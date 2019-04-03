@@ -6,3 +6,12 @@ google-services.json=app/google-services.json
 
 # Google Ananlytics
 analytics.xml=app/src/main/res/xml/analytics.xml
+
+# Fonts
+HelveticaNeueLTCom-BdCn.ttf=app/src/main/assets/HelveticaNeueLTCom-BdCn.ttf
+HelveticaNeueLTCom-LtCn.ttf=app/src/main/assets/HelveticaNeueLTCom-LtCn.ttf
+HelveticaNeueLTCom-LtIt.ttf=app/src/main/assets/HelveticaNeueLTCom-LtIt.ttf
+HelveticaNeueLTCom-MdCn.ttf=app/src/main/assets/HelveticaNeueLTCom-MdCn.ttf
+HelveticaNeueLTCom-MdCnO.ttf=app/src/main/assets/HelveticaNeueLTCom-MdCnO.ttf
+HelveticaNeueLTCom-Th.ttf=app/src/main/assets/HelveticaNeueLTCom-Th.ttf
+HelveticaNeueLTCom-ThIt.ttf=app/src/main/assets/HelveticaNeueLTCom-ThIt.ttf

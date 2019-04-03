@@ -4,6 +4,16 @@ Instructure's Open Source Android Code
 
 The open source code provided by the Android Team at Instructure. 
 
+## Building
+
+Run `./open_source.sh` once and then use Gradle to build the apps.
+
+App | Command
+--- | ---
+Student | `./gradlew/gradle -p apps :student:assembleDevDebug`
+Teacher | `./gradlew/gradle -p apps :teacher:assembleDevDebug`
+Parent  | `./gradlew/gradle -p apps :parent:assembleDevDebug`
+
 ## Applications:
 
 #### The Applications we have published on Google Play.
