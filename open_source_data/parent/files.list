@@ -2,4 +2,7 @@
 private.properties=private.properties
 
 # Fabric key
-fabric.properties=app/fabric.properties
+fabric.properties=fabric.properties
+
+# Google Services
+google-services.json=google-services.json
