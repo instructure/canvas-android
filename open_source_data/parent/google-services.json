@@ -1,45 +1,42 @@
 {
   "project_info": {
-    "project_id": "2",
-    "project_number": "2",
-    "name": "SpeedGrader"
+    "project_number": "1",
+    "firebase_url": "2",
+    "project_id": "3",
+    "storage_bucket": "4"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "2",
-        "client_id": "android:com.instructure.speedgrader",
-        "client_type": 1,
+        "mobilesdk_app_id": "5",
         "android_client_info": {
-          "package_name": "com.instructure.speedgrader"
+          "package_name": "com.instructure.parentapp"
         }
       },
-      "oauth_client": [],
-      "api_key": [],
+      "oauth_client": [
+        {
+          "client_id": "6",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "7"
+        }
+      ],
       "services": {
         "analytics_service": {
-          "status": 2,
-          "analytics_property": {
-            "tracking_id": "2"
-          }
-        },
-        "cloud_messaging_service": {
-          "status": 1,
-          "apns_config": []
+          "status": 1
         },
         "appinvite_service": {
           "status": 1,
           "other_platform_oauth_client": []
         },
-        "google_signin_service": {
-          "status": 1
-        },
         "ads_service": {
-          "status": 1
+          "status": 2
         }
       }
     }
   ],
-  "client_info": [],
-  "ARTIFACT_VERSION": "1"
+  "configuration_version": "1"
 }
