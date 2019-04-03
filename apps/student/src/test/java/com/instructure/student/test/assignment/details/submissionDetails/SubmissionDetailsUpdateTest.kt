@@ -29,7 +29,6 @@ import com.spotify.mobius.test.InitSpec
 import com.spotify.mobius.test.InitSpec.assertThatFirst
 import com.spotify.mobius.test.NextMatchers
 import com.spotify.mobius.test.NextMatchers.hasModel
-import com.spotify.mobius.test.NextMatchers.hasNoEffects
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import io.mockk.every
@@ -121,39 +120,6 @@ class SubmissionDetailsUpdateTest : Assert() {
                     matchesEffects<SubmissionDetailsModel, SubmissionDetailsEffect>(
                         SubmissionDetailsEffect.ShowSubmissionContentType(contentType)
                     )
-                )
-            )
-    }
-
-    @Test
-    fun `SubmissionClicked event results in model change but no effect if updateContent flag is false`() {
-        val submission = submission.copy(
-            body = "submission body",
-            submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString
-        )
-        initModel = initModel.copy(
-            assignment = DataResult.Success(assignment),
-            rootSubmission = DataResult.Success(
-                Submission(
-                    submissionHistory = listOf(
-                        Submission(id = 1),
-                        Submission(id = 2),
-                        submission
-                    )
-                )
-            )
-        )
-        val expectedModel = initModel.copy(
-            selectedSubmissionAttemptId = submission.id
-        )
-
-        updateSpec
-            .given(initModel)
-            .whenEvent(SubmissionDetailsEvent.SubmissionClicked(submission.id))
-            .then(
-                assertThatNext(
-                    NextMatchers.hasModel(expectedModel),
-                    hasNoEffects()
                 )
             )
     }
@@ -689,7 +655,7 @@ class SubmissionDetailsUpdateTest : Assert() {
             isLoading = false,
             assignment = assignmentResult,
             rootSubmission = submissionResult,
-            selectedSubmissionAttemptId = submission.id
+            selectedSubmissionAttemptId = submission.attempt
         )
 
         updateSpec
