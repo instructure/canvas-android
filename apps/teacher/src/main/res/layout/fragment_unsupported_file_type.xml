@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C) 2017 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="2dp"
+        tools:ignore="UnusedAttribute" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar"
+        android:fillViewport="true"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/scrollInstructions"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="32dp">
+
+            <ImageView
+                android:id="@+id/previewImageView"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:importantForAccessibility="no"
+                android:scaleType="fitCenter"
+                android:tint="@color/defaultThumbColor"
+                app:srcCompat="@drawable/vd_canvas_logo" />
+
+            <TextView
+                android:id="@+id/fileNameView"
+                style="@style/TextFont.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="24dp"
+                android:focusable="true"
+                android:importantForAccessibility="yes"
+                android:textColor="#2D3B45"
+                android:textSize="20sp"
+                tools:text="sample_file_name.png" />
+
+            <TextView
+                style="@style/TextFont.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="8dp"
+                android:focusable="true"
+                android:gravity="center"
+                android:importantForAccessibility="yes"
+                android:text="@string/unsupportedFileMessage"
+                android:textColor="@color/defaultTextGray"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/openExternallyButton"
+                style="@style/ButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="48dp"
+                android:text="@string/openWithAnotherApp" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</RelativeLayout>

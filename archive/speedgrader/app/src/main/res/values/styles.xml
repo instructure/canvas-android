@@ -1,0 +1,93 @@
+<!--
+  ~ Copyright (C) 2016 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<resources>
+
+
+    <style name="switchTextBlue" parent="@android:style/TextAppearance.Holo.Small">
+        <item name="android:textColor">@color/lightGray</item>
+    </style>
+
+    <style name="switchTextAqua" parent="@android:style/TextAppearance.Holo.Small">
+        <item name="android:textColor">@color/speedgrader_aqua</item>
+    </style>
+    <style name="switchTextGray" parent="@android:style/TextAppearance.Holo.Small">
+        <item name="android:textColor">@color/sg_bg_gray</item>
+    </style>
+    <style name="SG_ListHeaderStyleLight">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">@dimen/listHeaderHeight</item>
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:singleLine">false</item>
+        <item name="android:maxLines">3</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="SG_ListHeaderStyleDark">
+        <item name="android:textColor">@color/sg_darkText</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">@dimen/listHeaderHeight</item>
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:singleLine">false</item>
+        <item name="android:maxLines">3</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="Theme.Kaltura" parent="SpeedGrader_Material">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
+
+    <style name="sg_grading_drawer_header">
+        <item name="android:padding">12dp</item>
+        <item name="android:background">@color/dividerColor</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:layout_alignParentTop">true</item>
+        <item name="android:clickable">true</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="sg_grading_drawer_title">
+        <item name="android:textSize">20sp</item>
+        <item name="android:layout_marginBottom">4dp</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="Theme.NavigationSwitch" parent="SpeedGrader_Material">
+        <item name="colorControlActivated">@color/speedgrader_aqua</item>
+        <item name="colorSwitchThumbNormal">@color/white</item>
+    </style>
+
+    <style name="Theme.SGActionbarSwitch" parent="SpeedGrader_Material">
+        <item name="colorControlActivated">@color/white</item>
+        <item name="colorSwitchThumbNormal">@color/saveButtonDisabled</item>
+    </style>
+</resources>

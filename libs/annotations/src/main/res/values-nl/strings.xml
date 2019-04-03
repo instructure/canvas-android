@@ -1,0 +1,42 @@
+﻿<!--
+  ~ Copyright (C) 2018 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="inputText">Tekst invoeren</string>
+    <string name="cancel">Annuleren</string>
+    <string name="comment">Opmerking</string>
+    <string name="skip">Overslaan</string>
+    <string name="comments">Opmerkingen</string>
+    <string name="error_loading_submission">Er is een probleem met het laden van deze inzending.</string>
+    <string name="retry">Opnieuw proberen</string>
+    <string name="annotationErrorOccurred">Er is een onverwachte fout opgetreden tijdens het laden van aantekeningen.</string>
+    <string name="annotationError">Fout met aantekening</string>
+    <string name="annotationDialogMessage">De aantekening is uit een andere bron verwijderd.</string>
+    <string name="errorSendingMessage">Dit bericht kan niet worden verzonden. Tik om het nogmaals te proberen.</string>
+    <string name="addAnnotationComment">Opmerking toevoegen</string>
+    <string name="editComment">Opmerking bewerken</string>
+    <string name="deleteComment">Opmerking verwijderen</string>
+    <string name="deleteAnnotation">Aantekening verwijderen</string>
+    <string name="deleteCommentConfirmation">Weet je zeker dat je deze opmerking wilt verwijderen?</string>
+    <string name="deleteHeadCommentConfirmation">Door deze opmerking te verwijderen worden alle opmerkingen bij deze aantekening verwijderd. Weet je zeker dat je dit wilt doen?</string>
+    <string name="sendingSimple">Bezig met verzenden</string>
+    <string name="pspdf__annotation_type_stamp">Kleur van opmerking</string>
+
+    <string name="removedComment">%1$s verwijderd door %2$s</string>
+
+</resources>

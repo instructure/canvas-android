@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/not_a_teacher_header"
+        style="@style/TextFont.Regular"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/not_a_teacher"
+        android:textSize="30sp"/>
+
+    <TextView
+        android:id="@+id/explanation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:layout_marginStart="24dp"
+        android:gravity="center"
+        android:text="@string/not_a_teacher_tap_to_visit_play_store"
+        android:textColor="#8B969E"
+        android:textSize="16sp"/>
+
+    <RelativeLayout
+        android:id="@+id/studentLink"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="64dp">
+
+        <ImageView
+            android:id="@+id/studentCanvasLogo"
+            style="@style/NotATeacher.CanvasLogo"
+            android:layout_centerVertical="true"
+            android:importantForAccessibility="no"
+            android:tint="@color/removeOverrideColor"
+            app:srcCompat="@drawable/vd_canvas_logo"/>
+
+        <TextView
+            android:id="@+id/canvasTextStudent"
+            style="@style/NotATeacher.CanvasText"
+            android:layout_toEndOf="@id/studentCanvasLogo"/>
+
+        <TextView
+            style="@style/NotATeacher.SubText"
+            android:layout_below="@id/canvasTextStudent"
+            android:layout_toEndOf="@id/studentCanvasLogo"
+            android:text="@string/appUserTypeStudent"
+            android:textColor="@color/removeOverrideColor"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/parentLink"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp">
+
+        <ImageView
+            android:id="@+id/parentCanvasLogo"
+            style="@style/NotATeacher.CanvasLogo"
+            android:layout_centerVertical="true"
+            android:importantForAccessibility="no"
+            android:tint="@color/canvasDefaultButton"
+            app:srcCompat="@drawable/vd_canvas_logo"/>
+
+        <TextView
+            android:id="@+id/canvasTextParent"
+            style="@style/NotATeacher.CanvasText"
+            android:layout_toEndOf="@id/parentCanvasLogo"/>
+
+        <TextView
+            style="@style/NotATeacher.SubText"
+            android:layout_below="@id/canvasTextParent"
+            android:layout_toEndOf="@id/parentCanvasLogo"
+            android:text="@string/appUserTypeParent"
+            android:textColor="@color/canvasDefaultButton"/>
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/login"
+        style="@style/TextFont.Medium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:background="?android:selectableItemBackground"
+        android:gravity="center"
+        android:minWidth="130dp"
+        android:padding="12dp"
+        android:text="@string/login"
+        android:textColor="#8B969E"
+        android:textSize="16sp"/>
+
+</LinearLayout>

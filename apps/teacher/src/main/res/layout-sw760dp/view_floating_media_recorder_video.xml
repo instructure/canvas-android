@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:camerakit="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cameraView"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/recordingViewHeight">
+
+    <com.flurgle.camerakit.CameraView
+        android:id="@+id/camera"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:adjustViewBounds="true"
+        camerakit:ckFacing="front"
+        camerakit:ckZoom="off" />
+
+    <ImageView
+        android:id="@+id/startRecordingButton"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_centerInParent="true"
+        android:src="@drawable/ic_record_media"
+        android:contentDescription="@string/startRecordingVideo"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:id="@+id/endRecordingButton"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_centerInParent="true"
+        android:src="@drawable/ic_stop_record_media"
+        android:visibility="gone"
+        android:contentDescription="@string/stopRecordingVideo"
+        tools:ignore="ContentDescription" />
+
+    <Button
+        android:id="@+id/replayButton"
+        style="@style/FloatingRecorderReplayButtonStyle"
+        android:layout_above="@+id/sendButton"
+        android:text="@string/replay"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/sendButton"
+        style="@style/FloatingRecorderSendButtonStyle"
+        android:text="@string/send"
+        android:visibility="gone" />
+
+</RelativeLayout>

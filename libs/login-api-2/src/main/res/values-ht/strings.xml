@@ -1,0 +1,126 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="hello_world">Bonjou tout moun!</string>
+    <string name="action_settings">Paramèt</string>
+    <string name="mobileVerifyGeneral">App sa a pa gen ototrizasyon pou li itilize</string>
+    <string name="mobileVerifyDomainUnauthorized">Sèvè w antre a pa otorize pou app sa a.</string>
+    <string name="mobileVerifyUserAgentUnauthorized">Ajan itilizatè app sa a pa otorize.</string>
+    <string name="mobileVerifyUnknownError">Nou pa kapab verifye sèvè a pou li ka itilize ak app sa a.</string>
+    <string name="unknownDevice">UnknownDevice</string>
+    <string name="errorOccurred">Yon erè fèt sanzatann.</string>
+    <string name="pageNotFound">Paj entwouvab.</string>
+    <string name="confirm">Konfime</string>
+    <string name="cancel">Anile</string>
+    <string name="help">Èd</string>
+    <string name="enterURL">Antre URL Canvas ou a:</string>
+    <string name="signIntoCanvasNetwork">W ap eseye konekte sou Canvas Network?</string>
+    <string name="remove">Elimine</string>
+    <string name="exampleURLSimple">myschool.instructure.com</string>
+    <string name="userId">ID Itilizatè</string>
+    <string name="domain">Domèn</string>
+
+    <string name="actAsUser">Aji tankou Itilizatè</string>
+    <string name="stopActAsUser">Sispann Pase pou Itilizatè</string>
+    <!--Multiple User Sign in -->
+    <string name="removeUser">Elimine itilizatè sa a?</string>
+    <string name="removedForever">W ap gen pou konekte sou itilizatè sa a ankò pou w ka gen aksè a kontni yo.</string>
+
+    <!--Content Descriptions-->
+    <string name="canvasLogo">Logo Canvas</string>
+
+    <string name="canvasLoginOn">Canvas_Login: OUVÈ</string>
+    <string name="canvasLoginOff">Canvas_Login: FÈMEN</string>
+    <string name="siteAdminLogin">Koneksyon Admin Sit: OUVÈ</string>
+
+    <string name="username">Non Itilizatè</string>
+    <string name="password">Modpas</string>
+    <string name="authenticationRequired">Otantifikasyon Obligatwa</string>
+    <string name="invalidEmailPassword">Imèl oswa modpas envalid</string>
+    <string name="login">Konekte</string>
+    <string name="logout">Dekonekte</string>
+
+    <!--Logout Warning Dialog-->
+    <string name="logout_warning">Ou kwè vrèman ou vle dekonekte?</string>
+    <string name="logout_yes">Wi</string>
+    <string name="logout_no">Non</string>
+
+    <!--Smart Login-->
+    <string name="loginNearYou">Tou Prè ou</string>
+    <string name="loginCanvasNetwork">Canvas Network</string>
+    <string name="loginRightBehindYou">Dèyè w</string>
+    <string name="loginMiles">%1$s kilomèt distans</string>
+    <string name="loginCanvasHelp">Ou pa wè lekòl ou a? Antre URL lekòl la oswa tale la pou jwenn èd.</string>
+    <string name="loginCanvasHelpWithUser">Antre URL lekòl la oswa tale la pou jwenn èd.</string>
+    <string name="loginHint">Jwenn lekòl oswa distri ou a</string>
+
+    <!-- Error Report Dialog -->
+    <string name="errorReportAProblem">Rapòte yon Pwoblèm</string>
+    <string name="errorReportSubject">Sijè</string>
+    <string name="errorReportDescription">Deskripsyon</string>
+    <string name="errorReportWriteSomething">Ekri yon Bagay...</string>
+    <string name="errorReportSend">Voye</string>
+    <string name="errorReportThankyou">Mèsi paske w rapòte pwoblèm ou an bay Epik Sipò nou an.  W ap resevwa yon verifikasyon ak yon aktyalizasyon sou imèl ou.</string>
+    <string name="errorReportSeverityText">Nan ki sans sa afekte w?</string>
+    <string name="errorSeverityCasualQuestion">Sèlman yon kesyon, yon kòmantè, yon ide... enfòmèl</string>
+    <string name="errorSeverityNeedHelp">Mwen bezwen èd men se pa ijan.</string>
+    <string name="errorSeveritySomethingsBroken">Gen yon bagay ki pa pase, men mwen ka rezoud sa pou m fè sa m bezwen an.</string>
+    <string name="errorSeverityCantGetThingsDone">Mwen paka fè anyen toutotan mwen pa tande w ankò.</string>
+    <string name="errorSeverityExtremelyCritical">IJANS KRITIK EKSTRÈM!!</string>
+    <string name="errorReportEmailAddress">Adrès Imèl</string>
+    <string name="errorReportEnterEmail">Antre adrès imèl ou...</string>
+    <string name="errorReportUnknown">Enkoni</string>
+    <!-- Distance Strings -->
+    <string name="lessThanOne">&lt; 1 mile (1.6 km)</string>
+    <string name="oneMile">1 mile (1.6 km)</string>
+    <string name="miles">mile</string>
+    <string name="kilometers">km</string>
+
+    <!-- String for submitting tickets -->
+    <string name="device">Aparèy</string>
+    <string name="osVersion">Vèsyon OS</string>
+
+    <string name="previousLoginTitle">Ansyen Koneksyon</string>
+    <string name="findMySchool">Jwenn lekòl mwen an</string>
+    <string name="canvasLowerCase">canvas</string>
+    <string name="whatsYourSchoolName">Kijan lekòl ou a rele?</string>
+    <string name="next">Pwochen</string>
+    <string name="schoolInstructureCom">school.instructure.com</string>
+    <string name="contentDescription_removePreviousUser">Elimine Ansyen Itilizatè</string>
+    <string name="accountDomainFooter">Ou paka jwenn lekòl ou a? Eseye tape tout URL lekòl la</string>
+    <string name="accountDomainFooterLink">Tape la pou èd.</string>
+
+    <string name="login_noInternetConnectionTitle">Pa gen Koneksyon Internet</string>
+    <string name="login_noInternetConnectionMessage">Pou aksyon sa a ou bezwen konekte sou entènèt.</string>
+    <string name="empty_feedback">Ou dwe gen yon sijè ak yon deskripsyon pou soumèt kòmantè sa a.</string>
+    <string name="versionNum">Nimewo Vèsyon</string>
+    <string name="scrollInstructions">Desann pou wè tout detay yo</string>
+
+    <string name="masqueradeErrorUserId">Ou dwe antre yon ID itilizatè.</string>
+    <string name="masqueradeErrorDomain">Ou dwe antre yon domèn valid.</string>
+    <string name="masqueradeError">Erè pandan w ap eseye degize a.</string>
+    <string name="masqueradeInfo">\"Aji tankou\" an jeneral se konekte tankou itilizatè sa a san modpas. W ap ka fè nenpòt aksyon kòmsi w te itilizatè sa a, epi lòt moun yo ap panse se itilizatè sa a ki t ap aji. Men, jounal odit yo endike ke se te ou menm ki te fè aksyon yo nan non itilizatè sa a.</string>
+    <string name="masqueradingAs">W ap aji tankou %s</string>
+    <string name="stopActingAsTitle">Sispann aji tankou...</string>
+    <string name="stopActingAsMessage">Ou pral sispann aji tankou %s epi sou kont ou.</string>
+
+    <string name="weMadeChanges">Nou te fè kèk chanjman.</string>
+    <string name="whatsNewText">Gade kisa ki nouvo</string>
+</resources>

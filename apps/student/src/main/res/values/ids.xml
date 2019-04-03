@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2016 - present Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<resources>
+
+    <item type="id" name="gridview" />
+    <item type="id" name="webview" />
+    <item type="id" name="scrollview" />
+    <item type="id" name="empty_item"/>
+    <item type="id" name="popup_favorite_courses"/>
+    <item type="id" name="popup_divider"/>
+    <item type="id" name="rightLayout"/>
+    <item type="id" name="leftLayout"/>
+    <item type="id" name="canvasEditText"/>
+    <item type="id" name="lockWindow"/>
+    <item type="id" name="avatarLoaderID"/>
+    <item type="id" name="formatLoaderID"/>
+    <item type="id" name="openMediaLoaderID"/>
+    <item type="id" name="videoFullScreenView"/>
+    <item type="id" name="toggleTimer"/>
+    <item type="id" name="showFlaggedQuestions"/>
+    <item type="id" name="menu_star_conversation"/>
+    <item type="id" name="menu_inbox_mark_unread"/>
+    <item type="id" name="menu_inbox_archive"/>
+    <item type="id" name="menu_inbox_unarchive"/>
+    <item type="id" name="menu_inbox_delete"/>
+
+</resources>

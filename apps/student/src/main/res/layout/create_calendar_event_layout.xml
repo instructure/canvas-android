@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C) 2016 - present Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/canvasBackgroundWhite"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?android:actionBarSize"
+        android:layout_alignParentTop="true"
+        android:background="@color/white"
+        android:elevation="2dp"
+        app:popupTheme="@style/ToolBarPopupStyle"
+        app:theme="@style/ToolBarStyle"
+        tools:targetApi="lollipop" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar"
+        android:padding="12dp">
+
+        <ImageView
+            android:id="@+id/titleIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:padding="2dp"
+            android:layout_margin="6dp"
+            android:layout_alignParentStart="true"
+            android:contentDescription="@string/titleIconDescription"
+            app:srcCompat="@drawable/vd_text_submission" />
+
+        <EditText
+            android:id="@+id/titleEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/titleIcon"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/titleIcon"
+            android:background="@color/transparent"
+            android:gravity="center_vertical"
+            android:hint="@string/enterTitle"
+            android:inputType="textCapSentences"
+            android:maxLength="280"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp" />
+
+
+        <View
+            android:id="@+id/divider1"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_alignStart="@+id/titleEditText"
+            android:layout_below="@+id/titleEditText"
+            android:layout_marginBottom="12dp"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="12dp"
+            android:background="@color/lightGray" />
+
+        <ImageView
+            android:id="@+id/dateIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@id/divider1"
+            android:layout_margin="6dp"
+            android:contentDescription="@string/timeIconDescription"
+            app:srcCompat="@drawable/vd_clock" />
+
+        <TextView
+            android:id="@+id/eventDateText"
+            style="@style/TextStyle.Primary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/divider1"
+            android:layout_toEndOf="@+id/dateIcon"
+            android:background="@color/transparent"
+            android:gravity="center_vertical"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp" />
+
+        <TextView
+            android:id="@+id/eventStartTimeText"
+            style="@style/TextStyle.Primary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/divider2"
+            android:layout_alignTop="@+id/eventTimeDividerText"
+            android:paddingTop="12dp" />
+
+        <TextView
+            android:id="@+id/eventTimeDividerText"
+            style="@style/TextStyle.Primary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/eventDateText"
+            android:layout_toEndOf="@+id/eventStartTimeText"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:paddingTop="12dp"
+            android:text="@string/to" />
+
+        <TextView
+            android:id="@+id/eventEndTimeText"
+            style="@style/TextStyle.Primary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/eventDateText"
+            android:layout_toEndOf="@+id/eventTimeDividerText"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:paddingTop="12dp" />
+
+        <View
+            android:id="@+id/divider2"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_alignStart="@+id/eventDateText"
+            android:layout_below="@+id/eventStartTimeText"
+            android:layout_marginBottom="12dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="12dp"
+            android:background="@color/lightGray" />
+
+
+        <ImageView
+            android:id="@+id/placeIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/divider2"
+            android:layout_margin="6dp"
+            android:contentDescription="@string/locationIconDescription"
+            app:srcCompat="@drawable/vd_marker" />
+
+        <EditText
+            android:id="@+id/locationEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/divider2"
+            android:layout_toEndOf="@+id/placeIcon"
+            android:background="@color/transparent"
+            android:hint="@string/enterLocation"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp" />
+
+        <View
+            android:id="@+id/divider3"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_alignStart="@+id/locationEditText"
+            android:layout_below="@+id/locationEditText"
+            android:layout_marginBottom="12dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="12dp"
+            android:background="@color/lightGray" />
+
+        <ImageView
+            android:id="@+id/noteIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/divider3"
+            android:layout_margin="6dp"
+            android:contentDescription="@string/noteIconDescription"
+            app:srcCompat="@drawable/vd_note" />
+
+        <EditText
+            android:id="@+id/eventNoteText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_below="@+id/divider3"
+            android:layout_toEndOf="@+id/titleIcon"
+            android:background="@color/transparent"
+            android:gravity="top"
+            android:hint="@string/addNote"
+            android:imeOptions="actionNext"
+            android:inputType="textCapSentences|textMultiLine"
+            android:isScrollContainer="false"
+            android:maxLength="280"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:paddingTop="4dp"
+            android:scrollHorizontally="false"
+            android:singleLine="false" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

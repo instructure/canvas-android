@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="rce_contentDescription_undo">Annuler</string>
+    <string name="rce_contentDescription_redo">Rétablir</string>
+    <string name="rce_contentDescription_bold">Format gras</string>
+    <string name="rce_contentDescription_italic">Format italique</string>
+    <string name="rce_contentDescription_strikethrough">Barré</string>
+    <string name="rce_contentDescription_underline">Souligné</string>
+    <string name="rce_contentDescription_format_text_color">Format de couleur du texte</string>
+    <string name="rce_contentDescription_border_color">Format de couleur de bordure de texte</string>
+    <string name="rce_contentDescription_indent_increase">Augmenter le retrait</string>
+    <string name="rce_contentDescription_indent_decrease">Diminuer le retrait</string>
+    <string name="rce_contentDescription_align_left">Aligner à gauche</string>
+    <string name="rce_contentDescription_align_right">Aligner à droite</string>
+    <string name="rce_contentDescription_align_center">Aligner au centre</string>
+    <string name="rce_contentDescription_insert_bullets">Insérer une liste à puces</string>
+    <string name="rce_contentDescription_insert_numbers">Insérer une liste numérotée</string>
+    <string name="rce_contentDescription_insert_photo">Insérer une photo</string>
+    <string name="rce_contentDescription_upload_photo">Téléverser une photo depuis un dispositif</string>
+    <string name="rce_contentDescription_insert_link">Insérer un lien</string>
+    <string name="rce_contentDescription_block_quote">Guillemets de bloc</string>
+
+    <string name="rce_contentDescription_color_none">Aucune couleur</string>
+    <string name="rce_contentDescription_color_white">Couleur Blanc</string>
+    <string name="rce_contentDescription_color_black">Couleur Noir</string>
+    <string name="rce_contentDescription_color_blue">Couleur Bleu</string>
+    <string name="rce_contentDescription_color_red">Couleur Rouge</string>
+    <string name="rce_contentDescription_color_green">Couleur Vert</string>
+    <string name="rce_contentDescription_color_gray">Couleur Gris</string>
+    <string name="rce_contentDescription_color_magenta">Couleur Magenta</string>
+    <string name="rce_contentDescription_color_cyan">Couleur Cyan</string>
+    <string name="rce_contentDescription_color_orange">Couleur Orange</string>
+    <string name="rce_contentDescription_color_yellow">Couleur Jaune</string>
+    <string name="rce_contentDescription_color_purple">Couleur Pourpre</string>
+
+    <string name="rce_editTextUrlHint">Lien</string>
+    <string name="rce_editTextALTHint">Texte</string>
+    <string name="rce_dialogDone">Terminé</string>
+    <string name="rce_dialogCancel">Annuler</string>
+    <string name="rce_insertLink">Insérer un lien</string>
+    <string name="rce_insertImage">Insérer une image</string>
+
+    <string name="rce_uploadImage">Téléverser une image</string>
+    <string name="rce_done">Terminé</string>
+    <string name="rce_cancel">Annuler</string>
+    <string name="rce_exit">Quitter</string>
+    <string name="rce_dialog_exit_title">Quitter l\'édition de l\'affectation?</string>
+    <string name="rce_dialog_exit_message">Voulez-vous vraiment quitter? Toutes les informations non sauvegardées seront perdues.</string>
+    <string name="rce_empty_message">Message</string>
+    <string name="rce_empty_description">Ajouter description</string>
+    <string name="rce_scrollInstructions">Faites défiler pour tous les outils d\'édition</string>
+</resources>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ Copyright (C) 2016 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<!-- Generated with http://android-holo-colors.com -->
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="SpeedGrader_Material" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/sg_defaultPrimary</item>
+        <item name="colorPrimaryDark">@color/sg_defaultPrimaryDark</item>
+        <item name="colorAccent">@color/sg_defaultAccent</item>
+
+        <item name="android:colorPrimary">@color/sg_defaultPrimary</item>
+        <item name="android:colorPrimaryDark">@color/sg_defaultPrimaryDark</item>
+        <item name="android:colorAccent">@color/sg_defaultAccent</item>
+
+        <item name="android:windowBackground">@color/canvasBackgroundLight</item>
+        <item name="android:buttonStyle">@style/ButtonCanvasTheme</item>
+        <item name="android:imageButtonStyle">@style/ImageButtonCanvasTheme</item>
+        <item name="android:actionButtonStyle">@style/ActionButtonStyle</item>
+        <item name="searchViewStyle">@style/MySearchViewStyle</item>
+        <item name="android:radioButtonStyle">@style/SG_RadioButtonStyle</item>
+        <item name="android:editTextBackground">@drawable/canvastheme_edit_text_holo_light</item>
+    </style>
+
+</resources>

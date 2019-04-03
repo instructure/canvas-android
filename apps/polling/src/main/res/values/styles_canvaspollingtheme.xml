@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ Copyright (C) 2016 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<!-- Generated with http://android-holo-colors.com -->
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <style name="AutoCompleteTextViewCanvasPollingTheme" parent="android:Widget.Holo.Light.AutoCompleteTextView">
+      <item name="android:dropDownSelector">@drawable/canvaspollingtheme_list_selector_holo_light</item>
+	    <item name="android:background">@drawable/canvaspollingtheme_edit_text_holo_light</item>
+  </style>
+
+  <style name="ButtonCanvasPollingTheme" parent="android:Widget.Holo.Light.Button">
+	  <item name="android:background">@drawable/canvaspollingtheme_btn_default_holo_light</item>
+      <item name="android:textColor">@color/white</item>
+  </style>
+
+    <style name="ButtonBarCanvasPollingTheme" parent="android:Widget.Holo.Light.Button">
+        <item name="android:background">@drawable/button_pressed</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+  <style name="ImageButtonCanvasPollingTheme" parent="android:Widget.Holo.Light.ImageButton">
+	  <item name="android:background">@drawable/canvaspollingtheme_btn_default_holo_light</item>
+  </style>
+
+  <style name="SpinnerCanvasPollingTheme" parent="android:Widget.Holo.Light.Spinner">
+      <item name="android:background">@drawable/canvaspollingtheme_spinner_background_holo_light</item>
+      <item name="android:dropDownSelector">@drawable/canvaspollingtheme_list_selector_holo_light</item>
+  </style>
+
+  <style name="TabCanvasPollingTheme">
+      <item name="android:gravity">center_horizontal</item>
+      <item name="android:paddingLeft">16dip</item>
+      <item name="android:paddingRight">16dip</item>
+      <item name="android:background">@drawable/canvaspollingtheme_tab_indicator_holo</item>
+      <item name="android:layout_width">0dip</item>
+      <item name="android:layout_weight">1</item>
+      <item name="android:minWidth">80dip</item>
+  </style>
+
+  <style name="TabTextCanvasPollingTheme">
+	  <item name="android:textColor">#000000</item>
+      <item name="android:textSize">12sp</item>
+      <item name="android:textStyle">bold</item>
+      <!-- v14 <item name="android:textAllCaps">true</item> -->
+      <item name="android:ellipsize">marquee</item>
+      <item name="android:maxLines">2</item>
+      <item name="android:maxWidth">180dip</item>
+  </style>
+
+  <style name="ProgressBarCanvasPollingTheme" parent="android:Widget.Holo.Light.ProgressBar.Horizontal">
+      <item name="android:progressDrawable">@drawable/canvaspollingtheme_progress_horizontal_holo_light</item>
+      <item name="android:indeterminateDrawable">@drawable/canvaspollingtheme_progress_indeterminate_horizontal_holo_light</item>
+  </style>
+
+  <style name="SeekBarCanvasPollingTheme" parent="android:Widget.Holo.Light.SeekBar">
+      <item name="android:progressDrawable">@drawable/canvaspollingtheme_scrubber_progress_horizontal_holo_light</item>
+      <item name="android:indeterminateDrawable">@drawable/canvaspollingtheme_scrubber_progress_horizontal_holo_light</item>
+      <item name="android:thumb">@drawable/canvaspollingtheme_scrubber_control_selector_holo_light</item>
+  </style>
+
+  <style name="RatingBarCanvasPollingTheme" parent="android:Widget.Holo.Light.RatingBar">
+      <item name="android:progressDrawable">@drawable/canvaspollingtheme_ratingbar_full_holo_light</item>
+      <item name="android:indeterminateDrawable">@drawable/canvaspollingtheme_ratingbar_full_holo_light</item>
+  </style>
+
+  <style name="RatingBarBigCanvasPollingTheme" parent="android:Widget.Holo.Light.RatingBar.Indicator">
+      <item name="android:progressDrawable">@drawable/canvaspollingtheme_ratingbar_holo_light</item>
+      <item name="android:indeterminateDrawable">@drawable/canvaspollingtheme_ratingbar_holo_light</item>
+  </style>
+
+  <style name="RatingBarSmallCanvasPollingTheme" parent="android:Widget.Holo.Light.RatingBar.Small">
+      <item name="android:progressDrawable">@drawable/canvaspollingtheme_ratingbar_small_holo_light</item>
+      <item name="android:indeterminateDrawable">@drawable/canvaspollingtheme_ratingbar_small_holo_light</item>
+  </style>
+
+  <style name="ToggleCanvasPollingTheme" parent="android:Widget.Holo.Light.Button.Toggle">
+      <item name="android:background">@drawable/canvaspollingtheme_btn_toggle_holo_light</item>
+  </style>
+
+</resources>

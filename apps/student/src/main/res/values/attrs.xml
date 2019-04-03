@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2016 - present Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<resources>
+
+    <declare-styleable name="PullToRefresh">
+
+        <!-- A drawable to use as the background of the Refreshable View -->
+        <attr name="ptrRefreshableViewBackground" format="reference|color" />
+
+        <!-- A drawable to use as the background of the Header and Footer Loading Views -->
+        <attr name="ptrHeaderBackground" format="reference|color" />
+
+        <!-- Text Color of the Header and Footer Loading Views -->
+        <attr name="ptrHeaderTextColor" format="reference|color" />
+
+        <!-- Text Color of the Header and Footer Loading Views Sub Header -->
+        <attr name="ptrHeaderSubTextColor" format="reference|color" />
+
+        <!-- Mode of Pull-to-Refresh that should be used -->
+        <attr name="ptrMode">
+            <flag name="disabled" value="0x0" />
+            <flag name="pullFromStart" value="0x1" />
+            <flag name="pullFromEnd" value="0x2" />
+            <flag name="both" value="0x3" />
+            <flag name="manualOnly" value="0x4" />
+
+            <!-- These last two are depreacted -->
+            <flag name="pullDownFromTop" value="0x1" />
+            <flag name="pullUpFromBottom" value="0x2" />
+        </attr>
+
+        <!-- Whether the Indicator overlay(s) should be used -->
+        <attr name="ptrShowIndicator" format="reference|boolean" />
+
+        <!-- Drawable to use as Loading Indicator. Changes both Header and Footer. -->
+        <attr name="ptrDrawable" format="reference" />
+
+        <!-- Drawable to use as Loading Indicator in the Header View. Overrides value set in ptrDrawable. -->
+        <attr name="ptrDrawableStart" format="reference" />
+
+        <!-- Drawable to use as Loading Indicator in the Footer View. Overrides value set in ptrDrawable. -->
+        <attr name="ptrDrawableEnd" format="reference" />
+
+        <!-- Whether Android's built-in Over Scroll should be utilised for Pull-to-Refresh. -->
+        <attr name="ptrOverScroll" format="reference|boolean" />
+
+        <!-- Base text color, typeface, size, and style for Header and Footer Loading Views -->
+        <attr name="ptrHeaderTextAppearance" format="reference" />
+
+        <!-- Base text color, typeface, size, and style for Header and Footer Loading Views Sub Header -->
+        <attr name="ptrSubHeaderTextAppearance" format="reference" />
+
+        <!-- Style of Animation should be used displayed when pulling. -->
+        <attr name="ptrAnimationStyle">
+            <flag name="rotate" value="0x0" />
+            <flag name="flip" value="0x1" />
+        </attr>
+
+        <!-- Whether the user can scroll while the View is Refreshing -->
+        <attr name="ptrScrollingWhileRefreshingEnabled" format="reference|boolean" />
+
+        <!--
+            Whether PullToRefreshListView has it's extras enabled. This allows the user to be 
+            able to scroll while refreshing, and behaves better. It acheives this by adding
+            Header and/or Footer Views to the ListView.
+        -->
+        <attr name="ptrListViewExtrasEnabled" format="reference|boolean" />
+
+        <!--
+            Whether the Drawable should be continually rotated as you pull. This only
+            takes effect when using the 'Rotate' Animation Style.
+        -->
+        <attr name="ptrRotateDrawableWhilePulling" format="reference|boolean" />
+
+        <!-- BELOW HERE ARE DEPRECEATED. DO NOT USE. -->
+        <attr name="ptrAdapterViewBackground" format="reference|color" />
+        <attr name="ptrDrawableTop" format="reference" />
+        <attr name="ptrDrawableBottom" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="HoloCheckBox">
+        <attr name="holo_checkbox_checked" format="boolean" />
+        <attr name="holo_checkbox_color" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="DateTextView">
+        <attr name="emptyDateText" format="string" />
+        <attr name="drawableColor" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="CircularTextView">
+        <attr name="circleColor" format="string" />
+        <attr name="hasBorder" format="boolean" />
+        <attr name="hasShadow" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="PagerSlidingTabStrip">
+        <attr name="pstIndicatorColor" format="color" />
+        <attr name="pstUnderlineColor" format="color" />
+        <attr name="pstDividerColor" format="color" />
+        <attr name="pstIndicatorHeight" format="dimension" />
+        <attr name="pstUnderlineHeight" format="dimension" />
+        <attr name="pstDividerPadding" format="dimension" />
+        <attr name="pstTabPaddingLeftRight" format="dimension" />
+        <attr name="pstScrollOffset" format="dimension" />
+        <attr name="pstTabBackground" format="reference" />
+        <attr name="pstShouldExpand" format="boolean" />
+        <attr name="pstTextAllCaps" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="CanvasEditText">
+        <attr name="tintColor" format="color" />
+        <attr name="hasTopBorder" format="boolean" />
+        <attr name="hintText" format="string" />
+        <attr name="textSize" format="dimension" />
+        <attr name="maxLines" format="integer" />
+        <attr name="buttonDrawableSize" format="dimension"/>
+    </declare-styleable>
+
+    <declare-styleable name="ScrimInsetsView">
+        <attr name="sInsetForeground" format="reference|color" />
+    </declare-styleable>
+
+    <declare-styleable name="AspectRatioRelativeLayout">
+        <attr name="aspectRatio" format="float"/>
+    </declare-styleable>
+
+    <declare-styleable name="AttachmentLayout">
+        <attr name="al_spacing" format="dimension" />
+        <attr name="al_previewChildCount" format="integer" />
+    </declare-styleable>
+
+    <declare-styleable name="AttachmentDogEarLayout">
+        <attr name="adl_dogear_size" format="dimension" />
+    </declare-styleable>
+
+</resources>

@@ -1,0 +1,10 @@
+<resources>
+    <!-- Customize dimensions originally defined in res/values/dimens.xml (such as
+         screen margins) for sw720dp devices (e.g. 10" tablets) in landscape here. -->
+    <dimen name="activity_horizontal_margin">128dp</dimen>
+    <!-- Tablet Dimensions -->
+    <dimen name="tabIconPaddingLeft">30dp</dimen>
+    <dimen name="tabIconPaddingRight">30dp</dimen>
+    <dimen name="login_padding_left_right">96dp</dimen>
+    <dimen name="login_padding_bottom">48dp</dimen>
+</resources>

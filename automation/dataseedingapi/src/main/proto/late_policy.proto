@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+option java_package = "com.instructure.soseedy";
+option java_multiple_files = true;
+
+package soseedy;
+
+service SeedyLatePolicy {
+    rpc CreateLatePolicy (CreateLatePolicyRequest) returns (LatePolicy) { }
+}
+
+// Request messages
+
+message CreateLatePolicyRequest {
+    int64 courseId = 1;
+    LatePolicy latePolicy = 2;
+    string teacherToken = 3;
+}
+
+message LatePolicy {
+    bool missingSubmissionDeductionEnabled = 1;
+    int64 missingSubmissionDeduction = 2;
+    bool lateSubmissionDeductionEnabled = 3;
+    int64 lateSubmissionDeduction = 4;
+    string lateSubmissionInterval = 5;
+    bool lateSubmissionMinimumPercentEnabled = 6;
+    int64 lateSubmissionMinimumPercent = 7;
+}

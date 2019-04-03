@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2016 - present Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/canvasBackgroundWhite">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:layout_alignParentTop="true"
+        android:background="@color/defaultPrimary"
+        android:elevation="6dp"
+        app:popupTheme="@style/ToolBarPopupStyle"
+        app:theme="@style/ToolBarStyle"
+        tools:targetApi="lollipop" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="16dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardElevation="@dimen/card_elevation"
+                app:cardUseCompatPadding="true"
+                app:contentPadding="@dimen/card_inner_padding">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/quiz_title"
+                        style="@style/TextStyle.Primary.Bold"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="8dp" />
+
+                    <com.instructure.pandautils.views.CanvasWebView
+                        android:id="@+id/quiz_details"
+                        style="@style/TextStyle.Primary"
+                        android:padding="-8dp" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="4dp"
+                        android:paddingEnd="8dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:paddingStart="8dp"
+                        android:paddingTop="4dp">
+
+                        <TextView
+                            android:id="@+id/quiz_due"
+                            style="@style/TextStyle.Primary"
+                            android:layout_marginEnd="16dp"
+                            android:text="@string/dueAt" />
+
+                        <TextView
+                            android:id="@+id/quiz_due_details"
+                            style="@style/TextStyle.Secondary"
+                            android:layout_toEndOf="@id/quiz_due"
+                            android:textSize="18sp" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="4dp"
+                        android:paddingEnd="8dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:paddingStart="8dp"
+                        android:paddingTop="4dp">
+
+                        <TextView
+                            android:id="@+id/quiz_points_possible"
+                            style="@style/TextStyle.Primary"
+                            android:layout_marginEnd="16dp"
+                            android:text="@string/points" />
+
+                        <TextView
+                            android:id="@+id/quiz_points_details"
+                            style="@style/TextStyle.Secondary"
+                            android:layout_toEndOf="@id/quiz_points_possible"
+                            android:textSize="18sp" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="4dp"
+                        android:paddingEnd="8dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:paddingStart="8dp"
+                        android:paddingTop="4dp">
+
+                        <TextView
+                            android:id="@+id/quiz_question_count"
+                            style="@style/TextStyle.Primary"
+                            android:layout_marginEnd="16dp"
+                            android:text="@string/questions" />
+
+                        <TextView
+                            android:id="@+id/quiz_question_count_details"
+                            style="@style/TextStyle.Secondary"
+                            android:layout_toEndOf="@id/quiz_question_count"
+                            android:textSize="18sp" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="4dp"
+                        android:paddingEnd="8dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:paddingStart="8dp"
+                        android:paddingTop="4dp">
+
+                        <TextView
+                            android:id="@+id/quiz_attempt"
+                            style="@style/TextStyle.Primary"
+                            android:layout_marginEnd="16dp"
+                            android:text="@string/allowed_attempts" />
+
+                        <TextView
+                            android:id="@+id/quiz_attempt_details"
+                            style="@style/TextStyle.Secondary"
+                            android:layout_toEndOf="@id/quiz_attempt"
+                            android:textSize="18sp" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/quiz_unlocked_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="4dp"
+                        android:paddingEnd="8dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:paddingStart="8dp"
+                        android:paddingTop="4dp">
+
+                        <TextView
+                            android:id="@+id/quiz_unlocked"
+                            style="@style/TextStyle.Primary"
+                            android:layout_marginEnd="16dp" />
+
+                        <TextView
+                            android:id="@+id/quiz_unlocked_details"
+                            style="@style/TextStyle.Secondary"
+                            android:layout_toEndOf="@id/quiz_unlocked"
+                            android:textSize="18sp" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/quiz_time_limit_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="4dp"
+                        android:paddingEnd="8dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:paddingStart="8dp"
+                        android:paddingTop="4dp">
+
+                        <TextView
+                            android:id="@+id/quiz_time_limit"
+                            style="@style/TextStyle.Primary"
+                            android:layout_marginEnd="16dp" />
+
+                        <TextView
+                            android:id="@+id/quiz_time_limit_details"
+                            style="@style/TextStyle.Secondary"
+                            android:layout_toEndOf="@id/quiz_time_limit"
+                            android:textSize="18sp" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/quiz_turned_in_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="4dp"
+                        android:paddingEnd="8dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:paddingStart="8dp"
+                        android:paddingTop="4dp">
+
+                        <TextView
+                            android:id="@+id/quiz_turned_in"
+                            style="@style/TextStyle.Primary"
+                            android:layout_marginEnd="16dp"
+                            android:text="@string/turnedIn" />
+
+                        <TextView
+                            android:id="@+id/quiz_turned_in_details"
+                            style="@style/TextStyle.Secondary"
+                            android:layout_toEndOf="@id/quiz_turned_in"
+                            android:textSize="18sp" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingEnd="8dp"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:paddingStart="8dp">
+
+                        <Button
+                            android:id="@+id/next"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginEnd="4dp"
+                            android:layout_marginTop="8dp"
+                            android:background="@drawable/cv_transparent_button"
+                            android:gravity="start|center_vertical"
+                            android:text="@string/start"
+                            android:textAllCaps="true"
+                            android:textColor="@color/canvasBlue"
+                            android:textSize="14sp"
+                            android:visibility="gone" />
+
+                        <Button
+                            android:id="@+id/quiz_results"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="8dp"
+                            android:layout_toEndOf="@+id/next"
+                            android:background="@drawable/cv_transparent_button"
+                            android:text="@string/viewResults"
+                            android:textAllCaps="true"
+                            android:textColor="@color/canvasBlue"
+                            android:textSize="14sp"
+                            android:visibility="gone" />
+                    </RelativeLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+        </RelativeLayout>
+    </ScrollView>
+
+    <include
+        android:id="@+id/loading"
+        layout="@layout/loading_screen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
+
+</RelativeLayout>

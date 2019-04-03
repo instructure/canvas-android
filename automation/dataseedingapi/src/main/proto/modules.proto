@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+option java_package = "com.instructure.soseedy";
+option java_multiple_files = true;
+
+package soseedy;
+
+import "files.proto";
+
+service SeedyModules {
+    rpc CreateModule(CreateModuleRequest) returns (Module) { }
+    rpc UpdateModule(UpdateModuleRequest) returns (Module) { }
+}
+
+// Request messages
+
+message CreateModuleRequest {
+    int64 courseId = 1;
+    string unlockAt = 2;
+    string token = 3;
+}
+
+message UpdateModuleRequest {
+    int64 id = 1;
+    int64 courseId = 2;
+    bool published = 3;
+    string token = 4;
+}
+
+// Response messages
+
+message Module {
+    int64 id = 1;
+    string name = 2;
+    string unlockAt = 3;
+    bool published = 4;
+}

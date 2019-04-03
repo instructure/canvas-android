@@ -1,0 +1,4 @@
+include ':dataseedingapi'
+
+project(':dataseedingapi').projectDir = new File(rootProject.projectDir, '../dataseedingapi')
+

@@ -1,0 +1,136 @@
+/*
+ * Copyright (C) 2017 - present Instructure, Inc.
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, version 3 of the License.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+package com.instructure.teacher.view.edit_rubric
+
+import android.content.Context
+import androidx.appcompat.app.AppCompatActivity
+import android.util.AttributeSet
+import android.view.View
+import android.widget.FrameLayout
+import android.widget.ScrollView
+import com.instructure.canvasapi2.models.RubricCriterion
+import com.instructure.canvasapi2.models.RubricCriterionAssessment
+import com.instructure.pandautils.utils.*
+import com.instructure.teacher.R
+import com.instructure.teacher.dialog.CriterionLongDescriptionDialog
+import com.instructure.teacher.dialog.EditRubricCommentDialog
+import kotlinx.android.synthetic.main.view_rubric_criterion_item.view.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
+
+class RubricCriterionItemView @JvmOverloads constructor(
+        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+) : FrameLayout(context, attrs, defStyleAttr) {
+
+    /** Criterion ID*/
+    private var mCriterionId = ""
+    private var mStudentId = -1L
+    private var mAssigneeName = ""
+    private var mIsFreeForm = false
+
+    var gradeAnonymously = false
+
+    init {
+        // Inflate
+        View.inflate(context, R.layout.view_rubric_criterion_item, this)
+
+        if (!isInEditMode) {
+            // Set 'long description' button color to theme button color
+            viewLongDescriptionButton.setTextColor(ThemePrefs.buttonColor)
+
+            // Set 'add comment' button color to theme button color
+            addCommentButton.setTextColor(ThemePrefs.buttonColor)
+        }
+    }
+
+    /** Populates the view with data from the given [RubricCriterion] */
+    fun setCriterion(criterion: RubricCriterion, studentId: Long, assigneeName: String, criterionIdx: Int, isFreeForm: Boolean) {
+        mCriterionId = criterion.id ?: ""
+        mStudentId = studentId
+        mAssigneeName = assigneeName
+        mIsFreeForm = isFreeForm
+        criterionDescriptionTextView.text = criterion.description
+
+        addCommentButton.setVisible(mIsFreeForm)
+        criterionActionSeparator.setVisible(mIsFreeForm)
+
+        if (criterion.longDescription.isNullOrBlank()) {
+            criterionActionSeparator.setGone()
+            viewLongDescriptionButton.setGone()
+        } else {
+            viewLongDescriptionButton.onClick {
+                (context as? AppCompatActivity)?.supportFragmentManager?.let {
+                    CriterionLongDescriptionDialog.show(it, criterion.description ?: "", criterion.longDescription ?: "")
+                }
+            }
+        }
+        ratingLayout.setCriterion(criterion, mStudentId, criterionIdx, mIsFreeForm)
+    }
+
+    /** Sets the current/working criterion assessment */
+    fun setAssessment(assessment: RubricCriterionAssessment) {
+        updateComment(assessment.comments)
+        addCommentButton.onClick { editComment() }
+        editCommentButton.onClick { editComment(commentTextView.text.toString()) }
+        ratingLayout.selectValue(assessment.points)
+    }
+
+    private fun editComment(default: String = "") {
+        (context as? AppCompatActivity)?.supportFragmentManager?.let {
+            // Show dialog
+            EditRubricCommentDialog.show(it, mCriterionId, mStudentId, mAssigneeName, gradeAnonymously, default)
+
+            // Attempt to scroll to the criterion description
+            firstAncestorOrNull<ScrollView>()?.let {
+                it.smoothScrollTo(0, criterionDescriptionTextView.topOffsetIn(it))
+            }
+        }
+    }
+
+    fun updateComment(comment: String?) {
+        if (comment.isNullOrBlank()) {
+            criterionCommentContainer.setGone()
+            addCommentButton.setVisible(mIsFreeForm)
+            criterionActionSeparator.setVisible(mIsFreeForm && viewLongDescriptionButton.visibility == View.VISIBLE)
+        } else {
+            criterionCommentContainer.setVisible()
+            commentTextView.text = comment
+            criterionActionSeparator.setGone()
+            addCommentButton.setGone()
+        }
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        EventBus.getDefault().register(this)
+    }
+
+    override fun onDetachedFromWindow() {
+        EventBus.getDefault().unregister(this)
+        super.onDetachedFromWindow()
+    }
+
+    @Suppress("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun updateComment(event: RubricCommentEditedEvent) {
+        if (event.criterionId == mCriterionId && event.studentId == mStudentId) {
+            updateComment(event.text)
+        }
+    }
+
+}

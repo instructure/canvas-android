@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    android:layout_marginStart="?dialogPreferredPadding"
+    android:layout_marginEnd="?dialogPreferredPadding">
+
+    <androidx.appcompat.widget.AppCompatSpinner
+        android:id="@+id/passFailSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:listitem="@layout/support_simple_spinner_dropdown_item"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="-8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/defaultTrackColor" />
+
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/excuseStudentCheckbox"
+        style="@style/TextFont.Regular"
+        android:textSize="16sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:text="@string/excuse_student"/>
+
+</LinearLayout>

@@ -1,0 +1,40 @@
+/* Top-level project modules */
+include ':student'
+include ':teacher'
+include ':parent'
+include ':polling'
+
+/* Library modules */
+include ':androidcalendar'
+include ':annotations'
+include ':blueprint'
+include ':camerakit'
+include ':canvas-api-2'
+include ':chips'
+include ":croutonlibrary"
+include ':dataseedingapi'
+include ':canvas_espresso'
+include ':interactions'
+include ":jazzyviewpager"
+include ':login-api-2'
+include ':pandautils'
+include ':rceditor'
+include ':recyclerview'
+include ':pandares'
+
+project(':androidcalendar').projectDir = new File(rootProject.projectDir, '/../libs/androidcalendar')
+project(':annotations').projectDir = new File(rootProject.projectDir, '/../libs/annotations')
+project(':blueprint').projectDir = new File(rootProject.projectDir, '/../libs/blueprint')
+project(':camerakit').projectDir = new File('../libs/camerakit')
+project(':canvas-api-2').projectDir = new File(rootProject.projectDir, '/../libs/canvas-api-2')
+project(':chips').projectDir = new File(rootProject.projectDir, '/../libs/chips')
+project(':croutonlibrary').projectDir = new File(rootProject.projectDir, '/../libs/croutonlibrary')
+project(':dataseedingapi').projectDir = new File(rootProject.projectDir, '/../automation/dataseedingapi')
+project(':canvas_espresso').projectDir = new File(rootProject.projectDir, '/../automation/canvas_espresso')
+project(':interactions').projectDir = new File(rootProject.projectDir, '/../libs/interactions')
+project(':jazzyviewpager').projectDir = new File(rootProject.projectDir, '/../libs/jazzyviewpager')
+project(':login-api-2').projectDir = new File(rootProject.projectDir, '/../libs/login-api-2')
+project(':pandautils').projectDir = new File(rootProject.projectDir, '/../libs/pandautils')
+project(':rceditor').projectDir = new File(rootProject.projectDir, '/../libs/rceditor')
+project(':recyclerview').projectDir = new File(rootProject.projectDir, '/../libs/recyclerview')
+project(':pandares').projectDir = new File(rootProject.projectDir, '/../libs/pandares')

@@ -1,0 +1,312 @@
+/*
+ * Copyright (C) 2017 - present Instructure, Inc.
+ *
+ *     Licensed under the Apache License, Version 2.0 (the "License");
+ *     you may not use this file except in compliance with the License.
+ *     You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *     Unless required by applicable law or agreed to in writing, software
+ *     distributed under the License is distributed on an "AS IS" BASIS,
+ *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *     See the License for the specific language governing permissions and
+ *     limitations under the License.
+ *
+ */
+
+package com.instructure.canvasapi2.models
+
+import android.content.Context
+import com.google.gson.annotations.SerializedName
+import com.instructure.canvasapi2.R
+import com.instructure.canvasapi2.utils.toDate
+import kotlinx.android.parcel.Parcelize
+import java.util.*
+
+@Parcelize
+data class Assignment(
+        override var id: Long = 0,
+        var name: String? = null,
+        val description: String? = null,
+        @SerializedName("submission_types")
+        val submissionTypesRaw: List<String> = arrayListOf(),
+        @SerializedName("due_at")
+        val dueAt: String? = null,
+        @SerializedName("points_possible")
+        val pointsPossible: Double = 0.0,
+        @SerializedName("course_id")
+        val courseId: Long = 0,
+        @SerializedName("grade_group_students_individually")
+        val isGradeGroupsIndividually: Boolean = false,
+        @SerializedName("grading_type")
+        val gradingType: String? = null,
+        @SerializedName("needs_grading_count")
+        val needsGradingCount: Long = 0,
+        @SerializedName("html_url")
+        val htmlUrl: String? = null,
+        val url: String? = null,
+        @SerializedName("quiz_id")
+        val quizId: Long = 0, // (Optional) id of the associated quiz (applies only when submission_types is ["online_quiz"])
+        val rubric: List<RubricCriterion>? = arrayListOf(),
+        @SerializedName("use_rubric_for_grading")
+        val isUseRubricForGrading: Boolean = false,
+        @SerializedName("rubric_settings")
+        val rubricSettings: RubricSettings? = null,
+        @SerializedName("allowed_extensions")
+        val allowedExtensions: List<String> = arrayListOf(),
+        var submission: Submission? = null,
+        @SerializedName("assignment_group_id")
+        val assignmentGroupId: Long = 0,
+        val position: Int = 0,
+        @SerializedName("peer_reviews")
+        val isPeerReviews: Boolean = false,
+        @SerializedName("lock_info") // Module lock info
+        val lockInfo: LockInfo? = null,
+        @SerializedName("locked_for_user")
+        val lockedForUser: Boolean = false,
+        @SerializedName("lock_at")
+        val lockAt: String? = null, // Date the teacher no longer accepts submissions.
+        @SerializedName("unlock_at")
+        val unlockAt: String? = null,
+        @SerializedName("lock_explanation")
+        val lockExplanation: String? = null,
+        @SerializedName("discussion_topic")
+        var discussionTopicHeader: DiscussionTopicHeader? = null,
+        @SerializedName("needs_grading_count_by_section")
+        val needsGradingCountBySection: List<NeedsGradingCount> = arrayListOf(),
+        @SerializedName("free_form_criterion_comments")
+        val freeFormCriterionComments: Boolean = false,
+        val published: Boolean = false,
+        var muted: Boolean = false,
+        @SerializedName("group_category_id")
+        val groupCategoryId: Long = 0,
+        @SerializedName("all_dates")
+        val allDates: List<AssignmentDueDate> = arrayListOf(),
+        @SerializedName("user_submitted")
+        val userSubmitted: Boolean = false,
+        val unpublishable: Boolean = false,
+        val overrides: List<AssignmentOverride>? = null,
+        @SerializedName("only_visible_to_overrides")
+        val onlyVisibleToOverrides: Boolean = false,
+        @SerializedName("anonymous_peer_reviews")
+        val anonymousPeerReviews: Boolean = false,
+        @SerializedName("moderated_grading")
+        val moderatedGrading: Boolean = false,
+        @SerializedName("anonymous_grading")
+        val anonymousGrading: Boolean = false
+) : CanvasModel<Assignment>() {
+    override val comparisonDate get() = dueDate
+    override val comparisonString get() = dueAt
+
+    val lastActualSubmission: Submission? get() = submission?.takeIf { it.workflowState == "submitted" }
+
+    /**
+     * Whether or not the user has submitted this assignment. If the user has not submitted anything, Canvas generates
+     * an empty submission with an "unsubmitted" workflow state. For very old assignments, canvas might not
+     * return a submission at all.
+     */
+    val isSubmitted: Boolean get() = submission != null && submission!!.workflowState != "unsubmitted"
+
+    val isAllowedToSubmit: Boolean
+        get() {
+            val submissionTypes = getSubmissionTypes()
+            return expectsSubmissions() && !lockedForUser && !submissionTypes.contains(SubmissionType.ONLINE_QUIZ) && !submissionTypes.contains(SubmissionType.ATTENDANCE)
+        }
+
+    val isWithoutGradedSubmission: Boolean
+        get() {
+            val submission = lastActualSubmission
+            return submission == null || submission.isWithoutGradedSubmission
+        }
+
+    val isOnlineSubmissionType: Boolean get() = submissionTypesRaw.any { it in onlineSubmissionTypes }
+
+    val turnInType: TurnInType
+        get() = turnInTypeFromSubmissionType(getSubmissionTypes())
+
+    val isLocked: Boolean
+        get() {
+            val currentDate = Date()
+            return when {
+                lockInfo == null || lockInfo.isEmpty -> false
+                lockInfo.lockedModuleName != null && lockInfo.lockedModuleName!!.isNotEmpty() && lockInfo.lockedModuleName != "null" -> true
+                lockInfo.unlockDate != null && lockInfo.unlockDate!!.after(currentDate) -> true
+                else -> false
+            }
+
+        }
+
+    enum class SubmissionType(val apiString: String) {
+        ONLINE_QUIZ("online_quiz"),
+        NONE("none"),
+        ON_PAPER("on_paper"),
+        DISCUSSION_TOPIC("discussion_topic"),
+        EXTERNAL_TOOL("external_tool"), // External tool and Basic LTI launch use the same api string
+        BASIC_LTI_LAUNCH("basic_lti_launch"),
+        ONLINE_UPLOAD("online_upload"),
+        ONLINE_TEXT_ENTRY("online_text_entry"),
+        ONLINE_URL("online_url"),
+        MEDIA_RECORDING("media_recording"),
+        ATTENDANCE("attendance"),
+        NOT_GRADED("not_graded")
+    }
+
+    enum class GradingType {
+        PASS_FAIL, PERCENT, LETTER_GRADE, POINTS, GPA_SCALE, NOT_GRADED
+    }
+
+    enum class TurnInType {
+        ONLINE, ON_PAPER, NONE, DISCUSSION, QUIZ, EXTERNAL_TOOL
+    }
+
+    private fun expectsSubmissions(): Boolean {
+        val submissionTypes = getSubmissionTypes()
+        return submissionTypes.isNotEmpty() && !submissionTypes.contains(SubmissionType.NONE) && !submissionTypes.contains(SubmissionType.NOT_GRADED) && !submissionTypes.contains(SubmissionType.ON_PAPER) && !submissionTypes.contains(SubmissionType.EXTERNAL_TOOL)
+    }
+
+    private fun turnInTypeFromSubmissionType(submissionTypes: List<SubmissionType>?): TurnInType {
+        if (submissionTypes == null || submissionTypes.isEmpty()) {
+            return TurnInType.NONE
+        }
+
+        val submissionType = submissionTypes[0]
+
+        return when (submissionType) {
+            SubmissionType.MEDIA_RECORDING, SubmissionType.ONLINE_TEXT_ENTRY, SubmissionType.ONLINE_URL, SubmissionType.ONLINE_UPLOAD -> TurnInType.ONLINE
+            SubmissionType.ONLINE_QUIZ -> TurnInType.QUIZ
+            SubmissionType.DISCUSSION_TOPIC -> TurnInType.DISCUSSION
+            SubmissionType.ON_PAPER -> TurnInType.ON_PAPER
+            SubmissionType.EXTERNAL_TOOL -> TurnInType.EXTERNAL_TOOL
+            else -> TurnInType.NONE
+        }
+
+    }
+
+    fun hasRubric(): Boolean = rubric?.isNotEmpty() ?: false
+
+    fun getSubmissionTypes(): List<SubmissionType> =
+        submissionTypesRaw.map {
+            getSubmissionTypeFromAPIString(it)
+        }
+
+    val dueDate: Date? get() = dueAt.toDate()
+    val lockDate: Date? get() = lockAt.toDate()
+    val unlockDate: Date? get() = unlockAt.toDate()
+
+    override fun describeContents(): Int = 0
+
+
+    companion object {
+
+        const val PASS_FAIL_TYPE = "pass_fail"
+        const val PERCENT_TYPE = "percent"
+        const val LETTER_GRADE_TYPE = "letter_grade"
+        const val POINTS_TYPE = "points"
+        const val GPA_SCALE_TYPE = "gpa_scale"
+        const val NOT_GRADED_TYPE = "not_graded"
+
+        val onlineSubmissionTypes = listOf(
+            SubmissionType.ONLINE_TEXT_ENTRY.apiString,
+            SubmissionType.ONLINE_URL.apiString,
+            SubmissionType.MEDIA_RECORDING.apiString,
+            SubmissionType.ONLINE_UPLOAD.apiString,
+            SubmissionType.ONLINE_QUIZ.apiString,
+            SubmissionType.EXTERNAL_TOOL.apiString,
+            SubmissionType.BASIC_LTI_LAUNCH.apiString,
+            SubmissionType.DISCUSSION_TOPIC.apiString
+        )
+
+        fun turnInTypeToPrettyPrintString(turnInType: TurnInType?, context: Context): String? {
+            turnInType ?: return null
+
+            return when (turnInType) {
+                Assignment.TurnInType.ONLINE -> context.getString(R.string.canvasAPI_online)
+                Assignment.TurnInType.ON_PAPER -> context.getString(R.string.canvasAPI_onPaper)
+                Assignment.TurnInType.NONE -> context.getString(R.string.canvasAPI_none)
+                Assignment.TurnInType.DISCUSSION -> context.getString(R.string.canvasAPI_discussion)
+                Assignment.TurnInType.QUIZ -> context.getString(R.string.canvasAPI_quiz)
+                Assignment.TurnInType.EXTERNAL_TOOL -> context.getString(R.string.canvasAPI_externalTool)
+            }
+        }
+
+        fun getSubmissionTypeFromAPIString(submissionType: String?): SubmissionType = when (submissionType) {
+                    "online_quiz" -> SubmissionType.ONLINE_QUIZ
+                    "none" -> SubmissionType.NONE
+                    "on_paper" -> SubmissionType.ON_PAPER
+                    "discussion_topic" -> SubmissionType.DISCUSSION_TOPIC
+                    "external_tool" -> SubmissionType.EXTERNAL_TOOL
+                    "basic_lti_launch" -> SubmissionType.BASIC_LTI_LAUNCH
+                    "online_upload" -> SubmissionType.ONLINE_UPLOAD
+                    "online_text_entry" -> SubmissionType.ONLINE_TEXT_ENTRY
+                    "online_url" -> SubmissionType.ONLINE_URL
+                    "media_recording" -> SubmissionType.MEDIA_RECORDING
+                    "attendance" -> SubmissionType.ATTENDANCE
+                    "not_graded" -> SubmissionType.NOT_GRADED
+                    else -> SubmissionType.NONE
+                }
+
+        fun submissionTypeToAPIString(submissionType: SubmissionType?): String = submissionType?.name?.toLowerCase() ?: ""
+
+        fun submissionTypeStringToPrettyPrintString(submissionType: String?, context: Context): String? =
+                submissionTypeToPrettyPrintString(getSubmissionTypeFromAPIString(submissionType), context)
+
+        fun submissionTypeToPrettyPrintString(submissionType: SubmissionType?, context: Context): String? {
+            submissionType ?: return null
+
+            return when (submissionType) {
+                Assignment.SubmissionType.ONLINE_QUIZ -> context.getString(R.string.canvasAPI_onlineQuiz)
+                Assignment.SubmissionType.NONE -> context.getString(R.string.canvasAPI_none)
+                Assignment.SubmissionType.ON_PAPER -> context.getString(R.string.canvasAPI_onPaper)
+                Assignment.SubmissionType.DISCUSSION_TOPIC -> context.getString(R.string.canvasAPI_discussionTopic)
+                Assignment.SubmissionType.EXTERNAL_TOOL, Assignment.SubmissionType.BASIC_LTI_LAUNCH -> context.getString(R.string.canvasAPI_externalTool)
+                Assignment.SubmissionType.ONLINE_UPLOAD -> context.getString(R.string.canvasAPI_onlineUpload)
+                Assignment.SubmissionType.ONLINE_TEXT_ENTRY -> context.getString(R.string.canvasAPI_onlineTextEntry)
+                Assignment.SubmissionType.ONLINE_URL -> context.getString(R.string.canvasAPI_onlineURL)
+                Assignment.SubmissionType.MEDIA_RECORDING -> context.getString(R.string.canvasAPI_mediaRecording)
+                Assignment.SubmissionType.ATTENDANCE -> context.getString(R.string.canvasAPI_attendance)
+                Assignment.SubmissionType.NOT_GRADED -> context.getString(R.string.canvasAPI_notGraded)
+            }
+        }
+
+        fun getGradingTypeFromString(gradingType: String, context: Context): GradingType? =
+                when (gradingType) {
+                    "pass_fail", context.getString(R.string.canvasAPI_passFail) -> GradingType.PASS_FAIL
+                    "percent", context.getString(R.string.canvasAPI_percent) -> GradingType.PERCENT
+                    "letter_grade", context.getString(R.string.canvasAPI_letterGrade) -> GradingType.LETTER_GRADE
+                    "points", context.getString(R.string.canvasAPI_points) -> GradingType.POINTS
+                    "gpa_scale", context.getString(R.string.canvasAPI_gpaScale) -> GradingType.GPA_SCALE
+                    "not_graded", context.getString(R.string.canvasAPI_notGraded) -> GradingType.NOT_GRADED
+                    else -> null
+                }
+
+        fun getGradingTypeFromAPIString(gradingType: String): GradingType? = when (gradingType) {
+            "pass_fail" -> GradingType.PASS_FAIL
+            "percent" -> GradingType.PERCENT
+            "letter_grade" -> GradingType.LETTER_GRADE
+            "points" -> GradingType.POINTS
+            "gpa_scale" -> GradingType.GPA_SCALE
+            "not_graded" -> GradingType.NOT_GRADED
+            else -> null
+        }
+
+        fun gradingTypeToAPIString(gradingType: GradingType?): String? = gradingType?.name?.toLowerCase()
+
+        fun gradingTypeToPrettyPrintString(gradingType: String, context: Context): String? =
+                gradingTypeToPrettyPrintString(getGradingTypeFromAPIString(gradingType), context)
+
+        @Suppress("MemberVisibilityCanBePrivate")
+        fun gradingTypeToPrettyPrintString(gradingType: GradingType?, context: Context): String? {
+            gradingType ?: return null
+
+            return when (gradingType) {
+                Assignment.GradingType.PASS_FAIL -> context.getString(R.string.canvasAPI_passFail)
+                Assignment.GradingType.PERCENT -> context.getString(R.string.canvasAPI_percent)
+                Assignment.GradingType.LETTER_GRADE -> context.getString(R.string.canvasAPI_letterGrade)
+                Assignment.GradingType.POINTS -> context.getString(R.string.canvasAPI_points)
+                Assignment.GradingType.GPA_SCALE -> context.getString(R.string.canvasAPI_gpaScale)
+                Assignment.GradingType.NOT_GRADED -> context.getString(R.string.canvasAPI_notGraded)
+            }
+        }
+    }
+}

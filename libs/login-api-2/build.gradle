@@ -1,0 +1,143 @@
+import java.security.MessageDigest
+
+/*
+ * Copyright (C) 2017 - present Instructure, Inc.
+ *
+ *     Licensed under the Apache License, Version 2.0 (the "License");
+ *     you may not use this file except in compliance with the License.
+ *     You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *     Unless required by applicable law or agreed to in writing, software
+ *     distributed under the License is distributed on an "AS IS" BASIS,
+ *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *     See the License for the specific language governing permissions and
+ *     limitations under the License.
+ *
+ */
+
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+static String isTesting() {
+    if ( System.getenv("IS_TESTING") == "true" ) {
+        "true"
+    } else {
+        "false"
+    }
+}
+
+android {
+    compileSdkVersion Versions.COMPILE_SDK
+    buildToolsVersion Versions.BUILD_TOOLS
+
+    defaultConfig {
+        minSdkVersion Versions.MIN_SDK
+        targetSdkVersion Versions.TARGET_SDK
+
+        vectorDrawables.useSupportLibrary = true
+
+        /* Add private data */
+        PrivateData.merge(project, "login-api")
+
+        /* BuildConfig Fields */
+        buildConfigField "boolean", "IS_TESTING", isTesting()
+        buildConfigField "String", "ANONYMOUS_SCHOOL_DOMAIN", "\"$anonymousSchoolDomain\""
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+        release {
+            minifyEnabled false
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES.txt'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/dependencies.txt'
+        exclude 'META-INF/LGPL2.1'
+    }
+}
+
+androidExtensions {
+    experimental = true
+}
+
+configurations {
+    all*.exclude group: 'commons-logging', module: 'commons-logging'
+    all*.exclude group: 'org.apache.httpcomponents', module: 'httpclient'
+}
+
+dependencies {
+    /* Modules */
+    api project(path: ':pandautils')
+
+    /* Test Dependencies */
+    testImplementation Libs.JUNIT
+    testImplementation Libs.ROBOLECTRIC
+
+    /* AndroidTest Dependencies */
+    androidTestImplementation Libs.JUNIT
+
+    /* Support Dependencies */
+    implementation Libs.ANDROIDX_ANNOTATION
+    implementation Libs.ANDROIDX_APPCOMPAT
+    implementation Libs.ANDROIDX_DESIGN
+    implementation Libs.ANDROIDX_FRAGMENT
+    implementation Libs.ANDROIDX_RECYCLERVIEW
+}
+
+task copySnickerDoodles(type: Copy) {
+    println("Copying Snicker Doodles")
+
+    def md5 = { File file ->
+        MessageDigest.getInstance("MD5").digest(file.bytes).encodeHex().toString()
+    }
+
+    String baseDir = "$rootDir/../../"
+    def snickerFileName = "snickers.json"
+
+    File snickers = new File("$baseDir/$snickerFileName")
+
+    if(snickers.exists()) {
+        String dest = "$rootDir/../libs/login-api-2/src/main/res/raw"
+
+        File destDirFile = new File("$dest")
+        if(!destDirFile.exists()) {
+            destDirFile.mkdir()
+        }
+
+        File dst = new File("$dest/$snickerFileName")
+
+        if (!dst.exists()) {
+            dst.createNewFile()
+            dst << snickers.bytes
+        } else if (md5(snickers) != md5(dst)) {
+            dst.delete()
+            dst << snickers.bytes
+        }
+
+        println("Snicker Doodles Ready to Consume")
+    } else {
+        println("Snicker Doodles Do Not Currently Exist")
+    }
+}

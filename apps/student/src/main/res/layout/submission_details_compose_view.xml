@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2016 - present Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/composeView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="5dip"
+        android:orientation="horizontal"
+        android:paddingTop="5dip">
+
+        <Button
+            android:id="@+id/mediaComment"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/vd_attachment"
+            android:gravity="top|center"
+            android:enabled="false"/>
+
+        <EditText
+            android:id="@+id/composeMessage"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="@string/addComment"
+            android:imeOptions="actionSend"
+            android:inputType="textCapSentences"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp"
+            android:textCursorDrawable="@null" />
+
+        <Button
+            android:id="@+id/composeButton"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/vd_send"
+            android:contentDescription="@string/sendMessage"
+            android:gravity="top|center" />
+        <ProgressBar
+            android:id="@+id/sendingProgressBar"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:gravity="top|center"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+
+    <com.instructure.student.view.AttachmentLayout
+        android:id="@+id/attachmentLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/composeView"
+        android:animateLayoutChanges="true"
+        android:gravity="bottom"
+        android:padding="16dp"
+        app:al_previewChildCount="1"
+        app:al_spacing="12dp"/>
+</RelativeLayout>

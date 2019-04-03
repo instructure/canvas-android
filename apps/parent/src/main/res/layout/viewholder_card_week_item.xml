@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2016 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="@dimen/med_padding"
+    android:layout_marginLeft="@dimen/med_padding"
+    android:layout_marginRight="@dimen/med_padding"
+    android:layout_marginStart="@dimen/med_padding"
+    android:background="?android:attr/selectableItemBackground"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:minHeight="?android:listPreferredItemHeight"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="0dp"
+    app:cardElevation="@dimen/card_elevation"
+    app:cardUseCompatPadding="true"
+    app:contentPadding="@dimen/default_padding">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <FrameLayout
+            android:id="@+id/iconWrapper"
+            android:layout_width="@dimen/calendar_week_background_size"
+            android:layout_height="@dimen/calendar_week_background_size"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/circle_background">
+
+            <ImageView
+                android:id="@+id/icon"
+                android:layout_width="@dimen/calendar_week_icon_size"
+                android:layout_height="@dimen/calendar_week_icon_size"
+                android:layout_gravity="center"
+                android:contentDescription="@string/icon"
+                android:scaleType="fitCenter" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="12dp"
+            android:layout_toEndOf="@id/iconWrapper">
+
+            <TextView
+                android:id="@+id/title"
+                style="@style/TextStyle.Primary.CardView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:lines="1" />
+
+            <TextView
+                android:id="@+id/description"
+                style="@style/TextStyle.Secondary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/status"
+                style="@style/TextStyle.Tertiary.SingleLine"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/sm_padding"
+                android:layout_marginTop="@dimen/sm_padding"
+                android:paddingLeft="@dimen/med_padding"
+                android:paddingRight="@dimen/med_padding"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="@dimen/small_text" />
+
+            <TextView
+                android:id="@+id/date"
+                style="@style/TextStyle.Tertiary.SingleLine"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

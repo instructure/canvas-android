@@ -1,0 +1,94 @@
+<!--
+  ~ Copyright (C) 2016 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <!-- Tablet Dimensions -->
+    <dimen name="tabIconPaddingLeft">30dp</dimen>
+    <dimen name="tabIconPaddingRight">30dp</dimen>
+    <dimen name="master_fragment_width">320dp</dimen>
+    <dimen name="grid_column_width">240dp</dimen>
+    <dimen name="grid_horizontal_spacing">20px</dimen>
+    <dimen name="actionbar_home_width">250dp</dimen>
+    <dimen name="list_padding">10dp</dimen>
+    <dimen name="shadow_width">15dp</dimen>
+
+    <dimen name="indicator_right_padding">10dp</dimen>
+    <dimen name="indicator_corner_radius">12dp</dimen>
+    <dimen name="indicator_internal_padding">4dp</dimen>
+    <dimen name="header_footer_left_right_padding">25dp</dimen>
+    <dimen name="header_footer_top_bottom_padding">10dp</dimen>
+    <dimen name="header_footer_internal_padding">20dp</dimen>
+
+    <dimen name="welcome_screen_margin">15dp</dimen>
+    <dimen name="welcome_bottom_margin">15dp</dimen>
+    <dimen name="welcome_top_margin">20dp</dimen>
+    <dimen name="url_sign_in_logo_margin">30dp</dimen>
+    <dimen name="actionBarMargin">17dp</dimen>
+    <dimen name="actionBarMarginFragment">50px</dimen>
+    <dimen name="actionBarMarginCourses">24px</dimen>
+    <dimen name="actionBarMarginCoursesPX">24px</dimen>
+    <dimen name="actionBarProgressBarWidthCourses">28px</dimen>
+    <dimen name="actionBarProgressBarWidth">47px</dimen>
+
+    <!-- ListView Styles -->
+    <dimen name="zero">0dp</dimen>
+    <dimen name="indented">15dp</dimen>
+
+    <dimen name="primaryText">20sp</dimen>
+    <dimen name="secondaryText">12sp</dimen>
+    <dimen name="gradeText">25dp</dimen>
+    <dimen name="primaryPaddingTop">15dp</dimen>
+    <dimen name="primaryPaddingBottom">15dp</dimen>
+    <dimen name="primaryPaddingLeft">20dp</dimen>
+    <dimen name="secondaryPaddingTop">2dp</dimen>
+    <dimen name="secondaryPaddingBottom">2dp</dimen>
+    <dimen name="secondaryPaddingSide">10dp</dimen>
+
+    <dimen name="horizontalDividerHeight">1dp</dimen>
+    <dimen name="verticalDividerSidePadding">5dp</dimen>
+    <dimen name="verticalDividerMarginTop">5dp</dimen>
+    <dimen name="verticalDividerMargin">5dp</dimen>
+    <dimen name="verticalDividerHeight">45dp</dimen>
+    <dimen name="verticalDividerWidth">1dp</dimen>
+    <dimen name="itemHeight">65dp</dimen>
+
+    <dimen name="imagePadding">10dp</dimen>
+    <dimen name="imageMarginTop">2dp</dimen>
+
+    <dimen name="listHeaderHeight">40dp</dimen>
+
+    <dimen name="widgetAddingPreviewWidth">200dp</dimen>
+
+    <dimen name="sg_grid_column_width">280dp</dimen>
+    <dimen name="sg_grid_horizontal_spacing">20px</dimen>
+
+    <dimen name="corners">4dp</dimen>
+
+    <dimen name="rubric_tab_offset">200dp</dimen>
+    <dimen name="card_header_margins">12dp</dimen>
+    <dimen name="card_header_indicator_size">32dp</dimen>
+    <dimen name="card_outer_margin">12dp</dimen>
+    <dimen name="courseItemSpacing">8dp</dimen>
+    <dimen name="course_card_height">130dp</dimen>
+    <dimen name="course_card_min_width">280dp</dimen>
+
+    <dimen name="card_header_checkbox_margins">12dp</dimen>
+
+</resources>

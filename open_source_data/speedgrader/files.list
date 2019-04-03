@@ -1,0 +1,8 @@
+# Private keys and other non-file data
+private.properties=private.properties
+
+# Google Services json
+google-services.json=app/google-services.json
+
+# Google Ananlytics
+analytics.xml=app/src/main/res/xml/analytics.xml

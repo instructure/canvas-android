@@ -1,0 +1,104 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+  ~ Copyright (C) 2016 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+  <string name="app_name">登入API</string>
+  <string name="hello_world">你好世界！</string>
+  <string name="action_settings">設置</string>
+  <string name="mobileVerifyGeneral">該app未獲得使用授權</string>
+  <string name="mobileVerifyDomainUnauthorized">您輸入的服務器未獲得使用該app的授權。</string>
+  <string name="mobileVerifyUserAgentUnauthorized">用戶代理未獲得使用該app的授權。</string>
+  <string name="mobileVerifyUnknownError">我們無法驗證使用該app的服務器。</string>
+  <string name="unknownDevice">未知服務器</string>
+  <string name="errorOccurred">發生未知錯誤</string>
+  <string name="pageNotFound">未找到頁面</string>
+  <string name="okay">好的</string>
+  <string name="confirm">確認</string>
+  <string name="cancel">撤銷</string>
+  <string name="help">幫助</string>
+  <string name="enterURL">請輸入您的Canvas URL：</string>
+  <string name="signIntoCanvasNetwork">嘗試登入Canvas 網絡？</string>
+  <string name="remove">移除</string>
+  <string name="exampleURLSimple">myschool.instructure.com</string>
+  <!--Multiple User Sign in-->
+  <string name="removeUser">移除這個使用者？</string>
+  <string name="removedForever">要使用它們的內容，您必須再次登入該使用者。</string>
+  <string name="logout">登出</string>
+  <!--Logout Warning Dialog-->
+  <string name="logout_no">否</string>
+  <string name="logout_yes">是</string>
+  <string name="logout_warning">您確定要登出？</string>
+  <!--Content Descriptions-->
+  <string name="canvasLogo">Canvas 標誌</string>
+  <string name="canvasLoginOn">Canvas_登入: 開啟</string>
+  <string name="canvasLoginOff">Canvas_登入: 關閉</string>
+  <string name="siteAdminLogin">網站管理員登入: 開啟</string>
+  <string name="username">用戶名</string>
+  <string name="password">密碼</string>
+  <string name="authenticationRequired">需要授權</string>
+  <string name="invalidEmailPassword">無效的電郵地址或密碼</string>
+  <string name="login">登入</string>
+  <!--Smart Login-->
+  <string name="loginNearYou">您附近的</string>
+  <string name="loginCanvasNetwork">Canvas 網絡</string>
+  <string name="loginRightBehindYou">就在您身後</string>
+  <string name="loginMiles">%1$s 英里範圍內</string>
+  <string name="loginCanvasHelp">找不到您的學校？輸入學校URL或按一下此處尋求幫助。</string>
+  <string name="loginCanvasHelpWithUser">輸入學校URL或按一下此處尋求幫助。</string>
+  <string name="loginHint">查找您的學校或學區</string>
+  <!--Rating Dialog-->
+  <string name="howAreWeDoing">我們表現如何？</string>
+  <string name="rateUs">您如何評價我們？</string>
+  <string name="doBetter">我們需要改進的地方？</string>
+  <string name="sendFeedback">發送反饋</string>
+  <string name="suggestions">對Android版的建議</string>
+  <string name="domain">域名</string>
+  <string name="versionNum">版本：</string>
+  <string name="userId">使用者ID</string>
+  <string name="email">電郵地址</string>
+  <string name="dontShowAgain">不要再次顯示</string>
+  <!--Zendesk Dialog-->
+  <string name="zendesk_reportAProblem">報告問題</string>
+  <string name="zendesk_subject">主題</string>
+  <string name="zendesk_description">描述</string>
+  <string name="zendesk_writeSomething">開始撰寫……</string>
+  <string name="zendesk_send">發送</string>
+  <string name="zendesk_feedbackThankyou">感謝您向我們的支持團隊報告問題。您會通過電郵收到確認信和更新。</string>
+  <string name="zendesk_severityText">您所受到影響如何？</string>
+  <string name="zendesk_casualQuestion">只是隨意提問、評論、想法、建議……</string>
+  <string name="zendesk_casualQuestion_tag">just_a_comment</string>
+  <string name="zendesk_needHelp">我需要幫助，但並不緊迫。</string>
+  <string name="zendesk_needHelp_tag">not_urgent</string>
+  <string name="zendesk_somethingsBroken">有些小問題，但我能繞過問題實現我的目的。</string>
+  <string name="zendesk_somethingsBroken_tag">workaround_possible</string>
+  <string name="zendesk_cantGetThingsDone">沒有你們的幫助，我無法處理。</string>
+  <string name="zendesk_cantGetThingsDone_tag">blocks_what_i_need_to_do</string>
+  <string name="zendesk_extremelyCritical">十萬火急，急需幫助！！</string>
+  <string name="zendesk_extremelyCritical_tag">extreme_critical_emergency</string>
+  <string name="zendesk_emailAddress">電郵地址</string>
+  <string name="zendesk_enterEmail">請輸入您的電郵地址……</string>
+  <string name="zendesk_unknown">未知</string>
+  <!--Distance Strings-->
+  <string name="lessThanOne">&lt; 1 英里 (1.6 公里)</string>
+  <string name="oneMile">1 英里 (1.6 公里)</string>
+  <string name="miles">英里</string>
+  <string name="kilometers">公里</string>
+  <!--String for submitting tickets-->
+  <string name="device">設備</string>
+  <string name="osVersion">OS 版本</string>
+</resources>

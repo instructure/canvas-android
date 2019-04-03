@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <string name="app_name">LoginAPI</string>
+  <string name="hello_world">Hello world!</string>
+  <string name="action_settings">Settings</string>
+  <string name="mobileVerifyGeneral">This app is not authorised for use</string>
+  <string name="mobileVerifyDomainUnauthorized">The server you entered is not authorised for this app.</string>
+  <string name="mobileVerifyUserAgentUnauthorized">The user agent for this app is unauthorised.</string>
+  <string name="mobileVerifyUnknownError">We were unable to verify the server for use with this app.</string>
+  <string name="unknownDevice">UnknownDevice</string>
+  <string name="errorOccurred">An unexpected error occurred.</string>
+  <string name="pageNotFound">Page not found.</string>
+  <string name="confirm">Confirm</string>
+  <string name="cancel">Cancel</string>
+  <string name="help">Help</string>
+  <string name="enterURL">Enter your Canvas URL:</string>
+  <string name="signIntoCanvasNetwork">Trying to sign into Canvas Network?</string>
+  <string name="remove">Remove</string>
+  <string name="exampleURLSimple">myschool.instructure.com</string>
+  <string name="userId">User ID</string>
+  <string name="domain">Domain</string>
+  <!--Multiple User Sign in-->
+  <string name="removeUser">Remove this user?</string>
+  <string name="removedForever">To access this user\'s content, you will have to sign into this user again.</string>
+  <!--Content Descriptions-->
+  <string name="canvasLogo">Canvas logo</string>
+  <string name="canvasLoginOn">Canvas_Login: ON</string>
+  <string name="canvasLoginOff">Canvas_Login: OFF</string>
+  <string name="siteAdminLogin">Site admin login: ON</string>
+  <string name="username">Username</string>
+  <string name="password">Password</string>
+  <string name="authenticationRequired">Authentication required</string>
+  <string name="invalidEmailPassword">Invalid email or password</string>
+  <string name="login">Login</string>
+  <string name="logout">Log out</string>
+  <!--Logout Warning Dialog-->
+  <string name="logout_warning">Are you sure you want to log out?</string>
+  <string name="logout_yes">Yes</string>
+  <string name="logout_no">No</string>
+  <!--Smart Login-->
+  <string name="loginNearYou">Near you</string>
+  <string name="loginCanvasNetwork">Canvas Network</string>
+  <string name="loginRightBehindYou">Right behind you</string>
+  <string name="loginMiles">%1$s miles away</string>
+  <string name="loginCanvasHelp">Don\'t see your school? Enter the school URL or tap here for help.</string>
+  <string name="loginCanvasHelpWithUser">Enter the school URL or tap here for help.</string>
+  <string name="loginHint">Find your school or district</string>
+  <!--Zendesk Dialog-->
+  <string name="zendesk_reportAProblem">Report a problem</string>
+  <string name="zendesk_subject">Subject</string>
+  <string name="zendesk_description">Description</string>
+  <string name="zendesk_writeSomething">Write something…</string>
+  <string name="zendesk_send">Send</string>
+  <string name="zendesk_feedbackThankyou">Thank you for reporting your issue to our Support Team. You will receive verification and updates via email.</string>
+  <string name="zendesk_severityText">How is this affecting you?</string>
+  <string name="zendesk_casualQuestion">Just a casual question, comment, idea, suggestion…</string>
+  <string name="zendesk_casualQuestion_tag">just_a_comment</string>
+  <string name="zendesk_needHelp">I need some help but it\'s not urgent.</string>
+  <string name="zendesk_needHelp_tag">not_urgent</string>
+  <string name="zendesk_somethingsBroken">Something\'s broken, but I can work around it to finsh what I need to do.</string>
+  <string name="zendesk_somethingsBroken_tag">workaround_possible</string>
+  <string name="zendesk_cantGetThingsDone">I can\'t finish what I need to do until I hear back from you.</string>
+  <string name="zendesk_cantGetThingsDone_tag">blocks_what_i_need_to_do</string>
+  <string name="zendesk_extremelyCritical">EXTREME CRITICAL EMERGENCY!!</string>
+  <string name="zendesk_extremelyCritical_tag">extreme_critical_emergency</string>
+  <string name="zendesk_emailAddress">Email address</string>
+  <string name="zendesk_enterEmail">Enter your email address…</string>
+  <string name="zendesk_unknown">Unknown</string>
+  <!--Distance Strings-->
+  <string name="lessThanOne">&lt; 1.6 km (1 mile)</string>
+  <string name="oneMile">1.6 km (1 mile )</string>
+  <string name="miles">miles</string>
+  <string name="kilometers">km</string>
+  <!--String for submitting tickets-->
+  <string name="device">Device</string>
+  <string name="osVersion">OS version</string>
+  <string name="empty_feedback">A subject and description are required to submit feedback.</string>
+</resources>

@@ -1,0 +1,14 @@
+# Private keys and other non-file data
+private.properties=private.properties
+
+# Fabric key
+fabric.properties=candroid/fabric.properties
+
+# Google Services
+google-services.json=candroid/google-services.json
+
+# Google Analytics
+analytics.xml=candroid/src/main/res/xml/analytics.xml
+
+# Polling List & Private Strings
+strings.xml=candroid/src/main/res/values/private_strings.xml

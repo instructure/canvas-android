@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <!--Modules-->
+  <string name="mustComplete">最初に以下を完了させる必要があります:</string>
+  <string name="unlockedAt">次においてロック解除されます:</string>
+  <string name="goToModules">モジュールに移動</string>
+  <!--Events-->
+  <string name="Starts">開始</string>
+  <string name="Ends">終了</string>
+  <string name="allDayEvent">終日イベント</string>
+  <string name="at">おいて</string>
+  <string name="to">への</string>
+  <!--StreamItems-->
+  <string name="Message">メッセージ</string>
+  <string name="Loading">ロード中...</string>
+  <string name="Deleted">消去しました</string>
+  <!--Assignment Module-->
+  <string name="canvasAPI_online">オンライン</string>
+  <string name="canvasAPI_onPaper">紙上</string>
+  <string name="canvasAPI_discussion">ディスカッション</string>
+  <string name="canvasAPI_quiz">クイズ</string>
+  <string name="canvasAPI_externalTool">外部ツール</string>
+  <string name="canvasAPI_none">なし</string>
+  <string name="canvasAPI_passFail">合格不合格</string>
+  <string name="canvasAPI_percent">割合</string>
+  <string name="canvasAPI_letterGrade">文書による採点</string>
+  <string name="canvasAPI_points">得点</string>
+  <string name="canvasAPI_gpaScale">GPAスケール</string>
+  <string name="canvasAPI_notGraded">採点されていません</string>
+  <string name="canvasAPI_onlineQuiz">オンラインクイズ</string>
+  <string name="canvasAPI_discussionTopic">ディスカッションのトピック</string>
+  <string name="canvasAPI_onlineUpload">オンラインアップロード</string>
+  <string name="canvasAPI_onlineTextEntry">オンライン テキスト エントリ</string>
+  <string name="canvasAPI_onlineURL">オンラインURL</string>
+  <string name="canvasAPI_mediaRecording">メディア記録</string>
+  <string name="canvasAPI_attendance">出席</string>
+</resources>

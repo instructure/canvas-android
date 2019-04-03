@@ -1,0 +1,127 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="hello_world">Hej världen!</string>
+    <string name="action_settings">Inställningar</string>
+    <string name="mobileVerifyGeneral">Den här appen är inte tillåten</string>
+    <string name="mobileVerifyDomainUnauthorized">Servern du skrev in är inte behörig för den här appen.</string>
+    <string name="mobileVerifyUserAgentUnauthorized">Användarombudet för den här appen är obehörig.</string>
+    <string name="mobileVerifyUnknownError">Vi kunde inte verifiera servern för användning med den här appen.</string>
+    <string name="unknownDevice">UnknownDevice</string>
+    <string name="errorOccurred">Ett oväntat fel uppstod.</string>
+    <string name="pageNotFound">Sidan hittades inte.</string>
+    <string name="confirm">Bekräfta</string>
+    <string name="cancel">Avbryt</string>
+    <string name="help">Hjälp</string>
+    <string name="enterURL">Fyll i din Canvas URL:</string>
+    <string name="signIntoCanvasNetwork">Försöker du logga in på Canvas Network?</string>
+    <string name="remove">Ta bort</string>
+    <string name="exampleURLSimple">myschool.instructure.com</string>
+    <string name="userId">Användar-ID</string>
+    <string name="domain">Domän</string>
+    <string name="actAsUser">Agera som användare</string>
+    <string name="stopActAsUser">Sluta att agera som en användare</string>
+
+    <!--Multiple User Sign in -->
+    <string name="removeUser">Ta bort den här användaren?</string>
+    <string name="removedForever">Du måste logga in på den här användaren igen för att komma åt deras innehåll.</string>
+
+    <!--Content Descriptions-->
+    <string name="canvasLogo">Canvas Logo</string>
+
+    <string name="canvasLoginOn">Canvas_Login: PÅ</string>
+    <string name="canvasLoginOff">Canvas_Login: AV</string>
+    <string name="siteAdminLogin">Webbplats administratörsinloggning: PÅ</string>
+
+    <string name="username">Användarnamn</string>
+    <string name="password">Lösenord</string>
+    <string name="authenticationRequired">Autentisering krävs</string>
+    <string name="invalidEmailPassword">Ogiltig e-post eller lösenord</string>
+    <string name="login">Logga in</string>
+    <string name="logout">Logga ut</string>
+
+    <!--Logout Warning Dialog-->
+    <string name="logout_warning">Är du säker på att du vill logga ut?</string>
+    <string name="logout_yes">Ja</string>
+    <string name="logout_no">Nej</string>
+
+    <!--Smart Login-->
+    <string name="loginNearYou">Nära Dig</string>
+    <string name="loginCanvasNetwork">Canvas Nätverk</string>
+    <string name="loginRightBehindYou">Precis bakom dig</string>
+    <string name="loginMiles">%1$s långt borta</string>
+    <string name="loginCanvasHelp">Ser du inte din skola? Fyll i skolans URL eller peka här för att få hjälp.</string>
+    <string name="loginCanvasHelpWithUser">Fyll i skolans URL eller peka här för att få hjälp.</string>
+    <string name="loginHint">Hitta din skola eller distrikt</string>
+
+    <!-- Error Report Dialog -->
+    <string name="errorReportAProblem">Rapportera ett problem</string>
+    <string name="errorReportSubject">Ämne</string>
+    <string name="errorReportDescription">Beskrivning</string>
+    <string name="errorReportWriteSomething">Skriv något...</string>
+    <string name="errorReportSend">Skicka</string>
+    <string name="errorReportThankyou">Tack för att du rapporterade din fråga till vårt Support Team.  Du kommer att få bekräftelse och uppdateringar via e-post.</string>
+    <string name="errorReportSeverityText">Hur påverkar det dig?</string>
+    <string name="errorSeverityCasualQuestion">Bara en vanlig fråga, kommentar, idé, förslag...</string>
+    <string name="errorSeverityNeedHelp">Jag behöver lite hjälp, men det är inte brådskande.</string>
+    <string name="errorSeveritySomethingsBroken">Något är trasigt, men jag kan arbeta runt det för att få det jag behöver gjort.</string>
+    <string name="errorSeverityCantGetThingsDone">Jag kan inte göra saker fören jag hör från dig.</string>
+    <string name="errorSeverityExtremelyCritical">EXTREMT KRITISKT NÖDFALL!!</string>
+
+    <string name="errorReportEmailAddress">E-postadress</string>
+    <string name="errorReportEnterEmail">Fyll i din e-postadress...</string>
+    <string name="errorReportUnknown">Okänd</string>
+
+    <!-- Distance Strings -->
+    <string name="lessThanOne">&lt; 1 mil (1,6 km)</string>
+    <string name="oneMile">1 mil (1,6 km)</string>
+    <string name="miles">mil</string>
+    <string name="kilometers">km</string>
+
+    <!-- String for submitting tickets -->
+    <string name="device">Enhet</string>
+    <string name="osVersion">Operativsystemets version</string>
+
+    <string name="previousLoginTitle">Tidigare inloggningar</string>
+    <string name="findMySchool">Hitta min skola</string>
+    <string name="canvasLowerCase">Canvas</string>
+    <string name="whatsYourSchoolName">Vad heter din skola?</string>
+    <string name="next">Nästa</string>
+    <string name="schoolInstructureCom">school.instructure.com</string>
+    <string name="contentDescription_removePreviousUser">Ta bort tidigare användare</string>
+    <string name="accountDomainFooter">Kan du inte hitta din skola? Försök att skriva in skolans fullständiga URL.</string>
+    <string name="accountDomainFooterLink">Tryck här för hjälp.</string>
+
+    <string name="login_noInternetConnectionTitle">Ingen internet-anslutning</string>
+    <string name="login_noInternetConnectionMessage">Den här åtgärden kräver en internet-anslutningen.</string>
+    <string name="empty_feedback">Ett ämne och en beskrivning krävs för att lämna återkoppling.</string>
+    <string name="versionNum">Versions-nummer</string>
+    <string name="scrollInstructions">SKrolla för att se alla detaljer</string>
+
+    <string name="masqueradeErrorUserId">Du måste ange ett användare-ID.</string>
+    <string name="masqueradeErrorDomain">Du måste ange en giltig domän.</string>
+    <string name="masqueradeError">Fel vid maskeringsförsök.</string>
+    <string name="masqueradeInfo">\"Att uppträda som\", loggar huvudsakligen in som den här användaren utan lösenord. Du kommer att kunna vidta åtgärder som om du var den här användaren, och från andra användares synpunkter som om den här användaren utförde dem. I historik-loggar registreras dock att du var den som utförde åtgärderna på den här användarens vägnar.</string>
+    <string name="masqueradingAs">Du agerar som %s</string>
+    <string name="stopActingAsTitle">Sluta uppträda som...</string>
+    <string name="stopActingAsMessage">Du kommer sluta att uppträda som %s, och återvända till ditt konto.</string>
+    <string name="weMadeChanges">Vi har gjort några ändringar.</string>
+    <string name="whatsNewText">Se vad som är nytt</string>
+</resources>

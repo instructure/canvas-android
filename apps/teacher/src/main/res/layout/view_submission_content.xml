@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.instructure.pandautils.views.ProgressiveCanvasLoadingView
+        android:id="@+id/loadingView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        app:pclv_indeterminate="true"
+        app:pclv_override_color="@color/login_teacherAppTheme"/>
+
+    <LinearLayout
+        android:id="@+id/retryLoadingContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:importantForAccessibility="no"
+            android:src="@drawable/vd_warning"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/error_loading_submission"/>
+
+        <Button
+            android:id="@+id/retryLoadingButton"
+            style="@style/ButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="48dp"
+            android:text="@string/retry"/>
+
+    </LinearLayout>
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/speedGraderToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?android:actionBarSize"
+        android:background="@color/white"
+        android:theme="@style/ToolBarStyle"
+        app:popupTheme="@style/ToolBarPopupStyle">
+
+        <LinearLayout
+            android:id="@+id/assigneeWrapperView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/userImageView"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:padding="4dp"
+                android:importantForAccessibility="no"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/titleTextView"
+                    style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:paddingStart="8dp"
+                    android:singleLine="true"
+                    android:textColor="@color/defaultTextDark"
+                    tools:ignore="Deprecated,RtlSymmetry"
+                    tools:text="This is a Title"/>
+
+                <TextView
+                    android:id="@+id/subtitleTextView"
+                    style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:paddingStart="8dp"
+                    android:singleLine="true"
+                    android:textColor="@color/defaultTextDark"
+                    tools:ignore="Deprecated,RtlSymmetry"
+                    tools:text="This is a Subtitle"/>
+
+            </LinearLayout>
+        </LinearLayout>
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <com.sothree.slidinguppanel.SlidingUpPanelLayout
+        android:id="@+id/slidingUpPanelLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/speedGraderToolbar"
+        android:gravity="bottom"
+        app:umanoAnchorPoint="0.5"
+        app:umanoDragView="@+id/dragView"
+        app:umanoFadeColor="@android:color/transparent"
+        app:umanoPanelHeight="48.5dp"
+        app:umanoShadowHeight="6dp">
+
+        <FrameLayout
+            android:id="@+id/contentRoot"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/contentWrapper"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/submissionVersionsButton"
+                    style="@style/Base.Widget.AppCompat.Spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:backgroundTint="@color/defaultTextGray"
+                    android:fontFamily="sans-serif-medium"
+                    android:paddingEnd="16dp"
+                    android:paddingStart="16dp"
+                    android:textColor="@color/defaultTextGray"
+                    android:visibility="gone"
+                    tools:ignore="UnusedAttribute"
+                    tools:text="July 29, 2016 at 4:16 PM"
+                    tools:visibility="visible"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/dividerColor"/>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <com.pspdfkit.ui.toolbar.ToolbarCoordinatorLayout
+                        android:id="@+id/annotationToolbarLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"/>
+
+                    <com.pspdfkit.ui.inspector.PropertyInspectorCoordinatorLayout
+                        android:id="@+id/inspectorCoordinatorLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"/>
+
+                    <ImageView
+                        android:id="@+id/commentsButton"
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:padding="10dp"
+                        android:background="@drawable/bg_annotation_comments"
+                        android:clickable="true"
+                        android:contentDescription="@string/sg_tab_comments"
+                        android:elevation="2dp"
+                        android:visibility="gone"
+                        app:srcCompat="@drawable/vd_discussion"
+                        tools:visibility="visible"/>
+
+                    <FrameLayout
+                        android:id="@+id/content"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:clipChildren="false"
+                        android:clipToPadding="false"/>
+
+                    <FrameLayout
+                        android:id="@+id/loadingContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/white"
+                        android:visibility="gone"
+                        tools:visibility="visible">
+
+                        <com.instructure.pandautils.views.ProgressiveCanvasLoadingView
+                            android:id="@+id/speedGraderProgressBar"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            app:pclv_override_color="@color/login_teacherAppTheme"
+                            app:pclv_progress="1"/>
+
+                    </FrameLayout>
+
+                </FrameLayout>
+
+            </LinearLayout>
+
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/slidingPanel"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:id="@+id/dragView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/bottomTabLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginEnd="12dp"
+                    android:layout_marginStart="12dp"
+                    app:tabIndicatorHeight="2dp"
+                    app:tabPaddingEnd="4dp"
+                    app:tabPaddingStart="4dp"/>
+
+                <View
+                    android:layout_width="36dp"
+                    android:layout_height="4dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="4dp"
+                    android:background="@drawable/handle_bar_drag_view"/>
+
+            </FrameLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/divider"/>
+
+            <com.instructure.teacher.view.ViewPagerNoSwipe
+                android:id="@+id/bottomViewPager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        </LinearLayout>
+
+    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
+
+    <com.instructure.teacher.view.FloatingRecordingView
+        android:id="@+id/floatingRecordingView"
+        android:visibility="gone"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:elevation="12dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+</RelativeLayout>

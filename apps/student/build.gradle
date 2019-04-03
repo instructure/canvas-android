@@ -1,0 +1,260 @@
+/*
+ * Copyright (C) 2016 - present Instructure, Inc.
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, version 3 of the License.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+import com.instructure.android.buildtools.transform.ProjectTransformer
+import com.instructure.android.buildtools.transform.MasqueradeUITransformer
+import com.instructure.android.buildtools.transform.PageViewTransformer
+import com.instructure.android.buildtools.transform.LocaleTransformer
+import com.instructure.android.buildtools.transform.PDFKitCrashFixTransformer
+
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'io.fabric'
+apply plugin: 'com.google.android.gms.oss-licenses-plugin'
+apply plugin: 'okreplay'
+apply from: '../../gradle/coverage.gradle'
+
+configurations {
+    all*.exclude group: 'commons-logging', module: 'commons-logging'
+    all*.exclude group: 'org.apache.httpcomponents', module: 'httpclient'
+}
+
+androidExtensions {
+    experimental = true
+}
+
+android {
+    compileSdkVersion Versions.COMPILE_SDK
+    buildToolsVersion Versions.BUILD_TOOLS
+
+    defaultConfig {
+        applicationId "com.instructure.candroid"
+        minSdkVersion Versions.MIN_SDK
+        targetSdkVersion Versions.TARGET_SDK
+        versionCode = 191
+        versionName = '6.4.3'
+
+        vectorDrawables.useSupportLibrary = true
+        multiDexEnabled = true
+        testInstrumentationRunner 'com.instructure.canvas.espresso.CanvasRunner'
+        testInstrumentationRunnerArguments disableAnalytics: 'true'
+        buildConfigField "boolean", "IS_TESTING", "false"
+
+        /* Add private data */
+        PrivateData.merge(project, "student")
+        buildConfigField "String", "PSPDFKIT_LICENSE_KEY", "\"$pspdfkitLicenseKey\""
+        buildConfigField "String", "PUSH_SERVICE_PROJECT_ID", "\"$pushServiceProjectId\""
+        addManifestPlaceholders([
+                crashlyticsApiKey: "$crashlyticsApiKey"
+        ])
+
+        testBuildType = "debug"
+    }
+
+    packagingOptions {
+        exclude 'META-INF/maven/com.google.guava/guava/pom.xml'
+        exclude 'META-INF/maven/com.google.guava/guava/pom.properties'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/rxjava.properties'
+        exclude 'LICENSE.txt'
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+    signingConfigs {
+        release {
+            storeFile file('../candroid.keystore')
+            storePassword System.getenv('KEYSTORE_PASSWORD')
+            keyAlias System.getenv('KEY_ALIAS')
+            keyPassword System.getenv('KEY_PASSWORD')
+        }
+    }
+
+    buildTypes {
+
+        debug {
+            testCoverageEnabled = project.coverageEnabled
+            debuggable true
+            minifyEnabled false
+            shrinkResources false
+            buildConfigField 'boolean', 'IS_DEBUG', 'true'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            ext.enableCrashlytics = false
+            pseudoLocalesEnabled true
+        }
+
+        release {
+            signingConfig signingConfigs.release
+            debuggable false
+            minifyEnabled true
+            shrinkResources true
+            buildConfigField 'boolean', 'IS_DEBUG', 'false'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+    }
+
+    flavorDimensions 'default'
+
+    productFlavors {
+        dev {
+            dimension 'default'
+        }
+
+        qa {
+            buildConfigField "boolean", "IS_TESTING", "true"
+            dimension 'default'
+        }
+
+        prod {
+            dimension 'default'
+        }
+    }
+
+    // Always show the result of every unit test, even if it passes.
+    testOptions.unitTests.all {
+        testLogging {
+            events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
+        }
+    }
+
+    testOptions.unitTests.includeAndroidResources = true
+
+    configurations.all {
+        resolutionStrategy.force 'com.google.code.findbugs:jsr305:1.3.9'
+        /*
+        Resolves dependency versions across test and production APKs, specifically, transitive
+        dependencies. This is required since Espresso internally has a dependency on support-annotations.
+        https://github.com/googlecodelabs/android-testing/blob/57852eaf7df88ddaf828eca879a407f2249d5348/app/build.gradle#L86
+        */
+        resolutionStrategy.force Libs.ANDROIDX_ANNOTATION
+
+        // Fix for Robolectric 4.x
+        resolutionStrategy.force "org.ow2.asm:asm:7.0"
+    }
+
+    /*
+    All direct/transitive dependencies shared between your test and production APKs need to be
+    excluded from the test APK! This is necessary because both APKs will contain the same classes. Not
+    excluding these dependencies from your test configuration will result in an dex pre-verifier error
+    at runtime. More info in this tools bug: (https://code.google.com/p/android/issues/detail?id=192497)
+    */
+    configurations.implementation.dependencies.each { compileDependency ->
+        println "Excluding compile dependency: ${compileDependency.getName()}"
+        configurations.androidTestImplementation.dependencies.each { androidTestCompileDependency ->
+            configurations.androidTestImplementation.exclude module: "${compileDependency.getName()}"
+        }
+    }
+
+    dexOptions {
+        javaMaxHeapSize '4g'
+    }
+
+    registerTransform(
+            new ProjectTransformer(
+                    android,
+                    new MasqueradeUITransformer('com.instructure.student.activity.NavigationActivity.class'),
+                    new PageViewTransformer(),
+                    new LocaleTransformer(),
+                    new PDFKitCrashFixTransformer()
+            )
+    )
+
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
+}
+
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    /* Modules */
+    implementation project(path: ':login-api-2')
+    implementation project(path: ':androidcalendar')
+    implementation project(path: ':chips')
+    implementation project(path: ':annotations')
+    implementation project(path: ':rceditor')
+    implementation project(path: ':interactions')
+
+    /* Android Test Dependencies */
+    androidTestImplementation project(path: ':canvas_espresso')
+    androidTestImplementation project(':dataseedingapi')
+
+    /* OkHttp Idling Resource */
+    implementation('com.jakewharton.espresso:okhttp3-idling-resource:1.0.0') {
+        exclude module: 'espresso-idling-resource'
+    }
+
+    /* Unit Test Dependencies */
+    testImplementation Libs.JUNIT
+    testImplementation Libs.ROBOLECTRIC
+    testImplementation Libs.ANDROIDX_TEST_JUNIT
+    testImplementation "io.mockk:mockk:1.9.3"
+    androidTestImplementation Libs.ANDROIDX_TEST_JUNIT
+    testImplementation Libs.KOTLIN_COROUTINES_TEST
+
+    /* Crashlytics */
+    implementation(Libs.CRASHLYTICS) {
+        transitive = true
+    }
+
+    /* Kotlin */
+    implementation Libs.KOTLIN_STD_LIB
+
+    /* Mobius */
+    implementation Libs.MOBIUS_CORE
+    testImplementation Libs.MOBIUS_TEST
+    implementation Libs.MOBIUS_ANDROID
+    implementation Libs.MOBIUS_EXTRAS
+
+    /* Google Play Services */
+    implementation Libs.PLAY_SERVICES_OSS_LICENSES
+    implementation Libs.FIREBASE_CORE
+
+    /* Media Handling */
+    implementation 'com.makeramen:roundedimageview:2.3.0'
+    implementation Libs.PHOTO_VIEW
+
+    /* Apache Commons */
+    implementation 'org.apache.commons:commons-text:1.6'
+
+    /* Support dependencies */
+    implementation Libs.ANDROIDX_ANNOTATION
+    implementation Libs.ANDROIDX_APPCOMPAT
+    implementation Libs.ANDROIDX_CARDVIEW
+    implementation Libs.ANDROIDX_CONSTRAINT_LAYOUT
+    implementation Libs.ANDROIDX_DESIGN
+    implementation Libs.ANDROIDX_RECYCLERVIEW
+    implementation Libs.PLAY_SERVICES_ANALYTICS
+    implementation Libs.PLAY_SERVICES
+    implementation Libs.ANDROIDX_PALETTE
+
+    /* Job Scheduler */
+    implementation Libs.FIREBASE_JOB_DISPATCHER
+}
+
+apply plugin: 'com.google.gms.google-services'

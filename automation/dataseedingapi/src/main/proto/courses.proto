@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+option java_package = "com.instructure.soseedy";
+option java_multiple_files = true;
+
+package soseedy;
+
+
+service SeedyCourses {
+    rpc CreateCourse (CreateCourseRequest) returns (Course) { }
+    rpc AddFavoriteCourse (AddFavoriteCourseRequest) returns (Favorite) { }
+}
+
+// Request messages
+
+message CreateCourseRequest {
+    int64 termId = 1;
+}
+
+message AddFavoriteCourseRequest {
+    int64 courseId = 1;
+    string token = 2;
+}
+
+// Response messages
+
+message Course {
+    int64 id = 1;
+    string name = 2;
+    bool favorite = 4;
+    string courseCode = 5;
+}
+
+message Favorite {
+    int64 contextId = 1;
+}

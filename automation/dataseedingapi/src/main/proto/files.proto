@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+option java_package = "com.instructure.soseedy";
+option java_multiple_files = true;
+
+package soseedy; // used for Swift
+
+
+service SeedyFiles {
+    rpc UploadFile(UploadFileRequest) returns(Attachment) { }
+}
+
+// Request messages
+
+message UploadFileRequest {
+    int64 courseId = 1;
+    int64 assignmentId = 2;
+    string token = 3;
+    string fileName = 4;
+    bytes file = 5;
+    FileUploadType uploadType = 6;
+}
+
+// Response messages
+message FileUploadParams {
+    string uploadUrl = 1;
+    map<string, string> uploadParams = 2;
+}
+
+message Attachment {
+    int64 id = 1;
+    string displayName = 2;
+    string fileName = 3;
+}
+
+enum FileUploadType {
+    ASSIGNMENT_SUBMISSION = 0;
+    COMMENT_ATTACHMENT = 1;
+}

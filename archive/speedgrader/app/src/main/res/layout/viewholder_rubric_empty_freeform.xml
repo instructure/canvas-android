@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2016 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/commentEditTextHolder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/card"
+        android:padding="4dp">
+        <EditText
+            android:id="@+id/commentEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="75dp"
+            android:hint="@string/addComment"
+            android:background="@null"
+            android:textSize="14sp"
+            android:gravity="top"
+            android:paddingLeft="8dp"
+            android:paddingTop="4dp"
+            android:inputType="textMultiLine"
+            android:textColor="@color/sg_lightGrayText"
+            android:focusable="false"/>
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="12dp"
+        android:layout_below="@+id/commentEditTextHolder">
+
+        <RelativeLayout
+            android:id="@+id/pointsPossibleHolder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/card">
+
+            <EditText
+                android:id="@+id/pointsPossibleET"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:minHeight="34dp"
+                android:textSize="14sp"
+                android:paddingLeft="8dp"
+                android:textColor="@color/lightGray"
+                android:singleLine="true"
+                android:background="@null"
+                android:inputType="numberDecimal"
+                android:focusable="false"/>
+        </RelativeLayout>
+
+        <com.instructure.speedgrader.views.HelveticaTextView
+            android:id="@+id/slash"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/lightGray"
+            android:singleLine="true"
+            android:layout_toRightOf="@id/pointsPossibleHolder"
+            android:layout_alignBaseline="@id/pointsPossibleHolder"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="8dp"
+            android:gravity="bottom"
+            android:text="@string/slashNoDash"/>
+
+        <com.instructure.speedgrader.views.HelveticaTextView
+            android:id="@+id/pointsPossible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/lightGray"
+            android:layout_toRightOf="@+id/slash"
+            android:layout_alignBaseline="@id/pointsPossibleHolder"
+            android:layout_marginRight="16dp"
+            android:focusable="false"/>
+    </RelativeLayout>
+</RelativeLayout>

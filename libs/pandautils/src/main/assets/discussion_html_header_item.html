@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" charset="utf-8" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+		<style>
+
+			body {
+				margin: 0px;
+				padding-bottom: 15px;
+			}
+
+			.message_content iframe,
+			.message_content object,
+			.message_content embed,
+			.message_content video {
+				top: 0;
+				left: 0;
+				width: 100%;
+				max-width: 300px;
+				height: auto;
+			}
+
+
+			.child {
+				display: -webkit-box;
+				display: -ms-flexbox;
+				display: flex;
+			}
+
+			.nowrap{
+				white-space:nowrap;
+			}
+
+			.topic:first-child {
+				border-top:none;
+				padding-top:0px;
+				margin-top:0px;
+			}
+
+			.textarea {
+				position:absolute;
+				left: 30px;
+				right:60px;
+			}
+
+			.item_wrapper {
+				clear:left;
+				overflow:hidden;
+				position: relative;
+				height: 100%;
+				width: 100%;
+				padding-right: 5px;
+				margin-top: 15px;
+				color: #000000;
+			}
+
+			.rate_post {
+				display:inline-block;
+				width: 100px;
+				position:relative;
+				float:left;
+			}
+
+			.rate_span {
+				position:absolute;
+				font-size:.7em;
+				top: 40%;
+			}
+
+			.username_wrapper {
+				font-weight: bold;
+				font-size:14px;
+				white-space: nowrap;
+				text-overflow: ellipsis;
+				color:#394B58;
+			}
+
+			.timestamp {
+				width: 150px;
+				text-overflow: ellipsis;
+				font-size: 12px;
+				overflow: hidden;
+				white-space: nowrap;
+				color:#8B969E;
+			}
+
+			.timestamp_wrapper {
+				position: relative;
+				margin-top: -2px;
+			}
+
+			.container{
+				width: 100px;
+				position: relative;
+				padding-right: 10px;
+				text-align: right;
+				float: right;
+				margin: 0px;
+				padding: 0px;
+			}
+
+			.container .isUnread {
+				background:#0076A3;
+			}
+
+			.container ul, .container li {
+				display: inline-block;
+				font-size: 15px;
+				min-width:15px;
+				padding:3% 3% 3%;
+				text-align: center;
+				background:#0076A3;
+				color:white;
+			}
+
+			.content {
+				position:absolute;
+				bottom: 0;
+				left: 0;
+				margin-right: 100px;
+				font-style:italic;
+			}
+
+			.group:after {
+				content: "";
+				display: table;
+				clear: both;
+			}
+
+			img, video {
+				max-width:100% !important;
+				width:auto;
+				height:auto;
+				margin:0;
+				padding:0;
+			}
+
+			.unread {
+				float: left;
+				color: #CBCBCB;
+			}
+
+			.is_unread {
+				float: left;
+				color: #CBCBCB;
+				margin-top: 5px;
+			}
+
+            a {
+                word-break: break-all;
+            }
+
+			.child {
+				height:100%;
+			}
+
+			.group_details{
+				padding-left: 8px;
+				padding-right: 16px;
+				overflow: hidden;
+				margin: 0px;
+				float: left;
+				width: auto;
+			}
+
+			.message_content {
+				position: relative;
+				color: black;
+				height: 100%;
+				word-wrap: break-word;
+				margin-top: 6px;
+				margin-left: 30px;
+				margin-right: 16px;
+				padding-left: 25px;
+				border-left: thin solid #EBEDEE;
+			}
+
+			.likes_wrapper, .reply_wrapper, .edit_wrapper, .delete_wrapper, .comments_count_wrapper {
+				float:left;
+				height: 30px;
+				text-align: center;
+			}
+
+			.reply, .edit, .likes, .delete {
+            	color: #8B969E;
+				width: 100%;
+				height: 30px;
+				text-align: center;
+				line-height: 30px;
+				background-color: transparent;
+				background-repeat: no-repeat;
+				border: none;
+				overflow: hidden;
+				outline:none;
+				font-size: 14px;
+            }
+
+            .deleted_info {
+            	color: #8B969E;
+				width: 100%;
+				height: 30px;
+				height: 30px;
+				line-height: 30px;
+				background-color: transparent;
+				background-repeat: no-repeat;
+				border: none;
+				overflow: hidden;
+				outline:none;
+				font-size: 14px;
+				font-style: italic;
+            }
+
+            .edit_vertical_divider, .delete_vertical_divider {
+            	margin-left: 10px;
+            	margin-right: 10px;
+            	float:left;
+        		color: #8B969E;
+        		height: 30px;
+        		font-size: 18px;
+        		text-align: center;
+        		line-height: 30px;
+        	}
+
+			.comments {
+				color: #9197A3;
+				width: 100%;
+				height: 30px;
+				text-align: center;
+				line-height: 30px;
+				font-size: 1em;
+				font-weight: bold;
+			}
+
+			.comments:empty {
+				display: none;
+			}
+
+			.likes:empty {
+				display: none;
+			}
+
+			.reply:empty {
+				display: none;
+			}
+
+            .unread_indicator.read {
+                opacity: 0;
+            }
+
+            .unread_indicator.unread {
+            	opacity: 255;
+            }
+
+            .unread_indicator {
+            	width: 7px;
+            	height: 7px;
+            	background: #008ee2;
+            	border-radius: 6px;
+            	float: left;
+            	margin-top: 0px;
+            	margin-right: 3px;
+            	margin-left: 5px;
+        	}
+
+        	.attachments_icon {
+        		height: 16px;
+        		width: 16px;
+        		display: block;
+        		margin: auto;
+        		margin-top: 8px;
+        	}
+
+        	.forbidden_status {
+        	    background:#FFFFFF;
+				clear:left;
+				overflow:hidden;
+				position: relative;
+				height: 100%;
+				width: 100%;
+				padding-left: 5px;
+				padding-right: 5px;
+				margin-top: 15px;
+        		display: none;
+        	}
+
+        	/* makes the videos in fullscreen black */
+            :-webkit-full-screen-ancestor:not(iframe) { background-color: black }
+
+		</style>
+	</head>
+<body>
+<!-- DO NOT change to <div id="entries/>, it'll break appendHTML in javascipt-->
+<div id="entries">

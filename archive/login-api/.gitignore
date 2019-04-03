@@ -1,0 +1,41 @@
+#built application files
+*.apk
+*.ap_
+
+# files for the dex VM
+*.dex
+
+# Java class files
+*.class
+
+# generated files
+bin/
+gen/
+
+# Local configuration file (sdk path, etc)
+local.properties
+
+# Windows thumbnail db
+Thumbs.db
+
+# OSX files
+.DS_Store
+
+# Eclipse project files
+.classpath
+.project
+
+# Android Studio
+.idea
+*.iml
+*.iws
+.gradle
+build/
+/build
+login/build
+
+# Private Data
+private.properties
+
+# Snicker Doodles - File added at build time, don't remove this
+snickers.json

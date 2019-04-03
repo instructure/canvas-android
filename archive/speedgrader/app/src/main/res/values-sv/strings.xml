@@ -1,0 +1,175 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <string name="app_name">SpeedGrader</string>
+  <string name="hello_world">Hej världen!</string>
+  <string name="sg_settings">Inställningar</string>
+  <string name="title_activity_home">hem</string>
+  <string name="title_activity_document">dokument</string>
+  <string name="action_document_view">Visa Dokument</string>
+  <string name="sectionsFilter">Filtrera efter avsnitt</string>
+  <string name="drawer_open">Öppna meny</string>
+  <string name="drawer_close">Öppna meny</string>
+  <string name="favorites">Favoritkurser</string>
+  <string name="allCourses">Alla kurser</string>
+  <string name="emptyMessage">Meddelandet kan inte lämnas tomt!</string>
+  <string name="errorPostingComment">Ett fel inträffade när din inlämningskommentar postades. Försök igen.</string>
+  <string name="addAComment">Lägg till en kommentar</string>
+  <string name="noCommentsToDisplayShort">Det finns inga kommentarer</string>
+  <string name="noItemsToDisplayShort">Det finns inga objekt att visa</string>
+  <string name="noCoursesToDisplayShort">Det finns inga kurser att visa</string>
+  <string name="loading">Laddar</string>
+  <string name="loadingIndeterminate">Laddar...</string>
+  <string name="savingIndeterminate">Sparar...</string>
+  <string name="assignments">Uppgifter</string>
+  <string name="grade">Betyg</string>
+  <string name="graded">betygsatt</string>
+  <string name="submitted">inlämnad</string>
+  <string name="rubricPoints">Poäng</string>
+  <string name="pointsPossible">Möjliga Poäng</string>
+  <string name="due">inlämningsdatum</string>
+  <string name="noDueDate">Inget inlämningsdatum</string>
+  <string name="search">Sök</string>
+  <string name="commentPrompt">Kommentar:</string>
+  <string name="comment">Kommentar</string>
+  <string name="addComment">Lägg till kommentar</string>
+  <string name="noRubric">Det finns ingen rubrik för den här uppgiften</string>
+  <string name="courses">Kurser</string>
+  <string name="courseList">Kurslista</string>
+  <string name="dashboard">Kontrollpanel</string>
+  <string name="studentsSpinner">Elever</string>
+  <string name="name">Namn</string>
+  <string name="toggleRubric">Hantera värderingsmodell</string>
+  <string name="allSections">Alla avsnitt</string>
+  <string name="document">Dokument</string>
+  <string name="document_id">dokument_id</string>
+  <string name="duration">varaktighet</string>
+  <string name="student">Elev</string>
+  <string name="opening">Öppnar Fil...</string>
+  <string name="composeHint">Skriv något...</string>
+  <string name="attachHint">Lägg till en bilaga</string>
+  <string name="sendHint">Skicka Tips</string>
+  <string name="back">Tillbaka</string>
+  <string name="ninetyNinePlus">99+</string>
+  <string name="help">Hjälp</string>
+  <string name="searchTheGuides">Sök i guiden</string>
+  <string name="about">Om</string>
+  <string name="logout">Logga ut</string>
+  <string name="at">\u0020at\u0020</string>
+  <string-array name="defaultNavArray">
+    <item>Objekt 1</item>
+    <item>Objekt 2</item>
+  </string-array>
+  <string name="contentDescriptionPreviewImage">Förhandsvisning av skickad URL</string>
+  <string name="visitPage">Besök Live sidan</string>
+  <string name="pageAtSubmission">Sida när den skickades:</string>
+  <string name="onlineURLDisclaimer">Den här inlämningen var en URL från en extern sida. Vi har inkluderat ett snapshot av hur sidan såg ut när den lämnades in.</string>
+  <string name="urlSubmission">Skicka URL</string>
+  <string name="url">URL:</string>
+  <string name="noSubmission">Den här eleven har inte skickat in något för den här uppgiften</string>
+  <string name="noGroupSubmission">Den här gruppen har ingen inlämning för uppgiften</string>
+  <string name="deletedEntry">Den här diskussionsposten har tagits bort.</string>
+  <string name="viewDiscussion">Visa diskussion</string>
+  <string name="slash"> - / </string>
+  <string name="slashNoDash">/</string>
+  <string name="emptyViewMessage">Det finns inget inskickat för den här uppgiften</string>
+  <string name="emptyAssignmentViewMessage">Det finns inga uppgifter för den här kursen</string>
+  <string name="noSubmissionForAssignment">Inget inskickat</string>
+  <string name="authorizationRequired">Tillstånd Krävs</string>
+  <string name="cookie">Cookie</string>
+  <string name="unsavedData">Data som inte sparats</string>
+  <string name="unsavedDataWarning">Ditt betyg har inte sparats. Vill du lämna uppgiften?</string>
+  <string name="continueUnsaved">Fortsätt</string>
+  <!--Grading Messages-->
+  <string name="noGrade">Inget Betyg</string>
+  <string name="incomplete">Ofullständig</string>
+  <string name="complete">Färdig</string>
+  <string name="gradeSaved">Betyget sparades</string>
+  <string name="errorSavingGrade">Det uppstod ett fel när betyget sparades. Kontrollera anslutningen och försök igen.</string>
+  <string name="criterionLongDescription">Kriterium lång beskrivning</string>
+  <!--Drawer Settings-->
+  <string name="hideNamesWhileGrading">Visa namn när du betygsätter</string>
+  <string name="showUngradedStudentsFirst">Visa studenter utan betyg först</string>
+  <string name="viewUngradedCount">Visa antal ej betygsatta på ikonen</string>
+  <string name="viewHTML">Visa HTML</string>
+  <!--Drawer About-->
+  <string name="account">konto</string>
+  <string name="version">version</string>
+  <string name="copyright">upphovsrätt</string>
+  <string name="copyrightText"> © 2010–%1$s Instructure Inc.</string>
+  <!--Error Messages-->
+  <string name="noDataConnection">Kontrollera din dataanslutning och försök igen.</string>
+  <string name="invalidAccessToken">Ogiltig åtkomsttoken. Logga in igen.</string>
+  <string name="serverError">Serverfel. Försök igen.</string>
+  <string name="noApps">Din enhet har ingen applikation installerad som kan hantera den här filen.</string>
+  <string name="unexpectedErrorOpeningFile">Ett oväntat fel inträffade när den här filen öppnades.</string>
+  <string name="unexpectedErrorDownloadingFile">Ett oväntat fel inträffade när filen laddades ner.</string>
+  <string name="invalidScore">Ogiltig poäng angiven.</string>
+  <!--Assignment editing-->
+  <string name="points">Poäng:\u0020</string>
+  <string name="assignmentGroup">Uppgiftsgrupp:\u0020</string>
+  <string name="gradingType">Betygstyp:\u0020</string>
+  <string name="submissionType">Inlämningstyp:\u0020</string>
+  <string name="editAssignment">Ändra Uppgift</string>
+  <string name="save">Spara</string>
+  <string name="cancel">Avbryt</string>
+  <string name="saveContinue">Fortsätt</string>
+  <string name="sendNotification">Meddela användarna om att det här innehållet har ändrats</string>
+  <string name="setDueDate">Inget sista inlämningsdatum satt</string>
+  <string name="assignmentDue">Inlämningsdatum:</string>
+  <string name="assignmentSaved">Uppgiften sparades</string>
+  <string name="useRubricForGrading">Använd endast värderingsmodellen för betygsättning</string>
+  <string name="onlineEntryOptions">Alternativ för inmatning Online:</string>
+  <string name="useRubricError">Uppgiften är inställd på att använda värderingsmodell för betygsättning.</string>
+  <string name="noDueDateSet">Inget inlämningsdatum satt </string>
+  <string name="noGradeAssignment">Det finns inget betyg för den här uppgiften</string>
+  <string name="muted">Tysta uppgiften</string>
+  <!--Date Text View-->
+  <string name="dateTextDefault">Lägg till datum</string>
+  <string name="settings">Inställningar</string>
+  <string name="open">Öppna</string>
+  <!--Score Edit Text Hints-->
+  <string name="gpaScaleHint">Medelbetyg</string>
+  <string name="letterHint">Betyg</string>
+  <!--User Messages-->
+  <string name="videoCommentsComingSoon">Videokommentarer kommer snart!</string>
+  <!--Tutorial-->
+  <string name="tutorialSkip">Hoppa över</string>
+  <string name="tutorialPage1">Visa överblick</string>
+  <string name="tutorialPage2">Filtrera efter avsnitt</string>
+  <string name="tutorialPage3">Visa dokument</string>
+  <string name="tutorialPage4">Ändra uppgifter</string>
+  <string name="tutorialPage5">Betygsättning med värderingsmodell</string>
+  <string name="tutorialPage6">Gör personliga inställningar</string>
+  <string name="tutorial_tipAssignmentDetails">Uppgiftsdetaljer</string>
+  <string name="tutorial_tipAssignmentDetailsMessage">Ändra uppgiftsdetaljer.</string>
+  <string name="tutorial_tipFilterSections">Filtrera efter avsnitt</string>
+  <string name="tutorial_tipFilterSectionsMessage">Visa klassen som du betygsätter genom att filtrera efter sektion</string>
+  <string name="tutorial_tipSortStudentList">Sortera efter betyg eller namn i elevlistan</string>
+  <string name="tutorial_tipSortStudentListMessage">Välj om du vill sortera elever efter betyg eller namn.</string>
+  <string name="tutorial_tipSwipeBetweenStudents">Svep mellan elever</string>
+  <string name="tutorial_tipSwipeBetweenStudentsMessage">Svep för att enkelt flytta mellan olika elever.</string>
+  <string name="tutorial_tipSubmissionComments">Visa och ladda upp kommentarer för Inlämning av Media</string>
+  <string name="tutorial_tipSubmissionCommentsMessage">Undvik krångel med att skriva genom att skicka en snabb videokommentar.</string>
+  <!--Masquerading-->
+  <string name="masqueradeUserId">Maskera användar-ID</string>
+  <string name="startMasquerading">Påbörja Maskering</string>
+  <string name="stopMasquerading">Avsluta maskering</string>
+  <string name="userId">Användar-ID</string>
+  <string name="masqueradeFail">Ett fel uppstod under maskeringen</string>
+  <string name="emptyId">ID kan inte lämnas tomt</string>
+  <!--Options menu-->
+  <string name="openInBrowser">Öppna i webbläsare</string>
+  <string name="download">Ladda ned</string>
+  <string name="next">NÄSTA</string>
+  <string name="prev">FÖREGÅENDE</string>
+  <string name="nothingToDownload">Det finns ingen inskickad fil att ladda ner</string>
+  <string name="nothingToShowInBrowser">Det finns ingen URL att visa</string>
+  <string name="noAssignmentsInGroup">Inga Uppgifter i den här gruppen</string>
+  <string name="excusedAssignment">Den är uppgiften utelämnas och kommer inte att räknas i den totala sammanräkningen</string>
+  <string name="singleItem">Objekt</string>
+  <string name="multipleItems">Objekt</string>
+  <string name="excused">utelämnas</string>
+  <string name="expandOrCollapse">Expandera eller Komprimera</string>
+  <string name="mutedText">Bedömning är inte tillgänglig eftersom läraren arbetar med dem.</string>
+  <string name="freeFormRubricPoints" formatted="false">%s / %s</string>
+</resources>

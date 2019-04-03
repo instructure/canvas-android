@@ -1,0 +1,42 @@
+﻿<!--
+  ~ Copyright (C) 2018 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="inputText">Wprowadź tekst</string>
+    <string name="cancel">Anuluj</string>
+    <string name="comment">Komentarz</string>
+    <string name="skip">Pomiń</string>
+    <string name="comments">Komentarze</string>
+    <string name="error_loading_submission">Wystąpił problem z wczytaniem tych materiałów.</string>
+    <string name="retry">Ponów próbę</string>
+    <string name="annotationErrorOccurred">Podczas ładowania adnotacji wystąpił nieoczekiwany błąd.</string>
+    <string name="annotationError">Błąd adnotacji</string>
+    <string name="annotationDialogMessage">Adnotacja została usunięta z innego źródła.</string>
+    <string name="errorSendingMessage">Nie można wysłać tego komunikatu, Stuknij, aby ponowić próbę.</string>
+    <string name="addAnnotationComment">Dodaj komentarz</string>
+    <string name="editComment">Edytuj komentarz</string>
+    <string name="deleteComment">Usuń komentarz</string>
+    <string name="deleteAnnotation">Usuń adnotację</string>
+    <string name="deleteCommentConfirmation">Czy na pewno chcesz usunąć ten komentarz?</string>
+    <string name="deleteHeadCommentConfirmation">Usunięcie tego komentarza spowoduje usunięcie wszystkich komentarzy powiązanych z tą adnotacją. Czy na pewno chcesz to zrobić?</string>
+    <string name="sendingSimple">Wysyłanie</string>
+    <string name="pspdf__annotation_type_stamp">Kolor notatki</string>
+
+    <string name="removedComment">Usunięte %1$s przez %2$s</string>
+
+</resources>

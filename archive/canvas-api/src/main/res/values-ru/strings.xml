@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <!--Modules-->
+  <string name="mustComplete">Вы должны сначала завершить:</string>
+  <string name="unlockedAt">Будет разблокировано в:</string>
+  <string name="goToModules">Перейти к Модулям</string>
+  <!--Events-->
+  <string name="Starts">Начинается</string>
+  <string name="Ends">Заканчивается</string>
+  <string name="allDayEvent">Мероприятие на весь день</string>
+  <string name="at">в</string>
+  <string name="to">к</string>
+  <!--StreamItems-->
+  <string name="Message">Сообщение</string>
+  <string name="Loading">Загрузка...</string>
+  <string name="Deleted">Удалено</string>
+  <!--Assignment Module-->
+  <string name="canvasAPI_online">Онлайн</string>
+  <string name="canvasAPI_onPaper">На бумаге</string>
+  <string name="canvasAPI_discussion">Обсуждение</string>
+  <string name="canvasAPI_quiz">Тестовое задание</string>
+  <string name="canvasAPI_externalTool">Внешний инструмент</string>
+  <string name="canvasAPI_none">Нет</string>
+  <string name="canvasAPI_passFail">Сдал Не сдал</string>
+  <string name="canvasAPI_percent">Процент</string>
+  <string name="canvasAPI_letterGrade">Буква оценки</string>
+  <string name="canvasAPI_points">Баллы</string>
+  <string name="canvasAPI_gpaScale">Шкала GPA</string>
+  <string name="canvasAPI_notGraded">Без оценки</string>
+  <string name="canvasAPI_onlineQuiz">Онлайн тест</string>
+  <string name="canvasAPI_discussionTopic">Тема обсуждения</string>
+  <string name="canvasAPI_onlineUpload">Онлайн загрузка</string>
+  <string name="canvasAPI_onlineTextEntry">Ввод текста онлайн</string>
+  <string name="canvasAPI_onlineURL">Онлайн URL</string>
+  <string name="canvasAPI_mediaRecording">Медиа Запись</string>
+  <string name="canvasAPI_attendance">Посещаемость</string>
+</resources>

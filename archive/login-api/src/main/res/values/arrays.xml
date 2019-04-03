@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2016 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <integer-array name="red">
+        <item name="primary">@color/courseRed</item>
+        <item name="primaryDark">@color/courseRedDark</item>
+    </integer-array>
+
+    <integer-array name="orange">
+        <item name="primary">@color/courseOrange</item>
+        <item name="primaryDark">@color/courseOrangeDark</item>
+    </integer-array>
+
+    <integer-array name="gold">
+        <item name="primary">@color/courseGold</item>
+        <item name="primaryDark">@color/courseGoldDark</item>
+    </integer-array>
+
+    <integer-array name="green">
+        <item name="primary">@color/courseGreen</item>
+        <item name="primaryDark">@color/courseGreenDark</item>
+    </integer-array>
+
+    <integer-array name="chartreuse">
+        <item name="primary">@color/courseChartreuse</item>
+        <item name="primaryDark">@color/courseChartreuseDark</item>
+    </integer-array>
+
+    <integer-array name="cyan">
+        <item name="primary">@color/courseCyan</item>
+        <item name="primaryDark">@color/courseCyanDark</item>
+    </integer-array>
+
+    <integer-array name="slate">
+        <item name="primary">@color/courseSlate</item>
+        <item name="primaryDark">@color/courseSlateDark</item>
+    </integer-array>
+
+    <integer-array name="blue">
+        <item name="primary">@color/courseBlue</item>
+        <item name="primaryDark">@color/courseBlueDark</item>
+    </integer-array>
+
+    <integer-array name="purple">
+        <item name="primary">@color/coursePurple</item>
+        <item name="primaryDark">@color/coursePurpleDark</item>
+    </integer-array>
+
+    <integer-array name="violet">
+        <item name="primary">@color/courseViolet</item>
+        <item name="primaryDark">@color/courseVioletDark</item>
+    </integer-array>
+
+    <integer-array name="pink">
+        <item name="primary">@color/coursePink</item>
+        <item name="primaryDark">@color/coursePinkDark</item>
+    </integer-array>
+
+    <integer-array name="hotPink">
+        <item name="primary">@color/courseHotPink</item>
+        <item name="primaryDark">@color/courseHotPinkDark</item>
+    </integer-array>
+
+    <integer-array name="gray">
+        <item name="primary">@color/courseGrey</item>
+        <item name="primaryDark">@color/courseGreyDark</item>
+    </integer-array>
+
+    <integer-array name="yellow">
+        <item name="primary">@color/courseYellow</item>
+        <item name="primaryDark">@color/courseYellowDark</item>
+    </integer-array>
+
+    <integer-array name="lavender">
+        <item name="primary">@color/courseLavender</item>
+        <item name="primaryDark">@color/courseLavenderDark</item>
+    </integer-array>
+
+    <integer-array name="defaultColors">
+        <item name="primary">@color/defaultPrimary</item>
+        <item name="primaryDark">@color/defaultPrimaryDark</item>
+    </integer-array>
+
+    <array name="courseColors">
+        <item name="defaultColors">@array/defaultColors</item>
+        <item name="red">@array/red</item>
+        <item name="orange">@array/orange</item>
+        <item name="gold">@array/gold</item>
+        <item name="green">@array/green</item>
+        <item name="chartreuse">@array/chartreuse</item>
+        <item name="cyan">@array/cyan</item>
+        <item name="slate">@array/slate</item>
+        <item name="blue">@array/blue</item>
+        <item name="purple">@array/purple</item>
+        <item name="pink">@array/pink</item>
+        <item name="hotPink">@array/hotPink</item>
+        <item name="gray">@array/gray</item>
+        <item name="yellow">@array/yellow</item>
+        <item name="lavender">@array/lavender</item>
+        <item name="violet">@array/violet</item>
+    </array>
+
+</resources>

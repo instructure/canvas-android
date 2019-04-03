@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+option java_package = "com.instructure.soseedy";
+option java_multiple_files = true;
+
+package soseedy;
+
+
+service SeedyGroups {
+    rpc CreateCourseGroupCategory(CreateCourseGroupCategoryRequest) returns (GroupCategory) { }
+    rpc CreateGroup(CreateGroupRequest) returns (Group) { }
+    rpc CreateGroupMembership(CreateGroupMembershipRequest) returns (GroupMembership) { }
+}
+
+
+// Request messages
+
+message CreateCourseGroupCategoryRequest {
+    int64 courseId = 1;
+    string teacherToken = 2;
+}
+
+message CreateGroupRequest {
+    int64 groupCategoryId = 1;
+    string teacherToken = 2;
+}
+
+message CreateGroupMembershipRequest {
+    int64 groupId = 1;
+    int64 userId = 2;
+    string teacherToken = 3;
+}
+
+// Response messages
+
+message GroupCategory {
+    int64 id = 1;
+    string name = 2;
+    string contextType = 3;
+}
+
+message Group {
+    int64 id = 1;
+    string name = 2;
+    string description = 3;
+    string contextType = 4;
+    int64 courseId = 5;
+    int64 groupCategoryId = 6;
+}
+
+message GroupMembership {
+    int64 id = 1;
+    int64 groupId = 2;
+    int64 userId = 3;
+    string workflowState = 4;
+}

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="speedgrader_tab_spacing">0dp</dimen>
+    <dimen name="speedgraderGroupMemberListWidth">360dp</dimen>
+    <dimen name="profileBannerHeight">280dp</dimen>
+    <dimen name="recordingViewHeight">254dp</dimen>
+    <dimen name="recordingViewWidth">390dp</dimen>
+    <dimen name="mediaRecordingButton">64dp</dimen>
+    <dimen name="navigationDrawerWidth">340dp</dimen>
+</resources>

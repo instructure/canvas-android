@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2016 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<resources>
+    <string name="app_name_parent">Canvas Parent</string>
+    <string name="week_assignment_override_title">%1$s (%2$s)</string>
+    <string name="date_bar">%1$s - %2$s</string>
+
+    <!-- Debug content descriptions -->
+    <string name="avatar_content_desc">avatar_%1$d</string>
+    <string name="course_title_content_desc">course_title_%1$d</string>
+    <string name="grade_text_content_desc">grade_text_%1$d</string>
+    <string name="score_text_content_desc">score_text_%1$d</string>
+    <string name="calendar_title_content_desc">calendar_title_%1$d</string>
+    <string name="description_text_content_desc">description_text_%1$d</string>
+    <string name="status_text_content_desc">status_text_%1$d</string>
+    <string name="alert_title_content_desc">alert_title_%1$d</string>
+    <string name="date_text_content_desc">date_text_%1$d</string>
+    <string name="name_text_content_desc">name_text_%1$d</string>
+
+    <string name="airwolfGamma">Airwolf Gamma</string>
+</resources>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C) 2016 - present Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/AdapterItem"
+    android:orientation="horizontal">
+
+    <com.instructure.pandautils.views.NestedIconView
+        android:id="@+id/icon"
+        style="@style/AdapterItemIcon"
+        android:importantForAccessibility="no"
+        tools:srcCompat="@drawable/vd_copy" />
+
+
+    <LinearLayout
+        android:id="@+id/textContainer"
+        style="@style/AdapterItemTextContainer"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/title"
+            style="@style/AdapterItemTitleText"
+            tools:text="Assignment Title" />
+
+        <TextView
+            android:id="@+id/date"
+            style="@style/AdapterItemDescriptionText"
+            tools:text="No Due Date" />
+
+        <TextView
+            android:id="@+id/points"
+            style="@style/AdapterItemDescriptionText"
+            tools:text="100%"
+            android:textSize="16sp"/>
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/edit"
+        style="@style/AdapterItemIcon"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:contentDescription="@string/edit"
+        android:padding="8dp"
+        app:srcCompat="@drawable/vd_edit"
+        android:tint="@color/canvasTextDark"
+        android:scaleType="fitCenter"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:background="?android:selectableItemBackgroundBorderless"
+        android:layout_marginEnd="8dp"/>
+
+</LinearLayout>

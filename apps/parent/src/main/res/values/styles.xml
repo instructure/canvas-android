@@ -1,0 +1,211 @@
+<!--
+  ~ Copyright (C) 2016 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+         <!--Customize your theme here.-->
+        <item name="colorPrimary">@color/parent_colorPrimary</item>
+        <item name="colorPrimaryDark">@color/parent_colorPrimaryDark</item>
+        <item name="colorAccent">@color/parent_colorAccent</item>
+        <item name="android:windowBackground">@color/white</item>
+        <item name="android:actionOverflowButtonStyle">@style/Widget.ActionButton.Overflow</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="Theme.AppCompat.NoActionBar.NavigationActivity" parent="Theme.AppCompat.Light">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionModeOverlay">true</item>
+    </style>
+
+    <style name="SplashTheme" parent="AppTheme.NoActionBar">
+        <item name="android:windowBackground">@drawable/splash_background</item>
+    </style>
+
+    <style name="DetailsDialogAnimationVideo">
+        <item name="android:windowEnterAnimation">@anim/none</item>
+        <item name="android:windowExitAnimation">@anim/none</item>
+    </style>
+
+    <style name="Widget.ActionButton.Overflow" parent="@android:style/Widget.Holo.ActionButton.Overflow">
+        <item name="android:contentDescription">@string/accessibility_overflow</item>
+    </style>
+
+    <!--Text Styles-->
+    <style name="TextStyle.Primary.SingleLine">
+        <item name="android:maxLines">1</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="TextStyle.Primary.SingleLine.Gray">
+        <item name="android:textColor">@color/canvasTextMedium</item>
+    </style>
+
+    <style name="TextStyle.Primary.SingleLine.Navigation">
+        <item name="android:textColor">@color/defaultPrimary</item>
+    </style>
+
+    <style name="TextStyle.Primary.CardView">
+        <item name="android:maxLines">2</item>
+        <item name="android:gravity">center_vertical|start</item>
+    </style>
+
+    <style name="TextStyle.Secondary">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/canvasTextMedium</item>
+    </style>
+
+    <style name="TextStyle.Secondary.SingleLine">
+        <item name="android:maxLines">1</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="TextStyle.Secondary.SingleLine.Dark">
+        <item name="android:textColor">@color/canvasTextDark</item>
+    </style>
+
+    <style name="TextStyle.Secondary.Dark">
+        <item name="android:textColor">@color/canvasTextDark</item>
+    </style>
+
+    <style name="TextStyle.Secondary.CardView">
+        <item name="android:maxLines">3</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:layout_marginBottom">8dp</item>
+    </style>
+
+    <style name="TextStyle.Tertiary">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/canvasTextMedium</item>
+    </style>
+
+    <style name="TextStyle.Tertiary.SingleLine">
+        <item name="android:maxLines">1</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="TextStyle.Tertiary.SingleLine.Dark">
+        <item name="android:textColor">@color/canvasTextDark</item>
+    </style>
+
+    <style name="TextStyle.Tertiary.Dark">
+        <item name="android:textColor">@color/canvasTextDark</item>
+    </style>
+
+    <style name="Base.TextAppearance.AppCompat.Button.LoginButton">
+        <item name="android:minHeight">48dp</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_marginStart">0dp</item>
+        <item name="android:layout_marginEnd">0dp</item>
+        <item name="android:textColor">@color/parentButtonTextDisabled</item>
+        <item name="android:background">@drawable/login_button_background</item>
+        <item name="android:enabled">false</item>
+    </style>
+
+    <style name="Base.Widget.AppCompat.EditText.LoginEditText">
+        <item name="android:layout_marginStart">0dp</item>
+        <item name="android:layout_marginEnd">0dp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textColorHint">@color/lightGray</item>
+        <item name="android:background">@drawable/parent_et_bg</item>
+        <item name="android:textAlignment">viewStart</item>
+    </style>
+
+    <style name="Theme.AppCompat.Light.Dialog.Alert.addChildDialog" >
+        <item name="android:colorAccent">@color/parent_colorPrimary </item>
+    </style>
+
+    <style name="TextInputLabel" parent="TextAppearance.Design.Hint">
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="LoginTextAsButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:background">?android:selectableItemBackground</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:textColor">@color/login_textButton</item>
+        <item name="android:padding">12dp</item>
+    </style>
+
+    <style name="NavigationDrawerItem">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:minHeight">?android:listPreferredItemHeightSmall</item>
+        <item name="android:background">?android:selectableItemBackground</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:tint">@color/canvasTextDark</item>
+    </style>
+
+    <style name="NavigationDrawerIcon">
+        <item name="android:layout_height">24dp</item>
+        <item name="android:layout_width">24dp</item>
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:importantForAccessibility">no</item>
+        <item name="android:layout_marginEnd">24dp</item>
+        <item name="android:textColor">@color/canvasTextDark</item>
+    </style>
+
+    <style name="NotAParent"/>
+
+    <style name="NotAParent.CanvasLogo">
+        <item name="android:layout_width">48dp</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:importantForAccessibility">no</item>
+    </style>
+
+    <style name="NotAParent.CanvasText" parent="TextFont.Medium">
+        <!-- Use SP for all dimens to prevent scaling issues -->
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:text">@string/utils_canvas_lowercase_untranslated</item>
+        <item name="android:textColor">@color/login_grayCanvasLogo</item>
+        <item name="android:textSize">40sp</item>
+        <item name="android:layout_marginTop">-12sp</item>
+        <item name="android:layout_marginStart">6sp</item>
+    </style>
+
+    <style name="NotAParent.SubText" parent="TextFont.Medium">
+        <!-- Use SP for all dimens to prevent scaling issues -->
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:layout_marginTop">-12sp</item>
+        <item name="android:layout_marginStart">8sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+</resources>

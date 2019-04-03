@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2016 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/subHeader"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:orientation="vertical"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:background="@color/speedgrader_aqua"
+        android:gravity="center_vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/sg_settings"
+            android:textSize="16sp"
+            android:textStyle="bold"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/settingsContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@+id/subHeader"
+        android:padding="8dp"
+        android:background="@drawable/card_bg"
+        android:layout_marginBottom="90dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <com.instructure.speedgrader.views.HelveticaTextView
+                android:id="@+id/sg_options_hideNames"
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                android:gravity="left|center"
+                android:text="@string/hideNamesWhileGrading"
+                android:textSize="14sp"
+                android:textColor="@color/sg_darkText"
+                android:layout_alignParentLeft="true"
+                />
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/sg_options_hideNames_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
+                android:checked="true"
+                android:theme="@style/Theme.NavigationSwitch"/>
+
+            <ImageView
+                android:id="@+id/pulse"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:src="@drawable/pulse_indicator"
+                android:visibility="gone"
+                android:clickable="true"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <com.instructure.speedgrader.views.HelveticaTextView
+                android:id="@+id/sg_options_showUngradedFirst"
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                android:gravity="left|center"
+                android:textColor="@color/sg_darkText"
+                android:text="@string/showUngradedStudentsFirst"
+                android:textSize="14sp"
+                android:layout_alignParentLeft="true"
+                />
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/sg_options_showUngradedFirst_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:paddingRight="4dp"
+                android:paddingLeft="4dp"
+                android:checked="true"
+                android:theme="@style/Theme.NavigationSwitch"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <com.instructure.speedgrader.views.HelveticaTextView
+                android:id="@+id/sg_options_viewUngradedCount"
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                android:gravity="left|center"
+                android:textColor="@color/sg_darkText"
+                android:text="@string/viewUngradedCount"
+                android:textSize="14sp"
+                android:layout_alignParentLeft="true"
+                />
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/sg_options_viewUngradedCount_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:paddingRight="4dp"
+                android:paddingLeft="4dp"
+                android:checked="true"
+                android:theme="@style/Theme.NavigationSwitch"/>
+        </RelativeLayout>
+    </LinearLayout>
+</LinearLayout>

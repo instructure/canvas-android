@@ -1,0 +1,175 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <string name="app_name">Speedgrader</string>
+  <string name="hello_world">Hallo verden!</string>
+  <string name="sg_settings">Innstillinger</string>
+  <string name="title_activity_home">hjem</string>
+  <string name="title_activity_document">dokument</string>
+  <string name="action_document_view">Se dokument</string>
+  <string name="sectionsFilter">Filtrer på seksjon</string>
+  <string name="drawer_open">Åpne skuff</string>
+  <string name="drawer_close">Åpne skuff</string>
+  <string name="favorites">Favorittemne</string>
+  <string name="allCourses">Alle emne</string>
+  <string name="emptyMessage">Meldingen kan ikke være tom!</string>
+  <string name="errorPostingComment">Det oppsto en feil under innsending av kommentaren din. Vennligst prøv igjen.</string>
+  <string name="addAComment">Legg til en kommentar</string>
+  <string name="noCommentsToDisplayShort">Det er ingen kommentarer å vise</string>
+  <string name="noItemsToDisplayShort">Der er ingen elementer å vise</string>
+  <string name="noCoursesToDisplayShort">Det er ingen emne å vise</string>
+  <string name="loading">Laster</string>
+  <string name="loadingIndeterminate">Laster...</string>
+  <string name="savingIndeterminate">Lagrer...</string>
+  <string name="assignments">oppgaver</string>
+  <string name="grade">Vurdering</string>
+  <string name="graded">Vurdert</string>
+  <string name="submitted">sendt</string>
+  <string name="rubricPoints">Poeng</string>
+  <string name="pointsPossible">Mulige poeng</string>
+  <string name="due">Innen</string>
+  <string name="noDueDate">Ingen utløpsdato</string>
+  <string name="search">Søk</string>
+  <string name="commentPrompt">Kommentar:</string>
+  <string name="comment">Kommentar</string>
+  <string name="addComment">Legg til kommentar</string>
+  <string name="noRubric">Der er ingen rubrikk for denne oppgaven</string>
+  <string name="courses">Emne</string>
+  <string name="courseList">Emneliste</string>
+  <string name="dashboard">Kontrollpanel</string>
+  <string name="studentsSpinner">Studenter</string>
+  <string name="name">Navn</string>
+  <string name="toggleRubric">Bytte rubrikk</string>
+  <string name="allSections">Alle seksjoner</string>
+  <string name="document">Dokument</string>
+  <string name="document_id">dokument_id</string>
+  <string name="duration">varighet</string>
+  <string name="student">Student</string>
+  <string name="opening">Åpner fil...</string>
+  <string name="composeHint">Skriv noe...</string>
+  <string name="attachHint">Legg til et vedlegg</string>
+  <string name="sendHint">Send hint</string>
+  <string name="back">Tilbake</string>
+  <string name="ninetyNinePlus">99+</string>
+  <string name="help">Hjelp</string>
+  <string name="searchTheGuides">Søk i veiledningen</string>
+  <string name="about">Om</string>
+  <string name="logout">Logg ut</string>
+  <string name="at">\u0020at\u0020</string>
+  <string-array name="defaultNavArray">
+    <item>Element 1</item>
+    <item>Element 2</item>
+  </string-array>
+  <string name="contentDescriptionPreviewImage">Forhåndsvisning av den vedlagte url</string>
+  <string name="visitPage">Besøk live side</string>
+  <string name="pageAtSubmission">Side ved innlevering:</string>
+  <string name="onlineURLDisclaimer">Denne innsendingen var en URL til en ekstern side. Vi har tatt et øyeblikksbilde av hvordan siden så ut da den ble innsendt.</string>
+  <string name="urlSubmission">URL-innsending</string>
+  <string name="url">URL:</string>
+  <string name="noSubmission">Denne studenten har ingen innsendinger for denne oppgaven</string>
+  <string name="noGroupSubmission">Denne gruppen har ingen innleveringer for denne oppgaven</string>
+  <string name="deletedEntry">Dette diskusjons-innlegget har blitt slettet.</string>
+  <string name="viewDiscussion">Se diskusjon</string>
+  <string name="slash">- /</string>
+  <string name="slashNoDash">/</string>
+  <string name="emptyViewMessage">Der er ingen innsendinger for denne oppgaven</string>
+  <string name="emptyAssignmentViewMessage">Der er ingen innsendinger for dette emnet</string>
+  <string name="noSubmissionForAssignment">Ingen innsendinger</string>
+  <string name="authorizationRequired">Autorisasjon påkrevd</string>
+  <string name="cookie">Informasjonskapsel</string>
+  <string name="unsavedData">Ulagrede data</string>
+  <string name="unsavedDataWarning">Vurderingen din er ikke lagret. Forlate denne oppgaven?</string>
+  <string name="continueUnsaved">Fortsett</string>
+  <!--Grading Messages-->
+  <string name="noGrade">Ingen vurdering</string>
+  <string name="incomplete">Uferdig</string>
+  <string name="complete">Ferdig</string>
+  <string name="gradeSaved">Lagring av vurderingen var vellykket</string>
+  <string name="errorSavingGrade">Det oppsto en feil under lagring av vurderingen din. Vennligst kontroller forbindelsen din og prøv igjen.</string>
+  <string name="criterionLongDescription">Lang beskrivelse av kriterier</string>
+  <!--Drawer Settings-->
+  <string name="hideNamesWhileGrading">Vis navn under vurdering</string>
+  <string name="showUngradedStudentsFirst">Hvis studenter uten vurdering først</string>
+  <string name="viewUngradedCount">Vis antall uten vurdering på ikon</string>
+  <string name="viewHTML">Vis HTML</string>
+  <!--Drawer About-->
+  <string name="account">Konto</string>
+  <string name="version">Versjon</string>
+  <string name="copyright">Opphavsrett</string>
+  <string name="copyrightText">© 2010–%1$s Instructure Inc.</string>
+  <!--Error Messages-->
+  <string name="noDataConnection">Vennligst kontroller dataforbindelsen din og prøv igjen.</string>
+  <string name="invalidAccessToken">Ugyldig tilgangsnøkkel. Vennligst logg inn på nytt.</string>
+  <string name="serverError">Serverfeil. Vennligst prøv igjen.</string>
+  <string name="noApps">Enheten din har ingen installerte programmer som kan håndtere denne filen.</string>
+  <string name="unexpectedErrorOpeningFile">Det oppstod en uventet feil under forsøket på å åpne filen.</string>
+  <string name="unexpectedErrorDownloadingFile">Det oppstod en uventet feil under forsøket på nedlasting av filen.</string>
+  <string name="invalidScore">Ugyldig poengsum angitt.</string>
+  <!--Assignment editing-->
+  <string name="points">Poeng:\u0020</string>
+  <string name="assignmentGroup">Oppgave gruppe:\u0020</string>
+  <string name="gradingType">Vurderingstype:\u0020</string>
+  <string name="submissionType">Innsending type:\u0020</string>
+  <string name="editAssignment">Redigere oppgave</string>
+  <string name="save">Lagre</string>
+  <string name="cancel">Avbryt</string>
+  <string name="saveContinue">Fortsett</string>
+  <string name="sendNotification">Varsle brukerene om at innholdet er endret.</string>
+  <string name="setDueDate">Ingen ferdig-dato</string>
+  <string name="assignmentDue">Innen:</string>
+  <string name="assignmentSaved">Lagring av oppgaven var vellykket</string>
+  <string name="useRubricForGrading">Bruk rubrikken kun til vurdering</string>
+  <string name="onlineEntryOptions">Online påmeldingsalternativer:</string>
+  <string name="useRubricError">Oppgaven er satt til å bruke rubrikken ved vurdering.</string>
+  <string name="noDueDateSet">Ingen ferdig-dato </string>
+  <string name="noGradeAssignment">Der er ingen vurdering for denne oppgaven.</string>
+  <string name="muted">Dempe oppgaven</string>
+  <!--Date Text View-->
+  <string name="dateTextDefault">Legg til dato</string>
+  <string name="settings">Innstillinger</string>
+  <string name="open">Åpen</string>
+  <!--Score Edit Text Hints-->
+  <string name="gpaScaleHint">GPA</string>
+  <string name="letterHint">Brev</string>
+  <!--User Messages-->
+  <string name="videoCommentsComingSoon">Videokommentarer kommer snart!</string>
+  <!--Tutorial-->
+  <string name="tutorialSkip">Hopp over</string>
+  <string name="tutorialPage1">Hurtigvisning</string>
+  <string name="tutorialPage2">Filtrer på seksjon </string>
+  <string name="tutorialPage3">Se dokumenter</string>
+  <string name="tutorialPage4">Redigere oppgaver</string>
+  <string name="tutorialPage5">Rubrikkvurdering</string>
+  <string name="tutorialPage6">Tilpass innstillinger</string>
+  <string name="tutorial_tipAssignmentDetails">Oppgave-detaljer</string>
+  <string name="tutorial_tipAssignmentDetailsMessage">Endre oppgave-detaljer</string>
+  <string name="tutorial_tipFilterSections">Filtrer på seksjon</string>
+  <string name="tutorial_tipFilterSectionsMessage">Se klassen du vurderer filtrert på seksjon.</string>
+  <string name="tutorial_tipSortStudentList">Sortere etter klasse eller navn i student listevisning</string>
+  <string name="tutorial_tipSortStudentListMessage">Velg om du ønsker å vise studentene etter klasse eller navn</string>
+  <string name="tutorial_tipSwipeBetweenStudents">Sveip mellom studenter</string>
+  <string name="tutorial_tipSwipeBetweenStudentsMessage">Sveip for enkelt å flytte til den enkelte student</string>
+  <string name="tutorial_tipSubmissionComments">Vis og last opp kommentarer til media-innlevering</string>
+  <string name="tutorial_tipSubmissionCommentsMessage">Unngå problemene med å taste ved å sende inn en rask videokommentar</string>
+  <!--Masquerading-->
+  <string name="masqueradeUserId">Maskerade bruker-ID</string>
+  <string name="startMasquerading">Start maskerade</string>
+  <string name="stopMasquerading">Stopp maskerade</string>
+  <string name="userId">Bruker-ID</string>
+  <string name="masqueradeFail">Det oppsto en feil under forsøk på maskerade</string>
+  <string name="emptyId">ID kan ikke være tom</string>
+  <!--Options menu-->
+  <string name="openInBrowser">Åpne i nettleser</string>
+  <string name="download">Last ned</string>
+  <string name="next">NESTE</string>
+  <string name="prev">FORRIGE</string>
+  <string name="nothingToDownload">Der er ingen innsendt fil å laste ned</string>
+  <string name="nothingToShowInBrowser">Det er ingen vedlagt URL å vise</string>
+  <string name="noAssignmentsInGroup">Ingen oppgaver i denne gruppen</string>
+  <string name="excusedAssignment">Oppgaven er unnskyldt og vil ikke bli vurdert i totalberegningen</string>
+  <string name="singleItem">element</string>
+  <string name="multipleItems">elementer</string>
+  <string name="excused">Unnskyldt</string>
+  <string name="expandOrCollapse">Utvide eller sammenslå</string>
+  <string name="mutedText">Karakterene er utilgjengelige fordi instruktøren jobber med dem.</string>
+  <string name="freeFormRubricPoints" formatted="false">%s / %s</string>
+</resources>

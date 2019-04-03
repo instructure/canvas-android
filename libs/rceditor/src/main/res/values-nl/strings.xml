@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="rce_contentDescription_undo">Ongedaan maken</string>
+    <string name="rce_contentDescription_redo">Opnieuw</string>
+    <string name="rce_contentDescription_bold">Vet</string>
+    <string name="rce_contentDescription_italic">Cursief</string>
+    <string name="rce_contentDescription_strikethrough">Doorhalen</string>
+    <string name="rce_contentDescription_underline">Onderstrepen</string>
+    <string name="rce_contentDescription_format_text_color">Tekstkleur</string>
+    <string name="rce_contentDescription_border_color">Kleur tekstrand</string>
+    <string name="rce_contentDescription_indent_increase">Inspringen vergroten</string>
+    <string name="rce_contentDescription_indent_decrease">Inspringen verkleinen</string>
+    <string name="rce_contentDescription_align_left">Links uitlijnen</string>
+    <string name="rce_contentDescription_align_right">Rechts uitlijnen</string>
+    <string name="rce_contentDescription_align_center">Centreren</string>
+    <string name="rce_contentDescription_insert_bullets">Opsommingslijst invoegen</string>
+    <string name="rce_contentDescription_insert_numbers">Genummerde lijst invoegen</string>
+    <string name="rce_contentDescription_insert_photo">Foto invoegen</string>
+    <string name="rce_contentDescription_upload_photo">Foto vanaf apparaat uploaden</string>
+    <string name="rce_contentDescription_insert_link">Koppeling invoegen</string>
+    <string name="rce_contentDescription_block_quote">Blokcitaat</string>
+
+    <string name="rce_contentDescription_color_none">Geen kleur</string>
+    <string name="rce_contentDescription_color_white">Wit</string>
+    <string name="rce_contentDescription_color_black">Zwart</string>
+    <string name="rce_contentDescription_color_blue">Blauw</string>
+    <string name="rce_contentDescription_color_red">Rood</string>
+    <string name="rce_contentDescription_color_green">Groen</string>
+    <string name="rce_contentDescription_color_gray">Grijs</string>
+    <string name="rce_contentDescription_color_magenta">Magenta</string>
+    <string name="rce_contentDescription_color_cyan">Cyaan</string>
+    <string name="rce_contentDescription_color_orange">Oranje</string>
+    <string name="rce_contentDescription_color_yellow">Geel</string>
+    <string name="rce_contentDescription_color_purple">Paars</string>
+
+    <string name="rce_editTextUrlHint">Koppeling</string>
+    <string name="rce_editTextALTHint">Tekst</string>
+    <string name="rce_dialogDone">Gereed</string>
+    <string name="rce_dialogCancel">Annuleren</string>
+    <string name="rce_insertLink">Koppeling invoegen</string>
+    <string name="rce_insertImage">Afbeelding invoegen</string>
+
+    <string name="rce_uploadImage">Afbeelding uploaden</string>
+    <string name="rce_done">Gereed</string>
+    <string name="rce_cancel">Annuleren</string>
+    <string name="rce_exit">Afsluiten</string>
+    <string name="rce_dialog_exit_title">Opdracht bewerken afsluiten?</string>
+    <string name="rce_dialog_exit_message">Weet je zeker dat je wilt afsluiten? Alle niet-opgeslagen gegevens gaan verloren.</string>
+    <string name="rce_empty_message">Bericht</string>
+    <string name="rce_empty_description">Beschrijving toevoegen</string>
+    <string name="rce_scrollInstructions">Scrollen voor alle bewerkingstools</string>
+</resources>

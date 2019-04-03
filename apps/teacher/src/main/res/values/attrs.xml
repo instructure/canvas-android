@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<resources>
+
+    <declare-styleable name="CanvasLoadingView">
+        <attr name="clv_override_color" format="color" />
+        <attr name="clv_speed_multiplier" format="float" />
+    </declare-styleable>
+
+    <declare-styleable name="DonutChart">
+        <attr name="dc_radius" format="dimension"/>
+        <attr name="dc_center_text" format="string"/>
+        <attr name="dc_center_text_size" format="dimension"/>
+    </declare-styleable>
+
+    <declare-styleable name="CustomBottomSheetBehaviorAnchorPoints">
+        <attr name="anchorPoint" format="dimension"/>
+    </declare-styleable>
+
+    <declare-styleable name="AspectRatioRelativeLayout">
+        <attr name="aspectRatio" format="float"/>
+    </declare-styleable>
+
+    <declare-styleable name="PublishedStatusIconView">
+        <attr name="published" format="boolean"/>
+        <attr name="icon" format="reference"/>
+    </declare-styleable>
+
+    <declare-styleable name="CriterionRatingLayout">
+        <attr name="itemSpacing" format="dimension"/>
+        <attr name="justifyItems" format="boolean"/>
+    </declare-styleable>
+
+    <declare-styleable name="CommentView">
+        <attr name="comment_direction" format="enum">
+            <enum name="INCOMING" value="0"/>
+            <enum name="OUTGOING" value="1"/>
+        </attr>
+        <attr name="comment_bubbleColor" format="color"/>
+        <attr name="comment_textColor" format="color"/>
+        <attr name="comment_previewText" format="string"/>
+        <attr name="comment_previewName" format="string"/>
+        <attr name="comment_previewAvatar" format="reference"/>
+    </declare-styleable>
+
+    <declare-styleable name="CommentTextView">
+        <attr name="bubbleColor" format="color"/>
+        <attr name="targetAvatarId" format="reference"/>
+    </declare-styleable>
+
+    <declare-styleable name="TutorialSwipeView">
+        <attr name="tsv_color" format="color"/>
+        <attr name="tvs_showTrail" format="boolean"/>
+    </declare-styleable>
+
+    <declare-styleable name="RubricTooltipView">
+        <attr name="rtt_constrainBubbleToPaddingOf" format="reference"/>
+    </declare-styleable>
+
+    <declare-styleable name="LinearProgressBar">
+        <attr name="lbp_color" format="color"/>
+        <attr name="lbp_fillGravity" format="enum">
+            <enum name="top" value="48" />
+            <enum name="bottom" value="80" />
+            <enum name="start" value="8388611" />
+            <enum name="end" value="8388613" />
+            <enum name="left" value="3" />
+            <enum name="right" value="5" />
+        </attr>
+    </declare-styleable>
+</resources>

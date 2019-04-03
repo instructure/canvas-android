@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C) 2016 - present Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/AdapterItem"
+    android:background="@color/moduleItemBackground">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/icon"
+            style="@style/AdapterItemIcon"
+            android:layout_width="@dimen/avatar_size"
+            android:layout_height="@dimen/avatar_size"
+            android:padding="4dp"
+            android:contentDescription="@string/icon"/>
+
+        <LinearLayout
+            android:id="@+id/textContainer"
+            style="@style/AdapterItemTextContainer"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/title"
+                style="@style/AdapterItemTitleText"
+                android:layoutDirection="locale"
+                android:textDirection="locale"
+                tools:text="Person Name" />
+
+            <TextView
+                android:id="@+id/role"
+                style="@style/AdapterItemDescriptionText"
+                tools:text="Student" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/shadowTop"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/shadow_bottom_top"
+        android:visibility="invisible" />
+
+    <View
+        android:id="@+id/shadowBottom"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/shadow_top_bottom"
+        android:visibility="invisible" />
+
+</RelativeLayout>
+

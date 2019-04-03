@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+        android:width="20dp"
+        android:height="16dp"
+        android:viewportWidth="20.0"
+        android:viewportHeight="16.0">
+    <path
+        android:pathData="M0,15.294L0,0L20,0L20,15.294L0,15.294ZM1.176,1.57L10,9.222L18.823,1.57L18.823,1.177L1.176,1.177L1.176,1.57ZM18.823,3.127L10,10.778L1.176,3.127L1.176,13.028L4.834,8.456L5.753,9.192L1.812,14.118L18.188,14.118L14.247,9.192L15.166,8.456L18.823,13.028L18.823,3.127Z"
+        android:strokeColor="#00000000"
+        android:fillType="evenOdd"
+        android:fillColor="#73818C"
+        android:strokeWidth="1"/>
+</vector>

@@ -1,0 +1,1000 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2018 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+<resources>
+
+    <string name="noFilesFound">Файлы не найдены</string>
+    <string name="searchFilesHint">Поиск файлов</string>
+    <string name="fileSearchInstructions">Введите ключевое слово из трех или более символов</string>
+    <plurals name="fileSearchResultCount">
+        <item quantity="zero">"Совпадающие элементы не найдены"</item>
+        <item quantity="one">"Найден %d совпадающий элемент"</item>
+        <item quantity="few">"Найдено %d совпадающих элемента(-ов)"</item>
+        <item quantity="many">"Найдено %d совпадающих элемента(-ов)"</item>
+        <item quantity="other">"Найдено %d совпадающих элемента(-ов)"</item>
+    </plurals>
+    <string name="contentDescriptionSuperPanda">Летающая панда в плаще</string>
+    <string name="troubleLoggingIn">Проблема со входом в систему?</string>
+    <string name="requestLoginHelp">Запрос помощи со входом в систему</string>
+    <string name="loginHelpSubject">У меня проблема со входом в систему</string>
+    <string name="errorReportInvalidEmail">Введите действительный адрес эл. почты</string>
+    <string name="announcementSections">Разделы: %s</string>
+    <string name="selectedListItem">Выбрано: %s</string>
+
+    <!-- Student Strings -->
+    <!--Profile Fragment Strings -->
+    <string name="canvasVersionNum">Версия:</string>
+
+    <!--Content Descriptions-->
+    <string name="canvasLogo">Логотип Canvas</string>
+    <string name="enterURL">Введите Ваш URL Canvas:</string>
+    <string name="exampleURLSimple">myschool.instructure.com</string>
+    <string name="signIntoCanvasNetwork">Пытаетесь войти в сеть Canvas?</string>
+    <string name="mobileVerifyGeneral">Это приложение не авторизовано для использования</string>
+    <string name="mobileVerifyDomainUnauthorized">Введенный сервер не авторизован для этого приложения.</string>
+    <string name="mobileVerifyUserAgentUnauthorized">Пользовательский агент для этого приложения не авторизован.</string>
+    <string name="mobileVerifyUnknownError">Мы не смогли проверить сервер для использования с этим приложением.</string>
+    <string name="okay">Хорошо</string>
+    <string name="options">Опции</string>
+
+    <string name="discussionAttachment">Прикрепить файл</string>
+    <string name="discussionUpload">Загрузить видео или аудио</string>
+    <string name="discussionPostEditing">Редактировать</string>
+
+    <!--Multiple User Sign in -->
+    <string name="removeUser">Удалить пользователя?</string>
+    <string name="removedForever">Вам необходимо повторно войти в систему с учетными данными этого пользователя, чтобы получить доступ к контенту.</string>
+
+    <string name="bookmarksTitle">Закладки</string>
+    <string name="addBookmark">Добавить закладку</string>
+    <string name="bookmarkName">Ярлык</string>
+    <string name="bookmarkTitleRequired">Требуется ярлык</string>
+    <string name="bookmarkAddedSuccess">Закладка создана</string>
+    <string name="bookmarkAddedFailure">Закладка не может быть создана</string>
+    <string name="bookmarkShortcut">Выберите закладку</string>
+    <string name="bookmarkDeleted">Закладка удалена</string>
+    <string name="bookmarkDelete">Удалить закладку?</string>
+    <string name="bookmarkEdit">Редактировать закладку</string>
+    <string name="bookmarkUpdated">Закладка обновлена</string>
+    <string name="no_bookmarks">Создать закладку, а затем просмотреть ее здесь!</string>
+
+    <!--Date strings-->
+    <string name="today">Сегодня</string>
+    <string name="past">Прошлый</string>
+    <string name="noDate">Дата отсутствует</string>
+    <string name="future">Будущее</string>
+    <string name="next7Days">Следующие 7 дней</string>
+    <string name="days">Дней</string>
+
+    <!--Assignments-->
+    <string name="assignmentDue">Срок</string>
+    <string name="assignmentDueColon">Срок: </string>
+    <string name="assignmentLastSubmission">Последняя отправка</string>
+    <string name="assignmentNoSubmission">Нет</string>
+    <string name="assignmentTabDetails">Подробные сведения</string>
+    <string name="assignmentTabSubmission">Отправки</string>
+    <string name="assignmentTabGrade">Оценка</string>
+    <string name="assignmentLocked">Заблокировано</string>
+    <string name="assignments">Задания</string>
+    <string name="freeFormRubricPoints" formatted="false">%s / %s </string>
+    <string name="noRubric">Нет раздела для этого задания.</string>
+    <string name="noDescription">Нет описания для этого задания.</string>
+    <string name="noAssignmentsInGroup">Нет Заданий в этой группе</string>
+    <string name="excusedAssignment">Данное задание не обязательно и не будет учитываться в общем подсчете</string>
+    <string name="droppedAssignment">Данное задание изъято и не будет учитываться в общем подсчете</string>
+    <string name="excused">EX</string>
+    <string name="mutedText">Оценки успеваемости недоступны, потому что над ними работает преподаватель.</string>
+    <string name="rubricRangePointsText" formatted="false">&#160;до &gt; %s баллов</string>
+    <string name="contentDescriptionRubricRangePointsText" formatted="false">%s &#160;до &gt; %s баллов</string>
+
+    <!-- Assignment editing -->
+    <string name="points">Баллы </string>
+    <string name="assignmentGroup">Группа заданий: </string>
+    <string name="gradingType">Тип оценки успеваемости: </string>
+    <string name="submissionType">Тип отправки: </string>
+    <string name="editAssignment">Редактировать задание</string>
+    <string name="save">Сохранить</string>
+    <string name="cancel">Отменить</string>
+    <string name="sendNotification">Уведомить пользователей об изменении данного контента</string>
+
+    <!--Discussions-->
+    <string name="forbidden">Ответы видны только тем, кто опубликовал не менее одного ответа.</string>
+
+    <!--Events-->
+    <string name="Starts">Начинается</string>
+    <string name="Ends">Заканчивается</string>
+    <string name="allDayEvent">Мероприятие на весь день</string>
+    <string name="at">в</string>
+    <string name="PersonalCalendar">Личный календарь</string>
+    <string name="noLocation">Местоположение не указано</string>
+
+    <string name="discussion">Дискуссии</string>
+    <string name="closed_discussion">Закрыто для комментариев</string>
+    <string name="discussionUploadDialog">Загрузка обсуждения</string>
+    <string name="totalScore">Итого:</string>
+    <string name="noGradeText">Н/Д</string>
+    <string name="checkBoxFinalGradeOption">На основе оцениваемых заданий</string>
+    <string name="checkBoxWhatIfGradeOption">Показать возможную оценку</string>
+    <string name="whatIfDialogText">Возможная оценка</string>
+    <string name="inbox">Входящие</string>
+    <string name="unread">Не прочитано</string>
+    <string name="archived">Архивировано</string>
+    <string name="sent">Отправлено</string>
+    <string name="grade">Оценка</string>
+    <string name="clearFilter">Очистить фильтр</string>
+    <string name="addMessage">Добавить сообщение</string>
+    <string name="monologue">Монолог</string>
+    <string name="noItemsToDisplayShort">Нет элементов для отображения</string>
+    <string name="emptyCalendarDate">Ничего не запланировано на</string>
+    <string name="emptyCalendarWeek">Ничего не запланировано на неделю</string>
+    <string name="emptyCalendarMonth">Ничего не запланировано на месяц</string>
+    <string name="selectCanvasCalendars">Выберите до 10 календарей</string>
+    <string name="contentDesc_colored_calendar_indicator">Цветной индикатор расписания</string>
+    <string name="noDatesSelected">Пожалуйста, выберите дату</string>
+    <string name="Todo">Задачи</string>
+    <string name="todoFilter">Фильтровать курсы</string>
+    <string name="filterByEllipsis">Фильтровать по&#8230;</string>
+    <string name="favoritedCoursesLabel">Избранные курсы</string>
+    <string name="Event">Событие</string>
+    <string name="eventSuccessfulCreation">Мероприятие было успешно создано</string>
+    <string name="eventSuccessfulDeletion">Мероприятие было успешно удалено</string>
+    <string name="newEvent">Новое мероприятие</string>
+    <string name="enterTitle">Введите название</string>
+    <string name="enterLocation">Введите Местоположение</string>
+    <string name="addNote">Добавить заметку</string>
+    <string name="titleIconDescription">Иконка названия</string>
+    <string name="dateIconDescription">Иконка даты</string>
+    <string name="timeIconDescription">Значок времени</string>
+    <string name="locationIconDescription">Иконка местоположения</string>
+    <string name="noteIconDescription">Иконка заметки</string>
+    <string name="toDoTurnIn">Включить</string>
+    <string name="toDoNoDueDate">Срок выполнения не задан</string>
+
+    <string name="dueAt">Срок выполнения</string>
+    <string name="dueAtTime">Срок выполнения в %s</string>
+    <string name="toDoDue">Срок</string>
+    <string name="due">Срок %1$s</string>
+    <plurals name="to_do_needs_grading">
+        <item quantity="one">%d требует оценки</item>
+        <item quantity="few">%d требуют оценки</item>
+        <item quantity="many">%d требуют оценки</item>
+        <item quantity="other">%d требуют оценки</item>
+    </plurals>
+    <string name="myFiles">Файлы</string>
+    <string name="createAFolder">Создать папку</string>
+    <string name="createFolder">Создать папку</string>
+    <string name="createAFile">Создать файл</string>
+    <string name="createFileFolderFabContentDesc">Показать кнопки создания файла и создания папки</string>
+    <string name="folderCreationError">При создании папки произошла ошибка.</string>
+    <string name="rename">Переименовать</string>
+    <string name="renameFile">Переименовать файл</string>
+    <string name="renameFolder">Переименовать папку</string>
+    <string name="blankName">Необходимо указать имя</string>
+    <string name="confirmDeleteFile">Вы действительно хотите удалить файл \'%s\'? Это действие невозможно отменить.</string>
+    <string name="confirmDeleteEmptyFolder">Вы действительно хотите удалить папку \'%s\'? Это действие невозможно отменить.</string>
+    <plurals name="confirmDeleteFolder">
+        <item quantity="one">Вы действительно хотите удалить папку \'%1$s\', включая находящийся в ней элемент %2$d? Это действие невозможно отменить.</item>
+        <item quantity="few">Вы действительно хотите удалить папку \'%1$s\', включая находящиеся в ней элементы %2$d? Это действие невозможно отменить.</item>
+        <item quantity="many">Вы действительно хотите удалить папку \'%1$s\', включая находящиеся в ней элементы %2$d? Это действие невозможно отменить.</item>
+        <item quantity="other">Вы действительно хотите удалить папку \'%1$s\', включая находящиеся в ней элементы %2$d? Это действие невозможно отменить.</item>
+    </plurals>
+
+    <string name="settings">Настройки</string>
+    <string name="name">Имя</string>
+    <string name="email">Адрес электронной почты</string>
+    <string name="username">Имя пользователя</string>
+    <string name="password">Пароль</string>
+    <string name="authenticationRequired">Необходима аутентификация</string>
+    <string name="invalidEmailPassword">Неправильный адрес электронной почты или пароль</string>
+    <string name="loginId">Имя пользователя</string>
+    <string name="domain">Домен</string>
+    <string name="sendFeedback">Отправить отзыв</string>
+    <string name="sendMail">Отправить сообщение&#8230;</string>
+    <string name="edit">Редактировать</string>
+    <plurals name="item_count">
+        <item quantity="one">%d элемент</item>
+        <item quantity="few">%d элементов</item>
+        <item quantity="many">%d элементов</item>
+        <item quantity="other">%d элементов</item>
+    </plurals>
+    <string name="addToHomescreen">Добавить на начальную страницу</string>
+    <string name="archive">Архив</string>
+    <string name="moveToInbox">Поместить во Входящие</string>
+    <string name="markAsUnread">Отметить как непрочитанное</string>
+    <string name="selectPeopleInbox">Выбрать пользователей</string>
+    <string name="delete">Удалить</string>
+    <string name="deleteEvent">Удалить мероприятие</string>
+    <string name="selected">Выбрано</string>
+    <string name="errorSendingMessage">Произошла ошибка при попытке отправки вашего сообщения. Попробуйте еще раз.</string>
+    <string name="errorPostingComment">Произошла ошибка при попытке разместить ваш комментарий к отправке. Попробуйте еще раз.</string>
+    <string name="deletedConversation">Этот разговор был удален.</string>
+    <string name="uploadAvatarFailMsg">Не удалось загрузить изображение нового аватара</string>
+    <string name="editPhoto">Редактировать фотографию</string>
+    <string name="invalidUsername">Это имя пользователя не действительно.</string>
+    <string name="usernameChangeSuccess">Имя пользователя успешно обновлено!</string>
+    <string name="takePhoto">Сделать фотоснимок</string>
+    <string name="choosePhotoFromGallery">Выбрать фотографию из галереи</string>
+    <string name="fileNotFound">Файл не найден.</string>
+
+    <!-- Conversations -->
+    <string name="reply">Ответить</string>
+    <string name="writeAMessage">Написать сообщение...</string>
+    <string name="compose">Составить</string>
+    <string name="composeMessage">Написать сообщение</string>
+    <string name="successSendingMessage">Сообщение было успешно отправлено.</string>
+    <string name="emptyMessage">Сообщение не может быть пустым!</string>
+    <string name="noRecipients">Нет получателей</string>
+    <string name="send">Отправить</string>
+    <string name="users">Пользователи</string>
+    <string name="individually">Индивидуально</string>
+    <string name="versionNum">Версия:</string>
+    <string name="version" formatted="false">в. %s</string>
+    <string name="allCourses">Все курсы</string>
+    <string name="allGroups">Все группы</string>
+    <string name="courseOptions">Опции курсов</string>
+    <string name="editNickname">Редактировать псевдоним</string>
+    <string name="editCourseColor">Редактировать цвет курса</string>
+    <string name="open">Открыть</string>
+    <string name="openAlternate">Открыть с помощью альтернативного приложения</string>
+    <string name="opening">Открытие файла&#8230;</string>
+    <string name="download">Загрузить</string>
+    <string name="hideExtras">Скрыть дополнительное</string>
+    <string name="showExtras">Показать дополнительное</string>
+    <string name="messageAttachments">Вложения сообщения</string>
+    <string name="discussionAttachmentLabel">Вложение</string>
+    <string name="attachmentIcon">Значок вложения</string>
+    <string name="ok">OK</string>
+    <string name="with">с</string>
+    <string name="starConversation">Начать разговор</string>
+    <string name="deleteConversation">Удалить разговор</string>
+    <string name="sharedWith">Разделено с  </string>
+    <string name="sharedWithYou">Общее с вами</string>
+    <string name="inboxEmptyMessage">Нажмите на \"+\" для создания нового разговора.</string>
+    <string name="inboxAllMessages">Все</string>
+    <string name="filterInbox">Фильтровать Входящие</string>
+    <string name="selectCanvasContext">Выбрать курс или группу</string>
+    <string name="inboxEmptyTitle">Нет сообщений</string>
+    <string name="removeAttachment">Удалить вложение</string>
+    <string name="downloadAttachment">Загрузить вложение</string>
+    <string name="messageOptions">Опции сообщения</string>
+    <string name="forward">Переслать</string>
+    <string name="replyAll">Ответить на все</string>
+    <string name="unarchive">Разархивировать</string>
+    <string name="confirmDeleteMessage">Вы действительно хотите удалить копию этого сообщения? Это действие невозможно отменить.</string>
+    <string name="confirmDeleteConversation">Вы действительно хотите удалить копию этой дискуссии? Это действие невозможно отменить.</string>
+    <string name="errorConversationGeneric">Невозможно выполнить это действие. Проверьте подключение и попробуйте еще раз.</string>
+    <string name="conversationArchived">Дискуссия архивирована</string>
+    <string name="conversationUnarchived">Дискуссия разархивирована</string>
+    <string name="messageDeleted">Сообщение удалено</string>
+    <string name="sendIndividualMessage">Отправить индивидуальное сообщение каждому получателю</string>
+    <string name="invalidRecipients">Вы не имеете права отправлять сообщения одному или более из выбранных получателей.</string>
+    <string name="newMessage">Новое сообщение</string>
+    <string name="forwardMessage">Перенаправить сообщение</string>
+    <string name="addMorePeopleToMessage">Добавить другого получателя. Невозможно отправить сообщения, адресованные только самому себе.</string>
+    <string name="selectRecipients">Выбрать получателей</string>
+
+    <plurals name="people_count">
+        <item quantity="one">%d человек</item>
+        <item quantity="few">%d человека</item>
+        <item quantity="many">%d человека</item>
+        <item quantity="other">%d человека</item>
+    </plurals>
+
+    <plurals name="group_count">
+        <item quantity="one">%d группа</item>
+        <item quantity="few">%d групп</item>
+        <item quantity="many">%d групп</item>
+        <item quantity="other">%d групп</item>
+    </plurals>
+
+    <string name="exitWithoutSavingTitle">Выйти без сохранения?</string>
+    <string name="exitWithoutSavingMessage">Вы действительно хотите выйти без сохранения?</string>
+    <string name="exitUnsaved">Выход</string>
+
+    <!-- Groups -->
+    <string name="groupDialogTitle">Групповое сообщение?</string>
+    <string name="groupDialogMessage">Добавить всех в одну группу разговора или отправить сообщение всем индивидуально?</string>
+    <string name="group">Группа</string>
+    <string name="groups">Группы</string>
+    <string name="groupMembers">Члены группы</string>
+
+    <string name="loading">Загрузка&#8230;</string>
+    <string name="select_item_to_display">Выбрать из списка</string>
+
+    <string name="syllabus">Содержание курса</string>
+    <string name="coursePeople">Люди</string>
+    <string name="teachersTas">Учители и ассистенты</string>
+    <string name="students">Студенты</string>
+    <string name="observers">Наблюдатели</string>
+    <string name="syllabusMissing">Описание курса не было добавлено.</string>
+
+    <string name="canvas">Canvas</string>
+    <string name="chooseRecipient">Выберите получателя (ей)</string>
+    <string name="messageHasNoRecipients">У этого сообщения в настоящее время нет получателей.</string>
+    <string name="sendMessage">Отправить сообщение</string>
+    <string name="userAvatar">Аватар пользователя</string>
+
+    <string name="calendarIcon">Иконка календаря</string>
+    <string name="assignmentIcon">Иконка задания</string>
+    <string name="announcementIcon">Иконка объявления</string>
+    <string name="conversationIcon">Иконка разговора</string>
+    <string name="defaultIcon">Иконка по умолчанию</string>
+    <string name="discussionIcon">Иконка обсуждений</string>
+    <string name="gradesIcon">Иконка оценок</string>
+    <string name="grades">Оценки</string>
+    <string name="allGradingPeriods">Все академические периоды</string>
+    <string name="calendar">Календарь</string>
+    <string name="bookmarks">Закладки</string>
+    <string name="showGrades">Показать оценки</string>
+    <string name="gradesAreHidden">Оценки не видны для этого курса.</string>
+
+    <string name="entireGroupSelected">Вся эта группа уже была выбрана.</string>
+    <string name="noUsersInGroup">Нет пользователей в этой группе</string>
+
+    <!--Notifications-->
+    <string name="deleted">[Удалено]</string>
+    <string name="gradedDiscussion">Оцениваемое обсуждение.</string>
+    <string name="pointsPossible">Возможные баллы.</string>
+    <string name="pointsPossibleNoPeriod">Возможное количество баллов</string>
+
+    <string name="deletedEntryNoChildren">У этой удаленной записи обсуждения нет ответов.</string>
+    <string name="sideCommentEntry">В дискуссиях данного типа не допускается комментировать записи этого уровня.</string>
+    <string name="contentDescriptionFiles">Иконка файла</string>
+
+    <string name="loadingCanvas">Загрузка контента Canvas&#8230;</string>
+
+    <string name="unknownDevice">UnknownDevice</string>
+
+    <string name="differentDomainFromLink">Ссылка выбрана для другого домена,  не для того, в который вы вошли.</string>
+
+    <string name="pages">Страницы</string>
+    <string name="noPageFound">Нет доступной информации о странице.</string>
+    <string name="noPagesInContext">Нет страниц доступных для этого</string>
+    <string name="modified">Последнее изменение:</string>
+    <string name="lastModified">Последнее изменение: %1$s</string>
+
+    <string name="masqueradeUserId">Подмена ID пользователя</string>
+    <string name="startMasquerading">Начать подмену</string>
+    <string name="stopMasquerading">Остановить подмену</string>
+    <string name="userId">Идентификатор пользователя</string>
+    <string name="masqueradeFail">При попытке подмены возникла ошибка</string>
+
+    <string name="emptyId">ID не может быть пустым</string>
+
+    <string name="goToQuiz">Перейти к тестовому заданию</string>
+    <string name="goToExternalTool">Перейти к Внешнему инструменту</string>
+
+    <string name="pastDueDate">Просроченный срок выполнения</string>
+
+    <string name="goToDiscussion">Перейти к обсуждению</string>
+    <string name="quizzes">Тесты</string>
+
+    <string name="lastDiscussionPost">Последний пост</string>
+
+    <string name="newAnnouncement">Новое объявление</string>
+    <string name="newDiscussion">Новая дискуссия</string>
+    <string name="composeDiscussion">Создать Обсуждение</string>
+    <string name="composeAnnouncement">Создать Объявление</string>
+
+    <string name="postAnnouncement">Разместить объявление</string>
+    <string name="postDiscussion">Разместить обсуждение</string>
+
+    <string name="postAnnouncementSuccess">Объявление было опубликовано успешно.</string>
+    <string name="postDiscussionSuccess">Обсуждение был успешно опубликовано.</string>
+    <string name="updateDiscussionSuccess">Обсуждение был успешно обновлено.</string>
+    <string name="draftDiscussionSuccess">Проект обсуждения был успешно создан.</string>
+
+    <string name="errorPostingAnnouncement">Возникла ошибка при публикации объявления.</string>
+    <string name="errorPostingDiscussion">Возникла ошибка при публикации обсуждения.</string>
+    <string name="allowThreading">Разрешить ответы с деревом сообщений</string>
+    <string name="usersMustPost">Пользователи должны публиковать сообщения, прежде чем увидят ответы</string>
+    <string name="allowUserComments">Разрешить пользователям комментирование</string>
+    <string name="message">Сообщение</string>
+    <string name="title">Заголовок</string>
+
+
+    <string name="messageBlank">Сообщение не может быть пустым.</string>
+
+    <string name="notAuthorizedAnnouncement">Извините. У вас нет прав размещать объявления в данном курсе.</string>
+    <string name="notAuthorizedDiscussion">Извините. У вас нет прав размещать обсуждения в данном курсе.</string>
+
+    <string name="announcements">Объявления</string>
+
+    <string name="titleBlank">Название не может быть пустым.</string>
+
+    <!-- Modules -->
+    <string name="modules">Модули</string>
+    <string name="moduleItemMustView">Просмотреть этот элемент</string>
+    <string name="moduleItemViewed">Вы просмотрели этот элемент</string>
+    <string name="moduleItemSubmit">Необходимо предоставить задание</string>
+    <string name="moduleItemSubmitted">Задание предоставлено</string>
+    <string name="moduleItemContribute">Добавить информацию на эту страницу</string>
+    <string name="moduleItemContributed">Вы добавили информацию</string>
+    <string name="moduleItemMinScore">Набрать по меньшей мере</string>
+    <string name="moduleItemMinScoreMet">Минимальная оценка набрана</string>
+    <string name="prerequisites">Предварительные условия:</string>
+    <string name="unlocked">Разблокировано:</string>
+    <string name="locked">Заблокировано</string>
+    <string name="lockedAssignmentDesc">Данное задание является частью модуля %s и еще не было разблокировано.</string>
+    <string name="lockedPageDesc">Данная страница является частью модуля %s и еще не была разблокирована.</string>
+    <string name="lockedFileDesc">Данный файл является частью модуля %s и еще не был разблокирован.</string>
+    <string name="lockedQuizDesc">Данный тест является частью модуля %s и еще не был разблокирован.</string>
+    <string name="lockedDiscussionDesc">Данное обсуждение является частью модуля %s и еще не было разблокировано.</string>
+    <string name="lockedAssignmentDescLine2">Посетите страницу модулей курса для получения информации о том, как разблокировать этот контент.</string>
+    <string name="mustComplete">Вы должны сначала завершить:</string>
+    <string name="unlockedAt">Будет разблокировано в:</string>
+    <string name="goToModules">Перейти к Модулям</string>
+    <string name="markDone">Отметить как выполненное</string>
+
+    <string name="moduleItemNotFound">Элемент модуля не найден</string>
+    <string name="help">Справка</string>
+    <string name="instructor_question">Вопрос Учителя</string>
+    <string name="link">Ссылка</string>
+
+    <!-- LockInfoHTMLHelper Strings -->
+    <string name="lockedAssignmentNotModule">Это задание заблокировано.</string>
+
+    <!--New Course Layout Strings -->
+    <string name="myCourses">Мои курсы</string>
+
+
+    <!--New Submission Strings -->
+    <string name="textEntry"> Ввод текста</string>
+    <string name="onlineURL"> URL-адрес в Интернете</string>
+    <string name="enterTextEntry">Введите текст</string>
+    <string name="fileUpload"> Отправка файла</string>
+    <string name="oneFileOnly">В данном случае допускается отправка только одного файла</string>
+
+
+    <string name="submit">Отправить</string>
+    <string name="blankSubmission">Отправка не может быть пустой.</string>
+    <string name="errorPostingSubmission">Возникла ошибка при публикации отправки.</string>
+    <string name="successPostingSubmission">Отправка успешно опубликована.</string>
+
+    <string name="exampleSubmissionURL">http://www.example.com</string>
+
+
+
+    <!--DataLoss Fragment Strings -->
+    <string name="unsavedProgress">Несохраненный прогресс</string>
+    <string name="informationLost">Несохраненные данные будут утеряны. Продолжить?</string>
+    <string name="slash"> / </string>
+
+    <!--Delete Notification Strings -->
+    <string name="confirm">Подтвердить</string>
+
+    <!--Dismiss To do String-->
+    <string name="markAsDone">Отметить как выполненное</string>
+
+    <!--Submission Details Strings -->
+    <string name="next">Далее</string>
+    <string name="addSubmission">Включить</string>
+    <string name="addAnotherSubmission">Включить еще раз</string>
+    <string name="turnedIn">Включено:&#160;</string>
+    <string name="addComment">Добавить комментарий&#8230;</string>
+    <string name="addCommentNoEllipsis">Добавить комментарий</string>
+    <string name="subTypeOnlineText">Онлайновый ввод текста</string>
+    <string name="subTypeFileUpload">Онлайн загрузка eFile</string>
+    <string name="subTypeOnlineURL">Адрес веб-сайта</string>
+    <string name="subTypeOnlineQuiz">Онлайн тест</string>
+    <string name="subTypeMediaRecording">Запись на носитель</string>
+    <string name="sub_type_lti_launch">Пуск LTI</string>
+    <string name="subTypeDiscussionTopic">Обсуждение</string>
+    <string name="turnInByHand">Вы должны вернуть это задание лично</string>
+    <string name="noSubRequired">Отправка выполненной работы не требуется</string>
+    <string name="noTurnInOnMobile">Мобильная отправка выполненной работы не поддерживается</string>
+
+    <string name="home">Начальная страница</string>
+    <string name="Notifications">Уведомления</string>
+
+    <string name="icon">Иконка</string>
+    <string name="rootUser">Корневая папка пользователя</string>
+    <string name="rootCourse">Корневая папка курса</string>
+    <string name="rootGroup">Корневая папка группы</string>
+
+    <!-- Course Settings -->
+    <string name="privatelyAvailable">Доступно приватно</string>
+    <string name="publiclyAvailable">Доступно публично</string>
+    <string name="starts">Начинается:  </string>
+    <string name="courseCode">Код курса:  </string>
+    <string name="ends">Заканчивается:  </string>
+    <string name="visibility">Видимость:  </string>
+    <string name="license">Лицензия:  </string>
+
+
+    <!-- Navigation String -->
+    <string name="collaborations">Совместная работа</string>
+    <string name="conferences">Конференции</string>
+    <string name="chat">Чат</string>
+    <string name="outcomes">Результаты</string>
+
+    <!-- Submission View Strings -->
+    <string name="visitPage">Посетите страницу:</string>
+    <string name="clickToViewSubmission">Образ экрана веб-сайта был сделан при его включении. Нажмите и удерживайте изображение ниже, чтобы открыть или загрузить полное изображение.</string>
+    <string name="urlSubmissionNoPreview">Эта отправка была URL-адресом на внешнюю страницу. Имейте в виду, что после первоначальной отправки эта страница могла измениться.</string>
+    <string name="contentDescriptionPreviewImage">Предварительный обзор представленного URL</string>
+    <string name="itemStillProcessing">Данный объект все еще обрабатывается на сервере. Попробуйте еще раз.</string>
+
+
+    <string name="isNotSupportedFeature">%1$s не поддерживаются.</string>
+    <string name="isNotSupported">Ссылка не поддерживается.</string>
+    <string name="openInBrowser">Открыть в браузере</string>
+    <string name="unsupported">Не поддерживается</string>
+
+
+    <!-- Profile Strings -->
+    <string name="calendarWeekSetting">Календарь начинается в понедельник</string>
+    <string name="profile">Профиль</string>
+
+    <string name="noSubject">(Без темы)</string>
+    <string name="subject">Тема</string>
+    <string name="sadPanda">Изображение Грустной Панды</string>
+    <string name="panda_fact_string">Факты о Панде:&#160;</string>
+    <string name="remove">Удалить</string>
+    <string name="founders">Создатели</string>
+    <string name="image">Изображение</string>
+
+    <string name="EULA">Лицензионный договор</string>
+    <string name="privacyPolicy">Политика конфиденциальности</string>
+    <string name="termsOfUse">Условия использования</string>
+    <string name="openSource">Открытый исходный код</string>
+
+    <!-- Quiz Strings -->
+    <string name="assignmentQuizzes">Тесты задания</string>
+    <string name="practiceQuizzes">Практические тесты</string>
+    <string name="gradedSurveys">Оцениваемые опросы</string>
+    <string name="surveys">Опросы</string>
+    <string name="quizMatchingDefaultDisplay">[Выбрать]</string>
+    <string name="choose_answer_below">Выберите один из представленных ниже вариантов ответов</string>
+    <string name="choose_answers_below">Выберите несколько из представленных ниже вариантов ответов</string>
+
+
+    <!--Widget Strings-->
+    <string name="todoWidgetTitle">Задачи</string>
+    <string name="gradesWidgetTitle">Оценки</string>
+    <string name="notificationWidgetTitle">Уведомления</string>
+    <string name="todoWidgetTitleLong">Canvas - задачи</string>
+    <string name="gradesWidgetTitleLong">Canvas - Оценки</string>
+    <string name="notificationWidgetTitleLong">Canvas - Уведомления</string>
+    <string name="notLoggedIn">Вы не вошли в систему</string>
+    <string name="widgetStyle">Выберите стиль виджета</string>
+    <string name="widgetMinimumStyle">Скрыть подробную информацию о виджете</string>
+    <string name="light">Светлый</string>
+    <string name="dark">Темный</string>
+
+    <string name="invalidExternal">Срок действия этого внешнего инструмента либо истек или он настроен неправильно.</string>
+
+    <!-- Help dialog strings -->
+    <string name="askInstructor">Задать вопрос своему преподавателю</string>
+    <string name="askInstructorDetails">Вопросы направляются вашему преподавателю</string>
+    <string name="searchGuides">Поиск в руководствах Canvas</string>
+    <string name="canvasGuides">Руководства Canvas</string>
+    <string name="searchGuidesDetails">Найти ответы на общие вопросы</string>
+    <string name="reportProblem">Сообщить о проблеме</string>
+    <string name="reportProblemDetails">Если приложение работает с ошибками, дайте нам знать</string>
+    <string name="requestFeature">Запросить функцию</string>
+    <string name="requestFeatureDetails">Есть идея по улучшению приложения?</string>
+    <string name="shareYourLove">Поделитесь своей любовью к приложению</string>
+    <string name="shareYourLoveDetails">Расскажите нам о своих любимых моментах приложения</string>
+
+    <!-- Feature Request -->
+    <string name="featureSubject">Идея для Canvas [Android]</string>
+    <string name="understandRequest">Следующая информация поможет нам лучше понять вашу идею:</string>
+
+    <!-- Ask Instructor -->
+    <string name="whichCourse">К какому курсу относится этот вопрос?</string>
+    <string name="allTeachers">Это сообщение будет отправлено всем преподавателям и ассистентам курса</string>
+    <string name="sending">Отправка&#8230;</string>
+    <string name="error">Ошибка</string>
+
+    <!-- Tablet Strings -->
+    <string name="courses">Курсы</string>
+    <string name="toDoList">Список текущих задач</string>
+    <string name="notifications">Уведомления</string>
+    <string name="pushNotifications">Push-уведомления</string>
+    <string name="pushNotificationsError">Для данного устройства не было зарегистрировано ни одного push-уведомления.</string>
+    <string name="profileSettings">Настройки профиля</string>
+    <string name="accountPreferences">Параметры учетной записи</string>
+    <string name="pinAndFingerprint">PIN-код и отпечаток пальца</string>
+
+    <string name="launchSpeedgrader">Открыть Speedgrader</string>
+
+    <string name="search_todo">для выполнения выполнить список заданий список задач</string>
+    <string name="search_course">курс курсы класс классы</string>
+    <string name="search_grades">оценка оценки</string>
+
+    <!-- ShareFileOptions Dialog-->
+    <string name="uploadTo">Загрузить на </string>
+    <string name="uploadToCanvas">Загрузить на Canvas</string>
+    <string name="uploadMyFiles">Мои файлы</string>
+    <string name="uploadCourseFiles">Файлы курса</string>
+    <string name="uploadToSubmissionComment">Загрузить в комментарий к отправке</string>
+    <!-- ChangeLog Dialog-->
+    <string name="changelog">Список изменений</string>
+
+    <string name="editUserName">Редактировать имя пользователя</string>
+    <!-- Choose Profile Image -->
+    <string name="takeANewPhoto">Сделать новое фото</string>
+    <string name="chooseFromGallery">Выбрать из галереи</string>
+    <string name="setToDefault">Установить по умолчанию</string>
+    <string name="chooseBackgroundImage">Выбрать изображение заставки</string>
+
+    <string name="no_courses">Нажмите, чтобы добавить курс</string>
+    <string name="no_courses_available">Здесь нет курсов, возьмите выходной!</string>
+    <string name="no_courses_grades">Пожалуйста зарегистрируйтесь на курс, чтобы увидеть свои оценки</string>
+    <!--Navigation Drawer-->
+    <string name="navigation_drawer_open">Открыть панель навигации</string>
+    <string name="navigation_drawer_close">Закрыть панель навигации</string>
+
+    <string name="preferred_land_page">Целевая страница</string>
+    <string name="could_not_route_course">Не удалось найти регистрацию на курс.</string>
+    <string name="could_not_route_group">Не удалось найти регистрацию группы.</string>
+    <string name="could_not_route_unknown">Произошла непредвиденная ошибка.</string>
+    <string name="could_not_route_locked">Эта страница скрыта или заблокирована и не может быть доступна.</string>
+
+    <string name="close">Закрыть</string>
+    <string name="closed">Закрыто</string>
+
+    <string name="overdueAssignments">Просроченные задания</string>
+    <string name="upcomingAssignments">Предстоящие задания</string>
+    <string name="undatedAssignments">Обновленные задания</string>
+    <string name="pastAssignments">Прошлые задания</string>
+
+    <string name="could_not_find_course">Возникла ошибка при получении курса для этого элемента.</string>
+    <string name="could_not_find_group">Возникла ошибка при получении группы для этого элемента.</string>
+
+    <string name="selectBackground">Выбрать изображение заставки</string>
+
+    <string name="notoriousSubmissionInProgress">Отправка файлов&#8230; Проверьте обновления на панели уведомлений.</string>
+    <string name="notoriousSubmissionSuccessful">Отправка файлов выполнена</string>
+
+    <string name="bio">Биография</string>
+    <string name="draft">Черновик</string>
+    <string name="publish">Разместить</string>
+
+    <string name="createPandaAvatar">Создать аватар панды</string>
+    <string name="back">Назад</string>
+    <string name="setAsAvatar">Установить как аватар</string>
+    <string name="avatarSuccessfullySaved">Аватар панды был успешно сохранен</string>
+    <string name="regularAvatarSuccessfullySaved">Аватар успешно сохранен.</string>
+    <string name="errorSavingAvatar">Возникла ошибка при сохранении аватара панды</string>
+    <string name="pandaAvatar">Аватар панды</string>
+    <string name="pandaHead">Голова аватара панды</string>
+    <string name="pandaBody">Тело аватара панды</string>
+    <string name="pandaLegs">Ноги аватара панды</string>
+    <string name="pandaAvatarsFolderName">PandaAvatars</string>
+    <string name="share">Поделиться</string>
+
+    <string name="speedgrader">SpeedGrader</string>
+    <string name="gauge">Gauge</string>
+
+    <string name="calendarDay">День</string>
+    <string name="calendarWeek">Неделя</string>
+    <string name="calendarMonth">Месяц</string>
+    <string name="selectCalendars">Выбрать календари</string>
+    <string name="createNewCalendarEvent">Создать новое событие</string>
+    <string name="calendarDialog10Warning">Вы можете выбрать только 10 календарей для отображения</string>
+    <string name="calendarDialogNoneWarning">Выберите хотя бы один календарь</string>
+    <string name="enableFunMode">Выключить панд</string>
+
+    <string name="accountNotifications">Объявления</string>
+    <string name="addAccount">Добавить учетную запись</string>
+
+    <string name="changeUser">Сменить пользователя</string>
+
+    <string name="no_data_connection">Проверьте подключение и повторите попытку.</string>
+
+    <!--Notification Preferences-->
+    <string name="notification_primary_inbox_title">Уведомление Canvas</string>
+    <string name="notification_channel_name_primary">Общие уведомления Canvas</string>
+    <string name="notification_channel_description_primary">Дополнительная настройка уведомлений осуществляется в разделе настроек уведомлений Canvas.</string>
+
+    <string name="notification_cat_course_activities">Активность в рамках курса</string>
+    <string name="notification_cat_discussions">Дискуссии</string>
+    <string name="notification_cat_conversations">Разговоры</string>
+    <string name="notification_cat_scheduling">Составление плана</string>
+    <string name="notification_cat_groups">Группы</string>
+    <string name="notification_cat_alerts">Предупреждения</string>
+    <string name="notification_cat_conferences">Конференции</string>
+
+    <string name="notification_pref_due_date">Срок выполнения</string>
+    <string name="notification_pref_grading_policies">Политика выставления оценок</string>
+    <string name="notification_pref_course_content">Содержание курса</string>
+    <string name="notification_pref_files">Файлы</string>
+    <string name="notification_pref_announcement">Объявление</string>
+    <string name="notification_pref_announcement_created_by_you">Созданное вами объявление</string>
+    <string name="notification_pref_grading">Выставление оценок</string>
+    <string name="notification_pref_invitation">Приглашение</string>
+    <string name="notification_pref_all_submissions">Все отправки</string>
+    <string name="notification_pref_late_grading">Несвоевременное выставление оценок</string>
+    <string name="notification_pref_submission_comment">Комментарий при отправке</string>
+
+    <string name="notification_pref_discussion">Обсуждение</string>
+    <string name="notification_pref_discussion_post">Размещение обсуждения</string>
+
+    <string name="notification_pref_add_to_conversation">Добавить к разговору</string>
+    <string name="notification_pref_conversation_message">Сообщение разговора</string>
+    <string name="notification_pref_conversations_created_by_you">Разговоры, созданные вами</string>
+
+    <string name="notification_pref_student_appointment_signups">Заявления о регистрации студентов</string>
+    <string name="notification_pref_appointment_signups">Заявления о регистрации</string>
+    <string name="notification_pref_appointment_cancelations">Отмена встреч</string>
+    <string name="notification_pref_appointment_availability">Доступность регистрации</string>
+    <string name="notification_pref_calendar">Календарь</string>
+
+    <string name="notification_pref_membership_update">Обновление членства</string>
+    <string name="notification_pref_admin">Административные предупреждения</string>
+    <string name="notification_pref_recording_ready">Запись готова</string>
+
+    <string name="notification_pref_type_email">Адрес электронной почты</string>
+    <string name="notification_pref_type_push">Устройство</string>
+    <string name="notification_pref_type_sms">SMS</string>
+
+    <string name="notification_pref_dialog_title">Уведомления устройства</string>
+    <string name="notification_pref_dialog_message">Включить уведомления на устройстве? Данные настройки можно изменить позднее в меню Настройки &gt; Уведомления &gt; Для всех устройств</string>
+    <string name="notification_pref_toast_success">Уведомления были включены.</string>
+
+    <string name="notification_desc_due_date">Получайте уведомления при изменении срока выполнения задания.</string>
+    <string name="notification_desc_grading_policies">Получайте уведомления при изменении системы оценок в курсе.</string>
+    <string name="notification_desc_course_content">Получайте уведомления при изменении содержания курса на страницах WikiPages, Quizzes и Assignments.</string>
+    <string name="notification_desc_files">Получайте уведомления при добавлении нового файла в ваш курс.</string>
+    <string name="notification_desc_announcement">Получайте уведомления при появлении нового объявления в вашем курсе.</string>
+    <string name="notification_desc_announcement_created_by_you">Получайте уведомления при создании объявления и ответе на него.</string>
+    <string name="notification_desc_grading">Получайте уведомления при оценке/изменении (отправленного) задания, а также при изменении оценки.</string>
+    <string name="notification_desc_invitation">Получайте уведомления при получении приглашений принять участие в веб-конференциях, группах, совместных проектах, технических экспертизах, а также при получении напоминаний.</string>
+    <string name="notification_desc_all_submissions">Только инструктор и администратор. Получайте уведомления при отправке или повторной отправке задания.</string>
+    <string name="notification_desc_late_grading">Только инструктор и администратор. Получайте уведомления при несвоевременной отправке задания.</string>
+    <string name="notification_desc_submission_comment">Получайте уведомления при получении замечания в отношении вашего отправленного задания.</string>
+    <string name="notification_desc_discussion">Получайте уведомления при появлении нового вопроса для обсуждения в вашем курсе.</string>
+    <string name="notification_desc_discussion_post">Получайте уведомления при появлении нового поста в рамках дискуссии, на которую вы подписаны.</string>
+    <string name="notification_desc_add_to_conversation">Получайте уведомления при добавлении вас к разговору.</string>
+    <string name="notification_desc_conversation_message">Получайте уведомления при получении нового сообщения.</string>
+    <string name="notification_desc_conversations_created_by_you">Получайте уведомления при создании вами нового разговора.</string>
+    <string name="notification_desc_student_appointment_signups">Только инструктор и администратор. Получайте уведомления при появлении нового заявления о регистрации.</string>
+    <string name="notification_desc_appointment_signups">Получайте уведомления при появлении нового заявления о регистрации в вашем календаре.</string>
+    <string name="notification_desc_appointment_cancelations">Получайте уведомления при отмене регистрации.</string>
+    <string name="notification_desc_appointment_availability">Получайте уведомления при появлении открытой позиции для регистрации.</string>
+    <string name="notification_desc_calendar">Получайте уведомления о новых и обновленных элементах календаря.</string>
+    <string name="notification_desc_membership_update">Только администратор, активировано намеченное зачисление. Получайте уведомления при подтверждении или отклонении зачисления группы.</string>
+    <string name="notification_desc_admin">Только инструктор и администратор. Получайте уведомления о зачислениях на курс, сгенерированных отчетах, экспорте содержимого, миграционных отчетах, пользователях с новой учетной записью и новых студенческих группах.</string>
+    <string name="notification_desc_recording_ready">Получайте уведомления о готовности к записи конференции.</string>
+
+    <string name="enterAnswer">Ввести ответ</string>
+    <string name="resumeQuiz">Возобновить тест</string>
+    <string name="allowed_attempts">Разрешенные попытки</string>
+    <string name="viewQuestions">Посмотреть Вопросы</string>
+    <string name="unlimited">Неограниченно</string>
+    <string name="viewResults">Посмотреть результаты</string>
+
+    <string name="toggleTimer">Переключить Таймер</string>
+    <string name="thirtySecondWarning">30 секунд до конца</string>
+    <string name="timeSpentFormat" formatted="false">Затраченное время: %d минут/минуты</string>
+    <string name="lockedIPAddress">Этот тест заблокирован. Он доступен только в некоторых местоположениях.</string>
+    <string name="lockedInvalidAccessCode">Неверный код доступа</string>
+
+    <string name="showFlaggedQuestions">Показать отмеченные/неотвеченные вопросы</string>
+    <string name="question">Вопрос</string>
+    <string name="questions">Вопросы</string>
+    <plurals name="question_count">
+        <item quantity="one">Вопрос %d</item>
+        <item quantity="few">Вопросы %d</item>
+        <item quantity="many">Вопросы %d</item>
+        <item quantity="other">Вопросы %d</item>
+    </plurals>
+    <plurals name="pointCount">
+        <item quantity="one">%s балл</item>
+        <item quantity="few">%s баллов</item>
+        <item quantity="many">%s баллов</item>
+        <item quantity="other">%s баллов</item>
+    </plurals>
+    <string name="flagged">Помеченный</string>
+
+    <string name="areYouSure">Вы уверены, что хотите отправить этот тест?</string>
+    <string name="submitQuiz">Отправить тест?</string>
+    <plurals name="unanswered_quiz_questions">
+        <item quantity="one">Вы не ответили на вопрос %d.\nОтправить этот тест?</item>
+        <item quantity="few">Вы не ответили на вопросы %d.\nОтправить этот тест?</item>
+        <item quantity="many">Вы не ответили на вопросы %d.\nОтправить этот тест?</item>
+        <item quantity="other">Вы не ответили на вопросы %d.\nОтправить этот тест?</item>
+    </plurals>
+    <string name="takeQuizAgain">Снова пройти тест</string>
+    <string name="autoSubmitting">Автоматическая отправка теста&#8230;</string>
+    <string name="submitReasonTimedQuiz">Тест отправлен, потому что закончилось время.</string>
+    <string name="submitReasonLockAt">Тест отправлен, потому что была достигнута блокировка по дате.</string>
+    <string name="quizSubmittedSuccessfully">Тест успешно отправлен.</string>
+    <string name="quizSubmittedFailure">Тест невозможно отправить сейчас.</string>
+    <string name="almostDue">Срок почти подошел!</string>
+    <string name="almostDueMsg">Крайний срок почти наступил. Отправить сейчас, чтобы ваш тест не был помечен как несвоевременный?</string>
+    <string name="timeLimit">Ограничение по времени</string>
+    <string name="cantStartQuiz">Невозможно запустить тест.</string>
+    <string name="start">Начать</string>
+    <string name="newPushNotifications">Новые уведомления %1$s</string>
+    <string name="like">нравятся</string>
+    <string name="likes">нравится</string>
+
+    <string name="wear_reminder">Запланировать напоминания о наступлении срока</string>
+    <string name="wear_notifications">Включите уведомления об износе</string>
+
+    <string name="color_1">Красный</string>
+    <string name="color_2">Ярко-розовый</string>
+    <string name="color_3">Лавандовый</string>
+    <string name="color_4">Фиолетовый</string>
+    <string name="color_5">Пурпурный</string>
+    <string name="color_6">Синевато-серый</string>
+    <string name="color_7">Синий</string>
+    <string name="color_8">Голубой</string>
+    <string name="color_9">Зеленый</string>
+    <string name="color_10">Салатовый</string>
+    <string name="color_11">Желтый</string>
+    <string name="color_12">Золотой</string>
+    <string name="color_13">Оранжевый</string>
+    <string name="color_14">Розовый</string>
+    <string name="color_15">Серый</string>
+
+    <string name="edit_course_nickname">Редактировать псевдоним курса</string>
+    <string name="courseNicknameError">В данный момент невозможно задать псевдоним курса.</string>
+
+    <string name="colorPickerDialogTitle">Цвет курса</string>
+    <string name="colorPickerDialogMessage">Персонализируйте свой курс, задав новый цвет.</string>
+    <string name="colorPickerError">В данный момент невозможно задать цвет курса.</string>
+
+    <string name="contentDescriptionColorCottonCandy">Розовый</string>
+    <string name="contentDescriptionColorBarbie">Ярко-розовый</string>
+    <string name="contentDescriptionColorBarneyPurple">Фиолетовый</string>
+    <string name="contentDescriptionColorEggplant">Пурпурный</string>
+    <string name="contentDescriptionColorUltramarine">Темно-синий</string>
+    <string name="contentDescriptionColorOcean11">Синий</string>
+    <string name="contentDescriptionColorCyan">Голубой</string>
+    <string name="contentDescriptionColorAquaMarine">Бирюзовый</string>
+    <string name="contentDescriptionColorEmeraldGreen">Изумрудный</string>
+    <string name="contentDescriptionColorFreshCutLawn">Зеленый</string>
+    <string name="contentDescriptionColorChartreuse">Салатовый</string>
+    <string name="contentDescriptionColorSunFlower">Желтый</string>
+    <string name="contentDescriptionColorTangerine">Оранжевый</string>
+    <string name="contentDescriptionColorBloodOrange">Темно-оранжевый</string>
+    <string name="contentDescriptionColorSriracha">Красный</string>
+
+    <string name="courseFavorited">Курс %s, предпочтительный.</string>
+    <string name="courseNotFavorited">Курс %s, не предпочтительный.</string>
+    <string name="groupFavorited">Группа %s, предпочтительная.</string>
+    <string name="groupNotFavorited">Группа %s, не предпочтительная.</string>
+    <string name="accountGroup">Рабочая группа клиента</string>
+
+    <!--Recents-->
+    <string name="recents_empty">На экране настройки курса добавьте курс или группу, чтобы посмотреть их здесь.</string>
+
+    <string name="toolbar_close">Закрыть панель</string>
+    <string name="favoriteDescription">Показать в \"Мои курсы\"</string>
+    <string name="about">О проекте</string>
+    <string name="courseShortcuts">Добавить ссылку на ваш курс</string>
+    <string name="courseNickname">Прозвище курса</string>
+
+    <string name="notAvailableOffline">Функциональность недоступна в автономном режиме</string>
+    <string name="editFavorites">Редактировать курсы</string>
+
+    <string name="dashboard">Информационная панель</string>
+    <string name="previous">Предыдущий</string>
+    <string name="pageNum" formatted="false">Страница %d из %d</string>
+    <string name="language">Язык</string>
+    <string name="systemDefault">Системные установки по умолчанию</string>
+    <string name="restartingCanvas">Перезапуск Canvas</string>
+    <string name="languageDialogText">Изменение языка потребует перезагрузки приложение, вы уверены, что хотите продолжить?</string>
+    <string name="defaultLanguageWarning">Ваш язык системы по умолчанию не будет гарантированно поддерживаться и потребует перезагрузки, вы уверены, что хотите продолжить?</string>
+    <string name="locked_mastery_paths">Заблокировано до оценки \"%s\"</string>
+    <string name="locked_icon">Заблокированная пиктограмма</string>
+    <string name="choose_assignment_group">Выбрать группу заданий</string>
+    <string name="chooseAssignmentPath">Выберите путь задания</string>
+    <string name="select">Выбрать</string>
+    <string name="choice_position">Выбор %d</string>
+    <string name="updating_module_info">Обновление информации о модуле&#8230;</string>
+    <string name="arc">Arc</string>
+    <string name="pending_review">В ожидании рассмотрения</string>
+    <string name="totalPoints">%s баллов</string>
+    <string name="totalPointsText">Общее число баллов</string>
+    <string name="contentDescriptionPoints">%s баллов</string>
+    <string name="contentDescriptionRubricRangeGrade">%1$s из %2$s баллов</string>
+    <string name="score">Оценка</string>
+    <string name="rangedRubricTotal" formatted="false">%s / %s баллов</string>
+    <string name="seeAll">Смотреть все</string>
+    <string name="welcome">Добро пожаловать!</string>
+    <string name="dismiss">Исключить</string>
+    <string name="tapToViewAnnouncement">Нажать для просмотра объявления</string>
+    <string name="acceptCourseInvitation">Принять</string>
+    <string name="declineCourseInvitation">Снизить</string>
+
+    <!-- File Strings -->
+    <array name="file_size_units">
+        <item>B</item>
+        <item>кб</item>
+        <item>Мб</item>
+        <item>Гб</item>
+        <item>Тб</item>
+    </array>
+
+    <string name="launch_link_in_external_browser">Перейдите по ссылке во внешнем браузере</string>
+    <string name="ltiLaunchFailure">В данный момент загрузка этого LTI невозможна.</string>
+    <string name="urlSubmission">Отправка на URL</string>
+
+    <string name="assignmentDeletedError">Это задание более недоступно.</string>
+
+    <string name="homePageIdForNotifications">Недавно выполненные действия</string>
+    <string name="homePageIdForModules">Модули</string>
+    <string name="homePageIdForAssignments">Задания</string>
+    <string name="homePageIdForSyllabus">Содержание курса</string>
+
+    <string name="contentDescriptionWidgetRefresh">Обновить виджет</string>
+
+    <string name="copy">Копировать</string>
+    <string name="courseInviteTitle">Вам поступило приглашение.</string>
+    <string name="inviteAccepted">Приглашение принято!</string>
+    <string name="inviteDeclined">Приглашение отклонено.</string>
+    <string name="latePenalty">Снижение оценки за опоздание (-%s)</string>
+    <string name="finalGrade">Итоговая оценка</string>
+
+    <string name="moreThan99">99+</string>
+    <string name="max_count">99+</string>
+
+    <string name="opensInWebView">Открывается в веб-представлении</string>
+    <string name="unsupportedTabLabel">Не поддерживается на этом устройстве</string>
+
+    <string name="downloadingFile">Скачивание</string>
+    <string name="downloadFailed">Сбой скачивания</string>
+    <string name="downloadSuccessful">Скачивание завершено</string>
+
+    <string name="full_due_date_details">Полная информация о сроке выполнения</string>
+    <string name="submissions">Отправки</string>
+    <string name="attachment">Вложение</string>
+    <string name="contentDescription_back">Вернуться назад</string>
+
+    <plurals name="quantityPointsAbbreviated">
+        <item quantity="one">%s баллов</item>
+        <item quantity="few">%s баллов</item>
+        <item quantity="many">%s баллов</item>
+        <item quantity="other">%s баллов</item>
+    </plurals>
+    <plurals name="quantityPointsFull">
+        <item quantity="one">%s балл</item>
+        <item quantity="few">%s баллов</item>
+        <item quantity="many">%s баллов</item>
+        <item quantity="other">%s баллов</item>
+    </plurals>
+    <string name="capitalTo">Кому</string>
+
+    <string name="unableToViewInBrowser">Не удалось найти внешнее приложение для открытия этого инструмента LTI.</string>
+
+    <string name="commentUpload">Загрузка комментария</string>
+    <string name="unableToUploadMediaComment">Для отправки мультимедийного комментария отправьте или удалите свой неотправленный текстовый комментарий.</string>
+
+    <string name="frontPage">Первая страница</string>
+    <string name="editPage">Редактировать страницу</string>
+    <string name="description">Описание</string>
+    <string name="pageSuccessfullyUpdated">Страница успешно обновлена.</string>
+    <string name="errorSavingPage">Произошла ошибка при попытке сохранения этой страницы. Повторить попытку.</string>
+    <string name="pageTitleMustBeSet">Необходимо задать заголовок страницы.</string>
+    <string name="pageDetails">Данные страницы</string>
+    <string name="saving">Выполняется сохранение</string>
+    <string name="confirmDeleteEvent">Вы действительно хотите удалить это событие?</string>
+    <string name="conferencesNotSupported">Конференции еще не поддерживаются на мобильных устройствах.</string>
+    <string name="filePreviewContentDescription">Изображение для предварительного просмотра</string>
+
+    <string name="pdfError">Ошибка при попытке скачать этот PDF.</string>
+    <!-- Parent Strings -->
+    <string name="addChildTitle">Добавить студента</string>
+    <string name="addChildSubTitle">Введите полученный код привязки студента.</string>
+    <string name="addChildHint">Привязка кода&#8230;</string>
+    <string name="addChildErrorMessage">Не удалось выполнить привязку. Убедитесь в том, что код привязки верен и срок его действия не истек.</string>
+</resources>

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    ~ Copyright (C) 2017 - present Instructure, Inc.
+    ~
+    ~     This program is free software: you can redistribute it and/or modify
+    ~     it under the terms of the GNU General Public License as published by
+    ~     the Free Software Foundation, version 3 of the License.
+    ~
+    ~     This program is distributed in the hope that it will be useful,
+    ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+    ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    ~     GNU General Public License for more details.
+    ~
+    ~     You should have received a copy of the GNU General Public License
+    ~    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    ~
+-->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:background="@color/defaultPrimary"
+        android:elevation="6dp"
+        app:popupTheme="@style/ToolBarPopupStyle"
+        app:theme="@style/ToolBarStyle"
+        tools:ignore="UnusedAttribute">
+
+        <TextView
+            android:id="@+id/titleTextView"
+            style="@style/ToolBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="@string/tab_profile"
+            tools:ignore="Deprecated,RtlSymmetry" />
+
+    </androidx.appcompat.widget.Toolbar>
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:contentDescription="@string/scrollInstructions">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+
+            <ImageView
+                android:id="@+id/profileBanner"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/profileBannerHeight"
+                android:scaleType="centerCrop"
+                android:adjustViewBounds="true"/>
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/usersAvatar"
+                android:layout_width="@dimen/profileAvatarSize"
+                android:layout_height="@dimen/profileAvatarSize"
+                android:layout_below="@+id/profileBanner"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="-84dp"
+                app:civ_border_color="@color/white"
+                app:civ_circle_background_color="@color/white"
+                app:civ_border_width="4dp"
+                app:civ_border_overlay="true"/>
+
+            <TextView
+                android:id="@+id/usersName"
+                style="@style/TextFont.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="24dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="16dp"
+                android:textColor="@color/defaultTextDark"
+                android:textSize="24sp"
+                tools:text="Trevor Needham"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/usersAvatar"/>
+
+            <TextView
+                android:id="@+id/usersEmail"
+                style="@style/TextFont.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="24dp"
+                android:layout_marginStart="24dp"
+                android:textColor="@color/defaultTextGray"
+                android:textSize="16sp"
+                tools:text="whois@instructure.com"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/usersName"/>
+
+            <TextView
+                android:id="@+id/usersBio"
+                style="@style/ProfileBio"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="32dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="16dp"
+                android:textSize="16sp"
+                android:textAlignment="center"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/usersEmail"
+                android:paddingBottom="24dp"
+                tools:text="I changed my password everywhere to ‘incorrect.’ That way, when I forget, it reminds me, ‘Your password is incorrect.’" />
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+</LinearLayout>

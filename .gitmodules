@@ -1,0 +1,3 @@
+[submodule "android-vault"]
+	path = android-vault
+	url = git@github.com:instructure/android-vault.git

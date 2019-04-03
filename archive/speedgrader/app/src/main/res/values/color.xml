@@ -1,0 +1,76 @@
+<!--
+  ~ Copyright (C) 2016 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<resources>
+    <color name="transparent">#00000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="whiteOpaque">#e1ffffff</color>
+    <color name="lightGray">#ff979797</color>
+    <color name="dividerColor">#bebeb9</color>
+    <color name="sg_bg_gray">#d9d9d6</color>
+    <color name="sg_bg_search">#f9f9f6</color>
+    <color name="speedgrader_blue">#107f99</color>
+    <color name="speedgrader_aqua">#56BED4</color>
+    <color name="speedgrader_aqua_pressed">#ff559cb6</color>
+    <color name="speedgrader_red">#F1504F</color>
+    <color name="darkGray">#696969</color>
+    <color name="sg_rubric_content">#edf0f6</color>
+    <color name="sg_border_color">#ffeaeaea</color>
+    <color name="sg_course_green">#0AB59B</color>
+    <color name="sg_background">#f8f9f6</color>
+    <color name="sg_checkmark_green">#42b251</color>
+    <color name="sg_darkText">#2c2c2d</color>
+    <color name="sg_grayText">#ff3b3b3c</color>
+    <color name="sg_lightGrayText">#ffaeacae</color>
+    <color name="discussionBackground">#F7F8F4</color>
+
+    <color name="sg_defaultPrimary">#134e72 </color>
+    <color name="sg_defaultPrimaryDark">#134e72 </color>
+    <color name="sg_defaultAccent">#ffc9c9c9</color>
+
+    <!-- saveButton colors -->
+    <color name="saveButtonEnabled">#a0cb44</color>
+    <color name="saveButtonPressed">#ff86aa39</color>
+    <color name="saveButtonDisabled">#ff979797</color>
+
+    <!-- rating colors -->
+    <color name="rating_0_10">#EF4340</color>
+    <color name="rating_11_20">#ffef6f3c</color>
+    <color name="rating_21_30">#ffef8240</color>
+    <color name="rating_31_40">#fff6a61d</color>
+    <color name="rating_41_50">#ffefed55</color>
+    <color name="rating_51_60">#ffb8cb42</color>
+    <color name="rating_61_70">#ffa0cb44</color>
+    <color name="rating_71_80">#ff72cb2a</color>
+    <color name="rating_81_90">#ff8DC647</color>
+    <color name="rating_91_100">#ff68b632</color>
+
+    <color name="tutorialTextColor">#08242F</color>
+    <color name="tutorialPage1">#FDE098</color>
+    <color name="tutorialPage2">#94D7E3</color>
+    <color name="tutorialPage3">#F5B2CA</color>
+    <color name="tutorialPage4">#89CCC4</color>
+    <color name="tutorialPage5">#9994f5</color>
+    <color name="tutorialPage6">#91cc9d</color>
+    <color name="tutorialIndicator_light">#99ffffff</color>
+    <color name="tutorialIndicatorSolid_light">#d1d1d1</color>
+
+    <!-- FAB message view colors-->
+    <color name="menuColorNormal">#ffEF4437</color>
+    <color name="menuColorPressed">#ffc6221d</color>
+
+</resources>

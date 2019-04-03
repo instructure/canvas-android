@@ -1,0 +1,72 @@
+POST https://container.googleapis.com/v1/projects/fake-project-123123/zones/us-central1-a/clusters
+{
+  "cluster": {
+    "name": "cluster-1",
+    "zone": "us-central1-a",
+    "network": "default",
+    "nodePools": [
+      {
+        "name": "default-pool",
+        "initialNodeCount": 3,
+        "config": {
+          "machineType": "n1-standard-1",
+          "imageType": "COS",
+          "diskSizeGb": 100,
+          "diskType": "pd-standard",
+          "preemptible": false,
+          "oauthScopes": [
+            "https://www.googleapis.com/auth/compute",
+            "https://www.googleapis.com/auth/devstorage.read_only",
+            "https://www.googleapis.com/auth/logging.write",
+            "https://www.googleapis.com/auth/monitoring",
+            "https://www.googleapis.com/auth/servicecontrol",
+            "https://www.googleapis.com/auth/service.management.readonly",
+            "https://www.googleapis.com/auth/trace.append"
+          ]
+        },
+        "autoscaling": {
+          "enabled": false
+        },
+        "management": {
+          "autoUpgrade": false,
+          "autoRepair": true,
+          "upgradeOptions": {}
+        }
+      }
+    ],
+    "loggingService": "logging.googleapis.com",
+    "monitoringService": "monitoring.googleapis.com",
+    "initialClusterVersion": "1.8.10-gke.0",
+    "masterAuth": {
+      "username": "admin",
+      "clientCertificateConfig": {
+        "issueClientCertificate": true
+      }
+    },
+    "legacyAbac": {
+      "enabled": false
+    },
+    "masterAuthorizedNetworksConfig": {
+      "enabled": false,
+      "cidrBlocks": []
+    },
+    "addonsConfig": {
+      "kubernetesDashboard": {
+        "disabled": false
+      },
+      "httpLoadBalancing": {
+        "disabled": false
+      },
+      "networkPolicyConfig": {
+        "disabled": true
+      }
+    },
+    "networkPolicy": {
+      "enabled": false,
+      "provider": "CALICO"
+    },
+    "ipAllocationPolicy": {
+      "useIpAliases": false
+    }
+  }
+}

@@ -1,0 +1,64 @@
+syntax = "proto3";
+
+option java_package = "com.instructure.soseedy";
+option java_multiple_files = true;
+
+package soseedy;
+
+import "user.proto";
+import "enrollments.proto";
+import "courses.proto";
+import "discussions.proto";
+
+
+service SeedyGeneral {
+    rpc GetHealthCheck(HealthCheckRequest) returns (HealthCheck) { }
+
+    rpc SeedData(SeedDataRequest) returns (SeededData) { }
+    rpc SeedParentData(SeedParentDataRequest) returns (SeededParentData) { }
+}
+
+// Request messages
+
+message HealthCheckRequest { }
+
+message SeedDataRequest {
+    int32 teachers = 1;
+    int32 students = 2;
+    int32 courses = 3;
+    int32 favoriteCourses = 4;
+    int32 announcements = 5;
+    int32 discussions = 6;
+    bool gradingPeriods = 7;
+}
+
+message SeedParentDataRequest {
+    int32 parents = 1;
+    int32 students = 2;
+    int32 courses = 3;
+}
+
+message SeededParentData {
+    repeated CanvasUser parents = 1;
+    repeated Enrollment enrollments = 2;
+    repeated CanvasUser students = 3;
+    repeated Course courses = 4;
+}
+
+// Response messages
+
+message HealthCheck {
+    bool healthy = 1;
+}
+
+message SeededData {
+    repeated CanvasUser teachers = 1;
+    repeated Enrollment enrollments = 2;
+    repeated CanvasUser students = 3;
+    repeated Course courses = 4;
+    repeated Favorite favorites = 5;
+    repeated Discussion discussions = 6;
+    repeated Discussion announcements = 7;
+}
+
+

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rce_colorPickerRootView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:layout_gravity="center_horizontal">
+
+    <View
+        android:id="@+id/rce_topDivider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/rce_divider"
+        android:layout_gravity="top"/>
+
+    <HorizontalScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/rce_item_height"
+            android:orientation="horizontal">
+
+            <FrameLayout
+                android:layout_width="@dimen/rce_item_height"
+                android:layout_height="@dimen/rce_item_height">
+
+                <ImageView
+                    android:id="@+id/rce_colorPickerWhite"
+                    style="@style/RCE_ColorPickerItem"
+                    android:contentDescription="@string/rce_contentDescription_color_white"
+                    android:src="@drawable/rce_color_item_shape_white"/>
+
+                <ImageView
+                    style="@style/RCE_ColorPickerItem"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/rce_color_item_shape_foreground"
+                    android:clickable="false"
+                    android:focusable="false"/>
+
+            </FrameLayout>
+
+            <ImageView
+                android:id="@+id/rce_colorPickerBlack"
+                style="@style/RCE_ColorPickerItem"
+                android:contentDescription="@string/rce_contentDescription_color_black"
+                android:src="@drawable/rce_color_item_shape_black"/>
+
+            <ImageView
+                android:id="@+id/rce_colorPickerGray"
+                style="@style/RCE_ColorPickerItem"
+                android:contentDescription="@string/rce_contentDescription_color_gray"
+                android:src="@drawable/rce_color_item_shape_gray"/>
+
+            <ImageView
+                android:id="@+id/rce_colorPickerRed"
+                style="@style/RCE_ColorPickerItem"
+                android:contentDescription="@string/rce_contentDescription_color_red"
+                android:src="@drawable/rce_color_item_shape_red"/>
+
+            <ImageView
+                android:id="@+id/rce_colorPickerOrange"
+                style="@style/RCE_ColorPickerItem"
+                android:contentDescription="@string/rce_contentDescription_color_orange"
+                android:src="@drawable/rce_color_item_shape_orange"/>
+
+            <ImageView
+                android:id="@+id/rce_colorPickerYellow"
+                style="@style/RCE_ColorPickerItem"
+                android:contentDescription="@string/rce_contentDescription_color_yellow"
+                android:src="@drawable/rce_color_item_shape_yellow"/>
+
+            <ImageView
+                android:id="@+id/rce_colorPickerGreen"
+                style="@style/RCE_ColorPickerItem"
+                android:contentDescription="@string/rce_contentDescription_color_green"
+                android:src="@drawable/rce_color_item_shape_green"/>
+
+            <ImageView
+                android:id="@+id/rce_colorPickerBlue"
+                style="@style/RCE_ColorPickerItem"
+                android:contentDescription="@string/rce_contentDescription_color_blue"
+                android:src="@drawable/rce_color_item_shape_blue"/>
+
+            <ImageView
+                android:id="@+id/rce_colorPickerPurple"
+                style="@style/RCE_ColorPickerItem"
+                android:contentDescription="@string/rce_contentDescription_color_purple"
+                android:src="@drawable/rce_color_item_shape_purple"/>
+
+        </LinearLayout>
+
+    </HorizontalScrollView>
+
+</FrameLayout>

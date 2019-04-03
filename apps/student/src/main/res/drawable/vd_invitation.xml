@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="20dp"
+    android:height="20dp"
+    android:viewportWidth="20"
+    android:viewportHeight="20">
+
+    <group
+            android:translateX="-248.000000"
+            android:translateY="-463.000000">
+        <path
+            android:fillColor="#FFFFFF"
+            android:strokeWidth="1"
+            android:pathData="M251.529412,463 L251.529412,468.496471 L248,471.555294 L248,483 L268,483
+L268,471.555294 L264.471765,468.496471 L264.471765,463 L251.529412,463 Z
+M252.705882,475.541176 L252.705882,464.176471 L263.294118,464.176471
+L263.294118,475.541176 L261.322353,477.117647 L254.677647,477.117647
+L252.705882,475.541176 Z M264.471765,470.052941 L266.824706,472.091765
+L266.824706,472.717647 L264.471765,474.6 L264.471765,470.052941 Z
+M249.176471,472.717647 L249.176471,472.091765 L251.529412,470.052941
+L251.529412,474.6 L249.176471,472.717647 Z M261.736471,478.295294
+L266.824706,474.224706 L266.824706,480.717647 L264.344706,477.576471
+L263.421176,478.305882 L266.198824,481.823529 L249.801176,481.823529
+L252.58,478.305882 L251.656471,477.576471 L249.176471,480.717647
+L249.176471,474.224706 L254.264706,478.295294 L261.736471,478.295294 Z
+M257.412118,473.000118 L257.412118,470.058941 L254.470941,470.058941
+L254.470941,468.882471 L257.412118,468.882471 L257.412118,465.941294
+L258.588588,465.941294 L258.588588,468.882471 L261.529765,468.882471
+L261.529765,470.058941 L258.588588,470.058941 L258.588588,473.000118
+L257.412118,473.000118 Z" />
+    </group>
+</vector>

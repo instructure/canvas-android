@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+option java_package = "com.instructure.soseedy";
+option java_multiple_files = true;
+
+package soseedy;
+
+
+service SeedyColors {
+    rpc SetColor (SetColorRequest) returns (Color) { }
+}
+
+// Request messages
+
+message SetColorRequest {
+    string studentToken = 1;
+    string contextId = 2;
+    string hexcode = 3;
+}
+
+// Response messages
+
+message Color {
+    string hexcode = 1;
+}

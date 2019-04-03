@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2016 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".BaseActivity">
+
+    <include
+        android:id="@+id/toolbar"
+        style="@style/TeacherToolsTheme"
+        layout="@layout/toolbar_layout" />
+
+    <com.instructure.teacheraid.views.CardifyView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white">
+
+            <RelativeLayout
+                android:id="@+id/profile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/banner"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/profileBackdropHeight"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/banner" />
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/avatar"
+                    android:layout_width="@dimen/profileAvatarSize"
+                    android:layout_height="@dimen/profileAvatarSize"
+                    android:layout_margin="@dimen/profileAvatarMargin"
+                    android:src="@drawable/ic_cv_student" />
+
+                <TextView
+                    android:id="@+id/username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/avatar"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginStart="20dp"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+            </RelativeLayout>
+
+            <ScrollView
+                android:id="@+id/scrollView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/profile">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:id="@+id/hotSeat"
+                        android:layout_width="match_parent"
+                        android:layout_height="?android:attr/listPreferredItemHeight"
+                        android:background="@drawable/row_background_white">
+
+                        <ImageView
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginEnd="24dp"
+                            android:layout_marginLeft="16dp"
+                            android:layout_marginRight="24dp"
+                            android:layout_marginStart="16dp"
+                            android:src="@drawable/ic_people_grey" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:text="@string/studentChooser"
+                            android:textColor="@color/canvasTextDark"
+                            android:textSize="20sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/guessWho"
+                        android:layout_width="match_parent"
+                        android:layout_height="?android:attr/listPreferredItemHeight"
+                        android:layout_below="@id/hotSeat"
+                        android:background="@drawable/row_background_white">
+
+                        <ImageView
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginEnd="24dp"
+                            android:layout_marginLeft="16dp"
+                            android:layout_marginRight="24dp"
+                            android:layout_marginStart="16dp"
+                            android:src="@drawable/ic_guess_who" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:text="@string/guessWho"
+                            android:textColor="@color/canvasTextDark"
+                            android:textSize="20sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/studentNotes"
+                        android:layout_width="match_parent"
+                        android:layout_height="?android:attr/listPreferredItemHeight"
+                        android:layout_below="@id/guessWho"
+                        android:background="@drawable/row_background_white">
+
+                        <ImageView
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginEnd="24dp"
+                            android:layout_marginLeft="16dp"
+                            android:layout_marginRight="24dp"
+                            android:layout_marginStart="16dp"
+                            android:src="@drawable/ic_person_grey" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:text="@string/studentNotes"
+                            android:textColor="@color/canvasTextDark"
+                            android:textSize="20sp" />
+                    </LinearLayout>
+
+
+                </RelativeLayout>
+            </ScrollView>
+        </RelativeLayout>
+    </com.instructure.teacheraid.views.CardifyView>
+    <!-- As the main content view, the view below consumes the entire
+     space available using match_parent in both dimensions. -->
+    <FrameLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar"
+        android:visibility="gone" />
+
+</RelativeLayout>

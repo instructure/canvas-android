@@ -1,0 +1,42 @@
+﻿<!--
+  ~ Copyright (C) 2018 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="inputText">テキストを入力</string>
+    <string name="cancel">キャンセル</string>
+    <string name="comment">コメント</string>
+    <string name="skip">スキップ</string>
+    <string name="comments">コメント</string>
+    <string name="error_loading_submission">この提出の読み込み中、問題がありました。</string>
+    <string name="retry">再試行</string>
+    <string name="annotationErrorOccurred">注釈の読み込み中にエラーが発生しました</string>
+    <string name="annotationError">注釈エラー</string>
+    <string name="annotationDialogMessage">注釈は別のソースから削除されました。</string>
+    <string name="errorSendingMessage">このメッセージを送信できませんでした。タップして再試行してください。</string>
+    <string name="addAnnotationComment">コメントを追加</string>
+    <string name="editComment">コメントを編集</string>
+    <string name="deleteComment">コメントを削除する</string>
+    <string name="deleteAnnotation">注釈を削除する</string>
+    <string name="deleteCommentConfirmation">このコメントを削除してもよろしいですか?</string>
+    <string name="deleteHeadCommentConfirmation">このコメントを削除すると、この注釈に関連付けられているすべてのコメントが削除されます。よろしいですか？</string>
+    <string name="sendingSimple">送信中</string>
+    <string name="pspdf__annotation_type_stamp">ノートの色</string>
+
+    <string name="removedComment">%1$sにより除去済%2$s</string>
+
+</resources>

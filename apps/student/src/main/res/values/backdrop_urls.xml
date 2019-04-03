@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2016 - present Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<resources>
+
+    <string-array name="backdropURLs" translatable="false">
+
+        <item>https://canvas-static-assets.s3.amazonaws.com/mobile/backdrop/backdrop_img-01.jpg</item>
+
+        <item>https://canvas-static-assets.s3.amazonaws.com/mobile/backdrop/jayna_rice_01.jpg</item>
+
+        <item>https://canvas-static-assets.s3.amazonaws.com/mobile/backdrop/backdrop_img-02.jpg</item>
+
+        <item>https://canvas-static-assets.s3.amazonaws.com/mobile/backdrop/jayna_rice_02.jpg</item>
+
+        <item>https://canvas-static-assets.s3.amazonaws.com/mobile/backdrop/backdrop_img-03.jpg</item>
+
+        <item>https://canvas-static-assets.s3.amazonaws.com/mobile/backdrop/jayna_rice_03.jpg</item>
+
+        <item>https://canvas-static-assets.s3.amazonaws.com/mobile/backdrop/backdrop_img-04.jpg</item>
+
+        <item>https://canvas-static-assets.s3.amazonaws.com/mobile/backdrop/jayna_rice_04.jpg</item>
+
+        <item>https://canvas-static-assets.s3.amazonaws.com/mobile/backdrop/backdrop_img-05.jpg</item>
+
+        <item>https://canvas-static-assets.s3.amazonaws.com/mobile/backdrop/jayna_rice_05.jpg</item>
+
+        <item>https://canvas-static-assets.s3.amazonaws.com/mobile/backdrop/backdrop_img-06.jpg</item>
+
+        <item>https://canvas-static-assets.s3.amazonaws.com/mobile/backdrop/jayna_rice_06.jpg</item>
+
+        <item>https://canvas-static-assets.s3.amazonaws.com/mobile/backdrop/backdrop_img-07.jpg</item>
+
+        <item>https://canvas-static-assets.s3.amazonaws.com/mobile/backdrop/jayna_rice_07.jpg</item>
+
+        <item>https://canvas-static-assets.s3.amazonaws.com/mobile/backdrop/backdrop_img-08.jpg</item>
+
+        <item>https://canvas-static-assets.s3.amazonaws.com/mobile/backdrop/jayna_rice_08.jpg</item>
+
+        <item>https://canvas-static-assets.s3.amazonaws.com/mobile/backdrop/backdrop_img-09.jpg</item>
+
+        <item>https://canvas-static-assets.s3.amazonaws.com/mobile/backdrop/jayna_rice_09.jpg</item>
+
+        <item>https://canvas-static-assets.s3.amazonaws.com/mobile/backdrop/backdrop_img-10.jpg</item>
+
+        <item>https://canvas-static-assets.s3.amazonaws.com/mobile/backdrop/jayna_rice_10.jpg</item>
+
+        <item>https://canvas-static-assets.s3.amazonaws.com/mobile/backdrop/backdrop_img-11.jpg</item>
+
+        <item>https://canvas-static-assets.s3.amazonaws.com/mobile/backdrop/jayna_rice_11.jpg</item>
+
+        <item>https://canvas-static-assets.s3.amazonaws.com/mobile/backdrop/backdrop_img-12.jpg</item>
+
+        <item>https://canvas-static-assets.s3.amazonaws.com/mobile/backdrop/jayna_rice_12.jpg</item>
+
+        <item>https://canvas-static-assets.s3.amazonaws.com/mobile/backdrop/backdrop_img-13.jpg</item>
+
+        <item>https://canvas-static-assets.s3.amazonaws.com/mobile/backdrop/jayna_rice_13.jpg</item>
+
+        <item>https://canvas-static-assets.s3.amazonaws.com/mobile/backdrop/backdrop_img-14.jpg</item>
+
+        <item>https://canvas-static-assets.s3.amazonaws.com/mobile/backdrop/jayna_rice_14.jpg</item>
+
+        <item>https://canvas-static-assets.s3.amazonaws.com/mobile/backdrop/backdrop_img-15.jpg</item>
+
+        <item>https://canvas-static-assets.s3.amazonaws.com/mobile/backdrop/jayna_rice_15.jpg</item>
+
+        <item>https://canvas-static-assets.s3.amazonaws.com/mobile/backdrop/backdrop_img-16.jpg</item>
+        <item>https://canvas-static-assets.s3.amazonaws.com/mobile/backdrop/backdrop_img-17.jpg</item>
+        <item>https://canvas-static-assets.s3.amazonaws.com/mobile/backdrop/backdrop_img-18.jpg</item>
+        <item>https://canvas-static-assets.s3.amazonaws.com/mobile/backdrop/backdrop_img-19.jpg</item>
+        <item>https://canvas-static-assets.s3.amazonaws.com/mobile/backdrop/backdrop_img-20.jpg</item>
+
+
+    </string-array>
+
+</resources>

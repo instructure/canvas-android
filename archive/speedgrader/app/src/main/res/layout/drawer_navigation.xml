@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2016 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/left_drawer"
+    android:layout_width="320dp"
+    android:layout_height="match_parent"
+    android:layout_gravity="left"
+    android:background="@color/sg_background"
+    android:fillViewport="true">
+    <RelativeLayout
+        android:id="@+id/navigationParent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:id="@+id/navigationHeader"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:background="@color/speedgrader_aqua"
+            android:orientation="horizontal"
+            android:layout_alignParentTop="true"
+            android:gravity="center_vertical"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/profile_image"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:src="@drawable/ic_cv_user"
+                android:layout_gravity="center_vertical" />
+
+
+            <com.instructure.speedgrader.views.HelveticaTextView
+                android:id="@+id/userName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="normal"
+                android:textSize="24sp"
+                android:singleLine="true"
+                android:paddingLeft="10dp"
+                android:layout_gravity="center_vertical"
+                android:textColor="@color/white" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/helpContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_below="@+id/navigationHeader"
+            android:layout_margin="16dp">
+
+            <!-- about Button  -->
+            <RelativeLayout
+                android:id="@+id/aboutButton"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:background="@drawable/card_bg"
+                android:clickable="true"
+                android:layout_gravity="center">
+
+                <ImageView
+                    android:id="@+id/aboutButtonArrowBack"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:src="@drawable/ic_cv_arrow_left"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:visibility="gone"
+                    />
+                <com.instructure.speedgrader.views.HelveticaTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|left"
+                    android:paddingLeft="12dp"
+                    android:textSize="16sp"
+                    android:textColor="@color/sg_lightGrayText"
+                    android:singleLine="true"
+                    android:text="@string/about"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@id/aboutButtonArrowBack"
+                     />
+                <ImageView
+                    android:id="@+id/aboutButtonArrow"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:layout_alignParentRight="true"
+                    android:layout_width="wrap_content"
+                    android:src="@drawable/ic_cv_arrow_right"
+                    />
+            </RelativeLayout>
+
+            <!-- help Button  -->
+            <RelativeLayout
+                android:id="@+id/helpButton"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:background="@drawable/card_bg"
+                android:layout_marginTop="12dp"
+                android:layout_gravity="center"
+                android:clickable="true">
+
+                <com.instructure.speedgrader.views.HelveticaTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center|left"
+                    android:paddingLeft="12dp"
+                    android:textSize="16sp"
+                    android:textColor="@color/sg_lightGrayText"
+                    android:singleLine="true"
+                    android:text="@string/searchTheGuides"/>
+                <ImageView
+                    android:id="@+id/helpButtonArrow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:src="@drawable/ic_cv_arrow_right"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true" />
+            </RelativeLayout>
+
+            <!-- Zendesk Button  -->
+            <RelativeLayout
+                android:id="@+id/reportProblemButton"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:background="@drawable/card_bg"
+                android:layout_marginTop="12dp"
+                android:layout_gravity="center"
+                android:clickable="true">
+
+                <com.instructure.speedgrader.views.HelveticaTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center|left"
+                    android:paddingLeft="12dp"
+                    android:textSize="16sp"
+                    android:textColor="@color/sg_lightGrayText"
+                    android:singleLine="true"
+                    android:text="@string/zendesk_reportAProblem"/>
+                <ImageView
+                    android:id="@+id/reportProblemButtonArrow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:src="@drawable/ic_cv_arrow_right"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true" />
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <ViewSwitcher
+            android:id="@+id/aboutViewSwitcher"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/helpContent">
+
+            <include layout="@layout/drawer_navigation_settings"/>
+
+            <include layout="@layout/drawer_navigation_about"/>
+
+        </ViewSwitcher>
+
+        <RelativeLayout
+            android:id="@+id/navigationFooter"
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:background="@drawable/logout_bg"
+            android:orientation="horizontal"
+            android:gravity="bottom"
+            android:padding="16dp"
+            android:layout_alignParentBottom="true">
+
+            <com.instructure.speedgrader.views.HelveticaTextView
+                android:id="@+id/logoutText"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center|left"
+                android:textColor="@color/white"
+                android:layout_alignParentLeft="true"
+                android:textSize="16sp"
+                android:text="@string/logout"/>
+
+            <ImageView
+                android:id="@+id/logoutIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center|right"
+                android:layout_alignParentRight="true"
+                android:contentDescription="@string/logout"
+                android:src="@drawable/ic_cv_import"/>
+        </RelativeLayout>
+    </RelativeLayout>
+</ScrollView>

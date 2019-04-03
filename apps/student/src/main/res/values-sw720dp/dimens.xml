@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2016 - present Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<resources>
+    <!-- MANUALLY MANAGED (Changes value on orientation change) -->
+
+    <dimen name="calendar_vertical_grid_spacing">32dp</dimen>
+    <dimen name="calendar_text_size">16sp</dimen>
+
+    <dimen name="floatingCardPandaVerticalPadding">64dp</dimen>
+    <dimen name="floatingCardVerticalPadding">64dp</dimen>
+    <dimen name="floatingCardHorizontalPadding">64dp</dimen>
+    <!-- END MANUALLY MANAGED -->
+
+    <dimen name="card_header_margins">32dp</dimen>
+    <dimen name="card_header_checkbox_margins">42dp</dimen>
+
+</resources>

@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+option java_package = "com.instructure.soseedy";
+option java_multiple_files = true;
+
+package soseedy;
+
+
+service SeedyUsers {
+    // user.proto
+    rpc CreateCanvasUser (CreateCanvasUserRequest) returns (CanvasUser) {}
+}
+
+// Request messages
+message CreateCanvasUserRequest { }
+
+// Response messages
+message CanvasUser {
+    int64 id = 1;
+    string loginId = 2;
+    string password = 3;
+    string domain = 4;
+    string token = 5;
+    string name = 6;
+    string shortName = 7;
+    string avatarUrl = 8;
+}

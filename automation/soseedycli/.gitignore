@@ -1,0 +1,8 @@
+/build
+.idea
+
+# Ignore the cli .jar file in this directory, it will be copied to the Flank dir
+*.jar
+
+# Ignore seeded data .csv files
+results/

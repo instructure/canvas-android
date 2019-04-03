@@ -1,0 +1,424 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="chooseMedia">メディアを選択</string>
+    <string name="takeVideo">動画を撮影する</string>
+    <string name="noCameraOnDevice">カメラが使用出来ません</string>
+    <string name="takePhoto">写真を撮る</string>
+    <string name="choosePhotoFromGallery">ギャラリーから画像を選択する</string>
+
+    <string name="utils_edit">編集</string>
+
+    <!-- NotoriousPicker/uploadService -->
+    <string name="notificationTitle">Canvasにアップロードする</string>
+    <string name="preparingUpload">アップロードを準備</string>
+    <string name="loadingFilesIndeterminate">ファイル&#8230;を読み込み中</string>
+    <string name="fileUploadSuccess">アップロードできました</string>
+    <string name="noNetwork">ネットワークが利用できません - 後で試してください。</string>
+    <string name="uploadMessage">"アップロード進行中アップロードステータスの通知をチェックしてください。</string>
+    <string name="mediaUpload">メディアをアップロード</string>
+    <string name="uploadingFile">ファイル&#8230;をアップロード中</string>
+    <string name="errorUploadingFile">あなたのファイルをアップロードする際にエラーが発生しました。再度試してください。</string>
+    <string name="fileSubmission">ファイル(複数可)を送信</string>
+    <string name="uploadFiles">ファイル(複数可)をアップロード</string>
+    <string name="upload">アップロード</string>
+    <string name="errorSendingMessage">あなたのメッセージを送信する際にエラーが発生しました。再度試してください。</string>
+
+    <string name="notificationChannelNameFileUploadsName">ファイルアップロード通知</string>
+    <string name="notificationChannelNameFileUploadsDescription">現在進行中のファイルアップロード Canvas 通知。</string>
+
+
+    <!-- Turn in Files -->
+    <string name="chooseFileSource">ファイルを&#8230;から選択</string>
+    <string name="addFile">ファイルを追加</string>
+    <string name="choose_a_file">ファイルの選択</string>
+
+    <string name="fromCamera">カメラ</string>
+    <string name="fromGallery">ギャラリー</string>
+    <string name="fromDevice">デバイス</string>
+    <string name="fromOtherApplication">その他</string>
+    <string name="Domain">ドメイン</string>
+    <string name="files">ファイル</string>
+    <string name="file">ファイル</string>
+    <string name="fileTalkBack">ファイル%s</string>
+    <string name="folderTalkBack">フォルダ%s</string>
+
+    <string name="addItem">アイテム</string>
+    <string name="assignment">課題</string>
+    <string name="attachedFiles">添付されたファイル</string>
+    <string name="turnIn">提出する</string>
+    <string name="course">コース</string>
+    <string name="sending">&#8230;を送信中</string>
+
+    <!--rating dialog-->
+    <string name="star1">一つ星評価</string>
+    <string name="star2">二つ星評価</string>
+    <string name="star3">三つ星評価</string>
+    <string name="star4">四つ星評価</string>
+    <string name="star5">五つ星評価</string>
+
+    <!-- Submitting files -->
+    <string name="fileQuotaExceeded">現在、ファイルの保存容量を超えています。</string>
+    <string name="errorSubmittingFiles">あなたのファイルを読み込む際にエラーが発生しました。再度試してください。</string>
+    <string name="errorLoadingFiles">あなたのファイルを読み込む際にエラーが発生しました。インテーネット接続を確認して、もう一度お試しください。</string>
+    <string name="filesUploadedSuccessfully">ファイルがアップロードされました。</string>
+    <string name="filesSubmittedSuccessfully">ファイルが提出されました。</string>
+    <string name="messageSentSuccessfully">メッセージが送信されました。</string>
+    <string name="shareWithCanvas">他のアプリは Canvas とファイルを共有できます！下のアイコンをアプリで探し、 Canvas をタップします。</string>
+    <string name="shareWithCanvas2">それにより、このアプリが開きます。次に、ファイルをウップロードしたいコースと課題を選択します。</string>
+    <string name="contentDescriptionSocialShare">アイコンを共有</string>
+    <string name="submitAssignment">課題を提出する</string>
+    <string name="assignmentHeader">課題:</string>
+    <string name="submittingAssignment">課題を提出中&#8230;</string>
+    <string name="conversations">会話</string>
+    <string name="inbox">受信トレイ</string>
+    <string name="divider">配信</string>
+    <string name="legal">法務</string>
+    <string name="completeHomework">宿題を終わらせて下さい</string>
+    <string name="takeExam">テストを受ける</string>
+    <string name="fileIcon">ファイルアイコン</string>
+    <string name="uploadingFileNum" formatted="false">%d / %d をアップロード中</string>
+    <string name="fileLocked" formatted="false">%s はロックされています。</string>
+    <string name="filePermissionGranted">ファイルはダウンロードの用意が出来ています、再度試して下さい。</string>
+    <string name="filePermissionDenied">採点許可なしに、ファイルはダウンロードできません。</string>
+    <string name="pleaseTryAgain">許可されました。再試行してください。</string>
+    <string name="pickVideo">ビデオを選択</string>
+
+    <!--Errors-->
+    <string name="errorOccurred">予期しないエラーが発生しました。</string>
+    <string name="serverError">サーバーエラーが発生しました。</string>
+    <string name="unauthorized">あなたにはこれにアクセスする権限がありませんあなたに許可されていないか、まだアクセスがありません（あなたのコースはまだ始まっていません）</string>
+    <string name="fileNoLongerExists">ファイルはすでに存在しません。</string>
+    <string name="invalidAccessToken">あなたのセッションの有効期限が切れました。ログインして新しいセッションを開始してください。</string>
+    <string name="uploadingFromSourceFailed">このソースからのファイルのアップロードができませんでした。</string>
+    <string name="errorGettingPhoto">画像取得中にエラーがありました。再度試してください。</string>
+    <string name="errorTextMissing">テキストを追加してメッセージを送信する</string>
+
+    <string name="fileUploadNotSupported">選択した課題にファイルをアップロードすることはできません。</string>
+    <string name="noCourseSelected">コースを選択してください</string>
+    <string name="selectCourse">コースを選択する</string>
+    <string name="selectAssignment">課題を選択する</string>
+    <string name="loadingAssignments">課題をロード中...</string>
+    <string name="noAssignmentSelected">課題を選択してください</string>
+    <string name="noAssignmentsWithFileUpload">このコースには、ファイルのアップロードが可能な課題がありません。</string>
+    <string name="teacherNotAllowedFileSubmission">このコースの講師として、ファイルを提出することはできません</string>
+    <string name="noFilesUploaded">あなたはどのファイルも選択していません。</string>
+    <string name="oneOrMoreExtensionNotAllowed">1つ以上のファイルのファイル拡張子が許可されていません</string>
+    <string name="extensionNotAllowed">選択されたファイルタイプは許可されていません。</string>
+    <string name="allowedExtensions">拡張を許可する:&#160;</string>
+
+    <!-- Media Task Loader -->
+    <string name="noDataConnection">データの接続を確認し、やり直してください。</string>
+    <string name="noApps">お使いのデバイスには、このファイルを処理できるアプリケーションがインストールされていません。</string>
+    <string name="noAppsShort">開くことができません</string>
+    <string name="unexpectedErrorOpeningFile">ファイルを開く時に、予期していないエラーが発生しました。</string>
+    <string name="unexpectedErrorDownloadingFile">ファイルのダウンロード中に、予期していないエラーが発生しました。</string>
+
+    <string name="done">完了</string>
+
+    <!--Permissions-->
+    <string name="permissionDenied">この機能を使用するには、まず許可を得ることが必要です。</string>
+    <string name="noConnection">接続していません</string>
+
+    <!--Empty Screens-->
+    <string name="emptyCourseListMessage">あなたのお気に入りのコース＆amp; グループがここに表示されます。</string>
+    <string name="addCoursesGroups">コースとグループを追加</string>
+    <string name="noDiscussions">ディスカッションなし</string>
+    <string name="noDiscussionsSubtext">他の人たちと会話を始める。</string>
+    <string name="noDiscussionsTeacher">受講生徒と会話を始めましょう。</string>
+    <string name="nothingUnread">受信トレイゼロ！</string>
+    <string name="nothingUnreadSubtext">あなたは深くかかわっています！</string>
+    <string name="nothingStarred">スターありメッセージはありません</string>
+    <string name="nothingStarredSubtext">各メッセージの星印をタップすると、このセクションに重要なメッセージが表示されます。</string>
+    <string name="nothingSent">何も送信されていません</string>
+    <string name="nothingSentSubtext">あなたは何のメッセージも送信していません。</string>
+    <string name="nothingArchived">何もアーカイブされていない</string>
+    <string name="nothingArchivedSubtext">あなたは何のメッセージも選択していません。</string>
+    <string name="noQuizzes">クイズなし</string>
+    <string name="noQuizzesSubtext">すみません、まだクイズは存在しません。</string>
+    <string name="noQuizzesTeacher">表示する公開されているクイズはありません。</string>
+    <string name="noAnnouncements">アナウンスメントなし</string>
+    <string name="noAnnouncementsSubtext">まだなにもアナウンスされていません</string>
+    <string name="noCourses">コースなし</string>
+    <string name="noCoursesSubtext">このアカウントに関連付けられているコースはないようです。今日コースを作成するには、ウェブをご覧ください。</string>
+    <string name="noAssignments">課題なし</string>
+    <string name="noAssignmentsSubtext">このスペースには課題が作成されていないようです。外に出て探検する時間。</string>
+    <string name="noAssignmentsTeacher">まだ課題が公開されていないようです。</string>
+    <string name="noFiles">ファイルがありません</string>
+    <string name="noFilesSubtext">あなたのアカウントに関連付けられているファイルはありません。</string>
+    <string name="notSupported">サポートなし</string>
+    <string name="noEvents">今日は、イベントはありません！</string>
+    <string name="noEventsSubtext">少し休んでリラックスする、素晴らしい日のようです。</string>
+    <string name="noSubmission">提出なし</string>
+    <string name="noSubmissionSubtext">あなたの課題を%1$sまでに%2$sに提出してください。</string>
+    <string name="noSubmissionTeacher">この受講生にはまだ提出物がありません。</string>
+    <string name="noDueDate">この課題には期限がありません。</string>
+    <string name="locked">ロックされています</string>
+    <string name="lockedSubtext">この課題は%1$sまで%2$sでロックされます。</string>
+    <string name="lockedModule">この割り当てはモジュールの一部であり、\"%1$s\"ロックがまだ解除されていません。 </string>
+    <string name="chooseFile">ファイルの選択</string>
+    <string name="chooseFileSubtext">下のオプションをタップして、提出物にファイルを添付してください。</string>
+    <string name="noNotifications">通知なし</string>
+    <string name="noNotificationsSubtext">まだ通知される事項がありません。</string>
+    <string name="noTodos">よくできました！</string>
+    <string name="noTodosSubtext">あなたのタスクリストは空です。英気を養う時間です。</string>
+    <string name="noSyllabus">シラバスなし</string>
+    <string name="noSyllabusSubtext">シラバスはまだ作成されていません。</string>
+    <string name="noBookmarks">ブックマークなし</string>
+    <string name="noBookmarksSubtext">ブックマークは、アプリ内のいずれかの画面のショートカットです。ブックマークしたいところに追加してください。</string>
+    <string name="noModules">モジュールなし</string>
+    <string name="noModulesSubtext">まだ作成されているモジュールはないようです。</string>
+    <string name="noPages">ページなし</string>
+    <string name="noPagesSubtext">まだページが作成されていないようです。</string>
+
+    <!--General-->
+    <string name="yes">はい</string>
+    <string name="no">いいえ</string>
+
+    <string name="inbox_all">受信トレイ</string>
+    <string name="inbox_unread">未読</string>
+    <string name="inbox_starred">スターあり</string>
+    <string name="inbox_sent">送信済み</string>
+    <string name="inbox_archived">アーカイブ済み</string>
+
+    <string name="forbidden">回答は、少なくとも一つの回答を掲載している人にのみ表示されます。</string>
+
+    <string name="like">いいね！</string>
+    <string name="likes">いいね！</string>
+    <string name="lockedAssignmentNotModule">この課題はロックされています。</string>
+    <string name="deletedEntryNoChildren">この消去されたディスカッションエントリに返信はありません。</string>
+    <string name="deleted">[消去しました]</string>
+    <string name="deleted_by">[%1$sにより消去されました]</string>
+    <string name="lockedDiscussionDesc">このディスカッションは、%sモジュールの一部であり、まだアンロックされていません。</string>
+    <string name="gradedDiscussion">採点されたディスカッション</string>
+    <string name="pointsPossible">可能なポイント</string>
+    <string name="sideCommentEntry">このタイプのディスカッションでは、あなたはこのレベルのどのエントリにもコメントできません。</string>
+
+    <string name="accessibility_overflow">オーバーフロー</string>
+
+    <string name="discussion_response">コメント</string>
+    <string name="discussion_responses">コメント</string>
+    <string name="discussion_unread">未読</string>
+    <string name="discussion_reply">返信</string>
+    <string name="close">閉じる</string>
+
+    <string name="noInternetConnectionTitle">インターネット接続なし</string>
+    <string name="noInternetConnectionMessage">この操作にはインターネット接続が必要です。</string>
+    <string name="content_description_avatar">アバター</string>
+    <string name="formattedAvatarAction">%sの予約詳細を表示。</string>
+
+    <!-- App Names -->
+    <string name="utils_canvas">Canvas</string>
+    <string name="utils_canvasTeacher">Canvas 講師</string>
+    <string name="utils_canvasParent">Canvas Parent</string>
+    <string name="utils_polls">Canvas サーベイ</string>
+    <string name="utils_speedgrader">Speedgrader</string>
+
+    <!-- Rating Dialog -->
+    <string name="utils_howAreWeDoing">私たちはどうですか？</string>
+    <string name="utils_rateUs">どのように私たちを評価しますか？</string>
+    <string name="utils_doBetter">改善する余地はどこにあるでしょう？</string>
+    <string name="utils_sendFeedback">フィードバックを送る</string>
+    <string name="utils_suggestions">Androidへの提案</string>
+    <string name="utils_domain">ドメイン</string>
+    <string name="utils_versionNum">バージョン:</string>
+    <string name="utils_userId">ユーザーID</string>
+    <string name="utils_email">eメールアドレス</string>
+    <string name="utils_dontShowAgain">再び表示しない</string>
+    <string name="utils_installDate">インストール日:</string>
+    <string name="utils_device">デバイス</string>
+    <string name="utils_osVersion">OS バージョン</string>
+    <string name="loading">読み込み中</string>
+    <string name="save">保存</string>
+    <string name="cropInstructions">ピンチ＆ドラッグで画像を調整してください。</string>
+
+    <!--Discussions-->
+    <plurals name="utils_discussionsReplies">
+        <item quantity="other">%s の返信</item>
+    </plurals>
+
+    <string name="utils_discussionsDeleted" formatted="false">この返信 %s を削除する</string>
+    <string name="utils_discussionsUnknownAuthor">不明な作成者</string>
+    <string name="utils_discussionsReply">返信</string>
+    <string name="utils_discussionsEdit">編集</string>
+    <string name="utils_discussionsDeleteWarning">この返信を本当に削除しますか？</string>
+    <string name="utils_availableToLabel">利用できる人：</string>
+    <string name="utils_availableFromLabel">利用可能となる日：</string>
+    <string name="utils_dueDateHeaderLabel">期限</string>
+    <string name="utils_dueLabel">期限：</string>
+    <string name="utils_delete">削除</string>
+    <string name="utils_dueDateAtTime" formatted="false">%1s の %2s が期限</string>
+    <string name="utils_noDateFiller">--</string>
+    <string name="utils_availabilityLabel">利用可能性：</string>
+    <string name="utils_pinnedIcon">固定ディスカッションのアイコン</string>
+    <string name="utils_pinDiscussion">ディスカッションを固定する</string>
+    <string name="utils_unpinDiscussion">ディスカッションの固定を外す</string>
+    <string name="utils_discussionPinned">固定されたディスカッション</string>
+    <string name="utils_pinnedDiscussions">ピン付けしました</string>
+    <string name="utils_discussionUnpinned">ディスカッション</string>
+    <string name="utils_emptyDiscussions">このセクションに表示するディスカッションはありません。</string>
+    <string name="utils_description">説明</string>
+    <string name="utils_allowThreadedReplies">スレッドでの返信を許可する</string>
+    <string name="utils_usersMustPost">受講生は返信を表示する前に投稿しなければなりません</string>
+    <string name="utils_discussionsClosed">コメントを閉じました</string>
+    <string name="utils_discussionsOpen">コメントを受け付ける</string>
+    <string name="utils_discussionsPin">固定</string>
+    <string name="utils_discussionsUnpin">固定の解除</string>
+    <string name="utils_discussionsOptions">オプション</string>
+    <string name="utils_discussionsDeleteTitle">ディスカッションを削除しますか？</string>
+    <string name="utils_discussionsDelete">ディスカッションを削除</string>
+    <string name="utils_discussionsDeleteMessage">これにより、ディスカッションとスレッド全体が削除されます。</string>
+    <string name="utils_discussionSentSuccess">議論の返信は正常に行われました。</string>
+    <string name="utils_discussionUpdateSuccess">ディスカッションは正常に編集されました。</string>
+    <string name="utils_discussionSentEmpty">ディスカッションの返信は空ではいけません。</string>
+    <string name="utils_discussionSentFailure">今回はディスカッション回答を送信できませんでした。</string>
+    <string name="utils_createDiscussion">新しいディスカッション</string>
+    <string name="utils_editDiscussion">ディスカッションを編集</string>
+    <string name="utils_discussionDetails">ディスカッションの詳細</string>
+    <string name="utils_discussionSuccessfullyUpdated">ディスカッションは正常に更新されました。</string>
+    <string name="utils_saving">保存</string>
+    <string name="utils_discussionSuccessfullyCreated">ディスカッションは正常に作成されました。</string>
+    <string name="utils_discussionSuccessfulAttachmentNot">添付ファイルをこのディスカッションに追加できませんでした。ファイルクオータをチェックして、もういちど試してください。</string>
+    <string name="utils_noTitle">タイトルなし</string>
+    <string name="utils_discussionsReplies_Title">返信</string>
+    <string name="utils_contentDescriptionDiscussionsOverflow">その他のオプション</string>
+    <string name="utils_discussionsUnreadRepliesBlank" formatted="false">%s %s %s</string>
+    <string name="utils_lastPost" formatted="false">最終掲示 %s</string>
+    <string name="utils_postedOnDate">%sに掲示</string>
+    <string name="utils_discussionPostBeforeRepliesEmptyText">回答は、少なくとも一つの回答を掲載している人にのみ表示されます。</string>
+    <string name="utils_createAnnouncementDelayPosting">転記遅延</string>
+    <string name="utils_postAt">投稿日時</string>
+    <string name="utils_postDate">投稿日</string>
+    <string name="utils_postTime">投稿時間</string>
+    <string name="utils_editAnnouncementTitle">発表を編集</string>
+    <string name="utils_createAnnouncementTitle">新規発表</string>
+    <string name="utils_announcementDetails">アナウンスの詳細</string>
+    <string name="utils_createAnnouncementNoDescription">説明が必要です</string>
+    <string name="utils_errorSavingAnnouncement">この発表をを保存しようとしてエラーが発生しました。もう一度試してください。</string>
+    <string name="utils_announcementSuccessfullyUpdated">発表は正常に更新されました。</string>
+    <string name="utils_announcementSuccessfullyCreated">発表は正常に作成されました。</string>
+
+    <plurals name="utils_discussionsUnread">
+        <item quantity="other">%s 未読</item>
+    </plurals>
+
+    <plurals name="utils_addAttachment">
+        <item quantity="zero">添付を追加</item>
+        <item quantity="other">添付を追加</item>
+    </plurals>
+
+    <!-- Assignment Override !-->
+    <string name="utils_unlockAfterDueDateError">ロック解除日を締切日より後にすることはできません</string>
+    <string name="utils_lockBeforeDueDateError">ロック日を締切日より前にすることはできません</string>
+    <string name="utils_lockAfterUnlockError">ロック日をロック解除日より前にすることはできません</string>
+    <string name="utils_assigneeBlankError">課題対象者を空白にすることはできません</string>
+    <string name="utils_assignTo">～へ割り当てられました</string>
+    <string name="utils_availableFrom">次から使用可能</string>
+    <string name="utils_availableTo">利用できる人</string>
+    <string name="utils_availableFromDate">利用可能期間の開始日付</string>
+    <string name="utils_availableFromTime">利用可能期間の開始時間</string>
+    <string name="utils_availableToDate">利用可能期間の最終日</string>
+    <string name="utils_availableToTime">利用可能期間の最終時間</string>
+    <string name="utils_dueDate">期日</string>
+    <string name="utils_dueTime">期限存</string>
+    <string name="utils_addNew">新規を追加する</string>
+
+    <!--Attachment Layout-->
+    <string name="utils_downloadAttachment">添付をダウンロードする</string>
+    <string name="utils_removeAttachment">添付ファイルの削除</string>
+
+    <!--Unsaved Changes-->
+    <string name="utils_continueWithoutSavingTitle">保存せずに続行しますか？</string>
+    <string name="utils_continueWithoutSavingMessage">保存せずに続行してよろしいですか？</string>
+    <string name="utils_continueUnsaved">続行する</string>
+    <string name="utils_exitWithoutSavingTitle">保存せずに終了しますか？</string>
+    <string name="utils_exitWithoutSavingMessage">保存せずに終了してよろしいですか？</string>
+    <string name="utils_exitUnsaved">終了</string>
+    <string name="utils_cancel">キャンセル</string>
+
+    <string name="utils_contentDescriptionFiles">ファイルアイコン</string>
+    <string name="utils_turn_in">提出する</string>
+    <string name="utils_upload">アップロード</string>
+    <string name="utils_okay">OK</string>
+    <string name="utils_loadingFilesIndeterminate">ファイル&#8230;を読み込み中</string>
+    <string name="utils_allowedExtensions">拡張を許可する:&#160;</string>
+    <string name="utils_extensionNotAllowed">選択されたファイルタイプは許可されていません。</string>
+    <string name="utils_errorUploadingFile">あなたのファイルをアップロードする際にエラーが発生しました。再度試してください。</string>
+    <string name="utils_filesUploadedSuccessfully">ファイルがアップロードされました。</string>
+    <string name="utils_uploadingFiles">ファイル&#8230;をアップロード中</string>
+    <string name="utils_uploadingFile">ファイル&#8230;をアップロード中</string>
+    <string name="utils_noApps">お使いのデバイスには、このファイルを処理できるアプリケーションがインストールされていません。</string>
+    <string name="utils_errorGettingPhoto">画像取得中にエラーがありました。再度試してください。</string>
+    <string name="utils_oneOrMoreExtensionNotAllowed">1つ以上のファイルのファイル拡張子が許可されていません</string>
+    <string name="utils_fileUploadNotSupported">選択した課題にファイルをアップロードすることはできません。</string>
+    <string name="utils_noFilesUploaded">あなたはどのファイルも選択していません。</string>
+    <string name="utils_attachments">添付ファイル</string>
+    <string name="utils_uploadTo">アップロードする</string>
+    <string name="utils_uploadToCanvas">Canvasにアップロードする</string>
+    <string name="utils_uploadMyFiles">マイファイル</string>
+    <string name="utils_uploadCourseFiles">コースファイル</string>
+    <string name="utils_uploadToSubmissionComment">コメント送信をアップロード</string>
+    <string name="utils_attachFile">ファイルを添付する</string>
+    <string name="utils_with">と</string>
+
+    <string name="notificationPrimaryInboxTitle">Canvas 通知</string>
+    <string name="notificationChannelNamePrimary">一般的な Canvas 通知</string>
+    <string name="notificationChannelDescriptionPrimary">通知の詳細設定は、Canvas キャンバス通知設定のセクションで行うことができます。</string>
+
+    <string name="copyLinkAddress">リンクアドレスをコピー</string>
+    <string name="copyLink">リンクをコピー</string>
+    <string name="linkCopied">リンクがコピーされました</string>
+    <string name="link">リンク</string>
+    <string name="fileExists">ファイルがあります</string>
+    <string name="replace">置換</string>
+    <string name="shareLink">リンクを共有</string>
+
+    <string name="utils_launchExternalTool">外部ツールを起動する</string>
+    <string name="utils_externalToolTitle">外部ツール</string>
+    <string name="utils_placeholderTitle">外部ツール</string>
+    <string name="utils_placeholderDescription">この外部ツールを編集するには、Canvas ウェブアカウントにアクセスしてください。</string>
+    <string name="utils_unableToViewInBrowser">このLTIツールを表示する外部アプリを見つけられません。</string>
+
+    <string name="utils_unsupportedFileMessage">このファイルを表示できませんでした。下のボタンを使用して、デバイス上の別のアプリでファイルを開きます。</string>
+    <string name="utils_openWithAnotherApp">～にて開く...</string>
+    <string name="utils_couldNotPlayFormat">このメディアフォーマットはサポートされていません</string>
+    <string name="utils_fullscreen">全画面</string>
+
+    <string name="utils_dataUsageWarningTitle">データ使用に関する警告</string>
+    <string name="utils_dataUsageWarningMessage">この操作は大量のデータを消費する可能性があり、超過料金が発生する可能性があります。続行しますか？</string>
+    <string name="utils_doNotShowMessageAgain">このメッセージを再び表示しない</string>
+
+    <string name="utils_no_data_connection">データの接続を確認し、やり直してください。</string>
+    <string name="utils_playMedia">メディアを再生する</string>
+    <string name="utils_tryAgain">やり直し</string>
+    <string name="image_uploading">画像をアップロード中...</string>
+    <string name="image_upload_error">画像アップロードエラー</string>
+    <string name="retry">再試行</string>
+
+    <string name="search">検索</string>
+    <string name="searchAssignmentsHint">課題の検索</string>
+    <string name="searchAnnouncementsHint">お知らせ検索</string>
+    <string name="searchDiscussionsHint">ディスカッション検索</string>
+    <string name="searchPagesHint">ページ検索</string>
+    <string name="searchQuizzesHint">クイズ検索</string>
+    <string name="noItemsMatchingQuery">\"%s\"にマッチするアイテムなし</string>
+    <string name="selected">選択されました</string>
+
+</resources>

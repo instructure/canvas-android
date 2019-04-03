@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="2dp"
+        tools:background="@color/teacher_colorPrimary"
+        tools:ignore="UnusedAttribute">
+
+        <ProgressBar
+            android:id="@+id/savingProgressBar"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="end"
+            android:layout_marginEnd="16dp"
+            android:visibility="gone" />
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <include layout="@layout/view_divider" />
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:clipToPadding="false"
+            android:contentDescription="@string/scrollInstructions"
+            android:orientation="vertical"
+            android:padding="6dp">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/announcementNameTextInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="6dp"
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/title"
+                android:labelFor="@+id/announcementNameEditText"
+                android:textColorHint="@color/defaultTextGray"
+                app:hintTextAppearance="@style/TextInputLabel">
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/announcementNameEditText"
+                    style="@style/TextFont.Regular"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/title"
+                    android:maxLines="2"
+                    android:minHeight="48dp"
+                    android:textColorHint="@color/defaultTextGray"
+                    android:textSize="16sp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/announcementDescLabel"
+                style="@style/TextFont.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:text="@string/description"
+                android:textColor="@color/defaultTextGray" />
+
+            <instructure.rceditor.RCETextEditorView
+                android:id="@+id/announcementRCEView"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/rce_view_min_height"
+                android:layout_marginBottom="8dp"
+                app:rce_controls_margin_end="12dp"
+                app:rce_controls_margin_start="12dp"
+                app:rce_editor_padding="12dp" />
+
+            <com.instructure.pandautils.views.AttachmentLayout
+                android:id="@+id/attachmentLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-8dp"
+                android:animateLayoutChanges="true"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="16dp"
+                app:al_previewChildCount="1"
+                app:al_spacing="12dp" />
+
+            <TextView
+                style="@style/TextFont.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:importantForAccessibility="yes"
+                android:text="@string/options"
+                android:textColor="@color/defaultTextGray" />
+
+            <TextView
+                style="@style/TextFont.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:importantForAccessibility="yes"
+                android:text="@string/postTo"
+                android:textColor="@color/defaultTextGray" />
+
+            <RelativeLayout
+                android:id="@+id/sectionWrapper"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:background="?android:attr/selectableItemBackground">
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/sections"
+                    style="@style/OverrideViewEditText"
+                    android:text=""
+                    android:singleLine="true"
+                    tools:text="This is a test of a super long string to see what will happen if it's too long"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/delaySwitchWrapper"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:background="?android:attr/selectableItemBackground">
+
+                <TextView
+                    android:id="@+id/delayText"
+                    style="@style/TextFont.Medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="16dp"
+                    android:layout_toStartOf="@+id/delaySwitch"
+                    android:labelFor="@+id/delaySwitch"
+                    android:text="@string/create_announcement_delay_posting"
+                    android:textSize="16sp" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/delaySwitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:backgroundTint="@color/teacher_colorPrimary"
+                    android:maxWidth="48dp"
+                    android:minHeight="48dp"
+                    tools:checked="true" />
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/postDateWrapper"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/TextFont.Medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/postAt"
+                    android:textColor="@color/defaultTextGray" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingStart="6dp"
+                    android:paddingEnd="6dp">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="@integer/wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@string/post_date"
+                        android:labelFor="@+id/postDate" />
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/postDate"
+                        style="@style/OverrideViewEditText"
+                        android:layout_weight="1"
+                        android:text="" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="@integer/wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@string/post_time"
+                        android:labelFor="@+id/postTime" />
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/postTime"
+                        style="@style/OverrideViewEditText"
+                        android:layout_weight="1.6"
+                        android:text="" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/allowCommentsWrapper"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="10dp"
+                android:background="?attr/selectableItemBackground">
+
+                <TextView
+                    android:id="@+id/allowCommentsText"
+                    style="@style/TextFont.Medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="16dp"
+                    android:layout_toStartOf="@+id/allowCommentsSwitch"
+                    android:labelFor="@+id/allowCommentsSwitch"
+                    android:text="@string/allowUserComments"
+                    android:textSize="16sp"/>
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/allowCommentsSwitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="48dp"
+                    android:maxWidth="48dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:backgroundTint="@color/teacher_colorPrimary"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/usersMustPostWrapper"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:background="?android:attr/selectableItemBackground">
+
+                <TextView
+                    android:id="@+id/usersMustPostText"
+                    style="@style/TextFont.Medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="16dp"
+                    android:layout_toStartOf="@+id/usersMustPostSwitch"
+                    android:labelFor="@+id/usersMustPostSwitch"
+                    android:text="@string/usersMustPost"
+                    android:textSize="16sp" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/usersMustPostSwitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:backgroundTint="@color/teacher_colorPrimary"
+                    android:maxWidth="48dp"
+                    android:minHeight="48dp" />
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/deleteAnnouncementButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:gravity="center_vertical"
+                android:minHeight="48dp"
+                android:orientation="horizontal"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="8dp">
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_marginEnd="12dp"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/vd_trash"
+                    android:tint="@color/removeOverrideColor" />
+
+                <TextView
+                    style="@style/TextFont.Medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/deleteAnnouncement"
+                    android:textColor="@color/removeOverrideColor"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

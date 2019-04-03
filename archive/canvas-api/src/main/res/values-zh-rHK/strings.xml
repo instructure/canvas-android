@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <!--Modules-->
+  <string name="mustComplete">您必須首先完成：</string>
+  <string name="unlockedAt">解鎖日期是：</string>
+  <string name="goToModules">前往模塊</string>
+  <!--Events-->
+  <string name="Starts">開始</string>
+  <string name="Ends">結束</string>
+  <string name="allDayEvent">所有日期事件</string>
+  <string name="at">於</string>
+  <string name="to">至</string>
+  <!--StreamItems-->
+  <string name="Message">郵件</string>
+  <string name="Loading">載入中……</string>
+  <string name="Deleted">已刪除</string>
+  <!--Assignment Module-->
+  <string name="canvasAPI_online">在線</string>
+  <string name="canvasAPI_onPaper">在紙上</string>
+  <string name="canvasAPI_discussion">討論</string>
+  <string name="canvasAPI_quiz">測驗</string>
+  <string name="canvasAPI_externalTool">外部工具</string>
+  <string name="canvasAPI_none">無</string>
+  <string name="canvasAPI_passFail">未能通過</string>
+  <string name="canvasAPI_percent">百分比</string>
+  <string name="canvasAPI_letterGrade">來信評分</string>
+  <string name="canvasAPI_points">點數</string>
+  <string name="canvasAPI_gpaScale">GPA等級</string>
+  <string name="canvasAPI_notGraded">未評分</string>
+  <string name="canvasAPI_onlineQuiz">在線測驗</string>
+  <string name="canvasAPI_discussionTopic">討論話題</string>
+  <string name="canvasAPI_onlineUpload">在線上傳</string>
+  <string name="canvasAPI_onlineTextEntry">在線文本輸入</string>
+  <string name="canvasAPI_onlineURL">在線URL</string>
+  <string name="canvasAPI_mediaRecording">媒體錄製</string>
+  <string name="canvasAPI_attendance">出勤率</string>
+</resources>

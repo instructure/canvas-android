@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <!--Modules-->
+  <string name="mustComplete">首先您必须完成：</string>
+  <string name="unlockedAt">将被解锁于：</string>
+  <string name="goToModules">转到单元</string>
+  <!--Events-->
+  <string name="Starts">开始</string>
+  <string name="Ends">结束</string>
+  <string name="allDayEvent">全天活动</string>
+  <string name="at">在</string>
+  <string name="to">到</string>
+  <!--StreamItems-->
+  <string name="Message">信息</string>
+  <string name="Loading">正在加载...</string>
+  <string name="Deleted">删除</string>
+  <!--Assignment Module-->
+  <string name="canvasAPI_online">在线</string>
+  <string name="canvasAPI_onPaper">书面上、在纸上</string>
+  <string name="canvasAPI_discussion">讨论</string>
+  <string name="canvasAPI_quiz">测验</string>
+  <string name="canvasAPI_externalTool">外部工具</string>
+  <string name="canvasAPI_none">无</string>
+  <string name="canvasAPI_passFail">合格不合格</string>
+  <string name="canvasAPI_percent">百分数</string>
+  <string name="canvasAPI_letterGrade">字母分数</string>
+  <string name="canvasAPI_points">点值</string>
+  <string name="canvasAPI_gpaScale">GPA 等级</string>
+  <string name="canvasAPI_notGraded">非评分</string>
+  <string name="canvasAPI_onlineQuiz">在线测验</string>
+  <string name="canvasAPI_discussionTopic">讨论话题</string>
+  <string name="canvasAPI_onlineUpload">在线上传</string>
+  <string name="canvasAPI_onlineTextEntry">在线文本输入</string>
+  <string name="canvasAPI_onlineURL">在线URL</string>
+  <string name="canvasAPI_mediaRecording">媒体录制</string>
+  <string name="canvasAPI_attendance">考勤</string>
+</resources>

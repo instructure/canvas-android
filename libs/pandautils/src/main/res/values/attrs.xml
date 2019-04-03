@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <declare-styleable name="RippleView">
+        <attr name="rv_alpha" format="integer" />
+        <attr name="rv_framerate" format="integer"/>
+        <attr name="rv_rippleDuration" format="integer"/>
+        <attr name="rv_zoomDuration" format="integer" />
+        <attr name="rv_color" format="color" />
+        <attr name="rv_centered" format="boolean" />
+        <attr name="rv_type" format="enum">
+            <enum name="simpleRipple" value="0"/>
+            <enum name="doubleRipple" value="1"/>
+            <enum name="rectangle" value="2" />
+        </attr>
+        <attr name="rv_ripplePadding" format="dimension" />
+        <attr name="rv_zoom" format="boolean" />
+        <attr name="rv_zoomScale" format="float" />
+
+    </declare-styleable>
+
+    <declare-styleable name="AvatarCropOverlay">
+        <attr name="aco_strokeWidth" format="dimension"/>
+        <attr name="aco_sourceView" format="reference"/>
+        <attr name="aco_strokeColor" format="color"/>
+        <attr name="aco_overlayColor" format="color"/>
+    </declare-styleable>
+
+    <declare-styleable name="ProgressiveCanvasLoadingView">
+        <attr name="pclv_override_color" format="color" />
+        <attr name="pclv_progress" format="float" />
+        <attr name="pclv_indeterminate" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="AttachmentLayout">
+        <attr name="al_spacing" format="dimension" />
+        <attr name="al_previewChildCount" format="integer" />
+    </declare-styleable>
+
+    <declare-styleable name="AttachmentDogEarLayout">
+        <attr name="adl_dogear_size" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="NestedIconView">
+        <attr name="icon" format="reference"/>
+        <attr name="nestedIcon" format="reference"/>
+    </declare-styleable>
+
+    <declare-styleable name="ColorPickerIcon">
+        <attr name="circle" format="reference"/>
+        <attr name="checkMark" format="reference"/>
+    </declare-styleable>
+
+</resources>

@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="rce_contentDescription_undo">Defèt</string>
+    <string name="rce_contentDescription_redo">Refè</string>
+    <string name="rce_contentDescription_bold">Fòma Gra</string>
+    <string name="rce_contentDescription_italic">Fòma Italik</string>
+    <string name="rce_contentDescription_strikethrough">Reye</string>
+    <string name="rce_contentDescription_underline">Souliyen</string>
+    <string name="rce_contentDescription_format_text_color">Fòma Koulè Tèks</string>
+    <string name="rce_contentDescription_border_color">Fòma Koulè Tèks Bòdi</string>
+    <string name="rce_contentDescription_indent_increase">Ogmantasyon Retrè</string>
+    <string name="rce_contentDescription_indent_decrease">Diminisyon Retrè</string>
+    <string name="rce_contentDescription_align_left">Aliyen Agoch</string>
+    <string name="rce_contentDescription_align_right">Aliyen Adwat</string>
+    <string name="rce_contentDescription_align_center">Aliyen nan Mitan</string>
+    <string name="rce_contentDescription_insert_bullets">Ensere Lis Pwen</string>
+    <string name="rce_contentDescription_insert_numbers">Ensere Lis Nimewote</string>
+    <string name="rce_contentDescription_insert_photo">Ensere Foto</string>
+    <string name="rce_contentDescription_upload_photo">Transfere Foto Apati de Aparèy</string>
+    <string name="rce_contentDescription_insert_link">Ensere Lyen</string>
+    <string name="rce_contentDescription_block_quote">Sitasyon an Blòk</string>
+
+    <string name="rce_contentDescription_color_none">Koulè Okenn</string>
+    <string name="rce_contentDescription_color_white">Koulè Blan</string>
+    <string name="rce_contentDescription_color_black">Koulè Nwa</string>
+    <string name="rce_contentDescription_color_blue">Koulè Ble</string>
+    <string name="rce_contentDescription_color_red">Koulè Wouj</string>
+    <string name="rce_contentDescription_color_green">Koulè Vèt</string>
+    <string name="rce_contentDescription_color_gray">Koulè Gri</string>
+    <string name="rce_contentDescription_color_magenta">Koulè Majenta</string>
+    <string name="rce_contentDescription_color_cyan">Koulè Blesyèl</string>
+    <string name="rce_contentDescription_color_orange">Koulè Zoranj</string>
+    <string name="rce_contentDescription_color_yellow">Koulè Jòn</string>
+    <string name="rce_contentDescription_color_purple">Koulè  Mov</string>
+
+    <string name="rce_editTextUrlHint">Lyen</string>
+    <string name="rce_editTextALTHint">Tèks</string>
+    <string name="rce_dialogDone">Fini</string>
+    <string name="rce_dialogCancel">Anile</string>
+    <string name="rce_insertLink">Ensere Lyen</string>
+    <string name="rce_insertImage">Ensere Imaj</string>
+
+    <string name="rce_uploadImage">Transfere Imaj</string>
+    <string name="rce_done">Fini</string>
+    <string name="rce_cancel">Anile</string>
+    <string name="rce_exit">Soti</string>
+    <string name="rce_dialog_exit_title">Soti nan Modifikasyon Sesyon?</string>
+    <string name="rce_dialog_exit_message">Ou vle soti tout bon? Nenpòt done ki pa t anrejistre ap pèdi</string>
+    <string name="rce_empty_message">Mesaj</string>
+    <string name="rce_empty_description">Ajoute deskripsyon</string>
+    <string name="rce_scrollInstructions">Woule ou tout enstriman modifikasyon yo</string>
+</resources>

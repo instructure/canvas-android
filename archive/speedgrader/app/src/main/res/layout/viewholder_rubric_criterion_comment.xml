@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2016 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/editCommentViewSwitcher"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:measureAllChildren="false"
+    android:inAnimation="@android:anim/fade_in"
+    android:outAnimation="@android:anim/fade_out"
+    android:paddingRight="16dp"
+    android:paddingLeft="8dp"
+    android:paddingTop="8dp"
+    android:orientation="vertical"
+    android:paddingBottom="8dp">
+
+    <RelativeLayout
+        android:id="@+id/commentHolder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="40dp">
+
+        <TextView
+            android:id="@+id/comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textColor="@color/lightGray"
+            android:textSize="14sp"
+            android:text="@string/commentPrompt"
+            android:layout_alignParentLeft="true"
+            android:layout_alignTop="@+id/rubric_criterion_rating_text"/>
+
+        <TextView
+            android:id="@+id/rubric_criterion_rating_text"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="5dp"
+            android:textColor="@color/lightGray"
+            android:textSize="14sp"
+            android:layout_toRightOf="@+id/comment"
+            android:gravity="center_vertical"/>
+    </RelativeLayout>
+</LinearLayout>

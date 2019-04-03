@@ -1,0 +1,99 @@
+syntax = "proto3";
+
+option java_package = "com.instructure.soseedy";
+option java_multiple_files = true;
+
+package soseedy;
+
+
+service SeedyQuizzes {
+    // quizzes.proto
+    rpc CreateQuiz(CreateQuizRequest) returns (Quiz) {}
+    rpc CreateQuizSubmission(CreateQuizSubmissionRequest) returns (QuizSubmission) {}
+    rpc CompleteQuizSubmission(CompleteQuizSubmissionRequest) returns (QuizSubmission) {}
+    rpc CreateQuizQuestion(CreateQuizQuestionRequest) returns (CreateQuizQuestionResponse) {}
+    rpc PublishQuiz(PublishQuizRequest) returns (Quiz) {}
+
+    rpc SeedQuizzes(SeedQuizzesRequest) returns (Quizzes) { }
+    rpc SeedQuizSubmission(SeedQuizSubmissionRequest) returns (QuizSubmission) { }
+}
+
+// Request messages
+
+message CreateQuizRequest {
+    int64 courseId = 1;
+    bool withDescription = 2;
+    string lockAt = 3;
+    string unlockAt = 4;
+    string dueAt = 5;
+    bool published = 6;
+    string token = 7;
+}
+
+message CreateQuizSubmissionRequest {
+    int64 courseId = 1;
+    int64 quizId = 2;
+    string studentToken = 3;
+}
+
+message CompleteQuizSubmissionRequest {
+    int64 courseId = 1;
+    int64 quizId = 2;
+    int64 submissionId = 3;
+    int64 attempt = 4;
+    string validationToken = 5;
+    string studentToken = 6;
+}
+
+message CreateQuizQuestionRequest {
+    int64 courseId = 1;
+    int64 quizId = 2;
+    string teacherToken = 3;
+}
+
+message PublishQuizRequest {
+    int64 courseId = 1;
+    int64 quizId = 2;
+    string teacherToken = 3;
+    bool published = 4;
+}
+
+message SeedQuizzesRequest {
+    int64 courseId = 1;
+    int32 quizzes = 2;
+    bool withDescription = 3;
+    string lockAt = 4;
+    string unlockAt = 5;
+    string dueAt = 6;
+    bool published = 7;
+    string token = 8;
+}
+
+message SeedQuizSubmissionRequest {
+    int64 courseId = 1;
+    int64 quizId = 2;
+    string studentToken = 3;
+    bool complete = 4;
+}
+
+// Response messages
+
+message Quiz {
+    int64 id = 1;
+    string title = 2;
+    bool published = 3;
+}
+
+message QuizSubmission {
+    int64 id = 1;
+    int64 attempt = 2;
+    string validationToken = 3;
+}
+
+message CreateQuizQuestionResponse {
+    int64 id = 1;
+}
+
+message Quizzes {
+    repeated Quiz quizzes = 1;
+}

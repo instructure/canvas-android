@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipChildren="false"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clipChildren="false">
+
+            <ImageView
+                android:id="@+id/victoryTrophy"
+                android:layout_width="360dp"
+                android:layout_height="360dp"
+                android:layout_gravity="center"
+                app:srcCompat="@drawable/vd_trophy"
+                tools:ignore="ContentDescription"/>
+
+            <com.instructure.androidfoosball.views.PlayerView
+                android:id="@+id/playerLayout1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                tools:src="@drawable/sadpanda"/>
+
+        </FrameLayout>
+
+        <com.instructure.androidfoosball.views.PlayerView
+            android:id="@+id/playerLayout2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            tools:src="@drawable/sadpanda"/>
+
+        <com.instructure.androidfoosball.views.PlayerView
+            android:id="@+id/playerLayout3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            tools:src="@drawable/sadpanda"/>
+
+        <com.instructure.androidfoosball.views.PlayerView
+            android:id="@+id/playerLayout4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            tools:src="@drawable/sadpanda"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#888"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="32dp">
+
+        <FrameLayout
+            android:id="@+id/endGameView"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:layout_centerInParent="true">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="2dp"
+                android:background="@drawable/circle_outline_blue_medium"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="8dp"
+                android:drawablePadding="4dp"
+                android:drawableTop="@drawable/ic_check_blue_48dp"
+                android:fontFamily="sans-serif-black"
+                android:gravity="center"
+                android:text="@string/end_game"
+                android:textAllCaps="true"
+                android:textColor="@color/colorAccent"
+                android:textSize="24sp"/>
+
+            <com.instructure.androidfoosball.views.CountdownCircle
+                android:id="@+id/countdownView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        </FrameLayout>
+
+        <ImageView
+            android:id="@+id/undoView"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_alignBottom="@id/endGameView"
+            android:layout_toEndOf="@+id/endGameView"
+            android:background="@drawable/circle_outline_thin"
+            android:contentDescription="@string/undo_last_goal"
+            android:padding="12dp"
+            android:src="@drawable/ic_undo_black_24dp"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

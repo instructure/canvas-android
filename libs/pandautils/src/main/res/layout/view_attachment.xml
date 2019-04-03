@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<com.instructure.pandautils.views.AttachmentDogEarLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="@dimen/utils_attachment_view_width"
+    android:layout_height="@dimen/utils_attachment_view_height"
+    android:foreground="?attr/selectableItemBackground">
+
+
+    <ImageView
+        android:id="@+id/previewImage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/attachmentColorMisc"
+        android:scaleType="centerCrop"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:id="@+id/attachmentIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:adjustViewBounds="true"
+        android:tint="@color/white"
+        app:srcCompat="@drawable/vd_utils_attachment"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/attachmentName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="36dp"
+        android:ellipsize="start"
+        android:fontFamily="sans-serif-medium"
+        android:lines="3"
+        android:textColor="@color/white"
+        android:textSize="11sp"
+        tools:ignore="SmallSp"
+        tools:text="attachment_name_which_is_really_long.docx" />
+
+    <ImageButton
+        android:id="@+id/actionButton"
+        android:layout_width="24dp"
+        android:layout_height="28dp"
+        android:layout_gravity="bottom|end"
+        android:background="#22000000"
+        android:contentDescription="@string/utils_downloadAttachment"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
+        android:padding="4dp"
+        android:tint="#FFF"
+        app:srcCompat="@drawable/vd_utils_download" />
+
+</com.instructure.pandautils.views.AttachmentDogEarLayout>

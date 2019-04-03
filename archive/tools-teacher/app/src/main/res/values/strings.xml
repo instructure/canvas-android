@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2016 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<resources>
+
+    <string name="app_name">Teacher Tools</string>
+    <string name="title_section1">Section 1</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section3">Section 3</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_example">Example action</string>
+    <string name="action_settings">Settings</string>
+
+    <!--Errors-->
+    <string name="errorOccurred">An Unexpected Error Occurred</string>
+    <string name="serverError">A Server Error Has Occurred</string>
+    <string name="unauthorized">You are unauthorized to access this. Either you don\'t have permissions or you don\'t have access yet (like your course hasn\'t started yet)</string>
+    <string name="fileNoLongerExists">That file no longer exists.</string>
+    <string name="invalidAccessToken">Your session has expired. Please login to start a new session.</string>
+    <string name="noDataConnection">No data connection found</string>
+    <string name="error">Error</string>
+
+    <!-- Nav Drawer Items -->
+    <string name="studentChooser">Hot Seat</string>
+    <string name="guessWho">Guess Who</string>
+    <string name="quietTime">Quiet Time</string>
+
+    <array name="teacherOptions">
+        <item>@string/studentChooser</item>
+        <item>@string/guessWho</item>
+        <item>@string/quietTime</item>
+    </array>
+
+    <string name="noItemsToDisplayShort">No items to display</string>
+    <string name="loading">Loading&#8230;</string>
+    <string name="tapToRetry">Tap to retry</string>
+
+    <string name="startedAt">Started at</string>
+    <string name="startingAt">Starting</string>
+    <string name="coursesTitle">Courses</string>
+    <string name="random">Select a random student</string>
+    <string name="removeStudent">Remove after selected</string>
+    <string name="errorShowingPicture">There was an error showing the picture</string>
+    <string name="cast">Cast</string>
+    <string name="showImage">Show avatar on screen</string>
+    <string name="randomize">Randomize</string>
+    <string name="stopped">Stopped</string>
+    <string name="start">Start</string>
+    <string name="stop">Stop</string>
+    <string name="tapToIncrease">Tap to increase noise sensitivity</string>
+    <string name="tapToDecrease">Tap to decrease noise sensitivity</string>
+    <string name="shareNoise">Share color on screen</string>
+    <string name="noMoreStudents">No more students</string>
+    <string name="readName">Read student name</string>
+
+    <string name="studentNotes">Student Notes</string>
+    <string name="studentDetails">Student Details</string>
+
+    <string name="logout">Logout</string>
+    <string name="seeName">See Name</string>
+    <string name="pickCourse">Pick a Course</string>
+    <string name="studentDetailsHint">Enter some notes about this student (255 character limit)&#8230;</string>
+    <string name="done">Done</string>
+    <string name="successfullyUpdatedNotes">Successfully updated notes for</string>
+    <string name="notesColumnName">Notes</string>
+    <string name="noStudents">No students in this section</string>
+    <string name="swipeLeft">Swipe left to see the next student</string>
+    <string name="studentChooserTutorial">Tap the button below to start selecting students. \n\nAdjust settings by tapping on the settings icon in the top right.</string>
+    <string name="allSections">All Sections</string>
+</resources>

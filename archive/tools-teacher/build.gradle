@@ -1,0 +1,74 @@
+/*
+ * Copyright (C) 2016 - present  Instructure, Inc.
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, version 3 of the License.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
+buildscript {
+    /* Global constants */
+    apply from: '../gradle/global.gradle'
+
+    apply from: '../private-data/merge-private-data.gradle'
+    mergePrivateData "tools-teacher", false
+
+    repositories {
+        google()
+        jcenter()
+        maven { url 'https://maven.fabric.io/public' }
+        maven { url 'https://jitpack.io' }
+    }
+    dependencies {
+        classpath "com.android.tools.build:gradle:$GLOBAL_GRADLE_TOOLS_VERSION"
+        classpath "com.google.gms:oss-licenses:$GLOBAL_OSS_LICENSES_PLUGIN_VERSION"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$GLOBAL_KOTLIN_VERSION"
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+        maven { url 'https://maven.fabric.io/public' }
+        maven { url "https://jitpack.io" }
+        flatDir {
+            dirs '../aars'
+        }
+    }
+}
+
+ext {
+    compileSdkVersion = GLOBAL_COMPILE_SDK
+    buildToolsVersion = GLOBAL_BUILD_TOOLS_VERSION
+
+    targetSdkVersion = GLOBAL_TARGET_SDK
+    minSdkVersion = 17
+
+    versionCode = 2
+    versionName = '1.1'
+
+    supportLibraryVersion = GLOBAL_SUPPORT_LIBRARY_VERSION
+    googlePlayServicesVersion = GLOBAL_PLAY_SERVICES_VERSION
+
+    supportDependencies = [
+            design           : "com.android.support:design:$supportLibraryVersion",
+            recyclerView     : "com.android.support:recyclerview-v7:$supportLibraryVersion",
+            appCompat        : "com.android.support:appcompat-v7:$supportLibraryVersion",
+            supportAnnotation: "com.android.support:support-annotations:$supportLibraryVersion",
+            cardView         : "com.android.support:cardview-v7:$supportLibraryVersion",
+            gpsWearable      : "com.google.android.gms:play-services-wearable:$googlePlayServicesVersion",
+            supportLibV13    : "com.android.support:support-v13:$supportLibraryVersion",
+            percentLayout    : "com.android.support:percent:$supportLibraryVersion",
+    ]
+}

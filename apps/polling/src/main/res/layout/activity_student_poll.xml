@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ Copyright (C) 2016 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/viewMargin"
+    android:animateLayoutChanges="true">
+
+    <TextView
+        style="@style/TextStyle.Primary"
+        android:id="@+id/poll_question"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/dropshadow_nine_patch"
+        android:padding="@dimen/list_padding"
+        />
+
+    <ListView
+        android:id="@+id/listAnswers"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:dividerHeight="0dp"
+        android:divider="@null"
+        android:layout_below="@+id/poll_question"
+        android:layout_margin="@dimen/viewMargin"
+        android:layout_marginBottom="16dp"
+        android:layout_above="@+id/submit_poll"
+        />
+
+    <Button
+        android:id="@+id/submit_poll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/submitPoll"
+        android:textColor="@color/white"
+        android:layout_alignParentBottom="true"
+        />
+</RelativeLayout>

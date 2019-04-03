@@ -1,0 +1,42 @@
+﻿<!--
+  ~ Copyright (C) 2018 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="inputText">Skriv tekst</string>
+    <string name="cancel">Annuller</string>
+    <string name="comment">Kommentar</string>
+    <string name="skip">Spring over</string>
+    <string name="comments">Kommentarer</string>
+    <string name="error_loading_submission">Der opstod et problem ved indlæsning af denne aflevering.</string>
+    <string name="retry">Prøv igen</string>
+    <string name="annotationErrorOccurred">Der opstod en uventet fejl ved indlæsning af anmærkninger.</string>
+    <string name="annotationError">Anmærkningsfejl</string>
+    <string name="annotationDialogMessage">Anmærkningen er slettet fra en anden kilde.</string>
+    <string name="errorSendingMessage">Denne besked kunne ikke sendes. Tryk for at prøve igen.</string>
+    <string name="addAnnotationComment">Tilføj kommentar</string>
+    <string name="editComment">Rediger kommentar</string>
+    <string name="deleteComment">Slet kommentar</string>
+    <string name="deleteAnnotation">Slet anmærkning</string>
+    <string name="deleteCommentConfirmation">Er du sikker på, at du ønsker at slette denne kommentar?</string>
+    <string name="deleteHeadCommentConfirmation">Hvis du sletter denne kommentar, slettes alle kommentarer, der er knyttet til denne anmærkning. Er du sikker på, du vil gøre det?</string>
+    <string name="sendingSimple">Sender</string>
+    <string name="pspdf__annotation_type_stamp">Bemærkningens farve</string>
+
+    <string name="removedComment">Fjernet %1$s af %2$s</string>
+
+</resources>

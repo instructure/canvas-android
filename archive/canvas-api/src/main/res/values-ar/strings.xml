@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <!--Modules-->
+  <string name="mustComplete">يجب أن تكمل أولًا:</string>
+  <string name="unlockedAt">سيتم إلغاء التأمين في:</string>
+  <string name="goToModules">الانتقال إلى الوحدات</string>
+  <!--Events-->
+  <string name="Starts">يبدأ</string>
+  <string name="Ends">ينتهي</string>
+  <string name="allDayEvent">حدث يوم كامل</string>
+  <string name="at">في</string>
+  <string name="to">إلى</string>
+  <!--StreamItems-->
+  <string name="Message">الرسالة</string>
+  <string name="Loading">جارٍ التحميل...</string>
+  <string name="Deleted">تم حذفه</string>
+  <!--Assignment Module-->
+  <string name="canvasAPI_online">عبر الإنترنت</string>
+  <string name="canvasAPI_onPaper">على الورق</string>
+  <string name="canvasAPI_discussion">مناقشة</string>
+  <string name="canvasAPI_quiz">اختبار</string>
+  <string name="canvasAPI_externalTool">أداة خارجية</string>
+  <string name="canvasAPI_none">لا شيء</string>
+  <string name="canvasAPI_passFail">تجاوز إخفاق</string>
+  <string name="canvasAPI_percent">النسبة المئوية</string>
+  <string name="canvasAPI_letterGrade">التقييم بالأحرف</string>
+  <string name="canvasAPI_points">النقاط</string>
+  <string name="canvasAPI_gpaScale">المقياس التراكمي</string>
+  <string name="canvasAPI_notGraded">لم يتم التقييم</string>
+  <string name="canvasAPI_onlineQuiz">إختبار على الإنترنت</string>
+  <string name="canvasAPI_discussionTopic">موضوع المناقشة</string>
+  <string name="canvasAPI_onlineUpload">التحميل عبر الإنترنت</string>
+  <string name="canvasAPI_onlineTextEntry">إدخال النص عبر الإنترنت</string>
+  <string name="canvasAPI_onlineURL">عنوان URL عبر الإنترنت</string>
+  <string name="canvasAPI_mediaRecording">تسجيل الوسائط</string>
+  <string name="canvasAPI_attendance">الحضور</string>
+</resources>

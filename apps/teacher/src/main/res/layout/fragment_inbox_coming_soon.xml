@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:background="@color/defaultPrimary"
+        android:elevation="6dp"
+        app:popupTheme="@style/ToolBarPopupStyle"
+        app:theme="@style/ToolBarStyle"
+        tools:ignore="UnusedAttribute">
+
+        <com.instructure.teacher.view.CustomToolbarIconView
+            android:id="@+id/logoImageView"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/toolbarIconPadding"
+            android:layout_marginTop="@dimen/toolbarIconPadding"
+            android:importantForAccessibility="no"
+            android:scaleType="centerCrop" />
+
+        <TextView
+            android:id="@+id/titleTextView"
+            style="@style/ToolBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:paddingStart="24dp"
+            android:singleLine="true"
+            android:text="@string/tab_inbox"
+            tools:ignore="Deprecated,RtlSymmetry" />
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="?android:attr/actionBarSize"
+        android:layout_gravity="center"
+        android:padding="24dp"
+        android:text="Coming Soon..."
+        style="@style/TextFont.Medium"
+        android:textSize="26sp"
+        android:textColor="@color/login_grayText"/>
+
+</FrameLayout>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    android:clipChildren="false">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/avatarView"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            tools:src="@color/defaultTextGray"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
+            android:gravity="start|center_vertical"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/userNameTextView"
+                style="@style/TextFont.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Allen Thomas"/>
+
+            <TextView
+                android:id="@+id/commentDateTextView"
+                style="@style/TextFont.Regular"
+                android:textSize="12sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/defaultTextGray"
+                tools:text="March 24 at 4:16 PM"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <com.instructure.teacher.view.CommentTextView
+        android:id="@+id/commentTextView"
+        style="@style/TextFont.Regular"
+        android:layout_marginEnd="24dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="8dp"
+        android:paddingEnd="12dp"
+        android:paddingStart="12dp"
+        android:paddingTop="8dp"
+        android:textColor="#FFF"
+        android:layout_marginTop="4dp"
+        app:bubbleColor="@color/canvasDefaultButton"
+        app:targetAvatarId="@+id/avatarView"
+        tools:text="The due date has passed. Are you planning on submitting it?"/>
+
+    <FrameLayout
+        android:id="@+id/extrasContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"/>
+
+</LinearLayout>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2016 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true">
+
+        <RelativeLayout
+            android:id="@+id/cardFront"
+            android:layout_width="@dimen/guess_who_card_width"
+            android:layout_height="@dimen/guess_who_card_height">
+
+            <TextView
+                android:id="@+id/seeName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentBottom="true"
+                android:padding="12dp"
+                android:text="@string/seeName"
+                android:textAllCaps="true"
+                android:textColor="@color/mainGreen" />
+
+            <ImageView
+                android:id="@+id/avatar"
+                android:layout_width="@dimen/student_chooser_image_width"
+                android:layout_height="@dimen/student_chooser_image_height"
+                android:layout_centerHorizontal="true"
+                android:scaleType="fitCenter"
+                android:layout_alignParentTop="true"
+                android:layout_above="@id/seeName"
+                android:layout_marginTop="12dp"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/cardBack"
+            android:layout_width="@dimen/guess_who_card_width"
+            android:layout_height="@dimen/guess_who_card_height"
+            android:layout_centerInParent="true"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/studentName"
+                style="@style/TextStyle.Primary"
+                android:layout_centerInParent="true"
+                android:padding="16dp"
+                android:textSize="18sp" />
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+</RelativeLayout>

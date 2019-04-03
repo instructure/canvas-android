@@ -1,0 +1,79 @@
+﻿<?xml version='1.0' encoding='UTF-8'?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <!--Modules-->
+    <string name="mustComplete">Je moet eerst voltooien:</string>
+    <string name="unlockedAt">Het wordt ontgrendeld op:</string>
+    <string name="goToModules">Ga naar modulen</string>
+
+    <!--Events-->
+    <string name="Starts">Begint op</string>
+    <string name="Ends">Eindigt</string>
+    <string name="allDayEvent">Evenement dat de hele dag duurt</string>
+    <string name="at">om</string>
+    <string name="to">naar</string>
+
+    <!--StreamItems-->
+    <string name="Message">Bericht</string>
+    <string name="Loading">Aan het laden&#8230;</string>
+    <string name="Deleted">Verwijderd</string>
+
+    <!-- Assignment Module -->
+    <string name="canvasAPI_online">Online</string>
+    <string name="canvasAPI_onPaper">Op papier</string>
+    <string name="canvasAPI_discussion">Discussie</string>
+    <string name="canvasAPI_quiz">Toets</string>
+    <string name="canvasAPI_externalTool">Externe tool</string>
+    <string name="canvasAPI_none">Geen</string>
+
+    <string name="canvasAPI_passFail">Slagen Zakken</string>
+    <string name="canvasAPI_percent">Percentage</string>
+    <string name="canvasAPI_letterGrade">Beoordeling in lettervorm</string>
+    <string name="canvasAPI_points">Punten</string>
+    <string name="canvasAPI_gpaScale">Gemiddeld eindcijfer</string>
+    <string name="canvasAPI_notGraded">Niet beoordeeld</string>
+
+    <string name="canvasAPI_onlineQuiz">Online toets</string>
+    <string name="canvasAPI_discussionTopic">Discussieonderwerp</string>
+    <string name="canvasAPI_onlineUpload">Online upload</string>
+    <string name="canvasAPI_onlineTextEntry">Online tekstinvoer</string>
+    <string name="canvasAPI_onlineURL">Online URL</string>
+    <string name="canvasAPI_mediaRecording">Media opnames</string>
+    <string name="canvasAPI_attendance">Aanwezigheid</string>
+    <string name="quiz_scoring_policy_highest">Hoogste</string>
+    <string name="quiz_scoring_policy_average">Gemiddeld</string>
+    <string name="quiz_scoring_policy_latest">Laatste</string>
+    <string name="no">Nee</string>
+    <string name="always">Altijd</string>
+    <string name="graded_quiz">Beoordeelde toets</string>
+    <string name="practice_quiz">Practicumtoets</string>
+    <string name="graded_survey">Beoordeelde enquête</string>
+    <string name="ungraded_survey">Niet-beoordeelde enquête</string>
+    <string name="andMore"> en nog %d andere</string>
+
+    <!-- Enrollment Types -->
+    <string name="enrollmentTypeStudent">Cursist</string>
+    <string name="enrollmentTypeTeacher">Cursusleider</string>
+    <string name="enrollmentTypeObserver">Waarnemer</string>
+    <string name="enrollmentTypeTeachingAssistant">Onderwijsassistent</string>
+    <string name="enrollmentTypeDesigner">Ontwerper</string>
+    <string name="enrollmentTypeUnknown">Onbekend</string>
+
+</resources>

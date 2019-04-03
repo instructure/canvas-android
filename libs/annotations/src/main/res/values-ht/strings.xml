@@ -1,0 +1,42 @@
+﻿<!--
+  ~ Copyright (C) 2018 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="inputText">Sezi Tèks</string>
+    <string name="cancel">Anile</string>
+    <string name="comment">Kòmantè</string>
+    <string name="skip">Sote</string>
+    <string name="comments">Kòmantè</string>
+    <string name="error_loading_submission">Te gen yon pwoblèm nan chajman soumisyon sa a.</string>
+    <string name="retry">Re eseye</string>
+    <string name="annotationErrorOccurred">Gen yon erè ki fèt zanzatann pandan chajman anotasyon yo.</string>
+    <string name="annotationError">Erè Anotasyon</string>
+    <string name="annotationDialogMessage">Anotasyon an te efase apati de yon lòt sous.</string>
+    <string name="errorSendingMessage">Mesaj sa a pa t ka ale. Tape pou eseye ankò.</string>
+    <string name="addAnnotationComment">Ajoute Kòmantè</string>
+    <string name="editComment">Modifye Kòmantè</string>
+    <string name="deleteComment">Efase Kòmantè</string>
+    <string name="deleteAnnotation">Efase Anotasyon</string>
+    <string name="deleteCommentConfirmation">Ou kwè vrèman ou vle efase kòmantè sa a?</string>
+    <string name="deleteHeadCommentConfirmation">Eliminasyon kòmantè sa a ap efase tout kòmantè ki gen rapò ak anotasyon sa a. Ou kwè vrèman ou vle fè sa?</string>
+    <string name="sendingSimple">Voye</string>
+    <string name="pspdf__annotation_type_stamp">Note Koulè</string>
+
+    <string name="removedComment">Elimine %1$s pa %2$s</string>
+
+</resources>

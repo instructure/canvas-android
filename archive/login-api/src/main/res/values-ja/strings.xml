@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <string name="app_name">ログインAPI</string>
+  <string name="hello_world">Hello world!</string>
+  <string name="action_settings">設定</string>
+  <string name="mobileVerifyGeneral">このアプリは、使用許可されていません</string>
+  <string name="mobileVerifyDomainUnauthorized">あなたが入力したサーバーは、このアプリに承認されていません。</string>
+  <string name="mobileVerifyUserAgentUnauthorized">このアプリのユーザーエージェントは承認されていません。</string>
+  <string name="mobileVerifyUnknownError">このアプリと使用するためのサーバーを確認することが出来ません。</string>
+  <string name="unknownDevice">未知のディバイス</string>
+  <string name="errorOccurred">予期しないエラーが発生しました。</string>
+  <string name="pageNotFound">ページが見つかりません</string>
+  <string name="confirm">確認</string>
+  <string name="cancel">キャンセル</string>
+  <string name="help">ヘルプ</string>
+  <string name="enterURL">Canvas URLを入力してください:</string>
+  <string name="signIntoCanvasNetwork">Canvas Network にサインインしようとしていますか?</string>
+  <string name="remove">削除</string>
+  <string name="exampleURLSimple">myschool.instructure.com</string>
+  <string name="userId">ユーザーID</string>
+  <string name="domain">ドメイン</string>
+  <!--Multiple User Sign in-->
+  <string name="removeUser">このユーザーを削除しますか？</string>
+  <string name="removedForever">再度、このユーザーにサインインして、彼らのコンテンツにアクセスする必要があります。</string>
+  <!--Content Descriptions-->
+  <string name="canvasLogo">Canvas ロゴ</string>
+  <string name="canvasLoginOn">Canvas_ログイン: オン</string>
+  <string name="canvasLoginOff">Canvas_ログイン: オフ</string>
+  <string name="siteAdminLogin">サイト管理者ログイン: オン</string>
+  <string name="username">ユーザー名</string>
+  <string name="password">パスワード</string>
+  <string name="authenticationRequired">認証が必須です</string>
+  <string name="invalidEmailPassword">無効のメール、またはパスワード</string>
+  <string name="login">ログイン</string>
+  <string name="logout">ログアウト</string>
+  <!--Logout Warning Dialog-->
+  <string name="logout_warning">ログアウトしますか？</string>
+  <string name="logout_yes">はい</string>
+  <string name="logout_no">いいえ</string>
+  <!--Smart Login-->
+  <string name="loginNearYou">あなたの近く</string>
+  <string name="loginCanvasNetwork">Canvas Network</string>
+  <string name="loginRightBehindYou">あなたのすぐ後ろです</string>
+  <string name="loginMiles">%1$s マイルズ先</string>
+  <string name="loginCanvasHelp">あなたの学校がありませんか？学校のURLを入力するか、ここをタップしてヘルプを利用してください。</string>
+  <string name="loginCanvasHelpWithUser">学校のURLを入力するか、ここをタップしてヘルプを利用してください。</string>
+  <string name="loginHint">あなたの学校、または地区を検索</string>
+  <!--Zendesk Dialog-->
+  <string name="zendesk_reportAProblem">レポートＡ問題</string>
+  <string name="zendesk_subject">主題</string>
+  <string name="zendesk_description">説明</string>
+  <string name="zendesk_writeSomething">何か書いてください...</string>
+  <string name="zendesk_send">送信</string>
+  <string name="zendesk_feedbackThankyou">あなたの問題をサポートチームに報告して頂き、有難うございます。証明と更新をメールでお送りします。</string>
+  <string name="zendesk_severityText">これはあなたにどのように影響しますか？</string>
+  <string name="zendesk_casualQuestion">簡単な質問、コメント、アイディア、提案...</string>
+  <string name="zendesk_casualQuestion_tag">簡単_な_コメント</string>
+  <string name="zendesk_needHelp">これは急ぎではありませんが、ヘルプが必要です。</string>
+  <string name="zendesk_needHelp_tag">急ぎでは_ありません</string>
+  <string name="zendesk_somethingsBroken">何かがおかしいのですが、それを回避して必要なことを行うことができます。</string>
+  <string name="zendesk_somethingsBroken_tag">可能な_回避法</string>
+  <string name="zendesk_cantGetThingsDone">あなたから返事がくるまで、行うことができません。</string>
+  <string name="zendesk_cantGetThingsDone_tag">私が_行う_必要の_あることを_邪魔_します</string>
+  <string name="zendesk_extremelyCritical">極度の緊急事態です！！</string>
+  <string name="zendesk_extremelyCritical_tag">極度の_緊急_事態</string>
+  <string name="zendesk_emailAddress">メールアドレス</string>
+  <string name="zendesk_enterEmail">メールアドレスを入力してください...</string>
+  <string name="zendesk_unknown">未知の</string>
+  <!--Distance Strings-->
+  <string name="lessThanOne">&lt; 1 マイル (1.6 km)</string>
+  <string name="oneMile">1 マイル (1.6 km)</string>
+  <string name="miles">マイル</string>
+  <string name="kilometers">km</string>
+  <!--String for submitting tickets-->
+  <string name="device">デバイス</string>
+  <string name="osVersion">OS バージョン</string>
+  <string name="empty_feedback">フィードバックを提出するには、件名と説明は必須です。</string>
+</resources>

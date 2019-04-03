@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="rce_contentDescription_undo">Cofnij</string>
+    <string name="rce_contentDescription_redo">Cofnij</string>
+    <string name="rce_contentDescription_bold">Format - pogrubiona</string>
+    <string name="rce_contentDescription_italic">Format - kursywa</string>
+    <string name="rce_contentDescription_strikethrough">Przekreślenie</string>
+    <string name="rce_contentDescription_underline">Podkreślenie</string>
+    <string name="rce_contentDescription_format_text_color">Format - kolor tekstu</string>
+    <string name="rce_contentDescription_border_color">Format - kolor obramowania tekstu</string>
+    <string name="rce_contentDescription_indent_increase">Zwiększ wcięcie</string>
+    <string name="rce_contentDescription_indent_decrease">Zmniejsz wcięcie</string>
+    <string name="rce_contentDescription_align_left">Wyrównaj do lewej</string>
+    <string name="rce_contentDescription_align_right">Wyrównaj do prawej</string>
+    <string name="rce_contentDescription_align_center">Wyśrodkuj</string>
+    <string name="rce_contentDescription_insert_bullets">Wstaw listę z punktami</string>
+    <string name="rce_contentDescription_insert_numbers">Wstaw listę numerowaną</string>
+    <string name="rce_contentDescription_insert_photo">Wstaw zdjęcie</string>
+    <string name="rce_contentDescription_upload_photo">Prześlij zdjęcie z urządzenia</string>
+    <string name="rce_contentDescription_insert_link">Umieść Łącze</string>
+    <string name="rce_contentDescription_block_quote">Cytat blokowy</string>
+
+    <string name="rce_contentDescription_color_none">Brak koloru</string>
+    <string name="rce_contentDescription_color_white">Biały</string>
+    <string name="rce_contentDescription_color_black">Czarny</string>
+    <string name="rce_contentDescription_color_blue">Niebieski</string>
+    <string name="rce_contentDescription_color_red">Czerwony</string>
+    <string name="rce_contentDescription_color_green">Zielony</string>
+    <string name="rce_contentDescription_color_gray">Szary</string>
+    <string name="rce_contentDescription_color_magenta">Amarantowy</string>
+    <string name="rce_contentDescription_color_cyan">Błękitny</string>
+    <string name="rce_contentDescription_color_orange">Pomarańczowy</string>
+    <string name="rce_contentDescription_color_yellow">Żółty</string>
+    <string name="rce_contentDescription_color_purple">Fioletowy</string>
+
+    <string name="rce_editTextUrlHint">Łącze</string>
+    <string name="rce_editTextALTHint">Tekst</string>
+    <string name="rce_dialogDone">Gotowe</string>
+    <string name="rce_dialogCancel">Anuluj</string>
+    <string name="rce_insertLink">Umieść Łącze</string>
+    <string name="rce_insertImage">Wstaw obraz</string>
+
+    <string name="rce_uploadImage">Prześlij obraz</string>
+    <string name="rce_done">Gotowe</string>
+    <string name="rce_cancel">Anuluj</string>
+    <string name="rce_exit">Wyjdź</string>
+    <string name="rce_dialog_exit_title">Zakończyć edytowanie testu?</string>
+    <string name="rce_dialog_exit_message">Czy na pewno chcesz zakończyć? Niezapisane dane zostaną utracone.</string>
+    <string name="rce_empty_message">Wiadomość</string>
+    <string name="rce_empty_description">Dodaj opis</string>
+    <string name="rce_scrollInstructions">Przewiń, aby wyświetlić narzędzia edycji</string>
+</resources>

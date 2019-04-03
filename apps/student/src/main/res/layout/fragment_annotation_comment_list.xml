@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2018 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="2dp"
+        tools:ignore="UnusedAttribute"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/annotationCommentsRecyclerView"
+        android:layout_below="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/commentInputContainer"
+        android:cacheColorHint="@android:color/transparent" />
+
+    <RelativeLayout
+        android:animateLayoutChanges="true"
+        android:id="@+id/commentInputContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white">
+
+        <TextView
+            android:id="@+id/sendingErrorTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/error"
+            android:gravity="center"
+            android:padding="4dp"
+            android:text="@string/errorSendingMessage"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:visibility="gone"
+            tools:visibility="visible"/>
+
+        <ImageButton
+            android:id="@+id/sendCommentButton"
+            android:layout_width="56dp"
+            android:layout_height="0dp"
+            android:layout_alignBottom="@+id/commentEditText"
+            android:layout_alignParentEnd="true"
+            android:layout_alignTop="@+id/commentEditText"
+            android:layout_below="@id/sendingErrorTextView"
+            android:layout_centerVertical="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/send"
+            android:src="@drawable/vd_send"
+            android:tint="@color/canvasDefaultButton"/>
+
+        <EditText
+            android:id="@+id/commentEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/sendingErrorTextView"
+            android:layout_toStartOf="@id/sendCommentButton"
+            android:background="@color/transparent"
+            android:hint="@string/discussion_reply"
+            android:inputType="textCapSentences|textMultiLine"
+            android:maxLines="5"
+            android:minHeight="50dp"
+            android:paddingBottom="0dp"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp"
+            android:paddingTop="0dp"
+            android:textSize="16sp"/>
+
+        <ProgressBar
+            android:id="@+id/sendingProgressBar"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="16dp"
+            android:visibility="gone"/>
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_above="@+id/commentInputContainer"
+        android:background="@color/dividerColor"/>
+
+</RelativeLayout>

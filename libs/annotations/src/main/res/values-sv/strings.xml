@@ -1,0 +1,42 @@
+﻿<!--
+  ~ Copyright (C) 2018 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="inputText">Skriv in text</string>
+    <string name="cancel">Avbryt</string>
+    <string name="comment">Kommentera</string>
+    <string name="skip">Hoppa över</string>
+    <string name="comments">Kommentarer</string>
+    <string name="error_loading_submission">Det uppstod ett problem vid laddning av denna inlämning</string>
+    <string name="retry">Försök igen</string>
+    <string name="annotationErrorOccurred">Ett oväntat fel uppstod under laddning av notering.</string>
+    <string name="annotationError">Noteringsfel</string>
+    <string name="annotationDialogMessage">Noteringen har tagits bort från en annan källa.</string>
+    <string name="errorSendingMessage">Detta meddelande kunde inte skickas. Tryck för att försöka igen.</string>
+    <string name="addAnnotationComment">Lägg till kommentar</string>
+    <string name="editComment">Redigera kommentar</string>
+    <string name="deleteComment">Ta bort kommentar</string>
+    <string name="deleteAnnotation">Ta bort notering</string>
+    <string name="deleteCommentConfirmation">Är du säker på att du vill ta bort den här kommentaren?</string>
+    <string name="deleteHeadCommentConfirmation">Om du tar bort den här kommentaren tas alla kommentarer som är kopplade till den här noteringen bort. Är du säker på att du vill göra det?</string>
+    <string name="sendingSimple">Skickar</string>
+    <string name="pspdf__annotation_type_stamp">Anteckningsfärg</string>
+
+    <string name="removedComment">Borttagen %1$s av %2$s</string>
+
+</resources>

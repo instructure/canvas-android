@@ -1,0 +1,22 @@
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+<vector android:height="24dp" android:viewportHeight="2000.0"
+    android:viewportWidth="2000.0" android:width="24dp" xmlns:android="http://schemas.android.com/apk/res/android">
+    <path android:fillColor="#FF000000" android:fillType="evenOdd"
+        android:pathData="M1290,1083.4c-114.1,113.2 -253.7,269.9 -332,466.8 -76.9,-199.1 -215.2,-354.8 -328,-466.9 -141.4,-140 -210,-279.5 -210,-426.5 0,-295.9 240.8,-536.8 543.1,-536.8 296,0 536.9,240.8 536.9,536.8 0,147 -68.6,286.4 -210,426.6M956.9,0C594.7,0 300,294.6 300,656.8c0,180.6 80.3,348 245.4,511.7 239.8,237.8 351.5,457.6 351.5,691.6v60h120v-60c0,-232.9 110.4,-446.2 357.7,-691.4 165.1,-163.8 245.4,-331.2 245.4,-511.8C1620,294.6 1325.3,0 956.9,0"
+        android:strokeColor="#00000000" android:strokeWidth="1"/>
+</vector>

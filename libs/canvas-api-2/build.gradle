@@ -1,0 +1,138 @@
+/*
+ * Copyright (C) 2017 - present Instructure, Inc.
+ *
+ *     Licensed under the Apache License, Version 2.0 (the "License");
+ *     you may not use this file except in compliance with the License.
+ *     You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *     Unless required by applicable law or agreed to in writing, software
+ *     distributed under the License is distributed on an "AS IS" BASIS,
+ *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *     See the License for the specific language governing permissions and
+ *     limitations under the License.
+ *
+ */
+
+apply plugin: 'com.android.library'
+apply plugin: 'com.apollographql.android'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'au.com.dius.pact'
+
+static String isTesting() {
+    if ( System.getenv("IS_TESTING") == "true" ) {
+        "true"
+    } else {
+        "false"
+    }
+}
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'au.com.dius:pact-jvm-provider-gradle_2.11:3.5.14'
+    }
+}
+
+android {
+    compileSdkVersion Versions.COMPILE_SDK
+    buildToolsVersion Versions.BUILD_TOOLS
+
+    defaultConfig {
+        minSdkVersion Versions.MIN_SDK
+        targetSdkVersion Versions.TARGET_SDK
+        buildConfigField "boolean", "IS_TESTING", isTesting()
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+androidExtensions {
+    experimental = true
+}
+
+apollo {
+    useJavaBeansSemanticNaming = true
+    customTypeMapping = [
+            "URL" : "java.lang.String",
+            "DateTime": "java.util.Date",
+            "ID"  : "java.lang.String"
+    ]
+}
+
+ext {
+    retrofitVersion = '2.5.0'
+    okhttpVersion = '3.13.1'
+}
+
+dependencies {
+    api project(path: ':pandares')
+
+    /* Kotlin */
+    implementation Libs.KOTLIN_STD_LIB
+    api Libs.KOTLIN_COROUTINES_CORE
+    api Libs.KOTLIN_COROUTINES_ANDROID
+    testImplementation Libs.KOTLIN_COROUTINES_TEST
+
+    /* Retrofit / GSON */
+    api("com.squareup.retrofit2:retrofit:$retrofitVersion") {
+        exclude module: 'okhttp'
+    }
+    implementation 'com.google.code.gson:gson:2.8.5'
+    api "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+    implementation("com.squareup.retrofit2:converter-simplexml:$retrofitVersion") {
+        exclude module: 'stax-api'
+        exclude module: 'stax'
+        exclude module: 'xpp3'
+    }
+
+    /* OKHttp */
+    implementation "com.squareup.okhttp3:logging-interceptor:$okhttpVersion"
+    implementation "com.squareup.okhttp3:okhttp-urlconnection:$okhttpVersion"
+    implementation "com.squareup.okhttp3:okhttp:$okhttpVersion"
+    implementation 'com.squareup.okio:okio:1.17.3'
+
+    /* GraphQL */
+    /* NOTE: Newer versions of OkHttp affect the encoding of square brackets in @Query names. We're excluding the
+    * okhttp module here to avoid updating to a newer version until we're ready to handle the change. */
+    api(Libs.APOLLO_RUNTIME) {
+        exclude module: 'okhttp'
+    }
+    api (Libs.APOLLO_ANDROID_SUPPORT) {
+        exclude module: 'okhttp'
+    }
+    implementation (Libs.APOLLO_HTTP_CACHE) {
+        exclude module: 'okhttp'
+    }
+
+    compileOnly 'javax.annotation:jsr250-api:1.0'
+
+    /* EventBus */
+    api 'org.greenrobot:eventbus:3.1.1'
+
+    /* Date/time/calendar */
+    api 'com.jakewharton.threetenabp:threetenabp:1.1.2'
+
+    /* Test Dependencies */
+    testImplementation Libs.JUNIT
+    testImplementation "io.mockk:mockk:1.9.3"
+    testImplementation "org.mockito:mockito-inline:2.25.0"
+    testImplementation "au.com.dius:pact-jvm-consumer-junit_2.11:3.5.14"
+    testImplementation group: 'org.slf4j', name: 'slf4j-nop', version: '1.7.26'
+
+    /* Support Libs */
+    implementation Libs.ANDROIDX_APPCOMPAT
+    implementation Libs.ANDROIDX_ANNOTATION
+
+    /* Paper No SQl Storage */
+    api 'io.paperdb:paperdb:2.6'
+}

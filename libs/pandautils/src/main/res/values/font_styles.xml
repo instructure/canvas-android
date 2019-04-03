@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="TextFont" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">@color/defaultTextDark</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="TextFont.Regular">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="TextFont.Regular.Italic">
+        <item name="android:textStyle">italic</item>
+    </style>
+
+    <style name="TextFont.Medium">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="TextFont.Medium.Italic">
+        <item name="android:textStyle">italic</item>
+    </style>
+
+    <style name="TextFont.Bold">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextFont.Bold.Italic">
+        <item name="android:textStyle">bold|italic</item>
+    </style>
+
+    <style name="TextFont.Black">
+        <item name="android:fontFamily">sans-serif-black</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="TextFont.Black.Italic">
+        <item name="android:fontFamily">sans-serif-black</item>
+        <item name="android:textStyle">italic</item>
+    </style>
+
+</resources>

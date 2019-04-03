@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    ~ Copyright (C) 2017 - present Instructure, Inc.
+    ~
+    ~     This program is free software: you can redistribute it and/or modify
+    ~     it under the terms of the GNU General Public License as published by
+    ~     the Free Software Foundation, version 3 of the License.
+    ~
+    ~     This program is distributed in the hope that it will be useful,
+    ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+    ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    ~     GNU General Public License for more details.
+    ~
+    ~     You should have received a copy of the GNU General Public License
+    ~    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    ~
+-->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="2dp"
+        tools:ignore="UnusedAttribute" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:contentDescription="@string/scrollInstructions">
+
+            <ImageView
+                android:id="@+id/profileBanner"
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                android:importantForAccessibility="no"/>
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/usersAvatar"
+                android:layout_width="@dimen/profileAvatarSize"
+                android:layout_height="@dimen/profileAvatarSize"
+                android:layout_below="@+id/profileBanner"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="-84dp"
+                app:civ_border_color="@color/white"
+                app:civ_border_overlay="true"
+                app:civ_border_width="4dp"
+                app:civ_circle_background_color="@color/white" />
+
+            <FrameLayout
+                android:id="@+id/profileCameraIconWrapper"
+                android:layout_width="@dimen/profileCameraIconSize"
+                android:layout_height="@dimen/profileCameraIconSize"
+                android:layout_alignBottom="@+id/usersAvatar"
+                android:layout_alignEnd="@+id/usersAvatar"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/profile_icon_camera_background"
+                android:contentDescription="@string/takePhoto">
+
+                <ImageView
+                    android:id="@+id/profileCameraIcon"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerInside"
+                    app:srcCompat="@drawable/vd_camera"
+                    android:layout_gravity="center"
+                    android:importantForAccessibility="no"/>
+
+                <ProgressBar
+                    android:id="@+id/profileCameraLoadingIndicator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="?android:progressBarStyleSmall"
+                    android:layout_gravity="center"
+                    android:visibility="gone"/>
+
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/usersNameLabel"
+                style="@style/TextFont.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:labelFor="@+id/usersName"
+                android:layout_below="@+id/usersAvatar"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/name"
+                android:textColor="@color/defaultTextGray" />
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/usersName"
+                style="@style/TextFont.Regular"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:layout_below="@+id/usersNameLabel"
+                android:layout_marginEnd="12dp"
+                android:layout_marginStart="12dp"
+                android:maxLines="2"
+                android:textColorHint="@color/defaultTextGray"
+                android:textSize="16sp"
+                android:inputType="textCapWords"
+                tools:text="Mountain Man Trevor"/>
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+</LinearLayout>

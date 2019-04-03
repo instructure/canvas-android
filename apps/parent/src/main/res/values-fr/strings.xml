@@ -1,0 +1,228 @@
+﻿<!--
+  ~ Copyright (C) 2016 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<resources>
+
+    <string name="action_settings">Paramètres</string>
+    <string name="canvasLogo">Logo de Canvas</string>
+    <string name="email">Email</string>
+    <string name="emailAddress">Adresse courriel</string>
+    <string name="parent_email">Courriel du parent</string>
+    <string name="firstName">Prénom</string>
+    <string name="lastName">Nom de famille</string>
+    <string name="password">Mot de passe</string>
+    <string name="log_in">Connexion</string>
+    <string name="createAccount">Créer un compte</string>
+    <string name="create">Créer</string>
+    <string name="forgotPassword">Mot de passe oublié ?</string>
+    <string name="forgotPasswordWithoutQuestion">Mot de passe oublié</string>
+    <string name="enterAccountEmailHint">Email du compte</string>
+    <string name="requestPassword">Demander un mot de passe</string>
+    <string name="resetPassword">Réinitialiser le mot de passe</string>
+    <string name="requestPasswordHelpText">Nous vous enverrons un email contenant une demande de réinitialisation.</string>
+    <string name="requestPasswordSuccess">Votre mot de passe a été réinitialisé.</string>
+    <string name="fullName">Nom complet</string>
+    <string name="passwordsDoNotMatch">Les mots de passe ne correspondent pas.</string>
+    <string name="passwordsCannotBeBlank">Les mots de passe ne peuvent être laissés vides.</string>
+    <string name="passwordResetFailed">Nous n’avons pas pu réinitialisez votre mot de passe pour le moment.</string>
+    <string name="invalidEmail">Adresse email non valide Veuillez réessayer.</string>
+    <string name="next">Suivant</string>
+    <string name="createAccountMessage">Un courriel sera envoyé à l\'adresse que vous nous aurez indiqué lors de votre inscription.</string>
+    <string name="accountCreationSuccess">Création du compte effectuée avec succès. Veuillez consulter votre boîte mail pour terminer l’inscription.</string>
+    <string name="errorOccurred">Une erreur inattendue est survenue. Veuillez réessayer.</string>
+    <string name="unknownDevice">Appareil inconnu.</string>
+    <string name="addStudent">Ajouter un étudiant</string>
+    <string name="school">École</string>
+    <string name="finish">Terminer</string>
+    <string name="close">Fermer</string>
+    <string name="noStudents">Aucun élève disponible. Pour ajouter des élèves, appuyez sur les trois points situés dans le menu ci-dessus.</string>
+    <string name="noStudentsView">Aucun élève n’est associé à votre compte.</string>
+    <string name="noCourses">Cet étudiant n\'a aucun cours disponible.</string>
+    <string name="noAvailableCourses">Aucun cours</string>
+    <string name="coursesMayNotBePublished">Il se peut que les cours de cet étudiant ne soient pas encore publiés.</string>
+    <string name="noAlerts">Cet étudiant n\'a aucune alerte à vérifier.</string>
+    <string name="noItemsToDisplayShort">Aucun élément</string>
+    <string name="emailsSentTo">Courriels envoyés à :</string>
+    <string name="logged_in_as">Connecté en tant que :</string>
+    <string name="notifyWhen">M\'alerter lorsque</string>
+    <string name="gradeAbove">Note du cours au dessus de</string>
+    <string name="gradeBelow">Note du cours en dessous de</string>
+    <string name="assignmentMissing">Devoir manquant</string>
+    <string name="teacherAnnouncements">Annonces de cours</string>
+    <string name="institutionAnnouncements">Annonces de l\'institution</string>
+    <string name="assignmentGradeAbove">Note du devoir au dessus de</string>
+    <string name="assignmentGradeBelow">Note du devoir en dessous de</string>
+    <string name="never">Jamais</string>
+    <string name="save">Enregistrer</string>
+    <string name="enterThreshold">Saisir un pourcentage</string>
+    <string name="setGradeValueMessage">Régler la valeur de la note pour laquelle vous désirez être averti</string>
+    <string name="removeStudent">Supprimer l’élève</string>
+    <string name="removingStudent">Suppression de l’étudiant</string>
+    <string name="studentRemoved">Étudiant supprimé avec succès</string>
+    <string name="studentAdded">Étudiant ajouté avec succès</string>
+    <string name="courses">Cours</string>
+    <string name="week">Semaine</string>
+    <string name="alerts">Alertes</string>
+    <string name="alert">Alerte</string>
+    <string name="weekEmptyView">Aucun travail assigné, ni d\'événement pour cette semaine !</string>
+    <string name="toolbar_close">Barre d\'outils fermée</string>
+    <string name="syllabus">Programme</string>
+    <string name="emptySyllabus">Ce cours n\'a pas de programme pédagogique.</string>
+    <string name="noLocation">Aucun lieu spécifié</string>
+    <string name="previousAlerts">Alertes précédentes</string>
+    <string name="currentAlerts">Alertes actuelles</string>
+    <string name="badDomainError">Domaine non valide. Veuillez réessayer.</string>
+    <string name="unauthorized">Vous n\'êtes pas autorisé à accéder à ces informations.</string>
+    <string name="revokedTokenErrorContent">Vous n’êtes pas autorisé à accéder aux informations de %1$s. Vous pouvez réautoriser vos élèves depuis le menu paramètres.</string>
+    <string name="revokedTokenErrorTitle">Jeton d\'accès révoqué</string>
+    <string name="featureFlagDisabledError">Cette institution n’a pas activé l’accès à l’application mobile Canvas Parent.</string>
+
+    <!-- Help strings -->
+    <string name="askInstructor">Poser une question à votre instructeur</string>
+    <string name="askInstructorDetails">Les questions sont soumises à votre instructeur.</string>
+    <string name="searchGuides">Rechercher dans les guides de Canvas</string>
+    <string name="canvasGuides">Guides de Canvas</string>
+    <string name="searchGuidesDetails">Trouvez des réponses aux questions fréquentes</string>
+    <string name="reportProblem">Signaler un problème</string>
+    <string name="reportProblemDetails">Si l\'application malfonctionnait, faites-le nous savoir</string>
+    <string name="requestFeature">Demander une fonctionnalité</string>
+    <string name="requestFeatureDetails">Vous avez une idée pour améliorer l\'application ?</string>
+    <string name="shareYourLove">Partager votre engouement pour l\'application</string>
+    <string name="shareYourLoveDetails">Dites-nous quelles fonctions de l\'application vous plaisent le plus</string>
+    <string name="sendFeedback">Envoyer un avis</string>
+    <string name="sendMail">Envoyer un courriel&#8230;</string>
+    <string name="help_domain">Domaine :</string>
+    <string name="help_versionNum">Version :</string>
+    <string name="help_userId">ID d\'utilisateur</string>
+    <string name="help_email">Courriel :</string>
+    <string name="help_locale">Langue :</string>
+    <string name="installDate">Date d\'installation :</string>
+    <string name="icon">Icône</string>
+    <string name="due">À rendre le :</string>
+    <string name="no_due_date">Pas de date limite de rendu</string>
+    <string name="tapToSet">Tapoter pour régler</string>
+    <string name="alarmNotSet">Impossible de définir l’alerte. Veuillez réessayer.</string>
+    <string name="could_not_route_course">L\'enrôlement au cours n\'a pu être trouvé.</string>
+    <string name="could_not_route_assignment">Le travail assigné n\'a pu être trouvé.</string>
+    <string name="email_already_exists">Un utilisateur associé à cette adresse courriel existe déjà.</string>
+    <string name="password_reset_success">Un courriel contenant les instructions de réinitialisation de votre mot de passe va vous être envoyé.</string>
+    <string name="password_reset_no_user">Aucun utilisateur associé à cette adresse courriel n\'a pu être trouvé.</string>
+    <string name="reset_password">Réinitialiser le mot de passe</string>
+    <string name="location">Lieu</string>
+    <string name="time">Temps</string>
+    <string name="student_avatar">Avatar de l\'étudiant</string>
+    <string name="previous">Précédent</string>
+    <string name="empty_view">Ce qui est affiché lorsqu\'aucun contenu n\'est trouvé</string>
+    <string name="tab_icon">Icône au-dessus de l\'onglet</string>
+    <string name="add_student_icon">Icône pour ajouter un étudiant</string>
+    <string name="canvas_logo">Logo de Canvas</string>
+    <string name="course_threshold_grade_above_invalid">Ce seuil doit être au-dessus du seuil minimal du cours.</string>
+    <string name="course_threshold_grade_below_invalid">Ce seuil doit être en-dessous du seuil maximal du cours.</string>
+    <string name="assignment_threshold_grade_above_invalid">Ce seuil doit être au-dessus du seuil minimal du travail assigné.</string>
+    <string name="assignment_threshold_grade_below_invalid">Ce seuil doit être en-dessous du seuil maximal du travail assigné.</string>
+    <string name="set_reminder">Paramétrer un rappel planifié</string>
+    <string name="enter_student_institution">Saisir l\'institution de l\'étudiant</string>
+    <string name="enter_student_login">Saisir l\'identifiant et le mot de passe de l\'étudiant</string>
+    <string name="access_not_enabled">Cette institution n’a pas activé l’accès à l’application mobile Canvas Parent.</string>
+    <string name="dismiss">Rejeter</string>
+    <string name="invalid_username_password">La combinaison du courriel et du mot de passe était invalide.</string>
+    <string name="opening">Ouverture&#8230;</string>
+    <string name="locked_assignment_desc">Ce devoir fait partie du module %s et n’a pas encore été déverrouillé.</string>
+    <string name="locked_assignment_desc_line2">Visiter la page des modules de cours dans un navigateur pour y découvrir comment déverrouiller ce contenu.</string>
+    <string name="locked_assignment_not_module">Ce travail assigné est verrouillé.</string>
+    <string name="no_description">Il n\'y a aucune description pour ce travail assigné</string>
+    <string name="cannot_view_file">Impossible de visualiser ce fichier dans l’application. Veuillez l’afficher depuis un navigateur.</string>
+    <string name="calendar_event">Événement de calendrier</string>
+    <string name="set_reminder_toggle">Activateur du rappel planifié</string>
+    <string name="or">ou</string>
+    <string name="canvas_login_text">Connectez-vous avec Canvas</string>
+
+    <string name="dateRangeContentDescription">Plage de dates du %1$s au %2$s</string>
+    <string name="privacyPolicy">Politique de confidentialité</string>
+    <string name="EULA">CGU</string>
+    <string name="termsOfUse">Conditions d\'utilisation</string>
+    <!-- Feature Request -->
+    <string name="featureSubject">Idée pour l\'application Canvas Parent [Android]</string>
+    <string name="understandRequest">Les informations suivantes nous aideront à mieux comprendre votre idée :</string>
+
+    <!-- Distance Strings -->
+    <string name="lessThanOne">&lt; 1 mile (1.6 km)</string>
+    <string name="oneMile">1 mille (1.6 km)</string>
+    <string name="miles">milles</string>
+    <string name="kilometers">km</string>
+
+    <string name="grade">Note :</string>
+    <string name="notGraded">Pas encore noté</string>
+    <string name="missing">Manquant</string>
+    <string name="submitted">Soumis</string>
+    <string name="in_class">En classe</string>
+    <string name="excused">Excusé</string>
+    <string name="late">En retard</string>
+    <string name="greaterThan9">9+</string>
+
+    <string name="onlyCanvasObservers">Seuls les observateurs Canvas peuvent s\'identifier dans Canvas Parent.</string>
+    <string name="unableToAddStudentError">Impossible d’ajouter cet élève pour le moment.</string>
+
+    <string name="open_source">Public</string>
+    <string name="open_source_details">Afficher les licences publiques</string>
+
+    <string name="unitedStates">États-Unis d’Amérique</string>
+    <string name="theUnitedStates">les États-Unis d’Amérique</string>
+    <string name="canada">Canada</string>
+    <string name="ireland">Irlande</string>
+    <string name="australia">Australie</string>
+    <string name="germany">Allemagne</string>
+    <string name="singapore">Singapour</string>
+    <array name="regions">
+        <item name="unitedStates">@string/unitedStates</item>
+        <item name="canada">@string/canada</item>
+        <item name="ireland">@string/ireland</item>
+        <item name="australia">@string/australia</item>
+        <item name="germany">@string/germany</item>
+        <item name="singapore">@string/singapore</item>
+    </array>
+    <string name="selectChildRegion">Choisir la région de l’élève</string>
+    <string name="selectRegion">Sélecteur de région</string>
+    <string name="unauthorizedRegion">Région non-autorisée</string>
+    <string name="mismatchedRegionMessage">Cette institution se situe en dehors de votre région sélectionnée Pour ajouter un élève de cette institution, veuillez utiliser l’option « Sélecteur de région » sur la page d’identification pour créer un compte dans la région suivante : %1$s.</string>
+
+    <string name="notification_channel_name">Notifications générales</string>
+    <string name="notification_channel_description">Notifications concernant les rappels planifiés et les informations importantes sur votre élève.</string>
+
+    <string name="whatsYourStudentsSchoolName">Entrez le nom de l’école de l’élève.</string>
+    <string name="findYourStudentsSchoolHint">Trouvez l’école ou le district de vos élèves.</string>
+    <string name="noGradeText">Aucune note</string>
+    <string name="locked">Verrouillé</string>
+    <string name="changeUser">Changer d\'utilisateur</string>
+    <string name="manageChildren">Gérer les enfants</string>
+    <!-- Navigation Drawer -->
+    <string name="navigation_drawer_open">Ouvrir le tiroir de navigation</string>
+    <string name="navigation_drawer_close">Fermer le tiroir de navigation</string>
+    <string name="version" formatted="false">Version %s</string>
+    <string name="not_a_parent_title">Vous n\'êtes pas un parent ?</string>
+    <string name="not_a_parent_subtitle">Une autre de nos applications conviendrait sans doute davantage. Appuyez une fois pour vous rendre sur le Play Store</string>
+    <string name="tryLoginAgain">Veuillez réessayer de vous identifier</string>
+
+    <string name="legalDetails">Vie privée, conditions d’utilisation, open source</string>
+    <string name="assignmentGrade">Note de devoir</string>
+    <string name="courseGrade">Note de cours</string>
+    <string name="courseAnnouncement">Annonce de cours</string>
+    <string name="institutionAnnouncement">Annonce d\'institution</string>
+    <string name="institutionAnnouncementUnavailable">Cette annonce est expriée.</string>
+    <string name="previousWeekBtn">bouton Semaine précédente</string>
+    <string name="nextWeekBtn">bouton Semaine suivante</string>
+</resources>

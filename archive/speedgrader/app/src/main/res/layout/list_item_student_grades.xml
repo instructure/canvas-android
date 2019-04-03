@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2016 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="?android:attr/actionBarSize"
+    android:background="@android:color/transparent"
+    android:gravity="center_vertical"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp">
+
+    <ImageView
+        android:id="@+id/checkmark"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:src="@drawable/ic_cv_checkmark_fill"
+        android:layout_alignParentLeft="true"
+        android:layout_alignBottom="@+id/gradeTitle"
+        android:visibility="invisible"/>
+
+    <com.instructure.speedgrader.views.HelveticaTextView
+        android:id="@+id/gradeTitle"
+        android:layout_toRightOf="@+id/checkmark"
+        android:layout_toLeftOf="@+id/score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textColor="@color/sg_darkText"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:singleLine="true"/>
+
+    <com.instructure.speedgrader.views.HelveticaTextView
+        android:id="@+id/score"
+        android:layout_alignParentRight="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="@color/sg_lightGrayText"
+        android:paddingRight="5dp"
+        android:layout_alignBottom="@+id/gradeTitle" />
+</RelativeLayout>

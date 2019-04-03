@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2016 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<ViewFlipper
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/viewFlipper"
+    android:layout_height="240dp"
+    android:layout_width="280dp"
+    android:clipChildren="false"
+    android:clipToPadding="false">
+    <RelativeLayout
+        android:id="@+id/course_grid_item"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/card_bg"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        >
+        <RelativeLayout
+            android:id="@+id/courseHeader"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/rounded_background"
+            android:orientation="horizontal"
+            android:clipChildren="false"
+            android:clipToPadding="false">
+            <com.instructure.speedgrader.views.HelveticaTextView
+                android:id="@+id/courseCode"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:singleLine="true"
+                android:layout_marginLeft="16dp"
+                android:gravity="center_vertical"/>
+            <ImageView
+                android:id="@+id/pulse"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/pulse_indicator"
+                android:visibility="gone"
+                android:clickable="true"/>
+        </RelativeLayout>
+
+        <com.instructure.speedgrader.views.CircularTextView
+            android:id="@+id/badge"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="-20dp"
+            android:layout_marginTop="10dp"
+            app:hasBorder="true"/>
+
+        <com.instructure.speedgrader.views.HelveticaTextView
+            android:id="@+id/courseName"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:textSize="24sp"
+            android:layout_below="@+id/courseHeader"
+            android:gravity="center"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:textColor="@color/sg_darkText"
+            />
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/course_grid_item_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/card_bg"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        >
+        <LinearLayout
+            android:id="@+id/backButtonWrapper"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/rounded_background"
+            android:orientation="horizontal"
+            android:clipChildren="false"
+            android:clipToPadding="false">
+            <ImageView
+                android:id="@+id/backArrow"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_cv_arrow_left"
+                android:clickable="false"
+                android:gravity="center_vertical"/>
+            <com.instructure.speedgrader.views.HelveticaTextView
+                android:id="@+id/backButton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:singleLine="true"
+                android:text="@string/back"
+                android:gravity="center_vertical"/>
+        </LinearLayout>
+
+        <com.instructure.speedgrader.views.CourseColorGridView
+            android:id="@+id/colorLayout"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:verticalSpacing="10dp"
+            android:numColumns="5"
+            android:padding="5dp"
+            android:gravity="center"
+            android:layout_centerInParent="true"
+           />
+    </RelativeLayout>
+
+</ViewFlipper>

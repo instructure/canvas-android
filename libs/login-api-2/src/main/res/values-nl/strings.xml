@@ -1,0 +1,126 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="hello_world">Hallo wereld!</string>
+    <string name="action_settings">Instellingen</string>
+    <string name="mobileVerifyGeneral">Deze app mag niet gebruikt worden</string>
+    <string name="mobileVerifyDomainUnauthorized">De server die je hebt ingevoerd, is niet gemachtigd voor deze app.</string>
+    <string name="mobileVerifyUserAgentUnauthorized">De gebruikersagent voor deze app heeft geen toestemming.</string>
+    <string name="mobileVerifyUnknownError">We konden niet verifiëren of de server geschikt is voor deze.</string>
+    <string name="unknownDevice">UnknownDevice</string>
+    <string name="errorOccurred">Er is een onverwachte fout opgetreden.</string>
+    <string name="pageNotFound">Pagina niet gevonden.</string>
+    <string name="confirm">Bevestigen</string>
+    <string name="cancel">Annuleren</string>
+    <string name="help">Help</string>
+    <string name="enterURL">Voer je Canvas URL in:</string>
+    <string name="signIntoCanvasNetwork">Probeer je je aan te melden bij Canvas Network?</string>
+    <string name="remove">Verwijderen</string>
+    <string name="exampleURLSimple">myschool.instructure.com</string>
+    <string name="userId">Gebruikers-ID:</string>
+    <string name="domain">Domein</string>
+
+    <string name="actAsUser">Optreden als gebruiker</string>
+    <string name="stopActAsUser">Stop met optreden als gebruiker</string>
+    <!--Multiple User Sign in -->
+    <string name="removeUser">Deze gebruiker verwijderen?</string>
+    <string name="removedForever">Je moet je bij deze gebruiker opnieuw aanmelden om toegang tot zijn content te verkrijgen.</string>
+
+    <!--Content Descriptions-->
+    <string name="canvasLogo">Canvas Logo</string>
+
+    <string name="canvasLoginOn">Canvas_Login: AAN</string>
+    <string name="canvasLoginOff">Canvas_Login: UIT</string>
+    <string name="siteAdminLogin">Aanmelding sitebeheer: AAN</string>
+
+    <string name="username">Gebruikersnaam</string>
+    <string name="password">Wachtwoord</string>
+    <string name="authenticationRequired">Verificatie vereist</string>
+    <string name="invalidEmailPassword">Ongeldige e-mail of wachtwoord</string>
+    <string name="login">Aanmelden</string>
+    <string name="logout">Afmelden</string>
+
+    <!--Logout Warning Dialog-->
+    <string name="logout_warning">Weet je zeker dat je je wilt afmelden?</string>
+    <string name="logout_yes">Ja</string>
+    <string name="logout_no">Nee</string>
+
+    <!--Smart Login-->
+    <string name="loginNearYou">Bij jou in de buurt</string>
+    <string name="loginCanvasNetwork">Canvas Network</string>
+    <string name="loginRightBehindYou">Vlak achter je</string>
+    <string name="loginMiles">%1$s mijl verder</string>
+    <string name="loginCanvasHelp">Zie je je school niet? Voer de school URL in of tik hier voor help.</string>
+    <string name="loginCanvasHelpWithUser">Voer de school URL in of tik hier voor help.</string>
+    <string name="loginHint">Vind je school of district</string>
+
+    <!-- Error Report Dialog -->
+    <string name="errorReportAProblem">Een probleem melden</string>
+    <string name="errorReportSubject">Vak</string>
+    <string name="errorReportDescription">Beschrijving</string>
+    <string name="errorReportWriteSomething">Schrijf iets...</string>
+    <string name="errorReportSend">Versturen</string>
+    <string name="errorReportThankyou">Bedankt dat je dit probleem bij onze helpdesk hebt gemeld.  Je ontvangt een bevestiging en updates per e-mail.</string>
+    <string name="errorReportSeverityText">Wat voor gevolgen heeft dit voor jou?</string>
+    <string name="errorSeverityCasualQuestion">Gewoon een informele vraag, opmerking, idee of suggestie...</string>
+    <string name="errorSeverityNeedHelp">Ik heb wat hulp nodig, maar het is niet urgent</string>
+    <string name="errorSeveritySomethingsBroken">Er is iets stuk, maar daar kan ik wel omheen werken om gedaan te krijgen wat ik wil.</string>
+    <string name="errorSeverityCantGetThingsDone">Ik kan niets doen tot ik een antwoord van je terugkrijg.</string>
+    <string name="errorSeverityExtremelyCritical">EXTREEM NOODGEVAL!</string>
+    <string name="errorReportEmailAddress">E-mailadres</string>
+    <string name="errorReportEnterEmail">Voer je e-mailadres in...</string>
+    <string name="errorReportUnknown">Onbekend</string>
+    <!-- Distance Strings -->
+    <string name="lessThanOne">&lt; 1 mijl (1,6 km)</string>
+    <string name="oneMile">1 mijl (1,6 km)</string>
+    <string name="miles">mijlen</string>
+    <string name="kilometers">km</string>
+
+    <!-- String for submitting tickets -->
+    <string name="device">Apparaat</string>
+    <string name="osVersion">OS Versie</string>
+
+    <string name="previousLoginTitle">Eerdere aanmeldingen</string>
+    <string name="findMySchool">Zoek mijn school</string>
+    <string name="canvasLowerCase">canvas</string>
+    <string name="whatsYourSchoolName">Wat is de naam van je school?</string>
+    <string name="next">Volgende</string>
+    <string name="schoolInstructureCom">school.instructure.com</string>
+    <string name="contentDescription_removePreviousUser">Vorige gebruiker verwijderen</string>
+    <string name="accountDomainFooter">Kun je je school niet vinden? Typ de volledige URL van de school.</string>
+    <string name="accountDomainFooterLink">Tik hier voor hulp.</string>
+
+    <string name="login_noInternetConnectionTitle">Geen internetverbinding</string>
+    <string name="login_noInternetConnectionMessage">Voor deze actie is een internetverbinding vereist.</string>
+    <string name="empty_feedback">Bij het indienen van de feedback zijn een onderwerp en beschrijving verplicht.</string>
+    <string name="versionNum">Versienummer</string>
+    <string name="scrollInstructions">Scrol om alle details te zien</string>
+
+    <string name="masqueradeErrorUserId">Je moet een gebruikers-ID invoeren.</string>
+    <string name="masqueradeErrorDomain">Je moet een geldig domein invoeren.</string>
+    <string name="masqueradeError">Fout tijdens maskeren.</string>
+    <string name="masqueradeInfo">\"Optreden als\" is in essentie hetzelfde als aanmelden als deze gebruiker zonder wachtwoord. Je kunt alle acties uitvoeren alsof je die gebruiker bent. Gezien vanuit andere gebruikers lijkt het dan ook alsof die acties door die gebruiker zijn uitgevoerd. De controleogboeken laten echter zien dat jij degene was die namens deze gebruiker die acties verricht hebt.</string>
+    <string name="masqueradingAs">Je treedt op als %s</string>
+    <string name="stopActingAsTitle">Stop met optreden als...</string>
+    <string name="stopActingAsMessage">Je stopt met optreden als %s en keert terug naar je account.</string>
+
+    <string name="weMadeChanges">We hebben enkele wijzigingen aangebracht.</string>
+    <string name="whatsNewText">Wat is er nieuw</string>
+</resources>

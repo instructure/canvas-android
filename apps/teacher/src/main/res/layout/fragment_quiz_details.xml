@@ -1,0 +1,440 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C) 2017 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/quizDetailsPage"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="6dp"
+        tools:background="#00bcd5"
+        tools:ignore="UnusedAttribute"/>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:paddingBottom="36dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/scrollInstructions"
+                android:orientation="vertical">
+
+                <!-- Title, points, publish status -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:id="@+id/quizTitleTextView"
+                        style="@style/TextFont.Medium"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:importantForAccessibility="yes"
+                        android:textSize="20sp"
+                        tools:text="Beginning of the Biological Existence of Mankind in the Jungles of South America"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/pointsTextView"
+                            style="@style/TextFont.Medium"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:importantForAccessibility="yes"
+                            android:textColor="@color/defaultTextGray"
+                            tools:text="30 pts"/>
+
+                        <ImageView
+                            android:id="@+id/publishStatusIconView"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:layout_marginStart="12dp"
+                            android:importantForAccessibility="no"
+                            tools:src="@drawable/vd_published"/>
+
+                        <TextView
+                            android:id="@+id/publishStatusTextView"
+                            style="@style/TextFont.Medium"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:importantForAccessibility="yes"
+                            tools:text="Published"
+                            tools:textColor="#00ac18"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/dividerColor"
+                    android:importantForAccessibility="no"/>
+
+                <!-- Due Date(s) -->
+
+                <RelativeLayout
+                    android:id="@+id/dueLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/fullDateDetailsButton"
+                        android:layout_width="24dp"
+                        android:layout_height="60dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerInParent="true"
+                        android:layout_marginEnd="16dp"
+                        android:contentDescription="@string/full_due_date_details"
+                        android:tint="@color/defaultTextGray"
+                        app:srcCompat="@drawable/vd_arrow_forward"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <LinearLayout
+                            android:id="@+id/dueSectionLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="4dp"
+                            android:gravity="start|center_vertical"
+                            tools:ignore="UseCompoundDrawables">
+
+                            <ImageView
+                                android:layout_width="18dp"
+                                android:layout_height="18dp"
+                                android:importantForAccessibility="no"
+                                android:tint="@color/defaultTextGray"
+                                app:srcCompat="@drawable/vd_calendarclock"/>
+
+                            <TextView
+                                style="@style/TextFont.Medium"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="6dp"
+                                android:text="@string/due_date_header_label"
+                                android:textColor="@color/defaultTextGray"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/dueDateLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:visibility="gone"
+                            tools:visibility="visible">
+
+                            <TextView
+                                style="@style/TextFont.Medium"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:importantForAccessibility="no"
+                                android:text="@string/due_label"
+                                android:textSize="16sp"
+                                android:tint="@color/defaultTextGray"/>
+
+                            <TextView
+                                android:id="@+id/dueDateTextView"
+                                style="@style/TextFont.Regular"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:textSize="16sp"
+                                android:tint="@color/defaultTextGray"
+                                tools:text="April 1 at 11:59 PM"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/dueForLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:visibility="gone"
+                            tools:visibility="visible">
+
+                            <TextView
+                                style="@style/TextFont.Medium"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/due_for_label"
+                                android:textSize="16sp"/>
+
+                            <TextView
+                                android:id="@+id/dueForTextView"
+                                style="@style/TextFont.Regular"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:textSize="16sp"
+                                tools:text="Everyone"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/availableFromLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:visibility="gone"
+                            tools:visibility="visible">
+
+                            <TextView
+                                style="@style/TextFont.Medium"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/available_from_label"
+                                android:textSize="16sp"/>
+
+                            <TextView
+                                android:id="@+id/availableFromTextView"
+                                style="@style/TextFont.Regular"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:textSize="16sp"
+                                tools:text="April 1 at 11:59 PM"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/availableToLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:visibility="gone"
+                            tools:visibility="visible">
+
+                            <TextView
+                                style="@style/TextFont.Medium"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/available_to_label"
+                                android:textSize="16sp"/>
+
+                            <TextView
+                                android:id="@+id/availableToTextView"
+                                style="@style/TextFont.Regular"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:textSize="16sp"
+                                tools:text="April 30 at 11:59 PM"/>
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/otherDueDateTextView"
+                            style="@style/TextFont.Regular"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:textSize="16sp"
+                            android:visibility="gone"
+                            tools:text="@string/multiple_due_dates"
+                            tools:visibility="gone"/>
+
+                        <LinearLayout
+                            android:id="@+id/availabilityLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:visibility="gone"
+                            tools:visibility="visible">
+
+                            <TextView
+                                style="@style/TextFont.Medium"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/availability_label"
+                                android:textSize="16sp"/>
+
+                            <TextView
+                                android:id="@+id/availabilityTextView"
+                                style="@style/TextFont.Regular"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:textSize="16sp"
+                                tools:text="Closed"/>
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/dividerColor"
+                    android:importantForAccessibility="no"/>
+
+                <!-- Submissions -->
+                <LinearLayout
+                    android:id="@+id/submissionsLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:importantForAccessibility="no"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        style="@style/TextFont.Medium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:importantForAccessibility="yes"
+                        android:text="@string/submissions"
+                        android:textColor="@color/defaultTextGray"/>
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:importantForAccessibility="no">
+
+                        <include layout="@layout/view_submissions_donut_group"/>
+
+                    </FrameLayout>
+
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/submissionsHR"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/dividerColor"
+                    android:importantForAccessibility="no"/>
+
+                <!-- Assignment Description -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/instructionsSectionLabel"
+                        style="@style/TextFont.Medium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:labelFor="@+id/noInstructionsTextView"
+                        android:importantForAccessibility="yes"
+                        android:text="@string/description"
+                        android:textColor="@color/defaultTextGray"/>
+
+                    <TextView
+                        android:id="@+id/noInstructionsTextView"
+                        style="@style/TextFont.Regular"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="8dp"
+                        android:background="#f5f5f5"
+                        android:clickable="true"
+                        android:padding="12dp"
+                        android:text="@string/no_assignment_description_filler"
+                        android:textColor="#73818c"
+                        android:visibility="gone"
+                        tools:visibility="visible"/>
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <ProgressBar
+                            android:id="@+id/instructionsProgressBar"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="24dp"
+                            android:visibility="gone"
+                            tools:visibility="visible"/>
+
+                        <com.instructure.pandautils.views.CanvasWebView
+                            android:id="@+id/instructionsWebView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:scrollbars="none"/>
+
+                    </FrameLayout>
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/dividerColor"
+                    android:importantForAccessibility="no"/>
+
+                <!-- Quiz Settings -->
+                <LinearLayout
+                    android:id="@+id/settingsSection"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="6dp">
+
+                    <LinearLayout
+                        android:id="@+id/quizSettingsContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:importantForAccessibility="yes"
+                        android:orientation="vertical"
+                        android:padding="10dp"/>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/dividerColor"
+                    android:importantForAccessibility="no"/>
+
+                <include layout="@layout/view_quiz_preview_button"/>
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+</LinearLayout>

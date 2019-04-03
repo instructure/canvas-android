@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+option java_package = "com.instructure.soseedy";
+option java_multiple_files = true;
+
+package soseedy;
+
+
+service SeedyConversations {
+    rpc CreateConversation(CreateConversationRequest) returns (Conversation) { }
+}
+
+// Request messages
+
+message CreateConversationRequest {
+    string token = 1;
+    repeated string recipients = 2;
+}
+
+// Response messages
+
+message Conversation {
+    int64 id = 1;
+    string subject = 2;
+}

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C) 2016 - present Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/AdapterItem"
+    android:background="@color/moduleItemBackground">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/icon"
+            style="@style/AdapterItemIcon"
+            android:importantForAccessibility="no"
+            tools:srcCompat="@drawable/vd_assignment" />
+
+        <LinearLayout
+            android:id="@+id/textContainer"
+            style="@style/AdapterItemTextContainer"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/title"
+                    style="@style/AdapterItemTitleText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    tools:text="Person Name" />
+
+                <ImageView
+                    android:id="@+id/indicator"
+                    android:layout_width="@dimen/gridIconSizeSmall"
+                    android:layout_height="@dimen/gridIconSizeSmall"
+                    android:contentDescription="@string/locked"
+                    android:scaleType="fitCenter"
+                    tools:srcCompat="@drawable/vd_lock"
+                    android:layout_marginStart="12dp"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/description"
+                style="@style/AdapterItemDescriptionText"
+                tools:text="An assignment description with some length so we can ensure it looks amazing on every device!" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/date"
+                    style="@style/AdapterItemDescriptionText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    tools:text="No Due Date"/>
+
+                <TextView
+                    android:id="@+id/points"
+                    style="@style/AdapterItemDescriptionText"
+                    tools:text="-/100"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/shadowTop"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/shadow_bottom_top"
+        android:visibility="invisible" />
+
+    <View
+        android:id="@+id/shadowBottom"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/shadow_bottom_top"
+        android:visibility="invisible" />
+
+</RelativeLayout>

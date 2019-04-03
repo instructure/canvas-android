@@ -1,0 +1,79 @@
+﻿<?xml version='1.0' encoding='UTF-8'?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <!--Modules-->
+    <string name="mustComplete">Bydd yn rhaid i chi gwblhau’r canlynol yn gyntaf:</string>
+    <string name="unlockedAt">Bydd yn cael ei ddatgloi:</string>
+    <string name="goToModules">Mynd i’r Modiwlau</string>
+
+    <!--Events-->
+    <string name="Starts">Yn dechrau</string>
+    <string name="Ends">Yn gorffen</string>
+    <string name="allDayEvent">Digwyddiad Diwrnod Cyfan</string>
+    <string name="at">am</string>
+    <string name="to">i</string>
+
+    <!--StreamItems-->
+    <string name="Message">Neges</string>
+    <string name="Loading">Wrthi’n llwytho&#8230;</string>
+    <string name="Deleted">Wedi dileu</string>
+
+    <!-- Assignment Module -->
+    <string name="canvasAPI_online">Ar-lein</string>
+    <string name="canvasAPI_onPaper">Ar bapur</string>
+    <string name="canvasAPI_discussion">Trafodaeth</string>
+    <string name="canvasAPI_quiz">Cwis</string>
+    <string name="canvasAPI_externalTool">Adnodd Allanol</string>
+    <string name="canvasAPI_none">Dim</string>
+
+    <string name="canvasAPI_passFail">Pasio Methu</string>
+    <string name="canvasAPI_percent">Canran</string>
+    <string name="canvasAPI_letterGrade">Gradd Llythyren</string>
+    <string name="canvasAPI_points">Pwyntiau</string>
+    <string name="canvasAPI_gpaScale">Graddfa GPA</string>
+    <string name="canvasAPI_notGraded">Heb eu graddio</string>
+
+    <string name="canvasAPI_onlineQuiz">Cwis Ar-lein</string>
+    <string name="canvasAPI_discussionTopic">Pwnc Trafod</string>
+    <string name="canvasAPI_onlineUpload">Llwytho i Fyny Ar-lein</string>
+    <string name="canvasAPI_onlineTextEntry">Cofnod Testun Ar-lein</string>
+    <string name="canvasAPI_onlineURL">URL Ar-lein</string>
+    <string name="canvasAPI_mediaRecording">Recordio Cyfryngau</string>
+    <string name="canvasAPI_attendance">Presenoldeb</string>
+    <string name="quiz_scoring_policy_highest">Uchaf</string>
+    <string name="quiz_scoring_policy_average">Cyfartaledd</string>
+    <string name="quiz_scoring_policy_latest">Diweddaraf</string>
+    <string name="no">Na</string>
+    <string name="always">Bob amser</string>
+    <string name="graded_quiz">Cwis wedi’i Raddio</string>
+    <string name="practice_quiz">Cwis Ymarfer</string>
+    <string name="graded_survey">Arolwg wedi’i Raddio</string>
+    <string name="ungraded_survey">Arolwg heb ei Raddio</string>
+    <string name="andMore"> a %d yn fwy</string>
+
+    <!-- Enrollment Types -->
+    <string name="enrollmentTypeStudent">Myfyriwr</string>
+    <string name="enrollmentTypeTeacher">Athro</string>
+    <string name="enrollmentTypeObserver">Arsyllwr</string>
+    <string name="enrollmentTypeTeachingAssistant">Cynorthwyydd Dysgu</string>
+    <string name="enrollmentTypeDesigner">Dylunydd</string>
+    <string name="enrollmentTypeUnknown">Anhysbys</string>
+
+</resources>

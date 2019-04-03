@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/assignmentLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:selectableItemBackground">
+
+    <View
+        android:id="@+id/publishedBar"
+        android:layout_width="3dp"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="4dp"
+        android:layout_marginTop="4dp"
+        android:background="@color/publishedGreen"/>
+
+    <com.instructure.teacher.view.PublishedStatusIconView
+        android:id="@+id/assignmentIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
+        tools:ignore="ContentDescription"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="12dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/assignmentTitle"
+            style="@style/TextFont.Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textSize="16sp"
+            tools:text="Beginning of the Biological Existence of Mankind in the Jungles of South Asia Hodor Hodor"/>
+
+        <TextView
+            android:id="@+id/submissionStatus"
+            style="@style/TextFont.Regular"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/defaultTextGray"
+            tools:text="Submission Status"/>
+
+        <LinearLayout
+            android:id="@+id/submissionGradeContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="8dp">
+
+            <com.instructure.teacher.view.LinearProgressBar
+                android:id="@+id/scoreBar"
+                android:layout_width="0dp"
+                android:layout_height="18dp"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:id="@+id/submissionGradeView"
+                style="@style/TextFont.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:minEms="5"
+                android:singleLine="true"
+                android:text="@string/due"
+                android:textColor="@color/defaultTextGray"
+                tools:ignore="Deprecated"
+                tools:text="83%"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/needsGradingPill"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/needsGrading"
+            android:textAllCaps="true"
+            android:textSize="11sp"
+            android:visibility="gone"
+            tools:ignore="SmallSp"/>
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,206 @@
+/*
+ * Copyright (C) 2017 - present Instructure, Inc.
+ *
+ *     Licensed under the Apache License, Version 2.0 (the "License");
+ *     you may not use this file except in compliance with the License.
+ *     You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *     Unless required by applicable law or agreed to in writing, software
+ *     distributed under the License is distributed on an "AS IS" BASIS,
+ *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *     See the License for the specific language governing permissions and
+ *     limitations under the License.
+ *
+ */
+
+package com.instructure.canvasapi2.utils
+
+import android.annotation.SuppressLint
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.net.NetworkRequest
+import android.text.TextUtils
+import com.instructure.canvasapi2.builders.RestParams
+import okhttp3.Headers
+import okhttp3.MediaType
+import okhttp3.RequestBody
+import retrofit2.Response
+import java.text.SimpleDateFormat
+import java.util.*
+
+object APIHelper {
+
+    // Spelled as it should - misspelled
+    val referrer: Map<String, String>
+        get() {
+            val extraHeaders = HashMap<String, String>()
+            extraHeaders["Referer"] = ApiPrefs.domain
+            return extraHeaders
+        }
+
+    // Lazy init so we don't break unit tests
+    private val networkRequest by lazy {
+        NetworkRequest.Builder()
+            .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
+            .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+            .build()
+    }
+
+    private fun getConnectivityManager(): ConnectivityManager {
+        return ContextKeeper.appContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    }
+
+    @SuppressLint("MissingPermission")
+    fun hasNetworkConnection(): Boolean {
+        val netInfo = getConnectivityManager().activeNetworkInfo
+        return netInfo != null && netInfo.isConnectedOrConnecting
+    }
+
+    @SuppressLint("MissingPermission")
+    fun registerNetworkCallback(callback: ConnectivityManager.NetworkCallback) {
+        getConnectivityManager().registerNetworkCallback(networkRequest, callback)
+    }
+
+    @SuppressLint("MissingPermission")
+    fun unregisterNetworkCallback(callback: ConnectivityManager.NetworkCallback) {
+        getConnectivityManager().unregisterNetworkCallback(callback)
+    }
+
+    /**
+     * parseLinkHeaderResponse parses HTTP headers to return the first, next, prev, and last urls. Used for pagination.
+     *
+     * @param headers List of headers
+     * @return A LinkHeaders object
+     */
+    fun parseLinkHeaderResponse(headers: Headers): LinkHeaders {
+        val linkHeaders = LinkHeaders()
+
+        val map = headers.toMultimap()
+
+        for (name in map.keys) {
+            if ("link".equals(name, ignoreCase = true)) {
+                for (value in map[name]!!) {
+                    val split = value.split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+                    for (segment in split) {
+                        val index = segment.indexOf(">")
+                        var url: String? = segment.substring(0, index)
+                        url = url!!.substring(1)
+
+                        //Remove the domain, keep the encoding (for time zones MBL-11262)
+                        url = removeDomainFromUrl(url)
+
+                        when {
+                            segment.contains("rel=\"next\"") -> linkHeaders.nextUrl = url
+                            segment.contains("rel=\"prev\"") -> linkHeaders.prevUrl = url
+                            segment.contains("rel=\"first\"") -> linkHeaders.firstUrl = url
+                            segment.contains("rel=\"last\"") -> linkHeaders.lastUrl = url
+                        }
+                    }
+                }
+                break
+            }
+        }
+
+        return linkHeaders
+    }
+
+    internal fun parseLinkHeaderResponse(linkField: String): LinkHeaders {
+        val linkHeaders = LinkHeaders()
+        if (TextUtils.isEmpty(linkField)) {
+            return linkHeaders
+        }
+
+        val split = linkField.split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+        for (segment in split) {
+            val index = segment.indexOf(">")
+            var url: String? = segment.substring(0, index)
+            url = url!!.substring(1)
+
+            // Remove the domain.
+            url = removeDomainFromUrl(url)
+
+            when {
+                segment.contains("rel=\"next\"") -> linkHeaders.nextUrl = url
+                segment.contains("rel=\"prev\"") -> linkHeaders.prevUrl = url
+                segment.contains("rel=\"first\"") -> linkHeaders.firstUrl = url
+                segment.contains("rel=\"last\"") -> linkHeaders.lastUrl = url
+            }
+        }
+        return linkHeaders
+    }
+
+    /**
+     * removeDomainFromUrl is a helper function for removing the domain from a url. Used for pagination/routing
+     *
+     * @param url A url
+     * @return a String without a domain
+     */
+    fun removeDomainFromUrl(url: String?): String? = url?.substringAfter("/api/v1/")
+
+    fun isCachedResponse(response: okhttp3.Response): Boolean = response.cacheResponse() != null
+    fun isCachedResponse(response: Response<*>): Boolean = isCachedResponse(response.raw())
+
+    fun paramIsNull(vararg args: Any?): Boolean {
+        if (args == null) return true
+        for (arg in args) {
+            if (arg == null) {
+                return true
+            }
+        }
+        return false
+    }
+
+
+    fun dateToString(date: GregorianCalendar?): String? {
+        if (date == null) {
+            return null
+        }
+
+        val formatted = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US).format(Date(date.timeInMillis))
+        return formatted.substring(0, 22) + ":" + formatted.substring(22)
+    }
+
+    /**
+     * booleanToInt is a Helper function for Converting boolean to URL booleans (ints)
+     */
+    fun booleanToInt(bool: Boolean): Int {
+        return if (bool) {
+            1
+        } else 0
+    }
+
+    /*
+     * The fromHTML method can cause a character that looks like [obj]
+     * to show up. This is undesired behavior most of the time.
+     *
+     * Replace the [obj] with an empty space
+     * [obj] is char 65532 and an empty space is char 32
+     * @param sequence The fromHTML typically
+     * @return The modified charSequence
+     */
+    fun simplifyHTML(sequence: CharSequence?): String {
+        if (sequence != null) {
+            var toReplace: CharSequence = sequence
+            toReplace = toReplace.toString().replace(65532.toChar(), 32.toChar()).trim { it <= ' ' }
+            return toReplace.toString()
+        }
+        return ""
+    }
+
+    fun paramsWithDomain(domain: String, params: RestParams): RestParams = params.copy(domain = domain)
+
+    fun makeRequestBody(part: String?): RequestBody = if (part == null) {
+        RequestBody.create(MediaType.parse("multipart/form-data"), ByteArray(0))
+    } else {
+        RequestBody.create(MediaType.parse("multipart/form-data"), part)
+    }
+
+    fun getQuizURL(courseid: Long, quizId: Long): String {
+        // https://mobiledev.instructure.com/api/v1/courses/24219/quizzes/1129998/
+        return ApiPrefs.protocol + "://" + ApiPrefs.domain + "/courses/" + courseid + "/quizzes/" + quizId
+    }
+
+}

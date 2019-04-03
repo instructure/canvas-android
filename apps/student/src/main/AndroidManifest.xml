@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2016 - present Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.instructure.student">
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" /> <!-- Needed for Conferences (web audio capture) -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
+    <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
+
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+
+
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+
+    <permission android:name="com.instructure.candroid.permission.C2D_MESSAGE" android:protectionLevel="signature"/>
+    <uses-permission android:name="com.instructure.candroid.permission.C2D_MESSAGE"/>
+    <uses-permission android:name="com.google.android.c2dm.permission.REGISTER" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
+
+    <instrumentation
+        android:name="com.google.android.apps.common.testing.testrunner.GoogleInstrumentationTestRunner"
+        android:targetPackage="com.instructure.candroid"/>
+
+    <uses-feature android:name="android.hardware.camera" android:required="false"/>
+    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false"/>
+
+    <supports-screens
+        android:anyDensity="true"
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:smallScreens="true"
+        android:xlargeScreens="true" />
+
+    <application
+        android:allowBackup="false"
+        android:icon="@mipmap/ic_launcher"
+        android:logo="@drawable/canvas_logo_white"
+        android:label="@string/student_app_name"
+        android:theme="@style/CanvasMaterialTheme_Default"
+        android:name=".util.AppManager"
+        android:hardwareAccelerated="true"
+        android:supportsRtl="@bool/supportRTL"
+        android:largeHeap="true"
+        tools:replace="android:supportsRtl"
+        tools:overrideLibrary="com.instructure.canvasapi">
+
+        <!--Fun fact. LoginActivity is called that because activity-alias are not supported by pspdfkit, should be InitLoginActivity-->
+        <activity
+            android:name=".activity.LoginActivity"
+            android:label="@string/student_app_name"
+            android:windowSoftInputMode="stateHidden|adjustPan"
+            android:clearTaskOnLaunch="true"
+            android:launchMode="singleTop"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:theme="@style/LoginFlowTheme.Splash_Student">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".activity.StudentSubmissionActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:theme="@style/SubmissionPSPDFKitTheme" />
+
+        <activity android:name=".activity.LoginLandingPageActivity"
+            android:theme="@style/LoginFlowTheme.NoActionBar"
+            android:launchMode="singleTop"/>
+
+        <activity android:name=".activity.FindSchoolActivity"
+            android:theme="@style/LoginFlowTheme.NoActionBar"
+            android:launchMode="singleTop"/>
+
+        <activity android:name=".activity.SignInActivity"
+            android:theme="@style/LoginFlowTheme.NoActionBar"
+            android:launchMode="singleTop"/>
+
+        <activity android:name=".activity.NavigationActivity"
+            android:launchMode="singleTask"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/canvas"
+            android:theme="@style/CanvasMaterialTheme_Default">
+
+            <intent-filter>
+                <action android:name="com.instructure.student.ROUTING_ACTIVITY"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".activity.CandroidPSPDFActivity"
+            android:theme="@style/PSPDFKitTheme"
+            android:windowSoftInputMode="adjustNothing" />
+
+        <activity
+            android:name=".activity.NotificationPreferencesActivity"
+            android:theme="@style/CanvasMaterialTheme_Default"
+            android:label="@string/notifications"/>
+
+        <activity android:name=".activity.LTIActivity"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/CanvasMaterialTheme_Default"/>
+
+        <activity
+            android:name=".activity.SettingsActivity"
+            android:theme="@style/CanvasMaterialTheme_Default"/>
+
+        <activity android:name=".activity.PandaAvatarActivity"
+            android:label="@string/pandaAvatar"
+            android:theme="@style/CanvasMaterialTheme_Default"/>
+        <activity
+            android:name=".activity.InternalWebViewActivity"
+            android:theme="@style/CanvasMaterialTheme_Default"
+            android:configChanges="orientation|screenSize"/>
+
+        <activity
+            android:name=".activity.ViewMediaActivity"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/Theme.AppCompat.NoActionBar"/>
+
+        <activity
+            android:name="com.instructure.pandautils.activities.NotoriousMediaUploadPicker"
+            android:theme="@style/Theme.Notorious"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"/>
+
+        <activity android:name=".activity.VideoViewActivity"
+            android:label="@string/student_app_name"
+            android:theme="@style/CanvasMaterialTheme_Default"
+            android:configChanges="orientation|screenSize"/>
+        <activity
+            android:name=".activity.InterwebsToApplication"
+            android:launchMode="singleTop"
+            android:excludeFromRecents="true"
+            android:theme="@style/Theme.Transparent.NoAnimationOrBackground"
+            android:label="@string/student_app_name"
+            android:configChanges="keyboardHidden|orientation">
+            <intent-filter>
+                <data
+                    android:host="*.instructure.com"
+                    android:scheme="https"/>
+                <data
+                    android:host="*.instructure.com"
+                    android:scheme="http"/>
+                <data
+                    android:host="*.canvas.net"
+                    android:scheme="https"/>
+                <data
+                    android:host="*.canvas.net"
+                    android:scheme="http"/>
+
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+            </intent-filter>
+            <intent-filter>
+                <data
+                    android:host="*"
+                    android:scheme="canvas-courses"/>
+
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+            </intent-filter>
+            <intent-filter>
+                <data
+                    android:host="*"
+                    android:scheme="canvas-student"/>
+
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".activity.ShareFileUploadActivity"
+            android:label="@string/canvas"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:excludeFromRecents="true"
+            android:theme="@style/CanvasMaterialTheme_Default.Translucent">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+
+                <data android:mimeType="audio/*"/>
+                <data android:mimeType="video/*"/>
+                <data android:mimeType="image/*"/>
+                <data android:mimeType="application/*"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:name="com.google.android.gms.oss.licenses.OssLicensesMenuActivity"
+            android:theme="@style/OssTheme"/>
+
+        <activity android:name="com.google.android.gms.oss.licenses.OssLicensesActivity"
+            android:theme="@style/OssTheme"/>
+
+        <!-- Widget Items -->
+        <activity
+            android:name=".activity.NotificationWidgetRouter"
+            android:theme="@style/Theme.AppCompat"
+            android:label=""
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+
+        <activity
+            android:theme="@style/Theme.Transparent"
+            android:name=".activity.WidgetSetupActivity">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".activity.BookmarkShortcutActivity"
+            android:icon="@drawable/ic_bookmark_shortcut"
+            android:label="@string/student_app_name"
+            android:theme="@style/CanvasMaterialTheme_DefaultNoTransparency">
+            <intent-filter>
+                <action android:name="android.intent.action.CREATE_SHORTCUT" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <service android:name="com.instructure.pandautils.services.NotoriousUploadService"
+            android:exported="false"/>
+
+        <service android:name=".util.FileDownloadJobIntentService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <receiver android:name=".receivers.InitializeReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
+
+        <!--Push Notifications-->
+
+        <receiver android:name="com.google.android.gms.gcm.GcmReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+                <category android:name="com.instructure.candroid"/>
+            </intent-filter>
+        </receiver>
+
+        <service android:name=".receivers.StudentPushExternalReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+            </intent-filter>
+        </service>
+
+        <service android:name=".service.PushInstanceIdService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.gms.iid.InstanceID"/>
+            </intent-filter>
+        </service>
+
+        <!-- To do widget -->
+        <receiver
+            android:name=".widget.TodoWidgetProvider"
+            android:label="@string/todoWidgetTitleLong">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="android.appwidget.action.APPWIDGET_ENABLED" />
+                <action android:name="android.appwidget.action.APPWIDGET_DELETED" />
+                <action android:name="android.appwidget.action.APPWIDGET_DISABLED" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/todo_widget_info"/>
+        </receiver>
+
+        <service
+            android:name=".widget.TodoViewWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS"/>
+
+        <!-- Grades Widget -->
+        <receiver
+            android:name=".widget.GradesWidgetProvider"
+            android:label="@string/gradesWidgetTitleLong">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="android.appwidget.action.APPWIDGET_ENABLED" />
+                <action android:name="android.appwidget.action.APPWIDGET_DELETED" />
+                <action android:name="android.appwidget.action.APPWIDGET_DISABLED" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/grades_widget_info"/>
+        </receiver>
+
+        <service
+            android:name=".widget.GradesViewWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS"/>
+
+        <!-- Notifications widget-->
+        <receiver
+            android:name=".widget.NotificationWidgetProvider"
+            android:label="@string/notificationWidgetTitleLong">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="android.appwidget.action.APPWIDGET_ENABLED" />
+                <action android:name="android.appwidget.action.APPWIDGET_DELETED" />
+                <action android:name="android.appwidget.action.APPWIDGET_DISABLED" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/notification_widget_info"/>
+        </receiver>
+
+        <service
+            android:name=".widget.NotificationViewWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS"/>
+
+        <service
+            android:name=".service.StudentPageViewService"
+            android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE"/>
+
+        <!-- End of Widget Items -->
+
+        <meta-data
+            android:name="com.crashlytics.ApiKey"
+            android:value="${crashlyticsApiKey}"/>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"/>
+        </provider>
+
+    </application>
+</manifest>

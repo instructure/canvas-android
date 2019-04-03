@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2016 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.instructure.speedgrader">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <application
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:name=".util.App"
+        android:hardwareAccelerated="true"
+        android:largeHeap="true"
+        android:theme="@style/SpeedGrader_Material">
+        <activity
+            android:name=".activities.LoginActivity"
+            android:label="@string/app_name"
+            android:clearTaskOnLaunch="true"
+            android:launchMode="singleTop"
+            android:configChanges="keyboardHidden|screenSize"
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:theme="@style/SpeedGrader_Material.Toolbar">
+            <intent-filter>
+                <action android:name="com.instructure.speedgrader.SPEED_GRADER" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.instructure.loginapi.login.OAuthWebLogin"
+            android:theme="@style/SpeedGrader_Material.Toolbar"
+            android:label="Login"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"/>
+        <activity
+            android:name=".activities.HomeActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:theme="@style/SpeedGrader_Material">
+        </activity>
+        <activity
+            android:name=".activities.DocumentActivity"
+            android:label="@string/title_activity_document"
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:theme="@style/SpeedGrader_Material"
+            >
+        </activity>
+        <activity
+            android:name=".activities.InternalWebviewActivity"
+            android:label="">
+        </activity>
+        <activity android:name=".activities.TutorialActivity"
+            android:label="@string/app_name"
+            android:theme="@style/SpeedGrader_Material.Fullscreen"/>
+
+        <activity
+            android:theme="@style/Theme.Kaltura"
+            android:name="com.instructure.pandautils.activities.KalturaMediaUploadPicker"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"/>
+
+        <service android:name="com.instructure.pandautils.services.KalturaUploadService"
+            android:exported="false"/>
+
+        <meta-data android:name="com.crashlytics.ApiKey" android:value="${crashlyticsApiKey}"/>
+    </application>
+</manifest>

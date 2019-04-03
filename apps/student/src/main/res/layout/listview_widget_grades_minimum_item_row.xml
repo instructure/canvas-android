@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2016 - present Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="44dp"
+    android:paddingEnd="12dp"
+    android:paddingStart="12dp">
+
+    <ImageView
+        android:id="@+id/courseIndicator"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:layout_alignParentStart="true"
+        android:src="@drawable/favoriting_icon_background"
+        android:layout_centerVertical="true"
+        android:scaleType="fitCenter"
+        android:importantForAccessibility="no"/>
+
+    <TextView
+        android:id="@+id/courseName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/courseIndicator"
+        android:layout_toStartOf="@+id/gradeLayout"
+        style="@style/TextStyle.Primary.SingleLine.GradeWidget"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="12dp"/>
+
+    <FrameLayout
+        android:id="@+id/gradeLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true">
+
+        <TextView
+            android:id="@+id/courseGrade"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/canvasTextMedium" />
+
+        <ImageView
+            android:id="@+id/lockedGradeImage"
+            android:layout_width="22sp"
+            android:layout_height="22sp"
+            android:padding="2sp"
+            android:visibility="gone"
+            android:src="@drawable/vd_lock"
+            android:contentDescription="@string/locked" />
+
+    </FrameLayout>
+
+    <include layout="@layout/widget_not_logged_in" android:id="@+id/is_not_logged_in"/>
+
+</RelativeLayout>

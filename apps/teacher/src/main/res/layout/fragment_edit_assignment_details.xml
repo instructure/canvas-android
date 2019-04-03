@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C) 2017 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="2dp"
+        tools:background="@color/teacher_colorPrimary"
+        tools:ignore="UnusedAttribute">
+
+        <ProgressBar
+            android:id="@+id/savingProgressBar"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="end"
+            android:layout_marginEnd="16dp"
+            android:visibility="gone"/>
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <include layout="@layout/view_divider"/>
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:clipToPadding="false"
+            android:contentDescription="@string/scrollInstructions"
+            android:paddingBottom="16dp"
+            android:paddingEnd="6dp"
+            android:paddingStart="6dp"
+            android:paddingTop="8dp">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/assignmentNameTextInput"
+                android:contentDescription="@string/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:background="@android:color/transparent"
+                android:textColorHint="@color/defaultTextGray"
+                app:hintTextAppearance="@style/TextInputLabel">
+
+                <!-- Define speakable text for EditText below. -->
+                <TextView
+                    android:layout_width="1dp"
+                    android:layout_height="1dp"
+                    android:visibility="gone"
+                    android:text="@string/title"
+                    android:labelFor="@+id/editAssignmentName"/>
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/editAssignmentName"
+                    style="@style/TextFont.Regular"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="48dp"
+                    android:hint="@string/title"
+                    android:maxLines="2"
+                    android:textColorHint="@color/defaultTextGray"
+                    android:textSize="16sp"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/assignmentDescLabel"
+                style="@style/TextFont.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="14dp"
+                android:layout_marginTop="20dp"
+                android:text="@string/description"
+                android:textColor="@color/defaultTextGray"/>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:paddingEnd="4dp"
+                android:paddingStart="4dp">
+
+                <ProgressBar
+                    android:id="@+id/descriptionProgressBar"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="12dp"
+                    android:layout_marginTop="12dp"
+                    android:visibility="gone"
+                    tools:visibility="visible"/>
+
+                <instructure.rceditor.RCETextEditorView
+                    android:id="@+id/descriptionEditor"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/rce_view_min_height"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    tools:visibility="gone"
+                    app:rce_controls_margin_start="12dp"
+                    app:rce_controls_margin_end="12dp"
+                    app:rce_editor_padding="12dp"/>
+
+            </FrameLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/gradeTotalTextInput"
+                android:contentDescription="@string/points"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="10dp"
+                android:background="@android:color/transparent"
+                android:textColorHint="@color/defaultTextGray"
+                app:hintTextAppearance="@style/TextInputLabel">
+
+                <!-- define speakable text for editGradePoints EditText below -->
+                <TextView
+                    android:layout_width="1dp"
+                    android:layout_height="1dp"
+                    android:visibility="gone"
+                    android:labelFor="@+id/editGradePoints"
+                    android:text="@string/points"/>
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/editGradePoints"
+                    style="@style/TextFont.Regular"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/points"
+                    android:inputType="numberDecimal"
+                    android:maxLines="1"
+                    android:minHeight="48dp"
+                    android:textColorHint="@color/defaultTextGray"
+                    android:textSize="16sp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/displayGradeAsLabel"
+                style="@style/TextFont.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="14dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/display_grade_as"
+                android:textColor="@color/defaultTextGray"
+                android:labelFor="@+id/displayGradeAsSpinner"/>
+
+            <androidx.appcompat.widget.AppCompatSpinner
+                style="@style/Widget.AppCompat.Spinner.Underlined"
+                android:id="@+id/displayGradeAsSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:minHeight="48dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:paddingStart="-8dp"
+                app:theme="@style/ThemeSpinner"/>
+
+            <RelativeLayout
+                android:id="@+id/publishWrapper"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="10dp"
+                android:importantForAccessibility="yes">
+
+                <TextView
+                    android:id="@+id/publishText"
+                    style="@style/TextFont.Medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:padding="4dp"
+                    android:labelFor="@+id/publishSwitch"
+                    android:text="@string/publish"
+                    android:textSize="16sp"/>
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/publishSwitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="48dp"
+                    android:minWidth="48dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:padding="2dp"
+                    app:backgroundTint="@color/teacher_colorPrimary"/>
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/overrideContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="16dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:orientation="vertical"/>
+
+            <RelativeLayout
+                android:id="@+id/addOverride"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginStart="10dp">
+
+                <ImageView
+                    android:id="@+id/plus"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="11dp"
+                    android:importantForAccessibility="no"
+                    android:tint="@color/defaultActionColor"
+                    app:srcCompat="@drawable/vd_add"/>
+
+                <TextView
+                    android:id="@+id/addOverrideText"
+                    style="@style/TextFont.Medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@id/plus"
+                    android:text="@string/add_due_date"
+                    android:textColor="@color/defaultActionColor"
+                    android:textSize="16sp"/>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

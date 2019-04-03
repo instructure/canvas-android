@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright (C) 2017 - present Instructure, Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+        android:width="24dp"
+        android:height="24dp"
+        android:viewportWidth="24.0"
+        android:viewportHeight="24.0">
+    <path
+        android:pathData="M16.706,2C14.645,2 12.874,3.196 12,4.919C11.126,3.196 9.355,2 7.294,2L2,2L2,7.294C2,10.213 4.375,12.588 7.294,12.588L11.412,12.588L12.588,12.588L16.706,12.588C18.378,12.588 19.853,11.794 20.824,10.581L20.824,19.647C20.824,20.296 20.296,20.824 19.647,20.824C18.998,20.824 18.471,20.296 18.471,19.647L18.471,13.765L17.294,13.765L17.294,19.647C17.294,20.945 18.349,22 19.647,22C20.945,22 22,20.945 22,19.647L22,7.294L22,6.706L22,2L16.706,2ZM11.412,11.412L7.294,11.412C5.024,11.412 3.176,9.565 3.176,7.294L3.176,3.176L7.294,3.176C9.565,3.176 11.412,5.024 11.412,7.294L11.412,11.412ZM20.824,7.294C20.824,9.565 18.976,11.412 16.706,11.412L12.588,11.412L12.588,7.294C12.588,5.024 14.435,3.176 16.706,3.176L20.824,3.176L20.824,6.706L20.824,7.294ZM7.294,7.882C6.527,7.882 5.873,7.391 5.631,6.706L7.294,6.706C8.061,6.706 8.715,7.198 8.958,7.882L7.294,7.882ZM7.294,5.529L4.353,5.529L4.353,6.118C4.353,7.74 5.672,9.059 7.294,9.059L10.235,9.059L10.235,8.471C10.235,6.848 8.916,5.529 7.294,5.529ZM13.765,8.471L13.765,9.059L16.706,9.059C18.328,9.059 19.647,7.74 19.647,6.118L19.647,5.529L16.706,5.529C15.084,5.529 13.765,6.848 13.765,8.471M16.706,7.882L15.042,7.882C15.285,7.198 15.939,6.706 16.706,6.706L18.369,6.706C18.127,7.391 17.473,7.882 16.706,7.882"
+        android:strokeColor="#00000000"
+        android:fillType="evenOdd"
+        android:fillColor="#000000"
+        android:strokeWidth="1"/>
+</vector>

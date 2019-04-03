@@ -1,0 +1,79 @@
+﻿<?xml version='1.0' encoding='UTF-8'?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <!--Modules-->
+    <string name="mustComplete">يجب أن تكمل أولاً:</string>
+    <string name="unlockedAt">سيتم إلغاء التأمين في:</string>
+    <string name="goToModules">الانتقال إلى الوحدات</string>
+
+    <!--Events-->
+    <string name="Starts">يبدأ</string>
+    <string name="Ends">ينتهي</string>
+    <string name="allDayEvent">حدث يوم كامل</string>
+    <string name="at">في</string>
+    <string name="to">إلى</string>
+
+    <!--StreamItems-->
+    <string name="Message">الرسالة</string>
+    <string name="Loading">جارٍ التحميل&#8230;</string>
+    <string name="Deleted">تم الحذف</string>
+
+    <!-- Assignment Module -->
+    <string name="canvasAPI_online">عبر الإنترنت</string>
+    <string name="canvasAPI_onPaper">على الورق</string>
+    <string name="canvasAPI_discussion">النقاش</string>
+    <string name="canvasAPI_quiz">الاختبار الموجز</string>
+    <string name="canvasAPI_externalTool">أداة خارجية</string>
+    <string name="canvasAPI_none">بلا</string>
+
+    <string name="canvasAPI_passFail">تجاوز إخفاق</string>
+    <string name="canvasAPI_percent">النسبة المئوية</string>
+    <string name="canvasAPI_letterGrade">الدرجة بالأحرف</string>
+    <string name="canvasAPI_points">نقاط</string>
+    <string name="canvasAPI_gpaScale">مقياس المعدل التراكمي (GPA)</string>
+    <string name="canvasAPI_notGraded">لم يتم التقييم</string>
+
+    <string name="canvasAPI_onlineQuiz">اختبار على الإنترنت</string>
+    <string name="canvasAPI_discussionTopic">موضوع المناقشة</string>
+    <string name="canvasAPI_onlineUpload">تحميل عبر الإنترنت</string>
+    <string name="canvasAPI_onlineTextEntry">إدخال نصي عبر الإنترنت</string>
+    <string name="canvasAPI_onlineURL">عنوان URL عبر الإنترنت</string>
+    <string name="canvasAPI_mediaRecording">تسجيل الوسائط</string>
+    <string name="canvasAPI_attendance">الحضور</string>
+    <string name="quiz_scoring_policy_highest">الأعلى</string>
+    <string name="quiz_scoring_policy_average">متوسط</string>
+    <string name="quiz_scoring_policy_latest">الأدنى</string>
+    <string name="no">لا</string>
+    <string name="always">دائمًا</string>
+    <string name="graded_quiz">اختبار موجز تم تقييم درجاته</string>
+    <string name="practice_quiz">أداء الاختبار الموجز</string>
+    <string name="graded_survey">استطلاع تم تقييم درجاته</string>
+    <string name="ungraded_survey">استطلاع لم يتم تقييم درجاته</string>
+    <string name="andMore"> و %d أكثر</string>
+
+    <!-- Enrollment Types -->
+    <string name="enrollmentTypeStudent">الطالب</string>
+    <string name="enrollmentTypeTeacher">المعلم</string>
+    <string name="enrollmentTypeObserver">المراقب</string>
+    <string name="enrollmentTypeTeachingAssistant">مساعد المعلم</string>
+    <string name="enrollmentTypeDesigner">المصمم</string>
+    <string name="enrollmentTypeUnknown">غير معروف</string>
+
+</resources>

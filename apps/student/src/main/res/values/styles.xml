@@ -1,0 +1,411 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2016 - present Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="Theme.Transparent" parent="CanvasMaterialTheme_Default">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
+
+    <style name="Theme.Transparent.NoAnimationOrBackground" parent="CanvasMaterialTheme_Default">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowAnimationStyle">@null</item>
+    </style>
+
+    <style name="PSPDFKitTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/canvasRed</item>
+        <item name="colorAccent">@color/canvasRed</item>
+        <item name="colorPrimaryDark">@color/canvasRed</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionModeOverlay">true</item>
+        <item name="pspdf__annotationCreationToolbarIconsStyle">@style/PSPDFAnnotationCreationToolbarIconsStyle</item>
+    </style>
+
+    <style name="SubmissionPSPDFKitTheme" parent="CanvasMaterialTheme_Default">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionModeOverlay">true</item>
+        <item name="pspdf__contextualToolbarBackground">@color/annotationToolbarBackground</item>
+        <item name="pspdf__contextualToolbarSubmenuBackground">@color/submenuAnnotationToolbarBackground</item>
+        <item name="pspdf__annotationCreationToolbarIconsStyle">@style/AnnotationCreationToolbarIconsStyle</item>
+        <item name="pspdf__annotationEditingToolbarIconsStyle">@style/AnnotationEditingToolbarIconsStyle</item>
+        <item name="pspdf__stampPickerStyle">@style/StampPickerStyle</item>
+        <item name="pspdf__modalDialogStyle">@style/ModalDialogStyle</item>
+    </style>
+
+    <style name="AnnotationCreationToolbarIconsStyle">
+        <item name="pspdf__iconsColor">@color/white</item>
+        <item name="pspdf__highlightIcon">@drawable/vd_highlighter_icon</item>
+        <item name="pspdf__strikeoutIcon">@drawable/vd_strike_through_icon</item>
+        <item name="pspdf__stampIcon">@drawable/vd_stamp_icon</item>
+        <item name="pspdf__inkIcon">@drawable/vd_ink_icon</item>
+        <item name="pspdf__freeTextIcon">@drawable/vd_text_box_icon</item>
+        <item name="pspdf__squareIcon">@drawable/vd_square_icon</item>
+    </style>
+
+    <style name="AnnotationEditingToolbarIconsStyle">
+        <item name="pspdf__iconsColor">@color/white</item>
+        <item name="pspdf__deleteIcon">@drawable/vd_trash</item>
+        <item name="pspdf__editIcon">@drawable/vd_edit</item>
+    </style>
+
+    <style name="StampPickerStyle">
+        <item name="pspdf__titleBackground">@color/annotationToolbarBackground</item>
+        <item name="pspdf__maxHeight">320dp</item>
+        <item name="pspdf__maxWidth">100dp</item>
+    </style>
+
+    <style name="ModalDialogStyle">
+        <item name="pspdf__titleBackground">@color/annotationToolbarBackground</item>
+    </style>
+
+    <style name="Theme.Notorious" parent="CanvasMaterialTheme_Default">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
+
+    <style name="EditTextComposeMessage" parent="android:style/Widget.EditText">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:textColor">#000000</item>
+        <item name="android:padding">16dp</item>
+    </style>
+
+    <!--URL Sign In-->
+    <style name="UrlSignInLogo">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_marginLeft">75dp</item>
+        <item name="android:layout_marginRight">75dp</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+    </style>
+
+    <!--List Styles-->
+    <style name="ListHeaderStyle.Expandable.Inverse">
+        <item name="android:paddingLeft">48dp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="ListHeaderStyle.Inverse">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <!--Text Styles-->
+    <style name="TextStyle.Primary.SingleLine">
+        <item name="android:maxLines">1</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="TextStyle.Primary.SingleLine.Gray">
+        <item name="android:textColor">@color/canvasTextMedium</item>
+    </style>
+
+    <style name="TextStyle.Primary.SingleLine.Navigation">
+        <item name="android:textColor">@color/defaultPrimary</item>
+    </style>
+
+    <style name="TextStyle.Primary.CardView">
+        <item name="android:maxLines">2</item>
+        <item name="android:lines">2</item>
+        <item name="android:gravity">center_vertical|start</item>
+    </style>
+
+    <style name="TextStyle.Secondary">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/canvasTextMedium</item>
+    </style>
+
+    <style name="TextStyle.Secondary.SingleLine">
+        <item name="android:maxLines">1</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="TextStyle.Secondary.SingleLine.Dark">
+        <item name="android:textColor">@color/canvasTextDark</item>
+    </style>
+
+    <style name="TextStyle.Secondary.Dark">
+        <item name="android:textColor">@color/canvasTextDark</item>
+    </style>
+
+    <style name="TextStyle.Secondary.CardView">
+        <item name="android:maxLines">3</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:layout_marginBottom">8dp</item>
+    </style>
+
+    <style name="TextStyle.Tertiary">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/canvasTextMedium</item>
+    </style>
+
+    <style name="TextStyle.Tertiary.SingleLine">
+        <item name="android:maxLines">1</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="TextStyle.Tertiary.SingleLine.Dark">
+        <item name="android:textColor">@color/canvasTextDark</item>
+    </style>
+
+    <style name="TextStyle.Tertiary.Dark">
+        <item name="android:textColor">@color/canvasTextDark</item>
+    </style>
+
+    <style name="TextStyle.Grade">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextStyle.Primary.SingleLine.GradeWidget">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/canvasTextDark</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="TextStyle.NoGrade">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/canvasTextMedium</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="TextStyle.Message">
+        <item name="android:textSize">12sp</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">@color/canvasTextDark</item>
+    </style>
+
+    <style name="TextStyle.MessageDate">
+        <item name="android:textSize">11sp</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">@color/canvasTextMedium</item>
+    </style>
+
+    <style name="CourseNavigationSpinner" parent="android:Widget.Holo.Light.Spinner">
+        <item name="android:background">?android:selectableItemBackground</item>
+        <item name="android:dropDownSelector">?android:selectableItemBackground</item>
+        <item name="android:divider">@null</item>
+        <item name="android:dividerHeight">0dp</item>
+    </style>
+
+    <style name="TermSpinner" parent="android:Widget.Holo.Light.Spinner">
+        <item name="android:dropDownSelector">?android:selectableItemBackground</item>
+        <item name="android:background">@color/canvasBackgroundWhite</item>
+        <item name="android:divider">@null</item>
+        <item name="android:dividerHeight">0dp</item>
+    </style>
+
+    <style name="DetailsDialogAnimationVideo">
+        <item name="android:windowEnterAnimation">@anim/none</item>
+        <item name="android:windowExitAnimation">@anim/none</item>
+    </style>
+
+    <style name="ActionModeStyle" parent="Widget.AppCompat.ActionMode">
+        <item name="android:background">@color/defaultPrimary</item>
+    </style>
+
+    <style name="Canvas"/>
+
+    <style name="Canvas.NavDrawerItem">
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:layout_height">?android:listPreferredItemHeightSmall</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:clickable">true</item>
+        <item name="android:background">@drawable/listview_states</item>
+    </style>
+
+    <style name="Canvas.NavDrawerText">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/navigationTextColor</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:layout_marginLeft">12dp</item>
+        <item name="android:layout_marginRight">8dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Canvas.NavIcon">
+        <item name="android:layout_height">?android:listPreferredItemHeightSmall</item>
+        <item name="android:layout_width">60dp</item>
+        <item name="android:padding">12dp</item>
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:layout_alignParentStart">true</item>
+        <item name="android:layout_alignParentLeft">true</item>
+    </style>
+
+    <style name="NavigationDrawerItem">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:minHeight">?android:listPreferredItemHeightSmall</item>
+        <item name="android:background">?android:selectableItemBackground</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:tint">@color/navigationDrawerTextDark</item>
+    </style>
+
+    <style name="NavigationDrawerIcon">
+        <item name="android:layout_height">24dp</item>
+        <item name="android:layout_width">24dp</item>
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:importantForAccessibility">no</item>
+        <item name="android:layout_marginEnd">24dp</item>
+        <item name="android:textColor">@color/navigationDrawerTextDark</item>
+    </style>
+
+    <style name="ColorPickerDialogItem">
+        <item name="android:layout_width">48dp</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:src">@drawable/shape_color_picker_bg</item>
+        <item name="android:layout_margin">6dp</item>
+        <item name="android:clickable">true</item>
+    </style>
+
+    <style name="LightStatusBarDialog">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    <style name="TextInputLabel" parent="TextAppearance.Design.Hint">
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="ThemeSpinner">
+        <!-- Default color for the dropdown arrow and line -->
+        <item name="colorControlNormal">#C7CDD1</item>
+        <item name="android:height">1dp</item>
+    </style>
+
+
+    <!--Adapter Item Styles added 2018-->
+
+    <style name="AdapterItem">
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+        <item name="android:minHeight">?android:listPreferredItemHeight</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+    </style>
+
+    <style name="AdapterItemTextContainer">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_marginTop">12dp</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:layout_marginStart">24dp</item>
+        <item name="android:layout_marginEnd">16dp</item>
+    </style>
+
+    <style name="AdapterItemIcon">
+        <item name="android:layout_height">28dp</item>
+        <item name="android:layout_width">28dp</item>
+        <item name="android:layout_marginStart">16dp</item>
+        <item name="android:layout_marginTop">12dp</item>
+    </style>
+
+    <style name="AdapterItemTitleText" parent="TextFont.Medium">
+        <item name="android:textColor">@color/defaultTextDark</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="AdapterItemDescriptionText" parent="TextFont.Regular">
+        <item name="android:maxLines">3</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textColor">@color/defaultTextGray</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+    </style>
+
+    <style name="AdapterItemCourseNameText" parent="TextFont.Regular">
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+    </style>
+
+    <style name="AdapterListHeader" parent="TextFont.Medium">
+        <item name="android:maxLines">2</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textColor">@color/defaultTextGray</item>
+        <item name="android:layout_gravity">center_vertical</item>
+    </style>
+
+    <style name="FilesHeader"  parent="TextFont.Medium">
+        <item name="android:textColor">@color/canvasTextDark</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">@dimen/listHeaderHeight</item>
+        <item name="android:background">@color/canvasBackgroundMedium</item>
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:singleLine">false</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="OverrideViewTextInputLayoutDate">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1.6</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <style name="OverrideViewTextInputLayoutTime">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <style name="OverrideViewEditText" parent="Base.Widget.AppCompat.Spinner.Underlined">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:focusableInTouchMode">false</item>
+        <item name="android:editable">false</item>
+        <item name="android:text">--</item>
+        <item name="android:minWidth">140dp</item>
+        <item name="android:textColorHint">@color/defaultTextGray</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+</resources>

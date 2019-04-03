@@ -1,0 +1,126 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="hello_world">أهلا بالعالم!</string>
+    <string name="action_settings">إعدادات</string>
+    <string name="mobileVerifyGeneral">استخدام هذا التطبيق غير مخوَّل</string>
+    <string name="mobileVerifyDomainUnauthorized">الخادم الذي أدخلته غير مخول لهذا التطبيق.</string>
+    <string name="mobileVerifyUserAgentUnauthorized">وكيل المستخدم لهذا التطبيق غير مخوَّل.</string>
+    <string name="mobileVerifyUnknownError">لم نتمكن من التحقق من الخادم لاستخدامه مع هذا التطبيق.</string>
+    <string name="unknownDevice">UnknownDevice</string>
+    <string name="errorOccurred">حدث خطأ غير متوقع.</string>
+    <string name="pageNotFound">لم يتم العثور على الصفحة.</string>
+    <string name="confirm">تأكيد</string>
+    <string name="cancel">إلغاء</string>
+    <string name="help">المساعدة</string>
+    <string name="enterURL">أدخل عنوان URL لـ Canvas الخاص بك:</string>
+    <string name="signIntoCanvasNetwork">هل تحاول تسجيل الدخول إلى Canvas Network؟</string>
+    <string name="remove">إزالة</string>
+    <string name="exampleURLSimple">myschool.instructure.com</string>
+    <string name="userId">معرف المستخدم</string>
+    <string name="domain">المجال</string>
+
+    <string name="actAsUser">تصرف كمستخدم</string>
+    <string name="stopActAsUser">إيقاف التصرف كمستخدم</string>
+    <!--Multiple User Sign in -->
+    <string name="removeUser">حذف هذا المستخدم؟</string>
+    <string name="removedForever">سيتوجب عليك تسجيل الدخول إلى هذا المستخدم للتمتع بالوصول إلى المحتوى الخاص بهم.</string>
+
+    <!--Content Descriptions-->
+    <string name="canvasLogo">شعار Canvas</string>
+
+    <string name="canvasLoginOn">Canvas_Login: تشغيل</string>
+    <string name="canvasLoginOff">Canvas_Login: إيقاف تشغيل</string>
+    <string name="siteAdminLogin">تسجيل دخول مسؤول الموقع: تشغيل</string>
+
+    <string name="username">اسم المستخدم</string>
+    <string name="password">كلمة المرور</string>
+    <string name="authenticationRequired">المصادقة مطلوبة</string>
+    <string name="invalidEmailPassword">البريد الإلكتروني أو كلمة المرور غير صالحة</string>
+    <string name="login">تسجيل الدخول</string>
+    <string name="logout">تسجيل الخروج</string>
+
+    <!--Logout Warning Dialog-->
+    <string name="logout_warning">هل تريد تسجيل الخروج بالفعل؟</string>
+    <string name="logout_yes">نعم</string>
+    <string name="logout_no">لا</string>
+
+    <!--Smart Login-->
+    <string name="loginNearYou">بالقرب منك</string>
+    <string name="loginCanvasNetwork">Canvas Network</string>
+    <string name="loginRightBehindYou">خلفك تمامًا</string>
+    <string name="loginMiles">على بعد %1$s أميال</string>
+    <string name="loginCanvasHelp">ألا ترى مدرستك؟ أدخل عنوان URL التابع للمؤسسة التعليمية أو اضغط هنا لطلب المساعدة.</string>
+    <string name="loginCanvasHelpWithUser">أدخل عنوان URL التابع للمؤسسة التعليمية أو اضغط هنا لطلب المساعدة.</string>
+    <string name="loginHint">ابحث عن مدرستك أو دائرتك التعليمية</string>
+
+    <!-- Error Report Dialog -->
+    <string name="errorReportAProblem">الإبلاغ عن مشكلة</string>
+    <string name="errorReportSubject">الموضوع</string>
+    <string name="errorReportDescription">الوصف</string>
+    <string name="errorReportWriteSomething">اكتب شيئًا ما...</string>
+    <string name="errorReportSend">إرسال</string>
+    <string name="errorReportThankyou">شكرًا للإبلاغ عن مشكلتك لفريق الدعم.  ستستلم رسالة تحقق وتحديثات عبر البريد الإلكتروني.</string>
+    <string name="errorReportSeverityText">كيف يؤثر عليك ذلك؟</string>
+    <string name="errorSeverityCasualQuestion">مجرد سؤال عابر أو تعليق أو فكرة أو اقتراح...</string>
+    <string name="errorSeverityNeedHelp">أحتاج لقليل من المساعدة لكن الأمر ليس مستعجلاً.</string>
+    <string name="errorSeveritySomethingsBroken">هناك شيء لا يعمل لكن بمقدوري تجنب المشكلة لإتمام المهام التي يجب أن أقوم بإنجازها.</string>
+    <string name="errorSeverityCantGetThingsDone">ليس بمقدوري أن أنجز الأمر إلا بعد أن أحصل على استجابة منكم.</string>
+    <string name="errorSeverityExtremelyCritical">حالة طارئة حرجة للغاية!!</string>
+    <string name="errorReportEmailAddress">عنوان البريد الإلكتروني</string>
+    <string name="errorReportEnterEmail">أدخل عنوان البريد الإلكتروني...</string>
+    <string name="errorReportUnknown">غير معروف</string>
+    <!-- Distance Strings -->
+    <string name="lessThanOne">&lt; 1 ميل (1.6 كم)</string>
+    <string name="oneMile">1 ميل (1.6 كم)</string>
+    <string name="miles">أميال</string>
+    <string name="kilometers">كم</string>
+
+    <!-- String for submitting tickets -->
+    <string name="device">الجهاز</string>
+    <string name="osVersion">إصدار نظام التشغيل</string>
+
+    <string name="previousLoginTitle">عمليات تسجيل الدخول السابقة</string>
+    <string name="findMySchool">ابحث عن مدرستي</string>
+    <string name="canvasLowerCase">canvas</string>
+    <string name="whatsYourSchoolName">ما هو اسم مدرستك؟</string>
+    <string name="next">التالي</string>
+    <string name="schoolInstructureCom">school.instructure.com</string>
+    <string name="contentDescription_removePreviousUser">حذف المستخدم السابق</string>
+    <string name="accountDomainFooter">ألا تستطيع العثور على مدرستك؟ حاول كتابة رابط URL الكامل للمدرسة.</string>
+    <string name="accountDomainFooterLink">اضغط هنا للحصول على المساعدة.</string>
+
+    <string name="login_noInternetConnectionTitle">لا يوجد اتصال بالإنترنت</string>
+    <string name="login_noInternetConnectionMessage">يتطلب هذا الإجراء اتصالاً بالإنترنت.</string>
+    <string name="empty_feedback">يلزم وجود موضوع ووصف لإرسال الملاحظات والآراء.</string>
+    <string name="versionNum">رقم الإصدار</string>
+    <string name="scrollInstructions">قم بالتمرير لرؤية كافة التفاصيل</string>
+
+    <string name="masqueradeErrorUserId">يجب أن تدخل معرف مستخدم.</string>
+    <string name="masqueradeErrorDomain">يجب عليك إدخال مجال صالح.</string>
+    <string name="masqueradeError">حدث خطأ أثناء محاولة إخفاء الاسم.</string>
+    <string name="masqueradeInfo">\"تصرف كـ\" هو تسجيل الدخول كما لو كنت هذا المستخدم دون كلمة مرور. ستتمكن من اتخاذ أي إجراء كما لو كنت هذا المستخدم، ومن وجهة نظر المستخدمين الآخرين، سيبدو الأمر كما لو كان هذا المستخدم هو من قام بهذه الإجراءات. ولكن سجلات التدقيق ستسجل أنك كنت الشخص الذي قام بالإجراءات نيابةً عن هذا المستخدم.</string>
+    <string name="masqueradingAs">أنت تتصرف باعتبارك %s</string>
+    <string name="stopActingAsTitle">إيقاف التصرف باعتبارك...</string>
+    <string name="stopActingAsMessage">ستتوقف عن التصرف باعتبارك %s وستعود إلى حسابك.</string>
+
+    <string name="weMadeChanges">لقد أجرينا بعض التغييرات.</string>
+    <string name="whatsNewText">تعرف على الجديد.</string>
+</resources>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="ProfileBio" parent="TextFont.Medium">
+        <item name="android:layout_width">450dp</item>
+    </style>
+</resources>

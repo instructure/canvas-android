@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2018 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="80dp"
+    android:height="62dp"
+    android:viewportHeight="62"
+    android:viewportWidth="80">
+
+    <group
+        android:translateX="-148.000000"
+        android:translateY="-282.000000">
+        <group
+            android:translateX="49.000000"
+            android:translateY="273.000000">
+            <group
+                android:translateX="99.000000">
+                <path
+                    android:fillColor="#C7CDD1"
+                    android:pathData="M0,70.3433333 L0,9.16666667 L80,9.16666667 L80,70.3433333 L0,70.3433333 Z
+M4.70333333,15.4466667 L40,46.0566667 L75.2933333,15.4466667
+L75.2933333,13.8733333 L4.70333333,13.8733333 L4.70333333,15.4466667 Z
+M75.2933333,21.6733333 L40,52.28 L4.70333333,21.6733333 L4.70333333,61.28
+L19.3366667,42.99 L23.0133333,45.9333333 L7.24666667,65.6366667
+L72.75,65.6366667 L56.9866667,45.9333333 L60.6633333,42.99 L75.2933333,61.28
+L75.2933333,21.6733333 Z"
+                    android:strokeWidth="1"/>
+            </group>
+        </group>
+    </group>
+</vector>

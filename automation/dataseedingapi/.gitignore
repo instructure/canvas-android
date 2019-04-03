@@ -1,0 +1,9 @@
+.idea
+build
+out
+src/main/java/com/instructure/soseedy
+*.html
+*.dsc
+*.pb
+*.crt
+*.key

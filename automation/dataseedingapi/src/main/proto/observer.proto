@@ -1,0 +1,75 @@
+syntax = "proto3";
+
+option java_package = "com.instructure.soseedy";
+option java_multiple_files = true;
+
+import "user.proto";
+
+package soseedy;
+
+
+service SeedyObservers {
+    rpc AddObserveeWithCredentials (AddObserveeWithCredentialsRequest) returns (CanvasUser) { }
+    rpc GetObserverAlertThresholds (GetObserverAlertThresholdsRequest) returns (ObserverAlertThresholds) { }
+    rpc AddObserverAlertThreshold (AddObserverAlertThresholdRequest) returns (ObserverAlertThreshold) { }
+    rpc GetObserverAlerts (GetObserverAlertsRequest) returns (ObserverAlerts) { }
+}
+
+// Request messages
+
+// Any users can add their own observee if they have the credentials
+// https://canvas.instructure.com/doc/api/all_resources.html#method.user_observees.create
+message AddObserveeWithCredentialsRequest {
+    string loginId = 1;
+    string password = 2;
+    string observeeToken = 3;
+    string observerToken = 4;
+}
+
+message GetObserverAlertThresholdsRequest {
+    string token = 1;
+}
+
+message AddObserverAlertThresholdRequest {
+    string alertType = 1;
+    int64 userId = 2;
+    int64 observerId = 3;
+    string token = 4;
+}
+
+message GetObserverAlertsRequest {
+    int64 userId = 1;
+    string token = 2;
+}
+
+
+// Response messages
+message ObserverAlertThresholds {
+    repeated ObserverAlertThreshold thresholds = 1;
+}
+
+message ObserverAlertThreshold {
+    int64 id = 1;
+    string alertType = 2;
+    string threshold = 3;
+    string workflowState = 4;
+    int64 userId = 5;
+    int64 observerId = 6;
+}
+
+message ObserverAlerts {
+    repeated ObserverAlert alerts = 1;
+}
+
+message ObserverAlert {
+    int64 id = 1;
+    int64 observerAlertThresholdId = 2;
+    string contextType = 3;
+    int64 contextId = 4;
+    string alertType = 5;
+    string workflowState = 6;
+    string title = 7;
+    int64 userId = 8;
+    int64 observerId = 9;
+    string htmlUrl = 10;
+}

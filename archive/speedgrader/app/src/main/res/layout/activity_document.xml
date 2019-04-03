@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2016 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/sg_background">
+
+
+    <LinearLayout
+        android:id="@+id/controlBar"
+        android:layout_height="38dp"
+        android:layout_width="match_parent"
+        android:layout_alignParentTop="true"
+        android:background="@color/sg_background"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/prevButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/prev"
+            android:textSize="14sp"
+            android:textColor="@color/enabled_text"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center"/>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center_vertical"
+            android:background="@color/whiteOpaque"/>
+        <TextView
+            android:id="@+id/nextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/next"
+            android:textSize="14sp"
+            android:textColor="@color/enabled_text"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center"/>
+    </LinearLayout>
+    <SurfaceView
+        android:layout_width="0px"
+        android:layout_height="0px" />
+    <!--http://stackoverflow.com/questions/8772862/surfaceview-flashes-black-on-load/12636285#12636285-->
+    <!-- The main content view -->
+    <com.instructure.speedgrader.views.StaticViewPager
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/controlBar"
+        />
+
+    <View
+        android:id="@+id/contentOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/controlBar"
+        android:visibility="invisible"
+        android:clickable="false"
+        android:focusable="false"
+        android:background="#57000000"/>
+
+    <RelativeLayout
+        android:id="@+id/documentLoadingView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/controlBar"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:paddingLeft="24dp"
+        android:visibility="gone">
+
+        <com.instructure.speedgrader.views.CircularProgressBar
+            android:id="@+id/circularProgressBar"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"/>
+
+        <com.instructure.speedgrader.views.HelveticaTextView
+            android:id="@+id/emptyViewText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="30sp"
+            android:textColor="@color/lightGray"
+            android:text="@string/loadingIndeterminate"
+            android:layout_marginLeft="16dp"
+            android:textAllCaps="true"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/circularProgressBar"/>
+
+    </RelativeLayout>
+
+    <!-- The rubric drawer -->
+    <SlidingDrawer
+        android:id="@+id/drawer"
+        android:layout_width="370dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:gravity="top"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/controlBar"
+        android:orientation="horizontal"
+        android:handle="@+id/handle"
+        android:content="@+id/drawerFragment">
+
+        <RelativeLayout
+            android:id="@+id/handle"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:gravity="top">
+            <!-- The SlidingDrawer Tab by default centers in our view, but we add a margin to make it sit near the top 1/3rd -->
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginBottom="@dimen/rubric_tab_offset"
+                android:src="@drawable/rubric_tab"/>
+        </RelativeLayout>
+
+        <FrameLayout
+            android:id="@+id/drawerFragment"
+            android:layout_width="320dp"
+            android:layout_height="match_parent"
+            android:background="@color/sg_background"/>
+
+    </SlidingDrawer>
+</RelativeLayout>

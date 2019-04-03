@@ -1,0 +1,175 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <string name="app_name">SpeedGrader</string>
+  <string name="hello_world">Привет, мир!</string>
+  <string name="sg_settings">Настройки</string>
+  <string name="title_activity_home">главная</string>
+  <string name="title_activity_document">документ</string>
+  <string name="action_document_view">Посмотреть документ</string>
+  <string name="sectionsFilter">Фильтр по разделу</string>
+  <string name="drawer_open">Открыть панель</string>
+  <string name="drawer_close">Открыть панель</string>
+  <string name="favorites">Любимые Курсы</string>
+  <string name="allCourses">Все курсы</string>
+  <string name="emptyMessage">Сообщение не может быть пустым!</string>
+  <string name="errorPostingComment">Произошла ошибка при попытке опубликовать ваше комментарий у выполненной работе. Пожалуйста, попробуйте еще раз.</string>
+  <string name="addAComment">Добавить комментарий</string>
+  <string name="noCommentsToDisplayShort">Нет комментариев для отображения</string>
+  <string name="noItemsToDisplayShort">Нет элементов для отображения</string>
+  <string name="noCoursesToDisplayShort">Нет курсов для отображения</string>
+  <string name="loading">Загрузка</string>
+  <string name="loadingIndeterminate">Загрузка...</string>
+  <string name="savingIndeterminate">Сохранение...</string>
+  <string name="assignments">задания</string>
+  <string name="grade">Оценка</string>
+  <string name="graded">оценено</string>
+  <string name="submitted">отправлено</string>
+  <string name="rubricPoints">Баллы</string>
+  <string name="pointsPossible">Возможные баллы</string>
+  <string name="due">Срок</string>
+  <string name="noDueDate">Нет срока выполнения</string>
+  <string name="search">Поиск</string>
+  <string name="commentPrompt">Комментарий:</string>
+  <string name="comment">Комментарий</string>
+  <string name="addComment">Добавить комментарий</string>
+  <string name="noRubric">Нет раздела для этого задания.</string>
+  <string name="courses">Курсы</string>
+  <string name="courseList">Перечень курсов</string>
+  <string name="dashboard">Информационная панель</string>
+  <string name="studentsSpinner">Студенты</string>
+  <string name="name">Имя</string>
+  <string name="toggleRubric">Переключить раздел</string>
+  <string name="allSections">Все разделы</string>
+  <string name="document">Документ</string>
+  <string name="document_id">document_id</string>
+  <string name="duration">продолжительность</string>
+  <string name="student">Студент</string>
+  <string name="opening">Открытие файла...</string>
+  <string name="composeHint">Напишите что-нибудь...</string>
+  <string name="attachHint">Добавить вложение</string>
+  <string name="sendHint">Отправить подсказку</string>
+  <string name="back">Назад</string>
+  <string name="ninetyNinePlus">99+</string>
+  <string name="help">Справка</string>
+  <string name="searchTheGuides">Поиск по Справочникам</string>
+  <string name="about">О</string>
+  <string name="logout">Выйти</string>
+  <string name="at">\u0020в\u0020</string>
+  <string-array name="defaultNavArray">
+    <item>Элемент 1</item>
+    <item>Элемент 2</item>
+  </string-array>
+  <string name="contentDescriptionPreviewImage">Предварительный обзор представленного URL</string>
+  <string name="visitPage">Посетить Живую Страницу</string>
+  <string name="pageAtSubmission">Страница на момент подачи:</string>
+  <string name="onlineURLDisclaimer">Эта отправка была URL на внешнюю страницу. Мы включили снимок того, как выглядела страница, когда она была отправлена.</string>
+  <string name="urlSubmission">Отправка URL </string>
+  <string name="url">URL:</string>
+  <string name="noSubmission">Этот студент не отправил материалы для этого задания</string>
+  <string name="noGroupSubmission">В этой группе нет сданных работ по этому заданию</string>
+  <string name="deletedEntry">Эта запись обсуждения была удалена.</string>
+  <string name="viewDiscussion">Посмотреть Обсуждение</string>
+  <string name="slash"> - / </string>
+  <string name="slashNoDash">/</string>
+  <string name="emptyViewMessage">Нет отправленных материалов для этого задания</string>
+  <string name="emptyAssignmentViewMessage">Нет заданий для этого курса</string>
+  <string name="noSubmissionForAssignment">Нет отправленных материалов</string>
+  <string name="authorizationRequired">Требуется Авторизация</string>
+  <string name="cookie">Куки</string>
+  <string name="unsavedData">Несохраненные данные</string>
+  <string name="unsavedDataWarning">Ваша оценка не была сохранена. Покинуть это задание?</string>
+  <string name="continueUnsaved">Продолжить</string>
+  <!--Grading Messages-->
+  <string name="noGrade">Нет оценки</string>
+  <string name="incomplete">Не завершено</string>
+  <string name="complete">Завершено</string>
+  <string name="gradeSaved">Оценка успешно сохранена</string>
+  <string name="errorSavingGrade">Возникла ошибка при сохранении оценки. Проверьте подключение и повторите попытку.</string>
+  <string name="criterionLongDescription">Длинное описание критерия</string>
+  <!--Drawer Settings-->
+  <string name="hideNamesWhileGrading">Показать имена при оценивании</string>
+  <string name="showUngradedStudentsFirst">Сначала показывать студентов без оценок</string>
+  <string name="viewUngradedCount">Показать неоцененный подсчет на иконке</string>
+  <string name="viewHTML">Показать HTML</string>
+  <!--Drawer About-->
+  <string name="account">аккаунт</string>
+  <string name="version">версия</string>
+  <string name="copyright">копирайт</string>
+  <string name="copyrightText"> © 2010–%1$s Instructure Inc.</string>
+  <!--Error Messages-->
+  <string name="noDataConnection">Проверьте подключение и повторите попытку.</string>
+  <string name="invalidAccessToken">Недопустимый маркер доступа. Пожалуйста, войдите снова.</string>
+  <string name="serverError">Ошибка сервера. Пожалуйста, попробуйте еще раз.</string>
+  <string name="noApps">На вашем устройстве не установлены какие-либо приложения, которые могут обработать этот файл.</string>
+  <string name="unexpectedErrorOpeningFile">Произошла непредвиденная ошибка при попытке открыть файл.</string>
+  <string name="unexpectedErrorDownloadingFile">Произошла непредвиденная ошибка при попытке загрузить файл.</string>
+  <string name="invalidScore">Введена недействительная оценка.</string>
+  <!--Assignment editing-->
+  <string name="points">Баллы:\u0020</string>
+  <string name="assignmentGroup">Группа Заданий:\u0020</string>
+  <string name="gradingType">Тип Оценивания:\u0020</string>
+  <string name="submissionType">Тип отправки:\u0020</string>
+  <string name="editAssignment">Редактировать задание</string>
+  <string name="save">Сохранить</string>
+  <string name="cancel">Отменить</string>
+  <string name="saveContinue">Продолжить</string>
+  <string name="sendNotification">Уведомить пользователей, что контент изменился</string>
+  <string name="setDueDate">Срок выполнения не установлен</string>
+  <string name="assignmentDue">Срок: </string>
+  <string name="assignmentSaved">Задание успешно сохранено</string>
+  <string name="useRubricForGrading">Использовать рубрику только для лценивания</string>
+  <string name="onlineEntryOptions">Опции онлайн ввода:</string>
+  <string name="useRubricError">Задание настроено на использование рубрики для оценивания.</string>
+  <string name="noDueDateSet">Срок выполнения не установлен</string>
+  <string name="noGradeAssignment">Нет оценки для этого задания</string>
+  <string name="muted">Отключить звук задания</string>
+  <!--Date Text View-->
+  <string name="dateTextDefault">Добавить дату</string>
+  <string name="settings">Настройки</string>
+  <string name="open">Открыть</string>
+  <!--Score Edit Text Hints-->
+  <string name="gpaScaleHint">Балл GPA</string>
+  <string name="letterHint">Буква</string>
+  <!--User Messages-->
+  <string name="videoCommentsComingSoon">Скоро появятся комментарии к видео!</string>
+  <!--Tutorial-->
+  <string name="tutorialSkip">Пропустить</string>
+  <string name="tutorialPage1">Посмотреть Сразу</string>
+  <string name="tutorialPage2">Фильтр по разделу</string>
+  <string name="tutorialPage3">Посмотреть документы</string>
+  <string name="tutorialPage4">Редактировать задания</string>
+  <string name="tutorialPage5">Оценивание рубрики</string>
+  <string name="tutorialPage6">Настройка параметров</string>
+  <string name="tutorial_tipAssignmentDetails">Подробная информация о задании</string>
+  <string name="tutorial_tipAssignmentDetailsMessage">Изменить подробную информацию о задании</string>
+  <string name="tutorial_tipFilterSections">Фильтр по разделу</string>
+  <string name="tutorial_tipFilterSectionsMessage">Посмотреть класс, который вы оцениваете, посредством фильтрации по разделам.</string>
+  <string name="tutorial_tipSortStudentList">Сортировка по оценке или имени в окне списка студентов</string>
+  <string name="tutorial_tipSortStudentListMessage">Выберите, если вы хотите посмотреть студентов по оценке или имени.</string>
+  <string name="tutorial_tipSwipeBetweenStudents">Переключайтесь между студентами</string>
+  <string name="tutorial_tipSwipeBetweenStudentsMessage">Проведите пальцем по экрану, чтобы легко переместиться к каждому студенту.</string>
+  <string name="tutorial_tipSubmissionComments">Просмотр и загрузка комментариев к отправленным медиа материалам</string>
+  <string name="tutorial_tipSubmissionCommentsMessage">Избегайте суеты набора текста, разместив быстрый видео комментарий.</string>
+  <!--Masquerading-->
+  <string name="masqueradeUserId">Подмена ID пользователя</string>
+  <string name="startMasquerading">Начать подмену</string>
+  <string name="stopMasquerading">Закончить подмену</string>
+  <string name="userId">ID пользователя</string>
+  <string name="masqueradeFail">При попытке подмены возникла ошибка</string>
+  <string name="emptyId">ID не может быть пустым</string>
+  <!--Options menu-->
+  <string name="openInBrowser">Открыть в браузере</string>
+  <string name="download">Загрузить</string>
+  <string name="next">СЛЕД</string>
+  <string name="prev">ПРЕД</string>
+  <string name="nothingToDownload">Нет отправленных материалов для загрузки</string>
+  <string name="nothingToShowInBrowser">Нет URL отправленных материалов для отображения</string>
+  <string name="noAssignmentsInGroup">Нет Заданий в этой группе</string>
+  <string name="excusedAssignment">Это задание было не выполнено по разрешению и не будет рассматриваться в общем подсчете</string>
+  <string name="singleItem">элемент</string>
+  <string name="multipleItems">элементы</string>
+  <string name="excused">с освобождением</string>
+  <string name="expandOrCollapse">Развернуть или свернуть</string>
+  <string name="mutedText">Оценки успеваемости недоступны, потому что над ними работает преподаватель.</string>
+  <string name="freeFormRubricPoints" formatted="false">%s / %s</string>
+</resources>

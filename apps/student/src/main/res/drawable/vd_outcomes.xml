@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="20dp"
+    android:height="20dp"
+    android:viewportWidth="20"
+    android:viewportHeight="20">
+
+    <path
+        android:fillColor="#2B3B46"
+        android:fillType="evenOdd"
+        android:strokeWidth="1"
+        android:pathData="M12.9412,6.22635 L18.9939,0.171529 L19.8268,1.00329 L13.7724,7.05882
+L16.4706,7.05882 L16.4706,8.23529 L11.7647,8.23529 L11.7647,3.52941
+L12.9412,3.52941 L12.9412,6.22635 Z M10,20 C4.48588,20,0,15.5141,0,10
+C0,4.48588,4.48588,0,10,0 C11.7776,0,13.5318,0.48,15.0741,1.38706
+L14.4776,2.40118 C13.1153,1.6,11.5671,1.17647,10,1.17647
+C5.13412,1.17647,1.17647,5.13412,1.17647,10
+C1.17647,14.8659,5.13412,18.8235,10,18.8235
+C14.8659,18.8235,18.8235,14.8659,18.8235,10
+C18.8235,8.43176,18.4,6.88353,17.5988,5.52118 L18.6118,4.92588
+C19.52,6.46824,20,8.22235,20,10 C20,15.5141,15.5141,20,10,20 Z M10,16.4706
+C6.43294,16.4706,3.52941,13.5682,3.52941,10
+C3.52941,6.43176,6.43294,3.52941,10,3.52941 L10,4.70588
+C7.08118,4.70588,4.70588,7.08118,4.70588,10
+C4.70588,12.9188,7.08118,15.2941,10,15.2941
+C12.9188,15.2941,15.2941,12.9188,15.2941,10 L16.4706,10
+C16.4706,13.5682,13.5671,16.4706,10,16.4706 Z M10,12.9412
+C8.37765,12.9412,7.05882,11.6212,7.05882,10
+C7.05882,8.37882,8.37765,7.05882,10,7.05882 L10,8.23529
+C9.02706,8.23529,8.23529,9.02706,8.23529,10
+C8.23529,10.9729,9.02706,11.7647,10,11.7647
+C10.9729,11.7647,11.7647,10.9729,11.7647,10 L12.9412,10
+C12.9412,11.6212,11.6224,12.9412,10,12.9412 Z" />
+</vector>

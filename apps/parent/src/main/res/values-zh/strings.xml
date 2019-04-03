@@ -1,0 +1,228 @@
+﻿<!--
+  ~ Copyright (C) 2016 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<resources>
+
+    <string name="action_settings">设置</string>
+    <string name="canvasLogo">Canvas 标志</string>
+    <string name="email">电子邮件</string>
+    <string name="emailAddress">电子邮件地址</string>
+    <string name="parent_email">家长电邮</string>
+    <string name="firstName">名字</string>
+    <string name="lastName">姓氏</string>
+    <string name="password">密码</string>
+    <string name="log_in">登录</string>
+    <string name="createAccount">创建帐户</string>
+    <string name="create">创建</string>
+    <string name="forgotPassword">忘记密码？</string>
+    <string name="forgotPasswordWithoutQuestion">忘记密码</string>
+    <string name="enterAccountEmailHint">帐户电子邮件</string>
+    <string name="requestPassword">请求密码</string>
+    <string name="resetPassword">重置密码</string>
+    <string name="requestPasswordHelpText">我们将通过电子邮件向您发送重置请求。</string>
+    <string name="requestPasswordSuccess">您的密码已重置。</string>
+    <string name="fullName">全名</string>
+    <string name="passwordsDoNotMatch">密码不匹配。</string>
+    <string name="passwordsCannotBeBlank">密码不能为空。</string>
+    <string name="passwordResetFailed">我们此时无法重置您的密码。</string>
+    <string name="invalidEmail">无效的电子邮件地址。请重试。</string>
+    <string name="next">下一步</string>
+    <string name="createAccountMessage">一个电子邮件将发送到您提供的电子邮箱地址以完成注册。</string>
+    <string name="accountCreationSuccess">帐户创建成功。请检查您的电子邮件以完成注册。</string>
+    <string name="errorOccurred">发生意外错误。请重试。</string>
+    <string name="unknownDevice">未知设备</string>
+    <string name="addStudent">添加学生</string>
+    <string name="school">学校</string>
+    <string name="finish">完成</string>
+    <string name="close">关闭</string>
+    <string name="noStudents">无学生可用。要添加学生，请单击上方菜单中的三个点。</string>
+    <string name="noStudentsView">您的帐户没有关联任何学生。</string>
+    <string name="noCourses">此学生没有选择课程。</string>
+    <string name="noAvailableCourses">没有课程</string>
+    <string name="coursesMayNotBePublished">此学生的课程可能暂时没有发布。</string>
+    <string name="noAlerts">此学生没有查看警告。</string>
+    <string name="noItemsToDisplayShort">没有项目</string>
+    <string name="emailsSentTo">电子邮件发送到：</string>
+    <string name="logged_in_as">登录为：</string>
+    <string name="notifyWhen">通知我当</string>
+    <string name="gradeAbove">课程评分高于</string>
+    <string name="gradeBelow">课程评分低于</string>
+    <string name="assignmentMissing">缺少作业</string>
+    <string name="teacherAnnouncements">课程公告</string>
+    <string name="institutionAnnouncements">机构通告</string>
+    <string name="assignmentGradeAbove">作业评分高于</string>
+    <string name="assignmentGradeBelow">作业评分低于</string>
+    <string name="never">从不</string>
+    <string name="save">保存</string>
+    <string name="enterThreshold">输入百分数</string>
+    <string name="setGradeValueMessage">设置您想被通知的评分值</string>
+    <string name="removeStudent">移除学生</string>
+    <string name="removingStudent">删除学生</string>
+    <string name="studentRemoved">学生成功被移除</string>
+    <string name="studentAdded">学生成功被添加</string>
+    <string name="courses">课程</string>
+    <string name="week">周</string>
+    <string name="alerts">警告</string>
+    <string name="alert">警告</string>
+    <string name="weekEmptyView">本周没有作业或事件！</string>
+    <string name="toolbar_close">工具栏关闭</string>
+    <string name="syllabus">教学大纲</string>
+    <string name="emptySyllabus">本课程没有教学大纲。</string>
+    <string name="noLocation">没有具体的位置</string>
+    <string name="previousAlerts">先前警告</string>
+    <string name="currentAlerts">目前警告</string>
+    <string name="badDomainError">无效的域。请重试。</string>
+    <string name="unauthorized">您没有访问此资料的权限。</string>
+    <string name="revokedTokenErrorContent">您没有访问此%1$s信息的权限。您可以从设置菜单中重新对您的学生授权。</string>
+    <string name="revokedTokenErrorTitle">吊销访问令牌</string>
+    <string name="featureFlagDisabledError">未对此机构启用 Canvas Parent 移动应用程序的访问权限。</string>
+
+    <!-- Help strings -->
+    <string name="askInstructor">向您的讲师提问</string>
+    <string name="askInstructorDetails">问题提交给您的讲师</string>
+    <string name="searchGuides">搜索 Canvas 指南</string>
+    <string name="canvasGuides">Canvas 指南</string>
+    <string name="searchGuidesDetails">查找常见问题的答案</string>
+    <string name="reportProblem">报告问题</string>
+    <string name="reportProblemDetails">如果应用程序出现异常，告知我们。</string>
+    <string name="requestFeature">请求功能</string>
+    <string name="requestFeatureDetails">有一个改善应用程序的想法吗？</string>
+    <string name="shareYourLove">分享您所喜爱的应用程序</string>
+    <string name="shareYourLoveDetails">告诉我们您最喜欢应用程序的部分</string>
+    <string name="sendFeedback">发送反馈</string>
+    <string name="sendMail">发送电邮</string>
+    <string name="help_domain">域：</string>
+    <string name="help_versionNum">版本：</string>
+    <string name="help_userId">用户 ID：</string>
+    <string name="help_email">电子邮箱：</string>
+    <string name="help_locale">区域设置：</string>
+    <string name="installDate">安装日期：</string>
+    <string name="icon">图标</string>
+    <string name="due">到期：</string>
+    <string name="no_due_date">无截止日期</string>
+    <string name="tapToSet">点击设置</string>
+    <string name="alarmNotSet">无法设置警报。请重试。</string>
+    <string name="could_not_route_course">找不到课程注册。</string>
+    <string name="could_not_route_assignment">找不到作业。</string>
+    <string name="email_already_exists">一个拥有那个电子邮箱地址的用户已经存在。</string>
+    <string name="password_reset_success">一个指导重置您的电子邮箱密码的电邮已发送。</string>
+    <string name="password_reset_no_user">没有找拥有那个电子邮箱地址的用户。</string>
+    <string name="reset_password">重置密码</string>
+    <string name="location">位置</string>
+    <string name="time">时间</string>
+    <string name="student_avatar">学生Avatar</string>
+    <string name="previous">上一个</string>
+    <string name="empty_view">当没有找到内容时，显示视图</string>
+    <string name="tab_icon">选项卡上面的图标</string>
+    <string name="add_student_icon">添加学生的图标</string>
+    <string name="canvas_logo">Canvas 标志</string>
+    <string name="course_threshold_grade_above_invalid">该阈值必须在低级课程的阈值之上。</string>
+    <string name="course_threshold_grade_below_invalid">该阈值必须在高级课程的阈值之下。</string>
+    <string name="assignment_threshold_grade_above_invalid">该阈值必须在低级作业的阈值之上。</string>
+    <string name="assignment_threshold_grade_below_invalid">该阈值必须在高级作业的阈值之上。</string>
+    <string name="set_reminder">设置提醒</string>
+    <string name="enter_student_institution">输入学生的机构</string>
+    <string name="enter_student_login">输入学生的登录和密码</string>
+    <string name="access_not_enabled">未对此机构启用 Canvas Parent 移动应用程序的访问权限。</string>
+    <string name="dismiss">撤销</string>
+    <string name="invalid_username_password">电子邮件和密码组合无效。</string>
+    <string name="opening">正在打开&#8230;</string>
+    <string name="locked_assignment_desc">该作业是模块%s的一部分，并且尚未锁定。</string>
+    <string name="locked_assignment_desc_line2">在浏览器访问如何解锁此内容信息的课程单元页面。</string>
+    <string name="locked_assignment_not_module">此作业被锁定。</string>
+    <string name="no_description">没有此作业的说明</string>
+    <string name="cannot_view_file">无法在应用程序中查看此文件。请在浏览器中查看。</string>
+    <string name="calendar_event">日历事件</string>
+    <string name="set_reminder_toggle">设置提示切换</string>
+    <string name="or">或</string>
+    <string name="canvas_login_text">用 Canvas 登录</string>
+
+    <string name="dateRangeContentDescription">日期范围从%1$s至%2$s</string>
+    <string name="privacyPolicy">隐私政策</string>
+    <string name="EULA">最终用户许可协议</string>
+    <string name="termsOfUse">使用条款</string>
+    <!-- Feature Request -->
+    <string name="featureSubject">构想 Canvas 的[安卓版本]</string>
+    <string name="understandRequest">下面的信息将帮助我们更好地了解您的想法：</string>
+
+    <!-- Distance Strings -->
+    <string name="lessThanOne">&lt; 1 英里 (1.6 公里)</string>
+    <string name="oneMile">1 英里 (1.6 公里)</string>
+    <string name="miles">英里</string>
+    <string name="kilometers">公里</string>
+
+    <string name="grade">评分：</string>
+    <string name="notGraded">尚未评分</string>
+    <string name="missing">缺失</string>
+    <string name="submitted">已提交</string>
+    <string name="in_class">在课堂</string>
+    <string name="excused">已请假</string>
+    <string name="late">延迟</string>
+    <string name="greaterThan9">9+</string>
+
+    <string name="onlyCanvasObservers">仅 Canvas 观察者可在 Canvas Parent 中执行验证。</string>
+    <string name="unableToAddStudentError">我们此时无法添加此学生。</string>
+
+    <string name="open_source">开放源</string>
+    <string name="open_source_details">查看开放源许可证</string>
+
+    <string name="unitedStates">美国</string>
+    <string name="theUnitedStates">美国</string>
+    <string name="canada">加拿大</string>
+    <string name="ireland">爱尔兰</string>
+    <string name="australia">澳大利亚</string>
+    <string name="germany">德国</string>
+    <string name="singapore">新加坡</string>
+    <array name="regions">
+        <item name="unitedStates">@string/unitedStates</item>
+        <item name="canada">@string/canada</item>
+        <item name="ireland">@string/ireland</item>
+        <item name="australia">@string/australia</item>
+        <item name="germany">@string/germany</item>
+        <item name="singapore">@string/singapore</item>
+    </array>
+    <string name="selectChildRegion">选择学生所在的区域</string>
+    <string name="selectRegion">区域选择器</string>
+    <string name="unauthorizedRegion">未获授权的区域</string>
+    <string name="mismatchedRegionMessage">此机构不在您选择的区域内。若要添加此机构的学生，请使用登录页的“区域选择器”选项在%1$s区域内创建帐户。</string>
+
+    <string name="notification_channel_name">常规通知</string>
+    <string name="notification_channel_description">关于您的学生的提醒通知和重要信息。</string>
+
+    <string name="whatsYourStudentsSchoolName">输入学生的学校名称</string>
+    <string name="findYourStudentsSchoolHint">查找学生的学校或学区</string>
+    <string name="noGradeText">没有评分</string>
+    <string name="locked">已锁定</string>
+    <string name="changeUser">更改用户</string>
+    <string name="manageChildren">管理儿童</string>
+    <!-- Navigation Drawer -->
+    <string name="navigation_drawer_open">打开抽屉式导航栏</string>
+    <string name="navigation_drawer_close">关闭抽屉式导航栏</string>
+    <string name="version" formatted="false">版本%s</string>
+    <string name="not_a_parent_title">不是家长？</string>
+    <string name="not_a_parent_subtitle">我们的其他应用可能更合适。单击可访问 Play Store。</string>
+    <string name="tryLoginAgain">再次尝试登录</string>
+
+    <string name="legalDetails">隐私政策、使用条款、开放源</string>
+    <string name="assignmentGrade">作业评分</string>
+    <string name="courseGrade">课程评分</string>
+    <string name="courseAnnouncement">课程公告</string>
+    <string name="institutionAnnouncement">机构公告</string>
+    <string name="institutionAnnouncementUnavailable">此公告已过期。</string>
+    <string name="previousWeekBtn">上一周按钮</string>
+    <string name="nextWeekBtn">下一周按钮</string>
+</resources>

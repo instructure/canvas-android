@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2016 - present Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/canvasBackgroundMedium">
+
+    <include layout="@layout/toolbar_layout" android:id="@+id/toolbar"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/editOptions"
+        android:padding="4dp"
+        android:layout_below="@id/toolbar">
+        <LinearLayout
+            android:id="@+id/pandaImages"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:paddingTop="16dp"
+            android:paddingBottom="8dp"
+            >
+            <ImageView
+                android:id="@+id/imageHead"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:src="@drawable/pandify_head_02"
+                android:contentDescription="@string/pandaHead"/>
+
+            <ImageView
+                android:id="@+id/imageBody"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/pandify_body_1"
+                android:contentDescription="@string/pandaBody"/>
+
+            <ImageView
+                android:id="@+id/imageLegs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/pandify_feet_1"
+                android:contentDescription="@string/pandaLegs"/>
+        </LinearLayout>
+    </ScrollView>
+    <HorizontalScrollView
+        android:id="@+id/editOptions"
+        android:layout_width="match_parent"
+        android:layout_marginTop="16dp"
+        android:layout_height="110dp"
+        android:layout_alignParentBottom="true">
+        <LinearLayout
+            android:id="@+id/optionsContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:animateLayoutChanges="true">
+
+            <Button
+                android:id="@+id/changeHead"
+                android:layout_width="@dimen/scrollview_image_size"
+                android:layout_height="@dimen/scrollview_image_size"
+                android:background="@drawable/pandify_head_02"
+                android:layout_margin="10dp"/>
+            <Button
+                android:id="@+id/changeBody"
+                android:layout_width="@dimen/panda_body_width"
+                android:layout_height="@dimen/scrollview_image_size"
+                android:background="@drawable/pandify_body_11"
+                android:layout_margin="10dp"/>
+            <Button
+                android:id="@+id/changeLegs"
+                android:layout_width="@dimen/panda_feet_width_menu"
+                android:layout_height="@dimen/panda_feet_height_menu"
+                android:background="@drawable/pandify_feet_1"
+                android:layout_margin="10dp"/>
+        </LinearLayout>
+    </HorizontalScrollView>
+    <RelativeLayout
+        android:id="@+id/partsOptions"
+        android:layout_width="match_parent"
+        android:layout_height="128dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/canvasSectionDivider"
+        android:visibility="gone">
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="88dp">
+            <LinearLayout
+                android:id="@+id/partsContainer"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"/>
+        </HorizontalScrollView>
+        <Button
+            android:id="@+id/backButton"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_alignParentBottom="true"
+            android:text="@string/back"
+            android:textColor="@color/white"
+            android:background="@color/actionbarGrayLight"
+            android:textAllCaps="true"/>
+    </RelativeLayout>
+</RelativeLayout>

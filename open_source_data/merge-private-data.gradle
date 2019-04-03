@@ -1,0 +1,121 @@
+import java.security.MessageDigest
+
+gradle.allprojects {
+
+    String basePath = "$rootDir/../private-data"
+
+    ext.addDebugKeystore = {
+
+        File keystore = new File("$basePath/debug.keystore")
+        File credentials = new File("$basePath/debug.properties")
+
+        /* Confirm sources exist */
+        if (!keystore.exists()) failAddDebug("Could not find debug keystore at ${keystore.absolutePath}")
+        if (!credentials.exists()) failAddDebug("Could not find debug credential properties file at ${credentials.absolutePath}")
+
+        /* Copy keystore, skip if exists */
+        File keystoreDst = new File("$rootDir/debug.keystore")
+        if (keystoreDst.exists()) {
+            println "Debug keystore already exists. UP-TO-DATE."
+        } else {
+            println "Copying debug keystore to ${keystoreDst.absolutePath}"
+            keystoreDst << keystore.bytes
+        }
+
+        /* Copy credentials, skip if exists */
+        File credentialsDst = new File("$rootDir/debug.properties")
+        if (credentialsDst.exists()) {
+            println "debug.properties already exists. UP-TO-DATE"
+        } else {
+            println "Copying debug credentials to ${credentialsDst.absolutePath}"
+            credentialsDst << credentials.bytes
+        }
+
+    }
+
+    ext.mergePrivateData = { String dirName, boolean mergeDebugKeystore = false, String dstParentPath = "$projectDir"  ->
+
+        def LOG_PAD_SIZE = 60
+
+        println ""
+        println "============= MERGE PRIVATE FILES: ${dirName.toUpperCase()} ".padRight(LOG_PAD_SIZE, '=')
+
+
+        if (mergeDebugKeystore) addDebugKeystore()
+
+        String dirPath = "$basePath/$dirName"
+
+        /* Confirm dir exists */
+        File dir = new File(dirPath)
+        if (!dir.exists() || !dir.isDirectory()) {
+            failMerge("Unable to find private data source directory at ${dir.absolutePath}. Please add private project files.")
+        }
+
+        /* Confirm files list exists */
+        File fileList = new File("$dirPath/files.list")
+        if (!fileList.exists()) {
+            failMerge("Unable to find file list at ${fileList.absolutePath}. Ensure private project files have been added.")
+        }
+
+        /* Grab list of files */
+        def props = new Properties()
+        props.load(new FileInputStream(fileList))
+
+        /* Ensure all source files exist */
+        props.each { srcName, dstName ->
+            File src = new File("$dirPath/$srcName")
+            if (!src.exists() || !src.isFile()) {
+                failMerge("Could not find source file at ${src.absolutePath}")
+            }
+        }
+
+        /* Copy files if necessary */
+        props.each { String srcName, String dstPath ->
+            File src = new File("$dirPath/$srcName")
+            File dst = new File("$dstParentPath/$dstPath")
+
+            /* Merge private.properties */
+            if (srcName.equals("private.properties")) {
+                println "Merging private.properties:"
+                Properties privateProps = new Properties()
+                privateProps.load(new FileInputStream(src))
+                privateProps.each { privateProp ->
+                    println "    ${privateProp.key}"
+                    project.ext.set(privateProp.key, privateProp.value)
+                }
+            }
+
+            /* Make parent dir if necessary */
+            File dstParent = new File("${dst.absolutePath.substring(0, dst.absolutePath.lastIndexOf("/"))}")
+            if (!dstParent.exists()) dstParent.mkdirs()
+
+            if (!dst.exists()) {
+                println "Copying ${src.absolutePath} to $dst"
+                dst.createNewFile()
+                dst << src.bytes
+            } else if (!md5(src).equals(md5(dst))) {
+                println "${dst.absolutePath} differs from $src and will be replaced"
+                dst.delete()
+                dst << src.bytes
+            } else {
+                println "$dst exists and is UP-TO-DATE"
+            }
+        }
+
+        println "".padRight(LOG_PAD_SIZE, '=')
+        println ""
+
+    }
+
+    ext.md5 = { File file ->
+        MessageDigest.getInstance("MD5").digest(file.bytes).encodeHex().toString()
+    }
+
+    ext.failMerge = { String message->
+        throw new Exception("Failed to merge private data. $message")
+    }
+
+    ext.failAddDebug = { String message ->
+        throw new Exception("Failed to add debug keystore. $message")
+    }
+}

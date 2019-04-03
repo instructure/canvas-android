@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <ScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/navigationDrawer"
+        android:layout_width="@dimen/navigation_drawer_width"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@android:color/white"
+        android:fillViewport="true"
+        android:fitsSystemWindows="false"
+        android:scrollbars="none"
+        android:visibility="invisible"
+        tools:visibility="visible">
+
+        <!--Since we add things dynamically and some more complex views we are not using a NavigationView-->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            tools:ignore="ScrollViewSize">
+
+            <RelativeLayout
+                android:id="@+id/navigationDrawerHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                android:paddingBottom="12dp"
+                android:paddingEnd="16dp"
+                android:paddingStart="16dp"
+                android:paddingTop="24dp">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/navigationDrawerProfileImage"
+                    android:layout_width="@dimen/profileAvatarSize"
+                    android:layout_height="@dimen/profileAvatarSize"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:importantForAccessibility="no"
+                    app:civ_circle_background_color="@color/avatarGray"/>
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/navigationDrawerInstitutionImage"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_alignBottom="@+id/navigationDrawerProfileImage"
+                    android:layout_alignEnd="@+id/navigationDrawerProfileImage"
+                    android:layout_marginBottom="-4dp"
+                    android:layout_marginEnd="-12dp"
+                    android:background="@drawable/navigation_drawer_institution_background"
+                    android:importantForAccessibility="no"
+                    android:scaleType="fitCenter"
+                    tools:srcCompat="@drawable/vd_canvas_logo_red"/>
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/navigationDrawerSettings"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginEnd="-8dp"
+                    android:layout_marginTop="-8dp"
+                    android:background="?android:selectableItemBackground"
+                    android:contentDescription="@string/settings"
+                    android:padding="8dp"
+                    app:srcCompat="@drawable/vd_navigation_settings"/>
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/navigationDrawerUserName"
+                style="@style/TextFont.Black"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:paddingEnd="16dp"
+                android:paddingStart="16dp"
+                android:textColor="@color/navigationDrawerTextDark"
+                android:textSize="24sp"
+                tools:text="Allen Thomas"/>
+
+            <TextView
+                android:id="@+id/navigationDrawerUserEmail"
+                style="@style/TextFont"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="40dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:paddingEnd="16dp"
+                android:paddingStart="16dp"
+                android:textColor="@color/navigationDrawerTextLight"
+                android:textSize="16sp"
+                tools:text="allen-thomas187@gmail.com"/>
+
+            <!--Navigation Items-->
+
+            <LinearLayout
+                android:id="@+id/navigationDrawerItem_files"
+                style="@style/NavigationDrawerItem"
+                tools:ignore="UseCompoundDrawables">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    style="@style/NavigationDrawerIcon"
+                    app:srcCompat="@drawable/vd_navigation_files"/>
+
+                <TextView
+                    style="@style/TextFont.Medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/files"
+                    android:textSize="16sp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/navigationDrawerItem_arc"
+                style="@style/NavigationDrawerItem"
+                android:visibility="gone"
+                tools:ignore="UseCompoundDrawables"
+                tools:visibility="visible">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    style="@style/NavigationDrawerIcon"
+                    app:srcCompat="@drawable/vd_navigation_arc"/>
+
+                <TextView
+                    style="@style/TextFont.Medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/arc"
+                    android:textSize="16sp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/navigationDrawerItem_gauge"
+                style="@style/NavigationDrawerItem"
+                android:visibility="gone"
+                tools:ignore="UseCompoundDrawables"
+                tools:visibility="visible">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    style="@style/NavigationDrawerIcon"
+                    app:srcCompat="@drawable/vd_navigation_gauge"/>
+
+                <TextView
+                    style="@style/TextFont.Medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/gauge"
+                    android:textSize="16sp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/navigationDrawerItem_bookmarks"
+                style="@style/NavigationDrawerItem"
+                tools:ignore="UseCompoundDrawables">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    style="@style/NavigationDrawerIcon"
+                    app:srcCompat="@drawable/vd_navigation_bookmarks"/>
+
+                <TextView
+                    style="@style/TextFont.Medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/bookmarks"
+                    android:textSize="16sp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/navigationDrawerItem_showGrades"
+                style="@style/NavigationDrawerItem"
+                android:background="@null"
+                tools:ignore="UseCompoundDrawables">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    style="@style/NavigationDrawerIcon"
+                    app:srcCompat="@drawable/vd_navigation_show_grades"/>
+
+                <TextView
+                    style="@style/TextFont.Medium"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:labelFor="@+id/navigationDrawerShowGradesSwitch"
+                    android:text="@string/showGrades"
+                    android:textSize="16sp"/>
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/navigationDrawerShowGradesSwitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+            <!--Where we dynamically add items from the Launch Definitions API (Arc, etc) (Except Gauge we support that above)-->
+            <FrameLayout
+                android:id="@+id/navigationDrawerLaunchDefinitions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <LinearLayout
+                android:id="@+id/navigationDrawerItem_changeUser"
+                style="@style/NavigationDrawerItem"
+                tools:ignore="UseCompoundDrawables">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    style="@style/NavigationDrawerIcon"
+                    app:srcCompat="@drawable/vd_navigation_change_user"/>
+
+                <TextView
+                    style="@style/TextFont.Medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/changeUser"
+                    android:textSize="16sp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/navigationDrawerItem_logout"
+                style="@style/NavigationDrawerItem"
+                tools:ignore="UseCompoundDrawables">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    style="@style/NavigationDrawerIcon"
+                    app:srcCompat="@drawable/vd_navigation_logout"/>
+
+                <TextView
+                    style="@style/TextFont.Medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/logout"
+                    android:textSize="16sp"/>
+
+            </LinearLayout>
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+
+            <LinearLayout
+                android:id="@+id/navigationDrawerItem_startMasquerading"
+                style="@style/NavigationDrawerItem"
+                android:visibility="gone"
+                tools:ignore="UseCompoundDrawables"
+                tools:visibility="visible">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    style="@style/NavigationDrawerIcon"
+                    app:srcCompat="@drawable/vd_masquerade"/>
+
+                <TextView
+                    style="@style/TextFont.Medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/actAsUser"
+                    android:textSize="16sp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/navigationDrawerItem_stopMasquerading"
+                style="@style/NavigationDrawerItem"
+                android:visibility="gone"
+                tools:ignore="UseCompoundDrawables">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    style="@style/NavigationDrawerIcon"
+                    app:srcCompat="@drawable/vd_masquerade"/>
+
+                <TextView
+                    style="@style/TextFont.Medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/stopMasquerading"
+                    android:textSize="16sp"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/navigationDrawerVersion"
+                style="@style/TextFont.Regular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:textColor="@color/navigationDrawerTextLight"
+                tools:text="v. 1.2.3"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</merge>

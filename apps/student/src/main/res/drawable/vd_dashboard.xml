@@ -1,0 +1,22 @@
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+<vector android:height="24dp" android:viewportHeight="2000.0"
+    android:viewportWidth="2000.0" android:width="24dp" xmlns:android="http://schemas.android.com/apk/res/android">
+    <path android:fillColor="#FF000000" android:fillType="evenOdd"
+        android:pathData="M833.9,1063.3c28.9,170.3 64,348.2 83.5,384.8 27.6,51.8 92,71.9 144,44.4 51.8,-27.6 71.7,-92.3 44.2,-144.1 -19.4,-36.6 -146.9,-165.5 -271.6,-285.1zM1011.9,1617.6c-78.7,0 -155,-42.4 -194.4,-116.6 -44.4,-83.8 -109.1,-501.3 -121.6,-584.2 -3.5,-23.7 8.2,-47.2 29.4,-58.3 21.3,-11.3 47.1,-8 64.8,8.4 61.6,56.9 370.9,344.8 415.3,428.6 56.7,106.8 15.8,239.9 -91.1,296.7 -32.6,17.3 -67.8,25.4 -102.3,25.4zM903.5,630.8L903.5,471.3h112.9v159.5L903.5,630.8zM1469.7,865.2l-79.8,-79.8 112.7,-112.7 79.8,79.8 -112.7,112.7zM450.3,865.2L337.6,752.5l79.8,-79.8L530.1,785.4l-79.8,79.8zM1883,1511h-524.4v-112.9h434.3c9.5,-50.7 14.2,-103.1 14.2,-156.1 0,-467.1 -380,-847.1 -847.1,-847.1 -467.1,0 -847.1,379.9 -847.1,847.1 0,53 4.7,105.4 14.1,156.1h487.5v112.9L37,1511l-10.4,-43.1C9,1395.1 0,1319.1 0,1242c0,-529.2 430.6,-960 960,-960s960,430.8 960,960c0,77.1 -8.9,153.1 -26.7,225.9l-10.4,43.1z"
+        android:strokeColor="#00000000" android:strokeWidth="1"/>
+</vector>

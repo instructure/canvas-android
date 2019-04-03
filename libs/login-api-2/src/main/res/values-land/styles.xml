@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--URL Sign In-->
+    <style name="UrlSignInLogo">
+        <item name="android:layout_height">80dp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_marginLeft">75dp</item>
+        <item name="android:layout_marginRight">75dp</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+    </style>
+
+
+</resources>

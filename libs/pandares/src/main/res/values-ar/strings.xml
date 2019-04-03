@@ -1,0 +1,1021 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2018 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+<resources>
+
+    <string name="noFilesFound">لم يتم العثور على الملفات</string>
+    <string name="searchFilesHint">البحث عن ملفات</string>
+    <string name="fileSearchInstructions">أدخل مصطلح بحث يحتوي على ثلاثة أحرف أو أكثر</string>
+    <plurals name="fileSearchResultCount">
+        <item quantity="zero">"لم يتم العثور على عناصر مطابقة"</item>
+        <item quantity="one">"تم العثور على %d عنصر مطابق"</item>
+        <item quantity="two">"تم العثور على %d عناصر مطابقة"</item>
+        <item quantity="few">"تم العثور على %d عناصر مطابقة"</item>
+        <item quantity="many">"تم العثور على %d عناصر مطابقة"</item>
+        <item quantity="other">"تم العثور على %d عناصر مطابقة"</item>
+    </plurals>
+    <string name="contentDescriptionSuperPanda">الباندا الطائرة في كيب</string>
+    <string name="troubleLoggingIn">هل تواجه مشكلة في تسجيل الدخول؟</string>
+    <string name="requestLoginHelp">طلب مساعدة لتسجيل الدخول</string>
+    <string name="loginHelpSubject">لدي مشكلة في تسجيل الدخول</string>
+    <string name="errorReportInvalidEmail">يرجى إدخال عنوان بريد إلكتروني صالح</string>
+    <string name="announcementSections">الأقسام: %s</string>
+    <string name="selectedListItem">المحدد: %s</string>
+
+    <!-- Student Strings -->
+    <!--Profile Fragment Strings -->
+    <string name="canvasVersionNum">الإصدار:</string>
+
+    <!--Content Descriptions-->
+    <string name="canvasLogo">شعار Canvas</string>
+    <string name="enterURL">أدخل عنوان URL لـ Canvas الخاص بك:</string>
+    <string name="exampleURLSimple">myschool.instructure.com</string>
+    <string name="signIntoCanvasNetwork">هل تحاول تسجيل الدخول إلى Canvas Network؟</string>
+    <string name="mobileVerifyGeneral">استخدام هذا التطبيق غير مخوَّل</string>
+    <string name="mobileVerifyDomainUnauthorized">الخادم الذي أدخلته غير مخول لهذا التطبيق.</string>
+    <string name="mobileVerifyUserAgentUnauthorized">وكيل المستخدم لهذا التطبيق غير مخوَّل.</string>
+    <string name="mobileVerifyUnknownError">لم نتمكن من التحقق من الخادم لاستخدامه مع هذا التطبيق.</string>
+    <string name="okay">موافق</string>
+    <string name="options">خيارات</string>
+
+    <string name="discussionAttachment">إرفاق ملف</string>
+    <string name="discussionUpload">تحميل مقطع فيديو أو صوت</string>
+    <string name="discussionPostEditing">تحرير</string>
+
+    <!--Multiple User Sign in -->
+    <string name="removeUser">حذف هذا المستخدم؟</string>
+    <string name="removedForever">سيتوجب عليك تسجيل الدخول إلى هذا المستخدم لتتمكن من الوصول إلى المحتوى الخاص بهم.</string>
+
+    <string name="bookmarksTitle">الإشارات المرجعية</string>
+    <string name="addBookmark">إضافة إشارات مرجعية</string>
+    <string name="bookmarkName">التسمية</string>
+    <string name="bookmarkTitleRequired">التسمية مطلوبة</string>
+    <string name="bookmarkAddedSuccess">تم إنشاء الإشارة المرجعية</string>
+    <string name="bookmarkAddedFailure">تعذر إنشاء الإشارة المرجعية</string>
+    <string name="bookmarkShortcut">تحديد إشارة مرجعية</string>
+    <string name="bookmarkDeleted">تمت إزالة الإشارة المرجعية</string>
+    <string name="bookmarkDelete">إزالة الإشارة المرجعية؟</string>
+    <string name="bookmarkEdit">تحرير الإشارة المرجعية</string>
+    <string name="bookmarkUpdated">تم تحديث الإشارة المرجعية</string>
+    <string name="no_bookmarks">إنشاء إشارة مرجعية ثم عرضها هنا!</string>
+
+    <!--Date strings-->
+    <string name="today">اليوم</string>
+    <string name="past">الماضي</string>
+    <string name="noDate">بلا تاريخ</string>
+    <string name="future">المستقبل</string>
+    <string name="next7Days">الأيام السبعة القادمة</string>
+    <string name="days">أيام</string>
+
+    <!--Assignments-->
+    <string name="assignmentDue">الاستحقاق</string>
+    <string name="assignmentDueColon">تاريخ الاستحقاق: </string>
+    <string name="assignmentLastSubmission">آخر إرسال</string>
+    <string name="assignmentNoSubmission">بلا</string>
+    <string name="assignmentTabDetails">التفاصيل</string>
+    <string name="assignmentTabSubmission">الإرسالات</string>
+    <string name="assignmentTabGrade">الدرجة</string>
+    <string name="assignmentLocked">مؤمّن</string>
+    <string name="assignments">المهام</string>
+    <string name="freeFormRubricPoints" formatted="false">%s / %s </string>
+    <string name="noRubric">لا يوجد أي مقياس تقييم لهذه المهمة.</string>
+    <string name="noDescription">لا يوجد أي وصف لهذه المهمة</string>
+    <string name="noAssignmentsInGroup">لا توجد مهام في هذه المجموعة</string>
+    <string name="excusedAssignment">تم الإعفاء عن هذه المهمة ولن يتم اعتبارها في الحساب الإجمالي</string>
+    <string name="droppedAssignment">تم حذف هذه المهمة ولن تؤخذ في الاعتبار أثناء الحساب الإجمالي</string>
+    <string name="excused">EX</string>
+    <string name="mutedText">الدرجات غير متوفرة لأن المعلم لا يزال يعمل عليها.</string>
+    <string name="rubricRangePointsText" formatted="false">&#160;إلى &gt; %s من النقاط</string>
+    <string name="contentDescriptionRubricRangePointsText" formatted="false">%s &#160;إلى &gt; %s من النقاط</string>
+
+    <!-- Assignment editing -->
+    <string name="points">نقاط </string>
+    <string name="assignmentGroup">مجموعة المهام: </string>
+    <string name="gradingType">نوع التقييم: </string>
+    <string name="submissionType">نوع المهمة المرسلة: </string>
+    <string name="editAssignment">تحرير المهمة</string>
+    <string name="save">حفظ</string>
+    <string name="cancel">إلغاء</string>
+    <string name="sendNotification">إعلام المستخدمين بأنه تم تغيير هذا المحتوى</string>
+
+    <!--Discussions-->
+    <string name="forbidden">تظهر الردود فقط للأشخاص الذين أرسلوا ردًا واحدًا على الأقل.</string>
+
+    <!--Events-->
+    <string name="Starts">يبدأ</string>
+    <string name="Ends">ينتهي</string>
+    <string name="allDayEvent">حدث يوم كامل</string>
+    <string name="at">في</string>
+    <string name="PersonalCalendar">تقويم شخصي</string>
+    <string name="noLocation">لم يتم تحديد أي موقع</string>
+
+    <string name="discussion">النقاشات</string>
+    <string name="closed_discussion">مغلق للتعليقات</string>
+    <string name="discussionUploadDialog">تحميل المناقشة</string>
+    <string name="totalScore">الإجمالي:</string>
+    <string name="noGradeText">لا يوجد</string>
+    <string name="checkBoxFinalGradeOption">على أساس المهام التي تم تقييمها</string>
+    <string name="checkBoxWhatIfGradeOption">عرض النتيجة المفترضة</string>
+    <string name="whatIfDialogText">النتيجة المفترضة</string>
+    <string name="inbox">علبة الوارد</string>
+    <string name="unread">غير مقروء</string>
+    <string name="archived">مؤرشف</string>
+    <string name="sent">مرسَل</string>
+    <string name="grade">الدرجة</string>
+    <string name="clearFilter">مسح عامل التصفية</string>
+    <string name="addMessage">إضافة رسالة</string>
+    <string name="monologue">مونولوج</string>
+    <string name="noItemsToDisplayShort">لا توجد عناصر للعرض</string>
+    <string name="emptyCalendarDate">لم يتم تخطيط أي شيء ل</string>
+    <string name="emptyCalendarWeek">لم يتم تخطيط أي شيء للأسبوع</string>
+    <string name="emptyCalendarMonth">لم يتم تخطيط أي شيء للشهر</string>
+    <string name="selectCanvasCalendars">تحديد 10 تقويمات بحد أقصى</string>
+    <string name="contentDesc_colored_calendar_indicator">مؤشر تقويم ملون</string>
+    <string name="noDatesSelected">يرجى تحديد تاريخ</string>
+    <string name="Todo">قائمة مهام</string>
+    <string name="todoFilter">تصفية المساقات</string>
+    <string name="filterByEllipsis">التصفية حسب...</string>
+    <string name="favoritedCoursesLabel">المساقات المفضلة</string>
+    <string name="Event">الحدث</string>
+    <string name="eventSuccessfulCreation">تم إنشاء الحدث بنجاح</string>
+    <string name="eventSuccessfulDeletion">تم حذف الحدث بنجاح</string>
+    <string name="newEvent">حدث جديد</string>
+    <string name="enterTitle">إدخال العنوان</string>
+    <string name="enterLocation">إدخال المكان</string>
+    <string name="addNote">إضافة ملاحظة</string>
+    <string name="titleIconDescription">أيقونة العنوان</string>
+    <string name="dateIconDescription">أيقونة التاريخ</string>
+    <string name="timeIconDescription">أيقونة الوقت</string>
+    <string name="locationIconDescription">أيقونة المكان</string>
+    <string name="noteIconDescription">أيقونة الملاحظة</string>
+    <string name="toDoTurnIn">التسليم</string>
+    <string name="toDoNoDueDate">لا يوجد تاريخ استحقاق</string>
+
+    <string name="dueAt">موعد الاستحقاق</string>
+    <string name="dueAtTime">مستحق في %s</string>
+    <string name="toDoDue">تاريخ الاستحقاق</string>
+    <string name="due">تاريخ الاستحقاق %1$s</string>
+    <plurals name="to_do_needs_grading">
+        <item quantity="zero">%d بحاجة إلى تقييم</item>
+        <item quantity="one">%d بحاجة إلى تقييم</item>
+        <item quantity="two">%d بحاجة إلى تقييم</item>
+        <item quantity="few">%d بحاجة إلى تقييم</item>
+        <item quantity="many">%d بحاجة إلى تقييم</item>
+        <item quantity="other">%d بحاجة إلى تقييم</item>
+    </plurals>
+    <string name="myFiles">الملفات</string>
+    <string name="createAFolder">إنشاء مجلد</string>
+    <string name="createFolder">إنشاء مجلد</string>
+    <string name="createAFile">إنشاء ملف</string>
+    <string name="createFileFolderFabContentDesc">إظهار زري إنشاء الملف وإنشاء المجلد</string>
+    <string name="folderCreationError">حدث خطأ أثناء إنشاء المجلد.</string>
+    <string name="rename">إعادة تسمية</string>
+    <string name="renameFile">إعادة تسمية الملف</string>
+    <string name="renameFolder">إعادة تسمية المجلد</string>
+    <string name="blankName">يتعذر ترك الاسم فارغًا</string>
+    <string name="confirmDeleteFile">هل تريد بالفعل حذف الملف \'%s\'؟ لا يمكن التراجع عن هذا الإجراء.</string>
+    <string name="confirmDeleteEmptyFolder">هل ترغب بالفعل في حذف المجلد \'%s\'؟ لا يمكن التراجع عن هذا الإجراء.</string>
+    <plurals name="confirmDeleteFolder">
+        <item quantity="zero">هل ترغب بالفعل في حذف المجلد \'%1$s\'، بما يحتويه من %2$d عناصر؟ لا يمكن التراجع عن هذا الإجراء.</item>
+        <item quantity="one">هل ترغب بالفعل في حذف المجلد \'%1$s\'، بما يحتويه من %2$d عنصر؟ لا يمكن التراجع عن هذا الإجراء.</item>
+        <item quantity="two">هل ترغب بالفعل في حذف المجلد \'%1$s\'، بما يحتويه من %2$d عناصر؟ لا يمكن التراجع عن هذا الإجراء.</item>
+        <item quantity="few">هل ترغب بالفعل في حذف المجلد \'%1$s\'، بما يحتويه من %2$d عناصر؟ لا يمكن التراجع عن هذا الإجراء.</item>
+        <item quantity="many">هل ترغب بالفعل في حذف المجلد \'%1$s\'، بما يحتويه من %2$d عناصر؟ لا يمكن التراجع عن هذا الإجراء.</item>
+        <item quantity="other">هل ترغب بالفعل في حذف المجلد \'%1$s\'، بما يحتويه من %2$d عناصر؟ لا يمكن التراجع عن هذا الإجراء.</item>
+    </plurals>
+
+    <string name="settings">إعدادات</string>
+    <string name="name">الاسم</string>
+    <string name="email">البريد الإلكتروني</string>
+    <string name="username">اسم المستخدم</string>
+    <string name="password">كلمة المرور</string>
+    <string name="authenticationRequired">المصادقة مطلوبة</string>
+    <string name="invalidEmailPassword">البريد الإلكتروني غير صالح أو كلمة المرور غير صالحة</string>
+    <string name="loginId">معرف تسجيل الدخول</string>
+    <string name="domain">المجال</string>
+    <string name="sendFeedback">إرسال تعليقات</string>
+    <string name="sendMail">إرسال بريد إلكتروني&#8230;</string>
+    <string name="edit">تحرير</string>
+    <plurals name="item_count">
+        <item quantity="zero">%d عناصر</item>
+        <item quantity="one">%d عنصر</item>
+        <item quantity="two">%d عناصر</item>
+        <item quantity="few">%d عناصر</item>
+        <item quantity="many">%d عناصر</item>
+        <item quantity="other">%d عناصر</item>
+    </plurals>
+    <string name="addToHomescreen">الإضافة إلى الرئيسية</string>
+    <string name="archive">أرشفة</string>
+    <string name="moveToInbox">الانتقال إلى علبة الوارد</string>
+    <string name="markAsUnread">وضع علامة كغير مقروء</string>
+    <string name="selectPeopleInbox">تحديد الأشخاص</string>
+    <string name="delete">حذف</string>
+    <string name="deleteEvent">حذف الحدث</string>
+    <string name="selected">تم التحديد</string>
+    <string name="errorSendingMessage">حدث خطأ أثناء محاولة إرسال رسالتك. يرجى إعادة المحاولة.</string>
+    <string name="errorPostingComment">حدث خطأ أثناء محاولة نشر تعليق الإرسال الخاص بك. يرجى إعادة المحاولة.</string>
+    <string name="deletedConversation">تم حذف هذه المحادثة.</string>
+    <string name="uploadAvatarFailMsg">تعذر تحميل صورة أفاتار الجديدة</string>
+    <string name="editPhoto">تحرير الصورة</string>
+    <string name="invalidUsername">اسم المستخدم هذا غير صالح.</string>
+    <string name="usernameChangeSuccess">تم تحديث اسم المستخدم بنجاح!</string>
+    <string name="takePhoto">التقاط صورة</string>
+    <string name="choosePhotoFromGallery">اختيار صورة من معرض الصور</string>
+    <string name="fileNotFound">لم يتم العثور على الملف.</string>
+
+    <!-- Conversations -->
+    <string name="reply">رد</string>
+    <string name="writeAMessage">كتابة رسالة...</string>
+    <string name="compose">إنشاء</string>
+    <string name="composeMessage">إنشاء رسالة</string>
+    <string name="successSendingMessage">تم إرسال الرسالة بنجاح.</string>
+    <string name="emptyMessage">لا يمكن ترك الرسالة فارغة!</string>
+    <string name="noRecipients">لا يوجد متلقون</string>
+    <string name="send">إرسال</string>
+    <string name="users">المستخدمين</string>
+    <string name="individually">فرديًا</string>
+    <string name="versionNum">الإصدار:</string>
+    <string name="version" formatted="false">إصدار %s</string>
+    <string name="allCourses">جميع المساقات</string>
+    <string name="allGroups">جميع المجموعات</string>
+    <string name="courseOptions">خيارات المساق</string>
+    <string name="editNickname">تحرير اللقب</string>
+    <string name="editCourseColor">تحرير لون المساق</string>
+    <string name="open">مفتوح</string>
+    <string name="openAlternate">الفتح بواسطة تطبيق بديل</string>
+    <string name="opening">جارٍ فتح الملف&#8230;</string>
+    <string name="download">تنزيل</string>
+    <string name="hideExtras">حجب العناصر الإضافية</string>
+    <string name="showExtras">عرض العناصر الإضافية</string>
+    <string name="messageAttachments">مرفقات الرسالة</string>
+    <string name="discussionAttachmentLabel">المرفق</string>
+    <string name="attachmentIcon">أيقونة المرفق</string>
+    <string name="ok">موافق</string>
+    <string name="with">مع</string>
+    <string name="starConversation">وضع نجمة على المحادثة</string>
+    <string name="deleteConversation">حذف المحادثة</string>
+    <string name="sharedWith">تمت المشاركة مع  </string>
+    <string name="sharedWithYou">تمت المشاركة معك</string>
+    <string name="inboxEmptyMessage">انقر فوق \"+\" لإنشاء محادثة جديدة.</string>
+    <string name="inboxAllMessages">الكل</string>
+    <string name="filterInbox">تصفية علبة الوارد</string>
+    <string name="selectCanvasContext">تحديد مساق أو مجموعة</string>
+    <string name="inboxEmptyTitle">لا توجد رسائل</string>
+    <string name="removeAttachment">إزالة مرفق</string>
+    <string name="downloadAttachment">تنزيل مرفق</string>
+    <string name="messageOptions">خيارات الرسالة</string>
+    <string name="forward">إعادة توجيه</string>
+    <string name="replyAll">رد على الكل</string>
+    <string name="unarchive">إلغاء الأرشفة</string>
+    <string name="confirmDeleteMessage">هل ترغب بالتأكيد في حذف نسختك من هذه الرسالة؟ لا يمكن التراجع عن هذا الإجراء.</string>
+    <string name="confirmDeleteConversation">هل ترغب بالتأكيد في حذف نسختك من هذه المحادثة؟ لا يمكن التراجع عن هذا الإجراء.</string>
+    <string name="errorConversationGeneric">يتعذر تنفيذ هذا الإجراء. يرجى التحقق من الاتصال وإعادة المحاولة.</string>
+    <string name="conversationArchived">تمت أرشفة المحادثة</string>
+    <string name="conversationUnarchived">تم إلغاء أرشفة المحادثة</string>
+    <string name="messageDeleted">تم حذف الرسالة</string>
+    <string name="sendIndividualMessage">إرسال رسالة فردية إلى كل متلق</string>
+    <string name="invalidRecipients">غير مسموح لك بإرسال رسائل إلى أحد المتلقين المحددين أو أكثر.</string>
+    <string name="newMessage">رسالة جديدة</string>
+    <string name="forwardMessage">إعادة توجيه الرسالة</string>
+    <string name="addMorePeopleToMessage">إضافة متلق آخر. لا يمكن إرسال الرسائل الموجهة إليك أنت فقط.</string>
+    <string name="selectRecipients">تحديد متلقين</string>
+
+    <plurals name="people_count">
+        <item quantity="zero">%d أشخاص</item>
+        <item quantity="one">%d شخص</item>
+        <item quantity="two">%d أشخاص</item>
+        <item quantity="few">%d أشخاص</item>
+        <item quantity="many">%d أشخاص</item>
+        <item quantity="other">%d أشخاص</item>
+    </plurals>
+
+    <plurals name="group_count">
+        <item quantity="zero">%d مجموعات</item>
+        <item quantity="one">%d مجموعة</item>
+        <item quantity="two">%d مجموعات</item>
+        <item quantity="few">%d مجموعات</item>
+        <item quantity="many">%d مجموعات</item>
+        <item quantity="other">%d مجموعات</item>
+    </plurals>
+
+    <string name="exitWithoutSavingTitle">الخروج دون حفظ؟</string>
+    <string name="exitWithoutSavingMessage">هل أنت متأكد من أنك تريد الخروج دون حفظ؟</string>
+    <string name="exitUnsaved">خروج</string>
+
+    <!-- Groups -->
+    <string name="groupDialogTitle">رسالة جماعية؟</string>
+    <string name="groupDialogMessage">إضافة الجميع إلى محادثة واحدة في المجموعة أو إرسال رسالة لكل واحد بشكل فردي؟</string>
+    <string name="group">المجموعة</string>
+    <string name="groups">المجموعات</string>
+    <string name="groupMembers">أعضاء المجموعة</string>
+
+    <string name="loading">جارٍ التحميل&#8230;</string>
+    <string name="select_item_to_display">الاختيار من القائمة</string>
+
+    <string name="syllabus">المناهج</string>
+    <string name="coursePeople">أشخاص</string>
+    <string name="teachersTas">المعلمين ومساعديهم</string>
+    <string name="students">الطلاب</string>
+    <string name="observers">المراقبون</string>
+    <string name="syllabusMissing">لم تتم إضافة مخطط دراسي.</string>
+
+    <string name="canvas">Canvas</string>
+    <string name="chooseRecipient">اختيار المستلم (المستلمين)</string>
+    <string name="messageHasNoRecipients">لا يوجد حاليًا متلقين لهذه الرسالة.</string>
+    <string name="sendMessage">إرسال رسالة</string>
+    <string name="userAvatar">استعمال الصورة الرمزية</string>
+
+    <string name="calendarIcon">أيقونة التقويم</string>
+    <string name="assignmentIcon">أيقونة المهمة</string>
+    <string name="announcementIcon">أيقونة الإعلان</string>
+    <string name="conversationIcon">أيقونة المحادثة</string>
+    <string name="defaultIcon">الأيقونة الافتراضية</string>
+    <string name="discussionIcon">أيقونة المناقشة</string>
+    <string name="gradesIcon">أيقونة الدرجات</string>
+    <string name="grades">الدرجات</string>
+    <string name="allGradingPeriods">جميع فترات تقييم الدرجات</string>
+    <string name="calendar">التقويم</string>
+    <string name="bookmarks">الإشارات المرجعية</string>
+    <string name="showGrades">عرض الدرجات</string>
+    <string name="gradesAreHidden">لا يمكن رؤية درجات هذا المساق.</string>
+
+    <string name="entireGroupSelected">لقد تم بالفعل تحديد هذه المجموعة بأكملها.</string>
+    <string name="noUsersInGroup">لا يوجد مستخدمين في هذه المجموعة</string>
+
+    <!--Notifications-->
+    <string name="deleted">[تم حذفه]</string>
+    <string name="gradedDiscussion">مناقشة تم تقييمها.</string>
+    <string name="pointsPossible">النقاط الممكنة.</string>
+    <string name="pointsPossibleNoPeriod">النقاط الممكنة</string>
+
+    <string name="deletedEntryNoChildren">لا يحتوي إدخال المناقشة المحذوف هذا على أية ردود.</string>
+    <string name="sideCommentEntry">في هذا النوع من المناقشة، لا يمكنك التعليق على أي إدخال على هذا المستوى.</string>
+    <string name="contentDescriptionFiles">أيقونة الملف</string>
+
+    <string name="loadingCanvas">جارٍ تحميل محتوى Canvas&#8230;</string>
+
+    <string name="unknownDevice">UnknownDevice</string>
+
+    <string name="differentDomainFromLink">الارتباط المحدد خاص بمجال مختلف عن ذلك الذي سجلت إليه الدخول.</string>
+
+    <string name="pages">الصفحات</string>
+    <string name="noPageFound">لا تتوفر أي صفحة معلومات</string>
+    <string name="noPagesInContext">لا تتوفر أي صفحات لذلك</string>
+    <string name="modified">تاريخ آخر تعديل:</string>
+    <string name="lastModified">تاريخ آخر تعديل: %1$s</string>
+
+    <string name="masqueradeUserId">إخفاء معرف المستخدم</string>
+    <string name="startMasquerading">بدء الإخفاء</string>
+    <string name="stopMasquerading">إيقاف إخفاء الأسماء</string>
+    <string name="userId">معرف المستخدم</string>
+    <string name="masqueradeFail">حدث خطأ أثناء محاولة القيام بالإخفاء</string>
+
+    <string name="emptyId">لا يمكن ترك المعرف فارغًا</string>
+
+    <string name="goToQuiz">الانتقال إلى الاختبار</string>
+    <string name="goToExternalTool">الانتقال إلى أداة خارجية</string>
+
+    <string name="pastDueDate">تاريخ استحقاق سابق</string>
+
+    <string name="goToDiscussion">الانتقال إلى المناقشة</string>
+    <string name="quizzes">اختبارات موجزة</string>
+
+    <string name="lastDiscussionPost">آخر نشر</string>
+
+    <string name="newAnnouncement">إعلان جديد</string>
+    <string name="newDiscussion">نقاش جديد</string>
+    <string name="composeDiscussion">إنشاء مناقشة</string>
+    <string name="composeAnnouncement">إنشاء إعلان</string>
+
+    <string name="postAnnouncement">نشر إعلان</string>
+    <string name="postDiscussion">نشر مناقشة</string>
+
+    <string name="postAnnouncementSuccess">تم نشر الإعلان بنجاح.</string>
+    <string name="postDiscussionSuccess">تم نشر المناقشة بنجاح.</string>
+    <string name="updateDiscussionSuccess">تم تحديث المناقشة بنجاح.</string>
+    <string name="draftDiscussionSuccess">تم إنشاء مسودة المناقشة بنجاح.</string>
+
+    <string name="errorPostingAnnouncement">حدث خطأ أثناء نشر الإعلان.</string>
+    <string name="errorPostingDiscussion">حدث خطأ أثناء نشر المناقشة.</string>
+    <string name="allowThreading">السماح بالردود المترابطة</string>
+    <string name="usersMustPost">يجب على المستخدمين النشر قبل رؤية الردود</string>
+    <string name="allowUserComments">السماح للمستخدمين بالتعليق</string>
+    <string name="message">الرسالة</string>
+    <string name="title">العنوان</string>
+
+
+    <string name="messageBlank">لا يمكن ترك الرسالة فارغة.</string>
+
+    <string name="notAuthorizedAnnouncement">عذرًا. أنت غير مخوّل لنشر الإعلانات في هذا المساق.</string>
+    <string name="notAuthorizedDiscussion">عذرًا. أنت غير مخوّل لنشر المناقشات في هذا المساق.</string>
+
+    <string name="announcements">إعلانات</string>
+
+    <string name="titleBlank">لا يمكن ترك العنوان فارغًا.</string>
+
+    <!-- Modules -->
+    <string name="modules">الوحدات النمطية</string>
+    <string name="moduleItemMustView">عرض هذا العنصر</string>
+    <string name="moduleItemViewed">لقد اطلعت على هذا العنصر</string>
+    <string name="moduleItemSubmit">يجب إرسال المهمة</string>
+    <string name="moduleItemSubmitted">تم إرسال المهمة</string>
+    <string name="moduleItemContribute">المساهمة في هذه الصفحة</string>
+    <string name="moduleItemContributed">ساهمت</string>
+    <string name="moduleItemMinScore">الحصول على الأقل على درجة</string>
+    <string name="moduleItemMinScoreMet">أدنى درجة تم تحقيقها</string>
+    <string name="prerequisites">المتطلبات الأساسية:</string>
+    <string name="unlocked">تم إلغاء التأمين:</string>
+    <string name="locked">مؤمّن</string>
+    <string name="lockedAssignmentDesc">هذه المهمة جزء من الوحدة النمطية %s ولم يتم فتحها بعد.</string>
+    <string name="lockedPageDesc">هذه الصفحة جزء من الوحدة النمطية %s ولم يتم فتحها بعد.</string>
+    <string name="lockedFileDesc">هذا الملف جزء من الوحدة النمطية %s ولم يتم فتحه بعد.</string>
+    <string name="lockedQuizDesc">هذا الاختبار جزء من الوحدة النمطية %s ولم يتم فتحه بعد.</string>
+    <string name="lockedDiscussionDesc">هذه المناقشة جزء من الوحدة النمطية %s ولم يتم فتحها بعد.</string>
+    <string name="lockedAssignmentDescLine2">قم بزيارة صفحة وحدات المساق للحصول على معلومات حول كيفية إلغاء تأمين المحتوى.</string>
+    <string name="mustComplete">يجب أن تكمل أولاً:</string>
+    <string name="unlockedAt">سيتم إلغاء التأمين في:</string>
+    <string name="goToModules">الانتقال إلى الوحدات</string>
+    <string name="markDone">وضع علامة "تم"</string>
+
+    <string name="moduleItemNotFound">لم يتم العثور على عنصر الوحدة المنطقية</string>
+    <string name="help">المساعدة</string>
+    <string name="instructor_question">سؤال من المعلم</string>
+    <string name="link">ارتباط</string>
+
+    <!-- LockInfoHTMLHelper Strings -->
+    <string name="lockedAssignmentNotModule">هذه المهمة مؤمّنة.</string>
+
+    <!--New Course Layout Strings -->
+    <string name="myCourses">مساقاتي</string>
+
+
+    <!--New Submission Strings -->
+    <string name="textEntry"> إدخال النص</string>
+    <string name="onlineURL"> عنوان URL عبر الإنترنت</string>
+    <string name="enterTextEntry">الدخول إلى إدخال النص</string>
+    <string name="fileUpload"> تحميل ملف</string>
+    <string name="oneFileOnly">يقبل هذا الإرسال تحميل ملف واحد</string>
+
+
+    <string name="submit">إرسال</string>
+    <string name="blankSubmission">لا يمكن ترك الإرسال فارغًا.</string>
+    <string name="errorPostingSubmission">حدث خطأ أثناء نشر الإرسال.</string>
+    <string name="successPostingSubmission">تم نشر الإرسال بنجاح.</string>
+
+    <string name="exampleSubmissionURL">http://www.example.com</string>
+
+
+
+    <!--DataLoss Fragment Strings -->
+    <string name="unsavedProgress">لم يتم حفظ التقدم</string>
+    <string name="informationLost">سيتم فقد المعلومات غير المحفوظة. هل تريد المواصلة؟</string>
+    <string name="slash"> / </string>
+
+    <!--Delete Notification Strings -->
+    <string name="confirm">تأكيد</string>
+
+    <!--Dismiss To do String-->
+    <string name="markAsDone">وضع علامة "تم"</string>
+
+    <!--Submission Details Strings -->
+    <string name="next">التالي</string>
+    <string name="addSubmission">التسليم</string>
+    <string name="addAnotherSubmission">التسليم من جديد</string>
+    <string name="turnedIn">تم التسليم:&#160;</string>
+    <string name="addComment">إضافة تعليق&#8230;</string>
+    <string name="addCommentNoEllipsis">إضافة تعليق</string>
+    <string name="subTypeOnlineText">إدخال نصي عبر الإنترنت</string>
+    <string name="subTypeFileUpload">تحميل ملف eFile على الإنترنت</string>
+    <string name="subTypeOnlineURL">عنوان URL لموقع ويب</string>
+    <string name="subTypeOnlineQuiz">اختبار على الإنترنت</string>
+    <string name="subTypeMediaRecording">تسجيل الوسائط</string>
+    <string name="sub_type_lti_launch">تشغيل LTI</string>
+    <string name="subTypeDiscussionTopic">النقاش</string>
+    <string name="turnInByHand">عليك بتسليم هذه المهمة يدويًا</string>
+    <string name="noSubRequired">ليست هناك حاجة لأي إرسال</string>
+    <string name="noTurnInOnMobile">الإرسال عبر الأجهزة المحمولة غير مدعوم</string>
+
+    <string name="home">الصفحة الرئيسية</string>
+    <string name="Notifications">الإعلامات</string>
+
+    <string name="icon">أيقونة</string>
+    <string name="rootUser">مجلد المستخدم الجذر</string>
+    <string name="rootCourse">مجلد المساق الجذر</string>
+    <string name="rootGroup">مجلد المجموعة الجذر</string>
+
+    <!-- Course Settings -->
+    <string name="privatelyAvailable">متاح بشكل خاص</string>
+    <string name="publiclyAvailable">متاح للجميع</string>
+    <string name="starts">بدء:  </string>
+    <string name="courseCode">رمز المساق:  </string>
+    <string name="ends">انتهاء:  </string>
+    <string name="visibility">الرؤية:  </string>
+    <string name="license">الترخيص:  </string>
+
+
+    <!-- Navigation String -->
+    <string name="collaborations">الأعمال الجماعية</string>
+    <string name="conferences">المؤتمرات</string>
+    <string name="chat">الدردشة</string>
+    <string name="outcomes">الحصائل</string>
+
+    <!-- Submission View Strings -->
+    <string name="visitPage">زيارة الصفحة:</string>
+    <string name="clickToViewSubmission">تم تصوير لقطة لموقع الويب أثناء قيامك بالتسليم. اضغط باستمرار على الصورة أدناه لفتح أو تنزيل الصورة الكاملة.</string>
+    <string name="urlSubmissionNoPreview">كان هذا الإرسال هو عنوان URL المؤدي إلى صفحة خارجية. ضع في اعتبارك أن هذه الصفحة ربما قد تغيرت منذ حدوث الإرسال الأصلي.</string>
+    <string name="contentDescriptionPreviewImage">معاينة عنوان URL الذي تم إرساله</string>
+    <string name="itemStillProcessing">لا يزال هذا العنصر قيد المعالجة على الخادم. يرجى إعادة المحاولة.</string>
+
+
+    <string name="isNotSupportedFeature">%1$s غير مدعوم.</string>
+    <string name="isNotSupported">الارتباط غير مدعوم.</string>
+    <string name="openInBrowser">الفتح في المستعرض</string>
+    <string name="unsupported">غير مدعوم</string>
+
+
+    <!-- Profile Strings -->
+    <string name="calendarWeekSetting">يبدأ التقويم يوم الإثنين</string>
+    <string name="profile">ملف التعريف</string>
+
+    <string name="noSubject">(لا يوجد أي موضوع)</string>
+    <string name="subject">الموضوع</string>
+    <string name="sadPanda">صورة باندا حزين</string>
+    <string name="panda_fact_string">واقع باندا:&#160;</string>
+    <string name="remove">إزالة</string>
+    <string name="founders">المؤسسون</string>
+    <string name="image">صورة</string>
+
+    <string name="EULA">اتفاقية ترخيص المستخدم النهائي</string>
+    <string name="privacyPolicy">سياسة الخصوصية</string>
+    <string name="termsOfUse">شروط الاستخدام</string>
+    <string name="openSource">مصدر مفتوح</string>
+
+    <!-- Quiz Strings -->
+    <string name="assignmentQuizzes">اختبارات المهمة</string>
+    <string name="practiceQuizzes">التدريب على اختبارات موجزة</string>
+    <string name="gradedSurveys">استطلاعات تم تقييمها</string>
+    <string name="surveys">الاستطلاعات</string>
+    <string name="quizMatchingDefaultDisplay">[اختيار]</string>
+    <string name="choose_answer_below">اختر إجابتك أدناه</string>
+    <string name="choose_answers_below">اختر إجاباتك أدناه</string>
+
+
+    <!--Widget Strings-->
+    <string name="todoWidgetTitle">قائمة مهام</string>
+    <string name="gradesWidgetTitle">الدرجات</string>
+    <string name="notificationWidgetTitle">الإعلامات</string>
+    <string name="todoWidgetTitleLong">Canvas - قائمة المهام</string>
+    <string name="gradesWidgetTitleLong">Canvas - الدرجات</string>
+    <string name="notificationWidgetTitleLong">Canvas - الإعلامات</string>
+    <string name="notLoggedIn">لست مسجل الدخول الآن.</string>
+    <string name="widgetStyle">اختر نمط عنصر واجهة المستخدم</string>
+    <string name="widgetMinimumStyle">إخفاء التفاصيل على عنصر واجهة المستخدم</string>
+    <string name="light">فاتح</string>
+    <string name="dark">داكن</string>
+
+    <string name="invalidExternal">إما أن هذه الأداة الخارجية قد انتهت صلاحيتها أو تم تكوينها بشكل غير صحيح.</string>
+
+    <!-- Help dialog strings -->
+    <string name="askInstructor">اطرح سؤالاً على معلمك</string>
+    <string name="askInstructorDetails">تم إرسال الأسئلة إلى معلمك</string>
+    <string name="searchGuides">البحث في Canvas Guides</string>
+    <string name="canvasGuides">Canvas Guides</string>
+    <string name="searchGuidesDetails">احصل على إجابات للأسئلة المتداولة</string>
+    <string name="reportProblem">إبلاغ عن مشكلة</string>
+    <string name="reportProblemDetails">أخبرنا إن لم يعمل التطبيق بشكل صحيح</string>
+    <string name="requestFeature">طلب ميزة</string>
+    <string name="requestFeatureDetails">هل لديك فكرة لتحسين التطبيق؟</string>
+    <string name="shareYourLove">شارك إعجابك بالتطبيق</string>
+    <string name="shareYourLoveDetails">أخبرنا بالأشياء التي تفضلها في التطبيق</string>
+
+    <!-- Feature Request -->
+    <string name="featureSubject">أفكار لـ Canvas [Android]</string>
+    <string name="understandRequest">ستساعدنا المعلومات التالية على فهم فكرتك بشكل أفضل:</string>
+
+    <!-- Ask Instructor -->
+    <string name="whichCourse">عن أي مساق يدور هذا السؤال؟</string>
+    <string name="allTeachers">سيتم إرسال هذه الرسالة إلى المعلمين ومساعديهم في المساق</string>
+    <string name="sending">جارٍ الإرسال&#8230;</string>
+    <string name="error">خطأ</string>
+
+    <!-- Tablet Strings -->
+    <string name="courses">المساقات</string>
+    <string name="toDoList">قائمة المهام</string>
+    <string name="notifications">الإعلامات</string>
+    <string name="pushNotifications">الإعلامات الفورية</string>
+    <string name="pushNotificationsError">لم يتم تسجيل الإعلامات لهذا الجهاز.</string>
+    <string name="profileSettings">إعدادات ملف التعريف</string>
+    <string name="accountPreferences">تفضيلات الحساب</string>
+    <string name="pinAndFingerprint">PIN وبصمة الأصبع</string>
+
+    <string name="launchSpeedgrader">فتح SpeedGrader</string>
+
+    <string name="search_todo">قائمة ما يجب القيام به</string>
+    <string name="search_course">مساق مساقات صف صفوف</string>
+    <string name="search_grades">درجة درجات</string>
+
+    <!-- ShareFileOptions Dialog-->
+    <string name="uploadTo">التحميل إلى </string>
+    <string name="uploadToCanvas">التحميل إلى Canvas</string>
+    <string name="uploadMyFiles">ملفاتي</string>
+    <string name="uploadCourseFiles">ملفات المساق</string>
+    <string name="uploadToSubmissionComment">التحميل إلى تعليق الإرسال</string>
+    <!-- ChangeLog Dialog-->
+    <string name="changelog">Changelog</string>
+
+    <string name="editUserName">تحرير اسم المستخدم</string>
+    <!-- Choose Profile Image -->
+    <string name="takeANewPhoto">التقاط صورة جديدة</string>
+    <string name="chooseFromGallery">الاختيار من المعرض</string>
+    <string name="setToDefault">التعيين للافتراضي</string>
+    <string name="chooseBackgroundImage">اختيار صورة خلفية</string>
+
+    <string name="no_courses">اضغط لإضافة مساق</string>
+    <string name="no_courses_available">لا توجد مساقات هنا، خذ يوم راحة!</string>
+    <string name="no_courses_grades">يرجى التسجيل في مساق لمشاهدة درجاتك</string>
+    <!--Navigation Drawer-->
+    <string name="navigation_drawer_open">فتح درج التنقل</string>
+    <string name="navigation_drawer_close">إغلاق درج التنقل</string>
+
+    <string name="preferred_land_page">الصفحة المقصودة</string>
+    <string name="could_not_route_course">تعذر العثور على تسجيل المساق.</string>
+    <string name="could_not_route_group">تعذر العثور على تسجيل المجموعة.</string>
+    <string name="could_not_route_unknown">حدث خطأ غير متوقع.</string>
+    <string name="could_not_route_locked">هذه الصفحة مخفية أو مؤمّنة ولا يمكن الوصول إليها.</string>
+
+    <string name="close">إغلاق</string>
+    <string name="closed">مغلق</string>
+
+    <string name="overdueAssignments">مهام متأخرة</string>
+    <string name="upcomingAssignments">مهام قادمة</string>
+    <string name="undatedAssignments">مهام غير مؤرخة</string>
+    <string name="pastAssignments">مهام سابقة</string>
+
+    <string name="could_not_find_course">حدث خطأ أثناء الحصول على مساق لهذا العنصر.</string>
+    <string name="could_not_find_group">حدث خطأ أثناء الحصول على مجموعة لهذا العنصر.</string>
+
+    <string name="selectBackground">تحديد خلفية</string>
+
+    <string name="notoriousSubmissionInProgress">جارٍ إرسال الملفات&#8230; تحقق من التحديثات في شريط الإعلامات.</string>
+    <string name="notoriousSubmissionSuccessful">انتهى إرسال الملف</string>
+
+    <string name="bio">سيرة ذاتية</string>
+    <string name="draft">مسودة</string>
+    <string name="publish">نشر</string>
+
+    <string name="createPandaAvatar">إنشاء صورة الأفاتار للباندا</string>
+    <string name="back">عودة</string>
+    <string name="setAsAvatar">تعيين كصورة أفاتار</string>
+    <string name="avatarSuccessfullySaved">تم حفظ صورة أفاتار للباندا بنجاح</string>
+    <string name="regularAvatarSuccessfullySaved">تم حفظ صورة أفاتار بنجاح.</string>
+    <string name="errorSavingAvatar">حدث خطأ أثناء حفظ صورة أفاتار للباندا</string>
+    <string name="pandaAvatar">صورة أفاتار للباندا</string>
+    <string name="pandaHead">رأس صورة أفاتار للباندا</string>
+    <string name="pandaBody">جسم صورة أفاتار للباندا</string>
+    <string name="pandaLegs">ساقي صورة أفاتار للباندا</string>
+    <string name="pandaAvatarsFolderName">PandaAvatars</string>
+    <string name="share">مشاركة</string>
+
+    <string name="speedgrader">SpeedGrader</string>
+    <string name="gauge">مقياس</string>
+
+    <string name="calendarDay">اليوم</string>
+    <string name="calendarWeek">الأسبوع</string>
+    <string name="calendarMonth">الشهر</string>
+    <string name="selectCalendars">تحديد تقويمات</string>
+    <string name="createNewCalendarEvent">إنشاء حدث جديد</string>
+    <string name="calendarDialog10Warning">يمكنك اختيار 10 تقويمات فقط لعرضها</string>
+    <string name="calendarDialogNoneWarning">يرجى اختيار تقويم واحد على الأقل</string>
+    <string name="enableFunMode">إيقاف تشغيل الباندا</string>
+
+    <string name="accountNotifications">إعلانات</string>
+    <string name="addAccount">إضافة حساب</string>
+
+    <string name="changeUser">تغيير المستخدم</string>
+
+    <string name="no_data_connection">يرجى التأكد من اتصال البيانات والمحاولة من جديد.</string>
+
+    <!--Notification Preferences-->
+    <string name="notification_primary_inbox_title">إعلام Canvas</string>
+    <string name="notification_channel_name_primary">إعلامات Canvas عامة</string>
+    <string name="notification_channel_description_primary">يمكن إجراء تكوين إضافي للإعلامات داخل قسم تفضيلات إعلام Canvas.</string>
+
+    <string name="notification_cat_course_activities">أنشطة المساق</string>
+    <string name="notification_cat_discussions">النقاشات</string>
+    <string name="notification_cat_conversations">المحادثات</string>
+    <string name="notification_cat_scheduling">الجدولة</string>
+    <string name="notification_cat_groups">المجموعات</string>
+    <string name="notification_cat_alerts">التنبيهات</string>
+    <string name="notification_cat_conferences">المؤتمرات</string>
+
+    <string name="notification_pref_due_date">تاريخ الاستحقاق</string>
+    <string name="notification_pref_grading_policies">سياسات تقييم الدرجات</string>
+    <string name="notification_pref_course_content">محتوى المساق</string>
+    <string name="notification_pref_files">الملفات</string>
+    <string name="notification_pref_announcement">الإعلان</string>
+    <string name="notification_pref_announcement_created_by_you">الإعلان الذي قمت بإنشائه</string>
+    <string name="notification_pref_grading">تقييم الدرجات</string>
+    <string name="notification_pref_invitation">دعوة</string>
+    <string name="notification_pref_all_submissions">كل الإرسالات</string>
+    <string name="notification_pref_late_grading">تقييم متأخر</string>
+    <string name="notification_pref_submission_comment">تعليق الإرسال</string>
+
+    <string name="notification_pref_discussion">النقاش</string>
+    <string name="notification_pref_discussion_post">منشور المناقشة</string>
+
+    <string name="notification_pref_add_to_conversation">الإضافة إلى المحادثة</string>
+    <string name="notification_pref_conversation_message">رسالة المحادثة</string>
+    <string name="notification_pref_conversations_created_by_you">المحادثات التي قمت بإنشائها</string>
+
+    <string name="notification_pref_student_appointment_signups">مواعيد التسجيل للطالب</string>
+    <string name="notification_pref_appointment_signups">مواعيد التسجيل</string>
+    <string name="notification_pref_appointment_cancelations">إلغاءات المواعيد</string>
+    <string name="notification_pref_appointment_availability">توفر الموعد</string>
+    <string name="notification_pref_calendar">التقويم</string>
+
+    <string name="notification_pref_membership_update">تحديث العضوية</string>
+    <string name="notification_pref_admin">إعلامات إدارية</string>
+    <string name="notification_pref_recording_ready">التسجيل جاهز</string>
+
+    <string name="notification_pref_type_email">البريد الإلكتروني</string>
+    <string name="notification_pref_type_push">الجهاز</string>
+    <string name="notification_pref_type_sms">رسالة نصة قصيرة</string>
+
+    <string name="notification_pref_dialog_title">إعلامات الجهاز</string>
+    <string name="notification_pref_dialog_message">هل ترغب في تشغيل إعلامات الجهاز؟ يمكن تغيير هذه الإعدادات لاحقًا في الإعدادات &gt; الإعلامات &gt; لجميع الأجهزة</string>
+    <string name="notification_pref_toast_success">تم تمكين الإعلامات.</string>
+
+    <string name="notification_desc_due_date">الحصول على إعلامات عند تغيير تاريخ استحقاق المهمة.</string>
+    <string name="notification_desc_grading_policies">الحصول على إعلامات عند تغيير سياسات تقييم المساق.</string>
+    <string name="notification_desc_course_content">الحصول على إعلامات عند تغيير محتوى المساق على صفحات Wiki والاختبارات الموجزة والمهام.</string>
+    <string name="notification_desc_files">الحصول على إعلامات عند إضافة ملف جديد إلى مساقك.</string>
+    <string name="notification_desc_announcement">الحصول على إعلامات عند وجود إعلان جديد في مساقك.</string>
+    <string name="notification_desc_announcement_created_by_you">الحصول على إعلامات عند إنشائك لإعلان وعندما يرد أحد الأشخاص على إعلانك.</string>
+    <string name="notification_desc_grading">الحصول على إعلامات عند تقييم/تغيير لمهمة/إرسال وعند تغيير وزن الدرجة.</string>
+    <string name="notification_desc_invitation">الحصول على إعلامات للدعوات لمؤتمرات الويب والمجموعات والأعمال الجماعية ومراجعات الأقران والتذكيرات.</string>
+    <string name="notification_desc_all_submissions">المعلم والمسؤول فقط. الحصول على إعلامات عند إرسال مهمة أو إعادة إرسالها.</string>
+    <string name="notification_desc_late_grading">المعلم والمسؤول فقط. الحصول على إعلامات عند إرسال مهمة متأخرة.</string>
+    <string name="notification_desc_submission_comment">الحصول على إعلامات عند وضع تعليق على إرسالك.</string>
+    <string name="notification_desc_discussion">الحصول على إعلامات عند وجود عنوان نقاش جديد في مساقك.</string>
+    <string name="notification_desc_discussion_post">الحصول على إعلامات عند وجود منشور جديد في نقاش أنت مشترك فيه.</string>
+    <string name="notification_desc_add_to_conversation">الحصول على إعلامات عندما تضاف إلى محادثة.</string>
+    <string name="notification_desc_conversation_message">الحصول على إعلامات عندما تحصل على رسالة واردة جديدة.</string>
+    <string name="notification_desc_conversations_created_by_you">الحصول على إعلامات عندما تنشئ محادثة جديدة.</string>
+    <string name="notification_desc_student_appointment_signups">المعلم والمسؤول فقط. الحصول على إعلامات عند وجود تسجيل موعد.</string>
+    <string name="notification_desc_appointment_signups">الحصول على إعلامات عند وجود تسجيل جديد على التقويم الخاص بك.</string>
+    <string name="notification_desc_appointment_cancelations">الحصول على إعلامات عند وجود إلغاء موعد.</string>
+    <string name="notification_desc_appointment_availability">الحصول على إعلامات عند توفر مساحة موعد.</string>
+    <string name="notification_desc_calendar">الحصول على إعلامات حول عناصر التقويم الجديدة والمحدثة.</string>
+    <string name="notification_desc_membership_update">المسؤول فقط، بانتظار تنشيط التسجيل. الحصول على إعلامات عند قبول أو رفض تسجيل مجموعة.</string>
+    <string name="notification_desc_admin">المعلم والمسؤول فقط. الحصول على إعلامات حول تسجيلات المساق، وإنشاء التقارير، وتصدير المحتوى، وتقارير الترحيل، ومستخدمي الحسابات الجدد، ومجموعات الطلاب الجديدة.</string>
+    <string name="notification_desc_recording_ready">الحصول على إعلامات عند وجود تسجيل مؤتمر جاهز.</string>
+
+    <string name="enterAnswer">أدخل إجابة</string>
+    <string name="resumeQuiz">استئناف الاختبار</string>
+    <string name="allowed_attempts">المحاولات المسموح بها</string>
+    <string name="viewQuestions">عرض الأسئلة</string>
+    <string name="unlimited">غير محدود</string>
+    <string name="viewResults">عرض النتائج</string>
+
+    <string name="toggleTimer">تشغيل/إيقاف الموقت</string>
+    <string name="thirtySecondWarning">بقيت 30 ثانية</string>
+    <string name="timeSpentFormat" formatted="false">الوقت المستغرق: %d دقيقة</string>
+    <string name="lockedIPAddress">هذا الاختبار مؤمّن. متاح فقط في مواقع محددة.</string>
+    <string name="lockedInvalidAccessCode">رمز الوصول غير صالح</string>
+
+    <string name="showFlaggedQuestions">عرض الأسئلة التي لم توضع عليها علامة أو لم تتم الإجابة عليها</string>
+    <string name="question">السؤال</string>
+    <string name="questions">الأسئلة</string>
+    <plurals name="question_count">
+        <item quantity="zero">%d أسئلة</item>
+        <item quantity="one">%d سؤال</item>
+        <item quantity="two">%d أسئلة</item>
+        <item quantity="few">%d أسئلة</item>
+        <item quantity="many">%d أسئلة</item>
+        <item quantity="other">%d أسئلة</item>
+    </plurals>
+    <plurals name="pointCount">
+        <item quantity="zero">%s نقاط</item>
+        <item quantity="one">%s نقطة</item>
+        <item quantity="two">%s نقاط</item>
+        <item quantity="few">%s نقاط</item>
+        <item quantity="many">%s نقاط</item>
+        <item quantity="other">%s نقاط</item>
+    </plurals>
+    <string name="flagged">تم التمييز</string>
+
+    <string name="areYouSure">هل أنت متأكد من أنك تريد إرسال هذا الاختبار الموجز؟</string>
+    <string name="submitQuiz">إرسال الاختبار؟</string>
+    <plurals name="unanswered_quiz_questions">
+        <item quantity="zero">لديك %d أسئلة بدون إجابة.\nهل أنت متأكد من أنك تريد إرسال هذا الاختبار الموجز؟</item>
+        <item quantity="one">لديك %d سؤال بدون إجابة.\nهل أنت متأكد من أنك تريد إرسال هذا الاختبار الموجز؟</item>
+        <item quantity="two">لديك %d أسئلة بدون إجابة.\nهل أنت متأكد من أنك تريد إرسال هذا الاختبار الموجز؟</item>
+        <item quantity="few">لديك %d أسئلة بدون إجابة.\nهل أنت متأكد من أنك تريد إرسال هذا الاختبار الموجز؟</item>
+        <item quantity="many">لديك %d أسئلة بدون إجابة.\nهل أنت متأكد من أنك تريد إرسال هذا الاختبار الموجز؟</item>
+        <item quantity="other">لديك %d أسئلة بدون إجابة.\nهل أنت متأكد من أنك تريد إرسال هذا الاختبار الموجز؟</item>
+    </plurals>
+    <string name="takeQuizAgain">إجراء الاختبار الموجز من جديد</string>
+    <string name="autoSubmitting">جارٍ الإرسال التلقائي للاختبار الموجز&#8230;</string>
+    <string name="submitReasonTimedQuiz">تم إرسال الاختبار الموجز لأن المهلة الزمنية انتهت.</string>
+    <string name="submitReasonLockAt">تم إرسال الاختبار الموجز لأنه تم الوصول إلى تاريخ الإغلاق.</string>
+    <string name="quizSubmittedSuccessfully">تم إرسال الاختبار الموجز بنجاح.</string>
+    <string name="quizSubmittedFailure">تعذر إرسال الاختبار الموجز في هذا الوقت.</string>
+    <string name="almostDue">موعد الاستحقاق على وشك الانتهاء!</string>
+    <string name="almostDueMsg">موعد الاستحقاق اقترب. هل تريد الإرسال الآن لمنع وضع علامة على اختبارك كمتأخر؟</string>
+    <string name="timeLimit">الحد الزمني</string>
+    <string name="cantStartQuiz">لا يمكن بدء الاختبار الموجز.</string>
+    <string name="start">البدء</string>
+    <string name="newPushNotifications">%1$s من الإعلامات الجديدة</string>
+    <string name="like">إعجاب</string>
+    <string name="likes">إعجابات</string>
+
+    <string name="wear_reminder">جدولة تذكيرات مواعيد الاستحقاق</string>
+    <string name="wear_notifications">تشغيل إعلامات الأجهزة القابلة للارتداء</string>
+
+    <string name="color_1">أحمر</string>
+    <string name="color_2">وردي ناصع</string>
+    <string name="color_3">أرجواني شاحب</string>
+    <string name="color_4">بنفسجي</string>
+    <string name="color_5">أرجواني</string>
+    <string name="color_6">أردوازي</string>
+    <string name="color_7">أزرق</string>
+    <string name="color_8">سماوي</string>
+    <string name="color_9">أخضر</string>
+    <string name="color_10">أخضر مائل للصفرة</string>
+    <string name="color_11">أصفر</string>
+    <string name="color_12">ذهبي</string>
+    <string name="color_13">برتقالي</string>
+    <string name="color_14">وردي</string>
+    <string name="color_15">رمادي</string>
+
+    <string name="edit_course_nickname">تحرير اسم شهرة المساق</string>
+    <string name="courseNicknameError">تعذر تعيين الاسم المستعار للمساق في هذا الوقت.</string>
+
+    <string name="colorPickerDialogTitle">لون المساق</string>
+    <string name="colorPickerDialogMessage">قم بتخصيص المساق الخاص بك بإعداد لون جديد.</string>
+    <string name="colorPickerError">تعذر تعيين لون المساق في الوقت الحالي.</string>
+
+    <string name="contentDescriptionColorCottonCandy">وردي</string>
+    <string name="contentDescriptionColorBarbie">وردي ناصع</string>
+    <string name="contentDescriptionColorBarneyPurple">بنفسجي</string>
+    <string name="contentDescriptionColorEggplant">أرجواني</string>
+    <string name="contentDescriptionColorUltramarine">أزرق داكن</string>
+    <string name="contentDescriptionColorOcean11">أزرق</string>
+    <string name="contentDescriptionColorCyan">سماوي</string>
+    <string name="contentDescriptionColorAquaMarine">أزرق مائي</string>
+    <string name="contentDescriptionColorEmeraldGreen">أخضر زمردي</string>
+    <string name="contentDescriptionColorFreshCutLawn">أخضر</string>
+    <string name="contentDescriptionColorChartreuse">أخضر مائل للصفرة</string>
+    <string name="contentDescriptionColorSunFlower">أصفر</string>
+    <string name="contentDescriptionColorTangerine">برتقالي</string>
+    <string name="contentDescriptionColorBloodOrange">برتقالي غامق</string>
+    <string name="contentDescriptionColorSriracha">أحمر</string>
+
+    <string name="courseFavorited">المساق %s، مفضل.</string>
+    <string name="courseNotFavorited">المساق %s، غير مفضل.</string>
+    <string name="groupFavorited">المجموعة %s، مفضلة.</string>
+    <string name="groupNotFavorited">المجموعة %s، غير مفضلة.</string>
+    <string name="accountGroup">مجموعة الحساب</string>
+
+    <!--Recents-->
+    <string name="recents_empty">من شاشة تخصيص المساقات، قم بإضافة مساق أو مجموعة لعرضهما هنا.</string>
+
+    <string name="toolbar_close">إغلاق شريط الأدوات</string>
+    <string name="favoriteDescription">إظهار في \"المساقات الخاصة بي\"</string>
+    <string name="about">حول</string>
+    <string name="courseShortcuts">إضافة اختصار إلى مساقك</string>
+    <string name="courseNickname">لقب المساق</string>
+
+    <string name="notAvailableOffline">ميزة غير متوفرة دون الاتصال بالإنترنت</string>
+    <string name="editFavorites">تحرير مساقات</string>
+
+    <string name="dashboard">لوحة المعلومات</string>
+    <string name="previous">السابق</string>
+    <string name="pageNum" formatted="false">صفحة %d من %d</string>
+    <string name="language">اللغة</string>
+    <string name="systemDefault">النظام الافتراضي</string>
+    <string name="restartingCanvas">إعادة تشغيل Canvas</string>
+    <string name="languageDialogText">سيتطلب تغيير اللغة إعادة تشغيل التطبيق، هل أنت متأكد؟</string>
+    <string name="defaultLanguageWarning">ليس من المضمون أن تكون اللغة الافتراضية لنظامك مدعومة وقد يتطلب ذلك إعادة التشغيل، هل أنت متأكد؟</string>
+    <string name="locked_mastery_paths">مؤمَّن حتى يتم تقييم \"%s\"</string>
+    <string name="locked_icon">رمز مؤمَّن</string>
+    <string name="choose_assignment_group">اختر مجموعة المهمة</string>
+    <string name="chooseAssignmentPath">اختر مسار المهمة</string>
+    <string name="select">تحديد</string>
+    <string name="choice_position">اختر %d</string>
+    <string name="updating_module_info">جارٍ تحميل معلومات الوحدة النمطية&#8230;</string>
+    <string name="arc">Arc</string>
+    <string name="pending_review">بانتظار المراجعة</string>
+    <string name="totalPoints">%s نقاط</string>
+    <string name="totalPointsText">إجمالي النقاط</string>
+    <string name="contentDescriptionPoints">%s نقاط</string>
+    <string name="contentDescriptionRubricRangeGrade">%1$s من إجمالي %2$s نقطة</string>
+    <string name="score">الدرجة</string>
+    <string name="rangedRubricTotal" formatted="false">%s / %s نقاط</string>
+    <string name="seeAll">عرض الكل</string>
+    <string name="welcome">مرحبًا!</string>
+    <string name="dismiss">تجاهل</string>
+    <string name="tapToViewAnnouncement">انقر لعرض الإعلان</string>
+    <string name="acceptCourseInvitation">قبول</string>
+    <string name="declineCourseInvitation">رفض</string>
+
+    <!-- File Strings -->
+    <array name="file_size_units">
+        <item>بايت</item>
+        <item>كيلوبايت</item>
+        <item>ميجابايت</item>
+        <item>جيجابايت</item>
+        <item>تيرابايت</item>
+    </array>
+
+    <string name="launch_link_in_external_browser">رابط تشغيل في مستعرض خارجي</string>
+    <string name="ltiLaunchFailure">تعذر تحميل أداة LTI في الوقت الحالي.</string>
+    <string name="urlSubmission">إرسال عنوان URL</string>
+
+    <string name="assignmentDeletedError">هذه المهمة لم تعد متوفرة.</string>
+
+    <string name="homePageIdForNotifications">النشاط الأخير</string>
+    <string name="homePageIdForModules">الوحدات النمطية</string>
+    <string name="homePageIdForAssignments">المهام</string>
+    <string name="homePageIdForSyllabus">المناهج</string>
+
+    <string name="contentDescriptionWidgetRefresh">تحديث عنصر واجهة المستخدم</string>
+
+    <string name="copy">نسخ</string>
+    <string name="courseInviteTitle">تمت دعوتك.</string>
+    <string name="inviteAccepted">تم قبول الدعوة!</string>
+    <string name="inviteDeclined">تم رفض الدعوة.</string>
+    <string name="latePenalty">عقوبة التأخير (-%s)</string>
+    <string name="finalGrade">الدرجة النهائية</string>
+
+    <string name="moreThan99">أكثر من 99</string>
+    <string name="max_count">أكثر من 99</string>
+
+    <string name="opensInWebView">الفتح في عرض ويب</string>
+    <string name="unsupportedTabLabel">غير مدعوم على هذا الجهاز</string>
+
+    <string name="downloadingFile">جارٍ التنزيل</string>
+    <string name="downloadFailed">فشل التنزيل</string>
+    <string name="downloadSuccessful">نجح التنزيل</string>
+
+    <string name="full_due_date_details">التفاصيل الكاملة لتاريخ الاستحقاق</string>
+    <string name="submissions">الإرسالات</string>
+    <string name="attachment">المرفق</string>
+    <string name="contentDescription_back">عودة</string>
+
+    <plurals name="quantityPointsAbbreviated">
+        <item quantity="zero">%s نقاط</item>
+        <item quantity="one">%s نقطة</item>
+        <item quantity="two">%s نقاط</item>
+        <item quantity="few">%s نقاط</item>
+        <item quantity="many">%s نقاط</item>
+        <item quantity="other">%s نقاط</item>
+    </plurals>
+    <plurals name="quantityPointsFull">
+        <item quantity="zero">%s نقاط</item>
+        <item quantity="one">%s نقطة</item>
+        <item quantity="two">%s نقاط</item>
+        <item quantity="few">%s نقاط</item>
+        <item quantity="many">%s نقاط</item>
+        <item quantity="other">%s نقاط</item>
+    </plurals>
+    <string name="capitalTo">إلى</string>
+
+    <string name="unableToViewInBrowser">لا يمكننا العثور على تطبيق خارجي لعرض أداة LTI (تبادلية أدوات التعلم) هذه.</string>
+
+    <string name="commentUpload">تحميل التعليق</string>
+    <string name="unableToUploadMediaComment">لإرسال تعليق وسائط، قم بإرسال أو حذف تعليقك النصي غير المرسل.</string>
+
+    <string name="frontPage">الصفحة الأمامية</string>
+    <string name="editPage">تحرير صفحة</string>
+    <string name="description">الوصف</string>
+    <string name="pageSuccessfullyUpdated">تم تحديث الصفحة بنجاح.</string>
+    <string name="errorSavingPage">حدث خطأ أثناء محاولة حفظ هذه الصفحة. حاول مرة أخرى.</string>
+    <string name="pageTitleMustBeSet">يجب تعيين عنوان الصفحة.</string>
+    <string name="pageDetails">تفاصيل الصفحة</string>
+    <string name="saving">جارٍ الحفظ</string>
+    <string name="confirmDeleteEvent">هل ترغب بالتأكيد في حذف هذا الحدث؟</string>
+    <string name="conferencesNotSupported">لم يتم بعد دعم المؤتمرات على الأجهزة المحمولة.</string>
+    <string name="filePreviewContentDescription">صورة معاينة الملف</string>
+
+    <string name="pdfError">حدث خطأ أثناء محاولة تحميل ملف PDF هذا.</string>
+    <!-- Parent Strings -->
+    <string name="addChildTitle">إضافة طالب</string>
+    <string name="addChildSubTitle">أدخل رمز إقران الطالب المقدم لك.</string>
+    <string name="addChildHint">رمز الإقران...</string>
+    <string name="addChildErrorMessage">تعذر الإقران. تأكد من أن رمز الإقران صحيح وفي إطار الحد الزمني للاستخدام.</string>
+</resources>

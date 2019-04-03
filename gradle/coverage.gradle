@@ -1,0 +1,80 @@
+// Existing gradle issue: https://github.com/arturdm/jacoco-android-gradle-plugin/issues/37
+// Code from: https://gist.github.com/almozavr/3cd46c4b4f0babbfc136db91924ab56e
+
+apply plugin: "jacoco"
+
+jacoco {
+    toolVersion = Versions.JACOCO
+}
+
+tasks.withType(Test) {
+    jacoco.includeNoLocationClasses = true
+}
+
+task('jacocoReports') {
+    group = "Reporting"
+    description = "Generate Jacoco coverage reports for all variants"
+}
+
+task('jacocoVerifications') {
+    group = "Verification"
+    description = "Generate Jacoco coverage reports for all variants"
+}
+
+variants().all { variant ->
+    def params = prepareJacocoParams(variant)
+    def reportTask = createReportTask(params)
+    jacocoReports.dependsOn reportTask
+}
+
+def prepareJacocoParams(variant) {
+    def params = [:]
+    params.variantName = variant.name
+    params.variantCapName = variant.name.capitalize()
+    params.fileFilter = [
+                          '**/adapter/*.*',
+                          '**/util/*.*',
+                          '**/presenters/*.*',
+                          '**/canvasapi2/*.*',
+                          '**/annotations/*.*',
+                          '**/pandautils/*.*',
+                          '**/login/*.*',
+    ]
+    params.classDirectories = files([fileTree(
+            dir: variant.javaCompiler.destinationDir,
+            includes: params.fileFilter
+    ) + fileTree(
+            dir: "$buildDir/tmp/kotlin-classes/$params.variantName",
+            includes: params.fileFilter
+    )])
+
+    params.sourceDirectories = files([
+            "src/main/java", "src/main/kotlin",
+            "src/$params.variantName/java", "src/$params.variantName/kotlin"
+    ])
+    params.executionData = files("${buildDir}/jacoco/test${params.variantCapName}UnitTest.exec")
+    return params
+}
+
+def createReportTask(params) {
+    return task("jacoco${params.variantCapName}Report", type: JacocoReport, dependsOn: "test${params.variantCapName}UnitTest") {
+        group = "Reporting"
+        description = "Generate Jacoco coverage reports for $params.variantCapName"
+        reports {
+            xml.enabled = true
+            html.enabled = true
+            csv.enabled = false
+        }
+        classDirectories = params.classDirectories
+        sourceDirectories = params.sourceDirectories
+        executionData = params.executionData
+    }
+}
+
+def variants() {
+    if (project.android.hasProperty('libraryVariants')) {
+        return project.android.libraryVariants
+    } else {
+        return project.android.applicationVariants
+    }
+}

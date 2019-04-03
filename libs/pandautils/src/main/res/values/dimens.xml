@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <dimen name="floatingCardVerticalPadding">0dp</dimen>
+    <dimen name="floatingCardHorizontalPadding">0dp</dimen>
+
+    <dimen name="avatar_size">40dp</dimen>
+    <dimen name="avatar_border_width">1dp</dimen>
+
+    <dimen name="utils_toolbar_elevation_small">2dp</dimen>
+    <dimen name="utils_toolbar_elevation">6dp</dimen>
+    <dimen name="utils_landscapeTabletDialogAdjustment">120dp</dimen>
+    <dimen name="utils_attachment_view_width">150dp</dimen>
+    <dimen name="utils_attachment_view_height">90dp</dimen>
+
+    <dimen name="title_text_size">20sp</dimen>
+    <dimen name="message_text_size">16sp</dimen>
+    <dimen name="empty_text_margin">8dp</dimen>
+    <item name="image_top" type="dimen">.28</item>
+    <item name="image_bottom" type="dimen">.6</item>
+    <item name="title_top" type="dimen">.73</item>
+    <item name="text_left" type="dimen">.12</item>
+    <item name="text_right" type="dimen">.88</item>
+    <item name="dashboard_image_top" type="dimen">.36</item>
+    <item name="dashboard_image_bottom" type="dimen">.54</item>
+    <item name="dashboard_title_top" type="dimen">.64</item>
+    <item name="dashboard_button_top" type="dimen">.77</item>
+    <item name="inbox_image_top" type="dimen">.15</item>
+    <item name="inbox_image_bottom" type="dimen">.55</item>
+    <item name="inbox_title_top" type="dimen">.65</item>
+    <item name="inbox_text_left" type="dimen">.15</item>
+    <item name="inbox_text_right" type="dimen">.85</item>
+
+    <dimen name="file_upload_panda_top">56dp</dimen>
+    <dimen name="file_upload_panda_bottom">24dp</dimen>
+
+</resources>

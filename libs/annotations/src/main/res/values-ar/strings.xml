@@ -1,0 +1,41 @@
+﻿<!--
+  ~ Copyright (C) 2018 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="inputText">نص الإدخال</string>
+    <string name="cancel">إلغاء</string>
+    <string name="comment">تعليق</string>
+    <string name="skip">تخطي</string>
+    <string name="comments">تعليقات</string>
+    <string name="error_loading_submission">حدثت مشكلة أثناء تحميل هذا الإرسال.</string>
+    <string name="retry">إعادة المحاولة</string>
+    <string name="annotationErrorOccurred">حدث خطأ غير متوقع أثناء تحميل التعليقات التوضيحية.</string>
+    <string name="annotationError">خطأ بالتعليق التوضيحي</string>
+    <string name="annotationDialogMessage">تم حذف التعليق التوضيحي من مصدر آخر.</string>
+    <string name="errorSendingMessage">تعذر إرسال هذه الرسالة. اضغط لإعادة المحاولة.</string>
+    <string name="addAnnotationComment">إضافة تعليق</string>
+    <string name="editComment">تحرير التعليق</string>
+    <string name="deleteComment">حذف التعليق</string>
+    <string name="deleteAnnotation">حذف التعليق التوضيحي</string>
+    <string name="deleteCommentConfirmation">هل تريد بالتأكيد حذف هذا التعليق؟</string>
+    <string name="deleteHeadCommentConfirmation">سيؤدي حذف هذا التعليق إلى حذف جميع التعليقات المرتبطة بهذا التعليق التوضيحي. هل ترغب بالتأكيد في فعل هذا؟</string>
+    <string name="sendingSimple">جارٍ الإرسال</string>
+    <string name="pspdf__annotation_type_stamp">لون الملاحظة</string>
+    <string name="removedComment">تمت إزالة %1$s بواسطة %2$s</string>
+
+</resources>

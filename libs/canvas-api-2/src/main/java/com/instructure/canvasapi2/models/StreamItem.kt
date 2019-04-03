@@ -1,0 +1,308 @@
+/*
+ * Copyright (C) 2017 - present Instructure, Inc.
+ *
+ *     Licensed under the Apache License, Version 2.0 (the "License");
+ *     you may not use this file except in compliance with the License.
+ *     You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *     Unless required by applicable law or agreed to in writing, software
+ *     distributed under the License is distributed on an "AS IS" BASIS,
+ *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *     See the License for the specific language governing permissions and
+ *     limitations under the License.
+ *
+ */
+
+package com.instructure.canvasapi2.models
+
+import android.content.Context
+import com.google.gson.annotations.SerializedName
+import com.instructure.canvasapi2.R
+import com.instructure.canvasapi2.utils.toDate
+import kotlinx.android.parcel.IgnoredOnParcel
+import kotlinx.android.parcel.Parcelize
+import java.util.*
+
+@Parcelize
+data class StreamItem(
+        override val id: Long = -1,
+        @SerializedName("updated_at")
+        val updatedAt: String = "", // TODO: null?
+        @SerializedName("submitted_at")
+        val submittedAt: String? = null,
+        var title: String? = null,
+        private var message: String? = null,
+        val type: String = "", // TODO: null?
+        private val context_type: String? = null,
+        // Helper method to show that the stream item has been read without having to reload all the data.
+        // this method does not get the data from the server, so make sure item is actually read.
+        @SerializedName("read_state")
+        var isReadState: Boolean = false,
+        val url: String? = null,
+        @SerializedName("html_url")
+        val htmlUrl: String = "", // TODO: null?
+        private var course_id: Long = -1,
+        private var group_id: Long = -1,
+        var assignment_id: Long = -1,
+
+        // message type, which is not a conversation, but stream notifications
+        @SerializedName("message_id")
+        val messageId: Long = -1,
+        @SerializedName("notification_category")
+        val notificationCategory: String = "", // TODO: null?
+
+        // Conversation
+        @SerializedName("conversation_id")
+        val conversationId: Long = -1,
+        @SerializedName("private")
+        val isPrivate: Boolean = false,
+        @SerializedName("participant_count")
+        val participantCount: Int = 0,
+
+        // discussionTopic or announcement
+        private val discussion_topic_id: Long = -1,
+        private val announcement_id: Long = -1,
+        private val require_initial_post: Boolean = false,
+        private val user_has_posted: Boolean = false,
+        @SerializedName("root_discussion_entries")
+        val rootDiscussionEntries: List<DiscussionEntry> = ArrayList(),
+
+        // submission
+        val attempt: Int = 0,
+        val body: String? = null,
+        val grade: String? = null,
+        private val grade_matches_current_submission: Boolean = false,
+        private val graded_at: String? = null,
+        @SerializedName("grader_id")
+        val graderId: Long = -1,
+        val score: Double = -1.0,
+        @SerializedName("submission_type")
+        val submissiTonType: String? = null,
+        @SerializedName("workflow_state")
+        val workflowState: String = "", // TODO: null?
+        val late: Boolean = false,
+        @SerializedName("preview_url")
+        val previewUrl: String = "", // TODO: null?
+        @SerializedName("submission_comments")
+        val submissionComments: List<SubmissionComment> = ArrayList(),
+        var canvasContext: CanvasContext? = null,
+        val assignment: Assignment? = null,
+        @SerializedName("user_id")
+        val userId: Long = -1,
+        val user: User = User()
+) : CanvasModel<StreamItem>() {
+    // We want opposite of natural sorting order of date since we want the newest one to come first
+    override val comparisonDate get() = updatedDate
+
+    val gradedDate get() = graded_at.toDate()
+    val submittedDate get() = submittedAt.toDate()
+    val updatedDate get() = updatedAt.toDate()
+
+    // Helper fields
+    @IgnoredOnParcel
+    private var canvasContextType: CanvasContext.Type? = CanvasContext.Type.USER
+    @IgnoredOnParcel
+    private var hasSetContextType = false
+    @IgnoredOnParcel
+    var conversation: Conversation? = null
+        private set
+    @IgnoredOnParcel
+    var isChecked: Boolean = false
+
+    val contextType: CanvasContext.Type?
+        get() {
+            if (!hasSetContextType) {
+                if (context_type != null && (context_type.toLowerCase() == "course" || course_id > 0)) {
+                    canvasContextType = CanvasContext.Type.COURSE
+                } else if (context_type != null && (context_type.toLowerCase() == "group" || group_id > 0)) {
+                    canvasContextType = CanvasContext.Type.GROUP
+                }
+                hasSetContextType = true
+            }
+
+            return canvasContextType
+        }
+    val courseId: Long
+        get() {
+            if (contextType === CanvasContext.Type.COURSE && course_id == -1L) {
+                course_id = parseCourseId()
+            }
+            return course_id
+        }
+
+    val groupId: Long
+        get() {
+            if (contextType === CanvasContext.Type.GROUP && group_id == -1L) {
+                group_id = parseGroupId()
+            }
+            return group_id
+        }
+    val assignmentId: Long
+        get() {
+            if (contextType === CanvasContext.Type.COURSE) {
+                return parseAssignmentId()
+            }
+            return -1L
+        }
+    val discussionTopicId: Long
+        get() = if (discussion_topic_id == -1L) {
+            announcement_id
+        } else discussion_topic_id
+
+    enum class Type {
+        DISCUSSION_TOPIC, SUBMISSION, ANNOUNCEMENT, CONVERSATION, MESSAGE, CONFERENCE, COLLABORATION, COLLECTION_ITEM, UNKNOWN, NOT_SET;
+
+
+        companion object {
+            fun isDiscussionTopic(streamItem: StreamItem): Boolean = streamItem.getStreamItemType() == DISCUSSION_TOPIC
+            fun isSubmission(streamItem: StreamItem): Boolean = streamItem.getStreamItemType() == SUBMISSION
+            fun isAnnouncement(streamItem: StreamItem): Boolean = streamItem.getStreamItemType() == ANNOUNCEMENT
+            fun isConversation(streamItem: StreamItem): Boolean = streamItem.getStreamItemType() == CONVERSATION
+            fun isMessage(streamItem: StreamItem): Boolean = streamItem.getStreamItemType() == MESSAGE
+            fun isConference(streamItem: StreamItem): Boolean = streamItem.getStreamItemType() == CONFERENCE
+            fun isCollaboration(streamItem: StreamItem): Boolean = streamItem.getStreamItemType() == COLLABORATION
+            fun isCollectionItem(streamItem: StreamItem): Boolean = streamItem.getStreamItemType() == COLLECTION_ITEM
+            fun isUnknown(streamItem: StreamItem): Boolean = streamItem.getStreamItemType() == UNKNOWN
+            fun isNotSet(streamItem: StreamItem): Boolean = streamItem.getStreamItemType() == NOT_SET
+        }
+    }
+
+    fun getTitle(context: Context): String? {
+        if (title == null && getStreamItemType() == Type.CONVERSATION) {
+            title = context.getString(R.string.Message)
+        }
+        return title
+    }
+
+    fun getMessage(context: Context): String? {
+        if (message == null) {
+            message = createMessage(context)
+        }
+        return message
+    }
+
+    fun getStreamItemType(): Type? = typeFromString(type)
+
+    private fun typeFromString(type: String): Type = when {
+        type.toLowerCase() == "conversation" -> Type.CONVERSATION
+        type.toLowerCase() == "submission" -> Type.SUBMISSION
+        type.toLowerCase() == "discussiontopic" -> Type.DISCUSSION_TOPIC
+        type.toLowerCase() == "announcement" -> Type.ANNOUNCEMENT
+        type.toLowerCase() == "message" -> Type.MESSAGE
+        type.toLowerCase() == "conference" -> Type.CONFERENCE
+        type.toLowerCase() == "webconference" -> Type.CONFERENCE
+        type.toLowerCase() == "collaboration" -> Type.COLLABORATION
+        type.toLowerCase() == "collectionitem" -> Type.COLLECTION_ITEM
+        else -> Type.UNKNOWN
+    }
+
+    fun setConversation(context: Context, conversation: Conversation?, myUserId: Long, monologueDefault: String) {
+        this.conversation = conversation ?: return
+        title = conversation.getMessageTitle(context, myUserId, monologueDefault)
+        message = createMessage(context)
+    }
+
+    fun setCanvasContextFromMap(courseMap: Map<Long, Course>, groupMap: Map<Long, Group>) {
+        canvasContext = if (contextType === CanvasContext.Type.COURSE) {
+            courseMap[courseId]
+        } else {
+            groupMap[groupId]
+        }
+    }
+
+    private fun createMessage(context: Context): String? {
+        when (getStreamItemType()) {
+            StreamItem.Type.CONVERSATION -> {
+                if (conversation == null) {
+                    return context.getString(R.string.Loading)
+                } else if (conversation!!.lastMessagePreview == null) {
+                    return ""
+                }
+                return conversation!!.lastMessagePreview
+            }
+            StreamItem.Type.SUBMISSION -> {
+                // Get comments from assignment
+                var comment: String? = null
+                if (submissionComments.isNotEmpty()) {
+                    comment = submissionComments[submissionComments.size - 1].comment
+                }
+                // Set it to the last comment if it's not null
+                if (comment != null && comment != "null" && score != -1.0) {
+                    return ":$score $comment"
+                } else if ((comment == null || comment == "null") && score != -1.0) {
+                    return ":$score"
+                } else if (comment != null && comment != "null" && score == -1.0) {
+                    return comment
+                }
+            }
+            StreamItem.Type.DISCUSSION_TOPIC ->
+                // If it's a discussionTopic, get the last entry for the message.
+                if (rootDiscussionEntries.isNotEmpty()) {
+                    return rootDiscussionEntries[rootDiscussionEntries.size - 1].getMessage(context.getString(R.string.Deleted))
+                }
+            else -> {
+            }
+        }
+
+        return if (message == null) {
+            ""
+        } else message
+    }
+
+    private fun parseAssignmentId(): Long {
+        // Get the assignment from the url
+        if (htmlUrl.isNotEmpty() && htmlUrl != "null") {
+            val searchFor = "assignments/"
+            var start = htmlUrl.indexOf(searchFor)
+            if (start == -1) {
+                return 0
+            }
+            start += searchFor.length
+            var end = htmlUrl.indexOf("/", start)
+            //in some urls the assignmentID might be the last thing so there wouldn't be a final /
+            if (end == -1) {
+                end = htmlUrl.length
+            }
+            val assignmentId = htmlUrl.substring(start, end)
+
+            return assignmentId.toLong()
+        }
+        return 0
+    }
+
+    private fun parseCourseId(): Long {
+        if (htmlUrl.isNotEmpty() && htmlUrl != "null") {
+            val searchFor = "courses/"
+            var start = htmlUrl.indexOf(searchFor)
+            if (start == -1) {
+                return 0
+            }
+            start += searchFor.length
+            val end = htmlUrl.indexOf("/", start)
+
+            val courseIdString = htmlUrl.substring(start, end)
+
+            return courseIdString.toLong()
+        }
+        return 0
+    }
+
+    private fun parseGroupId(): Long {
+        if (htmlUrl.isNotEmpty() && htmlUrl != "null") {
+            val searchFor = "groups/"
+            var start = htmlUrl.indexOf(searchFor)
+            if (start == -1) {
+                return 0
+            }
+            start += searchFor.length
+            val end = htmlUrl.indexOf("/", start)
+
+            val groupIdString = htmlUrl.substring(start, end)
+
+            return groupIdString.toLong()
+        }
+        return 0
+    }
+}

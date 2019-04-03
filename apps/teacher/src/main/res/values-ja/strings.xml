@@ -1,0 +1,893 @@
+﻿<!--
+  ~ Copyright (C) 2017 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<resources>
+
+    <string name="settings_name">設定</string>
+    <string name="tab_week">週</string>
+    <string name="tab_inbox">受信トレイ</string>
+    <string name="tab_details">詳細</string>
+    <string name="tab_questions">質問</string>
+    <string name="tab_submissions">提出物</string>
+    <string name="tab_assignments">課題</string>
+    <string name="tab_profile">プロフィール</string>
+    <string name="tab_people">メンバー</string>
+    <string name="tab_quizzes">クイズ</string>
+    <string name="tab_discussions">ディスカッション</string>
+    <string name="tab_announcements">発表</string>
+    <string name="tab_attendance">出席状況</string>
+    <string name="tab_pages">ページ</string>
+    <string name="tab_todo">タスク</string>
+    <string name="content_description_school_logo">スクールロゴ</string>
+    <string name="search_guides">Canvas ガイドを検索する</string>
+    <string name="canvas_guides">Canvas ガイド</string>
+    <string name="search_guides_icon">Canvas ガイドのアイコン</string>
+    <string name="search_guides_details">よくある質問への回答</string>
+    <string name="report_problem">問題を報告する</string>
+    <string name="report_problem_icon"> 問題を報告するためのアイコン</string>
+    <string name="report_problem_details">アプリが正しく作動しない場合、連絡してください</string>
+    <string name="request_feature">機能をリクエストする</string>
+    <string name="request_feature_icon">機能をリクエストするためのアイコン</string>
+    <string name="request_feature_details">アプリを改善するためのアイデアをお知らせください</string>
+    <string name="share_your_love">アプリへの愛を共有しましょう</string>
+    <string name="share_your_love_details">このアプリの好きな部分を教えてください</string>
+    <string name="masquerade">マスカレード</string>
+    <string name="issue_with_teacher_app">講師用アプリの問題[Android]</string>
+    <string name="no_items_to_display_short">アイテムなし</string>
+    <string name="rate_the_app">アプリを評価する</string>
+    <string name="rate_the_app_icon">アプリを評価するためのアイコン</string>
+    <string name="teacher_log_out">ログアウト</string>
+    <string name="teacher_switch_user">ユーザーをスイッチする</string>
+    <string name="under_construction">工事中</string>
+    <string name="toolbar_event">イベント</string>
+    <string name="location">場所</string>
+    <string name="event_date">イベント日</string>
+    <string name="course">コース</string>
+    <string name="profile">プロフィール</string>
+    <string name="share">シェアする</string>
+    <string name="share_with">と共有&#8230;</string>
+
+    <!-- Navigation Drawer -->
+    <string name="navigation_drawer_open">ナビゲーションの引き出しを開く</string>
+    <string name="navigation_drawer_close">ナビゲーションの引き出しを閉じる</string>
+
+    <!-- Compose Message -->
+    <string name="no_subject">（件名なし）</string>
+    <string name="compose_message">メッセージを作成する</string>
+    <string name="newMessage">新しいメッセージ</string>
+    <string name="courses">コース</string>
+    <string name="compose_message_no_ellipsis">メッセージを作成</string>
+    <string name="send">送信</string>
+    <string name="attachment">添付ファイル</string>
+    <string name="attachments">添付ファイル</string>
+    <string name="not_available_offline">オフラインで利用できない機能</string>
+    <string name="empty_message">メッセージは空欄にはできません！</string>
+    <string name="message_has_no_recipients">このメッセージには現在、受信者はいません。</string>
+    <string name="course_spinner_title">コース：</string>
+    <string name="reply_to_message">返信</string>
+    <string name="forward_message">メッセージを転送</string>
+    <string name="label_to">変更後</string>
+    <string name="label_course">コース</string>
+    <string name="label_subject">件名</string>
+
+    <string name="common_send">送信</string>
+    <string name="common_edit">編集</string>
+
+    <!-- Feature Request -->
+    <string name="feature_subject">講師用アプリのアイデア[Android]</string>
+    <string name="understand_request">次の情報は、あなたのアイデアをより良く理解するために役立ちます:</string>
+    <string name="send_mail">メールを送信しています&#8230;</string>
+
+    <string name="color_1">レッド</string>
+    <string name="color_2">ホットピンク</string>
+    <string name="color_3">ラベンダー</string>
+    <string name="color_4">バイオレット</string>
+    <string name="color_5">パープル</string>
+    <string name="color_6">青灰色</string>
+    <string name="color_7">ブルー</string>
+    <string name="color_8">シアン</string>
+    <string name="color_9">グリーン</string>
+    <string name="color_10">黄緑</string>
+    <string name="color_11">イエロー</string>
+    <string name="color_12">金色</string>
+    <string name="color_13">オレンジ</string>
+    <string name="color_14">ピンク</string>
+    <string name="color_15">グレー</string>
+
+    <string name="attachment_icon">添付アイコン</string>
+    <string name="star_icon">スターアイコン</string>
+    <string name="monologue">モノローグ</string>
+
+    <string name="create_announcement_topic_title_hint">トピックのタイトル</string>
+    <string name="post_date">投稿日</string>
+    <string name="announcement">発表</string>
+    <string name="create_announcement_title">新規発表</string>
+    <string name="create_announcement_no_description">説明が必要です</string>
+    <string name="announcementDetails">アナウンスの詳細</string>
+
+    <string name="no_title">タイトルなし</string>
+    <string name="announcement_create_success">発表が作成されました！</string>
+    <string name="announcement_create_fail">発表を作成できません。接続を確認して、もう一度お試しください。</string>
+    <string name="create_announcement_delay_posting">転記遅延</string>
+
+    <string name="discussion">ディスカッション</string>
+
+    <string name="sunday">日曜日</string>
+    <string name="monday">月曜日</string>
+    <string name="tuesday">火曜日</string>
+    <string name="wednesday">水曜日</string>
+    <string name="thursday">木曜日</string>
+    <string name="friday">金曜日</string>
+    <string name="saturday">土曜日</string>
+
+    <string name="add_attachment">添付を追加</string>
+    <string name="content_description_files">ファイルアイコン</string>
+    <string name="next">次</string>
+    <string name="upload_to_cnavas">Canvasにアップロードする</string>
+    <string name="upload_my_files">マイファイル</string>
+    <string name="upload_course_files">コースファイル</string>
+    <string name="upload_to">アップロードする</string>
+    <string name="message_attachments">メッセージ添付ファイル</string>
+    <string name="with">と</string>
+    <string name="discussion_attachment">ファイルを添付する</string>
+    <string name="select_files_or_photos">ファイルまたは画像を選択</string>
+    <string name="uploading_files">ファイルをアップロード中&#8230;</string>
+    <string name="no_attachment">（添付なし）</string>
+    <string name="creating_announcement">アナウンスメントを作成中&#8230;</string>
+
+    <string name="copy_email">メールアドレスをコピー</string>
+    <string name="all_grading_periods">すべての採点期間</string>
+    <string name="no_submissions">提出はありません</string>
+    <string name="all_submissions_graded">すべての提出が採点済み</string>
+    <string name="icon">アイコン</string>
+    <plurals name="grading_status_assignment">
+        <item quantity="other">%d提出には採点が必要</item>
+    </plurals>
+
+    <plurals name="assignees_without_grades">
+        <item quantity="other">成績のない課題提出者が%dいます。</item>
+    </plurals>
+
+    <string name="inbox_empty_title">メッセージなし</string>
+    <string name="inbox_empty_starred_title">スターありメッセージはありません</string>
+    <string name="inbox_empty_message">\"+\"  をタップして新しい会話を作成する。</string>
+    <string name="inbox_empty_starred_message">メッセージのスターをタップすると、メッセージにスターが付きます。</string>
+
+    <string name="reply">返信</string>
+    <string name="replyAll">すべてに返信</string>
+    <string name="forward">転送</string>
+    <string name="star">スター</string>
+    <string name="archive">アーカイブ</string>
+    <string name="delete">削除</string>
+    <string name="message">メッセージ</string>
+    <string name="unarchive">アーカイブ解凍</string>
+    <string name="message_options">メッセージオプション</string>
+    <string name="markAsUnread">未読としてマークする</string>
+    <string name="message_delete_warning">このメッセージのコピーを本当に削除しますか？この操作は元に戻すことはできません。</string>
+    <string name="conversation_delete_warning">この会話のコピーを本当に削除しますか？この操作は元に戻すことはできません。</string>
+    <string name="error_conversation_generic">この操作を実行できません。接続を確認して、もう一度お試しください。</string>
+    <string name="message_archived">メッセージがアーカイブされました</string>
+    <string name="message_unarchived">メッセージがアーカイブされていません</string>
+    <string name="message_deleted">メッセージが削除されました</string>
+    <string name="select_recipients">受取人を選択する</string>
+    <string name="entire_group_selected">グループ全体が選択されました</string>
+    <string name="no_users_in_group">グループ内にユーザーなし</string>
+
+    <string name="published">公開済み</string>
+    <string name="not_published">未公開</string>
+    <string name="published_content_description">公開されたチェックマーク</string>
+    <string name="points_with_value">ポイント</string>
+    <string name="point_with_value">ポイント</string>
+    <string name="no_due_date">期日なし</string>
+    <string name="due_date">期日</string>
+
+    <string name="view_replies">返信を表示</string>
+    <string name="view_discussion">ディスカッションを表示</string>
+
+    <string name="edit">編集</string>
+    <string name="save">保存</string>
+    <string name="successfully_updated_assignment">課題の更新に成功しました</string>
+    <string name="successfully_updated_quiz">クイズの更新に成功しました</string>
+    <string name="failure_updating_assignment">課題を更新する際に問題が生じました。もう一度試してください。</string>
+    <string name="failure_deleting_assignment">課題を削除する際に問題が生じました。もう一度試してください。</string>
+    <string name="cant_unpublish">受講生の提出がある場合は公開を取り消すことはできません。</string>
+    <string name="messages">メッセージ</string>
+    <plurals name="reply_message_plus_label">
+        <item quantity="other">+ %d メッセージ</item>
+    </plurals>
+    <plurals name="submissionNeedsGrading">
+        <item quantity="other">%d提出には採点が必要</item>
+    </plurals>
+
+    <string name="delete_assignment_message">この課題を削除してもよろしいですか?</string>
+    <string name="question">質問</string>
+    <string name="quizMatchingDefaultDisplay">[選択する]</string>
+
+    <string name="max_count">99+</string>
+    <string name="message_student">受講生にメッセージ</string>
+
+    <string name="message_these_students">これら受講生にメッセージ</string>
+    <string name="submission_status_missing">欠如</string>
+    <string name="submission_status_late">遅れている</string>
+    <string name="submission_status_submitted">タスクの成績を送信</string>
+    <string name="submission_status_not_submitted">未提出</string>
+    <string name="submission_status_excused">免除</string>
+    <string name="last_login_format">最終ログイン：%s</string>
+
+    <string name="muteGrades">成績をミュートする</string>
+    <string name="unmuteGrades">成績をミュート解除する</string>
+    <string name="gradesMutedLabel">成績がミュートされています</string>
+    <string name="turnOnAnonymousGrading">匿名での採点をオンにする</string>
+    <string name="turnOffAnonymousGrading">匿名での採点をオフにする</string>
+    <string name="anonymousGradingLabel">匿名での採点</string>
+    <string name="anonymousStudentLabel">受講者</string>
+
+    <!-- TODO -->
+    <string name="coming_soon">この機能はまもなく利用可能に</string>
+
+    <string-array name="submission_filters">
+        <item>すべての提出物</item>
+        <item>遅れた提出物</item>
+        <item>不在の提出物</item>
+        <item>成績高</item>
+        <item>成績低</item>
+    </string-array>
+
+    <string-array name="people_filters">
+        <item>名前で</item>
+        <item>グレード - 高〜低</item>
+        <item>グレード - 低～高</item>
+    </string-array>
+
+    <string name="content_description_course_tab">コースタブ</string>
+    <string name="content_description_inbox_tab">[受信トレイ]タブ</string>
+    <string name="content_description_profile_tab">[プロファイル]タブ</string>
+    <string name="close">閉じる</string>
+    <string name="no_course_selected">コースを選択してください</string>
+    <string name="discussion_reply_to_entry">ディスカッションの返信</string>
+    <string name="announcement_reply_to_entry">アナウンスの返信</string>
+    <string name="error_text_missing">テキストを追加してメッセージを送信する</string>
+    <string name="error_sending_message">このメッセージを送信できませんでした。タップして再試行してください。</string>
+    <string name="message_sent_successfully">メッセージが送信されました。</string>
+    <string name="error_occurred">予期しないエラーが発生しました。</string>
+    <string name="no_assignments_with_file_upload">このコースには、ファイルのアップロードが可能な課題がありません。</string>
+    <string name="extension_not_allowed">選択されたファイルタイプは許可されていません。</string>
+    <string name="allowed_extensions">許可された拡張子:</string>
+    <string name="files_uploaded_successfully">ファイルがアップロードされました。</string>
+    <string name="error_uploading_file">あなたのファイルをアップロードする際にエラーが発生しました。再度試してください。</string>
+    <string name="uploading_file">ファイルをアップロード中&#8230;</string>
+    <string name="no_apps">お使いのデバイスには、このファイルを処理できるアプリケーションがインストールされていません。</string>
+    <string name="turn_in">提出する</string>
+    <string name="error_getting_photo">画像取得中にエラーがありました。再度試してください。</string>
+    <string name="loading_files_indeterminate">ファイルをロード中&#8230;</string>
+    <string name="no_files_uploaded">あなたはどのファイルも選択していません。</string>
+    <string name="file_upload_not_supported">選択した課題にファイルをアップロードすることはできません。</string>
+    <string name="one_or_more_extension_not_allowed">1つ以上のファイルのファイル拡張子が許可されていません</string>
+
+    <string name="inbox_all">受信トレイ</string>
+    <string name="inbox_unread">未読</string>
+    <string name="inbox_starred">スターあり</string>
+    <string name="inbox_sent">送信済み</string>
+    <string name="inbox_archived">アーカイブ済み</string>
+    <string name="inbox_all_messages">すべて</string>
+    <string name="uploading_file_num" formatted="false">%d / %d をアップロード中</string>
+    <string name="page_not_found">ページが見つかりません</string>
+    <string name="no_connection">接続していません</string>
+    <string name="unauthorized_access">あなたにはこれにアクセスする権限がありませんあなたに許可されていないか、まだアクセスがありません（あなたのコースはまだ始まっていません）</string>
+    <string name="server_error">サーバーエラーが発生しました。</string>
+    <string name="error_loading_files">あなたのファイルを読み込む際にエラーが発生しました。インテーネット接続を確認して、もう一度お試しください。</string>
+    <string name="files_submitted_successfully">ファイルが提出されました。</string>
+    <string name="no_data_connection">データの接続を確認し、やり直してください。</string>
+    <string name="teacher_logout_warning">ログアウトしますか？</string>
+    <string name="teacher_yes">はい</string>
+    <string name="teacher_no">いいえ</string>
+    <string name="teacher_sending">送信&#8230;</string>
+    <string name="teacher_cancel">キャンセル</string>
+    <string name="teacher_okay">OK</string>
+    <string name="teacher_upload">アップロード</string>
+    <string name="settings">設定</string>
+    <string name="edit_courses">コースを編集する</string>
+    <string name="start_annotating">注釈を開始する</string>
+    <string name="empty_speedgrader_content">空のSpeedgraderビュー、デザインが必要</string>
+
+    <!--Course Settings-->
+    <string name="course_settings">コース設定</string>
+    <string name="course_name">コース名</string>
+    <string name="set_home_to">\'Home\'をに設定する&#8230;</string>
+    <string name="course_activity_stream">コースのアクティビティ ストリーム</string>
+    <string name="pages_front_page">ページ/トップ ページ</string>
+    <string name="frontPage">フロントページ</string>
+    <string name="course_modules">コース モジュール</string>
+    <string name="assignments_list">課題リスト</string>
+    <string name="syllabus">シラバス</string>
+    <!--End Course Settings-->
+    <!-- Assignment Details -->
+    <string name="multiple_due_dates">複数の締切日</string>
+    <string name="everyone">全員</string>
+    <string name="everyone_else">他の全員</string>
+    <string name="unknown_student">未知の受講生</string>
+    <string name="closed">終了済み</string>
+    <string name="no_date_filler">--</string>
+    <string name="due_date_at_time" formatted="false">%1s の %2s が期限</string>
+    <string name="last_post" formatted="false">最終掲示 %s</string>
+    <string name="submission_types">提出タイプ</string>
+    <string name="full_due_date_details">締め切り日の全詳細</string>
+    <string name="availability_label">利用可能性：</string>
+    <string name="available_to_label">利用できる人：</string>
+    <string name="available_from_label">利用可能となる日：</string>
+    <string name="due_for_label">対象：</string>
+    <string name="due_label">期限：</string>
+    <string name="details_available_to_label">使用可能</string>
+    <string name="details_available_from_label">次の日時から</string>
+    <string name="details_due_for_label">対象</string>
+    <string name="due_date_header_label">期限</string>
+    <string name="assignment_details">課題の詳細</string>
+    <string name="no_content">コンテンツなし</string>
+    <string name="submissions">提出物</string>
+    <string name="no_assignment_description_filler">指示を追加して、この課題を受講生に分かりやすくしてください。</string>
+    <string name="no_quiz_description_filler">指示を追加して、このクイズを受講生に分かりやすくしてください。</string>
+    <string name="page_title_due_dates">期日</string>
+    <string name="edit_assignment">課題を編集する</string>
+    <string name="edit_quiz">クイズの編集</string>
+    <string name="title">タイトル</string>
+    <string name="description">説明</string>
+    <string name="grade_total">成績合計</string>
+    <string name="grade">成績</string>
+    <string name="calculated_by_rubric">ルブリックで計算しました</string>
+    <string name="customize_grade">グレードを最適化</string>
+    <string name="out_of_points">%1$s から</string>
+    <string name="gpa">GPA</string>
+    <string name="letter_grade">ABC&#8230;評価</string>
+    <string name="excuse_student">学生を免除する</string>
+    <string name="excuseGroup">グループを免除する</string>
+    <string name="complete_grade">完了</string>
+    <string name="incomplete_grade">不完全</string>
+    <string name="not_graded">採点されていません</string>
+    <string name="excused">免除</string>
+    <string formatted="false" name="grade_value_format">%s %s</string>
+    <string name="grade_value_format_talk_back">%1$s / %2$s</string>
+    <string name="publish">公開</string>
+    <string name="error_saving_assignment">課題を保存しようとしてエラーが発生しました。もう一度試してください。</string>
+    <string name="error_saving_quiz">クイズを保存しようとしてエラーが発生しました。もう一度試してください。</string>
+    <string name="assignment_name_must_be_set">課題名を設定しなければなりません。</string>
+    <string name="announcement_name_must_be_set">アナウンスメントのタイトルを設定しなければなりません。</string>
+    <string name="quiz_title_must_be_set">クイズのタイトルを設定しなければなりません。</string>
+    <string name="assignment_points_must_be_set">課題ポイントを設定しなければなりません。</string>
+    <string name="quiz_points_must_be_set">クイズポイントを設定しなければなりません。</string>
+    <string name="assignee_type_course_sections">コース セクション</string>
+    <string name="assignee_type_groups">グループ</string>
+    <string name="assignee_type_students">受講生</string>
+    <string name="page_title_add_assignees">課題対象者を追加する</string>
+    <string name="assign_to">～へ割り当てられました</string>
+    <string name="available_from">次の日時から</string>
+    <string name="available_to">利用できる人</string>
+    <string name="unlock_after_due_date_error">ロック解除日を期日より後にすることはできません</string>
+    <string name="lock_before_due_date_error">ロック日を期日より前にすることはできません</string>
+    <string name="lock_after_unlock_error">ロック日をロック解除日より前にすることはできません</string>
+    <string name="assignee_blank_error">課題対象者を空白にすることはできません</string>
+    <string name="remove">削除</string>
+    <string name="add_due_date">期限を追加する</string>
+    <string name="full_submission_details">提出の全詳細</string>
+    <string name="graded">採点済み</string>
+    <string name="needsGrading">採点が必要です</string>
+    <string name="not_submitted">未提出</string>
+    <string name="content_description_submission_donut_graded" formatted="false">成績評価 、%s 中 %s</string>
+    <string name="content_description_submission_donut_needs_grading" formatted="false">採点が必要、%s 中 %s</string>
+    <string name="content_description_submission_donut_unsubmitted" formatted="false">未提出、%s 中 %s</string>
+    <string name="display_grade_as">成績を&#8230;として表示する</string>
+    <string name="percentage">割合</string>
+    <string name="complete_incomplete">完了/未完了</string>
+    <string name="points">ポイント</string>
+    <string name="gpa_scale">GPAスケール</string>
+
+    <string-array name="display_grade_as_types" translatable="false">
+        <item>@string/percentage</item>
+        <item>@string/complete_incomplete</item>
+        <item>@string/points</item>
+        <item>@string/letter_grade</item>
+        <item>@string/gpa_scale</item>
+        <item>@string/not_graded</item>
+    </string-array>
+
+    <string-array name="display_grade_as_types_discussion" translatable="false">
+        <item>@string/percentage</item>
+        <item>@string/complete_incomplete</item>
+        <item>@string/points</item>
+        <item>@string/letter_grade</item>
+        <item>@string/gpa_scale</item>
+    </string-array>
+
+  <string name="not_a_teacher">講師ではありませんか？</string>
+    <string name="not_a_teacher_tap_to_visit_play_store">私たちの他のアプリのうちの1つのほうが、もと合うかもしれません。1つタップしてPlay Storeにアクセスする。</string>
+    <string name="canvas_lowercase">canvas</string>
+
+  <string name="sg_tab_grade">成績</string>
+    <string name="sg_tab_comments">コメント</string>
+    <string name="sg_tab_files">ファイル</string>
+    <string name="filter_submissions">フィルターを提出</string>
+    <string name="all_submissions">すべての提出物</string>
+    <string name="submitted_late">遅れた提出</string>
+    <string name="havent_submitted_yet">まだ提出されていません</string>
+    <string name="havent_been_graded">まだ採点されていません</string>
+    <string name="scored_less_than">&#8230; 未満のスコア</string>
+    <string name="scored_more_than">&#8230;を上回るスコア</string>
+    <string name="scored_less_than_value">%s 未満のスコア</string>
+    <string name="scored_more_than_value">%s を上回るスコア</string>
+    <string name="add_comment">コメントを追加</string>
+    <string name="editComment">コメントを編集</string>
+    <string name="deleteComment">コメントを削除する</string>
+    <string name="deleteAnnotation">注釈を削除する</string>
+    <string name="deleteCommentConfirmation">このコメントを削除してもよろしいですか?</string>
+    <string name="rubric_view_long_description">長い説明を表示</string>
+    <string name="rubric">ルービック</string>
+    <string name="enter_custom_value">カスタム値を入力してください</string>
+    <string name="success_saving_rubric_assessment">評価基準が保存されました</string>
+    <string name="error_saving_rubric_assessment">ルーブリック評価を保存中にエラーが発生しました。再度試してください。</string>
+    <string name="rubric_assessment_score_out_of_total">%1$s / %2$s</string>
+    <string name="criterion_rating_customize_score">スコアをカスタマイズする</string>
+    <string name="edit_criterion_comment">基準コメントを編集</string>
+    <string name="sendMessageToHint">メッセージ%s</string>
+    <string name="save_comment">コメントを保存する</string>
+    <string name="cancel_editing_comment">コメント編集をキャンセル</string>
+    <string name="skip">スキップ</string>
+
+    <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
+    <string name="rating_button_content_description_custom">カスタムスコア %1$s</string>
+
+    <!-- Content description for criterion rating button, including score and description. e.g. "100, meets all expectations" -->
+    <string name="rating_button_content_description">%1$s, %2$s</string>
+
+    <plurals name="submission_points_possible">
+        <item quantity="other">%s ポイント中</item>
+    </plurals>
+
+    <string name="tab_courses">コース</string>
+    <string name="course_options">コースのオプション</string>
+    <string name="edit_favorite_courses">お気に入りのコースを編集する</string>
+    <string name="feedback_form">フィードバックフォーム</string>
+    <string name="see_all">すべてを見る</string>
+    <string name="all_courses">すべてのコース</string>
+    <string name="welcome">どういたしまして！</string>
+    <string name="empty_course_list_message">お気に入りのコースをいくつか追加して、この場所をあなたのホームにしてください。</string>
+    <string name="add_courses">コースを追加する</string>
+    <string name="unable_to_add_course_to_favorites">現在、このコースはコース メニューに追加できません。</string>
+    <string name="grading_periods_filter">採点期間フィルター</string>
+    <string name="assignments">課題</string>
+    <string name="clear_filter">フィルターをクリア</string>
+    <string name="due">期限 %1$s</string>
+    <string name="updated">更新済み%1$s</string>
+
+    <plurals name="needsGradingCount">
+        <item quantity="other">%s が採点が必要です</item>
+    </plurals>
+    <plurals name="needsGradingNoQuantity">
+        <item quantity="other">採点が必要です</item>
+    </plurals>
+    <string name="at">おいて</string>
+    <plurals name="quantityPointsAbbreviated">
+        <item quantity="other">%s 点</item>
+    </plurals>
+    <plurals name="quantityPointsFull">
+        <item quantity="other">%s 点</item>
+    </plurals>
+    <plurals name="people_count">
+        <item quantity="other">%d 人</item>
+    </plurals>
+    <plurals name="group_count">
+        <item quantity="other">%d グループ</item>
+    </plurals>
+    <string name="cmp_closed">終了済み</string>
+    <string name="favorited_content_description" formatted="false">%s %s</string>
+    <string name="content_description_favorite">お気に入り</string>
+    <string name="content_description_not_favorite">お気に入りではない</string>
+    <string name="edit_nickname">ニックネームを編集</string>
+    <string name="edit_course_color">コースの色を編集</string>
+    <string name="edit_course_nickname">コースニックネームを編集</string>
+
+    <string name="colorPickerDialogTitle">コースの色</string>
+    <string name="colorPickerDialogMessage">これはあなたの個人的な色の設定です。あなただけがコースにこの色を見ます。</string>
+
+    <string name="colorPickerError">現時点でコースの色を設定できませんでした。</string>
+
+    <string name="contentDescriptionColorCottonCandy">ピンク</string>
+    <string name="contentDescriptionColorBarbie">ホットピンク</string>
+    <string name="contentDescriptionColorBarneyPurple">バイオレット</string>
+    <string name="contentDescriptionColorEggplant">パープル</string>
+    <string name="contentDescriptionColorUltramarine">ダークブルー</string>
+    <string name="contentDescriptionColorOcean11">ブルー</string>
+    <string name="contentDescriptionColorCyan">シアン</string>
+    <string name="contentDescriptionColorAquaMarine">アクアブルー</string>
+    <string name="contentDescriptionColorEmeraldGreen">エメラルドグリーン</string>
+    <string name="contentDescriptionColorFreshCutLawn">グリーン</string>
+    <string name="contentDescriptionColorChartreuse">黄緑</string>
+    <string name="contentDescriptionColorSunFlower">イエロー</string>
+    <string name="contentDescriptionColorTangerine">オレンジ</string>
+    <string name="contentDescriptionColorBloodOrange">ダークオレンジ</string>
+    <string name="contentDescriptionColorSriracha">レッド</string>
+    <string name="launch_link_in_external_browser">外部ブラウザでリンクを起動する</string>
+    <string name="contentDescriptionSelectedFile">選択したファイル</string>
+    <string name="contentDescriptionFileIcon">ファイルアイコン</string>
+    <string name="contentDescriptionExpandPage">ページを拡張</string>
+    <string name="contentDescriptionCollapsePage">ページを降り畳む</string>
+    <string name="noInternetConnectionTitle">インターネット接続なし</string>
+    <string name="noInternetConnectionMessage">この操作にはインターネット接続が必要です。</string>
+
+    <string name="emptyDetailsMessage">リスト内の項目をタップて、し詳細を表示する</string>
+
+    <string name="assignmentQuizzes">課題クイズ</string>
+    <string name="practiceQuizzes">練習クイズ</string>
+    <string name="gradedSurveys">採点されたアンケート</string>
+    <string name="surveys">サーベイ</string>
+    <string name="editQuiz">クイズ詳細を編集</string>
+    <string name="requireAccessCode">アクセスコードが必要</string>
+    <string name="accessCode">アクセス コード</string>
+    <string name="mustHaveAccessCode">アクセスコードを入力する。またはアクセスコードは不要。</string>
+    <string name="errorSavingQuiz">クイズを保存しようとしてエラーが発生しました。もう一度試してください。</string>
+    <string name="successfullyUpdatedQuiz">クイズの更新に成功しました</string>
+    <string name="quizType">クイズ タイプ</string>
+
+    <string name="practiceQuiz">練習クイズ</string>
+    <string name="gradedQuiz">採点済みのクイズ</string>
+    <string name="gradedSurvey">採点済みのサーベイ</string>
+    <string name="ungradedSurvey">未採点のサーベイ</string>
+
+    <string-array name="quizTypes" translatable="false">
+        <item>@string/practiceQuiz</item>
+        <item>@string/gradedQuiz</item>
+        <item>@string/gradedSurvey</item>
+        <item>@string/ungradedSurvey</item>
+    </string-array>
+    <string name="quizStatusUntaken">放棄</string>
+
+    <string name="quizStatusComplete">完了</string>
+    <string name="quizStatusPendingReview">保留中のレビュー</string>
+    <string name="quizStatusInProgress">進行中</string>
+    <string name="quizStatusNotStarted">始まっていない</string>
+
+
+    <string name="quiz_settings_label_quiz_type">保留中のレビュー</string>
+    <string name="quiz_settings_label_assignment_group">課題グループ：</string>
+    <string name="quiz_settings_label_shuffle_answers">回答のシャッフル：</string>
+    <string name="quiz_settings_label_multiple_attempts">複数の試行：</string>
+    <string name="quiz_settings_label_time_limit">制限時間：</string>
+    <string name="quiz_settings_label_score_to_keep">保存するスコア：</string>
+    <string name="quiz_settings_label_attempts">試行：</string>
+    <string name="quiz_settings_label_view_responses">レスポンスを表示する：</string>
+    <string name="quiz_settings_label_show_correct_answers">正解を表示する：</string>
+    <string name="quiz_settings_label_one_question_at_a_time">一度に1つの質問：</string>
+    <string name="quiz_settings_label_ip_filter">IP フィルタ：</string>
+    <string name="quiz_settings_label_points">点数:</string>
+    <string name="quiz_settings_label_access_code">アクセスコード：</string>
+    <string name="quiz_settings_label_anonymous_submissions">匿名での提出：</string>
+    <string name="quiz_settings_label_lock_questions_after_answering">回答後質問をロック：</string>
+
+    <string name="quizPreview">クイズプレビュー</string>
+    <string name="preview_quiz">プレビュークイズ</string>
+    <string name="quiz_details">クイズの詳細情報</string>
+    <string name="submission_versions">提出バージョン</string>
+    <string name="speedgrader_student_no_submissions">この受講生にはこの課題の提出はありません。</string>
+    <string name="speedgrader_group_no_submissions">このグループにはこの課題の提出はありません。</string>
+    <string name="speedgrader_unsupported_type">サポートされていない送信タイプ</string>
+    <string name="unlimited">無制限</string>
+    <string name="practice_quiz">練習クイズ</string>
+    <string name="graded_quiz">採点済みのクイズ</string>
+    <string name="graded_survey">採点済みのサーベイ</string>
+    <string name="ungraded_survey">未採点のサーベイ</string>
+    <string name="no_time_limit">時間制限なし</string>
+    <string name="immediately">ただちに</string>
+    <string name="quiz_details_no_points_assigned">割当のポイントなし</string>
+
+    <string name="quiz_details_from_to">%1$s から %2$s まで</string>
+    <string name="quiz_details_after">%1$s 後</string>
+    <string name="quiz_details_until">%1$s まで</string>
+    <string name="filterPointsMustBeSet">値を入力します。</string>
+
+    <plurals name="quantityQuestions">
+        <item quantity="other">%dの質問</item>
+    </plurals>
+
+    <plurals name="minutes">
+        <item quantity="other">%s分</item>
+    </plurals>
+
+    <string name="discussion_details">ディスカッションの詳細</string>
+    <string name="discussions_pinned">ピン付けしました</string>
+    <string name="discussions_unpinned">ディスカッション</string>
+    <string name="discussions_closed">コメントを閉じました</string>
+    <string name="discussions_open">コメントを受け付ける</string>
+    <string name="discussions_pin">固定</string>
+    <string name="discussions_unpin">固定の解除</string>
+    <string name="contentDescriptionDiscussionsOverflow">その他のオプション</string>
+    <string name="discussions_options">オプション</string>
+    <string name="discussions_replies" formatted="false">%s の返信</string>
+    <string name="discussions_unread" formatted="false">%s 未読</string>
+    <string name="discussions_unread_replies_blank" formatted="false">%s %s %s</string>
+    <string name="discussions_delete_warning">この返信を本当に削除しますか？</string>
+    <string name="discussions_replies_title">返信</string>
+    <string name="discussions_reply">返信</string>
+    <string name="discussions_edit">編集</string>
+    <string name="discussions_forbidden">回答は、少なくとも一つの回答を掲載している人にのみ表示されます。</string>
+    <string name="discussions_unknown_author">不明な作成者</string>
+    <string name="discussions_delete">ディスカッションを削除</string>
+    <string name="discussions_delete_title">ディスカッションを削除しますか？</string>
+    <string name="discussions_delete_message">これにより、ディスカッションとスレッド全体が削除されます。</string>
+
+    <string name="dataUsageWarningTitle">データ使用に関する警告</string>
+    <string name="dataUsageWarningMessage">この操作は大量のデータを消費する可能性があり、超過料金が発生する可能性があります。続行しますか？</string>
+    <string name="doNotShowMessageAgain">このメッセージを再び表示しない</string>
+    <string name="playMedia">メディアを再生する</string>
+    <string name="submissionIsMediaFile">この投稿はメディアファイルです</string>
+    <string name="tryAgain">やり直し</string>
+    <string name="couldNotPlayFormat">このメディアフォーマットはサポートされていません</string>
+    <string name="openWithAnotherApp">～にて開く&#8230;</string>
+
+    <string name="speedgraderCommentAddedSubmission">課題が提出されました。タップして表示する。</string>
+    <string name="speedgraderCommentSubmittedFiles">提出済みのファイル:</string>
+    <string name="no_submission_comments">提出コメントはありません。</string>
+    <string name="mediaUploadAudio">メディアアップロード - 音声</string>
+    <string name="mediaUploadVideo">メディアアップロード - 動画</string>
+    <string name="speedgraderCommentQuizAttempt">%d 試行</string>
+    <string name="speedGraderTextSubmission">テキストの提出</string>
+    <string name="speedGraderExternalToolSubmission">外部ツール提出</string>
+    <string name="speedGraderDiscussionSubmission">ディスカッションへの提出</string>
+    <string name="speedGraderQuizSubmission">クイズへの提出物</string>
+    <string name="speedGraderMediaFile">メディアファイル</string>
+    <string name="submissionTypeAudio">オーディオ</string>
+    <string name="submissionTypeVideo">ビデオ</string>
+    <string name="speedGraderUrlSubmission">URL 提出</string>
+
+    <string name="unsupportedFileMessage">このファイルを表示できませんでした。下のボタンを使用して、デバイス上の別のアプリでファイルを開きます。</string>
+    <string name="speedGraderNoneMessage">この課題は提出を許可していません。</string>
+    <string name="speedGraderExternalToolMessage">この課題は、提出用の外部ツールにリンクします。</string>
+    <string name="speedGraderOnPaperMessage">この課題は、論文の提出のみを許可します。</string>
+    <string name="speedGraderUrlSubmissionDisclaimer">この提出物は、外部ページへの URL でした。このページは、最初に提出されたときから、変更されている可能性がありますので注意してください。</string>
+    <string name="speedGraderOpenUrl">URL を開く</string>
+    <string name="annotationError">注釈エラー</string>
+    <string name="annotationDialogMessage">注釈は別のソースから削除されました。</string>
+
+    <string name="selectCourse">コースを選択する</string>
+
+    <string name="sendIndividualMessage">各受信者に個別のメッセージを送信する</string>
+
+    <string name="filterInbox">受信トレイをフィルタリングする</string>
+    <string name="selectCanvasContext">コースまたはグループを選択する</string>
+
+    <string name="contentDescription_back">戻る</string>
+
+    <string name="discussion_update_success">ディスカッションは正常に編集されました。</string>
+    <string name="discussion_update_empty">ディスカッションメッセージは空ではいけません。</string>
+    <string name="discussion_update_failure">今回はディスカッションを編集できませんでした。</string>
+    <string name="discussion_sent_success">議論の返信は正常に行われました。</string>
+    <string name="discussion_sent_empty">ディスカッションの返信は空ではいけません。</string>
+    <string name="discussion_sent_failure">今回はディスカッション回答を送信できませんでした。</string>
+    <string name="discussion_first_to_respond">返信を追加して、最初に応答するひとになりましょう。</string>
+    <string name="addMorePeopleToMessage">別の受取人を追加する。自分だけを宛先とするメッセージは送信できません。</string>
+    <string name="tutorialSwipeMessage">左または右にスワイプして他の受講者を表示する</string>
+    <string name="tutorialRubricMessage">番号をタップ＆ホールドして説明を表示します。</string>
+
+    <string name="viewQuizSubmission">提出を見る</string>
+    <string name="gradeQuizSubmission">成績提出</string>
+    <string name="comment">コメント</string>
+    <string name="messageStudentsWho">次の状態の受講者にメッセージを送る&#8230;</string>
+
+    <string name="on">～について</string>
+
+    <string name="createDiscussion">新しいディスカッション</string>
+    <string name="options">オプション</string>
+    <string name="subscribe">定期購読</string>
+    <string name="allowThreadedReplies">スレッドでの返信を許可する</string>
+    <string name="usersMustPost">ユーザは返信を表示する前に投稿しなければなりません</string>
+    <string name="allowUserComments">ユーザーにコメントを許可する</string>
+
+    <string name="discussionTitleMustBeSet">ディスカッションのタイトルを設定しなければなりません。</string>
+    <string name="discussionSuccessfullyCreated">ディスカッションは正常に作成されました。</string>
+    <string name="errorCreatingDiscussion">このディスカッションを作成しようといてエラーが発生しました。もう一度試してください。</string>
+    <string name="editDiscussion">ディスカッションを編集</string>
+    <string name="discussionSuccessfullyUpdated">ディスカッションは正常に更新されました。</string>
+    <string name="input_text">テキストを入力</string>
+    <string name="announcementSuccessfullyCreated">発表は正常に作成されました。</string>
+    <string name="errorSavingAnnouncement">この発表をを保存しようとしてエラーが発生しました。もう一度試してください。</string>
+    <string name="editAnnouncementTitle">発表を編集</string>
+    <string name="announcementSuccessfullyUpdated">発表は正常に更新されました。</string>
+    <string name="announcementDeleted">発表は削除されました。</string>
+    <string name="postAt">投稿日時</string>
+    <string name="errorDeletingAnnouncement">この発表をを削除しようとしてエラーが発生しました。もう一度試してください。</string>
+    <string name="deleteAnnouncementDialogTitle">発表を削除する</string>
+    <string name="deleteAnnouncementDialogMessage">この発表を削除してもよろしいですか?</string>
+    <string name="deleteAnnouncement">発表を削除する</string>
+    <string name="annotationErrorOccurred">注釈の読み込み中にエラーが発生しました</string>
+
+    <string name="account">アカウント</string>
+    <string name="changeUser">ユーザーを変更する</string>
+    <string name="general">一般</string>
+    <string name="sendFeedback">フィードバックを送る</string>
+    <string name="rateOnTheAppStore">App Storeでレート</string>
+    <string name="privacyPolicy">プライバシーポリシー</string>
+    <string name="EULA">EULA</string>
+    <string name="termsOfUse">利用規約</string>
+    <string name="openSource">ソースを開く</string>
+    <string name="searchGuides">Canvas ガイドを検索する</string>
+    <string name="searchGuidesDetails">よくある質問に対する回答を見つける</string>
+    <string name="reportProblem">問題を報告する</string>
+    <string name="reportProblemDetails">アプリが正しく作動しない場合、連絡してください</string>
+    <string name="requestFeature">機能をリクエストする</string>
+    <string name="requestFeatureDetails">アプリを向上させるためのアイディアをお持ちですか？</string>
+    <string name="shareYourLove">アプリへの愛を共有しましょう</string>
+    <string name="shareYourLoveDetails">このアプリの好きな部分を教えてください</string>
+    <string name="canvasGuides">Canvas ガイド</string>
+    <string name="featureSubject">Canvas Teacher 用のアイデア[Android]</string>
+    <string name="understandRequest">次の情報は、あなたのアイデアをより良く理解するために役立ちます:</string>
+    <string name="sendMail">メールを送信しています&#8230;</string>
+    <string name="editProfile">プロフィールの編集</string>
+    <string name="name">名前</string>
+    <string name="bio">略歴</string>
+    <string name="profileEditSuccess">プロフィールが更新されました。</string>
+    <string name="profileEditFailure">プロフィールが更新できませんでした</string>
+    <string name="takePhoto">写真を撮る</string>
+    <string name="choosePhotoFromGallery">ギャラリーから画像を選択する</string>
+    <string name="fileNotFound">ファイルがみつかりません。</string>
+    <string name="version" formatted="false">バージョン %s</string>
+    <string name="fullVersion">バージョン %s (%d)</string>
+    <string name="tap_to_view_submissions_list">タップして提出リストを表示します。</string>
+    <string name="assignmentDescriptionContentDescription">課題説明</string>
+    <string name="quizDescriptionContentDescription">クイズ説明</string>
+    <string name="removeDueDate">期限を削除する</string>
+    <string name="removeDueDateMessage">これにより、期日と関連するすべての課題対象者が削除されます。</string>
+    <string name="openTool">オープンツール</string>
+    <string name="email">メールアドレス</string>
+    <string name="fullscreen">全画面</string>
+    <string name="addNew">新規を追加する</string>
+    <string name="sendMessage">メッセージを送信</string>
+    <string name="addMessage">メッセージを追加</string>
+    <string name="messageThisStudent">この受講生にメッセージを送る</string>
+    <string name="scrollInstructions">スクロールしてすべての詳細を表示する</string>
+    <string name="dueTime">期限存</string>
+    <string name="available_from_date">利用可能期間の開始日付</string>
+    <string name="available_from_time">利用可能期間の開始時間</string>
+    <string name="available_to_date">利用可能期間の最終日</string>
+    <string name="available_to_time">利用可能期間の最終時間</string>
+    <string name="addDescription">説明を追加</string>
+    <string name="post_time">投稿時間</string>
+    <string name="allPeople">すべての人々</string>
+    <string name="loading">読み込み中</string>
+    <string name="saving">保存</string>
+    <string name="sendingSimple">送信中</string>
+    <string name="uploading">アップロードしています</string>
+    <string name="retry">再試行</string>
+    <string name="error_loading_submission">この提出の読み込み中、問題がありました。</string>
+    <string name="search">検索</string>
+    <string name="filterPeople">人々をフィルタリングする</string>
+    <string name="loadMore">もっと読み込む</string>
+    <string name="latestStudentActivityAtFormatted">%1$sへの%2$sでの最新のアクティビティ.</string>
+    <string name="sectionFormatted">セクション：%s</string>
+    <string name="errorLoadingStudentContextCard">このユーザーの詳細を読み込むことができません。</string>
+    <string name="enrollmentTypeStudent">受講者</string>
+    <string name="enrollmentTypeTeacher">講師</string>
+    <string name="enrollmentTypeObserver">オブザーバー</string>
+    <string name="enrollmentTypeTeachingAssistant">TA</string>
+    <string name="enrollmentTypeDesigner">設計者</string>
+    <string name="enrollmentTypeUnknown">不明</string>
+    <string name="unableToLoadAttendance">今回出席を読み込めませんでした。</string>
+    <string name="markRemainingAsPresent">出席としてマークする</string>
+    <string name="markAllAsPresent">全員を出席としてマークする</string>
+    <string name="calendar">予定表</string>
+    <string name="filterSections">セクションをフィルタリングする</string>
+    <string name="addVideoComment">動画コメントを追加</string>
+    <string name="addAudioComment">音声コメントを追加</string>
+    <string name="recordingTimerDefault">0:00:00</string>
+    <string name="recordingTimerContentDescription">%1$d 時間、%2$d 分、%3$d 秒</string>
+    <string name="recordingTimerSpeechDivider">%1$s / %2$s</string>
+    <string name="replay">再度再生</string>
+    <string name="stop">停止</string>
+    <string name="startRecordingAudio">録音開始</string>
+    <string name="stopRecordingAudio">録音開始</string>
+    <string name="startRecordingVideo">録画開始</string>
+    <string name="stopRecordingVideo">録画開始</string>
+    <string name="closeRecordingView">録画・録音ビューを閉じる</string>
+    <string name="deleteRecording">記録を削除</string>
+    <string name="videoCommentReplay">動画コメントを再度再生</string>
+    <string name="addMediaComment">メディアコメントを追加</string>
+    <string name="copyrightHolder">著作権所有者</string>
+    <string name="access">アクセス</string>
+    <string name="usageRights">使用権</string>
+    <string name="deleteFile">ファイルを削除</string>
+    <string name="holdCopyright">著作権を保有しています</string>
+    <string name="havePermission">このファイルを使用する権限を取得しています。</string>
+    <string name="publicDomain">パブリックドメインファイル</string>
+    <string name="fairUse">公正使用の例外</string>
+    <string name="creativeCommons">Creative Commons ファイル</string>
+    <string name="editFile">ファイルを編集</string>
+    <string name="deleteFolder">フォルダを削除</string>
+    <string name="editFolder">フォルダを編集</string>
+    <string name="deleteFileMessage">このファイルを削除してもよろしいですか?</string>
+    <string name="deleteFolderMessage">このフォルダを削除してもよろしいですか?このフォルダのすべてのコンテンツも削除されます。</string>
+    <string name="newFolder">新しいフォルダ</string>
+    <string name="createAFolder">フォルダを作成する</string>
+    <string name="createFolder">フォルダを作成する</string>
+    <string name="createAFile">ファイルを作成する</string>
+    <string name="createFileFolderFabContentDesc">ファイルの作成オタンとフォルダの作成ボタンを表示する</string>
+    <string name="hideCreateFileFolderFabContentDesc">ファイルの作成とフォルダの作成ボタンを非表示にする</string>
+
+    <string name="unpublish">未公開</string>
+    <string name="restrictedAccess">制限されたアクセス</string>
+    <string name="restricted">部外秘</string>
+    <string name="hidden">非表示の内部ファイルはリンクで利用できます。</string>
+    <string name="studentsWithLink">リンク付きの受講生のみ利用可能です。受講生ファイルでは使用できません。</string>
+    <string name="scheduleAvailability">受講生の利用可能状況をスケジュール</string>
+    <string name="folderCreationError">フォルダー作成中にエラーが起こりました。</string>
+
+    <string name="setAsFrontPage">フロントページとして設定</string>
+    <string name="canEdit">編集可能</string>
+    <string name="pageDetails">ページ詳細</string>
+    <string name="pageSuccessfullyUpdated">ページは正常に更新されました。</string>
+    <string name="pageSuccessfullyCreated">ページは正常に作成されました。</string>
+    <string name="editPageTitle">ページを編集</string>
+    <string name="createPageTitle">ページを作成</string>
+    <string name="pageTitleMustBeSet">ページのタイトルを設定しなければなりません。</string>
+    <string name="pageDeleteTitle">ページを削除しますか？</string>
+    <string name="pageDelete">ページを削除</string>
+    <string name="pageDeleteMessage">これにより、ページは削除されます。この操作は元に戻すことはできません。</string>
+    <string name="errorSavingPage">この発表を保存しようとしてエラーが発生しました。もう一度試してください。</string>
+    <string name="frontPageUnpublishedError">ページを先フロントページにした場合、未公開にすることはできません。</string>
+
+    <string name="onlyTeachers">講師のみ</string>
+    <string name="teachersAndStudents">講師と受講者</string>
+    <string name="anyone">全員</string>
+    <string name="groupMembers">メンバーのみ</string>
+    <string name="license">ライセンス</string>
+    <string name="availableFromAfterTo">利用可能終了日は開始日以降でなければなりません</string>
+    <string name="errorDeletingFile">このファイルを読み込む際にエラーが発生しました</string>
+    <string name="errorDeletingFolder">このフォルダを削除する際にエラーが発生しました</string>
+    <string name="errorUpdatingFile">このファイルをアップデートする際にエラーが発生しました</string>
+    <string name="errorUpdatingFolder">このフォルダをアップデートする際にエラーが発生しました</string>
+
+    <string name="toDoEmpty">他にすることはありません！\nよい一日を。</string>
+    <string name="toDoNoSubmissions">この課題を採点するための提出物はありません。</string>
+    <string name="errorToDoRouteFailed">このやるべきことの項目を表示しようとしてエラーが発生しました。</string>
+    <string name="errorIsDesigner">デザイナー登録はこれを表示できません。</string>
+
+    <string name="sections">セクション</string>
+    <string name="filterBy">フィルター要素：</string>
+    <string name="contentDescriptionFilterSection" formatted="false">%s 用</string>
+    <string name="filterBySection">セクションで分類する</string>
+    <string name="filterSubmissionsLowercase">フィルターを提出</string>
+
+    <string name="latePenalty">遅延ペナルティ</string>
+    <string name="finalGrade">最終的な成績</string>
+    <string name="moderatedGradingUnsupported">修正された採点は、現在モバイルの SpeedGrader ではサポートされていません。</string>
+    <plurals name="latePolicyPenalty">
+        <item quantity="other">-%s 点</item>
+    </plurals>
+    <plurals name="latePolicyPenaltyFull">
+        <item quantity="other">-%s 点</item>
+    </plurals>
+    <string name="todoUnreadCount">未読の「するべきこと」%d</string>
+    <string name="profileSettings">プロファイル設定</string>
+    <string name="downloadingFile">ファイルをダウンロード中&#8230;</string>
+    <string name="fileDownloadedSuccessfully">ファイルのダウンロードに成功しました。</string>
+    <string name="tapToView">タップして表示する</string>
+    <string name="errorDownloadingFile">あなたのファイルをダウンロードする際にエラーが発生しました。再度試してください。</string>
+
+    <string name="postTo">投稿先：</string>
+    <string name="allSections">すべてのセクション</string>
+
+    <string name="gauge">Gauge</string>
+    <string name="arc">Arc</string>
+    <string name="ltiLaunchFailure">今回 LTI ツールを読み込めませんでした。</string>
+
+    <string name="downloading">ダウンロード中...</string>
+
+</resources>

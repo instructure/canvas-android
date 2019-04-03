@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+option java_package = "com.instructure.soseedy";
+option java_multiple_files = true;
+
+package soseedy;
+
+
+service SeedyDiscussions {
+    rpc CreateAnnouncement(CreateAnnouncementRequest) returns (Discussion) { }
+    rpc CreateDiscussion(CreateDiscussionRequest) returns (Discussion) { }
+}
+
+// Request messages
+
+message CreateAnnouncementRequest {
+    int64 courseId = 1;
+    string token = 2;
+}
+
+message CreateDiscussionRequest {
+    int64 courseId = 1;
+    string token = 2;
+}
+
+// Response messages
+
+message Discussion {
+    int64 id = 1;
+    string title = 2;
+    string message = 3;
+    bool isAnnouncement = 4;
+}

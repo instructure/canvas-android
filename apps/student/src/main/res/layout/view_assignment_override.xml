@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C) 2017 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="16dp">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="60dp"
+        android:clipToPadding="false">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/assignToTextInput"
+            style="@style/OverrideViewTextInputLayoutDate"
+            android:layout_width="match_parent"
+            android:layout_marginTop="12dp"
+            android:textColorHint="@color/defaultTextGray"
+            app:hintTextAppearance="@style/TextInputLabel"
+            android:labelFor="@+id/assignTo"
+            android:contentDescription="@string/utils_assignTo">
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/assignTo"
+                style="@style/OverrideViewEditText"
+                android:hint="@string/utils_assignTo"
+                android:minHeight="48dp"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/removeOverride"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|end"
+            android:text="@string/remove"
+            android:paddingStart="4dp"
+            android:paddingEnd="4dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="4dp"
+            android:textColor="@color/removeOverrideColor"/>
+    </FrameLayout>
+
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/dueDateTextInput"
+            android:labelFor="@+id/dueDate"
+            android:contentDescription="@string/utils_dueDate"
+            style="@style/OverrideViewTextInputLayoutDate"
+            android:textColorHint="@color/defaultTextGray"
+            app:hintTextAppearance="@style/TextInputLabel">
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/dueDate"
+                style="@style/OverrideViewEditText"
+                android:hint="@string/utils_dueDate"
+                android:minHeight="48dp"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/dueTimeTextInput"
+            android:labelFor="@+id/dueTime"
+            android:contentDescription="@string/utils_dueTime"
+            style="@style/OverrideViewTextInputLayoutTime"
+            android:textColorHint="@color/defaultTextGray"
+            app:hintTextAppearance="@style/TextInputLabel">
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/dueTime"
+                style="@style/OverrideViewEditText"
+                android:minHeight="48dp"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/fromDateTextInput"
+            style="@style/OverrideViewTextInputLayoutDate"
+            android:labelFor="@+id/fromDate"
+            android:contentDescription="@string/utils_availableFromDate"
+            android:textColorHint="@color/defaultTextGray"
+            app:hintTextAppearance="@style/TextInputLabel">
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/fromDate"
+                style="@style/OverrideViewEditText"
+                android:hint="@string/utils_availableFrom"
+                android:minHeight="48dp"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/fromTimeTextInput"
+            style="@style/OverrideViewTextInputLayoutTime"
+            android:labelFor="@+id/fromTime"
+            android:contentDescription="@string/utils_availableFromTime"
+            android:textColorHint="@color/defaultTextGray"
+            app:hintTextAppearance="@style/TextInputLabel">
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/fromTime"
+                style="@style/OverrideViewEditText"
+                android:minHeight="48dp"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/toDateTextInput"
+            style="@style/OverrideViewTextInputLayoutDate"
+            android:labelFor="@+id/toDate"
+            android:contentDescription="@string/utils_availableToDate"
+            android:hint="@string/utils_availableTo"
+            android:textColorHint="@color/defaultTextGray"
+            app:hintTextAppearance="@style/TextInputLabel">
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/toDate"
+                style="@style/OverrideViewEditText"
+                android:minHeight="48dp"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/toTimeTextInput"
+            style="@style/OverrideViewTextInputLayoutTime"
+            android:labelFor="@+id/toTime"
+            android:contentDescription="@string/utils_availableToTime"
+            android:textColorHint="@color/defaultTextGray"
+            app:hintTextAppearance="@style/TextInputLabel">
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/toTime"
+                style="@style/OverrideViewEditText"
+                android:minHeight="48dp"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+    </LinearLayout>
+
+</LinearLayout>

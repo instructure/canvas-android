@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2016 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="320dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/spinner_dropdown_background_down"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/studentListSort"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@color/dividerColor"
+        android:gravity="center">
+
+        <com.instructure.speedgrader.views.CheckedLinearLayout
+            android:id="@+id/sortSelector"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:focusable="true" />
+
+        <ImageView
+            android:id="@id/pulse"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="84dp"
+            android:clickable="true"
+            android:src="@drawable/pulse_indicator_light" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/sg_border_color" />
+
+    <ListView
+        android:id="@+id/studentList"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/white"
+        android:divider="@null"
+        android:dividerHeight="0dp"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/sg_border_color" />
+
+    <RelativeLayout
+        android:id="@+id/searchBar"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_gravity="bottom"
+        android:background="@color/dividerColor"
+        android:orientation="horizontal">
+
+        <android.support.v7.widget.SearchView
+            android:id="@+id/searchView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@+id/gradeCount"
+            android:drawableRight="@drawable/ic_cv_delete_fill"
+            android:inputType="textNoSuggestions"
+            android:queryHint="@string/search"
+            android:textColor="@color/sg_darkText"
+            android:layout_centerVertical="true"
+            android:paddingLeft="8dp"
+            android:paddingStart="8dp"/>
+
+        <com.instructure.speedgrader.views.HelveticaTextView
+            android:id="@+id/gradeCount"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:gravity="center_vertical"
+            android:paddingRight="5dp"
+            android:textColor="@color/white" />
+    </RelativeLayout>
+</LinearLayout>

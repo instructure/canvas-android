@@ -1,0 +1,79 @@
+﻿<?xml version='1.0' encoding='UTF-8'?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <!--Modules-->
+    <string name="mustComplete">Primeiro tem de concluir:</string>
+    <string name="unlockedAt">Vai ser desbloqueado a:</string>
+    <string name="goToModules">Ir Para Módulos</string>
+
+    <!--Events-->
+    <string name="Starts">Inicia</string>
+    <string name="Ends">Termina</string>
+    <string name="allDayEvent">Evento de Dia Completo</string>
+    <string name="at">em</string>
+    <string name="to">para</string>
+
+    <!--StreamItems-->
+    <string name="Message">Mensagem</string>
+    <string name="Loading">Carregando&#8230;</string>
+    <string name="Deleted">Eliminado</string>
+
+    <!-- Assignment Module -->
+    <string name="canvasAPI_online">Online</string>
+    <string name="canvasAPI_onPaper">No papel</string>
+    <string name="canvasAPI_discussion">Discussão</string>
+    <string name="canvasAPI_quiz">Teste</string>
+    <string name="canvasAPI_externalTool">Ferramenta Externa</string>
+    <string name="canvasAPI_none">Nenhum</string>
+
+    <string name="canvasAPI_passFail">Chumbado</string>
+    <string name="canvasAPI_percent">Por cento</string>
+    <string name="canvasAPI_letterGrade">Nota da Carta</string>
+    <string name="canvasAPI_points">Pontos</string>
+    <string name="canvasAPI_gpaScale">Escala GPA</string>
+    <string name="canvasAPI_notGraded">Sem classificação</string>
+
+    <string name="canvasAPI_onlineQuiz">Questionário Online</string>
+    <string name="canvasAPI_discussionTopic">Tópico de Discussão</string>
+    <string name="canvasAPI_onlineUpload">Carregamento on-line</string>
+    <string name="canvasAPI_onlineTextEntry">Entrada de texto on-line</string>
+    <string name="canvasAPI_onlineURL">URL On-line</string>
+    <string name="canvasAPI_mediaRecording">Gravação de mídia</string>
+    <string name="canvasAPI_attendance">Presença</string>
+    <string name="quiz_scoring_policy_highest">Mais alto</string>
+    <string name="quiz_scoring_policy_average">Média</string>
+    <string name="quiz_scoring_policy_latest">Mais recente</string>
+    <string name="no">Não</string>
+    <string name="always">Sempre</string>
+    <string name="graded_quiz">Teste avaliado</string>
+    <string name="practice_quiz">Teste prático</string>
+    <string name="graded_survey">Questionário avaliado</string>
+    <string name="ungraded_survey">Questionário sem avaliação</string>
+    <string name="andMore"> e %d mais</string>
+
+    <!-- Enrollment Types -->
+    <string name="enrollmentTypeStudent">Aluno</string>
+    <string name="enrollmentTypeTeacher">Professor</string>
+    <string name="enrollmentTypeObserver">Observador</string>
+    <string name="enrollmentTypeTeachingAssistant">Assistente</string>
+    <string name="enrollmentTypeDesigner">Designer</string>
+    <string name="enrollmentTypeUnknown">Desconhecido</string>
+
+</resources>

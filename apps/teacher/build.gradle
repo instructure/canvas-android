@@ -1,0 +1,292 @@
+/*
+ * Copyright (C) 2017 - present  Instructure, Inc.
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, version 3 of the License.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+import com.instructure.android.buildtools.transform.ProjectTransformer
+import com.instructure.android.buildtools.transform.MasqueradeUITransformer
+
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'io.fabric'
+apply plugin: 'com.google.android.gms.oss-licenses-plugin'
+apply plugin: 'okreplay'
+apply from: '../../gradle/coverage.gradle'
+
+def coverageEnabled = project.hasProperty('coverage')
+
+if (coverageEnabled) {
+    apply plugin: 'jacoco-android'
+    apply from: 'jacoco.gradle'
+}
+
+android {
+    packagingOptions {
+        exclude 'META-INF/rxjava.properties'
+    }
+
+    compileSdkVersion Versions.COMPILE_SDK
+    buildToolsVersion Versions.BUILD_TOOLS
+
+    defaultConfig {
+        minSdkVersion Versions.MIN_SDK
+        targetSdkVersion Versions.TARGET_SDK
+        versionCode = 19
+        versionName = '1.7.2'
+        vectorDrawables.useSupportLibrary = true
+        multiDexEnabled true
+        testInstrumentationRunner 'com.instructure.canvas.espresso.CanvasRunner'
+        testInstrumentationRunnerArguments disableAnalytics: 'true'
+
+        /* BuildConfig fields */
+        buildConfigField "boolean", "IS_TESTING", "false"
+        buildConfigField "boolean", "IS_ROBO_TESTING", "false"
+        buildConfigField "String", "ROBO_USER_TOKEN", "\"\""
+        buildConfigField "String", "ROBO_USER_DOMAIN", "\"\""
+        buildConfigField "String", "ROBO_USER_JSON", "\"\""
+
+        /* Release Versions */
+        buildConfigField "boolean", "POINT_ONE", "true"
+        buildConfigField "boolean", "POINT_TWO", "true"
+        buildConfigField "boolean", "POINT_THREE", "true"
+        buildConfigField "boolean", "POINT_FOUR", "true"
+        buildConfigField "boolean", "POINT_FIVE", "true"
+        buildConfigField "boolean", "POINT_SIX", "true"
+        buildConfigField "boolean", "POINT_SEVEN", "true"
+        buildConfigField "boolean", "POINT_EIGHT", "true"
+        buildConfigField "boolean", "POINT_NINE", "true"
+
+        /* Add private data */
+        PrivateData.merge(project, "teacher")
+        addManifestPlaceholders([
+                fabricApiKey:"$fabricApiKey"
+        ])
+
+        buildConfigField "String", "PSPDFKIT_LICENSE_KEY", "\"$pspdfkitLicenseKey\""
+        buildConfigField "String", "PUSH_SERVICE_PROJECT_ID", "\"$pushServiceProjectId\""
+    }
+
+    flavorDimensions "icecream"
+    productFlavors {
+
+        dev {
+            dimension "icecream"
+            matchingFallbacks = ['debug']
+        }
+
+        prod {
+            dimension "icecream"
+        }
+
+        qa {
+            dimension "icecream"
+            buildConfigField "boolean", "IS_TESTING", "true"
+        }
+    }
+
+    buildTypes {
+        debug {
+            testCoverageEnabled = coverageEnabled
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            minifyEnabled false
+            shrinkResources false
+            // Disable fabric build ID generation for debug builds
+            ext.enableCrashlytics = false
+            pseudoLocalesEnabled true
+        }
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            buildConfigField "boolean", "POINT_ONE", "true"
+            buildConfigField "boolean", "POINT_TWO", "true"
+            buildConfigField "boolean", "POINT_THREE", "true"
+            buildConfigField "boolean", "POINT_FOUR", "true"
+            buildConfigField "boolean", "POINT_FIVE", "true"
+            buildConfigField "boolean", "POINT_SIX", "false"
+            buildConfigField "boolean", "POINT_SEVEN", "false"
+            buildConfigField "boolean", "POINT_EIGHT", "false"
+            buildConfigField "boolean", "POINT_NINE", "false"
+
+        }
+    }
+
+    configurations.all {
+        resolutionStrategy {
+            force 'android.arch.lifecycle:runtime:1.0.3'
+            // Fix for Robolectric 4.x
+            force "org.ow2.asm:asm:7.0"
+        }
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+    dexOptions {
+        javaMaxHeapSize "4g"
+    }
+
+    lintOptions {
+        disable 'MissingTranslation'
+    }
+
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES.txt'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/dependencies.txt'
+        exclude 'META-INF/LGPL2.1'
+        // Required for Espresso.
+        exclude 'META-INF/maven/com.google.guava/guava/pom.properties'
+        exclude 'META-INF/maven/com.google.guava/guava/pom.xml'
+    }
+
+    testOptions {
+        animationsDisabled = true
+        execution 'ANDROIDX_TEST_ORCHESTRATOR'
+    }
+
+    registerTransform(
+            new ProjectTransformer(
+                    android,
+                    new MasqueradeUITransformer('com.instructure.teacher.activities.LoginActivity.class')
+            )
+    )
+
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
+}
+
+repositories {
+    jcenter()
+    maven { url 'https://maven.fabric.io/public' }
+    maven { url "https://raw.github.com/laenger/maven-releases/master/releases" }
+}
+
+androidExtensions {
+    experimental = true
+}
+
+dependencies {
+    /* Modules */
+    implementation project(path: ':login-api-2')
+    implementation project(path: ':chips')
+    implementation project(path: ':rceditor')
+    implementation project(path: ':camerakit')
+    implementation project(path: ':annotations')
+    implementation project(path: ':interactions')
+
+    /* Kotlin */
+    implementation Libs.KOTLIN_STD_LIB
+
+    /* Crashlytics */
+    implementation Libs.FIREBASE_CORE
+    implementation(Libs.CRASHLYTICS) {
+        transitive = true
+    }
+    implementation('com.crashlytics.sdk.android:answers:1.3.12@aar') {
+        transitive = true
+    }
+
+    /* OkHttp Idling Resource */
+    implementation('com.jakewharton.espresso:okhttp3-idling-resource:1.0.0') {
+        exclude module: 'espresso-idling-resource'
+    }
+
+    /* Test Dependencies */
+    testImplementation Libs.JUNIT
+    testImplementation Libs.ROBOLECTRIC
+    testImplementation Libs.ANDROIDX_TEST_JUNIT
+
+    /* AndroidTest Dependencies */
+    androidTestImplementation project(':canvas_espresso')
+    androidTestImplementation project(':dataseedingapi')
+    androidTestImplementation Libs.JUNIT
+
+    androidTestUtil('androidx.test:orchestrator:1.1.0-beta01') {
+        exclude module: 'support-annotations'
+    }
+
+    /* Sliding Panel */
+    implementation 'com.sothree.slidinguppanel:library:3.3.1'
+
+    /* Media handling */
+    implementation Libs.ANDROID_SVG
+    implementation Libs.PHOTO_VIEW
+
+    /* Flexbox Layout */
+    implementation 'com.google.android:flexbox:1.1.0'
+    implementation 'net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.2.1'
+
+    /* Open Source Licensing Tool */
+    implementation Libs.PLAY_SERVICES_OSS_LICENSES
+
+    /* Support libs */
+    implementation Libs.ANDROIDX_APPCOMPAT
+    implementation Libs.ANDROIDX_CARDVIEW
+    implementation Libs.ANDROIDX_CONSTRAINT_LAYOUT
+    implementation Libs.ANDROIDX_DESIGN
+    implementation Libs.ANDROIDX_PALETTE
+    implementation Libs.ANDROIDX_PERCENT
+    implementation Libs.ANDROIDX_ANNOTATION
+    implementation Libs.ANDROIDX_FRAGMENT
+    implementation Libs.ANDROIDX_VECTOR
+    implementation Libs.PLAY_SERVICES
+
+    /* Job Scheduler */
+    implementation Libs.FIREBASE_JOB_DISPATCHER
+}
+
+apply plugin: 'com.google.gms.google-services'
+
+if (coverageEnabled) {
+    // ./gradlew -Pcoverage firebaseJacoco
+    task firebaseJacoco(type: JacocoReport) {
+        group = "Reporting"
+        description = "Generate Jacoco coverage reports for Firebase test lab."
+
+        def productFlavor = 'qa'
+        def buildType = 'debug'
+
+        classDirectories = fileTree(
+                dir: "${project.buildDir}/intermediates/classes/${productFlavor}/${buildType}",
+                excludes: ['**/R.class',
+                           '**/R$*.class',
+                           '**/*$ViewInjector*.*',
+                           '**/*$ViewBinder*.*',
+                           '**/BuildConfig.*',
+                           '**/Manifest*.*']
+        )
+
+        // project.buildDir is /android-uno/parent/app/build
+        sourceDirectories = files(['src/main/java'] + android.sourceSets[productFlavor].java.srcDirs)
+        executionData = files("${project.buildDir}/firebase.ec")
+
+        reports {
+            // default path: /android-uno/parent/app/build/reports/jacoco/firebaseJacoco/html/
+            html.enabled true
+            csv.enabled  false
+            xml.enabled  false
+        }
+    }
+}

@@ -1,0 +1,438 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="chooseMedia">اختيار الوسائط</string>
+    <string name="takeVideo">التقاط فيديو</string>
+    <string name="noCameraOnDevice">لا توجد كاميرا</string>
+    <string name="takePhoto">التقاط صورة</string>
+    <string name="choosePhotoFromGallery">اختيار صورة من معرض الصور</string>
+
+    <string name="utils_edit">تحرير</string>
+
+    <!-- NotoriousPicker/uploadService -->
+    <string name="notificationTitle">جارٍ التحميل إلى Canvas</string>
+    <string name="preparingUpload">جارٍ إعداد التحميل</string>
+    <string name="loadingFilesIndeterminate">جارٍ تحميل الملفات&#8230;</string>
+    <string name="fileUploadSuccess">تم التحميل بنجاح</string>
+    <string name="noNetwork">الشبكة غير متوفرة - يُرجى إعادة المحاولة لاحقًا.</string>
+    <string name="uploadMessage">التحميل قيد التقدم. تحقق من إخطارات حالة التحميل.</string>
+    <string name="mediaUpload">تحميل الوسائط</string>
+    <string name="uploadingFile">جارٍ تحميل الملف&#8230;</string>
+    <string name="errorUploadingFile">حدث خطأ أثناء تحميل ملفك. يرجى إعادة المحاولة.</string>
+    <string name="fileSubmission">إرسال الملف (الملفات)</string>
+    <string name="uploadFiles">تحميل الملف (الملفات)</string>
+    <string name="upload">تحميل</string>
+    <string name="errorSendingMessage">حدث خطأ أثناء إرسال رسالتك. يرجى إعادة المحاولة.</string>
+
+    <string name="notificationChannelNameFileUploadsName">إخطارات تحميل الملف</string>
+    <string name="notificationChannelNameFileUploadsDescription">إخطارات Canvas لعمليات تحميل الملفات الجارية.</string>
+
+
+    <!-- Turn in Files -->
+    <string name="chooseFileSource">اختيار ملف من&#8230;</string>
+    <string name="addFile">إضافة ملف</string>
+    <string name="choose_a_file">اختيار ملف</string>
+
+    <string name="fromCamera">الكاميرا</string>
+    <string name="fromGallery">المعرض</string>
+    <string name="fromDevice">الجهاز</string>
+    <string name="fromOtherApplication">أخرى</string>
+    <string name="Domain">المجال</string>
+    <string name="files">الملفات</string>
+    <string name="file">الملف</string>
+    <string name="fileTalkBack">الملف %s</string>
+    <string name="folderTalkBack">المجلد %s</string>
+
+    <string name="addItem">إضافة عنصر</string>
+    <string name="assignment">المهمة</string>
+    <string name="attachedFiles">الملفات المرفقة</string>
+    <string name="turnIn">التسليم</string>
+    <string name="course">المساق</string>
+    <string name="sending">جارٍ الإرسال&#8230;</string>
+
+    <!--rating dialog-->
+    <string name="star1">الترتيب حسب النجوم، الأول</string>
+    <string name="star2">الترتيب حسب النجوم، الثاني</string>
+    <string name="star3">الترتيب حسب النجوم، الثالث</string>
+    <string name="star4">الترتيب حسب النجوم، الرابع</string>
+    <string name="star5">الترتيب حسب النجوم، الخامس</string>
+
+    <!-- Submitting files -->
+    <string name="fileQuotaExceeded">لقد تجاوزت حاليًا حصة تخزين ملفاتك.</string>
+    <string name="errorSubmittingFiles">حدث خطأ في تسليم ملفاتك. يرجى إعادة المحاولة.</string>
+    <string name="errorLoadingFiles">حدث خطأ أثناء تحميل ملفك. يرجى التحقق من اتصالك بالإنترنت وإعادة المحاولة.</string>
+    <string name="filesUploadedSuccessfully">تم تحميل الملفات بنجاح.</string>
+    <string name="filesSubmittedSuccessfully">تم تسليم الملفات بنجاح.</string>
+    <string name="messageSentSuccessfully">تم إرسال الرسالة بنجاح.</string>
+    <string name="shareWithCanvas">يمكن لتطبيقات أخرى مشاركة الملفات مع Canvas! ابحث عن الرمز أدناه في التطبيقات وانقر فوق Canvas.</string>
+    <string name="shareWithCanvas2">سيؤدي ذلك إلى فتح هذا التطبيق. ثم، كل ما عليك هو تحديد المساق والمهمة التي تريد أن تسلم فيها الملف.</string>
+    <string name="contentDescriptionSocialShare">مشاركة الأيقونة</string>
+    <string name="submitAssignment">إرسال المهمة</string>
+    <string name="assignmentHeader">المهمة:</string>
+    <string name="submittingAssignment">جارٍ إرسال المهمة&#8230;</string>
+    <string name="conversations">المحادثات </string>
+    <string name="inbox">علبة الوارد </string>
+    <string name="divider">فاصل</string>
+    <string name="legal">قانوني</string>
+    <string name="completeHomework">إكمال واجبك المنزلي</string>
+    <string name="takeExam">تلقي اختبار</string>
+    <string name="fileIcon">أيقونة الملف</string>
+    <string name="uploadingFileNum" formatted="false">جارٍ تحميل %d من %d</string>
+    <string name="fileLocked" formatted="false">تم تأمين %s.</string>
+    <string name="filePermissionGranted">الملف جاهز الآن للتنزيل، يرجى المحاولة من جديد.</string>
+    <string name="filePermissionDenied">لا يمكن تنزيل الملف دون منح الإذن.</string>
+    <string name="pleaseTryAgain">تم منح الإذن، الرجاء إعادة المحاولة.</string>
+    <string name="pickVideo">قم بتحديد مقطع فيديو</string>
+
+    <!--Errors-->
+    <string name="errorOccurred">حدث خطأ غير متوقع.</string>
+    <string name="serverError">حدث خطأ بالخادم.</string>
+    <string name="unauthorized">غير مسموح لك بالوصول إلى هذا. إما أنك لا تملك أذونات أو لا يمكنك الوصول إليه حتى الآن (مثلاً عندما لم يبدأ مساقك بعد)</string>
+    <string name="fileNoLongerExists">هذا الملف لم يعد موجودًا.</string>
+    <string name="invalidAccessToken">انتهت الجلسة الخاصة بك. يُرجى تسجيل الدخول لبدء جلسة جديدة.</string>
+    <string name="uploadingFromSourceFailed">تعذر إكمال تحميل ملف من هذا المصدر.</string>
+    <string name="errorGettingPhoto">حدث خطأ أثناء الحصول على الصورة. يرجى إعادة المحاولة.</string>
+    <string name="errorTextMissing">أضف بعض النصوص لإرسال رسالة</string>
+
+    <string name="fileUploadNotSupported">لا يمكنك تحميل ملفات إلى المهمة المحددة.</string>
+    <string name="noCourseSelected">يرجى تحديد مساق</string>
+    <string name="selectCourse">تحديد مساق</string>
+    <string name="selectAssignment">تحديد مهمة</string>
+    <string name="loadingAssignments">جارٍ تحميل المهام...</string>
+    <string name="noAssignmentSelected">يرجى تحديد مهمة</string>
+    <string name="noAssignmentsWithFileUpload">لا يحتوي هذا المساق على مهام تسمح بتحميل ملفات.</string>
+    <string name="teacherNotAllowedFileSubmission">كمعلم في هذا المساق، لا يمكنك إرسال الملفات.</string>
+    <string name="noFilesUploaded">لم تقم بتحديد أي ملفات.</string>
+    <string name="oneOrMoreExtensionNotAllowed">ملف واحد أو أكثر له امتداد غير مسموح به</string>
+    <string name="extensionNotAllowed">نوع الملف المحدد غير مسموح به.</string>
+    <string name="allowedExtensions">الامتدادات المسموح بها:&#160;</string>
+
+    <!-- Media Task Loader -->
+    <string name="noDataConnection"> يرجى التأكد من الاتصال بالإنترنت والمحاولة من جديد. </string>
+    <string name="noApps">لا توجد أي تطبيقات مثبتة على جهازك قادرة على معالجة هذا الملف.</string>
+    <string name="noAppsShort">تعذر الفتح</string>
+    <string name="unexpectedErrorOpeningFile">حدث خطأ غير متوقع أثناء محاولة فتح الملف.</string>
+    <string name="unexpectedErrorDownloadingFile">حدث خطأ غير متوقع أثناء محاولة تنزيل الملف.</string>
+
+    <string name="done">تم</string>
+
+    <!--Permissions-->
+    <string name="permissionDenied">ينبغي الحصول على إذن مسبق لاستخدام هذه الميزة.</string>
+    <string name="noConnection">لا يوجد اتصال</string>
+
+    <!--Empty Screens-->
+    <string name="emptyCourseListMessage">تظهر هنا مساقاتك ومجموعاتك المفضلة.</string>
+    <string name="addCoursesGroups">إضافة مساقات/مجموعات</string>
+    <string name="noDiscussions">لا توجد نقاشات</string>
+    <string name="noDiscussionsSubtext">ابدأ محادثة مع الآخرين.</string>
+    <string name="noDiscussionsTeacher">ابدأ محادثة مع طلابك.</string>
+    <string name="nothingUnread">علبة الوارد صفر!</string>
+    <string name="nothingUnreadSubtext">لقد اطلعت عليها جميعًا!</string>
+    <string name="nothingStarred">لا توجد رسائل معلّمة بنجمة</string>
+    <string name="nothingStarredSubtext">احتفظ بالرسائل الهامة في هذا القسم بالضغط على النجمة في كل رسالة.</string>
+    <string name="nothingSent">لم يتم إرسال أي شيء</string>
+    <string name="nothingSentSubtext">لم تقم بإرسال أي رسائل.</string>
+    <string name="nothingArchived">لم تتم أرشفة أي شيء</string>
+    <string name="nothingArchivedSubtext">لم تقم بأرشفة أي رسالة.</string>
+    <string name="noQuizzes">لا توجد اختبارات موجزة</string>
+    <string name="noQuizzesSubtext">عذرًا، لا توجد اختبارات موجزة حتى الآن.</string>
+    <string name="noQuizzesTeacher">لا توجد أي اختبارات موجزة منشورة للعرض.</string>
+    <string name="noAnnouncements">لا توجد إعلانات</string>
+    <string name="noAnnouncementsSubtext">لم يتم الإعلان عن أي شيء حتى الآن.</string>
+    <string name="noCourses">لا يوجد أي مساق</string>
+    <string name="noCoursesSubtext">يبدو أنه لا توجد أي مساقات مقترنة بهذا الحساب. قم بزيارة الويب لإنشاء مساق اليوم.</string>
+    <string name="noAssignments">لا توجد أي مهام</string>
+    <string name="noAssignmentsSubtext">يبدو أنه لم يتم إنشاء مهام في هذه المساحة. حان وقت الانطلاق والاستكشاف.</string>
+    <string name="noAssignmentsTeacher">يبدو أنه لم تنشر أي مهام حتى الآن.</string>
+    <string name="noFiles">لا توجد ملفات</string>
+    <string name="noFilesSubtext">لا توجد ملفات مقترنة بهذا الحساب.</string>
+    <string name="notSupported">غير مدعوم</string>
+    <string name="noEvents">لا توجد أحداث اليوم!</string>
+    <string name="noEventsSubtext">يبدو أنه يوم رائع للراحة والاسترخاء.</string>
+    <string name="noSubmission">لا يوجد إرسال</string>
+    <string name="noSubmissionSubtext">أرسل مهمتك عن طريقة %1$s في %2$s.</string>
+    <string name="noSubmissionTeacher">لا يمتلك هذا الطالب إرسالات حتى الآن.</string>
+    <string name="noDueDate">لا تحتوي هذه المهمة على تاريخ استحقاق.</string>
+    <string name="locked">مؤمّن</string>
+    <string name="lockedSubtext">تم تأمين هذه المهمة حتى %1$s في %2$s.</string>
+    <string name="lockedModule">هذه المهمة جزء من الوحدة النمطية \"%1$s\" ولم يتم فتحها بعد.</string>
+    <string name="chooseFile">اختيار ملف</string>
+    <string name="chooseFileSubtext">قم بإرفاق ملف لإرسالك بالضغط على إحدى الخيارات أدناه.</string>
+    <string name="noNotifications">لا توجد إخطارات</string>
+    <string name="noNotificationsSubtext">لا يوجد شيء للإخطار عنه حتى الآن.</string>
+    <string name="noTodos">أحسنت!</string>
+    <string name="noTodosSubtext">قائمة المهام الخاصة بك فارغة. حان وقت إعادة الشحن.</string>
+    <string name="noSyllabus">لا توجد مخططات دراسية</string>
+    <string name="noSyllabusSubtext">لم يتم إنشاء مخطط دراسي حتى الآن.</string>
+    <string name="noBookmarks">لا توجد إشارات مرجعية</string>
+    <string name="noBookmarksSubtext">الإشارات المرجعية هي اختصارات لأي شاشة في التطبيق. أضفها على الشاشة التي ترغب في وضع إشارة مرجعية لها.</string>
+    <string name="noModules">لا توجد وحدات نمطية</string>
+    <string name="noModulesSubtext">يبدو أنه لم يتم إنشاء وحدات نمطية حتى الآن.</string>
+    <string name="noPages">لا توجد صفحات</string>
+    <string name="noPagesSubtext">يبدو أنه لم يتم إنشاء أي صفحات حتى الآن.</string>
+
+    <!--General-->
+    <string name="yes">نعم</string>
+    <string name="no">لا</string>
+
+    <string name="inbox_all">علبة الوارد</string>
+    <string name="inbox_unread">غير مقروء</string>
+    <string name="inbox_starred">تم وضع نجمة عليها</string>
+    <string name="inbox_sent">مرسَل</string>
+    <string name="inbox_archived">مؤرشف</string>
+
+    <string name="forbidden">تظهر الردود فقط للأشخاص الذين أرسلوا ردًا واحدًا على الأقل.</string>
+
+    <string name="like">إعجاب</string>
+    <string name="likes">إعجابات</string>
+    <string name="lockedAssignmentNotModule">هذه المهمة مؤمّنة.</string>
+    <string name="deletedEntryNoChildren">لا يحتوي إدخال المناقشة المحذوف هذا على أية ردود.</string>
+    <string name="deleted">[تم حذفه]</string>
+    <string name="deleted_by">[تم الحذف بواسطة %1$s]</string>
+    <string name="lockedDiscussionDesc">هذه المناقشة جزء من الوحدة %s ولم يتم تأمينها بعد.</string>
+    <string name="gradedDiscussion">مناقشة مقيمة</string>
+    <string name="pointsPossible">النقاط الممكنة</string>
+    <string name="sideCommentEntry">في هذا النوع من النقاش، لا يمكنك التعليق على أي إدخال على هذا المستوى.</string>
+
+    <string name="accessibility_overflow">تجاوز السعة</string>
+
+    <string name="discussion_response">تعليق</string>
+    <string name="discussion_responses">تعليقات</string>
+    <string name="discussion_unread">غير مقروء</string>
+    <string name="discussion_reply">رد</string>
+    <string name="close">إغلاق</string>
+
+    <string name="noInternetConnectionTitle">لا يوجد اتصال بالإنترنت</string>
+    <string name="noInternetConnectionMessage">يتطلب هذا الإجراء اتصالاً بالإنترنت.</string>
+    <string name="content_description_avatar">صورة مجسمة</string>
+    <string name="formattedAvatarAction">عرض تفاصيل المستخدم لـ %s.</string>
+
+    <!-- App Names -->
+    <string name="utils_canvas">Canvas</string>
+    <string name="utils_canvasTeacher">Canvas Teacher</string>
+    <string name="utils_canvasParent">Canvas Parent</string>
+    <string name="utils_polls">Canvas Polls</string>
+    <string name="utils_speedgrader">Speedgrader</string>
+
+    <!-- Rating Dialog -->
+    <string name="utils_howAreWeDoing">كيف هو أداؤنا؟</string>
+    <string name="utils_rateUs">ما تقييمك لنا؟</string>
+    <string name="utils_doBetter">ماذا يمكننا فعله لتطوير أداءنا؟</string>
+    <string name="utils_sendFeedback">إرسال تعليقات</string>
+    <string name="utils_suggestions">مقترحات لـ Android</string>
+    <string name="utils_domain">المجال</string>
+    <string name="utils_versionNum">الإصدار:</string>
+    <string name="utils_userId">معرف المستخدم</string>
+    <string name="utils_email">البريد الإلكتروني</string>
+    <string name="utils_dontShowAgain">لا تظهر مرة أخرى</string>
+    <string name="utils_installDate">تاريخ التثبيت:</string>
+    <string name="utils_device">الجهاز</string>
+    <string name="utils_osVersion">إصدار نظام التشغيل</string>
+    <string name="loading">يتم الآن التحميل</string>
+    <string name="save">حفظ</string>
+    <string name="cropInstructions">تصغير الصورة وسحبها لضبطها.</string>
+
+    <!--Discussions-->
+    <plurals name="utils_discussionsReplies">
+        <item quantity="zero">%s ردود</item>
+        <item quantity="one">%s رد</item>
+        <item quantity="two">%s ردود</item>
+        <item quantity="few">%s ردود</item>
+        <item quantity="many">%s ردود</item>
+        <item quantity="other">%s ردود</item>
+    </plurals>
+
+    <string name="utils_discussionsDeleted" formatted="false">تم حذف هذا الرد %s</string>
+    <string name="utils_discussionsUnknownAuthor">مؤلف غير معروف</string>
+    <string name="utils_discussionsReply">رد</string>
+    <string name="utils_discussionsEdit">تحرير</string>
+    <string name="utils_discussionsDeleteWarning">هل تريد بالتأكيد حذف هذا الرد؟</string>
+    <string name="utils_availableToLabel">متوفر لـ :</string>
+    <string name="utils_availableFromLabel">متوفر بدءًا من:</string>
+    <string name="utils_dueDateHeaderLabel">الاستحقاق</string>
+    <string name="utils_dueLabel">تاريخ الاستحقاق:</string>
+    <string name="utils_delete">حذف</string>
+    <string name="utils_dueDateAtTime" formatted="false">تاريخ الاستحقاق %1s في %2s</string>
+    <string name="utils_noDateFiller">--</string>
+    <string name="utils_availabilityLabel">الإتاحة:</string>
+    <string name="utils_pinnedIcon">أيقونة المناقشات المثبتة</string>
+    <string name="utils_pinDiscussion">تثبيت النقاش</string>
+    <string name="utils_unpinDiscussion">إلغاء تثبيت النقاش</string>
+    <string name="utils_discussionPinned">تم تثبيت النقاش</string>
+    <string name="utils_pinnedDiscussions">تم التثبيت</string>
+    <string name="utils_discussionUnpinned">النقاشات</string>
+    <string name="utils_emptyDiscussions">لا توجد نقاشات لعرضها في هذا القسم.</string>
+    <string name="utils_description">الوصف</string>
+    <string name="utils_allowThreadedReplies">السماح بالردود المترابطة</string>
+    <string name="utils_usersMustPost">يجب على الطلاب النشر قبل رؤية الردود</string>
+    <string name="utils_discussionsClosed">مغلق للتعليقات</string>
+    <string name="utils_discussionsOpen">مفتوح للتعليقات</string>
+    <string name="utils_discussionsPin">تثبيت</string>
+    <string name="utils_discussionsUnpin">إلغاء التثبيت</string>
+    <string name="utils_discussionsOptions">خيارات</string>
+    <string name="utils_discussionsDeleteTitle">هل تريد حذف النقاش؟</string>
+    <string name="utils_discussionsDelete">حذف النقاش</string>
+    <string name="utils_discussionsDeleteMessage">سيؤدي هذا إلى حذف النقاش والمحادثة بأكملها.</string>
+    <string name="utils_discussionSentSuccess">الرد على النقاش كان ناجحًا.</string>
+    <string name="utils_discussionUpdateSuccess">تحرير النقاش كان ناجحًا.</string>
+    <string name="utils_discussionSentEmpty">لا يمكن ترك الرد على النقاش فارغًا.</string>
+    <string name="utils_discussionSentFailure">تعذر إرسال الرد على النقاش في الوقت الحالي.</string>
+    <string name="utils_createDiscussion">نقاش جديد</string>
+    <string name="utils_editDiscussion">تحرير النقاش</string>
+    <string name="utils_discussionDetails">تفاصيل النقاش</string>
+    <string name="utils_discussionSuccessfullyUpdated">تم تحديث النقاش بنجاح.</string>
+    <string name="utils_saving">جارٍ الحفظ</string>
+    <string name="utils_discussionSuccessfullyCreated">تم إنشاء النقاش بنجاح.</string>
+    <string name="utils_discussionSuccessfulAttachmentNot">تعذر إضافة المرفق إلى هذا النقاش. يرجى التحقق من الحصة النسبية للملف وإعادة المحاولة.</string>
+    <string name="utils_noTitle">بلا عنوان</string>
+    <string name="utils_discussionsReplies_Title">ردود</string>
+    <string name="utils_contentDescriptionDiscussionsOverflow">المزيد من الخيارات</string>
+    <string name="utils_discussionsUnreadRepliesBlank" formatted="false">%s %s %s</string>
+    <string name="utils_lastPost" formatted="false">آخر منشور %s</string>
+    <string name="utils_postedOnDate">تم النشر على %s</string>
+    <string name="utils_discussionPostBeforeRepliesEmptyText">تظهر الردود فقط للأشخاص الذين أرسلوا ردًا واحدًا على الأقل.</string>
+    <string name="utils_createAnnouncementDelayPosting">تأخير النشر</string>
+    <string name="utils_postAt">نشر في</string>
+    <string name="utils_postDate">تاريخ النشر</string>
+    <string name="utils_postTime">ترحيل الوقت</string>
+    <string name="utils_editAnnouncementTitle">تحرير الإعلان</string>
+    <string name="utils_createAnnouncementTitle">إعلان جديد</string>
+    <string name="utils_announcementDetails">تفاصيل الإعلان</string>
+    <string name="utils_createAnnouncementNoDescription">الوصف مطلوب</string>
+    <string name="utils_errorSavingAnnouncement">حدث خطأ أثناء محاولة حفظ هذا الإعلان. حاول مرة أخرى.</string>
+    <string name="utils_announcementSuccessfullyUpdated">تم تحديث الإعلان بنجاح.</string>
+    <string name="utils_announcementSuccessfullyCreated">تم إنشاء الإعلان بنجاح.</string>
+
+    <plurals name="utils_discussionsUnread">
+        <item quantity="zero">%s غير مقروء</item>
+        <item quantity="one">%s غير مقروء</item>
+        <item quantity="two">%s غير مقروء</item>
+        <item quantity="few">%s غير مقروء</item>
+        <item quantity="many">%s غير مقروء</item>
+        <item quantity="other">%s غير مقروء</item>
+    </plurals>
+
+    <plurals name="utils_addAttachment">
+        <item quantity="zero">إضافة مرفقات</item>
+        <item quantity="one">إضافة مرفق</item>
+        <item quantity="two">إضافة مرفقات</item>
+        <item quantity="few">إضافة مرفقات</item>
+        <item quantity="many">إضافة مرفقات</item>
+        <item quantity="other">إضافة مرفقات</item>
+    </plurals>
+
+    <!-- Assignment Override !-->
+    <string name="utils_unlockAfterDueDateError">لا يمكن أن يكون تاريخ إلغاء التأمين بعد تاريخ الاستحقاق</string>
+    <string name="utils_lockBeforeDueDateError">لا يمكن أن يكون تاريخ التأمين قبل تاريخ الاستحقاق</string>
+    <string name="utils_lockAfterUnlockError">لا يمكن أن يكون تاريخ التأمين قبل تاريخ إلغاء التأمين</string>
+    <string name="utils_assigneeBlankError">لا يمكن أن يكون المعين له فارغ</string>
+    <string name="utils_assignTo">تعيين إلى</string>
+    <string name="utils_availableFrom">متاح من</string>
+    <string name="utils_availableTo">متاح إلى</string>
+    <string name="utils_availableFromDate">متاح من تاريخ</string>
+    <string name="utils_availableFromTime">متاح من وقت</string>
+    <string name="utils_availableToDate">متاح حتى تاريخ</string>
+    <string name="utils_availableToTime">متاح حتى وقت</string>
+    <string name="utils_dueDate">تاريخ الاستحقاق</string>
+    <string name="utils_dueTime">موعد الاستحقاق</string>
+    <string name="utils_addNew">إضافة جديد</string>
+
+    <!--Attachment Layout-->
+    <string name="utils_downloadAttachment">تنزيل مرفق</string>
+    <string name="utils_removeAttachment">إزالة مرفق</string>
+
+    <!--Unsaved Changes-->
+    <string name="utils_continueWithoutSavingTitle">متابعة دون حفظ؟</string>
+    <string name="utils_continueWithoutSavingMessage">هل أنت متأكد من أنك تريد المتابعة دون حفظ؟</string>
+    <string name="utils_continueUnsaved">متابعة</string>
+    <string name="utils_exitWithoutSavingTitle">الخروج دون حفظ؟</string>
+    <string name="utils_exitWithoutSavingMessage">هل أنت متأكد من أنك تريد الخروج دون حفظ؟</string>
+    <string name="utils_exitUnsaved">خروج</string>
+    <string name="utils_cancel">إلغاء</string>
+
+    <string name="utils_contentDescriptionFiles">أيقونة الملف</string>
+    <string name="utils_turn_in">التسليم</string>
+    <string name="utils_upload">تحميل</string>
+    <string name="utils_okay">موافق</string>
+    <string name="utils_loadingFilesIndeterminate">جارٍ تحميل الملفات&#8230;</string>
+    <string name="utils_allowedExtensions">الامتدادات المسموح بها:&#160;</string>
+    <string name="utils_extensionNotAllowed">نوع الملف المحدد غير مسموح به.</string>
+    <string name="utils_errorUploadingFile">حدث خطأ أثناء تحميل ملفك. يرجى إعادة المحاولة.</string>
+    <string name="utils_filesUploadedSuccessfully">تم تحميل الملفات بنجاح.</string>
+    <string name="utils_uploadingFiles">جارٍ تحميل الملفات&#8230;</string>
+    <string name="utils_uploadingFile">جارٍ تحميل الملف&#8230;</string>
+    <string name="utils_noApps">لا توجد أي تطبيقات مثبتة على جهازك قادرة على معالجة هذا الملف.</string>
+    <string name="utils_errorGettingPhoto">حدث خطأ أثناء الحصول على الصورة. يرجى إعادة المحاولة.</string>
+    <string name="utils_oneOrMoreExtensionNotAllowed">ملف واحد أو أكثر له امتداد غير مسموح به</string>
+    <string name="utils_fileUploadNotSupported">لا يمكنك تحميل ملفات إلى المهمة المحددة.</string>
+    <string name="utils_noFilesUploaded">لم تقم بتحديد أي ملفات.</string>
+    <string name="utils_attachments">المرفقات</string>
+    <string name="utils_uploadTo">التحميل إلى </string>
+    <string name="utils_uploadToCanvas">التحميل إلى Canvas</string>
+    <string name="utils_uploadMyFiles">ملفاتي</string>
+    <string name="utils_uploadCourseFiles">ملفات المساق</string>
+    <string name="utils_uploadToSubmissionComment">التحميل إلى تعليق الإرسال</string>
+    <string name="utils_attachFile">إرفاق ملف</string>
+    <string name="utils_with">مع</string>
+
+    <string name="notificationPrimaryInboxTitle">إخطار Canvas</string>
+    <string name="notificationChannelNamePrimary">إخطارات Canvas عامة</string>
+    <string name="notificationChannelDescriptionPrimary">يمكن إجراء تكوين إضافي للإخطارات داخل قسم تفضيلات إخطار Canvas.</string>
+
+    <string name="copyLinkAddress">نسخ عنوان الارتباط</string>
+    <string name="copyLink">نسخ الرابط</string>
+    <string name="linkCopied">تم نسخ الارتباط</string>
+    <string name="link">ارتباط</string>
+    <string name="fileExists">الملف موجود</string>
+    <string name="replace">استبدال</string>
+    <string name="shareLink">مشاركة الارتباط</string>
+
+    <string name="utils_launchExternalTool">تشغيل الأداة الخارجية</string>
+    <string name="utils_externalToolTitle">أداة خارجية</string>
+    <string name="utils_placeholderTitle">أداة خارجية</string>
+    <string name="utils_placeholderDescription">قم بزيارة حسابك على Canvas على الويب لتحرير هذه الأداة الخارجية.</string>
+    <string name="utils_unableToViewInBrowser">لا يمكننا العثور على تطبيق خارجي لعرض أداة LTI (تبادلية أدوات التعلم) هذه.</string>
+
+    <string name="utils_unsupportedFileMessage">تعذر عرض هذا الملف. استخدم الزر أدناه لفتح الملف بواسطة تطبيق آخر على جهازك.</string>
+    <string name="utils_openWithAnotherApp">فتح بواسطة...</string>
+    <string name="utils_couldNotPlayFormat">تنسيق الوسائط هذا غير مدعوم</string>
+    <string name="utils_fullscreen">شاشة كاملة</string>
+
+    <string name="utils_dataUsageWarningTitle">تحذير استخدام البيانات</string>
+    <string name="utils_dataUsageWarningMessage">قد يؤدي هذا الإجراء إلى استهلاك قدر كبير من البيانات، مما قد يكبد تكاليف زائدة. هل ترغب في المتابعة؟</string>
+    <string name="utils_doNotShowMessageAgain">لا تظهر هذه الرسالة مرة أخرى</string>
+
+    <string name="utils_no_data_connection">يرجى التأكد من الاتصال بالإنترنت والمحاولة من جديد.</string>
+    <string name="utils_playMedia">تشغيل وسائط</string>
+    <string name="utils_tryAgain">حاول مرة أخرى</string>
+    <string name="image_uploading">جارٍ تحميل الصورة...</string>
+    <string name="image_upload_error">خطأ في تحميل الصورة</string>
+    <string name="retry">إعادة المحاولة</string>
+
+    <string name="search">بحث</string>
+    <string name="searchAssignmentsHint">البحث عن المهام</string>
+    <string name="searchAnnouncementsHint">البحث عن الإعلانات</string>
+    <string name="searchDiscussionsHint">البحث عن النقاشات</string>
+    <string name="searchPagesHint">البحث عن الصفحات</string>
+    <string name="searchQuizzesHint">البحث عن الاختبارات الموجزة</string>
+    <string name="noItemsMatchingQuery">لا توجد عناصر مطابقة لـ \"%s\"</string>
+    <string name="selected">تم التحديد</string>
+
+</resources>

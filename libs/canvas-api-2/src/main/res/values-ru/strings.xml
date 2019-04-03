@@ -1,0 +1,79 @@
+﻿<?xml version='1.0' encoding='UTF-8'?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <!--Modules-->
+    <string name="mustComplete">Вы должны сначала завершить:</string>
+    <string name="unlockedAt">Будет разблокировано в:</string>
+    <string name="goToModules">Перейти к Модулям</string>
+
+    <!--Events-->
+    <string name="Starts">Начинается</string>
+    <string name="Ends">Заканчивается</string>
+    <string name="allDayEvent">Мероприятие на весь день</string>
+    <string name="at">в</string>
+    <string name="to">к</string>
+
+    <!--StreamItems-->
+    <string name="Message">Сообщение</string>
+    <string name="Loading">Загрузка&#8230;</string>
+    <string name="Deleted">Удалено</string>
+
+    <!-- Assignment Module -->
+    <string name="canvasAPI_online">Онлайн</string>
+    <string name="canvasAPI_onPaper">На бумаге</string>
+    <string name="canvasAPI_discussion">Обсуждение</string>
+    <string name="canvasAPI_quiz">Тест</string>
+    <string name="canvasAPI_externalTool">Внешний инструмент</string>
+    <string name="canvasAPI_none">Нет</string>
+
+    <string name="canvasAPI_passFail">Сдал Не сдал</string>
+    <string name="canvasAPI_percent">Процент</string>
+    <string name="canvasAPI_letterGrade">Успеваемость</string>
+    <string name="canvasAPI_points">Баллы</string>
+    <string name="canvasAPI_gpaScale">Шкала GPA</string>
+    <string name="canvasAPI_notGraded">Оценка не выставлена</string>
+
+    <string name="canvasAPI_onlineQuiz">Онлайн тест</string>
+    <string name="canvasAPI_discussionTopic">Тема обсуждения</string>
+    <string name="canvasAPI_onlineUpload">Онлайновая отправка</string>
+    <string name="canvasAPI_onlineTextEntry">Онлайновый ввод текста</string>
+    <string name="canvasAPI_onlineURL">URL-адрес в Интернете</string>
+    <string name="canvasAPI_mediaRecording">Запись на носитель</string>
+    <string name="canvasAPI_attendance">Посещаемость</string>
+    <string name="quiz_scoring_policy_highest">Самая высокая</string>
+    <string name="quiz_scoring_policy_average">Среднее значение</string>
+    <string name="quiz_scoring_policy_latest">Последняя</string>
+    <string name="no">Нет</string>
+    <string name="always">Всегда</string>
+    <string name="graded_quiz">Оцененная контрольная работа</string>
+    <string name="practice_quiz">Практическая контрольная работа</string>
+    <string name="graded_survey">Оцененный опрос</string>
+    <string name="ungraded_survey">Опрос без оценки</string>
+    <string name="andMore"> и многое другое %d</string>
+
+    <!-- Enrollment Types -->
+    <string name="enrollmentTypeStudent">Студент</string>
+    <string name="enrollmentTypeTeacher">Преподаватель</string>
+    <string name="enrollmentTypeObserver">Наблюдатель</string>
+    <string name="enrollmentTypeTeachingAssistant">TA</string>
+    <string name="enrollmentTypeDesigner">Дизайнер</string>
+    <string name="enrollmentTypeUnknown">Неизвестно</string>
+
+</resources>

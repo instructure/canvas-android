@@ -1,0 +1,907 @@
+﻿<!--
+  ~ Copyright (C) 2017 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<resources>
+
+    <string name="settings_name">Gosodiadau</string>
+    <string name="tab_week">Wythnos</string>
+    <string name="tab_inbox">Blwch Derbyn</string>
+    <string name="tab_details">Manylion</string>
+    <string name="tab_questions">Cwestiynau</string>
+    <string name="tab_submissions">Cyflwyniadau</string>
+    <string name="tab_assignments">Aseiniadau</string>
+    <string name="tab_profile">Proffil</string>
+    <string name="tab_people">Pobl</string>
+    <string name="tab_quizzes">Cwisiau</string>
+    <string name="tab_discussions">Trafodaethau</string>
+    <string name="tab_announcements">Cyhoeddiad</string>
+    <string name="tab_attendance">Presenoldeb</string>
+    <string name="tab_pages">Tudalennau</string>
+    <string name="tab_todo">Tasgau i’w Gwneud</string>
+    <string name="content_description_school_logo">Logo’r Ysgol</string>
+    <string name="search_guides">Chwilio drwy Ganllawiau Canvas</string>
+    <string name="canvas_guides">Canllawiau Canvas</string>
+    <string name="search_guides_icon">Eicon Canllawiau Canvas</string>
+    <string name="search_guides_details">Atebion i gwestiynau cyffredin</string>
+    <string name="report_problem">Rhoi gwybod am broblem</string>
+    <string name="report_problem_icon"> Eicon Rhoi gwybod am broblem</string>
+    <string name="report_problem_details">Os na fydd yr ap yn gweithio’n iawn, rhowch wybod i ni</string>
+    <string name="request_feature">Gofyn am Nodwedd</string>
+    <string name="request_feature_icon">Eicon Gofyn am Nodwedd</string>
+    <string name="request_feature_details">Rhowch wybod i ni am eich syniad am ffordd o wella’r ap?</string>
+    <string name="share_your_love">Rhowch eich barn am yr ap</string>
+    <string name="share_your_love_details">Rhowch wybod i ni am eich hoff rannau o’r ap</string>
+    <string name="masquerade">Ffugio</string>
+    <string name="issue_with_teacher_app">Problem gydag Ap Teacher [Android]</string>
+    <string name="no_items_to_display_short">Dim eitemau</string>
+    <string name="rate_the_app">Sgorio’r ap</string>
+    <string name="rate_the_app_icon">Eicon Sgorio’r ap</string>
+    <string name="teacher_log_out">Allgofnodi</string>
+    <string name="teacher_switch_user">Newid Defnyddiwr</string>
+    <string name="under_construction">Wrthi’n cael ei greu</string>
+    <string name="toolbar_event">Digwyddiad</string>
+    <string name="location">Lleoliad</string>
+    <string name="event_date">Dyddiad Digwyddiad</string>
+    <string name="course">Cwrs</string>
+    <string name="profile">Proffil</string>
+    <string name="share">Rhannu</string>
+    <string name="share_with">Rhannu gyda&#8230;</string>
+
+    <!-- Navigation Drawer -->
+    <string name="navigation_drawer_open">Agor drôr llywio</string>
+    <string name="navigation_drawer_close">Cau drôr llywio</string>
+
+    <!-- Compose Message -->
+    <string name="no_subject">(dim pwnc)</string>
+    <string name="compose_message">Creu neges</string>
+    <string name="newMessage">Neges Newydd</string>
+    <string name="courses">Cwrs</string>
+    <string name="compose_message_no_ellipsis">Creu Neges</string>
+    <string name="send">Anfon</string>
+    <string name="attachment">Atodiad</string>
+    <string name="attachments">Atodiad</string>
+    <string name="not_available_offline">Swyddogaethau ddim ar gael all-lein</string>
+    <string name="empty_message">Does dim modd i’r neges fod yn wag!</string>
+    <string name="message_has_no_recipients">Does gan y neges hon ddim derbynwyr ar hyn o bryd.</string>
+    <string name="course_spinner_title">Cwrs:</string>
+    <string name="reply_to_message">Ateb</string>
+    <string name="forward_message">Anfon Neges Ymlaen</string>
+    <string name="label_to">At</string>
+    <string name="label_course">Cwrs</string>
+    <string name="label_subject">Pwnc</string>
+
+    <string name="common_send">Anfon</string>
+    <string name="common_edit">Golygu</string>
+
+    <!-- Feature Request -->
+    <string name="feature_subject">Syniad ar gyfer Ap Teacher [Android]</string>
+    <string name="understand_request">Bydd y wybodaeth ganlynol yn ein helpu ni i ddeall eich syniad yn well:</string>
+    <string name="send_mail">Anfon E-bost&#8230;</string>
+
+    <string name="color_1">Coch</string>
+    <string name="color_2">Pinc Llachar</string>
+    <string name="color_3">Lafant</string>
+    <string name="color_4">Fioled</string>
+    <string name="color_5">Porffor</string>
+    <string name="color_6">Llechen</string>
+    <string name="color_7">Glas</string>
+    <string name="color_8">Cyan</string>
+    <string name="color_9">Gwyrdd</string>
+    <string name="color_10">Melynwyrdd</string>
+    <string name="color_11">Melyn</string>
+    <string name="color_12">Aur</string>
+    <string name="color_13">Oren</string>
+    <string name="color_14">Pinc</string>
+    <string name="color_15">Llwyd</string>
+
+    <string name="attachment_icon">Eicon Atodiad</string>
+    <string name="star_icon">Eicon Seren</string>
+    <string name="monologue">Monolog</string>
+
+    <string name="create_announcement_topic_title_hint">Teitl Pwnc</string>
+    <string name="post_date">Dyddiad Postio</string>
+    <string name="announcement">Cyhoeddiad</string>
+    <string name="create_announcement_title">Cyhoeddiad Newydd</string>
+    <string name="create_announcement_no_description">Rhaid rhoi disgrifiad</string>
+    <string name="announcementDetails">Manylion Cyhoeddiad</string>
+
+    <string name="no_title">Dim Teitl</string>
+    <string name="announcement_create_success">Wedi Creu Cyhoeddiad!</string>
+    <string name="announcement_create_fail">Does dim modd creu cyhoeddiad. Gwiriwch eich cysylltiad a rhoi cynnig arall arni.</string>
+    <string name="create_announcement_delay_posting">Oedi cyn postio</string>
+
+    <string name="discussion">Trafodaeth</string>
+
+    <string name="sunday">Dydd Sul</string>
+    <string name="monday">Dydd Llun</string>
+    <string name="tuesday">Dydd Mawrth</string>
+    <string name="wednesday">Dydd Mercher</string>
+    <string name="thursday">Dydd Iau</string>
+    <string name="friday">Dydd Gwener</string>
+    <string name="saturday">Dydd Sadwrn</string>
+
+    <string name="add_attachment">Ychwanegu Atodiad</string>
+    <string name="content_description_files">Eicon ffeil</string>
+    <string name="next">Nesaf</string>
+    <string name="upload_to_cnavas">Llwytho i fyny i Canvas</string>
+    <string name="upload_my_files">Fy Ffeiliau i</string>
+    <string name="upload_course_files">Ffeiliau Cwrs</string>
+    <string name="upload_to">Llwytho i fyny i</string>
+    <string name="message_attachments">Atodiadau Neges</string>
+    <string name="with">gyda</string>
+    <string name="discussion_attachment">Atodi ffeil</string>
+    <string name="select_files_or_photos">Dewiswch ffeiliau neu luniau</string>
+    <string name="uploading_files">Llwytho ffeiliau i fyny&#8230;</string>
+    <string name="no_attachment">(Dim Atodiad)</string>
+    <string name="creating_announcement">Wrthi’n Creu Cyhoeddiad&#8230;</string>
+
+    <string name="copy_email">Copïo cyfeiriad e-bost</string>
+    <string name="all_grading_periods">Pob Cyfnod Graddio</string>
+    <string name="no_submissions">Dim cyflwyniadau</string>
+    <string name="all_submissions_graded">Pob cyflwyniad wedi’i raddio</string>
+    <string name="icon">eicon</string>
+    <plurals name="grading_status_assignment">
+        <item quantity="one">%d cyflwyniad angen ei raddio</item>
+        <item quantity="other">%d cyflwyniad angen eu graddio</item>
+    </plurals>
+
+    <plurals name="assignees_without_grades">
+        <item quantity="one">Mae %d aseinî heb radd.</item>
+        <item quantity="other">Mae %d aseinî heb radd.</item>
+    </plurals>
+
+    <string name="inbox_empty_title">Dim negeseuon</string>
+    <string name="inbox_empty_starred_title">Dim negeseuon â seren</string>
+    <string name="inbox_empty_message">Tapiwch y \"+\" i greu sgwrs newydd.</string>
+    <string name="inbox_empty_starred_message">Rhoi seren wrth negeseuon drwy dapio\'r seren yn y neges.</string>
+
+    <string name="reply">Ateb</string>
+    <string name="replyAll">Ateb Pawb</string>
+    <string name="forward">Ymlaen</string>
+    <string name="star">Rhoi Seren</string>
+    <string name="archive">Archifo</string>
+    <string name="delete">Dileu</string>
+    <string name="message">Neges</string>
+    <string name="unarchive">Dad-archifo</string>
+    <string name="message_options">Opsiynau Neges</string>
+    <string name="markAsUnread">Marcio eu bod heb eu darllen</string>
+    <string name="message_delete_warning">Ydych chi’n siŵr eich bod am ddileu’ch copi chi o’r neges hon? Does dim modd dad-wneud hyn.</string>
+    <string name="conversation_delete_warning">Ydych chi’n siŵr eich bod am ddileu’ch copi chi o’r sgwrs hon? Does dim modd dad-wneud hyn.</string>
+    <string name="error_conversation_generic">Does dim modd gwneud hyn. Gwiriwch eich cysylltiad a rhoi cynnig arall arni.</string>
+    <string name="message_archived">Neges wedi’i harchifo</string>
+    <string name="message_unarchived">Neges heb ei harchifo</string>
+    <string name="message_deleted">Neges wedi’i dileu</string>
+    <string name="select_recipients">Dewis Derbynwyr</string>
+    <string name="entire_group_selected">Wedi dewis grŵp cyfan</string>
+    <string name="no_users_in_group">Dim defnyddwyr yn y grŵp</string>
+
+    <string name="published">Wedi cyhoeddi</string>
+    <string name="not_published">Heb Gyhoeddi</string>
+    <string name="published_content_description">Tic wedi’i gyhoeddi</string>
+    <string name="points_with_value">pwynt</string>
+    <string name="point_with_value">pwynt</string>
+    <string name="no_due_date">Dim Dyddiad Erbyn</string>
+    <string name="due_date">Dyddiad Erbyn</string>
+
+    <string name="view_replies">Gweld Atebion</string>
+    <string name="view_discussion">Gweld Trafodaethau</string>
+
+    <string name="edit">Golygu</string>
+    <string name="save">Cadw</string>
+    <string name="successfully_updated_assignment">Wedi llwyddo i ddiweddaru’r aseiniad.</string>
+    <string name="successfully_updated_quiz">Wedi llwyddo i ddiweddaru’r cwis.</string>
+    <string name="failure_updating_assignment">Aeth rhywbeth o’i le wrth ddiweddaru’r aseiniad. Rhowch gynnig arall arni.</string>
+    <string name="failure_deleting_assignment">Aeth rhywbeth o’i le wrth ddileu’r aseiniad. Rhowch gynnig arall arni.</string>
+    <string name="cant_unpublish">Does dim modd dad-gyhoeddi os oes gwaith wedi’i gyflwyno gan fyfyrwyr.</string>
+    <string name="messages">Negeseuon</string>
+    <plurals name="reply_message_plus_label">
+        <item quantity="one">+ %d Neges</item>
+        <item quantity="other">+ %d Neges</item>
+    </plurals>
+    <plurals name="submissionNeedsGrading">
+        <item quantity="one">%d cyflwyniad angen ei raddio</item>
+        <item quantity="other">%d cyflwyniad angen eu graddio</item>
+    </plurals>
+
+    <string name="delete_assignment_message">Ydych chi’n siŵr eich bod am ddileu’r aseiniad hwn?</string>
+    <string name="question">Cwestiwn</string>
+    <string name="quizMatchingDefaultDisplay">[Dewis]</string>
+
+    <string name="max_count">99+</string>
+    <string name="message_student">Anfon Neges at Fyfyriwr</string>
+
+    <string name="message_these_students">Anfon neges at y myfyrwyr hyn</string>
+    <string name="submission_status_missing">Ar goll</string>
+    <string name="submission_status_late">Yn Hwyr</string>
+    <string name="submission_status_submitted">Wedi cyflwyno</string>
+    <string name="submission_status_not_submitted">Heb gyflwyno eto</string>
+    <string name="submission_status_excused">Wedi esgusodi</string>
+    <string name="last_login_format">Manylion mewngofnodi diwethaf: %s</string>
+
+    <string name="muteGrades">Tewi Graddau</string>
+    <string name="unmuteGrades">Dad-dewi Graddau</string>
+    <string name="gradesMutedLabel">Graddau wedi’u tewi</string>
+    <string name="turnOnAnonymousGrading">Dechrau Graddio’n Ddienw</string>
+    <string name="turnOffAnonymousGrading">Diffodd Graddio’n Ddienw</string>
+    <string name="anonymousGradingLabel">Graddio’n Ddienw</string>
+    <string name="anonymousStudentLabel">Myfyriwr</string>
+
+    <!-- TODO -->
+    <string name="coming_soon">Nodwedd ar gael cyn bo hir</string>
+
+    <string-array name="submission_filters">
+        <item>Pob Cyflwyniad</item>
+        <item>Cyflwyniadau Hwyr</item>
+        <item>Cyflwyniadau ar goll</item>
+        <item>Gradd Uchaf</item>
+        <item>Gradd Isaf</item>
+    </string-array>
+
+    <string-array name="people_filters">
+        <item>Yn ôl Enw</item>
+        <item>Gradd - o’r Uchaf i’r Isaf</item>
+        <item>Gradd - o’r Isaf i’r Uchaf</item>
+    </string-array>
+
+    <string name="content_description_course_tab">Tab Cwrs</string>
+    <string name="content_description_inbox_tab">Tab Blwch Derbyn</string>
+    <string name="content_description_profile_tab">Tab Proffil</string>
+    <string name="close">Cau</string>
+    <string name="no_course_selected">Dewiswch gwrs</string>
+    <string name="discussion_reply_to_entry">Ateb Trafodaeth</string>
+    <string name="announcement_reply_to_entry">Ateb Cyhoeddiad</string>
+    <string name="error_text_missing">Ychwanegwch destun i anfon neges</string>
+    <string name="error_sending_message">Doedd dim modd anfon y neges hon. Tapiwch i roi cynnig arall arni.</string>
+    <string name="message_sent_successfully">Wedi llwyddo i anfon neges.</string>
+    <string name="error_occurred">Gwall annisgwyl.</string>
+    <string name="no_assignments_with_file_upload">Does gan y cwrs hwn ddim aseiniadau sy’n caniatáu llwytho ffeiliau i fyny.</string>
+    <string name="extension_not_allowed">Ni chaniateir y math hwn o ffeil.</string>
+    <string name="allowed_extensions">Estyniadau a ganiateir:&#160;</string>
+    <string name="files_uploaded_successfully">Wedi llwyddo i lwytho ffeiliau.</string>
+    <string name="error_uploading_file">Gwall wrth lwytho eich ffeil i fyny. Rhowch gynnig arall arni.</string>
+    <string name="uploading_file">Llwytho ffeil i fyny&#8230;</string>
+    <string name="no_apps">Does gan eich dyfais ddim rhaglen wedi’i gosod a all drin y ffeil hon.</string>
+    <string name="turn_in">Cyflwyno</string>
+    <string name="error_getting_photo">Gwall wrth nôl y llun. Rhowch gynnig arall arni.</string>
+    <string name="loading_files_indeterminate">Llwytho Ffeiliau&#8230;</string>
+    <string name="no_files_uploaded">Dydych chi ddim wedi dewis unrhyw ffeiliau.</string>
+    <string name="file_upload_not_supported">Does dim modd i chi lwytho ffeiliau i fyny i’r aseiniad hwn.</string>
+    <string name="one_or_more_extension_not_allowed">Mae gan o leiaf un ffeil estyniad ffeil sydd wedi’i wahardd</string>
+
+    <string name="inbox_all">Blwch Derbyn</string>
+    <string name="inbox_unread">Heb eu darllen</string>
+    <string name="inbox_starred">Wedi cael seren</string>
+    <string name="inbox_sent">Wedi anfon</string>
+    <string name="inbox_archived">Wedi archifo</string>
+    <string name="inbox_all_messages">Y cyfan</string>
+    <string name="uploading_file_num" formatted="false">Wrthi\'n llwytho %d o %d i fyny</string>
+    <string name="page_not_found">Heb ddod o hyd i’r dudalen.</string>
+    <string name="no_connection">Dim Cysylltiad</string>
+    <string name="unauthorized_access">Does gennych chi ddim hawl i gael mynediad at hwn. Does gennych chi ddim hawl neu does gennych chi ddim mynediad eto (efallai nad yw eich cwrs wedi dechrau eto)</string>
+    <string name="server_error">Gwall ar y gweinydd.</string>
+    <string name="error_loading_files">Gwall wrth lwytho eich ffeil. Gwiriwch eich cysylltiad rhyngrwyd a rhoi cynnig arall arni.</string>
+    <string name="files_submitted_successfully">Wedi llwyddo i gyflwyno ffeiliau.</string>
+    <string name="no_data_connection">Gwiriwch eich cysylltiad data a rhoi cynnig arall arni.</string>
+    <string name="teacher_logout_warning">Ydych chi’n siŵr eich bod am allgofnodi?</string>
+    <string name="teacher_yes">Iawn</string>
+    <string name="teacher_no">Na</string>
+    <string name="teacher_sending">Wrthi’n anfon&#8230;</string>
+    <string name="teacher_cancel">Canslo</string>
+    <string name="teacher_okay">Iawn</string>
+    <string name="teacher_upload">Llwytho i fyny</string>
+    <string name="settings">Gosodiadau</string>
+    <string name="edit_courses">Golygu Cyrsiau</string>
+    <string name="start_annotating">Dechrau Anodi</string>
+    <string name="empty_speedgrader_content">Gwedd SpeedGrader Wag, Angen Dyluniad</string>
+
+    <!--Course Settings-->
+    <string name="course_settings">Gosodiadau Cwrs</string>
+    <string name="course_name">Enw’r Cwrs</string>
+    <string name="set_home_to">Pennu ’Hafan’...</string>
+    <string name="course_activity_stream">Ffrwd Gweithgarwch Cwrs</string>
+    <string name="pages_front_page">Tudalen Flaen ar gyfer Tudalennau</string>
+    <string name="frontPage">Tudalen Flaen</string>
+    <string name="course_modules">Modiwlau Cwrs</string>
+    <string name="assignments_list">Rhestr Aseiniadau</string>
+    <string name="syllabus">Maes Llafur</string>
+    <!--End Course Settings-->
+    <!-- Assignment Details -->
+    <string name="multiple_due_dates">Mwy nag un dyddiad erbyn</string>
+    <string name="everyone">Pawb</string>
+    <string name="everyone_else">Pawb arall</string>
+    <string name="unknown_student">Myfyriwr Dieithr</string>
+    <string name="closed">Wedi cau</string>
+    <string name="no_date_filler">--</string>
+    <string name="due_date_at_time" formatted="false">Erbyn %1s am %2s</string>
+    <string name="last_post" formatted="false">Post diwethaf %s</string>
+    <string name="submission_types">Mathau o Gyflwyniadau</string>
+    <string name="full_due_date_details">Manylion llawn dyddiad erbyn</string>
+    <string name="availability_label">Ar gael:</string>
+    <string name="available_to_label">Ar gael tan:</string>
+    <string name="available_from_label">Ar gael o:</string>
+    <string name="due_for_label">Ar gyfer:</string>
+    <string name="due_label">Erbyn:</string>
+    <string name="details_available_to_label">Ar gael tan</string>
+    <string name="details_available_from_label">Ar gael o</string>
+    <string name="details_due_for_label">Ar gyfer</string>
+    <string name="due_date_header_label">Erbyn</string>
+    <string name="assignment_details">Manylion Aseiniad</string>
+    <string name="no_content">Dim Cynnwys</string>
+    <string name="submissions">Cyflwyniadau</string>
+    <string name="no_assignment_description_filler">Helpwch eich myfyrwyr gyda’r aseiniad hwn trwy ychwanegu cyfarwyddiadau.</string>
+    <string name="no_quiz_description_filler">Helpwch eich myfyrwyr gyda’r cwis hwn trwy ychwanegu cyfarwyddiadau.</string>
+    <string name="page_title_due_dates">Dyddiadau Erbyn</string>
+    <string name="edit_assignment">Golygu Aseiniad</string>
+    <string name="edit_quiz">Golygu Cwis</string>
+    <string name="title">Teitl</string>
+    <string name="description">Disgrifiad</string>
+    <string name="grade_total">Cyfanswm Gradd</string>
+    <string name="grade">Gradd</string>
+    <string name="calculated_by_rubric">Cyfrifwyd gan gyfarwyddyd sgorio</string>
+    <string name="customize_grade">Addasu Gradd</string>
+    <string name="out_of_points">Allan o %1$s</string>
+    <string name="gpa">GPA</string>
+    <string name="letter_grade">Gradd Llythyren</string>
+    <string name="excuse_student">Esgusodi myfyriwr</string>
+    <string name="excuseGroup">Esgusodi grŵp</string>
+    <string name="complete_grade">Cwblhau</string>
+    <string name="incomplete_grade">Heb Gwblhau</string>
+    <string name="not_graded">Heb ei Raddio</string>
+    <string name="excused">Wedi esgusodi</string>
+    <string formatted="false" name="grade_value_format">%s %s</string>
+    <string name="grade_value_format_talk_back">%1$s allan o %2$s</string>
+    <string name="publish">Cyhoeddi</string>
+    <string name="error_saving_assignment">Gwall wrth gadw’r aseiniad. Rhowch gynnig arall arni.</string>
+    <string name="error_saving_quiz">Gwall wrth gadw’r cwis. Rhowch gynnig arall arni.</string>
+    <string name="assignment_name_must_be_set">Rhaid gosod enw aseiniad.</string>
+    <string name="announcement_name_must_be_set">Rhaid gosod teitl cyhoeddiad.</string>
+    <string name="quiz_title_must_be_set">Rhaid gosod teitl cwis.</string>
+    <string name="assignment_points_must_be_set">Rhaid gosod pwyntiau aseiniad.</string>
+    <string name="quiz_points_must_be_set">Rhaid gosod pwyntiau cwis.</string>
+    <string name="assignee_type_course_sections">Adrannau Cwrs</string>
+    <string name="assignee_type_groups">Grwpiau</string>
+    <string name="assignee_type_students">Myfyrwyr</string>
+    <string name="page_title_add_assignees">Ychwanegu Aseinïaid</string>
+    <string name="assign_to">Dyrannu i</string>
+    <string name="available_from">Ar gael o</string>
+    <string name="available_to">Ar gael tan</string>
+    <string name="unlock_after_due_date_error">Does dim modd i’r dyddiad datgloi fod ar ôl y dyddiad erbyn</string>
+    <string name="lock_before_due_date_error">Does dim modd i’r dyddiad cloi fod cyn y dyddiad erbyn</string>
+    <string name="lock_after_unlock_error">Does dim modd i’r dyddiad cloi fod cyn y dyddiad datgloi</string>
+    <string name="assignee_blank_error">Does dim modd i’r aseinî fod yn wag</string>
+    <string name="remove">Tynnu</string>
+    <string name="add_due_date">Ychwanegu Dyddiad Erbyn</string>
+    <string name="full_submission_details">Manylion llawn y cyflwyniad</string>
+    <string name="graded">Wedi graddio</string>
+    <string name="needsGrading">Angen ei raddio</string>
+    <string name="not_submitted">Heb Gyflwyno</string>
+    <string name="content_description_submission_donut_graded" formatted="false">Wedi Graddio, %s o %s</string>
+    <string name="content_description_submission_donut_needs_grading" formatted="false">Angen Graddio, %s o %s</string>
+    <string name="content_description_submission_donut_unsubmitted" formatted="false">Heb gyflwyno, %s o %s</string>
+    <string name="display_grade_as">Dangos Gradd fel&#8230;</string>
+    <string name="percentage">Canran</string>
+    <string name="complete_incomplete">Wedi Cwblhau/Heb Gwblhau</string>
+    <string name="points">Pwynt</string>
+    <string name="gpa_scale">Graddfa GPA</string>
+
+    <string-array name="display_grade_as_types" translatable="false">
+        <item>@string/percentage</item>
+        <item>@string/complete_incomplete</item>
+        <item>@string/points</item>
+        <item>@string/letter_grade</item>
+        <item>@string/gpa_scale</item>
+        <item>@string/not_graded</item>
+    </string-array>
+
+    <string-array name="display_grade_as_types_discussion" translatable="false">
+        <item>@string/percentage</item>
+        <item>@string/complete_incomplete</item>
+        <item>@string/points</item>
+        <item>@string/letter_grade</item>
+        <item>@string/gpa_scale</item>
+    </string-array>
+
+  <string name="not_a_teacher">Ddim yn athro?</string>
+    <string name="not_a_teacher_tap_to_visit_play_store">Efallai y byddai un o\'r apiau eraill yn fwy addas. Tapiwch un i fynd i\'r Play Store.</string>
+    <string name="canvas_lowercase">canvas</string>
+
+  <string name="sg_tab_grade">Gradd</string>
+    <string name="sg_tab_comments">Sylwadau</string>
+    <string name="sg_tab_files">Ffeiliau</string>
+    <string name="filter_submissions">Hidlo Cyflwyniadau</string>
+    <string name="all_submissions">Pob Cyflwyniad</string>
+    <string name="submitted_late">Wedi’i gyflwyno’n hwyr</string>
+    <string name="havent_submitted_yet">Heb gyflwyno eto</string>
+    <string name="havent_been_graded">Heb gael gradd</string>
+    <string name="scored_less_than">Wedi cael sgôr o lai na &#8230;</string>
+    <string name="scored_more_than">Wedi cael sgôr o fwy na &#8230;</string>
+    <string name="scored_less_than_value">Wedi cael sgôr o lai na %s</string>
+    <string name="scored_more_than_value">Wedi cael sgôr o fwy na %s</string>
+    <string name="add_comment">Ychwanegu Sylw</string>
+    <string name="editComment">Golygu Sylw</string>
+    <string name="deleteComment">Dileu Sylw</string>
+    <string name="deleteAnnotation">Dileu Anodiad</string>
+    <string name="deleteCommentConfirmation">Ydych chi’n siŵr eich bod am ddileu’r sylw hwn?</string>
+    <string name="rubric_view_long_description">Gweld disgrifiad hir</string>
+    <string name="rubric">Cyfarwyddyd sgorio</string>
+    <string name="enter_custom_value">Rhowch werth personol</string>
+    <string name="success_saving_rubric_assessment">Asesiad cyfarwyddyd sgorio wedi’i gadw</string>
+    <string name="error_saving_rubric_assessment">Gwall wrth gadw’r cyfarwyddyd sgorio. Rhowch gynnig arall arni.</string>
+    <string name="rubric_assessment_score_out_of_total">%1$s allan o %2$s</string>
+    <string name="criterion_rating_customize_score">Addasu Sgôr</string>
+    <string name="edit_criterion_comment">Golygu sylw am faen prawf</string>
+    <string name="sendMessageToHint">Neges %s</string>
+    <string name="save_comment">Cadw sylw</string>
+    <string name="cancel_editing_comment">Canslo’r broses o olygu sylw</string>
+    <string name="skip">Anwybyddu</string>
+
+    <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
+    <string name="rating_button_content_description_custom">Sgôr personol %1$s</string>
+
+    <!-- Content description for criterion rating button, including score and description. e.g. "100, meets all expectations" -->
+    <string name="rating_button_content_description">"%1$s, %2$s</string>
+
+    <plurals name="submission_points_possible">
+        <item quantity="one">allan o %s pwynt</item>
+        <item quantity="other">allan o %s pwynt</item>
+    </plurals>
+
+    <string name="tab_courses">Cwrs</string>
+    <string name="course_options">Opsiynau Cwrs</string>
+    <string name="edit_favorite_courses">Golygu Hoff Gyrsiau</string>
+    <string name="feedback_form">Ffurflen Adborth</string>
+    <string name="see_all">Gweld y cyfan</string>
+    <string name="all_courses">Pob Cwrs</string>
+    <string name="welcome">Croeso!</string>
+    <string name="empty_course_list_message">Gallwch ychwanegu rhywfaint o\'ch hoff gyrsiau er mwyn i chi deimlo\'n gartrefol.</string>
+    <string name="add_courses">Ychwanegu Cyrsiau</string>
+    <string name="unable_to_add_course_to_favorites">Does dim modd ychwanegu’r cwrs hwn at y ddewislen cyrsiau ar hyn o bryd.</string>
+    <string name="grading_periods_filter">Hidlydd Cyfnodau Graddio</string>
+    <string name="assignments">Aseiniadau</string>
+    <string name="clear_filter">Clirio hidlydd</string>
+    <string name="due">Erbyn %1$s</string>
+    <string name="updated">Wedi diweddaru %1$s</string>
+
+    <plurals name="needsGradingCount">
+        <item quantity="one">%s angen ei raddio</item>
+        <item quantity="other">%s angen eu graddio</item>
+    </plurals>
+    <plurals name="needsGradingNoQuantity">
+        <item quantity="one">Angen ei raddio</item>
+        <item quantity="other">Angen eu graddio</item>
+    </plurals>
+    <string name="at">am</string>
+    <plurals name="quantityPointsAbbreviated">
+        <item quantity="one">%s pwynt</item>
+        <item quantity="other">%s pwynt</item>
+    </plurals>
+    <plurals name="quantityPointsFull">
+        <item quantity="one">%s pwynt</item>
+        <item quantity="other">%s pwynt</item>
+    </plurals>
+    <plurals name="people_count">
+        <item quantity="one">%d person</item>
+        <item quantity="other">%d person</item>
+    </plurals>
+    <plurals name="group_count">
+        <item quantity="one">%d grŵp</item>
+        <item quantity="other">%d grŵp</item>
+    </plurals>
+    <string name="cmp_closed">Wedi cau</string>
+    <string name="favorited_content_description" formatted="false">%s %s</string>
+    <string name="content_description_favorite">ffefryn</string>
+    <string name="content_description_not_favorite">ddim yn ffefryn</string>
+    <string name="edit_nickname">Golygu Llysenw</string>
+    <string name="edit_course_color">Golygu Lliw Cwrs</string>
+    <string name="edit_course_nickname">Golygu Llysenw Cwrs</string>
+
+    <string name="colorPickerDialogTitle">Lliw Cwrs</string>
+    <string name="colorPickerDialogMessage">Dyma\'ch gosodiad lliw personol. Dim ond chi sy’n gallu gweld y lliw hwn ar gyfer y cwrs.</string>
+
+    <string name="colorPickerError">Doedd dim modd gosod lliw’r cwrs y tro hwn.</string>
+
+    <string name="contentDescriptionColorCottonCandy">Pinc</string>
+    <string name="contentDescriptionColorBarbie">Pinc Llachar</string>
+    <string name="contentDescriptionColorBarneyPurple">Fioled</string>
+    <string name="contentDescriptionColorEggplant">Porffor</string>
+    <string name="contentDescriptionColorUltramarine">Glas Tywyll</string>
+    <string name="contentDescriptionColorOcean11">Glas</string>
+    <string name="contentDescriptionColorCyan">Cyan</string>
+    <string name="contentDescriptionColorAquaMarine">Gwyrddlas</string>
+    <string name="contentDescriptionColorEmeraldGreen">Gwyrdd Emrallt</string>
+    <string name="contentDescriptionColorFreshCutLawn">Gwyrdd</string>
+    <string name="contentDescriptionColorChartreuse">Melynwyrdd</string>
+    <string name="contentDescriptionColorSunFlower">Melyn</string>
+    <string name="contentDescriptionColorTangerine">Oren</string>
+    <string name="contentDescriptionColorBloodOrange">Oren Tywyll</string>
+    <string name="contentDescriptionColorSriracha">Coch</string>
+    <string name="launch_link_in_external_browser">Lansio dolen mewn porwr allanol</string>
+    <string name="contentDescriptionSelectedFile">Ffeil wedi’i dewis</string>
+    <string name="contentDescriptionFileIcon">Eicon Ffeil</string>
+    <string name="contentDescriptionExpandPage">Ehangu Tudalen</string>
+    <string name="contentDescriptionCollapsePage">Crebachu Tudalen</string>
+    <string name="noInternetConnectionTitle">Dim cysylltiad â\'r rhyngrwyd</string>
+    <string name="noInternetConnectionMessage">Mae angen cysylltiad â\'r rhyngrwyd i wneud hyn.</string>
+
+    <string name="emptyDetailsMessage">Tapiwch ar eitem yn y rhestr i weld y manylion</string>
+
+    <string name="assignmentQuizzes">Cwisiau Aseiniad</string>
+    <string name="practiceQuizzes">Cwisiau Ymarfer</string>
+    <string name="gradedSurveys">Arolygon wedi’u Graddio</string>
+    <string name="surveys">Arolygon</string>
+    <string name="editQuiz">Golygu Manylion Cwis</string>
+    <string name="requireAccessCode">Gofyn am God Mynediad</string>
+    <string name="accessCode">Cod Mynediad</string>
+    <string name="mustHaveAccessCode">Rhoi cod mynediad neu does dim angen cod mynediad.</string>
+    <string name="errorSavingQuiz">Gwall wrth gadw’r cwis. Rhowch gynnig arall arni.</string>
+    <string name="successfullyUpdatedQuiz">Wedi llwyddo i ddiweddaru’r cwis.</string>
+    <string name="quizType">Math o Gwis</string>
+
+    <string name="practiceQuiz">Cwis Ymarfer</string>
+    <string name="gradedQuiz">Cwis wedi’i Raddio</string>
+    <string name="gradedSurvey">Arolwg wedi’i Raddio</string>
+    <string name="ungradedSurvey">Arolwg heb ei Raddio</string>
+
+    <string-array name="quizTypes" translatable="false">
+        <item>@string/practiceQuiz</item>
+        <item>@string/gradedQuiz</item>
+        <item>@string/gradedSurvey</item>
+        <item>@string/ungradedSurvey</item>
+    </string-array>
+    <string name="quizStatusUntaken">Heb ei wneud</string>
+
+    <string name="quizStatusComplete">Cwblhau</string>
+    <string name="quizStatusPendingReview">Nes ceir adolygiad</string>
+    <string name="quizStatusInProgress">Ar y Gweill</string>
+    <string name="quizStatusNotStarted">Heb ei ddechrau</string>
+
+
+    <string name="quiz_settings_label_quiz_type">Math o Gwis:</string>
+    <string name="quiz_settings_label_assignment_group">Grŵp Aseiniadau:</string>
+    <string name="quiz_settings_label_shuffle_answers">Cymysgu Atebion:</string>
+    <string name="quiz_settings_label_multiple_attempts">Mwy nag un ymgais:</string>
+    <string name="quiz_settings_label_time_limit">Terfyn Amser:</string>
+    <string name="quiz_settings_label_score_to_keep">Sgôr i’w chadw:</string>
+    <string name="quiz_settings_label_attempts">Ymgais:</string>
+    <string name="quiz_settings_label_view_responses">Gweld Ymatebion:</string>
+    <string name="quiz_settings_label_show_correct_answers">Dangos Atebion Cywir:</string>
+    <string name="quiz_settings_label_one_question_at_a_time">Un cwestiwn ar y tro:</string>
+    <string name="quiz_settings_label_ip_filter">Hidlydd IP:</string>
+    <string name="quiz_settings_label_points">Pwyntiau:</string>
+    <string name="quiz_settings_label_access_code">Cod Mynediad:</string>
+    <string name="quiz_settings_label_anonymous_submissions">Cyflwyniadau Dienw:</string>
+    <string name="quiz_settings_label_lock_questions_after_answering">Cloi atebion ar ôl ateb:</string>
+
+    <string name="quizPreview">Rhagolwg o\'r Cwis</string>
+    <string name="preview_quiz">Gweld Rhagolwg o\'r Cwis</string>
+    <string name="quiz_details">Manylion Cwis</string>
+    <string name="submission_versions">Fersiynau o’r Cyflwyniad</string>
+    <string name="speedgrader_student_no_submissions">Does gan y myfyriwr hwn ddim cyflwyniad ar gyfer yr aseiniad hwn.</string>
+    <string name="speedgrader_group_no_submissions">Does gan y grŵp hwn ddim cyflwyniad ar gyfer yr aseiniad hwn.</string>
+    <string name="speedgrader_unsupported_type">Mathau o gyflwyniadau annilys</string>
+    <string name="unlimited">Diderfyn</string>
+    <string name="practice_quiz">Cwis Ymarfer</string>
+    <string name="graded_quiz">Cwis wedi’i Raddio</string>
+    <string name="graded_survey">Arolwg wedi’i Raddio</string>
+    <string name="ungraded_survey">Arolwg heb ei Raddio</string>
+    <string name="no_time_limit">Dim Terfyn Amser</string>
+    <string name="immediately">Yn syth</string>
+    <string name="quiz_details_no_points_assigned">Dim pwyntiau wedi’u neilltuo</string>
+
+    <string name="quiz_details_from_to">O %1$s i %2$s</string>
+    <string name="quiz_details_after">Ar ôl %1$s</string>
+    <string name="quiz_details_until">Tan %1$s</string>
+    <string name="filterPointsMustBeSet">Rhowch werth.</string>
+
+    <plurals name="quantityQuestions">
+        <item quantity="one">%d cwestiwn</item>
+        <item quantity="other">%d cwestiwn</item>
+    </plurals>
+
+    <plurals name="minutes">
+        <item quantity="one">%s Munud</item>
+        <item quantity="other">%s Munud</item>
+    </plurals>
+
+    <string name="discussion_details">Manylion Trafodaeth</string>
+    <string name="discussions_pinned">Wedi’i phinio</string>
+    <string name="discussions_unpinned">Trafodaethau</string>
+    <string name="discussions_closed">Wedi Cau ar gyfer Sylwadau</string>
+    <string name="discussions_open">Ar agor ar gyfer Sylwadau</string>
+    <string name="discussions_pin">Pinio</string>
+    <string name="discussions_unpin">Dad-binio</string>
+    <string name="contentDescriptionDiscussionsOverflow">Mwy o opsiynau</string>
+    <string name="discussions_options">Opsiynau</string>
+    <string name="discussions_replies" formatted="false">%s Ateb</string>
+    <string name="discussions_unread" formatted="false">%s Heb ei ddarllen</string>
+    <string name="discussions_unread_replies_blank" formatted="false">%s %s %s</string>
+    <string name="discussions_delete_warning">Ydych chi’n siŵr eich bod am ddileu’r ateb hwn?</string>
+    <string name="discussions_replies_title">Atebion</string>
+    <string name="discussions_reply">Ateb</string>
+    <string name="discussions_edit">Golygu</string>
+    <string name="discussions_forbidden">Dim ond y rheini sydd wedi postio o leiaf un ateb sy’n gallu gweld yr atebion.</string>
+    <string name="discussions_unknown_author">Awdur Dieithr</string>
+    <string name="discussions_delete">Dileu Trafodaeth</string>
+    <string name="discussions_delete_title">Dileu Trafodaeth?</string>
+    <string name="discussions_delete_message">Bydd hyn yn dileu’r holl drafodaeth ac edefyn.</string>
+
+    <string name="dataUsageWarningTitle">Rhybudd Defnydd Data</string>
+    <string name="dataUsageWarningMessage">Gallai’r weithred hon ddefnyddio llawer o ddata, gan arwain at gostau gorddefnydd. Ydych chi am fwrw ymlaen?</string>
+    <string name="doNotShowMessageAgain">Peidiwch â dangos y neges hon eto</string>
+    <string name="playMedia">Chwarae Cyfryngau</string>
+    <string name="submissionIsMediaFile">Mae’r cyflwyniad hwn yn ffeil cyfryngau</string>
+    <string name="tryAgain">Rhowch gynnig arall arni</string>
+    <string name="couldNotPlayFormat">Does dim modd delio â’r fformat cyfryngau hwn</string>
+    <string name="openWithAnotherApp">Agor gyda...</string>
+
+    <string name="speedgraderCommentAddedSubmission">Aseiniad wedi’i gyflwyno. Tapiwch i weld</string>
+    <string name="speedgraderCommentSubmittedFiles">Ffeiliau wedi\'u cyflwyno:</string>
+    <string name="no_submission_comments">Does dim sylwadau ar y cyflwyniad</string>
+    <string name="mediaUploadAudio">Llwytho cyfryngau i fyny - Sain</string>
+    <string name="mediaUploadVideo">Llwytho cyfryngau i fyny - Fideo</string>
+    <string name="speedgraderCommentQuizAttempt">Ymgais %d</string>
+    <string name="speedGraderTextSubmission">Cyflwyniad Testun</string>
+    <string name="speedGraderExternalToolSubmission">Cyflwyniad Adnodd Allanol</string>
+    <string name="speedGraderDiscussionSubmission">Cyflwyno Trafodaeth</string>
+    <string name="speedGraderQuizSubmission">Cyflwyno Cwis</string>
+    <string name="speedGraderMediaFile">Ffeil Gyfryngau</string>
+    <string name="submissionTypeAudio">Sain</string>
+    <string name="submissionTypeVideo">Fideo</string>
+    <string name="speedGraderUrlSubmission">URL sydd wedi’i gyflwyno</string>
+
+    <string name="unsupportedFileMessage">Doedd dim modd dangos y ffeil hon. Defnyddiwch y botwm isod i agor y ffeil gydag ap arall ar eich dyfais.</string>
+    <string name="speedGraderNoneMessage">Dydy’r aseiniad hwn ddim yn caniatáu cyflwyniadau.</string>
+    <string name="speedGraderExternalToolMessage">Mae’r aseiniad hwn yn cysylltu ag adnodd allanol ar gyfer cyflwyniadau.</string>
+    <string name="speedGraderOnPaperMessage">Dydy’r aseiniad hwn ond yn caniatáu cyflwyniadau ar bapur.</string>
+    <string name="speedGraderUrlSubmissionDisclaimer">Roedd y cyflwyniad hwn yn URL i dudalen allanol. Cofiwch efallai bod y dudalen hon wedi newid ers y cyflwyniad gwreiddiol.</string>
+    <string name="speedGraderOpenUrl">Agor URL</string>
+    <string name="annotationError">Gwall gydag Anodiad</string>
+    <string name="annotationDialogMessage">Mae’r anodiad wedi’i ddileu o ffynhonnell arall.</string>
+
+    <string name="selectCourse">Dewiswch gwrs</string>
+
+    <string name="sendIndividualMessage">Anfon neges unigol at bawb</string>
+
+    <string name="filterInbox">Hidlo Blwch Derbyn</string>
+    <string name="selectCanvasContext">Dewiswch gwrs neu grŵp</string>
+
+    <string name="contentDescription_back">Mynd yn ôl</string>
+
+    <string name="discussion_update_success">Wedi llwyddo i olygu’r drafodaeth.</string>
+    <string name="discussion_update_empty">Does dim modd i neges y drafodaeth fod yn wag.</string>
+    <string name="discussion_update_failure">Doedd dim modd golygu’r drafodaeth y tro hwn.</string>
+    <string name="discussion_sent_success">Wedi llwyddo i ateb i’r drafodaeth.</string>
+    <string name="discussion_sent_empty">Does dim modd i’r ateb i’r drafodaeth fod yn wag.</string>
+    <string name="discussion_sent_failure">Doedd dim modd anfon yr ateb i’r drafodaeth y tro hwn.</string>
+    <string name="discussion_first_to_respond">Byddwch y cyntaf i ymateb trwy ychwanegu ateb.</string>
+    <string name="addMorePeopleToMessage">Ychwanegu derbynnydd arall. Does dim modd anfon negeseuon wedi’u cyfeirio atoch chi eich hun yn unig.</string>
+    <string name="tutorialSwipeMessage">Sweipiwch i\'r chwith neu i\'r dde i weld myfyrwyr eraill.</string>
+    <string name="tutorialRubricMessage">Tapiwch a dal rhif i weld disgrifiad ohono.</string>
+
+    <string name="viewQuizSubmission">Gweld Cyflwyniad</string>
+    <string name="gradeQuizSubmission">Cyflwyniad wedi’i raddio</string>
+    <string name="comment">Sylw</string>
+    <string name="messageStudentsWho">Anfon neges at fyfyrwyr sydd&#8230;</string>
+
+    <string name="on">ar</string>
+
+    <string name="createDiscussion">Trafodaeth Newydd</string>
+    <string name="options">Opsiynau</string>
+    <string name="subscribe">Tanysgrifio</string>
+    <string name="allowThreadedReplies">Caniatáu atebion trywydd</string>
+    <string name="usersMustPost">Mae’n rhaid i ddefnyddwyr bostio cyn gweld atebion</string>
+    <string name="allowUserComments">Caniatáu i ddefnyddwyr wneud sylw</string>
+
+    <string name="discussionTitleMustBeSet">Rhaid gosod teitl trafodaeth.</string>
+    <string name="discussionSuccessfullyCreated">Wedi llwyddo i greu trafodaeth.</string>
+    <string name="errorCreatingDiscussion">Gwall wrth greu’r cyhoeddiad hwn. Rhowch gynnig arall arni.</string>
+    <string name="editDiscussion">Golygu Trafodaeth</string>
+    <string name="discussionSuccessfullyUpdated">Wedi llwyddo i ddiweddaru’r drafodaeth.</string>
+    <string name="input_text">Rhoi Testun</string>
+    <string name="announcementSuccessfullyCreated">Wedi llwyddo i greu cyhoeddiad.</string>
+    <string name="errorSavingAnnouncement">Gwall wrth gadw’r cyhoeddiad hwn. Rhowch gynnig arall arni.</string>
+    <string name="editAnnouncementTitle">Golygu Cyhoeddiad</string>
+    <string name="announcementSuccessfullyUpdated">Wedi llwyddo i ddiweddaru\'r cyhoeddiad.</string>
+    <string name="announcementDeleted">Cyhoeddiad wedi’i ddileu.</string>
+    <string name="postAt">Postio</string>
+    <string name="errorDeletingAnnouncement">Gwall wrth ddileu’r cyhoeddiad hwn. Rhowch gynnig arall arni.</string>
+    <string name="deleteAnnouncementDialogTitle">Dileu Cyhoeddiad?</string>
+    <string name="deleteAnnouncementDialogMessage">Ydych chi’n siŵr eich bod am ddileu’r cyhoeddiad hwn?</string>
+    <string name="deleteAnnouncement">Dileu Cyhoeddiad</string>
+    <string name="annotationErrorOccurred">Gwall annisgwyl wrth lwytho anodiadau.</string>
+
+    <string name="account">Cyfrif</string>
+    <string name="changeUser">Newid Defnyddiwr</string>
+    <string name="general">Cyffredinol</string>
+    <string name="sendFeedback">Anfon Adborth</string>
+    <string name="rateOnTheAppStore">Sgorio’r App Store</string>
+    <string name="privacyPolicy">Polisi Preifatrwydd</string>
+    <string name="EULA">EULA</string>
+    <string name="termsOfUse">Telerau Defnyddio</string>
+    <string name="openSource">Ffynhonnell Agored</string>
+    <string name="searchGuides">Chwilio drwy Ganllawiau Canvas</string>
+    <string name="searchGuidesDetails">Dod o hyd i atebion i gwestiynau cyffredin</string>
+    <string name="reportProblem">Rhoi gwybod am broblem</string>
+    <string name="reportProblemDetails">Os na fydd yr ap yn gweithio’n iawn, rhowch wybod i ni</string>
+    <string name="requestFeature">Gofyn am Nodwedd</string>
+    <string name="requestFeatureDetails">Oes gennych chi syniad am ffordd o wella’r ap?</string>
+    <string name="shareYourLove">Rhowch eich barn am yr ap</string>
+    <string name="shareYourLoveDetails">Rhowch wybod i ni am eich hoff rannau o’r ap</string>
+    <string name="canvasGuides">Canllawiau Canvas</string>
+    <string name="featureSubject">Syniadau ar gyfer Canvas Teacher [Android]</string>
+    <string name="understandRequest">Bydd y wybodaeth ganlynol yn ein helpu ni i ddeall eich syniad yn well:</string>
+    <string name="sendMail">Anfon E-bost&#8230;</string>
+    <string name="editProfile">Golygu Proffil</string>
+    <string name="name">Enw</string>
+    <string name="bio">Bywgraffiad</string>
+    <string name="profileEditSuccess">Proffil wedi’i ddiweddaru</string>
+    <string name="profileEditFailure">Does dim modd diweddaru’r proffil</string>
+    <string name="takePhoto">Tynnu llun gyda chamera</string>
+    <string name="choosePhotoFromGallery">Dewis llun o Oriel</string>
+    <string name="fileNotFound">Heb ddod o hyd i ffeil.</string>
+    <string name="version" formatted="false">Fersiwn %s</string>
+    <string name="fullVersion">Fersiwn %s (%d)</string>
+    <string name="tap_to_view_submissions_list">Tapiwch i weld y rhestr cyflwyniadau.</string>
+    <string name="assignmentDescriptionContentDescription">Disgrifiad o’r Aseiniad</string>
+    <string name="quizDescriptionContentDescription">Disgrifiad o’r Cwis</string>
+    <string name="removeDueDate">Tynnu Dyddiad Erbyn</string>
+    <string name="removeDueDateMessage">Bydd hyn yn tynnu\'r dyddiad erbyn a phob aseinî cysylltiedig.</string>
+    <string name="openTool">Agor Adnodd</string>
+    <string name="email">E-bost</string>
+    <string name="fullscreen">sgrin lawn</string>
+    <string name="addNew">Ychwanegu Newydd</string>
+    <string name="sendMessage">Anfon Neges</string>
+    <string name="addMessage">Ychwanegu Neges</string>
+    <string name="messageThisStudent">Anfon neges at y myfyriwr hwn</string>
+    <string name="scrollInstructions">Sgrolio i weld yr holl fanylion</string>
+    <string name="dueTime">Amser Erbyn</string>
+    <string name="available_from_date">Dyddiad Ar gael o</string>
+    <string name="available_from_time">Amser ar gael o</string>
+    <string name="available_to_date">Dyddiad ar gael tan</string>
+    <string name="available_to_time">Amser ar gael tan</string>
+    <string name="addDescription">Ychwanegu Disgrifiad</string>
+    <string name="post_time">Amser Postio</string>
+    <string name="allPeople">Holl Bobl</string>
+    <string name="loading">Wrthi’n llwytho</string>
+    <string name="saving">Wrthi’n cadw</string>
+    <string name="sendingSimple">Wrthi’n anfon</string>
+    <string name="uploading">Wrthi’n llwytho i fyny</string>
+    <string name="retry">Ailgynnig</string>
+    <string name="error_loading_submission">Problem wrth lwytho’r cyflwyniad hwn.</string>
+    <string name="search">Chwilio</string>
+    <string name="filterPeople">Hidlo Pobl</string>
+    <string name="loadMore">Llwytho Mwy</string>
+    <string name="latestStudentActivityAtFormatted">Gweithgarwch diweddaraf ar %1$s am %2$s</string>
+    <string name="sectionFormatted">Adran: %s</string>
+    <string name="errorLoadingStudentContextCard">Does dim modd llwytho manylion ar gyfer y defnyddiwr hwn.</string>
+    <string name="enrollmentTypeStudent">Myfyriwr</string>
+    <string name="enrollmentTypeTeacher">Athro</string>
+    <string name="enrollmentTypeObserver">Arsyllwr</string>
+    <string name="enrollmentTypeTeachingAssistant">Cynorthwyydd Dysgu</string>
+    <string name="enrollmentTypeDesigner">Dylunydd</string>
+    <string name="enrollmentTypeUnknown">Dieithr</string>
+    <string name="unableToLoadAttendance">Doedd dim modd llwytho presenoldeb y tro hwn.</string>
+    <string name="markRemainingAsPresent">Marcio bod y Gweddill yn Bresennol</string>
+    <string name="markAllAsPresent">Marcio bod y Cyfan yn Bresennol</string>
+    <string name="calendar">Calendr</string>
+    <string name="filterSections">Hidlo Adrannau</string>
+    <string name="addVideoComment">Ychwanegu sylw fideo</string>
+    <string name="addAudioComment">Ychwanegu sylw sain</string>
+    <string name="recordingTimerDefault">00:00:00</string>
+    <string name="recordingTimerContentDescription">%1$d awr, %2$d munud, a %3$d eiliad</string>
+    <string name="recordingTimerSpeechDivider">%1$s allan o %2$s</string>
+    <string name="replay">Ailadrodd</string>
+    <string name="stop">Stopio</string>
+    <string name="startRecordingAudio">Dechrau recordio sain</string>
+    <string name="stopRecordingAudio">Stopio recordio sain</string>
+    <string name="startRecordingVideo">Dechrau recordio fideo</string>
+    <string name="stopRecordingVideo">Stopio recordio fideo</string>
+    <string name="closeRecordingView">Cau gwedd recordio</string>
+    <string name="deleteRecording">Dileu’r recordiad</string>
+    <string name="videoCommentReplay">Ailadrodd Sylw Fideo</string>
+    <string name="addMediaComment">Ychwanegu sylw cyfryngau</string>
+    <string name="copyrightHolder">Perchennog yr Hawlfraint</string>
+    <string name="access">Mynediad</string>
+    <string name="usageRights">Hawliau Defnyddio</string>
+    <string name="deleteFile">Dileu Ffeil</string>
+    <string name="holdCopyright">Fi sydd biau’r hawlfraint</string>
+    <string name="havePermission">Mae gen i hawl i ddefnyddio’r ffeil</string>
+    <string name="publicDomain">Ffeil Parth Cyhoeddus</string>
+    <string name="fairUse">Eithriad Defnydd Teg</string>
+    <string name="creativeCommons">Ffeil Creative Commons</string>
+    <string name="editFile">Golygu Ffeil</string>
+    <string name="deleteFolder">Dileu Ffolder</string>
+    <string name="editFolder">Golygu Ffolder</string>
+    <string name="deleteFileMessage">Ydych chi’n siŵr eich bod am ddileu’r ffeil hon?</string>
+    <string name="deleteFolderMessage">Ydych chi’n siŵr eich bod am ddileu’r ffolder hon? Bydd holl gynnwys y ffolder hon yn cael ei ddileu hefyd.</string>
+    <string name="newFolder">Ffolder newydd</string>
+    <string name="createAFolder">Creu Ffolder</string>
+    <string name="createFolder">Creu Ffolder</string>
+    <string name="createAFile">Creu Ffeil</string>
+    <string name="createFileFolderFabContentDesc">Dangos Botymau Creu Ffeil a Creu Ffolder</string>
+    <string name="hideCreateFileFolderFabContentDesc">Cuddio Botymau Creu Ffeil a Creu Ffolder</string>
+
+    <string name="unpublish">Dad-gyhoeddi</string>
+    <string name="restrictedAccess">Mynediad Cyfyngedig</string>
+    <string name="restricted">Cyfyngedig</string>
+    <string name="hidden">Wedi cuddio, bydd y ffeiliau y tu mewn ar gael gyda dolenni.</string>
+    <string name="studentsWithLink">Dim ond ar gael i fyfyrwyr sydd â dolen. Ddim ar gael mewn ffeiliau myfyrwyr.</string>
+    <string name="scheduleAvailability">Trefnu bod myfyrwyr ar gael</string>
+    <string name="folderCreationError">Gwall wrth greu ffolder.</string>
+
+    <string name="setAsFrontPage">Gosod fel Tudalen Flaen</string>
+    <string name="canEdit">Gallu Golygu</string>
+    <string name="pageDetails">Manylion y Dudalen</string>
+    <string name="pageSuccessfullyUpdated">Wedi llwyddo i ddiweddaru’r dudalen.</string>
+    <string name="pageSuccessfullyCreated">Wedi llwyddo i greu tudalen.</string>
+    <string name="editPageTitle">Golygu Tudalen</string>
+    <string name="createPageTitle">Creu Tudalen</string>
+    <string name="pageTitleMustBeSet">Rhaid gosod teitl y dudalen.</string>
+    <string name="pageDeleteTitle">Dileu Tudalen?</string>
+    <string name="pageDelete">Dileu Tudalen</string>
+    <string name="pageDeleteMessage">Bydd hyn yn dileu’r dudalen. Does dim modd dad-wneud hyn.</string>
+    <string name="errorSavingPage">Gwall wrth geisio cadw’r dudalen. Rhowch gynnig arall arni.</string>
+    <string name="frontPageUnpublishedError">Does dim modd i dudalen fod yn dudalen flaen a heb ei chyhoeddi.</string>
+
+    <string name="onlyTeachers">Dim ond athrawon</string>
+    <string name="teachersAndStudents">Athrawon a myfyrwyr</string>
+    <string name="anyone">Unrhyw un</string>
+    <string name="groupMembers">Dim ond aelodau</string>
+    <string name="license">Trwydded</string>
+    <string name="availableFromAfterTo">Rhaid i’r dyddiad gorffen argaeledd fod ar ôl y dyddiad dechrau</string>
+    <string name="errorDeletingFile">Gwall wrth ddileu’r ffeil hon</string>
+    <string name="errorDeletingFolder">Gwall wrth ddileu’r ffolder hon</string>
+    <string name="errorUpdatingFile">Gwall wrth ddiweddaru’r ffeil hon</string>
+    <string name="errorUpdatingFolder">Gwall wrth ddiweddaru’r ffolder hon</string>
+
+    <string name="toDoEmpty">Dim byd arall i\'w wneud!\n Mwynhewch eich diwrnod.</string>
+    <string name="toDoNoSubmissions">Does dim cyflwyniadau i’w graddio ar gyfer yr aseiniad hwn.</string>
+    <string name="errorToDoRouteFailed">Gwall wrth geisio gweld yr eitem i’w gwneud.</string>
+    <string name="errorIsDesigner">Does dim modd i ymrestriadau dylunydd weld hwn.</string>
+
+    <string name="sections">Adrannau</string>
+    <string name="filterBy">Hidlo yn ôl&#8230;</string>
+    <string name="contentDescriptionFilterSection" formatted="false">ar gyfer %s</string>
+    <string name="filterBySection">Hidlo yn ôl adran</string>
+    <string name="filterSubmissionsLowercase">Hidlo cyflwyniadau</string>
+    <string name="latePenalty">Cosb am fod yn hwyr</string>
+    <string name="finalGrade">Gradd Derfynol</string>
+    <string name="moderatedGradingUnsupported">Dydy graddau wedi’u safoni ddim yn gydnaws â’r SpeedGrader symudol ar hyn o bryd.</string>
+    <plurals name="latePolicyPenalty">
+        <item quantity="one">%s pwynt</item>
+        <item quantity="other">%s pwynt</item>
+    </plurals>
+    <plurals name="latePolicyPenaltyFull">
+        <item quantity="one">%s pwynt</item>
+        <item quantity="other">%s pwynt</item>
+    </plurals>
+    <string name="todoUnreadCount">I\'w gwneud %d heb eu darllen</string>
+    <string name="profileSettings">Gosodiadau Proffil</string>
+    <string name="downloadingFile">Llwytho ffeil i lawr&#8230;</string>
+    <string name="fileDownloadedSuccessfully">Wedi llwyddo i lwytho ffeil i lawr.</string>
+    <string name="tapToView">Tapiwch i weld</string>
+    <string name="errorDownloadingFile">Gwall wrth lwytho eich ffeil i lawr. Rhowch gynnig arall arni.</string>
+
+    <string name="postTo">Postio i</string>
+    <string name="allSections">Pob Adran</string>
+
+    <string name="gauge">Medrydd</string>
+    <string name="arc">Arc</string>
+    <string name="ltiLaunchFailure">Doedd dim modd llwytho’r adnodd LTI hwn y tro hwn.</string>
+
+    <string name="downloading">Wrthi\'n llwytho i lawr...</string>
+
+</resources>

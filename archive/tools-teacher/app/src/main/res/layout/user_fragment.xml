@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2016 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        app:cardUseCompatPadding="true">
+
+        <RelativeLayout
+            android:id="@+id/root"
+            android:layout_width="@dimen/student_chooser_card_width"
+            android:layout_height="@dimen/student_chooser_card_height"
+            android:background="@color/white">
+
+            <ImageView
+                android:id="@+id/content"
+                android:layout_width="@dimen/student_chooser_image_width"
+                android:layout_height="@dimen/student_chooser_image_height"
+                android:layout_centerHorizontal="true"
+                android:scaleType="fitCenter"/>
+
+            <TextView
+                android:id="@+id/viewID"
+                style="@style/TextStyle.Primary"
+                android:layout_below="@+id/content"
+                android:layout_centerHorizontal="true"
+                android:padding="16dp"
+                android:textSize="@dimen/student_chooser_name_size" />
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+</RelativeLayout>

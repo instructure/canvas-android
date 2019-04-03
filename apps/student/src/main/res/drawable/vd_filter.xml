@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2018 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportHeight="24"
+    android:viewportWidth="24">
+    <path
+        android:fillColor="#000000"
+        android:pathData="M3,2 L21.8235294,2 L14.7647059,11.4117647 L14.7647059,22 L10.0588235,19.6470588
+L10.0588235,11.4117647 L3,2 Z M11.2352941,11.0196078 L11.2352941,18.91996
+L13.5882353,20.0964306 L13.5882353,11.0196078 L19.4705882,3.17647059
+L5.35294118,3.17647059 L11.2352941,11.0196078 Z"
+        android:strokeWidth="1"/>
+</vector>

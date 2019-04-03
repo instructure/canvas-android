@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+option java_package = "com.instructure.soseedy";
+option java_multiple_files = true;
+
+package soseedy;
+
+
+service SeedyPages {
+    rpc CreateCoursePage(CreateCoursePageRequest) returns (Page) { }
+}
+
+// Request messages
+
+message CreateCoursePageRequest {
+    int64 courseId = 1;
+    bool published = 2;
+    bool frontPage = 3;
+    string token = 4;
+}
+
+// Response messages
+
+message Page {
+    string url = 1;
+    string title = 2;
+    string body = 3;
+    bool published = 4;
+    bool frontPage = 5;
+}

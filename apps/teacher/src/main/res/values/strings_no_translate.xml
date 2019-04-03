@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<resources>
+    <string name="app_name" translatable="false">Canvas Teacher</string>
+    <string name="help_domain" translatable="false">Domain:</string>
+    <string name="help_versionNum" translatable="false">Version:</string>
+    <string name="help_userId" translatable="false">User ID:</string>
+    <string name="help_email" translatable="false">Email:</string>
+    <string name="help_locale" translatable="false">Locale:</string>
+    <string name="installDate" translatable="false">Install Date:</string>
+    <string name="no_user" translatable="false">No user data available.</string>
+
+    <string name="date_bar" translatable="false">%1$s - %2$s</string>
+    <string name="week_header_text" translatable="false">%1$s,  %2$s</string>
+    <string name="text_space_text" translatable="false">%1$s %2$s</string>
+    <string name="conversation_message_title" translatable="false">%1$s,  +%2$s</string>
+    <string name="week_assignment_override_title" translatable="false">%1$s (%2$s)</string>
+    <string name="issue_with_canvas" translatable="false">Issue with Canvas Teacher [Android]</string>
+    <!-- File Strings -->
+    <array name="file_size_units">
+        <item>B</item>
+        <item>KB</item>
+        <item>MB</item>
+        <item>GB</item>
+        <item>TB</item>
+    </array>
+
+    <string-array name="canEditRolesNoGroups" translatable="false">
+        <item>@string/onlyTeachers</item>
+        <item>@string/teachersAndStudents</item>
+        <item>@string/anyone</item>
+    </string-array>
+
+    <string-array name="canEditRolesWithGroups" translatable="false">
+        <item>@string/groupMembers</item>
+        <item>@string/anyone</item>
+    </string-array>
+
+    <string-array name="fileAccessTypes" translatable="false">
+        <item>@string/publish</item>
+        <item>@string/unpublish</item>
+        <item>@string/restrictedAccess</item>
+    </string-array>
+
+    <string-array name="fileRestrictedTypes" translatable="false">
+        <item>@string/studentsWithLink</item>
+        <item>@string/scheduleAvailability</item>
+    </string-array>
+
+    <string-array name="folderRestrictedTypes" translatable="false">
+        <item>@string/hidden</item>
+        <item>@string/scheduleAvailability</item>
+    </string-array>
+
+    <string-array name="fileUsageRightsTypes" translatable="false">
+        <item>@string/holdCopyright</item>
+        <item>@string/havePermission</item>
+        <item>@string/publicDomain</item>
+        <item>@string/fairUse</item>
+        <item>@string/creativeCommons</item>
+    </string-array>
+
+
+</resources>

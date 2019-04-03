@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/rubricHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
+        android:padding="16dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/errorTextView"
+            style="@style/TextFont.Regular"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="@string/error_saving_rubric_assessment"
+            android:textColor="@color/error"
+            android:textSize="12sp"
+            android:visibility="gone"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/rubricTitle"
+                    style="@style/TextFont.Medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:importantForAccessibility="yes"
+                    android:text="@string/rubric"
+                    android:textSize="20sp"/>
+
+                <TextView
+                    android:id="@+id/rubricScoreView"
+                    style="@style/TextFont.Regular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:importantForAccessibility="yes"
+                    android:textColor="@color/defaultTextGray"
+                    tools:text="5.0 out of 20.0"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/saveRubricButton"
+                style="@style/TextFont.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:gravity="center_vertical"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
+                android:text="@string/save"
+                android:textAllCaps="true"
+                android:textColor="@color/canvasDefaultButton"
+                android:textSize="16sp"
+                tools:ignore="RelativeOverlap"/>
+
+            <ProgressBar
+                android:id="@+id/saveProgressBar"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:visibility="gone"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/criteriaItemsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"/>
+
+    </LinearLayout>
+
+    <com.instructure.teacher.view.edit_rubric.RubricTooltipView
+        android:id="@+id/tooltipView"
+        app:rtt_constrainBubbleToPaddingOf="@id/rubricHeader"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="6dp"
+        android:paddingEnd="8dp"
+        android:paddingStart="8dp"
+        android:paddingTop="4dp"/>
+
+</FrameLayout>

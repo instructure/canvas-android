@@ -1,0 +1,978 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2018 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+<resources>
+
+    <string name="noFilesFound">Yo pa Jwenn Okenn Fichye</string>
+    <string name="searchFilesHint">Rechèch fichye</string>
+    <string name="fileSearchInstructions">Antre yon tèm rechèch ki gen pou pi piti twa karaktè</string>
+    <plurals name="fileSearchResultCount">
+        <item quantity="zero">"Nou pa jwenn okenn atik ki koresponn"</item>
+        <item quantity="one">"Nou jwenn %d atik ki koresponn"</item>
+        <item quantity="other">"Nou jwenn %d atik ki koresponn"</item>
+    </plurals>
+    <string name="contentDescriptionSuperPanda">Panda kap vole an kap</string>
+    <string name="troubleLoggingIn">Gen difikilte pou w konekte?</string>
+    <string name="requestLoginHelp">Mande Èd pou Koneksyon</string>
+    <string name="loginHelpSubject">MWen gen difikilte pou m konekte</string>
+    <string name="errorReportInvalidEmail">Tanpri antre yon adrès imèl valid</string>
+    <string name="announcementSections">Seksyon: %s</string>
+    <string name="selectedListItem">Seleksyone: %s</string>
+
+    <!-- Student Strings -->
+    <!--Profile Fragment Strings -->
+    <string name="canvasVersionNum">Vèsyon:</string>
+
+    <!--Content Descriptions-->
+    <string name="canvasLogo">Logo Canvas</string>
+    <string name="enterURL">Antre URL Canvas ou a:</string>
+    <string name="exampleURLSimple">myschool.instructure.com</string>
+    <string name="signIntoCanvasNetwork">W ap eseye konekte sou Canvas Network?</string>
+    <string name="mobileVerifyGeneral">App sa a pa gen ototrizasyon pou li itilize</string>
+    <string name="mobileVerifyDomainUnauthorized">Sèvè w antre a pa otorize pou app sa a.</string>
+    <string name="mobileVerifyUserAgentUnauthorized">Ajan itilizatè app sa a pa otorize.</string>
+    <string name="mobileVerifyUnknownError">Nou pa kapab verifye sèvè a pou li ka itilize ak app sa a.</string>
+    <string name="okay">OK</string>
+    <string name="options">Opsyon</string>
+
+    <string name="discussionAttachment">Ajoute yon fichye</string>
+    <string name="discussionUpload">Transfere odyo oswa videyo</string>
+    <string name="discussionPostEditing">Modifye</string>
+
+    <!--Multiple User Sign in -->
+    <string name="removeUser">Elimine itilizatè sa a?</string>
+    <string name="removedForever">W ap gen pou konekte sou itilizatè sa a ankò pou w ka gen aksè a kontni yo.</string>
+
+    <string name="bookmarksTitle">Preferans</string>
+    <string name="addBookmark">Ajoute Preferans</string>
+    <string name="bookmarkName">Make</string>
+    <string name="bookmarkTitleRequired">Yon Etikèt Obligatwa</string>
+    <string name="bookmarkAddedSuccess">Preferans Kreye</string>
+    <string name="bookmarkAddedFailure">Preferans pa kapab kreye</string>
+    <string name="bookmarkShortcut">Chwazi yon Preferans</string>
+    <string name="bookmarkDeleted">Preferans Elimine</string>
+    <string name="bookmarkDelete">Elimine Preferans?</string>
+    <string name="bookmarkEdit">Modifye Preferans</string>
+    <string name="bookmarkUpdated">Preferans Aktyalize</string>
+    <string name="no_bookmarks">Kreye yon preferans epi afiche li la!</string>
+
+    <!--Date strings-->
+    <string name="today">Jodi a</string>
+    <string name="past">Pase</string>
+    <string name="noDate">San Dat</string>
+    <string name="future">Fiti</string>
+    <string name="next7Days">7 Pwochen Jou</string>
+    <string name="days">Jou</string>
+
+    <!--Assignments-->
+    <string name="assignmentDue">Delè</string>
+    <string name="assignmentDueColon">Delè: </string>
+    <string name="assignmentLastSubmission">Dènye Soumisyon</string>
+    <string name="assignmentNoSubmission">Okenn</string>
+    <string name="assignmentTabDetails">Detay</string>
+    <string name="assignmentTabSubmission">Soumisyon</string>
+    <string name="assignmentTabGrade">Klas</string>
+    <string name="assignmentLocked">Bloke</string>
+    <string name="assignments">Sesyon</string>
+    <string name="freeFormRubricPoints" formatted="false">%s / %s </string>
+    <string name="noRubric">Pa gen ribrik pou sesyon sa a.</string>
+    <string name="noDescription">Pa gen deskripsyon pou sesyon sa a</string>
+    <string name="noAssignmentsInGroup">Pa gen Sesyon nan gwoup sa a</string>
+    <string name="excusedAssignment">Yo egzante sesyon sa a ni yo pa p konsidere li nan kalkil total la.</string>
+    <string name="droppedAssignment">Yo abandone sesyon sa a ni yo pa p konsidere li nan kalkil total la.</string>
+    <string name="excused">EX</string>
+    <string name="mutedText">Nòt yo pa disponib paske pwofesè a ap travay ladan yo.</string>
+    <string name="rubricRangePointsText" formatted="false">&#160;a &gt; %s pwen</string>
+    <string name="contentDescriptionRubricRangePointsText" formatted="false">%s &#160;a &gt; %s pwen</string>
+
+    <!-- Assignment editing -->
+    <string name="points">Pwen </string>
+    <string name="assignmentGroup">Gwoup Sesyon: </string>
+    <string name="gradingType">Trip Gradasyon: </string>
+    <string name="submissionType">Tip Soumisyon: </string>
+    <string name="editAssignment">Modifye Sesyon</string>
+    <string name="save">Anrejistre</string>
+    <string name="cancel">Anile</string>
+    <string name="sendNotification">Avèti itilizatè yo ke kontni sa a chanje</string>
+
+    <!--Discussions-->
+    <string name="forbidden">Sèlman moun ki poste yon repons pou pi piti k ap ka wè repons yo.</string>
+
+    <!--Events-->
+    <string name="Starts">Kòmanse</string>
+    <string name="Ends">Fini</string>
+    <string name="allDayEvent">Aktivite Tout Jounen</string>
+    <string name="at">nan</string>
+    <string name="PersonalCalendar">Kalandriye Pèsonèl</string>
+    <string name="noLocation">Okenn Anplasman Espesyal</string>
+
+    <string name="discussion">Diskisyon</string>
+    <string name="closed_discussion">Fèmen pou Kòmantè</string>
+    <string name="discussionUploadDialog">Transfè Diskisyon</string>
+    <string name="totalScore">Total:</string>
+    <string name="noGradeText">N/A</string>
+    <string name="checkBoxFinalGradeOption">Daprè sesyon klase yo</string>
+    <string name="checkBoxWhatIfGradeOption">Montre Kisa-Si Nòt</string>
+    <string name="whatIfDialogText">Kisa-Si Nòt</string>
+    <string name="inbox">Bwat resepsyon</string>
+    <string name="unread">Poko li</string>
+    <string name="archived">Achive</string>
+    <string name="sent">Voye</string>
+    <string name="grade">Klas</string>
+    <string name="clearFilter">Efase Filtè</string>
+    <string name="addMessage">Ajoute Mesaj</string>
+    <string name="monologue">Monològ</string>
+    <string name="noItemsToDisplayShort">Pa gen atik pou afiche</string>
+    <string name="emptyCalendarDate">Pa gen Anyen ki Planifye Pou</string>
+    <string name="emptyCalendarWeek">Pa gen Anyen ki Planifye Pou Semenn</string>
+    <string name="emptyCalendarMonth">Pa gen Anyen ki Planifye Pou Mwa</string>
+    <string name="selectCanvasCalendars">(Chwazi jiska 10 Kalandriye</string>
+    <string name="contentDesc_colored_calendar_indicator">Endikatè kalandriye kolorye</string>
+    <string name="noDatesSelected">Tanpri chwazi yon dat</string>
+    <string name="Todo">Pou Fè</string>
+    <string name="todoFilter">Filtè Kou</string>
+    <string name="filterByEllipsis">Filtre pa</string>
+    <string name="favoritedCoursesLabel">Kou Prefere</string>
+    <string name="Event">Aktivite</string>
+    <string name="eventSuccessfulCreation">Aktivite kreye kòrèkteman</string>
+    <string name="eventSuccessfulDeletion">Aktivite efase kòrèkteman</string>
+    <string name="newEvent">Nouvo Aktivite</string>
+    <string name="enterTitle">Entre Tit</string>
+    <string name="enterLocation">Entre Anplasman</string>
+    <string name="addNote">Ajoute Nòt</string>
+    <string name="titleIconDescription">Tiit Ikòn</string>
+    <string name="dateIconDescription">Dat Ikòn</string>
+    <string name="timeIconDescription">Ikòn Lè</string>
+    <string name="locationIconDescription">Anplasman Ikòn</string>
+    <string name="noteIconDescription">Nòt Ikòn</string>
+    <string name="toDoTurnIn">Aktive</string>
+    <string name="toDoNoDueDate">San Delè</string>
+
+    <string name="dueAt">Delè pou</string>
+    <string name="dueAtTime">Delè a %s</string>
+    <string name="toDoDue">Delè</string>
+    <string name="due">Delè %1$s</string>
+    <plurals name="to_do_needs_grading">
+        <item quantity="one">%d bezwen klasman</item>
+        <item quantity="other">%d bezwen klasman</item>
+    </plurals>
+    <string name="myFiles">Fichye</string>
+    <string name="createAFolder">Kreye yon Dosye</string>
+    <string name="createFolder">Kreye Dosye</string>
+    <string name="createAFile">Kreye yon Fichye</string>
+    <string name="createFileFolderFabContentDesc">Afiche Bouton Kreye Fichye epi Kreye Dosye</string>
+    <string name="folderCreationError">Gen yon erè ki fèt pandan kreyasyon dosye a.</string>
+    <string name="rename">Chanje non</string>
+    <string name="renameFile">Chanje non fichye</string>
+    <string name="renameFolder">Chanje non dosye</string>
+    <string name="blankName">Non pa gendwa vid</string>
+    <string name="confirmDeleteFile">Èske se tout bon ou vle elimine fichye \'%s\'? Aksyon sa a paka defèt.</string>
+    <string name="confirmDeleteEmptyFolder">Èske se tout bon ou swete elimine dosye \'%s\'? Aksyon sa a paka defèt.</string>
+    <plurals name="confirmDeleteFolder">
+        <item quantity="one">Èske se tout bon ou swete elimine dosye \'%1$s\', ansanm ak tout %2$d eleman ki ladan li an? Aksyon sa a paka defèt.</item>
+        <item quantity="other">Èske se tout bon ou swete elimine dosye \'%1$s\', ansanm ak tout %2$d eleman ki ladan li yo? Aksyon sa a paka defèt.</item>
+    </plurals>
+
+    <string name="settings">Paramèt</string>
+    <string name="name">Non</string>
+    <string name="email">Imèl</string>
+    <string name="username">Non Itilizatè</string>
+    <string name="password">Modpas</string>
+    <string name="authenticationRequired">Otantifikasyon Obligatwa</string>
+    <string name="invalidEmailPassword">Imèl oswa modpas envalid</string>
+    <string name="loginId">ID Koneksyon</string>
+    <string name="domain">Domèn</string>
+    <string name="sendFeedback">Voye Kòmantè</string>
+    <string name="sendMail">Voye Imèl&#8230;</string>
+    <string name="edit">Modifye</string>
+    <plurals name="item_count">
+        <item quantity="one">%d atik</item>
+        <item quantity="other">%d atik</item>
+    </plurals>
+    <string name="addToHomescreen">Ajoute nan Akèy</string>
+    <string name="archive">Achiv</string>
+    <string name="moveToInbox">Ale nan Bwat Resepsyon</string>
+    <string name="markAsUnread">Make tankou Poko Li</string>
+    <string name="selectPeopleInbox">Chwazi Moun</string>
+    <string name="delete">Efase</string>
+    <string name="deleteEvent">Efase Aktivite</string>
+    <string name="selected">Chwazi</string>
+    <string name="errorSendingMessage">Yon erè fèt pandan w ap voye mesaj ou a. Tanpri eseye ankò.</string>
+    <string name="errorPostingComment">Yon erè fèt pandan w ap poste kòmantè soumisyon ou a. Tanpri eseye ankò.</string>
+    <string name="deletedConversation">Konvèsasyon sa a te efase.</string>
+    <string name="uploadAvatarFailMsg">Transfè nouvo foto avata echwe</string>
+    <string name="editPhoto">Modifye Foto</string>
+    <string name="invalidUsername">Non itilizatè sa a pa valid.</string>
+    <string name="usernameChangeSuccess">Non itilizatè aktyalize kòrèkteman!</string>
+    <string name="takePhoto">Fè foto</string>
+    <string name="choosePhotoFromGallery">Chwazi foto nan Galri</string>
+    <string name="fileNotFound">Fichye entwouvab.</string>
+
+    <!-- Conversations -->
+    <string name="reply">Reponn</string>
+    <string name="writeAMessage">Ekri yon mesaj...</string>
+    <string name="compose">Konpoze</string>
+    <string name="composeMessage">Konpoze yon Mesaj</string>
+    <string name="successSendingMessage">Mesaj la ale kòrèkteman.</string>
+    <string name="emptyMessage">Mesaj la pa kapab vid!</string>
+    <string name="noRecipients">Pa gen Destinatè</string>
+    <string name="send">Voye</string>
+    <string name="users">Itilizatè</string>
+    <string name="individually">Pèsonèlman</string>
+    <string name="versionNum">Vèsyon:</string>
+    <string name="version" formatted="false">v. %s</string>
+    <string name="allCourses">Tout Kou</string>
+    <string name="allGroups">Tout Gwoup</string>
+    <string name="courseOptions">Opsyon Kou</string>
+    <string name="editNickname">Modifye non jwèt</string>
+    <string name="editCourseColor">Modifye koulè kou</string>
+    <string name="open">Ouvri</string>
+    <string name="openAlternate">Ouvri avèk yon lòt app</string>
+    <string name="opening">Ouvèti Fichye&#8230;</string>
+    <string name="download">Telechaje</string>
+    <string name="hideExtras">Kache Extra</string>
+    <string name="showExtras">Afiche Extra</string>
+    <string name="messageAttachments">Atachman Mesaj</string>
+    <string name="discussionAttachmentLabel">Atachman</string>
+    <string name="attachmentIcon">Ikòn Atachman</string>
+    <string name="ok">DAKO</string>
+    <string name="with">avèk</string>
+    <string name="starConversation">Kòmanse Konvèsasyon</string>
+    <string name="deleteConversation">Efase Konvèsasyon</string>
+    <string name="sharedWith">Pataje ak  </string>
+    <string name="sharedWithYou">Pataje avèk ou</string>
+    <string name="inboxEmptyMessage">Tape sou \"+\" pou kreye yon nouvo konvèsasyon.</string>
+    <string name="inboxAllMessages">Tout</string>
+    <string name="filterInbox">Filtè Bwat resepsyon</string>
+    <string name="selectCanvasContext">Seleksyone yon kou oswa gwoup</string>
+    <string name="inboxEmptyTitle">Pa gen mesaj</string>
+    <string name="removeAttachment">Retire atachman</string>
+    <string name="downloadAttachment">Telechaje Atachman</string>
+    <string name="messageOptions">Opsyon Mesaj</string>
+    <string name="forward">Fè swiv</string>
+    <string name="replyAll">Reponn Tout</string>
+    <string name="unarchive">Anile Achivaj</string>
+    <string name="confirmDeleteMessage">Ou kwè vrèman ou vle kopye mesaj sa a? Aksyon sa a paka defèt.</string>
+    <string name="confirmDeleteConversation">Ou kwè vrèman ou vle efase kopi konvèsasyon sa a? Aksyon sa a paka defèt.</string>
+    <string name="errorConversationGeneric">Ou paka fè aksyon sa a. Tanpri verifye koneksyon ou a epi eseye ankò.</string>
+    <string name="conversationArchived">Konvèsasyon an achive</string>
+    <string name="conversationUnarchived">Konvèsasyon an dezachive</string>
+    <string name="messageDeleted">Mesaj Efase</string>
+    <string name="sendIndividualMessage">Voye mesaj pèsonèl bay chak destinatè</string>
+    <string name="invalidRecipients">Ou pa otorize pou voye mesaj bay yonn oswa plizyè nan moun ki seleksyone yo.</string>
+    <string name="newMessage">Nouvo Mesaj</string>
+    <string name="forwardMessage">Mesaj Transfere</string>
+    <string name="addMorePeopleToMessage">Ajoute yon lòt destinatè. Sèlman mesaj w ap voye bay pwòp tèt ou pap ka ale.l</string>
+    <string name="selectRecipients">Seleksyone Destinatè</string>
+
+    <plurals name="people_count">
+        <item quantity="one">%d moun</item>
+        <item quantity="other">%d moun</item>
+    </plurals>
+
+    <plurals name="group_count">
+        <item quantity="one">%d gwoup</item>
+        <item quantity="other">%d gwoup</item>
+    </plurals>
+
+    <string name="exitWithoutSavingTitle">Soti san sovgade?</string>
+    <string name="exitWithoutSavingMessage">Se tout bon ou ta renmen soti san w pa sovgade?</string>
+    <string name="exitUnsaved">Soti</string>
+
+    <!-- Groups -->
+    <string name="groupDialogTitle">Mesaj Gwoup?</string>
+    <string name="groupDialogMessage">Ajoute chak moun nan yon sèl konvèsasyon an gwoup, oswa voye mesaj bay chak moun apa?</string>
+    <string name="group">Gwoup</string>
+    <string name="groups">Gwoup</string>
+    <string name="groupMembers">Manm Gwoup</string>
+
+    <string name="loading">Chajman&#8230;</string>
+    <string name="select_item_to_display">Chwazi nan lis la</string>
+
+    <string name="syllabus">Pwogram</string>
+    <string name="coursePeople">Moun</string>
+    <string name="teachersTas">Pwofesè &amp; TAs</string>
+    <string name="students">Elèv</string>
+    <string name="observers">Obsèvatè</string>
+    <string name="syllabusMissing">Pa gen yon pwogram ki ajoute.</string>
+
+    <string name="canvas">Canvas</string>
+    <string name="chooseRecipient">Chwazi Destinatè...</string>
+    <string name="messageHasNoRecipients">Mesaj sa a pa gen destinatè.</string>
+    <string name="sendMessage">Voye Mesaj</string>
+    <string name="userAvatar">Avata Itilizatè</string>
+
+    <string name="calendarIcon">Ikòn Kalandriye</string>
+    <string name="assignmentIcon">Ikòn Sesyon</string>
+    <string name="announcementIcon">Ikòn Anons</string>
+    <string name="conversationIcon">Ikòn Konvèsasyon</string>
+    <string name="defaultIcon">Ikòn pa Defo</string>
+    <string name="discussionIcon">Ikòn Diskisyon</string>
+    <string name="gradesIcon">Ikòn Klas</string>
+    <string name="grades">Nòt</string>
+    <string name="allGradingPeriods">Tout Peryòd Klasman</string>
+    <string name="calendar">Kalandriye</string>
+    <string name="bookmarks">Preferans</string>
+    <string name="showGrades">Afiche Klas</string>
+    <string name="gradesAreHidden">Nòt yo pa vizib pou kou sa a.</string>
+
+    <string name="entireGroupSelected">Tout gwoup la te seleksyone deja.</string>
+    <string name="noUsersInGroup">Pa gen itilizatè nan gwoup sa a</string>
+
+    <!--Notifications-->
+    <string name="deleted">[Deleted]</string>
+    <string name="gradedDiscussion">Diskisyon Klase.</string>
+    <string name="pointsPossible">Pwen Posib.</string>
+    <string name="pointsPossibleNoPeriod">Pwen Posib</string>
+
+    <string name="deletedEntryNoChildren">Tèks diskisyon efase sa a pa gen repons.</string>
+    <string name="sideCommentEntry">Nan tip diskisyon sa a, ou paka fè kòmantè nan okenn tèks nan nivo sa a.</string>
+    <string name="contentDescriptionFiles">Ikòn fichye</string>
+
+    <string name="loadingCanvas">Chajman Kontni Canvas&#8230;</string>
+
+    <string name="unknownDevice">UnknownDevice</string>
+
+    <string name="differentDomainFromLink">Lyen ou seleksyone a se pou yon lòt domèn ki pa sa ou konekte sou li a.</string>
+
+    <string name="pages">Paj</string>
+    <string name="noPageFound">Pa gen oken enfòmasyon paj disponib.</string>
+    <string name="noPagesInContext">Pa gen paj ki disponib pou sa a</string>
+    <string name="modified">Dènye Modifikasyon:</string>
+    <string name="lastModified">Dènye Modifikasyon: %1$s</string>
+
+    <string name="masqueradeUserId">Non Itilizatè pou Degize</string>
+    <string name="startMasquerading">Kòmanse Degizman</string>
+    <string name="stopMasquerading">Kanpe Degizman</string>
+    <string name="userId">ID Itilizatè</string>
+    <string name="masqueradeFail">Gen yon erè ki fèt pandan w t ap eseye degize a</string>
+
+    <string name="emptyId">ID a pa kapab vid</string>
+
+    <string name="goToQuiz">Ale nan Quiz</string>
+    <string name="goToExternalTool">Ale nan Zouti Ekstèn</string>
+
+    <string name="pastDueDate">Delè Pase</string>
+
+    <string name="goToDiscussion">Ale nan Diskisyon</string>
+    <string name="quizzes">Quiz</string>
+
+    <string name="lastDiscussionPost">Dènye piblikasyon</string>
+
+    <string name="newAnnouncement">Nouvo Anons</string>
+    <string name="newDiscussion">Nouvo Diskisyon</string>
+    <string name="composeDiscussion">Kreye Diskisyon</string>
+    <string name="composeAnnouncement">Kreye Anons</string>
+
+    <string name="postAnnouncement">Poste Anons</string>
+    <string name="postDiscussion">Poste Diskisyon</string>
+
+    <string name="postAnnouncementSuccess">Anons lan poste kòrèkteman.</string>
+    <string name="postDiscussionSuccess">Diskisyon an poste kòrèkteman.</string>
+    <string name="updateDiscussionSuccess">Diskisyon an aktyalize kòrèkteman.</string>
+    <string name="draftDiscussionSuccess">Bouyon diskisyon kreye kòrèkteman.</string>
+
+    <string name="errorPostingAnnouncement">Gen yon erè ki fèt nan poste anons lan.</string>
+    <string name="errorPostingDiscussion">Gen yon erè ki fèt nan poste diskisyon an.</string>
+    <string name="allowThreading">Otorize Repons Anfile</string>
+    <string name="usersMustPost">Itilizatè yo dwe poste anvan yo wè repons yo</string>
+    <string name="allowUserComments">Pèmèt itilizatè yo kòmante</string>
+    <string name="message">Mesaj</string>
+    <string name="title">Tit</string>
+
+
+    <string name="messageBlank">Mesaj la pa kapab vid.</string>
+
+    <string name="notAuthorizedAnnouncement">Nou regrèt. Ou pa otorize pou pibliye anons nan kou sa a.</string>
+    <string name="notAuthorizedDiscussion">Nou regrèt. Ou pa otorize pou pibliye diskisyon nan kou sa a.</string>
+
+    <string name="announcements">Anons</string>
+
+    <string name="titleBlank">Tit la pa kapab vid.</string>
+
+    <!-- Modules -->
+    <string name="modules">Modil</string>
+    <string name="moduleItemMustView">Afiche atik sa a</string>
+    <string name="moduleItemViewed">Ou te wè atik sa a</string>
+    <string name="moduleItemSubmit">Dwe soumèt sesyon</string>
+    <string name="moduleItemSubmitted">Sesyon soumèt</string>
+    <string name="moduleItemContribute">Kontribye nan paj sa a</string>
+    <string name="moduleItemContributed">Ou kontribye</string>
+    <string name="moduleItemMinScore">Fè pou pi piti</string>
+    <string name="moduleItemMinScoreMet">Notasyon minimòm reyalize</string>
+    <string name="prerequisites">Kondisyon:</string>
+    <string name="unlocked">Debloke:</string>
+    <string name="locked">Bloke</string>
+    <string name="lockedAssignmentDesc">Sesyon sa a fè pati modil %s e li poko debloke.</string>
+    <string name="lockedPageDesc">Paj sa a fè pati modil %s e li poko debloke.</string>
+    <string name="lockedFileDesc">Fichye sa a fè pati modil %s e li poko debloke.</string>
+    <string name="lockedQuizDesc">Quiz sa a fè pati modil %s e li poko debloke.</string>
+    <string name="lockedDiscussionDesc">Diskisyon sa a fè pati modil %s e li poko debloke.</string>
+    <string name="lockedAssignmentDescLine2">Al gade paj modil kou yo pou jwenn enfòmasyon sou kijan pou debloke kontni sa a.</string>
+    <string name="mustComplete">Ou dwe toudabò ranpli:</string>
+    <string name="unlockedAt">L ap debloke a:</string>
+    <string name="goToModules">Ale nan Modil</string>
+    <string name="markDone">Make tankou li fini</string>
+
+    <string name="moduleItemNotFound">Eleman Modil Entwouvab</string>
+    <string name="help">Èd</string>
+    <string name="instructor_question">Kesyon Enstriktè</string>
+    <string name="link">Lyen</string>
+
+    <!-- LockInfoHTMLHelper Strings -->
+    <string name="lockedAssignmentNotModule">Sesyon sa a bloke.</string>
+
+    <!--New Course Layout Strings -->
+    <string name="myCourses">Kou Mwen</string>
+
+
+    <!--New Submission Strings -->
+    <string name="textEntry"> Antre Tèks</string>
+    <string name="onlineURL"> URL an liy</string>
+    <string name="enterTextEntry">Antre Antre Tèks</string>
+    <string name="fileUpload"> Transfè Fichye</string>
+    <string name="oneFileOnly">Soumisyon sa a aksepte transfè yon fichye sèlman</string>
+
+
+    <string name="submit">Soumèt</string>
+    <string name="blankSubmission">Soumisyon an pa kapab vid.</string>
+    <string name="errorPostingSubmission">Gen yon erè ki fèt nan poste soumisyon an.</string>
+    <string name="successPostingSubmission">Soumisyon poste kòrèkteman.</string>
+
+    <string name="exampleSubmissionURL">http://www.example.com</string>
+
+
+
+    <!--DataLoss Fragment Strings -->
+    <string name="unsavedProgress">Pwogrè non Anrejistre</string>
+    <string name="informationLost">Enfòmasyon ki pa sovgade ap pèdi. Èske w vle kontinye?</string>
+    <string name="slash"> / </string>
+
+    <!--Delete Notification Strings -->
+    <string name="confirm">Konfime</string>
+
+    <!--Dismiss To do String-->
+    <string name="markAsDone">Make tankou li fini</string>
+
+    <!--Submission Details Strings -->
+    <string name="next">Pwochen</string>
+    <string name="addSubmission">Aktive</string>
+    <string name="addAnotherSubmission">Soumèt ankò</string>
+    <string name="turnedIn">Aktive:&#160;</string>
+    <string name="addComment">Ajoute yon kòmantè&#8230;</string>
+    <string name="addCommentNoEllipsis">Ajoute yon kòmantè...</string>
+    <string name="subTypeOnlineText">Antre Tèks an Liy</string>
+    <string name="subTypeFileUpload">Transfè eFichye an Liy</string>
+    <string name="subTypeOnlineURL">URL sit Web</string>
+    <string name="subTypeOnlineQuiz">Quiz an Liy</string>
+    <string name="subTypeMediaRecording">Anrejistreman Medya</string>
+    <string name="sub_type_lti_launch">Lansman LTI</string>
+    <string name="subTypeDiscussionTopic">Diskisyon</string>
+    <string name="turnInByHand">Ou dwe aktive sesyon sa a a la men</string>
+    <string name="noSubRequired">Soumisyon pa obligatwa</string>
+    <string name="noTurnInOnMobile">Soumisyon pòtab pa sipòte</string>
+
+    <string name="home">Akèy</string>
+    <string name="Notifications">Notifikasyon</string>
+
+    <string name="icon">Ikòn</string>
+    <string name="rootUser">Rasin Dosye Itilizatè</string>
+    <string name="rootCourse">Rasin Dosye Kou</string>
+    <string name="rootGroup">Rasin Dosye Gwoup</string>
+
+    <!-- Course Settings -->
+    <string name="privatelyAvailable">Disponib an sekrè</string>
+    <string name="publiclyAvailable">Disponib piblikman</string>
+    <string name="starts">Kòmansman:  </string>
+    <string name="courseCode">Kòd Kou:  </string>
+    <string name="ends">Fen:  </string>
+    <string name="visibility">Vizibilite:  </string>
+    <string name="license">Lisans:  </string>
+
+
+    <!-- Navigation String -->
+    <string name="collaborations">Kolaborasyon</string>
+    <string name="conferences">Konferans</string>
+    <string name="chat">Chat</string>
+    <string name="outcomes">Rezilta</string>
+
+    <!-- Submission View Strings -->
+    <string name="visitPage">Vizite Paj:</string>
+    <string name="clickToViewSubmission">Yo te pran yon apèsi sit entènèt la lè w aktive li a. Tape epi kenbe imaj pi ba a pou ouvri oswa telechaje imaj la an antye.</string>
+    <string name="urlSubmissionNoPreview">Soumisyon sa a se te yon URL a yon paj ekstèn. Sonje ke sa ka rive ke paj sa a chanje aprè soumisyon orijinal la.</string>
+    <string name="contentDescriptionPreviewImage">Yon apèsi url ki te soumèt la</string>
+    <string name="itemStillProcessing">Eleman sa a an pwosesis toujou sou sèvè a. Tanpri eseye ankò.</string>
+
+
+    <string name="isNotSupportedFeature">%1$s pa sipòte.</string>
+    <string name="isNotSupported">Lyen an pa sipòte.</string>
+    <string name="openInBrowser">Ouvri nan Navigatè</string>
+    <string name="unsupported">Pa sipòte</string>
+
+
+    <!-- Profile Strings -->
+    <string name="calendarWeekSetting">Kalandriye kòmanse nan Lendi</string>
+    <string name="profile">Pwofil</string>
+
+    <string name="noSubject">(Pa gen Sijè)</string>
+    <string name="subject">Sijè</string>
+    <string name="sadPanda">Imaj Panda Tris</string>
+    <string name="panda_fact_string">Panda Fact:&#160;</string>
+    <string name="remove">Elimine</string>
+    <string name="founders">Fondatè</string>
+    <string name="image">Imaj</string>
+
+    <string name="EULA">EULA</string>
+    <string name="privacyPolicy">Politik Konfidansyalite</string>
+    <string name="termsOfUse">Kondisyon Itilizasyon</string>
+    <string name="openSource">Open Source</string>
+
+    <!-- Quiz Strings -->
+    <string name="assignmentQuizzes">Sesyon Quiz</string>
+    <string name="practiceQuizzes">Quiz Pratik</string>
+    <string name="gradedSurveys">Ankèt Klase</string>
+    <string name="surveys">Ankèt</string>
+    <string name="quizMatchingDefaultDisplay">[Choose]</string>
+    <string name="choose_answer_below">Chwazi repons ou an pi ba a</string>
+    <string name="choose_answers_below">Chwazi repons ou yo pi ba a</string>
+
+
+    <!--Widget Strings-->
+    <string name="todoWidgetTitle">Pou Fè</string>
+    <string name="gradesWidgetTitle">Nòt</string>
+    <string name="notificationWidgetTitle">Notifikasyon</string>
+    <string name="todoWidgetTitleLong">Canvas - Pou Fè</string>
+    <string name="gradesWidgetTitleLong">Canvas - Klas</string>
+    <string name="notificationWidgetTitleLong">Canvas - Notifikasyon</string>
+    <string name="notLoggedIn">Ou pa konekte</string>
+    <string name="widgetStyle">Chwasi stil widget ou</string>
+    <string name="widgetMinimumStyle">Kache detay nan widget</string>
+    <string name="light">Limyè</string>
+    <string name="dark">Nwa</string>
+
+    <string name="invalidExternal">Zouti ekstèn sa a ekspit¡re oswa li mal konfigire.</string>
+
+    <!-- Help dialog strings -->
+    <string name="askInstructor">Poze Enstriktè ou a yon Kesyon</string>
+    <string name="askInstructorDetails">Kesyon yo ap soumèt a enstriktè ou a</string>
+    <string name="searchGuides">Chèche nan Gid Canvas</string>
+    <string name="canvasGuides">Gid Canvas</string>
+    <string name="searchGuidesDetails">Jwenn repons a kesyon yo poze souvan</string>
+    <string name="reportProblem">Rapòte yon Pwoblèm</string>
+    <string name="reportProblemDetails">Si app la konpòte li mal, fè nou konnen</string>
+    <string name="requestFeature">Mande yon Fonksyon</string>
+    <string name="requestFeatureDetails">Ou gen yon ide de kijan pou amelyore app la?</string>
+    <string name="shareYourLove">Pataje lanmou ou genyen pou App la</string>
+    <string name="shareYourLoveDetails">Di nou kisa w pi renmen nan app la</string>
+
+    <!-- Feature Request -->
+    <string name="featureSubject">Ide pou Canvas [Android]</string>
+    <string name="understandRequest">Enfòmasyon annapre yo ap ede nou konprann ide ou a pi byen:</string>
+
+    <!-- Ask Instructor -->
+    <string name="whichCourse">A ki kou kesyon ou an gen rapò?</string>
+    <string name="allTeachers">Mesaj sa a ptral jwenn tout pwofesè ak TA nan kou a</string>
+    <string name="sending">Voye&#8230;</string>
+    <string name="error">Erè</string>
+
+    <!-- Tablet Strings -->
+    <string name="courses">Kou</string>
+    <string name="toDoList">Lis sa Pou Fè</string>
+    <string name="notifications">Notifikasyon</string>
+    <string name="pushNotifications">Notifikasyon Push</string>
+    <string name="pushNotificationsError">Avètisman Push yo pa t anrejistre pou aparèy sa a.</string>
+    <string name="profileSettings">Paramèt Pwofi</string>
+    <string name="accountPreferences">Preferans Kont</string>
+    <string name="pinAndFingerprint">PIN ak Anprent</string>
+
+    <string name="launchSpeedgrader">Ouvri Speedgrader</string>
+
+    <string name="search_todo">lis tout sa pou fè</string>
+    <string name="search_course">kou kou klas klas</string>
+    <string name="search_grades">klas klas</string>
+
+    <!-- ShareFileOptions Dialog-->
+    <string name="uploadTo">Transfere nan </string>
+    <string name="uploadToCanvas">Transfere nan Canvas</string>
+    <string name="uploadMyFiles">Fichye Mwen</string>
+    <string name="uploadCourseFiles">Fichye Kou</string>
+    <string name="uploadToSubmissionComment">Soumèt nan Kòmantè Soumisyon</string>
+    <!-- ChangeLog Dialog-->
+    <string name="changelog">Changelog</string>
+
+    <string name="editUserName">Modifye Non Itilizatè</string>
+    <!-- Choose Profile Image -->
+    <string name="takeANewPhoto">Pran yon nouvo foto</string>
+    <string name="chooseFromGallery">Chwazi nan galeri a</string>
+    <string name="setToDefault">Konfigire pa defo</string>
+    <string name="chooseBackgroundImage">Chwazi imaj de fon</string>
+
+    <string name="no_courses">Tape pou ajoute yon kou</string>
+    <string name="no_courses_available">Pa gen kou la a, pran yon jou konje!</string>
+    <string name="no_courses_grades">Tanpri enskri nan yon kou pou wè nòt ou</string>
+    <!--Navigation Drawer-->
+    <string name="navigation_drawer_open">Ouvri meni navigasyon</string>
+    <string name="navigation_drawer_close">Fèmen meni navigasyon</string>
+
+    <string name="preferred_land_page">Paj Dakèy</string>
+    <string name="could_not_route_course">Pa kapab jwenn enskripsyon kou a.</string>
+    <string name="could_not_route_group">Pa kapab jwenn enskripsyon gwoup la.</string>
+    <string name="could_not_route_unknown">Yon erè fèt sanzatann.</string>
+    <string name="could_not_route_locked">Paj sa a maske oswa bloke, li enposib pou ale sou li.</string>
+
+    <string name="close">Fèmen</string>
+    <string name="closed">Fèmen</string>
+
+    <string name="overdueAssignments">Sesyon An Reta</string>
+    <string name="upcomingAssignments">Pwochen Sesyon</string>
+    <string name="undatedAssignments">Sesyon San Dat</string>
+    <string name="pastAssignments">Sesyon Pase</string>
+
+    <string name="could_not_find_course">Gen yon erè ki fèt pou jwenn kou pou atik sa a.</string>
+    <string name="could_not_find_group">Gen yon erè ki fèt pou jwenn gwoup pou atik sa a.</string>
+
+    <string name="selectBackground">Chwazi yon twal de fon</string>
+
+    <string name="notoriousSubmissionInProgress">Soumisyon fichye&#8230; Verifye ba avètisman an pou aktyalizasyon yo.</string>
+    <string name="notoriousSubmissionSuccessful">Soumisyon fichye fini</string>
+
+    <string name="bio">Biyo</string>
+    <string name="draft">Bouyon</string>
+    <string name="publish">Pibliye</string>
+
+    <string name="createPandaAvatar">Kreye Avata Panda</string>
+    <string name="back">Retounen</string>
+    <string name="setAsAvatar">Defini yon avata</string>
+    <string name="avatarSuccessfullySaved">Avata panda a anrejistre kòrèkteman</string>
+    <string name="regularAvatarSuccessfullySaved">Avata anrejistre kòrèkteman</string>
+    <string name="errorSavingAvatar">Gen yon erè ki fèt nan anrejistreman avata panda a</string>
+    <string name="pandaAvatar">Avata Panda</string>
+    <string name="pandaHead">Avata Panda</string>
+    <string name="pandaBody">Kò Avata Panda</string>
+    <string name="pandaLegs">Pye Avata Panda</string>
+    <string name="pandaAvatarsFolderName">PandaAvatars</string>
+    <string name="share">Pataje</string>
+
+    <string name="speedgrader">SpeedGrader</string>
+    <string name="gauge">Gauge</string>
+
+    <string name="calendarDay">Jou</string>
+    <string name="calendarWeek">Semenn</string>
+    <string name="calendarMonth">Mwa</string>
+    <string name="selectCalendars">Chwazi Kalandriye</string>
+    <string name="createNewCalendarEvent">Kreye Nouvo Aktivite</string>
+    <string name="calendarDialog10Warning">Ou ka chwazi sèlman 10 kalandriye pou afiche</string>
+    <string name="calendarDialogNoneWarning">Tanpri chwazi pou pi piti yon Kalandriye</string>
+    <string name="enableFunMode">Fèmen Panda a</string>
+
+    <string name="accountNotifications">Anons</string>
+    <string name="addAccount">Ajoute Kont</string>
+
+    <string name="changeUser">Chanje Itilizatè</string>
+
+    <string name="no_data_connection">Tanpri verifye koneksyon entènèt ou a epi eseye ankò.</string>
+
+    <!--Notification Preferences-->
+    <string name="notification_primary_inbox_title">Avètisman Canvas</string>
+    <string name="notification_channel_name_primary">Avètisman Jeneral Canvas</string>
+    <string name="notification_channel_description_primary">Plis konfigirasyon avètisman posib nan seksyon Preferans Avètisman Canvas la.</string>
+
+    <string name="notification_cat_course_activities">Aktivite Kou</string>
+    <string name="notification_cat_discussions">Diskisyon</string>
+    <string name="notification_cat_conversations">Konvèsasyon</string>
+    <string name="notification_cat_scheduling">Planifikasyon</string>
+    <string name="notification_cat_groups">Gwoup</string>
+    <string name="notification_cat_alerts">Alèt</string>
+    <string name="notification_cat_conferences">Konferans</string>
+
+    <string name="notification_pref_due_date">Delè</string>
+    <string name="notification_pref_grading_policies">Politik Klasman</string>
+    <string name="notification_pref_course_content">Kontni Kou</string>
+    <string name="notification_pref_files">Fichye</string>
+    <string name="notification_pref_announcement">Anons</string>
+    <string name="notification_pref_announcement_created_by_you">Anons Ou Kreye</string>
+    <string name="notification_pref_grading">Klasman</string>
+    <string name="notification_pref_invitation">Envitasyon</string>
+    <string name="notification_pref_all_submissions">Tout Soumisyon</string>
+    <string name="notification_pref_late_grading">Klasman an Reta</string>
+    <string name="notification_pref_submission_comment">Kòmantè Soumisyon</string>
+
+    <string name="notification_pref_discussion">Diskisyon</string>
+    <string name="notification_pref_discussion_post">Poste Diskisyon</string>
+
+    <string name="notification_pref_add_to_conversation">Ajoute nan Konvèsasyon</string>
+    <string name="notification_pref_conversation_message">Mesaj Konvèsasyon</string>
+    <string name="notification_pref_conversations_created_by_you">Konvèsasyon Ou Kreye</string>
+
+    <string name="notification_pref_student_appointment_signups">Elèv Randevou Enskripsyon</string>
+    <string name="notification_pref_appointment_signups">Randevou Enskripsyon</string>
+    <string name="notification_pref_appointment_cancelations">Anilasyon Randevou</string>
+    <string name="notification_pref_appointment_availability">Disponibilite Randevou</string>
+    <string name="notification_pref_calendar">Kalandriye</string>
+
+    <string name="notification_pref_membership_update">Aktyalize Manm</string>
+    <string name="notification_pref_admin">Notifikasyon Administratif</string>
+    <string name="notification_pref_recording_ready">Anrejistreman Pare</string>
+
+    <string name="notification_pref_type_email">Imèl</string>
+    <string name="notification_pref_type_push">Aparèy</string>
+    <string name="notification_pref_type_sms">SMS</string>
+
+    <string name="notification_pref_dialog_title">Notifikasyon Aparèy</string>
+    <string name="notification_pref_dialog_message">Èske w vle aktive avètisman yo sou aparèy ou a? Paramèt sa yo ka chanje aprè nan Paramèt &gt; Avètisman &gt; Pou tout Aparèy</string>
+    <string name="notification_pref_toast_success">Notifikasyon yo aktive.</string>
+
+    <string name="notification_desc_due_date">Resevwa avètisman lè delè yon sesyon chanje.</string>
+    <string name="notification_desc_grading_policies">Resevwa avètisman lè politik klasman kou a chanje.</string>
+    <string name="notification_desc_course_content">Resevwa avètisman lè kontni kou a chanje sou WikiPages yo, nan Quiz yo epi nan Sesyon yo.</string>
+    <string name="notification_desc_files">Resevwa avètisman lè yo ajoute yon nouvo fichye nan kou w la.</string>
+    <string name="notification_desc_announcement">Resevwa avètisman lè gen yon nouvo anons nan kou w la.</string>
+    <string name="notification_desc_announcement_created_by_you">Resevwa avètisman lè w kreye yon anons epi lè yon moun kòmante anons ou a.</string>
+    <string name="notification_desc_grading">Resevwa avètisman lè yon sesyon/soumisyon te evalye/chanje epi lè yon ponderasyon klas te chanje.</string>
+    <string name="notification_desc_invitation">Resevwa avètisman lè w gen envitasyon pou konferans wèb, gwoup, kolaborsyon, revizyon kamarad ak rapèl.</string>
+    <string name="notification_desc_all_submissions">Pwofesèr &amp; Admin sèlman. Resevwa avètisman lè yo soumèt oswa resoumèt yon sesyon.</string>
+    <string name="notification_desc_late_grading">Pwofesèr &amp; Admin sèlman. Resevwa avètisman lè yo soumèt yon sesyon an reta.</string>
+    <string name="notification_desc_submission_comment">Resevwa avètisman lè yo fè yon komantè nan soumisyon w lan.</string>
+    <string name="notification_desc_discussion">Resevwa avètisman lè gen yon nouvo sijè diskisyon nan kou w la.</string>
+    <string name="notification_desc_discussion_post">Resevwa avètisman lè gen yon nouvo piblikasyon ki fèt nan yon diskisyon ou enskri.</string>
+    <string name="notification_desc_add_to_conversation">Resevwa avètisman lè yo ajoute w nan yon konvèsasyon.</string>
+    <string name="notification_desc_conversation_message">Resevwa avètisman lè w resevwa yon nouvo mesaj.</string>
+    <string name="notification_desc_conversations_created_by_you">Resevwa avètisman lè w kreye yon nouvo konvèsasyon</string>
+    <string name="notification_desc_student_appointment_signups">Pwofesèr &amp; Admin sèlman. Resevwa avètisman lè gen yon randevou</string>
+    <string name="notification_desc_appointment_signups">Resevwa avètisman lè gen yon nouvo anons nan kalandriye w.</string>
+    <string name="notification_desc_appointment_cancelations">Resevwa avètisman lè gen yon randevou ki anile.</string>
+    <string name="notification_desc_appointment_availability">Resevwa avètisman lè gen yon randevou ki disponib.</string>
+    <string name="notification_desc_calendar">Resevwa avètisman sou eleman nan kalandriye a ki nouvo oswa aktyalize.</string>
+    <string name="notification_desc_membership_update">Sèlman Admin, enskripsyon annatant aktive. Resevwa avètisman lè yo aksepte oswa refize yon enskripsyon pou gwoup.</string>
+    <string name="notification_desc_admin">Pwofesèr &amp; Admin sèlman. Resevwa avètisman sou enskipsyon, rapò ki jenere kontni ki ekspòte, rapò migrasyon, nouvo itilizatè kont ak nouvo gwoup elèv.</string>
+    <string name="notification_desc_recording_ready">Resevwa avètisman lè anrejistreman yon konferans pare.</string>
+
+    <string name="enterAnswer">Entre Repons</string>
+    <string name="resumeQuiz">Reprann Quiz</string>
+    <string name="allowed_attempts">Tantativ Otorize</string>
+    <string name="viewQuestions">Afiche Kesyon</string>
+    <string name="unlimited">Ilimite</string>
+    <string name="viewResults">Afiche Rezilta</string>
+
+    <string name="toggleTimer">Aktive/Dezaktive Minitri</string>
+    <string name="thirtySecondWarning">30 segond ki rete</string>
+    <string name="timeSpentFormat" formatted="false">Tan ki Pase: %d minit</string>
+    <string name="lockedIPAddress">Quiz sa a bloke. Li disponib nan kèk zòn sèlman.</string>
+    <string name="lockedInvalidAccessCode">Kòd aksè envalid</string>
+
+    <string name="showFlaggedQuestions">Montre kesyon siyale/san repons</string>
+    <string name="question">Kesyon</string>
+    <string name="questions">Kesyon</string>
+    <plurals name="question_count">
+        <item quantity="one">%d kesyon</item>
+        <item quantity="other">%d kesyon</item>
+    </plurals>
+    <plurals name="pointCount">
+        <item quantity="one">%s pwen</item>
+        <item quantity="other">%s pwen</item>
+    </plurals>
+    <string name="flagged">Siyale</string>
+
+    <string name="areYouSure">Ou kwè vrèman ou vle soumèt quiz sa a?</string>
+    <string name="submitQuiz">Soumèt Quiz?</string>
+    <plurals name="unanswered_quiz_questions">
+        <item quantity="one">Ou gen %d kesyon san repons.\nÈske s vle soumèt quiz sa a tout bon?</item>
+        <item quantity="other">Ou gen %d kesyon san repons.\nÈske s vle soumèt quiz sa a tout bon?</item>
+    </plurals>
+    <string name="takeQuizAgain">Pran Quiz Ankò</string>
+    <string name="autoSubmitting">Soumisyon otomatik quiz&#8230;</string>
+    <string name="submitReasonTimedQuiz">Quiz la soumèt paske delè a te rive.</string>
+    <string name="submitReasonLockAt">Quiz la soumèt paske dat blokaj la te rive.</string>
+    <string name="quizSubmittedSuccessfully">Quiz soumèt kòrèkteman.</string>
+    <string name="quizSubmittedFailure">Quiz la paka soumèt kounye a.</string>
+    <string name="almostDue">Delè Prèske Rive!</string>
+    <string name="almostDueMsg">Delè a prèske rive. Soumèt kounye a pou evite yo make quiz ou a an reta?</string>
+    <string name="timeLimit">Limit Tan</string>
+    <string name="cantStartQuiz">Enposib pou kòmanse quiz la.</string>
+    <string name="start">Kòmanse</string>
+    <string name="newPushNotifications">%1$s Nouvo Avètisman</string>
+    <string name="like">jèm</string>
+    <string name="likes">jèm</string>
+
+    <string name="wear_reminder">Orè Delè Rapèl</string>
+    <string name="wear_notifications">Aktive Notifikasyon Dizaj</string>
+
+    <string name="color_1">Wouj</string>
+    <string name="color_2">Woz</string>
+    <string name="color_3">Lavand</string>
+    <string name="color_4">Vyolèt</string>
+    <string name="color_5">Mov</string>
+    <string name="color_6">Adwaz</string>
+    <string name="color_7">Ble</string>
+    <string name="color_8">Blesyèl</string>
+    <string name="color_9">Vèt</string>
+    <string name="color_10">Vè jòn</string>
+    <string name="color_11">Jòn</string>
+    <string name="color_12">Dore</string>
+    <string name="color_13">Zoranj</string>
+    <string name="color_14">Woz</string>
+    <string name="color_15">Gri</string>
+
+    <string name="edit_course_nickname">Modifye Ti Non Kou</string>
+    <string name="courseNicknameError">Non jwèt kou a paka defini nan moman sa a.</string>
+
+    <string name="colorPickerDialogTitle">Koulè Kou</string>
+    <string name="colorPickerDialogMessage">Chwazi yon nouvo koulè pou ka pèsonalize kou ou a.</string>
+    <string name="colorPickerError">Koulè kou a paka defini nan moman sa a,</string>
+
+    <string name="contentDescriptionColorCottonCandy">Woz</string>
+    <string name="contentDescriptionColorBarbie">Woz</string>
+    <string name="contentDescriptionColorBarneyPurple">Vyolèt</string>
+    <string name="contentDescriptionColorEggplant">Mov</string>
+    <string name="contentDescriptionColorUltramarine">Ble Maren</string>
+    <string name="contentDescriptionColorOcean11">Ble</string>
+    <string name="contentDescriptionColorCyan">Blesyèl</string>
+    <string name="contentDescriptionColorAquaMarine">Ble Klè</string>
+    <string name="contentDescriptionColorEmeraldGreen">Vè Emwod</string>
+    <string name="contentDescriptionColorFreshCutLawn">Vèt</string>
+    <string name="contentDescriptionColorChartreuse">Vè jòn</string>
+    <string name="contentDescriptionColorSunFlower">Jòn</string>
+    <string name="contentDescriptionColorTangerine">Zoranj</string>
+    <string name="contentDescriptionColorBloodOrange">Oranj sonb</string>
+    <string name="contentDescriptionColorSriracha">Wouj</string>
+
+    <string name="courseFavorited">Kou %s, favori.</string>
+    <string name="courseNotFavorited">Kou %s, pa favori.</string>
+    <string name="groupFavorited">Gwoup %s, favori.</string>
+    <string name="groupNotFavorited">Gwoup %s, pa favori.</string>
+    <string name="accountGroup">Gwoup Kont</string>
+
+    <!--Recents-->
+    <string name="recents_empty">Nan ekran pèsonalizasyon kou yo, ajoute yon kou oswa gwoup pou ka wè yo la a.</string>
+
+    <string name="toolbar_close">Fèmen ba ikòn nan</string>
+    <string name="favoriteDescription">Afiche nan \"Kou Mwen\"</string>
+    <string name="about">Apwopo</string>
+    <string name="courseShortcuts">Ajoute yon rakousi a kou ou a</string>
+    <string name="courseNickname">Ti Non Jwèt Kou a</string>
+
+    <string name="notAvailableOffline">Fonksyonalite pa disponib lè w pa gen koneksyon</string>
+    <string name="editFavorites">Modifye Kou</string>
+
+    <string name="dashboard">Tablo</string>
+    <string name="previous">Anvan</string>
+    <string name="pageNum" formatted="false">Paj %d sou %d</string>
+    <string name="language">Langaj</string>
+    <string name="systemDefault">Sisyèm pa Defo</string>
+    <string name="restartingCanvas">Reyinisyalizasyon Canvas</string>
+    <string name="languageDialogText">Chanjman langaj la ap mande pou app la redemare, èske ou vle sa tout bon?</string>
+    <string name="defaultLanguageWarning">Lang pa defo nan sistèm nan pa garanti ke l ap fonksyone e l ap bezwen redemare, èske ou vle sa tout bon?</string>
+    <string name="locked_mastery_paths">Bloke jiskaske \"%s\" evalye</string>
+    <string name="locked_icon">Ikòn Vewouye</string>
+    <string name="choose_assignment_group">Chwazi Gwoup Sesyon</string>
+    <string name="chooseAssignmentPath">Chwazi Pakou Sesyon</string>
+    <string name="select">Seleksyone</string>
+    <string name="choice_position">Chwa %d</string>
+    <string name="updating_module_info">Mizajou enfòmasyon modil&#8230;</string>
+    <string name="arc">Arc</string>
+    <string name="pending_review">Revizyon anatant</string>
+    <string name="totalPoints">%s pwen</string>
+    <string name="totalPointsText">Total Pwen</string>
+    <string name="contentDescriptionPoints">%s pwen</string>
+    <string name="contentDescriptionRubricRangeGrade">%1$s sou %2$s pwen</string>
+    <string name="score">Nòt</string>
+    <string name="rangedRubricTotal" formatted="false">%s / %s pwen</string>
+    <string name="seeAll">Gade Tout</string>
+    <string name="welcome">Bienveni!</string>
+    <string name="dismiss">Rejte</string>
+    <string name="tapToViewAnnouncement">Tape pou afiche anons.</string>
+    <string name="acceptCourseInvitation">Aksepte</string>
+    <string name="declineCourseInvitation">Refize</string>
+
+    <!-- File Strings -->
+    <array name="file_size_units">
+        <item>B</item>
+        <item>KB</item>
+        <item>MB</item>
+        <item>GB</item>
+        <item>TB</item>
+    </array>
+
+    <string name="launch_link_in_external_browser">Lanse lyen nan navigatè ekstèn</string>
+    <string name="ltiLaunchFailure">Zouti LTI sa a paka chaje pou kounye a.</string>
+    <string name="urlSubmission">Soumisyon URL</string>
+
+    <string name="assignmentDeletedError">Travay sa pa diponib ankò.</string>
+
+    <string name="homePageIdForNotifications">Aktivite Resan</string>
+    <string name="homePageIdForModules">Modil</string>
+    <string name="homePageIdForAssignments">Sesyon</string>
+    <string name="homePageIdForSyllabus">Pwogram</string>
+
+    <string name="contentDescriptionWidgetRefresh">Aktyalize widget</string>
+
+    <string name="copy">Kopye</string>
+    <string name="courseInviteTitle">Yo envite ou.</string>
+    <string name="inviteAccepted">Envitasyon an aksepte!</string>
+    <string name="inviteDeclined">Envitasyon an dekline!</string>
+    <string name="latePenalty">Penalite pou reta (-%s)</string>
+    <string name="finalGrade">Nòt Final</string>
+
+    <string name="moreThan99">99+</string>
+    <string name="max_count">99+</string>
+
+    <string name="opensInWebView">Li ouvè nan webview</string>
+    <string name="unsupportedTabLabel">Aparèy sa a pa sipòte l</string>
+
+    <string name="downloadingFile">Telechajman</string>
+    <string name="downloadFailed">Echèk telechajan</string>
+    <string name="downloadSuccessful">Telechajman reyisi</string>
+
+    <string name="full_due_date_details">Tout detay delè</string>
+    <string name="submissions">Soumisyon</string>
+    <string name="attachment">Atachman</string>
+    <string name="contentDescription_back">Retounen</string>
+
+    <plurals name="quantityPointsAbbreviated">
+        <item quantity="one">%s pwen</item>
+        <item quantity="other">%s pwen</item>
+    </plurals>
+    <plurals name="quantityPointsFull">
+        <item quantity="one">%s pwen</item>
+        <item quantity="other">%s pwen</item>
+    </plurals>
+    <string name="capitalTo">Pou</string>
+
+    <string name="unableToViewInBrowser">Nou pa an mezi pou nou jwenn yon app ekstèn pou afiche zouti LTI sa a.</string>
+
+    <string name="commentUpload">Kòmantè Soumèt</string>
+    <string name="unableToUploadMediaComment">Pou voye yon kòmantè miltimedya, voye oswa efase yon kòmantè ki pa t ale.</string>
+
+    <string name="frontPage">Premye Paj</string>
+    <string name="editPage">Modifye Paj</string>
+    <string name="description">Deskripsyon</string>
+    <string name="pageSuccessfullyUpdated">Paj aktyalize kòrèkteman.</string>
+    <string name="errorSavingPage">Gen yon erè ki fèt pandan w ap eseye anrejistre paj sa a. Eseye ankò.</string>
+    <string name="pageTitleMustBeSet">Tit paj la dwe defini.</string>
+    <string name="pageDetails">Detay Paj</string>
+    <string name="saving">Anrejistreman</string>
+    <string name="confirmDeleteEvent">Èske vrèman ou swete elemine aktivite sa a?</string>
+    <string name="conferencesNotSupported">Konferans yo pa posib sou aparèy mobil.</string>
+    <string name="filePreviewContentDescription">Fichye apèsi imaj</string>
+
+    <string name="pdfError">Gen yon erè ki fèt pandan esè chajman PDF sa a.</string>
+    <!-- Parent Strings -->
+    <string name="addChildTitle">Ajoute Elèv</string>
+    <string name="addChildSubTitle">Antre kòd kouplaj elèv yo ba ou a.</string>
+    <string name="addChildHint">Asosyasyon kòd...</string>
+    <string name="addChildErrorMessage">Asosyasyon Echwe... asire w ke kòd kouplaj ou a kòrèke li pa depase limit itilizasyon an.</string>
+</resources>

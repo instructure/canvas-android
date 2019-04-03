@@ -1,0 +1,142 @@
+/*
+ * Copyright (C) 2016 - present  Instructure, Inc.
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, version 3 of the License.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+repositories {
+    jcenter()
+    maven { url 'https://maven.fabric.io/public' }
+    maven { url "https://jitpack.io" }
+}
+
+buildscript {
+    repositories {
+        jcenter()
+        maven { url 'https://maven.fabric.io/public' }
+        maven { url 'https://jitpack.io' }
+    }
+
+    dependencies {
+        classpath "com.android.tools.build:gradle:$GLOBAL_GRADLE_TOOLS_VERSION"
+        classpath 'com.google.gms:google-services:1.5.0-beta2'
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
+}
+apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.cookpad.android.licensetools'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+
+    defaultConfig {
+        applicationId "com.instructure.speedgrader"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode rootProject.ext.versionCode
+        versionName rootProject.ext.versionName
+        multiDexEnabled true
+
+        /* Merge private data */
+        buildConfigField "String", "PSPDFKIT_LICENSE_KEY", "\"$pspdfLicenseKey\""
+        addManifestPlaceholders([
+                crashlyticsApiKey:"$crashlyticsApiKey"
+        ])
+    }
+
+    signingConfigs {
+        release {
+            storeFile file("../speedgrader.keystore")
+            storePassword System.getenv("KEYSTORE_PASSWORD")
+            keyAlias System.getenv("KEY_ALIAS")
+            keyPassword System.getenv("KEY_PASSWORD")
+        }
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            debuggable false
+            zipAlignEnabled true
+        }
+        debug{
+            debuggable true
+            zipAlignEnabled false
+            minifyEnabled false
+            shrinkResources false
+        }
+    }
+
+    dexOptions {
+        preDexLibraries = false
+        incremental true
+        javaMaxHeapSize "2g"
+    }
+
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES.txt'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/dependencies.txt'
+        exclude 'META-INF/LGPL2.1'
+    }
+
+    lintOptions {
+        abortOnError false
+        disable 'InvalidPackage'
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile project(':canvas-api')
+    compile project(':login-api')
+    compile 'de.hdodenhof:circleimageview:1.2.2'
+    compile files('libs/commons-lang3-3.3.2.jar')
+    compile rootProject.ext.supportDependencies.appCompat
+    compile rootProject.ext.supportDependencies.cardView
+    compile rootProject.ext.supportDependencies.recyclerView
+    compile rootProject.ext.supportDependencies.analytics
+    compile 'com.android.support:multidex:1.0.1'
+    compile project(':recyclerview')
+    compile("com.crashlytics.sdk.android:crashlytics:$GLOBAL_CRASHLYTICS_VERSION") {
+        transitive = true;
+    }
+    compile('com.github.afollestad.material-dialogs:core:0.8.5.6@aar') {
+        transitive = true;
+    }
+
+    compile (project(':annotations'))
+    compile (project(':pspdfkit-2.2.1')){
+        transitive = true;
+    }
+}
+
+/* Check licenses.yml, generate assets/licenses.html during build */
+afterEvaluate {
+  android.applicationVariants.all { variant ->
+    variant.mergeAssets.dependsOn(generateLicensePage)
+  }
+}

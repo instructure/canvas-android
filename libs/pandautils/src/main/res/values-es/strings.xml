@@ -1,0 +1,427 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="chooseMedia">Escoger multimedia</string>
+    <string name="takeVideo">Tomar video</string>
+    <string name="noCameraOnDevice">Sin cámara</string>
+    <string name="takePhoto">Tomar foto</string>
+    <string name="choosePhotoFromGallery">Elegir una foto de la galería</string>
+
+    <string name="utils_edit">Editar</string>
+
+    <!-- NotoriousPicker/uploadService -->
+    <string name="notificationTitle">Cargando a Canvas</string>
+    <string name="preparingUpload">Preparando la carga</string>
+    <string name="loadingFilesIndeterminate">Cargando archivos&#8230;</string>
+    <string name="fileUploadSuccess">Carga exitosa</string>
+    <string name="noNetwork">Red no disponible; inténtelo de nuevo más tarde.</string>
+    <string name="uploadMessage">"Carga en progreso. Compruebe las notificaciones de estado de carga.</string>
+    <string name="mediaUpload">Carga de multimedia</string>
+    <string name="uploadingFile">Cargando archivo&#8230;</string>
+    <string name="errorUploadingFile">Se produjo un error al cargar su archivo. Inténtelo de nuevo.</string>
+    <string name="fileSubmission">Enviar archivo(s)</string>
+    <string name="uploadFiles">Cargar archivo(s)</string>
+    <string name="upload">Cargar</string>
+    <string name="errorSendingMessage">Se produjo un error al enviar su mensaje. Inténtelo de nuevo.</string>
+
+    <string name="notificationChannelNameFileUploadsName">Notificaciones de carga de archivos</string>
+    <string name="notificationChannelNameFileUploadsDescription">Notificaciones de Canvas para cargas continuas de archivos.</string>
+
+
+    <!-- Turn in Files -->
+    <string name="chooseFileSource">Escoger archivo desde&#8230;</string>
+    <string name="addFile">Agregar archivo</string>
+    <string name="choose_a_file">Elegir un archivo</string>
+
+    <string name="fromCamera">Cámara</string>
+    <string name="fromGallery">Galería</string>
+    <string name="fromDevice">Dispositivo</string>
+    <string name="fromOtherApplication">Otro</string>
+    <string name="Domain">Dominio</string>
+    <string name="files">Archivos</string>
+    <string name="file">Archivo</string>
+    <string name="fileTalkBack">Archivo %s</string>
+    <string name="folderTalkBack">Carpeta %s</string>
+
+    <string name="addItem">Agregar elemento</string>
+    <string name="assignment">Tarea</string>
+    <string name="attachedFiles">Archivos adjuntos</string>
+    <string name="turnIn">Entregar</string>
+    <string name="course">Curso</string>
+    <string name="sending">Enviando&#8230;</string>
+
+    <!--rating dialog-->
+    <string name="star1">Clasificación por estrella uno</string>
+    <string name="star2">Clasificación por estrella dos</string>
+    <string name="star3">Clasificación por estrella tres</string>
+    <string name="star4">Clasificación por estrella cuatro</string>
+    <string name="star5">Clasificación por estrella cinco</string>
+
+    <!-- Submitting files -->
+    <string name="fileQuotaExceeded">Actualmente, ha superado el límite de almacenamiento de archivo.</string>
+    <string name="errorSubmittingFiles">Se produjo un error al entregar sus archivos. Inténtelo de nuevo.</string>
+    <string name="errorLoadingFiles">Se produjo un error durante la carga de su archivo. Compruebe su conexión a Internet y vuelva a intentarlo.</string>
+    <string name="filesUploadedSuccessfully">Los archivos se han cargado exitosamente.</string>
+    <string name="filesSubmittedSuccessfully">Los archivos han sido enviados exitosamente.</string>
+    <string name="messageSentSuccessfully">El mensaje ha sido enviado exitosamente.</string>
+    <string name="shareWithCanvas">¡Otras aplicaciones pueden compartir archivos con Canvas! Busque el ícono a continuación en las aplicaciones y toque sobre Canvas.</string>
+    <string name="shareWithCanvas2">De esta forma, abrirá esta aplicación. Luego seleccione en qué curso y tarea desea entregar el archivo.</string>
+    <string name="contentDescriptionSocialShare">Compartir ícono</string>
+    <string name="submitAssignment">Entregar tarea</string>
+    <string name="assignmentHeader">Tarea :</string>
+    <string name="submittingAssignment">Enviando tarea&#8230;</string>
+    <string name="conversations">Conversaciones </string>
+    <string name="inbox">Bandeja de entrada </string>
+    <string name="divider">Divisor</string>
+    <string name="legal">Legal</string>
+    <string name="completeHomework">COMPLETAR su tarea para la casa</string>
+    <string name="takeExam">Tomar un examen</string>
+    <string name="fileIcon">Ícono de archivo</string>
+    <string name="uploadingFileNum" formatted="false">Cargando %d de %d</string>
+    <string name="fileLocked" formatted="false">%s ha sido bloqueado.</string>
+    <string name="filePermissionGranted">El archivo ya está listo para descargar, por favor intente de nuevo.</string>
+    <string name="filePermissionDenied">El archivo no se puede descargar sin conceder permiso.</string>
+    <string name="pleaseTryAgain">Permiso otorgado; intente nuevamente.</string>
+    <string name="pickVideo">Seleccione un video</string>
+
+    <!--Errors-->
+    <string name="errorOccurred">Ha ocurrido un error inesperado.</string>
+    <string name="serverError">Ocurrió un error del servidor.</string>
+    <string name="unauthorized">No tiene autorización para acceder a esto. O no tiene permisos o no tiene acceso todavía (es posible que su curso no haya comenzado todavía)</string>
+    <string name="fileNoLongerExists">Ese archivo ya no existe.</string>
+    <string name="invalidAccessToken">Su sesión ha caducado. Inicie una nueva sesión.</string>
+    <string name="uploadingFromSourceFailed">No pudo completarse la carga de un archivo desde esta fuente.</string>
+    <string name="errorGettingPhoto">Hubo un error al obtener la foto. Inténtelo de nuevo.</string>
+    <string name="errorTextMissing">Agregar texto para enviar un mensaje</string>
+
+    <string name="fileUploadNotSupported">No puede cargar archivos a la tarea seleccionada.</string>
+    <string name="noCourseSelected">Por favor, seleccione un curso</string>
+    <string name="selectCourse">Seleccionar un curso</string>
+    <string name="selectAssignment">Seleccione una tarea</string>
+    <string name="loadingAssignments">Cargando tareas...</string>
+    <string name="noAssignmentSelected">Por favor, seleccione una tarea</string>
+    <string name="noAssignmentsWithFileUpload">Este curso no tiene tareas que permiten la carga de archivos.</string>
+    <string name="teacherNotAllowedFileSubmission">Como profesor en este curso, no puede enviar archivos</string>
+    <string name="noFilesUploaded">No ha seleccionado ningún archivo.</string>
+    <string name="oneOrMoreExtensionNotAllowed">Uno o más archivos tienen una extensión de archivo que no se permite</string>
+    <string name="extensionNotAllowed">No se permite el tipo de archivo seleccionado.</string>
+    <string name="allowedExtensions">Extensiones permitidas:&#160;</string>
+
+    <!-- Media Task Loader -->
+    <string name="noDataConnection"> Por favor, compruebe su conexión de datos y vuelva a intentarlo. </string>
+    <string name="noApps">Su dispositivo no tiene aplicaciones instaladas que puedan manejar este archivo.</string>
+    <string name="noAppsShort">No se puede abrir</string>
+    <string name="unexpectedErrorOpeningFile">Se ha producido un error inesperado al intentar abrir el archivo.</string>
+    <string name="unexpectedErrorDownloadingFile">Se ha producido un error inesperado al intentar descargar el archivo.</string>
+
+    <string name="done">Listo</string>
+
+    <!--Permissions-->
+    <string name="permissionDenied">Para utilizar esta función, el permiso primero debe ser concedido.</string>
+    <string name="noConnection">Sin conexión</string>
+
+    <!--Empty Screens-->
+    <string name="emptyCourseListMessage">Sus cursos y grupos favoritos se muestran aquí.</string>
+    <string name="addCoursesGroups">Agregar cursos/grupos</string>
+    <string name="noDiscussions">No hay foros</string>
+    <string name="noDiscussionsSubtext">Inicie una conversación con otras personas.</string>
+    <string name="noDiscussionsTeacher">Comience una conversación con sus alumnos.</string>
+    <string name="nothingUnread">¡Buzón de entrada vacío!</string>
+    <string name="nothingUnreadSubtext">¡Está al día!</string>
+    <string name="nothingStarred">No hay mensajes destacados</string>
+    <string name="nothingStarredSubtext">Conserve los mensajes importantes en esta sección tocando la estrella en cada mensaje.</string>
+    <string name="nothingSent">No hay mensajes enviados</string>
+    <string name="nothingSentSubtext">No ha enviado ningún mensaje.</string>
+    <string name="nothingArchived">No hay mensajes archivados</string>
+    <string name="nothingArchivedSubtext">No ha archivado ningún mensaje.</string>
+    <string name="noQuizzes">No hay evaluaciones</string>
+    <string name="noQuizzesSubtext">Lo sentimos, no existen evaluaciones aún.</string>
+    <string name="noQuizzesTeacher">No hay evaluaciones publicadas para mostrar.</string>
+    <string name="noAnnouncements">No hay anuncios</string>
+    <string name="noAnnouncementsSubtext">No se ha realizado ningún anuncio todavía.</string>
+    <string name="noCourses">Sin cursos</string>
+    <string name="noCoursesSubtext">Al parecer no hay cursos asociados con esta cuenta. Visite la web para crear un curso hoy mismo.</string>
+    <string name="noAssignments">No hay tareas</string>
+    <string name="noAssignmentsSubtext">Al parecer no se han creado tareas en este espacio. Hora de salir y explorar</string>
+    <string name="noAssignmentsTeacher">Al parecer no se han publicado tareas aún.</string>
+    <string name="noFiles">No hay archivos</string>
+    <string name="noFilesSubtext">No hay archivos asociados con esta cuenta.</string>
+    <string name="notSupported">No compatible</string>
+    <string name="noEvents">¡No hay ningún evento hoy!</string>
+    <string name="noEventsSubtext">Parece un día perfecto para descansar y relajarse.</string>
+    <string name="noSubmission">Sin presentaciones</string>
+    <string name="noSubmissionSubtext">Presente su tarea antes del %1$s a las %2$s.</string>
+    <string name="noSubmissionTeacher">Este alumno no tiene ninguna presentación aún.</string>
+    <string name="noDueDate">Esta tarea no tiene fecha límite.</string>
+    <string name="locked">Bloqueado</string>
+    <string name="lockedSubtext">Esta tarea está bloqueada hasta el %1$s a las %2$s.</string>
+    <string name="lockedModule">Esta tarea es parte del módulo \"%1$s\" y aún no ha sido desbloqueada.</string>
+    <string name="chooseFile">Elegir un archivo</string>
+    <string name="chooseFileSubtext">Adjunte un archivo a su presentación tocando una opción a continuación.</string>
+    <string name="noNotifications">Sin notificaciones</string>
+    <string name="noNotificationsSubtext">No hay nada que notificar por el momento.</string>
+    <string name="noTodos">¡Bien hecho!</string>
+    <string name="noTodosSubtext">Su lista de tareas por hacer está vacía. Hora de recargar energías.</string>
+    <string name="noSyllabus">No hay ningún Programa</string>
+    <string name="noSyllabusSubtext">No se ha creado ningún programa todavía.</string>
+    <string name="noBookmarks">No hay marcadores</string>
+    <string name="noBookmarksSubtext">Los marcadores son atajos para cualquier pantalla de la aplicación. Agréguelos en la pantalla que desee marcar.</string>
+    <string name="noModules">No hay módulos</string>
+    <string name="noModulesSubtext">Al parecer no se han creado módulos todavía.</string>
+    <string name="noPages">No hay páginas</string>
+    <string name="noPagesSubtext">Al parecer no se han creado páginas todavía.</string>
+
+    <!--General-->
+    <string name="yes">Sí</string>
+    <string name="no">No</string>
+
+    <string name="inbox_all">Buzón de entrada</string>
+    <string name="inbox_unread">No leído</string>
+    <string name="inbox_starred">Destacado</string>
+    <string name="inbox_sent">Enviado</string>
+    <string name="inbox_archived">Archivado</string>
+
+    <string name="forbidden">Las respuestas son visibles solamente para aquellos que han publicado al menos una respuesta.</string>
+
+    <string name="like">Me gusta</string>
+    <string name="likes">Me gusta</string>
+    <string name="lockedAssignmentNotModule">Esta tarea está bloqueada.</string>
+    <string name="deletedEntryNoChildren">Esta entrada de foro borrada no tiene ninguna respuesta.</string>
+    <string name="deleted">[Borrado]</string>
+    <string name="deleted_by">[Borrado por %1$s]</string>
+    <string name="lockedDiscussionDesc">Este foro es parte del módulo %s y no ha sido desbloqueado todavía.</string>
+    <string name="gradedDiscussion">Foro calificado</string>
+    <string name="pointsPossible">Puntos posibles</string>
+    <string name="sideCommentEntry">En este tipo de foros, no se puede comentar en ninguna entrada en este nivel.</string>
+
+    <string name="accessibility_overflow">Desbordamiento</string>
+
+    <string name="discussion_response">Comentario</string>
+    <string name="discussion_responses">Comentarios</string>
+    <string name="discussion_unread">No leído</string>
+    <string name="discussion_reply">Respuesta</string>
+    <string name="close">Cerrar</string>
+
+    <string name="noInternetConnectionTitle">Sin conexión a Internet</string>
+    <string name="noInternetConnectionMessage">Esta acción requiere conexión a Internet.</string>
+    <string name="content_description_avatar">Avatar</string>
+    <string name="formattedAvatarAction">Ver detalles de usuario de %s.</string>
+
+    <!-- App Names -->
+    <string name="utils_canvas">Canvas</string>
+    <string name="utils_canvasTeacher">Canvas Teacher</string>
+    <string name="utils_canvasParent">Canvas Parent</string>
+    <string name="utils_polls">Canvas Polls</string>
+    <string name="utils_speedgrader">SpeedGrader</string>
+
+    <!-- Rating Dialog -->
+    <string name="utils_howAreWeDoing">¿Cómo está?</string>
+    <string name="utils_rateUs">¿Cómo nos calificaría?</string>
+    <string name="utils_doBetter">¿Qué podemos mejorar?</string>
+    <string name="utils_sendFeedback">Enviar los comentarios</string>
+    <string name="utils_suggestions">Sugerencias para Android</string>
+    <string name="utils_domain">Dominio</string>
+    <string name="utils_versionNum">Versión:</string>
+    <string name="utils_userId">ID de usuario</string>
+    <string name="utils_email">Correo electrónico</string>
+    <string name="utils_dontShowAgain">No mostrar nuevamente</string>
+    <string name="utils_installDate">Fecha de instalación:</string>
+    <string name="utils_device">Dispositivo</string>
+    <string name="utils_osVersion">Versión del SO</string>
+    <string name="loading">Cargando</string>
+    <string name="save">Guardar</string>
+    <string name="cropInstructions">Haga clic y arrastre para ajustar la imagen.</string>
+
+    <!--Discussions-->
+    <plurals name="utils_discussionsReplies">
+        <item quantity="one">%s respuesta</item>
+        <item quantity="other">%s respuestas</item>
+    </plurals>
+
+    <string name="utils_discussionsDeleted" formatted="false">Eliminó esta respuesta %s</string>
+    <string name="utils_discussionsUnknownAuthor">Autor desconocido</string>
+    <string name="utils_discussionsReply">Respuesta</string>
+    <string name="utils_discussionsEdit">Editar</string>
+    <string name="utils_discussionsDeleteWarning">¿Está seguro de que desea eliminar esta respuesta?</string>
+    <string name="utils_availableToLabel">Disponible para:</string>
+    <string name="utils_availableFromLabel">Disponible desde:</string>
+    <string name="utils_dueDateHeaderLabel">Fecha límite</string>
+    <string name="utils_dueLabel">Fecha límite:</string>
+    <string name="utils_delete">Eliminar</string>
+    <string name="utils_dueDateAtTime" formatted="false">Fecha límite el %1s a las %2s</string>
+    <string name="utils_noDateFiller">--</string>
+    <string name="utils_availabilityLabel">Disponibilidad:</string>
+    <string name="utils_pinnedIcon">Ícono para un foro anclado</string>
+    <string name="utils_pinDiscussion">Anclar foro</string>
+    <string name="utils_unpinDiscussion">Desanclar foro</string>
+    <string name="utils_discussionPinned">Foro anclado</string>
+    <string name="utils_pinnedDiscussions">Anclado</string>
+    <string name="utils_discussionUnpinned">Foros</string>
+    <string name="utils_emptyDiscussions">No hay foros que mostrar en esta sección.</string>
+    <string name="utils_description">Descripción</string>
+    <string name="utils_allowThreadedReplies">Permitir respuestas agrupadas</string>
+    <string name="utils_usersMustPost">Los alumnos deben publicar antes de ver las respuestas</string>
+    <string name="utils_discussionsClosed">No admite comentarios</string>
+    <string name="utils_discussionsOpen">Admite comentarios</string>
+    <string name="utils_discussionsPin">Anclar</string>
+    <string name="utils_discussionsUnpin">Desanclar</string>
+    <string name="utils_discussionsOptions">Opciones</string>
+    <string name="utils_discussionsDeleteTitle">¿Desea eliminar el foro?</string>
+    <string name="utils_discussionsDelete">Eliminar foro</string>
+    <string name="utils_discussionsDeleteMessage">Esto eliminará todo el foro y el hilo.</string>
+    <string name="utils_discussionSentSuccess">La respuesta al foro se realizó correctamente.</string>
+    <string name="utils_discussionUpdateSuccess">La edición del foro se realizó correctamente.</string>
+    <string name="utils_discussionSentEmpty">La respuesta al foro no puede estar vacía.</string>
+    <string name="utils_discussionSentFailure">No se pudo enviar la respuesta al foro en este momento.</string>
+    <string name="utils_createDiscussion">Nuevo foro</string>
+    <string name="utils_editDiscussion">Editar foro</string>
+    <string name="utils_discussionDetails">Detalles del foro</string>
+    <string name="utils_discussionSuccessfullyUpdated">Foro actualizado correctamente.</string>
+    <string name="utils_saving">Guardando</string>
+    <string name="utils_discussionSuccessfullyCreated">Foro creado correctamente.</string>
+    <string name="utils_discussionSuccessfulAttachmentNot">No se pudo agregar el archivo adjunto a este foro. Compruebe el cupo de archivos y vuelva a intentarlo.</string>
+    <string name="utils_noTitle">Sin título</string>
+    <string name="utils_discussionsReplies_Title">Respuestas</string>
+    <string name="utils_contentDescriptionDiscussionsOverflow">Más opciones</string>
+    <string name="utils_discussionsUnreadRepliesBlank" formatted="false">%s %s %s</string>
+    <string name="utils_lastPost" formatted="false">Última publicación %s</string>
+    <string name="utils_postedOnDate">Publicado el %s</string>
+    <string name="utils_discussionPostBeforeRepliesEmptyText">Las respuestas son visibles solamente para aquellos que han publicado al menos una respuesta.</string>
+    <string name="utils_createAnnouncementDelayPosting">Atrasar la publicación</string>
+    <string name="utils_postAt">Publicar en</string>
+    <string name="utils_postDate">Fecha de publicación</string>
+    <string name="utils_postTime">Publicar hora</string>
+    <string name="utils_editAnnouncementTitle">Editar anuncios</string>
+    <string name="utils_createAnnouncementTitle">Nuevo anuncio</string>
+    <string name="utils_announcementDetails">Detalles del anuncio</string>
+    <string name="utils_createAnnouncementNoDescription">Se requiere una descripción</string>
+    <string name="utils_errorSavingAnnouncement">Se produjo un error al intentar guardar este anuncio. Inténtelo de nuevo.</string>
+    <string name="utils_announcementSuccessfullyUpdated">Anuncio actualizado correctamente.</string>
+    <string name="utils_announcementSuccessfullyCreated">Anuncio creado correctamente.</string>
+
+    <plurals name="utils_discussionsUnread">
+        <item quantity="one">%s no leídos</item>
+        <item quantity="other">%s no leídos</item>
+    </plurals>
+
+    <plurals name="utils_addAttachment">
+        <item quantity="zero">Agregar adjunto</item>
+        <item quantity="one">Agregar adjunto</item>
+        <item quantity="other">Agregar adjuntos</item>
+    </plurals>
+
+    <!-- Assignment Override !-->
+    <string name="utils_unlockAfterDueDateError">La fecha de desbloqueo no puede ser posterior a la fecha límite</string>
+    <string name="utils_lockBeforeDueDateError">La fecha de bloqueo no puede ser anterior a la fecha límite</string>
+    <string name="utils_lockAfterUnlockError">La fecha de bloqueo no puede ser anterior a la fecha de desbloqueo</string>
+    <string name="utils_assigneeBlankError">La persona asignada no puede estar en blanco</string>
+    <string name="utils_assignTo">Asignar a</string>
+    <string name="utils_availableFrom">Disponible desde</string>
+    <string name="utils_availableTo">Disponible para</string>
+    <string name="utils_availableFromDate">Disponible desde fecha</string>
+    <string name="utils_availableFromTime">Disponible desde hora</string>
+    <string name="utils_availableToDate">Disponible hasta fecha</string>
+    <string name="utils_availableToTime">Disponible hasta hora</string>
+    <string name="utils_dueDate">Fecha límite</string>
+    <string name="utils_dueTime">Hora límite</string>
+    <string name="utils_addNew">Agregar nuevo</string>
+
+    <!--Attachment Layout-->
+    <string name="utils_downloadAttachment">Descargar archivo adjunto</string>
+    <string name="utils_removeAttachment">Eliminar el archivo adjunto</string>
+
+    <!--Unsaved Changes-->
+    <string name="utils_continueWithoutSavingTitle">¿Continuar sin guardar?</string>
+    <string name="utils_continueWithoutSavingMessage">¿Está seguro de que desea continuar sin guardar?</string>
+    <string name="utils_continueUnsaved">Continuar</string>
+    <string name="utils_exitWithoutSavingTitle">¿Salir sin guardar?</string>
+    <string name="utils_exitWithoutSavingMessage">¿Está seguro de que desea salir sin guardar?</string>
+    <string name="utils_exitUnsaved">Salir</string>
+    <string name="utils_cancel">Cancelar</string>
+
+    <string name="utils_contentDescriptionFiles">Ícono de archivo</string>
+    <string name="utils_turn_in">Entregar</string>
+    <string name="utils_upload">Cargar</string>
+    <string name="utils_okay">De acuerdo</string>
+    <string name="utils_loadingFilesIndeterminate">Cargando archivos&#8230;</string>
+    <string name="utils_allowedExtensions">Extensiones permitidas:&#160;</string>
+    <string name="utils_extensionNotAllowed">No se permite el tipo de archivo seleccionado.</string>
+    <string name="utils_errorUploadingFile">Se produjo un error al cargar su archivo. Inténtelo de nuevo.</string>
+    <string name="utils_filesUploadedSuccessfully">Los archivos se han cargado exitosamente.</string>
+    <string name="utils_uploadingFiles">Cargando archivos&#8230;</string>
+    <string name="utils_uploadingFile">Cargando archivo&#8230;</string>
+    <string name="utils_noApps">Su dispositivo no tiene aplicaciones instaladas que puedan manejar este archivo.</string>
+    <string name="utils_errorGettingPhoto">Hubo un error al obtener la foto. Inténtelo de nuevo.</string>
+    <string name="utils_oneOrMoreExtensionNotAllowed">Uno o más archivos tienen una extensión de archivo que no se permite</string>
+    <string name="utils_fileUploadNotSupported">No puede cargar archivos a la tarea seleccionada.</string>
+    <string name="utils_noFilesUploaded">No ha seleccionado ningún archivo.</string>
+    <string name="utils_attachments">Archivos adjuntos</string>
+    <string name="utils_uploadTo">Cargar a </string>
+    <string name="utils_uploadToCanvas">Cargar a Canvas</string>
+    <string name="utils_uploadMyFiles">Mis archivos</string>
+    <string name="utils_uploadCourseFiles">Archivos del curso</string>
+    <string name="utils_uploadToSubmissionComment">Cargar a los comentarios de la presentación</string>
+    <string name="utils_attachFile">Adjuntar un archivo</string>
+    <string name="utils_with">con</string>
+
+    <string name="notificationPrimaryInboxTitle">Notificación de Canvas</string>
+    <string name="notificationChannelNamePrimary">Notificaciones generales de Canvas</string>
+    <string name="notificationChannelDescriptionPrimary">Se puede realizar una posterior configuración de las notificaciones dentro de la sección de Preferencias de notificaciones de Canvas.</string>
+
+    <string name="copyLinkAddress">Copiar dirección del enlace</string>
+    <string name="copyLink">Copiar enlace</string>
+    <string name="linkCopied">Enlace copiado</string>
+    <string name="link">Enlace</string>
+    <string name="fileExists">El archivo existe</string>
+    <string name="replace">Reemplazar</string>
+    <string name="shareLink">Compartir enlace</string>
+
+    <string name="utils_launchExternalTool">Iniciar la herramienta externa</string>
+    <string name="utils_externalToolTitle">Herramienta externa</string>
+    <string name="utils_placeholderTitle">Herramienta externa</string>
+    <string name="utils_placeholderDescription">Visite su cuenta web de Canvas para editar esta herramienta externa.</string>
+    <string name="utils_unableToViewInBrowser">No podemos encontrar una aplicación externa para ver esta herramienta LTI.</string>
+
+    <string name="utils_unsupportedFileMessage">No se pudo mostrar este archivo. Utilice el botón de abajo para abrir el archivo con otra aplicación en su dispositivo.</string>
+    <string name="utils_openWithAnotherApp">Abrir con&#8230;</string>
+    <string name="utils_couldNotPlayFormat">Este formato de multimedia no es compatible</string>
+    <string name="utils_fullscreen">pantalla completa</string>
+
+    <string name="utils_dataUsageWarningTitle">Advertencia de uso de datos</string>
+    <string name="utils_dataUsageWarningMessage">Esta acción puede consumir una gran cantidad de datos, lo que quizás haga que incurra en gastos por exceso. ¿Quiere continuar?</string>
+    <string name="utils_doNotShowMessageAgain">No mostrar este mensaje de nuevo</string>
+
+    <string name="utils_no_data_connection">Por favor, compruebe su conexión de datos y vuelva a intentarlo.</string>
+    <string name="utils_playMedia">Reproducir multimedia</string>
+    <string name="utils_tryAgain">Intente de nuevo</string>
+    <string name="image_uploading">Cargando imagen...</string>
+    <string name="image_upload_error">Error al cargar imagen</string>
+    <string name="retry">Reintentar</string>
+
+    <string name="search">Buscar</string>
+    <string name="searchAssignmentsHint">Buscar tareas</string>
+    <string name="searchAnnouncementsHint">Buscar anuncios</string>
+    <string name="searchDiscussionsHint">Buscar foros</string>
+    <string name="searchPagesHint">Buscar páginas</string>
+    <string name="searchQuizzesHint">Buscar evaluaciones</string>
+    <string name="noItemsMatchingQuery">No hay elementos que coincidan con \"%s\"</string>
+    <string name="selected">Seleccionado</string>
+
+</resources>

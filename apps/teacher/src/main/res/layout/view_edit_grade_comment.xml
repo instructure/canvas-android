@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/dismissEditCommentButton"
+        style="@style/ButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_above="@+id/commentEditText"
+        android:layout_alignParentTop="true"
+        android:background="@color/transparent"
+        android:contentDescription="@string/cancel_editing_comment"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_above="@+id/commentEditText"
+        android:background="@color/dividerColor"/>
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/commentEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toStartOf="@+id/saveCommentButton"
+        android:background="@color/white"
+        android:inputType="textCapSentences|textMultiLine"
+        android:minHeight="50dp"
+        android:paddingBottom="4dp"
+        android:paddingEnd="0dp"
+        android:paddingStart="16dp"
+        android:paddingTop="4dp"
+        android:hint="@string/messageThisStudent"
+        tools:hint="Message this student"/>
+
+    <ImageButton
+        android:id="@+id/saveCommentButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/commentEditText"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/commentEditText"
+        android:background="@color/white"
+        android:contentDescription="@string/save_comment"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp"
+        app:srcCompat="@drawable/vd_checkmark"
+        tools:tint="@color/defaultActionColor"/>
+
+</RelativeLayout>

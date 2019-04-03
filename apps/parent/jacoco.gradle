@@ -1,0 +1,65 @@
+/*
+ * Copyright (C) 2016 - present  Instructure, Inc.
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, version 3 of the License.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+// https://github.com/dampcake/Robolectric-JaCoCo-Sample/blob/61ee886c7aa0b8c103c1b98d073c6278d5a79f71/app/jacoco.gradle
+apply plugin: 'jacoco'
+
+jacoco {
+    // https://bintray.com/bintray/jcenter/org.jacoco:org.jacoco.core
+    toolVersion = "0.7.7.201606060606"
+}
+
+android {
+    testOptions {
+        unitTests.all {
+            jacoco {
+                includeNoLocationClasses = true
+            }
+        }
+    }
+}
+
+project.afterEvaluate {
+
+    android.applicationVariants.all { variant ->
+        def name = variant.name
+        def testTaskName = "test${name.capitalize()}UnitTest"
+
+        tasks.create(name: "${testTaskName}Coverage", type: JacocoReport, dependsOn: "$testTaskName") {
+            group = "Reporting"
+            description = "Generate Jacoco coverage reports for the ${name.capitalize()} build."
+
+            classDirectories = fileTree(
+                    dir: "${project.buildDir}/intermediates/classes/${name}",
+                    excludes: ['**/R.class',
+                               '**/R$*.class',
+                               '**/*$ViewInjector*.*',
+                               '**/*$ViewBinder*.*',
+                               '**/BuildConfig.*',
+                               '**/Manifest*.*']
+            )
+
+            sourceDirectories = files(['src/main/java'].plus(android.sourceSets[name].java.srcDirs))
+            executionData = files("${project.buildDir}/jacoco/${testTaskName}.exec")
+
+            reports {
+                xml.enabled = true
+                html.enabled = true
+            }
+        }
+    }
+}

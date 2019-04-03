@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ Copyright (C) 2016 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_repeated"
+    android:clickable="true"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/courseName"
+        style="@style/TextStyle.Primary.Bold"
+        android:layout_centerHorizontal="true"
+        android:padding="8dp"
+        android:layout_marginTop="16dp"/>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/myviewpager"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/randomize"
+        android:layout_below="@id/courseName"
+        android:layout_margin="8dp"
+        android:overScrollMode="never"
+        android:visibility="gone" />
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/tutorial"
+        android:layout_width="@dimen/student_chooser_card_width"
+        android:layout_height="@dimen/student_chooser_card_height"
+        android:layout_above="@+id/randomize"
+        android:layout_below="@id/courseName"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="8dp"
+        app:cardUseCompatPadding="true">
+
+        <ScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="16dp">
+
+            <TextView
+                style="@style/TextStyle.Primary"
+                android:text="@string/studentChooserTutorial" />
+        </ScrollView>
+    </android.support.v7.widget.CardView>
+
+    <TextView
+        android:id="@+id/emptyView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="@string/noMoreStudents"
+        android:textColor="@color/canvasTextDark"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
+
+    <com.instructure.teacheraid.views.CircleButton
+        android:id="@+id/randomize"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="8dp"
+        android:src="@drawable/ic_shuffle_white"
+        app:cb_color="@color/mainGreen"
+        app:cb_pressed_ring_width="8dp" />
+
+
+</RelativeLayout>

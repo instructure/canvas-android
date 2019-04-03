@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+option java_package = "com.instructure.soseedy";
+option java_multiple_files = true;
+
+package soseedy;
+
+
+service SeedyEnrollments {
+    rpc CreateEnrollmentTerm(CreateEnrollmentTermRequest) returns (EnrollmentTerm) { }
+
+    rpc EnrollUserInCourse(EnrollUserRequest) returns (Enrollment) { }
+    rpc EnrollUserInSection(EnrollUserInSectionRequest) returns (Enrollment) { }
+}
+
+// Request messages
+
+message CreateEnrollmentTermRequest {
+}
+
+message EnrollUserRequest {
+    int64 courseId = 1;
+    int64 userId = 2;
+    string enrollmentType = 3;
+    int64 associatedUserId = 4;
+}
+
+message EnrollUserInSectionRequest {
+    int64 sectionId = 1;
+    int64 userId = 2;
+    string enrollmentType = 3;
+}
+
+// Response messages
+
+message EnrollmentTerm {
+    int64 id = 1;
+}
+
+message Enrollment {
+    int64 courseId = 1;
+    int64 sectionId = 2;
+    int64 userId = 3;
+    string type = 4;
+    string role = 5;
+}

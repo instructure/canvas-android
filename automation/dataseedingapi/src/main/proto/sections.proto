@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+option java_package = "com.instructure.soseedy";
+option java_multiple_files = true;
+
+package soseedy;
+
+
+service SeedySections {
+    rpc CreateSection(CreateSectionRequest) returns (Section) { }
+}
+
+// Request messages
+message CreateSectionRequest {
+    int64 courseId = 1;
+}
+
+// Response messages
+message Section {
+    int64 id = 1;
+    string name = 2;
+    int64 courseId = 3;
+}

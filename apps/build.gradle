@@ -1,0 +1,78 @@
+/*
+ * Copyright (C) 2017 - present Instructure, Inc.
+ *
+ *     Licensed under the Apache License, Version 2.0 (the "License");
+ *     you may not use this file except in compliance with the License.
+ *     You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *     Unless required by applicable law or agreed to in writing, software
+ *     distributed under the License is distributed on an "AS IS" BASIS,
+ *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *     See the License for the specific language governing permissions and
+ *     limitations under the License.
+ *
+ */
+
+buildscript {
+    PrivateData.merge(project, "all-apps")
+    project.ext.setProperty("coverageEnabled", project.hasProperty("testCoverageEnabled"))
+
+    repositories {
+        google()
+        mavenCentral()
+        maven { url "https://jitpack.io" }
+        maven { url 'https://maven.fabric.io/public' }
+        jcenter()
+        maven { url "https://plugins.gradle.org/m2/" }
+        // These appear to have disappeared from the google repo
+        // https://issuetracker.google.com/issues/120759347
+        maven { url 'https://dl.bintray.com/android/android-tools' }
+        maven { url 'https://google.bintray.com/exoplayer/' }
+        maven { url 'https://dl.bintray.com/firebase/gradle/' }
+        maven { url "https://google.bintray.com/flexbox-layout" }
+    }
+
+    dependencies {
+        classpath Plugins.ANDROID_GRADLE_TOOLS
+        classpath Plugins.APOLLO
+        classpath Plugins.GOOGLE_SERVICES
+        classpath Plugins.OSS_LICENSES
+        classpath Plugins.KOTLIN
+        classpath Plugins.FABRIC
+        classpath Plugins.OKREPLAY
+        classpath Plugins.BUILD_SCAN
+        if (project.coverageEnabled) { classpath Plugins.JACOCO_ANDROID }
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        maven { url "https://jitpack.io" }
+        maven {
+            credentials {
+                username pspdfMavenUser
+                password pspdfMavenPass
+            }
+            url 'https://customers.pspdfkit.com/maven/'
+        }
+        maven { url "https://maven.google.com/" }
+        jcenter()
+        // These appear to have disappeared from the google repo
+        // https://issuetracker.google.com/issues/120759347
+        maven { url 'https://dl.bintray.com/android/android-tools' }
+        maven { url 'https://google.bintray.com/exoplayer/' }
+        maven { url 'https://dl.bintray.com/firebase/gradle/' }
+        maven { url "https://google.bintray.com/flexbox-layout" }
+    }
+}
+
+task assembleAllApps() {
+    dependsOn ':student:assembleDevDebug'
+    dependsOn ':teacher:assembleDevDebug'
+    dependsOn ':parent:assembleDevDebug'
+    dependsOn ':polling:assembleDevDebug'
+}

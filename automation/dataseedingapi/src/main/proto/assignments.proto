@@ -1,0 +1,195 @@
+syntax = "proto3";
+
+option java_package = "com.instructure.soseedy";
+option java_multiple_files = true;
+
+package soseedy;
+
+import "files.proto";
+
+service SeedyAssignments {
+    rpc CreateAssignment(CreateAssignmentRequest) returns (Assignment) { }
+    rpc CreateAssignmentOverride(CreateAssignmentOverrideRequest) returns (AssignmentOverride) { }
+    rpc SubmitCourseAssignment(SubmitCourseAssignmentRequest) returns (CourseAssignmentSubmission) { }
+    rpc GradeSubmission(GradeSubmissionRequest) returns (CourseAssignmentSubmission) { }
+    rpc CreateCourseAssignmentSubmissionComment(CreateCourseAssignmentCommentRequest) returns (CourseAssignmentSubmission) { }
+    rpc GetSubmission(GetSubmissionRequest) returns (CourseAssignmentSubmission) { }
+    rpc SeedAssignments(SeedAssignmentRequest) returns (Assignments) { }
+    rpc SeedAssignmentSubmission(SeedAssignmentSubmissionRequest) returns (SeededCourseAssignmentSubmissions) { }
+}
+
+// Request messages
+
+message CreateAssignmentRequest {
+    int64 courseId = 1;
+    bool withDescription = 2;
+    string lockAt = 3;
+    string unlockAt = 4;
+    string dueAt = 5;
+    repeated SubmissionType submissionTypes = 6;
+    string teacherToken = 7;
+    int64 groupCategoryId = 8;
+    double pointsPossible = 9;
+    GradingType gradingType = 10;
+    repeated string allowedExtensions = 11;
+}
+
+message CreateAssignmentOverrideRequest {
+    int64 courseId = 1;
+    int64 assignmentId = 2;
+    string token = 3;
+    repeated int64 studentIds = 4;
+    int64 groupId = 5;
+    int64 courseSectionId = 6;
+    string dueAt = 7;
+    string unlockAt = 8;
+    string lockAt = 9;
+}
+
+message SubmitCourseAssignmentRequest {
+    SubmissionType submissionType = 1;
+    int64 courseId = 2;
+    int64 assignmentId = 3;
+    string studentToken = 4;
+    string body = 5;
+    string url = 6;
+    repeated int64 fileIds = 7;
+}
+
+message GradeSubmissionRequest {
+    string teacherToken = 1;
+    int64 courseId = 2;
+    int64 assignmentId = 3;
+    int64 studentId = 4;
+    string postedGrade = 5;
+    bool excused = 6;
+}
+
+message CreateCourseAssignmentCommentRequest {
+    int64 courseId = 1;
+    int64 assignmentId = 2;
+    string studentToken = 3;
+    repeated int64 fileIds = 4;
+}
+
+message SeedAssignmentRequest {
+    int64 courseId = 1;
+    int32 assignments = 2;
+    bool withDescription = 3;
+    string lockAt = 4;
+    string unlockAt = 5;
+    string dueAt = 6;
+    repeated SubmissionType submissionTypes = 7;
+    repeated string allowedExtensions = 8;
+    string teacherToken = 9;
+}
+
+message SeedAssignmentSubmissionRequest {
+    int64 assignmentId = 1;
+    int64 courseId = 2;
+    string studentToken = 3;
+    repeated SubmissionSeed submissionSeeds = 4;
+    repeated CommentSeed commentSeeds = 5;
+}
+
+message SubmissionSeed {
+    SubmissionType submissionType = 1;
+    int32 amount = 2;
+    FileType fileType = 3;
+    repeated Attachment attachments = 4;
+    bool checkForLateStatus = 5;
+}
+
+message CommentSeed {
+    int32 amount = 1;
+    FileType fileType = 2;
+    repeated Attachment attachments = 3;
+}
+
+enum FileType {
+    TEXT = 0;
+    PDF = 1;
+    NONE = 3;
+}
+
+enum SubmissionType {
+    NO_TYPE = 0;
+    ON_PAPER = 1;
+    ONLINE_QUIZ = 2;
+    ONLINE_UPLOAD = 3;
+    ONLINE_TEXT_ENTRY = 4;
+    ONLINE_URL = 5;
+    EXTERNAL_TOOL = 6;
+    DISCUSSION_TOPIC = 7;
+}
+
+enum GradingType {
+    POINTS = 0;
+    PASS_FAIL = 1;
+    PERCENT = 2;
+    LETTER_GRADE = 3;
+    GPA_SCALE = 4;
+}
+
+// Response messages
+
+message Assignment {
+    int64 id = 1;
+    string courseId = 2;
+    string html_url = 3;
+    string name = 4;
+    string description = 5;
+    string due_at = 6;
+    double pointsPossible = 7;
+    GradingType gradingType = 8;
+    repeated SubmissionType submissionTypes = 9;
+    repeated string allowedExtensions = 10;
+    bool published = 11;
+    string lock_at = 12;
+    string unlock_at = 13;
+}
+
+message Assignments {
+    repeated Assignment assignments = 1;
+}
+
+message SeededCourseAssignmentSubmissions {
+    repeated CourseAssignmentSubmission submissions = 1;
+}
+
+message AssignmentOverride {
+    int64 id = 1;
+    int64 assignmentId = 2;
+    string title = 3;
+    repeated int64 studentIds = 4;
+    int64 groupId = 5;
+    int64 courseSectionId = 6;
+    string dueAt = 7;
+    string unlockAt = 8;
+    string lockAt = 9;
+}
+
+message CourseAssignmentSubmission {
+    int64 id = 1;
+    string body = 2;
+    string url = 3;
+    repeated Comment submissionComments = 4;
+    repeated Attachment attachments = 5;
+    int64 userId = 6;
+    bool late = 7;
+    bool excused = 8;
+    string grade = 9;
+}
+
+message Comment {
+    string authorName = 1;
+    string comment = 2;
+    repeated Attachment attachments = 3;
+}
+
+message GetSubmissionRequest {
+    string token = 1;
+    int64 courseId = 2;
+    int64 assignmentId = 3;
+    int64 studentId = 4;
+}

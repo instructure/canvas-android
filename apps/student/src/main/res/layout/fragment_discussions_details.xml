@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C) 2018 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/contentLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="6dp"
+            tools:background="#00bcd5"
+            tools:ignore="UnusedAttribute" />
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefreshLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ScrollView
+                android:id="@+id/discussionsScrollView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:id="@+id/discussionsScrollViewContentWrapper"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/discussionTopicTitle"
+                        style="@style/TextFont.Medium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:ellipsize="end"
+                        android:maxLines="2"
+                        android:textSize="20sp"
+                        tools:text="Getting Started with Life 101" />
+
+                    <TextView
+                        android:id="@+id/discussionSection"
+                        style="@style/TextFont.Medium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="4dp"
+                        android:textColor="@color/defaultTextGray"
+                        android:ellipsize="end"
+                        android:maxLines="2"
+                        tools:text="Afternoon Section" />
+
+                    <TextView
+                        android:id="@+id/pointsTextView"
+                        style="@style/TextFont.Medium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="4dp"
+                        android:textColor="@color/defaultTextGray"
+                        android:visibility="gone"
+                        tools:text="30 pts"
+                        tools:visibility="visible" />
+
+                    <include
+                        android:id="@+id/pointsPublishedDivider"
+                        layout="@layout/divider"
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:layout_marginTop="16dp" />
+
+                    <!-- Due Date(s) -->
+
+                    <LinearLayout
+                        android:id="@+id/dueLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp"
+                        android:visibility="gone"
+                        tools:visibility="visible">
+
+                        <LinearLayout
+                            android:id="@+id/dueSectionLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="4dp"
+                            android:gravity="start|center_vertical"
+                            tools:ignore="UseCompoundDrawables">
+
+                            <ImageView
+                                android:layout_width="18dp"
+                                android:layout_height="18dp"
+                                android:importantForAccessibility="no"
+                                android:tint="@color/defaultTextGray"
+                                app:srcCompat="@drawable/vd_calendar" />
+
+                            <TextView
+                                style="@style/TextFont.Medium"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="6dp"
+                                android:text="@string/utils_dueDateHeaderLabel"
+                                android:textColor="@color/defaultTextGray" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/dueDateLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:visibility="gone"
+                            tools:visibility="visible">
+
+                            <TextView
+                                style="@style/TextFont.Medium"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:importantForAccessibility="no"
+                                android:text="@string/utils_dueLabel"
+                                android:textSize="16sp"
+                                android:tint="@color/defaultTextGray" />
+
+                            <TextView
+                                android:id="@+id/dueDateTextView"
+                                style="@style/TextFont.Regular"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:textSize="16sp"
+                                android:tint="@color/defaultTextGray"
+                                tools:text="April 1 at 11:59 PM" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/availableFromLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:visibility="gone"
+                            tools:visibility="visible">
+
+                            <TextView
+                                style="@style/TextFont.Medium"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/utils_availableFromLabel"
+                                android:textSize="16sp" />
+
+                            <TextView
+                                android:id="@+id/availableFromTextView"
+                                style="@style/TextFont.Regular"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:textSize="16sp"
+                                tools:text="April 1 at 11:59 PM" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/availableToLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:visibility="gone"
+                            tools:visibility="visible">
+
+                            <TextView
+                                style="@style/TextFont.Medium"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/utils_availableToLabel"
+                                android:textSize="16sp" />
+
+                            <TextView
+                                android:id="@+id/availableToTextView"
+                                style="@style/TextFont.Regular"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:textSize="16sp"
+                                tools:text="April 30 at 11:59 PM" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/availabilityLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:visibility="gone"
+                            tools:visibility="visible">
+
+                            <TextView
+                                style="@style/TextFont.Medium"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/utils_availabilityLabel"
+                                android:textSize="16sp" />
+
+                            <TextView
+                                android:id="@+id/availabilityTextView"
+                                style="@style/TextFont.Regular"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:textSize="16sp"
+                                tools:text="Closed" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <include
+                        android:id="@+id/dueLayoutDivider"
+                        layout="@layout/divider" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:orientation="horizontal">
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/authorAvatar"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            tools:src="@mipmap/ic_launcher" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/authorName"
+                                style="@style/TextFont.Medium"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:maxLines="2"
+                                android:textSize="14sp"
+                                tools:text="Matthew Rice" />
+
+                            <TextView
+                                android:id="@+id/authoredDate"
+                                style="@style/TextFont.Regular"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:maxLines="2"
+                                android:textColor="@color/defaultTextGray"
+                                android:textSize="12sp"
+                                tools:text="Aug 1 at 8:30 AM" />
+
+                        </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/attachmentIcon"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:layout_gravity="center_vertical"
+                            android:background="?android:selectableItemBackground"
+                            android:contentDescription="@string/attachment"
+                            android:padding="6dp"
+                            android:scaleType="centerInside"
+                            android:visibility="gone"
+                            app:srcCompat="@drawable/vd_attachment" />
+
+                    </LinearLayout>
+
+                    <com.instructure.pandautils.views.CanvasWebView
+                        android:id="@+id/discussionTopicHeaderWebView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp" />
+
+                    <TextView
+                        android:id="@+id/replyToDiscussionTopic"
+                        style="@style/TextFont.Regular"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="12dp"
+                        android:paddingEnd="16dp"
+                        android:paddingStart="16dp"
+                        android:paddingTop="4dp"
+                        android:text="@string/discussion_reply"
+                        android:textSize="16sp" />
+
+                    <View
+                        android:id="@+id/repliesDivider"
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:background="@color/lightGray" />
+
+                    <TextView
+                        android:id="@+id/discussionTopicRepliesTitle"
+                        style="@style/TextFont.Medium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:gravity="center_vertical|start"
+                        android:minHeight="42dp"
+                        android:text="@string/utils_discussionsReplies_Title"
+                        android:textSize="20sp"
+                        android:visibility="invisible"
+                        tools:visibility="visible" />
+
+                    <TextView
+                        android:id="@+id/postBeforeViewingRepliesTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/TextFont.Medium"
+                        android:text="@string/utils_discussionPostBeforeRepliesEmptyText"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:visibility="gone"
+                        tools:visibility="visible"/>
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <com.instructure.pandautils.views.CanvasWebView
+                            android:id="@+id/discussionRepliesWebView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp" />
+
+                        <ProgressBar
+                            android:id="@+id/discussionProgressBar"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="24dp"
+                            android:visibility="gone"
+                            tools:visibility="visible" />
+
+                    </FrameLayout>
+
+                </LinearLayout>
+
+            </ScrollView>
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    </LinearLayout>
+
+</FrameLayout>

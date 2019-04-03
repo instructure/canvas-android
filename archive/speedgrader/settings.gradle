@@ -1,0 +1,22 @@
+include ':app'
+include ':app:libs'
+include ':canvas-api'
+include ':login-api'
+include ':blueprint'
+include ':pandautils'
+include ':recyclerview'
+include ':annotations'
+include ':canvas-api-2'
+include ':floating_action_button_library'
+include ':pspdfkit-2.2.1'
+
+project(':canvas-api').projectDir            = new File(rootProject.projectDir, '/../canvas-api')
+project(':login-api').projectDir    = new File(rootProject.projectDir, '/../login-api')
+project(':pandautils').projectDir   = new File(rootProject.projectDir, '/../pandautils')
+project(':recyclerview').projectDir = new File(rootProject.projectDir, '/../recyclerview')
+project(':annotations').projectDir   = new File(rootProject.projectDir, '/../annotations/annotations')
+project(':pspdfkit-2.2.1').projectDir   = new File(rootProject.projectDir, '/../annotations/pspdfkit-2.2.1')
+project(':canvas-api-2').projectDir = new File(rootProject.projectDir, '/../canvas-api-2/canvasapi')
+project(':blueprint').projectDir = new File(rootProject.projectDir, '/../blueprint')
+project(':floating_action_button_library').projectDir = new File(rootProject.projectDir, '/../pandautils/libs/floating_action_button_library')
+

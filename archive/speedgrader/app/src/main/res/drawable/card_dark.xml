@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2016 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:left="2.0dp"
+        android:right="1.0dp">
+        <shape android:shape="rectangle" >
+
+
+            <corners android:radius="4dp"/>
+
+            <padding
+                android:bottom="1dp"
+                android:left="0dp"
+                android:right="0dp"
+                android:top="0dp" />
+
+            <gradient
+                android:angle="270"
+                android:centerX="0.15"
+                android:startColor="#FF000000"
+                android:centerColor="#FF222222"
+                android:endColor="#55aaaaaa">
+
+            </gradient>
+        </shape>
+    </item>
+
+    <!-- White Top color -->
+    <item>
+        <shape android:shape="rectangle" >
+            <corners android:radius="2dp"/>
+            <!--<corners android:bottomRightRadius="4dp" android:bottomLeftRadius="4dp"
+                android:topLeftRadius="0dp" android:topRightRadius="0dp"/>-->
+            <solid android:color="#ffe8e8e8" />
+            <stroke
+                android:width="1dp"
+                android:color="#ffeeeeee"/>
+        </shape>
+    </item>
+
+</layer-list>

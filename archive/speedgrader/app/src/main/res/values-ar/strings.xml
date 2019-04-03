@@ -1,0 +1,175 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <string name="app_name">SpeedGrader</string>
+  <string name="hello_world">أهلا بالعالم!</string>
+  <string name="sg_settings">الإعدادات</string>
+  <string name="title_activity_home">البداية</string>
+  <string name="title_activity_document">مستند</string>
+  <string name="action_document_view">عرض المستند</string>
+  <string name="sectionsFilter">التصفية حسب القسم</string>
+  <string name="drawer_open">فتح الدرج</string>
+  <string name="drawer_close">فتح الدرج</string>
+  <string name="favorites">المساقات المفضلة</string>
+  <string name="allCourses">جميع المساقات</string>
+  <string name="emptyMessage">لا يمكن ترك الرسالة فارغة!</string>
+  <string name="errorPostingComment">حدث خطأ أثناء محاولة نشر تعليق إرسالك. يرجى المحاولة من جديد.</string>
+  <string name="addAComment">إضافة تعليق</string>
+  <string name="noCommentsToDisplayShort">لا توجد أي تعليقات للعرض</string>
+  <string name="noItemsToDisplayShort">لا توجد أي عناصر للعرض</string>
+  <string name="noCoursesToDisplayShort">لا توجد أي مساقات للعرض</string>
+  <string name="loading">تحميل</string>
+  <string name="loadingIndeterminate">جارٍ التحميل...</string>
+  <string name="savingIndeterminate">جارٍ الحفظ...</string>
+  <string name="assignments">المهام</string>
+  <string name="grade">الدرجة</string>
+  <string name="graded">تم تقييم الدرجة</string>
+  <string name="submitted">تم الإرسال</string>
+  <string name="rubricPoints">النقاط</string>
+  <string name="pointsPossible">النقاط الممكنة</string>
+  <string name="due">موعد الاستحقاق</string>
+  <string name="noDueDate">لا يوجد أي موعد استحقاق</string>
+  <string name="search">بحث</string>
+  <string name="commentPrompt">تعليق:</string>
+  <string name="comment">تعليق</string>
+  <string name="addComment">إضافة تعليق</string>
+  <string name="noRubric">لا يوجد أي عنوان لهذه المهمة.</string>
+  <string name="courses">المساقات</string>
+  <string name="courseList">قائمة المساقات</string>
+  <string name="dashboard">لوحة المعلومات</string>
+  <string name="studentsSpinner">الطلاب</string>
+  <string name="name">الاسم</string>
+  <string name="toggleRubric">تبديل العنوان</string>
+  <string name="allSections">جميع الأقسام</string>
+  <string name="document">مستند</string>
+  <string name="document_id">document_id</string>
+  <string name="duration">المدة</string>
+  <string name="student">الطالب</string>
+  <string name="opening">جارٍ فتح الملف...</string>
+  <string name="composeHint">اكتب شيئًا ما...</string>
+  <string name="attachHint">إضافة مرفق</string>
+  <string name="sendHint">إرسال تلميح</string>
+  <string name="back">العودة</string>
+  <string name="ninetyNinePlus">أكثر من 99</string>
+  <string name="help">المساعدة</string>
+  <string name="searchTheGuides">البحث في الأدلة</string>
+  <string name="about">حول</string>
+  <string name="logout">تسجيل الخروج</string>
+  <string name="at">\u0020at\u0020</string>
+  <string-array name="defaultNavArray">
+    <item>العنصر 1</item>
+    <item>العنصر 2</item>
+  </string-array>
+  <string name="contentDescriptionPreviewImage">معاينة عنوان URL الذي تم إرساله</string>
+  <string name="visitPage">زيارة صفحة \"على المباشر\"</string>
+  <string name="pageAtSubmission">الصفحة وقت الإرسال</string>
+  <string name="onlineURLDisclaimer">هذا الإرسال عبارة عن ارتباط عنوان URL نحو صفحة خارجية. أدرجنا لقطة للصفحة أثناء القيام بالإرسال.</string>
+  <string name="urlSubmission">إرسال ارتباط عنوان URL</string>
+  <string name="url">عنوان URL:</string>
+  <string name="noSubmission">لم يقدم الطالب أي إرسال لهذه المهمة</string>
+  <string name="noGroupSubmission">لا تشتمل هذه المجموعة على إرسال لهذه المهمة</string>
+  <string name="deletedEntry">تم حذف هذا الإدخال من المناقشة</string>
+  <string name="viewDiscussion">عرض المناقشة</string>
+  <string name="slash"> - / </string>
+  <string name="slashNoDash">/</string>
+  <string name="emptyViewMessage">لا توجد أي إرسالات لهذه المهمة.</string>
+  <string name="emptyAssignmentViewMessage">لا توجد أي إرسالات لهذا المساق</string>
+  <string name="noSubmissionForAssignment">لا يوجد أي إرسال</string>
+  <string name="authorizationRequired">التخويل مطلوب</string>
+  <string name="cookie">ملف تعريف الارتباط</string>
+  <string name="unsavedData">بيانات غير محفوظة</string>
+  <string name="unsavedDataWarning">لم يتم حفظ درجتك. مغادرة هذه المهمة؟</string>
+  <string name="continueUnsaved">المتابعة</string>
+  <!--Grading Messages-->
+  <string name="noGrade">لا توجد أي درجة</string>
+  <string name="incomplete">غير مكتمل</string>
+  <string name="complete">مكتمل</string>
+  <string name="gradeSaved">تم حفظ الدرجة بنجاح</string>
+  <string name="errorSavingGrade">حدث خطأ أثناء حفظ درجتك. يرجى التأكد من الاتصال والمحاولة من جديد.</string>
+  <string name="criterionLongDescription">وصف مطول للمعيار</string>
+  <!--Drawer Settings-->
+  <string name="hideNamesWhileGrading">عرض الأسماء أثناء تقييم الدرجات</string>
+  <string name="showUngradedStudentsFirst">عرض الطلاب الذين لم يتم تقييمهم أولًا</string>
+  <string name="viewUngradedCount">عرض عدد المهام التي لم يتم تقييمها على الأيقونة</string>
+  <string name="viewHTML">عرض HTML</string>
+  <!--Drawer About-->
+  <string name="account">الحساب</string>
+  <string name="version">الإصدار</string>
+  <string name="copyright">حقوق النشر</string>
+  <string name="copyrightText"> © 2010–%1$s Instructure Inc.</string>
+  <!--Error Messages-->
+  <string name="noDataConnection">يرجى التأكد من الاتصال بالإنترنت والمحاولة من جديد.</string>
+  <string name="invalidAccessToken">الرمز المميز للوصول غير صالح. يرجى تسجيل الدخول من جديد.</string>
+  <string name="serverError">خطأ في الخادم. يرجى المحاولة من جديد.</string>
+  <string name="noApps">لا توجد أي تطبيقات مثبتة على جهازك قادرة على معالجة هذا الملف.</string>
+  <string name="unexpectedErrorOpeningFile">حدث خطأ غير متوقع أثناء محاولة فتح الملف.</string>
+  <string name="unexpectedErrorDownloadingFile">حدث خطأ غير متوقع أثناء محاولة تنزيل الملف.</string>
+  <string name="invalidScore">تم إدخال درجة غير صالحة.</string>
+  <!--Assignment editing-->
+  <string name="points">النقاط: \u0020</string>
+  <string name="assignmentGroup">مجموعة المهام: \u0020</string>
+  <string name="gradingType">نوع التقييم: \u0020</string>
+  <string name="submissionType">نوع الإرسال: \u0020</string>
+  <string name="editAssignment">تحرير المهمة</string>
+  <string name="save">حفظ</string>
+  <string name="cancel">إلغاء</string>
+  <string name="saveContinue">متابعة</string>
+  <string name="sendNotification">إخطار المستخدمين بتغير هذا المحتوى</string>
+  <string name="setDueDate">لم يتم وضع أي موعد استحقاق</string>
+  <string name="assignmentDue">موعد الاستحقاق:</string>
+  <string name="assignmentSaved">تم حفظ المهمة بنجاح</string>
+  <string name="useRubricForGrading">استخدام عنوان التقييم فقط</string>
+  <string name="onlineEntryOptions">خيارات الإدخال على الإنترنت:</string>
+  <string name="useRubricError">تم تعيين المهمة لتستخدم عنوان التقييم.</string>
+  <string name="noDueDateSet">لم يتم وضع أي موعد استحقاق</string>
+  <string name="noGradeAssignment">لا يوجد أي تقييم لهذه المهمة</string>
+  <string name="muted">كتم صوت المهمة</string>
+  <!--Date Text View-->
+  <string name="dateTextDefault">إضافة تاريخ</string>
+  <string name="settings">الإعدادات</string>
+  <string name="open">فتح</string>
+  <!--Score Edit Text Hints-->
+  <string name="gpaScaleHint">المعدل التراكمي</string>
+  <string name="letterHint">رسالة</string>
+  <!--User Messages-->
+  <string name="videoCommentsComingSoon">ستكون تعليقات الفيديو متوفرة قريبًا!</string>
+  <!--Tutorial-->
+  <string name="tutorialSkip">تخطي</string>
+  <string name="tutorialPage1">العرض في رمشة عين</string>
+  <string name="tutorialPage2">التصفية حسب القسم</string>
+  <string name="tutorialPage3">عرض المستندات</string>
+  <string name="tutorialPage4">تحرير المهام</string>
+  <string name="tutorialPage5">التقييم في العنوان</string>
+  <string name="tutorialPage6">تخصيص الإعدادات</string>
+  <string name="tutorial_tipAssignmentDetails">تفاصيل المهمة</string>
+  <string name="tutorial_tipAssignmentDetailsMessage">تعديل تفاصيل المهمة.</string>
+  <string name="tutorial_tipFilterSections">التصفية حسب القسم</string>
+  <string name="tutorial_tipFilterSectionsMessage">عرض الصف الذي تقوم بتقييمه من خلال التصفية حسب القسم.</string>
+  <string name="tutorial_tipSortStudentList">الترتيب حسب الدرجة أو الاسم في عرض قائمة الطلاب</string>
+  <string name="tutorial_tipSortStudentListMessage">اختيار ما إذا كنت تريد عرض الطلاب حسب الدرجة أو الاسم.</string>
+  <string name="tutorial_tipSwipeBetweenStudents">تمرير الإصبع بين الطلاب</string>
+  <string name="tutorial_tipSwipeBetweenStudentsMessage">تمرير الإصبع للمرور بسهولة إلى كل طالب.</string>
+  <string name="tutorial_tipSubmissionComments">عرض وتحميل تعليقات إرسال الوسائط</string>
+  <string name="tutorial_tipSubmissionCommentsMessage">تجنب إزعاج الكتابة عن طريق إرسال تعليق سريع عبر الفيديو.</string>
+  <!--Masquerading-->
+  <string name="masqueradeUserId">تخصيص معرف المستخدم</string>
+  <string name="startMasquerading">بدء الإخفاء</string>
+  <string name="stopMasquerading">إيقاف الإخفاء</string>
+  <string name="userId">معرف المستخدم</string>
+  <string name="masqueradeFail">حدث خطأ أثناء محاولة القيام بالإخفاء</string>
+  <string name="emptyId">لا يمكن ترك المعرف فارغًا</string>
+  <!--Options menu-->
+  <string name="openInBrowser">الفتح في المستعرض</string>
+  <string name="download">تنزيل</string>
+  <string name="next">التالي</string>
+  <string name="prev">السابق</string>
+  <string name="nothingToDownload">لا يوجد أي ملف إرسال للتنزيل</string>
+  <string name="nothingToShowInBrowser">لا يوجد أي عنوان URL للإرسال يمكن عرضه</string>
+  <string name="noAssignmentsInGroup">لا توجد مهام في هذه المجموعة</string>
+  <string name="excusedAssignment">هذه المهمة غير إجبارية ولن تؤخذ في الاعتبار أثناء الحساب الإجمالي</string>
+  <string name="singleItem">عنصر</string>
+  <string name="multipleItems">عناصر</string>
+  <string name="excused">غير إجبارية</string>
+  <string name="expandOrCollapse">توسيع أو طي</string>
+  <string name="mutedText">العلامات غير متوفرة لأن المعلم يعمل عليها</string>
+  <string name="freeFormRubricPoints" formatted="false">%s / %s</string>
+</resources>

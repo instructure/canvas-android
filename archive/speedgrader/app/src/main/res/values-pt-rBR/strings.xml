@@ -1,0 +1,175 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <string name="app_name">SpeedGrader</string>
+  <string name="hello_world">Olá mundo!</string>
+  <string name="sg_settings">Configurações</string>
+  <string name="title_activity_home">início</string>
+  <string name="title_activity_document">documento</string>
+  <string name="action_document_view">Ver Documento</string>
+  <string name="sectionsFilter">Filtrar Por Seção</string>
+  <string name="drawer_open">Abrir Gaveta</string>
+  <string name="drawer_close">Abrir Gaveta</string>
+  <string name="favorites">Cursos Favoritos</string>
+  <string name="allCourses">Todos os Cursos</string>
+  <string name="emptyMessage">A mensagem não pode ser branca!</string>
+  <string name="errorPostingComment">Ocorreu um erro ao tentar postar o seu comentário de submissão. Por favor tente novamente.</string>
+  <string name="addAComment">Adicionar um Comentário</string>
+  <string name="noCommentsToDisplayShort">Não há comentários para mostrar</string>
+  <string name="noItemsToDisplayShort">Não há itens para mostrar</string>
+  <string name="noCoursesToDisplayShort">Não há cursos para mostrar</string>
+  <string name="loading">Carregando</string>
+  <string name="loadingIndeterminate">Carregando...</string>
+  <string name="savingIndeterminate">Salvando...</string>
+  <string name="assignments">tarefas</string>
+  <string name="grade">Nota</string>
+  <string name="graded">classificado</string>
+  <string name="submitted">enviado</string>
+  <string name="rubricPoints">Pontos</string>
+  <string name="pointsPossible">Pontos Possíveis</string>
+  <string name="due">Para ser entregue</string>
+  <string name="noDueDate">Sem Data para Entregar</string>
+  <string name="search">Pesquisar</string>
+  <string name="commentPrompt">Comentário:</string>
+  <string name="comment">Comentário</string>
+  <string name="addComment">Adicionar Comentário</string>
+  <string name="noRubric">Não há nenhuma rubrica para essa tarefa.</string>
+  <string name="courses">Cursos</string>
+  <string name="courseList">Lista de Cursos</string>
+  <string name="dashboard">Painel de ferramentas</string>
+  <string name="studentsSpinner">Estudantes</string>
+  <string name="name">Nome</string>
+  <string name="toggleRubric">Alternar Rubrica</string>
+  <string name="allSections">Todas as Seções</string>
+  <string name="document">Documento</string>
+  <string name="document_id">document_id</string>
+  <string name="duration">duração</string>
+  <string name="student">Estudante</string>
+  <string name="opening">Abrindo Arquivo...</string>
+  <string name="composeHint">Escrever Algo...</string>
+  <string name="attachHint">Adicionar um anexo</string>
+  <string name="sendHint">Enviar Dica</string>
+  <string name="back">Volta</string>
+  <string name="ninetyNinePlus">99+</string>
+  <string name="help">Ajuda</string>
+  <string name="searchTheGuides">Pesquisar Nos Guias</string>
+  <string name="about">Sobre</string>
+  <string name="logout">Sair</string>
+  <string name="at">\u0020at\u0020</string>
+  <string-array name="defaultNavArray">
+    <item>Item 1</item>
+    <item>Item 2</item>
+  </string-array>
+  <string name="contentDescriptionPreviewImage">Uma visualização do url enviado</string>
+  <string name="visitPage">Visitar Página ao Vivo</string>
+  <string name="pageAtSubmission">Página na hora de submissão:</string>
+  <string name="onlineURLDisclaimer">Esta submissão era um URL para uma página externa. Nós incluímos um instantâneo de como a página parecia quando foi submetido.</string>
+  <string name="urlSubmission">Submissão de URL</string>
+  <string name="url">URL:</string>
+  <string name="noSubmission">Este aluno não tem um trabalho submetido para esta tarefa</string>
+  <string name="noGroupSubmission">Este grupo não tem um envio para esta tarefa</string>
+  <string name="deletedEntry">Esta entrada de discussão foi excluída.</string>
+  <string name="viewDiscussion">Ver Discussão</string>
+  <string name="slash">- /</string>
+  <string name="slashNoDash">/</string>
+  <string name="emptyViewMessage">Não há trabalhos submetidos para esta tarefa</string>
+  <string name="emptyAssignmentViewMessage">Não há trabalhos submetidos para este curso</string>
+  <string name="noSubmissionForAssignment">Sem Trabalhos Submetidos</string>
+  <string name="authorizationRequired">Autorização Necessária</string>
+  <string name="cookie">Cookie</string>
+  <string name="unsavedData">Dados Não Salvos</string>
+  <string name="unsavedDataWarning">Sua nota não foi salvo. Deixar essa tarefa?</string>
+  <string name="continueUnsaved">Continue</string>
+  <!--Grading Messages-->
+  <string name="noGrade">Sem Nota</string>
+  <string name="incomplete">Incompleto</string>
+  <string name="complete">Completo</string>
+  <string name="gradeSaved">Nota Salva com Sucesso</string>
+  <string name="errorSavingGrade">Houve um erro ao salvar sua nota. Por favor, verifique sua conexão e tente novamente.</string>
+  <string name="criterionLongDescription">Critério Descrição Longa</string>
+  <!--Drawer Settings-->
+  <string name="hideNamesWhileGrading">Mostrar nomes enquanto classifica</string>
+  <string name="showUngradedStudentsFirst">Mostrar estudantes não classificados primeiros</string>
+  <string name="viewUngradedCount">Mostrar contagem não classificada no ícone</string>
+  <string name="viewHTML">Mostrar HTML</string>
+  <!--Drawer About-->
+  <string name="account">conta</string>
+  <string name="version">versão</string>
+  <string name="copyright">direitos autorais</string>
+  <string name="copyrightText">© 2010–%1$s Instructure Inc.</string>
+  <!--Error Messages-->
+  <string name="noDataConnection">Por favor, verifique sua conexão de dados e tente novamente.</string>
+  <string name="invalidAccessToken">Token de acesso inválido. Por favor faça login novamente.</string>
+  <string name="serverError">Erro de Servidor. Por favor, tente novamente.</string>
+  <string name="noApps">O seu dispositivo não tem nenhum aplicativo instalado que pode lidar com esse arquivo.</string>
+  <string name="unexpectedErrorOpeningFile">Ocorreu um erro inesperado ao tentar abrir o arquivo.</string>
+  <string name="unexpectedErrorDownloadingFile">Ocorreu um erro inesperado ao tentar baixar o arquivo.</string>
+  <string name="invalidScore">Pontuação inválida inserida.</string>
+  <!--Assignment editing-->
+  <string name="points">Pontos:\u0020</string>
+  <string name="assignmentGroup">Grupo de Tarefa:\u0020</string>
+  <string name="gradingType">Tipo de Classificação:\u0020</string>
+  <string name="submissionType">Tipo de Submissão:\u0020</string>
+  <string name="editAssignment">Editar Tarefa</string>
+  <string name="save">Salvar</string>
+  <string name="cancel">Cancelar</string>
+  <string name="saveContinue">Continuar</string>
+  <string name="sendNotification">Notificar os usuários de que esse conteúdo foi alterado</string>
+  <string name="setDueDate">Sem Data Fixa para Entregar</string>
+  <string name="assignmentDue">Para ser entregue:</string>
+  <string name="assignmentSaved">Tarefa salva com sucesso</string>
+  <string name="useRubricForGrading">Use rubrica somente para classificação</string>
+  <string name="onlineEntryOptions">Opções de Entrada Online:</string>
+  <string name="useRubricError">Tarefa está configurada para usar rubrica para classificação.</string>
+  <string name="noDueDateSet">Sem Data Fixa para Entregar</string>
+  <string name="noGradeAssignment">Não há nenhuma nota para essa tarefa.</string>
+  <string name="muted">Abafar Tarefa</string>
+  <!--Date Text View-->
+  <string name="dateTextDefault">Adicionar Data</string>
+  <string name="settings">Configurações</string>
+  <string name="open">Abrir</string>
+  <!--Score Edit Text Hints-->
+  <string name="gpaScaleHint">GPA</string>
+  <string name="letterHint">Letra</string>
+  <!--User Messages-->
+  <string name="videoCommentsComingSoon">Comentários de Vídeo Em breve!</string>
+  <!--Tutorial-->
+  <string name="tutorialSkip">Pular</string>
+  <string name="tutorialPage1">Ver Em Resumo</string>
+  <string name="tutorialPage2">Filtrar Por Seção </string>
+  <string name="tutorialPage3">Ver Documentos</string>
+  <string name="tutorialPage4">Editar Tarefas</string>
+  <string name="tutorialPage5">Classificação por Rubrica</string>
+  <string name="tutorialPage6">Personalizar Configurações</string>
+  <string name="tutorial_tipAssignmentDetails">Detalhes de Tarefa</string>
+  <string name="tutorial_tipAssignmentDetailsMessage">Alterar detalhes de tarefa.</string>
+  <string name="tutorial_tipFilterSections">Filtrar por seção</string>
+  <string name="tutorial_tipFilterSectionsMessage">Ver a classe que você está classificando ao filtrar por seção.</string>
+  <string name="tutorial_tipSortStudentList">Ordenar por nota ou nome na vista de lista do estudante</string>
+  <string name="tutorial_tipSortStudentListMessage">Escolha se você deseja ver os alunos por nota ou nome.</string>
+  <string name="tutorial_tipSwipeBetweenStudents">Deslizar entre estudantes</string>
+  <string name="tutorial_tipSwipeBetweenStudentsMessage">Deslizar para facilmente mover para cada estudante.</string>
+  <string name="tutorial_tipSubmissionComments">Ver e Fazer Upload de Comentários de Submissões de Mídia</string>
+  <string name="tutorial_tipSubmissionCommentsMessage">Evitar as dificuldades de digitação ao enviar um comentário rapidinho de vídeo.</string>
+  <!--Masquerading-->
+  <string name="masqueradeUserId">Mascarar ID de Usuário</string>
+  <string name="startMasquerading">Começar a Mascarar</string>
+  <string name="stopMasquerading">Parar de Mascarar</string>
+  <string name="userId">ID de Usuário</string>
+  <string name="masqueradeFail">Não houve nenhum erro ao tentar mascarar</string>
+  <string name="emptyId">O ID não pode ser branco</string>
+  <!--Options menu-->
+  <string name="openInBrowser">Abrir em Navegador</string>
+  <string name="download">Baixar</string>
+  <string name="next">PRÓX</string>
+  <string name="prev">PRÉV</string>
+  <string name="nothingToDownload">Não há nenhum arquivo de Trabalho Submetido para baixar</string>
+  <string name="nothingToShowInBrowser">Não há nehum URL de Trabalho Submetido para mostrar</string>
+  <string name="noAssignmentsInGroup">Sem Tarefas neste grupo</string>
+  <string name="excusedAssignment">Esta tarefa está dispensada e não será considerada no cálculo total</string>
+  <string name="singleItem">Item</string>
+  <string name="multipleItems">Itens</string>
+  <string name="excused">dispensado</string>
+  <string name="expandOrCollapse">Expandir ou Recolher</string>
+  <string name="mutedText">Notas não estão disponíveis porque o instrutor está trabalhando nelas.</string>
+  <string name="freeFormRubricPoints" formatted="false">%s / %s</string>
+</resources>

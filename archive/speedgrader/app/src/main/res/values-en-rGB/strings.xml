@@ -1,0 +1,175 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <string name="app_name">SpeedGrader</string>
+  <string name="hello_world">Hello world!</string>
+  <string name="sg_settings">Settings</string>
+  <string name="title_activity_home">home</string>
+  <string name="title_activity_document">document</string>
+  <string name="action_document_view">View document</string>
+  <string name="sectionsFilter">Filter by section</string>
+  <string name="drawer_open">Open drawer</string>
+  <string name="drawer_close">Open drawer</string>
+  <string name="favorites">Favourite courses</string>
+  <string name="allCourses">All courses</string>
+  <string name="emptyMessage">Message cannot be blank!</string>
+  <string name="errorPostingComment">An error occurred trying to post your submission comment. Please try again.</string>
+  <string name="addAComment">Add a comment</string>
+  <string name="noCommentsToDisplayShort">There are no comments to display</string>
+  <string name="noItemsToDisplayShort">There are no items to display</string>
+  <string name="noCoursesToDisplayShort">There are no courses to display</string>
+  <string name="loading">Loading</string>
+  <string name="loadingIndeterminate">Loading…</string>
+  <string name="savingIndeterminate">Saving…</string>
+  <string name="assignments">assignments</string>
+  <string name="grade">Mark</string>
+  <string name="graded">marked</string>
+  <string name="submitted">submitted</string>
+  <string name="rubricPoints">Points</string>
+  <string name="pointsPossible">Points possible</string>
+  <string name="due">Due</string>
+  <string name="noDueDate">No due date</string>
+  <string name="search">Search</string>
+  <string name="commentPrompt">Comment:</string>
+  <string name="comment">Comment</string>
+  <string name="addComment">Add Comment</string>
+  <string name="noRubric">There is no rubric for this assignment.</string>
+  <string name="courses">Courses</string>
+  <string name="courseList">Course list</string>
+  <string name="dashboard">Dashboard</string>
+  <string name="studentsSpinner">Students</string>
+  <string name="name">Name</string>
+  <string name="toggleRubric">Toggle rubric</string>
+  <string name="allSections">All sections</string>
+  <string name="document">Document</string>
+  <string name="document_id">document_id</string>
+  <string name="duration">duration</string>
+  <string name="student">Student</string>
+  <string name="opening">Opening file…</string>
+  <string name="composeHint">Write something…</string>
+  <string name="attachHint">Add an attachment</string>
+  <string name="sendHint">Send hint</string>
+  <string name="back">Back</string>
+  <string name="ninetyNinePlus">99+</string>
+  <string name="help">Help</string>
+  <string name="searchTheGuides">Search the guides</string>
+  <string name="about">About</string>
+  <string name="logout">Logout</string>
+  <string name="at">\u0020at\u0020</string>
+  <string-array name="defaultNavArray">
+    <item>Item 1</item>
+    <item>Item 2</item>
+  </string-array>
+  <string name="contentDescriptionPreviewImage">A preview of the submitted URL</string>
+  <string name="visitPage">Visit live page</string>
+  <string name="pageAtSubmission">Page at time of submission:</string>
+  <string name="onlineURLDisclaimer">This submission was a URL to an external page. We have included a snapshot of what the page looked like when it was submitted.</string>
+  <string name="urlSubmission">URL submission</string>
+  <string name="url">URL:</string>
+  <string name="noSubmission">This student has no submission for this assignment</string>
+  <string name="noGroupSubmission">This group does not have a submission for this assignment</string>
+  <string name="deletedEntry">This discussion entry has been deleted.</string>
+  <string name="viewDiscussion">View discussion</string>
+  <string name="slash">- /</string>
+  <string name="slashNoDash">/</string>
+  <string name="emptyViewMessage">There are no submissions for this assignment</string>
+  <string name="emptyAssignmentViewMessage">There are no assignments for this course</string>
+  <string name="noSubmissionForAssignment">No submission</string>
+  <string name="authorizationRequired">Authorisation required</string>
+  <string name="cookie">Cookie</string>
+  <string name="unsavedData">Unsaved data</string>
+  <string name="unsavedDataWarning">Your mark has not been saved. Leave this assignment?</string>
+  <string name="continueUnsaved">Continue</string>
+  <!--Grading Messages-->
+  <string name="noGrade">No mark</string>
+  <string name="incomplete">Incomplete</string>
+  <string name="complete">Complete</string>
+  <string name="gradeSaved">Mark saved successfully</string>
+  <string name="errorSavingGrade">There was an error saving your mark. Please check your connection and try again.</string>
+  <string name="criterionLongDescription">Criterion long description</string>
+  <!--Drawer Settings-->
+  <string name="hideNamesWhileGrading">Show names while marking</string>
+  <string name="showUngradedStudentsFirst">Show unmarked students first</string>
+  <string name="viewUngradedCount">Show marked count on icon</string>
+  <string name="viewHTML">Show HTML</string>
+  <!--Drawer About-->
+  <string name="account">account</string>
+  <string name="version">version</string>
+  <string name="copyright">copyright</string>
+  <string name="copyrightText">© 2010–%1$s Instructure Inc.</string>
+  <!--Error Messages-->
+  <string name="noDataConnection">Please check your data connection and try again.</string>
+  <string name="invalidAccessToken">Invalid access token. Please log in again.</string>
+  <string name="serverError">Server error. Please try again.</string>
+  <string name="noApps">Your device does not have any applications installed that can handle this file.</string>
+  <string name="unexpectedErrorOpeningFile">An unexpected error occurred while trying to open the file.</string>
+  <string name="unexpectedErrorDownloadingFile">An unexpected error occurred while trying to download the file.</string>
+  <string name="invalidScore">Invalid score entered.</string>
+  <!--Assignment editing-->
+  <string name="points">Points:\u0020</string>
+  <string name="assignmentGroup">Assignment group:\u0020</string>
+  <string name="gradingType">Marking type:\u0020</string>
+  <string name="submissionType">Submission type:\u0020</string>
+  <string name="editAssignment">Edit assignment</string>
+  <string name="save">Save</string>
+  <string name="cancel">Cancel</string>
+  <string name="saveContinue">Continue</string>
+  <string name="sendNotification">Notify users this content has changed</string>
+  <string name="setDueDate">No set due date</string>
+  <string name="assignmentDue">Due: </string>
+  <string name="assignmentSaved">Assignment successfully saved</string>
+  <string name="useRubricForGrading">Use rubric for marking only</string>
+  <string name="onlineEntryOptions">Online entry options:</string>
+  <string name="useRubricError">Assignment is set to use rubric for marking.</string>
+  <string name="noDueDateSet">No set due date</string>
+  <string name="noGradeAssignment">There is no mark for this assignment</string>
+  <string name="muted">Mute assignment</string>
+  <!--Date Text View-->
+  <string name="dateTextDefault">Add date</string>
+  <string name="settings">Settings</string>
+  <string name="open">Open</string>
+  <!--Score Edit Text Hints-->
+  <string name="gpaScaleHint">Class</string>
+  <string name="letterHint">Letter</string>
+  <!--User Messages-->
+  <string name="videoCommentsComingSoon">Video comments coming soon.</string>
+  <!--Tutorial-->
+  <string name="tutorialSkip">Skip</string>
+  <string name="tutorialPage1">View at a glance</string>
+  <string name="tutorialPage2">Filter by section</string>
+  <string name="tutorialPage3">View documents</string>
+  <string name="tutorialPage4">Edit assignments</string>
+  <string name="tutorialPage5">Rubric marking</string>
+  <string name="tutorialPage6">Customise settings</string>
+  <string name="tutorial_tipAssignmentDetails">Assignment details</string>
+  <string name="tutorial_tipAssignmentDetailsMessage">Change assignment details.</string>
+  <string name="tutorial_tipFilterSections">Filter by section</string>
+  <string name="tutorial_tipFilterSectionsMessage">See the class you are marking: filter by section.</string>
+  <string name="tutorial_tipSortStudentList">Sort by mark or name in student list view</string>
+  <string name="tutorial_tipSortStudentListMessage">Select if you want to view students by mark or name.</string>
+  <string name="tutorial_tipSwipeBetweenStudents">Swipe between students</string>
+  <string name="tutorial_tipSwipeBetweenStudentsMessage">Swipe to easily move to each student.</string>
+  <string name="tutorial_tipSubmissionComments">View and upload media submission comments</string>
+  <string name="tutorial_tipSubmissionCommentsMessage">Avoid hassles of typing: submit a quick video comment.</string>
+  <!--Masquerading-->
+  <string name="masqueradeUserId">Masquerade user ID</string>
+  <string name="startMasquerading">Start masquerading</string>
+  <string name="stopMasquerading">Stop masquerading</string>
+  <string name="userId">User ID</string>
+  <string name="masqueradeFail">There was an error when trying to masquerade</string>
+  <string name="emptyId">ID cannot be blank</string>
+  <!--Options menu-->
+  <string name="openInBrowser">Open in browser</string>
+  <string name="download">Download</string>
+  <string name="next">NEXT</string>
+  <string name="prev">PREV</string>
+  <string name="nothingToDownload">There is no Submission file to download</string>
+  <string name="nothingToShowInBrowser">There is no Submission URL to show</string>
+  <string name="noAssignmentsInGroup">No assignments in this group</string>
+  <string name="excusedAssignment">This assignment is excused and will not be considered in the total calculation</string>
+  <string name="singleItem">item</string>
+  <string name="multipleItems">items</string>
+  <string name="excused">excused</string>
+  <string name="expandOrCollapse">Expand or collapse</string>
+  <string name="mutedText">Grades are unavailable because the instructor is working on them.</string>
+  <string name="freeFormRubricPoints" formatted="false">%s / %s</string>
+</resources>

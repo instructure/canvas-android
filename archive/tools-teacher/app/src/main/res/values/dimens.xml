@@ -1,0 +1,37 @@
+<!--
+  ~ Copyright (C) 2016 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<resources>
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <bool name="isTablet">false</bool>
+    <bool name="isLandscape">false</bool>
+    <dimen name="navigation_drawer_width">240dp</dimen>
+    <dimen name="card_size">200dp</dimen>
+    <dimen name="profileBackdropHeight">180dp</dimen>
+    <dimen name="profileAvatarSize">100dp</dimen>
+    <dimen name="student_chooser_image_height">290dp</dimen>
+    <dimen name="student_chooser_image_width">260dp</dimen>
+    <dimen name="student_chooser_card_height">380dp</dimen>
+    <dimen name="student_chooser_card_width">300dp</dimen>
+    <dimen name="student_chooser_name_size">18sp</dimen>
+    <dimen name="guess_who_card_height">330dp</dimen>
+    <dimen name="guess_who_card_width">260dp</dimen>
+    <dimen name="student_note_grid_image_size">100dp</dimen>
+    <dimen name="profileAvatarMargin">16dp</dimen>
+    <dimen name="tutorialGuessWhoHeight">200dp</dimen>
+    <dimen name="student_details_icon_size">120dp</dimen>
+</resources>

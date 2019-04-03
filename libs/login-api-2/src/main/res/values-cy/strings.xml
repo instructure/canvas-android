@@ -1,0 +1,125 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="hello_world">Helo bawb!</string>
+    <string name="action_settings">Gosodiadau</string>
+    <string name="mobileVerifyGeneral">Dydi’r ap hwn ddim wedi’i awdurdodi i’w ddefnyddio</string>
+    <string name="mobileVerifyDomainUnauthorized">Dydy’r gweinydd rydych chi wedi\'i roi ddim wedi’i awdurdodi ar gyfer yr ap hwn.</string>
+    <string name="mobileVerifyUserAgentUnauthorized">Dydy’r asiant defnyddiwr ar gyfer yr ap hwn ddim wedi’i awdurdodi.</string>
+    <string name="mobileVerifyUnknownError">Doedd dim modd dilysu’r gweinydd i’w ddefnyddio gyda’r ap hwn.</string>
+    <string name="unknownDevice">UnknownDevice</string>
+    <string name="errorOccurred">Gwall annisgwyl.</string>
+    <string name="pageNotFound">Heb ddod o hyd i’r dudalen.</string>
+    <string name="confirm">Cadarnhau</string>
+    <string name="cancel">Canslo</string>
+    <string name="help">Help</string>
+    <string name="enterURL">Rhowch eich URL Canvas:</string>
+    <string name="signIntoCanvasNetwork">Ceisio mewngofnodi i Canvas Network?</string>
+    <string name="remove">Tynnu</string>
+    <string name="exampleURLSimple">myschool.instructure.com</string>
+    <string name="userId">ID Defnyddiwr</string>
+    <string name="domain">Parth</string>
+    <string name="actAsUser">Gweithredu fel Defnyddiwr</string>
+    <string name="stopActAsUser">Stopio Gweithredu fel Defnyddiwr</string>
+
+    <!--Multiple User Sign in -->
+    <string name="removeUser">Tynnu’r defnyddiwr hwn?</string>
+    <string name="removedForever">Bydd angen i chi fewngofnodi i’r defnyddiwr hwn eto i gael mynediad at eu cynnwys.</string>
+
+    <!--Content Descriptions-->
+    <string name="canvasLogo">Logo Canvas</string>
+
+    <string name="canvasLoginOn">Canvas_Login: AR WAITH</string>
+    <string name="canvasLoginOff">Canvas_Login: DIFFODD</string>
+    <string name="siteAdminLogin">Manylion Mewngofnodi Gweinyddwr y Safle: AR WAITH</string>
+
+    <string name="username">Enw defnyddiwr</string>
+    <string name="password">Cyfrinair</string>
+    <string name="authenticationRequired">Mae’n rhaid dilysu</string>
+    <string name="invalidEmailPassword">E-bost neu gyfrinair annilys</string>
+    <string name="login">Mewngofnodi</string>
+    <string name="logout">Allgofnodi</string>
+
+    <!--Logout Warning Dialog-->
+    <string name="logout_warning">Ydych chi’n siŵr eich bod am allgofnodi?</string>
+    <string name="logout_yes">Iawn</string>
+    <string name="logout_no">Na</string>
+
+    <!--Smart Login-->
+    <string name="loginNearYou">Wrth eich ymyl</string>
+    <string name="loginCanvasNetwork">Canvas Network</string>
+    <string name="loginRightBehindYou">Tu ôl i chi</string>
+    <string name="loginMiles">%1$s milltir i ffwrdd</string>
+    <string name="loginCanvasHelp">Ddim yn gweld eich ysgol? Rhowch URL yr ysgol neu tapiwch yma i gael help.</string>
+    <string name="loginCanvasHelpWithUser">Rhowch URL yr ysgol neu tapiwch yma i gael help.</string>
+    <string name="loginHint">Ewch ati i ddod o hyd i\'ch ysgol neu\'ch ardal</string>
+
+    <!-- Error Report Dialog -->
+    <string name="errorReportAProblem">Rhoi gwybod am broblem</string>
+    <string name="errorReportSubject">Pwnc</string>
+    <string name="errorReportDescription">Disgrifiad</string>
+    <string name="errorReportWriteSomething">Ysgrifennu Rhywbeth...</string>
+    <string name="errorReportSend">Anfon</string>
+    <string name="errorReportThankyou">Diolch am roi gwybod i’n Tîm Cymorth am eich problem.  Byddwch yn cael dilysiad a diweddariadau trwy e-bost,</string>
+    <string name="errorReportSeverityText">Sut mae hyn yn effeithio arnoch chi?</string>
+    <string name="errorSeverityCasualQuestion">Dim ond awgrym, syniad, sylw neu gwestiwn anffurfiol...</string>
+    <string name="errorSeverityNeedHelp">Mae angen help arna i, ond dydy’r mater ddim yn un brys.</string>
+    <string name="errorSeveritySomethingsBroken">Mae rhywbeth wedi mynd o’i le, ond fe alla i ddal i wneud yr hyn rydw i angen ei wneud.</string>
+    <string name="errorSeverityCantGetThingsDone">Alla i ddim gorffen fy ngwaith nes bydda i wedi cael ateb gennych chi.</string>
+    <string name="errorSeverityExtremelyCritical">ARGYFWNG - DIFRIFOL IAWN!!</string>
+    <string name="errorReportEmailAddress">Cyfeiriad E-bost</string>
+    <string name="errorReportEnterEmail">Rhowch eich cyfeiriad e-bost</string>
+    <string name="errorReportUnknown">Dieithr</string>
+    <!-- Distance Strings -->
+    <string name="lessThanOne">&lt; milltir (1.6 km)</string>
+    <string name="oneMile">Milltir (1.6 km)</string>
+    <string name="miles">milltir</string>
+    <string name="kilometers">km</string>
+
+    <!-- String for submitting tickets -->
+    <string name="device">Dyfais</string>
+    <string name="osVersion">Fersiwn OS</string>
+
+    <string name="previousLoginTitle">Manylion Mewngofnodi Blaenorol</string>
+    <string name="findMySchool">Dod o hyd i fy ysgol</string>
+    <string name="canvasLowerCase">canvas</string>
+    <string name="whatsYourSchoolName">Beth yw enw eich ysgol?</string>
+    <string name="next">Nesaf</string>
+    <string name="schoolInstructureCom">school.instructure.com</string>
+    <string name="contentDescription_removePreviousUser">Tynnu defnyddiwr blaenorol?</string>
+    <string name="accountDomainFooter">Methu dod o hyd i’ch ysgol? Ceisiwch deipio URL llawn yr ysgol.</string>
+    <string name="accountDomainFooterLink">Tapiwch yma i gael help.</string>
+
+    <string name="login_noInternetConnectionTitle">Dim cysylltiad â\'r rhyngrwyd</string>
+    <string name="login_noInternetConnectionMessage">Mae angen cysylltiad â\'r rhyngrwyd i wneud hyn.</string>
+    <string name="empty_feedback">Mae’n rhaid rhoi pwnc a disgrifiad er mwyn cyflwyno adborth.</string>
+    <string name="versionNum">Rhif Fersiwn</string>
+    <string name="scrollInstructions">Sgrolio i weld yr holl fanylion</string>
+
+    <string name="masqueradeErrorUserId">Mae’n rhaid i chi roi ID defnyddiwr.</string>
+    <string name="masqueradeErrorDomain">Mae’n rhaid i chi roi parth dilys.</string>
+    <string name="masqueradeError">Gwall wrth geisio ffugio.</string>
+    <string name="masqueradeInfo">Bydd \""Gweithredu fel"\" yn golygu eich bod yn mewngofnodi fel y defnyddiwr hwn heb gyfrinair. Byddwch chi’n gallu gwneud unrhyw beth fel petai chi yw’r defnyddiwr hwn. O safbwynt pobl eraill, bydd yn edrych fel mai’r defnyddiwr hwn sydd wedi gwneud hynny. Ond, bydd logiau archwilio’n cofnodi mai chi wnaeth hynny ar ran y defnyddiwr hwn.</string>
+    <string name="masqueradingAs">Rydych chi’n gweithredu fel %s</string>
+    <string name="stopActingAsTitle">Stopio gweithredu fel...</string>
+    <string name="stopActingAsMessage">Byddwch yn stopio gweithredu fel %s ac yn dychwelyd i’ch cyfrif eich hun.</string>
+    <string name="weMadeChanges">Rydyn ni wedi gwneud ychydig o newidiadau.</string>
+    <string name="whatsNewText">Dewch i weld beth sy’n newydd</string>
+</resources>

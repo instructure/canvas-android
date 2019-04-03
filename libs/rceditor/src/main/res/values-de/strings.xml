@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="rce_contentDescription_undo">Rückgängig machen</string>
+    <string name="rce_contentDescription_redo">Wiederholen</string>
+    <string name="rce_contentDescription_bold">Als „Fett“ formatieren</string>
+    <string name="rce_contentDescription_italic">Als „Kursiv“ formatieren</string>
+    <string name="rce_contentDescription_strikethrough">Durchstreichen</string>
+    <string name="rce_contentDescription_underline">Unterstreichen</string>
+    <string name="rce_contentDescription_format_text_color">Textfarbe formatieren</string>
+    <string name="rce_contentDescription_border_color">Textrahmenfarbe formatieren</string>
+    <string name="rce_contentDescription_indent_increase">Einzug erhöhen</string>
+    <string name="rce_contentDescription_indent_decrease">Einzug verringern</string>
+    <string name="rce_contentDescription_align_left">Links ausrichten</string>
+    <string name="rce_contentDescription_align_right">Rechts ausrichten</string>
+    <string name="rce_contentDescription_align_center">Mittig ausrichten</string>
+    <string name="rce_contentDescription_insert_bullets">Aufzählungsliste einfügen</string>
+    <string name="rce_contentDescription_insert_numbers">Nummerierte Liste einfügen</string>
+    <string name="rce_contentDescription_insert_photo">Foto einfügen</string>
+    <string name="rce_contentDescription_upload_photo">Foto von Gerät hochladen</string>
+    <string name="rce_contentDescription_insert_link">Link einfügen</string>
+    <string name="rce_contentDescription_block_quote">Blockzitat</string>
+
+    <string name="rce_contentDescription_color_none">Ohne Farbe</string>
+    <string name="rce_contentDescription_color_white">Farbe Weiß</string>
+    <string name="rce_contentDescription_color_black">Farbe Schwarz</string>
+    <string name="rce_contentDescription_color_blue">Farbe Blau</string>
+    <string name="rce_contentDescription_color_red">Farbe Rot</string>
+    <string name="rce_contentDescription_color_green">Farbe Grün</string>
+    <string name="rce_contentDescription_color_gray">Farbe Grau</string>
+    <string name="rce_contentDescription_color_magenta">Farbe Magenta</string>
+    <string name="rce_contentDescription_color_cyan">Farbe Cyan</string>
+    <string name="rce_contentDescription_color_orange">Farbe Orange</string>
+    <string name="rce_contentDescription_color_yellow">Farbe Gelb</string>
+    <string name="rce_contentDescription_color_purple">Farbe Violett</string>
+
+    <string name="rce_editTextUrlHint">Link</string>
+    <string name="rce_editTextALTHint">Text</string>
+    <string name="rce_dialogDone">Fertig</string>
+    <string name="rce_dialogCancel">Abbrechen</string>
+    <string name="rce_insertLink">Link einfügen</string>
+    <string name="rce_insertImage">Bild einfügen</string>
+
+    <string name="rce_uploadImage">Bild hochladen</string>
+    <string name="rce_done">Fertig</string>
+    <string name="rce_cancel">Abbrechen</string>
+    <string name="rce_exit">Beenden</string>
+    <string name="rce_dialog_exit_title">Aufgabenbearbeitung verlassen?</string>
+    <string name="rce_dialog_exit_message">Wollen Sie wirklich aufhören? Alle nicht gespeicherten Daten gehen verloren.</string>
+    <string name="rce_empty_message">Nachricht</string>
+    <string name="rce_empty_description">Beschreibung hinzufügen</string>
+    <string name="rce_scrollInstructions">Blättern, um alle Bearbeitungstools zu sehen</string>
+</resources>

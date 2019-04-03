@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2016 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/triangle_bg"
+    tools:context=".URLSignIn">
+
+    <ImageView
+        android:id="@+id/help_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/cv_transparent_button"
+        android:contentDescription="@string/help"
+        android:minHeight="48dp"
+        android:minWidth="48dp"
+        android:src="@drawable/ic_cv_help" />
+
+    <ImageView
+        android:id="@+id/canvas_logo"
+        style="@style/UrlSignInLogo"
+        android:layout_below="@+id/help_button"
+        android:layout_marginTop="@dimen/login_help_logo_gap"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/canvasLogo"
+        android:maxWidth="@dimen/login_logo_max_width"
+        android:scaleType="fitCenter"
+        android:src="@drawable/canvas_full_logo" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/canvas_logo"
+        android:layout_marginTop="@dimen/login_logo_text_gap"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:paddingBottom="@dimen/login_padding_bottom"
+        android:paddingLeft="@dimen/login_padding_left_right"
+        android:paddingRight="@dimen/login_padding_left_right">
+
+        <FrameLayout
+            android:id="@+id/enterUrlWrapper"
+            android:layout_width="match_parent"
+            android:background="@drawable/auto_complete_text_background"
+            android:layout_height="54dp">
+
+            <com.instructure.loginapi.login.view.HttpAutoCompleteTextView
+                android:id="@+id/enterURL"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="start|center_vertical"
+                android:hint="@string/loginHint"
+                android:background="@null"
+                android:imeOptions="actionGo"
+                android:inputType="textNoSuggestions|textVisiblePassword"
+                android:padding="10dp"
+                android:singleLine="true"
+                android:maxLines="1"
+                android:textColor="@color/canvasTextDark"
+                android:textColorHint="@color/canvasTextLight"
+                android:textCursorDrawable="@null"
+                android:layout_marginEnd="54dp"
+                android:layout_marginRight="54dp"/>
+
+            <ImageView
+                android:id="@+id/connect"
+                android:layout_width="54dp"
+                android:layout_height="54dp"
+                android:background="?android:selectableItemBackground"
+                android:src="@drawable/ic_cv_login_arrow"
+                android:scaleType="centerInside"
+                android:visibility="gone"
+                android:layout_gravity="end|center_vertical"/>
+
+        </FrameLayout>
+
+        <View
+            android:id="@+id/topDivider"
+            android:layout_width="match_parent"
+            android:layout_height=".05dp"
+            android:layout_below="@+id/enterUrlWrapper"
+            android:background="@color/canvasRowDivider"
+            android:visibility="invisible" />
+
+        <ListView
+            android:id="@+id/listview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/topDivider"
+            android:background="@drawable/auto_complete_text_background"
+            android:divider="@color/canvasRowDivider"
+            android:dividerHeight=".5dp" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

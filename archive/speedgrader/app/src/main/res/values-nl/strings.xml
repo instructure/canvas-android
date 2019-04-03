@@ -1,0 +1,175 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <string name="app_name">Snelheidsmeter</string>
+  <string name="hello_world">Hallo wereld!</string>
+  <string name="sg_settings">Instellingen </string>
+  <string name="title_activity_home">start</string>
+  <string name="title_activity_document">document</string>
+  <string name="action_document_view">Document bekijken</string>
+  <string name="sectionsFilter">Filteren op Sectie</string>
+  <string name="drawer_open">Open lade</string>
+  <string name="drawer_close">Open lade</string>
+  <string name="favorites">Favoriete cursussen</string>
+  <string name="allCourses">Alle cursussen</string>
+  <string name="emptyMessage">Het bericht mag niet leeg zijn! </string>
+  <string name="errorPostingComment">Er heeft zich een fout voorgedaan bij het publiceren van je commentaar bij de inzending. Probeer het nogmaals.</string>
+  <string name="addAComment">Een opmerking toevoegen</string>
+  <string name="noCommentsToDisplayShort">Er zijn geen opmerkingen om te tonen</string>
+  <string name="noItemsToDisplayShort">Er zijn geen items om te tonen</string>
+  <string name="noCoursesToDisplayShort">Er zijn geen cursussen om te tonen</string>
+  <string name="loading">Aan het laden</string>
+  <string name="loadingIndeterminate">Aan het laden...</string>
+  <string name="savingIndeterminate">Bezig met opslaan...</string>
+  <string name="assignments">opdrachten</string>
+  <string name="grade">Cijfer</string>
+  <string name="graded">cijfer gegeven</string>
+  <string name="submitted">ingediend</string>
+  <string name="rubricPoints">Punten</string>
+  <string name="pointsPossible">Mogelijke punten</string>
+  <string name="due">Inleverdatum</string>
+  <string name="noDueDate">Geen vervaldatum</string>
+  <string name="search">Zoeken</string>
+  <string name="commentPrompt">Opmerking:</string>
+  <string name="comment">Opmerking</string>
+  <string name="addComment">Opmerking toevoegen</string>
+  <string name="noRubric">Er is geen rubriek voor deze opdracht.</string>
+  <string name="courses">Cursussen</string>
+  <string name="courseList">Cursuslijst</string>
+  <string name="dashboard">Dashboard</string>
+  <string name="studentsSpinner">Cursisten</string>
+  <string name="name">Naam</string>
+  <string name="toggleRubric">Rubriek aan-/uitzetten</string>
+  <string name="allSections">Alle secties</string>
+  <string name="document">Document</string>
+  <string name="document_id">document_id</string>
+  <string name="duration">duur</string>
+  <string name="student">Cursist</string>
+  <string name="opening">Bestand aan het openen...</string>
+  <string name="composeHint">Schrijf iets...</string>
+  <string name="attachHint">Een bijlage toevoegen</string>
+  <string name="sendHint">Hint versturen</string>
+  <string name="back">Terug</string>
+  <string name="ninetyNinePlus">99+</string>
+  <string name="help">Help</string>
+  <string name="searchTheGuides">Zoek in de gidsen</string>
+  <string name="about">Over</string>
+  <string name="logout">Afmelden</string>
+  <string name="at">\u0020at\u0020</string>
+  <string-array name="defaultNavArray">
+    <item>Item 1</item>
+    <item>Item 2</item>
+  </string-array>
+  <string name="contentDescriptionPreviewImage">Een voorbeeld van de ingediende url</string>
+  <string name="visitPage">Bezoek Live Pagina</string>
+  <string name="pageAtSubmission">Pagina op tijdstip van indiening:</string>
+  <string name="onlineURLDisclaimer">Deze indiening was een URL naar een externe pagina. We hebben een snapshot bijgevoegd van hoe de pagina eruit zag toen hij werd ingediend.</string>
+  <string name="urlSubmission">URL Indiening</string>
+  <string name="url">URL:</string>
+  <string name="noSubmission">Deze cursist heeft geen indiening voor deze opdracht.</string>
+  <string name="noGroupSubmission">Deze groep heeft geen inzending voor deze opdracht</string>
+  <string name="deletedEntry">Dit discussieonderwerp is verwijderd.</string>
+  <string name="viewDiscussion">Discussie bekijken</string>
+  <string name="slash">- /</string>
+  <string name="slashNoDash">/</string>
+  <string name="emptyViewMessage">Er zijn geen inzendingen voor deze opdracht</string>
+  <string name="emptyAssignmentViewMessage">Er zijn geen opdrachten voor deze cursus</string>
+  <string name="noSubmissionForAssignment">Geen indiening</string>
+  <string name="authorizationRequired">Toestemming vereist</string>
+  <string name="cookie">Cookie</string>
+  <string name="unsavedData">Niet bewaarde gegevens</string>
+  <string name="unsavedDataWarning">Je cijfer is niet opgeslagen. Deze opdracht verlaten?</string>
+  <string name="continueUnsaved">Doorgaan</string>
+  <!--Grading Messages-->
+  <string name="noGrade">Geen cijfer</string>
+  <string name="incomplete">Onvolledig</string>
+  <string name="complete">Volledig</string>
+  <string name="gradeSaved">Cijfer succesvol opgeslagen</string>
+  <string name="errorSavingGrade">Er heeft zich een fout voorgedaan bij het opslaan van je cijfer. Controleer je verbinding en probeer het nogmaals.</string>
+  <string name="criterionLongDescription">Criterium Lange Beschrijving</string>
+  <!--Drawer Settings-->
+  <string name="hideNamesWhileGrading">Namen tonen tijdens het beoordelen</string>
+  <string name="showUngradedStudentsFirst">Niet beoordeelde cursisten eerst tonen</string>
+  <string name="viewUngradedCount">Niet beoordeeld aantal op icoon tonen</string>
+  <string name="viewHTML">HTML tonen</string>
+  <!--Drawer About-->
+  <string name="account">account</string>
+  <string name="version">versie</string>
+  <string name="copyright">auteursrecht</string>
+  <string name="copyrightText">© 2010–%1$s Instructure Inc.</string>
+  <!--Error Messages-->
+  <string name="noDataConnection">Controleer je dataverbinding en probeer het nogmaals. </string>
+  <string name="invalidAccessToken">Ongeldig toegangstoken. Probeer opnieuw in te loggen.</string>
+  <string name="serverError">Serverfout. Probeer het nogmaals.</string>
+  <string name="noApps">Je apparaat heeft geen applicaties geïnstalleerd die dit bestand aankunnen. </string>
+  <string name="unexpectedErrorOpeningFile">Er heeft zich een onverwachte fout voorgedaan bij het openen van het bestand.</string>
+  <string name="unexpectedErrorDownloadingFile">Er heeft zich een onverwachte fout voorgedaan bij het downloaden van het bestand.</string>
+  <string name="invalidScore">Ongeldige score ingevoerd.</string>
+  <!--Assignment editing-->
+  <string name="points">Punten:\u0020</string>
+  <string name="assignmentGroup">Opdrachtgroep:\u0020</string>
+  <string name="gradingType">Cijfer Type:\u0020</string>
+  <string name="submissionType">Indieningstype:\u0020</string>
+  <string name="editAssignment">Opdracht bijwerken</string>
+  <string name="save">Opslaan</string>
+  <string name="cancel">Annuleren</string>
+  <string name="saveContinue">Doorgaan</string>
+  <string name="sendNotification">Licht de gebruikers in dat deze content gewijzigd is.</string>
+  <string name="setDueDate">Geen inleverdatum ingesteld</string>
+  <string name="assignmentDue">Inleverdatum:</string>
+  <string name="assignmentSaved">Opdracht succesvol bewaard</string>
+  <string name="useRubricForGrading">Rubriek alleen om te beoordelen gebruiken</string>
+  <string name="onlineEntryOptions">Online toegangsopties:</string>
+  <string name="useRubricError">Opdracht is ingesteld om rubriek te gebruiken voor beoordelen.</string>
+  <string name="noDueDateSet">Geen inleverdatum ingesteld </string>
+  <string name="noGradeAssignment">Er is geen cijfer voor deze opdracht </string>
+  <string name="muted">Mute opdracht</string>
+  <!--Date Text View-->
+  <string name="dateTextDefault">Datum toevoegen</string>
+  <string name="settings">Instellingen</string>
+  <string name="open">Openen</string>
+  <!--Score Edit Text Hints-->
+  <string name="gpaScaleHint">GPA</string>
+  <string name="letterHint">Brief</string>
+  <!--User Messages-->
+  <string name="videoCommentsComingSoon">Videocommentaar komt binnenkort!</string>
+  <!--Tutorial-->
+  <string name="tutorialSkip">Overslaan</string>
+  <string name="tutorialPage1">In een oogopslag bekijken</string>
+  <string name="tutorialPage2">Filteren op Sectie</string>
+  <string name="tutorialPage3">Documenten bekijken</string>
+  <string name="tutorialPage4">Documenten bewerken</string>
+  <string name="tutorialPage5">Rubriek beoordelen</string>
+  <string name="tutorialPage6">Instellingen aanpassen</string>
+  <string name="tutorial_tipAssignmentDetails">Opdrachtdetails</string>
+  <string name="tutorial_tipAssignmentDetailsMessage">Opdrachtdetails wijzigen.</string>
+  <string name="tutorial_tipFilterSections">Filteren op sectie</string>
+  <string name="tutorial_tipFilterSectionsMessage">Bekijk de klas die je beoordeelt door op sectie te filteren.</string>
+  <string name="tutorial_tipSortStudentList">Sorteren op cijfer of naam in cursistenlijst afbeelding</string>
+  <string name="tutorial_tipSortStudentListMessage">Kies of je cursisten op cijfer of naam wilt zien.</string>
+  <string name="tutorial_tipSwipeBetweenStudents">Vegen tussen cursisten</string>
+  <string name="tutorial_tipSwipeBetweenStudentsMessage">Vegen om gemakkelijk van de ene naar de andere cursist te gaan.</string>
+  <string name="tutorial_tipSubmissionComments">Media Indiening Opmerkingen bekijken en uploaden</string>
+  <string name="tutorial_tipSubmissionCommentsMessage">Niet meer te hoeven typen door een snelle video-opmerking in te dienen.</string>
+  <!--Masquerading-->
+  <string name="masqueradeUserId">Gebruikers ID verbergen</string>
+  <string name="startMasquerading">Begin te verbergen</string>
+  <string name="stopMasquerading">Stop met verbergen</string>
+  <string name="userId">Gebruikers ID</string>
+  <string name="masqueradeFail">Er heeft zich een foto voorgedaan bij het verbergen</string>
+  <string name="emptyId">Het ID mag niet leeg zijn</string>
+  <!--Options menu-->
+  <string name="openInBrowser">Openen in browser</string>
+  <string name="download">Downloaden</string>
+  <string name="next">VOLGENDE</string>
+  <string name="prev">VORIGE</string>
+  <string name="nothingToDownload">Er is geen indieningsbestand om te downloaden</string>
+  <string name="nothingToShowInBrowser">Er is geen indienings-URL om te tonen</string>
+  <string name="noAssignmentsInGroup">Geen opdrachten in deze groep</string>
+  <string name="excusedAssignment">Deze opdracht wordt vrijgesteld en zal niet worden opgenomen in de totale berekening</string>
+  <string name="singleItem">item</string>
+  <string name="multipleItems">items</string>
+  <string name="excused">verontschuldigd</string>
+  <string name="expandOrCollapse">Uit- of inklappen</string>
+  <string name="mutedText">Cijfers zijn niet beschikbaar omdat de cursusleider ermee bezig is.</string>
+  <string name="freeFormRubricPoints" formatted="false">%s / %s</string>
+</resources>

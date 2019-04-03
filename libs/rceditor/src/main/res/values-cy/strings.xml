@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+    <string name="rce_contentDescription_undo">Dad-wneud</string>
+    <string name="rce_contentDescription_redo">Ailwneud</string>
+    <string name="rce_contentDescription_bold">Fformat Trwm</string>
+    <string name="rce_contentDescription_italic">Fformat Italig</string>
+    <string name="rce_contentDescription_strikethrough">Llinell Drwodd</string>
+    <string name="rce_contentDescription_underline">Tanlinellu</string>
+    <string name="rce_contentDescription_format_text_color">Fformatio Lliw y Testun</string>
+    <string name="rce_contentDescription_border_color">Fformatio Lliw Border y Testun</string>
+    <string name="rce_contentDescription_indent_increase">Cynyddu’r Mewnoliad</string>
+    <string name="rce_contentDescription_indent_decrease">Lleihau’r Mewnoliad</string>
+    <string name="rce_contentDescription_align_left">Alinio i’r Chwith</string>
+    <string name="rce_contentDescription_align_right">Alinio i’r Dde</string>
+    <string name="rce_contentDescription_align_center">Alinio i’r Canol</string>
+    <string name="rce_contentDescription_insert_bullets">Mewnosod Rhestr Bwledi</string>
+    <string name="rce_contentDescription_insert_numbers">Mewnosod Rhestr Rhifau</string>
+    <string name="rce_contentDescription_insert_photo">Mewnosod Llun</string>
+    <string name="rce_contentDescription_upload_photo">Llwytho Llun i Fyny o’r Ddyfais</string>
+    <string name="rce_contentDescription_insert_link">Mewnosod Dolen</string>
+    <string name="rce_contentDescription_block_quote">Rhwystro Dyfyniad</string>
+
+    <string name="rce_contentDescription_color_none">Lliw - Dim</string>
+    <string name="rce_contentDescription_color_white">Lliw - Gwyn</string>
+    <string name="rce_contentDescription_color_black">Lliw - Du</string>
+    <string name="rce_contentDescription_color_blue">Lliw - Glas</string>
+    <string name="rce_contentDescription_color_red">Lliw - Coch</string>
+    <string name="rce_contentDescription_color_green">Lliw - Gwyrdd</string>
+    <string name="rce_contentDescription_color_gray">Lliw - Llwyd</string>
+    <string name="rce_contentDescription_color_magenta">Lliw - Magenta</string>
+    <string name="rce_contentDescription_color_cyan">Lliw - Cyan</string>
+    <string name="rce_contentDescription_color_orange">Lliw - Oren</string>
+    <string name="rce_contentDescription_color_yellow">Lliw - Melyn</string>
+    <string name="rce_contentDescription_color_purple">Lliw - Porffor</string>
+
+    <string name="rce_editTextUrlHint">Dolen</string>
+    <string name="rce_editTextALTHint">Testun</string>
+    <string name="rce_dialogDone">Wedi gorffen</string>
+    <string name="rce_dialogCancel">Canslo</string>
+    <string name="rce_insertLink">Mewnosod Dolen</string>
+    <string name="rce_insertImage">Mewnosod Delwedd</string>
+
+    <string name="rce_uploadImage">Llwytho Llun i Fyny</string>
+    <string name="rce_done">Wedi gorffen</string>
+    <string name="rce_cancel">Canslo</string>
+    <string name="rce_exit">Gadael</string>
+    <string name="rce_dialog_exit_title">Gadael Golygu Aseiniad?</string>
+    <string name="rce_dialog_exit_message">Ydych chi’n siŵr eich bod am adael? Bydd unrhyw ddata heb ei gadw yn cael ei golli.</string>
+    <string name="rce_empty_message">Neges</string>
+    <string name="rce_empty_description">Ychwanegu disgrifiad</string>
+    <string name="rce_scrollInstructions">Sgrolio i weld yr holl adnoddau golygu</string>
+</resources>

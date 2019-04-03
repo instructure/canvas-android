@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="login_previousLoginHeight_1x">80dp</dimen>
+    <dimen name="login_previousLoginHeight_2x">136dp</dimen>
+    <integer name="login_previousMaxVisible">2</integer>
+</resources>

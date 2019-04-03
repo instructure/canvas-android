@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+option java_package = "com.instructure.soseedy";
+option java_multiple_files = true;
+
+package soseedy;
+
+
+service SeedyGradingPeriods {
+    rpc CreateGradingPeriodSet(CreateGradingPeriodSetRequest) returns (GradingPeriodSet) { }
+    rpc CreateGradingPeriod(CreateGradingPeriodRequest) returns (GradingPeriod) { }
+}
+
+// Request messages
+
+message CreateGradingPeriodSetRequest {
+    int64 enrollmentId = 1;
+}
+
+message CreateGradingPeriodRequest {
+    int64 gradingPeriodSetId = 1;
+}
+
+// Response messages
+
+message GradingPeriodSet {
+    int64 id = 1;
+}
+
+message GradingPeriod {
+    int64 id = 1;
+}
+

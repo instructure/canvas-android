@@ -1,0 +1,41 @@
+﻿<!--
+  ~ Copyright (C) 2018 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="inputText">Rhoi Testun</string>
+    <string name="cancel">Canslo</string>
+    <string name="comment">Sylw</string>
+    <string name="skip">Anwybyddu</string>
+    <string name="comments">Sylwadau</string>
+    <string name="error_loading_submission">Problem wrth lwytho’r cyflwyniad hwn.</string>
+    <string name="retry">Ailgynnig</string>
+    <string name="annotationErrorOccurred">Gwall annisgwyl wrth lwytho anodiadau.</string>
+    <string name="annotationError">Gwall gydag Anodiad</string>
+    <string name="annotationDialogMessage">Mae’r anodiad wedi’i ddileu o ffynhonnell arall.</string>
+    <string name="errorSendingMessage">Doedd dim modd anfon y neges hon. Tapiwch i roi cynnig arall arni.</string>
+    <string name="addAnnotationComment">Ychwanegu Sylw</string>
+    <string name="editComment">Golygu Sylw</string>
+    <string name="deleteComment">Dileu Sylw</string>
+    <string name="deleteAnnotation">Dileu Anodiad</string>
+    <string name="deleteCommentConfirmation">Ydych chi’n siŵr eich bod am ddileu’r sylw hwn?</string>
+    <string name="deleteHeadCommentConfirmation">Wrth ddileu’r sylw hwn, bydd yr holl sylwadau sy’n gysylltiedig â’r anodiad hwn yn cael eu dileu. Ydych chi’n siŵr eich bod am wneud hyn?</string>
+    <string name="sendingSimple">Wrthi’n anfon</string>
+    <string name="pspdf__annotation_type_stamp">Lliw y Nodyn</string>
+    <string name="removedComment">%2$s wedi tynnu %1$s </string>
+
+</resources>

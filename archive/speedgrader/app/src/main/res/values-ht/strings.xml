@@ -1,0 +1,175 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <string name="app_name">SpeedGrader</string>
+  <string name="hello_world">Bonjou tout moun!</string>
+  <string name="sg_settings">Reglaj</string>
+  <string name="title_activity_home">akèy</string>
+  <string name="title_activity_document">dokiman</string>
+  <string name="action_document_view">Afiche Dokiman</string>
+  <string name="sectionsFilter">Klase Pa Seksyon</string>
+  <string name="drawer_open">Ouvri Desinatè</string>
+  <string name="drawer_close">Ouvri Desinatè</string>
+  <string name="favorites">Kou Prefere</string>
+  <string name="allCourses">Tout Kou yo</string>
+  <string name="emptyMessage">Mesaj la pa kapab vid!</string>
+  <string name="errorPostingComment">Gen yon erè ki fèt pandan w ap eseye poste kòmantè soumisyon ou a. Tanpri eseye ankò.</string>
+  <string name="addAComment">Ajoute yon Kòmantè</string>
+  <string name="noCommentsToDisplayShort">Pa gen kòmantè pou afiche</string>
+  <string name="noItemsToDisplayShort">Pa gen atik pou afiche</string>
+  <string name="noCoursesToDisplayShort">Pa gen kou pou afiche</string>
+  <string name="loading">Chajman</string>
+  <string name="loadingIndeterminate">Chajman...</string>
+  <string name="savingIndeterminate">Anrejistreman...</string>
+  <string name="assignments">sesyon</string>
+  <string name="grade">Klas</string>
+  <string name="graded">klase</string>
+  <string name="submitted">soumèt</string>
+  <string name="rubricPoints">Pwen</string>
+  <string name="pointsPossible">Pwen Posib</string>
+  <string name="due">Delè</string>
+  <string name="noDueDate">San Delè</string>
+  <string name="search">Chèche</string>
+  <string name="commentPrompt">Kòmantè:</string>
+  <string name="comment">Kòmantè</string>
+  <string name="addComment">Ajoute Kòmantè</string>
+  <string name="noRubric">Pa gen ribrik pou sesyon sa a.</string>
+  <string name="courses">Kou</string>
+  <string name="courseList">Lis Kou</string>
+  <string name="dashboard">Dach</string>
+  <string name="studentsSpinner">Elèv</string>
+  <string name="name">Non</string>
+  <string name="toggleRubric">Aktive/Dezaktive Ribrik</string>
+  <string name="allSections">Tout Seksyon</string>
+  <string name="document">Dokiman</string>
+  <string name="document_id">id_dokiman</string>
+  <string name="duration">dire</string>
+  <string name="student">Elèv</string>
+  <string name="opening">Ouvèti Fichye...</string>
+  <string name="composeHint">Ekri yon Bagay...</string>
+  <string name="attachHint">Ajoute yon atachman</string>
+  <string name="sendHint">Voye Endikasyon</string>
+  <string name="back">Retounen</string>
+  <string name="ninetyNinePlus">99+</string>
+  <string name="help">Èd</string>
+  <string name="searchTheGuides">Chèche nan Gid yo</string>
+  <string name="about">Apwopo</string>
+  <string name="logout">Dekoneksyon</string>
+  <string name="at">\u0020at\u0020</string>
+  <string-array name="defaultNavArray">
+    <item>Item 1</item>
+    <item>Item 2</item>
+  </string-array>
+  <string name="contentDescriptionPreviewImage">Yon apèsi url ki te soumèt la</string>
+  <string name="visitPage">Vizite Paj an Dirèk</string>
+  <string name="pageAtSubmission">Paj nan moman soumisyon:</string>
+  <string name="onlineURLDisclaimer">Soumisyon sa a se te yon URL a yon paj ekstèn. Nou mete yon apèsi sou a kisa paj la te sanble lè yo te soumèt li a.</string>
+  <string name="urlSubmission">Soumisyon URL</string>
+  <string name="url">URL:</string>
+  <string name="noSubmission">Elèv sa a pa gen yon soumisyon pou sesyon sa a.</string>
+  <string name="noGroupSubmission">Gwoup sa a pa gen soumisyon pou sesyon sa a</string>
+  <string name="deletedEntry">Tèks diskisyon sa a te efase.</string>
+  <string name="viewDiscussion">Afiche Diskisyon</string>
+  <string name="slash"> - / </string>
+  <string name="slashNoDash">/</string>
+  <string name="emptyViewMessage">Pa gen soumisyon pou sesyon sa a</string>
+  <string name="emptyAssignmentViewMessage">Pa gen sesyon pou kou sa a</string>
+  <string name="noSubmissionForAssignment">Pa gen Soumisyon</string>
+  <string name="authorizationRequired">Otorizasyon Obligatwa</string>
+  <string name="cookie">Cookie</string>
+  <string name="unsavedData">Done non Anrejistre</string>
+  <string name="unsavedDataWarning">Pagen okenn klas ki te anrejistre. Kite sesyon sa a?</string>
+  <string name="continueUnsaved">Kontinye</string>
+  <!--Grading Messages-->
+  <string name="noGrade">Pa gen Klas</string>
+  <string name="incomplete">Enkonplè</string>
+  <string name="complete">Konplè</string>
+  <string name="gradeSaved">Klas Anrejistre Kòrèkteman</string>
+  <string name="errorSavingGrade">Te gen yon erè nan anrejistreman klas ou a. Tanpri eseye koneksyon entènèt ou a epi eseye ankò.</string>
+  <string name="criterionLongDescription">Kretè pou Deskripsyon Long</string>
+  <!--Drawer Settings-->
+  <string name="hideNamesWhileGrading">Afiche non pandan klasman an</string>
+  <string name="showUngradedStudentsFirst">Afiche etidyan ki pa klase an premye</string>
+  <string name="viewUngradedCount">Afiche nonb ki pa klase nan ikòn nan</string>
+  <string name="viewHTML">Afiche HTML</string>
+  <!--Drawer About-->
+  <string name="account">kont</string>
+  <string name="version">vèsyon</string>
+  <string name="copyright">copyright</string>
+  <string name="copyrightText"> © 2010–%1$s Instructure Inc.</string>
+  <!--Error Messages-->
+  <string name="noDataConnection"> Tanpri verifye koneksyon entènèt ou a epi eseye ankò. </string>
+  <string name="invalidAccessToken">Token Aksè Envalid. Tanpri rekonekte.</string>
+  <string name="serverError">Erè Sèvè. tanpri eseye ankò.</string>
+  <string name="noApps">Aparèy ou a pa gen okenn apliasyon sou li ki ouvri fichye sa a.</string>
+  <string name="unexpectedErrorOpeningFile">Yon erè fèt sanzatann pandan w ap eseye ouvri fichye a.</string>
+  <string name="unexpectedErrorDownloadingFile">Yon erè fèt sanzatann pandan w ap eseye telechaje fichye a.</string>
+  <string name="invalidScore">Nòt ki antre a envalid.</string>
+  <!--Assignment editing-->
+  <string name="points">Pwen:\u0020</string>
+  <string name="assignmentGroup">Sesyon Gwoup:\u0020</string>
+  <string name="gradingType">Tip Klasman:\u0020</string>
+  <string name="submissionType">Tip Soumisyon:\u0020</string>
+  <string name="editAssignment">Modifye Sesyon</string>
+  <string name="save">Anrejistre</string>
+  <string name="cancel">Anile</string>
+  <string name="saveContinue">Kontinye</string>
+  <string name="sendNotification">Avèti itilizatè a ke kontni sa a chanje</string>
+  <string name="setDueDate">Okenn Delè Fikse</string>
+  <string name="assignmentDue">Delè: </string>
+  <string name="assignmentSaved">Sesyon anrejistre kòrèkteman</string>
+  <string name="useRubricForGrading">Itilize ribrik la sèlman pou klasman</string>
+  <string name="onlineEntryOptions">Opsyon pou Tape an Liy:</string>
+  <string name="useRubricError">Sesyon an konfigire pou itilize ribrik la pou klasman.</string>
+  <string name="noDueDateSet">Okenn Delè Fikse</string>
+  <string name="noGradeAssignment">Pa gen kategori pou sesyon sa a</string>
+  <string name="muted">Silans Sesyon</string>
+  <!--Date Text View-->
+  <string name="dateTextDefault">Ajoute Dat</string>
+  <string name="settings">Reglaj</string>
+  <string name="open">Ouvri</string>
+  <!--Score Edit Text Hints-->
+  <string name="gpaScaleHint">GPA</string>
+  <string name="letterHint">Lèt</string>
+  <!--User Messages-->
+  <string name="videoCommentsComingSoon">Kòmantè Videyo se pou Byento!</string>
+  <!--Tutorial-->
+  <string name="tutorialSkip">Sote</string>
+  <string name="tutorialPage1">Fè yon Koudèy </string>
+  <string name="tutorialPage2">Klase Pa Seksyon</string>
+  <string name="tutorialPage3">Afiche Dokiman</string>
+  <string name="tutorialPage4">Modifye Sesyon</string>
+  <string name="tutorialPage5">Klasman Ribrik</string>
+  <string name="tutorialPage6">Pèsonalize Reglaj</string>
+  <string name="tutorial_tipAssignmentDetails">Detay sesyon</string>
+  <string name="tutorial_tipAssignmentDetailsMessage">Chanje detay sesyon.</string>
+  <string name="tutorial_tipFilterSections"> Klase pa seksyon </string>
+  <string name="tutorial_tipFilterSectionsMessage">Gade klas w ap klase pa seksyon an. </string>
+  <string name="tutorial_tipSortStudentList">Klase pa kategori oswa non nan afichaj lis elèv yo</string>
+  <string name="tutorial_tipSortStudentListMessage">Chwazi si w vle wè elèv yo pa kategori oswa non.</string>
+  <string name="tutorial_tipSwipeBetweenStudents">Baleye ant elèv yo</string>
+  <string name="tutorial_tipSwipeBetweenStudentsMessage">Baleye pou deplase a chak elèv fasilman.</string>
+  <string name="tutorial_tipSubmissionComments">Afiche epi Soumèt Kòmantè Soumisyon Medya</string>
+  <string name="tutorial_tipSubmissionCommentsMessage">Soumèt yon ti kòmantè videyo pou evite pwoblèm daktilografi.</string>
+  <!--Masquerading-->
+  <string name="masqueradeUserId">Non Itilizatè pou Degize</string>
+  <string name="startMasquerading">Kòmanse Degizman</string>
+  <string name="stopMasquerading">Kanpe Degizman</string>
+  <string name="userId">Non Itilizatè</string>
+  <string name="masqueradeFail">Gen yon erè ki fèt pandan w t ap eseye degize a</string>
+  <string name="emptyId">ID a pa kapab vid</string>
+  <!--Options menu-->
+  <string name="openInBrowser">Ouvri nan Navigatè</string>
+  <string name="download">Telechaje</string>
+  <string name="next">PWOCHEN</string>
+  <string name="prev">ANVAN</string>
+  <string name="nothingToDownload">Pa gen fichye Soumisyon pou telechaje</string>
+  <string name="nothingToShowInBrowser">Pa gen URL Soumisyon pou afiche</string>
+  <string name="noAssignmentsInGroup">Pa gen Sesyon nan gwoup sa a</string>
+  <string name="excusedAssignment">Yo egzante sesyon sa a ni yo pa p konsidere li nan kalkil total la.</string>
+  <string name="singleItem">atik</string>
+  <string name="multipleItems">atik</string>
+  <string name="excused">egzante</string>
+  <string name="expandOrCollapse">Agrandi oswa Diminye</string>
+  <string name="mutedText">Nòt yo pa disponib paske pwofesè a ap travay ladan yo.</string>
+  <string name="freeFormRubricPoints" formatted="false">%s / %s</string>
+</resources>

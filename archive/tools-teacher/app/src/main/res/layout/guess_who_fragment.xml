@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2016 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_repeated"
+    android:clickable="true">
+
+    <TextView
+        android:id="@+id/courseName"
+        style="@style/TextStyle.Primary.Bold"
+        android:layout_centerHorizontal="true"
+        android:padding="8dp"
+        android:layout_marginTop="16dp"/>
+
+    <TextView
+        android:id="@+id/sectionName"
+        style="@style/TextStyle.Primary"
+        android:layout_below="@id/courseName"
+        android:layout_centerHorizontal="true"
+        android:padding="8dp"
+        android:textSize="16sp" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/guessWhoViewPager"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/sectionName"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:overScrollMode="never"/>
+
+    <TextView
+        android:id="@+id/emptyView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="@string/noStudents"
+        android:textColor="@color/canvasTextDark"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/tutorial"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/tutorialGuessWhoHeight"
+        android:layout_alignParentBottom="true"
+        android:background="@color/translucent_black"
+        android:clickable="false"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/swipeLeft"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_margin="16dp"
+            android:src="@drawable/back_button" />
+
+        <TextView
+            android:id="@+id/tutorialText"
+            style="@style/TextStyle.Primary"
+            android:text="@string/swipeLeft"
+            android:textColor="@color/white" />
+    </LinearLayout>
+
+</RelativeLayout>

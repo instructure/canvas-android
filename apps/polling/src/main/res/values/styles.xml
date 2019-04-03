@@ -1,0 +1,149 @@
+<!--
+  ~ Copyright (C) 2016 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<resources>
+
+    <!--&lt;!&ndash; Base application theme. &ndash;&gt;-->
+    <!--<style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">-->
+        <!--&lt;!&ndash; Customize your theme here. &ndash;&gt;-->
+    <!--</style>-->
+
+    <!--Text Styles-->
+    <style name="TextStyle" parent="AppTheme">
+        <item name="android:ellipsize">end</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="TextStyle.Primary">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/canvasTextDark</item>
+    </style>
+
+    <style name="TextStyle.Primary.Medium">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/canvasTextMedium</item>
+    </style>
+
+    <style name="TextStyle.Secondary">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/canvasTextMedium</item>
+    </style>
+
+    <style name="TextStyle.Secondary.Dark">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/canvasTextDark</item>
+    </style>
+
+    <style name="TextStyle.Secondary.Dark.Bold">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextStyle.Tertiary">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/canvasTextMedium</item>
+    </style>
+
+    <style name="TextStyle.Tertiary.Dark">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/canvasTextDark</item>
+    </style>
+
+    <style name="TextStyle.Tertiary.Dark.Bold">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextStyle.Primary.Bold">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextStyle.Secondary.Bold">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextStyle.Tertiary.Bold">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextStyle.Primary.Light">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="TextStyle.Secondary.Light">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="TextStyle.Tertiary.Light">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="TextStyle.Tertiary.Light.Bold">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="ListHeaderStyle">
+        <item name="android:textColor">@color/canvasTextMedium</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">@dimen/listHeaderHeight</item>
+        <item name="android:background">@color/canvasBackgroundMedium</item>
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:singleLine">false</item>
+        <item name="android:maxLines">3</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="ListHeaderStyle.Expandable">
+        <item name="android:paddingLeft">48dp</item>
+    </style>
+
+    <style name="TextAppearance.FloatLabel" parent="android:TextAppearance.Small">
+        <item name="android:textColor">@color/canvasBlue</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:layout_marginLeft">8dp</item>
+        <item name="android:layout_marginRight">8dp</item>
+    </style>
+
+    <style name="TextAppearance.EditText" parent="android:TextAppearance.Widget.EditText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/canvasTextDark</item>
+        <item name="android:padding">@dimen/editTextPadding</item>
+        <item name="android:layout_marginLeft">@dimen/viewMargin</item>
+        <item name="android:layout_marginRight">@dimen/viewMargin</item>
+        <item name="android:inputType">textMultiLine</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:cursorVisible">true</item>
+        <item name="android:textCursorDrawable">@null</item>
+    </style>
+
+    <style name="ButtonBarTheme" parent="android:style/Holo.ButtonBar">
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <style name="PollingAnswerTheme" parent="TextStyle.Primary">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">@dimen/editTextPadding</item>
+        <item name="android:background">@drawable/dropshadow_nine_patch</item>
+    </style>
+</resources>

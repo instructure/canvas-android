@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <!--Modules-->
+  <string name="mustComplete">Je moet eerst voltooien:</string>
+  <string name="unlockedAt">Het wordt ontgrendeld op:</string>
+  <string name="goToModules">Ga naar modulen</string>
+  <!--Events-->
+  <string name="Starts">Begint</string>
+  <string name="Ends">Eindigt</string>
+  <string name="allDayEvent">Evenement dat de hele dag duurt</string>
+  <string name="at">op</string>
+  <string name="to">tot </string>
+  <!--StreamItems-->
+  <string name="Message">Bericht</string>
+  <string name="Loading">Aan het laden...</string>
+  <string name="Deleted">Verwijderd</string>
+  <!--Assignment Module-->
+  <string name="canvasAPI_online">Online</string>
+  <string name="canvasAPI_onPaper">Op papier</string>
+  <string name="canvasAPI_discussion">Discussie</string>
+  <string name="canvasAPI_quiz">Toets</string>
+  <string name="canvasAPI_externalTool">Externe tool</string>
+  <string name="canvasAPI_none">Geen</string>
+  <string name="canvasAPI_passFail">Slagen Zakken</string>
+  <string name="canvasAPI_percent">Procent</string>
+  <string name="canvasAPI_letterGrade">Letter Cijfer</string>
+  <string name="canvasAPI_points">Punten</string>
+  <string name="canvasAPI_gpaScale">GPA schaal</string>
+  <string name="canvasAPI_notGraded">Niet beoordeeld</string>
+  <string name="canvasAPI_onlineQuiz">Online toets</string>
+  <string name="canvasAPI_discussionTopic">Discussie-onderwerp </string>
+  <string name="canvasAPI_onlineUpload">Online Upload</string>
+  <string name="canvasAPI_onlineTextEntry">Online tekstonderwerp</string>
+  <string name="canvasAPI_onlineURL">Online URL</string>
+  <string name="canvasAPI_mediaRecording">Media opname</string>
+  <string name="canvasAPI_attendance">Aanwezigheid</string>
+</resources>

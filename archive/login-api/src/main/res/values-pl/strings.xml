@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <string name="app_name">Interfejs do logowania</string>
+  <string name="hello_world">Witaj świecie!</string>
+  <string name="action_settings">Ustawienia</string>
+  <string name="mobileVerifyGeneral">Ta aplikacja nie została zatwierdzona do użytku</string>
+  <string name="mobileVerifyDomainUnauthorized">Serwer, który został wprowadzony nie jest zatwierdzony dla tej aplikacji.</string>
+  <string name="mobileVerifyUserAgentUnauthorized">Aplikacja kliencka dla tej aplikacji jest nie zatwierdzona.</string>
+  <string name="mobileVerifyUnknownError">Nie udało nam się zweryfikować serwera do użytku z tą aplikacją.</string>
+  <string name="unknownDevice">Nieznane urządzenie</string>
+  <string name="errorOccurred">Wystąpił nieoczekiwany błąd.</string>
+  <string name="pageNotFound">Nie odnaleziono strony.</string>
+  <string name="confirm">Zatwierdź</string>
+  <string name="cancel">Usuń</string>
+  <string name="help">Pomoc</string>
+  <string name="enterURL">Wprowadź swój adres URL dla Canvas:</string>
+  <string name="signIntoCanvasNetwork">Czy próbujesz się zarejestrować w sieci Canvas Network?</string>
+  <string name="remove">Usuń</string>
+  <string name="exampleURLSimple">myschool.instructure.com</string>
+  <string name="userId">Identyfikator użytkownika</string>
+  <string name="domain">Domena</string>
+  <!--Multiple User Sign in-->
+  <string name="removeUser">Usunąć tego użytkownika?</string>
+  <string name="removedForever">Trzeba ponownie zalogować się na konto tego użytkownika aby mieć dostęp do jego zawartości.</string>
+  <!--Content Descriptions-->
+  <string name="canvasLogo">Logo Canvas</string>
+  <string name="canvasLoginOn">Canvas_Login: WŁĄCZONY</string>
+  <string name="canvasLoginOff">Canvas_Login: WYŁĄCZONY</string>
+  <string name="siteAdminLogin">Panel administracyjny logowania: WŁĄCZONY</string>
+  <string name="username">Nazwa użytkownika</string>
+  <string name="password">Hasło</string>
+  <string name="authenticationRequired">Wymagane jest uwierzytelnienie</string>
+  <string name="invalidEmailPassword">Nieważny adres e-mail lub hasło</string>
+  <string name="login">Login</string>
+  <string name="logout">Wyloguj</string>
+  <!--Logout Warning Dialog-->
+  <string name="logout_warning">Czy na pewno chcesz się wylogować?</string>
+  <string name="logout_yes">Tak</string>
+  <string name="logout_no">Nie</string>
+  <!--Smart Login-->
+  <string name="loginNearYou">Blisko ciebie</string>
+  <string name="loginCanvasNetwork">Canvas Network</string>
+  <string name="loginRightBehindYou">Bezpośrednio za tobą</string>
+  <string name="loginMiles">%1$s mil stąd</string>
+  <string name="loginCanvasHelp">Nie widzisz swojej szkoły? Wpisz adres URL szkoły lub dotknij tutaj aby uzyskać pomoc.</string>
+  <string name="loginCanvasHelpWithUser">Wpisz adres URL szkoły lub dotknij tutaj aby uzyskać pomoc.</string>
+  <string name="loginHint">Znajdź swoją szkołę lub dzielnicę</string>
+  <!--Zendesk Dialog-->
+  <string name="zendesk_reportAProblem">Zgłoś problem</string>
+  <string name="zendesk_subject">Temat</string>
+  <string name="zendesk_description">Opis</string>
+  <string name="zendesk_writeSomething">Napisz coś...</string>
+  <string name="zendesk_send">Wyślij</string>
+  <string name="zendesk_feedbackThankyou">Dziękujemy za zgłoszenie problemu do naszej Grupy Wsparcia. Otrzymasz weryfikację i aktualizacje pocztą elektroniczną.</string>
+  <string name="zendesk_severityText">Jaki to ma na ciebie wpływ?</string>
+  <string name="zendesk_casualQuestion">Jedynie przypadkowe pytanie, komentarz, pomysł, sugestię...</string>
+  <string name="zendesk_casualQuestion_tag">tylko_komentarz</string>
+  <string name="zendesk_needHelp">Potrzebuję pomocy ale nie jest to pilne.</string>
+  <string name="zendesk_needHelp_tag">nie_pilne</string>
+  <string name="zendesk_somethingsBroken">Coś się zepsuło ale jestem w stanie to obejść aby wykonać to czego potrzebuję.</string>
+  <string name="zendesk_somethingsBroken_tag">możliwe_obejście</string>
+  <string name="zendesk_cantGetThingsDone">Nie mogę nie zrobić dopóki się ze mną nie skontaktujesz.</string>
+  <string name="zendesk_cantGetThingsDone_tag">blokuje_to_co_muszę_zrobić</string>
+  <string name="zendesk_extremelyCritical">KRYTYCZNIE EKSTREMALNA AWARIA!!</string>
+  <string name="zendesk_extremelyCritical_tag">ekstremalnie_krytyczna_awaria</string>
+  <string name="zendesk_emailAddress">Adres e-mail</string>
+  <string name="zendesk_enterEmail">Wpisz swój adres e-mail...</string>
+  <string name="zendesk_unknown">Nieznany</string>
+  <!--Distance Strings-->
+  <string name="lessThanOne">&lt; 1 mila (1,6 km)</string>
+  <string name="oneMile">1 mila (1,6 km)</string>
+  <string name="miles">mile</string>
+  <string name="kilometers">km</string>
+  <!--String for submitting tickets-->
+  <string name="device">Urządzenie</string>
+  <string name="osVersion">Wersja OS</string>
+  <string name="empty_feedback">W celu przesłania informacji zwrotnych należy wprowadzić temat i opis.</string>
+</resources>

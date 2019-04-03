@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <path
+        android:fillColor="#2D3B45"
+        android:fillType="evenOdd"
+        android:strokeWidth="1"
+        android:pathData="M12.0409,13.0828 L12.0409,10.917 L21,10.917 L21,12 C21,16.9624,16.9627,21,12,21
+C7.03733,21,3,16.9624,3,12 C3,7.03733,7.03733,3,12,3 L20.8787,3 L20.8787,5.16556
+L12,5.16556 C8.23148,5.16556,5.16556,8.23148,5.16556,12
+C5.16556,15.7683,8.23148,18.8342,12,18.8342
+C13.6246,18.8342,15.2002,18.2518,16.4365,17.1945
+C17.653,16.1539,18.4701,14.7177,18.7374,13.151 L18.7488,13.0828 L18.6796,13.0828
+L12.0409,13.0828 Z M12.0408,9.0333 L12.0408,6.86748 L20.8787,6.86748
+L20.8787,9.0333 L12.0408,9.0333 Z" />
+</vector>

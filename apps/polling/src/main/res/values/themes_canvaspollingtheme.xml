@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ Copyright (C) 2016 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<!-- Generated with http://android-holo-colors.com -->
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <!-- Customize your theme here. -->
+    <item name="colorPrimary">@color/color_primary</item>
+    <item name="colorPrimaryDark">@color/color_primary_dark</item>
+    <item name="colorAccent">@color/color_accent</item>
+    <item name="android:windowBackground">@color/white</item>
+    <item name="windowActionBar">true</item>
+    <item name="windowNoTitle">false</item>
+  </style>
+
+  <style name="AppTheme.NoActionBar">
+    <item name="windowActionBar">false</item>
+    <item name="windowNoTitle">true</item>
+    <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+    <item name="android:statusBarColor">@color/color_primary_dark</item>
+  </style>
+
+  <style name="CanvasPollingTheme" parent="@style/AppTheme"/>
+
+  <style name="_CanvasPollingTheme" parent="Theme.Canvaspollingthemeactionbar">
+
+    <item name="android:editTextBackground">@drawable/canvaspollingtheme_edit_text_holo_light</item>
+
+    <item name="android:textColorHighlight">#99cc0000</item>
+    <item name="android:textSelectHandleLeft">@drawable/canvaspollingtheme_text_select_handle_left</item>
+    <item name="android:textSelectHandleRight">@drawable/canvaspollingtheme_text_select_handle_right</item>
+    <item name="android:textSelectHandle">@drawable/canvaspollingtheme_text_select_handle_middle</item>
+
+    <item name="android:autoCompleteTextViewStyle">@style/AutoCompleteTextViewCanvasPollingTheme</item>
+
+    <item name="android:listChoiceIndicatorMultiple">@drawable/canvaspollingtheme_btn_check_holo_light</item>
+
+    <item name="android:listChoiceIndicatorSingle">@drawable/canvaspollingtheme_btn_radio_holo_light</item>
+
+    <item name="android:buttonStyle">@style/ButtonCanvasPollingTheme</item>
+
+    <item name="android:imageButtonStyle">@style/ImageButtonCanvasPollingTheme</item>
+
+    <item name="android:dropDownSpinnerStyle">@style/SpinnerCanvasPollingTheme</item>
+
+    <item name="android:progressBarStyleHorizontal">@style/ProgressBarCanvasPollingTheme</item>
+
+    <item name="android:seekBarStyle">@style/SeekBarCanvasPollingTheme</item>
+
+    <item name="android:ratingBarStyle">@style/RatingBarCanvasPollingTheme</item>
+
+    <item name="android:ratingBarStyleIndicator">@style/RatingBarBigCanvasPollingTheme</item>
+
+    <item name="android:ratingBarStyleSmall">@style/RatingBarSmallCanvasPollingTheme</item>
+
+    <item name="android:buttonStyleToggle">@style/ToggleCanvasPollingTheme</item>
+
+    <item name="android:listChoiceBackgroundIndicator">@drawable/canvaspollingtheme_list_selector_holo_light</item>
+
+    <item name="android:activatedBackgroundIndicator">@drawable/canvaspollingtheme_activated_background_holo_light</item>
+
+    <item name="android:fastScrollThumbDrawable">@drawable/canvaspollingtheme_fastscroll_thumb_holo</item>
+
+  </style>
+
+  <style name="CanvasPollingTheme.NoActionBar">
+    <item name="windowActionBar">false</item>
+    <item name="windowNoTitle">true</item>
+  </style>
+
+</resources>

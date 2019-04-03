@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="rce_contentDescription_undo">Desfazer</string>
+    <string name="rce_contentDescription_redo">Refazer</string>
+    <string name="rce_contentDescription_bold">Formatar negrito</string>
+    <string name="rce_contentDescription_italic">Formatar itálico</string>
+    <string name="rce_contentDescription_strikethrough">Riscado</string>
+    <string name="rce_contentDescription_underline">Sublinhado</string>
+    <string name="rce_contentDescription_format_text_color">Formatar cor do texto</string>
+    <string name="rce_contentDescription_border_color">Formatar cor da borda do texto</string>
+    <string name="rce_contentDescription_indent_increase">Aumentar recuo</string>
+    <string name="rce_contentDescription_indent_decrease">Diminuir recuo</string>
+    <string name="rce_contentDescription_align_left">Alinhar à esquerda</string>
+    <string name="rce_contentDescription_align_right">Alinhar à direita</string>
+    <string name="rce_contentDescription_align_center">Centralizar</string>
+    <string name="rce_contentDescription_insert_bullets">Inserir lista de marcadores</string>
+    <string name="rce_contentDescription_insert_numbers">Inserir lista numerada</string>
+    <string name="rce_contentDescription_insert_photo">Inserir foto</string>
+    <string name="rce_contentDescription_upload_photo">Carregar foto a partir do dispositivo</string>
+    <string name="rce_contentDescription_insert_link">Inserir link</string>
+    <string name="rce_contentDescription_block_quote">Citação em bloco</string>
+
+    <string name="rce_contentDescription_color_none">Cor nenhuma</string>
+    <string name="rce_contentDescription_color_white">Cor branca</string>
+    <string name="rce_contentDescription_color_black">Cor preta</string>
+    <string name="rce_contentDescription_color_blue">Cor azul</string>
+    <string name="rce_contentDescription_color_red">Cor vermelha</string>
+    <string name="rce_contentDescription_color_green">Cor verde</string>
+    <string name="rce_contentDescription_color_gray">Cor cinza</string>
+    <string name="rce_contentDescription_color_magenta">Cor magenta</string>
+    <string name="rce_contentDescription_color_cyan">Cor ciano</string>
+    <string name="rce_contentDescription_color_orange">Cor laranja</string>
+    <string name="rce_contentDescription_color_yellow">Cor amarela</string>
+    <string name="rce_contentDescription_color_purple">Cor roxa</string>
+
+    <string name="rce_editTextUrlHint">Link</string>
+    <string name="rce_editTextALTHint">Texto</string>
+    <string name="rce_dialogDone">Feito</string>
+    <string name="rce_dialogCancel">Cancelar</string>
+    <string name="rce_insertLink">Inserir link</string>
+    <string name="rce_insertImage">Inserir imagem</string>
+
+    <string name="rce_uploadImage">Carregar imagem</string>
+    <string name="rce_done">Feito</string>
+    <string name="rce_cancel">Cancelar</string>
+    <string name="rce_exit">Sair</string>
+    <string name="rce_dialog_exit_title">Sair da edição da tarefa?</string>
+    <string name="rce_dialog_exit_message">Tem certeza de que deseja sair? Quaisquer dados não salvos serão perdidos.</string>
+    <string name="rce_empty_message">Mensagem</string>
+    <string name="rce_empty_description">Adicionar descrição</string>
+    <string name="rce_scrollInstructions">Rolar para todas as ferramentas de edição</string>
+</resources>

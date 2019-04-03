@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2016 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/commentHolder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="40dp"
+        android:paddingTop="4dp">
+
+        <EditText
+            android:id="@+id/commentEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="75dp"
+            android:hint="@string/addComment"
+            android:background="@drawable/card"
+            android:layout_margin="16dp"
+            android:textSize="14sp"
+            android:gravity="top"
+            android:paddingLeft="12dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:paddingRight="25dp"
+            android:paddingTop="4dp"
+            android:inputType="textMultiLine"
+            android:textColor="@color/sg_lightGrayText"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/freeFormPointsHolder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_margin="16dp"
+        android:layout_below="@+id/commentHolder"
+        android:gravity="bottom">
+
+        <EditText
+            android:id="@+id/pointsEditText"
+            android:layout_width="75dp"
+            android:layout_height="wrap_content"
+            android:minHeight="34dp"
+            android:background="@drawable/card"
+            android:textSize="14sp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:textColor="@color/lightGray"
+            android:inputType="numberDecimal"
+            android:singleLine="true"/>
+
+        <com.instructure.speedgrader.views.HelveticaTextView
+            android:id="@+id/slash"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="34dp"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/lightGray"
+            android:singleLine="true"
+            android:layout_toRightOf="@+id/pointsEditText"
+            android:layout_alignBaseline="@+id/pointsEditText"
+            android:gravity="bottom"
+            android:layout_marginLeft="4dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginRight="8dp"
+            android:text="@string/slashNoDash"/>
+
+        <com.instructure.speedgrader.views.HelveticaTextView
+            android:id="@+id/pointsPossible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="34dp"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/lightGray"
+            android:gravity="bottom"
+            android:layout_toRightOf="@+id/slash"
+            android:layout_alignBaseline="@+id/pointsEditText"
+            android:layout_marginRight="16dp"/>
+    </RelativeLayout>
+</RelativeLayout>

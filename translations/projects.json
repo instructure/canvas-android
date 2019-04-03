@@ -1,0 +1,42 @@
+[
+  {
+    "name": "canvas-api",
+    "source_path": "libs/canvas-api-2/src/main/res/values/strings.xml",
+    "resource_dir": "libs/canvas-api-2/src/main/res"
+  },
+  {
+    "name": "login-api",
+    "source_path": "libs/login-api-2/src/main/res/values/strings.xml",
+    "resource_dir": "libs/login-api-2/src/main/res"
+  },
+  {
+    "name": "pandautils",
+    "source_path": "libs/pandautils/src/main/res/values/strings.xml",
+    "resource_dir": "libs/pandautils/src/main/res"
+  },
+  {
+    "name": "parent",
+    "source_path": "apps/parent/src/main/res/values/strings.xml",
+    "resource_dir": "apps/parent/src/main/res"
+  },
+  {
+    "name": "rceditor",
+    "source_path": "libs/rceditor/src/main/res/values/rce_strings.xml",
+    "resource_dir": "libs/rceditor/src/main/res"
+  },
+  {
+    "name": "teacher",
+    "source_path": "apps/teacher/src/main/res/values/strings.xml",
+    "resource_dir": "apps/teacher/src/main/res"
+  },
+  {
+    "name": "annotations",
+    "source_path": "libs/annotations/src/main/res/values/strings.xml",
+    "resource_dir": "libs/annotations/src/main/res"
+  },
+  {
+    "name": "pandares",
+    "source_path": "libs/pandares/src/main/res/values/strings.xml",
+    "resource_dir": "libs/pandares/src/main/res"
+  }
+]

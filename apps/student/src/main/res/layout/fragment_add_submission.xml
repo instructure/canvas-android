@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C) 2016 - present Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/canvasBackgroundWhite"
+    android:clipChildren="false"
+    android:clipToPadding="false">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?android:actionBarSize"
+        android:layout_alignParentTop="true"
+        android:background="@color/defaultPrimary"
+        android:elevation="6dp"
+        app:popupTheme="@style/ToolBarPopupStyle"
+        app:theme="@style/ToolBarStyle"
+        tools:targetApi="lollipop" />
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:layout_below="@+id/toolbar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/textEntryHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dip"
+                android:background="@color/canvasBackgroundMedium"
+                android:padding="16dp"
+                android:text="@string/textEntry"
+                android:textColor="@color/canvasTextMedium"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:id="@+id/textEntryContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dip"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/textEntry"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="start"
+                    android:hint="@string/enterTextEntry"
+                    android:imeOptions="actionSend"
+                    android:textColor="@color/black"
+                    android:textCursorDrawable="@null" />
+
+                <Button
+                    android:id="@+id/submitTextEntry"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:text="@string/submit" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/onlineURLHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dip"
+                android:background="@color/canvasBackgroundMedium"
+                android:padding="16dp"
+                android:text="@string/onlineURL"
+                android:textColor="@color/canvasTextMedium"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:id="@+id/urlEntryContainer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="10dip"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/onlineURL"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dip"
+                        android:layout_weight="1"
+                        android:gravity="start"
+                        android:hint="@string/exampleSubmissionURL"
+                        android:imeOptions="actionSend"
+                        android:textColor="@color/black"
+                        android:textCursorDrawable="@null" />
+
+                    <Button
+                        android:id="@+id/submitURLEntry"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:text="@string/submit" />
+                </LinearLayout>
+
+                <com.instructure.pandautils.views.CanvasWebView
+                    android:id="@+id/webView"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:background="@color/lightGray" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/fileUpload"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:background="@color/canvasBackgroundMedium"
+                android:padding="16dp"
+                android:text="@string/fileUpload"
+                android:textColor="@color/canvasTextMedium"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/mediaSubmission"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:background="@color/canvasBackgroundMedium"
+                android:padding="16dp"
+                android:text="@string/mediaUpload"
+                android:textColor="@color/canvasTextMedium"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/arcSubmission"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:background="@color/canvasBackgroundMedium"
+                android:padding="16dp"
+                android:text="@string/arc"
+                android:textColor="@color/canvasTextMedium"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:id="@+id/arcEntryContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/arcEntry"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="start"
+                    android:hint="@string/enterTextEntry"
+                    android:imeOptions="actionSend"
+                    android:textColor="@color/black"
+                    android:textCursorDrawable="@null" />
+
+                <Button
+                    android:id="@+id/submitArcEntry"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:text="@string/submit" />
+                
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</RelativeLayout>

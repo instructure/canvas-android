@@ -1,0 +1,42 @@
+﻿<!--
+  ~ Copyright (C) 2018 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="inputText">Вводимый текст</string>
+    <string name="cancel">Отменить</string>
+    <string name="comment">Комментарий</string>
+    <string name="skip">Пропустить</string>
+    <string name="comments">Комментарии</string>
+    <string name="error_loading_submission">При загрузке данного документа возникла проблема.</string>
+    <string name="retry">Повторить</string>
+    <string name="annotationErrorOccurred">Произошла непредвиденная ошибка при загрузке аннотация.</string>
+    <string name="annotationError">Ошибка аннотации</string>
+    <string name="annotationDialogMessage">Аннотация была удалена с другого источника.</string>
+    <string name="errorSendingMessage">Данное сообщение нельзя отправить. Щелкните, чтобы повторить попытку.</string>
+    <string name="addAnnotationComment">Добавить комментарий</string>
+    <string name="editComment">Редактировать комментарий</string>
+    <string name="deleteComment">Удалить комментарий</string>
+    <string name="deleteAnnotation">Удалить аннотацию</string>
+    <string name="deleteCommentConfirmation">Удалить данный комментарий?</string>
+    <string name="deleteHeadCommentConfirmation">Удаление этого комментария приведет к удалению всех связанных с данной аннотацией комментариев. Вы действительно хотите сделать это?</string>
+    <string name="sendingSimple">Отправка</string>
+    <string name="pspdf__annotation_type_stamp">Отметить цвет</string>
+
+    <string name="removedComment">%1$s удален %2$s</string>
+
+</resources>

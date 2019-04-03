@@ -1,0 +1,28 @@
+<!--
+  ~ Copyright (C) 2018 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+  <path
+      android:pathData="M12,20.8235C7.1341,20.8235 3.1765,16.8659 3.1765,12C3.1765,7.1341 7.1341,3.1765 12,3.1765C16.8659,3.1765 20.8235,7.1341 20.8235,12C20.8235,16.8659 16.8659,20.8235 12,20.8235M12,2C6.4859,2 2,6.4859 2,12C2,17.5141 6.4859,22 12,22C17.5141,22 22,17.5141 22,12C22,6.4859 17.5141,2 12,2M12,5.5294C10.7024,5.5294 9.6471,6.5847 9.6471,7.8824C9.6471,9.18 10.7024,10.2353 12,10.2353C13.2976,10.2353 14.3529,9.18 14.3529,7.8824C14.3529,6.5847 13.2976,5.5294 12,5.5294M12,9.0588C11.3506,9.0588 10.8235,8.5306 10.8235,7.8824C10.8235,7.2341 11.3506,6.7059 12,6.7059C12.6494,6.7059 13.1765,7.2341 13.1765,7.8824C13.1765,8.5306 12.6494,9.0588 12,9.0588ZM10.2353,17.2941L10.2353,11.4118L13.7647,11.4118L13.7647,17.2941L10.2353,17.2941ZM11.4118,16.1176L12.5882,16.1176L12.5882,12.5882L11.4118,12.5882L11.4118,16.1176Z"
+      android:strokeWidth="1"
+      android:fillColor="#000000"
+      android:fillType="evenOdd"
+      android:strokeColor="#00000000"/>
+</vector>

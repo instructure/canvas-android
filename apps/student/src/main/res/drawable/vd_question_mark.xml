@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2018 - present Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+        android:width="24dp"
+        android:height="24dp"
+        android:viewportWidth="24.0"
+        android:viewportHeight="24.0">
+    <path
+        android:pathData="M12,2C17.514,2 22,6.486 22,12C22,17.514 17.514,22 12,22C6.486,22 2,17.514 2,12C2,6.486 6.486,2 12,2ZM12,20.824C16.866,20.824 20.824,16.866 20.824,12C20.824,7.134 16.866,3.176 12,3.176C7.134,3.176 3.176,7.134 3.176,12C3.176,16.866 7.134,20.824 12,20.824ZM12.931,5.65C14.127,5.959 15.1,6.932 15.409,8.128C15.653,9.071 15.521,10.038 15.04,10.852C14.566,11.654 13.778,12.247 12.878,12.478C12.734,12.514 12.588,12.632 12.588,12.81L12.588,13.765L11.412,13.765L11.412,12.81C11.412,12.121 11.894,11.517 12.586,11.338C13.186,11.185 13.711,10.79 14.027,10.254C14.348,9.71 14.435,9.059 14.271,8.422C14.066,7.634 13.425,6.993 12.636,6.788C11.898,6.599 11.141,6.747 10.56,7.198C9.98,7.647 9.647,8.326 9.647,9.059L8.471,9.059C8.471,7.959 8.969,6.941 9.84,6.267C10.712,5.593 11.836,5.367 12.931,5.65ZM12.001,14.941C12.649,14.941 13.177,15.469 13.177,16.118C13.177,16.766 12.649,17.294 12.001,17.294C11.351,17.294 10.824,16.766 10.824,16.118C10.824,15.469 11.351,14.941 12.001,14.941Z"
+        android:strokeColor="#00000000"
+        android:fillType="evenOdd"
+        android:fillColor="#FFFFFF"
+        android:strokeWidth="1"/>
+</vector>

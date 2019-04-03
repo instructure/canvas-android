@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+        android:width="108dp"
+        android:height="108dp"
+        android:viewportWidth="48.648647"
+        android:viewportHeight="54.054054">
+    <group android:translateX="15.324325"
+            android:translateY="17.027027">
+        <path
+            android:fillColor="#73818C"
+            android:fillType="evenOdd"
+            android:pathData="M1.176,4.706L1.176,2.941C1.176,2.616 1.441,2.353 1.765,2.353L3.529,2.353L3.529,2.941C3.529,3.266 3.793,3.529 4.118,3.529C4.442,3.529 4.706,3.266 4.706,2.941L4.706,2.353L12.941,2.353L12.941,2.941C12.941,3.266 13.205,3.529 13.529,3.529C13.854,3.529 14.118,3.266 14.118,2.941L14.118,2.353L15.882,2.353C16.206,2.353 16.471,2.616 16.471,2.941L16.471,4.706L1.176,4.706ZM1.176,18.824L16.471,18.824L16.471,5.882L1.176,5.882L1.176,18.824ZM15.882,1.176L14.118,1.176L14.118,0.588C14.118,0.264 13.854,0 13.529,0C13.205,0 12.941,0.264 12.941,0.588L12.941,1.176L4.706,1.176L4.706,0.588C4.706,0.264 4.442,0 4.118,0C3.793,0 3.529,0.264 3.529,0.588L3.529,1.176L1.765,1.176C0.792,1.176 0,1.968 0,2.941L0,4.706L0,5.882L0,20L17.647,20L17.647,5.882L17.647,4.706L17.647,2.941C17.647,1.968 16.855,1.176 15.882,1.176L15.882,1.176ZM3.529,10.588L4.706,10.588L4.706,9.412L3.529,9.412L3.529,10.588ZM2.353,11.765L5.882,11.765L5.882,8.235L2.353,8.235L2.353,11.765ZM8.235,10.588L9.412,10.588L9.412,9.412L8.235,9.412L8.235,10.588ZM7.059,11.765L10.588,11.765L10.588,8.235L7.059,8.235L7.059,11.765ZM12.941,10.588L14.118,10.588L14.118,9.412L12.941,9.412L12.941,10.588ZM11.765,11.765L15.294,11.765L15.294,8.235L11.765,8.235L11.765,11.765ZM3.529,15.294L4.706,15.294L4.706,14.118L3.529,14.118L3.529,15.294ZM2.353,16.471L5.882,16.471L5.882,12.941L2.353,12.941L2.353,16.471ZM8.235,15.294L9.412,15.294L9.412,14.118L8.235,14.118L8.235,15.294ZM7.059,16.471L10.588,16.471L10.588,12.941L7.059,12.941L7.059,16.471ZM12.941,15.294L14.118,15.294L14.118,14.118L12.941,14.118L12.941,15.294ZM11.765,16.471L15.294,16.471L15.294,12.941L11.765,12.941L11.765,16.471Z"
+            android:strokeColor="#00000000"
+            android:strokeWidth="1" />
+    </group>
+</vector>

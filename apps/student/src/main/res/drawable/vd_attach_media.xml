@@ -1,0 +1,22 @@
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+<vector android:height="24dp" android:viewportHeight="17.0"
+    android:viewportWidth="20.0" android:width="24dp" xmlns:android="http://schemas.android.com/apk/res/android">
+    <path android:fillColor="#000000" android:fillType="evenOdd"
+        android:pathData="M1.053,10.715C2.314,11.038 6.628,11.974 11.59,11.163L11.59,12.218C10.143,12.446 8.751,12.551 7.478,12.551C3.453,12.551 0.552,11.675 0.372,11.618L0,11.504L0,1.075L0.331,0.942C7.597,-1.125 14.111,0.842 14.385,0.928L14.756,1.043L14.756,5.641L13.703,5.957L13.703,1.833C12.264,1.463 6.862,0.295 1.053,1.833L1.053,10.715ZM18.516,6.558L20,6.118L20,13.339L20,13.342C19.999,14.416 19.143,15.288 18.09,15.288C17.134,15.288 16.347,14.564 16.209,13.627C16.195,13.532 16.181,13.438 16.181,13.339C16.181,12.265 17.037,11.39 18.09,11.39C18.264,11.39 18.429,11.421 18.589,11.466C18.715,11.5 18.835,11.548 18.947,11.607L18.947,7.527L18.533,7.65L14.756,8.768L14.465,8.853L14.465,11.596L14.465,13.733L14.465,14.895C14.465,14.924 14.458,14.951 14.457,14.98C14.413,16.014 13.58,16.844 12.555,16.844C11.501,16.844 10.645,15.969 10.645,14.895C10.645,14.181 11.027,13.561 11.589,13.222C11.875,13.05 12.201,12.945 12.555,12.945C12.865,12.945 13.154,13.028 13.412,13.162L13.412,11.854L13.412,10.784L13.412,8.067L13.703,7.982L14.756,7.67L18.516,6.558ZM18.09,14.236C18.563,14.236 18.947,13.834 18.947,13.339C18.947,13.051 18.809,12.806 18.606,12.642C18.462,12.524 18.287,12.443 18.09,12.443C17.618,12.443 17.234,12.845 17.234,13.339C17.234,13.419 17.258,13.489 17.277,13.562C17.374,13.947 17.694,14.236 18.09,14.236ZM12.555,15.791C13.027,15.791 13.412,15.389 13.412,14.895C13.412,14.4 13.027,13.998 12.555,13.998C12.082,13.998 11.698,14.4 11.698,14.895C11.698,15.389 12.082,15.791 12.555,15.791ZM5.496,9.773L5.496,2.902L11.338,6.338L5.496,9.773ZM6.548,4.742L6.548,7.933L9.261,6.338L6.548,4.742Z"
+        android:strokeColor="#00000000" android:strokeWidth="1"/>
+</vector>

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2016 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="@dimen/med_padding"
+    android:layout_marginLeft="@dimen/med_padding"
+    android:layout_marginRight="@dimen/med_padding"
+    android:layout_marginStart="@dimen/med_padding"
+    android:layout_marginTop="@dimen/med_padding"
+    android:background="?android:attr/selectableItemBackground"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:minHeight="?android:listPreferredItemHeight"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="0dp"
+    app:cardElevation="@dimen/card_elevation"
+    app:cardUseCompatPadding="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/courseTitle"
+            style="@style/TextStyle.Primary.SingleLine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Test Course" />
+
+        <TextView
+            android:id="@+id/courseCode"
+            style="@style/TextStyle.Primary.SingleLine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/gray" />
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:id="@+id/gradeContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp">
+
+                <TextView
+                    android:id="@+id/scoreText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:textColor="@color/parent_colorPrimary"
+                    android:textSize="18sp"
+                    tools:text="98.3"
+                    android:layout_alignParentStart="true"/>
+
+                <TextView
+                    android:id="@+id/gradeText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/scoreText"
+                    android:textColor="@color/parent_colorPrimary"
+                    android:textSize="18sp"
+                    tools:text="A" />
+
+            </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/lockedGradeImage"
+                android:layout_width="22sp"
+                android:layout_height="22sp"
+                android:layout_marginTop="8dp"
+                android:padding="2sp"
+                android:visibility="gone"
+                android:contentDescription="@string/locked" />
+
+        </FrameLayout>
+
+
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

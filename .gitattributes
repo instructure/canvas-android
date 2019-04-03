@@ -1,0 +1,2 @@
+automation/tools/flank.jar filter=lfs diff=lfs merge=lfs -text
+automation/tools/soseedycli.jar filter=lfs diff=lfs merge=lfs -text

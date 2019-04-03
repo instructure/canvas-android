@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <!--Modules-->
+  <string name="mustComplete">Ou dwe konplete dabò:</string>
+  <string name="unlockedAt">L ap debloke a:</string>
+  <string name="goToModules">Ale nan Modil</string>
+  <!--Events-->
+  <string name="Starts">Kòmanse</string>
+  <string name="Ends">Fini</string>
+  <string name="allDayEvent">Aktivite Tout Jounen</string>
+  <string name="at">nan</string>
+  <string name="to">a</string>
+  <!--StreamItems-->
+  <string name="Message">Mesaj</string>
+  <string name="Loading">Chajman...</string>
+  <string name="Deleted">Efase</string>
+  <!--Assignment Module-->
+  <string name="canvasAPI_online">An Liy</string>
+  <string name="canvasAPI_onPaper">Sou Papye</string>
+  <string name="canvasAPI_discussion">Diskisyon</string>
+  <string name="canvasAPI_quiz">Quiz</string>
+  <string name="canvasAPI_externalTool">Zouti Ekstèn</string>
+  <string name="canvasAPI_none">Okenn</string>
+  <string name="canvasAPI_passFail">Pase Echwe</string>
+  <string name="canvasAPI_percent">Pousantaj</string>
+  <string name="canvasAPI_letterGrade">Lèt Nòt</string>
+  <string name="canvasAPI_points">Pwen</string>
+  <string name="canvasAPI_gpaScale">Echèl GPA</string>
+  <string name="canvasAPI_notGraded">Pa Klase</string>
+  <string name="canvasAPI_onlineQuiz">Quiz an Liy</string>
+  <string name="canvasAPI_discussionTopic">Sijè Diskisyon</string>
+  <string name="canvasAPI_onlineUpload">Transfè An Liy</string>
+  <string name="canvasAPI_onlineTextEntry">Antre Tèks an Liy</string>
+  <string name="canvasAPI_onlineURL">URL an Liy</string>
+  <string name="canvasAPI_mediaRecording">Anrejistreman Medya</string>
+  <string name="canvasAPI_attendance">Prezans</string>
+</resources>

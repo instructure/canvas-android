@@ -1,0 +1,42 @@
+﻿<!--
+  ~ Copyright (C) 2018 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="inputText">Whakauru kuputuhi</string>
+    <string name="cancel">Whakakore</string>
+    <string name="comment">Kōrero</string>
+    <string name="skip">Tīpoka</string>
+    <string name="comments">Ngā kōrero</string>
+    <string name="error_loading_submission">He hapa i te wā uta ana i tēnei tukuna</string>
+    <string name="retry">Ngana anō</string>
+    <string name="annotationErrorOccurred">He hapa ohorere i puta i te wā e uta ana i ngā tuhipoka.</string>
+    <string name="annotationError">Tuhipoka hapa</string>
+    <string name="annotationDialogMessage">Kua mukua te tuhipoka mai i wāhi kē</string>
+    <string name="errorSendingMessage">Kaore i taea te tuku i tēnei karere. Pāto ki te tarai anō.</string>
+    <string name="addAnnotationComment">Tāpiri Kōrero</string>
+    <string name="editComment">Whakatika kōrero</string>
+    <string name="deleteComment">Muku Kōrero</string>
+    <string name="deleteAnnotation">Muku tuhipoka</string>
+    <string name="deleteCommentConfirmation">E tino hiahia ana koe ki te muku i tēnei kōrero?</string>
+    <string name="deleteHeadCommentConfirmation">Te whakakore i tēnei kōrero ka muku i ngā kōrero katoa e pā ana ki tēnei tuhinga. E tino hiahia ana koe ki te mahi i tēnei?</string>
+    <string name="sendingSimple">E tuku ana</string>
+    <string name="pspdf__annotation_type_stamp">Tuhi Tae</string>
+
+    <string name="removedComment">I tangohia %1$s e %2$s</string>
+
+</resources>

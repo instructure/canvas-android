@@ -1,0 +1,126 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">設定</string>
+    <string name="mobileVerifyGeneral">このアプリは、使用許可されていません</string>
+    <string name="mobileVerifyDomainUnauthorized">あなたが入力したサーバーは、このアプリには承認されていません。</string>
+    <string name="mobileVerifyUserAgentUnauthorized">このアプリのユーザーエージェントは権限がありません。</string>
+    <string name="mobileVerifyUnknownError">このアプリで使用するサーバーを確認できませんでした。</string>
+    <string name="unknownDevice">UnknownDevice</string>
+    <string name="errorOccurred">予期しないエラーが発生しました。</string>
+    <string name="pageNotFound">ページが見つかりません</string>
+    <string name="confirm">確認</string>
+    <string name="cancel">キャンセル</string>
+    <string name="help">ヘルプ</string>
+    <string name="enterURL">Canvas URLを入力してください:</string>
+    <string name="signIntoCanvasNetwork">Canvas Network にサインインしようとしていますか?</string>
+    <string name="remove">削除</string>
+    <string name="exampleURLSimple">myschool.instructure.com</string>
+    <string name="userId">ユーザーID</string>
+    <string name="domain">ドメイン</string>
+
+    <string name="actAsUser">ユーザーとして行動する</string>
+    <string name="stopActAsUser">ユーザーとして行動することを止める</string>
+    <!--Multiple User Sign in -->
+    <string name="removeUser">このユーザーを削除しますか？</string>
+    <string name="removedForever">そのコンテンツにアクセスするには、再度このユーザーにログインする必要があります。</string>
+
+    <!--Content Descriptions-->
+    <string name="canvasLogo">Canvas ロゴ</string>
+
+    <string name="canvasLoginOn">Canvas_Login:ON</string>
+    <string name="canvasLoginOff">Canvas_Login:OFF</string>
+    <string name="siteAdminLogin">サイト管理者ログイン：ON</string>
+
+    <string name="username">ユーザー名</string>
+    <string name="password">パスワード</string>
+    <string name="authenticationRequired">認証は必須です</string>
+    <string name="invalidEmailPassword">無効のメール、またはパスワード</string>
+    <string name="login">ログイン</string>
+    <string name="logout">ログアウト</string>
+
+    <!--Logout Warning Dialog-->
+    <string name="logout_warning">ログアウトしますか？</string>
+    <string name="logout_yes">はい</string>
+    <string name="logout_no">いいえ</string>
+
+    <!--Smart Login-->
+    <string name="loginNearYou">あなたの近く</string>
+    <string name="loginCanvasNetwork">Canvas Network</string>
+    <string name="loginRightBehindYou">あなたのすぐ後ろです</string>
+    <string name="loginMiles">後 %1$s マイル</string>
+    <string name="loginCanvasHelp">学校が見えませんか？学校のURLを入力するか、ここをタップしてヘルプを利用してください。</string>
+    <string name="loginCanvasHelpWithUser">学校のURLを入力するか、ここをタップしてヘルプを利用してください。</string>
+    <string name="loginHint">あなたの学校または地域を見つける</string>
+
+    <!-- Error Report Dialog -->
+    <string name="errorReportAProblem">レポートＡ問題</string>
+    <string name="errorReportSubject">件名</string>
+    <string name="errorReportDescription">説明</string>
+    <string name="errorReportWriteSomething">何か書いてください...</string>
+    <string name="errorReportSend">送信</string>
+    <string name="errorReportThankyou">問題をサポートチームにご報告いただきありがとうございます。メールで確認と更新を受け取られます。</string>
+    <string name="errorReportSeverityText">これはあなたにどのような影響を与えるでしょうか？</string>
+    <string name="errorSeverityCasualQuestion">簡単な質問、コメント、アイディア、提案...</string>
+    <string name="errorSeverityNeedHelp">助けが必要ですが、緊急ではありません。</string>
+    <string name="errorSeveritySomethingsBroken">故障がありますが、回避してなんとか用は足せます。</string>
+    <string name="errorSeverityCantGetThingsDone">あなたの返事が来るまで用が足せません。</string>
+    <string name="errorSeverityExtremelyCritical">非常に緊急な事態!!</string>
+    <string name="errorReportEmailAddress">メールアドレス</string>
+    <string name="errorReportEnterEmail">メールアドレスを入力してください...</string>
+    <string name="errorReportUnknown">不明</string>
+    <!-- Distance Strings -->
+    <string name="lessThanOne">&lt; 1 マイル (1.6 km)</string>
+    <string name="oneMile">1 マイル (1.6 km)</string>
+    <string name="miles">マイル</string>
+    <string name="kilometers">km</string>
+
+    <!-- String for submitting tickets -->
+    <string name="device">デバイス</string>
+    <string name="osVersion">OS バージョン</string>
+
+    <string name="previousLoginTitle">以前のログイン</string>
+    <string name="findMySchool">私の学校を探す</string>
+    <string name="canvasLowerCase">canvas</string>
+    <string name="whatsYourSchoolName">学校の名前は？</string>
+    <string name="next">次</string>
+    <string name="schoolInstructureCom">school.instructure.com</string>
+    <string name="contentDescription_removePreviousUser">以前のユーザーを削除</string>
+    <string name="accountDomainFooter">学校が見つかりませんか？学校の完全なURLを入力してみてください。</string>
+    <string name="accountDomainFooterLink">ここをタップしてヘルプを表示します。</string>
+
+    <string name="login_noInternetConnectionTitle">インターネット接続なし</string>
+    <string name="login_noInternetConnectionMessage">この操作にはインターネット接続が必要です。</string>
+    <string name="empty_feedback">フィードバックを提出するには、件名と説明は必須です。</string>
+    <string name="versionNum">バージョン番号</string>
+    <string name="scrollInstructions">スクロールしてすべての詳細を表示する</string>
+
+    <string name="masqueradeErrorUserId">有効なIDを入力しなければなりません。</string>
+    <string name="masqueradeErrorDomain">有効なドメインを入力しなければなりません</string>
+    <string name="masqueradeError">マスカレード試行中にエラーが発生しました。</string>
+    <string name="masqueradeInfo">\"「\"として行動する」には、このユーザーとしてパスワードなしでログインしていることが基本です。あたかもこのユーザーであるかのようにアクションを取ることができ、また、他のユーザーの観点からだと、あたかもこのユーザーがそれを実行したかのように見ることができます。ただし、監査ログには、このユーザーの代わりにアクションを実行したのは、あなた だったと記録されます。</string>
+    <string name="masqueradingAs">あなたは%sとして行動しています</string>
+    <string name="stopActingAsTitle">以下として行動することを止める</string>
+    <string name="stopActingAsMessage">%s行動することを止め、自分のアカウントに戻る</string>
+
+    <string name="weMadeChanges">2、3の変更がありました。</string>
+    <string name="whatsNewText">最新情報を見る</string>
+</resources>

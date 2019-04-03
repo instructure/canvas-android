@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/moderatedGradingMessage"
+            style="@style/TextFont.Regular"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:padding="32dp"
+            android:text="@string/moderatedGradingUnsupported"
+            android:textColor="@color/defaultTextGray"
+            android:textSize="16sp"
+            android:visibility="gone"/>
+
+        <LinearLayout
+            android:id="@+id/gradeContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/scrollInstructions"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:paddingStart="16dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="8dp">
+
+            <RelativeLayout
+                android:id="@+id/gradeTextContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:minHeight="48dp">
+
+                <TextView
+                    android:id="@+id/gradeText"
+                    style="@style/TextFont.Medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:text="@string/grade"
+                    android:textSize="20sp"
+                    tools:ignore="RelativeOverlap"
+                    tools:text="Grade"/>
+
+                <TextView
+                    android:id="@+id/gradeSubtext"
+                    style="@style/TextFont.Regular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/gradeText"
+                    android:focusable="true"
+                    android:textColor="@color/defaultTextGray"
+                    android:textSize="14sp"
+                    android:visibility="gone"
+                    tools:text="Calculated by rubric"
+                    tools:visibility="gone"/>
+
+                <TextView
+                    android:id="@+id/gradeValueText"
+                    style="@style/TextFont.Medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:ellipsize="end"
+                    android:focusable="true"
+                    android:maxLines="1"
+                    android:textSize="20sp"
+                    android:visibility="gone"
+                    tools:text="Excusasdfsdfsdfdsfad"/>
+
+                <ImageView
+                    android:id="@+id/addGradeIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:contentDescription="@string/customize_grade"
+                    android:focusable="true"
+                    android:tint="@color/defaultActionColor"
+                    android:visibility="visible"
+                    app:srcCompat="@drawable/vd_add"/>
+
+                <ProgressBar
+                    android:id="@+id/gradeProgressSpinner"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_alignParentEnd="true"
+                    android:visibility="gone"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/latePolicy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:focusable="true"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <TextView
+                    android:id="@+id/latePenalty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/latePenalty"/>
+
+                <TextView
+                    android:id="@+id/latePenaltyValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginBottom="-4dp"
+                    android:visibility="gone"
+                    tools:text="-2"
+                    tools:visibility="visible"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/finalGradeContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:focusable="true"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <TextView
+                    android:id="@+id/finalGrade"
+                    style="@style/TextFont.Medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginEnd="8dp"
+                    android:layout_toStartOf="@id/finalGradeValueText"
+                    android:ellipsize="end"
+                    android:text="@string/finalGrade"
+                    android:textSize="20sp"/>
+
+                <TextView
+                    android:id="@+id/finalGradeValueText"
+                    style="@style/TextFont.Medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textSize="20sp"
+                    android:visibility="gone"
+                    tools:text="8/10"
+                    tools:visibility="visible"/>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height=".5dp"
+            android:background="@color/defaultTrackColor"
+            tools:layout_height="1dp"/>
+
+        <com.instructure.teacher.view.edit_rubric.RubricEditView
+            android:id="@+id/rubricEditView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+</ScrollView>

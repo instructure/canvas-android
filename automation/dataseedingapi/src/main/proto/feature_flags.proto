@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+option java_package = "com.instructure.soseedy";
+option java_multiple_files = true;
+
+package soseedy;
+
+service SeedyFeatureFlags {
+    rpc SetAccountFeatureFlag(SetAccountFeatureFlagRequest) returns (FeatureFlag) { }
+}
+
+// Request messages
+
+message SetAccountFeatureFlagRequest {
+    string feature = 1;
+    string state = 2;
+}
+
+// Response messages
+message FeatureFlag {
+    string feature = 1;
+    string state = 2;
+    string contextType = 3;
+}

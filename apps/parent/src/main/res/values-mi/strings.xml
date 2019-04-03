@@ -1,0 +1,228 @@
+﻿<!--
+  ~ Copyright (C) 2016 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<resources>
+
+    <string name="action_settings">Ngā Tautuhinga</string>
+    <string name="canvasLogo">Canvas Moko</string>
+    <string name="email">Īmēra</string>
+    <string name="emailAddress">Īmēra wāhitau</string>
+    <string name="parent_email">Īmēra Matua</string>
+    <string name="firstName">ingoa tuatahi</string>
+    <string name="lastName">ingoa whakamutunga</string>
+    <string name="password">Kupuhipa</string>
+    <string name="log_in">Takiuru ki roto</string>
+    <string name="createAccount">Waihanga Pūkete</string>
+    <string name="create">Hanga</string>
+    <string name="forgotPassword">Wareware Kupuhipa?</string>
+    <string name="forgotPasswordWithoutQuestion">Wareware Kupuhipa</string>
+    <string name="enterAccountEmailHint">Pūkete Īmēra</string>
+    <string name="requestPassword">Tono Kupuhipa</string>
+    <string name="resetPassword">Kupuhipa Tautuhi</string>
+    <string name="requestPasswordHelpText">Ka tukuna atu e mātou he kupuhipa tautuhi tono.</string>
+    <string name="requestPasswordSuccess">Kua tautuhitia to kupuhipa.</string>
+    <string name="fullName">Ingoa tonu</string>
+    <string name="passwordsDoNotMatch">Kaore e rite ngā kupuhipa.</string>
+    <string name="passwordsCannotBeBlank">Kaore ngā kupuhipa e pātea.</string>
+    <string name="passwordResetFailed">Kaore e taea e mātou te tautuhi i tō pātea i tēnei wā.</string>
+    <string name="invalidEmail">Īmēra wāhitau muhu. Tarai anō</string>
+    <string name="next">E haere ake nei</string>
+    <string name="createAccountMessage">ka tukuna he īmēra ki te wāhitau īmēra whakarato koe ki te whakaoti i rēhitatanga.</string>
+    <string name="accountCreationSuccess">I angitu te hanga pūkete. Tēnā koa tipako i tō īmēra ki te whakaoti i to rehitatanga.</string>
+    <string name="errorOccurred">He hapa ohorere i puta. Tēnā tarai anō.</string>
+    <string name="unknownDevice">Pūrere unknown</string>
+    <string name="addStudent">Tapiri ākonga</string>
+    <string name="school">Kura</string>
+    <string name="finish">Mutu</string>
+    <string name="close">Katia</string>
+    <string name="noStudents">Kaore ngā ākonga i te wātea. Ki te tāpiri ngā ākonga pātō ngā toka e toru i roto i tetahua i runga ake. .</string>
+    <string name="noStudentsView">Kāore he ākonga e pā ana ki tō pūkete.</string>
+    <string name="noCourses">Tenei ākonga kahore akoranga e wātea ana.</string>
+    <string name="noAvailableCourses">Kāore ngā akoranga</string>
+    <string name="coursesMayNotBePublished">Kaore anō pea i pānuitia ngā akoranga a tēnei ākonga</string>
+    <string name="noAlerts">kahore matohi ki tiro tenei ākonga.</string>
+    <string name="noItemsToDisplayShort">Kāore he tūemi</string>
+    <string name="emailsSentTo">Īmēra tonoa ki:</string>
+    <string name="logged_in_as">Takiuru rite:</string>
+    <string name="notifyWhen">Matohi ahau ina</string>
+    <string name="gradeAbove">kōeke akoranga i runga</string>
+    <string name="gradeBelow">kōeke akoranga i raro</string>
+    <string name="assignmentMissing">e ngaro ana Taumahi</string>
+    <string name="teacherAnnouncements">Ngā Akoranga pānuitanga</string>
+    <string name="institutionAnnouncements">Mau faaararaa MoE</string>
+    <string name="assignmentGradeAbove">kōeke Taumahi runga</string>
+    <string name="assignmentGradeBelow">kōeke Taumahi raro</string>
+    <string name="never">Kore rawa</string>
+    <string name="save">Tiaki</string>
+    <string name="enterThreshold">Tomo Ōrau</string>
+    <string name="setGradeValueMessage">Whakaturia te uara māka o ina e hiahia ana koe ki te kia whakamōhiotia</string>
+    <string name="removeStudent">Tango Ākonga</string>
+    <string name="removingStudent">Tango ana i te Ākonga</string>
+    <string name="studentRemoved">pai nekehia Ākonga</string>
+    <string name="studentAdded">ākonga momoho tāpiri</string>
+    <string name="courses">Ngā akoranga</string>
+    <string name="week">Wiki</string>
+    <string name="alerts">Ngā Matohi</string>
+    <string name="alert">Matohi</string>
+    <string name="weekEmptyView">No ohipa kaupapa ranei tenei wiki!</string>
+    <string name="toolbar_close">tata Paeutauta</string>
+    <string name="syllabus">Marautanga</string>
+    <string name="emptySyllabus">kahore marautanga tēnei akoranga.</string>
+    <string name="noLocation">Tauwhāititia Kāore he Wāhi</string>
+    <string name="previousAlerts">Matohi O mua</string>
+    <string name="currentAlerts">Matohi O nāianei</string>
+    <string name="badDomainError">Rohe muhu. Tarai anō</string>
+    <string name="unauthorized">He kāore i ki te uru i tēnei mōhiohio e koe.</string>
+    <string name="revokedTokenErrorContent">Kaore koe i te manahia ki te uru i tēnei mōhiohio ō%1$s. Kaore e taea e koe ki te whakamana anō i tō ākonga mai i te tahua tautuhinga.</string>
+    <string name="revokedTokenErrorTitle">Uru Maimai Whakakore</string>
+    <string name="featureFlagDisabledError">e kore i tenei whare whakahohea uru ki te taupānga pūkoro Canvas Parent.</string>
+
+    <!-- Help strings -->
+    <string name="askInstructor">Pātai ki to Kaitohutohu he pātai.</string>
+    <string name="askInstructorDetails">Ka tukuna ngā pātai ki tō Kaitohutohu.</string>
+    <string name="searchGuides">Rapu ngā Canvas Kaiarahi</string>
+    <string name="canvasGuides">Canvas Kaiārahi</string>
+    <string name="searchGuidesDetails">Kimihia ngā whakautu mō ngā pāti noa</string>
+    <string name="reportProblem">Pūrongo te Raruraru</string>
+    <string name="reportProblemDetails">Ki te hape te taupānga, whakamōhio mai ki ā mātou</string>
+    <string name="requestFeature">Tono te Āhuatanga</string>
+    <string name="requestFeatureDetails">He whakaaro ki te whakapai ake i te taupānga?</string>
+    <string name="shareYourLove">Tuari Tō Aroha mō te Taupānga</string>
+    <string name="shareYourLoveDetails">Korerotia mai ki a matou ngā wahi tino makau o te taupānga ki a koe</string>
+    <string name="sendFeedback">Tuku Urupare</string>
+    <string name="sendMail">Tukua Īmēra &#8230;</string>
+    <string name="help_domain">Rohe:</string>
+    <string name="help_versionNum">Putanga:</string>
+    <string name="help_userId">ID Kaiwhakamahi:</string>
+    <string name="help_email">Īmēra:</string>
+    <string name="help_locale">Tauwāhi:</string>
+    <string name="installDate">Rā Tāuta:</string>
+    <string name="icon">Ata</string>
+    <string name="due">E tika ana:</string>
+    <string name="no_due_date">Kaore he rā tika</string>
+    <string name="tapToSet">Tap ki whakaturia</string>
+    <string name="alarmNotSet">Kaore i taea te whakatau i te whakaoho. Tarai anō</string>
+    <string name="could_not_route_course">Kāore i kitea i te whakaurunga akoranga.</string>
+    <string name="could_not_route_assignment">Kāore i kitea i te ohipa.</string>
+    <string name="email_already_exists">tīariari kē te kaiwhakamahi ki taua wāhitau īmēra.</string>
+    <string name="password_reset_success">ka he īmēra ki ngā tohutohu ki te tautuhi anō i tō kupuhipa, kia tonoa.</string>
+    <string name="password_reset_no_user">Kāore i kitea he kaiwhakamahi ki taua wāhitau īmēra.</string>
+    <string name="reset_password">Kupuhipa Tautuhi</string>
+    <string name="location">Wāhi</string>
+    <string name="time">Wā</string>
+    <string name="student_avatar">Ākonga Avatar</string>
+    <string name="previous">ō muri</string>
+    <string name="empty_view">Tirohia whakaaturia ka kitea kahore ihirangi te</string>
+    <string name="tab_icon">Ata i runga i te ripa</string>
+    <string name="add_student_icon">Ata mō te tāpiri ākonga</string>
+    <string name="canvas_logo">Canvas Moko</string>
+    <string name="course_threshold_grade_above_invalid">Me tenei paepae runga te paepae akoranga raro.</string>
+    <string name="course_threshold_grade_below_invalid">Me tenei paepae raro te paepae akoranga runga.</string>
+    <string name="assignment_threshold_grade_above_invalid">Me tenei paepae runga te paepae taumahi raro.</string>
+    <string name="assignment_threshold_grade_below_invalid">Me tenei paepae raro te paepae taumahi runga.</string>
+    <string name="set_reminder">Whakatau maumahara</string>
+    <string name="enter_student_institution">Tomo institution o ngā ākonga</string>
+    <string name="enter_student_login">E tomo takiuru me te kupuhipa o ngā ākonga</string>
+    <string name="access_not_enabled">e kore i tenei whare whakahohea uru ki te taupānga pūkoro Canvas Parent.</string>
+    <string name="dismiss">Pana</string>
+    <string name="invalid_username_password">I muhu te huinga īmēra me te kupuhipa.</string>
+    <string name="opening">E whakatuwhera ana&#8230;</string>
+    <string name="locked_assignment_desc">Ko tēnei taumahi he wāhanga o te kōwae %s a kaore ano kia huakinatia.</string>
+    <string name="locked_assignment_desc_line2">Tirohia te whārangi kōwae akoranga i roto i te pūtirotiro mō ngā mōhiohio i runga i pehea ki te iriti i tēnei ihirangi.</string>
+    <string name="locked_assignment_not_module">Kua rakaina tenei taumahi</string>
+    <string name="no_description">Kahore he whakaahuatanga hoki tenei taumahi</string>
+    <string name="cannot_view_file">Kaore e tirohia tēnei kōnae i roto i tēnei taupānga. Tēnā koa tirohia i roto i tō pūtirotiro.</string>
+    <string name="calendar_event">Takahanga Māramataka</string>
+    <string name="set_reminder_toggle">Whakatakotoria Takahuri Whakamaumahara</string>
+    <string name="or">rānei</string>
+    <string name="canvas_login_text">Takiuru me Canvas</string>
+
+    <string name="dateRangeContentDescription">Te wā mai %1$s kī %2$s</string>
+    <string name="privacyPolicy">Kaupapa Tūmataiti</string>
+    <string name="EULA">EULA</string>
+    <string name="termsOfUse">Ngā ture o te Mahi</string>
+    <!-- Feature Request -->
+    <string name="featureSubject">Whakaaro mō te Taupānga Canvas Parent [Android]</string>
+    <string name="understandRequest">Ka awhinatia mātou ki te mōhio i tō whakāro i ngā mōhiohio e whai ake nei:</string>
+
+    <!-- Distance Strings -->
+    <string name="lessThanOne">&lt; 1 maero (1.6 km)</string>
+    <string name="oneMile">1 maero (1.6 km)</string>
+    <string name="miles">maero</string>
+    <string name="kilometers">km</string>
+
+    <string name="grade">Kōeke</string>
+    <string name="notGraded">Kaore ano i kōeketia</string>
+    <string name="missing">Ngaro</string>
+    <string name="submitted">Kua tukuna</string>
+    <string name="in_class">I roto i te-Karaihe</string>
+    <string name="excused">Whakawātea</string>
+    <string name="late">Tūreiti</string>
+    <string name="greaterThan9">9+</string>
+
+    <string name="onlyCanvasObservers">Ka taea e ngā Canvas kaitirotiro te whakamotuhēhē te Canvas Parent.</string>
+    <string name="unableToAddStudentError">Kaore e taea a mātou te tāpiri i tēnei ākonga i tēnei wā..</string>
+
+    <string name="open_source">tuwhera puna</string>
+    <string name="open_source_details">Titiro ki ngā tuwhera puna raihaina</string>
+
+    <string name="unitedStates">Amerika</string>
+    <string name="theUnitedStates">te Amerika</string>
+    <string name="canada">Kānata</string>
+    <string name="ireland">Ireland</string>
+    <string name="australia">Ahitereiria</string>
+    <string name="germany">Tiamana</string>
+    <string name="singapore">Haragapore</string>
+    <array name="regions">
+        <item name="unitedStates">@string/unitedStates</item>
+        <item name="canada">@string/canada</item>
+        <item name="ireland">@string/ireland</item>
+        <item name="australia">@string/australia</item>
+        <item name="germany">@string/germany</item>
+        <item name="singapore">@string/singapore</item>
+    </array>
+    <string name="selectChildRegion">Kōwhiritia te rohe o ngā/akonga</string>
+    <string name="selectRegion">Kaiwhiwhi Rohe</string>
+    <string name="unauthorizedRegion">Rohe kaore e manahia</string>
+    <string name="mismatchedRegionMessage">Tēnei kāinga kei waho o tō rohe kua tohua e koe. Ki te tāpiri atu i tētahi akonga ki tēnei kāinga, tēnā koa whakamahi i te wāhanga "Kaiwhiwhi Rohe" i te rārangi takiuru hei waihanga i tētahi pūkete i te rohe o %1$s.</string>
+
+    <string name="notification_channel_name">Ngā whakmōhiotanga whānui</string>
+    <string name="notification_channel_description">Ngā whakamōhiotanga mo ngā whakamahara me ngā kōrero nui mo to tamaiti.</string>
+
+    <string name="whatsYourStudentsSchoolName">Whakauru ingoa o te kura mo ngā ākonga</string>
+    <string name="findYourStudentsSchoolHint">Kimihia tō kura rhe rānei mo ngā ākonga</string>
+    <string name="noGradeText">Kaore he Kōeke</string>
+    <string name="locked">Kua rakaina</string>
+    <string name="changeUser">Huri Kaiwhakamahi</string>
+    <string name="manageChildren">Whakahāere ngā tamariki</string>
+    <!-- Navigation Drawer -->
+    <string name="navigation_drawer_open">tuwhera kaiutuutu whakaterenga</string>
+    <string name="navigation_drawer_close">Kati kaiutuutu whakaterenga</string>
+    <string name="version" formatted="false">Putanga %s</string>
+    <string name="not_a_parent_title">Kaore i te matua?</string>
+    <string name="not_a_parent_subtitle">Ko tētahi atu o a mātou taupānga pea he pai ake te uru. Pātō kotahi ki te toro atu ki te Toa Tākaro</string>
+    <string name="tryLoginAgain">Ngana ki te takiuru anō</string>
+
+    <string name="legalDetails">Kaupapahere tūmataitinga, tikanga whakamahi, puna tuwhera</string>
+    <string name="assignmentGrade">Whakataunga Kōeke</string>
+    <string name="courseGrade">Akoranga Kōeke</string>
+    <string name="courseAnnouncement">Akoranga Pānuitanga</string>
+    <string name="institutionAnnouncement">Panuitanga o te Whare</string>
+    <string name="institutionAnnouncementUnavailable">Kua pau te wā o tēnei pānuitanga</string>
+    <string name="previousWeekBtn">te pātene mo te wiki o muri</string>
+    <string name="nextWeekBtn">te pātene mo te wiki e heke mai nei</string>
+</resources>

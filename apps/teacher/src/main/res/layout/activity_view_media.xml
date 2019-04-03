@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black">
+
+    <com.google.android.exoplayer2.ui.SimpleExoPlayerView
+        android:id="@+id/mediaPlayerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/audioIconView"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_gravity="center"
+            android:importantForAccessibility="no"
+            android:src="@drawable/vd_audio"
+            android:tint="@color/defaultTextGray"
+            android:visibility="gone"/>
+
+    </com.google.android.exoplayer2.ui.SimpleExoPlayerView>
+
+    <LinearLayout
+        android:id="@+id/mediaPlaybackErrorView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/errorTextView"
+            style="@style/TextFont.Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="16dp"
+            android:text="@string/errorOccurred"
+            android:textColor="@color/defaultTextGray"
+            android:textSize="16sp"/>
+
+        <Button
+            android:id="@+id/tryAgainButton"
+            style="@style/ButtonStyle"
+            android:layout_width="wrap_content"
+            android:text="@string/tryAgain"/>
+
+        <Button
+            android:id="@+id/openExternallyButton"
+            style="@style/ButtonStyle"
+            android:layout_width="wrap_content"
+            android:text="@string/openWithAnotherApp"/>
+
+    </LinearLayout>
+
+    <com.instructure.pandautils.views.ProgressiveCanvasLoadingView
+        android:id="@+id/mediaProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        app:pclv_indeterminate="true"
+        app:pclv_override_color="@color/login_teacherAppTheme"/>
+
+    <FrameLayout
+        android:id="@+id/mediaPreviewContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true">
+
+        <ImageView
+            android:id="@+id/mediaThumbnailView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:importantForAccessibility="no"
+            tools:src="@drawable/sad_panda"/>
+
+        <ImageButton
+            android:id="@+id/prepareMediaButton"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_gravity="center"
+            android:background="@drawable/bg_play_arrow"
+            android:contentDescription="@string/playMedia"
+            android:importantForAccessibility="yes"
+            android:src="@drawable/vd_play_arrow_36dp"/>
+
+    </FrameLayout>
+
+</RelativeLayout>

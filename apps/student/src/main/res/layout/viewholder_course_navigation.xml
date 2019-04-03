@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2016 - present Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="?android:listPreferredItemHeight"
+    android:minWidth="@dimen/actionbar_course_navigation_width"
+    android:paddingLeft="12dp"
+    android:paddingRight="12dp">
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="@dimen/gridIconSize"
+        android:layout_height="@dimen/gridIconSize"
+        android:contentDescription="@string/icon"
+        android:scaleType="fitCenter"
+        android:layout_gravity="start|center_vertical"
+        android:src="@mipmap/ic_launcher"/>
+
+    <TextView
+        android:id="@+id/title"
+        style="@style/TextStyle.Primary.SingleLine"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="@dimen/gridIconSize"
+        android:layout_marginLeft="@dimen/gridIconSize"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"/>
+
+</FrameLayout>

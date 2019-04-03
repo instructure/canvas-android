@@ -1,0 +1,175 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <string name="app_name">SpeedGrader</string>
+  <string name="hello_world">Hallo Ihr!</string>
+  <string name="sg_settings">Einstellungen</string>
+  <string name="title_activity_home">Home</string>
+  <string name="title_activity_document">Dokument</string>
+  <string name="action_document_view">Dokument ansehen</string>
+  <string name="sectionsFilter">Nach Bereich filtern</string>
+  <string name="drawer_open">Schubfach öffnen</string>
+  <string name="drawer_close">Schubfach öffnen</string>
+  <string name="favorites">Lieblingskurse</string>
+  <string name="allCourses">Alle Kurse</string>
+  <string name="emptyMessage">Die Nachricht darf nicht leer sein!</string>
+  <string name="errorPostingComment">Beim Versuch, den Kommentar zu Ihrer Einreichung zu posten, ist ein Fehler aufgetreten. Bitte versuchen Sie es noch einmal.</string>
+  <string name="addAComment">Einen Kommentar hinzufügen</string>
+  <string name="noCommentsToDisplayShort">Es gibt keine Kommentar zum Anzeigen</string>
+  <string name="noItemsToDisplayShort">Es gibt keine Elemente zum Anzeigen</string>
+  <string name="noCoursesToDisplayShort">Es gibt keine Kurse zum Anzeigen</string>
+  <string name="loading">Wird geladen</string>
+  <string name="loadingIndeterminate">Wird geladen...</string>
+  <string name="savingIndeterminate">Wird gespeichert...</string>
+  <string name="assignments">Aufgaben</string>
+  <string name="grade">Note</string>
+  <string name="graded">benotet</string>
+  <string name="submitted">abgeschickt</string>
+  <string name="rubricPoints">Punkte</string>
+  <string name="pointsPossible">Mögliche Punkte</string>
+  <string name="due">Fällig</string>
+  <string name="noDueDate">Kein Fälligkeitsdatum</string>
+  <string name="search">Suche</string>
+  <string name="commentPrompt">Kommentar:</string>
+  <string name="comment">Kommentar</string>
+  <string name="addComment">Kommentar hinzufügen</string>
+  <string name="noRubric">Für diese Aufgabe gibt es keine Rubrik.</string>
+  <string name="courses">Kurse</string>
+  <string name="courseList">Kursliste</string>
+  <string name="dashboard">Dashboard</string>
+  <string name="studentsSpinner">Studenten</string>
+  <string name="name">Name</string>
+  <string name="toggleRubric">Umschalter-Rubrik</string>
+  <string name="allSections">Alle Bereiche</string>
+  <string name="document">Dokument</string>
+  <string name="document_id">Dokument_ID</string>
+  <string name="duration">Dauer</string>
+  <string name="student">Student</string>
+  <string name="opening">Datei wird geöffnet...</string>
+  <string name="composeHint">Schreiben Sie was...</string>
+  <string name="attachHint">Einen Anhang anhängen</string>
+  <string name="sendHint">Tipp senden</string>
+  <string name="back">Zurück</string>
+  <string name="ninetyNinePlus">99+</string>
+  <string name="help">Hilfe</string>
+  <string name="searchTheGuides">Die Leitfäden suchen</string>
+  <string name="about">Über</string>
+  <string name="logout">Abmelden</string>
+  <string name="at">\u0020at\u0020</string>
+  <string-array name="defaultNavArray">
+    <item>Element 1</item>
+    <item>Element 2</item>
+  </string-array>
+  <string name="contentDescriptionPreviewImage">Eine Vorschau der abgeschickten URL</string>
+  <string name="visitPage">Live-Seite ansehen</string>
+  <string name="pageAtSubmission">Seite zur Zeit der Einreichung:</string>
+  <string name="onlineURLDisclaimer">Diese Einreichung war eine URL auf eine externe Seite. Wir haben ein Bild von der Seite mit eingeschlossen, so wie sie aussah, als sie eingereicht wurde.</string>
+  <string name="urlSubmission">URL-Einreichung</string>
+  <string name="url">URL:</string>
+  <string name="noSubmission">Dieser Student hat keine Einreichung für diese Aufgabe</string>
+  <string name="noGroupSubmission">Diese Gruppe hat keine Abgabe dieser Aufgabe</string>
+  <string name="deletedEntry">Dieser Diskussionsbeitrag wurde gelöscht.</string>
+  <string name="viewDiscussion">Diskussion ansehen</string>
+  <string name="slash"> - / </string>
+  <string name="slashNoDash">/</string>
+  <string name="emptyViewMessage">Für diese Aufgabe gibt es keine Einreichungen</string>
+  <string name="emptyAssignmentViewMessage">Für diesen Kurs gibt es keine Aufgaben</string>
+  <string name="noSubmissionForAssignment">Keine Einreichung</string>
+  <string name="authorizationRequired">Autorisierung obligatorisch</string>
+  <string name="cookie">Cookie</string>
+  <string name="unsavedData">Nicht gespeicherte Daten</string>
+  <string name="unsavedDataWarning">Ihre Note wurde nicht gespeichert. Diese Aufgabe verlassen?</string>
+  <string name="continueUnsaved">Weiter</string>
+  <!--Grading Messages-->
+  <string name="noGrade">Keine Note</string>
+  <string name="incomplete">Unvollständig</string>
+  <string name="complete">Vollständig</string>
+  <string name="gradeSaved">Note erfolgreich gespeichert.</string>
+  <string name="errorSavingGrade">Beim Speichern Ihrer Note ist ein Fehler aufgetreten. Bitte überprüfen Sie Ihre Verbindung und versuchen es noch einmal.</string>
+  <string name="criterionLongDescription">Kriterium Langbeschreibung</string>
+  <!--Drawer Settings-->
+  <string name="hideNamesWhileGrading">Beim Benoten Namen zeigen</string>
+  <string name="showUngradedStudentsFirst">Nicht benotete Studenten zuerst zeigen</string>
+  <string name="viewUngradedCount">Unbenotete Anzahl im Symbol zeigen</string>
+  <string name="viewHTML">HTML anzeigen</string>
+  <!--Drawer About-->
+  <string name="account">Konto</string>
+  <string name="version">Version</string>
+  <string name="copyright">Copyright</string>
+  <string name="copyrightText"> © 2010–%1$s Instructure Inc.</string>
+  <!--Error Messages-->
+  <string name="noDataConnection">Bitte überprüfen Sie Ihre Datenverbindung und versuchen es noch einmal.</string>
+  <string name="invalidAccessToken">Ungültiges Zugangs-Token. Bitte loggen Sie sich nochmal ein.</string>
+  <string name="serverError">Server-Fehler. Bitte versuchen Sie es noch einmal.</string>
+  <string name="noApps">Auf Ihrem Gerät sind keine Apps installiert, die mit dieser Datei umgehen können,</string>
+  <string name="unexpectedErrorOpeningFile">Beim Versuch, die Datei zu öffnen, ist ein unerwarteter Fehler aufgetreten.</string>
+  <string name="unexpectedErrorDownloadingFile">Beim Versuch, die Datei herunter zu laden, ist ein unerwarteter Fehler aufgetreten.</string>
+  <string name="invalidScore">Ungültiges Ergebnis eingetragen</string>
+  <!--Assignment editing-->
+  <string name="points">Punkte:\u0020</string>
+  <string name="assignmentGroup">Aufgabengruppe:\u0020</string>
+  <string name="gradingType">Benotungstyp:\u0020</string>
+  <string name="submissionType">Einreichungstyp:\u0020</string>
+  <string name="editAssignment">Aufgabe bearbeiten</string>
+  <string name="save">Speichern</string>
+  <string name="cancel">Abbrechen</string>
+  <string name="saveContinue">Fortfahren</string>
+  <string name="sendNotification">Benutzer informieren, dass sich dieser Inhalt verändert hat</string>
+  <string name="setDueDate">Kein Fälligkeitsdatum eingerichtet</string>
+  <string name="assignmentDue">Fällig:</string>
+  <string name="assignmentSaved">Aufgabe erfolgreich gespeichert</string>
+  <string name="useRubricForGrading">Rubrik nur zum Benoten verwenden</string>
+  <string name="onlineEntryOptions">Online-Eingabeoptionen:</string>
+  <string name="useRubricError">Aufgabe ist so eingestellt, dass sie die Rubrik zum Benoten verwenden darf.</string>
+  <string name="noDueDateSet">Kein Fälligkeitsdatum eingerichtet</string>
+  <string name="noGradeAssignment">Keine Benotung für diese Aufgabe</string>
+  <string name="muted">Aufgabe stummschalten</string>
+  <!--Date Text View-->
+  <string name="dateTextDefault">Datum hinzufügen</string>
+  <string name="settings">Einstellungen</string>
+  <string name="open">Offen</string>
+  <!--Score Edit Text Hints-->
+  <string name="gpaScaleHint">GPA</string>
+  <string name="letterHint">Brief</string>
+  <!--User Messages-->
+  <string name="videoCommentsComingSoon">Video-Kommentare kommen bald!</string>
+  <!--Tutorial-->
+  <string name="tutorialSkip">Überspringen</string>
+  <string name="tutorialPage1">Auf einen Blick ansehen</string>
+  <string name="tutorialPage2">Nach Bereich filtern</string>
+  <string name="tutorialPage3">Dokumente ansehen</string>
+  <string name="tutorialPage4">Aufgaben bearbeiten</string>
+  <string name="tutorialPage5">Rubrik-Benotung</string>
+  <string name="tutorialPage6">Einstellungen anpassen</string>
+  <string name="tutorial_tipAssignmentDetails">Aufgabendetails</string>
+  <string name="tutorial_tipAssignmentDetailsMessage">Aufgabendetails verändern.</string>
+  <string name="tutorial_tipFilterSections">Nach Bereich filtern</string>
+  <string name="tutorial_tipFilterSectionsMessage">Die Klasse, die Sie benoten ansehen, indem Sie nach Bereich filtern.</string>
+  <string name="tutorial_tipSortStudentList">Nach Note oder Name in der Ansicht Studentenaufzählung sortieren</string>
+  <string name="tutorial_tipSortStudentListMessage">Auswählen, ob Sie Studenten per Note oder Name ansehen möchten.</string>
+  <string name="tutorial_tipSwipeBetweenStudents">Mit einem Wisch zwischen Studenten wechseln</string>
+  <string name="tutorial_tipSwipeBetweenStudentsMessage">Mit einem Wisch leicht zu jedem Studenten gelangen.</string>
+  <string name="tutorial_tipSubmissionComments">Kommentare zu Einreichung von Media ansehen und hochladen</string>
+  <string name="tutorial_tipSubmissionCommentsMessage">Schicken Sie einfach einen kurzen Videokommentar und Sie brauchen nichts mehr mühevoll eingeben.</string>
+  <!--Masquerading-->
+  <string name="masqueradeUserId">Benutzer-ID maskieren</string>
+  <string name="startMasquerading">Mit der Maskerade beginnen</string>
+  <string name="stopMasquerading">Die Maskerade beenden</string>
+  <string name="userId">Benutzer-ID</string>
+  <string name="masqueradeFail">Beim Versuch der Maskerade ist ein Fehler aufgetreten</string>
+  <string name="emptyId">Die ID darf nicht leer sein</string>
+  <!--Options menu-->
+  <string name="openInBrowser">Im Browser öffnen</string>
+  <string name="download">Download</string>
+  <string name="next">WEITER</string>
+  <string name="prev">VORIGES</string>
+  <string name="nothingToDownload">Es gibt keine Einreichungs-Datei zum herunterladen</string>
+  <string name="nothingToShowInBrowser">Es gibt keine Einreichungs-URL zum anzeigen</string>
+  <string name="noAssignmentsInGroup">Keine Aufgaben in dieser Gruppe</string>
+  <string name="excusedAssignment">Diese Aufgabe ist entschuldigt und wird nicht in die Gesamtberechnung mit einbezogen</string>
+  <string name="singleItem">Element</string>
+  <string name="multipleItems">Elemente</string>
+  <string name="excused">entschuldigt</string>
+  <string name="expandOrCollapse">Aufziehen oder einfahren</string>
+  <string name="mutedText">Die Noten sind nicht verfügbar, da der Dozent sie gerade ausarbeitet.</string>
+  <string name="freeFormRubricPoints" formatted="false">%s / %s</string>
+</resources>

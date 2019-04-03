@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2016 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<resources>
+    <color name="white">#FFFFFFFF</color>
+    <color name="whiteNoAlpha">#FFFFFF</color>
+    <color name="yellow">#FFFF00</color>
+    <color name="fuchsia">#FF00FF</color>
+    <color name="red">#FF0000</color>
+    <color name="silver">#C0C0C0</color>
+    <color name="gray">#808080</color>
+    <color name="darkGray">#696969</color>
+    <color name="olive">#808000</color>
+    <color name="purple">#800080</color>
+    <color name="maroon">#800000</color>
+    <color name="aqua">#00FFFF</color>
+    <color name="lime">#00FF00</color>
+    <color name="teal">#008080</color>
+    <color name="green">#008000</color>
+    <color name="blue">#0000FF</color>
+    <color name="navy">#000080</color>
+    <color name="black">#000000</color>
+    <color name="mediumgray">#B4B4B4</color>
+    <color name="lightgray">#D3D3D3</color>
+    <color name="skyblue">#00BFFF</color>
+    <color name="firstListHighlight">#00BFFF</color>
+    <color name="listHighlight">#87CEFA</color>
+    <color name="canvas_blue_discussion_unread">#0095ed</color>
+    <color name="discussionHeaderRead">#555555</color>
+    <color name="translucent_black">#99000000</color>
+    <color name="linkBlue">#5858F8</color>
+    <color name="masqueradeRed">#ff96190e</color>
+    <color name="moduleOverlay">#77b3b3b3</color>
+    <!--canvas style guide colors-->
+    <color name="canvasRed">#D64027</color>
+    <color name="canvasOrange">#F25622</color>
+    <color name="canvasGreen">#85BA13</color>
+    <color name="canvasBlue">#0076A3</color>
+    <color name="canvasBlueButtonPressed">#00384d</color>
+    <color name="canvasBlueRowSelected">#D9F4FC</color>
+    <color name="canvasBlueGreyRowSelected">#C5DCE3</color>
+    <color name="canvasBlueSelectedTransparent">#5500C6F3</color>
+
+    <color name="tabBackground">#666</color>
+    <color name="moduleBackground">#5b5b5b</color>
+    <color name="canvasDisabledRowBackground">#EEEEEE</color>
+    <color name="canvasBackgroundDark">#1B1B1B</color>
+    <color name="canvasBackgroundMediumDark">#2D2D2D</color>
+    <color name="canvasBackgroundMedium">#FFE3E3E3</color>
+    <color name="canvasBackgroundLight">#FFF9F9F9</color>
+    <color name="canvasRowDivider">#CBCBCB</color>
+    <color name="canvasSectionDivider">#A4A4A4</color>
+    <color name="canvasRowGrip">#393939</color>
+    <color name="canvasTextDark">#3B3B3B</color>
+    <color name="canvasTextMedium">#939393</color>
+    <color name="canvasTabSelected">#404040</color>
+    <color name="canvasProfileGrey">#F3F3F3</color>
+    <color name="background_tab_pressed">#6633B5E5</color>
+    <color name="submissionBackground">#FFEBEBEB</color>
+    <color name="primaryText">#333333</color>
+    <color name="secondaryText">#777777</color>
+    <color name="dividerColor">#E0E0E0</color>
+
+    <color name="listview_default">#00000000</color>
+    <color name="listview_focused">#00000000</color>
+    <color name="listview_pressed">#34AADC</color>
+
+    <!-- course colors -->
+    <color name="courseRed">#D64027</color>
+    <color name="courseOrange">#FF5E3A</color>
+    <color name="courseGold">#FF9500</color>
+    <color name="courseGreen">#0BD318</color>
+    <color name="courseChartreuse">#4CD964</color>
+    <color name="courseCyan">#1AD6FD</color>
+    <color name="courseSlate">#34AADC</color>
+    <color name="courseBlue">#007AFF</color>
+    <color name="coursePurple">#5856DC</color>
+    <color name="courseViolet">#C644FC</color>
+    <color name="coursePink">#EF4DB6</color>
+    <color name="courseHotPink">#FF2D55</color>
+    <color name="courseGrey">#8E8E93</color>
+    <color name="courseBlack">#2B2B2B</color>
+    <color name="courseDarkGrey">#555555</color>
+    <!-- Tablet Candroid Style Colors (Based on Colton's design guideline)-->
+
+    <!-- Content -->
+    <color name="tablet_content_bg">#FFFFFF</color>
+    <color name="tablet_content_primary">#212121</color>
+    <color name="tablet_content_secondary">#ABABAB</color>
+    <color name="tablet_content_titlebar">#FFFFFF</color>
+    <color name="tablet_content_link">#FF392B</color>
+    <color name="tablet_content_divider">#CDCDCD</color>
+    <color name="tablet_content_complete">#00A12D</color>
+
+    <!-- Sidebar-->
+    <color name="tablet_sidebar_bg">#F9F9FA</color>
+    <color name="tablet_sidebar_border">#CDCDCD</color>
+    <color name="tablet_sidebar_primary">#212121</color>
+    <color name="tablet_sidebar_secondary">#9A9A9A</color>
+    <color name="tablet_sidebar_title_background">#E3E3E3</color>
+    <color name="tablet_sidebar_title_text">#818181</color>
+    <color name="tablet_sidebar_selected">#3DA9D8</color>
+    <color name="tablet_sidebar_selected_text">#FFFFFF</color>
+    <color name="tablet_sidebar_complete">#00A12D</color>
+
+    <!-- Miscellaneous -->
+    <color name="tablet_divider">#FFC3C3C3</color>
+    <color name="tablet_canvas_blue">#0095ed</color>
+    <color name="tablet_gridview_dark_text">#535353</color>
+    <color name="tablet_gridview_med_text">#858585</color>
+
+    <!-- Colors for refresh listener -->
+    <color name="polling_purple">#7c107c</color>
+    <color name="polling_aqua">#19b4b2</color>
+    <color name="polling_green">#3dc288</color>
+    <color name="polling_aqua_pressed">#059190</color>
+
+    <!-- Empty State text colors -->
+    <color name="aqua_text">#56D9CD</color>
+    <color name="light_grey_text">#BBBDBF</color>
+</resources>

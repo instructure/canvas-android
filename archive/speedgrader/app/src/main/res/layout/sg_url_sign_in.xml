@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2016 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rootView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/sg_login_domain">
+
+    <ImageView
+        android:id="@+id/help_button"
+        android:padding="5dip"
+        android:background="@drawable/cv_transparent_button"
+        android:contentDescription="@string/help"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:src="@drawable/ic_cv_question"
+        android:visibility="gone"/>
+
+    <ImageView
+        android:contentDescription="@string/canvasLogo"
+        android:id="@+id/canvas_logo"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:layout_marginTop="24dp"
+        style="@style/UrlSignInLogo"
+        android:src="@drawable/sg_logo"/>
+
+    <TextView
+        android:id="@+id/urlText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="24sp"
+        android:layout_marginTop="10dip"
+        android:text="@string/enterURL"
+        android:textColor="@color/white"
+        android:layout_marginBottom="35dp"
+        android:layout_below="@+id/canvas_logo"
+        android:layout_alignParentLeft="true"/>
+
+    <RelativeLayout
+        android:background="@drawable/rounded_corners"
+        android:id="@+id/enterURLBorder"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/urlText"
+        android:layout_marginTop="-30dip"
+        android:paddingTop="1dip"
+        android:paddingBottom="1dip"
+        android:paddingLeft="1dip"
+        android:paddingRight="1dip"
+        android:layout_marginLeft="@dimen/welcome_screen_margin"
+        android:layout_marginRight="@dimen/welcome_screen_margin">
+
+        <com.instructure.loginapi.login.view.HttpAutoCompleteTextView
+            android:id="@+id/enterURL"
+            android:background="@color/transparent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:hint="@string/exampleURLSimple"
+            android:inputType="textNoSuggestions|textVisiblePassword"
+            android:imeOptions="actionGo"
+            android:singleLine="true"
+            android:textColor="@color/translucent_black"
+            android:textCursorDrawable="@null"
+            android:padding="10dip"/>
+
+        <ImageView
+            android:id="@+id/connect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/enterURL"
+            android:layout_alignRight="@+id/enterURL"
+            android:layout_alignTop="@+id/enterURL"
+            android:background="@drawable/cv_transparent_button"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:src="@drawable/ic_cv_login_arrow" />
+        <View
+            android:id="@+id/topDivider"
+            android:layout_below="@+id/enterURL"
+            android:layout_width="match_parent"
+            android:layout_height=".05dp"
+            android:background="@color/canvasRowDivider"
+            android:visibility="invisible"/>
+        <ListView
+            android:layout_margin="15dip"
+            android:id="@+id/listview"
+            android:divider="@color/translucent_black"
+            android:dividerHeight="1dip"
+            android:background="@android:color/white"
+            android:layout_marginTop="10dip"
+            android:layout_marginBottom="10dip"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_below="@+id/connect"
+            android:cacheColorHint="@color/transparent"/>
+    </RelativeLayout>
+</RelativeLayout>

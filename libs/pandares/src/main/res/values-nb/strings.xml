@@ -1,0 +1,978 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2018 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+<resources>
+
+    <string name="noFilesFound">Fant ingen filer</string>
+    <string name="searchFilesHint">Søk i filer</string>
+    <string name="fileSearchInstructions">Skriv inn en søkeord med tre eller flere tegn</string>
+    <plurals name="fileSearchResultCount">
+        <item quantity="zero">"Fant ingen relevante treff"</item>
+        <item quantity="one">"Fant %d relevant treff"</item>
+        <item quantity="other">"Fant %d relevante treff"</item>
+    </plurals>
+    <string name="contentDescriptionSuperPanda">Flygende panda i kappe</string>
+    <string name="troubleLoggingIn">Er det problemer med å logge inn?</string>
+    <string name="requestLoginHelp">Be om hjelp til å logge inn</string>
+    <string name="loginHelpSubject">Jeg har problemer med å logge inn</string>
+    <string name="errorReportInvalidEmail">Oppgi en gyldig e-postadresse</string>
+    <string name="announcementSections">Seksjoner %s</string>
+    <string name="selectedListItem">Valgt: %s</string>
+
+    <!-- Student Strings -->
+    <!--Profile Fragment Strings -->
+    <string name="canvasVersionNum">Versjon:</string>
+
+    <!--Content Descriptions-->
+    <string name="canvasLogo">Canvas-logo</string>
+    <string name="enterURL">Skriv inn din Canvas URL:</string>
+    <string name="exampleURLSimple">myschool.instructure.com</string>
+    <string name="signIntoCanvasNetwork">Prøve å logge på Canvas Network?</string>
+    <string name="mobileVerifyGeneral">Denne appen er ikke godkjent for bruk</string>
+    <string name="mobileVerifyDomainUnauthorized">Serveren du oppga er ikke tillatt for denne appen.</string>
+    <string name="mobileVerifyUserAgentUnauthorized">Brukeragenten for denne appen er uautorisert.</string>
+    <string name="mobileVerifyUnknownError">Vi klarte ikke å verifisere serveren for bruk med denne appen.</string>
+    <string name="okay">OK</string>
+    <string name="options">Valg</string>
+
+    <string name="discussionAttachment">Legg ved en fil</string>
+    <string name="discussionUpload">Last opp video eller lyd</string>
+    <string name="discussionPostEditing">Rediger</string>
+
+    <!--Multiple User Sign in -->
+    <string name="removeUser">Fjerne denne brukeren?</string>
+    <string name="removedForever">Du må logge inn på denne brukeren på nytt for å få tilgang til innholdet deres.</string>
+
+    <string name="bookmarksTitle">Bokmerker</string>
+    <string name="addBookmark">Legg til bokmerke</string>
+    <string name="bookmarkName">Merke</string>
+    <string name="bookmarkTitleRequired">En etikett er påkrevd</string>
+    <string name="bookmarkAddedSuccess">Bokmerke opprettet</string>
+    <string name="bookmarkAddedFailure">Bokmerket kunne ikke opprettes</string>
+    <string name="bookmarkShortcut">Velg et bokmerke</string>
+    <string name="bookmarkDeleted">Bokmerke fjernet</string>
+    <string name="bookmarkDelete">Fjerne bokmerke</string>
+    <string name="bookmarkEdit">Redigere bokmerke</string>
+    <string name="bookmarkUpdated">Bokmerke oppdatert</string>
+    <string name="no_bookmarks">Opprett et bokmerke og se det her!</string>
+
+    <!--Date strings-->
+    <string name="today">I dag</string>
+    <string name="past">Tidligere</string>
+    <string name="noDate">Ingen dato</string>
+    <string name="future">Fremtidige</string>
+    <string name="next7Days">Neste 7 dager</string>
+    <string name="days">Dager</string>
+
+    <!--Assignments-->
+    <string name="assignmentDue">Forfall</string>
+    <string name="assignmentDueColon">Frist: </string>
+    <string name="assignmentLastSubmission">Siste innsending</string>
+    <string name="assignmentNoSubmission">Ingen</string>
+    <string name="assignmentTabDetails">Detaljer</string>
+    <string name="assignmentTabSubmission">Innleveringer</string>
+    <string name="assignmentTabGrade">Karakter</string>
+    <string name="assignmentLocked">Låst</string>
+    <string name="assignments">Oppgaver</string>
+    <string name="freeFormRubricPoints" formatted="false">%s / %s </string>
+    <string name="noRubric">Der er ingen rubrikk for denne oppgaven</string>
+    <string name="noDescription">Der er ingen beskrivelse på denne oppgaven</string>
+    <string name="noAssignmentsInGroup">Ingen oppgaver i denne gruppen</string>
+    <string name="excusedAssignment">Denne oppgaven er fritatt og blir ikke vurdert i den totale beregningen</string>
+    <string name="droppedAssignment">Denne oppgaven er droppet og blir ikke tatt med i beregningen</string>
+    <string name="excused">EX</string>
+    <string name="mutedText">Karakterene er utilgjengelige fordi instruktøren jobber med dem.</string>
+    <string name="rubricRangePointsText" formatted="false">&#160;til &gt; %s poeng</string>
+    <string name="contentDescriptionRubricRangePointsText" formatted="false">%s &#160;til &gt; %s poeng</string>
+
+    <!-- Assignment editing -->
+    <string name="points">Poeng </string>
+    <string name="assignmentGroup">Oppgavegruppe: </string>
+    <string name="gradingType">Karaktertype: </string>
+    <string name="submissionType">Type innlevering: </string>
+    <string name="editAssignment">Rediger oppgave</string>
+    <string name="save">Lagre</string>
+    <string name="cancel">Avbryt</string>
+    <string name="sendNotification">Varsle brukere om at dette innholdet er endret</string>
+
+    <!--Discussions-->
+    <string name="forbidden">Svarene er kun synlige for dem som har postet minst ett svar.</string>
+
+    <!--Events-->
+    <string name="Starts">Starter</string>
+    <string name="Ends">Slutter</string>
+    <string name="allDayEvent">Heldagsarrangement</string>
+    <string name="at">på</string>
+    <string name="PersonalCalendar">Personlig kalender</string>
+    <string name="noLocation">Ingen lokalisasjon spesifisert</string>
+
+    <string name="discussion">Diskusjoner</string>
+    <string name="closed_discussion">Stengt for kommentarer</string>
+    <string name="discussionUploadDialog">Last opp diskusjon</string>
+    <string name="totalScore">Totalt:</string>
+    <string name="noGradeText">N/A</string>
+    <string name="checkBoxFinalGradeOption">Basert på vurderte oppgaver</string>
+    <string name="checkBoxWhatIfGradeOption">Vis hva-om poengsum</string>
+    <string name="whatIfDialogText">Hva-om poengsum</string>
+    <string name="inbox">Innboks</string>
+    <string name="unread">Ulest</string>
+    <string name="archived">Arkivert</string>
+    <string name="sent">Sendt</string>
+    <string name="grade">Karakter</string>
+    <string name="clearFilter">Slett filter</string>
+    <string name="addMessage">Send melding</string>
+    <string name="monologue">Monolog</string>
+    <string name="noItemsToDisplayShort">Ingenting å vise</string>
+    <string name="emptyCalendarDate">Ingenting planlagt for</string>
+    <string name="emptyCalendarWeek">Ingenting planlagt for uken</string>
+    <string name="emptyCalendarMonth">Ingenting planlagt for måneden</string>
+    <string name="selectCanvasCalendars">Velg opp til 10 kalendere</string>
+    <string name="contentDesc_colored_calendar_indicator">Indikator for farget kalender</string>
+    <string name="noDatesSelected">Vennligst velg en dato</string>
+    <string name="Todo">Å gjøre</string>
+    <string name="todoFilter">Filtrer emner</string>
+    <string name="filterByEllipsis">Filtrer etter &#8230;</string>
+    <string name="favoritedCoursesLabel">Emnefavoritter</string>
+    <string name="Event">Hendelse</string>
+    <string name="eventSuccessfulCreation">Event ble opprettet vellykket</string>
+    <string name="eventSuccessfulDeletion">Event ble vellykket slettet</string>
+    <string name="newEvent">Nytt event</string>
+    <string name="enterTitle">Skriv inn tittel</string>
+    <string name="enterLocation">Skriv in lokalisasjon</string>
+    <string name="addNote">Legg til notat</string>
+    <string name="titleIconDescription">Tittel-ikon</string>
+    <string name="dateIconDescription">Dato-ikon</string>
+    <string name="timeIconDescription">Tids-ikon</string>
+    <string name="locationIconDescription">Lokalisasjons-ikon</string>
+    <string name="noteIconDescription">Merk ikon</string>
+    <string name="toDoTurnIn">Innlevere</string>
+    <string name="toDoNoDueDate">Ingen forfallsdato</string>
+
+    <string name="dueAt">Innleveringsfrist</string>
+    <string name="dueAtTime">Innleveringsfrist %s</string>
+    <string name="toDoDue">Forfall</string>
+    <string name="due">Forfall: %1$s</string>
+    <plurals name="to_do_needs_grading">
+        <item quantity="one">%d trenger karaktersetting</item>
+        <item quantity="other">%d trenger karaktersetting</item>
+    </plurals>
+    <string name="myFiles">Filer</string>
+    <string name="createAFolder">Opprett en mappe</string>
+    <string name="createFolder">Opprett mappe</string>
+    <string name="createAFile">Opprett en fil</string>
+    <string name="createFileFolderFabContentDesc">Vis knapper for opprett fil og opprett mappe</string>
+    <string name="folderCreationError">En fil oppsto under opprettelse av mappe.</string>
+    <string name="rename">Gi nytt navn</string>
+    <string name="renameFile">Gi nytt navn til en fil</string>
+    <string name="renameFolder">Gi nytt navn til en mappe</string>
+    <string name="blankName">Navnet kan ikke være blankt</string>
+    <string name="confirmDeleteFile">Er du sikker på at du til vil slette filen \'%s\'? Denne handlingen kan ikke angres.</string>
+    <string name="confirmDeleteEmptyFolder">Er du sikker på at du til vil slette mappen \'%s\'? Denne handlingen kan ikke angres.</string>
+    <plurals name="confirmDeleteFolder">
+        <item quantity="one">Er du sikker på at du til vil slette mappen \'%1$s\', inklusive det %2$d elementet den inneholder? Denne handlingen kan ikke angres.</item>
+        <item quantity="other">Er du sikker på at du til vil slette mappen \'%1$s\', inklusive de %2$d elementene den inneholder? Denne handlingen kan ikke angres.</item>
+    </plurals>
+
+    <string name="settings">Innstillinger</string>
+    <string name="name">Navn</string>
+    <string name="email">E-post</string>
+    <string name="username">Brukernavn</string>
+    <string name="password">Passord</string>
+    <string name="authenticationRequired">Behøver autentisering</string>
+    <string name="invalidEmailPassword">Ugyldig e-post eller passord</string>
+    <string name="loginId">Innloggings-ID</string>
+    <string name="domain">Domene</string>
+    <string name="sendFeedback">Send tilbakemelding</string>
+    <string name="sendMail">Send e-post&#8230;</string>
+    <string name="edit">Rediger</string>
+    <plurals name="item_count">
+        <item quantity="one">%d element</item>
+        <item quantity="other">%d elementer</item>
+    </plurals>
+    <string name="addToHomescreen">Legg til i Hjemme</string>
+    <string name="archive">Arkiv</string>
+    <string name="moveToInbox">Flytt til innboks</string>
+    <string name="markAsUnread">Merk som ulest</string>
+    <string name="selectPeopleInbox">Velg personer</string>
+    <string name="delete">Slett</string>
+    <string name="deleteEvent">Slett event</string>
+    <string name="selected">Valgt</string>
+    <string name="errorSendingMessage">En feil oppsto under sending av melding. Vennligst prøv igjen.</string>
+    <string name="errorPostingComment">En feil oppsto under oppføringen av innleveringskommentaren. Vennligst prøv igjen.</string>
+    <string name="deletedConversation">Den samtalen har blitt slettet.</string>
+    <string name="uploadAvatarFailMsg">Opplasting av nytt avatar-bilde feilet</string>
+    <string name="editPhoto">Rediger bilde</string>
+    <string name="invalidUsername">Det brukernavnet er ugyldig.</string>
+    <string name="usernameChangeSuccess">Brukernavn er oppdatert!</string>
+    <string name="takePhoto">Ta bilde</string>
+    <string name="choosePhotoFromGallery">Velg foto fra galleri</string>
+    <string name="fileNotFound">Fil ikke funnet.</string>
+
+    <!-- Conversations -->
+    <string name="reply">Svar</string>
+    <string name="writeAMessage">Skriv en melding...</string>
+    <string name="compose">Opprett</string>
+    <string name="composeMessage">Skriv melding</string>
+    <string name="successSendingMessage">Meldingsforsendelsen var vellykket</string>
+    <string name="emptyMessage">Meldingen kan ikke være tom!</string>
+    <string name="noRecipients">Ingen mottakere</string>
+    <string name="send">Send</string>
+    <string name="users">Brukere</string>
+    <string name="individually">Individuelt</string>
+    <string name="versionNum">Versjon:</string>
+    <string name="version" formatted="false">v. %s</string>
+    <string name="allCourses">Alle emner</string>
+    <string name="allGroups">Alle grupper</string>
+    <string name="courseOptions">Emne alternativer</string>
+    <string name="editNickname">Rediger kallenavn</string>
+    <string name="editCourseColor">Rediger emnefarge</string>
+    <string name="open">Åpen</string>
+    <string name="openAlternate">Åpne med alternativ app</string>
+    <string name="opening">Åpne fil&#8230;</string>
+    <string name="download">Last ned</string>
+    <string name="hideExtras">Skjul det som er ekstra</string>
+    <string name="showExtras">Vis det som er ekstra</string>
+    <string name="messageAttachments">Meldingsvedlegg</string>
+    <string name="discussionAttachmentLabel">Vedlegg</string>
+    <string name="attachmentIcon">Vedlegg-ikon</string>
+    <string name="ok">OK</string>
+    <string name="with">med</string>
+    <string name="starConversation">Stjerne-konversasjon</string>
+    <string name="deleteConversation">Slett samtale</string>
+    <string name="sharedWith">Delt med  </string>
+    <string name="sharedWithYou">Delt med deg</string>
+    <string name="inboxEmptyMessage">Klill \"+\" for å lage en ny samtale.</string>
+    <string name="inboxAllMessages">Alle</string>
+    <string name="filterInbox">Filtrere innboksen</string>
+    <string name="selectCanvasContext">Velg et emne eller gruppe</string>
+    <string name="inboxEmptyTitle">Ingen meldinger</string>
+    <string name="removeAttachment">Fjern vedlegg</string>
+    <string name="downloadAttachment">Laste ned vedlegg</string>
+    <string name="messageOptions">Meldingsalternativer</string>
+    <string name="forward">Videresend</string>
+    <string name="replyAll">Svar alle</string>
+    <string name="unarchive">Fjern arkivering</string>
+    <string name="confirmDeleteMessage">Er du sikker på at du vil slette din kopi av denne meldingen? Denne handlingen kan ikke angres.</string>
+    <string name="confirmDeleteConversation">Er du sikker på at du vil slette din kopi av denne samtalen? Denne handlingen kan ikke angres.</string>
+    <string name="errorConversationGeneric">Kan ikke utføre denne handlingen. Kontroller tilkoblingen og prøv på nytt.</string>
+    <string name="conversationArchived">Samtalen ble arkivert</string>
+    <string name="conversationUnarchived">Samtalen ble fjernet fra arkivet</string>
+    <string name="messageDeleted">Meldingen slettet</string>
+    <string name="sendIndividualMessage">Send individuell melding til hver mottaker</string>
+    <string name="invalidRecipients">Da har ikke tillatelse til å sende melding til en eller flere av de valgte mottakerne.</string>
+    <string name="newMessage">Ny melding</string>
+    <string name="forwardMessage">Videresend melding</string>
+    <string name="addMorePeopleToMessage">Legg til en annen mottaker. Kan ikke sende meldinger som er adressert bare til deg selv.</string>
+    <string name="selectRecipients">Velg mottakere</string>
+
+    <plurals name="people_count">
+        <item quantity="one">%d person</item>
+        <item quantity="other">%d personer</item>
+    </plurals>
+
+    <plurals name="group_count">
+        <item quantity="one">%d gruppe</item>
+        <item quantity="other">%d grupper</item>
+    </plurals>
+
+    <string name="exitWithoutSavingTitle">Avslutt uten å lagre?</string>
+    <string name="exitWithoutSavingMessage">Er du sikker på at du vil avslutte uten å lagre?</string>
+    <string name="exitUnsaved">Avslutt</string>
+
+    <!-- Groups -->
+    <string name="groupDialogTitle">Gruppemelding</string>
+    <string name="groupDialogMessage">Legg til samtlige i en enkelt gruppekonversasjon, eller send melding til samtlige individuelt?</string>
+    <string name="group">Gruppe</string>
+    <string name="groups">Grupper</string>
+    <string name="groupMembers">Gruppemedlemmer</string>
+
+    <string name="loading">Laster&#8230;</string>
+    <string name="select_item_to_display">Velg fra listen</string>
+
+    <string name="syllabus">Emneoversikt</string>
+    <string name="coursePeople">Personer</string>
+    <string name="teachersTas">Lærere &amp; TAs</string>
+    <string name="students">Studenter</string>
+    <string name="observers">Observatører</string>
+    <string name="syllabusMissing">Et sammendrag har ikke blitt lagt til.</string>
+
+    <string name="canvas">Canvas</string>
+    <string name="chooseRecipient">Velg mottaker(e)</string>
+    <string name="messageHasNoRecipients">Denne meldingen har foreløpig ingen mottakere.</string>
+    <string name="sendMessage">Send melding</string>
+    <string name="userAvatar">Bruker-avatar</string>
+
+    <string name="calendarIcon">Kalender-ikon</string>
+    <string name="assignmentIcon">Oppgave-ikon</string>
+    <string name="announcementIcon">Kunngjørings-ikon</string>
+    <string name="conversationIcon">Samtale-ikon</string>
+    <string name="defaultIcon">Standard-ikon</string>
+    <string name="discussionIcon">Diskusjons-ikon</string>
+    <string name="gradesIcon">Klasse-ikon</string>
+    <string name="grades">Karakterer</string>
+    <string name="allGradingPeriods">Alle vurderingsperioder</string>
+    <string name="calendar">Kalender</string>
+    <string name="bookmarks">Bokmerker</string>
+    <string name="showGrades">Vis karakterer</string>
+    <string name="gradesAreHidden">Klasser er ikke synlig for dette emnet.</string>
+
+    <string name="entireGroupSelected">Hele gruppen er allerede valgt.</string>
+    <string name="noUsersInGroup">Der er ingen bukere i denne gruppen</string>
+
+    <!--Notifications-->
+    <string name="deleted">[Slettet]</string>
+    <string name="gradedDiscussion">Karaktergivende diskusjon</string>
+    <string name="pointsPossible">Mulige poeng</string>
+    <string name="pointsPossibleNoPeriod">Mulige poenger</string>
+
+    <string name="deletedEntryNoChildren">Innlegget i den slettede diskusjonen hadde ingen svar.</string>
+    <string name="sideCommentEntry">I denne typen diskusjon, kan du ikke kommentere noe innlegg på dette nivået.</string>
+    <string name="contentDescriptionFiles">Fil-ikon</string>
+
+    <string name="loadingCanvas">Laster Canvas-innhold&#8230;</string>
+
+    <string name="unknownDevice">UnknownDevice</string>
+
+    <string name="differentDomainFromLink">Valgt lenke er for et annet domene enn det du er pålogget.</string>
+
+    <string name="pages">Sider</string>
+    <string name="noPageFound">Det er ingen sideinformasjon tilgjengelig.</string>
+    <string name="noPagesInContext">Det er  ingen sider tilgjengelig for dette</string>
+    <string name="modified">Sist endret:</string>
+    <string name="lastModified">Sist endret: %1$s</string>
+
+    <string name="masqueradeUserId">Maskerade bruker-ID</string>
+    <string name="startMasquerading">Start maskerade</string>
+    <string name="stopMasquerading">Stopp forkledning</string>
+    <string name="userId">Bruker-ID</string>
+    <string name="masqueradeFail">Det oppsto en feil under forsøk på maskerade</string>
+
+    <string name="emptyId">ID kan ikke være tom</string>
+
+    <string name="goToQuiz">Gå til quiz</string>
+    <string name="goToExternalTool">Gå til eksterne verktøy</string>
+
+    <string name="pastDueDate">Innleveringsdato utløpt</string>
+
+    <string name="goToDiscussion">Gå til diskusjon</string>
+    <string name="quizzes">Tester</string>
+
+    <string name="lastDiscussionPost">Siste innlegg</string>
+
+    <string name="newAnnouncement">Ny kunngjøring</string>
+    <string name="newDiscussion">Ny diskusjon</string>
+    <string name="composeDiscussion">Opprett diskusjon</string>
+    <string name="composeAnnouncement">Opprett kunngjøring</string>
+
+    <string name="postAnnouncement">Legg ut kunngjøring</string>
+    <string name="postDiscussion">Post diskusjon</string>
+
+    <string name="postAnnouncementSuccess">Denne kunngjøringen ble vellykket lagt ut.</string>
+    <string name="postDiscussionSuccess">Diskusjonen ble vellykket lagt ut.</string>
+    <string name="updateDiscussionSuccess">Diskusjonen ble vellykket oppdatert.</string>
+    <string name="draftDiscussionSuccess">Diskusjons-kladden vellykket opprettet.</string>
+
+    <string name="errorPostingAnnouncement">Det oppsto en feil med å legge ut kunngjøringen.</string>
+    <string name="errorPostingDiscussion">Det oppsto en feil med å legge ut diskusjonen</string>
+    <string name="allowThreading">Tillatt kjede-svar</string>
+    <string name="usersMustPost">Brukere må publisere før de kan se svar</string>
+    <string name="allowUserComments">Lar brukere kommentere</string>
+    <string name="message">Melding</string>
+    <string name="title">Tittel</string>
+
+
+    <string name="messageBlank">Denne meldingen kan ikke være tom.</string>
+
+    <string name="notAuthorizedAnnouncement">Beklager. Du har ikke tilstrekkelige rettigheter for å skrive kunngjøringer i dette emnet.</string>
+    <string name="notAuthorizedDiscussion">Beklager. Du har ikke tilstrekkelige rettigheter for å starte diskusjoner i dette emnet.</string>
+
+    <string name="announcements">Kunngjøringer</string>
+
+    <string name="titleBlank">Tittelen kan ikke være tomt.</string>
+
+    <!-- Modules -->
+    <string name="modules">Moduler</string>
+    <string name="moduleItemMustView">Se på denne</string>
+    <string name="moduleItemViewed">Du har sett på denne</string>
+    <string name="moduleItemSubmit">Må levere inn oppgaven</string>
+    <string name="moduleItemSubmitted">Oppgaven innlevert</string>
+    <string name="moduleItemContribute">Bidra til denne siden</string>
+    <string name="moduleItemContributed">Du har bidratt</string>
+    <string name="moduleItemMinScore">Poengsum minst en</string>
+    <string name="moduleItemMinScoreMet">Minimum poengsum innfridd</string>
+    <string name="prerequisites">Forhåndskrav:</string>
+    <string name="unlocked">Ulåst:</string>
+    <string name="locked">Låst</string>
+    <string name="lockedAssignmentDesc">Denne oppgaven er en del av %s-modulen og har ikke blitt låst opp ennå.</string>
+    <string name="lockedPageDesc">Denne siden er en del av %s-modulen og har ikke blitt låst opp ennå.</string>
+    <string name="lockedFileDesc">Denne filen er en del av %s-modulen og har ikke blitt låst opp ennå.</string>
+    <string name="lockedQuizDesc">Denne quizn er en del av %s-modulen og har ikke blitt låst opp ennå.</string>
+    <string name="lockedDiscussionDesc">Denne diskusjonen er en del av %s-modulen og har ikke blitt låst opp ennå.</string>
+    <string name="lockedAssignmentDescLine2">Besøk modulsiden for emnet for å få informasjon om hvordan dette innholdet skal låses opp.</string>
+    <string name="mustComplete">Du må først fullføre:</string>
+    <string name="unlockedAt">Den vil låses opp den:</string>
+    <string name="goToModules">Gå til moduler</string>
+    <string name="markDone">Merk ferdig</string>
+
+    <string name="moduleItemNotFound">Modulen ble ikke funnet</string>
+    <string name="help">Hjelp</string>
+    <string name="instructor_question">Instruktør-spørsmål</string>
+    <string name="link">Lenke</string>
+
+    <!-- LockInfoHTMLHelper Strings -->
+    <string name="lockedAssignmentNotModule">Denne oppgaven er låst.</string>
+
+    <!--New Course Layout Strings -->
+    <string name="myCourses">Mine emner</string>
+
+
+    <!--New Submission Strings -->
+    <string name="textEntry"> Innlegging av tekst</string>
+    <string name="onlineURL"> URL på nett</string>
+    <string name="enterTextEntry">Skriv inn tekst</string>
+    <string name="fileUpload"> Filopplasting</string>
+    <string name="oneFileOnly">Innleveringen tillater kun én filopplasting</string>
+
+
+    <string name="submit">Send inn</string>
+    <string name="blankSubmission">Innleveringen kan ikke være tom.</string>
+    <string name="errorPostingSubmission">Det oppsto en feil med å legge ut innsendingen.</string>
+    <string name="successPostingSubmission">Vellykket innsending.</string>
+
+    <string name="exampleSubmissionURL">http://www.example.com</string>
+
+
+
+    <!--DataLoss Fragment Strings -->
+    <string name="unsavedProgress">Ulagret fremdrift</string>
+    <string name="informationLost">All ulagret informasjon vil bli tapt. Ønsker du å fortsette?</string>
+    <string name="slash"> / </string>
+
+    <!--Delete Notification Strings -->
+    <string name="confirm">Bekreft</string>
+
+    <!--Dismiss To do String-->
+    <string name="markAsDone">Merk som ferdig</string>
+
+    <!--Submission Details Strings -->
+    <string name="next">Neste</string>
+    <string name="addSubmission">Innlevere</string>
+    <string name="addAnotherSubmission">Innlevere på nytt</string>
+    <string name="turnedIn">Innlevert:&#160;</string>
+    <string name="addComment">Legg til en kommentar&#8230;</string>
+    <string name="addCommentNoEllipsis">Legg til en kommentar</string>
+    <string name="subTypeOnlineText">Skriv inn tekst på nett</string>
+    <string name="subTypeFileUpload">Opplasting av eFile online</string>
+    <string name="subTypeOnlineURL">Websidens URL</string>
+    <string name="subTypeOnlineQuiz">Online quiz</string>
+    <string name="subTypeMediaRecording">Medieinnspilling</string>
+    <string name="sub_type_lti_launch">LTI-start</string>
+    <string name="subTypeDiscussionTopic">Diskusjon</string>
+    <string name="turnInByHand">Du må levere inn denne oppgaven for hånd</string>
+    <string name="noSubRequired">Ingen innlevering påkrevd</string>
+    <string name="noTurnInOnMobile">Mobil innlevering støttes ikke</string>
+
+    <string name="home">Hjem</string>
+    <string name="Notifications">Varslinger</string>
+
+    <string name="icon">Ikon</string>
+    <string name="rootUser">Rotmappe bruker</string>
+    <string name="rootCourse">Rotmappe emne</string>
+    <string name="rootGroup">Rotmappe gruppe</string>
+
+    <!-- Course Settings -->
+    <string name="privatelyAvailable">Tilgjengelig privat</string>
+    <string name="publiclyAvailable">Starter: \u0020</string>
+    <string name="starts">Starter:  </string>
+    <string name="courseCode">Emnekode:  </string>
+    <string name="ends">Slutter:  </string>
+    <string name="visibility">Synlighet:  </string>
+    <string name="license">Lisens:  </string>
+
+
+    <!-- Navigation String -->
+    <string name="collaborations">Samarbeid</string>
+    <string name="conferences">Konferanser</string>
+    <string name="chat">Chat</string>
+    <string name="outcomes">Læringsmål</string>
+
+    <!-- Submission View Strings -->
+    <string name="visitPage">Besøk side:</string>
+    <string name="clickToViewSubmission">Det ble tatt et øyeblikksbilde av nettstedet når du leverte det inn. Tapp og hold på bilde nedenfor for å åpne eller laste ned hele bildet.</string>
+    <string name="urlSubmissionNoPreview">Denne innleveringen var en URL til en ekstern side. Husk at denne siden kan ha endret seg siden innleveringen opprinnelig skjedde.</string>
+    <string name="contentDescriptionPreviewImage">Forhåndsvisning av den vedlagte url</string>
+    <string name="itemStillProcessing">Denne artikkelen blir fortsatt behandlet på serveren. Vennligst prøv igjen.</string>
+
+
+    <string name="isNotSupportedFeature">%1$s støttes ikke.</string>
+    <string name="isNotSupported">Lenken støttes ikke.</string>
+    <string name="openInBrowser">Åpne i nettleser</string>
+    <string name="unsupported">Støttes ikke</string>
+
+
+    <!-- Profile Strings -->
+    <string name="calendarWeekSetting">Kalender starter på mandag</string>
+    <string name="profile">Profil</string>
+
+    <string name="noSubject">(intet tittel)</string>
+    <string name="subject">Tittel</string>
+    <string name="sadPanda">Trist Panda-bilde</string>
+    <string name="panda_fact_string">Panda-fakta:&#160;</string>
+    <string name="remove">Fjern</string>
+    <string name="founders">Grunnleggere</string>
+    <string name="image">Bilde</string>
+
+    <string name="EULA">EULA</string>
+    <string name="privacyPolicy">Personvernregler</string>
+    <string name="termsOfUse">Bruksvilkår</string>
+    <string name="openSource">Åpen kilde</string>
+
+    <!-- Quiz Strings -->
+    <string name="assignmentQuizzes">Oppgavetester</string>
+    <string name="practiceQuizzes">Øvelsestester</string>
+    <string name="gradedSurveys">Karaktergivende spørreundersøkelser</string>
+    <string name="surveys">Spørreundersøkelser</string>
+    <string name="quizMatchingDefaultDisplay">[Velg]</string>
+    <string name="choose_answer_below">Velg svaret ditt nedenfor</string>
+    <string name="choose_answers_below">Velg svarene dine nedenfor</string>
+
+
+    <!--Widget Strings-->
+    <string name="todoWidgetTitle">Å gjøre</string>
+    <string name="gradesWidgetTitle">Karakterer</string>
+    <string name="notificationWidgetTitle">Varslinger</string>
+    <string name="todoWidgetTitleLong">Canvas - å gjøre</string>
+    <string name="gradesWidgetTitleLong">Canvas - klasser</string>
+    <string name="notificationWidgetTitleLong">Canvas - varsler</string>
+    <string name="notLoggedIn">Du er ikke innlogget</string>
+    <string name="widgetStyle">Velg din widget-stil</string>
+    <string name="widgetMinimumStyle">Skule detaljer på widget</string>
+    <string name="light">Lys</string>
+    <string name="dark">Mørk</string>
+
+    <string name="invalidExternal">Dette eksterne verktøyet har enten utløpt eller blitt konfigurert feil.</string>
+
+    <!-- Help dialog strings -->
+    <string name="askInstructor">Spør instruktøren din et spørsmål</string>
+    <string name="askInstructorDetails">Spørsmål leveres til din instruktør</string>
+    <string name="searchGuides">Søk i Canvas-guidene</string>
+    <string name="canvasGuides">Canvas-guider</string>
+    <string name="searchGuidesDetails">Finn svarene på vanlige spørsmål</string>
+    <string name="reportProblem">Rapporter et problem</string>
+    <string name="reportProblemDetails">La oss få vite det dersom appen oppfører seg dårlig</string>
+    <string name="requestFeature">Be om en funksjon</string>
+    <string name="requestFeatureDetails">Har du en idé for å forbedre appen?</string>
+    <string name="shareYourLove">Del din kjærlighet for appen</string>
+    <string name="shareYourLoveDetails">Fortell oss om dine favorittdeler av appen</string>
+
+    <!-- Feature Request -->
+    <string name="featureSubject">Idé for Canvas [Android]</string>
+    <string name="understandRequest">Følgende informasjon vil hjelpe oss bedre til å forstå din idé:</string>
+
+    <!-- Ask Instructor -->
+    <string name="whichCourse">Hvilket emne gjelder spørsmålet?</string>
+    <string name="allTeachers">Denne meldingen blir sendt til alle lærere og lærerassistenter på emnet</string>
+    <string name="sending">Sender&#8230;</string>
+    <string name="error">Avvik</string>
+
+    <!-- Tablet Strings -->
+    <string name="courses">Emner</string>
+    <string name="toDoList">Å gjøre-liste</string>
+    <string name="notifications">Varslinger</string>
+    <string name="pushNotifications">Push-varslinger</string>
+    <string name="pushNotificationsError">Push-varslinger har ikke blitt registrert for denne enheten.</string>
+    <string name="profileSettings">Profilinnstillinger</string>
+    <string name="accountPreferences">Kontoinnstillinger</string>
+    <string name="pinAndFingerprint">PIN og fingeravtrykk</string>
+
+    <string name="launchSpeedgrader">Åpne Speedgrader</string>
+
+    <string name="search_todo">todo to do todos todo list</string>
+    <string name="search_course">emne emner klasse klasser</string>
+    <string name="search_grades">karakter karakterer</string>
+
+    <!-- ShareFileOptions Dialog-->
+    <string name="uploadTo">Last opp til </string>
+    <string name="uploadToCanvas">Last opp til Canvas</string>
+    <string name="uploadMyFiles">Mine filer</string>
+    <string name="uploadCourseFiles">Filer for emne</string>
+    <string name="uploadToSubmissionComment">Last opp til sendt inn kommentar</string>
+    <!-- ChangeLog Dialog-->
+    <string name="changelog">Endringslogg</string>
+
+    <string name="editUserName">Rediger brukernavn</string>
+    <!-- Choose Profile Image -->
+    <string name="takeANewPhoto">Ta et nytt bilde</string>
+    <string name="chooseFromGallery">Velg fra galleri</string>
+    <string name="setToDefault">Sett til standard</string>
+    <string name="chooseBackgroundImage">Velg bakgrunnsbilde</string>
+
+    <string name="no_courses">Tappe for å legge til et emne</string>
+    <string name="no_courses_available">Ingen emner her, ta fri i dag!</string>
+    <string name="no_courses_grades">Vennligst meld deg på et emne for å se karakterene dine</string>
+    <!--Navigation Drawer-->
+    <string name="navigation_drawer_open">Åpne navigasjonsskuff</string>
+    <string name="navigation_drawer_close">Lukk navigasjonsskuff</string>
+
+    <string name="preferred_land_page">Destinasjonsside</string>
+    <string name="could_not_route_course">Kunne ikke finne emnepåmeldingen.</string>
+    <string name="could_not_route_group">Kunne ikke finne gruppepåmeldingen.</string>
+    <string name="could_not_route_unknown">Det oppsto en uventet feil.</string>
+    <string name="could_not_route_locked">Denne siden er skjult eller låst og ikke aksesseres.</string>
+
+    <string name="close">Lukk</string>
+    <string name="closed">Lukket</string>
+
+    <string name="overdueAssignments">Oppgaver med passert innleveringsdato</string>
+    <string name="upcomingAssignments">Kommende oppgaver</string>
+    <string name="undatedAssignments">Udaterte oppgaver</string>
+    <string name="pastAssignments">Tidligere oppgaver</string>
+
+    <string name="could_not_find_course">Det oppsto en feil med å få emnet for denne enheten.</string>
+    <string name="could_not_find_group">Det oppsto en feil med å få gruppen for denne enheten.</string>
+
+    <string name="selectBackground">Velg en bakgrunn</string>
+
+    <string name="notoriousSubmissionInProgress">Fremlegger filer&#8230; Sjekk varslingslinjen for oppdateringer.</string>
+    <string name="notoriousSubmissionSuccessful">Ferdig med å sende filen</string>
+
+    <string name="bio">Biografi</string>
+    <string name="draft">Utkast</string>
+    <string name="publish">Publiser</string>
+
+    <string name="createPandaAvatar">Opprett Panda Avatar</string>
+    <string name="back">Tilbake</string>
+    <string name="setAsAvatar">Sett som avatar</string>
+    <string name="avatarSuccessfullySaved">Panda-avataren ble vellykket lagret</string>
+    <string name="regularAvatarSuccessfullySaved">Avatar ble vellykket lagret.</string>
+    <string name="errorSavingAvatar">Det var en feil med lagring av panda-avataren</string>
+    <string name="pandaAvatar">Panda-avatar</string>
+    <string name="pandaHead">Panda-avatarhode</string>
+    <string name="pandaBody">Panda-avatarkropp</string>
+    <string name="pandaLegs">Panda-avatarbein</string>
+    <string name="pandaAvatarsFolderName">PandaAvatars</string>
+    <string name="share">Dele</string>
+
+    <string name="speedgrader">SpeedGrader</string>
+    <string name="gauge">Gauge</string>
+
+    <string name="calendarDay">Dag</string>
+    <string name="calendarWeek">Uke</string>
+    <string name="calendarMonth">Måned</string>
+    <string name="selectCalendars">Velg kalendere</string>
+    <string name="createNewCalendarEvent">Opprett ny hendelse</string>
+    <string name="calendarDialog10Warning">Du kan kun velge å vise 10 kalendre</string>
+    <string name="calendarDialogNoneWarning">Vennligst velg minst én kalender</string>
+    <string name="enableFunMode">Skru av pandaene</string>
+
+    <string name="accountNotifications">Kunngjøringer</string>
+    <string name="addAccount">Legg til konto</string>
+
+    <string name="changeUser">Endre bruker</string>
+
+    <string name="no_data_connection">Kontroller dataforbindelsen din og prøv igjen.</string>
+
+    <!--Notification Preferences-->
+    <string name="notification_primary_inbox_title">Canvas Notification</string>
+    <string name="notification_channel_name_primary">Generelle Canvas Notifications</string>
+    <string name="notification_channel_description_primary">Ytterligere konfigurering av varsler kan gjøres inne i seksjonen for Canvas Notification Preferences.</string>
+
+    <string name="notification_cat_course_activities">Aktiviteter for emne</string>
+    <string name="notification_cat_discussions">Diskusjoner</string>
+    <string name="notification_cat_conversations">Samtaler</string>
+    <string name="notification_cat_scheduling">Planlegger</string>
+    <string name="notification_cat_groups">Grupper</string>
+    <string name="notification_cat_alerts">Varsler</string>
+    <string name="notification_cat_conferences">Konferanser</string>
+
+    <string name="notification_pref_due_date">Forfallsdato</string>
+    <string name="notification_pref_grading_policies">Retningslinjer for karaktersetting</string>
+    <string name="notification_pref_course_content">Emneinnhold</string>
+    <string name="notification_pref_files">Filer</string>
+    <string name="notification_pref_announcement">Kunngjøring</string>
+    <string name="notification_pref_announcement_created_by_you">Kunngjøring opprettet av deg</string>
+    <string name="notification_pref_grading">Karaktersetting</string>
+    <string name="notification_pref_invitation">Invitasjon</string>
+    <string name="notification_pref_all_submissions">Alle innleveringer</string>
+    <string name="notification_pref_late_grading">Forsinket karaktersetting</string>
+    <string name="notification_pref_submission_comment">Innleveringskommentar</string>
+
+    <string name="notification_pref_discussion">Diskusjon</string>
+    <string name="notification_pref_discussion_post">Diskusjonspost</string>
+
+    <string name="notification_pref_add_to_conversation">Legg til konversasjon</string>
+    <string name="notification_pref_conversation_message">Samtalemeldinger</string>
+    <string name="notification_pref_conversations_created_by_you">Konversasjoner opprettet av deg</string>
+
+    <string name="notification_pref_student_appointment_signups">Påmeldinger til studentavtaler</string>
+    <string name="notification_pref_appointment_signups">Avtalepåmeldinger</string>
+    <string name="notification_pref_appointment_cancelations">Kansellerte avtaler</string>
+    <string name="notification_pref_appointment_availability">Tilgjengelighet for avtaler</string>
+    <string name="notification_pref_calendar">Kalender</string>
+
+    <string name="notification_pref_membership_update">Oppdatering av medlemskap</string>
+    <string name="notification_pref_admin">Administrative varslinger</string>
+    <string name="notification_pref_recording_ready">Opptak klart</string>
+
+    <string name="notification_pref_type_email">E-post</string>
+    <string name="notification_pref_type_push">Enhet</string>
+    <string name="notification_pref_type_sms">SMS</string>
+
+    <string name="notification_pref_dialog_title">Enhetsvarsler</string>
+    <string name="notification_pref_dialog_message">Ønsker du å skru på enhetsvarsler? Disse innstillingene kan endres senere i Innstillinger &gt; Varsler &gt; for alle enheter.</string>
+    <string name="notification_pref_toast_success">Varslinger har blitt aktivert</string>
+
+    <string name="notification_desc_due_date">Bli varslet når en forfallsdato for oppgaven endres.</string>
+    <string name="notification_desc_grading_policies">Bli varslet når regler for emne-karaktersetting endres.</string>
+    <string name="notification_desc_course_content">Bli varslet når emneinnhold endres på WikiPages, Tester og Oppgaver.</string>
+    <string name="notification_desc_files">Bli varslet når en ny fil er lagt til emnet ditt.</string>
+    <string name="notification_desc_announcement">Bli varslet når det er en ny kunngjøring i løpet av emnet.</string>
+    <string name="notification_desc_announcement_created_by_you">Bli varslet når du oppretter en kunngjøring, og når noen svarer på kunngjøringen din.</string>
+    <string name="notification_desc_grading">Bli varslet når en oppgave/innlevering ble karaktersatt/endret, og når en vektet karakter ble endret.</string>
+    <string name="notification_desc_invitation">Bli varslet om invitasjoner til webkonferanser, grupper, samarbeid, fagfellevurdering og påminnelser.</string>
+    <string name="notification_desc_all_submissions">Instruktør &amp; kun Admin. Bli varslet når en oppgave sendes inn eller sendes på ny.</string>
+    <string name="notification_desc_late_grading">Instruktør &amp; kun Admin. Bli varslet når en forsinket oppgave sendes inn.</string>
+    <string name="notification_desc_submission_comment">Bli varslet når en kommentar er gitt om innleveringen din.</string>
+    <string name="notification_desc_discussion">Bli varslet når det er et nytt diskusjonstema i emnet ditt.</string>
+    <string name="notification_desc_discussion_post">Bli varslet når det er ny post i en diskusjon du abonnerer på.</string>
+    <string name="notification_desc_add_to_conversation">Bli varslet når du er lagt til i en samtale.</string>
+    <string name="notification_desc_conversation_message">Bli varslet når du har en ny innboksmelding.</string>
+    <string name="notification_desc_conversations_created_by_you">Bli varslet når du oppretter en ny samtale.</string>
+    <string name="notification_desc_student_appointment_signups">Instruktør &amp; kun Admin. Bli varslet når det er en avtaleoppføring.</string>
+    <string name="notification_desc_appointment_signups">Bli varslet når det er registrert noe nytt på kalenderen din.</string>
+    <string name="notification_desc_appointment_cancelations">Bli varslet når det er en avbestilling av avtale.</string>
+    <string name="notification_desc_appointment_availability">Bli varslet når en timeavtale blir tilgjengelig.</string>
+    <string name="notification_desc_calendar">Bli varslet om nye og oppdaterte kalenderelementer.</string>
+    <string name="notification_desc_membership_update">Bare admin, ventende påmelding aktivert. Bli varslet når en gruppepåmelding er akseptert eller avvist.</string>
+    <string name="notification_desc_admin">Instruktør &amp; kun Admin. Få beskjed om emnepåmeldinger, rapporter generert, innhold eksportert, flyttingsrapporter, nye kontobrukere og nye studentgrupper.</string>
+    <string name="notification_desc_recording_ready">Bli varslet når et konferanseopptak er klart.</string>
+
+    <string name="enterAnswer">Skriv inn svar</string>
+    <string name="resumeQuiz">Fortsett test</string>
+    <string name="allowed_attempts">Tillatte forsøk</string>
+    <string name="viewQuestions">Se spørsmål</string>
+    <string name="unlimited">Ubegrenset</string>
+    <string name="viewResults">Se resultater</string>
+
+    <string name="toggleTimer">Veksle timer</string>
+    <string name="thirtySecondWarning">30 sekunder igjen</string>
+    <string name="timeSpentFormat" formatted="false">Tid brukt: %d minutter</string>
+    <string name="lockedIPAddress">Denne testen er låst. Den er kun tilgjengelig enkelte steder.</string>
+    <string name="lockedInvalidAccessCode">Ugyldig tilgangskode</string>
+
+    <string name="showFlaggedQuestions">Vis flagget/ubesvarte spørsmål</string>
+    <string name="question">Spørsmål</string>
+    <string name="questions">Spørsmål</string>
+    <plurals name="question_count">
+        <item quantity="one">%d spørsmål</item>
+        <item quantity="other">%d spørsmål</item>
+    </plurals>
+    <plurals name="pointCount">
+        <item quantity="one">%s poeng</item>
+        <item quantity="other">%s poeng</item>
+    </plurals>
+    <string name="flagged">Flagget</string>
+
+    <string name="areYouSure">Er du sikker på at du sende inn denne quizen?</string>
+    <string name="submitQuiz">Sende inn quiz?</string>
+    <plurals name="unanswered_quiz_questions">
+        <item quantity="one">Du har %d ubesvart spørsmål.\nEr du sikker på at du vil sende inn denne quizen?</item>
+        <item quantity="other">Du har %d ubesvart spørsmål.\nEr du sikker på at du vil sende inn denne quizen?</item>
+    </plurals>
+    <string name="takeQuizAgain">Ta quizen på nytt</string>
+    <string name="autoSubmitting">Automatisk innsending av quiz&#8230;</string>
+    <string name="submitReasonTimedQuiz">Quizen ble sendt inn ettersom tiden utløp.</string>
+    <string name="submitReasonLockAt">Quizen ble innlevert fordi datolåsen ble nådd.</string>
+    <string name="quizSubmittedSuccessfully">Quizen vellykket innlevert.</string>
+    <string name="quizSubmittedFailure">Quiz kunne ikke sendes inn akkurat nå.</string>
+    <string name="almostDue">Nesten ferdig!</string>
+    <string name="almostDueMsg">Forfallsdatoen er rett rundt hjørnet. Send inn nå for å forhindre at quizen din blir merket med sen innlevering?</string>
+    <string name="timeLimit">Tidsbegrensning</string>
+    <string name="cantStartQuiz">Kan ikke starte quiz</string>
+    <string name="start">Start</string>
+    <string name="newPushNotifications">%1$s Nye varsler</string>
+    <string name="like">liker</string>
+    <string name="likes">liker</string>
+
+    <string name="wear_reminder">Planlegg påminnelser på innleveringsfrister</string>
+    <string name="wear_notifications">Skru på wear-varslinger</string>
+
+    <string name="color_1">Rød</string>
+    <string name="color_2">Varmrosa</string>
+    <string name="color_3">Lavendel</string>
+    <string name="color_4">Fiolett</string>
+    <string name="color_5">Lilla</string>
+    <string name="color_6">Skifergrå</string>
+    <string name="color_7">Blå</string>
+    <string name="color_8">Cyan</string>
+    <string name="color_9">Grønn</string>
+    <string name="color_10">Chartreuse</string>
+    <string name="color_11">Gul</string>
+    <string name="color_12">Gull</string>
+    <string name="color_13">Oransje</string>
+    <string name="color_14">Rosa</string>
+    <string name="color_15">Grå</string>
+
+    <string name="edit_course_nickname">Rediger kallenavn for emne</string>
+    <string name="courseNicknameError">Kallenavnet til emnet kan ikke angis akkurat nå.</string>
+
+    <string name="colorPickerDialogTitle">Emnefarge</string>
+    <string name="colorPickerDialogMessage">Personifiser emnet ved å gi det en ny farge.</string>
+    <string name="colorPickerError">Emnefargen kan ikke angis nå.</string>
+
+    <string name="contentDescriptionColorCottonCandy">Rosa</string>
+    <string name="contentDescriptionColorBarbie">Varmrosa</string>
+    <string name="contentDescriptionColorBarneyPurple">Fiolett</string>
+    <string name="contentDescriptionColorEggplant">Lilla</string>
+    <string name="contentDescriptionColorUltramarine">Mørkeblå</string>
+    <string name="contentDescriptionColorOcean11">Blå</string>
+    <string name="contentDescriptionColorCyan">Cyan</string>
+    <string name="contentDescriptionColorAquaMarine">Aqua blå</string>
+    <string name="contentDescriptionColorEmeraldGreen">Smaragdgrønt</string>
+    <string name="contentDescriptionColorFreshCutLawn">Grønn</string>
+    <string name="contentDescriptionColorChartreuse">Chartreuse</string>
+    <string name="contentDescriptionColorSunFlower">Gul</string>
+    <string name="contentDescriptionColorTangerine">Oransje</string>
+    <string name="contentDescriptionColorBloodOrange">Mørk oransje</string>
+    <string name="contentDescriptionColorSriracha">Rød</string>
+
+    <string name="courseFavorited">Emne %s, favoritt.</string>
+    <string name="courseNotFavorited">Emne %s, ikke favoritt.</string>
+    <string name="groupFavorited">Gruppe %s, favoritt.</string>
+    <string name="groupNotFavorited">Gruppe %s, ikke favoritt.</string>
+    <string name="accountGroup">Gruppe konto</string>
+
+    <!--Recents-->
+    <string name="recents_empty">Legg til et emne eller gruppe fra skjermbildet for emnetilpasninger for å se de her.</string>
+
+    <string name="toolbar_close">Lukk verktøylinje</string>
+    <string name="favoriteDescription">Vis i \"Mine emner\"</string>
+    <string name="about">Om</string>
+    <string name="courseShortcuts">Legg til en snarvei for emnet ditt</string>
+    <string name="courseNickname">Kallenavn for emne</string>
+
+    <string name="notAvailableOffline">Funksjonalitet utilgjengelig når du er offline</string>
+    <string name="editFavorites">Rediger emner</string>
+
+    <string name="dashboard">Instrumentbord</string>
+    <string name="previous">Forrige</string>
+    <string name="pageNum" formatted="false">Side %d av %d</string>
+    <string name="language">Språk</string>
+    <string name="systemDefault">Systemstandard</string>
+    <string name="restartingCanvas">Starter Canvas på nytt</string>
+    <string name="languageDialogText">Endring av språk krever ny oppstart av appen, er du sikker?</string>
+    <string name="defaultLanguageWarning">Det er ikke garantert at standardspråket ditt støttes og vil kreve omstart, er du sikker?</string>
+    <string name="locked_mastery_paths">Låst inntil \"%s\" har fått karakterer</string>
+    <string name="locked_icon">Låst-ikon</string>
+    <string name="choose_assignment_group">Velg oppgavegruppe</string>
+    <string name="chooseAssignmentPath">Velg oppgavesti</string>
+    <string name="select">Velg</string>
+    <string name="choice_position">Valg %d</string>
+    <string name="updating_module_info">Oppdaterer modulinformasjon&#8230;</string>
+    <string name="arc">Arc</string>
+    <string name="pending_review">Venter på gjennomgang</string>
+    <string name="totalPoints">%s poeng</string>
+    <string name="totalPointsText">Totalt antall poeng</string>
+    <string name="contentDescriptionPoints">%s poeng</string>
+    <string name="contentDescriptionRubricRangeGrade">%1$s av %2$s poeng</string>
+    <string name="score">Resultat</string>
+    <string name="rangedRubricTotal" formatted="false">%s / %s poeng</string>
+    <string name="seeAll">Se alle</string>
+    <string name="welcome">Velkommen!</string>
+    <string name="dismiss">Avvise</string>
+    <string name="tapToViewAnnouncement">Trykk for å vise kunngjøring</string>
+    <string name="acceptCourseInvitation">Godta</string>
+    <string name="declineCourseInvitation">Avslå</string>
+
+    <!-- File Strings -->
+    <array name="file_size_units">
+        <item>B</item>
+        <item>KB</item>
+        <item>MB</item>
+        <item>GB</item>
+        <item>TB</item>
+    </array>
+
+    <string name="launch_link_in_external_browser">Starte lenke i ekstern nettleser</string>
+    <string name="ltiLaunchFailure">Dette LTI-verktøyet kan ikke lastes ned på dette tidspunktet.</string>
+    <string name="urlSubmission">URL-innlevering</string>
+
+    <string name="assignmentDeletedError">Denne oppgaven er ikke lenger tilgjengelig.</string>
+
+    <string name="homePageIdForNotifications">Siste aktiviteter</string>
+    <string name="homePageIdForModules">Moduler</string>
+    <string name="homePageIdForAssignments">Oppgaver</string>
+    <string name="homePageIdForSyllabus">Emneoversikt</string>
+
+    <string name="contentDescriptionWidgetRefresh">Oppdater widgeten</string>
+
+    <string name="copy">Kopi</string>
+    <string name="courseInviteTitle">Du har blitt invitert.</string>
+    <string name="inviteAccepted">Invitasjonen ble akseptert!</string>
+    <string name="inviteDeclined">Invitasjonen ble avslått.</string>
+    <string name="latePenalty">Forsinkelsesstraff (-%s)</string>
+    <string name="finalGrade">Slutt karakter</string>
+
+    <string name="moreThan99">99+</string>
+    <string name="max_count">99+</string>
+
+    <string name="opensInWebView">Åpne i nettvisning</string>
+    <string name="unsupportedTabLabel">Ikke støttet på denne enheten</string>
+
+    <string name="downloadingFile">Laster ned</string>
+    <string name="downloadFailed">Kunne ikke laste ned</string>
+    <string name="downloadSuccessful">Lastet ned</string>
+
+    <string name="full_due_date_details">Fulle forfallsdato detaljer</string>
+    <string name="submissions">Innleveringer</string>
+    <string name="attachment">Vedlegg</string>
+    <string name="contentDescription_back">Gå tilbake</string>
+
+    <plurals name="quantityPointsAbbreviated">
+        <item quantity="one">%s poeng</item>
+        <item quantity="other">%s poeng</item>
+    </plurals>
+    <plurals name="quantityPointsFull">
+        <item quantity="one">%s poeng</item>
+        <item quantity="other">%s poeng</item>
+    </plurals>
+    <string name="capitalTo">Til</string>
+
+    <string name="unableToViewInBrowser">Vi finner ikke et eksternt program for å vise dette LTI-verktøyet.</string>
+
+    <string name="commentUpload">Last opp kommentar</string>
+    <string name="unableToUploadMediaComment">For å sende mediekommentar, send eller slett usendt tekstkommentar.</string>
+
+    <string name="frontPage">Forside</string>
+    <string name="editPage">Endre side</string>
+    <string name="description">Beskrivelse</string>
+    <string name="pageSuccessfullyUpdated">Side oppdatert.</string>
+    <string name="errorSavingPage">En feil oppsto under lagringen av siden. Prøv igjen.</string>
+    <string name="pageTitleMustBeSet">Sidetittel må være satt.</string>
+    <string name="pageDetails">Sidedetaljer</string>
+    <string name="saving">Lagrer</string>
+    <string name="confirmDeleteEvent">Er du sikker du ønsker å slette denne hendelsen?</string>
+    <string name="conferencesNotSupported">Konferanser støttes ikke på mobil.</string>
+    <string name="filePreviewContentDescription">Forhåndsvisning av filen</string>
+
+    <string name="pdfError">En feil oppsto under innlastingen av denne PDF-en.</string>
+    <!-- Parent Strings -->
+    <string name="addChildTitle">Legg til student</string>
+    <string name="addChildSubTitle">Oppgi studentparingskoden som ble gitt til deg.</string>
+    <string name="addChildHint">Paringskode &#8230;</string>
+    <string name="addChildErrorMessage">Paring mislyktes. Pass på at paringskoden er korrekt og innenfor tidsbegrensningen for bruk.</string>
+</resources>

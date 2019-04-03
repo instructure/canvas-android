@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="rce_contentDescription_undo">Аннулировать</string>
+    <string name="rce_contentDescription_redo">Повторить</string>
+    <string name="rce_contentDescription_bold">Форматирование жирного шрифта</string>
+    <string name="rce_contentDescription_italic">Форматирование курсива</string>
+    <string name="rce_contentDescription_strikethrough">Зачеркивание</string>
+    <string name="rce_contentDescription_underline">Подчеркивание</string>
+    <string name="rce_contentDescription_format_text_color">Форматирование цвета текста</string>
+    <string name="rce_contentDescription_border_color">Форматирование цвета границы текста</string>
+    <string name="rce_contentDescription_indent_increase">Увеличение отступа</string>
+    <string name="rce_contentDescription_indent_decrease">Уменьшение отступа</string>
+    <string name="rce_contentDescription_align_left">Выравнивание по левому краю</string>
+    <string name="rce_contentDescription_align_right">Выравнивание по правому краю</string>
+    <string name="rce_contentDescription_align_center">Выравнивание по центру</string>
+    <string name="rce_contentDescription_insert_bullets">Вставить маркированный список</string>
+    <string name="rce_contentDescription_insert_numbers">Вставить нумерованный список</string>
+    <string name="rce_contentDescription_insert_photo">Вставить фотографию</string>
+    <string name="rce_contentDescription_upload_photo">Загрузить фотографию с устройства</string>
+    <string name="rce_contentDescription_insert_link">Вставить ссылку</string>
+    <string name="rce_contentDescription_block_quote">Блокировать кавычки</string>
+
+    <string name="rce_contentDescription_color_none">Цвет отсутствует</string>
+    <string name="rce_contentDescription_color_white">Цвет белый</string>
+    <string name="rce_contentDescription_color_black">Цвет черный</string>
+    <string name="rce_contentDescription_color_blue">Цвет синий</string>
+    <string name="rce_contentDescription_color_red">Цвет красный</string>
+    <string name="rce_contentDescription_color_green">Цвет зеленый</string>
+    <string name="rce_contentDescription_color_gray">Цвет серый</string>
+    <string name="rce_contentDescription_color_magenta">Цвет пурпурный</string>
+    <string name="rce_contentDescription_color_cyan">Цвет бирюзовый</string>
+    <string name="rce_contentDescription_color_orange">Цвет оранжевый</string>
+    <string name="rce_contentDescription_color_yellow">Цвет желтый</string>
+    <string name="rce_contentDescription_color_purple">Цвет фиолетовый</string>
+
+    <string name="rce_editTextUrlHint">Ссылка</string>
+    <string name="rce_editTextALTHint">Текст</string>
+    <string name="rce_dialogDone">Готово</string>
+    <string name="rce_dialogCancel">Отменить</string>
+    <string name="rce_insertLink">Вставить ссылку</string>
+    <string name="rce_insertImage">Вставить изображение</string>
+
+    <string name="rce_uploadImage">Загрузить изображение</string>
+    <string name="rce_done">Готово</string>
+    <string name="rce_cancel">Отменить</string>
+    <string name="rce_exit">Выход</string>
+    <string name="rce_dialog_exit_title">Выйти из режима редактирования заданий?</string>
+    <string name="rce_dialog_exit_message">Подтвердить выход? Все несохраненные данные будут потеряны.</string>
+    <string name="rce_empty_message">Сообщение</string>
+    <string name="rce_empty_description">Добавить описание</string>
+    <string name="rce_scrollInstructions">Просмотр всех инструментов для редактирования</string>
+</resources>

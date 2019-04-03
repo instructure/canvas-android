@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2016 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/aboutContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="8dp"
+        android:background="@drawable/card_bg"
+        android:layout_marginBottom="90dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <com.instructure.speedgrader.views.HelveticaTextView
+                android:id="@+id/sg_about_account"
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                android:gravity="left|center"
+                android:textAllCaps="true"
+                android:text="@string/account"
+                android:textSize="14sp"
+                android:textColor="@color/speedgrader_aqua"
+                android:layout_alignParentLeft="true"
+                />
+            <com.instructure.speedgrader.views.HelveticaTextView
+                android:id="@+id/sg_about_account_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/masquerade"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone">
+
+            <com.instructure.speedgrader.views.HelveticaTextView
+                android:id="@+id/masquerade_text"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:gravity="left|center"
+                android:textAllCaps="true"
+                android:text="@string/userId"
+                android:textSize="14sp"
+                android:textColor="@color/speedgrader_aqua"/>
+            <EditText
+                android:id="@+id/masqueradeId"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:hint="@string/masqueradeUserId"
+                android:imeOptions="actionGo"
+                android:singleLine="true"
+                android:inputType="number"
+                android:layout_below="@+id/masquerade_text"
+                android:layout_toLeftOf="@+id/btn_masquerade"/>
+            <ImageButton
+                android:id="@+id/btn_masquerade"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_cv_arrow_right"
+                android:layout_below="@+id/masquerade_text"
+                style="@android:style/Widget.ActionButton"
+                android:contentDescription="@string/startMasquerading"
+                android:layout_alignParentRight="true"/>
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <com.instructure.speedgrader.views.HelveticaTextView
+                android:id="@+id/sg_about_version"
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                android:gravity="left|center"
+                android:textAllCaps="true"
+                android:textColor="@color/speedgrader_aqua"
+                android:text="@string/version"
+                android:textSize="14sp"
+                android:layout_alignParentLeft="true"
+                />
+            <com.instructure.speedgrader.views.HelveticaTextView
+                android:id="@+id/sg_about_version_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <com.instructure.speedgrader.views.HelveticaTextView
+                android:id="@+id/sg_about_copyright"
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                android:gravity="left|center"
+                android:textAllCaps="true"
+                android:textColor="@color/speedgrader_aqua"
+                android:text="@string/copyright"
+                android:textSize="14sp"
+                android:layout_alignParentLeft="true"
+                />
+            <com.instructure.speedgrader.views.HelveticaTextView
+                android:id="@+id/sg_about_copyright_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/copyrightText"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"/>
+        </RelativeLayout>
+
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,227 @@
+<div class="child" id="__HEADER_ID__" __HTML_LISTENER__>
+
+    <div class="indent_1___ENTRY_ID__"></div>
+    <div class="indent_2___ENTRY_ID__"></div>
+    <div class="indent_3___ENTRY_ID__"></div>
+    <div class="indent_4___ENTRY_ID__"></div>
+    <div class="indent_5___ENTRY_ID__"></div>
+
+    <div class="item_wrapper">
+
+        <header class="group" id="group">
+
+            <div id="unread_indicator___ENTRY_ID__" class="unread_indicator __READ_STATE__"></div>
+
+            <div class="avatar" id="avatar___ENTRY_ID__" __AVATAR_LISTENER__>
+                <img id="avatar_image___USER_ID__" src="__AVATAR_URL__">
+            </div>
+
+            <div class="group_details">
+                <div class="username_wrapper">
+                    __TITLE__
+                </div>
+                <div class="timestamp_wrapper" id="timestamp_wrapper___ENTRY_ID__">
+                    <time class="timestamp"> __DATE__</time>
+                </div>
+            </div>
+
+            <div class="attachments___ENTRY_ID__" id="attachment___ENTRY_ID__" __ATTACHMENT_LISTENER__>
+                <img class="attachments_icon" src="file:///android_asset/discussion_attachment.png">
+            </div>
+
+        </header>
+
+        <div class="message_content" id="message_content___ENTRY_ID__">
+            __CONTENT_HTML__
+        </div>
+
+        <div class="details_wrapper" id="details_wrapper___ENTRY_ID__">
+
+            <div class="reply_wrapper" id="reply___ENTRY_ID__" __REPLY_LISTENER__>
+                __REPLY_TEXT__
+            </div>
+
+            <div class="edit_vertical_divider" aria-hidden="true">__EDIT_DIVIDER__</div>
+
+            <div class="edit_wrapper" id="edit___ENTRY_ID__" __EDIT_LISTENER__>
+                __EDIT_TEXT__
+            </div>
+
+            <div class="delete_vertical_divider" aria-hidden="true">__DELETE_DIVIDER__</div>
+
+            <div class="delete_wrapper" id="delete___ENTRY_ID__" __DELETE_LISTENER__>
+                __DELETE_TEXT__
+            </div>
+
+            <div class="likes_wrapper___ENTRY_ID__" __LIKE_LISTENER__>
+                <div class="likes_icon_wrapper___ENTRY_ID__"><img class="likes_icon___ENTRY_ID__" src="__LIKE_ICON__"></div>
+                <div class="likes_count___ENTRY_ID__">__LIKE_COUNT__</div>
+            </div>
+
+        </div>
+
+        <div class="reply_button_wrapper___ENTRY_ID__">
+            <div class="reply_button___ENTRY_ID__" __MORE_REPLIES_LISTENER__>
+                __REPLY_BUTTON_TEXT__
+            </div>
+        </div>
+
+    </div>
+
+    <style>
+
+        #avatar___ENTRY_ID__ {
+            float:left;
+            height: 32px;
+            width: 32px;
+        }
+
+        #avatar_image___USER_ID__{
+            position:relative;
+            display:block;
+            background-position:50% 50%;
+            background-repeat: no-repeat;
+            background-attachment: scroll;
+            border-radius: 50%;
+            height: 32px;
+            width: 32px;
+            background-size: 32px 32px;
+            /* Fix for Samsung CSS3 border-radius support */
+            border-top-left-radius: 50%;
+            border-top-right-radius: 50%;
+            border-bottom-left-radius: 50%;
+            border-bottom-right-radius: 50%;
+            text-align: center;
+            line-height: 32px;
+            color:white;
+            font-size: 27px;
+        }
+
+        #group {
+            __GROUP__
+        }
+
+        .indent_1___ENTRY_ID__ {
+            padding-left: 5px;
+            margin-left: 30px;
+            border-left: thin solid #EBEDEE;
+            __INDENT_DISPLAY_1__
+        }
+
+        .indent_2___ENTRY_ID__ {
+            padding-left: 5px;
+            margin-left: 30px;
+            border-left: thin solid #EBEDEE;
+            __INDENT_DISPLAY_2__
+        }
+
+        .indent_3___ENTRY_ID__ {
+            padding-left: 5px;
+            margin-left: 30px;
+            border-left: thin solid #EBEDEE;
+            __INDENT_DISPLAY_3__
+        }
+
+        .indent_4___ENTRY_ID__ {
+            padding-left: 5px;
+            margin-left: 30px;
+            border-left: thin solid #EBEDEE;
+            __INDENT_DISPLAY_4__
+        }
+
+        .indent_5___ENTRY_ID__ {
+            padding-left: 5px;
+            margin-left: 30px;
+            border-left: thin solid #EBEDEE;
+            __INDENT_DISPLAY_5__
+        }
+
+        #details_wrapper___ENTRY_ID__ {
+            height: 35px;
+            margin-left: 30px;
+            margin-right: 16px;
+            padding-left: 25px;
+			border-left: thin solid #EBEDEE;
+            __DETAILS_WRAPPER__
+        }
+
+        .reply_button___ENTRY_ID__ {
+            margin-left: 25px;
+            margin-bottom: 12px;
+            height: 27px;
+            width: __REPLY_BUTTON_WIDTH__;
+            border: 0.5px solid #C7CDD1;
+            border-radius: 4px;
+            background-color: #F5F5F5;
+            text-align: center;
+            vertical-align: middle;
+            line-height: 27px;
+            color: #394B58;
+            font-size: 12px;
+	    }
+
+	    .reply_button_wrapper___ENTRY_ID__ {
+	        border-left: thin solid #EBEDEE;
+	        padding-top: 12px;
+	        padding-bottom: 12px;
+	        margin-left: 30px;
+	        height: auto;
+	        __REPLY_BUTTON_WRAPPER__
+	    }
+
+        .attachments___ENTRY_ID__ {
+            height: 36px;
+            width: 48px;
+            float: right;
+            __ATTACHMENTS_WRAPPER__
+        }
+
+        .likes_wrapper___ENTRY_ID__ {
+            height: 30px;
+            width: auto;
+            float: right;
+            __LIKE_ALLOWED__
+        }
+
+        .likes_count___ENTRY_ID__ {
+            float: right;
+            margin-right: 8px;
+            color: __LIKE_COLOR__;
+        }
+
+        .unlikes_count___ENTRY_ID__ {
+            float: right;
+            margin-right: 8px;
+            color: #8b969e;
+        }
+
+        .likes_icon___ENTRY_ID__ {
+        	height: 17px;
+        	width: 16px;
+        	float: right;
+        }
+
+        .likes_icon_wrapper___ENTRY_ID__ {
+            display:inline-block;
+            height:100%;
+            vertical-align:middle;
+            float: right;
+        }
+
+        .lti_button {
+            margin-bottom: 12px;
+            height: 38px;
+            width: __LTI_BUTTON_WIDTH__;
+            border: 0.5px solid #C7CDD1;
+            border-radius: 4px;
+            background-color: #F5F5F5;
+            text-align: center;
+            vertical-align: middle;
+            line-height: 38px;
+            color: #394B58;
+            font-size: 13px;
+            margin: __LTI_BUTTON_MARGIN__;
+        }
+
+    </style>
+</div>

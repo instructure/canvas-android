@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2016 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rubric_list_header"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/rubricGrade"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_margin="12dp"
+        android:orientation="vertical">
+
+        <Spinner
+            android:id="@+id/versionSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"/>
+
+        <Spinner
+            android:id="@+id/fileSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@android:color/transparent"/>
+
+        <RelativeLayout
+            android:id="@+id/gradingRow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center_vertical"
+            android:clipChildren="false"
+            android:clipToPadding="false">
+
+            <LinearLayout
+                android:id="@+id/scoresHolder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:orientation="horizontal"
+                android:layout_toLeftOf="@+id/saveButton"
+                android:layout_toStartOf="@+id/saveButton"
+                android:gravity="bottom">
+
+                <RelativeLayout
+                    android:id="@+id/scoreEditTextHolder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edittext_white_state_list">
+
+                    <EditText
+                        android:id="@+id/scoreEditText"
+                        android:layout_width="100dp"
+                        android:minWidth="150dp"
+                        android:layout_height="34dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginStart="8dp"
+                        android:background="@null"
+                        android:cursorVisible="false"
+                        android:maxWidth="140dp"
+                        android:singleLine="true"
+                        android:textColor="@color/lightGray"/>
+                </RelativeLayout>
+
+                <com.instructure.speedgrader.views.HelveticaTextView
+                    android:id="@+id/pointsPossible"
+                    android:layout_width="wrap_content"
+                    android:layout_height="34dp"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/lightGray"
+                    android:layout_alignBaseline="@id/scoreEditText"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginStart="4dp"
+                    android:ellipsize="end"
+                    android:gravity="start|bottom"
+                    android:singleLine="true"/>
+                <Spinner
+                    android:id="@+id/passFailSpinner"
+                    android:layout_width="175dp"
+                    android:layout_height="34dp"
+                    android:minWidth="54dp"
+                    android:textColor="@color/lightGray"
+                    android:background="@android:color/transparent"
+                    android:visibility="gone"/>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/saveButton"
+                android:layout_width="70dp"
+                android:layout_height="38dp"
+                android:text="@string/save"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:textColor="@color/white"
+                android:layout_marginLeft="14dp"
+                android:layout_marginStart="14dp"
+                android:enabled="false"
+                android:background="@drawable/save_button_state_list"/>
+
+        </RelativeLayout>
+    </LinearLayout>
+</RelativeLayout>

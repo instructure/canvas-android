@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<androidx.percentlayout.widget.PercentRelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rootView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:id="@+id/master"
+        android:layout_height="match_parent"
+        app:layout_widthPercent="35%"
+        android:layout_alignParentStart="true"
+        android:background="@color/white"
+        android:animateLayoutChanges="true">
+
+        <View
+            android:id="@+id/fakeToolbarMaster"
+            android:layout_width="match_parent"
+            android:layout_height="?android:actionBarSize"
+            android:elevation="0dp"/>
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/detail"
+        android:layout_height="match_parent"
+        app:layout_widthPercent="65%"
+        android:layout_alignParentEnd="true"
+        android:background="@color/white"
+        android:animateLayoutChanges="true">
+
+        <View
+            android:id="@+id/fakeToolbarDetail"
+            android:layout_width="match_parent"
+            android:layout_height="?android:actionBarSize"
+            android:elevation="0dp"/>
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/middleDividerWrapper"
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_toStartOf="@+id/detail">
+
+        <View
+            android:id="@+id/middleTopDivider"
+            android:layout_height="?android:actionBarSize"
+            android:layout_width="match_parent"
+            android:background="@color/divider"/>
+
+        <View
+            android:id="@+id/middleBottomDivider"
+            android:layout_height="0dp"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:background="@color/divider"/>
+
+    </LinearLayout>
+
+</androidx.percentlayout.widget.PercentRelativeLayout>

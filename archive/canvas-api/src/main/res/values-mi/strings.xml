@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <!--Modules-->
+  <string name="mustComplete">Me tuatahi whakaoti koe:</string>
+  <string name="unlockedAt">Ka whakawātea te reira i:</string>
+  <string name="goToModules">Haere ki te Kōwae</string>
+  <!--Events-->
+  <string name="Starts">tīmata</string>
+  <string name="Ends">Pito</string>
+  <string name="allDayEvent">Takahanga ra katoa</string>
+  <string name="at">i</string>
+  <string name="to">ki</string>
+  <!--StreamItems-->
+  <string name="Message">Karere</string>
+  <string name="Loading">Utanga ...</string>
+  <string name="Deleted">Mukua</string>
+  <!--Assignment Module-->
+  <string name="canvasAPI_online">Ipurangi</string>
+  <string name="canvasAPI_onPaper">I te Pepa</string>
+  <string name="canvasAPI_discussion">Aparauraa</string>
+  <string name="canvasAPI_quiz">Pātaitai</string>
+  <string name="canvasAPI_externalTool">Taputapu Waho</string>
+  <string name="canvasAPI_none">Kahore</string>
+  <string name="canvasAPI_passFail">Haere Rahu</string>
+  <string name="canvasAPI_percent">ōrau</string>
+  <string name="canvasAPI_letterGrade">Kōeke Reta</string>
+  <string name="canvasAPI_points">Piro</string>
+  <string name="canvasAPI_gpaScale">GPA Tauine</string>
+  <string name="canvasAPI_notGraded">e kore e mākahia</string>
+  <string name="canvasAPI_onlineQuiz">Pātaitai Ipurangi</string>
+  <string name="canvasAPI_discussionTopic">Aparauraa Kaupapa</string>
+  <string name="canvasAPI_onlineUpload">Tukuatu Ipurangi</string>
+  <string name="canvasAPI_onlineTextEntry">Whakauru Kuputuhi Ipurangi</string>
+  <string name="canvasAPI_onlineURL">URL Ipurangi</string>
+  <string name="canvasAPI_mediaRecording">Hopu pāpāho</string>
+  <string name="canvasAPI_attendance">te haereraa i</string>
+</resources>

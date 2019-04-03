@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <string name="app_name">LoginAPI</string>
+  <string name="hello_world">Hallo wereld!</string>
+  <string name="action_settings">Instellingen</string>
+  <string name="mobileVerifyGeneral">Deze app mag niet gebruikt worden</string>
+  <string name="mobileVerifyDomainUnauthorized">De server die je ingevoerd hebt is niet bevoegd voor deze app.</string>
+  <string name="mobileVerifyUserAgentUnauthorized">De gebruikersagent voor deze app is niet bevoegd.</string>
+  <string name="mobileVerifyUnknownError">We konden de server voor gebruik met deze app niet controleren. </string>
+  <string name="unknownDevice">Onbekend apparaat</string>
+  <string name="errorOccurred">Er heeft zich een onverwachte fout voorgedaan.</string>
+  <string name="pageNotFound">Pagina niet gevonden.</string>
+  <string name="confirm">Bevestigen</string>
+  <string name="cancel">Annuleren</string>
+  <string name="help">Help</string>
+  <string name="enterURL">Voer je Canvas URL in: </string>
+  <string name="signIntoCanvasNetwork">Probeer je je aan te melden bij Canvas Network? </string>
+  <string name="remove">Verwijderen</string>
+  <string name="exampleURLSimple">myschool.instructure.com </string>
+  <string name="userId">Gebruikers ID</string>
+  <string name="domain">Domein </string>
+  <!--Multiple User Sign in-->
+  <string name="removeUser">Deze gebruiker verwijderen?</string>
+  <string name="removedForever">Je moet je bij deze gebruiker weer aanmelden om toegang tot zijn content te verkrijgen.</string>
+  <!--Content Descriptions-->
+  <string name="canvasLogo">Canvas Logo </string>
+  <string name="canvasLoginOn">Canvas_Login: AAN</string>
+  <string name="canvasLoginOff">Canvas-Login: UIT</string>
+  <string name="siteAdminLogin">Sitebeheer Login: AAN</string>
+  <string name="username">Gebruikersnaam</string>
+  <string name="password">Wachtwoord</string>
+  <string name="authenticationRequired">Verificatie vereist</string>
+  <string name="invalidEmailPassword">Ongeldige e-mail of wachtwoord</string>
+  <string name="login">Inloggen</string>
+  <string name="logout">Uitloggen</string>
+  <!--Logout Warning Dialog-->
+  <string name="logout_warning">Weet je zeker dat je je wilt afmelden?</string>
+  <string name="logout_yes">Ja</string>
+  <string name="logout_no">Nee</string>
+  <!--Smart Login-->
+  <string name="loginNearYou">Bij jou in de buurt</string>
+  <string name="loginCanvasNetwork">Canvas Network</string>
+  <string name="loginRightBehindYou">Vlak achter je</string>
+  <string name="loginMiles">%1$s mijl afstand</string>
+  <string name="loginCanvasHelp">Zie je je school niet? Voer de school URL in of tik hier voor help.</string>
+  <string name="loginCanvasHelpWithUser">Voer de school URL in of tik hier voor help.</string>
+  <string name="loginHint">Vind je school of district</string>
+  <!--Zendesk Dialog-->
+  <string name="zendesk_reportAProblem">Een probleem melden</string>
+  <string name="zendesk_subject">Onderwerp</string>
+  <string name="zendesk_description">Beschrijving</string>
+  <string name="zendesk_writeSomething">Schrijf iets...</string>
+  <string name="zendesk_send">Versturen</string>
+  <string name="zendesk_feedbackThankyou">Dank voor het melden van je probleem bij ons Support Team. Je zult een verificatie en updates via e-mail ontvangen.</string>
+  <string name="zendesk_severityText">Wat betekent dit voor jou?</string>
+  <string name="zendesk_casualQuestion">Gewoon een informele vraag, opmerking, idee of suggestie...</string>
+  <string name="zendesk_casualQuestion_tag">just_a_comment</string>
+  <string name="zendesk_needHelp">Ik heb wat hulp nodig, maar het is niet dringend.</string>
+  <string name="zendesk_needHelp_tag">not_urgent</string>
+  <string name="zendesk_somethingsBroken">Er is iets gebroken, maar daar kan ik wel omheen werken om gedaan te krijgen wat ik wil.</string>
+  <string name="zendesk_somethingsBroken_tag">workaround_possible</string>
+  <string name="zendesk_cantGetThingsDone">Ik kan pas iets voor je doen als je me antwoordt. </string>
+  <string name="zendesk_cantGetThingsDone_tag">blocks_what_i_need_to_do</string>
+  <string name="zendesk_extremelyCritical">UITERST KRITIEK NOODGEVAL!</string>
+  <string name="zendesk_extremelyCritical_tag">extreme_critical_emergency</string>
+  <string name="zendesk_emailAddress">E-mailadres</string>
+  <string name="zendesk_enterEmail">Voer je e-mailadres in...</string>
+  <string name="zendesk_unknown">Onbekend</string>
+  <!--Distance Strings-->
+  <string name="lessThanOne">&lt; 1 mijl (1,6 km)</string>
+  <string name="oneMile">1 mijl (1,6 km)</string>
+  <string name="miles">mijlen</string>
+  <string name="kilometers">km</string>
+  <!--String for submitting tickets-->
+  <string name="device">Apparaat</string>
+  <string name="osVersion">OS Versie</string>
+  <string name="empty_feedback">Bij het indienen van de feedback zijn een onderwerp en beschrijving verplicht.</string>
+</resources>

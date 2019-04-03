@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <string name="app_name">LoginAPI</string>
+  <string name="hello_world">Привет, мир!</string>
+  <string name="action_settings">Настройки</string>
+  <string name="mobileVerifyGeneral">Это приложение не авторизовано для использования</string>
+  <string name="mobileVerifyDomainUnauthorized">Сервер, на который вы вошли, не авторизован для этого приложения.</string>
+  <string name="mobileVerifyUserAgentUnauthorized">Агент пользователя не авторизован для этого приложения.</string>
+  <string name="mobileVerifyUnknownError">Мы не смогли проверить сервер на использование вместе с этим приложением.</string>
+  <string name="unknownDevice">Неизвестное устройство</string>
+  <string name="errorOccurred">Возникла непредвиденная ошибка.</string>
+  <string name="pageNotFound">Страница не найдена</string>
+  <string name="confirm">Подтвердить</string>
+  <string name="cancel">Отменить</string>
+  <string name="help">Справка</string>
+  <string name="enterURL">Введите Ваш URL Canvas:</string>
+  <string name="signIntoCanvasNetwork">Пытаетесь войти в Canvas Network?</string>
+  <string name="remove">Удалить</string>
+  <string name="exampleURLSimple">myschool.instructure.com</string>
+  <string name="userId">ID пользователя</string>
+  <string name="domain">Домейн</string>
+  <!--Multiple User Sign in-->
+  <string name="removeUser">Удалить пользователя?</string>
+  <string name="removedForever">Вам придется войти в систему, как даннa пользователь для получения доступа к их содержимому.</string>
+  <!--Content Descriptions-->
+  <string name="canvasLogo">Логотип Canvas</string>
+  <string name="canvasLoginOn">Canvas_Login: ВКЛ</string>
+  <string name="canvasLoginOff">Canvas_Login: ВЫКЛ</string>
+  <string name="siteAdminLogin">Логин Админа Сайта: ВКЛ</string>
+  <string name="username">Имя пользователя</string>
+  <string name="password">Пароль</string>
+  <string name="authenticationRequired">Необходима аутентификация</string>
+  <string name="invalidEmailPassword">Неправильный адрес электронной почты или пароль</string>
+  <string name="login">Логин</string>
+  <string name="logout">Выйти</string>
+  <!--Logout Warning Dialog-->
+  <string name="logout_warning">Вы действительно хотите выйти?</string>
+  <string name="logout_yes">Да</string>
+  <string name="logout_no">Нет</string>
+  <!--Smart Login-->
+  <string name="loginNearYou">Рядом с вами</string>
+  <string name="loginCanvasNetwork">Canvas Network</string>
+  <string name="loginRightBehindYou">Сразу за вами</string>
+  <string name="loginMiles">в %1$s милях</string>
+  <string name="loginCanvasHelp">Не можете найти вашу школу? Введите URL школы или нажмите здесь для справки.</string>
+  <string name="loginCanvasHelpWithUser">Введите URL школы или нажмите здесь для справки.</string>
+  <string name="loginHint">Найдите свою школу или район</string>
+  <!--Zendesk Dialog-->
+  <string name="zendesk_reportAProblem">Сообщить о проблеме</string>
+  <string name="zendesk_subject">Тема</string>
+  <string name="zendesk_description">Описание</string>
+  <string name="zendesk_writeSomething">Напишите что-нибудь...</string>
+  <string name="zendesk_send">Отправить</string>
+  <string name="zendesk_feedbackThankyou">Благодарим Вас за сообщение о своей проблеме нашей службе поддержки. Вы получите подтверждение и обновления по электронной почте.</string>
+  <string name="zendesk_severityText">Как это влияет на вас?</string>
+  <string name="zendesk_casualQuestion">Просто обычный вопрос, комментарий, идея, предложение...</string>
+  <string name="zendesk_casualQuestion_tag">just_a_comment</string>
+  <string name="zendesk_needHelp">Мне нужна помощь, но это не срочно.</string>
+  <string name="zendesk_needHelp_tag">not_urgent</string>
+  <string name="zendesk_somethingsBroken">Что-то не работает, но я могу обойтись без этого, чтобы получить то, что мне нужно сделать.</string>
+  <string name="zendesk_somethingsBroken_tag">workaround_possible</string>
+  <string name="zendesk_cantGetThingsDone">Я не могу добиться своей цели, пока не услышу от вас ответа.</string>
+  <string name="zendesk_cantGetThingsDone_tag">blocks_what_i_need_to_do</string>
+  <string name="zendesk_extremelyCritical">ЭКСТРЕННАЯ И КРИТИЧЕСКАЯ СИТУАЦИЯ!!</string>
+  <string name="zendesk_extremelyCritical_tag">extreme_critical_emergency</string>
+  <string name="zendesk_emailAddress">Адрес электронной почты</string>
+  <string name="zendesk_enterEmail">Введите ваш адрес электронной почты…</string>
+  <string name="zendesk_unknown">Неизвестно</string>
+  <!--Distance Strings-->
+  <string name="lessThanOne">&lt; 1 мили (1.6 км)</string>
+  <string name="oneMile">1 миля (1.6 км)</string>
+  <string name="miles">миль</string>
+  <string name="kilometers">км</string>
+  <!--String for submitting tickets-->
+  <string name="device">Устройство</string>
+  <string name="osVersion">Версия ОС</string>
+  <string name="empty_feedback">Для отправки отзыва необходимо указать тему и дать описание.</string>
+</resources>

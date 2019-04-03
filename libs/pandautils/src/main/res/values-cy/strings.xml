@@ -1,0 +1,427 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="chooseMedia">Dewiswch Gyfryngau</string>
+    <string name="takeVideo">Gwnewch Fideo</string>
+    <string name="noCameraOnDevice">Dim Camera</string>
+    <string name="takePhoto">Tynnu llun gyda chamera</string>
+    <string name="choosePhotoFromGallery">Dewis Llun o’r Oriel</string>
+
+    <string name="utils_edit">Golygu</string>
+
+    <!-- NotoriousPicker/uploadService -->
+    <string name="notificationTitle">Llwytho i fyny i Canvas</string>
+    <string name="preparingUpload">Paratoi i lwytho i fyny</string>
+    <string name="loadingFilesIndeterminate">Llwytho Ffeiliau&#8230;</string>
+    <string name="fileUploadSuccess">Wedi llwyddo i lwytho i fyny</string>
+    <string name="noNetwork">Rhwydwaith ddim ar gael - rhowch gynnig arall arni rywbryd eto.</string>
+    <string name="uploadMessage">"Proses lwytho i fyny ar waith. Gwirio hysbysiadau am statws llwytho i fyny.</string>
+    <string name="mediaUpload">Llwytho cyfryngau i fyny</string>
+    <string name="uploadingFile">Llwytho ffeil i fyny&#8230;</string>
+    <string name="errorUploadingFile">Gwall wrth lwytho eich ffeil i fyny. Rhowch gynnig arall arni.</string>
+    <string name="fileSubmission">Cyflwyno Ffeil(iau)</string>
+    <string name="uploadFiles">Llwytho ffeil(iau) i fyny</string>
+    <string name="upload">Llwytho i fyny</string>
+    <string name="errorSendingMessage">Gwall wrth anfon eich neges. Rhowch gynnig arall arni.</string>
+
+    <string name="notificationChannelNameFileUploadsName">Hysbysiadau llwytho ffeiliau i fyny</string>
+    <string name="notificationChannelNameFileUploadsDescription">Hysbysiadau Canvas o ffeiliau sy’n cael eu llwytho i fyny ar hyn o bryd.</string>
+
+
+    <!-- Turn in Files -->
+    <string name="chooseFileSource">Dewiswch Ffeil O&#8230;</string>
+    <string name="addFile">Ychwanegu Ffeil</string>
+    <string name="choose_a_file">Dewiswch Ffeil</string>
+
+    <string name="fromCamera">Camera</string>
+    <string name="fromGallery">Oriel</string>
+    <string name="fromDevice">Dyfais</string>
+    <string name="fromOtherApplication">Arall</string>
+    <string name="Domain">Parth</string>
+    <string name="files">Ffeiliau</string>
+    <string name="file">Ffeil</string>
+    <string name="fileTalkBack">Ffeil %s</string>
+    <string name="folderTalkBack">Ffolder %s</string>
+
+    <string name="addItem">Ychwanegu Eitem</string>
+    <string name="assignment">Aseiniad</string>
+    <string name="attachedFiles">Ffeiliau wedi’u hatodi</string>
+    <string name="turnIn">Cyflwyno</string>
+    <string name="course">Cwrs</string>
+    <string name="sending">Wrthi’n anfon&#8230;</string>
+
+    <!--rating dialog-->
+    <string name="star1">Un Seren</string>
+    <string name="star2">Dwy Seren</string>
+    <string name="star3">Tair Seren</string>
+    <string name="star4">Pedair Seren</string>
+    <string name="star5">Pum Seren</string>
+
+    <!-- Submitting files -->
+    <string name="fileQuotaExceeded">Rydych chi wedi cyrraedd terfyn eich cwota storio ffeiliau.</string>
+    <string name="errorSubmittingFiles">Gwall wrth gyflwyno eich ffeiliau. Rhowch gynnig arall arni.</string>
+    <string name="errorLoadingFiles">Gwall wrth lwytho eich ffeil. Gwiriwch eich cysylltiad rhyngrwyd a rhoi cynnig arall arni.</string>
+    <string name="filesUploadedSuccessfully">Wedi llwyddo i lwytho ffeiliau.</string>
+    <string name="filesSubmittedSuccessfully">Wedi llwyddo i gyflwyno ffeiliau.</string>
+    <string name="messageSentSuccessfully">Wedi llwyddo i anfon neges.</string>
+    <string name="shareWithCanvas">Mae modd i apiau eraill rannu ffeiliau â Canvas! Chwiliwch am yr eicon isod yn yr apiau a thapiwch ar Canvas.</string>
+    <string name="shareWithCanvas2">Bydd hyn yn agor yr ap. Yna dewiswch i ba gwrs ac aseiniad rydych chi am gyflwyno’r ffeil.</string>
+    <string name="contentDescriptionSocialShare">Eicon rhannu</string>
+    <string name="submitAssignment">Cyflwyno Aseiniad</string>
+    <string name="assignmentHeader">Aseiniad :</string>
+    <string name="submittingAssignment">Cyflwyno Aseiniad&#8230;</string>
+    <string name="conversations">Sgyrsiau </string>
+    <string name="inbox">Blwch Derbyn </string>
+    <string name="divider">Gwahanydd</string>
+    <string name="legal">Cyfreithiol</string>
+    <string name="completeHomework">GORFFENNWCH eich gwaith cartref</string>
+    <string name="takeExam">Sefwch arholiad</string>
+    <string name="fileIcon">Eicon Ffeil</string>
+    <string name="uploadingFileNum" formatted="false">Wrthi’n llwytho %d o %d i fyny</string>
+    <string name="fileLocked" formatted="false">Mae%s wedi cael ei gloi.</string>
+    <string name="filePermissionGranted">Ffeil yn barod i’w llwytho i lawr, rhowch gynnig arall arni.</string>
+    <string name="filePermissionDenied">Does dim modd llwytho’r ffeil i lawr heb gael caniatâd.</string>
+    <string name="pleaseTryAgain">Wedi cael caniatâd, rhowch gynnig arall arni.</string>
+    <string name="pickVideo">Dewiswch Fideo</string>
+
+    <!--Errors-->
+    <string name="errorOccurred">Gwall annisgwyl.</string>
+    <string name="serverError">Gwall ar y gweinydd.</string>
+    <string name="unauthorized">Does gennych chi ddim hawl i gael mynediad at hwn. Does gennych chi ddim hawl neu does gennych chi ddim mynediad eto (efallai nad yw eich cwrs wedi dechrau eto)</string>
+    <string name="fileNoLongerExists">Dydy’r ffeil honno ddim yn bodoli mwyach.</string>
+    <string name="invalidAccessToken">Mae eich sesiwn wedi dod i ben. Mewngofnodwch i ddechrau sesiwn newydd.</string>
+    <string name="uploadingFromSourceFailed">Doedd dim modd cwblhau llwytho ffeil i fyny o’r ffynhonnell hon</string>
+    <string name="errorGettingPhoto">Gwall wrth nôl y llun. Rhowch gynnig arall arni.</string>
+    <string name="errorTextMissing">Ychwanegwch destun i anfon neges</string>
+
+    <string name="fileUploadNotSupported">Does dim modd i chi lwytho ffeiliau i fyny i’r aseiniad hwn.</string>
+    <string name="noCourseSelected">Dewiswch gwrs</string>
+    <string name="selectCourse">Dewiswch gwrs</string>
+    <string name="selectAssignment">Dewiswch aseiniad</string>
+    <string name="loadingAssignments">Llwytho aseiniadau...</string>
+    <string name="noAssignmentSelected">Dewiswch aseiniad</string>
+    <string name="noAssignmentsWithFileUpload">Does gan y cwrs hwn ddim aseiniadau sy’n caniatáu llwytho ffeiliau i fyny.</string>
+    <string name="teacherNotAllowedFileSubmission">Fel athro ar y cwrs hwn, does dim modd i chi gyflwyno ffeiliau</string>
+    <string name="noFilesUploaded">Dydych chi ddim wedi dewis unrhyw ffeiliau.</string>
+    <string name="oneOrMoreExtensionNotAllowed">Mae gan o leiaf un ffeil estyniad ffeil sydd wedi’i wahardd</string>
+    <string name="extensionNotAllowed">Ni chaniateir y math hwn o ffeil.</string>
+    <string name="allowedExtensions">Estyniadau a ganiateir:&#160;</string>
+
+    <!-- Media Task Loader -->
+    <string name="noDataConnection"> Gwiriwch eich cysylltiad data a rhoi cynnig arall arni. </string>
+    <string name="noApps">Does gan eich dyfais ddim rhaglen wedi’i gosod a all drin y ffeil hon.</string>
+    <string name="noAppsShort">Does dim modd agor</string>
+    <string name="unexpectedErrorOpeningFile">Gwall annisgwyl wrth agor y ffeil.</string>
+    <string name="unexpectedErrorDownloadingFile">Gwall annisgwyl wrth lwytho’r ffeil i lawr.</string>
+
+    <string name="done">Wedi gorffen</string>
+
+    <!--Permissions-->
+    <string name="permissionDenied">I ddefnyddio’r nodwedd hon, rhaid cael caniatâd.</string>
+    <string name="noConnection">Dim Cysylltiad</string>
+
+    <!--Empty Screens-->
+    <string name="emptyCourseListMessage">Mae cyrsiau a grwpiau rydych chi wedi’u hoffi yn ymddangos yma.</string>
+    <string name="addCoursesGroups">Ychwanegu Cyrsiau/Grwpiau</string>
+    <string name="noDiscussions">Dim Trafodaethau</string>
+    <string name="noDiscussionsSubtext">Dechrau sgwrs gyda phobl eraill.</string>
+    <string name="noDiscussionsTeacher">Dechrau sgwrs gyda’ch myfyrwyr.</string>
+    <string name="nothingUnread">Inbox Zero!</string>
+    <string name="nothingUnreadSubtext">Rydych chi wedi eich dal!</string>
+    <string name="nothingStarred">Dim Negeseuon â Seren</string>
+    <string name="nothingStarredSubtext">Gallwch gadw negeseuon pwysig yn yr adran hon drwy dapio’r seren ym mhob neges.</string>
+    <string name="nothingSent">Dim wedi’i anfon</string>
+    <string name="nothingSentSubtext">Dydych chi ddim wedi anfon unrhyw negeseuon eto.</string>
+    <string name="nothingArchived">Dim wedi’i archifo</string>
+    <string name="nothingArchivedSubtext">Dydych chi ddim wedi archifo unrhyw negeseuon.</string>
+    <string name="noQuizzes">Dim Cwisiau</string>
+    <string name="noQuizzesSubtext">Yn anffodus, does dim cwisiau yn bodoli eto.</string>
+    <string name="noQuizzesTeacher">Does dim cwisiau wedi’u cyhoeddi i’w dangos.</string>
+    <string name="noAnnouncements">Dim Cyhoeddiadau</string>
+    <string name="noAnnouncementsSubtext">Dim byd wedi’i gyhoeddi eto.</string>
+    <string name="noCourses">Dim Cyrsiau</string>
+    <string name="noCoursesSubtext">Mae’n edrych yn debyg nad oes unrhyw gyrsiau yn gysylltiedig â’r cyfrif hwn. Ewch ar y we i greu cwrs heddiw.</string>
+    <string name="noAssignments">Dim Aseiniadau</string>
+    <string name="noAssignmentsSubtext">Mae’n edrych yn debyg nad oes unrhyw aseiniadau wedi’u creu yn y gofod hwn. Amser i fynd allan a chrwydro.</string>
+    <string name="noAssignmentsTeacher">Mae’n edrych yn debyg nad oes aseiniadau wedi cael eu cyhoeddi eto.</string>
+    <string name="noFiles">Dim Ffeiliau</string>
+    <string name="noFilesSubtext">Does dim ffeiliau wedi’u cysylltu â’r cyfrif hwn.</string>
+    <string name="notSupported">Does dim modd delio â</string>
+    <string name="noEvents">Dim Digwyddiadau Heddiw!</string>
+    <string name="noEventsSubtext">Mae’n edrych fel diwrnod gwych i ymlacio.</string>
+    <string name="noSubmission">Dim cyflwyniad</string>
+    <string name="noSubmissionSubtext">Cyflwynwch eich aseiniad gyda %1$s am %2$s.</string>
+    <string name="noSubmissionTeacher">Does gan y myfyriwr hwn ddim cyflwyniad eto.</string>
+    <string name="noDueDate">Does gan yr aseiniad hwn ddim dyddiad erbyn.</string>
+    <string name="locked">Wedi Cloi</string>
+    <string name="lockedSubtext">Mae’r aseiniad hwn wedi’i gloi tan %1$s am %2$s.</string>
+    <string name="lockedModule">Mae’r aseiniad hwn yn rhan o’r modiwl \"%1$s\" ac nid yw wedi’i ddatgloi eto.</string>
+    <string name="chooseFile">Dewiswch Ffeil</string>
+    <string name="chooseFileSubtext">Atodwch ffeil i’ch trafodaeth trwy dapio opsiwn isod.</string>
+    <string name="noNotifications">Dim Hysbysiadau</string>
+    <string name="noNotificationsSubtext">Does dim byd i’w hysbysu eto.</string>
+    <string name="noTodos">Da Iawn!</string>
+    <string name="noTodosSubtext">Mae eich rhestr tasgau i’ w gwneud yn wag. Amser i ailwefru.</string>
+    <string name="noSyllabus">Dim Maes Llafur</string>
+    <string name="noSyllabusSubtext">Dydy’r Maes Llafur ddim wedi’i greu eto.</string>
+    <string name="noBookmarks">Dim Nodau tudalen</string>
+    <string name="noBookmarksSubtext">Mae nodau tudalen yn llwybrau byr ar gyfer unrhyw sgrin yn yr ap. Ychwanegwch nhw ar y sgrin os hoffech chi greu nodyn tudalen.</string>
+    <string name="noModules">Dim Modiwlau</string>
+    <string name="noModulesSubtext">Mae’n edrych yn debyg nad oes unrhyw fodiwlau wedi’u creu eto.</string>
+    <string name="noPages">Dim Tudalennau</string>
+    <string name="noPagesSubtext">Mae’n edrych yn debyg nad os tudalennau wedi’u creu eto.</string>
+
+    <!--General-->
+    <string name="yes">Iawn</string>
+    <string name="no">Na</string>
+
+    <string name="inbox_all">Blwch Derbyn</string>
+    <string name="inbox_unread">Heb ddarllen</string>
+    <string name="inbox_starred">Wedi cael seren</string>
+    <string name="inbox_sent">Wedi anfon</string>
+    <string name="inbox_archived">Archifwyd</string>
+
+    <string name="forbidden">Dim ond y rheini sydd wedi cyflwyno o leiaf un ateb sy’n gallu gweld yr atebion.</string>
+
+    <string name="like">Yn hoffi</string>
+    <string name="likes">Yn hoffi</string>
+    <string name="lockedAssignmentNotModule">Mae’r aseiniad hwn wedi’i gloi.</string>
+    <string name="deletedEntryNoChildren">Does gan y cofnod trafodaeth sydd wedi’i ddileu ddim atebion.</string>
+    <string name="deleted">[Wedi dileu]</string>
+    <string name="deleted_by">[Wedi’i ddileu gan %1$s]</string>
+    <string name="lockedDiscussionDesc">Mae’r drafodaeth hon yn rhan o’r modiwl %s ac nid yw wedi cael ei datgloi eto.</string>
+    <string name="gradedDiscussion">Trafodaeth wedi’i Graddio</string>
+    <string name="pointsPossible">Pwynt yn bosib</string>
+    <string name="sideCommentEntry">Mewn trafodaeth o’r math hwn, does dim modd rhoi sylw ar unrhyw gofnod ar y lefel hon.</string>
+
+    <string name="accessibility_overflow">Gorlif</string>
+
+    <string name="discussion_response">Sylw</string>
+    <string name="discussion_responses">Sylwadau</string>
+    <string name="discussion_unread">Heb ddarllen</string>
+    <string name="discussion_reply">Ateb</string>
+    <string name="close">Cau</string>
+
+    <string name="noInternetConnectionTitle">Dim cysylltiad â’r rhyngrwyd</string>
+    <string name="noInternetConnectionMessage">Mae angen cysylltiad â’r rhyngrwyd.</string>
+    <string name="content_description_avatar">Avatar</string>
+    <string name="formattedAvatarAction">Gweld manylion defnyddiwr ar gyfer %s.</string>
+
+    <!-- App Names -->
+    <string name="utils_canvas">Canvas</string>
+    <string name="utils_canvasTeacher">Canvas Teacher</string>
+    <string name="utils_canvasParent">Canvas Parent</string>
+    <string name="utils_polls">Canvas Polls</string>
+    <string name="utils_speedgrader">Speedgrader</string>
+
+    <!-- Rating Dialog -->
+    <string name="utils_howAreWeDoing">Sut hwyl rydyn ni’n ei gael arni?</string>
+    <string name="utils_rateUs">Pa mor dda ydyn ni?</string>
+    <string name="utils_doBetter">Beth fydden ni’n gallu ei wneud yn well?</string>
+    <string name="utils_sendFeedback">Anfon Adborth</string>
+    <string name="utils_suggestions">Argymhellion ar gyfer Android</string>
+    <string name="utils_domain">Parth</string>
+    <string name="utils_versionNum">Fersiwn:</string>
+    <string name="utils_userId">ID Defnyddiwr</string>
+    <string name="utils_email">E-bost</string>
+    <string name="utils_dontShowAgain">Peidiwch â’i ddangos eto</string>
+    <string name="utils_installDate">Dyddiad Gosod:</string>
+    <string name="utils_device">Dyfais</string>
+    <string name="utils_osVersion">Fersiwn OS</string>
+    <string name="loading">Wrthi’n llwytho</string>
+    <string name="save">Cadw</string>
+    <string name="cropInstructions">Pinsio a llusgo i addasu’r llun.</string>
+
+    <!--Discussions-->
+    <plurals name="utils_discussionsReplies">
+        <item quantity="one">%s Ateb</item>
+        <item quantity="other">%s Ateb</item>
+    </plurals>
+
+    <string name="utils_discussionsDeleted" formatted="false">Wedi dileu’r ateb hwn %s</string>
+    <string name="utils_discussionsUnknownAuthor">Awdur Dieithr</string>
+    <string name="utils_discussionsReply">Ateb</string>
+    <string name="utils_discussionsEdit">Golygu</string>
+    <string name="utils_discussionsDeleteWarning">Ydych chi’n siŵr eich bod am ddileu’r ateb hwn?</string>
+    <string name="utils_availableToLabel">Ar gael tan:</string>
+    <string name="utils_availableFromLabel">Ar gael o:</string>
+    <string name="utils_dueDateHeaderLabel">Erbyn</string>
+    <string name="utils_dueLabel">Erbyn:</string>
+    <string name="utils_delete">Dileu</string>
+    <string name="utils_dueDateAtTime" formatted="false">Erbyn %1s am %2s</string>
+    <string name="utils_noDateFiller">--</string>
+    <string name="utils_availabilityLabel">Argaeledd:</string>
+    <string name="utils_pinnedIcon">Eicon trafodaeth wedi’i phinio</string>
+    <string name="utils_pinDiscussion">Pinio Trafodaeth</string>
+    <string name="utils_unpinDiscussion">Dad-binio trafodaeth</string>
+    <string name="utils_discussionPinned">Trafodaeth wedi’i phinio</string>
+    <string name="utils_pinnedDiscussions">Wedi’i phinio</string>
+    <string name="utils_discussionUnpinned">Trafodaethau</string>
+    <string name="utils_emptyDiscussions">Does dim trafodaethau i’w dangos yn yr adran hon.</string>
+    <string name="utils_description">Disgrifiad</string>
+    <string name="utils_allowThreadedReplies">Caniatáu atebion aml-drywydd</string>
+    <string name="utils_usersMustPost">Mae’n rhaid i fyfyrwyr bostio cyn gweld atebion</string>
+    <string name="utils_discussionsClosed">Wedi Cau ar gyfer Sylwadau</string>
+    <string name="utils_discussionsOpen">Ar agor ar gyfer Sylwadau</string>
+    <string name="utils_discussionsPin">Pinio</string>
+    <string name="utils_discussionsUnpin">Dadbinio</string>
+    <string name="utils_discussionsOptions">Opsiynau</string>
+    <string name="utils_discussionsDeleteTitle">Dileu Trafodaeth?</string>
+    <string name="utils_discussionsDelete">Dileu Trafodaeth</string>
+    <string name="utils_discussionsDeleteMessage">Bydd hyn yn dileu’r holl drafodaeth ac edefyn.</string>
+    <string name="utils_discussionSentSuccess">Wedi llwyddo i ateb i’r drafodaeth.</string>
+    <string name="utils_discussionUpdateSuccess">Wedi llwyddo i olygu’r drafodaeth.</string>
+    <string name="utils_discussionSentEmpty">Does dim modd i’r ateb i’r drafodaeth fod yn wag.</string>
+    <string name="utils_discussionSentFailure">Doedd dim modd anfon yr ateb i’r drafodaeth y tro hwn.</string>
+    <string name="utils_createDiscussion">Trafodaeth Newydd</string>
+    <string name="utils_editDiscussion">Golygu Trafodaeth</string>
+    <string name="utils_discussionDetails">Manylion Trafodaeth</string>
+    <string name="utils_discussionSuccessfullyUpdated">Wedi llwyddo i ddiweddaru’r drafodaeth.</string>
+    <string name="utils_saving">Wrthi’n cadw</string>
+    <string name="utils_discussionSuccessfullyCreated">Wedi llwyddo i greu trafodaeth.</string>
+    <string name="utils_discussionSuccessfulAttachmentNot">Doedd dim modd ychwanegu’r atodiad i’r drafodaeth hon. Gwiriwch eich cwota ffeiliau a rhoi cynnig arall arni.</string>
+    <string name="utils_noTitle">Dim Teitl</string>
+    <string name="utils_discussionsReplies_Title">Ateb</string>
+    <string name="utils_contentDescriptionDiscussionsOverflow">Mwy o opsiynau</string>
+    <string name="utils_discussionsUnreadRepliesBlank" formatted="false">%s %s %s</string>
+    <string name="utils_lastPost" formatted="false">Postiad diwethaf %s</string>
+    <string name="utils_postedOnDate">Wedi postio ar %s</string>
+    <string name="utils_discussionPostBeforeRepliesEmptyText">Dim ond y rheini sydd wedi cyflwyno o leiaf un ateb sy’n gallu gweld yr atebion.</string>
+    <string name="utils_createAnnouncementDelayPosting">Oedi cyn postio</string>
+    <string name="utils_postAt">Postio</string>
+    <string name="utils_postDate">Dyddiad Postio</string>
+    <string name="utils_postTime">Amser Postio</string>
+    <string name="utils_editAnnouncementTitle">Golygu Cyhoeddiad</string>
+    <string name="utils_createAnnouncementTitle">Cyhoeddiad Newydd</string>
+    <string name="utils_announcementDetails">Manylion Cyhoeddiad</string>
+    <string name="utils_createAnnouncementNoDescription">Rhaid rhoi disgrifiad</string>
+    <string name="utils_errorSavingAnnouncement">Gwall wrth gadw’r cyhoeddiad hwn. Rhowch gynnig arall arni.</string>
+    <string name="utils_announcementSuccessfullyUpdated">Wedi llwyddo i ddiweddaru’r cyhoeddiad.</string>
+    <string name="utils_announcementSuccessfullyCreated">Wedi llwyddo i greu cyhoeddiad.</string>
+
+    <plurals name="utils_discussionsUnread">
+        <item quantity="one">%s Heb ei ddarllen</item>
+        <item quantity="other">%s Heb ei ddarllen</item>
+    </plurals>
+
+    <plurals name="utils_addAttachment">
+        <item quantity="zero">Ychwanegu Atodiad</item>
+        <item quantity="one">Ychwanegu Atodiad</item>
+        <item quantity="other">Ychwanegu Atodiadau</item>
+    </plurals>
+
+    <!-- Assignment Override !-->
+    <string name="utils_unlockAfterDueDateError">Does dim modd i’r dyddiad datgloi fod ar ôl y dyddiad erbyn</string>
+    <string name="utils_lockBeforeDueDateError">Does dim modd i’r dyddiad cloi fod cyn y dyddiad erbyn</string>
+    <string name="utils_lockAfterUnlockError">Does dim modd i’r dyddiad cloi fod cyn y dyddiad datgloi</string>
+    <string name="utils_assigneeBlankError">Does dim modd i’r aseinî fod yn wag</string>
+    <string name="utils_assignTo">Dyrannu i</string>
+    <string name="utils_availableFrom">Ar gael o</string>
+    <string name="utils_availableTo">Ar gael tan</string>
+    <string name="utils_availableFromDate">Dyddiad Ar gael o</string>
+    <string name="utils_availableFromTime">Amser ar gael o</string>
+    <string name="utils_availableToDate">Dyddiad ar gael tan</string>
+    <string name="utils_availableToTime">Amser ar gael tan</string>
+    <string name="utils_dueDate">Dyddiad Erbyn</string>
+    <string name="utils_dueTime">Amser Erbyn</string>
+    <string name="utils_addNew">Ychwanegu Newydd</string>
+
+    <!--Attachment Layout-->
+    <string name="utils_downloadAttachment">Llwytho atodiad i lawr</string>
+    <string name="utils_removeAttachment">Tynnu atodiad</string>
+
+    <!--Unsaved Changes-->
+    <string name="utils_continueWithoutSavingTitle">Bwrw ymlaen heb gadw?</string>
+    <string name="utils_continueWithoutSavingMessage">Ydych chi’n siŵr eich bod am fwrw ymlaen heb gadw?</string>
+    <string name="utils_continueUnsaved">Bwrw ymlaen</string>
+    <string name="utils_exitWithoutSavingTitle">Gadael heb gadw?</string>
+    <string name="utils_exitWithoutSavingMessage">Ydych chi’n siŵr eich bod am adael heb gadw?</string>
+    <string name="utils_exitUnsaved">Gadael</string>
+    <string name="utils_cancel">Canslo</string>
+
+    <string name="utils_contentDescriptionFiles">Eicon ffeil</string>
+    <string name="utils_turn_in">Cyflwyno</string>
+    <string name="utils_upload">Llwytho i fyny</string>
+    <string name="utils_okay">Iawn</string>
+    <string name="utils_loadingFilesIndeterminate">Llwytho Ffeiliau&#8230;</string>
+    <string name="utils_allowedExtensions">Estyniadau a ganiateir:&#160;</string>
+    <string name="utils_extensionNotAllowed">Ni chaniateir y math hwn o ffeil.</string>
+    <string name="utils_errorUploadingFile">Gwall wrth lwytho eich ffeil i fyny. Rhowch gynnig arall arni.</string>
+    <string name="utils_filesUploadedSuccessfully">Wedi llwyddo i lwytho ffeiliau.</string>
+    <string name="utils_uploadingFiles">Llwytho ffeiliau i fyny&#8230;</string>
+    <string name="utils_uploadingFile">Llwytho ffeil i fyny&#8230;</string>
+    <string name="utils_noApps">Does gan eich dyfais ddim rhaglen wedi’i gosod a all drin y ffeil hon.</string>
+    <string name="utils_errorGettingPhoto">Gwall wrth nôl y llun. Rhowch gynnig arall arni.</string>
+    <string name="utils_oneOrMoreExtensionNotAllowed">Mae gan o leiaf un ffeil estyniad ffeil sydd wedi’i wahardd</string>
+    <string name="utils_fileUploadNotSupported">Does dim modd i chi lwytho ffeiliau i fyny i’r aseiniad hwn.</string>
+    <string name="utils_noFilesUploaded">Dydych chi ddim wedi dewis unrhyw ffeiliau.</string>
+    <string name="utils_attachments">Atodiadau</string>
+    <string name="utils_uploadTo">Llwytho i fyny i </string>
+    <string name="utils_uploadToCanvas">Llwytho i fyny i Canvas</string>
+    <string name="utils_uploadMyFiles">Fy Ffeiliau</string>
+    <string name="utils_uploadCourseFiles">Ffeiliau Cwrs</string>
+    <string name="utils_uploadToSubmissionComment">Llwytho i fyny i Sylw ar y cyflwyniad</string>
+    <string name="utils_attachFile">Atodi ffeil</string>
+    <string name="utils_with">gyda</string>
+
+    <string name="notificationPrimaryInboxTitle">Hysbysiad Canvas</string>
+    <string name="notificationChannelNamePrimary">Hysbysiadau Cyffredinol Canvas</string>
+    <string name="notificationChannelDescriptionPrimary">Gellir ffurfweddu hysbysiadau ymhellach o fewn yr adran Dewisiadau Hysbysiadau Canvas.</string>
+
+    <string name="copyLinkAddress">Copïo cyfeiriad dolen</string>
+    <string name="copyLink">Copïo Dolen</string>
+    <string name="linkCopied">Wedi copïo dolen</string>
+    <string name="link">Dolen</string>
+    <string name="fileExists">Ffeil yn bodoli</string>
+    <string name="replace">Disodli</string>
+    <string name="shareLink">Rhannu dolen</string>
+
+    <string name="utils_launchExternalTool">Lansio Adnodd Allanol</string>
+    <string name="utils_externalToolTitle">Adnodd Allanol</string>
+    <string name="utils_placeholderTitle">Adnodd Allanol</string>
+    <string name="utils_placeholderDescription">Ewch i’ch cyfrif Canvas ar y we i olygu’r adnodd allanol hwn.</string>
+    <string name="utils_unableToViewInBrowser">Does dim modd dod o hyd i ap allanol i weld yr adnodd LTI hwn.</string>
+
+    <string name="utils_unsupportedFileMessage">Doedd dim modd dangos y ffeil hon. Defnyddiwch y botwm isod i agor y ffeil gydag ap arall ar eich dyfais.</string>
+    <string name="utils_openWithAnotherApp">Agor gyda...</string>
+    <string name="utils_couldNotPlayFormat">Does dim modd delio â’r fformat cyfryngau hwn</string>
+    <string name="utils_fullscreen">sgrin lawn</string>
+
+    <string name="utils_dataUsageWarningTitle">Rhybudd Defnyddio Data</string>
+    <string name="utils_dataUsageWarningMessage">Gallai’r weithred hon ddefnyddio llawer o ddata, gan arwain at gostau gorddefnydd. Ydych chi am fwrw ymlaen?</string>
+    <string name="utils_doNotShowMessageAgain">Peidiwch â dangos y neges hon eto</string>
+
+    <string name="utils_no_data_connection">Gwiriwch eich cyswllt data a rhowch gynnig arall arni.</string>
+    <string name="utils_playMedia">Chwarae cyfryngau</string>
+    <string name="utils_tryAgain">Rhoi cynnig arall arni</string>
+    <string name="image_uploading">Wrthi’n Llwytho’r Ddelwedd i Fyny...</string>
+    <string name="image_upload_error">Gwall wrth Lwytho’r Ddelwedd i Fyny</string>
+    <string name="retry">Rhoi cynnig arall arni</string>
+
+    <string name="search">Chwilio</string>
+    <string name="searchAssignmentsHint">Chwilio Aseiniadau</string>
+    <string name="searchAnnouncementsHint">Chwilio Cyhoeddiadau</string>
+    <string name="searchDiscussionsHint">Chwilio Trafodaethau</string>
+    <string name="searchPagesHint">Chwilio Tudalennau</string>
+    <string name="searchQuizzesHint">Chwilio Cwisiau</string>
+    <string name="noItemsMatchingQuery">Dim eitemau’n cyfateb \"%s\"</string>
+    <string name="selected">Wedi dewis</string>
+
+</resources>

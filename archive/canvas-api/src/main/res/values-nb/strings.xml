@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <!--Modules-->
+  <string name="mustComplete">Du må først fullføre:</string>
+  <string name="unlockedAt">Den vil låses opp den: </string>
+  <string name="goToModules">Gå til moduler</string>
+  <!--Events-->
+  <string name="Starts">Starter</string>
+  <string name="Ends">Slutter</string>
+  <string name="allDayEvent">Heldagsarrangement</string>
+  <string name="at">på</string>
+  <string name="to">til</string>
+  <!--StreamItems-->
+  <string name="Message">Melding</string>
+  <string name="Loading">Laster...</string>
+  <string name="Deleted">Slettet</string>
+  <!--Assignment Module-->
+  <string name="canvasAPI_online">Online</string>
+  <string name="canvasAPI_onPaper">På papir</string>
+  <string name="canvasAPI_discussion">Diskusjon</string>
+  <string name="canvasAPI_quiz">Quiz</string>
+  <string name="canvasAPI_externalTool">Eksternt verktøy</string>
+  <string name="canvasAPI_none">Ingen</string>
+  <string name="canvasAPI_passFail">Sto ikke</string>
+  <string name="canvasAPI_percent">Prosent</string>
+  <string name="canvasAPI_letterGrade">Bokstavkarakter</string>
+  <string name="canvasAPI_points">Poeng</string>
+  <string name="canvasAPI_gpaScale">GPA-skala</string>
+  <string name="canvasAPI_notGraded">Ikke vurdert</string>
+  <string name="canvasAPI_onlineQuiz">Online quiz</string>
+  <string name="canvasAPI_discussionTopic">Diskusjonsemne</string>
+  <string name="canvasAPI_onlineUpload">Opplasting online</string>
+  <string name="canvasAPI_onlineTextEntry">Skriv inn tekst online</string>
+  <string name="canvasAPI_onlineURL">Online URL</string>
+  <string name="canvasAPI_mediaRecording">Mediainnspilling</string>
+  <string name="canvasAPI_attendance">Oppmøte</string>
+</resources>

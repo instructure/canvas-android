@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="master_fragment_width">400dp</dimen>
+    <!-- Tablet Dimensions -->
+    <dimen name="tabIconPaddingLeft">30dp</dimen>
+    <dimen name="tabIconPaddingRight">30dp</dimen>
+    <dimen name="login_padding_left_right">48dp</dimen>
+    <dimen name="login_padding_bottom">24dp</dimen>
+    <dimen name="login_logo_text_gap">80dp</dimen>
+    <dimen name="login_help_logo_gap">80dp</dimen>
+</resources>

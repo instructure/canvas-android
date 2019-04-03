@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C) 2017 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<com.instructure.teacher.view.CourseBrowserHeaderView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:alpha="0"
+    android:elevation="6dp">
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/courseBrowserHeaderTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:lines="1"
+        android:textColor="@android:color/white"
+        style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse" />
+
+    <!-- Subtitle -->
+    <TextView
+        android:id="@+id/courseBrowserHeaderSubtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:lines="1"
+        android:textColor="@android:color/white"
+        style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle.Inverse"/>
+
+</com.instructure.teacher.view.CourseBrowserHeaderView>

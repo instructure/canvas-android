@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="22dp"
+    android:height="18dp"
+    android:viewportWidth="22"
+    android:viewportHeight="18">
+
+    <group
+            android:translateX="-169.000000"
+            android:translateY="-546.000000">
+        <group
+                android:translateY="536.000000">
+            <group
+                    android:translateX="168.000000"
+                    android:translateY="7.000000">
+                <path
+                    android:fillColor="#000000"
+                    android:strokeWidth="1"
+                    android:pathData="M7.06276467,3 L7.96224139,3.89947672 L3.66019244,8.20108253 L1,5.54042389
+L1.89904426,4.64137963 L3.66021465,6.40255002 L7.06276467,3 Z
+M10.4061057,6.61395005 L10.4061057,5.33861899 L23,5.33861899 L23,6.61395005
+L10.4061057,6.61395005 Z M8.59938668,12.9906054 L8.59938668,11.7152743
+L23,11.7152743 L23,12.9906054 L8.59938668,12.9906054 Z M8.59938668,19.3672607
+L8.59938668,18.0919297 L23,18.0919297 L23,19.3672607 L8.59938668,19.3672607 Z
+M4.16175828,20.1638306 C3.41339076,20.1638306 2.80671901,19.5571589
+2.80671901,18.8087914 C2.80671901,18.0604239 3.41339076,17.4537521
+4.16175828,17.4537521 C4.91012579,17.4537521 5.51679754,18.0604239
+5.51679754,18.8087914 C5.51679754,19.5571589 4.91012579,20.1638306
+4.16175828,20.1638306 Z M4.16175828,13.8403141 C3.41339076,13.8403141
+2.80671901,13.2336423 2.80671901,12.4852748 C2.80671901,11.7369073
+3.41339076,11.1302356 4.16175828,11.1302356 C4.91012579,11.1302356
+5.51679754,11.7369073 5.51679754,12.4852748 C5.51679754,13.2336423
+4.91012579,13.8403141 4.16175828,13.8403141 Z" />
+            </group>
+        </group>
+    </group>
+</vector>

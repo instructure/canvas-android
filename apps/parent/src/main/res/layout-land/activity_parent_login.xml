@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C) 2016 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:fitsSystemWindows="true"
+    android:scrollbarStyle="outsideOverlay"
+    android:paddingEnd="16dp"
+    android:paddingStart="16dp"
+    android:fillViewport="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/logoWrapper"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/login_logoMargins"
+            android:layout_marginTop="@dimen/login_logoMargins"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:focusable="true"
+            android:focusableInTouchMode="true">
+
+            <ImageView
+                android:id="@+id/canvasLogo"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_marginBottom="-8dp"
+                android:importantForAccessibility="no"
+                android:tint="@color/login_parentAppTheme"
+                app:srcCompat="@drawable/vd_canvas_logo" />
+
+            <TextView
+                android:id="@+id/canvasName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:text="@string/canvasLowerCase"
+                android:textColor="@color/login_grayCanvasLogo"
+                android:textSize="56sp" />
+
+            <TextView
+                android:id="@+id/appDescriptionType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-8dp"
+                android:fontFamily="sans-serif-black"
+                android:text="@string/appUserTypeParent"
+                android:textAllCaps="true"
+                android:textColor="@color/login_parentAppTheme"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/usernameWrapper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/logoWrapper"
+            android:textColorHint="@color/login_textButton"
+            app:hintTextAppearance="@style/TextInputLabel"
+            android:importantForAccessibility="no">
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:hint="@string/parent_email"
+                android:inputType="textEmailAddress"
+                android:nextFocusDown="@+id/password"
+                android:textCursorDrawable="@null"
+                android:contentDescription="@string/parent_email"
+                android:importantForAccessibility="yes"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/passwordWrapper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/usernameWrapper"
+            android:layout_marginTop="8dp"
+            app:hintTextAppearance="@style/TextInputLabel"
+            android:importantForAccessibility="no">
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:hint="@string/password"
+                android:imeOptions="actionGo"
+                android:maxLines="1"
+                android:nextFocusDown="@+id/forgotPassword"
+                android:textCursorDrawable="@null"
+                tools:ignore="TextFields"
+                android:contentDescription="@string/password"
+                android:importantForAccessibility="yes"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/forgotPassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/passwordWrapper"
+            android:layout_alignParentStart="true"
+            android:paddingStart="4dp"
+            android:paddingEnd="4dp"
+            android:textSize="12sp"
+            android:paddingBottom="12dp"
+            android:nextFocusDown="@+id/parentLoginButton"
+            android:text="@string/forgotPassword"
+            android:fontFamily="sans-serif-medium"
+            android:clickable="true"
+            android:focusable="true"
+            android:textColor="@color/login_textButton"
+            android:background="?android:selectableItemBackground"/>
+
+        <Button
+            android:id="@+id/parentLoginButton"
+            style="@style/ButtonStyleOutline"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/forgotPassword"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="0dp"
+            android:layout_marginTop="12dp"
+            android:nextFocusDown="@+id/canvasLoginButton"
+            android:stateListAnimator="@null"
+            android:text="@string/log_in" />
+
+        <TextView
+            android:id="@+id/or"
+            style="@style/LoginTextAsButton"
+            android:layout_below="@id/parentLoginButton"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="4dp"
+            android:layout_marginTop="4dp"
+            android:text="@string/or" />
+
+        <Button
+            android:id="@+id/canvasLoginButton"
+            style="@style/ButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/or"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="0dp"
+            android:elevation="0dp"
+            android:nextFocusDown="@+id/createAccount"
+            android:text="@string/canvas_login_text" />
+
+        <LinearLayout
+            android:id="@+id/buttonWrapper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_alignParentBottom="true"
+            android:layout_below="@+id/canvasLoginButton"
+            android:gravity="bottom">
+
+            <androidx.legacy.widget.Space
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:id="@+id/selectRegion"
+                style="@style/LoginTextAsButton"
+                android:nextFocusDown="@+id/username"
+                android:text="@string/selectRegion"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</ScrollView>
