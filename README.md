@@ -10,7 +10,7 @@ Run `./open_source.sh` once and then use Gradle to build the apps.
 
 App | Command
 --- | ---
-Student | `./gradlew/gradle -p apps clean :student:assembleDevDebug`
+Student | `./gradlew/gradle -p apps :student:assembleDevDebug`
 Teacher | `./gradlew/gradle -p apps :teacher:assembleDevDebug`
 Parent  | `./gradlew/gradle -p apps :parent:assembleDevDebug`
 
