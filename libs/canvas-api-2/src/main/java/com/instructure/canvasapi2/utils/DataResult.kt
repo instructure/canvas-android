@@ -33,6 +33,8 @@ sealed class DataResult<out A> {
         is Fail -> null
     }
 
+    val dataOrThrow get() = dataOrNull ?: throw IllegalStateException("Cannot get data from DataResult because it is Failed")
+
     inline fun onSuccess(block: (A) -> Unit): DataResult<A> {
         (this as? Success<A>)?.let { block(it.data) }
         return this

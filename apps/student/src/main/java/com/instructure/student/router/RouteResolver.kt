@@ -6,6 +6,7 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.utils.Const
 import com.instructure.student.features.files.search.FileSearchFragment
 import com.instructure.student.fragment.*
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsFragment
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 
 object RouteResolver {
@@ -94,6 +95,7 @@ object RouteResolver {
             cls.isA<CourseModuleProgressionFragment>() -> CourseModuleProgressionFragment.newInstance(route)
             cls.isA<AssignmentFragment>() -> AssignmentFragment.newInstance(route)
             cls.isA<AssignmentDetailsFragment>() -> AssignmentDetailsFragment.newInstance(route)
+            cls.isA<SubmissionDetailsFragment>() -> SubmissionDetailsFragment.newInstance(route)
             cls.isA<DiscussionListFragment>() -> DiscussionListFragment.newInstance(route)
             cls.isA<DiscussionDetailsFragment>() -> DiscussionDetailsFragment.newInstance(route)
             cls.isA<DiscussionsReplyFragment>() -> DiscussionsReplyFragment.newInstance(route)

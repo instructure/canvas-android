@@ -463,7 +463,6 @@
         android:id="@+id/submitButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:background="@color/canvasDefaultAccent"
         android:text="@string/submitAssignment"
         android:textAllCaps="false"

@@ -16,11 +16,12 @@
 
 package com.instructure.pandautils.views
 
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.graphics.*
-import androidx.annotation.ColorInt
 import android.util.AttributeSet
 import android.view.View
+import androidx.annotation.ColorInt
 import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.DP
 import com.instructure.pandautils.utils.specMode
@@ -50,8 +51,23 @@ class ProgressiveCanvasLoadingView @JvmOverloads constructor(
     var isIndeterminate = false
         set(value) {
             field = value
-            invalidate()
+            if (value) {
+                animator.start()
+            } else {
+                animator.cancel()
+                invalidate()
+            }
         }
+
+    /**
+     * [ObjectAnimator] which provides the indeterminate animation. This is used rather than calling [invalidate] on
+     * every draw call in order to avoid AppNotIdleExceptions in espresso tests.
+     */
+    private val animator = ObjectAnimator.ofFloat(this, "indeterminateProgress", 0f, 1f).apply {
+        repeatMode = ObjectAnimator.REVERSE
+        repeatCount = ObjectAnimator.INFINITE
+        duration = 2400
+    }
 
     /** Current progress - between 0 and 1, or between 0 and 2 for indeterminate state */
     private var progress = 0f
@@ -63,6 +79,13 @@ class ProgressiveCanvasLoadingView @JvmOverloads constructor(
     fun setProgress(newProgress: Float) {
         progress = newProgress.coerceIn(0f, 1f)
         isIndeterminate = false
+    }
+
+    /** Sets the current indeterminate progress. This is called internally by [animator]. */
+    @Suppress("unused")
+    private fun setIndeterminateProgress(newProgress: Float) {
+        progress = newProgress
+        invalidate()
     }
 
     init {
@@ -92,8 +115,6 @@ class ProgressiveCanvasLoadingView @JvmOverloads constructor(
                 if (i % 2 == 0) angleOffset = -angleOffset
                 drawCircle(canvas, i, -90f + angleOffset, 1f)
             }
-            progress += 0.01f
-            invalidate()
 
         } else {
             /* Determine index of 'progressing' circle */

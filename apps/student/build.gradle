@@ -239,6 +239,9 @@ dependencies {
     implementation 'com.makeramen:roundedimageview:2.3.0'
     implementation Libs.PHOTO_VIEW
 
+    /* Sliding Panel */
+    implementation 'com.sothree.slidinguppanel:library:3.4.0'
+
     /* Apache Commons */
     implementation 'org.apache.commons:commons-text:1.6'
 

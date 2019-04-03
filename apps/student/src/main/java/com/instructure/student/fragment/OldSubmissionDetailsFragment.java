@@ -134,7 +134,7 @@ import retrofit2.Call;
 import retrofit2.Response;
 
 @PageView(url = "{canvasContext}/assignments/{assignmentId}/submissions")
-public class SubmissionDetailsFragment extends ParentFragment {
+public class OldSubmissionDetailsFragment extends ParentFragment {
 
     public interface SubmissionDetailsFragmentCallback {
         void updateSubmissionDate(Date date);
@@ -278,7 +278,7 @@ public class SubmissionDetailsFragment extends ParentFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = getLayoutInflater().inflate(R.layout.fragment_submission_details, container, false);
+        View rootView = getLayoutInflater().inflate(R.layout.fragment_old_submission_details, container, false);
         setupViews(rootView);
         return rootView;
     }
@@ -1615,10 +1615,10 @@ public class SubmissionDetailsFragment extends ParentFragment {
     }
 
     @Nullable
-    public static SubmissionDetailsFragment newInstance(Route route) {
+    public static OldSubmissionDetailsFragment newInstance(Route route) {
         if(!validRoute(route)) return null;
 
-        SubmissionDetailsFragment fragment = new SubmissionDetailsFragment();
+        OldSubmissionDetailsFragment fragment = new OldSubmissionDetailsFragment();
         fragment.canvasContext = route.getArguments().getParcelable(Const.CANVAS_CONTEXT);
         fragment.setArguments(route.getArguments());
         return fragment;
@@ -1627,6 +1627,6 @@ public class SubmissionDetailsFragment extends ParentFragment {
     public static Route makeRoute(CanvasContext canvasContext) {
         Bundle args = new Bundle();
         args.putParcelable(Const.CANVAS_CONTEXT, canvasContext);
-        return new Route(null, SubmissionDetailsFragment.class, canvasContext, args);
+        return new Route(null, OldSubmissionDetailsFragment.class, canvasContext, args);
     }
 }

@@ -57,7 +57,7 @@ import java.lang.ref.WeakReference
 import java.text.DateFormat
 import java.util.*
 
-class AssignmentFragment : ParentFragment(), SubmissionDetailsFragment.SubmissionDetailsFragmentCallback, Bookmarkable {
+class AssignmentFragment : ParentFragment(), OldSubmissionDetailsFragment.SubmissionDetailsFragmentCallback, Bookmarkable {
 
     // Bundle Args
     private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
@@ -79,10 +79,10 @@ class AssignmentFragment : ParentFragment(), SubmissionDetailsFragment.Submissio
             null
         } else fragmentPagerAdapter!!.getRegisteredFragment(ASSIGNMENT_TAB_DETAILS) as OldAssignmentDetailsFragment?
 
-    private val submissionDetailsFragment: SubmissionDetailsFragment?
+    private val submissionDetailsFragment: OldSubmissionDetailsFragment?
         get() = if (fragmentPagerAdapter == null) {
             null
-        } else fragmentPagerAdapter!!.getRegisteredFragment(ASSIGNMENT_TAB_SUBMISSION) as SubmissionDetailsFragment?
+        } else fragmentPagerAdapter!!.getRegisteredFragment(ASSIGNMENT_TAB_SUBMISSION) as OldSubmissionDetailsFragment?
 
     private val assignmentCallback = object : StatusCallback<Assignment>() {
         override fun onResponse(response: Response<Assignment>, linkHeaders: LinkHeaders, type: ApiType) {
@@ -224,7 +224,7 @@ class AssignmentFragment : ParentFragment(), SubmissionDetailsFragment.Submissio
                     .forEach {
                         when (it) {
                             is OldAssignmentDetailsFragment -> it.setupAssignment(assignment)
-                            is SubmissionDetailsFragment -> {
+                            is OldSubmissionDetailsFragment -> {
                                 it.setAssignmentFragment(WeakReference(this))
                                 it.setAssignment(assignment, isWithinAnotherCallback, isCached)
                                 it.setSubmissionDetailsFragmentCallback(this)
@@ -321,7 +321,8 @@ class AssignmentFragment : ParentFragment(), SubmissionDetailsFragment.Submissio
         override fun getItem(position: Int): Fragment? {
             return when (position) {
                 ASSIGNMENT_TAB_DETAILS -> OldAssignmentDetailsFragment.newInstance(OldAssignmentDetailsFragment.makeRoute(canvasContext))
-                ASSIGNMENT_TAB_SUBMISSION -> SubmissionDetailsFragment.newInstance(SubmissionDetailsFragment.makeRoute(canvasContext))
+                ASSIGNMENT_TAB_SUBMISSION -> OldSubmissionDetailsFragment.newInstance(
+                    OldSubmissionDetailsFragment.makeRoute(canvasContext))
                 ASSIGNMENT_TAB_GRADE -> RubricFragment.newInstance(RubricFragment.makeRoute(canvasContext))
                 else -> OldAssignmentDetailsFragment.newInstance(OldAssignmentDetailsFragment.makeRoute(canvasContext))
             }
@@ -332,7 +333,7 @@ class AssignmentFragment : ParentFragment(), SubmissionDetailsFragment.Submissio
         override fun getPageTitle(position: Int): CharSequence {
             return when (position) {
                 ASSIGNMENT_TAB_DETAILS -> if (isLocked) getString(R.string.assignmentLocked) else getString(OldAssignmentDetailsFragment.tabTitle)
-                ASSIGNMENT_TAB_SUBMISSION -> getString(SubmissionDetailsFragment.getTabTitle())
+                ASSIGNMENT_TAB_SUBMISSION -> getString(OldSubmissionDetailsFragment.getTabTitle())
                 ASSIGNMENT_TAB_GRADE -> getString(RubricFragment.tabTitle)
                 else -> getString(OldAssignmentDetailsFragment.tabTitle)
             }

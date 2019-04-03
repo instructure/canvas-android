@@ -17,4 +17,34 @@
 
 package com.instructure.student.mobius.assignmentDetails.submissionDetails.ui
 
-sealed class SubmissionDetailsViewState
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Attachment
+import com.instructure.canvasapi2.models.Submission
+
+sealed class SubmissionDetailsViewState {
+    object Error : SubmissionDetailsViewState()
+    object Loading : SubmissionDetailsViewState()
+    data class Loaded(
+        val showVersionsSpinner: Boolean,
+        val selectedVersionSpinnerIndex: Int,
+        val submissionVersions: List<Pair<Long, String>>,
+        val tabData : List<SubmissionDetailsTabData>
+    ): SubmissionDetailsViewState()
+}
+
+sealed class SubmissionDetailsTabData(val tabName: String) {
+    data class CommentData(
+        val name: String,
+        val assignmentId: Long
+    ) : SubmissionDetailsTabData(name)
+    data class FileData(
+        val name: String,
+        val files: List<Attachment>,
+        val selectedFileId: Long
+    ) : SubmissionDetailsTabData(name)
+    data class GradeData(
+        val name: String,
+        val assignment: Assignment,
+        val submission: Submission
+    ) : SubmissionDetailsTabData(name)
+}

@@ -18,9 +18,9 @@ package com.instructure.student.test.assignment.details.submissionDetails
 import android.net.Uri
 import android.webkit.MimeTypeMap
 import com.instructure.canvasapi2.models.*
-import com.instructure.student.mobius.assignmentDetails.submissionDetails.*
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Failure
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.*
 import com.instructure.student.test.util.matchesEffects
 import com.instructure.student.test.util.matchesFirstEffects
 import com.instructure.student.util.Const
@@ -28,6 +28,8 @@ import com.spotify.mobius.test.FirstMatchers
 import com.spotify.mobius.test.InitSpec
 import com.spotify.mobius.test.InitSpec.assertThatFirst
 import com.spotify.mobius.test.NextMatchers
+import com.spotify.mobius.test.NextMatchers.hasModel
+import com.spotify.mobius.test.NextMatchers.hasNoEffects
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import io.mockk.every
@@ -60,57 +62,148 @@ class SubmissionDetailsUpdateTest : Assert() {
     fun `Initializes into a loading state`() {
         val expectedModel = initModel.copy(isLoading = true)
         initSpec
-                .whenInit(initModel)
-                .then(
-                        assertThatFirst(
-                                FirstMatchers.hasModel(expectedModel),
-                                matchesFirstEffects<SubmissionDetailsModel, SubmissionDetailsEffect>(SubmissionDetailsEffect.LoadData(course.id, assignment.id))
-                        )
+            .whenInit(initModel)
+            .then(
+                assertThatFirst(
+                    FirstMatchers.hasModel(expectedModel),
+                    matchesFirstEffects<SubmissionDetailsModel, SubmissionDetailsEffect>(
+                        SubmissionDetailsEffect.LoadData(course.id, assignment.id)
+                    )
                 )
+            )
+    }
+
+    @Test
+    fun `RefreshRequested event produces a loading state and LoadData effect`() {
+        val expectedModel = initModel.copy(isLoading = true)
+        val expectedEffect = SubmissionDetailsEffect.LoadData(initModel.canvasContext.id, initModel.assignmentId)
+        updateSpec.given(initModel)
+            .whenEvent(SubmissionDetailsEvent.RefreshRequested)
+            .then(
+                assertThatNext(
+                    hasModel(expectedModel),
+                    matchesEffects<SubmissionDetailsModel, SubmissionDetailsEffect>(expectedEffect)
+                )
+            )
     }
 
     // region SubmissionClicked event tests
 
     @Test
     fun `SubmissionClicked event results in model change and a ShowSubmissionContentType effect`() {
-        val submission = submission.copy(body = "submission body", submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString)
-        initModel = initModel.copy(
-                assignment = DataResult.Success(assignment),
-                rootSubmission = DataResult.Success(Submission(submissionHistory = listOf(Submission(id = 1), Submission(id = 2), submission)))
+        val submission = submission.copy(
+            body = "submission body",
+            submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString
         )
+        initModel = initModel.copy(
+            assignment = DataResult.Success(assignment),
+            rootSubmission = DataResult.Success(
+                Submission(
+                    submissionHistory = listOf(
+                        Submission(id = 1),
+                        Submission(id = 2),
+                        submission
+                    )
+                )
+            )
+        )
+        val contentType = SubmissionDetailsContentType.TextContent(submission.body!!)
         val expectedModel = initModel.copy(
-                selectedSubmissionId = submission.id,
-                submissionContentType = SubmissionDetailsContentType.TextContent(submission.body!!)
+            selectedSubmissionAttemptId = submission.id
         )
 
         updateSpec
-                .given(initModel)
-                .whenEvent(SubmissionDetailsEvent.SubmissionClicked(submission.id))
-                .then(
-                        assertThatNext(
-                                NextMatchers.hasModel(expectedModel),
-                                matchesEffects<SubmissionDetailsModel, SubmissionDetailsEffect>(SubmissionDetailsEffect.ShowSubmissionContentType(expectedModel.submissionContentType))
-                        )
+            .given(initModel)
+            .whenEvent(SubmissionDetailsEvent.SubmissionClicked(submission.id))
+            .then(
+                assertThatNext(
+                    NextMatchers.hasModel(expectedModel),
+                    matchesEffects<SubmissionDetailsModel, SubmissionDetailsEffect>(
+                        SubmissionDetailsEffect.ShowSubmissionContentType(contentType)
+                    )
                 )
+            )
+    }
+
+    @Test
+    fun `SubmissionClicked event results in model change but no effect if updateContent flag is false`() {
+        val submission = submission.copy(
+            body = "submission body",
+            submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString
+        )
+        initModel = initModel.copy(
+            assignment = DataResult.Success(assignment),
+            rootSubmission = DataResult.Success(
+                Submission(
+                    submissionHistory = listOf(
+                        Submission(id = 1),
+                        Submission(id = 2),
+                        submission
+                    )
+                )
+            )
+        )
+        val expectedModel = initModel.copy(
+            selectedSubmissionAttemptId = submission.id
+        )
+
+        updateSpec
+            .given(initModel)
+            .whenEvent(SubmissionDetailsEvent.SubmissionClicked(submission.id))
+            .then(
+                assertThatNext(
+                    NextMatchers.hasModel(expectedModel),
+                    hasNoEffects()
+                )
+            )
+    }
+
+    @Test
+    fun `SubmissionClicked event results in no change if submission is already selected`() {
+        val submission = submission.copy(
+            body = "submission body",
+            submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString
+        )
+        initModel = initModel.copy(
+            selectedSubmissionAttemptId = submission.id,
+            assignment = DataResult.Success(assignment),
+            rootSubmission = DataResult.Success(
+                Submission(
+                    submissionHistory = listOf(
+                        Submission(id = 1),
+                        Submission(id = 2),
+                        submission
+                    )
+                )
+            )
+        )
+
+        updateSpec
+            .given(initModel)
+            .whenEvent(SubmissionDetailsEvent.SubmissionClicked(submission.id))
+            .then(assertThatNext(NextMatchers.hasNothing()))
     }
 
     @Test
     fun `SubmissionClicked event with no corresponding submission results in model change and a ShowSubmissionContentType effect of NoSubmissionContent`() {
         val submissionId = 1234L
+        val contentType =
+            SubmissionDetailsContentType.NoSubmissionContent // No submission in the model with the selected ID maps to NoSubmissionContent type
         val expectedModel = initModel.copy(
-                selectedSubmissionId = submissionId,
-                submissionContentType = SubmissionDetailsContentType.NoSubmissionContent // No submission in the model with the selected ID maps to NoSubmissionContent type
+            selectedSubmissionAttemptId = submissionId
         )
 
         updateSpec
-                .given(initModel)
-                .whenEvent(SubmissionDetailsEvent.SubmissionClicked(submissionId))
-                .then(
-                        assertThatNext(
-                                NextMatchers.hasModel(expectedModel),
-                                matchesEffects<SubmissionDetailsModel, SubmissionDetailsEffect>(SubmissionDetailsEffect.ShowSubmissionContentType(expectedModel.submissionContentType))
-                        )
+            .given(initModel)
+            .whenEvent(SubmissionDetailsEvent.SubmissionClicked(submissionId))
+            .then(
+                assertThatNext(
+                    NextMatchers.hasModel(expectedModel),
+                    matchesEffects<SubmissionDetailsModel, SubmissionDetailsEffect>(
+                        SubmissionDetailsEffect.ShowSubmissionContentType(contentType)
+                    )
                 )
+            )
     }
 
     // endregion
@@ -122,22 +215,24 @@ class SubmissionDetailsUpdateTest : Assert() {
         initModel = initModel.copy(isLoading = true)
         val assignment = DataResult.Success(assignment)
         val submission = DataResult.Fail(Failure.Network("ErRoR"))
+        val contentType = SubmissionDetailsContentType.NoSubmissionContent
         val expectedModel = initModel.copy(
-                isLoading = false,
-                assignment = assignment,
-                rootSubmission = submission,
-                selectedSubmissionId = null,
-                submissionContentType = SubmissionDetailsContentType.NoSubmissionContent)
-
+            isLoading = false,
+            assignment = assignment,
+            rootSubmission = submission,
+            selectedSubmissionAttemptId = null
+        )
         updateSpec
-                .given(initModel)
-                .whenEvent(SubmissionDetailsEvent.DataLoaded(assignment, submission))
-                .then(
-                        assertThatNext(
-                                NextMatchers.hasModel(expectedModel),
-                                matchesEffects<SubmissionDetailsModel, SubmissionDetailsEffect>(SubmissionDetailsEffect.ShowSubmissionContentType(expectedModel.submissionContentType))
-                        )
+            .given(initModel)
+            .whenEvent(SubmissionDetailsEvent.DataLoaded(assignment, submission))
+            .then(
+                assertThatNext(
+                    NextMatchers.hasModel(expectedModel),
+                    matchesEffects<SubmissionDetailsModel, SubmissionDetailsEffect>(
+                        SubmissionDetailsEffect.ShowSubmissionContentType(contentType)
+                    )
                 )
+            )
     }
 
     // region getSubmissionContentType tests
@@ -145,36 +240,36 @@ class SubmissionDetailsUpdateTest : Assert() {
     @Test
     fun `NONE results in SubmissionDetailsContentType of NoneContent`() {
         verifyGetSubmissionContentType(
-                assignment.copy(submissionTypesRaw = listOf(Assignment.SubmissionType.NONE.apiString)),
-                submission,
-                SubmissionDetailsContentType.NoneContent
+            assignment.copy(submissionTypesRaw = listOf(Assignment.SubmissionType.NONE.apiString)),
+            submission,
+            SubmissionDetailsContentType.NoneContent
         )
     }
 
     @Test
     fun `ON_PAPER results in SubmissionDetailsContentType of OnPaperContent`() {
         verifyGetSubmissionContentType(
-                assignment.copy(submissionTypesRaw = listOf(Assignment.SubmissionType.ON_PAPER.apiString)),
-                submission,
-                SubmissionDetailsContentType.OnPaperContent
+            assignment.copy(submissionTypesRaw = listOf(Assignment.SubmissionType.ON_PAPER.apiString)),
+            submission,
+            SubmissionDetailsContentType.OnPaperContent
         )
     }
 
     @Test
     fun `ASSIGNMENT_STATE_MISSING results in SubmissionDetailsContentType of NoSubmissionContent`() {
         verifyGetSubmissionContentType(
-                assignment,
-                submission.copy(attempt = 0),
-                SubmissionDetailsContentType.NoSubmissionContent
+            assignment,
+            submission.copy(attempt = 0),
+            SubmissionDetailsContentType.NoSubmissionContent
         )
     }
 
     @Test
     fun `ASSIGNMENT_STATE_GRADED_MISSING results in SubmissionDetailsContentType of NoSubmissionContent`() {
         verifyGetSubmissionContentType(
-                assignment,
-                submission.copy(missing = true),
-                SubmissionDetailsContentType.NoSubmissionContent
+            assignment,
+            submission.copy(missing = true),
+            SubmissionDetailsContentType.NoSubmissionContent
         )
     }
 
@@ -182,54 +277,54 @@ class SubmissionDetailsUpdateTest : Assert() {
     fun `ONLINE_TEXT_ENTRY results in SubmissionDetailsContentType of TextContent`() {
         val body = "submission body"
         verifyGetSubmissionContentType(
-                assignment,
-                submission.copy(body = body, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString),
-                SubmissionDetailsContentType.TextContent(body)
+            assignment,
+            submission.copy(body = body, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString),
+            SubmissionDetailsContentType.TextContent(body)
         )
     }
 
     @Test
     fun `ONLINE_TEXT_ENTRY with a null body results in SubmissionDetailsContentType of TextContent`() {
         verifyGetSubmissionContentType(
-                assignment,
-                submission.copy(body = null, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString),
-                SubmissionDetailsContentType.TextContent("")
+            assignment,
+            submission.copy(body = null, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString),
+            SubmissionDetailsContentType.TextContent("")
         )
     }
 
     @Test
     fun `BASIC_LTI_LAUNCH results in SubmissionDetailsContentType of ExternalToolContent`() {
         verifyGetSubmissionContentType(
-                assignment,
-                submission.copy(previewUrl = url, submissionType = Assignment.SubmissionType.BASIC_LTI_LAUNCH.apiString),
-                SubmissionDetailsContentType.ExternalToolContent(initModel.canvasContext, url)
+            assignment,
+            submission.copy(previewUrl = url, submissionType = Assignment.SubmissionType.BASIC_LTI_LAUNCH.apiString),
+            SubmissionDetailsContentType.ExternalToolContent(initModel.canvasContext, url)
         )
     }
 
     @Test
     fun `BASIC_LTI_LAUNCH without a preview url results in SubmissionDetailsContentType of ExternalToolContent`() {
         verifyGetSubmissionContentType(
-                assignment.copy(url = url),
-                submission.copy(previewUrl = null, submissionType = Assignment.SubmissionType.BASIC_LTI_LAUNCH.apiString),
-                SubmissionDetailsContentType.ExternalToolContent(initModel.canvasContext, url)
+            assignment.copy(url = url),
+            submission.copy(previewUrl = null, submissionType = Assignment.SubmissionType.BASIC_LTI_LAUNCH.apiString),
+            SubmissionDetailsContentType.ExternalToolContent(initModel.canvasContext, url)
         )
     }
 
     @Test
     fun `BASIC_LTI_LAUNCH without a preview url or an assignment url results in SubmissionDetailsContentType of ExternalToolContent`() {
         verifyGetSubmissionContentType(
-                assignment.copy(url = null, htmlUrl = url),
-                submission.copy(previewUrl = null, submissionType = Assignment.SubmissionType.BASIC_LTI_LAUNCH.apiString),
-                SubmissionDetailsContentType.ExternalToolContent(initModel.canvasContext, url)
+            assignment.copy(url = null, htmlUrl = url),
+            submission.copy(previewUrl = null, submissionType = Assignment.SubmissionType.BASIC_LTI_LAUNCH.apiString),
+            SubmissionDetailsContentType.ExternalToolContent(initModel.canvasContext, url)
         )
     }
 
     @Test
     fun `BASIC_LTI_LAUNCH without a preview url or an assignment url or an assignment html url results in SubmissionDetailsContentType of ExternalToolContent`() {
         verifyGetSubmissionContentType(
-                assignment.copy(url = null, htmlUrl = null),
-                submission.copy(previewUrl = null, submissionType = Assignment.SubmissionType.BASIC_LTI_LAUNCH.apiString),
-                SubmissionDetailsContentType.ExternalToolContent(initModel.canvasContext, "")
+            assignment.copy(url = null, htmlUrl = null),
+            submission.copy(previewUrl = null, submissionType = Assignment.SubmissionType.BASIC_LTI_LAUNCH.apiString),
+            SubmissionDetailsContentType.ExternalToolContent(initModel.canvasContext, "")
         )
     }
 
@@ -243,9 +338,16 @@ class SubmissionDetailsUpdateTest : Assert() {
         every { Uri.parse(url) } returns uri
 
         verifyGetSubmissionContentType(
-                assignment,
-                submission.copy(mediaComment = MediaComment(url = url, contentType = contentType, displayName = displayName), submissionType = Assignment.SubmissionType.MEDIA_RECORDING.apiString),
-                SubmissionDetailsContentType.MediaContent(Uri.parse(url), contentType, null, displayName)
+            assignment,
+            submission.copy(
+                mediaComment = MediaComment(
+                    url = url,
+                    contentType = contentType,
+                    displayName = displayName
+                ),
+                submissionType = Assignment.SubmissionType.MEDIA_RECORDING.apiString
+            ),
+            SubmissionDetailsContentType.MediaContent(Uri.parse(url), contentType, null, displayName)
         )
     }
 
@@ -258,36 +360,43 @@ class SubmissionDetailsUpdateTest : Assert() {
         every { Uri.parse(url) } returns uri
 
         verifyGetSubmissionContentType(
-                assignment,
-                submission.copy(mediaComment = MediaComment(url = url, contentType = null, displayName = displayName), submissionType = Assignment.SubmissionType.MEDIA_RECORDING.apiString),
-                SubmissionDetailsContentType.MediaContent(uri, "", null, displayName)
+            assignment,
+            submission.copy(
+                mediaComment = MediaComment(url = url, contentType = null, displayName = displayName),
+                submissionType = Assignment.SubmissionType.MEDIA_RECORDING.apiString
+            ),
+            SubmissionDetailsContentType.MediaContent(uri, "", null, displayName)
         )
     }
 
     @Test
     fun `MEDIA_RECORDING with null media comment results in SubmissionDetailsContentType of UnsupportedContent`() {
         verifyGetSubmissionContentType(
-                assignment,
-                submission.copy(mediaComment = null, submissionType = Assignment.SubmissionType.MEDIA_RECORDING.apiString),
-                SubmissionDetailsContentType.UnsupportedContent
+            assignment,
+            submission.copy(mediaComment = null, submissionType = Assignment.SubmissionType.MEDIA_RECORDING.apiString),
+            SubmissionDetailsContentType.UnsupportedContent
         )
     }
 
     @Test
     fun `ONLINE_URL results in SubmissionDetailsContentType of UrlContent`() {
         verifyGetSubmissionContentType(
-                assignment,
-                submission.copy(url = url, attachments = arrayListOf(Attachment(url = url)), submissionType = Assignment.SubmissionType.ONLINE_URL.apiString),
-                SubmissionDetailsContentType.UrlContent(url, url)
+            assignment,
+            submission.copy(
+                url = url,
+                attachments = arrayListOf(Attachment(url = url)),
+                submissionType = Assignment.SubmissionType.ONLINE_URL.apiString
+            ),
+            SubmissionDetailsContentType.UrlContent(url, url)
         )
     }
 
     @Test
     fun `ONLINE_URL with no attachments results in SubmissionDetailsContentType of UrlContent`() {
         verifyGetSubmissionContentType(
-                assignment,
-                submission.copy(url = url, submissionType = Assignment.SubmissionType.ONLINE_URL.apiString),
-                SubmissionDetailsContentType.UrlContent(url, null)
+            assignment,
+            submission.copy(url = url, submissionType = Assignment.SubmissionType.ONLINE_URL.apiString),
+            SubmissionDetailsContentType.UrlContent(url, null)
         )
     }
 
@@ -295,15 +404,20 @@ class SubmissionDetailsUpdateTest : Assert() {
     fun `ONLINE_QUIZ results in SubmissionDetailsContentType of QuizContent`() {
         val studentId = 101L
         verifyGetSubmissionContentType(
-                assignment,
-                submission.copy(userId = studentId, previewUrl = url, workflowState = QuizSubmission.WorkflowState.COMPLETE.name.toLowerCase(), submissionType = Assignment.SubmissionType.ONLINE_QUIZ.apiString),
-                SubmissionDetailsContentType.QuizContent(
-                        initModel.canvasContext.id,
-                        assignment.id,
-                        studentId,
-                        url,
-                        false // Workflow state is COMPLETE, so not pending
-                )
+            assignment,
+            submission.copy(
+                userId = studentId,
+                previewUrl = url,
+                workflowState = QuizSubmission.WorkflowState.COMPLETE.name.toLowerCase(),
+                submissionType = Assignment.SubmissionType.ONLINE_QUIZ.apiString
+            ),
+            SubmissionDetailsContentType.QuizContent(
+                initModel.canvasContext.id,
+                assignment.id,
+                studentId,
+                url,
+                false // Workflow state is COMPLETE, so not pending
+            )
         )
     }
 
@@ -311,15 +425,20 @@ class SubmissionDetailsUpdateTest : Assert() {
     fun `ONLINE_QUIZ with no preview url results in SubmissionDetailsContentType of QuizContent`() {
         val studentId = 101L
         verifyGetSubmissionContentType(
-                assignment,
-                submission.copy(userId = studentId, previewUrl = null, workflowState = QuizSubmission.WorkflowState.COMPLETE.name.toLowerCase(), submissionType = Assignment.SubmissionType.ONLINE_QUIZ.apiString),
-                SubmissionDetailsContentType.QuizContent(
-                        initModel.canvasContext.id,
-                        assignment.id,
-                        studentId,
-                        "",
-                        false // Workflow state is COMPLETE, so not pending
-                )
+            assignment,
+            submission.copy(
+                userId = studentId,
+                previewUrl = null,
+                workflowState = QuizSubmission.WorkflowState.COMPLETE.name.toLowerCase(),
+                submissionType = Assignment.SubmissionType.ONLINE_QUIZ.apiString
+            ),
+            SubmissionDetailsContentType.QuizContent(
+                initModel.canvasContext.id,
+                assignment.id,
+                studentId,
+                "",
+                false // Workflow state is COMPLETE, so not pending
+            )
         )
     }
 
@@ -327,33 +446,38 @@ class SubmissionDetailsUpdateTest : Assert() {
     fun `ONLINE_QUIZ with PENDING_REVIEW submission results in SubmissionDetailsContentType of QuizContent`() {
         val studentId = 101L
         verifyGetSubmissionContentType(
-                assignment,
-                submission.copy(userId = studentId, previewUrl = url, workflowState = QuizSubmission.WorkflowState.PENDING_REVIEW.name.toLowerCase(), submissionType = Assignment.SubmissionType.ONLINE_QUIZ.apiString),
-                SubmissionDetailsContentType.QuizContent(
-                        initModel.canvasContext.id,
-                        assignment.id,
-                        studentId,
-                        url,
-                        true // Workflow state is PENDING_REVIEW
-                )
+            assignment,
+            submission.copy(
+                userId = studentId,
+                previewUrl = url,
+                workflowState = QuizSubmission.WorkflowState.PENDING_REVIEW.name.toLowerCase(),
+                submissionType = Assignment.SubmissionType.ONLINE_QUIZ.apiString
+            ),
+            SubmissionDetailsContentType.QuizContent(
+                initModel.canvasContext.id,
+                assignment.id,
+                studentId,
+                url,
+                true // Workflow state is PENDING_REVIEW
+            )
         )
     }
 
     @Test
     fun `DISCUSSION_TOPIC results in SubmissionDetailsContentType of DiscussionContent`() {
         verifyGetSubmissionContentType(
-                assignment,
-                submission.copy(previewUrl = url, submissionType = Assignment.SubmissionType.DISCUSSION_TOPIC.apiString),
-                SubmissionDetailsContentType.DiscussionContent(url)
+            assignment,
+            submission.copy(previewUrl = url, submissionType = Assignment.SubmissionType.DISCUSSION_TOPIC.apiString),
+            SubmissionDetailsContentType.DiscussionContent(url)
         )
     }
 
     @Test
     fun `BROKEN_TYPE results in SubmissionDetailsContentType of UnsupportedContent`() {
         verifyGetSubmissionContentType(
-                assignment,
-                submission.copy(submissionType = "BROKEN_TYPE"),
-                SubmissionDetailsContentType.UnsupportedContent
+            assignment,
+            submission.copy(submissionType = "BROKEN_TYPE"),
+            SubmissionDetailsContentType.UnsupportedContent
         )
     }
 
@@ -361,9 +485,12 @@ class SubmissionDetailsUpdateTest : Assert() {
     fun `ONLINE_UPLOAD with no content type results in SubmissionDetailsContentType of OtherAttachmentContent`() {
         val attachment = Attachment(contentType = null)
         verifyGetSubmissionContentType(
-                assignment,
-                submission.copy(attachments = arrayListOf(attachment), submissionType = Assignment.SubmissionType.ONLINE_UPLOAD.apiString),
-                SubmissionDetailsContentType.OtherAttachmentContent(attachment)
+            assignment,
+            submission.copy(
+                attachments = arrayListOf(attachment),
+                submissionType = Assignment.SubmissionType.ONLINE_UPLOAD.apiString
+            ),
+            SubmissionDetailsContentType.OtherAttachmentContent(attachment)
         )
     }
 
@@ -375,9 +502,12 @@ class SubmissionDetailsUpdateTest : Assert() {
         every { MimeTypeMap.getSingleton().getMimeTypeFromExtension(any()) } returns "apk"
 
         verifyGetSubmissionContentType(
-                assignment,
-                submission.copy(attachments = arrayListOf(attachment), submissionType = Assignment.SubmissionType.ONLINE_UPLOAD.apiString),
-                SubmissionDetailsContentType.OtherAttachmentContent(attachment)
+            assignment,
+            submission.copy(
+                attachments = arrayListOf(attachment),
+                submissionType = Assignment.SubmissionType.ONLINE_UPLOAD.apiString
+            ),
+            SubmissionDetailsContentType.OtherAttachmentContent(attachment)
         )
     }
 
@@ -390,9 +520,12 @@ class SubmissionDetailsUpdateTest : Assert() {
         every { MimeTypeMap.getFileExtensionFromUrl(any()) } returns "apk"
 
         verifyGetSubmissionContentType(
-                assignment,
-                submission.copy(attachments = arrayListOf(attachment), submissionType = Assignment.SubmissionType.ONLINE_UPLOAD.apiString),
-                SubmissionDetailsContentType.OtherAttachmentContent(attachment)
+            assignment,
+            submission.copy(
+                attachments = arrayListOf(attachment),
+                submissionType = Assignment.SubmissionType.ONLINE_UPLOAD.apiString
+            ),
+            SubmissionDetailsContentType.OtherAttachmentContent(attachment)
         )
     }
 
@@ -405,20 +538,27 @@ class SubmissionDetailsUpdateTest : Assert() {
         every { MimeTypeMap.getFileExtensionFromUrl(any()) } returns null
 
         verifyGetSubmissionContentType(
-                assignment,
-                submission.copy(attachments = arrayListOf(attachment), submissionType = Assignment.SubmissionType.ONLINE_UPLOAD.apiString),
-                SubmissionDetailsContentType.OtherAttachmentContent(attachment)
+            assignment,
+            submission.copy(
+                attachments = arrayListOf(attachment),
+                submissionType = Assignment.SubmissionType.ONLINE_UPLOAD.apiString
+            ),
+            SubmissionDetailsContentType.OtherAttachmentContent(attachment)
         )
     }
 
     @Test
     fun `ONLINE_UPLOAD with canvadoc preview url results in SubmissionDetailsContentType of PdfContent`() {
-        val attachment = Attachment(contentType = "can be anything, just not null", previewUrl = url + "/" + Const.CANVADOC)
+        val attachment =
+            Attachment(contentType = "can be anything, just not null", previewUrl = url + "/" + Const.CANVADOC)
 
         verifyGetSubmissionContentType(
-                assignment,
-                submission.copy(attachments = arrayListOf(attachment), submissionType = Assignment.SubmissionType.ONLINE_UPLOAD.apiString),
-                SubmissionDetailsContentType.PdfContent(attachment.previewUrl!!)
+            assignment,
+            submission.copy(
+                attachments = arrayListOf(attachment),
+                submissionType = Assignment.SubmissionType.ONLINE_UPLOAD.apiString
+            ),
+            SubmissionDetailsContentType.PdfContent(attachment.previewUrl!!)
         )
     }
 
@@ -427,9 +567,12 @@ class SubmissionDetailsUpdateTest : Assert() {
         val attachment = Attachment(contentType = "application/pdf", previewUrl = url + "/" + Const.CANVADOC)
 
         verifyGetSubmissionContentType(
-                assignment,
-                submission.copy(attachments = arrayListOf(attachment), submissionType = Assignment.SubmissionType.ONLINE_UPLOAD.apiString),
-                SubmissionDetailsContentType.PdfContent(attachment.previewUrl!!)
+            assignment,
+            submission.copy(
+                attachments = arrayListOf(attachment),
+                submissionType = Assignment.SubmissionType.ONLINE_UPLOAD.apiString
+            ),
+            SubmissionDetailsContentType.PdfContent(attachment.previewUrl!!)
         )
     }
 
@@ -438,9 +581,12 @@ class SubmissionDetailsUpdateTest : Assert() {
         val attachment = Attachment(contentType = "application/pdf", url = url)
 
         verifyGetSubmissionContentType(
-                assignment,
-                submission.copy(attachments = arrayListOf(attachment), submissionType = Assignment.SubmissionType.ONLINE_UPLOAD.apiString),
-                SubmissionDetailsContentType.PdfContent(attachment.url!!)
+            assignment,
+            submission.copy(
+                attachments = arrayListOf(attachment),
+                submissionType = Assignment.SubmissionType.ONLINE_UPLOAD.apiString
+            ),
+            SubmissionDetailsContentType.PdfContent(attachment.url!!)
         )
     }
 
@@ -449,9 +595,12 @@ class SubmissionDetailsUpdateTest : Assert() {
         val attachment = Attachment(contentType = "application/pdf", url = null)
 
         verifyGetSubmissionContentType(
-                assignment,
-                submission.copy(attachments = arrayListOf(attachment), submissionType = Assignment.SubmissionType.ONLINE_UPLOAD.apiString),
-                SubmissionDetailsContentType.PdfContent("")
+            assignment,
+            submission.copy(
+                attachments = arrayListOf(attachment),
+                submissionType = Assignment.SubmissionType.ONLINE_UPLOAD.apiString
+            ),
+            SubmissionDetailsContentType.PdfContent("")
         )
     }
 
@@ -464,14 +613,17 @@ class SubmissionDetailsUpdateTest : Assert() {
         every { Uri.parse(url) } returns uri
 
         verifyGetSubmissionContentType(
-                assignment,
-                submission.copy(attachments = arrayListOf(attachment), submissionType = Assignment.SubmissionType.ONLINE_UPLOAD.apiString),
-                SubmissionDetailsContentType.MediaContent(
-                        uri,
-                        attachment.contentType,
-                        attachment.thumbnailUrl,
-                        attachment.displayName
-                )
+            assignment,
+            submission.copy(
+                attachments = arrayListOf(attachment),
+                submissionType = Assignment.SubmissionType.ONLINE_UPLOAD.apiString
+            ),
+            SubmissionDetailsContentType.MediaContent(
+                uri,
+                attachment.contentType,
+                attachment.thumbnailUrl,
+                attachment.displayName
+            )
         )
     }
 
@@ -484,14 +636,17 @@ class SubmissionDetailsUpdateTest : Assert() {
         every { Uri.parse(url) } returns uri
 
         verifyGetSubmissionContentType(
-                assignment,
-                submission.copy(attachments = arrayListOf(attachment), submissionType = Assignment.SubmissionType.ONLINE_UPLOAD.apiString),
-                SubmissionDetailsContentType.MediaContent(
-                        uri,
-                        attachment.contentType,
-                        attachment.thumbnailUrl,
-                        attachment.displayName
-                )
+            assignment,
+            submission.copy(
+                attachments = arrayListOf(attachment),
+                submissionType = Assignment.SubmissionType.ONLINE_UPLOAD.apiString
+            ),
+            SubmissionDetailsContentType.MediaContent(
+                uri,
+                attachment.contentType,
+                attachment.thumbnailUrl,
+                attachment.displayName
+            )
         )
     }
 
@@ -500,9 +655,12 @@ class SubmissionDetailsUpdateTest : Assert() {
         val attachment = Attachment(contentType = "image", url = url)
 
         verifyGetSubmissionContentType(
-                assignment,
-                submission.copy(attachments = arrayListOf(attachment), submissionType = Assignment.SubmissionType.ONLINE_UPLOAD.apiString),
-                SubmissionDetailsContentType.ImageContent(url, attachment.contentType!!)
+            assignment,
+            submission.copy(
+                attachments = arrayListOf(attachment),
+                submissionType = Assignment.SubmissionType.ONLINE_UPLOAD.apiString
+            ),
+            SubmissionDetailsContentType.ImageContent(url, attachment.contentType!!)
         )
     }
 
@@ -511,32 +669,40 @@ class SubmissionDetailsUpdateTest : Assert() {
         val attachment = Attachment(contentType = "image", url = null)
 
         verifyGetSubmissionContentType(
-                assignment,
-                submission.copy(attachments = arrayListOf(attachment), submissionType = Assignment.SubmissionType.ONLINE_UPLOAD.apiString),
-                SubmissionDetailsContentType.ImageContent("", attachment.contentType!!)
+            assignment,
+            submission.copy(
+                attachments = arrayListOf(attachment),
+                submissionType = Assignment.SubmissionType.ONLINE_UPLOAD.apiString
+            ),
+            SubmissionDetailsContentType.ImageContent("", attachment.contentType!!)
         )
     }
 
-    private fun verifyGetSubmissionContentType(assignment: Assignment, submission: Submission, expectedContentType: SubmissionDetailsContentType) {
+    private fun verifyGetSubmissionContentType(
+        assignment: Assignment,
+        submission: Submission,
+        expectedContentType: SubmissionDetailsContentType
+    ) {
         val assignmentResult = DataResult.Success(assignment)
         val submissionResult = DataResult.Success(submission)
         val expectedModel = initModel.copy(
-                isLoading = false,
-                assignment = assignmentResult,
-                rootSubmission = submissionResult,
-                selectedSubmissionId = submission.id,
-                submissionContentType = expectedContentType
+            isLoading = false,
+            assignment = assignmentResult,
+            rootSubmission = submissionResult,
+            selectedSubmissionAttemptId = submission.id
         )
 
         updateSpec
-                .given(initModel)
-                .whenEvent(SubmissionDetailsEvent.DataLoaded(assignmentResult, submissionResult))
-                .then(
-                        assertThatNext(
-                                NextMatchers.hasModel(expectedModel),
-                                matchesEffects<SubmissionDetailsModel, SubmissionDetailsEffect>(SubmissionDetailsEffect.ShowSubmissionContentType(expectedContentType))
-                        )
+            .given(initModel)
+            .whenEvent(SubmissionDetailsEvent.DataLoaded(assignmentResult, submissionResult))
+            .then(
+                assertThatNext(
+                    NextMatchers.hasModel(expectedModel),
+                    matchesEffects<SubmissionDetailsModel, SubmissionDetailsEffect>(
+                        SubmissionDetailsEffect.ShowSubmissionContentType(expectedContentType)
+                    )
                 )
+            )
     }
     // endregion getSubmissionContentType
 

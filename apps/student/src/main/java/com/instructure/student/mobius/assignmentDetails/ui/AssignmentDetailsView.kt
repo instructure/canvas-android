@@ -33,6 +33,7 @@ import com.instructure.student.R
 import com.instructure.student.activity.InternalWebViewActivity
 import com.instructure.student.fragment.InternalWebviewFragment
 import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsEvent
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsFragment
 import com.instructure.student.mobius.common.ui.MobiusView
 import com.instructure.student.router.RouteMatcher
 import com.spotify.mobius.functions.Consumer
@@ -156,8 +157,7 @@ class AssignmentDetailsView(
     }
 
     fun showSubmissionView(assignmentId: Long, course: Course) {
-        // TODO
-        context.toast("Route to submission page")
+        RouteMatcher.route(context, SubmissionDetailsFragment.makeRoute(course, assignmentId))
     }
 
     fun showUploadStatusView(assignmentId: Long, course: Course) {
