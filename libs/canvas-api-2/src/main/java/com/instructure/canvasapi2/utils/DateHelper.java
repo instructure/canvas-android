@@ -19,8 +19,6 @@ package com.instructure.canvasapi2.utils;
 
 import android.content.Context;
 import android.os.Build;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.text.format.DateFormat;
 import android.text.format.DateUtils;
 
@@ -30,6 +28,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 
 public class DateHelper {
@@ -459,4 +460,21 @@ public class DateHelper {
         GregorianCalendar genericDate = new GregorianCalendar(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
         return new Date(genericDate.getTimeInMillis());
     }
+
+    /**
+     * Creates a new date from the provided year, month, day, hour, minute, and second
+     * @param year The year
+     * @param month Month of the year, zero-indexed (e.g. 0 is January)
+     * @param day Day of the month
+     * @param hour Hour of the day
+     * @param minute Minute of the hour
+     * @param second Second of the minute
+     * @return The new Date
+     */
+    public static Date makeDate(int year, int month, int day, int hour, int minute, int second) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month, day, hour, minute, second);
+        return calendar.getTime();
+    }
+
 }

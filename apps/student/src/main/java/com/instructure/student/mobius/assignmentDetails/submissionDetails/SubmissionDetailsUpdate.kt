@@ -39,18 +39,27 @@ class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDet
 
     override fun update(model: SubmissionDetailsModel, event: SubmissionDetailsEvent): Next<SubmissionDetailsModel, SubmissionDetailsEffect> {
         return when (event) {
+            SubmissionDetailsEvent.RefreshRequested -> {
+                Next.next(
+                    model.copy(isLoading = true),
+                    setOf(SubmissionDetailsEffect.LoadData(model.canvasContext.id, model.assignmentId)))
+            }
             is SubmissionDetailsEvent.SubmissionClicked -> {
-                val submissionType = getSubmissionContentType(
-                        model.rootSubmission?.dataOrNull?.submissionHistory?.find { it?.id == event.submissionId },
+                if (event.submissionAttempt == model.selectedSubmissionAttempt) {
+                    Next.noChange<SubmissionDetailsModel, SubmissionDetailsEffect>()
+                } else {
+                    val submissionType = getSubmissionContentType(
+                        model.rootSubmission?.dataOrNull?.submissionHistory?.find { it?.attempt == event.submissionAttempt },
                         model.assignment?.dataOrNull,
                         model.canvasContext,
-                        model.assignmentId)
-                Next.next(
+                        model.assignmentId
+                    )
+                    Next.next<SubmissionDetailsModel, SubmissionDetailsEffect>(
                         model.copy(
-                                selectedSubmissionId = event.submissionId,
-                                submissionContentType = submissionType
+                            selectedSubmissionAttempt = event.submissionAttempt
                         ), setOf(SubmissionDetailsEffect.ShowSubmissionContentType(submissionType))
-                )
+                    )
+                }
             }
             is SubmissionDetailsEvent.DataLoaded -> {
                 val submissionType = getSubmissionContentType(
@@ -63,8 +72,7 @@ class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDet
                                 isLoading = false,
                                 assignment = event.assignment,
                                 rootSubmission = event.rootSubmission,
-                                selectedSubmissionId = event.rootSubmission.dataOrNull?.id,
-                                submissionContentType = submissionType
+                                selectedSubmissionAttempt = event.rootSubmission.dataOrNull?.attempt
                         ), setOf(SubmissionDetailsEffect.ShowSubmissionContentType(submissionType))
                 )
             }

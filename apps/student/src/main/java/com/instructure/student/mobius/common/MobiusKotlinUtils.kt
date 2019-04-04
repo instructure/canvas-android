@@ -28,7 +28,17 @@ fun <I, J, O> Connectable<I, O>.contraMap(
     return Connectable { output ->
         val delegateConnection = connect(output)
         object : Connection<J> {
-            override fun accept(value: J) = delegateConnection.accept(mapper(value, context))
+            var lastValue: I? = null
+
+            override fun accept(value: J) {
+                val mappedValue: I = mapper(value, context)
+                // Only push value if it has changed (prevents duplicate renders)
+                if (mappedValue != lastValue) {
+                    lastValue = mappedValue
+                    delegateConnection.accept(mappedValue)
+                }
+            }
+
             override fun dispose() = delegateConnection.dispose()
         }
     }

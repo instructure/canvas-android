@@ -25,38 +25,42 @@ import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.DataResult
 
 sealed class SubmissionDetailsEvent {
-    data class SubmissionClicked(val submissionId: Long) : SubmissionDetailsEvent()
-    data class DataLoaded(val assignment: DataResult<Assignment>, val rootSubmission: DataResult<Submission>) : SubmissionDetailsEvent()
+    object RefreshRequested : SubmissionDetailsEvent()
+    data class SubmissionClicked(val submissionAttempt: Long, val attachmentId: Int = 0) : SubmissionDetailsEvent()
+    data class DataLoaded(val assignment: DataResult<Assignment>, val rootSubmission: DataResult<Submission>) :
+        SubmissionDetailsEvent()
 }
 
 sealed class SubmissionDetailsEffect {
     data class LoadData(val courseId: Long, val assignmentId: Long) : SubmissionDetailsEffect()
-    data class ShowSubmissionContentType(val submissionContentType: SubmissionDetailsContentType) : SubmissionDetailsEffect()
+    data class ShowSubmissionContentType(val submissionContentType: SubmissionDetailsContentType) :
+        SubmissionDetailsEffect()
 }
 
 data class SubmissionDetailsModel(
-        val isLoading: Boolean = false,
-        val canvasContext: CanvasContext,
-        val assignmentId: Long,
-        val submissionContentType: SubmissionDetailsContentType = SubmissionDetailsContentType.NoneContent,
-        val selectedSubmissionId: Long? = null,
-        val assignment: DataResult<Assignment>? = null,
-        val rootSubmission: DataResult<Submission>? = null
+    val isLoading: Boolean = false,
+    val canvasContext: CanvasContext,
+    val assignmentId: Long,
+    val selectedSubmissionAttempt: Long? = null,
+    val selectedAttachmentId: Long? = null,
+    val assignment: DataResult<Assignment>? = null,
+    val rootSubmission: DataResult<Submission>? = null
 )
 
 sealed class SubmissionDetailsContentType {
     data class QuizContent(
-            val courseId: Long,
-            val assignmentId: Long,
-            val studentId: Long,
-            val url: String,
-            val pendingReview: Boolean) : SubmissionDetailsContentType()
+        val courseId: Long,
+        val assignmentId: Long,
+        val studentId: Long,
+        val url: String,
+        val pendingReview: Boolean
+    ) : SubmissionDetailsContentType()
 
     data class MediaContent(
-            val uri: Uri,
-            val contentType: String?,
-            val thumbnailUrl: String?,
-            val displayName: String?
+        val uri: Uri,
+        val contentType: String?,
+        val thumbnailUrl: String?,
+        val displayName: String?
     ) : SubmissionDetailsContentType()
 
     object NoSubmissionContent : SubmissionDetailsContentType()
