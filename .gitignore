@@ -4,6 +4,7 @@
 # Private data
 android-private-data/
 **/PrivateConst.kt
+private-data/
 
 # Release keys
 android-keys/
