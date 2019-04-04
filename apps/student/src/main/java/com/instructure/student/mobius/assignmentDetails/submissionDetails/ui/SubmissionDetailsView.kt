@@ -38,7 +38,7 @@ import com.instructure.student.mobius.assignmentDetails.submissionDetails.Submis
 import com.instructure.student.mobius.common.ui.MobiusView
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import com.spotify.mobius.functions.Consumer
-import kotlinx.android.synthetic.main.fragment_submissiont_details.*
+import kotlinx.android.synthetic.main.fragment_submission_details.*
 
 class SubmissionDetailsView(
     layoutInflater: LayoutInflater,
@@ -46,7 +46,7 @@ class SubmissionDetailsView(
     private val canvasContext: CanvasContext,
     private val fragmentManager: FragmentManager
 ) : MobiusView<SubmissionDetailsViewState, SubmissionDetailsEvent>(
-    R.layout.fragment_submissiont_details,
+    R.layout.fragment_submission_details,
     layoutInflater,
     parent
 ) {
@@ -167,8 +167,8 @@ class SubmissionDetailsView(
         submissionVersionsSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) = Unit
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                val submissionId = submissions[position].first
-                consumer?.accept(SubmissionDetailsEvent.SubmissionClicked(submissionId))
+                val submissionAttempt = submissions[position].first
+                consumer?.accept(SubmissionDetailsEvent.SubmissionClicked(submissionAttempt))
             }
         }
     }

@@ -21,6 +21,7 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsModel
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsPresenter
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsTabData
@@ -45,7 +46,7 @@ class SubmissionDetailsPresenterTest : Assert() {
         baseModel = SubmissionDetailsModel(
             canvasContext = Course(),
             assignmentId = 123,
-            selectedSubmissionAttemptId = 1
+            selectedSubmissionAttempt = 1
         )
         baseAssignment = Assignment(
             id = 123,
@@ -131,11 +132,11 @@ class SubmissionDetailsPresenterTest : Assert() {
     fun `Sorts submission versions by descending date`() {
         val firstSubmission = Submission(
             attempt = 1,
-            submittedAt = Calendar.getInstance().apply { set(2050, 0, 30, 23, 59, 0) }.time
+            submittedAt = DateHelper.makeDate(2050, 0, 30, 23, 59, 0)
         )
         val secondSubmission = Submission(
             attempt = 2,
-            submittedAt = Calendar.getInstance().apply { set(2050, 0, 31, 23, 59, 0) }.time
+            submittedAt = DateHelper.makeDate(2050, 0, 31, 23, 59, 0)
         )
         val model = baseModel.copy(
             assignment = DataResult.Success(baseAssignment),
@@ -156,15 +157,15 @@ class SubmissionDetailsPresenterTest : Assert() {
     fun `Has correct selected version index`() {
         val firstSubmission = Submission(
             attempt = 1,
-            submittedAt = Calendar.getInstance().apply { set(2050, 0, 29, 23, 59, 0) }.time
+            submittedAt = DateHelper.makeDate(2050, 0, 29, 23, 59, 0)
         )
         val secondSubmission = Submission(
             attempt = 2,
-            submittedAt = Calendar.getInstance().apply { set(2050, 0, 30, 23, 59, 0) }.time
+            submittedAt = DateHelper.makeDate(2050, 0, 30, 23, 59, 0)
         )
         val thirdSubmission = Submission(
             attempt = 3,
-            submittedAt = Calendar.getInstance().apply { set(2050, 0, 31, 23, 59, 0) }.time
+            submittedAt = DateHelper.makeDate(2050, 0, 31, 23, 59, 0)
         )
         val model = baseModel.copy(
             assignment = DataResult.Success(baseAssignment),
@@ -173,7 +174,7 @@ class SubmissionDetailsPresenterTest : Assert() {
                     submissionHistory = listOf(firstSubmission, secondSubmission, thirdSubmission)
                 )
             ),
-            selectedSubmissionAttemptId = 2
+            selectedSubmissionAttempt = 2
         )
         val viewState = SubmissionDetailsPresenter.present(model, context) as SubmissionDetailsViewState.Loaded
         assertEquals(1, viewState.selectedVersionSpinnerIndex)
@@ -211,7 +212,7 @@ class SubmissionDetailsPresenterTest : Assert() {
     }
 
     @Test
-    fun `Shows Grade tab when root submission is graded`() {
+    fun `Rubric tab name reads "Grade" when assignment does not use a rubric`() {
         val model = baseModel.copy(
             assignment = DataResult.Success(baseAssignment),
             rootSubmission = DataResult.Success(
@@ -232,12 +233,16 @@ class SubmissionDetailsPresenterTest : Assert() {
     }
 
     @Test
-    fun `Shows Rubric tab when root submission is graded`() {
+    fun `Rubric tab name reads "Rubric" when assignment uses a rubric`() {
         val submission = baseSubmission.copy(
             rubricAssessment = hashMapOf("1" to RubricCriterionAssessment())
         )
         val model = baseModel.copy(
-            assignment = DataResult.Success(baseAssignment),
+            assignment = DataResult.Success(
+                baseAssignment.copy(
+                    rubric = listOf(RubricCriterion("1"))
+                )
+            ),
             rootSubmission = DataResult.Success(
                 submission.copy(submissionHistory = listOf(submission))
             )
@@ -250,22 +255,6 @@ class SubmissionDetailsPresenterTest : Assert() {
         )
         val actualTab = viewState.tabData.single { it is SubmissionDetailsTabData.GradeData }
         assertEquals(expectedTab, actualTab)
-    }
-
-    @Test
-    fun `Hides Grade tab when there is no grade or rubric`() {
-        val model = baseModel.copy(
-            assignment = DataResult.Success(baseAssignment),
-            rootSubmission = DataResult.Success(
-                baseSubmission.copy(
-                    submissionHistory = listOf(baseSubmission)
-                )
-            )
-        )
-        val viewState = SubmissionDetailsPresenter.present(model, context) as SubmissionDetailsViewState.Loaded
-        val expectedCount = 0
-        val actualCount = viewState.tabData.count { it is SubmissionDetailsTabData.GradeData }
-        assertEquals(expectedCount, actualCount)
     }
 
 }

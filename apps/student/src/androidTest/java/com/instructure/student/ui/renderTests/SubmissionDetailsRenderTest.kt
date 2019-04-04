@@ -22,6 +22,7 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.espresso.assertGone
 import com.instructure.espresso.assertVisible
 import com.instructure.espresso.click
@@ -32,7 +33,6 @@ import com.spotify.mobius.runners.WorkRunner
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.util.*
 
 @RunWith(AndroidJUnit4::class)
 class SubmissionDetailsRenderTest : StudentRenderTest() {
@@ -72,7 +72,7 @@ class SubmissionDetailsRenderTest : StudentRenderTest() {
     fun displaysLoadedState() {
         loadPageWithModel(
             baseModel.copy(
-                selectedSubmissionAttemptId = 1,
+                selectedSubmissionAttempt = 1,
                 assignment = DataResult.Success(Assignment()),
                 rootSubmission = DataResult.Success(
                     Submission(submissionHistory = listOf(Submission(attempt = 1)))
@@ -86,7 +86,7 @@ class SubmissionDetailsRenderTest : StudentRenderTest() {
     fun hidesVersionSpinnerForSingleSubmission() {
         loadPageWithModel(
             baseModel.copy(
-                selectedSubmissionAttemptId = 1,
+                selectedSubmissionAttempt = 1,
                 assignment = DataResult.Success(Assignment()),
                 rootSubmission = DataResult.Success(
                     Submission(submissionHistory = listOf(Submission(attempt = 1)))
@@ -102,7 +102,7 @@ class SubmissionDetailsRenderTest : StudentRenderTest() {
         val secondSubmission = Submission(attempt = 2)
         loadPageWithModel(
             baseModel.copy(
-                selectedSubmissionAttemptId = 1,
+                selectedSubmissionAttempt = 1,
                 assignment = DataResult.Success(Assignment()),
                 rootSubmission = DataResult.Success(
                     Submission(submissionHistory = listOf(firstSubmission, secondSubmission))
@@ -116,15 +116,15 @@ class SubmissionDetailsRenderTest : StudentRenderTest() {
     fun spinnerShowsCorrectSelectedSubmission() {
         val firstSubmission = Submission(
             attempt = 1,
-            submittedAt = Calendar.getInstance().apply { set(2050, 0, 30, 23, 59, 0) }.time
+            submittedAt = DateHelper.makeDate(2050, 0, 30, 23, 59, 0)
         )
         val secondSubmission = Submission(
             attempt = 2,
-            submittedAt = Calendar.getInstance().apply { set(2050, 0, 31, 23, 59, 0) }.time
+            submittedAt = DateHelper.makeDate(2050, 0, 31, 23, 59, 0)
         )
         loadPageWithModel(
             baseModel.copy(
-                selectedSubmissionAttemptId = 2,
+                selectedSubmissionAttempt = 2,
                 assignment = DataResult.Success(Assignment()),
                 rootSubmission = DataResult.Success(
                     Submission(submissionHistory = listOf(firstSubmission, secondSubmission))
@@ -138,15 +138,15 @@ class SubmissionDetailsRenderTest : StudentRenderTest() {
     fun clickingSpinnerShowsSubmissionVersions() {
         val firstSubmission = Submission(
             attempt = 1,
-            submittedAt = Calendar.getInstance().apply { set(2050, 0, 30, 23, 59, 0) }.time
+            submittedAt = DateHelper.makeDate(2050, 0, 30, 23, 59, 0)
         )
         val secondSubmission = Submission(
             attempt = 2,
-            submittedAt = Calendar.getInstance().apply { set(2050, 0, 31, 23, 59, 0) }.time
+            submittedAt = DateHelper.makeDate(2050, 0, 31, 23, 59, 0)
         )
         loadPageWithModel(
             baseModel.copy(
-                selectedSubmissionAttemptId = 2,
+                selectedSubmissionAttempt = 2,
                 assignment = DataResult.Success(Assignment()),
                 rootSubmission = DataResult.Success(
                     Submission(submissionHistory = listOf(firstSubmission, secondSubmission))
@@ -162,7 +162,7 @@ class SubmissionDetailsRenderTest : StudentRenderTest() {
     fun tappingSelectedTabOpensDrawer() {
         loadPageWithModel(
             baseModel.copy(
-                selectedSubmissionAttemptId = 1,
+                selectedSubmissionAttempt = 1,
                 assignment = DataResult.Success(Assignment()),
                 rootSubmission = DataResult.Success(
                     Submission(submissionHistory = listOf(Submission(attempt = 1)))
@@ -177,7 +177,7 @@ class SubmissionDetailsRenderTest : StudentRenderTest() {
     fun tappingUnselectedTabOpensDrawer() {
         loadPageWithModel(
             baseModel.copy(
-                selectedSubmissionAttemptId = 1,
+                selectedSubmissionAttempt = 1,
                 assignment = DataResult.Success(Assignment()),
                 rootSubmission = DataResult.Success(
                     Submission(submissionHistory = listOf(Submission(attempt = 1)))
@@ -192,7 +192,7 @@ class SubmissionDetailsRenderTest : StudentRenderTest() {
     fun swipingOnTabLayoutOpensDrawer() {
         loadPageWithModel(
             baseModel.copy(
-                selectedSubmissionAttemptId = 1,
+                selectedSubmissionAttempt = 1,
                 assignment = DataResult.Success(Assignment()),
                 rootSubmission = DataResult.Success(
                     Submission(submissionHistory = listOf(Submission(attempt = 1)))
@@ -207,7 +207,7 @@ class SubmissionDetailsRenderTest : StudentRenderTest() {
     fun swipingGauntlet() {
         loadPageWithModel(
             baseModel.copy(
-                selectedSubmissionAttemptId = 1,
+                selectedSubmissionAttempt = 1,
                 assignment = DataResult.Success(Assignment()),
                 rootSubmission = DataResult.Success(
                     Submission(submissionHistory = listOf(Submission(attempt = 1)))
@@ -228,7 +228,7 @@ class SubmissionDetailsRenderTest : StudentRenderTest() {
     fun updatesDrawerHeightOnOrientationChangeToLandscape() {
         loadPageWithModel(
             baseModel.copy(
-                selectedSubmissionAttemptId = 1,
+                selectedSubmissionAttempt = 1,
                 assignment = DataResult.Success(Assignment()),
                 rootSubmission = DataResult.Success(
                     Submission(submissionHistory = listOf(Submission(attempt = 1)))
@@ -244,7 +244,7 @@ class SubmissionDetailsRenderTest : StudentRenderTest() {
     fun updatesDrawerHeightOnOrientationChangeToPortrait() {
         loadPageWithModel(
             baseModel.copy(
-                selectedSubmissionAttemptId = 1,
+                selectedSubmissionAttempt = 1,
                 assignment = DataResult.Success(Assignment()),
                 rootSubmission = DataResult.Success(
                     Submission(submissionHistory = listOf(Submission(attempt = 1)))

@@ -23,10 +23,7 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withSpinnerText
 import com.instructure.espresso.*
-import com.instructure.espresso.page.onView
-import com.instructure.espresso.page.onViewWithText
-import com.instructure.espresso.page.withAncestor
-import com.instructure.espresso.page.withText
+import com.instructure.espresso.page.*
 import com.instructure.student.R
 import com.instructure.student.ui.pages.SubmissionDetailsPage
 import org.hamcrest.CoreMatchers.*
@@ -63,9 +60,12 @@ class SubmissionDetailsRenderPage : SubmissionDetailsPage() {
     }
 
     fun assertDisplaysError() {
-        errorView.assertVisible()
         loadingView.assertGone()
         mainContent.assertGone()
+        errorView.assertVisible()
+        onViewWithText(R.string.submissionDetailsErrorTitle).assertDisplayed()
+        onViewWithText(R.string.error_loading_submission).assertDisplayed()
+        onViewWithId(R.id.retryButton).assertDisplayed()
     }
 
     fun assertDisplaysContent() {

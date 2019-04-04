@@ -38,7 +38,7 @@ object SubmissionDetailsPresenter : Presenter<SubmissionDetailsModel, Submission
             .filterNotNull()
             .sortedByDescending { it.submittedAt }
 
-        val selectedSubmission = validSubmissions.first { it.attempt == model.selectedSubmissionAttemptId }
+        val selectedSubmission = validSubmissions.first { it.attempt == model.selectedSubmissionAttempt }
 
         val submissionVersions: List<Pair<Long, String>> = validSubmissions
             .map {
@@ -48,7 +48,7 @@ object SubmissionDetailsPresenter : Presenter<SubmissionDetailsModel, Submission
 
 
         val selectedVersionIdx = submissionVersions
-            .indexOfFirst { it.first == model.selectedSubmissionAttemptId }
+            .indexOfFirst { it.first == model.selectedSubmissionAttempt }
             .coerceAtLeast(0)
 
         val tabData = mutableListOf<SubmissionDetailsTabData>()
@@ -74,18 +74,16 @@ object SubmissionDetailsPresenter : Presenter<SubmissionDetailsModel, Submission
         }
 
         // Grade/Rubric tab
-        if (rootSubmission.isGraded || rootSubmission.rubricAssessment.isNotEmpty()) {
-            val name = if (rootSubmission.rubricAssessment.isNotEmpty()) {
-                context.getString(R.string.rubric)
-            } else {
-                context.getString(R.string.grade)
-            }
-            tabData += SubmissionDetailsTabData.GradeData(
-                name = name,
-                assignment = assignment,
-                submission = rootSubmission
-            )
+        val name = if (assignment.rubric?.isNotEmpty() == true) {
+            context.getString(R.string.rubric)
+        } else {
+            context.getString(R.string.grade)
         }
+        tabData += SubmissionDetailsTabData.GradeData(
+            name = name,
+            assignment = assignment,
+            submission = rootSubmission
+        )
 
         return SubmissionDetailsViewState.Loaded(
             showVersionsSpinner = submissionVersions.size > 1,

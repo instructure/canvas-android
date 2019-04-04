@@ -108,12 +108,12 @@ class SubmissionDetailsUpdateTest : Assert() {
         )
         val contentType = SubmissionDetailsContentType.TextContent(submission.body!!)
         val expectedModel = initModel.copy(
-            selectedSubmissionAttemptId = submission.id
+            selectedSubmissionAttempt = submission.attempt
         )
 
         updateSpec
             .given(initModel)
-            .whenEvent(SubmissionDetailsEvent.SubmissionClicked(submission.id))
+            .whenEvent(SubmissionDetailsEvent.SubmissionClicked(submission.attempt))
             .then(
                 assertThatNext(
                     NextMatchers.hasModel(expectedModel),
@@ -131,7 +131,7 @@ class SubmissionDetailsUpdateTest : Assert() {
             submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString
         )
         initModel = initModel.copy(
-            selectedSubmissionAttemptId = submission.id,
+            selectedSubmissionAttempt = submission.attempt,
             assignment = DataResult.Success(assignment),
             rootSubmission = DataResult.Success(
                 Submission(
@@ -146,7 +146,7 @@ class SubmissionDetailsUpdateTest : Assert() {
 
         updateSpec
             .given(initModel)
-            .whenEvent(SubmissionDetailsEvent.SubmissionClicked(submission.id))
+            .whenEvent(SubmissionDetailsEvent.SubmissionClicked(submission.attempt))
             .then(assertThatNext(NextMatchers.hasNothing()))
     }
 
@@ -156,7 +156,7 @@ class SubmissionDetailsUpdateTest : Assert() {
         val contentType =
             SubmissionDetailsContentType.NoSubmissionContent // No submission in the model with the selected ID maps to NoSubmissionContent type
         val expectedModel = initModel.copy(
-            selectedSubmissionAttemptId = submissionId
+            selectedSubmissionAttempt = submissionId
         )
 
         updateSpec
@@ -186,7 +186,7 @@ class SubmissionDetailsUpdateTest : Assert() {
             isLoading = false,
             assignment = assignment,
             rootSubmission = submission,
-            selectedSubmissionAttemptId = null
+            selectedSubmissionAttempt = null
         )
         updateSpec
             .given(initModel)
@@ -655,7 +655,7 @@ class SubmissionDetailsUpdateTest : Assert() {
             isLoading = false,
             assignment = assignmentResult,
             rootSubmission = submissionResult,
-            selectedSubmissionAttemptId = submission.attempt
+            selectedSubmissionAttempt = submission.attempt
         )
 
         updateSpec

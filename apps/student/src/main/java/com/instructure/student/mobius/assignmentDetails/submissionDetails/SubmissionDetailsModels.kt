@@ -26,7 +26,7 @@ import com.instructure.canvasapi2.utils.DataResult
 
 sealed class SubmissionDetailsEvent {
     object RefreshRequested : SubmissionDetailsEvent()
-    data class SubmissionClicked(val submissionAttemptId: Long, val attachmentId: Int = 0) : SubmissionDetailsEvent()
+    data class SubmissionClicked(val submissionAttempt: Long, val attachmentId: Int = 0) : SubmissionDetailsEvent()
     data class DataLoaded(val assignment: DataResult<Assignment>, val rootSubmission: DataResult<Submission>) :
         SubmissionDetailsEvent()
 }
@@ -41,7 +41,7 @@ data class SubmissionDetailsModel(
     val isLoading: Boolean = false,
     val canvasContext: CanvasContext,
     val assignmentId: Long,
-    val selectedSubmissionAttemptId: Long? = null,
+    val selectedSubmissionAttempt: Long? = null,
     val selectedAttachmentId: Long? = null,
     val assignment: DataResult<Assignment>? = null,
     val rootSubmission: DataResult<Submission>? = null

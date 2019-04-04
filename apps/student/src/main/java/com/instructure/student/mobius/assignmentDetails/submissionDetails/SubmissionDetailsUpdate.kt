@@ -45,18 +45,18 @@ class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDet
                     setOf(SubmissionDetailsEffect.LoadData(model.canvasContext.id, model.assignmentId)))
             }
             is SubmissionDetailsEvent.SubmissionClicked -> {
-                if (event.submissionAttemptId == model.selectedSubmissionAttemptId) {
+                if (event.submissionAttempt == model.selectedSubmissionAttempt) {
                     Next.noChange<SubmissionDetailsModel, SubmissionDetailsEffect>()
                 } else {
                     val submissionType = getSubmissionContentType(
-                        model.rootSubmission?.dataOrNull?.submissionHistory?.find { it?.id == event.submissionAttemptId },
+                        model.rootSubmission?.dataOrNull?.submissionHistory?.find { it?.attempt == event.submissionAttempt },
                         model.assignment?.dataOrNull,
                         model.canvasContext,
                         model.assignmentId
                     )
                     Next.next<SubmissionDetailsModel, SubmissionDetailsEffect>(
                         model.copy(
-                            selectedSubmissionAttemptId = event.submissionAttemptId
+                            selectedSubmissionAttempt = event.submissionAttempt
                         ), setOf(SubmissionDetailsEffect.ShowSubmissionContentType(submissionType))
                     )
                 }
@@ -72,7 +72,7 @@ class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDet
                                 isLoading = false,
                                 assignment = event.assignment,
                                 rootSubmission = event.rootSubmission,
-                                selectedSubmissionAttemptId = event.rootSubmission.dataOrNull?.attempt
+                                selectedSubmissionAttempt = event.rootSubmission.dataOrNull?.attempt
                         ), setOf(SubmissionDetailsEffect.ShowSubmissionContentType(submissionType))
                 )
             }
