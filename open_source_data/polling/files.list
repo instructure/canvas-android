@@ -2,4 +2,4 @@
 private.properties=private.properties
 
 # Analytics
-global_tracker.xml=app/src/main/res/xml/global_tracker.xml
+global_tracker.xml=src/main/res/xml/global_tracker.xml
