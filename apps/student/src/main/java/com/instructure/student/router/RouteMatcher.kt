@@ -39,6 +39,7 @@ import com.instructure.pandautils.activities.BaseViewMediaActivity
 import com.instructure.pandautils.loaders.OpenMediaAsyncTaskLoader
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.LoaderUtils
+import com.instructure.pandautils.utils.RouteUtils
 import com.instructure.pandautils.utils.nonNullArgs
 import com.instructure.student.R
 import com.instructure.student.activity.InternalWebViewActivity
@@ -362,20 +363,9 @@ object RouteMatcher : BaseRouteMatcher() {
         // through a relative URL which we won't be able to access. Instead, just showing the file in
         // a webview will load the file the user is trying to view and will resolve all relative paths
         if (filename.toLowerCase().endsWith(".htm") || filename.toLowerCase().endsWith(".html")) {
-            var needsAuth = true
-            var htmlUrl = "${ApiPrefs.protocol}://${ApiPrefs.domain}"
-            var context = CanvasContext.currentUserContext(ApiPrefs.user!!)
-            route.paramsHash[RouterParams.COURSE_ID]?.let {
-                context = CanvasContext.getGenericContext(CanvasContext.Type.COURSE, it.toLong())
-                htmlUrl += "/courses/$it"
+            RouteUtils.retrieveFileUrl(route, fileId) { fileUrl, context, needsAuth ->
+                InternalWebviewFragment.loadInternalWebView(activity, InternalWebviewFragment.makeRoute(context, fileUrl, needsAuth, true))
             }
-            htmlUrl += "/files/$fileId/preview"
-            route.queryParamsHash[RouterParams.VERIFIER]?.let {
-                needsAuth = false
-                htmlUrl += "?verifier=$it"
-            }
-
-            InternalWebviewFragment.loadInternalWebView(activity, InternalWebviewFragment.makeRoute(context, htmlUrl, needsAuth, true))
         } else {
             openMediaCallbacks = null
             openMediaBundle = OpenMediaAsyncTaskLoader.createBundle(mime, url, filename)
