@@ -21,13 +21,12 @@ import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
 import com.instructure.canvasapi2.utils.weave.awaitApiResponse
-import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsEffect
-import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsEffectHandler
-import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsEvent
-import com.instructure.student.mobius.assignmentDetails.SubmissionUploadStatus
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsView
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Failure
+import com.instructure.student.mobius.assignmentDetails.*
+import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsViewState
+import com.instructure.student.mobius.assignmentDetails.ui.SubmissionTypesVisibilities
 import com.spotify.mobius.functions.Consumer
 import io.mockk.*
 import kotlinx.coroutines.Dispatchers
@@ -50,16 +49,18 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     private val eventConsumer: Consumer<AssignmentDetailsEvent> = mockk(relaxed = true)
     private val connection = effectHandler.connect(eventConsumer)
 
+    lateinit var assignment: Assignment
+
     @ExperimentalCoroutinesApi
     @Before
     fun setup() {
         Dispatchers.setMain(Executors.newSingleThreadExecutor().asCoroutineDispatcher())
+        assignment = Assignment(id = 2468, courseId = 8642)
     }
 
     @Test
     fun `Failed LoadData results in fail DataLoaded`() {
         val courseId = 1L
-        val assignmentId = 1L
         val errorMessage = "Error"
         val expectedEvent = AssignmentDetailsEvent.DataLoaded(
                 DataResult.Fail(Failure.Network(errorMessage))
@@ -68,7 +69,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
         mockkStatic("com.instructure.canvasapi2.utils.weave.AwaitApiKt")
         coEvery { awaitApiResponse<Assignment>(any()) } throws createError<Assignment>(errorMessage)
 
-        connection.accept(AssignmentDetailsEffect.LoadData(assignmentId, courseId, false))
+        connection.accept(AssignmentDetailsEffect.LoadData(assignment.id, courseId, false))
 
         verify(timeout = 100) {
             eventConsumer.accept(expectedEvent)
@@ -80,7 +81,6 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     @Test
     fun `Auth failed LoadData results in fail DataLoaded`() {
         val courseId = 1L
-        val assignmentId = 1L
         val errorMessage = "Error"
         val expectedEvent = AssignmentDetailsEvent.DataLoaded(
                 DataResult.Fail(Failure.Authorization(errorMessage))
@@ -89,7 +89,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
         mockkStatic("com.instructure.canvasapi2.utils.weave.AwaitApiKt")
         coEvery { awaitApiResponse<Assignment>(any()) } throws createError<Assignment>(errorMessage, 401)
 
-        connection.accept(AssignmentDetailsEffect.LoadData(assignmentId, courseId, false))
+        connection.accept(AssignmentDetailsEffect.LoadData(assignment.id, courseId, false))
 
         verify(timeout = 100) {
             eventConsumer.accept(expectedEvent)
@@ -101,7 +101,6 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     @Test
     fun `Successful LoadData results in DataLoaded`() {
         val courseId = 1L
-        val assignment = Assignment()
         val expectedEvent = AssignmentDetailsEvent.DataLoaded(
                 DataResult.Success(assignment)
         )
@@ -121,12 +120,11 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     @Test
     fun `ShowSubmitAssignmentView calls ShowSubmitDialogView on the view`() {
         val course = Course()
-        val assignmentId = 1L
 
-        connection.accept(AssignmentDetailsEffect.ShowSubmitDialogView(assignmentId, course))
+        connection.accept(AssignmentDetailsEffect.ShowSubmitDialogView(assignment, course))
 
         verify(timeout = 100) {
-            view.showSubmitDialogView(assignmentId, course)
+            view.showSubmitDialogView(assignment, course.id, SubmissionTypesVisibilities())
         }
 
         confirmVerified(view)
@@ -135,12 +133,11 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     @Test
     fun `ShowSubmissionView calls showSubmissionView on the view`() {
         val course = Course()
-        val assignmentId = 1L
 
-        connection.accept(AssignmentDetailsEffect.ShowSubmissionView(assignmentId, course))
+        connection.accept(AssignmentDetailsEffect.ShowSubmissionView(assignment.id, course))
 
         verify(timeout = 100) {
-            view.showSubmissionView(assignmentId, course)
+            view.showSubmissionView(assignment.id, course)
         }
 
         confirmVerified(view)
@@ -149,12 +146,11 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     @Test
     fun `ShowUploadStatusView calls showUploadStatusView on the view`() {
         val course = Course()
-        val assignmentId = 1L
 
-        connection.accept(AssignmentDetailsEffect.ShowUploadStatusView(assignmentId, course))
+        connection.accept(AssignmentDetailsEffect.ShowUploadStatusView(assignment.id, course))
 
         verify(timeout = 100) {
-            view.showUploadStatusView(assignmentId, course)
+            view.showUploadStatusView(assignment.id, course)
         }
 
         confirmVerified(view)
@@ -164,10 +160,9 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
 
     @Test
     fun `ObserveSubmissionStatus results in SubmissionStatusUpdated event`() {
-        val assignmentId = 1L
         val expectedEvent = AssignmentDetailsEvent.SubmissionStatusUpdated(SubmissionUploadStatus.Empty)
 
-        connection.accept(AssignmentDetailsEffect.ObserveSubmissionStatus(assignmentId))
+        connection.accept(AssignmentDetailsEffect.ObserveSubmissionStatus(assignment.id))
 
         verify(timeout = 100) {
             eventConsumer.accept(expectedEvent)
@@ -178,22 +173,20 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
 
     @Test
     fun `ShowCreateSubmissionView with quiz submissionType calls showQuizOrDiscussionView`() {
-        val courseId = 1234L
         val quizId = 1234L
-        val assignmentId = 1234L
-        val assignment = Assignment(id = assignmentId, quizId = quizId, courseId = courseId)
         val domain = "mobiledev.instructure.com/api/v1"
         val protocol = "https"
         val submissionType = Assignment.SubmissionType.ONLINE_QUIZ
+        val assignment = assignment.copy(quizId = quizId)
 
         mockkStatic(ApiPrefs::class)
         every { ApiPrefs.protocol } returns protocol
         every { ApiPrefs.domain } returns domain
 
-        connection.accept(AssignmentDetailsEffect.ShowCreateSubmissionView(submissionType, courseId, assignment))
+        connection.accept(AssignmentDetailsEffect.ShowCreateSubmissionView(submissionType, assignment.courseId, assignment))
 
 
-        val url = "$protocol://$domain/courses/$courseId/quizzes/$quizId"
+        val url = "$protocol://$domain/courses/${assignment.courseId}/quizzes/$quizId"
 
         verify(timeout = 100) {
             view.showQuizOrDiscussionView(url)
@@ -203,22 +196,20 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
 
     @Test
     fun `ShowCreateSubmissionView with discussion submissionType calls showQuizOrDiscussionView`() {
-        val courseId = 1234L
         val discussionTopicId = 1234L
-        val assignmentId = 1234L
-        val assignment = Assignment(id = assignmentId, courseId = courseId, discussionTopicHeader = DiscussionTopicHeader(id = discussionTopicId))
         val domain = "mobiledev.instructure.com/api/v1"
         val protocol = "https"
         val submissionType = Assignment.SubmissionType.DISCUSSION_TOPIC
+        val assignment = assignment.copy(discussionTopicHeader = DiscussionTopicHeader(id = discussionTopicId))
 
         mockkStatic(ApiPrefs::class)
         every { ApiPrefs.protocol } returns protocol
         every { ApiPrefs.domain } returns domain
 
-        connection.accept(AssignmentDetailsEffect.ShowCreateSubmissionView(submissionType, courseId, assignment))
+        connection.accept(AssignmentDetailsEffect.ShowCreateSubmissionView(submissionType, assignment.courseId, assignment))
 
 
-        val url = "$protocol://$domain/courses/$courseId/discussion_topics/$discussionTopicId"
+        val url = "$protocol://$domain/courses/${assignment.courseId}/discussion_topics/$discussionTopicId"
 
         verify(timeout = 100) {
             view.showQuizOrDiscussionView(url)
@@ -228,45 +219,36 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
 
     @Test
     fun `ShowCreateSubmissionView with fileUpload submissionType calls showFileUploadView`() {
-        val courseId = 1234L
-        val assignmentId = 1234L
-        val assignment = Assignment(id = assignmentId, courseId = courseId)
         val submissionType = Assignment.SubmissionType.ONLINE_UPLOAD
 
-        connection.accept(AssignmentDetailsEffect.ShowCreateSubmissionView(submissionType, courseId, assignment))
+        connection.accept(AssignmentDetailsEffect.ShowCreateSubmissionView(submissionType, assignment.courseId, assignment))
 
         verify(timeout = 100) {
-            view.showFileUploadView(assignment, courseId)
+            view.showFileUploadView(assignment, assignment.courseId)
         }
         confirmVerified(view)
     }
 
     @Test
     fun `ShowCreateSubmissionView with textEntry submissionType calls showOnlineTextEntryView`() {
-        val courseId = 1234L
-        val assignmentId = 1234L
-        val assignment = Assignment(id = assignmentId, courseId = courseId)
         val submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY
 
-        connection.accept(AssignmentDetailsEffect.ShowCreateSubmissionView(submissionType, courseId, assignment))
+        connection.accept(AssignmentDetailsEffect.ShowCreateSubmissionView(submissionType, assignment.courseId, assignment))
 
         verify(timeout = 100) {
-            view.showOnlineTextEntryView(assignmentId, courseId)
+            view.showOnlineTextEntryView(assignment.id, assignment.courseId)
         }
         confirmVerified(view)
     }
 
     @Test
     fun `ShowCreateSubmissionView with urlEntry submissionType calls showOnlineUrlEntryView`() {
-        val courseId = 1234L
-        val assignmentId = 1234L
-        val assignment = Assignment(id = assignmentId, courseId = courseId)
         val submissionType = Assignment.SubmissionType.ONLINE_URL
 
-        connection.accept(AssignmentDetailsEffect.ShowCreateSubmissionView(submissionType, courseId, assignment))
+        connection.accept(AssignmentDetailsEffect.ShowCreateSubmissionView(submissionType, assignment.courseId, assignment))
 
         verify(timeout = 100) {
-            view.showOnlineUrlEntryView(assignmentId, courseId)
+            view.showOnlineUrlEntryView(assignment.id, assignment.courseId)
         }
         confirmVerified(view)
     }
@@ -274,8 +256,6 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     @Test
     fun `ShowCreateSubmissionView with mediaRecording submissionType calls showMediaRecordingView`() {
         val courseId = 1234L
-        val assignmentId = 1234L
-        val assignment = Assignment(id = assignmentId, courseId = courseId)
         val submissionType = Assignment.SubmissionType.MEDIA_RECORDING
 
         connection.accept(AssignmentDetailsEffect.ShowCreateSubmissionView(submissionType, courseId, assignment))
@@ -283,6 +263,87 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
         verify(timeout = 100) {
             view.showMediaRecordingView(assignment, courseId)
         }
+        confirmVerified(view)
+    }
+
+
+    @Test
+    fun `Displays fileUpload when submission type is fileUpload`() {
+        val course = Course()
+        val assignment = assignment.copy(
+                submissionTypesRaw = listOf("online_upload")
+        )
+
+        connection.accept(AssignmentDetailsEffect.ShowSubmitDialogView(assignment, course))
+
+        verify(timeout = 100) {
+            view.showSubmitDialogView(assignment, course.id, SubmissionTypesVisibilities(fileUpload = true))
+        }
+
+        confirmVerified(view)
+    }
+
+    @Test
+    fun `Displays textEntry when submission type is textEntry`() {
+        val course = Course()
+        val assignment = assignment.copy(
+                submissionTypesRaw = listOf("online_text_entry")
+        )
+
+        connection.accept(AssignmentDetailsEffect.ShowSubmitDialogView(assignment, course))
+
+        verify(timeout = 100) {
+            view.showSubmitDialogView(assignment, course.id, SubmissionTypesVisibilities(textEntry = true))
+        }
+
+        confirmVerified(view)
+    }
+
+    @Test
+    fun `Displays onlineUrl when submission type is onlineUrl`() {
+        val course = Course()
+        val assignment = assignment.copy(
+                submissionTypesRaw = listOf("online_url")
+        )
+
+        connection.accept(AssignmentDetailsEffect.ShowSubmitDialogView(assignment, course))
+
+        verify(timeout = 100) {
+            view.showSubmitDialogView(assignment, course.id, SubmissionTypesVisibilities(urlEntry = true))
+        }
+
+        confirmVerified(view)
+    }
+
+    @Test
+    fun `Displays mediaRecording when submission type is mediaRecording`() {
+        val course = Course()
+        val assignment = assignment.copy(
+                submissionTypesRaw = listOf("media_recording")
+        )
+
+        connection.accept(AssignmentDetailsEffect.ShowSubmitDialogView(assignment, course))
+
+        verify(timeout = 100) {
+            view.showSubmitDialogView(assignment, course.id, SubmissionTypesVisibilities(mediaRecording = true))
+        }
+
+        confirmVerified(view)
+    }
+
+    @Test
+    fun `Displays all submission types when all are present`() {
+        val course = Course()
+        val assignment = assignment.copy(
+                submissionTypesRaw = listOf("media_recording", "online_url", "online_text_entry", "online_upload")
+        )
+
+        connection.accept(AssignmentDetailsEffect.ShowSubmitDialogView(assignment, course))
+
+        verify(timeout = 100) {
+            view.showSubmitDialogView(assignment, course.id, SubmissionTypesVisibilities(true, true, true, true))
+        }
+
         confirmVerified(view)
     }
 

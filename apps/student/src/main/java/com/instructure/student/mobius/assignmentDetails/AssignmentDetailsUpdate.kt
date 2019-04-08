@@ -31,11 +31,11 @@ class AssignmentDetailsUpdate : UpdateInit<AssignmentDetailsModel, AssignmentDet
     ): Next<AssignmentDetailsModel, AssignmentDetailsEffect> = when (event) {
         AssignmentDetailsEvent.SubmitAssignmentClicked -> {
             // If a user is trying to submit something to an assignment and the assignment is null, something is terribly wrong.
-            val submissionTypes = model.assignmentResult!!.dataOrNull!!.getSubmissionTypes()
+            val submissionTypes = model.assignmentResult!!.dataOrThrow.getSubmissionTypes()
             if(submissionTypes.size == 1) {
                 Next.dispatch<AssignmentDetailsModel, AssignmentDetailsEffect>(setOf(AssignmentDetailsEffect.ShowCreateSubmissionView(submissionTypes.first(), model.course.id, model.assignmentResult.dataOrNull!!)))
             } else {
-                Next.dispatch<AssignmentDetailsModel, AssignmentDetailsEffect>(setOf(AssignmentDetailsEffect.ShowSubmitDialogView(model.assignmentId, model.course)))
+                Next.dispatch<AssignmentDetailsModel, AssignmentDetailsEffect>(setOf(AssignmentDetailsEffect.ShowSubmitDialogView(model.assignmentResult.dataOrThrow, model.course)))
             }
         }
         AssignmentDetailsEvent.ViewSubmissionClicked -> {
@@ -58,7 +58,7 @@ class AssignmentDetailsUpdate : UpdateInit<AssignmentDetailsModel, AssignmentDet
         }
         is AssignmentDetailsEvent.SubmissionTypeClicked -> {
             // If a user is trying to submit something to an assignment and the assignment is null, something is terribly wrong.
-            Next.dispatch(setOf(AssignmentDetailsEffect.ShowCreateSubmissionView(event.submissionType, model.course.id, model.assignmentResult!!.dataOrNull!!)))
+            Next.dispatch(setOf(AssignmentDetailsEffect.ShowCreateSubmissionView(event.submissionType, model.course.id, model.assignmentResult!!.dataOrThrow)))
         }
     }
 }

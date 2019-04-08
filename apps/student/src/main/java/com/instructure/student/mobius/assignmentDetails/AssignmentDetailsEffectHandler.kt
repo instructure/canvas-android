@@ -23,13 +23,14 @@ import com.instructure.canvasapi2.utils.*
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
 import com.instructure.canvasapi2.utils.weave.awaitApiResponse
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsView
+import com.instructure.student.mobius.assignmentDetails.ui.SubmissionTypesVisibilities
 import com.instructure.student.mobius.common.ui.EffectHandler
 import kotlinx.coroutines.launch
 
 class AssignmentDetailsEffectHandler : EffectHandler<AssignmentDetailsView, AssignmentDetailsEvent, AssignmentDetailsEffect>() {
     override fun accept(effect: AssignmentDetailsEffect) {
         when (effect) {
-            is AssignmentDetailsEffect.ShowSubmitDialogView -> view?.showSubmitDialogView(effect.assignmentId, effect.course)
+            is AssignmentDetailsEffect.ShowSubmitDialogView -> view?.showSubmitDialogView(effect.assignment, effect.course.id, getSubmissionTypesVisibilities(effect.assignment))
             is AssignmentDetailsEffect.ShowSubmissionView -> view?.showSubmissionView(effect.assignmentId, effect.course)
             is AssignmentDetailsEffect.ShowUploadStatusView -> view?.showUploadStatusView(effect.assignmentId, effect.course)
             is AssignmentDetailsEffect.LoadData -> {
@@ -84,4 +85,21 @@ class AssignmentDetailsEffectHandler : EffectHandler<AssignmentDetailsView, Assi
         }
     }
 
+    private fun getSubmissionTypesVisibilities(assignment: Assignment) : SubmissionTypesVisibilities {
+        val visibilities = SubmissionTypesVisibilities()
+
+        val submissionTypes = assignment.getSubmissionTypes()
+
+        for (submissionType in submissionTypes) {
+            @Suppress("NON_EXHAUSTIVE_WHEN")
+            when(submissionType) {
+                Assignment.SubmissionType.ONLINE_UPLOAD -> visibilities.fileUpload = true
+                Assignment.SubmissionType.ONLINE_TEXT_ENTRY -> visibilities.textEntry = true
+                Assignment.SubmissionType.ONLINE_URL -> visibilities.urlEntry = true
+                Assignment.SubmissionType.MEDIA_RECORDING -> visibilities.mediaRecording = true
+            }
+        }
+
+        return visibilities
+    }
 }

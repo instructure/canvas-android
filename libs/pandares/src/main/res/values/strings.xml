@@ -478,6 +478,8 @@
     <string name="enterTextEntry">Enter Text Entry</string>
     <string name="fileUpload"> File Upload</string>
     <string name="oneFileOnly">This submission only accepts one file upload</string>
+    <string name="websiteEntry">Add Website Entry</string>
+    <string name="mediaRecordingEntry">Media Recordings</string>
 
 
     <string name="submit">Submit</string>

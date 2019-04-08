@@ -127,7 +127,7 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
             .joinToString(", ")
 
         // File types
-        visibilities.fileTypes = assignment.allowedExtensions.isNotEmpty()
+        visibilities.fileTypes = assignment.allowedExtensions.isNotEmpty() && assignment.getSubmissionTypes().contains(Assignment.SubmissionType.ONLINE_UPLOAD)
         val fileTypes = assignment.allowedExtensions.joinToString(", ")
 
 
@@ -154,26 +154,8 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
             description = description.orEmpty(),
             submitButtonText = submitButtonText,
             gradeState = gradeState,
-            assignmentDetailsVisibilities = visibilities,
-            submissionTypesVisibilities = getSubmissionTypesVisibilities(assignment)
+            assignmentDetailsVisibilities = visibilities
         )
-    }
-
-    private fun getSubmissionTypesVisibilities(assignment: Assignment) : SubmissionTypesVisibilities {
-        val visibilities = SubmissionTypesVisibilities()
-
-        val submissionTypes = assignment.getSubmissionTypes()
-
-        for (submissionType in submissionTypes) {
-            when(submissionType) {
-                Assignment.SubmissionType.ONLINE_UPLOAD -> visibilities.fileUpload = true
-                Assignment.SubmissionType.ONLINE_TEXT_ENTRY -> visibilities.textEntry = true
-                Assignment.SubmissionType.ONLINE_URL -> visibilities.urlEntry = true
-                Assignment.SubmissionType.MEDIA_RECORDING -> visibilities.mediaRecording = true
-            }
-        }
-
-        return visibilities
     }
 
     private fun makeLockedState(

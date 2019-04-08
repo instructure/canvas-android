@@ -41,8 +41,7 @@ sealed class AssignmentDetailsViewState(val visibilities: AssignmentDetailsVisib
         val description: String = "",
         val submitButtonText: String = "",
         val gradeState: GradeCellViewState = GradeCellViewState.Empty,
-        val assignmentDetailsVisibilities: AssignmentDetailsVisibilities,
-        val submissionTypesVisibilities: SubmissionTypesVisibilities? = null
+        val assignmentDetailsVisibilities: AssignmentDetailsVisibilities
     ) : AssignmentDetailsViewState(assignmentDetailsVisibilities)
 }
 

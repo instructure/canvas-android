@@ -87,7 +87,7 @@ class AssignmentDetailsUpdateTest : Assert() {
                 .whenEvent(AssignmentDetailsEvent.SubmitAssignmentClicked)
                 .then(
                         assertThatNext(
-                                matchesEffects<AssignmentDetailsModel, AssignmentDetailsEffect>(AssignmentDetailsEffect.ShowSubmitDialogView(assignmentId, course))
+                                matchesEffects<AssignmentDetailsModel, AssignmentDetailsEffect>(AssignmentDetailsEffect.ShowSubmitDialogView(assignmentCopy, course))
                         )
                 )
     }
