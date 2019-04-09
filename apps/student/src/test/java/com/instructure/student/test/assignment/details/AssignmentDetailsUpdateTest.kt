@@ -87,15 +87,46 @@ class AssignmentDetailsUpdateTest : Assert() {
                 .whenEvent(AssignmentDetailsEvent.SubmitAssignmentClicked)
                 .then(
                         assertThatNext(
-                                matchesEffects<AssignmentDetailsModel, AssignmentDetailsEffect>(AssignmentDetailsEffect.ShowSubmitDialogView(assignmentCopy, course))
+                                matchesEffects<AssignmentDetailsModel, AssignmentDetailsEffect>(AssignmentDetailsEffect.ShowSubmitDialogView(assignmentCopy, course, false))
+                        )
+                )
+    }
+
+    @Test
+    fun `SubmitAssignmentClicked event with only ONLINE_UPLOAD submission type and having arc enabled results in ShowSubmitDialogView effect`() {
+        val submissionTypes = listOf("online_upload")
+        val assignmentCopy = assignment.copy(submissionTypesRaw = submissionTypes)
+        val givenModel = initModel.copy(assignmentResult = DataResult.Success(assignmentCopy), isArcEnabled = true)
+        updateSpec
+                .given(givenModel)
+                .whenEvent(AssignmentDetailsEvent.SubmitAssignmentClicked)
+                .then(
+                        assertThatNext(
+                                matchesEffects<AssignmentDetailsModel, AssignmentDetailsEffect>(AssignmentDetailsEffect.ShowSubmitDialogView(assignmentCopy, course, true))
+                        )
+                )
+    }
+
+    @Test
+    fun `SubmitAssignmentClicked event with only ONLINE_UPLOAD submission type and without arc enabled results in ShowCreateSubmissionView effect`() {
+        val submissionType = Assignment.SubmissionType.ONLINE_UPLOAD
+        val submissionTypes = listOf("online_upload")
+        val assignmentCopy = assignment.copy(submissionTypesRaw = submissionTypes)
+        val givenModel = initModel.copy(assignmentResult = DataResult.Success(assignmentCopy))
+        updateSpec
+                .given(givenModel)
+                .whenEvent(AssignmentDetailsEvent.SubmitAssignmentClicked)
+                .then(
+                        assertThatNext(
+                                matchesEffects<AssignmentDetailsModel, AssignmentDetailsEffect>(AssignmentDetailsEffect.ShowCreateSubmissionView(submissionType, courseId, assignmentCopy))
                         )
                 )
     }
 
     @Test
     fun `SubmitAssignmentClicked event with one submission type results in ShowCreateSubmissionView effect`() {
-        val submissionType = Assignment.SubmissionType.ONLINE_UPLOAD
-        val submissionTypes = listOf("online_upload")
+        val submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY
+        val submissionTypes = listOf("online_text_entry")
         val assignmentCopy = assignment.copy(submissionTypesRaw = submissionTypes)
         val givenModel = initModel.copy(assignmentResult = DataResult.Success(assignmentCopy))
         updateSpec
@@ -159,11 +190,12 @@ class AssignmentDetailsUpdateTest : Assert() {
     fun `DataLoaded event updates the model`() {
         val assignment = Assignment(id = assignmentId)
         val startModel = initModel.copy(status = SubmissionUploadStatus.Uploading)
-        val expectedModel = initModel.copy(isLoading = false, status = SubmissionUploadStatus.Uploading, assignmentResult = DataResult.Success(assignment))
+        val expectedModel = initModel.copy(isLoading = false, status = SubmissionUploadStatus.Uploading, assignmentResult = DataResult.Success(assignment), isArcEnabled = true)
         updateSpec
                 .given(startModel)
                 .whenEvent(AssignmentDetailsEvent.DataLoaded(
-                        assignmentResult = expectedModel.assignmentResult
+                        assignmentResult = expectedModel.assignmentResult,
+                        isArcEnabled = true
                 ))
                 .then(assertThatNext(NextMatchers.hasModel(expectedModel)))
     }
@@ -175,7 +207,8 @@ class AssignmentDetailsUpdateTest : Assert() {
         updateSpec
                 .given(startModel)
                 .whenEvent(AssignmentDetailsEvent.DataLoaded(
-                        assignmentResult = expectedModel.assignmentResult
+                        assignmentResult = expectedModel.assignmentResult,
+                        isArcEnabled = false
                 ))
                 .then(assertThatNext(NextMatchers.hasModel(expectedModel)))
     }
@@ -187,7 +220,8 @@ class AssignmentDetailsUpdateTest : Assert() {
         updateSpec
                 .given(startModel)
                 .whenEvent(AssignmentDetailsEvent.DataLoaded(
-                        assignmentResult = expectedModel.assignmentResult
+                        assignmentResult = expectedModel.assignmentResult,
+                        isArcEnabled = false
                 ))
                 .then(assertThatNext(NextMatchers.hasModel(expectedModel)))
     }

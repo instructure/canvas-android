@@ -26,12 +26,12 @@ sealed class AssignmentDetailsEvent {
     object ViewUploadStatusClicked : AssignmentDetailsEvent()
     object PullToRefresh : AssignmentDetailsEvent()
     data class SubmissionTypeClicked(val submissionType: Assignment.SubmissionType) : AssignmentDetailsEvent()
-    data class DataLoaded(val assignmentResult: DataResult<Assignment>?) : AssignmentDetailsEvent()
+    data class DataLoaded(val assignmentResult: DataResult<Assignment>?, val isArcEnabled: Boolean) : AssignmentDetailsEvent()
     data class SubmissionStatusUpdated(val status: SubmissionUploadStatus) : AssignmentDetailsEvent()
 }
 
 sealed class AssignmentDetailsEffect {
-    data class ShowSubmitDialogView(val assignment: Assignment, val course: Course) : AssignmentDetailsEffect()
+    data class ShowSubmitDialogView(val assignment: Assignment, val course: Course, val isArcEnabled: Boolean) : AssignmentDetailsEffect()
     data class ShowSubmissionView(val assignmentId: Long, val course: Course) : AssignmentDetailsEffect()
     data class ShowUploadStatusView(val assignmentId: Long, val course: Course) : AssignmentDetailsEffect()
     data class ShowCreateSubmissionView(val submissionType: Assignment.SubmissionType, val courseId: Long, val assignment: Assignment) : AssignmentDetailsEffect()
@@ -44,6 +44,7 @@ data class AssignmentDetailsModel(
     val course: Course, // Will always pull from cache for the course
     val isLoading: Boolean = false,
     val assignmentResult: DataResult<Assignment>? = null,
+    val isArcEnabled: Boolean = false,
     val status: SubmissionUploadStatus = SubmissionUploadStatus.Empty
 )
 

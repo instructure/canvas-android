@@ -16,6 +16,7 @@
  */
 package com.instructure.student.mobius.assignmentDetails
 
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.student.mobius.common.ui.UpdateInit
 import com.spotify.mobius.First
 import com.spotify.mobius.Next
@@ -32,10 +33,10 @@ class AssignmentDetailsUpdate : UpdateInit<AssignmentDetailsModel, AssignmentDet
         AssignmentDetailsEvent.SubmitAssignmentClicked -> {
             // If a user is trying to submit something to an assignment and the assignment is null, something is terribly wrong.
             val submissionTypes = model.assignmentResult!!.dataOrThrow.getSubmissionTypes()
-            if(submissionTypes.size == 1) {
-                Next.dispatch<AssignmentDetailsModel, AssignmentDetailsEffect>(setOf(AssignmentDetailsEffect.ShowCreateSubmissionView(submissionTypes.first(), model.course.id, model.assignmentResult.dataOrNull!!)))
+            if(submissionTypes.size == 1 && !(submissionTypes.contains(Assignment.SubmissionType.ONLINE_UPLOAD) && model.isArcEnabled)) {
+                Next.dispatch<AssignmentDetailsModel, AssignmentDetailsEffect>(setOf(AssignmentDetailsEffect.ShowCreateSubmissionView(submissionTypes.first(), model.course.id, model.assignmentResult.dataOrThrow)))
             } else {
-                Next.dispatch<AssignmentDetailsModel, AssignmentDetailsEffect>(setOf(AssignmentDetailsEffect.ShowSubmitDialogView(model.assignmentResult.dataOrThrow, model.course)))
+                Next.dispatch<AssignmentDetailsModel, AssignmentDetailsEffect>(setOf(AssignmentDetailsEffect.ShowSubmitDialogView(model.assignmentResult.dataOrThrow, model.course, model.isArcEnabled)))
             }
         }
         AssignmentDetailsEvent.ViewSubmissionClicked -> {
@@ -53,7 +54,8 @@ class AssignmentDetailsUpdate : UpdateInit<AssignmentDetailsModel, AssignmentDet
         is AssignmentDetailsEvent.DataLoaded -> {
             Next.next(model.copy(
                     isLoading = false,
-                    assignmentResult = event.assignmentResult
+                    assignmentResult = event.assignmentResult,
+                    isArcEnabled = event.isArcEnabled
             ))
         }
         is AssignmentDetailsEvent.SubmissionTypeClicked -> {

@@ -88,4 +88,21 @@
         android:visibility="gone"
         tools:visibility="visible" />
 
+    <TextView
+        android:id="@+id/submissionEntryArc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/TextFont.Regular"
+        android:text="@string/arc"
+        android:textSize="16sp"
+        android:drawableStart="@drawable/vd_navigation_arc"
+        android:paddingTop="14dp"
+        android:paddingBottom="14dp"
+        android:paddingStart="18dp"
+        android:paddingEnd="18dp"
+        android:drawablePadding="18dp"
+        android:background="?attr/selectableItemBackground"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
 </LinearLayout>

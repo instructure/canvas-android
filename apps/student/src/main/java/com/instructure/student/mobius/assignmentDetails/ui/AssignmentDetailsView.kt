@@ -174,6 +174,9 @@ class AssignmentDetailsView(
             setupDialogRow(dialog, dialog.submissionEntryMedia, visibilities.mediaRecording) {
                 showMediaRecordingView(assignment, courseId)
             }
+            setupDialogRow(dialog, dialog.submissionEntryArc, visibilities.arcUpload) {
+                showArcUploadView(assignment, courseId)
+            }
         }
         dialog.show()
     }
@@ -213,6 +216,11 @@ class AssignmentDetailsView(
     fun showFileUploadView(assignment: Assignment, courseId: Long) {
         // TODO
         context.toast("Route to file upload page")
+    }
+
+    fun showArcUploadView(assignment: Assignment, courseId: Long) {
+        // TODO
+        context.toast("Route to arc upload page")
     }
 
     fun showQuizOrDiscussionView(url: String) {

@@ -17,7 +17,9 @@
 package com.instructure.student.mobius.assignmentDetails
 
 import com.instructure.canvasapi2.managers.AssignmentManager
+import com.instructure.canvasapi2.managers.ExternalToolManager
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionTopic
 import com.instructure.canvasapi2.utils.*
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
@@ -30,7 +32,7 @@ import kotlinx.coroutines.launch
 class AssignmentDetailsEffectHandler : EffectHandler<AssignmentDetailsView, AssignmentDetailsEvent, AssignmentDetailsEffect>() {
     override fun accept(effect: AssignmentDetailsEffect) {
         when (effect) {
-            is AssignmentDetailsEffect.ShowSubmitDialogView -> view?.showSubmitDialogView(effect.assignment, effect.course.id, getSubmissionTypesVisibilities(effect.assignment))
+            is AssignmentDetailsEffect.ShowSubmitDialogView -> view?.showSubmitDialogView(effect.assignment, effect.course.id, getSubmissionTypesVisibilities(effect.assignment, effect.isArcEnabled))
             is AssignmentDetailsEffect.ShowSubmissionView -> view?.showSubmissionView(effect.assignmentId, effect.course)
             is AssignmentDetailsEffect.ShowUploadStatusView -> view?.showUploadStatusView(effect.assignmentId, effect.course)
             is AssignmentDetailsEffect.LoadData -> {
@@ -41,7 +43,7 @@ class AssignmentDetailsEffectHandler : EffectHandler<AssignmentDetailsView, Assi
                 consumer.accept(AssignmentDetailsEvent.SubmissionStatusUpdated(SubmissionUploadStatus.Empty))
             }
             is AssignmentDetailsEffect.ShowCreateSubmissionView -> {
-                when(effect.submissionType) {
+                when (effect.submissionType) {
                     Assignment.SubmissionType.ONLINE_QUIZ -> {
                         val url = APIHelper.getQuizURL(effect.courseId, effect.assignment.quizId)
                         view?.showQuizOrDiscussionView(url)
@@ -81,19 +83,31 @@ class AssignmentDetailsEffectHandler : EffectHandler<AssignmentDetailsView, Assi
                     DataResult.Fail(Failure.Network(e.response?.message()))
                 }
             }
-            consumer.accept(AssignmentDetailsEvent.DataLoaded(result))
+
+            // We need to know if they can make submissions through arc, only for file uploads
+            val isArcEnabled = if (result.isSuccess && result.dataOrThrow.getSubmissionTypes().contains(Assignment.SubmissionType.ONLINE_UPLOAD)) {
+                val context = CanvasContext.getGenericContext(CanvasContext.Type.COURSE, effect.courseId)
+                ExternalToolManager.getExternalToolsForCanvasContextAsync(context, true).await().dataOrNull?.any {
+                    it.url?.contains("instructuremedia.com/lti/launch") ?: false
+                } ?: false
+            } else false
+
+            consumer.accept(AssignmentDetailsEvent.DataLoaded(result, isArcEnabled))
         }
     }
 
-    private fun getSubmissionTypesVisibilities(assignment: Assignment) : SubmissionTypesVisibilities {
+    private fun getSubmissionTypesVisibilities(assignment: Assignment, isArcEnabled: Boolean): SubmissionTypesVisibilities {
         val visibilities = SubmissionTypesVisibilities()
 
         val submissionTypes = assignment.getSubmissionTypes()
 
         for (submissionType in submissionTypes) {
             @Suppress("NON_EXHAUSTIVE_WHEN")
-            when(submissionType) {
-                Assignment.SubmissionType.ONLINE_UPLOAD -> visibilities.fileUpload = true
+            when (submissionType) {
+                Assignment.SubmissionType.ONLINE_UPLOAD -> {
+                    visibilities.fileUpload = true
+                    visibilities.arcUpload = isArcEnabled
+                }
                 Assignment.SubmissionType.ONLINE_TEXT_ENTRY -> visibilities.textEntry = true
                 Assignment.SubmissionType.ONLINE_URL -> visibilities.urlEntry = true
                 Assignment.SubmissionType.MEDIA_RECORDING -> visibilities.mediaRecording = true
