@@ -24,7 +24,7 @@ class TextSubmissionEffectHandler : EffectHandler<TextSubmissionView, TextSubmis
     override fun accept(effect: TextSubmissionEffect) {
         when (effect) {
             is TextSubmissionEffect.SubmitText -> {
-                view?.onTextSubmitted(effect.text, effect.canvasContext, effect.assignmentId)
+                view?.onTextSubmitted(effect.text, effect.canvasContext, effect.assignmentId, effect.assignmentName)
             }
             is TextSubmissionEffect.InitializeText -> {
                 view?.setInitialSubmissionText(effect.text)

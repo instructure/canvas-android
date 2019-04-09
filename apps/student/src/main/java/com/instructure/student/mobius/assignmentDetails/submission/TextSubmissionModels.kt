@@ -25,13 +25,14 @@ sealed class TextSubmissionEvent {
 }
 
 sealed class TextSubmissionEffect {
-    data class SubmitText(val text: String, val canvasContext: CanvasContext, val assignmentId: Long) : TextSubmissionEffect()
+    data class SubmitText(val text: String, val canvasContext: CanvasContext, val assignmentId: Long, val assignmentName: String?) : TextSubmissionEffect()
     data class InitializeText(val text: String) : TextSubmissionEffect()
 }
 
 data class TextSubmissionModel(
         val canvasContext: CanvasContext,
         val assignmentId: Long,
+        val assignmentName: String?,
         val initialText: String? = null,
         val failureMessage: String? = null,
         val isSubmittable: Boolean = false

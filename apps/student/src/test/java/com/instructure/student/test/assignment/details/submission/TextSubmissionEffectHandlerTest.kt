@@ -48,12 +48,13 @@ class TextSubmissionEffectHandlerTest : Assert() {
     fun `SubmitText results in submission`() {
         val text = "Some text here"
         val assignmentId = 1234L
+        val assignmentName = "Name"
         val course = Course()
 
-        connection.accept(TextSubmissionEffect.SubmitText(text, course, assignmentId))
+        connection.accept(TextSubmissionEffect.SubmitText(text, course, assignmentId, assignmentName))
 
         verify(timeout = 100) {
-            view.onTextSubmitted(text, course, assignmentId)
+            view.onTextSubmitted(text, course, assignmentId, assignmentName)
         }
 
         confirmVerified(view)
@@ -63,13 +64,14 @@ class TextSubmissionEffectHandlerTest : Assert() {
     fun `SubmitText with no view does not crash`() {
         val text = "Some text here"
         val assignmentId = 1234L
+        val assignmentName = "Name"
         val course = Course()
         effectHandler.view = null
 
-        connection.accept(TextSubmissionEffect.SubmitText(text, course, assignmentId))
+        connection.accept(TextSubmissionEffect.SubmitText(text, course, assignmentId, assignmentName))
 
         verify(exactly = 0) {
-            view.onTextSubmitted(any(), any(), any())
+            view.onTextSubmitted(any(), any(), any(), any())
         }
 
         confirmVerified(view)
