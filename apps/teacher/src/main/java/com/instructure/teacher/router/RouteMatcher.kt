@@ -44,6 +44,7 @@ import com.instructure.pandautils.activities.BaseViewMediaActivity
 import com.instructure.pandautils.loaders.OpenMediaAsyncTaskLoader
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.LoaderUtils
+import com.instructure.pandautils.utils.RouteUtils
 import com.instructure.pandautils.utils.nonNullArgs
 import com.instructure.teacher.PSPDFKit.AnnotationComments.AnnotationCommentListFragment
 import com.instructure.teacher.R
@@ -170,13 +171,10 @@ object RouteMatcher : BaseRouteMatcher() {
                     openMedia(context as FragmentActivity, route.uri.toString())
                 }
             } else {
-                if (route.queryParamsHash.containsKey(RouterParams.PREVIEW)) {
-                    // This is a link for a file preview, so we need to get the file id from the preview query param
-                    handleSpecificFile(context as FragmentActivity, route.queryParamsHash[RouterParams.PREVIEW]
-                            ?: "")
-                } else {
-                    handleSpecificFile(context as FragmentActivity, route.paramsHash[RouterParams.FILE_ID] ?: "")
-                }
+                handleSpecificFile(
+                        context as FragmentActivity,
+                        (if (route.queryParamsHash.containsKey(RouterParams.PREVIEW)) route.queryParamsHash[RouterParams.PREVIEW] else route.paramsHash[RouterParams.FILE_ID]) ?: "",
+                        route)
             }
 
         } else if (route.routeContext === RouteContext.MEDIA) {
@@ -514,8 +512,20 @@ object RouteMatcher : BaseRouteMatcher() {
         }
     }
 
-    private fun openMedia(activity: FragmentActivity?, mime: String, url: String, filename: String) {
-        if (activity != null) {
+    private fun openMedia(activity: FragmentActivity?, mime: String, url: String, filename: String, route: Route, fileId: String?) {
+        if (activity == null) {
+            return
+        }
+
+        // If we're trying to open an HTML file, don't download it. It could be referencing other files
+        // through a relative URL which we won't be able to access. Instead, just showing the file in
+        // a webview will load the file the user is trying to view and will resolve all relative paths
+        if (filename.toLowerCase().endsWith(".htm") || filename.toLowerCase().endsWith(".html")) {
+            RouteUtils.retrieveFileUrl(route, fileId) { fileUrl, context, needsAuth ->
+                val bundle = InternalWebViewFragment.makeBundle(url = fileUrl, title = filename, shouldAuthenticate = needsAuth)
+                RouteMatcher.route(activity, Route(FullscreenInternalWebViewFragment::class.java, context, bundle))
+            }
+        } else {
             openMediaCallbacks = null
             openMediaBundle = OpenMediaAsyncTaskLoader.createBundle(mime, url, filename)
             LoaderUtils.restartLoaderWithBundle<LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia>>(
@@ -523,7 +533,7 @@ object RouteMatcher : BaseRouteMatcher() {
         }
     }
 
-    private fun handleSpecificFile(activity: FragmentActivity, fileID: String?) {
+    private fun handleSpecificFile(activity: FragmentActivity, fileID: String?, route: Route) {
         val fileFolderStatusCallback = object : StatusCallback<FileFolder>() {
             override fun onResponse(response: retrofit2.Response<FileFolder>, linkHeaders: com.instructure.canvasapi2.utils.LinkHeaders, type: ApiType) {
                 super.onResponse(response, linkHeaders, type)
@@ -531,7 +541,7 @@ object RouteMatcher : BaseRouteMatcher() {
                 if (fileFolder!!.isLocked || fileFolder.isLockedForUser) {
                     Toast.makeText(activity, String.format(activity.getString(R.string.fileLocked), if (fileFolder.displayName == null) activity.getString(R.string.file) else fileFolder.displayName), Toast.LENGTH_LONG).show()
                 } else {
-                    openMedia(activity, fileFolder.contentType!!, fileFolder.url!!, fileFolder.displayName!!)
+                    openMedia(activity, fileFolder.contentType!!, fileFolder.url!!, fileFolder.displayName!!, route, fileID)
                 }
             }
         }
