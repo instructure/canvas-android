@@ -14,25 +14,21 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
 package com.instructure.student.mobius.assignmentDetails.submission
 
-import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.utils.exhaustive
+import com.instructure.student.mobius.assignmentDetails.submission.ui.TextSubmissionView
+import com.instructure.student.mobius.common.ui.EffectHandler
 
-sealed class TextSubmissionEvent {
-    data class TextChanged(val text: String) : TextSubmissionEvent()
-    data class SubmitClicked(val text: String) : TextSubmissionEvent()
+class TextSubmissionEffectHandler : EffectHandler<TextSubmissionView, TextSubmissionEvent, TextSubmissionEffect>() {
+    override fun accept(effect: TextSubmissionEffect) {
+        when (effect) {
+            is TextSubmissionEffect.SubmitText -> {
+                view?.onTextSubmitted(effect.text, effect.canvasContext, effect.assignmentId)
+            }
+            is TextSubmissionEffect.InitializeText -> {
+                view?.setInitialSubmissionText(effect.text)
+            }
+        }.exhaustive
+    }
 }
-
-sealed class TextSubmissionEffect {
-    data class SubmitText(val text: String, val canvasContext: CanvasContext, val assignmentId: Long) : TextSubmissionEffect()
-    data class InitializeText(val text: String) : TextSubmissionEffect()
-}
-
-data class TextSubmissionModel(
-        val canvasContext: CanvasContext,
-        val assignmentId: Long,
-        val initialText: String? = null,
-        val failureMessage: String? = null,
-        val isSubmittable: Boolean = false
-)
