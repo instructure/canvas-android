@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.teacher.mobius.common
+package com.instructure.teacher.mobius.common.ui
 
 import android.content.Context
 import android.os.Bundle
@@ -24,6 +24,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.instructure.interactions.FragmentInteractions
 import com.instructure.interactions.Navigation
+import com.instructure.teacher.mobius.common.*
+import com.spotify.mobius.*
+import com.spotify.mobius.android.MobiusAndroid
+import com.spotify.mobius.android.runners.MainThreadWorkRunner
+import com.spotify.mobius.functions.Consumer
 import kotlinx.android.extensions.LayoutContainer
 
 
