@@ -32,7 +32,7 @@ import com.spotify.mobius.functions.Consumer
 import kotlinx.android.extensions.LayoutContainer
 
 
-abstract class MobiusFragment<MODEL, EVENT, EFFECT, VIEW : MobiusView<VIEW_STATE, EVENT>, VIEW_STATE> : Fragment(), FragmentInteractions {
+abstract class MobiusFragment<MODEL, EVENT, EFFECT, VIEW : MobiusView<VIEW_STATE, EVENT>, VIEW_STATE> : Fragment() {
     var overrideInitModel: MODEL? = null
 
     var loopMod: ((MobiusLoop.Builder<MODEL, EVENT, EFFECT>) -> MobiusLoop.Builder<MODEL, EVENT, EFFECT>)? = null
@@ -60,17 +60,6 @@ abstract class MobiusFragment<MODEL, EVENT, EFFECT, VIEW : MobiusView<VIEW_STATE
     abstract fun makePresenter(): Presenter<MODEL, VIEW_STATE>
 
     abstract fun makeInitModel(): MODEL
-
-    // FragmentInteractions override
-    override val navigation: Navigation? get() = context as? Navigation
-
-    // FragmentInteractions override
-    override fun title() = ""
-
-    // FragmentInteractions override
-    override fun getFragment(): Fragment? = this
-
-    override fun applyTheme() = view.applyTheme()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -154,8 +143,6 @@ abstract class MobiusView<VIEW_STATE, EVENT>(layoutId: Int, inflater: LayoutInfl
     abstract fun render(state: VIEW_STATE)
 
     abstract fun onDispose()
-
-    abstract fun applyTheme()
 
     override fun connect(output: Consumer<EVENT>): Connection<VIEW_STATE> {
         onConnect(output)
