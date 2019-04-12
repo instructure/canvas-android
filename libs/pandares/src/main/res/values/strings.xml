@@ -58,6 +58,7 @@
     <string name="submissionDetailsFileTabName">Files (%d)</string>
     <string name="rubric">Rubric</string>
     <string name="submissionDetailsErrorTitle">Submission Error</string>
+    <string name="urlSubmissionDisclaimer">This submission was a URL to an external page. We\'ve included a snapshot of what the page looked like when it was submitted.</string>
 
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">Version:</string>
