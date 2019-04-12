@@ -19,7 +19,6 @@
 package tasks
 
 import api.bitrise.BitriseApps
-import util.defaultBitriseAppSlug
 import util.defaultBitriseTxt
 import tasks.BuildErrorReport.downloadErrorLog
 import java.nio.file.Files
@@ -31,22 +30,22 @@ object ReportBitriseJob : Task {
     override fun execute() {
         val buildSlugs = Files.readAllLines(Paths.get(defaultBitriseTxt))
 
-
         // Write failed: Broken pipe // https://www.bitrise.io/build/a260c64aa59835cb
         // INSTRUMENTATION_ABORTED: System has crashed. // https://www.bitrise.io/build/28a2d3e5bc76a723
         // INSTRUMENTATION_STATUS: stack=
 
-        val failures = listOf<String>(
+        val failures = listOf(
                 "Write failed: Broken pipe",
                 "INSTRUMENTATION_ABORTED:",
                 "INSTRUMENTATION_STATUS: stack="
         )
 
+        val appSlug = "693f666c209a029b"
         val total = buildSlugs.size
         val status = mutableMapOf<String, Int>()
         var logFailures = 0
         buildSlugs.forEach buildSlugsForEach@{ buildSlug ->
-            val build = BitriseApps.getBuild(defaultBitriseAppSlug, buildSlug).data
+            val build = BitriseApps.getBuild(appSlug, buildSlug).data
             println("https://www.bitrise.io/build/${build.slug} - ${build.status_text}")
 
             val value: Int = (status[build.status_text] ?: 0) + 1
@@ -54,7 +53,7 @@ object ReportBitriseJob : Task {
 
             // Check logs on successful builds to ensure they're really successful
             if (build.status_text == "success") {
-                val logPath = downloadErrorLog(defaultBitriseAppSlug, build)
+                val logPath = downloadErrorLog(appSlug, build)
                 val logData = Files.readAllLines(logPath)
 
                 logData.forEach { line ->
@@ -91,6 +90,6 @@ object ReportBitriseJob : Task {
     // "9 hrs 30 mins 41 secs" for 100x espresso @ 10 concurrency
     @JvmStatic
     fun main(args: Array<String>) {
-        ReportBitriseJob.execute()
+        execute()
     }
 }
