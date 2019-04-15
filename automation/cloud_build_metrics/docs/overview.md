@@ -10,7 +10,7 @@ Task | Description
 [BitriseSetRollingBuilds](./BitriseSetRollingBuilds.md)| Enforce rolling build settings across all apps in an org.
 [BuildActivityReport](./BuildActivityReport.md)| Print build activity from most recent to least.
 [BuildErrorReport](./BuildErrorReport.md)| Parse build results and identify failed steps.
-[LintBitriseYamls](./LintBitriseYamls)| Lint bitrise yamls for pinned steps.
+[LintBitriseYamls](./LintBitriseYamls.md)| Lint bitrise yamls for pinned steps.
 [StartBitriseJob / ReportBitriseJob](./StartBitriseJob_ReportBitriseJobs.md)| Start a batch of jobs and then asynchronously view the status
 [SprintReport](./SprintReport.md) | Update Google Sheet build health dashboard.
 [UpdateBitriseYamls](./UpdateBitriseYamls.md) | Rewrites all Bitrise YAMLs to use master version of steps
