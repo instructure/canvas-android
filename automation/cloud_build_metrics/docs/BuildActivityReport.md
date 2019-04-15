@@ -1,4 +1,4 @@
-# BuildActivityReport.md
+# BuildActivityReport
 
 ## Objective
 
