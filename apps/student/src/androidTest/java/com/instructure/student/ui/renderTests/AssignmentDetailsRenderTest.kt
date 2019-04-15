@@ -20,12 +20,12 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.student.espresso.StudentRenderTest
 import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsModel
 import com.instructure.student.mobius.assignmentDetails.SubmissionUploadStatus
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
-import com.instructure.canvasapi2.utils.DataResult
 import com.spotify.mobius.runners.WorkRunner
 import org.junit.Before
 import org.junit.Test
@@ -215,6 +215,24 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
         val model = baseModel.copy(assignmentResult = DataResult.Success(Assignment()))
         loadPageWithModel(model)
         assignmentDetailsRenderPage.assertDisplaysNoDescription()
+    }
+
+    @Test
+    fun displaysGradeCell() {
+        val assignment = Assignment(
+            name = "Test Assignment",
+            submission = Submission(
+                attempt = 1L,
+                workflowState = "graded",
+                enteredGrade = "85",
+                enteredScore = 85.0,
+                grade = "85.0",
+                score = 85.0
+            )
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        loadPageWithModel(model)
+        assignmentDetailsRenderPage.assertDisplaysGrade()
     }
 
     private fun loadPageWithModel(model: AssignmentDetailsModel) {

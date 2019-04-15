@@ -59,6 +59,12 @@
     <string name="rubric">Rubric</string>
     <string name="submissionDetailsErrorTitle">Submission Error</string>
 
+    <!-- Grade Cell -->
+    <string name="outOfPointsFormatted">Out of %s points</string>
+    <string name="outOfPointsAbbreviatedFormatted">Out of %s pts</string>
+    <string name="gradeExcused">Excused</string>
+    <string name="finalGradeFormatted">Final Grade: %s</string>
+
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">Version:</string>
 

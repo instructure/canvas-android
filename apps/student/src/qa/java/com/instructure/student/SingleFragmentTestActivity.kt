@@ -17,6 +17,8 @@
 package com.instructure.student
 
 import android.os.Bundle
+import android.view.View
+import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.qa.activity_single_fragment_test.*
@@ -32,5 +34,10 @@ class SingleFragmentTestActivity : AppCompatActivity() {
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(container.id, fragment, fragment.javaClass.simpleName)
         transaction.commitAllowingStateLoss()
+    }
+
+    fun loadView(view: View, width: Int, height: Int) {
+        val params = FrameLayout.LayoutParams(width, height)
+        container.addView(view, params)
     }
 }

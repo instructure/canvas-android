@@ -375,6 +375,31 @@
 
                 </LinearLayout>
 
+                <!-- Grade -->
+
+                <LinearLayout
+                    android:id="@+id/gradeContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:id="@+id/gradeSectionLabel"
+                        style="@style/TextFont.Medium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/grade"
+                        android:textColor="@color/defaultTextGray"/>
+
+                    <com.instructure.student.mobius.assignmentDetails.ui.gradeCell.GradeCellView
+                        android:id="@+id/gradeCell"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"/>
+
+                </LinearLayout>
+
                 <!-- Submission & Rubric button -->
 
                 <LinearLayout

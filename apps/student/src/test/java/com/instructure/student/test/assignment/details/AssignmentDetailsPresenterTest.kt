@@ -20,13 +20,13 @@ import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.student.R
 import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsModel
 import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsPresenter
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsViewState
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsVisibilities
-import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.student.mobius.assignmentDetails.ui.SubmissionTypesVisibilities
 import org.junit.Assert
 import org.junit.Before
@@ -366,5 +366,20 @@ class AssignmentDetailsPresenterTest : Assert() {
         val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
         val expected = SubmissionTypesVisibilities(true, true, true, true)
         assertEquals(expected, state.submissionTypesVisibilities)
+    }
+
+    @Test
+    fun `Displays grade cell when grade is not empty`() {
+        val assignment = baseAssignment.copy(
+            submission = baseSubmission.copy(
+                enteredScore = 85.0,
+                enteredGrade = "85",
+                score = 85.0,
+                grade = "85"
+            )
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        val actual = AssignmentDetailsPresenter.present(model, context).visibilities.grade
+        assertTrue(actual)
     }
 }

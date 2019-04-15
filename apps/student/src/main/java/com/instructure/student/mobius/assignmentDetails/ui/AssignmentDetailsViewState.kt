@@ -19,6 +19,7 @@ package com.instructure.student.mobius.assignmentDetails.ui
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import com.instructure.student.mobius.assignmentDetails.SubmissionUploadStatus
+import com.instructure.student.mobius.assignmentDetails.ui.gradeCell.GradeCellViewState
 
 sealed class AssignmentDetailsViewState(val visibilities: AssignmentDetailsVisibilities) {
     object Loading : AssignmentDetailsViewState(AssignmentDetailsVisibilities(loading = true))
@@ -39,7 +40,7 @@ sealed class AssignmentDetailsViewState(val visibilities: AssignmentDetailsVisib
         val fileTypes: String = "",
         val description: String = "",
         val submitButtonText: String = "",
-        val gradeState: AssignmentDetailsGradeState = AssignmentDetailsGradeState.Empty,
+        val gradeState: GradeCellViewState = GradeCellViewState.Empty,
         val assignmentDetailsVisibilities: AssignmentDetailsVisibilities,
         val submissionTypesVisibilities: SubmissionTypesVisibilities? = null
     ) : AssignmentDetailsViewState(assignmentDetailsVisibilities)
@@ -52,6 +53,7 @@ data class AssignmentDetailsVisibilities (
     var dueDate: Boolean = false,
     var submissionTypes: Boolean = false,
     var fileTypes: Boolean = false,
+    var grade: Boolean = false,
     var submissionAndRubricButton: Boolean = false,
     var lockedMessage: Boolean = false,
     var lockedImage: Boolean = false,
@@ -67,8 +69,3 @@ data class SubmissionTypesVisibilities(
     var fileUpload: Boolean = false,
     var mediaRecording: Boolean = false
 )
-
-sealed class AssignmentDetailsGradeState {
-    object Empty : AssignmentDetailsGradeState()
-    data class Graded(val grade: String) : AssignmentDetailsGradeState()
-}

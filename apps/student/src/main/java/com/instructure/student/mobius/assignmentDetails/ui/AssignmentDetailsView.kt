@@ -108,6 +108,7 @@ class AssignmentDetailsView(
             dueDateContainer.setVisible(visibilities.dueDate)
             submissionTypesContainer.setVisible(visibilities.submissionTypes)
             fileTypesContainer.setVisible(visibilities.fileTypes)
+            gradeContainer.setVisible(visibilities.grade)
             submissionRubricButton.setVisible(visibilities.submissionAndRubricButton)
             lockMessageContainer.setVisible(visibilities.lockedMessage)
             lockImageContainer.setVisible(visibilities.lockedImage)
@@ -136,6 +137,7 @@ class AssignmentDetailsView(
         lockMessageTextView.text = state.lockMessage
         submissionTypesTextView.text = state.submissionTypes
         fileTypesTextView.text = state.fileTypes
+        gradeCell.setState(state.gradeState)
         submitButton.text = state.submitButtonText
         if (state.visibilities.description) {
             descriptionWebView.formatHTML(state.description, state.assignmentName)
