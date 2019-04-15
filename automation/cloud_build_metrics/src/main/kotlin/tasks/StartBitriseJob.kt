@@ -70,14 +70,13 @@ object StartBitriseJob : Task {
     override fun execute() {
         warnUser()
 
-        val app = getApp()
-        val envList = environmentVariables.map { apk -> Environment(apk.envKey, apk.fileName) }
+        val appSlug = "693f666c209a029b"
         val buildRequest = BitriseTriggerBuildRequest(
-                build_params = BuildParams(workflow_id = "x86_emulator", environments = envList)
+                build_params = BuildParams(workflow_id = "primary", environments = emptyList())
         )
 
         repeat(JOBS_TO_TRIGGER) {
-            val build = BitriseApps.triggerBuild(app.slug, buildRequest)
+            val build = BitriseApps.triggerBuild(appSlug, buildRequest)
             BUILD_IDS.add(build.build_slug)
             println("Build triggered: ${build.build_url}")
         }
@@ -87,6 +86,6 @@ object StartBitriseJob : Task {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        StartBitriseJob.execute()
+        execute()
     }
 }

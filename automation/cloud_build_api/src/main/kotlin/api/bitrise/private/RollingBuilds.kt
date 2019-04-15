@@ -19,6 +19,7 @@ package api.bitrise.private
 
 import api.bitrise.private.CookieRetrofit.privateCookieRetrofit
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.*
 
 object RollingBuilds {
@@ -41,30 +42,46 @@ object RollingBuilds {
         privateCookieRetrofit.create(ApiService::class.java)
     }
 
+    // 404 error - means BITRISE_USER isn't authorized to access that app.
+    // TODO: move this to an interceptor
+    private fun <T> Response<T>.checkError(): Response<T> {
+        val response = this
+        val request = response.raw().request()
+
+        if (response.isSuccessful.not()) {
+            throw RuntimeException("""
+         ${request.method()} ${request.url()} ${response.code()} ${response.message()}
+         ${response.errorBody()?.string()}
+     """.trimIndent())
+        }
+
+        return response
+    }
+
     fun getConfig(appSlug: String): RollingBuildsConfig {
-        return apiService.getConfig(appSlug).execute().body() ?: throw RuntimeException("getConfig failed")
+        return apiService.getConfig(appSlug).execute().checkError().body() ?: throw RuntimeException("getConfig failed")
     }
 
     fun setConfigPR(appSlug: String, enabled: Boolean): RollingBuildsConfig {
         val config = RollingBuildsPatch("pr", enabled)
-        return apiService.setConfig(appSlug, config).execute().body() ?: throw RuntimeException("setConfigPR failed")
+        return apiService.setConfig(appSlug, config).execute().checkError().body() ?: throw RuntimeException("setConfigPR failed")
     }
 
     fun setConfigPush(appSlug: String, enabled: Boolean): RollingBuildsConfig {
         val config = RollingBuildsPatch("push", enabled)
-        return apiService.setConfig(appSlug, config).execute().body() ?: throw RuntimeException("setConfigPush failed")
+        return apiService.setConfig(appSlug, config).execute().checkError().body() ?: throw RuntimeException("setConfigPush failed")
     }
 
     fun setConfigRunning(appSlug: String, enabled: Boolean): RollingBuildsConfig {
         val config = RollingBuildsPatch("running", enabled)
-        return apiService.setConfig(appSlug, config).execute().body() ?: throw RuntimeException("setConfigRunning failed")
+        return apiService.setConfig(appSlug, config).execute().checkError().body() ?: throw RuntimeException("setConfigRunning failed")
     }
 
     fun disable(appSlug: String): Status {
-        return apiService.disable(appSlug).execute().body() ?: Status(null, null)
+        return apiService.disable(appSlug).execute().checkError().body() ?: Status(null, null)
     }
 
     fun enable(appSlug: String): Status {
-        return apiService.enable(appSlug).execute().body() ?: Status(null, null)
+        return apiService.enable(appSlug).execute().checkError().body() ?: Status(null, null)
     }
 }
