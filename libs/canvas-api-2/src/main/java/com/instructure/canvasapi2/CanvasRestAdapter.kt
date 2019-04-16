@@ -225,7 +225,11 @@ protected constructor(var statusCallback: StatusCallback<*>?, private val authUs
         // Can make this check as we KNOW that the setter doesn't allow empty strings.
         if (params.domain == "") {
             Logger.d("The RestAdapter hasn't been set up yet. Call setupInstance(context,token,domain)")
-            return Retrofit.Builder().baseUrl("http://invalid.domain.com/").build()
+            return Retrofit.Builder()
+                .baseUrl("http://invalid.domain.com/")
+                // Add a converter here so that unmocked tests will result in an API failure instead of a crash
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
         }
 
         var apiContext = ""
