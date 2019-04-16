@@ -138,12 +138,12 @@ class BasicQuizViewFragment : InternalWebviewFragment() {
     }
 
     private suspend fun processQuizDetails(url: String?) {
-        if (shouldShowNatively(quiz)) return
-
         // Only show the lock if submissions are empty, otherwise let them view their submission
         if (quiz?.lockInfo != null && awaitApi<QuizSubmissionResponse> { QuizManager.getFirstPageQuizSubmissions(canvasContext, quiz!!.id, true, it) }.quizSubmissions.isEmpty()) {
             populateWebView(LockInfoHTMLHelper.getLockedInfoHTML(quiz?.lockInfo, activity, R.string.lockedQuizDesc))
         } else {
+            if (shouldShowNatively(quiz)) return
+
             val authenticatedUrl = tryOrNull {
                 awaitApi<AuthenticatedSession> { OAuthManager.getAuthenticatedSession(url!!, it) }.sessionUrl
             }
