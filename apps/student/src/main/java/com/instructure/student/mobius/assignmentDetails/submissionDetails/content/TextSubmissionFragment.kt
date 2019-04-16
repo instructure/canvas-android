@@ -83,15 +83,14 @@ class TextSubmissionFragment : Fragment() {
     private fun formatHtml(src: String): String {
         /* Pre-format using CanvasWebView's formatter, which will wrap the source string in an HTML body to
            set the viewport and apply basic CSS properties */
-        var formatted = textSubmissionWebView.formatHtml(src)
+        val formatted = textSubmissionWebView.formatHtml(src)
 
         /* If the source content begins with a paragraph tag, the WebView automatically applies some vertical padding.
            For other content, we need to apply the padding ourselves. */
-        val verticalPadding = if (src.startsWith("<p")) "0px" else "8px"
+        val verticalPadding = if (src.startsWith("<p")) "0px" else "16px"
 
-        // Set padding by updating the relevant CSS properties
-        formatted = formatted.replaceFirstAfter("html,body", "padding: 0;", "padding: $verticalPadding 8px;")
-        return formatted.replaceFirstAfter("#content", "padding: 0px 10px 10px;", "")
+        // Set padding by updating the relevant CSS property
+        return formatted.replaceFirstAfter("#content", "padding: 0px 10px 10px;", "padding: $verticalPadding 16px;")
     }
 
     override fun onStop() {
