@@ -41,8 +41,7 @@ sealed class AssignmentDetailsViewState(val visibilities: AssignmentDetailsVisib
         val description: String = "",
         val submitButtonText: String = "",
         val gradeState: GradeCellViewState = GradeCellViewState.Empty,
-        val assignmentDetailsVisibilities: AssignmentDetailsVisibilities,
-        val submissionTypesVisibilities: SubmissionTypesVisibilities? = null
+        val assignmentDetailsVisibilities: AssignmentDetailsVisibilities
     ) : AssignmentDetailsViewState(assignmentDetailsVisibilities)
 }
 
@@ -67,5 +66,6 @@ data class SubmissionTypesVisibilities(
     var textEntry: Boolean = false,
     var urlEntry: Boolean = false,
     var fileUpload: Boolean = false,
-    var mediaRecording: Boolean = false
+    var mediaRecording: Boolean = false,
+    var arcUpload: Boolean = false
 )
