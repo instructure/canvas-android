@@ -35,6 +35,7 @@ import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsContentType
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsEvent
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.TextSubmissionFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.UrlSubmissionFragment
 import com.instructure.student.mobius.common.ui.MobiusView
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
@@ -184,6 +185,7 @@ class SubmissionDetailsView(
     private fun getFragmentForContent(type: SubmissionDetailsContentType): Fragment {
         return when (type) {
             is SubmissionDetailsContentType.UrlContent -> UrlSubmissionFragment.newInstance(type.url, type.previewUrl)
+            is SubmissionDetailsContentType.TextContent -> TextSubmissionFragment.newInstance(type.text)
             else -> PlaceholderFragment().apply {
                 typeName = type::class.java.simpleName
                 typeContents = type.toString()

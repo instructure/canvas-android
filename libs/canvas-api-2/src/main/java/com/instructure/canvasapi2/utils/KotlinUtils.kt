@@ -35,6 +35,17 @@ inline fun String?.isValid(): Boolean = !isNullOrBlank()
 @Suppress("NOTHING_TO_INLINE")
 inline fun String?.validOrNull(): String? = this?.takeIf { it.isValid() }
 
+/**
+ * Replaces the first instance of [oldValue] - found after the first instance of [delimiter] - with [newValue].
+ * If [delimiter] is not found, this will find the first instance of [oldValue] and replace it with [newValue].
+ * If [oldValue] is not found, this will return the original, unmodified String.
+ */
+fun String.replaceFirstAfter(delimiter: String, oldValue: String, newValue: String): String {
+    val delimiterIdx = indexOf(delimiter)
+    val valueIdx = indexOf(oldValue, delimiterIdx)
+    return if (valueIdx== -1) this else replaceRange(valueIdx, valueIdx + oldValue.length, newValue)
+}
+
 inline fun <T> List<T>.intersectBy(other: List<T>, unique: (T) -> Any): List<T> {
     val list = this.toMutableList()
     val iterator = list.iterator()
