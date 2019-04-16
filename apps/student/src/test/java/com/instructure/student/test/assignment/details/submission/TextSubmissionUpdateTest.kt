@@ -30,9 +30,13 @@ import com.spotify.mobius.test.InitSpec.assertThatFirst
 import com.spotify.mobius.test.NextMatchers
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
+import io.mockk.every
+import io.mockk.mockkStatic
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
+import java.io.UnsupportedEncodingException
+import java.net.URLEncoder
 
 class TextSubmissionUpdateTest : Assert() {
     private val initSpec = InitSpec(TextSubmissionUpdate()::init)
@@ -45,8 +49,8 @@ class TextSubmissionUpdateTest : Assert() {
     @Before
     fun setup() {
         course = Course()
-        assignment = Assignment(id = 1234L, courseId = course.id)
-        initModel = TextSubmissionModel(assignmentId = assignment.id, canvasContext = course)
+        assignment = Assignment(id = 1234L, courseId = course.id, name = "name")
+        initModel = TextSubmissionModel(assignmentId = assignment.id, canvasContext = course, assignmentName = assignment.name)
     }
 
     @Test
@@ -99,12 +103,50 @@ class TextSubmissionUpdateTest : Assert() {
     fun `SubmitClicked event results in SubmitText effect`() {
         val text = "Some text to submit"
 
+        mockkStatic(URLEncoder::class)
+        every { URLEncoder.encode(any(), any()) } returns text
+
         updateSpec
                 .given(initModel)
                 .whenEvent(TextSubmissionEvent.SubmitClicked(text))
                 .then(
                         assertThatNext(
-                                matchesEffects<TextSubmissionModel, TextSubmissionEffect>(TextSubmissionEffect.SubmitText(text, course, assignment.id))
+                                matchesEffects<TextSubmissionModel, TextSubmissionEffect>(TextSubmissionEffect.SubmitText(text, course, assignment.id, assignment.name))
+                        )
+                )
+    }
+
+    @Test
+    fun `SubmitClicked event with new lines in text results in SubmitText effect`() {
+        val text = "Some text to submit\nWith a new line"
+        val expected = "Some text to submit<br/>With a new line"
+
+        mockkStatic(URLEncoder::class)
+        every { URLEncoder.encode(any(), any()) } returns expected
+
+        updateSpec
+                .given(initModel)
+                .whenEvent(TextSubmissionEvent.SubmitClicked(text))
+                .then(
+                        assertThatNext(
+                                matchesEffects<TextSubmissionModel, TextSubmissionEffect>(TextSubmissionEffect.SubmitText(expected, course, assignment.id, assignment.name))
+                        )
+                )
+    }
+
+    @Test
+    fun `SubmitClicked event with unsupported encoding characters in text results in SubmitText effect`() {
+        val text = "Some text to submit"
+
+        mockkStatic(URLEncoder::class)
+        every { URLEncoder.encode(any(), any()) } throws UnsupportedEncodingException()
+
+        updateSpec
+                .given(initModel)
+                .whenEvent(TextSubmissionEvent.SubmitClicked(text))
+                .then(
+                        assertThatNext(
+                                matchesEffects<TextSubmissionModel, TextSubmissionEffect>(TextSubmissionEffect.SubmitText(text, course, assignment.id, assignment.name))
                         )
                 )
     }

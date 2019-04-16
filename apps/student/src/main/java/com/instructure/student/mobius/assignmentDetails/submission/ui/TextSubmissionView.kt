@@ -16,12 +16,14 @@
  */
 package com.instructure.student.mobius.assignmentDetails.submission.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.student.mobius.assignmentDetails.submission.TextSubmissionEvent
 import com.instructure.student.mobius.common.ui.MobiusView
+import com.instructure.student.mobius.common.ui.SubmissionService
 import com.instructure.student.util.Const
 import com.spotify.mobius.functions.Consumer
 
@@ -46,16 +48,8 @@ class TextSubmissionView(inflater: LayoutInflater, parent: ViewGroup) : MobiusVi
         TODO("not implemented")
     }
 
-    fun onTextSubmitted(text: String, canvasContext: CanvasContext, assignmentId: Long) {
-        // Create the bundle in the view, so we don't leak android resources into testable classes
-        val bundle = Bundle().apply {
-            putParcelable(Const.CANVAS_CONTEXT, canvasContext)
-            putLong(Const.ASSIGNMENT_ID, assignmentId)
-            putString(Const.MESSAGE, text)
-        }
-
-        // TODO: Call submission service
-//        SubmissionService.enqueueWork(context, SubmissionAction.SUBMIT_TEXT_ENTRY, bundle)
+    fun onTextSubmitted(text: String, canvasContext: CanvasContext, assignmentId: Long, assignmentName: String?) {
+        SubmissionService.startTextSubmission(context, canvasContext, assignmentId, assignmentName, text)
         // TODO: close screen (back press)
     }
 }
