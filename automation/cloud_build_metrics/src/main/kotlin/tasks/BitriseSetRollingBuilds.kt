@@ -19,6 +19,7 @@ package tasks
 import api.bitrise.BitriseApps
 import api.bitrise.private.RollingBuilds
 import util.getOnlyInstructureApps
+import java.lang.Thread.sleep
 
 object BitriseSetRollingBuilds : BitriseTask {
     override fun execute() {
@@ -33,6 +34,8 @@ object BitriseSetRollingBuilds : BitriseTask {
                 RollingBuilds.getConfig(appSlug)
             } catch (e: Exception) {
                 RollingBuilds.enable(appSlug)
+                // bitrise doesn't immediately enable rolling builds
+                sleep(2000)
                 RollingBuilds.getConfig(appSlug)
             }
 

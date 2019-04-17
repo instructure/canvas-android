@@ -38,6 +38,7 @@ class AssignmentDetailsRenderPage : AssignmentDetailsPage() {
     val fileTypes by OnViewWithId(R.id.fileTypesTextView)
     val noDescription by OnViewWithId(R.id.noDescriptionContainer)
     val descriptionWebView by OnViewWithId(R.id.descriptionWebView)
+    val gradeContainer by OnViewWithId(R.id.gradeContainer)
 
     fun assertDisplaysToolbarTitle(text: String) {
         onViewWithText(text).assertDisplayed()
@@ -74,6 +75,10 @@ class AssignmentDetailsRenderPage : AssignmentDetailsPage() {
     fun assertDisplaysNoDescription() {
         noDescription.assertVisible()
         descriptionWebView.assertGone()
+    }
+
+    fun assertDisplaysGrade() {
+        gradeContainer.assertVisible()
     }
 
     fun assertDisplaysDescription(text: String) {

@@ -24,10 +24,10 @@ import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.canvasapi2.utils.isRtl
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.student.R
-import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsGradeState
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsViewState
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsVisibilities
 import com.instructure.student.mobius.assignmentDetails.ui.SubmissionTypesVisibilities
+import com.instructure.student.mobius.assignmentDetails.ui.gradeCell.GradeCellViewState
 import com.instructure.student.mobius.common.ui.Presenter
 import java.text.DateFormat
 import java.util.*
@@ -124,7 +124,7 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
             .joinToString(", ")
 
         // File types
-        visibilities.fileTypes = assignment.allowedExtensions.isNotEmpty()
+        visibilities.fileTypes = assignment.allowedExtensions.isNotEmpty() && assignment.getSubmissionTypes().contains(Assignment.SubmissionType.ONLINE_UPLOAD)
         val fileTypes = assignment.allowedExtensions.joinToString(", ")
 
 
@@ -133,6 +133,9 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
         val submitButtonText = context.getString(
             if (submitted) R.string.resubmitAssignment else R.string.submitAssignment
         )
+
+        val gradeState = GradeCellViewState.fromSubmission(context, assignment, assignment.submission)
+        visibilities.grade = gradeState != GradeCellViewState.Empty
 
         return AssignmentDetailsViewState.Loaded(
             assignmentName = assignment.name.orEmpty(),
@@ -147,27 +150,9 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
             fileTypes = fileTypes,
             description = description.orEmpty(),
             submitButtonText = submitButtonText,
-            gradeState = AssignmentDetailsGradeState.Empty, // TODO
-            assignmentDetailsVisibilities = visibilities,
-            submissionTypesVisibilities = getSubmissionTypesVisibilities(assignment)
+            gradeState = gradeState,
+            assignmentDetailsVisibilities = visibilities
         )
-    }
-
-    private fun getSubmissionTypesVisibilities(assignment: Assignment) : SubmissionTypesVisibilities {
-        val visibilities = SubmissionTypesVisibilities()
-
-        val submissionTypes = assignment.getSubmissionTypes()
-
-        for (submissionType in submissionTypes) {
-            when(submissionType) {
-                Assignment.SubmissionType.ONLINE_UPLOAD -> visibilities.fileUpload = true
-                Assignment.SubmissionType.ONLINE_TEXT_ENTRY -> visibilities.textEntry = true
-                Assignment.SubmissionType.ONLINE_URL -> visibilities.urlEntry = true
-                Assignment.SubmissionType.MEDIA_RECORDING -> visibilities.mediaRecording = true
-            }
-        }
-
-        return visibilities
     }
 
     private fun makeLockedState(

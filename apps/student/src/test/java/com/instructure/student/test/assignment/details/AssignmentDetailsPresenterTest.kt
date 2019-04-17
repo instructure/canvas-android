@@ -20,14 +20,17 @@ import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.student.R
 import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsModel
 import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsPresenter
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsViewState
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsVisibilities
-import com.instructure.canvasapi2.utils.DataResult
-import com.instructure.student.mobius.assignmentDetails.ui.SubmissionTypesVisibilities
+import com.instructure.canvasapi2.utils.isRtl
+import io.mockk.every
+import io.mockk.mockkStatic
+import io.mockk.unmockkStatic
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -135,10 +138,21 @@ class AssignmentDetailsPresenterTest : Assert() {
     @Test
     fun `Shows allowed file types when available`() {
         val assignment = baseAssignment.copy(
+            submissionTypesRaw = listOf("online_upload"),
             allowedExtensions = listOf("pdf", "JPG", "PNG", "zip")
         )
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
-        val expected = baseVisibilities.copy(fileTypes = true)
+        val actual = AssignmentDetailsPresenter.present(model, context).visibilities
+        assertTrue(actual.fileTypes)
+    }
+
+    @Test
+    fun `Does not show allowed file types when not an online submission`() {
+        val assignment = baseAssignment.copy(
+            allowedExtensions = listOf("pdf", "JPG", "PNG", "zip")
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        val expected = baseVisibilities.copy(fileTypes = false)
         val actual = AssignmentDetailsPresenter.present(model, context).visibilities
         assertEquals(expected, actual)
     }
@@ -231,6 +245,21 @@ class AssignmentDetailsPresenterTest : Assert() {
     }
 
     @Test
+    fun `Uses RTL content description on RTL devices`() {
+        val description = "<body dir=\"rtl\">This is a description</body>"
+
+        mockkStatic("com.instructure.canvasapi2.utils.KotlinUtilsKt")
+        every { any<Locale>().isRtl } returns true
+
+        val assignment = baseAssignment.copy(pointsPossible = 15.0)
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
+        assertEquals(description, state.description)
+
+        unmockkStatic("com.instructure.canvasapi2.utils.KotlinUtilsKt")
+    }
+
+    @Test
     fun `Formats due date correctly`() {
         val expectedDueDate = "January 31, 2050 at 11:59 PM"
         val calendar = Calendar.getInstance().apply { set(2050, 0, 31, 23, 59, 0) }
@@ -311,57 +340,28 @@ class AssignmentDetailsPresenterTest : Assert() {
     }
 
     @Test
-    fun `Displays fileUpload when submission type is fileUpload`() {
+    fun `Shows no description message when there is no valid description`() {
         val assignment = baseAssignment.copy(
-                submissionTypesRaw = listOf("online_upload")
+            description = null
         )
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
-        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
-        val expected = SubmissionTypesVisibilities(false, false, true, false)
-        assertEquals(expected, state.submissionTypesVisibilities)
+        val visibilities = AssignmentDetailsPresenter.present(model, context).visibilities
+        assertFalse(visibilities.description)
+        assertTrue(visibilities.noDescriptionLabel)
     }
 
     @Test
-    fun `Displays textEntry when submission type is textEntry`() {
+    fun `Displays grade cell when grade is not empty`() {
         val assignment = baseAssignment.copy(
-                submissionTypesRaw = listOf("online_text_entry")
+            submission = baseSubmission.copy(
+                enteredScore = 85.0,
+                enteredGrade = "85",
+                score = 85.0,
+                grade = "85"
+            )
         )
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
-        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
-        val expected = SubmissionTypesVisibilities(true, false, false, false)
-        assertEquals(expected, state.submissionTypesVisibilities)
-    }
-
-    @Test
-    fun `Displays onlineUrl when submission type is onlineUrl`() {
-        val assignment = baseAssignment.copy(
-                submissionTypesRaw = listOf("online_url")
-        )
-        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
-        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
-        val expected = SubmissionTypesVisibilities(false, true, false, false)
-        assertEquals(expected, state.submissionTypesVisibilities)
-    }
-
-    @Test
-    fun `Displays mediaRecording when submission type is mediaRecording`() {
-        val assignment = baseAssignment.copy(
-                submissionTypesRaw = listOf("media_recording")
-        )
-        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
-        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
-        val expected = SubmissionTypesVisibilities(false, false, false, true)
-        assertEquals(expected, state.submissionTypesVisibilities)
-    }
-
-    @Test
-    fun `Displays all submission types when all are present`() {
-        val assignment = baseAssignment.copy(
-                submissionTypesRaw = listOf("media_recording", "online_url", "online_text_entry", "online_upload")
-        )
-        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
-        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
-        val expected = SubmissionTypesVisibilities(true, true, true, true)
-        assertEquals(expected, state.submissionTypesVisibilities)
+        val actual = AssignmentDetailsPresenter.present(model, context).visibilities.grade
+        assertTrue(actual)
     }
 }

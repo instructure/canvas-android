@@ -59,7 +59,13 @@
     <string name="rubric">Rubric</string>
     <string name="submissionDetailsErrorTitle">Submission Error</string>
     <string name="noSubmissionYet">No Submission Yet</string>
-    <string name="yourAssignmentIsDueAt">Your assignment is due %s</string>
+    <string name="urlSubmissionDisclaimer">This submission was a URL to an external page. We\'ve included a snapshot of what the page looked like when it was submitted.</string>
+
+    <!-- Grade Cell -->
+    <string name="outOfPointsFormatted">Out of %s points</string>
+    <string name="outOfPointsAbbreviatedFormatted">Out of %s pts</string>
+    <string name="gradeExcused">Excused</string>
+    <string name="finalGradeFormatted">Final Grade: %s</string>
 
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">Version:</string>
@@ -493,6 +499,8 @@
     <string name="enterTextEntry">Enter Text Entry</string>
     <string name="fileUpload"> File Upload</string>
     <string name="oneFileOnly">This submission only accepts one file upload</string>
+    <string name="websiteEntry">Add Website Entry</string>
+    <string name="mediaRecordingEntry">Media Recordings</string>
 
 
     <string name="submit">Submit</string>

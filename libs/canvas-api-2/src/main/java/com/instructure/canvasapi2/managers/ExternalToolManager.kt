@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.LTITool
+import com.instructure.canvasapi2.utils.weave.apiAsync
 
 object ExternalToolManager {
 
@@ -35,5 +36,10 @@ object ExternalToolManager {
 
         ExternalToolAPI.getExternalToolsForCanvasContext(canvasContext.id, adapter, params, callback)
     }
+
+    fun getExternalToolsForCanvasContextAsync(
+        canvasContext: CanvasContext,
+        forceNetwork: Boolean
+    ) = apiAsync<List<LTITool>> { getExternalToolsForCanvasContext(canvasContext, it, forceNetwork) }
 
 }

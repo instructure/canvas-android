@@ -199,6 +199,12 @@ dependencies {
     /* Kotlin */
     implementation Libs.KOTLIN_STD_LIB
 
+    /* Mobius */
+    implementation Libs.MOBIUS_CORE
+    testImplementation Libs.MOBIUS_TEST
+    implementation Libs.MOBIUS_ANDROID
+    implementation Libs.MOBIUS_EXTRAS
+
     /* Crashlytics */
     implementation Libs.FIREBASE_CORE
     implementation(Libs.CRASHLYTICS) {

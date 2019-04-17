@@ -19,6 +19,7 @@ package com.instructure.student.mobius.assignmentDetails.ui
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import com.instructure.student.mobius.assignmentDetails.SubmissionUploadStatus
+import com.instructure.student.mobius.assignmentDetails.ui.gradeCell.GradeCellViewState
 
 sealed class AssignmentDetailsViewState(val visibilities: AssignmentDetailsVisibilities) {
     object Loading : AssignmentDetailsViewState(AssignmentDetailsVisibilities(loading = true))
@@ -39,9 +40,8 @@ sealed class AssignmentDetailsViewState(val visibilities: AssignmentDetailsVisib
         val fileTypes: String = "",
         val description: String = "",
         val submitButtonText: String = "",
-        val gradeState: AssignmentDetailsGradeState = AssignmentDetailsGradeState.Empty,
-        val assignmentDetailsVisibilities: AssignmentDetailsVisibilities,
-        val submissionTypesVisibilities: SubmissionTypesVisibilities? = null
+        val gradeState: GradeCellViewState = GradeCellViewState.Empty,
+        val assignmentDetailsVisibilities: AssignmentDetailsVisibilities
     ) : AssignmentDetailsViewState(assignmentDetailsVisibilities)
 }
 
@@ -53,6 +53,7 @@ data class AssignmentDetailsVisibilities (
     var submissionTypes: Boolean = false,
     var fileTypes: Boolean = false,
     var submissionAndRubricButton: Boolean = true, // We always show the button leading to Submission Details
+    var grade: Boolean = false,
     var lockedMessage: Boolean = false,
     var lockedImage: Boolean = false,
     var noDescriptionLabel: Boolean = false,
@@ -65,10 +66,6 @@ data class SubmissionTypesVisibilities(
     var textEntry: Boolean = false,
     var urlEntry: Boolean = false,
     var fileUpload: Boolean = false,
-    var mediaRecording: Boolean = false
+    var mediaRecording: Boolean = false,
+    var arcUpload: Boolean = false
 )
-
-sealed class AssignmentDetailsGradeState {
-    object Empty : AssignmentDetailsGradeState()
-    data class Graded(val grade: String) : AssignmentDetailsGradeState()
-}

@@ -17,9 +17,12 @@
 package com.instructure.student.mobius.assignmentDetails.ui
 
 import android.app.Activity
+import android.app.AlertDialog
+import android.app.Dialog
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import com.instructure.canvasapi2.models.Assignment
@@ -37,6 +40,7 @@ import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.Sub
 import com.instructure.student.mobius.common.ui.MobiusView
 import com.instructure.student.router.RouteMatcher
 import com.spotify.mobius.functions.Consumer
+import kotlinx.android.synthetic.main.dialog_submission_picker.*
 import kotlinx.android.synthetic.main.fragment_assignment_details.*
 
 class AssignmentDetailsView(
@@ -108,6 +112,7 @@ class AssignmentDetailsView(
             dueDateContainer.setVisible(visibilities.dueDate)
             submissionTypesContainer.setVisible(visibilities.submissionTypes)
             fileTypesContainer.setVisible(visibilities.fileTypes)
+            gradeContainer.setVisible(visibilities.grade)
             submissionRubricButton.setVisible(visibilities.submissionAndRubricButton)
             lockMessageContainer.setVisible(visibilities.lockedMessage)
             lockImageContainer.setVisible(visibilities.lockedImage)
@@ -136,6 +141,7 @@ class AssignmentDetailsView(
         lockMessageTextView.text = state.lockMessage
         submissionTypesTextView.text = state.submissionTypes
         fileTypesTextView.text = state.fileTypes
+        gradeCell.setState(state.gradeState)
         submitButton.text = state.submitButtonText
         if (state.visibilities.description) {
             descriptionWebView.formatHTML(state.description, state.assignmentName)
@@ -151,9 +157,36 @@ class AssignmentDetailsView(
         descriptionWebView.stopLoading()
     }
 
-    fun showSubmitDialogView(assignmentId: Long, course: Course) {
-        // TODO
-        context.toast("Route to submission workflow")
+    fun showSubmitDialogView(assignment: Assignment, courseId: Long, visibilities: SubmissionTypesVisibilities) {
+        val builder = AlertDialog.Builder(context)
+        val dialog = builder.setView(R.layout.dialog_submission_picker)
+                .create()
+        dialog.setOnShowListener {
+            setupDialogRow(dialog, dialog.submissionEntryText, visibilities.textEntry) {
+                showOnlineTextEntryView(assignment.id, courseId)
+            }
+            setupDialogRow(dialog, dialog.submissionEntryWebsite, visibilities.urlEntry) {
+                showOnlineUrlEntryView(assignment.id, courseId)
+            }
+            setupDialogRow(dialog, dialog.submissionEntryFile, visibilities.fileUpload) {
+                showFileUploadView(assignment, courseId)
+            }
+            setupDialogRow(dialog, dialog.submissionEntryMedia, visibilities.mediaRecording) {
+                showMediaRecordingView(assignment, courseId)
+            }
+            setupDialogRow(dialog, dialog.submissionEntryArc, visibilities.arcUpload) {
+                showArcUploadView(assignment, courseId)
+            }
+        }
+        dialog.show()
+    }
+
+    private fun setupDialogRow(dialog: Dialog, view: View, visibility: Boolean, onClick: () -> Unit) {
+        view.setVisible(visibility)
+        view.setOnClickListener {
+            onClick()
+            dialog.cancel()
+        }
     }
 
     fun showSubmissionView(assignmentId: Long, course: Course) {
@@ -183,6 +216,11 @@ class AssignmentDetailsView(
     fun showFileUploadView(assignment: Assignment, courseId: Long) {
         // TODO
         context.toast("Route to file upload page")
+    }
+
+    fun showArcUploadView(assignment: Assignment, courseId: Long) {
+        // TODO
+        context.toast("Route to arc upload page")
     }
 
     fun showQuizOrDiscussionView(url: String) {

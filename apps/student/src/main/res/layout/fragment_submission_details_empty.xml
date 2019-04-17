@@ -71,7 +71,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:text="@string/yourAssignmentIsDueAt"
             android:textColor="@color/defaultTextGray"
             android:textSize="@dimen/message_text_size"
             tools:text="Your assignment is due tomorrow at 11:59pm" />

@@ -313,7 +313,7 @@ public class CanvasWebView extends WebView implements NestedScrollingChild {
 
     /**
      * Create a context menu to copy the link that was pressed and then copy that link to the clipboard
-     * 
+     *
      */
     @Override
     protected void onCreateContextMenu(ContextMenu menu) {
@@ -681,19 +681,31 @@ public class CanvasWebView extends WebView implements NestedScrollingChild {
     }
 
     public String loadHtml(String html, String contentDescription) {
-        String htmlWrapper = FileUtils.getAssetsFile(mContext, "html_wrapper.html");
+        String result = formatHtml(html);
+        this.loadDataWithBaseURL(CanvasWebView.getReferrer(true), result, "text/html", encoding, getHtmlAsUrl(result, encoding));
+        setupAccessibilityContentDescription(result, contentDescription);
+        return result;
+    }
 
+    /**
+     * Makes html content somewhat suitable for mobile
+     */
+    public String formatHtml(String html) {
+        String htmlWrapper = FileUtils.getAssetsFile(mContext, "html_wrapper.html");
         html = CanvasWebView.applyWorkAroundForDoubleSlashesAsUrlSource(html);
         html = CanvasWebView.addProtocolToLinks(html);
         html = checkForMathTags(html);
+        return htmlWrapper.replace("{$CONTENT$}", html);
+    }
 
-        String result = htmlWrapper.replace("{$CONTENT$}", html);
-
-        this.loadDataWithBaseURL(CanvasWebView.getReferrer(true), result, "text/html", encoding, getHtmlAsUrl(result, encoding));
-
-        setupAccessibilityContentDescription(result, contentDescription);
-
-        return result;
+    /**
+     * Loads the provided HTML string without modification
+     * @param html The raw HTML to load
+     * @param contentDescription The content description of the HTML
+     */
+    public void loadRawHtml(String html, String contentDescription) {
+        this.loadDataWithBaseURL(CanvasWebView.getReferrer(true), html, "text/html", encoding, getHtmlAsUrl(html, encoding));
+        setupAccessibilityContentDescription(html, contentDescription);
     }
 
     /*

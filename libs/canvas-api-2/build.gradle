@@ -124,7 +124,7 @@ dependencies {
 
     /* Test Dependencies */
     testImplementation Libs.JUNIT
-    testImplementation "io.mockk:mockk:1.9.3"
+    testImplementation Libs.MOCKK
     testImplementation "org.mockito:mockito-inline:2.25.0"
     testImplementation "au.com.dius:pact-jvm-consumer-junit_2.11:3.5.14"
     testImplementation group: 'org.slf4j', name: 'slf4j-nop', version: '1.7.26'

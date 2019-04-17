@@ -21,6 +21,7 @@ import com.instructure.student.SingleFragmentTestActivity
 import com.instructure.student.ui.pages.renderPages.AssignmentDetailsRenderPage
 import com.instructure.student.ui.pages.renderPages.SubmissionDetailsEmptyContentRenderPage
 import com.instructure.student.ui.pages.renderPages.SubmissionDetailsRenderPage
+import com.instructure.student.ui.pages.renderPages.UrlSubmissionRenderPage
 import com.instructure.student.ui.utils.StudentActivityTestRule
 import com.instructure.student.ui.utils.StudentTest
 import org.junit.runner.RunWith
@@ -38,5 +39,5 @@ abstract class StudentRenderTest : StudentTest() {
     val assignmentDetailsRenderPage = AssignmentDetailsRenderPage()
     val submissionDetailsRenderPage = SubmissionDetailsRenderPage()
     val submissionDetailsEmptyContentRenderPage = SubmissionDetailsEmptyContentRenderPage()
-
+    val urlSubmissionRenderPage = UrlSubmissionRenderPage()
 }
