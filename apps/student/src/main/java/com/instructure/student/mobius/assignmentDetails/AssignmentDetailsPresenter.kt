@@ -104,9 +104,6 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
             DateHelper.getMonthDayTimeMaybeMinutesMaybeYear(context, assignment.dueDate, R.string.at)!!
         }
 
-        // Submission/Rubric button
-        visibilities.submissionAndRubricButton = submitted
-
         // Description
         val description = if (assignment.description.isValid()) {
             visibilities.description = true

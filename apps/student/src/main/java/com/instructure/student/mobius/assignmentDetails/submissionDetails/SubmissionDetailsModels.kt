@@ -63,7 +63,7 @@ sealed class SubmissionDetailsContentType {
         val displayName: String?
     ) : SubmissionDetailsContentType()
 
-    object NoSubmissionContent : SubmissionDetailsContentType()
+    data class NoSubmissionContent(val canvasContext: CanvasContext, val assignment: Assignment) : SubmissionDetailsContentType()
     object NoneContent : SubmissionDetailsContentType()
     data class ExternalToolContent(val canvasContext: CanvasContext, val url: String) : SubmissionDetailsContentType()
     object OnPaperContent : SubmissionDetailsContentType()

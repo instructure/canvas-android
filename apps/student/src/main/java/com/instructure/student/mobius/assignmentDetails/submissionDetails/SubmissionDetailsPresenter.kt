@@ -46,7 +46,6 @@ object SubmissionDetailsPresenter : Presenter<SubmissionDetailsModel, Submission
                 it.attempt to formattedDate
             }
 
-
         val selectedVersionIdx = submissionVersions
             .indexOfFirst { it.first == model.selectedSubmissionAttempt }
             .coerceAtLeast(0)

@@ -116,7 +116,7 @@ class SubmissionDetailsUpdateTest : Assert() {
             .whenEvent(SubmissionDetailsEvent.SubmissionClicked(submission.attempt))
             .then(
                 assertThatNext(
-                    NextMatchers.hasModel(expectedModel),
+                    hasModel(expectedModel),
                     matchesEffects<SubmissionDetailsModel, SubmissionDetailsEffect>(
                         SubmissionDetailsEffect.ShowSubmissionContentType(contentType)
                     )
@@ -154,9 +154,13 @@ class SubmissionDetailsUpdateTest : Assert() {
     fun `SubmissionClicked event with no corresponding submission results in model change and a ShowSubmissionContentType effect of NoSubmissionContent`() {
         val submissionId = 1234L
         val contentType =
-            SubmissionDetailsContentType.NoSubmissionContent // No submission in the model with the selected ID maps to NoSubmissionContent type
+            SubmissionDetailsContentType.NoSubmissionContent(course, assignment) // No submission in the model with the selected ID maps to NoSubmissionContent type
+
+        initModel = initModel.copy(assignment = DataResult.Success(assignment))
+
         val expectedModel = initModel.copy(
-            selectedSubmissionAttempt = submissionId
+                selectedSubmissionAttempt = submissionId,
+                assignment = DataResult.Success(assignment)
         )
 
         updateSpec
@@ -164,7 +168,7 @@ class SubmissionDetailsUpdateTest : Assert() {
             .whenEvent(SubmissionDetailsEvent.SubmissionClicked(submissionId))
             .then(
                 assertThatNext(
-                    NextMatchers.hasModel(expectedModel),
+                    hasModel(expectedModel),
                     matchesEffects<SubmissionDetailsModel, SubmissionDetailsEffect>(
                         SubmissionDetailsEffect.ShowSubmissionContentType(contentType)
                     )
@@ -181,7 +185,7 @@ class SubmissionDetailsUpdateTest : Assert() {
         initModel = initModel.copy(isLoading = true)
         val assignment = DataResult.Success(assignment)
         val submission = DataResult.Fail(Failure.Network("ErRoR"))
-        val contentType = SubmissionDetailsContentType.NoSubmissionContent
+        val contentType = SubmissionDetailsContentType.NoSubmissionContent(course, assignment.data)
         val expectedModel = initModel.copy(
             isLoading = false,
             assignment = assignment,
@@ -193,7 +197,7 @@ class SubmissionDetailsUpdateTest : Assert() {
             .whenEvent(SubmissionDetailsEvent.DataLoaded(assignment, submission))
             .then(
                 assertThatNext(
-                    NextMatchers.hasModel(expectedModel),
+                    hasModel(expectedModel),
                     matchesEffects<SubmissionDetailsModel, SubmissionDetailsEffect>(
                         SubmissionDetailsEffect.ShowSubmissionContentType(contentType)
                     )
@@ -226,7 +230,7 @@ class SubmissionDetailsUpdateTest : Assert() {
         verifyGetSubmissionContentType(
             assignment,
             submission.copy(attempt = 0),
-            SubmissionDetailsContentType.NoSubmissionContent
+            SubmissionDetailsContentType.NoSubmissionContent(course, assignment)
         )
     }
 
@@ -235,7 +239,7 @@ class SubmissionDetailsUpdateTest : Assert() {
         verifyGetSubmissionContentType(
             assignment,
             submission.copy(missing = true),
-            SubmissionDetailsContentType.NoSubmissionContent
+            SubmissionDetailsContentType.NoSubmissionContent(course, assignment)
         )
     }
 
@@ -663,7 +667,7 @@ class SubmissionDetailsUpdateTest : Assert() {
             .whenEvent(SubmissionDetailsEvent.DataLoaded(assignmentResult, submissionResult))
             .then(
                 assertThatNext(
-                    NextMatchers.hasModel(expectedModel),
+                    hasModel(expectedModel),
                     matchesEffects<SubmissionDetailsModel, SubmissionDetailsEffect>(
                         SubmissionDetailsEffect.ShowSubmissionContentType(expectedContentType)
                     )

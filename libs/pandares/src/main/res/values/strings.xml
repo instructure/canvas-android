@@ -58,6 +58,8 @@
     <string name="submissionDetailsFileTabName">Files (%d)</string>
     <string name="rubric">Rubric</string>
     <string name="submissionDetailsErrorTitle">Submission Error</string>
+    <string name="noSubmissionYet">No Submission Yet</string>
+    <string name="yourAssignmentIsDueAt">Your assignment is due %s</string>
 
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">Version:</string>
@@ -102,6 +104,26 @@
     <string name="future">Future</string>
     <string name="next7Days">Next 7 Days</string>
     <string name="days">Days</string>
+    <string name="submissionDetailsDueTodayAt">Due today at %s</string>
+    <string name="submissionDetailsDueTomorrowAt">Due tomorrow at %s</string>
+    <string name="submissionDetailsDueYesterdayAt">Due yesterday at %s</string>
+    <string name="submissionDetailsHasNoDueDate">Your assignment has no due date</string>
+    <string name="submissionDetailsDueAt">Due %1$s at %2$s</string> <!--Ex: Due April 2 at 11:59pm-->
+    <string name="monthShortJanuary">Jan</string>
+    <string name="monthShortFebruary">Feb</string>
+    <string name="monthShortMarch">Mar</string>
+    <string name="monthShortApril">Apr</string>
+    <string name="monthShortMay">May</string>
+    <string name="monthShortJune">Jun</string>
+    <string name="monthShortJuly">Jul</string>
+    <string name="monthShortAugust">Aug</string>
+    <string name="monthShortSeptember">Sep</string>
+    <string name="monthShortOctober">Oct</string>
+    <string name="monthShortNovember">Nov</string>
+    <string name="monthShortDecember">Dec</string>
+    <string name="lowercaseAM">am</string>
+    <string name="lowercasePM">pm</string>
+
 
     <!--Assignments-->
     <string name="assignmentDue">Due</string>

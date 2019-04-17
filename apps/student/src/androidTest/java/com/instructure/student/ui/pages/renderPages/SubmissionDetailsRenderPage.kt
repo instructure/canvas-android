@@ -74,6 +74,22 @@ class SubmissionDetailsRenderPage : SubmissionDetailsPage() {
         errorView.assertGone()
     }
 
+    fun assertDisplaysEmptySubmissionContent() {
+        mainContent.assertDisplayed()
+        loadingView.assertGone()
+        errorView.assertGone()
+        onViewWithText("No Submission Yet").assertDisplayed()
+        onViewWithText("Submit Assignment").assertDisplayed()
+    }
+
+    fun assertSubmitButtonNotDisplayed() {
+        mainContent.assertDisplayed()
+        loadingView.assertGone()
+        errorView.assertGone()
+        onViewWithText("No Submission Yet").assertDisplayed()
+        onViewWithText("Submit Assignment").assertNotDisplayed()
+    }
+
     fun assertDisplaysDrawerContent() {
         drawerContent.assertDisplayed()
     }
