@@ -25,13 +25,13 @@ import com.instructure.student.mobius.assignmentDetails.submissionDetails.conten
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyContentViewState.Loaded
 import com.instructure.student.mobius.common.ui.MobiusView
 import com.spotify.mobius.functions.Consumer
-import kotlinx.android.synthetic.main.fragment_submission_details_empty.*
+import kotlinx.android.synthetic.main.fragment_submission_details_empty_content.*
 
-class SubmissionDetailsEmptyView(
+class SubmissionDetailsEmptyContentView(
         inflater: LayoutInflater,
         parent: ViewGroup
 ) : MobiusView<SubmissionDetailsEmptyContentViewState, SubmissionDetailsEmptyEvent>(
-        R.layout.fragment_submission_details_empty,
+        R.layout.fragment_submission_details_empty_content,
         inflater,
         parent
 ) {
@@ -48,17 +48,15 @@ class SubmissionDetailsEmptyView(
     override fun render(state: SubmissionDetailsEmptyContentViewState) {
         when(state) {
             is Loaded -> {
-                title.text = state.assignmentLocked ?: context.getString(R.string.submissionDetailsNoSubmissionYet)
-                message.text = state.dueDate
+                title.text = if (state.isAllowedToSubmit) context.getString(R.string.submissionDetailsNoSubmissionYet) else context.getString(R.string.submissionDetailsAssignmentLocked)
+                message.text = state.dueDateText
                 submitButton.setHidden(state.isAllowedToSubmit)
             }
         }
     }
 
     override fun onDispose() {}
-    override fun applyTheme() {
-
-    }
+    override fun applyTheme() {}
 
 
     fun showSubmitDialogView(assignmentId: Long, course: Course) {

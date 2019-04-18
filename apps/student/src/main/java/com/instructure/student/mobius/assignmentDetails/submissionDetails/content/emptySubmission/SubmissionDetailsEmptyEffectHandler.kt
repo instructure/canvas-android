@@ -15,10 +15,10 @@
  */
 package com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission
 
-import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyView
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyContentView
 import com.instructure.student.mobius.common.ui.EffectHandler
 
-class SubmissionDetailsEmptyEffectHandler : EffectHandler<SubmissionDetailsEmptyView, SubmissionDetailsEmptyEvent, SubmissionDetailsEmptyEffect>() {
+class SubmissionDetailsEmptyEffectHandler : EffectHandler<SubmissionDetailsEmptyContentView, SubmissionDetailsEmptyEvent, SubmissionDetailsEmptyEffect>() {
     override fun accept(effect: SubmissionDetailsEmptyEffect) {
         when(effect) {
             is SubmissionDetailsEmptyEffect.ShowSubmitDialogView -> view?.showSubmitDialogView(effect.assignmentId, effect.course)

@@ -27,15 +27,15 @@ import com.instructure.student.mobius.assignmentDetails.submissionDetails.conten
 import com.instructure.student.mobius.common.ui.MobiusFragment
 
 class SubmissionDetailsEmptyFragment :
-        MobiusFragment<SubmissionDetailsEmptyContentModel, SubmissionDetailsEmptyEvent, SubmissionDetailsEmptyEffect, SubmissionDetailsEmptyView, SubmissionDetailsEmptyContentViewState>() {
+        MobiusFragment<SubmissionDetailsEmptyContentModel, SubmissionDetailsEmptyEvent, SubmissionDetailsEmptyEffect, SubmissionDetailsEmptyContentView, SubmissionDetailsEmptyContentViewState>() {
 
     val canvasContext by ParcelableArg<Course>(key = Const.CANVAS_CONTEXT)
     val assignment by ParcelableArg<Assignment>(key = Const.ASSIGNMENT)
 
     override fun makeEffectHandler() = SubmissionDetailsEmptyEffectHandler()
     override fun makeUpdate() = SubmissionDetailsEmptyUpdate()
-    override fun makeView(inflater: LayoutInflater, parent: ViewGroup) = SubmissionDetailsEmptyView(inflater, parent)
-    override fun makePresenter() = SubmissionDetailsEmptyContentPresenter()
+    override fun makeView(inflater: LayoutInflater, parent: ViewGroup) = SubmissionDetailsEmptyContentView(inflater, parent)
+    override fun makePresenter() = SubmissionDetailsEmptyContentPresenter
     override fun makeInitModel() = SubmissionDetailsEmptyContentModel(assignment, canvasContext)
 
     companion object {

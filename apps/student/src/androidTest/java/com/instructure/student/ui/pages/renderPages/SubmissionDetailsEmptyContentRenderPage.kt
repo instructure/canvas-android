@@ -16,6 +16,7 @@
 package com.instructure.student.ui.pages.renderPages
 
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isEnabled
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertContainsText
@@ -33,8 +34,8 @@ class SubmissionDetailsEmptyContentRenderPage : SubmissionDetailsEmptyContentPag
         submitButton.check(matches(isEnabled()))
     }
 
-    fun assertSubmitButtonDisabled() {
-        submitButton.check(matches(not(isEnabled())))
+    fun assertSubmitButtonHidden() {
+        submitButton.check(matches(not(isDisplayed())))
     }
 
     fun assertExpectedDueDate(expectedText: String) {

@@ -62,8 +62,9 @@
     <string name="submissionDetailsNoSubmissionYet">No Submission Yet</string>
     <string name="submissionDetailsAssignmentWasLockedOn">Your assignment was locked on \n%1$s at %2$s</string>
     <string name="submissionDetailsAssignmentWillUnlockOn">Your assignment will unlock on \n%1$s at %2$s</string>
-    <string name="submissionDetailsAssignmentLockedByModuleName">Your assignment is locked by the module %1$s</string>
-    <string name="submissionDetailsAssignmentLockedByModulePrereqs">Your assignment is locked by a module requirement</string>
+    <string name="submissionDetailsAssignmentLockedByModuleName">This assignment is locked by module \"%1$s\"</string>
+    <string name="submissionDetailsAssignmentLockedByModulePrereqs">This assignment is locked by a module requirement</string>
+    <string name="submissionDetailsAssignmentLocked">Assignment Locked</string>
 
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Out of %s points</string>

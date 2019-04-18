@@ -27,21 +27,22 @@ import org.threeten.bp.format.DateTimeFormatterBuilder
 import org.threeten.bp.temporal.ChronoField
 import org.threeten.bp.temporal.ChronoUnit
 
-class SubmissionDetailsEmptyContentPresenter : Presenter<SubmissionDetailsEmptyContentModel, SubmissionDetailsEmptyContentViewState> {
+object SubmissionDetailsEmptyContentPresenter : Presenter<SubmissionDetailsEmptyContentModel, SubmissionDetailsEmptyContentViewState> {
     override fun present(model: SubmissionDetailsEmptyContentModel, context: Context): SubmissionDetailsEmptyContentViewState {
-        model.assignment.isAllowedToSubmit
         return SubmissionDetailsEmptyContentViewState.Loaded(
                 model.assignment.isAllowedToSubmit,
-                model.assignment.getDueString(context),
-                model.assignment.getLockedString(context)
+                model.assignment.getDueString(context)
         )
     }
 }
 
 fun Assignment.getDueString(context: Context): String {
-    if (dueAt.isNullOrBlank()) {
+    if (!isAllowedToSubmit)
+        return getLockedString(context)
+
+    if (dueAt.isNullOrBlank())
         return context.getString(R.string.submissionDetailsHasNoDueDate)
-    }
+
 
     // There doesn't appear to be an easy way to convert the UTC time to the user's time, so we do this dance
     val dueDateTime = OffsetDateTime.parse(dueAt).withOffsetSameInstant(OffsetDateTime.now().offset)
@@ -67,9 +68,7 @@ fun Assignment.getDueString(context: Context): String {
     }
 }
 
-fun Assignment.getLockedString(context: Context): String? {
-    if (isAllowedToSubmit) return null
-
+fun Assignment.getLockedString(context: Context): String {
     val now = LocalDate.now()
 
     // Check if the user is locked out by a module
@@ -104,7 +103,7 @@ fun Assignment.getLockedString(context: Context): String? {
         }
     }
 
-    return null
+    return context.getString(R.string.lockedAssignmentNotModule)
 }
 
 fun OffsetDateTime.getShortMonthAndDay(): String {

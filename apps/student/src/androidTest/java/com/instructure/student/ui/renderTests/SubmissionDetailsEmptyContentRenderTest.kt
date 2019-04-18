@@ -32,41 +32,44 @@ import org.threeten.bp.format.DateTimeFormatter
 class SubmissionDetailsEmptyContentRenderTest : StudentRenderTest() {
 
     private lateinit var baseModel: SubmissionDetailsEmptyContentModel
+    private lateinit var baseAssignment: Assignment
 
     @Before
     fun setup() {
+        baseAssignment = Assignment(
+                submissionTypesRaw = listOf("online_upload"),
+                lockedForUser = false,
+                dueAt = OffsetDateTime.now().withHour(23).withMinute(59).format(DateTimeFormatter.ISO_DATE_TIME)
+        )
+
         baseModel = SubmissionDetailsEmptyContentModel(
-                assignment = Assignment(dueAt = OffsetDateTime.now().withHour(23).withMinute(59).format(DateTimeFormatter.ISO_DATE_TIME)),
+                assignment = baseAssignment,
                 course = Course()
         )
     }
 
     @Test
     fun submitButtonIsEnabledWhenUserCanSubmitAssignment() {
-        loadPageWithModel(baseModel.copy(
-                assignment = Assignment(
-                        submissionTypesRaw = listOf("online_upload"),
-                        lockedForUser = false)
-        ))
+        loadPageWithModel(baseModel)
 
         submissionDetailsEmptyContentRenderPage.assertSubmitButtonEnabled()
     }
 
     @Test
-    fun submitButtonIsDisabledWhenTheUserCannotSubmit() {
+    fun submitButtonIsHiddenWhenUserCannotSubmit() {
         loadPageWithModel(baseModel.copy(
-                assignment = Assignment(
-                        lockedForUser = false)
+                assignment = Assignment(lockedForUser = true)
         ))
 
-        submissionDetailsEmptyContentRenderPage.assertSubmitButtonDisabled()
+        submissionDetailsEmptyContentRenderPage.assertSubmitButtonHidden()
     }
 
     @Test
     fun displaysDueYesterday() {
         val expectedText = "Due yesterday at 1:59pm"
         loadPageWithModel(baseModel.copy(
-                assignment = Assignment(dueAt = OffsetDateTime.now().minusDays(1L).withHour(13).withMinute(59).format(DateTimeFormatter.ISO_DATE_TIME))
+                assignment = baseAssignment.copy(dueAt = OffsetDateTime.now().minusDays(1L).withHour(13).withMinute(59).format(DateTimeFormatter.ISO_DATE_TIME)
+                )
         ))
 
         submissionDetailsEmptyContentRenderPage.assertExpectedDueDate(expectedText)
@@ -84,8 +87,8 @@ class SubmissionDetailsEmptyContentRenderTest : StudentRenderTest() {
     fun displaysDueTomorrow() {
         val expectedText = "Due tomorrow at 1:59pm"
         loadPageWithModel(baseModel.copy(
-                assignment = Assignment(dueAt = OffsetDateTime.now().plusDays(1L).withHour(13).withMinute(59).format(DateTimeFormatter.ISO_DATE_TIME))
-        ))
+                assignment = baseAssignment.copy(dueAt = OffsetDateTime.now().plusDays(1L).withHour(13).withMinute(59).format(DateTimeFormatter.ISO_DATE_TIME)
+                )))
 
         submissionDetailsEmptyContentRenderPage.assertExpectedDueDate(expectedText)
     }
@@ -94,8 +97,8 @@ class SubmissionDetailsEmptyContentRenderTest : StudentRenderTest() {
     fun displaysDueDate() {
         val expectedText = "Due Apr 2 at 1:59pm"
         loadPageWithModel(baseModel.copy(
-                assignment = Assignment(dueAt = OffsetDateTime.now().withMonth(4).withDayOfMonth(2).withHour(13).withMinute(59).format(DateTimeFormatter.ISO_DATE_TIME))
-        ))
+                assignment = baseAssignment.copy(dueAt = OffsetDateTime.now().withMonth(4).withDayOfMonth(2).withHour(13).withMinute(59).format(DateTimeFormatter.ISO_DATE_TIME)
+                )))
 
         submissionDetailsEmptyContentRenderPage.assertExpectedDueDate(expectedText)
     }
@@ -104,10 +107,29 @@ class SubmissionDetailsEmptyContentRenderTest : StudentRenderTest() {
     fun displaysNoDueDate() {
         val expectedText = "Your assignment has no due date"
         loadPageWithModel(baseModel.copy(
-                assignment = Assignment()
+                assignment = baseAssignment.copy(dueAt = null)
         ))
 
         submissionDetailsEmptyContentRenderPage.assertExpectedDueDate(expectedText)
+    }
+
+    @Test
+    fun displaysDueDateWithYearWhenNotThisYear() {
+        val expectedText = "Due Apr 2, 2018 at 1:59pm"
+        loadPageWithModel(baseModel.copy(
+                assignment = baseAssignment.copy(dueAt = OffsetDateTime.now().withYear(2018).withMonth(4).withDayOfMonth(2).withHour(13).withMinute(59).format(DateTimeFormatter.ISO_DATE_TIME))
+        ))
+
+        submissionDetailsEmptyContentRenderPage.assertExpectedDueDate(expectedText)
+    }
+
+    @Test
+    fun displaysAssignmentLockedByModule() {
+    }
+
+    @Test
+    fun displaysAssignmentLockedByModulePrereq() {
+
     }
 
     private fun loadPageWithModel(model: SubmissionDetailsEmptyContentModel) {
