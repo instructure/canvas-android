@@ -145,6 +145,41 @@ class SubmissionDetailsEmptyContentPresenterTest : Assert() {
     }
 
     @Test
+    fun `Sets Assignment locked`() {
+        baseAssignment = baseAssignment.copy(
+                lockedForUser = true,
+                lockAt = OffsetDateTime.now().withYear(2016).withMonth(4).withDayOfMonth(2).withHour(13).withMinute(59).format(DateTimeFormatter.ISO_DATE_TIME)
+        )
+        baseModel = baseModel.copy(assignment = baseAssignment)
+
+        val expectedState = Loaded(
+                isAllowedToSubmit = false,
+                dueDateText = "Your assignment was locked on Apr 2, 2016 at 1:59pm"
+        )
+
+        val actualState = SubmissionDetailsEmptyContentPresenter.present(baseModel, context)
+
+        assertEquals(expectedState, actualState)
+    }
+
+    @Test
+    fun `Sets Assignment will unlock`() {
+        baseAssignment = baseAssignment.copy(
+                lockedForUser = true,
+                unlockAt = OffsetDateTime.now().withYear(2067).withMonth(4).withDayOfMonth(2).withHour(13).withMinute(59).format(DateTimeFormatter.ISO_DATE_TIME))
+        baseModel = baseModel.copy(assignment = baseAssignment)
+
+        val expectedState = Loaded(
+                isAllowedToSubmit = false,
+                dueDateText = "Your assignment will unlock on Apr 2, 2067 at 1:59pm"
+        )
+
+        val actualState = SubmissionDetailsEmptyContentPresenter.present(baseModel, context)
+
+        assertEquals(expectedState, actualState)
+    }
+
+    @Test
     fun `Sets Assignment locked by module`() {
         baseAssignment = baseAssignment.copy(
                 lockedForUser = true,
@@ -158,7 +193,7 @@ class SubmissionDetailsEmptyContentPresenterTest : Assert() {
 
         val expectedState = Loaded(
                 isAllowedToSubmit = false,
-                dueDateText = "This assignment is locked by module \"Test Module\""
+                dueDateText = "Your assignment is locked by module \"Test Module\""
         )
 
         val actualState = SubmissionDetailsEmptyContentPresenter.present(baseModel, context)
@@ -178,7 +213,7 @@ class SubmissionDetailsEmptyContentPresenterTest : Assert() {
 
         val expectedState = Loaded(
                 isAllowedToSubmit = false,
-                dueDateText = "This assignment is locked by a module requirement"
+                dueDateText = "Your assignment is locked by a module requirement"
         )
 
         val actualState = SubmissionDetailsEmptyContentPresenter.present(baseModel, context)

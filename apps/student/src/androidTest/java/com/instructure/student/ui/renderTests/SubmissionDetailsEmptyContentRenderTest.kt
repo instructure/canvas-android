@@ -18,6 +18,8 @@ package com.instructure.student.ui.renderTests
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.LockInfo
+import com.instructure.canvasapi2.models.LockedModule
 import com.instructure.student.espresso.StudentRenderTest
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.SubmissionDetailsEmptyContentModel
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyFragment
@@ -124,11 +126,56 @@ class SubmissionDetailsEmptyContentRenderTest : StudentRenderTest() {
     }
 
     @Test
+    fun displaysAssignmentLocked() {
+        val expectedText = "Your assignment was locked on Apr 2, 2016 at 1:59pm"
+        loadPageWithModel(baseModel.copy(
+                assignment = baseAssignment.copy(
+                        lockedForUser = true,
+                        lockAt = OffsetDateTime.now().withYear(2016).withMonth(4).withDayOfMonth(2).withHour(13).withMinute(59).format(DateTimeFormatter.ISO_DATE_TIME))
+        ))
+
+        submissionDetailsEmptyContentRenderPage.assertExpectedDueDate(expectedText)
+    }
+
+    @Test
+    fun displaysAssignmentWillUnlock() {
+        val expectedText = "Your assignment will unlock on Apr 2, 2067 at 1:59pm"
+        loadPageWithModel(baseModel.copy(
+                assignment = baseAssignment.copy(
+                        lockedForUser = true,
+                        unlockAt = OffsetDateTime.now().withYear(2067).withMonth(4).withDayOfMonth(2).withHour(13).withMinute(59).format(DateTimeFormatter.ISO_DATE_TIME))
+        ))
+
+        submissionDetailsEmptyContentRenderPage.assertExpectedDueDate(expectedText)
+    }
+
+    @Test
     fun displaysAssignmentLockedByModule() {
+        val expectedText = "Your assignment is locked by module \"Test Module\""
+        loadPageWithModel(baseModel.copy(
+                assignment = baseAssignment.copy(lockedForUser = true,
+                        lockInfo = LockInfo(
+                                contextModule = LockedModule(
+                                        name = "Test Module"
+                                )
+                        ))
+        ))
+
+        submissionDetailsEmptyContentRenderPage.assertExpectedDueDate(expectedText)
     }
 
     @Test
     fun displaysAssignmentLockedByModulePrereq() {
+        val expectedText = "Your assignment is locked by a module requirement"
+        loadPageWithModel(baseModel.copy(
+                assignment = baseAssignment.copy(
+                        lockedForUser = true,
+                        lockInfo = LockInfo(
+                                modulePrerequisiteNames = arrayListOf("must_view")
+                        ))
+        ))
+
+        submissionDetailsEmptyContentRenderPage.assertExpectedDueDate(expectedText)
 
     }
 
