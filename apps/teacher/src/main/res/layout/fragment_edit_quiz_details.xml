@@ -214,14 +214,19 @@
                 android:id="@+id/accessCodeTextInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:labelFor="@+id/editAccessCode"
-                android:contentDescription="@string/accessCode"
                 android:layout_marginEnd="10dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="16dp"
                 android:background="@android:color/transparent"
                 android:textColorHint="@color/defaultTextGray"
                 app:hintTextAppearance="@style/TextInputLabel">
+
+                <TextView
+                    android:layout_width="1dp"
+                    android:layout_height="1dp"
+                    android:visibility="gone"
+                    android:labelFor="@+id/editAccessCode"
+                    android:text="@string/accessCode"/>
 
                 <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/editAccessCode"

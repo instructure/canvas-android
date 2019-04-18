@@ -14,8 +14,9 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/avatarView"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="4dp"
             tools:src="@color/defaultTextGray"/>
 
         <LinearLayout
