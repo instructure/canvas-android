@@ -28,16 +28,6 @@ abstract class TeacherTest : CanvasTest() {
 
     override val isTesting = BuildConfig.IS_TESTING
 
-    // Overriding this to turn on accessibility tests for all teacher tests
-    @Before
-    override fun preLaunchSetup() {
-        // Enable accessibility checks
-        enableAndConfigureAccessibilityChecks()
-
-        // Call the super method
-        super.preLaunchSetup()
-    }
-
     /**
      * Required for auto complete of page objects within tests
      */
