@@ -159,6 +159,7 @@ open class GradesListRecyclerAdapter(
                 }
 
                 if (isAllGradingPeriodsSelected) {
+                    isRefresh = true
                     loadAssignment()
                     return
                 }
@@ -183,6 +184,7 @@ open class GradesListRecyclerAdapter(
                 }
 
                 // if we've made it this far, MGP is not enabled, so we do the standard behavior
+                isRefresh = true
                 loadAssignment()
             }
         }
