@@ -19,20 +19,20 @@ import com.instructure.student.mobius.common.ui.UpdateInit
 import com.spotify.mobius.First
 import com.spotify.mobius.Next
 
-class SubmissionDetailsEmptyUpdate : UpdateInit<SubmissionDetailsEmptyModel, SubmissionDetailsEmptyEvent, SubmissionDetailsEmptyEffect>() {
-    override fun performInit(model: SubmissionDetailsEmptyModel): First<SubmissionDetailsEmptyModel, SubmissionDetailsEmptyEffect> {
+class SubmissionDetailsEmptyUpdate : UpdateInit<SubmissionDetailsEmptyContentModel, SubmissionDetailsEmptyEvent, SubmissionDetailsEmptyEffect>() {
+    override fun performInit(model: SubmissionDetailsEmptyContentModel): First<SubmissionDetailsEmptyContentModel, SubmissionDetailsEmptyEffect> {
         return First.first(model, setOf())
     }
 
-    override fun update(model: SubmissionDetailsEmptyModel, event: SubmissionDetailsEmptyEvent): Next<SubmissionDetailsEmptyModel, SubmissionDetailsEmptyEffect> {
+    override fun update(model: SubmissionDetailsEmptyContentModel, event: SubmissionDetailsEmptyEvent): Next<SubmissionDetailsEmptyContentModel, SubmissionDetailsEmptyEffect> {
         return when(event) {
             SubmissionDetailsEmptyEvent.SubmitAssignmentClicked -> {
                 // If a user is trying to submit something to an assignment and the assignment is null, something is terribly wrong
                 val submissionTypes = model.assignment.getSubmissionTypes()
                 if(submissionTypes.size == 1) {
-                    Next.dispatch<SubmissionDetailsEmptyModel, SubmissionDetailsEmptyEffect>(setOf(SubmissionDetailsEmptyEffect.ShowCreateSubmissionView(submissionTypes.first(), model.course.id, model.assignment)))
+                    Next.dispatch<SubmissionDetailsEmptyContentModel, SubmissionDetailsEmptyEffect>(setOf(SubmissionDetailsEmptyEffect.ShowCreateSubmissionView(submissionTypes.first(), model.course.id, model.assignment)))
                 } else {
-                    Next.dispatch<SubmissionDetailsEmptyModel, SubmissionDetailsEmptyEffect>(setOf(SubmissionDetailsEmptyEffect.ShowSubmitDialogView(model.assignment.id, model.course)))
+                    Next.dispatch<SubmissionDetailsEmptyContentModel, SubmissionDetailsEmptyEffect>(setOf(SubmissionDetailsEmptyEffect.ShowSubmitDialogView(model.assignment.id, model.course)))
                 }
             }
         }

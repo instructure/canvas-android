@@ -19,7 +19,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.student.espresso.StudentRenderTest
-import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.SubmissionDetailsEmptyModel
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.SubmissionDetailsEmptyContentModel
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyFragment
 import com.spotify.mobius.runners.WorkRunner
 import org.junit.Before
@@ -31,11 +31,11 @@ import org.threeten.bp.format.DateTimeFormatter
 @RunWith(AndroidJUnit4::class)
 class SubmissionDetailsEmptyContentRenderTest : StudentRenderTest() {
 
-    private lateinit var baseModel: SubmissionDetailsEmptyModel
+    private lateinit var baseModel: SubmissionDetailsEmptyContentModel
 
     @Before
     fun setup() {
-        baseModel = SubmissionDetailsEmptyModel(
+        baseModel = SubmissionDetailsEmptyContentModel(
                 assignment = Assignment(dueAt = OffsetDateTime.now().withHour(23).withMinute(59).format(DateTimeFormatter.ISO_DATE_TIME)),
                 course = Course()
         )
@@ -110,7 +110,7 @@ class SubmissionDetailsEmptyContentRenderTest : StudentRenderTest() {
         submissionDetailsEmptyContentRenderPage.assertExpectedDueDate(expectedText)
     }
 
-    private fun loadPageWithModel(model: SubmissionDetailsEmptyModel) {
+    private fun loadPageWithModel(model: SubmissionDetailsEmptyContentModel) {
         val emptyEffectRunner = object : WorkRunner {
             override fun dispose() = Unit
             override fun post(runnable: Runnable) = Unit

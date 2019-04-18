@@ -412,9 +412,10 @@
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:paddingStart="16dp"
-                    android:paddingEnd="16dp">
+                    android:paddingEnd="16dp"
+                    android:visibility="gone">
 
-                    <TextView
+                <TextView
                         android:id="@+id/submissionAndRubricLabel"
                         style="@style/TextFont.Medium"
                         android:layout_width="0dp"

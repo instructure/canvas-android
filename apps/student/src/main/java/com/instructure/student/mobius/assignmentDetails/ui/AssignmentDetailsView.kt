@@ -113,7 +113,6 @@ class AssignmentDetailsView(
             submissionTypesContainer.setVisible(visibilities.submissionTypes)
             fileTypesContainer.setVisible(visibilities.fileTypes)
             gradeContainer.setVisible(visibilities.grade)
-            submissionRubricButton.setVisible(visibilities.submissionAndRubricButton)
             lockMessageContainer.setVisible(visibilities.lockedMessage)
             lockImageContainer.setVisible(visibilities.lockedImage)
             noDescriptionContainer.setVisible(visibilities.noDescriptionLabel)
@@ -131,6 +130,7 @@ class AssignmentDetailsView(
     }
 
     private fun renderLoadedState(state: AssignmentDetailsViewState.Loaded) {
+        submissionRubricButton.setVisible(true) // Moved this here from the render function so it doesn't show up at the very top of view while things are loading
         assignmentName.text = state.assignmentName
         points.text = state.assignmentPoints
         submissionStatusIcon.setImageResource(state.submittedStateIcon)

@@ -27,7 +27,7 @@ sealed class SubmissionDetailsEmptyEffect {
     data class ShowCreateSubmissionView(val submissionType: Assignment.SubmissionType, val courseId: Long, val assignment: Assignment) : SubmissionDetailsEmptyEffect()
 }
 
-data class SubmissionDetailsEmptyModel(
+data class SubmissionDetailsEmptyContentModel(
         val assignment: Assignment,
         val course: Course
 )

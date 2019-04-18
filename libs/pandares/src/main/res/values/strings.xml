@@ -58,8 +58,12 @@
     <string name="submissionDetailsFileTabName">Files (%d)</string>
     <string name="rubric">Rubric</string>
     <string name="submissionDetailsErrorTitle">Submission Error</string>
-    <string name="noSubmissionYet">No Submission Yet</string>
     <string name="urlSubmissionDisclaimer">This submission was a URL to an external page. We\'ve included a snapshot of what the page looked like when it was submitted.</string>
+    <string name="submissionDetailsNoSubmissionYet">No Submission Yet</string>
+    <string name="submissionDetailsAssignmentWasLockedOn">Your assignment was locked on \n%1$s at %2$s</string>
+    <string name="submissionDetailsAssignmentWillUnlockOn">Your assignment will unlock on \n%1$s at %2$s</string>
+    <string name="submissionDetailsAssignmentLockedByModuleName">Your assignment is locked by the module %1$s</string>
+    <string name="submissionDetailsAssignmentLockedByModulePrereqs">Your assignment is locked by a module requirement</string>
 
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Out of %s points</string>
@@ -115,18 +119,6 @@
     <string name="submissionDetailsDueYesterdayAt">Due yesterday at %s</string>
     <string name="submissionDetailsHasNoDueDate">Your assignment has no due date</string>
     <string name="submissionDetailsDueAt">Due %1$s at %2$s</string> <!--Ex: Due April 2 at 11:59pm-->
-    <string name="monthShortJanuary">Jan</string>
-    <string name="monthShortFebruary">Feb</string>
-    <string name="monthShortMarch">Mar</string>
-    <string name="monthShortApril">Apr</string>
-    <string name="monthShortMay">May</string>
-    <string name="monthShortJune">Jun</string>
-    <string name="monthShortJuly">Jul</string>
-    <string name="monthShortAugust">Aug</string>
-    <string name="monthShortSeptember">Sep</string>
-    <string name="monthShortOctober">Oct</string>
-    <string name="monthShortNovember">Nov</string>
-    <string name="monthShortDecember">Dec</string>
     <string name="lowercaseAM">am</string>
     <string name="lowercasePM">pm</string>
 

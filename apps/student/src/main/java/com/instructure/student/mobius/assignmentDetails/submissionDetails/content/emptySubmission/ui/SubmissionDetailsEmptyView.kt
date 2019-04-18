@@ -18,15 +18,11 @@ package com.instructure.student.mobius.assignmentDetails.submissionDetails.conte
 import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import com.instructure.canvasapi2.models.Course
-import com.instructure.pandautils.utils.ThemePrefs
-import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.onClick
-import com.instructure.pandautils.utils.toast
+import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.SubmissionDetailsEmptyEvent
-import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyViewState.Loaded
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyContentViewState.Loaded
 import com.instructure.student.mobius.common.ui.MobiusView
 import com.spotify.mobius.functions.Consumer
 import kotlinx.android.synthetic.main.fragment_submission_details_empty.*
@@ -34,7 +30,7 @@ import kotlinx.android.synthetic.main.fragment_submission_details_empty.*
 class SubmissionDetailsEmptyView(
         inflater: LayoutInflater,
         parent: ViewGroup
-) : MobiusView<SubmissionDetailsEmptyViewState, SubmissionDetailsEmptyEvent>(
+) : MobiusView<SubmissionDetailsEmptyContentViewState, SubmissionDetailsEmptyEvent>(
         R.layout.fragment_submission_details_empty,
         inflater,
         parent
@@ -49,15 +45,12 @@ class SubmissionDetailsEmptyView(
         submitButton.onClick { output.accept(SubmissionDetailsEmptyEvent.SubmitAssignmentClicked) }
     }
 
-    override fun render(state: SubmissionDetailsEmptyViewState) {
+    override fun render(state: SubmissionDetailsEmptyContentViewState) {
         when(state) {
             is Loaded -> {
+                title.text = state.assignmentLocked ?: context.getString(R.string.submissionDetailsNoSubmissionYet)
                 message.text = state.dueDate
-                submitButton.isEnabled = state.isAllowedToSubmit
-                submitButton.backgroundTintList = ViewStyler.generateColorStateList(
-                        intArrayOf(-android.R.attr.state_enabled) to ContextCompat.getColor(context,R.color.defaultTextGray),
-                        intArrayOf() to ThemePrefs.buttonColor
-                )
+                submitButton.setHidden(state.isAllowedToSubmit)
             }
         }
     }
