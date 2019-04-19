@@ -9,6 +9,7 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.teacher.PSPDFKit.AnnotationComments.AnnotationCommentListFragment
 import com.instructure.teacher.adapters.StudentContextFragment
 import com.instructure.teacher.features.files.search.FileSearchFragment
+import com.instructure.teacher.features.modules.list.ui.ModuleListFragment
 import com.instructure.teacher.fragments.*
 import instructure.rceditor.RCEFragment
 
@@ -85,6 +86,8 @@ object RouteResolver {
             fragment = CourseSettingsFragment.newInstance((canvasContext as Course?)!!)
         } else if (QuizListFragment::class.java.isAssignableFrom(cls)) {
             fragment = QuizListFragment.newInstance(canvasContext!!)
+        } else if (ModuleListFragment::class.java.isAssignableFrom(cls)) {
+            fragment = ModuleListFragment.newInstance(route.arguments)
         } else if (QuizDetailsFragment::class.java.isAssignableFrom(cls)) {
             fragment = getQuizDetailsFragment(canvasContext, route)
         } else if (RCEFragment::class.java.isAssignableFrom(cls)) {

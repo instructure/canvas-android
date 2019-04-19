@@ -76,18 +76,37 @@ val Fragment.isTablet: Boolean
 
 /** Convenience delegates for fragment arguments */
 class IntArg(val default: Int = 0, val key: String? = null) : ReadWriteProperty<Fragment, Int> {
-    override fun setValue(thisRef: Fragment, property: KProperty<*>, value: Int) = thisRef.nonNullArgs.putInt(key ?: key ?: property.name, value)
+    override fun setValue(thisRef: Fragment, property: KProperty<*>, value: Int) = thisRef.nonNullArgs.putInt(key ?: property.name, value)
     override fun getValue(thisRef: Fragment, property: KProperty<*>) = thisRef.arguments?.getInt(key ?: key ?: property.name, default) ?: default
 }
 
 class BooleanArg(val default: Boolean = false, val key: String? = null) : ReadWriteProperty<Fragment, Boolean> {
-    override fun setValue(thisRef: Fragment, property: KProperty<*>, value: Boolean) = thisRef.nonNullArgs.putBoolean(key ?: key ?: property.name, value)
+    override fun setValue(thisRef: Fragment, property: KProperty<*>, value: Boolean) = thisRef.nonNullArgs.putBoolean(key ?: property.name, value)
     override fun getValue(thisRef: Fragment, property: KProperty<*>) = thisRef.arguments?.getBoolean(key ?: key ?: property.name, default) ?: default
 }
 
 class LongArg(val default: Long = 0L, val key: String? = null) : ReadWriteProperty<Fragment, Long> {
-    override fun setValue(thisRef: Fragment, property: KProperty<*>, value: Long) = thisRef.nonNullArgs.putLong(key ?: key ?: property.name, value)
+    override fun setValue(thisRef: Fragment, property: KProperty<*>, value: Long) = thisRef.nonNullArgs.putLong(key ?: property.name, value)
     override fun getValue(thisRef: Fragment, property: KProperty<*>) = thisRef.arguments?.getLong(key ?: key ?: property.name, default) ?: default
+}
+
+class NLongArg(val default: Long? = null, val key: String? = null) : ReadWriteProperty<Fragment, Long?> {
+    override fun setValue(thisRef: Fragment, property: KProperty<*>, value: Long?) {
+        val keyName = key ?: property.name
+        if (value == null) {
+            thisRef.nonNullArgs.remove(keyName)
+        } else {
+            thisRef.nonNullArgs.putLong(keyName, value)
+        }
+    }
+    override fun getValue(thisRef: Fragment, property: KProperty<*>): Long? {
+        val keyName = key ?: property.name
+        return if (thisRef.arguments?.containsKey(keyName) == true) {
+            thisRef.arguments!!.getLong(keyName, 0L)
+        } else {
+            default
+        }
+    }
 }
 
 class LongArrayArg(val default: LongArray = longArrayOf(), val key: String? = null) : ReadWriteProperty<Fragment, LongArray> {
