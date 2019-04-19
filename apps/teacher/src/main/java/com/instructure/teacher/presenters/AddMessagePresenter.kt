@@ -31,6 +31,7 @@ import instructure.androidblueprint.FragmentPresenter
 import kotlinx.coroutines.Job
 import retrofit2.Call
 import retrofit2.Response
+import java.net.URLEncoder
 import java.util.*
 
 class AddMessagePresenter(val conversation: Conversation?, private val mParticipants: ArrayList<BasicUser>?, private val mMessages: ArrayList<Message>?, val isReply: Boolean) : FragmentPresenter<AddMessageView>() {
@@ -95,7 +96,9 @@ class AddMessagePresenter(val conversation: Conversation?, private val mParticip
             recipientIds.add(entry.destination)
         }
 
-        InboxManager.createConversation(recipientIds, message, subject, contextId, attachmentIDs, isBulk, mCreateConversationCallback)
+        val encodedMessage = URLEncoder.encode(message, "UTF-8")
+        val encodedSubject = URLEncoder.encode(subject, "UTF-8")
+        InboxManager.createConversation(recipientIds, encodedMessage, encodedSubject, contextId, attachmentIDs, isBulk, mCreateConversationCallback)
     }
 
     fun sendMessage(selectedRecipients: List<RecipientEntry>, message: String) {
@@ -121,7 +124,8 @@ class AddMessagePresenter(val conversation: Conversation?, private val mParticip
         }
 
         // Send message
-        InboxManager.addMessage(conversation?.id ?: 0, message, recipientIds, messageIds, attachmentIDs, mAddConversationCallback)
+        val encodedMessage = URLEncoder.encode(message, "UTF-8")
+        InboxManager.addMessage(conversation?.id ?: 0, encodedMessage, recipientIds, messageIds, attachmentIDs, mAddConversationCallback)
     }
 
     private val mAddConversationCallback = object : StatusCallback<Conversation>() {
