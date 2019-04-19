@@ -29,11 +29,15 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="windowActionModeOverlay">true</item>
-        <item name="pspdf__contextualToolbarBackground">@color/annotationToolbarBackground</item>
-        <item name="pspdf__contextualToolbarSubmenuBackground">@color/submenuAnnotationToolbarBackground</item>
+        <item name="pspdf__contextualToolbarStyle">@style/ContextualToolbarStyle</item>
         <item name="pspdf__annotationCreationToolbarIconsStyle">@style/AnnotationCreationToolbarIconsStyle</item>
         <item name="pspdf__annotationEditingToolbarIconsStyle">@style/AnnotationEditingToolbarIconsStyle</item>
         <item name="pspdf__stampPickerStyle">@style/StampPickerStyle</item>
+    </style>
+
+    <style name="ContextualToolbarStyle">
+        <item name="pspdf__backgroundColor">@color/annotationToolbarBackground</item>
+        <item name="pspdf__submenuBackgroundColor">@color/submenuAnnotationToolbarBackground</item>
     </style>
 
     <style name="AnnotationCreationToolbarIconsStyle">

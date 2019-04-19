@@ -174,8 +174,7 @@ android {
                     android,
                     new MasqueradeUITransformer('com.instructure.student.activity.NavigationActivity.class'),
                     new PageViewTransformer(),
-                    new LocaleTransformer(),
-                    new PDFKitCrashFixTransformer()
+                    new LocaleTransformer()
             )
     )
 
@@ -255,6 +254,9 @@ dependencies {
     implementation Libs.PLAY_SERVICES_ANALYTICS
     implementation Libs.PLAY_SERVICES
     implementation Libs.ANDROIDX_PALETTE
+    implementation(Libs.ANDROIDX_FRAGMENT) {
+        exclude module: 'fragment'
+    }
 
     /* Job Scheduler */
     implementation Libs.FIREBASE_JOB_DISPATCHER
