@@ -269,54 +269,6 @@
 
                 </LinearLayout>
 
-                <!-- Locked Message -->
-
-                <LinearLayout
-                    android:id="@+id/lockMessageContainer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <TextView
-                        style="@style/TextFont.Medium"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="4dp"
-                        android:text="@string/locked"
-                        android:textColor="@color/defaultTextGray"/>
-
-                    <TextView
-                        android:id="@+id/lockMessageTextView"
-                        style="@style/TextFont.Regular"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="16sp"
-                        android:tint="@color/defaultTextGray"
-                        tools:text="April 1 at 11:59 PM"/>
-
-                </LinearLayout>
-
-                <!-- Locked Image -->
-
-                <LinearLayout
-                    android:id="@+id/lockImageContainer"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:padding="32dp"
-                    android:visibility="gone"
-                    tools:visibility="visible">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:importantForAccessibility="no"
-                        android:src="@drawable/vd_panda_locked"/>
-
-                </LinearLayout>
-
                 <!-- Submission Types -->
 
                 <LinearLayout
@@ -400,6 +352,34 @@
 
                 </LinearLayout>
 
+                <!-- Locked Message -->
+
+                <LinearLayout
+                    android:id="@+id/lockMessageContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        style="@style/TextFont.Medium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
+                        android:text="@string/locked"
+                        android:textColor="@color/defaultTextGray"/>
+
+                    <TextView
+                        android:id="@+id/lockMessageTextView"
+                        style="@style/TextFont.Regular"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                        android:tint="@color/defaultTextGray"
+                        tools:text="April 1 at 11:59 PM"/>
+
+                </LinearLayout>
+
                 <!-- Submission & Rubric button -->
 
                 <LinearLayout
@@ -431,6 +411,27 @@
                         android:importantForAccessibility="no"
                         android:src="@drawable/vd_forward_arrow"
                         android:tint="@color/textLightGray" />
+
+                </LinearLayout>
+
+
+                <!-- Locked Image -->
+
+                <LinearLayout
+                    android:id="@+id/lockImageContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="32dp"
+                    android:visibility="gone"
+                    tools:visibility="visible">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/vd_panda_locked"/>
 
                 </LinearLayout>
 

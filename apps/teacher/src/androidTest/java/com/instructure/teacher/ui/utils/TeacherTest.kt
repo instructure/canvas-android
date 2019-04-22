@@ -20,6 +20,7 @@ import com.instructure.canvas.espresso.CanvasTest
 import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.activities.LoginActivity
 import com.instructure.teacher.ui.pages.*
+import org.junit.Before
 
 abstract class TeacherTest : CanvasTest() {
 

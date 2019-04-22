@@ -230,6 +230,8 @@ public class CanvasWebView extends WebView implements NestedScrollingChild {
         this.setWebViewClient(new CanvasWebViewClient());
 
         this.getSettings().setDomStorageEnabled(true);
+        this.getSettings().setMediaPlaybackRequiresUserGesture(false); // Disabled to allow videos to be played
+
         // Increase text size based on the devices accessibility setting
         // fontScale comes back as a float
         int scalePercent = (int)(getResources().getConfiguration().fontScale * 100);
@@ -633,7 +635,7 @@ public class CanvasWebView extends WebView implements NestedScrollingChild {
         String result = html.replace("{$CONTENT$}", content);
 
         // BaseURL is set as Referer. Referer needed for some vimeo videos to play
-        this.loadDataWithBaseURL(CanvasWebView.getRefererDomain(getContext()), result, "text/html", encoding, getHtmlAsUrl(result, encoding));
+        this.loadDataWithBaseURL(CanvasWebView.getReferrer(true), result, "text/html", encoding, getHtmlAsUrl(result, encoding));
 
         setupAccessibilityContentDescription(result, title);
 

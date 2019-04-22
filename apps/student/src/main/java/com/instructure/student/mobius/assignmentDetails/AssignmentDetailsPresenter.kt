@@ -26,7 +26,6 @@ import com.instructure.canvasapi2.utils.isValid
 import com.instructure.student.R
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsViewState
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsVisibilities
-import com.instructure.student.mobius.assignmentDetails.ui.SubmissionTypesVisibilities
 import com.instructure.student.mobius.assignmentDetails.ui.gradeCell.GradeCellViewState
 import com.instructure.student.mobius.common.ui.Presenter
 import java.text.DateFormat
@@ -92,8 +91,7 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
         }
 
         // Partial locked state (availability date has passed; show details and the lock explanation)
-        val lockMessage =
-            assignment.lockExplanation.takeIf { it.isValid() && assignment.lockDate?.before(Date()) == true }
+        val lockMessage = assignment.lockExplanation.takeIf { it.isValid() && assignment.lockDate?.before(Date()) == true }
         visibilities.lockedMessage = lockMessage.isValid()
 
         // Due date
@@ -103,6 +101,9 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
         } else {
             DateHelper.getMonthDayTimeMaybeMinutesMaybeYear(context, assignment.dueDate, R.string.at)!!
         }
+
+        // Submission/Rubric button
+        visibilities.submissionAndRubricButton = true // Always show the submission and rubric button
 
         // Description
         val description = if (assignment.description.isValid()) {
@@ -167,6 +168,7 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
     ): AssignmentDetailsViewState.Loaded {
         visibilities.lockedMessage = true
         visibilities.lockedImage = true
+        visibilities.submissionAndRubricButton = true
         val unlockDate = assignment.unlockDate
         val lockMessage = if (unlockDate != null) {
             val dateString = DateFormat.getDateInstance().format(unlockDate)
