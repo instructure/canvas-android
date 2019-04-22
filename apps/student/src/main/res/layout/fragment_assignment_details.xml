@@ -415,7 +415,7 @@
                     android:paddingEnd="16dp"
                     android:visibility="gone">
 
-                <TextView
+                    <TextView
                         android:id="@+id/submissionAndRubricLabel"
                         style="@style/TextFont.Medium"
                         android:layout_width="0dp"
@@ -423,14 +423,14 @@
                         android:layout_weight="1"
                         android:text="@string/submissionAndRubric"
                         android:textColor="@color/canvasDefaultAccent"
-                        android:textSize="16sp"/>
+                        android:textSize="16sp" />
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:importantForAccessibility="no"
                         android:src="@drawable/vd_forward_arrow"
-                        android:tint="@color/textLightGray"/>
+                        android:tint="@color/textLightGray" />
 
                 </LinearLayout>
 
