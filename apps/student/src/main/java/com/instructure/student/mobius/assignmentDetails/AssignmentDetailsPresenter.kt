@@ -92,8 +92,7 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
         }
 
         // Partial locked state (availability date has passed; show details and the lock explanation)
-        val lockMessage =
-            assignment.lockExplanation.takeIf { it.isValid() && assignment.lockDate?.before(Date()) == true }
+        val lockMessage = assignment.lockExplanation.takeIf { it.isValid() && assignment.lockDate?.before(Date()) == true }
         visibilities.lockedMessage = lockMessage.isValid()
 
         // Due date
@@ -105,7 +104,7 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
         }
 
         // Submission/Rubric button
-        visibilities.submissionAndRubricButton = submitted
+        visibilities.submissionAndRubricButton = true // Always show the submission and rubric button
 
         // Description
         val description = if (assignment.description.isValid()) {
@@ -170,6 +169,7 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
     ): AssignmentDetailsViewState.Loaded {
         visibilities.lockedMessage = true
         visibilities.lockedImage = true
+        visibilities.submissionAndRubricButton = true
         val unlockDate = assignment.unlockDate
         val lockMessage = if (unlockDate != null) {
             val dateString = DateFormat.getDateInstance().format(unlockDate)
