@@ -22,6 +22,7 @@ import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.utils.DataResult
 
 sealed class SyllabusEvent {
+    object PullToRefresh : SyllabusEvent()
     data class DataLoaded(val events: DataResult<List<ScheduleItem>>) : SyllabusEvent()
     data class AssignmentClicked(val assignmentId: Long) : SyllabusEvent()
 }
