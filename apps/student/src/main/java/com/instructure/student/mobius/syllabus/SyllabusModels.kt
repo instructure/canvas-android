@@ -22,18 +22,19 @@ import com.instructure.canvasapi2.utils.DataResult
 
 sealed class SyllabusEvent {
     object PullToRefresh : SyllabusEvent()
-    data class DataLoaded(val events: DataResult<List<ScheduleItem>>) : SyllabusEvent()
-    data class AssignmentClicked(val assignmentId: Long) : SyllabusEvent()
+    data class DataLoaded(val canvasContext: DataResult<CanvasContext>, val events: DataResult<List<ScheduleItem>>) : SyllabusEvent()
+    data class SyllabusItemClicked(val itemId: Long) : SyllabusEvent()
 }
 
 sealed class SyllabusEffect {
-    data class LoadData(val contextId: String, val forceNetwork: Boolean) : SyllabusEffect()
+    data class LoadData(val canvasContextId: String, val forceNetwork: Boolean) : SyllabusEffect()
     data class ShowAssignmentView(val assignmentId: Long, val canvasContext: CanvasContext) : SyllabusEffect()
+    data class ShowScheduleItemView(val scheduleItem: ScheduleItem, val canvasContext: CanvasContext) : SyllabusEffect()
 }
 
 data class SyllabusModel(
     val isLoading: Boolean = false,
-    val canvasContext: CanvasContext,
-    val syllabus: ScheduleItem,
+    val canvasContext: DataResult<CanvasContext>? = null,
+    val syllabus: ScheduleItem? = null,
     val events: DataResult<List<ScheduleItem>>? = null
 )
