@@ -27,7 +27,7 @@ sealed class SyllabusEvent {
 }
 
 sealed class SyllabusEffect {
-    data class LoadData(val contextId: Long, val forceNetwork: Boolean) : SyllabusEffect()
+    data class LoadData(val contextId: String, val forceNetwork: Boolean) : SyllabusEffect()
     data class ShowAssignmentView(val assignmentId: Long, val canvasContext: CanvasContext) : SyllabusEffect()
 }
 
