@@ -61,7 +61,8 @@ class AssignmentDetailsPresenterTest : Assert() {
             title = true,
             dueDate = true,
             submissionTypes = true,
-            description = true
+            description = true,
+            submissionAndRubricButton = true
         )
         baseSubmission = Submission(
             attempt = 1,
@@ -86,7 +87,7 @@ class AssignmentDetailsPresenterTest : Assert() {
     }
 
     @Test
-    fun `Shows only title content and lock views when assignment locked by date`() {
+    fun `Shows only title content, submission and rubric button, and lock views when assignment locked by date`() {
         val unlockDate = Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(10))
         val assignment = baseAssignment.copy(
             lockInfo = LockInfo(unlockAt = unlockDate.toApiString())
@@ -95,14 +96,15 @@ class AssignmentDetailsPresenterTest : Assert() {
         val expected = AssignmentDetailsVisibilities(
             title = true,
             lockedMessage = true,
-            lockedImage = true
+            lockedImage = true,
+            submissionAndRubricButton = true
         )
         val actual = AssignmentDetailsPresenter.present(model, context).visibilities
         assertEquals(expected, actual)
     }
 
     @Test
-    fun `Shows only title content and lock views when assignment is in a locked module`() {
+    fun `Shows only title content, submission and rubric button, and lock views when assignment is in a locked module`() {
         val assignment = baseAssignment.copy(
             lockInfo = LockInfo(
                 contextModule = LockedModule(name = "Locked Module")
@@ -112,7 +114,8 @@ class AssignmentDetailsPresenterTest : Assert() {
         val expected = AssignmentDetailsVisibilities(
             title = true,
             lockedMessage = true,
-            lockedImage = true
+            lockedImage = true,
+            submissionAndRubricButton = true
         )
         val actual = AssignmentDetailsPresenter.present(model, context).visibilities
         assertEquals(expected, actual)
