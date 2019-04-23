@@ -101,15 +101,6 @@ class SubmissionDetailsEmptyContentView(
         }
     }
 
-    fun showSubmissionView(assignmentId: Long, course: Course) {
-        RouteMatcher.route(context, SubmissionDetailsFragment.makeRoute(course, assignmentId))
-    }
-
-    fun showUploadStatusView(assignmentId: Long, course: Course) {
-        // TODO
-        context.toast("Route to status page")
-    }
-
     fun showOnlineTextEntryView(assignmentId: Long, courseId: Long) {
         // TODO
         context.toast("Route to text entry page")
