@@ -32,7 +32,7 @@ class SubmissionDetailsEmptyContentUpdate : UpdateInit<SubmissionDetailsEmptyCon
                 if (submissionTypes.size == 1 && !(submissionTypes.contains(Assignment.SubmissionType.ONLINE_UPLOAD) && model.isArcEnabled)) {
                     Next.dispatch<SubmissionDetailsEmptyContentModel, SubmissionDetailsEmptyContentEffect>(setOf(SubmissionDetailsEmptyContentEffect.ShowCreateSubmissionView(submissionTypes.first(), model.course.id, model.assignment)))
                 } else {
-                    Next.dispatch<SubmissionDetailsEmptyContentModel, SubmissionDetailsEmptyContentEffect>(setOf(SubmissionDetailsEmptyContentEffect.ShowSubmitDialogView(model.assignment, model.course)))
+                    Next.dispatch<SubmissionDetailsEmptyContentModel, SubmissionDetailsEmptyContentEffect>(setOf(SubmissionDetailsEmptyContentEffect.ShowSubmitDialogView(model.assignment, model.course, model.isArcEnabled)))
                 }
             }
         }
