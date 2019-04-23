@@ -26,6 +26,7 @@ import com.instructure.student.mobius.common.ui.UpdateInit
 import com.instructure.student.util.Const
 import com.spotify.mobius.First
 import com.spotify.mobius.Next
+import java.util.Collections.emptyList
 
 class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDetailsEvent, SubmissionDetailsEffect>() {
     override fun performInit(model: SubmissionDetailsModel): First<SubmissionDetailsModel, SubmissionDetailsEffect> {
@@ -68,7 +69,7 @@ class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDet
                     event.assignment.dataOrNull,
                     model.canvasContext,
                     model.assignmentId,
-                    model.isArcEnabled)
+                    event.isArcEnabled)
                 Next.next(
                     model.copy(
                         isLoading = false,
