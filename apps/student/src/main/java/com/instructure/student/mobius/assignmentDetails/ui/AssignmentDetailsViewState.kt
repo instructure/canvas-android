@@ -52,7 +52,7 @@ data class AssignmentDetailsVisibilities (
     var dueDate: Boolean = false,
     var submissionTypes: Boolean = false,
     var fileTypes: Boolean = false,
-    var submissionAndRubricButton: Boolean = true, // We always show the button leading to Submission Details
+    var submissionAndRubricButton: Boolean = false,
     var grade: Boolean = false,
     var lockedMessage: Boolean = false,
     var lockedImage: Boolean = false,

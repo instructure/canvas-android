@@ -18,16 +18,17 @@ package com.instructure.student.mobius.assignmentDetails.submissionDetails.conte
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 
-sealed class SubmissionDetailsEmptyEvent {
-    object SubmitAssignmentClicked : SubmissionDetailsEmptyEvent()
+sealed class SubmissionDetailsEmptyContentEvent {
+    object SubmitAssignmentClicked : SubmissionDetailsEmptyContentEvent()
 }
 
-sealed class SubmissionDetailsEmptyEffect {
-    data class ShowSubmitDialogView(val assignmentId: Long, val course: Course) : SubmissionDetailsEmptyEffect()
-    data class ShowCreateSubmissionView(val submissionType: Assignment.SubmissionType, val courseId: Long, val assignment: Assignment) : SubmissionDetailsEmptyEffect()
+sealed class SubmissionDetailsEmptyContentEffect {
+    data class ShowSubmitDialogView(val assignment: Assignment, val course: Course) : SubmissionDetailsEmptyContentEffect()
+    data class ShowCreateSubmissionView(val submissionType: Assignment.SubmissionType, val courseId: Long, val assignment: Assignment) : SubmissionDetailsEmptyContentEffect()
 }
 
 data class SubmissionDetailsEmptyContentModel(
-        val assignment: Assignment,
-        val course: Course
+    val assignment: Assignment,
+    val course: Course,
+    val isArcEnabled: Boolean
 )

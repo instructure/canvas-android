@@ -39,6 +39,7 @@ class SubmissionDetailsEmptyContentPresenterTest : Assert() {
     private lateinit var baseAssignment: Assignment
     private lateinit var baseCourse: Course
     private lateinit var context: Context
+    private var isArcEnabled = false
 
     @Before
     fun setup() {
@@ -49,7 +50,8 @@ class SubmissionDetailsEmptyContentPresenterTest : Assert() {
                 submissionTypesRaw = listOf("online_upload"),
                 lockedForUser = false
         )
-        baseModel = SubmissionDetailsEmptyContentModel(baseAssignment, baseCourse)
+
+        baseModel = SubmissionDetailsEmptyContentModel(baseAssignment, baseCourse, isArcEnabled)
     }
 
     @Test
@@ -62,7 +64,7 @@ class SubmissionDetailsEmptyContentPresenterTest : Assert() {
 
         val expectedState = Loaded(
                 isAllowedToSubmit = true,
-                dueDateText = "Due tomorrow at 1:59pm"
+                dueDateText = "Due tomorrow at 1:59 pm"
         )
 
         val actualState = SubmissionDetailsEmptyContentPresenter.present(baseModel, context)
@@ -80,7 +82,7 @@ class SubmissionDetailsEmptyContentPresenterTest : Assert() {
 
         val expectedState = Loaded(
                 isAllowedToSubmit = true,
-                dueDateText = "Due today at 1:59pm"
+                dueDateText = "Due today at 1:59 pm"
         )
 
         val actualState = SubmissionDetailsEmptyContentPresenter.present(baseModel, context)
@@ -98,7 +100,7 @@ class SubmissionDetailsEmptyContentPresenterTest : Assert() {
 
         val expectedState = Loaded(
                 isAllowedToSubmit = true,
-                dueDateText = "Due yesterday at 1:59pm"
+                dueDateText = "Due yesterday at 1:59 pm"
         )
 
         val actualState = SubmissionDetailsEmptyContentPresenter.present(baseModel, context)
@@ -116,7 +118,7 @@ class SubmissionDetailsEmptyContentPresenterTest : Assert() {
 
         val expectedState = Loaded(
                 isAllowedToSubmit = true,
-                dueDateText = "Due Apr 2 at 1:59pm"
+                dueDateText = "Due Apr 2 at 1:59 pm"
         )
 
         val actualState = SubmissionDetailsEmptyContentPresenter.present(baseModel, context)
@@ -152,7 +154,7 @@ class SubmissionDetailsEmptyContentPresenterTest : Assert() {
 
         val expectedState = Loaded(
                 isAllowedToSubmit = false,
-                dueDateText = "Your assignment was locked on Apr 2, 2016 at 1:59pm"
+                dueDateText = "Your assignment was locked on Apr 2, 2016 at 1:59 pm"
         )
 
         val actualState = SubmissionDetailsEmptyContentPresenter.present(baseModel, context)
@@ -169,7 +171,7 @@ class SubmissionDetailsEmptyContentPresenterTest : Assert() {
 
         val expectedState = Loaded(
                 isAllowedToSubmit = false,
-                dueDateText = "Your assignment will unlock on Apr 2, 2067 at 1:59pm"
+                dueDateText = "Your assignment will unlock on Apr 2, 2067 at 1:59 pm"
         )
 
         val actualState = SubmissionDetailsEmptyContentPresenter.present(baseModel, context)
@@ -229,7 +231,7 @@ class SubmissionDetailsEmptyContentPresenterTest : Assert() {
 
         val expectedState = Loaded(
                 isAllowedToSubmit = true,
-                dueDateText = "Due Apr 2, 2018 at 1:59pm"
+                dueDateText = "Due Apr 2, 2018 at 1:59 pm"
         )
 
         val actualState = SubmissionDetailsEmptyContentPresenter.present(baseModel, context)

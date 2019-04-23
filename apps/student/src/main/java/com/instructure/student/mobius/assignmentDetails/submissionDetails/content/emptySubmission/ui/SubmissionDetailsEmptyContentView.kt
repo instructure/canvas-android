@@ -18,22 +18,23 @@ package com.instructure.student.mobius.assignmentDetails.submissionDetails.conte
 import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
-import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.SubmissionDetailsEmptyEvent
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.SubmissionDetailsEmptyContentEvent
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyContentViewState.Loaded
 import com.instructure.student.mobius.common.ui.MobiusView
 import com.spotify.mobius.functions.Consumer
 import kotlinx.android.synthetic.main.fragment_submission_details_empty_content.*
 
 class SubmissionDetailsEmptyContentView(
-        inflater: LayoutInflater,
-        parent: ViewGroup
-) : MobiusView<SubmissionDetailsEmptyContentViewState, SubmissionDetailsEmptyEvent>(
-        R.layout.fragment_submission_details_empty_content,
-        inflater,
-        parent
+    inflater: LayoutInflater,
+    parent: ViewGroup
+) : MobiusView<SubmissionDetailsEmptyContentViewState, SubmissionDetailsEmptyContentEvent>(
+    R.layout.fragment_submission_details_empty_content,
+    inflater,
+    parent
 ) {
 
     init {
@@ -41,8 +42,8 @@ class SubmissionDetailsEmptyContentView(
         submitButton.setTextColor(ThemePrefs.buttonTextColor)
     }
 
-    override fun onConnect(output: Consumer<SubmissionDetailsEmptyEvent>) {
-        submitButton.onClick { output.accept(SubmissionDetailsEmptyEvent.SubmitAssignmentClicked) }
+    override fun onConnect(output: Consumer<SubmissionDetailsEmptyContentEvent>) {
+        submitButton.onClick { output.accept(SubmissionDetailsEmptyContentEvent.SubmitAssignmentClicked) }
     }
 
     override fun render(state: SubmissionDetailsEmptyContentViewState) {
@@ -58,8 +59,7 @@ class SubmissionDetailsEmptyContentView(
     override fun onDispose() {}
     override fun applyTheme() {}
 
-
-    fun showSubmitDialogView(assignmentId: Long, course: Course) {
+    fun showSubmitDialogView(assignment: Assignment, course: Course) {
         // TODO
         context.toast("Route to submission workflow")
     }

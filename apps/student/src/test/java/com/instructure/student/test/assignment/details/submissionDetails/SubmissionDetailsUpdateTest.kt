@@ -48,13 +48,14 @@ class SubmissionDetailsUpdateTest : Assert() {
     private lateinit var assignment: Assignment
     private lateinit var submission: Submission
     private lateinit var initModel: SubmissionDetailsModel
+    private var isArcEnabled = false
 
     @Before
     fun setup() {
         course = Course()
         assignment = Assignment(id = 1234L, courseId = course.id)
         submission = Submission(id = 30L, attempt = 1L, assignmentId = assignment.id)
-        initModel = SubmissionDetailsModel(assignmentId = assignment.id, canvasContext = course)
+        initModel = SubmissionDetailsModel(assignmentId = assignment.id, canvasContext = course, isArcEnabled = isArcEnabled)
     }
 
     @Test
@@ -154,7 +155,7 @@ class SubmissionDetailsUpdateTest : Assert() {
     fun `SubmissionClicked event with no corresponding submission results in model change and a ShowSubmissionContentType effect of NoSubmissionContent`() {
         val submissionId = 1234L
         val contentType =
-            SubmissionDetailsContentType.NoSubmissionContent(course, assignment) // No submission in the model with the selected ID maps to NoSubmissionContent type
+            SubmissionDetailsContentType.NoSubmissionContent(course, assignment, isArcEnabled) // No submission in the model with the selected ID maps to NoSubmissionContent type
 
         initModel = initModel.copy(assignment = DataResult.Success(assignment))
 
@@ -185,16 +186,17 @@ class SubmissionDetailsUpdateTest : Assert() {
         initModel = initModel.copy(isLoading = true)
         val assignment = DataResult.Success(assignment)
         val submission = DataResult.Fail(Failure.Network("ErRoR"))
-        val contentType = SubmissionDetailsContentType.NoSubmissionContent(course, assignment.data)
+        val contentType = SubmissionDetailsContentType.NoSubmissionContent(course, assignment.data, isArcEnabled)
         val expectedModel = initModel.copy(
             isLoading = false,
             assignment = assignment,
             rootSubmission = submission,
-            selectedSubmissionAttempt = null
+            selectedSubmissionAttempt = null,
+            isArcEnabled = isArcEnabled
         )
         updateSpec
             .given(initModel)
-            .whenEvent(SubmissionDetailsEvent.DataLoaded(assignment, submission))
+            .whenEvent(SubmissionDetailsEvent.DataLoaded(assignment, submission, isArcEnabled))
             .then(
                 assertThatNext(
                     hasModel(expectedModel),
@@ -230,7 +232,7 @@ class SubmissionDetailsUpdateTest : Assert() {
         verifyGetSubmissionContentType(
             assignment,
             submission.copy(attempt = 0),
-            SubmissionDetailsContentType.NoSubmissionContent(course, assignment)
+            SubmissionDetailsContentType.NoSubmissionContent(course, assignment, isArcEnabled)
         )
     }
 
@@ -239,7 +241,7 @@ class SubmissionDetailsUpdateTest : Assert() {
         verifyGetSubmissionContentType(
             assignment,
             submission.copy(missing = true),
-            SubmissionDetailsContentType.NoSubmissionContent(course, assignment)
+            SubmissionDetailsContentType.NoSubmissionContent(course, assignment, isArcEnabled)
         )
     }
 
@@ -664,7 +666,7 @@ class SubmissionDetailsUpdateTest : Assert() {
 
         updateSpec
             .given(initModel)
-            .whenEvent(SubmissionDetailsEvent.DataLoaded(assignmentResult, submissionResult))
+            .whenEvent(SubmissionDetailsEvent.DataLoaded(assignmentResult, submissionResult, isArcEnabled))
             .then(
                 assertThatNext(
                     hasModel(expectedModel),

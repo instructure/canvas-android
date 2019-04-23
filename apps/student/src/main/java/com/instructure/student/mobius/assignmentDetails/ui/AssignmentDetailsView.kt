@@ -114,6 +114,7 @@ class AssignmentDetailsView(
             fileTypesContainer.setVisible(visibilities.fileTypes)
             gradeContainer.setVisible(visibilities.grade)
             lockMessageContainer.setVisible(visibilities.lockedMessage)
+            submissionRubricButton.setVisible(visibilities.submissionAndRubricButton)
             lockImageContainer.setVisible(visibilities.lockedImage)
             noDescriptionContainer.setVisible(visibilities.noDescriptionLabel)
             descriptionWebView.setVisible(visibilities.description)

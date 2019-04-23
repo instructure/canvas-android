@@ -38,7 +38,7 @@ import com.instructure.student.mobius.assignmentDetails.submissionDetails.Submis
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsEvent
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.TextSubmissionFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.UrlSubmissionFragment
-import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyFragment
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyContentFragment
 import com.instructure.student.mobius.common.ui.MobiusView
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import com.spotify.mobius.functions.Consumer
@@ -186,7 +186,7 @@ class SubmissionDetailsView(
 
     private fun getFragmentForContent(type: SubmissionDetailsContentType): Fragment {
         return when (type) {
-            is SubmissionDetailsContentType.NoSubmissionContent -> SubmissionDetailsEmptyFragment.newInstance(type.canvasContext as Course, type.assignment)
+            is SubmissionDetailsContentType.NoSubmissionContent -> SubmissionDetailsEmptyContentFragment.newInstance(type.canvasContext as Course, type.assignment, type.isArcEnabled)
             is SubmissionDetailsContentType.UrlContent -> UrlSubmissionFragment.newInstance(type.url, type.previewUrl)
             is SubmissionDetailsContentType.TextContent -> TextSubmissionFragment.newInstance(type.text)
             else -> PlaceholderFragment().apply {

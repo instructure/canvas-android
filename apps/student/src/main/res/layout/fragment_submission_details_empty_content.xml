@@ -23,7 +23,7 @@
     android:layout_height="match_parent"
     android:paddingBottom="40dp">
 
-<androidx.constraintlayout.widget.Guideline
+    <androidx.constraintlayout.widget.Guideline
         android:id="@+id/imageTop"
         android:layout_width="wrap_content"
         android:layout_height="1dp"
@@ -35,14 +35,14 @@
         android:layout_width="1dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.05" />
+        app:layout_constraintGuide_begin="16dp" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/textRight"
         android:layout_width="1dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.95" />
+        app:layout_constraintGuide_end="16dp" />
 
     <ImageView
         android:id="@+id/image"
@@ -96,8 +96,7 @@
         android:text="@string/submitAssignment"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintLeft_toLeftOf="@id/textRight"
+        app:layout_constraintRight_toRightOf="@id/textLeft" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

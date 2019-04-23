@@ -13,11 +13,14 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui
+package com.instructure.student.util
 
-sealed class SubmissionDetailsEmptyContentViewState {
-    data class Loaded(
-        val isAllowedToSubmit: Boolean = true,
-        val dueDateText: String = ""
-    ) : SubmissionDetailsEmptyContentViewState()
+import com.instructure.canvasapi2.managers.ExternalToolManager
+import com.instructure.canvasapi2.models.CanvasContext
+
+suspend fun Long.isArcEnabled(): Boolean {
+    val context = CanvasContext.getGenericContext(CanvasContext.Type.COURSE, this)
+    return ExternalToolManager.getExternalToolsForCanvasContextAsync(context, true).await().dataOrNull?.any {
+        it.url?.contains("instructuremedia.com/lti/launch") ?: false
+    } ?: false
 }

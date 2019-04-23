@@ -27,7 +27,7 @@ import com.instructure.canvasapi2.utils.DataResult
 sealed class SubmissionDetailsEvent {
     object RefreshRequested : SubmissionDetailsEvent()
     data class SubmissionClicked(val submissionAttempt: Long, val attachmentId: Int = 0) : SubmissionDetailsEvent()
-    data class DataLoaded(val assignment: DataResult<Assignment>, val rootSubmission: DataResult<Submission>) :
+    data class DataLoaded(val assignment: DataResult<Assignment>, val rootSubmission: DataResult<Submission>, val isArcEnabled: Boolean) :
         SubmissionDetailsEvent()
 }
 
@@ -44,7 +44,8 @@ data class SubmissionDetailsModel(
     val selectedSubmissionAttempt: Long? = null,
     val selectedAttachmentId: Long? = null,
     val assignment: DataResult<Assignment>? = null,
-    val rootSubmission: DataResult<Submission>? = null
+    val rootSubmission: DataResult<Submission>? = null,
+    val isArcEnabled: Boolean? = null
 )
 
 sealed class SubmissionDetailsContentType {
@@ -63,7 +64,7 @@ sealed class SubmissionDetailsContentType {
         val displayName: String?
     ) : SubmissionDetailsContentType()
 
-    data class NoSubmissionContent(val canvasContext: CanvasContext, val assignment: Assignment) : SubmissionDetailsContentType()
+    data class NoSubmissionContent(val canvasContext: CanvasContext, val assignment: Assignment, val isArcEnabled: Boolean) : SubmissionDetailsContentType()
     object NoneContent : SubmissionDetailsContentType()
     data class ExternalToolContent(val canvasContext: CanvasContext, val url: String) : SubmissionDetailsContentType()
     object OnPaperContent : SubmissionDetailsContentType()

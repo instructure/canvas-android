@@ -24,7 +24,6 @@ import org.threeten.bp.LocalDate
 import org.threeten.bp.OffsetDateTime
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.format.DateTimeFormatterBuilder
-import org.threeten.bp.temporal.ChronoField
 import org.threeten.bp.temporal.ChronoUnit
 
 object SubmissionDetailsEmptyContentPresenter : Presenter<SubmissionDetailsEmptyContentModel, SubmissionDetailsEmptyContentViewState> {
@@ -51,19 +50,19 @@ fun Assignment.getDueString(context: Context): String {
     return when (ChronoUnit.DAYS.between(now, dueDateTime)) {
         -1L -> {
             // Yesterday
-            context.getString(R.string.submissionDetailsDueYesterdayAt, dueDateTime.getTime(context))
+            context.getString(R.string.submissionDetailsDueYesterdayAt, dueDateTime.getTime())
         }
         0L -> {
             // Today
-            context.getString(R.string.submissionDetailsDueTodayAt, dueDateTime.getTime(context))
+            context.getString(R.string.submissionDetailsDueTodayAt, dueDateTime.getTime())
         }
         1L -> {
             // Tomorrow
-            context.getString(R.string.submissionDetailsDueTomorrowAt, dueDateTime.getTime(context))
+            context.getString(R.string.submissionDetailsDueTomorrowAt, dueDateTime.getTime())
         }
         else -> {
             // Due sometime in the future
-            context.getString(R.string.submissionDetailsDueAt, dueDateTime.getShortMonthAndDay(), dueDateTime.getTime(context))
+            context.getString(R.string.submissionDetailsDueAt, dueDateTime.getShortMonthAndDay(), dueDateTime.getTime())
         }
     }
 }
@@ -89,7 +88,7 @@ fun Assignment.getLockedString(context: Context): String {
 
         if (now.isBefore(unlockDateTime.toLocalDate())) {
             // Assignment isn't unlocked yet
-            return context.getString(R.string.submissionDetailsAssignmentWillUnlockOn, unlockDateTime.getShortMonthAndDay(), unlockDateTime.getTime(context))
+            return context.getString(R.string.submissionDetailsAssignmentWillUnlockOn, unlockDateTime.getShortMonthAndDay(), unlockDateTime.getTime())
         }
     }
 
@@ -99,7 +98,7 @@ fun Assignment.getLockedString(context: Context): String {
 
         if (now.isAfter(lockDateTime.toLocalDate())) {
             // Assignment was locked
-            return context.getString(R.string.submissionDetailsAssignmentWasLockedOn, lockDateTime.getShortMonthAndDay(), lockDateTime.getTime(context))
+            return context.getString(R.string.submissionDetailsAssignmentWasLockedOn, lockDateTime.getShortMonthAndDay(), lockDateTime.getTime())
         }
     }
 
@@ -112,13 +111,8 @@ fun OffsetDateTime.getShortMonthAndDay(): String {
     return format(pattern)
 }
 
-fun OffsetDateTime.getTime(context: Context): String {
-    val amPm = hashMapOf(
-            0L to context.getString(R.string.lowercaseAM),
-            1L to context.getString(R.string.lowercasePM)
-    )
-
-    val pattern = DateTimeFormatterBuilder().appendPattern("h:mm").appendText(ChronoField.AMPM_OF_DAY, amPm).toFormatter()
-    return format(pattern)
+fun OffsetDateTime.getTime(): String {
+    val pattern = DateTimeFormatterBuilder().appendPattern("h:mm a").toFormatter()
+    return format(pattern).toLowerCase()
 }
 

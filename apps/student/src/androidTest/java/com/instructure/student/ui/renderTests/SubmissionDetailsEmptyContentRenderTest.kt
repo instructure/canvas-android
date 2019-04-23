@@ -22,7 +22,7 @@ import com.instructure.canvasapi2.models.LockInfo
 import com.instructure.canvasapi2.models.LockedModule
 import com.instructure.student.espresso.StudentRenderTest
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.SubmissionDetailsEmptyContentModel
-import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyFragment
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyContentFragment
 import com.spotify.mobius.runners.WorkRunner
 import org.junit.Before
 import org.junit.Test
@@ -35,18 +35,20 @@ class SubmissionDetailsEmptyContentRenderTest : StudentRenderTest() {
 
     private lateinit var baseModel: SubmissionDetailsEmptyContentModel
     private lateinit var baseAssignment: Assignment
+    private var isArcEnabled = false
 
     @Before
     fun setup() {
         baseAssignment = Assignment(
-                submissionTypesRaw = listOf("online_upload"),
-                lockedForUser = false,
-                dueAt = OffsetDateTime.now().withHour(23).withMinute(59).format(DateTimeFormatter.ISO_DATE_TIME)
+            submissionTypesRaw = listOf("online_upload"),
+            lockedForUser = false,
+            dueAt = OffsetDateTime.now().withHour(23).withMinute(59).format(DateTimeFormatter.ISO_DATE_TIME)
         )
 
         baseModel = SubmissionDetailsEmptyContentModel(
-                assignment = baseAssignment,
-                course = Course()
+            assignment = baseAssignment,
+            course = Course(),
+            isArcEnabled = isArcEnabled
         )
     }
 
@@ -60,7 +62,7 @@ class SubmissionDetailsEmptyContentRenderTest : StudentRenderTest() {
     @Test
     fun submitButtonIsHiddenWhenUserCannotSubmit() {
         loadPageWithModel(baseModel.copy(
-                assignment = Assignment(lockedForUser = true)
+            assignment = Assignment(lockedForUser = true)
         ))
 
         submissionDetailsEmptyContentRenderPage.assertSubmitButtonHidden()
@@ -68,10 +70,11 @@ class SubmissionDetailsEmptyContentRenderTest : StudentRenderTest() {
 
     @Test
     fun displaysDueYesterday() {
-        val expectedText = "Due yesterday at 1:59pm"
+        val expectedText = "Due yesterday at 1:59 pm"
         loadPageWithModel(baseModel.copy(
-                assignment = baseAssignment.copy(dueAt = OffsetDateTime.now().minusDays(1L).withHour(13).withMinute(59).format(DateTimeFormatter.ISO_DATE_TIME)
-                )
+            assignment = baseAssignment.copy(
+                dueAt = OffsetDateTime.now().minusDays(1L).withHour(13).withMinute(59).format(DateTimeFormatter.ISO_DATE_TIME)
+            )
         ))
 
         submissionDetailsEmptyContentRenderPage.assertExpectedDueDate(expectedText)
@@ -79,7 +82,7 @@ class SubmissionDetailsEmptyContentRenderTest : StudentRenderTest() {
 
     @Test
     fun displaysDueToday() {
-        val expectedText = "Due today at 11:59pm"
+        val expectedText = "Due today at 11:59 pm"
         loadPageWithModel(baseModel)
 
         submissionDetailsEmptyContentRenderPage.assertExpectedDueDate(expectedText)
@@ -87,20 +90,22 @@ class SubmissionDetailsEmptyContentRenderTest : StudentRenderTest() {
 
     @Test
     fun displaysDueTomorrow() {
-        val expectedText = "Due tomorrow at 1:59pm"
+        val expectedText = "Due tomorrow at 1:59 pm"
         loadPageWithModel(baseModel.copy(
-                assignment = baseAssignment.copy(dueAt = OffsetDateTime.now().plusDays(1L).withHour(13).withMinute(59).format(DateTimeFormatter.ISO_DATE_TIME)
-                )))
+            assignment = baseAssignment.copy(
+                dueAt = OffsetDateTime.now().plusDays(1L).withHour(13).withMinute(59).format(DateTimeFormatter.ISO_DATE_TIME)
+            )
+        ))
 
         submissionDetailsEmptyContentRenderPage.assertExpectedDueDate(expectedText)
     }
 
     @Test
     fun displaysDueDate() {
-        val expectedText = "Due Apr 2 at 1:59pm"
+        val expectedText = "Due Apr 2 at 1:59 pm"
         loadPageWithModel(baseModel.copy(
-                assignment = baseAssignment.copy(dueAt = OffsetDateTime.now().withMonth(4).withDayOfMonth(2).withHour(13).withMinute(59).format(DateTimeFormatter.ISO_DATE_TIME)
-                )))
+            assignment = baseAssignment.copy(dueAt = OffsetDateTime.now().withMonth(4).withDayOfMonth(2).withHour(13).withMinute(59).format(DateTimeFormatter.ISO_DATE_TIME))
+        ))
 
         submissionDetailsEmptyContentRenderPage.assertExpectedDueDate(expectedText)
     }
@@ -109,7 +114,7 @@ class SubmissionDetailsEmptyContentRenderTest : StudentRenderTest() {
     fun displaysNoDueDate() {
         val expectedText = "Your assignment has no due date"
         loadPageWithModel(baseModel.copy(
-                assignment = baseAssignment.copy(dueAt = null)
+            assignment = baseAssignment.copy(dueAt = null)
         ))
 
         submissionDetailsEmptyContentRenderPage.assertExpectedDueDate(expectedText)
@@ -117,9 +122,9 @@ class SubmissionDetailsEmptyContentRenderTest : StudentRenderTest() {
 
     @Test
     fun displaysDueDateWithYearWhenNotThisYear() {
-        val expectedText = "Due Apr 2, 2018 at 1:59pm"
+        val expectedText = "Due Apr 2, 2018 at 1:59 pm"
         loadPageWithModel(baseModel.copy(
-                assignment = baseAssignment.copy(dueAt = OffsetDateTime.now().withYear(2018).withMonth(4).withDayOfMonth(2).withHour(13).withMinute(59).format(DateTimeFormatter.ISO_DATE_TIME))
+            assignment = baseAssignment.copy(dueAt = OffsetDateTime.now().withYear(2018).withMonth(4).withDayOfMonth(2).withHour(13).withMinute(59).format(DateTimeFormatter.ISO_DATE_TIME))
         ))
 
         submissionDetailsEmptyContentRenderPage.assertExpectedDueDate(expectedText)
@@ -127,11 +132,11 @@ class SubmissionDetailsEmptyContentRenderTest : StudentRenderTest() {
 
     @Test
     fun displaysAssignmentLocked() {
-        val expectedText = "Your assignment was locked on Apr 2, 2016 at 1:59pm"
+        val expectedText = "Your assignment was locked on Apr 2, 2016 at 1:59 pm"
         loadPageWithModel(baseModel.copy(
-                assignment = baseAssignment.copy(
-                        lockedForUser = true,
-                        lockAt = OffsetDateTime.now().withYear(2016).withMonth(4).withDayOfMonth(2).withHour(13).withMinute(59).format(DateTimeFormatter.ISO_DATE_TIME))
+            assignment = baseAssignment.copy(
+                lockedForUser = true,
+                lockAt = OffsetDateTime.now().withYear(2016).withMonth(4).withDayOfMonth(2).withHour(13).withMinute(59).format(DateTimeFormatter.ISO_DATE_TIME))
         ))
 
         submissionDetailsEmptyContentRenderPage.assertExpectedDueDate(expectedText)
@@ -139,11 +144,11 @@ class SubmissionDetailsEmptyContentRenderTest : StudentRenderTest() {
 
     @Test
     fun displaysAssignmentWillUnlock() {
-        val expectedText = "Your assignment will unlock on Apr 2, 2067 at 1:59pm"
+        val expectedText = "Your assignment will unlock on Apr 2, 2067 at 1:59 pm"
         loadPageWithModel(baseModel.copy(
-                assignment = baseAssignment.copy(
-                        lockedForUser = true,
-                        unlockAt = OffsetDateTime.now().withYear(2067).withMonth(4).withDayOfMonth(2).withHour(13).withMinute(59).format(DateTimeFormatter.ISO_DATE_TIME))
+            assignment = baseAssignment.copy(
+                lockedForUser = true,
+                unlockAt = OffsetDateTime.now().withYear(2067).withMonth(4).withDayOfMonth(2).withHour(13).withMinute(59).format(DateTimeFormatter.ISO_DATE_TIME))
         ))
 
         submissionDetailsEmptyContentRenderPage.assertExpectedDueDate(expectedText)
@@ -153,12 +158,14 @@ class SubmissionDetailsEmptyContentRenderTest : StudentRenderTest() {
     fun displaysAssignmentLockedByModule() {
         val expectedText = "Your assignment is locked by module \"Test Module\""
         loadPageWithModel(baseModel.copy(
-                assignment = baseAssignment.copy(lockedForUser = true,
-                        lockInfo = LockInfo(
-                                contextModule = LockedModule(
-                                        name = "Test Module"
-                                )
-                        ))
+            assignment = baseAssignment.copy(
+                lockedForUser = true,
+                lockInfo = LockInfo(
+                    contextModule = LockedModule(
+                        name = "Test Module"
+                    )
+                )
+            )
         ))
 
         submissionDetailsEmptyContentRenderPage.assertExpectedDueDate(expectedText)
@@ -168,11 +175,12 @@ class SubmissionDetailsEmptyContentRenderTest : StudentRenderTest() {
     fun displaysAssignmentLockedByModulePrereq() {
         val expectedText = "Your assignment is locked by a module requirement"
         loadPageWithModel(baseModel.copy(
-                assignment = baseAssignment.copy(
-                        lockedForUser = true,
-                        lockInfo = LockInfo(
-                                modulePrerequisiteNames = arrayListOf("must_view")
-                        ))
+            assignment = baseAssignment.copy(
+                lockedForUser = true,
+                lockInfo = LockInfo(
+                    modulePrerequisiteNames = arrayListOf("must_view")
+                )
+            )
         ))
 
         submissionDetailsEmptyContentRenderPage.assertExpectedDueDate(expectedText)
@@ -184,12 +192,11 @@ class SubmissionDetailsEmptyContentRenderTest : StudentRenderTest() {
             override fun dispose() = Unit
             override fun post(runnable: Runnable) = Unit
         }
-        val fragment = SubmissionDetailsEmptyFragment.newInstance(model.course, model.assignment).apply {
+        val fragment = SubmissionDetailsEmptyContentFragment.newInstance(model.course, model.assignment, model.isArcEnabled).apply {
             overrideInitModel = model
             loopMod = { it.effectRunner { emptyEffectRunner } }
         }
 
         activityRule.activity.loadFragment(fragment)
     }
-
 }

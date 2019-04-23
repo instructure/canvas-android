@@ -94,7 +94,8 @@ data class Assignment(
         @SerializedName("moderated_grading")
         val moderatedGrading: Boolean = false,
         @SerializedName("anonymous_grading")
-        val anonymousGrading: Boolean = false
+        val anonymousGrading: Boolean = false,
+        var isArcEnabled: Boolean = false
 ) : CanvasModel<Assignment>() {
     override val comparisonDate get() = dueDate
     override val comparisonString get() = dueAt

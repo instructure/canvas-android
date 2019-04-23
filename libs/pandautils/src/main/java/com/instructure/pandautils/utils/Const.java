@@ -91,6 +91,7 @@ public class Const {
     public static final String IMAGE_ID = "imageId";
     public static final String INTERNAL_URL = "internalURL";
     public static final String IN_EDIT_MODE = "inEditMode";
+    public static final String IS_ARC_ENABLED = "isArcEnabled";
     public static final String IS_DASHBOARD = "isDashboard";
     public static final String IS_MEDIA_TYPE = "isMediaType";
     public static final String IS_OVERRIDDEN = "isOverridden";

@@ -38,6 +38,7 @@ import org.junit.runner.RunWith
 class SubmissionDetailsRenderTest : StudentRenderTest() {
 
     private lateinit var baseModel: SubmissionDetailsModel
+    private var isArcEnabled = false
 
     @Before
     fun setup() {
@@ -46,7 +47,8 @@ class SubmissionDetailsRenderTest : StudentRenderTest() {
             isLoading = false,
             canvasContext = Course(name = "Test Course"),
             assignment = DataResult.Fail(),
-            rootSubmission = DataResult.Fail()
+            rootSubmission = DataResult.Fail(),
+            isArcEnabled = isArcEnabled
         )
     }
 

@@ -17,9 +17,7 @@
 package com.instructure.student.mobius.assignmentDetails
 
 import com.instructure.canvasapi2.managers.AssignmentManager
-import com.instructure.canvasapi2.managers.ExternalToolManager
 import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionTopic
 import com.instructure.canvasapi2.utils.*
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
@@ -27,6 +25,7 @@ import com.instructure.canvasapi2.utils.weave.awaitApiResponse
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsView
 import com.instructure.student.mobius.assignmentDetails.ui.SubmissionTypesVisibilities
 import com.instructure.student.mobius.common.ui.EffectHandler
+import com.instructure.student.util.isArcEnabled
 import kotlinx.coroutines.launch
 
 class AssignmentDetailsEffectHandler : EffectHandler<AssignmentDetailsView, AssignmentDetailsEvent, AssignmentDetailsEffect>() {
@@ -86,10 +85,7 @@ class AssignmentDetailsEffectHandler : EffectHandler<AssignmentDetailsView, Assi
 
             // We need to know if they can make submissions through arc, only for file uploads
             val isArcEnabled = if (result.isSuccess && result.dataOrThrow.getSubmissionTypes().contains(Assignment.SubmissionType.ONLINE_UPLOAD)) {
-                val context = CanvasContext.getGenericContext(CanvasContext.Type.COURSE, effect.courseId)
-                ExternalToolManager.getExternalToolsForCanvasContextAsync(context, true).await().dataOrNull?.any {
-                    it.url?.contains("instructuremedia.com/lti/launch") ?: false
-                } ?: false
+                effect.courseId.isArcEnabled()
             } else false
 
             consumer.accept(AssignmentDetailsEvent.DataLoaded(result, isArcEnabled))

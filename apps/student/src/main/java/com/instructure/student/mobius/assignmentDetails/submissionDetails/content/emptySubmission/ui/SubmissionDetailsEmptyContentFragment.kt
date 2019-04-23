@@ -19,33 +19,32 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
-import com.instructure.pandautils.utils.Const
-import com.instructure.pandautils.utils.ParcelableArg
-import com.instructure.pandautils.utils.makeBundle
-import com.instructure.pandautils.utils.withArgs
+import com.instructure.pandautils.utils.*
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.*
 import com.instructure.student.mobius.common.ui.MobiusFragment
 
-class SubmissionDetailsEmptyFragment :
-        MobiusFragment<SubmissionDetailsEmptyContentModel, SubmissionDetailsEmptyEvent, SubmissionDetailsEmptyEffect, SubmissionDetailsEmptyContentView, SubmissionDetailsEmptyContentViewState>() {
+class SubmissionDetailsEmptyContentFragment :
+        MobiusFragment<SubmissionDetailsEmptyContentModel, SubmissionDetailsEmptyContentEvent, SubmissionDetailsEmptyContentEffect, SubmissionDetailsEmptyContentView, SubmissionDetailsEmptyContentViewState>() {
 
     val canvasContext by ParcelableArg<Course>(key = Const.CANVAS_CONTEXT)
     val assignment by ParcelableArg<Assignment>(key = Const.ASSIGNMENT)
+    val isArcEnabled by BooleanArg(key = Const.IS_ARC_ENABLED)
 
-    override fun makeEffectHandler() = SubmissionDetailsEmptyEffectHandler()
-    override fun makeUpdate() = SubmissionDetailsEmptyUpdate()
+    override fun makeEffectHandler() = SubmissionDetailsEmptyContentEffectHandler()
+    override fun makeUpdate() = SubmissionDetailsEmptyContentUpdate()
     override fun makeView(inflater: LayoutInflater, parent: ViewGroup) = SubmissionDetailsEmptyContentView(inflater, parent)
     override fun makePresenter() = SubmissionDetailsEmptyContentPresenter
-    override fun makeInitModel() = SubmissionDetailsEmptyContentModel(assignment, canvasContext)
+    override fun makeInitModel() = SubmissionDetailsEmptyContentModel(assignment, canvasContext, isArcEnabled)
 
     companion object {
         @JvmStatic
-        fun newInstance(course: Course, assignment: Assignment): SubmissionDetailsEmptyFragment {
+        fun newInstance(course: Course, assignment: Assignment, isArcEnabled: Boolean): SubmissionDetailsEmptyContentFragment {
             val bundle = course.makeBundle {
                 putParcelable(Const.ASSIGNMENT, assignment)
+                putBoolean(Const.IS_ARC_ENABLED, isArcEnabled)
             }
 
-            return SubmissionDetailsEmptyFragment().withArgs(bundle)
+            return SubmissionDetailsEmptyContentFragment().withArgs(bundle)
         }
     }
 }
