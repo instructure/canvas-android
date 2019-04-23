@@ -48,6 +48,7 @@ import com.instructure.student.activity.NavigationActivity
 import com.instructure.student.activity.ViewMediaActivity
 import com.instructure.student.fragment.*
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
+import com.instructure.student.mobius.syllabus.ui.SyllabusFragment
 import com.instructure.student.util.FeatureFlags
 import com.instructure.student.util.FileUtils
 import retrofit2.Response
@@ -148,12 +149,11 @@ object RouteMatcher : BaseRouteMatcher() {
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/calendar_events/:${RouterParams.EVENT_ID}"), CalendarListViewFragment::class.java))
 
         // Syllabus
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/syllabus"), ScheduleListFragment::class.java))
+        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/syllabus"), SyllabusFragment::class.java))
 
         // Assignments
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments"), AssignmentListFragment::class.java))
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}"), AssignmentListFragment::class.java, assignmentDetailsClass))
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}"), ScheduleListFragment::class.java, assignmentDetailsClass))
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}"), NotificationListFragment::class.java, assignmentDetailsClass))
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}"), CalendarListViewFragment::class.java, assignmentDetailsClass))
 

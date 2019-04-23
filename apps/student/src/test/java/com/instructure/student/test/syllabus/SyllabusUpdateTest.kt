@@ -149,7 +149,7 @@ class SyllabusUpdateTest : Assert() {
             .whenEvent(SyllabusEvent.SyllabusItemClicked("0"))
             .then(
                 assertThatNext(
-                    matchesEffects<SyllabusModel, SyllabusEffect>(SyllabusEffect.ShowAssignmentView(assignmentId, course))
+                    matchesEffects<SyllabusModel, SyllabusEffect>(SyllabusEffect.ShowAssignmentView(events.data[0].assignment!!, course))
                 )
             )
     }

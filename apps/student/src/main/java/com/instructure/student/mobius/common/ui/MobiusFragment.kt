@@ -144,6 +144,7 @@ abstract class MobiusView<VIEW_STATE, EVENT>(layoutId: Int, inflater: LayoutInfl
         get() = rootView
 
     var connection: Connection<VIEW_STATE>? = null
+    var consumer: Consumer<EVENT>? = null
 
     protected val context: Context
         get() = parent.context
@@ -158,6 +159,7 @@ abstract class MobiusView<VIEW_STATE, EVENT>(layoutId: Int, inflater: LayoutInfl
 
     override fun connect(output: Consumer<EVENT>): Connection<VIEW_STATE> {
         onConnect(output)
+        consumer = output
         connection = object : Connection<VIEW_STATE> {
             override fun accept(value: VIEW_STATE) {
                 render(value)
@@ -166,6 +168,7 @@ abstract class MobiusView<VIEW_STATE, EVENT>(layoutId: Int, inflater: LayoutInfl
             override fun dispose() {
                 onDispose()
                 connection = null
+                consumer = null
             }
         }
         return connection!!

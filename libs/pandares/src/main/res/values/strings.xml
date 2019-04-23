@@ -355,6 +355,7 @@
     <string name="students">Students</string>
     <string name="observers">Observers</string>
     <string name="syllabusMissing">A syllabus not has been added.</string>
+    <string name="syllabusEventsError">There was an error loading your modules.</string>
 
     <string name="canvas">Canvas</string>
     <string name="chooseRecipient">Choose Recipient(s)</string>
@@ -965,7 +966,7 @@
 
     <string name="homePageIdForNotifications">Recent Activity</string>
     <string name="homePageIdForModules">Modules</string>
-    <string name="homePageIdForAssignments">Assignments</string>O
+    <string name="homePageIdForAssignments">Assignments</string>
     <string name="homePageIdForSyllabus">Syllabus</string>
 
     <string name="contentDescriptionWidgetRefresh">Refresh widget</string>

@@ -26,6 +26,7 @@ import com.instructure.interactions.router.RouteContext
 import com.instructure.interactions.router.RouterParams
 import com.instructure.student.activity.BaseRouterActivity
 import com.instructure.student.fragment.*
+import com.instructure.student.mobius.syllabus.ui.SyllabusFragment
 import com.instructure.student.router.RouteMatcher
 import junit.framework.TestCase
 import org.junit.Before
@@ -350,7 +351,7 @@ class RouterUtilsTest : TestCase() {
     fun testGetInternalRoute_syllabus() {
         val route = callGetInternalRoute("https://mobiledev.instructure.com/courses/836357/assignments/syllabus")
         TestCase.assertNotNull(route)
-        TestCase.assertEquals(ScheduleListFragment::class.java, route!!.primaryClass)
+        TestCase.assertEquals(SyllabusFragment::class.java, route!!.primaryClass)
 
         val expectedParams = HashMap<String, String>()
         expectedParams[RouterParams.COURSE_ID] = "836357"

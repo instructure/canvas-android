@@ -20,6 +20,8 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.student.R
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyContentViewState
 import com.instructure.student.mobius.common.ui.Presenter
+import com.instructure.student.util.getShortMonthAndDay
+import com.instructure.student.util.getTime
 import org.threeten.bp.LocalDate
 import org.threeten.bp.OffsetDateTime
 import org.threeten.bp.format.DateTimeFormatter
@@ -103,16 +105,5 @@ fun Assignment.getLockedString(context: Context): String {
     }
 
     return context.getString(R.string.lockedAssignmentNotModule)
-}
-
-fun OffsetDateTime.getShortMonthAndDay(): String {
-    // Get year if the year of the due date isn't the current year
-    val pattern = if (LocalDate.now().year != this.year) DateTimeFormatter.ofPattern("MMM d, Y") else DateTimeFormatter.ofPattern("MMM d")
-    return format(pattern)
-}
-
-fun OffsetDateTime.getTime(): String {
-    val pattern = DateTimeFormatterBuilder().appendPattern("h:mm a").toFormatter()
-    return format(pattern).toLowerCase()
 }
 

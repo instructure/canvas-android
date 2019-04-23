@@ -19,6 +19,7 @@ package com.instructure.student.test.syllabus
 import com.instructure.canvasapi2.apis.CalendarEventAPI
 import com.instructure.canvasapi2.managers.CalendarEventManager
 import com.instructure.canvasapi2.managers.CourseManager
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.utils.DataResult
@@ -226,11 +227,11 @@ class SyllabusEffectHandlerTest : Assert() {
 
     @Test
     fun `ShowAssignmentView results in view calling showAssignmentView`() {
-        val assignmentId = 101L
-        connection.accept(SyllabusEffect.ShowAssignmentView(assignmentId, course))
+        val assignment = Assignment()
+        connection.accept(SyllabusEffect.ShowAssignmentView(assignment, course))
 
         verify(timeout = 100) {
-            view.showAssignmentView(assignmentId, course)
+            view.showAssignmentView(assignment, course)
         }
 
         confirmVerified(view)

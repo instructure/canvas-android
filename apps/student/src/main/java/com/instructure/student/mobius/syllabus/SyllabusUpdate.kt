@@ -41,7 +41,7 @@ class SyllabusUpdate : UpdateInit<SyllabusModel, SyllabusEvent, SyllabusEffect>(
                 val item = model.events!!.dataOrThrow.find { it.itemId == event.itemId }!!
                 Next.dispatch(setOf(
                     when {
-                        item.assignment != null -> SyllabusEffect.ShowAssignmentView(item.assignment!!.id, model.course!!.dataOrThrow)
+                        item.assignment != null -> SyllabusEffect.ShowAssignmentView(item.assignment!!, model.course!!.dataOrThrow)
                         else -> SyllabusEffect.ShowScheduleItemView(item, model.course!!.dataOrThrow)
                     }
                 ))

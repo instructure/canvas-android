@@ -16,6 +16,7 @@
  */
 package com.instructure.student.mobius.syllabus
 
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.utils.DataResult
@@ -28,7 +29,7 @@ sealed class SyllabusEvent {
 
 sealed class SyllabusEffect {
     data class LoadData(val courseId: Long, val forceNetwork: Boolean) : SyllabusEffect()
-    data class ShowAssignmentView(val assignmentId: Long, val course: Course) : SyllabusEffect()
+    data class ShowAssignmentView(val assignment: Assignment, val course: Course) : SyllabusEffect()
     data class ShowScheduleItemView(val scheduleItem: ScheduleItem, val course: Course) : SyllabusEffect()
 }
 
