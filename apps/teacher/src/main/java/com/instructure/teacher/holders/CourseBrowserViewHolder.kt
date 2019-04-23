@@ -17,11 +17,11 @@
 package com.instructure.teacher.holders
 
 import android.graphics.drawable.Drawable
-import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
-import androidx.core.graphics.drawable.DrawableCompat
-import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.widget.TextView
+import androidx.core.graphics.drawable.DrawableCompat
+import androidx.recyclerview.widget.RecyclerView
+import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.teacher.R
 import com.instructure.teacher.utils.TeacherPrefs
@@ -45,6 +45,7 @@ class CourseBrowserViewHolder(view: View, val color: Int) : RecyclerView.ViewHol
             Tab.PEOPLE_ID -> R.drawable.vd_people
             Tab.FILES_ID -> R.drawable.vd_files
             Tab.PAGES_ID -> R.drawable.vd_pages
+            Tab.MODULES_ID -> R.drawable.vd_modules
             else -> {
                 //Determine if its the attendance tool
                 val attendanceExternalToolId = TeacherPrefs.attendanceExternalToolId
