@@ -22,6 +22,7 @@ import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ExhaustiveListCallback
+import com.instructure.canvasapi2.utils.weave.apiAsync
 import java.io.IOException
 import java.util.*
 
@@ -110,6 +111,10 @@ object CourseManager {
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
 
         CourseAPI.getCourseWithSyllabus(courseId, adapter, callback, params)
+    }
+
+    fun getCourseWithSyllabusAsync(courseId: Long, forceNetwork: Boolean) = apiAsync<Course> {
+        getCourseWithSyllabus(courseId, it, forceNetwork)
     }
 
     @JvmStatic

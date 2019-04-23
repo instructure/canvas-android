@@ -16,25 +16,26 @@
  */
 package com.instructure.student.mobius.syllabus
 
-import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.utils.DataResult
 
 sealed class SyllabusEvent {
     object PullToRefresh : SyllabusEvent()
-    data class DataLoaded(val canvasContext: DataResult<CanvasContext>, val events: DataResult<List<ScheduleItem>>) : SyllabusEvent()
-    data class SyllabusItemClicked(val itemId: Long) : SyllabusEvent()
+    data class DataLoaded(val course: DataResult<Course>, val events: DataResult<List<ScheduleItem>>) : SyllabusEvent()
+    data class SyllabusItemClicked(val itemId: String) : SyllabusEvent()
 }
 
 sealed class SyllabusEffect {
-    data class LoadData(val canvasContextId: String, val forceNetwork: Boolean) : SyllabusEffect()
-    data class ShowAssignmentView(val assignmentId: Long, val canvasContext: CanvasContext) : SyllabusEffect()
-    data class ShowScheduleItemView(val scheduleItem: ScheduleItem, val canvasContext: CanvasContext) : SyllabusEffect()
+    data class LoadData(val courseId: Long, val forceNetwork: Boolean) : SyllabusEffect()
+    data class ShowAssignmentView(val assignmentId: Long, val course: Course) : SyllabusEffect()
+    data class ShowScheduleItemView(val scheduleItem: ScheduleItem, val course: Course) : SyllabusEffect()
 }
 
 data class SyllabusModel(
+    val courseId: Long,
     val isLoading: Boolean = false,
-    val canvasContext: DataResult<CanvasContext>? = null,
+    val course: DataResult<Course>? = null,
     val syllabus: ScheduleItem? = null,
     val events: DataResult<List<ScheduleItem>>? = null
 )
