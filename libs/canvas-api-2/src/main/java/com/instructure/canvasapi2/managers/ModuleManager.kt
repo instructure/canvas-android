@@ -42,10 +42,24 @@ object ModuleManager {
         ModuleAPI.getFirstPageModuleObjects(adapter, params, canvasContext.id, callback)
     }
 
+    fun getFirstPageModulesWithItems(
+        canvasContext: CanvasContext,
+        callback: StatusCallback<List<ModuleObject>>,
+        forceNetwork: Boolean
+    ) {
+        val adapter = RestBuilder(callback)
+        val params = RestParams(
+            canvasContext = canvasContext,
+            usePerPageQueryParam = false, // Use API default
+            isForceReadFromNetwork = forceNetwork
+        )
+        ModuleAPI.getFirstPageModulesWithItems(adapter, params, canvasContext.id, callback)
+    }
+
     @JvmStatic
     fun getNextPageModuleObjects(nextUrl: String, callback: StatusCallback<List<ModuleObject>>, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)
-        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
+        val params = RestParams(usePerPageQueryParam = false, isForceReadFromNetwork = forceNetwork)
         ModuleAPI.getNextPageModuleObjects(adapter, params, nextUrl, callback)
     }
 
@@ -87,7 +101,8 @@ object ModuleManager {
         )
         val depaginatedCallback = object : ExhaustiveListCallback<ModuleItem>(callback) {
             override fun getNextPage(callback: StatusCallback<List<ModuleItem>>, nextUrl: String, isCached: Boolean) {
-                ModuleAPI.getAllModuleItems(adapter, params, canvasContext.id, moduleId, callback)
+                val nextParams = params.copy(canvasContext = null, usePerPageQueryParam = false)
+                ModuleAPI.getAllModuleItems(adapter, nextParams, canvasContext.id, moduleId, callback)
             }
         }
         adapter.statusCallback = depaginatedCallback

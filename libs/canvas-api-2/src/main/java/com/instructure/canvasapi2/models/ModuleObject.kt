@@ -22,20 +22,28 @@ import com.instructure.canvasapi2.utils.toDate
 import kotlinx.android.parcel.Parcelize
 import java.util.*
 
+@Suppress("ArrayInDataClass")
 @Parcelize
 data class ModuleObject(
-        override var id: Long = 0,
-        val position: Int = 0,
-        val name: String? = null,
-        @SerializedName("unlock_at")
-        val unlockAt: String? = null,
-        @SerializedName("require_sequential_progress")
-        val sequentialProgress: Boolean = false,
-        @SerializedName("prerequisite_ids")
-        val prerequisiteIds: LongArray? = null,
-        val state: String? = null,
-        @SerializedName("completed_at")
-        val completedAt: String? = null
+    override var id: Long = 0,
+    val position: Int = 0,
+    val name: String? = null,
+    @SerializedName("unlock_at")
+    val unlockAt: String? = null,
+    @SerializedName("require_sequential_progress")
+    val sequentialProgress: Boolean = false,
+    @SerializedName("prerequisite_ids")
+    val prerequisiteIds: LongArray? = null,
+    val state: String? = null,
+    @SerializedName("completed_at")
+    val completedAt: String? = null,
+    val published: Boolean = false,
+    @SerializedName("items_count")
+    val itemCount: Int = 0,
+    @SerializedName("items_url")
+    val itemsUrl: String = "",
+    val items: List<ModuleItem> = emptyList()
+
 ) : CanvasModel<ModuleObject>() {
     val unlockDate: Date? get() = unlockAt.toDate()
 

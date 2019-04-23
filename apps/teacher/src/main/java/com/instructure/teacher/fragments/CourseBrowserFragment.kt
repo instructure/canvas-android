@@ -18,22 +18,22 @@ package com.instructure.teacher.fragments
 
 import android.animation.ObjectAnimator
 import android.graphics.Color
-import com.google.android.material.appbar.AppBarLayout
-import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.recyclerview.widget.RecyclerView
 import android.view.MenuItem
 import android.view.View
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.appbar.AppBarLayout
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.fragments.BaseSyncFragment
 import com.instructure.pandautils.utils.*
-import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.CourseBrowserAdapter
 import com.instructure.teacher.events.CourseUpdatedEvent
 import com.instructure.teacher.factory.CourseBrowserPresenterFactory
+import com.instructure.teacher.features.modules.list.ui.ModuleListFragment
 import com.instructure.teacher.holders.CourseBrowserViewHolder
 import com.instructure.teacher.presenters.CourseBrowserPresenter
 import com.instructure.teacher.router.RouteMatcher
@@ -75,13 +75,14 @@ class CourseBrowserFragment : BaseSyncFragment<
         //Filter for white-list supported features
         //TODO: support other things like it.isHidden
         when(tab.tabId) {
-            Tab.ASSIGNMENTS_ID -> true
-            Tab.QUIZZES_ID -> BuildConfig.POINT_THREE
-            Tab.DISCUSSIONS_ID -> BuildConfig.POINT_FIVE
-            Tab.ANNOUNCEMENTS_ID -> BuildConfig.POINT_FIVE
-            Tab.PEOPLE_ID -> true
-            Tab.FILES_ID -> true
+            Tab.ASSIGNMENTS_ID,
+            Tab.QUIZZES_ID,
+            Tab.DISCUSSIONS_ID,
+            Tab.ANNOUNCEMENTS_ID,
+            Tab.PEOPLE_ID,
+            Tab.FILES_ID,
             Tab.PAGES_ID -> true
+            Tab.MODULES_ID -> false // TODO: Wire up to FeatureFlags
             else -> {
                 if(attendanceId != 0L && tab.tabId.endsWith(attendanceId.toString())) {
                     TeacherPrefs.attendanceExternalToolId = tab.tabId
@@ -174,6 +175,10 @@ class CourseBrowserFragment : BaseSyncFragment<
                         RouteMatcher.route(requireContext(), Route(FileListFragment::class.java, presenter.canvasContext, args))
                     }
                     Tab.PAGES_ID -> RouteMatcher.route(requireContext(), Route(PageListFragment::class.java, presenter.canvasContext))
+                    Tab.MODULES_ID -> {
+                        val bundle = ModuleListFragment.makeBundle(presenter.canvasContext)
+                        RouteMatcher.route(requireContext(), Route(ModuleListFragment::class.java, null, bundle))
+                    }
                     else -> {
                         if(tab.type == Tab.TYPE_EXTERNAL) {
                             // if the user is a designer we don't want to let them look at LTI tools (like attendance)

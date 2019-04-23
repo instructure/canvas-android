@@ -24,12 +24,20 @@ import java.io.File
 import java.io.InputStream
 import java.lang.reflect.Field
 import java.util.*
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.contract
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
 /** Returns true if this string is non-null and non-blank, otherwise returns false */
+@UseExperimental(ExperimentalContracts::class)
 @Suppress("NOTHING_TO_INLINE")
-inline fun String?.isValid(): Boolean = !isNullOrBlank()
+inline fun String?.isValid(): Boolean {
+    contract {
+        returns(true) implies (this@isValid != null)
+    }
+    return !isNullOrBlank()
+}
 
 /** Returns this string if is it non-null and non-blank, otherwise returns null */
 @Suppress("NOTHING_TO_INLINE")

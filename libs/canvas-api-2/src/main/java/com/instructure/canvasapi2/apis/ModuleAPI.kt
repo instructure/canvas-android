@@ -33,6 +33,9 @@ internal object ModuleAPI {
         @GET
         fun getNextPageModuleObjectList(@Url nextURL: String) : Call<List<ModuleObject>>
 
+        @GET("{contextId}/modules?include[]=items&include[]=content_details")
+        fun getFirstPageModulesWithItems(@Path("contextId") contextId: Long) : Call<List<ModuleObject>>
+
         @GET("{contextId}/modules/{moduleId}/items?include[]=content_details&include[]=mastery_paths")
         fun getFirstPageModuleItems(@Path("contextId") contextId: Long, @Path("moduleId") moduleId: Long) : Call<List<ModuleItem>>
 
@@ -74,6 +77,17 @@ internal object ModuleAPI {
 
     fun getFirstPageModuleObjects(adapter: RestBuilder, params: RestParams, contextId: Long, callback: StatusCallback<List<ModuleObject>>) {
         callback.addCall(adapter.build(ModuleInterface::class.java, params).getFirstPageModuleObjects(contextId)).enqueue(callback)
+    }
+
+    fun getFirstPageModulesWithItems(
+        adapter: RestBuilder,
+        params: RestParams,
+        contextId: Long,
+        callback: StatusCallback<List<ModuleObject>>
+    ) {
+        callback
+            .addCall(adapter.build(ModuleInterface::class.java, params).getFirstPageModulesWithItems(contextId))
+            .enqueue(callback)
     }
 
     fun getNextPageModuleObjects(adapter: RestBuilder, params: RestParams, nextUrl: String, callback: StatusCallback<List<ModuleObject>>) {

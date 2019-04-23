@@ -223,6 +223,8 @@ dependencies {
     testImplementation Libs.JUNIT
     testImplementation Libs.ROBOLECTRIC
     testImplementation Libs.ANDROIDX_TEST_JUNIT
+    testImplementation Libs.MOCKK
+    testImplementation Libs.KOTLIN_COROUTINES_TEST
 
     /* AndroidTest Dependencies */
     androidTestImplementation project(':canvas_espresso')
