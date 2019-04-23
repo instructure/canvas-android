@@ -171,6 +171,7 @@
             android:tint="@color/white"
             android:contentDescription="@string/addMessage"
             app:elevation="4dp"
+            app:fabSize="normal"
             app:srcCompat="@drawable/vd_add" />
 
     </FrameLayout>

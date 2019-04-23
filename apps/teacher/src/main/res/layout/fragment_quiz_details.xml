@@ -372,7 +372,7 @@
                         android:clickable="true"
                         android:padding="12dp"
                         android:text="@string/no_assignment_description_filler"
-                        android:textColor="#73818c"
+                        android:textColor="#2D3B45"
                         android:visibility="gone"
                         tools:visibility="visible"/>
 

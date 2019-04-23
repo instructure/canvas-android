@@ -1,7 +1,7 @@
 package com.instructure.canvas.espresso
 
 import android.content.res.Resources
-import android.util.Log
+import android.util.DisplayMetrics
 import android.view.View
 import androidx.test.espresso.matcher.ViewMatchers
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils
@@ -95,5 +95,10 @@ abstract class CanvasTest : InstructureTest() {
                 return false
             }
         }
+    }
+
+    // Does the test device have particularly low screen resolution?
+    fun isLowResDevice() : Boolean {
+        return activityRule.activity.resources.displayMetrics.densityDpi < DisplayMetrics.DENSITY_HIGH
     }
 }

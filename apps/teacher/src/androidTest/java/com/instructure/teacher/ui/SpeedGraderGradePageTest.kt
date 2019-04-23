@@ -15,6 +15,7 @@
  */
 package com.instructure.teacher.ui
 
+import android.util.Log
 import com.instructure.dataseeding.api.SubmissionsApi
 import com.instructure.dataseeding.model.SubmissionType.ONLINE_TEXT_ENTRY
 import com.instructure.teacher.ui.utils.*
@@ -41,6 +42,12 @@ class SpeedGraderGradePageTest : TeacherTest() {
     @Test
     @Ditto
     fun displaysNewGrade() {
+        if(isLowResDevice()) {
+            // We don't want to run accessibility tests on this device, because it's impossible to
+            // make all touch targets in the openGradeDialog 48dp high
+            Log.v("SkippedTest", "SpeedGraderGradePageTest.displaysNewGrade skipped due to low resolution")
+            return
+        }
         goToSpeedGraderGradePage()
         speedGraderGradePage.openGradeDialog()
         val grade = "20"
