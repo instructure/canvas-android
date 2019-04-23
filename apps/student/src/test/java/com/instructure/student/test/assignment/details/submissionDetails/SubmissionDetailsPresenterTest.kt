@@ -256,5 +256,4 @@ class SubmissionDetailsPresenterTest : Assert() {
         val actualTab = viewState.tabData.single { it is SubmissionDetailsTabData.GradeData }
         assertEquals(expectedTab, actualTab)
     }
-
 }

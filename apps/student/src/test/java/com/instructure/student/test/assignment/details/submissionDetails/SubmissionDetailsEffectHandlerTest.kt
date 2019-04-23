@@ -76,10 +76,13 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
         connection.accept(SubmissionDetailsEffect.LoadData(assignmentId, courseId))
 
         verify(timeout = 100) {
-            eventConsumer.accept(SubmissionDetailsEvent.DataLoaded(
+            eventConsumer.accept(
+                SubmissionDetailsEvent.DataLoaded(
                     DataResult.Fail(Failure.Network(errorMessage)),
-                    DataResult.Fail(Failure.Network(errorMessage))
-            ))
+                    DataResult.Fail(Failure.Network(errorMessage)),
+                    false
+                )
+            )
         }
 
         confirmVerified(eventConsumer)
@@ -109,10 +112,13 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
         connection.accept(SubmissionDetailsEffect.LoadData(assignmentId, courseId))
 
         verify(timeout = 100) {
-            eventConsumer.accept(SubmissionDetailsEvent.DataLoaded(
+            eventConsumer.accept(
+                SubmissionDetailsEvent.DataLoaded(
                     DataResult.Fail(Failure.Authorization(errorMessage)),
-                    DataResult.Fail(Failure.Authorization(errorMessage))
-            ))
+                    DataResult.Fail(Failure.Authorization(errorMessage)),
+                    false
+                )
+            )
         }
 
         confirmVerified(eventConsumer)
@@ -152,10 +158,13 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
         connection.accept(SubmissionDetailsEffect.LoadData(assignment.id, courseId))
 
         verify(timeout = 100) {
-            eventConsumer.accept(SubmissionDetailsEvent.DataLoaded(
-                DataResult.Success(assignment),
-                DataResult.Success(submission)
-            ))
+            eventConsumer.accept(
+                SubmissionDetailsEvent.DataLoaded(
+                    DataResult.Success(assignment),
+                    DataResult.Success(submission),
+                    false
+                )
+            )
         }
 
         confirmVerified(eventConsumer)

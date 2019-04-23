@@ -52,7 +52,8 @@ class SubmissionDetailsFragment :
 
         @JvmStatic
         fun makeRoute(course: CanvasContext, assignmentId: Long): Route {
-            val bundle = course.makeBundle { putLong(Const.ASSIGNMENT_ID, assignmentId) }
+            val bundle = course.makeBundle { putLong(
+                    Const.ASSIGNMENT_ID, assignmentId) }
             return Route(null, SubmissionDetailsFragment::class.java, course, bundle)
         }
 

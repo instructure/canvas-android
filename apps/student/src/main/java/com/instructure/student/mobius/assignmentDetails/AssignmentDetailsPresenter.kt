@@ -26,7 +26,6 @@ import com.instructure.canvasapi2.utils.isValid
 import com.instructure.student.R
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsViewState
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsVisibilities
-import com.instructure.student.mobius.assignmentDetails.ui.SubmissionTypesVisibilities
 import com.instructure.student.mobius.assignmentDetails.ui.gradeCell.GradeCellViewState
 import com.instructure.student.mobius.common.ui.Presenter
 import java.text.DateFormat
@@ -43,6 +42,7 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
         }
 
         val assignment = model.assignmentResult.dataOrNull!!
+        assignment.isArcEnabled = model.isArcEnabled
 
         // Loaded state
         return presentLoadedState(assignment, context)

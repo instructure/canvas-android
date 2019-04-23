@@ -94,7 +94,8 @@ data class Assignment(
         @SerializedName("moderated_grading")
         val moderatedGrading: Boolean = false,
         @SerializedName("anonymous_grading")
-        val anonymousGrading: Boolean = false
+        val anonymousGrading: Boolean = false,
+        var isArcEnabled: Boolean = false
 ) : CanvasModel<Assignment>() {
     override val comparisonDate get() = dueDate
     override val comparisonString get() = dueAt
@@ -221,12 +222,12 @@ data class Assignment(
             turnInType ?: return null
 
             return when (turnInType) {
-                Assignment.TurnInType.ONLINE -> context.getString(R.string.canvasAPI_online)
-                Assignment.TurnInType.ON_PAPER -> context.getString(R.string.canvasAPI_onPaper)
-                Assignment.TurnInType.NONE -> context.getString(R.string.canvasAPI_none)
-                Assignment.TurnInType.DISCUSSION -> context.getString(R.string.canvasAPI_discussion)
-                Assignment.TurnInType.QUIZ -> context.getString(R.string.canvasAPI_quiz)
-                Assignment.TurnInType.EXTERNAL_TOOL -> context.getString(R.string.canvasAPI_externalTool)
+                TurnInType.ONLINE -> context.getString(R.string.canvasAPI_online)
+                TurnInType.ON_PAPER -> context.getString(R.string.canvasAPI_onPaper)
+                TurnInType.NONE -> context.getString(R.string.canvasAPI_none)
+                TurnInType.DISCUSSION -> context.getString(R.string.canvasAPI_discussion)
+                TurnInType.QUIZ -> context.getString(R.string.canvasAPI_quiz)
+                TurnInType.EXTERNAL_TOOL -> context.getString(R.string.canvasAPI_externalTool)
             }
         }
 
@@ -255,17 +256,17 @@ data class Assignment(
             submissionType ?: return null
 
             return when (submissionType) {
-                Assignment.SubmissionType.ONLINE_QUIZ -> context.getString(R.string.canvasAPI_onlineQuiz)
-                Assignment.SubmissionType.NONE -> context.getString(R.string.canvasAPI_none)
-                Assignment.SubmissionType.ON_PAPER -> context.getString(R.string.canvasAPI_onPaper)
-                Assignment.SubmissionType.DISCUSSION_TOPIC -> context.getString(R.string.canvasAPI_discussionTopic)
-                Assignment.SubmissionType.EXTERNAL_TOOL, Assignment.SubmissionType.BASIC_LTI_LAUNCH -> context.getString(R.string.canvasAPI_externalTool)
-                Assignment.SubmissionType.ONLINE_UPLOAD -> context.getString(R.string.canvasAPI_onlineUpload)
-                Assignment.SubmissionType.ONLINE_TEXT_ENTRY -> context.getString(R.string.canvasAPI_onlineTextEntry)
-                Assignment.SubmissionType.ONLINE_URL -> context.getString(R.string.canvasAPI_onlineURL)
-                Assignment.SubmissionType.MEDIA_RECORDING -> context.getString(R.string.canvasAPI_mediaRecording)
-                Assignment.SubmissionType.ATTENDANCE -> context.getString(R.string.canvasAPI_attendance)
-                Assignment.SubmissionType.NOT_GRADED -> context.getString(R.string.canvasAPI_notGraded)
+                SubmissionType.ONLINE_QUIZ -> context.getString(R.string.canvasAPI_onlineQuiz)
+                SubmissionType.NONE -> context.getString(R.string.canvasAPI_none)
+                SubmissionType.ON_PAPER -> context.getString(R.string.canvasAPI_onPaper)
+                SubmissionType.DISCUSSION_TOPIC -> context.getString(R.string.canvasAPI_discussionTopic)
+                SubmissionType.EXTERNAL_TOOL, SubmissionType.BASIC_LTI_LAUNCH -> context.getString(R.string.canvasAPI_externalTool)
+                SubmissionType.ONLINE_UPLOAD -> context.getString(R.string.canvasAPI_onlineUpload)
+                SubmissionType.ONLINE_TEXT_ENTRY -> context.getString(R.string.canvasAPI_onlineTextEntry)
+                SubmissionType.ONLINE_URL -> context.getString(R.string.canvasAPI_onlineURL)
+                SubmissionType.MEDIA_RECORDING -> context.getString(R.string.canvasAPI_mediaRecording)
+                SubmissionType.ATTENDANCE -> context.getString(R.string.canvasAPI_attendance)
+                SubmissionType.NOT_GRADED -> context.getString(R.string.canvasAPI_notGraded)
             }
         }
 
@@ -300,12 +301,12 @@ data class Assignment(
             gradingType ?: return null
 
             return when (gradingType) {
-                Assignment.GradingType.PASS_FAIL -> context.getString(R.string.canvasAPI_passFail)
-                Assignment.GradingType.PERCENT -> context.getString(R.string.canvasAPI_percent)
-                Assignment.GradingType.LETTER_GRADE -> context.getString(R.string.canvasAPI_letterGrade)
-                Assignment.GradingType.POINTS -> context.getString(R.string.canvasAPI_points)
-                Assignment.GradingType.GPA_SCALE -> context.getString(R.string.canvasAPI_gpaScale)
-                Assignment.GradingType.NOT_GRADED -> context.getString(R.string.canvasAPI_notGraded)
+                GradingType.PASS_FAIL -> context.getString(R.string.canvasAPI_passFail)
+                GradingType.PERCENT -> context.getString(R.string.canvasAPI_percent)
+                GradingType.LETTER_GRADE -> context.getString(R.string.canvasAPI_letterGrade)
+                GradingType.POINTS -> context.getString(R.string.canvasAPI_points)
+                GradingType.GPA_SCALE -> context.getString(R.string.canvasAPI_gpaScale)
+                GradingType.NOT_GRADED -> context.getString(R.string.canvasAPI_notGraded)
             }
         }
     }

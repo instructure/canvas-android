@@ -26,14 +26,15 @@ import com.instructure.student.mobius.common.ui.UpdateInit
 import com.instructure.student.util.Const
 import com.spotify.mobius.First
 import com.spotify.mobius.Next
+import java.util.Collections.emptyList
 
 class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDetailsEvent, SubmissionDetailsEffect>() {
     override fun performInit(model: SubmissionDetailsModel): First<SubmissionDetailsModel, SubmissionDetailsEffect> {
         return First.first(
-                model.copy(
-                        isLoading = true
-                ),
-                setOf(SubmissionDetailsEffect.LoadData(model.canvasContext.id, model.assignmentId))
+            model.copy(
+                isLoading = true
+            ),
+            setOf(SubmissionDetailsEffect.LoadData(model.canvasContext.id, model.assignmentId))
         )
     }
 
@@ -52,7 +53,8 @@ class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDet
                         model.rootSubmission?.dataOrNull?.submissionHistory?.find { it?.attempt == event.submissionAttempt },
                         model.assignment?.dataOrNull,
                         model.canvasContext,
-                        model.assignmentId
+                        model.assignmentId,
+                        model.isArcEnabled
                     )
                     Next.next<SubmissionDetailsModel, SubmissionDetailsEffect>(
                         model.copy(
@@ -63,28 +65,29 @@ class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDet
             }
             is SubmissionDetailsEvent.DataLoaded -> {
                 val submissionType = getSubmissionContentType(
-                        event.rootSubmission.dataOrNull,
-                        event.assignment.dataOrNull,
-                        model.canvasContext,
-                        model.assignmentId)
+                    event.rootSubmission.dataOrNull,
+                    event.assignment.dataOrNull,
+                    model.canvasContext,
+                    model.assignmentId,
+                    event.isArcEnabled)
                 Next.next(
-                        model.copy(
-                                isLoading = false,
-                                assignment = event.assignment,
-                                rootSubmission = event.rootSubmission,
-                                selectedSubmissionAttempt = event.rootSubmission.dataOrNull?.attempt
-                        ), setOf(SubmissionDetailsEffect.ShowSubmissionContentType(submissionType))
+                    model.copy(
+                        isLoading = false,
+                        assignment = event.assignment,
+                        rootSubmission = event.rootSubmission,
+                        selectedSubmissionAttempt = event.rootSubmission.dataOrNull?.attempt
+                    ), setOf(SubmissionDetailsEffect.ShowSubmissionContentType(submissionType))
                 )
             }
         }
     }
 
-    private fun getSubmissionContentType(submission: Submission?, assignment: Assignment?, canvasContext: CanvasContext, assignmentId: Long): SubmissionDetailsContentType {
+    private fun getSubmissionContentType(submission: Submission?, assignment: Assignment?, canvasContext: CanvasContext, assignmentId: Long, isArcEnabled: Boolean?): SubmissionDetailsContentType {
         return when {
             Assignment.SubmissionType.NONE.apiString in assignment?.submissionTypesRaw ?: emptyList() -> SubmissionDetailsContentType.NoneContent
             Assignment.SubmissionType.ON_PAPER.apiString in assignment?.submissionTypesRaw ?: emptyList() -> SubmissionDetailsContentType.OnPaperContent
-            submission?.submissionType == null -> SubmissionDetailsContentType.NoSubmissionContent
-            AssignmentUtils2.getAssignmentState(assignment, submission) in listOf(AssignmentUtils2.ASSIGNMENT_STATE_MISSING, AssignmentUtils2.ASSIGNMENT_STATE_GRADED_MISSING) -> SubmissionDetailsContentType.NoSubmissionContent
+            submission?.submissionType == null -> SubmissionDetailsContentType.NoSubmissionContent(canvasContext, assignment!!, isArcEnabled!!)
+            AssignmentUtils2.getAssignmentState(assignment, submission) in listOf(AssignmentUtils2.ASSIGNMENT_STATE_MISSING, AssignmentUtils2.ASSIGNMENT_STATE_GRADED_MISSING) -> SubmissionDetailsContentType.NoSubmissionContent(canvasContext, assignment!!, isArcEnabled!!)
             else -> when (Assignment.getSubmissionTypeFromAPIString(submission.submissionType)) {
 
                 // LTI submission
@@ -146,10 +149,10 @@ class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDet
             }
             type.startsWith("audio") || type.startsWith("video") -> with(attachment) {
                 SubmissionDetailsContentType.MediaContent(
-                        uri = Uri.parse(url),
-                        thumbnailUrl = thumbnailUrl,
-                        contentType = contentType,
-                        displayName = displayName
+                    uri = Uri.parse(url),
+                    thumbnailUrl = thumbnailUrl,
+                    contentType = contentType,
+                    displayName = displayName
                 )
             }
             type.startsWith("image") -> SubmissionDetailsContentType.ImageContent(attachment.url ?: "", attachment.contentType!!)

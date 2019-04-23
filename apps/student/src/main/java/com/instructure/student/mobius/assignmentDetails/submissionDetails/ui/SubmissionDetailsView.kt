@@ -31,12 +31,14 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.tabs.TabLayout
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Course
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsContentType
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsEvent
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.TextSubmissionFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.UrlSubmissionFragment
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyContentFragment
 import com.instructure.student.mobius.common.ui.MobiusView
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import com.spotify.mobius.functions.Consumer
@@ -184,6 +186,7 @@ class SubmissionDetailsView(
 
     private fun getFragmentForContent(type: SubmissionDetailsContentType): Fragment {
         return when (type) {
+            is SubmissionDetailsContentType.NoSubmissionContent -> SubmissionDetailsEmptyContentFragment.newInstance(type.canvasContext as Course, type.assignment, type.isArcEnabled)
             is SubmissionDetailsContentType.UrlContent -> UrlSubmissionFragment.newInstance(type.url, type.previewUrl)
             is SubmissionDetailsContentType.TextContent -> TextSubmissionFragment.newInstance(type.text)
             else -> PlaceholderFragment().apply {

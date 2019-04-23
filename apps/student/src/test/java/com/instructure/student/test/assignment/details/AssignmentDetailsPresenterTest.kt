@@ -315,7 +315,7 @@ class AssignmentDetailsPresenterTest : Assert() {
     }
 
     @Test
-    fun `Submit button reads "Submit Assignment" if there are no existing subnmissions`() {
+    fun `Submit button reads "Submit Assignment" if there are no existing submissions`() {
         val assignment = baseAssignment.copy(
             submissionTypesRaw = listOf("online_text_entry")
         )
@@ -336,11 +336,8 @@ class AssignmentDetailsPresenterTest : Assert() {
     }
 
     @Test
-    fun `Displays 'Submission & Rubric' button when there is an existing submission`() {
-        val assignment = baseAssignment.copy(
-            submission = baseSubmission
-        )
-        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+    fun `Displays 'Submission & Rubric' button`() {
+        val model = baseModel.copy(assignmentResult = DataResult.Success(baseAssignment))
         val visibilities = AssignmentDetailsPresenter.present(model, context).visibilities
         assertTrue(visibilities.submissionAndRubricButton)
     }
