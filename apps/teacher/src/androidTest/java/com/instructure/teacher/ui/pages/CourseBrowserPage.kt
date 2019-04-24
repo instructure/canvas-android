@@ -49,12 +49,17 @@ class CourseBrowserPage : BasePage() {
         waitForViewWithText("Assignments").click()
     }
 
-    fun openQuizzesTab() {
+    private fun scrollDownToCourseBrowser()
+    {
         /* The course browser RecyclerView is inside a CoordinatorLayout and is therefore only partially
-        visible, causing some clicks to fail. We need to perform a swipe up first to make it fully visible. */
+           visible, causing some clicks to fail. We need to perform a swipe up first to make it fully visible. */
         Espresso.onView(ViewMatchers.withId(android.R.id.content)).perform(ViewActions.swipeUp())
         Espresso.onView(ViewMatchers.withId(R.id.courseBrowserRecyclerView))
                 .perform(scrollToPosition<CourseBrowserViewHolder>(10))
+
+    }
+    fun openQuizzesTab() {
+        scrollDownToCourseBrowser()
         waitForViewWithText(R.string.tab_quizzes).click()
     }
 
@@ -67,6 +72,7 @@ class CourseBrowserPage : BasePage() {
     }
 
     fun openPeopleTab() {
+        scrollDownToCourseBrowser()
         waitForViewWithText("People").click()
     }
 
@@ -93,6 +99,7 @@ class CourseBrowserPage : BasePage() {
             }
 
     fun openPagesTab() {
+        scrollDownToCourseBrowser()
         waitForViewWithText(R.string.tab_pages).click()
     }
 }
