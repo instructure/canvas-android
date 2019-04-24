@@ -14,10 +14,10 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.student.mobius.assignmentDetails.submission
+package com.instructure.student.mobius.assignmentDetails.submission.text
 
 import com.instructure.canvasapi2.utils.exhaustive
-import com.instructure.student.mobius.assignmentDetails.submission.ui.TextSubmissionView
+import com.instructure.student.mobius.assignmentDetails.submission.text.ui.TextSubmissionView
 import com.instructure.student.mobius.common.ui.EffectHandler
 
 class TextSubmissionEffectHandler : EffectHandler<TextSubmissionView, TextSubmissionEvent, TextSubmissionEffect>() {

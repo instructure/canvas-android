@@ -14,17 +14,14 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.student.mobius.assignmentDetails.submission.ui
+package com.instructure.student.mobius.assignmentDetails.submission.text.ui
 
-import android.content.Intent
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.student.mobius.assignmentDetails.submission.TextSubmissionEvent
+import com.instructure.student.mobius.assignmentDetails.submission.text.TextSubmissionEvent
 import com.instructure.student.mobius.common.ui.MobiusView
 import com.instructure.student.mobius.common.ui.SubmissionService
-import com.instructure.student.util.Const
 import com.spotify.mobius.functions.Consumer
 
 class TextSubmissionView(inflater: LayoutInflater, parent: ViewGroup) : MobiusView<TextSubmissionViewState, TextSubmissionEvent>(0, inflater, parent) {

@@ -18,10 +18,10 @@ package com.instructure.student.test.assignment.details.submission
 
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
-import com.instructure.student.mobius.assignmentDetails.submission.TextSubmissionEffect
-import com.instructure.student.mobius.assignmentDetails.submission.TextSubmissionEvent
-import com.instructure.student.mobius.assignmentDetails.submission.TextSubmissionModel
-import com.instructure.student.mobius.assignmentDetails.submission.TextSubmissionUpdate
+import com.instructure.student.mobius.assignmentDetails.submission.text.TextSubmissionEffect
+import com.instructure.student.mobius.assignmentDetails.submission.text.TextSubmissionEvent
+import com.instructure.student.mobius.assignmentDetails.submission.text.TextSubmissionModel
+import com.instructure.student.mobius.assignmentDetails.submission.text.TextSubmissionUpdate
 import com.instructure.student.test.util.matchesEffects
 import com.instructure.student.test.util.matchesFirstEffects
 import com.spotify.mobius.test.FirstMatchers

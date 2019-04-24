@@ -15,7 +15,7 @@
  *
  */
 
-package com.instructure.student.mobius.assignmentDetails.submission
+package com.instructure.student.mobius.assignmentDetails.submission.url
 
 sealed class UrlSubmissionEvent {
     data class UrlChanged(val url: String) : UrlSubmissionEvent()
@@ -25,8 +25,7 @@ sealed class UrlSubmissionEvent {
 sealed class UrlSubmissionEffect {
     object ShowMalformedUrl : UrlSubmissionEffect()
     data class ShowPreviewUrl(val url: String) : UrlSubmissionEffect()
-    data class SubmitText(val url: String, val courseId: Long, val assignmentId: Long) : UrlSubmissionEffect()
-
+    data class SubmitUrl(val url: String, val courseId: Long, val assignmentId: Long) : UrlSubmissionEffect()
     data class InitializeUrl(val url: String?) : UrlSubmissionEffect()
 }
 

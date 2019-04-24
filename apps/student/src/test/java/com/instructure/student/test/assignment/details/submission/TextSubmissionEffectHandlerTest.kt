@@ -16,10 +16,10 @@
 package com.instructure.student.test.assignment.details.submission
 
 import com.instructure.canvasapi2.models.Course
-import com.instructure.student.mobius.assignmentDetails.submission.TextSubmissionEffect
-import com.instructure.student.mobius.assignmentDetails.submission.TextSubmissionEffectHandler
-import com.instructure.student.mobius.assignmentDetails.submission.TextSubmissionEvent
-import com.instructure.student.mobius.assignmentDetails.submission.ui.TextSubmissionView
+import com.instructure.student.mobius.assignmentDetails.submission.text.TextSubmissionEffect
+import com.instructure.student.mobius.assignmentDetails.submission.text.TextSubmissionEffectHandler
+import com.instructure.student.mobius.assignmentDetails.submission.text.TextSubmissionEvent
+import com.instructure.student.mobius.assignmentDetails.submission.text.ui.TextSubmissionView
 import com.spotify.mobius.functions.Consumer
 import io.mockk.*
 import kotlinx.coroutines.Dispatchers
