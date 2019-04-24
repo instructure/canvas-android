@@ -22,6 +22,7 @@ import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.utils.ExhaustiveListCallback
+import com.instructure.canvasapi2.utils.weave.apiAsync
 import java.io.IOException
 
 object CalendarEventManager {
@@ -66,6 +67,16 @@ object CalendarEventManager {
             params
         )
     }
+
+    @JvmStatic
+    fun getCalendarEventsExhaustiveAsync(
+        allEvents: Boolean,
+        type: CalendarEventAPI.CalendarEventType,
+        startDate: String?,
+        endDate: String?,
+        canvasContexts: List<String>,
+        forceNetwork: Boolean
+    ) = apiAsync<List<ScheduleItem>> { CalendarEventManager.getCalendarEventsExhaustive(allEvents, type, startDate, endDate, canvasContexts, it, forceNetwork) }
 
     @Throws(IOException::class)
     @JvmStatic
