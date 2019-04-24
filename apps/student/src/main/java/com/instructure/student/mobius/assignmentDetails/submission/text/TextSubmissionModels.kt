@@ -15,7 +15,7 @@
  *
  */
 
-package com.instructure.student.mobius.assignmentDetails.submission
+package com.instructure.student.mobius.assignmentDetails.submission.text
 
 import com.instructure.canvasapi2.models.CanvasContext
 

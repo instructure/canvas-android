@@ -14,6 +14,6 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.student.mobius.assignmentDetails.submission.ui
+package com.instructure.student.mobius.assignmentDetails.submission.text.ui
 
 sealed class TextSubmissionViewState

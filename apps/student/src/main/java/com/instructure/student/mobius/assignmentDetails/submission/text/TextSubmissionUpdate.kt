@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.student.mobius.assignmentDetails.submission
+package com.instructure.student.mobius.assignmentDetails.submission.text
 
 import com.instructure.student.mobius.common.ui.UpdateInit
 import com.spotify.mobius.Effects.effects
@@ -25,7 +25,8 @@ import java.net.URLEncoder
 
 class TextSubmissionUpdate : UpdateInit<TextSubmissionModel, TextSubmissionEvent, TextSubmissionEffect>() {
     override fun performInit(model: TextSubmissionModel): First<TextSubmissionModel, TextSubmissionEffect> {
-        return First.first(model, setOf<TextSubmissionEffect>(TextSubmissionEffect.InitializeText(model.initialText ?: "")))
+        return First.first(model, setOf<TextSubmissionEffect>(TextSubmissionEffect.InitializeText(model.initialText
+                ?: "")))
     }
 
     override fun update(model: TextSubmissionModel, event: TextSubmissionEvent): Next<TextSubmissionModel, TextSubmissionEffect> {
