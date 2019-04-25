@@ -32,6 +32,7 @@ buildscript {
         maven { url 'https://google.bintray.com/exoplayer/' }
         maven { url 'https://dl.bintray.com/firebase/gradle/' }
         maven { url "https://google.bintray.com/flexbox-layout" }
+        maven { url "https://dl.bintray.com/instructure/maven" }
     }
 
     dependencies {
@@ -67,6 +68,7 @@ allprojects {
         maven { url 'https://google.bintray.com/exoplayer/' }
         maven { url 'https://dl.bintray.com/firebase/gradle/' }
         maven { url "https://google.bintray.com/flexbox-layout" }
+        maven { url "https://dl.bintray.com/instructure/maven" }
     }
 }
 
