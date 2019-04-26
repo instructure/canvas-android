@@ -22,7 +22,6 @@ import com.instructure.espresso.InstructureActivityTestRule
 import com.instructure.student.BuildConfig
 import com.instructure.student.activity.LoginActivity
 import com.instructure.student.ui.pages.*
-import org.junit.Before
 
 abstract class StudentTest : CanvasTest() {
 
@@ -30,16 +29,6 @@ abstract class StudentTest : CanvasTest() {
         StudentActivityTestRule(LoginActivity::class.java)
 
     override val isTesting = BuildConfig.IS_TESTING
-
-    // Overriding this to turn on accessibility tests for all student tests
-    @Before
-    override fun preLaunchSetup() {
-        // Enable accessibility checks
-        enableAndConfigureAccessibilityChecks()
-
-        // Call the super method
-        super.preLaunchSetup()
-    }
 
     /**
      * Required for auto complete of page objects within tests

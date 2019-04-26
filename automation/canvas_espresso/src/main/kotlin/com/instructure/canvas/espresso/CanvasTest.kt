@@ -18,8 +18,8 @@ import org.junit.Before
 abstract class CanvasTest : InstructureTest() {
     @Before
     override fun preLaunchSetup() {
-        // Uncomment this to enable accessibility checks on all tests
-        //enableAndConfigureAccessibilityChecks()
+        // Enable accessibility testing for all apps
+        enableAndConfigureAccessibilityChecks()
         super.preLaunchSetup()
     }
 

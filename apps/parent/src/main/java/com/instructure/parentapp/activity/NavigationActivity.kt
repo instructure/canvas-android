@@ -308,6 +308,11 @@ class NavigationActivity : BaseParentActivity(), MasqueradingDialog.OnMasqueradi
                 adapter = UserSpinnerAdapter(this@NavigationActivity, users)
                 setSelection(ParentPrefs.selectedStudentIdx)
             }
+
+            // Give the spinner a minimum height of 48dp.
+            // Unfortunately, I didn't see a way to do this in the layout file.
+            val density = this.resources.displayMetrics.density
+            minimumHeight = (48.0 * density).toInt() + 1
         }
     }
 
