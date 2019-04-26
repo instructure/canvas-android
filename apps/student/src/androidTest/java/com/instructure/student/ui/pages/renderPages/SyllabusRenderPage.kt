@@ -61,17 +61,14 @@ class SyllabusRenderPage : SyllabusPage() {
 
     fun assertDisplaysEmpty() {
         eventsEmpty.assertDisplayed()
-        webView.assertNotDisplayed()
     }
 
     fun assertDisplaysError() {
         eventsError.assertDisplayed()
-        webView.assertNotDisplayed()
     }
 
     fun assertDisplaysEvents() {
         eventsRecycler.assertDisplayed()
-        webView.assertNotDisplayed()
     }
 
     fun clickEventsTab() {
