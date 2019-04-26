@@ -25,7 +25,8 @@ import com.instructure.canvasapi2.utils.isValid
 sealed class ModulesListEvent {
     object PullToRefresh : ModulesListEvent()
     object NextPageRequested : ModulesListEvent()
-    data class ModuleItemClicked(val moduleItem: ModuleItem) : ModulesListEvent()
+    data class ModuleItemClicked(val moduleItemId: Long) : ModulesListEvent()
+    data class ModuleExpanded(val moduleId: Long, val isExpanded: Boolean) : ModulesListEvent()
     data class PageLoaded(val pageData: ModuleListPageData) : ModulesListEvent()
 }
 
@@ -37,9 +38,14 @@ sealed class ModulesListEffect {
         val scrollToItemId: Long?
     ) : ModulesListEffect()
     data class ScrollToItem(val moduleItemId: Long) : ModulesListEffect()
+    data class MarkModuleExpanded(
+        val canvasContext: CanvasContext,
+        val moduleId: Long,
+        val isExpanded: Boolean
+    ) : ModulesListEffect()
 }
 
-data class ModulesListModel(
+data class ModuleListModel(
     val course: CanvasContext,
     val isLoading: Boolean = false,
     val scrollToItemId: Long? = null,

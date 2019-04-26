@@ -1,0 +1,338 @@
+/*
+ * Copyright (C) 2019 - present Instructure, Inc.
+ *
+ *     Licensed under the Apache License, Version 2.0 (the "License");
+ *     you may not use this file except in compliance with the License.
+ *     You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *     Unless required by applicable law or agreed to in writing, software
+ *     distributed under the License is distributed on an "AS IS" BASIS,
+ *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *     See the License for the specific language governing permissions and
+ *     limitations under the License.
+ */
+package com.instructure.teacher.ui.renderTests
+
+import android.graphics.Color
+import com.instructure.canvasapi2.models.Course
+import com.instructure.espresso.assertCompletelyDisplayed
+import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.assertHasText
+import com.instructure.espresso.assertNotDisplayed
+import com.instructure.espresso.page.onViewWithText
+import com.instructure.espresso.page.waitForViewWithId
+import com.instructure.teacher.R
+import com.instructure.teacher.features.modules.list.ui.ModuleListFragment
+import com.instructure.teacher.features.modules.list.ui.ModuleListItemData
+import com.instructure.teacher.features.modules.list.ui.ModuleListViewState
+import com.instructure.teacher.ui.renderTests.pages.ModuleListRenderPage
+import com.instructure.teacher.ui.utils.TeacherRenderTest
+import com.spotify.mobius.runners.WorkRunner
+import org.junit.Before
+import org.junit.Test
+
+class ModuleListRenderTest : TeacherRenderTest() {
+
+    private val page = ModuleListRenderPage()
+    private lateinit var moduleTemplate: ModuleListItemData.ModuleData
+    private lateinit var moduleItemTemplate: ModuleListItemData.ModuleItemData
+
+    @Before
+    fun setUp() {
+        moduleTemplate = ModuleListItemData.ModuleData(
+            id = 1L,
+            name = "Module 1",
+            isPublished = true,
+            moduleItems = emptyList()
+        )
+        moduleItemTemplate = ModuleListItemData.ModuleItemData(
+            id = 2L,
+            title = "Assignment Module Item",
+            subtitle = "Due Tomorrow",
+            iconResId = R.drawable.vd_assignment,
+            isPublished = true,
+            indent = 0,
+            tintColor = Color.BLUE
+        )
+    }
+
+    @Test
+    fun displaysFullError() {
+        val state = ModuleListViewState(
+            items = listOf(ModuleListItemData.FullError(Color.BLUE))
+        )
+        loadPageWithViewState(state)
+        page.fullErrorView.assertDisplayed()
+    }
+
+    @Test
+    fun setsUpToolbar() {
+        val course = Course(name = "This is a Test Course!")
+        loadPageWithViewState(ModuleListViewState(), course)
+        page.assertDisplaysToolbarText("Modules")
+        page.assertDisplaysToolbarText(course.name)
+    }
+
+    @Test
+    fun displaysInlineError() {
+        val state = ModuleListViewState(
+            items = listOf(
+                ModuleListItemData.ModuleData(1, "Module 1", true, emptyList()),
+                ModuleListItemData.ModuleData(2, "Module 2", true, emptyList()),
+                ModuleListItemData.ModuleData(3, "Module 3", true, emptyList()),
+                ModuleListItemData.InlineError(Color.BLUE)
+            )
+        )
+        loadPageWithViewState(state)
+        page.inlineErrorView.assertDisplayed()
+    }
+
+    @Test
+    fun displaysEmptyState() {
+        val state = ModuleListViewState(
+            items = listOf(ModuleListItemData.Empty)
+        )
+        loadPageWithViewState(state)
+        page.emptyView.assertDisplayed()
+    }
+
+    @Test
+    fun displaysEmptyModule() {
+        val module = ModuleListItemData.ModuleData(1, "Module 1", true, emptyList())
+        val state = ModuleListViewState(
+            items = listOf(module)
+        )
+        loadPageWithViewState(state)
+        page.moduleName.assertHasText(module.name)
+    }
+
+    @Test
+    fun displaysInitialLoadingView() {
+        val state = ModuleListViewState(
+            showRefreshing = true
+        )
+        loadPageWithViewState(state)
+        page.assertRefreshing(true)
+    }
+
+    @Test
+    fun displaysInlineLoadingView() {
+        val state = ModuleListViewState(
+            items = listOf(
+                ModuleListItemData.ModuleData(1, "Module 1", true, emptyList()),
+                ModuleListItemData.Loading
+            )
+        )
+        loadPageWithViewState(state)
+        page.inlineLoadingView.assertDisplayed()
+    }
+
+    @Test
+    fun displaysModuleItem() {
+        val state = ModuleListViewState(
+            items = listOf(moduleItemTemplate)
+        )
+        loadPageWithViewState(state)
+        page.moduleItemIcon.assertDisplayed()
+        page.moduleItemTitle.assertDisplayed()
+        page.moduleItemTitle.assertHasText(moduleItemTemplate.title!!)
+    }
+
+    @Test
+    fun displaysModuleItemPublishIcon() {
+        val moduleItem = moduleItemTemplate.copy(
+            isPublished = true
+        )
+        val state = ModuleListViewState(
+            items = listOf(moduleItem)
+        )
+        loadPageWithViewState(state)
+        page.moduleItemPublishedIcon.assertDisplayed()
+        page.moduleItemUnpublishedIcon.assertNotDisplayed()
+    }
+
+    @Test
+    fun displaysModuleItemUnpublishedIcon() {
+        val moduleItem = moduleItemTemplate.copy(
+            isPublished = false
+        )
+        val state = ModuleListViewState(
+            items = listOf(moduleItem)
+        )
+        loadPageWithViewState(state)
+        page.moduleItemUnpublishedIcon.assertDisplayed()
+        page.moduleItemPublishedIcon.assertNotDisplayed()
+    }
+
+    @Test
+    fun displaysSubHeaderModuleItem() {
+        val moduleItem = moduleItemTemplate.copy(
+            title = null,
+            iconResId = null,
+            subtitle = "This is a SubHeader"
+        )
+        val state = ModuleListViewState(
+            items = listOf(moduleItem)
+        )
+        loadPageWithViewState(state)
+        page.moduleItemIcon.assertNotDisplayed()
+        page.moduleItemTitle.assertNotDisplayed()
+        page.moduleItemSubtitle.assertDisplayed()
+        page.moduleItemSubtitle.assertHasText(moduleItem.subtitle!!)
+    }
+
+    @Test
+    fun expandsAndCollapsesModule() {
+        val itemCount = 5
+        val state = ModuleListViewState(
+            items = listOf(
+                ModuleListItemData.ModuleData(
+                    1, "Module 1", true,
+                    List(itemCount - 1) { idx ->
+                        ModuleListItemData.ModuleItemData(
+                            idx + 2L, "Module Item ${idx + 1}", null, R.drawable.vd_assignment, false, 0, Color.BLUE
+                        )
+                    }
+                )
+            )
+        )
+        loadPageWithViewState(state)
+
+        // Assert expected item count as a precondition
+        page.assertListItemCount(itemCount)
+
+        // Click the first item (the module header) and assert it has collapsed to a single item
+        page.clickItemAtPosition(0)
+        page.assertListItemCount(1)
+
+        // Click the module again and assert it has expanded to the original count
+        page.clickItemAtPosition(0)
+        page.assertListItemCount(itemCount)
+    }
+
+    @Test
+    fun displaysModulePublishIcon() {
+        val state = ModuleListViewState(
+            items = listOf(
+                moduleTemplate.copy(isPublished = true)
+            )
+        )
+        loadPageWithViewState(state)
+        page.modulePublishedIcon.assertDisplayed()
+        page.moduleUnpublishedIcon.assertNotDisplayed()
+    }
+
+    @Test
+    fun displaysModuleUnpublishedIcon() {
+        val state = ModuleListViewState(
+            items = listOf(
+                moduleTemplate.copy(isPublished = false)
+            )
+        )
+        loadPageWithViewState(state)
+        page.moduleUnpublishedIcon.assertDisplayed()
+        page.modulePublishedIcon.assertNotDisplayed()
+    }
+
+    @Test
+    fun displaysModuleItemDueDate() {
+        val item = moduleItemTemplate.copy(subtitle = "Due Tomorrow")
+        val state = ModuleListViewState(
+            items = listOf(item)
+        )
+        loadPageWithViewState(state)
+        page.moduleItemSubtitle.assertDisplayed()
+        page.moduleItemSubtitle.assertHasText(item.subtitle!!)
+    }
+
+    @Test
+    fun hidesModuleItemDueDate() {
+        val item = moduleItemTemplate.copy(subtitle = null)
+        val state = ModuleListViewState(
+            items = listOf(item)
+        )
+        loadPageWithViewState(state)
+        page.moduleItemSubtitle.assertNotDisplayed()
+    }
+
+    @Test
+    fun loadsWithModuleCollapsed() {
+        val itemCount = 5
+        val state = ModuleListViewState(
+            items = listOf(
+                ModuleListItemData.ModuleData(
+                    1L, "Module 1", true,
+                    List(itemCount - 1) { idx ->
+                        ModuleListItemData.ModuleItemData(
+                            idx + 2L, "Module Item ${idx + 1}", null, R.drawable.vd_assignment, false, 0, Color.BLUE
+                        )
+                    }
+                )
+            ),
+            collapsedModuleIds = setOf(1L)
+        )
+        loadPageWithViewState(state)
+        page.assertListItemCount(1)
+    }
+
+    @Test
+    fun scrollsToTargetItem() {
+        val itemCount = 50
+        val targetItem = ModuleListItemData.ModuleItemData(
+            1234L, "This is the target item", null, R.drawable.vd_attachment, false, 0, Color.BLUE
+        )
+        val state = ModuleListViewState(
+            items = listOf(
+                ModuleListItemData.ModuleData(
+                    1, "Module 1", true,
+                    List(itemCount - 1) { idx ->
+                        if (idx == 35) {
+                            targetItem
+                        } else {
+                            moduleItemTemplate.copy(
+                                id = idx + 2L,
+                                title = "Module Item ${idx + 1}"
+                            )
+                        }
+                    }
+                )
+            )
+        )
+        val fragment = loadPageWithViewState(state)
+        page.waitForViewWithId(R.id.moduleName)
+        activityRule.runOnUiThread {
+            fragment.view.scrollToItem(targetItem.id)
+        }
+        page.onViewWithText(targetItem.title!!).assertCompletelyDisplayed()
+    }
+
+    @Test
+    fun displaysModuleItemWithIndent() {
+        val item = moduleItemTemplate.copy(indent = 100)
+        val state = ModuleListViewState(
+            items = listOf(item)
+        )
+        loadPageWithViewState(state)
+        page.assertHasItemIndent(item.indent)
+    }
+
+    private fun loadPageWithViewState(
+        state: ModuleListViewState,
+        course: Course = Course(name = "Test Course")
+    ) : ModuleListFragment {
+        val emptyEffectRunner = object : WorkRunner {
+            override fun dispose() = Unit
+            override fun post(runnable: Runnable) = Unit
+        }
+        val route = ModuleListFragment.makeBundle(course)
+        val fragment = ModuleListFragment.newInstance(route).apply {
+            overrideInitViewState = state
+            loopMod = { it.effectRunner { emptyEffectRunner } }
+        }
+        activityRule.activity.loadFragment(fragment)
+        return fragment
+    }
+
+}

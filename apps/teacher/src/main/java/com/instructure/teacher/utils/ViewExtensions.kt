@@ -19,6 +19,8 @@
 package com.instructure.teacher.utils
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Context
 import android.text.SpannableString
 import android.text.style.URLSpan
 import android.view.MenuItem
@@ -35,6 +37,7 @@ import com.instructure.pandautils.utils.isTablet
 import com.instructure.pandautils.utils.requestAccessibilityFocus
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.InternalWebViewActivity
+import com.instructure.teacher.mobius.common.ui.MobiusView
 import com.instructure.teacher.router.RouteMatcher
 import de.hdodenhof.circleimageview.CircleImageView
 
@@ -84,8 +87,7 @@ fun Toolbar?.setupBackButton(onClick: () -> Unit) = setupNavButtonWithCallback(
 )
 
 /**
- * Changes this Toolbar's icon to a back arrow. Click events will attempt to call onBackPressed()
- * on the given fragment's activity
+ * Changes this Toolbar's icon and behavior to a back arrow.
  */
 @JvmName("setupToolbarBackButton")
 fun Toolbar?.setupBackButton(fragment: Fragment?) = setupBackButton {
@@ -93,6 +95,20 @@ fun Toolbar?.setupBackButton(fragment: Fragment?) = setupBackButton {
         fragment.activity?.finish()
     } else {
         fragment?.activity?.onBackPressed()
+    }
+}
+
+/**
+ * Changes this Toolbar's icon to a back arrow. Click events will attempt to call onBackPressed()
+ * on the given fragment's activity
+ */
+@JvmName("setupToolbarBackButton")
+fun Toolbar?.setupBackButton(context: Context) = setupBackButton {
+    val activity = context as? Activity ?: throw IllegalArgumentException("Context must be an Activity")
+    if(activity is MasterDetailInteractions) {
+        activity.finish()
+    } else {
+        activity.onBackPressed()
     }
 }
 

@@ -20,9 +20,9 @@ import com.instructure.teacher.mobius.common.ui.UpdateInit
 import com.spotify.mobius.First
 import com.spotify.mobius.Next
 
-class ModuleListUpdate : UpdateInit<ModulesListModel, ModulesListEvent, ModulesListEffect>() {
+class ModuleListUpdate : UpdateInit<ModuleListModel, ModulesListEvent, ModulesListEffect>() {
 
-    override fun performInit(model: ModulesListModel): First<ModulesListModel, ModulesListEffect> {
+    override fun performInit(model: ModuleListModel): First<ModuleListModel, ModulesListEffect> {
         return First.first(
             model.copy(isLoading = true),
             setOf(
@@ -35,7 +35,7 @@ class ModuleListUpdate : UpdateInit<ModulesListModel, ModulesListEvent, ModulesL
         )
     }
 
-    override fun update(model: ModulesListModel, event: ModulesListEvent): Next<ModulesListModel, ModulesListEffect> {
+    override fun update(model: ModuleListModel, event: ModulesListEvent): Next<ModuleListModel, ModulesListEffect> {
         when (event) {
             ModulesListEvent.PullToRefresh -> {
                 val newModel = model.copy(
@@ -51,7 +51,8 @@ class ModuleListUpdate : UpdateInit<ModulesListModel, ModulesListEvent, ModulesL
                 return Next.next(newModel, setOf(effect))
             }
             is ModulesListEvent.ModuleItemClicked -> {
-                return Next.dispatch(setOf(ModulesListEffect.ShowModuleItemDetailView(event.moduleItem)))
+                val item = model.modules.flatMap { it.items }.first { it.id == event.moduleItemId }
+                return Next.dispatch(setOf(ModulesListEffect.ShowModuleItemDetailView(item)))
             }
             is ModulesListEvent.PageLoaded -> {
                 val effects = mutableSetOf<ModulesListEffect>()
@@ -73,8 +74,8 @@ class ModuleListUpdate : UpdateInit<ModulesListModel, ModulesListEvent, ModulesL
                 return Next.next(newModel, effects)
             }
             ModulesListEvent.NextPageRequested -> {
-                return if (model.isLoading) {
-                    // Do nothing if we're already loading
+                return if (model.isLoading || !model.pageData.hasMorePages) {
+                    // Do nothing if we're already loading or all pages have loaded
                     Next.noChange()
                 } else {
                     val newModel = model.copy(isLoading = true)
@@ -85,6 +86,13 @@ class ModuleListUpdate : UpdateInit<ModulesListModel, ModulesListEvent, ModulesL
                     )
                     Next.next(newModel, setOf(effect))
                 }
+            }
+            is ModulesListEvent.ModuleExpanded -> {
+                return Next.dispatch(setOf(ModulesListEffect.MarkModuleExpanded(
+                    model.course,
+                    event.moduleId,
+                    event.isExpanded
+                )))
             }
         }
     }

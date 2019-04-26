@@ -16,29 +16,79 @@
  */
 package com.instructure.teacher.features.modules.list.ui
 
+import android.app.Activity
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ModuleItem
+import com.instructure.pandarecycler.PaginatedScrollListener
+import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.toast
 import com.instructure.teacher.R
 import com.instructure.teacher.features.modules.list.ModulesListEvent
 import com.instructure.teacher.mobius.common.ui.MobiusView
+import com.instructure.teacher.utils.setupBackButton
 import com.spotify.mobius.functions.Consumer
+import kotlinx.android.synthetic.main.fragment_module_list.*
 
 class ModuleListView(
     inflater: LayoutInflater,
-    parent: ViewGroup
+    parent: ViewGroup,
+    val course: CanvasContext
 ) : MobiusView<ModuleListViewState, ModulesListEvent>(R.layout.fragment_module_list, inflater, parent) {
+
+    private var consumer: Consumer<ModulesListEvent>? = null
+
+    private val scrollListener = PaginatedScrollListener {
+        consumer?.accept(ModulesListEvent.NextPageRequested)
+    }
+
+    private val layoutManager= LinearLayoutManager(context)
+
+    private val adapter = ModuleListRecyclerAdapter(object : ModuleListCallback {
+        override fun retryNextPage() {
+            consumer?.accept(ModulesListEvent.NextPageRequested)
+        }
+
+        override fun moduleItemClicked(moduleItemId: Long) {
+            consumer?.accept(ModulesListEvent.ModuleItemClicked(moduleItemId))
+        }
+
+        override fun markModuleExpanded(moduleId: Long, isExpanded: Boolean) {
+            consumer?.accept(ModulesListEvent.ModuleExpanded(moduleId, isExpanded))
+        }
+
+    })
+
+    init {
+        // Toolbar setup
+        toolbar.subtitle = course.name
+        toolbar.setupBackButton(context)
+        ViewStyler.themeToolbar(context as Activity, toolbar, course)
+
+        recyclerView.layoutManager = layoutManager
+        recyclerView.adapter = adapter
+
+        recyclerView.addOnScrollListener(scrollListener)
+
+        swipeRefreshLayout.setOnRefreshListener {
+            consumer?.accept(ModulesListEvent.PullToRefresh)
+        }
+    }
+
     override fun onConnect(output: Consumer<ModulesListEvent>) {
-        // TODO
+        consumer = output
     }
 
     override fun render(state: ModuleListViewState) {
-        // TODO
+        swipeRefreshLayout.isRefreshing = state.showRefreshing
+        adapter.setData(state.items, state.collapsedModuleIds)
+        if (state.items.isEmpty()) scrollListener.resetScroll()
     }
 
     override fun onDispose() {
-        // TODO
+        consumer = null
     }
 
     fun routeToModuleItem(item: ModuleItem) {
@@ -47,7 +97,7 @@ class ModuleListView(
     }
 
     fun scrollToItem(itemId: Long) {
-        context.toast("Scroll to item $itemId")
-        // TODO
+        val itemPosition = adapter.getItemVisualPosition(itemId)
+        recyclerView?.scrollToPosition(itemPosition)
     }
 }

@@ -29,7 +29,7 @@ import com.instructure.teacher.mobius.common.ui.MobiusFragment
 import com.instructure.teacher.mobius.common.ui.Presenter
 
 class ModuleListFragment :
-    MobiusFragment<ModulesListModel, ModulesListEvent, ModulesListEffect, ModuleListView, ModuleListViewState>() {
+    MobiusFragment<ModuleListModel, ModulesListEvent, ModulesListEffect, ModuleListView, ModuleListViewState>() {
 
     val course by ParcelableArg<CanvasContext>(key = Const.COURSE)
 
@@ -39,11 +39,11 @@ class ModuleListFragment :
 
     override fun makeUpdate() = ModuleListUpdate()
 
-    override fun makeView(inflater: LayoutInflater, parent: ViewGroup) = ModuleListView(inflater, parent)
+    override fun makeView(inflater: LayoutInflater, parent: ViewGroup) = ModuleListView(inflater, parent, course)
 
-    override fun makePresenter(): Presenter<ModulesListModel, ModuleListViewState> = ModuleListPresenter
+    override fun makePresenter(): Presenter<ModuleListModel, ModuleListViewState> = ModuleListPresenter
 
-    override fun makeInitModel(): ModulesListModel = ModulesListModel(course = course, scrollToItemId = scrollToItemId)
+    override fun makeInitModel(): ModuleListModel = ModuleListModel(course = course, scrollToItemId = scrollToItemId)
 
     companion object {
 

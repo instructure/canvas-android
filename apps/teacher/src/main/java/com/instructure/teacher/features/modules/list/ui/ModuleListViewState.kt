@@ -16,5 +16,53 @@
  */
 package com.instructure.teacher.features.modules.list.ui
 
-class ModuleListViewState {
+import androidx.annotation.ColorInt
+
+data class ModuleListViewState(
+    val showRefreshing: Boolean = false,
+    val items: List<ModuleListItemData> = emptyList(),
+    val collapsedModuleIds: Set<Long> = emptySet()
+)
+
+sealed class ModuleListItemData {
+
+    object Empty : ModuleListItemData()
+
+    object Loading : ModuleListItemData()
+
+    data class FullError(val buttonColor: Int): ModuleListItemData()
+
+    data class InlineError(val buttonColor: Int): ModuleListItemData()
+
+    data class ModuleData(
+        val id: Long,
+        val name: String,
+        val isPublished: Boolean,
+        val moduleItems: List<ModuleItemData>
+    ): ModuleListItemData()
+
+    data class ModuleItemData(
+        /** The ID of this module item */
+        val id: Long,
+
+        /** The title. If null, the title should be hidden. */
+        val title: String?,
+
+        /** The subtitle. If null, the subtitle should be hidden. */
+        val subtitle: String?,
+
+        /** The resource ID of the icon to show for this item. If null, the icon should be hidden. */
+        val iconResId: Int?,
+
+        /** Whether this module item is published */
+        val isPublished: Boolean,
+
+        /** The indent in pixels */
+        val indent: Int,
+
+        /** The icon tint color, which should be the course color */
+        @ColorInt
+        val tintColor: Int
+    ) : ModuleListItemData()
+
 }

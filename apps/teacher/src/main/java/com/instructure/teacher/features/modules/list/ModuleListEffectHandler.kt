@@ -38,6 +38,9 @@ class ModuleListEffectHandler : EffectHandler<ModuleListView, ModulesListEvent, 
                 effect.scrollToItemId
             )
             is ModulesListEffect.ScrollToItem -> view?.scrollToItem(effect.moduleItemId)
+            is ModulesListEffect.MarkModuleExpanded -> {
+                CollapsedModulesStore.markModuleCollapsed(effect.canvasContext, effect.moduleId, !effect.isExpanded)
+            }
         }.exhaustive
     }
 
@@ -70,14 +73,21 @@ class ModuleListEffectHandler : EffectHandler<ModuleListView, ModulesListEvent, 
     ): ModuleListPageData {
         val fetchedModules = mutableListOf<ModuleObject>()
         var latestData = lastPageData
-        var isTargetItemFetched: Boolean
+        var targetModule: ModuleObject?
+
         do {
             val data = fetchPageData(canvasContext, latestData)
             val modules = data.lastPageResult!!.dataOrThrow
             fetchedModules += modules
             latestData = data
-            isTargetItemFetched = modules.any { module -> module.items.any { it.id == targetItemId } }
-        } while (!isTargetItemFetched && latestData.nextPageUrl.isValid())
+            targetModule = modules.find { module -> module.items.any { it.id == targetItemId } }
+        } while (targetModule == null && latestData.nextPageUrl.isValid())
+
+        targetModule?.let {
+            // Mark the module containing the target item as expanded so the view can auto scroll to it
+            CollapsedModulesStore.markModuleCollapsed(canvasContext, it.id, false)
+        }
+
         return latestData.copy(lastPageResult = DataResult.Success(fetchedModules))
     }
 

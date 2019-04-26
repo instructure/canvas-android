@@ -37,6 +37,7 @@ data class ModuleItem(
         val completionRequirement: CompletionRequirement? = null,
         @SerializedName("content_details")
         val moduleDetails: ModuleContentDetails? = null,
+        val published: Boolean = false,
         @SerializedName("mastery_paths")
         var masteryPaths: MasteryPath? = null,
         // When we display the "Choose Assignment Group" when an assignment uses Mastery Paths we create a new row to display.
