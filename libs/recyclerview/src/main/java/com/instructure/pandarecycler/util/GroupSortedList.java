@@ -183,6 +183,7 @@ public class GroupSortedList<GROUP, ITEM> {
      * @param isExpanded Whether the groups should be marked as expanded (true) or collapsed (false)
      */
     public void markExpanded(Set<Long> groupIds, boolean isExpanded) {
+        if (disallowCollapse) return;
         for (Long groupId : groupIds) {
             mExpanded.put(groupId, isExpanded);
         }

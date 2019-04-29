@@ -18,10 +18,12 @@
 
 package com.instructure.teacher.adapters
 
+import android.accessibilityservice.AccessibilityServiceInfo
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.accessibility.AccessibilityManager
 import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
@@ -31,6 +33,7 @@ import kotlin.Comparator
 
 
 abstract class GroupedRecyclerAdapter<T : Any, C : ListItemCallback>(
+    context: Context,
     klazz: Class<T>,
     val callback: C
 ) : RecyclerView.Adapter<ViewHolder>() {
@@ -123,6 +126,11 @@ abstract class GroupedRecyclerAdapter<T : Any, C : ListItemCallback>(
                 notifyItemRangeChanged(position, count)
             }
         }, groupCallback, itemCallback)
+
+        // Workaround for a11y bug that causes TalkBack to skip items after expand/collapse
+        val a11yManager = context.getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
+        val enabledServices = a11yManager.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_SPOKEN)
+        if (enabledServices?.isNotEmpty() == true) sortedList.disallowCollapse = true
     }
 
     fun clear() {
@@ -384,7 +392,13 @@ abstract class ListItemBinder<T : Any, C : ListItemCallback> {
     @get:LayoutRes
     abstract val layoutResId: Int
 
-    abstract fun getItemId(item: T): Long
+    /**
+     * Returns an ID for the specified item. By default this returns a negative value that is assigned to
+     * this [ListItemBinder] when registered with an adapter. In most cases this should be overridden to provide a
+     * unique ID value for the given item, but the default behavior can safely be used for items that are expected to
+     * appear no more than once in the list (e.g. an inline loading indicator or error view).
+     */
+    open fun getItemId(item: T): Long = -viewType.toLong()
 
     fun createViewHolder(context: Context, parent: ViewGroup): ViewHolder {
         val view = LayoutInflater.from(context).inflate(layoutResId, parent, false)

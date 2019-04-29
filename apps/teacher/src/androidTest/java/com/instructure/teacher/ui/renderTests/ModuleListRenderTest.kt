@@ -55,8 +55,7 @@ class ModuleListRenderTest : TeacherRenderTest() {
             isPublished = true,
             indent = 0,
             tintColor = Color.BLUE,
-            clickable = true,
-            backgroundResourceId = 0
+            enabled = true
         )
     }
 
@@ -201,8 +200,7 @@ class ModuleListRenderTest : TeacherRenderTest() {
                             isPublished = false,
                             indent = 0,
                             tintColor = Color.BLUE,
-                            clickable = true,
-                            backgroundResourceId = 0
+                            enabled = true
                         )
                     }
                 )
@@ -283,8 +281,7 @@ class ModuleListRenderTest : TeacherRenderTest() {
                             isPublished = false,
                             indent = 0,
                             tintColor = Color.BLUE,
-                            clickable = true,
-                            backgroundResourceId = 0
+                            enabled = true
                         )
                     }
                 )
@@ -299,7 +296,7 @@ class ModuleListRenderTest : TeacherRenderTest() {
     fun scrollsToTargetItem() {
         val itemCount = 50
         val targetItem = ModuleListItemData.ModuleItemData(
-            1234L, "This is the target item", null, R.drawable.vd_attachment, false, 0, Color.BLUE, true, 0
+            1234L, "This is the target item", null, R.drawable.vd_attachment, false, 0, Color.BLUE, true
         )
         val state = ModuleListViewState(
             items = listOf(

@@ -25,8 +25,6 @@ class ModuleListEmptyBinder : ListItemBinder<ModuleListItemData.Empty, ModuleLis
 
     override val layoutResId = R.layout.adapter_module_list_empty
 
-    override fun getItemId(item: ModuleListItemData.Empty) = -1L
-
     override val bindBehavior = NoBind()
 
 }

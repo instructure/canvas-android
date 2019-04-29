@@ -46,7 +46,7 @@ class ModuleListView(
 
     private val layoutManager= LinearLayoutManager(context)
 
-    private val adapter = ModuleListRecyclerAdapter(object : ModuleListCallback {
+    private val adapter = ModuleListRecyclerAdapter(context, object : ModuleListCallback {
         override fun retryNextPage() {
             consumer?.accept(ModulesListEvent.NextPageRequested)
         }

@@ -25,8 +25,6 @@ class ModuleListLoadingBinder : ListItemBinder<ModuleListItemData.Loading, Modul
 
     override val layoutResId = R.layout.adapter_module_list_loading
 
-    override fun getItemId(item: ModuleListItemData.Loading) = -3L
-
     override val bindBehavior = NoBind()
 
 }

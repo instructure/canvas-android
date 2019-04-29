@@ -16,6 +16,7 @@
  */
 package com.instructure.teacher.features.modules.list.ui
 
+import android.content.Context
 import com.instructure.teacher.adapters.GroupedRecyclerAdapter
 import com.instructure.teacher.adapters.ListItemCallback
 import com.instructure.teacher.features.modules.list.ui.binders.*
@@ -28,8 +29,10 @@ interface ModuleListCallback : ListItemCallback {
 }
 
 class ModuleListRecyclerAdapter(
+    context: Context,
     callback: ModuleListCallback
 ) : GroupedRecyclerAdapter<ModuleListItemData, ModuleListCallback>(
+    context,
     ModuleListItemData::class.java,
     callback
 ) {

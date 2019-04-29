@@ -26,7 +26,7 @@
     android:paddingEnd="16dp"
     android:paddingBottom="8dp">
 
-    <View
+    <Space
         android:id="@+id/moduleItemIndent"
         android:layout_width="0dp"
         android:layout_height="0dp"/>

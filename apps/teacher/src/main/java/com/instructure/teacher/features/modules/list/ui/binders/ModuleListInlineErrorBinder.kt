@@ -27,8 +27,6 @@ class ModuleListInlineErrorBinder : ListItemBinder<ModuleListItemData.InlineErro
 
     override val layoutResId = R.layout.adapter_module_list_error_inline
 
-    override fun getItemId(item: ModuleListItemData.InlineError) = -2L
-
     override val bindBehavior = Item { item, view, callback ->
         with(view.retryButton) {
             backgroundTintList = ColorStateList.valueOf(item.buttonColor)

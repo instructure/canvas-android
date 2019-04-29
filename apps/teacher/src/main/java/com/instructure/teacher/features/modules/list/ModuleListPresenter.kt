@@ -55,8 +55,7 @@ object ModuleListPresenter : Presenter<ModuleListModel, ModuleListViewState> {
                         isPublished = item.published,
                         indent = item.indent * indentWidth,
                         tintColor = 0,
-                        clickable = false,
-                        backgroundResourceId = 0
+                        enabled = false
                     )
                 } else {
                     createModuleItemData(item, context, indentWidth, courseColor, selectableBackgroundId)
@@ -126,8 +125,7 @@ object ModuleListPresenter : Presenter<ModuleListModel, ModuleListViewState> {
             isPublished = item.published,
             indent = item.indent * indentWidth,
             tintColor = courseColor,
-            clickable = true,
-            backgroundResourceId = selectableBackgroundId
+            enabled = true
         )
     }
 

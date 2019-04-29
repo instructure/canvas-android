@@ -64,11 +64,8 @@ sealed class ModuleListItemData {
         @ColorInt
         val tintColor: Int,
 
-        /** Whether the item is clickable. This will be false for SubHeader items. */
-        val clickable: Boolean,
-
-        /** The background resource ID for this item. Will be 0 if no background should be used. */
-        val backgroundResourceId: Int
+        /** Whether the item is enabled (and therefore clickable). This will be false for SubHeader items. */
+        val enabled: Boolean
     ) : ModuleListItemData()
 
 }

@@ -16,7 +16,6 @@
 package com.instructure.teacher.unit
 
 import android.content.Context
-import android.util.TypedValue
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.Course
@@ -84,11 +83,7 @@ class ModuleListPresenterTest : Assert() {
             isPublished = true,
             indent = 0,
             tintColor = course.color,
-            clickable = true,
-            backgroundResourceId = with(TypedValue()) {
-                context.theme.resolveAttribute(android.R.attr.selectableItemBackground, this, true)
-                resourceId
-            }
+            enabled = true
         )
         modelTemplate = ModuleListModel(
             course = course,
@@ -338,8 +333,7 @@ class ModuleListPresenterTest : Assert() {
             title = null,
             subtitle = item.title,
             iconResId = null,
-            clickable = false,
-            backgroundResourceId = 0
+            enabled = false
         )
         val viewState = ModuleListPresenter.present(model, context)
         val itemState = (viewState.items[0] as ModuleListItemData.ModuleData).moduleItems.first()

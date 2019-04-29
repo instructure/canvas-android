@@ -26,8 +26,6 @@ class ModuleListFullErrorBinder : ListItemBinder<ModuleListItemData.FullError, M
 
     override val layoutResId = R.layout.adapter_module_list_error_full
 
-    override fun getItemId(item: ModuleListItemData.FullError) = -4L
-
     override val bindBehavior = Item { item, view, callback ->
         with(view.retryButton) {
             backgroundTintList = android.content.res.ColorStateList.valueOf(item.buttonColor)
