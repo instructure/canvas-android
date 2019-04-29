@@ -16,6 +16,7 @@
 package com.instructure.teacher.unit
 
 import android.content.Context
+import android.util.TypedValue
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.Course
@@ -74,6 +75,7 @@ class ModuleListPresenterTest : Assert() {
                 dueAt = DateHelper.makeDate(2050, 1, 12, 15, 7, 0).toApiString()
             )
         )
+
         moduleItemDataTemplate = ModuleListItemData.ModuleItemData(
             id = 1000L,
             title = "Module Item 1",
@@ -81,7 +83,12 @@ class ModuleListPresenterTest : Assert() {
             iconResId = R.drawable.vd_assignment,
             isPublished = true,
             indent = 0,
-            tintColor = course.color
+            tintColor = course.color,
+            clickable = true,
+            backgroundResourceId = with(TypedValue()) {
+                context.theme.resolveAttribute(android.R.attr.selectableItemBackground, this, true)
+                resourceId
+            }
         )
         modelTemplate = ModuleListModel(
             course = course,
@@ -330,7 +337,9 @@ class ModuleListPresenterTest : Assert() {
         val expectedState = moduleItemDataTemplate.copy(
             title = null,
             subtitle = item.title,
-            iconResId = null
+            iconResId = null,
+            clickable = false,
+            backgroundResourceId = 0
         )
         val viewState = ModuleListPresenter.present(model, context)
         val itemState = (viewState.items[0] as ModuleListItemData.ModuleData).moduleItems.first()

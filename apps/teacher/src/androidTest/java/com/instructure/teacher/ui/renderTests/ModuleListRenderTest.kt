@@ -54,7 +54,9 @@ class ModuleListRenderTest : TeacherRenderTest() {
             iconResId = R.drawable.vd_assignment,
             isPublished = true,
             indent = 0,
-            tintColor = Color.BLUE
+            tintColor = Color.BLUE,
+            clickable = true,
+            backgroundResourceId = 0
         )
     }
 
@@ -192,7 +194,15 @@ class ModuleListRenderTest : TeacherRenderTest() {
                     1, "Module 1", true,
                     List(itemCount - 1) { idx ->
                         ModuleListItemData.ModuleItemData(
-                            idx + 2L, "Module Item ${idx + 1}", null, R.drawable.vd_assignment, false, 0, Color.BLUE
+                            id = idx + 2L,
+                            title = "Module Item ${idx + 1}",
+                            subtitle = null,
+                            iconResId = R.drawable.vd_assignment,
+                            isPublished = false,
+                            indent = 0,
+                            tintColor = Color.BLUE,
+                            clickable = true,
+                            backgroundResourceId = 0
                         )
                     }
                 )
@@ -266,7 +276,15 @@ class ModuleListRenderTest : TeacherRenderTest() {
                     1L, "Module 1", true,
                     List(itemCount - 1) { idx ->
                         ModuleListItemData.ModuleItemData(
-                            idx + 2L, "Module Item ${idx + 1}", null, R.drawable.vd_assignment, false, 0, Color.BLUE
+                            id = idx + 2L,
+                            title = "Module Item ${idx + 1}",
+                            subtitle = null,
+                            iconResId = R.drawable.vd_assignment,
+                            isPublished = false,
+                            indent = 0,
+                            tintColor = Color.BLUE,
+                            clickable = true,
+                            backgroundResourceId = 0
                         )
                     }
                 )
@@ -281,7 +299,7 @@ class ModuleListRenderTest : TeacherRenderTest() {
     fun scrollsToTargetItem() {
         val itemCount = 50
         val targetItem = ModuleListItemData.ModuleItemData(
-            1234L, "This is the target item", null, R.drawable.vd_attachment, false, 0, Color.BLUE
+            1234L, "This is the target item", null, R.drawable.vd_attachment, false, 0, Color.BLUE, true, 0
         )
         val state = ModuleListViewState(
             items = listOf(
@@ -321,7 +339,7 @@ class ModuleListRenderTest : TeacherRenderTest() {
     private fun loadPageWithViewState(
         state: ModuleListViewState,
         course: Course = Course(name = "Test Course")
-    ) : ModuleListFragment {
+    ): ModuleListFragment {
         val emptyEffectRunner = object : WorkRunner {
             override fun dispose() = Unit
             override fun post(runnable: Runnable) = Unit

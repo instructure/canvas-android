@@ -18,6 +18,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
     android:minHeight="48dp"
     android:orientation="horizontal"
     android:paddingStart="16dp"
@@ -35,6 +36,7 @@
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_marginEnd="32dp"
+        android:layout_gravity="center_vertical"
         android:importantForAccessibility="no"
         android:src="@drawable/vd_quiz"
         android:tint="@color/canvasDefaultAccent"/>
@@ -42,6 +44,7 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
         android:layout_weight="1"
         android:orientation="vertical">
 

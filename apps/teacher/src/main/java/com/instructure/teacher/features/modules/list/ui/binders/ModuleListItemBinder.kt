@@ -43,7 +43,12 @@ class ModuleListItemBinder : ListItemBinder<ModuleListItemData.ModuleItemData, M
             moduleItemSubtitle.setTextForVisibility(item.subtitle)
             moduleItemPublishedIcon.setVisible(item.isPublished)
             moduleItemUnpublishedIcon.setVisible(!item.isPublished)
-            setOnClickListener { callback.moduleItemClicked(item.id) }
+            setBackgroundResource(item.backgroundResourceId)
+            if (item.clickable) {
+                setOnClickListener { callback.moduleItemClicked(item.id) }
+            } else {
+                setOnClickListener(null)
+            }
         }
     }
 

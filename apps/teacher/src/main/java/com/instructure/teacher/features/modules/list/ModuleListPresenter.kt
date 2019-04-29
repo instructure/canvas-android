@@ -17,6 +17,7 @@
 package com.instructure.teacher.features.modules.list
 
 import android.content.Context
+import android.util.TypedValue
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.tryOrNull
@@ -38,20 +39,27 @@ object ModuleListPresenter : Presenter<ModuleListModel, ModuleListViewState> {
 
         val courseColor = model.course.color
 
+        val selectableBackgroundId = with(TypedValue()) {
+            context.theme.resolveAttribute(android.R.attr.selectableItemBackground, this, true)
+            resourceId
+        }
+
         items += model.modules.map { module ->
             val moduleItems = module.items.map { item ->
                 if (item.type.equals(ModuleItem.Type.SubHeader.name, ignoreCase = true)) {
                     ModuleListItemData.ModuleItemData(
-                        item.id,
-                        null,
-                        item.title,
-                        null,
-                        item.published,
-                        item.indent * indentWidth,
-                        0
+                        id = item.id,
+                        title = null,
+                        subtitle = item.title,
+                        iconResId = null,
+                        isPublished = item.published,
+                        indent = item.indent * indentWidth,
+                        tintColor = 0,
+                        clickable = false,
+                        backgroundResourceId = 0
                     )
                 } else {
-                    createModuleItemData(item, context, indentWidth, courseColor)
+                    createModuleItemData(item, context, indentWidth, courseColor, selectableBackgroundId)
                 }
             }
             ModuleListItemData.ModuleData(
@@ -89,7 +97,8 @@ object ModuleListPresenter : Presenter<ModuleListModel, ModuleListViewState> {
         item: ModuleItem,
         context: Context,
         indentWidth: Int,
-        courseColor: Int
+        courseColor: Int,
+        selectableBackgroundId: Int
     ): ModuleListItemData.ModuleItemData {
         val subtitle = item.moduleDetails?.dueDate?.let {
             context.getString(
@@ -110,13 +119,15 @@ object ModuleListPresenter : Presenter<ModuleListModel, ModuleListViewState> {
         }
 
         return ModuleListItemData.ModuleItemData(
-            item.id,
-            item.title,
-            subtitle,
-            iconRes,
-            item.published,
-            item.indent * indentWidth,
-            courseColor
+            id = item.id,
+            title = item.title,
+            subtitle = subtitle,
+            iconResId = iconRes,
+            isPublished = item.published,
+            indent = item.indent * indentWidth,
+            tintColor = courseColor,
+            clickable = true,
+            backgroundResourceId = selectableBackgroundId
         )
     }
 

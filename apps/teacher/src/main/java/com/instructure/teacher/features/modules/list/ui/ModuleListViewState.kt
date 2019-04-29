@@ -62,7 +62,13 @@ sealed class ModuleListItemData {
 
         /** The icon tint color, which should be the course color */
         @ColorInt
-        val tintColor: Int
+        val tintColor: Int,
+
+        /** Whether the item is clickable. This will be false for SubHeader items. */
+        val clickable: Boolean,
+
+        /** The background resource ID for this item. Will be 0 if no background should be used. */
+        val backgroundResourceId: Int
     ) : ModuleListItemData()
 
 }
