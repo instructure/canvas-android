@@ -26,12 +26,14 @@ import androidx.viewpager.widget.PagerAdapter
 
 class ViewPagerNonSwipeable : ViewPager {
 
+    var canSwipe = false
+
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
 
     // Never allow swiping to switch between pages
-    override fun onInterceptTouchEvent(event: MotionEvent): Boolean = false
+    override fun onInterceptTouchEvent(event: MotionEvent): Boolean = if (canSwipe) super.onInterceptTouchEvent(event) else false
 
     // Never allow swiping to switch between pages
-    override fun onTouchEvent(event: MotionEvent): Boolean = false
+    override fun onTouchEvent(event: MotionEvent): Boolean = if (canSwipe) super.onTouchEvent(event) else false
 }

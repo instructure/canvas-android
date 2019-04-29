@@ -8,6 +8,7 @@ import com.instructure.student.features.files.search.FileSearchFragment
 import com.instructure.student.fragment.*
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsFragment
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
+import com.instructure.student.mobius.syllabus.ui.SyllabusFragment
 
 object RouteResolver {
 
@@ -80,7 +81,6 @@ object RouteResolver {
             cls.isA<UnknownItemFragment>() -> UnknownItemFragment.newInstance(route)
             cls.isA<PeopleListFragment>() -> PeopleListFragment.newInstance(route)
             cls.isA<PeopleDetailsFragment>() -> PeopleDetailsFragment.newInstance(route)
-            cls.isA<ScheduleListFragment>() -> ScheduleListFragment.newInstance(route)
             cls.isA<FileListFragment>() -> FileListFragment.newInstance(route)
             cls.isA<FileSearchFragment>() -> FileSearchFragment.newInstance(route)
             cls.isA<CalendarEventFragment>() -> CalendarEventFragment.newInstance(route)

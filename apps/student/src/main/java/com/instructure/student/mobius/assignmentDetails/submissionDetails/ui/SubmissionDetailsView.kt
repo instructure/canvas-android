@@ -55,7 +55,6 @@ class SubmissionDetailsView(
     parent
 ) {
 
-    private var consumer: Consumer<SubmissionDetailsEvent>? = null
     private var drawerPagerAdapter = SubmissionDetailsDrawerPagerAdapter(fragmentManager)
 
     /* Tab selection listener for the drawer ViewPager */
