@@ -27,7 +27,6 @@ import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsView
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Failure
 import com.instructure.student.mobius.assignmentDetails.*
-import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsViewState
 import com.instructure.student.mobius.assignmentDetails.ui.SubmissionTypesVisibilities
 import com.spotify.mobius.functions.Consumer
 import io.mockk.*
@@ -52,12 +51,14 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     private val connection = effectHandler.connect(eventConsumer)
 
     lateinit var assignment: Assignment
+    lateinit var course: Course
 
     @ExperimentalCoroutinesApi
     @Before
     fun setup() {
         Dispatchers.setMain(Executors.newSingleThreadExecutor().asCoroutineDispatcher())
         assignment = Assignment(id = 2468, courseId = 8642)
+        course = Course()
     }
 
     @Test
@@ -292,10 +293,10 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
         every { ApiPrefs.protocol } returns protocol
         every { ApiPrefs.domain } returns domain
 
-        connection.accept(AssignmentDetailsEffect.ShowCreateSubmissionView(submissionType, assignment.courseId, assignment))
+        connection.accept(AssignmentDetailsEffect.ShowCreateSubmissionView(submissionType, course, assignment))
 
 
-        val url = "$protocol://$domain/courses/${assignment.courseId}/quizzes/$quizId"
+        val url = "$protocol://$domain/courses/${course.id}/quizzes/$quizId"
 
         verify(timeout = 100) {
             view.showQuizOrDiscussionView(url)
@@ -310,12 +311,13 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
         val protocol = "https"
         val submissionType = Assignment.SubmissionType.DISCUSSION_TOPIC
         val assignment = assignment.copy(discussionTopicHeader = DiscussionTopicHeader(id = discussionTopicId))
+        val course = Course()
 
         mockkStatic(ApiPrefs::class)
         every { ApiPrefs.protocol } returns protocol
         every { ApiPrefs.domain } returns domain
 
-        connection.accept(AssignmentDetailsEffect.ShowCreateSubmissionView(submissionType, assignment.courseId, assignment))
+        connection.accept(AssignmentDetailsEffect.ShowCreateSubmissionView(submissionType, course, assignment))
 
 
         val url = "$protocol://$domain/courses/${assignment.courseId}/discussion_topics/$discussionTopicId"
@@ -330,10 +332,10 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     fun `ShowCreateSubmissionView with fileUpload submissionType calls showFileUploadView`() {
         val submissionType = Assignment.SubmissionType.ONLINE_UPLOAD
 
-        connection.accept(AssignmentDetailsEffect.ShowCreateSubmissionView(submissionType, assignment.courseId, assignment))
+        connection.accept(AssignmentDetailsEffect.ShowCreateSubmissionView(submissionType, course, assignment))
 
         verify(timeout = 100) {
-            view.showFileUploadView(assignment, assignment.courseId)
+            view.showFileUploadView(assignment, course.id)
         }
         confirmVerified(view)
     }
@@ -342,10 +344,10 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     fun `ShowCreateSubmissionView with textEntry submissionType calls showOnlineTextEntryView`() {
         val submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY
 
-        connection.accept(AssignmentDetailsEffect.ShowCreateSubmissionView(submissionType, assignment.courseId, assignment))
+        connection.accept(AssignmentDetailsEffect.ShowCreateSubmissionView(submissionType, course, assignment))
 
         verify(timeout = 100) {
-            view.showOnlineTextEntryView(assignment.id, assignment.courseId)
+            view.showOnlineTextEntryView(assignment.id, course.id)
         }
         confirmVerified(view)
     }
@@ -354,23 +356,22 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     fun `ShowCreateSubmissionView with urlEntry submissionType calls showOnlineUrlEntryView`() {
         val submissionType = Assignment.SubmissionType.ONLINE_URL
 
-        connection.accept(AssignmentDetailsEffect.ShowCreateSubmissionView(submissionType, assignment.courseId, assignment))
+        connection.accept(AssignmentDetailsEffect.ShowCreateSubmissionView(submissionType, course, assignment))
 
         verify(timeout = 100) {
-            view.showOnlineUrlEntryView(assignment.id, assignment.courseId)
+            view.showOnlineUrlEntryView(assignment.id, assignment.name, course)
         }
         confirmVerified(view)
     }
 
     @Test
     fun `ShowCreateSubmissionView with mediaRecording submissionType calls showMediaRecordingView`() {
-        val courseId = 1234L
         val submissionType = Assignment.SubmissionType.MEDIA_RECORDING
 
-        connection.accept(AssignmentDetailsEffect.ShowCreateSubmissionView(submissionType, courseId, assignment))
+        connection.accept(AssignmentDetailsEffect.ShowCreateSubmissionView(submissionType, course, assignment))
 
         verify(timeout = 100) {
-            view.showMediaRecordingView(assignment, courseId)
+            view.showMediaRecordingView(assignment, course.id)
         }
         confirmVerified(view)
     }

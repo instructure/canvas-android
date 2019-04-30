@@ -17,10 +17,10 @@
 package com.instructure.student.mobius.assignmentDetails.submission.text
 
 import com.instructure.canvasapi2.utils.exhaustive
-import com.instructure.student.mobius.assignmentDetails.submission.text.ui.TextSubmissionView
+import com.instructure.student.mobius.assignmentDetails.submission.text.ui.TextSubmissionUploadView
 import com.instructure.student.mobius.common.ui.EffectHandler
 
-class TextSubmissionEffectHandler : EffectHandler<TextSubmissionView, TextSubmissionEvent, TextSubmissionEffect>() {
+class TextSubmissionUploadEffectHandler : EffectHandler<TextSubmissionUploadView, TextSubmissionEvent, TextSubmissionEffect>() {
     override fun accept(effect: TextSubmissionEffect) {
         when (effect) {
             is TextSubmissionEffect.SubmitText -> {

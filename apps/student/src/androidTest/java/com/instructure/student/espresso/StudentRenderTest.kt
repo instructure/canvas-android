@@ -36,6 +36,7 @@ abstract class StudentRenderTest : StudentTest() {
     val assignmentDetailsRenderPage = AssignmentDetailsRenderPage()
     val submissionDetailsRenderPage = SubmissionDetailsRenderPage()
     val submissionDetailsEmptyContentRenderPage = SubmissionDetailsEmptyContentRenderPage()
-    val urlSubmissionRenderPage = UrlSubmissionRenderPage()
     val syllabusRenderPage = SyllabusRenderPage()
+    val urlSubmissionViewRenderPage = UrlSubmissionViewRenderPage()
+    val urlSubmissionUploadRenderPage = UrlSubmissionUploadRenderPage()
 }

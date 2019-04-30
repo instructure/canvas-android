@@ -34,7 +34,7 @@ class AssignmentDetailsUpdate : UpdateInit<AssignmentDetailsModel, AssignmentDet
             // If a user is trying to submit something to an assignment and the assignment is null, something is terribly wrong.
             val submissionTypes = model.assignmentResult!!.dataOrThrow.getSubmissionTypes()
             if(submissionTypes.size == 1 && !(submissionTypes.contains(Assignment.SubmissionType.ONLINE_UPLOAD) && model.isArcEnabled)) {
-                Next.dispatch<AssignmentDetailsModel, AssignmentDetailsEffect>(setOf(AssignmentDetailsEffect.ShowCreateSubmissionView(submissionTypes.first(), model.course.id, model.assignmentResult.dataOrThrow)))
+                Next.dispatch<AssignmentDetailsModel, AssignmentDetailsEffect>(setOf(AssignmentDetailsEffect.ShowCreateSubmissionView(submissionTypes.first(), model.course, model.assignmentResult.dataOrThrow)))
             } else {
                 Next.dispatch<AssignmentDetailsModel, AssignmentDetailsEffect>(setOf(AssignmentDetailsEffect.ShowSubmitDialogView(model.assignmentResult.dataOrThrow, model.course, model.isArcEnabled)))
             }
@@ -60,7 +60,7 @@ class AssignmentDetailsUpdate : UpdateInit<AssignmentDetailsModel, AssignmentDet
         }
         is AssignmentDetailsEvent.SubmissionTypeClicked -> {
             // If a user is trying to submit something to an assignment and the assignment is null, something is terribly wrong.
-            Next.dispatch(setOf(AssignmentDetailsEffect.ShowCreateSubmissionView(event.submissionType, model.course.id, model.assignmentResult!!.dataOrThrow)))
+            Next.dispatch(setOf(AssignmentDetailsEffect.ShowCreateSubmissionView(event.submissionType, model.course, model.assignmentResult!!.dataOrThrow)))
         }
     }
 }

@@ -36,6 +36,7 @@ import com.instructure.student.R
 import com.instructure.student.activity.InternalWebViewActivity
 import com.instructure.student.fragment.InternalWebviewFragment
 import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsEvent
+import com.instructure.student.mobius.assignmentDetails.submission.url.ui.UrlSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsFragment
 import com.instructure.student.mobius.common.ui.MobiusView
 import com.instructure.student.router.RouteMatcher
@@ -166,7 +167,7 @@ class AssignmentDetailsView(
                 showOnlineTextEntryView(assignment.id, courseId)
             }
             setupDialogRow(dialog, dialog.submissionEntryWebsite, visibilities.urlEntry) {
-                showOnlineUrlEntryView(assignment.id, courseId)
+                showOnlineUrlEntryView(assignment.id, assignment.name, canvasContext, assignment.submission?.url)
             }
             setupDialogRow(dialog, dialog.submissionEntryFile, visibilities.fileUpload) {
                 showFileUploadView(assignment, courseId)
@@ -203,9 +204,8 @@ class AssignmentDetailsView(
         context.toast("Route to text entry page")
     }
 
-    fun showOnlineUrlEntryView(assignmentId: Long, courseId: Long) {
-        // TODO
-        context.toast("Route to url page")
+    fun showOnlineUrlEntryView(assignmentId: Long, assignmentName: String?, canvasContext: CanvasContext, submittedUrl: String? = null) {
+        RouteMatcher.route(context, UrlSubmissionUploadFragment.makeRoute(canvasContext, assignmentId, assignmentName, submittedUrl))
     }
 
     fun showMediaRecordingView(assignment: Assignment, courseId: Long) {

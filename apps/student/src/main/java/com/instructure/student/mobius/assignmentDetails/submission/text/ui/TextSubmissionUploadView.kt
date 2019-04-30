@@ -24,12 +24,12 @@ import com.instructure.student.mobius.common.ui.MobiusView
 import com.instructure.student.mobius.common.ui.SubmissionService
 import com.spotify.mobius.functions.Consumer
 
-class TextSubmissionView(inflater: LayoutInflater, parent: ViewGroup) : MobiusView<TextSubmissionViewState, TextSubmissionEvent>(0, inflater, parent) {
+class TextSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) : MobiusView<TextSubmissionUploadViewState, TextSubmissionEvent>(0, inflater, parent) {
     override fun onConnect(output: Consumer<TextSubmissionEvent>) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun render(state: TextSubmissionViewState) {
+    override fun render(state: TextSubmissionUploadViewState) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

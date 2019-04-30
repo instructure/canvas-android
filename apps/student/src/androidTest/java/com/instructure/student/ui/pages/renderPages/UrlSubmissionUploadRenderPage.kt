@@ -13,6 +13,17 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.student.mobius.assignmentDetails.submission.url.ui
+package com.instructure.student.ui.pages.renderPages
 
-sealed class UrlSubmissionViewState
+import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.page.BasePage
+import com.instructure.student.R
+
+class UrlSubmissionUploadRenderPage : BasePage(R.id.urlSubmissionUpload) {
+
+    val url by OnViewWithId(R.id.editUrl)
+    val previewLabel by OnViewWithId(R.id.previewLabel)
+    val previewWebView by OnViewWithId(R.id.urlPreviewWebView)
+    val errorMsg by OnViewWithId(R.id.errorMsg)
+    val submit by OnViewWithId(R.id.menuSubmit)
+}
