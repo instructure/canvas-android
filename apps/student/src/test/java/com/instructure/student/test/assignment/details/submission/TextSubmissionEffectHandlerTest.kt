@@ -16,10 +16,10 @@
 package com.instructure.student.test.assignment.details.submission
 
 import com.instructure.canvasapi2.models.Course
-import com.instructure.student.mobius.assignmentDetails.submission.text.TextSubmissionEffect
-import com.instructure.student.mobius.assignmentDetails.submission.text.TextSubmissionEffectHandler
-import com.instructure.student.mobius.assignmentDetails.submission.text.TextSubmissionEvent
-import com.instructure.student.mobius.assignmentDetails.submission.text.ui.TextSubmissionView
+import com.instructure.student.mobius.assignmentDetails.submission.text.TextSubmissionUploadEffect
+import com.instructure.student.mobius.assignmentDetails.submission.text.TextSubmissionUploadEffectHandler
+import com.instructure.student.mobius.assignmentDetails.submission.text.TextSubmissionUploadEvent
+import com.instructure.student.mobius.assignmentDetails.submission.text.ui.TextSubmissionUploadView
 import com.spotify.mobius.functions.Consumer
 import io.mockk.*
 import kotlinx.coroutines.Dispatchers
@@ -32,9 +32,9 @@ import org.junit.Test
 import java.util.concurrent.Executors
 
 class TextSubmissionEffectHandlerTest : Assert() {
-    private val view: TextSubmissionView = mockk(relaxed = true)
-    private val eventConsumer: Consumer<TextSubmissionEvent> = mockk(relaxed = true)
-    private val effectHandler = TextSubmissionEffectHandler()
+    private val view: TextSubmissionUploadView = mockk(relaxed = true)
+    private val eventConsumer: Consumer<TextSubmissionUploadEvent> = mockk(relaxed = true)
+    private val effectHandler = TextSubmissionUploadEffectHandler()
     private val connection = effectHandler.connect(eventConsumer)
 
     @ExperimentalCoroutinesApi
@@ -51,7 +51,7 @@ class TextSubmissionEffectHandlerTest : Assert() {
         val assignmentName = "Name"
         val course = Course()
 
-        connection.accept(TextSubmissionEffect.SubmitText(text, course, assignmentId, assignmentName))
+        connection.accept(TextSubmissionUploadEffect.SubmitText(text, course, assignmentId, assignmentName))
 
         verify(timeout = 100) {
             view.onTextSubmitted(text, course, assignmentId, assignmentName)
@@ -68,7 +68,7 @@ class TextSubmissionEffectHandlerTest : Assert() {
         val course = Course()
         effectHandler.view = null
 
-        connection.accept(TextSubmissionEffect.SubmitText(text, course, assignmentId, assignmentName))
+        connection.accept(TextSubmissionUploadEffect.SubmitText(text, course, assignmentId, assignmentName))
 
         verify(exactly = 0) {
             view.onTextSubmitted(any(), any(), any(), any())
@@ -80,7 +80,7 @@ class TextSubmissionEffectHandlerTest : Assert() {
     @Test
     fun `InitializeText results in view calling setInitialSubmissionText`() {
         val text = "Some text"
-        connection.accept(TextSubmissionEffect.InitializeText(text))
+        connection.accept(TextSubmissionUploadEffect.InitializeText(text))
 
         verify(timeout = 100) {
             view.setInitialSubmissionText(text)
@@ -94,7 +94,7 @@ class TextSubmissionEffectHandlerTest : Assert() {
         val text = "Some text"
         effectHandler.view = null
 
-        connection.accept(TextSubmissionEffect.InitializeText(text))
+        connection.accept(TextSubmissionUploadEffect.InitializeText(text))
 
         verify(exactly = 0) {
             view.setInitialSubmissionText(any())

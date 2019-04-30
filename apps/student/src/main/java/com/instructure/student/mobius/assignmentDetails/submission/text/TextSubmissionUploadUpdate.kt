@@ -23,25 +23,25 @@ import com.spotify.mobius.Next
 import java.io.UnsupportedEncodingException
 import java.net.URLEncoder
 
-class TextSubmissionUpdate : UpdateInit<TextSubmissionModel, TextSubmissionEvent, TextSubmissionEffect>() {
-    override fun performInit(model: TextSubmissionModel): First<TextSubmissionModel, TextSubmissionEffect> {
-        return First.first(model, setOf<TextSubmissionEffect>(TextSubmissionEffect.InitializeText(model.initialText
+class TextSubmissionUploadUpdate : UpdateInit<TextSubmissionUploadModel, TextSubmissionUploadEvent, TextSubmissionUploadEffect>() {
+    override fun performInit(model: TextSubmissionUploadModel): First<TextSubmissionUploadModel, TextSubmissionUploadEffect> {
+        return First.first(model, setOf<TextSubmissionUploadEffect>(TextSubmissionUploadEffect.InitializeText(model.initialText
                 ?: "")))
     }
 
-    override fun update(model: TextSubmissionModel, event: TextSubmissionEvent): Next<TextSubmissionModel, TextSubmissionEffect> {
+    override fun update(model: TextSubmissionUploadModel, event: TextSubmissionUploadEvent): Next<TextSubmissionUploadModel, TextSubmissionUploadEffect> {
         return when(event) {
-            is TextSubmissionEvent.TextChanged -> {
+            is TextSubmissionUploadEvent.TextChanged -> {
                 Next.next(model.copy(isSubmittable = event.text.isNotEmpty()))
             }
-            is TextSubmissionEvent.SubmitClicked -> {
+            is TextSubmissionUploadEvent.SubmitClicked -> {
                 // Get the text, replace all line breaks with <br/> tags so they are preserved when displayed in a webview
                 var textToSubmit = event.text.replace("\\n".toRegex(), "<br/>")
                 try {
                     textToSubmit = URLEncoder.encode(textToSubmit, "UTF-8")
                 } catch (e: UnsupportedEncodingException) {}
 
-                Next.dispatch(effects(TextSubmissionEffect.SubmitText(textToSubmit, model.canvasContext, model.assignmentId, model.assignmentName)))
+                Next.dispatch(effects(TextSubmissionUploadEffect.SubmitText(textToSubmit, model.canvasContext, model.assignmentId, model.assignmentName)))
             }
         }
     }

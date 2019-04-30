@@ -41,6 +41,7 @@ public class Const {
     public static final String ATTACHMENTS = "attachments";
     public static final String ASSIGNMENT = "assignment";
     public static final String ASSIGNMENT_ID = "assignmentId";
+    public static final String ASSIGNMENT_NAME = "assignmentName";
     public static final String ASSIGNMENT_SET = "assignment_set";
     public static final String AUTHENTICATE = "authenticate";
     public static final String BUNDLE = "bundle";
@@ -148,6 +149,7 @@ public class Const {
     public static final String SYLLABUS = "syllabus";
     public static final String TAB = "tab";
     public static final String TAB_ID = "tabId";
+    public static final String TEXT = "text";
     public static final String TEXT_ALLOWED = "isOnlineTextAllowed";
     public static final String TITLE_TEXT = "titleText";
     public static final String TOPIC_HEADER = "topicHeader";

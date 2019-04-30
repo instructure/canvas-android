@@ -17,9 +17,6 @@ package com.instructure.student.test.assignment.details.submission
 
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
-import com.instructure.student.mobius.assignmentDetails.submission.text.TextSubmissionEffect
-import com.instructure.student.mobius.assignmentDetails.submission.text.TextSubmissionEvent
-import com.instructure.student.mobius.assignmentDetails.submission.text.TextSubmissionModel
 import com.instructure.student.mobius.assignmentDetails.submission.url.UrlSubmissionEffect
 import com.instructure.student.mobius.assignmentDetails.submission.url.UrlSubmissionEvent
 import com.instructure.student.mobius.assignmentDetails.submission.url.UrlSubmissionModel
@@ -31,12 +28,9 @@ import com.spotify.mobius.test.InitSpec
 import com.spotify.mobius.test.InitSpec.assertThatFirst
 import com.spotify.mobius.test.NextMatchers
 import com.spotify.mobius.test.UpdateSpec
-import io.mockk.every
-import io.mockk.mockkStatic
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import java.net.URLEncoder
 
 class UrlSubmissionUpdateTest : Assert() {
 

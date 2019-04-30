@@ -488,8 +488,8 @@
 
 
     <!--New Submission Strings -->
-    <string name="textEntry"> Text Entry</string>
-    <string name="onlineURL"> Online URL</string>
+    <string name="textEntry">Text Entry</string>
+    <string name="onlineURL">Online URL</string>
     <string name="enterTextEntry">Enter Text Entry</string>
     <string name="fileUpload"> File Upload</string>
     <string name="oneFileOnly">This submission only accepts one file upload</string>
