@@ -38,7 +38,7 @@ class ModuleListUpdateTest : Assert() {
     private val updateSpec = UpdateSpec(ModuleListUpdate()::update)
 
     private val course = Course()
-    private val initModel = ModulesListModel(course)
+    private val initModel = ModuleListModel(course)
 
     @Test
     fun `Initializes into a loading state`() {
@@ -51,7 +51,7 @@ class ModuleListUpdateTest : Assert() {
         initSpec
             .whenInit(initModel)
             .then(
-                assertThatFirst<ModulesListModel, ModulesListEffect>(
+                assertThatFirst<ModuleListModel, ModulesListEffect>(
                     FirstMatchers.hasModel(expectedModel),
                     matchesFirstEffects(expectedEffect)
                 )
@@ -70,7 +70,7 @@ class ModuleListUpdateTest : Assert() {
         initSpec
             .whenInit(initModel.copy(scrollToItemId = itemId))
             .then(
-                assertThatFirst<ModulesListModel, ModulesListEffect>(
+                assertThatFirst<ModuleListModel, ModulesListEffect>(
                     FirstMatchers.hasModel(expectedModel),
                     matchesFirstEffects(expectedEffect)
                 )
@@ -97,7 +97,7 @@ class ModuleListUpdateTest : Assert() {
             .given(model)
             .whenEvent(ModulesListEvent.PullToRefresh)
             .then(
-                assertThatNext<ModulesListModel, ModulesListEffect>(
+                assertThatNext<ModuleListModel, ModulesListEffect>(
                     hasModel(expectedModel),
                     matchesEffects(expectedEffect)
                 )
@@ -107,13 +107,13 @@ class ModuleListUpdateTest : Assert() {
     @Test
     fun `ModuleClicked event emits ShowModuleDetailView effect`() {
         val item = ModuleItem(id = 123L)
-        val event = ModulesListEvent.ModuleItemClicked(item)
+        val event = ModulesListEvent.ModuleItemClicked(item.id)
         val expectedEffect = ModulesListEffect.ShowModuleItemDetailView(item)
         updateSpec
             .given(initModel)
             .whenEvent(event)
             .then(
-                assertThatNext<ModulesListModel, ModulesListEffect>(
+                assertThatNext<ModuleListModel, ModulesListEffect>(
                     matchesEffects(expectedEffect)
                 )
             )
@@ -133,7 +133,7 @@ class ModuleListUpdateTest : Assert() {
             .given(model)
             .whenEvent(event)
             .then(
-                assertThatNext<ModulesListModel, ModulesListEffect>(
+                assertThatNext<ModuleListModel, ModulesListEffect>(
                     hasModel(expectedModel),
                     NextMatchers.hasNoEffects()
                 )
@@ -161,7 +161,7 @@ class ModuleListUpdateTest : Assert() {
             .given(model)
             .whenEvent(event)
             .then(
-                assertThatNext<ModulesListModel, ModulesListEffect>(
+                assertThatNext<ModuleListModel, ModulesListEffect>(
                     hasModel(expectedModel),
                     NextMatchers.hasNoEffects()
                 )
@@ -192,7 +192,7 @@ class ModuleListUpdateTest : Assert() {
             .given(model)
             .whenEvent(event)
             .then(
-                assertThatNext<ModulesListModel, ModulesListEffect>(
+                assertThatNext<ModuleListModel, ModulesListEffect>(
                     hasModel(expectedModel),
                     matchesEffects(ModulesListEffect.ScrollToItem(itemId))
                 )
@@ -227,7 +227,7 @@ class ModuleListUpdateTest : Assert() {
             .given(model)
             .whenEvent(event)
             .then(
-                assertThatNext<ModulesListModel, ModulesListEffect>(
+                assertThatNext<ModuleListModel, ModulesListEffect>(
                     hasModel(expectedModel),
                     matchesEffects(expectedEffect)
                 )

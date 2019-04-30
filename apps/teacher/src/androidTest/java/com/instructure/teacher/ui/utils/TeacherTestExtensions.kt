@@ -24,33 +24,13 @@ import android.os.Environment
 import androidx.test.espresso.Espresso
 import androidx.test.platform.app.InstrumentationRegistry
 import com.instructure.canvasapi2.models.User
-import com.instructure.dataseeding.api.AssignmentsApi
-import com.instructure.dataseeding.api.ConversationsApi
-import com.instructure.dataseeding.api.CoursesApi
-import com.instructure.dataseeding.api.EnrollmentsApi
-import com.instructure.dataseeding.api.FileUploadsApi
-import com.instructure.dataseeding.api.PagesApi
-import com.instructure.dataseeding.api.QuizzesApi
-import com.instructure.dataseeding.api.SeedApi
-import com.instructure.dataseeding.api.SubmissionsApi
-import com.instructure.dataseeding.api.UserApi
-import com.instructure.dataseeding.model.AssignmentListApiModel
-import com.instructure.dataseeding.model.AttachmentApiModel
-import com.instructure.dataseeding.model.CanvasUserApiModel
-import com.instructure.dataseeding.model.ConversationListApiModel
-import com.instructure.dataseeding.model.CourseApiModel
-import com.instructure.dataseeding.model.EnrollmentTypes
-import com.instructure.dataseeding.model.FileType
-import com.instructure.dataseeding.model.FileUploadType
-import com.instructure.dataseeding.model.PageApiModel
-import com.instructure.dataseeding.model.QuizListApiModel
-import com.instructure.dataseeding.model.QuizSubmissionApiModel
-import com.instructure.dataseeding.model.SubmissionListApiModel
-import com.instructure.dataseeding.model.SubmissionType
+import com.instructure.dataseeding.api.*
+import com.instructure.dataseeding.model.*
 import com.instructure.dataseeding.util.CanvasRestAdapter
 import com.instructure.dataseeding.util.DataSeedingException
 import com.instructure.dataseeding.util.Randomizer
 import com.instructure.interactions.router.Route
+import com.instructure.teacher.activities.LoginActivity
 import com.instructure.teacher.router.RouteMatcher
 import java.io.*
 
@@ -100,7 +80,7 @@ fun TeacherTest.logIn(
     }
 
     activityRule.runOnUiThread {
-        activityRule.activity.loginWithToken(
+        (activityRule.activity as LoginActivity).loginWithToken(
                 teacher.token,
                 teacher.domain,
                 User(
@@ -352,7 +332,7 @@ val SeedApi.SeededDataApiModel.favoriteCourses: List<CourseApiModel>
 
 fun TeacherTest.tokenLogin(teacher: CanvasUserApiModel, skipSplash: Boolean = true) {
     activityRule.runOnUiThread {
-        activityRule.activity.loginWithToken(
+        (activityRule.activity as LoginActivity).loginWithToken(
                 teacher.token,
                 teacher.domain,
                 User(

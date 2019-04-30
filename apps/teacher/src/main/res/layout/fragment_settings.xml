@@ -101,6 +101,21 @@
                 android:textColor="@color/defaultTextDark"
                 android:textSize="16sp"/>
 
+            <TextView
+                android:id="@+id/featureFlagButton"
+                style="@style/TextFont.Medium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:minHeight="?android:listPreferredItemHeight"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/featureFlagsTitle"
+                android:textColor="@color/colorOcean11"
+                android:textSize="16sp"
+                android:visibility="gone"
+                tools:visibility="visible"/>
+
             <Space
                 android:layout_width="0dp"
                 android:layout_height="0dp"

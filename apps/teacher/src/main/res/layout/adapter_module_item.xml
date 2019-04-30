@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2019 - present Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:minHeight="48dp"
+    android:orientation="horizontal"
+    android:paddingStart="16dp"
+    android:paddingTop="8dp"
+    android:paddingEnd="16dp"
+    android:paddingBottom="8dp">
+
+    <Space
+        android:id="@+id/moduleItemIndent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"/>
+
+    <ImageView
+        android:id="@+id/moduleItemIcon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginEnd="32dp"
+        android:layout_gravity="center_vertical"
+        android:importantForAccessibility="no"
+        android:src="@drawable/vd_quiz"
+        android:tint="@color/canvasDefaultAccent"/>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/moduleItemTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="@color/defaultTextDark"
+            android:textSize="16sp"
+            tools:text="General Questions &amp; Answers"/>
+
+        <TextView
+            android:id="@+id/moduleItemSubtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/defaultTextGray"
+            tools:text="Due Apr 25 at 11:59pm"/>
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/moduleItemPublishedIcon"
+        android:layout_width="14dp"
+        android:layout_height="14dp"
+        android:layout_gravity="center_vertical"
+        android:contentDescription="@string/published"
+        android:src="@drawable/vd_published"
+        android:tint="@color/publishedGreen"/>
+
+    <ImageView
+        android:id="@+id/moduleItemUnpublishedIcon"
+        android:layout_width="14dp"
+        android:layout_height="14dp"
+        android:layout_gravity="center_vertical"
+        android:contentDescription="@string/not_published"
+        android:src="@drawable/vd_universal_no"
+        android:tint="@color/defaultTextGray"/>
+
+</LinearLayout>

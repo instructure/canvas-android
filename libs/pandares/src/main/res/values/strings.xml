@@ -475,6 +475,7 @@
     <string name="goToModules">Go To Modules</string>
     <string name="markDone">Mark done</string>
     <string name="moduleItemNotFound">Module Item Not Found</string>
+    <string name="errorLoadingModules">There was an error loading your modules.</string>
 
     <string name="help">Help</string>
     <string name="instructor_question">Instructor Question</string>

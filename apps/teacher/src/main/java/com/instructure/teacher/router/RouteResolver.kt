@@ -139,6 +139,8 @@ object RouteResolver {
             fragment = SettingsFragment.newInstance(route.arguments)
         } else if (ProfileEditFragment::class.java.isAssignableFrom(cls)) {
             fragment = ProfileEditFragment.newInstance(route.arguments)
+        } else if (FeatureFlagsFragment::class.java.isAssignableFrom(cls)) {
+            fragment = FeatureFlagsFragment()
         } else if (LTIWebViewFragment::class.java.isAssignableFrom(cls)) {
             fragment = LTIWebViewFragment.newInstance(route.arguments)
         } else if (PeopleListFragment::class.java.isAssignableFrom(cls)) {

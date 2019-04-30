@@ -16,14 +16,17 @@
  */
 package com.instructure.teacher.ui.utils
 
+import android.app.Activity
 import com.instructure.canvas.espresso.CanvasTest
+import com.instructure.espresso.InstructureActivityTestRule
 import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.activities.LoginActivity
 import com.instructure.teacher.ui.pages.*
 
 abstract class TeacherTest : CanvasTest() {
 
-    override val activityRule = TeacherActivityTestRule(LoginActivity::class.java)
+    override val activityRule: InstructureActivityTestRule<out Activity>
+            = TeacherActivityTestRule(LoginActivity::class.java)
 
     override val isTesting = BuildConfig.IS_TESTING
 
