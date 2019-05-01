@@ -177,6 +177,16 @@ class RCETextEditorView @JvmOverloads constructor(
             editor.setupRtl()
     }
 
+    fun setOnTextChangeListener(callback: (String) -> Unit) {
+        editor.setOnTextChangeListener {
+            callback.invoke(it)
+        }
+    }
+
+    fun setPaddingOnEditor(left: Int = 0, top: Int = 0, right: Int = 0, bottom: Int = 0) {
+        editor.setPadding(left, top, right, bottom)
+    }
+
     fun insertImage(url: String, alt: String) {
         editor.insertImage(url, alt)
     }

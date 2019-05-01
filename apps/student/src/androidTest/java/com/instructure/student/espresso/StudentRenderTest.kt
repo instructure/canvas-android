@@ -18,6 +18,7 @@ package com.instructure.student.espresso
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.student.SingleFragmentTestActivity
+import com.instructure.student.ui.pages.TextSubmissionUploadPage
 import com.instructure.student.ui.pages.renderPages.*
 import com.instructure.student.ui.utils.StudentActivityTestRule
 import com.instructure.student.ui.utils.StudentTest
@@ -38,4 +39,5 @@ abstract class StudentRenderTest : StudentTest() {
     val submissionDetailsEmptyContentRenderPage = SubmissionDetailsEmptyContentRenderPage()
     val urlSubmissionRenderPage = UrlSubmissionRenderPage()
     val syllabusRenderPage = SyllabusRenderPage()
+    val textSubmissionUploadPage = TextSubmissionUploadPage()
 }

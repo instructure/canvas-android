@@ -13,16 +13,9 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.student.mobius.assignmentDetails.submission.text
+package com.instructure.student.ui.pages
 
-import android.content.Context
-import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.student.mobius.assignmentDetails.submission.text.ui.TextSubmissionUploadViewState
-import com.instructure.student.mobius.common.ui.Presenter
+import com.instructure.espresso.page.BasePage
+import com.instructure.student.R
 
-object TextSubmissionUploadPresenter :
-    Presenter<TextSubmissionUploadModel, TextSubmissionUploadViewState> {
-    override fun present(model: TextSubmissionUploadModel, context: Context): TextSubmissionUploadViewState {
-        return TextSubmissionUploadViewState(model.initialText,  submitEnabled = model.isSubmittable)
-    }
-}
+class TextSubmissionUploadPage : BasePage(R.id.textSubmissionUpload)

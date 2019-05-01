@@ -38,7 +38,7 @@ import org.junit.Test
 import java.io.UnsupportedEncodingException
 import java.net.URLEncoder
 
-class TextSubmissionUpdateTest : Assert() {
+class TextSubmissionUploadUpdateTest : Assert() {
     private val initSpec = InitSpec(TextSubmissionUploadUpdate()::init)
     private val updateSpec = UpdateSpec(TextSubmissionUploadUpdate()::update)
 

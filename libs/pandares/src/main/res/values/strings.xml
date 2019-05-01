@@ -52,6 +52,9 @@
     <string name="allowedFileTypes">Allowable File Types</string>
     <string name="resubmitAssignment">Resubmit Assignment</string>
 
+    <!-- Student Submission -->
+    <string name="submissionWrite">Write...</string>
+
     <!-- Student Submission Details -->
     <string name="submission">Submission</string>
     <string name="submissionVersions">Submission versions</string>

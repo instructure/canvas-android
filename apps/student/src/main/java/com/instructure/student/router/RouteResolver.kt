@@ -6,6 +6,7 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.utils.Const
 import com.instructure.student.features.files.search.FileSearchFragment
 import com.instructure.student.fragment.*
+import com.instructure.student.mobius.assignmentDetails.submission.text.ui.TextSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsFragment
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.mobius.syllabus.ui.SyllabusFragment
@@ -102,6 +103,7 @@ object RouteResolver {
             cls.isA<CreateDiscussionFragment>() -> CreateDiscussionFragment.newInstance(route)
             cls.isA<DiscussionsUpdateFragment>() -> DiscussionsUpdateFragment.newInstance(route)
             cls.isA<ArcWebviewFragment>() -> ArcWebviewFragment.newInstance(route)
+            cls.isA<TextSubmissionUploadFragment>() -> TextSubmissionUploadFragment.newInstance(route)
             cls.isA<InternalWebviewFragment>() -> InternalWebviewFragment.newInstance(route) // Keep this at the end
             else -> null
         }

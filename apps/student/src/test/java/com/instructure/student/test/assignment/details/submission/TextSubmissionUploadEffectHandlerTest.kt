@@ -31,7 +31,7 @@ import org.junit.Before
 import org.junit.Test
 import java.util.concurrent.Executors
 
-class TextSubmissionEffectHandlerTest : Assert() {
+class TextSubmissionUploadEffectHandlerTest : Assert() {
     private val view: TextSubmissionUploadView = mockk(relaxed = true)
     private val eventConsumer: Consumer<TextSubmissionUploadEvent> = mockk(relaxed = true)
     private val effectHandler = TextSubmissionUploadEffectHandler()

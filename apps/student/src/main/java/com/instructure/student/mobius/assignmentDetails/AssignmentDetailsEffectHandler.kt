@@ -55,7 +55,7 @@ class AssignmentDetailsEffectHandler : EffectHandler<AssignmentDetailsView, Assi
                         view?.showFileUploadView(effect.assignment, effect.courseId)
                     }
                     Assignment.SubmissionType.ONLINE_TEXT_ENTRY -> {
-                        view?.showOnlineTextEntryView(effect.assignment.id, effect.courseId)
+                        view?.showOnlineTextEntryView(effect.assignment.id, effect.assignment.name, effect.assignment.submission?.body)
                     }
                     Assignment.SubmissionType.ONLINE_URL -> {
                         view?.showOnlineUrlEntryView(effect.assignment.id, effect.courseId)

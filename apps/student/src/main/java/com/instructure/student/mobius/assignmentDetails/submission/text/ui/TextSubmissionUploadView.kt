@@ -18,16 +18,20 @@ package com.instructure.student.mobius.assignmentDetails.submission.text.ui
 
 import android.app.Activity
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.pandautils.utils.onChangeDebounce
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.Utils
 import com.instructure.pandautils.utils.setMenu
 import com.instructure.pandautils.utils.setupAsBackButton
 import com.instructure.student.R
 import com.instructure.student.mobius.assignmentDetails.submission.text.TextSubmissionUploadEvent
 import com.instructure.student.mobius.common.ui.MobiusView
 import com.instructure.student.mobius.common.ui.SubmissionService
+import com.pspdfkit.framework.it
 import com.spotify.mobius.functions.Consumer
+import instructure.rceditor.RCETextEditor
 import kotlinx.android.synthetic.main.fragment_text_submission_upload.*
 
 class TextSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) : MobiusView<TextSubmissionUploadViewState, TextSubmissionUploadEvent>(R.layout.fragment_text_submission_upload, inflater, parent) {
@@ -41,18 +45,21 @@ class TextSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) : Mo
         toolbar.setMenu(R.menu.menu_submit_generic) {
             when (it.itemId) {
                 R.id.menuSubmit -> {
-                    output.accept(TextSubmissionUploadEvent.SubmitClicked(editText.text.toString()))
+                    output.accept(TextSubmissionUploadEvent.SubmitClicked(rce.html))
                 }
             }
         }
 
-        editText.onChangeDebounce(URL_MINIMUM_LENGTH, DELAY) {
+        toolbar.menu.findItem(R.id.menuSubmit).isEnabled = false
+
+        rce.setPaddingOnEditor(left = Utils.dpToPx(context, 4.0f).toInt(), right = Utils.dpToPx(context, 4.0f).toInt())
+        rce.setOnTextChangeListener {
             output.accept(TextSubmissionUploadEvent.TextChanged(it))
         }
     }
 
     override fun render(state: TextSubmissionUploadViewState) {
-        editText.hint = state.textHint
+        toolbar.menu.findItem(R.id.menuSubmit).isEnabled = state.submitEnabled
     }
 
     override fun onDispose() { }
@@ -60,7 +67,8 @@ class TextSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) : Mo
     override fun applyTheme() { }
 
     fun setInitialSubmissionText(text: String?) {
-        editText.setText(text ?: "")
+        rce.setHtml(text ?: "", context.getString(R.string.textEntry), context.getString(R.string.submissionWrite), ThemePrefs.brandColor, ThemePrefs.buttonColor)
+        toolbar.menu.findItem(R.id.menuSubmit).isEnabled = !text.isNullOrBlank()
     }
 
     fun onTextSubmitted(text: String, canvasContext: CanvasContext, assignmentId: Long, assignmentName: String?) {
@@ -68,10 +76,4 @@ class TextSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) : Mo
 
         (context as? Activity)?.onBackPressed()
     }
-
-    companion object {
-        private const val DELAY = 0L
-        private const val URL_MINIMUM_LENGTH = 3
-    }
-
 }
