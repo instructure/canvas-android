@@ -41,8 +41,12 @@ class GetNoteAnnotationPact : DocViewerPact() {
 
     override fun createPact(builder: PactDslWithProvider): RequestResponsePact {
         @Language("JSON")
+        val jsonObj = GsonBuilder().create().toJsonTree(expectedAnnotation).asJsonObject
+        if(jsonObj.get("deleted").asBoolean == false ) {
+            jsonObj.remove("deleted") // "deleted" should not be present if it is false.  MBL-12312.
+        }
         val body = """
-            { "data": [ ${GsonBuilder().create().toJson(expectedAnnotation)} ] }
+            { "data": [ ${jsonObj.toString()} ] }
             """
 
         return builder
