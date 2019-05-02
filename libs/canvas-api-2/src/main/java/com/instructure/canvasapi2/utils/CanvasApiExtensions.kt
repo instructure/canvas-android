@@ -18,6 +18,7 @@ package com.instructure.canvasapi2.utils
 import java.text.SimpleDateFormat
 import java.util.*
 
+@JvmOverloads
 fun Date?.toApiString(timeZone: TimeZone? = null): String? {
     this ?: return ""
 
