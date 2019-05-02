@@ -80,3 +80,16 @@ fun <T> apiAsync(managerCall: ManagerCall<T>): Deferred<DataResult<T>> {
 
     return deferred
 }
+
+/**
+ * A convenience function which awaits a successful result and returns its payload, or throws an exception
+ * if the result is not successful.
+ */
+suspend fun <T> Deferred<DataResult<T>>.awaitOrThrow(): T {
+    val result = await()
+    if (result.isSuccess) {
+        return result.dataOrThrow
+    } else {
+        throw RuntimeException(result.toString())
+    }
+}

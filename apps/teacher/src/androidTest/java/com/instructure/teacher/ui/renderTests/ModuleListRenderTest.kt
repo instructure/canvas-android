@@ -16,6 +16,8 @@
 package com.instructure.teacher.ui.renderTests
 
 import android.graphics.Color
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.isEnabled
 import com.instructure.canvasapi2.models.Course
 import com.instructure.espresso.assertCompletelyDisplayed
 import com.instructure.espresso.assertDisplayed
@@ -30,6 +32,7 @@ import com.instructure.teacher.features.modules.list.ui.ModuleListViewState
 import com.instructure.teacher.ui.renderTests.pages.ModuleListRenderPage
 import com.instructure.teacher.ui.utils.TeacherRenderTest
 import com.spotify.mobius.runners.WorkRunner
+import org.hamcrest.CoreMatchers.not
 import org.junit.Before
 import org.junit.Test
 
@@ -331,6 +334,22 @@ class ModuleListRenderTest : TeacherRenderTest() {
         )
         loadPageWithViewState(state)
         page.assertHasItemIndent(item.indent)
+    }
+
+    @Test
+    fun displaysModuleItemLoadingIndicator() {
+        val item = moduleItemTemplate.copy(
+            iconResId = null,
+            enabled = false,
+            isLoading = true
+        )
+        val state = ModuleListViewState(
+            items = listOf(item)
+        )
+        loadPageWithViewState(state)
+        page.moduleItemIcon.assertNotDisplayed()
+        page.moduleItemLoadingView.assertDisplayed()
+        page.moduleItemRoot.check(matches(not(isEnabled())))
     }
 
     private fun loadPageWithViewState(

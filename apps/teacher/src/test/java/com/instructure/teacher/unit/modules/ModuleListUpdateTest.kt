@@ -27,6 +27,7 @@ import com.spotify.mobius.test.InitSpec
 import com.spotify.mobius.test.InitSpec.assertThatFirst
 import com.spotify.mobius.test.NextMatchers
 import com.spotify.mobius.test.NextMatchers.hasModel
+import com.spotify.mobius.test.NextMatchers.hasNothing
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Assert
@@ -43,7 +44,7 @@ class ModuleListUpdateTest : Assert() {
     @Test
     fun `Initializes into a loading state`() {
         val expectedModel = initModel.copy(isLoading = true)
-        val expectedEffect = ModulesListEffect.LoadNextPage(
+        val expectedEffect = ModuleListEffect.LoadNextPage(
             expectedModel.course,
             expectedModel.pageData,
             expectedModel.scrollToItemId
@@ -51,7 +52,7 @@ class ModuleListUpdateTest : Assert() {
         initSpec
             .whenInit(initModel)
             .then(
-                assertThatFirst<ModuleListModel, ModulesListEffect>(
+                assertThatFirst<ModuleListModel, ModuleListEffect>(
                     FirstMatchers.hasModel(expectedModel),
                     matchesFirstEffects(expectedEffect)
                 )
@@ -62,7 +63,7 @@ class ModuleListUpdateTest : Assert() {
     fun `Initializes into a loading state with scrollToItemId`() {
         val itemId = 123L
         val expectedModel = initModel.copy(isLoading = true, scrollToItemId = itemId)
-        val expectedEffect = ModulesListEffect.LoadNextPage(
+        val expectedEffect = ModuleListEffect.LoadNextPage(
             expectedModel.course,
             expectedModel.pageData,
             expectedModel.scrollToItemId
@@ -70,7 +71,7 @@ class ModuleListUpdateTest : Assert() {
         initSpec
             .whenInit(initModel.copy(scrollToItemId = itemId))
             .then(
-                assertThatFirst<ModuleListModel, ModulesListEffect>(
+                assertThatFirst<ModuleListModel, ModuleListEffect>(
                     FirstMatchers.hasModel(expectedModel),
                     matchesFirstEffects(expectedEffect)
                 )
@@ -88,16 +89,16 @@ class ModuleListUpdateTest : Assert() {
             isLoading = true,
             pageData = ModuleListPageData(forceNetwork = true)
         )
-        val expectedEffect = ModulesListEffect.LoadNextPage(
+        val expectedEffect = ModuleListEffect.LoadNextPage(
             expectedModel.course,
             expectedModel.pageData,
             expectedModel.scrollToItemId
         )
         updateSpec
             .given(model)
-            .whenEvent(ModulesListEvent.PullToRefresh)
+            .whenEvent(ModuleListEvent.PullToRefresh)
             .then(
-                assertThatNext<ModuleListModel, ModulesListEffect>(
+                assertThatNext<ModuleListModel, ModuleListEffect>(
                     hasModel(expectedModel),
                     matchesEffects(expectedEffect)
                 )
@@ -107,21 +108,204 @@ class ModuleListUpdateTest : Assert() {
     @Test
     fun `ModuleClicked event emits ShowModuleDetailView effect`() {
         val item = ModuleItem(id = 123L)
-        val event = ModulesListEvent.ModuleItemClicked(item.id)
-        val expectedEffect = ModulesListEffect.ShowModuleItemDetailView(item)
+        val event = ModuleListEvent.ModuleItemClicked(item.id)
+        val expectedEffect = ModuleListEffect.ShowModuleItemDetailView(item, course)
+        val model = initModel.copy(
+            modules = listOf(ModuleObject(items = listOf(item)))
+        )
         updateSpec
-            .given(initModel)
+            .given(model)
             .whenEvent(event)
             .then(
-                assertThatNext<ModuleListModel, ModulesListEffect>(
+                assertThatNext<ModuleListModel, ModuleListEffect>(
                     matchesEffects(expectedEffect)
                 )
             )
     }
 
     @Test
+    fun `ModuleClicked event emits LoadFileInfo effect for files`() {
+        val item = ModuleItem(id = 123L, type = "File")
+        val event = ModuleListEvent.ModuleItemClicked(item.id)
+        val expectedEffect = ModuleListEffect.LoadFileInfo(item, course)
+        val model = initModel.copy(
+            modules = listOf(ModuleObject(items = listOf(item)))
+        )
+        updateSpec
+            .given(model)
+            .whenEvent(event)
+            .then(
+                assertThatNext<ModuleListModel, ModuleListEffect>(
+                    matchesEffects(expectedEffect)
+                )
+            )
+    }
+
+    @Test
+    fun `ModuleExpanded event emits MarkModuleExpanded effect`() {
+        val moduleId = 123L
+        val isExpanded = true
+        val event = ModuleListEvent.ModuleExpanded(moduleId, isExpanded)
+        val expectedEffect = ModuleListEffect.MarkModuleExpanded(course, moduleId, isExpanded)
+        updateSpec
+            .given(initModel)
+            .whenEvent(event)
+            .then(
+                assertThatNext<ModuleListModel, ModuleListEffect>(
+                    matchesEffects(expectedEffect)
+                )
+            )
+    }
+
+    @Test
+    fun `ModuleItemLoadStatusChanged event adds loadingModuleItemIds`() {
+        val model = initModel.copy(
+            loadingModuleItemIds = setOf(1L, 2L, 3L)
+        )
+        val expectedModel = initModel.copy(
+            loadingModuleItemIds = setOf(1L, 2L, 3L, 4L, 5L, 6L)
+        )
+        val event = ModuleListEvent.ModuleItemLoadStatusChanged(setOf(4L, 5L, 6L), true)
+        updateSpec
+            .given(model)
+            .whenEvent(event)
+            .then(
+                assertThatNext<ModuleListModel, ModuleListEffect>(
+                    hasModel(expectedModel)
+                )
+            )
+    }
+
+    @Test
+    fun `ModuleItemLoadStatusChanged event removed loadingModuleItemIds`() {
+        val model = initModel.copy(
+            loadingModuleItemIds = setOf(1L, 2L, 3L, 4L)
+        )
+        val expectedModel = initModel.copy(
+            loadingModuleItemIds = setOf(2L, 4L)
+        )
+        val event = ModuleListEvent.ModuleItemLoadStatusChanged(setOf(1L, 3L), false)
+        updateSpec
+            .given(model)
+            .whenEvent(event)
+            .then(
+                assertThatNext<ModuleListModel, ModuleListEffect>(
+                    hasModel(expectedModel)
+                )
+            )
+    }
+
+    @Test
+    fun `ItemRefreshRequested event emits UpdateModuleItems effect`() {
+        val items = listOf(
+            ModuleItem(id = 1L, type = "Assignment"),
+            ModuleItem(id = 2L, type = "Discussion"),
+            ModuleItem(id = 3L, type = "File")
+        )
+        val model = initModel.copy(
+            modules = listOf(ModuleObject(items = items))
+        )
+        val event = ModuleListEvent.ItemRefreshRequested("Discussion") { it.id in 1L..3L}
+        val expectedEffect = ModuleListEffect.UpdateModuleItems(model.course, listOf(items[1]))
+        updateSpec
+            .given(model)
+            .whenEvent(event)
+            .then(
+                assertThatNext<ModuleListModel, ModuleListEffect>(
+                    matchesEffects(expectedEffect)
+                )
+            )
+    }
+
+    @Test
+    fun `ItemRefreshRequested event emits no change if model does not have matching items`() {
+        val items = listOf(
+            ModuleItem(id = 1L, type = "Assignment"),
+            ModuleItem(id = 2L, type = "Discussion"),
+            ModuleItem(id = 3L, type = "File")
+        )
+        val model = initModel.copy(
+            modules = listOf(ModuleObject(items = items))
+        )
+        val event = ModuleListEvent.ItemRefreshRequested("Discussion") { it.id == 3L}
+        updateSpec
+            .given(model)
+            .whenEvent(event)
+            .then(
+                assertThatNext<ModuleListModel, ModuleListEffect>(
+                    hasNothing()
+                )
+            )
+    }
+
+    @Test
+    fun `ReplaceModuleItems event replaces module items`() {
+        val model = initModel.copy(
+            modules = listOf(
+                ModuleObject(id = 1L, items = listOf(ModuleItem(id = 100L, moduleId = 1L, title = "M1 Old Item"))),
+                ModuleObject(id = 2L, items = listOf(ModuleItem(id = 200L, moduleId = 2L, title = "M2 Old Item"))),
+                ModuleObject(id = 3L, items = listOf(ModuleItem(id = 300L, moduleId = 3L, title = "M3 Old Item")))
+            )
+        )
+        val expectedModel = initModel.copy(
+            modules = listOf(
+                ModuleObject(id = 1L, items = listOf(ModuleItem(id = 100L, moduleId = 1L, title = "M1 New Item"))),
+                ModuleObject(id = 2L, items = listOf(ModuleItem(id = 200L, moduleId = 2L, title = "M2 Old Item"))),
+                ModuleObject(id = 3L, items = listOf(ModuleItem(id = 300L, moduleId = 3L, title = "M3 New Item")))
+            )
+        )
+        val event = ModuleListEvent.ReplaceModuleItems(
+            listOf(
+                ModuleItem(id = 100L, moduleId = 1L, title = "M1 New Item"),
+                ModuleItem(id = 300L, moduleId = 3L, title = "M3 New Item")
+            )
+        )
+        updateSpec
+            .given(model)
+            .whenEvent(event)
+            .then(
+                assertThatNext<ModuleListModel, ModuleListEffect>(
+                    hasModel(expectedModel)
+                )
+            )
+    }
+
+    @Test
+    fun `RemoveModuleItems event removed module items`() {
+        val model = initModel.copy(
+            modules = listOf(
+                ModuleObject(
+                    id = 1L,
+                    items = listOf(ModuleItem(id = 100L, moduleId = 1L, type = "File", contentId = 123L))
+                ),
+                ModuleObject(id = 2L, items = listOf(ModuleItem(id = 200L, moduleId = 2L, title = "M2 Old Item"))),
+                ModuleObject(
+                    id = 3L,
+                    items = listOf(ModuleItem(id = 300L, moduleId = 3L, type = "File", contentId = 123L))
+                )
+            )
+        )
+        val expectedModel = initModel.copy(
+            modules = listOf(
+                ModuleObject(id = 1L),
+                ModuleObject(id = 2L, items = listOf(ModuleItem(id = 200L, moduleId = 2L, title = "M2 Old Item"))),
+                ModuleObject(id = 3L)
+            )
+        )
+        val event = ModuleListEvent.RemoveModuleItems("File") { it.contentId == 123L }
+        updateSpec
+            .given(model)
+            .whenEvent(event)
+            .then(
+                assertThatNext<ModuleListModel, ModuleListEffect>(
+                    hasModel(expectedModel)
+                )
+            )
+    }
+
+    @Test
     fun `PageLoaded event with failed result correctly updates model`() {
-        val event = ModulesListEvent.PageLoaded(
+        val event = ModuleListEvent.PageLoaded(
             ModuleListPageData(lastPageResult = DataResult.Fail())
         )
         val model = initModel.copy(isLoading = true)
@@ -133,7 +317,7 @@ class ModuleListUpdateTest : Assert() {
             .given(model)
             .whenEvent(event)
             .then(
-                assertThatNext<ModuleListModel, ModulesListEffect>(
+                assertThatNext<ModuleListModel, ModuleListEffect>(
                     hasModel(expectedModel),
                     NextMatchers.hasNoEffects()
                 )
@@ -145,7 +329,7 @@ class ModuleListUpdateTest : Assert() {
         val existingData = List(5) { ModuleObject(id = it.toLong()) }
         val newData = List(5) { ModuleObject(id = it.toLong() + 10) }
         val expectedData = existingData + newData
-        val event = ModulesListEvent.PageLoaded(
+        val event = ModuleListEvent.PageLoaded(
             ModuleListPageData(lastPageResult = DataResult.Success(newData))
         )
         val model = initModel.copy(
@@ -161,7 +345,7 @@ class ModuleListUpdateTest : Assert() {
             .given(model)
             .whenEvent(event)
             .then(
-                assertThatNext<ModuleListModel, ModulesListEffect>(
+                assertThatNext<ModuleListModel, ModuleListEffect>(
                     hasModel(expectedModel),
                     NextMatchers.hasNoEffects()
                 )
@@ -174,7 +358,7 @@ class ModuleListUpdateTest : Assert() {
         val existingData = listOf(ModuleObject(id = 1))
         val newData = listOf(ModuleObject(id = 2, items = listOf(ModuleItem(itemId))))
         val expectedData = existingData + newData
-        val event = ModulesListEvent.PageLoaded(
+        val event = ModuleListEvent.PageLoaded(
             ModuleListPageData(lastPageResult = DataResult.Success(newData))
         )
         val model = initModel.copy(
@@ -192,16 +376,16 @@ class ModuleListUpdateTest : Assert() {
             .given(model)
             .whenEvent(event)
             .then(
-                assertThatNext<ModuleListModel, ModulesListEffect>(
+                assertThatNext<ModuleListModel, ModuleListEffect>(
                     hasModel(expectedModel),
-                    matchesEffects(ModulesListEffect.ScrollToItem(itemId))
+                    matchesEffects(ModuleListEffect.ScrollToItem(itemId))
                 )
             )
     }
 
     @Test
     fun `NextPageRequested event results in no change if already loading`() {
-        val event = ModulesListEvent.NextPageRequested
+        val event = ModuleListEvent.NextPageRequested
         val model = initModel.copy(isLoading = true)
         updateSpec
             .given(model)
@@ -215,10 +399,10 @@ class ModuleListUpdateTest : Assert() {
 
     @Test
     fun `NextPageRequested event correctly updates model and emits LoadNextPage event`() {
-        val event = ModulesListEvent.NextPageRequested
+        val event = ModuleListEvent.NextPageRequested
         val model = initModel.copy(isLoading = false)
         val expectedModel = initModel.copy(isLoading = true)
-        val expectedEffect = ModulesListEffect.LoadNextPage(
+        val expectedEffect = ModuleListEffect.LoadNextPage(
             expectedModel.course,
             expectedModel.pageData,
             expectedModel.scrollToItemId
@@ -227,7 +411,7 @@ class ModuleListUpdateTest : Assert() {
             .given(model)
             .whenEvent(event)
             .then(
-                assertThatNext<ModuleListModel, ModulesListEffect>(
+                assertThatNext<ModuleListModel, ModuleListEffect>(
                     hasModel(expectedModel),
                     matchesEffects(expectedEffect)
                 )

@@ -16,6 +16,7 @@
   -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/moduleItemRoot"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackground"
@@ -35,11 +36,19 @@
         android:id="@+id/moduleItemIcon"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:layout_marginEnd="32dp"
         android:layout_gravity="center_vertical"
+        android:layout_marginEnd="32dp"
         android:importantForAccessibility="no"
         android:src="@drawable/vd_quiz"
         android:tint="@color/canvasDefaultAccent"/>
+
+    <ProgressBar
+        android:id="@+id/moduleItemLoadingView"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginEnd="32dp"
+        android:visibility="gone"/>
 
     <LinearLayout
         android:layout_width="0dp"

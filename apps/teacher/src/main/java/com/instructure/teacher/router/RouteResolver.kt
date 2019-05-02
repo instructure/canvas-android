@@ -181,7 +181,8 @@ object RouteResolver {
     }
 
     private fun getAssignmentDetailsFragment(canvasContext: CanvasContext?, route: Route): AssignmentDetailsFragment {
-        return if (route.arguments.containsKey(AssignmentDetailsFragment.ASSIGNMENT)) {
+        return if (route.arguments.containsKey(AssignmentDetailsFragment.ASSIGNMENT)
+            || route.arguments.containsKey(AssignmentDetailsFragment.ASSIGNMENT_ID)) {
             AssignmentDetailsFragment.newInstance((canvasContext as Course?)!!, route.arguments)
         } else {
             //parse the route to get the assignment id
@@ -212,7 +213,8 @@ object RouteResolver {
     }
 
     private fun getPageDetailsFragment(canvasContext: CanvasContext?, route: Route): PageDetailsFragment {
-        return if (route.arguments.containsKey(PageDetailsFragment.PAGE)) {
+        return if (route.arguments.containsKey(PageDetailsFragment.PAGE)
+            || route.arguments.containsKey(PageDetailsFragment.PAGE_ID)) {
             PageDetailsFragment.newInstance(canvasContext!!, route.arguments)
         } else {
             //parse the route to get the page id

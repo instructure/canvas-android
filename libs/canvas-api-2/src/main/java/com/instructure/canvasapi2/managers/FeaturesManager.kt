@@ -20,6 +20,7 @@ import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.apis.FeaturesAPI
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.utils.weave.apiAsync
 
 object FeaturesManager {
 
@@ -30,5 +31,10 @@ object FeaturesManager {
 
         FeaturesAPI.getEnabledFeaturesForCourse(adapter, courseId, callback, params)
     }
+
+    fun getEnabledFeaturesForCourseAsync(
+        courseId: Long,
+        forceNetwork: Boolean
+    ) = apiAsync<List<String>> { getEnabledFeaturesForCourse(courseId, forceNetwork, it) }
 
 }

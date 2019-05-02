@@ -56,6 +56,9 @@ internal object ModuleAPI {
 
         @GET("{contextId}/module_item_sequence")
         fun getModuleItemSequence(@Path("contextId") contextId: Long, @Query("asset_type") assetType: String, @Query("asset_id") assetId: String) : Call<ModuleItemSequence>
+
+        @GET("{contextId}/modules/{moduleId}/items/{itemId}?include[]=content_details")
+        fun getModuleItem(@Path("contextId") contextId: Long, @Path("moduleId") moduleId: Long, @Path("itemId") itemId: Long) : Call<ModuleItem>
     }
 
 
@@ -112,5 +115,20 @@ internal object ModuleAPI {
 
     fun getModuleItemSequence(adapter: RestBuilder, params: RestParams,canvasContext: CanvasContext, assetType: String, assetId: String, callback: StatusCallback<ModuleItemSequence>) {
         callback.addCall(adapter.build(ModuleInterface::class.java, params).getModuleItemSequence(canvasContext.id, assetType, assetId)).enqueue(callback)
+    }
+
+    fun getModuleItem(
+        adapter: RestBuilder,
+        params: RestParams,
+        contextId: Long,
+        moduleId: Long,
+        moduleItemId: Long,
+        callback: StatusCallback<ModuleItem>
+    ) {
+        callback
+            .addCall(
+                adapter.build(ModuleInterface::class.java, params).getModuleItem(contextId, moduleId, moduleItemId)
+            )
+            .enqueue(callback)
     }
 }

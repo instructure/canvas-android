@@ -61,6 +61,8 @@ abstract class MobiusFragment<MODEL, EVENT, EFFECT, VIEW : MobiusView<VIEW_STATE
 
     abstract fun makeInitModel(): MODEL
 
+    open val eventSources : List<EventSource<EVENT>> = emptyList()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         retainInstance = true
@@ -69,9 +71,9 @@ abstract class MobiusFragment<MODEL, EVENT, EFFECT, VIEW : MobiusView<VIEW_STATE
         globalEventSource = GlobalEventSource(update)
         effectHandler = makeEffectHandler()
         loop = Mobius.loop(update, effectHandler)
-                .effectRunner { MainThreadWorkRunner.create() }
-                .eventSource(globalEventSource)
-                .init(update::init)
+            .effectRunner { MainThreadWorkRunner.create() }
+            .eventSources(globalEventSource, *eventSources.toTypedArray())
+            .init(update::init)
         controller = MobiusAndroid.controller(loop, overrideInitModel ?: makeInitModel())
     }
 
@@ -113,7 +115,7 @@ abstract class MobiusFragment<MODEL, EVENT, EFFECT, VIEW : MobiusView<VIEW_STATE
 }
 
 abstract class UpdateInit<MODEL, EVENT, EFFECT> : Update<MODEL, EVENT, EFFECT>, Init<MODEL, EFFECT>,
-        GlobalEventMapper<EVENT> {
+    GlobalEventMapper<EVENT> {
 
     var initialized = false
 
@@ -130,7 +132,7 @@ abstract class UpdateInit<MODEL, EVENT, EFFECT> : Update<MODEL, EVENT, EFFECT>, 
 }
 
 abstract class MobiusView<VIEW_STATE, EVENT>(layoutId: Int, inflater: LayoutInflater, val parent: ViewGroup) :
-        Connectable<VIEW_STATE, EVENT>, LayoutContainer {
+    Connectable<VIEW_STATE, EVENT>, LayoutContainer {
     val rootView: View? = inflater.inflate(layoutId, parent, false)
 
     override val containerView: View?
