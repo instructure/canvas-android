@@ -17,9 +17,9 @@ package com.instructure.student.test.assignment.details.submission
 
 import com.instructure.canvasapi2.models.Course
 import com.instructure.student.mobius.assignmentDetails.submission.text.TextSubmissionEffect
-import com.instructure.student.mobius.assignmentDetails.submission.text.TextSubmissionEffectHandler
+import com.instructure.student.mobius.assignmentDetails.submission.text.TextSubmissionUploadEffectHandler
 import com.instructure.student.mobius.assignmentDetails.submission.text.TextSubmissionEvent
-import com.instructure.student.mobius.assignmentDetails.submission.text.ui.TextSubmissionView
+import com.instructure.student.mobius.assignmentDetails.submission.text.ui.TextSubmissionUploadView
 import com.spotify.mobius.functions.Consumer
 import io.mockk.*
 import kotlinx.coroutines.Dispatchers
@@ -31,10 +31,10 @@ import org.junit.Before
 import org.junit.Test
 import java.util.concurrent.Executors
 
-class TextSubmissionEffectHandlerTest : Assert() {
-    private val view: TextSubmissionView = mockk(relaxed = true)
+class TextSubmissionUploadEffectHandlerTest : Assert() {
+    private val view: TextSubmissionUploadView = mockk(relaxed = true)
     private val eventConsumer: Consumer<TextSubmissionEvent> = mockk(relaxed = true)
-    private val effectHandler = TextSubmissionEffectHandler()
+    private val effectHandler = TextSubmissionUploadEffectHandler()
     private val connection = effectHandler.connect(eventConsumer)
 
     @ExperimentalCoroutinesApi

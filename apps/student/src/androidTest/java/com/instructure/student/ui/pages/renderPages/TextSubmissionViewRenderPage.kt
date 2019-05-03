@@ -30,7 +30,7 @@ import com.instructure.espresso.waitForCheck
 import com.instructure.student.R
 import org.hamcrest.CoreMatchers.containsString
 
-class TextSubmissionRenderPage : BasePage(R.id.textSubmission) {
+class TextSubmissionViewRenderPage : BasePage(R.id.textSubmission) {
 
     private val progressBar by OnViewWithId(R.id.progressBar)
     private val webView by OnViewWithId(R.id.textSubmissionWebView)

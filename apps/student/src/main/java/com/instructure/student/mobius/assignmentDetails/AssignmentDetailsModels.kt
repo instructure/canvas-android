@@ -34,7 +34,7 @@ sealed class AssignmentDetailsEffect {
     data class ShowSubmitDialogView(val assignment: Assignment, val course: Course, val isArcEnabled: Boolean) : AssignmentDetailsEffect()
     data class ShowSubmissionView(val assignmentId: Long, val course: Course) : AssignmentDetailsEffect()
     data class ShowUploadStatusView(val assignmentId: Long, val course: Course) : AssignmentDetailsEffect()
-    data class ShowCreateSubmissionView(val submissionType: Assignment.SubmissionType, val courseId: Long, val assignment: Assignment) : AssignmentDetailsEffect()
+    data class ShowCreateSubmissionView(val submissionType: Assignment.SubmissionType, val course: Course, val assignment: Assignment) : AssignmentDetailsEffect()
     data class LoadData(val assignmentId: Long, val courseId: Long, val forceNetwork: Boolean) : AssignmentDetailsEffect()
     data class ObserveSubmissionStatus(val assignmentId: Long) : AssignmentDetailsEffect()
 }

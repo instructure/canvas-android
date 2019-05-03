@@ -16,4 +16,4 @@
  */
 package com.instructure.student.mobius.assignmentDetails.submission.text.ui
 
-sealed class TextSubmissionViewState
+sealed class TextSubmissionUploadViewState

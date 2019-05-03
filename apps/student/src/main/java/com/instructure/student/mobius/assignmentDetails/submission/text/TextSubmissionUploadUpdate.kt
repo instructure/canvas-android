@@ -23,7 +23,7 @@ import com.spotify.mobius.Next
 import java.io.UnsupportedEncodingException
 import java.net.URLEncoder
 
-class TextSubmissionUpdate : UpdateInit<TextSubmissionModel, TextSubmissionEvent, TextSubmissionEffect>() {
+class TextSubmissionUploadUpdate : UpdateInit<TextSubmissionModel, TextSubmissionEvent, TextSubmissionEffect>() {
     override fun performInit(model: TextSubmissionModel): First<TextSubmissionModel, TextSubmissionEffect> {
         return First.first(model, setOf<TextSubmissionEffect>(TextSubmissionEffect.InitializeText(model.initialText
                 ?: "")))

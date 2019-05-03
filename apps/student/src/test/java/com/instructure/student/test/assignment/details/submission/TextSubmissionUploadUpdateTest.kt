@@ -21,7 +21,7 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.student.mobius.assignmentDetails.submission.text.TextSubmissionEffect
 import com.instructure.student.mobius.assignmentDetails.submission.text.TextSubmissionEvent
 import com.instructure.student.mobius.assignmentDetails.submission.text.TextSubmissionModel
-import com.instructure.student.mobius.assignmentDetails.submission.text.TextSubmissionUpdate
+import com.instructure.student.mobius.assignmentDetails.submission.text.TextSubmissionUploadUpdate
 import com.instructure.student.test.util.matchesEffects
 import com.instructure.student.test.util.matchesFirstEffects
 import com.spotify.mobius.test.FirstMatchers
@@ -38,9 +38,9 @@ import org.junit.Test
 import java.io.UnsupportedEncodingException
 import java.net.URLEncoder
 
-class TextSubmissionUpdateTest : Assert() {
-    private val initSpec = InitSpec(TextSubmissionUpdate()::init)
-    private val updateSpec = UpdateSpec(TextSubmissionUpdate()::update)
+class TextSubmissionUploadUpdateTest : Assert() {
+    private val initSpec = InitSpec(TextSubmissionUploadUpdate()::init)
+    private val updateSpec = UpdateSpec(TextSubmissionUploadUpdate()::update)
 
     private lateinit var course: Course
     private lateinit var assignment: Assignment

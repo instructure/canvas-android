@@ -44,7 +44,7 @@ class AssignmentDetailsEffectHandler : EffectHandler<AssignmentDetailsView, Assi
             is AssignmentDetailsEffect.ShowCreateSubmissionView -> {
                 when (effect.submissionType) {
                     Assignment.SubmissionType.ONLINE_QUIZ -> {
-                        val url = APIHelper.getQuizURL(effect.courseId, effect.assignment.quizId)
+                        val url = APIHelper.getQuizURL(effect.course.id, effect.assignment.quizId)
                         view?.showQuizOrDiscussionView(url)
                     }
                     Assignment.SubmissionType.DISCUSSION_TOPIC -> {
@@ -52,16 +52,16 @@ class AssignmentDetailsEffectHandler : EffectHandler<AssignmentDetailsView, Assi
                         view?.showQuizOrDiscussionView(url)
                     }
                     Assignment.SubmissionType.ONLINE_UPLOAD -> {
-                        view?.showFileUploadView(effect.assignment, effect.courseId)
+                        view?.showFileUploadView(effect.assignment, effect.course.id)
                     }
                     Assignment.SubmissionType.ONLINE_TEXT_ENTRY -> {
-                        view?.showOnlineTextEntryView(effect.assignment.id, effect.courseId)
+                        view?.showOnlineTextEntryView(effect.assignment.id, effect.course.id)
                     }
                     Assignment.SubmissionType.ONLINE_URL -> {
-                        view?.showOnlineUrlEntryView(effect.assignment.id, effect.courseId)
+                        view?.showOnlineUrlEntryView(effect.assignment.id, effect.assignment.name, effect.course)
                     }
                     else -> { // Assignment.SubmissionType.MEDIA_RECORDING
-                        view?.showMediaRecordingView(effect.assignment, effect.courseId)
+                        view?.showMediaRecordingView(effect.assignment, effect.course.id)
                     }
                 }
             }
