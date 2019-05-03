@@ -21,14 +21,22 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.FileFolder
+import com.instructure.canvasapi2.models.License
 import com.instructure.canvasapi2.models.ModuleItem
+import com.instructure.canvasapi2.utils.tryOrNull
+import com.instructure.interactions.router.Route
 import com.instructure.pandarecycler.PaginatedScrollListener
+import com.instructure.pandautils.models.EditableFile
 import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.toast
+import com.instructure.pandautils.utils.color
 import com.instructure.teacher.R
-import com.instructure.teacher.features.modules.list.ModulesListEvent
+import com.instructure.teacher.features.modules.list.ModuleListEvent
+import com.instructure.teacher.fragments.*
 import com.instructure.teacher.mobius.common.ui.MobiusView
+import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.setupBackButton
+import com.instructure.teacher.utils.viewMedia
 import com.spotify.mobius.functions.Consumer
 import kotlinx.android.synthetic.main.fragment_module_list.*
 
@@ -36,27 +44,27 @@ class ModuleListView(
     inflater: LayoutInflater,
     parent: ViewGroup,
     val course: CanvasContext
-) : MobiusView<ModuleListViewState, ModulesListEvent>(R.layout.fragment_module_list, inflater, parent) {
+) : MobiusView<ModuleListViewState, ModuleListEvent>(R.layout.fragment_module_list, inflater, parent) {
 
-    private var consumer: Consumer<ModulesListEvent>? = null
+    private var consumer: Consumer<ModuleListEvent>? = null
 
     private val scrollListener = PaginatedScrollListener {
-        consumer?.accept(ModulesListEvent.NextPageRequested)
+        consumer?.accept(ModuleListEvent.NextPageRequested)
     }
 
-    private val layoutManager= LinearLayoutManager(context)
+    private val layoutManager = LinearLayoutManager(context)
 
     private val adapter = ModuleListRecyclerAdapter(context, object : ModuleListCallback {
         override fun retryNextPage() {
-            consumer?.accept(ModulesListEvent.NextPageRequested)
+            consumer?.accept(ModuleListEvent.NextPageRequested)
         }
 
         override fun moduleItemClicked(moduleItemId: Long) {
-            consumer?.accept(ModulesListEvent.ModuleItemClicked(moduleItemId))
+            consumer?.accept(ModuleListEvent.ModuleItemClicked(moduleItemId))
         }
 
         override fun markModuleExpanded(moduleId: Long, isExpanded: Boolean) {
-            consumer?.accept(ModulesListEvent.ModuleExpanded(moduleId, isExpanded))
+            consumer?.accept(ModuleListEvent.ModuleExpanded(moduleId, isExpanded))
         }
 
     })
@@ -73,11 +81,11 @@ class ModuleListView(
         recyclerView.addOnScrollListener(scrollListener)
 
         swipeRefreshLayout.setOnRefreshListener {
-            consumer?.accept(ModulesListEvent.PullToRefresh)
+            consumer?.accept(ModuleListEvent.PullToRefresh)
         }
     }
 
-    override fun onConnect(output: Consumer<ModulesListEvent>) {
+    override fun onConnect(output: Consumer<ModuleListEvent>) {
         consumer = output
     }
 
@@ -91,9 +99,61 @@ class ModuleListView(
         consumer = null
     }
 
-    fun routeToModuleItem(item: ModuleItem) {
-        context.toast("Route to Module Item")
-        // TODO
+    fun routeToModuleItem(item: ModuleItem, canvasContext: CanvasContext) {
+        val route = when (tryOrNull { ModuleItem.Type.valueOf(item.type!!) }) {
+            ModuleItem.Type.Assignment -> {
+                val args = AssignmentDetailsFragment.makeBundle(item.contentId)
+                Route(null, AssignmentDetailsFragment::class.java, canvasContext, args)
+            }
+            ModuleItem.Type.Discussion -> {
+                val args = DiscussionsDetailsFragment.makeBundle(item.contentId)
+                Route(null, DiscussionsDetailsFragment::class.java, canvasContext, args)
+            }
+            ModuleItem.Type.Page -> {
+                val args = PageDetailsFragment.makeBundle(item.pageUrl!!)
+                Route(null, PageDetailsFragment::class.java, canvasContext, args)
+            }
+            ModuleItem.Type.Quiz -> {
+                val args = QuizDetailsFragment.makeBundle(item.contentId)
+                Route(null, QuizDetailsFragment::class.java, canvasContext, args)
+            }
+            ModuleItem.Type.ExternalUrl, ModuleItem.Type.ExternalTool -> {
+                val args = InternalWebViewFragment.makeBundle(
+                    item.externalUrl.orEmpty(),
+                    item.title.orEmpty()
+                )
+                Route(null, InternalWebViewFragment::class.java, canvasContext, args)
+            }
+            else -> null
+        }
+        RouteMatcher.route(context, route)
+    }
+
+    fun routeToFile(
+        canvasContext: CanvasContext,
+        file: FileFolder,
+        requiresUsageRights: Boolean,
+        licenses: List<License>
+    ) {
+        val editableFile = EditableFile(
+            file = file,
+            usageRights = requiresUsageRights,
+            licenses = licenses,
+            courseColor = canvasContext.color,
+            canvasContext = canvasContext,
+            iconRes = R.drawable.vd_document
+        )
+        viewMedia(
+            context = context,
+            filename = file.displayName.orEmpty(),
+            contentType = file.contentType.orEmpty(),
+            url = file.url,
+            thumbnailUrl = file.thumbnailUrl,
+            displayName = file.displayName,
+            iconRes = R.drawable.vd_document,
+            toolbarColor = canvasContext.color,
+            editableFile = editableFile
+        )
     }
 
     fun scrollToItem(itemId: Long) {

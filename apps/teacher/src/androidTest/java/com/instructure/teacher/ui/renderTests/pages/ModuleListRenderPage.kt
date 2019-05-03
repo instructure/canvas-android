@@ -45,13 +45,15 @@ class ModuleListRenderPage : BasePage(R.id.moduleList) {
     val modulePublishedIcon by OnViewWithId(R.id.publishedIcon)
     val moduleUnpublishedIcon by OnViewWithId(R.id.unpublishedIcon)
 
-    /* Module Item views. Can only be used is there is a single module item present. */
+    /* Module Item views. Can only be used if there is a single module item present. */
+    val moduleItemRoot by OnViewWithId(R.id.moduleItemRoot)
     val moduleItemIcon by OnViewWithId(R.id.moduleItemIcon)
     val moduleItemTitle by OnViewWithId(R.id.moduleItemTitle)
     val moduleItemIndent by OnViewWithId(R.id.moduleItemIndent)
     val moduleItemSubtitle by OnViewWithId(R.id.moduleItemSubtitle)
     val moduleItemPublishedIcon by OnViewWithId(R.id.moduleItemPublishedIcon)
     val moduleItemUnpublishedIcon by OnViewWithId(R.id.moduleItemUnpublishedIcon)
+    val moduleItemLoadingView by OnViewWithId(R.id.moduleItemLoadingView)
 
     fun assertDisplaysToolbarText(title: String) {
         onView(allOf(withText(title), withAncestor(R.id.toolbar))).assertDisplayed()

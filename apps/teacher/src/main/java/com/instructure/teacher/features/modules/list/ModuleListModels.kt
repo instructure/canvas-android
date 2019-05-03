@@ -22,27 +22,39 @@ import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.isValid
 
-sealed class ModulesListEvent {
-    object PullToRefresh : ModulesListEvent()
-    object NextPageRequested : ModulesListEvent()
-    data class ModuleItemClicked(val moduleItemId: Long) : ModulesListEvent()
-    data class ModuleExpanded(val moduleId: Long, val isExpanded: Boolean) : ModulesListEvent()
-    data class PageLoaded(val pageData: ModuleListPageData) : ModulesListEvent()
+sealed class ModuleListEvent {
+    object PullToRefresh : ModuleListEvent()
+    object NextPageRequested : ModuleListEvent()
+    data class ModuleItemClicked(val moduleItemId: Long) : ModuleListEvent()
+    data class ModuleExpanded(val moduleId: Long, val isExpanded: Boolean) : ModuleListEvent()
+    data class PageLoaded(val pageData: ModuleListPageData) : ModuleListEvent()
+    data class ModuleItemLoadStatusChanged(val moduleItemIds: Set<Long>, val isLoading: Boolean) : ModuleListEvent()
+    data class ItemRefreshRequested(val type: String, val predicate: (item: ModuleItem) -> Boolean) : ModuleListEvent()
+    data class ReplaceModuleItems(val items: List<ModuleItem>) : ModuleListEvent()
+    data class RemoveModuleItems(val type: String, val predicate: (item: ModuleItem) -> Boolean) : ModuleListEvent()
 }
 
-sealed class ModulesListEffect {
-    data class ShowModuleItemDetailView(val moduleItem: ModuleItem) : ModulesListEffect()
+sealed class ModuleListEffect {
+    data class ShowModuleItemDetailView(
+        val moduleItem: ModuleItem,
+        val canvasContext: CanvasContext
+    ) : ModuleListEffect()
+    data class LoadFileInfo(
+        val item: ModuleItem,
+        val canvasContext: CanvasContext
+    ) : ModuleListEffect()
     data class LoadNextPage(
         val canvasContext: CanvasContext,
         val pageData: ModuleListPageData,
         val scrollToItemId: Long?
-    ) : ModulesListEffect()
-    data class ScrollToItem(val moduleItemId: Long) : ModulesListEffect()
+    ) : ModuleListEffect()
+    data class ScrollToItem(val moduleItemId: Long) : ModuleListEffect()
     data class MarkModuleExpanded(
         val canvasContext: CanvasContext,
         val moduleId: Long,
         val isExpanded: Boolean
-    ) : ModulesListEffect()
+    ) : ModuleListEffect()
+    data class UpdateModuleItems(val canvasContext: CanvasContext, val items: List<ModuleItem>) : ModuleListEffect()
 }
 
 data class ModuleListModel(
@@ -50,7 +62,8 @@ data class ModuleListModel(
     val isLoading: Boolean = false,
     val scrollToItemId: Long? = null,
     val pageData: ModuleListPageData = ModuleListPageData(),
-    val modules: List<ModuleObject> = emptyList()
+    val modules: List<ModuleObject> = emptyList(),
+    val loadingModuleItemIds: Set<Long> = emptySet()
 )
 
 data class ModuleListPageData(

@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ExhaustiveListCallback
+import com.instructure.canvasapi2.utils.weave.apiAsync
 import okhttp3.ResponseBody
 
 object ModuleManager {
@@ -170,5 +171,27 @@ object ModuleManager {
         )
         ModuleAPI.getModuleItemSequence(adapter, params, canvasContext, assetType, assetId, callback)
     }
+
+    fun getModuleItem(
+        canvasContext: CanvasContext,
+        moduleId: Long,
+        moduleItemId: Long,
+        forceNetwork: Boolean,
+        callback: StatusCallback<ModuleItem>
+    ) {
+        val adapter = RestBuilder(callback)
+        val params = RestParams(
+            canvasContext = canvasContext,
+            isForceReadFromNetwork = forceNetwork
+        )
+        ModuleAPI.getModuleItem(adapter, params, canvasContext.id, moduleId, moduleItemId, callback)
+    }
+
+    fun getModuleItemAsync(
+        canvasContext: CanvasContext,
+        moduleId: Long,
+        moduleItemId: Long,
+        forceNetwork: Boolean
+    ) = apiAsync<ModuleItem> { getModuleItem(canvasContext, moduleId, moduleItemId, forceNetwork, it) }
 
 }

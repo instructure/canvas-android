@@ -65,7 +65,13 @@ sealed class ModuleListItemData {
         val tintColor: Int,
 
         /** Whether the item is enabled (and therefore clickable). This will be false for SubHeader items. */
-        val enabled: Boolean
+        val enabled: Boolean,
+
+        /**
+         * Whether additional data is being loaded for this item, either for the purpose of routing or for the purpose
+         * of refreshing this item after it has been updated elsewhere in the app.
+         */
+        val isLoading: Boolean = false
     ) : ModuleListItemData()
 
 }

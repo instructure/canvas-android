@@ -24,6 +24,7 @@ import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.ExhaustiveListCallback
 import com.instructure.canvasapi2.utils.LinkHeaders
+import com.instructure.canvasapi2.utils.weave.apiAsync
 import retrofit2.Response
 import java.util.*
 
@@ -35,6 +36,11 @@ object FileFolderManager {
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
         FileFolderAPI.getFileFolderFromURL(adapter, url, callback, params)
     }
+
+    fun getFileFolderFromUrlAsync(
+        url: String,
+        forceNetwork: Boolean
+    ) = apiAsync<FileFolder> { getFileFolderFromURL(url, forceNetwork, it) }
 
     @JvmStatic
     fun getFileFolderFromURLSynchronous(url: String): FileFolder? {
@@ -227,6 +233,7 @@ object FileFolderManager {
         FileFolderAPI.getCourseFileLicenses(courseId, adapter, callback, params)
     }
 
+    fun getCourseFileLicensesAsync(courseId: Long) = apiAsync<ArrayList<License>> { getCourseFileLicenses(courseId, it) }
 
     @JvmStatic
     fun getAvatarFileToken(fileNumber: String, callback: StatusCallback<FileFolder>) {

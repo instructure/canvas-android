@@ -16,32 +16,82 @@
  */
 package com.instructure.teacher.features.modules.list
 
+import com.instructure.canvasapi2.CanvasRestAdapter
+import com.instructure.canvasapi2.managers.FeaturesManager
+import com.instructure.canvasapi2.managers.FileFolderManager
 import com.instructure.canvasapi2.managers.ModuleManager
-import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.ModuleObject
+import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.*
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.awaitApiResponse
+import com.instructure.canvasapi2.utils.weave.awaitOrThrow
 import com.instructure.teacher.features.modules.list.ui.ModuleListView
 import com.instructure.teacher.mobius.common.ui.EffectHandler
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
-class ModuleListEffectHandler : EffectHandler<ModuleListView, ModulesListEvent, ModulesListEffect>() {
+class ModuleListEffectHandler : EffectHandler<ModuleListView, ModuleListEvent, ModuleListEffect>() {
 
-    override fun accept(effect: ModulesListEffect) {
+    private var fileInfoJob: Job? = null
+
+    override fun accept(effect: ModuleListEffect) {
         when (effect) {
-            is ModulesListEffect.ShowModuleItemDetailView -> view?.routeToModuleItem(effect.moduleItem)
-            is ModulesListEffect.LoadNextPage -> loadNextPage(
+            is ModuleListEffect.ShowModuleItemDetailView -> {
+                view?.routeToModuleItem(effect.moduleItem, effect.canvasContext)
+            }
+            is ModuleListEffect.LoadFileInfo -> {
+                loadFileInfo(effect.item, effect.canvasContext)
+            }
+            is ModuleListEffect.LoadNextPage -> loadNextPage(
                 effect.canvasContext,
                 effect.pageData,
                 effect.scrollToItemId
             )
-            is ModulesListEffect.ScrollToItem -> view?.scrollToItem(effect.moduleItemId)
-            is ModulesListEffect.MarkModuleExpanded -> {
+            is ModuleListEffect.ScrollToItem -> view?.scrollToItem(effect.moduleItemId)
+            is ModuleListEffect.MarkModuleExpanded -> {
                 CollapsedModulesStore.markModuleCollapsed(effect.canvasContext, effect.moduleId, !effect.isExpanded)
             }
+            is ModuleListEffect.UpdateModuleItems -> updateModuleItems(effect.canvasContext, effect.items)
         }.exhaustive
+    }
+
+    private fun updateModuleItems(canvasContext: CanvasContext, items: List<ModuleItem>) {
+        launch {
+            val ids = items.map { it.id }.toSet()
+            consumer.accept(ModuleListEvent.ModuleItemLoadStatusChanged(ids, true))
+            tryOrNull {
+                val updatedItems = items
+                    .map { item -> ModuleManager.getModuleItemAsync(canvasContext, item.moduleId, item.id, true) }
+                    .mapNotNull { it.await().dataOrNull }
+                consumer.accept(ModuleListEvent.ReplaceModuleItems(updatedItems))
+                CanvasRestAdapter.clearCacheUrls("""/modules""")
+            }
+            consumer.accept(ModuleListEvent.ModuleItemLoadStatusChanged(ids, false))
+        }
+    }
+
+    private fun loadFileInfo(item: ModuleItem, canvasContext: CanvasContext) {
+        fileInfoJob?.cancel()
+        fileInfoJob = launch {
+            consumer.accept(ModuleListEvent.ModuleItemLoadStatusChanged(setOf(item.id), true))
+            tryOrNull {
+                // Get the file
+                val file: FileFolder = FileFolderManager.getFileFolderFromUrlAsync(item.url!!, false).awaitOrThrow()
+
+                // Get usage rights and licenses, if applicable
+                val features = FeaturesManager.getEnabledFeaturesForCourseAsync(canvasContext.id, false).awaitOrThrow()
+
+                val requiresUsageRights = features.contains("usage_rights_required")
+                val licenses = if (requiresUsageRights) {
+                    FileFolderManager.getCourseFileLicensesAsync(canvasContext.id).awaitOrThrow()
+                } else {
+                    emptyList<License>()
+                }
+                view?.routeToFile(canvasContext, file, requiresUsageRights, licenses)
+            }
+            consumer.accept(ModuleListEvent.ModuleItemLoadStatusChanged(setOf(item.id), false))
+        }
     }
 
     private fun loadNextPage(canvasContext: CanvasContext, lastPageData: ModuleListPageData, scrollToItemId: Long?) {
@@ -52,10 +102,11 @@ class ModuleListEffectHandler : EffectHandler<ModuleListView, ModulesListEvent, 
                 } else {
                     fetchPageData(canvasContext, lastPageData)
                 }
-                consumer.accept(ModulesListEvent.PageLoaded(newPageData))
+                consumer.accept(ModuleListEvent.PageLoaded(newPageData))
             } catch (e: Throwable) {
+                e.printStackTrace()
                 consumer.accept(
-                    ModulesListEvent.PageLoaded(
+                    ModuleListEvent.PageLoaded(
                         lastPageData.copy(lastPageResult = DataResult.Fail(Failure.Network(e.message)))
                     )
                 )
@@ -131,3 +182,4 @@ class ModuleListEffectHandler : EffectHandler<ModuleListView, ModulesListEvent, 
     }
 
 }
+

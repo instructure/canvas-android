@@ -17,7 +17,6 @@
 package com.instructure.teacher.features.modules.list
 
 import android.content.Context
-import android.util.TypedValue
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.tryOrNull
@@ -39,11 +38,6 @@ object ModuleListPresenter : Presenter<ModuleListModel, ModuleListViewState> {
 
         val courseColor = model.course.color
 
-        val selectableBackgroundId = with(TypedValue()) {
-            context.theme.resolveAttribute(android.R.attr.selectableItemBackground, this, true)
-            resourceId
-        }
-
         items += model.modules.map { module ->
             val moduleItems = module.items.map { item ->
                 if (item.type.equals(ModuleItem.Type.SubHeader.name, ignoreCase = true)) {
@@ -58,7 +52,7 @@ object ModuleListPresenter : Presenter<ModuleListModel, ModuleListViewState> {
                         enabled = false
                     )
                 } else {
-                    createModuleItemData(item, context, indentWidth, courseColor, selectableBackgroundId)
+                    createModuleItemData(item, context, indentWidth, courseColor, item.id in model.loadingModuleItemIds)
                 }
             }
             ModuleListItemData.ModuleData(
@@ -97,7 +91,7 @@ object ModuleListPresenter : Presenter<ModuleListModel, ModuleListViewState> {
         context: Context,
         indentWidth: Int,
         courseColor: Int,
-        selectableBackgroundId: Int
+        loading: Boolean
     ): ModuleListItemData.ModuleItemData {
         val subtitle = item.moduleDetails?.dueDate?.let {
             context.getString(
@@ -121,11 +115,12 @@ object ModuleListPresenter : Presenter<ModuleListModel, ModuleListViewState> {
             id = item.id,
             title = item.title,
             subtitle = subtitle,
-            iconResId = iconRes,
+            iconResId = iconRes.takeUnless { loading },
             isPublished = item.published,
             indent = item.indent * indentWidth,
             tintColor = courseColor,
-            enabled = true
+            enabled = !loading,
+            isLoading = loading
         )
     }
 

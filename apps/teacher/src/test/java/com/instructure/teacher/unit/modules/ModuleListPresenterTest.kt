@@ -13,7 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.teacher.unit
+package com.instructure.teacher.unit.modules
 
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
@@ -317,7 +317,6 @@ class ModuleListPresenterTest : Assert() {
         assertEquals(expectedState, itemState)
     }
 
-
     @Test
     fun `Returns correct state for SubHeader`() {
         val item = moduleItemTemplate.copy(
@@ -340,5 +339,27 @@ class ModuleListPresenterTest : Assert() {
         assertEquals(expectedState, itemState)
     }
 
+    @Test
+    fun `Returns correct state for loading item`() {
+        val item = moduleItemTemplate.copy(
+            title = "File item",
+            type = "File"
+        )
+        val model = modelTemplate.copy(
+            modules = listOf(
+                moduleTemplate.copy(items = listOf(item))
+            ),
+            loadingModuleItemIds = setOf(item.id)
+        )
+        val expectedState = moduleItemDataTemplate.copy(
+            title = item.title,
+            iconResId = null,
+            enabled = false,
+            isLoading = true
+        )
+        val viewState = ModuleListPresenter.present(model, context)
+        val itemState = (viewState.items[0] as ModuleListItemData.ModuleData).moduleItems.first()
+        assertEquals(expectedState, itemState)
+    }
 
 }
