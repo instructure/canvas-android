@@ -227,4 +227,11 @@ object FileFolderManager {
         FileFolderAPI.getCourseFileLicenses(courseId, adapter, callback, params)
     }
 
+
+    @JvmStatic
+    fun getAvatarFileToken(fileNumber: String, callback: StatusCallback<FileFolder>) {
+        val adapter = RestBuilder(callback)
+        val params = RestParams()
+        FileFolderAPI.getAvatarFileToken(fileNumber, adapter, params, callback)
+    }
 }

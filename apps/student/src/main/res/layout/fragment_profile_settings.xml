@@ -35,7 +35,7 @@
         app:titleTextColor="@android:color/black"
         tools:ignore="UnusedAttribute"/>
 
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -71,7 +71,7 @@
 
                 <TextView
                     style="@style/TextFont.Medium"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="?attr/listPreferredItemHeight"
                     android:background="?attr/selectableItemBackground"
                     android:gravity="center_vertical"
@@ -101,7 +101,7 @@
 
                 <TextView
                     style="@style/TextFont.Medium"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="?attr/listPreferredItemHeight"
                     android:background="?attr/selectableItemBackground"
                     android:gravity="center_vertical"

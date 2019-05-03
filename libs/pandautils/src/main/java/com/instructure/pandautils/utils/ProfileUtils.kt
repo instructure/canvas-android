@@ -44,7 +44,7 @@ object ProfileUtils {
 
     @JvmStatic
     fun shouldLoadAltAvatarImage(avatarUrl: String?): Boolean {
-        return avatarUrl.isNullOrBlank() || avatarUrl?.indexOfAny(noPictureUrls) ?: -1 >= 0
+        return avatarUrl.isNullOrBlank() || avatarUrl.indexOfAny(noPictureUrls) >= 0
     }
 
     @JvmStatic

@@ -84,6 +84,9 @@ object FileFolderAPI {
 
         @GET("courses/{courseId}/content_licenses")
         fun getCourseFileLicenses(@Path("courseId") courseId: Long): Call<ArrayList<License>>
+
+        @GET("files/{fileNumber}?include=avatar")
+        fun getAvatarFileToken(@Path("fileNumber") fileNumber: String): Call<FileFolder>
     }
 
     fun getFileFolderFromURL(adapter: RestBuilder, url: String, callback: StatusCallback<FileFolder>, params: RestParams) {
@@ -179,5 +182,10 @@ object FileFolderAPI {
     fun getCourseFileLicenses(courseId: Long, adapter: RestBuilder, callback: StatusCallback<ArrayList<License>>, params: RestParams) {
         if (APIHelper.paramIsNull(callback)) return
         callback.addCall(adapter.build(FilesFoldersInterface::class.java, params).getCourseFileLicenses(courseId)).enqueue(callback)
+    }
+
+    fun getAvatarFileToken(fileNumber: String, adapter: RestBuilder, params: RestParams, callback: StatusCallback<FileFolder>) {
+        if (APIHelper.paramIsNull(callback)) return
+        callback.addCall(adapter.build(FilesFoldersInterface::class.java, params).getAvatarFileToken(fileNumber)).enqueue(callback)
     }
 }
