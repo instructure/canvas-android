@@ -82,7 +82,7 @@ class CourseBrowserFragment : BaseSyncFragment<
             Tab.PEOPLE_ID,
             Tab.FILES_ID,
             Tab.PAGES_ID -> true
-            Tab.MODULES_ID -> false // TODO: Wire up to FeatureFlags
+            Tab.MODULES_ID -> FeatureFlags.moduleList
             else -> {
                 if(attendanceId != 0L && tab.tabId.endsWith(attendanceId.toString())) {
                     TeacherPrefs.attendanceExternalToolId = tab.tabId

@@ -18,27 +18,27 @@ package com.instructure.student.ui.renderTests
 import com.instructure.espresso.assertCompletelyDisplayed
 import com.instructure.espresso.assertHasText
 import com.instructure.student.espresso.StudentRenderTest
-import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.UrlSubmissionFragment
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.UrlSubmissionViewFragment
 import org.junit.Test
 
-class UrlSubmissionRenderTest : StudentRenderTest() {
+class UrlSubmissionViewRenderTest : StudentRenderTest() {
 
     private val testUrl = "https://www.instructure.com"
 
     @Test
     fun displaysDisclaimer() {
         loadPageWithData(testUrl, "")
-        urlSubmissionRenderPage.disclaimer.assertCompletelyDisplayed()
+        urlSubmissionViewRenderPage.disclaimer.assertCompletelyDisplayed()
     }
 
     @Test
     fun displaysUrl() {
         loadPageWithData(testUrl, "")
-        urlSubmissionRenderPage.url.assertHasText(testUrl)
+        urlSubmissionViewRenderPage.url.assertHasText(testUrl)
     }
 
     private fun loadPageWithData(url: String, previewUrl: String) {
-        val fragment = UrlSubmissionFragment.newInstance(url, previewUrl)
+        val fragment = UrlSubmissionViewFragment.newInstance(url, previewUrl)
         activityRule.activity.loadFragment(fragment)
     }
 

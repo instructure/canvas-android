@@ -21,7 +21,9 @@ import com.instructure.student.mobius.assignmentDetails.submission.text.TextSubm
 import com.instructure.student.mobius.assignmentDetails.submission.text.TextSubmissionUploadEvent
 import com.instructure.student.mobius.assignmentDetails.submission.text.ui.TextSubmissionUploadView
 import com.spotify.mobius.functions.Consumer
-import io.mockk.*
+import io.mockk.confirmVerified
+import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.asCoroutineDispatcher

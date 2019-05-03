@@ -66,6 +66,17 @@ inline fun <T> List<T>.intersectBy(other: List<T>, unique: (T) -> Any): List<T> 
     return list
 }
 
+/**
+ * Returns a patched version of this list using elements from the provided [patch] list, retaining the original order.
+ * All elements in the original list which match an element in the [patch] list - where a match is determined by the
+ * provided [matchValue] - will be replaced with that element. Elements in the [patch] list which do not match
+ * any elements in the original list will not be included.
+ */
+fun <T> List<T>.patchedBy(patch: List<T>, matchValue: (T) -> Any): List<T> {
+    val patchMap = patch.associateBy(matchValue)
+    return map { patchMap[matchValue(it)] ?: it }
+}
+
 inline fun <T> tryOrNull(block: () -> T?): T? {
     return try {
         block()

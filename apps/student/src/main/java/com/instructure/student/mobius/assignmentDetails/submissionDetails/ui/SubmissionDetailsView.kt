@@ -36,8 +36,8 @@ import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsContentType
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsEvent
-import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.TextSubmissionFragment
-import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.UrlSubmissionFragment
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.TextSubmissionViewFragment
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.UrlSubmissionViewFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyContentFragment
 import com.instructure.student.mobius.common.ui.MobiusView
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
@@ -186,8 +186,8 @@ class SubmissionDetailsView(
     private fun getFragmentForContent(type: SubmissionDetailsContentType): Fragment {
         return when (type) {
             is SubmissionDetailsContentType.NoSubmissionContent -> SubmissionDetailsEmptyContentFragment.newInstance(type.canvasContext as Course, type.assignment, type.isArcEnabled)
-            is SubmissionDetailsContentType.UrlContent -> UrlSubmissionFragment.newInstance(type.url, type.previewUrl)
-            is SubmissionDetailsContentType.TextContent -> TextSubmissionFragment.newInstance(type.text)
+            is SubmissionDetailsContentType.UrlContent -> UrlSubmissionViewFragment.newInstance(type.url, type.previewUrl)
+            is SubmissionDetailsContentType.TextContent -> TextSubmissionViewFragment.newInstance(type.text)
             else -> PlaceholderFragment().apply {
                 typeName = type::class.java.simpleName
                 typeContents = type.toString()

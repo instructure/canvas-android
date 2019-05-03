@@ -24,6 +24,7 @@ import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.isTablet
 import com.instructure.pandautils.utils.onClick
+import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
 import com.instructure.teacher.dialog.HelpDialogStyled
@@ -31,7 +32,6 @@ import com.instructure.teacher.dialog.LegalDialog
 import com.instructure.teacher.factory.ProfileSettingsFragmentPresenterFactory
 import com.instructure.teacher.presenters.ProfileSettingsFragmentPresenter
 import com.instructure.teacher.router.RouteMatcher
-import com.instructure.teacher.utils.isTablet
 import com.instructure.teacher.utils.setupBackButton
 import com.instructure.teacher.viewinterface.ProfileSettingsFragmentView
 import kotlinx.android.synthetic.main.fragment_settings.*
@@ -48,6 +48,10 @@ class SettingsFragment : BasePresenterFragment<ProfileSettingsFragmentPresenter,
         rateButton.onClick { RatingDialog.showRateDialog(requireActivity(), com.instructure.pandautils.utils.AppType.TEACHER) }
         legalButton.onClick { LegalDialog().show(fragmentManager, LegalDialog.TAG) }
         helpButton.onClick { HelpDialogStyled.show(requireActivity()) }
+        if (BuildConfig.DEBUG) {
+            featureFlagButton.setVisible()
+            featureFlagButton.onClick { RouteMatcher.route(requireContext(), Route(FeatureFlagsFragment::class.java, null)) }
+        }
     }
 
     override fun getPresenterFactory() = ProfileSettingsFragmentPresenterFactory()

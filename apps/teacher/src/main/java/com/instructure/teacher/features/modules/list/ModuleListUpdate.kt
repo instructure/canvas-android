@@ -16,17 +16,18 @@
  */
 package com.instructure.teacher.features.modules.list
 
+import com.instructure.canvasapi2.utils.patchedBy
 import com.instructure.teacher.mobius.common.ui.UpdateInit
 import com.spotify.mobius.First
 import com.spotify.mobius.Next
 
-class ModuleListUpdate : UpdateInit<ModulesListModel, ModulesListEvent, ModulesListEffect>() {
+class ModuleListUpdate : UpdateInit<ModuleListModel, ModuleListEvent, ModuleListEffect>() {
 
-    override fun performInit(model: ModulesListModel): First<ModulesListModel, ModulesListEffect> {
+    override fun performInit(model: ModuleListModel): First<ModuleListModel, ModuleListEffect> {
         return First.first(
             model.copy(isLoading = true),
             setOf(
-                ModulesListEffect.LoadNextPage(
+                ModuleListEffect.LoadNextPage(
                     model.course,
                     model.pageData,
                     model.scrollToItemId
@@ -35,26 +36,32 @@ class ModuleListUpdate : UpdateInit<ModulesListModel, ModulesListEvent, ModulesL
         )
     }
 
-    override fun update(model: ModulesListModel, event: ModulesListEvent): Next<ModulesListModel, ModulesListEffect> {
+    override fun update(model: ModuleListModel, event: ModuleListEvent): Next<ModuleListModel, ModuleListEffect> {
         when (event) {
-            ModulesListEvent.PullToRefresh -> {
+            ModuleListEvent.PullToRefresh -> {
                 val newModel = model.copy(
                     isLoading = true,
                     modules = emptyList(),
                     pageData = ModuleListPageData(forceNetwork = true)
                 )
-                val effect = ModulesListEffect.LoadNextPage(
+                val effect = ModuleListEffect.LoadNextPage(
                     newModel.course,
                     newModel.pageData,
                     newModel.scrollToItemId
                 )
                 return Next.next(newModel, setOf(effect))
             }
-            is ModulesListEvent.ModuleItemClicked -> {
-                return Next.dispatch(setOf(ModulesListEffect.ShowModuleItemDetailView(event.moduleItem)))
+            is ModuleListEvent.ModuleItemClicked -> {
+                val item = model.modules.flatMap { it.items }.first { it.id == event.moduleItemId }
+                return if (item.type == "File") {
+                    // We need to grab additional file info from Canvas to know how to route
+                    Next.dispatch(setOf(ModuleListEffect.LoadFileInfo(item, model.course)))
+                } else {
+                    Next.dispatch(setOf(ModuleListEffect.ShowModuleItemDetailView(item, model.course)))
+                }
             }
-            is ModulesListEvent.PageLoaded -> {
-                val effects = mutableSetOf<ModulesListEffect>()
+            is ModuleListEvent.PageLoaded -> {
+                val effects = mutableSetOf<ModuleListEffect>()
                 var newModel = model.copy(
                     isLoading = false,
                     pageData = event.pageData
@@ -66,25 +73,76 @@ class ModuleListUpdate : UpdateInit<ModulesListModel, ModulesListEvent, ModulesL
                     if (model.scrollToItemId != null
                         && newModules.any { module -> module.items.any { it.id == model.scrollToItemId } }) {
                         newModel = newModel.copy(scrollToItemId = null)
-                        effects += ModulesListEffect.ScrollToItem(model.scrollToItemId)
+                        effects += ModuleListEffect.ScrollToItem(model.scrollToItemId)
                     }
                 }
 
                 return Next.next(newModel, effects)
             }
-            ModulesListEvent.NextPageRequested -> {
-                return if (model.isLoading) {
-                    // Do nothing if we're already loading
+            ModuleListEvent.NextPageRequested -> {
+                return if (model.isLoading || !model.pageData.hasMorePages) {
+                    // Do nothing if we're already loading or all pages have loaded
                     Next.noChange()
                 } else {
                     val newModel = model.copy(isLoading = true)
-                    val effect = ModulesListEffect.LoadNextPage(
+                    val effect = ModuleListEffect.LoadNextPage(
                         model.course,
                         model.pageData,
                         model.scrollToItemId
                     )
                     Next.next(newModel, setOf(effect))
                 }
+            }
+            is ModuleListEvent.ModuleExpanded -> {
+                return Next.dispatch(setOf(ModuleListEffect.MarkModuleExpanded(
+                    model.course,
+                    event.moduleId,
+                    event.isExpanded
+                )))
+            }
+            is ModuleListEvent.ModuleItemLoadStatusChanged -> {
+                return Next.next(
+                    model.copy(
+                        loadingModuleItemIds = if (event.isLoading) {
+                            model.loadingModuleItemIds + event.moduleItemIds
+                        } else {
+                            model.loadingModuleItemIds - event.moduleItemIds
+                        }
+                    )
+                )
+            }
+            is ModuleListEvent.ItemRefreshRequested -> {
+                val items = model.modules.flatMap { it.items }.filter { it.type == event.type }.filter(event.predicate)
+                return if (items.isEmpty()) {
+                    Next.noChange()
+                } else {
+                    val effect = ModuleListEffect.UpdateModuleItems(model.course, items)
+                    Next.dispatch(setOf(effect))
+                }
+            }
+            is ModuleListEvent.ReplaceModuleItems -> {
+                val itemGroups = event.items.groupBy { it.moduleId }
+                val newModel = model.copy(
+                    modules = model.modules.map { module ->
+                        val items = itemGroups[module.id]
+                        if (items == null) {
+                            module
+                        } else {
+                            module.copy(items = module.items.patchedBy(items) { it.id })
+                        }
+                    }
+                )
+                return Next.next(newModel)
+            }
+            is ModuleListEvent.RemoveModuleItems -> {
+                val newModel = model.copy(
+                    modules = model.modules.map { module ->
+                        module.copy(
+                            items = module.items.filter { it.type != event.type || !event.predicate(it) }
+                        )
+                    }
+                )
+                return Next.next(newModel)
             }
         }
     }

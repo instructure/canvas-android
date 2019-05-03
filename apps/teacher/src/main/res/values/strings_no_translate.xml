@@ -31,6 +31,8 @@
     <string name="conversation_message_title" translatable="false">%1$s,  +%2$s</string>
     <string name="week_assignment_override_title" translatable="false">%1$s (%2$s)</string>
     <string name="issue_with_canvas" translatable="false">Issue with Canvas Teacher [Android]</string>
+    <string name="featureFlagsTitle" translatable="false">Feature Flags</string>
+
     <!-- File Strings -->
     <array name="file_size_units">
         <item>B</item>

@@ -16,13 +16,13 @@
 package com.instructure.student.ui.renderTests
 
 import com.instructure.student.espresso.StudentRenderTest
-import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.TextSubmissionFragment
-import com.instructure.student.ui.pages.renderPages.TextSubmissionRenderPage
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.TextSubmissionViewFragment
+import com.instructure.student.ui.pages.renderPages.TextSubmissionViewRenderPage
 import org.junit.Test
 
-class TextSubmissionRenderTest : StudentRenderTest() {
+class TextSubmissionViewRenderTest : StudentRenderTest() {
 
-    private val page = TextSubmissionRenderPage()
+    private val page = TextSubmissionViewRenderPage()
 
     @Test
     fun displaysProgressBarPriorToLoading() {
@@ -56,7 +56,7 @@ class TextSubmissionRenderTest : StudentRenderTest() {
     }
 
     private fun loadPageWithHtml(html: String) {
-        val fragment = TextSubmissionFragment.newInstance(html)
+        val fragment = TextSubmissionViewFragment.newInstance(html)
         activityRule.activity.loadFragment(fragment)
     }
 

@@ -13,17 +13,14 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.student.ui.pages.renderPages
+package com.instructure.teacher.ui.utils
 
-import com.instructure.espresso.OnViewWithId
-import com.instructure.espresso.OnViewWithText
-import com.instructure.espresso.page.BasePage
-import com.instructure.student.R
+import com.instructure.teacher.SingleFragmentTestActivity
 
-class UrlSubmissionRenderPage : BasePage(R.id.urlSubmission) {
+abstract class TeacherRenderTest : TeacherTest() {
 
-    val disclaimer by OnViewWithText(R.string.urlSubmissionDisclaimer)
-    val url by OnViewWithId(R.id.urlTextView)
-    val previewImage by OnViewWithId(R.id.urlPreviewImageView)
+    override val activityRule = TeacherActivityTestRule(SingleFragmentTestActivity::class.java)
+
+    override fun displaysPageObjects() = Unit // Ignore for render tests
 
 }

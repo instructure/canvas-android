@@ -1,0 +1,52 @@
+/*
+ * Copyright (C) 2019 - present Instructure, Inc.
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, version 3 of the License.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+package com.instructure.teacher.features.modules.list.ui.binders
+
+import android.content.res.ColorStateList
+import com.instructure.pandautils.utils.setTextForVisibility
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.teacher.R
+import com.instructure.teacher.adapters.ListItemBinder
+import com.instructure.teacher.features.modules.list.ui.ModuleListCallback
+import com.instructure.teacher.features.modules.list.ui.ModuleListItemData
+import kotlinx.android.synthetic.main.adapter_module_item.view.*
+
+class ModuleListItemBinder : ListItemBinder<ModuleListItemData.ModuleItemData, ModuleListCallback>() {
+
+    override val layoutResId = R.layout.adapter_module_item
+
+    override fun getItemId(item: ModuleListItemData.ModuleItemData) = item.id
+
+    override val bindBehavior = Item { item, view, callback ->
+        with(view) {
+            moduleItemIcon.setVisible(item.iconResId != null)
+            item.iconResId?.let {
+                moduleItemIcon.setImageResource(it)
+                moduleItemIcon.imageTintList = ColorStateList.valueOf(item.tintColor)
+            }
+            moduleItemIndent.layoutParams.width = item.indent
+            moduleItemTitle.setTextForVisibility(item.title)
+            moduleItemSubtitle.setTextForVisibility(item.subtitle)
+            moduleItemPublishedIcon.setVisible(item.isPublished)
+            moduleItemUnpublishedIcon.setVisible(!item.isPublished)
+            moduleItemLoadingView.setVisible(item.isLoading)
+            setOnClickListener { callback.moduleItemClicked(item.id) }
+            isEnabled = item.enabled
+        }
+    }
+
+}

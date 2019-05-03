@@ -17,14 +17,15 @@
 
 package com.instructure.pandarecycler.util;
 
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.SortedList;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.SortedList;
 
 
 public class GroupSortedList<GROUP, ITEM> {
@@ -176,6 +177,27 @@ public class GroupSortedList<GROUP, ITEM> {
     }
 
     /**
+     * Marks the groups matching the provided group IDs as expanded or collapsed.
+     * Note that this only updates the underlying map and does notify any callbacks of the change.
+     * @param groupIds IDs of the groups to mark as expanded or collapsed.
+     * @param isExpanded Whether the groups should be marked as expanded (true) or collapsed (false)
+     */
+    public void markExpanded(Set<Long> groupIds, boolean isExpanded) {
+        if (disallowCollapse) return;
+        for (Long groupId : groupIds) {
+            mExpanded.put(groupId, isExpanded);
+        }
+    }
+
+    /**
+     * Clears the underlying map that tracks which groups are expanded and collapsed.
+     * Note that this only updates the underlying map and does notify any callbacks of the change.
+     */
+    public void clearExpanded() {
+        mExpanded.clear();
+    }
+
+    /**
      * Expands given group
      * @param group
      */
@@ -268,6 +290,19 @@ public class GroupSortedList<GROUP, ITEM> {
             collapseGroup(group);
         } else {
             expandGroup(group);
+        }
+    }
+
+    /**
+     * Expands if collapsed, collapses if expanded.
+     * @param group
+     * @param isNotifyGroupChange when true calls notify changed on the group's view holder
+     */
+    public void expandCollapseGroup(GROUP group, boolean isNotifyGroupChange) {
+        if (isGroupExpanded(group)) {
+            collapseGroup(group, isNotifyGroupChange);
+        } else {
+            expandGroup(group, isNotifyGroupChange);
         }
     }
     // endregion

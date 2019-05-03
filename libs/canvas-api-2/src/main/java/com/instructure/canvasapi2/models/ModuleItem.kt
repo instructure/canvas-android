@@ -23,26 +23,33 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class ModuleItem(
-        override val id: Long = 0,
-        @SerializedName("module_id")
-        val moduleId: Long = 0,
-        var position: Int = 0,
-        val title: String? = null,
-        val indent: Int = 0,
-        val type: String? = null,
-        @SerializedName("html_url")
-        val htmlUrl: String? = null,
-        val url: String? = null,
-        @SerializedName("completion_requirement")
-        val completionRequirement: CompletionRequirement? = null,
-        @SerializedName("content_details")
-        val moduleDetails: ModuleContentDetails? = null,
-        @SerializedName("mastery_paths")
-        var masteryPaths: MasteryPath? = null,
-        // When we display the "Choose Assignment Group" when an assignment uses Mastery Paths we create a new row to display.
-        // We still need the module item id to select the assignment group that we want, but if we use the same id as the root
-        // module item both items wouldn't display (because they would have the same id at that point).
-        var masteryPathsItemId: Long = 0 // Helper variable
+    override val id: Long = 0,
+    @SerializedName("module_id")
+    val moduleId: Long = 0,
+    var position: Int = 0,
+    val title: String? = null,
+    val indent: Int = 0,
+    val type: String? = null,
+    @SerializedName("html_url")
+    val htmlUrl: String? = null,
+    val url: String? = null,
+    @SerializedName("completion_requirement")
+    val completionRequirement: CompletionRequirement? = null,
+    @SerializedName("content_details")
+    val moduleDetails: ModuleContentDetails? = null,
+    val published: Boolean = false,
+    @SerializedName("content_id")
+    val contentId: Long = 0,
+    @SerializedName("external_url")
+    val externalUrl: String? = null,
+    @SerializedName("page_url")
+    val pageUrl: String? = null,
+    @SerializedName("mastery_paths")
+    var masteryPaths: MasteryPath? = null,
+    // When we display the "Choose Assignment Group" when an assignment uses Mastery Paths we create a new row to display.
+    // We still need the module item id to select the assignment group that we want, but if we use the same id as the root
+    // module item both items wouldn't display (because they would have the same id at that point).
+    var masteryPathsItemId: Long = 0 // Helper variable
 ) : CanvasModel<ModuleItem>() {
     override val comparisonString get() = title
 
@@ -57,9 +64,9 @@ data class ModuleItem(
 
 @Parcelize
 data class CompletionRequirement(
-        val type: String? = null,
-        @SerializedName("min_score")
-        val minScore: Double = 0.0,
-        var completed: Boolean = false
+    val type: String? = null,
+    @SerializedName("min_score")
+    val minScore: Double = 0.0,
+    var completed: Boolean = false
 ) : Parcelable
 
