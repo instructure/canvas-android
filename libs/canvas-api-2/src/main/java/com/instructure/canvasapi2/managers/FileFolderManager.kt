@@ -235,4 +235,10 @@ object FileFolderManager {
 
     fun getCourseFileLicensesAsync(courseId: Long) = apiAsync<ArrayList<License>> { getCourseFileLicenses(courseId, it) }
 
+    @JvmStatic
+    fun getAvatarFileToken(fileNumber: String, callback: StatusCallback<FileFolder>) {
+        val adapter = RestBuilder(callback)
+        val params = RestParams()
+        FileFolderAPI.getAvatarFileToken(fileNumber, adapter, params, callback)
+    }
 }

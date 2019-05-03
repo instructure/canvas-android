@@ -34,7 +34,7 @@ import com.instructure.student.activity.InternalWebViewActivity
 import com.instructure.student.router.RouteMatcher
 import kotlinx.android.synthetic.main.fragment_text_submission.*
 
-class TextSubmissionFragment : Fragment() {
+class TextSubmissionViewFragment : Fragment() {
 
     private var submissionText by StringArg()
 
@@ -100,7 +100,7 @@ class TextSubmissionFragment : Fragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance(text: String) = TextSubmissionFragment().apply {
+        fun newInstance(text: String) = TextSubmissionViewFragment().apply {
             submissionText = text
         }
     }

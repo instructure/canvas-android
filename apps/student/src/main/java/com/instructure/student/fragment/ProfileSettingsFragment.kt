@@ -34,9 +34,11 @@ import androidx.core.content.FileProvider
 import androidx.loader.app.LoaderManager
 import androidx.loader.content.AsyncTaskLoader
 import androidx.loader.content.Loader
+import com.instructure.canvasapi2.managers.FileFolderManager
 import com.instructure.canvasapi2.managers.FileUploadManager
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.AvatarWrapper
+import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.pageview.PageView
@@ -47,6 +49,7 @@ import com.instructure.student.activity.PandaAvatarActivity
 import com.instructure.student.dialog.EditTextDialog
 import com.instructure.student.events.UserUpdatedEvent
 import com.instructure.student.util.StudentPrefs
+import com.pspdfkit.framework.it
 import kotlinx.android.synthetic.main.dialog_photo_source.*
 import kotlinx.android.synthetic.main.fragment_profile_settings.*
 import org.greenrobot.eventbus.EventBus
@@ -134,8 +137,16 @@ class ProfileSettingsFragment : ParentFragment(), LoaderManager.LoaderCallbacks<
     private fun updateAvatarUrl(newUrl: String) {
         mUpdateAvatarCall = weave {
             try {
-                val user = awaitApi<User> { UserManager.updateUsersAvatar(newUrl, it) }
-                ApiPrefs.user = ApiPrefs.user?.apply { avatarUrl = user.avatarUrl }
+                val newAvatarUrl = if (!ApiPrefs.domain.contains("instructure")) {
+                    // We have a vanity URL for the domain - has to be handled slightly differently
+                    val fileNumber = newUrl.substringAfter("files/").substringBefore(("/download"))
+                    val token = awaitApi<FileFolder> { FileFolderManager.getAvatarFileToken(fileNumber, it) }.avatar?.token
+                    val user = awaitApi<User> { UserManager.updateUsersAvatarWithToken(token!!, it) }
+                    user.avatarUrl
+                } else {
+                    awaitApi<User> { UserManager.updateUsersAvatar(newUrl, it) }.avatarUrl
+                }
+                ApiPrefs.user = ApiPrefs.user?.apply { avatarUrl = newAvatarUrl }
                 EventBus.getDefault().postSticky(UserUpdatedEvent(ApiPrefs.user!!))
                 toast(R.string.regularAvatarSuccessfullySaved)
                 loaderBundle = null

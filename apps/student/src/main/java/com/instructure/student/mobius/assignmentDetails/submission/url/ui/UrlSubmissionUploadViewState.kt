@@ -13,17 +13,11 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.student.ui.pages.renderPages
+package com.instructure.student.mobius.assignmentDetails.submission.url.ui
 
-import com.instructure.espresso.OnViewWithId
-import com.instructure.espresso.OnViewWithText
-import com.instructure.espresso.page.BasePage
-import com.instructure.student.R
-
-class UrlSubmissionRenderPage : BasePage(R.id.urlSubmission) {
-
-    val disclaimer by OnViewWithText(R.string.urlSubmissionDisclaimer)
-    val url by OnViewWithId(R.id.urlTextView)
-    val previewImage by OnViewWithId(R.id.urlPreviewImageView)
-
-}
+data class UrlSubmissionUploadViewState(
+        val urlHint: String,
+        val url: String? = null,
+        val errorMsg: String = "",
+        val submitEnabled: Boolean = false
+)

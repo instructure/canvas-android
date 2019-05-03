@@ -118,7 +118,7 @@ class AssignmentDetailsUpdateTest : Assert() {
                 .whenEvent(AssignmentDetailsEvent.SubmitAssignmentClicked)
                 .then(
                         assertThatNext(
-                                matchesEffects<AssignmentDetailsModel, AssignmentDetailsEffect>(AssignmentDetailsEffect.ShowCreateSubmissionView(submissionType, courseId, assignmentCopy))
+                                matchesEffects<AssignmentDetailsModel, AssignmentDetailsEffect>(AssignmentDetailsEffect.ShowCreateSubmissionView(submissionType, course, assignmentCopy))
                         )
                 )
     }
@@ -134,7 +134,7 @@ class AssignmentDetailsUpdateTest : Assert() {
                 .whenEvent(AssignmentDetailsEvent.SubmitAssignmentClicked)
                 .then(
                         assertThatNext(
-                                matchesEffects<AssignmentDetailsModel, AssignmentDetailsEffect>(AssignmentDetailsEffect.ShowCreateSubmissionView(submissionType, courseId, assignmentCopy))
+                                matchesEffects<AssignmentDetailsModel, AssignmentDetailsEffect>(AssignmentDetailsEffect.ShowCreateSubmissionView(submissionType, course, assignmentCopy))
                         )
                 )
     }
@@ -237,7 +237,7 @@ class AssignmentDetailsUpdateTest : Assert() {
                 .whenEvent(AssignmentDetailsEvent.SubmissionTypeClicked(submissionType))
                 .then(
                         assertThatNext(
-                            matchesEffects<AssignmentDetailsModel, AssignmentDetailsEffect>(AssignmentDetailsEffect.ShowCreateSubmissionView(submissionType, courseId, assignmentCopy))
+                            matchesEffects<AssignmentDetailsModel, AssignmentDetailsEffect>(AssignmentDetailsEffect.ShowCreateSubmissionView(submissionType, course, assignmentCopy))
                         )
                 )
     }

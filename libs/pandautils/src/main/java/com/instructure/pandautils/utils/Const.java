@@ -41,6 +41,7 @@ public class Const {
     public static final String ATTACHMENTS = "attachments";
     public static final String ASSIGNMENT = "assignment";
     public static final String ASSIGNMENT_ID = "assignmentId";
+    public static final String ASSIGNMENT_NAME = "assignmentName";
     public static final String ASSIGNMENT_SET = "assignment_set";
     public static final String AUTHENTICATE = "authenticate";
     public static final String BUNDLE = "bundle";

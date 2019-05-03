@@ -32,9 +32,16 @@ object AvatarAPI {
     internal interface AvatarsInterface {
         @PUT("users/self")
         fun updateAvatar(@Query("user[avatar][url]") avatarUrl: String): Call<User>
+
+        @PUT("users/self")
+        fun updateAvatarWithToken(@Query("user[avatar][token]") avatarToken: String): Call<User>
     }
 
     fun updateAvatar(adapter: RestBuilder, params: RestParams, avatarUrl: String, callback: StatusCallback<User>) {
         callback.addCall(adapter.build(AvatarsInterface::class.java, params).updateAvatar(avatarUrl)).enqueue(callback)
+    }
+
+    fun updateAvatarWithToken(adapter: RestBuilder, params: RestParams, avatarToken: String, callback: StatusCallback<User>) {
+        callback.addCall(adapter.build(AvatarsInterface::class.java, params).updateAvatarWithToken(avatarToken)).enqueue(callback)
     }
 }

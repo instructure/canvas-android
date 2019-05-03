@@ -196,6 +196,13 @@ object UserManager {
     }
 
     @JvmStatic
+    fun updateUsersAvatarWithToken(avatarToken: String, callback: StatusCallback<User>) {
+        val adapter = RestBuilder(callback)
+        val params = RestParams()
+        AvatarAPI.updateAvatarWithToken(adapter, params, avatarToken, callback)
+    }
+
+    @JvmStatic
     fun getTermsOfService(callback: StatusCallback<TermsOfService>, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = forceNetwork)

@@ -159,7 +159,9 @@ object APIHelper {
             return null
         }
 
-        val formatted = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US).format(Date(date.timeInMillis))
+        val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US)
+        format.timeZone = date.timeZone
+        val formatted = format.format(Date(date.timeInMillis))
         return formatted.substring(0, 22) + ":" + formatted.substring(22)
     }
 

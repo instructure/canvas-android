@@ -87,8 +87,7 @@ object FileUploadManager {
             true
         ) ?: return AvatarWrapper(AvatarWrapper.ERROR_UNKNOWN)
         if (uploadParams.message == "file size exceeds quota") return AvatarWrapper(AvatarWrapper.ERROR_QUOTA_EXCEEDED)
-        val attachment =
-            performUploadSynchronous(File(path), uploadParams) ?: return AvatarWrapper(AvatarWrapper.ERROR_UNKNOWN)
+        val attachment = performUploadSynchronous(File(path), uploadParams) ?: return AvatarWrapper(AvatarWrapper.ERROR_UNKNOWN)
         return AvatarWrapper(AvatarWrapper.ERROR_NONE, Avatar().apply {
             url = attachment.url
             displayName = attachment.displayName

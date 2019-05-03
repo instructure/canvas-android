@@ -148,7 +148,7 @@ class ModuleListUpdateTest : Assert() {
         val event = ModuleListEvent.ModuleExpanded(moduleId, isExpanded)
         val expectedEffect = ModuleListEffect.MarkModuleExpanded(course, moduleId, isExpanded)
         updateSpec
-            .given(initModel)
+            .given(model)
             .whenEvent(event)
             .then(
                 assertThatNext<ModuleListModel, ModuleListEffect>(

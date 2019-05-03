@@ -33,9 +33,11 @@ import androidx.loader.content.AsyncTaskLoader
 import androidx.loader.content.Loader
 import com.bumptech.glide.Glide
 import com.instructure.canvasapi2.StatusCallback
+import com.instructure.canvasapi2.managers.FileFolderManager
 import com.instructure.canvasapi2.managers.FileUploadManager
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.AvatarWrapper
+import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ApiPrefs.user
@@ -81,7 +83,7 @@ class ProfileEditFragment : BasePresenterFragment<
                 if(isTablet) R.drawable.teacher_profile_banner_image_tablet
                 else R.drawable.teacher_profile_banner_image_phone)
 
-        val user = ApiPrefs.user
+        val user = user
 
         if(ProfileUtils.shouldLoadAltAvatarImage(user?.avatarUrl)) {
             val initials = ProfileUtils.getUserInitials(user?.shortName ?: "")
@@ -204,7 +206,7 @@ class ProfileEditFragment : BasePresenterFragment<
             var urlPath = uri.path.orEmpty()
             if (urlPath.contains("googleusercontent")) {
                 urlPath = changeGoogleURL(urlPath)
-                ApiPrefs.user?.avatarUrl = urlPath
+                user?.avatarUrl = urlPath
                 UserManager.updateUsersAvatar(urlPath, mAvatarPostedCallback)
                 return
             }
@@ -297,10 +299,17 @@ class ProfileEditFragment : BasePresenterFragment<
         hideProgressBar()
 
         data?.avatar?.let {
-            ApiPrefs.user?.avatarUrl = it.url
-            updateAvatarImage(it.url)
-            //Notify canvas of the change in avatar url
-            UserManager.updateUsersAvatar(it.url!!, mAvatarPostedCallback)
+            if (!ApiPrefs.domain.contains("instructure.com")) {
+                // We have a vanity URL for the domain - has to be handled slightly differently
+                val fileNumber = it.url?.substringAfter("files/")?.substringBefore(("/download")) ?: ""
+                // Get the token and then update the user's avatar URL
+                FileFolderManager.getAvatarFileToken(fileNumber, getTokenCallback)
+            } else {
+                user?.avatarUrl = it.url
+                updateAvatarImage(it.url)
+                // Notify canvas of the change in avatar URL
+                UserManager.updateUsersAvatar(it.url!!, mAvatarPostedCallback)
+            }
         } ?: data?.let {
             //check to see the error messages
             when(it.error) {
@@ -326,6 +335,16 @@ class ProfileEditFragment : BasePresenterFragment<
             response.body()?.let { user ->
                 ApiPrefs.user = ApiPrefs.user?.apply { avatarUrl = user.avatarUrl }
                 updateAvatarImage(user.avatarUrl)
+            }
+        }
+    }
+
+    private val getTokenCallback = object: StatusCallback<FileFolder>() {
+        override fun onResponse(response: Response<FileFolder>, linkHeaders: LinkHeaders, type: ApiType) {
+            response.body()?.let { file ->
+                val token = file.avatar?.token ?: ""
+                UserManager.updateUsersAvatarWithToken(token, mAvatarPostedCallback)
+                updateAvatarImage(user?.avatarUrl)
             }
         }
     }

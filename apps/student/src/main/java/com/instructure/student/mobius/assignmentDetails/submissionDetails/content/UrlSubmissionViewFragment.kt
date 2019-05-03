@@ -27,15 +27,15 @@ import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.onClick
 import com.instructure.student.R
 import com.instructure.student.activity.InternalWebViewActivity
-import kotlinx.android.synthetic.main.fragment_url_submission.*
+import kotlinx.android.synthetic.main.fragment_url_submission_view.*
 
-class UrlSubmissionFragment : Fragment() {
+class UrlSubmissionViewFragment : Fragment() {
 
     private var url by StringArg()
     private var previewUrl by NullableStringArg()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_url_submission, container, false)
+        return inflater.inflate(R.layout.fragment_url_submission_view, container, false)
     }
 
     override fun onStart() {
@@ -54,7 +54,7 @@ class UrlSubmissionFragment : Fragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance(url: String, previewUrl: String?) = UrlSubmissionFragment().apply {
+        fun newInstance(url: String, previewUrl: String?) = UrlSubmissionViewFragment().apply {
             this.url = url
             this.previewUrl = previewUrl
         }

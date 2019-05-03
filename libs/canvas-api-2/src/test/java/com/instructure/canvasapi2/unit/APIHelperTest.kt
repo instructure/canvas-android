@@ -21,11 +21,11 @@ import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.canvasapi2.utils.toDate
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotNull
 import okhttp3.Headers
 import okhttp3.Protocol
 import okhttp3.Request
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
 import org.junit.Test
 import java.text.SimpleDateFormat
 import java.util.*
@@ -115,7 +115,7 @@ class APIHelperTest {
 
         val dateString = "2037-07-28T19:38:31-06:00"
         val date = calendar.time
-        assertEquals(dateString, date.toApiString())
+        assertEquals(dateString, date.toApiString(calendar.timeZone))
     }
 
     @Test
