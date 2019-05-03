@@ -136,3 +136,21 @@ dependencies {
     /* Paper No SQl Storage */
     api 'io.paperdb:paperdb:2.6'
 }
+
+// MBL-12312: I added this as a way to publish Pact contract updates.
+// Ultimately, we should do something like we did for Bridge, and
+// run this job (and populate some of these fields) from Bitrise.  But,
+// for now, if you need to re-publish these in a pinch, just fill
+// in the username/password fields manually, and increment the version.
+//
+// Define our pact-publish object
+pact {
+    publish {
+        pactDirectory = '../libs/canvas-api-2/target/pacts'
+        pactBrokerUrl = 'https://inst-pact-broker.inseng.net/'
+        pactBrokerUsername = '' // Must fill in manually
+        pactBrokerPassword = '' // Must fill in manually
+        tags = ['master']
+        version = '1.0.1'
+    }
+}
