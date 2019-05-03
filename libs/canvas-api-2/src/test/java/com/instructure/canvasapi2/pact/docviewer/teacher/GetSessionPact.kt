@@ -44,6 +44,7 @@ class GetSessionPact : DocViewerPact() {
                 .path("/1/sessions/some_session_id") // Must have leading slash.
                 .method("GET")
                 .willRespondWith()
+                .headers(mapOf("Content-Type" to "application/json; charset=utf-8")) //MBL-12312
                 .status(200)
                 .body(body)
                 .toPact()

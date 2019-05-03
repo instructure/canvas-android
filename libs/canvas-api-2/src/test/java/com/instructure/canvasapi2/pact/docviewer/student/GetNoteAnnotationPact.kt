@@ -18,6 +18,7 @@
 package com.instructure.canvasapi2.pact.docviewer.student
 
 import au.com.dius.pact.consumer.MockServer
+import au.com.dius.pact.consumer.dsl.PactDslJsonBody
 import au.com.dius.pact.consumer.dsl.PactDslWithProvider
 import au.com.dius.pact.model.RequestResponsePact
 import com.google.gson.GsonBuilder
@@ -39,11 +40,28 @@ class GetNoteAnnotationPact : DocViewerPact() {
             rect = arrayListOf(arrayListOf(496.33f, 750.0f), arrayListOf(505.67f, 763.33f)),
             color = "#008EE2")
 
+    private val expectedAnnotationBody = PactDslJsonBody()
+            .array("data")
+            .`object`()
+            .stringValue("id", expectedAnnotation.annotationId) // ID is the serialized name of annotationId
+            .numberValue("page", expectedAnnotation.page)
+            .booleanValue("isEditable", expectedAnnotation.isEditable)
+            .stringValue("color", expectedAnnotation.color)
+            .array("rect")
+            .array()
+            .numberValue(expectedAnnotation.rect!![0][0])
+            .numberValue(expectedAnnotation.rect!![0][1])
+            .closeArray()
+            .array()
+            .numberValue(expectedAnnotation.rect!![1][0])
+            .numberValue(expectedAnnotation.rect!![1][1])
+            .closeArray()
+            .closeArray() // close rect 2-D array
+            .closeObject() // close only object in data array
+            .closeArray() // close data array
+            .asBody()
+
     override fun createPact(builder: PactDslWithProvider): RequestResponsePact {
-        @Language("JSON")
-        val body = """
-            { "data": [ ${GsonBuilder().create().toJson(expectedAnnotation)} ] }
-            """
 
         return builder
                 .given("a session id")
@@ -52,7 +70,8 @@ class GetNoteAnnotationPact : DocViewerPact() {
                 .method("GET")
                 .willRespondWith()
                 .status(200)
-                .body(body)
+                .headers(mapOf("Content-Type" to "application/json; charset=utf-8")) // MBL-12312
+                .body(expectedAnnotationBody)
                 .toPact()
     }
 
