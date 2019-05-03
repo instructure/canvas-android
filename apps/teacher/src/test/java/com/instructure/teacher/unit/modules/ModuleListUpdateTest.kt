@@ -109,8 +109,11 @@ class ModuleListUpdateTest : Assert() {
         val item = ModuleItem(id = 123L)
         val event = ModulesListEvent.ModuleItemClicked(item.id)
         val expectedEffect = ModulesListEffect.ShowModuleItemDetailView(item)
+        val model = initModel.copy(
+            modules = listOf(ModuleObject(items = listOf(item)))
+        )
         updateSpec
-            .given(initModel)
+            .given(model)
             .whenEvent(event)
             .then(
                 assertThatNext<ModuleListModel, ModulesListEffect>(

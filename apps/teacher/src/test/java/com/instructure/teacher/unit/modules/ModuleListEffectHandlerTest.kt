@@ -23,10 +23,7 @@ import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Failure
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.awaitApiResponse
-import com.instructure.teacher.features.modules.list.ModuleListEffectHandler
-import com.instructure.teacher.features.modules.list.ModuleListPageData
-import com.instructure.teacher.features.modules.list.ModulesListEffect
-import com.instructure.teacher.features.modules.list.ModulesListEvent
+import com.instructure.teacher.features.modules.list.*
 import com.instructure.teacher.features.modules.list.ui.ModuleListView
 import com.spotify.mobius.Connection
 import com.spotify.mobius.functions.Consumer
@@ -138,11 +135,12 @@ class ModuleListEffectHandlerTest : Assert() {
 
     @Test
     fun `LoadNextPage results in correct PageLoaded event when scroll-to item is specified`() {
+        val moduleId = 654321L
         val scrollToItemId = 123456L
         val nextUrl1 = "fake_next_url_1"
         val nextUrl2 = "fake_next_url_2"
         val firstPageModules = makeModulePage(pageNumber = 0)
-        val secondPageModules = listOf(ModuleObject(itemCount = 1, items = listOf(ModuleItem(scrollToItemId))))
+        val secondPageModules = listOf(ModuleObject(id = moduleId, itemCount = 1, items = listOf(ModuleItem(scrollToItemId))))
         val thirdPageModules = makeModulePage(pageNumber = 1)
 
         val expectedEvent = ModulesListEvent.PageLoaded(
@@ -151,6 +149,9 @@ class ModuleListEffectHandlerTest : Assert() {
                 nextPageUrl = nextUrl2
             )
         )
+
+        mockkObject(CollapsedModulesStore)
+        every { CollapsedModulesStore.markModuleCollapsed(any(), any(), any()) } returns Unit
 
         mockkStatic("com.instructure.canvasapi2.utils.weave.AwaitApiKt")
         coEvery {
@@ -162,9 +163,13 @@ class ModuleListEffectHandlerTest : Assert() {
         )
 
         connection.accept(ModulesListEffect.LoadNextPage(course, ModuleListPageData(), scrollToItemId))
-        verify(timeout = 100) { consumer.accept(expectedEvent) }
+        verify(timeout = 100) {
+            CollapsedModulesStore.markModuleCollapsed(course, moduleId, false)
+            consumer.accept(expectedEvent)
+        }
         confirmVerified(consumer)
 
+        unmockkObject(CollapsedModulesStore)
         unmockkStatic("com.instructure.canvasapi2.utils.weave.AwaitApiKt")
     }
 
