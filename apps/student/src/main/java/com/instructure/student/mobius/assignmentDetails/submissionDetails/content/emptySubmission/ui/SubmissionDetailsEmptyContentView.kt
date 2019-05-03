@@ -23,11 +23,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.activity.InternalWebViewActivity
+import com.instructure.student.mobius.assignmentDetails.submission.text.ui.TextSubmissionUploadFragment
+import com.instructure.student.mobius.assignmentDetails.submission.url.ui.UrlSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.SubmissionDetailsEmptyContentEvent
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyContentViewState.Loaded
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsFragment
@@ -36,7 +39,9 @@ import com.instructure.student.mobius.common.ui.MobiusView
 import com.instructure.student.router.RouteMatcher
 import com.spotify.mobius.functions.Consumer
 import kotlinx.android.synthetic.main.dialog_submission_picker.*
+import kotlinx.android.synthetic.main.fragment_assignment_details.*
 import kotlinx.android.synthetic.main.fragment_submission_details_empty_content.*
+import kotlinx.android.synthetic.main.fragment_submission_details_empty_content.submitButton
 
 class SubmissionDetailsEmptyContentView(
     inflater: LayoutInflater,
@@ -73,12 +78,13 @@ class SubmissionDetailsEmptyContentView(
         val builder = AlertDialog.Builder(context)
         val dialog = builder.setView(R.layout.dialog_submission_picker)
                 .create()
+        val course = CanvasContext.getGenericContext(CanvasContext.Type.COURSE, courseId)
         dialog.setOnShowListener {
             setupDialogRow(dialog, dialog.submissionEntryText, visibilities.textEntry) {
-                showOnlineTextEntryView(assignment.id, courseId)
+                showOnlineTextEntryView(assignment.id, assignment.name, course)
             }
             setupDialogRow(dialog, dialog.submissionEntryWebsite, visibilities.urlEntry) {
-                showOnlineUrlEntryView(assignment.id, courseId)
+                showOnlineUrlEntryView(assignment.id, assignment.name, course)
             }
             setupDialogRow(dialog, dialog.submissionEntryFile, visibilities.fileUpload) {
                 showFileUploadView(assignment, courseId)
@@ -101,14 +107,12 @@ class SubmissionDetailsEmptyContentView(
         }
     }
 
-    fun showOnlineTextEntryView(assignmentId: Long, courseId: Long) {
-        // TODO
-        context.toast("Route to text entry page")
+    fun showOnlineTextEntryView(assignmentId: Long, assignmentName: String?, canvasContext: CanvasContext, submittedText: String? = null) {
+        RouteMatcher.route(context, TextSubmissionUploadFragment.makeRoute(canvasContext, assignmentId, assignmentName, submittedText))
     }
 
-    fun showOnlineUrlEntryView(assignmentId: Long, courseId: Long) {
-        // TODO
-        context.toast("Route to url page")
+    fun showOnlineUrlEntryView(assignmentId: Long, assignmentName: String?, canvasContext: CanvasContext, submittedUrl: String? = null) {
+        RouteMatcher.route(context, UrlSubmissionUploadFragment.makeRoute(canvasContext, assignmentId, assignmentName, submittedUrl))
     }
 
     fun showMediaRecordingView(assignment: Assignment, courseId: Long) {

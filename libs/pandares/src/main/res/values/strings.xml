@@ -59,7 +59,7 @@
     <string name="enterAUrlHereForYourSubmission">Enter a URL here for your submission</string>
 
     <!-- Student Submission -->
-    <string name="submissionWrite">Write...</string>
+    <string name="submissionWrite">Write&#8230;</string>
 
     <!-- Student Submission Details -->
     <string name="submission">Submission</string>

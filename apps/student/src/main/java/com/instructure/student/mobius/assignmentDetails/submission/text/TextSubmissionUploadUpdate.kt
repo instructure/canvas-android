@@ -35,8 +35,7 @@ class TextSubmissionUploadUpdate : UpdateInit<TextSubmissionUploadModel, TextSub
                 Next.next(model.copy(isSubmittable = event.text.isNotEmpty()))
             }
             is TextSubmissionUploadEvent.SubmitClicked -> {
-                // Get the text, replace all line breaks with <br/> tags so they are preserved when displayed in a webview
-                var textToSubmit = event.text.replace("\\n".toRegex(), "<br/>")
+                var textToSubmit = event.text
                 try {
                     textToSubmit = URLEncoder.encode(textToSubmit, "UTF-8")
                 } catch (e: UnsupportedEncodingException) {}
