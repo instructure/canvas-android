@@ -253,3 +253,6 @@
 -dontwarn org.slf4j.impl.StaticLoggerBinder
 -dontwarn org.slf4j.impl.StaticMDCBinder
 -dontwarn org.slf4j.impl.StaticMarkerBinder
+
+# Sliding Panel
+-dontwarn com.sothree.slidinguppanel.**
