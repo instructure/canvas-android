@@ -24,7 +24,7 @@ sealed class SubmissionDetailsEmptyContentEvent {
 
 sealed class SubmissionDetailsEmptyContentEffect {
     data class ShowSubmitDialogView(val assignment: Assignment, val course: Course, val isArcEnabled: Boolean) : SubmissionDetailsEmptyContentEffect()
-    data class ShowCreateSubmissionView(val submissionType: Assignment.SubmissionType, val courseId: Long, val assignment: Assignment) : SubmissionDetailsEmptyContentEffect()
+    data class ShowCreateSubmissionView(val submissionType: Assignment.SubmissionType, val course: Course, val assignment: Assignment) : SubmissionDetailsEmptyContentEffect()
 }
 
 data class SubmissionDetailsEmptyContentModel(

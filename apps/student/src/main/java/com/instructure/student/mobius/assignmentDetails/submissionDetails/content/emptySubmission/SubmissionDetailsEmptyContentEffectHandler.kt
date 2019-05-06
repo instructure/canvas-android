@@ -30,18 +30,18 @@ class SubmissionDetailsEmptyContentEffectHandler : EffectHandler<SubmissionDetai
         when(effect) {
             is SubmissionDetailsEmptyContentEffect.ShowSubmitDialogView -> view?.showSubmitDialogView(effect.assignment, effect.course.id, getSubmissionTypesVisibilities(effect.assignment, effect.isArcEnabled))
             is SubmissionDetailsEmptyContentEffect.ShowCreateSubmissionView -> {
-                val course = CanvasContext.getGenericContext(CanvasContext.Type.COURSE, effect.courseId)
+                val course = CanvasContext.getGenericContext(CanvasContext.Type.COURSE, effect.course.id)
                 when (effect.submissionType) {
                     Assignment.SubmissionType.ONLINE_QUIZ -> {
-                        val url = APIHelper.getQuizURL(effect.courseId, effect.assignment.quizId)
+                        val url = APIHelper.getQuizURL(effect.course.id, effect.assignment.quizId)
                         view?.showQuizOrDiscussionView(url)
                     }
                     Assignment.SubmissionType.DISCUSSION_TOPIC -> {
-                        val url = DiscussionTopic.getDiscussionURL(ApiPrefs.protocol, ApiPrefs.domain, effect.assignment.courseId, effect.assignment.discussionTopicHeader!!.id)
+                        val url = DiscussionTopic.getDiscussionURL(ApiPrefs.protocol, ApiPrefs.domain, effect.course.id, effect.assignment.discussionTopicHeader!!.id)
                         view?.showQuizOrDiscussionView(url)
                     }
                     Assignment.SubmissionType.ONLINE_UPLOAD -> {
-                        view?.showFileUploadView(effect.assignment, effect.courseId)
+                        view?.showFileUploadView(effect.assignment, effect.course.id)
                     }
                     Assignment.SubmissionType.ONLINE_TEXT_ENTRY -> {
                         view?.showOnlineTextEntryView(effect.assignment.id, effect.assignment.name, course)
@@ -50,7 +50,7 @@ class SubmissionDetailsEmptyContentEffectHandler : EffectHandler<SubmissionDetai
                         view?.showOnlineUrlEntryView(effect.assignment.id, effect.assignment.name, course)
                     }
                     else -> { // Assignment.SubmissionType.MEDIA_RECORDING
-                        view?.showMediaRecordingView(effect.assignment, effect.courseId)
+                        view?.showMediaRecordingView(effect.assignment, effect.course.id)
                     }
                 }
             }

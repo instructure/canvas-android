@@ -19,14 +19,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.utils.*
 import com.instructure.student.mobius.assignmentDetails.submission.text.*
-import com.instructure.student.mobius.common.ui.EffectHandler
 import com.instructure.student.mobius.common.ui.MobiusFragment
-import com.instructure.student.mobius.common.ui.Presenter
-import com.instructure.student.mobius.common.ui.UpdateInit
 
 class TextSubmissionUploadFragment : MobiusFragment<TextSubmissionUploadModel, TextSubmissionUploadEvent, TextSubmissionUploadEffect, TextSubmissionUploadView, TextSubmissionUploadViewState>() {
 

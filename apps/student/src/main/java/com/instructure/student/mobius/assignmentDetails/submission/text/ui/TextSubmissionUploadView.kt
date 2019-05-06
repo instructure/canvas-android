@@ -17,11 +17,12 @@
 package com.instructure.student.mobius.assignmentDetails.submission.text.ui
 
 import android.app.Activity
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.utils.ThemePrefs
-import com.instructure.pandautils.utils.Utils
+import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.setMenu
 import com.instructure.pandautils.utils.setupAsBackButton
 import com.instructure.student.R
@@ -49,7 +50,6 @@ class TextSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) : Mo
 
         toolbar.menu.findItem(R.id.menuSubmit).isEnabled = false
 
-        rce.setPaddingOnEditor(left = Utils.dpToPx(context, 4.0f).toInt(), right = Utils.dpToPx(context, 4.0f).toInt())
         rce.setOnTextChangeListener {
             output.accept(TextSubmissionUploadEvent.TextChanged(it))
         }
@@ -61,7 +61,9 @@ class TextSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) : Mo
 
     override fun onDispose() { }
 
-    override fun applyTheme() { }
+    override fun applyTheme() {
+        ViewStyler.themeToolbarBottomSheet(context as Activity, false, toolbar, Color.BLACK, false)
+    }
 
     fun setInitialSubmissionText(text: String?) {
         rce.setHtml(text ?: "", context.getString(R.string.textEntry), context.getString(R.string.submissionWrite), ThemePrefs.brandColor, ThemePrefs.buttonColor)
