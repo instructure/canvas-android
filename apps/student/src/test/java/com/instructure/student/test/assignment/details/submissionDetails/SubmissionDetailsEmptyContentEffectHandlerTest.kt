@@ -44,18 +44,18 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
     private val connection = effectHandler.connect(eventConsumer)
 
     lateinit var assignment: Assignment
+    lateinit var course: Course
 
     @ExperimentalCoroutinesApi
     @Before
     fun setup() {
         Dispatchers.setMain(Executors.newSingleThreadExecutor().asCoroutineDispatcher())
         assignment = Assignment(id = 2468, courseId = 8642)
+        course = Course(id = 1234L)
     }
 
     @Test
     fun `ShowSubmitAssignmentView calls ShowSubmitDialogView on the view`() {
-        val course = Course()
-
         connection.accept(SubmissionDetailsEmptyContentEffect.ShowSubmitDialogView(assignment, course, false))
 
         verify(timeout = 100) {
@@ -77,10 +77,10 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
         every { ApiPrefs.protocol } returns protocol
         every { ApiPrefs.domain } returns domain
 
-        connection.accept(SubmissionDetailsEmptyContentEffect.ShowCreateSubmissionView(submissionType, assignment.courseId, assignment))
+        connection.accept(SubmissionDetailsEmptyContentEffect.ShowCreateSubmissionView(submissionType, course, assignment))
 
 
-        val url = "$protocol://$domain/courses/${assignment.courseId}/quizzes/$quizId"
+        val url = "$protocol://$domain/courses/${course.id}/quizzes/$quizId"
 
         verify(timeout = 100) {
             view.showQuizOrDiscussionView(url)
@@ -100,10 +100,10 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
         every { ApiPrefs.protocol } returns protocol
         every { ApiPrefs.domain } returns domain
 
-        connection.accept(SubmissionDetailsEmptyContentEffect.ShowCreateSubmissionView(submissionType, assignment.courseId, assignment))
+        connection.accept(SubmissionDetailsEmptyContentEffect.ShowCreateSubmissionView(submissionType, course, assignment))
 
 
-        val url = "$protocol://$domain/courses/${assignment.courseId}/discussion_topics/$discussionTopicId"
+        val url = "$protocol://$domain/courses/${course.id}/discussion_topics/$discussionTopicId"
 
         verify(timeout = 100) {
             view.showQuizOrDiscussionView(url)
@@ -115,10 +115,10 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
     fun `ShowCreateSubmissionView with fileUpload submissionType calls showFileUploadView`() {
         val submissionType = Assignment.SubmissionType.ONLINE_UPLOAD
 
-        connection.accept(SubmissionDetailsEmptyContentEffect.ShowCreateSubmissionView(submissionType, assignment.courseId, assignment))
+        connection.accept(SubmissionDetailsEmptyContentEffect.ShowCreateSubmissionView(submissionType, course, assignment))
 
         verify(timeout = 100) {
-            view.showFileUploadView(assignment, assignment.courseId)
+            view.showFileUploadView(assignment, course.id)
         }
         confirmVerified(view)
     }
@@ -127,10 +127,10 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
     fun `ShowCreateSubmissionView with textEntry submissionType calls showOnlineTextEntryView`() {
         val submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY
 
-        connection.accept(SubmissionDetailsEmptyContentEffect.ShowCreateSubmissionView(submissionType, assignment.courseId, assignment))
+        connection.accept(SubmissionDetailsEmptyContentEffect.ShowCreateSubmissionView(submissionType, course, assignment))
 
         verify(timeout = 100) {
-            view.showOnlineTextEntryView(assignment.id, assignment.courseId)
+            view.showOnlineTextEntryView(assignment.id, assignment.name, course)
         }
         confirmVerified(view)
     }
@@ -139,23 +139,22 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
     fun `ShowCreateSubmissionView with urlEntry submissionType calls showOnlineUrlEntryView`() {
         val submissionType = Assignment.SubmissionType.ONLINE_URL
 
-        connection.accept(SubmissionDetailsEmptyContentEffect.ShowCreateSubmissionView(submissionType, assignment.courseId, assignment))
+        connection.accept(SubmissionDetailsEmptyContentEffect.ShowCreateSubmissionView(submissionType, course, assignment))
 
         verify(timeout = 100) {
-            view.showOnlineUrlEntryView(assignment.id, assignment.courseId)
+            view.showOnlineUrlEntryView(assignment.id, assignment.name, course)
         }
         confirmVerified(view)
     }
 
     @Test
     fun `ShowCreateSubmissionView with mediaRecording submissionType calls showMediaRecordingView`() {
-        val courseId = 1234L
         val submissionType = Assignment.SubmissionType.MEDIA_RECORDING
 
-        connection.accept(SubmissionDetailsEmptyContentEffect.ShowCreateSubmissionView(submissionType, courseId, assignment))
+        connection.accept(SubmissionDetailsEmptyContentEffect.ShowCreateSubmissionView(submissionType, course, assignment))
 
         verify(timeout = 100) {
-            view.showMediaRecordingView(assignment, courseId)
+            view.showMediaRecordingView(assignment, course.id)
         }
         confirmVerified(view)
     }
@@ -193,7 +192,6 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
 
     @Test
     fun `Displays textEntry when submission type is textEntry`() {
-        val course = Course()
         val assignment = assignment.copy(
                 submissionTypesRaw = listOf("online_text_entry")
         )
@@ -209,7 +207,6 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
 
     @Test
     fun `Displays onlineUrl when submission type is onlineUrl`() {
-        val course = Course()
         val assignment = assignment.copy(
                 submissionTypesRaw = listOf("online_url")
         )
@@ -225,7 +222,6 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
 
     @Test
     fun `Displays mediaRecording when submission type is mediaRecording`() {
-        val course = Course()
         val assignment = assignment.copy(
                 submissionTypesRaw = listOf("media_recording")
         )
@@ -241,7 +237,6 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
 
     @Test
     fun `Displays all submission types when all are present`() {
-        val course = Course()
         val assignment = assignment.copy(
                 submissionTypesRaw = listOf("media_recording", "online_url", "online_text_entry", "online_upload")
         )

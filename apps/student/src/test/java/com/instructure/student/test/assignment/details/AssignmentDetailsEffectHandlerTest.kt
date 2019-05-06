@@ -347,7 +347,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
         connection.accept(AssignmentDetailsEffect.ShowCreateSubmissionView(submissionType, course, assignment))
 
         verify(timeout = 100) {
-            view.showOnlineTextEntryView(assignment.id, course.id)
+            view.showOnlineTextEntryView(assignment.id, assignment.name)
         }
         confirmVerified(view)
     }

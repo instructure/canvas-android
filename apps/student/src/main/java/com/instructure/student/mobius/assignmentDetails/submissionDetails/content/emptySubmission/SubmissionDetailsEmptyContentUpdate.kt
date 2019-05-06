@@ -30,7 +30,7 @@ class SubmissionDetailsEmptyContentUpdate : UpdateInit<SubmissionDetailsEmptyCon
             SubmissionDetailsEmptyContentEvent.SubmitAssignmentClicked -> {
                 val submissionTypes = model.assignment.getSubmissionTypes()
                 if (submissionTypes.size == 1 && !(submissionTypes.contains(Assignment.SubmissionType.ONLINE_UPLOAD) && model.isArcEnabled)) {
-                    Next.dispatch<SubmissionDetailsEmptyContentModel, SubmissionDetailsEmptyContentEffect>(setOf(SubmissionDetailsEmptyContentEffect.ShowCreateSubmissionView(submissionTypes.first(), model.course.id, model.assignment)))
+                    Next.dispatch<SubmissionDetailsEmptyContentModel, SubmissionDetailsEmptyContentEffect>(setOf(SubmissionDetailsEmptyContentEffect.ShowCreateSubmissionView(submissionTypes.first(), model.course, model.assignment)))
                 } else {
                     Next.dispatch<SubmissionDetailsEmptyContentModel, SubmissionDetailsEmptyContentEffect>(setOf(SubmissionDetailsEmptyContentEffect.ShowSubmitDialogView(model.assignment, model.course, model.isArcEnabled)))
                 }
