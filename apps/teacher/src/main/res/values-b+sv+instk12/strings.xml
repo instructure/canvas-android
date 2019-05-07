@@ -318,6 +318,7 @@
     <string name="assignments_list">Uppgiftslista</string>
     <string name="syllabus">Kursöversikt</string>
     <!--End Course Settings-->
+
     <!-- Assignment Details -->
     <string name="multiple_due_dates">Flera inlämningsdatum</string>
     <string name="everyone">Alla</string>
@@ -350,6 +351,8 @@
     <string name="description">Beskrivning</string>
     <string name="grade_total">Totalt bedömning</string>
     <string name="grade">Bedömning</string>
+    <string name="enter_grade">Ange bedömning</string>
+    <string name="override">Åsidosätta</string>
     <string name="calculated_by_rubric">Kalkylerat efter titel</string>
     <string name="customize_grade">Anpassa bedömning</string>
     <string name="out_of_points">Av %1$s</string>

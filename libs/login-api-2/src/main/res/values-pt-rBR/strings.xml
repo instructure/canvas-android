@@ -57,6 +57,7 @@
     <string name="login">Entrar</string>
     <string name="logout">Sair</string>
 
+    <string name="matchingSchools">Escolas correspondentes</string>
     <!--Logout Warning Dialog-->
     <string name="logout_warning">Tem certeza de que deseja sair?</string>
     <string name="logout_yes">Sim</string>

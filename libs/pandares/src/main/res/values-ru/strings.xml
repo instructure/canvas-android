@@ -36,6 +36,24 @@
     <string name="selectedListItem">Выбрано: %s</string>
 
     <!-- Student Strings -->
+    <!-- Student Assignment Details -->
+    <string name="assignmentDetails">Сведения о задании</string>
+    <string name="submission_types">Типы сдаваемых работ</string>
+    <string name="noAssignmentDescriptionStudent">Нет содержимого</string>
+    <string name="dueLabel">Срок</string>
+    <string name="submissionStatusSuccessTitle">Успешно отправлено!</string>
+    <string name="submissionStatusSuccessSubtitle">Предоставляемые вами данные в ожидании оценки</string>
+    <string name="submissionStatusUploadingTitle">Выполняется загрузка...</string>
+    <string name="submissionStatusUploadingSubtitle">Нажмите для просмотра прогресса</string>
+    <string name="submissionStatusFailedTitle">Ошибка отправки</string>
+    <string name="submissionStatusFailedSubtitle">Нажмите для просмотра подробностей</string>
+    <string name="submissionAndRubric">Предоставление и рубрика</string>
+    <string name="errorLoadingAssignment">Возникла проблема при загрузке данного задания. Проверьте подключение и попробуйте еще раз.</string>
+    <string name="submitted">Отправлено</string>
+    <string name="notSubmitted">Не отправлено</string>
+    <string name="allowedFileTypes">Разрешенные типы файлов</string>
+    <string name="resubmitAssignment">Повторная отправка задания</string>
+
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">Версия:</string>
 
@@ -346,7 +364,7 @@
     <string name="noUsersInGroup">Нет пользователей в этой группе</string>
 
     <!--Notifications-->
-    <string name="deleted">[Удалено]</string>
+    <string name="deleted">Удалено</string>
     <string name="gradedDiscussion">Оцениваемое обсуждение.</string>
     <string name="pointsPossible">Возможные баллы.</string>
     <string name="pointsPossibleNoPeriod">Возможное количество баллов</string>
@@ -439,8 +457,8 @@
     <string name="unlockedAt">Будет разблокировано в:</string>
     <string name="goToModules">Перейти к Модулям</string>
     <string name="markDone">Отметить как выполненное</string>
-
     <string name="moduleItemNotFound">Элемент модуля не найден</string>
+
     <string name="help">Справка</string>
     <string name="instructor_question">Вопрос Учителя</string>
     <string name="link">Ссылка</string>
@@ -990,11 +1008,13 @@
     <string name="confirmDeleteEvent">Вы действительно хотите удалить это событие?</string>
     <string name="conferencesNotSupported">Конференции еще не поддерживаются на мобильных устройствах.</string>
     <string name="filePreviewContentDescription">Изображение для предварительного просмотра</string>
-
     <string name="pdfError">Ошибка при попытке скачать этот PDF.</string>
+
     <!-- Parent Strings -->
     <string name="addChildTitle">Добавить студента</string>
     <string name="addChildSubTitle">Введите полученный код привязки студента.</string>
     <string name="addChildHint">Привязка кода&#8230;</string>
     <string name="addChildErrorMessage">Не удалось выполнить привязку. Убедитесь в том, что код привязки верен и срок его действия не истек.</string>
+    <string name="gradeComplete">Завершить</string>
+    <string name="gradeIncomplete">Не завершено</string>
 </resources>

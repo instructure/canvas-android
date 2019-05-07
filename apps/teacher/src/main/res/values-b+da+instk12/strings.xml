@@ -318,6 +318,7 @@
     <string name="assignments_list">Opgaveliste</string>
     <string name="syllabus">Fagplan</string>
     <!--End Course Settings-->
+
     <!-- Assignment Details -->
     <string name="multiple_due_dates">Flere forfaldsdatoer</string>
     <string name="everyone">Alle</string>
@@ -350,6 +351,8 @@
     <string name="description">Beskrivelse</string>
     <string name="grade_total">Samlet vurdering</string>
     <string name="grade">Vurdering</string>
+    <string name="enter_grade">Indtast vurderinger</string>
+    <string name="override">Tilsidesæt</string>
     <string name="calculated_by_rubric">Beregnet med vurderingskriterium</string>
     <string name="customize_grade">Tilpas vurdering</string>
     <string name="out_of_points">Ud af %1$s</string>

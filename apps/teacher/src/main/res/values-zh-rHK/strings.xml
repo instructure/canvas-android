@@ -314,6 +314,7 @@
     <string name="assignments_list">任務列表</string>
     <string name="syllabus">教學大綱</string>
     <!--End Course Settings-->
+
     <!-- Assignment Details -->
     <string name="multiple_due_dates">多個截止日期</string>
     <string name="everyone">所有人</string>
@@ -346,6 +347,8 @@
     <string name="description">說明</string>
     <string name="grade_total">總分</string>
     <string name="grade">評分</string>
+    <string name="enter_grade">輸入評分</string>
+    <string name="override">重寫</string>
     <string name="calculated_by_rubric">以評分標準計算</string>
     <string name="customize_grade">自訂評分</string>
     <string name="out_of_points">總分：%1$s</string>
@@ -499,7 +502,6 @@
 
     <string name="colorPickerDialogTitle">課程顏色</string>
     <string name="colorPickerDialogMessage">這是您的個人顏色設定。只有您會看見本課程顏色。</string>
-
     <string name="colorPickerError">無法設定課程顏色。</string>
 
     <string name="contentDescriptionColorCottonCandy">粉色</string>
@@ -691,7 +693,6 @@
     <string name="allowThreadedReplies">允許執行緒回復</string>
     <string name="usersMustPost">使用者必須發佈，然後才能看到回復</string>
     <string name="allowUserComments">允許使用者評論</string>
-
     <string name="discussionTitleMustBeSet">必須設定討論區標題。</string>
     <string name="discussionSuccessfullyCreated">已成功創建討論區。</string>
     <string name="errorCreatingDiscussion">嘗試創建討論區時發生錯誤。請再試一次。</string>
@@ -820,7 +821,6 @@
     <string name="createAFile">創建檔案</string>
     <string name="createFileFolderFabContentDesc">顯示創建檔案與創建資料夾按鈕</string>
     <string name="hideCreateFileFolderFabContentDesc">隱藏創建檔案與創建資料夾按鈕</string>
-
     <string name="unpublish">取消發佈</string>
     <string name="restrictedAccess">訪問受限</string>
     <string name="restricted">受限</string>
@@ -864,7 +864,6 @@
     <string name="contentDescriptionFilterSection" formatted="false">針對 %s</string>
     <string name="filterBySection">按分班篩選</string>
     <string name="filterSubmissionsLowercase">篩選提交項目</string>
-
     <string name="latePenalty">逾期懲罰</string>
     <string name="finalGrade">最終評分</string>
     <string name="moderatedGradingUnsupported">流動快速評分器現未支援綜合評分。</string>
@@ -887,7 +886,6 @@
     <string name="gauge">Gauge</string>
     <string name="arc">Arc</string>
     <string name="ltiLaunchFailure">現時無法載入此 LTI 工具。</string>
-
     <string name="downloading">正在下載...</string>
 
 </resources>

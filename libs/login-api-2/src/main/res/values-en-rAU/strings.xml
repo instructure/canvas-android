@@ -57,6 +57,7 @@
     <string name="login">Log In</string>
     <string name="logout">Log Out</string>
 
+    <string name="matchingSchools">Matching Schools</string>
     <!--Logout Warning Dialog-->
     <string name="logout_warning">Are you sure you want to logout?</string>
     <string name="logout_yes">Yes</string>

@@ -123,6 +123,8 @@
     <string name="extensionNotAllowed">Den valgte filtype er ikke tilladt.</string>
     <string name="allowedExtensions">Tilladet filtyper:&#160;</string>
 
+    <string name="quizNetworkErrorTitle">Quiz fejl</string>
+    <string name="quizNetworkErrorMessage">Internettet ser ud til at være offline.</string>
     <!-- Media Task Loader -->
     <string name="noDataConnection"> Kontrollér din dataforbindelse, og prøv igen. </string>
     <string name="noApps">Der er ingen app på enheden, der kan åbne denne fil.</string>
@@ -203,7 +205,7 @@
     <string name="likes">Synes godt om</string>
     <string name="lockedAssignmentNotModule">Denne opgave er låst.</string>
     <string name="deletedEntryNoChildren">Denne slettede diskussionspost har intet svar.</string>
-    <string name="deleted">[Slettet]</string>
+    <string name="deleted">Slettet</string>
     <string name="deleted_by">[Slettet af %1$s]</string>
     <string name="lockedDiscussionDesc">Denne diskussion er en del af forløbet %s og er ikke blevet låst op endnu.</string>
     <string name="gradedDiscussion">Bedømt diskussion</string>
@@ -379,7 +381,6 @@
     <string name="utils_uploadToSubmissionComment">Upload til afleveringskommentar</string>
     <string name="utils_attachFile">Vedhæft en fil</string>
     <string name="utils_with">med</string>
-
     <string name="notificationPrimaryInboxTitle">Canvas-meddelelse</string>
     <string name="notificationChannelNamePrimary">Almindelige Canvas-meddelelser</string>
     <string name="notificationChannelDescriptionPrimary">Yderligere konfiguration af meddelelser kan ske i sektionen Canvas-meddelelsesindstillinger.</string>

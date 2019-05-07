@@ -34,6 +34,24 @@
     <string name="selectedListItem">Vald: %s</string>
 
     <!-- Student Strings -->
+    <!-- Student Assignment Details -->
+    <string name="assignmentDetails">Uppgiftsdetaljer</string>
+    <string name="submission_types">Inlämningstyp</string>
+    <string name="noAssignmentDescriptionStudent">Inget innehåll</string>
+    <string name="dueLabel">Förfallodatum</string>
+    <string name="submissionStatusSuccessTitle">Inlämningen har slutförts!</string>
+    <string name="submissionStatusSuccessSubtitle">Din inlämning väntar på att bedömas</string>
+    <string name="submissionStatusUploadingTitle">Inlämningen laddas upp...</string>
+    <string name="submissionStatusUploadingSubtitle">Tryck för att visa framsteg</string>
+    <string name="submissionStatusFailedTitle">Inlämningen misslyckades</string>
+    <string name="submissionStatusFailedSubtitle">Tryck för att visa detaljerad information</string>
+    <string name="submissionAndRubric">Inlämning och matris</string>
+    <string name="errorLoadingAssignment">Det gick inte att läsa in den här uppgiften. Vänligen kontrollera din anslutning och försök igen.</string>
+    <string name="submitted">Skickad</string>
+    <string name="notSubmitted">Inte inskickad</string>
+    <string name="allowedFileTypes">Filtyper som tillåts</string>
+    <string name="resubmitAssignment">Lämna in uppgift igen</string>
+
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">Version:</string>
 
@@ -334,7 +352,7 @@
     <string name="noUsersInGroup">Det finns inga användare i den här gruppen</string>
 
     <!--Notifications-->
-    <string name="deleted">[Borttagen]</string>
+    <string name="deleted">Raderad</string>
     <string name="gradedDiscussion">Betygsatt diskussion.</string>
     <string name="pointsPossible">Möjliga poäng.</string>
     <string name="pointsPossibleNoPeriod">Möjliga poäng</string>
@@ -427,8 +445,8 @@
     <string name="unlockedAt">Den kommer att låsas upp:</string>
     <string name="goToModules">Gå till moduler</string>
     <string name="markDone">Markering färdig</string>
-
     <string name="moduleItemNotFound">Modulobjektet hittades inte</string>
+
     <string name="help">Hjälp</string>
     <string name="instructor_question">Fråga Handledare</string>
     <string name="link">Länk</string>
@@ -781,6 +799,7 @@
         <item quantity="one">%d fråga</item>
         <item quantity="other">%d frågor</item>
     </plurals>
+
     <plurals name="pointCount">
         <item quantity="one">%s poäng</item>
         <item quantity="other">%s poäng</item>
@@ -968,11 +987,13 @@
     <string name="confirmDeleteEvent">Vill du ta bort den här händelsen?</string>
     <string name="conferencesNotSupported">Konferenser stöds ännu inte på den här mobilen.</string>
     <string name="filePreviewContentDescription">Förhandsgranskningsbild för fil</string>
-
     <string name="pdfError">Ett fel uppstod vid inläsning av den här PDF:n.</string>
+
     <!-- Parent Strings -->
     <string name="addChildTitle">Lägg till elev</string>
     <string name="addChildSubTitle">Ange studentkopplingskoden du fått.</string>
     <string name="addChildHint">Kopplingskod...</string>
     <string name="addChildErrorMessage">Det gick inte att koppla. Se till att din kopplingskod är korrekt och att dess tidsgräns inte har överskridits.</string>
+    <string name="gradeComplete">Färdig</string>
+    <string name="gradeIncomplete">Ofullständig</string>
 </resources>

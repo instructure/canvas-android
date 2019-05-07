@@ -124,6 +124,8 @@
     <string name="extensionNotAllowed">不允许选择文件的类型</string>
     <string name="allowedExtensions">允许的扩展名：&#160;</string>
 
+    <string name="quizNetworkErrorTitle">测验错误</string>
+    <string name="quizNetworkErrorMessage">互联网连接似乎已断开。</string>
     <!-- Media Task Loader -->
     <string name="noDataConnection">请检查您的数据连接，然后再试一次。</string>
     <string name="noApps">您的设备未安装可以处理此文件的任何应用程序。</string>
@@ -204,7 +206,7 @@
     <string name="likes">赞</string>
     <string name="lockedAssignmentNotModule">此作业被锁定。</string>
     <string name="deletedEntryNoChildren">该删除的讨论条目没有回复。</string>
-    <string name="deleted">[删除]</string>
+    <string name="deleted">已删除</string>
     <string name="deleted_by">[被%1$s删除]</string>
     <string name="lockedDiscussionDesc">该讨论是模块%s的组成部分，并且尚未锁定。</string>
     <string name="gradedDiscussion">评分讨论</string>
@@ -377,7 +379,6 @@
     <string name="utils_uploadToSubmissionComment">上传到提交项评论</string>
     <string name="utils_attachFile">附加文件</string>
     <string name="utils_with">与</string>
-
     <string name="notificationPrimaryInboxTitle">Canvas 通知</string>
     <string name="notificationChannelNamePrimary">常规 Canvas 通知</string>
     <string name="notificationChannelDescriptionPrimary">在 Canvas 通知首选项部分可对通知进行进一步配置。</string>

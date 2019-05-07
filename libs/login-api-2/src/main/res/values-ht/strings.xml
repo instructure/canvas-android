@@ -57,6 +57,7 @@
     <string name="login">Konekte</string>
     <string name="logout">Dekonekte</string>
 
+    <string name="matchingSchools">Lekòl ki Koresponn</string>
     <!--Logout Warning Dialog-->
     <string name="logout_warning">Ou kwè vrèman ou vle dekonekte?</string>
     <string name="logout_yes">Wi</string>

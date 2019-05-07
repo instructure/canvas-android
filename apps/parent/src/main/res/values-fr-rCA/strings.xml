@@ -118,6 +118,9 @@
     <string name="alarmNotSet">L’alarme ne peut être réglée. Réessayez.</string>
     <string name="could_not_route_course">L\'enrôlement au cours n\'a pu être trouvé.</string>
     <string name="could_not_route_assignment">La tâche n\'a pu être trouvée.</string>
+    <string name="could_not_route_announcement">Impossible de trouver l’annonce.</string>
+    <string name="could_not_route_event">Impossible de trouver l’événement.</string>
+    <string name="could_not_route_account_notifications">Impossible de trouver la notification.</string>
     <string name="email_already_exists">Un utilisateur associé à cette adresse courriel existe déjà.</string>
     <string name="password_reset_success">Un courriel contenant les instructions de réinitialisation de votre mot de passe va vous être envoyé.</string>
     <string name="password_reset_no_user">Aucun utilisateur associé à cette adresse courriel n\'a pu être trouvé.</string>
@@ -225,4 +228,5 @@
     <string name="institutionAnnouncementUnavailable">Cette annonce a expiré.</string>
     <string name="previousWeekBtn">bouton « Semaine précédente »</string>
     <string name="nextWeekBtn">bouton « Semaine prochaine »</string>
+    <string name="filesNotSupported">Les fichiers ne sont pas actuellement pris en charge</string>
 </resources>

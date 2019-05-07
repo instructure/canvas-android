@@ -118,6 +118,9 @@
     <string name="alarmNotSet">アラームを設定できませんでした。もう一度試してください。</string>
     <string name="could_not_route_course">そのコース登録が見つかりませんでした。</string>
     <string name="could_not_route_assignment">その課題が見つかりませんでした。</string>
+    <string name="could_not_route_announcement">お知らせが見つかりませんでした。</string>
+    <string name="could_not_route_event">イベントが見つかりませんでした。</string>
+    <string name="could_not_route_account_notifications">通知が見つかりませんでした。</string>
     <string name="email_already_exists">そのメールアドレスを使用するユーザーがすでに存在しています。</string>
     <string name="password_reset_success">パスワードのリセット方法を記載したEメールが送信されます。</string>
     <string name="password_reset_no_user">そのメールアドレスを使用するユーザーが見つかりませんでした。</string>
@@ -225,4 +228,5 @@
     <string name="institutionAnnouncementUnavailable">この発表は終了しました。</string>
     <string name="previousWeekBtn">先週のボタン</string>
     <string name="nextWeekBtn">翌週のボタン</string>
+    <string name="filesNotSupported">ファイルは現在サポートされていません</string>
 </resources>

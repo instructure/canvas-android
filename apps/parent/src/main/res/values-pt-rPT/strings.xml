@@ -118,6 +118,9 @@
     <string name="alarmNotSet">O alarme não pôde ser configurado. Tente novamente.</string>
     <string name="could_not_route_course">Não foi possível encontrar a inscrição na disciplina.</string>
     <string name="could_not_route_assignment">Não foi possível encontrar a tarefa.</string>
+    <string name="could_not_route_announcement">Não foi possível encontrar o anúncio.</string>
+    <string name="could_not_route_event">Não foi possível encontrar o evento.</string>
+    <string name="could_not_route_account_notifications">Não foi possível encontrar a notificação.</string>
     <string name="email_already_exists">Já existe um utilizador com este endereço de email.</string>
     <string name="password_reset_success">Será enviado um email com indicações para reiniciar a sua palavra chave.</string>
     <string name="password_reset_no_user">Não foi encontrado nenhum utilizador com esse endereço de email.</string>
@@ -225,4 +228,5 @@
     <string name="institutionAnnouncementUnavailable">Este anúncio expirou.</string>
     <string name="previousWeekBtn">botão semana anterior</string>
     <string name="nextWeekBtn">botão próxima semana</string>
+    <string name="filesNotSupported">Ficheiros não são suportados atualmente</string>
 </resources>

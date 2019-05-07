@@ -118,6 +118,9 @@
     <string name="alarmNotSet">No se pudo configurar la alarma. Inténtelo de nuevo.</string>
     <string name="could_not_route_course">No se pudo encontrar la inscripción a los cursos.</string>
     <string name="could_not_route_assignment">No se pudo encontrar la tarea.</string>
+    <string name="could_not_route_announcement">No se pudo encontrar el anuncio.</string>
+    <string name="could_not_route_event">No se pudo encontrar el evento.</string>
+    <string name="could_not_route_account_notifications">No se pudo encontrar la notificación.</string>
     <string name="email_already_exists">Ya existe un usuario con esa dirección de correo electrónico.</string>
     <string name="password_reset_success">Se enviará un correo electrónico con instrucciones para restablecer su contraseña.</string>
     <string name="password_reset_no_user">No se encontró ningún usuario con esa dirección de correo electrónico.</string>
@@ -225,4 +228,5 @@
     <string name="institutionAnnouncementUnavailable">Este anuncio ha caducado.</string>
     <string name="previousWeekBtn">botón de semana anterior</string>
     <string name="nextWeekBtn">botón de semana siguiente</string>
+    <string name="filesNotSupported">Los archivos no se admiten actualmente</string>
 </resources>

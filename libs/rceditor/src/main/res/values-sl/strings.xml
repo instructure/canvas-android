@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="rce_contentDescription_undo">Razveljavi</string>
+    <string name="rce_contentDescription_redo">Uveljavi</string>
+    <string name="rce_contentDescription_bold">Oblikuj krepko</string>
+    <string name="rce_contentDescription_italic">Oblikuj ležeče</string>
+    <string name="rce_contentDescription_strikethrough">Prečrtaj</string>
+    <string name="rce_contentDescription_underline">Podčrtaj</string>
+    <string name="rce_contentDescription_format_text_color">Oblikuj barvo besedila</string>
+    <string name="rce_contentDescription_border_color">Oblikuj barvo obrobe besedila</string>
+    <string name="rce_contentDescription_indent_increase">Povečaj zamik</string>
+    <string name="rce_contentDescription_indent_decrease">Zmanjšaj zamik</string>
+    <string name="rce_contentDescription_align_left">Poravnaj levo</string>
+    <string name="rce_contentDescription_align_right">Poravnaj desno</string>
+    <string name="rce_contentDescription_align_center">Poravnaj na sredino</string>
+    <string name="rce_contentDescription_insert_bullets">Vstavi seznam z alinejami</string>
+    <string name="rce_contentDescription_insert_numbers">Vstavi oštevilčeni seznam</string>
+    <string name="rce_contentDescription_insert_photo">Vstavi fotografijo</string>
+    <string name="rce_contentDescription_upload_photo">Naloži fotografijo iz naprave</string>
+    <string name="rce_contentDescription_insert_link">Vstavi povezavo</string>
+    <string name="rce_contentDescription_block_quote">Blokiraj kvoto</string>
+
+    <string name="rce_contentDescription_color_none">Brez barve</string>
+    <string name="rce_contentDescription_color_white">Bela barva</string>
+    <string name="rce_contentDescription_color_black">Črna barva</string>
+    <string name="rce_contentDescription_color_blue">Modra barva</string>
+    <string name="rce_contentDescription_color_red">Rdeča barva</string>
+    <string name="rce_contentDescription_color_green">Zelena barva</string>
+    <string name="rce_contentDescription_color_gray">Siva barva</string>
+    <string name="rce_contentDescription_color_magenta">Barva magenta</string>
+    <string name="rce_contentDescription_color_cyan">Barva cijan</string>
+    <string name="rce_contentDescription_color_orange">Oranžna barva</string>
+    <string name="rce_contentDescription_color_yellow">Rumena barva</string>
+    <string name="rce_contentDescription_color_purple">Škrlatna barva</string>
+
+    <string name="rce_editTextUrlHint">Povezava</string>
+    <string name="rce_editTextALTHint">Besedilo</string>
+    <string name="rce_dialogDone">Dokončano</string>
+    <string name="rce_dialogCancel">Prekliči</string>
+    <string name="rce_insertLink">Vstavi povezavo</string>
+    <string name="rce_insertImage">Vstavi sliko</string>
+    <string name="rce_uploadImage">Naloži sliko</string>
+
+    <string name="rce_done">Dokončano</string>
+    <string name="rce_cancel">Prekliči</string>
+    <string name="rce_exit">Izhod</string>
+    <string name="rce_dialog_exit_title">Ali želite izhod iz urejanja naloge?</string>
+    <string name="rce_dialog_exit_message">Ali ste prepričani, da želite izhod? Vsi neshranjeni podatki bodo izgubljeni.</string>
+    <string name="rce_empty_message">Sporočilo</string>
+    <string name="rce_empty_description">Dodaj opis</string>
+    <string name="rce_scrollInstructions">Z drsnikom poiščite vsa orodja za urejanje.</string>
+</resources>

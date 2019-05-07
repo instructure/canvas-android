@@ -34,6 +34,24 @@
     <string name="selectedListItem">Geselecteerd: %s</string>
 
     <!-- Student Strings -->
+    <!-- Student Assignment Details -->
+    <string name="assignmentDetails">Opdrachtdetails</string>
+    <string name="submission_types">Inleveringstypen</string>
+    <string name="noAssignmentDescriptionStudent">Geen inhoud</string>
+    <string name="dueLabel">Inleverdatum</string>
+    <string name="submissionStatusSuccessTitle">Inlevering is gelukt!</string>
+    <string name="submissionStatusSuccessSubtitle">Je inlevering wacht op beoordeling</string>
+    <string name="submissionStatusUploadingTitle">Inlevering wordt geüpload&#8230;</string>
+    <string name="submissionStatusUploadingSubtitle">Tik om voortgang te bekijken</string>
+    <string name="submissionStatusFailedTitle">Inlevering mislukt</string>
+    <string name="submissionStatusFailedSubtitle">Tik om details te bekijken</string>
+    <string name="submissionAndRubric">Inlevering en rubriek</string>
+    <string name="errorLoadingAssignment">Er is een probleem met het laden van deze opdracht. Controleer je verbinding en probeer het opnieuw.</string>
+    <string name="submitted">Ingediend</string>
+    <string name="notSubmitted">Niet ingediend</string>
+    <string name="allowedFileTypes">Toegestane bestandstypen</string>
+    <string name="resubmitAssignment">Opdracht opnieuw inleveren</string>
+
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">Versie:</string>
 
@@ -334,7 +352,7 @@
     <string name="noUsersInGroup">Er zijn geen gebruikers in deze groep</string>
 
     <!--Notifications-->
-    <string name="deleted">[Deleted]</string>
+    <string name="deleted">Verwijderd</string>
     <string name="gradedDiscussion">Beoordeelde discussie.</string>
     <string name="pointsPossible">Punten mogelijk.</string>
     <string name="pointsPossibleNoPeriod">Aantal punten mogelijk</string>
@@ -427,8 +445,8 @@
     <string name="unlockedAt">Het wordt ontgrendeld op:</string>
     <string name="goToModules">Ga naar modulen</string>
     <string name="markDone">Gereed markeren</string>
-
     <string name="moduleItemNotFound">Module-item niet gevonden</string>
+
     <string name="help">Help</string>
     <string name="instructor_question">Instructeurvraag</string>
     <string name="link">Link</string>
@@ -781,6 +799,7 @@
         <item quantity="one">%d vraag</item>
         <item quantity="other">%d vragen</item>
     </plurals>
+
     <plurals name="pointCount">
         <item quantity="one">%s punt</item>
         <item quantity="other">%s punten</item>
@@ -968,11 +987,13 @@
     <string name="confirmDeleteEvent">Weet je zeker dat je dit evenement wilt verwijderen?</string>
     <string name="conferencesNotSupported">Vergaderingen worden nog niet ondersteund op mobiele apparatenó.</string>
     <string name="filePreviewContentDescription">Voorbeeldweergave bestand</string>
-
     <string name="pdfError">Er is een fout opgetreden bij het laden van deze PDF.</string>
+
     <!-- Parent Strings -->
     <string name="addChildTitle">Cursist toevoegen</string>
     <string name="addChildSubTitle">Voer de koppelingscode cursist in die je gekregen hebt.</string>
     <string name="addChildHint">Koppelingscode&#8230;</string>
     <string name="addChildErrorMessage">Koppelen mislukt. Zorg ervoor dat je koppelingscode juist is en dat deze binnen de ingestelde tijdslimiet valt.</string>
+    <string name="gradeComplete">Voltooid</string>
+    <string name="gradeIncomplete">Incompleet</string>
 </resources>

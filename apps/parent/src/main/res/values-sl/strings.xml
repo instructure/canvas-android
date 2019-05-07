@@ -1,0 +1,232 @@
+﻿<!--
+  ~ Copyright (C) 2016 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<resources>
+
+    <string name="action_settings">Nastavitve</string>
+    <string name="canvasLogo">Logotip sistema Canvas</string>
+    <string name="email">E-pošta</string>
+    <string name="emailAddress">E-poštni naslov</string>
+    <string name="parent_email">E-poštni naslov starša</string>
+    <string name="firstName">Ime</string>
+    <string name="lastName">Priimek</string>
+    <string name="password">Geslo</string>
+    <string name="log_in">Prijava</string>
+    <string name="createAccount">Ustvari račun</string>
+    <string name="create">Ustvari</string>
+    <string name="forgotPassword">Ali ste pozabili geslo?</string>
+    <string name="forgotPasswordWithoutQuestion">Pozabljeno geslo</string>
+    <string name="enterAccountEmailHint">E-poštni naslov računa</string>
+    <string name="requestPassword">Zahtevaj geslo</string>
+    <string name="resetPassword">Ponastavi geslo</string>
+    <string name="requestPasswordHelpText">Zahtevo za obnovitev vam bomo poslali po e-pošti.</string>
+    <string name="requestPasswordSuccess">Vaše geslo je obnovljeno.</string>
+    <string name="fullName">Polno ime</string>
+    <string name="passwordsDoNotMatch">Gesli se ne ujemata.</string>
+    <string name="passwordsCannotBeBlank">Gesla ne smejo biti prazna.</string>
+    <string name="passwordResetFailed">Vašega gesla trenutno ni mogoče obnoviti.</string>
+    <string name="invalidEmail">Neveljaven e-poštni naslov. Poskusite znova.</string>
+    <string name="next">Naprej</string>
+    <string name="createAccountMessage">Na e-poštni naslov, ki ste ga predložili za zaključek registracije, bo poslano e-poštno sporočilo.</string>
+    <string name="accountCreationSuccess">Ustvarjanje računa je uspelo. Za zaključek registracije preverite svojo e-pošto.</string>
+    <string name="errorOccurred">Prišlo je do nepričakovane napake. Poskusite znova.</string>
+    <string name="unknownDevice">Neznana naprava</string>
+    <string name="addStudent">Dodaj študenta</string>
+    <string name="school">Šola</string>
+    <string name="finish">Dokončaj</string>
+    <string name="close">Zapri</string>
+    <string name="noStudents">Na voljo ni noben študent. Za dodajanje študentov tapnite tri pike v zgornjem meniju.</string>
+    <string name="noStudentsView">S tem računom ni povezan noben študent.</string>
+    <string name="noCourses">Pri tem študentu ni na voljo nobenih predmetov.</string>
+    <string name="noAvailableCourses">Ni predmetov.</string>
+    <string name="coursesMayNotBePublished">Predmeti tega študenta morda še niso objavljeni.</string>
+    <string name="noAlerts">Pri tem študentu ni nobenih opozoril za ogled.</string>
+    <string name="noItemsToDisplayShort">Ni elementov.</string>
+    <string name="emailsSentTo">E-poštna sporočila so poslana na:</string>
+    <string name="logged_in_as">Prijavljen kot:</string>
+    <string name="notifyWhen">Obvesti me, ko</string>
+    <string name="gradeAbove">Ocena pri predmetu višja od</string>
+    <string name="gradeBelow">Ocena pri predmetu nižja od</string>
+    <string name="assignmentMissing">Manjkajoča naloga</string>
+    <string name="teacherAnnouncements">Obvestila o predmetu</string>
+    <string name="institutionAnnouncements">Obvestila ustanove</string>
+    <string name="assignmentGradeAbove">Ocena pri nalogi višja od</string>
+    <string name="assignmentGradeBelow">Ocena pri nalogi nižja od</string>
+    <string name="never">Nikoli</string>
+    <string name="save">Shrani</string>
+    <string name="enterThreshold">Vnos odstotka</string>
+    <string name="setGradeValueMessage">Nastavite vrednost ocene, ki določa, kdaj želite biti obveščeni.</string>
+    <string name="removeStudent">Odstrani študenta</string>
+    <string name="removingStudent">Odstranjevanje študenta</string>
+    <string name="studentRemoved">Študent je uspešno odstranjen.</string>
+    <string name="studentAdded">Študent je uspešno dodan.</string>
+    <string name="courses">Predmeti</string>
+    <string name="week">Teden</string>
+    <string name="alerts">Opozorila</string>
+    <string name="alert">Opozorilo</string>
+    <string name="weekEmptyView">Ta teden ni nobenih nalog ali dogodkov.</string>
+    <string name="toolbar_close">Zapri orodno vrstico</string>
+    <string name="syllabus">Učni načrt</string>
+    <string name="emptySyllabus">Ta predmet nima učnega načrta.</string>
+    <string name="noLocation">Mesto ni določeno.</string>
+    <string name="previousAlerts">Prejšnja opozorila</string>
+    <string name="currentAlerts">Trenutna opozorila</string>
+    <string name="badDomainError">Neveljavna domena. Poskusite znova.</string>
+    <string name="unauthorized">Nimate pooblastil za dostop do teh informacij.</string>
+    <string name="revokedTokenErrorContent">Nimate pooblastil za dostop do informacij %1$s. Študentu lahko v meniju nastavitev znova podelite pooblastilo.</string>
+    <string name="revokedTokenErrorTitle">Žeton za dostop je ukinjen.</string>
+    <string name="featureFlagDisabledError">Ta ustanova ni omogočila dostopa do mobilne aplikacije Canvas Parent.</string>
+
+    <!-- Help strings -->
+    <string name="askInstructor">Zastavite vprašanje učitelju.</string>
+    <string name="askInstructorDetails">Vprašanja so bila poslana učitelju.</string>
+    <string name="searchGuides">Išči vodnike po sistemu Canvas</string>
+    <string name="canvasGuides">Vodniki po sistemu Canvas</string>
+    <string name="searchGuidesDetails">Poišči odgovore na pogosta vprašanja</string>
+    <string name="reportProblem">Poročajte o težavi</string>
+    <string name="reportProblemDetails">Če aplikacija ne deluje dobro, nas o tem obvestite.</string>
+    <string name="requestFeature">Zahtevaj funkcionalnost</string>
+    <string name="requestFeatureDetails">Ali imate zamisel za izboljšanje aplikacije?</string>
+    <string name="shareYourLove">Delite svoje navdušenje nad aplikacijo.</string>
+    <string name="shareYourLoveDetails">Opišite nam, kateri deli aplikacije so vam najljubši.</string>
+    <string name="sendFeedback">Pošlji povratne informacije</string>
+    <string name="sendMail">Pošlji e-pošto&#8230;</string>
+    <string name="help_domain">Domena:</string>
+    <string name="help_versionNum">Različica:</string>
+    <string name="help_userId">ID uporabnika:</string>
+    <string name="help_email">E-pošta:</string>
+    <string name="help_locale">Območna nastavitev:</string>
+    <string name="installDate">Datum nameščanja:</string>
+    <string name="icon">Ikona</string>
+    <string name="due">Rok:</string>
+    <string name="no_due_date">Ni roka.</string>
+    <string name="tapToSet">Za nastavitev tapnite.</string>
+    <string name="alarmNotSet">Alarma ni mogoče nastaviti. Poskusite znova.</string>
+    <string name="could_not_route_course">Vpisa v predmet ni mogoče najti.</string>
+    <string name="could_not_route_assignment">Naloge ni mogoče najti.</string>
+    <string name="could_not_route_announcement">Obvestila ni mogoče najti.</string>
+    <string name="could_not_route_event">Dogodka ni mogoče najti.</string>
+    <string name="could_not_route_account_notifications">Sporočila ni mogoče najti.</string>
+    <string name="email_already_exists">Uporabnik s tem e-poštnim naslovom že obstaja.</string>
+    <string name="password_reset_success">Poslano bo e-poštno sporočilo z navodili na obnovitev gesla.</string>
+    <string name="password_reset_no_user">Najden ni noben uporabnik s tem e-poštnim naslovom.</string>
+    <string name="reset_password">Ponastavi geslo</string>
+    <string name="location">Mesto</string>
+    <string name="time">Čas</string>
+    <string name="student_avatar">Avatar študenta</string>
+    <string name="previous">Nazaj</string>
+    <string name="empty_view">Prikazani pogled, če vsebina ni najdena.</string>
+    <string name="tab_icon">Ikona nad zavihkom</string>
+    <string name="add_student_icon">Ikona za dodajanje študenta</string>
+    <string name="canvas_logo">Logotip sistema Canvas</string>
+    <string name="course_threshold_grade_above_invalid">Ta prag mora biti nad spodnjim pragom predmeta.</string>
+    <string name="course_threshold_grade_below_invalid">Ta prag mora biti nad zgornjim pragom predmeta.</string>
+    <string name="assignment_threshold_grade_above_invalid">Ta prag mora biti nad spodnjim pragom naloge.</string>
+    <string name="assignment_threshold_grade_below_invalid">Ta prag mora biti nad zgornjim pragom naloge.</string>
+    <string name="set_reminder">Nastavi opomnik</string>
+    <string name="enter_student_institution">Vnesite ustanovo študenta.</string>
+    <string name="enter_student_login">Vnesite podatke za prijavo in geslo študenta.</string>
+    <string name="access_not_enabled">Ta ustanova ni omogočila dostopa do mobilne aplikacije Canvas Parent.</string>
+    <string name="dismiss">Opusti</string>
+    <string name="invalid_username_password">Kombinacija e-poštnega naslova in gesla ni bila veljavna.</string>
+    <string name="opening">Odpiranje&#8230;</string>
+    <string name="locked_assignment_desc">Ta naloga je del modula %s in še ni odklenjena.</string>
+    <string name="locked_assignment_desc_line2">Za informacije o tem, kako odkleniti to vsebino, v brskalniku obiščite strani modulov predmetov.</string>
+    <string name="locked_assignment_not_module">Ta naloga je zaklenjena.</string>
+    <string name="no_description">Za to nalogo ni opisa.</string>
+    <string name="cannot_view_file">Te datoteke si ni mogoče ogledati v aplikaciji. Oglejte si v brskalniku.</string>
+    <string name="calendar_event">Dogodek koledarja</string>
+    <string name="set_reminder_toggle">Nastavi preklop opomnika</string>
+    <string name="or">ali</string>
+    <string name="canvas_login_text">Prijava v sistem Canvas</string>
+    <string name="dateRangeContentDescription">Razpon datumov od %1$s do %2$s</string>
+
+    <string name="privacyPolicy">Pravilnik o zasebnosti</string>
+    <string name="EULA">Licenčni pogoji za končnega uporabnika</string>
+    <string name="termsOfUse">Pogoji uporabe</string>
+
+    <!-- Feature Request -->
+    <string name="featureSubject">Zamisel za aplikacijo Canvas Parent [Android]</string>
+    <string name="understandRequest">Z naslednjimi informacijami bomo bolje razumeli vašo zamisel:</string>
+
+    <!-- Distance Strings -->
+    <string name="lessThanOne">&lt; 1 milja (1,6 km)</string>
+    <string name="oneMile">1 milja (1,6 km)</string>
+    <string name="miles">milje</string>
+    <string name="kilometers">km</string>
+
+    <string name="grade">Ocena:</string>
+    <string name="notGraded">Še ni ocenjeno.</string>
+    <string name="missing">Manjkajoče</string>
+    <string name="submitted">Poslano</string>
+    <string name="in_class">V razredu</string>
+    <string name="excused">Opravičeno</string>
+    <string name="late">Zamuda</string>
+    <string name="greaterThan9">9+</string>
+
+    <string name="onlyCanvasObservers">V aplikaciji Canvas Parent so lahko overjeni le skriti bralci sistema Canvas.</string>
+    <string name="unableToAddStudentError">Trenutno tega študenta ni mogoče dodati.</string>
+
+    <string name="open_source">Odprti vir</string>
+    <string name="open_source_details">Poglej odprte licence</string>
+
+    <string name="unitedStates">Združene države Amerike</string>
+    <string name="theUnitedStates">Združene države Amerike</string>
+    <string name="canada">Kanada</string>
+    <string name="ireland">Irska</string>
+    <string name="australia">Avstralija</string>
+    <string name="germany">Nemčija</string>
+    <string name="singapore">Singapur</string>
+    <array name="regions">
+        <item name="unitedStates">@string/unitedStates</item>
+        <item name="canada">@string/canada</item>
+        <item name="ireland">@string/ireland</item>
+        <item name="australia">@string/australia</item>
+        <item name="germany">@string/germany</item>
+        <item name="singapore">@string/singapore</item>
+    </array>
+    <string name="selectChildRegion">Izberi območje študenta</string>
+    <string name="selectRegion">Orodje za izbiranje območja</string>
+    <string name="unauthorizedRegion">Nedovoljeno območje</string>
+    <string name="mismatchedRegionMessage">Ta ustanova je zunaj izbranega območja. Za dodajanje študenta tej ustanovi uporabite možnost »Orodje za izbiranje območja« na strani za prijavo, da v območju %1$s ustvarite račun.</string>
+
+    <string name="notification_channel_name">Splošna sporočila</string>
+    <string name="notification_channel_description">Sporočila o opomnikih in pomembnih informacijah o študentu.</string>
+
+    <string name="whatsYourStudentsSchoolName">Vnesite ime šole študenta.</string>
+    <string name="findYourStudentsSchoolHint">Najdite šolo ali okoliš študenta.</string>
+    <string name="noGradeText">Ni ocen.</string>
+    <string name="locked">Zaklenjeno</string>
+    <string name="changeUser">Spremeni uporabnika</string>
+    <string name="manageChildren">Urejaj otroke</string>
+    <!-- Navigation Drawer -->
+    <string name="navigation_drawer_open">Odpri predal za navigacijo</string>
+    <string name="navigation_drawer_close">Zapri predal za navigacijo</string>
+    <string name="version" formatted="false">Različica %s</string>
+    <string name="not_a_parent_title">Niste starš?</string>
+    <string name="not_a_parent_subtitle">Morda bi bolj ustrezala kakšna druga aplikacija. Tapnite eno od njih, da obiščete trgovino Play Store.</string>
+    <string name="tryLoginAgain">Poskusite se znova prijaviti.</string>
+    <string name="legalDetails">Politika zasebnosti, pogoji uporabe, odprti vir</string>
+    <string name="assignmentGrade">Ocena naloge</string>
+    <string name="courseGrade">Ocena pri predmetu</string>
+    <string name="courseAnnouncement">Obvestilo o predmetu</string>
+    <string name="institutionAnnouncement">Obvestilo ustanove</string>
+    <string name="institutionAnnouncementUnavailable">Čas tega obvestila se je iztekel.</string>
+    <string name="previousWeekBtn">gumb za prejšnji teden</string>
+    <string name="nextWeekBtn">gumb za naslednji teden</string>
+    <string name="filesNotSupported">Datoteke trenutno niso podprte</string>
+</resources>
