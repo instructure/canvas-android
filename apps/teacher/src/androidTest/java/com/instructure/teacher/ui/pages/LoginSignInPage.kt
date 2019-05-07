@@ -42,7 +42,6 @@ class LoginSignInPage : BasePage() {
         return onWebView().withElement(findElement(Locator.CSS_SELECTOR, FORGOT_PASSWORD_BUTTON_CSS))
     }
 
-    // https://github.com/instructure/android-uno/blob/master/candroid/candroid/src/androidTest/java/com/instructure/candroid/test/page/LoginPage.java#L103
     private fun authorizeButton(): Web.WebInteraction<*> {
         return onWebView().withElement(findElement(Locator.CSS_SELECTOR, AUTHORIZE_BUTTON_CSS))
     }
