@@ -124,6 +124,8 @@
     <string name="extensionNotAllowed">選択されたファイルタイプは許可されていません。</string>
     <string name="allowedExtensions">拡張を許可する:&#160;</string>
 
+    <string name="quizNetworkErrorTitle">クイズエラー</string>
+    <string name="quizNetworkErrorMessage">インターネット接続がオフラインになっているようです。</string>
     <!-- Media Task Loader -->
     <string name="noDataConnection">データの接続を確認し、やり直してください。</string>
     <string name="noApps">お使いのデバイスには、このファイルを処理できるアプリケーションがインストールされていません。</string>
@@ -204,7 +206,7 @@
     <string name="likes">いいね！</string>
     <string name="lockedAssignmentNotModule">この課題はロックされています。</string>
     <string name="deletedEntryNoChildren">この消去されたディスカッションエントリに返信はありません。</string>
-    <string name="deleted">[消去しました]</string>
+    <string name="deleted">削除されました</string>
     <string name="deleted_by">[%1$sにより消去されました]</string>
     <string name="lockedDiscussionDesc">このディスカッションは、%sモジュールの一部であり、まだアンロックされていません。</string>
     <string name="gradedDiscussion">採点されたディスカッション</string>
@@ -377,7 +379,6 @@
     <string name="utils_uploadToSubmissionComment">コメント送信をアップロード</string>
     <string name="utils_attachFile">ファイルを添付する</string>
     <string name="utils_with">と</string>
-
     <string name="notificationPrimaryInboxTitle">Canvas 通知</string>
     <string name="notificationChannelNamePrimary">一般的な Canvas 通知</string>
     <string name="notificationChannelDescriptionPrimary">通知の詳細設定は、Canvas キャンバス通知設定のセクションで行うことができます。</string>

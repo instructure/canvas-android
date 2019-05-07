@@ -318,6 +318,7 @@
     <string name="assignments_list">Lista de tareas</string>
     <string name="syllabus">Plan de estudio</string>
     <!--End Course Settings-->
+
     <!-- Assignment Details -->
     <string name="multiple_due_dates">Varias fechas límite</string>
     <string name="everyone">Todos</string>
@@ -350,6 +351,8 @@
     <string name="description">Descripción</string>
     <string name="grade_total">Calificación total</string>
     <string name="grade">Calificación</string>
+    <string name="enter_grade">Ingresar grado</string>
+    <string name="override">Anulación</string>
     <string name="calculated_by_rubric">Calculado por rúbrica</string>
     <string name="customize_grade">Personalizar calificación</string>
     <string name="out_of_points">De %1$s</string>
@@ -510,7 +513,6 @@
 
     <string name="colorPickerDialogTitle">Color del curso</string>
     <string name="colorPickerDialogMessage">Esta es su configuración de color personal. Solo usted verá este color para el curso.</string>
-
     <string name="colorPickerError">No se pudo establecer el color del curso en este momento.</string>
 
     <string name="contentDescriptionColorCottonCandy">Rosado</string>
@@ -704,7 +706,6 @@
     <string name="allowThreadedReplies">Permitir respuestas agrupadas</string>
     <string name="usersMustPost">Los usuarios deben publicar antes de ver las respuestas</string>
     <string name="allowUserComments">Permitir que los usuarios comenten</string>
-
     <string name="discussionTitleMustBeSet">Se debe establecer el título del foro.</string>
     <string name="discussionSuccessfullyCreated">Foro creado correctamente.</string>
     <string name="errorCreatingDiscussion">Se produjo un error al intentar crear este foro. Inténtelo de nuevo.</string>
@@ -833,7 +834,6 @@
     <string name="createAFile">Crear un archivo</string>
     <string name="createFileFolderFabContentDesc">Mostrar botones Crear archivo y Crear carpeta</string>
     <string name="hideCreateFileFolderFabContentDesc">OcOOcultar los botones Crear archivo y Crear carpeta</string>
-
     <string name="unpublish">No publicado</string>
     <string name="restrictedAccess">Acceso restringido</string>
     <string name="restricted">Restringido</string>
@@ -877,7 +877,6 @@
     <string name="contentDescriptionFilterSection" formatted="false">para %s</string>
     <string name="filterBySection">Filtrar por sección</string>
     <string name="filterSubmissionsLowercase">Filtrar presentaciones</string>
-
     <string name="latePenalty">Sanción por presentación tardía</string>
     <string name="finalGrade">Calificación final</string>
     <string name="moderatedGradingUnsupported">La calificación moderada no es compatible actualmente con la versión para teléfono móvil de SpeedGrader.</string>
@@ -902,7 +901,6 @@
     <string name="gauge">Gauge</string>
     <string name="arc">Arc</string>
     <string name="ltiLaunchFailure">No se pudo cargar esta herramienta de LTI.</string>
-
     <string name="downloading">Descargando...</string>
 
 </resources>

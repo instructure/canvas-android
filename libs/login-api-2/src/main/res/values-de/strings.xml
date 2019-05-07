@@ -57,6 +57,7 @@
     <string name="login">Anmeldung</string>
     <string name="logout">Abmelden</string>
 
+    <string name="matchingSchools">Passende Schulen</string>
     <!--Logout Warning Dialog-->
     <string name="logout_warning">Sind Sie sicher, dass Sie sich abmelden möchten?</string>
     <string name="logout_yes">Ja</string>

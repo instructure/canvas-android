@@ -124,6 +124,8 @@
     <string name="extensionNotAllowed">O tipo de arquivo selecionado não é permitido.</string>
     <string name="allowedExtensions">Extensões permitidas:&#160;</string>
 
+    <string name="quizNetworkErrorTitle">Erro de Questionário</string>
+    <string name="quizNetworkErrorMessage">A conexão à Internet parece estar off-line.</string>
     <!-- Media Task Loader -->
     <string name="noDataConnection"> Por favor, verifique sua conexão de dados e tente novamente. </string>
     <string name="noApps">O seu dispositivo não tem nenhum aplicativo instalado que pode lidar com esse arquivo.</string>
@@ -204,7 +206,7 @@
     <string name="likes">Curtidas</string>
     <string name="lockedAssignmentNotModule">Esta tarefa está bloqueada.</string>
     <string name="deletedEntryNoChildren">Esta entrada de discussão excluída não tem nenhuma resposta.</string>
-    <string name="deleted">[Excluída]</string>
+    <string name="deleted">Excluído</string>
     <string name="deleted_by">[Excluída por %1$s]</string>
     <string name="lockedDiscussionDesc">Esta discussão faz parte do módulo %s e ainda não foi desbloqueada.</string>
     <string name="gradedDiscussion">Discussão Avaliada</string>
@@ -380,7 +382,6 @@
     <string name="utils_uploadToSubmissionComment">Carregar em comentário de envio</string>
     <string name="utils_attachFile">Anexar um arquivo</string>
     <string name="utils_with">com</string>
-
     <string name="notificationPrimaryInboxTitle">Canvas Notification</string>
     <string name="notificationChannelNamePrimary">Notificações gerais do Canvas</string>
     <string name="notificationChannelDescriptionPrimary">Uma maior configuração de notificações pode ser feita dentro da seção de Preferências de Notificação do Canvas.</string>

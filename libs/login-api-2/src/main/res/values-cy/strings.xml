@@ -57,6 +57,7 @@
     <string name="login">Mewngofnodi</string>
     <string name="logout">Allgofnodi</string>
 
+    <string name="matchingSchools">Ysgolion Cyfatebol</string>
     <!--Logout Warning Dialog-->
     <string name="logout_warning">Ydych chi’n siŵr eich bod am allgofnodi?</string>
     <string name="logout_yes">Iawn</string>

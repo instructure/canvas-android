@@ -118,6 +118,9 @@
     <string name="alarmNotSet">Alarm kon niet worden ingesteld. Probeer het nog eens.</string>
     <string name="could_not_route_course">Kon de cursusinschrijving niet vinden.</string>
     <string name="could_not_route_assignment">Kon de opdracht niet vinden.</string>
+    <string name="could_not_route_announcement">Kan de aankondiging niet vinden.</string>
+    <string name="could_not_route_event">Kan het evenement niet vinden.</string>
+    <string name="could_not_route_account_notifications">Kan de melding niet vinden.</string>
     <string name="email_already_exists">Er bestaat al een gebruiker met dat e-mailadres.</string>
     <string name="password_reset_success">Er zal een e-mail met instructies om je wachtwoord te herstellen worden verzonden.</string>
     <string name="password_reset_no_user">Er kon geen gebruiker met dat e-mailadres gevonden worden.</string>
@@ -225,4 +228,5 @@
     <string name="institutionAnnouncementUnavailable">Deze aankondiging is vervallen.</string>
     <string name="previousWeekBtn">knop vorige week</string>
     <string name="nextWeekBtn">knop volgende week</string>
+    <string name="filesNotSupported">Bestanden worden momenteel niet ondersteund</string>
 </resources>

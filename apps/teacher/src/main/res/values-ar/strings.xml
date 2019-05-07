@@ -334,6 +334,7 @@
     <string name="assignments_list">قائمة المهام</string>
     <string name="syllabus">المناهج</string>
     <!--End Course Settings-->
+
     <!-- Assignment Details -->
     <string name="multiple_due_dates">تواريخ استحقاق متعددة</string>
     <string name="everyone">الجميع</string>
@@ -366,6 +367,8 @@
     <string name="description">الوصف</string>
     <string name="grade_total">إجمالي الدرجة</string>
     <string name="grade">الدرجة</string>
+    <string name="enter_grade">أدخل الدرجة</string>
+    <string name="override">التجاوز</string>
     <string name="calculated_by_rubric">تم الحساب من خلال تقييم روبرك</string>
     <string name="customize_grade">تخصيص الدرجة</string>
     <string name="out_of_points">من أصل %1$s</string>
@@ -554,7 +557,6 @@
 
     <string name="colorPickerDialogTitle">لون المساق</string>
     <string name="colorPickerDialogMessage">هذا إعداد اللون الشخصي الخاص بك. أنت فقط من سترى هذا اللون للمساق.</string>
-
     <string name="colorPickerError">تعذر تعيين لون المساق في الوقت الحالي.</string>
 
     <string name="contentDescriptionColorCottonCandy">وردي</string>
@@ -756,7 +758,6 @@
     <string name="allowThreadedReplies">السماح بالردود المترابطة</string>
     <string name="usersMustPost">يجب على المستخدمين النشر قبل رؤية الردود</string>
     <string name="allowUserComments">السماح للمستخدمين بالتعليق</string>
-
     <string name="discussionTitleMustBeSet">يجب تعيين عنوان النقاش.</string>
     <string name="discussionSuccessfullyCreated">تم إنشاء النقاش بنجاح.</string>
     <string name="errorCreatingDiscussion">حدث خطأ أثناء محاولة إنشاء هذا النقاش. حاول مرة أخرى.</string>
@@ -885,7 +886,6 @@
     <string name="createAFile">إنشاء ملف</string>
     <string name="createFileFolderFabContentDesc">إظهار زري إنشاء الملف وإنشاء المجلد</string>
     <string name="hideCreateFileFolderFabContentDesc">إخفاء زري إنشاء الملف وإنشاء المجلد</string>
-
     <string name="unpublish">إلغاء النشر</string>
     <string name="restrictedAccess">وصول مقيّد</string>
     <string name="restricted">مقيد</string>
@@ -929,7 +929,6 @@
     <string name="contentDescriptionFilterSection" formatted="false">بالنسبة لـ %s</string>
     <string name="filterBySection">التصفية حسب القسم</string>
     <string name="filterSubmissionsLowercase">تصفية الإرسالات</string>
-
     <string name="latePenalty">عقوبة التأخير</string>
     <string name="finalGrade">الدرجة النهائية</string>
     <string name="moderatedGradingUnsupported">منح الدرجات تحت الإشراف غير مدعوم حاليًا في تطبيق SpeedGrader للهاتف المحمول.</string>
@@ -962,7 +961,6 @@
     <string name="gauge">Gauge</string>
     <string name="arc">Arc</string>
     <string name="ltiLaunchFailure">تعذر تحميل أداة LTI في الوقت الحالي.</string>
-
     <string name="downloading">جارٍ التنزيل...</string>
 
 </resources>

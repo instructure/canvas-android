@@ -314,6 +314,7 @@
     <string name="assignments_list">課題リスト</string>
     <string name="syllabus">シラバス</string>
     <!--End Course Settings-->
+
     <!-- Assignment Details -->
     <string name="multiple_due_dates">複数の締切日</string>
     <string name="everyone">全員</string>
@@ -346,6 +347,8 @@
     <string name="description">説明</string>
     <string name="grade_total">成績合計</string>
     <string name="grade">成績</string>
+    <string name="enter_grade">グレードを入力する</string>
+    <string name="override">上書き</string>
     <string name="calculated_by_rubric">ルブリックで計算しました</string>
     <string name="customize_grade">グレードを最適化</string>
     <string name="out_of_points">%1$s から</string>
@@ -499,7 +502,6 @@
 
     <string name="colorPickerDialogTitle">コースの色</string>
     <string name="colorPickerDialogMessage">これはあなたの個人的な色の設定です。あなただけがコースにこの色を見ます。</string>
-
     <string name="colorPickerError">現時点でコースの色を設定できませんでした。</string>
 
     <string name="contentDescriptionColorCottonCandy">ピンク</string>
@@ -691,7 +693,6 @@
     <string name="allowThreadedReplies">スレッドでの返信を許可する</string>
     <string name="usersMustPost">ユーザは返信を表示する前に投稿しなければなりません</string>
     <string name="allowUserComments">ユーザーにコメントを許可する</string>
-
     <string name="discussionTitleMustBeSet">ディスカッションのタイトルを設定しなければなりません。</string>
     <string name="discussionSuccessfullyCreated">ディスカッションは正常に作成されました。</string>
     <string name="errorCreatingDiscussion">このディスカッションを作成しようといてエラーが発生しました。もう一度試してください。</string>
@@ -820,7 +821,6 @@
     <string name="createAFile">ファイルを作成する</string>
     <string name="createFileFolderFabContentDesc">ファイルの作成オタンとフォルダの作成ボタンを表示する</string>
     <string name="hideCreateFileFolderFabContentDesc">ファイルの作成とフォルダの作成ボタンを非表示にする</string>
-
     <string name="unpublish">未公開</string>
     <string name="restrictedAccess">制限されたアクセス</string>
     <string name="restricted">部外秘</string>
@@ -864,7 +864,6 @@
     <string name="contentDescriptionFilterSection" formatted="false">%s 用</string>
     <string name="filterBySection">セクションで分類する</string>
     <string name="filterSubmissionsLowercase">フィルターを提出</string>
-
     <string name="latePenalty">遅延ペナルティ</string>
     <string name="finalGrade">最終的な成績</string>
     <string name="moderatedGradingUnsupported">修正された採点は、現在モバイルの SpeedGrader ではサポートされていません。</string>
@@ -887,7 +886,6 @@
     <string name="gauge">Gauge</string>
     <string name="arc">Arc</string>
     <string name="ltiLaunchFailure">今回 LTI ツールを読み込めませんでした。</string>
-
     <string name="downloading">ダウンロード中...</string>
 
 </resources>

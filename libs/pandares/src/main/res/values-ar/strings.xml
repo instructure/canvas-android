@@ -37,6 +37,24 @@
     <string name="selectedListItem">المحدد: %s</string>
 
     <!-- Student Strings -->
+    <!-- Student Assignment Details -->
+    <string name="assignmentDetails">تفاصيل المهمة</string>
+    <string name="submission_types">أنواع الإرسال</string>
+    <string name="noAssignmentDescriptionStudent">لا يوجد محتوى</string>
+    <string name="dueLabel">الاستحقاق</string>
+    <string name="submissionStatusSuccessTitle">تم الإرسال بنجاح!</string>
+    <string name="submissionStatusSuccessSubtitle">إرسالك قيد الانتظار الآن للتقييم</string>
+    <string name="submissionStatusUploadingTitle">جارٍ تحميل الإرسال...</string>
+    <string name="submissionStatusUploadingSubtitle">اضغط لعرض التقدم</string>
+    <string name="submissionStatusFailedTitle">فشل الإرسال</string>
+    <string name="submissionStatusFailedSubtitle">اضغط لعرض التفاصيل</string>
+    <string name="submissionAndRubric">الإرسال ومقياس التقييم</string>
+    <string name="errorLoadingAssignment">حدثت مشكلة أثناء تحميل هذه المهمة. يرجى التحقق من الاتصال وإعادة المحاولة.</string>
+    <string name="submitted">تم الإرسال</string>
+    <string name="notSubmitted">لم يتم الإرسال</string>
+    <string name="allowedFileTypes">أنواع الملفات المسموح بها</string>
+    <string name="resubmitAssignment">إعادة إرسال المهمة</string>
+
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">الإصدار:</string>
 
@@ -357,7 +375,7 @@
     <string name="noUsersInGroup">لا يوجد مستخدمين في هذه المجموعة</string>
 
     <!--Notifications-->
-    <string name="deleted">[تم حذفه]</string>
+    <string name="deleted">تم الحذف</string>
     <string name="gradedDiscussion">مناقشة تم تقييمها.</string>
     <string name="pointsPossible">النقاط الممكنة.</string>
     <string name="pointsPossibleNoPeriod">النقاط الممكنة</string>
@@ -450,8 +468,8 @@
     <string name="unlockedAt">سيتم إلغاء التأمين في:</string>
     <string name="goToModules">الانتقال إلى الوحدات</string>
     <string name="markDone">وضع علامة "تم"</string>
-
     <string name="moduleItemNotFound">لم يتم العثور على عنصر الوحدة المنطقية</string>
+
     <string name="help">المساعدة</string>
     <string name="instructor_question">سؤال من المعلم</string>
     <string name="link">ارتباط</string>
@@ -808,6 +826,7 @@
         <item quantity="many">%d أسئلة</item>
         <item quantity="other">%d أسئلة</item>
     </plurals>
+
     <plurals name="pointCount">
         <item quantity="zero">%s نقاط</item>
         <item quantity="one">%s نقطة</item>
@@ -1011,11 +1030,13 @@
     <string name="confirmDeleteEvent">هل ترغب بالتأكيد في حذف هذا الحدث؟</string>
     <string name="conferencesNotSupported">لم يتم بعد دعم المؤتمرات على الأجهزة المحمولة.</string>
     <string name="filePreviewContentDescription">صورة معاينة الملف</string>
-
     <string name="pdfError">حدث خطأ أثناء محاولة تحميل ملف PDF هذا.</string>
+
     <!-- Parent Strings -->
     <string name="addChildTitle">إضافة طالب</string>
     <string name="addChildSubTitle">أدخل رمز إقران الطالب المقدم لك.</string>
     <string name="addChildHint">رمز الإقران...</string>
     <string name="addChildErrorMessage">تعذر الإقران. تأكد من أن رمز الإقران صحيح وفي إطار الحد الزمني للاستخدام.</string>
+    <string name="gradeComplete">مكتمل</string>
+    <string name="gradeIncomplete">غير مكتمل</string>
 </resources>

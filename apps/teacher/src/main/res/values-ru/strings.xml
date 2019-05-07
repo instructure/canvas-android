@@ -326,6 +326,7 @@
     <string name="assignments_list">Список заданий</string>
     <string name="syllabus">Содержание курса</string>
     <!--End Course Settings-->
+
     <!-- Assignment Details -->
     <string name="multiple_due_dates">Множественные даты выполнения</string>
     <string name="everyone">Все</string>
@@ -358,6 +359,8 @@
     <string name="description">Описание</string>
     <string name="grade_total">Выставить общую оценку</string>
     <string name="grade">Оценка</string>
+    <string name="enter_grade">Ввести оценку</string>
+    <string name="override">Отмена</string>
     <string name="calculated_by_rubric">Рассчитано по рубрикам</string>
     <string name="customize_grade">Персонализировать оценку</string>
     <string name="out_of_points">Из %1$s</string>
@@ -532,7 +535,6 @@
 
     <string name="colorPickerDialogTitle">Цвет курса</string>
     <string name="colorPickerDialogMessage">Это ваша персональная настройка цвета. Только вы будет видеть этот цвет для курса.</string>
-
     <string name="colorPickerError">В данный момент невозможно задать цвет курса.</string>
 
     <string name="contentDescriptionColorCottonCandy">Розовый</string>
@@ -730,7 +732,6 @@
     <string name="allowThreadedReplies">Разрешить цепочечные ответы</string>
     <string name="usersMustPost">Пользователи должны публиковать сообщения, прежде чем увидят ответы</string>
     <string name="allowUserComments">Разрешить пользователям комментирование</string>
-
     <string name="discussionTitleMustBeSet">Необходимо задать заголовок дискуссии.</string>
     <string name="discussionSuccessfullyCreated">Дискуссия успешно создана.</string>
     <string name="errorCreatingDiscussion">Произошла ошибка при попытке создания этой дискуссии. Повторить попытку.</string>
@@ -859,7 +860,6 @@
     <string name="createAFile">Создать файл</string>
     <string name="createFileFolderFabContentDesc">Показать кнопки создания файла и создания папки</string>
     <string name="hideCreateFileFolderFabContentDesc">Скрыть кнопки Создать файл и Создать папку</string>
-
     <string name="unpublish">Отменить публикацию</string>
     <string name="restrictedAccess">Ограниченный доступ</string>
     <string name="restricted">Доступ ограничен</string>
@@ -903,7 +903,6 @@
     <string name="contentDescriptionFilterSection" formatted="false">для %s</string>
     <string name="filterBySection">Фильтр по разделу</string>
     <string name="filterSubmissionsLowercase">Фильтр отправок</string>
-
     <string name="latePenalty">Снижение оценки за опоздание</string>
     <string name="finalGrade">Итоговая оценка</string>
     <string name="moderatedGradingUnsupported">Модерированное выставление оценок в текущий момент не поддерживается в мобильной версии SpeedGrader.</string>
@@ -932,7 +931,6 @@
     <string name="gauge">Gauge</string>
     <string name="arc">Arc</string>
     <string name="ltiLaunchFailure">В данный момент загрузка этого LTI невозможна.</string>
-
     <string name="downloading">Загрузка...</string>
 
 </resources>

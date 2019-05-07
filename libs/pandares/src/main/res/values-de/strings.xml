@@ -34,6 +34,24 @@
     <string name="selectedListItem">Ausgewählt: %s</string>
 
     <!-- Student Strings -->
+    <!-- Student Assignment Details -->
+    <string name="assignmentDetails">Aufgabendetails</string>
+    <string name="submission_types">Abgabearten</string>
+    <string name="noAssignmentDescriptionStudent">Kein Content</string>
+    <string name="dueLabel">Fällig</string>
+    <string name="submissionStatusSuccessTitle">Wurde abgegeben!</string>
+    <string name="submissionStatusSuccessSubtitle">Ihre Abgabe wartet nun auf die Benotung.</string>
+    <string name="submissionStatusUploadingTitle">Abgabe erfolgt &#8230;</string>
+    <string name="submissionStatusUploadingSubtitle">Zum Anzeigen des Fortschritts antippen</string>
+    <string name="submissionStatusFailedTitle">Abgabe fehlgeschlagen</string>
+    <string name="submissionStatusFailedSubtitle">Zum Anzeigen der Details antippen</string>
+    <string name="submissionAndRubric">Abgabe und Bewertungsschema</string>
+    <string name="errorLoadingAssignment">Beim Laden dieser Aufgabe ist ein Problem aufgetreten. Bitte überprüfen Sie Ihre Verbindung, und versuchen Sie es erneut.</string>
+    <string name="submitted">Abgegeben</string>
+    <string name="notSubmitted">Nicht abgegeben</string>
+    <string name="allowedFileTypes">Zulässige Dateitypen</string>
+    <string name="resubmitAssignment">Aufgabe neu einreichen</string>
+
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">Version:</string>
 
@@ -334,7 +352,7 @@
     <string name="noUsersInGroup">In dieser Gruppe sind keine Benutzer</string>
 
     <!--Notifications-->
-    <string name="deleted">[Gelöscht]</string>
+    <string name="deleted">Gelöscht</string>
     <string name="gradedDiscussion">Benotete Diskussion.</string>
     <string name="pointsPossible">Mögliche Punkte.</string>
     <string name="pointsPossibleNoPeriod">Mögliche Punkte</string>
@@ -427,8 +445,8 @@
     <string name="unlockedAt">Wird entsperrt am:</string>
     <string name="goToModules">Zu den Modulen gehen</string>
     <string name="markDone">Als fertig markieren</string>
-
     <string name="moduleItemNotFound">Modulobjekt nicht gefunden</string>
+
     <string name="help">Hilfe</string>
     <string name="instructor_question">Frage des Dozenten</string>
     <string name="link">Link</string>
@@ -781,6 +799,7 @@
         <item quantity="one">%d Frage</item>
         <item quantity="other">%d Fragen</item>
     </plurals>
+
     <plurals name="pointCount">
         <item quantity="one">%s Punkt</item>
         <item quantity="other">%s Punkte</item>
@@ -968,11 +987,13 @@
     <string name="confirmDeleteEvent">Möchten Sie dieses Event wirklich löschen?</string>
     <string name="conferencesNotSupported">Konferenzen werden auf Mobilgeräten noch nicht unterstützt.</string>
     <string name="filePreviewContentDescription">Dateivorschaubild</string>
-
     <string name="pdfError">Fehler beim Versuch diese PDF-Datei zu laden</string>
+
     <!-- Parent Strings -->
     <string name="addChildTitle">Teilnehmer hinzufügen</string>
     <string name="addChildSubTitle">Geben Sie den Studenten-Pairing-Code ein, den Sie erhalten haben.</string>
     <string name="addChildHint">Pairing-Code &#8230;</string>
     <string name="addChildErrorMessage">Pairing fehlgeschlagen. Stellen Sie sicher, dass ihr Pairing-Code korrekt und noch gültig ist.</string>
+    <string name="gradeComplete">Fertigstellen</string>
+    <string name="gradeIncomplete">Unvollständig</string>
 </resources>

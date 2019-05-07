@@ -1,0 +1,428 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="chooseMedia">Izberi medij</string>
+    <string name="takeVideo">Posnemi videoposnetek</string>
+    <string name="noCameraOnDevice">Ni fotoaparata.</string>
+    <string name="takePhoto">Posnemi fotografijo</string>
+    <string name="choosePhotoFromGallery">Izberi fotografijo iz galerije</string>
+
+    <string name="utils_edit">Uredi</string>
+
+    <!-- NotoriousPicker/uploadService -->
+    <string name="notificationTitle">Nalaganje v sistem Canvas</string>
+    <string name="preparingUpload">Priprava nalaganja</string>
+    <string name="loadingFilesIndeterminate">Nalaganje datotek&#8230;</string>
+    <string name="fileUploadSuccess">Nalaganje je uspelo.</string>
+    <string name="noNetwork">Omrežje ni na voljo – poskusite znova pozneje.</string>
+    <string name="uploadMessage">»Poteka nalaganje. Preverite sporočila za stanje nalaganja.</string>
+    <string name="mediaUpload">Nalaganje medija</string>
+    <string name="uploadingFile">Nalaganje datoteke&#8230;</string>
+    <string name="errorUploadingFile">Pri nalaganju datoteke je prišlo do napake. Poskusite znova.</string>
+    <string name="fileSubmission">Pošlji datoteke</string>
+    <string name="uploadFiles">Naloži datoteke</string>
+    <string name="upload">Naloži</string>
+    <string name="errorSendingMessage">Pri pošiljanju sporočila je prišlo do napake. Poskusite znova.</string>
+
+    <string name="notificationChannelNameFileUploadsName">Sporočila pri nalaganju datoteke</string>
+    <string name="notificationChannelNameFileUploadsDescription">Sporočila sistema Canvas za nalaganja datotek v teku.</string>
+
+
+    <!-- Turn in Files -->
+    <string name="chooseFileSource">Izberi datoteko iz&#8230;</string>
+    <string name="addFile">Dodaj datoteko</string>
+    <string name="choose_a_file">Izberi datoteko</string>
+
+    <string name="fromCamera">Fotoaparat</string>
+    <string name="fromGallery">Galerija</string>
+    <string name="fromDevice">Naprava</string>
+    <string name="fromOtherApplication">Drugo</string>
+    <string name="Domain">Domena</string>
+    <string name="files">Datoteke</string>
+    <string name="file">Datoteka</string>
+    <string name="fileTalkBack">Datoteka %s</string>
+    <string name="folderTalkBack">Mapa %s</string>
+    <string name="addItem">Dodaj element</string>
+    <string name="assignment">Naloga</string>
+    <string name="attachedFiles">Dodane datoteke</string>
+    <string name="turnIn">Oddaj</string>
+    <string name="course">Predmet</string>
+    <string name="sending">Pošiljanje&#8230;</string>
+
+    <!--rating dialog-->
+    <string name="star1">Ocena z eno zvezdico</string>
+    <string name="star2">Ocena z dvema zvezdicama</string>
+    <string name="star3">Ocena s tremi zvezdicami</string>
+    <string name="star4">Ocena s štirimi zvezdicami</string>
+    <string name="star5">Ocena s petimi zvezdicami</string>
+
+    <!-- Submitting files -->
+    <string name="fileQuotaExceeded">Trenutno ste presegli kvoto prostora za datoteke na disku.</string>
+    <string name="errorSubmittingFiles">Pri oddaji datotek je prišlo do napake. Poskusite znova.</string>
+    <string name="errorLoadingFiles">Pri nalaganju datoteke je prišlo do napake. Preverite svojo internetno povezavo in poskusite znova.</string>
+    <string name="filesUploadedSuccessfully">Datoteke so uspešno naložene.</string>
+    <string name="filesSubmittedSuccessfully">Datoteke so uspešno poslane.</string>
+    <string name="messageSentSuccessfully">Sporočilo je uspešno poslano.</string>
+    <string name="shareWithCanvas">Druge aplikacije si lahko delijo datoteke s sistemom Canvas. Poiščite spodnjo ikono v aplikacijah in tapnite na sistem Canvas.</string>
+    <string name="shareWithCanvas2">S tem se bo odprla ta aplikacija. Nato samo izberite predmet in nalogo, za katera želite oddati datoteko.</string>
+    <string name="contentDescriptionSocialShare">Ikona skupne rabe</string>
+    <string name="submitAssignment">Pošlji nalogo</string>
+    <string name="assignmentHeader">Naloga:</string>
+    <string name="submittingAssignment">Pošiljanje naloge&#8230;</string>
+    <string name="conversations">Pogovori </string>
+    <string name="inbox">Pošta </string>
+    <string name="divider">Ločilna črta</string>
+    <string name="legal">Pravne informacije</string>
+    <string name="completeHomework">ZAKLJUČITE domačo nalogo.</string>
+    <string name="takeExam">Opravite izpit</string>
+    <string name="fileIcon">Ikona datoteke</string>
+    <string name="uploadingFileNum" formatted="false">Nalaganje %d od %d</string>
+    <string name="fileLocked" formatted="false">%s je zaklenjeno.</string>
+    <string name="filePermissionGranted">Datoteka je zdaj pripravljena za prenos, poskusite znova.</string>
+    <string name="filePermissionDenied">Brez podelitve dovoljenja datoteke ni mogoče prenesti.</string>
+    <string name="pleaseTryAgain">Dovoljenje je podeljeno, poskusite znova.</string>
+    <string name="pickVideo">Izberi videoposnetek</string>
+
+    <!--Errors-->
+    <string name="errorOccurred">Prišlo je do nepričakovane napake.</string>
+    <string name="serverError">Prišlo je do napake strežnika.</string>
+    <string name="unauthorized">Nimate pooblastil za dostop do tega. Nimate dovoljenj ali pa še nimate dostopa (vaš predmet se, na primer, še ni začel).</string>
+    <string name="fileNoLongerExists">Ta datoteka ne obstaja več.</string>
+    <string name="invalidAccessToken">Vaša seja se je iztekla. Za zagon nove seje se prijavite.</string>
+    <string name="uploadingFromSourceFailed">Nalaganja datoteke iz tega vira ni bilo mogoče zaključiti.</string>
+    <string name="errorGettingPhoto">Pri pridobivanju fotografije je prišlo do napake. Poskusite znova.</string>
+    <string name="errorTextMissing">Če želite poslati sporočilo, dodajte nekaj besedila.</string>
+
+    <string name="fileUploadNotSupported">V izbrano nalogo ne morete naložiti datotek.</string>
+    <string name="noCourseSelected">Izberite predmet.</string>
+    <string name="selectCourse">Izberi predmet</string>
+    <string name="selectAssignment">Izberi nalogo</string>
+    <string name="loadingAssignments">Nalaganje nalog ...</string>
+    <string name="noAssignmentSelected">Izberite nalogo.</string>
+    <string name="noAssignmentsWithFileUpload">Ta predmet nima nalog, pri katerih bi bilo mogoče nalagati datoteke.</string>
+    <string name="teacherNotAllowedFileSubmission">Kot izvajalec pri tem predmetu ne morete pošiljati datotek.</string>
+    <string name="noFilesUploaded">Niste izbrali nobene datoteke.</string>
+    <string name="oneOrMoreExtensionNotAllowed">Ena ali več datotek ima pripono datoteke, ki ni dovoljena.</string>
+    <string name="extensionNotAllowed">Izbrana vrsta datotek ni dovoljena.</string>
+    <string name="allowedExtensions">Dovoljene pripone:&#160;</string>
+
+    <string name="quizNetworkErrorTitle">Napaka pri kvizu</string>
+    <string name="quizNetworkErrorMessage">Videti je, da je internetna povezava prekinjena.</string>
+
+    <!-- Media Task Loader -->
+    <string name="noDataConnection"> Preverite svojo podatkovno povezavo in poskusite znova. </string>
+    <string name="noApps">Na vaši napravi ni nameščene nobene aplikacije, ki bi lahko obravnavala to datoteko.</string>
+    <string name="noAppsShort">Ni mogoče odpreti.</string>
+    <string name="unexpectedErrorOpeningFile">Pri odpiranju datoteke je prišlo do nepričakovane napake.</string>
+    <string name="unexpectedErrorDownloadingFile">Pri poskusu prenosa datoteke je prišlo do nepričakovane napake.</string>
+
+    <string name="done">Dokončano</string>
+
+    <!--Permissions-->
+    <string name="permissionDenied">Za uporabo te funkcionalnosti mora biti najprej podeljeno dovoljenje.</string>
+    <string name="noConnection">Ni povezave.</string>
+
+    <!--Empty Screens-->
+    <string name="emptyCourseListMessage">Tu se prikažejo vaši priljubljeni predmeti in skupine.</string>
+    <string name="addCoursesGroups">Dodaj predmete/skupine</string>
+    <string name="noDiscussions">Ni razprav.</string>
+    <string name="noDiscussionsSubtext">Začni pogovor z drugimi.</string>
+    <string name="noDiscussionsTeacher">Začni pogovor s študenti.</string>
+    <string name="nothingUnread">Pošta je prazna.</string>
+    <string name="nothingUnreadSubtext">Seznanjeni ste z vsem.</string>
+    <string name="nothingStarred">Ni sporočil, označenih z zvezdico.</string>
+    <string name="nothingStarredSubtext">Tapnite zvezdico pri vsakem sporočilu, da ohranite pomembna sporočila v tej sekciji.</string>
+    <string name="nothingSent">Nič ni poslano.</string>
+    <string name="nothingSentSubtext">Niste poslali nobenih sporočil.</string>
+    <string name="nothingArchived">Nič ni arhivirano.</string>
+    <string name="nothingArchivedSubtext">Niste arhivirali nobenih sporočil.</string>
+    <string name="noQuizzes">Ni kvizov.</string>
+    <string name="noQuizzesSubtext">Žal ne obstaja še noben kviz.</string>
+    <string name="noQuizzesTeacher">Ni nobenih objavljenih kvizov za prikaz.</string>
+    <string name="noAnnouncements">Ni obvestil.</string>
+    <string name="noAnnouncementsSubtext">Objavljenega ni še nobenega obvestila.</string>
+    <string name="noCourses">Ni predmetov.</string>
+    <string name="noCoursesSubtext">Zdi se, da s tem računom ni povezan noben predmet. Da ustvarite predmet še danes, obiščite splet.</string>
+    <string name="noAssignments">Ni nalog.</string>
+    <string name="noAssignmentsSubtext">Zdi se, da v tem prostoru naloge še niso ustvarjene. Čas je, da odidete ven in raziskujete.</string>
+    <string name="noAssignmentsTeacher">Zdi se, da ni objavljenih še nobenih nalog.</string>
+    <string name="noFiles">Ni datotek.</string>
+    <string name="noFilesSubtext">S tem računom ni povezana nobena datoteka.</string>
+    <string name="notSupported">Ni podprto.</string>
+    <string name="noEvents">Danes ni dogodkov.</string>
+    <string name="noEventsSubtext">Videti je, da je to krasen dan za počitek in sprostitev.</string>
+    <string name="noSubmission">Ni oddaj.</string>
+    <string name="noSubmissionSubtext">Pošljite svojo nalogo do %1$s ob %2$s.</string>
+    <string name="noSubmissionTeacher">Ta študent še nima oddaje.</string>
+    <string name="noDueDate">Ta naloga še nima roka.</string>
+    <string name="locked">Zaklenjeno</string>
+    <string name="lockedSubtext">Ta naloga je zaklenjena do %1$s ob %2$s.</string>
+    <string name="lockedModule">Ta naloga je del modula »%1$s« in še ni odklenjena.</string>
+    <string name="chooseFile">Izberi datoteko</string>
+    <string name="chooseFileSubtext">Tapnite spodnjo možnost, da oddaji dodate datoteko.</string>
+    <string name="noNotifications">Ni sporočil.</string>
+    <string name="noNotificationsSubtext">Ni ničesar, o čemer bi bilo treba sporočati.</string>
+    <string name="noTodos">Dobro opravljeno.</string>
+    <string name="noTodosSubtext">Seznam opravil je prazen. Čas za polnjenje z energijo.</string>
+    <string name="noSyllabus">Ni učnega načrta.</string>
+    <string name="noSyllabusSubtext">Učni načrt še ni ustvarjen.</string>
+    <string name="noBookmarks">Ni zaznamkov.</string>
+    <string name="noBookmarksSubtext">Zaznamki so bližnjice do katerega koli zaslona v aplikaciji. Dodajte jih zaslonu, ki bi ga želeli dodati med zaznamke.</string>
+    <string name="noModules">Ni modulov.</string>
+    <string name="noModulesSubtext">Zdi se, da ni ustvarjen še noben modul.</string>
+    <string name="noPages">Ni strani.</string>
+    <string name="noPagesSubtext">Zdi se, da ni ustvarjene še nobene strani.</string>
+
+    <!--General-->
+    <string name="yes">Da</string>
+    <string name="no">Ne</string>
+
+    <string name="inbox_all">Pošta</string>
+    <string name="inbox_unread">Neprebrano</string>
+    <string name="inbox_starred">Označeno z zvezdico</string>
+    <string name="inbox_sent">Poslano</string>
+    <string name="inbox_archived">Arhivirano</string>
+
+    <string name="forbidden">Odgovori so vidni samo tistim, ki so objavili vsaj en odgovor.</string>
+
+    <string name="like">Všeček</string>
+    <string name="likes">Všečki</string>
+    <string name="lockedAssignmentNotModule">Ta naloga je zaklenjena.</string>
+    <string name="deletedEntryNoChildren">Pri tem odstranjenem vnosu razprave ni odgovorov.</string>
+    <string name="deleted">Odstranjeno</string>
+    <string name="deleted_by">[Odstranil %1$s]</string>
+    <string name="lockedDiscussionDesc">Ta razprava je del modula %s in še ni odklenjena.</string>
+    <string name="gradedDiscussion">Ocenjena razprava</string>
+    <string name="pointsPossible">Možne točke</string>
+    <string name="sideCommentEntry">Pri tej vrsti razprave na tej ravni ne morete komentirati nobenega vnosa.</string>
+
+    <string name="accessibility_overflow">Prekoračitev</string>
+
+    <string name="discussion_response">Komentar</string>
+    <string name="discussion_responses">Komentarji</string>
+    <string name="discussion_unread">Neprebrano</string>
+    <string name="discussion_reply">Odgovori</string>
+    <string name="close">Zapri</string>
+
+    <string name="noInternetConnectionTitle">Brez internetne povezave.</string>
+    <string name="noInternetConnectionMessage">Pri tem dejanju je potrebna internetna povezava.</string>
+    <string name="content_description_avatar">Avatar</string>
+    <string name="formattedAvatarAction">Ogled podrobnosti o uporabniku za %s.</string>
+
+    <!-- App Names -->
+    <string name="utils_canvas">Sistem Canvas</string>
+    <string name="utils_canvasTeacher">Izvajalec v sistemu Canvas</string>
+    <string name="utils_canvasParent">Aplikacija Canvas Parent</string>
+    <string name="utils_polls">Ankete sistema Canvas</string>
+    <string name="utils_speedgrader">Aplikacija SpeedGrader</string>
+
+    <!-- Rating Dialog -->
+    <string name="utils_howAreWeDoing">Kako nam gre?</string>
+    <string name="utils_rateUs">Kako bi nas ocenili?</string>
+    <string name="utils_doBetter">Kaj lahko izboljšamo?</string>
+    <string name="utils_sendFeedback">Pošlji povratne informacije</string>
+    <string name="utils_suggestions">Predlogi za sistem Android</string>
+    <string name="utils_domain">Domena</string>
+    <string name="utils_versionNum">Različica:</string>
+    <string name="utils_userId">ID uporabnika</string>
+    <string name="utils_email">E-pošta</string>
+    <string name="utils_dontShowAgain">Ne prikazuj znova.</string>
+    <string name="utils_installDate">Datum nameščanja:</string>
+    <string name="utils_device">Naprava</string>
+    <string name="utils_osVersion">Različica OS</string>
+    <string name="loading">Nalaganje</string>
+    <string name="save">Shrani</string>
+    <string name="cropInstructions">Da prilagodite sliko, približajte prste in povlecite.</string>
+
+    <!--Discussions-->
+    <plurals name="utils_discussionsReplies">
+        <item quantity="one">%s odgovor</item>
+        <item quantity="other">%s odgovorov</item>
+    </plurals>
+
+    <string name="utils_discussionsDeleted" formatted="false">Odstranil ta odgovor %s.</string>
+    <string name="utils_discussionsUnknownAuthor">Neznani avtor</string>
+    <string name="utils_discussionsReply">Odgovori</string>
+    <string name="utils_discussionsEdit">Uredi</string>
+    <string name="utils_discussionsDeleteWarning">Ali ste prepričani, da želite odstraniti ta odgovor?</string>
+    <string name="utils_availableToLabel">Na voljo do:</string>
+    <string name="utils_availableFromLabel">Na voljo od:</string>
+    <string name="utils_dueDateHeaderLabel">Rok</string>
+    <string name="utils_dueLabel">Rok:</string>
+    <string name="utils_delete">Odstrani</string>
+    <string name="utils_dueDateAtTime" formatted="false">Rok %1s ob %2s.</string>
+    <string name="utils_noDateFiller">--</string>
+    <string name="utils_availabilityLabel">Razpoložljivost:</string>
+    <string name="utils_pinnedIcon">Ikona za pripeto razpravo</string>
+    <string name="utils_pinDiscussion">Pripni razpravo</string>
+    <string name="utils_unpinDiscussion">Odpni razpravo</string>
+    <string name="utils_discussionPinned">Razprava je pripeta.</string>
+    <string name="utils_pinnedDiscussions">Pripeto</string>
+    <string name="utils_discussionUnpinned">Razprave</string>
+    <string name="utils_emptyDiscussions">V tej sekciji ni nobenih razprav za prikaz.</string>
+    <string name="utils_description">Opis</string>
+    <string name="utils_allowThreadedReplies">Dovoli odgovore v niti</string>
+    <string name="utils_usersMustPost">Študenti morajo nekaj objaviti, preden vidijo odgovore.</string>
+    <string name="utils_discussionsClosed">Zaprto za komentarje</string>
+    <string name="utils_discussionsOpen">Odpri za komentarje</string>
+    <string name="utils_discussionsPin">Pripni</string>
+    <string name="utils_discussionsUnpin">Odpni</string>
+    <string name="utils_discussionsOptions">Možnosti</string>
+    <string name="utils_discussionsDeleteTitle">Ali želite odstraniti razpravo?</string>
+    <string name="utils_discussionsDelete">Odstrani razpravo</string>
+    <string name="utils_discussionsDeleteMessage">S tem bo odstranjena celotna razprava in nit.</string>
+    <string name="utils_discussionSentSuccess">Odgovor na razpravo je uspel.</string>
+    <string name="utils_discussionUpdateSuccess">Urejanje razprave je uspelo.</string>
+    <string name="utils_discussionSentEmpty">Odgovor na razpravo ne more biti prazen.</string>
+    <string name="utils_discussionSentFailure">Odgovora na razpravo trenutno ni bilo mogoče poslati.</string>
+    <string name="utils_createDiscussion">Nova razprava</string>
+    <string name="utils_editDiscussion">Uredi razpravo</string>
+    <string name="utils_discussionDetails">Podrobnosti o razpravi</string>
+    <string name="utils_discussionSuccessfullyUpdated">Razprava je uspešno posodobljena.</string>
+    <string name="utils_saving">Shranjevanje</string>
+    <string name="utils_discussionSuccessfullyCreated">Razprava je uspešno ustvarjena.</string>
+    <string name="utils_discussionSuccessfulAttachmentNot">Tej razpravi ni mogoče dodati priloge. Preverite kvoto datotek in poskusite znova.</string>
+    <string name="utils_noTitle">Ni naslova.</string>
+    <string name="utils_discussionsReplies_Title">Odgovori</string>
+    <string name="utils_contentDescriptionDiscussionsOverflow">Dodatne možnosti</string>
+    <string name="utils_discussionsUnreadRepliesBlank" formatted="false">%s %s %s</string>
+    <string name="utils_lastPost" formatted="false">Zadnja objava %s</string>
+    <string name="utils_postedOnDate">Objavljeno dne %s.</string>
+    <string name="utils_discussionPostBeforeRepliesEmptyText">Odgovori so vidni samo tistim, ki so objavili vsaj en odgovor.</string>
+    <string name="utils_createAnnouncementDelayPosting">Zakasni objavljanje</string>
+    <string name="utils_postAt">Objavi ob</string>
+    <string name="utils_postDate">Datum objave</string>
+    <string name="utils_postTime">Čas objave</string>
+    <string name="utils_editAnnouncementTitle">Uredi obvestilo</string>
+    <string name="utils_createAnnouncementTitle">Novo obvestilo</string>
+    <string name="utils_announcementDetails">Podrobnosti o obvestilu</string>
+    <string name="utils_createAnnouncementNoDescription">Zahtevan je opis.</string>
+    <string name="utils_errorSavingAnnouncement">Pri shranjevanju tega obvestila je prišlo do napake. Poskusite znova.</string>
+    <string name="utils_announcementSuccessfullyUpdated">Obvestilo je uspešno posodobljeno.</string>
+    <string name="utils_announcementSuccessfullyCreated">Obvestilo je uspešno ustvarjeno.</string>
+
+    <plurals name="utils_discussionsUnread">
+        <item quantity="one">%s neprebrano</item>
+        <item quantity="other">%s neprebranih</item>
+    </plurals>
+
+    <plurals name="utils_addAttachment">
+        <item quantity="zero">Dodaj prilogo</item>
+        <item quantity="one">Dodaj prilogo</item>
+        <item quantity="other">Dodaj priloge</item>
+    </plurals>
+
+    <!-- Assignment Override !-->
+    <string name="utils_unlockAfterDueDateError">Datum sprostitve zapore ne more biti po roku.</string>
+    <string name="utils_lockBeforeDueDateError">Datum zapore objave ne more biti pred rokom.</string>
+    <string name="utils_lockAfterUnlockError">Datum zapore objave ne more biti pred datumom sprostitve zapore.</string>
+    <string name="utils_assigneeBlankError">Prevzemnik ne sme biti prazen.</string>
+    <string name="utils_assignTo">Dodeli</string>
+    <string name="utils_availableFrom">Na voljo od</string>
+    <string name="utils_availableTo">Na voljo do</string>
+    <string name="utils_availableFromDate">Na voljo od datuma</string>
+    <string name="utils_availableFromTime">Na voljo od ure</string>
+    <string name="utils_availableToDate">Na voljo do datuma</string>
+    <string name="utils_availableToTime">Na voljo do ure</string>
+    <string name="utils_dueDate">Rok</string>
+    <string name="utils_dueTime">Časovni rok</string>
+    <string name="utils_addNew">Dodaj novo</string>
+
+    <!--Attachment Layout-->
+    <string name="utils_downloadAttachment">Prenesi prilogo</string>
+    <string name="utils_removeAttachment">Odstrani prilogo</string>
+
+    <!--Unsaved Changes-->
+    <string name="utils_continueWithoutSavingTitle">Ali želite nadaljevati brez shranjevanja?</string>
+    <string name="utils_continueWithoutSavingMessage">Ali ste prepričani, da želite nadaljevati brez shranjevanja?</string>
+    <string name="utils_continueUnsaved">Nadaljuj</string>
+    <string name="utils_exitWithoutSavingTitle">Ali želite izhod brez shranjevanja?</string>
+    <string name="utils_exitWithoutSavingMessage">Ali ste prepričani, da želite izhod brez shranjevanja?</string>
+    <string name="utils_exitUnsaved">Izhod</string>
+    <string name="utils_cancel">Prekliči</string>
+
+    <string name="utils_contentDescriptionFiles">Ikona datoteke</string>
+    <string name="utils_turn_in">Oddaj</string>
+    <string name="utils_upload">Naloži</string>
+    <string name="utils_okay">V redu</string>
+    <string name="utils_loadingFilesIndeterminate">Nalaganje datotek&#8230;</string>
+    <string name="utils_allowedExtensions">Dovoljene pripone:&#160;</string>
+    <string name="utils_extensionNotAllowed">Izbrana vrsta datotek ni dovoljena.</string>
+    <string name="utils_errorUploadingFile">Pri nalaganju datoteke je prišlo do napake. Poskusite znova.</string>
+    <string name="utils_filesUploadedSuccessfully">Datoteke so uspešno naložene.</string>
+    <string name="utils_uploadingFiles">Nalaganje datotek&#8230;</string>
+    <string name="utils_uploadingFile">Nalaganje datoteke&#8230;</string>
+    <string name="utils_noApps">Na vaši napravi ni nameščene nobene aplikacije, ki bi lahko odprla to datoteko.</string>
+    <string name="utils_errorGettingPhoto">Pri pridobivanju fotografije je prišlo do napake. Poskusite znova.</string>
+    <string name="utils_oneOrMoreExtensionNotAllowed">Ena ali več datotek ima pripono datoteke, ki ni dovoljena.</string>
+    <string name="utils_fileUploadNotSupported">V izbrano nalogo ne morete naložiti datotek.</string>
+    <string name="utils_noFilesUploaded">Niste izbrali nobene datoteke.</string>
+    <string name="utils_attachments">Priloge</string>
+    <string name="utils_uploadTo">Naloži v </string>
+    <string name="utils_uploadToCanvas">Naloži v sistem Canvas</string>
+    <string name="utils_uploadMyFiles">Moje datoteke</string>
+    <string name="utils_uploadCourseFiles">Datoteke predmeta</string>
+    <string name="utils_uploadToSubmissionComment">Naloži v komentar oddaje</string>
+    <string name="utils_attachFile">Dodaj datoteko</string>
+    <string name="utils_with">s/z</string>
+    <string name="notificationPrimaryInboxTitle">Sporočila sistema Canvas</string>
+    <string name="notificationChannelNamePrimary">Splošna sporočila sistema Canvas</string>
+    <string name="notificationChannelDescriptionPrimary">Dodatno konfiguriranje sporočil je mogoče v sekciji sistema Canvas »Prednostne nastavitve«.</string>
+
+    <string name="copyLinkAddress">Kopiraj naslov povezave</string>
+    <string name="copyLink">Kopiraj povezavo</string>
+    <string name="linkCopied">Povezava je kopirana.</string>
+    <string name="link">Povezava</string>
+    <string name="fileExists">Datoteka obstaja.</string>
+    <string name="replace">Zamenjaj</string>
+    <string name="shareLink">Povezava skupne rabe</string>
+
+    <string name="utils_launchExternalTool">Zaženi zunanje orodje</string>
+    <string name="utils_externalToolTitle">Zunanje orodje</string>
+    <string name="utils_placeholderTitle">Zunanje orodje</string>
+    <string name="utils_placeholderDescription">Za urejanje tega zunanjega orodja obiščite svoj spletni račun Canvas.</string>
+    <string name="utils_unableToViewInBrowser">Zunanje aplikacije za ogled tega orodja LTI ni bilo mogoče najti.</string>
+
+    <string name="utils_unsupportedFileMessage">Te datoteko ni bilo mogoče prikazati. S spodnjim gumbom odprete datoteko z drugo aplikacijo na svoji napravi.</string>
+    <string name="utils_openWithAnotherApp">Odpri s/z ...</string>
+    <string name="utils_couldNotPlayFormat">Ta oblika zapisa medija ni podprta.</string>
+    <string name="utils_fullscreen">celoten zaslon</string>
+
+    <string name="utils_dataUsageWarningTitle">Opozorilo o uporabi podatkov</string>
+    <string name="utils_dataUsageWarningMessage">Pri tem dejanju je lahko porabljena velika količina podatkov, zato lahko pride do stroškov presežka. Ali želite nadaljevati?</string>
+    <string name="utils_doNotShowMessageAgain">Tega sporočila ne prikazuj več.</string>
+
+    <string name="utils_no_data_connection">Preverite svojo podatkovno povezavo in poskusite znova.</string>
+    <string name="utils_playMedia">Predvajaj medij</string>
+    <string name="utils_tryAgain">Poskusite znova.</string>
+    <string name="image_uploading">Nalaganje slike ...</string>
+    <string name="image_upload_error">Napaka pri nalaganju slike</string>
+    <string name="retry">Ponovno poskusi</string>
+    <string name="search">Iskanje</string>
+    <string name="searchAssignmentsHint">Iskanje nalog</string>
+    <string name="searchAnnouncementsHint">Iskanje obvestil</string>
+    <string name="searchDiscussionsHint">Iskanje razprav</string>
+    <string name="searchPagesHint">Iskanje strani</string>
+    <string name="searchQuizzesHint">Iskanje kvizov</string>
+    <string name="noItemsMatchingQuery">Noben element ne ustreza »%s«.</string>
+
+    <string name="selected">Izbrano</string>
+
+</resources>

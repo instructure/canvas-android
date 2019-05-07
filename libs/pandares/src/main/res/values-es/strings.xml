@@ -34,6 +34,24 @@
     <string name="selectedListItem">Seleccionado: %s</string>
 
     <!-- Student Strings -->
+    <!-- Student Assignment Details -->
+    <string name="assignmentDetails">Detalles de la tarea</string>
+    <string name="submission_types">Tipos de presentación</string>
+    <string name="noAssignmentDescriptionStudent">Sin contenido</string>
+    <string name="dueLabel">Fecha límite</string>
+    <string name="submissionStatusSuccessTitle">¡Enviada correctamente!</string>
+    <string name="submissionStatusSuccessSubtitle">Su presentación está ahora esperando para ser calificada</string>
+    <string name="submissionStatusUploadingTitle">La presentación se está cargando...</string>
+    <string name="submissionStatusUploadingSubtitle">Toca para ver el progreso</string>
+    <string name="submissionStatusFailedTitle">No se pudo presentar</string>
+    <string name="submissionStatusFailedSubtitle">Toca para ver los detalles</string>
+    <string name="submissionAndRubric">Presentación y rúbrica</string>
+    <string name="errorLoadingAssignment">Se produjo un problema al cargar esta tarea. Compruebe su conexión y vuelva a intentarlo.</string>
+    <string name="submitted">Presentado</string>
+    <string name="notSubmitted">No presentado</string>
+    <string name="allowedFileTypes">Tipos de archivos habilitados</string>
+    <string name="resubmitAssignment">Volver a presentar la tarea</string>
+
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">Versión:</string>
 
@@ -334,7 +352,7 @@
     <string name="noUsersInGroup">No hay usuarios en este grupo</string>
 
     <!--Notifications-->
-    <string name="deleted">[Borrado]</string>
+    <string name="deleted">Eliminado</string>
     <string name="gradedDiscussion">Foro calificado.</string>
     <string name="pointsPossible">Puntos posibles.</string>
     <string name="pointsPossibleNoPeriod">Puntos posibles</string>
@@ -427,8 +445,8 @@
     <string name="unlockedAt">Será desbloqueado a las:</string>
     <string name="goToModules">Ir a módulos</string>
     <string name="markDone">Marcar como hecho</string>
-
     <string name="moduleItemNotFound">No se encontró el elemento del módulo</string>
+
     <string name="help">Ayuda</string>
     <string name="instructor_question">Pregunta del instructor</string>
     <string name="link">Enlace</string>
@@ -781,6 +799,7 @@
         <item quantity="one">%d pregunta</item>
         <item quantity="other">%d preguntas</item>
     </plurals>
+
     <plurals name="pointCount">
         <item quantity="one">%s punto</item>
         <item quantity="other">%s puntos</item>
@@ -968,11 +987,13 @@
     <string name="confirmDeleteEvent">¿Está seguro de que desea eliminar este evento?</string>
     <string name="conferencesNotSupported">Los teléfonos móviles aún no admiten conferencias.</string>
     <string name="filePreviewContentDescription">Imagen de vista previa del archivo</string>
-
     <string name="pdfError">Se ha producido un error al intentar cargar este PDF.</string>
+
     <!-- Parent Strings -->
     <string name="addChildTitle">Agregar alumno</string>
     <string name="addChildSubTitle">Ingresar el código de emparejamiento del alumno que a usted se le proporcionó.</string>
     <string name="addChildHint">Código de emparejamiento&#8230;</string>
     <string name="addChildErrorMessage">Se produjo un error en el emparejamiento. Asegúrese de que su código de emparejamiento sea correcto y esté dentro del límite de tiempo de utilización.</string>
+    <string name="gradeComplete">Completa</string>
+    <string name="gradeIncomplete">Incompleta</string>
 </resources>
