@@ -118,6 +118,9 @@
     <string name="alarmNotSet">Невозможно поставить будильник. Повторить попытку.</string>
     <string name="could_not_route_course">Не удалось найти регистрацию на курс.</string>
     <string name="could_not_route_assignment">Не удалось найти задание.</string>
+    <string name="could_not_route_announcement">Не удалось найти объявление.</string>
+    <string name="could_not_route_event">Не удалось найти событие.</string>
+    <string name="could_not_route_account_notifications">Не удалось найти уведомление.</string>
     <string name="email_already_exists">Пользователь с таким адресом электронной почты уже существует.</string>
     <string name="password_reset_success">Письмо с инструкциями по восстановлению пароля будет отправлено.</string>
     <string name="password_reset_no_user">Ни один пользователь с таким адресом электронной почты не был найден.</string>
@@ -225,4 +228,5 @@
     <string name="institutionAnnouncementUnavailable">Срок действия этого объявления истек.</string>
     <string name="previousWeekBtn">кнопка предыдущая неделя</string>
     <string name="nextWeekBtn">кнопка следующая неделя</string>
+    <string name="filesNotSupported">Файлы в настоящее время не поддерживаются</string>
 </resources>

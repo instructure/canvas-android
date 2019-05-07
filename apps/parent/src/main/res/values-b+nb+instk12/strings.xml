@@ -118,6 +118,9 @@
     <string name="alarmNotSet">Alarm kunne ikke bli satt. Prøv igjen.</string>
     <string name="could_not_route_course">Kunne ikke finne fagpåmeldingen.</string>
     <string name="could_not_route_assignment">Kunne ikke finne oppgaven</string>
+    <string name="could_not_route_announcement">Kan ikke finne beskjeder.</string>
+    <string name="could_not_route_event">Kan ikke finne begivenhet.</string>
+    <string name="could_not_route_account_notifications">Kan ikke finne varsling.</string>
     <string name="email_already_exists">En bruker med den e-postadressen eksisterer allerede.</string>
     <string name="password_reset_success">Du vil motta en e-post med instruksjoner for å nullstille passordet ditt.</string>
     <string name="password_reset_no_user">Ingen bruker med den e-postadressen ble funnet.</string>
@@ -225,4 +228,5 @@
     <string name="institutionAnnouncementUnavailable">Denne beskjeden har utløpt-</string>
     <string name="previousWeekBtn">Tast «forrige uke»</string>
     <string name="nextWeekBtn">Tast «neste uke»</string>
+    <string name="filesNotSupported">Filene støttes ikke for øyeblikket</string>
 </resources>

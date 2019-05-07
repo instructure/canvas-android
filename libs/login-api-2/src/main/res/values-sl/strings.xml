@@ -1,0 +1,128 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Nastavitve</string>
+    <string name="mobileVerifyGeneral">Te aplikacije ni dovoljeno uporabljati</string>
+    <string name="mobileVerifyDomainUnauthorized">Strežnik, ki ste ga vnesli, nima pooblastila za to aplikacijo.</string>
+    <string name="mobileVerifyUserAgentUnauthorized">Agent uporabnika za to aplikacijo nima pooblastila.</string>
+    <string name="mobileVerifyUnknownError">Strežnika za uporabo pri tej aplikaciji nismo uspeli preveriti.</string>
+    <string name="unknownDevice">UnknownDevice</string>
+    <string name="errorOccurred">Prišlo je do nepričakovane napake.</string>
+    <string name="pageNotFound">Strani ni mogoče najti.</string>
+    <string name="confirm">Potrdi</string>
+    <string name="cancel">Prekliči</string>
+    <string name="help">Pomoč</string>
+    <string name="enterURL">Vnesite svoj naslov URL sistema Canvas:</string>
+    <string name="signIntoCanvasNetwork">Ali se skušate vpisati v omrežje Canvas Network?</string>
+    <string name="remove">Odstrani</string>
+    <string name="exampleURLSimple">myschool.instructure.com</string>
+    <string name="userId">ID uporabnika</string>
+    <string name="domain">Domena</string>
+    <string name="actAsUser">Nastopajoči v vlogi uporabnika</string>
+    <string name="stopActAsUser">Opustite vlogo uporabnika</string>
+
+    <!--Multiple User Sign in -->
+    <string name="removeUser">Ali želite odstraniti tega uporabnika?</string>
+    <string name="removedForever">Za dostop do vsebine tega uporabnika se boste morali znova vpisati vanj.</string>
+
+    <!--Content Descriptions-->
+    <string name="canvasLogo">Logotip sistema Canvas</string>
+
+    <string name="canvasLoginOn">Canvas_Login: VKLOPLJENO</string>
+    <string name="canvasLoginOff">Canvas_Login: IZKLOPLJENO</string>
+    <string name="siteAdminLogin">Prijava skrbnika mesta: VKLOPLJENO</string>
+
+    <string name="username">Uporabniško ime</string>
+    <string name="password">Geslo</string>
+    <string name="authenticationRequired">Zahtevana je overitev.</string>
+    <string name="invalidEmailPassword">Neveljaven e-poštni naslov ali geslo</string>
+    <string name="login">Prijava</string>
+    <string name="logout">Odjava</string>
+
+    <string name="matchingSchools">Najdene šole</string>
+    <!--Logout Warning Dialog-->
+    <string name="logout_warning">Ali ste prepričani, da se želite odjaviti?</string>
+    <string name="logout_yes">Da</string>
+    <string name="logout_no">Ne</string>
+
+    <!--Smart Login-->
+    <string name="loginNearYou">V vaši bližini.</string>
+    <string name="loginCanvasNetwork">Omrežje Canvas Network</string>
+    <string name="loginRightBehindYou">Tik za vami.</string>
+    <string name="loginMiles">%1$s milj stran.</string>
+    <string name="loginCanvasHelp">Ali svoje šole ne vidite? Za pomoč vnesite naslov URL šole ali tapnite tukaj.</string>
+    <string name="loginCanvasHelpWithUser">Za pomoč vnesite naslov URL šole ali tapnite tukaj.</string>
+    <string name="loginHint">Najdite svojo šolo ali okoliš.</string>
+
+    <!-- Error Report Dialog -->
+    <string name="errorReportAProblem">Poročajte o težavi.</string>
+    <string name="errorReportSubject">Kratek opis predmeta</string>
+    <string name="errorReportDescription">Opis</string>
+    <string name="errorReportWriteSomething">Nekaj napišite ...</string>
+    <string name="errorReportSend">Pošlji</string>
+    <string name="errorReportThankyou">Hvala za poročanje o težavi naši ekipi za podporo.  Potrdilo in posodobitve boste prejeli prek e-pošte.</string>
+    <string name="errorReportSeverityText">Kako to vpliva na vas?</string>
+    <string name="errorSeverityCasualQuestion">Samo neobvezno vprašanje, komentar, zamisel, predlog ...</string>
+    <string name="errorSeverityNeedHelp">Potrebujem pomoč, ni pa nujno.</string>
+    <string name="errorSeveritySomethingsBroken">Nekaj ne deluje, a znam to rešiti, da dokončam, kar je treba.</string>
+    <string name="errorSeverityCantGetThingsDone">Ne morem dokončati zadev, dokler ne prejmem vašega odziva.</string>
+    <string name="errorSeverityExtremelyCritical">SKRAJNO KRITIČNI NUJNI PRIMER</string>
+
+    <string name="errorReportEmailAddress">E-poštni naslov</string>
+    <string name="errorReportEnterEmail">Vnesite svoj e-poštni naslov ...</string>
+    <string name="errorReportUnknown">Neznano</string>
+
+    <!-- Distance Strings -->
+    <string name="lessThanOne">&lt; 1 milja (1,6 km)</string>
+    <string name="oneMile">1 milja (1,6 km)</string>
+    <string name="miles">milje</string>
+    <string name="kilometers">km</string>
+
+    <!-- String for submitting tickets -->
+    <string name="device">Naprava</string>
+    <string name="osVersion">Različica OS</string>
+
+    <string name="previousLoginTitle">Predhodne prijave</string>
+    <string name="findMySchool">Najdi mojo šolo</string>
+    <string name="canvasLowerCase">canvas</string>
+    <string name="whatsYourSchoolName">Kakšno je ime vaše šole?</string>
+    <string name="next">Naprej</string>
+    <string name="schoolInstructureCom">school.instructure.com</string>
+    <string name="contentDescription_removePreviousUser">Odstrani predhodnega uporabnika</string>
+    <string name="accountDomainFooter">Ali svoje šole ne najdete? Poskusite vnesti poln naslov URL šole.</string>
+    <string name="accountDomainFooterLink">Za pomoč tapnite tukaj.</string>
+
+    <string name="login_noInternetConnectionTitle">Brez internetne povezave.</string>
+    <string name="login_noInternetConnectionMessage">Pri tem dejanju je potrebna internetna povezava.</string>
+    <string name="empty_feedback">Za pošiljanje povratnih informacij sta potrebna predmet in opis.</string>
+    <string name="versionNum">Številka različice</string>
+    <string name="scrollInstructions">S pomikanjem drsnika si oglejte vse podrobnosti.</string>
+
+    <string name="masqueradeErrorUserId">Vnesti morate ID uporabnika.</string>
+    <string name="masqueradeErrorDomain">Vnesti morate veljavno domeno.</string>
+    <string name="masqueradeError">Napaka pri poskusu prevzemanja vlog.</string>
+    <string name="masqueradeInfo">»Nastopajoči v vlogi« se v osnovi prijavlja kot ta uporabnik brez gesla. Lahko boste izvedli katero koli dejanje, kot bi bili ta uporabnik, z vidika drugih uporabnikov pa bo videti, kot da je dejanja izvedel ta uporabnik. Vendar dnevniki dogodkov beležijo, da ste v imenu tega uporabnika dejanja izvedli vi.</string>
+    <string name="masqueradingAs">Nastopate v vlogi %s</string>
+    <string name="stopActingAsTitle">Prenehajte nastopati v vlogi ...</string>
+    <string name="stopActingAsMessage">Prenehali boste nastopati v vlogi %s in vrnili se boste v svoj račun.</string>
+    <string name="weMadeChanges">Uvedli smo nekaj sprememb.</string>
+    <string name="whatsNewText">Oglejte si, kaj je novega.</string>
+</resources>

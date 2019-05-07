@@ -27,8 +27,8 @@
     <string name="annotationErrorOccurred">He hapa ohorere i puta i te wā e uta ana i ngā tuhipoka.</string>
     <string name="annotationError">Tuhipoka hapa</string>
     <string name="annotationDialogMessage">Kua mukua te tuhipoka mai i wāhi kē</string>
-    <string name="errorSendingMessage">Kaore i taea te tuku i tēnei karere. Pāto ki te tarai anō.</string>
-    <string name="addAnnotationComment">Tāpiri Kōrero</string>
+    <string name="errorSendingMessage">Kaore i taea te tuku i tēnei karere. Pāto ki te ngana anō.</string>
+    <string name="addAnnotationComment">Tāpiri kōrero</string>
     <string name="editComment">Whakatika kōrero</string>
     <string name="deleteComment">Muku Kōrero</string>
     <string name="deleteAnnotation">Muku tuhipoka</string>
@@ -36,7 +36,6 @@
     <string name="deleteHeadCommentConfirmation">Te whakakore i tēnei kōrero ka muku i ngā kōrero katoa e pā ana ki tēnei tuhinga. E tino hiahia ana koe ki te mahi i tēnei?</string>
     <string name="sendingSimple">E tuku ana</string>
     <string name="pspdf__annotation_type_stamp">Tuhi Tae</string>
-
-    <string name="removedComment">I tangohia %1$s e %2$s</string>
+    <string name="removedComment">Kua tangohia %1$s e %2$s</string>
 
 </resources>
