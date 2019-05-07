@@ -1,0 +1,79 @@
+﻿<?xml version='1.0' encoding='UTF-8'?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <!--Modules-->
+    <string name="mustComplete">Najprej morate zaključiti:</string>
+    <string name="unlockedAt">Odklenjeno bo ob:</string>
+    <string name="goToModules">Pojdi v module</string>
+
+    <!--Events-->
+    <string name="Starts">Začne se</string>
+    <string name="Ends">Konča se</string>
+    <string name="allDayEvent">Celodnevni dogodek</string>
+    <string name="at">ob</string>
+    <string name="to">naslovnik</string>
+
+    <!--StreamItems-->
+    <string name="Message">Sporočilo</string>
+    <string name="Loading">Nalaganje&#8230;</string>
+    <string name="Deleted">Odstranjeno</string>
+
+    <!-- Assignment Module -->
+    <string name="canvasAPI_online">Prek spleta</string>
+    <string name="canvasAPI_onPaper">Na papirju</string>
+    <string name="canvasAPI_discussion">Razprava</string>
+    <string name="canvasAPI_quiz">Kviz</string>
+    <string name="canvasAPI_externalTool">Zunanje orodje</string>
+    <string name="canvasAPI_none">Brez</string>
+
+    <string name="canvasAPI_passFail">Opravljeno Neopravljeno</string>
+    <string name="canvasAPI_percent">Odstotek</string>
+    <string name="canvasAPI_letterGrade">Črkovna ocena</string>
+    <string name="canvasAPI_points">Točke</string>
+    <string name="canvasAPI_gpaScale">Lestvica GPA</string>
+    <string name="canvasAPI_notGraded">Ni ocenjeno.</string>
+
+    <string name="canvasAPI_onlineQuiz">Spletni kviz</string>
+    <string name="canvasAPI_discussionTopic">Tema razprave</string>
+    <string name="canvasAPI_onlineUpload">Nalaganje prek spleta</string>
+    <string name="canvasAPI_onlineTextEntry">Vnos besedila prek spleta</string>
+    <string name="canvasAPI_onlineURL">Spletni naslov URL</string>
+    <string name="canvasAPI_mediaRecording">Medijski posnetek</string>
+    <string name="canvasAPI_attendance">Prisotnost</string>
+    <string name="quiz_scoring_policy_highest">Najvišje</string>
+    <string name="quiz_scoring_policy_average">Povprečje</string>
+    <string name="quiz_scoring_policy_latest">Najnovejše</string>
+    <string name="no">Ne</string>
+    <string name="always">Vedno</string>
+    <string name="graded_quiz">Ocenjeni kviz</string>
+    <string name="practice_quiz">Vadi kviz</string>
+    <string name="graded_survey">Ocenjena anketa</string>
+    <string name="ungraded_survey">Neocenjena anketa</string>
+    <string name="andMore"> in %d več</string>
+
+    <!-- Enrollment Types -->
+    <string name="enrollmentTypeStudent">Študent</string>
+    <string name="enrollmentTypeTeacher">Izvajalec</string>
+    <string name="enrollmentTypeObserver">Skriti bralec</string>
+    <string name="enrollmentTypeTeachingAssistant">Demonstrator</string>
+    <string name="enrollmentTypeDesigner">Snovalec</string>
+    <string name="enrollmentTypeUnknown">Neznano</string>
+
+</resources>

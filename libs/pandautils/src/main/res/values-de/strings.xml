@@ -124,6 +124,8 @@
     <string name="extensionNotAllowed">Der ausgewählte Dateityp ist nicht zulässig.</string>
     <string name="allowedExtensions">Zulässige Erweiterungen:&#160;</string>
 
+    <string name="quizNetworkErrorTitle">Quiz-Fehler</string>
+    <string name="quizNetworkErrorMessage">Die Internetverbindung scheint offline zu sein.</string>
     <!-- Media Task Loader -->
     <string name="noDataConnection"> Bitte überprüfen Sie Ihre Datenverbindung, und versuchen Sie es erneut. </string>
     <string name="noApps">Auf Ihrem Gerät gibt es keine Anwendung für diese Datei.</string>
@@ -204,7 +206,7 @@
     <string name="likes">Likes</string>
     <string name="lockedAssignmentNotModule">Diese Aufgabe ist gesperrt.</string>
     <string name="deletedEntryNoChildren">Dieser gelöschte Diskussionsbeitrag hat keine Antworten.</string>
-    <string name="deleted">[Gelöscht]</string>
+    <string name="deleted">Gelöscht</string>
     <string name="deleted_by">[Gelöscht von %1$s]</string>
     <string name="lockedDiscussionDesc">Diese Diskussion ist Teil des Moduls %s und ist noch nicht entsperrt.</string>
     <string name="gradedDiscussion">Benotete Diskussion</string>
@@ -380,7 +382,6 @@
     <string name="utils_uploadToSubmissionComment">Hochladen zum Sendekommentar</string>
     <string name="utils_attachFile">Eine Datei anhängen</string>
     <string name="utils_with">mit</string>
-
     <string name="notificationPrimaryInboxTitle">Canvas-Benachrichtigung</string>
     <string name="notificationChannelNamePrimary">Allgemeine Canvas-Benachrichtigungen</string>
     <string name="notificationChannelDescriptionPrimary">Die weitere Konfiguration von Benachrichtigungen kann im Abschnitt „Canvas-Benachrichtigungseinstellungen“ vorgenommen werden.</string>

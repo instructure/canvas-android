@@ -318,6 +318,7 @@
     <string name="assignments_list">Aufgabenliste</string>
     <string name="syllabus">Kursplan</string>
     <!--End Course Settings-->
+
     <!-- Assignment Details -->
     <string name="multiple_due_dates">Mehrere Abgabetermine</string>
     <string name="everyone">Jeder</string>
@@ -350,6 +351,8 @@
     <string name="description">Beschreibung</string>
     <string name="grade_total">Gesamtnote</string>
     <string name="grade">Note</string>
+    <string name="enter_grade">Noten eingeben</string>
+    <string name="override">Außer Kraft setzen</string>
     <string name="calculated_by_rubric">Nach Bewertungsschema berechnet</string>
     <string name="customize_grade">Note anpassen</string>
     <string name="out_of_points">von insgesamt %1$s</string>
@@ -510,7 +513,6 @@
 
     <string name="colorPickerDialogTitle">Kursfarbe</string>
     <string name="colorPickerDialogMessage">Dies ist Ihre persönliche Farbeinstellung. Nur Sie sehen diese Farbe für den Kurs.</string>
-
     <string name="colorPickerError">Die Kursfarbe konnte jetzt nicht festgelegt werden.</string>
 
     <string name="contentDescriptionColorCottonCandy">Rosa</string>
@@ -704,7 +706,6 @@
     <string name="allowThreadedReplies">Gelistete Antworten zulassen</string>
     <string name="usersMustPost">Benutzer müssen gepostet haben, bevor sie Antworten sehen können.</string>
     <string name="allowUserComments">Benutzern Kommentare erlauben</string>
-
     <string name="discussionTitleMustBeSet">Ein Diskussionstitel muss festgelegt werden.</string>
     <string name="discussionSuccessfullyCreated">Die Diskussion wurde erstellt.</string>
     <string name="errorCreatingDiscussion">Fehler beim Erstellen der Diskussion. Versuchen Sie es erneut.</string>
@@ -833,7 +834,6 @@
     <string name="createAFile">Eine Datei erstellen</string>
     <string name="createFileFolderFabContentDesc">Schaltflächen „Datei erstellen“ und „Ordner anlegen“ anzeigen</string>
     <string name="hideCreateFileFolderFabContentDesc">Schaltflächen „Datei erstellen“ und „Ordner anlegen“ ausblenden</string>
-
     <string name="unpublish">Veröffentlichung rückgängig machen</string>
     <string name="restrictedAccess">Beschränkter Zugriff</string>
     <string name="restricted">Eingeschränkt</string>
@@ -877,7 +877,6 @@
     <string name="contentDescriptionFilterSection" formatted="false">für %s</string>
     <string name="filterBySection">Nach Abschnitt filtern</string>
     <string name="filterSubmissionsLowercase">Abgaben filtern</string>
-
     <string name="latePenalty">Strafe für Verspätung</string>
     <string name="finalGrade">Gesamtnote</string>
     <string name="moderatedGradingUnsupported">Moderierte Benotungen werden derzeit im mobilen SpeedGrader nicht unterstützt.</string>
@@ -902,7 +901,6 @@
     <string name="gauge">Gauge</string>
     <string name="arc">Arc</string>
     <string name="ltiLaunchFailure">Dieses LTI-Tool konnte zu diesem Zeitpunkt nicht geladen werden.</string>
-
     <string name="downloading">Download läuft...</string>
 
 </resources>

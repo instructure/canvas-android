@@ -36,6 +36,24 @@
     <string name="selectedListItem">Wybrano: %s</string>
 
     <!-- Student Strings -->
+    <!-- Student Assignment Details -->
+    <string name="assignmentDetails">Szczegóły zadania</string>
+    <string name="submission_types">Typy przesłanych materiałów</string>
+    <string name="noAssignmentDescriptionStudent">Brak zawartości</string>
+    <string name="dueLabel">Termin</string>
+    <string name="submissionStatusSuccessTitle">Przesłano pomyślnie!</string>
+    <string name="submissionStatusSuccessSubtitle">Przesłane materiały oczekują na ocenę</string>
+    <string name="submissionStatusUploadingTitle">Przesyłanie zadania...</string>
+    <string name="submissionStatusUploadingSubtitle">Stuknij, aby wyświetlić postęp</string>
+    <string name="submissionStatusFailedTitle">Przesyłanie zadania nie powiodło się</string>
+    <string name="submissionStatusFailedSubtitle">Stuknij, aby wyświetlić szczegóły</string>
+    <string name="submissionAndRubric">Przesyłka i kryteria ocen</string>
+    <string name="errorLoadingAssignment">Wystąpił problem z wczytaniem tego zadania. Sprawdź połączenie i spróbuj ponownie.</string>
+    <string name="submitted">Przesłano</string>
+    <string name="notSubmitted">Nie wysłano</string>
+    <string name="allowedFileTypes">Dopuszczalne typy plików</string>
+    <string name="resubmitAssignment">Wyślij ponownie zadanie</string>
+
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">Wersja:</string>
 
@@ -346,7 +364,7 @@
     <string name="noUsersInGroup">Brak użytkowników w danej grupie</string>
 
     <!--Notifications-->
-    <string name="deleted">[Usunięto]</string>
+    <string name="deleted">Usunięto</string>
     <string name="gradedDiscussion">Oceniona dyskusja.</string>
     <string name="pointsPossible">Możliwa ilość punktów.</string>
     <string name="pointsPossibleNoPeriod">Możliwe do uzyskania punkty</string>
@@ -795,6 +813,7 @@
         <item quantity="many">%d pytania</item>
         <item quantity="other">%d pytania</item>
     </plurals>
+
     <plurals name="pointCount">
         <item quantity="one">%s punkt</item>
         <item quantity="few">%s punkty</item>
@@ -990,11 +1009,13 @@
     <string name="confirmDeleteEvent">Czy na pewno chcesz usunąć to zdarzenie?</string>
     <string name="conferencesNotSupported">Konferencje nie mają jeszcze wsparcia dla urządzeń przenośnych.</string>
     <string name="filePreviewContentDescription">Obraz podglądu pliku</string>
-
     <string name="pdfError">Podczas wczytywania tego pliku PDF wystąpił błąd.</string>
+
     <!-- Parent Strings -->
     <string name="addChildTitle">Dodaj ucznia</string>
     <string name="addChildSubTitle">Wpisz otrzymany kod parowania uczestnika.</string>
     <string name="addChildHint">Kod parowania...</string>
     <string name="addChildErrorMessage">Niepowodzenie parowania. Upewnij się, że kod parowania jest poprawny i nie utracił ważności.</string>
+    <string name="gradeComplete">Ukończony</string>
+    <string name="gradeIncomplete">Nie ukończono</string>
 </resources>

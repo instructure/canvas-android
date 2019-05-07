@@ -124,6 +124,8 @@
     <string name="extensionNotAllowed">The selected file type is not allowed.</string>
     <string name="allowedExtensions">Allowed extensions:&#160;</string>
 
+    <string name="quizNetworkErrorTitle">Quiz error</string>
+    <string name="quizNetworkErrorMessage">The internet connection appears to be offline.</string>
     <!-- Media Task Loader -->
     <string name="noDataConnection"> Please check your data connection and try again. </string>
     <string name="noApps">Your device doesn\'t have any applications installed that can handle this file.</string>
@@ -204,7 +206,7 @@
     <string name="likes">Likes</string>
     <string name="lockedAssignmentNotModule">This assignment is locked.</string>
     <string name="deletedEntryNoChildren">This deleted discussion entry has no replies.</string>
-    <string name="deleted">[Deleted]</string>
+    <string name="deleted">Deleted</string>
     <string name="deleted_by">[Deleted by %1$s]</string>
     <string name="lockedDiscussionDesc">This discussion is part of the module %s and has not been unlocked yet.</string>
     <string name="gradedDiscussion">Marked discussion</string>
@@ -380,7 +382,6 @@
     <string name="utils_uploadToSubmissionComment">Upload to submission comment</string>
     <string name="utils_attachFile">Attach a file</string>
     <string name="utils_with">with</string>
-
     <string name="notificationPrimaryInboxTitle">Canvas notification</string>
     <string name="notificationChannelNamePrimary">General Canvas notifications</string>
     <string name="notificationChannelDescriptionPrimary">Further configuration of notifications can be done within the Canvas notification preferences section.</string>

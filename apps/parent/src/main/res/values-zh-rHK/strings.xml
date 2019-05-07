@@ -118,6 +118,9 @@
     <string name="alarmNotSet">提醒無法設定。請再試一次。</string>
     <string name="could_not_route_course">無法搜尋到此課程的入學資訊。</string>
     <string name="could_not_route_assignment">無法搜尋到此任務。</string>
+    <string name="could_not_route_announcement">無法找到此通告。</string>
+    <string name="could_not_route_event">無法找到此活動。</string>
+    <string name="could_not_route_account_notifications">無法找到此通知。</string>
     <string name="email_already_exists">使用此電郵地址的使用者已存在。</string>
     <string name="password_reset_success">稍後將會給您發送一份電子郵件，其中包含指導您重設密碼的內容。</string>
     <string name="password_reset_no_user">無法搜尋到使用此郵件地址的使用者。</string>
@@ -225,4 +228,5 @@
     <string name="institutionAnnouncementUnavailable">此通告已過期。</string>
     <string name="previousWeekBtn">上一週按鈕</string>
     <string name="nextWeekBtn">下一週按鈕</string>
+    <string name="filesNotSupported">檔案目前不受支援。</string>
 </resources>

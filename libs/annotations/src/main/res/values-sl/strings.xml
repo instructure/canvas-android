@@ -1,0 +1,41 @@
+﻿<!--
+  ~ Copyright (C) 2018 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="inputText">Besedilo vnosa</string>
+    <string name="cancel">Prekliči</string>
+    <string name="comment">Komentar</string>
+    <string name="skip">Preskoči</string>
+    <string name="comments">Komentarji</string>
+    <string name="error_loading_submission">Prišlo je do težave z nalaganjem te oddaje.</string>
+    <string name="retry">Ponovno poskusi</string>
+    <string name="annotationErrorOccurred">Med nalaganjem opomb je prišlo do nepričakovane napake.</string>
+    <string name="annotationError">Napaka pri opombi</string>
+    <string name="annotationDialogMessage">Opomba je odstranjena iz drugega vira.</string>
+    <string name="errorSendingMessage">Tega sporočila ni bilo mogoče poslati. Tapnite, da poskusite znova.</string>
+    <string name="addAnnotationComment">Dodaj komentar</string>
+    <string name="editComment">Uredi komentar</string>
+    <string name="deleteComment">Odstrani komentar</string>
+    <string name="deleteAnnotation">Odstrani opombo</string>
+    <string name="deleteCommentConfirmation">Ali ste prepričani, da želite odstraniti ta komentar?</string>
+    <string name="deleteHeadCommentConfirmation">Z brisanjem tega komentarja bodo odstranjeni vsi komentarji, povezani s to opombo. Ali ste prepričani, da to želite storiti?</string>
+    <string name="sendingSimple">Pošiljanje</string>
+    <string name="pspdf__annotation_type_stamp">Barva opombe</string>
+    <string name="removedComment">Odstranjeno %1$s, odstranil %2$s</string>
+
+</resources>

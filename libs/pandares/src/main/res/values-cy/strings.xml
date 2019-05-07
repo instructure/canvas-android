@@ -34,6 +34,24 @@
     <string name="selectedListItem">Wedi dewis: %s</string>
 
     <!-- Student Strings -->
+    <!-- Student Assignment Details -->
+    <string name="assignmentDetails">Manylion Aseiniad</string>
+    <string name="submission_types">Mathau o Gyflwyniadau</string>
+    <string name="noAssignmentDescriptionStudent">Dim Cynnwys</string>
+    <string name="dueLabel">Erbyn</string>
+    <string name="submissionStatusSuccessTitle">Wedi llwyddo i gyflwyno!</string>
+    <string name="submissionStatusSuccessSubtitle">Mae eich cyflwyniad bellach yn aros i gael ei raddio</string>
+    <string name="submissionStatusUploadingTitle">Cyflwyniad yn llwytho i fyny&#8230;</string>
+    <string name="submissionStatusUploadingSubtitle">Tapiwch i weld cynnydd</string>
+    <string name="submissionStatusFailedTitle">Cyflwyniad wedi methu</string>
+    <string name="submissionStatusFailedSubtitle">Tapiwch i weld manylion</string>
+    <string name="submissionAndRubric">Cyflwyniad a Chyfarwyddyd Sgorio</string>
+    <string name="errorLoadingAssignment">Problem wrth lwytho’r aseiniad hwn. Gwiriwch eich cysylltiad a rhoi cynnig arall arni.</string>
+    <string name="submitted">Wedi Cyflwyno</string>
+    <string name="notSubmitted">Heb Gyflwyno</string>
+    <string name="allowedFileTypes">Mathau o Ffeiliau a Ganiateir</string>
+    <string name="resubmitAssignment">Ailgyflwyno Aseiniad</string>
+
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">Fersiwn:</string>
 
@@ -334,7 +352,7 @@
     <string name="noUsersInGroup">Does dim defnyddwyr yn y grŵp hwn</string>
 
     <!--Notifications-->
-    <string name="deleted">[Wedi dileu]</string>
+    <string name="deleted">Wedi dileu</string>
     <string name="gradedDiscussion">Trafodaeth wedi’i Graddio.</string>
     <string name="pointsPossible">Pwynt yn bosib.</string>
     <string name="pointsPossibleNoPeriod">Pwynt yn bosib</string>
@@ -781,6 +799,7 @@
         <item quantity="one">%d cwestiwn</item>
         <item quantity="other">%d cwestiwn</item>
     </plurals>
+
     <plurals name="pointCount">
         <item quantity="one">%s pwynt</item>
         <item quantity="other">%s pwynt</item>
@@ -968,11 +987,13 @@
     <string name="confirmDeleteEvent">Ydych chi’n siŵr eich bod am ddileu’r digwyddiad hwn?</string>
     <string name="conferencesNotSupported">Does dim modd delio â chynadleddau ar ffonau symudol eto.</string>
     <string name="filePreviewContentDescription">Delwedd Rhagolwg o Ffeil</string>
-
     <string name="pdfError">Gwall wrth geisio llwytho’r PDF hwn.</string>
+
     <!-- Parent Strings -->
     <string name="addChildTitle">Ychwanegu Myfyriwr</string>
     <string name="addChildSubTitle">Rhowch y cod paru myfyriwr a roddwyd i chi.</string>
     <string name="addChildHint">Cod Paru&#8230;</string>
     <string name="addChildErrorMessage">Wedi methu paru. Gwnewch yn siŵr bod eich cod paru yn gywir ac o fewn terfyn amser ar gyfer ei ddefnyddio.</string>
+    <string name="gradeComplete">Cwblhau</string>
+    <string name="gradeIncomplete">Heb Gwblhau</string>
 </resources>

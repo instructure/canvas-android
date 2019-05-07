@@ -124,6 +124,8 @@
     <string name="extensionNotAllowed">Выбранный тип файла не допускается.</string>
     <string name="allowedExtensions">Допустимые расширения:&#160;</string>
 
+    <string name="quizNetworkErrorTitle">Ошибка теста</string>
+    <string name="quizNetworkErrorMessage">Вероятно отсутствует подключение к Интернету.</string>
     <!-- Media Task Loader -->
     <string name="noDataConnection"> Проверьте подключение и повторите попытку. </string>
     <string name="noApps">На вашем устройстве не установлено приложение, способное работать с этим файлом.</string>
@@ -204,7 +206,7 @@
     <string name="likes">Количество отметок \"Мне нравится\"</string>
     <string name="lockedAssignmentNotModule">Это задание заблокировано.</string>
     <string name="deletedEntryNoChildren">У этой удаленной записи обсуждения нет ответов.</string>
-    <string name="deleted">[Удалено]</string>
+    <string name="deleted">Удалено</string>
     <string name="deleted_by">[Удалено %1$s]</string>
     <string name="lockedDiscussionDesc">Эта дискуссия является частью модуля %s и еще не была разблокирована.</string>
     <string name="gradedDiscussion">Оцениваемая дискуссия</string>
@@ -386,7 +388,6 @@
     <string name="utils_uploadToSubmissionComment">Загрузить в комментарий к отправке</string>
     <string name="utils_attachFile">Прикрепить файл</string>
     <string name="utils_with">с</string>
-
     <string name="notificationPrimaryInboxTitle">Уведомление Canvas</string>
     <string name="notificationChannelNamePrimary">Общие уведомления Canvas</string>
     <string name="notificationChannelDescriptionPrimary">Дополнительная настройка уведомлений осуществляется в разделе настроек уведомлений Canvas.</string>
