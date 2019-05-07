@@ -251,9 +251,11 @@ class WeaveCoroutineTest : Assert() {
         weave {
             repeat(5) {
                 onUI {
-                    count++
+                    synchronized(count) { count++ }
                 }
             }
+            // onUI is async and not suspending, so we delay for a bit to avoid a race condition
+            delay(50)
         }.blockWithTimeout()
         assertEquals(5, count)
     }
