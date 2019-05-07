@@ -34,6 +34,24 @@
     <string name="selectedListItem">Valgt: %s</string>
 
     <!-- Student Strings -->
+    <!-- Student Assignment Details -->
+    <string name="assignmentDetails">Oppgavedetaljer</string>
+    <string name="submission_types">Innleveringstyper</string>
+    <string name="noAssignmentDescriptionStudent">Uten innhold</string>
+    <string name="dueLabel">Forfall</string>
+    <string name="submissionStatusSuccessTitle">Vellykket innsending!</string>
+    <string name="submissionStatusSuccessSubtitle">Din innlevering venter på karaktersetting</string>
+    <string name="submissionStatusUploadingTitle">Laster opp innleveringen...</string>
+    <string name="submissionStatusUploadingSubtitle">Trykk for å se fremgang</string>
+    <string name="submissionStatusFailedTitle">Innlevering feilet</string>
+    <string name="submissionStatusFailedSubtitle">Trykk for å vise detaljer</string>
+    <string name="submissionAndRubric">Innlevering &amp; Vurderingsveiledning</string>
+    <string name="errorLoadingAssignment">Det var et problem med lasting av denne oppgaven. Kontroller tilkoblingen og prøv på nytt.</string>
+    <string name="submitted">Sendt inn</string>
+    <string name="notSubmitted">Ikke levert</string>
+    <string name="allowedFileTypes">Tillatte filtyper</string>
+    <string name="resubmitAssignment">Send oppgaven inn på nytt</string>
+
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">Versjon:</string>
 
@@ -334,7 +352,7 @@
     <string name="noUsersInGroup">Der er ingen bukere i denne gruppen</string>
 
     <!--Notifications-->
-    <string name="deleted">[Slettet]</string>
+    <string name="deleted">Slettet</string>
     <string name="gradedDiscussion">Karaktergivende diskusjon</string>
     <string name="pointsPossible">Mulige poeng</string>
     <string name="pointsPossibleNoPeriod">Mulige poenger</string>
@@ -427,8 +445,8 @@
     <string name="unlockedAt">Den vil låses opp den:</string>
     <string name="goToModules">Gå til moduler</string>
     <string name="markDone">Merk ferdig</string>
-
     <string name="moduleItemNotFound">Modulen ble ikke funnet</string>
+
     <string name="help">Hjelp</string>
     <string name="instructor_question">Instruktør-spørsmål</string>
     <string name="link">Lenke</string>
@@ -781,6 +799,7 @@
         <item quantity="one">%d spørsmål</item>
         <item quantity="other">%d spørsmål</item>
     </plurals>
+
     <plurals name="pointCount">
         <item quantity="one">%s poeng</item>
         <item quantity="other">%s poeng</item>
@@ -968,11 +987,13 @@
     <string name="confirmDeleteEvent">Er du sikker du ønsker å slette denne hendelsen?</string>
     <string name="conferencesNotSupported">Konferanser støttes ikke på mobil.</string>
     <string name="filePreviewContentDescription">Forhåndsvisning av filen</string>
-
     <string name="pdfError">En feil oppsto under innlastingen av denne PDF-en.</string>
+
     <!-- Parent Strings -->
     <string name="addChildTitle">Legg til student</string>
     <string name="addChildSubTitle">Oppgi studentparingskoden som ble gitt til deg.</string>
     <string name="addChildHint">Paringskode &#8230;</string>
     <string name="addChildErrorMessage">Paring mislyktes. Pass på at paringskoden er korrekt og innenfor tidsbegrensningen for bruk.</string>
+    <string name="gradeComplete">Fullført</string>
+    <string name="gradeIncomplete">Ikke godkjent</string>
 </resources>

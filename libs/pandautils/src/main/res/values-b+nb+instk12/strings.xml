@@ -123,6 +123,8 @@
     <string name="extensionNotAllowed">Den valgte filtypen er ikke tillatt.</string>
     <string name="allowedExtensions">Tillatte filtyper:&#160;</string>
 
+    <string name="quizNetworkErrorTitle">Testfeil</string>
+    <string name="quizNetworkErrorMessage">Det ser ut som internettforbindelsen er frakoblet.</string>
     <!-- Media Task Loader -->
     <string name="noDataConnection"> Kontroller dataforbindelsen din og prøv igjen. </string>
     <string name="noApps">Din enhet har ikke installert programmer som kan håndtere denne filen.</string>
@@ -203,7 +205,7 @@
     <string name="likes">Liker</string>
     <string name="lockedAssignmentNotModule">Denne oppgaven er låst.</string>
     <string name="deletedEntryNoChildren">Innlegget i den slettede diskusjonen hadde ingen svar.</string>
-    <string name="deleted">[Slettet]</string>
+    <string name="deleted">Slettet</string>
     <string name="deleted_by">[Slettet av %1$s]</string>
     <string name="lockedDiscussionDesc">Denne diskusjonen er en del av modulen %s og har ikke blitt låst opp ennå.</string>
     <string name="gradedDiscussion">Vurdert diskusjon</string>
@@ -379,7 +381,6 @@
     <string name="utils_uploadToSubmissionComment">Last opp til sendt inn kommentar</string>
     <string name="utils_attachFile">Legg ved en fil</string>
     <string name="utils_with">med</string>
-
     <string name="notificationPrimaryInboxTitle">Canvas Notification</string>
     <string name="notificationChannelNamePrimary">Generelle Canvas Notifications</string>
     <string name="notificationChannelDescriptionPrimary">Ytterligere konfigurering av varsler kan gjøres inne i seksjonen for Canvas Notification Preferences.</string>

@@ -57,6 +57,7 @@
     <string name="login">Logga in</string>
     <string name="logout">Logga ut</string>
 
+    <string name="matchingSchools">Matchar skolor</string>
     <!--Logout Warning Dialog-->
     <string name="logout_warning">Är du säker på att du vill logga ut?</string>
     <string name="logout_yes">Ja</string>

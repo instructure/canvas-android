@@ -39,17 +39,17 @@
     <string name="passwordsDoNotMatch">Lösenorden stämmer inte överens.</string>
     <string name="passwordsCannotBeBlank">Lösenord kan inte vara tomma.</string>
     <string name="passwordResetFailed">Vi kunde inte återställa ditt lösenord just nu.</string>
-    <string name="invalidEmail">Ogiltig e-postadress.Försök igen.</string>
+    <string name="invalidEmail">Ogiltig e-postadress. Försök igen.</string>
     <string name="next">Nästa</string>
     <string name="createAccountMessage">Ett e-postmeddelande kommer att skickas till e-postadressen för att fullborda registreringen.</string>
-    <string name="accountCreationSuccess">Konto skapades.Kontrollera din e-post för att slutföra registreringen.</string>
-    <string name="errorOccurred">Ett oväntat fel uppstod.Vänligen försök igen.</string>
+    <string name="accountCreationSuccess">Konto skapades. Kontrollera din e-post för att slutföra registreringen.</string>
+    <string name="errorOccurred">Ett oväntat fel uppstod. Vänligen försök igen.</string>
     <string name="unknownDevice">Okänd enhet</string>
     <string name="addStudent">Lägg till elev</string>
     <string name="school">Skola</string>
     <string name="finish">Avsluta</string>
     <string name="close">Stäng</string>
-    <string name="noStudents">Inga studenter tillgängliga.För att lägga till studenter, klicka på de tre punkterna i menyn ovan.</string>
+    <string name="noStudents">Inga studenter tillgängliga. För att lägga till studenter, klicka på de tre punkterna i menyn ovan.</string>
     <string name="noStudentsView">Det finns inga elever associerade med ditt konto.</string>
     <string name="noCourses">Den här eleven har inga kurser tillgängliga.</string>
     <string name="noAvailableCourses">Inga kurser</string>
@@ -85,9 +85,9 @@
     <string name="noLocation">Ingen plats specificerad</string>
     <string name="previousAlerts">Tidigare larm</string>
     <string name="currentAlerts">Nuvarande larm</string>
-    <string name="badDomainError">Ogiltig domän.Försök igen.</string>
+    <string name="badDomainError">Ogiltig domän. Försök igen.</string>
     <string name="unauthorized">Du har inte behörighet att komma åt den här informationen.</string>
-    <string name="revokedTokenErrorContent">Du är obehörig för att få tillgång till informationen från%1$s.Du kan om-auktorisera din student från inställningsmenyn.</string>
+    <string name="revokedTokenErrorContent">Du är obehörig för att få tillgång till informationen från%1$s. Du kan om-auktorisera din student från inställningsmenyn.</string>
     <string name="revokedTokenErrorTitle">Åtkomsttoken spärrad</string>
     <string name="featureFlagDisabledError">Den här institutionen har inte aktiverat mobilappen Canvas Parent.</string>
 
@@ -115,9 +115,12 @@
     <string name="due">Färdig:</string>
     <string name="no_due_date">Inget inlämningsdatum</string>
     <string name="tapToSet">Peka för att ställa in</string>
-    <string name="alarmNotSet">Larmet kunde inte ställas in.Försök igen.</string>
+    <string name="alarmNotSet">Larmet kunde inte ställas in. Försök igen.</string>
     <string name="could_not_route_course">Kunde inte hitta kursregistrering.</string>
     <string name="could_not_route_assignment">Kunde inte hitta uppgiften.</string>
+    <string name="could_not_route_announcement">Det gick inte att hitta meddelandet.</string>
+    <string name="could_not_route_event">Det gick inte att hitta händelsen.</string>
+    <string name="could_not_route_account_notifications">Det gick inte att hitta aviseringen.</string>
     <string name="email_already_exists">En användare med den e-postadressen existerar redan.</string>
     <string name="password_reset_success">Ett e-postmeddelande med instruktioner om hur du återställer ditt lösenord kommer att skickas.</string>
     <string name="password_reset_no_user">Ingen användare med den e-postadressen hittades.</string>
@@ -145,7 +148,7 @@
     <string name="locked_assignment_desc_line2">Besök sidan för kursens moduler med en webbläsare för information om hur du kan låsa upp innehållet.</string>
     <string name="locked_assignment_not_module">Den här uppgiften är låst.</string>
     <string name="no_description">Det finns ingen beskrivning av den här uppgiften</string>
-    <string name="cannot_view_file">Kan inte se den här filen i appen.Vänligen visa i en webbläsare.</string>
+    <string name="cannot_view_file">Kan inte se den här filen i appen. Vänligen visa i en webbläsare.</string>
     <string name="calendar_event">Kalenderhändelse</string>
     <string name="set_reminder_toggle">Ställ in påminnelse väljare</string>
     <string name="or">eller</string>
@@ -198,7 +201,7 @@
     <string name="selectChildRegion">Välj students region</string>
     <string name="selectRegion">Regionväljare</string>
     <string name="unauthorizedRegion">Obehörig region</string>
-    <string name="mismatchedRegionMessage">Denna institution ligger utanför din valda region.För att lägga till en student vid denna institution, använd alternativet "Regionväljare" på inloggningssidan för att skapa ett konto i regionen %1$s.</string>
+    <string name="mismatchedRegionMessage">Denna institution ligger utanför din valda region. För att lägga till en student vid denna institution, använd alternativet "Regionväljare" på inloggningssidan för att skapa ett konto i regionen %1$s.</string>
 
     <string name="notification_channel_name">Allmänna meddelanden</string>
     <string name="notification_channel_description">Meddelanden om påminnelser och viktig information om din student.</string>
@@ -225,4 +228,5 @@
     <string name="institutionAnnouncementUnavailable">Detta meddelande har löpt ut.</string>
     <string name="previousWeekBtn">knapp för föregående vecka</string>
     <string name="nextWeekBtn">knapp för nästa vecka</string>
+    <string name="filesNotSupported">Filerna stöds inte för närvarande</string>
 </resources>

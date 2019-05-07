@@ -1,0 +1,999 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2018 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+<resources>
+
+    <string name="noFilesFound">Ni najdenih datotek.</string>
+    <string name="searchFilesHint">Poišči datoteke</string>
+    <string name="fileSearchInstructions">Vnesite iskalno besedo s tremi ali več znaki.</string>
+    <plurals name="fileSearchResultCount">
+        <item quantity="zero">»Ujemajočih se elementov ni mogoče najti.«</item>
+        <item quantity="one">»Najden je %d ujemajoči se element.«</item>
+        <item quantity="other">»Najdenih je %d ujemajočih se elementov.«</item>
+    </plurals>
+    <string name="contentDescriptionSuperPanda">Leteči panda v ogrinjalu</string>
+    <string name="troubleLoggingIn">Ali imate težavo pri prijavi?</string>
+    <string name="requestLoginHelp">Prosite za pomoč pri prijavi.</string>
+    <string name="loginHelpSubject">Imam težavo pri prijavi.</string>
+    <string name="errorReportInvalidEmail">Vnesite veljavni e-poštni naslov.</string>
+    <string name="announcementSections">Sekcije: %s</string>
+    <string name="selectedListItem">Izbrano: %s</string>
+
+    <!-- Student Strings -->
+    <!-- Student Assignment Details -->
+    <string name="assignmentDetails">Podrobnosti o nalogi</string>
+    <string name="submission_types">Vrste oddaj</string>
+    <string name="noAssignmentDescriptionStudent">Ni vsebine.</string>
+    <string name="dueLabel">Rok</string>
+    <string name="submissionStatusSuccessTitle">Uspešno poslano.</string>
+    <string name="submissionStatusSuccessSubtitle">Oddaja čaka, da bo ocenjena.</string>
+    <string name="submissionStatusUploadingTitle">Nalaganje oddaj ...</string>
+    <string name="submissionStatusUploadingSubtitle">Tapnite za ogled napredka</string>
+    <string name="submissionStatusFailedTitle">Oddaja ni uspela.</string>
+    <string name="submissionStatusFailedSubtitle">Tapnite za ogled podrobnosti</string>
+    <string name="submissionAndRubric">Oddaja in ocenjevalni vodnik</string>
+    <string name="errorLoadingAssignment">Prišlo je do težave z nalaganjem te naloge. Preverite svojo povezavo in poskusite znova.</string>
+    <string name="submitted">Poslano</string>
+    <string name="notSubmitted">Ni oddano.</string>
+    <string name="allowedFileTypes">Dovoljene vrste datotek</string>
+    <string name="resubmitAssignment">Ponovno pošlji nalogo</string>
+
+    <!--Profile Fragment Strings -->
+    <string name="canvasVersionNum">Različica:</string>
+
+    <!--Content Descriptions-->
+    <string name="canvasLogo">Logotip sistema Canvas</string>
+    <string name="enterURL">Vnesite svoj naslov URL Canvas:</string>
+    <string name="exampleURLSimple">myschool.instructure.com</string>
+    <string name="signIntoCanvasNetwork">Ali se poskušate vpisati v omrežje Canvas Network?</string>
+    <string name="mobileVerifyGeneral">Te aplikacije ni dovoljeno uporabljati</string>
+    <string name="mobileVerifyDomainUnauthorized">Strežnik, ki ste ga vnesli, nima pooblastila za to aplikacijo.</string>
+    <string name="mobileVerifyUserAgentUnauthorized">Zastopnik uporabnika za to aplikacijo nima pooblastila.</string>
+    <string name="mobileVerifyUnknownError">Strežnika za uporabo pri tej aplikaciji nismo uspeli preveriti.</string>
+    <string name="okay">V redu</string>
+    <string name="options">Možnosti</string>
+
+    <string name="discussionAttachment">Dodaj datoteko</string>
+    <string name="discussionUpload">Naloži videoposnetek ali zvočni posnetek</string>
+    <string name="discussionPostEditing">Uredi</string>
+
+    <!--Multiple User Sign in -->
+    <string name="removeUser">Ali želite odstraniti tega uporabnika?</string>
+    <string name="removedForever">Za dostop do vsebine tega uporabnika se boste morali znova vpisati vanj.</string>
+
+    <string name="bookmarksTitle">Zaznamki</string>
+    <string name="addBookmark">Dodaj zaznamek</string>
+    <string name="bookmarkName">Oznaka</string>
+    <string name="bookmarkTitleRequired">Zahtevana je oznaka.</string>
+    <string name="bookmarkAddedSuccess">Zaznamek je ustvarjen.</string>
+    <string name="bookmarkAddedFailure">Zaznamka ni mogoče ustvariti.</string>
+    <string name="bookmarkShortcut">Izberi zaznamek.</string>
+    <string name="bookmarkDeleted">Zaznamek je odstranjen.</string>
+    <string name="bookmarkDelete">Ali želite odstraniti zaznamek?</string>
+    <string name="bookmarkEdit">Uredi zaznamek</string>
+    <string name="bookmarkUpdated">Zaznamek je posodobljen.</string>
+    <string name="no_bookmarks">Ustvarite zaznamek in si ga nato oglejte tukaj.</string>
+
+    <!--Date strings-->
+    <string name="today">Danes</string>
+    <string name="past">Preteklo</string>
+    <string name="noDate">Brez datuma</string>
+    <string name="future">Prihodnje</string>
+    <string name="next7Days">V naslednjih 7 dneh</string>
+    <string name="days">Dnevi</string>
+
+    <!--Assignments-->
+    <string name="assignmentDue">Rok</string>
+    <string name="assignmentDueColon">Rok: </string>
+    <string name="assignmentLastSubmission">Zadnja oddaja:</string>
+    <string name="assignmentNoSubmission">Brez</string>
+    <string name="assignmentTabDetails">Podrobnosti</string>
+    <string name="assignmentTabSubmission">Oddaje</string>
+    <string name="assignmentTabGrade">Ocena</string>
+    <string name="assignmentLocked">Zaklenjeno</string>
+    <string name="assignments">Naloge:</string>
+    <string name="freeFormRubricPoints" formatted="false">%s/%s </string>
+    <string name="noRubric">Za to nalogo ni ocenjevalnega vodnika.</string>
+    <string name="noDescription">Za to nalogo ni opisa.</string>
+    <string name="noAssignmentsInGroup">V tej skupini ni nalog.</string>
+    <string name="excusedAssignment">Ta naloga je opravičena in ne bo upoštevana v končnem izračunu.</string>
+    <string name="droppedAssignment">Ta naloga je izpuščena in ne bo upoštevana v končnem izračunu.</string>
+    <string name="excused">Opravičeno</string>
+    <string name="mutedText">Ocene niso na voljo, ker se z njimi ukvarja učitelj.</string>
+    <string name="rubricRangePointsText" formatted="false">&#160;do &gt; %s točk</string>
+    <string name="contentDescriptionRubricRangePointsText" formatted="false">%s &#160;do &gt; %s točk</string>
+
+    <!-- Assignment editing -->
+    <string name="points">Točke </string>
+    <string name="assignmentGroup">Skupina nalog: </string>
+    <string name="gradingType">Vrsta ocenjevanja: </string>
+    <string name="submissionType">Vrsta oddaje: </string>
+    <string name="editAssignment">Uredi nalogo</string>
+    <string name="save">Shrani</string>
+    <string name="cancel">Prekliči</string>
+    <string name="sendNotification">Obvestite uporabnike, da se je ta vsebina spremenila.</string>
+
+    <!--Discussions-->
+    <string name="forbidden">Odgovori so vidni samo tistim, ki so objavili vsaj en odgovor.</string>
+
+    <!--Events-->
+    <string name="Starts">Začne se</string>
+    <string name="Ends">Konča se</string>
+    <string name="allDayEvent">Celodnevni dogodek</string>
+    <string name="at">ob</string>
+    <string name="PersonalCalendar">Osebni koledar</string>
+    <string name="noLocation">Mesto ni določeno.</string>
+
+    <string name="discussion">Razprave</string>
+    <string name="closed_discussion">Zaprto za komentarje</string>
+    <string name="discussionUploadDialog">Nalaganje razprave</string>
+    <string name="totalScore">Vsota:</string>
+    <string name="noGradeText">Ni na voljo.</string>
+    <string name="checkBoxFinalGradeOption">Na podlagi ocenjenih nalog</string>
+    <string name="checkBoxWhatIfGradeOption">Prikaži simulacijo rezultatov</string>
+    <string name="whatIfDialogText">Simulacija rezultatov</string>
+    <string name="inbox">Pošta</string>
+    <string name="unread">Neprebrano</string>
+    <string name="archived">Arhivirano</string>
+    <string name="sent">Poslano</string>
+    <string name="grade">Ocena</string>
+    <string name="clearFilter">Počisti filter</string>
+    <string name="addMessage">Dodaj sporočilo</string>
+    <string name="monologue">Samogovor</string>
+    <string name="noItemsToDisplayShort">Ni elementov za prikaz.</string>
+    <string name="emptyCalendarDate">Ničesar načrtovanega ni za</string>
+    <string name="emptyCalendarWeek">Ničesar načrtovanega ni za teden</string>
+    <string name="emptyCalendarMonth">Ničesar načrtovanega ni za mesec</string>
+    <string name="selectCanvasCalendars">Izberi do 10 koledarjev</string>
+    <string name="contentDesc_colored_calendar_indicator">Barvni kazalnik koledarja</string>
+    <string name="noDatesSelected">Izberite datum.</string>
+    <string name="Todo">Seznam opravil</string>
+    <string name="todoFilter">Filtriraj predmete</string>
+    <string name="filterByEllipsis">Filtriraj po ...</string>
+    <string name="favoritedCoursesLabel">Priljubljeni predmeti</string>
+    <string name="Event">Dogodek</string>
+    <string name="eventSuccessfulCreation">Dogodek je bil uspešno ustvarjen.</string>
+    <string name="eventSuccessfulDeletion">Dogodek je bil uspešno izbrisan.</string>
+    <string name="newEvent">Nov dogodek</string>
+    <string name="enterTitle">Vnos naslova</string>
+    <string name="enterLocation">Vnos lokacije</string>
+    <string name="addNote">Dodaj opombo</string>
+    <string name="titleIconDescription">Ikona naslova</string>
+    <string name="dateIconDescription">Ikona datuma</string>
+    <string name="timeIconDescription">Ikona časa</string>
+    <string name="locationIconDescription">Ikona mesta</string>
+    <string name="noteIconDescription">Ikona opombe</string>
+    <string name="toDoTurnIn">Oddaj</string>
+    <string name="toDoNoDueDate">Ni roka.</string>
+
+    <string name="dueAt">Rok ob</string>
+    <string name="dueAtTime">Rok ob %s</string>
+    <string name="toDoDue">Rok</string>
+    <string name="due">Rok %1$s</string>
+    <plurals name="to_do_needs_grading">
+        <item quantity="one">%d je treba oceniti.</item>
+        <item quantity="other">%d je treba oceniti.</item>
+    </plurals>
+    <string name="myFiles">Datoteke</string>
+    <string name="createAFolder">Ustvari mapo</string>
+    <string name="createFolder">Ustvari mapo</string>
+    <string name="createAFile">Ustvari datoteko</string>
+    <string name="createFileFolderFabContentDesc">Prikaži gumbe »Ustvari datoteko« in »Ustvari mapo«</string>
+    <string name="folderCreationError">Med ustvarjanjem mape je prišlo do napake.</string>
+    <string name="rename">Preimenuj</string>
+    <string name="renameFile">Preimenuj datoteko</string>
+    <string name="renameFolder">Preimenuj mapo</string>
+    <string name="blankName">Ime ne sme biti prazno.</string>
+    <string name="confirmDeleteFile">Ali ste prepričani, da želite odstraniti datoteko »%s«? Tega dejanja ni mogoče razveljaviti.</string>
+    <string name="confirmDeleteEmptyFolder">Ali ste prepričani, da želite odstraniti datoteko »%s«? Tega dejanja ni mogoče razveljaviti.</string>
+    <plurals name="confirmDeleteFolder">
+        <item quantity="one">Ali ste prepričani, da želite odstraniti mapo »%1$s«, vključno z elementom %2$d, ki ga vsebuje? Tega dejanja ni mogoče razveljaviti.</item>
+        <item quantity="other">Ali ste prepričani, da želite odstraniti mapo »%1$s«, vključno z elementi %2$d, ki jih vsebuje? Tega dejanja ni mogoče razveljaviti.</item>
+    </plurals>
+
+    <string name="settings">Nastavitve</string>
+    <string name="name">Ime</string>
+    <string name="email">E-pošta</string>
+    <string name="username">Uporabniško ime</string>
+    <string name="password">Geslo</string>
+    <string name="authenticationRequired">Zahtevana je overitev.</string>
+    <string name="invalidEmailPassword">Neveljaven e-poštni naslov ali geslo</string>
+    <string name="loginId">ID prijave</string>
+    <string name="domain">Domena</string>
+    <string name="sendFeedback">Pošlji povratne informacije</string>
+    <string name="sendMail">Pošlji e-pošto&#8230;</string>
+    <string name="edit">Uredi</string>
+    <plurals name="item_count">
+        <item quantity="one">%d element</item>
+        <item quantity="other">%d elementov</item>
+    </plurals>
+    <string name="addToHomescreen">Dodaj glavni strani</string>
+    <string name="archive">Arhiviraj</string>
+    <string name="moveToInbox">Premakni v pošto</string>
+    <string name="markAsUnread">Označi kot neprebrano</string>
+    <string name="selectPeopleInbox">Izberi sodelujoče</string>
+    <string name="delete">Odstrani</string>
+    <string name="deleteEvent">Odstrani dogodek</string>
+    <string name="selected">Izbrano</string>
+    <string name="errorSendingMessage">Pri pošiljanju sporočila je prišlo do napake. Poskusite znova.</string>
+    <string name="errorPostingComment">Pri poskusu objave komentarja k oddaji je prišlo do napake. Poskusite znova.</string>
+    <string name="deletedConversation">Ta pogovor je izbrisan.</string>
+    <string name="uploadAvatarFailMsg">Nalaganje nove slike avatarja ni uspelo.</string>
+    <string name="editPhoto">Uredi fotografijo</string>
+    <string name="invalidUsername">To uporabniško ime ni veljavno.</string>
+    <string name="usernameChangeSuccess">Uporabniško ime je uspešno posodobljeno.</string>
+    <string name="takePhoto">Posnemi fotografijo</string>
+    <string name="choosePhotoFromGallery">Izberi fotografijo iz galerije</string>
+    <string name="fileNotFound">Datoteke ni bilo mogoče najti.</string>
+
+    <!-- Conversations -->
+    <string name="reply">Odgovori</string>
+    <string name="writeAMessage">Napišite sporočilo ...</string>
+    <string name="compose">Sestavi</string>
+    <string name="composeMessage">Sestavi sporočilo</string>
+    <string name="successSendingMessage">Sporočilo je bilo uspešno poslano.</string>
+    <string name="emptyMessage">Sporočilo ne sme biti prazno.</string>
+    <string name="noRecipients">Ni prejemnikov</string>
+    <string name="send">Pošlji</string>
+    <string name="users">Uporabniki</string>
+    <string name="individually">Posamezno</string>
+    <string name="versionNum">Različica:</string>
+    <string name="version" formatted="false">r. %s</string>
+    <string name="allCourses">Vsi predmeti</string>
+    <string name="allGroups">Vse skupine</string>
+    <string name="courseOptions">Možnosti predmeta</string>
+    <string name="editNickname">Uredi vzdevek</string>
+    <string name="editCourseColor">Uredi barvo predmeta</string>
+    <string name="open">Odpri</string>
+    <string name="openAlternate">Odpri z drugo aplikacijo</string>
+    <string name="opening">Odpiranje datoteke&#8230;</string>
+    <string name="download">Prenesi</string>
+    <string name="hideExtras">Skrij dodatke</string>
+    <string name="showExtras">Prikaži dodatke</string>
+    <string name="messageAttachments">Priloge sporočilom</string>
+    <string name="discussionAttachmentLabel">Priloga</string>
+    <string name="attachmentIcon">Ikona priloge</string>
+    <string name="ok">V redu</string>
+    <string name="with">s/z</string>
+    <string name="starConversation">Označi pogovor z zvezdico</string>
+    <string name="deleteConversation">Odstrani pogovor</string>
+    <string name="sharedWith">Skupna raba s/z  </string>
+    <string name="sharedWithYou">Skupna raba z vami</string>
+    <string name="inboxEmptyMessage">Tapnite »+«, da ustvarite nov pogovor.</string>
+    <string name="inboxAllMessages">Vse</string>
+    <string name="filterInbox">Filtriraj pošto</string>
+    <string name="selectCanvasContext">Izberi predmet ali skupino</string>
+    <string name="inboxEmptyTitle">Ni sporočil.</string>
+    <string name="removeAttachment">Odstrani prilogo</string>
+    <string name="downloadAttachment">Prenesi prilogo</string>
+    <string name="messageOptions">Možnosti sporočil</string>
+    <string name="forward">Naprej</string>
+    <string name="replyAll">Odgovori vsem</string>
+    <string name="unarchive">Razveljavi arhiviranje</string>
+    <string name="confirmDeleteMessage">Ali ste prepričani, da želite odstraniti svojo kopijo tega sporočila? Tega dejanja ni mogoče razveljaviti.</string>
+    <string name="confirmDeleteConversation">Ali ste prepričani, da želite odstraniti svojo kopijo tega pogovora? Tega dejanja ni mogoče razveljaviti.</string>
+    <string name="errorConversationGeneric">Tega dejanja ni mogoče izvesti. Preverite svojo povezavo in poskusite znova.</string>
+    <string name="conversationArchived">Pogovor je arhiviran.</string>
+    <string name="conversationUnarchived">Arhiviranje pogovora je razveljavljeno.</string>
+    <string name="messageDeleted">Sporočilo je izbrisano.</string>
+    <string name="sendIndividualMessage">Vsakemu prejemniku pošlji individualno sporočilo.</string>
+    <string name="invalidRecipients">Nimate dovoljenja za pošiljanje sporočil enemu ali več izbranim prejemnikom.</string>
+    <string name="newMessage">Novo sporočilo</string>
+    <string name="forwardMessage">Prepošlji sporočilo</string>
+    <string name="addMorePeopleToMessage">Dodaj drugega prejemnika Sporočil, ki so naslovljena samo na vas, ni mogoče pošiljati.</string>
+    <string name="selectRecipients">Izberi prejemnike</string>
+
+    <plurals name="people_count">
+        <item quantity="one">%d oseba</item>
+        <item quantity="other">%d sodelujoči</item>
+    </plurals>
+
+    <plurals name="group_count">
+        <item quantity="one">%d skupina</item>
+        <item quantity="other">%d skupin</item>
+    </plurals>
+
+    <string name="exitWithoutSavingTitle">Ali želite izhod brez shranjevanja?</string>
+    <string name="exitWithoutSavingMessage">Ali ste prepričani, da želite izhod brez shranjevanja?</string>
+    <string name="exitUnsaved">Izhod</string>
+
+    <!-- Groups -->
+    <string name="groupDialogTitle">Sporočilo skupini?</string>
+    <string name="groupDialogMessage">Ali želite dodati vse v en pogovor skupine ali želite sporočati vsakemu posebej?</string>
+    <string name="group">Skupina</string>
+    <string name="groups">Skupine</string>
+    <string name="groupMembers">Člani skupine</string>
+
+    <string name="loading">Nalaganje&#8230;</string>
+    <string name="select_item_to_display">Izberi s seznama</string>
+
+    <string name="syllabus">Učni načrt</string>
+    <string name="coursePeople">Sodelujoči</string>
+    <string name="teachersTas">Izvajalci in demonstratorji</string>
+    <string name="students">Študenti</string>
+    <string name="observers">Skriti bralci</string>
+    <string name="syllabusMissing">Učni načrt ni dodan.</string>
+
+    <string name="canvas">Sistem Canvas</string>
+    <string name="chooseRecipient">Izberi prejemnike</string>
+    <string name="messageHasNoRecipients">To sporočilo trenutno nima prejemnikov.</string>
+    <string name="sendMessage">Pošlji sporočilo</string>
+    <string name="userAvatar">Avatar uporabnika</string>
+
+    <string name="calendarIcon">Ikona koledarja</string>
+    <string name="assignmentIcon">Ikona naloge</string>
+    <string name="announcementIcon">Ikona obvestila</string>
+    <string name="conversationIcon">Ikona pogovora</string>
+    <string name="defaultIcon">Privzeta ikona</string>
+    <string name="discussionIcon">Ikona razprave</string>
+    <string name="gradesIcon">Ikona ocen</string>
+    <string name="grades">Ocene</string>
+    <string name="allGradingPeriods">Vsa ocenjevalna obdobja</string>
+    <string name="calendar">Koledar</string>
+    <string name="bookmarks">Zaznamki</string>
+    <string name="showGrades">Prikaži ocene</string>
+    <string name="gradesAreHidden">Ocene za ta predmet niso vidne.</string>
+
+    <string name="entireGroupSelected">Ta celotna skupina je že izbrana.</string>
+    <string name="noUsersInGroup">V tej skupini ni uporabnikov.</string>
+
+    <!--Notifications-->
+    <string name="deleted">Odstranjeno</string>
+    <string name="gradedDiscussion">Ocenjena razprava</string>
+    <string name="pointsPossible">Mogoče točke</string>
+    <string name="pointsPossibleNoPeriod">Mogoče točke</string>
+
+    <string name="deletedEntryNoChildren">Pri tem izbrisanem vnosu razprave ni odgovorov.</string>
+    <string name="sideCommentEntry">Pri tej vrsti razprave na tej ravni ne morete komentirati nobenega vnosa.</string>
+    <string name="contentDescriptionFiles">Ikona datoteke</string>
+
+    <string name="loadingCanvas">Nalaganje vsebine sistema Canvas&#8230;</string>
+
+    <string name="unknownDevice">UnknownDevice</string>
+
+    <string name="differentDomainFromLink">Izbrana povezava je namenjena drugi domeni, ne tej, v katero ste se vpisali.</string>
+
+    <string name="pages">Strani</string>
+    <string name="noPageFound">Informacije o strani niso na voljo.</string>
+    <string name="noPagesInContext">Ni razpoložljivih strani za to</string>
+    <string name="modified">Nazadnje prilagojeno:</string>
+    <string name="lastModified">Nazadnje prilagojeno: %1$s</string>
+
+    <string name="masqueradeUserId">ID uporabnika v prevzeti vlogi</string>
+    <string name="startMasquerading">Začetek prevzemanja vloge</string>
+    <string name="stopMasquerading">Konec prevzemanja vloge</string>
+    <string name="userId">ID uporabnika</string>
+    <string name="masqueradeFail">Prišlo je do napake pri prevzemanju vloge</string>
+
+    <string name="emptyId">ID ne sme biti prazen.</string>
+
+    <string name="goToQuiz">Pojdi na kviz</string>
+    <string name="goToExternalTool">Pojdi na zunanje orodje</string>
+
+    <string name="pastDueDate">Po roku</string>
+
+    <string name="goToDiscussion">Pojdi na razpravo</string>
+    <string name="quizzes">Kvizi</string>
+
+    <string name="lastDiscussionPost">Zadnja objava</string>
+
+    <string name="newAnnouncement">Novo obvestilo</string>
+    <string name="newDiscussion">Nova razprava</string>
+    <string name="composeDiscussion">Ustvari razpravo</string>
+    <string name="composeAnnouncement">Ustvari obvestilo</string>
+
+    <string name="postAnnouncement">Objavi obvestilo</string>
+    <string name="postDiscussion">Objavi razpravo</string>
+
+    <string name="postAnnouncementSuccess">Obvestilo je bilo uspešno objavljeno.</string>
+    <string name="postDiscussionSuccess">Razprava je bila uspešno objavljena.</string>
+    <string name="updateDiscussionSuccess">Razprava je bila uspešno objavljena.</string>
+    <string name="draftDiscussionSuccess">Osnutek razprave je uspešno ustvarjen.</string>
+
+    <string name="errorPostingAnnouncement">Pri objavi obvestila je prišlo do napake.</string>
+    <string name="errorPostingDiscussion">Pri objavi razprave je prišlo do napake.</string>
+    <string name="allowThreading">Dovoli odgovore v niti</string>
+    <string name="usersMustPost">Uporabniki morajo objavljati, preden vidijo odgovore.</string>
+    <string name="allowUserComments">Dovoli uporabnikom, da komentirajo</string>
+    <string name="message">Sporočilo</string>
+    <string name="title">Naslov</string>
+
+
+    <string name="messageBlank">Sporočilo ne sme biti prazno.</string>
+
+    <string name="notAuthorizedAnnouncement">Oprostite. Nimate pooblastila za objavo obvestil v tem predmetu.</string>
+    <string name="notAuthorizedDiscussion">Oprostite. Nimate pooblastila za objavo razprav v tem predmetu.</string>
+
+    <string name="announcements">Obvestila</string>
+
+    <string name="titleBlank">Naslov ne sme biti prazen.</string>
+
+    <!-- Modules -->
+    <string name="modules">Moduli</string>
+    <string name="moduleItemMustView">Ogled tega elementa</string>
+    <string name="moduleItemViewed">Ta element ste si ogledali element.</string>
+    <string name="moduleItemSubmit">Mora poslati nalogo</string>
+    <string name="moduleItemSubmitted">Naloga je poslana.</string>
+    <string name="moduleItemContribute">Prispevajte k tej strani.</string>
+    <string name="moduleItemContributed">Prispevali ste</string>
+    <string name="moduleItemMinScore">Rezultat vsaj</string>
+    <string name="moduleItemMinScoreMet">Dosežen je najnižji rezultat</string>
+    <string name="prerequisites">Predpogoji:</string>
+    <string name="unlocked">Odklenjeno:</string>
+    <string name="locked">Zaklenjeno</string>
+    <string name="lockedAssignmentDesc">Ta naloga je del modula %s in še ni odklenjena.</string>
+    <string name="lockedPageDesc">Ta stran je del modula %s in še ni odklenjena.</string>
+    <string name="lockedFileDesc">Ta datoteka je del modula %s in še ni odklenjena.</string>
+    <string name="lockedQuizDesc">Ta kviz je del modula %s in še ni odklenjen.</string>
+    <string name="lockedDiscussionDesc">Ta razprava je del modula %s in še ni odklenjena.</string>
+    <string name="lockedAssignmentDescLine2">Za informacije o tem, kako odkleniti to vsebino, obiščite strani modulov predmetov.</string>
+    <string name="mustComplete">Najprej morate zaključiti:</string>
+    <string name="unlockedAt">Odklenjeno bo ob:</string>
+    <string name="goToModules">Pojdi v module</string>
+    <string name="markDone">Označi kot dokončano</string>
+    <string name="moduleItemNotFound">Elementa modula ni bilo mogoče najti</string>
+
+    <string name="help">Pomoč</string>
+    <string name="instructor_question">Vprašanje za učitelja</string>
+    <string name="link">Povezava</string>
+
+    <!-- LockInfoHTMLHelper Strings -->
+    <string name="lockedAssignmentNotModule">Ta naloga je zaklenjena.</string>
+
+    <!--New Course Layout Strings -->
+    <string name="myCourses">Moji predmeti</string>
+
+
+    <!--New Submission Strings -->
+    <string name="textEntry"> Vnos besedila</string>
+    <string name="onlineURL"> Spletni naslov URL</string>
+    <string name="enterTextEntry">Vnos besedila</string>
+    <string name="fileUpload"> Nalaganje datotek</string>
+    <string name="oneFileOnly">Pri tej oddaji je sprejemljivo le nalaganje ene datoteke.</string>
+
+
+    <string name="submit">Pošlji</string>
+    <string name="blankSubmission">Oddaja ne sme biti prazna.</string>
+    <string name="errorPostingSubmission">Pri objavi oddaje je prišlo do napake.</string>
+    <string name="successPostingSubmission">Uspešno objavljena oddaja</string>
+
+    <string name="exampleSubmissionURL">http://www.example.com</string>
+
+
+
+    <!--DataLoss Fragment Strings -->
+    <string name="unsavedProgress">Neshranjeni napredek</string>
+    <string name="informationLost">Neshranjene informacije bodo izgubljene. Ali želite nadaljevati?</string>
+    <string name="slash"> / </string>
+
+    <!--Delete Notification Strings -->
+    <string name="confirm">Potrdi</string>
+
+    <!--Dismiss To do String-->
+    <string name="markAsDone">Označi kot dokončano</string>
+
+    <!--Submission Details Strings -->
+    <string name="next">Naprej</string>
+    <string name="addSubmission">Oddaj</string>
+    <string name="addAnotherSubmission">Znova oddaj</string>
+    <string name="turnedIn">Oddano:&#160;</string>
+    <string name="addComment">Dodaj komentar&#8230;</string>
+    <string name="addCommentNoEllipsis">Dodaj komentar</string>
+    <string name="subTypeOnlineText">Vnos besedila prek spleta</string>
+    <string name="subTypeFileUpload">Nalaganje datoteke prek spleta</string>
+    <string name="subTypeOnlineURL">URL spletnega mesta</string>
+    <string name="subTypeOnlineQuiz">Spletni kviz</string>
+    <string name="subTypeMediaRecording">Medijski posnetek</string>
+    <string name="sub_type_lti_launch">Zagon orodja LTI</string>
+    <string name="subTypeDiscussionTopic">Razprava</string>
+    <string name="turnInByHand">To nalogo morate oddati osebno.</string>
+    <string name="noSubRequired">Oddaja ni zahtevana.</string>
+    <string name="noTurnInOnMobile">Nepodprta mobilna oddaja</string>
+
+    <string name="home">Glavna stran</string>
+    <string name="Notifications">Obvestila</string>
+
+    <string name="icon">Ikona</string>
+    <string name="rootUser">Korenska mapa uporabnika</string>
+    <string name="rootCourse">Korenska mapa predmeta</string>
+    <string name="rootGroup">Korenska mapa skupine</string>
+
+    <!-- Course Settings -->
+    <string name="privatelyAvailable">Na voljo je zasebno.</string>
+    <string name="publiclyAvailable">Na voljo je javno.</string>
+    <string name="starts">Začne se:  </string>
+    <string name="courseCode">Koda predmeta:  </string>
+    <string name="ends">Konča se:  </string>
+    <string name="visibility">Vidnost:  </string>
+    <string name="license">Licenca:  </string>
+
+
+    <!-- Navigation String -->
+    <string name="collaborations">Skupinske naloge</string>
+    <string name="conferences">Konference</string>
+    <string name="chat">Klepet</string>
+    <string name="outcomes">Učni izidi</string>
+
+    <!-- Submission View Strings -->
+    <string name="visitPage">Obišči stran:</string>
+    <string name="clickToViewSubmission">Ob oddaji je bilo spletno mesto posneto. Tapnite in držite spodnjo sliko, da odprete ali prenesete polno sliko.</string>
+    <string name="urlSubmissionNoPreview">Ta oddaja je bila v obliki naslova URL za zunanjo stran. Ne pozabite, da se je ta stran morda spremenila, od kar se je oddaja prvič pojavila.</string>
+    <string name="contentDescriptionPreviewImage">Predogled poslanega naslova URL</string>
+    <string name="itemStillProcessing">Ta element je v strežniku še vedno v obdelavi. Poskusite znova.</string>
+
+
+    <string name="isNotSupportedFeature">%1$s niso podprti.</string>
+    <string name="isNotSupported">Povezava ni podprta.</string>
+    <string name="openInBrowser">Odpri v brskalniku</string>
+    <string name="unsupported">Nepodprto</string>
+
+
+    <!-- Profile Strings -->
+    <string name="calendarWeekSetting">Koledar se začne s ponedeljkom.</string>
+    <string name="profile">Profil</string>
+
+    <string name="noSubject">(Ni kratkega opisa predmeta.)</string>
+    <string name="subject">Kratek opis predmeta</string>
+    <string name="sadPanda">Slika žalostnega pande</string>
+    <string name="panda_fact_string">Dejstvo o pandi:&#160;</string>
+    <string name="remove">Odstrani</string>
+    <string name="founders">Ustanovitelji</string>
+    <string name="image">Slika</string>
+
+    <string name="EULA">Licenčni pogoji za končnega uporabnika</string>
+    <string name="privacyPolicy">Pravilnik o zasebnosti</string>
+    <string name="termsOfUse">Pogoji uporabe</string>
+    <string name="openSource">Odprti vir</string>
+
+    <!-- Quiz Strings -->
+    <string name="assignmentQuizzes">Kvizi pri nalogah</string>
+    <string name="practiceQuizzes">Kvizi za vajo</string>
+    <string name="gradedSurveys">Ocenjene ankete</string>
+    <string name="surveys">Ankete</string>
+    <string name="quizMatchingDefaultDisplay">[Izberi]</string>
+    <string name="choose_answer_below">Spodaj izberite svoj odgovor.</string>
+    <string name="choose_answers_below">Spodaj izberite svoje odgovore.</string>
+
+
+    <!--Widget Strings-->
+    <string name="todoWidgetTitle">Seznam opravil</string>
+    <string name="gradesWidgetTitle">Ocene</string>
+    <string name="notificationWidgetTitle">Obvestila</string>
+    <string name="todoWidgetTitleLong">Sistem Canvas – Seznam opravil</string>
+    <string name="gradesWidgetTitleLong">Sistem Canvas – Ocene</string>
+    <string name="notificationWidgetTitleLong">Sistem Canvas – Obvestila</string>
+    <string name="notLoggedIn">Niste prijavljeni.</string>
+    <string name="widgetStyle">Izberite slog svojega pripomočka.</string>
+    <string name="widgetMinimumStyle">Skrij podrobnosti o pripomočku</string>
+    <string name="light">Svetlo</string>
+    <string name="dark">Temno</string>
+
+    <string name="invalidExternal">Temu zunanjemu orodju se je iztekel čas ali pa je nepravilno konfigurirano.</string>
+
+    <!-- Help dialog strings -->
+    <string name="askInstructor">Zastavite vprašanje učitelju.</string>
+    <string name="askInstructorDetails">Vprašanja so bila poslana učitelju.</string>
+    <string name="searchGuides">Išči vodnike po sistemu Canvas</string>
+    <string name="canvasGuides">Vodniki po sistemu Canvas</string>
+    <string name="searchGuidesDetails">Najdi odgovore na pogosta vprašanja</string>
+    <string name="reportProblem">Poročajte o težavi.</string>
+    <string name="reportProblemDetails">Če aplikacija ne deluje dobro, nas o tem obvestite.</string>
+    <string name="requestFeature">Zahtevaj funkcionalnost</string>
+    <string name="requestFeatureDetails">Ali imate zamisel za izboljšanje aplikacije?</string>
+    <string name="shareYourLove">Delite svoje navdušenje nad aplikacijo.</string>
+    <string name="shareYourLoveDetails">Opišite nam, kateri deli aplikacije so vam najljubši.</string>
+
+    <!-- Feature Request -->
+    <string name="featureSubject">Zamisel za sistem Canvas [Android]</string>
+    <string name="understandRequest">Z naslednjimi informacijami bomo bolje razumeli vašo zamisel:</string>
+
+    <!-- Ask Instructor -->
+    <string name="whichCourse">O katerem predmetu govori to vprašanje?</string>
+    <string name="allTeachers">To sporočilo bo poslano vsem izvajalcem in demonstratorjem pri predmetu.</string>
+    <string name="sending">Pošiljanje&#8230;</string>
+    <string name="error">Napaka</string>
+
+    <!-- Tablet Strings -->
+    <string name="courses">Predmeti</string>
+    <string name="toDoList">Seznam opravil</string>
+    <string name="notifications">Obvestila</string>
+    <string name="pushNotifications">Poslana obvestila</string>
+    <string name="pushNotificationsError">Za to napravo ni registriranih poslanih obvestil.</string>
+    <string name="profileSettings">Nastavitve profila</string>
+    <string name="accountPreferences">Prednostne nastavitve računa</string>
+    <string name="pinAndFingerprint">Koda PIN in prstni odtis</string>
+
+    <string name="launchSpeedgrader">Odpri aplikacijo SpeedGrader</string>
+
+    <string name="search_todo">seznamopravil seznam opravil seznami opravil seznam opravil</string>
+    <string name="search_course">predmet predmeti razred razredi</string>
+    <string name="search_grades">ocena ocene</string>
+
+    <!-- ShareFileOptions Dialog-->
+    <string name="uploadTo">Naloži v/na </string>
+    <string name="uploadToCanvas">Naloži v Canvas</string>
+    <string name="uploadMyFiles">Moje datoteke</string>
+    <string name="uploadCourseFiles">Datoteke predmeta</string>
+    <string name="uploadToSubmissionComment">Naloži v komentar oddaje</string>
+    <!-- ChangeLog Dialog-->
+    <string name="changelog">Dnevnik sprememb</string>
+
+    <string name="editUserName">Uredi uporabniško ime</string>
+    <!-- Choose Profile Image -->
+    <string name="takeANewPhoto">Posnemi novo fotografijo</string>
+    <string name="chooseFromGallery">Izberi iz galerije</string>
+    <string name="setToDefault">Nastavi na privzeto</string>
+    <string name="chooseBackgroundImage">Izberi sliko kulise</string>
+
+    <string name="no_courses">Tapnite, da dodate predmet</string>
+    <string name="no_courses_available">Tu ni predmetov, vzemite si prost dan.</string>
+    <string name="no_courses_grades">Za ogled ocen se vpišite v predmet.</string>
+    <!--Navigation Drawer-->
+    <string name="navigation_drawer_open">Odprite predal za navigacijo</string>
+    <string name="navigation_drawer_close">Zaprite predal za navigacijo</string>
+
+    <string name="preferred_land_page">Ciljna stran</string>
+    <string name="could_not_route_course">Vpisa v predmet ni mogoče najti.</string>
+    <string name="could_not_route_group">Vpisa v skupino ni mogoče najti.</string>
+    <string name="could_not_route_unknown">Prišlo je do nepričakovane napake.</string>
+    <string name="could_not_route_locked">Ta stran je skrita ali zaklenjena in dostop do nje ni mogoč.</string>
+
+    <string name="close">Zapri</string>
+    <string name="closed">Zaprto</string>
+
+    <string name="overdueAssignments">Zamujene naloge</string>
+    <string name="upcomingAssignments">Prihodnje naloge</string>
+    <string name="undatedAssignments">Naloge brez datuma</string>
+    <string name="pastAssignments">Pretekle naloge</string>
+
+    <string name="could_not_find_course">Prišlo je do napake pri pridobivanju predmeta za ta element.</string>
+    <string name="could_not_find_group">Prišlo je do napake pri pridobivanju skupine za ta element.</string>
+
+    <string name="selectBackground">Izberi kuliso</string>
+
+    <string name="notoriousSubmissionInProgress">Pošiljanje datotek&#8230; Preverite posodobitve v vrstici z obvestili.</string>
+    <string name="notoriousSubmissionSuccessful">Dokončano pošiljanje datoteke</string>
+
+    <string name="bio">Življenjepis</string>
+    <string name="draft">Osnutek</string>
+    <string name="publish">Objavi</string>
+
+    <string name="createPandaAvatar">Ustvari avatar panda</string>
+    <string name="back">Nazaj</string>
+    <string name="setAsAvatar">Nastavi kot avatar</string>
+    <string name="avatarSuccessfullySaved">Avatar panda je bil uspešno shranjen.</string>
+    <string name="regularAvatarSuccessfullySaved">Avatar panda je uspešno shranjen.</string>
+    <string name="errorSavingAvatar">Pri shranjevanju avatarja panda je prišlo do napake.</string>
+    <string name="pandaAvatar">Avatar panda</string>
+    <string name="pandaHead">Glava avatarja panda</string>
+    <string name="pandaBody">Telo avatarja panda</string>
+    <string name="pandaLegs">Noge avatarja panda</string>
+    <string name="pandaAvatarsFolderName">PandaAvatars</string>
+    <string name="share">Deli z drugimi</string>
+
+    <string name="speedgrader">SpeedGrader</string>
+    <string name="gauge">Merilo</string>
+
+    <string name="calendarDay">Dan</string>
+    <string name="calendarWeek">Teden</string>
+    <string name="calendarMonth">Mesec</string>
+    <string name="selectCalendars">Izberi koledarje</string>
+    <string name="createNewCalendarEvent">Ustvari nov dogodek</string>
+    <string name="calendarDialog10Warning">Za prikaz lahko izberete le 10 koledarjev.</string>
+    <string name="calendarDialogNoneWarning">Izberite vsaj en koledar.</string>
+    <string name="enableFunMode">Izklopi pande</string>
+
+    <string name="accountNotifications">Obvestila</string>
+    <string name="addAccount">Dodaj račun</string>
+
+    <string name="changeUser">Spremeni uporabnika</string>
+
+    <string name="no_data_connection">Preverite svojo podatkovno povezavo in poskusite znova.</string>
+
+    <!--Notification Preferences-->
+    <string name="notification_primary_inbox_title">Obvestila Canvas</string>
+    <string name="notification_channel_name_primary">Splošna obvestila Canvas</string>
+    <string name="notification_channel_description_primary">Dodatno konfiguriranje obvestil je mogoče v sekciji Canvas »Prednostne nastavitve«.</string>
+
+    <string name="notification_cat_course_activities">Aktivnosti pri predmetu</string>
+    <string name="notification_cat_discussions">Razprave</string>
+    <string name="notification_cat_conversations">Pogovori</string>
+    <string name="notification_cat_scheduling">Razporejanje</string>
+    <string name="notification_cat_groups">Skupine</string>
+    <string name="notification_cat_alerts">Opozorila</string>
+    <string name="notification_cat_conferences">Konference</string>
+
+    <string name="notification_pref_due_date">Rok</string>
+    <string name="notification_pref_grading_policies">Politike ocenjevanja</string>
+    <string name="notification_pref_course_content">Vsebina predmeta</string>
+    <string name="notification_pref_files">Datoteke</string>
+    <string name="notification_pref_announcement">Obvestilo</string>
+    <string name="notification_pref_announcement_created_by_you">Obvestila, ki ste jih ustvarili.</string>
+    <string name="notification_pref_grading">Ocenjevanje</string>
+    <string name="notification_pref_invitation">Povabilo</string>
+    <string name="notification_pref_all_submissions">Vse oddaje</string>
+    <string name="notification_pref_late_grading">Zamujen rok za ocenjevanje</string>
+    <string name="notification_pref_submission_comment">Komentar k oddaji</string>
+
+    <string name="notification_pref_discussion">Razprava</string>
+    <string name="notification_pref_discussion_post">Objava v razpravi</string>
+
+    <string name="notification_pref_add_to_conversation">Dodaj pogovoru</string>
+    <string name="notification_pref_conversation_message">Sporočilo o pogovoru</string>
+    <string name="notification_pref_conversations_created_by_you">Pogovori, ki ste jih ustvarili.</string>
+
+    <string name="notification_pref_student_appointment_signups">Prijave študentov na sestanke</string>
+    <string name="notification_pref_appointment_signups">Prijave na sestanke</string>
+    <string name="notification_pref_appointment_cancelations">Preklici sestankov</string>
+    <string name="notification_pref_appointment_availability">Razpoložljivost sestanka</string>
+    <string name="notification_pref_calendar">Koledar</string>
+
+    <string name="notification_pref_membership_update">Posodobitev članstva</string>
+    <string name="notification_pref_admin">Skrbniška obvestila</string>
+    <string name="notification_pref_recording_ready">Posnetek je pripravljen.</string>
+
+    <string name="notification_pref_type_email">E-pošta</string>
+    <string name="notification_pref_type_push">Naprava</string>
+    <string name="notification_pref_type_sms">SMS</string>
+
+    <string name="notification_pref_dialog_title">Obvestila naprav</string>
+    <string name="notification_pref_dialog_message">Ali želite izklopiti obvestila naprav? Te nastavitve je mogoče kasneje spremeniti v možnosti »Nastavitve &gt; Obvestila &gt; Za vse naprave.</string>
+    <string name="notification_pref_toast_success">Obvestila so omogočena.</string>
+
+    <string name="notification_desc_due_date">Bodite obveščeni o spremembi roka naloge.</string>
+    <string name="notification_desc_grading_policies">Bodite obveščeni o spremembi politike ocenjevanja predmeta.</string>
+    <string name="notification_desc_course_content">Bodite obveščeni o spremembi vsebine predmeta na straneh wiki (WikiPages), v kvizih in pri nalogah.</string>
+    <string name="notification_desc_files">Bodite obveščeni ob dodajanju nove datoteke predmetu.</string>
+    <string name="notification_desc_announcement">Bodite obveščeni, ko se bo pri predmetu pojavilo novo obvestilo.</string>
+    <string name="notification_desc_announcement_created_by_you">Bodite obveščeni, ko boste ustvarili obvestilo in če bo nanj nekdo odgovoril.</string>
+    <string name="notification_desc_grading">Bodite obveščeni, ko bo naloga/oddaja ocenjena/spremenjena in ko bo spremenjena utež ocene.</string>
+    <string name="notification_desc_invitation">Bodite obveščeni o povabilih na spletne konference, v skupine, skupinske naloge, ocenjevanja kolegov in opomnike.</string>
+    <string name="notification_desc_all_submissions">Samo učitelj in skrbnik. Bodite obveščeni, ko bo naloga poslana ali ponovno poslana.</string>
+    <string name="notification_desc_late_grading">Samo učitelj in skrbnik. Bodite obveščeni, ko bo poslana zamujena naloga.</string>
+    <string name="notification_desc_submission_comment">Bodite obveščeni, ko bo pri vaši oddaji podan komentar.</string>
+    <string name="notification_desc_discussion">Bodite obveščeni, ko se bo pri predmetu pojavila nova tema.</string>
+    <string name="notification_desc_discussion_post">Bodite obveščeni, ko se bo v razpravi, na katero ste naročeni, pojavila nova objava.</string>
+    <string name="notification_desc_add_to_conversation">Bodite obveščeni, ko boste dodani pogovoru.</string>
+    <string name="notification_desc_conversation_message">Bodite obveščeni, ko boste dobili novo e-poštno sporočilo.</string>
+    <string name="notification_desc_conversations_created_by_you">Bodite obveščeni, ko boste ustvarili nov pogovor.</string>
+    <string name="notification_desc_student_appointment_signups">Samo učitelj in skrbnik. Bodite obveščeni, ko se bo pojavila prijava na sestanek.</string>
+    <string name="notification_desc_appointment_signups">Bodite obveščeni, ko se bo v koledarju pojavila nova prijava.</string>
+    <string name="notification_desc_appointment_cancelations">Bodite obveščeni, ko bo sestanek preklican.</string>
+    <string name="notification_desc_appointment_availability">Bodite obveščeni, ko bo termin na voljo.</string>
+    <string name="notification_desc_calendar">Bodite obveščeni o novih in posodobljenih elementih koledarja.</string>
+    <string name="notification_desc_membership_update">Samo skrbnik; aktiviran je čakajoči vpis. Bodite obveščeni, ko bo vpis v skupino sprejet ali zavrnjen.</string>
+    <string name="notification_desc_admin">Samo učitelj in skrbnik. Bodite obveščeni o vpisih v predmete, generirana poročila, izvoženo vsebino, poročila o migracijah, uporabnikih novih računov in novih skupinah študentov.</string>
+    <string name="notification_desc_recording_ready">Bodite obveščeni, ko bo posnetek konference pripravljen.</string>
+
+    <string name="enterAnswer">Vnos odgovora</string>
+    <string name="resumeQuiz">Nadaljevanje kviza</string>
+    <string name="allowed_attempts">Dovoljeni poskusi</string>
+    <string name="viewQuestions">Ogled vprašanj</string>
+    <string name="unlimited">Neomejeno</string>
+    <string name="viewResults">Ogled rezultatov</string>
+
+    <string name="toggleTimer">Preklop časovnika</string>
+    <string name="thirtySecondWarning">Preostalih je še 30 sekund.</string>
+    <string name="timeSpentFormat" formatted="false">Porabljen čas: %d minut</string>
+    <string name="lockedIPAddress">Ta kviz je zaklenjen. Na voljo je le na določenih mestih.</string>
+    <string name="lockedInvalidAccessCode">Neveljavna koda za dostop</string>
+
+    <string name="showFlaggedQuestions">Prikaži označena/neodgovorjena vprašanja</string>
+    <string name="question">Vprašanje</string>
+    <string name="questions">Vprašanja</string>
+    <plurals name="question_count">
+        <item quantity="one">%d vprašanje</item>
+        <item quantity="other">%d vprašanj</item>
+    </plurals>
+
+    <plurals name="pointCount">
+        <item quantity="one">%s točka</item>
+        <item quantity="other">%s točk</item>
+    </plurals>
+    <string name="flagged">Označeno</string>
+
+    <string name="areYouSure">Ali ste prepričani, da želite poslati ta kviz?</string>
+    <string name="submitQuiz">Ali želite poslati ta kviz?</string>
+    <plurals name="unanswered_quiz_questions">
+        <item quantity="one">Imate %d neodgovorjeno vprašanje.\nAli ste prepričani, da želite poslati ta kviz?</item>
+        <item quantity="other">Imate %d neodgovorjenih vprašanj.\nAli ste prepričani, da želite poslati ta kviz?</item>
+    </plurals>
+    <string name="takeQuizAgain">Ponovno opravi kviz</string>
+    <string name="autoSubmitting">Samodejno pošiljanje kviza&#8230;</string>
+    <string name="submitReasonTimedQuiz">Kviz je bil poslan, ker je časovna omejitev potekla.</string>
+    <string name="submitReasonLockAt">Kviz je bil poslan, ker je bil dosežen datum zapore objave.</string>
+    <string name="quizSubmittedSuccessfully">Kviz je bil uspešno poslan.</string>
+    <string name="quizSubmittedFailure">Trenutno kviza ni bilo mogoče poslati.</string>
+    <string name="almostDue">Skoraj dokončano.</string>
+    <string name="almostDueMsg">Rok je že zelo blizu. Ali želite kviz poslati zdaj, da ne bo označen zaradi zamujenega roka?</string>
+    <string name="timeLimit">Časovna omejitev</string>
+    <string name="cantStartQuiz">Kviza ni mogoče začeti.</string>
+    <string name="start">Začni</string>
+    <string name="newPushNotifications">%1$s novih obvestil</string>
+    <string name="like">všeček</string>
+    <string name="likes">všečki</string>
+
+    <string name="wear_reminder">Razporedi opomnike rokov</string>
+    <string name="wear_notifications">Vklopi obvestila aplikacije Wear</string>
+
+    <string name="color_1">Rdeče</string>
+    <string name="color_2">Živo rožnato</string>
+    <string name="color_3">Sivka</string>
+    <string name="color_4">Vijolično</string>
+    <string name="color_5">Škrlatno</string>
+    <string name="color_6">Skrilasto modro</string>
+    <string name="color_7">Modro</string>
+    <string name="color_8">Cijan</string>
+    <string name="color_9">Zeleno</string>
+    <string name="color_10">Svetlo rumenozeleno</string>
+    <string name="color_11">Rumeno</string>
+    <string name="color_12">Zlato</string>
+    <string name="color_13">Oranžno</string>
+    <string name="color_14">Rožnato</string>
+    <string name="color_15">Sivo</string>
+
+    <string name="edit_course_nickname">Uredi vzdevek predmeta</string>
+    <string name="courseNicknameError">Vzdevka predmeta trenutno ni mogoče nastaviti.</string>
+
+    <string name="colorPickerDialogTitle">Barva predmeta</string>
+    <string name="colorPickerDialogMessage">Nastavite novo barvo in prilagodite predmet po meri.</string>
+    <string name="colorPickerError">Barve predmeta trenutno ni mogoče nastaviti.</string>
+
+    <string name="contentDescriptionColorCottonCandy">Rožnato</string>
+    <string name="contentDescriptionColorBarbie">Živo rožnato</string>
+    <string name="contentDescriptionColorBarneyPurple">Vijolično</string>
+    <string name="contentDescriptionColorEggplant">Škrlatno</string>
+    <string name="contentDescriptionColorUltramarine">Temno modro</string>
+    <string name="contentDescriptionColorOcean11">Modro</string>
+    <string name="contentDescriptionColorCyan">Cijan</string>
+    <string name="contentDescriptionColorAquaMarine">Zelenkasto modro</string>
+    <string name="contentDescriptionColorEmeraldGreen">Smaragdno</string>
+    <string name="contentDescriptionColorFreshCutLawn">Zeleno</string>
+    <string name="contentDescriptionColorChartreuse">Svetlo rumenozeleno</string>
+    <string name="contentDescriptionColorSunFlower">Rumeno</string>
+    <string name="contentDescriptionColorTangerine">Oranžno</string>
+    <string name="contentDescriptionColorBloodOrange">Temno oranžno</string>
+    <string name="contentDescriptionColorSriracha">Rdeče</string>
+
+    <string name="courseFavorited">%s predmeta, priljubljeno.</string>
+    <string name="courseNotFavorited">Predmet %s, ni priljubljen.</string>
+    <string name="groupFavorited">%s skupine, priljubljeno.</string>
+    <string name="groupNotFavorited">%s skupine, ni priljubljeno.</string>
+    <string name="accountGroup">Skupina računov</string>
+
+    <!--Recents-->
+    <string name="recents_empty">Z zaslona za prilagoditev predmeta po meri dodajte predmet ali skupino, da si jih ogledate tukaj.</string>
+
+    <string name="toolbar_close">Zapri orodno vrstico</string>
+    <string name="favoriteDescription">Prikaži v možnosti »Moji predmeti«.</string>
+    <string name="about">Vizitka</string>
+    <string name="courseShortcuts">Dodaj bližnjico predmetu</string>
+    <string name="courseNickname">Vzdevek predmeta</string>
+
+    <string name="notAvailableOffline">Med stanjem brez povezave funkcionalnost ni na voljo.</string>
+    <string name="editFavorites">Uredi predmete</string>
+
+    <string name="dashboard">Preglednica</string>
+    <string name="previous">Nazaj</string>
+    <string name="pageNum" formatted="false">Stran %d od %d</string>
+    <string name="language">Jezik</string>
+    <string name="systemDefault">Sistemsko privzeto</string>
+    <string name="restartingCanvas">Ponovni zagon sistema Canvas</string>
+    <string name="languageDialogText">Pri spremembi jezika bo potreben ponovni zagon aplikacije; ali ste prepričani?</string>
+    <string name="defaultLanguageWarning">Podpora za privzeti jezik sistema ni zajamčena in potreben bo ponovni zagon; ali ste prepričani?</string>
+    <string name="locked_mastery_paths">Zaklenjeno, dokler element »%s« ni ocenjen.</string>
+    <string name="locked_icon">Zaklenjena ikona</string>
+    <string name="choose_assignment_group">Izberi skupino nalog</string>
+    <string name="chooseAssignmentPath">Izberi pot naloge</string>
+    <string name="select">Izberi</string>
+    <string name="choice_position">Izbor %d</string>
+    <string name="updating_module_info">Posodabljanje informacij o modulu&#8230;</string>
+    <string name="arc">Arc</string>
+    <string name="pending_review">Čaka na pregled</string>
+    <string name="totalPoints">%s točk</string>
+    <string name="totalPointsText">Vsota točk:</string>
+    <string name="contentDescriptionPoints">%s točk</string>
+    <string name="contentDescriptionRubricRangeGrade">%1$s od %2$s točk</string>
+    <string name="score">Rezultat</string>
+    <string name="rangedRubricTotal" formatted="false">%s/%s točk</string>
+    <string name="seeAll">Ogled vsega</string>
+    <string name="welcome">Dobrodošli.</string>
+    <string name="dismiss">Opusti</string>
+    <string name="tapToViewAnnouncement">Tapnite za ogled obvestila.</string>
+    <string name="acceptCourseInvitation">Sprejmi</string>
+    <string name="declineCourseInvitation">Zavrni</string>
+
+    <!-- File Strings -->
+    <array name="file_size_units">
+        <item>B</item>
+        <item>kB</item>
+        <item>MB</item>
+        <item>GB</item>
+        <item>TB</item>
+    </array>
+
+    <string name="launch_link_in_external_browser">Zaženi povezavo v zunanjem brskalniku</string>
+    <string name="ltiLaunchFailure">Tega orodja LTI ni mogoče naložiti.</string>
+    <string name="urlSubmission">Oddaja naslova URL</string>
+
+    <string name="assignmentDeletedError">Ta naloga ni več na voljo.</string>
+
+    <string name="homePageIdForNotifications">Nedavna aktivnost</string>
+    <string name="homePageIdForModules">Moduli</string>
+    <string name="homePageIdForAssignments">Naloge:</string>
+    <string name="homePageIdForSyllabus">Učni načrt</string>
+
+    <string name="contentDescriptionWidgetRefresh">Osveži pripomoček</string>
+
+    <string name="copy">Kopiraj</string>
+    <string name="courseInviteTitle">Povabljeni ste.</string>
+    <string name="inviteAccepted">Povabilo sprejeto.</string>
+    <string name="inviteDeclined">Povabilo zavrnjeno.</string>
+    <string name="latePenalty">Kazen za zamudo (-%s)</string>
+    <string name="finalGrade">Končna ocena</string>
+
+    <string name="moreThan99">99+</string>
+    <string name="max_count">99+</string>
+
+    <string name="opensInWebView">Odpre se v spletnem pogledu</string>
+    <string name="unsupportedTabLabel">Ni podprto na tej napravi.</string>
+
+    <string name="downloadingFile">Prenos</string>
+    <string name="downloadFailed">Prenos ni uspel.</string>
+    <string name="downloadSuccessful">Prenos je uspel.</string>
+
+    <string name="full_due_date_details">Vse podrobnosti o roku</string>
+    <string name="submissions">Oddaje</string>
+    <string name="attachment">Priloga</string>
+    <string name="contentDescription_back">Pojdi nazaj</string>
+
+    <plurals name="quantityPointsAbbreviated">
+        <item quantity="one">%s točka</item>
+        <item quantity="other">%s točk</item>
+    </plurals>
+    <plurals name="quantityPointsFull">
+        <item quantity="one">%s točka</item>
+        <item quantity="other">%s točk</item>
+    </plurals>
+    <string name="capitalTo">Naslovnik</string>
+
+    <string name="unableToViewInBrowser">Zunanje aplikacije za ogled tega orodja LTI ni bilo mogoče najti.</string>
+
+    <string name="commentUpload">Nalaganje komentarjev</string>
+    <string name="unableToUploadMediaComment">Za pošiljanje komentarjev v obliki medijev pošljite ali izbrišite svoj neposlan komentar v obliki besedila.</string>
+
+    <string name="frontPage">Prva stran</string>
+    <string name="editPage">Uredi stran</string>
+    <string name="description">Opis</string>
+    <string name="pageSuccessfullyUpdated">Stran je uspešno posodobljena.</string>
+    <string name="errorSavingPage">Pri shranjevanju strani je prišlo do napake. Poskusite znova.</string>
+    <string name="pageTitleMustBeSet">Nastavljen mora biti naslov strani.</string>
+    <string name="pageDetails">Podrobnosti o strani</string>
+    <string name="saving">Shranjevanje</string>
+    <string name="confirmDeleteEvent">Ali ste prepričani, da želite odstraniti ta dogodek?</string>
+    <string name="conferencesNotSupported">Konference na mobilni napravi še niso podprte.</string>
+    <string name="filePreviewContentDescription">Slika predogleda datoteke</string>
+    <string name="pdfError">Med nalaganjem tega PDF je prišlo do napake</string>
+
+    <!-- Parent Strings -->
+    <string name="addChildTitle">Dodaj študenta</string>
+    <string name="addChildSubTitle">Vnesite kodo za vzpostavljanje povezave študentov, ki ste jo prejeli.</string>
+    <string name="addChildHint">Koda za vzpostavljanje povezave ...</string>
+    <string name="addChildErrorMessage">Vzpostavljanje povezave ni bilo uspešno. Prepričajte se, da je vaša koda za vzpostavljanje povezave pravilna in veljavna glede na časovno omejitev uporabe.</string>
+    <string name="gradeComplete">Zaključeno</string>
+    <string name="gradeIncomplete">Nezaključeno</string>
+</resources>

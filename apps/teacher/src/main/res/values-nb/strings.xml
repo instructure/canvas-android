@@ -274,7 +274,7 @@
     <string name="error_uploading_file">Avvik ved opplasting av filen. Vennligst prøv igjen.</string>
     <string name="uploading_file">Laster opp fil&#8230;</string>
     <string name="no_apps">Din enhet har ikke installert programmer som kan håndtere denne filen.</string>
-    <string name="turn_in">Innlevere</string>
+    <string name="turn_in">Lever</string>
     <string name="error_getting_photo">Det oppstod et avvik ved henting av bildet. Vennligst prøv igjen.</string>
     <string name="loading_files_indeterminate">Laster filer:</string>
     <string name="no_files_uploaded">Du har ikke valgt filer.</string>
@@ -318,6 +318,7 @@
     <string name="assignments_list">Oppgaveliste</string>
     <string name="syllabus">Emneoversikt</string>
     <!--End Course Settings-->
+
     <!-- Assignment Details -->
     <string name="multiple_due_dates">Flere forfallsdatoer</string>
     <string name="everyone">Alle</string>
@@ -350,6 +351,8 @@
     <string name="description">Beskrivelse</string>
     <string name="grade_total">Karakter totalt</string>
     <string name="grade">Karakter</string>
+    <string name="enter_grade">Legg inn karakter</string>
+    <string name="override">Opphev</string>
     <string name="calculated_by_rubric">Beregnet ved rubrikk</string>
     <string name="customize_grade">Tilpass karakter</string>
     <string name="out_of_points">Av %1$s</string>
@@ -510,7 +513,6 @@
 
     <string name="colorPickerDialogTitle">Emnefarge</string>
     <string name="colorPickerDialogMessage">Dette er din personlige fargeinnstilling. Bare du vil se denne fargen for emnet.</string>
-
     <string name="colorPickerError">Emnefargen kan ikke angis nå.</string>
 
     <string name="contentDescriptionColorCottonCandy">Rosa</string>
@@ -704,7 +706,6 @@
     <string name="allowThreadedReplies">Tillat svartråder</string>
     <string name="usersMustPost">Brukere må publisere før de kan se svar</string>
     <string name="allowUserComments">Lar brukere kommentere</string>
-
     <string name="discussionTitleMustBeSet">Diskusjons-tittel må angis.</string>
     <string name="discussionSuccessfullyCreated">Diskusjon opprettet.</string>
     <string name="errorCreatingDiscussion">Avvik ved forsøk på å opprette denne diskusjonen. Prøv igjen.</string>
@@ -833,7 +834,6 @@
     <string name="createAFile">Opprett en fil</string>
     <string name="createFileFolderFabContentDesc">Vis knapper for opprett fil og opprett mappe</string>
     <string name="hideCreateFileFolderFabContentDesc">Skjul tastene «opprette fil» og «opprette mappe»</string>
-
     <string name="unpublish">Avpubliser</string>
     <string name="restrictedAccess">Begrenset tilgang</string>
     <string name="restricted">Begrenset</string>
@@ -877,7 +877,6 @@
     <string name="contentDescriptionFilterSection" formatted="false">for %s</string>
     <string name="filterBySection">Filtrer etter seksjon</string>
     <string name="filterSubmissionsLowercase">Filtrer innleveringer</string>
-
     <string name="latePenalty">Forsinkelsesstraff</string>
     <string name="finalGrade">Sluttkarakter</string>
     <string name="moderatedGradingUnsupported">Moderert vurdering er for øyeblikket ikke støttet i SpeedGrader for mobiler.</string>
@@ -902,7 +901,6 @@
     <string name="gauge">Gauge</string>
     <string name="arc">Arc</string>
     <string name="ltiLaunchFailure">Dette LTI-verktøyet kan ikke lastes ned på dette tidspunktet.</string>
-
     <string name="downloading">Laster ned ...</string>
 
 </resources>

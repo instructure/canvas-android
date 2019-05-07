@@ -318,6 +318,7 @@
     <string name="assignments_list">Liste des tâches</string>
     <string name="syllabus">Programme</string>
     <!--End Course Settings-->
+
     <!-- Assignment Details -->
     <string name="multiple_due_dates">Dates limites multiples</string>
     <string name="everyone">Tout le monde</string>
@@ -350,6 +351,8 @@
     <string name="description">Description</string>
     <string name="grade_total">Total note</string>
     <string name="grade">Note</string>
+    <string name="enter_grade">Saisir une notation</string>
+    <string name="override">Remplacer</string>
     <string name="calculated_by_rubric">Calculé par rubrique</string>
     <string name="customize_grade">Personnaliser la note</string>
     <string name="out_of_points">Sur %1$s</string>
@@ -510,7 +513,6 @@
 
     <string name="colorPickerDialogTitle">Couleur du cours</string>
     <string name="colorPickerDialogMessage">Voici votre paramètre de couleur personnel. Vous seul verrez cette couleur pour ce cours.</string>
-
     <string name="colorPickerError">La couleur du cours n’a pas pu être paramétrée pour le moment.</string>
 
     <string name="contentDescriptionColorCottonCandy">Rose</string>
@@ -704,7 +706,6 @@
     <string name="allowThreadedReplies">Autoriser les réponses thématiques</string>
     <string name="usersMustPost">Les utilisateurs doivent publier quelque chose pour voir les réponses.</string>
     <string name="allowUserComments">Autoriser les utilisateurs à commenter</string>
-
     <string name="discussionTitleMustBeSet">Vous devez définir un titre de discussion.</string>
     <string name="discussionSuccessfullyCreated">Discussion créée avec succès.</string>
     <string name="errorCreatingDiscussion">Une erreur est survenue lors de la tentative de création de la discussion. Veuillez réessayer.</string>
@@ -833,7 +834,6 @@
     <string name="createAFile">Créer un fichier</string>
     <string name="createFileFolderFabContentDesc">Afficher les boutons « Créer un fichier » et « Créer un dossier »</string>
     <string name="hideCreateFileFolderFabContentDesc">Masquer les boutons Créer un fichier et Créer un dossier</string>
-
     <string name="unpublish">Ne pas publier</string>
     <string name="restrictedAccess">Accès restreint</string>
     <string name="restricted">Restreint</string>
@@ -877,7 +877,6 @@
     <string name="contentDescriptionFilterSection" formatted="false">pour %s</string>
     <string name="filterBySection">Filtrer par section</string>
     <string name="filterSubmissionsLowercase">Filtrer les soumissions</string>
-
     <string name="latePenalty">Pénalité de retard</string>
     <string name="finalGrade">Note Finale</string>
     <string name="moderatedGradingUnsupported">La notation modérée n\'est pas actuellement prise en charge dans le SpeedGrader mobile.</string>
@@ -902,7 +901,6 @@
     <string name="gauge">Gauge</string>
     <string name="arc">Arc</string>
     <string name="ltiLaunchFailure">Cet outil LTI n\'a pas pu être chargé pour le moment.</string>
-
     <string name="downloading">Téléversement en cours...</string>
 
 </resources>

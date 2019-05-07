@@ -318,6 +318,7 @@
     <string name="assignments_list">Rhestr Aseiniadau</string>
     <string name="syllabus">Maes Llafur</string>
     <!--End Course Settings-->
+
     <!-- Assignment Details -->
     <string name="multiple_due_dates">Mwy nag un dyddiad erbyn</string>
     <string name="everyone">Pawb</string>
@@ -350,6 +351,8 @@
     <string name="description">Disgrifiad</string>
     <string name="grade_total">Cyfanswm Gradd</string>
     <string name="grade">Gradd</string>
+    <string name="enter_grade">Rowch Radd</string>
+    <string name="override">Diystyru</string>
     <string name="calculated_by_rubric">Cyfrifwyd gan gyfarwyddyd sgorio</string>
     <string name="customize_grade">Addasu Gradd</string>
     <string name="out_of_points">Allan o %1$s</string>
@@ -510,7 +513,6 @@
 
     <string name="colorPickerDialogTitle">Lliw Cwrs</string>
     <string name="colorPickerDialogMessage">Dyma\'ch gosodiad lliw personol. Dim ond chi sy’n gallu gweld y lliw hwn ar gyfer y cwrs.</string>
-
     <string name="colorPickerError">Doedd dim modd gosod lliw’r cwrs y tro hwn.</string>
 
     <string name="contentDescriptionColorCottonCandy">Pinc</string>
@@ -704,7 +706,6 @@
     <string name="allowThreadedReplies">Caniatáu atebion trywydd</string>
     <string name="usersMustPost">Mae’n rhaid i ddefnyddwyr bostio cyn gweld atebion</string>
     <string name="allowUserComments">Caniatáu i ddefnyddwyr wneud sylw</string>
-
     <string name="discussionTitleMustBeSet">Rhaid gosod teitl trafodaeth.</string>
     <string name="discussionSuccessfullyCreated">Wedi llwyddo i greu trafodaeth.</string>
     <string name="errorCreatingDiscussion">Gwall wrth greu’r cyhoeddiad hwn. Rhowch gynnig arall arni.</string>
@@ -833,7 +834,6 @@
     <string name="createAFile">Creu Ffeil</string>
     <string name="createFileFolderFabContentDesc">Dangos Botymau Creu Ffeil a Creu Ffolder</string>
     <string name="hideCreateFileFolderFabContentDesc">Cuddio Botymau Creu Ffeil a Creu Ffolder</string>
-
     <string name="unpublish">Dad-gyhoeddi</string>
     <string name="restrictedAccess">Mynediad Cyfyngedig</string>
     <string name="restricted">Cyfyngedig</string>
@@ -901,7 +901,6 @@
     <string name="gauge">Medrydd</string>
     <string name="arc">Arc</string>
     <string name="ltiLaunchFailure">Doedd dim modd llwytho’r adnodd LTI hwn y tro hwn.</string>
-
     <string name="downloading">Wrthi\'n llwytho i lawr...</string>
 
 </resources>

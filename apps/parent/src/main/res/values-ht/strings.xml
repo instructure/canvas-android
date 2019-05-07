@@ -118,6 +118,9 @@
     <string name="alarmNotSet">Alam pa ka defini. Eseye ankò.</string>
     <string name="could_not_route_course">Pa kapab jwenn enskripsyon kou a.</string>
     <string name="could_not_route_assignment">Pa kapab jwenn sesyon an.</string>
+    <string name="could_not_route_announcement">Paka jwenn anons lan</string>
+    <string name="could_not_route_event">Paka jwenn aktivite a</string>
+    <string name="could_not_route_account_notifications">Paka jwenn avètisman an.</string>
     <string name="email_already_exists">Yon itilizatè egziste deja ak imèl sa a.</string>
     <string name="password_reset_success">Y ap voye yon imèl pou ou sou kijan pou reinisyalize modpas ou a.</string>
     <string name="password_reset_no_user">Nou pa jwenn okenn itilizatè ak adrès imèl sa a.</string>
@@ -225,4 +228,5 @@
     <string name="institutionAnnouncementUnavailable">Anons sa a ekspire.</string>
     <string name="previousWeekBtn">bouton semenn pase</string>
     <string name="nextWeekBtn">bouton semenn pwochen</string>
+    <string name="filesNotSupported">Yo pa aksepte fichye sa yo pou kounye a</string>
 </resources>

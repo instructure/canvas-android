@@ -1,0 +1,906 @@
+﻿<!--
+  ~ Copyright (C) 2017 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<resources>
+
+    <string name="settings_name">Nastavitve</string>
+    <string name="tab_week">Teden</string>
+    <string name="tab_inbox">Pošta</string>
+    <string name="tab_details">Podrobnosti</string>
+    <string name="tab_questions">Vprašanja</string>
+    <string name="tab_submissions">Oddaje</string>
+    <string name="tab_assignments">Naloge:</string>
+    <string name="tab_profile">Profil</string>
+    <string name="tab_people">Sodelujoči</string>
+    <string name="tab_quizzes">Kvizi</string>
+    <string name="tab_discussions">Razprave</string>
+    <string name="tab_announcements">Obvestila</string>
+    <string name="tab_attendance">Prisotnost</string>
+    <string name="tab_pages">Strani</string>
+    <string name="tab_todo">Seznam opravil</string>
+    <string name="content_description_school_logo">Logotip šole</string>
+    <string name="search_guides">Išči vodnike po sistemu Canvas</string>
+    <string name="canvas_guides">Vodniki po sistemu Canvas</string>
+    <string name="search_guides_icon">Ikona za vodnike po sistemu Canvas</string>
+    <string name="search_guides_details">Odgovori na pogosto zastavljena vprašanja</string>
+    <string name="report_problem">Poročajte o težavi</string>
+    <string name="report_problem_icon"> Ikona poročanja o težavi</string>
+    <string name="report_problem_details">Če aplikacija ne deluje dobro, nas o tem obvestite.</string>
+    <string name="request_feature">Zahtevaj funkcionalnost</string>
+    <string name="request_feature_icon">Ikona zahteve za funkcionalnost</string>
+    <string name="request_feature_details">Obvestite nas o svoji zamisli za izboljšanje aplikacije.</string>
+    <string name="share_your_love">Delite svoje navdušenje nad aplikacijo.</string>
+    <string name="share_your_love_details">Opišite nam, kateri deli aplikacije so vam najljubši.</string>
+    <string name="masquerade">Prevzemite vlogo</string>
+    <string name="issue_with_teacher_app">Težava z aplikacijo Teacher [Android]</string>
+    <string name="no_items_to_display_short">Ni elementov.</string>
+    <string name="rate_the_app">Oceni aplikacijo</string>
+    <string name="rate_the_app_icon">Ikona ocene aplikacije</string>
+    <string name="teacher_log_out">Odjava</string>
+    <string name="teacher_switch_user">Preklopi uporabnika</string>
+    <string name="under_construction">V delu.</string>
+    <string name="toolbar_event">Dogodek</string>
+    <string name="location">Mesto</string>
+    <string name="event_date">Datum dogodka</string>
+    <string name="course">Predmet</string>
+    <string name="profile">Profil</string>
+    <string name="share">Deli z drugimi</string>
+    <string name="share_with">Deli z drugimi&#8230;</string>
+
+    <!-- Navigation Drawer -->
+    <string name="navigation_drawer_open">Odpri predal za navigacijo</string>
+    <string name="navigation_drawer_close">Zapri predal za navigacijo</string>
+
+    <!-- Compose Message -->
+    <string name="no_subject">(ni kratkega opisa predmeta)</string>
+    <string name="compose_message">Sestavi sporočilo</string>
+    <string name="newMessage">Novo sporočilo</string>
+    <string name="courses">Predmeti</string>
+    <string name="compose_message_no_ellipsis">Sestavi sporočilo</string>
+    <string name="send">Pošlji</string>
+    <string name="attachment">Priloga</string>
+    <string name="attachments">Priloge</string>
+    <string name="not_available_offline">Med stanjem brez povezave funkcionalnost ni na voljo.</string>
+    <string name="empty_message">Sporočilo ne sme biti prazno.</string>
+    <string name="message_has_no_recipients">To sporočilo trenutno nima prejemnikov.</string>
+    <string name="course_spinner_title">Predmet:</string>
+    <string name="reply_to_message">Odgovori</string>
+    <string name="forward_message">Prepošlji sporočilo</string>
+    <string name="label_to">Naslovnik</string>
+    <string name="label_course">Predmet</string>
+    <string name="label_subject">Kratek opis predmeta</string>
+
+    <string name="common_send">Pošlji</string>
+    <string name="common_edit">Uredi</string>
+
+    <!-- Feature Request -->
+    <string name="feature_subject">Zamisel za aplikacijo Teacher [Android]</string>
+    <string name="understand_request">Z naslednjimi informacijami bomo bolje razumeli vašo zamisel:</string>
+    <string name="send_mail">Pošlji e-pošto&#8230;</string>
+
+    <string name="color_1">Rdeče</string>
+    <string name="color_2">Živo rožnato</string>
+    <string name="color_3">Sivka</string>
+    <string name="color_4">Vijolično</string>
+    <string name="color_5">Škrlatno</string>
+    <string name="color_6">Skrilasto modro</string>
+    <string name="color_7">Modro</string>
+    <string name="color_8">Cijan</string>
+    <string name="color_9">Zeleno</string>
+    <string name="color_10">Svetlo rumenozeleno</string>
+    <string name="color_11">Rumeno</string>
+    <string name="color_12">Zlato</string>
+    <string name="color_13">Oranžno</string>
+    <string name="color_14">Rožnato</string>
+    <string name="color_15">Sivo</string>
+
+    <string name="attachment_icon">Ikona priloge</string>
+    <string name="star_icon">Ikona zvezdice</string>
+    <string name="monologue">Samogovor</string>
+
+    <string name="create_announcement_topic_title_hint">Naslov teme</string>
+    <string name="post_date">Datum objave</string>
+    <string name="announcement">Obvestilo</string>
+    <string name="create_announcement_title">Novo obvestilo</string>
+    <string name="create_announcement_no_description">Zahtevan je opis.</string>
+    <string name="announcementDetails">Podrobnosti o obvestilu</string>
+
+    <string name="no_title">Ni naslova.</string>
+    <string name="announcement_create_success">Obvestilo je ustvarjeno.</string>
+    <string name="announcement_create_fail">Obvestila ni mogoče ustvariti. Preverite svojo povezavo in poskusite znova.</string>
+    <string name="create_announcement_delay_posting">Zakasni objavljanje</string>
+
+    <string name="discussion">Razprava</string>
+
+    <string name="sunday">Nedelja</string>
+    <string name="monday">Ponedeljek</string>
+    <string name="tuesday">Torek</string>
+    <string name="wednesday">Sreda</string>
+    <string name="thursday">Četrtek</string>
+    <string name="friday">Petek</string>
+    <string name="saturday">Sobota</string>
+
+    <string name="add_attachment">Dodaj prilogo</string>
+    <string name="content_description_files">Ikona datoteke</string>
+    <string name="next">Naprej</string>
+    <string name="upload_to_cnavas">Naloži v sistem Canvas</string>
+    <string name="upload_my_files">Moje datoteke</string>
+    <string name="upload_course_files">Datoteke predmeta</string>
+    <string name="upload_to">Naloži v</string>
+    <string name="message_attachments">Priloge sporočilom</string>
+    <string name="with">s/z</string>
+    <string name="discussion_attachment">Dodaj datoteko</string>
+    <string name="select_files_or_photos">Izberi datoteke ali fotografije</string>
+    <string name="uploading_files">Nalaganje datotek&#8230;</string>
+    <string name="no_attachment">(Ni priloge.)</string>
+    <string name="creating_announcement">Ustvarjanje obvestila&#8230;</string>
+
+    <string name="copy_email">Kopiraj e-poštni naslov</string>
+    <string name="all_grading_periods">Vsa ocenjevalna obdobja</string>
+    <string name="no_submissions">Ni oddaj.</string>
+    <string name="all_submissions_graded">Vse oddaje so ocenjene.</string>
+    <string name="icon">ikona</string>
+    <plurals name="grading_status_assignment">
+        <item quantity="one">%d oddaja mora biti ocenjena.</item>
+        <item quantity="other">%d oddaj je treba oceniti.</item>
+    </plurals>
+
+    <plurals name="assignees_without_grades">
+        <item quantity="one">Obstaja %d prevzemnik brez ocene.</item>
+        <item quantity="other">Obstaja %d prevzemnikov brez ocen.</item>
+    </plurals>
+
+    <string name="inbox_empty_title">Ni sporočil.</string>
+    <string name="inbox_empty_starred_title">Ni sporočil, označenih z zvezdico.</string>
+    <string name="inbox_empty_message">Tapnite »+«, da ustvarite nov pogovor.</string>
+    <string name="inbox_empty_starred_message">Označite sporočilo z zvezdico, tako da tapnete zvezdico v njem.</string>
+
+    <string name="reply">Odgovori</string>
+    <string name="replyAll">Odgovori vsem</string>
+    <string name="forward">Naprej</string>
+    <string name="star">Označi z zvezdico</string>
+    <string name="archive">Arhiviraj</string>
+    <string name="delete">Izbriši</string>
+    <string name="message">Sporočilo</string>
+    <string name="unarchive">Razveljavi arhiviranje</string>
+    <string name="message_options">Možnosti sporočil</string>
+    <string name="markAsUnread">Označi kot neprebrano</string>
+    <string name="message_delete_warning">Ali ste prepričani, da želite odstraniti svojo kopijo tega sporočila? Tega dejanja ni mogoče razveljaviti.</string>
+    <string name="conversation_delete_warning">Ali ste prepričani, da želite odstraniti svojo kopijo tega pogovora? Tega dejanja ni mogoče razveljaviti.</string>
+    <string name="error_conversation_generic">Tega dejanja ni mogoče izvesti. Preverite svojo povezavo in poskusite znova.</string>
+    <string name="message_archived">Sporočilo je arhivirano.</string>
+    <string name="message_unarchived">Arhiviranje sporočila je razveljavljeno.</string>
+    <string name="message_deleted">Sporočilo je izbrisano.</string>
+    <string name="select_recipients">Izberi prejemnike</string>
+    <string name="entire_group_selected">Izbrana je celotna skupina.</string>
+    <string name="no_users_in_group">V skupini ni uporabnikov.</string>
+
+    <string name="published">Objavljeno</string>
+    <string name="not_published">Neobjavljeno</string>
+    <string name="published_content_description">Kljukica »Objavljeno«</string>
+    <string name="points_with_value">točk</string>
+    <string name="point_with_value">točka</string>
+    <string name="no_due_date">Ni roka.</string>
+    <string name="due_date">Rok</string>
+
+    <string name="view_replies">Ogled odgovorov</string>
+    <string name="view_discussion">Ogled razprave</string>
+
+    <string name="edit">Uredi</string>
+    <string name="save">Shrani</string>
+    <string name="successfully_updated_assignment">Naloga je uspešno posodobljena.</string>
+    <string name="successfully_updated_quiz">Kviz je uspešno posodobljen.</string>
+    <string name="failure_updating_assignment">Pri posodabljanju naloge je prišlo do težav. Poskusite znova.</string>
+    <string name="failure_deleting_assignment">Pri brisanju naloge je prišlo do težav. Poskusite znova.</string>
+    <string name="cant_unpublish">Neobjava ni mogoča, če obstajajo oddaje študentov.</string>
+    <string name="messages">Sporočila</string>
+    <plurals name="reply_message_plus_label">
+        <item quantity="one">+ %d sporočilo</item>
+        <item quantity="other">+ %d sporočil</item>
+    </plurals>
+    <plurals name="submissionNeedsGrading">
+        <item quantity="one">%d oddaja mora biti ocenjena.</item>
+        <item quantity="other">%d oddaj je treba oceniti.</item>
+    </plurals>
+
+    <string name="delete_assignment_message">Ali ste prepričani, da želite odstraniti to nalogo?</string>
+    <string name="question">Vprašanje</string>
+    <string name="quizMatchingDefaultDisplay">[Izberi]</string>
+
+    <string name="max_count">99+</string>
+    <string name="message_student">Sporoči študentu</string>
+
+    <string name="message_these_students">Pošlji sporočilo tem študentom</string>
+    <string name="submission_status_missing">Manjkajoče</string>
+    <string name="submission_status_late">Zamuda</string>
+    <string name="submission_status_submitted">Poslano</string>
+    <string name="submission_status_not_submitted">Še ni poslano.</string>
+    <string name="submission_status_excused">Opravičeno</string>
+    <string name="last_login_format">Zadnja prijava: %s</string>
+
+    <string name="muteGrades">Ocene brez sprotnega obveščanja</string>
+    <string name="unmuteGrades">Ocene s sprotnim obveščanjem</string>
+    <string name="gradesMutedLabel">Ocene so brez sprotnega obveščanja.</string>
+    <string name="turnOnAnonymousGrading">Vklopi anonimizirano ocenjevanje</string>
+    <string name="turnOffAnonymousGrading">Izklopi anonimizirano ocenjevanje</string>
+    <string name="anonymousGradingLabel">Anonimno ocenjevanje</string>
+    <string name="anonymousStudentLabel">Študent</string>
+
+    <!-- TODO -->
+    <string name="coming_soon">Funkcionalnost bo kmalu na voljo.</string>
+
+    <string-array name="submission_filters">
+        <item>Vse oddaje</item>
+        <item>Zamujeni roki oddaje</item>
+        <item>Manjkajoče oddaje</item>
+        <item>Visoka ocena</item>
+        <item>Nizka ocena</item>
+    </string-array>
+
+    <string-array name="people_filters">
+        <item>Glede na ime</item>
+        <item>Ocena – od visoke do nizke</item>
+        <item>Ocena – od nizke do visoke</item>
+    </string-array>
+
+    <string name="content_description_course_tab">Zavihek »Predmet«</string>
+    <string name="content_description_inbox_tab">Zavihek »Pošta«</string>
+    <string name="content_description_profile_tab">Zavihek »Profil«</string>
+    <string name="close">Zapri</string>
+    <string name="no_course_selected">Izberite predmet.</string>
+    <string name="discussion_reply_to_entry">Odgovor na razpravo</string>
+    <string name="announcement_reply_to_entry">Odgovor na obvestilo</string>
+    <string name="error_text_missing">Če želite poslati sporočilo, dodajte nekaj besedila.</string>
+    <string name="error_sending_message">Tega sporočila ni bilo mogoče poslati. Tapnite, da poskusite znova.</string>
+    <string name="message_sent_successfully">Sporočilo je uspešno poslano.</string>
+    <string name="error_occurred">Prišlo je do nepričakovane napake.</string>
+    <string name="no_assignments_with_file_upload">Ta predmet nima nalog, pri katerih bi bilo mogoče nalagati datoteke.</string>
+    <string name="extension_not_allowed">Izbrana vrsta datotek ni dovoljena.</string>
+    <string name="allowed_extensions">Dovoljene pripone:&#160;</string>
+    <string name="files_uploaded_successfully">Datoteke so uspešno naložene.</string>
+    <string name="error_uploading_file">Pri nalaganju datoteke je prišlo do napake. Poskusite znova.</string>
+    <string name="uploading_file">Nalaganje datoteke&#8230;</string>
+    <string name="no_apps">V vaši napravi ni nameščene nobene aplikacije, ki bi lahko obravnavala to datoteko.</string>
+    <string name="turn_in">Oddaj</string>
+    <string name="error_getting_photo">Pri pridobivanju fotografije je prišlo do napake. Poskusite znova.</string>
+    <string name="loading_files_indeterminate">Nalaganje datotek&#8230;</string>
+    <string name="no_files_uploaded">Niste izbrali nobene datoteke.</string>
+    <string name="file_upload_not_supported">V izbrano nalogo ne morete naložiti datotek.</string>
+    <string name="one_or_more_extension_not_allowed">Ena ali več datotek ima pripono datoteke, ki ni dovoljena.</string>
+
+    <string name="inbox_all">Pošta</string>
+    <string name="inbox_unread">Neprebrano</string>
+    <string name="inbox_starred">Označeno z zvezdico</string>
+    <string name="inbox_sent">Poslano</string>
+    <string name="inbox_archived">Arhivirano</string>
+    <string name="inbox_all_messages">Vse</string>
+    <string name="uploading_file_num" formatted="false">Nalaganje %d od %d</string>
+    <string name="page_not_found">Strani ni mogoče najti.</string>
+    <string name="no_connection">Ni povezave.</string>
+    <string name="unauthorized_access">Nimate pooblastil za dostop do tega. Nimate dovoljenj ali pa še nimate dostopa (vaš predmet se, na primer, še ni začel).</string>
+    <string name="server_error">Prišlo je do napake strežnika.</string>
+    <string name="error_loading_files">Pri nalaganju datoteke je prišlo do napake. Preverite svojo internetno povezavo in poskusite znova.</string>
+    <string name="files_submitted_successfully">Datoteke so uspešno poslane.</string>
+    <string name="no_data_connection">Preverite svojo podatkovno povezavo in poskusite znova.</string>
+    <string name="teacher_logout_warning">Ali ste prepričani, da se želite odjaviti?</string>
+    <string name="teacher_yes">Da</string>
+    <string name="teacher_no">Ne</string>
+    <string name="teacher_sending">Pošiljanje&#8230;</string>
+    <string name="teacher_cancel">Prekliči</string>
+    <string name="teacher_okay">V redu</string>
+    <string name="teacher_upload">Naloži</string>
+    <string name="settings">Nastavitve</string>
+    <string name="edit_courses">Uredi predmete</string>
+    <string name="start_annotating">Začni z dodajanjem opomb</string>
+    <string name="empty_speedgrader_content">Prazen pogled aplikacije Speedgrader; potrebno je oblikovanje.</string>
+
+    <!--Course Settings-->
+    <string name="course_settings">Nastavitve predmeta</string>
+    <string name="course_name">Ime predmeta</string>
+    <string name="set_home_to">Nastavi »Glavno stran« na ...</string>
+    <string name="course_activity_stream">Aktivnosti predmeta</string>
+    <string name="pages_front_page">Prva stran pri straneh</string>
+    <string name="frontPage">Prva stran</string>
+    <string name="course_modules">Moduli predmeta</string>
+    <string name="assignments_list">Seznam nalog</string>
+    <string name="syllabus">Učni načrt</string>
+    <!--End Course Settings-->
+
+    <!-- Assignment Details -->
+    <string name="multiple_due_dates">Več rokov</string>
+    <string name="everyone">Vsi</string>
+    <string name="everyone_else">Vsi ostali</string>
+    <string name="unknown_student">Neznan študent</string>
+    <string name="closed">Zaprto</string>
+    <string name="no_date_filler">--</string>
+    <string name="due_date_at_time" formatted="false">Rok %1s ob %2s.</string>
+    <string name="last_post" formatted="false">Zadnja objava %s</string>
+    <string name="submission_types">Vrste oddaj</string>
+    <string name="full_due_date_details">Vse podrobnosti o roku</string>
+    <string name="availability_label">Razpoložljivost:</string>
+    <string name="available_to_label">Na voljo do:</string>
+    <string name="available_from_label">Na voljo od:</string>
+    <string name="due_for_label">Za:</string>
+    <string name="due_label">Rok:</string>
+    <string name="details_available_to_label">Na voljo do</string>
+    <string name="details_available_from_label">Na voljo od</string>
+    <string name="details_due_for_label">Za</string>
+    <string name="due_date_header_label">Rok</string>
+    <string name="assignment_details">Podrobnosti o nalogi</string>
+    <string name="no_content">Ni vsebine.</string>
+    <string name="submissions">Oddaje</string>
+    <string name="no_assignment_description_filler">Dodajte navodila in tako pomagajte študentom pri tej nalogi.</string>
+    <string name="no_quiz_description_filler">Dodajte navodila in tako pomagajte študentom pri tem kvizu.</string>
+    <string name="page_title_due_dates">Roki</string>
+    <string name="edit_assignment">Uredi nalogo</string>
+    <string name="edit_quiz">Uredi kviz</string>
+    <string name="title">Naslov</string>
+    <string name="description">Opis</string>
+    <string name="grade_total">Skupna ocena</string>
+    <string name="grade">Ocena</string>
+    <string name="enter_grade">Vnesite oceno</string>
+    <string name="override">Preglasitve</string>
+    <string name="calculated_by_rubric">Izračunano glede na ocenjevalni vodnik</string>
+    <string name="customize_grade">Prilagodi oceno po meri</string>
+    <string name="out_of_points">Od %1$s</string>
+    <string name="gpa">Lestvica GPA</string>
+    <string name="letter_grade">Črkovna ocena</string>
+    <string name="excuse_student">Opraviči študenta</string>
+    <string name="excuseGroup">Opraviči skupino</string>
+    <string name="complete_grade">Zaključeno</string>
+    <string name="incomplete_grade">Nezaključeno</string>
+    <string name="not_graded">Ni ocenjeno.</string>
+    <string name="excused">Opravičeno</string>
+    <string formatted="false" name="grade_value_format">%s %s</string>
+    <string name="grade_value_format_talk_back">%1$s od %2$s</string>
+    <string name="publish">Objavi</string>
+    <string name="error_saving_assignment">Pri shranjevanju naloge je prišlo do napake. Poskusite znova.</string>
+    <string name="error_saving_quiz">Pri shranjevanju kviza je prišlo do napake. Poskusite znova.</string>
+    <string name="assignment_name_must_be_set">Nastavljeno mora biti ime naloge.</string>
+    <string name="announcement_name_must_be_set">Nastavljen mora biti naslov obvestila.</string>
+    <string name="quiz_title_must_be_set">Nastavljen mora biti naslov kviza.</string>
+    <string name="assignment_points_must_be_set">Nastavljene morajo biti točke naloge.</string>
+    <string name="quiz_points_must_be_set">Nastavljene morajo biti točke kviza.</string>
+    <string name="assignee_type_course_sections">Sekcije predmeta</string>
+    <string name="assignee_type_groups">Skupine</string>
+    <string name="assignee_type_students">Študenti</string>
+    <string name="page_title_add_assignees">Dodaj prevzemnike</string>
+    <string name="assign_to">Dodeli</string>
+    <string name="available_from">Na voljo od</string>
+    <string name="available_to">Na voljo do</string>
+    <string name="unlock_after_due_date_error">Datum sprostitve zapore ne more biti po roku.</string>
+    <string name="lock_before_due_date_error">Datum zapore objave ne more biti pred rokom.</string>
+    <string name="lock_after_unlock_error">Datum zapore objave ne more biti pred datumom sprostitve zapore.</string>
+    <string name="assignee_blank_error">Prevzemnik ne sme biti prazen.</string>
+    <string name="remove">Odstrani</string>
+    <string name="add_due_date">Dodaj rok</string>
+    <string name="full_submission_details">Vse podrobnosti o oddaji</string>
+    <string name="graded">Ocenjeno</string>
+    <string name="needsGrading">Je treba oceniti.</string>
+    <string name="not_submitted">Ni oddano.</string>
+    <string name="content_description_submission_donut_graded" formatted="false">Ocenjeno, %s od %s</string>
+    <string name="content_description_submission_donut_needs_grading" formatted="false">Je treba oceniti, %s od %s</string>
+    <string name="content_description_submission_donut_unsubmitted" formatted="false">Ni oddano, %s od %s</string>
+    <string name="display_grade_as">Prikaži oceno kot&#8230;</string>
+    <string name="percentage">Odstotek</string>
+    <string name="complete_incomplete">Zaključeno/nezaključeno</string>
+    <string name="points">Točke</string>
+    <string name="gpa_scale">Lestvica GPA</string>
+
+    <string-array name="display_grade_as_types" translatable="false">
+        <item>@string/percentage</item>
+        <item>@string/complete_incomplete</item>
+        <item>@string/points</item>
+        <item>@string/letter_grade</item>
+        <item>@string/gpa_scale</item>
+        <item>@string/not_graded</item>
+    </string-array>
+
+    <string-array name="display_grade_as_types_discussion" translatable="false">
+        <item>@string/percentage</item>
+        <item>@string/complete_incomplete</item>
+        <item>@string/points</item>
+        <item>@string/letter_grade</item>
+        <item>@string/gpa_scale</item>
+    </string-array>
+
+  <string name="not_a_teacher">Niste izvajalec?</string>
+    <string name="not_a_teacher_tap_to_visit_play_store">Morda bi bolj ustrezala kakšna druga aplikacija. Tapnite eno od njih, da obiščete trgovino Play Store.</string>
+    <string name="canvas_lowercase">canvas</string>
+
+  <string name="sg_tab_grade">Ocena</string>
+    <string name="sg_tab_comments">Komentarji</string>
+    <string name="sg_tab_files">Datoteke</string>
+    <string name="filter_submissions">Filtriraj oddaje</string>
+    <string name="all_submissions">Vse oddaje</string>
+    <string name="submitted_late">Poslano z zamudo</string>
+    <string name="havent_submitted_yet">Še niso oddali.</string>
+    <string name="havent_been_graded">Še ni ocenjeno.</string>
+    <string name="scored_less_than">Dosegel rezultat, manjši od&#8230;</string>
+    <string name="scored_more_than">Dosegel rezultat, večji od&#8230;</string>
+    <string name="scored_less_than_value">Dosegel rezultat, manjši od %s</string>
+    <string name="scored_more_than_value">Dosegel rezultat, večji od %s</string>
+    <string name="add_comment">Dodaj komentar</string>
+    <string name="editComment">Uredi komentar</string>
+    <string name="deleteComment">Izbriši komentar</string>
+    <string name="deleteAnnotation">Izbriši opombo</string>
+    <string name="deleteCommentConfirmation">Ali ste prepričani, da želite odstraniti ta komentar?</string>
+    <string name="rubric_view_long_description">Ogled dolgega opisa</string>
+    <string name="rubric">Ocenjevalni vodnik</string>
+    <string name="enter_custom_value">Vnos prilagojene vrednosti po meri</string>
+    <string name="success_saving_rubric_assessment">Ocenjevanje z ocenjevalnim vodnikom je shranjeno.</string>
+    <string name="error_saving_rubric_assessment">Med shranjevanjem ocenjevanja z ocenjevalnim vodnikom je prišlo do napake. Poskusite znova.</string>
+    <string name="rubric_assessment_score_out_of_total">%1$s od %2$s</string>
+    <string name="criterion_rating_customize_score">Prilagodi rezultat po meri</string>
+    <string name="edit_criterion_comment">Uredi komentar merila</string>
+    <string name="sendMessageToHint">Sporočilo %s</string>
+    <string name="save_comment">Shrani komentar</string>
+    <string name="cancel_editing_comment">Prekliči urejanje komentarja</string>
+    <string name="skip">Preskoči</string>
+
+    <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
+    <string name="rating_button_content_description_custom">Po meri prilagojen rezultat %1$s</string>
+
+    <!-- Content description for criterion rating button, including score and description. e.g. "100, meets all expectations" -->
+    <string name="rating_button_content_description">»%1$s, %2$s</string>
+
+    <plurals name="submission_points_possible">
+        <item quantity="one">od %s točk</item>
+        <item quantity="other">od %s točk</item>
+    </plurals>
+
+    <string name="tab_courses">Predmeti</string>
+    <string name="course_options">Možnosti predmeta</string>
+    <string name="edit_favorite_courses">Uredi priljubljene predmete</string>
+    <string name="feedback_form">Obrazec za povratne informacije</string>
+    <string name="see_all">Ogled vsega</string>
+    <string name="all_courses">Vsi predmeti</string>
+    <string name="welcome">Dobrodošli.</string>
+    <string name="empty_course_list_message">Dodajte nekaj priljubljenih predmetov, da prilagodite ta prostor po svoje.</string>
+    <string name="add_courses">Dodaj predmete</string>
+    <string name="unable_to_add_course_to_favorites">Tega predmeta trenutno ni mogoče dodati v meni predmetov.</string>
+    <string name="grading_periods_filter">Filter ocenjevalnih obdobij</string>
+    <string name="assignments">Naloge:</string>
+    <string name="clear_filter">Počisti filter</string>
+    <string name="due">Rok %1$s</string>
+    <string name="updated">Posodobljeno %1$s</string>
+
+    <plurals name="needsGradingCount">
+        <item quantity="one">%s je treba oceniti.</item>
+        <item quantity="other">%s je treba oceniti.</item>
+    </plurals>
+    <plurals name="needsGradingNoQuantity">
+        <item quantity="one">Je treba oceniti.</item>
+        <item quantity="other">Je treba oceniti.</item>
+    </plurals>
+    <string name="at">ob</string>
+    <plurals name="quantityPointsAbbreviated">
+        <item quantity="one">%s točka</item>
+        <item quantity="other">%s točk</item>
+    </plurals>
+    <plurals name="quantityPointsFull">
+        <item quantity="one">%s točka</item>
+        <item quantity="other">%s točk</item>
+    </plurals>
+    <plurals name="people_count">
+        <item quantity="one">%d oseba</item>
+        <item quantity="other">%d sodelujoči</item>
+    </plurals>
+    <plurals name="group_count">
+        <item quantity="one">%d skupina</item>
+        <item quantity="other">%d skupin</item>
+    </plurals>
+    <string name="cmp_closed">Zaprto</string>
+    <string name="favorited_content_description" formatted="false">%s %s</string>
+    <string name="content_description_favorite">priljubljeno</string>
+    <string name="content_description_not_favorite">ni priljubljeno</string>
+    <string name="edit_nickname">Uredi vzdevek</string>
+    <string name="edit_course_color">Uredi barvo predmeta</string>
+    <string name="edit_course_nickname">Uredi vzdevek predmeta</string>
+
+    <string name="colorPickerDialogTitle">Barva predmeta</string>
+    <string name="colorPickerDialogMessage">To je vaša osebna nastavitev barve. To barvo za predmet boste videli samo vi.</string>
+    <string name="colorPickerError">Barve predmeta trenutno ni mogoče nastaviti.</string>
+
+    <string name="contentDescriptionColorCottonCandy">Rožnato</string>
+    <string name="contentDescriptionColorBarbie">Živo rožnato</string>
+    <string name="contentDescriptionColorBarneyPurple">Vijolično</string>
+    <string name="contentDescriptionColorEggplant">Škrlatno</string>
+    <string name="contentDescriptionColorUltramarine">Temno modro</string>
+    <string name="contentDescriptionColorOcean11">Modro</string>
+    <string name="contentDescriptionColorCyan">Cijan</string>
+    <string name="contentDescriptionColorAquaMarine">Zelenkasto modro</string>
+    <string name="contentDescriptionColorEmeraldGreen">Smaragdno</string>
+    <string name="contentDescriptionColorFreshCutLawn">Zeleno</string>
+    <string name="contentDescriptionColorChartreuse">Svetlo rumenozeleno</string>
+    <string name="contentDescriptionColorSunFlower">Rumeno</string>
+    <string name="contentDescriptionColorTangerine">Oranžno</string>
+    <string name="contentDescriptionColorBloodOrange">Temno oranžno</string>
+    <string name="contentDescriptionColorSriracha">Rdeče</string>
+    <string name="launch_link_in_external_browser">Zaženi povezavo v zunanjem brskalniku</string>
+    <string name="contentDescriptionSelectedFile">Izbrana datoteka</string>
+    <string name="contentDescriptionFileIcon">Ikona datoteke</string>
+    <string name="contentDescriptionExpandPage">Razširi stran</string>
+    <string name="contentDescriptionCollapsePage">Strni stran</string>
+    <string name="noInternetConnectionTitle">Brez internetne povezave.</string>
+    <string name="noInternetConnectionMessage">Pri tem dejanju je potrebna internetna povezava.</string>
+
+    <string name="emptyDetailsMessage">Za ogled podrobnosti tapnite element na seznamu.</string>
+
+    <string name="assignmentQuizzes">Kvizi pri nalogah</string>
+    <string name="practiceQuizzes">Kvizi za vajo</string>
+    <string name="gradedSurveys">Ocenjene ankete</string>
+    <string name="surveys">Ankete</string>
+    <string name="editQuiz">Uredi podrobnosti o kvizu</string>
+    <string name="requireAccessCode">Zahtevaj kodo za dostop</string>
+    <string name="accessCode">Koda za dostop</string>
+    <string name="mustHaveAccessCode">Vstavite kodo za dostop ali pa ne zahtevajte kode za dostop.</string>
+    <string name="errorSavingQuiz">Pri shranjevanju kviza je prišlo do napake. Poskusite znova.</string>
+    <string name="successfullyUpdatedQuiz">Kviz je uspešno posodobljen.</string>
+    <string name="quizType">Vrsta kviza</string>
+
+    <string name="practiceQuiz">Vadi kviz</string>
+    <string name="gradedQuiz">Ocenjeni kviz</string>
+    <string name="gradedSurvey">Ocenjena anketa</string>
+    <string name="ungradedSurvey">Neocenjena anketa</string>
+
+    <string-array name="quizTypes" translatable="false">
+        <item>@string/practiceQuiz</item>
+        <item>@string/gradedQuiz</item>
+        <item>@string/gradedSurvey</item>
+        <item>@string/ungradedSurvey</item>
+    </string-array>
+    <string name="quizStatusUntaken">Ni opravljano.</string>
+
+    <string name="quizStatusComplete">Zaključeno</string>
+    <string name="quizStatusPendingReview">Čaka na pregled</string>
+    <string name="quizStatusInProgress">Poteka</string>
+    <string name="quizStatusNotStarted">Ni začeto.</string>
+
+
+    <string name="quiz_settings_label_quiz_type">Vrsta kviza:</string>
+    <string name="quiz_settings_label_assignment_group">Skupina nalog:</string>
+    <string name="quiz_settings_label_shuffle_answers">Prerazporedi odgovore:</string>
+    <string name="quiz_settings_label_multiple_attempts">Več poskusov:</string>
+    <string name="quiz_settings_label_time_limit">Časovna omejitev:</string>
+    <string name="quiz_settings_label_score_to_keep">Upoštevani rezultat:</string>
+    <string name="quiz_settings_label_attempts">Poskusi:</string>
+    <string name="quiz_settings_label_view_responses">Ogled odgovorov:</string>
+    <string name="quiz_settings_label_show_correct_answers">Prikaži pravilne odgovore:</string>
+    <string name="quiz_settings_label_one_question_at_a_time">Eno vprašanje naenkrat:</string>
+    <string name="quiz_settings_label_ip_filter">IP-filter:</string>
+    <string name="quiz_settings_label_points">Točke:</string>
+    <string name="quiz_settings_label_access_code">Koda za dostop:</string>
+    <string name="quiz_settings_label_anonymous_submissions">Anonimne oddaje:</string>
+    <string name="quiz_settings_label_lock_questions_after_answering">Zakleni vprašanja, ko bo nanje odgovorjeno:</string>
+
+    <string name="quizPreview">Predogled kviza</string>
+    <string name="preview_quiz">Predogled kviza</string>
+    <string name="quiz_details">Podrobnosti o kvizu</string>
+    <string name="submission_versions">Različice oddaj</string>
+    <string name="speedgrader_student_no_submissions">Ta študent nima oddaj za to nalogo.</string>
+    <string name="speedgrader_group_no_submissions">Ta skupina nima oddaj za to nalogo.</string>
+    <string name="speedgrader_unsupported_type">Nepodprta vrsta oddaje</string>
+    <string name="unlimited">Neomejeno</string>
+    <string name="practice_quiz">Vadi kviz</string>
+    <string name="graded_quiz">Ocenjeni kviz</string>
+    <string name="graded_survey">Ocenjena anketa</string>
+    <string name="ungraded_survey">Neocenjena anketa</string>
+    <string name="no_time_limit">Brez časovne omejitve</string>
+    <string name="immediately">Takoj</string>
+    <string name="quiz_details_no_points_assigned">Ni dodeljenih točk.</string>
+
+    <string name="quiz_details_from_to">Od %1$s do %2$s</string>
+    <string name="quiz_details_after">Po %1$s</string>
+    <string name="quiz_details_until">Do %1$s</string>
+    <string name="filterPointsMustBeSet">Vnesite vrednost.</string>
+
+    <plurals name="quantityQuestions">
+        <item quantity="one">%d vprašanje</item>
+        <item quantity="other">%d vprašanj</item>
+    </plurals>
+
+    <plurals name="minutes">
+        <item quantity="one">%s minuta</item>
+        <item quantity="other">%s minut</item>
+    </plurals>
+
+    <string name="discussion_details">Podrobnosti o razpravi</string>
+    <string name="discussions_pinned">Pripeto</string>
+    <string name="discussions_unpinned">Razprave</string>
+    <string name="discussions_closed">Zaprto za komentarje</string>
+    <string name="discussions_open">Odpri za komentarje</string>
+    <string name="discussions_pin">Pripni</string>
+    <string name="discussions_unpin">Odpni</string>
+    <string name="contentDescriptionDiscussionsOverflow">Več možnosti</string>
+    <string name="discussions_options">Možnosti</string>
+    <string name="discussions_replies" formatted="false">%s odgovorov</string>
+    <string name="discussions_unread" formatted="false">%s neprebranih</string>
+    <string name="discussions_unread_replies_blank" formatted="false">%s %s %s</string>
+    <string name="discussions_delete_warning">Ali ste prepričani, da želite odstraniti ta odgovor?</string>
+    <string name="discussions_replies_title">Odgovori</string>
+    <string name="discussions_reply">Odgovori</string>
+    <string name="discussions_edit">Uredi</string>
+    <string name="discussions_forbidden">Odgovori so vidni samo tistim, ki so objavili vsaj en odgovor.</string>
+    <string name="discussions_unknown_author">Neznani avtor</string>
+    <string name="discussions_delete">Izbriši razpravo</string>
+    <string name="discussions_delete_title">Ali želite odstraniti razpravo?</string>
+    <string name="discussions_delete_message">S tem bo izbrisana celotna razprava in nit.</string>
+
+    <string name="dataUsageWarningTitle">Opozorilo o uporabi podatkov</string>
+    <string name="dataUsageWarningMessage">Pri tem dejanju je lahko porabljena velika količina podatkov, zato lahko pride do stroškov presežka. Ali želite nadaljevati?</string>
+    <string name="doNotShowMessageAgain">Tega sporočila ne prikazuj več.</string>
+    <string name="playMedia">Predvajaj medij</string>
+    <string name="submissionIsMediaFile">Ta oddaja je medijska datoteka.</string>
+    <string name="tryAgain">Poskusite znova.</string>
+    <string name="couldNotPlayFormat">Ta oblika zapisa medija ni podprta.</string>
+    <string name="openWithAnotherApp">Odpri s/z ...</string>
+
+    <string name="speedgraderCommentAddedSubmission">Naloga je poslana. Tapnite za ogled.</string>
+    <string name="speedgraderCommentSubmittedFiles">Poslane datoteke:</string>
+    <string name="no_submission_comments">Ni komentarjev k oddaji.</string>
+    <string name="mediaUploadAudio">Nalaganje medija – zvočni posnetek</string>
+    <string name="mediaUploadVideo">Nalaganje medija – videoposnetek</string>
+    <string name="speedgraderCommentQuizAttempt">Poskus %d</string>
+    <string name="speedGraderTextSubmission">Oddaja besedila</string>
+    <string name="speedGraderExternalToolSubmission">Oddaja z zunanjim orodjem</string>
+    <string name="speedGraderDiscussionSubmission">Oddaja pri razpravi</string>
+    <string name="speedGraderQuizSubmission">Oddaja kviza</string>
+    <string name="speedGraderMediaFile">Medijska datoteka</string>
+    <string name="submissionTypeAudio">Zvok</string>
+    <string name="submissionTypeVideo">Videoposnetek</string>
+    <string name="speedGraderUrlSubmission">Oddaja naslova URL</string>
+
+    <string name="unsupportedFileMessage">Te datoteko ni bilo mogoče prikazati. S spodnjim gumbom odprete datoteko z drugo aplikacijo na svoji napravi.</string>
+    <string name="speedGraderNoneMessage">Pri tej nalogi oddaje niso dovoljene.</string>
+    <string name="speedGraderExternalToolMessage">Ta naloga je za oddaje povezana z zunanjim orodjem.</string>
+    <string name="speedGraderOnPaperMessage">Pri tej nalogi so dovoljene le oddaje na papirju.</string>
+    <string name="speedGraderUrlSubmissionDisclaimer">Ta oddaja je bila v obliki naslova URL za zunanjo stran. Ne pozabite, da se je ta stran morda spremenila, od kar se je oddaja prvič pojavila.</string>
+    <string name="speedGraderOpenUrl">Odpri naslov URL</string>
+    <string name="annotationError">Napaka pri opombi</string>
+    <string name="annotationDialogMessage">Opomba je izbrisana iz drugega vira.</string>
+
+    <string name="selectCourse">Izberi predmet</string>
+
+    <string name="sendIndividualMessage">Vsakemu prejemniku pošlji individualno sporočilo.</string>
+
+    <string name="filterInbox">Filtriraj pošto</string>
+    <string name="selectCanvasContext">Izberi predmet ali skupino</string>
+
+    <string name="contentDescription_back">Pojdi nazaj</string>
+
+    <string name="discussion_update_success">Urejanje razprave je uspelo.</string>
+    <string name="discussion_update_empty">Sporočilo v razpravi ne more biti prazni.</string>
+    <string name="discussion_update_failure">Razprave trenutno ni bilo mogoče urediti.</string>
+    <string name="discussion_sent_success">Odgovor na razpravo je uspel.</string>
+    <string name="discussion_sent_empty">Odgovor na razpravo ne more biti prazen.</string>
+    <string name="discussion_sent_failure">Odgovora na razpravo trenutno ni bilo mogoče poslati.</string>
+    <string name="discussion_first_to_respond">Dodajte odgovor in se tako prvi odzovite.</string>
+    <string name="addMorePeopleToMessage">Dodaj drugega prejemnika Sporočil, ki so naslovljena samo na vas, ni mogoče pošiljati.</string>
+    <string name="tutorialSwipeMessage">Za ogled drugih študentov podrsajte levo ali desno.</string>
+    <string name="tutorialRubricMessage">Za ogled opisa tapnite in pridržite številko.</string>
+
+    <string name="viewQuizSubmission">Ogled oddaje</string>
+    <string name="gradeQuizSubmission">Oceni oddajo</string>
+    <string name="comment">Komentar</string>
+    <string name="messageStudentsWho">Sporoči študentom, ki&#8230;</string>
+
+    <string name="on">vklopljeno</string>
+
+    <string name="createDiscussion">Nova razprava</string>
+    <string name="options">Možnosti</string>
+    <string name="subscribe">Naroči se</string>
+    <string name="allowThreadedReplies">Dovoli odgovore v niti</string>
+    <string name="usersMustPost">Uporabniki morajo objavljati, preden vidijo odgovore.</string>
+    <string name="allowUserComments">Dovoli uporabnikom, da komentirajo</string>
+    <string name="discussionTitleMustBeSet">Nastavljen mora biti naslov razprave.</string>
+    <string name="discussionSuccessfullyCreated">Razprava je uspešno ustvarjena.</string>
+    <string name="errorCreatingDiscussion">Pri ustvarjanju te razprave je prišlo do napake. Poskusite znova.</string>
+    <string name="editDiscussion">Uredi razpravo</string>
+    <string name="discussionSuccessfullyUpdated">Razprava je uspešno posodobljena.</string>
+    <string name="input_text">Besedilo vnosa</string>
+    <string name="announcementSuccessfullyCreated">Obvestilo je uspešno ustvarjeno.</string>
+    <string name="errorSavingAnnouncement">Pri shranjevanju tega obvestila je prišlo do napake. Poskusite znova.</string>
+    <string name="editAnnouncementTitle">Uredi obvestilo</string>
+    <string name="announcementSuccessfullyUpdated">Obvestilo je uspešno posodobljeno.</string>
+    <string name="announcementDeleted">Obvestilo je izbrisano.</string>
+    <string name="postAt">Objavi ob</string>
+    <string name="errorDeletingAnnouncement">Pri brisanju tega obvestila je prišlo do napake. Poskusite znova.</string>
+    <string name="deleteAnnouncementDialogTitle">Ali želite odstraniti obvestilo?</string>
+    <string name="deleteAnnouncementDialogMessage">Ali ste prepričani, da želite odstraniti to obvestilo?</string>
+    <string name="deleteAnnouncement">Izbriši obvestilo</string>
+    <string name="annotationErrorOccurred">Med nalaganjem opomb je prišlo do nepričakovane napake.</string>
+
+    <string name="account">Račun</string>
+    <string name="changeUser">Spremeni uporabnika</string>
+    <string name="general">Splošno</string>
+    <string name="sendFeedback">Pošlji povratne informacije</string>
+    <string name="rateOnTheAppStore">Oceni v trgovini App Store</string>
+    <string name="privacyPolicy">Pravilnik o zasebnosti</string>
+    <string name="EULA">Licenčni pogoji za končnega uporabnika</string>
+    <string name="termsOfUse">Pogoji uporabe</string>
+    <string name="openSource">Odprti vir</string>
+    <string name="searchGuides">Išči vodnike po sistemu Canvas</string>
+    <string name="searchGuidesDetails">Poišči odgovore na pogosta vprašanja</string>
+    <string name="reportProblem">Poročajte o težavi</string>
+    <string name="reportProblemDetails">Če aplikacija ne deluje dobro, nas o tem obvestite.</string>
+    <string name="requestFeature">Zahtevaj funkcionalnost</string>
+    <string name="requestFeatureDetails">Ali imate zamisel za izboljšanje aplikacije?</string>
+    <string name="shareYourLove">Delite svoje navdušenje nad aplikacijo.</string>
+    <string name="shareYourLoveDetails">Opišite nam, kateri deli aplikacije so vam najljubši.</string>
+    <string name="canvasGuides">Vodniki po sistemu Canvas</string>
+    <string name="featureSubject">Zamisel za aplikacijo Canvas Teacher [Android]</string>
+    <string name="understandRequest">Z naslednjimi informacijami bomo bolje razumeli vašo zamisel:</string>
+    <string name="sendMail">Pošlji e-pošto&#8230;</string>
+    <string name="editProfile">Uredi profil</string>
+    <string name="name">Ime</string>
+    <string name="bio">Življenjepis</string>
+    <string name="profileEditSuccess">Profil je posodobljen.</string>
+    <string name="profileEditFailure">Profila ni mogoče posodobiti.</string>
+    <string name="takePhoto">Posnemi fotografijo</string>
+    <string name="choosePhotoFromGallery">Izberi fotografijo iz galerije</string>
+    <string name="fileNotFound">Datoteke ni bilo mogoče najti.</string>
+    <string name="version" formatted="false">Različica %s</string>
+    <string name="fullVersion">Različica %s (%d)</string>
+    <string name="tap_to_view_submissions_list">Tapnite za ogled seznama oddaj.</string>
+    <string name="assignmentDescriptionContentDescription">Opis naloge</string>
+    <string name="quizDescriptionContentDescription">Opis kviza</string>
+    <string name="removeDueDate">Odstrani rok</string>
+    <string name="removeDueDateMessage">S tem bodo odstranjeni rok in vsi povezani prevzemniki.</string>
+    <string name="openTool">Odpri orodje</string>
+    <string name="email">E-pošta</string>
+    <string name="fullscreen">celoten zaslon</string>
+    <string name="addNew">Dodaj novo</string>
+    <string name="sendMessage">Pošlji sporočilo</string>
+    <string name="addMessage">Dodaj sporočilo</string>
+    <string name="messageThisStudent">Pošlji sporočilo temu študentu</string>
+    <string name="scrollInstructions">S pomikanjem drsnika si oglejte vse podrobnosti.</string>
+    <string name="dueTime">Časovni rok</string>
+    <string name="available_from_date">Na voljo od datuma</string>
+    <string name="available_from_time">Na voljo od ure</string>
+    <string name="available_to_date">Na voljo do datuma</string>
+    <string name="available_to_time">Na voljo do ure</string>
+    <string name="addDescription">Dodaj opis</string>
+    <string name="post_time">Čas objave</string>
+    <string name="allPeople">Vsi sodelujoči</string>
+    <string name="loading">Nalaganje</string>
+    <string name="saving">Shranjevanje</string>
+    <string name="sendingSimple">Pošiljanje</string>
+    <string name="uploading">Nalaganje</string>
+    <string name="retry">Ponovno poskusi</string>
+    <string name="error_loading_submission">Prišlo je do težave z nalaganjem te oddaje.</string>
+    <string name="search">Iskanje</string>
+    <string name="filterPeople">Filtriraj sodelujoče</string>
+    <string name="loadMore">Naloži več</string>
+    <string name="latestStudentActivityAtFormatted">Nedavna dejavnost dne %1$s ob %2$s.</string>
+    <string name="sectionFormatted">Sekcija: %s</string>
+    <string name="errorLoadingStudentContextCard">Podrobnosti za tega uporabniku ni mogoče naložiti.</string>
+    <string name="enrollmentTypeStudent">Študent</string>
+    <string name="enrollmentTypeTeacher">Izvajalec</string>
+    <string name="enrollmentTypeObserver">Skriti bralec</string>
+    <string name="enrollmentTypeTeachingAssistant">Demonstrator</string>
+    <string name="enrollmentTypeDesigner">Snovalec</string>
+    <string name="enrollmentTypeUnknown">Neznano</string>
+    <string name="unableToLoadAttendance">Trenutno prisotnosti ni bilo mogoče poslati.</string>
+    <string name="markRemainingAsPresent">Označi preostale kot prisotne</string>
+    <string name="markAllAsPresent">Označi vse kot prisotne</string>
+    <string name="calendar">Koledar</string>
+    <string name="filterSections">Filtriraj sekcije</string>
+    <string name="addVideoComment">Dodaj komentar v obliki videoposnetka</string>
+    <string name="addAudioComment">Dodaj komentar v obliki zvočnega posnetka</string>
+    <string name="recordingTimerDefault">00:00:00</string>
+    <string name="recordingTimerContentDescription">%1$d ur, %2$d minut in %3$d sekund</string>
+    <string name="recordingTimerSpeechDivider">%1$s od %2$s</string>
+    <string name="replay">Ponovno predvajaj</string>
+    <string name="stop">Zaustavi</string>
+    <string name="startRecordingAudio">Začni snemati zvočni posnetek</string>
+    <string name="stopRecordingAudio">Zaustavi snemanje zvočnega posnetka</string>
+    <string name="startRecordingVideo">Začni snemati videoposnetek</string>
+    <string name="stopRecordingVideo">Zaustavi snemanje videoposnetka</string>
+    <string name="closeRecordingView">Zapri prikaz snemanja</string>
+    <string name="deleteRecording">Izbriši posnetek</string>
+    <string name="videoCommentReplay">Ponovno predvajanje komentarja v obliki videoposnetka</string>
+    <string name="addMediaComment">Dodaj komentar v obliki medija</string>
+    <string name="copyrightHolder">Lastnik avtorskih pravic</string>
+    <string name="access">Dostop</string>
+    <string name="usageRights">Pravice uporabe</string>
+    <string name="deleteFile">Izbriši datoteko</string>
+    <string name="holdCopyright">Imam avtorske pravice.</string>
+    <string name="havePermission">Imam dovoljenje za uporabo datoteke.</string>
+    <string name="publicDomain">Datoteka, dostopna javnosti</string>
+    <string name="fairUse">Izjema poštene uporabe (Fair Use)</string>
+    <string name="creativeCommons">Datoteka Creative Commons</string>
+    <string name="editFile">Uredi datoteko</string>
+    <string name="deleteFolder">Izbriši mapo</string>
+    <string name="editFolder">Uredi mapo</string>
+    <string name="deleteFileMessage">Ali ste prepričani, da želite odstraniti to datoteko?</string>
+    <string name="deleteFolderMessage">Ali ste prepričani, da želite odstraniti to mapo? Izbrisana bo tudi vsa vsebina te mape.</string>
+    <string name="newFolder">Nova mapa</string>
+    <string name="createAFolder">Ustvari mapo</string>
+    <string name="createFolder">Ustvari mapo</string>
+    <string name="createAFile">Ustvari datoteko</string>
+    <string name="createFileFolderFabContentDesc">Prikaži gumba »Ustvari datoteko« in »Ustvari mapo«</string>
+    <string name="hideCreateFileFolderFabContentDesc">Skrij gumba »Ustvari datoteko« in »Ustvari mapo«</string>
+    <string name="unpublish">Ne objavi</string>
+    <string name="restrictedAccess">Omejen dostop</string>
+    <string name="restricted">Omejeno</string>
+    <string name="hidden">Skrito; datoteke znotraj bodo na voljo s povezavami.</string>
+    <string name="studentsWithLink">Na voljo je le študentom s povezavo. Ni vina voljo v datotekah študentov.</string>
+    <string name="scheduleAvailability">Razporedi razpoložljivost študenta</string>
+    <string name="folderCreationError">Med ustvarjanjem mape je prišlo do napake.</string>
+
+    <string name="setAsFrontPage">Nastavi kot prvo stran</string>
+    <string name="canEdit">Lahko ureja.</string>
+    <string name="pageDetails">Podrobnosti o strani</string>
+    <string name="pageSuccessfullyUpdated">Stran je uspešno posodobljena.</string>
+    <string name="pageSuccessfullyCreated">Stran je uspešno ustvarjena.</string>
+    <string name="editPageTitle">Uredi stran</string>
+    <string name="createPageTitle">Ustvari stran</string>
+    <string name="pageTitleMustBeSet">Nastavljen mora biti naslov strani.</string>
+    <string name="pageDeleteTitle">Ali želite odstraniti stran?</string>
+    <string name="pageDelete">Izbriši stran</string>
+    <string name="pageDeleteMessage">S tem bo stran odstranjena. Tega dejanja ni mogoče razveljaviti.</string>
+    <string name="errorSavingPage">Pri shranjevanju strani je prišlo do napake. Poskusite znova.</string>
+    <string name="frontPageUnpublishedError">Stran ne more biti glavna in neobjavljena.</string>
+
+    <string name="onlyTeachers">Samo izvajalci</string>
+    <string name="teachersAndStudents">Izvajalci in študenti</string>
+    <string name="anyone">Kdor koli</string>
+    <string name="groupMembers">Samo za člane</string>
+    <string name="license">Licenca</string>
+    <string name="availableFromAfterTo">Datum konca razpoložljivosti mora biti po datumu začetka.</string>
+    <string name="errorDeletingFile">Pri odstranjevanju te datoteke je prišlo do napake.</string>
+    <string name="errorDeletingFolder">Pri brisanju te mape je prišlo do napake.</string>
+    <string name="errorUpdatingFile">Pri posodabljanju te datoteke je prišlo do napake.</string>
+    <string name="errorUpdatingFolder">Pri posodabljanju te mape je prišlo do napake.</string>
+
+    <string name="toDoEmpty">Ničesar ni več treba opraviti.\n Uživajte v dnevu.</string>
+    <string name="toDoNoSubmissions">Za to nalogo ni oddaj, ki bi jih bilo treba oceniti.</string>
+    <string name="errorToDoRouteFailed">Pri ogledu tega elementa seznama opravil je prišlo do napake.</string>
+    <string name="errorIsDesigner">Za vpis snovalca ogled tega ni mogoč.</string>
+
+    <string name="sections">Sekcije</string>
+    <string name="filterBy">Filtriraj glede na&#8230;</string>
+    <string name="contentDescriptionFilterSection" formatted="false">za %s</string>
+    <string name="filterBySection">Filtriraj glede na sekcijo</string>
+    <string name="filterSubmissionsLowercase">Filtriraj oddaje</string>
+    <string name="latePenalty">Kazen za zamudo</string>
+    <string name="finalGrade">Končna ocena</string>
+    <string name="moderatedGradingUnsupported">Moderirano ocenjevanje v mobilni aplikaciji SpeedGrader trenutno ni podprto.</string>
+    <plurals name="latePolicyPenalty">
+        <item quantity="one">– %s točka</item>
+        <item quantity="other">– %s točk</item>
+    </plurals>
+    <plurals name="latePolicyPenaltyFull">
+        <item quantity="one">– %s točka</item>
+        <item quantity="other">– %s točk</item>
+    </plurals>
+    <string name="todoUnreadCount">Seznam opravil, %d neprebranih</string>
+    <string name="profileSettings">Nastavitve profila</string>
+    <string name="downloadingFile">Prenos datoteke&#8230;</string>
+    <string name="fileDownloadedSuccessfully">Datoteka je uspešno prenesena.</string>
+    <string name="tapToView">Tapnite za ogled.</string>
+    <string name="errorDownloadingFile">Pri prenosu datoteke je prišlo do napake. Poskusite znova.</string>
+
+    <string name="postTo">Objavi v</string>
+    <string name="allSections">Vse sekcije</string>
+
+    <string name="gauge">Merilo</string>
+    <string name="arc">Arc</string>
+    <string name="ltiLaunchFailure">Tega orodja LTI ni mogoče naložiti.</string>
+    <string name="downloading">Prenos ...</string>
+
+</resources>

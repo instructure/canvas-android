@@ -118,6 +118,9 @@
     <string name="alarmNotSet">Larmet kunde inte ställas in. Försök igen.</string>
     <string name="could_not_route_course">Kunde inte hitta kursregistrering.</string>
     <string name="could_not_route_assignment">Kunde inte hitta uppgiften.</string>
+    <string name="could_not_route_announcement">Det gick inte att hitta meddelandet.</string>
+    <string name="could_not_route_event">Det gick inte att hitta händelsen.</string>
+    <string name="could_not_route_account_notifications">Det gick inte att hitta aviseringen.</string>
     <string name="email_already_exists">En användare med den e-postadressen existerar redan.</string>
     <string name="password_reset_success">Ett e-postmeddelande med instruktioner om hur du återställer ditt lösenord kommer att skickas.</string>
     <string name="password_reset_no_user">Ingen användare med den e-postadressen hittades.</string>
@@ -225,4 +228,5 @@
     <string name="institutionAnnouncementUnavailable">Detta meddelande har löpt ut.</string>
     <string name="previousWeekBtn">knapp för föregående vecka</string>
     <string name="nextWeekBtn">knapp för nästa vecka</string>
+    <string name="filesNotSupported">Filerna stöds inte för närvarande</string>
 </resources>

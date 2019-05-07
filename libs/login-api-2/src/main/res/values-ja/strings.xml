@@ -57,6 +57,7 @@
     <string name="login">ログイン</string>
     <string name="logout">ログアウト</string>
 
+    <string name="matchingSchools">マッチするスクール</string>
     <!--Logout Warning Dialog-->
     <string name="logout_warning">ログアウトしますか？</string>
     <string name="logout_yes">はい</string>

@@ -124,6 +124,8 @@
     <string name="extensionNotAllowed">Den valda filtypen är inte tillåten.</string>
     <string name="allowedExtensions">Tillåtna tillägg:&#160;</string>
 
+    <string name="quizNetworkErrorTitle">Fel på quiz</string>
+    <string name="quizNetworkErrorMessage">Det verkar som om internanslutningen ligger nere.</string>
     <!-- Media Task Loader -->
     <string name="noDataConnection"> Kontrollera din dataanslutning och försök igen. </string>
     <string name="noApps">Din enhet har inte några program installerade som kan hantera den här filen.</string>
@@ -204,7 +206,7 @@
     <string name="likes">Gilla-markeringar</string>
     <string name="lockedAssignmentNotModule">Den här uppgiften är låst.</string>
     <string name="deletedEntryNoChildren">Det här borttagna diskussionsinlägget har inga svar.</string>
-    <string name="deleted">[Borttagen]</string>
+    <string name="deleted">Raderad</string>
     <string name="deleted_by">[Raderad av %1$s]</string>
     <string name="lockedDiscussionDesc">Den här diskussionen är en del av modulen %s och har inte låsts upp än.</string>
     <string name="gradedDiscussion">Betygsatt diskussion</string>
@@ -380,7 +382,6 @@
     <string name="utils_uploadToSubmissionComment">Ladda upp till inlämningskommentar</string>
     <string name="utils_attachFile">Bifoga en fil</string>
     <string name="utils_with">med</string>
-
     <string name="notificationPrimaryInboxTitle">Canvas meddelande</string>
     <string name="notificationChannelNamePrimary">Allmänna Canvas meddelanden</string>
     <string name="notificationChannelDescriptionPrimary">Ytterligare konfiguration av meddelanden kan göras inom Canvas meddelande preferenssektion.</string>
