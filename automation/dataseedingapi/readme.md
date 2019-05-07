@@ -29,7 +29,7 @@ kubectl logs esp-grpc-soseedy-548d44bbb4-q5x8x -c esp
 kubectl logs esp-grpc-soseedy-548d44bbb4-q5x8x -c soseedy
 
 Error from server (BadRequest): container "esp" in pod "esp-grpc-soseedy-6fc96fc676-7wvd6" is waiting to start: trying and failing to pull image
- ✘  ~/code/android-uno/automation/dataseedingapi   dockerfile ●  kubectl logs esp-grpc-soseedy-6fc96fc676-7wvd6 -c soseedy
+ ✘  ~/code/canvas-android/automation/dataseedingapi   dockerfile ●  kubectl logs esp-grpc-soseedy-6fc96fc676-7wvd6 -c soseedy
 Server started on port 50051
 # https://console.cloud.google.com/gcr/images/endpoints-release/GLOBAL/endpoints-runtime?gcrImageListsize=50&gcrImageListsort=-uploaded
 
