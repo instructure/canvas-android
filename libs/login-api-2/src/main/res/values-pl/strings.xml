@@ -57,6 +57,7 @@
     <string name="login">Zaloguj</string>
     <string name="logout">Wyloguj</string>
 
+    <string name="matchingSchools">Pasujące szkoły</string>
     <!--Logout Warning Dialog-->
     <string name="logout_warning">Czy na pewno chcesz się wylogować?</string>
     <string name="logout_yes">Tak</string>

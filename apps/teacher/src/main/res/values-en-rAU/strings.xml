@@ -318,6 +318,7 @@
     <string name="assignments_list">Assignments List</string>
     <string name="syllabus">Syllabus</string>
     <!--End Course Settings-->
+
     <!-- Assignment Details -->
     <string name="multiple_due_dates">Multiple Due Dates</string>
     <string name="everyone">Everyone</string>
@@ -350,6 +351,8 @@
     <string name="description">Description</string>
     <string name="grade_total">Grade Total</string>
     <string name="grade">Grade</string>
+    <string name="enter_grade">Enter Grade</string>
+    <string name="override">Override</string>
     <string name="calculated_by_rubric">Calculated by rubric</string>
     <string name="customize_grade">Customise Grade</string>
     <string name="out_of_points">Out of %1$s</string>
@@ -510,7 +513,6 @@
 
     <string name="colorPickerDialogTitle">Course Colour</string>
     <string name="colorPickerDialogMessage">This is your personal colour setting. Only you will see this colour for the course.</string>
-
     <string name="colorPickerError">The course colour could not be set at this time.</string>
 
     <string name="contentDescriptionColorCottonCandy">Pink</string>
@@ -704,7 +706,6 @@
     <string name="allowThreadedReplies">Allow threaded replies</string>
     <string name="usersMustPost">Users must post before seeing replies</string>
     <string name="allowUserComments">Allow users to comment</string>
-
     <string name="discussionTitleMustBeSet">Discussion title must be set.</string>
     <string name="discussionSuccessfullyCreated">Discussion successfully created.</string>
     <string name="errorCreatingDiscussion">An error occurred trying to create this discussion. Try again.</string>
@@ -833,7 +834,6 @@
     <string name="createAFile">Create A File</string>
     <string name="createFileFolderFabContentDesc">Show Create File and Create Folder Buttons</string>
     <string name="hideCreateFileFolderFabContentDesc">Hide Create File and Create Folder Buttons</string>
-
     <string name="unpublish">Unpublish</string>
     <string name="restrictedAccess">Restricted Access</string>
     <string name="restricted">Restricted</string>
@@ -877,7 +877,6 @@
     <string name="contentDescriptionFilterSection" formatted="false">for %s</string>
     <string name="filterBySection">Filter by section</string>
     <string name="filterSubmissionsLowercase">Filter submissions</string>
-
     <string name="latePenalty">Late penalty</string>
     <string name="finalGrade">Final Grade</string>
     <string name="moderatedGradingUnsupported">Moderated grading is not currently supported in mobile SpeedGrader.</string>
@@ -902,7 +901,6 @@
     <string name="gauge">Gauge</string>
     <string name="arc">Arc</string>
     <string name="ltiLaunchFailure">This LTI tool could not be loaded at this time.</string>
-
     <string name="downloading">Downloading...</string>
 
 </resources>

@@ -33,6 +33,24 @@
     <string name="selectedListItem">已选择：%s</string>
 
     <!-- Student Strings -->
+    <!-- Student Assignment Details -->
+    <string name="assignmentDetails">作业详情</string>
+    <string name="submission_types">提交项类型</string>
+    <string name="noAssignmentDescriptionStudent">无内容</string>
+    <string name="dueLabel">截止</string>
+    <string name="submissionStatusSuccessTitle">已成功提交。</string>
+    <string name="submissionStatusSuccessSubtitle">您的提交项目前正在等待评分</string>
+    <string name="submissionStatusUploadingTitle">正在上传提交项...</string>
+    <string name="submissionStatusUploadingSubtitle">轻按以查看进度</string>
+    <string name="submissionStatusFailedTitle">提交文件失败</string>
+    <string name="submissionStatusFailedSubtitle">轻按以查看详细信息</string>
+    <string name="submissionAndRubric">提交项和评估表格</string>
+    <string name="errorLoadingAssignment">加载此作业时发生问题。请检查您的连接，然后再试一次。</string>
+    <string name="submitted">已提交</string>
+    <string name="notSubmitted">未提交</string>
+    <string name="allowedFileTypes">允许的文件类型</string>
+    <string name="resubmitAssignment">重新提交作业</string>
+
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">版本：</string>
 
@@ -328,7 +346,7 @@
     <string name="noUsersInGroup">在该小组没有用户。</string>
 
     <!--Notifications-->
-    <string name="deleted">[删除]</string>
+    <string name="deleted">已删除</string>
     <string name="gradedDiscussion">评分讨论</string>
     <string name="pointsPossible">可能的分值</string>
     <string name="pointsPossibleNoPeriod">可能得分</string>
@@ -421,8 +439,8 @@
     <string name="unlockedAt">将被解锁于：</string>
     <string name="goToModules">转到单元</string>
     <string name="markDone">标记为完成</string>
-
     <string name="moduleItemNotFound">找不到模块项目</string>
+
     <string name="help">帮助</string>
     <string name="instructor_question">讲师的问题</string>
     <string name="link">链接</string>
@@ -774,6 +792,7 @@
     <plurals name="question_count">
         <item quantity="other">%d 个问题</item>
     </plurals>
+
     <plurals name="pointCount">
         <item quantity="other">%s 分</item>
     </plurals>
@@ -957,11 +976,13 @@
     <string name="confirmDeleteEvent">是否确定要删除此活动？</string>
     <string name="conferencesNotSupported">会议目前不支持移动设备。</string>
     <string name="filePreviewContentDescription">文件预览图像</string>
-
     <string name="pdfError">尝试加载此PDF时出错。</string>
+
     <!-- Parent Strings -->
     <string name="addChildTitle">添加学生</string>
     <string name="addChildSubTitle">输入提供给您的学生配对码。</string>
     <string name="addChildHint">配对码</string>
     <string name="addChildErrorMessage">配对失败。确保配对码正确，且未超过使用时间限制。</string>
+    <string name="gradeComplete">完成</string>
+    <string name="gradeIncomplete">未完成</string>
 </resources>

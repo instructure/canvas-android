@@ -124,6 +124,8 @@
     <string name="extensionNotAllowed">Het geselecteerde bestandstype is niet toegestaan.</string>
     <string name="allowedExtensions">Toegestane extensies:&#160;</string>
 
+    <string name="quizNetworkErrorTitle">Fout in toets</string>
+    <string name="quizNetworkErrorMessage">Er is geen internetverbinding.</string>
     <!-- Media Task Loader -->
     <string name="noDataConnection"> Controleer je dataverbinding en probeer het nogmaals. </string>
     <string name="noApps">Er zijn op je apparaat geen applicaties geïnstalleerd die dit bestand kunnen verwerken.</string>
@@ -204,7 +206,7 @@
     <string name="likes">Likes</string>
     <string name="lockedAssignmentNotModule">Deze opdracht is vergrendeld.</string>
     <string name="deletedEntryNoChildren">Dit verwijderde discussieonderwerp heeft geen reacties.</string>
-    <string name="deleted">[Deleted]</string>
+    <string name="deleted">Verwijderd</string>
     <string name="deleted_by">[Verwijderd door %1$s]</string>
     <string name="lockedDiscussionDesc">Deze discussie  is onderdeel van de module %s en is nog niet ontgrendeld.</string>
     <string name="gradedDiscussion">Beoordeelde discussie</string>
@@ -380,7 +382,6 @@
     <string name="utils_uploadToSubmissionComment">Uploaden naar Opmerking bij inlevering</string>
     <string name="utils_attachFile">Bestand bijvoegen</string>
     <string name="utils_with">met</string>
-
     <string name="notificationPrimaryInboxTitle">Canvas-melding</string>
     <string name="notificationChannelNamePrimary">Algemene Canvas-meldingen</string>
     <string name="notificationChannelDescriptionPrimary">Verdere configuratie van meldingen kan worden uitgevoerd in de sectie Voorkeuren Canvas-meldingen.</string>

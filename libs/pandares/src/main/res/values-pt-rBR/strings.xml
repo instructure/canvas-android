@@ -34,6 +34,24 @@
     <string name="selectedListItem">Selecionado: %s</string>
 
     <!-- Student Strings -->
+    <!-- Student Assignment Details -->
+    <string name="assignmentDetails">Detalhes da tarefa</string>
+    <string name="submission_types">Tipos de envio</string>
+    <string name="noAssignmentDescriptionStudent">Sem conteúdo</string>
+    <string name="dueLabel">Vencimento</string>
+    <string name="submissionStatusSuccessTitle">Enviado com êxito!</string>
+    <string name="submissionStatusSuccessSubtitle">Seu envio agora está esperando avaliação</string>
+    <string name="submissionStatusUploadingTitle">Envio carregando...</string>
+    <string name="submissionStatusUploadingSubtitle">Toque para visualizar o progresso</string>
+    <string name="submissionStatusFailedTitle">Falha no envio</string>
+    <string name="submissionStatusFailedSubtitle">Toque para visualizar os detalhes</string>
+    <string name="submissionAndRubric">Envio e rubrica</string>
+    <string name="errorLoadingAssignment">Houve um problema ao carregar esta tarefa. Verifique a sua conexão e tente novamente.</string>
+    <string name="submitted">Enviado</string>
+    <string name="notSubmitted">Não Enviado</string>
+    <string name="allowedFileTypes">Tipos de arquivos permitidos</string>
+    <string name="resubmitAssignment">Reenviar Tarefa</string>
+
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">Versão:</string>
 
@@ -334,7 +352,7 @@
     <string name="noUsersInGroup">Não há usuários neste grupo</string>
 
     <!--Notifications-->
-    <string name="deleted">[Excluída]</string>
+    <string name="deleted">Excluído</string>
     <string name="gradedDiscussion">Discussão Classificada:</string>
     <string name="pointsPossible">Pontos Possíveis:</string>
     <string name="pointsPossibleNoPeriod">Pontos possíveis</string>
@@ -427,8 +445,8 @@
     <string name="unlockedAt">Será desbloqueado às:</string>
     <string name="goToModules">Ir Para Mòdulos</string>
     <string name="markDone">Marcar como concluído</string>
-
     <string name="moduleItemNotFound">Item do módulo não encontrado</string>
+
     <string name="help">Ajuda</string>
     <string name="instructor_question">Pergunta de Instrutor</string>
     <string name="link">Link</string>
@@ -781,6 +799,7 @@
         <item quantity="one">%d pergunta</item>
         <item quantity="other">%d perguntas</item>
     </plurals>
+
     <plurals name="pointCount">
         <item quantity="one">%s ponto</item>
         <item quantity="other">%s pontos</item>
@@ -968,11 +987,13 @@
     <string name="confirmDeleteEvent">Tem certeza de que deseja excluir este evento?</string>
     <string name="conferencesNotSupported">Conferências ainda não são suportadas em dispositivos móveis.</string>
     <string name="filePreviewContentDescription">Imagem de pré-visualização do arquivo</string>
-
     <string name="pdfError">Ocorreu um erro ao tentar carregar este PDF.</string>
+
     <!-- Parent Strings -->
     <string name="addChildTitle">Adicionar Estudante</string>
     <string name="addChildSubTitle">Insira o código de emparelhamento do aluno fornecido.</string>
     <string name="addChildHint">Código de emparelhamento...</string>
     <string name="addChildErrorMessage">Emparelhamento falhou. Certifique-se de que o seu código de emparelhamento esteja correto e dentro do limite de tempo do uso.</string>
+    <string name="gradeComplete">Concluído</string>
+    <string name="gradeIncomplete">Incompleto</string>
 </resources>

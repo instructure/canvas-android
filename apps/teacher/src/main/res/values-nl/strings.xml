@@ -318,6 +318,7 @@
     <string name="assignments_list">Opdrachtenlijst</string>
     <string name="syllabus">Syllabus</string>
     <!--End Course Settings-->
+
     <!-- Assignment Details -->
     <string name="multiple_due_dates">Meerdere inleverdatums</string>
     <string name="everyone">Iedereen</string>
@@ -350,6 +351,8 @@
     <string name="description">Beschrijving</string>
     <string name="grade_total">Totaalcijfer</string>
     <string name="grade">Cijfer</string>
+    <string name="enter_grade">Cijfer invoeren</string>
+    <string name="override">Overschrijving</string>
     <string name="calculated_by_rubric">Berekend op basis van rubric</string>
     <string name="customize_grade">Beoordeling aanpassen</string>
     <string name="out_of_points">Vanuit %1$s</string>
@@ -510,7 +513,6 @@
 
     <string name="colorPickerDialogTitle">Cursuskleur</string>
     <string name="colorPickerDialogMessage">Dit is je persoonlijke kleurinstelling. Alleen jij kunt deze kleur voor de cursus zien.</string>
-
     <string name="colorPickerError">De cursuskleur kan op dit moment niet worden ingesteld.</string>
 
     <string name="contentDescriptionColorCottonCandy">Roze</string>
@@ -704,7 +706,6 @@
     <string name="allowThreadedReplies">Antwoorden op antwoorden toestaan</string>
     <string name="usersMustPost">Gebruikers moeten een bericht plaatsen voordat ze antwoorden kunnen zien</string>
     <string name="allowUserComments">Geef gebruikers de mogelijkheid om opmerkingen te geven</string>
-
     <string name="discussionTitleMustBeSet">Discussienaam moet worden ingesteld.</string>
     <string name="discussionSuccessfullyCreated">Discussie is gemaakt.</string>
     <string name="errorCreatingDiscussion">Er is een fout opgetreden bij het maken van deze discussie. Probeer het nog eens.</string>
@@ -833,7 +834,6 @@
     <string name="createAFile">Bestand aanmaken</string>
     <string name="createFileFolderFabContentDesc">Knoppen Bestand aanmaken en Map aanmaken weergeven</string>
     <string name="hideCreateFileFolderFabContentDesc">Knoppen voor Bestand maken en Map maken verbergen</string>
-
     <string name="unpublish">Publicatie ongedaan maken</string>
     <string name="restrictedAccess">Beperkte toegang</string>
     <string name="restricted">Beperkt</string>
@@ -877,7 +877,6 @@
     <string name="contentDescriptionFilterSection" formatted="false">voor %s</string>
     <string name="filterBySection">Filteren op sectie</string>
     <string name="filterSubmissionsLowercase">Inzendingen filteren</string>
-
     <string name="latePenalty">Sanctie indien te laat</string>
     <string name="finalGrade">Eindcijfer</string>
     <string name="moderatedGradingUnsupported">Gemodereerd beoordelen wordt momenteel niet ondersteund in SpeedGrader voor mobiel.</string>
@@ -902,7 +901,6 @@
     <string name="gauge">Gauge</string>
     <string name="arc">Arc</string>
     <string name="ltiLaunchFailure">Deze LTI-tool kan op dit moment niet worden geladen.</string>
-
     <string name="downloading">Downloaden...</string>
 
 </resources>

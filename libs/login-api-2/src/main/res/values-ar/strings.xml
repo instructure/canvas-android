@@ -57,6 +57,7 @@
     <string name="login">تسجيل الدخول</string>
     <string name="logout">تسجيل الخروج</string>
 
+    <string name="matchingSchools">مدارس متطابقة</string>
     <!--Logout Warning Dialog-->
     <string name="logout_warning">هل تريد تسجيل الخروج بالفعل؟</string>
     <string name="logout_yes">نعم</string>

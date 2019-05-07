@@ -118,6 +118,9 @@
     <string name="alarmNotSet">Alarm kunne ikke indstilles. Prøv igen.</string>
     <string name="could_not_route_course">Kunne ikke finde kurtilmelding.</string>
     <string name="could_not_route_assignment">Kunne ikke finde opgaven.</string>
+    <string name="could_not_route_announcement">Kunne ikke finde beskeden.</string>
+    <string name="could_not_route_event">Kunne ikke finde begivenheden.</string>
+    <string name="could_not_route_account_notifications">Kunne ikke finde meddelelsen.</string>
     <string name="email_already_exists">En bruger med den e-mailadresse eksisterer allerede.</string>
     <string name="password_reset_success">En e-mail med instruktioner om, hvordan du nulstiller din adgangskode vil blive sendt om et øjeblik.</string>
     <string name="password_reset_no_user">Ingen bruger med den e-mailadresse blev fundet.</string>
@@ -225,4 +228,5 @@
     <string name="institutionAnnouncementUnavailable">Denne besked er udløbet.</string>
     <string name="previousWeekBtn">forrige uge-knap</string>
     <string name="nextWeekBtn">næste uge-knap</string>
+    <string name="filesNotSupported">Filer understøttes ikke i øjeblikket</string>
 </resources>

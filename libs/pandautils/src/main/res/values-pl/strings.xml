@@ -124,6 +124,8 @@
     <string name="extensionNotAllowed">Wybrany rodzaj pliku jest niedozwolony.</string>
     <string name="allowedExtensions">Dozwolone rozszerzenia:&#160;</string>
 
+    <string name="quizNetworkErrorTitle">Błąd testu</string>
+    <string name="quizNetworkErrorMessage">Połączenie internetowe wydaje się niedostępne.</string>
     <!-- Media Task Loader -->
     <string name="noDataConnection"> Sprawdź połączenie transmisji danych i spróbuj ponownie. </string>
     <string name="noApps">Urządzenie nie ma zainstalowanych aplikacji, które obsługują ten typ pliku.</string>
@@ -204,7 +206,7 @@
     <string name="likes">Polubienia</string>
     <string name="lockedAssignmentNotModule">Niniejsze zadanie jest zablokowane.</string>
     <string name="deletedEntryNoChildren">Niniejsza usunięta rozmowa nie ma żadnych odpowiedzi.</string>
-    <string name="deleted">[Usunięto]</string>
+    <string name="deleted">Usunięto</string>
     <string name="deleted_by">[Usunięte przez %1$s]</string>
     <string name="lockedDiscussionDesc">Ta dyskusja jest częścią modułu %s i nie została jeszcze zablokowana.</string>
     <string name="gradedDiscussion">Oceniona dyskusja</string>
@@ -386,7 +388,6 @@
     <string name="utils_uploadToSubmissionComment">Prześlij do komentarzy</string>
     <string name="utils_attachFile">Dołącz plik</string>
     <string name="utils_with">z</string>
-
     <string name="notificationPrimaryInboxTitle">Powiadomienie Canvas</string>
     <string name="notificationChannelNamePrimary">Ogólne powiadomienia Canvas</string>
     <string name="notificationChannelDescriptionPrimary">Dalszą konfigurację powiadomień można wykonać w sekcji Preferencje powiadomień Canvas.</string>

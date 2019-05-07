@@ -118,6 +118,9 @@
     <string name="alarmNotSet">Der Alarm konnte nicht eingestellt werden. Versuchen Sie es erneut.</string>
     <string name="could_not_route_course">Konnte die Kurseinschreibung nicht finden.</string>
     <string name="could_not_route_assignment">Konnte die Aufgabe nicht finden.</string>
+    <string name="could_not_route_announcement">Die Ankündigung konnte nicht gefunden werden.</string>
+    <string name="could_not_route_event">Das Ereignis konnte nicht gefunden werden.</string>
+    <string name="could_not_route_account_notifications">Die Benachrichtigung konnte nicht gefunden werden.</string>
     <string name="email_already_exists">Es gibt bereits einen Benutzer, der diese E-Mail-Adresse besitzt.</string>
     <string name="password_reset_success">Sie werden eine E-Mail mit Instruktionen zum Zurücksetzen des Passworts erhalten.</string>
     <string name="password_reset_no_user">Keinen Benutzer mit einer derartigen E-Mail-Adresse gefunden.</string>
@@ -225,4 +228,5 @@
     <string name="institutionAnnouncementUnavailable">Diese Ankündigung ist abgelaufen.</string>
     <string name="previousWeekBtn">Schaltfläche „Vorherige Woche“</string>
     <string name="nextWeekBtn">Schaltfläche „Nächste Woche“</string>
+    <string name="filesNotSupported">Dateien werden derzeit nicht unterstützt</string>
 </resources>

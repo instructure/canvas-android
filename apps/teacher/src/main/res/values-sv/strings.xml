@@ -120,7 +120,7 @@
 
     <string name="no_title">Ingen titel</string>
     <string name="announcement_create_success">Meddelande skapat!</string>
-    <string name="announcement_create_fail">Kunde inte skapa meddelande.Vänligen kontrollera din anslutning och försök igen.</string>
+    <string name="announcement_create_fail">Kunde inte skapa meddelande. Vänligen kontrollera din anslutning och försök igen.</string>
     <string name="create_announcement_delay_posting">Fördröj inlägg</string>
 
     <string name="discussion">Diskussion</string>
@@ -180,7 +180,7 @@
     <string name="markAsUnread">Markera som oläst</string>
     <string name="message_delete_warning">Är du säker på att du vill ta bort din kopia av det här meddelandet?Den här åtgärden kan inte ångras.</string>
     <string name="conversation_delete_warning">Är du säker på att du vill ta bort din kopia av den här konversationen?Den här åtgärden kan inte ångras.</string>
-    <string name="error_conversation_generic">Det går inte att utföra den här åtgärden.Vänligen kontrollera din anslutning och försök igen.</string>
+    <string name="error_conversation_generic">Det går inte att utföra den här åtgärden. Vänligen kontrollera din anslutning och försök igen.</string>
     <string name="message_archived">Meddelande arkiverat</string>
     <string name="message_unarchived">Meddelande avarkiverat</string>
     <string name="message_deleted">Meddelande raaderat</string>
@@ -264,18 +264,18 @@
     <string name="discussion_reply_to_entry">Diskussionssvar</string>
     <string name="announcement_reply_to_entry">Meddelande svar</string>
     <string name="error_text_missing">Lägg till lite text för att skicka ett meddelande</string>
-    <string name="error_sending_message">Detta meddelande kunde inte skickas.Tryck för att försöka igen.</string>
+    <string name="error_sending_message">Detta meddelande kunde inte skickas. Tryck för att försöka igen.</string>
     <string name="message_sent_successfully">Meddelandet skickades.</string>
     <string name="error_occurred">Ett oväntat fel uppstod.</string>
     <string name="no_assignments_with_file_upload">Den här kursen har inga uppgifter som tillåter filuppladdningar.</string>
     <string name="extension_not_allowed">Den valda filtypen är inte tillåten.</string>
     <string name="allowed_extensions">Tillåtna filnamnstillägg: </string>
     <string name="files_uploaded_successfully">Filerna laddades upp.</string>
-    <string name="error_uploading_file">Ett fel uppstod vid uppladdning av din fil.Vänligen försök igen.</string>
+    <string name="error_uploading_file">Ett fel uppstod vid uppladdning av din fil. Vänligen försök igen.</string>
     <string name="uploading_file">Laddar upp fil&#8230;</string>
     <string name="no_apps">Din enhet har inte några program installerade som kan hantera den här filen.</string>
     <string name="turn_in">Lämna in</string>
-    <string name="error_getting_photo">Ett fel uppstod med att hämta fotot.Vänligen försök igen.</string>
+    <string name="error_getting_photo">Ett fel uppstod med att hämta fotot. Vänligen försök igen.</string>
     <string name="loading_files_indeterminate">Laddar filer&#8230;</string>
     <string name="no_files_uploaded">Du har inte valt några filer.</string>
     <string name="file_upload_not_supported">Du kan inte ladda upp filer till den valda uppgiften.</string>
@@ -290,9 +290,9 @@
     <string name="uploading_file_num" formatted="false">Uppladdning %d av %d</string>
     <string name="page_not_found">Sidan hittades inte.</string>
     <string name="no_connection">Ingen anslutning</string>
-    <string name="unauthorized_access">Du är obehörig att komma åt detta.Antingen har du inte behörigheter eller så har du inte tillgång ännu (eftersom din kurs inte har startat ännu)</string>
+    <string name="unauthorized_access">Du är obehörig att komma åt detta. Antingen har du inte behörigheter eller så har du inte tillgång ännu (eftersom din kurs inte har startat ännu)</string>
     <string name="server_error">Ett serverfel uppstod.</string>
-    <string name="error_loading_files">Ett fel inträffade när du läste in filen.Kontrollera din internetanslutning och försök igen.</string>
+    <string name="error_loading_files">Ett fel inträffade när du läste in filen. Kontrollera din internetanslutning och försök igen.</string>
     <string name="files_submitted_successfully">Filerna har skickats in.</string>
     <string name="no_data_connection">Kontrollera din dataanslutning och försök igen.</string>
     <string name="teacher_logout_warning">Är du säker på att du vill logga ut?</string>
@@ -318,6 +318,7 @@
     <string name="assignments_list">Uppgiftslista</string>
     <string name="syllabus">Kursplan</string>
     <!--End Course Settings-->
+
     <!-- Assignment Details -->
     <string name="multiple_due_dates">Flera förfallodatum</string>
     <string name="everyone">Alla</string>
@@ -350,6 +351,8 @@
     <string name="description">Beskrivning</string>
     <string name="grade_total">Totalt betyg</string>
     <string name="grade">Betyg</string>
+    <string name="enter_grade">Ange omdöme</string>
+    <string name="override">Åsidosätta</string>
     <string name="calculated_by_rubric">Kalkylerat efter titel</string>
     <string name="customize_grade">Anpassa betyg</string>
     <string name="out_of_points">Av %1$s</string>
@@ -364,8 +367,8 @@
     <string formatted="false" name="grade_value_format">%s %s</string>
     <string name="grade_value_format_talk_back">%1$s av %2$s</string>
     <string name="publish">Publicera</string>
-    <string name="error_saving_assignment">Ett fel uppstod vid försök att spara uppgiften.Försök igen.</string>
-    <string name="error_saving_quiz">Ett fel uppstod vid försök att spara quiz.Försök igen.</string>
+    <string name="error_saving_assignment">Ett fel uppstod vid försök att spara uppgiften. Försök igen.</string>
+    <string name="error_saving_quiz">Ett fel uppstod vid försök att spara quiz. Försök igen.</string>
     <string name="assignment_name_must_be_set">Uppgiftsnamnet måste ställas in.</string>
     <string name="announcement_name_must_be_set">Aviseringsrubriken måste ställas in.</string>
     <string name="quiz_title_must_be_set">Quiz titel måste ställas in.</string>
@@ -415,7 +418,7 @@
     </string-array>
 
   <string name="not_a_teacher">Inte en lärare?</string>
-    <string name="not_a_teacher_tap_to_visit_play_store">En av våra andra appar kan vara bättre lämpade.Tryck på en för att besöka Play Store.</string>
+    <string name="not_a_teacher_tap_to_visit_play_store">En av våra andra appar kan vara bättre lämpade. Tryck på en för att besöka Play Store.</string>
     <string name="canvas_lowercase">Canvas</string>
 
   <string name="sg_tab_grade">Betyg</string>
@@ -510,7 +513,6 @@
 
     <string name="colorPickerDialogTitle">Kursfärg</string>
     <string name="colorPickerDialogMessage">Detta är din personliga färg-inställning. Endast du kommer att se denna färgen för kursen.</string>
-
     <string name="colorPickerError">Kursens färg kunde inte ställas in just nu.</string>
 
     <string name="contentDescriptionColorCottonCandy">Rosa</string>
@@ -546,7 +548,7 @@
     <string name="requireAccessCode">Kräv en tillgångskod</string>
     <string name="accessCode">Tillgångskod</string>
     <string name="mustHaveAccessCode">Ange en åtkomstkod, eller behöver inte en åtkomstkod.</string>
-    <string name="errorSavingQuiz">Ett fel uppstod vid försök att spara quiz.Försök igen.</string>
+    <string name="errorSavingQuiz">Ett fel uppstod vid försök att spara quiz. Försök igen.</string>
     <string name="successfullyUpdatedQuiz">Uppdaterade quiz</string>
     <string name="quizType">Quiztyp</string>
 
@@ -639,14 +641,15 @@
     <string name="discussions_delete_message">Detta kommer att radera hela diskussionen och tråden.</string>
 
     <string name="dataUsageWarningTitle">Varning om dataanvändning</string>
-    <string name="dataUsageWarningMessage">Den här åtgärden kan konsumera en stor mängd data, eventuellt med överbelastningsavgifter.Vill du fortsätta?</string>
+    <string name="dataUsageWarningMessage">Den här åtgärden kan konsumera en stor mängd data, eventuellt med överbelastningsavgifter. Vill du fortsätta?</string>
     <string name="doNotShowMessageAgain">Visa inte det här meddelandet igen</string>
     <string name="playMedia">Spela media</string>
     <string name="submissionIsMediaFile">Den här inlämingen är en mediafil</string>
     <string name="tryAgain">Försök igen</string>
     <string name="couldNotPlayFormat">Detta media format stöds inte</string>
     <string name="openWithAnotherApp">Öppna med&#8230;</string>
-    <string name="speedgraderCommentAddedSubmission">Uppgiften inlämnad.Tryck för att visa.</string>
+
+    <string name="speedgraderCommentAddedSubmission">Uppgiften inlämnad. Tryck för att visa.</string>
     <string name="speedgraderCommentSubmittedFiles">Inlämnade filer:</string>
     <string name="no_submission_comments">Det finns inga kommentarer för inlämning</string>
     <string name="mediaUploadAudio">Media uppladdning - Ljud</string>
@@ -661,11 +664,11 @@
     <string name="submissionTypeVideo">VIdeo</string>
     <string name="speedGraderUrlSubmission">URL-inlämning</string>
 
-    <string name="unsupportedFileMessage">Den här filen kan inte visas.Använd knappen nedan för att öppna filen med en annan app på din enhet.</string>
+    <string name="unsupportedFileMessage">Den här filen kan inte visas. Använd knappen nedan för att öppna filen med en annan app på din enhet.</string>
     <string name="speedGraderNoneMessage">Den här uppgiften tillåter inte inlämningar.</string>
     <string name="speedGraderExternalToolMessage">Den här uppgiften länkar till ett externt verktyg för inlämningar.</string>
     <string name="speedGraderOnPaperMessage">Den här uppgiften tillåter endast inlämningar på papper.</string>
-    <string name="speedGraderUrlSubmissionDisclaimer">Den här inlämningen var en URL till en extern sida.Kom ihåg att den här sidan kan ha ändrats sedan inlämningen först dök upp.</string>
+    <string name="speedGraderUrlSubmissionDisclaimer">Den här inlämningen var en URL till en extern sida. Kom ihåg att den här sidan kan ha ändrats sedan inlämningen först dök upp.</string>
     <string name="speedGraderOpenUrl">Öppna URL</string>
     <string name="annotationError">Meddelande fel</string>
     <string name="annotationDialogMessage">Meddelandet har tagits bort från en annan källa.</string>
@@ -686,7 +689,7 @@
     <string name="discussion_sent_empty">Diskussionssvaret kan inte vara tomt.</string>
     <string name="discussion_sent_failure">Diskussionssvaret kunde inte skickas vid denna tidpunkt.</string>
     <string name="discussion_first_to_respond">Var den första att svara genom att lägga till ett svar.</string>
-    <string name="addMorePeopleToMessage">Lägg till en annan mottagare.Meddelanden som endast adresseras till dig kan inte skickas.</string>
+    <string name="addMorePeopleToMessage">Lägg till en annan mottagare. Meddelanden som endast adresseras till dig kan inte skickas.</string>
     <string name="tutorialSwipeMessage">Dra åt vänster eller höger för att visa andra studenter.</string>
     <string name="tutorialRubricMessage">Tryck och håll ner nummer för att se beskrivning.</string>
 
@@ -703,20 +706,19 @@
     <string name="allowThreadedReplies">Tillåt svar i trådar</string>
     <string name="usersMustPost">Användare måste skriva ett inlägg innan de kan se svaren</string>
     <string name="allowUserComments">Tillåt användare att kommentera</string>
-
     <string name="discussionTitleMustBeSet">Diskussionstiteln måste ställas in.</string>
     <string name="discussionSuccessfullyCreated">Diskussionen skapades.</string>
-    <string name="errorCreatingDiscussion">Ett fel uppstod vid försök att skapa denna diskussion.Försök igen.</string>
+    <string name="errorCreatingDiscussion">Ett fel uppstod vid försök att skapa denna diskussion. Försök igen.</string>
     <string name="editDiscussion">Redigera diskussion</string>
     <string name="discussionSuccessfullyUpdated">Diskussionen uppdaterades</string>
     <string name="input_text">Skriv in text</string>
     <string name="announcementSuccessfullyCreated">Meddelande skapades.</string>
-    <string name="errorSavingAnnouncement">Ett fel uppstod vid försök att spara detta meddelande.Försök igen.</string>
+    <string name="errorSavingAnnouncement">Ett fel uppstod vid försök att spara detta meddelande. Försök igen.</string>
     <string name="editAnnouncementTitle">Redigera meddelande</string>
     <string name="announcementSuccessfullyUpdated">Meddelandet har uppdaterats.</string>
     <string name="announcementDeleted">Meddelande borttaget</string>
     <string name="postAt">Inlägg kl.</string>
-    <string name="errorDeletingAnnouncement">Ett fel inträffade vid försök att ta bort meddelandet.Försök igen.</string>
+    <string name="errorDeletingAnnouncement">Ett fel inträffade vid försök att ta bort meddelandet. Försök igen.</string>
     <string name="deleteAnnouncementDialogTitle">Ta bort meddelande?</string>
     <string name="deleteAnnouncementDialogMessage">Är du säker på att du vill radera det här meddelandet?</string>
     <string name="deleteAnnouncement">Ta bort meddelande</string>
@@ -832,12 +834,11 @@
     <string name="createAFile">Skapa en fil</string>
     <string name="createFileFolderFabContentDesc">Visa skapa-fil och skapa-mapp knappar</string>
     <string name="hideCreateFileFolderFabContentDesc">Dölj knapparna för Skapa fil och Skapa mapp</string>
-
     <string name="unpublish">Avpublicera</string>
     <string name="restrictedAccess">Begränsad tillgång</string>
     <string name="restricted">Begränsat</string>
     <string name="hidden">Dold, filerna inuti kommer vara tillgängliga via länkar.</string>
-    <string name="studentsWithLink">Endast tillgänglig för studenter med länk.Ej tillgängligt i studentfiler.</string>
+    <string name="studentsWithLink">Endast tillgänglig för studenter med länk. Ej tillgängligt i studentfiler.</string>
     <string name="scheduleAvailability">Planera student-tillgänglighet</string>
     <string name="folderCreationError">Ett fel uppstod under mapp-skapandet.</string>
 
@@ -845,15 +846,14 @@
     <string name="canEdit">Kan redigera</string>
     <string name="pageDetails">Sidodetaljer</string>
     <string name="pageSuccessfullyUpdated">Sida uppdaterades.</string>
-    <string name="pageSuccessfullyCreated">Sida skapades.
-</string>
+    <string name="pageSuccessfullyCreated">Sida skapades.</string>
     <string name="editPageTitle">Redigera sida</string>
     <string name="createPageTitle">Skapa sida</string>
     <string name="pageTitleMustBeSet">Sidans titel måste anges.</string>
     <string name="pageDeleteTitle">Radera sida?</string>
     <string name="pageDelete">Radera sida</string>
-    <string name="pageDeleteMessage">Detta kommer att ta bort sidan.Den här åtgärden kan inte ångras.</string>
-    <string name="errorSavingPage">Ett fel uppstod vid försök att spara den här sidan.Försök igen.</string>
+    <string name="pageDeleteMessage">Detta kommer att ta bort sidan. Den här åtgärden kan inte ångras.</string>
+    <string name="errorSavingPage">Ett fel uppstod vid försök att spara den här sidan. Försök igen.</string>
     <string name="frontPageUnpublishedError">En sida kan inte vara första sida och opublicerad.</string>
 
     <string name="onlyTeachers">Endast lärare</string>
@@ -894,13 +894,13 @@
     <string name="fileDownloadedSuccessfully">Filen hämtades.</string>
     <string name="tapToView">Tryck för att se</string>
     <string name="errorDownloadingFile">Ett fel uppstod vid hämtning av filen. Vänligen försök igen.</string>
+
     <string name="postTo">Publicera till</string>
     <string name="allSections">Alla sektioner</string>
 
     <string name="gauge">Mätare</string>
     <string name="arc">Cirkelbåge</string>
     <string name="ltiLaunchFailure">Det här LTI-verktyget kunde inte laddas just nu.</string>
-
     <string name="downloading">Laddar ner...</string>
 
 </resources>

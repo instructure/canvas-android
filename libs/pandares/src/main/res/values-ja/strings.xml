@@ -33,6 +33,24 @@
     <string name="selectedListItem">選択されたもの：%s</string>
 
     <!-- Student Strings -->
+    <!-- Student Assignment Details -->
+    <string name="assignmentDetails">課題の詳細</string>
+    <string name="submission_types">提出タイプ</string>
+    <string name="noAssignmentDescriptionStudent">コンテンツなし</string>
+    <string name="dueLabel">締切日</string>
+    <string name="submissionStatusSuccessTitle">正常に提出しました！</string>
+    <string name="submissionStatusSuccessSubtitle">あなたの提出物は採点待ちです</string>
+    <string name="submissionStatusUploadingTitle">提出をアップロード中...</string>
+    <string name="submissionStatusUploadingSubtitle">タップして進捗を表示する</string>
+    <string name="submissionStatusFailedTitle">提出に失敗しました</string>
+    <string name="submissionStatusFailedSubtitle">タップして詳細を表示する</string>
+    <string name="submissionAndRubric">提出 &amp; ルブリック</string>
+    <string name="errorLoadingAssignment">この課題の読み込み中、問題がありました。接続を確認して、もう一度お試しください。</string>
+    <string name="submitted">タスクの成績を送信</string>
+    <string name="notSubmitted">未提出</string>
+    <string name="allowedFileTypes">許可されているファイルタイプ</string>
+    <string name="resubmitAssignment">課題を再提出する</string>
+
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">バージョン:</string>
 
@@ -328,7 +346,7 @@
     <string name="noUsersInGroup">このグループにはユーザーが存在しません</string>
 
     <!--Notifications-->
-    <string name="deleted">[消去しました]</string>
+    <string name="deleted">削除されました</string>
     <string name="gradedDiscussion">採点ディスカッション。</string>
     <string name="pointsPossible">可能な得点。</string>
     <string name="pointsPossibleNoPeriod">可能なポイント</string>
@@ -421,8 +439,8 @@
     <string name="unlockedAt">次においてロック解除されます:</string>
     <string name="goToModules">モジュールに移動</string>
     <string name="markDone">完了にする</string>
-
     <string name="moduleItemNotFound">モジュールアイテムが見つかりません</string>
+
     <string name="help">ヘルプ</string>
     <string name="instructor_question">講師の質問</string>
     <string name="link">リンク</string>
@@ -774,6 +792,7 @@
     <plurals name="question_count">
         <item quantity="other">%dの質問</item>
     </plurals>
+
     <plurals name="pointCount">
         <item quantity="other">%s 点</item>
     </plurals>
@@ -957,11 +976,13 @@
     <string name="confirmDeleteEvent">このイベントを削除してもよろしいですか？</string>
     <string name="conferencesNotSupported">会議はまだモバイルではサポートされていません。</string>
     <string name="filePreviewContentDescription">ファイルプレビュー画像</string>
-
     <string name="pdfError">このPDFを削除しようとしてエラーが発生しました。</string>
+
     <!-- Parent Strings -->
     <string name="addChildTitle">受講生を追加</string>
     <string name="addChildSubTitle">提供されている受講生ペアリングコードを入力します。</string>
     <string name="addChildHint">ペアリングコード...</string>
     <string name="addChildErrorMessage">ペアリングに失敗しました。ペアリングコードが正しいこと、使用期限内であることを確認してください。</string>
+    <string name="gradeComplete">完了</string>
+    <string name="gradeIncomplete">不完全</string>
 </resources>

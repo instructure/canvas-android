@@ -124,6 +124,8 @@
     <string name="extensionNotAllowed">نوع الملف المحدد غير مسموح به.</string>
     <string name="allowedExtensions">الامتدادات المسموح بها:&#160;</string>
 
+    <string name="quizNetworkErrorTitle">خطأ في الاختبار الموجز</string>
+    <string name="quizNetworkErrorMessage">يبدو أن اتصال الإنترنت غير متصل.</string>
     <!-- Media Task Loader -->
     <string name="noDataConnection"> يرجى التأكد من الاتصال بالإنترنت والمحاولة من جديد. </string>
     <string name="noApps">لا توجد أي تطبيقات مثبتة على جهازك قادرة على معالجة هذا الملف.</string>
@@ -204,7 +206,7 @@
     <string name="likes">إعجابات</string>
     <string name="lockedAssignmentNotModule">هذه المهمة مؤمّنة.</string>
     <string name="deletedEntryNoChildren">لا يحتوي إدخال المناقشة المحذوف هذا على أية ردود.</string>
-    <string name="deleted">[تم حذفه]</string>
+    <string name="deleted">تم الحذف</string>
     <string name="deleted_by">[تم الحذف بواسطة %1$s]</string>
     <string name="lockedDiscussionDesc">هذه المناقشة جزء من الوحدة %s ولم يتم تأمينها بعد.</string>
     <string name="gradedDiscussion">مناقشة مقيمة</string>
@@ -391,7 +393,6 @@
     <string name="utils_uploadToSubmissionComment">التحميل إلى تعليق الإرسال</string>
     <string name="utils_attachFile">إرفاق ملف</string>
     <string name="utils_with">مع</string>
-
     <string name="notificationPrimaryInboxTitle">إخطار Canvas</string>
     <string name="notificationChannelNamePrimary">إخطارات Canvas عامة</string>
     <string name="notificationChannelDescriptionPrimary">يمكن إجراء تكوين إضافي للإخطارات داخل قسم تفضيلات إخطار Canvas.</string>

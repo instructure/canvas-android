@@ -118,6 +118,9 @@
     <string name="alarmNotSet">تعذر تعيين المنبه. حاول مرة أخرى.</string>
     <string name="could_not_route_course">تعذر العثور على التسجيل في المساق.</string>
     <string name="could_not_route_assignment">تعذر العثور على المساق.</string>
+    <string name="could_not_route_announcement">تعذر العثور على الإعلان.</string>
+    <string name="could_not_route_event">تعذر العثور على الحدث.</string>
+    <string name="could_not_route_account_notifications">تعذر العثور على الإعلام.</string>
     <string name="email_already_exists">يوجد بالفعل مستخدم بعنوان البريد الإلكتروني هذا.</string>
     <string name="password_reset_success">سيتم إرسال بريد إلكتروني يتضمن التعليمات لإعادة تعيين كلمة المرور.</string>
     <string name="password_reset_no_user">لم يتم العثور على أي مستخدم بعنوان البريد الإلكتروني هذا.</string>
@@ -225,4 +228,5 @@
     <string name="institutionAnnouncementUnavailable">انتهت صلاحية هذا الإعلان.</string>
     <string name="previousWeekBtn">زر الأسبوع الماضي</string>
     <string name="nextWeekBtn">زر الأسبوع المقبل</string>
+    <string name="filesNotSupported">الملفات غير مدعومة في الوقت الحالي</string>
 </resources>

@@ -124,6 +124,8 @@
     <string name="extensionNotAllowed">Tip fichye ou seleksyone a pa otorize.</string>
     <string name="allowedExtensions">Ekstansyon otorize:&#160;</string>
 
+    <string name="quizNetworkErrorTitle">Erè Quiz</string>
+    <string name="quizNetworkErrorMessage">Koneksyon entènèt parèt ke ou pa konekte.</string>
     <!-- Media Task Loader -->
     <string name="noDataConnection"> Tanpri verifye koneksyon entènèt ou a epi eseye ankò. </string>
     <string name="noApps">Aparèy ou a pa gen okenn aplikasyon ki enstale ki ka jere fichye sa a.</string>
@@ -204,7 +206,7 @@
     <string name="likes">Jèm</string>
     <string name="lockedAssignmentNotModule">Sesyon sa a bloke.</string>
     <string name="deletedEntryNoChildren">Tèks diskisyon efase sa a pa gen repons.</string>
-    <string name="deleted">[Deleted]</string>
+    <string name="deleted">Efase</string>
     <string name="deleted_by">[Deleted by %1$s]</string>
     <string name="lockedDiscussionDesc">Dikisyons a a fè pati modil %s e li poko debloke.</string>
     <string name="gradedDiscussion">Diskisyon Klase</string>
@@ -380,7 +382,6 @@
     <string name="utils_uploadToSubmissionComment">Soumèt nan Kòmantè Soumisyon</string>
     <string name="utils_attachFile">Ajoute yon fichye</string>
     <string name="utils_with">avèk</string>
-
     <string name="notificationPrimaryInboxTitle">Avètisman Canvas</string>
     <string name="notificationChannelNamePrimary">Avètisman Jeneral Canvas</string>
     <string name="notificationChannelDescriptionPrimary">Plis konfigirasyon avètisman posib nan seksyon Preferans Avètisman Canvas la.</string>

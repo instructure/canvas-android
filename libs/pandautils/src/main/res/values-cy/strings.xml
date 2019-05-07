@@ -124,6 +124,8 @@
     <string name="extensionNotAllowed">Ni chaniateir y math hwn o ffeil.</string>
     <string name="allowedExtensions">Estyniadau a ganiateir:&#160;</string>
 
+    <string name="quizNetworkErrorTitle">Gwall ar y Cwis</string>
+    <string name="quizNetworkErrorMessage">Mae’n ymddangos nad oes cysylltiad â’r rhyngrwyd.</string>
     <!-- Media Task Loader -->
     <string name="noDataConnection"> Gwiriwch eich cysylltiad data a rhoi cynnig arall arni. </string>
     <string name="noApps">Does gan eich dyfais ddim rhaglen wedi’i gosod a all drin y ffeil hon.</string>
@@ -204,7 +206,7 @@
     <string name="likes">Yn hoffi</string>
     <string name="lockedAssignmentNotModule">Mae’r aseiniad hwn wedi’i gloi.</string>
     <string name="deletedEntryNoChildren">Does gan y cofnod trafodaeth sydd wedi’i ddileu ddim atebion.</string>
-    <string name="deleted">[Wedi dileu]</string>
+    <string name="deleted">Wedi dileu</string>
     <string name="deleted_by">[Wedi’i ddileu gan %1$s]</string>
     <string name="lockedDiscussionDesc">Mae’r drafodaeth hon yn rhan o’r modiwl %s ac nid yw wedi cael ei datgloi eto.</string>
     <string name="gradedDiscussion">Trafodaeth wedi’i Graddio</string>
@@ -380,7 +382,6 @@
     <string name="utils_uploadToSubmissionComment">Llwytho i fyny i Sylw ar y cyflwyniad</string>
     <string name="utils_attachFile">Atodi ffeil</string>
     <string name="utils_with">gyda</string>
-
     <string name="notificationPrimaryInboxTitle">Hysbysiad Canvas</string>
     <string name="notificationChannelNamePrimary">Hysbysiadau Cyffredinol Canvas</string>
     <string name="notificationChannelDescriptionPrimary">Gellir ffurfweddu hysbysiadau ymhellach o fewn yr adran Dewisiadau Hysbysiadau Canvas.</string>
