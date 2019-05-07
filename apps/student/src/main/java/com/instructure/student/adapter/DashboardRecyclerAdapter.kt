@@ -178,8 +178,10 @@ class DashboardRecyclerAdapter(
 
             // Add course invites
             val validInvites = invites.filter {
-                mRawCourseMap[it.courseId]?.let { it.isValidTerm() && !it.accessRestrictedByDate } ?: false
+                mRawCourseMap[it.courseId]?.let { course ->
+                    course.isValidTerm() && !course.accessRestrictedByDate && !course.restrictEnrollmentsToCourseDate} ?: false
             }
+            
             addOrUpdateAllItems(ItemType.INVITATION_HEADER, validInvites)
 
             notifyDataSetChanged()
