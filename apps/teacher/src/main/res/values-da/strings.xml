@@ -318,6 +318,7 @@
     <string name="assignments_list">Opgaveliste</string>
     <string name="syllabus">Læseplan</string>
     <!--End Course Settings-->
+
     <!-- Assignment Details -->
     <string name="multiple_due_dates">Flere forfaldsdatoer</string>
     <string name="everyone">Alle</string>
@@ -350,6 +351,8 @@
     <string name="description">Beskrivelse</string>
     <string name="grade_total">Samlet karakter</string>
     <string name="grade">Karakter</string>
+    <string name="enter_grade">Indtast karakter</string>
+    <string name="override">Tilsidesæt</string>
     <string name="calculated_by_rubric">Beregnet med rubrik</string>
     <string name="customize_grade">Tilpas karakter</string>
     <string name="out_of_points">Ud af %1$s</string>
@@ -510,7 +513,6 @@
 
     <string name="colorPickerDialogTitle">Fagets farve</string>
     <string name="colorPickerDialogMessage">Denne er din personlige farveindstilling. Du er den eneste, der ser denne farve sammen med faget.</string>
-
     <string name="colorPickerError">Fagets farve kunne ikke indstilles på nuværende tidspunkt.</string>
 
     <string name="contentDescriptionColorCottonCandy">Lyserød</string>
@@ -704,7 +706,6 @@
     <string name="allowThreadedReplies">Tillad trådede svar</string>
     <string name="usersMustPost">Brugere skal lægge opslag ud, inden de ser svar</string>
     <string name="allowUserComments">Tillad brugere at kommentere</string>
-
     <string name="discussionTitleMustBeSet">Diskussionens titel skal angives.</string>
     <string name="discussionSuccessfullyCreated">Diskussionen er oprettet.</string>
     <string name="errorCreatingDiscussion">Der opstod en fejl ved forsøg på at oprette denne diskussion. Prøv igen.</string>
@@ -833,7 +834,6 @@
     <string name="createAFile">Opret en fil</string>
     <string name="createFileFolderFabContentDesc">Vis knapperne Opret fil og Opret mappe</string>
     <string name="hideCreateFileFolderFabContentDesc">Skjul Opret fil- og Opret mappe-knapper</string>
-
     <string name="unpublish">Annuller offentliggørelse</string>
     <string name="restrictedAccess">Begrænset adgang</string>
     <string name="restricted">Begrænset</string>
@@ -877,7 +877,6 @@
     <string name="contentDescriptionFilterSection" formatted="false">for %s</string>
     <string name="filterBySection">Filtrer efter sektion</string>
     <string name="filterSubmissionsLowercase">Filtrer afleveringer</string>
-
     <string name="latePenalty">Straf for sen aflevering</string>
     <string name="finalGrade">Endelig karakter</string>
     <string name="moderatedGradingUnsupported">Samlet karaktergivning understøttes ikke i øjeblikket i mobil SpeedGrader.</string>
@@ -902,7 +901,6 @@
     <string name="gauge">Gauge</string>
     <string name="arc">Arc</string>
     <string name="ltiLaunchFailure">LTI-værktøjet kunne ikke indlæses på dette tidspunkt.</string>
-
     <string name="downloading">Downloader ...</string>
 
 </resources>

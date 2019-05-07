@@ -57,6 +57,7 @@
     <string name="login">Connexion</string>
     <string name="logout">Déconnexion</string>
 
+    <string name="matchingSchools">Écoles correspondantes</string>
     <!--Logout Warning Dialog-->
     <string name="logout_warning">Êtes-vous certain de vouloir vous déconnecter?</string>
     <string name="logout_yes">Oui</string>

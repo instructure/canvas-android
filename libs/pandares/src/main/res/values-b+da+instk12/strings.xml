@@ -34,6 +34,24 @@
     <string name="selectedListItem">Valgt: %s</string>
 
     <!-- Student Strings -->
+    <!-- Student Assignment Details -->
+    <string name="assignmentDetails">Opgaveoplysninger</string>
+    <string name="submission_types">Afleveringstyper</string>
+    <string name="noAssignmentDescriptionStudent">Intet indhold</string>
+    <string name="dueLabel">Forfalder</string>
+    <string name="submissionStatusSuccessTitle">Blev indsendt!</string>
+    <string name="submissionStatusSuccessSubtitle">Din aflevering venter nu på at blive bedømt</string>
+    <string name="submissionStatusUploadingTitle">Aflevering uploader ...</string>
+    <string name="submissionStatusUploadingSubtitle">Tryk for at se fremskridt</string>
+    <string name="submissionStatusFailedTitle">Aflevering mislykkedes</string>
+    <string name="submissionStatusFailedSubtitle">Tryk for at se detaljer</string>
+    <string name="submissionAndRubric">Aflevering og vurderingskriterie</string>
+    <string name="errorLoadingAssignment">Der opstod et problem med at indlæse denne opgave. Kontrollér forbindelsen, og prøv igen.</string>
+    <string name="submitted">Afleveret</string>
+    <string name="notSubmitted">Ikke indsendt</string>
+    <string name="allowedFileTypes">Tilladte filtyper</string>
+    <string name="resubmitAssignment">Gen-indsend opgave</string>
+
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">Version:</string>
 
@@ -334,7 +352,7 @@
     <string name="noUsersInGroup">Der er ingen brugere i denne gruppe</string>
 
     <!--Notifications-->
-    <string name="deleted">[Slettet]</string>
+    <string name="deleted">Slettet</string>
     <string name="gradedDiscussion">Bedømt diskussion.</string>
     <string name="pointsPossible">Mulige points.</string>
     <string name="pointsPossibleNoPeriod">Mulige point</string>
@@ -976,4 +994,6 @@
     <string name="addChildSubTitle">Indtast elevens parringskode, der er blevet givet til dig.</string>
     <string name="addChildHint">Parringskode ...</string>
     <string name="addChildErrorMessage">Parring mislykkedes. Sørg for, at din parringskode er korrekt og ikke udløbet.</string>
+    <string name="gradeComplete">Fuldført</string>
+    <string name="gradeIncomplete">Ufuldstændig</string>
 </resources>

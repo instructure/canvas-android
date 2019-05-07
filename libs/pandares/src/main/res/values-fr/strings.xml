@@ -34,6 +34,24 @@
     <string name="selectedListItem">Sélectionné : %s</string>
 
     <!-- Student Strings -->
+    <!-- Student Assignment Details -->
+    <string name="assignmentDetails">Informations sur le devoir</string>
+    <string name="submission_types">Types de soumission</string>
+    <string name="noAssignmentDescriptionStudent">Pas de contenu</string>
+    <string name="dueLabel">À rendre le</string>
+    <string name="submissionStatusSuccessTitle">Soumission effectuée avec succès !</string>
+    <string name="submissionStatusSuccessSubtitle">Votre soumission est maintenant en attente de notation</string>
+    <string name="submissionStatusUploadingTitle">Téléchargement des soumissions...</string>
+    <string name="submissionStatusUploadingSubtitle">Tapez sur pour afficher l\'état d\'avancement</string>
+    <string name="submissionStatusFailedTitle">Échec de l’envoi</string>
+    <string name="submissionStatusFailedSubtitle">Tapez sur pour afficher les détails</string>
+    <string name="submissionAndRubric">Soumission &amp; Rubrique</string>
+    <string name="errorLoadingAssignment">Un problème est survenu lors du chargement de ce travail. Veuillez vérifier votre et réessayer.</string>
+    <string name="submitted">Soumis</string>
+    <string name="notSubmitted">Non soumis</string>
+    <string name="allowedFileTypes">Types de fichiers autorisés</string>
+    <string name="resubmitAssignment">Soumettre à nouveau le travail</string>
+
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">Version :</string>
 
@@ -334,7 +352,7 @@
     <string name="noUsersInGroup">Il n\'y a aucun utilisateur dans ce groupe</string>
 
     <!--Notifications-->
-    <string name="deleted">[Supprimé]</string>
+    <string name="deleted">Supprimé</string>
     <string name="gradedDiscussion">Discussion notée.</string>
     <string name="pointsPossible">Points possibles.</string>
     <string name="pointsPossibleNoPeriod">Points possibles</string>
@@ -427,8 +445,8 @@
     <string name="unlockedAt">Ce sera déverrouillé à :</string>
     <string name="goToModules">Se rendre sur Modules</string>
     <string name="markDone">Marquer comme terminé</string>
-
     <string name="moduleItemNotFound">Élément de module introuvable</string>
+
     <string name="help">Aide</string>
     <string name="instructor_question">Question de l\'instructeur</string>
     <string name="link">Lien</string>
@@ -781,6 +799,7 @@
         <item quantity="one">%d question</item>
         <item quantity="other">%d questions</item>
     </plurals>
+
     <plurals name="pointCount">
         <item quantity="one">%s point</item>
         <item quantity="other">%s points</item>
@@ -968,11 +987,13 @@
     <string name="confirmDeleteEvent">Êtes-vous sûr de vouloir supprimer cet événement ?</string>
     <string name="conferencesNotSupported">Les conférences ne sont pas encore prises en charge sur mobile.</string>
     <string name="filePreviewContentDescription">Image de prévisualisation de fichier</string>
-
     <string name="pdfError">Une erreur est survenue lors du chargement de ce PDF.</string>
+
     <!-- Parent Strings -->
     <string name="addChildTitle">Ajouter un étudiant</string>
     <string name="addChildSubTitle">Saisir le code de jumelage de l’étudiant qui vous a été fourni.</string>
     <string name="addChildHint">Code de jumelage ...</string>
     <string name="addChildErrorMessage">Le jumelage a échoué. Assurez-vous que votre code de jumelage est correct et dans les limites de durée d’utilisation prévues.</string>
+    <string name="gradeComplete">Terminé</string>
+    <string name="gradeIncomplete">Incomplet</string>
 </resources>

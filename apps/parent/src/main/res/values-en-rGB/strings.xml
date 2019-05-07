@@ -118,6 +118,9 @@
     <string name="alarmNotSet">Alarm could not be set. Try again.</string>
     <string name="could_not_route_course">Could not find the course enrolment.</string>
     <string name="could_not_route_assignment">Could not find the assignment.</string>
+    <string name="could_not_route_announcement">Could not find the announcement.</string>
+    <string name="could_not_route_event">Could not find the event.</string>
+    <string name="could_not_route_account_notifications">Could not find the notification.</string>
     <string name="email_already_exists">A user with that email address already exists.</string>
     <string name="password_reset_success">An email with instructions to reset your password will be sent.</string>
     <string name="password_reset_no_user">No user with that email address was found.</string>
@@ -225,4 +228,5 @@
     <string name="institutionAnnouncementUnavailable">This announcement has expired.</string>
     <string name="previousWeekBtn">previous week button</string>
     <string name="nextWeekBtn">next week button</string>
+    <string name="filesNotSupported">Files are not currently supported</string>
 </resources>

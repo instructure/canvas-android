@@ -20,60 +20,60 @@
 
     <!--Modules-->
     <string name="mustComplete">Me whakaoti koe i te tuatahi:</string>
-    <string name="unlockedAt">Ka whakawātea te reira i:</string>
-    <string name="goToModules">Haere ki te Kōwae</string>
+    <string name="unlockedAt">Ka huakina i:</string>
+    <string name="goToModules">Haere ki ngā kōwae</string>
 
     <!--Events-->
     <string name="Starts">Tīmata</string>
-    <string name="Ends">Mutunga</string>
+    <string name="Ends">Mutunga:</string>
     <string name="allDayEvent">Takahanga ra katoa</string>
     <string name="at">ī</string>
     <string name="to">kī</string>
 
     <!--StreamItems-->
     <string name="Message">Karere</string>
-    <string name="Loading">Utanga &#8230;</string>
-    <string name="Deleted">Kua mukua</string>
+    <string name="Loading">E Uta ana&#8230;</string>
+    <string name="Deleted">mukua</string>
 
     <!-- Assignment Module -->
-    <string name="canvasAPI_online">Ipurangi</string>
-    <string name="canvasAPI_onPaper">I runga I te Pepa</string>
+    <string name="canvasAPI_online">ipurangi</string>
+    <string name="canvasAPI_onPaper">I te Pepa</string>
     <string name="canvasAPI_discussion">Kōrerorero</string>
     <string name="canvasAPI_quiz">Quiz</string>
-    <string name="canvasAPI_externalTool">Taputapu o waho</string>
+    <string name="canvasAPI_externalTool">Taputapu waho</string>
     <string name="canvasAPI_none">Kaore</string>
 
     <string name="canvasAPI_passFail">Haere Rahu</string>
     <string name="canvasAPI_percent">ōrau</string>
     <string name="canvasAPI_letterGrade">Kōeke Reta</string>
-    <string name="canvasAPI_points">Ngā koinga</string>
+    <string name="canvasAPI_points">Ngā Piro</string>
     <string name="canvasAPI_gpaScale">GPA Tauine</string>
-    <string name="canvasAPI_notGraded">Kāore i mākahia</string>
+    <string name="canvasAPI_notGraded">Kāore i kōekehia</string>
 
     <string name="canvasAPI_onlineQuiz">Quiz Ipurangi</string>
-    <string name="canvasAPI_discussionTopic">Kaupapa Kōrero</string>
-    <string name="canvasAPI_onlineUpload">Ipurangi Tukuatu</string>
-    <string name="canvasAPI_onlineTextEntry">Ipurangi Kuputuhi Whakauru</string>
-    <string name="canvasAPI_onlineURL">Ipurangi URL</string>
+    <string name="canvasAPI_discussionTopic">Aparauraa Kaupapa</string>
+    <string name="canvasAPI_onlineUpload">Tukuatu ipurangi</string>
+    <string name="canvasAPI_onlineTextEntry">Whakauru Kuputuhi ipurangi</string>
+    <string name="canvasAPI_onlineURL">URL ipurangi</string>
     <string name="canvasAPI_mediaRecording">Hopu pāpāho</string>
     <string name="canvasAPI_attendance">Taenga mai</string>
     <string name="quiz_scoring_policy_highest">teitei</string>
     <string name="quiz_scoring_policy_average">toharite</string>
     <string name="quiz_scoring_policy_latest">hou</string>
-    <string name="no">Kāo</string>
+    <string name="no">kahore</string>
     <string name="always">tonu</string>
-    <string name="graded_quiz">Quiz kua mākahia</string>
+    <string name="graded_quiz">Whakatau Quiz</string>
     <string name="practice_quiz">Mahi Quiz</string>
-    <string name="graded_survey">Rangahau kua mākahia</string>
-    <string name="ungraded_survey">Rangahau kāore anō i makahia</string>
+    <string name="graded_survey">Whakatau Rangahau</string>
+    <string name="ungraded_survey">Rangahau kaore i kōekehia</string>
     <string name="andMore"> me %d nui atu</string>
 
     <!-- Enrollment Types -->
     <string name="enrollmentTypeStudent">Ākonga</string>
     <string name="enrollmentTypeTeacher">Kaiako</string>
-    <string name="enrollmentTypeObserver">Kaimatakitaki</string>
+    <string name="enrollmentTypeObserver">kaimātakitaki</string>
     <string name="enrollmentTypeTeachingAssistant">TA</string>
-    <string name="enrollmentTypeDesigner">Kaitātai</string>
+    <string name="enrollmentTypeDesigner">kaitātai</string>
     <string name="enrollmentTypeUnknown">Kaore e mōhiotia</string>
 
 </resources>

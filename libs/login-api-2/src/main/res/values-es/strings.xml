@@ -57,6 +57,7 @@
     <string name="login">Iniciar sesión</string>
     <string name="logout">Cerrar sesión</string>
 
+    <string name="matchingSchools">Escuelas que coinciden con sus criterios.</string>
     <!--Logout Warning Dialog-->
     <string name="logout_warning">¿Está seguro de que quiere cerrar sesión?</string>
     <string name="logout_yes">Sí</string>

@@ -33,9 +33,9 @@
     <string name="rce_contentDescription_align_center">Whakarārangi Waenganui</string>
     <string name="rce_contentDescription_insert_bullets">Whakauru Rārangi Papa</string>
     <string name="rce_contentDescription_insert_numbers">Whakauru Rārangi Tatauhia</string>
-    <string name="rce_contentDescription_insert_photo">Whakauru Whakaahua</string>
+    <string name="rce_contentDescription_insert_photo">Whakauru Whakāhua</string>
     <string name="rce_contentDescription_upload_photo">Tukuake Whakāhua mai i te Pūrere</string>
-    <string name="rce_contentDescription_insert_link">Whakauru Haono</string>
+    <string name="rce_contentDescription_insert_link">Whakauru hono</string>
     <string name="rce_contentDescription_block_quote">Poraka Whakahua</string>
 
     <string name="rce_contentDescription_color_none">Tae Kore</string>
@@ -51,20 +51,20 @@
     <string name="rce_contentDescription_color_yellow">Tae Kowhai</string>
     <string name="rce_contentDescription_color_purple">Tae Waiporoporo</string>
 
-    <string name="rce_editTextUrlHint">Hono</string>
+    <string name="rce_editTextUrlHint">hono</string>
     <string name="rce_editTextALTHint">Kuputuhi</string>
     <string name="rce_dialogDone">Kua mahia</string>
     <string name="rce_dialogCancel">Whakakore</string>
-    <string name="rce_insertLink">Whakauru Haono</string>
+    <string name="rce_insertLink">Whakauru hono</string>
     <string name="rce_insertImage">Whakauru Āhua</string>
-
     <string name="rce_uploadImage">Tukuake Whakāturanga</string>
+
     <string name="rce_done">Kua mahia</string>
     <string name="rce_cancel">Whakakore</string>
     <string name="rce_exit">Puta</string>
     <string name="rce_dialog_exit_title">Puta Whakataunga Whakatikatika?</string>
-    <string name="rce_dialog_exit_message">E pono ana koe ki te puta? Ka ngaro ngā raraunga kaore ano i tiakina.</string>
+    <string name="rce_dialog_exit_message">E pono ana koe ki te puta? Ka ngaro ngā raraunga kaore anō i tiakina.</string>
     <string name="rce_empty_message">Karere</string>
-    <string name="rce_empty_description">Tāpiri whakaahua</string>
-    <string name="rce_scrollInstructions">Pāania mo ngā taputapu whakatika katoa</string>
+    <string name="rce_empty_description">Tāpiri whakāhua</string>
+    <string name="rce_scrollInstructions">Pānia mo ngā taputapu whakatika katoa</string>
 </resources>

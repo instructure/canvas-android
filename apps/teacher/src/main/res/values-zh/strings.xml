@@ -314,6 +314,7 @@
     <string name="assignments_list">作业列表</string>
     <string name="syllabus">教学大纲</string>
     <!--End Course Settings-->
+
     <!-- Assignment Details -->
     <string name="multiple_due_dates">多个到期日</string>
     <string name="everyone">所有人</string>
@@ -346,6 +347,8 @@
     <string name="description">说明</string>
     <string name="grade_total">总分</string>
     <string name="grade">评分</string>
+    <string name="enter_grade">输入评分</string>
+    <string name="override">覆盖</string>
     <string name="calculated_by_rubric">按评测计算</string>
     <string name="customize_grade">自定义评分</string>
     <string name="out_of_points">共 %1$s</string>
@@ -499,7 +502,6 @@
 
     <string name="colorPickerDialogTitle">课程颜色</string>
     <string name="colorPickerDialogMessage">这是您的个人颜色设置。只有您自己可以看到此课程颜色。</string>
-
     <string name="colorPickerError">暂时无法设置课程颜色。</string>
 
     <string name="contentDescriptionColorCottonCandy">粉红色</string>
@@ -691,7 +693,6 @@
     <string name="allowThreadedReplies">允许将回复信息按话题组织</string>
     <string name="usersMustPost">用户必须先发布本人信息才能阅读他人回复</string>
     <string name="allowUserComments">允许用户评论</string>
-
     <string name="discussionTitleMustBeSet">必须设置讨论标题。</string>
     <string name="discussionSuccessfullyCreated">已成功创建讨论。</string>
     <string name="errorCreatingDiscussion">尝试创建讨论时出错。请重试。</string>
@@ -820,7 +821,6 @@
     <string name="createAFile">选择文件</string>
     <string name="createFileFolderFabContentDesc">显示“创建文件”和“创建文件夹”按钮</string>
     <string name="hideCreateFileFolderFabContentDesc">隐藏“创建文件”和“创建文件夹”按钮</string>
-
     <string name="unpublish">未发布</string>
     <string name="restrictedAccess">限制访问</string>
     <string name="restricted">限制</string>
@@ -864,7 +864,6 @@
     <string name="contentDescriptionFilterSection" formatted="false">适用于%s</string>
     <string name="filterBySection">通过班级过滤</string>
     <string name="filterSubmissionsLowercase">筛选提交项</string>
-
     <string name="latePenalty">迟交罚分</string>
     <string name="finalGrade">最终评分</string>
     <string name="moderatedGradingUnsupported">移动版 SpeedGrader 目前不支持审核后的评分。</string>
@@ -887,7 +886,6 @@
     <string name="gauge">Gauge</string>
     <string name="arc">Arc</string>
     <string name="ltiLaunchFailure">此时不能加载此 LTI 工具。</string>
-
     <string name="downloading">正在下载...</string>
 
 </resources>

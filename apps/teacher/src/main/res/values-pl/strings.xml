@@ -326,6 +326,7 @@
     <string name="assignments_list">Lista zadań</string>
     <string name="syllabus">Program</string>
     <!--End Course Settings-->
+
     <!-- Assignment Details -->
     <string name="multiple_due_dates">Wiele terminów</string>
     <string name="everyone">Każdy</string>
@@ -358,6 +359,8 @@
     <string name="description">Opis</string>
     <string name="grade_total">Ocena łącznie</string>
     <string name="grade">Ocena</string>
+    <string name="enter_grade">Wpisz ocenę</string>
+    <string name="override">Nadpis</string>
     <string name="calculated_by_rubric">Obliczona wg rubryki</string>
     <string name="customize_grade">Konfiguruj ocenę</string>
     <string name="out_of_points">Z %1$s</string>
@@ -532,7 +535,6 @@
 
     <string name="colorPickerDialogTitle">Kolor kursu</string>
     <string name="colorPickerDialogMessage">To jest twoje osobiste ustawienie koloru. Tylko ty będziesz widzieć ten kurs podczas kursu.</string>
-
     <string name="colorPickerError">W danej chwili nie można ustawić koloru kursu.</string>
 
     <string name="contentDescriptionColorCottonCandy">Różowy</string>
@@ -730,7 +732,6 @@
     <string name="allowThreadedReplies">Zezwalaj na odpowiedzi złożone z wątków</string>
     <string name="usersMustPost">Użytkownicy powinni wysyłać przed ujrzeniem odpowiedzi</string>
     <string name="allowUserComments">Zezwalaj użytkownikom na komentowanie</string>
-
     <string name="discussionTitleMustBeSet">Należy ustawić tytuł dyskusji.</string>
     <string name="discussionSuccessfullyCreated">Utworzono dyskusję.</string>
     <string name="errorCreatingDiscussion">Podczas tworzenia dyskusji wystąpił błąd. Spróbuj ponownie.</string>
@@ -859,7 +860,6 @@
     <string name="createAFile">Utwórz plik</string>
     <string name="createFileFolderFabContentDesc">Pokaż przyciski tworzenia plików i folderów</string>
     <string name="hideCreateFileFolderFabContentDesc">Ukryj przyciski tworzenia plików i folderów</string>
-
     <string name="unpublish">Cofnij publikowanie</string>
     <string name="restrictedAccess">Ograniczony dostęp</string>
     <string name="restricted">Ograniczony</string>
@@ -903,7 +903,6 @@
     <string name="contentDescriptionFilterSection" formatted="false">dla %s</string>
     <string name="filterBySection">Filtruj według sekcji</string>
     <string name="filterSubmissionsLowercase">Filtruj materiały</string>
-
     <string name="latePenalty">Kara za spóźnienie</string>
     <string name="finalGrade">Ocena końcowa</string>
     <string name="moderatedGradingUnsupported">Moderowane ocenianie nie jest obecnie obsługiwane w wersji mobilnej SpeedGrader.</string>
@@ -932,7 +931,6 @@
     <string name="gauge">Gauge</string>
     <string name="arc">Arc</string>
     <string name="ltiLaunchFailure">Nie udało się wczytać narzędzia LTI.</string>
-
     <string name="downloading">Pobieranie...</string>
 
 </resources>

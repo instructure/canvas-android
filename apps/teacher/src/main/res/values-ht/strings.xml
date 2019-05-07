@@ -318,6 +318,7 @@
     <string name="assignments_list">Lis Sesyon</string>
     <string name="syllabus">Pwogram</string>
     <!--End Course Settings-->
+
     <!-- Assignment Details -->
     <string name="multiple_due_dates">Plizyè Delè</string>
     <string name="everyone">Tout Moun</string>
@@ -350,6 +351,8 @@
     <string name="description">Deskripsyon</string>
     <string name="grade_total">Total Nòt</string>
     <string name="grade">Klas</string>
+    <string name="enter_grade">Antre Nòt</string>
+    <string name="override">Ranplase</string>
     <string name="calculated_by_rubric">Kalkile pa ribrik</string>
     <string name="customize_grade">Pèsonalize Nòt</string>
     <string name="out_of_points">Sou %1$s</string>
@@ -510,7 +513,6 @@
 
     <string name="colorPickerDialogTitle">Koulè Kou</string>
     <string name="colorPickerDialogMessage">Sa se paramèt koulè pèsonèl ou. Sèlman ou menm k ap wè koulè sa a pou kou a.</string>
-
     <string name="colorPickerError">Koulè kou a paka defini nan moman sa a,</string>
 
     <string name="contentDescriptionColorCottonCandy">Woz</string>
@@ -704,7 +706,6 @@
     <string name="allowThreadedReplies">Otorize repons filte</string>
     <string name="usersMustPost">Itilizatè yo dwe poste anvan yo wè repons yo</string>
     <string name="allowUserComments">Pèmèt itilizatè yo kòmante</string>
-
     <string name="discussionTitleMustBeSet">Tit diskisyon an dwe defini.</string>
     <string name="discussionSuccessfullyCreated">Diskisyon kreye kòrèkteman.</string>
     <string name="errorCreatingDiscussion">Gen yon erè ki fèt pandan w ap eseye kreye diskisyon sa a. Eseye ankò.</string>
@@ -833,7 +834,6 @@
     <string name="createAFile">Kreye yon Fichye</string>
     <string name="createFileFolderFabContentDesc">Afiche Bouton  Kreye Fichye epi Kreye Dosye</string>
     <string name="hideCreateFileFolderFabContentDesc">Kache Bouton Kreye Fichye ak Kreye Dosye a</string>
-
     <string name="unpublish">Pa Pibliye</string>
     <string name="restrictedAccess">Aksè Limite</string>
     <string name="restricted">Limite</string>
@@ -877,7 +877,6 @@
     <string name="contentDescriptionFilterSection" formatted="false">pou %s</string>
     <string name="filterBySection">Klase pa seksyon</string>
     <string name="filterSubmissionsLowercase">Soumisyon filtè</string>
-
     <string name="latePenalty">Penalite pou Reta</string>
     <string name="finalGrade">Nòt Final</string>
     <string name="moderatedGradingUnsupported">Notasyon modere a pa sipòte pou kounye a nan SpeedGrader mobil.</string>
@@ -902,7 +901,6 @@
     <string name="gauge">Gauge</string>
     <string name="arc">Arc</string>
     <string name="ltiLaunchFailure">Zouti LTI sa a paka chaje pou kounye a.</string>
-
     <string name="downloading">Telechajman an kou...</string>
 
 </resources>

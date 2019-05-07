@@ -34,6 +34,24 @@
     <string name="selectedListItem">Seleksyone: %s</string>
 
     <!-- Student Strings -->
+    <!-- Student Assignment Details -->
+    <string name="assignmentDetails">Detay Sesyon</string>
+    <string name="submission_types">Tip Soumisyon</string>
+    <string name="noAssignmentDescriptionStudent">Pa gen Kontni</string>
+    <string name="dueLabel">Delè</string>
+    <string name="submissionStatusSuccessTitle">Ale avèk siksè!</string>
+    <string name="submissionStatusSuccessSubtitle">Soumisyon ou an ap tann pou yo evalye li</string>
+    <string name="submissionStatusUploadingTitle">Chajman Soumisyon...</string>
+    <string name="submissionStatusUploadingSubtitle">Tape pou afiche pwogrè</string>
+    <string name="submissionStatusFailedTitle">Soumisyon Echwe</string>
+    <string name="submissionStatusFailedSubtitle">Tape pou afiche detay</string>
+    <string name="submissionAndRubric">Soumisyon &amp; Ribrik</string>
+    <string name="errorLoadingAssignment">Te gen yon pwobl pouchaje devwa sa a. Tanpri verifye koneksyon ou a epi eseye ankò.</string>
+    <string name="submitted">Soumèt</string>
+    <string name="notSubmitted">Pa Soumèt</string>
+    <string name="allowedFileTypes">Tip Fichye Otorize</string>
+    <string name="resubmitAssignment">Resoumèt Sesyon</string>
+
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">Vèsyon:</string>
 
@@ -276,7 +294,7 @@
     <string name="invalidRecipients">Ou pa otorize pou voye mesaj bay yonn oswa plizyè nan moun ki seleksyone yo.</string>
     <string name="newMessage">Nouvo Mesaj</string>
     <string name="forwardMessage">Mesaj Transfere</string>
-    <string name="addMorePeopleToMessage">Ajoute yon lòt destinatè. Sèlman mesaj w ap voye bay pwòp tèt ou pap ka ale.l</string>
+    <string name="addMorePeopleToMessage">Ajoute yon lòt destinatè. Sèlman mesaj w ap voye bay pwòp tèt ou pap ka ale.</string>
     <string name="selectRecipients">Seleksyone Destinatè</string>
 
     <plurals name="people_count">
@@ -334,7 +352,7 @@
     <string name="noUsersInGroup">Pa gen itilizatè nan gwoup sa a</string>
 
     <!--Notifications-->
-    <string name="deleted">[Deleted]</string>
+    <string name="deleted">Efase</string>
     <string name="gradedDiscussion">Diskisyon Klase.</string>
     <string name="pointsPossible">Pwen Posib.</string>
     <string name="pointsPossibleNoPeriod">Pwen Posib</string>
@@ -427,8 +445,8 @@
     <string name="unlockedAt">L ap debloke a:</string>
     <string name="goToModules">Ale nan Modil</string>
     <string name="markDone">Make tankou li fini</string>
-
     <string name="moduleItemNotFound">Eleman Modil Entwouvab</string>
+
     <string name="help">Èd</string>
     <string name="instructor_question">Kesyon Enstriktè</string>
     <string name="link">Lyen</string>
@@ -781,6 +799,7 @@
         <item quantity="one">%d kesyon</item>
         <item quantity="other">%d kesyon</item>
     </plurals>
+
     <plurals name="pointCount">
         <item quantity="one">%s pwen</item>
         <item quantity="other">%s pwen</item>
@@ -968,11 +987,13 @@
     <string name="confirmDeleteEvent">Èske vrèman ou swete elemine aktivite sa a?</string>
     <string name="conferencesNotSupported">Konferans yo pa posib sou aparèy mobil.</string>
     <string name="filePreviewContentDescription">Fichye apèsi imaj</string>
-
     <string name="pdfError">Gen yon erè ki fèt pandan esè chajman PDF sa a.</string>
+
     <!-- Parent Strings -->
     <string name="addChildTitle">Ajoute Elèv</string>
     <string name="addChildSubTitle">Antre kòd kouplaj elèv yo ba ou a.</string>
     <string name="addChildHint">Asosyasyon kòd...</string>
     <string name="addChildErrorMessage">Asosyasyon Echwe... asire w ke kòd kouplaj ou a kòrèke li pa depase limit itilizasyon an.</string>
+    <string name="gradeComplete">Fini</string>
+    <string name="gradeIncomplete">Enkonplè</string>
 </resources>

@@ -124,6 +124,8 @@
     <string name="extensionNotAllowed">選中的檔案類型不被允許。</string>
     <string name="allowedExtensions">允許的擴展名：&#160;</string>
 
+    <string name="quizNetworkErrorTitle">測驗錯誤</string>
+    <string name="quizNetworkErrorMessage">網絡連線可能已離線。</string>
     <!-- Media Task Loader -->
     <string name="noDataConnection">請檢查您的數據連接並重試。</string>
     <string name="noApps">您的設備沒有安裝可處理此檔案的應用程式。</string>
@@ -204,7 +206,7 @@
     <string name="likes">讚好</string>
     <string name="lockedAssignmentNotModule">該作業已被鎖定。</string>
     <string name="deletedEntryNoChildren">該已刪除的討論條目尚未回复。</string>
-    <string name="deleted">[已刪除]</string>
+    <string name="deleted">已刪除</string>
     <string name="deleted_by">[已被 %1$s 刪除]</string>
     <string name="lockedDiscussionDesc">這項討論是%s單元的一部分，而且未被鎖定。</string>
     <string name="gradedDiscussion">已評分的討論</string>
@@ -377,7 +379,6 @@
     <string name="utils_uploadToSubmissionComment">上傳到提交項目評論</string>
     <string name="utils_attachFile">附加檔案</string>
     <string name="utils_with">與</string>
-
     <string name="notificationPrimaryInboxTitle">Canvas 通知</string>
     <string name="notificationChannelNamePrimary">一般 Canvas 通知</string>
     <string name="notificationChannelDescriptionPrimary">可於 Canvas 通知偏好的部分進行更多通知配置。</string>

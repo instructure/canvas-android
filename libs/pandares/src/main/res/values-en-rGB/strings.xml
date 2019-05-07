@@ -34,6 +34,24 @@
     <string name="selectedListItem">Selected: %s</string>
 
     <!-- Student Strings -->
+    <!-- Student Assignment Details -->
+    <string name="assignmentDetails">Assignment details</string>
+    <string name="submission_types">Submission types</string>
+    <string name="noAssignmentDescriptionStudent">No Content</string>
+    <string name="dueLabel">Due</string>
+    <string name="submissionStatusSuccessTitle">Successfully submitted!</string>
+    <string name="submissionStatusSuccessSubtitle">Your submission is now waiting to be graded</string>
+    <string name="submissionStatusUploadingTitle">Submission Uploading&#8230;</string>
+    <string name="submissionStatusUploadingSubtitle">Tap to view progress</string>
+    <string name="submissionStatusFailedTitle">Submission failed</string>
+    <string name="submissionStatusFailedSubtitle">Tap to view details</string>
+    <string name="submissionAndRubric">Submission &amp; Rubric</string>
+    <string name="errorLoadingAssignment">There was a problem loading this assignment. Please check your connection and try again.</string>
+    <string name="submitted">Submitted</string>
+    <string name="notSubmitted">Not submitted</string>
+    <string name="allowedFileTypes">Allowable File Types</string>
+    <string name="resubmitAssignment">Resubmit assignment</string>
+
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">Version:</string>
 
@@ -334,7 +352,7 @@
     <string name="noUsersInGroup">There are no users in this group</string>
 
     <!--Notifications-->
-    <string name="deleted">[Deleted]</string>
+    <string name="deleted">Deleted</string>
     <string name="gradedDiscussion">Marked discussion.</string>
     <string name="pointsPossible">Points possible.</string>
     <string name="pointsPossibleNoPeriod">Points possible</string>
@@ -427,8 +445,8 @@
     <string name="unlockedAt">It will be unlocked at:</string>
     <string name="goToModules">Go to Modules</string>
     <string name="markDone">Mark as completed</string>
-
     <string name="moduleItemNotFound">Module Item Not Found</string>
+
     <string name="help">Help</string>
     <string name="instructor_question">Instructor question</string>
     <string name="link">Link</string>
@@ -781,6 +799,7 @@
         <item quantity="one">%d question</item>
         <item quantity="other">%d questions</item>
     </plurals>
+
     <plurals name="pointCount">
         <item quantity="one">%s point</item>
         <item quantity="other">%s points</item>
@@ -968,11 +987,13 @@
     <string name="confirmDeleteEvent">Are you sure you wish to delete this event?</string>
     <string name="conferencesNotSupported">Conferences are not yet supported on mobile.</string>
     <string name="filePreviewContentDescription">File preview image</string>
-
     <string name="pdfError">An error occurred trying to load this PDF.</string>
+
     <!-- Parent Strings -->
     <string name="addChildTitle">Add student</string>
     <string name="addChildSubTitle">Input the student pairing code provided to you.</string>
     <string name="addChildHint">Pairing Code&#8230;</string>
     <string name="addChildErrorMessage">Pairing Failed. Make sure your pairing code is correct and within the time limit of use.</string>
+    <string name="gradeComplete">Complete</string>
+    <string name="gradeIncomplete">Incomplete</string>
 </resources>

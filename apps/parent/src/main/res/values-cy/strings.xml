@@ -118,6 +118,9 @@
     <string name="alarmNotSet">Doedd dim modd gosod neges hysbysu. Rhowch gynnig arall arni.</string>
     <string name="could_not_route_course">Doedd dim modd canfod yr ymrestriad cwrs.</string>
     <string name="could_not_route_assignment">Doedd dim modd canfod yr aseiniad.</string>
+    <string name="could_not_route_announcement">Doedd dim modd dod o hyd i’r cyhoeddiad.</string>
+    <string name="could_not_route_event">Doedd dim modd dod o hyd i’r digwyddiad.</string>
+    <string name="could_not_route_account_notifications">Doedd dim modd dod o hyd i’r hysbysiad.</string>
     <string name="email_already_exists">Mae defnyddiwr gyda’r cyfeiriad e-bost hwn yn bodoli’n barod.</string>
     <string name="password_reset_success">Bydd neges e-bost yn cael ei hanfon gyda chyfarwyddiadau i ailosod eich cyfrinair.</string>
     <string name="password_reset_no_user">Heb ganfod defnyddiwr gyda’r cyfeiriad e-bost hwn.</string>
@@ -225,4 +228,5 @@
     <string name="institutionAnnouncementUnavailable">Mae cyhoeddiad hwn wedi dod i ben.</string>
     <string name="previousWeekBtn">botwm yr wythnos flaenorol</string>
     <string name="nextWeekBtn">botwm yr wythnos nesaf</string>
+    <string name="filesNotSupported">Does dim modd delio â\'r ffeiliau ar hyn o bryd</string>
 </resources>
