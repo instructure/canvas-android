@@ -25,7 +25,9 @@ class PDFKitCrashFixTransformer : ClassTransformer() {
 
     override val transformName = "PSPDFKitYUDoDis"
 
-    override val includeExternalLibs = listOf("pspdfkit-4.8.1.aar")
+    override val counter = TransformCounter.Exactly(1)
+
+    override val includeExternalLibs = listOf("pspdfkit:4.8.1")
 
     private val problemClassName = "com.pspdfkit.ui.PdfThumbnailGrid"
 
