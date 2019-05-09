@@ -74,6 +74,11 @@ interface Stitcher {
  */
 @UseExperimental(InternalCoroutinesApi::class)
 class WeaveCoroutine(parentContext: CoroutineContext) : AbstractCoroutine<Unit>(parentContext, true), CoroutineScope {
+
+    /**
+     * Runs the provided code on the UI thread. Note that this does *not* suspend the coroutine; as such, any code
+     * passed to this function is *not* guaranteed to complete prior to execution of code declared after this function.
+     */
     fun onUI(block: () -> Unit) {
         Dispatchers.Main.dispatch(parentContext, Runnable(block))
     }

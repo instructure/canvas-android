@@ -19,17 +19,17 @@ package com.instructure.student.mobius.assignmentDetails.submission.text
 
 import com.instructure.canvasapi2.models.CanvasContext
 
-sealed class TextSubmissionEvent {
-    data class TextChanged(val text: String) : TextSubmissionEvent()
-    data class SubmitClicked(val text: String) : TextSubmissionEvent()
+sealed class TextSubmissionUploadEvent {
+    data class TextChanged(val text: String) : TextSubmissionUploadEvent()
+    data class SubmitClicked(val text: String) : TextSubmissionUploadEvent()
 }
 
-sealed class TextSubmissionEffect {
-    data class SubmitText(val text: String, val canvasContext: CanvasContext, val assignmentId: Long, val assignmentName: String?) : TextSubmissionEffect()
-    data class InitializeText(val text: String) : TextSubmissionEffect()
+sealed class TextSubmissionUploadEffect {
+    data class SubmitText(val text: String, val canvasContext: CanvasContext, val assignmentId: Long, val assignmentName: String?) : TextSubmissionUploadEffect()
+    data class InitializeText(val text: String) : TextSubmissionUploadEffect()
 }
 
-data class TextSubmissionModel(
+data class TextSubmissionUploadModel(
         val canvasContext: CanvasContext,
         val assignmentId: Long,
         val assignmentName: String?,

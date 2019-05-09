@@ -16,37 +16,63 @@
  */
 package com.instructure.student.mobius.assignmentDetails.submission.text.ui
 
+import android.app.Activity
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.student.mobius.assignmentDetails.submission.text.TextSubmissionEvent
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.setMenu
+import com.instructure.pandautils.utils.setupAsBackButton
+import com.instructure.student.R
+import com.instructure.student.mobius.assignmentDetails.submission.text.TextSubmissionUploadEvent
 import com.instructure.student.mobius.common.ui.MobiusView
 import com.instructure.student.mobius.common.ui.SubmissionService
 import com.spotify.mobius.functions.Consumer
+import kotlinx.android.synthetic.main.fragment_text_submission_upload.*
 
-class TextSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) : MobiusView<TextSubmissionUploadViewState, TextSubmissionEvent>(0, inflater, parent) {
-    override fun onConnect(output: Consumer<TextSubmissionEvent>) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+class TextSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) : MobiusView<TextSubmissionUploadViewState, TextSubmissionUploadEvent>(R.layout.fragment_text_submission_upload, inflater, parent) {
+
+    init {
+        toolbar.setupAsBackButton { (context as? Activity)?.onBackPressed() }
+        toolbar.title = context.getString(R.string.textEntry)
+    }
+
+    override fun onConnect(output: Consumer<TextSubmissionUploadEvent>) {
+        toolbar.setMenu(R.menu.menu_submit_generic) {
+            when (it.itemId) {
+                R.id.menuSubmit -> {
+                    output.accept(TextSubmissionUploadEvent.SubmitClicked(rce.html))
+                }
+            }
+        }
+
+        toolbar.menu.findItem(R.id.menuSubmit).isEnabled = false
+
+        rce.setOnTextChangeListener {
+            output.accept(TextSubmissionUploadEvent.TextChanged(it))
+        }
     }
 
     override fun render(state: TextSubmissionUploadViewState) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        toolbar.menu.findItem(R.id.menuSubmit).isEnabled = state.submitEnabled
     }
 
-    override fun onDispose() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun onDispose() { }
 
     override fun applyTheme() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        ViewStyler.themeToolbarBottomSheet(context as Activity, false, toolbar, Color.BLACK, false)
     }
 
-    fun setInitialSubmissionText(text: String) {
-        TODO("not implemented")
+    fun setInitialSubmissionText(text: String?) {
+        rce.setHtml(text ?: "", context.getString(R.string.textEntry), context.getString(R.string.submissionWrite), ThemePrefs.brandColor, ThemePrefs.buttonColor)
+        toolbar.menu.findItem(R.id.menuSubmit).isEnabled = !text.isNullOrBlank()
     }
 
     fun onTextSubmitted(text: String, canvasContext: CanvasContext, assignmentId: Long, assignmentName: String?) {
         SubmissionService.startTextSubmission(context, canvasContext, assignmentId, assignmentName, text)
-        // TODO: close screen (back press)
+
+        (context as? Activity)?.onBackPressed()
     }
 }
