@@ -44,18 +44,19 @@ class ProjectTransformer(
     )
 
     override fun transform(transformInvocation: TransformInvocation) = with(transformInvocation) {
+        val start = System.currentTimeMillis()
 
         // Don't transform anything if this is a test APK; just copy inputs and return
         if (context.variantName.endsWith("AndroidTest")) {
-            inputs.forEach {
-                it.jarInputs.forEach {
+            inputs.forEach { input ->
+                input.jarInputs.forEach {
                     val dest = outputProvider.getContentLocation(it.name, it.contentTypes, it.scopes, Format.JAR)
                     when (it.status) {
                         Status.REMOVED -> dest.delete()
                         else -> it.file.copyTo(dest, true)
                     }
                 }
-                it.directoryInputs.forEach {
+                input.directoryInputs.forEach {
                     val dest = outputProvider.getContentLocation(it.name, it.contentTypes, it.scopes, Format.DIRECTORY)
                     it.file.copyRecursively(dest, overwrite = true)
                 }
@@ -88,7 +89,7 @@ class ProjectTransformer(
                         jarInput.file.copyTo(dest, true)
                         classPool.insertClassPath(jarInput.file.absolutePath)
                         if (jarInput.scopes.contains(QualifiedContent.Scope.SUB_PROJECTS)
-                            || includedExternalLibs.any { it in jarInput.file.absolutePath }) {
+                            || includedExternalLibs.any { it in jarInput.name }) {
                             candidateJars += jarInput.file to dest
                         }
                     }
@@ -112,7 +113,7 @@ class ProjectTransformer(
         // Transform files
         candidateFiles.forEach { (cc, src) ->
             try {
-                val modCount = transformers.count { it.filter.matches(cc) && it.transform(cc, classPool) }
+                val modCount = transformers.count { it.filter.matches(cc) && it.performTransform(cc, classPool) }
                 if (modCount > 0) src.writeBytes(cc.toBytecode())
             } catch (e: Throwable) {
                 println("Error transforming file ${src.nameWithoutExtension}")
@@ -130,7 +131,7 @@ class ProjectTransformer(
                     if (entry.name.endsWith(".class")) {
                         val cc = classPool[entry.name.substringBeforeLast(".class").replace("/", ".")]
                         if (cc.isFrozen) cc.defrost()
-                        if (transformers.count { it.filter.matches(cc) && it.transform(cc, classPool) } > 0) {
+                        if (transformers.count { it.filter.matches(cc) && it.performTransform(cc, classPool) } > 0) {
                             output.putNextEntry(JarEntry(entry.name))
                             output.write(cc.toBytecode())
                         } else {
@@ -148,6 +149,12 @@ class ProjectTransformer(
             output.close()
             input.close()
         }
+
+        // Assert the transform counts match their expected conditions
+        transformers.forEach { it.counter.assertCount() }
+
+        val end = System.currentTimeMillis()
+        println("    :Transform took ${(end - start) / 1000.0} seconds")
     }
 
     /** Copies [entry] from the [input] jar to the [output] jar without modification */

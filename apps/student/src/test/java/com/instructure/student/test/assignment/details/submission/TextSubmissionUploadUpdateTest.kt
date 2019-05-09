@@ -18,9 +18,9 @@ package com.instructure.student.test.assignment.details.submission
 
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
-import com.instructure.student.mobius.assignmentDetails.submission.text.TextSubmissionEffect
-import com.instructure.student.mobius.assignmentDetails.submission.text.TextSubmissionEvent
-import com.instructure.student.mobius.assignmentDetails.submission.text.TextSubmissionModel
+import com.instructure.student.mobius.assignmentDetails.submission.text.TextSubmissionUploadEffect
+import com.instructure.student.mobius.assignmentDetails.submission.text.TextSubmissionUploadEvent
+import com.instructure.student.mobius.assignmentDetails.submission.text.TextSubmissionUploadModel
 import com.instructure.student.mobius.assignmentDetails.submission.text.TextSubmissionUploadUpdate
 import com.instructure.student.test.util.matchesEffects
 import com.instructure.student.test.util.matchesFirstEffects
@@ -44,13 +44,13 @@ class TextSubmissionUploadUpdateTest : Assert() {
 
     private lateinit var course: Course
     private lateinit var assignment: Assignment
-    private lateinit var initModel: TextSubmissionModel
+    private lateinit var initModel: TextSubmissionUploadModel
 
     @Before
     fun setup() {
         course = Course()
         assignment = Assignment(id = 1234L, courseId = course.id, name = "name")
-        initModel = TextSubmissionModel(assignmentId = assignment.id, canvasContext = course, assignmentName = assignment.name)
+        initModel = TextSubmissionUploadModel(assignmentId = assignment.id, canvasContext = course, assignmentName = assignment.name)
     }
 
     @Test
@@ -62,7 +62,7 @@ class TextSubmissionUploadUpdateTest : Assert() {
                 .then(
                         assertThatFirst(
                                 FirstMatchers.hasModel(startModel),
-                                matchesFirstEffects<TextSubmissionModel, TextSubmissionEffect>(TextSubmissionEffect.InitializeText(text))
+                                matchesFirstEffects<TextSubmissionUploadModel, TextSubmissionUploadEffect>(TextSubmissionUploadEffect.InitializeText(text))
                         )
                 )
     }
@@ -75,7 +75,7 @@ class TextSubmissionUploadUpdateTest : Assert() {
 
         updateSpec
                 .given(startModel)
-                .whenEvent(TextSubmissionEvent.TextChanged(text))
+                .whenEvent(TextSubmissionUploadEvent.TextChanged(text))
                 .then(
                         assertThatNext(
                                 NextMatchers.hasModel(expectedModel)
@@ -91,7 +91,7 @@ class TextSubmissionUploadUpdateTest : Assert() {
 
         updateSpec
                 .given(startModel)
-                .whenEvent(TextSubmissionEvent.TextChanged(text))
+                .whenEvent(TextSubmissionUploadEvent.TextChanged(text))
                 .then(
                         assertThatNext(
                                 NextMatchers.hasModel(expectedModel)
@@ -108,10 +108,10 @@ class TextSubmissionUploadUpdateTest : Assert() {
 
         updateSpec
                 .given(initModel)
-                .whenEvent(TextSubmissionEvent.SubmitClicked(text))
+                .whenEvent(TextSubmissionUploadEvent.SubmitClicked(text))
                 .then(
                         assertThatNext(
-                                matchesEffects<TextSubmissionModel, TextSubmissionEffect>(TextSubmissionEffect.SubmitText(text, course, assignment.id, assignment.name))
+                                matchesEffects<TextSubmissionUploadModel, TextSubmissionUploadEffect>(TextSubmissionUploadEffect.SubmitText(text, course, assignment.id, assignment.name))
                         )
                 )
     }
@@ -126,10 +126,10 @@ class TextSubmissionUploadUpdateTest : Assert() {
 
         updateSpec
                 .given(initModel)
-                .whenEvent(TextSubmissionEvent.SubmitClicked(text))
+                .whenEvent(TextSubmissionUploadEvent.SubmitClicked(text))
                 .then(
                         assertThatNext(
-                                matchesEffects<TextSubmissionModel, TextSubmissionEffect>(TextSubmissionEffect.SubmitText(expected, course, assignment.id, assignment.name))
+                                matchesEffects<TextSubmissionUploadModel, TextSubmissionUploadEffect>(TextSubmissionUploadEffect.SubmitText(expected, course, assignment.id, assignment.name))
                         )
                 )
     }
@@ -143,10 +143,10 @@ class TextSubmissionUploadUpdateTest : Assert() {
 
         updateSpec
                 .given(initModel)
-                .whenEvent(TextSubmissionEvent.SubmitClicked(text))
+                .whenEvent(TextSubmissionUploadEvent.SubmitClicked(text))
                 .then(
                         assertThatNext(
-                                matchesEffects<TextSubmissionModel, TextSubmissionEffect>(TextSubmissionEffect.SubmitText(text, course, assignment.id, assignment.name))
+                                matchesEffects<TextSubmissionUploadModel, TextSubmissionUploadEffect>(TextSubmissionUploadEffect.SubmitText(text, course, assignment.id, assignment.name))
                         )
                 )
     }

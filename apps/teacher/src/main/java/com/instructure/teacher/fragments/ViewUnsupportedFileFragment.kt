@@ -18,30 +18,31 @@ package com.instructure.teacher.fragments
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
-import androidx.annotation.DrawableRes
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.DrawableRes
+import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.instructure.annotations.FileCaching.FileCache
 import com.instructure.annotations.awaitFileDownload
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
-import com.instructure.canvasapi2.utils.weave.weave
+import com.instructure.interactions.router.Route
+import com.instructure.pandautils.models.EditableFile
 import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.Utils.copyToClipboard
 import com.instructure.teacher.R
 import com.instructure.teacher.events.FileFolderDeletedEvent
 import com.instructure.teacher.events.FileFolderUpdatedEvent
-import com.instructure.interactions.router.Route
-import com.instructure.pandautils.models.EditableFile
-import com.instructure.pandautils.utils.Utils.copyToClipboard
 import com.instructure.teacher.router.RouteMatcher
-import com.instructure.teacher.utils.*
+import com.instructure.teacher.utils.setupBackButton
+import com.instructure.teacher.utils.setupMenu
 import kotlinx.android.synthetic.main.fragment_unsupported_file_type.*
 import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.EventBus
+import java.io.File
 
 class ViewUnsupportedFileFragment : Fragment() {
 
@@ -56,7 +57,7 @@ class ViewUnsupportedFileFragment : Fragment() {
     private var mToolbarColor by IntArg(0)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater?.inflate(R.layout.fragment_unsupported_file_type, container, false)
+        return inflater.inflate(R.layout.fragment_unsupported_file_type, container, false)
     }
 
     override fun onResume() {
@@ -129,7 +130,14 @@ class ViewUnsupportedFileFragment : Fragment() {
                 openExternallyButton.isEnabled = true
 
                 if (tempFile != null)
-                    Uri.fromFile(tempFile).viewExternally(requireContext(), mContentType)
+                    if (mDisplayName.contains(".doc") || mDisplayName.contains(".docx")) {
+                        // Microsoft Word appears to search for their extensions specifically in the URI, regardless of the set MIME type - Our LRU cache does not keep track of the file name, including the extension,
+                        // so, as a temporary solution, we append copy the file, appending the extension. This means that caching does not work for doc files for now (see TODO below)
+                        // TODO: MBL-12338 (https://instructure.atlassian.net/browse/MBL-12338)
+                        val docTempFile = File("${tempFile.absolutePath}${mDisplayName.substring(mDisplayName.indexOf("."), mDisplayName.length)}")
+                        tempFile.renameTo(docTempFile)
+                        Uri.fromFile(docTempFile).viewExternally(requireContext(), mContentType)
+                    } else Uri.fromFile(tempFile).viewExternally(requireContext(), mContentType)
                 else {
                     throw RuntimeException("File download error")
                 }

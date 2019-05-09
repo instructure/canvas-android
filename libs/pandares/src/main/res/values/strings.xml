@@ -58,6 +58,9 @@
     <string name="submissionUrlNotAUrlError">Please enter a valid URL</string>
     <string name="enterAUrlHereForYourSubmission">Enter a URL here for your submission</string>
 
+    <!-- Student Submission -->
+    <string name="submissionWrite">Write&#8230;</string>
+
     <!-- Student Submission Details -->
     <string name="submission">Submission</string>
     <string name="submissionVersions">Submission versions</string>
@@ -497,8 +500,8 @@
 
 
     <!--New Submission Strings -->
-    <string name="textEntry"> Text Entry</string>
-    <string name="onlineURL"> Online URL</string>
+    <string name="textEntry">Text Entry</string>
+    <string name="onlineURL">Online URL</string>
     <string name="enterTextEntry">Enter Text Entry</string>
     <string name="fileUpload"> File Upload</string>
     <string name="oneFileOnly">This submission only accepts one file upload</string>

@@ -287,12 +287,12 @@ if (coverageEnabled) {
                            '**/Manifest*.*']
         )
 
-        // project.buildDir is /android-uno/parent/app/build
+        // project.buildDir is /canvas-android/apps/teacher/build
         sourceDirectories = files(['src/main/java'] + android.sourceSets[productFlavor].java.srcDirs)
         executionData = files("${project.buildDir}/firebase.ec")
 
         reports {
-            // default path: /android-uno/parent/app/build/reports/jacoco/firebaseJacoco/html/
+            // default path: /canvas-android/apps/teacher/build/reports/jacoco/firebaseJacoco/html/
             html.enabled true
             csv.enabled  false
             xml.enabled  false

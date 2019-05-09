@@ -10,7 +10,7 @@ s3_source = 's3://instructure-translations/translations/android-canvas/'
 
 # Projects json file is required
 unless File.exist? projects_json
-  raise 'Missing projects.json; please run again from android-uno root'
+  raise 'Missing projects.json; please run again from repository root'
 end
 
 # Hub CLI and valid config are required for creating Pull Requests

@@ -36,6 +36,7 @@ import com.instructure.student.R
 import com.instructure.student.activity.InternalWebViewActivity
 import com.instructure.student.fragment.InternalWebviewFragment
 import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsEvent
+import com.instructure.student.mobius.assignmentDetails.submission.text.ui.TextSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submission.url.ui.UrlSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsFragment
 import com.instructure.student.mobius.common.ui.MobiusView
@@ -160,11 +161,11 @@ class AssignmentDetailsView(
 
     fun showSubmitDialogView(assignment: Assignment, courseId: Long, visibilities: SubmissionTypesVisibilities) {
         val builder = AlertDialog.Builder(context)
-        val dialog = builder.setView(R.layout.dialog_submission_picker)
-                .create()
+        val dialog = builder.setView(R.layout.dialog_submission_picker).create()
+
         dialog.setOnShowListener {
             setupDialogRow(dialog, dialog.submissionEntryText, visibilities.textEntry) {
-                showOnlineTextEntryView(assignment.id, courseId)
+                showOnlineTextEntryView(assignment.id, assignment.name, assignment.submission?.body)
             }
             setupDialogRow(dialog, dialog.submissionEntryWebsite, visibilities.urlEntry) {
                 showOnlineUrlEntryView(assignment.id, assignment.name, canvasContext, assignment.submission?.url)
@@ -199,9 +200,8 @@ class AssignmentDetailsView(
         context.toast("Route to status page")
     }
 
-    fun showOnlineTextEntryView(assignmentId: Long, courseId: Long) {
-        // TODO
-        context.toast("Route to text entry page")
+    fun showOnlineTextEntryView(assignmentId: Long, assignmentName: String?, submittedText: String? = null) {
+        RouteMatcher.route(context, TextSubmissionUploadFragment.makeRoute(canvasContext, assignmentId, assignmentName, submittedText))
     }
 
     fun showOnlineUrlEntryView(assignmentId: Long, assignmentName: String?, canvasContext: CanvasContext, submittedUrl: String? = null) {
