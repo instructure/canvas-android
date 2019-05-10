@@ -373,6 +373,7 @@
     <string name="announcement_name_must_be_set">Announcement title must be set.</string>
     <string name="quiz_title_must_be_set">Quiz title must be set.</string>
     <string name="assignment_points_must_be_set">Assignment points must be set.</string>
+    <string name="assignment_points_must_be_a_number">Points possible must be a number</string>
     <string name="quiz_points_must_be_set">Quiz points must be set.</string>
     <string name="assignee_type_course_sections">Course Sections</string>
     <string name="assignee_type_groups">Groups</string>
