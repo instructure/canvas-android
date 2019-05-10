@@ -65,10 +65,14 @@ class CriterionRatingLayout @JvmOverloads constructor(
      * Selects the rating button matching the provided value. If the value is null, all buttons
      * will be deselected. If there is no matching value, the custom value button will be selected
      */
-    fun selectValue(value: Double?) {
+    fun selectValue(ratingId: String?, value: Double?) {
         val buttons = children<CriterionRatingButton>()
         buttons.forEach { it.isSelected = false }
-        if (value != null) {
+        if (ratingId != null) {
+            val selection = buttons.firstOrNull { it.ratingId == ratingId } ?: buttons.last()
+            value?.let { selection.pointValue = value }
+            selection.isSelected = true
+        } else if (value != null) {
             val selection = buttons.firstOrNull { it.pointValue == value } ?: buttons.last()
             selection.pointValue = value
             selection.isSelected = true
@@ -174,7 +178,7 @@ class CriterionRatingLayout @JvmOverloads constructor(
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onRatingSelected(event: RatingSelectedEvent) {
         if (event.criterionId == mCriterionId && event.studentId == mStudentId) {
-            selectValue(event.points)
+            selectValue(event.ratingId, event.points)
         }
     }
 

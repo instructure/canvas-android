@@ -59,7 +59,7 @@ class CriterionRatingButton @JvmOverloads constructor(
     private var mMaxRating = 0.0
 
     /** ID of the rating assigned to this button */
-    private var mRatingId = ""
+    var ratingId : String? = null
 
     /** Description of this rating item */
     private var mRatingDescription = ""
@@ -106,8 +106,8 @@ class CriterionRatingButton @JvmOverloads constructor(
                 mIsCustom -> (context as? AppCompatActivity)?.supportFragmentManager?.let {
                     CustomRubricRatingDialog.show(it, mCriterionId, mStudentId, pointValue, mMaxRating)
                 }
-                isSelected -> EventBus.getDefault().post(RatingSelectedEvent(null, mCriterionId, mStudentId))
-                else -> EventBus.getDefault().post(RatingSelectedEvent(pointValue, mCriterionId, mStudentId))
+                isSelected -> EventBus.getDefault().post(RatingSelectedEvent(null, mCriterionId, ratingId, mStudentId))
+                else -> EventBus.getDefault().post(RatingSelectedEvent(pointValue, mCriterionId, ratingId, mStudentId))
             }
         }
 
@@ -131,7 +131,7 @@ class CriterionRatingButton @JvmOverloads constructor(
 
     @SuppressLint("GetContentDescriptionOverride") // TODO
     override fun getContentDescription(): CharSequence = when {
-        BuildConfig.IS_TESTING -> "criterion_${mCriterionId}_rating_button_${if (mIsCustom) "custom" else mRatingId}"
+        BuildConfig.IS_TESTING -> "criterion_${mCriterionId}_rating_button_${if (mIsCustom) "custom" else ratingId}"
         mIsCustom && isSelected -> context.getString(R.string.rating_button_content_description_custom, text)
         mIsCustom -> context.getString(R.string.enter_custom_value)
         else -> context.getString(R.string.rating_button_content_description, text, mRatingDescription)
@@ -144,6 +144,7 @@ class CriterionRatingButton @JvmOverloads constructor(
     fun setCriterionRating(rating: RubricCriterionRating, criterion: RubricCriterion, studentId: Long) {
         mCriterionId = criterion.id ?: ""
         mStudentId = studentId
+        ratingId = rating.id
         mMaxRating = criterion.points
         mRatingDescription = rating.description ?: ""
         pointValue = rating.points

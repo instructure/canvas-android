@@ -31,6 +31,7 @@ import retrofit2.http.*
 object SubmissionAPI {
 
     private const val assessmentPrefix = "rubric_assessment["
+    private const val ratingIdPostFix = "][rating_id]"
     private const val pointsPostFix = "][points]"
     private const val commentsPostFix = "][comments]"
 
@@ -190,10 +191,8 @@ object SubmissionAPI {
     private fun generateRubricAssessmentQueryMap(rubricAssessment: Map<String, RubricCriterionAssessment>): Map<String, String> {
         val map = mutableMapOf<String, String>()
         for ((criterionIdKey, ratingValue) in rubricAssessment) {
-            ratingValue.points?.let { points ->
-                map[assessmentPrefix + criterionIdKey + pointsPostFix] = points.toString()
-            }
-
+            ratingValue.points?.let { map[assessmentPrefix + criterionIdKey + pointsPostFix] = it.toString() }
+            ratingValue.ratingId?.let { map[assessmentPrefix + criterionIdKey + ratingIdPostFix] = it }
             map[assessmentPrefix + criterionIdKey + commentsPostFix] = ratingValue.comments?.let { it } ?: ""
         }
         return map

@@ -216,7 +216,10 @@ class RubricEditView @JvmOverloads constructor(
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onRatingSelected(event: RatingSelectedEvent) {
         if (event.studentId == mAssignee.id) {
-            mAssessment.getOrPut(event.criterionId) { RubricCriterionAssessment() }.points = event.points
+            mAssessment.getOrPut(event.criterionId) { RubricCriterionAssessment() }.apply {
+                ratingId = event.ratingId
+                points = event.points
+            }
             val score = refreshScore()
             onScorePreviewUpdated(score)
             checkForChanges()

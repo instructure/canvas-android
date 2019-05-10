@@ -30,7 +30,7 @@ class ShowRatingDescriptionEvent(val anchor: View?, val assigneeId: Long?, val d
  * when a [CriterionRatingButton] has been clicked. A null value for [points] indicates the removal
  * of any point rating for the specified criterion.
  */
-class RatingSelectedEvent(val points: Double?, val criterionId: String, val studentId: Long)
+class RatingSelectedEvent(val points: Double?, val criterionId: String, val ratingId: String?, val studentId: Long)
 
 /**
  * RubricCommentEditedEvent
