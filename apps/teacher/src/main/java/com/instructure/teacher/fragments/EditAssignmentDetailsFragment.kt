@@ -68,6 +68,8 @@ import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import java.text.DecimalFormat
+import java.text.ParseException
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -388,12 +390,20 @@ class EditAssignmentDetailsFragment : BaseFragment() {
         // Both name and points are required
         if (editAssignmentName.text.isNullOrBlank() || editGradePoints.text.isNullOrBlank()) return
 
+        // Validate points possible
+        val pointsPossible = try {
+            DecimalFormat().parse(editGradePoints.text.toString()).toDouble()
+        } catch (e: ParseException) {
+            editGradePoints.error = getString(R.string.assignment_points_must_be_a_number)
+            return
+        }
+
         // Check due, unlock, and lock dates
         if (overrideContainer.children<AssignmentOverrideView>().any { it.validateInput() }) return
 
         val postData = AssignmentPostBody()
         postData.name = editAssignmentName.text.toString()
-        postData.pointsPossible = editGradePoints.text.toString().toDouble()
+        postData.pointsPossible = pointsPossible
         postData.setGroupedDueDates(mEditDateGroups)
         postData.description = handleLTIPlaceHolders(placeHolderList, descriptionEditor.html)
         postData.notifyOfUpdate = false
