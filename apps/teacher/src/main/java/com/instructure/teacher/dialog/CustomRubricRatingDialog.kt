@@ -75,7 +75,7 @@ class CustomRubricRatingDialog : AppCompatDialogFragment() {
 
         val onSave = { _: DialogInterface, _: Int ->
             val newScore = editText.text.toString().toDoubleOrNull()?.coerceAtMost(mMaxValue)
-            EventBus.getDefault().post(RatingSelectedEvent(newScore, mCriterionId, mStudentId))
+            EventBus.getDefault().post(RatingSelectedEvent(newScore, mCriterionId, null, mStudentId))
         }
 
         return AlertDialog.Builder(requireContext())

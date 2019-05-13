@@ -17,11 +17,13 @@
 package com.instructure.canvasapi2.models
 
 import android.os.Parcelable
+import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
-import java.io.Serializable
 
 @Parcelize
 data class RubricCriterionAssessment(
-        var points: Double? = null,
-        var comments: String? = null
+    @SerializedName("rating_id")
+    var ratingId: String? = null,
+    var points: Double? = null,
+    var comments: String? = null
 ) : Parcelable

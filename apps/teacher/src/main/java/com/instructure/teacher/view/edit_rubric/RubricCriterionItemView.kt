@@ -17,11 +17,11 @@
 package com.instructure.teacher.view.edit_rubric
 
 import android.content.Context
-import androidx.appcompat.app.AppCompatActivity
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ScrollView
+import androidx.appcompat.app.AppCompatActivity
 import com.instructure.canvasapi2.models.RubricCriterion
 import com.instructure.canvasapi2.models.RubricCriterionAssessment
 import com.instructure.pandautils.utils.*
@@ -87,7 +87,7 @@ class RubricCriterionItemView @JvmOverloads constructor(
         updateComment(assessment.comments)
         addCommentButton.onClick { editComment() }
         editCommentButton.onClick { editComment(commentTextView.text.toString()) }
-        ratingLayout.selectValue(assessment.points)
+        ratingLayout.selectValue(assessment.ratingId, assessment.points)
     }
 
     private fun editComment(default: String = "") {
