@@ -18,6 +18,7 @@ import com.instructure.student.db.sqlColAdapters.Date;
 import com.instructure.canvasapi2.models.CanvasContext;
 
 CREATE TABLE submission (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     submission TEXT, -- Text, URL, or a URI pointing to a file
     lastActivityDate TEXT as Date, -- Uploaded on, or day/time the upload failed
     assignmentName TEXT,
