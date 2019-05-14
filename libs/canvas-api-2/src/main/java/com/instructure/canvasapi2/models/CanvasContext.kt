@@ -136,7 +136,7 @@ abstract class CanvasContext : CanvasModel<CanvasContext>() {
 
         fun getApiContext(canvasContext: CanvasContext): String = if (canvasContext.type == Type.COURSE) "courses" else "groups"
 
-        fun getGenericContext(type: Type, id: Long, name: String = ""): CanvasContext =
+        fun getGenericContext(type: Type, id: Long = -1L, name: String = ""): CanvasContext =
                 when (type) {
                     Type.USER -> User(id = id, name = name)
                     Type.COURSE -> Course(id = id, name = name)
@@ -145,8 +145,9 @@ abstract class CanvasContext : CanvasModel<CanvasContext>() {
                     Type.UNKNOWN -> Unknown()
                 }
 
-        fun emptyCourseContext(): CanvasContext = getGenericContext(Type.COURSE, 0, "")
-        fun emptyGroupContext(id: Long): CanvasContext = getGenericContext(Type.GROUP, id, "")
+        @JvmOverloads
+        fun emptyCourseContext(id: Long = 0L): CanvasContext = getGenericContext(Type.COURSE, id, "")
+        fun emptyGroupContext(id: Long = 0L): CanvasContext = getGenericContext(Type.GROUP, id, "")
         fun defaultCanvasContext(): CanvasContext = getGenericContext(Type.UNKNOWN, 0, "")
         fun emptyUserContext(): CanvasContext = getGenericContext(Type.USER, 0, "")
         fun currentUserContext(user: User): CanvasContext = getGenericContext(Type.USER, user.id, user.name)

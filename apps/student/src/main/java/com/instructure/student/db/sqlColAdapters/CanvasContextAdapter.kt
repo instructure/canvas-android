@@ -7,7 +7,8 @@ class CanvasContextAdapter : ColumnAdapter<CanvasContext, String> {
     override fun decode(databaseValue: String): CanvasContext {
         val parsed = databaseValue.split(",")
         val type = when (parsed[0]) {
-            CanvasContext.Type.COURSE.name -> CanvasContext.Type.COURSE
+            CanvasContext.Type.COURSE.apiString -> CanvasContext.Type.COURSE
+            CanvasContext.Type.GROUP.apiString-> CanvasContext.Type.GROUP
             else -> { CanvasContext.Type.UNKNOWN}
         }
         val id = parsed[1].toLong()
@@ -16,7 +17,7 @@ class CanvasContextAdapter : ColumnAdapter<CanvasContext, String> {
     }
 
     override fun encode(value: CanvasContext): String {
-        return "${value.type},${value.id}"
+        return "${value.type.apiString},${value.id}"
     }
 
 }
