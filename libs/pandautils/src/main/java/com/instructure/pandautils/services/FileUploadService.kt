@@ -59,7 +59,7 @@ class FileUploadService @JvmOverloads constructor(name: String = FileUploadServi
     override fun onHandleIntent(intent: Intent) {
         val action = intent.action
         val bundle = intent.extras
-
+        
         if (isCanceled) return
 
         val fileSubmitObjects = bundle.getParcelableArrayList<FileSubmitObject>(Const.FILES) ?: return

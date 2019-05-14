@@ -26,12 +26,6 @@ buildscript {
         maven { url 'https://maven.fabric.io/public' }
         jcenter()
         maven { url "https://plugins.gradle.org/m2/" }
-        // These appear to have disappeared from the google repo
-        // https://issuetracker.google.com/issues/120759347
-        maven { url 'https://dl.bintray.com/android/android-tools' }
-        maven { url 'https://google.bintray.com/exoplayer/' }
-        maven { url 'https://dl.bintray.com/firebase/gradle/' }
-        maven { url "https://google.bintray.com/flexbox-layout" }
         maven { url "https://dl.bintray.com/instructure/maven" }
     }
 
@@ -45,6 +39,7 @@ buildscript {
         classpath Plugins.OKREPLAY
         classpath Plugins.BUILD_SCAN
         if (project.coverageEnabled) { classpath Plugins.JACOCO_ANDROID }
+        classpath Plugins.SQLDELIGHT
     }
 }
 
@@ -62,12 +57,6 @@ allprojects {
         }
         maven { url "https://maven.google.com/" }
         jcenter()
-        // These appear to have disappeared from the google repo
-        // https://issuetracker.google.com/issues/120759347
-        maven { url 'https://dl.bintray.com/android/android-tools' }
-        maven { url 'https://google.bintray.com/exoplayer/' }
-        maven { url 'https://dl.bintray.com/firebase/gradle/' }
-        maven { url "https://google.bintray.com/flexbox-layout" }
         maven { url "https://dl.bintray.com/instructure/maven" }
     }
 }
