@@ -6,9 +6,11 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class Date : ColumnAdapter<OffsetDateTime, String> {
-    override fun decode(databaseValue: String) = OffsetDateTime.parse(databaseValue) as OffsetDateTime
-    override fun encode(value: OffsetDateTime): String = value.toApiString()
+typealias Date = OffsetDateTime
+
+class DateAdapter : ColumnAdapter<Date, String> {
+    override fun decode(databaseValue: String) = Date.parse(databaseValue) as Date
+    override fun encode(value: Date): String = value.toApiString()
 }
 
 fun OffsetDateTime?.toApiString(timeZone: TimeZone? = null): String {

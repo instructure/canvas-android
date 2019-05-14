@@ -1,31 +1,29 @@
 import com.instructure.student.db.sqlColAdapters.Date;
-import com.instructure.student.db.sqlColAdapters.CanvasContext;
+import com.instructure.canvasapi2.models.CanvasContext;
 
 CREATE TABLE submission (
     submission TEXT, -- Text, URL, or a URI pointing to a file
-  --  lastActivityDate Date, -- Uploaded on, or day/time the upload failed
+    lastActivityDate TEXT as Date, -- Uploaded on, or day/time the upload failed
     assignmentName TEXT,
     mediaCommentId TEXT,  -- Media submissions
     mediaCommentType TEXT,
     assignmentId INTEGER,
-    --canvasContext CanvasContext,
-    canvasContextType TEXT,
-    canvasContextId INTEGER NOT NULL,
+    canvasContext TEXT as CanvasContext,
     submissionType TEXT,
     uploadError TEXT
 );
 
 insertOnlineTextSubmission:
-INSERT INTO submission (submission, assignmentName, assignmentId, canvasContextType, canvasContextId, submissionType)
-VALUES (?, ?, ?, ?, ?, "online_text_entry");
+INSERT INTO submission (submission, assignmentName, assignmentId, canvasContext, submissionType)
+VALUES (?, ?, ?, ?, "online_text_entry");
 
 insertOnlineUrlSubmission:
-INSERT INTO submission (submission, assignmentName, assignmentId, canvasContextType, canvasContextId, submissionType)
-VALUES (?, ?, ?, ?, ?, "online_url"); --"basic_lti_launch" else "online_url"
+INSERT INTO submission (submission, assignmentName, assignmentId, canvasContext, submissionType)
+VALUES (?, ?, ?, ?, "online_url"); --"basic_lti_launch" else "online_url"
 
 insertOnlineUploadSubmission:
-INSERT INTO submission (submission, assignmentName, assignmentId, canvasContextType, canvasContextId, submissionType)
-VALUES (?, ?, ?, ?, ?, "online_upload");
+INSERT INTO submission (submission, assignmentName, assignmentId, canvasContext, submissionType)
+VALUES (?, ?, ?, ?, "online_upload");
 
 getAllSubmissions:
 SELECT *

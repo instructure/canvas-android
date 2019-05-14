@@ -3,7 +3,7 @@ package com.instructure.student.db.sqlColAdapters
 import com.squareup.sqldelight.ColumnAdapter
 import com.instructure.canvasapi2.models.CanvasContext
 
-class CanvasContext : ColumnAdapter<CanvasContext, String> {
+class CanvasContextAdapter : ColumnAdapter<CanvasContext, String> {
     override fun decode(databaseValue: String): CanvasContext {
         val parsed = databaseValue.split(",")
         val type = when (parsed[0]) {
