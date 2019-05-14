@@ -45,3 +45,8 @@ VALUES (?, ?, ?, ?, "online_upload");
 getAllSubmissions:
 SELECT *
 FROM submission;
+
+getSubmissionsByAssignmentId:
+SELECT *
+FROM submission
+WHERE assignmentId = ?;
