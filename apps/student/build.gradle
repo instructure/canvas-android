@@ -27,6 +27,7 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'io.fabric'
 apply plugin: 'com.google.android.gms.oss-licenses-plugin'
 apply plugin: 'okreplay'
+apply plugin: 'com.squareup.sqldelight'
 apply from: '../../gradle/coverage.gradle'
 
 configurations {
@@ -194,7 +195,7 @@ dependencies {
 
     testImplementation 'org.threeten:threetenbp:1.3.8'
 
-    /* Modules */
+    /* Project Modules */
     implementation project(path: ':login-api-2')
     implementation project(path: ':androidcalendar')
     implementation project(path: ':chips')
@@ -260,6 +261,17 @@ dependencies {
 
     /* Job Scheduler */
     implementation Libs.FIREBASE_JOB_DISPATCHER
+
+    /* Database */
+    implementation "com.squareup.sqldelight:android-driver:1.1.3"
+}
+
+sqldelight {
+    StudentDb {
+        packageName = "com.instructure.student.db"
+        sourceFolders = ["db"]
+        schemaOutputDirectory = file("src/main/db/migrations")
+    }
 }
 
 apply plugin: 'com.google.gms.google-services'

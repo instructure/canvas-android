@@ -7,7 +7,7 @@ object Versions {
     const val TARGET_SDK = 28
 
     /* Build/tooling */
-    const val ANDROID_GRADLE_TOOLS = "3.3.2"
+    const val ANDROID_GRADLE_TOOLS = "3.4.0"
     const val BUILD_TOOLS = "28.0.3"
     const val BUILD_SCAN = "1.16"
 
@@ -21,7 +21,7 @@ object Versions {
     const val JACOCO_ANDROID = "0.1.2"
 
     /* Kotlin */
-    const val KOTLIN = "1.3.21"
+    const val KOTLIN = "1.3.31"
     const val KOTLIN_ANKO = "0.10.4"
     const val KOTLIN_COROUTINES = "1.1.1"
 
@@ -39,6 +39,7 @@ object Versions {
     const val PHOTO_VIEW = "2.3.0"
     const val ANDROID_SVG = "1.3"
     const val MOBIUS = "1.2.1"
+    const val SQLDELIGHT = "1.1.3"
 }
 
 object Libs {
@@ -105,6 +106,7 @@ object Plugins {
     const val OKREPLAY = "com.airbnb.okreplay:gradle-plugin:${Versions.OKREPLAY}"
     const val BUILD_SCAN = "com.gradle:build-scan-plugin:${Versions.BUILD_SCAN}"
     const val JACOCO_ANDROID = "com.dicedmelon.gradle:jacoco-android:${Versions.JACOCO_ANDROID}"
+    const val SQLDELIGHT = "com.squareup.sqldelight:gradle-plugin:${Versions.SQLDELIGHT}"
 }
 
 object BuildScan {

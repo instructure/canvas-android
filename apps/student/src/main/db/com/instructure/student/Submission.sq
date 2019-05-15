@@ -1,0 +1,52 @@
+ --
+ -- Copyright (C) 2019 - present Instructure, Inc.
+ --
+ --     Licensed under the Apache License, Version 2.0 (the "License");
+ --     you may not use this file except in compliance with the License.
+ --     You may obtain a copy of the License at
+ --
+ --     http://www.apache.org/licenses/LICENSE-2.0
+ --
+ --     Unless required by applicable law or agreed to in writing, software
+ --     distributed under the License is distributed on an "AS IS" BASIS,
+ --     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ --     See the License for the specific language governing permissions and
+ --     limitations under the License.
+ --
+
+import com.instructure.student.db.sqlColAdapters.Date;
+import com.instructure.canvasapi2.models.CanvasContext;
+
+CREATE TABLE submission (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    submission TEXT, -- Text, URL, or a URI pointing to a file
+    lastActivityDate TEXT as Date, -- Uploaded on, or day/time the upload failed
+    assignmentName TEXT,
+    mediaCommentId TEXT,  -- Media submissions
+    mediaCommentType TEXT,
+    assignmentId INTEGER,
+    canvasContext TEXT as CanvasContext,
+    submissionType TEXT,
+    uploadError TEXT
+);
+
+insertOnlineTextSubmission:
+INSERT INTO submission (submission, assignmentName, assignmentId, canvasContext, submissionType)
+VALUES (?, ?, ?, ?, "online_text_entry");
+
+insertOnlineUrlSubmission:
+INSERT INTO submission (submission, assignmentName, assignmentId, canvasContext, submissionType)
+VALUES (?, ?, ?, ?, "online_url"); --"basic_lti_launch" else "online_url"
+
+insertOnlineUploadSubmission:
+INSERT INTO submission (submission, assignmentName, assignmentId, canvasContext, submissionType)
+VALUES (?, ?, ?, ?, "online_upload");
+
+getAllSubmissions:
+SELECT *
+FROM submission;
+
+getSubmissionsByAssignmentId:
+SELECT *
+FROM submission
+WHERE assignmentId = ?;
