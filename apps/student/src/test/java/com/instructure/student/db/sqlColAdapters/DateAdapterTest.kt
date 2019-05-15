@@ -20,6 +20,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.threeten.bp.Instant
 import org.threeten.bp.OffsetDateTime
 import org.threeten.bp.format.DateTimeFormatter
 
@@ -38,11 +39,8 @@ class DateAdapterTest {
     @Test
     fun dateDecodesCorrectly() {
         val serverDateTime = "2019-12-12T12:12:12Z"
-        val expectedValue = OffsetDateTime.parse("2019-12-12T06:12:12-06:00")
+        val expectedValue = OffsetDateTime.parse(serverDateTime).withOffsetSameInstant(OffsetDateTime.now().offset)
         val actualValue = DateAdapter().decode(serverDateTime)
-
-        println("Expected value: ${expectedValue.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)}")
-        println("Actual value: ${actualValue.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)}")
 
         assertEquals(expectedValue.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME), actualValue.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME))
     }
