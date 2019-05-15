@@ -28,7 +28,6 @@ class DateAdapterTest {
 
     @Test
     fun dateEncodesCorrectly() {
-        // My OffsetDateTime -> Server String
         val localDateTime = OffsetDateTime.parse("2019-12-12T06:12:12-06:00")
         val expectedValue = "2019-12-12T12:12:12Z"
         val actualValue = DateAdapter().encode(localDateTime)
@@ -41,6 +40,9 @@ class DateAdapterTest {
         val serverDateTime = "2019-12-12T12:12:12Z"
         val expectedValue = OffsetDateTime.parse("2019-12-12T06:12:12-06:00")
         val actualValue = DateAdapter().decode(serverDateTime)
+
+        println("Expected value: ${expectedValue.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)}")
+        println("Actual value: ${actualValue.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)}")
 
         assertEquals(expectedValue.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME), actualValue.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME))
     }

@@ -26,7 +26,7 @@ class CanvasContextAdapterTest {
 
     @Test
     fun courseContextDecodesToCorrectCanvasContextType() {
-        val encodedCourse = "courses,123"
+        val encodedCourse = "course_123"
         val expectedValue = CanvasContext.emptyCourseContext(123L)
 
         assertEquals(expectedValue, CanvasContextAdapter().decode(encodedCourse))
@@ -34,7 +34,7 @@ class CanvasContextAdapterTest {
 
     @Test
     fun nonCourseOrGroupDecodesToUnknownCanvasContextType() {
-        val encodedUnknown = "sections,1234"
+        val encodedUnknown = "section_1234"
         val expectedValue = CanvasContext.defaultCanvasContext()
         val actualValue = CanvasContextAdapter().decode(encodedUnknown)
 
@@ -43,7 +43,7 @@ class CanvasContextAdapterTest {
 
     @Test
     fun courseContextEncodesCorrectly() {
-        val expectedValue = "courses,1234"
+        val expectedValue = "course_1234"
         val decodedCourse = CanvasContext.emptyCourseContext(id = 1234L)
         val actualValue = CanvasContextAdapter().encode(decodedCourse)
 
@@ -52,7 +52,7 @@ class CanvasContextAdapterTest {
 
     @Test
     fun unknownContextEncodesCorrectly() {
-        val expectedValue = "unknown,-1"
+        val expectedValue = "unknown_-1"
         val decodedUnknown = CanvasContext.defaultCanvasContext()
         val actualValue = CanvasContextAdapter().encode(decodedUnknown)
 

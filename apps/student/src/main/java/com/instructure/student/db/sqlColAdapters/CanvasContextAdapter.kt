@@ -21,17 +21,10 @@ import com.instructure.canvasapi2.models.CanvasContext
 
 class CanvasContextAdapter : ColumnAdapter<CanvasContext, String> {
     override fun decode(databaseValue: String): CanvasContext {
-        val parsed = databaseValue.split(",")
-        val type = when (parsed[0]) {
-            CanvasContext.Type.COURSE.apiString -> CanvasContext.Type.COURSE
-            else -> { CanvasContext.Type.UNKNOWN}
-        }
-        val id = parsed[1].toLong()
-
-        return CanvasContext.getGenericContext(type, id, "")
+       return CanvasContext.fromContextCode(databaseValue) ?: CanvasContext.defaultCanvasContext()
     }
 
     override fun encode(value: CanvasContext): String {
-        return "${value.type.apiString},${value.id}"
+        return value.contextId
     }
 }

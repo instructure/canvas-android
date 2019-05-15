@@ -52,8 +52,8 @@ abstract class CanvasContext : CanvasModel<CanvasContext>() {
                 Type.COURSE -> "course"
                 Type.GROUP -> "group"
                 Type.USER -> "user"
-                CanvasContext.Type.SECTION -> TODO()
-                CanvasContext.Type.UNKNOWN -> TODO()
+                Type.SECTION -> TODO()
+                Type.UNKNOWN -> "unknown"
             }
 
             return prefix + "_" + id
