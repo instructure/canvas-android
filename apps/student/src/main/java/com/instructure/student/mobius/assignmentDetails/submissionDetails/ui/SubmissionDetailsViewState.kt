@@ -19,6 +19,7 @@ package com.instructure.student.mobius.assignmentDetails.submissionDetails.ui
 
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Attachment
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Submission
 
 sealed class SubmissionDetailsViewState {
@@ -40,7 +41,8 @@ sealed class SubmissionDetailsTabData(val tabName: String) {
     data class FileData(
         val name: String,
         val files: List<Attachment>,
-        val selectedFileId: Long
+        val selectedFileId: Long,
+        val canvasContext: CanvasContext
     ) : SubmissionDetailsTabData(name)
     data class GradeData(
         val name: String,

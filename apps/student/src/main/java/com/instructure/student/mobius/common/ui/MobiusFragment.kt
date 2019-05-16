@@ -34,6 +34,8 @@ import kotlinx.android.extensions.LayoutContainer
 abstract class MobiusFragment<MODEL, EVENT, EFFECT, VIEW : MobiusView<VIEW_STATE, EVENT>, VIEW_STATE> : Fragment(), FragmentInteractions {
     var overrideInitModel: MODEL? = null
 
+    var overrideInitViewState: VIEW_STATE? = null
+
     var loopMod: ((MobiusLoop.Builder<MODEL, EVENT, EFFECT>) -> MobiusLoop.Builder<MODEL, EVENT, EFFECT>)? = null
 
     var loop: MobiusLoop.Builder<MODEL, EVENT, EFFECT> by LateInit {
@@ -60,6 +62,8 @@ abstract class MobiusFragment<MODEL, EVENT, EFFECT, VIEW : MobiusView<VIEW_STATE
 
     abstract fun makeInitModel(): MODEL
 
+    open val eventSources : List<EventSource<EVENT>> = emptyList()
+
     // FragmentInteractions override
     override val navigation: Navigation? get() = context as? Navigation
 
@@ -75,12 +79,12 @@ abstract class MobiusFragment<MODEL, EVENT, EFFECT, VIEW : MobiusView<VIEW_STATE
         super.onCreate(savedInstanceState)
         retainInstance = true
 
-        update = makeUpdate().apply { initialized = overrideInitModel != null }
+        update = makeUpdate().apply { initialized = overrideInitModel != null || overrideInitViewState != null }
         globalEventSource = GlobalEventSource(update)
         effectHandler = makeEffectHandler()
         loop = Mobius.loop(update, effectHandler)
             .effectRunner { MainThreadWorkRunner.create() }
-            .eventSource(globalEventSource)
+            .eventSources(globalEventSource, *eventSources.toTypedArray())
             .init(update::init)
         controller = MobiusAndroid.controller(loop, overrideInitModel ?: makeInitModel())
     }
@@ -89,8 +93,11 @@ abstract class MobiusFragment<MODEL, EVENT, EFFECT, VIEW : MobiusView<VIEW_STATE
         view = makeView(inflater, container!!)
         effectHandler.view = view
         val presenter = makePresenter()
-        controller.connect(view.contraMap(presenter::present, requireContext()))
-        if (update.initialized) {
+        controller.connect(view.contraMap(presenter::present, requireContext(), overrideInitViewState != null))
+        if (overrideInitViewState != null) {
+            view.connection?.accept(overrideInitViewState!!)
+            overrideInitViewState = null
+        } else if (update.initialized) {
             view.connection?.accept(presenter.present(controller.model, requireContext()))
         }
         return view.containerView

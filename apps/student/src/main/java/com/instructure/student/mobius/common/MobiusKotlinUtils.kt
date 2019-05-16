@@ -23,7 +23,8 @@ import kotlin.reflect.KFunction2
 
 fun <I, J, O> Connectable<I, O>.contraMap(
     mapper: KFunction2<J, Context, I>,
-    context: Context
+    context: Context,
+    isDisabledForTesting: Boolean = false
 ): Connectable<J, O> {
     return Connectable { output ->
         val delegateConnection = connect(output)
@@ -31,6 +32,7 @@ fun <I, J, O> Connectable<I, O>.contraMap(
             var lastValue: I? = null
 
             override fun accept(value: J) {
+                if (isDisabledForTesting) return
                 val mappedValue: I = mapper(value, context)
                 // Only push value if it has changed (prevents duplicate renders)
                 if (mappedValue != lastValue) {
