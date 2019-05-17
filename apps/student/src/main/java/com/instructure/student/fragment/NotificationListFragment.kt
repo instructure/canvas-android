@@ -252,7 +252,7 @@ class NotificationListFragment : ParentFragment(), Bookmarkable {
                     }
                 }
                 COLLABORATION -> UnsupportedTabFragment.makeRoute(canvasContext, Tab.COLLABORATIONS_ID)
-                CONFERENCE -> UnsupportedTabFragment.makeRoute(canvasContext, Tab.CONFERENCES_ID)
+                CONFERENCE -> ConferencesFragment.makeRoute(canvasContext)
                 else -> UnsupportedFeatureFragment.makeRoute(canvasContext, streamItem.type, streamItem.url)
             }
 

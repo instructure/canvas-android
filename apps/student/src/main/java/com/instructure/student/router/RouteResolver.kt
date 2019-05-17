@@ -11,7 +11,6 @@ import com.instructure.student.mobius.assignmentDetails.submission.url.ui.UrlSub
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsFragment
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.mobius.syllabus.ui.SyllabusFragment
-import retrofit2.http.HEAD
 
 object RouteResolver {
 
@@ -78,6 +77,7 @@ object RouteResolver {
             cls.isA<ModuleListFragment>() -> ModuleListFragment.newInstance(route)
             cls.isA<CourseSettingsFragment>() -> CourseSettingsFragment.newInstance(route)
             cls.isA<AnnouncementListFragment>() -> AnnouncementListFragment.newInstance(route)
+            cls.isA<ConferencesFragment>() -> ConferencesFragment.newInstance(route)
             cls.isA<UnsupportedTabFragment>() -> UnsupportedTabFragment.newInstance(route)
             cls.isA<PageListFragment>() -> PageListFragment.newInstance(route)
             cls.isA<UnsupportedFeatureFragment>() -> UnsupportedFeatureFragment.newInstance(route)

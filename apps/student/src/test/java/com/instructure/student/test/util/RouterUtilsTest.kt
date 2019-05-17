@@ -20,7 +20,6 @@ package com.instructure.student.test.util
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouteContext
 import com.instructure.interactions.router.RouterParams
@@ -29,7 +28,6 @@ import com.instructure.student.fragment.*
 import com.instructure.student.mobius.syllabus.ui.SyllabusFragment
 import com.instructure.student.router.RouteMatcher
 import junit.framework.TestCase
-import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RuntimeEnvironment
@@ -429,18 +427,6 @@ class RouterUtilsTest : TestCase() {
         //        assertEquals(Tab.COLLABORATIONS_ID, route.getTabId());
         TestCase.assertEquals(expectedParams, route.paramsHash)
 
-        route = callGetInternalRoute("https://mobiledev.instructure.com/courses/836357/conferences/")
-        TestCase.assertNotNull(route)
-        TestCase.assertEquals(UnsupportedTabFragment::class.java, route!!.primaryClass)
-        //        assertEquals(Tab.CONFERENCES_ID, route.getTabId());
-        TestCase.assertEquals(expectedParams, route.paramsHash)
-
-        route = callGetInternalRoute("https://mobiledev.instructure.com/courses/836357/conferences/234") // not an actual url
-        TestCase.assertNotNull(route)
-        TestCase.assertEquals(UnsupportedTabFragment::class.java, route!!.primaryClass)
-        //        assertEquals(Tab.CONFERENCES_ID, route.getTabId());
-        TestCase.assertEquals(expectedParams, route.paramsHash)
-
         route = callGetInternalRoute("https://mobiledev.instructure.com/courses/836357/outcomes/")
         TestCase.assertNotNull(route)
         TestCase.assertEquals(UnsupportedTabFragment::class.java, route!!.primaryClass)
@@ -454,6 +440,21 @@ class RouterUtilsTest : TestCase() {
         TestCase.assertEquals(expectedParams, route.paramsHash)
     }
 
+    @Test
+    fun testGetInternalRoute_conferences() {
+        val courseId = "836357"
+        var route = callGetInternalRoute("https://mobiledev.instructure.com/courses/$courseId/conferences/")
+        val expectedParams = hashMapOf(RouterParams.COURSE_ID to courseId)
+        assertNotNull(route)
+        assertEquals(ConferencesFragment::class.java, route!!.primaryClass)
+        assertEquals(expectedParams, route.paramsHash)
+
+        route = callGetInternalRoute("https://mobiledev.instructure.com/courses/$courseId/conferences/234") // not an actual url
+        assertNotNull(route)
+        assertEquals(ConferencesFragment::class.java, route!!.primaryClass)
+        assertEquals(expectedParams, route.paramsHash)
+
+    }
 
     @Test
     fun testCreateBookmarkCourse() {
