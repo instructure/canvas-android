@@ -14,18 +14,20 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer
+package com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric
 
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Submission
 
-sealed class SubmissionGradeEvent {
-    data class LongDescriptionClicked(val rubricCriterionId: String) : SubmissionGradeEvent()
+sealed class SubmissionRubricEvent {
+    data class LongDescriptionClicked(val rubricCriterionId: String) : SubmissionRubricEvent()
 }
 
-sealed class SubmissionGradeEffect {
-    data class ShowLongDescription(val description: String) : SubmissionGradeEffect()
+sealed class SubmissionRubricEffect {
+    data class ShowLongDescription(val description: String) : SubmissionRubricEffect()
 }
 
-data class SubmissionGradeModel(
-    val assignment: Assignment
+data class SubmissionRubricModel(
+    val assignment: Assignment,
+    val submission: Submission
 )
