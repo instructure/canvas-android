@@ -178,7 +178,7 @@ object RouteMatcher : BaseRouteMatcher() {
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/lti_collaborations.*"), UnsupportedTabFragment::class.java, Tab.COLLABORATIONS_ID))
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/collaborations.*"), UnsupportedTabFragment::class.java, Tab.COLLABORATIONS_ID))
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/outcomes.*"), UnsupportedTabFragment::class.java, Tab.OUTCOMES_ID))
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/conferences.*"), UnsupportedTabFragment::class.java, Tab.CONFERENCES_ID))
+        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/conferences.*"), ConferencesFragment::class.java, Tab.CONFERENCES_ID))
 
         routes.add(Route("/files", FileListFragment::class.java).apply{ canvasContext = ApiPrefs.user }) // validRoute for FileListFragment checks for a canvasContext, which is null on deep links
         routes.add(Route("/files/folder/:${RouterParams.FOLDER_NAME}", RouteContext.FILE))

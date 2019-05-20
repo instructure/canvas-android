@@ -83,7 +83,7 @@ object TabHelper {
             Tab.SYLLABUS_ID -> SyllabusFragment.makeRoute(canvasContext as Course)
             Tab.QUIZZES_ID -> QuizListFragment.makeRoute(canvasContext)
             Tab.OUTCOMES_ID -> UnsupportedTabFragment.makeRoute(canvasContext, tab.tabId)
-            Tab.CONFERENCES_ID -> UnsupportedTabFragment.makeRoute(canvasContext, tab.tabId)
+            Tab.CONFERENCES_ID -> ConferencesFragment.makeRoute(canvasContext)
             Tab.COLLABORATIONS_ID -> UnsupportedTabFragment.makeRoute(canvasContext, tab.tabId)
             Tab.ANNOUNCEMENTS_ID -> AnnouncementListFragment.makeRoute(canvasContext)
             Tab.GRADES_ID -> GradesListFragment.makeRoute(canvasContext)
