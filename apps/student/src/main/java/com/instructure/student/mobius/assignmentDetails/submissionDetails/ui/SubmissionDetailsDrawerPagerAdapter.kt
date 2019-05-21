@@ -20,6 +20,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.viewpager.widget.PagerAdapter
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.files.ui.SubmissionFilesFragment
 
 class SubmissionDetailsDrawerPagerAdapter(fragmentManager: FragmentManager) : FragmentStatePagerAdapter(fragmentManager) {
 
@@ -41,10 +42,13 @@ class SubmissionDetailsDrawerPagerAdapter(fragmentManager: FragmentManager) : Fr
         cachedFragments[position]
         var cachedFragment = cachedFragments[position]
         if (cachedFragment == null) {
-            val tab = tabData[position]
-            cachedFragment = PlaceholderFragment().apply {
-                typeName = tab::class.java.simpleName.substringAfterLast('.')
-                typeContents = tab.toString()
+            val tabData = tabData[position]
+            cachedFragment = when (tabData) {
+                is SubmissionDetailsTabData.FileData -> SubmissionFilesFragment().apply { data = tabData }
+                else -> PlaceholderFragment().apply {
+                    typeName = tabData::class.java.simpleName.substringAfterLast('.')
+                    typeContents = tabData.toString()
+                }
             }
             cachedFragments[position] = cachedFragment
         }

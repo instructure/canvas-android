@@ -26,6 +26,7 @@ import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.utils.*
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.*
+import com.instructure.student.mobius.common.ChannelSource
 import com.instructure.student.mobius.common.ui.MobiusFragment
 
 @PageView(url = "{canvasContext}/assignments/{assignmentId}/submissions")
@@ -47,6 +48,14 @@ class SubmissionDetailsFragment :
     override fun makePresenter() = SubmissionDetailsPresenter
 
     override fun makeInitModel() = SubmissionDetailsModel(canvasContext = canvasContext, assignmentId = assignmentId)
+
+    override val eventSources = listOf(
+        ChannelSource.getSource<SubmissionDetailsSharedEvent, SubmissionDetailsEvent> {
+            when (it) {
+                is SubmissionDetailsSharedEvent.FileSelected -> SubmissionDetailsEvent.AttachmentClicked(it.file)
+            }
+        }
+    )
 
     companion object {
 

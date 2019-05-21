@@ -87,8 +87,9 @@ class WeaveCoroutine(parentContext: CoroutineContext) : AbstractCoroutine<Unit>(
         return async(context = Dispatchers.Default, block = block).await()
     }
 
-    override fun handleJobException(exception: Throwable) {
-        handleExceptionViaHandler(parentContext, exception)
+    override fun handleJobException(exception: Throwable): Boolean {
+        handleCoroutineException(parentContext, exception)
+        return true
     }
 
     // region Stitcher

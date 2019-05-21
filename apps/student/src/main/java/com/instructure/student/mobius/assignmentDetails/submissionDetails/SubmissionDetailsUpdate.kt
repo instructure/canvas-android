@@ -79,6 +79,17 @@ class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDet
                     ), setOf(SubmissionDetailsEffect.ShowSubmissionContentType(submissionType))
                 )
             }
+            is SubmissionDetailsEvent.AttachmentClicked -> {
+                if (model.selectedAttachmentId == event.file.id) {
+                    Next.noChange()
+                } else {
+                    val content = getAttachmentContent(event.file)
+                    Next.next<SubmissionDetailsModel, SubmissionDetailsEffect>(
+                        model.copy(selectedAttachmentId = event.file.id),
+                        setOf(SubmissionDetailsEffect.ShowSubmissionContentType(content))
+                    )
+                }
+            }
         }
     }
 

@@ -28,7 +28,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.CookieManager;
-import android.webkit.CookieSyncManager;
 import android.webkit.HttpAuthHandler;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
@@ -326,11 +325,8 @@ public abstract class BaseLoginSignInActivity extends AppCompatActivity implemen
         }
     }
 
-    @SuppressWarnings("deprecation")
     protected void clearCookies() {
-        CookieSyncManager.createInstance(this);
-        CookieManager cookieManager = CookieManager.getInstance();
-        cookieManager.removeAllCookie();
+        CookieManager.getInstance().removeAllCookies(null);
     }
 
     public Map<String, String> getHeaders() {

@@ -14,19 +14,24 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer
+package com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.files
 
-import com.instructure.canvasapi2.models.Attachment
+import androidx.annotation.ColorInt
+import androidx.annotation.DrawableRes
 
-sealed class SubmissionFilesEvent {
-    data class FileClicked(val fileId: Long) : SubmissionFilesEvent()
+sealed class SubmissionFilesViewState {
+    object Empty : SubmissionFilesViewState()
+    data class FileList(
+        val files: List<SubmissionFileData> = emptyList()
+    ) : SubmissionFilesViewState()
 }
 
-sealed class SubmissionFilesEffect {
-    data class BroadcastFileSelected(val file: Attachment) : SubmissionFilesEffect()
-}
-
-data class SubmissionFilesModel(
-    val files: List<Attachment>,
-    val selectedFileId: Long
+data class SubmissionFileData(
+    val id: Long,
+    val name: String,
+    @DrawableRes val icon: Int,
+    val thumbnailUrl: String?,
+    val isSelected: Boolean,
+    @ColorInt val iconColor: Int,
+    @ColorInt val selectionColor: Int
 )

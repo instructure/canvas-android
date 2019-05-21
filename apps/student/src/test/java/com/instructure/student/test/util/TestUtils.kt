@@ -14,6 +14,8 @@
  *     limitations under the License.
  *
  */
+@file:Suppress("EXPERIMENTAL_API_USAGE")
+
 package com.instructure.student.test.util
 
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
@@ -21,6 +23,8 @@ import com.spotify.mobius.First
 import com.spotify.mobius.Next
 import com.spotify.mobius.test.FirstMatchers
 import com.spotify.mobius.test.NextMatchers
+import kotlinx.coroutines.channels.BroadcastChannel
+import kotlinx.coroutines.runBlocking
 import okhttp3.Protocol
 import okhttp3.Request
 import okhttp3.Response
@@ -50,3 +54,11 @@ fun <T>createError(message: String = "Error", code: Int = 400) = StatusCallbackE
                         .build()
         )
 )
+
+inline fun <T> BroadcastChannel<T>.receiveOnce(crossinline block: () -> Unit): T = runBlocking {
+        val receiveChannel = openSubscription()
+        block()
+        val single = receiveChannel.receive()
+        receiveChannel.cancel()
+        single
+}

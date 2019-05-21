@@ -19,7 +19,6 @@ package com.instructure.loginapi.login.tasks
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.webkit.CookieManager
 import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.managers.OAuthManager
@@ -68,8 +67,7 @@ abstract class LogoutTask(val type: Type) {
                 FilePrefs.clearPrefs()
                 ThemePrefs.clearPrefs()
 
-                // Clear cookies
-                CookieManager.getInstance().flush()
+                // Cookies are cleared in BaseLoginSignInActivity
             }
 
             // Perform additional, app-specific cleanup
