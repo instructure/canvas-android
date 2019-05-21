@@ -17,8 +17,10 @@
 package com.instructure.student
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
+import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.qa.activity_single_fragment_test.*
@@ -39,5 +41,9 @@ class SingleFragmentTestActivity : AppCompatActivity() {
     fun loadView(view: View, width: Int, height: Int) {
         val params = FrameLayout.LayoutParams(width, height)
         container.addView(view, params)
+    }
+
+    fun loadLayout(@LayoutRes layout: Int) {
+        LayoutInflater.from(this).inflate(layout, container, true)
     }
 }
