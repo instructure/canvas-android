@@ -50,6 +50,8 @@ import kotlinx.android.synthetic.main.view_rubric_tooltip.view.*
 
 internal class SubmissionRubricTooltipPopup(private val context: Context) {
 
+    private val tooltipOffset = context.DP(5).toInt()
+
     private val tooltipView = RubricTooltipView(context)
 
     private val layoutParams = WindowManager.LayoutParams()
@@ -90,11 +92,8 @@ internal class SubmissionRubricTooltipPopup(private val context: Context) {
         val offsetX = anchorView.width / 2
 
         val offsetBelow = anchorView.height  // Place below the view in most cases.
-        val offsetAbove = 0  // Place above the view if the tooltip does not fit below.
 
         outParams.gravity = Gravity.START or Gravity.TOP
-
-        val tooltipOffset = context.DP(5).toInt()
 
         val displayFrame = Rect()
         val appView = getAppRootView(anchorView)
@@ -127,7 +126,7 @@ internal class SubmissionRubricTooltipPopup(private val context: Context) {
         outParams.x = anchorPos[0] + offsetX - tooltipView.measuredWidth / 2
         outParams.x = outParams.x.coerceIn(0, appView.width - tooltipView.measuredWidth)
 
-        val yAbove = anchorPos[1] + offsetAbove - tooltipOffset - tooltipHeight
+        val yAbove = anchorPos[1] - tooltipOffset - tooltipHeight
         val yBelow = anchorPos[1] + offsetBelow + tooltipOffset
         outParams.y = if (yAbove >= 0) yAbove else yBelow
 
