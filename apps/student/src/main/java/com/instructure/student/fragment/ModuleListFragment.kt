@@ -22,6 +22,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
@@ -122,7 +123,7 @@ class ModuleListFragment : ParentFragment(), Bookmarkable {
     override fun getSelectedParamName(): String = RouterParams.MODULE_ID
 
     fun setupViews() {
-        recyclerAdapter = ModuleListRecyclerAdapter(canvasContext, -1, requireContext(), object : ModuleAdapterToFragmentCallback {
+        recyclerAdapter = ModuleListRecyclerAdapter(canvasContext, arguments?.getString(MODULE_ID)?.toLong() ?: -1, requireContext(), object : ModuleAdapterToFragmentCallback {
             override fun onRowClicked(moduleObject: ModuleObject, moduleItem: ModuleItem, position: Int, isOpenDetail: Boolean) {
                 if (moduleItem.type != null && moduleItem.type == ModuleObject.State.UnlockRequirements.apiString) return
 
@@ -149,6 +150,11 @@ class ModuleListFragment : ParentFragment(), Bookmarkable {
                 setRefreshing(false)
                 if (recyclerAdapter.size() == 0) {
                     setEmptyView(emptyView, R.drawable.vd_panda_nomodules, R.string.noModules, R.string.noModulesSubtext)
+                } else if (!arguments?.getString(MODULE_ID).isNullOrEmpty()) {
+                    val groupPosition = recyclerAdapter.getGroupItemPosition(arguments!!.getString(MODULE_ID)!!.toLong())
+                    if (groupPosition >= 0) {
+                        (listView.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(groupPosition,  0)
+                    }
                 }
             }
         })
@@ -182,10 +188,14 @@ class ModuleListFragment : ParentFragment(), Bookmarkable {
     // endregion
 
     companion object {
+        private const val MODULE_ID = "module_id"
+
         fun newInstance(route: Route) =
                 if (validateRoute(route)) {
                     ModuleListFragment().apply {
-                        arguments = route.canvasContext!!.makeBundle(route.arguments)
+                        arguments = route.canvasContext!!.makeBundle(route.arguments) {
+                            route.paramsHash[MODULE_ID]?.let { putString(MODULE_ID, it) }
+                        }
                     }
                 } else null
 

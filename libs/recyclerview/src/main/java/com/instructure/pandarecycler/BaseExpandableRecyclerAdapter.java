@@ -429,6 +429,10 @@ public abstract class BaseExpandableRecyclerAdapter<GROUP, ITEM, VIEWHOLDER exte
         return mGroupSortedList.getGroupVisualPosition(position);
     }
 
+    public int getGroupItemPosition(long itemId) {
+        return mGroupSortedList.getGroupPosition(itemId);
+    }
+
     /**
      * See {@link GroupSortedList#isVisualGroupPosition(int)}
      * @param position

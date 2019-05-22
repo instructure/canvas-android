@@ -488,6 +488,22 @@ public class GroupSortedList<GROUP, ITEM> {
     }
 
     /**
+     * @param groupId the group ID to look for
+     * @return the visible position in the adapter, or -1 if not found
+     */
+    public int getGroupPosition(long groupId) {
+        int expandedItems = 0;
+        for (int i = 0; i < mGroupObjects.size(); i++) {
+            if (getGroupId(mGroupObjects.get(i)) == groupId) {
+                return i + expandedItems;
+            } else {
+                expandedItems += calculatedChildrenCount(i);
+            }
+        }
+        return -1;
+    }
+
+    /**
      * Gets the group based on id.
      *
      * Returns {@link #GROUP_NOT_FOUND} if group doesn't exist
