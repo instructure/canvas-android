@@ -408,4 +408,9 @@
         <item name="android:textSize">16sp</item>
     </style>
 
+    <style name="RubricTooltipWindowAnimation" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/rubric_tooltip_enter</item>
+        <item name="android:windowExitAnimation">@anim/rubric_tooltip_exit</item>
+    </style>
+
 </resources>
