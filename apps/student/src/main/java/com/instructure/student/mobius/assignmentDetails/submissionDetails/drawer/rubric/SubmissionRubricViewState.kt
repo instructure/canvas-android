@@ -16,5 +16,26 @@
  */
 package com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric
 
-class SubmissionRubricViewState {
+import com.instructure.student.mobius.assignmentDetails.ui.gradeCell.GradeCellViewState
+
+data class SubmissionRubricViewState(
+    val listData: List<RubricListData>
+)
+
+sealed class RubricListData {
+    object Empty : RubricListData()
+    data class Grade(val state: GradeCellViewState) : RubricListData()
+    data class Criterion(
+        val description: String,
+        val longDescription: String?,
+        val ratingDescription: String?,
+        val ratings: List<RatingData>,
+        val comment: String?
+    ) : RubricListData()
 }
+
+data class RatingData(
+    val points: String,
+    val description: String?,
+    val isSelected: Boolean
+)

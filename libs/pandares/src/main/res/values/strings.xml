@@ -83,6 +83,9 @@
     <string name="gradeExcused">Excused</string>
     <string name="finalGradeFormatted">Final Grade: %s</string>
 
+    <!-- Student rubric tab -->
+    <string name="rubricCustomScore">Custom score</string>
+
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">Version:</string>
 
