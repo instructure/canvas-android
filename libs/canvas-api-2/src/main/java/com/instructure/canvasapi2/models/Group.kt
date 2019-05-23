@@ -50,7 +50,8 @@ data class Group(
         @SerializedName("storage_quota_mb")
         val storageQuotaMb: Long = 0,
         @SerializedName("is_favorite")
-        var isFavorite: Boolean = false
+        var isFavorite: Boolean = false,
+        var concluded: Boolean = false
 ) : CanvasContext() {
     override val comparisonString get() = name
     override val type get() = CanvasContext.Type.GROUP
