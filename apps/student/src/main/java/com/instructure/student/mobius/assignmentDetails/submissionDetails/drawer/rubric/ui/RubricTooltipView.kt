@@ -62,6 +62,9 @@ class RubricTooltipView @JvmOverloads constructor(
 
         // A11y events will happen on each rating button and not on the tooltip
         importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS
+
+        // Initial update to ensure padding is set
+        update(0, true)
     }
 
     fun setText(text: CharSequence) {
@@ -98,9 +101,14 @@ class RubricTooltipView @JvmOverloads constructor(
         // Draw tail
         val path1 = Path().apply {
             val minOffset = cornerRadius + tailSize
-            val offsetX = tailOffset.coerceIn(
-                tooltipTextView.left.toFloat() + minOffset,
-                tooltipTextView.right.toFloat() - minOffset)
+            val minX = tooltipTextView.left.toFloat() + minOffset
+            val maxX = tooltipTextView.right.toFloat() - minOffset
+            val offsetX = if (maxX < minX) {
+                // Width is too small, use the center
+                (tooltipTextView.left + tooltipTextView.right) / 2f
+            } else {
+                tailOffset.coerceIn(minX, maxX)
+            }
             val offsetY = height - tailSize -0.5f
             tailPath.offset(offsetX, offsetY, this)
         }

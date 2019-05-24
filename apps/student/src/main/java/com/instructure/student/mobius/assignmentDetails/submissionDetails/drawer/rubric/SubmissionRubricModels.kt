@@ -20,11 +20,14 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Submission
 
 sealed class SubmissionRubricEvent {
-    data class LongDescriptionClicked(val rubricCriterionId: String) : SubmissionRubricEvent()
+    data class LongDescriptionClicked(val criterionId: String) : SubmissionRubricEvent()
 }
 
 sealed class SubmissionRubricEffect {
-    data class ShowLongDescription(val description: String) : SubmissionRubricEffect()
+    data class ShowLongDescription(
+        val description: String,
+        val longDescription: String
+    ) : SubmissionRubricEffect()
 }
 
 data class SubmissionRubricModel(

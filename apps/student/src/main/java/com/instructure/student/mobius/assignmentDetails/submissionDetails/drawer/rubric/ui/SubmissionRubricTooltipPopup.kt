@@ -35,6 +35,7 @@
  */
 package com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.ui
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
@@ -42,6 +43,7 @@ import android.graphics.PixelFormat
 import android.graphics.Rect
 import android.text.Layout
 import android.view.Gravity
+import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
 import com.instructure.pandautils.utils.DP
@@ -66,14 +68,22 @@ internal class SubmissionRubricTooltipPopup(private val context: Context) {
         layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT
         layoutParams.format = PixelFormat.TRANSLUCENT
         layoutParams.windowAnimations = R.style.RubricTooltipWindowAnimation
-        layoutParams.flags =
-            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+        layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE or
+                WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or
+                WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
     }
 
     /** Shows this tooltip and returns a suggested show duration based on the visible text length */
+    @SuppressLint("ClickableViewAccessibility")
     fun show(anchorView: View, tooltipText: CharSequence): Long {
         if (isShowing) hide()
         tooltipView.setText(tooltipText)
+        tooltipView.setOnTouchListener { _, event ->
+            // Hide when the user touches outside the tooltip bounds
+            if (event.action == MotionEvent.ACTION_OUTSIDE) hide()
+            false
+        }
         computePosition(anchorView, layoutParams)
         (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager).addView(tooltipView, layoutParams)
         // Return the suggested duration, 3 seconds plus 20ms for every visible character

@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.models.RubricCriterion
 import com.instructure.canvasapi2.models.RubricCriterionAssessment
 import com.instructure.canvasapi2.models.RubricCriterionRating
 import com.instructure.canvasapi2.utils.NumberHelper
+import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.validOrNull
 import com.instructure.student.R
 import com.instructure.student.mobius.assignmentDetails.ui.gradeCell.GradeCellViewState
@@ -76,8 +77,9 @@ object SubmissionRubricPresenter : Presenter<SubmissionRubricModel, SubmissionRu
                     description = context.getString(R.string.rubricCustomScore),
                     points = assessment.points ?: 0.0
                 )
-            ).sortedBy { it.points }
+            )
         }
+        ratings = ratings.sortedBy { it.points }
 
         // Find the criterion rating that matches the assessment rating
         val selectedRating = ratings.find { it.id == assessment?.ratingId }
@@ -92,7 +94,7 @@ object SubmissionRubricPresenter : Presenter<SubmissionRubricModel, SubmissionRu
         }
 
         // Map criterion ratings to view state data
-        val ratingData = ratings.map { rating ->
+        var ratingData = ratings.map { rating ->
             RatingData(
                 points = NumberHelper.formatDecimal(rating.points, 2, true),
                 description = rating.description,
@@ -100,9 +102,25 @@ object SubmissionRubricPresenter : Presenter<SubmissionRubricModel, SubmissionRu
             )
         }
 
+        // The rating for free-form assessments should include the total points
+        if (model.assignment.freeFormCriterionComments) {
+            ratingData = ratingData.map {
+                it.copy(
+                    points = String.format(
+                        context.getString(
+                            R.string.rangedRubricTotal,
+                            it.points,
+                            NumberHelper.formatDecimal(criterion.points, 2, true)
+                        )
+                    )
+                )
+            }
+        }
+
         return RubricListData.Criterion(
             description = criterion.description.orEmpty(),
-            longDescription = criterion.longDescription,
+            criterionId = criterion.id!!,
+            showLongDescriptionButton = criterion.longDescription.isValid(),
             ratingDescription = selectedRatingDescription.validOrNull(),
             ratings = ratingData,
             comment = assessment?.comments.validOrNull()

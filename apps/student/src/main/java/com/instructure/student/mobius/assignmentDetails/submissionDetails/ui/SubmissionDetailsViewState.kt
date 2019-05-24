@@ -44,7 +44,7 @@ sealed class SubmissionDetailsTabData(val tabName: String) {
         val selectedFileId: Long,
         val canvasContext: CanvasContext
     ) : SubmissionDetailsTabData(name)
-    data class GradeData(
+    data class RubricData(
         val name: String,
         val assignment: Assignment,
         val submission: Submission

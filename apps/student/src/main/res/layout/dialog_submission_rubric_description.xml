@@ -14,28 +14,26 @@
   ~     You should have received a copy of the GNU General Public License
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingStart="8dp"
-    android:paddingEnd="8dp">
+    android:paddingEnd="14dp"
+    android:paddingStart="14dp">
 
-    <TextView
-        android:id="@+id/tooltipTextView"
-        android:layout_width="wrap_content"
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="24dp"/>
+
+    <com.instructure.pandautils.views.CanvasWebView
+        android:id="@+id/webView"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:maxWidth="256dp"
-        android:maxLines="3"
-        android:paddingStart="8.5dp"
-        android:paddingTop="6dp"
-        android:paddingEnd="8.5dp"
-        android:paddingBottom="6dp"
-        android:textColor="@color/white"
-        tools:background="@color/defaultTextDark"
-        tools:text="This is a sample description of a rubric criterion rating."/>
+        android:scrollbars="none"
+        android:visibility="gone"
+        tools:visibility="visible"/>
 
 </FrameLayout>
-

@@ -212,27 +212,6 @@ class SubmissionDetailsPresenterTest : Assert() {
     }
 
     @Test
-    fun `Rubric tab name reads "Grade" when assignment does not use a rubric`() {
-        val model = baseModel.copy(
-            assignment = DataResult.Success(baseAssignment),
-            rootSubmission = DataResult.Success(
-                baseSubmission.copy(
-                    grade = "95",
-                    submissionHistory = listOf(baseSubmission)
-                )
-            )
-        )
-        val viewState = SubmissionDetailsPresenter.present(model, context) as SubmissionDetailsViewState.Loaded
-        val expectedTab = SubmissionDetailsTabData.GradeData(
-            "Grade",
-            model.assignment!!.dataOrThrow,
-            model.rootSubmission!!.dataOrThrow
-        )
-        val actualTab = viewState.tabData.single { it is SubmissionDetailsTabData.GradeData }
-        assertEquals(expectedTab, actualTab)
-    }
-
-    @Test
     fun `Rubric tab name reads "Rubric" when assignment uses a rubric`() {
         val submission = baseSubmission.copy(
             rubricAssessment = hashMapOf("1" to RubricCriterionAssessment())
@@ -248,12 +227,12 @@ class SubmissionDetailsPresenterTest : Assert() {
             )
         )
         val viewState = SubmissionDetailsPresenter.present(model, context) as SubmissionDetailsViewState.Loaded
-        val expectedTab = SubmissionDetailsTabData.GradeData(
+        val expectedTab = SubmissionDetailsTabData.RubricData(
             "Rubric",
             model.assignment!!.dataOrThrow,
             model.rootSubmission!!.dataOrThrow
         )
-        val actualTab = viewState.tabData.single { it is SubmissionDetailsTabData.GradeData }
+        val actualTab = viewState.tabData.single { it is SubmissionDetailsTabData.RubricData }
         assertEquals(expectedTab, actualTab)
     }
 }

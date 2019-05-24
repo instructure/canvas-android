@@ -84,7 +84,8 @@ class SubmissionRubricPresenterTest : Assert() {
                 RatingData("10", "Rating 2 Description", true),
                 RatingData("15", "Rating 3 Description", false)
             ),
-            longDescription = "This is a long description for criterion 1",
+            criterionId = "123",
+            showLongDescriptionButton = true,
             comment = "This is a comment"
         )
     }
@@ -147,7 +148,8 @@ class SubmissionRubricPresenterTest : Assert() {
                         RatingData("10", "Rating 2 Description", false),
                         RatingData("15", "Rating 3 Description", false)
                     ),
-                    longDescription = "This is a long description for criterion 1",
+                    criterionId = "123",
+                    showLongDescriptionButton = true,
                     comment = null
                 )
             )
@@ -168,7 +170,12 @@ class SubmissionRubricPresenterTest : Assert() {
                 gradeTemplate,
                 criterionTemplate.copy(
                     ratingDescription = null,
-                    ratings = listOf(criterionTemplate.ratings[1].copy(description = null))
+                    ratings = listOf(
+                        criterionTemplate.ratings[1].copy(
+                            description = null,
+                            points = "10 / 15 pts"
+                        )
+                    )
                 )
             )
         )

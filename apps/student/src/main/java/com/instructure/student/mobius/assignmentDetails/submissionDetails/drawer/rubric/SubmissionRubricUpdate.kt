@@ -31,8 +31,11 @@ class SubmissionRubricUpdate : UpdateInit<SubmissionRubricModel, SubmissionRubri
     ): Next<SubmissionRubricModel, SubmissionRubricEffect> {
         return when (event) {
             is SubmissionRubricEvent.LongDescriptionClicked -> {
-                val criterion = model.assignment.rubric!!.first { it.id == event.rubricCriterionId }
-                val effect = SubmissionRubricEffect.ShowLongDescription(criterion.longDescription.orEmpty())
+                val criterion = model.assignment.rubric!!.first { it.id == event.criterionId }
+                val effect = SubmissionRubricEffect.ShowLongDescription(
+                    criterion.description.orEmpty(),
+                    criterion.longDescription.orEmpty()
+                )
                 Next.dispatch(setOf(effect))
             }
         }

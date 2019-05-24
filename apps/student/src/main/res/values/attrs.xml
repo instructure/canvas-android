@@ -76,7 +76,7 @@
         <attr name="ptrScrollingWhileRefreshingEnabled" format="reference|boolean" />
 
         <!--
-            Whether PullToRefreshListView has it's extras enabled. This allows the user to be 
+            Whether PullToRefreshListView has it's extras enabled. This allows the user to be
             able to scroll while refreshing, and behaves better. It acheives this by adding
             Header and/or Footer Views to the ListView.
         -->
@@ -148,6 +148,12 @@
 
     <declare-styleable name="AttachmentDogEarLayout">
         <attr name="adl_dogear_size" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="SubmissionCommentBubble">
+        <attr name="ctv_targetMargin" format="dimension"/>
+        <attr name="ctv_tailRadius" format="dimension"/>
+        <attr name="ctv_color" format="color"/>
     </declare-styleable>
 
 </resources>

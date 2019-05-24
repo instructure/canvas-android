@@ -65,13 +65,13 @@ class SubmissionRubricUpdateTest : Assert() {
     fun `LongDescriptionClicked event produces ShowLongDescription effect`() {
         val assignment = assignmentTemplate.copy(
             rubric = listOf(
-                RubricCriterion(id = "123", longDescription = "Long Description 123"),
-                RubricCriterion(id = "456", longDescription = "Long Description 456")
+                RubricCriterion(id = "123", description = "Criterion 1", longDescription = "Long Description 123"),
+                RubricCriterion(id = "456", description = "Criterion 2", longDescription = "Long Description 456")
             )
         )
         val model = modelTemplate.copy(assignment = assignment)
         val event = SubmissionRubricEvent.LongDescriptionClicked("123")
-        val expectedEffect = SubmissionRubricEffect.ShowLongDescription("Long Description 123")
+        val expectedEffect = SubmissionRubricEffect.ShowLongDescription("Criterion 1", "Long Description 123")
         updateSpec.given(model)
             .whenEvent(event)
             .then(
