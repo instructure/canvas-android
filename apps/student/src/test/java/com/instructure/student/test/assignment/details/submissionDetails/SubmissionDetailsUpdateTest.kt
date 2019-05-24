@@ -18,6 +18,7 @@ package com.instructure.student.test.assignment.details.submissionDetails
 import android.net.Uri
 import android.webkit.MimeTypeMap
 import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Failure
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.*
@@ -31,9 +32,7 @@ import com.spotify.mobius.test.NextMatchers
 import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.mockkStatic
+import io.mockk.*
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -374,65 +373,23 @@ class SubmissionDetailsUpdateTest : Assert() {
 
     @Test
     fun `ONLINE_QUIZ results in SubmissionDetailsContentType of QuizContent`() {
-        val studentId = 101L
-        verifyGetSubmissionContentType(
-            assignment,
-            submission.copy(
-                userId = studentId,
-                previewUrl = url,
-                workflowState = QuizSubmission.WorkflowState.COMPLETE.name.toLowerCase(),
-                submissionType = Assignment.SubmissionType.ONLINE_QUIZ.apiString
-            ),
-            SubmissionDetailsContentType.QuizContent(
-                initModel.canvasContext.id,
-                assignment.id,
-                studentId,
-                url,
-                false // Workflow state is COMPLETE, so not pending
-            )
-        )
-    }
+        val url = "https://example.com"
+        val quizId = 987L
+        val attempt = 2L
+        mockkStatic(ApiPrefs::class)
+        every { ApiPrefs.fullDomain } returns url
 
-    @Test
-    fun `ONLINE_QUIZ with no preview url results in SubmissionDetailsContentType of QuizContent`() {
-        val studentId = 101L
         verifyGetSubmissionContentType(
-            assignment,
+            assignment.copy(quizId = quizId),
             submission.copy(
-                userId = studentId,
-                previewUrl = null,
-                workflowState = QuizSubmission.WorkflowState.COMPLETE.name.toLowerCase(),
-                submissionType = Assignment.SubmissionType.ONLINE_QUIZ.apiString
+                submissionType = Assignment.SubmissionType.ONLINE_QUIZ.apiString,
+                attempt = attempt
             ),
             SubmissionDetailsContentType.QuizContent(
-                initModel.canvasContext.id,
-                assignment.id,
-                studentId,
-                "",
-                false // Workflow state is COMPLETE, so not pending
+                url + "/courses/${initModel.canvasContext.id}/quizzes/$quizId/history?version=$attempt&headless=1"
             )
         )
-    }
-
-    @Test
-    fun `ONLINE_QUIZ with PENDING_REVIEW submission results in SubmissionDetailsContentType of QuizContent`() {
-        val studentId = 101L
-        verifyGetSubmissionContentType(
-            assignment,
-            submission.copy(
-                userId = studentId,
-                previewUrl = url,
-                workflowState = QuizSubmission.WorkflowState.PENDING_REVIEW.name.toLowerCase(),
-                submissionType = Assignment.SubmissionType.ONLINE_QUIZ.apiString
-            ),
-            SubmissionDetailsContentType.QuizContent(
-                initModel.canvasContext.id,
-                assignment.id,
-                studentId,
-                url,
-                true // Workflow state is PENDING_REVIEW
-            )
-        )
+        unmockkStatic(ApiPrefs::class)
     }
 
     @Test

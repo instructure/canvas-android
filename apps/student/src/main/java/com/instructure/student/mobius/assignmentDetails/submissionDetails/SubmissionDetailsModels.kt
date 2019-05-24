@@ -51,11 +51,7 @@ data class SubmissionDetailsModel(
 
 sealed class SubmissionDetailsContentType {
     data class QuizContent(
-        val courseId: Long,
-        val assignmentId: Long,
-        val studentId: Long,
-        val url: String,
-        val pendingReview: Boolean
+        val url: String
     ) : SubmissionDetailsContentType()
 
     data class MediaContent(

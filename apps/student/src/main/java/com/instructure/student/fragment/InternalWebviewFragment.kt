@@ -324,7 +324,7 @@ open class InternalWebviewFragment : ParentFragment() {
     //endregion
 
     companion object {
-        private const val SHOULD_ROUTE_INTERNALLY = "shouldRouteInternally"
+        internal const val SHOULD_ROUTE_INTERNALLY = "shouldRouteInternally"
 
         fun newInstance(route: Route): InternalWebviewFragment? {
             return InternalWebviewFragment().withArgs(route.argsWithContext)

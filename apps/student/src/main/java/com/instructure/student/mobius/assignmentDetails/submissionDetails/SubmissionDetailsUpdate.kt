@@ -20,6 +20,7 @@ package com.instructure.student.mobius.assignmentDetails.submissionDetails
 import android.net.Uri
 import android.webkit.MimeTypeMap
 import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.validOrNull
 import com.instructure.pandautils.utils.AssignmentUtils2
 import com.instructure.student.mobius.common.ui.UpdateInit
@@ -53,7 +54,6 @@ class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDet
                         model.rootSubmission?.dataOrNull?.submissionHistory?.find { it?.attempt == event.submissionAttempt },
                         model.assignment?.dataOrNull,
                         model.canvasContext,
-                        model.assignmentId,
                         model.isArcEnabled
                     )
                     Next.next<SubmissionDetailsModel, SubmissionDetailsEffect>(
@@ -68,7 +68,6 @@ class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDet
                     event.rootSubmission.dataOrNull,
                     event.assignment.dataOrNull,
                     model.canvasContext,
-                    model.assignmentId,
                     event.isArcEnabled)
                 Next.next(
                     model.copy(
@@ -93,7 +92,7 @@ class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDet
         }
     }
 
-    private fun getSubmissionContentType(submission: Submission?, assignment: Assignment?, canvasContext: CanvasContext, assignmentId: Long, isArcEnabled: Boolean?): SubmissionDetailsContentType {
+    private fun getSubmissionContentType(submission: Submission?, assignment: Assignment?, canvasContext: CanvasContext, isArcEnabled: Boolean?): SubmissionDetailsContentType {
         return when {
             Assignment.SubmissionType.NONE.apiString in assignment?.submissionTypesRaw ?: emptyList() -> SubmissionDetailsContentType.NoneContent
             Assignment.SubmissionType.ON_PAPER.apiString in assignment?.submissionTypesRaw ?: emptyList() -> SubmissionDetailsContentType.OnPaperContent
@@ -128,11 +127,7 @@ class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDet
 
                 // Quiz Submission
                 Assignment.SubmissionType.ONLINE_QUIZ -> SubmissionDetailsContentType.QuizContent(
-                        canvasContext.id,
-                        assignmentId,
-                        submission.userId,
-                        submission.previewUrl ?: "",
-                        QuizSubmission.parseWorkflowState(submission.workflowState!!) == QuizSubmission.WorkflowState.PENDING_REVIEW
+                    ApiPrefs.fullDomain + "/courses/${canvasContext.id}/quizzes/${assignment!!.quizId}/history?version=${submission.attempt}&headless=1"
                 )
 
                 // Discussion Submission

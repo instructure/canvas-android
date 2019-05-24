@@ -36,6 +36,7 @@ import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsContentType
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsEvent
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.QuizSubmissionViewFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.TextSubmissionViewFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.UrlSubmissionViewFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyContentFragment
@@ -187,6 +188,7 @@ class SubmissionDetailsView(
         return when (type) {
             is SubmissionDetailsContentType.NoSubmissionContent -> SubmissionDetailsEmptyContentFragment.newInstance(type.canvasContext as Course, type.assignment, type.isArcEnabled)
             is SubmissionDetailsContentType.UrlContent -> UrlSubmissionViewFragment.newInstance(type.url, type.previewUrl)
+            is SubmissionDetailsContentType.QuizContent -> QuizSubmissionViewFragment.newInstance(type.url)
             is SubmissionDetailsContentType.TextContent -> TextSubmissionViewFragment.newInstance(type.text)
             else -> PlaceholderFragment().apply {
                 typeName = type::class.java.simpleName
