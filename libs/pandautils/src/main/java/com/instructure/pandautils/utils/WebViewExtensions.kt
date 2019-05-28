@@ -66,7 +66,7 @@ fun WebView.loadHtmlWithLTIs(context: Context, isTablet: Boolean, html: String, 
                         val button = "</br><p><div class=\"lti_button\" onClick=\"onLtiToolButtonPressed('%s')\">%s</div></p>"
                         val htmlButton = String.format(button, ltiUrl, context.resources.getString(R.string.utils_launchExternalTool))
 
-                        // Nowe we add the launch button along with the new iframe with the updated URL
+                        // Now we add the launch button along with the new iframe with the updated URL
                         newHTML = newHTML.replace(iframe, newIframe + htmlButton)
                     }
                 }
