@@ -88,7 +88,7 @@ object SubmissionRubricPresenter : Presenter<SubmissionRubricModel, SubmissionRu
         // Free-form assessments should only show the assessment comments and the matching assessment rating
         if (model.assignment.freeFormCriterionComments) {
             ratings = ratings
-                .filter { it.id == assessment?.ratingId }
+                .filter { it.id == assessment?.ratingId && model.assignment.rubricSettings?.hidePoints != true}
                 .map { it.copy(description = null) }
             selectedRatingDescription = null
         }
@@ -102,8 +102,18 @@ object SubmissionRubricPresenter : Presenter<SubmissionRubricModel, SubmissionRu
             )
         }
 
-        // The rating for free-form assessments should include the total points
-        if (model.assignment.freeFormCriterionComments) {
+
+        if (model.assignment.rubricSettings?.hidePoints == true) {
+            // If points are hidden, show the rating description instead and hide the selected rating text
+            selectedRatingDescription = null
+            ratingData = ratingData.map {
+                it.copy(
+                    points = it.description.orEmpty(),
+                    description = null
+                )
+            }
+        } else if (model.assignment.freeFormCriterionComments) {
+            // The rating for free-form assessments should include the total points
             ratingData = ratingData.map {
                 it.copy(
                     points = String.format(

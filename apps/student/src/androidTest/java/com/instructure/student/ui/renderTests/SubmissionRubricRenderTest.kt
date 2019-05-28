@@ -203,6 +203,13 @@ class SubmissionRubricRenderTest : StudentRenderTest() {
         page.tooltip.inRoot(RootMatchers.hasWindowLayoutParams()).check(doesNotExist())
     }
 
+    @Test
+    fun hidesRatingContainerIfNoRatings() {
+        val data = dataTemplate.copy(ratings = emptyList())
+        loadPageWithViewData(data)
+        page.ratingLayout.assertGone()
+    }
+
     private fun loadPageWithViewData(listData: RubricListData): SubmissionRubricFragment {
         val emptyEffectRunner = object : WorkRunner {
             override fun dispose() = Unit

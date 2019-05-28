@@ -31,6 +31,7 @@ class RubricListCriterionBinder : BasicItemBinder<RubricListData.Criterion, Rubr
         with(view) {
             criterionDescription.text = data.description
             selectedRatingDescription.setTextForVisibility(data.ratingDescription)
+            ratingLayout.setVisible(data.ratings.isNotEmpty())
             ratingLayout.setRatingData(data.ratings)
             commentContainer.setVisible(data.comment != null)
             comment.text = data.comment

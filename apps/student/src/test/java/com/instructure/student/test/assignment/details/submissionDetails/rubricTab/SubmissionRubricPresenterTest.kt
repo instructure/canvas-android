@@ -262,4 +262,49 @@ class SubmissionRubricPresenterTest : Assert() {
         val actualState = SubmissionRubricPresenter.present(model, context)
         assertEquals(expectedState, actualState)
     }
+
+    @Test
+    fun `Returns correct state when rubric does not include points`() {
+        val model = modelTemplate.copy(
+            assignment = assignmentTemplate.copy(
+                rubricSettings = RubricSettings(hidePoints = true)
+            )
+        )
+        val expectedState = SubmissionRubricViewState(
+            listOf(
+                gradeTemplate,
+                criterionTemplate.copy(
+                    ratingDescription = null,
+                    ratings = listOf(
+                        RatingData("Rating 1 Description", null, false),
+                        RatingData("Rating 2 Description", null, true),
+                        RatingData("Rating 3 Description", null, false)
+                    )
+                )
+            )
+        )
+        val actualState = SubmissionRubricPresenter.present(model, context)
+        assertEquals(expectedState, actualState)
+    }
+
+    @Test
+    fun `Returns correct state for free-form rubric that does not include points`() {
+        val model = modelTemplate.copy(
+            assignment = assignmentTemplate.copy(
+                freeFormCriterionComments = true,
+                rubricSettings = RubricSettings(hidePoints = true)
+            )
+        )
+        val expectedState = SubmissionRubricViewState(
+            listOf(
+                gradeTemplate,
+                criterionTemplate.copy(
+                    ratingDescription = null,
+                    ratings = emptyList()
+                )
+            )
+        )
+        val actualState = SubmissionRubricPresenter.present(model, context)
+        assertEquals(expectedState, actualState)
+    }
 }
