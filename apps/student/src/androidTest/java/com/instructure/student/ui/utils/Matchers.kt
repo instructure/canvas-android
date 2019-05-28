@@ -76,3 +76,23 @@ fun ViewInteraction.assertCompletelyBelow(other: ViewInteraction) {
 }
 
 val View.locationOnScreen get() = IntArray(2).apply { getLocationOnScreen(this) }
+
+
+/**
+ * Asserts that the TextView uses the specified font size in scaled pixels
+ */
+fun ViewInteraction.assertFontSizeSP(expectedSP: Float) {
+    val matcher = object : TypeSafeMatcher<View>(View::class.java) {
+
+        override fun matchesSafely(target: View): Boolean {
+            if (target !is TextView) return false
+            val actualSP = target.textSize / target.getResources().displayMetrics.scaledDensity
+            return actualSP.compareTo(expectedSP) == 0
+        }
+
+        override fun describeTo(description: Description) {
+            description.appendText("with fontSize: ${expectedSP}px")
+        }
+    }
+    check(matches(matcher))
+}

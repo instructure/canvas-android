@@ -39,6 +39,7 @@ import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsTabData
 import com.instructure.student.mobius.assignmentDetails.ui.gradeCell.GradeCellViewState
 import com.instructure.student.ui.pages.renderPages.SubmissionRubricRenderPage
+import com.instructure.student.ui.utils.assertFontSizeSP
 import com.spotify.mobius.runners.WorkRunner
 import org.hamcrest.CoreMatchers.not
 import org.hamcrest.Matchers
@@ -168,6 +169,38 @@ class SubmissionRubricRenderTest : StudentRenderTest() {
         loadPageWithViewData(data)
         page.longDescriptionButton.assertGone()
         page.bottomPadding.assertVisible()
+    }
+
+    @Test
+    fun usesLargeFontSize() {
+        val data = dataTemplate.copy(
+            ratings = listOf(
+                RatingData(
+                    points = "Large text",
+                    description = null,
+                    isSelected = false,
+                    useSmallText = false
+                )
+            )
+        )
+        loadPageWithViewData(data)
+        page.onViewWithText("Large text").assertFontSizeSP(20f)
+    }
+
+    @Test
+    fun usesSmallFontSize() {
+        val data = dataTemplate.copy(
+            ratings = listOf(
+                RatingData(
+                    points = "Small text",
+                    description = null,
+                    isSelected = false,
+                    useSmallText = true
+                )
+            )
+        )
+        loadPageWithViewData(data)
+        page.onViewWithText("Small text").assertFontSizeSP(16f)
     }
 
     @Test

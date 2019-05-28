@@ -276,9 +276,9 @@ class SubmissionRubricPresenterTest : Assert() {
                 criterionTemplate.copy(
                     ratingDescription = null,
                     ratings = listOf(
-                        RatingData("Rating 1 Description", null, false),
-                        RatingData("Rating 2 Description", null, true),
-                        RatingData("Rating 3 Description", null, false)
+                        RatingData("Rating 1 Description", null, isSelected = false, useSmallText = true),
+                        RatingData("Rating 2 Description", null, isSelected = true, useSmallText = true),
+                        RatingData("Rating 3 Description", null, isSelected = false, useSmallText = true)
                     )
                 )
             )

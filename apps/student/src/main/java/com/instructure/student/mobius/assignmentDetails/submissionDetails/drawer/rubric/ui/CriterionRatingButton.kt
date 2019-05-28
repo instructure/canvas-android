@@ -41,7 +41,7 @@ class CriterionRatingButton(context: Context, data: RatingData) : TextView(conte
     private val minSize = context.DP(48f).toInt()
 
     /** Button text size */
-    private val fontSize = 20f
+    private val fontSize = if (data.useSmallText) 16f else 20f
 
     init {
         // Set text appearance to Medium

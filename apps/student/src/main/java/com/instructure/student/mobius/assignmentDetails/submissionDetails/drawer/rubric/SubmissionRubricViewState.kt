@@ -38,5 +38,6 @@ sealed class RubricListData {
 data class RatingData(
     val points: String,
     val description: String?,
-    val isSelected: Boolean
+    val isSelected: Boolean,
+    val useSmallText: Boolean = false
 )

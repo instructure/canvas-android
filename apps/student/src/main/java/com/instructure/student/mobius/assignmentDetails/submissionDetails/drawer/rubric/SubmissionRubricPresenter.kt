@@ -109,7 +109,8 @@ object SubmissionRubricPresenter : Presenter<SubmissionRubricModel, SubmissionRu
             ratingData = ratingData.map {
                 it.copy(
                     points = it.description.orEmpty(),
-                    description = null
+                    description = null,
+                    useSmallText = true
                 )
             }
         } else if (model.assignment.freeFormCriterionComments) {
