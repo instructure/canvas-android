@@ -98,13 +98,14 @@ abstract class BasicRecyclerAdapter<T : Any, C : BasicItemCallback>(val callback
             is BasicItemBinder.Item -> behavior.onBind(item, holder.itemView, callback)
             is BasicItemBinder.Header -> {
                 if (behavior.collapsible) {
+                    val groupId = binder.getItemId(item)
+                    val expanded = groupId in collapsedGroups
                     holder.itemView.setOnClickListener {
-                        val groupId = binder.getItemId(item)
-                        val expanded = groupId in collapsedGroups
                         if (expanded) collapsedGroups -= groupId else collapsedGroups += groupId
                         behavior.onExpand(item, !expanded, callback)
                         updateExpandedItems()
                     }
+                    behavior.onBind(item, holder.itemView, expanded, callback)
                 } else {
                     behavior.onBind(item, holder.itemView, true, callback)
                 }
