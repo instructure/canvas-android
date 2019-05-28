@@ -14,15 +14,7 @@
   ~     You should have received a copy of the GNU General Public License
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/submissionRubricPage"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-
-</LinearLayout>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/defaultTextGray"/>
+    <corners android:radius="1000dp"/>
+</shape>

@@ -18,34 +18,21 @@ package com.instructure.student.mobius.assignmentDetails.submissionDetails.drawe
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.SubmissionRubricEffect
-import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.SubmissionRubricEvent
-import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.SubmissionRubricModel
-import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.SubmissionRubricViewState
-import com.instructure.student.mobius.common.ui.EffectHandler
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.*
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsTabData
 import com.instructure.student.mobius.common.ui.MobiusFragment
-import com.instructure.student.mobius.common.ui.Presenter
-import com.instructure.student.mobius.common.ui.UpdateInit
 
 class SubmissionRubricFragment :
     MobiusFragment<SubmissionRubricModel, SubmissionRubricEvent, SubmissionRubricEffect, SubmissionRubricView, SubmissionRubricViewState>() {
-    override fun makeEffectHandler(): EffectHandler<SubmissionRubricView, SubmissionRubricEvent, SubmissionRubricEffect> {
-        TODO()
-    }
+    lateinit var data: SubmissionDetailsTabData.RubricData
 
-    override fun makeUpdate(): UpdateInit<SubmissionRubricModel, SubmissionRubricEvent, SubmissionRubricEffect> {
-        TODO()
-    }
+    override fun makeEffectHandler() = SubmissionRubricEffectHandler()
 
-    override fun makeView(inflater: LayoutInflater, parent: ViewGroup): SubmissionRubricView {
-        TODO()
-    }
+    override fun makeUpdate() = SubmissionRubricUpdate()
 
-    override fun makePresenter(): Presenter<SubmissionRubricModel, SubmissionRubricViewState> {
-        TODO()
-    }
+    override fun makeView(inflater: LayoutInflater, parent: ViewGroup) = SubmissionRubricView(inflater, parent)
 
-    override fun makeInitModel(): SubmissionRubricModel {
-        TODO()
-    }
+    override fun makePresenter() = SubmissionRubricPresenter
+
+    override fun makeInitModel() = SubmissionRubricModel(data.assignment, data.submission)
 }

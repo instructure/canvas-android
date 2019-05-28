@@ -18,11 +18,20 @@ package com.instructure.student.mobius.assignmentDetails.submissionDetails.drawe
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.instructure.student.R
+import com.instructure.student.adapter.BasicItemCallback
+import com.instructure.student.adapter.BasicRecyclerAdapter
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.RubricListData
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.SubmissionRubricEvent
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.SubmissionRubricViewState
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.ui.binders.RubricListCriterionBinder
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.ui.binders.RubricListEmptyBinder
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.ui.binders.RubricListGradeBinder
 import com.instructure.student.mobius.common.ui.MobiusView
 import com.spotify.mobius.functions.Consumer
+import kotlinx.android.synthetic.main.fragment_submission_rubric.*
 
 class SubmissionRubricView(
     inflater: LayoutInflater,
@@ -32,23 +41,46 @@ class SubmissionRubricView(
     inflater,
     parent
 ) {
-    override fun onConnect(output: Consumer<SubmissionRubricEvent>) {
-        TODO()
+
+    private val adapter = RubricRecyclerAdapter(object : RubricListCallback {
+        override fun longDescriptionClicked(criterionId: String) {
+            consumer?.accept(SubmissionRubricEvent.LongDescriptionClicked(criterionId))
+        }
+    })
+
+    init {
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        recyclerView.adapter = adapter
     }
+
+    override fun onConnect(output: Consumer<SubmissionRubricEvent>) = Unit
 
     override fun render(state: SubmissionRubricViewState) {
-        TODO()
+        adapter.data = state.listData
     }
 
-    override fun onDispose() {
-        TODO()
+    override fun onDispose() = Unit
+
+    override fun applyTheme() = Unit
+
+    fun displayLongDescription(description: String, longDescription: String) {
+        (context as? FragmentActivity)?.supportFragmentManager?.let {
+            SubmissionRubricDescriptionDialog.show(it, description, longDescription)
+        }
+    }
+}
+
+interface RubricListCallback : BasicItemCallback {
+    fun longDescriptionClicked(criterionId: String)
+}
+
+class RubricRecyclerAdapter(callback: RubricListCallback) :
+    BasicRecyclerAdapter<RubricListData, RubricListCallback>(callback) {
+
+    override fun registerBinders() {
+        register(RubricListEmptyBinder())
+        register(RubricListGradeBinder())
+        register(RubricListCriterionBinder())
     }
 
-    override fun applyTheme() {
-        TODO()
-    }
-
-    fun displayLongDescription(description: String) {
-        TODO()
-    }
 }

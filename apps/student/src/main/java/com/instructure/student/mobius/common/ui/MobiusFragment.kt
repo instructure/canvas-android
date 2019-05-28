@@ -46,6 +46,8 @@ abstract class MobiusFragment<MODEL, EVENT, EFFECT, VIEW : MobiusView<VIEW_STATE
 
     protected lateinit var view: VIEW
 
+    fun getMobiusView(): VIEW = view
+
     private lateinit var effectHandler: EffectHandler<VIEW, EVENT, EFFECT>
 
     private lateinit var globalEventSource: GlobalEventSource<EVENT>

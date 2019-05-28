@@ -73,14 +73,9 @@ object SubmissionDetailsPresenter : Presenter<SubmissionDetailsModel, Submission
             )
         }
 
-        // Grade/Rubric tab
-        val name = if (assignment.rubric?.isNotEmpty() == true) {
-            context.getString(R.string.rubric)
-        } else {
-            context.getString(R.string.grade)
-        }
-        tabData += SubmissionDetailsTabData.GradeData(
-            name = name,
+        // Rubric tab
+        tabData += SubmissionDetailsTabData.RubricData(
+            name = context.getString(R.string.rubric),
             assignment = assignment,
             submission = rootSubmission
         )

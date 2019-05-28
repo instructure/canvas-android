@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.models.RubricCriterion
 import com.instructure.canvasapi2.models.RubricCriterionAssessment
 import com.instructure.canvasapi2.models.RubricCriterionRating
 import com.instructure.canvasapi2.utils.NumberHelper
+import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.validOrNull
 import com.instructure.student.R
 import com.instructure.student.mobius.assignmentDetails.ui.gradeCell.GradeCellViewState
@@ -76,8 +77,9 @@ object SubmissionRubricPresenter : Presenter<SubmissionRubricModel, SubmissionRu
                     description = context.getString(R.string.rubricCustomScore),
                     points = assessment.points ?: 0.0
                 )
-            ).sortedBy { it.points }
+            )
         }
+        ratings = ratings.sortedBy { it.points }
 
         // Find the criterion rating that matches the assessment rating
         val selectedRating = ratings.find { it.id == assessment?.ratingId }
@@ -86,13 +88,13 @@ object SubmissionRubricPresenter : Presenter<SubmissionRubricModel, SubmissionRu
         // Free-form assessments should only show the assessment comments and the matching assessment rating
         if (model.assignment.freeFormCriterionComments) {
             ratings = ratings
-                .filter { it.id == assessment?.ratingId }
+                .filter { it.id == assessment?.ratingId && model.assignment.rubricSettings?.hidePoints != true}
                 .map { it.copy(description = null) }
             selectedRatingDescription = null
         }
 
         // Map criterion ratings to view state data
-        val ratingData = ratings.map { rating ->
+        var ratingData = ratings.map { rating ->
             RatingData(
                 points = NumberHelper.formatDecimal(rating.points, 2, true),
                 description = rating.description,
@@ -100,9 +102,36 @@ object SubmissionRubricPresenter : Presenter<SubmissionRubricModel, SubmissionRu
             )
         }
 
+
+        if (model.assignment.rubricSettings?.hidePoints == true) {
+            // If points are hidden, show the rating description instead and hide the selected rating text
+            selectedRatingDescription = null
+            ratingData = ratingData.map {
+                it.copy(
+                    points = it.description.orEmpty(),
+                    description = null,
+                    useSmallText = true
+                )
+            }
+        } else if (model.assignment.freeFormCriterionComments) {
+            // The rating for free-form assessments should include the total points
+            ratingData = ratingData.map {
+                it.copy(
+                    points = String.format(
+                        context.getString(
+                            R.string.rangedRubricTotal,
+                            it.points,
+                            NumberHelper.formatDecimal(criterion.points, 2, true)
+                        )
+                    )
+                )
+            }
+        }
+
         return RubricListData.Criterion(
             description = criterion.description.orEmpty(),
-            longDescription = criterion.longDescription,
+            criterionId = criterion.id!!,
+            showLongDescriptionButton = criterion.longDescription.isValid(),
             ratingDescription = selectedRatingDescription.validOrNull(),
             ratings = ratingData,
             comment = assessment?.comments.validOrNull()

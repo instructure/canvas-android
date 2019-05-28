@@ -21,6 +21,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.viewpager.widget.PagerAdapter
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.files.ui.SubmissionFilesFragment
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.ui.SubmissionRubricFragment
 
 class SubmissionDetailsDrawerPagerAdapter(fragmentManager: FragmentManager) : FragmentStatePagerAdapter(fragmentManager) {
 
@@ -45,6 +46,7 @@ class SubmissionDetailsDrawerPagerAdapter(fragmentManager: FragmentManager) : Fr
             val tabData = tabData[position]
             cachedFragment = when (tabData) {
                 is SubmissionDetailsTabData.FileData -> SubmissionFilesFragment().apply { data = tabData }
+                is SubmissionDetailsTabData.RubricData -> SubmissionRubricFragment().apply { data = tabData }
                 else -> PlaceholderFragment().apply {
                     typeName = tabData::class.java.simpleName.substringAfterLast('.')
                     typeContents = tabData.toString()

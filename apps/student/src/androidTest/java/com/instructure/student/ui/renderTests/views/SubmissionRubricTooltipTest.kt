@@ -131,6 +131,19 @@ class SubmissionRubricTooltipTest : StudentRenderTest() {
         page.tooltipText.assertCompletelyBelow(page.buttonCenter)
     }
 
+    @Test
+    fun hidesOnOutsideClick() {
+        val container = setupTestLayout()
+        SubmissionRubricTooltipHandler.setTooltipText(container.buttonCenter, testText)
+
+        page.buttonCenter.click()
+        page.tooltipText.assertCompletelyDisplayed()
+
+        // This button has not been set up, so clicking it should only dismiss the existing tooltip
+        page.buttonBottomRight.click()
+        page.tooltipText.check(doesNotExist())
+    }
+
     private fun setupTestLayout(): View {
         var complete = false
         activityRule.runOnUiThread {

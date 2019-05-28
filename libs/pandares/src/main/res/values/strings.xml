@@ -85,6 +85,8 @@
 
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Custom score</string>
+    <string name="rubricEmptyMessage">There is no rubric for this assignment</string>
+    <string name="rubricViewLongDescription">View long description</string>
 
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">Version:</string>

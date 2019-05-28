@@ -27,7 +27,8 @@ sealed class RubricListData {
     data class Grade(val state: GradeCellViewState) : RubricListData()
     data class Criterion(
         val description: String,
-        val longDescription: String?,
+        val criterionId: String,
+        val showLongDescriptionButton: Boolean,
         val ratingDescription: String?,
         val ratings: List<RatingData>,
         val comment: String?
@@ -37,5 +38,6 @@ sealed class RubricListData {
 data class RatingData(
     val points: String,
     val description: String?,
-    val isSelected: Boolean
+    val isSelected: Boolean,
+    val useSmallText: Boolean = false
 )

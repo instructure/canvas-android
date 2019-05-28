@@ -14,28 +14,29 @@
   ~     You should have received a copy of the GNU General Public License
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:paddingStart="8dp"
-    android:paddingEnd="8dp">
+    android:id="@+id/rubricEmptyView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:ignore="UseCompoundDrawables">
+
+    <ImageView
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:importantForAccessibility="no"
+        android:src="@drawable/vd_rubric"
+        android:tint="@color/defaultTextGray"/>
 
     <TextView
-        android:id="@+id/tooltipTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:maxWidth="256dp"
-        android:maxLines="3"
-        android:paddingStart="8.5dp"
-        android:paddingTop="6dp"
-        android:paddingEnd="8.5dp"
-        android:paddingBottom="6dp"
-        android:textColor="@color/white"
-        tools:background="@color/defaultTextDark"
-        tools:text="This is a sample description of a rubric criterion rating."/>
+        android:layout_marginTop="32dp"
+        android:gravity="center"
+        android:text="@string/rubricEmptyMessage"
+        android:textColor="@color/defaultTextGray"
+        android:textSize="16sp"/>
 
-</FrameLayout>
-
+</LinearLayout>

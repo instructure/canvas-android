@@ -35,12 +35,13 @@ class SubmissionRubricEffectHandlerTest : Assert() {
 
     @Test
     fun `ShowLongDescription results in view calling displayLongDescription`() {
-        val description = "Long Description 123"
+        val description = "Description 123"
+        val longDescription = "Long Description 123"
 
-        connection.accept(SubmissionRubricEffect.ShowLongDescription(description))
+        connection.accept(SubmissionRubricEffect.ShowLongDescription(description, longDescription))
 
         verify(timeout = 100) {
-            view.displayLongDescription(description)
+            view.displayLongDescription(description, longDescription)
         }
 
         confirmVerified(view)
