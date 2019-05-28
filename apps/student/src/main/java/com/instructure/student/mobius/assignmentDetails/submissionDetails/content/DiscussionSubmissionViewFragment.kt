@@ -47,6 +47,7 @@ class DiscussionSubmissionViewFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
+        progressBar.announceForAccessibility(getString(R.string.loading))
         discussionSubmissionWebView.webChromeClient = object : WebChromeClient() {
             override fun onProgressChanged(view: WebView?, newProgress: Int) {
                 super.onProgressChanged(view, newProgress)
@@ -54,8 +55,6 @@ class DiscussionSubmissionViewFragment : Fragment() {
                 if (newProgress >= 100) {
                     progressBar?.setGone()
                     discussionSubmissionWebView?.setVisible()
-                } else {
-                    progressBar.announceForAccessibility(getString(R.string.loading))
                 }
             }
         }
@@ -68,7 +67,7 @@ class DiscussionSubmissionViewFragment : Fragment() {
                 override fun onPageStartedCallback(webView: WebView?, url: String?) = Unit
                 override fun onPageFinishedCallback(webView: WebView?, url: String?) = Unit
                 override fun canRouteInternallyDelegate(url: String?) =
-                    RouteMatcher.canRouteInternally(requireContext(), url!!, ApiPrefs.domain, false)
+                    if (url?.contains("root_discussion_topic_id") == true ) false else RouteMatcher.canRouteInternally(requireContext(), url!!, ApiPrefs.domain, false)
 
                 override fun routeInternallyCallback(url: String?) {
                     RouteMatcher.canRouteInternally(requireContext(), url!!, ApiPrefs.domain, true)
@@ -82,7 +81,7 @@ class DiscussionSubmissionViewFragment : Fragment() {
                         InternalWebViewActivity.createIntent(requireActivity(), url, "", true)
                     )
 
-                override fun shouldLaunchInternalWebViewFragment(url: String): Boolean = true
+                override fun shouldLaunchInternalWebViewFragment(url: String): Boolean = !url.contains(ApiPrefs.domain)
             }
 
         discussionSubmissionWebView.setInitialScale(100)
