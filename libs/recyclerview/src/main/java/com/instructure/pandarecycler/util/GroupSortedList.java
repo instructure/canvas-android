@@ -153,7 +153,7 @@ public class GroupSortedList<GROUP, ITEM> {
 
     // endregion
 
-    // region expand/collaspe helpers
+    // region expand/collapse helpers
 
     /**
      * True if group is expanded; false otherwise

@@ -173,7 +173,7 @@ public class UserAPI extends BuildInterfaceAPI {
         if (APIHelpers.paramIsNull(callback)) { return; }
 
         //Don't allow this API call to be made while masquerading.
-        //It causes the current user to be overriden with the masqueraded one.
+        //It causes the current user to be overridden with the masqueraded one.
         if (Masquerading.isMasquerading(callback.getContext())) {
             Log.w(APIHelpers.LOG_TAG,"No API call for /users/self can be made while masquerading.");
             return;

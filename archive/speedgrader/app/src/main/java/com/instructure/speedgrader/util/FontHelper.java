@@ -34,7 +34,7 @@ public class FontHelper {
             } else if (root instanceof TextView)
                 ((TextView) root).setTypeface(Typeface.createFromAsset(context.getAssets(), fontName));
         } catch (Exception e) {
-            Log.e("canvas-speed-grader", String.format("Error occured when trying to apply %s font for %s view", fontName, root));
+            Log.e("canvas-speed-grader", String.format("Error occurred when trying to apply %s font for %s view", fontName, root));
             e.printStackTrace();
         }
     }

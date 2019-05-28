@@ -597,7 +597,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
          * Calculates the offset of the scrollview and it's content as compared to the elements position within the webview.
          * A scrollview's visible window can be between 0 and the size of the scrollview's height. This looks at the content on top
          * of the discussion replies webview and adds that to the elements position to come up with a relative position for the element
-         * withing the scrollview. In sort we are finding the elements position withing a scrollview.
+         * within the scrollview. In sort we are finding the elements position within a scrollview.
          */
         @Suppress("UNUSED_PARAMETER")
         @JavascriptInterface

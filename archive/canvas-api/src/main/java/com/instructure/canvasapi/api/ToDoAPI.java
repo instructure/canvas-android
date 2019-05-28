@@ -142,8 +142,8 @@ public class ToDoAPI extends BuildInterfaceAPI {
             //We only have upcoming left.
             if (todoIndex >= todos.size()) {
                 List<ToDo> subset = upcomingEvents.subList(upcomingIndex, upcomingEvents.size());
-                for (ToDo upcomming : subset) {
-                    merged.add(upcomming);
+                for (ToDo upcoming : subset) {
+                    merged.add(upcoming);
                 }
                 return merged;
             }
