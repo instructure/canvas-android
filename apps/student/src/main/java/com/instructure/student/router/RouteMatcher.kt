@@ -51,6 +51,7 @@ import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFrag
 import com.instructure.student.mobius.syllabus.ui.SyllabusFragment
 import com.instructure.student.util.FeatureFlags
 import com.instructure.student.util.FileUtils
+import retrofit2.Call
 import retrofit2.Response
 import java.util.*
 import java.util.regex.Pattern
@@ -386,6 +387,11 @@ object RouteMatcher : BaseRouteMatcher() {
                         openMedia(activity, fileFolder.contentType!!, fileFolder.url!!, fileFolder.displayName!!, route, fileID)
                     }
                 } ?: Toast.makeText(activity, activity.getString(R.string.errorOccurred), Toast.LENGTH_LONG).show()
+            }
+
+            override fun onFail(call: Call<FileFolder>?, error: Throwable, response: Response<*>?) {
+                super.onFail(call, error, response)
+                Toast.makeText(activity, R.string.fileNotFound, Toast.LENGTH_SHORT).show()
             }
         }
 
