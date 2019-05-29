@@ -23,7 +23,10 @@ import android.view.ViewGroup
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import androidx.fragment.app.Fragment
+import com.instructure.canvasapi2.managers.OAuthManager
+import com.instructure.canvasapi2.models.AuthenticatedSession
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.pandautils.utils.StringArg
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
@@ -32,10 +35,14 @@ import com.instructure.student.R
 import com.instructure.student.activity.InternalWebViewActivity
 import com.instructure.student.router.RouteMatcher
 import kotlinx.android.synthetic.main.fragment_discussion_submission_view.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 class DiscussionSubmissionViewFragment : Fragment() {
 
     private var discussionUrl: String by StringArg()
+    private var authJob: Job? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -70,7 +77,7 @@ class DiscussionSubmissionViewFragment : Fragment() {
                     // Let urls with 'root_discussion_topic_id' get redirected so we can capture the correct topic id.
                     // This was an issue when routing a group discussion, with the 'root_discussion_topic_id'
                     // being the course discussion id rather than the group discussion id.
-                    (url?.contains("root_discussion_topic_id") == false) && RouteMatcher.canRouteInternally(
+                    (url?.equals(discussionUrl) == false && !url.contains("root_discussion_topic_id")) && RouteMatcher.canRouteInternally(
                         requireContext(),
                         url,
                         ApiPrefs.domain,
@@ -94,12 +101,21 @@ class DiscussionSubmissionViewFragment : Fragment() {
             }
 
         discussionSubmissionWebView.setInitialScale(100)
-        discussionSubmissionWebView.loadUrl(discussionUrl)
+
+        authJob = GlobalScope.launch {
+            val authenticatedUrl = awaitApi<AuthenticatedSession> { OAuthManager.getAuthenticatedSession(discussionUrl, it) }.sessionUrl
+            discussionSubmissionWebView.post { discussionSubmissionWebView.loadUrl(authenticatedUrl) }
+        }
     }
 
     override fun onStop() {
         super.onStop()
         discussionSubmissionWebView.stopLoading()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        authJob?.cancel()
     }
 
     companion object {
