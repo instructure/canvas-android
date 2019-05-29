@@ -67,7 +67,15 @@ class DiscussionSubmissionViewFragment : Fragment() {
                 override fun onPageStartedCallback(webView: WebView?, url: String?) = Unit
                 override fun onPageFinishedCallback(webView: WebView?, url: String?) = Unit
                 override fun canRouteInternallyDelegate(url: String?) =
-                    if (url?.contains("root_discussion_topic_id") == true ) false else RouteMatcher.canRouteInternally(requireContext(), url!!, ApiPrefs.domain, false)
+                    // Let urls with 'root_discussion_topic_id' get redirected so we can capture the correct topic id.
+                    // This was an issue when routing a group discussion, with the 'root_discussion_topic_id'
+                    // being the course discussion id rather than the group discussion id.
+                    (url?.contains("root_discussion_topic_id") == false) && RouteMatcher.canRouteInternally(
+                        requireContext(),
+                        url,
+                        ApiPrefs.domain,
+                        false
+                    )
 
                 override fun routeInternallyCallback(url: String?) {
                     RouteMatcher.canRouteInternally(requireContext(), url!!, ApiPrefs.domain, true)
@@ -81,7 +89,8 @@ class DiscussionSubmissionViewFragment : Fragment() {
                         InternalWebViewActivity.createIntent(requireActivity(), url, "", true)
                     )
 
-                override fun shouldLaunchInternalWebViewFragment(url: String): Boolean = !url.contains(ApiPrefs.domain)
+                override fun shouldLaunchInternalWebViewFragment(url: String): Boolean =
+                    !url.contains(ApiPrefs.domain)
             }
 
         discussionSubmissionWebView.setInitialScale(100)
