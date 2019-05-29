@@ -967,21 +967,18 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
             if (cancelled && annotation.contents.isNullOrEmpty()) {
                 // Remove the annotation
                 pdfFragment?.document?.annotationProvider?.removeAnnotationFromPage(annotation)
-                pdfFragment?.notifyAnnotationHasChanged(annotation)
-                pdfFragment?.clearSelectedAnnotations()
+//                pdfFragment?.notifyAnnotationHasChanged(annotation)
+//                pdfFragment?.clearSelectedAnnotations()
                 pdfFragment?.enterAnnotationCreationMode()
                 return
             }
 
             // Updating the annotation's contents triggers an update call which creates the new annotation.
             annotation.contents = text
-            pdfFragment?.notifyAnnotationHasChanged(annotation)
 
-            pdfFragment?.document?.annotationProvider?.removeOnAnnotationUpdatedListener(mAnnotationUpdateListener)
             // We need to update the UI so pspdfkit knows how to handle this.
             pdfFragment?.exitCurrentlyActiveMode()
             pdfFragment?.enterAnnotationCreationMode()
-            pdfFragment?.document?.annotationProvider?.addOnAnnotationUpdatedListener(mAnnotationUpdateListener)
         }
     }
 }
