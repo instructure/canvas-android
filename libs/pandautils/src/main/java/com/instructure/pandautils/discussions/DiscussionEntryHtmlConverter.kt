@@ -206,6 +206,7 @@ class DiscussionEntryHtmlConverter {
                 .replace("__LTI_BUTTON_MARGIN__", ltiButtonMargin)
 
                 .replace("__AVATAR_URL__", avatarImage)
+                .replace("__AVATAR_ALT__", context.getString(R.string.userAvatar))
                 .replace("__TITLE__", authorName)
                 .replace("__DATE__", date)
                 .replace("__CONTENT_HTML__", content)
