@@ -27,28 +27,16 @@ import retrofit2.Response
 
 class ContinuationCallback<T>(private val continuation: CancellableContinuation<*>, private val onSuccess: SuccessCall<T>, var onError: ErrorCall = {}) : StatusCallback<T>() {
 
-    private var succeededOrFailed = false
-
     override fun onResponse(response: Response<T>, linkHeaders: LinkHeaders, type: ApiType) {
         synchronized(continuation) {
-            succeededOrFailed = true
             if (continuation.isCancelled) return
-            if (response.isSuccessful) {
-                @Suppress("UNCHECKED_CAST")
-                onSuccess(response.body() as T)
-            } else {
-                onError(StatusCallbackError(response = response))
-            }
+            @Suppress("UNCHECKED_CAST")
+            onSuccess(response.body() as T)
         }
-    }
-
-    override fun onFinished(type: ApiType) {
-        if (!succeededOrFailed && type != ApiType.CACHE) onError(StatusCallbackError())
     }
 
     override fun onFail(call: Call<T>?, error: Throwable, response: Response<*>?) {
         synchronized(continuation) {
-            succeededOrFailed = true
             if (continuation.isCancelled) return
             onError(StatusCallbackError(call, error, response))
         }
