@@ -16,9 +16,6 @@
 
 package com.instructure.teacher.presenters;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import com.instructure.canvasapi2.StatusCallback;
 import com.instructure.canvasapi2.apis.InboxApi;
 import com.instructure.canvasapi2.managers.InboxManager;
@@ -30,10 +27,14 @@ import com.instructure.canvasapi2.utils.LinkHeaders;
 import com.instructure.teacher.R;
 import com.instructure.teacher.viewinterface.MessageThreadView;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import instructure.androidblueprint.SyncPresenter;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -132,6 +133,13 @@ public class MessageThreadPresenter extends SyncPresenter<Message, MessageThread
             if (getViewCallback() != null) {
                 getViewCallback().onRefreshFinished();
                 getViewCallback().checkIfEmpty();
+            }
+        }
+
+        @Override
+        public void onFail(@Nullable Call<Conversation> call, @NotNull Throwable error, @Nullable Response<?> response) {
+            if (getViewCallback() != null) {
+                getViewCallback().onConversationLoadFailed();
             }
         }
     };

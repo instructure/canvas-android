@@ -88,7 +88,7 @@ class StudentContextPresenter(
                 }
             }
         } catch { error ->
-            val isDesigner = student.enrollments.any { it.type == EnrollmentType.DESIGNERENROLLMENT }
+            val isDesigner = this::student.isInitialized && student.enrollments.any { it.type == EnrollmentType.DESIGNERENROLLMENT }
             viewCallback?.onErrorLoading(isDesigner)
             error.printStackTrace()
         }
