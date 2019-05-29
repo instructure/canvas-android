@@ -153,7 +153,7 @@ class DashboardRecyclerAdapter(
                 EnrollmentManager.getSelfEnrollments(null, listOf(EnrollmentAPI.STATE_INVITED), isRefresh, it)
             }
 
-            val favoriteCourses = rawCourses.filter { it.isFavorite && !it.accessRestrictedByDate && !it.isInvited() }
+            val favoriteCourses = rawCourses.filter { it.isFavorite && it.workflowState != "completed" && !it.accessRestrictedByDate && !it.isInvited() }
 
             // Add courses
             addOrUpdateAllItems(ItemType.COURSE_HEADER, favoriteCourses)
@@ -162,7 +162,7 @@ class DashboardRecyclerAdapter(
             mCourseMap = rawCourses.associateBy { it.id }
             val rawGroups = groups.filter { group ->
                 val groupCourse = mCourseMap[group.courseId] ?: return@filter true // Account groups don't have a course
-                with(groupCourse) { isValidTerm() && !accessRestrictedByDate && endDate?.before(Date()) != true }
+                with(groupCourse) { isValidTerm() && !accessRestrictedByDate && endDate?.before(Date()) != true } && !group.concluded
             }
             val favoriteGroups = rawGroups.filter {
                 (it.isFavorite)
