@@ -26,6 +26,7 @@ import androidx.fragment.app.Fragment
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.models.AuthenticatedSession
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.weave.StatusCallbackError
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.pandautils.utils.StringArg
 import com.instructure.pandautils.utils.setGone
@@ -103,7 +104,20 @@ class DiscussionSubmissionViewFragment : Fragment() {
         discussionSubmissionWebView.setInitialScale(100)
 
         authJob = GlobalScope.launch {
-            val authenticatedUrl = awaitApi<AuthenticatedSession> { OAuthManager.getAuthenticatedSession(discussionUrl, it) }.sessionUrl
+            val authenticatedUrl = if (ApiPrefs.domain in discussionUrl)
+                try {
+                    awaitApi<AuthenticatedSession> {
+                        OAuthManager.getAuthenticatedSession(
+                            discussionUrl,
+                            it
+                        )
+                    }.sessionUrl
+                } catch (e: StatusCallbackError) {
+                    discussionUrl
+                }
+            else
+                discussionUrl
+
             discussionSubmissionWebView.post { discussionSubmissionWebView.loadUrl(authenticatedUrl) }
         }
     }
