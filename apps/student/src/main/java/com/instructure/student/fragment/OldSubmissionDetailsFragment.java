@@ -397,6 +397,10 @@ public class OldSubmissionDetailsFragment extends ParentFragment {
         FileDownloadJobIntentService.Companion.scheduleDownloadJob(requireContext(), currentFileName, currentURL, currentFileSize);
     }
 
+    private boolean isCanvaDocLink(Attachment attachment) {
+        return attachment.getContentType().contains("pdf") || (attachment.getPreviewUrl() != null && attachment.getPreviewUrl().contains("canvadoc"));
+    }
+
     private void setupViews(View rootView) {
         toolbar = rootView.findViewById(R.id.toolbar);
         emptyView = rootView.findViewById(R.id.emptyView);
@@ -681,7 +685,7 @@ public class OldSubmissionDetailsFragment extends ParentFragment {
                             if (submission.getAttachments().size() == 1) {
                                 // Makes more sense to open the file since they should already have it on their device
                                 Attachment attachment = submission.getAttachments().get(0);
-                                if (attachment.getContentType().contains("pdf") || (attachment.getPreviewUrl() != null && attachment.getPreviewUrl().contains("canvadoc"))) {
+                                if (isCanvaDocLink(attachment)) {
                                     startActivity(StudentSubmissionActivity.createIntent(getActivity(), getCourse(), assignment, new GradeableStudentSubmission(new StudentAssignee(ApiPrefs.getUser(), ApiPrefs.getUser().getId(), ApiPrefs.getUser().getName()), submission, true), 0));
                                 } else {
                                     openMedia(true, attachment.getContentType(), attachment.getUrl(), attachment.getFilename(), canvasContext);
@@ -865,7 +869,7 @@ public class OldSubmissionDetailsFragment extends ParentFragment {
                 Attachment attachment = (Attachment)adapter.getAdapter().getItem(position);
 
                 // If this is a pdf, we want to make sure we disable annotations/etc
-                if(attachment.getContentType().contains("pdf")) {
+                if(isCanvaDocLink(attachment)) {
                     startActivity(StudentSubmissionActivity.createIntent(getActivity(), getCourse(), assignment, new GradeableStudentSubmission(new StudentAssignee(ApiPrefs.getUser(), ApiPrefs.getUser().getId(), ApiPrefs.getUser().getName()), submission, true), position));
                 } else {
                     openMedia(true, attachment.getContentType(), attachment.getUrl(), attachment.getFilename(), canvasContext);
