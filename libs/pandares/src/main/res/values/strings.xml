@@ -300,6 +300,7 @@
     <string name="allCourses">All Courses</string>
     <string name="allGroups">All Groups</string>
     <string name="courseOptions">Course Options</string>
+    <string name="courseOptionsFormatted">Course options for %s</string>
     <string name="editNickname">Edit nickname</string>
     <string name="editCourseColor">Edit course color</string>
     <string name="open">Open</string>

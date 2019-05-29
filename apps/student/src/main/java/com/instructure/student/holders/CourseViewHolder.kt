@@ -20,17 +20,17 @@ package com.instructure.student.holders
 import android.annotation.SuppressLint
 import android.content.Context
 import android.view.Gravity
-import androidx.appcompat.widget.PopupMenu
-import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.widget.TextView
-import com.instructure.student.R
-import com.instructure.student.interfaces.CourseAdapterToFragmentCallback
-import com.instructure.student.util.StudentPrefs
+import androidx.appcompat.widget.PopupMenu
+import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.CourseGrade
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.utils.*
+import com.instructure.student.R
+import com.instructure.student.interfaces.CourseAdapterToFragmentCallback
+import com.instructure.student.util.StudentPrefs
 import kotlinx.android.synthetic.main.viewholder_course_card.view.*
 
 class CourseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -69,6 +69,7 @@ class CourseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             }
             popup.show()
         }
+        overflow.contentDescription = context.getString(R.string.courseOptionsFormatted, course.name)
 
         val courseGrade = course.getCourseGrade(false)
 
