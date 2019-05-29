@@ -14,17 +14,17 @@
  *     limitations under the License.
  *
  */
-package com.instructure.student.db
+package com.instructure.student.db.sqlColAdapters
 
-import android.content.Context
-import com.squareup.sqldelight.android.AndroidSqliteDriver
+import com.squareup.sqldelight.ColumnAdapter
+import com.instructure.canvasapi2.models.CanvasContext
 
-const val DB_NAME = "student.db"
+class CanvasContextColAdapter : ColumnAdapter<CanvasContext, String> {
+    override fun decode(databaseValue: String): CanvasContext {
+       return CanvasContext.fromContextCode(databaseValue) ?: CanvasContext.defaultCanvasContext()
+    }
 
-fun Db.getInstance(context: Context): StudentDb {
-    if (!ready)
-        // Note: To use an in-memory database (for testing purposes), pass in 'null' for the name argument or don't pass anything at all (null by default)
-        dbSetup(AndroidSqliteDriver(Schema, context, DB_NAME))
-
-    return instance
+    override fun encode(value: CanvasContext): String {
+        return value.contextId
+    }
 }

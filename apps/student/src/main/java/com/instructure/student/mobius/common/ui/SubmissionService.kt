@@ -33,6 +33,10 @@ import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.canvasapi2.utils.weave.apiAsync
 import com.instructure.pandautils.utils.Const
 import com.instructure.student.R
+import com.instructure.student.db.Db
+import com.instructure.student.db.getInstance
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.util.*
 
 class SubmissionService : IntentService(SubmissionService::class.java.simpleName) {
@@ -72,27 +76,53 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
     private fun uploadText(intent: Intent) {
         val text = intent.getStringExtra(Const.MESSAGE)
         val assignmentId = intent.getLongExtra(Const.ASSIGNMENT_ID, 0)
-        val assignmentName = intent.getStringExtra(Const.ASSIGNMENT)
+        val assignmentName = intent.getStringExtra(Const.ASSIGNMENT_NAME)
         val context = intent.getParcelableExtra<CanvasContext>(Const.CANVAS_CONTEXT)
+        val dbSubmissionId: Long
+        val db = Db.getInstance(this).submissionQueries
 
-        // TODO: Save to persistence
+        // Save to persistence
+        db.insertOnlineTextSubmission(text, assignmentName, assignmentId, context)
+        dbSubmissionId = db.getLastInsert().executeAsOne()
+
         showProgressNotification(assignmentName)
         val result = apiAsync<Submission> { SubmissionManager.postTextSubmission(context, assignmentId, text, it) }
-        // TODO: Update persistence, either delete on success or update with error and show notification
-//        showErrorNotification(assignment.name, assignment.id.toInt(), intent)
+
+        GlobalScope.launch {
+            val uploadResult = result.await()
+            uploadResult.onSuccess {
+                db.deleteSubmissionById(dbSubmissionId)
+            }.onFailure {
+                db.setSubmissionError(true, dbSubmissionId)
+                showErrorNotification(assignmentName, assignmentId, intent)
+            }
+        }
     }
 
     private fun uploadUrl(intent: Intent, isLti: Boolean) {
         val url = intent.getStringExtra(Const.URL)
         val assignmentId = intent.getLongExtra(Const.ASSIGNMENT_ID, 0)
-        val assignmentName = intent.getStringExtra(Const.ASSIGNMENT)
+        val assignmentName = intent.getStringExtra(Const.ASSIGNMENT_NAME)
         val context = intent.getParcelableExtra<CanvasContext>(Const.CANVAS_CONTEXT)
+        val dbSubmissionId: Long
+        val db = Db.getInstance(this).submissionQueries
 
-        // TODO: Save to persistence
+        // Save to persistence
+        db.insertOnlineUrlSubmission(url, assignmentName, assignmentId, context)
+        dbSubmissionId = db.getLastInsert().executeAsOne()
+
         showProgressNotification(assignmentName)
         val result = apiAsync<Submission> { SubmissionManager.postUrlSubmission(context, assignmentId, url, isLti, it) }
-        // TODO: Update persistence, either delete on success or update with error and show notification
-//        showErrorNotification(assignment.name, assignment.id.toInt(), intent)
+
+        GlobalScope.launch {
+            val uploadResult = result.await()
+            uploadResult.onSuccess {
+                db.deleteSubmissionById(dbSubmissionId)
+            }.onFailure {
+                db.setSubmissionError(true, dbSubmissionId)
+                showErrorNotification(assignmentName, assignmentId, intent)
+            }
+        }
     }
 
     private fun uploadMedia(intent: Intent) {
@@ -119,14 +149,14 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
      * @param assignmentId - used as the notification ID so that we can have many, distinct notifications
      * @param intent - an Intent to launch when the notification is clicked so the user can address
      */
-    private fun showErrorNotification(assignmentName: String?, assignmentId: Int, intent: Intent) {
+    private fun showErrorNotification(assignmentName: String?, assignmentId: Long, intent: Intent) {
         val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
         createNotificationChannel()
         notificationBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_notification_canvas_logo)
                 .setContentTitle(String.format(Locale.US, getString(R.string.assignmentSubmissionError), assignmentName))
                 .setContentIntent(pendingIntent)
-        NotificationManagerCompat.from(this).notify(assignmentId, notificationBuilder.build())
+        NotificationManagerCompat.from(this).notify(assignmentId.toInt(), notificationBuilder.build())
     }
 
     private fun showProgressNotification(assignmentName: String?) {
@@ -172,7 +202,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
             val bundle = Bundle().apply {
                 putParcelable(Const.CANVAS_CONTEXT, canvasContext)
                 putLong(Const.ASSIGNMENT_ID, assignmentId)
-                putString(Const.ASSIGNMENT, assignmentName)
+                putString(Const.ASSIGNMENT_NAME, assignmentName)
                 putString(Const.MESSAGE, text)
             }
 
@@ -183,7 +213,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
             val bundle = Bundle().apply {
                 putParcelable(Const.CANVAS_CONTEXT, canvasContext)
                 putLong(Const.ASSIGNMENT_ID, assignmentId)
-                putString(Const.ASSIGNMENT, assignmentName)
+                putString(Const.ASSIGNMENT_NAME, assignmentName)
                 putString(Const.URL, url)
             }
 
@@ -194,7 +224,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
             val bundle = Bundle().apply {
                 putParcelable(Const.CANVAS_CONTEXT, canvasContext)
                 putLong(Const.ASSIGNMENT_ID, assignmentId)
-                putString(Const.ASSIGNMENT, assignmentName)
+                putString(Const.ASSIGNMENT_NAME, assignmentName)
             }
 
             startService(context, Action.FILE_ENTRY, bundle)
@@ -204,7 +234,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
             val bundle = Bundle().apply {
                 putParcelable(Const.CANVAS_CONTEXT, canvasContext)
                 putLong(Const.ASSIGNMENT_ID, assignmentId)
-                putString(Const.ASSIGNMENT, assignmentName)
+                putString(Const.ASSIGNMENT_NAME, assignmentName)
             }
 
             startService(context, Action.MEDIA_ENTRY, bundle)
@@ -214,7 +244,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
             val bundle = Bundle().apply {
                 putParcelable(Const.CANVAS_CONTEXT, canvasContext)
                 putLong(Const.ASSIGNMENT_ID, assignmentId)
-                putString(Const.ASSIGNMENT, assignmentName)
+                putString(Const.ASSIGNMENT_NAME, assignmentName)
                 putString(Const.URL, url)
             }
 
