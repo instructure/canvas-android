@@ -38,10 +38,7 @@ import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.interactions.router.Route
-import com.instructure.pandautils.utils.Const
-import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.isTablet
-import com.instructure.pandautils.utils.setupAsBackButton
+import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.EditFavoritesRecyclerAdapter
 import com.instructure.student.interfaces.AdapterToFragmentCallback
@@ -87,6 +84,9 @@ class EditFavoritesFragment : ParentFragment() {
         })
         configureRecyclerView(view!!, requireContext(), recyclerAdapter!!, R.id.swipeRefreshLayout, R.id.emptyView, R.id.listView, R.string.no_courses_available)
         listView.isSelectionEnabled = false
+
+        // Disable item animator when TalkBack is enabled, otherwise a11y focus resets when a favorite is toggled
+        if (requireContext().a11yManager.hasSpokenFeedback) listView.itemAnimator = null
     }
 
     override fun onConfigurationChanged(newConfig: Configuration?) {
