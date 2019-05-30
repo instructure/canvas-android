@@ -24,7 +24,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.DialogFragment
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.GroupManager
@@ -56,11 +55,11 @@ class EditFavoritesFragment : ParentFragment() {
     private var courseCall: WeaveJob? = null
     private var groupCall: WeaveJob? = null
 
-    override fun title(): String = requireContext().getString(R.string.editFavorites)
+    override fun title(): String = requireContext().getString(R.string.editDashboard)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (isTablet) setStyle(DialogFragment.STYLE_NORMAL, R.style.LightStatusBarDialog)
+        if (isTablet) setStyle(STYLE_NORMAL, R.style.LightStatusBarDialog)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
@@ -111,7 +110,7 @@ class EditFavoritesFragment : ParentFragment() {
     }
 
     override fun applyTheme() {
-        toolbar.setTitle(R.string.editFavorites)
+        toolbar.setTitle(R.string.editDashboard)
         toolbar.setupAsBackButton(this)
         ViewStyler.themeToolbar(requireActivity(), toolbar, Color.WHITE, Color.BLACK, false)
     }
