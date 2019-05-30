@@ -18,11 +18,13 @@ package com.instructure.teacher.presenters
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.DashboardCard
 import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.LinkHeaders
-import com.instructure.teacher.utils.hasActiveEnrollment
 import com.instructure.teacher.viewinterface.CoursesView
 import instructure.androidblueprint.SyncPresenter
+import retrofit2.Call
+import retrofit2.Response
 
 class CoursesPresenter : SyncPresenter<Course, CoursesView>(Course::class.java) {
 
@@ -36,29 +38,65 @@ class CoursesPresenter : SyncPresenter<Course, CoursesView>(Course::class.java) 
         }
 
         onRefreshStarted()
-        CourseManager.getAllFavoriteCourses(forceNetwork, mFavoriteCoursesCallback)
+        CourseManager.getCourses(forceNetwork, mCoursesCallback)
     }
 
     override fun refresh(forceNetwork: Boolean) {
         onRefreshStarted()
-        mFavoriteCoursesCallback.reset()
+        mCoursesCallback.reset()
+        mDashboardCallback?.reset()
         clearData()
         loadData(forceNetwork)
     }
 
-    private val mFavoriteCoursesCallback = object : StatusCallback<List<Course>>() {
-        override fun onResponse(response: retrofit2.Response<List<Course>>, linkHeaders: LinkHeaders, type: ApiType) {
-            val courses = response.body() ?: return
-            val validCourses = courses.filter {
-                it.isFavorite && (it.isTeacher || it.isTA || it.isDesigner) && it.hasActiveEnrollment()
+    private var mDashboardCallback: StatusCallback<List<DashboardCard>>? = null
+    private val mCoursesCallback = object : StatusCallback<List<Course>>() {
+        override fun onResponse(response: Response<List<Course>>, linkHeaders: LinkHeaders, type: ApiType) {
+            val courses = response.body()
+            if (courses.isNullOrEmpty()) {
+                notifyRefreshFinished()
+            } else {
+                addIfOnDashboard(courses)
             }
-            data.addOrUpdate(validCourses)
         }
 
-        override fun onFinished(type: ApiType) {
-            viewCallback?.onRefreshFinished()
-            viewCallback?.checkIfEmpty()
+        override fun onFail(call: Call<List<Course>>?, error: Throwable, response: Response<*>?) {
+            super.onFail(call, error, response)
+            notifyRefreshFinished()
         }
+    }
+
+    private fun addIfOnDashboard(courses: List<Course>) {
+        mDashboardCallback = object : StatusCallback<List<DashboardCard>>() {
+            override fun onResponse(
+                response: Response<List<DashboardCard>>,
+                linkHeaders: LinkHeaders,
+                type: ApiType
+            ) {
+                val dashboardCourses = response.body() ?: return
+                val courseMap = courses.associateBy { it.id }
+                val validCourses = dashboardCourses.mapNotNull { courseMap[it.id] }
+
+                data.addOrUpdate(validCourses)
+                notifyRefreshFinished()
+            }
+
+            override fun onFail(
+                call: Call<List<DashboardCard>>?,
+                error: Throwable,
+                response: Response<*>?
+            ) {
+                super.onFail(call, error, response)
+                notifyRefreshFinished()
+            }
+        }
+
+        CourseManager.getDashboardCourses(true, mDashboardCallback!!)
+    }
+
+    private fun notifyRefreshFinished() {
+        viewCallback?.onRefreshFinished()
+        viewCallback?.checkIfEmpty()
     }
 
     override fun areItemsTheSame(item1: Course, item2: Course): Boolean {

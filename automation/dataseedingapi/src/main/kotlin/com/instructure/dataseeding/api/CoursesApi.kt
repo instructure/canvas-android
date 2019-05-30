@@ -25,6 +25,7 @@ import com.instructure.dataseeding.util.CanvasRestAdapter
 import com.instructure.dataseeding.util.Randomizer
 import retrofit2.Call
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.POST
 import retrofit2.http.Path
 
@@ -37,6 +38,8 @@ object CoursesApi {
         @POST("users/self/favorites/courses/{courseId}")
         fun addCourseToFavorites(@Path("courseId") courseId: Long): Call<FavoriteApiModel>
 
+        @DELETE("courses/{courseId}?event=conclude")
+        fun concludeCourse(@Path("courseId") courseId: Long): Call<FavoriteApiModel>
     }
 
     private val adminCoursesService: CoursesService by lazy {
@@ -59,6 +62,12 @@ object CoursesApi {
                 .createCourse(course)
                 .execute()
                 .body()!!
+    }
+
+    fun concludeCourse(courseId: Long) {
+        adminCoursesService
+            .concludeCourse(courseId)
+            .execute()
     }
 
     fun addCourseToFavorites(courseId: Long, token: String): FavoriteApiModel

@@ -34,6 +34,9 @@ object CourseAPI {
         @get:GET("users/self/favorites/courses?include[]=term&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=current_grading_period_scores&include[]=course_image&include[]=favorites")
         val favoriteCourses: Call<List<Course>>
 
+        @get:GET("dashboard/dashboard_cards")
+        val dashboardCourses: Call<List<DashboardCard>>
+
         @get:GET("courses?include[]=term&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=sections&state[]=completed&state[]=available")
         val firstPageCourses: Call<List<Course>>
 
@@ -132,6 +135,10 @@ object CourseAPI {
         } else if (callback.linkHeaders != null && StatusCallback.moreCallsExist(callback.linkHeaders)) {
             callback.addCall(adapter.build(CoursesInterface::class.java, params).next(callback.linkHeaders!!.nextUrl!!)).enqueue(callback)
         }
+    }
+
+    fun getDashboardCourses(adapter: RestBuilder, callback: StatusCallback<List<DashboardCard>>, params: RestParams) {
+        callback.addCall(adapter.build(CoursesInterface::class.java, params).dashboardCourses).enqueue(callback)
     }
 
     fun getFirstPageCourses(adapter: RestBuilder, callback: StatusCallback<List<Course>>, params: RestParams) {

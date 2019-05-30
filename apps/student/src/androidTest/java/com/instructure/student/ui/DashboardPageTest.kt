@@ -34,9 +34,9 @@ class DashboardPageTest : StudentTest() {
 
     @Test
     @Ditto
-    fun displaysAddCourseMessage() {
+    fun displaysCourses() {
         getToDashboard()
-        dashboardPage.assertDisplaysAddCourseMessage()
+        dashboardPage.assertDisplaysCourses()
     }
 
     private fun getToDashboard(courseCount: Int = 1) : SeedApi.SeededDataApiModel {

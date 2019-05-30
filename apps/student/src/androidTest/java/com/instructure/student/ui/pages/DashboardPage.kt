@@ -22,19 +22,20 @@ import com.instructure.student.R
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.WaitForViewWithId
 import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.page.*
 
 class DashboardPage : BasePage(R.id.dashboardPage) {
 
     private val toolbar by OnViewWithId(R.id.toolbar)
-    private val emptyView by WaitForViewWithId(R.id.emptyCoursesView, autoAssert = false)
+    private val emptyView by OnViewWithId(R.id.emptyCoursesView, autoAssert = false)
+    private val listView by WaitForViewWithId(R.id.listView, autoAssert = false)
 
-    fun assertDisplaysAddCourseMessage() {
-        emptyView.assertDisplayed()
+    fun assertDisplaysCourses() {
+        emptyView.assertNotDisplayed()
         onView(withParent(R.id.toolbar) + withText(R.string.dashboard)).assertDisplayed()
-        onViewWithText(R.string.welcome).assertDisplayed()
-        onViewWithText(R.string.emptyCourseListMessage).assertDisplayed()
-        onViewWithId(R.id.addCoursesButton).assertDisplayed()
+        listView.assertDisplayed()
+        onViewWithText("Courses").assertDisplayed()
+        onViewWithText("See All").assertDisplayed()
     }
-
 }

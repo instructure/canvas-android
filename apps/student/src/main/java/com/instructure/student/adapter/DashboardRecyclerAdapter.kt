@@ -57,7 +57,6 @@ class DashboardRecyclerAdapter(
     }
 
     private var mApiCalls: WeaveJob? = null
-    private var mRawCourseMap = mapOf<Long, Course>()
     private var mCourseMap = mapOf<Long, Course>()
 
     init {
@@ -78,7 +77,7 @@ class DashboardRecyclerAdapter(
 
     override fun onBindChildHolder(holder: RecyclerView.ViewHolder, header: ItemType, item: CanvasComparable<*>) {
         when {
-            holder is CourseInvitationViewHolder && item is Enrollment -> holder.bind(item, mRawCourseMap[item.courseId]!!, mAdapterToFragmentCallback)
+            holder is CourseInvitationViewHolder && item is Enrollment -> holder.bind(item, mCourseMap[item.courseId]!!, mAdapterToFragmentCallback)
             holder is AnnouncementViewHolder && item is AccountNotification -> holder.bind(item, mAdapterToFragmentCallback)
             holder is CourseViewHolder && item is Course -> holder.bind(item, mAdapterToFragmentCallback)
             holder is GroupViewHolder && item is Group -> holder.bind(item, mCourseMap, mAdapterToFragmentCallback)
@@ -93,7 +92,7 @@ class DashboardRecyclerAdapter(
         return object : GroupSortedList.ItemComparatorCallback<ItemType, CanvasComparable<*>> {
             override fun compare(group: ItemType?, o1: CanvasComparable<*>?, o2: CanvasComparable<*>?) = when {
                 o1 is AccountNotification && o2 is AccountNotification -> o1.compareTo(o2)
-                o1 is Course && o2 is Course -> o1.compareTo(o2)
+                o1 is Course && o2 is Course -> -1 // Don't sort courses, the api returns in the users order
                 o1 is Group && o2 is Group -> o1.compareTo(o2)
                 else -> -1
             }
@@ -145,21 +144,21 @@ class DashboardRecyclerAdapter(
                     { GroupManager.getAllGroups(it, isRefresh) },
                     { AccountNotificationManager.getAllAccountNotifications(it, true)}
             )
+            val dashboardCards = awaitApi<List<DashboardCard>> { CourseManager.getDashboardCourses(isRefresh, it) }
 
-            mRawCourseMap = rawCourses.associateBy { it.id }
+            mCourseMap = rawCourses.associateBy { it.id }
 
             // Get enrollment invites
             val invites = awaitApi<List<Enrollment>> {
                 EnrollmentManager.getSelfEnrollments(null, listOf(EnrollmentAPI.STATE_INVITED), isRefresh, it)
             }
 
-            val favoriteCourses = rawCourses.filter { it.isFavorite && it.workflowState != "completed" && !it.accessRestrictedByDate && !it.isInvited() }
+            val favoriteCourses = dashboardCards.map { mCourseMap[it.id] }
 
             // Add courses
             addOrUpdateAllItems(ItemType.COURSE_HEADER, favoriteCourses)
 
             // Add groups
-            mCourseMap = rawCourses.associateBy { it.id }
             val rawGroups = groups.filter { group ->
                 val groupCourse = mCourseMap[group.courseId] ?: return@filter true // Account groups don't have a course
                 with(groupCourse) { isValidTerm() && !accessRestrictedByDate && endDate?.before(Date()) != true } && !group.concluded
@@ -178,7 +177,7 @@ class DashboardRecyclerAdapter(
 
             // Add course invites
             val validInvites = invites.filter {
-                mRawCourseMap[it.courseId]?.let { course ->
+                mCourseMap[it.courseId]?.let { course ->
                     course.isValidTerm() && !course.accessRestrictedByDate && !course.restrictEnrollmentsToCourseDate} ?: false
             }
             
