@@ -48,12 +48,6 @@ abstract class StatusCallback<DATA> : Callback<DATA> {
                 response.raw(),
                 APIHelper.parseLinkHeaderResponse(response.headers())
             )
-            response.code() == 504 -> {
-                // Cached response does not exist.
-                Logger.e("StatusCallback: GOT A 504")
-                // No response
-                onCallbackFinished(ApiType.CACHE)
-            }
             else -> {
                 onFail(data, Throwable("StatusCallback: " + response.code() + " Error"), response)
                 if (response.code() == 401) tryOrNull {
@@ -74,6 +68,7 @@ abstract class StatusCallback<DATA> : Callback<DATA> {
         } else {
             Logger.e("StatusCallback: Failure: " + t.message)
             onFail(data, t, null)
+            onFinished(ApiType.API)
         }
     }
 

@@ -40,27 +40,12 @@ fun <T> apiAsync(managerCall: ManagerCall<T>): Deferred<DataResult<T>> {
 
     val callback = object : StatusCallback<T>() {
 
-        var succeededOrFailed = false
-
         override fun onResponse(response: Response<T>, linkHeaders: LinkHeaders, type: ApiType) {
-            succeededOrFailed = true
-            if (response.isSuccessful) {
-                @Suppress("UNCHECKED_CAST")
-                deferred.complete(DataResult.Success(response.body() as T))
-            } else {
-                val failure = Failure.Exception(StatusCallbackError(response = response))
-                deferred.complete(DataResult.Fail(failure))
-            }
-        }
-
-        override fun onFinished(type: ApiType) {
-            if (!succeededOrFailed && type != ApiType.CACHE) {
-                deferred.complete(DataResult.Fail(Failure.Network("StatusCallback: 504 Error")))
-            }
+            @Suppress("UNCHECKED_CAST")
+            deferred.complete(DataResult.Success(response.body() as T))
         }
 
         override fun onFail(call: Call<T>?, error: Throwable, response: Response<*>?) {
-            succeededOrFailed = true
             val failure = if (response?.code() == 401) {
                 Failure.Authorization(response.message())
             } else {

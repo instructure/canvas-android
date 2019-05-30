@@ -35,24 +35,12 @@ suspend fun <T> awaitApi(managerCall: ManagerCall<T>): T {
     return suspendCancellableCoroutine { continuation ->
         val callback = object : StatusCallback<T>() {
 
-            var succeededOrFailed = false
-
             override fun onResponse(response: Response<T>, linkHeaders: LinkHeaders, type: ApiType) {
-                succeededOrFailed = true
-                if (response.isSuccessful) {
-                    @Suppress("UNCHECKED_CAST")
-                    continuation.resumeSafely(response.body() as T)
-                } else {
-                    continuation.resumeSafelyWithException(StatusCallbackError(response = response), originStackTrace)
-                }
-            }
-
-            override fun onFinished(type: ApiType) {
-                if (!succeededOrFailed && type != ApiType.CACHE) continuation.resumeSafelyWithException(StatusCallbackError(error = Throwable("StatusCallback: 504 Error")), originStackTrace)
+                @Suppress("UNCHECKED_CAST")
+                continuation.resumeSafely(response.body() as T)
             }
 
             override fun onFail(call: Call<T>?, error: Throwable, response: Response<*>?) {
-                succeededOrFailed = true
                 continuation.resumeSafelyWithException(StatusCallbackError(call, error, response), originStackTrace)
             }
         }
@@ -72,21 +60,11 @@ suspend fun <T> awaitApiResponse(managerCall: ManagerCall<T>): Response<T> {
     return suspendCancellableCoroutine { continuation ->
         val callback = object : StatusCallback<T>() {
 
-            var succeededOrFailed = false
-
             override fun onResponse(response: Response<T>, linkHeaders: LinkHeaders, type: ApiType) {
-                succeededOrFailed = true
                 continuation.resumeSafely(response)
             }
 
-            override fun onFinished(type: ApiType) {
-                if (!succeededOrFailed && type != ApiType.CACHE) continuation.resumeSafelyWithException(
-                    StatusCallbackError(error = Throwable("StatusCallback: 504 Error"))
-                )
-            }
-
             override fun onFail(call: Call<T>?, error: Throwable, response: Response<*>?) {
-                succeededOrFailed = true
                 continuation.resumeSafelyWithException(StatusCallbackError(call, error, response))
             }
         }

@@ -61,11 +61,12 @@ class RequestInterceptor : Interceptor {
         // Add Accept-Language header for a11y
         builder.addHeader("accept-language", params.acceptLanguageOverride ?: acceptedLanguageString)
 
-        if (!APIHelper.hasNetworkConnection() || params.isForceReadFromCache) {
-            // Offline or only want cached data
+        if (params.isForceReadFromCache) {
+            // Only want cached data
             builder.cacheControl(CacheControl.FORCE_CACHE)
-        } else if (params.isForceReadFromNetwork) {
-            // Typical from a pull-to-refresh
+        } else if (APIHelper.hasNetworkConnection() && params.isForceReadFromNetwork) {
+            // Typical from a pull-to-refresh. We do not use this when the network is unavailable because we want
+            // requests to fall back to cached responses for a better offline experience.
             builder.cacheControl(CacheControl.FORCE_NETWORK)
         }
 

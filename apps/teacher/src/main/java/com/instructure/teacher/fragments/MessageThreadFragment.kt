@@ -422,6 +422,11 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
         }
     }
 
+    override fun onConversationLoadFailed() {
+        toast(R.string.errorOccurred)
+        activity?.onBackPressed()
+    }
+
     override fun showUserMessage(userMessageResId: Int) {
         showToast(userMessageResId)
     }

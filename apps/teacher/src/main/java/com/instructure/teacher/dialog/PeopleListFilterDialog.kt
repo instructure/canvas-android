@@ -124,7 +124,7 @@ class PeopleListFilterDialog : AppCompatDialogFragment() {
                 }
 
                 updateCanvasContexts(sections, groups)
-            } catch (ignore: Exception) {
+            } catch (ignore: Throwable) {
                 if (activity != null) {
                     Toast.makeText(requireActivity(), R.string.error_occurred, Toast.LENGTH_SHORT).show()
                 }

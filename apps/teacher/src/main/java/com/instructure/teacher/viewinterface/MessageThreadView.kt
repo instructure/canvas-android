@@ -31,5 +31,5 @@ interface MessageThreadView : SyncManager<Message> {
     fun onMessageDeleted()
     fun showUserMessage(userMessageResId: Int)
     fun setupConversationDetails()
-
+    fun onConversationLoadFailed()
 }

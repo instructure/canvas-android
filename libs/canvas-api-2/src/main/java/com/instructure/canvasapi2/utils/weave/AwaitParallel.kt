@@ -37,28 +37,16 @@ suspend fun inParallel(block: ParallelWaiter.() -> Unit) {
 
 class ParallelCallback<T>(private val managerCall: ManagerCall<T>) : StatusCallback<T>() {
 
-    private var succeededOrFailed = false
-
     var onSuccess: SuccessCall<T> = {}
 
     var onError: ErrorCall = {}
 
     override fun onResponse(response: Response<T>, linkHeaders: LinkHeaders, type: ApiType) {
-        succeededOrFailed = true
-        if (response.isSuccessful) {
-            @Suppress("UNCHECKED_CAST")
-            onSuccess(response.body() as T)
-        } else {
-            onError(StatusCallbackError(response = response))
-        }
-    }
-
-    override fun onFinished(type: ApiType) {
-        if (!succeededOrFailed && type != ApiType.CACHE) onError(StatusCallbackError())
+        @Suppress("UNCHECKED_CAST")
+        onSuccess(response.body() as T)
     }
 
     override fun onFail(call: Call<T>?, error: Throwable, response: Response<*>?) {
-        succeededOrFailed = true
         onError(StatusCallbackError(call, error, response))
     }
 
