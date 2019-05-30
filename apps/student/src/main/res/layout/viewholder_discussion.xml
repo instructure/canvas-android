@@ -33,6 +33,7 @@
             android:layout_height="8dp"
             android:visibility="invisible"
             android:background="@drawable/status_indicator_blue"
+            android:contentDescription="@string/unread"
             android:layout_alignParentStart="true"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
