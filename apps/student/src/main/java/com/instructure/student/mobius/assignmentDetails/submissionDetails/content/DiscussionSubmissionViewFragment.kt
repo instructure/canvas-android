@@ -36,6 +36,7 @@ import com.instructure.student.R
 import com.instructure.student.activity.InternalWebViewActivity
 import com.instructure.student.router.RouteMatcher
 import kotlinx.android.synthetic.main.fragment_discussion_submission_view.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -118,7 +119,7 @@ class DiscussionSubmissionViewFragment : Fragment() {
             else
                 discussionUrl
 
-            discussionSubmissionWebView.post { discussionSubmissionWebView.loadUrl(authenticatedUrl) }
+            GlobalScope.launch(Dispatchers.Main) { discussionSubmissionWebView.loadUrl(authenticatedUrl) }
         }
     }
 
