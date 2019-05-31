@@ -45,6 +45,7 @@
             android:layout_height="7dp"
             android:visibility="invisible"
             android:background="@drawable/status_indicator_blue"
+            android:contentDescription="@string/unread"
             android:layout_toEndOf="@+id/publishedBar"
             android:layout_marginStart="4dp"
             android:layout_marginEnd="4dp"
