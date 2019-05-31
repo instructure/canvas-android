@@ -104,7 +104,7 @@ class DiscussionSubmissionViewFragment : Fragment() {
 
         discussionSubmissionWebView.setInitialScale(100)
 
-        authJob = GlobalScope.launch {
+        authJob = GlobalScope.launch(Dispatchers.Main) {
             val authenticatedUrl = if (ApiPrefs.domain in discussionUrl)
                 try {
                     awaitApi<AuthenticatedSession> {
@@ -119,7 +119,7 @@ class DiscussionSubmissionViewFragment : Fragment() {
             else
                 discussionUrl
 
-            GlobalScope.launch(Dispatchers.Main) { discussionSubmissionWebView.loadUrl(authenticatedUrl) }
+            discussionSubmissionWebView?.loadUrl(authenticatedUrl)
         }
     }
 
