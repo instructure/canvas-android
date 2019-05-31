@@ -17,44 +17,43 @@ package com.instructure.student.db.sqlColAdapters
  */
 
 import com.instructure.canvasapi2.models.CanvasContext
-import org.junit.Before
 
 import org.junit.Assert.*
 import org.junit.Test
 
-class CanvasContextAdapterTest {
+class CanvasContextColAdapterTest {
 
     @Test
-    fun courseContextDecodesToCorrectCanvasContextType() {
+    fun `CourseContext decodes to correct CanvasContext type`() {
         val encodedCourse = "course_123"
         val expectedValue = CanvasContext.emptyCourseContext(123L)
 
-        assertEquals(expectedValue, CanvasContextAdapter().decode(encodedCourse))
+        assertEquals(expectedValue, CanvasContextColAdapter().decode(encodedCourse))
     }
 
     @Test
-    fun nonCourseOrGroupDecodesToUnknownCanvasContextType() {
+    fun `Non course or group decodes to Unknown CanvasContext type`() {
         val encodedUnknown = "section_1234"
         val expectedValue = CanvasContext.defaultCanvasContext()
-        val actualValue = CanvasContextAdapter().decode(encodedUnknown)
+        val actualValue = CanvasContextColAdapter().decode(encodedUnknown)
 
         assertEquals(expectedValue, actualValue)
     }
 
     @Test
-    fun courseContextEncodesCorrectly() {
+    fun `Course context encodes correctly`() {
         val expectedValue = "course_1234"
         val decodedCourse = CanvasContext.emptyCourseContext(id = 1234L)
-        val actualValue = CanvasContextAdapter().encode(decodedCourse)
+        val actualValue = CanvasContextColAdapter().encode(decodedCourse)
 
         assertEquals(expectedValue, actualValue)
     }
 
     @Test
-    fun unknownContextEncodesCorrectly() {
+    fun `Unknown context encodes correctly`() {
         val expectedValue = "unknown_-1"
         val decodedUnknown = CanvasContext.defaultCanvasContext()
-        val actualValue = CanvasContextAdapter().encode(decodedUnknown)
+        val actualValue = CanvasContextColAdapter().encode(decodedUnknown)
 
         assertEquals(expectedValue, actualValue)
     }

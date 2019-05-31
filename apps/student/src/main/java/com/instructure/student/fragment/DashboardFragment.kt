@@ -40,6 +40,8 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.DashboardRecyclerAdapter
+import com.instructure.student.db.Db
+import com.instructure.student.db.getInstance
 import com.instructure.student.decorations.VerticalGridSpacingDecoration
 import com.instructure.student.dialog.ColorPickerDialog
 import com.instructure.student.dialog.EditCourseNicknameDialog

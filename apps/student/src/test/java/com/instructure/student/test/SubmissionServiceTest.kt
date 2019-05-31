@@ -59,7 +59,7 @@ class SubmissionServiceTest : Assert() {
         assertEquals(SubmissionService.Action.TEXT_ENTRY.name, intent.captured.action)
         assertEquals(canvasContext, intent.captured.getParcelableExtra(Const.CANVAS_CONTEXT))
         assertEquals(assignmentId, intent.captured.getLongExtra(Const.ASSIGNMENT_ID, -1))
-        assertEquals(assignmentName, intent.captured.getStringExtra(Const.ASSIGNMENT))
+        assertEquals(assignmentName, intent.captured.getStringExtra(Const.ASSIGNMENT_NAME))
         assertEquals(text, intent.captured.getStringExtra(Const.MESSAGE))
     }
 
@@ -75,7 +75,7 @@ class SubmissionServiceTest : Assert() {
         assertEquals(SubmissionService.Action.URL_ENTRY.name, intent.captured.action)
         assertEquals(canvasContext, intent.captured.getParcelableExtra(Const.CANVAS_CONTEXT))
         assertEquals(assignmentId, intent.captured.getLongExtra(Const.ASSIGNMENT_ID, -1))
-        assertEquals(assignmentName, intent.captured.getStringExtra(Const.ASSIGNMENT))
+        assertEquals(assignmentName, intent.captured.getStringExtra(Const.ASSIGNMENT_NAME))
         assertEquals(url, intent.captured.getStringExtra(Const.URL))
     }
 
@@ -90,7 +90,7 @@ class SubmissionServiceTest : Assert() {
         assertEquals(SubmissionService.Action.FILE_ENTRY.name, intent.captured.action)
         assertEquals(canvasContext, intent.captured.getParcelableExtra(Const.CANVAS_CONTEXT))
         assertEquals(assignmentId, intent.captured.getLongExtra(Const.ASSIGNMENT_ID, -1))
-        assertEquals(assignmentName, intent.captured.getStringExtra(Const.ASSIGNMENT))
+        assertEquals(assignmentName, intent.captured.getStringExtra(Const.ASSIGNMENT_NAME))
     }
 
     @Test
@@ -104,7 +104,7 @@ class SubmissionServiceTest : Assert() {
         assertEquals(SubmissionService.Action.MEDIA_ENTRY.name, intent.captured.action)
         assertEquals(canvasContext, intent.captured.getParcelableExtra(Const.CANVAS_CONTEXT))
         assertEquals(assignmentId, intent.captured.getLongExtra(Const.ASSIGNMENT_ID, -1))
-        assertEquals(assignmentName, intent.captured.getStringExtra(Const.ASSIGNMENT))
+        assertEquals(assignmentName, intent.captured.getStringExtra(Const.ASSIGNMENT_NAME))
     }
 
     @Test
@@ -119,8 +119,7 @@ class SubmissionServiceTest : Assert() {
         assertEquals(SubmissionService.Action.ARC_ENTRY.name, intent.captured.action)
         assertEquals(canvasContext, intent.captured.getParcelableExtra(Const.CANVAS_CONTEXT))
         assertEquals(assignmentId, intent.captured.getLongExtra(Const.ASSIGNMENT_ID, -1))
-        assertEquals(assignmentName, intent.captured.getStringExtra(Const.ASSIGNMENT))
+        assertEquals(assignmentName, intent.captured.getStringExtra(Const.ASSIGNMENT_NAME))
         assertEquals(url, intent.captured.getStringExtra(Const.URL))
     }
-
 }

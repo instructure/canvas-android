@@ -17,7 +17,7 @@
 package com.instructure.student.db
 
 import com.instructure.student.Submission
-import com.instructure.student.db.sqlColAdapters.CanvasContextAdapter
+import com.instructure.student.db.sqlColAdapters.CanvasContextColAdapter
 import com.instructure.student.db.sqlColAdapters.DateAdapter
 import com.squareup.sqldelight.db.SqlDriver
 
@@ -26,7 +26,8 @@ fun createQueryWrapper(driver: SqlDriver): StudentDb {
         driver = driver,
         submissionAdapter = Submission.Adapter(
             lastActivityDateAdapter = DateAdapter(),
-            canvasContextAdapter = CanvasContextAdapter()
+            canvasContextAdapter = CanvasContextColAdapter()
+
         )
     )
 }

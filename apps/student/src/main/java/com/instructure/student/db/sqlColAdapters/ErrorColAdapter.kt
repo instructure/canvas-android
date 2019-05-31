@@ -12,19 +12,12 @@
  *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
- *
  */
 package com.instructure.student.db.sqlColAdapters
 
 import com.squareup.sqldelight.ColumnAdapter
-import com.instructure.canvasapi2.models.CanvasContext
 
-class CanvasContextAdapter : ColumnAdapter<CanvasContext, String> {
-    override fun decode(databaseValue: String): CanvasContext {
-       return CanvasContext.fromContextCode(databaseValue) ?: CanvasContext.defaultCanvasContext()
-    }
-
-    override fun encode(value: CanvasContext): String {
-        return value.contextId
-    }
+class ErrorColAdapter : ColumnAdapter<Boolean, Int> {
+    override fun decode(databaseValue: Int) = databaseValue == 1
+    override fun encode(value: Boolean) = if (value) 1 else 0
 }
