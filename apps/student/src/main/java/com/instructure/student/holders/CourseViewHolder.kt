@@ -19,6 +19,7 @@ package com.instructure.student.holders
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.ColorStateList
 import android.view.Gravity
 import android.view.View
 import android.widget.TextView
@@ -47,7 +48,14 @@ class CourseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         cardView.setCardBackgroundColor(course.color)
         titleTextView.setTextColor(course.color)
 
-        courseImageView.setCourseImage(course, course.color)
+        courseImageView.setCourseImage(
+            course = course,
+            courseColor = course.color,
+            applyColor = !StudentPrefs.hideCourseColorOverlay
+        )
+
+        courseColorIndicator.backgroundTintList = ColorStateList.valueOf(course.color)
+        courseColorIndicator.setVisible(StudentPrefs.hideCourseColorOverlay)
 
         cardView.setOnClickListener { callback.onCourseSelected(course)}
 

@@ -217,6 +217,34 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/navigationDrawerItem_colorOverlay"
+                style="@style/NavigationDrawerItem"
+                android:background="@null"
+                tools:ignore="UseCompoundDrawables">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    style="@style/NavigationDrawerIcon"
+                    android:padding="3dp"
+                    android:tint="@color/defaultTextDark"
+                    app:srcCompat="@drawable/vd_courses"/>
+
+                <TextView
+                    style="@style/TextFont.Medium"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:labelFor="@+id/navigationDrawerShowGradesSwitch"
+                    android:text="@string/colorOverlay"
+                    android:textSize="16sp"/>
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/navigationDrawerColorOverlaySwitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
             <!--Where we dynamically add items from the Launch Definitions API (Arc, etc) (Except Gauge we support that above)-->
             <FrameLayout
                 android:id="@+id/navigationDrawerLaunchDefinitions"

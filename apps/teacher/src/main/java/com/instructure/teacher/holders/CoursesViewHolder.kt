@@ -16,17 +16,17 @@
 
 package com.instructure.teacher.holders
 
+import android.content.res.ColorStateList
 import android.view.Gravity
 import android.view.View
 import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.Course
-import com.instructure.pandautils.utils.ColorKeeper
-import com.instructure.pandautils.utils.onClickWithRequireNetwork
-import com.instructure.pandautils.utils.setCourseImage
+import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
 import com.instructure.teacher.utils.Const.COURSE_EDIT_COLOR_ID
 import com.instructure.teacher.utils.Const.COURSE_EDIT_NAME_ID
+import com.instructure.teacher.utils.TeacherPrefs
 import kotlinx.android.synthetic.main.adapter_courses.view.*
 
 
@@ -44,7 +44,10 @@ class CoursesViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         cardView.setCardBackgroundColor(courseColor)
         titleTextView.setTextColor(courseColor)
 
-        courseImageView.setCourseImage(course, courseColor)
+        courseImageView.setCourseImage(course, courseColor, !TeacherPrefs.hideCourseColorOverlay)
+
+        courseColorIndicator.backgroundTintList = ColorStateList.valueOf(course.color)
+        courseColorIndicator.setVisible(TeacherPrefs.hideCourseColorOverlay)
 
         cardView.setOnClickListener { callback?.onShowCourseDetails(course) }
 

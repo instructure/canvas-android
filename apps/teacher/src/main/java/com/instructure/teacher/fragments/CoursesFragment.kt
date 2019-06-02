@@ -30,6 +30,7 @@ import com.instructure.teacher.activities.InitActivity
 import com.instructure.teacher.adapters.CoursesAdapter
 import com.instructure.teacher.decorations.VerticalGridSpacingDecoration
 import com.instructure.teacher.dialog.NoInternetConnectionDialog
+import com.instructure.teacher.events.CourseColorOverlayToggledEvent
 import com.instructure.teacher.events.CourseUpdatedEvent
 import com.instructure.teacher.factory.CoursesPresenterFactory
 import com.instructure.teacher.holders.CoursesViewHolder
@@ -185,6 +186,12 @@ class CoursesFragment : BaseSyncFragment<Course, CoursesPresenter, CoursesView, 
     companion object {
         @JvmStatic
         fun getInstance() = CoursesFragment()
+    }
+
+    @Suppress("unused", "UNUSED_PARAMETER")
+    @Subscribe(sticky = true)
+    fun onColorOverlayToggled(event: CourseColorOverlayToggledEvent) {
+        mAdapter?.notifyDataSetChanged()
     }
 
     @Suppress("unused")

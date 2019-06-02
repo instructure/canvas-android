@@ -326,7 +326,11 @@ protected constructor(var statusCallback: StatusCallback<*>?, private val authUs
                 val regex = Regex(pattern)
                 val urls = okHttpClient.cache()?.urls() ?: return
                 while (urls.hasNext()) {
-                    if (regex.containsMatchIn(urls.next())) urls.remove()
+                    val next = urls.next()
+                    if (regex.containsMatchIn(next)) {
+                        urls.remove()
+                        Logger.d("Clearing cached url: $next")
+                    }
                 }
             }
         }

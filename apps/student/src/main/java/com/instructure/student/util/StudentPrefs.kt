@@ -26,6 +26,8 @@ object StudentPrefs : PrefManager("candroidSP") {
     @JvmStatic
     var showGradesOnCard by BooleanPref(true)
 
+    var hideCourseColorOverlay by BooleanPref(false)
+
     @JvmStatic
     var weekStartsOnMonday by BooleanPref(false, "calendarStartDayPrefs")
 

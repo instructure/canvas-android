@@ -28,6 +28,7 @@ import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.AllCoursesAdapter
 import com.instructure.teacher.decorations.VerticalGridSpacingDecoration
+import com.instructure.teacher.events.CourseColorOverlayToggledEvent
 import com.instructure.teacher.factory.AllCoursesPresenterFactory
 import com.instructure.teacher.holders.CoursesViewHolder
 import com.instructure.teacher.presenters.AllCoursesPresenter
@@ -36,6 +37,8 @@ import com.instructure.teacher.utils.setupBackButton
 import com.instructure.teacher.viewinterface.AllCoursesView
 import kotlinx.android.synthetic.main.fragment_all_courses.*
 import kotlinx.android.synthetic.main.recycler_swipe_refresh_layout.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 
 class AllCoursesFragment : BaseSyncFragment<Course, AllCoursesPresenter, AllCoursesView, CoursesViewHolder, AllCoursesAdapter>(), AllCoursesView {
 
@@ -102,6 +105,16 @@ class AllCoursesFragment : BaseSyncFragment<Course, AllCoursesPresenter, AllCour
         mCourseBrowserCallback = null
     }
 
+    override fun onStart() {
+        super.onStart()
+        EventBus.getDefault().register(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        EventBus.getDefault().unregister(this)
+    }
+
     override fun getAdapter(): AllCoursesAdapter {
         if (mAdapter == null) {
             mAdapter = AllCoursesAdapter(requireActivity(), presenter, mCourseBrowserCallback)
@@ -123,6 +136,12 @@ class AllCoursesFragment : BaseSyncFragment<Course, AllCoursesPresenter, AllCour
 
     override fun checkIfEmpty() {
         RecyclerViewUtils.checkIfEmpty(emptyPandaView, mRecyclerView, swipeRefreshLayout, adapter, presenter.isEmpty)
+    }
+
+    @Suppress("unused", "UNUSED_PARAMETER")
+    @Subscribe(sticky = true)
+    fun onColorOverlayToggled(event: CourseColorOverlayToggledEvent) {
+        mAdapter?.notifyDataSetChanged()
     }
 
     companion object {

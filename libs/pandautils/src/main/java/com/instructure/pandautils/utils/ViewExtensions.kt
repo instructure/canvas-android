@@ -52,6 +52,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.DownsampleStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.signature.ObjectKey
@@ -366,19 +367,23 @@ fun View.onClickWithRequireNetwork(clickListener: (v: View) -> Unit) = onClick {
  * desaturated, and overlaid with the specified color at 75% opacity.
  */
 @JvmName("setCourseImage")
-fun ImageView?.setCourseImage(course: Course?, courseColor: Int) {
+fun ImageView?.setCourseImage(course: Course?, courseColor: Int, applyColor: Boolean) {
     if (this == null) return
     if (!course?.imageUrl.isNullOrBlank()) {
         val requestOptions = RequestOptions().apply {
-            signature(ObjectKey("${course!!.imageUrl}:$courseColor")) // Use unique signature per url-color combo
-            transform(CourseImageTransformation(courseColor))
+            if (applyColor) {
+                signature(ObjectKey("${course!!.imageUrl}:$courseColor")) // Use unique signature per url-color combo
+                transform(CourseImageTransformation(courseColor))
+            } else {
+                transform(CenterCrop())
+            }
             placeholder(ColorDrawable(courseColor))
         }
         Glide.with(context)
-                .load(course!!.imageUrl)
-                .apply(requestOptions)
-                .transition(DrawableTransitionOptions.withCrossFade())
-                .into(this)
+            .load(course!!.imageUrl)
+            .apply(requestOptions)
+            .transition(DrawableTransitionOptions.withCrossFade())
+            .into(this)
     } else {
         setImageDrawable(ColorDrawable(courseColor))
     }
@@ -391,7 +396,7 @@ private class CourseImageTransformation(val overlayColor: Int) : CenterCrop() {
         val cropped = super.transform(pool, toTransform, outWidth, outHeight)
         with(Canvas(cropped)) {
             // Draw image in grayscale
-            drawBitmap(cropped, 0f, 0f, CourseImageTransformation.Companion.grayscalePaint)
+            drawBitmap(cropped, 0f, 0f, grayscalePaint)
             // Draw color overlay at 75% (0xBF) opacity
             drawColor(overlayColor and 0xBFFFFFFF.toInt())
         }

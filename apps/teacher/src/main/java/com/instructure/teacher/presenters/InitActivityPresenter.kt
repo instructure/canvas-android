@@ -16,16 +16,25 @@
 
 package com.instructure.teacher.presenters
 
+import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.managers.LaunchDefinitionsManager
 import com.instructure.canvasapi2.managers.ToDoManager
+import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.LaunchDefinition
 import com.instructure.canvasapi2.models.ToDo
 import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
+import com.instructure.teacher.events.CourseColorOverlayToggledEvent
+import com.instructure.teacher.utils.TeacherPrefs
 import com.instructure.teacher.viewinterface.InitActivityView
 import instructure.androidblueprint.Presenter
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import org.greenrobot.eventbus.EventBus
 
 class InitActivityPresenter : Presenter<InitActivityView> {
 
@@ -34,6 +43,7 @@ class InitActivityPresenter : Presenter<InitActivityView> {
 
     private var view: InitActivityView? = null
     private var apiCall: WeaveJob? = null
+    private var colorOverlayJob: Job? = null
 
     override fun onViewAttached(view: InitActivityView): InitActivityPresenter {
         this.view = view
@@ -57,6 +67,22 @@ class InitActivityPresenter : Presenter<InitActivityView> {
 
         } catch {
             it.printStackTrace()
+        }
+    }
+
+    fun setHideColorOverlay(hide: Boolean) {
+        colorOverlayJob?.cancel()
+        colorOverlayJob = GlobalScope.launch(Dispatchers.Main) {
+            UserManager.setHideColorOverlay(hide).await()
+                .onSuccess {
+                    TeacherPrefs.hideCourseColorOverlay = it.hideDashCardColorOverlays
+                    CanvasRestAdapter.clearCacheUrls("""/users/self/settings""")
+                    EventBus.getDefault().post(CourseColorOverlayToggledEvent())
+                    view?.updateColorOverlaySwitch(!it.hideDashCardColorOverlays, false)
+                }
+                .onFailure {
+                    view?.updateColorOverlaySwitch(hide, true)
+                }
         }
     }
 

@@ -202,3 +202,5 @@ class FileFolderUpdatedEvent(val updatedFileFolder: FileFolder, skipId: String? 
 class SectionsUpdatedEvent
 
 class SubmissionFilterChangedEvent(val filterIndex: Int = -1, val canvasContext: ArrayList<CanvasContext>? = null)
+
+class CourseColorOverlayToggledEvent

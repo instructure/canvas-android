@@ -102,6 +102,11 @@ class SplashActivity : AppCompatActivity() {
                     return@weave
                 }
 
+                // Get course color overlay setting
+                UserManager.getSelfSettings(false).await().onSuccess {
+                    TeacherPrefs.hideCourseColorOverlay = it.hideDashCardColorOverlays
+                }
+
                 // Grab colors
                 if (ColorKeeper.hasPreviouslySynced) {
                     UserManager.getColors(mUserColorsCallback, true)

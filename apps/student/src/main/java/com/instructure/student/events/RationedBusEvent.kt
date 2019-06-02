@@ -150,5 +150,6 @@ class ModuleUpdatedEvent(moduleObject: ModuleObject, skipId: String? = null) : R
 
 
 object ShowGradesToggledEvent
+object CourseColorOverlayToggledEvent
 object RecipientsListModifiedEvent
 object CoreDataFinishedLoading
