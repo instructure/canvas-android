@@ -67,6 +67,11 @@ class CoursesPresenter : SyncPresenter<Course, CoursesView>(Course::class.java) 
             }
     }
 
+    override fun onDestroyed() {
+        super.onDestroyed()
+        dashboardJob?.cancel()
+    }
+
     override fun refresh(forceNetwork: Boolean) {
         onRefreshStarted()
         dashboardJob?.cancel()
