@@ -90,6 +90,7 @@
                     android:layout_below="@+id/txtOverallGrade"
                     android:layout_marginBottom="4dp"
                     android:orientation="horizontal"
+                    android:importantForAccessibility="no"
                     android:paddingLeft="12dp"
                     android:paddingRight="12dp">
 
@@ -99,12 +100,23 @@
                         android:layout_height="wrap_content"
                         android:checked="true" />
 
+                    <!-- Mark not important for a11y to prevent TalkBack from reading the label redundantly (see below comment) -->
                     <TextView
                         style="@style/TextStyle.Tertiary.Dark"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
+                        android:importantForAccessibility="no"
                         android:layout_weight="1"
+                        android:text="@string/checkBoxFinalGradeOption" />
+
+                    <!-- TalkBack reads the 'labelFor' TextView as a label, as well as the TextView text like normal. Here we're trying to prevent it from reading the  -->
+                    <!-- label the second time, so we mark what would have been the label as not important for accessibility (see the above TextView) and create a dummy TextView -->
+                    <!-- with no width/height with the label text in it so TalkBack will read the label correctly but not allow it to focus on the TextView to read its contents again -->
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:labelFor="@id/showTotalCheckBox"
                         android:text="@string/checkBoxFinalGradeOption" />
 
                 </LinearLayout>
@@ -127,12 +139,24 @@
                         android:layout_height="wrap_content"
                         android:checked="false" />
 
+                    <!-- Mark not important for a11y to prevent TalkBack from reading the label redundantly (see below comment) -->
                     <TextView
                         style="@style/TextStyle.Tertiary.Dark"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_weight="1"
+                        android:focusable="false"
+                        android:importantForAccessibility="no"
+                        android:text="@string/checkBoxWhatIfGradeOption" />
+
+                    <!-- TalkBack reads the 'labelFor' TextView as a label, as well as the TextView text like normal. Here we're trying to prevent it from reading the  -->
+                    <!-- label the second time, so we mark what would have been the label as not important for accessibility (see the above TextView) and create a dummy TextView -->
+                    <!-- with no width/height with the label text in it so TalkBack will read the label correctly but not allow it to focus on the TextView to read its contents again -->
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:labelFor="@id/showWhatIfCheckBox"
                         android:text="@string/checkBoxWhatIfGradeOption" />
 
                 </LinearLayout>
