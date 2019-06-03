@@ -30,6 +30,7 @@ object SeedApi {
             val teachers: Int = 0,
             val students: Int = 0,
             val courses: Int = 0,
+            val pastCourses: Int = 0,
             val favoriteCourses: Int = 0,
             val gradingPeriods: Boolean = false,
             val discussions: Int = 0,
@@ -89,7 +90,7 @@ object SeedApi {
         val seededData = SeededDataApiModel()
 
         with(seededData) {
-            for (c in 0 until maxOf(request.courses, request.favoriteCourses)) {
+            for (c in 0 until maxOf(request.courses + request.pastCourses, request.favoriteCourses)) {
                 // Seed course
                 addCourses(createCourse(request.gradingPeriods))
 
@@ -103,6 +104,11 @@ object SeedApi {
                     addStudents(UserApi.createCanvasUser())
                     addEnrollments(EnrollmentsApi.enrollUserAsStudent(coursesList[c].id, studentsList[s].id))
                 }
+            }
+
+            // Make the last x courses concluded to keep the first ones as favorites
+            for (c in coursesList.size - request.pastCourses until coursesList.size) {
+                CoursesApi.concludeCourse(coursesList[c].id)
             }
 
             // Seed favorite courses

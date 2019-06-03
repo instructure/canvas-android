@@ -38,4 +38,11 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         onViewWithText("Courses").assertDisplayed()
         onViewWithText("See All").assertDisplayed()
     }
+
+    fun assertDisplaysAddCourseMessage() {
+        emptyView.assertDisplayed()
+        onViewWithText(R.string.welcome).assertDisplayed()
+        onViewWithText(R.string.emptyCourseListMessage).assertDisplayed()
+        onViewWithId(R.id.addCoursesButton).assertDisplayed()
+    }
 }

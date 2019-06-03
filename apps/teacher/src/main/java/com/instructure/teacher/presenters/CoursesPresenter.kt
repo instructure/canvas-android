@@ -15,18 +15,20 @@
  */
 package com.instructure.teacher.presenters
 
-import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DashboardCard
-import com.instructure.canvasapi2.utils.ApiType
-import com.instructure.canvasapi2.utils.LinkHeaders
+import com.instructure.canvasapi2.utils.weave.apiAsync
 import com.instructure.teacher.viewinterface.CoursesView
 import instructure.androidblueprint.SyncPresenter
-import retrofit2.Call
-import retrofit2.Response
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 class CoursesPresenter : SyncPresenter<Course, CoursesView>(Course::class.java) {
+
+    private var dashboardJob: Job? = null
 
     override fun loadData(forceNetwork: Boolean) {
         if (forceNetwork) {
@@ -38,60 +40,38 @@ class CoursesPresenter : SyncPresenter<Course, CoursesView>(Course::class.java) 
         }
 
         onRefreshStarted()
-        CourseManager.getCourses(forceNetwork, mCoursesCallback)
+
+        dashboardJob = GlobalScope.launch(Dispatchers.Main) {
+            loadCourses(forceNetwork)
+        }
     }
 
-    override fun refresh(forceNetwork: Boolean) {
-        onRefreshStarted()
-        mCoursesCallback.reset()
-        mDashboardCallback?.reset()
-        clearData()
-        loadData(forceNetwork)
-    }
-
-    private var mDashboardCallback: StatusCallback<List<DashboardCard>>? = null
-    private val mCoursesCallback = object : StatusCallback<List<Course>>() {
-        override fun onResponse(response: Response<List<Course>>, linkHeaders: LinkHeaders, type: ApiType) {
-            val courses = response.body()
-            if (courses.isNullOrEmpty()) {
-                notifyRefreshFinished()
-            } else {
-                addIfOnDashboard(courses)
+    private suspend fun loadCourses(forceNetwork: Boolean) {
+        apiAsync<List<Course>> { CourseManager.getCourses(forceNetwork, it) }.await()
+            .onFailure { notifyRefreshFinished() }
+            .onSuccess { courses ->
+                // Make a call to get which courses are visible on the dashboard as well as their position
+                loadCards(forceNetwork, courses)
             }
-        }
-
-        override fun onFail(call: Call<List<Course>>?, error: Throwable, response: Response<*>?) {
-            super.onFail(call, error, response)
-            notifyRefreshFinished()
-        }
     }
 
-    private fun addIfOnDashboard(courses: List<Course>) {
-        mDashboardCallback = object : StatusCallback<List<DashboardCard>>() {
-            override fun onResponse(
-                response: Response<List<DashboardCard>>,
-                linkHeaders: LinkHeaders,
-                type: ApiType
-            ) {
-                val dashboardCourses = response.body() ?: return
+    private suspend fun loadCards(forceNetwork: Boolean, courses: List<Course>) {
+        apiAsync<List<DashboardCard>> { CourseManager.getDashboardCourses(forceNetwork, it) }.await()
+            .onFailure { notifyRefreshFinished() }
+            .onSuccess { dashboardCourses ->
                 val courseMap = courses.associateBy { it.id }
                 val validCourses = dashboardCourses.mapNotNull { courseMap[it.id] }
 
                 data.addOrUpdate(validCourses)
                 notifyRefreshFinished()
             }
+    }
 
-            override fun onFail(
-                call: Call<List<DashboardCard>>?,
-                error: Throwable,
-                response: Response<*>?
-            ) {
-                super.onFail(call, error, response)
-                notifyRefreshFinished()
-            }
-        }
-
-        CourseManager.getDashboardCourses(true, mDashboardCallback!!)
+    override fun refresh(forceNetwork: Boolean) {
+        onRefreshStarted()
+        dashboardJob?.cancel()
+        clearData()
+        loadData(forceNetwork)
     }
 
     private fun notifyRefreshFinished() {
