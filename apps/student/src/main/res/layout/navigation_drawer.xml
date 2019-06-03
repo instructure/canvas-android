@@ -225,7 +225,7 @@
 
                 <androidx.appcompat.widget.AppCompatImageView
                     style="@style/NavigationDrawerIcon"
-                    android:padding="3dp"
+                    android:padding="1dp"
                     android:tint="@color/defaultTextDark"
                     app:srcCompat="@drawable/vd_courses"/>
 
