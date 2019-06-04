@@ -33,7 +33,7 @@ object CanvasRestAdapter {
     val clientId = DATA_SEEDING_CLIENT_ID
     val clientSecret = DATA_SEEDING_CLIENT_SECRET
     private var log = true
-    private val TIMEOUT_IN_SECONDS = 60L
+    private val TIMEOUT_IN_SECONDS = 120L
 
     private fun getLoggingInterceptor(): HttpLoggingInterceptor {
         val loggingInterceptor = HttpLoggingInterceptor()
