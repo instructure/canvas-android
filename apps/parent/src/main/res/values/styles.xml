@@ -186,15 +186,15 @@
         <item name="android:importantForAccessibility">no</item>
     </style>
 
-    <style name="NotAParent.CanvasText" parent="TextFont.Medium">
-        <!-- Use SP for all dimens to prevent scaling issues -->
-        <item name="android:layout_width">wrap_content</item>
+    <style name="NotAParent.CanvasWordmark">
+        <item name="android:layout_width">100dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:text">@string/utils_canvas_lowercase_untranslated</item>
-        <item name="android:textColor">@color/login_grayCanvasLogo</item>
-        <item name="android:textSize">40sp</item>
-        <item name="android:layout_marginTop">-12sp</item>
-        <item name="android:layout_marginStart">6sp</item>
+        <item name="android:layout_marginTop">7dp</item>
+        <item name="android:layout_marginStart">7dp</item>
+        <item name="android:adjustViewBounds">true</item>
+        <item name="android:importantForAccessibility">no</item>
+        <item name="android:tint">@color/login_grayCanvasLogo</item>
+        <item name="android:src">@drawable/vd_canvas_wordmark</item>
     </style>
 
     <style name="NotAParent.SubText" parent="TextFont.Medium">
@@ -203,7 +203,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:textSize">10sp</item>
-        <item name="android:layout_marginTop">-12sp</item>
+        <item name="android:layout_marginTop">-2sp</item>
         <item name="android:layout_marginStart">8sp</item>
         <item name="android:textStyle">bold</item>
     </style>

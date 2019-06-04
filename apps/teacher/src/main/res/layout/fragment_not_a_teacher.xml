@@ -52,20 +52,20 @@
             style="@style/NotATeacher.CanvasLogo"
             android:layout_centerVertical="true"
             android:importantForAccessibility="no"
-            android:tint="@color/removeOverrideColor"
+            android:tint="@color/login_studentAppTheme"
             app:srcCompat="@drawable/vd_canvas_logo"/>
 
-        <TextView
-            android:id="@+id/canvasTextStudent"
-            style="@style/NotATeacher.CanvasText"
+        <ImageView
+            android:id="@+id/canvasWordmarkStudent"
+            style="@style/NotATeacher.CanvasWordmark"
             android:layout_toEndOf="@id/studentCanvasLogo"/>
 
         <TextView
             style="@style/NotATeacher.SubText"
-            android:layout_below="@id/canvasTextStudent"
+            android:layout_below="@+id/canvasWordmarkStudent"
             android:layout_toEndOf="@id/studentCanvasLogo"
             android:text="@string/appUserTypeStudent"
-            android:textColor="@color/removeOverrideColor"/>
+            android:textColor="@color/login_studentAppTheme"/>
 
     </RelativeLayout>
 
@@ -80,20 +80,20 @@
             style="@style/NotATeacher.CanvasLogo"
             android:layout_centerVertical="true"
             android:importantForAccessibility="no"
-            android:tint="@color/canvasDefaultButton"
+            android:tint="@color/login_parentAppTheme"
             app:srcCompat="@drawable/vd_canvas_logo"/>
 
-        <TextView
-            android:id="@+id/canvasTextParent"
-            style="@style/NotATeacher.CanvasText"
+        <ImageView
+            android:id="@+id/canvasWordmarkParent"
+            style="@style/NotATeacher.CanvasWordmark"
             android:layout_toEndOf="@id/parentCanvasLogo"/>
 
         <TextView
             style="@style/NotATeacher.SubText"
-            android:layout_below="@id/canvasTextParent"
+            android:layout_below="@+id/canvasWordmarkParent"
             android:layout_toEndOf="@id/parentCanvasLogo"
             android:text="@string/appUserTypeParent"
-            android:textColor="@color/canvasDefaultButton"/>
+            android:textColor="@color/login_parentAppTheme"/>
 
     </RelativeLayout>
 
