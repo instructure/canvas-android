@@ -54,7 +54,6 @@ object CanvasRestAdapter {
                 .addInterceptor(getLoggingInterceptor())
                 .addInterceptor(RestRetryInterceptor)
                 .readTimeout(TIMEOUT_IN_SECONDS, TimeUnit.SECONDS)
-                .connectTimeout(TIMEOUT_IN_SECONDS, TimeUnit.SECONDS)
                 .build()
     }
 
@@ -67,7 +66,6 @@ object CanvasRestAdapter {
                 .addInterceptor(getLoggingInterceptor())
                 .addInterceptor(RestRetryInterceptor)
                 .readTimeout(TIMEOUT_IN_SECONDS, TimeUnit.SECONDS)
-                .connectTimeout(TIMEOUT_IN_SECONDS, TimeUnit.SECONDS)
                 .build()
     }
 
@@ -77,7 +75,6 @@ object CanvasRestAdapter {
                 .addInterceptor(getLoggingInterceptor())
                 .addInterceptor(RestRetryInterceptor)
                 .readTimeout(TIMEOUT_IN_SECONDS, TimeUnit.SECONDS)
-                .connectTimeout(TIMEOUT_IN_SECONDS, TimeUnit.SECONDS)
                 .build()
     }
 
