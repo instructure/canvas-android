@@ -36,6 +36,7 @@ import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsContentType
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsEvent
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.MediaSubmissionViewFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.QuizSubmissionViewFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.DiscussionSubmissionViewFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.TextSubmissionViewFragment
@@ -192,6 +193,7 @@ class SubmissionDetailsView(
             is SubmissionDetailsContentType.QuizContent -> QuizSubmissionViewFragment.newInstance(type.url)
             is SubmissionDetailsContentType.TextContent -> TextSubmissionViewFragment.newInstance(type.text)
             is SubmissionDetailsContentType.DiscussionContent -> DiscussionSubmissionViewFragment.newInstance(type.previewUrl ?: "")
+            is SubmissionDetailsContentType.MediaContent -> MediaSubmissionViewFragment.newInstance(type)
             else -> PlaceholderFragment().apply {
                 typeName = type::class.java.simpleName
                 typeContents = type.toString()
