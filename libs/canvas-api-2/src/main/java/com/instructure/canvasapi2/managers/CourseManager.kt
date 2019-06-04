@@ -59,6 +59,14 @@ object CourseManager {
     }
 
     @JvmStatic
+    fun getDashboardCourses(forceNetwork: Boolean, callback: StatusCallback<List<DashboardCard>>) {
+        val adapter = RestBuilder(callback)
+        val params = RestParams(isForceReadFromNetwork = forceNetwork)
+
+        CourseAPI.getDashboardCourses(adapter, callback, params)
+    }
+
+    @JvmStatic
     fun getCoursesWithSyllabus(forceNetwork: Boolean, callback: StatusCallback<List<Course>>) {
         val adapter = RestBuilder(callback)
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)

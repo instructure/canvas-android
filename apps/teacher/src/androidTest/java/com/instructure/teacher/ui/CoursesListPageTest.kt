@@ -36,7 +36,7 @@ class CoursesListPageTest : TeacherTest() {
     @Ditto
     @TestRail(ID = "C3109494")
     fun displaysNoCoursesView() {
-        logIn()
+        logIn(defaultToPastCourse = true)
         coursesListPage.assertDisplaysNoCoursesView()
     }
 

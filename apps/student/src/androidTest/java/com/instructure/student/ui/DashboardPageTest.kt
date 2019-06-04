@@ -35,12 +35,19 @@ class DashboardPageTest : StudentTest() {
     @Test
     @Ditto
     fun displaysAddCourseMessage() {
-        getToDashboard()
+        getToDashboard(courseCount = 0, pastCourseCount = 1)
         dashboardPage.assertDisplaysAddCourseMessage()
     }
 
-    private fun getToDashboard(courseCount: Int = 1) : SeedApi.SeededDataApiModel {
-        val data = seedData(students = 1, courses = courseCount)
+    @Test
+    @Ditto
+    fun displaysCourses() {
+        getToDashboard()
+        dashboardPage.assertDisplaysCourses()
+    }
+
+    private fun getToDashboard(courseCount: Int = 1, pastCourseCount: Int = 0) : SeedApi.SeededDataApiModel {
+        val data = seedData(students = 1, courses = courseCount, pastCourses = pastCourseCount)
         tokenLogin(data.studentsList[0])
         return data
     }
