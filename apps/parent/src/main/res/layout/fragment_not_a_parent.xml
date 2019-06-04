@@ -56,14 +56,14 @@
             android:tint="@color/login_studentAppTheme"
             app:srcCompat="@drawable/vd_canvas_logo"/>
 
-        <TextView
-            android:id="@+id/canvasTextStudent"
-            style="@style/NotAParent.CanvasText"
+        <ImageView
+            android:id="@+id/canvasWordmarkStudent"
+            style="@style/NotAParent.CanvasWordmark"
             android:layout_toEndOf="@id/studentCanvasLogo"/>
 
         <TextView
             style="@style/NotAParent.SubText"
-            android:layout_below="@id/canvasTextStudent"
+            android:layout_below="@+id/canvasWordmarkStudent"
             android:layout_toEndOf="@id/studentCanvasLogo"
             android:text="@string/appUserTypeStudent"
             android:textColor="@color/login_studentAppTheme"/>
@@ -85,14 +85,14 @@
             android:tint="@color/login_teacherAppTheme"
             app:srcCompat="@drawable/vd_canvas_logo"/>
 
-        <TextView
-            android:id="@+id/canvasTextParent"
-            style="@style/NotAParent.CanvasText"
+        <ImageView
+            android:id="@+id/canvasWordmarkTeacher"
+            style="@style/NotAParent.CanvasWordmark"
             android:layout_toEndOf="@id/teacherCanvasLogo"/>
 
         <TextView
             style="@style/NotAParent.SubText"
-            android:layout_below="@id/canvasTextParent"
+            android:layout_below="@+id/canvasWordmarkTeacher"
             android:layout_toEndOf="@id/teacherCanvasLogo"
             android:text="@string/appUserTypeTeacher"
             android:textColor="@color/login_teacherAppTheme"/>
