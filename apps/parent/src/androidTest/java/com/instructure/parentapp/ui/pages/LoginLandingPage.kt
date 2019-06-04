@@ -31,7 +31,7 @@ class LoginLandingPage : BasePage() {
     private val previousLoginTitleText by  OnViewWithId(R.id.previousLoginTitleText, autoAssert = false)
     private val previousLoginDivider by  OnViewWithId(R.id.previousLoginDivider, autoAssert = false)
     private val previousLoginRecyclerView by  OnViewWithId(R.id.previousLoginRecyclerView, autoAssert = false)
-    private val canvasNameTextView by OnViewWithId(R.id.canvasName, autoAssert = false)
+    private val canvasWordmarkView by OnViewWithId(R.id.canvasWordmark, autoAssert = false)
     private val appDescriptionTypeTextView by OnViewWithId(R.id.appDescriptionType, autoAssert = false)
 
     fun clickFindMySchoolButton() {
@@ -42,8 +42,8 @@ class LoginLandingPage : BasePage() {
         canvasNetworkTextView.click()
     }
 
-    fun assertDisplaysCanvasName() {
-        canvasNameTextView.assertDisplayed()
+    fun assertDisplaysCanvasWordmark() {
+        canvasWordmarkView.assertDisplayed()
     }
 
     fun assertDisplaysAppDescriptionType() {
