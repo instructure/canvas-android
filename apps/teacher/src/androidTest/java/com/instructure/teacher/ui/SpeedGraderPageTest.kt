@@ -55,7 +55,6 @@ class SpeedGraderPageTest : TeacherTest() {
     fun opensToCorrectSubmission() {
         val data = goToSpeedGraderPage(students = 4, submissionType = ONLINE_TEXT_ENTRY)
         val students = data.students
-        speedGraderPage.clickBackButton()
         for (i in 0 until students.size) {
             val student = students[i]
             assignmentSubmissionListPage.clickSubmission(student)

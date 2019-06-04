@@ -12,19 +12,13 @@
  *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
- *
  */
-package com.instructure.student.db
 
-import android.content.Context
-import com.squareup.sqldelight.android.AndroidSqliteDriver
+package com.instructure.canvasapi2.models
 
-const val DB_NAME = "student.db"
+import kotlinx.android.parcel.Parcelize
 
-fun Db.getInstance(context: Context): StudentDb {
-    if (!ready)
-        // Note: To use an in-memory database (for testing purposes), pass in 'null' for the name argument or don't pass anything at all (null by default)
-        dbSetup(AndroidSqliteDriver(Schema, context, DB_NAME))
-
-    return instance
-}
+@Parcelize
+data class DashboardCard(
+    override val id: Long = 0
+) : CanvasModel<DashboardCard>()

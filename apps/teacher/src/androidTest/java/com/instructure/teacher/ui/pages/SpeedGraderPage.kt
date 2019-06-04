@@ -18,6 +18,7 @@ package com.instructure.teacher.ui.pages
 import androidx.annotation.StringRes
 import androidx.test.InstrumentationRegistry
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
 import com.instructure.dataseeding.model.CanvasUserApiModel
@@ -89,11 +90,15 @@ class SpeedGraderPage : BasePage() {
     }
 
     fun clickBackButton() {
-        Espresso.onView(Matchers.allOf(
-                ViewMatchers.withContentDescription(androidx.appcompat.R.string.abc_action_bar_up_description),
-                ViewMatchers.isCompletelyDisplayed()
-
-        )).click()
+        try {
+            Espresso.onView(
+                Matchers.allOf(
+                    ViewMatchers.withContentDescription(androidx.appcompat.R.string.abc_action_bar_up_description),
+                    ViewMatchers.isCompletelyDisplayed(),
+                    ViewMatchers.isDescendantOfA(ViewMatchers.withId(R.id.speedGraderToolbar))
+                )
+            ).click()
+        } catch (e: NoMatchingViewException) {}
     }
 
     fun assertPageCount(count: Int) {

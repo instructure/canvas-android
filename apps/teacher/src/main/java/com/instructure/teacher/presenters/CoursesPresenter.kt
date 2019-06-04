@@ -15,16 +15,20 @@
  */
 package com.instructure.teacher.presenters
 
-import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.utils.ApiType
-import com.instructure.canvasapi2.utils.LinkHeaders
-import com.instructure.teacher.utils.hasActiveEnrollment
+import com.instructure.canvasapi2.models.DashboardCard
+import com.instructure.canvasapi2.utils.weave.apiAsync
 import com.instructure.teacher.viewinterface.CoursesView
 import instructure.androidblueprint.SyncPresenter
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 class CoursesPresenter : SyncPresenter<Course, CoursesView>(Course::class.java) {
+
+    private var dashboardJob: Job? = null
 
     override fun loadData(forceNetwork: Boolean) {
         if (forceNetwork) {
@@ -36,29 +40,48 @@ class CoursesPresenter : SyncPresenter<Course, CoursesView>(Course::class.java) 
         }
 
         onRefreshStarted()
-        CourseManager.getAllFavoriteCourses(forceNetwork, mFavoriteCoursesCallback)
+
+        dashboardJob = GlobalScope.launch(Dispatchers.Main) {
+            loadCourses(forceNetwork)
+        }
+    }
+
+    private suspend fun loadCourses(forceNetwork: Boolean) {
+        apiAsync<List<Course>> { CourseManager.getCourses(forceNetwork, it) }.await()
+            .onFailure { notifyRefreshFinished() }
+            .onSuccess { courses ->
+                // Make a call to get which courses are visible on the dashboard as well as their position
+                loadCards(forceNetwork, courses)
+            }
+    }
+
+    private suspend fun loadCards(forceNetwork: Boolean, courses: List<Course>) {
+        apiAsync<List<DashboardCard>> { CourseManager.getDashboardCourses(forceNetwork, it) }.await()
+            .onFailure { notifyRefreshFinished() }
+            .onSuccess { dashboardCourses ->
+                val courseMap = courses.associateBy { it.id }
+                val validCourses = dashboardCourses.mapNotNull { courseMap[it.id] }
+
+                data.addOrUpdate(validCourses)
+                notifyRefreshFinished()
+            }
+    }
+
+    override fun onDestroyed() {
+        super.onDestroyed()
+        dashboardJob?.cancel()
     }
 
     override fun refresh(forceNetwork: Boolean) {
         onRefreshStarted()
-        mFavoriteCoursesCallback.reset()
+        dashboardJob?.cancel()
         clearData()
         loadData(forceNetwork)
     }
 
-    private val mFavoriteCoursesCallback = object : StatusCallback<List<Course>>() {
-        override fun onResponse(response: retrofit2.Response<List<Course>>, linkHeaders: LinkHeaders, type: ApiType) {
-            val courses = response.body() ?: return
-            val validCourses = courses.filter {
-                it.isFavorite && (it.isTeacher || it.isTA || it.isDesigner) && it.hasActiveEnrollment()
-            }
-            data.addOrUpdate(validCourses)
-        }
-
-        override fun onFinished(type: ApiType) {
-            viewCallback?.onRefreshFinished()
-            viewCallback?.checkIfEmpty()
-        }
+    private fun notifyRefreshFinished() {
+        viewCallback?.onRefreshFinished()
+        viewCallback?.checkIfEmpty()
     }
 
     override fun areItemsTheSame(item1: Course, item2: Course): Boolean {

@@ -49,36 +49,36 @@
                     android:id="@+id/canvasLogo"
                     android:layout_width="64dp"
                     android:layout_height="64dp"
-                    android:layout_marginBottom="-8dp"
                     android:importantForAccessibility="no"
                     app:srcCompat="@drawable/vd_canvas_logo"/>
 
-                <TextView
-                    android:id="@+id/canvasName"
-                    android:layout_width="wrap_content"
+                <ImageView
+                    android:id="@+id/canvasWordmark"
+                    android:layout_width="170dp"
+                    android:layout_marginTop="24dp"
                     android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-medium"
-                    android:text="@string/canvasLowerCase"
-                    android:textColor="@color/login_grayCanvasLogo"
-                    android:textSize="56sp"/>
+                    android:adjustViewBounds="true"
+                    android:layout_marginBottom="2dp"
+                    android:importantForAccessibility="no"
+                    android:tint="@color/login_grayCanvasLogo"
+                    app:srcCompat="@drawable/vd_canvas_wordmark"/>
 
                 <TextView
                     android:id="@+id/appDescriptionType"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="-8dp"
-                    android:fontFamily="sans-serif-black"
+                    android:textStyle="bold"
                     android:text="@string/appUserTypeTeacher"
+                    android:letterSpacing="0.1"
                     android:textAllCaps="true"
                     android:textColor="@color/login_teacherAppTheme"
-                    android:textSize="14sp"
-                    android:textStyle="bold"/>
+                    android:textSize="14sp"/>
 
                 <Button
                     android:id="@+id/findMySchool"
                     style="@style/ButtonStyle"
                     android:layout_width="240dp"
-                    android:layout_marginTop="30dp"
+                    android:layout_marginTop="36dp"
                     android:text="@string/findMySchool"/>
 
                 <TextView

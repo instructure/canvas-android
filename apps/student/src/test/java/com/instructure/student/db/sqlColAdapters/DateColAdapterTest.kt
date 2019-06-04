@@ -17,18 +17,17 @@ package com.instructure.student.db.sqlColAdapters
  */
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.threeten.bp.Instant
 import org.threeten.bp.OffsetDateTime
 import org.threeten.bp.format.DateTimeFormatter
 
 @RunWith(AndroidJUnit4::class)
-class DateAdapterTest {
+class DateColAdapterTest {
 
     @Test
-    fun dateEncodesCorrectly() {
+    fun `Date encodes correctly`() {
         val localDateTime = OffsetDateTime.parse("2019-12-12T06:12:12-06:00")
         val expectedValue = "2019-12-12T12:12:12Z"
         val actualValue = DateAdapter().encode(localDateTime)
@@ -37,7 +36,7 @@ class DateAdapterTest {
     }
 
     @Test
-    fun dateDecodesCorrectly() {
+    fun `Date decodes correctly`() {
         val serverDateTime = "2019-12-12T12:12:12Z"
         val expectedValue = OffsetDateTime.parse(serverDateTime).withOffsetSameInstant(OffsetDateTime.now().offset)
         val actualValue = DateAdapter().decode(serverDateTime)

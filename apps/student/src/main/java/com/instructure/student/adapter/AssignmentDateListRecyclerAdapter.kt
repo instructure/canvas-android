@@ -171,7 +171,7 @@ open class AssignmentDateListRecyclerAdapter(
         }
     }
 
-    override fun contextReady() = Unit
+    override fun contextReady() {}
 
     override fun isPaginated() = false
 
@@ -200,7 +200,7 @@ open class AssignmentDateListRecyclerAdapter(
             canvasContext,
             holder as ExpandableViewHolder,
             assignmentGroup,
-            assignmentGroup.name,
+            assignmentGroup.name ?: "",
             isExpanded,
             viewHolderHeaderClicked
         )

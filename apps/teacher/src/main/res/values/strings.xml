@@ -420,9 +420,8 @@
 
   <string name="not_a_teacher">Not a teacher?</string>
     <string name="not_a_teacher_tap_to_visit_play_store">One of our other apps might be a better fit. Tap one to visit the Play Store.</string>
-    <string name="canvas_lowercase">canvas</string>
 
-  <string name="sg_tab_grade">Grade</string>
+    <string name="sg_tab_grade">Grade</string>
     <string name="sg_tab_comments">Comments</string>
     <string name="sg_tab_files">Files</string>
     <string name="filter_submissions">Filter Submissions</string>

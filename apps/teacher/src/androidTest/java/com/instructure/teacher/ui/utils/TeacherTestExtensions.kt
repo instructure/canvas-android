@@ -67,7 +67,8 @@ fun TeacherTest.slowLogInAsStudent(): CanvasUserApiModel = slowLogIn(EnrollmentT
 
 fun TeacherTest.logIn(
     skipSplash: Boolean = true,
-    enrollmentType: String = EnrollmentTypes.TEACHER_ENROLLMENT
+    enrollmentType: String = EnrollmentTypes.TEACHER_ENROLLMENT,
+    defaultToPastCourse: Boolean = false
 ): CanvasUserApiModel {
     val teacher = mockableSeed {
         UserApi.createCanvasUser()
@@ -77,6 +78,9 @@ fun TeacherTest.logIn(
     }
     mockableSeed {
         EnrollmentsApi.enrollUser(course.id, teacher.id, enrollmentType)
+    }
+    if (defaultToPastCourse) {
+        CoursesApi.concludeCourse(course.id)
     }
 
     activityRule.runOnUiThread {

@@ -55,7 +55,6 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import java.io.File
 import java.util.*
-import kotlin.collections.ArrayList
 
 class UploadFilesDialog : AppCompatDialogFragment() {
 
