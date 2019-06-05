@@ -40,7 +40,7 @@ import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.fragment.ParentFragment
-import com.instructure.student.view.StudentSubmissionView
+import com.instructure.student.view.OldStudentSubmissionView
 import kotlinx.android.synthetic.main.fragment_annotation_comment_list.*
 import kotlinx.coroutines.Job
 import okhttp3.ResponseBody
@@ -111,7 +111,7 @@ class AnnotationCommentListFragment : ParentFragment() {
         editCommentJob?.cancel()
         deleteCommentJob?.cancel()
         EventBus.getDefault().post(
-                StudentSubmissionView.AnnotationCommentDeleteAcknowledged(
+                OldStudentSubmissionView.AnnotationCommentDeleteAcknowledged(
                         annotations.filter { it.deleted && it.deleteAcknowledged.isNullOrEmpty() },
                         assigneeId))
     }
@@ -172,7 +172,7 @@ class AnnotationCommentListFragment : ParentFragment() {
                 val rootComment = annotations.firstOrNull()
                 if (rootComment != null) {
                     val newCommentReply = awaitApi<CanvaDocAnnotation> { CanvaDocsManager.putAnnotation(docSession.apiValues.sessionId, generateAnnotationId(), createCommentReplyAnnotation(comment, headAnnotationId, docSession.apiValues.documentId, ApiPrefs.user?.id.toString(), rootComment.page), docSession.apiValues.canvaDocsDomain, it) }
-                    EventBus.getDefault().post(StudentSubmissionView.AnnotationCommentAdded(newCommentReply, assigneeId))
+                    EventBus.getDefault().post(OldStudentSubmissionView.AnnotationCommentAdded(newCommentReply, assigneeId))
                     // The put request doesn't return this property, so we need to set it to true
                     newCommentReply.isEditable = true
                     recyclerAdapter?.add(newCommentReply) //ALSO, add it to the UI
@@ -190,7 +190,7 @@ class AnnotationCommentListFragment : ParentFragment() {
     private fun editComment(annotation: CanvaDocAnnotation, position: Int) {
         editCommentJob = tryWeave {
             awaitApi<CanvaDocAnnotation> { CanvaDocsManager.putAnnotation(docSession.apiValues.sessionId, annotation.annotationId, annotation, docSession.apiValues.canvaDocsDomain, it) }
-            EventBus.getDefault().post(StudentSubmissionView.AnnotationCommentEdited(annotation, assigneeId))
+            EventBus.getDefault().post(OldStudentSubmissionView.AnnotationCommentEdited(annotation, assigneeId))
             // Update the UI
             recyclerAdapter?.add(annotation)
             recyclerAdapter?.notifyItemChanged(position)
@@ -205,10 +205,10 @@ class AnnotationCommentListFragment : ParentFragment() {
             awaitApi<ResponseBody> { CanvaDocsManager.deleteAnnotation(docSession.apiValues.sessionId, annotation.annotationId, docSession.apiValues.canvaDocsDomain, it) }
             if(annotation.annotationId == annotations.firstOrNull()?.annotationId) {
                 //this is the root comment, deleting this deletes the entire thread
-                EventBus.getDefault().post(StudentSubmissionView.AnnotationCommentDeleted(annotation, true, assigneeId))
+                EventBus.getDefault().post(OldStudentSubmissionView.AnnotationCommentDeleted(annotation, true, assigneeId))
                 headAnnotationDeleted()
             } else {
-                EventBus.getDefault().post(StudentSubmissionView.AnnotationCommentDeleted(annotation, false, assigneeId))
+                EventBus.getDefault().post(OldStudentSubmissionView.AnnotationCommentDeleted(annotation, false, assigneeId))
                 recyclerAdapter?.remove(annotation)
                 recyclerAdapter?.notifyItemChanged(position)
             }

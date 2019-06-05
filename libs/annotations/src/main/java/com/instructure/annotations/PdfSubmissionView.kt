@@ -212,7 +212,7 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
         configureCommentView(commentsButton)
     }
 
-    private fun configureCommentView(commentsButton: ImageView) {
+    open fun configureCommentView(commentsButton: ImageView) {
         //we want to offset the comment button by the height of the action bar
         val typedValue = TypedValue()
         context.theme.resolveAttribute(android.R.attr.actionBarSize, typedValue, true)
@@ -232,7 +232,7 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
         }
     }
 
-    private fun openComments() {
+    protected fun openComments() {
         // Get current annotation in both forms
         val currentPdfAnnotation = pdfFragment?.selectedAnnotations?.get(0)
         val currentAnnotation = currentPdfAnnotation?.convertPDFAnnotationToCanvaDoc(docSession.documentId)
