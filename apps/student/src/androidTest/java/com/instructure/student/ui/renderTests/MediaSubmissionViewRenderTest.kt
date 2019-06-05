@@ -56,24 +56,24 @@ class MediaSubmissionViewRenderTest : StudentRenderTest() {
 
     @Test
     fun displaysErrorView() {
-        Thread.sleep(500)
-//        loadPageWithViewData(mediaTemplate)
-//
-//        page.prepareMediaButton.click()
-//        page.mediaPlaybackErrorView.waitForCheck(matches(isDisplayed()))
-//
-//        page.mediaProgressBar.assertNotDisplayed()
-//        page.submissionMediaPlayerView.assertNotDisplayed()
-//        page.prepareMediaButton.assertNotDisplayed()
+        Thread.sleep(1000)
         loadPageWithViewData(mediaTemplate)
+
+        page.prepareMediaButton.click()
+        page.mediaPlaybackErrorView.waitForCheck(matches(isDisplayed()))
 
         page.mediaProgressBar.assertNotDisplayed()
         page.submissionMediaPlayerView.assertNotDisplayed()
-        page.mediaPlaybackErrorView.assertNotDisplayed()
-
-        page.prepareMediaButton.assertDisplayed()
-        page.prepareMediaButton.click()
-        page.mediaPlaybackErrorView.assertDisplayed()
+        page.prepareMediaButton.assertNotDisplayed()
+//        loadPageWithViewData(mediaTemplate)
+//
+//        page.mediaProgressBar.assertNotDisplayed()
+//        page.submissionMediaPlayerView.assertNotDisplayed()
+//        page.mediaPlaybackErrorView.assertNotDisplayed()
+//
+//        page.prepareMediaButton.assertDisplayed()
+//        page.prepareMediaButton.click()
+//        page.mediaPlaybackErrorView.assertDisplayed()
     }
 
     private fun loadPageWithViewData(data: SubmissionDetailsContentType.MediaContent): MediaSubmissionViewFragment {
