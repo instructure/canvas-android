@@ -71,6 +71,8 @@ class MediaSubmissionViewRenderTest : StudentRenderTest() {
         page.mediaPlaybackErrorView.assertNotDisplayed()
 
         page.prepareMediaButton.assertDisplayed()
+        page.prepareMediaButton.click()
+        page.mediaPlaybackErrorView.assertDisplayed()
     }
 
     private fun loadPageWithViewData(data: SubmissionDetailsContentType.MediaContent): MediaSubmissionViewFragment {
