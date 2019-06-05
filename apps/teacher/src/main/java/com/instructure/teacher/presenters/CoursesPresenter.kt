@@ -60,7 +60,9 @@ class CoursesPresenter : SyncPresenter<Course, CoursesView>(Course::class.java) 
             .onFailure { notifyRefreshFinished() }
             .onSuccess { dashboardCourses ->
                 val courseMap = courses.associateBy { it.id }
-                val validCourses = dashboardCourses.mapNotNull { courseMap[it.id] }
+                val validCourses = dashboardCourses
+                    .mapNotNull { courseMap[it.id] }
+                    .filter { (it.isTeacher || it.isTA || it.isDesigner) }
 
                 data.addOrUpdate(validCourses)
                 notifyRefreshFinished()
