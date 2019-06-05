@@ -26,7 +26,8 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
-class CoursesPresenter : SyncPresenter<Course, CoursesView>(Course::class.java) {
+class
+CoursesPresenter : SyncPresenter<Course, CoursesView>(Course::class.java) {
 
     private var dashboardJob: Job? = null
 
