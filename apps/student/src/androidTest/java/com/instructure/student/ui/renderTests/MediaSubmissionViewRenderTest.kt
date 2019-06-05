@@ -20,10 +20,13 @@ import android.net.Uri
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.instructure.canvasapi2.utils.NetworkUtils
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.click
+import com.instructure.espresso.page.waitForViewWithText
 import com.instructure.espresso.waitForCheck
+import com.instructure.pandautils.utils.PandaPrefs
 import com.instructure.student.espresso.StudentRenderTest
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsContentType
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.MediaSubmissionViewFragment
@@ -56,24 +59,15 @@ class MediaSubmissionViewRenderTest : StudentRenderTest() {
 
     @Test
     fun displaysErrorView() {
-        Thread.sleep(1000)
+        PandaPrefs.warnForMobileData = false
         loadPageWithViewData(mediaTemplate)
 
         page.prepareMediaButton.click()
-        page.mediaPlaybackErrorView.waitForCheck(matches(isDisplayed()))
+        page.mediaPlaybackErrorView.assertDisplayed()
 
         page.mediaProgressBar.assertNotDisplayed()
         page.submissionMediaPlayerView.assertNotDisplayed()
         page.prepareMediaButton.assertNotDisplayed()
-//        loadPageWithViewData(mediaTemplate)
-//
-//        page.mediaProgressBar.assertNotDisplayed()
-//        page.submissionMediaPlayerView.assertNotDisplayed()
-//        page.mediaPlaybackErrorView.assertNotDisplayed()
-//
-//        page.prepareMediaButton.assertDisplayed()
-//        page.prepareMediaButton.click()
-//        page.mediaPlaybackErrorView.assertDisplayed()
     }
 
     private fun loadPageWithViewData(data: SubmissionDetailsContentType.MediaContent): MediaSubmissionViewFragment {
