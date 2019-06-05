@@ -56,6 +56,7 @@ class MediaSubmissionViewRenderTest : StudentRenderTest() {
 
     @Test
     fun displaysErrorView() {
+        Thread.sleep(500)
 //        loadPageWithViewData(mediaTemplate)
 //
 //        page.prepareMediaButton.click()
