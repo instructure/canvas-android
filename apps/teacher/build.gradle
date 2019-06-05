@@ -193,9 +193,11 @@ dependencies {
     implementation project(path: ':login-api-2')
     implementation project(path: ':chips')
     implementation project(path: ':rceditor')
-    implementation project(path: ':camerakit')
+    implementation 'com.wonderkiln:camerakit:0.13.4'
     implementation project(path: ':annotations')
     implementation project(path: ':interactions')
+
+
 
     /* Kotlin */
     implementation Libs.KOTLIN_STD_LIB
