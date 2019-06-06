@@ -53,14 +53,17 @@ object FileUploadManager {
     }
 
     @JvmStatic
-    private fun performUploadSynchronous(file: File, uploadParams: FileUploadParams): Attachment? {
+    private fun performUploadSynchronous(file: File, uploadParams: FileUploadParams, dbSubmissionId: Long? = null): Attachment? {
         val adapter = RestBuilder()
         val params = RestParams(shouldIgnoreToken = true)
-        return FileUploadAPI.uploadSynchronous(uploadParams, file, adapter, params)
+        return FileUploadAPI.uploadSynchronous(uploadParams, file, adapter, params, dbSubmissionId)
     }
 
+    /**
+     * @param dbSubmissionId - An optional parameter to specify submission id to get progress updates
+     */
     @JvmStatic
-    fun uploadFileSynchronous(uploadContext: UploadContextProvider, config: FileUploadConfig): Attachment? {
+    fun uploadFileSynchronous(uploadContext: UploadContextProvider, config: FileUploadConfig, dbSubmissionId: Long? = null): Attachment? {
         if (config.parentFolderId != null && config.parentFolderPath != null) {
             throw IllegalArgumentException("Specifying both the parent folder ID and parent folder path is disallowed.")
         }
@@ -72,7 +75,7 @@ object FileUploadManager {
             config.parentFolderId,
             config.parentFolderPath,
             config.renameOnDuplicate
-        )?.let { performUploadSynchronous(File(config.filePath), it) }
+        )?.let { performUploadSynchronous(File(config.filePath), it, dbSubmissionId) }
     }
 
     @JvmStatic

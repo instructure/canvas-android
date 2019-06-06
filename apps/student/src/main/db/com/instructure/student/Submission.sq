@@ -16,7 +16,6 @@
 
 import com.instructure.canvasapi2.models.CanvasContext;
 import com.instructure.student.db.sqlColAdapters.Date;
-import com.instructure.student.db.sqlColAdapters.SubmissionFailure;
 import com.instructure.student.db.sqlColAdapters.ErrorColAdapter;
 
 CREATE TABLE submission (
@@ -29,7 +28,8 @@ CREATE TABLE submission (
     assignmentId INTEGER,
     canvasContext TEXT as CanvasContext,
     submissionType TEXT,
-    errorFlag INTEGER as Boolean NOT NULL DEFAULT 0
+    errorFlag INTEGER as Boolean NOT NULL DEFAULT 0,
+    assignmentGroupCategoryId INTEGER
 );
 --
 insertOnlineTextSubmission:
@@ -40,10 +40,9 @@ insertOnlineUrlSubmission:
 INSERT INTO submission (submissionEntry, assignmentName, assignmentId, canvasContext, submissionType)
 VALUES (?, ?, ?, ?, "online_url"); --"basic_lti_launch" else "online_url"
 --
--- insertOnlineUploadSubmission:
--- INSERT INTO submission (submission, assignmentName, assignmentId, canvasContext, submissionType)
--- VALUES (?, ?, ?, ?, "online_upload");
--- SELECT last_insert_rowid();
+insertOnlineUploadSubmission:
+INSERT INTO submission (assignmentName, assignmentId, assignmentGroupCategoryId, canvasContext, submissionType)
+VALUES (?, ?, ?, ?, "online_upload");
 
 getAllSubmissions:
 SELECT *

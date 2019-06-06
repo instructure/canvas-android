@@ -19,7 +19,9 @@ package com.instructure.student.test
 import android.content.Context
 import android.content.Intent
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
+import com.instructure.pandautils.models.FileSubmitObject
 import com.instructure.pandautils.utils.Const
 import com.instructure.student.mobius.common.ui.SubmissionService
 import io.mockk.*
@@ -82,15 +84,30 @@ class SubmissionServiceTest : Assert() {
     @Test
     fun `startFileSubmission starts the service with an intent`() {
         val intent = slot<Intent>()
+        val assignmentGroupCategoryId = 0L
+        val assignment = Assignment(id = assignmentId, name = assignmentName, groupCategoryId = assignmentGroupCategoryId)
+        val files = arrayListOf(FileSubmitObject())
 
         every { context.startService(capture(intent)) } returns null
 
-        SubmissionService.startFileSubmission(context, canvasContext, assignmentId, assignmentName)
+        SubmissionService.startFileSubmission(context, canvasContext, assignmentId, assignmentName, assignmentGroupCategoryId, files)
 
         assertEquals(SubmissionService.Action.FILE_ENTRY.name, intent.captured.action)
         assertEquals(canvasContext, intent.captured.getParcelableExtra(Const.CANVAS_CONTEXT))
-        assertEquals(assignmentId, intent.captured.getLongExtra(Const.ASSIGNMENT_ID, -1))
-        assertEquals(assignmentName, intent.captured.getStringExtra(Const.ASSIGNMENT_NAME))
+        assertEquals(assignment, intent.captured.getParcelableExtra(Const.ASSIGNMENT))
+        assertEquals(files, intent.captured.getParcelableArrayListExtra<FileSubmitObject>(Const.FILES))
+    }
+
+    @Test
+    fun `startFileSubmission does not start the service if no files are given`() {
+        val intent = slot<Intent>()
+        val assignmentGroupCategoryId = 0L
+
+        every { context.startService(capture(intent)) } returns null
+
+        SubmissionService.startFileSubmission(context, canvasContext, assignmentId, assignmentName, assignmentGroupCategoryId, arrayListOf())
+
+        verify(exactly = 0) { context.startService(any()) }
     }
 
     @Test
