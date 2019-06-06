@@ -37,6 +37,7 @@ import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.canvasapi2.utils.weave.weave
+import com.instructure.interactions.router.Route
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.fragment.ParentFragment
@@ -171,7 +172,7 @@ class AnnotationCommentListFragment : ParentFragment() {
                 //first we need to find the root comment
                 val rootComment = annotations.firstOrNull()
                 if (rootComment != null) {
-                    val newCommentReply = awaitApi<CanvaDocAnnotation> { CanvaDocsManager.putAnnotation(docSession.apiValues.sessionId, generateAnnotationId(), createCommentReplyAnnotation(comment, headAnnotationId, docSession.apiValues.documentId, ApiPrefs.user?.id.toString(), rootComment.page), docSession.apiValues.canvaDocsDomain, it) }
+                    val newCommentReply = awaitApi<CanvaDocAnnotation> { CanvaDocsManager.putAnnotation(docSession.apiValues!!.sessionId, generateAnnotationId(), createCommentReplyAnnotation(comment, headAnnotationId, docSession.apiValues!!.documentId, ApiPrefs.user?.id.toString(), rootComment.page), docSession.apiValues!!.canvaDocsDomain, it) }
                     EventBus.getDefault().post(OldStudentSubmissionView.AnnotationCommentAdded(newCommentReply, assigneeId))
                     // The put request doesn't return this property, so we need to set it to true
                     newCommentReply.isEditable = true
@@ -189,7 +190,7 @@ class AnnotationCommentListFragment : ParentFragment() {
     @Suppress("EXPERIMENTAL_FEATURE_WARNING")
     private fun editComment(annotation: CanvaDocAnnotation, position: Int) {
         editCommentJob = tryWeave {
-            awaitApi<CanvaDocAnnotation> { CanvaDocsManager.putAnnotation(docSession.apiValues.sessionId, annotation.annotationId, annotation, docSession.apiValues.canvaDocsDomain, it) }
+            awaitApi<CanvaDocAnnotation> { CanvaDocsManager.putAnnotation(docSession.apiValues!!.sessionId, annotation.annotationId, annotation, docSession.apiValues!!.canvaDocsDomain, it) }
             EventBus.getDefault().post(OldStudentSubmissionView.AnnotationCommentEdited(annotation, assigneeId))
             // Update the UI
             recyclerAdapter?.add(annotation)
@@ -202,7 +203,7 @@ class AnnotationCommentListFragment : ParentFragment() {
     @Suppress("EXPERIMENTAL_FEATURE_WARNING")
     private fun deleteComment(annotation: CanvaDocAnnotation, position: Int) {
         deleteCommentJob = tryWeave {
-            awaitApi<ResponseBody> { CanvaDocsManager.deleteAnnotation(docSession.apiValues.sessionId, annotation.annotationId, docSession.apiValues.canvaDocsDomain, it) }
+            awaitApi<ResponseBody> { CanvaDocsManager.deleteAnnotation(docSession.apiValues!!.sessionId, annotation.annotationId, docSession.apiValues!!.canvaDocsDomain, it) }
             if(annotation.annotationId == annotations.firstOrNull()?.annotationId) {
                 //this is the root comment, deleting this deletes the entire thread
                 EventBus.getDefault().post(OldStudentSubmissionView.AnnotationCommentDeleted(annotation, true, assigneeId))
@@ -229,6 +230,31 @@ class AnnotationCommentListFragment : ParentFragment() {
 
         @JvmStatic
         fun newInstance(bundle: Bundle) = AnnotationCommentListFragment().apply { arguments = bundle }
+
+        @JvmStatic
+        fun makeRoute(annotations: ArrayList<CanvaDocAnnotation>, headAnnotationId: String, docSession: DocSession, assigneeId: Long): Route {
+            val args = Bundle()
+            args.putParcelableArrayList(ANNOTATIONS, annotations)
+            args.putLong(ASSIGNEE_ID, assigneeId)
+            args.putParcelable(DOC_SESSION, docSession)
+            args.putString(HEAD_ANNOTATION_ID, headAnnotationId)
+
+            return Route(null, AnnotationCommentListFragment::class.java, null, args)
+        }
+
+        @JvmStatic
+        fun validRoute(route: Route): Boolean {
+            return route.arguments.containsKey(ANNOTATIONS)
+                    && route.arguments.containsKey(HEAD_ANNOTATION_ID)
+                    && route.arguments.containsKey(DOC_SESSION)
+                    && route.arguments.containsKey(ASSIGNEE_ID)
+        }
+
+        @JvmStatic
+        fun newInstance(route: Route): AnnotationCommentListFragment? {
+            if (!validRoute(route)) return null
+            return AnnotationCommentListFragment().withArgs(route.arguments)
+        }
 
         @JvmStatic
         fun makeBundle(annotations: ArrayList<CanvaDocAnnotation>, headAnnotationId: String, docSession: DocSession, assigneeId: Long): Bundle {

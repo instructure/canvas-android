@@ -236,7 +236,7 @@ class OldStudentSubmissionView(
         if (event.assigneeId == assignee.id) {
             deleteJob = tryWeave {
                 for(annotation in event.annotationList) {
-                    awaitApi<ResponseBody> { CanvaDocsManager.deleteAnnotation(docSession.apiValues.sessionId, annotation.annotationId, docSession.apiValues.canvaDocsDomain, it) }
+                    awaitApi<ResponseBody> { CanvaDocsManager.deleteAnnotation(docSession.apiValues!!.sessionId, annotation.annotationId, docSession.apiValues!!.canvaDocsDomain, it) }
                     commentRepliesHashMap[annotation.inReplyTo]?.remove(annotation)
                 }
             } catch {

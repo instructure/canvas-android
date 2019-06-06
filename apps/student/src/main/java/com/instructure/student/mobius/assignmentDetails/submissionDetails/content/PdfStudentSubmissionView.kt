@@ -41,6 +41,7 @@ import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.views.ProgressiveCanvasLoadingView
 import com.instructure.student.AnnotationComments.AnnotationCommentListFragment
 import com.instructure.student.R
+import com.instructure.student.router.RouteMatcher
 import com.pspdfkit.ui.inspector.PropertyInspectorCoordinatorLayout
 import com.pspdfkit.ui.special_mode.manager.AnnotationManager
 import com.pspdfkit.ui.toolbar.ToolbarCoordinatorLayout
@@ -79,13 +80,14 @@ class PdfStudentSubmissionView(
     override fun setIsCurrentlyAnnotating(boolean: Boolean) {}
 
     override fun showAnnotationComments(commentList: ArrayList<CanvaDocAnnotation>, headAnnotationId: String, docSession: DocSession) {
-        val bundle = AnnotationCommentListFragment.makeBundle(commentList, headAnnotationId, docSession, ApiPrefs.user!!.id)
-        val fragment = AnnotationCommentListFragment.newInstance(bundle)
+//        val bundle = AnnotationCommentListFragment.makeBundle(commentList, headAnnotationId, docSession, ApiPrefs.user!!.id)
+//        val fragment = AnnotationCommentListFragment.newInstance(bundle)
         if (isAttachedToWindow) {
-            val ft = supportFragmentManager.beginTransaction()
-            ft.add(R.id.annotationCommentsContainer, fragment, fragment::class.java.name)
-            ft.addToBackStack(fragment::class.java.name)
-            ft.commit()
+//            val ft = supportFragmentManager.beginTransaction()
+//            ft.add(R.id.annotationCommentsContainer, fragment, fragment::class.java.name)
+//            ft.addToBackStack(fragment::class.java.name)
+//            ft.commit()
+            RouteMatcher.route(context, AnnotationCommentListFragment.makeRoute(commentList, headAnnotationId, docSession, ApiPrefs.user!!.id))
         }
     }
 
@@ -198,7 +200,7 @@ class PdfStudentSubmissionView(
         if (event.assigneeId == ApiPrefs.user!!.id) {
             deleteJob = tryWeave {
                 for (annotation in event.annotationList) {
-                    awaitApi<ResponseBody> { CanvaDocsManager.deleteAnnotation(docSession.apiValues.sessionId, annotation.annotationId, docSession.apiValues.canvaDocsDomain, it) }
+                    awaitApi<ResponseBody> { CanvaDocsManager.deleteAnnotation(docSession.apiValues!!.sessionId, annotation.annotationId, docSession.apiValues!!.canvaDocsDomain, it) }
                     commentRepliesHashMap[annotation.inReplyTo]?.remove(annotation)
                 }
             } catch {

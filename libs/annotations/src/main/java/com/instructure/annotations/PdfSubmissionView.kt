@@ -289,7 +289,7 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
                         it.apiValues = ApiValues(it.documentId, pdfUrl, extractSessionId(pdfUrl), canvaDocsDomain)
                     }
 
-                    load(docSession.apiValues.pdfUrl) { setupPSPDFKit(it) }
+                    load(docSession.apiValues!!.pdfUrl) { setupPSPDFKit(it) }
                 } else {
                     //TODO: better handle case where redirect url is empty, is a canvadoc failure case
                     toast(R.string.errorOccurred)
@@ -323,7 +323,7 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
             if (docSession.annotationMetadata?.canRead() != true) return
             annotationsJob = tryWeave {
                 // Snag them annotations with the session id
-                val annotations = awaitApi<CanvaDocAnnotationResponse> { CanvaDocsManager.getAnnotations(docSession.apiValues.sessionId, docSession.apiValues.canvaDocsDomain, it) }
+                val annotations = awaitApi<CanvaDocAnnotationResponse> { CanvaDocsManager.getAnnotations(docSession.apiValues!!.sessionId, docSession.apiValues!!.canvaDocsDomain, it) }
                 // We don't want to trigger the annotation events here, so unregister and re-register after
                 pdfFragment?.document?.annotationProvider?.removeOnAnnotationUpdatedListener(mAnnotationUpdateListener)
 
@@ -514,9 +514,9 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
         commentsButton.isEnabled = false
 
         createAnnotationJob = tryWeave {
-            val canvaDocAnnotation = annotation.convertPDFAnnotationToCanvaDoc(docSession.apiValues.documentId)
+            val canvaDocAnnotation = annotation.convertPDFAnnotationToCanvaDoc(docSession.apiValues!!.documentId)
             if (canvaDocAnnotation != null) {
-                val newAnnotation = awaitApi<CanvaDocAnnotation> { CanvaDocsManager.putAnnotation(docSession.apiValues.sessionId, generateAnnotationId(), canvaDocAnnotation, docSession.apiValues.canvaDocsDomain, it) }
+                val newAnnotation = awaitApi<CanvaDocAnnotation> { CanvaDocsManager.putAnnotation(docSession.apiValues!!.sessionId, generateAnnotationId(), canvaDocAnnotation, docSession.apiValues!!.canvaDocsDomain, it) }
 
                 // Edit the annotation with the appropriate id
                 annotation.name = newAnnotation.annotationId
@@ -541,9 +541,9 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
     private fun updateAnnotation(annotation: Annotation) {
         // Annotation modified; Update it
         updateAnnotationJob = tryWeave {
-            val canvaDocAnnotation = annotation.convertPDFAnnotationToCanvaDoc(docSession.apiValues.documentId)
+            val canvaDocAnnotation = annotation.convertPDFAnnotationToCanvaDoc(docSession.apiValues!!.documentId)
             if (canvaDocAnnotation != null && !annotation.name.isNullOrEmpty()) {
-                awaitApi<CanvaDocAnnotation> { CanvaDocsManager.putAnnotation(docSession.apiValues.sessionId, annotation.name!!, canvaDocAnnotation, docSession.apiValues.canvaDocsDomain, it) }
+                awaitApi<CanvaDocAnnotation> { CanvaDocsManager.putAnnotation(docSession.apiValues!!.sessionId, annotation.name!!, canvaDocAnnotation, docSession.apiValues!!.canvaDocsDomain, it) }
             }
         } catch {
             if(it is StatusCallbackError) {
@@ -572,7 +572,7 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
         deleteAnnotationJob = tryWeave {
             // If it is not found, don't hit the server (it will fail)
             if (!annotation.name.isNullOrEmpty())
-                awaitApi<ResponseBody> { CanvaDocsManager.deleteAnnotation(docSession.apiValues.sessionId, annotation.name!!, docSession.apiValues.canvaDocsDomain, it) }
+                awaitApi<ResponseBody> { CanvaDocsManager.deleteAnnotation(docSession.apiValues!!.sessionId, annotation.name!!, docSession.apiValues!!.canvaDocsDomain, it) }
         } catch {
             // Show general error, make more specific in the future?
             toast(R.string.errorOccurred)
@@ -587,7 +587,7 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
 
         sendCommentJob = tryWeave {
             val newCommentReply = awaitApi<CanvaDocAnnotation> {
-                CanvaDocsManager.putAnnotation(docSession.apiValues.sessionId, generateAnnotationId(), createCommentReplyAnnotation(comment ?: "", inReplyToId, docSession.apiValues.documentId, ApiPrefs.user?.id.toString(), page), docSession.apiValues.canvaDocsDomain, it)
+                CanvaDocsManager.putAnnotation(docSession.apiValues!!.sessionId, generateAnnotationId(), createCommentReplyAnnotation(comment ?: "", inReplyToId, docSession.apiValues!!.documentId, ApiPrefs.user?.id.toString(), page), docSession.apiValues!!.canvaDocsDomain, it)
             }
 
             // The put request doesn't return this property, so we need to set it to true
