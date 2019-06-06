@@ -188,6 +188,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/colorOverlay"
+                    android:labelFor="@id/navigationDrawerColorOverlaySwitch"
                     android:textSize="16sp"/>
 
                 <androidx.appcompat.widget.SwitchCompat
