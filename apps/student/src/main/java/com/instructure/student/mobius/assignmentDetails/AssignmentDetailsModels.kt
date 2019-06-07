@@ -28,6 +28,7 @@ sealed class AssignmentDetailsEvent {
     data class SubmissionTypeClicked(val submissionType: Assignment.SubmissionType) : AssignmentDetailsEvent()
     data class DataLoaded(val assignmentResult: DataResult<Assignment>?, val isArcEnabled: Boolean) : AssignmentDetailsEvent()
     data class SubmissionStatusUpdated(val status: SubmissionUploadStatus) : AssignmentDetailsEvent()
+    data class InternalRouteRequested(val url: String) : AssignmentDetailsEvent()
 }
 
 sealed class AssignmentDetailsEffect {
@@ -37,6 +38,11 @@ sealed class AssignmentDetailsEffect {
     data class ShowCreateSubmissionView(val submissionType: Assignment.SubmissionType, val course: Course, val assignment: Assignment) : AssignmentDetailsEffect()
     data class LoadData(val assignmentId: Long, val courseId: Long, val forceNetwork: Boolean) : AssignmentDetailsEffect()
     data class ObserveSubmissionStatus(val assignmentId: Long) : AssignmentDetailsEffect()
+    data class RouteInternally(
+        val url: String,
+        val course: Course,
+        val assignment: Assignment
+    ) : AssignmentDetailsEffect()
 }
 
 data class AssignmentDetailsModel(

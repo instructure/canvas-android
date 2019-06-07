@@ -22,14 +22,15 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.LayoutDirection
-import android.view.*
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
 import androidx.core.text.TextUtilsCompat
 import com.instructure.annotations.CanvasPdfMenuGrouping
-
-import com.instructure.student.R
+import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.setGone
+import com.instructure.student.R
 import com.pspdfkit.document.processor.PdfProcessorTask
 import com.pspdfkit.document.sharing.DefaultDocumentSharingController
 import com.pspdfkit.document.sharing.DocumentSharingIntentHelper
@@ -47,6 +48,8 @@ class CandroidPSPDFActivity : PdfActivity(), ToolbarCoordinatorLayout.OnContextu
     override fun onRemoveContextualToolbar(p0: ContextualToolbar<*>) {}
 
     private var menuItems: List<ContextualToolbarMenuItem>? = null
+
+    private val submissionTarget by lazy { intent?.extras?.getParcelable<ShareFileSubmissionTarget>(Const.SUBMISSION_TARGET) }
 
     override fun onPrepareContextualToolbar(toolbar: ContextualToolbar<*>) {
         if(toolbar is AnnotationCreationToolbar) {
@@ -90,6 +93,11 @@ class CandroidPSPDFActivity : PdfActivity(), ToolbarCoordinatorLayout.OnContextu
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
         super.onPrepareOptionsMenu(menu)
         menuInflater.inflate(R.menu.pspdf_activity_menu, menu)
+        if (submissionTarget != null) {
+            // If targeted for submission, change the menu item title from "Upload to Canvas" to "Submit Assignment"
+            val item = menu.findItem(R.id.upload_item)
+            item.title = getString(R.string.submitAssignment)
+        }
         return true
     }
 
@@ -106,19 +114,23 @@ class CandroidPSPDFActivity : PdfActivity(), ToolbarCoordinatorLayout.OnContextu
     private fun uploadDocumentToCanvas() {
         if (document != null) {
             DocumentSharingManager.shareDocument(
-                    CandroidDocumentSharingController(this),
+                    CandroidDocumentSharingController(this, submissionTarget),
                     document,
                     SharingOptions(PdfProcessorTask.AnnotationProcessingMode.FLATTEN))
         }
     }
 
 
-    private inner class CandroidDocumentSharingController(private val mContext: Context) : DefaultDocumentSharingController(mContext) {
+    private inner class CandroidDocumentSharingController(
+        private val mContext: Context,
+        private val submissionTarget: ShareFileSubmissionTarget?
+    ) : DefaultDocumentSharingController(mContext) {
 
         override fun onDocumentPrepared(shareUri: Uri) {
             val intent = Intent(mContext, ShareFileUploadActivity::class.java)
             intent.type = DocumentSharingIntentHelper.MIME_TYPE_PDF
             intent.putExtra(Intent.EXTRA_STREAM, shareUri)
+            intent.putExtra(Const.SUBMISSION_TARGET, submissionTarget)
             intent.action = Intent.ACTION_SEND
             mContext.startActivity(intent)
         }

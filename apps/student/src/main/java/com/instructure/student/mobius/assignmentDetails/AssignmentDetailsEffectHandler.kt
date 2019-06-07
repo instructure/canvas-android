@@ -65,6 +65,9 @@ class AssignmentDetailsEffectHandler : EffectHandler<AssignmentDetailsView, Assi
                     }
                 }
             }
+            is AssignmentDetailsEffect.RouteInternally -> {
+                view?.routeInternally(effect.url, ApiPrefs.domain, effect.course, effect.assignment)
+            }
         }.exhaustive
     }
 

@@ -42,10 +42,7 @@ import com.instructure.pandautils.utils.LoaderUtils
 import com.instructure.pandautils.utils.RouteUtils
 import com.instructure.pandautils.utils.nonNullArgs
 import com.instructure.student.R
-import com.instructure.student.activity.InternalWebViewActivity
-import com.instructure.student.activity.InterwebsToApplication
-import com.instructure.student.activity.NavigationActivity
-import com.instructure.student.activity.ViewMediaActivity
+import com.instructure.student.activity.*
 import com.instructure.student.fragment.*
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.mobius.syllabus.ui.SyllabusFragment
@@ -209,11 +206,11 @@ object RouteMatcher : BaseRouteMatcher() {
 //        bottomSheetFragments.add(EditFavoritesFragment::class.java)
     }
 
-    fun routeUrl(context: Context, url: String) {
-        routeUrl(context, url, ApiPrefs.domain)
+    fun routeUrl(context: Context, url: String, extras: Bundle? = null) {
+        routeUrl(context, url, ApiPrefs.domain, extras)
     }
 
-    fun routeUrl(context: Context, url: String, domain: String) {
+    fun routeUrl(context: Context, url: String, domain: String, extras: Bundle? = null) {
         /* Possible activity types we can navigate too: Unknown Link, InitActivity, Master/Detail, Fullscreen, WebView, ViewMedia */
 
         //Find the best route
@@ -221,6 +218,7 @@ object RouteMatcher : BaseRouteMatcher() {
         //One or two classes? (F, or M/D)
 
         val route = getInternalRoute(url, domain)
+        extras?.let { route?.arguments?.putAll(it) }
 
         // The Group API will not load an individual user's details, so we route to the List fragment by default
         // FIXME: Remove if the group context works with grabbing a user
@@ -322,7 +320,8 @@ object RouteMatcher : BaseRouteMatcher() {
                             if (loadedMedia.intent.type!!.contains("pdf") && !loadedMedia.isUseOutsideApps) {
                                 // Show pdf with PSPDFkit
                                 val uri = loadedMedia.intent.data
-                                FileUtils.showPdfDocument(uri, loadedMedia, activity)
+                                val submissionTarget = loadedMedia.bundle?.getParcelable<ShareFileSubmissionTarget>(Const.SUBMISSION_TARGET)
+                                FileUtils.showPdfDocument(uri, loadedMedia, activity, submissionTarget)
                             } else if (loadedMedia.intent.type == "video/mp4") {
                                 val bundle = BaseViewMediaActivity.makeBundle(loadedMedia.intent.data!!.toString(), null, "video/mp4", loadedMedia.intent.dataString, true)
                                 RouteMatcher.route(activity, Route(bundle, RouteContext.MEDIA))
@@ -369,7 +368,7 @@ object RouteMatcher : BaseRouteMatcher() {
             }
         } else {
             openMediaCallbacks = null
-            openMediaBundle = OpenMediaAsyncTaskLoader.createBundle(mime, url, filename)
+            openMediaBundle = OpenMediaAsyncTaskLoader.createBundle(mime, url, filename, route.arguments)
             LoaderUtils.restartLoaderWithBundle<LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia>>(LoaderManager.getInstance(activity), openMediaBundle, getLoaderCallbacks(activity), R.id.openMediaLoaderID)
         }
     }

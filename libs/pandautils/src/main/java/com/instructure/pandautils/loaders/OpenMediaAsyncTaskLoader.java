@@ -70,7 +70,7 @@ public class OpenMediaAsyncTaskLoader extends AsyncTaskLoader<OpenMediaAsyncTask
         private boolean isSubmission;
 
         private Intent intent;
-        private Bundle bundle; // Used for html files
+        private Bundle bundle; // Used for html files and submission target
 
         public LoadedMedia() {
 
@@ -85,8 +85,12 @@ public class OpenMediaAsyncTaskLoader extends AsyncTaskLoader<OpenMediaAsyncTask
             return bundle;
         }
 
-        public void setBundle(Bundle bundle) {
+        public void setHtmlBundle(Bundle bundle) {
             isHtmlFile = true;
+            this.bundle = bundle;
+        }
+
+        public void setBundle(Bundle bundle) {
             this.bundle = bundle;
         }
 
@@ -140,6 +144,7 @@ public class OpenMediaAsyncTaskLoader extends AsyncTaskLoader<OpenMediaAsyncTask
     private boolean isSubmission;
     private CanvasContext canvasContext;
     private boolean isUseOutsideApps;
+    private Bundle extras;
 
     private Context applicationContext;
     private PackageManager packageManager;
@@ -163,6 +168,9 @@ public class OpenMediaAsyncTaskLoader extends AsyncTaskLoader<OpenMediaAsyncTask
             }
             if(args.containsKey(Const.IS_SUBMISSION)) {
                 isSubmission = args.getBoolean(Const.IS_SUBMISSION);
+            }
+            if (args.containsKey(Const.EXTRAS)) {
+                extras = args.getBundle(Const.EXTRAS);
             }
             canvasContext = args.getParcelable(Const.CANVAS_CONTEXT);
         }
@@ -189,13 +197,13 @@ public class OpenMediaAsyncTaskLoader extends AsyncTaskLoader<OpenMediaAsyncTask
             if (isHtmlFile() && canvasContext != null) {
                 File file = downloadFile(context, url, filename);
                 Bundle bundle = FileUploadUtils.createTaskLoaderBundle(canvasContext, FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + Const.FILE_PROVIDER_AUTHORITY, file).toString(), filename, false);
-                loadedMedia.setBundle(bundle);
+                loadedMedia.setHtmlBundle(bundle);
             } else if(isHtmlFile() && canvasContext == null) {
                 // When the canvasContext is null we're routing from the teacher app, which just needs the url and title to get the html file
                 Bundle bundle = new Bundle();
                 bundle.putString(Const.INTERNAL_URL, url);
                 bundle.putString(Const.ACTION_BAR_TITLE, filename);
-                loadedMedia.setBundle(bundle);
+                loadedMedia.setHtmlBundle(bundle);
             } else if (Utils.isAmazonDevice()) {
                 attemptDownloadFile(context, intent, loadedMedia, url, filename);
             } else {
@@ -204,6 +212,7 @@ public class OpenMediaAsyncTaskLoader extends AsyncTaskLoader<OpenMediaAsyncTask
                 if (uri != null) {
                     intent.setDataAndType(uri, mimeType);
                     loadedMedia.setIntent(intent);
+                    if (extras != null) loadedMedia.setBundle(extras);
                     Log.d(Const.OPEN_MEDIA_ASYNC_TASK_LOADER_LOG, "Intent can be handled: " + isIntentHandledByActivity(intent));
                     attemptDownloadFile(context, intent, loadedMedia, url, filename);
                 } else {
@@ -292,7 +301,7 @@ public class OpenMediaAsyncTaskLoader extends AsyncTaskLoader<OpenMediaAsyncTask
                     filename = "" + url.hashCode();
                 }
             }
-            
+
             if(!TextUtils.isEmpty(connectedUrl)) {
                 uri = Uri.parse(connectedUrl);
                 if (mimeType.toLowerCase().equals("binary/octet-stream") || mimeType.toLowerCase().equals("*/*")) {
@@ -422,6 +431,15 @@ public class OpenMediaAsyncTaskLoader extends AsyncTaskLoader<OpenMediaAsyncTask
         openMediaBundle.putString(Const.MIME, mime);
         openMediaBundle.putString(Const.URL, url);
         openMediaBundle.putString(Const.FILE_URL, filename);
+        return openMediaBundle;
+    }
+
+    public static Bundle createBundle(String mime, String url, String filename, Bundle extras) {
+        Bundle openMediaBundle = new Bundle();
+        openMediaBundle.putString(Const.MIME, mime);
+        openMediaBundle.putString(Const.URL, url);
+        openMediaBundle.putString(Const.FILE_URL, filename);
+        openMediaBundle.putBundle(Const.EXTRAS, extras);
         return openMediaBundle;
     }
 

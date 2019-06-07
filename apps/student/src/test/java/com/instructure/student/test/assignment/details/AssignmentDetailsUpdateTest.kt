@@ -17,8 +17,8 @@ package com.instructure.student.test.assignment.details
 
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
-import com.instructure.student.mobius.assignmentDetails.*
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.student.mobius.assignmentDetails.*
 import com.instructure.student.test.util.matchesEffects
 import com.instructure.student.test.util.matchesFirstEffects
 import com.spotify.mobius.test.FirstMatchers
@@ -240,6 +240,26 @@ class AssignmentDetailsUpdateTest : Assert() {
                             matchesEffects<AssignmentDetailsModel, AssignmentDetailsEffect>(AssignmentDetailsEffect.ShowCreateSubmissionView(submissionType, course, assignmentCopy))
                         )
                 )
+    }
+
+    @Test
+    fun `InternalRouteRequested event results in RouteInternally effect`() {
+        val url = "www.instructure.com"
+        val model = initModel.copy(assignmentResult = DataResult.Success(assignment))
+        val event = AssignmentDetailsEvent.InternalRouteRequested(url)
+        val expectedEffect = AssignmentDetailsEffect.RouteInternally(
+            url = url,
+            course = model.course,
+            assignment = model.assignmentResult!!.dataOrThrow
+        )
+        updateSpec
+            .given(model)
+            .whenEvent(event)
+            .then(
+                assertThatNext(
+                    matchesEffects<AssignmentDetailsModel, AssignmentDetailsEffect>(expectedEffect)
+                )
+            )
     }
 
     private fun testStatusUpdate(status: SubmissionUploadStatus, model: AssignmentDetailsModel = initModel) {
