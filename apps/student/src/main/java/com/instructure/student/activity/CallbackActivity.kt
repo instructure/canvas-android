@@ -33,12 +33,16 @@ import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.pandautils.dialogs.RatingDialog
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.AppType
+import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.toast
 import com.instructure.student.BuildConfig
 import com.instructure.student.R
 import com.instructure.student.fragment.InboxFragment
 import com.instructure.student.service.StudentPageViewService
 import com.instructure.student.util.AppManager
+import com.instructure.student.util.StudentPrefs
 import kotlinx.coroutines.Job
 import retrofit2.Call
 import retrofit2.Response
@@ -97,6 +101,11 @@ abstract class CallbackActivity : ParentActivity(), InboxFragment.OnUnreadCountI
                 } catch (ignore: Throwable) {
                     Logger.w("Unable to refresh pandata info")
                 }
+            }
+
+            // Get course color overlay setting
+            UserManager.getSelfSettings(false).await().onSuccess {
+                StudentPrefs.hideCourseColorOverlay = it.hideDashCardColorOverlays
             }
 
             val launchDefinitions = awaitApi<List<LaunchDefinition>?> { LaunchDefinitionsManager.getLaunchDefinitions(it, false) }

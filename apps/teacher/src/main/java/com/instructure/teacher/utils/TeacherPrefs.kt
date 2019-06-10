@@ -44,4 +44,6 @@ object TeacherPrefs : PrefManager(AppManager.PREF_FILE_NAME) {
     @JvmStatic
     var attendanceExternalToolId by StringPref()
 
+    var hideCourseColorOverlay by BooleanPref()
+
 }

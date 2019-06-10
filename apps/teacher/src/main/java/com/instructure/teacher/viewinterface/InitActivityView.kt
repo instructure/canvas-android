@@ -21,4 +21,5 @@ import com.instructure.canvasapi2.models.LaunchDefinition
 interface InitActivityView {
     fun updateTodoCount(todoCount: Int)
     fun gotLaunchDefinitions(launchDefinitions: List<LaunchDefinition>?)
+    fun updateColorOverlaySwitch(isChecked: Boolean, isFailed: Boolean)
 }

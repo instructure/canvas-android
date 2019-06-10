@@ -30,6 +30,7 @@ import com.instructure.teacher.dialog.EditCourseNameDialog
 import com.instructure.teacher.dialog.RadioButtonDialog
 import com.instructure.teacher.factory.CourseSettingsFragmentPresenterFactory
 import com.instructure.teacher.presenters.CourseSettingsFragmentPresenter
+import com.instructure.teacher.utils.TeacherPrefs
 import com.instructure.teacher.utils.setupBackButton
 import com.instructure.teacher.viewinterface.CourseSettingsFragmentView
 import kotlinx.android.synthetic.main.fragment_course_settings.*
@@ -60,7 +61,7 @@ class CourseSettingsFragment : BasePresenterFragment<
 
     override fun onReadySetGo(presenter: CourseSettingsFragmentPresenter?) {
         setupToolbar()
-        courseImage.setCourseImage(mCourse, mCourseColor)
+        courseImage.setCourseImage(mCourse, mCourseColor, !TeacherPrefs.hideCourseColorOverlay)
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {

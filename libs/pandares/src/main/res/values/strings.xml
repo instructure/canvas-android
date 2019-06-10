@@ -392,6 +392,7 @@
     <string name="calendar">Calendar</string>
     <string name="bookmarks">Bookmarks</string>
     <string name="showGrades">Show Grades</string>
+    <string name="colorOverlay">Color Overlay</string>
     <string name="gradesAreHidden">Grades are not visible for this course.</string>
 
     <string name="entireGroupSelected">This entire group has already been selected.</string>

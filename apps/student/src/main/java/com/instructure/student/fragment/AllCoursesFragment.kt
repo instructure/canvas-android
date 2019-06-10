@@ -40,6 +40,7 @@ import com.instructure.student.R
 import com.instructure.student.adapter.AllCoursesRecyclerAdapter
 import com.instructure.student.dialog.ColorPickerDialog
 import com.instructure.student.dialog.EditCourseNicknameDialog
+import com.instructure.student.events.CourseColorOverlayToggledEvent
 import com.instructure.student.events.ShowGradesToggledEvent
 import com.instructure.student.interfaces.CourseAdapterToFragmentCallback
 import com.instructure.student.router.RouteMatcher
@@ -152,6 +153,12 @@ class AllCoursesFragment : ParentFragment() {
     @Suppress("unused", "UNUSED_PARAMETER")
     @Subscribe
     fun onShowGradesToggled(event: ShowGradesToggledEvent) {
+        recyclerAdapter?.notifyDataSetChanged()
+    }
+
+    @Suppress("unused", "UNUSED_PARAMETER")
+    @Subscribe(sticky = true)
+    fun onColorOverlayToggled(event: CourseColorOverlayToggledEvent) {
         recyclerAdapter?.notifyDataSetChanged()
     }
 

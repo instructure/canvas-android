@@ -21,21 +21,16 @@ import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import com.google.android.material.appbar.AppBarLayout
-import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.instructure.student.R
-import com.instructure.student.adapter.CourseBrowserAdapter
-import com.instructure.student.router.RouteMatcher
-import com.instructure.student.util.Const
-import com.instructure.student.util.DisableableAppBarLayoutBehavior
-import com.instructure.student.util.TabHelper
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.fragment.app.Fragment
+import com.google.android.material.appbar.AppBarLayout
 import com.instructure.canvasapi2.managers.PageManager
 import com.instructure.canvasapi2.managers.TabManager
 import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
 import com.instructure.canvasapi2.utils.weave.awaitApi
@@ -45,9 +40,19 @@ import com.instructure.interactions.FragmentInteractions
 import com.instructure.interactions.Navigation
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.utils.*
+import com.instructure.student.R
+import com.instructure.student.adapter.CourseBrowserAdapter
+import com.instructure.student.events.CourseColorOverlayToggledEvent
+import com.instructure.student.router.RouteMatcher
+import com.instructure.student.util.Const
+import com.instructure.student.util.DisableableAppBarLayoutBehavior
+import com.instructure.student.util.StudentPrefs
+import com.instructure.student.util.TabHelper
 import kotlinx.android.synthetic.main.fragment_course_browser.*
 import kotlinx.android.synthetic.main.view_course_browser_header.*
 import kotlinx.coroutines.Job
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 
 @PageView(url = "{canvasContext}")
 class CourseBrowserFragment : Fragment(), FragmentInteractions, AppBarLayout.OnOffsetChangedListener  {
@@ -72,7 +77,7 @@ class CourseBrowserFragment : Fragment(), FragmentInteractions, AppBarLayout.OnO
         courseBrowserTitle.text = canvasContext.name
 
         (canvasContext as? Course)?.let {
-            courseImage.setCourseImage(it, it.color)
+            courseImage.setCourseImage(it, it.color, !StudentPrefs.hideCourseColorOverlay)
             courseBrowserSubtitle.text = it.term?.name ?: ""
             courseBrowserHeader.setTitleAndSubtitle(it.name, it.term?.name ?: "")
         }
@@ -83,9 +88,19 @@ class CourseBrowserFragment : Fragment(), FragmentInteractions, AppBarLayout.OnO
 
         collapsingToolbarLayout.setContentScrimColor(canvasContext.color)
 
-        toolbar.setupAsBackButton(this)
+        // If course color overlay is disabled we show a static toolbar and hide the text overlay
+        overlayToolbar.setupAsBackButton(this)
+        noOverlayToolbar.setupAsBackButton(this)
+        noOverlayToolbar.title = canvasContext.name
+        (canvasContext as? Course)?.term?.name?.let { noOverlayToolbar.subtitle = it }
+        noOverlayToolbar.setBackgroundColor(canvasContext.color)
+        updateToolbarVisibility()
 
-        if (requireContext().a11yManager.isSwitchAccessEnabled) {
+        // Hide image placeholder if color overlay is disabled and there is no valid image
+        val hasImage = (canvasContext as? Course)?.imageUrl?.isValid() == true
+        val hideImagePlaceholder = StudentPrefs.hideCourseColorOverlay && !hasImage
+
+        if (requireContext().a11yManager.isSwitchAccessEnabled || hideImagePlaceholder) {
             appBarLayout.setExpanded(false, false)
             appBarLayout.isActivated = false
             appBarLayout.isFocusable = false
@@ -99,10 +114,36 @@ class CourseBrowserFragment : Fragment(), FragmentInteractions, AppBarLayout.OnO
         loadTabs()
     }
 
+    override fun onStart() {
+        super.onStart()
+        EventBus.getDefault().register(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        EventBus.getDefault().unregister(this)
+    }
+
+    @Suppress("unused", "UNUSED_PARAMETER")
+    @Subscribe(sticky = true)
+    fun onColorOverlayToggled(event: CourseColorOverlayToggledEvent) {
+        (canvasContext as? Course)?.let {
+            courseImage.setCourseImage(it, it.color, !StudentPrefs.hideCourseColorOverlay)
+        }
+        updateToolbarVisibility()
+    }
+
+    private fun updateToolbarVisibility() {
+        val useOverlay = !StudentPrefs.hideCourseColorOverlay
+        noOverlayToolbar.setVisible(!useOverlay)
+        overlayToolbar.setVisible(useOverlay)
+        courseHeader.setVisible(useOverlay)
+    }
+
     override fun onConfigurationChanged(newConfig: Configuration?) {
         super.onConfigurationChanged(newConfig)
         // Set course image again after orientation change to ensure correct scale/crop
-        (canvasContext as? Course)?.let { courseImage.setCourseImage(it, it.color) }
+        (canvasContext as? Course)?.let { courseImage.setCourseImage(it, it.color, !StudentPrefs.hideCourseColorOverlay) }
     }
 
     override fun onDestroyView() {
@@ -114,7 +155,8 @@ class CourseBrowserFragment : Fragment(), FragmentInteractions, AppBarLayout.OnO
     //region Fragment Interaction Overrides
 
     override fun applyTheme() {
-        ViewStyler.colorToolbarIconsAndText(requireActivity(), toolbar, Color.WHITE)
+        ViewStyler.colorToolbarIconsAndText(requireActivity(), noOverlayToolbar, Color.WHITE)
+        ViewStyler.colorToolbarIconsAndText(requireActivity(), overlayToolbar, Color.WHITE)
         ViewStyler.setStatusBarDark(requireActivity(), canvasContext.color)
     }
 
