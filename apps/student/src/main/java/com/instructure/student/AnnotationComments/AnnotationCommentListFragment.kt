@@ -115,10 +115,18 @@ class AnnotationCommentListFragment : ParentFragment() {
         sendCommentJob?.cancel()
         editCommentJob?.cancel()
         deleteCommentJob?.cancel()
-        EventBus.getDefault().post(
-                OldStudentSubmissionView.AnnotationCommentDeleteAcknowledged(
-                        annotations.filter { it.deleted && it.deleteAcknowledged.isNullOrEmpty() },
-                        assigneeId))
+        if (FeatureFlagPrefs.newAssignmentPage) {
+            EventBus.getDefault().post(
+                    PdfStudentSubmissionView.AnnotationCommentDeleteAcknowledged(
+                            annotations.filter { it.deleted && it.deleteAcknowledged.isNullOrEmpty() },
+                            assigneeId))
+        } else {
+            EventBus.getDefault().post(
+                    OldStudentSubmissionView.AnnotationCommentDeleteAcknowledged(
+                            annotations.filter { it.deleted && it.deleteAcknowledged.isNullOrEmpty() },
+                            assigneeId))
+        }
+
     }
 
     fun configureRecyclerView() {
