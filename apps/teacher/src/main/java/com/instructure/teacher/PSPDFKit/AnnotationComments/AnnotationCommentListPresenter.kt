@@ -18,6 +18,7 @@ package com.instructure.teacher.PSPDFKit.AnnotationComments
 
 import com.instructure.annotations.*
 import com.instructure.canvasapi2.managers.CanvaDocsManager
+import com.instructure.canvasapi2.models.ApiValues
 import com.instructure.canvasapi2.models.canvadocs.CanvaDocAnnotation
 import com.instructure.canvasapi2.models.DocSession
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -33,6 +34,7 @@ import org.greenrobot.eventbus.EventBus
 
 class AnnotationCommentListPresenter(val annotations: ArrayList<CanvaDocAnnotation>,
                                      val docSession: DocSession,
+                                     val apiValues: ApiValues,
                                      val assigneeId: Long,
                                      val headAnnotationId: String) : ListPresenter<CanvaDocAnnotation, AnnotationCommentListView>(CanvaDocAnnotation::class.java) {
 
@@ -72,7 +74,7 @@ class AnnotationCommentListPresenter(val annotations: ArrayList<CanvaDocAnnotati
                 //first we need to find the root comment
                 val rootComment = data[0]
                 if (rootComment != null) {
-                    val newCommentReply = awaitApi<CanvaDocAnnotation> { CanvaDocsManager.putAnnotation(docSession.apiValues.sessionId, generateAnnotationId(), createCommentReplyAnnotation(comment, headAnnotationId, docSession.apiValues.documentId, ApiPrefs.user?.id.toString(), rootComment.page), docSession.apiValues.canvaDocsDomain, it) }
+                    val newCommentReply = awaitApi<CanvaDocAnnotation> { CanvaDocsManager.putAnnotation(apiValues.sessionId, generateAnnotationId(), createCommentReplyAnnotation(comment, headAnnotationId, apiValues.documentId, ApiPrefs.user?.id.toString(), rootComment.page), apiValues.canvaDocsDomain, it) }
                     EventBus.getDefault().post(AnnotationCommentAdded(newCommentReply, assigneeId))
 
                     // The put request doesn't return this property, so we need to set it to true
@@ -91,7 +93,7 @@ class AnnotationCommentListPresenter(val annotations: ArrayList<CanvaDocAnnotati
     @Suppress("EXPERIMENTAL_FEATURE_WARNING")
     fun editComment(annotation: CanvaDocAnnotation, position: Int) {
         mEditCommentJob = tryWeave {
-            awaitApi<CanvaDocAnnotation> { CanvaDocsManager.putAnnotation(docSession.apiValues.sessionId, annotation.annotationId, annotation, docSession.apiValues.canvaDocsDomain, it) }
+            awaitApi<CanvaDocAnnotation> { CanvaDocsManager.putAnnotation(apiValues.sessionId, annotation.annotationId, annotation, apiValues.canvaDocsDomain, it) }
             EventBus.getDefault().post(AnnotationCommentEdited(annotation, assigneeId))
 
             //ALSO, add it to the UI
@@ -105,7 +107,7 @@ class AnnotationCommentListPresenter(val annotations: ArrayList<CanvaDocAnnotati
     @Suppress("EXPERIMENTAL_FEATURE_WARNING")
     fun deleteComment(annotation: CanvaDocAnnotation, position: Int) {
         mDeleteCommentJob = tryWeave {
-            awaitApi<ResponseBody> { CanvaDocsManager.deleteAnnotation(docSession.apiValues.sessionId, annotation.annotationId, docSession.apiValues.canvaDocsDomain, it) }
+            awaitApi<ResponseBody> { CanvaDocsManager.deleteAnnotation(apiValues.sessionId, annotation.annotationId, apiValues.canvaDocsDomain, it) }
             if(annotation.annotationId == data[0]?.annotationId) {
                 //this is the root comment, deleting this deletes the entire thread
                 EventBus.getDefault().post(AnnotationCommentDeleted(annotation, true, assigneeId))

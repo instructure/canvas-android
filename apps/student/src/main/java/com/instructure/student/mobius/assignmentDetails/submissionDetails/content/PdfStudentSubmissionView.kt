@@ -27,6 +27,7 @@ import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import com.instructure.annotations.PdfSubmissionView
 import com.instructure.canvasapi2.managers.CanvaDocsManager
+import com.instructure.canvasapi2.models.ApiValues
 import com.instructure.canvasapi2.models.DocSession
 import com.instructure.canvasapi2.models.canvadocs.CanvaDocAnnotation
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -79,16 +80,8 @@ class PdfStudentSubmissionView(
     override fun enableViewPager() {}
     override fun setIsCurrentlyAnnotating(boolean: Boolean) {}
 
-    override fun showAnnotationComments(commentList: ArrayList<CanvaDocAnnotation>, headAnnotationId: String, docSession: DocSession) {
-//        val bundle = AnnotationCommentListFragment.makeBundle(commentList, headAnnotationId, docSession, ApiPrefs.user!!.id)
-//        val fragment = AnnotationCommentListFragment.newInstance(bundle)
-        if (isAttachedToWindow) {
-//            val ft = supportFragmentManager.beginTransaction()
-//            ft.add(R.id.annotationCommentsContainer, fragment, fragment::class.java.name)
-//            ft.addToBackStack(fragment::class.java.name)
-//            ft.commit()
-            RouteMatcher.route(context, AnnotationCommentListFragment.makeRoute(commentList, headAnnotationId, docSession, ApiPrefs.user!!.id))
-        }
+    override fun showAnnotationComments(commentList: ArrayList<CanvaDocAnnotation>, headAnnotationId: String, docSession: DocSession, apiValues: ApiValues) {
+        if (isAttachedToWindow) RouteMatcher.route(context, AnnotationCommentListFragment.makeRoute(commentList, headAnnotationId, docSession, apiValues, ApiPrefs.user!!.id))
     }
 
     override fun showFileError() {
@@ -200,7 +193,7 @@ class PdfStudentSubmissionView(
         if (event.assigneeId == ApiPrefs.user!!.id) {
             deleteJob = tryWeave {
                 for (annotation in event.annotationList) {
-                    awaitApi<ResponseBody> { CanvaDocsManager.deleteAnnotation(docSession.apiValues!!.sessionId, annotation.annotationId, docSession.apiValues!!.canvaDocsDomain, it) }
+                    awaitApi<ResponseBody> { CanvaDocsManager.deleteAnnotation(apiValues.sessionId, annotation.annotationId, apiValues.canvaDocsDomain, it) }
                     commentRepliesHashMap[annotation.inReplyTo]?.remove(annotation)
                 }
             } catch {

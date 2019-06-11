@@ -46,7 +46,7 @@ import com.instructure.student.dialog.WhatIfDialogStyled
 import com.instructure.student.interfaces.AdapterToFragmentCallback
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.router.RouteMatcher
-import com.instructure.student.util.FeatureFlags
+import com.instructure.student.util.FeatureFlagPrefs
 import kotlinx.android.synthetic.main.fragment_course_grades.*
 import retrofit2.Response
 import java.math.BigDecimal
@@ -213,7 +213,7 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
 
     private val adapterToFragmentCallback = object : AdapterToFragmentCallback<Assignment> {
         override fun onRowClicked(assignment: Assignment, position: Int, isOpenDetail: Boolean) {
-            if (FeatureFlags.newAssignmentPage) {
+            if (FeatureFlagPrefs.newAssignmentPage) {
                 RouteMatcher.route(requireContext(), AssignmentDetailsFragment.makeRoute(canvasContext, assignment.id))
             } else {
                 RouteMatcher.route(requireContext(), AssignmentFragment.makeRoute(canvasContext, assignment))

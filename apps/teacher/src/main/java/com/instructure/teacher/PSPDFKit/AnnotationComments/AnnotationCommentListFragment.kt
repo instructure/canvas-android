@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.annotations.AnnotationDialogs.AnnotationCommentDialog
+import com.instructure.canvasapi2.models.ApiValues
 import com.instructure.canvasapi2.models.canvadocs.CanvaDocAnnotation
 import com.instructure.canvasapi2.models.DocSession
 import com.instructure.pandautils.fragments.BaseListFragment
@@ -44,6 +45,7 @@ class AnnotationCommentListFragment : BaseListFragment<
     private var mAnnotationList by ParcelableArrayListArg<CanvaDocAnnotation>()
     private var mAssigneeId by LongArg()
     private var mDocSession by ParcelableArg<DocSession>()
+    private var mApiValues by ParcelableArg<ApiValues>()
     private var mHeadAnnotationId by StringArg()
     private val mAnnotationCommentsAdapter by lazy {
         AnnotationCommentListAdapter(requireContext(), presenter, { annotation, position ->
@@ -79,7 +81,7 @@ class AnnotationCommentListFragment : BaseListFragment<
     override fun checkIfEmpty() {} // we don't display this view if its empty, so no need to check
     override fun onRefreshFinished() {}
     override fun onRefreshStarted() {}
-    override fun getPresenterFactory() = AnnotationCommentListPresenterFactory(mAnnotationList, mDocSession, mAssigneeId, mHeadAnnotationId)
+    override fun getPresenterFactory() = AnnotationCommentListPresenterFactory(mAnnotationList, mDocSession, mApiValues, mAssigneeId, mHeadAnnotationId)
 
     override fun onPresenterPrepared(presenter: AnnotationCommentListPresenter?) {
         val layoutManager = LinearLayoutManager(requireContext())
@@ -153,17 +155,19 @@ class AnnotationCommentListFragment : BaseListFragment<
         @JvmStatic val ANNOTATIONS = "mAnnotationList"
         @JvmStatic val ASSIGNEE_ID = "mAssigneeId"
         @JvmStatic val DOC_SESSION = "mDocSession"
+        @JvmStatic val API_VALUES = "mApiValues"
         @JvmStatic val HEAD_ANNOTATION_ID = "mHeadAnnotationId"
 
         @JvmStatic
         fun newInstance(bundle: Bundle) = AnnotationCommentListFragment().apply { arguments = bundle }
 
         @JvmStatic
-        fun makeBundle(annotations: ArrayList<CanvaDocAnnotation>, headAnnotationId: String, docSession: DocSession, assigneeId: Long): Bundle {
+        fun makeBundle(annotations: ArrayList<CanvaDocAnnotation>, headAnnotationId: String, docSession: DocSession, apiValues: ApiValues, assigneeId: Long): Bundle {
             val args = Bundle()
             args.putParcelableArrayList(ANNOTATIONS, annotations)
             args.putLong(ASSIGNEE_ID, assigneeId)
             args.putParcelable(DOC_SESSION, docSession)
+            args.putParcelable(API_VALUES, apiValues)
             args.putString(HEAD_ANNOTATION_ID, headAnnotationId)
             return args
         }

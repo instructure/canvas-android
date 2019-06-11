@@ -25,7 +25,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.utils.FeatureFlagPref
 import com.instructure.pandautils.utils.setupAsBackButton
 import com.instructure.student.R
-import com.instructure.student.util.FeatureFlags
+import com.instructure.student.util.FeatureFlagPrefs
 import kotlinx.android.synthetic.main.adapter_feature_flag.view.*
 import kotlinx.android.synthetic.main.fragment_feature_flags.*
 
@@ -44,7 +44,7 @@ class FeatureFlagsFragment : Fragment() {
 
 private class FeatureFlagAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    val flags = FeatureFlags.delegates.filterIsInstance<FeatureFlagPref>()
+    val flags = FeatureFlagPrefs.delegates.filterIsInstance<FeatureFlagPref>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layout = LayoutInflater.from(parent.context).inflate(R.layout.adapter_feature_flag, parent, false)
@@ -58,9 +58,9 @@ private class FeatureFlagAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>
         with (holder.itemView) {
             featureSwitch.setOnCheckedChangeListener(null)
             featureSwitch.text = flag.description
-            featureSwitch.isChecked = flag.getValue(FeatureFlags, flag.property)
+            featureSwitch.isChecked = flag.getValue(FeatureFlagPrefs, flag.property)
             featureSwitch.setOnCheckedChangeListener { _, isChecked ->
-                flag.setValue(FeatureFlags, flag.property, isChecked)
+                flag.setValue(FeatureFlagPrefs, flag.property, isChecked)
             }
         }
     }

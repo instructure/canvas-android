@@ -39,7 +39,7 @@ import com.instructure.student.adapter.TermSpinnerAdapter
 import com.instructure.student.interfaces.AdapterToAssignmentsCallback
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.router.RouteMatcher
-import com.instructure.student.util.FeatureFlags
+import com.instructure.student.util.FeatureFlagPrefs
 import kotlinx.android.synthetic.main.assignment_list_layout.*
 
 @PageView(url = "{canvasContext}/assignments")
@@ -66,7 +66,7 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
         }
 
         override fun onRowClicked(assignment: Assignment, position: Int, isOpenDetail: Boolean) {
-            if (FeatureFlags.newAssignmentPage) {
+            if (FeatureFlagPrefs.newAssignmentPage) {
                 RouteMatcher.route(requireContext(), AssignmentDetailsFragment.makeRoute(canvasContext, assignment.id))
             } else {
                 RouteMatcher.route(requireContext(), AssignmentFragment.makeRoute(canvasContext, assignment))

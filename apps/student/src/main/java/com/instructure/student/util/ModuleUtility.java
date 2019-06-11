@@ -74,7 +74,7 @@ public class ModuleUtility {
 
         //deal with assignments
         if(moduleItem.getType().equals("Assignment")) {
-            if (FeatureFlags.INSTANCE.getNewAssignmentPage()) {
+            if (FeatureFlagPrefs.INSTANCE.getNewAssignmentPage()) {
                 return AssignmentDetailsFragment.newInstance(AssignmentDetailsFragment.makeRoute(course, getAssignmentId(moduleItem, course)));
             } else {
                 return AssignmentFragment.newInstance(AssignmentFragment.makeRoute(course, getAssignmentId(moduleItem, course)));

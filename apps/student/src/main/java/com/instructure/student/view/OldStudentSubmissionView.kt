@@ -89,8 +89,8 @@ class OldStudentSubmissionView(
     override fun enableViewPager() {}
     override fun setIsCurrentlyAnnotating(boolean: Boolean) {}
 
-    override fun showAnnotationComments(commentList: ArrayList<CanvaDocAnnotation>, headAnnotationId: String, docSession: DocSession) {
-        val bundle = AnnotationCommentListFragment.makeBundle(commentList, headAnnotationId, docSession, assignee.id)
+    override fun showAnnotationComments(commentList: ArrayList<CanvaDocAnnotation>, headAnnotationId: String, docSession: DocSession, apiValues: ApiValues) {
+        val bundle = AnnotationCommentListFragment.makeBundle(commentList, headAnnotationId, docSession, apiValues, assignee.id)
         val fragment = AnnotationCommentListFragment.newInstance(bundle)
         if (isAttachedToWindow) {
             val ft = supportFragmentManager.beginTransaction()
@@ -236,7 +236,7 @@ class OldStudentSubmissionView(
         if (event.assigneeId == assignee.id) {
             deleteJob = tryWeave {
                 for(annotation in event.annotationList) {
-                    awaitApi<ResponseBody> { CanvaDocsManager.deleteAnnotation(docSession.apiValues!!.sessionId, annotation.annotationId, docSession.apiValues!!.canvaDocsDomain, it) }
+                    awaitApi<ResponseBody> { CanvaDocsManager.deleteAnnotation(apiValues.sessionId, annotation.annotationId, apiValues.canvaDocsDomain, it) }
                     commentRepliesHashMap[annotation.inReplyTo]?.remove(annotation)
                 }
             } catch {

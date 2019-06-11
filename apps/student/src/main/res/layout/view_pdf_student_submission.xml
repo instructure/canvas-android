@@ -15,24 +15,17 @@
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/pdfStudentRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <FrameLayout
-        android:id="@+id/annotationCommentsContainer"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:elevation="10dp"
-        android:clipChildren="false"
-        android:clipToPadding="false"/>
-
     <com.instructure.pandautils.views.ProgressiveCanvasLoadingView
         android:id="@+id/loadingView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_gravity="center"
         app:pclv_indeterminate="true"
         app:pclv_override_color="@color/login_studentAppTheme"/>
 
@@ -113,7 +106,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                app:pclv_override_color="@color/login_teacherAppTheme"
+                app:pclv_override_color="@color/login_studentAppTheme"
                 app:pclv_progress="1"/>
 
         </FrameLayout>

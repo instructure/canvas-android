@@ -18,7 +18,7 @@ package com.instructure.student.util
 import com.instructure.canvasapi2.utils.FeatureFlagPref
 import com.instructure.canvasapi2.utils.PrefManager
 
-object FeatureFlags : PrefManager("feature_flags") {
+object FeatureFlagPrefs : PrefManager("feature_flags") {
 
     var newAssignmentPage by FeatureFlagPref("New Assignment Page")
 
