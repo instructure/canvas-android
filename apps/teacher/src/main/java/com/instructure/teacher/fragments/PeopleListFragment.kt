@@ -188,7 +188,6 @@ class PeopleListFragment : BaseSyncFragment<User, PeopleListPresenter, PeopleLis
 
     override fun onRefreshFinished() {
         swipeRefreshLayout.isRefreshing = false
-//        emptyPandaView.visibility = View.GONE
     }
 
     override fun onRefreshStarted() {
