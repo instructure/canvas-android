@@ -137,7 +137,7 @@ private fun getTextSizeFromFont(font: String?): Float{
     return when {
         font?.contains("14pt") == true -> 10f
         font?.contains("22pt") == true -> 18f
-        font?.contains("38pt") == true -> 34f
+        font?.contains("38pt") == true -> 32f
         else -> 10f
     }
 }
