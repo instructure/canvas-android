@@ -38,25 +38,20 @@ import kotlinx.android.synthetic.main.fragment_media_submission_view.*
 
 class MediaSubmissionViewFragment : Fragment() {
 
-    private var mUri by ParcelableArg(Uri.EMPTY)
-    private var mContentType by StringArg()
-    private var mThumbnailUrl by NullableStringArg()
-    private var mDisplayName by NullableStringArg()
+    private var uri by ParcelableArg(Uri.EMPTY)
+    private var contentType by StringArg()
+    private var thumbnailUrl by NullableStringArg()
+    private var displayName by NullableStringArg()
 
-    private val mExoAgent get() = ExoAgent.getAgentForUri(mUri)
+    private val exoAgent get() = ExoAgent.getAgentForUri(uri)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         inflater.inflate(R.layout.fragment_media_submission_view, container, false)
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        toolbar.setGone()
-    }
-
     override fun onStart() {
         super.onStart()
 
-        Glide.with(requireContext()).load(mThumbnailUrl).into(mediaThumbnailView)
+        Glide.with(requireContext()).load(thumbnailUrl).into(mediaThumbnailView)
 
         prepareMediaButton.onClick {
             MobileDataWarningDialog.showIfNeeded(
@@ -69,11 +64,11 @@ class MediaSubmissionViewFragment : Fragment() {
         tryAgainButton.onClick { prepare() }
 
         ViewStyler.themeButton(openExternallyButton)
-        openExternallyButton.onClick { mUri.viewExternally(requireContext(), mContentType) }
+        openExternallyButton.onClick { uri.viewExternally(requireContext(), contentType) }
 
         fullscreenButton.onClick {
-            mExoAgent.flagForResume()
-            val bundle = BaseViewMediaActivity.makeBundle(mUri.toString(), mThumbnailUrl, mContentType, mDisplayName, false)
+            exoAgent.flagForResume()
+            val bundle = BaseViewMediaActivity.makeBundle(uri.toString(), thumbnailUrl, contentType, displayName, false)
             RouteMatcher.route(requireContext(), Route(bundle, RouteContext.MEDIA))
         }
     }
@@ -81,7 +76,7 @@ class MediaSubmissionViewFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        mExoAgent.attach(submissionMediaPlayerView, object : ExoInfoListener {
+        exoAgent.attach(submissionMediaPlayerView, object : ExoInfoListener {
             override fun onStateChanged(newState: ExoAgentState) {
                 when (newState) {
                     ExoAgentState.IDLE -> {
@@ -105,7 +100,7 @@ class MediaSubmissionViewFragment : Fragment() {
                         mediaProgressBar.setGone()
                     }
                     ExoAgentState.ENDED -> {
-                        mExoAgent.reset()
+                        exoAgent.reset()
                         mediaPreviewContainer.setVisible()
                         mediaPlaybackErrorView.setGone()
                         submissionMediaPlayerView.setGone()
@@ -135,11 +130,11 @@ class MediaSubmissionViewFragment : Fragment() {
     }
 
     private fun prepare() {
-        mExoAgent.prepare(submissionMediaPlayerView)
+        exoAgent.prepare(submissionMediaPlayerView)
     }
 
     override fun onDetach() {
-        mExoAgent.release()
+        exoAgent.release()
         super.onDetach()
     }
 
@@ -147,10 +142,10 @@ class MediaSubmissionViewFragment : Fragment() {
 
         @JvmStatic
         fun newInstance(media: SubmissionDetailsContentType.MediaContent) = MediaSubmissionViewFragment().apply {
-            mUri = media.uri
-            mThumbnailUrl = media.thumbnailUrl
-            mContentType = media.contentType!!
-            mDisplayName = media.displayName
+            uri = media.uri
+            thumbnailUrl = media.thumbnailUrl
+            contentType = media.contentType!!
+            displayName = media.displayName
         }
     }
 }
