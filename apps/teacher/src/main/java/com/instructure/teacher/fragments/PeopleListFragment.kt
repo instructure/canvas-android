@@ -188,12 +188,14 @@ class PeopleListFragment : BaseSyncFragment<User, PeopleListPresenter, PeopleLis
 
     override fun onRefreshFinished() {
         swipeRefreshLayout.isRefreshing = false
-        emptyPandaView.visibility = View.GONE
     }
 
     override fun onRefreshStarted() {
+        //this prevents two loading spinners from happening during pull to refresh
+        if(!swipeRefreshLayout.isRefreshing) {
+            emptyPandaView.visibility  = View.VISIBLE
+        }
         emptyPandaView.setLoading()
-        emptyPandaView.visibility = View.VISIBLE
     }
 
     override fun checkIfEmpty() {
