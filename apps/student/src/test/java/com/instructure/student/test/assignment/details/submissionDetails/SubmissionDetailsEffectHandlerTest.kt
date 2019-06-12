@@ -18,6 +18,7 @@ package com.instructure.student.test.assignment.details.submissionDetails
 import com.instructure.canvasapi2.managers.AssignmentManager
 import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -70,6 +71,10 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
             coEvery { await() } returns DataResult.Fail(Failure.Network(errorMessage))
         }
 
+        every { SubmissionManager.getLtiFromAuthenticationUrlAsync(any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Fail(Failure.Network(errorMessage))
+        }
+
         mockkStatic(ApiPrefs::class)
         every { ApiPrefs.user } returns user
 
@@ -78,6 +83,7 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
         verify(timeout = 100) {
             eventConsumer.accept(
                 SubmissionDetailsEvent.DataLoaded(
+                    DataResult.Fail(Failure.Network(errorMessage)),
                     DataResult.Fail(Failure.Network(errorMessage)),
                     DataResult.Fail(Failure.Network(errorMessage)),
                     false
@@ -106,6 +112,10 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
             coEvery { await() } returns DataResult.Fail(Failure.Authorization(errorMessage))
         }
 
+        every { SubmissionManager.getLtiFromAuthenticationUrlAsync(any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Fail(Failure.Authorization(errorMessage))
+        }
+
         mockkStatic(ApiPrefs::class)
         every { ApiPrefs.user } returns user
 
@@ -114,6 +124,7 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
         verify(timeout = 100) {
             eventConsumer.accept(
                 SubmissionDetailsEvent.DataLoaded(
+                    DataResult.Fail(Failure.Authorization(errorMessage)),
                     DataResult.Fail(Failure.Authorization(errorMessage)),
                     DataResult.Fail(Failure.Authorization(errorMessage)),
                     false
@@ -140,6 +151,7 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
         val assignment = Assignment()
         val submission = Submission()
         val user = User()
+        val ltiTool = LTITool()
 
         mockkObject(AssignmentManager)
         mockkObject(SubmissionManager)
@@ -152,6 +164,10 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
             coEvery { await() } returns DataResult.Success(submission)
         }
 
+        every { SubmissionManager.getLtiFromAuthenticationUrlAsync(any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(ltiTool)
+        }
+
         mockkStatic(ApiPrefs::class)
         every { ApiPrefs.user } returns user
 
@@ -162,6 +178,7 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
                 SubmissionDetailsEvent.DataLoaded(
                     DataResult.Success(assignment),
                     DataResult.Success(submission),
+                    DataResult.Success(ltiTool),
                     false
                 )
             )

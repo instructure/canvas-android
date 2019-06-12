@@ -34,6 +34,7 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
+import com.instructure.student.fragment.LTIWebViewFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsContentType
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsEvent
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.QuizSubmissionViewFragment
@@ -192,6 +193,9 @@ class SubmissionDetailsView(
             is SubmissionDetailsContentType.QuizContent -> QuizSubmissionViewFragment.newInstance(type.url)
             is SubmissionDetailsContentType.TextContent -> TextSubmissionViewFragment.newInstance(type.text)
             is SubmissionDetailsContentType.DiscussionContent -> DiscussionSubmissionViewFragment.newInstance(type.previewUrl ?: "")
+            is SubmissionDetailsContentType.ExternalToolContent -> {
+                LTIWebViewFragment.newInstance(LTIWebViewFragment.makeRoute(type.canvasContext, type.url, hideToolbar = true))!!
+            }
             else -> PlaceholderFragment().apply {
                 typeName = type::class.java.simpleName
                 typeContents = type.toString()

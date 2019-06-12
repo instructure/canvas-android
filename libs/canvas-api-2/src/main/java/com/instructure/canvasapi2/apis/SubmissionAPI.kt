@@ -109,7 +109,7 @@ object SubmissionAPI {
                 @Query("submission[file_ids][]") attachments: List<Long>): Call<Submission>
 
         @GET
-        fun getLtiFromAuthenticationUrl(@Url url: String): Call<LTITool>
+        fun getLtiFromAuthenticationUrl(@Url url: String?): Call<LTITool>
 
         @PUT("courses/{contextId}/assignments/{assignmentId}/submissions/{userId}")
         fun postSubmissionGrade(@Path("contextId") contextId: Long,
@@ -147,7 +147,7 @@ object SubmissionAPI {
         callback.addCall(adapter.build(SubmissionInterface::class.java, params).postUrlSubmission(contextId, assignmentId, submissionType, url)).enqueue(callback)
     }
 
-    fun getLtiFromAuthenticationUrl(url: String, adapter: RestBuilder, params: RestParams, callback: StatusCallback<LTITool>) {
+    fun getLtiFromAuthenticationUrl(url: String?, adapter: RestBuilder, params: RestParams, callback: StatusCallback<LTITool>) {
         callback.addCall(adapter.build(SubmissionInterface::class.java, params).getLtiFromAuthenticationUrl(url)).enqueue(callback)
     }
 

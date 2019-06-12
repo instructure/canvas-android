@@ -38,15 +38,18 @@ class SubmissionDetailsEffectHandler : EffectHandler<SubmissionDetailsView, Subm
 
     private fun loadData(effect: SubmissionDetailsEffect.LoadData) {
         launch {
-            val submission = SubmissionManager.getSingleSubmissionAsync(effect.courseId, effect.assignmentId, ApiPrefs.user!!.id, true)
+            val submission = SubmissionManager.getSingleSubmissionAsync(effect.courseId, effect.assignmentId, ApiPrefs.user!!.id, true).await()
             val assignment = AssignmentManager.getAssignmentAsync(effect.assignmentId, effect.courseId, true).await()
+
 
             // We need to know if they can make submissions through arc, only for file uploads - This is for empty submissions
             val isArcEnabled = if (assignment.isSuccess && assignment.dataOrThrow.getSubmissionTypes().contains(Assignment.SubmissionType.ONLINE_UPLOAD)) {
                 effect.courseId.isArcEnabled()
             } else false
 
-            consumer.accept(SubmissionDetailsEvent.DataLoaded(assignment, submission.await(), isArcEnabled))
+            val ltiUrl = SubmissionManager.getLtiFromAuthenticationUrlAsync(assignment.dataOrNull?.url, true).await()
+
+            consumer.accept(SubmissionDetailsEvent.DataLoaded(assignment, submission, ltiUrl, isArcEnabled))
         }
     }
 }

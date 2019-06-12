@@ -18,17 +18,14 @@
 package com.instructure.student.mobius.assignmentDetails.submissionDetails
 
 import android.net.Uri
-import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.models.Attachment
-import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.DataResult
 
 sealed class SubmissionDetailsEvent {
     object RefreshRequested : SubmissionDetailsEvent()
     data class AttachmentClicked(val file: Attachment) : SubmissionDetailsEvent()
     data class SubmissionClicked(val submissionAttempt: Long, val attachmentId: Int = 0) : SubmissionDetailsEvent()
-    data class DataLoaded(val assignment: DataResult<Assignment>, val rootSubmission: DataResult<Submission>, val isArcEnabled: Boolean) :
+    data class DataLoaded(val assignment: DataResult<Assignment>, val rootSubmission: DataResult<Submission>, val ltiUrl: DataResult<LTITool?>, val isArcEnabled: Boolean) :
         SubmissionDetailsEvent()
 }
 

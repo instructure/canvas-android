@@ -201,12 +201,15 @@ object SubmissionManager {
     }
 
     @JvmStatic
-    fun getLtiFromAuthenticationUrl(url: String, callback: StatusCallback<LTITool>, forceNetwork: Boolean) {
+    fun getLtiFromAuthenticationUrl(url: String?, callback: StatusCallback<LTITool>, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
 
         SubmissionAPI.getLtiFromAuthenticationUrl(url, adapter, params, callback)
     }
+
+    fun getLtiFromAuthenticationUrlAsync(url: String?, forceNetwork: Boolean) =
+        apiAsync<LTITool> { getLtiFromAuthenticationUrl(url, it, forceNetwork) }
 
     @JvmStatic
     fun postMediaSubmissionComment(

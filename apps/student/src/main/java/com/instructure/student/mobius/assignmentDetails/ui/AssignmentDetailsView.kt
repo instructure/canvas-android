@@ -229,5 +229,4 @@ class AssignmentDetailsView(
             context.startActivity(intent)
         }
     }
-
 }
