@@ -137,7 +137,7 @@ class FileUploadService @JvmOverloads constructor(name: String = FileUploadServi
                 }
             }
             // Submit fileIds to the assignment
-            val attachmentsIds = attachments.map { it.id }
+            val attachmentsIds = attachments.map { it.id }.plus(bundle.getLongArray(Const.ATTACHMENTS)?.toList() ?: emptyList())
             when (action) {
                 ACTION_ASSIGNMENT_SUBMISSION -> submitAttachmentsForSubmission(courseId, assignment, attachments, attachmentsIds, bundle)
                 ACTION_DISCUSSION_ATTACHMENT -> broadcastDiscussionSuccess(notificationId, attachments)
@@ -409,12 +409,14 @@ class FileUploadService @JvmOverloads constructor(name: String = FileUploadServi
                 fileSubmitObjects: ArrayList<FileSubmitObject>,
                 courseId: Long,
                 assignment: Assignment,
-                dbSubmissionId: Long? = null
+                dbSubmissionId: Long? = null,
+                additionalAttachmentIds: ArrayList<Long>? = null
         ) = Bundle().apply {
             putParcelableArrayList(Const.FILES, fileSubmitObjects)
             putLong(Const.COURSE_ID, courseId)
             putParcelable(Const.ASSIGNMENT, assignment)
             dbSubmissionId?.let { putLong(Const.SUBMISSION, dbSubmissionId) }
+            additionalAttachmentIds?.let { putLongArray(Const.ATTACHMENTS, it.toLongArray()) }
         }
 
         @JvmStatic

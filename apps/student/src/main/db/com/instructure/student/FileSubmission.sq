@@ -57,6 +57,11 @@ SELECT *
 FROM fileSubmission
 WHERE dbSubmissionId = ?;
 
+getFilesWithoutAttachmentsForSubmissionId:
+SELECT *
+FROM fileSubmission
+WHERE dbSubmissionId = ? AND attachmentId IS NULL;
+
 deleteFilesById:
 DELETE
 FROM fileSubmission
@@ -74,7 +79,7 @@ WHERE id = ?;
 
 setAttachmentId:
 UPDATE fileSubmission
-SET attachmentId = ?
+SET attachmentId = ?, errorFlag = ?, error = ?
 WHERE id = ?;
 
 getLastInsert:

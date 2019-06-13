@@ -58,12 +58,13 @@ class SubmissionFileUploadReceiver(private val dbSubmissionId: Long) : Broadcast
 
                 val message = intent.getStringExtra(Const.MESSAGE)
                 val attachments = intent.getParcelableArrayListExtra<Attachment>(Const.ATTACHMENTS)
-                val files = db.fileSubmissionQueries.getFilesForSubmissionId(submissionId).executeAsList().sortedBy { it.id }
+                val files = db.fileSubmissionQueries.getFilesWithoutAttachmentsForSubmissionId(submissionId).executeAsList()
 
                 // Update files, if we have an attachment it uploaded, otherwise it failed
+                db.submissionQueries.setSubmissionError(true, submissionId)
                 files.forEachIndexed { index, file ->
                     if (index < attachments.size) {
-                        db.fileSubmissionQueries.setAttachmentId(attachments[index].id, file.id)
+                        db.fileSubmissionQueries.setAttachmentId(attachments[index].id, false, null, file.id)
                     } else {
                         db.fileSubmissionQueries.setFileError(true, message, file.id)
                     }
@@ -179,21 +180,42 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
     }
 
     private fun uploadFile(intent: Intent) {
-        val files = intent.getParcelableArrayListExtra<FileSubmitObject>(Const.FILES)
-        val assignment = intent.getParcelableExtra<Assignment>(Const.ASSIGNMENT)
+        var files = intent.getParcelableArrayListExtra<FileSubmitObject>(Const.FILES)
+        var assignment = intent.getParcelableExtra<Assignment>(Const.ASSIGNMENT)
         val context = intent.getParcelableExtra<CanvasContext>(Const.CANVAS_CONTEXT)
 
-        // Save to persistence
         val dbSubmissionId: Long
+        var attachmentIds: ArrayList<Long>? = null
         val db = Db.getInstance(this)
         val submissionsDb = db.submissionQueries
         val filesDb = db.fileSubmissionQueries
 
-        submissionsDb.insertOnlineUploadSubmission(assignment.name, assignment.id, assignment.groupCategoryId, context)
-        dbSubmissionId = submissionsDb.getLastInsert().executeAsOne()
+        // Check if we're retrying a submission or if it's a new one that needs to be persisted
+        if (intent.hasExtra(Const.SUBMISSION)) {
+            dbSubmissionId = intent.extras!!.getLong(Const.SUBMISSION)
+            val submission = db.submissionQueries.getSubmissionById(dbSubmissionId).executeAsOne()
+            val dbFiles = db.fileSubmissionQueries.getFilesForSubmissionId(dbSubmissionId).executeAsList()
 
-        files.forEach {
-            filesDb.insertFile(dbSubmissionId, it.name, it.size, it.contentType, it.fullPath)
+            files = ArrayList(dbFiles.filter { it.attachmentId == null }
+                .map { FileSubmitObject(it.name, it.size!!, it.contentType, it.fullPath, it.error) })
+            attachmentIds = ArrayList(dbFiles.mapNotNull { it.attachmentId })
+            assignment = Assignment(
+                id = submission.assignmentId!!.toLong(),
+                name = submission.assignmentName,
+                groupCategoryId = submission.assignmentGroupCategoryId ?: 0
+            )
+        } else {
+            submissionsDb.insertOnlineUploadSubmission(
+                assignment.name,
+                assignment.id,
+                assignment.groupCategoryId,
+                context
+            )
+            dbSubmissionId = submissionsDb.getLastInsert().executeAsOne()
+
+            files.forEach {
+                filesDb.insertFile(dbSubmissionId, it.name, it.size, it.contentType, it.fullPath)
+            }
         }
 
         // Don't show the notification in the foreground so it doesn't disappear when this service dies
@@ -209,7 +231,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
 
         val fileUploadIntent = Intent(this, FileUploadService::class.java).apply {
             action = FileUploadService.ACTION_ASSIGNMENT_SUBMISSION
-            putExtras(FileUploadService.getAssignmentSubmissionBundle(files, context.id, assignment!!, dbSubmissionId))
+            putExtras(FileUploadService.getAssignmentSubmissionBundle(files, context.id, assignment!!, dbSubmissionId, attachmentIds))
         }
         startService(fileUploadIntent)
     }
@@ -303,6 +325,15 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
                 putParcelable(Const.CANVAS_CONTEXT, canvasContext)
                 putParcelable(Const.ASSIGNMENT, Assignment(id = assignmentId, name = assignmentName, groupCategoryId = assignmentGroupCategoryId))
                 putParcelableArrayList(Const.FILES, files)
+            }
+
+            startService(context, Action.FILE_ENTRY, bundle)
+        }
+
+        fun retryFileSubmission(context: Context, canvasContext: CanvasContext, dbSubmissionId: Long) {
+            val bundle = Bundle().apply {
+                putParcelable(Const.CANVAS_CONTEXT, canvasContext)
+                putLong(Const.SUBMISSION, dbSubmissionId)
             }
 
             startService(context, Action.FILE_ENTRY, bundle)
