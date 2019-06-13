@@ -21,21 +21,17 @@ import android.graphics.Point
 import android.media.MediaPlayer
 import android.media.MediaRecorder
 import android.os.Handler
-import androidx.cardview.widget.CardView
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import com.flurgle.camerakit.CameraListener
-import com.instructure.pandautils.utils.DP
-import com.instructure.pandautils.utils.onClick
-import com.instructure.pandautils.utils.setGone
-import com.instructure.pandautils.utils.setVisible
+import androidx.cardview.widget.CardView
+import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
 import com.instructure.teacher.dialog.SGMediaCommentType
-import com.instructure.pandautils.utils.onClickWithRequireNetwork
-import com.instructure.pandautils.utils.requestAccessibilityFocus
+import com.wonderkiln.camerakit.CameraKitEventCallback
+import com.wonderkiln.camerakit.CameraKitVideo
 import kotlinx.android.synthetic.main.view_floating_media_recorder.view.*
 import kotlinx.android.synthetic.main.view_floating_media_recorder_audio.view.*
 import kotlinx.android.synthetic.main.view_floating_media_recorder_video.view.*
@@ -59,6 +55,8 @@ class FloatingRecordingView @JvmOverloads constructor(
 
     lateinit var stoppedCallback: () -> Unit
     lateinit var replayCallback: (File?) -> Unit
+
+    lateinit var cameraKitVideoCapturedCallback : CameraKitEventCallback<CameraKitVideo>
 
     // Audio related
     var mediaRecorder: MediaRecorder? = null
@@ -97,7 +95,7 @@ class FloatingRecordingView @JvmOverloads constructor(
         recordingView.setGone()
         if(isRecording) {
             isRecording = false
-            recordingView.camera.stopRecordingVideo()
+            recordingView.camera.stopVideo()
         }
         recordingView.camera.stop()
         timerHandler.removeCallbacks(timerRunnable)
@@ -131,29 +129,29 @@ class FloatingRecordingView @JvmOverloads constructor(
                 when (event.action) {
                     MotionEvent.ACTION_DOWN -> {
 
-                        //remember the initial position.
+                        // Remember the initial position.
                         initialX = recordingView.x
                         initialY = recordingView.y
 
-                        //remember the initial position.
+                        // Remember the initial position.
                         initialTouchX = event.rawX
                         initialTouchY = event.rawY
                         lastAction = event.action
                         return true
                     }
                     MotionEvent.ACTION_UP -> {
-                        //As we implemented on touch listener with ACTION_MOVE,
-                        //we have to check if the previous action was ACTION_DOWN
-                        //to identify if the user clicked the view or not.
-                        if (lastAction == MotionEvent.ACTION_DOWN) {
-                            return false
+                        // As we implemented on touch listener with ACTION_MOVE,
+                        // we have to check if the previous action was ACTION_DOWN
+                        // to identify if the user clicked the view or not.
+                        return if (lastAction == MotionEvent.ACTION_DOWN) {
+                            false
                         } else {
                             lastAction = event.action
-                            return true
+                            true
                         }
                     }
                     MotionEvent.ACTION_MOVE -> {
-                        //Calculate the X and Y coordinates of the view.
+                        // Calculate the X and Y coordinates of the view.
                         display.getSize(size)
                         val newX = (initialX + (event.rawX - initialTouchX)).coerceIn(0f, size.x - v.width.toFloat())
                         val newY = (initialY + (event.rawY - initialTouchY)).coerceIn(0f, size.y - v.height.toFloat())
@@ -175,7 +173,7 @@ class FloatingRecordingView @JvmOverloads constructor(
             val minutes = seconds / 60
             val hours = minutes / 60
 
-            //Mod the seconds by 60 so they reset every minute
+            // Mod the seconds by 60 so they reset every minute
             recordingView.toolbarTitle?.text = "%02d:%02d:%02d".format(hours, minutes, seconds % 60)
             setA11yStringForTitle(hours, minutes, seconds % 60)
             timerHandler.postDelayed(this, 500)
@@ -196,7 +194,7 @@ class FloatingRecordingView @JvmOverloads constructor(
             val totalDurationMinutes = totalDurationSeconds / 60
             val totalDurationHours = totalDurationMinutes / 60
 
-            //Mod the seconds by 60 so they reset every minute
+            // Mod the seconds by 60 so they reset every minute
             recordingView.toolbarTitle?.text = "%02d:%02d:%02d / %02d:%02d:%02d".format(hours, minutes, seconds % 60, totalDurationHours, totalDurationMinutes, totalDurationSeconds % 60)
             setA11yStringForAudioReplayTitle(hours, minutes, seconds % 60, totalDurationHours, totalDurationMinutes, totalDurationSeconds % 60)
             if (seconds <= totalDurationSeconds)
@@ -209,25 +207,22 @@ class FloatingRecordingView @JvmOverloads constructor(
     private fun setupVideo() {
         recordingView.video.setVisible()
         recordingView.audio.setGone()
-
         recordingView.startRecordingButton.requestAccessibilityFocus()
 
-        recordingView.camera.setCameraListener(object : CameraListener() {
-            override fun onVideoTaken(video: File?) {
-                super.onVideoTaken(video)
-                //show toast
-                timerHandler.removeCallbacks(timerRunnable)
-                videoFile = video
-            }
-        })
+        videoFile = File(context.cacheDir, "temp.mp4")
 
-        //Set the close button.
+        cameraKitVideoCapturedCallback = CameraKitEventCallback { video ->
+            timerHandler.removeCallbacks(timerRunnable)
+            videoFile = video.videoFile
+        }
+
+        // Set the close button.
         recordingView.closeButton.onClick {
             stopVideoView()
         }
 
         recordingView.startRecordingButton.onClick {
-            recordingView.camera.startRecordingVideo()
+            recordingView.camera.captureVideo(videoFile, cameraKitVideoCapturedCallback)
             isRecording = true
             startTime = System.currentTimeMillis()
             timerHandler.postDelayed(timerRunnable, 0)
@@ -235,7 +230,7 @@ class FloatingRecordingView @JvmOverloads constructor(
         }
 
         recordingView.endRecordingButton.onClick {
-            recordingView.camera.stopRecordingVideo()
+            recordingView.camera.stopVideo()
             isRecording = false
             timerHandler.removeCallbacks(timerRunnable)
             setViewStateEndRecording()
@@ -251,13 +246,14 @@ class FloatingRecordingView @JvmOverloads constructor(
         }
 
         recordingView.sendButton.onClickWithRequireNetwork {
-            val newFile = File(context.externalCacheDir, UUID.randomUUID().toString() + "video.mp4")
+            val newFile = File(context.cacheDir, UUID.randomUUID().toString() + "video.mp4")
+            newFile.createNewFile()
             videoFile?.renameTo(newFile)
             recordingCallback(newFile)
             recordingView.setGone()
-            if(isRecording) {
+            if (isRecording) {
                 isRecording = false
-                recordingView.camera.stopRecordingVideo()
+                recordingView.camera.stopVideo()
             }
             recordingView.camera.stop()
             timerHandler.removeCallbacks(timerRunnable)
@@ -432,7 +428,7 @@ class FloatingRecordingView @JvmOverloads constructor(
         timerHandler.removeCallbacks(playbackTimerRunnable)
     }
 
-    //Sets the toolbar to the total duration of the audio recording.
+    // Sets the toolbar to the total duration of the audio recording.
     private fun setTimeForAudioRecording() {
         val duration = mediaPlayer?.duration ?: 0
 

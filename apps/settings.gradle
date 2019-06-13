@@ -8,7 +8,6 @@ include ':polling'
 include ':androidcalendar'
 include ':annotations'
 include ':blueprint'
-include ':camerakit'
 include ':canvas-api-2'
 include ':chips'
 include ":croutonlibrary"
@@ -25,7 +24,6 @@ include ':pandares'
 project(':androidcalendar').projectDir = new File(rootProject.projectDir, '/../libs/androidcalendar')
 project(':annotations').projectDir = new File(rootProject.projectDir, '/../libs/annotations')
 project(':blueprint').projectDir = new File(rootProject.projectDir, '/../libs/blueprint')
-project(':camerakit').projectDir = new File('../libs/camerakit')
 project(':canvas-api-2').projectDir = new File(rootProject.projectDir, '/../libs/canvas-api-2')
 project(':chips').projectDir = new File(rootProject.projectDir, '/../libs/chips')
 project(':croutonlibrary').projectDir = new File(rootProject.projectDir, '/../libs/croutonlibrary')
