@@ -140,10 +140,10 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
     @Test
     fun `LoadData results in DataLoaded`() {
         val courseId = 1L
-        val assignment = Assignment().copy(submissionTypesRaw = listOf(Assignment.SubmissionType.EXTERNAL_TOOL.apiString))
+        val assignment = Assignment().copy(submissionTypesRaw = listOf(Assignment.SubmissionType.EXTERNAL_TOOL.apiString), url="https://www.instructure.com")
         val submission = Submission()
         val user = User()
-        val ltiTool = LTITool()
+        val ltiTool = LTITool(url = "https://www.instructure.com")
 
         mockkObject(AssignmentManager)
         mockkObject(SubmissionManager)
