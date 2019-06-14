@@ -75,7 +75,7 @@ public class CalendarWeekBinder extends BaseBinder {
                 int drawable;
 
                 if(assignment != null) {
-                    int assignmentState = AssignmentUtils2.INSTANCE.getAssignmentState(assignment, assignment.getSubmission());
+                    int assignmentState = AssignmentUtils2.INSTANCE.getAssignmentState(assignment, assignment.getSubmission(), false);
 
                     holder.icon.setContentDescription(context.getString(R.string.assignment));
                     switch(assignmentState){
