@@ -55,7 +55,7 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     fun signOut() {
         hamburgerButton.click()
         onViewWithId(R.id.navigationDrawerItem_logout).click()
-        onViewWithText(R.string.ok).click()
+        onViewWithText(android.R.string.yes).click()
     }
 
     fun pressChangeUser() {
