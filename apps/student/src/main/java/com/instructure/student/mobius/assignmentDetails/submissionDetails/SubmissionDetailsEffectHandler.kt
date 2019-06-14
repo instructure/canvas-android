@@ -49,8 +49,10 @@ class SubmissionDetailsEffectHandler : EffectHandler<SubmissionDetailsView, Subm
                 effect.courseId.isArcEnabled()
             } else false
 
-            val ltiUrl = if (assignment.dataOrNull?.getSubmissionTypes()?.contains(Assignment.SubmissionType.EXTERNAL_TOOL) == true)
-                 SubmissionManager.getLtiFromAuthenticationUrlAsync(assignment.dataOrNull?.url, true).await()
+            // Determine if we need to retrieve an authenticated LTI URL based on whether this assignment accepts external tool submissions
+            val assignmentUrl = assignment.dataOrNull?.url
+            val ltiUrl = if (assignmentUrl != null && assignment.dataOrNull?.getSubmissionTypes()?.contains(Assignment.SubmissionType.EXTERNAL_TOOL) == true)
+                 SubmissionManager.getLtiFromAuthenticationUrlAsync(assignmentUrl, true).await()
             else DataResult.Fail(null)
 
             consumer.accept(SubmissionDetailsEvent.DataLoaded(assignment, submission, ltiUrl, isArcEnabled))

@@ -208,7 +208,7 @@ object SubmissionManager {
         SubmissionAPI.getLtiFromAuthenticationUrl(url, adapter, params, callback)
     }
 
-    fun getLtiFromAuthenticationUrlAsync(url: String?, forceNetwork: Boolean) =
+    fun getLtiFromAuthenticationUrlAsync(url: String, forceNetwork: Boolean) =
         apiAsync<LTITool> { getLtiFromAuthenticationUrl(url, it, forceNetwork) }
 
     @JvmStatic
