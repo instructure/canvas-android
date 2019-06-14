@@ -30,6 +30,7 @@ import android.os.Handler
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
+import android.widget.CompoundButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -46,8 +47,10 @@ import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationItemView
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.GroupManager
+import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -72,6 +75,7 @@ import com.instructure.pandautils.utils.Const.LANGUAGES_PENDING_INTENT_KEY
 import com.instructure.student.R
 import com.instructure.student.dialog.BookmarkCreationDialog
 import com.instructure.student.events.CoreDataFinishedLoading
+import com.instructure.student.events.CourseColorOverlayToggledEvent
 import com.instructure.student.events.ShowGradesToggledEvent
 import com.instructure.student.events.UserUpdatedEvent
 import com.instructure.student.fragment.*
@@ -84,8 +88,7 @@ import com.instructure.student.util.StudentPrefs
 import kotlinx.android.synthetic.main.activity_navigation.*
 import kotlinx.android.synthetic.main.loading_canvas_view.*
 import kotlinx.android.synthetic.main.navigation_drawer.*
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -98,6 +101,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     private var debounceJob: Job? = null
     private var drawerItemSelectedJob: Job? = null
     private var mDrawerToggle: ActionBarDrawerToggle? = null
+    private var colorOverlayJob: Job? = null
 
     //endregion
 
@@ -215,6 +219,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         debounceJob?.cancel()
         drawerItemSelectedJob?.cancel()
         routeJob?.cancel()
+        colorOverlayJob?.cancel()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -348,6 +353,9 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         }
         ViewStyler.themeSwitch(this@NavigationActivity, navigationDrawerShowGradesSwitch, ThemePrefs.brandColor)
 
+        // Set up Color Overlay setting
+        setUpColorOverlaySwitch()
+
         //Load version
         try {
             val navigationDrawerVersion = findViewById<TextView>(R.id.navigationDrawerVersion)
@@ -388,6 +396,32 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
         navigationDrawerItem_startMasquerading.setVisible(!ApiPrefs.isMasquerading && ApiPrefs.canBecomeUser == true)
         navigationDrawerItem_stopMasquerading.setVisible(ApiPrefs.isMasquerading)
+    }
+
+    private fun setUpColorOverlaySwitch() {
+        navigationDrawerColorOverlaySwitch.isChecked = !StudentPrefs.hideCourseColorOverlay
+        lateinit var checkListener: CompoundButton.OnCheckedChangeListener
+        checkListener = CompoundButton.OnCheckedChangeListener { _, isChecked ->
+            colorOverlayJob?.cancel()
+            colorOverlayJob = GlobalScope.launch(Dispatchers.Main) {
+                navigationDrawerColorOverlaySwitch.isEnabled = false
+                UserManager.setHideColorOverlay(!isChecked).await()
+                    .onSuccess {
+                        StudentPrefs.hideCourseColorOverlay = it.hideDashCardColorOverlays
+                        CanvasRestAdapter.clearCacheUrls("""/users/self/settings""")
+                        EventBus.getDefault().post(CourseColorOverlayToggledEvent)
+                    }
+                    .onFailure {
+                        toast(R.string.errorOccurred)
+                        navigationDrawerColorOverlaySwitch.setOnCheckedChangeListener(null)
+                        navigationDrawerColorOverlaySwitch.isChecked = !isChecked
+                        navigationDrawerColorOverlaySwitch.setOnCheckedChangeListener(checkListener)
+                    }
+                navigationDrawerColorOverlaySwitch.isEnabled = true
+            }
+        }
+        navigationDrawerColorOverlaySwitch.setOnCheckedChangeListener(checkListener)
+        ViewStyler.themeSwitch(this@NavigationActivity, navigationDrawerColorOverlaySwitch, ThemePrefs.brandColor)
     }
 
     override fun onStartMasquerading(domain: String, userId: Long) {

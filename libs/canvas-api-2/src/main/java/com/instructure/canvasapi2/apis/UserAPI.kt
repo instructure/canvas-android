@@ -20,16 +20,8 @@ package com.instructure.canvasapi2.apis
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
-import com.instructure.canvasapi2.models.Account
-import com.instructure.canvasapi2.models.BecomeUserPermission
-import com.instructure.canvasapi2.models.CanvasColor
-import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.Enrollment
-import com.instructure.canvasapi2.models.Student
-import com.instructure.canvasapi2.models.TermsOfService
-import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.APIHelper
-
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -47,6 +39,12 @@ object UserAPI {
 
         @GET("users/self/profile")
         fun getSelf(): Call<User>
+
+        @GET("users/self/settings")
+        fun getSelfSettings(): Call<UserSettings>
+
+        @PUT("users/self/settings")
+        fun setHideColorOverlaySetting(@Query("hide_dashcard_color_overlays") hideOverlay: Boolean): Call<UserSettings>
 
         @GET("users/self/enrollments?state[]=active&state[]=invited&state[]=completed")
         fun getSelfEnrollments(): Call<List<Enrollment>>
@@ -112,6 +110,20 @@ object UserAPI {
 
     fun getSelf(adapter: RestBuilder, params: RestParams, callback: StatusCallback<User>) {
         callback.addCall(adapter.build(UsersInterface::class.java, params).getSelf()).enqueue(callback)
+    }
+
+    fun getSelfSettings(adapter: RestBuilder, params: RestParams, callback: StatusCallback<UserSettings>) {
+        callback.addCall(adapter.build(UsersInterface::class.java, params).getSelfSettings()).enqueue(callback)
+    }
+
+    fun setHideColorOverlaySetting(
+        hide: Boolean,
+        adapter: RestBuilder,
+        params: RestParams,
+        callback: StatusCallback<UserSettings>
+    ) {
+        callback.addCall(adapter.build(UsersInterface::class.java, params).setHideColorOverlaySetting(hide))
+            .enqueue(callback)
     }
 
     fun getSelfEnrollments(adapter: RestBuilder, params: RestParams, callback: StatusCallback<List<Enrollment>>) {

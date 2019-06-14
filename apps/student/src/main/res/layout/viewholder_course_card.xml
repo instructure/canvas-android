@@ -45,17 +45,39 @@
                 android:layout_above="@+id/textContainer"
                 android:importantForAccessibility="no"/>
 
-            <ImageView
-                android:id="@+id/overflow"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:background="?android:selectableItemBackground"
-                android:clickable="true"
-                android:contentDescription="@string/courseOptions"
-                android:focusable="true"
-                android:padding="8dp"
-                app:srcCompat="@drawable/vd_overflow_white_18dp"/>
+            <FrameLayout
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_alignParentEnd="true">
+
+                <View
+                    android:id="@+id/courseColorIndicator"
+                    android:importantForAccessibility="no"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginEnd="6dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/ic_circle"
+                    android:backgroundTint="@color/canvasDefaultAccent"/>
+
+                <ImageView
+                    android:id="@+id/overflow"
+                    android:layout_gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?android:selectableItemBackground"
+                    android:clickable="true"
+                    android:contentDescription="@string/courseOptions"
+                    android:focusable="true"
+                    android:paddingTop="13dp"
+                    android:paddingEnd="13dp"
+                    android:paddingStart="17dp"
+                    android:paddingBottom="17dp"
+                    app:srcCompat="@drawable/vd_overflow_white_18dp"/>
+
+            </FrameLayout>
 
             <View
                 android:id="@+id/middleDivider"

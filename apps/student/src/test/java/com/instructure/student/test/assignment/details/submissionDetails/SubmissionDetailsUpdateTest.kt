@@ -47,6 +47,7 @@ class SubmissionDetailsUpdateTest : Assert() {
     private lateinit var assignment: Assignment
     private lateinit var submission: Submission
     private lateinit var initModel: SubmissionDetailsModel
+    private lateinit var ltiTool: LTITool
     private var isArcEnabled = false
 
     @Before
@@ -55,6 +56,7 @@ class SubmissionDetailsUpdateTest : Assert() {
         assignment = Assignment(id = 1234L, courseId = course.id)
         submission = Submission(id = 30L, attempt = 1L, assignmentId = assignment.id)
         initModel = SubmissionDetailsModel(assignmentId = assignment.id, canvasContext = course, isArcEnabled = isArcEnabled)
+        ltiTool = LTITool(url = "https://www.instructure.com")
     }
 
     @Test
@@ -185,6 +187,7 @@ class SubmissionDetailsUpdateTest : Assert() {
         initModel = initModel.copy(isLoading = true)
         val assignment = DataResult.Success(assignment)
         val submission = DataResult.Fail(Failure.Network("ErRoR"))
+        val ltiTool = DataResult.Fail(Failure.Network("ErRoR"))
         val contentType = SubmissionDetailsContentType.NoSubmissionContent(course, assignment.data, isArcEnabled)
         val expectedModel = initModel.copy(
             isLoading = false,
@@ -195,7 +198,7 @@ class SubmissionDetailsUpdateTest : Assert() {
         )
         updateSpec
             .given(initModel)
-            .whenEvent(SubmissionDetailsEvent.DataLoaded(assignment, submission, isArcEnabled))
+            .whenEvent(SubmissionDetailsEvent.DataLoaded(assignment, submission, ltiTool, isArcEnabled))
             .then(
                 assertThatNext(
                     hasModel(expectedModel),
@@ -223,6 +226,16 @@ class SubmissionDetailsUpdateTest : Assert() {
             assignment.copy(submissionTypesRaw = listOf(Assignment.SubmissionType.ON_PAPER.apiString)),
             submission,
             SubmissionDetailsContentType.OnPaperContent
+        )
+    }
+
+    @Test
+    fun `EXTERNAL_TOOL results in SubmissionDetailsContentType of ExternalToolContent`() {
+        verifyGetSubmissionContentType(
+            assignment.copy(submissionTypesRaw = listOf(Assignment.SubmissionType.EXTERNAL_TOOL.apiString)),
+            submission,
+            SubmissionDetailsContentType.ExternalToolContent(course, ltiTool.url!!),
+            ltiTool
         )
     }
 
@@ -610,10 +623,12 @@ class SubmissionDetailsUpdateTest : Assert() {
     private fun verifyGetSubmissionContentType(
         assignment: Assignment,
         submission: Submission,
-        expectedContentType: SubmissionDetailsContentType
+        expectedContentType: SubmissionDetailsContentType,
+        lti: LTITool? = null
     ) {
         val assignmentResult = DataResult.Success(assignment)
         val submissionResult = DataResult.Success(submission)
+        val ltiToolResult = DataResult.Success(lti)
         val expectedModel = initModel.copy(
             isLoading = false,
             assignment = assignmentResult,
@@ -623,7 +638,7 @@ class SubmissionDetailsUpdateTest : Assert() {
 
         updateSpec
             .given(initModel)
-            .whenEvent(SubmissionDetailsEvent.DataLoaded(assignmentResult, submissionResult, isArcEnabled))
+            .whenEvent(SubmissionDetailsEvent.DataLoaded(assignmentResult, submissionResult, ltiToolResult, isArcEnabled))
             .then(
                 assertThatNext(
                     hasModel(expectedModel),

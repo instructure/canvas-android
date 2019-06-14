@@ -18,6 +18,7 @@ package com.instructure.student.test.assignment.details.submissionDetails
 import com.instructure.canvasapi2.managers.AssignmentManager
 import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -80,6 +81,7 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
                 SubmissionDetailsEvent.DataLoaded(
                     DataResult.Fail(Failure.Network(errorMessage)),
                     DataResult.Fail(Failure.Network(errorMessage)),
+                    DataResult.Fail(null),
                     false
                 )
             )
@@ -116,6 +118,7 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
                 SubmissionDetailsEvent.DataLoaded(
                     DataResult.Fail(Failure.Authorization(errorMessage)),
                     DataResult.Fail(Failure.Authorization(errorMessage)),
+                    DataResult.Fail(null),
                     false
                 )
             )
@@ -137,9 +140,10 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
     @Test
     fun `LoadData results in DataLoaded`() {
         val courseId = 1L
-        val assignment = Assignment()
+        val assignment = Assignment().copy(submissionTypesRaw = listOf(Assignment.SubmissionType.EXTERNAL_TOOL.apiString), url="https://www.instructure.com")
         val submission = Submission()
         val user = User()
+        val ltiTool = LTITool(url = "https://www.instructure.com")
 
         mockkObject(AssignmentManager)
         mockkObject(SubmissionManager)
@@ -152,6 +156,10 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
             coEvery { await() } returns DataResult.Success(submission)
         }
 
+        every { SubmissionManager.getLtiFromAuthenticationUrlAsync(any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(ltiTool)
+        }
+
         mockkStatic(ApiPrefs::class)
         every { ApiPrefs.user } returns user
 
@@ -162,6 +170,7 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
                 SubmissionDetailsEvent.DataLoaded(
                     DataResult.Success(assignment),
                     DataResult.Success(submission),
+                    DataResult.Success(ltiTool),
                     false
                 )
             )

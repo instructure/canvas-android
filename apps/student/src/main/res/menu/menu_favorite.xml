@@ -20,7 +20,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item android:id="@+id/selectFavorites"
-        android:title="@string/editFavorites"
+        android:title="@string/editDashboard"
         android:icon="@drawable/vd_edit"
         app:showAsAction="always"/>
 

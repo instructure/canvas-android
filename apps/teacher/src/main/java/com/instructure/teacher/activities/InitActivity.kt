@@ -25,6 +25,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.CompoundButton
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
@@ -66,6 +67,7 @@ import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.router.RouteResolver
 import com.instructure.teacher.tasks.TeacherLogoutTask
 import com.instructure.teacher.utils.AppType
+import com.instructure.teacher.utils.TeacherPrefs
 import com.instructure.teacher.utils.getColorCompat
 import com.instructure.teacher.utils.isTablet
 import com.instructure.teacher.viewinterface.InitActivityView
@@ -122,6 +124,8 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
 
             return ColorStateList(states, colors)
         }
+
+    private lateinit var checkListener: CompoundButton.OnCheckedChangeListener
 
     private val isDrawerOpen: Boolean
         get() = !(drawerLayout == null || navigationDrawer == null) && drawerLayout.isDrawerOpen(navigationDrawer)
@@ -262,6 +266,9 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
             navigationDrawerItem_logout.setVisible(false)
         }
 
+        // Set up Color Overlay setting
+        setUpColorOverlaySwitch()
+
         // App version
         navigationDrawerVersion.text = getString(R.string.version, BuildConfig.VERSION_NAME)
 
@@ -275,6 +282,24 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
 
         navigationDrawerItem_startMasquerading.setVisible(!ApiPrefs.isMasquerading && ApiPrefs.canBecomeUser == true)
         navigationDrawerItem_stopMasquerading.setVisible(ApiPrefs.isMasquerading)
+    }
+
+    private fun setUpColorOverlaySwitch() {
+        navigationDrawerColorOverlaySwitch.isChecked = !TeacherPrefs.hideCourseColorOverlay
+        checkListener = CompoundButton.OnCheckedChangeListener { _, isChecked ->
+            navigationDrawerColorOverlaySwitch.isEnabled = false
+            presenter?.setHideColorOverlay(!isChecked)
+        }
+        navigationDrawerColorOverlaySwitch.setOnCheckedChangeListener(checkListener)
+        ViewStyler.themeSwitch(this, navigationDrawerColorOverlaySwitch, ThemePrefs.brandColor)
+    }
+
+    override fun updateColorOverlaySwitch(isChecked: Boolean, isFailed: Boolean) {
+        if (isFailed) toast(R.string.errorOccurred)
+        navigationDrawerColorOverlaySwitch.setOnCheckedChangeListener(null)
+        navigationDrawerColorOverlaySwitch.isChecked = isChecked
+        navigationDrawerColorOverlaySwitch.setOnCheckedChangeListener(checkListener)
+        navigationDrawerColorOverlaySwitch.isEnabled = true
     }
 
     override fun gotLaunchDefinitions(launchDefinitions: List<LaunchDefinition>?) {

@@ -203,7 +203,11 @@ class FileListFragment : BaseSyncFragment<
     }
 
     override fun checkIfEmpty() {
-        emptyPandaView.setMessageText(R.string.noFilesSubtext)
+        when {
+            mCanvasContext.isCourse -> emptyPandaView.setMessageText(R.string.noFilesSubtextCourse)
+            mCanvasContext.isGroup -> emptyPandaView.setMessageText(R.string.noFilesSubtextGroup)
+            else -> emptyPandaView.setMessageText(R.string.noFilesSubtext)
+        }
         emptyPandaView.setEmptyViewImage(requireContext().getDrawableCompat(R.drawable.vd_panda_nofiles))
         RecyclerViewUtils.checkIfEmpty(emptyPandaView, mRecyclerView, swipeRefreshLayout, adapter, presenter.isEmpty)
     }

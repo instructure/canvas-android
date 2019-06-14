@@ -392,6 +392,7 @@
     <string name="calendar">Calendar</string>
     <string name="bookmarks">Bookmarks</string>
     <string name="showGrades">Show Grades</string>
+    <string name="colorOverlay">Color Overlay</string>
     <string name="gradesAreHidden">Grades are not visible for this course.</string>
 
     <string name="entireGroupSelected">This entire group has already been selected.</string>
@@ -935,7 +936,9 @@
     <string name="courseNickname">Course Nickname</string>
 
     <string name="notAvailableOffline">Functionality unavailable while offline</string>
-    <string name="editFavorites">Edit Courses</string>
+    <string name="editDashboard">Edit Dashboard</string>
+    <string name="editDashboardDescriptor">Select which courses you would like to see on the Dashboard</string>
+    <string name="a11y_editYourCourseList">Edit your course list</string>
 
     <string name="dashboard">Dashboard</string>
     <string name="previous">Previous</string>
@@ -968,6 +971,9 @@
     <string name="declineCourseInvitation">Decline</string>
 
     <!-- File Strings -->
+    <string name="noFilesSubtextCourse">There are no files associated with this course.</string>
+    <string name="noFilesSubtextGroup">There are no files associated with this group.</string>
+
     <array name="file_size_units">
         <item>B</item>
         <item>KB</item>

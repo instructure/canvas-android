@@ -26,6 +26,7 @@ import com.google.android.material.appbar.AppBarLayout
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Tab
+import com.instructure.canvasapi2.utils.isValid
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.fragments.BaseSyncFragment
 import com.instructure.pandautils.utils.*
@@ -110,8 +111,9 @@ class CourseBrowserFragment : BaseSyncFragment<
     override fun onResume() {
         super.onResume()
         EventBus.getDefault().register(this)
-        (presenter.canvasContext as? Course)?.let { courseImage.setCourseImage(it, it.color) }
-        courseImage.setCourseImage(presenter.canvasContext as? Course, presenter.canvasContext.color)
+        (presenter.canvasContext as? Course)?.let {
+            courseImage.setCourseImage(it, it.color, !TeacherPrefs.hideCourseColorOverlay)
+        }
         courseBrowserTitle.text = presenter.canvasContext.name
         courseBrowserSubtitle.text = (presenter.canvasContext as? Course)?.term?.name ?: ""
         mCourseBrowserHeader.setTitleAndSubtitle(presenter.canvasContext.name ?: "", (presenter.canvasContext as? Course)?.term?.name ?: "")
@@ -135,6 +137,19 @@ class CourseBrowserFragment : BaseSyncFragment<
     }
 
     private fun setupToolbar() {
+        // If course color overlay is disabled we show a static toolbar and hide the text overlay
+        val toolbar = if (TeacherPrefs.hideCourseColorOverlay) {
+            overlayToolbar.setGone()
+            courseHeader.setGone()
+            noOverlayToolbar.title = presenter.canvasContext.name
+            (presenter.canvasContext as? Course)?.term?.name?.let { noOverlayToolbar.subtitle = it }
+            noOverlayToolbar.setBackgroundColor(presenter.canvasContext.color)
+            noOverlayToolbar
+        } else {
+            noOverlayToolbar.setGone()
+            overlayToolbar
+        }
+
         toolbar.setupBackButton(this)
         toolbar.setupMenu(R.menu.menu_course_browser, menuItemCallback)
         ViewStyler.colorToolbarIconsAndText(requireActivity(), toolbar, Color.WHITE)
@@ -142,7 +157,11 @@ class CourseBrowserFragment : BaseSyncFragment<
 
         collapsingToolbarLayout.setContentScrimColor(presenter.canvasContext.color)
 
-        if (isTablet || requireContext().a11yManager.isSwitchAccessEnabled) {
+        // Hide image placeholder if color overlay is disabled and there is no valid image
+        val hasImage = (presenter.canvasContext as? Course)?.imageUrl?.isValid() == true
+        val hideImagePlaceholder = TeacherPrefs.hideCourseColorOverlay && !hasImage
+
+        if (isTablet || requireContext().a11yManager.isSwitchAccessEnabled || hideImagePlaceholder) {
             appBarLayout.setExpanded(false, false)
             appBarLayout.isActivated = false
             appBarLayout.isFocusable = false

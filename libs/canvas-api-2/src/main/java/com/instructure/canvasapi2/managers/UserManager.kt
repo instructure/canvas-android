@@ -25,6 +25,7 @@ import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ExhaustiveListCallback
+import com.instructure.canvasapi2.utils.weave.apiAsync
 
 object UserManager {
 
@@ -60,6 +61,23 @@ object UserManager {
         )
 
         UserAPI.getSelf(adapter, params, callback)
+    }
+
+    fun getSelfSettings(forceNetwork: Boolean) = apiAsync<UserSettings> { callback ->
+        UserAPI.getSelfSettings(
+            adapter = RestBuilder(callback),
+            params = RestParams(isForceReadFromNetwork = forceNetwork),
+            callback = callback
+        )
+    }
+
+    fun setHideColorOverlay(hide: Boolean) = apiAsync<UserSettings> { callback ->
+        UserAPI.setHideColorOverlaySetting(
+            hide = hide,
+            adapter = RestBuilder(callback),
+            params = RestParams(),
+            callback = callback
+        )
     }
 
     @JvmStatic

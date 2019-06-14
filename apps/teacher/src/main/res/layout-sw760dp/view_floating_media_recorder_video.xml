@@ -22,13 +22,13 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/recordingViewHeight">
 
-    <com.flurgle.camerakit.CameraView
+    <com.wonderkiln.camerakit.CameraView
         android:id="@+id/camera"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:adjustViewBounds="true"
         camerakit:ckFacing="front"
-        camerakit:ckZoom="off" />
+        camerakit:ckPinchToZoom="false" />
 
     <ImageView
         android:id="@+id/startRecordingButton"
