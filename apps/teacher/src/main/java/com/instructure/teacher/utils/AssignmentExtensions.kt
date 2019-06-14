@@ -292,7 +292,7 @@ fun getPointsPossibleWithParenthesis(points: Double, pointsPossible: Double): St
     return "(" + NumberHelper.formatDecimal(points, 2, true) + "/" + NumberHelper.formatDecimal(pointsPossible, 2, true) + ")"
 }
 
-fun Assignment?.getState(submission: Submission?) = AssignmentUtils2.getAssignmentState(this, submission)
+fun Assignment?.getState(submission: Submission?, isTeacher: Boolean = false) = AssignmentUtils2.getAssignmentState(this, submission, isTeacher)
 
 /**
  *

@@ -35,7 +35,7 @@ object AssignmentUtils2 {
     const val ASSIGNMENT_STATE_IN_CLASS = 1008
     const val ASSIGNMENT_STATE_DROPPED = 1009 //not yet used....
 
-    fun getAssignmentState(assignment: Assignment?, submission: Submission?): Int {
+    fun getAssignmentState(assignment: Assignment?, submission: Submission?, isTeacher: Boolean = false): Int {
         // Case - Error
         if (assignment == null) {
             return ASSIGNMENT_STATE_UNKNOWN
@@ -67,7 +67,7 @@ object AssignmentUtils2 {
             } else if (submission.missing) {
                 ASSIGNMENT_STATE_GRADED_MISSING
             } else {
-                checkOnTimeOrLate(submission, hasNoGrade(assignment, submission))
+                checkOnTimeOrLate(submission, hasNoGrade(assignment, submission, isTeacher))
             }
 
         }
@@ -77,8 +77,8 @@ object AssignmentUtils2 {
     // 1. Has not been graded
     // 2. Is "Pending Review"
     // 3. Is muted
-    private fun hasNoGrade(assignment: Assignment, submission: Submission): Boolean {
-        return !submission.isGraded || Const.PENDING_REVIEW == submission.workflowState || assignment.muted
+    private fun hasNoGrade(assignment: Assignment, submission: Submission, isTeacher: Boolean): Boolean {
+        return !submission.isGraded || Const.PENDING_REVIEW == submission.workflowState || (!isTeacher && assignment.muted)
     }
 
     // Edge Case - Assignment is either due in the future or an unknown "paper" hand in
