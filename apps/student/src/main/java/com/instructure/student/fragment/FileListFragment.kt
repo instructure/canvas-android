@@ -195,7 +195,7 @@ class FileListFragment : ParentFragment(), Bookmarkable {
                 setRefreshing(false)
 
                 if (recyclerAdapter?.size() == 0) {
-                    setEmptyView(emptyView, R.drawable.vd_panda_nofiles, R.string.noFiles, R.string.noFilesSubtext)
+                    setEmptyView(emptyView, R.drawable.vd_panda_nofiles, R.string.noFiles, getNoFileSubtextId())
                 }
             }
         }
@@ -385,11 +385,19 @@ class FileListFragment : ParentFragment(), Bookmarkable {
             }
             recyclerAdapter?.remove(deletedItem)
             if (recyclerAdapter?.size() == 0) {
-                setEmptyView(emptyView, R.drawable.vd_panda_nofiles, R.string.noFiles, R.string.noFilesSubtext)
+                setEmptyView(emptyView, R.drawable.vd_panda_nofiles, R.string.noFiles, getNoFileSubtextId())
             }
             StudentPrefs.staleFolderIds = StudentPrefs.staleFolderIds + folder!!.id
         } catch {
             toast(R.string.errorOccurred)
+        }
+    }
+
+    private fun getNoFileSubtextId(): Int {
+        return when {
+            canvasContext.isCourse -> R.string.noFilesSubtextCourse
+            canvasContext.isGroup -> R.string.noFilesSubtextGroup
+            else -> R.string.noFilesSubtext
         }
     }
 
