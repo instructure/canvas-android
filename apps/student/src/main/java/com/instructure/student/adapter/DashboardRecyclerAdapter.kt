@@ -153,7 +153,8 @@ class DashboardRecyclerAdapter(
                 EnrollmentManager.getSelfEnrollments(null, listOf(EnrollmentAPI.STATE_INVITED), isRefresh, it)
             }
 
-            val favoriteCourses = dashboardCards.map { mCourseMap[it.id] }
+            // Map not null is needed because the dashboard api can return unpublished courses
+            val favoriteCourses = dashboardCards.mapNotNull { mCourseMap[it.id] }
 
             // Add courses
             addOrUpdateAllItems(ItemType.COURSE_HEADER, favoriteCourses)
