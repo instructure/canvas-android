@@ -43,6 +43,7 @@ import com.instructure.pandautils.views.ProgressiveCanvasLoadingView
 import com.instructure.student.AnnotationComments.AnnotationCommentListFragment
 import com.instructure.student.R
 import com.instructure.student.router.RouteMatcher
+import com.pspdfkit.preferences.PSPDFKitPreferences
 import com.pspdfkit.ui.inspector.PropertyInspectorCoordinatorLayout
 import com.pspdfkit.ui.special_mode.manager.AnnotationManager
 import com.pspdfkit.ui.toolbar.ToolbarCoordinatorLayout
@@ -114,6 +115,10 @@ class PdfStudentSubmissionView(
     }
 
     init {
+        if (!PSPDFKitPreferences.get(getContext()).isAnnotationCreatorSet) {
+            PSPDFKitPreferences.get(getContext()).setAnnotationCreator(ApiPrefs.user?.name)
+        }
+
         View.inflate(context, R.layout.view_pdf_student_submission, this)
 
         setLoading(true)
