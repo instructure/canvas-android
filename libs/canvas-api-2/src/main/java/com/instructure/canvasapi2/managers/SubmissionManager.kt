@@ -201,7 +201,7 @@ object SubmissionManager {
     }
 
     @JvmStatic
-    fun getLtiFromAuthenticationUrl(url: String?, callback: StatusCallback<LTITool>, forceNetwork: Boolean) {
+    fun getLtiFromAuthenticationUrl(url: String, callback: StatusCallback<LTITool>, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
 
