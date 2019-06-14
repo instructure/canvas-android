@@ -971,6 +971,9 @@
     <string name="declineCourseInvitation">Decline</string>
 
     <!-- File Strings -->
+    <string name="noFilesSubtextCourse">There are no files associated with this course.</string>
+    <string name="noFilesSubtextGroup">There are no files associated with this group.</string>
+
     <array name="file_size_units">
         <item>B</item>
         <item>KB</item>
