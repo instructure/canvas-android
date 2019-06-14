@@ -20,7 +20,9 @@ package com.instructure.student.mobius.assignmentDetails.submissionDetails
 import com.instructure.canvasapi2.managers.AssignmentManager
 import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsView
 import com.instructure.student.mobius.common.ui.EffectHandler
 import com.instructure.student.util.isArcEnabled
@@ -47,7 +49,9 @@ class SubmissionDetailsEffectHandler : EffectHandler<SubmissionDetailsView, Subm
                 effect.courseId.isArcEnabled()
             } else false
 
-            val ltiUrl = SubmissionManager.getLtiFromAuthenticationUrlAsync(assignment.dataOrNull?.url, true).await()
+            val ltiUrl = if (assignment.dataOrNull?.getSubmissionTypes()?.contains(Assignment.SubmissionType.EXTERNAL_TOOL) == true)
+                 SubmissionManager.getLtiFromAuthenticationUrlAsync(assignment.dataOrNull?.url, true).await()
+            else DataResult.Fail(null)
 
             consumer.accept(SubmissionDetailsEvent.DataLoaded(assignment, submission, ltiUrl, isArcEnabled))
         }

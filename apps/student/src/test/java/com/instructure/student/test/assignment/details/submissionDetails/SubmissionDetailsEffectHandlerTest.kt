@@ -71,10 +71,6 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
             coEvery { await() } returns DataResult.Fail(Failure.Network(errorMessage))
         }
 
-        every { SubmissionManager.getLtiFromAuthenticationUrlAsync(any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Fail(Failure.Network(errorMessage))
-        }
-
         mockkStatic(ApiPrefs::class)
         every { ApiPrefs.user } returns user
 
@@ -85,7 +81,7 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
                 SubmissionDetailsEvent.DataLoaded(
                     DataResult.Fail(Failure.Network(errorMessage)),
                     DataResult.Fail(Failure.Network(errorMessage)),
-                    DataResult.Fail(Failure.Network(errorMessage)),
+                    DataResult.Fail(null),
                     false
                 )
             )
@@ -112,10 +108,6 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
             coEvery { await() } returns DataResult.Fail(Failure.Authorization(errorMessage))
         }
 
-        every { SubmissionManager.getLtiFromAuthenticationUrlAsync(any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Fail(Failure.Authorization(errorMessage))
-        }
-
         mockkStatic(ApiPrefs::class)
         every { ApiPrefs.user } returns user
 
@@ -126,7 +118,7 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
                 SubmissionDetailsEvent.DataLoaded(
                     DataResult.Fail(Failure.Authorization(errorMessage)),
                     DataResult.Fail(Failure.Authorization(errorMessage)),
-                    DataResult.Fail(Failure.Authorization(errorMessage)),
+                    DataResult.Fail(null),
                     false
                 )
             )
@@ -148,7 +140,7 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
     @Test
     fun `LoadData results in DataLoaded`() {
         val courseId = 1L
-        val assignment = Assignment()
+        val assignment = Assignment().copy(submissionTypesRaw = listOf(Assignment.SubmissionType.EXTERNAL_TOOL.apiString))
         val submission = Submission()
         val user = User()
         val ltiTool = LTITool()
