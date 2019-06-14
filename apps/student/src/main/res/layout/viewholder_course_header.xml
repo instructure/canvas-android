@@ -18,7 +18,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/header"
     android:layout_width="match_parent"
-    android:layout_height="40dp">
+    android:layout_height="48dp">
 
     <TextView
         android:id="@+id/courseLabel"
@@ -35,6 +35,8 @@
         style="@style/TextFont.Medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:minWidth="48dp"
         android:layout_gravity="bottom|end"
         android:background="?android:selectableItemBackground"
         android:paddingBottom="2dp"

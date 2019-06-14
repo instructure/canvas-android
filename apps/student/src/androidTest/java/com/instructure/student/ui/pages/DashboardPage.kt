@@ -18,11 +18,16 @@
 
 package com.instructure.student.ui.pages
 
+import androidx.test.espresso.Espresso
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import com.instructure.dataseeding.model.CanvasUserApiModel
+import com.instructure.espresso.OnViewWithContentDescription
 import com.instructure.student.R
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.WaitForViewWithId
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.assertNotDisplayed
+import com.instructure.espresso.click
 import com.instructure.espresso.page.*
 
 class DashboardPage : BasePage(R.id.dashboardPage) {
@@ -30,6 +35,7 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     private val toolbar by OnViewWithId(R.id.toolbar)
     private val emptyView by OnViewWithId(R.id.emptyCoursesView, autoAssert = false)
     private val listView by WaitForViewWithId(R.id.listView, autoAssert = false)
+    private val hamburgerButton by OnViewWithContentDescription(R.string.navigation_drawer_open)
 
     fun assertDisplaysCourses() {
         emptyView.assertNotDisplayed()
@@ -44,5 +50,26 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         onViewWithText(R.string.welcome).assertDisplayed()
         onViewWithText(R.string.emptyCourseListMessage).assertDisplayed()
         onViewWithId(R.id.addCoursesButton).assertDisplayed()
+    }
+
+    fun signOut() {
+        hamburgerButton.click()
+        onViewWithId(R.id.navigationDrawerItem_logout).click()
+        onViewWithText(R.string.ok).click()
+    }
+
+    fun pressChangeUser() {
+        hamburgerButton.click()
+        onViewWithId(R.id.navigationDrawerItem_changeUser).click()
+    }
+
+    fun assertUserLoggedIn(user: CanvasUserApiModel) {
+        hamburgerButton.click()
+        onViewWithText(user.shortName).assertDisplayed()
+        Espresso.pressBack()
+    }
+
+    fun waitForRender() {
+        listView.assertDisplayed() // Oddly, this seems sufficient as a wait-for-render mechanism
     }
 }
