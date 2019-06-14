@@ -20,7 +20,9 @@ package com.instructure.student.mobius.assignmentDetails.submissionDetails
 import com.instructure.canvasapi2.managers.AssignmentManager
 import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsView
 import com.instructure.student.mobius.common.ui.EffectHandler
 import com.instructure.student.util.isArcEnabled
@@ -38,15 +40,22 @@ class SubmissionDetailsEffectHandler : EffectHandler<SubmissionDetailsView, Subm
 
     private fun loadData(effect: SubmissionDetailsEffect.LoadData) {
         launch {
-            val submission = SubmissionManager.getSingleSubmissionAsync(effect.courseId, effect.assignmentId, ApiPrefs.user!!.id, true)
+            val submission = SubmissionManager.getSingleSubmissionAsync(effect.courseId, effect.assignmentId, ApiPrefs.user!!.id, true).await()
             val assignment = AssignmentManager.getAssignmentAsync(effect.assignmentId, effect.courseId, true).await()
+
 
             // We need to know if they can make submissions through arc, only for file uploads - This is for empty submissions
             val isArcEnabled = if (assignment.isSuccess && assignment.dataOrThrow.getSubmissionTypes().contains(Assignment.SubmissionType.ONLINE_UPLOAD)) {
                 effect.courseId.isArcEnabled()
             } else false
 
-            consumer.accept(SubmissionDetailsEvent.DataLoaded(assignment, submission.await(), isArcEnabled))
+            // Determine if we need to retrieve an authenticated LTI URL based on whether this assignment accepts external tool submissions
+            val assignmentUrl = assignment.dataOrNull?.url
+            val ltiUrl = if (assignmentUrl != null && assignment.dataOrNull?.getSubmissionTypes()?.contains(Assignment.SubmissionType.EXTERNAL_TOOL) == true)
+                 SubmissionManager.getLtiFromAuthenticationUrlAsync(assignmentUrl, true).await()
+            else DataResult.Fail(null)
+
+            consumer.accept(SubmissionDetailsEvent.DataLoaded(assignment, submission, ltiUrl, isArcEnabled))
         }
     }
 }

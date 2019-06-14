@@ -54,7 +54,8 @@ class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDet
                         model.rootSubmission?.dataOrNull?.submissionHistory?.find { it?.attempt == event.submissionAttempt },
                         model.assignment?.dataOrNull,
                         model.canvasContext,
-                        model.isArcEnabled
+                        model.isArcEnabled,
+                        null
                     )
                     Next.next<SubmissionDetailsModel, SubmissionDetailsEffect>(
                         model.copy(
@@ -68,7 +69,8 @@ class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDet
                     event.rootSubmission.dataOrNull,
                     event.assignment.dataOrNull,
                     model.canvasContext,
-                    event.isArcEnabled)
+                    event.isArcEnabled,
+                    event.ltiUrl.dataOrNull)
                 Next.next(
                     model.copy(
                         isLoading = false,
@@ -92,10 +94,17 @@ class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDet
         }
     }
 
-    private fun getSubmissionContentType(submission: Submission?, assignment: Assignment?, canvasContext: CanvasContext, isArcEnabled: Boolean?): SubmissionDetailsContentType {
+    private fun getSubmissionContentType(
+        submission: Submission?,
+        assignment: Assignment?,
+        canvasContext: CanvasContext,
+        isArcEnabled: Boolean?,
+        ltiUrl: LTITool?
+    ): SubmissionDetailsContentType {
         return when {
             Assignment.SubmissionType.NONE.apiString in assignment?.submissionTypesRaw ?: emptyList() -> SubmissionDetailsContentType.NoneContent
             Assignment.SubmissionType.ON_PAPER.apiString in assignment?.submissionTypesRaw ?: emptyList() -> SubmissionDetailsContentType.OnPaperContent
+            Assignment.SubmissionType.EXTERNAL_TOOL.apiString in assignment?.submissionTypesRaw ?: emptyList() -> SubmissionDetailsContentType.ExternalToolContent(canvasContext, ltiUrl?.url ?: "")
             submission?.submissionType == null -> SubmissionDetailsContentType.NoSubmissionContent(canvasContext, assignment!!, isArcEnabled!!)
             AssignmentUtils2.getAssignmentState(assignment, submission) in listOf(AssignmentUtils2.ASSIGNMENT_STATE_MISSING, AssignmentUtils2.ASSIGNMENT_STATE_GRADED_MISSING) -> SubmissionDetailsContentType.NoSubmissionContent(canvasContext, assignment!!, isArcEnabled!!)
             else -> when (Assignment.getSubmissionTypeFromAPIString(submission.submissionType)) {

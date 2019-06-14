@@ -208,6 +208,9 @@ object SubmissionManager {
         SubmissionAPI.getLtiFromAuthenticationUrl(url, adapter, params, callback)
     }
 
+    fun getLtiFromAuthenticationUrlAsync(url: String, forceNetwork: Boolean) =
+        apiAsync<LTITool> { getLtiFromAuthenticationUrl(url, it, forceNetwork) }
+
     @JvmStatic
     fun postMediaSubmissionComment(
         canvasContext: CanvasContext,

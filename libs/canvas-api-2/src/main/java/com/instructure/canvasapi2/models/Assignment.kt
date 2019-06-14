@@ -163,7 +163,7 @@ data class Assignment(
 
     private fun expectsSubmissions(): Boolean {
         val submissionTypes = getSubmissionTypes()
-        return submissionTypes.isNotEmpty() && !submissionTypes.contains(SubmissionType.NONE) && !submissionTypes.contains(SubmissionType.NOT_GRADED) && !submissionTypes.contains(SubmissionType.ON_PAPER) && !submissionTypes.contains(SubmissionType.EXTERNAL_TOOL)
+        return submissionTypes.isNotEmpty() && !submissionTypes.contains(SubmissionType.NONE) && !submissionTypes.contains(SubmissionType.NOT_GRADED) && !submissionTypes.contains(SubmissionType.ON_PAPER)
     }
 
     private fun turnInTypeFromSubmissionType(submissionTypes: List<SubmissionType>?): TurnInType {
