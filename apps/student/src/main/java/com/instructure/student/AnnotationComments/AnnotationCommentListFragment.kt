@@ -262,12 +262,7 @@ class AnnotationCommentListFragment : ParentFragment() {
 
         @JvmStatic
         fun makeRoute(annotations: ArrayList<CanvaDocAnnotation>, headAnnotationId: String, docSession: DocSession, apiValues: ApiValues, assigneeId: Long): Route {
-            val args = Bundle()
-            args.putParcelableArrayList(ANNOTATIONS, annotations)
-            args.putLong(ASSIGNEE_ID, assigneeId)
-            args.putParcelable(DOC_SESSION, docSession)
-            args.putParcelable(API_VALUES, apiValues)
-            args.putString(HEAD_ANNOTATION_ID, headAnnotationId)
+            val args = makeBundle(annotations, headAnnotationId, docSession, apiValues, assigneeId)
 
             return Route(null, AnnotationCommentListFragment::class.java, null, args)
         }
