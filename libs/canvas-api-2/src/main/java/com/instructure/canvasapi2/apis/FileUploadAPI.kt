@@ -21,7 +21,7 @@ import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.FileUploadParams
 import com.instructure.canvasapi2.models.StorageQuotaExceededError
-import okhttp3.MediaType
+import com.instructure.canvasapi2.utils.ProgressResponseBody
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import org.greenrobot.eventbus.EventBus
@@ -97,12 +97,13 @@ internal object FileUploadAPI {
             uploadParams: FileUploadParams,
             file: File,
             adapter: RestBuilder,
-            params: RestParams
+            params: RestParams,
+            dbSubmissionId: Long? = null
     ): Attachment? {
-        val requestFile = RequestBody.create(MediaType.parse("application/octet-stream"), file)
+        val requestFile = ProgressResponseBody(file, dbSubmissionId)
         val requestFilePart = MultipartBody.Part.createFormData("file", file.name, requestFile)
         return try {
-            adapter.buildNoRetry(FileUploadInterface::class.java, params)
+            adapter.buildUpload(FileUploadInterface::class.java, params)
                     .uploadFile(
                             uploadParams.uploadUrl.orEmpty(),
                             uploadParams.getPlainTextUploadParams(),

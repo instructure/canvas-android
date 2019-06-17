@@ -61,9 +61,9 @@ class RestBuilder(callback: StatusCallback<*> = object : StatusCallback<Any>(){}
         return restAdapter.create(clazz)
     }
 
-    fun <T> buildNoRetry(clazz: Class<T>, params: RestParams): T {
+    fun <T> buildUpload(clazz: Class<T>, params: RestParams): T {
         val restParams = params.copy(isForceReadFromCache = false)
-        val restAdapter = buildAdapterNoRetry(restParams)
+        val restAdapter = buildAdapterUpload(restParams)
 
         return restAdapter.create(clazz)
     }

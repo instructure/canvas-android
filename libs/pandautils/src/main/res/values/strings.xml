@@ -40,8 +40,8 @@
     <string name="upload">Upload</string>
     <string name="errorSendingMessage">An error occurred sending your message. Please try again.</string>
 
-    <string name="notificationChannelNameFileUploadsName">File Upload Notifications</string>
-    <string name="notificationChannelNameFileUploadsDescription">Canvas notifications for ongoing file uploads.</string>
+    <string name="notificationChannelNameFileUploadsName">Upload Notifications</string>
+    <string name="notificationChannelNameFileUploadsDescription">Canvas notifications for ongoing uploads.</string>
 
 
     <!-- Turn in Files -->
@@ -98,11 +98,9 @@
     <string name="filePermissionDenied">The file cannot be downloaded without granting permission.</string>
     <string name="pleaseTryAgain">Permission Granted, please try again.</string>
     <string name="pickVideo">Select a Video</string>
-    <string name="assignmentSubmissionUpload">Uploading submission for "%s"</string>
-    <string name="assignmentSubmissionError">Submission failed for "%s"</string>
-
-    <string name="notificationChannelNameSubmissionUploadsName">Submission Upload Notifications</string>
-    <string name="notificationChannelNameSubmissionUploadsDescription">Canvas notifications for ongoing submission uploads.</string>
+    <string name="assignmentSubmissionUpload">Uploading submission for %s</string>
+    <string name="assignmentSubmissionError">Submission failed for %s</string>
+    <string name="assignmentSubmissionComplete">Successfully submitted %s</string>
 
     <!--Errors-->
     <string name="errorOccurred">An unexpected error occurred.</string>

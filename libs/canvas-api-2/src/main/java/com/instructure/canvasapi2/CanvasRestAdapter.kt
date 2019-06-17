@@ -184,7 +184,7 @@ protected constructor(var statusCallback: StatusCallback<*>?, private val authUs
             else params
     )
 
-    fun buildAdapterNoRetry(params: RestParams): Retrofit {
+    fun buildAdapterUpload(params: RestParams): Retrofit {
         val params = if (params.domain.isNullOrEmpty()) params.copy(domain = ApiPrefs.fullDomain) else params
 
         statusCallback?.onCallbackStarted()
