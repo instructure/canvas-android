@@ -79,6 +79,7 @@ import com.instructure.student.events.CourseColorOverlayToggledEvent
 import com.instructure.student.events.ShowGradesToggledEvent
 import com.instructure.student.events.UserUpdatedEvent
 import com.instructure.student.fragment.*
+import com.instructure.student.mobius.common.ui.SubmissionService
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.router.RouteResolver
 import com.instructure.student.tasks.StudentLogoutTask
@@ -177,7 +178,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         supportFragmentManager.addOnBackStackChangedListener(onBackStackChangedListener)
 
         if (savedInstanceState == null) {
-            if (hasUnreadPushNotification(intent.extras)) {
+            if (hasUnreadPushNotification(intent.extras) || hasLocalNotificationLink(intent.extras)) {
                 handlePushNotification(hasUnreadPushNotification(intent.extras))
             }
         }
@@ -279,7 +280,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         // Switching languages will trigger this, so we check for our Pending intent id
-        if (intent.hasExtra(LANGUAGES_PENDING_INTENT_KEY) && intent.getIntExtra(LANGUAGES_PENDING_INTENT_KEY, 0) != LANGUAGES_PENDING_INTENT_ID) {
+        if (hasPendingLanguageIntent(intent.extras) || hasLocalNotificationLink(intent.extras)) {
             handlePushNotification(hasUnreadPushNotification(intent.extras))
         }
     }
@@ -803,6 +804,21 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     private fun setPushNotificationAsRead() {
         intent.putExtra(PushExternalReceiver.NEW_PUSH_NOTIFICATION, false)
         PushNotification.clearPushHistory()
+    }
+
+    private fun hasLocalNotificationLink(extras: Bundle?): Boolean {
+        val flag = extras != null && extras.containsKey(Const.LOCAL_NOTIFICATION)
+            && extras.getBoolean(Const.LOCAL_NOTIFICATION, false)
+        if (flag) {
+            // Clear the flag if we are handling this, so subsequent app opens don't deep link again
+            extras!!.putBoolean(Const.LOCAL_NOTIFICATION,false)
+        }
+        return flag
+    }
+
+    private fun hasPendingLanguageIntent(extras: Bundle?): Boolean {
+        return extras != null && extras.containsKey(LANGUAGES_PENDING_INTENT_KEY)
+            && extras.getInt(LANGUAGES_PENDING_INTENT_KEY, 0) != LANGUAGES_PENDING_INTENT_ID
     }
 
     //endregion

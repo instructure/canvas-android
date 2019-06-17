@@ -29,12 +29,15 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.canvasapi2.utils.weave.apiAsync
 import com.instructure.pandautils.models.FileSubmitObject
+import com.instructure.pandautils.models.PushNotification
 import com.instructure.pandautils.services.FileUploadService
 import com.instructure.pandautils.utils.Const
 import com.instructure.student.R
+import com.instructure.student.activity.NavigationActivity
 import com.instructure.student.db.Db
 import com.instructure.student.db.getInstance
 import kotlinx.coroutines.GlobalScope
@@ -51,10 +54,11 @@ class SubmissionFileUploadReceiver(private val dbSubmissionId: Long) : Broadcast
         if (submissionId == null || submissionId != dbSubmissionId) return // Only handle our submission
 
         val db = Db.getInstance(context)
+        val submission = db.submissionQueries.getSubmissionById(submissionId).executeAsOne()
 
         when (intent.action) {
             FileUploadService.UPLOAD_ERROR -> {
-                SubmissionService.showErrorNotification(context, assignmentName, submissionId, intent) // TODO: create intent to go to file upload submission screen
+                SubmissionService.showErrorNotification(context, submission.canvasContext!!, submission.assignmentId!!, assignmentName, submissionId)
 
                 val message = intent.getStringExtra(Const.MESSAGE)
                 val attachments = intent.getParcelableArrayListExtra<Attachment>(Const.ATTACHMENTS)
@@ -71,7 +75,7 @@ class SubmissionFileUploadReceiver(private val dbSubmissionId: Long) : Broadcast
                 }
             }
             FileUploadService.ALL_UPLOADS_COMPLETED -> {
-                SubmissionService.showCompleteNotification(context, assignmentName, submissionId, intent)
+                SubmissionService.showCompleteNotification(context, submission.canvasContext!!, submission.assignmentId!!, assignmentName, submissionId)
 
                 // Clear out the db for the successful submission
                 db.fileSubmissionQueries.deleteFilesForSubmissionId(submissionId)
@@ -140,7 +144,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
                 db.deleteSubmissionById(dbSubmissionId)
             }.onFailure {
                 db.setSubmissionError(true, dbSubmissionId)
-                showErrorNotification(this@SubmissionService, assignmentName, dbSubmissionId, intent)
+                showErrorNotification(this@SubmissionService, context, assignmentId, assignmentName, dbSubmissionId)
             }
         }
     }
@@ -166,7 +170,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
                 db.deleteSubmissionById(dbSubmissionId)
             }.onFailure {
                 db.setSubmissionError(true, dbSubmissionId)
-                showErrorNotification(this@SubmissionService, assignmentName, dbSubmissionId, intent)
+                showErrorNotification(this@SubmissionService, context, assignmentId, assignmentName, dbSubmissionId)
             }
         }
     }
@@ -258,26 +262,38 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
     }
 
     companion object {
+
+        private fun getSubmissionIntent(context: Context, canvasContext: CanvasContext, assignmentId: Long): PendingIntent {
+            val intent = Intent(context, NavigationActivity.startActivityClass).apply {
+                putExtra(Const.LOCAL_NOTIFICATION, true)
+                putExtra(
+                    PushNotification.HTML_URL,
+                    "${ApiPrefs.fullDomain}/${canvasContext.apiContext()}/${canvasContext.id}/assignments/$assignmentId"
+                )
+            }
+
+            return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        }
+
         /**
          * @param notificationId - this should be the submission id in the local database, so we can have different submissions in notifications
-         * @param intent - an Intent to launch when the notification is clicked so the user can address any issues
          */
-        internal fun showErrorNotification(context: Context, assignmentName: String?, notificationId: Long, intent: Intent) {
-            val pendingIntent: PendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
+        internal fun showErrorNotification(context: Context, canvasContext: CanvasContext, assignmentId: Long, assignmentName: String?, notificationId: Long) {
+            val pendingIntent = getSubmissionIntent(context, canvasContext, assignmentId)
             val notificationBuilder = NotificationCompat.Builder(context, FileUploadService.CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_notification_canvas_logo)
                 .setContentTitle(context.getString(R.string.assignmentSubmissionError, assignmentName ?: ""))
                 .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
             NotificationManagerCompat.from(context)
                 .notify(notificationId.toInt(), notificationBuilder.build())
         }
 
         /**
          * @param notificationId - this should be the submission id in the local database, so we can have different submissions in notifications
-         * @param intent - an Intent to launch when the notification is clicked so the user can address any issues
          */
-        internal fun showCompleteNotification(context: Context, assignmentName: String?, notificationId: Long, intent: Intent) {
-            val pendingIntent: PendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
+        internal fun showCompleteNotification(context: Context, canvasContext: CanvasContext, assignmentId: Long, assignmentName: String?, notificationId: Long) {
+            val pendingIntent = getSubmissionIntent(context, canvasContext, assignmentId)
             val notificationBuilder = NotificationCompat.Builder(context, FileUploadService.CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_notification_canvas_logo)
                 .setContentTitle(context.getString(R.string.assignmentSubmissionComplete, assignmentName ?: ""))

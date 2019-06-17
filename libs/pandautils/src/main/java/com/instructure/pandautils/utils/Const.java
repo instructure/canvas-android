@@ -313,6 +313,7 @@ public class Const {
     public static final String IS_SUBMISSION = "isSubmission";
 
     // Language intent strings used for checking the incoming pending intent for a push notification
+    public static final String LOCAL_NOTIFICATION = "localNotification";
     public static final String LANGUAGES_PENDING_INTENT_KEY = "languagesPendingIntentKey";
     public static final int LANGUAGES_PENDING_INTENT_ID = 654321;
 
