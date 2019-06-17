@@ -174,6 +174,7 @@ public class Const {
     public static final String REFRESH = "refresh";
     public static final String SUBMISSION_COMMENT_SUBMITTED = "submission-comment-submitted";
     public static final String SUBMISSION = "submission";
+    public static final String SUBMISSION_TARGET = "submission_target";
     public static final String DISCUSSION_REPLY_SUBMITTED = "discussion_reply_submitted";
 
     public static final String TITLE = "title";

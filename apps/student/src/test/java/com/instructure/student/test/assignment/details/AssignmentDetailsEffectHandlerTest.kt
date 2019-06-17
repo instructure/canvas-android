@@ -21,12 +21,15 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.weave.StatusCallbackError
-import com.instructure.canvasapi2.utils.weave.awaitApiResponse
-import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsView
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Failure
-import com.instructure.student.mobius.assignmentDetails.*
+import com.instructure.canvasapi2.utils.weave.StatusCallbackError
+import com.instructure.canvasapi2.utils.weave.awaitApiResponse
+import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsEffect
+import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsEffectHandler
+import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsEvent
+import com.instructure.student.mobius.assignmentDetails.SubmissionUploadStatus
+import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsView
 import com.instructure.student.mobius.assignmentDetails.ui.SubmissionTypesVisibilities
 import com.spotify.mobius.functions.Consumer
 import io.mockk.*
@@ -376,6 +379,24 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
         confirmVerified(view)
     }
 
+    @Test
+    fun `RouteInternally effect calls routeInternally on View`() {
+        val url = "url"
+        val domain = "domain"
+        val course = Course()
+        val assignment = Assignment()
+        val effect = AssignmentDetailsEffect.RouteInternally(url, course, assignment)
+
+        mockkStatic(ApiPrefs::class)
+        every { ApiPrefs.domain } returns domain
+
+        connection.accept(effect)
+        verify(timeout = 100) {
+            view.routeInternally(url, domain, course, assignment)
+        }
+        confirmVerified(view)
+        unmockkStatic(ApiPrefs::class)
+    }
 
     @Test
     fun `Displays arc when submission type is fileUpload and arc is enabled`() {

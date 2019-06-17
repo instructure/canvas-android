@@ -22,6 +22,7 @@ import android.net.Uri
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.loaders.OpenMediaAsyncTaskLoader
 import com.instructure.student.activity.CandroidPSPDFActivity
+import com.instructure.student.activity.ShareFileSubmissionTarget
 import com.pspdfkit.PSPDFKit
 import com.pspdfkit.annotations.AnnotationType
 import com.pspdfkit.configuration.activity.PdfActivityConfiguration
@@ -53,7 +54,12 @@ object FileUtils {
         AnnotationType.FREETEXT
     )
 
-    fun showPdfDocument(uri: Uri, loadedMedia: OpenMediaAsyncTaskLoader.LoadedMedia, context: Context) {
+    fun showPdfDocument(
+        uri: Uri,
+        loadedMedia: OpenMediaAsyncTaskLoader.LoadedMedia,
+        context: Context,
+        submissionTarget: ShareFileSubmissionTarget? = null
+    ) {
         if (!PSPDFKitPreferences.get(context).isAnnotationCreatorSet) {
             PSPDFKitPreferences.get(context).setAnnotationCreator(ApiPrefs.user?.shortName.orEmpty())
         }
@@ -90,6 +96,7 @@ object FileUtils {
                 .configuration(pspdfActivityConfiguration)
                 .activityClass(CandroidPSPDFActivity::class.java)
                 .build()
+            intent.putExtra(com.instructure.pandautils.utils.Const.SUBMISSION_TARGET, submissionTarget)
             context.startActivity(intent)
         } else {
             //If we still can't open this PDF, we will then attempt to pass it off to the user's pdfviewer

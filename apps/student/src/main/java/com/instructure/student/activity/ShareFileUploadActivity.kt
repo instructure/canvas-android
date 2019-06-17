@@ -34,6 +34,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import com.instructure.canvasapi2.managers.CourseManager
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.StorageQuotaExceededError
@@ -47,12 +48,19 @@ import com.instructure.student.R
 import com.instructure.student.dialog.ShareFileDestinationDialog
 import com.instructure.student.util.Analytics
 import com.instructure.student.util.AnimationHelpers
+import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.activity_share_file.*
 import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.*
+
+@Parcelize
+data class ShareFileSubmissionTarget(
+    val course: Course,
+    val assignment: Assignment
+) : Parcelable
 
 class ShareFileUploadActivity : AppCompatActivity(), ShareFileDestinationDialog.DialogCloseListener {
 
@@ -61,6 +69,10 @@ class ShareFileUploadActivity : AppCompatActivity(), ShareFileDestinationDialog.
     private var loadCoursesJob: Job? = null
     private var uploadFileSourceFragment: DialogFragment? = null
     private var courses: ArrayList<Course>? = null
+
+    private val submissionTarget: ShareFileSubmissionTarget? by lazy {
+        intent?.extras?.getParcelable<ShareFileSubmissionTarget>(Const.SUBMISSION_TARGET)
+    }
 
     private var sharedURI: Uri? = null
 
@@ -72,7 +84,17 @@ class ShareFileUploadActivity : AppCompatActivity(), ShareFileDestinationDialog.
             revealBackground()
             Analytics.trackAppFlow(this)
             sharedURI = parseIntentType()
-            getCourses()
+            if (submissionTarget != null) {
+                // If targeted for submission, skip the picker and go immediately to the submission workflow
+                val bundle = UploadFilesDialog.createAssignmentBundle(
+                    sharedURI,
+                    submissionTarget!!.course,
+                    submissionTarget!!.assignment
+                )
+                onNext(bundle)
+            } else {
+                getCourses()
+            }
             askForStoragePermissionIfNecessary()
         }
     }
@@ -192,7 +214,7 @@ class ShareFileUploadActivity : AppCompatActivity(), ShareFileDestinationDialog.
         finish()
     }
 
-    override fun onCancel(dialog: DialogInterface) {
+    override fun onCancel(dialog: DialogInterface?) {
         finish()
     }
 

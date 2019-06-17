@@ -21,6 +21,7 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Intent
 import android.content.res.ColorStateList
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,6 +35,7 @@ import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.student.R
 import com.instructure.student.activity.InternalWebViewActivity
+import com.instructure.student.activity.ShareFileSubmissionTarget
 import com.instructure.student.fragment.InternalWebviewFragment
 import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsEvent
 import com.instructure.student.mobius.assignmentDetails.submission.text.ui.TextSubmissionUploadFragment
@@ -90,7 +92,7 @@ class AssignmentDetailsView(
             }
 
             override fun routeInternallyCallback(url: String) {
-                RouteMatcher.canRouteInternally(context, url, ApiPrefs.domain, true)
+                consumer?.accept(AssignmentDetailsEvent.InternalRouteRequested(url))
             }
         }
 
@@ -189,6 +191,13 @@ class AssignmentDetailsView(
             onClick()
             dialog.cancel()
         }
+    }
+
+    fun routeInternally(url: String, domain: String, course: Course, assignment: Assignment) {
+        val extras = Bundle().apply {
+            putParcelable(Const.SUBMISSION_TARGET, ShareFileSubmissionTarget(course, assignment))
+        }
+        RouteMatcher.routeUrl(context, url, domain, extras)
     }
 
     fun showSubmissionView(assignmentId: Long, course: Course) {

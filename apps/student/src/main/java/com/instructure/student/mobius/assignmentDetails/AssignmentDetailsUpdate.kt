@@ -62,5 +62,13 @@ class AssignmentDetailsUpdate : UpdateInit<AssignmentDetailsModel, AssignmentDet
             // If a user is trying to submit something to an assignment and the assignment is null, something is terribly wrong.
             Next.dispatch(setOf(AssignmentDetailsEffect.ShowCreateSubmissionView(event.submissionType, model.course, model.assignmentResult!!.dataOrThrow)))
         }
+        is AssignmentDetailsEvent.InternalRouteRequested -> {
+            val effect = AssignmentDetailsEffect.RouteInternally(
+                url = event.url,
+                course = model.course,
+                assignment = model.assignmentResult!!.dataOrThrow
+            )
+            Next.dispatch(setOf(effect))
+        }
     }
 }
