@@ -64,7 +64,7 @@ class SubmissionFileUploadReceiver(private val dbSubmissionId: Long) : Broadcast
                 db.submissionQueries.setSubmissionError(true, submissionId)
                 files.forEachIndexed { index, file ->
                     if (index < attachments.size) {
-                        db.fileSubmissionQueries.setAttachmentId(attachments[index].id, false, null, file.id)
+                        db.fileSubmissionQueries.setFileAttachmentIdAndError(attachments[index].id, false, null, file.id)
                     } else {
                         db.fileSubmissionQueries.setFileError(true, message, file.id)
                     }

@@ -15,7 +15,6 @@
  --
 
 import com.instructure.canvasapi2.models.CanvasContext;
--- import com.instructure.student.db.sqlColAdapters.Date;
 import com.instructure.student.db.sqlColAdapters.ErrorColAdapter;
 import com.instructure.pandautils.models.FileSubmitObject;
 
@@ -38,10 +37,6 @@ insertFile:
 INSERT INTO fileSubmission (dbSubmissionId, name, size, contentType, fullPath)
 VALUES (?, ?, ?, ?, ?);
 --
-insertFileWithError:
-INSERT INTO fileSubmission (dbSubmissionId, name, size, contentType, fullPath, error)
-VALUES (?, ?, ?, ?, ?, ?);
---
 
 getAllFiles:
 SELECT *
@@ -62,7 +57,7 @@ SELECT *
 FROM fileSubmission
 WHERE dbSubmissionId = ? AND attachmentId IS NULL;
 
-deleteFilesById:
+deleteFileById:
 DELETE
 FROM fileSubmission
 WHERE id = ?;
@@ -77,10 +72,10 @@ UPDATE fileSubmission
 SET errorFlag = ?, error = ?
 WHERE id = ?;
 
-setAttachmentId:
+setFileAttachmentIdAndError:
 UPDATE fileSubmission
 SET attachmentId = ?, errorFlag = ?, error = ?
 WHERE id = ?;
 
-getLastInsert:
+getLastInsertId:
 SELECT last_insert_rowid();
