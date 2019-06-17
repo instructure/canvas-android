@@ -151,9 +151,9 @@ class AssignmentSubmissionListPresenter(val mAssignment: Assignment, private var
         mFilteredSubmissions = mUnfilteredSubmissions.filter {
             when (mFilter) {
                 SubmissionListFilter.ALL -> true
-                SubmissionListFilter.LATE -> it.submission?.let { mAssignment.getState(it) == AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED_LATE || mAssignment.getState(it) == AssignmentUtils2.ASSIGNMENT_STATE_GRADED_LATE } ?: false
-                SubmissionListFilter.NOT_GRADED -> it.submission?.let { mAssignment.getState(it) == AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED ||  mAssignment.getState(it) == AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED_LATE || !it.isGradeMatchesCurrentSubmission } ?: false
-                SubmissionListFilter.GRADED -> it.submission?.let { mAssignment.getState(it) in listOf(AssignmentUtils2.ASSIGNMENT_STATE_GRADED, AssignmentUtils2.ASSIGNMENT_STATE_GRADED_LATE, AssignmentUtils2.ASSIGNMENT_STATE_GRADED_MISSING)  && it.isGradeMatchesCurrentSubmission} ?: false
+                SubmissionListFilter.LATE -> it.submission?.let { mAssignment.getState(it, true) in listOf(AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED_LATE, AssignmentUtils2.ASSIGNMENT_STATE_GRADED_LATE) } ?: false
+                SubmissionListFilter.NOT_GRADED -> it.submission?.let { mAssignment.getState(it, true) in listOf(AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED, AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED_LATE) || !it.isGradeMatchesCurrentSubmission } ?: false
+                SubmissionListFilter.GRADED -> it.submission?.let { mAssignment.getState(it, true) in listOf(AssignmentUtils2.ASSIGNMENT_STATE_GRADED, AssignmentUtils2.ASSIGNMENT_STATE_GRADED_LATE, AssignmentUtils2.ASSIGNMENT_STATE_GRADED_MISSING)  && it.isGradeMatchesCurrentSubmission} ?: false
                 SubmissionListFilter.ABOVE_VALUE -> it.submission?.let { it.isGraded && it.score >= mFilterValue } ?: false
                 SubmissionListFilter.BELOW_VALUE -> it.submission?.let { it.isGraded && it.score < mFilterValue } ?: false
                 // Filtering by ASSIGNMENT_STATE_MISSING here doesn't work because it assumes that the due date has already passed, which isn't necessarily the case when the teacher wants to see
