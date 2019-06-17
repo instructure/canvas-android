@@ -46,7 +46,7 @@ import com.instructure.student.activity.*
 import com.instructure.student.fragment.*
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.mobius.syllabus.ui.SyllabusFragment
-import com.instructure.student.util.FeatureFlags
+import com.instructure.student.util.FeatureFlagPrefs
 import com.instructure.student.util.FileUtils
 import retrofit2.Call
 import retrofit2.Response
@@ -66,7 +66,7 @@ object RouteMatcher : BaseRouteMatcher() {
     // Be sensitive to the order of items. It really, really matters.
     private fun initRoutes() {
 
-        val assignmentDetailsClass: Class<out Fragment> = if (FeatureFlags.newAssignmentPage) AssignmentDetailsFragment::class.java else AssignmentFragment::class.java
+        val assignmentDetailsClass: Class<out Fragment> = if (FeatureFlagPrefs.newAssignmentPage) AssignmentDetailsFragment::class.java else AssignmentFragment::class.java
 
         routes.add(Route("/", DashboardFragment::class.java))
         // region Conversations

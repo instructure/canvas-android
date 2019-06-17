@@ -37,11 +37,7 @@ import com.instructure.student.R
 import com.instructure.student.fragment.LTIWebViewFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsContentType
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsEvent
-import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.MediaSubmissionViewFragment
-import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.QuizSubmissionViewFragment
-import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.DiscussionSubmissionViewFragment
-import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.TextSubmissionViewFragment
-import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.UrlSubmissionViewFragment
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.*
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyContentFragment
 import com.instructure.student.mobius.common.ui.MobiusView
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
@@ -194,6 +190,7 @@ class SubmissionDetailsView(
             is SubmissionDetailsContentType.QuizContent -> QuizSubmissionViewFragment.newInstance(type.url)
             is SubmissionDetailsContentType.TextContent -> TextSubmissionViewFragment.newInstance(type.text)
             is SubmissionDetailsContentType.DiscussionContent -> DiscussionSubmissionViewFragment.newInstance(type.previewUrl ?: "")
+            is SubmissionDetailsContentType.PdfContent -> PdfSubmissionViewFragment.newInstance(type.url)
             is SubmissionDetailsContentType.ExternalToolContent -> LTIWebViewFragment.newInstance(LTIWebViewFragment.makeRoute(type.canvasContext, type.url, hideToolbar = true))!!
             is SubmissionDetailsContentType.MediaContent -> MediaSubmissionViewFragment.newInstance(type)
             else -> PlaceholderFragment().apply {

@@ -19,7 +19,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.instructure.student.view.StudentSubmissionView
+import com.instructure.student.view.OldStudentSubmissionView
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.GradeableStudentSubmission
@@ -36,7 +36,7 @@ class StudentSubmissionActivity : AppCompatActivity() {
         }
         val bundle = intent.extras
 
-        setContentView(StudentSubmissionView(this, bundle.get(COURSE) as Course, bundle.get(SUBMISSION) as GradeableStudentSubmission, bundle.get(ASSIGNMENT) as Assignment, bundle.getInt(ATTACHMENT_POSITION)))
+        setContentView(OldStudentSubmissionView(this, bundle.get(COURSE) as Course, bundle.get(SUBMISSION) as GradeableStudentSubmission, bundle.get(ASSIGNMENT) as Assignment, bundle.getInt(ATTACHMENT_POSITION)))
     }
 
     companion object {

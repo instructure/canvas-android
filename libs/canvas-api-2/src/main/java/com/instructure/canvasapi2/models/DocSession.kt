@@ -32,10 +32,7 @@ data class DocSession(
         @SerializedName("panda_push")
         var pandaPush: PandaPush? = null,
         var rotations: HashMap<String, Int>? = null
-) : Parcelable {
-    @IgnoredOnParcel
-    lateinit var apiValues: ApiValues
-}
+) : Parcelable
 
 @Parcelize
 data class AnnotationMetadata(

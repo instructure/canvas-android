@@ -143,8 +143,8 @@ class SubmissionContentView(
         showMessageFragment(R.string.error_loading_files)
     }
 
-    override fun showAnnotationComments(commentList: ArrayList<CanvaDocAnnotation>, headAnnotationId: String, docSession: DocSession) {
-        val bundle = AnnotationCommentListFragment.makeBundle(commentList, headAnnotationId, docSession, mAssignee.id)
+    override fun showAnnotationComments(commentList: ArrayList<CanvaDocAnnotation>, headAnnotationId: String, docSession: DocSession, apiValues: ApiValues) {
+        val bundle = AnnotationCommentListFragment.makeBundle(commentList, headAnnotationId, docSession, apiValues, mAssignee.id)
         //if isTablet, we need to prevent the sliding panel from moving opening all the way with the keyboard
         if(context.isTablet) {
             setIsCurrentlyAnnotating(true)
@@ -803,7 +803,7 @@ class SubmissionContentView(
         if (event.assigneeId == mAssignee.id) {
             deleteJob = tryWeave {
                 for(annotation in event.annotationList) {
-                    awaitApi<ResponseBody> { CanvaDocsManager.deleteAnnotation(docSession.apiValues.sessionId, annotation.annotationId, docSession.apiValues.canvaDocsDomain, it) }
+                    awaitApi<ResponseBody> { CanvaDocsManager.deleteAnnotation(apiValues.sessionId, annotation.annotationId, apiValues.canvaDocsDomain, it) }
                     commentRepliesHashMap[annotation.inReplyTo]?.remove(annotation)
                 }
             } catch {

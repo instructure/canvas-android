@@ -32,7 +32,7 @@ import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFrag
 import com.instructure.student.mobius.common.ui.MobiusView
 import com.instructure.student.mobius.syllabus.SyllabusEvent
 import com.instructure.student.router.RouteMatcher
-import com.instructure.student.util.FeatureFlags
+import com.instructure.student.util.FeatureFlagPrefs
 import com.instructure.student.view.EmptyView
 import com.spotify.mobius.functions.Consumer
 import kotlinx.android.synthetic.main.fragment_syllabus.*
@@ -130,7 +130,7 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
     }
 
     fun showAssignmentView(assignment: Assignment, canvasContext: CanvasContext) {
-        if (FeatureFlags.newAssignmentPage) {
+        if (FeatureFlagPrefs.newAssignmentPage) {
             RouteMatcher.route(context, AssignmentDetailsFragment.makeRoute(canvasContext, assignment.id))
         } else {
             RouteMatcher.route(context, AssignmentFragment.makeRoute(canvasContext, assignment))
