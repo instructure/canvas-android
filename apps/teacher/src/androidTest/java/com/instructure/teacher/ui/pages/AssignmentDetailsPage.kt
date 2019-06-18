@@ -16,12 +16,14 @@
 package com.instructure.teacher.ui.pages
 
 import androidx.test.InstrumentationRegistry
+import androidx.test.espresso.matcher.ViewMatchers.withId
 import com.instructure.dataseeding.model.AssignmentApiModel
 import com.instructure.espresso.*
 import com.instructure.espresso.page.BasePage
 
 
 import com.instructure.espresso.page.scrollTo
+import com.instructure.espresso.page.waitForView
 import com.instructure.teacher.R
 
 @Suppress("unused")
@@ -135,5 +137,9 @@ class AssignmentDetailsPage : BasePage(pageResId = R.id.assignmentDetailsPage) {
     fun assertNotSubmitted() {
         val resources = InstrumentationRegistry.getTargetContext()
         notSubmittedDonutWrapper.assertHasContentDescription(resources.getString(R.string.content_description_submission_donut_unsubmitted).format(1, 1))
+    }
+
+    fun waitForRender() {
+        waitForView(withId(R.id.assignmentDetailsPage))
     }
 }

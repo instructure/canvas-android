@@ -178,6 +178,7 @@ class AssignmentDetailsPageTest : TeacherTest() {
 
         tokenLogin(teacher)
         routeTo("courses/${course.id}/assignments/${assignment.assignmentList[0].id}")
+        assignmentDetailsPage.waitForRender()
         return assignment.assignmentList[0]
     }
 
