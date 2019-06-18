@@ -112,6 +112,17 @@ fun StudentTest.tokenLogin(user: CanvasUserApiModel) {
     dashboardPage.assertPageObjects()
 }
 
+fun StudentTest.tokenLogin(domain: String, token: String, user: User) {
+    activityRule.runOnUiThread {
+        (activityRule.activity as LoginActivity).loginWithToken(
+            token,
+            domain,
+            user
+        )
+    }
+    dashboardPage.assertPageObjects()
+}
+
 fun StudentTest.routeTo(route: String) {
     val url = "canvas-student://${CanvasRestAdapter.canvasDomain}/$route"
     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
