@@ -15,6 +15,9 @@
  */
 package com.instructure.canvasapi2.utils
 
+import org.threeten.bp.OffsetDateTime
+import org.threeten.bp.format.DateTimeFormatter
+import org.threeten.bp.temporal.ChronoUnit
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -26,6 +29,11 @@ fun Date?.toApiString(timeZone: TimeZone? = null): String? {
     timeZone?.let { format.timeZone = it }
     val formatted = format.format(this)
     return formatted.substring(0, 22) + ":" + formatted.substring(22)
+}
+
+fun OffsetDateTime?.toApiString(): String? {
+    this ?: return null
+    return DateTimeFormatter.ISO_INSTANT.format(this.truncatedTo(ChronoUnit.SECONDS))
 }
 
 fun String?.toDate(): Date? {

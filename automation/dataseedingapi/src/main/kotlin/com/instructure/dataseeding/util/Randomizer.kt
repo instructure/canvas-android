@@ -41,6 +41,13 @@ object Randomizer {
     /** Creates a random email using a timestamp and a UUID */
     fun randomEmail(): String = "${Date().time}@${randomUUID()}.com"
 
+    /** Creates a random avatar URL */
+    fun randomAvatarUrl(): String = faker.avatar().image()
+
+    /** Creates a Url to a small image */
+    fun randomImageUrlSmall(): String = faker.internet().image(64, 64, false, null)
+
+
     fun randomDiscussion(isAnnouncement: Boolean = false): CreateDiscussionTopic =
             CreateDiscussionTopic(
                     title = faker.lorem().sentence(),

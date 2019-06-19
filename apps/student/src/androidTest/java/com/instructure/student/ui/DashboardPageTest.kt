@@ -16,39 +16,37 @@
  */
 package com.instructure.student.ui
 
-import com.instructure.dataseeding.api.SeedApi
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.student.ui.utils.StudentTest
-import com.instructure.student.ui.utils.seedData
 import com.instructure.student.ui.utils.tokenLogin
-import com.instructure.espresso.ditto.Ditto
 import org.junit.Test
 
 class DashboardPageTest : StudentTest() {
 
     @Test
-    @Ditto
     override fun displaysPageObjects() {
         getToDashboard()
         dashboardPage.assertPageObjects()
     }
 
     @Test
-    @Ditto
     fun displaysAddCourseMessage() {
         getToDashboard(courseCount = 0, pastCourseCount = 1)
         dashboardPage.assertDisplaysAddCourseMessage()
     }
 
     @Test
-    @Ditto
     fun displaysCourses() {
         getToDashboard()
         dashboardPage.assertDisplaysCourses()
     }
 
-    private fun getToDashboard(courseCount: Int = 1, pastCourseCount: Int = 0) : SeedApi.SeededDataApiModel {
-        val data = seedData(students = 1, courses = courseCount, pastCourses = pastCourseCount)
-        tokenLogin(data.studentsList[0])
+    private fun getToDashboard(courseCount: Int = 1, pastCourseCount: Int = 0): MockCanvas {
+        val data = MockCanvas.init(studentCount = 1, courseCount = courseCount, pastCourseCount = pastCourseCount)
+        val student = data.students[0]
+        val token = data.tokenFor(student)!!
+        tokenLogin(data.domain, token, student)
         return data
     }
 
