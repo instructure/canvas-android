@@ -126,6 +126,7 @@ class QuizDetailsPageTest: TeacherTest() {
 
         tokenLogin(teacher)
         routeTo("courses/${course.id}/quizzes/${quiz.id}")
+        quizDetailsPage.waitForRender()
         return quiz
     }
 
