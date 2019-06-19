@@ -27,6 +27,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.tabs.TabLayout
@@ -73,8 +74,21 @@ class SubmissionDetailsView(
         retryButton.onClick { consumer?.accept(SubmissionDetailsEvent.RefreshRequested) }
         drawerViewPager.offscreenPageLimit = 3
         drawerViewPager.adapter = drawerPagerAdapter
-        drawerTabLayout.setupWithViewPager(drawerViewPager)
+        configureDrawerTabLayout()
         configureSlidingPanelHeight()
+    }
+
+    private fun configureDrawerTabLayout() {
+        drawerTabLayout.setupWithViewPager(drawerViewPager)
+
+        // Tint the tab with the course color
+        val tint = canvasContext.color
+        drawerTabLayout.setSelectedTabIndicatorColor(tint)
+        drawerTabLayout.setTabTextColors(ContextCompat.getColor(context, R.color.defaultTextDark), tint)
+
+        // Use 90% luminance to ensure a 'light' ripple effect that doesn't overpower the tab text
+        val rippleTint = tint.withLuminance(0.90f).asStateList()
+        drawerTabLayout.tabRippleColor =  rippleTint
     }
 
     private fun configureSlidingPanelHeight() {
