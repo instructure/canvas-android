@@ -7,7 +7,6 @@ import androidx.test.espresso.matcher.ViewMatchers
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityViewCheckResult
 import com.instructure.espresso.AccessibilityChecker
-import com.instructure.espresso.matchers.withOnlyWidthLessThan
 import com.instructure.espresso.page.InstructureTest
 import org.hamcrest.BaseMatcher
 import org.hamcrest.Description
@@ -100,5 +99,37 @@ abstract class CanvasTest : InstructureTest() {
     // Does the test device have particularly low screen resolution?
     fun isLowResDevice() : Boolean {
         return activityRule.activity.resources.displayMetrics.densityDpi < DisplayMetrics.DENSITY_HIGH
+    }
+
+    // Copying this matcher from the shared espresso lib to here.  In the espresso lib, we had
+    // to rely on ActivityHelper.currentActivity() to get an activity, and that
+    // was occasionally buggy due to small windows where there might be no resumed
+    // activities.  Here, we have access to activityRule to get an activity.
+    //
+    // A matcher for views whose width is less than the specified amount (in dp),
+    // but whose height is at least the specified amount.
+    // This is used to suppress accessibility failures related to overflow menus
+    // in action bars being to narrow.
+    fun withOnlyWidthLessThan(dimInDp: Int) : BaseMatcher<AccessibilityViewCheckResult>
+    {
+        var activity = activityRule.activity
+        val densityDpi = activity.resources.displayMetrics.densityDpi
+        val dim_f = dimInDp * (densityDpi.toDouble() / DisplayMetrics.DENSITY_DEFAULT.toDouble())
+        val dim = dim_f.toInt()
+        return object : BaseMatcher<AccessibilityViewCheckResult>() {
+            override fun describeTo(description: Description?) {
+                description?.appendText("checking whether width < $dim && height >= $dim")
+            }
+
+            override fun matches(item: Any): Boolean {
+                when(item) {
+                    is AccessibilityViewCheckResult -> {
+                        return item.view.width < dim && item.view.height >= dim
+                    }
+                    else -> return false
+                }
+            }
+
+        }
     }
 }
