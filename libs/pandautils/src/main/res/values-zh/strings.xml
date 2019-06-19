@@ -101,6 +101,10 @@
     <string name="pleaseTryAgain">已授予权限，请重试。</string>
     <string name="pickVideo">选择视频</string>
 
+    <string name="assignmentSubmissionUpload">正在为“%s”上传提交项</string>
+    <string name="assignmentSubmissionError">为“%s”提交失败</string>
+    <string name="notificationChannelNameSubmissionUploadsName">提交项上传通知</string>
+    <string name="notificationChannelNameSubmissionUploadsDescription">Canvas 持续提交项上传通知。</string>
     <!--Errors-->
     <string name="errorOccurred">发生意外错误。</string>
     <string name="serverError">发生服务器错误。</string>

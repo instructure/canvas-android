@@ -318,7 +318,6 @@
     <string name="assignments_list">Opdrachtenlijst</string>
     <string name="syllabus">Syllabus</string>
     <!--End Course Settings-->
-
     <!-- Assignment Details -->
     <string name="multiple_due_dates">Meerdere inleverdatums</string>
     <string name="everyone">Iedereen</string>
@@ -373,6 +372,7 @@
     <string name="announcement_name_must_be_set">Aankondigingsnaam moet worden ingesteld.</string>
     <string name="quiz_title_must_be_set">Toetsnaam moet worden ingesteld.</string>
     <string name="assignment_points_must_be_set">Opdrachtpunten moeten worden ingesteld.</string>
+    <string name="assignment_points_must_be_a_number">Mogelijke punten moeten een getal zijn</string>
     <string name="quiz_points_must_be_set">Er moeten toetspunten worden ingesteld.</string>
     <string name="assignee_type_course_sections">Cursussecties</string>
     <string name="assignee_type_groups">Groepen</string>

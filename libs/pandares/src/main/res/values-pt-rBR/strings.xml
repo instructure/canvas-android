@@ -52,6 +52,35 @@
     <string name="allowedFileTypes">Tipos de arquivos permitidos</string>
     <string name="resubmitAssignment">Reenviar Tarefa</string>
 
+    <string name="preview">Pré-visualização</string>
+    <!--    Student Submission-->
+    <string name="submissionUrlClearTextError">Nenhuma pré-visualização disponível para URLs usando \'http://\'</string>
+    <string name="submissionUrlNotAUrlError">Por favor, insira uma URL válida</string>
+    <string name="enterAUrlHereForYourSubmission">Insira uma URL para o seu envio</string>
+    <!-- Student Submission -->
+    <string name="submissionWrite">Gravar&#8230;</string>
+    <!-- Student Submission Details -->
+    <string name="submission">Envio</string>
+    <string name="submissionVersions">Versões de envio</string>
+    <string name="submissionDetailsFileTabName">Arquivo (%d)</string>
+    <string name="rubric">Rubrica</string>
+    <string name="submissionDetailsErrorTitle">Erro de Envio</string>
+    <string name="urlSubmissionDisclaimer">Este envio era uma URL para uma página externa. Incluímos uma captura instantânea de como a página aparecia quando foi enviada.</string>
+    <string name="submissionDetailsNoSubmissionYet">Ainda sem envios</string>
+    <string name="submissionDetailsAssignmentWasLockedOn">Sua tarefa foi bloqueada em %1$s às %2$s</string>
+    <string name="submissionDetailsAssignmentWillUnlockOn">Sua tarefa será desbloqueada em %1$s às %2$s</string>
+    <string name="submissionDetailsAssignmentLockedByModuleName">Sua tarefa está bloqueada pelo módulo \"%1$s\"</string>
+    <string name="submissionDetailsAssignmentLockedByModulePrereqs">Sua tarefa está bloqueada por um requisito do módulo</string>
+    <string name="submissionDetailsAssignmentLocked">Tarefa bloqueada</string>
+    <string name="webPreview">Pré-visualização da URL inserida</string>
+    <string name="websiteUrl">URL do site</string>
+    <!-- Grade Cell -->
+    <string name="outOfPointsFormatted">De %s pontos</string>
+    <string name="outOfPointsAbbreviatedFormatted">De %s pts</string>
+    <string name="gradeExcused">Dispensado</string>
+    <string name="finalGradeFormatted">Nota final: %s</string>
+    <!-- Student rubric tab -->
+    <string name="rubricCustomScore">Pontuação personalizada</string>
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">Versão:</string>
 
@@ -96,6 +125,13 @@
     <string name="next7Days">Próximos 7 Dias</string>
     <string name="days">Dias</string>
 
+    <string name="submissionDetailsDueTodayAt">Vence hoje às %s</string>
+    <string name="submissionDetailsDueTomorrowAt">Vence amanhã às %s</string>
+    <string name="submissionDetailsDueYesterdayAt">Venceu ontem às %s</string>
+    <string name="submissionDetailsHasNoDueDate">Sua tarefa não tem prazo</string>
+    <string name="submissionDetailsDueAt">Para ser entregue em %1$s às %2$s</string> <!--Ex: Due April 2 at 11:59pm-->
+    <string name="lowercaseAM">manhã</string>
+    <string name="lowercasePM">h</string>
     <!--Assignments-->
     <string name="assignmentDue">Vencimento</string>
     <string name="assignmentDueColon">Vencimento: </string>
@@ -328,6 +364,7 @@
     <string name="observers">Observadores</string>
     <string name="syllabusMissing">Um programa de estudo não foi adicionado.</string>
 
+    <string name="syllabusEventsError">Houve um erro ao carregar os seus módulos.</string>
     <string name="canvas">Fundamentos do</string>
     <string name="chooseRecipient">Escolher Destinatário(s)</string>
     <string name="messageHasNoRecipients">Esta mensagem atualmente não tem destinatários.</string>
@@ -447,6 +484,7 @@
     <string name="markDone">Marcar como concluído</string>
     <string name="moduleItemNotFound">Item do módulo não encontrado</string>
 
+    <string name="errorLoadingModules">Houve um erro ao carregar os seus módulos.</string>
     <string name="help">Ajuda</string>
     <string name="instructor_question">Pergunta de Instrutor</string>
     <string name="link">Link</string>
@@ -459,13 +497,15 @@
 
 
     <!--New Submission Strings -->
-    <string name="textEntry"> Entrada de texto</string>
-    <string name="onlineURL"> URL online</string>
+    <string name="textEntry">Entrada de texto</string>
+    <string name="onlineURL">URL online</string>
     <string name="enterTextEntry">Insira Entrada de Texto</string>
     <string name="fileUpload"> Carregamento de arquivo</string>
     <string name="oneFileOnly">Este envio aceita apenas o carregamento de um arquivo</string>
 
 
+    <string name="websiteEntry">Adicionar entrada do site</string>
+    <string name="mediaRecordingEntry">Gravações de mídia</string>
     <string name="submit">Enviar</string>
     <string name="blankSubmission">O trabalho submetido não pode ser branco.</string>
     <string name="errorPostingSubmission">Houve um erro postando o trabalho submetido.</string>

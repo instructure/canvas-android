@@ -318,7 +318,6 @@
     <string name="assignments_list">Uppgiftslista</string>
     <string name="syllabus">Kursplan</string>
     <!--End Course Settings-->
-
     <!-- Assignment Details -->
     <string name="multiple_due_dates">Flera förfallodatum</string>
     <string name="everyone">Alla</string>
@@ -373,6 +372,7 @@
     <string name="announcement_name_must_be_set">Aviseringsrubriken måste ställas in.</string>
     <string name="quiz_title_must_be_set">Quiz titel måste ställas in.</string>
     <string name="assignment_points_must_be_set">Uppgiftspoäng måste ställas in.</string>
+    <string name="assignment_points_must_be_a_number">Möjliga poäng måste vara ett nummer</string>
     <string name="quiz_points_must_be_set">Quiz päng måste ställas in.</string>
     <string name="assignee_type_course_sections">Kurssektioner</string>
     <string name="assignee_type_groups">Grupper</string>

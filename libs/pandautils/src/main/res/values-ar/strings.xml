@@ -101,6 +101,10 @@
     <string name="pleaseTryAgain">تم منح الإذن، الرجاء إعادة المحاولة.</string>
     <string name="pickVideo">قم بتحديد مقطع فيديو</string>
 
+    <string name="assignmentSubmissionUpload">جاري تحميل الإرسال لـ "%s"</string>
+    <string name="assignmentSubmissionError">الإرسال فشل لـ "%s"</string>
+    <string name="notificationChannelNameSubmissionUploadsName">إخطارات تحميل الإرسال</string>
+    <string name="notificationChannelNameSubmissionUploadsDescription">إخطارات Canvas لعمليات تحميل الإرسالات الجارية.</string>
     <!--Errors-->
     <string name="errorOccurred">حدث خطأ غير متوقع.</string>
     <string name="serverError">حدث خطأ بالخادم.</string>

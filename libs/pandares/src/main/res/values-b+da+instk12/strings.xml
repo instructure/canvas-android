@@ -52,6 +52,33 @@
     <string name="allowedFileTypes">Tilladte filtyper</string>
     <string name="resubmitAssignment">Gen-indsend opgave</string>
 
+    <string name="preview">Eksempel</string>
+    <!--    Student Submission-->
+    <string name="submissionUrlClearTextError">Der findes ingen forhåndsvisning for URL’er, der bruger \'http://\'</string>
+    <string name="submissionUrlNotAUrlError">Indtast venligst en gyldig URL</string>
+    <string name="enterAUrlHereForYourSubmission">Indtast en URL for din aflevering her</string>
+    <!-- Student Submission -->
+    <string name="submissionWrite">Skriv&#8230;</string>
+    <!-- Student Submission Details -->
+    <string name="submission">Aflevering</string>
+    <string name="submissionVersions">Afleveringsversioner</string>
+    <string name="submissionDetailsFileTabName">Filer (%d)</string>
+    <string name="rubric">Vurderingskriterie</string>
+    <string name="submissionDetailsErrorTitle">Indsendelsesfejl</string>
+    <string name="urlSubmissionDisclaimer">Afleveringen var en URL til en ekstern side. Vi har inkluderet et øjebliksbillede af, hvordan siden så ud, da den blev afleveret.</string>
+    <string name="submissionDetailsNoSubmissionYet">Ingen aflevering endnu</string>
+    <string name="submissionDetailsAssignmentWasLockedOn">Din opgave blev låst d. %1$s kl. %2$s</string>
+    <string name="submissionDetailsAssignmentWillUnlockOn">Din opgave bliver låst op d. %1$s kl. %2$s</string>
+    <string name="submissionDetailsAssignmentLockedByModuleName">Din opgave er låst efter forløb \"%1$s\"</string>
+    <string name="submissionDetailsAssignmentLockedByModulePrereqs">Din opgave er låst af et krav for et forløb</string>
+    <string name="submissionDetailsAssignmentLocked">Opgave låst</string>
+    <string name="webPreview">Forhåndsvisning af den indtastede URL</string>
+    <string name="websiteUrl">Webside URL</string>
+    <!-- Grade Cell -->
+    <string name="outOfPointsFormatted">Ud af %s point</string>
+    <string name="outOfPointsAbbreviatedFormatted">Ud af %s point</string>
+    <string name="gradeExcused">Undskyldt</string>
+    <string name="finalGradeFormatted">Endelig vurdering: %s</string>
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">Version:</string>
 
@@ -96,6 +123,13 @@
     <string name="next7Days">Næste 7 dage</string>
     <string name="days">Dage</string>
 
+    <string name="submissionDetailsDueTodayAt">Skal afleveres før i dag kl. %s</string>
+    <string name="submissionDetailsDueTomorrowAt">Skal afleveres før i morgen kl. %s</string>
+    <string name="submissionDetailsDueYesterdayAt">Skulle afleveres før i går kl. %s</string>
+    <string name="submissionDetailsHasNoDueDate">Din opgave har ingen afleveringsdato</string>
+    <string name="submissionDetailsDueAt">Forfalder d. %1$s kl. %2$s</string> <!--Ex: Due April 2 at 11:59pm-->
+    <string name="lowercaseAM">am</string>
+    <string name="lowercasePM">pm</string>
     <!--Assignments-->
     <string name="assignmentDue">Forfalder</string>
     <string name="assignmentDueColon">Forfalder: </string>
@@ -328,6 +362,7 @@
     <string name="observers">Observatører</string>
     <string name="syllabusMissing">En fagplan er ikke blevet tildelt</string>
 
+    <string name="syllabusEventsError">Der opstod en fejl under indlæsning af dine forløb.</string>
     <string name="canvas">Canvas</string>
     <string name="chooseRecipient">Vælg modtager(-e)</string>
     <string name="messageHasNoRecipients">Denne besked har for øjeblikket ingen modtagere.</string>
@@ -447,6 +482,7 @@
     <string name="markDone">Marker som færdig</string>
     <string name="moduleItemNotFound">Forløbelement ikke fundet</string>
 
+    <string name="errorLoadingModules">Der opstod en fejl under indlæsning af dine forløb.</string>
     <string name="help">Hjælp</string>
     <string name="instructor_question">Instruktør spørgsmål</string>
     <string name="link">Link</string>
@@ -459,13 +495,15 @@
 
 
     <!--New Submission Strings -->
-    <string name="textEntry"> Tekstindlæg</string>
-    <string name="onlineURL"> Online URL</string>
+    <string name="textEntry">Tekstindlæg</string>
+    <string name="onlineURL">Online URL</string>
     <string name="enterTextEntry">Indtast tekstpostering</string>
     <string name="fileUpload"> Filoverførsel</string>
     <string name="oneFileOnly">Denne indsendelse accepterer kun én filoverførsel</string>
 
 
+    <string name="websiteEntry">Tilføj indtastning på websted</string>
+    <string name="mediaRecordingEntry">Medieoptagelser</string>
     <string name="submit">Aflever</string>
     <string name="blankSubmission">Indsendelsen kan ikke være tom.</string>
     <string name="errorPostingSubmission">Der var en fejl under postering af indsendelsen.</string>

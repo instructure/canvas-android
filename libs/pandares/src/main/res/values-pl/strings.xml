@@ -54,6 +54,35 @@
     <string name="allowedFileTypes">Dopuszczalne typy plików</string>
     <string name="resubmitAssignment">Wyślij ponownie zadanie</string>
 
+    <string name="preview">Podgląd</string>
+    <!--    Student Submission-->
+    <string name="submissionUrlClearTextError">Brak podglądu dla adresu URL z użyciem \'http://\'</string>
+    <string name="submissionUrlNotAUrlError">Wpisz prawidłowy adres URL</string>
+    <string name="enterAUrlHereForYourSubmission">Wpisz adres dla przesyłki</string>
+    <!-- Student Submission -->
+    <string name="submissionWrite">Napisz&#8230;</string>
+    <!-- Student Submission Details -->
+    <string name="submission">Podanie</string>
+    <string name="submissionVersions">Przesłane wersje</string>
+    <string name="submissionDetailsFileTabName">Pliki (%d)</string>
+    <string name="rubric">Rubryka</string>
+    <string name="submissionDetailsErrorTitle">Błąd złożenia</string>
+    <string name="urlSubmissionDisclaimer">To przesłane zadanie było adresem URL do zewnętrznej strony. Zamieściliśmy migawkę przedstawiająca stronę w momencie jej przesłania.</string>
+    <string name="submissionDetailsNoSubmissionYet">Brak przesłanych materiałów</string>
+    <string name="submissionDetailsAssignmentWasLockedOn">Twoje zadanie zostało zablokowane w dniu %1$s o godz. %2$s.</string>
+    <string name="submissionDetailsAssignmentWillUnlockOn">Twoje zadanie zostanie odblokowane w dniu %1$s o godz. %2$s.</string>
+    <string name="submissionDetailsAssignmentLockedByModuleName">Twoje zadanie jest zablokowane przez moduł \"%1$s\"</string>
+    <string name="submissionDetailsAssignmentLockedByModulePrereqs">Twoje zadanie jest zablokowane przez wymóg modułu</string>
+    <string name="submissionDetailsAssignmentLocked">Zablokowano zadanie</string>
+    <string name="webPreview">Podgląd wprowadzonego adresu URL</string>
+    <string name="websiteUrl">Adres URL witryny</string>
+    <!-- Grade Cell -->
+    <string name="outOfPointsFormatted">Z %s pkt</string>
+    <string name="outOfPointsAbbreviatedFormatted">Z %s pkt</string>
+    <string name="gradeExcused">Usprawiedliwiony</string>
+    <string name="finalGradeFormatted">Ocena końcowa: %s</string>
+    <!-- Student rubric tab -->
+    <string name="rubricCustomScore">Niestandardowy wynik punktowy</string>
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">Wersja:</string>
 
@@ -98,6 +127,13 @@
     <string name="next7Days">Następne 7 dni</string>
     <string name="days">Dni</string>
 
+    <string name="submissionDetailsDueTodayAt">Termin o %s dziś</string>
+    <string name="submissionDetailsDueTomorrowAt">Termin o %s jutro</string>
+    <string name="submissionDetailsDueYesterdayAt">Termin o %s wczoraj</string>
+    <string name="submissionDetailsHasNoDueDate">Brak terminu dla zadania</string>
+    <string name="submissionDetailsDueAt">Termin %1$s o %2$s</string> <!--Ex: Due April 2 at 11:59pm-->
+    <string name="lowercaseAM">am</string>
+    <string name="lowercasePM">pm</string>
     <!--Assignments-->
     <string name="assignmentDue">Termin</string>
     <string name="assignmentDueColon">Termin: </string>
@@ -340,6 +376,7 @@
     <string name="observers">Obserwatorzy</string>
     <string name="syllabusMissing">Dodano sylabus.</string>
 
+    <string name="syllabusEventsError">Wystąpił błąd podczas wczytywania modułów.</string>
     <string name="canvas">Canvas</string>
     <string name="chooseRecipient">Wybierz odbiorcę (odbiorców)</string>
     <string name="messageHasNoRecipients">Obecnie ta wiadomość nie ma odbiorców.</string>
@@ -459,6 +496,7 @@
     <string name="markDone">Oznacz jako gotowe</string>
 
     <string name="moduleItemNotFound">Nie odnaleziono elementu modułu</string>
+    <string name="errorLoadingModules">Wystąpił błąd podczas wczytywania modułów.</string>
     <string name="help">Pomoc</string>
     <string name="instructor_question">Pytanie Instruktora</string>
     <string name="link">Łącze</string>
@@ -471,13 +509,15 @@
 
 
     <!--New Submission Strings -->
-    <string name="textEntry"> Zapis tekstu</string>
-    <string name="onlineURL"> Adres URL online</string>
+    <string name="textEntry">Zapis tekstu</string>
+    <string name="onlineURL">Adres URL online</string>
     <string name="enterTextEntry">Wprowadź wpis tekstowy</string>
     <string name="fileUpload"> Prześlij plik</string>
     <string name="oneFileOnly">Za pomocą tej funkcji można przesłać tylko jeden plik</string>
 
 
+    <string name="websiteEntry">Dodaj zapis witryny</string>
+    <string name="mediaRecordingEntry">Nagrania multimedialne</string>
     <string name="submit">Prześlij</string>
     <string name="blankSubmission">Zgłoszenie nie może być puste.</string>
     <string name="errorPostingSubmission">Wystąpił błąd podczas publikowania zgłoszenia.</string>

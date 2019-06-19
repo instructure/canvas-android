@@ -101,6 +101,10 @@
     <string name="pleaseTryAgain">Berechtigung erteilt, bitte erneut versuchen.</string>
     <string name="pickVideo">Wählen Sie ein Video aus.</string>
 
+    <string name="assignmentSubmissionUpload">Abgabe für „%s“ hochladen</string>
+    <string name="assignmentSubmissionError">Abgabe für „%s“ fehlgeschlagen</string>
+    <string name="notificationChannelNameSubmissionUploadsName">Benachrichtigungen über Abgabe-Upload</string>
+    <string name="notificationChannelNameSubmissionUploadsDescription">Canvas-Benachrichtigungen für laufende Abgabe-Uploads</string>
     <!--Errors-->
     <string name="errorOccurred">Es ist ein unerwarteter Fehler aufgetreten.</string>
     <string name="serverError">Ein Server-Fehler ist aufgetreten.</string>

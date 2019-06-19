@@ -100,6 +100,10 @@
     <string name="pleaseTryAgain">Kräver tillstånd, vänligen försök igen.</string>
     <string name="pickVideo">Välj en video</string>
 
+    <string name="assignmentSubmissionUpload">Laddar upp inlämningar för "%s"</string>
+    <string name="assignmentSubmissionError">Inlämningen för "%s" misslyckades</string>
+    <string name="notificationChannelNameSubmissionUploadsName">Uppladdningsmeddelanden för inlämning</string>
+    <string name="notificationChannelNameSubmissionUploadsDescription">Canvas-meddelanden för pågående uppladdningar av inlämning.</string>
     <!--Errors-->
     <string name="errorOccurred">Ett oväntat fel uppstod.</string>
     <string name="serverError">Ett serverfel uppstod.</string>

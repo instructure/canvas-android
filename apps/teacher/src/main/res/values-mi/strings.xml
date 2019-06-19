@@ -318,7 +318,6 @@
     <string name="assignments_list">Rārangi Ngā Whakataunga</string>
     <string name="syllabus">Marautanga</string>
     <!--End Course Settings-->
-
     <!-- Assignment Details -->
     <string name="multiple_due_dates">Maha Rā e tika ana</string>
     <string name="everyone">tāngata katoa</string>
@@ -373,6 +372,7 @@
     <string name="announcement_name_must_be_set">Me whakatau te taitara whakamōhio</string>
     <string name="quiz_title_must_be_set">Me whakatau te taitara o Quiz</string>
     <string name="assignment_points_must_be_set">Me whakatau ngā koinga mo te whakataunga</string>
+    <string name="assignment_points_must_be_a_number">Ngā kōinga ka taea Me waiho te tau</string>
     <string name="quiz_points_must_be_set">Me whakatau ngā koinga mo te tquiz</string>
     <string name="assignee_type_course_sections">Ngā Wāhanga akoranga</string>
     <string name="assignee_type_groups">rōpū</string>

@@ -55,6 +55,35 @@
     <string name="allowedFileTypes">أنواع الملفات المسموح بها</string>
     <string name="resubmitAssignment">إعادة إرسال المهمة</string>
 
+    <string name="preview">معاينة</string>
+    <!--    Student Submission-->
+    <string name="submissionUrlClearTextError">لا توجد معاينة متوفرة لعناوين URL باستخدام \'http://\'</string>
+    <string name="submissionUrlNotAUrlError">يُرجى إدخال عنوان URL صالح</string>
+    <string name="enterAUrlHereForYourSubmission">أدخل عنوان URL هنا لإرسالك</string>
+    <!-- Student Submission -->
+    <string name="submissionWrite">كتابة&#8230;</string>
+    <!-- Student Submission Details -->
+    <string name="submission">إرسال</string>
+    <string name="submissionVersions">إصدارات الإرسال</string>
+    <string name="submissionDetailsFileTabName">الملفات (%d)</string>
+    <string name="rubric">تقييم روبرك</string>
+    <string name="submissionDetailsErrorTitle">إرسال</string>
+    <string name="urlSubmissionDisclaimer">كان هذا الإرسال هو عنوان URL المؤدي إلى صفحة خارجية. لقد قمنا بتضمين لقطة توضح كيف كانت تبدو الصفحة عندما تم إرسالها.</string>
+    <string name="submissionDetailsNoSubmissionYet">لا يوجد إرسال حتى الآن</string>
+    <string name="submissionDetailsAssignmentWasLockedOn">تم تأمين مهمتك في %1$s الساعة %2$s</string>
+    <string name="submissionDetailsAssignmentWillUnlockOn">سيتم إلغاء تأمين مهمتك في %1$s الساعة %2$s</string>
+    <string name="submissionDetailsAssignmentLockedByModuleName">مهمتك مؤمّنة بسبب \"%1$s\" الوحدة المنطقية</string>
+    <string name="submissionDetailsAssignmentLockedByModulePrereqs">مهمتك مؤمّنة بسبب شرط الوحدة المنطقية</string>
+    <string name="submissionDetailsAssignmentLocked">تم تأمين المهمة</string>
+    <string name="webPreview">معاينة URL المدخل</string>
+    <string name="websiteUrl">عنوان URL لموقع ويب</string>
+    <!-- Grade Cell -->
+    <string name="outOfPointsFormatted">من إجمالي %s من النقاط</string>
+    <string name="outOfPointsAbbreviatedFormatted">من إجمالي %s من النقاط</string>
+    <string name="gradeExcused">معفى</string>
+    <string name="finalGradeFormatted">الدرجة النهائية: %s</string>
+    <!-- Student rubric tab -->
+    <string name="rubricCustomScore">نتيجة مخصصة</string>
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">الإصدار:</string>
 
@@ -99,6 +128,13 @@
     <string name="next7Days">الأيام السبعة القادمة</string>
     <string name="days">أيام</string>
 
+    <string name="submissionDetailsDueTodayAt">مستحق اليوم الساعة %s</string>
+    <string name="submissionDetailsDueTomorrowAt">مستحق غدًا الساعة %s</string>
+    <string name="submissionDetailsDueYesterdayAt">مستحق أمس الساعة %s</string>
+    <string name="submissionDetailsHasNoDueDate">لا يوجد تاريخ استحقاق لمهمتك</string>
+    <string name="submissionDetailsDueAt">تاريخ الاستحقاق %1$s في %2$s</string> <!--Ex: Due April 2 at 11:59pm-->
+    <string name="lowercaseAM">ص</string>
+    <string name="lowercasePM">م</string>
     <!--Assignments-->
     <string name="assignmentDue">الاستحقاق</string>
     <string name="assignmentDueColon">تاريخ الاستحقاق: </string>
@@ -351,6 +387,7 @@
     <string name="observers">المراقبون</string>
     <string name="syllabusMissing">لم تتم إضافة مخطط دراسي.</string>
 
+    <string name="syllabusEventsError">حدث خطأ أثناء تحميل الوحدات النمطية.</string>
     <string name="canvas">Canvas</string>
     <string name="chooseRecipient">اختيار المستلم (المستلمين)</string>
     <string name="messageHasNoRecipients">لا يوجد حاليًا متلقين لهذه الرسالة.</string>
@@ -470,6 +507,7 @@
     <string name="markDone">وضع علامة "تم"</string>
     <string name="moduleItemNotFound">لم يتم العثور على عنصر الوحدة المنطقية</string>
 
+    <string name="errorLoadingModules">حدث خطأ أثناء تحميل الوحدات النمطية.</string>
     <string name="help">المساعدة</string>
     <string name="instructor_question">سؤال من المعلم</string>
     <string name="link">ارتباط</string>
@@ -482,13 +520,15 @@
 
 
     <!--New Submission Strings -->
-    <string name="textEntry"> إدخال النص</string>
-    <string name="onlineURL"> عنوان URL عبر الإنترنت</string>
+    <string name="textEntry">إدخال النص</string>
+    <string name="onlineURL">عنوان URL عبر الإنترنت</string>
     <string name="enterTextEntry">الدخول إلى إدخال النص</string>
     <string name="fileUpload"> تحميل ملف</string>
     <string name="oneFileOnly">يقبل هذا الإرسال تحميل ملف واحد</string>
 
 
+    <string name="websiteEntry">إضافة إدخال موقع ويب</string>
+    <string name="mediaRecordingEntry">تسجيلات الوسائط</string>
     <string name="submit">إرسال</string>
     <string name="blankSubmission">لا يمكن ترك الإرسال فارغًا.</string>
     <string name="errorPostingSubmission">حدث خطأ أثناء نشر الإرسال.</string>

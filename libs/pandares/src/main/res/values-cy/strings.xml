@@ -52,6 +52,35 @@
     <string name="allowedFileTypes">Mathau o Ffeiliau a Ganiateir</string>
     <string name="resubmitAssignment">Ailgyflwyno Aseiniad</string>
 
+    <string name="preview">Rhagolwg</string>
+    <!--    Student Submission-->
+    <string name="submissionUrlClearTextError">Does dim rhagolwg ar gael ar gyfer URL sy\'n defnyddio \'http://\'</string>
+    <string name="submissionUrlNotAUrlError">Rhowch URL dilys</string>
+    <string name="enterAUrlHereForYourSubmission">Rhowch URL yma ar gyfer eich cyflwyniad</string>
+    <!-- Student Submission -->
+    <string name="submissionWrite">Ysgrifennwch&#8230;</string>
+    <!-- Student Submission Details -->
+    <string name="submission">Cyflwyniad</string>
+    <string name="submissionVersions">Fersiynau o’r Cyflwyniad</string>
+    <string name="submissionDetailsFileTabName">Ffeiliau (%d)</string>
+    <string name="rubric">Cyfarwyddyd sgorio</string>
+    <string name="submissionDetailsErrorTitle">Gwall Cyflwyno</string>
+    <string name="urlSubmissionDisclaimer">Roedd y cyflwyniad hwn yn URL i dudalen allanol. Rydyn ni wedi cynnwys ciplun o’r dudalen pan gafodd hyn ei gyflwyno.</string>
+    <string name="submissionDetailsNoSubmissionYet">Dim Cyflwyniad Eto</string>
+    <string name="submissionDetailsAssignmentWasLockedOn">Cafodd eich aseiniad ei gloi ar %1$s am %2$s</string>
+    <string name="submissionDetailsAssignmentWillUnlockOn">Bydd eich aseiniad yn datgloi ar %1$s am %2$s</string>
+    <string name="submissionDetailsAssignmentLockedByModuleName">Cafodd eich aseiniad ei gloi gan fodiwl \"%1$s\"</string>
+    <string name="submissionDetailsAssignmentLockedByModulePrereqs">Mae eich aseiniad wedi\'i gloi gan ofynion y modiwl</string>
+    <string name="submissionDetailsAssignmentLocked">Aseiniad wedi’i gloi</string>
+    <string name="webPreview">Rhagolwg o’r URL a roddwyd</string>
+    <string name="websiteUrl">URL Gwefan</string>
+    <!-- Grade Cell -->
+    <string name="outOfPointsFormatted">Allan o %s pwynt</string>
+    <string name="outOfPointsAbbreviatedFormatted">Allan o %s pwynt</string>
+    <string name="gradeExcused">Wedi esgusodi</string>
+    <string name="finalGradeFormatted">Gradd Derfynol: %s</string>
+    <!-- Student rubric tab -->
+    <string name="rubricCustomScore">Sgôr personol</string>
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">Fersiwn:</string>
 
@@ -96,6 +125,13 @@
     <string name="next7Days">Yn y 7 Diwrnod Nesaf</string>
     <string name="days">Diwrnod</string>
 
+    <string name="submissionDetailsDueTodayAt">Erbyn heddiw am %s</string>
+    <string name="submissionDetailsDueTomorrowAt">Erbyn yfory am %s</string>
+    <string name="submissionDetailsDueYesterdayAt">Erbyn ddoe am %s</string>
+    <string name="submissionDetailsHasNoDueDate">Does gan eich aseiniad ddim dyddiad erbyn</string>
+    <string name="submissionDetailsDueAt">Erbyn %1$s am %2$s</string> <!--Ex: Due April 2 at 11:59pm-->
+    <string name="lowercaseAM">am</string>
+    <string name="lowercasePM">pm</string>
     <!--Assignments-->
     <string name="assignmentDue">Erbyn</string>
     <string name="assignmentDueColon">Erbyn: </string>
@@ -328,6 +364,7 @@
     <string name="observers">Arsyllwyr</string>
     <string name="syllabusMissing">Nid oes maes llafur wedi’i ychwanegu.</string>
 
+    <string name="syllabusEventsError">Gwall wrth lwytho’ch modiwlau.</string>
     <string name="canvas">Canvas</string>
     <string name="chooseRecipient">Dewis Derbynnydd neu Dderbynwyr.</string>
     <string name="messageHasNoRecipients">Does gan y neges hon ddim derbynwyr ar hyn o bryd.</string>
@@ -447,6 +484,7 @@
     <string name="markDone">Marcio eu bod wedi’u gwneud</string>
 
     <string name="moduleItemNotFound">Heb ddod o hyd i’r Eitem Modiwl</string>
+    <string name="errorLoadingModules">Gwall wrth lwytho’ch modiwlau.</string>
     <string name="help">Help</string>
     <string name="instructor_question">Cwestiwn gan Addysgwr</string>
     <string name="link">Dolen</string>
@@ -459,13 +497,15 @@
 
 
     <!--New Submission Strings -->
-    <string name="textEntry"> Cofnod Testun</string>
-    <string name="onlineURL"> URL Ar-lein</string>
+    <string name="textEntry">Cofnod Testun</string>
+    <string name="onlineURL">URL Ar-lein</string>
     <string name="enterTextEntry">Rhowch Gofnod Testun</string>
     <string name="fileUpload"> Llwytho Ffeil i Fyny</string>
     <string name="oneFileOnly">Dydy’r cyflwyniad hwn ond yn derbyn llwytho un ffeil i fyny</string>
 
 
+    <string name="websiteEntry">Ychwanegu Cofnod Gwefan</string>
+    <string name="mediaRecordingEntry">Recordiadau ar Gyfryngau</string>
     <string name="submit">Cyflwyno</string>
     <string name="blankSubmission">Does dim modd i’r cyflwyniad fod yn wag.</string>
     <string name="errorPostingSubmission">Gwall wrth bostio’r cyflwyniad.</string>

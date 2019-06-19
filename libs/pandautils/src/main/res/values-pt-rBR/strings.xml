@@ -101,6 +101,10 @@
     <string name="pleaseTryAgain">Permissão concedida, tente novamente.</string>
     <string name="pickVideo">Selecionar um vídeo</string>
 
+    <string name="assignmentSubmissionUpload">Carregando envio para "%s"</string>
+    <string name="assignmentSubmissionError">Falha do envio para "%s"</string>
+    <string name="notificationChannelNameSubmissionUploadsName">Notificações de carregamento de envios</string>
+    <string name="notificationChannelNameSubmissionUploadsDescription">Notificações do Canvas para carregamentos de envios em andamento.</string>
     <!--Errors-->
     <string name="errorOccurred">Ocorreu um erro inesperado.</string>
     <string name="serverError">Ocorreu um erro no servidor.</string>

@@ -101,6 +101,10 @@
     <string name="pleaseTryAgain">Pèmisyon Akòde, tanpri eseye ankò.</string>
     <string name="pickVideo">Seleksyone yon Videyo</string>
 
+    <string name="assignmentSubmissionUpload">Transfere soumisyon pou "%s"</string>
+    <string name="assignmentSubmissionError">Soumisyon echwe pou "%s"</string>
+    <string name="notificationChannelNameSubmissionUploadsName">Notifikasyon Transfè Soumisyon</string>
+    <string name="notificationChannelNameSubmissionUploadsDescription">Notifikasyon Canvas ou transfè soumisyon an atant yo.</string>
     <!--Errors-->
     <string name="errorOccurred">Yon erè fèt sanzatann.</string>
     <string name="serverError">Gen yon erè sèvè ki fèt.</string>

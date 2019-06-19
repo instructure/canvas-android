@@ -100,6 +100,10 @@
     <string name="pleaseTryAgain">Dovoljenje je podeljeno, poskusite znova.</string>
     <string name="pickVideo">Izberi videoposnetek</string>
 
+    <string name="assignmentSubmissionUpload">Nalaganje oddaje za »%s«</string>
+    <string name="assignmentSubmissionError">Oddaja »%s« ni uspela</string>
+    <string name="notificationChannelNameSubmissionUploadsName">Sporočila pri nalaganju oddaje</string>
+    <string name="notificationChannelNameSubmissionUploadsDescription">Sporočila sistema Canvas za nalaganje oddaj v teku.</string>
     <!--Errors-->
     <string name="errorOccurred">Prišlo je do nepričakovane napake.</string>
     <string name="serverError">Prišlo je do napake strežnika.</string>

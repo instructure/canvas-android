@@ -51,6 +51,35 @@
     <string name="allowedFileTypes">允许的文件类型</string>
     <string name="resubmitAssignment">重新提交作业</string>
 
+    <string name="preview">预览</string>
+    <!--    Student Submission-->
+    <string name="submissionUrlClearTextError">使用“http://”的 URL 无可用预览</string>
+    <string name="submissionUrlNotAUrlError">请输入有效的 URL</string>
+    <string name="enterAUrlHereForYourSubmission">请在此处为您的提交项输入 URL</string>
+    <!-- Student Submission -->
+    <string name="submissionWrite">写入&#8230;</string>
+    <!-- Student Submission Details -->
+    <string name="submission">提交</string>
+    <string name="submissionVersions">提交版本</string>
+    <string name="submissionDetailsFileTabName">文件(%d)</string>
+    <string name="rubric">评测</string>
+    <string name="submissionDetailsErrorTitle">提交错误</string>
+    <string name="urlSubmissionDisclaimer">此提交是指向外部页面的一个 URL。我们已添加快照，显示提交时的页面外观。</string>
+    <string name="submissionDetailsNoSubmissionYet">尚无提交项</string>
+    <string name="submissionDetailsAssignmentWasLockedOn">您的作业在 %1$s %2$s 锁定</string>
+    <string name="submissionDetailsAssignmentWillUnlockOn">您的作业将在 %1$s %2$s 解锁</string>
+    <string name="submissionDetailsAssignmentLockedByModuleName">您的作业由模块\"%1$s\"锁定</string>
+    <string name="submissionDetailsAssignmentLockedByModulePrereqs">您的作业由模块要求锁定</string>
+    <string name="submissionDetailsAssignmentLocked">作业已锁定</string>
+    <string name="webPreview">输入的 URL 预览</string>
+    <string name="websiteUrl">网站 URL</string>
+    <!-- Grade Cell -->
+    <string name="outOfPointsFormatted">满分 %s</string>
+    <string name="outOfPointsAbbreviatedFormatted">满分 %s</string>
+    <string name="gradeExcused">已请假</string>
+    <string name="finalGradeFormatted">最终评分：%s</string>
+    <!-- Student rubric tab -->
+    <string name="rubricCustomScore">自定义评分</string>
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">版本：</string>
 
@@ -95,6 +124,13 @@
     <string name="next7Days">未来 7 天</string>
     <string name="days">天</string>
 
+    <string name="submissionDetailsDueTodayAt">今天 %s 到期</string>
+    <string name="submissionDetailsDueTomorrowAt">明天 %s 到期</string>
+    <string name="submissionDetailsDueYesterdayAt">昨天 %s 到期</string>
+    <string name="submissionDetailsHasNoDueDate">您的作业没有到期日期</string>
+    <string name="submissionDetailsDueAt">截止于 %1$s，%2$s</string> <!--Ex: Due April 2 at 11:59pm-->
+    <string name="lowercaseAM">上午</string>
+    <string name="lowercasePM">下午</string>
     <!--Assignments-->
     <string name="assignmentDue">截止</string>
     <string name="assignmentDueColon">到期：</string>
@@ -322,6 +358,7 @@
     <string name="observers">观察员</string>
     <string name="syllabusMissing">未添加教学大纲。</string>
 
+    <string name="syllabusEventsError">加载模块时出错。</string>
     <string name="canvas">Canvas</string>
     <string name="chooseRecipient">选择收件人(s)</string>
     <string name="messageHasNoRecipients">这个消息目前还没有收件人。</string>
@@ -441,6 +478,7 @@
     <string name="markDone">标记为完成</string>
     <string name="moduleItemNotFound">找不到模块项目</string>
 
+    <string name="errorLoadingModules">加载模块时出错。</string>
     <string name="help">帮助</string>
     <string name="instructor_question">讲师的问题</string>
     <string name="link">链接</string>
@@ -460,6 +498,8 @@
     <string name="oneFileOnly">此提交项只接受上传一份文件</string>
 
 
+    <string name="websiteEntry">添加网站条目</string>
+    <string name="mediaRecordingEntry">媒体录音</string>
     <string name="submit">提交</string>
     <string name="blankSubmission">提交不能为空白。</string>
     <string name="errorPostingSubmission">发布提交时出现错误。</string>

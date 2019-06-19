@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="hello_world">Hei maailma!</string>
+    <string name="action_settings">Asetukset</string>
+    <string name="mobileVerifyGeneral">Tätä sovellusta ei ole valtuutettu käyttöön</string>
+    <string name="mobileVerifyDomainUnauthorized">Syöttämääsi palvelinta ei ole valtuutettu tälle sovellukselle.</string>
+    <string name="mobileVerifyUserAgentUnauthorized">Tämän sovelluksen käyttäjän edustaja on valtuuttamaton.</string>
+    <string name="mobileVerifyUnknownError">Emme voineet vahvistaa tämän sovelluksen kanssa käytettävää palvelinta.</string>
+    <string name="unknownDevice">UnknownDevice</string>
+    <string name="errorOccurred">Ilmeni odottamaton virhe.</string>
+    <string name="pageNotFound">Sivua ei löytynyt.</string>
+    <string name="confirm">Vahvista</string>
+    <string name="cancel">Peruuta</string>
+    <string name="help">Ohje</string>
+    <string name="enterURL">Syötä Canvas-URL:</string>
+    <string name="signIntoCanvasNetwork">Yritätkö kirjautua Canvas-verkostoon?</string>
+    <string name="remove">Poista</string>
+    <string name="exampleURLSimple">myschool.instructure.com</string>
+    <string name="userId">Käyttäjätunnus</string>
+    <string name="domain">Verkkotunnus</string>
+    <string name="actAsUser">Toimi käyttäjänä</string>
+    <string name="stopActAsUser">Lopeta toimiminen käyttäjänä</string>
+
+    <!--Multiple User Sign in -->
+    <string name="removeUser">Poistetaanko tämä käyttäjä?</string>
+    <string name="removedForever">Sinun täytyy kirjautua sisään tälle käyttäjätilille taas, jotta voit käyttää sen sisältöä.</string>
+
+    <!--Content Descriptions-->
+    <string name="canvasLogo">Canvas-logo</string>
+
+    <string name="canvasLoginOn">Canvas_Login: PÄÄLLÄ</string>
+    <string name="canvasLoginOff">Canvas_Login: POIS PÄÄLTÄ</string>
+    <string name="siteAdminLogin">Sivuston pääkäyttäjän kirjautuminen: PÄÄLLÄ</string>
+
+    <string name="username">Käyttäjänimi</string>
+    <string name="password">Salasana</string>
+    <string name="authenticationRequired">Todennus vaaditaan</string>
+    <string name="invalidEmailPassword">Virheellinen sähköpostiosoite tai salasana</string>
+    <string name="login">Kirjaudu sisään</string>
+    <string name="logout">Kirjaudu ulos</string>
+    <string name="matchingSchools">Sopivat koulut</string>
+
+    <!--Logout Warning Dialog-->
+    <string name="logout_warning">Haluatko varmasti kirjautua ulos?</string>
+    <string name="logout_yes">Kyllä</string>
+    <string name="logout_no">Ei</string>
+
+    <!--Smart Login-->
+
+    <string name="loginNearYou">Lähistöllä</string>
+    <string name="loginCanvasNetwork">Canvas-verkosto</string>
+    <string name="loginRightBehindYou">Aivan takanasi</string>
+    <string name="loginMiles">%1$s kilometrin päässä</string>
+    <string name="loginCanvasHelp">Etkö näe kouluasi? Syötä koulun URL tai napauta tästä ohjeet.</string>
+    <string name="loginCanvasHelpWithUser">Syötä koulun URL tai napauta tästä ohjeet.</string>
+    <string name="loginHint">Etsi koulusi tai alueesi</string>
+
+    <!-- Error Report Dialog -->
+    <string name="errorReportAProblem">Raportoi ongelma</string>
+    <string name="errorReportSubject">Aihe</string>
+    <string name="errorReportDescription">Kuvaus</string>
+    <string name="errorReportWriteSomething">Kirjoita jotakin...</string>
+    <string name="errorReportSend">Lähetä</string>
+    <string name="errorReportThankyou">Kiitos ongelmasi raportoimisesta tukitiimille.  Saat vahvistuksen ja päivitykset sähköpostitse.</string>
+    <string name="errorReportSeverityText">Kuinka tämä vaikuttaa sinuun?</string>
+    <string name="errorSeverityCasualQuestion">Vain satunnainen kysymys, kommentti, idea, ehdotus...</string>
+    <string name="errorSeverityNeedHelp">Tarvitsen apua, mutta tämä ei ele kiireellistä.</string>
+    <string name="errorSeveritySomethingsBroken">Jotakin on rikki, mutta löydän tavan saada tehdyksi, mitä minun pitää saada tehdyksi.</string>
+    <string name="errorSeverityCantGetThingsDone">En saa asioita tehtyä, ennen kuin kuulen sinusta.</string>
+    <string name="errorSeverityExtremelyCritical">ERITTÄIN KIIREELLINEN HÄTÄTAPAUS!</string>
+
+    <string name="errorReportEmailAddress">Sähköpostiosoite</string>
+    <string name="errorReportEnterEmail">Syötä sähköpostiosoitteesi</string>
+    <string name="errorReportUnknown">Tuntematon</string>
+
+    <!-- Distance Strings -->
+    <string name="lessThanOne">&lt; 1 maili (1,6 km)</string>
+    <string name="oneMile">1 maili (1,6 km)</string>
+    <string name="miles">mailia</string>
+    <string name="kilometers">km</string>
+
+    <!-- String for submitting tickets -->
+    <string name="device">Laite</string>
+    <string name="osVersion">Käyttöjärjestelmäversio</string>
+
+    <string name="previousLoginTitle">Edelliset kirjautumiset</string>
+    <string name="findMySchool">Etsi kouluni</string>
+    <string name="canvasLowerCase">canvas</string>
+    <string name="whatsYourSchoolName">Mikä on koulusi nimi?</string>
+    <string name="next">Seuraava</string>
+    <string name="schoolInstructureCom">school.instructure.com</string>
+    <string name="contentDescription_removePreviousUser">Poista edellinen käyttäjä</string>
+    <string name="accountDomainFooter">Etkö löydä kouluasi? Yritä kirjoittaa koko koulun URL</string>
+    <string name="accountDomainFooterLink">Avaa ohje napauttamalla tässä.</string>
+
+    <string name="login_noInternetConnectionTitle">Ei Internet-yhteyttä</string>
+    <string name="login_noInternetConnectionMessage">Tähän toimintoon vaaditaan Internet-yhteys.</string>
+    <string name="empty_feedback">Aihe ja kuvaus vaaditaan palautteen lähettämiseen.</string>
+    <string name="versionNum">Version numero</string>
+    <string name="scrollInstructions">Vieritä nähdäksesi kaikki tiedot</string>
+
+    <string name="masqueradeErrorUserId">Sinun on annettava voimassa oleva tunnus.</string>
+    <string name="masqueradeErrorDomain">Sinun on kirjoitettava kelvollinen verkkotunnus.</string>
+    <string name="masqueradeError">Ilmeni virhe yritettäessä naamioimista.</string>
+    <string name="masqueradeInfo">\"Toimi käyttäjänä\" kirjautuu periaatteessa sisään tänä käyttäjänä ilman salasanaa. Voit ryhtyä mihin tahansa toimenpiteeseen ikään kuin olisit tämä käyttäjä, ja muiden käyttäjien näkökulmasta näyttäisi siltä, että sinä olisit suorittanut nämä toimenpiteet. Tarkistuslokeihin kuitenkin kirjataan kuitenkin, että sinä suoritit toimenpiteet tämän käyttäjän puolesta.</string>
+    <string name="masqueradingAs">Toimit käyttäjänä %s</string>
+    <string name="stopActingAsTitle">Lopeta toimimasta käyttäjänä...</string>
+    <string name="stopActingAsMessage">Lopetat toimimasta käyttäjänä %s ja palaat tilillesi.</string>
+    <string name="weMadeChanges">Olemme tehneet muutamia muutoksia.</string>
+    <string name="whatsNewText">Mitä uutta</string>
+</resources>

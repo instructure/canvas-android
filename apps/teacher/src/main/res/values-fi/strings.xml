@@ -1,0 +1,904 @@
+﻿<!--
+  ~ Copyright (C) 2017 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<resources>
+
+    <string name="settings_name">Asetukset</string>
+    <string name="tab_week">Viikko</string>
+    <string name="tab_inbox">Tulevien laatikko</string>
+    <string name="tab_details">Lisätiedot</string>
+    <string name="tab_questions">Kysymykset</string>
+    <string name="tab_submissions">Lähetykset</string>
+    <string name="tab_assignments">Tehtävät</string>
+    <string name="tab_profile">Profiili</string>
+    <string name="tab_people">Henkilöt</string>
+    <string name="tab_quizzes">Tietovisat</string>
+    <string name="tab_discussions">Keskustelut</string>
+    <string name="tab_announcements">Ilmoitukset</string>
+    <string name="tab_attendance">Osallistuminen</string>
+    <string name="tab_pages">Sivut</string>
+    <string name="tab_todo">Tehtävä</string>
+    <string name="content_description_school_logo">Koulun logo</string>
+    <string name="search_guides">Etsi Canvas-oppaita</string>
+    <string name="canvas_guides">Canvas-oppaat</string>
+    <string name="search_guides_icon">Kuvake Canvas-oppaille</string>
+    <string name="search_guides_details">Vastauksia usein kysyttyihin kysymyksiin</string>
+    <string name="report_problem">Raportoi ongelma</string>
+    <string name="report_problem_icon"> Kuvake Raportoi ongelma</string>
+    <string name="report_problem_details">Jos sovelluksen toiminnassa on häiriöitä, kerro meille</string>
+    <string name="request_feature">Pyydä ominaisuus</string>
+    <string name="request_feature_icon">Kuvake Pyydä ominaisuutta</string>
+    <string name="request_feature_details">Kerro meille ideasi sovelluksen kehittämisestä</string>
+    <string name="share_your_love">Jaa rakkautesi sovellusta kohtaan</string>
+    <string name="share_your_love_details">Kerro meille sovelluksen suosikkiosista</string>
+    <string name="masquerade">Naamiointi</string>
+    <string name="issue_with_teacher_app">Ongelma Teacher App -sovelluksen kanssa [Android]</string>
+    <string name="no_items_to_display_short">Ei kohteita</string>
+    <string name="rate_the_app">Arvioi sovellus</string>
+    <string name="rate_the_app_icon">Kuvake Arvostele sovellus</string>
+    <string name="teacher_log_out">Kirjaudu ulos</string>
+    <string name="teacher_switch_user">Vaihda käyttäjää</string>
+    <string name="under_construction">Rakenteilla</string>
+    <string name="toolbar_event">Tapahtuma</string>
+    <string name="location">Sijainti</string>
+    <string name="event_date">Tapahtumapäivä</string>
+    <string name="course">Kurssi</string>
+    <string name="profile">Profiili</string>
+    <string name="share">Jakaa</string>
+    <string name="share_with">Jaettu&#8230; kanssa</string>
+
+    <!-- Navigation Drawer -->
+    <string name="navigation_drawer_open">Avaa siirtymisvalikko</string>
+    <string name="navigation_drawer_close">Sulje siirtymisvalikko</string>
+
+    <!-- Compose Message -->
+    <string name="no_subject">(ei aihetta)</string>
+    <string name="compose_message">Luo viesti</string>
+    <string name="newMessage">Uusi viesti</string>
+    <string name="courses">Kurssit</string>
+    <string name="compose_message_no_ellipsis">Luo viesti</string>
+    <string name="send">Lähetä</string>
+    <string name="attachment">Liite</string>
+    <string name="attachments">Liitteet</string>
+    <string name="not_available_offline">Toiminto ei ole käytettävissä verkon ulkopuolella</string>
+    <string name="empty_message">Viesti ei voi olla tyhjä!</string>
+    <string name="message_has_no_recipients">Tässä viestissä ei parhaillaan ole vastaanottajia.</string>
+    <string name="course_spinner_title">Kurssi:</string>
+    <string name="reply_to_message">Vastaus</string>
+    <string name="forward_message">Lähetä viesti eteenpäin</string>
+    <string name="label_to">Johonkin</string>
+    <string name="label_course">Kurssi</string>
+    <string name="label_subject">Aihe</string>
+
+    <string name="common_send">Lähetä</string>
+    <string name="common_edit">Muokkaa</string>
+
+    <!-- Feature Request -->
+    <string name="feature_subject">Idea Teacher App -sovellukselle [Android]</string>
+    <string name="understand_request">Seuraavat tiedot auttavat meitä ymmärtämään ideasi paremmin:</string>
+    <string name="send_mail">Lähetä sähköpostiviesti&#8230;</string>
+
+    <string name="color_1">Punainen</string>
+    <string name="color_2">Kuuma vaaleanpunainen</string>
+    <string name="color_3">Laventeli</string>
+    <string name="color_4">Violetti</string>
+    <string name="color_5">Purppura</string>
+    <string name="color_6">Liuskekivi</string>
+    <string name="color_7">Sininen</string>
+    <string name="color_8">Syaani</string>
+    <string name="color_9">Vihreä</string>
+    <string name="color_10">Herneenvihreä</string>
+    <string name="color_11">Keltainen</string>
+    <string name="color_12">Kulta</string>
+    <string name="color_13">Oranssi</string>
+    <string name="color_14">Vaaleanpunainen</string>
+    <string name="color_15">Harmaa</string>
+
+    <string name="attachment_icon">Liitteen kuvake</string>
+    <string name="star_icon">Tähti-kuvake</string>
+    <string name="monologue">Monologi</string>
+
+    <string name="create_announcement_topic_title_hint">Aiheen otsikko</string>
+    <string name="post_date">Lähetyspäivä</string>
+    <string name="announcement">Tiedotus</string>
+    <string name="create_announcement_title">Uusi ilmoitus</string>
+    <string name="create_announcement_no_description">Kuvaus vaaditaan</string>
+    <string name="announcementDetails">Ilmoituksen tiedot</string>
+
+    <string name="no_title">Ei otsikkoa</string>
+    <string name="announcement_create_success">Ilmoitus luotu!</string>
+    <string name="announcement_create_fail">Ilmoitusta ei voitu luoda. Tarkasta yhteytesi ja yritä uudelleen.</string>
+    <string name="create_announcement_delay_posting">Viivästytä lähetystä</string>
+
+    <string name="discussion">Keskustelu</string>
+
+    <string name="sunday">Sunnuntai</string>
+    <string name="monday">Maanantai</string>
+    <string name="tuesday">Tiistai</string>
+    <string name="wednesday">Keskiviikko</string>
+    <string name="thursday">Torstai</string>
+    <string name="friday">Perjantai</string>
+    <string name="saturday">Lauantai</string>
+
+    <string name="add_attachment">Lisää liite</string>
+    <string name="content_description_files">Tiedostokuvake</string>
+    <string name="next">Seuraava</string>
+    <string name="upload_to_cnavas">Lataa Canvas-sovellukseen</string>
+    <string name="upload_my_files">Omat tiedostot</string>
+    <string name="upload_course_files">Kurssitiedostot</string>
+    <string name="upload_to">Lataa</string>
+    <string name="message_attachments">Viestin liitteet</string>
+    <string name="with">jossa</string>
+    <string name="discussion_attachment">Liitä tiedosto</string>
+    <string name="select_files_or_photos">Valitse tiedostot tai valokuvat</string>
+    <string name="uploading_files">Ladataan tiedostoja&#8230;</string>
+    <string name="no_attachment">(Ei liitettä)</string>
+    <string name="creating_announcement">Luo ilmoitus&#8230;</string>
+
+    <string name="copy_email">Kopioi sähköpostiosoite</string>
+    <string name="all_grading_periods">Kaikki arvosanojen antojaksot</string>
+    <string name="no_submissions">Ei lähetyksiä</string>
+    <string name="all_submissions_graded">Kaikki lähetykset arvosteltu</string>
+    <string name="icon">kuvake</string>
+    <plurals name="grading_status_assignment">
+        <item quantity="one">%d lähetystä tarvitsee arvostelun</item>
+        <item quantity="other">%d lähetystä tarvitsee arvostelun</item>
+    </plurals>
+
+    <plurals name="assignees_without_grades">
+        <item quantity="one">Yhdeltä %d tehtävänsaajalta puuttuu arvosana.</item>
+        <item quantity="other">%d tehtävänsaajalta puuttuu arvosana.</item>
+    </plurals>
+
+    <string name="inbox_empty_title">Ei viestejä</string>
+    <string name="inbox_empty_starred_title">Ei tähdellä merkittyjä viestejä</string>
+    <string name="inbox_empty_message">Luo uusi keskustelu napauttamalla \"+\".</string>
+    <string name="inbox_empty_starred_message">Merkitse viestit tähdellä napauttamalla tähteä viestissä.</string>
+
+    <string name="reply">Vastaus</string>
+    <string name="replyAll">Vastaa kaikille</string>
+    <string name="forward">Välitä eteenpäin</string>
+    <string name="star">Tähti</string>
+    <string name="archive">Arkisto</string>
+    <string name="delete">Poista</string>
+    <string name="message">Viesti</string>
+    <string name="unarchive">Peru arkistointi</string>
+    <string name="message_options">Viestivaihtoehdot</string>
+    <string name="markAsUnread">Merkitse lukemattomaksi</string>
+    <string name="message_delete_warning">Haluatko varmasti poistaa tämän viestin kopion? Tätä toimintoa ei voida peruuttaa.</string>
+    <string name="conversation_delete_warning">Haluatko varmasti poistaa tämän keskustelun kopion? Tätä toimintoa ei voida peruuttaa.</string>
+    <string name="error_conversation_generic">Tämän toiminnon suorittaminen ei onnistunut. Tarkasta yhteytesi ja yritä uudelleen.</string>
+    <string name="message_archived">Viesti arkistoitu</string>
+    <string name="message_unarchived">Viesti poistettu arkistosta</string>
+    <string name="message_deleted">Viesti on poistettu</string>
+    <string name="select_recipients">Valitse vastaanottajat</string>
+    <string name="entire_group_selected">Koko ryhmä valittu</string>
+    <string name="no_users_in_group">Ei käyttäjiä tyhmässä</string>
+
+    <string name="published">Julkaistu</string>
+    <string name="not_published">Julkaisematon</string>
+    <string name="published_content_description">Julkaistu tarkistusmerkki</string>
+    <string name="points_with_value">pisteet</string>
+    <string name="point_with_value">piste</string>
+    <string name="no_due_date">Ei määräpäivää</string>
+    <string name="due_date">Määräpäivä</string>
+
+    <string name="view_replies">Näytä vastaukset</string>
+    <string name="view_discussion">Näytä keskustelu</string>
+
+    <string name="edit">Muokkaa</string>
+    <string name="save">Tallenna</string>
+    <string name="successfully_updated_assignment">Tehtävän päivittäminen onnistui.</string>
+    <string name="successfully_updated_quiz">Tietovisan päivittäminen onnistui.</string>
+    <string name="failure_updating_assignment">Jotakin meni pieleen tehtävän päivittämisessä. Yritä uudelleen.</string>
+    <string name="failure_deleting_assignment">Jotakin meni pieleen tehtävän poistamisessa. Yritä uudelleen.</string>
+    <string name="cant_unpublish">Julkaisua ei voida peruuttaa, jos on opiskelijalähetyksiä.</string>
+    <string name="messages">Viestit</string>
+    <plurals name="reply_message_plus_label">
+        <item quantity="one">+ %d Viesti</item>
+        <item quantity="other">+ %d Viestit</item>
+    </plurals>
+    <plurals name="submissionNeedsGrading">
+        <item quantity="one">%d lähetystä tarvitsee arvostelun</item>
+        <item quantity="other">%d lähetystä tarvitsee arvostelun</item>
+    </plurals>
+
+    <string name="delete_assignment_message">Haluatko varmasti poistaa tämän tehtävän?</string>
+    <string name="question">Kysymys</string>
+    <string name="quizMatchingDefaultDisplay">[Valitse]</string>
+
+    <string name="max_count">99+</string>
+    <string name="message_student">Lähetä viesti opiskelijalle</string>
+
+    <string name="message_these_students">Lähetä viesti näille opiskelijoille.</string>
+    <string name="submission_status_missing">Puuttuu</string>
+    <string name="submission_status_late">Myöhään</string>
+    <string name="submission_status_submitted">Lähetetty</string>
+    <string name="submission_status_not_submitted">Ei lähetetty vielä.</string>
+    <string name="submission_status_excused">Annettu anteeksi</string>
+    <string name="last_login_format">Viimeinen sisäänkirjautuminen: %s</string>
+
+    <string name="muteGrades">Mykistä arvosanat</string>
+    <string name="unmuteGrades">Poista mykistys arvosanoista</string>
+    <string name="gradesMutedLabel">Arvosanat mykistetty</string>
+    <string name="turnOnAnonymousGrading">Kytke päälle nimetön arvosanojen anto</string>
+    <string name="turnOffAnonymousGrading">Kytke nimetön arvosanojen anto pois päältä</string>
+    <string name="anonymousGradingLabel">Nimetön arvosanojen anto</string>
+    <string name="anonymousStudentLabel">Opiskelija</string>
+
+    <!-- TODO -->
+    <string name="coming_soon">Ominaisuus tulossa pian</string>
+
+    <string-array name="submission_filters">
+        <item>Kaikki lähetykset</item>
+        <item>Myöhäiset lähetykset</item>
+        <item>Puuttuvat lähetykset</item>
+        <item>Arvosana korkea</item>
+        <item>Arvosana alhainen</item>
+    </string-array>
+
+    <string-array name="people_filters">
+        <item>Nimen mukaan</item>
+        <item>Arvosana korkea-alhainen</item>
+        <item>Arvosana alhainen-korkea</item>
+    </string-array>
+
+    <string name="content_description_course_tab">Kurssin välilehti</string>
+    <string name="content_description_inbox_tab">Tulevien laatikko -välilehti</string>
+    <string name="content_description_profile_tab">Profiili-välilehti</string>
+    <string name="close">Sulje</string>
+    <string name="no_course_selected">Valitse kurssi</string>
+    <string name="discussion_reply_to_entry">Keskustelun vastaus</string>
+    <string name="announcement_reply_to_entry">Ilmoituksen vastaus</string>
+    <string name="error_text_missing">Lisää tekstiä lähettääksesi viesti.</string>
+    <string name="error_sending_message">Tämän viestin lähettäminen epäonnistui. Yritä uudelleen napauttamalla.</string>
+    <string name="message_sent_successfully">Viesti lähetetty onnistuneesti.</string>
+    <string name="error_occurred">Ilmeni odottamaton virhe.</string>
+    <string name="no_assignments_with_file_upload">Tässä kurssissa ei ole tehtäviä, jotka sallivat tiedoston lataukset.</string>
+    <string name="extension_not_allowed">Valittu tiedoston tyyppi ei kelpaa.</string>
+    <string name="allowed_extensions">Sallitut tiedostotunnisteet:&#160;</string>
+    <string name="files_uploaded_successfully">Tiedostojen lataus onnistui.</string>
+    <string name="error_uploading_file">Ilmeni virhe tiedostoa ladatessa. Yritä uudelleen.</string>
+    <string name="uploading_file">Ladataan tiedostoa&#8230;</string>
+    <string name="no_apps">Laitteessasi ei ole asennettuna sovelluksia, jotka voisivat käsitellä tämän tiedoston.</string>
+    <string name="turn_in">Luovuttaminen</string>
+    <string name="error_getting_photo">Valokuvan hakemisessa tapahtui virhe. Yritä uudelleen.</string>
+    <string name="loading_files_indeterminate">Tiedostoja&#8230; ladataan</string>
+    <string name="no_files_uploaded">Et ole vielä valinnut yhtään tiedostoa.</string>
+    <string name="file_upload_not_supported">Tiedostojen lataus valittuun tehtävään ei onnistunut.</string>
+    <string name="one_or_more_extension_not_allowed">Yhden tai useamman tiedoston tiedostotunniste ei ole sallittua muotoa</string>
+
+    <string name="inbox_all">Tulevien laatikko</string>
+    <string name="inbox_unread">Lukematon</string>
+    <string name="inbox_starred">Merkitty tähdellä</string>
+    <string name="inbox_sent">Lähetetty</string>
+    <string name="inbox_archived">Arkistoitu</string>
+    <string name="inbox_all_messages">Kaikki</string>
+    <string name="uploading_file_num" formatted="false">Ladataan tiedostoa %d/%d</string>
+    <string name="page_not_found">Sivua ei löytynyt.</string>
+    <string name="no_connection">Ei yhteyttä</string>
+    <string name="unauthorized_access">Sinulla ei ole valtuuksia käyttää tätä. Sinulla ei ole käyttöoikeuksia tai pääsyä vielä (kuten kurssisi, joka ei ole vielä alkanut).</string>
+    <string name="server_error">Ilmeni palvelinvirhe.</string>
+    <string name="error_loading_files">Virhe ladattaessa tiedostoasi. Tarkasta Internet-yhteytesi ja yritä uudelleen.</string>
+    <string name="files_submitted_successfully">Tiedostojen lähetys onnistui.</string>
+    <string name="no_data_connection">Tarkasta datayhteytesi ja yritä uudelleen.</string>
+    <string name="teacher_logout_warning">Haluatko varmasti kirjautua ulos?</string>
+    <string name="teacher_yes">Kyllä</string>
+    <string name="teacher_no">Ei</string>
+    <string name="teacher_sending">Lähetetään&#8230;</string>
+    <string name="teacher_cancel">Peruuta</string>
+    <string name="teacher_okay">Ok</string>
+    <string name="teacher_upload">Lataa</string>
+    <string name="settings">Asetukset</string>
+    <string name="edit_courses">Muokkaa kursseja</string>
+    <string name="start_annotating">Aloita huomautusten teko</string>
+    <string name="empty_speedgrader_content">Tyhjä Speedgrader-näkymä, tarvitsee suunnittelua</string>
+
+    <!--Course Settings-->
+    <string name="course_settings">Kurssiasetukset</string>
+    <string name="course_name">Kurssin nimi</string>
+    <string name="set_home_to">Määritä \”Etusivu\” arvoon&#8230;</string>
+    <string name="course_activity_stream">Kurssin aktiviteetin virtaus</string>
+    <string name="pages_front_page">Sivut-etusivu</string>
+    <string name="frontPage">Etusivu</string>
+    <string name="course_modules">Kurssimoduulit</string>
+    <string name="assignments_list">Tehtäväluettelo</string>
+    <string name="syllabus">Opinto-ohjelma</string>
+    <!--End Course Settings-->
+
+    <!-- Assignment Details -->
+    <string name="multiple_due_dates">Useita määräpäiviä</string>
+    <string name="everyone">Kaikki</string>
+    <string name="everyone_else">Kaikki muut</string>
+    <string name="unknown_student">Tuntematon opiskelija</string>
+    <string name="closed">Suljettu</string>
+    <string name="no_date_filler">--</string>
+    <string name="due_date_at_time" formatted="false">Määräpäivä %1s kohteessa %2s</string>
+    <string name="last_post" formatted="false">Viimeinen lähetys %s</string>
+    <string name="submission_types">Lähetystyypit</string>
+    <string name="full_due_date_details">Täydelliset palautuspäivää koskevat tiedot</string>
+    <string name="availability_label">Saatavuus:</string>
+    <string name="available_to_label">Saatavilla:</string>
+    <string name="available_from_label">Saatavissa alkaen:</string>
+    <string name="due_for_label">Kenelle:</string>
+    <string name="due_label">Eräpäivä:</string>
+    <string name="details_available_to_label">Saatavissa</string>
+    <string name="details_available_from_label">Saatavissa alkaen</string>
+    <string name="details_due_for_label">-</string>
+    <string name="due_date_header_label">Määräpäivä</string>
+    <string name="assignment_details">Tehtävän tiedot</string>
+    <string name="no_content">Ei sisältöä</string>
+    <string name="submissions">Lähetykset</string>
+    <string name="no_assignment_description_filler">Auta opiskelijoitasi tämän tehtävän kanssa lisäämällä ohjeet.</string>
+    <string name="no_quiz_description_filler">Auta opiskelijoitasi tässä tietovisassa lisäämällä ohjeet.</string>
+    <string name="page_title_due_dates">Määräpäivät</string>
+    <string name="edit_assignment">Muokkaa tehtävää</string>
+    <string name="edit_quiz">Muokkaa kyselyä</string>
+    <string name="title">Otsikko</string>
+    <string name="description">Kuvaus</string>
+    <string name="grade_total">Arvosana yhteensä</string>
+    <string name="grade">Arvosana</string>
+    <string name="calculated_by_rubric">Laskettu ohjeiden mukaan</string>
+    <string name="customize_grade">Mukautettu arvosana</string>
+    <string name="out_of_points">/%1$s</string>
+    <string name="gpa">GPA</string>
+    <string name="letter_grade">Kirjeen arvosana</string>
+    <string name="excuse_student">Anna opiskelijalle anteeksi</string>
+    <string name="excuseGroup">Anna ryhmälle anteeksi</string>
+    <string name="complete_grade">Valmis</string>
+    <string name="incomplete_grade">Keskeneräinen</string>
+    <string name="not_graded">Ei arvosteltu</string>
+    <string name="excused">Annettu anteeksi</string>
+    <string formatted="false" name="grade_value_format">%s %s</string>
+    <string name="grade_value_format_talk_back">%1$s/%2$s</string>
+    <string name="publish">Julkaise</string>
+    <string name="error_saving_assignment">Tämän tehtävän näyttämisen yhteydessä ilmeni virhe. Yritä uudelleen.</string>
+    <string name="error_saving_quiz">Ilmeni virhe yritettäessä tallentaa tätä tietovisaa. Yritä uudelleen.</string>
+    <string name="assignment_name_must_be_set">Tehtävän nimi täytyy määrittää.</string>
+    <string name="announcement_name_must_be_set">Ilmoituksen otsikko täytyy määrittää.</string>
+    <string name="quiz_title_must_be_set">Tietovisan otsikko täytyy määrittää.</string>
+    <string name="assignment_points_must_be_set">Tehtävän pisteet täytyy määrittää.</string>
+    <string name="quiz_points_must_be_set">Tietovisan pisteet täytyy määrittää.</string>
+    <string name="assignee_type_course_sections">Kurssin osat</string>
+    <string name="assignee_type_groups">Ryhmät</string>
+    <string name="assignee_type_students">Opiskelijat</string>
+    <string name="page_title_add_assignees">Lisää tehtävänsaajat</string>
+    <string name="assign_to">Kohdista kohteelle</string>
+    <string name="available_from">Saatavissa alkaen</string>
+    <string name="available_to">Saatavissa</string>
+    <string name="unlock_after_due_date_error">Lukituspäivä ei voi olla määräpäivän jälkeen.</string>
+    <string name="lock_before_due_date_error">Lukituspäivä ei voi olla ennen määräpäivää.</string>
+    <string name="lock_after_unlock_error">Lukituspäivä ei voi olla ennen lukituksen poistopäivää.</string>
+    <string name="assignee_blank_error">Siirronsaaja ei voi olla tyhjä</string>
+    <string name="remove">Poista</string>
+    <string name="add_due_date">Lisää määräpäivä</string>
+    <string name="full_submission_details">Täydelliset lähetystiedot</string>
+    <string name="graded">Arvosteltu</string>
+    <string name="needsGrading">Täytyy arvostella</string>
+    <string name="not_submitted">Ei esitetty</string>
+    <string name="content_description_submission_donut_graded" formatted="false">Arvosteltu, %s/%s</string>
+    <string name="content_description_submission_donut_needs_grading" formatted="false">Täytyy arvostella, %s/%s</string>
+    <string name="content_description_submission_donut_unsubmitted" formatted="false">Ei lähetetty, %s/%s</string>
+    <string name="display_grade_as">Näytä arvosana seuraavasti:&#8230;</string>
+    <string name="percentage">Prosenttiosuus</string>
+    <string name="complete_incomplete">Valmis/keskeneräinen</string>
+    <string name="points">Pisteitä</string>
+    <string name="gpa_scale">GPA-asteikko</string>
+
+    <string-array name="display_grade_as_types" translatable="false">
+        <item>@string/percentage</item>
+        <item>@string/complete_incomplete</item>
+        <item>@string/points</item>
+        <item>@string/letter_grade</item>
+        <item>@string/gpa_scale</item>
+        <item>@string/not_graded</item>
+    </string-array>
+
+    <string-array name="display_grade_as_types_discussion" translatable="false">
+        <item>@string/percentage</item>
+        <item>@string/complete_incomplete</item>
+        <item>@string/points</item>
+        <item>@string/letter_grade</item>
+        <item>@string/gpa_scale</item>
+    </string-array>
+
+  <string name="not_a_teacher">Et ole opettaja?</string>
+    <string name="not_a_teacher_tap_to_visit_play_store">Yksi muista sovelluksistamme saattaa olla paremmin sopiva. Napsauta yhtä vieraillaksesi Play Storessa.</string>
+    <string name="canvas_lowercase">canvas</string>
+
+  <string name="sg_tab_grade">Arvosana</string>
+    <string name="sg_tab_comments">Kommentit</string>
+    <string name="sg_tab_files">Tiedostot</string>
+    <string name="filter_submissions">Suodattimen lähetykset</string>
+    <string name="all_submissions">Kaikki lähetykset</string>
+    <string name="submitted_late">Lähetetty myöhässä</string>
+    <string name="havent_submitted_yet">Ei ole lähettänyt vielä</string>
+    <string name="havent_been_graded">Ei ole vielä arvosteltu</string>
+    <string name="scored_less_than">Sai vähemmän pisteitä kuin&#8230;</string>
+    <string name="scored_more_than">Sai enemmän pisteitä kuin&#8230;</string>
+    <string name="scored_less_than_value">Sai vähemmän pisteitä kuin%s</string>
+    <string name="scored_more_than_value">Sai enemmän pisteitä kuin%s</string>
+    <string name="add_comment">Lisää kommentti</string>
+    <string name="editComment">Muokkaa kommenttia</string>
+    <string name="deleteComment">Poista huomautus</string>
+    <string name="deleteAnnotation">Poista huomautus</string>
+    <string name="deleteCommentConfirmation">Haluatko varmasti poistaa tämän kommentin?</string>
+    <string name="rubric_view_long_description">Näytä pitkä kuvaus</string>
+    <string name="rubric">Rubriikki</string>
+    <string name="enter_custom_value">Anna mukautettu arvo</string>
+    <string name="success_saving_rubric_assessment">Rubric-arviointi tallennettu</string>
+    <string name="error_saving_rubric_assessment">Ilmeni virhe tallennettaessa rubric-arviointia. Yritä uudelleen.</string>
+    <string name="rubric_assessment_score_out_of_total">%1$s/%2$s</string>
+    <string name="criterion_rating_customize_score">Mukauta pistemäärä</string>
+    <string name="edit_criterion_comment">Muokkaa kriteerien kommenttia</string>
+    <string name="sendMessageToHint">Viesti %s</string>
+    <string name="save_comment">Tallenna kommentti</string>
+    <string name="cancel_editing_comment">Peruuta kommentin muokkaus</string>
+    <string name="skip">Ohita</string>
+
+    <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
+    <string name="rating_button_content_description_custom">Mukautettu pistemäärä %1$s</string>
+
+    <!-- Content description for criterion rating button, including score and description. e.g. "100, meets all expectations" -->
+    <string name="rating_button_content_description">"%1$s, %2$s</string>
+
+    <plurals name="submission_points_possible">
+        <item quantity="one">/%s piste</item>
+        <item quantity="other">/%s pistettä</item>
+    </plurals>
+
+    <string name="tab_courses">Kurssit</string>
+    <string name="course_options">Kurssivaihtoehdot</string>
+    <string name="edit_favorite_courses">Muokkaa suosikkikursseja</string>
+    <string name="feedback_form">Palautelomake</string>
+    <string name="see_all">Katso kaikki</string>
+    <string name="all_courses">Kaikki kurssit</string>
+    <string name="welcome">Tervetuloa!</string>
+    <string name="empty_course_list_message">Lisää muutama suosikkikurssisi ja tee tästä paikasta kotisi.</string>
+    <string name="add_courses">Lisää kursseja</string>
+    <string name="unable_to_add_course_to_favorites">Tätä kurssia ei voitu lisätä kurssivalikkoosi tällä kertaa.</string>
+    <string name="grading_periods_filter">Arvosanojen antojaksojen suodatin</string>
+    <string name="assignments">Tehtävät</string>
+    <string name="clear_filter">Tyhjennä suodatin</string>
+    <string name="due">Määräpäivä %1$s</string>
+    <string name="updated">Päivitetty %1$s</string>
+
+    <plurals name="needsGradingCount">
+        <item quantity="one">%s täytyy arvostella</item>
+        <item quantity="other">%s täytyy arvostella</item>
+    </plurals>
+    <plurals name="needsGradingNoQuantity">
+        <item quantity="one">Täytyy arvostella</item>
+        <item quantity="other">Täytyy arvostella</item>
+    </plurals>
+    <string name="at">kohteessa</string>
+    <plurals name="quantityPointsAbbreviated">
+        <item quantity="one">%s piste</item>
+        <item quantity="other">%s pistettä</item>
+    </plurals>
+    <plurals name="quantityPointsFull">
+        <item quantity="one">%s piste</item>
+        <item quantity="other">%s pistettä</item>
+    </plurals>
+    <plurals name="people_count">
+        <item quantity="one">%d henkilö</item>
+        <item quantity="other">%d henkilöt</item>
+    </plurals>
+    <plurals name="group_count">
+        <item quantity="one">%d ryhmä</item>
+        <item quantity="other">%d ryhmät</item>
+    </plurals>
+    <string name="cmp_closed">Suljettu</string>
+    <string name="favorited_content_description" formatted="false">%s %s</string>
+    <string name="content_description_favorite">suosikki</string>
+    <string name="content_description_not_favorite">ei suosikki</string>
+    <string name="edit_nickname">Muokkaa lempinimeä</string>
+    <string name="edit_course_color">Muokkaa kurssin väriä</string>
+    <string name="edit_course_nickname">Muokkaa kurssin lempinimeä</string>
+
+    <string name="colorPickerDialogTitle">Kurssiväri</string>
+    <string name="colorPickerDialogMessage">Tämä on henkilökohtainen väriasetuksesi. Vain sinä näet tämän värin kurssille.</string>
+    <string name="colorPickerError">Kurssin värin määrittäminen ei onnistu juuri nyt.</string>
+
+    <string name="contentDescriptionColorCottonCandy">Vaaleanpunainen</string>
+    <string name="contentDescriptionColorBarbie">Kuuma vaaleanpunainen</string>
+    <string name="contentDescriptionColorBarneyPurple">Violetti</string>
+    <string name="contentDescriptionColorEggplant">Purppura</string>
+    <string name="contentDescriptionColorUltramarine">Tummansininen</string>
+    <string name="contentDescriptionColorOcean11">Sininen</string>
+    <string name="contentDescriptionColorCyan">Syaani</string>
+    <string name="contentDescriptionColorAquaMarine">Vedensininen</string>
+    <string name="contentDescriptionColorEmeraldGreen">Smaragdinvihreä</string>
+    <string name="contentDescriptionColorFreshCutLawn">Vihreä</string>
+    <string name="contentDescriptionColorChartreuse">Herneenvihreä</string>
+    <string name="contentDescriptionColorSunFlower">Keltainen</string>
+    <string name="contentDescriptionColorTangerine">Oranssi</string>
+    <string name="contentDescriptionColorBloodOrange">Tummanoranssi</string>
+    <string name="contentDescriptionColorSriracha">Punainen</string>
+    <string name="launch_link_in_external_browser">Lanseeraa linkki ulkoisessa selaimessa</string>
+    <string name="contentDescriptionSelectedFile">Valitse tiedosto</string>
+    <string name="contentDescriptionFileIcon">Tiedostokuvake</string>
+    <string name="contentDescriptionExpandPage">Laajenna sivu</string>
+    <string name="contentDescriptionCollapsePage">Kutista sivu</string>
+    <string name="noInternetConnectionTitle">Ei Internet-yhteyttä</string>
+    <string name="noInternetConnectionMessage">Tähän toimintoon vaaditaan Internet-yhteys.</string>
+
+    <string name="emptyDetailsMessage">Tarkastele tietoja napauttamalla kohdetta luettelossa</string>
+
+    <string name="assignmentQuizzes">Tehtävän tietovisat</string>
+    <string name="practiceQuizzes">Harjoittelutietovisat</string>
+    <string name="gradedSurveys">Arvostellut kyselyt</string>
+    <string name="surveys">Kyselyt</string>
+    <string name="editQuiz">Muokkaa tietovisan tietoja</string>
+    <string name="requireAccessCode">Vaadi pääsykoodia</string>
+    <string name="accessCode">Pääsykoodi</string>
+    <string name="mustHaveAccessCode">Syötä pääsykoodi tai älä vaadi pääsykoodia.</string>
+    <string name="errorSavingQuiz">Tämän tietovisan näyttämisen yhteydessä ilmeni virhe. Yritä uudelleen.</string>
+    <string name="successfullyUpdatedQuiz">Tietovisan päivittäminen onnistui.</string>
+    <string name="quizType">Tietovisan tyyppi</string>
+
+    <string name="practiceQuiz">Harjoittelutietovisa</string>
+    <string name="gradedQuiz">Arvosteltutietovisa</string>
+    <string name="gradedSurvey">Arvosteltu kysely</string>
+    <string name="ungradedSurvey">Arvostelematon kysely</string>
+
+    <string-array name="quizTypes" translatable="false">
+        <item>@string/practiceQuiz</item>
+        <item>@string/gradedQuiz</item>
+        <item>@string/gradedSurvey</item>
+        <item>@string/ungradedSurvey</item>
+    </string-array>
+    <string name="quizStatusUntaken">Ei suoritettu</string>
+
+    <string name="quizStatusComplete">Valmis</string>
+    <string name="quizStatusPendingReview">Odottaa tarkastelua</string>
+    <string name="quizStatusInProgress">Käynnissä</string>
+    <string name="quizStatusNotStarted">Ei aloitettu</string>
+
+
+    <string name="quiz_settings_label_quiz_type">Tietovisan yppi:</string>
+    <string name="quiz_settings_label_assignment_group">Tehtäväryhmä:</string>
+    <string name="quiz_settings_label_shuffle_answers">Sekoita vastauksia:</string>
+    <string name="quiz_settings_label_multiple_attempts">Useita yrityksiä:</string>
+    <string name="quiz_settings_label_time_limit">Aikaraja:</string>
+    <string name="quiz_settings_label_score_to_keep">Pidettävät pistemäärät:</string>
+    <string name="quiz_settings_label_attempts">Yrityksiä:</string>
+    <string name="quiz_settings_label_view_responses">Näytä vastaukset:</string>
+    <string name="quiz_settings_label_show_correct_answers">Näytä oikeat vastaukset:</string>
+    <string name="quiz_settings_label_one_question_at_a_time">Yksi kysymys kerrallaan:</string>
+    <string name="quiz_settings_label_ip_filter">IP-suodatin:</string>
+    <string name="quiz_settings_label_points">Pisteet:</string>
+    <string name="quiz_settings_label_access_code">Käyttökoodi:</string>
+    <string name="quiz_settings_label_anonymous_submissions">Nimettömät lähetykset:</string>
+    <string name="quiz_settings_label_lock_questions_after_answering">Lukitse kysymykset vastaamisen jälkeen:</string>
+
+    <string name="quizPreview">Tietovisan katselu</string>
+    <string name="preview_quiz">Esikatsele kysely</string>
+    <string name="quiz_details">Tietovisan tiedot</string>
+    <string name="submission_versions">Lähetyksen versiot</string>
+    <string name="speedgrader_student_no_submissions">Tällä opiskelijalla ei ole lähetyksiä tähän tehtävään.</string>
+    <string name="speedgrader_group_no_submissions">Tällä ryhmällä ei ole lähetyksiä tähän tehtävään.</string>
+    <string name="speedgrader_unsupported_type">Lähetystyyppiä ei tueta</string>
+    <string name="unlimited">Rajoittamaton</string>
+    <string name="practice_quiz">Harjoittelutietovisa</string>
+    <string name="graded_quiz">Arvosteltutietovisa</string>
+    <string name="graded_survey">Arvosteltu kysely</string>
+    <string name="ungraded_survey">Arvostelematon tutkimus</string>
+    <string name="no_time_limit">Ei aikarajaa</string>
+    <string name="immediately">Välittömästi</string>
+    <string name="quiz_details_no_points_assigned">Ei pisteitä kohdistettu</string>
+
+    <string name="quiz_details_from_to">%1$s-%2$s</string>
+    <string name="quiz_details_after">Jälkeen %1$s</string>
+    <string name="quiz_details_until">Asti %1$s</string>
+    <string name="filterPointsMustBeSet">Anna arvo.</string>
+
+    <plurals name="quantityQuestions">
+        <item quantity="one">%d kysymys</item>
+        <item quantity="other">%d kysymykset</item>
+    </plurals>
+
+    <plurals name="minutes">
+        <item quantity="one">%s Minuutti</item>
+        <item quantity="other">%s Minuutit</item>
+    </plurals>
+
+    <string name="discussion_details">Keskustelun tiedot</string>
+    <string name="discussions_pinned">Kiinnitetty</string>
+    <string name="discussions_unpinned">Keskustelut</string>
+    <string name="discussions_closed">Suljettu kommenteilta</string>
+    <string name="discussions_open">Avoin kommenteille</string>
+    <string name="discussions_pin">Kiinnitä</string>
+    <string name="discussions_unpin">Poista kiinnitys</string>
+    <string name="contentDescriptionDiscussionsOverflow">Lisävaihtoehdot</string>
+    <string name="discussions_options">Asetukset</string>
+    <string name="discussions_replies" formatted="false">%s vastausta</string>
+    <string name="discussions_unread" formatted="false">%s Lukematon</string>
+    <string name="discussions_unread_replies_blank" formatted="false">%s %s %s</string>
+    <string name="discussions_delete_warning">Haluatko varmasti poistaa tämän vastauksen?</string>
+    <string name="discussions_replies_title">Vastausta</string>
+    <string name="discussions_reply">Vastaus</string>
+    <string name="discussions_edit">Muokkaa</string>
+    <string name="discussions_forbidden">Vastaukset ovat näkyvissä vai niille, jotka ovat lähettäneet vähintään yhden vastauksen.</string>
+    <string name="discussions_unknown_author">Tuntematon tekijä</string>
+    <string name="discussions_delete">Poista keskustelu</string>
+    <string name="discussions_delete_title">Poistetaanko keskustelu?</string>
+    <string name="discussions_delete_message">Tämä poistaa koko keskustelun ja keskusteluketjun</string>
+
+    <string name="dataUsageWarningTitle">Datan käytön varoitukset</string>
+    <string name="dataUsageWarningMessage">Tämä toiminto saattaa kuluttaa paljon tietoja, mahdollidesti aiheuttaen ylimääräisiä veloituksia. Haluatko jatkaa?</string>
+    <string name="doNotShowMessageAgain">Älä näytä tätä viestiä uudelleen</string>
+    <string name="playMedia">Toista mediaa</string>
+    <string name="submissionIsMediaFile">Tämä lähetys on mediatiedosto</string>
+    <string name="tryAgain">Yritä uudestaan</string>
+    <string name="couldNotPlayFormat">Tätä mediaformaattia ei tueta</string>
+    <string name="openWithAnotherApp">Avaa sovelluksessa...</string>
+    
+    <string name="speedgraderCommentAddedSubmission">Tehtävä lähetetty. Katso napauttamalla.</string>
+    <string name="speedgraderCommentSubmittedFiles">Lähetetyt tiedostot.</string>
+    <string name="no_submission_comments">Lähetykseen ei ole kommentteja</string>
+    <string name="mediaUploadAudio">Median lataus - ääni</string>
+    <string name="mediaUploadVideo">Median lataus - video</string>
+    <string name="speedgraderCommentQuizAttempt">Yritys %d</string>
+    <string name="speedGraderTextSubmission">Tekstin lähetys</string>
+    <string name="speedGraderExternalToolSubmission">Ulkoinen työkalu lähetykseen</string>
+    <string name="speedGraderDiscussionSubmission">Keskustelun lähetys</string>
+    <string name="speedGraderQuizSubmission">Tietovisan lähetys</string>
+    <string name="speedGraderMediaFile">Mediatiedosto</string>
+    <string name="submissionTypeAudio">Ääni</string>
+    <string name="submissionTypeVideo">Video</string>
+    <string name="speedGraderUrlSubmission">URL-lähetys</string>
+
+    <string name="unsupportedFileMessage">Tiedostoa ei voitu näyttää. Käytä tätä painiketta alla avataksesi tiedosto toisessa sovelluksessa laitteessasi.</string>
+    <string name="speedGraderNoneMessage">Tämä tehtävä ei salli lähetyksiä.</string>
+    <string name="speedGraderExternalToolMessage">Tämä tehtävä linkittää ulkoisen työkalun lähetyksiin.</string>
+    <string name="speedGraderOnPaperMessage">Tämä tehtävä sallii vain paperilla tehtävät lähetykset.</string>
+    <string name="speedGraderUrlSubmissionDisclaimer">Tämä lähetys oli URL ulkoiselle sivulle. Muista, että tämä sivu on ehkä muuttunut siitä, kun lähetys alunperin tapahtui.</string>
+    <string name="speedGraderOpenUrl">Avaa URL</string>
+    <string name="annotationError">Huomautuksen teossa ilmeni virhe</string>
+    <string name="annotationDialogMessage">Huomautus on poistettu toisesta lähteestä.</string>
+
+    <string name="selectCourse">Valitse kurssi</string>
+
+    <string name="sendIndividualMessage">Lähetä yksilöllinen viesti jokaiselle vastaanottajalle</string>
+
+    <string name="filterInbox">Suodata tulevien laatikko</string>
+    <string name="selectCanvasContext">Valitse kurssi tai ryhmä</string>
+
+    <string name="contentDescription_back">Siirry takaisin</string>
+
+    <string name="discussion_update_success">Keskustelun muokkaaminen onnistui.</string>
+    <string name="discussion_update_empty">Keskustelun viesti ei voi olla tyhjä.</string>
+    <string name="discussion_update_failure">Keskustelua vastausta ei voitu muokata tällä kertaa.</string>
+    <string name="discussion_sent_success">Vastaus keskusteluun onnistui</string>
+    <string name="discussion_sent_empty">Keskustelun vastaus ei voi olla tyhjä.</string>
+    <string name="discussion_sent_failure">Keskustelun vastausta ei voitu lähettää tällä kertaa.</string>
+    <string name="discussion_first_to_respond">Vastaa ensimmäisenä lisäämällä vastaus.</string>
+    <string name="addMorePeopleToMessage">Lisää toinen vastaanottaja. Vain itsellesi osoitettuja viestejä ei voida lähettää.</string>
+    <string name="tutorialSwipeMessage">Tarkastele muita opiskelijoita pyyhkäisemällä vasemmalle tai oikealle.</string>
+    <string name="tutorialRubricMessage">Napauta ja pidä numeroa nähdäksesi kuvauksen.</string>
+
+    <string name="viewQuizSubmission">Näytä lähetystä</string>
+    <string name="gradeQuizSubmission">Arvosanan lähetys</string>
+    <string name="comment">Kommentti</string>
+    <string name="messageStudentsWho">Lähetä viesti opiskelijoille, jotka&#8230;</string>
+
+    <string name="on">on</string>
+
+    <string name="createDiscussion">Uusi keskustelu</string>
+    <string name="options">Asetukset</string>
+    <string name="subscribe">Tilaa</string>
+    <string name="allowThreadedReplies">Kaikki ketjutetut vastaukset</string>
+    <string name="usersMustPost">Käyttäjien täytyy lähettää ennen kuin he voivat nähdä vastauksia</string>
+    <string name="allowUserComments">Salli käyttäjien kommentoida</string>
+    <string name="discussionTitleMustBeSet">Keskustelun otsikko täytyy määrittää.</string>
+    <string name="discussionSuccessfullyCreated">Keskustelun luonti onnistui.</string>
+    <string name="errorCreatingDiscussion">Tämän keskustelun luomisen yhteydessä ilmeni virhe. Yritä uudelleen.</string>
+    <string name="editDiscussion">Muokkaa keskustelu</string>
+    <string name="discussionSuccessfullyUpdated">Keskustelun päivitys onnistui.</string>
+    <string name="input_text">Syöttöteksti</string>
+    <string name="announcementSuccessfullyCreated">Ilmoituksen luonti onnistui.</string>
+    <string name="errorSavingAnnouncement">Tämän ilmoituksen näyttämisen yhteydessä ilmeni virhe. Yritä uudelleen.</string>
+    <string name="editAnnouncementTitle">Muokkaa ilmoitusta</string>
+    <string name="announcementSuccessfullyUpdated">Ilmoituksen päivitys onnistui.</string>
+    <string name="announcementDeleted">Ilmoitus poistettu.</string>
+    <string name="postAt">Lähetä</string>
+    <string name="errorDeletingAnnouncement">Tämän ilmoituksen poistamisen yrittämisessä ilmeni virhe. Yritä uudelleen.</string>
+    <string name="deleteAnnouncementDialogTitle">Poistetaanko ilmoitus?</string>
+    <string name="deleteAnnouncementDialogMessage">Haluatko varmasti poistaa tämän ilmoituksen?</string>
+    <string name="deleteAnnouncement">Poista ilmoitus</string>
+    <string name="annotationErrorOccurred">Huomautusten lataamisen yhteydessä tapahtui virhe.</string>
+
+    <string name="account">Tili</string>
+    <string name="changeUser">Change User (Vaihda käyttäjää)</string>
+    <string name="general">Yleinen</string>
+    <string name="sendFeedback">Lähetä palautetta</string>
+    <string name="rateOnTheAppStore">Arvostele App Storessa</string>
+    <string name="privacyPolicy">Tietosuojakäytäntö</string>
+    <string name="EULA">EULA</string>
+    <string name="termsOfUse">Käyttöehdot</string>
+    <string name="openSource">Avoin lähde</string>
+    <string name="searchGuides">Etsi Canvas-oppaita</string>
+    <string name="searchGuidesDetails">Etsi vastaukset yleisiin kysymyksiin</string>
+    <string name="reportProblem">Raportoi ongelma</string>
+    <string name="reportProblemDetails">Jos sovelluksen toiminnassa on häiriöitä, kerro meille</string>
+    <string name="requestFeature">Pyydä ominaisuus</string>
+    <string name="requestFeatureDetails">Onko sinulla idea sovelluksen parantamiseksi?</string>
+    <string name="shareYourLove">Jaa rakkautesi sovellusta kohtaan</string>
+    <string name="shareYourLoveDetails">Kerro meille sovelluksen suosikkiosista</string>
+    <string name="canvasGuides">Canvas-oppaat</string>
+    <string name="featureSubject">Idea Canvas Teacher -sovellukselle [Android]</string>
+    <string name="understandRequest">Seuraavat tiedot auttavat meitä ymmärtämään ideasi paremmin:</string>
+    <string name="sendMail">Lähetä sähköpostiviesti&#8230;</string>
+    <string name="editProfile">Muokkaa profiilia</string>
+    <string name="name">Nimi</string>
+    <string name="bio">Bio</string>
+    <string name="profileEditSuccess">Profiili on päivitetty</string>
+    <string name="profileEditFailure">Profiilia ei voida päivittää</string>
+    <string name="takePhoto">Ota valokuva</string>
+    <string name="choosePhotoFromGallery">Valitse valokuva galleriasta</string>
+    <string name="fileNotFound">Tiedostoa ei löytynyt.</string>
+    <string name="version" formatted="false">Versio %s</string>
+    <string name="fullVersion">Versio %s (%d)</string>
+    <string name="tap_to_view_submissions_list">Napauta nähdäksesi lähetysluettelo.</string>
+    <string name="assignmentDescriptionContentDescription">Tehtävän kuvaus</string>
+    <string name="quizDescriptionContentDescription">Tietovisan kuvaus</string>
+    <string name="removeDueDate">Poista määräpäivä</string>
+    <string name="removeDueDateMessage">Tämä poistaa määräpäivän ja kaikki liitetyn tehtävänsaajat.</string>
+    <string name="openTool">Avaa työkalu</string>
+    <string name="email">Sähköposti</string>
+    <string name="fullscreen">koko näyttö</string>
+    <string name="addNew">Lisää uusi</string>
+    <string name="sendMessage">Lähetä viesti</string>
+    <string name="addMessage">Lisää viesti</string>
+    <string name="messageThisStudent">Lähetä viesti tälle opiskelijalle.</string>
+    <string name="scrollInstructions">Vieritä nähdäksesi kaikki tiedot</string>
+    <string name="dueTime">Erääntymisaika</string>
+    <string name="available_from_date">Saatavissa päivämäärästä asti</string>
+    <string name="available_from_time">Saatavissa lähtien</string>
+    <string name="available_to_date">Saatavissa asti</string>
+    <string name="available_to_time">Saatavissa aikaan</string>
+    <string name="addDescription">Lisää kuvaus</string>
+    <string name="post_time">Lähetysaika</string>
+    <string name="allPeople">Kaikki henkilöt</string>
+    <string name="loading">Ladataan</string>
+    <string name="saving">Tallennetaan</string>
+    <string name="sendingSimple">Lähetetään</string>
+    <string name="uploading">Ladataan</string>
+    <string name="retry">Yritä uudelleen</string>
+    <string name="error_loading_submission">Tämän lähetyksen lataamisessa oli vaikeuksia.</string>
+    <string name="search">Hae</string>
+    <string name="filterPeople">Suodata ihmisiä</string>
+    <string name="loadMore">Lataa lisää</string>
+    <string name="latestStudentActivityAtFormatted">Viimeisin aktiviteetti %1$s kohdassa %2$s.</string>
+    <string name="sectionFormatted">Osa: %s</string>
+    <string name="errorLoadingStudentContextCard">Tämän käyttäjän tietojen lataus ei onnistunut</string>
+    <string name="enrollmentTypeStudent">Opiskelija</string>
+    <string name="enrollmentTypeTeacher">Opettaja</string>
+    <string name="enrollmentTypeObserver">Havainnoija</string>
+    <string name="enrollmentTypeTeachingAssistant">Apuopettaja</string>
+    <string name="enrollmentTypeDesigner">Suunnittelija</string>
+    <string name="enrollmentTypeUnknown">Tuntematon</string>
+    <string name="unableToLoadAttendance">Osallistumisen lataaminen ei onnistu juuri nyt.</string>
+    <string name="markRemainingAsPresent">Merkitse jäljellä olevat läsnä olevina</string>
+    <string name="markAllAsPresent">Merkitse kaikki läsnä olevina</string>
+    <string name="calendar">Kalenteri</string>
+    <string name="filterSections">Suodattimen osat</string>
+    <string name="addVideoComment">Lisää videon kommentti</string>
+    <string name="addAudioComment">Lisää videon kommentti</string>
+    <string name="recordingTimerDefault">00:00:00</string>
+    <string name="recordingTimerContentDescription">%1$d tuntia, %2$d minuuttia ja %3$d sekuntia</string>
+    <string name="recordingTimerSpeechDivider">%1$s/%2$s</string>
+    <string name="replay">Toista</string>
+    <string name="stop">Lopeta</string>
+    <string name="startRecordingAudio">Aloita äänen nauhoitus nyt</string>
+    <string name="stopRecordingAudio">Lopeta äänen nauhoitus</string>
+    <string name="startRecordingVideo">Aloita videon nauhoitus nyt</string>
+    <string name="stopRecordingVideo">Lopeta videon nauhoitus</string>
+    <string name="closeRecordingView">Sulje nauhoitusnäkymä</string>
+    <string name="deleteRecording">Poista nauhoitus</string>
+    <string name="videoCommentReplay">Videon kommentin vastaus</string>
+    <string name="addMediaComment">Lisää mediakommentti</string>
+    <string name="copyrightHolder">Tekijänoikeuden haltija</string>
+    <string name="access">Pääsy</string>
+    <string name="usageRights">Käyttöoikeudet</string>
+    <string name="deleteFile">Poista tiedosto</string>
+    <string name="holdCopyright">Minulla on tekijäoikeus</string>
+    <string name="havePermission">Minulla on käyttöoikeudet tähän tiedostoon</string>
+    <string name="publicDomain">Julkisen verkkotunnuksen tiedosto</string>
+    <string name="fairUse">Reilun käytön poikkeus</string>
+    <string name="creativeCommons">Creative Commons -tiedosto</string>
+    <string name="editFile">Muokkaa tiedostoa</string>
+    <string name="deleteFolder">Poista kansio</string>
+    <string name="editFolder">Muokkaa kansiota</string>
+    <string name="deleteFileMessage">Haluatko varmasti poistaa tämän tiedoston?</string>
+    <string name="deleteFolderMessage">Oletko varma, että tahdot poistaa tämän kansion? Kaikki tämän kansion sisältö poistetaan myös</string>
+    <string name="newFolder">Uusi kansio</string>
+    <string name="createAFolder">Kansion luominen</string>
+    <string name="createFolder">Kansion luonti</string>
+    <string name="createAFile">Luo tiedosto</string>
+    <string name="createFileFolderFabContentDesc">Näytä Luo tiedosto - ja Luo kansio -painikkeet</string>
+    <string name="hideCreateFileFolderFabContentDesc">Piilota Luo tiedosto - ja Luo kansio -painikkeet</string>
+    <string name="unpublish">Peruuta julkaisu</string>
+    <string name="restrictedAccess">Rajoitettu käyttöoikeus</string>
+    <string name="restricted">Rajoitettu</string>
+    <string name="hidden">Piilotettu, tiedostot sisällä ovat käytettävissä linkkien kanssa.</string>
+    <string name="studentsWithLink">Saatavissa vain opiskelijoille linkin kanssa. Ei saatavilla opiskelijan tiedostoissa.</string>
+    <string name="scheduleAvailability">Aikatauluta opiskelijan saatavissa olo</string>
+    <string name="folderCreationError">Kansion luonnin aikana tapahtui virhe.</string>
+
+    <string name="setAsFrontPage">Määritä etusivuksi</string>
+    <string name="canEdit">Voi muokata</string>
+    <string name="pageDetails">Sivun tiedot</string>
+    <string name="pageSuccessfullyUpdated">Sivun lataus onnistui!</string>
+    <string name="pageSuccessfullyCreated">Sivun luonti onnistui.</string>
+    <string name="editPageTitle">Muokkaa sivua</string>
+    <string name="createPageTitle">Luo sivu</string>
+    <string name="pageTitleMustBeSet">Sivun otsikko täytyy määrittää.</string>
+    <string name="pageDeleteTitle">Poistetaanko sivu?</string>
+    <string name="pageDelete">Poista sivu</string>
+    <string name="pageDeleteMessage">Tämä poistaa sivun. Tätä toimintoa ei voida peruuttaa.</string>
+    <string name="errorSavingPage">Sivun tallennuksen yhteydessä ilmeni virhe. Yritä uudelleen.</string>
+    <string name="frontPageUnpublishedError">Sivu ei voi olla etusivu ja julkaisematon.</string>
+
+    <string name="onlyTeachers">Vain opettajat</string>
+    <string name="teachersAndStudents">Opettajat ja opiskelijat</string>
+    <string name="anyone">Kuka tahansa</string>
+    <string name="groupMembers">Vain jäsenet</string>
+    <string name="license">Lisenssi</string>
+    <string name="availableFromAfterTo">Saatavissa olon päättymispäivän on oltava alkamispäivän jälkeen</string>
+    <string name="errorDeletingFile">Virhe poistettaessa tätä tiedostoa</string>
+    <string name="errorDeletingFolder">Kansiota poistettaessa ilmeni virhe</string>
+    <string name="errorUpdatingFile">Virhe päivitettäessä tätä tiedostoa</string>
+    <string name="errorUpdatingFolder">Tätä kansiota päivitettäessä ilmeni virhe</string>
+
+    <string name="toDoEmpty">Ei enempää tehtävänä!\n Nauti päivästäsi.</string>
+    <string name="toDoNoSubmissions">Ei ole lähetyksiä tämän tehtävän arvosteluun.</string>
+    <string name="errorToDoRouteFailed">Tämän Tehtävä-kohteen näyttämisen yhteydessä ilmeni virhe.</string>
+    <string name="errorIsDesigner">Suunnittelijan ilmoittautumista ei voi tarkastella tätä.</string>
+
+    <string name="sections">Osat</string>
+    <string name="filterBy">Suodatustapa&#8230;</string>
+    <string name="contentDescriptionFilterSection" formatted="false">%s</string>
+    <string name="filterBySection">Suodata osan mukaan</string>
+    <string name="filterSubmissionsLowercase">Suodattimen lähetykset</string>
+    <string name="latePenalty">Rangaistus myöhästymisestä</string>
+    <string name="finalGrade">Lopullinen arvosana</string>
+    <string name="moderatedGradingUnsupported">Valvottua arvosanojen antoa ei parhaillaan tueta mobiilissa SpeedGrader-sovelluksessa.</string>
+    <plurals name="latePolicyPenalty">
+        <item quantity="one">-%s piste</item>
+        <item quantity="other">-%s pistettä</item>
+    </plurals>
+    <plurals name="latePolicyPenaltyFull">
+        <item quantity="one">-%s piste</item>
+        <item quantity="other">-%s pistettä</item>
+    </plurals>
+    <string name="todoUnreadCount">Tehtävä %d lukematon</string>
+    <string name="profileSettings">Profiiliasetukset</string>
+    <string name="downloadingFile">Tiedostoa ladataan&#8230;</string>
+    <string name="fileDownloadedSuccessfully">Tiedoston lataus onnistui.</string>
+    <string name="tapToView">Katso napauttamalla</string>
+    <string name="errorDownloadingFile">Virhe ladattaessa tiedostoasi. Yritä uudelleen.</string>
+
+    <string name="postTo">Lähetä vastaanottajalle:</string>
+    <string name="allSections">Kaikki osat</string>
+
+    <string name="gauge">Mittari</string>
+    <string name="arc">Kaari</string>
+    <string name="ltiLaunchFailure">Tämän LTI-työkalun lataaminen ei onnistu juuri nyt.</string>
+    <string name="downloading">Ladataan...</string>
+
+</resources>

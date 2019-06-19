@@ -52,6 +52,35 @@
     <string name="allowedFileTypes">Dovoljene vrste datotek</string>
     <string name="resubmitAssignment">Ponovno pošlji nalogo</string>
 
+    <string name="preview">Predogled</string>
+    <!--    Student Submission-->
+    <string name="submissionUrlClearTextError">Za naslove URL, ki uporabljajo »http://«, predogled ni na voljo.</string>
+    <string name="submissionUrlNotAUrlError">Vnesite veljaven naslov URL.</string>
+    <string name="enterAUrlHereForYourSubmission">Tukaj vnesite naslov URL za svojo oddajo</string>
+    <!-- Student Submission -->
+    <string name="submissionWrite">Zapis&#8230;</string>
+    <!-- Student Submission Details -->
+    <string name="submission">Oddaja</string>
+    <string name="submissionVersions">Različice oddaj</string>
+    <string name="submissionDetailsFileTabName">Datoteke (%d)</string>
+    <string name="rubric">Ocenjevalni vodnik</string>
+    <string name="submissionDetailsErrorTitle">Napaka pri oddaji</string>
+    <string name="urlSubmissionDisclaimer">Ta oddaja je bila v obliki naslova URL za zunanjo stran. Priložili smo posnetek videza strani, ko je bila poslana.</string>
+    <string name="submissionDetailsNoSubmissionYet">Prejeta ni bila še nobena oddaja</string>
+    <string name="submissionDetailsAssignmentWasLockedOn">Vaša naloga je zaklenjena %1$s ob %2$s.</string>
+    <string name="submissionDetailsAssignmentWillUnlockOn">Vaša naloga bo odklenjena %1$s ob %2$s.</string>
+    <string name="submissionDetailsAssignmentLockedByModuleName">Vašo nalogo je zaklenil modul \"%1$s\".</string>
+    <string name="submissionDetailsAssignmentLockedByModulePrereqs">Vašo nalogo je zaklenjena zaradi zahtev modula.</string>
+    <string name="submissionDetailsAssignmentLocked">Naloga je zaklenjena</string>
+    <string name="webPreview">Predogled vnesenega naslova URL</string>
+    <string name="websiteUrl">URL spletnega mesta</string>
+    <!-- Grade Cell -->
+    <string name="outOfPointsFormatted">Od %s točk</string>
+    <string name="outOfPointsAbbreviatedFormatted">Od %s točk</string>
+    <string name="gradeExcused">Opravičeno</string>
+    <string name="finalGradeFormatted">Končna ocena: %s</string>
+    <!-- Student rubric tab -->
+    <string name="rubricCustomScore">Po meri prilagojen rezultat</string>
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">Različica:</string>
 
@@ -96,6 +125,13 @@
     <string name="next7Days">V naslednjih 7 dneh</string>
     <string name="days">Dnevi</string>
 
+    <string name="submissionDetailsDueTodayAt">Rok danes ob %s</string>
+    <string name="submissionDetailsDueTomorrowAt">Rok jutri ob %s</string>
+    <string name="submissionDetailsDueYesterdayAt">Rok včeraj ob %s</string>
+    <string name="submissionDetailsHasNoDueDate">Vaša naloga nima roka</string>
+    <string name="submissionDetailsDueAt">Rok %1$s ob %2$s.</string> <!--Ex: Due April 2 at 11:59pm-->
+    <string name="lowercaseAM">dop.</string>
+    <string name="lowercasePM">pop.</string>
     <!--Assignments-->
     <string name="assignmentDue">Rok</string>
     <string name="assignmentDueColon">Rok: </string>
@@ -328,6 +364,7 @@
     <string name="observers">Skriti bralci</string>
     <string name="syllabusMissing">Učni načrt ni dodan.</string>
 
+    <string name="syllabusEventsError">Pri nalaganju vaših modulov je prišlo do napake.</string>
     <string name="canvas">Sistem Canvas</string>
     <string name="chooseRecipient">Izberi prejemnike</string>
     <string name="messageHasNoRecipients">To sporočilo trenutno nima prejemnikov.</string>
@@ -447,6 +484,7 @@
     <string name="markDone">Označi kot dokončano</string>
     <string name="moduleItemNotFound">Elementa modula ni bilo mogoče najti</string>
 
+    <string name="errorLoadingModules">Pri nalaganju vaših modulov je prišlo do napake.</string>
     <string name="help">Pomoč</string>
     <string name="instructor_question">Vprašanje za učitelja</string>
     <string name="link">Povezava</string>
@@ -459,13 +497,15 @@
 
 
     <!--New Submission Strings -->
-    <string name="textEntry"> Vnos besedila</string>
-    <string name="onlineURL"> Spletni naslov URL</string>
+    <string name="textEntry">Vnos besedila</string>
+    <string name="onlineURL">Spletni naslov URL</string>
     <string name="enterTextEntry">Vnos besedila</string>
     <string name="fileUpload"> Nalaganje datotek</string>
     <string name="oneFileOnly">Pri tej oddaji je sprejemljivo le nalaganje ene datoteke.</string>
 
 
+    <string name="websiteEntry">Dodaj vnos spletnega mesta</string>
+    <string name="mediaRecordingEntry">Medijski posnetki</string>
     <string name="submit">Pošlji</string>
     <string name="blankSubmission">Oddaja ne sme biti prazna.</string>
     <string name="errorPostingSubmission">Pri objavi oddaje je prišlo do napake.</string>

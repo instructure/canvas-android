@@ -318,7 +318,6 @@
     <string name="assignments_list">Rhestr Aseiniadau</string>
     <string name="syllabus">Maes Llafur</string>
     <!--End Course Settings-->
-
     <!-- Assignment Details -->
     <string name="multiple_due_dates">Mwy nag un dyddiad erbyn</string>
     <string name="everyone">Pawb</string>
@@ -373,6 +372,7 @@
     <string name="announcement_name_must_be_set">Rhaid gosod teitl cyhoeddiad.</string>
     <string name="quiz_title_must_be_set">Rhaid gosod teitl cwis.</string>
     <string name="assignment_points_must_be_set">Rhaid gosod pwyntiau aseiniad.</string>
+    <string name="assignment_points_must_be_a_number">Mae’n rhaid i’r pwyntiau sy’n bosib fod yn rhif</string>
     <string name="quiz_points_must_be_set">Rhaid gosod pwyntiau cwis.</string>
     <string name="assignee_type_course_sections">Adrannau Cwrs</string>
     <string name="assignee_type_groups">Grwpiau</string>

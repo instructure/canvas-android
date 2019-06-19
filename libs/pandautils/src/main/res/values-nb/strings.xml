@@ -101,6 +101,10 @@
     <string name="pleaseTryAgain">Tillatelse gitt, prøv igjen.</string>
     <string name="pickVideo">Velg en video</string>
 
+    <string name="assignmentSubmissionUpload">Laster opp innlevering for «%s»</string>
+    <string name="assignmentSubmissionError">Mislykket innlevering for «%s»</string>
+    <string name="notificationChannelNameSubmissionUploadsName">Varslinger for opplastet innlevering</string>
+    <string name="notificationChannelNameSubmissionUploadsDescription">Canvas varslinger for pågående opplastende innlevering.</string>
     <!--Errors-->
     <string name="errorOccurred">Det oppsto en uventet feil.</string>
     <string name="serverError">En serverfeil har oppstått.</string>

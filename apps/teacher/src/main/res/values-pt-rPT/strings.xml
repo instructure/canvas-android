@@ -318,7 +318,6 @@
     <string name="assignments_list">Lista de atribuições</string>
     <string name="syllabus">Programa</string>
     <!--End Course Settings-->
-
     <!-- Assignment Details -->
     <string name="multiple_due_dates">Datas de entrega múltiplas</string>
     <string name="everyone">Todos</string>
@@ -373,6 +372,7 @@
     <string name="announcement_name_must_be_set">O título do anúncio deve ser definido.</string>
     <string name="quiz_title_must_be_set">O título do teste deve ser definido.</string>
     <string name="assignment_points_must_be_set">Os pontos de atribuição devem ser definidos.</string>
+    <string name="assignment_points_must_be_a_number">O valor de pontos possíveis tem de ser um número</string>
     <string name="quiz_points_must_be_set">Os pontos do teste devem ser definidos.</string>
     <string name="assignee_type_course_sections">Seções da disciplina</string>
     <string name="assignee_type_groups">Grupos</string>

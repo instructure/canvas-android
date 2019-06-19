@@ -318,7 +318,6 @@
     <string name="assignments_list">Liste des tâches</string>
     <string name="syllabus">Programme</string>
     <!--End Course Settings-->
-
     <!-- Assignment Details -->
     <string name="multiple_due_dates">Dates limites multiples</string>
     <string name="everyone">Tous</string>
@@ -373,6 +372,7 @@
     <string name="announcement_name_must_be_set">Le titre de l’annonce doit être défini.</string>
     <string name="quiz_title_must_be_set">Le titre du questionnaire doit être défini.</string>
     <string name="assignment_points_must_be_set">Les points de la tâche doivent être définis.</string>
+    <string name="assignment_points_must_be_a_number">Les points possibles doivent être spécifiés par un nombre</string>
     <string name="quiz_points_must_be_set">Les points du questionnaire doivent être définis.</string>
     <string name="assignee_type_course_sections">Sections du cours</string>
     <string name="assignee_type_groups">Groupes</string>

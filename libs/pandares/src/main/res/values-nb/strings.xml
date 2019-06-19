@@ -52,6 +52,35 @@
     <string name="allowedFileTypes">Tillatte filtyper</string>
     <string name="resubmitAssignment">Send oppgaven inn på nytt</string>
 
+    <string name="preview">Forhåndsvisning</string>
+    <!--    Student Submission-->
+    <string name="submissionUrlClearTextError">Det er ingen forhåndsvisnings-URL ved bruk av \'http://\'</string>
+    <string name="submissionUrlNotAUrlError">Skriv inn gyldig URL</string>
+    <string name="enterAUrlHereForYourSubmission">Skriv inn en URL her for innleveringen din</string>
+    <!-- Student Submission -->
+    <string name="submissionWrite">Skriv&#8230;</string>
+    <!-- Student Submission Details -->
+    <string name="submission">Innlevering</string>
+    <string name="submissionVersions">Innlevering versjoner</string>
+    <string name="submissionDetailsFileTabName">Filer (%d)</string>
+    <string name="rubric">Rubrikk</string>
+    <string name="submissionDetailsErrorTitle">Innsendingsfeil</string>
+    <string name="urlSubmissionDisclaimer">Denne innleveringen var en URL til en ekstern side. Vi har lagt ved et stillbilde av hvordan siden så ut da den ble sendt inn.</string>
+    <string name="submissionDetailsNoSubmissionYet">Intet tidspunkt for innlevering</string>
+    <string name="submissionDetailsAssignmentWasLockedOn">Oppgaven din ble låst den %1$s klokken %2$s</string>
+    <string name="submissionDetailsAssignmentWillUnlockOn">Oppgaven din ble åpnes den %1$s klokken %2$s</string>
+    <string name="submissionDetailsAssignmentLockedByModuleName">Oppgaven din er låst av modulen \"%1$s\"</string>
+    <string name="submissionDetailsAssignmentLockedByModulePrereqs">Oppgaven din er låst etter modulforespørsel</string>
+    <string name="submissionDetailsAssignmentLocked">Oppgave låst</string>
+    <string name="webPreview">Forhåndsvisning av skrevet inn URL</string>
+    <string name="websiteUrl">Websidens URL</string>
+    <!-- Grade Cell -->
+    <string name="outOfPointsFormatted">Av %s poeng</string>
+    <string name="outOfPointsAbbreviatedFormatted">Av %s poeng</string>
+    <string name="gradeExcused">Fritatt</string>
+    <string name="finalGradeFormatted">Slutt karakter: %s</string>
+    <!-- Student rubric tab -->
+    <string name="rubricCustomScore">Egendefinert resultat</string>
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">Versjon:</string>
 
@@ -96,6 +125,13 @@
     <string name="next7Days">Neste 7 dager</string>
     <string name="days">Dager</string>
 
+    <string name="submissionDetailsDueTodayAt">Frist i dag klokken %s</string>
+    <string name="submissionDetailsDueTomorrowAt">Frist i morgen klokken %s</string>
+    <string name="submissionDetailsDueYesterdayAt">Frist i går klokken %s</string>
+    <string name="submissionDetailsHasNoDueDate">Oppgaven din har ingen forfallsdato</string>
+    <string name="submissionDetailsDueAt">Frist %1$s klokken %2$s</string> <!--Ex: Due April 2 at 11:59pm-->
+    <string name="lowercaseAM">am</string>
+    <string name="lowercasePM">pm</string>
     <!--Assignments-->
     <string name="assignmentDue">Forfall</string>
     <string name="assignmentDueColon">Frist: </string>
@@ -328,6 +364,7 @@
     <string name="observers">Observatører</string>
     <string name="syllabusMissing">Et sammendrag har ikke blitt lagt til.</string>
 
+    <string name="syllabusEventsError">Det var et avvik ved lasting av modulene dine.</string>
     <string name="canvas">Canvas</string>
     <string name="chooseRecipient">Velg mottaker(e)</string>
     <string name="messageHasNoRecipients">Denne meldingen har foreløpig ingen mottakere.</string>
@@ -447,6 +484,7 @@
     <string name="markDone">Merk ferdig</string>
     <string name="moduleItemNotFound">Modulen ble ikke funnet</string>
 
+    <string name="errorLoadingModules">Det var et avvik ved lasting av modulene dine.</string>
     <string name="help">Hjelp</string>
     <string name="instructor_question">Instruktør-spørsmål</string>
     <string name="link">Lenke</string>
@@ -459,13 +497,15 @@
 
 
     <!--New Submission Strings -->
-    <string name="textEntry"> Innlegging av tekst</string>
-    <string name="onlineURL"> URL på nett</string>
+    <string name="textEntry">Innlegging av tekst</string>
+    <string name="onlineURL">URL på nett</string>
     <string name="enterTextEntry">Skriv inn tekst</string>
     <string name="fileUpload"> Filopplasting</string>
     <string name="oneFileOnly">Innleveringen tillater kun én filopplasting</string>
 
 
+    <string name="websiteEntry">Legg inn nettside-innlegg</string>
+    <string name="mediaRecordingEntry">Medieinnspillinger</string>
     <string name="submit">Send inn</string>
     <string name="blankSubmission">Innleveringen kan ikke være tom.</string>
     <string name="errorPostingSubmission">Det oppsto en feil med å legge ut innsendingen.</string>
