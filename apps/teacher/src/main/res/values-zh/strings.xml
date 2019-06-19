@@ -314,7 +314,6 @@
     <string name="assignments_list">作业列表</string>
     <string name="syllabus">教学大纲</string>
     <!--End Course Settings-->
-
     <!-- Assignment Details -->
     <string name="multiple_due_dates">多个到期日</string>
     <string name="everyone">所有人</string>
@@ -369,6 +368,7 @@
     <string name="announcement_name_must_be_set">必须设置公告标题。</string>
     <string name="quiz_title_must_be_set">必须设置测验标题。</string>
     <string name="assignment_points_must_be_set">必须设置作业分数。</string>
+    <string name="assignment_points_must_be_a_number">满分必须为数字</string>
     <string name="quiz_points_must_be_set">必须设置测验分数。</string>
     <string name="assignee_type_course_sections">课程班级</string>
     <string name="assignee_type_groups">小组</string>

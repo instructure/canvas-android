@@ -334,7 +334,6 @@
     <string name="assignments_list">قائمة المهام</string>
     <string name="syllabus">المناهج</string>
     <!--End Course Settings-->
-
     <!-- Assignment Details -->
     <string name="multiple_due_dates">تواريخ استحقاق متعددة</string>
     <string name="everyone">الجميع</string>
@@ -389,6 +388,7 @@
     <string name="announcement_name_must_be_set">يجب تعيين عنوان الإعلان.</string>
     <string name="quiz_title_must_be_set">يجب تعيين عنوان الاختبار الموجز.</string>
     <string name="assignment_points_must_be_set">يجب تعيين نقاط المهمة.</string>
+    <string name="assignment_points_must_be_a_number">النقاط الممكنة لابد أن تكون رقمًا</string>
     <string name="quiz_points_must_be_set">يجب تعيين نقاط الاختبار الموجز.</string>
     <string name="assignee_type_course_sections">أقسام المساق</string>
     <string name="assignee_type_groups">المجموعات</string>

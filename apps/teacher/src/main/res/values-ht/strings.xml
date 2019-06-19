@@ -318,7 +318,6 @@
     <string name="assignments_list">Lis Sesyon</string>
     <string name="syllabus">Pwogram</string>
     <!--End Course Settings-->
-
     <!-- Assignment Details -->
     <string name="multiple_due_dates">Plizyè Delè</string>
     <string name="everyone">Tout Moun</string>
@@ -373,6 +372,7 @@
     <string name="announcement_name_must_be_set">Tit anons lan dwe defini.</string>
     <string name="quiz_title_must_be_set">Tit quiz la dwe defini.</string>
     <string name="assignment_points_must_be_set">Pwen sesyon an dwe defini.</string>
+    <string name="assignment_points_must_be_a_number">Pwen ki posib yo dwe se yon chif</string>
     <string name="quiz_points_must_be_set">Pwen quiz la dwe defini.</string>
     <string name="assignee_type_course_sections">Seksyon Kou</string>
     <string name="assignee_type_groups">Gwoup</string>

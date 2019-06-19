@@ -101,6 +101,10 @@
     <string name="pleaseTryAgain">Разрешение дано, пожалуйста, попробуйте еще раз.</string>
     <string name="pickVideo">Выберите видеоролик</string>
 
+    <string name="assignmentSubmissionUpload">Загрузить отправку для "%s"</string>
+    <string name="assignmentSubmissionError">Сбой отправки для "%s"</string>
+    <string name="notificationChannelNameSubmissionUploadsName">Уведомления о загрузке отправок</string>
+    <string name="notificationChannelNameSubmissionUploadsDescription">Уведомления Canvas для текущих загрузок отправок.</string>
     <!--Errors-->
     <string name="errorOccurred">Произошла непредвиденная ошибка.</string>
     <string name="serverError">Произошла ошибка сервера.</string>

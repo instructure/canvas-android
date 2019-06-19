@@ -51,6 +51,35 @@
     <string name="allowedFileTypes">許可されているファイルタイプ</string>
     <string name="resubmitAssignment">課題を再提出する</string>
 
+    <string name="preview">プレビュー</string>
+    <!--    Student Submission-->
+    <string name="submissionUrlClearTextError">URL を \'http://\' でプレビューすることはできません</string>
+    <string name="submissionUrlNotAUrlError">有効なURLを入力してください</string>
+    <string name="enterAUrlHereForYourSubmission">提出するにはこちらに URL を入力してください</string>
+    <!-- Student Submission -->
+    <string name="submissionWrite">&#8230; を書く</string>
+    <!-- Student Submission Details -->
+    <string name="submission">提出</string>
+    <string name="submissionVersions">提出バージョン</string>
+    <string name="submissionDetailsFileTabName">ファイル (%d)</string>
+    <string name="rubric">ルービック</string>
+    <string name="submissionDetailsErrorTitle">提出エラー</string>
+    <string name="urlSubmissionDisclaimer">この提出物は、外部ページへの URL でした。提出時のページの様子を示すスナップショットを追加しました。</string>
+    <string name="submissionDetailsNoSubmissionYet">提出はまだされていません</string>
+    <string name="submissionDetailsAssignmentWasLockedOn">あなたの課題は %1$s に %2$s でロックされています</string>
+    <string name="submissionDetailsAssignmentWillUnlockOn">あなたの課題は %1$s に %2$s でロック解除されます</string>
+    <string name="submissionDetailsAssignmentLockedByModuleName">あなたの課題はモジュールによりロックされます \"%1$s\"</string>
+    <string name="submissionDetailsAssignmentLockedByModulePrereqs">あなたの課題はモジュール要件によりロックされます</string>
+    <string name="submissionDetailsAssignmentLocked">課題ロック</string>
+    <string name="webPreview">入力した URL のプレビュー</string>
+    <string name="websiteUrl">ウェブサイト URL</string>
+    <!-- Grade Cell -->
+    <string name="outOfPointsFormatted">/%s 点</string>
+    <string name="outOfPointsAbbreviatedFormatted">/%s 点</string>
+    <string name="gradeExcused">免除</string>
+    <string name="finalGradeFormatted">最終的な成績：%s</string>
+    <!-- Student rubric tab -->
+    <string name="rubricCustomScore">カスタムスコア</string>
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">バージョン:</string>
 
@@ -95,6 +124,13 @@
     <string name="next7Days">次の7日間</string>
     <string name="days">日にち</string>
 
+    <string name="submissionDetailsDueTodayAt">%s で今日が期限</string>
+    <string name="submissionDetailsDueTomorrowAt">%s で明日が期限</string>
+    <string name="submissionDetailsDueYesterdayAt">%s で昨日が期限</string>
+    <string name="submissionDetailsHasNoDueDate">あなたの課題には期限はありません</string>
+    <string name="submissionDetailsDueAt">%1$s の %2$s が期限</string> <!--Ex: Due April 2 at 11:59pm-->
+    <string name="lowercaseAM">am</string>
+    <string name="lowercasePM">pm</string>
     <!--Assignments-->
     <string name="assignmentDue">締切日</string>
     <string name="assignmentDueColon">期限：</string>
@@ -322,6 +358,7 @@
     <string name="observers">オブザーバー</string>
     <string name="syllabusMissing">シラバスが追加されていません。</string>
 
+    <string name="syllabusEventsError">モジュールの読込時にエラーが発生しました。</string>
     <string name="canvas">Canvas</string>
     <string name="chooseRecipient">受信者(複数可)を選択</string>
     <string name="messageHasNoRecipients">このメッセージには現在、受信者はいません。</string>
@@ -441,6 +478,7 @@
     <string name="markDone">完了にする</string>
     <string name="moduleItemNotFound">モジュールアイテムが見つかりません</string>
 
+    <string name="errorLoadingModules">モジュールの読込時にエラーが発生しました。</string>
     <string name="help">ヘルプ</string>
     <string name="instructor_question">講師の質問</string>
     <string name="link">リンク</string>
@@ -460,6 +498,8 @@
     <string name="oneFileOnly">この提出は、1個のファイルのアップロードしか受け付けません</string>
 
 
+    <string name="websiteEntry">ウェブサイトエントリの追加</string>
+    <string name="mediaRecordingEntry">メディアの記録</string>
     <string name="submit">提出</string>
     <string name="blankSubmission">提出は空白にできません。</string>
     <string name="errorPostingSubmission">提出物をポスト中にエラーが発生しました。</string>

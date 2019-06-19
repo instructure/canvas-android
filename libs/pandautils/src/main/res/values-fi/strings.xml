@@ -1,0 +1,428 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+    <string name="chooseMedia">Valitse media</string>
+    <string name="takeVideo">Ota video</string>
+    <string name="noCameraOnDevice">Ei kameraa</string>
+    <string name="takePhoto">Ota valokuva</string>
+    <string name="choosePhotoFromGallery">Valitse valokuva galleriasta</string>
+
+    <string name="utils_edit">Muokkaa</string>
+
+    <!-- NotoriousPicker/uploadService -->
+    <string name="notificationTitle">Ladataan Canvas-sovellukseen</string>
+    <string name="preparingUpload">Latauksen valmistelu</string>
+    <string name="loadingFilesIndeterminate">Tiedostoja&#8230; ladataan</string>
+    <string name="fileUploadSuccess">Lataus onnistui</string>
+    <string name="noNetwork">Verkko ei ole saatavilla - yritä uudelleen myöhemmin.</string>
+    <string name="uploadMessage">”Lataus käynnissä. Tarkista latauksen tila ilmoituksista.</string>
+    <string name="mediaUpload">Mediatiedoston lataus</string>
+    <string name="uploadingFile">Ladataan tiedostoa&#8230;</string>
+    <string name="errorUploadingFile">Ilmeni virhe tiedostoa ladatessa. Yritä uudelleen.</string>
+    <string name="fileSubmission">Lähetä tiedosto</string>
+    <string name="uploadFiles">Lataa tiedosto</string>
+    <string name="upload">Lataa</string>
+    <string name="errorSendingMessage">Viestin lähettämisen yhteydessä ilmeni virhe. Yritä uudelleen.</string>
+
+    <string name="notificationChannelNameFileUploadsName">Tiedoston latausilmoitukset</string>
+    <string name="notificationChannelNameFileUploadsDescription">Canvas-ilmoitukset meneillään olevien tiedostolatausten tilasta.</string>
+
+
+    <!-- Turn in Files -->
+    <string name="chooseFileSource">Valitse tiedosto kohteesta&#8230;</string>
+    <string name="addFile">Tiedoston lisäysikkuna</string>
+    <string name="choose_a_file">Valitse tiedosto</string>
+
+    <string name="fromCamera">Kamera</string>
+    <string name="fromGallery">Galleria</string>
+    <string name="fromDevice">Laite</string>
+    <string name="fromOtherApplication">Muu</string>
+    <string name="Domain">Verkkotunnus</string>
+    <string name="files">Tiedostot</string>
+    <string name="file">Tiedosto</string>
+    <string name="fileTalkBack">Tiedosto %s</string>
+    <string name="folderTalkBack">Kansio %s</string>
+    <string name="addItem">Lisää kohde</string>
+    <string name="assignment">Tehtävä</string>
+    <string name="attachedFiles">Liitetyt tiedostot</string>
+    <string name="turnIn">Luovuttaminen</string>
+    <string name="course">Kurssi</string>
+    <string name="sending">Lähetetään&#8230;</string>
+
+    <!--rating dialog-->
+    <string name="star1">Tähtiluokitus Yksi</string>
+    <string name="star2">Tähtiluokitus Kaksi</string>
+    <string name="star3">Tähtiluokitus Kolme</string>
+    <string name="star4">Tähtiluokitus Neljä</string>
+    <string name="star5">Tähtiluokitus Viisi</string>
+
+    <!-- Submitting files -->
+    <string name="fileQuotaExceeded">Olet parhaillaan ylittänyt tiedostontallennuskiintiösi.</string>
+    <string name="errorSubmittingFiles">Tiedostojesi luovuttamisessa tapahtui virhe. Yritä uudelleen.</string>
+    <string name="errorLoadingFiles">Virhe ladattaessa tiedostoasi. Tarkasta Internet-yhteytesi ja yritä uudelleen.</string>
+    <string name="filesUploadedSuccessfully">Tiedostojen lataus onnistui.</string>
+    <string name="filesSubmittedSuccessfully">Tiedostojen lähetys onnistui.</string>
+    <string name="messageSentSuccessfully">Viesti lähetetty onnistuneesti.</string>
+    <string name="shareWithCanvas">Muut sovellukset voivat jakaa tiedostoja Canvas-ohjelmiston kanssa! Katso kuvaketta alla sovelluksissa ja napauta Canvas-sovellusta.</string>
+    <string name="shareWithCanvas2">Tämä sovellus avautuu. Valitse sitten vain, mihin kurssiin ja tehtävään haluat luovuttaa tiedoston.</string>
+    <string name="contentDescriptionSocialShare">Jaa-kuvake</string>
+    <string name="submitAssignment">Lähetä tehtävä</string>
+    <string name="assignmentHeader">Tehtävä:</string>
+    <string name="submittingAssignment">Lähetetään tehtävä&#8230;</string>
+    <string name="conversations">Keskustelut </string>
+    <string name="inbox">Tulevien laatikko </string>
+    <string name="divider">Jakaja</string>
+    <string name="legal">Lakitiedot</string>
+    <string name="completeHomework">TEE kotitehtäväsi</string>
+    <string name="takeExam">Suorita koe</string>
+    <string name="fileIcon">Tiedostokuvake</string>
+    <string name="uploadingFileNum" formatted="false">Ladataan tiedostoa %d/%d</string>
+    <string name="fileLocked" formatted="false">%s on lukittu.</string>
+    <string name="filePermissionGranted">Tiedosto on nyt valmis ladattavaksi, yritä uudelleen.</string>
+    <string name="filePermissionDenied">Tiedostoa ei voi ladata ilman käyttöoikeuksien myöntämistä.</string>
+    <string name="pleaseTryAgain">Käyttöoikeudet myönnetty, yritä uudelleen.</string>
+    <string name="pickVideo">Valitse video</string>
+
+    <!--Errors-->
+    <string name="errorOccurred">Ilmeni odottamaton virhe.</string>
+    <string name="serverError">Palvelinvirhe ilmeni.</string>
+    <string name="unauthorized">Sinulla ei ole valtuuksia käyttää tätä. Sinulla ei ole käyttöoikeuksia tai pääsyä vielä (kuten kurssisi, joka ei ole vielä alkanut).</string>
+    <string name="fileNoLongerExists">Tätä tiedostoa ei enää ole olemassa.</string>
+    <string name="invalidAccessToken">Istuntosi on vanhentunut. Kirjaudu sisään aloittaaksesi uusi istunto</string>
+    <string name="uploadingFromSourceFailed">Tiedoston lataamista tästä lähteestä ei voitu suorittaa.</string>
+    <string name="errorGettingPhoto">Valokuvan hakemisessa tapahtui virhe. Yritä uudelleen.</string>
+    <string name="errorTextMissing">Lisää tekstiä lähettääksesi viesti.</string>
+
+    <string name="fileUploadNotSupported">Tiedostojen lataus valittuun tehtävään ei onnistunut.</string>
+    <string name="noCourseSelected">Valitse kurssi</string>
+    <string name="selectCourse">Valitse kurssi</string>
+    <string name="selectAssignment">Valitse tehtävä</string>
+    <string name="loadingAssignments">Tehtäviä ladataan...</string>
+    <string name="noAssignmentSelected">Valitse tehtävä</string>
+    <string name="noAssignmentsWithFileUpload">Tässä kurssissa ei ole tehtäviä, jotka sallivat tiedoston lataukset.</string>
+    <string name="teacherNotAllowedFileSubmission">Tämän kurssin opettajana et voi lähettää tiedostoja.</string>
+    <string name="noFilesUploaded">Et ole vielä valinnut yhtään tiedostoa.</string>
+    <string name="oneOrMoreExtensionNotAllowed">Yhden tai useamman tiedoston tiedostotunniste ei ole sallittua muotoa</string>
+    <string name="extensionNotAllowed">Valittu tiedoston tyyppi ei kelpaa.</string>
+    <string name="allowedExtensions">Sallitut tiedostotunnisteet:&#160;</string>
+    <string name="quizNetworkErrorTitle">Tietovisan virhe</string>
+    <string name="quizNetworkErrorMessage">Internet näyttäisi olevan pois verkosta.</string>
+
+    <!-- Media Task Loader -->
+    <string name="noDataConnection"> Tarkasta datayhteytesi ja yritä uudelleen. </string>
+    <string name="noApps">Laitteessasi ei ole asennettuna sovelluksia, jotka voisivat käsitellä tämän tiedoston.</string>
+    <string name="noAppsShort">Ei voida avata</string>
+    <string name="unexpectedErrorOpeningFile">Ilmeni tuntematon virhe ilmeni tiedostoa avatessa.</string>
+    <string name="unexpectedErrorDownloadingFile">Ilmeni tuntematon virhe ilmeni tiedostoa ladatessa.</string>
+
+    <string name="done">Valmis</string>
+
+    <!--Permissions-->
+    <string name="permissionDenied">Jos haluat käyttää tätä ominaisuutta, käyttöoikeudet täytyy myöntää.</string>
+    <string name="noConnection">Ei yhteyttä</string>
+
+    <!--Empty Screens-->
+    <string name="emptyCourseListMessage">Suosikkikurssisi &amp; ryhmäsi näkyvät täällä.</string>
+    <string name="addCoursesGroups">Lisää kursseja/ryhmiä</string>
+    <string name="noDiscussions">Keskustelut</string>
+    <string name="noDiscussionsSubtext">Aloita keskustelu muiden kanssa.</string>
+    <string name="noDiscussionsTeacher">Aloita keskustelu opiskelijoidesi kanssa.</string>
+    <string name="nothingUnread">Saapuvia posteja nolla!</string>
+    <string name="nothingUnreadSubtext">Olet ajan tasalla!</string>
+    <string name="nothingStarred">Ei tähdellä merkittyjä viestejä</string>
+    <string name="nothingStarredSubtext">Pidä tärkeä viestit tässä osassa napauttamalla tähreä joka viestissä.</string>
+    <string name="nothingSent">Mitään ei ole lähetetty</string>
+    <string name="nothingSentSubtext">Et ole lähettänyt yhtään viestiä</string>
+    <string name="nothingArchived">Mitään ei ole arkistoitu</string>
+    <string name="nothingArchivedSubtext">Et ole arkistoinut yhtään viestiä.</string>
+    <string name="noQuizzes">Ei tietovisoja</string>
+    <string name="noQuizzesSubtext">Pahoittelut, tietovisoja ei vielä ole.</string>
+    <string name="noQuizzesTeacher">Näytettäviä julkaistuja tietovisoja ei ole.</string>
+    <string name="noAnnouncements">Ei ilmoituksia</string>
+    <string name="noAnnouncementsSubtext">Mitään ei ole vielä ilmoitettu.</string>
+    <string name="noCourses">Ei kursseja</string>
+    <string name="noCoursesSubtext">Näyttää siltä kuin tähän tiliin ei olisi liitetty yhtään kurssia. Käy verkossa luodaksesi kurssi tänään</string>
+    <string name="noAssignments">Ei tehtäviä</string>
+    <string name="noAssignmentsSubtext">Näyttää siltä kuin tehtäviä ei olisi luotu tässä tilassa. Aika lähteä ulos tutustumaan.</string>
+    <string name="noAssignmentsTeacher">Näyttäisi siltä, että tehtäviä ei ole vielä julkaistu.</string>
+    <string name="noFiles">Ei tiedostoja</string>
+    <string name="noFilesSubtext">Tähän tiliin ei ole liitetty tiedostoja</string>
+    <string name="notSupported">Ei tuettu</string>
+    <string name="noEvents">Ei tapahtumia tänään!</string>
+    <string name="noEventsSubtext">Näyttää olevan hyvä päivä levätä ja rentoutua.</string>
+    <string name="noSubmission">Ei lähetystä</string>
+    <string name="noSubmissionSubtext">Lähetä tehtäväsi %1$s mennessä kohteessa %2$s.</string>
+    <string name="noSubmissionTeacher">Opiskelijalla ei ole vielä lähetystä.</string>
+    <string name="noDueDate">Tehtävällä ei ole määräpäivää.</string>
+    <string name="locked">Lukittu</string>
+    <string name="lockedSubtext">Tehtävä on lukittu %1$s asti kohdassa %2$s.</string>
+    <string name="lockedModule">Tämä tehtävä on osa moduulia \"%1$s\" eikä sen lukitusta ole vielä poistettu.</string>
+    <string name="chooseFile">Valitse tiedosto</string>
+    <string name="chooseFileSubtext">Liitä tiedosto lähetyksesi napauttamalla alla olevaa asetusta.</string>
+    <string name="noNotifications">Ei ilmoituksia</string>
+    <string name="noNotificationsSubtext">Ei ole vielä mitään ilmoitettavaa.</string>
+    <string name="noTodos">Hyvin tehty!</string>
+    <string name="noTodosSubtext">Tehtävälistasi on tyhjä. Aika ladata.</string>
+    <string name="noSyllabus">Ei opinto-ohjelmaa</string>
+    <string name="noSyllabusSubtext">Opinto-ohjelmaa ei ole vielä luotu.</string>
+    <string name="noBookmarks">Ei kirjanmerkkejä</string>
+    <string name="noBookmarksSubtext">Kirjanmerkit ovat pikakuvakkeita millä tahansa sovelluksen näytöllä. Lisää ne näytölle, jonka haluat kirjanmerkitä.</string>
+    <string name="noModules">Ei moduuleita</string>
+    <string name="noModulesSubtext">Näyttäisi siltä, että yhtään moduulia ei ole vielä luotu.</string>
+    <string name="noPages">Ei sivuja</string>
+    <string name="noPagesSubtext">Näyttäisi siltä, että sivuja ei ole vielä julkaistu.</string>
+
+    <!--General-->
+    <string name="yes">Kyllä</string>
+    <string name="no">Ei</string>
+
+    <string name="inbox_all">Tulevien laatikko</string>
+    <string name="inbox_unread">Lukematon</string>
+    <string name="inbox_starred">Merkitty tähdellä</string>
+    <string name="inbox_sent">Lähetetty</string>
+    <string name="inbox_archived">Arkistoitu</string>
+
+    <string name="forbidden">Vastaukset ovat näkyvissä vai niille, jotka ovat lähettäneet vähintään yhden vastauksen.</string>
+
+    <string name="like">Tykkää</string>
+    <string name="likes">Tykkäystä</string>
+    <string name="lockedAssignmentNotModule">Tämä tehtävä on lukittu.</string>
+    <string name="deletedEntryNoChildren">Tälle poistetulle keskustelumerkinnälle ei ole vastauksia.</string>
+    <string name="deleted">[Poistettu]</string>
+    <string name="deleted_by">[Kohteen poistaja %1$s]</string>
+    <string name="lockedDiscussionDesc">Tämä keskustelu on osa moduulia %s eikä sen lukitusta ole vielä poistettu.</string>
+    <string name="gradedDiscussion">Arvosteltu keskustelu</string>
+    <string name="pointsPossible">Pisteet mahdollisia</string>
+    <string name="sideCommentEntry">Tämän tyyppisessä keskustelussa et voi kommentoida mitään merkintää tällä tasolla.</string>
+
+    <string name="accessibility_overflow">Ylivuoto</string>
+
+    <string name="discussion_response">Kommentti</string>
+    <string name="discussion_responses">Kommentit</string>
+    <string name="discussion_unread">Lukematon</string>
+    <string name="discussion_reply">Vastaus</string>
+    <string name="close">Sulje</string>
+
+    <string name="noInternetConnectionTitle">Ei Internet-yhteyttä</string>
+    <string name="noInternetConnectionMessage">Tähän toimintoon vaaditaan Internet-yhteys.</string>
+    <string name="content_description_avatar">Avatar</string>
+    <string name="formattedAvatarAction">Näytä kohteen %s käyttäjätiedot.</string>
+
+    <!-- App Names -->
+    <string name="utils_canvas">Canvas</string>
+    <string name="utils_canvasTeacher">Canvas Teacher</string>
+    <string name="utils_canvasParent">Canvas Parent</string>
+    <string name="utils_polls">Canvas-kyselyt</string>
+    <string name="utils_speedgrader">SpeedGrader</string>
+
+    <!-- Rating Dialog -->
+    <string name="utils_howAreWeDoing">Miten menestymme?</string>
+    <string name="utils_rateUs">Miillaisen arvosanan antaisit meille?</string>
+    <string name="utils_doBetter">Mitä voimme parantaa?</string>
+    <string name="utils_sendFeedback">Lähetä palautetta</string>
+    <string name="utils_suggestions">Ehdotukset Androidille</string>
+    <string name="utils_domain">Verkkotunnus</string>
+    <string name="utils_versionNum">Versio:</string>
+    <string name="utils_userId">Käyttäjätunnus</string>
+    <string name="utils_email">Sähköposti</string>
+    <string name="utils_dontShowAgain">Älä näytä uudelleen</string>
+    <string name="utils_installDate">Asennuspäivämäärä:</string>
+    <string name="utils_device">Laite</string>
+    <string name="utils_osVersion">Käyttöjärjestelmäversio</string>
+    <string name="loading">Ladataan</string>
+    <string name="save">Tallenna</string>
+    <string name="cropInstructions">Nipistä ja vedä painiketta säätääksesi kuvan suuruutta.</string>
+
+    <!--Discussions-->
+    <plurals name="utils_discussionsReplies">
+        <item quantity="one">%s Vastaus</item>
+        <item quantity="other">%s vastausta</item>
+    </plurals>
+
+    <string name="utils_discussionsDeleted" formatted="false">Poisti tämä vastauksen %s</string>
+    <string name="utils_discussionsUnknownAuthor">Tuntematon tekijä</string>
+    <string name="utils_discussionsReply">Vastaus</string>
+    <string name="utils_discussionsEdit">Muokkaa</string>
+    <string name="utils_discussionsDeleteWarning">Haluatko varmasti poistaa tämän vastauksen?</string>
+    <string name="utils_availableToLabel">Saatavilla:</string>
+    <string name="utils_availableFromLabel">Saatavissa alkaen:</string>
+    <string name="utils_dueDateHeaderLabel">Määräpäivä</string>
+    <string name="utils_dueLabel">Määräpäivä:</string>
+    <string name="utils_delete">Poista</string>
+    <string name="utils_dueDateAtTime" formatted="false">Määräpäivä %1s kohteessa %2s</string>
+    <string name="utils_noDateFiller">--</string>
+    <string name="utils_availabilityLabel">Saatavuus:</string>
+    <string name="utils_pinnedIcon">Kiinnitettyjen keskusteluiden kuvake</string>
+    <string name="utils_pinDiscussion">Kiinnitä keskustelu</string>
+    <string name="utils_unpinDiscussion">Poista kiinnitys keskustelusta</string>
+    <string name="utils_discussionPinned">Keskustelu kiinnitetty</string>
+    <string name="utils_pinnedDiscussions">Kiinnitetty</string>
+    <string name="utils_discussionUnpinned">Keskustelut</string>
+    <string name="utils_emptyDiscussions">Tässä osassa ei ole näytettäviä keskusteluja</string>
+    <string name="utils_description">Kuvaus</string>
+    <string name="utils_allowThreadedReplies">Kaikki ketjutetut vastaukset</string>
+    <string name="utils_usersMustPost">Opiskelijoiden täytyy lähettää ennen kuin he voivat nähdä vastauksia</string>
+    <string name="utils_discussionsClosed">Suljettu kommenteilta</string>
+    <string name="utils_discussionsOpen">Avoin kommenteille</string>
+    <string name="utils_discussionsPin">Kiinnitä</string>
+    <string name="utils_discussionsUnpin">Poista kiinnitys</string>
+    <string name="utils_discussionsOptions">Asetukset</string>
+    <string name="utils_discussionsDeleteTitle">Poistetaanko keskustelu?</string>
+    <string name="utils_discussionsDelete">Poista keskustelu</string>
+    <string name="utils_discussionsDeleteMessage">Tämä poistaa koko keskustelun ja keskusteluketjun</string>
+    <string name="utils_discussionSentSuccess">Vastaus keskusteluun onnistui</string>
+    <string name="utils_discussionUpdateSuccess">Keskustelun muokkaaminen onnistui.</string>
+    <string name="utils_discussionSentEmpty">Keskustelun vastaus ei voi olla tyhjä.</string>
+    <string name="utils_discussionSentFailure">Keskustelun vastausta ei voitu lähettää tällä kertaa.</string>
+    <string name="utils_createDiscussion">Uusi keskustelu</string>
+    <string name="utils_editDiscussion">Muokkaa keskustelu</string>
+    <string name="utils_discussionDetails">Keskustelun tiedot</string>
+    <string name="utils_discussionSuccessfullyUpdated">Keskustelun päivitys onnistui.</string>
+    <string name="utils_saving">Tallennetaan</string>
+    <string name="utils_discussionSuccessfullyCreated">Keskustelun luonti onnistui.</string>
+    <string name="utils_discussionSuccessfulAttachmentNot">Liitettä ei voitu lisätä tähän keskusteluun. Tarkista tiedostokiintiö ja yritä uudelleen.</string>
+    <string name="utils_noTitle">Ei otsikkoa</string>
+    <string name="utils_discussionsReplies_Title">Vastausta</string>
+    <string name="utils_contentDescriptionDiscussionsOverflow">Lisäasetukset</string>
+    <string name="utils_discussionsUnreadRepliesBlank" formatted="false">%s %s %s</string>
+    <string name="utils_lastPost" formatted="false">Viimeinen lähetys %s</string>
+    <string name="utils_postedOnDate">Lähetetty %s</string>
+    <string name="utils_discussionPostBeforeRepliesEmptyText">Vastaukset ovat näkyvissä vai niille, jotka ovat lähettäneet vähintään yhden vastauksen.</string>
+    <string name="utils_createAnnouncementDelayPosting">Viivästytä lähetystä</string>
+    <string name="utils_postAt">Lähetä</string>
+    <string name="utils_postDate">Lähetyspäivä</string>
+    <string name="utils_postTime">Lähetysaika</string>
+    <string name="utils_editAnnouncementTitle">Muokkaa ilmoitusta</string>
+    <string name="utils_createAnnouncementTitle">Uusi ilmoitus</string>
+    <string name="utils_announcementDetails">Ilmoituksen tiedot</string>
+    <string name="utils_createAnnouncementNoDescription">Kuvaus vaaditaan</string>
+    <string name="utils_errorSavingAnnouncement">Tämän ilmoituksen näyttämisen yhteydessä ilmeni virhe. Yritä uudelleen.</string>
+    <string name="utils_announcementSuccessfullyUpdated">Ilmoituksen päivitys onnistui.</string>
+    <string name="utils_announcementSuccessfullyCreated">Ilmoituksen luonti onnistui.</string>
+
+    <plurals name="utils_discussionsUnread">
+        <item quantity="one">%s Lukematon</item>
+        <item quantity="other">%s Lukematon</item>
+    </plurals>
+
+    <plurals name="utils_addAttachment">
+        <item quantity="zero">Lisää liite</item>
+        <item quantity="one">Lisää liite</item>
+        <item quantity="other">Lisää liite</item>
+    </plurals>
+
+    <!-- Assignment Override !-->
+
+    <string name="utils_unlockAfterDueDateError">Lukituspäivä ei voi olla määräpäivän jälkeen.</string>
+    <string name="utils_lockBeforeDueDateError">Lukituspäivä ei voi olla ennen määräpäivää.</string>
+    <string name="utils_lockAfterUnlockError">Lukituspäivä ei voi olla ennen lukituksen poistopäivää.</string>
+    <string name="utils_assigneeBlankError">Siirronsaaja ei voi olla tyhjä</string>
+    <string name="utils_assignTo">Kohdista</string>
+    <string name="utils_availableFrom">Saatavissa alkaen</string>
+    <string name="utils_availableTo">Saatavissa</string>
+    <string name="utils_availableFromDate">Saatavissa päivämäärästä asti</string>
+    <string name="utils_availableFromTime">Saatavissa lähtien</string>
+    <string name="utils_availableToDate">Saatavissa asti</string>
+    <string name="utils_availableToTime">Saatavissa aikaan</string>
+    <string name="utils_dueDate">Määräpäivä</string>
+    <string name="utils_dueTime">Erääntymisaika</string>
+    <string name="utils_addNew">Lisää uusi</string>
+
+    <!--Attachment Layout-->
+    <string name="utils_downloadAttachment">Lataa liite</string>
+    <string name="utils_removeAttachment">Poista liite</string>
+
+    <!--Unsaved Changes-->
+    <string name="utils_continueWithoutSavingTitle">Jatketaanko tallentamatta?</string>
+    <string name="utils_continueWithoutSavingMessage">Haluatko varmasti jatkaa tallentamatta?</string>
+    <string name="utils_continueUnsaved">Jatka</string>
+    <string name="utils_exitWithoutSavingTitle">Poistutaanko tallentamatta?</string>
+    <string name="utils_exitWithoutSavingMessage">Oletko varma, että haluat poistua tallentamatta?</string>
+    <string name="utils_exitUnsaved">Poistu</string>
+    <string name="utils_cancel">Peruuta</string>
+
+    <string name="utils_contentDescriptionFiles">Tiedostokuvake</string>
+    <string name="utils_turn_in">Luovuttaminen</string>
+    <string name="utils_upload">Lataa</string>
+    <string name="utils_okay">Ok</string>
+    <string name="utils_loadingFilesIndeterminate">Tiedostoja&#8230; ladataan</string>
+    <string name="utils_allowedExtensions">Sallitut tiedostotunnisteet:&#160;</string>
+    <string name="utils_extensionNotAllowed">Valittu tiedoston tyyppi ei kelpaa.</string>
+    <string name="utils_errorUploadingFile">Ilmeni virhe tiedostoa ladatessa. Yritä uudelleen.</string>
+    <string name="utils_filesUploadedSuccessfully">Tiedostojen lataus onnistui.</string>
+    <string name="utils_uploadingFiles">Ladataan tiedostoja&#8230;</string>
+    <string name="utils_uploadingFile">Ladataan tiedostoa&#8230;</string>
+    <string name="utils_noApps">Laitteessasi ei ole asennettuna sovelluksia, jotka voisivat käsitellä tämän tiedoston.</string>
+    <string name="utils_errorGettingPhoto">Valokuvan hakemisessa tapahtui virhe. Yritä uudelleen.</string>
+    <string name="utils_oneOrMoreExtensionNotAllowed">Yhden tai useamman tiedoston tiedostotunniste ei ole sallittua muotoa</string>
+    <string name="utils_fileUploadNotSupported">Tiedostojen lataus valittuun tehtävään ei onnistunut.</string>
+    <string name="utils_noFilesUploaded">Et ole valinnut yhtään tiedostoa.</string>
+    <string name="utils_attachments">Liitteet</string>
+    <string name="utils_uploadTo">Lataa </string>
+    <string name="utils_uploadToCanvas">Lataa Canvas-sovellukseen</string>
+    <string name="utils_uploadMyFiles">Omat tiedostot</string>
+    <string name="utils_uploadCourseFiles">Kurssitiedostot</string>
+    <string name="utils_uploadToSubmissionComment">Lataa lähetyksen kommenttiin</string>
+    <string name="utils_attachFile">Liitä tiedosto</string>
+    <string name="utils_with">jossa</string>
+
+    <string name="notificationPrimaryInboxTitle">Canvas-ilmoitus</string>
+    <string name="notificationChannelNamePrimary">Yleiset Canvas-ilmoitukset</string>
+    <string name="notificationChannelDescriptionPrimary">Ilmoitusten lisäkonfigurointi voidaan tehdä Canvas-ilmoitusasetusten osassa.</string>
+
+    <string name="copyLinkAddress">Kopioi linkin osoite</string>
+    <string name="copyLink">Kopioi linkki</string>
+    <string name="linkCopied">Linkki kopioitu</string>
+    <string name="link">Linkki</string>
+    <string name="fileExists">Tiedosto on olemassa</string>
+    <string name="replace">Korvaa</string>
+    <string name="shareLink">Jaa linkki</string>
+
+    <string name="utils_launchExternalTool">Käynnistä ulkoinen työkalu</string>
+    <string name="utils_externalToolTitle">Ulkoinen työkalu</string>
+    <string name="utils_placeholderTitle">Ulkoinen työkalu</string>
+    <string name="utils_placeholderDescription">Käy Canvasin verkkotilillä ja muokkaa tätä ulkoista työkalua.</string>
+    <string name="utils_unableToViewInBrowser">Emme pystyneet löytämään ulkoista sovellusta tämän LTI-työkalun tarkasteluun.</string>
+
+    <string name="utils_unsupportedFileMessage">Tiedostoa ei voitu näyttää. Käytä tätä painiketta alla avataksesi tiedosto toisessa sovelluksessa laitteessasi.</string>
+    <string name="utils_openWithAnotherApp">Avaa sovelluksessa...</string>
+    <string name="utils_couldNotPlayFormat">Tätä mediaformaattia ei tueta</string>
+    <string name="utils_fullscreen">koko näyttö</string>
+
+    <string name="utils_dataUsageWarningTitle">Datan käytön varoitukset</string>
+    <string name="utils_dataUsageWarningMessage">Tämä toiminto saattaa kuluttaa paljon tietoja, mahdollidesti aiheuttaen ylimääräisiä veloituksia. Haluatko jatkaa?</string>
+    <string name="utils_doNotShowMessageAgain">Älä näytä tätä viestiä uudelleen</string>
+
+    <string name="utils_no_data_connection">Tarkasta datayhteytesi ja yritä uudelleen.</string>
+    <string name="utils_playMedia">Toista mediaa</string>
+    <string name="utils_tryAgain">Yritä uudestaan</string>
+    <string name="image_uploading">Kuvaa ladata...</string>
+    <string name="image_upload_error">Kuvan latausvirhe</string>
+    <string name="retry">Yritä uudelleen</string>
+    <string name="search">Hae</string>
+    <string name="searchAssignmentsHint">Hae tehtäviä</string>
+    <string name="searchAnnouncementsHint">Haun ilmoitukset</string>
+    <string name="searchDiscussionsHint">Etsi keskusteluista</string>
+    <string name="searchPagesHint">Hakusivu</string>
+    <string name="searchQuizzesHint">Hae tietovisoja</string>
+    <string name="noItemsMatchingQuery">Ei täsmääviä kohteita \"%s\" kanssa</string>
+
+    <string name="selected">Valittu</string>
+
+</resources>

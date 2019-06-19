@@ -52,6 +52,35 @@
     <string name="allowedFileTypes">Allowable File Types</string>
     <string name="resubmitAssignment">Resubmit assignment</string>
 
+    <string name="preview">Preview</string>
+    <!--    Student Submission-->
+    <string name="submissionUrlClearTextError">No preview available for URLs using \'http://\'</string>
+    <string name="submissionUrlNotAUrlError">Please enter a valid URL</string>
+    <string name="enterAUrlHereForYourSubmission">Enter a URL here for your submission</string>
+    <!-- Student Submission -->
+    <string name="submissionWrite">Write&#8230;</string>
+    <!-- Student Submission Details -->
+    <string name="submission">Submission</string>
+    <string name="submissionVersions">Submission versions</string>
+    <string name="submissionDetailsFileTabName">Files (%d)</string>
+    <string name="rubric">Rubric</string>
+    <string name="submissionDetailsErrorTitle">Submission error</string>
+    <string name="urlSubmissionDisclaimer">This submission was a URL to an external page. We\'ve included a snapshot of what the page looked like when it was submitted.</string>
+    <string name="submissionDetailsNoSubmissionYet">No Submission Yet</string>
+    <string name="submissionDetailsAssignmentWasLockedOn">Your assignment was locked on %1$s at %2$s</string>
+    <string name="submissionDetailsAssignmentWillUnlockOn">Your assignment will unlock on %1$s at %2$s</string>
+    <string name="submissionDetailsAssignmentLockedByModuleName">Your assignment is locked by module \"%1$s\"</string>
+    <string name="submissionDetailsAssignmentLockedByModulePrereqs">Your assignment is locked by a module requirement</string>
+    <string name="submissionDetailsAssignmentLocked">Assignment Locked</string>
+    <string name="webPreview">Preview of the entered URL</string>
+    <string name="websiteUrl">Website URL</string>
+    <!-- Grade Cell -->
+    <string name="outOfPointsFormatted">Out of %s points</string>
+    <string name="outOfPointsAbbreviatedFormatted">Out of %s pts</string>
+    <string name="gradeExcused">Excused</string>
+    <string name="finalGradeFormatted">Final grade: %s</string>
+    <!-- Student rubric tab -->
+    <string name="rubricCustomScore">Custom score</string>
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">Version:</string>
 
@@ -96,6 +125,13 @@
     <string name="next7Days">Next 7 days</string>
     <string name="days">Days</string>
 
+    <string name="submissionDetailsDueTodayAt">Due today at %s</string>
+    <string name="submissionDetailsDueTomorrowAt">Due tomorrow at %s</string>
+    <string name="submissionDetailsDueYesterdayAt">Due yesterday at %s</string>
+    <string name="submissionDetailsHasNoDueDate">Your assignment has no due date</string>
+    <string name="submissionDetailsDueAt">Due %1$s at %2$s</string> <!--Ex: Due April 2 at 11:59pm-->
+    <string name="lowercaseAM">am</string>
+    <string name="lowercasePM">pm</string>
     <!--Assignments-->
     <string name="assignmentDue">Due</string>
     <string name="assignmentDueColon">Due: </string>
@@ -328,6 +364,7 @@
     <string name="observers">Observers</string>
     <string name="syllabusMissing">A syllabus has not been added.</string>
 
+    <string name="syllabusEventsError">There was an error loading your modules.</string>
     <string name="canvas">Canvas</string>
     <string name="chooseRecipient">Choose recipient(s)</string>
     <string name="messageHasNoRecipients">This message currently has no recipients.</string>
@@ -447,6 +484,7 @@
     <string name="markDone">Mark as completed</string>
     <string name="moduleItemNotFound">Module Item Not Found</string>
 
+    <string name="errorLoadingModules">There was an error loading your modules.</string>
     <string name="help">Help</string>
     <string name="instructor_question">Instructor question</string>
     <string name="link">Link</string>
@@ -459,13 +497,15 @@
 
 
     <!--New Submission Strings -->
-    <string name="textEntry"> Text entry</string>
-    <string name="onlineURL"> Online URL</string>
+    <string name="textEntry">Text entry</string>
+    <string name="onlineURL">Online URL</string>
     <string name="enterTextEntry">Enter text entry</string>
     <string name="fileUpload"> File upload</string>
     <string name="oneFileOnly">This submission only accepts one file upload</string>
 
 
+    <string name="websiteEntry">Add Website Entry</string>
+    <string name="mediaRecordingEntry">Media Recordings</string>
     <string name="submit">Submit</string>
     <string name="blankSubmission">Submission cannot be blank.</string>
     <string name="errorPostingSubmission">There was an error posting submission.</string>

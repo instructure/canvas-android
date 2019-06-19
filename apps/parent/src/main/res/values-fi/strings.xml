@@ -1,0 +1,227 @@
+﻿<!--
+  ~ Copyright (C) 2016 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<resources>
+    <string name="action_settings">Asetukset</string>
+    <string name="canvasLogo">Canvas-logo</string>
+    <string name="email">Sähköposti</string>
+    <string name="emailAddress">Sähköpostiosoite</string>
+    <string name="parent_email">Vanhempien sähköpostiosoite</string>
+    <string name="firstName">Etunimi</string>
+    <string name="lastName">Efternavn</string>
+    <string name="password">Salasana</string>
+    <string name="log_in">Kirjaudu sisään</string>
+    <string name="createAccount">Luo tili</string>
+    <string name="create">Luo</string>
+    <string name="forgotPassword">Unohditko salasanasi?</string>
+    <string name="forgotPasswordWithoutQuestion">Salasana unohtui</string>
+    <string name="enterAccountEmailHint">Tilin sähköpostiosotie</string>
+    <string name="requestPassword">Pyydä salasana</string>
+    <string name="resetPassword">Palauta salasana</string>
+    <string name="requestPasswordHelpText">Lähetämme sinulle sähköpostitse palautuspyynnön.</string>
+    <string name="requestPasswordSuccess">Salasanasi on vaihdettu.</string>
+    <string name="fullName">Koko nimi</string>
+    <string name="passwordsDoNotMatch">Salasanat eivät täsmää.</string>
+    <string name="passwordsCannotBeBlank">Salasanat eivät voi olla tyhjät.</string>
+    <string name="passwordResetFailed">Salasanan palauttaminen ei onnistunut tällä kertaa</string>
+    <string name="invalidEmail">Virheellinen sähköpostiosoite. Yritä uudelleen.</string>
+    <string name="next">Seuraava</string>
+    <string name="createAccountMessage">Sinulle lähetetään sähköpostia ilmoittamaasi osoitteeseen rekisteröitymisen loppuun suorittamista varten.</string>
+    <string name="accountCreationSuccess">Tilin luonti onnistui. Tarkista sähköpostiviesti suorittaaksesi rekisteröityminen loppuun.</string>
+    <string name="errorOccurred">Ilmeni odottamaton virhe. Yritä uudelleen.</string>
+    <string name="unknownDevice">Tuntematon laite</string>
+    <string name="addStudent">Lisää opiskelija</string>
+    <string name="school">Koulussa</string>
+    <string name="finish">Lopeta</string>
+    <string name="close">Sulje</string>
+    <string name="noStudents">Ei opiskelija saatavilla. Jos haluat lisätä opiskelijan, napauta yllä olevassa valikossa kolmea pistettä.</string>
+    <string name="noStudentsView">Tähän tiliin ei ole liitetty opiskelijoita.</string>
+    <string name="noCourses">Tällä opiskelijalla ei ole kursseja saatavissa.</string>
+    <string name="noAvailableCourses">Ei kursseja</string>
+    <string name="coursesMayNotBePublished">Tämän opiskelijan kursseja ei ehkä vielä julkaista.</string>
+    <string name="noAlerts">Tällä opiskelijalla ei ole tarkasteltavia hälytyksiä.</string>
+    <string name="noItemsToDisplayShort">Ei kohteita</string>
+    <string name="emailsSentTo">Sähköpostiviesti lähetetty:</string>
+    <string name="logged_in_as">Kirjautunut sisään nimellä:</string>
+    <string name="notifyWhen">Hälytä minulle, kun</string>
+    <string name="gradeAbove">Kurssin arvosana yläpuolella</string>
+    <string name="gradeBelow">Kurssin arvosana alapuolella</string>
+    <string name="assignmentMissing">Tehtävä puuttuu</string>
+    <string name="teacherAnnouncements">Kurssin ilmoitukset</string>
+    <string name="institutionAnnouncements">Laitoksen ilmoitukset</string>
+    <string name="assignmentGradeAbove">Tehtävän arvosana yllä</string>
+    <string name="assignmentGradeBelow">Tehtävän arvosana alla</string>
+    <string name="never">Ei koskaan</string>
+    <string name="save">Tallenna</string>
+    <string name="enterThreshold">Syötä prosenttiluku</string>
+    <string name="setGradeValueMessage">Määritä sellainen arvosanan arvo, josta haluat saada ilmoituksen</string>
+    <string name="removeStudent">Poista opiskelija</string>
+    <string name="removingStudent">Opiskelijaa poistetaan</string>
+    <string name="studentRemoved">Opiskelijan poistaminen onnistui</string>
+    <string name="studentAdded">Opiskelijan lisääminen onnistui</string>
+    <string name="courses">Kurssit</string>
+    <string name="week">Viikko</string>
+    <string name="alerts">Hälytykset</string>
+    <string name="alert">Ilmoitus</string>
+    <string name="weekEmptyView">Ei tehtäviä tai tapahtumia tällä viikolla!</string>
+    <string name="toolbar_close">Työkalupalkki, sulje</string>
+    <string name="syllabus">Opinto-ohjelma</string>
+    <string name="emptySyllabus">Tällä kurssilla ei ole opinto-ohjelmaa.</string>
+    <string name="noLocation">Sijaintia ei ole määritetty.</string>
+    <string name="previousAlerts">Edelliset hälytykset</string>
+    <string name="currentAlerts">Nykyiset hälytykset</string>
+    <string name="badDomainError">Virheellinen verkkotunnus. Yritä uudelleen.</string>
+    <string name="unauthorized">Sinulla ei ole valtuuksia näiden tietojen käyttöön.</string>
+    <string name="revokedTokenErrorContent">Sinulla ei ole valtuuksia näiden %1$s tietojen käyttöön. Voit valtuuttaa uudelleen opiskelijasi asetukset-valikosta.</string>
+    <string name="revokedTokenErrorTitle">Käyttöoikeustunnus peruutettu</string>
+    <string name="featureFlagDisabledError">Tämä laitos ei ole ottanut käyttöön pääsyä Canvas Parent -mobiilisovellukseen.</string>
+
+    <!-- Help strings -->
+    <string name="askInstructor">Kysy ohjaajaltasi kysymys</string>
+    <string name="askInstructorDetails">Kysymykset lähetetään ohjaajallesi</string>
+    <string name="searchGuides">Etsi Canvas-oppaita</string>
+    <string name="canvasGuides">Canvas-oppaat</string>
+    <string name="searchGuidesDetails">Etsi vastaukset yleisiin kysymyksiin</string>
+    <string name="reportProblem">Raportoi ongelma</string>
+    <string name="reportProblemDetails">Jos sovelluksen toiminnassa on häiriöitä, kerro meille</string>
+    <string name="requestFeature">Pyydä ominaisuus</string>
+    <string name="requestFeatureDetails">Onko sinulla idea sovelluksen parantamiseksi?</string>
+    <string name="shareYourLove">Jaa rakkautesi sovellusta kohtaan</string>
+    <string name="shareYourLoveDetails">Kerro meille sovelluksen suosikkiosista</string>
+    <string name="sendFeedback">Lähetä palautetta</string>
+    <string name="sendMail">Lähetä sähköpostiviesti&#8230;</string>
+    <string name="help_domain">Verkkotunnus:</string>
+    <string name="help_versionNum">Versio:</string>
+    <string name="help_userId">Käyttäjätunnus:</string>
+    <string name="help_email">Sähköposti:</string>
+    <string name="help_locale">Kielialue:</string>
+    <string name="installDate">Asennuspäivämäärä:</string>
+    <string name="icon">Kuvake</string>
+    <string name="due">Eräpäivä:</string>
+    <string name="no_due_date">Ei määräpäivää</string>
+    <string name="tapToSet">Määritä napauttamalla</string>
+    <string name="alarmNotSet">Hälytystä ei voitu määrittää. Yritä uudelleen.</string>
+    <string name="could_not_route_course">Kurssin ilmoittautumista ei löydy.</string>
+    <string name="could_not_route_assignment">Tehtävä ei löytynyt.</string>
+    <string name="email_already_exists">Tätä sähköpostiosoitetta käyttävä käyttäjä on jo olemassa</string>
+    <string name="password_reset_success">Salasanan palautusohjeet sisältävä sähköpostiviesti lähetetään.</string>
+    <string name="password_reset_no_user">Ei löydy käyttäjiä kyseisellä sähköpostiosoitteella.</string>
+    <string name="reset_password">Palauta salasana</string>
+    <string name="location">Sijainti</string>
+    <string name="time">Aika</string>
+    <string name="student_avatar">Opiskelijan avatar</string>
+    <string name="previous">Edellinen</string>
+    <string name="empty_view">Näkymä esitetään, kun sisältöä ei löydy</string>
+    <string name="tab_icon">Kuvake välilehden yläpuolella</string>
+    <string name="add_student_icon">Kuvake opiskelijan lisäämiseen</string>
+    <string name="canvas_logo">Canvas-logo</string>
+    <string name="course_threshold_grade_above_invalid">Tämän kynnyksen täytyy olla alemman kurssin kynnyksen alapuolella.</string>
+    <string name="course_threshold_grade_below_invalid">Tämän kynnyksen täytyy olla ylemmän kurssin kynnyksen alapuolella.</string>
+    <string name="assignment_threshold_grade_above_invalid">Tämän kynnyksen täytyy olla alemman tehtävän kynnyksen alapuolella.</string>
+    <string name="assignment_threshold_grade_below_invalid">Tämän kynnyksen täytyy olla ylemmän tehtävän kynnyksen alapuolella.</string>
+    <string name="set_reminder">Määritä muistutus</string>
+    <string name="enter_student_institution">Anna opiskelijan laitos</string>
+    <string name="enter_student_login">Anna opiskelijan sisäänkirjautuminen tai salasana</string>
+    <string name="access_not_enabled">Tämä laitos ei ole ottanut käyttöön pääsyä Canvas Parent -mobiilisovellukseen.</string>
+    <string name="dismiss">Ohita</string>
+    <string name="invalid_username_password">Sähköpostin ja salasanan yhdistelmä olivat virheellisiä.</string>
+    <string name="opening">Avataan&#8230;</string>
+    <string name="locked_assignment_desc">Tämä tehtävä on osa moduulia %s eikä sen lukitusta ole vielä poistettu.</string>
+    <string name="locked_assignment_desc_line2">Lue kurssin moduulit -sivulta tietoja siitä, kuinka poistaa tämän sisällön lukitus.</string>
+    <string name="locked_assignment_not_module">Tämä tehtävä on lukittu.</string>
+    <string name="no_description">Tälle tehtävälle ei ole kuvausta.</string>
+    <string name="cannot_view_file">Ei voida tarkastella tätä tiedostoa sovelluksessa. Tarkastele selaimessa</string>
+    <string name="calendar_event">Kalenteritapahtuma</string>
+    <string name="set_reminder_toggle">Määritä muistutuksen vaihto</string>
+    <string name="or">tai</string>
+    <string name="canvas_login_text">Kirjaudu sisään Canvasin avulla</string>
+    <string name="dateRangeContentDescription">Päivämääräväli %1$s-%2$s</string>
+
+    <string name="privacyPolicy">Tietosuojakäytäntö</string>
+    <string name="EULA">EULA</string>
+    <string name="termsOfUse">Käyttöehdot</string>
+
+    <!-- Feature Request -->
+    <string name="featureSubject">Idea Canvas Parent App -sovellukselle [Android]</string>
+    <string name="understandRequest">Seuraavat tiedot auttavat meitä ymmärtämään ideasi paremmin:</string>
+
+    <!-- Distance Strings -->
+    <string name="lessThanOne">&lt; 1 maili (1,6 km)</string>
+    <string name="oneMile">1 maili (1,6 km)</string>
+    <string name="miles">mailia</string>
+    <string name="kilometers">km</string>
+
+    <string name="grade">Arvosana:</string>
+    <string name="notGraded">Arvosanaa ei vielä ole annettu</string>
+    <string name="missing">Puuttuu</string>
+    <string name="submitted">Lähetetty</string>
+    <string name="in_class">Luokassa</string>
+    <string name="excused">Annettu anteeksi</string>
+    <string name="late">Myöhään</string>
+    <string name="greaterThan9">9+</string>
+
+    <string name="onlyCanvasObservers">Vain Canvas-havaitsijat voivat todentaa Canvas Parent -sovelluksessa.</string>
+    <string name="unableToAddStudentError">Emme pysty lisäämään opiskelijaa tällä kertaa.</string>
+
+    <string name="open_source">Avoin lähde</string>
+    <string name="open_source_details">Näytä avoimen lähteen lisenssit</string>
+
+    <string name="unitedStates">Yhdysvallat</string>
+    <string name="theUnitedStates">Yhdysvallat</string>
+    <string name="canada">Kanada</string>
+    <string name="ireland">Irlanti</string>
+    <string name="australia">Australia</string>
+    <string name="germany">Saksa</string>
+    <string name="singapore">Singapore</string>
+    <array name="regions">
+        <item name="unitedStates">@string/unitedStates</item>
+        <item name="canada">@string/canada</item>
+        <item name="ireland">@string/ireland</item>
+        <item name="australia">@string/australia</item>
+        <item name="germany">@string/germany</item>
+        <item name="singapore">@string/singapore</item>
+    </array>
+    <string name="selectChildRegion">Valitse opiskelijan alue</string>
+    <string name="selectRegion">Alueen valitsin</string>
+    <string name="unauthorizedRegion">Valtuuttamaton alue</string>
+    <string name="mismatchedRegionMessage">Tämä laitos sijaitsee valitun alueesi ulkopuolella. Voit lisätä opiskelijan tähän laitokseen, käytä ”Alueen poimija” -asetusta kirjautumissivulla luodaksesi tilin alueelle %1$s.</string>
+
+    <string name="notification_channel_name">Yleiset ilmoitukset</string>
+    <string name="notification_channel_description">Ilmoituksen muistutuksista ja tärkeistä opiskelijaasi koskevista tiedoista.</string>
+
+    <string name="whatsYourStudentsSchoolName">Syötä opiskelijan koulun nimi</string>
+    <string name="findYourStudentsSchoolHint">Etsi opiskelijan koulu tai alue</string>
+    <string name="noGradeText">Ei arvosanaa</string>
+    <string name="locked">Lukittu</string>
+    <string name="changeUser">Change User (Vaihda käyttäjää)</string>
+    <string name="manageChildren">Hallitse lapsia</string>
+    <!-- Navigation Drawer -->
+    <string name="navigation_drawer_open">Avaa siirtymisvalikko</string>
+    <string name="navigation_drawer_close">Sulje siirtymisvalikko</string>
+    <string name="version" formatted="false">Versio %s</string>
+    <string name="not_a_parent_title">Et ole vanhempi?</string>
+    <string name="not_a_parent_subtitle">Yksi muista sovelluksistamme saattaa olla paremmin sopiva. Napsauta yhtä vieraillaksesi Play Storessa.</string>
+    <string name="tryLoginAgain">Yritä kirjautua sisään uudelleen</string>
+    <string name="legalDetails">Tietosuojakäytäntö, käyttöehdot, avoin lähde</string>
+    <string name="assignmentGrade">Tehtävän arvosana</string>
+    <string name="courseGrade">Kurssin arvosana</string>
+    <string name="courseAnnouncement">Kurssin ilmoitus</string>
+    <string name="institutionAnnouncement">Laitoksen ilmoitus</string>
+    <string name="institutionAnnouncementUnavailable">Tämä ilmoitus on vanhentunut.</string>
+    <string name="previousWeekBtn">edellisen viikon painike</string>
+    <string name="nextWeekBtn">seuraavan viikon painike</string>
+</resources>

@@ -318,7 +318,6 @@
     <string name="assignments_list">Lista de tarefas</string>
     <string name="syllabus">Programa de estudos</string>
     <!--End Course Settings-->
-
     <!-- Assignment Details -->
     <string name="multiple_due_dates">Várias datas de entrega</string>
     <string name="everyone">Todo mundo</string>
@@ -373,6 +372,7 @@
     <string name="announcement_name_must_be_set">Título do Anúncio deve ser definido.</string>
     <string name="quiz_title_must_be_set">Título do questionário deve ser definido.</string>
     <string name="assignment_points_must_be_set">Pontos da tarefa deve ser definido.</string>
+    <string name="assignment_points_must_be_a_number">Pontos possíveis devem ser um número</string>
     <string name="quiz_points_must_be_set">Pontos do questionário deve ser definido.</string>
     <string name="assignee_type_course_sections">Seções do curso</string>
     <string name="assignee_type_groups">Grupos</string>

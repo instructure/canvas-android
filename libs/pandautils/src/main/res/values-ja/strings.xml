@@ -101,6 +101,10 @@
     <string name="pleaseTryAgain">許可されました。再試行してください。</string>
     <string name="pickVideo">ビデオを選択</string>
 
+    <string name="assignmentSubmissionUpload">「%s」 用提出物をアップロード</string>
+    <string name="assignmentSubmissionError">「%s」の提出に失敗しました</string>
+    <string name="notificationChannelNameSubmissionUploadsName">提出アップロード通知</string>
+    <string name="notificationChannelNameSubmissionUploadsDescription">継続中の提出アップロードに関する Canvas 通知</string>
     <!--Errors-->
     <string name="errorOccurred">予期しないエラーが発生しました。</string>
     <string name="serverError">サーバーエラーが発生しました。</string>

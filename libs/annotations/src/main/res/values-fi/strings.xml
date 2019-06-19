@@ -1,0 +1,40 @@
+﻿<!--
+  ~ Copyright (C) 2018 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+    <string name="inputText">Syöttöteksti</string>
+    <string name="cancel">Peruuta</string>
+    <string name="comment">Kommentti</string>
+    <string name="skip">Ohita</string>
+    <string name="comments">Huomautuksia</string>
+    <string name="error_loading_submission">Tämän lähetyksen lataamisessa oli vaikeuksia.</string>
+    <string name="retry">Yritä uudelleen</string>
+    <string name="annotationErrorOccurred">Huomautusten lataamisen yhteydessä tapahtui virhe.</string>
+    <string name="annotationError">Huomautuksen teossa ilmeni virhe</string>
+    <string name="annotationDialogMessage">Huomautus on poistettu toisesta lähteestä.</string>
+    <string name="errorSendingMessage">Tämän viestin lähettäminen epäonnistui. Yritä uudelleen napauttamalla.</string>
+    <string name="addAnnotationComment">Lisää kommentti</string>
+    <string name="editComment">Muokkaa kommenttia</string>
+    <string name="deleteComment">Poista huomautus</string>
+    <string name="deleteAnnotation">Poista huomautus</string>
+    <string name="deleteCommentConfirmation">Haluatko varmasti poistaa tämän kommentin?</string>
+    <string name="deleteHeadCommentConfirmation">Tämän kommentin poistaminen poistaa kaikki tähän huomatukseen liitetyt kommentit. Haluatko varmasti tehdä näin?</string>
+    <string name="sendingSimple">Lähetetään</string>
+    <string name="pspdf__annotation_type_stamp">Huomautuksen väri</string>
+    <string name="removedComment">Kohteen %1$s poistaja %2$s</string>
+
+</resources>

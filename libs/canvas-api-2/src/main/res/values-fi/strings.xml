@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <!--Modules-->
+    <string name="mustComplete">Sinun täytyy suorittaa ensin seuraavat:</string>
+    <string name="unlockedAt">Sen lukitus avataan kohteessa:</string>
+    <string name="goToModules">Siirry Moduuleihin</string>
+
+    <!--Events-->
+    <string name="Starts">Alkaa</string>
+    <string name="Ends">Päättyy</string>
+    <string name="allDayEvent">Koko päivän tapahtuma</string>
+    <string name="at">kohteessa</string>
+    <string name="to">kohteeseen</string>
+
+    <!--StreamItems-->
+    <string name="Message">Viesti</string>
+    <string name="Loading">Ladataan&#8230;</string>
+    <string name="Deleted">Poistettu</string>
+
+    <!-- Assignment Module -->
+    <string name="canvasAPI_online">Verkossa</string>
+    <string name="canvasAPI_onPaper">Paperilla</string>
+    <string name="canvasAPI_discussion">Keskustelu</string>
+    <string name="canvasAPI_quiz">Tietovisa</string>
+    <string name="canvasAPI_externalTool">Ulkoinen työkalu</string>
+    <string name="canvasAPI_none">Ei mitään</string>
+
+    <string name="canvasAPI_passFail">Läpäissyt/ei läpäissyt</string>
+    <string name="canvasAPI_percent">Prosentti</string>
+    <string name="canvasAPI_letterGrade">Kirjeen arvosana</string>
+    <string name="canvasAPI_points">Pisteitä</string>
+    <string name="canvasAPI_gpaScale">GPA-asteikko</string>
+    <string name="canvasAPI_notGraded">Ei arvosteltu</string>
+
+    <string name="canvasAPI_onlineQuiz">Verkkokysely</string>
+    <string name="canvasAPI_discussionTopic">Keskustelun aihe</string>
+    <string name="canvasAPI_onlineUpload">Verkkolataus</string>
+    <string name="canvasAPI_onlineTextEntry">Verkon tekstimerkintä</string>
+    <string name="canvasAPI_onlineURL">Verkko-url</string>
+    <string name="canvasAPI_mediaRecording">Median nauhoitus</string>
+    <string name="canvasAPI_attendance">Osallistuminen</string>
+    <string name="quiz_scoring_policy_highest">Korkein</string>
+    <string name="quiz_scoring_policy_average">Keskimääräinen</string>
+    <string name="quiz_scoring_policy_latest">Viimeisin</string>
+    <string name="no">Ei</string>
+    <string name="always">Aina</string>
+    <string name="graded_quiz">Arvosteltu kysely</string>
+    <string name="practice_quiz">Harjoittelukysely</string>
+    <string name="graded_survey">Arvosteltu tutkimus</string>
+    <string name="ungraded_survey">Arvostelematon tutkimus</string>
+    <string name="andMore"> ja %d lisää</string>
+
+    <!-- Enrollment Types -->
+    <string name="enrollmentTypeStudent">Opiskelija</string>
+    <string name="enrollmentTypeTeacher">Opettaja</string>
+    <string name="enrollmentTypeObserver">Havainnoija</string>
+    <string name="enrollmentTypeTeachingAssistant">Apuopettaja</string>
+    <string name="enrollmentTypeDesigner">Suunnittelija</string>
+    <string name="enrollmentTypeUnknown">Tuntematon</string>
+
+</resources>

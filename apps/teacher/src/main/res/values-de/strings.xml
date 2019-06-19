@@ -318,7 +318,6 @@
     <string name="assignments_list">Aufgabenliste</string>
     <string name="syllabus">Kursplan</string>
     <!--End Course Settings-->
-
     <!-- Assignment Details -->
     <string name="multiple_due_dates">Mehrere Abgabetermine</string>
     <string name="everyone">Jeder</string>
@@ -373,6 +372,7 @@
     <string name="announcement_name_must_be_set">Ein Ankündigungstitel muss festgelegt werden.</string>
     <string name="quiz_title_must_be_set">Ein Quiztitel muss festgelegt werden.</string>
     <string name="assignment_points_must_be_set">Aufgabenpunkte müssen festgelegt werden.</string>
+    <string name="assignment_points_must_be_a_number">Der Wert für die möglichen Punkte muss eine Zahl sein.</string>
     <string name="quiz_points_must_be_set">Quizpunkte müssen festgelegt werden.</string>
     <string name="assignee_type_course_sections">Kursabschnitte</string>
     <string name="assignee_type_groups">Gruppen</string>

@@ -52,6 +52,35 @@
     <string name="allowedFileTypes">Whakāe kōnae momo</string>
     <string name="resubmitAssignment">Tuku anō i te whakataunga</string>
 
+    <string name="preview">Arokite</string>
+    <!--    Student Submission-->
+    <string name="submissionUrlClearTextError">Kaore e wātea he arokite mo ngā  URL e mahi ana http//</string>
+    <string name="submissionUrlNotAUrlError">Tēnā koa whakauru he URL whaimana</string>
+    <string name="enterAUrlHereForYourSubmission">Whakauru he URL ki konei mo tō tapaetanga</string>
+    <!-- Student Submission -->
+    <string name="submissionWrite">Tuhi&#8230;</string>
+    <!-- Student Submission Details -->
+    <string name="submission">Tapaetanga</string>
+    <string name="submissionVersions">Ngā tāpaetanga whakāturanga</string>
+    <string name="submissionDetailsFileTabName">Ngā kōnae (%d)</string>
+    <string name="rubric">rubric</string>
+    <string name="submissionDetailsErrorTitle">Hapa Tāpaetanga</string>
+    <string name="urlSubmissionDisclaimer">Tēnei tukunga ko te URL ki te whārangi waho. He URL tēnei tapaetangs ki tētahi whārangi o waho</string>
+    <string name="submissionDetailsNoSubmissionYet">Kaore anō he tāpaetanga</string>
+    <string name="submissionDetailsAssignmentWasLockedOn">I rakaina tō whakataunga i runga i te %1$s i %2$s</string>
+    <string name="submissionDetailsAssignmentWillUnlockOn">Ka whakawāteatia tō whakataunga i runga i te %1$s i %2$s</string>
+    <string name="submissionDetailsAssignmentLockedByModuleName">Kua rakaina tō whakataunga e te kōwa \"%1$s\"</string>
+    <string name="submissionDetailsAssignmentLockedByModulePrereqs">Kua rakaina tō whakataunga  e te hiahiatanga o te kōwae</string>
+    <string name="submissionDetailsAssignmentLocked">Whakataunga kua rakaina</string>
+    <string name="webPreview">Arokite o te URL kua whakaurutia</string>
+    <string name="websiteUrl">paetukutuku URL</string>
+    <!-- Grade Cell -->
+    <string name="outOfPointsFormatted">I waho o %s ngā koinga</string>
+    <string name="outOfPointsAbbreviatedFormatted">I waho o %s pts</string>
+    <string name="gradeExcused">Whakawātea</string>
+    <string name="finalGradeFormatted">Kōeke whakamutunga: %s</string>
+    <!-- Student rubric tab -->
+    <string name="rubricCustomScore">Kaute tikanga</string>
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">Putanga:</string>
 
@@ -96,6 +125,13 @@
     <string name="next7Days">Panuku 7 ra</string>
     <string name="days">Ngā rā</string>
 
+    <string name="submissionDetailsDueTodayAt">E tika ana i tēnei rā i %s</string>
+    <string name="submissionDetailsDueTomorrowAt">E tika ana apopo i %s</string>
+    <string name="submissionDetailsDueYesterdayAt">E tika ana inānahi i %s</string>
+    <string name="submissionDetailsHasNoDueDate">Kaore he rā tika mo tō whakataunga</string>
+    <string name="submissionDetailsDueAt">Rā tika %1$s ī %2$s</string> <!--Ex: Due April 2 at 11:59pm-->
+    <string name="lowercaseAM">am</string>
+    <string name="lowercasePM">pm</string>
     <!--Assignments-->
     <string name="assignmentDue">e tika ana</string>
     <string name="assignmentDueColon">E tika ana: </string>
@@ -328,6 +364,7 @@
     <string name="observers">Kaitirotiro</string>
     <string name="syllabusMissing">Kaore i whakaurua tētahi marautanga.</string>
 
+    <string name="syllabusEventsError">He hapa i te wā e uta ana i ō kōwae</string>
     <string name="canvas">Canvas</string>
     <string name="chooseRecipient">Kōwhiri Kaiwhiwhi (ngā)</string>
     <string name="messageHasNoRecipients">Tēnei karere kaore he kaiwhiwhi tēnei wā.</string>
@@ -447,6 +484,7 @@
     <string name="markDone">tohu mahia</string>
     <string name="moduleItemNotFound">Kaore i kitea te Kōwae tūemi</string>
 
+    <string name="errorLoadingModules">He hapa i te wā e uta ana i ō kōwae</string>
     <string name="help">Āwhina</string>
     <string name="instructor_question">Pātai Kaiwhakāko</string>
     <string name="link">hono</string>
@@ -459,13 +497,15 @@
 
 
     <!--New Submission Strings -->
-    <string name="textEntry"> Whakauru kuputuhi</string>
-    <string name="onlineURL"> URL ipurangi</string>
+    <string name="textEntry">Whakauru kuputuhi</string>
+    <string name="onlineURL">URL ipurangi</string>
     <string name="enterTextEntry">Whakauru Tāurunga Kuputuhi</string>
     <string name="fileUpload"> Kōnae Tukuake</string>
     <string name="oneFileOnly">Ka whakāe tēnei tāpaetanga kotahi anake te kōnae hei tukuatu.</string>
 
 
+    <string name="websiteEntry">Tāpiri Paetukutuku Whakauru</string>
+    <string name="mediaRecordingEntry">Pāpāho ōrorongo</string>
     <string name="submit">Tuku</string>
     <string name="blankSubmission">Kaore e taea ki a wātea te tāpaetanga.</string>
     <string name="errorPostingSubmission">He hapa i te wā e whakairi ana i te tāpaetanga.</string>

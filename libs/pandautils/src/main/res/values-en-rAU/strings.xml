@@ -101,6 +101,10 @@
     <string name="pleaseTryAgain">Permission Granted, please try again.</string>
     <string name="pickVideo">Select a Video</string>
 
+    <string name="assignmentSubmissionUpload">Uploading submission for "%s"</string>
+    <string name="assignmentSubmissionError">Submission failed for "%s"</string>
+    <string name="notificationChannelNameSubmissionUploadsName">Submission Upload Notifications</string>
+    <string name="notificationChannelNameSubmissionUploadsDescription">Canvas notifications for ongoing submission uploads.</string>
     <!--Errors-->
     <string name="errorOccurred">An unexpected error occurred.</string>
     <string name="serverError">A server error has occurred.</string>

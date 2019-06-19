@@ -52,6 +52,33 @@
     <string name="allowedFileTypes">Filtyper som tillåts</string>
     <string name="resubmitAssignment">Lämna in uppgift igen</string>
 
+    <string name="preview">Förhandsvisa</string>
+    <!--    Student Submission-->
+    <string name="submissionUrlClearTextError">Ingen förhandsgranskning är tillgänglig för URL:er som använder \'http://\'</string>
+    <string name="submissionUrlNotAUrlError">Vänligen ange en giltig URL</string>
+    <string name="enterAUrlHereForYourSubmission">Ange en URL här för din inlämning</string>
+    <!-- Student Submission -->
+    <string name="submissionWrite">Skriv&#8230;</string>
+    <!-- Student Submission Details -->
+    <string name="submission">Inlämning</string>
+    <string name="submissionVersions">Inlämnade versioner</string>
+    <string name="submissionDetailsFileTabName">Filer (%d)</string>
+    <string name="rubric">Matris</string>
+    <string name="submissionDetailsErrorTitle">Fel vid inlämning</string>
+    <string name="urlSubmissionDisclaimer">Den här inlämningen var en URL till en extern sida. Vi har inkluderat en ögonblicksbild över hur sidan såg ut när den lämnades in.</string>
+    <string name="submissionDetailsNoSubmissionYet">Ingen inlämning än</string>
+    <string name="submissionDetailsAssignmentWasLockedOn">Din uppgift låstes %1$s kl. %2$s</string>
+    <string name="submissionDetailsAssignmentWillUnlockOn">Din uppgift kommer att låsas upp %1$s kl. %2$s</string>
+    <string name="submissionDetailsAssignmentLockedByModuleName">Din uppgift har låsts av modulen \"%1$s\"</string>
+    <string name="submissionDetailsAssignmentLockedByModulePrereqs">Din uppgift har låsts på grund av ett modulkrav</string>
+    <string name="submissionDetailsAssignmentLocked">Uppgift låst</string>
+    <string name="webPreview">Förhandsgranskning av angiven URL</string>
+    <string name="websiteUrl">Hemsida URL</string>
+    <!-- Grade Cell -->
+    <string name="outOfPointsFormatted">Av %s poäng</string>
+    <string name="outOfPointsAbbreviatedFormatted">Av %s poäng</string>
+    <string name="gradeExcused">Slipper göra</string>
+    <string name="finalGradeFormatted">Total bedömning: %s</string>
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">Version:</string>
 
@@ -96,6 +123,13 @@
     <string name="next7Days">Nästa 7 dagar</string>
     <string name="days">Dagar</string>
 
+    <string name="submissionDetailsDueTodayAt">Förfaller idag kl. %s</string>
+    <string name="submissionDetailsDueTomorrowAt">Förfaller imorgon kl. %s</string>
+    <string name="submissionDetailsDueYesterdayAt">Förföll igår kl. %s</string>
+    <string name="submissionDetailsHasNoDueDate">Din uppgift saknar förfallodatum</string>
+    <string name="submissionDetailsDueAt">Ska vara klar %1$s klockan %2$s</string> <!--Ex: Due April 2 at 11:59pm-->
+    <string name="lowercaseAM">am</string>
+    <string name="lowercasePM">pm</string>
     <!--Assignments-->
     <string name="assignmentDue">Förfallodatum</string>
     <string name="assignmentDueColon">Förfallodatum: </string>
@@ -328,6 +362,7 @@
     <string name="observers">Observatörer</string>
     <string name="syllabusMissing">Ingen kursöversikt har lagts till</string>
 
+    <string name="syllabusEventsError">Det gick inte att läsa in dina moduler.</string>
     <string name="canvas">Canvas</string>
     <string name="chooseRecipient">Välj mottagare ()</string>
     <string name="messageHasNoRecipients">Det här meddelandet har för närvarande inga mottagare.</string>
@@ -447,6 +482,7 @@
     <string name="markDone">Markering färdig</string>
     <string name="moduleItemNotFound">Modulobjektet hittades inte</string>
 
+    <string name="errorLoadingModules">Det gick inte att läsa in dina moduler.</string>
     <string name="help">Hjälp</string>
     <string name="instructor_question">Fråga Handledare</string>
     <string name="link">Länk</string>
@@ -459,13 +495,15 @@
 
 
     <!--New Submission Strings -->
-    <string name="textEntry"> Textinlägg</string>
-    <string name="onlineURL"> Online URL</string>
+    <string name="textEntry">Textinlägg</string>
+    <string name="onlineURL">Online URL</string>
     <string name="enterTextEntry">Gör textinlägg</string>
     <string name="fileUpload"> Filuppladdning</string>
     <string name="oneFileOnly">Denna inlämning accepterar endast en filuppladdning</string>
 
 
+    <string name="websiteEntry">Lägg till webbplatsinlägg</string>
+    <string name="mediaRecordingEntry">Mediainspelningar</string>
     <string name="submit">Lämna in</string>
     <string name="blankSubmission">Inlämningen kan inte lämnas tom.</string>
     <string name="errorPostingSubmission">Ett fel uppstod när inlämningen skickades in.</string>

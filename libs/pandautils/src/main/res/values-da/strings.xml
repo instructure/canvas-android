@@ -101,6 +101,10 @@
     <string name="pleaseTryAgain">Tilladelse givet, prøv igen.</string>
     <string name="pickVideo">Vælg en video</string>
 
+    <string name="assignmentSubmissionUpload">Uploader aflevering til "%s”</string>
+    <string name="assignmentSubmissionError">Aflevering mislykkedes for "%s"</string>
+    <string name="notificationChannelNameSubmissionUploadsName">Meddelelser for afleveringsupload</string>
+    <string name="notificationChannelNameSubmissionUploadsDescription">Canvas-meddelelser for løbende afleveringsuploads.</string>
     <!--Errors-->
     <string name="errorOccurred">En uventet fejl opstod.</string>
     <string name="serverError">En serverfejl opstod.</string>

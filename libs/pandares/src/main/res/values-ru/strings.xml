@@ -54,6 +54,35 @@
     <string name="allowedFileTypes">Разрешенные типы файлов</string>
     <string name="resubmitAssignment">Повторная отправка задания</string>
 
+    <string name="preview">Предпросмотр</string>
+    <!--    Student Submission-->
+    <string name="submissionUrlClearTextError">Предпросмотр для URL-адресов с использованием \'http://\' недоступен</string>
+    <string name="submissionUrlNotAUrlError">Введите действительный URL-адрес</string>
+    <string name="enterAUrlHereForYourSubmission">Введите здесь URL-адрес для отправки</string>
+    <!-- Student Submission -->
+    <string name="submissionWrite">Запись&#8230;</string>
+    <!-- Student Submission Details -->
+    <string name="submission">Отправка</string>
+    <string name="submissionVersions">Версии отправки</string>
+    <string name="submissionDetailsFileTabName">Файлы (%d)</string>
+    <string name="rubric">Рубрика</string>
+    <string name="submissionDetailsErrorTitle">Ошибка отправки</string>
+    <string name="urlSubmissionDisclaimer">Эта отправка была URL-адресом на внешнюю страницу. Мы включили скриншот, на котором видно, как выглядела страница, когда она была представлена.</string>
+    <string name="submissionDetailsNoSubmissionYet">Нет отправок</string>
+    <string name="submissionDetailsAssignmentWasLockedOn">Ваше задание было заблокировано %1$s в %2$s.</string>
+    <string name="submissionDetailsAssignmentWillUnlockOn">Ваше задание было разблокировано %1$s в %2$s</string>
+    <string name="submissionDetailsAssignmentLockedByModuleName">Ваше задание заблокировано модулем \"%1$s\"</string>
+    <string name="submissionDetailsAssignmentLockedByModulePrereqs">Ваше задание заблокировано требованием модуля</string>
+    <string name="submissionDetailsAssignmentLocked">Задание заблокировано</string>
+    <string name="webPreview">Предпросмотр введенного URL-адреса</string>
+    <string name="websiteUrl">Адрес веб-сайта</string>
+    <!-- Grade Cell -->
+    <string name="outOfPointsFormatted">Из %s баллов</string>
+    <string name="outOfPointsAbbreviatedFormatted">Из %s баллов</string>
+    <string name="gradeExcused">По уважительной причине</string>
+    <string name="finalGradeFormatted">Итоговая оценка: %s</string>
+    <!-- Student rubric tab -->
+    <string name="rubricCustomScore">Персонализированная оценка</string>
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">Версия:</string>
 
@@ -98,6 +127,13 @@
     <string name="next7Days">Следующие 7 дней</string>
     <string name="days">Дней</string>
 
+    <string name="submissionDetailsDueTodayAt">Срок – сегодня в %s</string>
+    <string name="submissionDetailsDueTomorrowAt">Срок – завтра в %s</string>
+    <string name="submissionDetailsDueYesterdayAt">Срок – вчера в %s</string>
+    <string name="submissionDetailsHasNoDueDate">Ваше задание не имеет срока сдачи</string>
+    <string name="submissionDetailsDueAt">Срок выполнения %1$s в %2$s</string> <!--Ex: Due April 2 at 11:59pm-->
+    <string name="lowercaseAM">до обеда</string>
+    <string name="lowercasePM">после обеда</string>
     <!--Assignments-->
     <string name="assignmentDue">Срок</string>
     <string name="assignmentDueColon">Срок: </string>
@@ -340,6 +376,7 @@
     <string name="observers">Наблюдатели</string>
     <string name="syllabusMissing">Описание курса не было добавлено.</string>
 
+    <string name="syllabusEventsError">Произошла ошибка при загрузке ваших модулей.</string>
     <string name="canvas">Canvas</string>
     <string name="chooseRecipient">Выберите получателя (ей)</string>
     <string name="messageHasNoRecipients">У этого сообщения в настоящее время нет получателей.</string>
@@ -459,6 +496,7 @@
     <string name="markDone">Отметить как выполненное</string>
     <string name="moduleItemNotFound">Элемент модуля не найден</string>
 
+    <string name="errorLoadingModules">Произошла ошибка при загрузке ваших модулей.</string>
     <string name="help">Справка</string>
     <string name="instructor_question">Вопрос Учителя</string>
     <string name="link">Ссылка</string>
@@ -471,13 +509,15 @@
 
 
     <!--New Submission Strings -->
-    <string name="textEntry"> Ввод текста</string>
-    <string name="onlineURL"> URL-адрес в Интернете</string>
+    <string name="textEntry">Ввод текста</string>
+    <string name="onlineURL">URL-адрес в Интернете</string>
     <string name="enterTextEntry">Введите текст</string>
     <string name="fileUpload"> Отправка файла</string>
     <string name="oneFileOnly">В данном случае допускается отправка только одного файла</string>
 
 
+    <string name="websiteEntry">Добавить элемент веб-сайта</string>
+    <string name="mediaRecordingEntry">Записи мультимедийных данных</string>
     <string name="submit">Отправить</string>
     <string name="blankSubmission">Отправка не может быть пустой.</string>
     <string name="errorPostingSubmission">Возникла ошибка при публикации отправки.</string>

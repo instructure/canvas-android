@@ -101,6 +101,10 @@
     <string name="pleaseTryAgain">Udzielono zezwolenia, spróbuj ponownie.</string>
     <string name="pickVideo">Wybierz film</string>
 
+    <string name="assignmentSubmissionUpload">Przesyłanie plików dla %s</string>
+    <string name="assignmentSubmissionError">Nie udało się przesłać plików dla %s</string>
+    <string name="notificationChannelNameSubmissionUploadsName">Powiadomienia dotyczące przesyłek</string>
+    <string name="notificationChannelNameSubmissionUploadsDescription">Powiadomienia Canvas dla przesyłanych obecnie plików.</string>
     <!--Errors-->
     <string name="errorOccurred">Wystąpił nieoczekiwany błąd.</string>
     <string name="serverError">Wystąpił błąd serwera.</string>

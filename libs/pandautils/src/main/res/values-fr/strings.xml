@@ -101,6 +101,10 @@
     <string name="pleaseTryAgain">Permission accordée, veuillez réessayer.</string>
     <string name="pickVideo">Sélectionnez une vidéo</string>
 
+    <string name="assignmentSubmissionUpload">Envoi de la soumission pour « %s »</string>
+    <string name="assignmentSubmissionError">Soumission échouée pour « %s »</string>
+    <string name="notificationChannelNameSubmissionUploadsName">Notifications d’envoi de soumission</string>
+    <string name="notificationChannelNameSubmissionUploadsDescription">Notifications Canvas pour les envois de soumissions en cours.</string>
     <!--Errors-->
     <string name="errorOccurred">Une erreur inattendue est survenue.</string>
     <string name="serverError">Une erreur de serveur est survenue.</string>

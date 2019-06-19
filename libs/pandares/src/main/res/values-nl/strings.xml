@@ -52,6 +52,35 @@
     <string name="allowedFileTypes">Toegestane bestandstypen</string>
     <string name="resubmitAssignment">Opdracht opnieuw inleveren</string>
 
+    <string name="preview">Voorbeeld</string>
+    <!--    Student Submission-->
+    <string name="submissionUrlClearTextError">Geen voorbeeld beschikbaar voor URL\'s die \'http://\' gebruiken</string>
+    <string name="submissionUrlNotAUrlError">Voer een geldige URL in</string>
+    <string name="enterAUrlHereForYourSubmission">Voer hier een URL in voor uw inzending</string>
+    <!-- Student Submission -->
+    <string name="submissionWrite">Schrijven&#8230;</string>
+    <!-- Student Submission Details -->
+    <string name="submission">Inzending</string>
+    <string name="submissionVersions">Inzendingsversies</string>
+    <string name="submissionDetailsFileTabName">Bestanden (%d)</string>
+    <string name="rubric">Rubriek</string>
+    <string name="submissionDetailsErrorTitle">Indieningsfout</string>
+    <string name="urlSubmissionDisclaimer">Deze inzending was een URL naar een externe pagina. We hebben een snapshot ingevoegd van hoe de pagina eruit zag toen deze werd ingezonden.</string>
+    <string name="submissionDetailsNoSubmissionYet">Nog geen inzending beschikbaar</string>
+    <string name="submissionDetailsAssignmentWasLockedOn">Je opdracht is vergrendeld op %1$s om  %2$s</string>
+    <string name="submissionDetailsAssignmentWillUnlockOn">Je opdracht wordt vrijgegeven op %1$s om  %2$s</string>
+    <string name="submissionDetailsAssignmentLockedByModuleName">Je opdracht is vergrendeld door module \"%1$s\"</string>
+    <string name="submissionDetailsAssignmentLockedByModulePrereqs">Je opdracht wordt vergrendeld door een modulevereiste</string>
+    <string name="submissionDetailsAssignmentLocked">Opdracht vergrendeld</string>
+    <string name="webPreview">Voorbeeld van de ingevoerde URL</string>
+    <string name="websiteUrl">Website-URL</string>
+    <!-- Grade Cell -->
+    <string name="outOfPointsFormatted">Zonder %s punten</string>
+    <string name="outOfPointsAbbreviatedFormatted">Zonder %s punten</string>
+    <string name="gradeExcused">Vrijgesteld</string>
+    <string name="finalGradeFormatted">Eindcijfer: %s</string>
+    <!-- Student rubric tab -->
+    <string name="rubricCustomScore">Aangepaste score</string>
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">Versie:</string>
 
@@ -96,6 +125,13 @@
     <string name="next7Days">Volgende 7 dagen</string>
     <string name="days">Dagen</string>
 
+    <string name="submissionDetailsDueTodayAt">Vandaag in te leveren om %s</string>
+    <string name="submissionDetailsDueTomorrowAt">Inleverdatum morgen om %s</string>
+    <string name="submissionDetailsDueYesterdayAt">Inleverdatum gisteren om %s</string>
+    <string name="submissionDetailsHasNoDueDate">Je opdracht heeft geen vervaldatum</string>
+    <string name="submissionDetailsDueAt">In te leveren op %1$s om %2$s</string> <!--Ex: Due April 2 at 11:59pm-->
+    <string name="lowercaseAM">s ochtends</string>
+    <string name="lowercasePM">s middags</string>
     <!--Assignments-->
     <string name="assignmentDue">Inleverdatum</string>
     <string name="assignmentDueColon">Inleverdatum: </string>
@@ -328,6 +364,7 @@
     <string name="observers">Waarnemers</string>
     <string name="syllabusMissing">Er is geen syllabus toegevoegd.</string>
 
+    <string name="syllabusEventsError">Er is een fout opgetreden bij het laden van uw modules.</string>
     <string name="canvas">Canvas</string>
     <string name="chooseRecipient">Ontvanger(s) kiezen</string>
     <string name="messageHasNoRecipients">Dit bericht heeft momenteel geen ontvangers.</string>
@@ -447,6 +484,7 @@
     <string name="markDone">Gereed markeren</string>
     <string name="moduleItemNotFound">Module-item niet gevonden</string>
 
+    <string name="errorLoadingModules">Er is een fout opgetreden bij het laden van uw modules.</string>
     <string name="help">Help</string>
     <string name="instructor_question">Instructeurvraag</string>
     <string name="link">Link</string>
@@ -459,13 +497,15 @@
 
 
     <!--New Submission Strings -->
-    <string name="textEntry"> Tekstinvoer</string>
-    <string name="onlineURL"> Online URL</string>
+    <string name="textEntry">Tekstinvoer</string>
+    <string name="onlineURL">Online URL</string>
     <string name="enterTextEntry">Tekstonderwerp invoeren</string>
     <string name="fileUpload"> Bestand uploaden</string>
     <string name="oneFileOnly">Je kunt niet meer dan één bestand uploaden</string>
 
 
+    <string name="websiteEntry">Ingang voor website toevoegen</string>
+    <string name="mediaRecordingEntry">Media opnames</string>
     <string name="submit">Inleveren</string>
     <string name="blankSubmission">De indiening mag niet leeg zijn.</string>
     <string name="errorPostingSubmission">Er heeft zich een fout voorgedaan bij het publiceren van de indiening.</string>

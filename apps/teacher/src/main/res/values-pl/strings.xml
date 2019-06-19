@@ -326,7 +326,6 @@
     <string name="assignments_list">Lista zadań</string>
     <string name="syllabus">Program</string>
     <!--End Course Settings-->
-
     <!-- Assignment Details -->
     <string name="multiple_due_dates">Wiele terminów</string>
     <string name="everyone">Każdy</string>
@@ -381,6 +380,7 @@
     <string name="announcement_name_must_be_set">Należy ustawić tytuł ogłoszenia.</string>
     <string name="quiz_title_must_be_set">Należy ustawić tytuł testu.</string>
     <string name="assignment_points_must_be_set">Należy ustawić punkty za zadanie.</string>
+    <string name="assignment_points_must_be_a_number">Możliwe punkty do zdobycia muszą być wartością liczbową</string>
     <string name="quiz_points_must_be_set">Należy ustawić punkty za test.</string>
     <string name="assignee_type_course_sections">Sekcje kursu</string>
     <string name="assignee_type_groups">Grupy</string>

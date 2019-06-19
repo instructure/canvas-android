@@ -52,6 +52,35 @@
     <string name="allowedFileTypes">Types de fichiers autorisés</string>
     <string name="resubmitAssignment">Soumettre à nouveau le travail</string>
 
+    <string name="preview">Aperçu</string>
+    <!--    Student Submission-->
+    <string name="submissionUrlClearTextError">Aucun aperçu disponible pour les URLs utilisant « http:// »</string>
+    <string name="submissionUrlNotAUrlError">Veuillez saisir une URL valide</string>
+    <string name="enterAUrlHereForYourSubmission">Entrez une URL ici pour votre soumission</string>
+    <!-- Student Submission -->
+    <string name="submissionWrite">Écrire&#8230;</string>
+    <!-- Student Submission Details -->
+    <string name="submission">Soumission</string>
+    <string name="submissionVersions">Versions de soumission</string>
+    <string name="submissionDetailsFileTabName">Fichiers (%d)</string>
+    <string name="rubric">Rubrique</string>
+    <string name="submissionDetailsErrorTitle">Erreur de soumission</string>
+    <string name="urlSubmissionDisclaimer">Cet envoi correspond à une URL vers une page externe. Nous avons inclus une capture de ce à quoi la page ressemblait lorsque vous l\'avez soumise.</string>
+    <string name="submissionDetailsNoSubmissionYet">Aucune soumission pour le moment</string>
+    <string name="submissionDetailsAssignmentWasLockedOn">Votre travail a été verrouillé le %1$s à %2$s</string>
+    <string name="submissionDetailsAssignmentWillUnlockOn">Votre travail sera déverrouillé le %1$s à %2$s</string>
+    <string name="submissionDetailsAssignmentLockedByModuleName">Votre travail est verrouillé par le module \"%1$s\"</string>
+    <string name="submissionDetailsAssignmentLockedByModulePrereqs">Votre travail est verrouillé par un prérequis de module</string>
+    <string name="submissionDetailsAssignmentLocked">Devoir verrouillé</string>
+    <string name="webPreview">Aperçu de l’URL saisie</string>
+    <string name="websiteUrl">URL du site web</string>
+    <!-- Grade Cell -->
+    <string name="outOfPointsFormatted">Sur %s points</string>
+    <string name="outOfPointsAbbreviatedFormatted">Sur %s pts</string>
+    <string name="gradeExcused">Excusé</string>
+    <string name="finalGradeFormatted">Note finale : %s</string>
+    <!-- Student rubric tab -->
+    <string name="rubricCustomScore">Score personnalisé</string>
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">Version :</string>
 
@@ -96,6 +125,13 @@
     <string name="next7Days">Les 7 prochains jours</string>
     <string name="days">Jours</string>
 
+    <string name="submissionDetailsDueTodayAt">À rendre aujourd\'hui à %s</string>
+    <string name="submissionDetailsDueTomorrowAt">À rendre demain à %s</string>
+    <string name="submissionDetailsDueYesterdayAt">À rendre hier à %s</string>
+    <string name="submissionDetailsHasNoDueDate">Votre tâche ne possède pas de date d\'échéance</string>
+    <string name="submissionDetailsDueAt">Dû le %1$s à %2$s</string> <!--Ex: Due April 2 at 11:59pm-->
+    <string name="lowercaseAM">am</string>
+    <string name="lowercasePM">pm</string>
     <!--Assignments-->
     <string name="assignmentDue">À rendre le</string>
     <string name="assignmentDueColon">À rendre le : </string>
@@ -328,6 +364,7 @@
     <string name="observers">Observateurs</string>
     <string name="syllabusMissing">Un programme n’a pu être chargé.</string>
 
+    <string name="syllabusEventsError">Une erreur est survenue durant le chargement de vos modules.</string>
     <string name="canvas">Canvas</string>
     <string name="chooseRecipient">Choisir un ou des destinataire(s)</string>
     <string name="messageHasNoRecipients">Ce message n\'a aucun destinataire actuellement</string>
@@ -447,6 +484,7 @@
     <string name="markDone">Marquer comme terminé</string>
     <string name="moduleItemNotFound">Élément de module introuvable</string>
 
+    <string name="errorLoadingModules">Une erreur est survenue durant le chargement de vos modules.</string>
     <string name="help">Aide</string>
     <string name="instructor_question">Question de l\'instructeur</string>
     <string name="link">Lien</string>
@@ -459,13 +497,15 @@
 
 
     <!--New Submission Strings -->
-    <string name="textEntry"> Saisie de texte</string>
-    <string name="onlineURL"> URL en ligne</string>
+    <string name="textEntry">Saisie de texte</string>
+    <string name="onlineURL">URL en ligne</string>
     <string name="enterTextEntry">Accéder à la saisie de texte</string>
     <string name="fileUpload"> Envoi de fichier</string>
     <string name="oneFileOnly">Cette soumission n’accepte qu’un seul téléchargement de fichier</string>
 
 
+    <string name="websiteEntry">Ajouter une entrée de site web</string>
+    <string name="mediaRecordingEntry">Enregistrements multimédias</string>
     <string name="submit">Soumettre</string>
     <string name="blankSubmission">La soumission ne peut pas être vierge.</string>
     <string name="errorPostingSubmission">Une erreur est survenue lors de la publication de la soumission.</string>

@@ -318,7 +318,6 @@
     <string name="assignments_list">Liste des tâches</string>
     <string name="syllabus">Programme</string>
     <!--End Course Settings-->
-
     <!-- Assignment Details -->
     <string name="multiple_due_dates">Dates limites multiples</string>
     <string name="everyone">Tout le monde</string>
@@ -373,6 +372,7 @@
     <string name="announcement_name_must_be_set">Vous devez indiquer un titre d\'annonce</string>
     <string name="quiz_title_must_be_set">Vous devez paramétrer le titre du quiz.</string>
     <string name="assignment_points_must_be_set">Vous devez paramétrer le nombre de points du devoir.</string>
+    <string name="assignment_points_must_be_a_number">Les points possibles doivent être spécifiés par un nombre</string>
     <string name="quiz_points_must_be_set">Vous devez paramétrer le nombre de points du quiz.</string>
     <string name="assignee_type_course_sections">Sections du cours</string>
     <string name="assignee_type_groups">Groupes</string>

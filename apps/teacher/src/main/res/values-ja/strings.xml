@@ -314,7 +314,6 @@
     <string name="assignments_list">課題リスト</string>
     <string name="syllabus">シラバス</string>
     <!--End Course Settings-->
-
     <!-- Assignment Details -->
     <string name="multiple_due_dates">複数の締切日</string>
     <string name="everyone">全員</string>
@@ -369,6 +368,7 @@
     <string name="announcement_name_must_be_set">アナウンスメントのタイトルを設定しなければなりません。</string>
     <string name="quiz_title_must_be_set">クイズのタイトルを設定しなければなりません。</string>
     <string name="assignment_points_must_be_set">課題ポイントを設定しなければなりません。</string>
+    <string name="assignment_points_must_be_a_number">配点は数値で入力してください</string>
     <string name="quiz_points_must_be_set">クイズポイントを設定しなければなりません。</string>
     <string name="assignee_type_course_sections">コース セクション</string>
     <string name="assignee_type_groups">グループ</string>

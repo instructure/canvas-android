@@ -52,6 +52,35 @@
     <string name="allowedFileTypes">Tip Fichye Otorize</string>
     <string name="resubmitAssignment">Resoumèt Sesyon</string>
 
+    <string name="preview">Apèsi</string>
+    <!--    Student Submission-->
+    <string name="submissionUrlClearTextError">Okenn apèsi disponib pou URL ki itilize \'http://\'</string>
+    <string name="submissionUrlNotAUrlError">Tanpri antre yon URL ki valid</string>
+    <string name="enterAUrlHereForYourSubmission">Antre yon URL la a pou soumisyon an</string>
+    <!-- Student Submission -->
+    <string name="submissionWrite">Ekri&#8230;</string>
+    <!-- Student Submission Details -->
+    <string name="submission">Soumisyon</string>
+    <string name="submissionVersions">Vèsyon soumisyon</string>
+    <string name="submissionDetailsFileTabName">Fichye (%d)</string>
+    <string name="rubric">Ribrik</string>
+    <string name="submissionDetailsErrorTitle">Erè Soumisyon</string>
+    <string name="urlSubmissionDisclaimer">Soumisyon sa a se te yon URL a yon paj ekstèn. Nou mete yon apèsi de a kisa paj la te sanble lè li te soumèt la.</string>
+    <string name="submissionDetailsNoSubmissionYet">Poko gen soumisyon</string>
+    <string name="submissionDetailsAssignmentWasLockedOn">Devwa ou a te bloke le %1$s a %2$s</string>
+    <string name="submissionDetailsAssignmentWillUnlockOn">Devwa ou a ap debloke le %1$s a %2$s</string>
+    <string name="submissionDetailsAssignmentLockedByModuleName">Devwa w la bloke pa modil \"%1$s\"</string>
+    <string name="submissionDetailsAssignmentLockedByModulePrereqs">Devwa w la bloke pa yon egzijans modil </string>
+    <string name="submissionDetailsAssignmentLocked">Sesyon Bloke</string>
+    <string name="webPreview">Apèsi URL ki antre a</string>
+    <string name="websiteUrl">URL sit Web</string>
+    <!-- Grade Cell -->
+    <string name="outOfPointsFormatted">Sou %s pwen</string>
+    <string name="outOfPointsAbbreviatedFormatted">Sou %s pts</string>
+    <string name="gradeExcused">Egzante</string>
+    <string name="finalGradeFormatted">Nòt Final: %s</string>
+    <!-- Student rubric tab -->
+    <string name="rubricCustomScore">Nòt pèsonalize</string>
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">Vèsyon:</string>
 
@@ -96,6 +125,13 @@
     <string name="next7Days">7 Pwochen Jou</string>
     <string name="days">Jou</string>
 
+    <string name="submissionDetailsDueTodayAt">Delè jodi a a %s</string>
+    <string name="submissionDetailsDueTomorrowAt">Delè demen a %s</string>
+    <string name="submissionDetailsDueYesterdayAt">Delè yè a %s</string>
+    <string name="submissionDetailsHasNoDueDate">Devwa w la pa gen delai</string>
+    <string name="submissionDetailsDueAt">Delè %1$s a %2$s</string> <!--Ex: Due April 2 at 11:59pm-->
+    <string name="lowercaseAM">am</string>
+    <string name="lowercasePM">pm</string>
     <!--Assignments-->
     <string name="assignmentDue">Delè</string>
     <string name="assignmentDueColon">Delè: </string>
@@ -328,6 +364,7 @@
     <string name="observers">Obsèvatè</string>
     <string name="syllabusMissing">Pa gen yon pwogram ki ajoute.</string>
 
+    <string name="syllabusEventsError">Te gen yon erè pandan chajman modil ou yo.</string>
     <string name="canvas">Canvas</string>
     <string name="chooseRecipient">Chwazi Destinatè...</string>
     <string name="messageHasNoRecipients">Mesaj sa a pa gen destinatè.</string>
@@ -447,6 +484,7 @@
     <string name="markDone">Make tankou li fini</string>
     <string name="moduleItemNotFound">Eleman Modil Entwouvab</string>
 
+    <string name="errorLoadingModules">Te gen yon erè pandan chajman modil ou yo.</string>
     <string name="help">Èd</string>
     <string name="instructor_question">Kesyon Enstriktè</string>
     <string name="link">Lyen</string>
@@ -459,13 +497,15 @@
 
 
     <!--New Submission Strings -->
-    <string name="textEntry"> Antre Tèks</string>
-    <string name="onlineURL"> URL an liy</string>
+    <string name="textEntry">Antre Tèks</string>
+    <string name="onlineURL">URL an liy</string>
     <string name="enterTextEntry">Antre Antre Tèks</string>
     <string name="fileUpload"> Transfè Fichye</string>
     <string name="oneFileOnly">Soumisyon sa a aksepte transfè yon fichye sèlman</string>
 
 
+    <string name="websiteEntry">Ajoute Antre Sit</string>
+    <string name="mediaRecordingEntry">Anrejistreman Medya</string>
     <string name="submit">Soumèt</string>
     <string name="blankSubmission">Soumisyon an pa kapab vid.</string>
     <string name="errorPostingSubmission">Gen yon erè ki fèt nan poste soumisyon an.</string>

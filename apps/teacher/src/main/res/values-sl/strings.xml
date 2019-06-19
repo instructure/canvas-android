@@ -318,7 +318,6 @@
     <string name="assignments_list">Seznam nalog</string>
     <string name="syllabus">Učni načrt</string>
     <!--End Course Settings-->
-
     <!-- Assignment Details -->
     <string name="multiple_due_dates">Več rokov</string>
     <string name="everyone">Vsi</string>
@@ -373,6 +372,7 @@
     <string name="announcement_name_must_be_set">Nastavljen mora biti naslov obvestila.</string>
     <string name="quiz_title_must_be_set">Nastavljen mora biti naslov kviza.</string>
     <string name="assignment_points_must_be_set">Nastavljene morajo biti točke naloge.</string>
+    <string name="assignment_points_must_be_a_number">Možne točke morajo biti numerične.</string>
     <string name="quiz_points_must_be_set">Nastavljene morajo biti točke kviza.</string>
     <string name="assignee_type_course_sections">Sekcije predmeta</string>
     <string name="assignee_type_groups">Skupine</string>

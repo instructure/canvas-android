@@ -326,7 +326,6 @@
     <string name="assignments_list">Список заданий</string>
     <string name="syllabus">Содержание курса</string>
     <!--End Course Settings-->
-
     <!-- Assignment Details -->
     <string name="multiple_due_dates">Множественные даты выполнения</string>
     <string name="everyone">Все</string>
@@ -381,6 +380,7 @@
     <string name="announcement_name_must_be_set">Необходимо установить заголовок оповещения.</string>
     <string name="quiz_title_must_be_set">Необходимо задать заголовок теста.</string>
     <string name="assignment_points_must_be_set">Необходимо задать баллы для задания.</string>
+    <string name="assignment_points_must_be_a_number">Значение возможных баллов должно быть числом</string>
     <string name="quiz_points_must_be_set">Необходимо задать баллы для теста.</string>
     <string name="assignee_type_course_sections">Разделы курса</string>
     <string name="assignee_type_groups">Группы</string>
