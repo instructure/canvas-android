@@ -27,7 +27,7 @@ class DiscussionsInteractionTest : StudentTest() {
 
     @Stub
     @Test
-    fun testDiscussionCreate() {
+    fun testDiscussionCreate_base() {
 
     }
 
@@ -63,7 +63,7 @@ class DiscussionsInteractionTest : StudentTest() {
 
     @Stub
     @Test
-    fun testDiscussionLikePost() {
+    fun testDiscussionLikePost_base() {
         // Users can like entries and the correct like count is displayed, if the liking is enabled
     }
 
@@ -75,7 +75,7 @@ class DiscussionsInteractionTest : StudentTest() {
 
     @Stub
     @Test
-    fun testDiscussionView() {
+    fun testDiscussionView_base() {
 
     }
 
@@ -93,7 +93,7 @@ class DiscussionsInteractionTest : StudentTest() {
 
     @Stub
     @Test
-    fun testDiscussionReply() {
+    fun testDiscussionReply_base() {
 
     }
 

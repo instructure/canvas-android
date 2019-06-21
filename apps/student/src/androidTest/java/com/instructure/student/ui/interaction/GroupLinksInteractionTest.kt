@@ -27,7 +27,7 @@ class GroupLinksInteractionTest : StudentTest() {
 
     @Stub
     @Test
-    fun testGroupLink() {
+    fun testGroupLink_base() {
         // Link to group opens group browser - eg: "/groups/:id"
     }
 
