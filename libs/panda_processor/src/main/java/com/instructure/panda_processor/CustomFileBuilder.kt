@@ -15,44 +15,54 @@
  */
 package com.instructure.panda_processor
 
-class CustomFileBuilder(testCounts: TestCounts, priorityCounts: PriorityCounts, featureCounts: FeatureCounts) {
+import com.instructure.panda_annotations.FeatureCategory
+import com.instructure.panda_annotations.Priority
+import com.instructure.panda_annotations.TestCategory
+
+class CustomFileBuilder(
+        totalWritten: Int,
+        totalStubbed: Int,
+        testCounts: HashMap<TestCategory, TestCount>,
+        priorityCounts: HashMap<Priority, TestCount>,
+        featureCounts: HashMap<FeatureCategory, TestCount>) {
 
     private val contentTemplate = """
         *** Total Test Counts ***
-        Tests Written = ${testCounts.totalWritten}
-        Tests Stubbed = ${testCounts.totalStubbed}
+        Total Tests = ${totalWritten + totalStubbed}
+        Tests Written = $totalWritten
+        Tests Stubbed = $totalStubbed
 
         *** Test Types ***
-        E2E Test Count = stubbed(${testCounts.e2eStubbed}) / written(${testCounts.e2eWritten})
-        Interaction Test Count = stubbed(${testCounts.interactionStubbed}) / written(${testCounts.interactionWritten})
-        Render Test Count = stubbed(${testCounts.renderStubbed}) / written(${testCounts.renderWritten})
+        E2E Test Count = stubbed(${testCounts[TestCategory.E2E]?.stubbed}) / written(${testCounts[TestCategory.E2E]?.written})
+        Interaction Test Count = stubbed(${testCounts[TestCategory.INTERACTION]?.stubbed}) / written(${testCounts[TestCategory.INTERACTION]?.written})
+        Render Test Count = stubbed(${testCounts[TestCategory.RENDER]?.stubbed}) / written(${testCounts[TestCategory.RENDER]?.written})
 
 
         *** Test Priority ***
-        P0 Test Count = stubbed(${priorityCounts.p0Stubbed}) / written(${priorityCounts.p0Written})
-        P1 Test Count = stubbed(${priorityCounts.p1Stubbed}) / written(${priorityCounts.p1Written})
-        P2 Test Count = stubbed(${priorityCounts.p2Stubbed}) / written(${priorityCounts.p2Written})
-        P3 Test Count = stubbed(${priorityCounts.p2Stubbed}) / written(${priorityCounts.p3Written})
+        P0 Test Count = stubbed(${priorityCounts[Priority.P0]?.stubbed}) / written(${priorityCounts[Priority.P0]?.written})
+        P1 Test Count = stubbed(${priorityCounts[Priority.P1]?.stubbed}) / written(${priorityCounts[Priority.P1]?.written})
+        P2 Test Count = stubbed(${priorityCounts[Priority.P2]?.stubbed}) / written(${priorityCounts[Priority.P2]?.written})
+        P3 Test Count = stubbed(${priorityCounts[Priority.P3]?.stubbed}) / written(${priorityCounts[Priority.P3]?.written})
 
         *** Test Feature Coverage ***
-        Assignments = stubbed(${featureCounts.assignmentsStubbed}) / written(${featureCounts.assignmentsWritten})
-        Submissions = stubbed(${featureCounts.submissionsStubbed}) / written(${featureCounts.submissionsWritten})
-        Login = stubbed(${featureCounts.loginStubbed}) / written(${featureCounts.loginWritten})
-        Course = stubbed(${featureCounts.courseStubbed}) / written(${featureCounts.courseWritten})
-        Dashboard = stubbed(${featureCounts.dashboardStubbed}) / written(${featureCounts.dashboardWritten})
-        Settings = stubbed(${featureCounts.settingsStubbed}) / written(${featureCounts.settingsWritten})
-        Pages = stubbed(${featureCounts.pagesStubbed}) / written(${featureCounts.pagesWritten})
-        Discussions = stubbed(${featureCounts.discussionsStubbed}) / written(${featureCounts.discussionsWritten})
-        Modules = stubbed(${featureCounts.modulesStubbed}) / written(${featureCounts.modulesWritten})
-        Inbox = stubbed(${featureCounts.inboxStubbed}) / written(${featureCounts.inboxWritten})
-        Grades = stubbed(${featureCounts.gradesStubbed}) / written(${featureCounts.gradesWritten})
-        Files = stubbed(${featureCounts.filesStubbed}) / written(${featureCounts.filesWritten})
-        Events = stubbed(${featureCounts.eventsStubbed}) / written(${featureCounts.eventsWritten})
-        People = stubbed(${featureCounts.peopleStubbed}) / written(${featureCounts.peopleWritten})
-        Conferences = stubbed(${featureCounts.conferencesStubbed}) / written(${featureCounts.conferencesWritten})
-        Collaborations = stubbed(${featureCounts.collaborationsStubbed}) / written(${featureCounts.collaborationsWritten})
-        Syllabus = stubbed(${featureCounts.syllabusStubbed}) / written(${featureCounts.syllabusWritten})
-        Todos = stubbed(${featureCounts.todosStubbed}) / written(${featureCounts.todosWritten})
+        Assignments = stubbed(${featureCounts[FeatureCategory.ASSIGNMENTS]?.stubbed}) / written(${featureCounts[FeatureCategory.ASSIGNMENTS]?.written})
+        Submissions = stubbed(${featureCounts[FeatureCategory.SUBMISSIONS]?.stubbed}) / written(${featureCounts[FeatureCategory.SUBMISSIONS]?.written})
+        Login = stubbed(${featureCounts[FeatureCategory.LOGIN]?.stubbed}) / written(${featureCounts[FeatureCategory.LOGIN]?.written})
+        Course = stubbed(${featureCounts[FeatureCategory.COURSE]?.stubbed}) / written(${featureCounts[FeatureCategory.COURSE]?.written})
+        Dashboard = stubbed(${featureCounts[FeatureCategory.DASHBOARD]?.stubbed}) / written(${featureCounts[FeatureCategory.DASHBOARD]?.written})
+        Settings = stubbed(${featureCounts[FeatureCategory.SETTINGS]?.stubbed}) / written(${featureCounts[FeatureCategory.SETTINGS]?.written})
+        Pages = stubbed(${featureCounts[FeatureCategory.PAGES]?.stubbed}) / written(${featureCounts[FeatureCategory.PAGES]?.written})
+        Discussions = stubbed(${featureCounts[FeatureCategory.DISCUSSIONS]?.stubbed}) / written(${featureCounts[FeatureCategory.DISCUSSIONS]?.written})
+        Modules = stubbed(${featureCounts[FeatureCategory.MODULES]?.stubbed}) / written(${featureCounts[FeatureCategory.MODULES]?.written})
+        Inbox = stubbed(${featureCounts[FeatureCategory.INBOX]?.stubbed}) / written(${featureCounts[FeatureCategory.INBOX]?.written})
+        Grades = stubbed(${featureCounts[FeatureCategory.GRADES]?.stubbed}) / written(${featureCounts[FeatureCategory.GRADES]?.written})
+        Files = stubbed(${featureCounts[FeatureCategory.FILES]?.stubbed}) / written(${featureCounts[FeatureCategory.FILES]?.written})
+        Events = stubbed(${featureCounts[FeatureCategory.EVENTS]?.stubbed}) / written(${featureCounts[FeatureCategory.EVENTS]?.written})
+        People = stubbed(${featureCounts[FeatureCategory.PEOPLE]?.stubbed}) / written(${featureCounts[FeatureCategory.PEOPLE]?.written})
+        Conferences = stubbed(${featureCounts[FeatureCategory.CONFERENCES]?.stubbed}) / written(${featureCounts[FeatureCategory.CONFERENCES]?.written})
+        Collaborations = stubbed(${featureCounts[FeatureCategory.COLLABORATIONS]?.stubbed}) / written(${featureCounts[FeatureCategory.COLLABORATIONS]?.written})
+        Syllabus = stubbed(${featureCounts[FeatureCategory.SYLLABUS]?.stubbed}) / written(${featureCounts[FeatureCategory.SYLLABUS]?.written})
+        Todos = stubbed(${featureCounts[FeatureCategory.TODOS]?.stubbed}) / written(${featureCounts[FeatureCategory.TODOS]?.written})
     """.trimIndent()
     fun getContent() : String{
         return contentTemplate
@@ -60,67 +70,4 @@ class CustomFileBuilder(testCounts: TestCounts, priorityCounts: PriorityCounts, 
 
 }
 
-data class TestCounts(
-    val total: Int,
-    val totalWritten: Int,
-    val e2eWritten: Int,
-    val interactionWritten: Int,
-    val renderWritten: Int,
-
-    val totalStubbed: Int,
-    val e2eStubbed: Int,
-    val interactionStubbed: Int,
-    val renderStubbed: Int
-)
-
-data class PriorityCounts(
-    val p0Stubbed: Int,
-    val p1Stubbed: Int,
-    val p2Stubbed: Int,
-    val p3Stubbed: Int,
-
-    val p0Written: Int,
-    val p1Written: Int,
-    val p2Written: Int,
-    val p3Written: Int
-)
-
-data class FeatureCounts(
-    val assignmentsStubbed: Int,
-    val submissionsStubbed: Int,
-    val loginStubbed: Int,
-    val courseStubbed: Int,
-    val dashboardStubbed: Int,
-    val settingsStubbed: Int,
-    val pagesStubbed: Int,
-    val discussionsStubbed: Int,
-    val modulesStubbed: Int,
-    val inboxStubbed: Int,
-    val gradesStubbed: Int,
-    val filesStubbed: Int,
-    val eventsStubbed: Int,
-    val peopleStubbed: Int,
-    val conferencesStubbed: Int,
-    val collaborationsStubbed: Int,
-    val syllabusStubbed: Int,
-    val todosStubbed: Int,
-
-    val assignmentsWritten: Int,
-    val submissionsWritten: Int,
-    val loginWritten: Int,
-    val courseWritten: Int,
-    val dashboardWritten: Int,
-    val settingsWritten: Int,
-    val pagesWritten: Int,
-    val discussionsWritten: Int,
-    val modulesWritten: Int,
-    val inboxWritten: Int,
-    val gradesWritten: Int,
-    val filesWritten: Int,
-    val eventsWritten: Int,
-    val peopleWritten: Int,
-    val conferencesWritten: Int,
-    val collaborationsWritten: Int,
-    val syllabusWritten: Int,
-    val todosWritten: Int
-)
+data class TestCount(val stubbed: Int = 0, val written: Int = 0)

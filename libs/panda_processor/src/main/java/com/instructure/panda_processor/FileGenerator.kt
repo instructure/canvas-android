@@ -28,7 +28,7 @@ import javax.lang.model.element.TypeElement
 class FileGenerator : AbstractProcessor(){
 
     override fun getSupportedAnnotationTypes(): MutableSet<String> {
-        return mutableSetOf(TestMetaData::class.java.name, GreetingGenerator::class.java.name)
+        return mutableSetOf(TestMetaData::class.java.name)
     }
 
     override fun getSupportedSourceVersion(): SourceVersion {
@@ -43,12 +43,7 @@ class FileGenerator : AbstractProcessor(){
 
     private fun generateFile(annotationList: List<TestMetaData>){
         val fileName = "Generated_Test_data"
-        val fileContent =
-                CustomFileBuilder(
-                        calculateTestCounts(annotationList),
-                        calculatePriorityCounts(annotationList),
-                        calculateFeatureCounts(annotationList)
-                ).getContent()
+        val fileContent = generateFileContent(annotationList)
 
         val kaptKotlinGeneratedDir = processingEnv.options[KAPT_KOTLIN_GENERATED_OPTION_NAME]
         val file = File(kaptKotlinGeneratedDir, "$fileName.txt")
@@ -56,69 +51,32 @@ class FileGenerator : AbstractProcessor(){
         file.writeText(fileContent)
     }
 
-    private fun calculateTestCounts(annotationList: List<TestMetaData>) = TestCounts(
-            annotationList.filter { it.stubbed }.size,
-            annotationList.filter { it.testCategory == TestCategory.E2E && it.stubbed}.size,
-            annotationList.filter { it.testCategory == TestCategory.INTERACTION && it.stubbed}.size,
-            annotationList.filter { it.testCategory == TestCategory.RENDER && it.stubbed}.size,
+    private fun generateFileContent(annotationList: List<TestMetaData>): String {
+        var totalWritten = 0
+        var totalStubbed = 0
+        val testCounts = HashMap<TestCategory, TestCount>()
+        val priorityCounts = HashMap<Priority, TestCount>()
+        val featureCounts = HashMap<FeatureCategory, TestCount>()
 
-            annotationList.filter { !it.stubbed }.size,
-            annotationList.filter { it.testCategory == TestCategory.E2E && !it.stubbed}.size,
-            annotationList.filter { it.testCategory == TestCategory.INTERACTION && !it.stubbed}.size,
-            annotationList.filter { it.testCategory == TestCategory.RENDER && !it.stubbed}.size
-    )
+        annotationList.forEach { annotation ->
+            val stubbedCount = if(annotation.stubbed) 1 else 0
+            val writtenCount = if(!annotation.stubbed) 1 else 0
+            totalStubbed += stubbedCount
+            totalWritten += writtenCount
+            val testCount = testCounts[annotation.testCategory] ?: TestCount()
+            testCounts[annotation.testCategory] = TestCount(testCount.stubbed + stubbedCount, testCount.written + writtenCount)
+            priorityCounts[annotation.priority] = TestCount(testCount.stubbed + stubbedCount, testCount.written + writtenCount)
+            featureCounts[annotation.featureCategory] = TestCount(testCount.stubbed + stubbedCount, testCount.written + writtenCount)
+        }
 
-    private fun calculatePriorityCounts(annotationList: List<TestMetaData>) = PriorityCounts(
-            annotationList.filter { it.priority == Priority.P0 && it.stubbed }.size,
-            annotationList.filter { it.priority == Priority.P1 && it.stubbed }.size,
-            annotationList.filter { it.priority == Priority.P2 && it.stubbed }.size,
-            annotationList.filter { it.priority == Priority.P3 && it.stubbed }.size,
-
-            annotationList.filter { it.priority == Priority.P0 && !it.stubbed }.size,
-            annotationList.filter { it.priority == Priority.P1 && !it.stubbed }.size,
-            annotationList.filter { it.priority == Priority.P2 && !it.stubbed }.size,
-            annotationList.filter { it.priority == Priority.P3 && !it.stubbed }.size
-    )
-
-    private fun calculateFeatureCounts(annotationList: List<TestMetaData>) = FeatureCounts(
-            annotationList.filter { FeatureCategory.ASSIGNMENTS in listOf(it.featureCategory, it.secondaryFeature) && it.stubbed }.size,
-            annotationList.filter { FeatureCategory.SUBMISSIONS in listOf(it.featureCategory, it.secondaryFeature) && it.stubbed }.size,
-            annotationList.filter { FeatureCategory.LOGIN in listOf(it.featureCategory, it.secondaryFeature) && it.stubbed }.size,
-            annotationList.filter { FeatureCategory.COURSE in listOf(it.featureCategory, it.secondaryFeature) && it.stubbed }.size,
-            annotationList.filter { FeatureCategory.DASHBOARD in listOf(it.featureCategory, it.secondaryFeature) && it.stubbed }.size,
-            annotationList.filter { FeatureCategory.SETTINGS in listOf(it.featureCategory, it.secondaryFeature) && it.stubbed }.size,
-            annotationList.filter { FeatureCategory.PAGES in listOf(it.featureCategory, it.secondaryFeature) && it.stubbed }.size,
-            annotationList.filter { FeatureCategory.DISCUSSIONS in listOf(it.featureCategory, it.secondaryFeature) && it.stubbed }.size,
-            annotationList.filter { FeatureCategory.MODULES in listOf(it.featureCategory, it.secondaryFeature) && it.stubbed }.size,
-            annotationList.filter { FeatureCategory.INBOX in listOf(it.featureCategory, it.secondaryFeature) && it.stubbed }.size,
-            annotationList.filter { FeatureCategory.GRADES in listOf(it.featureCategory, it.secondaryFeature) && it.stubbed }.size,
-            annotationList.filter { FeatureCategory.FILES in listOf(it.featureCategory, it.secondaryFeature) && it.stubbed }.size,
-            annotationList.filter { FeatureCategory.EVENTS in listOf(it.featureCategory, it.secondaryFeature) && it.stubbed }.size,
-            annotationList.filter { FeatureCategory.PEOPLE in listOf(it.featureCategory, it.secondaryFeature) && it.stubbed }.size,
-            annotationList.filter { FeatureCategory.CONFERENCES in listOf(it.featureCategory, it.secondaryFeature) && it.stubbed }.size,
-            annotationList.filter { FeatureCategory.COLLABORATIONS in listOf(it.featureCategory, it.secondaryFeature) && it.stubbed }.size,
-            annotationList.filter { FeatureCategory.SYLLABUS in listOf(it.featureCategory, it.secondaryFeature) && it.stubbed }.size,
-            annotationList.filter { FeatureCategory.TODOS in listOf(it.featureCategory, it.secondaryFeature) && it.stubbed }.size,
-
-            annotationList.filter { FeatureCategory.ASSIGNMENTS in listOf(it.featureCategory, it.secondaryFeature) && !it.stubbed }.size,
-            annotationList.filter { FeatureCategory.SUBMISSIONS in listOf(it.featureCategory, it.secondaryFeature) && !it.stubbed }.size,
-            annotationList.filter { FeatureCategory.LOGIN in listOf(it.featureCategory, it.secondaryFeature) && !it.stubbed }.size,
-            annotationList.filter { FeatureCategory.COURSE in listOf(it.featureCategory, it.secondaryFeature) && !it.stubbed }.size,
-            annotationList.filter { FeatureCategory.DASHBOARD in listOf(it.featureCategory, it.secondaryFeature) && !it.stubbed }.size,
-            annotationList.filter { FeatureCategory.SETTINGS in listOf(it.featureCategory, it.secondaryFeature) && !it.stubbed }.size,
-            annotationList.filter { FeatureCategory.PAGES in listOf(it.featureCategory, it.secondaryFeature) && !it.stubbed }.size,
-            annotationList.filter { FeatureCategory.DISCUSSIONS in listOf(it.featureCategory, it.secondaryFeature) && !it.stubbed }.size,
-            annotationList.filter { FeatureCategory.MODULES in listOf(it.featureCategory, it.secondaryFeature) && !it.stubbed }.size,
-            annotationList.filter { FeatureCategory.INBOX in listOf(it.featureCategory, it.secondaryFeature) && !it.stubbed }.size,
-            annotationList.filter { FeatureCategory.GRADES in listOf(it.featureCategory, it.secondaryFeature) && !it.stubbed }.size,
-            annotationList.filter { FeatureCategory.FILES in listOf(it.featureCategory, it.secondaryFeature) && !it.stubbed }.size,
-            annotationList.filter { FeatureCategory.EVENTS in listOf(it.featureCategory, it.secondaryFeature) && !it.stubbed }.size,
-            annotationList.filter { FeatureCategory.PEOPLE in listOf(it.featureCategory, it.secondaryFeature) && !it.stubbed }.size,
-            annotationList.filter { FeatureCategory.CONFERENCES in listOf(it.featureCategory, it.secondaryFeature) && !it.stubbed }.size,
-            annotationList.filter { FeatureCategory.COLLABORATIONS in listOf(it.featureCategory, it.secondaryFeature) && !it.stubbed }.size,
-            annotationList.filter { FeatureCategory.SYLLABUS in listOf(it.featureCategory, it.secondaryFeature) && !it.stubbed }.size,
-            annotationList.filter { FeatureCategory.TODOS in listOf(it.featureCategory, it.secondaryFeature) && !it.stubbed }.size
-    )
+        return CustomFileBuilder(
+                totalWritten,
+                totalStubbed,
+                testCounts,
+                priorityCounts,
+                featureCounts
+        ).getContent()
+    }
 
     companion object {
         const val KAPT_KOTLIN_GENERATED_OPTION_NAME = "kapt.kotlin.generated"
