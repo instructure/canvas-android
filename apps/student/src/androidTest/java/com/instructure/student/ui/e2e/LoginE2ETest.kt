@@ -15,7 +15,6 @@ class LoginE2ETest : StudentTest() {
     @E2E
     @Test
     @TestMetaData(Priority.P0, FeatureCategory.LOGIN, TestCategory.E2E)
-    @GreetingGenerator(P.P0)
     fun testLoginE2E() {
 
         // Seed data
