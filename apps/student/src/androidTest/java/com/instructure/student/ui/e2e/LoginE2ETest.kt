@@ -2,6 +2,7 @@ package com.instructure.student.ui.e2e
 
 import com.instructure.canvas.espresso.E2E
 import com.instructure.dataseeding.model.CanvasUserApiModel
+import com.instructure.panda_annotations.*
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.seedData
 import org.junit.Test
@@ -13,6 +14,8 @@ class LoginE2ETest : StudentTest() {
 
     @E2E
     @Test
+    @TestMetaData(Priority.P0, FeatureCategory.LOGIN, TestCategory.E2E)
+    @GreetingGenerator(P.P0)
     fun testLoginE2E() {
 
         // Seed data
