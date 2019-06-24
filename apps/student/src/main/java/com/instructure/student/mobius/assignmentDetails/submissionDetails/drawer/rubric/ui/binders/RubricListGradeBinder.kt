@@ -24,7 +24,7 @@ import kotlinx.android.synthetic.main.adapter_rubric_grade.view.*
 
 class RubricListGradeBinder : BasicItemBinder<RubricListData.Grade, RubricListCallback>() {
     override val layoutResId = R.layout.adapter_rubric_grade
-    override val bindBehavior = Item { gradeData, view, _ ->
-        view.gradeCell.setState(gradeData.state)
+    override val bindBehavior = Item { gradeData, _, _ ->
+        gradeCell.setState(gradeData.state)
     }
 }

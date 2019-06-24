@@ -245,6 +245,7 @@ public class RubricRecyclerAdapter extends ExpandableRecyclerAdapter<RubricCrite
                 RubricCriterionRating rubricCriterionRating = new RubricCriterionRating(
                         "null" + (rubricCriterion.getId()),
                         getContext().getString(R.string.score),
+                        null,
                         points
                 );
                 mInsertedOrderHash.put(rubricCriterion.getId(), ++insertCount);

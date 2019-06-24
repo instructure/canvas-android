@@ -69,6 +69,7 @@ object ColorKeeper : PrefManager(PREFERENCE_FILE_NAME) {
         }
     }
 
+    fun colorFromCourseId(courseId: Long) = getOrGenerateColor(CanvasContext.emptyCourseContext(courseId))
 
     /** Gets the color associated with the given contextId if it exists, otherwise generates a new color **/
     @JvmStatic fun getOrGenerateColor(contextId: String)

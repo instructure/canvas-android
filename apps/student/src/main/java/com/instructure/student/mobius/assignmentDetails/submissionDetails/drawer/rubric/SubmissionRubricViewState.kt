@@ -26,18 +26,21 @@ sealed class RubricListData {
     object Empty : RubricListData()
     data class Grade(val state: GradeCellViewState) : RubricListData()
     data class Criterion(
-        val description: String,
+        val title: String,
         val criterionId: String,
-        val showLongDescriptionButton: Boolean,
-        val ratingDescription: String?,
+        val showDescriptionButton: Boolean,
         val ratings: List<RatingData>,
-        val comment: String?
+        val ratingTitle: String?,
+        val ratingDescription: String?,
+        val comment: String?,
+        val tint: Int
     ) : RubricListData()
 }
 
 data class RatingData(
-    val points: String,
-    val description: String?,
+    val id: String,
+    val text: String,
     val isSelected: Boolean,
+    val isAssessed: Boolean,
     val useSmallText: Boolean = false
 )

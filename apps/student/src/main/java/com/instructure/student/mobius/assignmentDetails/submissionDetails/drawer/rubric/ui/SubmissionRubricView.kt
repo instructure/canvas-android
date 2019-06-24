@@ -46,6 +46,10 @@ class SubmissionRubricView(
         override fun longDescriptionClicked(criterionId: String) {
             consumer?.accept(SubmissionRubricEvent.LongDescriptionClicked(criterionId))
         }
+
+        override fun ratingClicked(criterionId: String, ratingId: String) {
+            consumer?.accept(SubmissionRubricEvent.RatingClicked(criterionId, ratingId))
+        }
     })
 
     init {
@@ -72,6 +76,7 @@ class SubmissionRubricView(
 
 interface RubricListCallback : BasicItemCallback {
     fun longDescriptionClicked(criterionId: String)
+    fun ratingClicked(criterionId: String, ratingId: String)
 }
 
 class RubricRecyclerAdapter(callback: RubricListCallback) :

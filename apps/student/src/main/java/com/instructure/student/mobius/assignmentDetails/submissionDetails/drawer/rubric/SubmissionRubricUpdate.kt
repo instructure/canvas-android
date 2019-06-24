@@ -38,6 +38,11 @@ class SubmissionRubricUpdate : UpdateInit<SubmissionRubricModel, SubmissionRubri
                 )
                 Next.dispatch(setOf(effect))
             }
+            is SubmissionRubricEvent.RatingClicked -> {
+                val selectionMap = model.selectedRatingMap + (event.criterionId to event.ratingId)
+                val newModel = model.copy(selectedRatingMap = selectionMap)
+                Next.next(newModel)
+            }
         }
     }
 }
