@@ -64,9 +64,11 @@ class FileGenerator : AbstractProcessor(){
             totalStubbed += stubbedCount
             totalWritten += writtenCount
             val testCount = testCounts[annotation.testCategory] ?: TestCount()
+            val priorityCount = priorityCounts[annotation.priority] ?: TestCount()
+            val featureCount = featureCounts[annotation.featureCategory] ?: TestCount()
             testCounts[annotation.testCategory] = TestCount(testCount.stubbed + stubbedCount, testCount.written + writtenCount)
-            priorityCounts[annotation.priority] = TestCount(testCount.stubbed + stubbedCount, testCount.written + writtenCount)
-            featureCounts[annotation.featureCategory] = TestCount(testCount.stubbed + stubbedCount, testCount.written + writtenCount)
+            priorityCounts[annotation.priority] = TestCount(priorityCount.stubbed + stubbedCount, priorityCount.written + writtenCount)
+            featureCounts[annotation.featureCategory] = TestCount(featureCount.stubbed + stubbedCount, featureCount.written + writtenCount)
         }
 
         return CustomFileBuilder(
