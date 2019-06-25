@@ -21,12 +21,7 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.espresso.matcher.ViewMatchers.hasChildCount
 import androidx.test.espresso.matcher.ViewMatchers.isSelected
-import androidx.test.espresso.web.assertion.WebViewAssertions
-import androidx.test.espresso.web.sugar.Web
-import androidx.test.espresso.web.webdriver.DriverAtoms
-import androidx.test.espresso.web.webdriver.Locator
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.platform.app.InstrumentationRegistry
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.RubricCriterion
 import com.instructure.canvasapi2.models.RubricCriterionRating
@@ -45,7 +40,6 @@ import com.instructure.student.ui.pages.renderPages.SubmissionRubricRenderPage
 import com.instructure.student.ui.utils.assertFontSizeSP
 import com.spotify.mobius.runners.WorkRunner
 import org.hamcrest.CoreMatchers.not
-import org.hamcrest.Matchers
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -196,26 +190,6 @@ class SubmissionRubricRenderTest : StudentRenderTest() {
         )
         loadPageWithViewData(data)
         page.onViewWithText("Small text").assertFontSizeSP(16f)
-    }
-
-    @Test
-    fun displaysDescriptionDialog() {
-        val title = "This is a title"
-        val description = "This is a description. ".repeat(20).trim()
-        val data = dataTemplate.copy(title = "")
-        val fragment = loadPageWithViewData(data)
-        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
-        val view = fragment.getMobiusView()
-        view.displayCriterionDescription(title, """<p>$description</p>""")
-        page.onViewWithText(title).assertDisplayed()
-        Web.onWebView()
-            .withElement(DriverAtoms.findElement(Locator.TAG_NAME, "p"))
-            .check(
-                WebViewAssertions.webMatches(
-                    DriverAtoms.getText(),
-                    Matchers.comparesEqualTo(description)
-                )
-            )
     }
 
     @Test
