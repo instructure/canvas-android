@@ -20,12 +20,17 @@ import com.instructure.dataseeding.model.AssignmentListApiModel
 import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.student.ui.utils.*
 import com.instructure.espresso.ditto.Ditto
+import com.instructure.panda_annotations.FeatureCategory
+import com.instructure.panda_annotations.Priority
+import com.instructure.panda_annotations.TestCategory
+import com.instructure.panda_annotations.TestMetaData
 import org.junit.Test
 
 class AssignmentListPageTest : StudentTest() {
 
     @Test
     @Ditto
+    @TestMetaData(Priority.P1, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
     override fun displaysPageObjects() {
         getToAssignmentsPage(0)
         assignmentListPage.assertPageObjects()
@@ -33,6 +38,7 @@ class AssignmentListPageTest : StudentTest() {
 
     @Test
     @Ditto
+    @TestMetaData(Priority.P1, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
     fun displaysNoAssignmentsView() {
         getToAssignmentsPage(0)
         assignmentListPage.assertDisplaysNoAssignmentsView()
@@ -40,6 +46,7 @@ class AssignmentListPageTest : StudentTest() {
 
     @Test
     @Ditto
+    @TestMetaData(Priority.P1, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
     fun displaysAssignment() {
         val assignment = getToAssignmentsPage().assignmentList[0]
         assignmentListPage.assertHasAssignment(assignment)

@@ -19,15 +19,19 @@ import android.content.Context
 import android.net.Uri
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
+import com.instructure.canvasapi2.managers.OAuthManager
+import com.instructure.canvasapi2.models.AuthenticatedSession
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.HttpHelper
 import com.instructure.canvasapi2.utils.Logger
+import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.pandautils.R
 import com.instructure.pandautils.discussions.DiscussionHtmlTemplates
 import com.instructure.pandautils.views.CanvasWebView
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 import java.net.URLEncoder
 import java.util.regex.Pattern
@@ -54,9 +58,7 @@ fun WebView.loadHtmlWithLTIs(context: Context, isTablet: Boolean, html: String, 
                         val ltiUrl = URLEncoder.encode(url, "UTF-8")
 
                         inBackground {
-                            authenticateLTIUrl(context, url) {
-                                authenticatedUrl = it
-                            }
+                            authenticatedUrl = authenticateLTIUrl(url)
                         }
 
                         // Now we need to replace the iframes src url with the authenticated url
@@ -80,7 +82,7 @@ fun WebView.loadHtmlWithLTIs(context: Context, isTablet: Boolean, html: String, 
 
         loadHtml(CanvasWebView.applyWorkAroundForDoubleSlashesAsUrlSource(newHTML))
     } catch {
-        Logger.d("loadHtmlWithLTIs caught an exception: " + it.message)
+        Logger.e("loadHtmlWithLTIs caught an exception: " + it.message)
     }
 }
 
@@ -95,25 +97,8 @@ fun handleLTIPlaceHolders(placeHolderList: ArrayList<Placeholder>, html: String)
     return newHtml
 }
 
-fun authenticateLTIUrl(context: Context, ltiUrl: String, callback: (ltiUrl: String?) -> Unit) {
-    val newUrl = ApiPrefs.fullDomain + "/api/v1/accounts/self/external_tools/sessionless_launch?url=" + ltiUrl
-    var result: String? = null
-
-    val response = HttpHelper.externalHttpGet(context, newUrl, true).responseBody
-    if (response != null) {
-        val ltiJSON = JSONObject(response)
-        result = ltiJSON.getString("url")
-    }
-
-    if (result != null) {
-        val uri = Uri.parse(result).buildUpon()
-                .appendQueryParameter("display", "borderless")
-                .appendQueryParameter("platform", "android")
-                .build()
-        callback(uri.toString())
-    } else {
-        callback(null)
-    }
+suspend fun authenticateLTIUrl(ltiUrl: String): String {
+    return awaitApi<AuthenticatedSession> { OAuthManager.getAuthenticatedSession(ltiUrl, it) }.sessionUrl
 }
 
 data class Placeholder(val iframeHtml: String, val placeHolderHtml: String)

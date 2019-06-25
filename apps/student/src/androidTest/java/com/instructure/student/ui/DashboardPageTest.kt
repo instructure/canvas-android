@@ -18,6 +18,10 @@ package com.instructure.student.ui
 
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.panda_annotations.FeatureCategory
+import com.instructure.panda_annotations.Priority
+import com.instructure.panda_annotations.TestCategory
+import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLogin
 import org.junit.Test
@@ -25,18 +29,21 @@ import org.junit.Test
 class DashboardPageTest : StudentTest() {
 
     @Test
+    @TestMetaData(Priority.P1, FeatureCategory.DASHBOARD, TestCategory.INTERACTION)
     override fun displaysPageObjects() {
         getToDashboard()
         dashboardPage.assertPageObjects()
     }
 
     @Test
+    @TestMetaData(Priority.P1, FeatureCategory.DASHBOARD, TestCategory.INTERACTION)
     fun displaysAddCourseMessage() {
         getToDashboard(courseCount = 0, pastCourseCount = 1)
         dashboardPage.assertDisplaysAddCourseMessage()
     }
 
     @Test
+    @TestMetaData(Priority.P1, FeatureCategory.DASHBOARD, TestCategory.INTERACTION)
     fun displaysCourses() {
         getToDashboard()
         dashboardPage.assertDisplaysCourses()

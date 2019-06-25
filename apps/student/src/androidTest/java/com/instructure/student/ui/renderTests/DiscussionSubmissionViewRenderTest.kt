@@ -15,6 +15,10 @@
  */
 package com.instructure.student.ui.renderTests
 
+import com.instructure.panda_annotations.FeatureCategory
+import com.instructure.panda_annotations.Priority
+import com.instructure.panda_annotations.TestCategory
+import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.espresso.StudentRenderTest
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.DiscussionSubmissionViewFragment
 import com.instructure.student.ui.pages.renderPages.DiscussionSubmissionViewRenderPage
@@ -26,18 +30,21 @@ class DiscussionSubmissionViewRenderTest : StudentRenderTest() {
     private val linkUrl = "https://www.google.com"
 
     @Test
+    @TestMetaData(Priority.P2, FeatureCategory.SUBMISSIONS, TestCategory.RENDER)
     fun displaysProgressBarPriorToLoading() {
         loadPageWithUrl(linkUrl)
         page.assertDisplaysProgressBar()
     }
 
     @Test
+    @TestMetaData(Priority.P2, FeatureCategory.SUBMISSIONS, TestCategory.RENDER)
     fun showsWebViewAndHidesProgressBarAfterLoading() {
         loadPageWithUrl(linkUrl)
         page.assertDisplaysLoadedPage()
     }
 
     @Test
+    @TestMetaData(Priority.P2, FeatureCategory.SUBMISSIONS, TestCategory.RENDER)
     fun linkOpensWebView() {
         loadPageWithUrl(linkUrl)
         page.assertUrlMatches(linkUrl)
