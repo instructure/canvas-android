@@ -20,6 +20,7 @@ package com.instructure.teacher.ui
 import com.instructure.espresso.TestRail
 import com.instructure.teacher.ui.utils.*
 import com.instructure.espresso.ditto.Ditto
+import com.instructure.espresso.ditto.DittoMode
 import org.junit.Test
 
 class CoursesListPageTest : TeacherTest() {
@@ -33,7 +34,7 @@ class CoursesListPageTest : TeacherTest() {
     }
 
     @Test
-    @Ditto
+    @Ditto(mode = DittoMode.LIVE)
     @TestRail(ID = "C3109494")
     fun displaysNoCoursesView() {
         logIn(defaultToPastCourse = true)
