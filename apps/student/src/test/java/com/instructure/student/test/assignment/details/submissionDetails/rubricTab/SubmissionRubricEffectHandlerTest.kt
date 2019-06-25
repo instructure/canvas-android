@@ -41,7 +41,7 @@ class SubmissionRubricEffectHandlerTest : Assert() {
         connection.accept(SubmissionRubricEffect.ShowLongDescription(description, longDescription))
 
         verify(timeout = 100) {
-            view.displayLongDescription(description, longDescription)
+            view.displayCriterionDescription(description, longDescription)
         }
 
         confirmVerified(view)

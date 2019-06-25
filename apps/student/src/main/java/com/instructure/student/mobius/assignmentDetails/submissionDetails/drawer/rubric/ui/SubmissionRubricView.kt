@@ -18,7 +18,6 @@ package com.instructure.student.mobius.assignmentDetails.submissionDetails.drawe
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.instructure.student.R
 import com.instructure.student.adapter.BasicItemCallback
@@ -30,6 +29,7 @@ import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.ui.binders.RubricListEmptyBinder
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.ui.binders.RubricListGradeBinder
 import com.instructure.student.mobius.common.ui.MobiusView
+import com.instructure.student.router.RouteMatcher
 import com.spotify.mobius.functions.Consumer
 import kotlinx.android.synthetic.main.fragment_submission_rubric.*
 
@@ -67,10 +67,8 @@ class SubmissionRubricView(
 
     override fun applyTheme() = Unit
 
-    fun displayLongDescription(description: String, longDescription: String) {
-        (context as? FragmentActivity)?.supportFragmentManager?.let {
-            SubmissionRubricDescriptionDialog.show(it, description, longDescription)
-        }
+    fun displayCriterionDescription(title: String, description: String) {
+        RouteMatcher.route(context, SubmissionRubricDescriptionFragment.makeRoute(title, description))
     }
 }
 

@@ -39,7 +39,12 @@ class SubmissionRubricUpdate : UpdateInit<SubmissionRubricModel, SubmissionRubri
                 Next.dispatch(setOf(effect))
             }
             is SubmissionRubricEvent.RatingClicked -> {
-                val selectionMap = model.selectedRatingMap + (event.criterionId to event.ratingId)
+                val currentSelection = model.selectedRatingMap[event.criterionId]
+                val selectionMap = if (event.ratingId == currentSelection) {
+                    model.selectedRatingMap - event.criterionId
+                } else {
+                    model.selectedRatingMap + (event.criterionId to event.ratingId)
+                }
                 val newModel = model.copy(selectedRatingMap = selectionMap)
                 Next.next(newModel)
             }

@@ -117,5 +117,42 @@ class SubmissionRubricUpdateTest : Assert() {
             )
     }
 
+    @Test
+    fun `RatingClicked event un-selects the selected rating`() {
+        val assignment = Assignment(
+            rubric = listOf(
+                RubricCriterion(
+                    id = "123",
+                    ratings = mutableListOf(
+                        RubricCriterionRating("_id1", "Rating 1 Title", "Rating 1 Description", 5.5),
+                        RubricCriterionRating("_id2", "Rating 2 Title", "Rating 2 Description", 10.0)
+                    )
+                )
+            )
+        )
+        val submission = Submission(
+            rubricAssessment = hashMapOf(
+                "123" to RubricCriterionAssessment("_id2", 10.0, "This is a comment")
+            )
+        )
+        val model = SubmissionRubricModel(
+            assignment = assignment,
+            submission = submission,
+            selectedRatingMap = mapOf("123" to "_id2")
+        )
+        val event = SubmissionRubricEvent.RatingClicked("123", "_id2")
+        val expectedModel = model.copy(
+            selectedRatingMap = emptyMap()
+        )
+        updateSpec.given(model)
+            .whenEvent(event)
+            .then(
+                assertThatNext(
+                    NextMatchers.hasModel(expectedModel),
+                    NextMatchers.hasNoEffects()
+                )
+            )
+    }
+
 
 }

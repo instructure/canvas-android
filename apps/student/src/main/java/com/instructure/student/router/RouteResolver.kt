@@ -9,6 +9,7 @@ import com.instructure.student.features.files.search.FileSearchFragment
 import com.instructure.student.fragment.*
 import com.instructure.student.mobius.assignmentDetails.submission.text.ui.TextSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submission.url.ui.UrlSubmissionUploadFragment
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.ui.SubmissionRubricDescriptionFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsFragment
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.mobius.syllabus.ui.SyllabusFragment
@@ -100,6 +101,7 @@ object RouteResolver {
             cls.isA<AssignmentFragment>() -> AssignmentFragment.newInstance(route)
             cls.isA<AssignmentDetailsFragment>() -> AssignmentDetailsFragment.newInstance(route)
             cls.isA<SubmissionDetailsFragment>() -> SubmissionDetailsFragment.newInstance(route)
+            cls.isA<SubmissionRubricDescriptionFragment>() -> SubmissionRubricDescriptionFragment.newInstance(route)
             cls.isA<DiscussionListFragment>() -> DiscussionListFragment.newInstance(route)
             cls.isA<DiscussionDetailsFragment>() -> DiscussionDetailsFragment.newInstance(route)
             cls.isA<DiscussionsReplyFragment>() -> DiscussionsReplyFragment.newInstance(route)

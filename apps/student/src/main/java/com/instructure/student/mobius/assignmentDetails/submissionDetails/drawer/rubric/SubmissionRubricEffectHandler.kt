@@ -24,7 +24,7 @@ class SubmissionRubricEffectHandler :
     override fun accept(effect: SubmissionRubricEffect) {
         when (effect) {
             is SubmissionRubricEffect.ShowLongDescription -> {
-                view?.displayLongDescription(effect.description, effect.longDescription)
+                view?.displayCriterionDescription(effect.description, effect.longDescription)
             }
         }
     }

@@ -206,7 +206,7 @@ class SubmissionRubricRenderTest : StudentRenderTest() {
         val fragment = loadPageWithViewData(data)
         InstrumentationRegistry.getInstrumentation().waitForIdleSync()
         val view = fragment.getMobiusView()
-        view.displayLongDescription(title, """<p>$description</p>""")
+        view.displayCriterionDescription(title, """<p>$description</p>""")
         page.onViewWithText(title).assertDisplayed()
         Web.onWebView()
             .withElement(DriverAtoms.findElement(Locator.TAG_NAME, "p"))
