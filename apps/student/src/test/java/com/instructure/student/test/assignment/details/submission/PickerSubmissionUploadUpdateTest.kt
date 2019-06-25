@@ -112,34 +112,6 @@ class PickerSubmissionUploadUpdateTest : Assert() {
     }
 
     @Test
-    fun `VideoClicked event results in LaunchVideoRecorder effect`() {
-        updateSpec
-            .given(initModel)
-            .whenEvent(PickerSubmissionUploadEvent.VideoClicked)
-            .then(
-                assertThatNext(
-                    matchesEffects<PickerSubmissionUploadModel, PickerSubmissionUploadEffect>(
-                        PickerSubmissionUploadEffect.LaunchVideoRecorder
-                    )
-                )
-            )
-    }
-
-    @Test
-    fun `AudioClicked event results in LaunchAudioRecorder effect`() {
-        updateSpec
-            .given(initModel)
-            .whenEvent(PickerSubmissionUploadEvent.AudioClicked)
-            .then(
-                assertThatNext(
-                    matchesEffects<PickerSubmissionUploadModel, PickerSubmissionUploadEffect>(
-                        PickerSubmissionUploadEffect.LaunchAudioRecorder
-                    )
-                )
-            )
-    }
-
-    @Test
     fun `SelectFileClicked event results in LaunchSelectFile effect`() {
         updateSpec
             .given(initModel)

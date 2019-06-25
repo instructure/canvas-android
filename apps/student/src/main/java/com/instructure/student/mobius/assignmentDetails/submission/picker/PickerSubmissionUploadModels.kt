@@ -24,8 +24,6 @@ sealed class PickerSubmissionUploadEvent {
     object SubmitClicked : PickerSubmissionUploadEvent()
     object CameraClicked : PickerSubmissionUploadEvent()
     object GalleryClicked : PickerSubmissionUploadEvent()
-    object VideoClicked : PickerSubmissionUploadEvent()
-    object AudioClicked : PickerSubmissionUploadEvent()
     object SelectFileClicked : PickerSubmissionUploadEvent()
     data class OnFileSelected(val uri: Uri) : PickerSubmissionUploadEvent()
     data class OnFileRemoved(val fileIndex: Int) : PickerSubmissionUploadEvent()
@@ -36,8 +34,6 @@ sealed class PickerSubmissionUploadEffect {
     object LaunchCamera : PickerSubmissionUploadEffect()
     object LaunchGallery : PickerSubmissionUploadEffect()
     object LaunchSelectFile : PickerSubmissionUploadEffect()
-    object LaunchVideoRecorder : PickerSubmissionUploadEffect()
-    object LaunchAudioRecorder : PickerSubmissionUploadEffect()
     data class HandleSubmit(val model: PickerSubmissionUploadModel) : PickerSubmissionUploadEffect()
     data class LoadFileContents(val uri: Uri, val allowedExtensions: List<String>) :
         PickerSubmissionUploadEffect()

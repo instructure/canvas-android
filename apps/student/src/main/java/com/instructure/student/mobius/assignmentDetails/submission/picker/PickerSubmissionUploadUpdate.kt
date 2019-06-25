@@ -33,8 +33,6 @@ class PickerSubmissionUploadUpdate :
         PickerSubmissionUploadEvent.SubmitClicked -> Next.dispatch(setOf(PickerSubmissionUploadEffect.HandleSubmit(model)))
         PickerSubmissionUploadEvent.CameraClicked -> Next.dispatch(setOf(PickerSubmissionUploadEffect.LaunchCamera))
         PickerSubmissionUploadEvent.GalleryClicked -> Next.dispatch(setOf(PickerSubmissionUploadEffect.LaunchGallery))
-        PickerSubmissionUploadEvent.VideoClicked -> Next.dispatch(setOf(PickerSubmissionUploadEffect.LaunchVideoRecorder))
-        PickerSubmissionUploadEvent.AudioClicked -> Next.dispatch(setOf(PickerSubmissionUploadEffect.LaunchAudioRecorder))
         PickerSubmissionUploadEvent.SelectFileClicked -> Next.dispatch(setOf(PickerSubmissionUploadEffect.LaunchSelectFile))
         is PickerSubmissionUploadEvent.OnFileSelected -> Next.dispatch(setOf(PickerSubmissionUploadEffect.LoadFileContents(event.uri, model.allowedExtensions)))
         is PickerSubmissionUploadEvent.OnFileRemoved -> {

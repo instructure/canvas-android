@@ -129,6 +129,11 @@ class StringArg(val default: String = "", val key: String? = null) : ReadWritePr
     override fun getValue(thisRef: Fragment, property: KProperty<*>) = thisRef.arguments?.getString(key ?: property.name, default) ?: default
 }
 
+class StringArrayArg(val default: Array<String> = emptyArray(), val key: String? = null) : ReadWriteProperty<Fragment, Array<String>> {
+    override fun setValue(thisRef: Fragment, property: KProperty<*>, value: Array<String>) = thisRef.nonNullArgs.putStringArray(key ?: property.name, value)
+    override fun getValue(thisRef: Fragment, property: KProperty<*>) = thisRef.arguments?.getStringArray(key ?: property.name) ?: default
+}
+
 class NullableStringArg(val key: String? = null) : ReadWriteProperty<Fragment, String?> {
     override fun setValue(thisRef: Fragment, property: KProperty<*>, value: String?) = thisRef.nonNullArgs.putString(key ?: property.name, value)
     override fun getValue(thisRef: Fragment, property: KProperty<*>) = thisRef.arguments?.getString(key ?: property.name)
