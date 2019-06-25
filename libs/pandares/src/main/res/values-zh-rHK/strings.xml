@@ -795,7 +795,7 @@
     <string name="notification_desc_announcement">在新通告添加到您的課程時收到通知。</string>
     <string name="notification_desc_announcement_created_by_you">在您創建通告，以及有人回覆您的通告時收到通知。</string>
     <string name="notification_desc_grading">在作業/提交項目已評分/變更時以及在等級比重變更時收到通知。</string>
-    <string name="notification_desc_invitation">在邀請參與 Web 會議、群組、協作、同儕檢閱和提醒時收到通知。</string>
+    <string name="notification_desc_invitation">在邀請參與 Web 會議、群組、協作、同儕互評和提醒時收到通知。</string>
     <string name="notification_desc_all_submissions">只限導師和管理員。在作業被提交或重新提交時收到通知。</string>
     <string name="notification_desc_late_grading">只限導師和管理員。在提交遲交作業時收到通知。</string>
     <string name="notification_desc_submission_comment">在提交項目被評論時收到通知。</string>
