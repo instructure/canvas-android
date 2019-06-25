@@ -107,9 +107,9 @@ object APIHelper {
         return linkHeaders
     }
 
-    internal fun parseLinkHeaderResponse(linkField: String): LinkHeaders {
+    internal fun parseLinkHeaderResponse(linkField: String?): LinkHeaders {
         val linkHeaders = LinkHeaders()
-        if (TextUtils.isEmpty(linkField)) {
+        if (linkField.isNullOrEmpty()) {
             return linkHeaders
         }
 
