@@ -22,6 +22,10 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.toApiString
+import com.instructure.panda_annotations.FeatureCategory
+import com.instructure.panda_annotations.Priority
+import com.instructure.panda_annotations.TestCategory
+import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.espresso.StudentRenderTest
 import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsModel
 import com.instructure.student.mobius.assignmentDetails.SubmissionUploadStatus
@@ -49,6 +53,7 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
     }
 
     @Test
+    @TestMetaData(Priority.P2, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER)
     fun displaysToolbarTitles() {
         val model = baseModel.copy()
         loadPageWithModel(model)
@@ -57,6 +62,7 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
     }
 
     @Test
+    @TestMetaData(Priority.P2, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER)
     fun displaysTitleDataNotSubmitted() {
         val assignment = Assignment(
             name = "Test Assignment",
@@ -70,6 +76,7 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
     }
 
     @Test
+    @TestMetaData(Priority.P2, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER)
     fun displaysTitleDataSubmitted() {
         val submission = Submission(workflowState = "submitted")
         val assignment = Assignment(
@@ -85,6 +92,7 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
     }
 
     @Test
+    @TestMetaData(Priority.P2, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER)
     fun displaysDueDate() {
         val expectedDueDate = "January 31, 2050 at 11:59 PM"
         val calendar = Calendar.getInstance().apply { set(2050, 0, 31, 23, 59, 0) }
@@ -98,6 +106,7 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
     }
 
     @Test
+    @TestMetaData(Priority.P2, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER)
     fun displaysNoDueDate() {
         val model = baseModel.copy(assignmentResult = DataResult.Success(Assignment(name = "Test Assignment")))
         loadPageWithModel(model)
@@ -105,6 +114,7 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
     }
 
     @Test
+    @TestMetaData(Priority.P2, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER)
     fun displaysNoneSubmissionType() {
         val assignment = Assignment(
             name = "Test Assignment",
@@ -116,6 +126,7 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
     }
 
     @Test
+    @TestMetaData(Priority.P2, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER)
     fun displaysNotGradedSubmissionType() {
         val assignment = Assignment(
             name = "Test Assignment",
