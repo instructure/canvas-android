@@ -204,8 +204,6 @@ public class OpenMediaAsyncTaskLoader extends AsyncTaskLoader<OpenMediaAsyncTask
                 bundle.putString(Const.INTERNAL_URL, url);
                 bundle.putString(Const.ACTION_BAR_TITLE, filename);
                 loadedMedia.setHtmlBundle(bundle);
-            } else if (Utils.isAmazonDevice()) {
-                attemptDownloadFile(context, intent, loadedMedia, url, filename);
             } else {
                 loadedMedia.setHtmlFile(isHtmlFile());
                 Uri uri = attemptConnection(url);

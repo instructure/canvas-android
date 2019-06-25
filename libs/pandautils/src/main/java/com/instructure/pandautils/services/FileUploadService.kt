@@ -73,7 +73,7 @@ class FileUploadService @JvmOverloads constructor(name: String = FileUploadServi
         val notificationId = notificationId(bundle)
         val fileSubmitObjects = bundle?.getParcelableArrayList<FileSubmitObject>(Const.FILES) ?: return
         val assignment = bundle.getParcelable<Assignment>(Const.ASSIGNMENT)
-        val submissionId = if (bundle.containsKey(Const.SUBMISSION)) bundle.getLong(Const.SUBMISSION) else null
+        val submissionId = if (bundle.containsKey(Const.SUBMISSION_ID)) bundle.getLong(Const.SUBMISSION_ID) else null
 
         uploadCount = fileSubmitObjects.size
         showNotification(notificationId, uploadCount)
@@ -98,7 +98,7 @@ class FileUploadService @JvmOverloads constructor(name: String = FileUploadServi
         val position = bundle.getInt(Const.POSITION)
         val parentFolderId = if (bundle.containsKey(Const.PARENT_FOLDER_ID)) bundle.getLong(Const.PARENT_FOLDER_ID) else null
         val notificationId = notificationId(bundle)
-        val submissionId = if (bundle.containsKey(Const.SUBMISSION)) bundle.getLong(Const.SUBMISSION) else null
+        val submissionId = if (bundle.containsKey(Const.SUBMISSION_ID)) bundle.getLong(Const.SUBMISSION_ID) else null
 
         val attachments = mutableListOf<Attachment>()
 
@@ -168,7 +168,7 @@ class FileUploadService @JvmOverloads constructor(name: String = FileUploadServi
         bundle: Bundle
     ) {
         val notificationId = notificationId(bundle)
-        val submissionId = if (bundle.containsKey(Const.SUBMISSION)) bundle.getLong(Const.SUBMISSION) else null
+        val submissionId = if (bundle.containsKey(Const.SUBMISSION_ID)) bundle.getLong(Const.SUBMISSION_ID) else null
         SubmissionManager.postSubmissionAttachmentsSynchronous(courseId, assignment.id, attachmentsIds)?.let {
             updateSubmissionComplete(notificationId)
             broadcastAllUploadsCompleted(attachments, submissionId, assignment.name)
@@ -181,7 +181,7 @@ class FileUploadService @JvmOverloads constructor(name: String = FileUploadServi
     private fun broadcastAllUploadsCompleted(attachments: List<Attachment>, submissionId: Long? = null, assignmentName: String? = null) {
         val status = Intent(ALL_UPLOADS_COMPLETED)
         status.putParcelableArrayListExtra(Const.ATTACHMENTS, ArrayList(attachments))
-        submissionId?.let { status.putExtra(Const.SUBMISSION, it) }
+        submissionId?.let { status.putExtra(Const.SUBMISSION_ID, it) }
         assignmentName?.let { status.putExtra(Const.ASSIGNMENT_NAME, it) }
 
         FileUploadEvent(FileUploadNotification(status, attachments)).postSticky()
@@ -238,7 +238,7 @@ class FileUploadService @JvmOverloads constructor(name: String = FileUploadServi
 
         val bundle = Bundle()
         bundle.putString(Const.MESSAGE, message)
-        submissionId?.let { bundle.putLong(Const.SUBMISSION, it) }
+        submissionId?.let { bundle.putLong(Const.SUBMISSION_ID, it) }
         assignmentName?.let { bundle.putString(Const.ASSIGNMENT_NAME, it) }
         attachments?.let { bundle.putParcelableArrayList(Const.ATTACHMENTS, ArrayList(it)) }
 
@@ -288,8 +288,8 @@ class FileUploadService @JvmOverloads constructor(name: String = FileUploadServi
     }
 
     private fun notificationId(extras: Bundle?): Int {
-        return if (extras?.containsKey(Const.SUBMISSION) == true) {
-            extras.getLong(Const.SUBMISSION).toInt()
+        return if (extras?.containsKey(Const.SUBMISSION_ID) == true) {
+            extras.getLong(Const.SUBMISSION_ID).toInt()
         } else {
             NOTIFICATION_ID
         }
@@ -415,7 +415,7 @@ class FileUploadService @JvmOverloads constructor(name: String = FileUploadServi
             putParcelableArrayList(Const.FILES, fileSubmitObjects)
             putLong(Const.COURSE_ID, courseId)
             putParcelable(Const.ASSIGNMENT, assignment)
-            dbSubmissionId?.let { putLong(Const.SUBMISSION, dbSubmissionId) }
+            dbSubmissionId?.let { putLong(Const.SUBMISSION_ID, dbSubmissionId) }
             additionalAttachmentIds?.let { putLongArray(Const.ATTACHMENTS, it.toLongArray()) }
         }
 

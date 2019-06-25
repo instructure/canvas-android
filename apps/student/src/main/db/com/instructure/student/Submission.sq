@@ -31,18 +31,22 @@ CREATE TABLE submission (
     errorFlag INTEGER as Boolean NOT NULL DEFAULT 0,
     assignmentGroupCategoryId INTEGER
 );
---
+
 insertOnlineTextSubmission:
-INSERT INTO submission (submissionEntry, assignmentName, assignmentId, canvasContext, submissionType) --, canvasContext, submissionType)
+INSERT INTO submission (submissionEntry, assignmentName, assignmentId, canvasContext, submissionType)
 VALUES (?, ?, ?, ?, "online_text_entry");
---
+
 insertOnlineUrlSubmission:
 INSERT INTO submission (submissionEntry, assignmentName, assignmentId, canvasContext, submissionType)
 VALUES (?, ?, ?, ?, "online_url"); --"basic_lti_launch" else "online_url"
---
+
 insertOnlineUploadSubmission:
 INSERT INTO submission (assignmentName, assignmentId, assignmentGroupCategoryId, canvasContext, submissionType)
 VALUES (?, ?, ?, ?, "online_upload");
+
+insertMediaSubmission:
+INSERT INTO submission(assignmentName, assignmentId, canvasContext, submissionType)
+VALUES(?, ?, ?, ?);
 
 getAllSubmissions:
 SELECT *

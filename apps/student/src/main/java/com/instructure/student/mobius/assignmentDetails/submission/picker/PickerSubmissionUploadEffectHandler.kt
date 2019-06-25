@@ -20,6 +20,7 @@ import android.content.Context
 import android.net.Uri
 import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.pandautils.models.FileSubmitObject
+import com.instructure.pandautils.services.NotoriousUploadService
 import com.instructure.pandautils.utils.FileUploadUtils
 import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerSubmissionUploadView
 import com.instructure.student.mobius.common.ui.EffectHandler
@@ -107,7 +108,9 @@ class PickerSubmissionUploadEffectHandler(private val context: Context) :
                 context,
                 model.canvasContext,
                 model.assignmentId,
-                model.assignmentName
+                model.assignmentName,
+                model.files.first().fullPath,
+                NotoriousUploadService.ACTION.ASSIGNMENT_SUBMISSION // TODO: Make this more dynamic when everything else is wired up
             )
         } else {
             SubmissionService.startFileSubmission(
