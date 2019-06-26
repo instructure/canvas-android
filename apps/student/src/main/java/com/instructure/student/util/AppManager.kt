@@ -17,8 +17,6 @@
 
 package com.instructure.student.util
 
-import android.content.Context
-import android.content.res.Configuration
 import android.webkit.WebView
 import androidx.core.content.ContextCompat
 import com.crashlytics.android.Crashlytics
@@ -26,15 +24,12 @@ import com.crashlytics.android.core.CrashlyticsCore
 import com.google.android.gms.analytics.GoogleAnalytics
 import com.google.android.gms.analytics.HitBuilders
 import com.google.android.gms.analytics.Tracker
-import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.pageview.PageViewUploadService
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.utils.ColorKeeper
-import com.instructure.pandautils.utils.LocaleUtils
 import com.instructure.student.BuildConfig
 import com.instructure.student.R
-import com.instructure.student.activity.LoginActivity
 import com.instructure.student.service.StudentPageViewService
 import com.instructure.student.tasks.StudentLogoutTask
 import com.pspdfkit.PSPDFKit
@@ -71,18 +66,6 @@ class AppManager : com.instructure.canvasapi2.AppManager(), AnalyticsEventHandli
         }
 
         PageViewUploadService.schedule(this, StudentPageViewService::class.java)
-    }
-
-    override fun attachBaseContext(base: Context) {
-        /* Need to set context in ContextKeeper here because LocaleUtils.wrapContext() accesses shared prefs
-         which uses ContextKeeper, but attachBaseContext occurs before ContentProvider init */
-        ContextKeeper.appContext = base
-        super.attachBaseContext(LocaleUtils.wrapContext(base))
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-        LocaleUtils.wrapContext(this)
     }
 
     override fun trackButtonPressed(buttonName: String?, buttonValue: Long?) {
@@ -188,14 +171,6 @@ class AppManager : com.instructure.canvasapi2.AppManager(), AnalyticsEventHandli
 
     override fun performLogoutOnAuthError() {
         StudentLogoutTask(LogoutTask.Type.LOGOUT).execute()
-    }
-
-    companion object {
-
-        fun restartApp(context: Context) {
-            LocaleUtils.restartApp(context, LoginActivity::class.java)
-        }
-
     }
 
 }

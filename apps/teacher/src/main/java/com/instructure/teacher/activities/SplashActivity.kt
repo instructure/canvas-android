@@ -28,16 +28,15 @@ import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.ThemeManager
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.*
-import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.ApiType
-import com.instructure.canvasapi2.utils.LinkHeaders
-import com.instructure.canvasapi2.utils.Logger
+import com.instructure.canvasapi2.utils.*
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.toast
+import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
 import com.instructure.teacher.fragments.NotATeacherFragment
 import com.instructure.teacher.utils.TeacherPrefs
@@ -68,6 +67,14 @@ class SplashActivity : AppCompatActivity() {
         startUp = weave {
             // Grab user teacher status
             try {
+
+                val user = awaitApi<User> { UserManager.getSelf(true, it) }
+                val shouldRestartForLocaleChange = setupUser(user)
+                if (shouldRestartForLocaleChange) {
+                    if (BuildConfig.DEBUG) toast(R.string.localeRestartMessage)
+                    LocaleUtils.restartApp(this@SplashActivity, LoginActivity::class.java)
+                    return@weave
+                }
 
                 // Determine if user is a Teacher, Ta, or Designer
                 if (!TeacherPrefs.isConfirmedTeacher) {
@@ -140,6 +147,13 @@ class SplashActivity : AppCompatActivity() {
             canvasLoadingView.announceForAccessibility(getString(R.string.loading))
             finish()
         }
+    }
+
+    /** Caches the user in ApiPrefs. Returns true if the user's locale has changed and an app restart is required. */
+    private fun setupUser(user: User): Boolean {
+        val oldLocale = ApiPrefs.effectiveLocale
+        ApiPrefs.user = user
+        return ApiPrefs.effectiveLocale != oldLocale
     }
 
     override fun onStop() {

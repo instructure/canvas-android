@@ -41,7 +41,6 @@ import com.instructure.student.BuildConfig
 import com.instructure.student.R
 import com.instructure.student.fragment.InboxFragment
 import com.instructure.student.service.StudentPageViewService
-import com.instructure.student.util.AppManager
 import com.instructure.student.util.StudentPrefs
 import kotlinx.coroutines.Job
 import retrofit2.Call
@@ -165,7 +164,7 @@ abstract class CallbackActivity : ParentActivity(), InboxFragment.OnUnreadCountI
             val shouldRestartForLocaleChange = setupUser(user, type)
             if (shouldRestartForLocaleChange) {
                 if (BuildConfig.DEBUG) toast(R.string.localeRestartMessage)
-                AppManager.restartApp(this@CallbackActivity)
+                LocaleUtils.restartApp(this@CallbackActivity, LoginActivity::class.java)
             } else {
                 loadInitialData()
             }
