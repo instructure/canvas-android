@@ -53,9 +53,6 @@ class AssignmentBinder : BaseBinder() {
             } else {
                 holder.points.visibility = View.VISIBLE
                 BaseBinder.setupGradeText(context, holder.points, assignment, submission, courseColor)
-                // Set accessibility text
-                val outOf = context.resources.getString(R.string.outOf)
-                holder.points.contentDescription = holder.points.text.toString().replace("/", " $outOf ")
             }
 
 

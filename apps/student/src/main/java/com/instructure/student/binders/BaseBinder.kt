@@ -125,10 +125,15 @@ open class BaseBinder {
                 textView.text = grade
                 textView.setTextAppearance(context, R.style.TextStyle_Grade)
                 textView.setBackgroundDrawable(createGradeIndicatorBackground(context, color))
+                // Set accessibility text
+                val outOf = context.resources.getString(R.string.outOf)
+                textView.contentDescription = textView.text.toString().replace("/", " $outOf ")
+
             } else {
                 textView.text = grade
                 textView.setTextAppearance(context, R.style.TextStyle_NoGrade)
                 textView.setBackgroundDrawable(null)
+                textView.contentDescription = grade
             }
         }
 
