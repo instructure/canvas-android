@@ -40,7 +40,19 @@ object LocaleUtils {
     @JvmStatic
     @Suppress("DEPRECATION")
     fun wrapContext(base: Context): Context {
-        val localeString = ApiPrefs.effectiveLocale.replace("-x-", "-inst")
+        var localeString = ApiPrefs.effectiveLocale
+
+        // Replace the private use identifier "-x-" with the padded "-inst" if the variant is less than 5 letters
+        val localeParts = localeString.split("-x-")
+        if (localeParts.size > 1) {
+            localeString = if (localeParts[1].length < 5) {
+                "${localeParts[0]}-inst${localeParts[1]}" // da-x-k12 -> da-instk12
+            } else {
+                // Only take the first 8 characters, the maximum size of locale variants
+                "${localeParts[0]}-${localeParts[1].take(8)}" // en-AU-x-unimelb -> en-AU-unimelb
+            }
+        }
+
         val locale = if (localeString == ApiPrefs.DEVICE_LOCALE) {
             ConfigurationCompat.getLocales(Resources.getSystem().configuration)[0]
         } else {
