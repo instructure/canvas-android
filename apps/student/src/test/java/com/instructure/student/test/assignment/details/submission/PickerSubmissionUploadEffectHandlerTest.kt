@@ -200,7 +200,7 @@ class PickerSubmissionUploadEffectHandlerTest : Assert() {
 
         connection.accept(PickerSubmissionUploadEffect.LoadFileContents(uri, allowedExtensions))
 
-        verify(timeout = 100) {
+        verify(timeout = 1000) {
             view.showBadExtensionDialog(allowedExtensions)
         }
 
@@ -229,7 +229,7 @@ class PickerSubmissionUploadEffectHandlerTest : Assert() {
 
         connection.accept(PickerSubmissionUploadEffect.LoadFileContents(uri, emptyList()))
 
-        verify(timeout = 300) {
+        verify(timeout = 1000) {
             view.showFileErrorMessage(errorMessage)
         }
 
