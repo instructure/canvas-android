@@ -795,7 +795,7 @@
     <string name="notification_desc_announcement">当课程中有新公告时收到通知。</string>
     <string name="notification_desc_announcement_created_by_you">当您创建公告且有人回复您的公告时收到通知。</string>
     <string name="notification_desc_grading">当作业/提交项获得评分/更改及当评分权重更改时收到通知。</string>
-    <string name="notification_desc_invitation">收到Web会议邀请、小组、协作、同行评审和提醒通知。</string>
+    <string name="notification_desc_invitation">收到Web会议邀请、小组、协作、同伴互评和提醒通知。</string>
     <string name="notification_desc_all_submissions">仅限讲师和管理员。当提交或重新提交作业时收到通知。</string>
     <string name="notification_desc_late_grading">仅限讲师和管理员。当延迟提交作业时收到通知。</string>
     <string name="notification_desc_submission_comment">当有人对您的提交项进行评论时收到通知。</string>
