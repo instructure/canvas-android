@@ -40,10 +40,11 @@ import org.junit.Test
 import java.util.concurrent.Executors
 
 class UploadStatusSubmissionEffectHandlerTest : Assert() {
+    private val submissionId = 123L
     private val context: Context = mockk(relaxed = true)
     private val view: UploadStatusSubmissionView = mockk(relaxed = true)
     private val eventConsumer: Consumer<UploadStatusSubmissionEvent> = mockk(relaxed = true)
-    private val effectHandler = UploadStatusSubmissionEffectHandler(context)
+    private val effectHandler = UploadStatusSubmissionEffectHandler(context, submissionId)
     private val connection = effectHandler.connect(eventConsumer)
 
     @ExperimentalCoroutinesApi
@@ -55,8 +56,6 @@ class UploadStatusSubmissionEffectHandlerTest : Assert() {
 
     @Test
     fun `LoadPersistedFiles results in OnPersistedSubmissionLoaded event`() {
-        val submissionId = 123L
-
         val list = listOf(
             FileSubmission.Impl(
                 0,
@@ -100,8 +99,6 @@ class UploadStatusSubmissionEffectHandlerTest : Assert() {
 
     @Test
     fun `receiver getting called results in OnFilesRefreshed event`() {
-        val submissionId = 123L
-
         val file = FileSubmitObject("File Name", 1L, "contentType", "fullPath")
         val list = listOf(
             FileSubmission.Impl(
@@ -150,6 +147,21 @@ class UploadStatusSubmissionEffectHandlerTest : Assert() {
     }
 
     @Test
+    fun `receiver getting called with wrong submission ID results in no event`() {
+        val intent = mockk<Intent>()
+        every { intent.hasExtra(Const.SUBMISSION) } returns true
+        every { intent.extras.getLong(Const.SUBMISSION) } returns submissionId + 1
+
+        effectHandler.receiver.onReceive(context, intent)
+
+        verify(exactly = 0) {
+            eventConsumer.accept(any())
+        }
+
+        confirmVerified(eventConsumer)
+    }
+
+    @Test
     fun `receiver getting called with no submission ID results in no event`() {
         val intent = mockk<Intent>()
         every { intent.hasExtra(Const.SUBMISSION) } returns false
@@ -179,13 +191,21 @@ class UploadStatusSubmissionEffectHandlerTest : Assert() {
 
     @Test
     fun `onUploadProgress results in OnUploadProgressChanged event`() {
-        effectHandler.onUploadProgress(ProgressEvent(0, 1, 2, 3))
+        effectHandler.onUploadProgress(ProgressEvent(0, submissionId, 2, 3))
 
 
         verify(timeout = 100) {
-            eventConsumer.accept(UploadStatusSubmissionEvent.OnUploadProgressChanged(0, 1, 2))
+            eventConsumer.accept(UploadStatusSubmissionEvent.OnUploadProgressChanged(0, submissionId, 2))
         }
     }
 
+    @Test
+    fun `onUploadProgress does not result in OnUploadProgressChanged event when submission ID does not match`() {
+        effectHandler.onUploadProgress(ProgressEvent(0, submissionId + 1, 2, 3))
 
+
+        verify(exactly = 0) {
+            eventConsumer.accept(any())
+        }
+    }
 }

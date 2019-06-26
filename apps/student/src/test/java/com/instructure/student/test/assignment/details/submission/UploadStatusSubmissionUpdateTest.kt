@@ -132,23 +132,6 @@ class UploadStatusSubmissionUpdateTest : Assert() {
     }
 
     @Test
-    fun `OnFilesRefreshed event with wrong submission id results in no model change`() {
-        val badSubmissionId = 321L
-        val startModel = initModel.copy()
-
-        updateSpec
-            .given(startModel)
-            .whenEvent(
-                UploadStatusSubmissionEvent.OnFilesRefreshed(
-                    false,
-                    badSubmissionId,
-                    listOf(initFile)
-                )
-            )
-            .then(assertThatNext(NextMatchers.hasNothing()))
-    }
-
-    @Test
     fun `OnFilesRefreshed event results in model file states getting reset`() {
         val startModel = initModel.copy(
             isFailed = false,
@@ -198,19 +181,6 @@ class UploadStatusSubmissionUpdateTest : Assert() {
                     NextMatchers.hasNoEffects()
                 )
             )
-    }
-
-    @Test
-    fun `OnUploadProgressChanged event with wrong submission id results in no model change`() {
-        val badSubmissionId = 321L
-        val startModel = initModel.copy()
-
-        updateSpec
-            .given(startModel)
-            .whenEvent(
-                UploadStatusSubmissionEvent.OnUploadProgressChanged(0, badSubmissionId, 0)
-            )
-            .then(assertThatNext(NextMatchers.hasNothing()))
     }
 
     @Test

@@ -36,7 +36,7 @@ import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 
-class UploadStatusSubmissionEffectHandler(val context: Context) : EffectHandler<UploadStatusSubmissionView, UploadStatusSubmissionEvent, UploadStatusSubmissionEffect>() {
+class UploadStatusSubmissionEffectHandler(val context: Context, val submissionId: Long) : EffectHandler<UploadStatusSubmissionView, UploadStatusSubmissionEvent, UploadStatusSubmissionEffect>() {
 
     internal val receiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -46,6 +46,9 @@ class UploadStatusSubmissionEffectHandler(val context: Context) : EffectHandler<
 
             val submissionId = intent!!.extras!!.getLong(Const.SUBMISSION)
 
+            if (submissionId != this@UploadStatusSubmissionEffectHandler.submissionId) {
+                return // Since there could be multiple submissions at the same time, we only care about events for our submission id
+            }
             launch {
                 val data = loadPersistedData(submissionId, context)
                 consumer.accept(
@@ -62,6 +65,9 @@ class UploadStatusSubmissionEffectHandler(val context: Context) : EffectHandler<
     @Suppress("unused", "UNUSED_PARAMETER")
     @Subscribe
     fun onUploadProgress(event: ProgressEvent) {
+        if (event.submissionId != submissionId) {
+            return // Since there could be multiple submissions at the same time, we only care about events for our submission id
+        }
         consumer.accept(
             UploadStatusSubmissionEvent.OnUploadProgressChanged(
                 event.fileIndex,

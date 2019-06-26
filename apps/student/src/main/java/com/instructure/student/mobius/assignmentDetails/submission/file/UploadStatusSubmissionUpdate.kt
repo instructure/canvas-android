@@ -37,24 +37,15 @@ class UploadStatusSubmissionUpdate :
             Next.next(model.copy(isLoading = false, files = event.files, isFailed = event.failed))
         }
         is UploadStatusSubmissionEvent.OnFilesRefreshed -> {
-            // On a refresh, clear out all existing files, but only if it matches our submission
-            if (event.submissionId != model.submissionId) {
-                Next.noChange()
-            } else {
-                Next.next(
-                    model.copy(files = event.files, isFailed = event.failed, uploadedBytes = null)
-                )
-            }
+            Next.next(
+                model.copy(files = event.files, isFailed = event.failed, uploadedBytes = null)
+            )
         }
         is UploadStatusSubmissionEvent.OnUploadProgressChanged -> {
-            if (event.submissionId != model.submissionId) {
-                Next.noChange()
-            } else {
-                val uploadedFileSize = model.files.take(event.fileIndex).fold(0) { sum, file ->
-                    sum + file.size.toInt()
-                }
-                Next.next(model.copy(uploadedBytes = uploadedFileSize + event.uploaded.toInt()))
+            val uploadedFileSize = model.files.take(event.fileIndex).fold(0) { sum, file ->
+                sum + file.size.toInt()
             }
+            Next.next(model.copy(uploadedBytes = uploadedFileSize + event.uploaded.toInt()))
         }
     }
 }
