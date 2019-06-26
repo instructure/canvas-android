@@ -29,8 +29,8 @@ import java.util.*
 
 object LocaleUtils {
 
-    private const val LANGUAGES_PENDING_INTENT_KEY = "languagesPendingIntentKey"
-    private const val LANGUAGES_PENDING_INTENT_ID = 654321
+    const val LANGUAGES_PENDING_INTENT_KEY = "languagesPendingIntentKey"
+    const val LANGUAGES_PENDING_INTENT_ID = 654321
 
     @JvmStatic
     fun getSupportedLanguageTags() : Array<String> {
@@ -38,7 +38,7 @@ object LocaleUtils {
     }
 
     @JvmStatic
-    @Suppress("DEPRECATION")
+    @Suppress("DEPRECATION", "UNUSED")
     fun wrapContext(base: Context): Context {
         var localeString = ApiPrefs.effectiveLocale
 

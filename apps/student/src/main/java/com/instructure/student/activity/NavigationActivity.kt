@@ -52,10 +52,7 @@ import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.GroupManager
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.*
-import com.instructure.canvasapi2.utils.APIHelper
-import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.Logger
-import com.instructure.canvasapi2.utils.MasqueradeHelper
+import com.instructure.canvasapi2.utils.*
 import com.instructure.canvasapi2.utils.weave.*
 import com.instructure.interactions.FragmentInteractions
 import com.instructure.interactions.FullScreenInteractions
@@ -70,8 +67,6 @@ import com.instructure.pandautils.dialogs.UploadFilesDialog
 import com.instructure.pandautils.models.PushNotification
 import com.instructure.pandautils.receivers.PushExternalReceiver
 import com.instructure.pandautils.utils.*
-import com.instructure.pandautils.utils.Const.LANGUAGES_PENDING_INTENT_ID
-import com.instructure.pandautils.utils.Const.LANGUAGES_PENDING_INTENT_KEY
 import com.instructure.student.R
 import com.instructure.student.dialog.BookmarkCreationDialog
 import com.instructure.student.events.CoreDataFinishedLoading
@@ -79,7 +74,6 @@ import com.instructure.student.events.CourseColorOverlayToggledEvent
 import com.instructure.student.events.ShowGradesToggledEvent
 import com.instructure.student.events.UserUpdatedEvent
 import com.instructure.student.fragment.*
-import com.instructure.student.mobius.common.ui.SubmissionService
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.router.RouteResolver
 import com.instructure.student.tasks.StudentLogoutTask
@@ -817,8 +811,8 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     }
 
     private fun hasPendingLanguageIntent(extras: Bundle?): Boolean {
-        return extras != null && extras.containsKey(LANGUAGES_PENDING_INTENT_KEY)
-            && extras.getInt(LANGUAGES_PENDING_INTENT_KEY, 0) != LANGUAGES_PENDING_INTENT_ID
+        return extras != null && extras.containsKey(LocaleUtils.LANGUAGES_PENDING_INTENT_KEY)
+            && extras.getInt(LocaleUtils.LANGUAGES_PENDING_INTENT_KEY, 0) != LocaleUtils.LANGUAGES_PENDING_INTENT_ID
     }
 
     //endregion

@@ -43,8 +43,7 @@
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:replace="android:icon"
-        tools:overrideLibrary="com.instructure.canvasapi">
+        tools:replace="android:icon">
 
         <activity
             android:name=".activities.LoginActivity"

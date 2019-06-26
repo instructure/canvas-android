@@ -39,6 +39,7 @@ import com.instructure.canvasapi2.managers.CourseNicknameManager
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.LocaleUtils
 import com.instructure.canvasapi2.utils.MasqueradeHelper
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
@@ -158,7 +159,7 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         super.onNewIntent(intent)
         // Switching languages will also trigger this method; check for our Pending intent id
         intent?.let {
-            if (it.hasExtra(Const.LANGUAGES_PENDING_INTENT_KEY) && it.getIntExtra(Const.LANGUAGES_PENDING_INTENT_KEY, 0) != Const.LANGUAGES_PENDING_INTENT_ID) {
+            if (it.hasExtra(LocaleUtils.LANGUAGES_PENDING_INTENT_KEY) && it.getIntExtra(LocaleUtils.LANGUAGES_PENDING_INTENT_KEY, 0) != LocaleUtils.LANGUAGES_PENDING_INTENT_ID) {
                 handlePushNotification(hasUnreadPushNotification(it.extras))
             }
         }
