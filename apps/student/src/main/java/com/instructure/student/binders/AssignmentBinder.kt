@@ -19,7 +19,6 @@ package com.instructure.student.binders
 
 import android.content.Context
 import android.graphics.Typeface
-import android.text.TextUtils
 import android.view.View
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
@@ -54,6 +53,9 @@ class AssignmentBinder : BaseBinder() {
             } else {
                 holder.points.visibility = View.VISIBLE
                 BaseBinder.setupGradeText(context, holder.points, assignment, submission, courseColor)
+                // Set accessibility text
+                val outOf = context.resources.getString(R.string.outOf)
+                holder.points.contentDescription = holder.points.text.toString().replace("/", " $outOf ")
             }
 
 
