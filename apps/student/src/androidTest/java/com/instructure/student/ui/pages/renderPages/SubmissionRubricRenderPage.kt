@@ -23,13 +23,12 @@ class SubmissionRubricRenderPage : BasePage(R.id.submissionRubricPage) {
     val emptyView by OnViewWithId(R.id.rubricEmptyView)
     val gradeView by OnViewWithId(R.id.rubricGradeView)
 
-    val criterionDescription by OnViewWithId(R.id.criterionDescription)
-    val selectedRatingDescription by OnViewWithId(R.id.selectedRatingDescription)
+    val criterionTitle by OnViewWithId(R.id.criterionTitle)
+    val descriptionButton by OnViewWithId(R.id.descriptionButton)
     val ratingLayout by OnViewWithId(R.id.ratingLayout)
+    val ratingInfoContainer by OnViewWithId(R.id.ratingInfoContainer)
+    val selectedRatingTitle by OnViewWithId(R.id.ratingTitle)
+    val selectedRatingDescription by OnViewWithId(R.id.ratingDescription)
     val commentContainer by OnViewWithId(R.id.commentContainer)
     val comment by OnViewWithId(R.id.comment)
-    val longDescriptionButton by OnViewWithId(R.id.viewLongDescriptionButton)
-    val bottomPadding by OnViewWithId(R.id.bottomPadding)
-
-    val tooltip by OnViewWithId(R.id.tooltipTextView)
 }

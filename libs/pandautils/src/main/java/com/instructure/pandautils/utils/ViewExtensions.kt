@@ -22,6 +22,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
+import android.content.res.ColorStateList
 import android.content.res.Resources
 import android.content.res.TypedArray
 import android.graphics.*
@@ -67,6 +68,7 @@ import com.instructure.pandautils.R
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.abc_search_view.view.*
 import kotlinx.coroutines.delay
+import kotlin.math.roundToInt
 
 /** Convenience extension for setting a click listener */
 @Suppress("NOTHING_TO_INLINE")
@@ -160,6 +162,17 @@ fun View.isRTL() = ViewCompat.getLayoutDirection(this) == ViewCompat.LAYOUT_DIRE
 val Int.specSize get() = View.MeasureSpec.getSize(this)
 /** Convenience extension property for getting the MeasureSpec mode */
 val Int.specMode get() = View.MeasureSpec.getMode(this)
+
+/** Returns this color with the specified brightness applied (valid range 0f to 1f) */
+fun Int.withLuminance(alpha: Float): Int {
+    val hsl = FloatArray(3)
+    ColorUtils.colorToHSL(this, hsl)
+    hsl[2] = alpha.coerceIn(0f, 1f)
+    return ColorUtils.HSLToColor(hsl)
+}
+
+/** Returns a [ColorStateList] with a single state set to this color */
+fun Int.asStateList(): ColorStateList = ColorStateList.valueOf(this)
 
 /** Returns a list of all immediate child views in this ViewGroup */
 val View.children: List<View>

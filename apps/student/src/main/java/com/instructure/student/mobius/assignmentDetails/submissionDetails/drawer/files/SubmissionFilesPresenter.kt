@@ -18,7 +18,6 @@ package com.instructure.student.mobius.assignmentDetails.submissionDetails.drawe
 
 import android.content.Context
 import com.instructure.canvasapi2.models.Attachment
-import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.color
 import com.instructure.student.R
 import com.instructure.student.mobius.common.ui.Presenter
@@ -28,17 +27,15 @@ object SubmissionFilesPresenter : Presenter<SubmissionFilesModel, SubmissionFile
         return if (model.files.isEmpty()) {
             SubmissionFilesViewState.Empty
         } else {
-            val iconColor = model.canvasContext.color
-            val selectionColor = ThemePrefs.brandColor
-            SubmissionFilesViewState.FileList(model.files.map { mapData(it, model, iconColor, selectionColor) })
+            val tintColor = model.canvasContext.color
+            SubmissionFilesViewState.FileList(model.files.map { mapData(it, model, tintColor) })
         }
     }
 
     private fun mapData(
         attachment: Attachment,
         model: SubmissionFilesModel,
-        iconColor: Int,
-        selectionColor: Int
+        tintColor: Int
     ): SubmissionFileData {
         val contentType = attachment.contentType.orEmpty()
         val icon = when {
@@ -56,8 +53,8 @@ object SubmissionFilesPresenter : Presenter<SubmissionFilesModel, SubmissionFile
             icon = icon,
             thumbnailUrl = attachment.thumbnailUrl,
             isSelected = attachment.id == model.selectedFileId,
-            iconColor = iconColor,
-            selectionColor = selectionColor
+            iconColor = tintColor,
+            selectionColor = tintColor
         )
     }
 }
