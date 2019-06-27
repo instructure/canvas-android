@@ -146,7 +146,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
     private val onBackStackChangedListener = FragmentManager.OnBackStackChangedListener {
         currentFragment?.let {
-            //Sends a broadcast event to notify the backstack has changed and which fragment class is on top.
+            // Sends a broadcast event to notify the backstack has changed and which fragment class is on top.
             OnBackStackChangedEvent(it::class.java).post()
             applyCurrentFragmentTheme()
         }
@@ -181,7 +181,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     }
 
     override fun initialCoreDataLoadingComplete() {
-        //We are ready to load our UI
+        // We are ready to load our UI
         if (currentFragment == null) {
             loadLandingPage(true)
         }
@@ -194,7 +194,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         }
         setupBottomNavigation()
 
-        //There is a chance our fragment may attach before we have our core data back.
+        // There is a chance our fragment may attach before we have our core data back.
         EventBus.getDefault().post(CoreDataFinishedLoading)
         applyCurrentFragmentTheme()
     }

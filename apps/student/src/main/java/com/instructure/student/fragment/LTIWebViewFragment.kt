@@ -15,8 +15,6 @@
  *
  */
 
-@file:Suppress("EXPERIMENTAL_FEATURE_WARNING")
-
 package com.instructure.student.fragment
 
 import android.content.Context
@@ -55,13 +53,14 @@ class LTIWebViewFragment : InternalWebviewFragment() {
     private var ltiUrl: String by StringArg(key = LTI_URL)
     private var ltiTab: Tab? by NullableParcelableArg(key = Const.TAB)
     private var sessionLessLaunch: Boolean by BooleanArg(key = Const.SESSIONLESS_LAUNCH)
+    private var isAssignmentLTI: Boolean by BooleanArg(key = Const.ASSIGNMENT_LTI)
     private var hideToolbar by BooleanArg(key = HIDE_TOOLBAR)
 
     private var externalUrlToLoad: String? = null
     private var skipReload: Boolean = false
 
     private var ltiUrlLaunchJob: Job? = null
-    private var sessionAuthJob: Job? = null
+    private var retrieveLtiUrlJob: Job? = null
 
     @Suppress("unused")
     @PageViewUrl
@@ -95,8 +94,8 @@ class LTIWebViewFragment : InternalWebviewFragment() {
 
     override fun handleBackPressed(): Boolean {
         if (canGoBack()) {
-            //This prevents users from going back to the launch url for LITs, that url shows an error message and is
-            //only used to forward the user to the actual LTI.
+            // This prevents users from going back to the launch url for LITs, that url shows an error message and is
+            // only used to forward the user to the actual LTI.
             val webBackForwardList = getCanvasWebView()?.copyBackForwardList()
             val historyUrl = webBackForwardList?.getItemAtIndex(webBackForwardList.currentIndex - 1)?.url
             if (historyUrl != null && historyUrl.contains("external_tools/sessionless_launch")) {
@@ -109,7 +108,7 @@ class LTIWebViewFragment : InternalWebviewFragment() {
 
     override fun onResume() {
         super.onResume()
-        // After we request permissions to access files (like in Arc) this webview will reload and call onResume again. In order to not break any other LTI things, this flag should skip
+        // After we request permissions to access files (like in Arc) this WebView will reload and call onResume again. In order to not break any other LTI things, this flag should skip
         // reloading the url and keep the user where they are
         if (skipReload) {
             skipReload = false
@@ -121,7 +120,8 @@ class LTIWebViewFragment : InternalWebviewFragment() {
                 getLtiUrl(ltiTab)
             } else {
                 if (ltiUrl.isNotBlank()) {
-                    //modify the url
+
+                    // Modify the url
                     if (ltiUrl.startsWith("canvas-courses://")) {
                         ltiUrl = ltiUrl.replaceFirst("canvas-courses".toRegex(), ApiPrefs.protocol)
                     }
@@ -129,27 +129,28 @@ class LTIWebViewFragment : InternalWebviewFragment() {
                         ltiUrl = ltiUrl.replaceFirst("canvas-student".toRegex(), ApiPrefs.protocol)
                     }
 
-                    if (sessionLessLaunch) {
-                        getSessionlessLtiUrl(ApiPrefs.fullDomain + "/api/v1/accounts/self/external_tools/sessionless_launch?url=" + ltiUrl)
-                    } else {
-                        externalUrlToLoad = ltiUrl
+                    when {
+                        sessionLessLaunch -> // This is specific for Ark and Gauge
+                            getSessionlessLtiUrl(ApiPrefs.fullDomain + "/api/v1/accounts/self/external_tools/sessionless_launch?url=" + ltiUrl)
+                        isAssignmentLTI -> getSessionlessLtiUrl(ltiUrl)
+                        else -> {
+                            externalUrlToLoad = ltiUrl
 
-                        loadUrl(
-                            Uri.parse(ltiUrl).buildUpon()
-                                .appendQueryParameter("display", "borderless")
-                                .appendQueryParameter("platform", "android")
-                                .build()
-                                .toString()
-                        )
+                            loadUrl(
+                                Uri.parse(ltiUrl).buildUpon()
+                                    .appendQueryParameter("display", "borderless")
+                                    .appendQueryParameter("platform", "android")
+                                    .build()
+                                    .toString()
+                            )
+                        }
                     }
-                } else if (ltiUrl.isNotBlank()) {
-                    getSessionlessLtiUrl(ltiUrl)
                 } else {
                     loadDisplayError()
                 }
             }
         } catch (e: Exception) {
-            //if it gets here we're in trouble and won't know what the tab is, so just display an error message
+            // If it gets here we're in trouble and won't know what the tab is, so just display an error message
             loadDisplayError()
         }
 
@@ -171,13 +172,12 @@ class LTIWebViewFragment : InternalWebviewFragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.launchExternalWeb) {
-
             if (ltiTab != null) {
-                //coming from a tab that is an lti tool
-                sessionAuthJob = tryWeave {
+                // Coming from a tab that is an lti tool
+                retrieveLtiUrlJob = tryWeave {
 
                     val result = inBackground {
-                        // we have to get a new sessionless url
+                        // We have to get a new sessionless url
                         getLTIUrlForTab(requireContext(), ltiTab as Tab)
                     }
                     launchIntent(result)
@@ -189,14 +189,20 @@ class LTIWebViewFragment : InternalWebviewFragment() {
                     ).show()
                 }
             } else {
-                // coming from anywhere else
+                // Coming from anywhere else
                 var url = ltiUrl
                 if (externalUrlToLoad.isValid()) {
                     url = externalUrlToLoad!!
                 }
 
-                sessionAuthJob = tryWeave {
-                    if (ApiPrefs.domain in url) {
+                retrieveLtiUrlJob = tryWeave {
+                    if (isAssignmentLTI) {
+                        // Get a basic sessionless URL for Assignment LTIs
+                        inBackground {
+                            val result = getLTIUrl(requireContext(), ltiUrl)
+                            launchIntent(result)
+                        }
+                    } else if (ApiPrefs.domain in url) {
                         // Get an authenticated session so the user doesn't have to log in
                         url = awaitApi<AuthenticatedSession> {
                             OAuthManager.getAuthenticatedSession(
@@ -251,7 +257,7 @@ class LTIWebViewFragment : InternalWebviewFragment() {
                 externalUrlToLoad = uri.toString()
                 loadUrl(uri.toString())
             } else {
-                //error
+                // Error
                 loadDisplayError()
             }
         }
@@ -265,7 +271,8 @@ class LTIWebViewFragment : InternalWebviewFragment() {
             }
 
             if (result != null) {
-                val uri = Uri.parse(result).buildUpon()
+                val uri = Uri.parse(result)
+                    .buildUpon()
                     .appendQueryParameter("display", "borderless")
                     .appendQueryParameter("platform", "android")
                     .build()
@@ -274,7 +281,7 @@ class LTIWebViewFragment : InternalWebviewFragment() {
 
                 loadUrl(uri.toString())
             } else {
-                //error
+                // Error
                 loadDisplayError()
             }
         }
@@ -305,6 +312,7 @@ class LTIWebViewFragment : InternalWebviewFragment() {
             }
             ltiUrl
         } catch (e: Exception) {
+            e.printStackTrace()
             null
         }
     }
@@ -312,7 +320,7 @@ class LTIWebViewFragment : InternalWebviewFragment() {
     override fun onDestroy() {
         super.onDestroy()
         ltiUrlLaunchJob?.cancel()
-        sessionAuthJob?.cancel()
+        retrieveLtiUrlJob?.cancel()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -363,12 +371,14 @@ class LTIWebViewFragment : InternalWebviewFragment() {
             url: String,
             title: String? = null,
             sessionLessLaunch: Boolean = false,
+            isAssignmentLTI: Boolean = false,
             hideToolbar: Boolean = false
         ): Route {
             val bundle = Bundle().apply {
                 putString(LTI_URL, url)
                 putBoolean(HIDE_TOOLBAR, hideToolbar)
                 putBoolean(Const.SESSIONLESS_LAUNCH, sessionLessLaunch)
+                putBoolean(Const.ASSIGNMENT_LTI, isAssignmentLTI)
                 putString(Const.ACTION_BAR_TITLE, title) // For 'title' property in InternalWebViewFragment
             }
             return Route(LTIWebViewFragment::class.java, canvasContext, bundle)

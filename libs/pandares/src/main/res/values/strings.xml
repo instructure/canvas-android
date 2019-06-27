@@ -51,9 +51,10 @@
     <string name="notSubmitted">Not Submitted</string>
     <string name="allowedFileTypes">Allowable File Types</string>
     <string name="resubmitAssignment">Resubmit Assignment</string>
+    <string name="launchExternalTool">Launch External Tool</string>
     <string name="preview">Preview</string>
 
-    <!--    Student Submission-->
+    <!-- Student Submission -->
     <string name="submissionUrlClearTextError">No preview available for URLs using \'http://\'</string>
     <string name="submissionUrlNotAUrlError">Please enter a valid URL</string>
     <string name="enterAUrlHereForYourSubmission">Enter a URL here for your submission</string>
@@ -88,10 +89,10 @@
     <string name="rubricEmptyMessage">There is no rubric for this assignment</string>
     <string name="rubricViewLongDescription">View long description</string>
 
-    <!--Profile Fragment Strings -->
+    <!-- Profile Fragment Strings -->
     <string name="canvasVersionNum">Version:</string>
 
-    <!--Content Descriptions-->
+    <!-- Content Descriptions -->
     <string name="canvasLogo">Canvas Logo</string>
     <string name="enterURL">Enter your Canvas URL:</string>
     <string name="exampleURLSimple">myschool.instructure.com</string>
@@ -124,7 +125,7 @@
     <string name="bookmarkUpdated">Bookmark Updated</string>
     <string name="no_bookmarks">Create a bookmark then view it here!</string>
 
-    <!--Date strings-->
+    <!-- Date strings -->
     <string name="today">Today</string>
     <string name="past">Past</string>
     <string name="noDate">No Date</string>
@@ -140,7 +141,7 @@
     <string name="lowercasePM">pm</string>
 
 
-    <!--Assignments-->
+    <!-- Assignments -->
     <string name="assignmentDue">Due</string>
     <string name="assignmentDueColon">Due: </string>
     <string name="assignmentLastSubmission">Last Submission</string>
@@ -171,10 +172,10 @@
     <string name="cancel">Cancel</string>
     <string name="sendNotification">Notify users that this content has changed</string>
 
-    <!--Discussions-->
+    <!-- Discussions -->
     <string name="forbidden">Replies are only visible to those who have posted at least one reply.</string>
 
-    <!--Events-->
+    <!-- Events -->
     <string name="Starts">Starts</string>
     <string name="Ends">Ends</string>
     <string name="allDayEvent">All Day Event</string>
@@ -398,7 +399,7 @@
     <string name="entireGroupSelected">This entire group has already been selected.</string>
     <string name="noUsersInGroup">There are no users in this group</string>
 
-    <!--Notifications-->
+    <!-- Notifications -->
     <string name="deleted">Deleted</string>
     <string name="gradedDiscussion">Graded Discussion.</string>
     <string name="pointsPossible">Points Possible.</string>
@@ -502,11 +503,11 @@
     <!-- LockInfoHTMLHelper Strings -->
     <string name="lockedAssignmentNotModule">This assignment is locked.</string>
 
-    <!--New Course Layout Strings -->
+    <!-- New Course Layout Strings -->
     <string name="myCourses">My Courses</string>
 
 
-    <!--New Submission Strings -->
+    <!-- New Submission Strings -->
     <string name="textEntry">Text Entry</string>
     <string name="onlineURL">Online URL</string>
     <string name="enterTextEntry">Enter Text Entry</string>
@@ -525,18 +526,18 @@
 
 
 
-    <!--DataLoss Fragment Strings -->
+    <!-- DataLoss Fragment Strings -->
     <string name="unsavedProgress">Unsaved Progress</string>
     <string name="informationLost">Unsaved information will be lost. Do you want to continue?</string>
     <string name="slash"> / </string>
 
-    <!--Delete Notification Strings -->
+    <!-- Delete Notification Strings -->
     <string name="confirm">Confirm</string>
 
-    <!--Dismiss To do String-->
+    <!-- Dismiss To do String -->
     <string name="markAsDone">Mark as done</string>
 
-    <!--Submission Details Strings -->
+    <!-- Submission Details Strings -->
     <string name="next">Next</string>
     <string name="addSubmission">Turn in</string>
     <string name="addAnotherSubmission">Turn in again</string>
@@ -619,7 +620,7 @@
     <string name="choose_answers_below">Choose your answers below</string>
 
 
-    <!--Widget Strings-->
+    <!-- Widget Strings -->
     <string name="todoWidgetTitle">To Do</string>
     <string name="gradesWidgetTitle">Grades</string>
     <string name="notificationWidgetTitle">Notifications</string>
@@ -673,13 +674,13 @@
     <string name="search_course">course courses class classes</string>
     <string name="search_grades">grade grades</string>
 
-    <!-- ShareFileOptions Dialog-->
+    <!-- ShareFileOptions Dialog -->
     <string name="uploadTo">Upload To </string>
     <string name="uploadToCanvas">Upload To Canvas</string>
     <string name="uploadMyFiles">My Files</string>
     <string name="uploadCourseFiles">Course Files</string>
     <string name="uploadToSubmissionComment">Upload to Submission Comment</string>
-    <!-- ChangeLog Dialog-->
+    <!-- ChangeLog Dialog -->
     <string name="changelog">Changelog</string>
 
     <string name="editUserName">Edit Username</string>
@@ -692,7 +693,7 @@
     <string name="no_courses">Tap to add a course</string>
     <string name="no_courses_available">No courses here, take the day off!</string>
     <string name="no_courses_grades">Please enroll in a course to see your grades</string>
-    <!--Navigation Drawer-->
+    <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
@@ -754,8 +755,7 @@
 
     <string name="no_data_connection">Please check your data connection and try again.</string>
 
-    <!--Notification Preferences-->
-
+    <!-- Notification Preferences -->
     <string name="notification_primary_inbox_title">Canvas Notification</string>
     <string name="notification_channel_name_primary">General Canvas Notifications</string>
     <string name="notification_channel_description_primary">Further configuration of notifications can be done within the Canvas Notification Preferences section.</string>
@@ -926,7 +926,7 @@
     <string name="groupNotFavorited">Group %s, not favorite.</string>
     <string name="accountGroup">Account Group</string>
 
-    <!--Recents-->
+    <!-- Recents -->
     <string name="recents_empty">From the course customization screen add a course or group to view them here.</string>
 
     <string name="toolbar_close">Toolbar close</string>

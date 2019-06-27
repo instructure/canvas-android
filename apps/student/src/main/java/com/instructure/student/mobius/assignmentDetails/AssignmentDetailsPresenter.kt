@@ -125,6 +125,9 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
             .map { Assignment.submissionTypeToPrettyPrintString(it, context) }
             .joinToString(", ")
 
+        val isExternalToolSubmission = assignment.getSubmissionTypes()
+            .any { it == Assignment.SubmissionType.EXTERNAL_TOOL || it == Assignment.SubmissionType.BASIC_LTI_LAUNCH }
+
         // File types
         visibilities.fileTypes = assignment.allowedExtensions.isNotEmpty() && assignment.getSubmissionTypes().contains(Assignment.SubmissionType.ONLINE_UPLOAD)
         val fileTypes = assignment.allowedExtensions.joinToString(", ")
@@ -133,7 +136,11 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
         // SubmitButton TODO - Check logic around enabling this
         visibilities.submitButton = assignment.isAllowedToSubmit
         val submitButtonText = context.getString(
-            if (submitted) R.string.resubmitAssignment else R.string.submitAssignment
+            when {
+                isExternalToolSubmission -> R.string.launchExternalTool
+                submitted -> R.string.resubmitAssignment
+                else -> R.string.submitAssignment
+            }
         )
 
         val gradeState = GradeCellViewState.fromSubmission(context, assignment, assignment.submission)
@@ -153,7 +160,8 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
             description = description.orEmpty(),
             submitButtonText = submitButtonText,
             gradeState = gradeState,
-            assignmentDetailsVisibilities = visibilities
+            assignmentDetailsVisibilities = visibilities,
+            isExternalToolSubmission = isExternalToolSubmission
         )
     }
 
