@@ -867,7 +867,7 @@
     <string name="courseNickname">Kurssin lempinimi</string>
 
     <string name="notAvailableOffline">Toiminto ei ole käytettävissä verkon ulkopuolella</string>
-    <string name="editDashboard">Muokkaa kursseja</string>
+    <string name="editFavorites">Muokkaa kursseja</string>
 
     <string name="dashboard">Koontinäyttö</string>
     <string name="previous">Edellinen</string>

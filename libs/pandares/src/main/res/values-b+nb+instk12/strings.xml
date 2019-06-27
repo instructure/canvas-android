@@ -923,7 +923,7 @@
     <string name="courseNickname">Kallenavn for fag</string>
 
     <string name="notAvailableOffline">Funksjonalitet utilgjengelig når du er offline</string>
-    <string name="editDashboard">Rediger fag</string>
+    <string name="editFavorites">Rediger fag</string>
 
     <string name="dashboard">Oversikt</string>
     <string name="previous">Forrige</string>

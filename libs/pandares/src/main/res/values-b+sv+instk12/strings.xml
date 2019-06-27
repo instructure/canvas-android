@@ -923,7 +923,7 @@
     <string name="courseNickname">Alias för kurs</string>
 
     <string name="notAvailableOffline">Funktionen är inte tillgänglig offline</string>
-    <string name="editDashboard">Redigera kurser</string>
+    <string name="editFavorites">Redigera kurser</string>
 
     <string name="dashboard">Översikt</string>
     <string name="previous">Föregående</string>

@@ -925,7 +925,7 @@
     <string name="courseNickname">Nome da Disciplina</string>
 
     <string name="notAvailableOffline">Funcionalidade não disponível enquanto offline</string>
-    <string name="editDashboard">Editar disciplinas</string>
+    <string name="editFavorites">Editar disciplinas</string>
 
     <string name="dashboard">Painel de controlo</string>
     <string name="previous">Anterior</string>

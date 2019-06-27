@@ -960,7 +960,7 @@
     <string name="courseNickname">لقب المساق</string>
 
     <string name="notAvailableOffline">ميزة غير متوفرة دون الاتصال بالإنترنت</string>
-    <string name="editDashboard">تحرير مساقات</string>
+    <string name="editFavorites">تحرير مساقات</string>
 
     <string name="dashboard">لوحة المعلومات</string>
     <string name="previous">السابق</string>
