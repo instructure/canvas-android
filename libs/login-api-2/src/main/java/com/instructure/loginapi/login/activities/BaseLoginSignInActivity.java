@@ -410,13 +410,17 @@ public abstract class BaseLoginSignInActivity extends AppCompatActivity implemen
             mAuthenticationURL += "&canvas_login=1";
         } else if (mCanvasLogin == MASQUERADE_FLOW) {
             // canvas_sa_delegated=1    identifies that we want to masquerade
-            final String cookie = "canvas_sa_delegated=1;domain=.instructure.com;path=/;";
             CookieManager cookieManager = CookieManager.getInstance();
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 cookieManager.setAcceptThirdPartyCookies(mWebView, true);
             }
-            cookieManager.setCookie(apiProtocol + "://" + domain, cookie);
-            cookieManager.setCookie(".instructure.com", cookie);
+            if (domain.contains(".instructure.com")) {
+                String cookie = "canvas_sa_delegated=1;domain=.instructure.com;path=/;";
+                cookieManager.setCookie(apiProtocol + "://" + domain, cookie);
+                cookieManager.setCookie(".instructure.com", cookie);
+            } else {
+                cookieManager.setCookie(domain, "canvas_sa_delegated=1");
+            }
         }
         mWebView.loadUrl(mAuthenticationURL, getHeaders());
 
