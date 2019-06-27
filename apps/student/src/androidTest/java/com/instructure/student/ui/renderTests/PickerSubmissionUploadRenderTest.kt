@@ -21,6 +21,10 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.espresso.*
+import com.instructure.panda_annotations.FeatureCategory
+import com.instructure.panda_annotations.Priority
+import com.instructure.panda_annotations.TestCategory
+import com.instructure.panda_annotations.TestMetaData
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.makeBundle
 import com.instructure.student.R
@@ -41,6 +45,7 @@ class PickerSubmissionUploadRenderTest : StudentRenderTest() {
     private val baseVisibilities = PickerVisibilities(fab = true)
 
     @Test
+    @TestMetaData(Priority.P2, FeatureCategory.SUBMISSIONS, TestCategory.RENDER, false)
     fun displaysEmptyState() {
         loadPageWithViewState(PickerSubmissionUploadViewState.Empty(baseVisibilities))
         page.emptyView.assertVisible()
@@ -52,6 +57,7 @@ class PickerSubmissionUploadRenderTest : StudentRenderTest() {
     }
 
     @Test
+    @TestMetaData(Priority.P2, FeatureCategory.SUBMISSIONS, TestCategory.RENDER, false)
     fun displaysListState() {
         val fileItemStates = listOf(
             PickerListItemViewState(0, R.drawable.vd_media_recordings, "title", "12.3 KB")
@@ -71,6 +77,7 @@ class PickerSubmissionUploadRenderTest : StudentRenderTest() {
     }
 
     @Test
+    @TestMetaData(Priority.P2, FeatureCategory.SUBMISSIONS, TestCategory.RENDER, false)
     fun displaysFabsAndHandlesClicks() {
         loadPageWithViewState(
             PickerSubmissionUploadViewState.Empty(

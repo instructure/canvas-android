@@ -20,6 +20,7 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
+import android.net.Uri
 import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
@@ -160,7 +161,6 @@ class PickerSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) :
     }
 
     private fun closeFabs() {
-
         pickFab.startAnimation(fabRotateBackwards)
         hideFabs(pickFabFile, pickFabCamera, pickFabGallery)
     }
@@ -184,73 +184,24 @@ class PickerSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) :
     }
 
     //endregion
-    //region Media Fetching
 
-    fun launchGallery() {
-        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-        intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
-        val file = File(context.filesDir, "/submission/*")
-        intent.setDataAndType(FileProvider.getUriForFile(context, context.packageName + Const.FILE_PROVIDER_AUTHORITY, file), "image/*")
-        intent.putExtra(Intent.EXTRA_MIME_TYPES, arrayOf("image/*"))
-        (context as Activity).startActivityForResult(intent, REQUEST_PICK_IMAGE_GALLERY)
+    fun getSelectFileIntent() = Intent(Intent.ACTION_GET_CONTENT).apply {
+        flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+        type = "*/*"
+        addCategory(Intent.CATEGORY_OPENABLE)
     }
 
-    fun launchSelectFile() {
-        val intent = Intent(Intent.ACTION_GET_CONTENT)
-        intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
-        intent.type = "*/*"
-        intent.addCategory(Intent.CATEGORY_OPENABLE)
-        (context as Activity).startActivityForResult(intent, REQUEST_PICK_FILE_FROM_DEVICE)
-    }
-
-    fun launchCamera() {
-        // Get video permission if we need it
-        if (needsPermissions(::launchCamera, PermissionUtils.CAMERA)) return
-
-        // Check to see if the device has a camera
-        if (!Utils.hasCameraAvailable(context as Activity)) {
-            Toast.makeText(context, R.string.noCameraOnDevice, Toast.LENGTH_LONG).show()
-            return
-        }
-
-        // Store the uri that we're saving the file to
-        val fileName = "pic_${System.currentTimeMillis()}.jpg"
-        val file = File(FileUploadUtils.getExternalCacheDir(context), fileName)
-        val uri = FileProvider.getUriForFile(context, context.packageName + Const.FILE_PROVIDER_AUTHORITY, file)
-        if (uri != null) {
-            FilePrefs.tempCaptureUri = uri.toString()
-        }
-
-        // Create new Intent and launch
-        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE).apply {
-            putExtra(MediaStore.EXTRA_OUTPUT, uri)
-        }
-        if (isIntentAvailable(intent.action)) {
-            (context as Activity).startActivityForResult(intent, REQUEST_CAMERA_PIC)
+    fun getGalleryIntent(dataUri: Uri): Intent {
+        return Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI).apply {
+            flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+            setDataAndType(dataUri, "image/*")
+            putExtra(Intent.EXTRA_MIME_TYPES, arrayOf("image/*"))
         }
     }
 
-    private fun needsPermissions(successCallback: () -> Unit, vararg permissions: String): Boolean {
-        if (PermissionUtils.hasPermissions(context as Activity, *permissions)) {
-            return false
-        }
-
-        (context as Activity).requestPermissions(setOf(*permissions)) { results ->
-            if (results.isNotEmpty() && results.all { it.value }) {
-                // If permissions list is not empty and all are granted, retry camera
-                successCallback()
-            } else {
-                Toast.makeText(context, com.instructure.pandautils.R.string.permissionDenied, Toast.LENGTH_LONG).show()
-            }
-        }
-        return true
+    fun getCameraIntent(dataUri: Uri) = Intent(MediaStore.ACTION_IMAGE_CAPTURE).apply {
+        putExtra(MediaStore.EXTRA_OUTPUT, dataUri)
     }
-
-    private fun isIntentAvailable(action: String?): Boolean {
-        return context.packageManager.queryIntentActivities(Intent(action), PackageManager.MATCH_DEFAULT_ONLY).size > 0
-    }
-
-    //endregion
 
     fun showBadExtensionDialog(allowedExtensions: List<String>) {
         PickerBadExtensionDialog.show((context as FragmentActivity).supportFragmentManager, allowedExtensions)
@@ -260,22 +211,12 @@ class PickerSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) :
         Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
     }
 
-    fun showFileResultErrorMessage(errorMessage: Int) {
+    fun showErrorMessage(errorMessage: Int) {
         Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
     }
 
     fun closeSubmissionView() {
         (context as Activity).onBackPressed()
-    }
-
-    companion object {
-        const val REQUEST_CAMERA_PIC = 5100
-        const val REQUEST_PICK_IMAGE_GALLERY = 5101
-        const val REQUEST_PICK_FILE_FROM_DEVICE = 5102
-
-        fun isPickerRequest(code: Int): Boolean {
-            return code in listOf(REQUEST_CAMERA_PIC, REQUEST_PICK_IMAGE_GALLERY, REQUEST_PICK_FILE_FROM_DEVICE)
-        }
     }
 }
 

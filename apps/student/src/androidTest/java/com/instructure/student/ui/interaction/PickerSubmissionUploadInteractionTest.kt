@@ -17,6 +17,10 @@
 package com.instructure.student.ui.interaction
 
 import com.instructure.canvas.espresso.Stub
+import com.instructure.panda_annotations.FeatureCategory
+import com.instructure.panda_annotations.Priority
+import com.instructure.panda_annotations.TestCategory
+import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.ui.utils.StudentTest
 import org.junit.Test
 
@@ -25,30 +29,35 @@ class PickerSubmissionUploadInteractionTest : StudentTest() {
 
     @Stub
     @Test
+    @TestMetaData(Priority.P2, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, true)
     fun testFab_camera() {
 
     }
 
     @Stub
     @Test
+    @TestMetaData(Priority.P2, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, true)
     fun testFab_galleryPicker() {
 
     }
 
     @Stub
     @Test
+    @TestMetaData(Priority.P2, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, true)
     fun testFab_filePicker() {
 
     }
 
     @Stub
     @Test
+    @TestMetaData(Priority.P2, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, true)
     fun testDeleteFile() {
 
     }
 
     @Stub
     @Test
+    @TestMetaData(Priority.P1, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, true)
     fun testSubmit() {
 
     }
