@@ -19,7 +19,6 @@ package com.instructure.student.binders
 
 import android.content.Context
 import android.graphics.Typeface
-import android.text.TextUtils
 import android.view.View
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext

@@ -17,11 +17,14 @@
 package com.instructure.canvasapi2.models
 
 import android.os.Parcelable
+import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class RubricCriterionRating(
         val id: String? = null,
         val description: String? = null,
+        @SerializedName("long_description")
+        val longDescription: String? = null,
         val points: Double = 0.0
 ) : Parcelable

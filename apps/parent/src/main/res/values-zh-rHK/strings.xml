@@ -78,7 +78,7 @@
     <string name="week">週</string>
     <string name="alerts">警示</string>
     <string name="alert">警示</string>
-    <string name="weekEmptyView">本週沒有任務或事件！</string>
+    <string name="weekEmptyView">本週沒有作業或事件！</string>
     <string name="toolbar_close">工具條關閉</string>
     <string name="syllabus">教學大綱</string>
     <string name="emptySyllabus">此課程無課程大綱。</string>
@@ -117,7 +117,7 @@
     <string name="tapToSet">請按以設定</string>
     <string name="alarmNotSet">提醒無法設定。請再試一次。</string>
     <string name="could_not_route_course">無法搜尋到此課程的入學資訊。</string>
-    <string name="could_not_route_assignment">無法搜尋到此任務。</string>
+    <string name="could_not_route_assignment">無法搜尋到此作業。</string>
     <string name="could_not_route_announcement">無法找到此通告。</string>
     <string name="could_not_route_event">無法找到此活動。</string>
     <string name="could_not_route_account_notifications">無法找到此通知。</string>
@@ -135,8 +135,8 @@
     <string name="canvas_logo">Canvas 標誌</string>
     <string name="course_threshold_grade_above_invalid">此下限必須高於更低級別課程所設的下限。</string>
     <string name="course_threshold_grade_below_invalid">此下限必須低於更高級別課程所設的下限。</string>
-    <string name="assignment_threshold_grade_above_invalid">此下限必須高於更低級別任務所設的下限。</string>
-    <string name="assignment_threshold_grade_below_invalid">此下限必須低於更高級別任務所設的下限。</string>
+    <string name="assignment_threshold_grade_above_invalid">此下限必須高於更低級別作業所設的下限。</string>
+    <string name="assignment_threshold_grade_below_invalid">此下限必須低於更高級別作業所設的下限。</string>
     <string name="set_reminder">設定提醒</string>
     <string name="enter_student_institution">鍵入學生的機構名稱</string>
     <string name="enter_student_login">鍵入學生的登錄名和密碼</string>
@@ -146,8 +146,8 @@
     <string name="opening">正在開啟&#8230;</string>
     <string name="locked_assignment_desc">此作業是單元 %s 的一部分，尚未解除鎖定。</string>
     <string name="locked_assignment_desc_line2">在瀏覽器中訪問課程模塊頁面，了解如何解鎖內容。</string>
-    <string name="locked_assignment_not_module">該任務被鎖定。</string>
-    <string name="no_description">該任務沒有描述</string>
+    <string name="locked_assignment_not_module">該作業被鎖定。</string>
+    <string name="no_description">該作業沒有描述</string>
     <string name="cannot_view_file">無法在應用程式中檢視檔案。請在瀏覽器中檢視。</string>
     <string name="calendar_event">月曆事件</string>
     <string name="set_reminder_toggle">設定提醒器開關</string>

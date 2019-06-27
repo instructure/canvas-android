@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (C) 2018 - present Instructure, Inc.
   ~
@@ -16,6 +16,7 @@
   ~
   -->
 <resources>
+
     <string name="noFilesFound">No Files Found</string>
     <string name="searchFilesHint">Search files</string>
     <string name="fileSearchInstructions">Enter a search term with three or more characters</string>
@@ -33,7 +34,6 @@
     <string name="selectedListItem">Selected: %s</string>
 
     <!-- Student Strings -->
-
     <!-- Student Assignment Details -->
     <string name="assignmentDetails">Assignment Details</string>
     <string name="submission_types">Submission Types</string>
@@ -41,7 +41,7 @@
     <string name="dueLabel">Due</string>
     <string name="submissionStatusSuccessTitle">Successfully submitted!</string>
     <string name="submissionStatusSuccessSubtitle">Your submission is now waiting to be graded</string>
-    <string name="submissionStatusUploadingTitle">Submission Uploading…</string>
+    <string name="submissionStatusUploadingTitle">Submission Uploading&#8230;</string>
     <string name="submissionStatusUploadingSubtitle">Tap to view progress</string>
     <string name="submissionStatusFailedTitle">Submission Failed</string>
     <string name="submissionStatusFailedSubtitle">Tap to view details</string>
@@ -51,16 +51,14 @@
     <string name="notSubmitted">Not Submitted</string>
     <string name="allowedFileTypes">Allowable File Types</string>
     <string name="resubmitAssignment">Resubmit Assignment</string>
-    <string name="preview">Preview</string>
 
+    <string name="preview">Preview</string>
     <!--    Student Submission-->
     <string name="submissionUrlClearTextError">No preview available for URLs using \'http://\'</string>
     <string name="submissionUrlNotAUrlError">Please enter a valid URL</string>
     <string name="enterAUrlHereForYourSubmission">Enter a URL here for your submission</string>
-
     <!-- Student Submission -->
     <string name="submissionWrite">Write&#8230;</string>
-
     <!-- Student Submission Details -->
     <string name="submission">Submission</string>
     <string name="submissionVersions">Submission versions</string>
@@ -76,18 +74,13 @@
     <string name="submissionDetailsAssignmentLocked">Assignment Locked</string>
     <string name="webPreview">Preview of the entered URL</string>
     <string name="websiteUrl">Website URL</string>
-
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Out of %s points</string>
     <string name="outOfPointsAbbreviatedFormatted">Out of %s pts</string>
     <string name="gradeExcused">Excused</string>
     <string name="finalGradeFormatted">Final Grade: %s</string>
-
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Custom score</string>
-    <string name="rubricEmptyMessage">There is no rubric for this assignment</string>
-    <string name="rubricViewLongDescription">View long description</string>
-
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">Version:</string>
 
@@ -95,16 +88,16 @@
     <string name="canvasLogo">Canvas Logo</string>
     <string name="enterURL">Enter your Canvas URL:</string>
     <string name="exampleURLSimple">myschool.instructure.com</string>
-    <string name="signIntoCanvasNetwork">Trying to sign into Canvas Network?</string>
-    <string name="mobileVerifyGeneral">This app is not authorized for use</string>
-    <string name="mobileVerifyDomainUnauthorized">The server you entered is not authorized for this app.</string>
-    <string name="mobileVerifyUserAgentUnauthorized">The user agent for this app is unauthorized.</string>
+    <string name="signIntoCanvasNetwork">Trying to sign into the Canvas Network?</string>
+    <string name="mobileVerifyGeneral">This app is not authorised for use.</string>
+    <string name="mobileVerifyDomainUnauthorized">The server you entered is not authorised for this app.</string>
+    <string name="mobileVerifyUserAgentUnauthorized">The user agent for this app is unauthorised.</string>
     <string name="mobileVerifyUnknownError">We were unable to verify the server for use with this app.</string>
     <string name="okay">Okay</string>
     <string name="options">Options</string>
 
     <string name="discussionAttachment">Attach a file</string>
-    <string name="discussionUpload">Upload video or audio</string>
+    <string name="discussionUpload">Upload a video or audio</string>
     <string name="discussionPostEditing">Edit</string>
 
     <!--Multiple User Sign in -->
@@ -131,6 +124,7 @@
     <string name="future">Future</string>
     <string name="next7Days">Next 7 Days</string>
     <string name="days">Days</string>
+
     <string name="submissionDetailsDueTodayAt">Due today at %s</string>
     <string name="submissionDetailsDueTomorrowAt">Due tomorrow at %s</string>
     <string name="submissionDetailsDueYesterdayAt">Due yesterday at %s</string>
@@ -138,8 +132,6 @@
     <string name="submissionDetailsDueAt">Due %1$s at %2$s</string> <!--Ex: Due April 2 at 11:59pm-->
     <string name="lowercaseAM">am</string>
     <string name="lowercasePM">pm</string>
-
-
     <!--Assignments-->
     <string name="assignmentDue">Due</string>
     <string name="assignmentDueColon">Due: </string>
@@ -152,20 +144,20 @@
     <string name="assignments">Assignments</string>
     <string name="freeFormRubricPoints" formatted="false">%s / %s </string>
     <string name="noRubric">There is no rubric for this assignment.</string>
-    <string name="noDescription">There is no description for this assignment</string>
+    <string name="noDescription">There is no description for this assignment.</string>
     <string name="noAssignmentsInGroup">No Assignments in this group</string>
-    <string name="excusedAssignment">This assignment is excused and will not be considered in the total calculation</string>
-    <string name="droppedAssignment">This assignment is dropped and will not be considered in the total calculation</string>
+    <string name="excusedAssignment">This assignment is excused and will not be considered in the total calculation.</string>
+    <string name="droppedAssignment">This assignment is dropped and will not be considered in the total calculation.</string>
     <string name="excused">EX</string>
     <string name="mutedText">Grades are unavailable because the instructor is working on them.</string>
     <string name="rubricRangePointsText" formatted="false">&#160;to &gt; %s pts</string>
     <string name="contentDescriptionRubricRangePointsText" formatted="false">%s &#160;to &gt; %s points</string>
 
     <!-- Assignment editing -->
-    <string name="points">Points\u0020</string>
-    <string name="assignmentGroup">Assignment Group:\u0020</string>
-    <string name="gradingType">Grading Type:\u0020</string>
-    <string name="submissionType">Submission Type:\u0020</string>
+    <string name="points">Points </string>
+    <string name="assignmentGroup">Assignment Group: </string>
+    <string name="gradingType">Grading Type: </string>
+    <string name="submissionType">Submission Type: </string>
     <string name="editAssignment">Edit Assignment</string>
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
@@ -203,15 +195,15 @@
     <string name="emptyCalendarWeek">Nothing Planned For The Week</string>
     <string name="emptyCalendarMonth">Nothing Planned For The Month</string>
     <string name="selectCanvasCalendars">Select Up To 10 Calendars</string>
-    <string name="contentDesc_colored_calendar_indicator">Colored calendar indicator</string>
-    <string name="noDatesSelected">Please select a date</string>
+    <string name="contentDesc_colored_calendar_indicator">Coloured calendar indicator</string>
+    <string name="noDatesSelected">Please select a date.</string>
     <string name="Todo">To Do</string>
-    <string name="todoFilter">Filter Courses</string>
-    <string name="filterByEllipsis">Filter by…</string>
-    <string name="favoritedCoursesLabel">Favorited Courses</string>
+    <string name="todoFilter">Filter Subjects</string>
+    <string name="filterByEllipsis">Filter by&#8230;</string>
+    <string name="favoritedCoursesLabel">Favourited Subjects</string>
     <string name="Event">Event</string>
-    <string name="eventSuccessfulCreation">Event was successfully created</string>
-    <string name="eventSuccessfulDeletion">Event was successfully deleted</string>
+    <string name="eventSuccessfulCreation">Event successfully created</string>
+    <string name="eventSuccessfulDeletion">Event successfully deleted</string>
     <string name="newEvent">New Event</string>
     <string name="enterTitle">Enter Title</string>
     <string name="enterLocation">Enter Location</string>
@@ -282,11 +274,11 @@
     <string name="usernameChangeSuccess">Username successfully updated!</string>
     <string name="takePhoto">Take photo</string>
     <string name="choosePhotoFromGallery">Choose photo from Gallery</string>
-    <string name="fileNotFound">File not found.</string>
+    <string name="fileNotFound">File not found</string>
 
     <!-- Conversations -->
     <string name="reply">Reply</string>
-    <string name="writeAMessage">Write a message…</string>
+    <string name="writeAMessage">Write a message&#8230;</string>
     <string name="compose">Compose</string>
     <string name="composeMessage">Compose Message</string>
     <string name="successSendingMessage">Message was successfully sent.</string>
@@ -297,14 +289,13 @@
     <string name="individually">Individually</string>
     <string name="versionNum">Version:</string>
     <string name="version" formatted="false">v. %s</string>
-    <string name="allCourses">All Courses</string>
+    <string name="allCourses">All Subjects</string>
     <string name="allGroups">All Groups</string>
-    <string name="courseOptions">Course Options</string>
-    <string name="courseOptionsFormatted">Course options for %s</string>
+    <string name="courseOptions">Subject Options</string>
     <string name="editNickname">Edit nickname</string>
-    <string name="editCourseColor">Edit course color</string>
+    <string name="editCourseColor">Edit subject colour</string>
     <string name="open">Open</string>
-    <string name="openAlternate">Open with alternate app</string>
+    <string name="openAlternate">Open with alternate app.</string>
     <string name="opening">Opening File&#8230;</string>
     <string name="download">Download</string>
     <string name="hideExtras">Hide Extras</string>
@@ -316,12 +307,12 @@
     <string name="with">with</string>
     <string name="starConversation">Star Conversation</string>
     <string name="deleteConversation">Delete Conversation</string>
-    <string name="sharedWith">Shared with \u0020</string>
+    <string name="sharedWith">Shared with  </string>
     <string name="sharedWithYou">Shared with you</string>
     <string name="inboxEmptyMessage">Tap the \"+\" to create a new conversation.</string>
     <string name="inboxAllMessages">All</string>
     <string name="filterInbox">Filter Inbox</string>
-    <string name="selectCanvasContext">Select a course or group</string>
+    <string name="selectCanvasContext">Select a subject or group</string>
     <string name="inboxEmptyTitle">No messages</string>
     <string name="removeAttachment">Remove attachment</string>
     <string name="downloadAttachment">Download Attachment</string>
@@ -366,14 +357,14 @@
     <string name="loading">Loading&#8230;</string>
     <string name="select_item_to_display">Select from the list</string>
 
-    <string name="syllabus">Syllabus</string>
+    <string name="syllabus">Subject Overview</string>
     <string name="coursePeople">People</string>
-    <string name="teachersTas">Teachers &amp; TAs</string>
+    <string name="teachersTas">Instructors &amp; Tutors</string>
     <string name="students">Students</string>
     <string name="observers">Observers</string>
-    <string name="syllabusMissing">A syllabus not has been added.</string>
-    <string name="syllabusEventsError">There was an error loading your modules.</string>
+    <string name="syllabusMissing">A subject overview not has been added.</string>
 
+    <string name="syllabusEventsError">There was an error loading your modules.</string>
     <string name="canvas">Canvas</string>
     <string name="chooseRecipient">Choose Recipient(s)</string>
     <string name="messageHasNoRecipients">This message currently has no recipients.</string>
@@ -392,8 +383,7 @@
     <string name="calendar">Calendar</string>
     <string name="bookmarks">Bookmarks</string>
     <string name="showGrades">Show Grades</string>
-    <string name="colorOverlay">Color Overlay</string>
-    <string name="gradesAreHidden">Grades are not visible for this course.</string>
+    <string name="gradesAreHidden">Grades are not visible for this subject.</string>
 
     <string name="entireGroupSelected">This entire group has already been selected.</string>
     <string name="noUsersInGroup">There are no users in this group</string>
@@ -416,7 +406,7 @@
 
     <string name="pages">Pages</string>
     <string name="noPageFound">There is no page information available.</string>
-    <string name="noPagesInContext">There are no pages available for this</string>
+    <string name="noPagesInContext">There are no pages available for this.</string>
     <string name="modified">Last Modified:</string>
     <string name="lastModified">Last Modified: %1$s</string>
 
@@ -424,9 +414,9 @@
     <string name="startMasquerading">Start Masquerading</string>
     <string name="stopMasquerading">Stop Masquerading</string>
     <string name="userId">User ID</string>
-    <string name="masqueradeFail">There was an error when trying to masquerade</string>
+    <string name="masqueradeFail">There was an error when trying to masquerade.</string>
 
-    <string name="emptyId">The ID cannot be blank</string>
+    <string name="emptyId">The ID cannot be blank.</string>
 
     <string name="goToQuiz">Go To Quiz</string>
     <string name="goToExternalTool">Go To External Tool</string>
@@ -462,8 +452,8 @@
 
     <string name="messageBlank">The message cannot be blank.</string>
 
-    <string name="notAuthorizedAnnouncement">Sorry. You are not authorized to post announcements in this course.</string>
-    <string name="notAuthorizedDiscussion">Sorry. You are not authorized to post discussions in this course.</string>
+    <string name="notAuthorizedAnnouncement">Sorry. You are not authorised to post announcements in this subject.</string>
+    <string name="notAuthorizedDiscussion">Sorry. You are not authorised to post discussions in this subject.</string>
 
     <string name="announcements">Announcements</string>
 
@@ -471,12 +461,12 @@
 
     <!-- Modules -->
     <string name="modules">Modules</string>
-    <string name="moduleItemMustView">View this item</string>
-    <string name="moduleItemViewed">You have viewed this item</string>
-    <string name="moduleItemSubmit">Must submit assigment</string>
+    <string name="moduleItemMustView">View this item.</string>
+    <string name="moduleItemViewed">You have viewed this item.</string>
+    <string name="moduleItemSubmit">Must submit assignment</string>
     <string name="moduleItemSubmitted">Assignment submitted</string>
-    <string name="moduleItemContribute">Contribute to this page</string>
-    <string name="moduleItemContributed">You have contributed</string>
+    <string name="moduleItemContribute">Contribute to this page.</string>
+    <string name="moduleItemContributed">You have contributed.</string>
     <string name="moduleItemMinScore">Score at least a</string>
     <string name="moduleItemMinScoreMet">Minimum score met</string>
     <string name="prerequisites">Prerequisites:</string>
@@ -487,14 +477,14 @@
     <string name="lockedFileDesc">This file is part of the module %s and hasn\'t been unlocked yet.</string>
     <string name="lockedQuizDesc">This quiz is part of the module %s and hasn\'t been unlocked yet.</string>
     <string name="lockedDiscussionDesc">This discussion is part of the module %s and hasn\'t been unlocked yet.</string>
-    <string name="lockedAssignmentDescLine2">Visit the course modules page for information on how to unlock this content.</string>
+    <string name="lockedAssignmentDescLine2">Visit the subject modules page for information on how to unlock this content.</string>
     <string name="mustComplete">You must first complete:</string>
     <string name="unlockedAt">It will be unlocked at:</string>
-    <string name="goToModules">Go To Modules</string>
+    <string name="goToModules">Go to Modules</string>
     <string name="markDone">Mark done</string>
     <string name="moduleItemNotFound">Module Item Not Found</string>
-    <string name="errorLoadingModules">There was an error loading your modules.</string>
 
+    <string name="errorLoadingModules">There was an error loading your modules.</string>
     <string name="help">Help</string>
     <string name="instructor_question">Instructor Question</string>
     <string name="link">Link</string>
@@ -503,7 +493,7 @@
     <string name="lockedAssignmentNotModule">This assignment is locked.</string>
 
     <!--New Course Layout Strings -->
-    <string name="myCourses">My Courses</string>
+    <string name="myCourses">My Subjects</string>
 
 
     <!--New Submission Strings -->
@@ -512,14 +502,14 @@
     <string name="enterTextEntry">Enter Text Entry</string>
     <string name="fileUpload"> File Upload</string>
     <string name="oneFileOnly">This submission only accepts one file upload</string>
+
+
     <string name="websiteEntry">Add Website Entry</string>
     <string name="mediaRecordingEntry">Media Recordings</string>
-
-
     <string name="submit">Submit</string>
     <string name="blankSubmission">The submission cannot be blank.</string>
     <string name="errorPostingSubmission">There was an error posting the submission.</string>
-    <string name="successPostingSubmission">Successfully posted the submission.</string>
+    <string name="successPostingSubmission">Submission successfully posted</string>
 
     <string name="exampleSubmissionURL">http://www.example.com</string>
 
@@ -550,7 +540,7 @@
     <string name="subTypeMediaRecording">Media Recording</string>
     <string name="sub_type_lti_launch">LTI Launch</string>
     <string name="subTypeDiscussionTopic">Discussion</string>
-    <string name="turnInByHand">You must turn this assignment in by hand</string>
+    <string name="turnInByHand">You must turn this assignment in by hand.</string>
     <string name="noSubRequired">No submission required</string>
     <string name="noTurnInOnMobile">Mobile submission unsupported</string>
 
@@ -559,17 +549,17 @@
 
     <string name="icon">Icon</string>
     <string name="rootUser">Root User Folder</string>
-    <string name="rootCourse">Root Course Folder</string>
+    <string name="rootCourse">Root Subject Folder</string>
     <string name="rootGroup">Root Group Folder</string>
 
     <!-- Course Settings -->
     <string name="privatelyAvailable">Privately available</string>
     <string name="publiclyAvailable">Publicly available</string>
-    <string name="starts">Starts: \u0020</string>
-    <string name="courseCode">Course Code: \u0020</string>
-    <string name="ends">Ends: \u0020</string>
-    <string name="visibility">Visibility: \u0020</string>
-    <string name="license">License: \u0020</string>
+    <string name="starts">Starts:  </string>
+    <string name="courseCode">Subject Code:  </string>
+    <string name="ends">Ends:  </string>
+    <string name="visibility">Visibility:  </string>
+    <string name="license">Licence:  </string>
 
 
     <!-- Navigation String -->
@@ -582,7 +572,7 @@
     <string name="visitPage">Visit Page:</string>
     <string name="clickToViewSubmission">A snapshot of the website was taken when you turned it in. Tap and hold the image below to open or download the full image.</string>
     <string name="urlSubmissionNoPreview">This submission was a URL to an external page. Keep in mind that this page may have changed since the submission originally occurred.</string>
-    <string name="contentDescriptionPreviewImage">A preview of the submitted url</string>
+    <string name="contentDescriptionPreviewImage">A preview of the submitted URL</string>
     <string name="itemStillProcessing">This item is still processing on the server. Please try again.</string>
 
 
@@ -626,8 +616,8 @@
     <string name="todoWidgetTitleLong">Canvas - To Do</string>
     <string name="gradesWidgetTitleLong">Canvas - Grades</string>
     <string name="notificationWidgetTitleLong">Canvas - Notifications</string>
-    <string name="notLoggedIn">You are not logged in</string>
-    <string name="widgetStyle">Choose your widget style</string>
+    <string name="notLoggedIn">You are not logged in.</string>
+    <string name="widgetStyle">Choose your widget style.</string>
     <string name="widgetMinimumStyle">Hide details on widget</string>
     <string name="light">Light</string>
     <string name="dark">Dark</string>
@@ -641,24 +631,24 @@
     <string name="canvasGuides">Canvas Guides</string>
     <string name="searchGuidesDetails">Find answers to common questions</string>
     <string name="reportProblem">Report a Problem</string>
-    <string name="reportProblemDetails">If the app misbehaves, let us know</string>
+    <string name="reportProblemDetails">If the app misbehaves, please let us know.</string>
     <string name="requestFeature">Request a Feature</string>
     <string name="requestFeatureDetails">Have an idea to improve the app?</string>
     <string name="shareYourLove">Share Your Love for the App</string>
-    <string name="shareYourLoveDetails">Tell us about your favorite parts of the app</string>
+    <string name="shareYourLoveDetails">Tell us about your favourite parts of the app.</string>
 
     <!-- Feature Request -->
     <string name="featureSubject">Idea for Canvas [Android]</string>
     <string name="understandRequest">The following information will help us better understand your idea:</string>
 
     <!-- Ask Instructor -->
-    <string name="whichCourse">Which course is this question about?</string>
-    <string name="allTeachers">This message will be sent to all Teachers and TAs in the course</string>
+    <string name="whichCourse">Which subject is this question about?</string>
+    <string name="allTeachers">This message will be sent to all Instructors and Tutors in the subject.</string>
     <string name="sending">Sending&#8230;</string>
     <string name="error">Error</string>
 
     <!-- Tablet Strings -->
-    <string name="courses">Courses</string>
+    <string name="courses">Subjects</string>
     <string name="toDoList">To Do List</string>
     <string name="notifications">Notifications</string>
     <string name="pushNotifications">Push Notifications</string>
@@ -670,14 +660,14 @@
     <string name="launchSpeedgrader">Open Speedgrader</string>
 
     <string name="search_todo">todo to do todos todo list</string>
-    <string name="search_course">course courses class classes</string>
+    <string name="search_course">subject subjects class classes</string>
     <string name="search_grades">grade grades</string>
 
     <!-- ShareFileOptions Dialog-->
     <string name="uploadTo">Upload To </string>
     <string name="uploadToCanvas">Upload To Canvas</string>
     <string name="uploadMyFiles">My Files</string>
-    <string name="uploadCourseFiles">Course Files</string>
+    <string name="uploadCourseFiles">Subject Files</string>
     <string name="uploadToSubmissionComment">Upload to Submission Comment</string>
     <!-- ChangeLog Dialog-->
     <string name="changelog">Changelog</string>
@@ -689,16 +679,16 @@
     <string name="setToDefault">Set to default</string>
     <string name="chooseBackgroundImage">Choose backdrop image</string>
 
-    <string name="no_courses">Tap to add a course</string>
-    <string name="no_courses_available">No courses here, take the day off!</string>
-    <string name="no_courses_grades">Please enroll in a course to see your grades</string>
+    <string name="no_courses">Tap to add a subject.</string>
+    <string name="no_courses_available">No subjects here; take the day off!</string>
+    <string name="no_courses_grades">Please enrol in a subject to see your grades.</string>
     <!--Navigation Drawer-->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="preferred_land_page">Landing Page</string>
-    <string name="could_not_route_course">Could not find the course enrollment.</string>
-    <string name="could_not_route_group">Could not find the group enrollment.</string>
+    <string name="could_not_route_course">Could not find the subject enrolment.</string>
+    <string name="could_not_route_group">Could not find the group enrolment.</string>
     <string name="could_not_route_unknown">An unexpected error occurred.</string>
     <string name="could_not_route_locked">This page is hidden or locked and cannot be accessed.</string>
 
@@ -710,7 +700,7 @@
     <string name="undatedAssignments">Undated Assignments</string>
     <string name="pastAssignments">Past Assignments</string>
 
-    <string name="could_not_find_course">There was an error getting the course for this item.</string>
+    <string name="could_not_find_course">There was an error getting the subject for this item.</string>
     <string name="could_not_find_group">There was an error getting the group for this item.</string>
 
     <string name="selectBackground">Select a backdrop</string>
@@ -724,10 +714,10 @@
 
     <string name="createPandaAvatar">Create Panda Avatar</string>
     <string name="back">Back</string>
-    <string name="setAsAvatar">Set as avatar</string>
-    <string name="avatarSuccessfullySaved">The panda avatar was successfully saved</string>
+    <string name="setAsAvatar">Set as avatar.</string>
+    <string name="avatarSuccessfullySaved">The panda avatar was successfully saved.</string>
     <string name="regularAvatarSuccessfullySaved">Avatar successfully saved.</string>
-    <string name="errorSavingAvatar">There was an error saving the panda avatar</string>
+    <string name="errorSavingAvatar">There was an error saving the panda avatar.</string>
     <string name="pandaAvatar">Panda Avatar</string>
     <string name="pandaHead">Panda Avatar Head</string>
     <string name="pandaBody">Panda Avatar Body</string>
@@ -743,11 +733,11 @@
     <string name="calendarMonth">Month</string>
     <string name="selectCalendars">Select Calendars</string>
     <string name="createNewCalendarEvent">Create New Event</string>
-    <string name="calendarDialog10Warning">You may only choose 10 Calendars to display</string>
-    <string name="calendarDialogNoneWarning">Please select at least one Calendar</string>
-    <string name="enableFunMode">Turn off the pandas</string>
+    <string name="calendarDialog10Warning">You may only choose 10 Calendars to display.</string>
+    <string name="calendarDialogNoneWarning">Please select at least one Calendar.</string>
+    <string name="enableFunMode">Turn off the pandas.</string>
 
-    <string name="accountNotifications">Announcements</string>`
+    <string name="accountNotifications">Announcements</string>
     <string name="addAccount">Add Account</string>
 
     <string name="changeUser">Change User</string>
@@ -755,12 +745,11 @@
     <string name="no_data_connection">Please check your data connection and try again.</string>
 
     <!--Notification Preferences-->
-
     <string name="notification_primary_inbox_title">Canvas Notification</string>
     <string name="notification_channel_name_primary">General Canvas Notifications</string>
     <string name="notification_channel_description_primary">Further configuration of notifications can be done within the Canvas Notification Preferences section.</string>
 
-    <string name="notification_cat_course_activities">Course Activities</string>
+    <string name="notification_cat_course_activities">Subject Activities</string>
     <string name="notification_cat_discussions">Discussions</string>
     <string name="notification_cat_conversations">Conversations</string>
     <string name="notification_cat_scheduling">Scheduling</string>
@@ -770,7 +759,7 @@
 
     <string name="notification_pref_due_date">Due Date</string>
     <string name="notification_pref_grading_policies">Grading Policies</string>
-    <string name="notification_pref_course_content">Course Content</string>
+    <string name="notification_pref_course_content">Subject Content</string>
     <string name="notification_pref_files">Files</string>
     <string name="notification_pref_announcement">Announcement</string>
     <string name="notification_pref_announcement_created_by_you">Announcement Created By You</string>
@@ -789,7 +778,7 @@
 
     <string name="notification_pref_student_appointment_signups">Student Appointment Signups</string>
     <string name="notification_pref_appointment_signups">Appointment Signups</string>
-    <string name="notification_pref_appointment_cancelations">Appointment Cancelations</string>
+    <string name="notification_pref_appointment_cancelations">Appointment Cancellations</string>
     <string name="notification_pref_appointment_availability">Appointment Availability</string>
     <string name="notification_pref_calendar">Calendar</string>
 
@@ -806,17 +795,17 @@
     <string name="notification_pref_toast_success">Notifications have been enabled.</string>
 
     <string name="notification_desc_due_date">Get notified when an assignment due date changes.</string>
-    <string name="notification_desc_grading_policies">Get notified when course grading policies change.</string>
-    <string name="notification_desc_course_content">Get notified when course content changes on WikiPages, Quizzes, and Assignments.</string>
-    <string name="notification_desc_files">Get notified when a new file is added to your course.</string>
-    <string name="notification_desc_announcement">Get notified when there is a new announcement in your course.</string>
+    <string name="notification_desc_grading_policies">Get notified when subject grading policies change.</string>
+    <string name="notification_desc_course_content">Get notified when subject content changes on WikiPages, Quizzes, and Assignments.</string>
+    <string name="notification_desc_files">Get notified when a new file is added to your subject.</string>
+    <string name="notification_desc_announcement">Get notified when there is a new announcement in your subject.</string>
     <string name="notification_desc_announcement_created_by_you">Get notified when you create an announcement and when somebody replies to your announcement.</string>
     <string name="notification_desc_grading">Get notified when an assignment/submission was graded/changed and when a grade weight was changed.</string>
     <string name="notification_desc_invitation">Get notified for invitations to web conferences, groups, collaborations, peer reviews, and reminders.</string>
     <string name="notification_desc_all_submissions">Instructor &amp; Admin only. Get notified when an assignment is submitted or resubmitted.</string>
     <string name="notification_desc_late_grading">Instructor &amp; Admin only. Get notified when a late assignment is submitted.</string>
     <string name="notification_desc_submission_comment">Get notified when a comment is made on your submission.</string>
-    <string name="notification_desc_discussion">Get notified when there’s a new discussion topic in your course.</string>
+    <string name="notification_desc_discussion">Get notified when there’s a new discussion topic in your subject.</string>
     <string name="notification_desc_discussion_post">Get notified when there’s a new post in a discussion you’re subscribed to.</string>
     <string name="notification_desc_add_to_conversation">Get notified when you’re added to a conversation.</string>
     <string name="notification_desc_conversation_message">Get notified when you have a new inbox message.</string>
@@ -826,8 +815,8 @@
     <string name="notification_desc_appointment_cancelations">Get notified when there’s an appointment cancellation.</string>
     <string name="notification_desc_appointment_availability">Get notified when an appointment slot becomes available.</string>
     <string name="notification_desc_calendar">Get notified about new and updated calendar items.</string>
-    <string name="notification_desc_membership_update">Admin only, pending enrollment activated. Get notified when a group enrolllment is accepted or rejected.</string>
-    <string name="notification_desc_admin">Instructor &amp; Admin only. Get notified about course enrollments, reports generated, content exported, migration reports, new account users, and new student groups.</string>
+    <string name="notification_desc_membership_update">Admin only, pending enrolment activated. Get notified when a group enrolment is accepted or rejected.</string>
+    <string name="notification_desc_admin">Instructor &amp; Admin only. Get notified about subject enrolments, reports generated, content exported, migration reports, new account users, and new student groups.</string>
     <string name="notification_desc_recording_ready">Get notified when a conference recording is ready.</string>
 
     <string name="enterAnswer">Enter Answer</string>
@@ -843,7 +832,7 @@
     <string name="lockedIPAddress">This quiz is locked. It is only available in certain locations.</string>
     <string name="lockedInvalidAccessCode">Invalid access code</string>
 
-    <string name="showFlaggedQuestions">Show flagged/unanswered questions</string>
+    <string name="showFlaggedQuestions">Show flagged/unanswered questions.</string>
     <string name="question">Question</string>
     <string name="questions">Questions</string>
     <plurals name="question_count">
@@ -872,7 +861,7 @@
     <string name="almostDue">Almost Due!</string>
     <string name="almostDueMsg">The due date is almost here. Submit now to prevent your quiz from being marked late?</string>
     <string name="timeLimit">Time Limit</string>
-    <string name="cantStartQuiz">Unable to start quiz.</string>
+    <string name="cantStartQuiz">Unable to start quiz</string>
     <string name="start">Start</string>
     <string name="newPushNotifications">%1$s New Notifications</string>
     <string name="like">like</string>
@@ -895,14 +884,14 @@
     <string name="color_12">Gold</string>
     <string name="color_13">Orange</string>
     <string name="color_14">Pink</string>
-    <string name="color_15">Gray</string>
+    <string name="color_15">Grey</string>
 
-    <string name="edit_course_nickname">Edit Course Nickname</string>
-    <string name="courseNicknameError">The course nickname could not be set at this time.</string>
+    <string name="edit_course_nickname">Edit Subject Nickname</string>
+    <string name="courseNicknameError">The subject nickname could not be set at this time.</string>
 
-    <string name="colorPickerDialogTitle">Course Color</string>
-    <string name="colorPickerDialogMessage">Personalize your course by setting a new color.</string>
-    <string name="colorPickerError">The course color could not be set at this time.</string>
+    <string name="colorPickerDialogTitle">Subject Colour</string>
+    <string name="colorPickerDialogMessage">Personalise your subject by setting a new colour.</string>
+    <string name="colorPickerError">The subject colour could not be set at this time.</string>
 
     <string name="contentDescriptionColorCottonCandy">Pink</string>
     <string name="contentDescriptionColorBarbie">Hot Pink</string>
@@ -920,25 +909,23 @@
     <string name="contentDescriptionColorBloodOrange">Dark Orange</string>
     <string name="contentDescriptionColorSriracha">Red</string>
 
-    <string name="courseFavorited">Course %s, favorite.</string>
-    <string name="courseNotFavorited">Course %s, not favorite.</string>
-    <string name="groupFavorited">Group %s, favorite.</string>
-    <string name="groupNotFavorited">Group %s, not favorite.</string>
+    <string name="courseFavorited">Subject %s, favourite.</string>
+    <string name="courseNotFavorited">Subject %s, not favourite.</string>
+    <string name="groupFavorited">Group %s, favourite.</string>
+    <string name="groupNotFavorited">Group %s, not favourite.</string>
     <string name="accountGroup">Account Group</string>
 
     <!--Recents-->
-    <string name="recents_empty">From the course customization screen add a course or group to view them here.</string>
+    <string name="recents_empty">From the subject customisation screen, add a subject or group to view them here.</string>
 
     <string name="toolbar_close">Toolbar close</string>
-    <string name="favoriteDescription">Show in \"My Courses\"</string>
+    <string name="favoriteDescription">Show in \"My Subjects\"</string>
     <string name="about">About</string>
-    <string name="courseShortcuts">Add a shortcut to your course</string>
-    <string name="courseNickname">Course Nickname</string>
+    <string name="courseShortcuts">Add a shortcut to your subject.</string>
+    <string name="courseNickname">Subject Nickname</string>
 
     <string name="notAvailableOffline">Functionality unavailable while offline</string>
-    <string name="editDashboard">Edit Dashboard</string>
-    <string name="editDashboardDescriptor">Select which courses you would like to see on the Dashboard</string>
-    <string name="a11y_editYourCourseList">Edit your course list</string>
+    <string name="editFavorites">Edit Subjects</string>
 
     <string name="dashboard">Dashboard</string>
     <string name="previous">Previous</string>
@@ -946,8 +933,8 @@
     <string name="language">Language</string>
     <string name="systemDefault">System Default</string>
     <string name="restartingCanvas">Restarting Canvas</string>
-    <string name="languageDialogText">Changing the language will require the app to restart, are you sure?</string>
-    <string name="defaultLanguageWarning">Your system default language is not guaranteed to be supported and will require a restart, are you sure?</string>
+    <string name="languageDialogText">Changing the language will require the app to restart. Are you sure you want to do this?</string>
+    <string name="defaultLanguageWarning">Your system default language is not guaranteed to be supported and will require a restart. Are you sure you want to do this?</string>
     <string name="locked_mastery_paths">Locked until \"%s\" is graded</string>
     <string name="locked_icon">Locked Icon</string>
     <string name="choose_assignment_group">Choose Assignment Group</string>
@@ -969,12 +956,8 @@
     <string name="tapToViewAnnouncement">Tap to view announcement</string>
     <string name="acceptCourseInvitation">Accept</string>
     <string name="declineCourseInvitation">Decline</string>
-    <string name="outOf">out of</string>
 
     <!-- File Strings -->
-    <string name="noFilesSubtextCourse">There are no files associated with this course.</string>
-    <string name="noFilesSubtextGroup">There are no files associated with this group.</string>
-
     <array name="file_size_units">
         <item>B</item>
         <item>KB</item>
@@ -992,7 +975,7 @@
     <string name="homePageIdForNotifications">Recent Activity</string>
     <string name="homePageIdForModules">Modules</string>
     <string name="homePageIdForAssignments">Assignments</string>
-    <string name="homePageIdForSyllabus">Syllabus</string>
+    <string name="homePageIdForSyllabus">Subject Overview</string>
 
     <string name="contentDescriptionWidgetRefresh">Refresh widget</string>
 
@@ -1049,7 +1032,7 @@
     <!-- Parent Strings -->
     <string name="addChildTitle">Add Student</string>
     <string name="addChildSubTitle">Input the student pairing code provided to you.</string>
-    <string name="addChildHint">Pairing Code…</string>
+    <string name="addChildHint">Pairing Code&#8230;</string>
     <string name="addChildErrorMessage">Pairing Failed. Make sure your pairing code is correct and within the time limit of use.</string>
     <string name="gradeComplete">Complete</string>
     <string name="gradeIncomplete">Incomplete</string>

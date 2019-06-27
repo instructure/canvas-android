@@ -14,18 +14,18 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric
+package com.instructure.student.ui.interaction
 
-import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.ui.SubmissionRubricView
-import com.instructure.student.mobius.common.ui.EffectHandler
+import com.instructure.canvas.espresso.Stub
+import com.instructure.student.ui.utils.StudentTest
+import org.junit.Test
 
-class SubmissionRubricEffectHandler :
-    EffectHandler<SubmissionRubricView, SubmissionRubricEvent, SubmissionRubricEffect>() {
-    override fun accept(effect: SubmissionRubricEffect) {
-        when (effect) {
-            is SubmissionRubricEffect.ShowLongDescription -> {
-                view?.displayCriterionDescription(effect.description, effect.longDescription)
-            }
-        }
+class SubmissionDetailsInteractionTest : StudentTest() {
+    override fun displaysPageObjects() = Unit // Not implemented
+
+    @Stub
+    @Test
+    fun testRubrics_showCriterionDescription() {
+        // Clicking the "Description" button on a rubric criterion item should show a new page with the full description
     }
 }

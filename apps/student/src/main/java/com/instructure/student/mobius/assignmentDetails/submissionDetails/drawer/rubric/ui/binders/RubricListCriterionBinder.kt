@@ -16,29 +16,63 @@
  */
 package com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.ui.binders
 
+import android.animation.LayoutTransition
+import android.view.View
+import android.view.animation.AccelerateDecelerateInterpolator
+import com.instructure.canvasapi2.utils.isValid
+import com.instructure.pandautils.utils.asStateList
 import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.setTextForVisibility
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.student.R
 import com.instructure.student.adapter.BasicItemBinder
-import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.RubricListData
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.RubricListData.Criterion
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.ui.RubricListCallback
 import kotlinx.android.synthetic.main.adapter_rubric_criterion.view.*
 
-class RubricListCriterionBinder : BasicItemBinder<RubricListData.Criterion, RubricListCallback>() {
+class RubricListCriterionBinder : BasicItemBinder<Criterion, RubricListCallback>() {
     override val layoutResId = R.layout.adapter_rubric_criterion
-    override val bindBehavior = Item { data, view, callback ->
-        with(view) {
-            criterionDescription.text = data.description
-            selectedRatingDescription.setTextForVisibility(data.ratingDescription)
-            ratingLayout.setVisible(data.ratings.isNotEmpty())
-            ratingLayout.setRatingData(data.ratings)
-            commentContainer.setVisible(data.comment != null)
-            comment.text = data.comment
-            viewLongDescriptionButton.setVisible(data.showLongDescriptionButton).onClick {
-                callback.longDescriptionClicked(data.criterionId)
-            }
-            bottomPadding.setVisible(!data.showLongDescriptionButton)
+
+    override fun initView(view: View) {
+        val transition = LayoutTransition().apply {
+            enableTransitionType(LayoutTransition.CHANGING)
+            val interpolator = AccelerateDecelerateInterpolator()
+            setInterpolator(LayoutTransition.APPEARING, interpolator)
+            setInterpolator(LayoutTransition.DISAPPEARING, interpolator)
+            setInterpolator(LayoutTransition.CHANGE_APPEARING, interpolator)
+            setInterpolator(LayoutTransition.CHANGE_DISAPPEARING, interpolator)
+            setInterpolator(LayoutTransition.CHANGING, interpolator)
+            setDuration(250)
+        }
+        view.ratingInfoContainer.layoutTransition = transition
+        view.rubricCriterion.layoutTransition = transition
+    }
+
+    override val bindBehavior = Item { data, callback, diff ->
+        // If diff is not null, only perform partial bind with changes
+        diff?.apply {
+            ratingTitle.setTextForVisibility(newItem.ratingTitle)
+            ratingDescription.setTextForVisibility(newItem.ratingDescription)
+            ratingInfoContainer.setVisible(newItem.ratingTitle.isValid() || newItem.ratingDescription.isValid())
+            ratingLayout.updateRatingData(newItem.ratings)
+            return@Item
+        }
+
+        // Otherwise, perform full bind
+        criterionTitle.text = data.title
+        ratingLayout.setVisible(data.ratings.isNotEmpty())
+        ratingLayout.setRatingData(data.ratings, data.tint) { callback.ratingClicked(data.criterionId, it) }
+        ratingTitle.setTextForVisibility(data.ratingTitle)
+        ratingDescription.setTextForVisibility(data.ratingDescription)
+        ratingInfoContainer
+            .setVisible(data.ratingTitle.isValid() || data.ratingDescription.isValid())
+            .backgroundTintList = data.tint.asStateList()
+        commentContainer.setVisible(data.comment != null)
+        comment.text = data.comment
+        descriptionButton.setVisible(data.showDescriptionButton).onClick {
+            callback.longDescriptionClicked(data.criterionId)
         }
     }
+
+    override fun getItemId(item: Criterion) = item.criterionId.hashCode().toLong()
 }

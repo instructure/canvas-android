@@ -17,6 +17,7 @@
 package com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.ui
 
 import android.content.Context
+import android.graphics.Color
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
@@ -33,17 +34,32 @@ class CriterionRatingLayout @JvmOverloads constructor(
     private val positionMap = WeakHashMap<View, Pair<Int, Int>>()
 
     /** The minimum horizontal and vertical spacing between rating button */
-    private val minSpacing = context.DP(8f).toInt()
+    private val minSpacing = context.DP(4f).toInt()
 
     init {
+        clipChildren = false
         // Generate fake ratings for layout preview
-        if (isInEditMode) setRatingData(generatePreviewRatings())
+        if (isInEditMode) setRatingData(generatePreviewRatings(), Color.GRAY) {}
     }
 
-    /** Sets the criterion to be used for rating. This MUST be called for proper functionality */
-    fun setRatingData(ratings: List<RatingData>) {
+    /** Sets (replaces) the data to be used for rating. This MUST be called for proper functionality */
+    fun setRatingData(ratings: List<RatingData>, tint: Int, onRatingClicked: (ratingId: String) -> Unit) {
         removeAllViews()
-        ratings.forEach { addView(CriterionRatingButton(context, it)) }
+        ratings.forEach { rating ->
+            val button = CriterionRatingButton(context, rating, tint)
+            button.onClick { onRatingClicked(rating.id) }
+            addView(button)
+        }
+    }
+
+    /** Updates the current rating data and selection states */
+    fun updateRatingData(ratings: List<RatingData>) {
+        if (ratings.size != childCount) throw IllegalArgumentException("New rating count does not match existing count")
+        ratings.forEachIndexed { index, rating ->
+            val button = getChildAt(index) as CriterionRatingButton
+            button.isSelected = rating.isSelected
+            button.isActivated = rating.isAssessed
+        }
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -113,9 +129,10 @@ class CriterionRatingLayout @JvmOverloads constructor(
 
         return List(ratingCount) {
             RatingData(
-                (it * ratingMultiplier).toString(),
-                "Rating $it",
-                it == selectedRating
+                id = "_fake_$it",
+                text = (it * ratingMultiplier).toString(),
+                isSelected = it == selectedRating,
+                isAssessed = false
             )
         }
     }
