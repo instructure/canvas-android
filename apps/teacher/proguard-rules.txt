@@ -103,6 +103,7 @@
 -keepclassmembernames class * {
     @com.google.android.gms.common.annotation.KeepName *;
 }
+-dontwarn com.google.android.gms.**
 
 -dontwarn com.google.api.**
 -dontwarn android.net.http.**
