@@ -23,6 +23,8 @@ import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.validOrNull
 import com.instructure.pandautils.utils.AssignmentUtils2
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.SubmissionCommentsSharedEvent
+import com.instructure.student.mobius.common.ChannelSource
 import com.instructure.student.mobius.common.ui.UpdateInit
 import com.instructure.student.util.Const
 import com.spotify.mobius.First
@@ -89,6 +91,29 @@ class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDet
                         model.copy(selectedAttachmentId = event.file.id),
                         setOf(SubmissionDetailsEffect.ShowSubmissionContentType(content))
                     )
+                }
+            }
+            is SubmissionDetailsEvent.AudioRecordingClicked -> {
+                Next.dispatch(setOf(SubmissionDetailsEffect.ShowAudioRecordingView))
+            }
+            is SubmissionDetailsEvent.VideoRecordingClicked -> {
+                Next.dispatch(setOf(SubmissionDetailsEffect.ShowVideoRecordingView))
+            }
+            is SubmissionDetailsEvent.VideoRecordingReplayClicked -> {
+                if(event.file != null) {
+                    Next.dispatch<SubmissionDetailsModel, SubmissionDetailsEffect>(setOf(SubmissionDetailsEffect.ShowVideoRecordingPlayback(event.file)))
+                } else {
+                    Next.dispatch<SubmissionDetailsModel, SubmissionDetailsEffect>(setOf(SubmissionDetailsEffect.ShowVideoRecordingPlaybackError))
+                }
+            }
+            is SubmissionDetailsEvent.StopMediaRecordingClicked -> {
+                Next.dispatch(setOf(SubmissionDetailsEffect.MediaCommentDialogClosed))
+            }
+            is SubmissionDetailsEvent.SendMediaCommentClicked -> {
+                if(event.file != null) {
+                    Next.dispatch<SubmissionDetailsModel, SubmissionDetailsEffect>(setOf(SubmissionDetailsEffect.UploadMediaComment(event.file)))
+                } else {
+                    Next.dispatch<SubmissionDetailsModel, SubmissionDetailsEffect>(setOf(SubmissionDetailsEffect.ShowMediaCommentError))
                 }
             }
         }

@@ -54,4 +54,7 @@
     <dimen name="file_upload_panda_top">56dp</dimen>
     <dimen name="file_upload_panda_bottom">24dp</dimen>
 
+    <dimen name="recordingViewHeight">127dp</dimen>
+    <dimen name="recordingViewWidth">195dp</dimen>
+    <dimen name="mediaRecordingButton">60dp</dimen>
 </resources>

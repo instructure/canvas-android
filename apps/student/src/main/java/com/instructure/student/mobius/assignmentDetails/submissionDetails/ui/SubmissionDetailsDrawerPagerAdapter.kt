@@ -20,6 +20,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.viewpager.widget.PagerAdapter
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.ui.SubmissionCommentsFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.files.ui.SubmissionFilesFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.ui.SubmissionRubricFragment
 
@@ -47,10 +48,7 @@ class SubmissionDetailsDrawerPagerAdapter(fragmentManager: FragmentManager) : Fr
             cachedFragment = when (tabData) {
                 is SubmissionDetailsTabData.FileData -> SubmissionFilesFragment().apply { data = tabData }
                 is SubmissionDetailsTabData.RubricData -> SubmissionRubricFragment().apply { data = tabData }
-                else -> PlaceholderFragment().apply {
-                    typeName = tabData::class.java.simpleName.substringAfterLast('.')
-                    typeContents = tabData.toString()
-                }
+                is SubmissionDetailsTabData.CommentData -> SubmissionCommentsFragment().apply { data = tabData }
             }
             cachedFragments[position] = cachedFragment
         }

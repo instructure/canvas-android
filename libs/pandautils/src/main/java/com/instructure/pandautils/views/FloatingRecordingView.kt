@@ -1,20 +1,19 @@
 /*
- * Copyright (C) 2017 - present Instructure, Inc.
+ * Copyright (C) 2019 - present Instructure, Inc.
  *
- *     This program is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, version 3 of the License.
+ *     Licensed under the Apache License, Version 2.0 (the "License");
+ *     you may not use this file except in compliance with the License.
+ *     You may obtain a copy of the License at
  *
- *     This program is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *     You should have received a copy of the GNU General Public License
- *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
+ *     Unless required by applicable law or agreed to in writing, software
+ *     distributed under the License is distributed on an "AS IS" BASIS,
+ *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *     See the License for the specific language governing permissions and
+ *     limitations under the License.
  */
-package com.instructure.teacher.view
+package com.instructure.pandautils.views
 
 import android.content.Context
 import android.graphics.Point
@@ -27,9 +26,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.cardview.widget.CardView
+import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.*
-import com.instructure.teacher.R
-import com.instructure.teacher.dialog.SGMediaCommentType
 import com.wonderkiln.camerakit.CameraKitEventCallback
 import com.wonderkiln.camerakit.CameraKitVideo
 import kotlinx.android.synthetic.main.view_floating_media_recorder.view.*
@@ -63,7 +61,7 @@ class FloatingRecordingView @JvmOverloads constructor(
     var mediaPlayer: MediaPlayer? = null
     private val TEMP_FILENAME = "audio.3gp"
 
-    private var mediaType: SGMediaCommentType? = null
+    private var mediaType: RecordingMediaType? = null
 
     lateinit var recordingCallback: (File?) -> Unit
 
@@ -79,8 +77,8 @@ class FloatingRecordingView @JvmOverloads constructor(
         super.onDetachedFromWindow()
         timerHandler.removeCallbacks(timerRunnable)
         when(mediaType) {
-            is SGMediaCommentType.Video -> stopVideoView()
-            is SGMediaCommentType.Audio -> cleanupMediaObjects()
+            is RecordingMediaType.Video -> stopVideoView()
+            is RecordingMediaType.Audio -> cleanupMediaObjects()
         }
     }
 
@@ -102,13 +100,13 @@ class FloatingRecordingView @JvmOverloads constructor(
         stoppedCallback()
     }
 
-    fun setContentType(type: SGMediaCommentType) = when (type) {
-        is SGMediaCommentType.Video -> {
-            mediaType = SGMediaCommentType.Video()
+    fun setContentType(type: RecordingMediaType) = when (type) {
+        is RecordingMediaType.Video -> {
+            mediaType = RecordingMediaType.Video
             setupVideo()
         }
-        is SGMediaCommentType.Audio -> {
-            mediaType = SGMediaCommentType.Audio()
+        is RecordingMediaType.Audio -> {
+            mediaType = RecordingMediaType.Audio
             setupAudio()
         }
     }
@@ -449,6 +447,11 @@ class FloatingRecordingView @JvmOverloads constructor(
                 context.getString(R.string.recordingTimerContentDescription, hours, minutes, seconds),
                 context.getString(R.string.recordingTimerContentDescription, totalHours, totalMinutes, totalSeconds))
     }
+}
+
+sealed class RecordingMediaType {
+    object Video : RecordingMediaType()
+    object Audio : RecordingMediaType()
 }
 
 

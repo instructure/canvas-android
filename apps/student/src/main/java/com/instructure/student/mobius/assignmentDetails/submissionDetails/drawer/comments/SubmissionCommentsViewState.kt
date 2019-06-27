@@ -14,12 +14,8 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.student.mobius.assignmentDetails.submissionDetails
+package com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments
 
-import com.instructure.canvasapi2.models.Attachment
-
-sealed class SubmissionDetailsSharedEvent {
-    data class FileSelected(val file: Attachment) : SubmissionDetailsSharedEvent()
-    object AudioRecordingViewLaunched : SubmissionDetailsSharedEvent()
-    object VideoRecordingViewLaunched : SubmissionDetailsSharedEvent()
+sealed class SubmissionCommentsViewState {
+    object Empty : SubmissionCommentsViewState()
 }

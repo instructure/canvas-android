@@ -14,12 +14,14 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.student.mobius.assignmentDetails.submissionDetails
+package com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments
 
-import com.instructure.canvasapi2.models.Attachment
+import android.content.Context
+import com.instructure.student.mobius.common.ui.Presenter
 
-sealed class SubmissionDetailsSharedEvent {
-    data class FileSelected(val file: Attachment) : SubmissionDetailsSharedEvent()
-    object AudioRecordingViewLaunched : SubmissionDetailsSharedEvent()
-    object VideoRecordingViewLaunched : SubmissionDetailsSharedEvent()
+
+object SubmissionCommentsPresenter : Presenter<SubmissionCommentsModel, SubmissionCommentsViewState> {
+    override fun present(model: SubmissionCommentsModel, context: Context): SubmissionCommentsViewState {
+        return SubmissionCommentsViewState.Empty
+    }
 }

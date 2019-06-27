@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?><!--
-  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~ Copyright (C) 2019 - present Instructure, Inc.
   ~
   ~     This program is free software: you can redistribute it and/or modify
   ~     it under the terms of the GNU General Public License as published by
@@ -16,47 +16,38 @@
   -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:camerakit="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cameraView"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/recordingViewHeight">
-
-    <com.wonderkiln.camerakit.CameraView
-        android:id="@+id/camera"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:adjustViewBounds="true"
-        camerakit:ckFacing="front"
-        camerakit:ckPinchToZoom="false" />
+    android:layout_height="@dimen/recordingViewHeight"
+    android:background="@color/recordFloatingViewBackground">
 
     <ImageView
-        android:id="@+id/startRecordingButton"
+        android:id="@+id/recordAudioButton"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_centerInParent="true"
-        android:contentDescription="@string/startRecordingVideo"
         android:src="@drawable/ic_record_media"
+        android:contentDescription="@string/startRecordingAudio"
         tools:ignore="ContentDescription" />
 
     <ImageView
-        android:id="@+id/endRecordingButton"
+        android:id="@+id/stopButton"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_centerInParent="true"
-        android:contentDescription="@string/stopRecordingVideo"
         android:src="@drawable/ic_stop_record_media"
-        android:visibility="gone"
-        tools:ignore="ContentDescription" />
+        android:contentDescription="@string/stopRecordingAudio"
+        android:visibility="gone" />
 
     <Button
-        android:id="@+id/replayButton"
+        android:id="@+id/replayAudioButton"
         style="@style/FloatingRecorderReplayButtonStyle"
         android:text="@string/replay"
         android:visibility="gone" />
 
     <Button
-        android:id="@+id/sendButton"
+        android:id="@+id/sendAudioButton"
         style="@style/FloatingRecorderSendButtonStyle"
         android:text="@string/send"
         android:visibility="gone" />

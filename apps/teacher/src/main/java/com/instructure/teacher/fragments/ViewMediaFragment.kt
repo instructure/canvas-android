@@ -27,7 +27,6 @@ import com.google.android.exoplayer2.source.UnrecognizedInputFormatException
 import com.google.android.exoplayer2.upstream.HttpDataSource
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
-import com.instructure.teacher.activities.ViewMediaActivity
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouteContext
 import com.instructure.pandautils.activities.BaseViewMediaActivity
