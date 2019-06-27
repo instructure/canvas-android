@@ -916,7 +916,7 @@
     <string name="courseNickname">コースニックネーム</string>
 
     <string name="notAvailableOffline">オフラインで利用できない機能</string>
-    <string name="editFavorites">コースを編集する</string>
+    <string name="editDashboard">コースを編集する</string>
 
     <string name="dashboard">ダッシュボード</string>
     <string name="previous">前</string>

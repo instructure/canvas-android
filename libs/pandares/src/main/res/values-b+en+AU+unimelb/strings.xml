@@ -925,7 +925,9 @@
     <string name="courseNickname">Subject Nickname</string>
 
     <string name="notAvailableOffline">Functionality unavailable while offline</string>
-    <string name="editFavorites">Edit Subjects</string>
+    <string name="editDashboardDescriptor">Select which subjects you would like to see on the Dashboard</string>
+    <string name="a11y_editYourCourseList">Edit your subject list</string>
+    <string name="editDashboard">Edit Subjects</string>
 
     <string name="dashboard">Dashboard</string>
     <string name="previous">Previous</string>
@@ -958,6 +960,9 @@
     <string name="declineCourseInvitation">Decline</string>
 
     <!-- File Strings -->
+    <string name="noFilesSubtextCourse">There are no files associated with this subject.</string>
+    <string name="noFilesSubtextGroup">There are no files associated with this group.</string>
+
     <array name="file_size_units">
         <item>B</item>
         <item>KB</item>
