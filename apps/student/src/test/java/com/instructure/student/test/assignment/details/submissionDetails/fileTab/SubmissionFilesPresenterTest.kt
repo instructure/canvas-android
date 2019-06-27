@@ -21,7 +21,6 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.Course
-import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.color
 import com.instructure.student.R
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.files.SubmissionFileData
@@ -36,6 +35,7 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class SubmissionFilesPresenterTest : Assert() {
 
+    private val testCourse = Course(id = 123L, name = "Test Course")
     private lateinit var context: Context
     private lateinit var baseModel: SubmissionFilesModel
     private lateinit var baseData: SubmissionFileData
@@ -45,11 +45,10 @@ class SubmissionFilesPresenterTest : Assert() {
     fun setup() {
         context = ApplicationProvider.getApplicationContext()
         baseModel = SubmissionFilesModel(
-            canvasContext = Course(),
+            canvasContext = testCourse,
             files = emptyList(),
             selectedFileId = 0
         )
-
         baseAttachment = Attachment(
             id = 123L,
             displayName = "File 123"
@@ -61,7 +60,7 @@ class SubmissionFilesPresenterTest : Assert() {
             thumbnailUrl = null,
             isSelected = false,
             iconColor = baseModel.canvasContext.color,
-            selectionColor = ThemePrefs.brandColor
+            selectionColor = testCourse.color
         )
     }
 

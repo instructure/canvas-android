@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.models.Submission
 
 sealed class SubmissionRubricEvent {
     data class LongDescriptionClicked(val criterionId: String) : SubmissionRubricEvent()
+    data class RatingClicked(val criterionId: String, val ratingId: String) : SubmissionRubricEvent()
 }
 
 sealed class SubmissionRubricEffect {
@@ -32,5 +33,6 @@ sealed class SubmissionRubricEffect {
 
 data class SubmissionRubricModel(
     val assignment: Assignment,
-    val submission: Submission
+    val submission: Submission,
+    val selectedRatingMap: Map<String, String> = emptyMap()
 )

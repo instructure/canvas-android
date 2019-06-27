@@ -925,7 +925,7 @@
     <string name="courseNickname">Course Nickname</string>
 
     <string name="notAvailableOffline">Functionality unavailable while offline</string>
-    <string name="editFavorites">Edit Courses</string>
+    <string name="editDashboard">Edit Courses</string>
 
     <string name="dashboard">Dashboard</string>
     <string name="previous">Previous</string>

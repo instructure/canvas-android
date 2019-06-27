@@ -925,7 +925,7 @@
     <string name="courseNickname">Surnom du cours</string>
 
     <string name="notAvailableOffline">La fonctionnalité n\'est pas disponible hors ligne</string>
-    <string name="editFavorites">Modifier cours</string>
+    <string name="editDashboard">Modifier cours</string>
 
     <string name="dashboard">Tableau de bord</string>
     <string name="previous">Précédent</string>

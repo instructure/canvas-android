@@ -925,7 +925,7 @@
     <string name="courseNickname">Spitzname des Kurses</string>
 
     <string name="notAvailableOffline">Diese Funktionalität ist im Offline-Betrieb nicht verfügbar</string>
-    <string name="editFavorites">Kurse bearbeiten</string>
+    <string name="editDashboard">Kurse bearbeiten</string>
 
     <string name="dashboard">Dashboard</string>
     <string name="previous">Vorherige</string>

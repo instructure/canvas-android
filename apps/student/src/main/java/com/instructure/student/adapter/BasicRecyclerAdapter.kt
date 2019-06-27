@@ -23,8 +23,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import kotlin.reflect.KProperty1
 
 
 abstract class BasicRecyclerAdapter<T : Any, C : BasicItemCallback>(val callback: C) :
@@ -52,8 +54,9 @@ abstract class BasicRecyclerAdapter<T : Any, C : BasicItemCallback>(val callback
 
     private var items: List<T> = emptyList()
         set(value) {
+            val diffResult = DiffUtil.calculateDiff(BasicDiffCallback(this, field, value))
             field = value
-            notifyDataSetChanged()
+            diffResult.dispatchUpdatesTo(this)
         }
 
     private fun updateExpandedItems() {
@@ -84,18 +87,27 @@ abstract class BasicRecyclerAdapter<T : Any, C : BasicItemCallback>(val callback
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        performBind(items[position], holder)
+        performBind(items[position], holder, null)
     }
 
     @Suppress("UNCHECKED_CAST")
-    private fun <I : T> getBinder(item: I): BasicItemBinder<I, C> =
+    override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: MutableList<Any>) {
+        performBind(items[position], holder, payloads.getOrNull(0) as? ItemDiff<T>)
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    internal fun <I : T> getBinder(item: I): BasicItemBinder<I, C> =
         registeredBinders[item::class.java] as? BasicItemBinder<I, C>
                 ?: throw IllegalStateException("No binder registered for ${item::class.java.name}")
 
-    private fun performBind(item: T, holder: ViewHolder) {
+    private fun performBind(
+        item: T,
+        holder: ViewHolder,
+        itemDiff: ItemDiff<T>?
+    ) {
         val binder = getBinder(item)
         when (val behavior = binder.bindBehavior) {
-            is BasicItemBinder.Item -> behavior.onBind(item, holder.itemView, callback)
+            is BasicItemBinder.Item -> behavior.onBind(holder.itemView, item, callback, itemDiff)
             is BasicItemBinder.Header -> {
                 if (behavior.collapsible) {
                     val groupId = binder.getItemId(item)
@@ -105,9 +117,9 @@ abstract class BasicRecyclerAdapter<T : Any, C : BasicItemCallback>(val callback
                         behavior.onExpand(item, !expanded, callback)
                         updateExpandedItems()
                     }
-                    behavior.onBind(item, holder.itemView, expanded, callback)
+                    behavior.onBind(holder.itemView, item, expanded, callback, itemDiff)
                 } else {
-                    behavior.onBind(item, holder.itemView, true, callback)
+                    behavior.onBind(holder.itemView, item, true, callback, itemDiff)
                 }
             }
             is BasicItemBinder.NoBind -> Unit // Do nothing
@@ -120,6 +132,40 @@ abstract class BasicRecyclerAdapter<T : Any, C : BasicItemCallback>(val callback
     override fun getItemViewType(position: Int): Int {
         val item = items[position]
         return getBinder(item).viewType
+    }
+
+}
+
+class BasicDiffCallback<T: Any, C : BasicItemCallback>(
+    val adapter: BasicRecyclerAdapter<T, C>,
+    val old: List<T>,
+    val new: List<T>
+) : DiffUtil.Callback() {
+
+    override fun getOldListSize() = old.size
+
+    override fun getNewListSize() = new.size
+
+    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        val oldItem = old[oldItemPosition]
+        val newItem = new[newItemPosition]
+        val oldItemBinder = adapter.getBinder(oldItem)
+        val newItemBinder = adapter.getBinder(newItem)
+        if (oldItemBinder !== newItemBinder) return false
+        return oldItemBinder.getItemId(oldItem) == newItemBinder.getItemId(newItem)
+    }
+
+    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        val oldItem = old[oldItemPosition]
+        val newItem = new[newItemPosition]
+        val binder = adapter.getBinder(oldItem)
+        return binder.areContentsTheSame(oldItem, newItem)
+    }
+
+    override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? {
+        val oldItem = old[oldItemPosition]
+        val newItem = new[newItemPosition]
+        return ItemDiff(oldItem, newItem)
     }
 
 }
@@ -138,6 +184,8 @@ abstract class BasicItemBinder<T : Any, C : BasicItemCallback> {
      * appear no more than once in the list (e.g. an inline loading indicator or error view).
      */
     open fun getItemId(item: T): Long = -viewType.toLong()
+
+    open fun areContentsTheSame(old: T, new: T): Boolean = old == new
 
     fun createViewHolder(context: Context, parent: ViewGroup): ViewHolder {
         val view = LayoutInflater.from(context).inflate(layoutResId, parent, false)
@@ -162,17 +210,27 @@ abstract class BasicItemBinder<T : Any, C : BasicItemCallback> {
     inner class NoBind : BindBehavior<T, C>()
 
     inner class Item(
-        val onBind: (item: T, view: View, callback: C) -> Unit
+        val onBind: View.(item: T, callback: C, diff: ItemDiff<T>?) -> Unit
     ) : BindBehavior<T, C>()
 
     inner class Header(
         val collapsible: Boolean = true,
         val onExpand: (item: T, isExpanded: Boolean, callback: C) -> Unit = { _, _, _ -> },
-        val onBind: (item: T, view: View, isCollapsed: Boolean, callback: C) -> Unit
+        val onBind: View.(item: T, isCollapsed: Boolean, callback: C, diff: ItemDiff<T>?) -> Unit
     ) : BindBehavior<T, C>()
 
     // endregion
 
+}
+
+class ItemDiff<T: Any>(val oldItem: T, val newItem: T) {
+    fun <K> prop(prop: KProperty1<T, K>, eval: (old: K, new: K) -> Unit) {
+        val oldProp = prop.get(oldItem)
+        val newProp = prop.get(newItem)
+        if (newProp != oldProp) eval(oldProp, newProp)
+    }
+
+    inline fun processChanges(block: ItemDiff<T>.() -> Unit) = this.block()
 }
 
 interface BasicItemCallback

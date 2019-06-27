@@ -942,7 +942,7 @@
     <string name="courseNickname">Прозвище курса</string>
 
     <string name="notAvailableOffline">Функциональность недоступна в автономном режиме</string>
-    <string name="editFavorites">Редактировать курсы</string>
+    <string name="editDashboard">Редактировать курсы</string>
 
     <string name="dashboard">Информационная панель</string>
     <string name="previous">Предыдущий</string>

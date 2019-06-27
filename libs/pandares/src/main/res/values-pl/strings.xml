@@ -943,7 +943,7 @@
     <string name="courseNickname">Przydomek kursu</string>
 
     <string name="notAvailableOffline">Funkcje niedostępne w trybie offline</string>
-    <string name="editFavorites">Edytuj kursy</string>
+    <string name="editDashboard">Edytuj kursy</string>
 
     <string name="dashboard">Panel nawigacyjny</string>
     <string name="previous">Poprzednie</string>

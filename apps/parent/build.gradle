@@ -16,6 +16,7 @@
  */
 import com.instructure.android.buildtools.transform.ProjectTransformer
 import com.instructure.android.buildtools.transform.MasqueradeUITransformer
+import com.instructure.android.buildtools.transform.LocaleTransformer
 
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
@@ -149,7 +150,8 @@ android {
     registerTransform(
             new ProjectTransformer(
                     android,
-                    new MasqueradeUITransformer('com.instructure.parentapp.activity.LoginActivity.class')
+                    new MasqueradeUITransformer('com.instructure.parentapp.activity.LoginActivity.class'),
+                    new LocaleTransformer()
             )
     )
 
