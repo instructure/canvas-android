@@ -916,7 +916,7 @@
     <string name="courseNickname">課程暱稱</string>
 
     <string name="notAvailableOffline">離線功能不可用</string>
-    <string name="editFavorites">編輯課程</string>
+    <string name="editDashboard">編輯課程</string>
 
     <string name="dashboard">控制面板</string>
     <string name="previous">上一個</string>

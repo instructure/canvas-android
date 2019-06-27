@@ -925,7 +925,7 @@
     <string name="courseNickname">Bijnaam cursus</string>
 
     <string name="notAvailableOffline">Functionaliteit niet beschikbaar als je offline bent</string>
-    <string name="editFavorites">Cursussen bewerken</string>
+    <string name="editDashboard">Cursussen bewerken</string>
 
     <string name="dashboard">Dashboard</string>
     <string name="previous">Vorige</string>

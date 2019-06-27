@@ -30,6 +30,7 @@ import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.Account
 import com.instructure.canvasapi2.models.BecomeUserPermission
 import com.instructure.canvasapi2.models.Enrollment
+import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.*
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
 import com.instructure.canvasapi2.utils.weave.awaitApi
@@ -38,6 +39,8 @@ import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.toast
+import com.instructure.parentapp.BuildConfig
 import com.instructure.parentapp.R
 import com.instructure.parentapp.fragments.NotAParentFragment
 import com.instructure.parentapp.tasks.ParentLogoutTask
@@ -74,6 +77,14 @@ class SplashActivity : AppCompatActivity() {
             // Now get it from the new place. This will be the true token whether they signed into dev/retrofit or the old way.
             val token = ApiPrefs.token
             ApiPrefs.protocol = "https"
+
+            val user = awaitApi<User> { UserManager.getSelf(true, it) }
+            val shouldRestartForLocaleChange = setupUser(user)
+            if (shouldRestartForLocaleChange) {
+                if (BuildConfig.DEBUG) toast(R.string.localeRestartMessage)
+                LocaleUtils.restartApp(this@SplashActivity, LoginActivity::class.java)
+                return@tryWeave
+            }
 
             if (ParentPrefs.isObserver == null) {
                 val enrollments = awaitApi<List<Enrollment>> { EnrollmentManager.getObserveeEnrollments(true, it) }
@@ -131,6 +142,13 @@ class SplashActivity : AppCompatActivity() {
             Logger.e(it.message)
             Logger.e(it.stackTrace.toString())
         }
+    }
+
+    /** Caches the user in ApiPrefs. Returns true if the user's locale has changed and an app restart is required. */
+    private fun setupUser(user: User): Boolean {
+        val oldLocale = ApiPrefs.effectiveLocale
+        ApiPrefs.user = user
+        return ApiPrefs.effectiveLocale != oldLocale
     }
 
     private fun navigateLoginLandingPage() {

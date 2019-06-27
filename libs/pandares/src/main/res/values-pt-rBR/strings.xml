@@ -925,7 +925,7 @@
     <string name="courseNickname">Apelido do Curso</string>
 
     <string name="notAvailableOffline">Funcionalidade indisponível no modo off-line</string>
-    <string name="editFavorites">Editar Cursos</string>
+    <string name="editDashboard">Editar Cursos</string>
 
     <string name="dashboard">Painel</string>
     <string name="previous">Anterior</string>

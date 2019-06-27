@@ -916,7 +916,7 @@
     <string name="courseNickname">课程昵称</string>
 
     <string name="notAvailableOffline">离线时功能不可用。</string>
-    <string name="editFavorites">编辑课程</string>
+    <string name="editDashboard">编辑课程</string>
 
     <string name="dashboard">控制面板</string>
     <string name="previous">上一个</string>

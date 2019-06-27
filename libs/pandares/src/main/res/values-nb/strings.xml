@@ -925,7 +925,7 @@
     <string name="courseNickname">Kallenavn for emne</string>
 
     <string name="notAvailableOffline">Funksjonalitet utilgjengelig når du er offline</string>
-    <string name="editFavorites">Rediger emner</string>
+    <string name="editDashboard">Rediger emner</string>
 
     <string name="dashboard">Instrumentbord</string>
     <string name="previous">Forrige</string>
