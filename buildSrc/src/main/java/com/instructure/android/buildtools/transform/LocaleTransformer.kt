@@ -67,7 +67,7 @@ class LocaleTransformer : ClassTransformer() {
             // If method is overridden, ensure that the context is being wrapped
             var callsWrap = false
             method.instrument(object : ExprEditor() {
-                val expectedCall = "com.instructure.pandautils.utils.LocaleUtils.wrapContext(android.content.Context)"
+                val expectedCall = "com.instructure.canvasapi2.utils.LocaleUtils.wrapContext(android.content.Context)"
                 override fun edit(m: MethodCall) {
                     if (m.method.longName == expectedCall) callsWrap = true
                 }
@@ -77,7 +77,7 @@ class LocaleTransformer : ClassTransformer() {
             val newMethod = CtNewMethod.make(
                     """
                 protected void attachBaseContext(android.content.Context base) {
-                    android.content.Context newBase = com.instructure.pandautils.utils.LocaleUtils.wrapContext(base);
+                    android.content.Context newBase = com.instructure.canvasapi2.utils.LocaleUtils.wrapContext(base);
                     super.attachBaseContext(newBase);
                 }
                 """.trimIndent(), this)

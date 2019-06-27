@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.models.RubricCriterionRating
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.validOrNull
+import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.student.R
 import com.instructure.student.mobius.assignmentDetails.ui.gradeCell.GradeCellViewState
 import com.instructure.student.mobius.common.ui.Presenter
@@ -30,7 +31,7 @@ import java.util.*
 
 object SubmissionRubricPresenter : Presenter<SubmissionRubricModel, SubmissionRubricViewState> {
 
-    private const val customRatingId = "_custom_rating_id_"
+    const val customRatingId = "_custom_rating_id_"
 
     override fun present(model: SubmissionRubricModel, context: Context): SubmissionRubricViewState {
         val rubric = model.assignment.rubric ?: emptyList()
@@ -82,45 +83,40 @@ object SubmissionRubricPresenter : Presenter<SubmissionRubricModel, SubmissionRu
         ratings = ratings.sortedBy { it.points }
 
         // Find the criterion rating that matches the assessment rating
-        val selectedRating = ratings.find { it.id == assessment?.ratingId }
-        var selectedRatingDescription = selectedRating?.description
+        val assessedRating = ratings.find { it.id == assessment?.ratingId }
+
+        val selectedRatingId = model.selectedRatingMap[criterion.id] ?: assessedRating?.id
 
         // Free-form assessments should only show the assessment comments and the matching assessment rating
         if (model.assignment.freeFormCriterionComments) {
             ratings = ratings
                 .filter { it.id == assessment?.ratingId && model.assignment.rubricSettings?.hidePoints != true}
                 .map { it.copy(description = null) }
-            selectedRatingDescription = null
         }
+
+        // If points are hidden, show the rating title instead of points
+        val hidePoints = model.assignment.rubricSettings?.hidePoints == true
 
         // Map criterion ratings to view state data
         var ratingData = ratings.map { rating ->
             RatingData(
-                points = NumberHelper.formatDecimal(rating.points, 2, true),
-                description = rating.description,
-                isSelected = rating.id == selectedRating?.id
+                id = rating.id.orEmpty(),
+                text = if (hidePoints) rating.description.orEmpty() else NumberHelper.formatDecimal(rating.points, 2, true),
+                isSelected = rating.id == selectedRatingId,
+                isAssessed = rating.id == assessedRating?.id,
+                useSmallText = hidePoints
             )
         }
 
-
-        if (model.assignment.rubricSettings?.hidePoints == true) {
-            // If points are hidden, show the rating description instead and hide the selected rating text
-            selectedRatingDescription = null
+        // The rating for free-form assessments should include the total points
+        val isFreeForm = model.assignment.freeFormCriterionComments
+        if (isFreeForm) {
             ratingData = ratingData.map {
                 it.copy(
-                    points = it.description.orEmpty(),
-                    description = null,
-                    useSmallText = true
-                )
-            }
-        } else if (model.assignment.freeFormCriterionComments) {
-            // The rating for free-form assessments should include the total points
-            ratingData = ratingData.map {
-                it.copy(
-                    points = String.format(
+                    text = String.format(
                         context.getString(
                             R.string.rangedRubricTotal,
-                            it.points,
+                            it.text,
                             NumberHelper.formatDecimal(criterion.points, 2, true)
                         )
                     )
@@ -128,13 +124,17 @@ object SubmissionRubricPresenter : Presenter<SubmissionRubricModel, SubmissionRu
             }
         }
 
+        val selectedRating = ratings.find { it.id == selectedRatingId }
+
         return RubricListData.Criterion(
-            description = criterion.description.orEmpty(),
+            title = criterion.description.orEmpty(),
             criterionId = criterion.id!!,
-            showLongDescriptionButton = criterion.longDescription.isValid(),
-            ratingDescription = selectedRatingDescription.validOrNull(),
+            showDescriptionButton = criterion.longDescription.isValid(),
             ratings = ratingData,
-            comment = assessment?.comments.validOrNull()
+            comment = assessment?.comments.validOrNull(),
+            ratingTitle = if (isFreeForm) null else selectedRating?.description,
+            ratingDescription = if (isFreeForm) null else selectedRating?.longDescription,
+            tint = ColorKeeper.colorFromCourseId(model.assignment.courseId)
         )
     }
 

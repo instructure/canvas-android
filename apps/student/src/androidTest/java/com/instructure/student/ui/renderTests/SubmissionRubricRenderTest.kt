@@ -16,24 +16,22 @@
  */
 package com.instructure.student.ui.renderTests
 
-import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
+import android.graphics.Color
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.espresso.matcher.ViewMatchers.hasChildCount
 import androidx.test.espresso.matcher.ViewMatchers.isSelected
-import androidx.test.espresso.web.assertion.WebViewAssertions
-import androidx.test.espresso.web.sugar.Web
-import androidx.test.espresso.web.webdriver.DriverAtoms
-import androidx.test.espresso.web.webdriver.Locator
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.platform.app.InstrumentationRegistry
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.RubricCriterion
+import com.instructure.canvasapi2.models.RubricCriterionRating
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.espresso.*
 import com.instructure.espresso.page.onViewWithText
 import com.instructure.student.espresso.StudentRenderTest
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.RatingData
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.RubricListData
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.SubmissionRubricModel
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.SubmissionRubricViewState
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.ui.SubmissionRubricFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsTabData
@@ -42,7 +40,6 @@ import com.instructure.student.ui.pages.renderPages.SubmissionRubricRenderPage
 import com.instructure.student.ui.utils.assertFontSizeSP
 import com.spotify.mobius.runners.WorkRunner
 import org.hamcrest.CoreMatchers.not
-import org.hamcrest.Matchers
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -53,32 +50,38 @@ class SubmissionRubricRenderTest : StudentRenderTest() {
 
     private val dataTemplate = RubricListData.Criterion(
         criterionId = "123",
-        description = "Criterion description",
-        ratingDescription = "Selected rating description",
+        title = "Criterion title",
+        ratingTitle = "Rating Title",
+        ratingDescription = "Rating Description",
         ratings = listOf(
             RatingData(
-                points = "0",
-                description = "No Effort",
-                isSelected = false
+                id = "_id0",
+                text = "0",
+                isSelected = false,
+                isAssessed = false
             ),
             RatingData(
-                points = "5",
-                description = "Bad Job",
-                isSelected = false
+                id = "_id1",
+                text = "5",
+                isSelected = false,
+                isAssessed = false
             ),
             RatingData(
-                points = "10",
-                description = "Could be better",
-                isSelected = true
+                id = "_id2",
+                text = "10",
+                isSelected = true,
+                isAssessed = true
             ),
             RatingData(
-                points = "15",
-                description = "Top notch",
-                isSelected = false
+                id = "_id3",
+                text = "15",
+                isSelected = false,
+                isAssessed = false
             )
         ),
         comment = "Test comment",
-        showLongDescriptionButton = true
+        showDescriptionButton = true,
+        tint = Color.BLUE
     )
 
     @Test
@@ -94,26 +97,11 @@ class SubmissionRubricRenderTest : StudentRenderTest() {
     }
 
     @Test
-    fun displaysCriterionDescription() {
+    fun displaysCriterionTitle() {
         val data = dataTemplate
         loadPageWithViewData(data)
-        page.criterionDescription.assertVisible()
-        page.criterionDescription.assertHasText(data.description)
-    }
-
-    @Test
-    fun displaysSelectedRatingDescription() {
-        val data = dataTemplate
-        loadPageWithViewData(data)
-        page.selectedRatingDescription.assertVisible()
-        page.selectedRatingDescription.assertHasText(data.ratingDescription!!)
-    }
-
-    @Test
-    fun hidesSelectedRatingDescription() {
-        val data = dataTemplate.copy(ratingDescription = null)
-        loadPageWithViewData(data)
-        page.selectedRatingDescription.assertGone()
+        page.criterionTitle.assertVisible()
+        page.criterionTitle.assertHasText(data.title)
     }
 
     @Test
@@ -122,7 +110,7 @@ class SubmissionRubricRenderTest : StudentRenderTest() {
         loadPageWithViewData(data)
         page.ratingLayout.check(matches(hasChildCount(data.ratings.size)))
         data.ratings.forEach {
-            val view = page.onViewWithText(it.points)
+            val view = page.onViewWithText(it.text)
 
             // Assert displayed
             view.assertDisplayed()
@@ -134,9 +122,10 @@ class SubmissionRubricRenderTest : StudentRenderTest() {
                 view.check(matches(not(isSelected())))
             }
 
-            // Assert tooltip shows description
+            // Assert clicking updates rating title and description
             view.click()
-            page.onViewWithText(it.description!!).inRoot(RootMatchers.hasWindowLayoutParams()).assertDisplayed()
+
+            page.onViewWithText(it.text).inRoot(RootMatchers.hasWindowLayoutParams()).assertDisplayed()
         }
     }
 
@@ -159,16 +148,14 @@ class SubmissionRubricRenderTest : StudentRenderTest() {
     fun displaysLongDescriptionButton() {
         val data = dataTemplate
         loadPageWithViewData(data)
-        page.longDescriptionButton.assertVisible()
-        page.bottomPadding.assertGone()
+        page.descriptionButton.assertVisible()
     }
 
     @Test
     fun hidesLongDescriptionButton() {
-        val data = dataTemplate.copy(showLongDescriptionButton = false)
+        val data = dataTemplate.copy(showDescriptionButton = false)
         loadPageWithViewData(data)
-        page.longDescriptionButton.assertGone()
-        page.bottomPadding.assertVisible()
+        page.descriptionButton.assertGone()
     }
 
     @Test
@@ -176,9 +163,10 @@ class SubmissionRubricRenderTest : StudentRenderTest() {
         val data = dataTemplate.copy(
             ratings = listOf(
                 RatingData(
-                    points = "Large text",
-                    description = null,
+                    id = "_id0",
+                    text = "Large text",
                     isSelected = false,
+                    isAssessed = false,
                     useSmallText = false
                 )
             )
@@ -192,9 +180,10 @@ class SubmissionRubricRenderTest : StudentRenderTest() {
         val data = dataTemplate.copy(
             ratings = listOf(
                 RatingData(
-                    points = "Small text",
-                    description = null,
+                    id = "_id0",
+                    text = "Small text",
                     isSelected = false,
+                    isAssessed = false,
                     useSmallText = true
                 )
             )
@@ -204,43 +193,96 @@ class SubmissionRubricRenderTest : StudentRenderTest() {
     }
 
     @Test
-    fun displaysLongDescriptionDialog() {
-        val description = "This is a description"
-        val longDescription = "Long Description ".repeat(20).trim()
-        val data = dataTemplate.copy(description = "")
-        val fragment = loadPageWithViewData(data)
-        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
-        val view = fragment.getMobiusView()
-        view.displayLongDescription(description, """<p>$longDescription</p>""")
-        page.onViewWithText(description).assertDisplayed()
-        Web.onWebView()
-            .withElement(DriverAtoms.findElement(Locator.TAG_NAME, "p"))
-            .check(
-                WebViewAssertions.webMatches(
-                    DriverAtoms.getText(),
-                    Matchers.comparesEqualTo(longDescription)
-                )
-            )
-    }
-
-    @Test
-    fun doesNotDisplayTooltipForEmptyDescription() {
-        val ratingData = RatingData(
-            points = "10 / 15 pts",
-            description = null,
-            isSelected = true
-        )
-        val data = dataTemplate.copy(ratings = listOf(ratingData))
-        loadPageWithViewData(data)
-        page.onViewWithText(ratingData.points).click()
-        page.tooltip.inRoot(RootMatchers.hasWindowLayoutParams()).check(doesNotExist())
-    }
-
-    @Test
     fun hidesRatingContainerIfNoRatings() {
         val data = dataTemplate.copy(ratings = emptyList())
         loadPageWithViewData(data)
         page.ratingLayout.assertGone()
+    }
+
+    @Test
+    fun populatesRatingTitleAndDescriptionWhenPresent() {
+        val data = dataTemplate
+        loadPageWithViewData(data)
+        page.ratingInfoContainer.assertVisible()
+        page.selectedRatingTitle.assertVisible()
+        page.selectedRatingTitle.assertHasText(data.ratingTitle!!)
+        page.selectedRatingDescription.assertVisible()
+        page.selectedRatingDescription.assertHasText(data.ratingDescription!!)
+    }
+
+    @Test
+    fun updatesRatingInfoOnClick() {
+        val assignment = Assignment(
+            courseId = 123L,
+            rubric = listOf(
+                RubricCriterion(
+                    id = "123",
+                    description = "Criterion description 1",
+                    longDescription = "This is a long description for criterion 1",
+                    points = 15.0,
+                    ratings = mutableListOf(
+                        RubricCriterionRating("_id1", "Rating 1 Title", "Rating 1 Description", 5.5),
+                        RubricCriterionRating("_id2", "Rating 2 Title", null, 10.0),
+                        RubricCriterionRating("_id3", null, null, 15.0)
+                    )
+                )
+            )
+        )
+        loadPageWithModel(SubmissionRubricModel(assignment, Submission()))
+
+        // No ratings should be selected at this point, so the rating info container should not be showing
+        page.ratingInfoContainer.assertGone()
+
+        // Clicking on the "5.5" rating should show the info container with the correct title and description
+        page.onViewWithText("5.5").click()
+        page.ratingInfoContainer.assertVisible()
+        page.selectedRatingTitle.assertVisible()
+        page.selectedRatingTitle.assertHasText("Rating 1 Title")
+        page.selectedRatingDescription.assertVisible()
+        page.selectedRatingDescription.assertHasText("Rating 1 Description")
+
+        // Clicking on the "15" rating should completely hide the info container
+        page.onViewWithText("15").click()
+        page.ratingInfoContainer.assertGone()
+
+        // Clicking on the "10" rating should show the info container with just the title
+        page.onViewWithText("10").click()
+        page.ratingInfoContainer.assertVisible()
+        page.selectedRatingTitle.assertVisible()
+        page.selectedRatingTitle.assertHasText("Rating 2 Title")
+        page.selectedRatingDescription.assertGone()
+    }
+
+    @Test
+    fun hidesRatingTitleAndDescriptionIfNotPresent() {
+        val data = dataTemplate.copy(
+            ratingTitle = null,
+            ratingDescription = null
+        )
+        loadPageWithViewData(data)
+        page.ratingInfoContainer.assertGone()
+        page.selectedRatingTitle.assertNotDisplayed()
+        page.selectedRatingDescription.assertNotDisplayed()
+    }
+
+    @Test
+    fun hidesRatingTitleIfNotPresent() {
+        val data = dataTemplate.copy(ratingTitle = null)
+        loadPageWithViewData(data)
+        page.ratingInfoContainer.assertVisible()
+        page.selectedRatingTitle.assertNotDisplayed()
+        page.selectedRatingDescription.assertVisible()
+        page.selectedRatingDescription.assertHasText(data.ratingDescription!!)
+    }
+
+    @Test
+    fun hidesRatingDescriptionIfNotPresent() {
+        val data = dataTemplate.copy(ratingDescription = null)
+        loadPageWithViewData(data)
+        page.ratingInfoContainer.assertVisible()
+        page.selectedRatingTitle.assertVisible()
+        page.selectedRatingTitle.assertHasText(data.ratingTitle!!)
+        page.selectedRatingDescription.assertNotDisplayed()
     }
 
     private fun loadPageWithViewData(listData: RubricListData): SubmissionRubricFragment {
@@ -250,6 +292,24 @@ class SubmissionRubricRenderTest : StudentRenderTest() {
         }
         val fragment = SubmissionRubricFragment().apply {
             overrideInitViewState = SubmissionRubricViewState(listOf(listData))
+            loopMod = { it.effectRunner { emptyEffectRunner } }
+            data = SubmissionDetailsTabData.RubricData(
+                name = "Rubric",
+                assignment = Assignment(),
+                submission = Submission()
+            )
+        }
+        activityRule.activity.loadFragment(fragment)
+        return fragment
+    }
+
+    private fun loadPageWithModel(model: SubmissionRubricModel): SubmissionRubricFragment {
+        val emptyEffectRunner = object : WorkRunner {
+            override fun dispose() = Unit
+            override fun post(runnable: Runnable) = Unit
+        }
+        val fragment = SubmissionRubricFragment().apply {
+            overrideInitModel = model
             loopMod = { it.effectRunner { emptyEffectRunner } }
             data = SubmissionDetailsTabData.RubricData(
                 name = "Rubric",

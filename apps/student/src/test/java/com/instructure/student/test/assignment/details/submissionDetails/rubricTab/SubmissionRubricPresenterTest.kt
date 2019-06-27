@@ -21,6 +21,7 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.DateHelper
+import com.instructure.pandautils.utils.color
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.*
 import com.instructure.student.mobius.assignmentDetails.ui.gradeCell.GradeCellViewState
 import org.junit.Assert
@@ -31,6 +32,7 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class SubmissionRubricPresenterTest : Assert() {
 
+    private val course = Course(id = 123L, name = "Test Course")
     private lateinit var context: Context
     private lateinit var modelTemplate: SubmissionRubricModel
     private lateinit var assignmentTemplate: Assignment
@@ -42,6 +44,7 @@ class SubmissionRubricPresenterTest : Assert() {
     fun setup() {
         context = ApplicationProvider.getApplicationContext()
         assignmentTemplate = Assignment(
+            courseId = course.id,
             freeFormCriterionComments = false,
             isUseRubricForGrading = true,
             pointsPossible = 15.0,
@@ -53,9 +56,9 @@ class SubmissionRubricPresenterTest : Assert() {
                     longDescription = "This is a long description for criterion 1",
                     points = 15.0,
                     ratings = mutableListOf(
-                        RubricCriterionRating("rating1", "Rating 1 Description", 5.5),
-                        RubricCriterionRating("rating2", "Rating 2 Description", 10.0),
-                        RubricCriterionRating("rating3", "Rating 3 Description", 15.0)
+                        RubricCriterionRating("_id1", "Rating 1 Title", "Rating 1 Description", 5.5),
+                        RubricCriterionRating("_id2", "Rating 2 Title", "Rating 2 Description", 10.0),
+                        RubricCriterionRating("_id3", "Rating 3 Title", "Rating 3 Description", 15.0)
                     )
                 )
             )
@@ -69,7 +72,7 @@ class SubmissionRubricPresenterTest : Assert() {
             grade = "10",
             score = 10.0,
             rubricAssessment = hashMapOf(
-                "123" to RubricCriterionAssessment("rating2", 10.0, "This is a comment")
+                "123" to RubricCriterionAssessment("_id2", 10.0, "This is a comment")
             )
         )
         modelTemplate = SubmissionRubricModel(assignmentTemplate, submissionTemplate)
@@ -77,16 +80,18 @@ class SubmissionRubricPresenterTest : Assert() {
             GradeCellViewState.fromSubmission(context, assignmentTemplate, submissionTemplate)
         )
         criterionTemplate = RubricListData.Criterion(
-            description = "Criterion description 1",
+            title = "Criterion description 1",
+            ratingTitle = "Rating 2 Title",
             ratingDescription = "Rating 2 Description",
             ratings = listOf(
-                RatingData("5.5", "Rating 1 Description", false),
-                RatingData("10", "Rating 2 Description", true),
-                RatingData("15", "Rating 3 Description", false)
+                RatingData("_id1", "5.5", isSelected = false, isAssessed = false),
+                RatingData("_id2", "10", isSelected = true, isAssessed = true),
+                RatingData("_id3", "15", isSelected = false, isAssessed = false)
             ),
             criterionId = "123",
-            showLongDescriptionButton = true,
-            comment = "This is a comment"
+            showDescriptionButton = true,
+            comment = "This is a comment",
+            tint = course.color
         )
     }
 
@@ -141,16 +146,18 @@ class SubmissionRubricPresenterTest : Assert() {
         val expectedState = SubmissionRubricViewState(
             listOf(
                 RubricListData.Criterion(
-                    description = "Criterion description 1",
+                    title = "Criterion description 1",
+                    ratingTitle = null,
                     ratingDescription = null,
                     ratings = listOf(
-                        RatingData("5.5", "Rating 1 Description", false),
-                        RatingData("10", "Rating 2 Description", false),
-                        RatingData("15", "Rating 3 Description", false)
+                        RatingData("_id1", "5.5", isSelected = false, isAssessed = false),
+                        RatingData("_id2", "10", isSelected = false, isAssessed = false),
+                        RatingData("_id3", "15", isSelected = false, isAssessed = false)
                     ),
                     criterionId = "123",
-                    showLongDescriptionButton = true,
-                    comment = null
+                    showDescriptionButton = true,
+                    comment = null,
+                    tint = course.color
                 )
             )
         )
@@ -169,11 +176,11 @@ class SubmissionRubricPresenterTest : Assert() {
             listOf(
                 gradeTemplate,
                 criterionTemplate.copy(
+                    ratingTitle = null,
                     ratingDescription = null,
                     ratings = listOf(
                         criterionTemplate.ratings[1].copy(
-                            description = null,
-                            points = "10 / 15 pts"
+                            text = "10 / 15 pts"
                         )
                     )
                 )
@@ -197,13 +204,14 @@ class SubmissionRubricPresenterTest : Assert() {
             listOf(
                 gradeTemplate,
                 criterionTemplate.copy(
-                    ratingDescription = "Custom score",
+                    ratingTitle = "Custom score",
+                    ratingDescription = null,
                     comment = "Custom comment",
                     ratings = listOf(
-                        RatingData("5.5", "Rating 1 Description", false),
-                        RatingData("7", "Custom score", true),
-                        RatingData("10", "Rating 2 Description", false),
-                        RatingData("15", "Rating 3 Description", false)
+                        RatingData("_id1", "5.5", isSelected = false, isAssessed = false),
+                        RatingData(SubmissionRubricPresenter.customRatingId, "7", isSelected = true, isAssessed = true),
+                        RatingData("_id2", "10", isSelected = false, isAssessed = false),
+                        RatingData("_id3", "15", isSelected = false, isAssessed = false)
                     )
                 )
             )
@@ -217,7 +225,7 @@ class SubmissionRubricPresenterTest : Assert() {
         val model = modelTemplate.copy(
             submission = submissionTemplate.copy(
                 rubricAssessment = hashMapOf(
-                    "123" to RubricCriterionAssessment("rating2", 10.0, "")
+                    "123" to RubricCriterionAssessment("_id2", 10.0, "")
                 )
             )
         )
@@ -232,15 +240,15 @@ class SubmissionRubricPresenterTest : Assert() {
     }
 
     @Test
-    fun `Returns correct state for empty rating description`() {
+    fun `Returns correct state for empty rating title`() {
         val model = modelTemplate.copy(
             assignment = assignmentTemplate.copy(
                 rubric = listOf(
                     assignmentTemplate.rubric!![0].copy(
                         ratings = mutableListOf(
-                            RubricCriterionRating("rating1", "Rating 1 Description", 5.5),
-                            RubricCriterionRating("rating2", null, 10.0),
-                            RubricCriterionRating("rating3", "Rating 3 Description", 15.0)
+                            RubricCriterionRating("_id1", "Rating 1 Title", "Rating 1 Description", 5.5),
+                            RubricCriterionRating("_id2", null, "Rating 2 Description", 10.0),
+                            RubricCriterionRating("_id3", "Rating 3 Title", "Rating 3 Description", 15.0)
                         )
                     )
                 )
@@ -249,14 +257,32 @@ class SubmissionRubricPresenterTest : Assert() {
         val expectedState = SubmissionRubricViewState(
             listOf(
                 gradeTemplate,
-                criterionTemplate.copy(
-                    ratingDescription = null,
-                    ratings = listOf(
-                        RatingData("5.5", "Rating 1 Description", false),
-                        RatingData("10", null, true),
-                        RatingData("15", "Rating 3 Description", false)
+                criterionTemplate.copy(ratingTitle = null)
+            )
+        )
+        val actualState = SubmissionRubricPresenter.present(model, context)
+        assertEquals(expectedState, actualState)
+    }
+
+    @Test
+    fun `Returns correct state for empty rating description`() {
+        val model = modelTemplate.copy(
+            assignment = assignmentTemplate.copy(
+                rubric = listOf(
+                    assignmentTemplate.rubric!![0].copy(
+                        ratings = mutableListOf(
+                            RubricCriterionRating("_id1", "Rating 1 Title", "Rating 1 Description", 5.5),
+                            RubricCriterionRating("_id2", "Rating 2 Title", null, 10.0),
+                            RubricCriterionRating("_id3", "Rating 3 Title", "Rating 3 Description", 15.0)
+                        )
                     )
                 )
+            )
+        )
+        val expectedState = SubmissionRubricViewState(
+            listOf(
+                gradeTemplate,
+                criterionTemplate.copy(ratingDescription = null)
             )
         )
         val actualState = SubmissionRubricPresenter.present(model, context)
@@ -274,11 +300,10 @@ class SubmissionRubricPresenterTest : Assert() {
             listOf(
                 gradeTemplate,
                 criterionTemplate.copy(
-                    ratingDescription = null,
                     ratings = listOf(
-                        RatingData("Rating 1 Description", null, isSelected = false, useSmallText = true),
-                        RatingData("Rating 2 Description", null, isSelected = true, useSmallText = true),
-                        RatingData("Rating 3 Description", null, isSelected = false, useSmallText = true)
+                        RatingData("_id1", "Rating 1 Title", isSelected = false, isAssessed = false, useSmallText = true),
+                        RatingData("_id2", "Rating 2 Title", isSelected = true, isAssessed = true, useSmallText = true),
+                        RatingData("_id3", "Rating 3 Title", isSelected = false, isAssessed = false, useSmallText = true)
                     )
                 )
             )
@@ -299,8 +324,32 @@ class SubmissionRubricPresenterTest : Assert() {
             listOf(
                 gradeTemplate,
                 criterionTemplate.copy(
+                    ratingTitle = null,
                     ratingDescription = null,
                     ratings = emptyList()
+                )
+            )
+        )
+        val actualState = SubmissionRubricPresenter.present(model, context)
+        assertEquals(expectedState, actualState)
+    }
+
+    @Test
+    fun `Returns correct state for selected rating`() {
+        val model = modelTemplate.copy(
+            selectedRatingMap = mapOf("123" to "_id1")
+        )
+        val expectedState = SubmissionRubricViewState(
+            listOf(
+                gradeTemplate,
+                criterionTemplate.copy(
+                    ratingTitle = "Rating 1 Title",
+                    ratingDescription = "Rating 1 Description",
+                    ratings = listOf(
+                        RatingData("_id1", "5.5", isSelected = true, isAssessed = false),
+                        RatingData("_id2", "10", isSelected = false, isAssessed = true),
+                        RatingData("_id3", "15", isSelected = false, isAssessed = false)
+                    )
                 )
             )
         )

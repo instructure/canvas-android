@@ -13,7 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.pandautils.utils
+package com.instructure.canvasapi2.utils
 
 import android.app.AlarmManager
 import android.app.PendingIntent
@@ -25,12 +25,12 @@ import android.os.Build
 import android.os.Handler
 import android.os.LocaleList
 import androidx.core.os.ConfigurationCompat
-import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.ContextKeeper
-import com.instructure.canvasapi2.utils.isValid
 import java.util.*
 
 object LocaleUtils {
+
+    const val LANGUAGES_PENDING_INTENT_KEY = "languagesPendingIntentKey"
+    const val LANGUAGES_PENDING_INTENT_ID = 654321
 
     @JvmStatic
     fun getSupportedLanguageTags() : Array<String> {
@@ -38,9 +38,21 @@ object LocaleUtils {
     }
 
     @JvmStatic
-    @Suppress("DEPRECATION")
+    @Suppress("DEPRECATION", "UNUSED")
     fun wrapContext(base: Context): Context {
-        val localeString = ApiPrefs.effectiveLocale.replace("-x-", "-inst")
+        var localeString = ApiPrefs.effectiveLocale
+
+        // Replace the private use identifier "-x-" with the padded "-inst" if the variant is less than 5 letters
+        val localeParts = localeString.split("-x-")
+        if (localeParts.size > 1) {
+            localeString = if (localeParts[1].length < 5) {
+                "${localeParts[0]}-inst${localeParts[1]}" // da-x-k12 -> da-instk12
+            } else {
+                // Only take the first 8 characters, the maximum size of locale variants
+                "${localeParts[0]}-${localeParts[1].take(8)}" // en-AU-x-unimelb -> en-AU-unimelb
+            }
+        }
+
         val locale = if (localeString == ApiPrefs.DEVICE_LOCALE) {
             ConfigurationCompat.getLocales(Resources.getSystem().configuration)[0]
         } else {
@@ -61,8 +73,8 @@ object LocaleUtils {
         // Restart the App to apply language after a short delay to guarantee shared prefs are saved
         Handler().postDelayed({
             val intent = Intent(context, startingClass)
-            intent.putExtra(Const.LANGUAGES_PENDING_INTENT_KEY, Const.LANGUAGES_PENDING_INTENT_ID)
-            val mPendingIntent = PendingIntent.getActivity(context, Const.LANGUAGES_PENDING_INTENT_ID, intent, PendingIntent.FLAG_CANCEL_CURRENT)
+            intent.putExtra(LANGUAGES_PENDING_INTENT_KEY, LANGUAGES_PENDING_INTENT_ID)
+            val mPendingIntent = PendingIntent.getActivity(context, LANGUAGES_PENDING_INTENT_ID, intent, PendingIntent.FLAG_CANCEL_CURRENT)
             val mgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent)
             System.exit(0)

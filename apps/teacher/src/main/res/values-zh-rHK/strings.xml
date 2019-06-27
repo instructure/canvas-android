@@ -212,7 +212,7 @@
         <item quantity="other">%d 個提交件需要評分</item>
     </plurals>
 
-    <string name="delete_assignment_message">是否確定要刪除此任務？</string>
+    <string name="delete_assignment_message">是否確定要刪除此作業？</string>
     <string name="question">問題</string>
     <string name="quizMatchingDefaultDisplay">[選擇]</string>
 
@@ -263,7 +263,7 @@
     <string name="error_sending_message">無法傳送訊息。輕點以重試。</string>
     <string name="message_sent_successfully">郵件已成功發送。</string>
     <string name="error_occurred">意外錯誤出現。</string>
-    <string name="no_assignments_with_file_upload">該課程沒有允許文檔上傳的任務。</string>
+    <string name="no_assignments_with_file_upload">該課程沒有允許文檔上傳的作業。</string>
     <string name="extension_not_allowed">選中的文檔類型不被允許。</string>
     <string name="allowed_extensions">允許的擴展名：</string>
     <string name="files_uploaded_successfully">文檔以成功上傳。</string>
@@ -274,7 +274,7 @@
     <string name="error_getting_photo">載入照片時發生錯誤。請重試。</string>
     <string name="loading_files_indeterminate">載入文檔&#8230;&#8230;</string>
     <string name="no_files_uploaded">您尚未選擇任何檔案。</string>
-    <string name="file_upload_not_supported">您無法上傳檔案到選定的任務。</string>
+    <string name="file_upload_not_supported">您無法上傳檔案到選定的作業。</string>
     <string name="one_or_more_extension_not_allowed">一個或多個檔案中含有不允許的檔案擴展名</string>
 
     <string name="inbox_all">收件匣</string>
@@ -311,7 +311,7 @@
     <string name="pages_front_page">網頁標題版</string>
     <string name="frontPage">標題版</string>
     <string name="course_modules">課程單元</string>
-    <string name="assignments_list">任務列表</string>
+    <string name="assignments_list">作業列表</string>
     <string name="syllabus">教學大綱</string>
     <!--End Course Settings-->
     <!-- Assignment Details -->
@@ -340,7 +340,7 @@
     <string name="no_assignment_description_filler">添加指引，協助學生完成作業。</string>
     <string name="no_quiz_description_filler">添加指引，協助學生完成測驗。</string>
     <string name="page_title_due_dates">截止日期</string>
-    <string name="edit_assignment">編輯任務</string>
+    <string name="edit_assignment">編輯作業</string>
     <string name="edit_quiz">編輯測驗</string>
     <string name="title">標題</string>
     <string name="description">說明</string>
@@ -529,7 +529,7 @@
 
     <string name="emptyDetailsMessage">點擊清單項目，檢視詳細資料</string>
 
-    <string name="assignmentQuizzes">任務測驗</string>
+    <string name="assignmentQuizzes">作業測驗</string>
     <string name="practiceQuizzes">練習測驗</string>
     <string name="gradedSurveys">已評分的調查</string>
     <string name="surveys">調查</string>
@@ -561,7 +561,7 @@
 
 
     <string name="quiz_settings_label_quiz_type">測驗類型：</string>
-    <string name="quiz_settings_label_assignment_group">任務群組：</string>
+    <string name="quiz_settings_label_assignment_group">作業群組：</string>
     <string name="quiz_settings_label_shuffle_answers">拖放答案：</string>
     <string name="quiz_settings_label_multiple_attempts">多次嘗試：</string>
     <string name="quiz_settings_label_time_limit">時間限制：</string>
@@ -636,7 +636,7 @@
     <string name="couldNotPlayFormat">並不支援該媒體格式</string>
     <string name="openWithAnotherApp">以其他應用程式開啟</string>
 
-    <string name="speedgraderCommentAddedSubmission">任務已提交。點擊檢視。</string>
+    <string name="speedgraderCommentAddedSubmission">作業已提交。點擊檢視。</string>
     <string name="speedgraderCommentSubmittedFiles">已提交檔案：</string>
     <string name="no_submission_comments">並無提交項目評論</string>
     <string name="mediaUploadAudio">媒體上載 — 音頻</string>

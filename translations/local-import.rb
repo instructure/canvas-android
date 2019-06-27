@@ -50,7 +50,12 @@ Dir.glob("#{import_dir}/*/") do |src_dir|
     if language.include? '-x-'
       # BCP 47 private-use subtag. Convert to new Android format and
       # prepend subtag with 'inst'
-      language = language.sub('-x-', "-inst").gsub('-', '+').prepend('b+')
+      # if prepended subtag becomes greater than 8 characters, remove inst
+      language = language
+        .sub('-x-', "-inst")
+        .sub(/\-inst(\w{5,})/, '-\1')
+        .gsub('-', '+')
+        .prepend('b+')
     else
       language = language.gsub('-', '-r')
     end

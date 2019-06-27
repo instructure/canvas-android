@@ -318,7 +318,6 @@
     <string name="assignments_list">Uppgiftslista</string>
     <string name="syllabus">Kursöversikt</string>
     <!--End Course Settings-->
-
     <!-- Assignment Details -->
     <string name="multiple_due_dates">Flera inlämningsdatum</string>
     <string name="everyone">Alla</string>

@@ -969,6 +969,7 @@
     <string name="tapToViewAnnouncement">Tap to view announcement</string>
     <string name="acceptCourseInvitation">Accept</string>
     <string name="declineCourseInvitation">Decline</string>
+    <string name="outOf">out of</string>
 
     <!-- File Strings -->
     <string name="noFilesSubtextCourse">There are no files associated with this course.</string>

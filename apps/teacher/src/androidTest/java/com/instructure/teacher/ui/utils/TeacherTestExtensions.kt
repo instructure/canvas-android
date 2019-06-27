@@ -91,7 +91,8 @@ fun TeacherTest.logIn(
                         id = teacher.id,
                         name = teacher.name,
                         shortName = teacher.shortName,
-                        avatarUrl = teacher.avatarUrl
+                        avatarUrl = teacher.avatarUrl,
+                        locale = "en" // Must specify 'en' here to avoid restarting app due to locale change
                 ),
                 skipSplash
         )
@@ -343,7 +344,8 @@ fun TeacherTest.tokenLogin(teacher: CanvasUserApiModel, skipSplash: Boolean = tr
                     id = teacher.id,
                     name = teacher.name,
                     shortName = teacher.shortName,
-                    avatarUrl = teacher.avatarUrl
+                    avatarUrl = teacher.avatarUrl,
+                    locale = "en" // Must specify 'en' here to avoid restarting app due to locale change
                     ),
                 skipSplash
         )

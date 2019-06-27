@@ -26,12 +26,13 @@ import android.widget.AdapterView
 import android.widget.BaseAdapter
 import androidx.core.content.ContextCompat
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.LocaleUtils
+import com.instructure.canvasapi2.utils.cleanDisplayName
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.pandautils.utils.*
 import com.instructure.student.BuildConfig
 import com.instructure.student.R
 import com.instructure.student.activity.LoginActivity
-import com.instructure.student.util.AppManager
 import com.instructure.student.util.StudentPrefs
 import kotlinx.android.synthetic.main.fragment_account_preferences.*
 import kotlinx.android.synthetic.main.settings_spinner.view.*
@@ -121,7 +122,7 @@ class AccountPreferencesFragment : ParentFragment() {
                 .setPositiveButton(R.string.yes) { _, _ ->
                     // Set the language
                     ApiPrefs.selectedLocale = languages[position].first
-                    AppManager.restartApp(requireContext())
+                    LocaleUtils.restartApp(requireContext(), LoginActivity::class.java)
                 }
                 .setNegativeButton(R.string.no, null)
                 .setCancelable(true)
