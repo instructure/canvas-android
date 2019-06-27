@@ -256,3 +256,6 @@
 
 # Sliding Panel
 -dontwarn com.sothree.slidinguppanel.**
+
+# Kotlin
+-dontwarn kotlinx.atomicfu.AtomicBoolean
