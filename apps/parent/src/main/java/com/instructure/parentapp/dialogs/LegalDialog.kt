@@ -64,7 +64,7 @@ class LegalDialog : AppCompatDialogFragment() {
             progressBar.setGone()
             itemContainer.setVisible()
             // Hide the item if the institution has set terms and conditions to be "no terms"
-            termsOfUse.setVisible(html.isValid())
+            termsOfUse.setVisible(html.isNotBlank())
         } catch {
             itemContainer.setVisible()
         }
