@@ -35,7 +35,7 @@ fun ParentTest.tokenLogin(user: CanvasUserApiModel) {
         activityRule.activity.loginWithToken(
                 user.token,
                 user.domain,
-                User(id = user.id, name = user.name, shortName = user.shortName, avatarUrl = user.avatarUrl, locale = "en")
+                User(id = user.id, name = user.name, shortName = user.shortName, avatarUrl = user.avatarUrl/*, locale = "en"*/)
         )
     }
 }
