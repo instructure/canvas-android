@@ -66,6 +66,7 @@ class LegalDialog : AppCompatDialogFragment() {
             // Hide the item if the institution has set terms and conditions to be "no terms"
             termsOfUse.setVisible(html.isNotBlank())
         } catch {
+            itemContainer.descendants.forEach { it.setVisible(true) }
             itemContainer.setVisible()
         }
 
