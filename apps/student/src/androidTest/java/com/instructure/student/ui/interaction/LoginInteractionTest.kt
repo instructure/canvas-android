@@ -16,17 +16,20 @@
 package com.instructure.student.ui.interaction
 
 import com.instructure.canvas.espresso.Stub
+import com.instructure.panda_annotations.FeatureCategory
+import com.instructure.panda_annotations.Priority
+import com.instructure.panda_annotations.TestCategory
+import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.ui.utils.StudentTest
 import org.junit.Test
 
 class LoginInteractionTest : StudentTest() {
-
     override fun displaysPageObjects() = Unit // Not used for interaction tests
 
     @Stub
     @Test
+    @TestMetaData(Priority.P0, FeatureCategory.LOGIN, TestCategory.INTERACTION, true)
     fun testLogin_canFindSchool() {
         // Should be able to search for and select a school in the "What's your school's name?" page
     }
-
 }

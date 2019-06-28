@@ -16,57 +16,68 @@
 package com.instructure.student.ui.interaction
 
 import com.instructure.canvas.espresso.Stub
+import com.instructure.panda_annotations.FeatureCategory
+import com.instructure.panda_annotations.Priority
+import com.instructure.panda_annotations.TestCategory
+import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.ui.utils.StudentTest
 import org.junit.Test
 
 class ModuleInteractionTest : StudentTest() {
-
     override fun displaysPageObjects() = Unit // Not used for interaction tests
 
     @Stub
     @Test
+    @TestMetaData(Priority.P0, FeatureCategory.MODULES, TestCategory.INTERACTION, true, FeatureCategory.ASSIGNMENTS)
     fun testModules_launchesIntoAssignment() {
         // Tapping an Assignment module item should navigate to that item's detail page
     }
 
     @Stub
     @Test
+    @TestMetaData(Priority.P0, FeatureCategory.MODULES, TestCategory.INTERACTION, true, FeatureCategory.DISCUSSIONS)
     fun testModules_launchesIntoDiscussion() {
         // Tapping a Discussion module item should navigate to that item's detail page
     }
 
     @Stub
     @Test
+    @TestMetaData(Priority.P0, FeatureCategory.MODULES, TestCategory.INTERACTION, true)
     fun testModules_launchesIntoExternalTool() {
         // Tapping an ExternalTool module item should navigate to that item's detail page
     }
 
     @Stub
     @Test
+    @TestMetaData(Priority.P0, FeatureCategory.MODULES, TestCategory.INTERACTION, true)
     fun testModules_launchesIntoExternalURL() {
         // Tapping an ExternalURL module item should navigate to that item's detail page
     }
 
     @Stub
     @Test
+    @TestMetaData(Priority.P0, FeatureCategory.MODULES, TestCategory.INTERACTION, true, FeatureCategory.FILES)
     fun testModules_launchesIntoFile() {
         // Tapping a File module item should navigate to that item's detail page
     }
 
     @Stub
     @Test
+    @TestMetaData(Priority.P0, FeatureCategory.MODULES, TestCategory.INTERACTION, true, FeatureCategory.PAGES)
     fun testModules_launchesIntoPage() {
         // Tapping a Page module item should navigate to that item's detail page
     }
 
     @Stub
     @Test
+    @TestMetaData(Priority.P0, FeatureCategory.MODULES, TestCategory.INTERACTION, true, FeatureCategory.QUIZZES)
     fun testModules_launchesIntoQuiz() {
         // Tapping a Quiz module item should navigate to that item's detail page
     }
 
     @Stub
     @Test
+    @TestMetaData(Priority.P1, FeatureCategory.MODULES, TestCategory.INTERACTION, true)
     fun testModules_modulesExpandAndCollapse() {
         // Tapping a module should collapse and hide all of that module's items in the module list
         // Tapping a collapsed module should expand it
@@ -74,6 +85,7 @@ class ModuleInteractionTest : StudentTest() {
 
     @Stub
     @Test
+    @TestMetaData(Priority.P0, FeatureCategory.MODULES, TestCategory.INTERACTION, true)
     fun testModules_navigateBackToModuleListFromModuleItem() {
         // After entering the detail page for a module item, pressing the back button or back arrow should navigate back
         // to the module list. This should also work if the detail page is accessed via deep link
@@ -81,9 +93,9 @@ class ModuleInteractionTest : StudentTest() {
 
     @Stub
     @Test
+    @TestMetaData(Priority.P0, FeatureCategory.MODULES, TestCategory.INTERACTION, true)
     fun testModules_navigateToNextAndPreviousModuleItems() {
         // When viewing the detail page for an item in a module with multiple items, the detail page should have
         // 'next' and 'previous' navigation buttons. Clicking these should navigate to the next/previous module items.
     }
-
 }

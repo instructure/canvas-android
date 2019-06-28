@@ -16,71 +16,83 @@
 package com.instructure.student.ui.interaction
 
 import com.instructure.canvas.espresso.Stub
+import com.instructure.panda_annotations.FeatureCategory
+import com.instructure.panda_annotations.Priority
+import com.instructure.panda_annotations.TestCategory
+import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.ui.utils.StudentTest
 import org.junit.Test
 
 class QuizInteractionTest : StudentTest() {
-
     override fun displaysPageObjects() = Unit // Not used for interaction tests
 
     @Stub
     @Test
+    @TestMetaData(Priority.P1, FeatureCategory.QUIZZES, TestCategory.INTERACTION, true)
     fun testOpensNativeView_essayQuiz() {
         // Quizzes with just Essay questions should open in a native view and not a WebView
     }
 
     @Stub
     @Test
+    @TestMetaData(Priority.P1, FeatureCategory.QUIZZES, TestCategory.INTERACTION, true)
     fun testOpensNativeView_fileUploadQuiz() {
         // Quizzes with just File Upload questions should open in a native view and not a WebView
     }
 
     @Stub
     @Test
+    @TestMetaData(Priority.P1, FeatureCategory.QUIZZES, TestCategory.INTERACTION, true)
     fun testOpensNativeView_fillInTheBlankQuiz() {
         // Quizzes with just Fill In The Blank questions should open in a native view and not a WebView
     }
 
     @Stub
     @Test
+    @TestMetaData(Priority.P1, FeatureCategory.QUIZZES, TestCategory.INTERACTION, true)
     fun testOpensNativeView_matchingQuiz() {
         // Quizzes with just Matching questions should open in a native view and not a WebView
     }
 
     @Stub
     @Test
+    @TestMetaData(Priority.P1, FeatureCategory.QUIZZES, TestCategory.INTERACTION, true)
     fun testOpensNativeView_multipleAnswerQuiz() {
         // Quizzes with just Multiple Answer questions should open in a native view and not a WebView
     }
 
     @Stub
     @Test
+    @TestMetaData(Priority.P1, FeatureCategory.QUIZZES, TestCategory.INTERACTION, true)
     fun testOpensNativeView_multipleChoiceQuiz() {
         // Quizzes with just Multiple Choice questions should open in a native view and not a WebView
     }
 
     @Stub
     @Test
+    @TestMetaData(Priority.P1, FeatureCategory.QUIZZES, TestCategory.INTERACTION, true)
     fun testOpensNativeView_multipleDropdownQuiz() {
         // Quizzes with just Multiple Dropdown questions should open in a native view and not a WebView
     }
 
     @Stub
     @Test
+    @TestMetaData(Priority.P1, FeatureCategory.QUIZZES, TestCategory.INTERACTION, true)
     fun testOpensNativeView_numericalAnswerQuiz() {
         // Quizzes with just Numerical Answer questions should open in a native view and not a WebView
     }
 
     @Stub
     @Test
+    @TestMetaData(Priority.P1, FeatureCategory.QUIZZES, TestCategory.INTERACTION, true)
     fun testOpensNativeView_textQuiz() {
         // Quizzes with just Text questions should open in a native view and not a WebView
     }
 
     @Stub
     @Test
+    @TestMetaData(Priority.P1, FeatureCategory.QUIZZES, TestCategory.INTERACTION, true)
     fun testOpensNativeView_trueFalseQuiz() {
         // Quizzes with just True-False questions should open in a native view and not a WebView
     }
-
 }

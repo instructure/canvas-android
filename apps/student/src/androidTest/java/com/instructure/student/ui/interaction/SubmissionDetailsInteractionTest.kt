@@ -17,14 +17,19 @@
 package com.instructure.student.ui.interaction
 
 import com.instructure.canvas.espresso.Stub
+import com.instructure.panda_annotations.FeatureCategory
+import com.instructure.panda_annotations.Priority
+import com.instructure.panda_annotations.TestCategory
+import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.ui.utils.StudentTest
 import org.junit.Test
 
 class SubmissionDetailsInteractionTest : StudentTest() {
-    override fun displaysPageObjects() = Unit // Not implemented
+    override fun displaysPageObjects() = Unit // Not used for interaction tests
 
     @Stub
     @Test
+    @TestMetaData(Priority.P0, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, true)
     fun testRubrics_showCriterionDescription() {
         // Clicking the "Description" button on a rubric criterion item should show a new page with the full description
     }
