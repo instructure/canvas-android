@@ -15,7 +15,9 @@
  */
 package com.instructure.canvasapi2.utils
 
+import android.content.res.Resources
 import android.webkit.URLUtil
+import androidx.core.os.ConfigurationCompat
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.models.CanvasTheme
 import com.instructure.canvasapi2.models.User
@@ -68,7 +70,7 @@ object ApiPrefs : PrefManager(PREFERENCE_FILE_NAME) {
             return selectedLocale.takeUnless { it == ACCOUNT_LOCALE }
                     ?: user?.effective_locale
                     ?: user?.locale
-                    ?: DEVICE_LOCALE
+                    ?: ConfigurationCompat.getLocales(Resources.getSystem().configuration)[0].language
         }
 
     /* Masquerading Prefs */

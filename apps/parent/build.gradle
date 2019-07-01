@@ -174,10 +174,6 @@ dependencies {
     androidTestImplementation Libs.JUNIT
     androidTestImplementation project(':canvas_espresso')
     androidTestImplementation project(':dataseedingapi')
-    //Needed for espresso test recorder
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-beta01', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    }
 
     /* Unit Test Dependencies */
     testImplementation Libs.JUNIT
