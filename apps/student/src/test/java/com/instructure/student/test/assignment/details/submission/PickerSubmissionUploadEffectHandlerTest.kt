@@ -16,18 +16,11 @@
 package com.instructure.student.test.assignment.details.submission
 
 import android.content.Context
-import android.content.Intent
 import android.net.Uri
 import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.utils.ProgressEvent
 import com.instructure.pandautils.models.FileSubmitObject
 import com.instructure.pandautils.services.NotoriousUploadService
-import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.FileUploadUtils
-import com.instructure.student.FileSubmission
-import com.instructure.student.db.Db
-import com.instructure.student.db.StudentDb
-import com.instructure.student.db.getInstance
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadEffect
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadEffectHandler
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadEvent
@@ -261,6 +254,7 @@ class PickerSubmissionUploadEffectHandlerTest : Assert() {
                 model.canvasContext,
                 model.assignmentId,
                 model.assignmentName,
+                model.assignmentGroupCategoryId,
                 model.files.first().fullPath,
                 NotoriousUploadService.ACTION.ASSIGNMENT_SUBMISSION
             )

@@ -121,7 +121,7 @@ class SubmissionServiceTest : Assert() {
 
         every { context.startService(capture(intent)) } returns null
 
-        SubmissionService.startMediaSubmission(context, canvasContext, assignment.id, assignment.name, mediaFilePath, notoriousAction)
+        SubmissionService.startMediaSubmission(context, canvasContext, assignment.id, assignment.name, assignment.groupCategoryId, mediaFilePath, notoriousAction)
 
         assertEquals(SubmissionService.Action.MEDIA_ENTRY.name, intent.captured.action)
         assertEquals(canvasContext, intent.captured.getParcelableExtra(Const.CANVAS_CONTEXT))
