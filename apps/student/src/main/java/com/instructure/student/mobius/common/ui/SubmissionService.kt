@@ -395,7 +395,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
             startService(context, Action.FILE_ENTRY, bundle)
         }
 
-        fun startMediaSubmission(context: Context, canvasContext: CanvasContext, assignmentId: Long, assignmentName: String?, mediaFilePath: String?, notoriousAction: NotoriousUploadService.ACTION, assignmentGroupCategoryId: Long = 0) {
+        fun startMediaSubmission(context: Context, canvasContext: CanvasContext, assignmentId: Long, assignmentName: String?, assignmentGroupCategoryId: Long, mediaFilePath: String?, notoriousAction: NotoriousUploadService.ACTION) {
             val bundle = Bundle().apply {
                 putParcelable(Const.CANVAS_CONTEXT, canvasContext)
                 putParcelable(Const.ASSIGNMENT, Assignment(id = assignmentId, name = assignmentName, groupCategoryId = assignmentGroupCategoryId))

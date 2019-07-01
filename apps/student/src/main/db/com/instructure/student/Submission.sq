@@ -44,10 +44,6 @@ insertOnlineUploadSubmission:
 INSERT INTO submission (assignmentName, assignmentId, assignmentGroupCategoryId, canvasContext, submissionType)
 VALUES (?, ?, ?, ?, "online_upload");
 
-insertMediaSubmission:
-INSERT INTO submission(assignmentName, assignmentId, canvasContext, submissionType)
-VALUES(?, ?, ?, ?);
-
 getAllSubmissions:
 SELECT *
 FROM submission;

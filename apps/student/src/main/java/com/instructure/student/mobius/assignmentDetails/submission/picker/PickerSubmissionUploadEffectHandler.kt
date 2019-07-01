@@ -109,6 +109,7 @@ class PickerSubmissionUploadEffectHandler(private val context: Context) :
                 model.canvasContext,
                 model.assignmentId,
                 model.assignmentName,
+                model.assignmentGroupCategoryId,
                 model.files.first().fullPath,
                 NotoriousUploadService.ACTION.ASSIGNMENT_SUBMISSION // TODO: Make this more dynamic when everything else is wired up
             )
