@@ -35,8 +35,5 @@
     <item name="inbox_title_top" type="dimen">.6</item>
     <item name="inbox_text_left" type="dimen">.2</item>
     <item name="inbox_text_right" type="dimen">.8</item>
-    <dimen name="recordingViewHeight">254dp</dimen>
-    <dimen name="recordingViewWidth">390dp</dimen>
-    <dimen name="mediaRecordingButton">64dp</dimen>
 
 </resources>

@@ -44,7 +44,7 @@
         style="@style/TextFont.Regular"
         android:text="@string/addVideoComment"
         android:textSize="16sp"
-        android:drawableStart="@drawable/vd_media"
+        android:drawableStart="@drawable/vd_video"
         android:paddingTop="14dp"
         android:paddingBottom="14dp"
         android:paddingStart="18dp"
