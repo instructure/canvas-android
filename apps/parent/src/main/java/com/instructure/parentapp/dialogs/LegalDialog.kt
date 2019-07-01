@@ -64,14 +64,9 @@ class LegalDialog : AppCompatDialogFragment() {
             html = awaitApi<TermsOfService> { UserManager.getTermsOfService(it, true) }.content.orEmpty()
             progressBar.setGone()
             itemContainer.setVisible()
-
-            Log.v("TermsOfService", "Terms of service html: \"$html\"")
-
             // Hide the item if the institution has set terms and conditions to be "no terms"
             termsOfUse.setVisible(html.isNotBlank())
         } catch {
-
-            Log.v("TermsOfService", "Terms of service blown up")
             itemContainer.descendants.forEach { it.setVisible(true) }
             itemContainer.setVisible()
         }
