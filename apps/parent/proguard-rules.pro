@@ -30,3 +30,6 @@
     @org.greenrobot.eventbus.Subscribe <methods>;
 }
 -keep enum org.greenrobot.eventbus.ThreadMode { *; }
+
+# Kotlin
+-dontwarn kotlinx.atomicfu.AtomicBoolean
