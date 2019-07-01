@@ -81,7 +81,7 @@ class LTIWebViewFragment : InternalWebviewFragment() {
 
     override fun applyTheme() {
         toolbar.title = title()
-        toolbar.setupAsBackButton(this)
+        toolbar.setupAsCloseButton { requireActivity().supportFragmentManager.popBackStack() }
         ViewStyler.themeToolbar(requireActivity(), toolbar, canvasContext)
     }
 
@@ -175,7 +175,6 @@ class LTIWebViewFragment : InternalWebviewFragment() {
             if (ltiTab != null) {
                 // Coming from a tab that is an lti tool
                 retrieveLtiUrlJob = tryWeave {
-
                     val result = inBackground {
                         // We have to get a new sessionless url
                         getLTIUrlForTab(requireContext(), ltiTab as Tab)
