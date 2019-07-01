@@ -17,100 +17,117 @@
 package com.instructure.student.ui.interaction
 
 import com.instructure.canvas.espresso.Stub
+import com.instructure.panda_annotations.FeatureCategory
+import com.instructure.panda_annotations.Priority
+import com.instructure.panda_annotations.TestCategory
+import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.ui.utils.StudentTest
 import org.junit.Test
 
 class DiscussionsInteractionTest : StudentTest() {
-    override fun displaysPageObjects() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun displaysPageObjects() = Unit // Not used for interaction tests
 
     @Stub
     @Test
+    @TestMetaData(Priority.P0, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, true)
     fun testDiscussionCreate_base() {
 
     }
 
     @Stub
     @Test
+    @TestMetaData(Priority.P0, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, true)
     fun testDiscussionCreate_withAttachment() {
 
     }
 
     @Stub
     @Test
+    @TestMetaData(Priority.P0, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, true)
     fun testDiscussionCreate_disabledWhenNotPermitted() {
 
     }
 
     @Stub
     @Test
+    @TestMetaData(Priority.P1, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, true)
     fun testDiscussion_linksRouteInApp() {
         // Links to other Canvas content routes properly
     }
 
     @Stub
     @Test
+    @TestMetaData(Priority.P1, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, true)
     fun testDiscussion_postsGetMarkedAsRead() {
         // Replies automatically get marked as read as the user scrolls through the list
     }
 
     @Stub
     @Test
+    @TestMetaData(Priority.P0, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, true)
     fun testDiscussion_previewAttachment() {
 
     }
 
     @Stub
     @Test
+    @TestMetaData(Priority.P0, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, true)
     fun testDiscussionLikePost_base() {
         // Users can like entries and the correct like count is displayed, if the liking is enabled
     }
 
     @Stub
     @Test
+    @TestMetaData(Priority.P1, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, true)
     fun testDiscussionLikePost_disabledWhenNotPermitted() {
 
     }
 
     @Stub
     @Test
+    @TestMetaData(Priority.P0, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, true)
     fun testDiscussionView_base() {
 
     }
 
     @Stub
     @Test
+    @TestMetaData(Priority.P0, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, true)
     fun testDiscussionView_replies() {
 
     }
 
     @Stub
     @Test
+    @TestMetaData(Priority.P0, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, true)
     fun testDiscussionView_repliesHiddenWhenNotPermitted() {
 
     }
 
     @Stub
     @Test
+    @TestMetaData(Priority.P0, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, true)
     fun testDiscussionReply_base() {
 
     }
 
     @Stub
     @Test
+    @TestMetaData(Priority.P0, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, true)
     fun testDiscussionReply_withAttachment() {
 
     }
 
     @Stub
     @Test
+    @TestMetaData(Priority.P0, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, true)
     fun testDiscussionReply_threaded() {
 
     }
 
     @Stub
     @Test
+    @TestMetaData(Priority.P0, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, true)
     fun testDiscussionReply_threadedWithAttachment() {
 
     }

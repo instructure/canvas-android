@@ -103,6 +103,7 @@
 -keepclassmembernames class * {
     @com.google.android.gms.common.annotation.KeepName *;
 }
+-dontwarn com.google.android.gms.**
 
 -dontwarn com.google.api.**
 -dontwarn android.net.http.**
@@ -251,3 +252,6 @@
 -dontwarn org.slf4j.impl.StaticLoggerBinder
 -dontwarn org.slf4j.impl.StaticMDCBinder
 -dontwarn org.slf4j.impl.StaticMarkerBinder
+
+# Kotlin
+-dontwarn kotlinx.atomicfu.AtomicBoolean

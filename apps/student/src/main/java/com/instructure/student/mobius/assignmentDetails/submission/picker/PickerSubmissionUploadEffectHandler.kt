@@ -26,6 +26,8 @@ import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.pandautils.models.FileSubmitObject
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
+import com.instructure.pandautils.services.NotoriousUploadService
+import com.instructure.pandautils.utils.FileUploadUtils
 import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerSubmissionUploadView
 import com.instructure.student.mobius.common.ui.EffectHandler
 import com.instructure.student.mobius.common.ui.SubmissionService
@@ -103,7 +105,10 @@ class PickerSubmissionUploadEffectHandler(private val context: Context) :
                 context,
                 model.canvasContext,
                 model.assignmentId,
-                model.assignmentName
+                model.assignmentName,
+                model.assignmentGroupCategoryId,
+                model.files.first().fullPath,
+                NotoriousUploadService.ACTION.ASSIGNMENT_SUBMISSION // TODO: Make this more dynamic when everything else is wired up
             )
         } else {
             SubmissionService.startFileSubmission(
@@ -163,7 +168,11 @@ class PickerSubmissionUploadEffectHandler(private val context: Context) :
 
     private fun launchCamera() {
         // Get camera permission if we need it
-        if (needsPermissions(PickerSubmissionUploadEvent.CameraClicked, PermissionUtils.CAMERA)) return
+        if (needsPermissions(
+                PickerSubmissionUploadEvent.CameraClicked,
+                PermissionUtils.CAMERA
+            )
+        ) return
 
         // Store the uri that we're saving the file to
         val fileName = "pic_${System.currentTimeMillis()}.jpg"
@@ -187,7 +196,10 @@ class PickerSubmissionUploadEffectHandler(private val context: Context) :
 
     // Helper functions for handling media
 
-    private fun needsPermissions(successEvent: PickerSubmissionUploadEvent, vararg permissions: String): Boolean {
+    private fun needsPermissions(
+        successEvent: PickerSubmissionUploadEvent,
+        vararg permissions: String
+    ): Boolean {
         if (PermissionUtils.hasPermissions(context as Activity, *permissions)) {
             return false
         }
@@ -210,7 +222,10 @@ class PickerSubmissionUploadEffectHandler(private val context: Context) :
         ).size > 0
     }
 
-    private fun isExtensionAllowed(file: FileSubmitObject, allowedExtensions: List<String>): Boolean {
+    private fun isExtensionAllowed(
+        file: FileSubmitObject,
+        allowedExtensions: List<String>
+    ): Boolean {
         if (allowedExtensions.isEmpty()) {
             return true // No restrictions if empty
         }
@@ -229,15 +244,18 @@ class PickerSubmissionUploadEffectHandler(private val context: Context) :
         return false
     }
 
-    //endregion
-
     companion object {
         const val REQUEST_CAMERA_PIC = 5100
         const val REQUEST_PICK_IMAGE_GALLERY = 5101
         const val REQUEST_PICK_FILE_FROM_DEVICE = 5102
 
         fun isPickerRequest(code: Int): Boolean {
-            return code in listOf(REQUEST_CAMERA_PIC, REQUEST_PICK_IMAGE_GALLERY, REQUEST_PICK_FILE_FROM_DEVICE)
+            return code in listOf(
+                REQUEST_CAMERA_PIC,
+                REQUEST_PICK_IMAGE_GALLERY,
+                REQUEST_PICK_FILE_FROM_DEVICE
+            )
+
         }
     }
 }

@@ -22,6 +22,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.pandautils.models.FileSubmitObject
+import com.instructure.pandautils.services.NotoriousUploadService
 import com.instructure.pandautils.utils.Const
 import com.instructure.student.mobius.common.ui.SubmissionService
 import io.mockk.*
@@ -35,6 +36,8 @@ class SubmissionServiceTest : Assert() {
 
     private var assignmentId: Long = 0
     private var assignmentName: String = "Assignment Name"
+    private var mediaFilePath = "/some/path/to/a/file"
+    private var notoriousAction = NotoriousUploadService.ACTION.ASSIGNMENT_SUBMISSION
 
     private lateinit var context: Context
     private lateinit var canvasContext: Course
@@ -113,15 +116,18 @@ class SubmissionServiceTest : Assert() {
     @Test
     fun `startMediaSubmission starts the service with an intent`() {
         val intent = slot<Intent>()
+        val assignmentGroupCategoryId = 0L
+        val assignment = Assignment(id = assignmentId, name = assignmentName, groupCategoryId = assignmentGroupCategoryId)
 
         every { context.startService(capture(intent)) } returns null
 
-        SubmissionService.startMediaSubmission(context, canvasContext, assignmentId, assignmentName)
+        SubmissionService.startMediaSubmission(context, canvasContext, assignment.id, assignment.name, assignment.groupCategoryId, mediaFilePath, notoriousAction)
 
         assertEquals(SubmissionService.Action.MEDIA_ENTRY.name, intent.captured.action)
         assertEquals(canvasContext, intent.captured.getParcelableExtra(Const.CANVAS_CONTEXT))
-        assertEquals(assignmentId, intent.captured.getLongExtra(Const.ASSIGNMENT_ID, -1))
-        assertEquals(assignmentName, intent.captured.getStringExtra(Const.ASSIGNMENT_NAME))
+        assertEquals(assignment, intent.captured.getParcelableExtra(Const.ASSIGNMENT))
+        assertEquals(mediaFilePath, intent.captured.getStringExtra(Const.MEDIA_FILE_PATH))
+        assertEquals(notoriousAction, intent.captured.getSerializableExtra(Const.ACTION))
     }
 
     @Test

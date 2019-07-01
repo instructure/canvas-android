@@ -18,11 +18,7 @@
 package com.instructure.pandautils.utils;
 
 import android.app.Activity;
-import android.content.ActivityNotFoundException;
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
-import android.content.Intent;
+import android.content.*;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.net.ConnectivityManager;
@@ -33,7 +29,6 @@ import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.Toast;
-
 import com.instructure.canvasapi2.utils.ApiPrefs;
 import com.instructure.pandautils.R;
 
@@ -46,12 +41,9 @@ public class Utils {
 
     /**
      * Check if the device has a camera. If it doesn't, return false
-     * and show a crouton so the user can see something
-     *
      */
     public static boolean hasCameraAvailable(Activity activity) {
         PackageManager pm = activity.getPackageManager();
-
         return pm.hasSystemFeature(PackageManager.FEATURE_CAMERA) || pm.hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT);
     }
 
@@ -63,28 +55,6 @@ public class Utils {
             file = context.getFilesDir();
         }
         return file;
-    }
-
-    public static boolean isAmazonDevice() {
-        String manufacture = Build.MANUFACTURER.toLowerCase(Locale.getDefault());
-        String brand = Build.BRAND.toLowerCase(Locale.getDefault());
-        String board = Build.BOARD.toLowerCase(Locale.getDefault());
-        String device = Build.DEVICE.toLowerCase(Locale.getDefault());
-
-        if(!TextUtils.isEmpty(manufacture) && manufacture.contains("amazon")) {
-            return true;
-        }
-
-        if(!TextUtils.isEmpty(brand) && brand.contains("amazon")) {
-            return true;
-        }
-
-        if(!TextUtils.isEmpty(board) && board.contains("amazon")) {
-            return true;
-        }
-
-        return !TextUtils.isEmpty(device) && device.contains("amazon");
-
     }
 
     public static boolean isNetworkAvailable(Context context) {
@@ -166,39 +136,25 @@ public class Utils {
     }
 
     public static void goToAppStore(AppType appType, Context context) {
-        if(com.instructure.pandautils.utils.Utils.isAmazonDevice()) {
-            String marketURL = "";
-            if(appType == AppType.STUDENT) {
-                marketURL = "http://www.amazon.com/gp/mas/dl/android?p=com.instructure.candroid";
-            }
-            else if(appType == AppType.POLLING) {
-
-            }
-            Intent goToAppstore = new Intent(Intent.ACTION_VIEW);
-            goToAppstore.setData(Uri.parse(marketURL));
-            context.startActivity(goToAppstore);
+        String packageName = "";
+        if (appType == AppType.STUDENT) {
+            packageName = "com.instructure.candroid";
+        } else if (appType == AppType.POLLING) {
+            packageName = "com.instructure.androidpolling";
+        } else if (appType == AppType.PARENT) {
+            packageName = "com.instructure.parentapp";
+        } else if (appType == AppType.TEACHER) {
+            packageName = "com.instructure.teacher";
         }
-        else {
-            String packageName = "";
-            if (appType == AppType.STUDENT) {
-                packageName = "com.instructure.candroid";
-            } else if (appType == AppType.POLLING) {
-                packageName = "com.instructure.androidpolling";
-            } else if (appType == AppType.PARENT) {
-                packageName = "com.instructure.parentapp";
-            } else if (appType == AppType.TEACHER) {
-                packageName = "com.instructure.teacher";
-            }
-            try {
-                Intent goToMarket = new Intent(Intent.ACTION_VIEW);
-                goToMarket.setData(Uri.parse("market://details?id=" + packageName));
-                context.startActivity(goToMarket);
-            } catch (ActivityNotFoundException e) {
-                //the device might not have the play store installed, open it in a webview
-                Intent goToMarket = new Intent(Intent.ACTION_VIEW);
-                goToMarket.setData(Uri.parse("https://play.google.com/store/apps/details?id=" + packageName));
-                context.startActivity(goToMarket);
-            }
+        try {
+            Intent goToMarket = new Intent(Intent.ACTION_VIEW);
+            goToMarket.setData(Uri.parse("market://details?id=" + packageName));
+            context.startActivity(goToMarket);
+        } catch (ActivityNotFoundException e) {
+            //the device might not have the play store installed, open it in a webview
+            Intent goToMarket = new Intent(Intent.ACTION_VIEW);
+            goToMarket.setData(Uri.parse("https://play.google.com/store/apps/details?id=" + packageName));
+            context.startActivity(goToMarket);
         }
     }
 

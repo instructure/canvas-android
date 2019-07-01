@@ -98,9 +98,10 @@ internal object FileUploadAPI {
             file: File,
             adapter: RestBuilder,
             params: RestParams,
-            dbSubmissionId: Long? = null
+            fileIndex: Int?,
+            dbSubmissionId: Long?
     ): Attachment? {
-        val requestFile = ProgressResponseBody(file, dbSubmissionId)
+        val requestFile = ProgressResponseBody(file, fileIndex, dbSubmissionId)
         val requestFilePart = MultipartBody.Part.createFormData("file", file.name, requestFile)
         return try {
             adapter.buildUpload(FileUploadInterface::class.java, params)

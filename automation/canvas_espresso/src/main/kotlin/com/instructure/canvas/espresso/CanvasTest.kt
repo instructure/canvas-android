@@ -7,6 +7,7 @@ import androidx.test.espresso.matcher.ViewMatchers
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityViewCheckResult
 import com.instructure.espresso.AccessibilityChecker
+import com.instructure.espresso.BuildConfig
 import com.instructure.espresso.page.InstructureTest
 import org.hamcrest.BaseMatcher
 import org.hamcrest.Description
@@ -14,9 +15,10 @@ import org.hamcrest.Matchers
 import org.junit.Before
 
 // InstructureTest wrapper for Canvas code
-abstract class CanvasTest : InstructureTest() {
+abstract class CanvasTest : InstructureTest(BuildConfig.GLOBAL_DITTO_MODE) {
     @Before
     override fun preLaunchSetup() {
+
         // Enable accessibility testing for all apps
         enableAndConfigureAccessibilityChecks()
         super.preLaunchSetup()

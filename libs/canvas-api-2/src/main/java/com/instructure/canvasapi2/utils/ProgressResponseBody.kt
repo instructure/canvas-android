@@ -23,7 +23,7 @@ import java.io.File
 import java.io.FileInputStream
 
 
-class ProgressResponseBody(private val file: File, private val submissionId: Long?) :
+class ProgressResponseBody(private val file: File, private val fileIndex: Int?, private val submissionId: Long?) :
     RequestBody() {
 
     override fun contentLength() = file.length()
@@ -38,9 +38,9 @@ class ProgressResponseBody(private val file: File, private val submissionId: Lon
             var read: Int = stream.read(buffer)
             while (read != -1) {
 
-                // Send out updates if we have a submission id
-                if (submissionId != null) {
-                    val event = ProgressEvent(submissionId, uploaded, contentLength())
+                // Send out updates if we have a submission id and a file index
+                if (fileIndex != null && submissionId != null) {
+                    val event = ProgressEvent(fileIndex, submissionId, uploaded, contentLength())
                     EventBus.getDefault().postSticky(event)
                 }
 
@@ -52,4 +52,4 @@ class ProgressResponseBody(private val file: File, private val submissionId: Lon
     }
 }
 
-data class ProgressEvent(val submissionId: Long, val uploaded: Long, val contentLength: Long)
+data class ProgressEvent(val fileIndex: Int, val submissionId: Long, val uploaded: Long, val contentLength: Long)
