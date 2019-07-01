@@ -98,4 +98,18 @@ class ModuleInteractionTest : StudentTest() {
         // When viewing the detail page for an item in a module with multiple items, the detail page should have
         // 'next' and 'previous' navigation buttons. Clicking these should navigate to the next/previous module items.
     }
+
+    @Stub
+    @Test
+    @TestMetaData(Priority.P1, FeatureCategory.MODULES, TestCategory.INTERACTION, true)
+    fun testModules_moduleLockedWithUnfulfilledPrerequisite() {
+        // Module can't be accessed unless all prerequisites have been fulfilled
+    }
+
+    @Stub
+    @Test
+    @TestMetaData(Priority.P1, FeatureCategory.MODULES, TestCategory.INTERACTION, true)
+    fun testModules_moduleLockedUntilAvailabilityDate() {
+        // Module can't be accessed until the availability date has passed
+    }
 }

@@ -33,4 +33,11 @@ class SubmissionDetailsInteractionTest : StudentTest() {
     fun testRubrics_showCriterionDescription() {
         // Clicking the "Description" button on a rubric criterion item should show a new page with the full description
     }
+
+    @Stub
+    @Test
+    @TestMetaData(Priority.P0, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, true)
+    fun testComments_addCommentToSubmission() {
+        // Should be able to add a comment on a submission
+    }
 }

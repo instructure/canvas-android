@@ -95,4 +95,28 @@ class QuizInteractionTest : StudentTest() {
     fun testOpensNativeView_trueFalseQuiz() {
         // Quizzes with just True-False questions should open in a native view and not a WebView
     }
+
+    @Stub
+    @Test
+    @TestMetaData(Priority.P0, FeatureCategory.QUIZZES, TestCategory.INTERACTION, true)
+    fun testQuiz_canTakeQuiz() {
+        // User should be able to take a valid quiz
+    }
+
+    @Stub
+    @Test
+    @TestMetaData(Priority.P0, FeatureCategory.QUIZZES, TestCategory.INTERACTION, true)
+    fun testQuiz_canResumeQuiz() {
+        // User should be able to resume a valid quiz
+    }
+
+    @Stub
+    @Test
+    @TestMetaData(Priority.P0, FeatureCategory.QUIZZES, TestCategory.INTERACTION, true)
+    fun testQuiz_canSubmitQuiz() {
+        // User should be able to submit a valid quiz
+    }
+
+
+
 }
