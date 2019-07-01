@@ -16,12 +16,15 @@
  */
 package com.instructure.student.mobius.common.ui
 
-import android.app.*
+import android.app.IntentService
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+import android.os.Parcelable
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.instructure.canvasapi2.managers.SubmissionManager
@@ -35,6 +38,7 @@ import com.instructure.canvasapi2.utils.weave.apiAsync
 import com.instructure.pandautils.models.FileSubmitObject
 import com.instructure.pandautils.models.PushNotification
 import com.instructure.pandautils.services.FileUploadService
+import com.instructure.pandautils.services.NotoriousUploadService
 import com.instructure.pandautils.utils.Const
 import com.instructure.student.R
 import com.instructure.student.activity.NavigationActivity
@@ -42,13 +46,14 @@ import com.instructure.student.db.Db
 import com.instructure.student.db.getInstance
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.io.File
 import java.util.*
 
 class SubmissionFileUploadReceiver(private val dbSubmissionId: Long) : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         context ?: return
 
-        val submissionId = intent?.extras?.getLong(Const.SUBMISSION)
+        val submissionId = intent?.extras?.getLong(Const.SUBMISSION_ID)
         val assignmentName = intent?.extras?.getString(Const.ASSIGNMENT_NAME)
 
         if (submissionId == null || submissionId != dbSubmissionId) return // Only handle our submission
@@ -97,19 +102,6 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
     init {
         setIntentRedelivery(true)
     }
-
-//    override fun onCreate() {
-//        super.onCreate()
-//
-//        // perform one-time setup procedures when the service is initially created (before it calls
-//        // either onStartCommand() or onBind()). If the service is already running, this method is not called.
-//    }
-//
-//    override fun onDestroy() {
-//        super.onDestroy()
-//
-//        // clean up any resources such as threads, registered listeners, or receivers
-//    }
 
     override fun onHandleIntent(intent: Intent) {
         val action = intent.action!!
@@ -176,11 +168,59 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
     }
 
     private fun uploadMedia(intent: Intent) {
-        // TODO: Save to persistence
-        // TODO: Upload files to server
-        // TODO: On broadcast, upload submission with file references
-        // TODO: Show progress notification (one already shown for each file)
-        // TODO: Update persistence, either delete on success or update with error and show notification
+        val mediaFilePath = intent.getStringExtra(Const.MEDIA_FILE_PATH)
+        var assignment = intent.getParcelableExtra<Assignment>(Const.ASSIGNMENT)
+        val canvasContext = intent.getParcelableExtra<CanvasContext>(Const.CANVAS_CONTEXT)
+        val action = intent.getSerializableExtra(Const.ACTION) as NotoriousUploadService.ACTION
+
+        val dbSubmissionId: Long
+        val filesDb = Db.getInstance(this).fileSubmissionQueries
+        val submissionsDb = Db.getInstance(this).submissionQueries
+
+        // Check if we're retrying a submission or if it's a new one that needs to be persisted
+        if (intent.hasExtra(Const.SUBMISSION_ID)) {
+            // Get previously attempted submission information so we can retry
+            dbSubmissionId = intent.extras!!.getLong(Const.SUBMISSION_ID)
+            val submission = submissionsDb.getSubmissionById(dbSubmissionId).executeAsOne()
+
+            assignment = Assignment(
+                id = submission.assignmentId!!.toLong(),
+                name = submission.assignmentName,
+                groupCategoryId = submission.assignmentGroupCategoryId ?: 0
+            )
+        } else {
+            // New submission - store submission details in the db
+            submissionsDb.insertOnlineUploadSubmission(
+                assignment.name,
+                assignment.id,
+                assignment.groupCategoryId,
+                canvasContext
+            )
+            dbSubmissionId = submissionsDb.getLastInsert().executeAsOne()
+
+            val file = File(mediaFilePath)
+            filesDb.insertFile(dbSubmissionId, file.name, file.length(), "", mediaFilePath)
+        }
+
+        // Don't show the notification in the foreground so it doesn't disappear when this service dies
+        showProgressNotification(assignment.name, dbSubmissionId, false)
+
+        // Handle broadcasts from file upload service
+        // Register the receiver on the application context so this service can die and handle the next submission
+        val receiver = SubmissionFileUploadReceiver(dbSubmissionId)
+
+        val filter = IntentFilter(FileUploadService.ALL_UPLOADS_COMPLETED)
+        filter.addAction(FileUploadService.UPLOAD_ERROR)
+        applicationContext.registerReceiver(receiver, filter)
+
+        val mediaFileUploadIntent = Intent(this, NotoriousUploadService::class.java).apply {
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            putExtra(Const.MEDIA_FILE_PATH, mediaFilePath)
+            putExtra(Const.ACTION, action)
+            putExtra(Const.ASSIGNMENT, assignment.copy(courseId = canvasContext.id) as Parcelable)
+            putExtra(Const.SUBMISSION_ID, dbSubmissionId)
+        }
+        startService(mediaFileUploadIntent)
     }
 
     private fun uploadFile(intent: Intent) {
@@ -195,8 +235,8 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
         val filesDb = db.fileSubmissionQueries
 
         // Check if we're retrying a submission or if it's a new one that needs to be persisted
-        if (intent.hasExtra(Const.SUBMISSION)) {
-            dbSubmissionId = intent.extras!!.getLong(Const.SUBMISSION)
+        if (intent.hasExtra(Const.SUBMISSION_ID)) {
+            dbSubmissionId = intent.extras!!.getLong(Const.SUBMISSION_ID)
             val submission = db.submissionQueries.getSubmissionById(dbSubmissionId).executeAsOne()
             val dbFiles = db.fileSubmissionQueries.getFilesForSubmissionId(dbSubmissionId).executeAsList()
 
@@ -349,17 +389,18 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
         fun retryFileSubmission(context: Context, canvasContext: CanvasContext, dbSubmissionId: Long) {
             val bundle = Bundle().apply {
                 putParcelable(Const.CANVAS_CONTEXT, canvasContext)
-                putLong(Const.SUBMISSION, dbSubmissionId)
+                putLong(Const.SUBMISSION_ID, dbSubmissionId)
             }
 
             startService(context, Action.FILE_ENTRY, bundle)
         }
 
-        fun startMediaSubmission(context: Context, canvasContext: CanvasContext, assignmentId: Long, assignmentName: String?) {
+        fun startMediaSubmission(context: Context, canvasContext: CanvasContext, assignmentId: Long, assignmentName: String?, assignmentGroupCategoryId: Long, mediaFilePath: String?, notoriousAction: NotoriousUploadService.ACTION) {
             val bundle = Bundle().apply {
                 putParcelable(Const.CANVAS_CONTEXT, canvasContext)
-                putLong(Const.ASSIGNMENT_ID, assignmentId)
-                putString(Const.ASSIGNMENT_NAME, assignmentName)
+                putParcelable(Const.ASSIGNMENT, Assignment(id = assignmentId, name = assignmentName, groupCategoryId = assignmentGroupCategoryId))
+                putString(Const.MEDIA_FILE_PATH, mediaFilePath)
+                putSerializable(Const.ACTION, notoriousAction)
             }
 
             startService(context, Action.MEDIA_ENTRY, bundle)

@@ -52,6 +52,7 @@ import com.instructure.pandautils.activities.NotoriousMediaUploadPicker
 import com.instructure.pandautils.dialogs.UploadFilesDialog
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
+import com.instructure.student.mobius.common.ui.SubmissionService
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.Analytics
 import com.instructure.student.util.VisibilityAnimator
