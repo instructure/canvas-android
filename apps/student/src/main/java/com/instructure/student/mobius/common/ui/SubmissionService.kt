@@ -91,6 +91,9 @@ class SubmissionFileUploadReceiver(private val dbSubmissionId: Long) : Broadcast
 
         // We'll always want to unregister ourselves
         context.unregisterReceiver(this)
+        context.sendBroadcast(Intent(SubmissionService.FILE_SUBMISSION_FINISHED).apply {
+            putExtra(Const.SUBMISSION, submissionId)
+        })
     }
 }
 
@@ -302,6 +305,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
     }
 
     companion object {
+        const val FILE_SUBMISSION_FINISHED = "file_submission_finished"
 
         private fun getSubmissionIntent(context: Context, canvasContext: CanvasContext, assignmentId: Long): PendingIntent {
             val intent = Intent(context, NavigationActivity.startActivityClass).apply {

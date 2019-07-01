@@ -109,7 +109,7 @@ class FileUploadService @JvmOverloads constructor(name: String = FileUploadServi
                 when (action) {
                     ACTION_ASSIGNMENT_SUBMISSION -> {
                         val uploadContext = if (groupId == null) SubmissionUploadContext(courseId, assignment!!.id) else GroupUploadContext(groupId)
-                        attachments += FileUploadManager.uploadFileSynchronous(uploadContext, config, submissionId)!!
+                        attachments += FileUploadManager.uploadFileSynchronous(uploadContext, config, idx, submissionId)!!
                     }
                     ACTION_COURSE_FILE -> {
                         config.parentFolderId = parentFolderId
