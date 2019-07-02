@@ -24,7 +24,8 @@ annotation class TestMetaData(
         val featureCategory: FeatureCategory,
         val testCategory: TestCategory,
         val stubbed: Boolean = false,
-        val secondaryFeature: FeatureCategory = FeatureCategory.NONE
+        val secondaryFeature: FeatureCategory = FeatureCategory.NONE,
+        val manualOnly: Boolean = false
 )
 
 enum class Priority {
@@ -33,7 +34,7 @@ enum class Priority {
 
 enum class FeatureCategory {
     ASSIGNMENTS, SUBMISSIONS, LOGIN, COURSE, DASHBOARD, GROUPS, SETTINGS, PAGES, DISCUSSIONS, MODULES,
-    INBOX, GRADES, FILES, EVENTS, PEOPLE, CONFERENCES, COLLABORATIONS, SYLLABUS, TODOS, QUIZZES, NONE
+    INBOX, GRADES, FILES, EVENTS, PEOPLE, CONFERENCES, COLLABORATIONS, SYLLABUS, TODOS, QUIZZES, NOTIFICATIONS, ANNOTATIONS, ANNOUNCEMENTS, NONE
 }
 
 enum class TestCategory {

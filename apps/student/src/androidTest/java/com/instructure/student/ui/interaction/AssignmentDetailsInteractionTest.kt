@@ -40,4 +40,25 @@ class AssignmentDetailsInteractionTest : StudentTest() {
         // Test clicking on the Submission and Rubric button to load the Submission Details Page
     }
 
+    @Stub
+    @Test
+    @TestMetaData(Priority.P0, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, true)
+    fun testNavigating_viewAssignmentDetails() {
+        // Test clicking on the Assignment item in the Assignment List to load the Assignment Details Page
+    }
+
+    @Stub
+    @Test
+    @TestMetaData(Priority.P0, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, true, FeatureCategory.QUIZZES)
+    fun testGauge_launchQuizzesNextAssignment() {
+        // Launch into Quizzes.Next assignment
+    }
+
+    @Stub
+    @Test
+    @TestMetaData(Priority.P0, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, true)
+    fun testAssignments_previewAttachment() {
+        // Student can preview an assignment attachment
+    }
+
 }

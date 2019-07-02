@@ -95,4 +95,46 @@ class InboxInteractionTest : StudentTest() {
     fun testInbox_filterMessagesByContext() {
         // Should be able to filter messages by course or group
     }
+
+    @Stub
+    @Test
+    @TestMetaData(Priority.P1, FeatureCategory.INBOX, TestCategory.INTERACTION, true)
+    fun testInbox_canComposeAndSendToRoleGroupsIfPermissionEnabled() {
+        // Can compose and send messages to one or more role groups if "Send messages to the entire class is enabled"
+    }
+
+    @Stub
+    @Test
+    @TestMetaData(Priority.P1, FeatureCategory.INBOX, TestCategory.INTERACTION, true)
+    fun testInbox_canNotComposeAndSendToRoleGroupsIfPermissionDisabled() {
+        // Can NOT compose and send messages to one or more role groups if "Send messages to the entire class is disabled"
+    }
+
+    @Stub
+    @Test
+    @TestMetaData(Priority.P1, FeatureCategory.INBOX, TestCategory.INTERACTION, true)
+    fun testInbox_canComposeAndSendToEntireClassIfPermissionEnabled() {
+        // Can compose and send messages to entire class if "Send messages to the entire class" is enabled
+    }
+
+    @Stub
+    @Test
+    @TestMetaData(Priority.P1, FeatureCategory.INBOX, TestCategory.INTERACTION, true)
+    fun testInbox_canNotComposeAndSendToEntireClassIfPermissionDisabled() {
+        // Can NOT compose and send messages to entire class if "Send messages to the entire class" is disabled
+    }
+
+    @Stub
+    @Test
+    @TestMetaData(Priority.P1, FeatureCategory.INBOX, TestCategory.INTERACTION, true)
+    fun testInbox_canComposeAndSendToIndividualCourseMembersIfPermissionEnabled() {
+        // Can compose and send messages to individual course members if "Send messages to individual course members" is enabled
+    }
+
+    @Stub
+    @Test
+    @TestMetaData(Priority.P1, FeatureCategory.INBOX, TestCategory.INTERACTION, true)
+    fun testInbox_canNotComposeAndSendToIndividualCourseMembersIfPermissionDisabled() {
+        // Can NOT compose and send messages to individual course members if "Send messages to individual course members" is disabled
+    }
 }
