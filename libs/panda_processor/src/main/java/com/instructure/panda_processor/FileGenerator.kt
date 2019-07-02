@@ -17,9 +17,11 @@ package com.instructure.panda_processor
 
 import com.google.auto.service.AutoService
 import com.instructure.panda_annotations.*
+import java.awt.AWTError
 import java.io.File
 import javax.annotation.processing.*
 import javax.lang.model.SourceVersion
+import javax.lang.model.element.Element
 import javax.lang.model.element.TypeElement
 
 @AutoService(Processor::class) // For registering the service
@@ -36,14 +38,14 @@ class FileGenerator : AbstractProcessor(){
     }
 
     override fun process(set: MutableSet<out TypeElement>?, roundEnvironment: RoundEnvironment?): Boolean {
-        val annotationList = roundEnvironment?.getElementsAnnotatedWith(TestMetaData::class.java)?.map { it.getAnnotation(TestMetaData::class.java) }
+        val annotationList = roundEnvironment?.getElementsAnnotatedWith(TestMetaData::class.java)?.map { AnnotationWrapper(it.getAnnotation(TestMetaData::class.java), it) }
         if(annotationList?.isNotEmpty() == true) generateFile(annotationList)
         return true
     }
 
-    private fun generateFile(annotationList: List<TestMetaData>){
+    private fun generateFile(annotationWrapperList: List<AnnotationWrapper>){
         val fileName = "Generated_Test_data"
-        val fileContent = generateFileContent(annotationList)
+        val fileContent = generateFileContent(annotationWrapperList)
 
         val kaptKotlinGeneratedDir = processingEnv.options[KAPT_KOTLIN_GENERATED_OPTION_NAME]
         val file = File(kaptKotlinGeneratedDir, "$fileName.txt")
@@ -51,24 +53,26 @@ class FileGenerator : AbstractProcessor(){
         file.writeText(fileContent)
     }
 
-    private fun generateFileContent(annotationList: List<TestMetaData>): String {
+    private fun generateFileContent(annotationWrapperList: List<AnnotationWrapper>): String {
         var totalWritten = 0
         var totalStubbed = 0
         val testCounts = HashMap<TestCategory, TestCount>()
         val priorityCounts = HashMap<Priority, TestCount>()
         val featureCounts = HashMap<FeatureCategory, TestCount>()
+        val manualOnly = ArrayList<String>()
 
-        annotationList.forEach { annotation ->
-            val stubbedCount = if(annotation.stubbed) 1 else 0
-            val writtenCount = if(!annotation.stubbed) 1 else 0
+        annotationWrapperList.forEach { annotationWrapper ->
+            val stubbedCount = if(annotationWrapper.annotation.stubbed) 1 else 0
+            val writtenCount = if(!annotationWrapper.annotation.stubbed) 1 else 0
             totalStubbed += stubbedCount
             totalWritten += writtenCount
-            val testCount = testCounts[annotation.testCategory] ?: TestCount()
-            val priorityCount = priorityCounts[annotation.priority] ?: TestCount()
-            val featureCount = featureCounts[annotation.featureCategory] ?: TestCount()
-            testCounts[annotation.testCategory] = TestCount(testCount.stubbed + stubbedCount, testCount.written + writtenCount)
-            priorityCounts[annotation.priority] = TestCount(priorityCount.stubbed + stubbedCount, priorityCount.written + writtenCount)
-            featureCounts[annotation.featureCategory] = TestCount(featureCount.stubbed + stubbedCount, featureCount.written + writtenCount)
+            val testCount = testCounts[annotationWrapper.annotation.testCategory] ?: TestCount()
+            val priorityCount = priorityCounts[annotationWrapper.annotation.priority] ?: TestCount()
+            val featureCount = featureCounts[annotationWrapper.annotation.featureCategory] ?: TestCount()
+            testCounts[annotationWrapper.annotation.testCategory] = TestCount(testCount.stubbed + stubbedCount, testCount.written + writtenCount)
+            priorityCounts[annotationWrapper.annotation.priority] = TestCount(priorityCount.stubbed + stubbedCount, priorityCount.written + writtenCount)
+            featureCounts[annotationWrapper.annotation.featureCategory] = TestCount(featureCount.stubbed + stubbedCount, featureCount.written + writtenCount)
+            if(annotationWrapper.annotation.manualOnly) manualOnly.add(annotationWrapper.annotatedElement.simpleName.toString())
         }
 
         return CustomFileBuilder(
@@ -76,7 +80,8 @@ class FileGenerator : AbstractProcessor(){
                 totalStubbed,
                 testCounts,
                 priorityCounts,
-                featureCounts
+                featureCounts,
+                manualOnly
         ).getContent()
     }
 
@@ -85,3 +90,5 @@ class FileGenerator : AbstractProcessor(){
     }
 
 }
+
+data class AnnotationWrapper(val annotation: TestMetaData, val annotatedElement: Element)

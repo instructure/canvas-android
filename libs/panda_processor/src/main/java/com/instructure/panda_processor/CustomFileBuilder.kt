@@ -18,13 +18,15 @@ package com.instructure.panda_processor
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
+import com.instructure.panda_annotations.TestMetaData
 
 class CustomFileBuilder(
         totalWritten: Int,
         totalStubbed: Int,
         testCounts: HashMap<TestCategory, TestCount>,
         priorityCounts: HashMap<Priority, TestCount>,
-        featureCounts: HashMap<FeatureCategory, TestCount>) {
+        featureCounts: HashMap<FeatureCategory, TestCount>,
+        manualOnly: ArrayList<String>) {
 
     private val contentTemplate = """
         *** Total Test Counts ***
@@ -65,9 +67,19 @@ class CustomFileBuilder(
         Todos = stubbed(${featureCounts[FeatureCategory.TODOS]?.stubbed}) / written(${featureCounts[FeatureCategory.TODOS]?.written})
         Quizzes = stubbed(${featureCounts[FeatureCategory.QUIZZES]?.stubbed}) / written(${featureCounts[FeatureCategory.QUIZZES]?.written})
         Groups = stubbed(${featureCounts[FeatureCategory.GROUPS]?.stubbed}) / written(${featureCounts[FeatureCategory.GROUPS]?.written})
+        Notifications = stubbed(${featureCounts[FeatureCategory.NOTIFICATIONS]?.stubbed}) / written(${featureCounts[FeatureCategory.NOTIFICATIONS]?.written})
+        Annotations = stubbed(${featureCounts[FeatureCategory.ANNOTATIONS]?.stubbed}) / written(${featureCounts[FeatureCategory.ANNOTATIONS]?.written})
+        Announcements = stubbed(${featureCounts[FeatureCategory.ANNOUNCEMENTS]?.stubbed}) / written(${featureCounts[FeatureCategory.ANNOUNCEMENTS]?.written})
+        
+        *** Manual Only ***
+        ${manualOnly.forEach { formatManualTest(it) }}
     """.trimIndent()
     fun getContent() : String{
         return contentTemplate
+    }
+
+    private fun formatManualTest(testName: String) : String {
+        return "Test Name: $testName \n"
     }
 
 }
