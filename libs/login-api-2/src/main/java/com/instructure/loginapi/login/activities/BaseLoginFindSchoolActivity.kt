@@ -88,7 +88,7 @@ abstract class BaseLoginFindSchoolActivity : AppCompatActivity(), ErrorReportDia
                 domains?.add(2, createAccountForDebugging("mobileqa.instructure.com"))
                 domains?.add(3, createAccountForDebugging("mobileqat.instructure.com"))
                 domains?.add(4, createAccountForDebugging("clare.instructure.com"))
-                domains?.add(5, createAccountForDebugging("mobileqa.test.instructure.com"))
+                domains?.add(5, createAccountForDebugging("mobileqa.beta.instructure.com"))
             }
 
             if (mDomainAdapter != null) {

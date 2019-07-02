@@ -90,9 +90,11 @@ class LoginSignInPage : BasePage() {
         enterEmail(loginId)
         enterPassword(password)
         clickLoginButton()
-        authorizeButton().repeatedlyUntilNot(action = webClick(),
-                desiredStateMatcher = ::authorizeButton,
-                maxAttempts = 20)
+
+        // Apparently not necessary when running on mobileqa.beta.instructure.com
+//        authorizeButton().repeatedlyUntilNot(action = webClick(),
+//                desiredStateMatcher = ::authorizeButton,
+//                maxAttempts = 20)
     }
 
     //endregion

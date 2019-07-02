@@ -97,7 +97,7 @@ class LoginSignInPage: BasePage() {
         enterEmail(user.loginId)
         enterPassword(user.password)
         clickLoginButton()
-        authorizeButton().perform(webClick())
+        // authorizeButton().perform(webClick()) // Not necessary on mobileqa.beta
     }
 
     fun loginAs(loginId: String, password: String) {
