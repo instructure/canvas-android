@@ -67,6 +67,7 @@ class FloatingRecordingView @JvmOverloads constructor(
 
     init {
         recordingView = View.inflate(context, R.layout.view_floating_media_recorder, this) as ViewGroup
+        recordingView.camera.z = 15f // TODO - Remove once we update to playerview
         setupFloatingAction()
 
         this.elevation = context.DP(8.0f)
