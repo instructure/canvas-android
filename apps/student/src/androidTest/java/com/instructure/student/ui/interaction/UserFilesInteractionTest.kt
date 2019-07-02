@@ -63,13 +63,25 @@ class UserFilesInteractionTest : StudentTest() {
 
     @Stub
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.FILES, TestCategory.INTERACTION, true)
-    fun testView_preview() {
-        // Should be able to preview a file
+    @TestMetaData(Priority.P2, FeatureCategory.FILES, TestCategory.INTERACTION, true)
+    fun testView_previewAudio() {
+        // Should be able to preview an audio file
     }
 
+    @Stub
+    @Test
+    @TestMetaData(Priority.P2, FeatureCategory.FILES, TestCategory.INTERACTION, true)
+    fun testView_previewVideo() {
+        // Should be able to preview a video file
+    }
 
+    @Stub
+    @Test
+    @TestMetaData(Priority.P2, FeatureCategory.FILES, TestCategory.INTERACTION, true)
+    fun testView_previewImage() {
+        // Should be able to preview an image file
+    }
 
-
+    // TODO - Add all interaction tests for supported file view/previews
 
 }

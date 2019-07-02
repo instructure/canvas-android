@@ -33,7 +33,7 @@ import com.instructure.pandautils.dialogs.MobileDataWarningDialog
 import com.instructure.student.R
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsContentType
 import com.instructure.student.router.RouteMatcher
-import kotlinx.android.synthetic.main.exo_playback_control_view.*
+import kotlinx.android.synthetic.main.student_exo_playback_control_view.*
 import kotlinx.android.synthetic.main.fragment_media_submission_view.*
 
 class MediaSubmissionViewFragment : Fragment() {

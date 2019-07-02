@@ -33,4 +33,11 @@ class CourseInteractionTest : StudentTest() {
         // Link from a course page to another public course should open in the app
     }
 
+    @Stub
+    @Test
+    @TestMetaData(Priority.P0, FeatureCategory.COURSE, TestCategory.INTERACTION, true, FeatureCategory.FILES)
+    fun testCourse_openFile() {
+        // user should be able to open/preview course file
+    }
+
 }

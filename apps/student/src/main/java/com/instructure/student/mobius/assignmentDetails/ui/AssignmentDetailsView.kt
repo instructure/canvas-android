@@ -37,6 +37,7 @@ import com.instructure.student.R
 import com.instructure.student.activity.InternalWebViewActivity
 import com.instructure.student.activity.ShareFileSubmissionTarget
 import com.instructure.student.fragment.InternalWebviewFragment
+import com.instructure.student.fragment.LTIWebViewFragment
 import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsEvent
 import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submission.text.ui.TextSubmissionUploadFragment
@@ -216,6 +217,10 @@ class AssignmentDetailsView(
 
     fun showOnlineUrlEntryView(assignmentId: Long, assignmentName: String?, canvasContext: CanvasContext, submittedUrl: String? = null) {
         RouteMatcher.route(context, UrlSubmissionUploadFragment.makeRoute(canvasContext, assignmentId, assignmentName, submittedUrl))
+    }
+
+    fun showLTIView(canvasContext: CanvasContext, url: String, title: String) {
+        RouteMatcher.route(context, LTIWebViewFragment.makeRoute(canvasContext, url, title, isAssignmentLTI = true))
     }
 
     fun showMediaRecordingView(assignment: Assignment, courseId: Long) {

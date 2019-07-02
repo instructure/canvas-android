@@ -367,4 +367,35 @@ class AssignmentDetailsPresenterTest : Assert() {
         val actual = AssignmentDetailsPresenter.present(model, context).visibilities.grade
         assertTrue(actual)
     }
+
+    @Test
+    fun `Displays Launch External Tool if submission type is external tool`() {
+        val assignment = baseAssignment.copy(
+            submissionTypesRaw = listOf(Assignment.SubmissionType.EXTERNAL_TOOL.apiString)
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
+        assertEquals("Launch External Tool", state.submitButtonText)
+    }
+
+    @Test
+    fun `isExternalToolSubmission is true if submission type is external tool`() {
+        val assignment = baseAssignment.copy(
+            submissionTypesRaw = listOf(Assignment.SubmissionType.EXTERNAL_TOOL.apiString)
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
+        assertEquals(true, state.isExternalToolSubmission)
+    }
+
+    @Test
+    fun `isExternalToolSubmission is false if submission type is not external tool`() {
+        val assignment = baseAssignment.copy(
+            submissionTypesRaw = listOf(Assignment.SubmissionType.ONLINE_UPLOAD.apiString)
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
+        assertEquals(false, state.isExternalToolSubmission)
+    }
+
 }

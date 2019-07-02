@@ -93,7 +93,7 @@ class EditFavoritesFragment : BaseSyncFragment<
 
     override fun onPresenterPrepared(presenter: EditFavoritesPresenter) {
         mRecyclerView = RecyclerViewUtils.buildRecyclerView(mRootView, requireContext(), adapter, presenter, R.id.swipeRefreshLayout,
-                R.id.favoritesRecyclerView, R.id.emptyPandaView, getString(R.string.noCoursesSubtext))
+                R.id.favoritesRecyclerView, R.id.emptyPandaView, getString(R.string.noCourses))
         mRecyclerView.itemAnimator = null
     }
 

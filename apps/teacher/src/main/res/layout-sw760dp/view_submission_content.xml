@@ -242,7 +242,7 @@
         android:layout_toStartOf="@+id/panelContent"
         android:background="@color/divider" />
 
-    <com.instructure.teacher.view.FloatingRecordingView
+    <com.instructure.pandautils.views.FloatingRecordingView
         android:id="@+id/floatingRecordingView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

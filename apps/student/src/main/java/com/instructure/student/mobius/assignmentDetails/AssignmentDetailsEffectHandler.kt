@@ -17,6 +17,7 @@
 package com.instructure.student.mobius.assignmentDetails
 
 import com.instructure.canvasapi2.managers.AssignmentManager
+import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.DiscussionTopic
 import com.instructure.canvasapi2.utils.*
@@ -60,6 +61,9 @@ class AssignmentDetailsEffectHandler : EffectHandler<AssignmentDetailsView, Assi
                     Assignment.SubmissionType.ONLINE_URL -> {
                         view?.showOnlineUrlEntryView(effect.assignment.id, effect.assignment.name, effect.course)
                     }
+                    Assignment.SubmissionType.EXTERNAL_TOOL, Assignment.SubmissionType.BASIC_LTI_LAUNCH -> {
+                        view?.showLTIView(effect.course, effect.ltiUrl ?: "", effect.assignment.name ?: "")
+                    }
                     else -> { // Assignment.SubmissionType.MEDIA_RECORDING
                         view?.showMediaRecordingView(effect.assignment, effect.course.id)
                     }
@@ -86,12 +90,18 @@ class AssignmentDetailsEffectHandler : EffectHandler<AssignmentDetailsView, Assi
                 }
             }
 
+            // Determine if we need to retrieve an authenticated LTI URL based on whether this assignment accepts external tool submissions
+            val assignmentUrl = result.dataOrNull?.url
+            val ltiTool = if (assignmentUrl != null && result.dataOrNull?.getSubmissionTypes()?.contains(Assignment.SubmissionType.EXTERNAL_TOOL) == true)
+                SubmissionManager.getLtiFromAuthenticationUrlAsync(assignmentUrl, true).await()
+            else DataResult.Fail(null)
+
             // We need to know if they can make submissions through arc, only for file uploads
             val isArcEnabled = if (result.isSuccess && result.dataOrThrow.getSubmissionTypes().contains(Assignment.SubmissionType.ONLINE_UPLOAD)) {
                 effect.courseId.isArcEnabled()
             } else false
 
-            consumer.accept(AssignmentDetailsEvent.DataLoaded(result, isArcEnabled))
+            consumer.accept(AssignmentDetailsEvent.DataLoaded(result, isArcEnabled, ltiTool))
         }
     }
 

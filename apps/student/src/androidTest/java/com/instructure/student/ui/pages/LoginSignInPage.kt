@@ -102,7 +102,7 @@ class LoginSignInPage: BasePage() {
         enterEmail(loginId)
         enterPassword(password)
         clickLoginButton()
-        authorizeButton().perform(webClick())
+        // authorizeButton().perform(webClick()) // Not needed on mobileqa.beta.instructure.com (???)
     }
 
     //endregion

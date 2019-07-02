@@ -53,6 +53,8 @@ class SubmissionDetailsFragment :
         ChannelSource.getSource<SubmissionDetailsSharedEvent, SubmissionDetailsEvent> {
             when (it) {
                 is SubmissionDetailsSharedEvent.FileSelected -> SubmissionDetailsEvent.AttachmentClicked(it.file)
+                is SubmissionDetailsSharedEvent.AudioRecordingViewLaunched -> SubmissionDetailsEvent.AudioRecordingClicked
+                is SubmissionDetailsSharedEvent.VideoRecordingViewLaunched -> SubmissionDetailsEvent.VideoRecordingClicked
             }
         }
     )

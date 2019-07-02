@@ -40,4 +40,32 @@ class SubmissionDetailsInteractionTest : StudentTest() {
     fun testComments_addCommentToSubmission() {
         // Should be able to add a comment on a submission
     }
+
+    @Stub
+    @Test
+    @TestMetaData(Priority.P1, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, true)
+    fun testComments_addVideoCommentToSubmission() {
+        // Should be able to add a video comment on a submission
+    }
+
+    @Stub
+    @Test
+    @TestMetaData(Priority.P1, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, true)
+    fun testComments_addAudioCommentToSubmission() {
+        // Should be able to add a audio comment on a submission
+    }
+
+    @Stub
+    @Test
+    @TestMetaData(Priority.P2, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, true)
+    fun testComments_videoCommentPlayback() {
+        // After recording a video comment, user should be able to view a replay
+    }
+
+    @Stub
+    @Test
+    @TestMetaData(Priority.P2, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, true)
+    fun testComments_audioCommentPlayback() {
+        // After recording an audio comment, user should be able to hear an audio playback
+    }
 }

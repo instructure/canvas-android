@@ -83,4 +83,26 @@ class DashboardInteractionTest : StudentTest() {
     fun testDashboardAnnouncement_view() {
         // Tapping global announcement displays the content
     }
+
+    @Stub
+    @Test
+    @TestMetaData(Priority.P0, FeatureCategory.DASHBOARD, TestCategory.INTERACTION, true, FeatureCategory.COURSE)
+    fun testDashboardCourses_tappingCourseCardDisplaysCourseBrowser() {
+        // Tapping on a course card opens course browser page
+    }
+
+    @Stub
+    @Test
+    @TestMetaData(Priority.P1, FeatureCategory.DASHBOARD, TestCategory.INTERACTION, true, FeatureCategory.COURSE)
+    fun testDashboardCourses_gradeIsDisplayedWhenShowGradesIsSelected() {
+        // [Student] Grade is displayed when 'Show Grades' (located in navigation drawer) is selected
+    }
+
+    @Stub
+    @Test
+    @TestMetaData(Priority.P1, FeatureCategory.DASHBOARD, TestCategory.INTERACTION, true, FeatureCategory.COURSE)
+    fun testDashboardCourses_gradeIsNotDisplayedWhenShowGradesIsDeSelected() {
+        // [Student] Grade is NOT displayed when 'Show Grades' (located in navigation drawer) is de-selected
+    }
+
 }

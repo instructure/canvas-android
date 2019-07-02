@@ -28,8 +28,22 @@ class AnnouncementInteractionTest : StudentTest() {
 
     @Stub
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.DASHBOARD, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P0, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION, true)
+    fun testAnnouncement_replyToSectionSpecificAnnouncement() {
+        // Student enrolled in intended section can see and reply to the announcement
+    }
+
+    @Stub
+    @Test
+    @TestMetaData(Priority.P0, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION, true)
+    fun testAnnouncement_previewAttachment() {
+        // User can preview an announcement attachment
+    }
+
+    @Stub
+    @Test
+    @TestMetaData(Priority.P0, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION, true)
     fun testAnnouncement_reply() {
-        // Student can reply to the announcement
+        // View/reply to an announcement
     }
 }

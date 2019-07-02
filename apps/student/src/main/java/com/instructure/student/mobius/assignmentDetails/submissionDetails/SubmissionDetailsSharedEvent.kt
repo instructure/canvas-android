@@ -20,4 +20,6 @@ import com.instructure.canvasapi2.models.Attachment
 
 sealed class SubmissionDetailsSharedEvent {
     data class FileSelected(val file: Attachment) : SubmissionDetailsSharedEvent()
+    object AudioRecordingViewLaunched : SubmissionDetailsSharedEvent()
+    object VideoRecordingViewLaunched : SubmissionDetailsSharedEvent()
 }

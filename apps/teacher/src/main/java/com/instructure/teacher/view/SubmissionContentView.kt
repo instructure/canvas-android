@@ -58,13 +58,13 @@ import com.instructure.pandautils.dialogs.UnsavedChangesExitDialog
 import com.instructure.pandautils.interfaces.ShareableFile
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.ProgressiveCanvasLoadingView
+import com.instructure.pandautils.views.RecordingMediaType
 import com.instructure.teacher.PSPDFKit.AnnotationComments.AnnotationCommentListFragment
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.SpeedGraderActivity
 import com.instructure.teacher.adapters.StudentContextFragment
 import com.instructure.teacher.dialog.NoInternetConnectionDialog
 import com.instructure.teacher.dialog.RadioButtonDialog
-import com.instructure.teacher.dialog.SGMediaCommentType
 import com.instructure.teacher.events.RationedBusEvent
 import com.instructure.teacher.fragments.*
 import com.instructure.teacher.interfaces.SpeedGraderWebNavigator
@@ -653,7 +653,7 @@ class SubmissionContentView(
 
     private fun showVideoCommentDialog() {
         activity.disableViewPager()
-        floatingRecordingView.setContentType(SGMediaCommentType.Video())
+        floatingRecordingView.setContentType(RecordingMediaType.Video)
         floatingRecordingView.startVideoView()
         floatingRecordingView.recordingCallback = {
             it?.let {
@@ -672,7 +672,7 @@ class SubmissionContentView(
 
     private fun showAudioCommentDialog() {
         activity.disableViewPager()
-        floatingRecordingView.setContentType(SGMediaCommentType.Audio())
+        floatingRecordingView.setContentType(RecordingMediaType.Audio)
         floatingRecordingView.setVisible()
         floatingRecordingView.stoppedCallback = {
             activity.enableViewPager()

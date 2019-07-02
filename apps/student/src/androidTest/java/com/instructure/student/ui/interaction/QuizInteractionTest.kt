@@ -117,6 +117,18 @@ class QuizInteractionTest : StudentTest() {
         // User should be able to submit a valid quiz
     }
 
+    @Stub
+    @Test
+    @TestMetaData(Priority.P1, FeatureCategory.QUIZZES, TestCategory.INTERACTION, true)
+    fun testQuiz_resumingTimedQuizShowsCorrectTime() {
+        // User should be able to resume a timed quiz with the correct time displayed
+    }
 
+    @Stub
+    @Test
+    @TestMetaData(Priority.P1, FeatureCategory.QUIZZES, TestCategory.INTERACTION, true)
+    fun testQuiz_quizTimerCountsDownAndEndsSessionIfQuizNotCompleted() {
+        // Timer counts down and ends the session if quiz has not been completed
+    }
 
 }

@@ -16,14 +16,18 @@
 package com.instructure.student.test.assignment.details
 
 import com.instructure.canvasapi2.managers.ExternalToolManager
+import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.LTITool
+import com.instructure.canvasapi2.type.SubmissionType
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.ApiPrefs.protocol
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Failure
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
+import com.instructure.canvasapi2.utils.weave.apiAsync
 import com.instructure.canvasapi2.utils.weave.awaitApiResponse
 import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsEffect
 import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsEffectHandler
@@ -33,6 +37,7 @@ import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsView
 import com.instructure.student.mobius.assignmentDetails.ui.SubmissionTypesVisibilities
 import com.spotify.mobius.functions.Consumer
 import io.mockk.*
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.asCoroutineDispatcher
@@ -49,7 +54,7 @@ import java.util.concurrent.Executors
 class AssignmentDetailsEffectHandlerTest : Assert() {
     private val view: AssignmentDetailsView = mockk(relaxed = true)
     private val effectHandler =
-            AssignmentDetailsEffectHandler().apply { view = this@AssignmentDetailsEffectHandlerTest.view }
+        AssignmentDetailsEffectHandler().apply { view = this@AssignmentDetailsEffectHandlerTest.view }
     private val eventConsumer: Consumer<AssignmentDetailsEvent> = mockk(relaxed = true)
     private val connection = effectHandler.connect(eventConsumer)
 
@@ -69,8 +74,9 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
         val courseId = 1L
         val errorMessage = "Error"
         val expectedEvent = AssignmentDetailsEvent.DataLoaded(
-                DataResult.Fail(Failure.Network(errorMessage)),
-                false
+            DataResult.Fail(Failure.Network(errorMessage)),
+            false,
+            DataResult.Fail(null)
         )
 
         mockkStatic("com.instructure.canvasapi2.utils.weave.AwaitApiKt")
@@ -90,8 +96,9 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
         val courseId = 1L
         val errorMessage = "Error"
         val expectedEvent = AssignmentDetailsEvent.DataLoaded(
-                DataResult.Fail(Failure.Authorization(errorMessage)),
-                false
+            DataResult.Fail(Failure.Authorization(errorMessage)),
+            false,
+            DataResult.Fail(null)
         )
 
         mockkStatic("com.instructure.canvasapi2.utils.weave.AwaitApiKt")
@@ -109,13 +116,21 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     @Test
     fun `Successful LoadData results in DataLoaded`() {
         val courseId = 1L
+        val ltiTool = LTITool(url = "https://www.instructure.com")
+        assignment = assignment.copy(submissionTypesRaw = listOf(Assignment.SubmissionType.EXTERNAL_TOOL.apiString), url = "https://www.instructure.com")
         val expectedEvent = AssignmentDetailsEvent.DataLoaded(
-                DataResult.Success(assignment),
-                false
+            DataResult.Success(assignment),
+            false,
+            DataResult.Success(ltiTool)
         )
 
         mockkStatic("com.instructure.canvasapi2.utils.weave.AwaitApiKt")
         coEvery { awaitApiResponse<Assignment>(any()) } returns Response.success(assignment)
+
+        mockkObject(SubmissionManager)
+        every { SubmissionManager.getLtiFromAuthenticationUrlAsync(any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(ltiTool)
+        }
 
         connection.accept(AssignmentDetailsEffect.LoadData(assignment.id, courseId, false))
 
@@ -131,8 +146,9 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
         val courseId = 1L
         val assignment = assignment.copy(submissionTypesRaw = listOf("online_upload"))
         val expectedEvent = AssignmentDetailsEvent.DataLoaded(
-                DataResult.Success(assignment),
-                true
+            DataResult.Success(assignment),
+            true,
+            DataResult.Fail(null)
         )
 
         mockkStatic("com.instructure.canvasapi2.utils.weave.AwaitApiKt")
@@ -157,8 +173,9 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
         val courseId = 1L
         val assignment = assignment.copy(submissionTypesRaw = listOf("online_upload"))
         val expectedEvent = AssignmentDetailsEvent.DataLoaded(
-                DataResult.Success(assignment),
-                false
+            DataResult.Success(assignment),
+            false,
+            DataResult.Fail(null)
         )
 
         mockkStatic("com.instructure.canvasapi2.utils.weave.AwaitApiKt")
@@ -183,8 +200,9 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
         val courseId = 1L
         val assignment = assignment.copy(submissionTypesRaw = listOf("online_upload"))
         val expectedEvent = AssignmentDetailsEvent.DataLoaded(
-                DataResult.Success(assignment),
-                false
+            DataResult.Success(assignment),
+            false,
+            DataResult.Fail(null)
         )
 
         mockkStatic("com.instructure.canvasapi2.utils.weave.AwaitApiKt")
@@ -209,8 +227,9 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
         val courseId = 1L
         val assignment = assignment.copy(submissionTypesRaw = listOf("online_upload"))
         val expectedEvent = AssignmentDetailsEvent.DataLoaded(
-                DataResult.Success(assignment),
-                false
+            DataResult.Success(assignment),
+            false,
+            DataResult.Fail(null)
         )
 
         mockkStatic("com.instructure.canvasapi2.utils.weave.AwaitApiKt")
@@ -406,7 +425,11 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
         connection.accept(AssignmentDetailsEffect.ShowSubmitDialogView(assignment, course, true))
 
         verify(timeout = 100) {
-            view.showSubmitDialogView(assignment, course.id, SubmissionTypesVisibilities(fileUpload = true, arcUpload = true))
+            view.showSubmitDialogView(
+                assignment,
+                course.id,
+                SubmissionTypesVisibilities(fileUpload = true, arcUpload = true)
+            )
         }
 
         confirmVerified(view)
@@ -416,7 +439,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     fun `Displays fileUpload when submission type is fileUpload`() {
         val course = Course()
         val assignment = assignment.copy(
-                submissionTypesRaw = listOf("online_upload")
+            submissionTypesRaw = listOf("online_upload")
         )
 
         connection.accept(AssignmentDetailsEffect.ShowSubmitDialogView(assignment, course, false))
@@ -432,7 +455,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     fun `Displays textEntry when submission type is textEntry`() {
         val course = Course()
         val assignment = assignment.copy(
-                submissionTypesRaw = listOf("online_text_entry")
+            submissionTypesRaw = listOf("online_text_entry")
         )
 
         connection.accept(AssignmentDetailsEffect.ShowSubmitDialogView(assignment, course, false))
@@ -448,7 +471,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     fun `Displays onlineUrl when submission type is onlineUrl`() {
         val course = Course()
         val assignment = assignment.copy(
-                submissionTypesRaw = listOf("online_url")
+            submissionTypesRaw = listOf("online_url")
         )
 
         connection.accept(AssignmentDetailsEffect.ShowSubmitDialogView(assignment, course, false))
@@ -464,7 +487,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     fun `Displays mediaRecording when submission type is mediaRecording`() {
         val course = Course()
         val assignment = assignment.copy(
-                submissionTypesRaw = listOf("media_recording")
+            submissionTypesRaw = listOf("media_recording")
         )
 
         connection.accept(AssignmentDetailsEffect.ShowSubmitDialogView(assignment, course, false))
@@ -480,7 +503,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     fun `Displays all submission types when all are present`() {
         val course = Course()
         val assignment = assignment.copy(
-                submissionTypesRaw = listOf("media_recording", "online_url", "online_text_entry", "online_upload")
+            submissionTypesRaw = listOf("media_recording", "online_url", "online_text_entry", "online_upload")
         )
 
         connection.accept(AssignmentDetailsEffect.ShowSubmitDialogView(assignment, course, false))
