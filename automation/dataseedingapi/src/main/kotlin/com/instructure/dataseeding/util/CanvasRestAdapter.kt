@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit
 
 object CanvasRestAdapter {
 
-    val canvasDomain = "mobileqa.test.instructure.com"
+    val canvasDomain = "mobileqa.beta.instructure.com"
     val baseUrl = "https://$canvasDomain/api/v1/"
     val redirectUri = "urn:ietf:wg:oauth:2.0:oob"
     val adminToken = DATA_SEEDING_ADMIN_TOKEN
