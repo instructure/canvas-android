@@ -1053,4 +1053,24 @@
     <string name="addChildErrorMessage">Pairing Failed. Make sure your pairing code is correct and within the time limit of use.</string>
     <string name="gradeComplete">Complete</string>
     <string name="gradeIncomplete">Incomplete</string>
+
+    <!-- Floating Recording View Strings -->
+    <string name="recordingTimerDefault">00:00:00</string>
+    <string name="recordingTimerContentDescription">%1$d hours, %2$d minutes, and %3$d seconds</string>
+    <string name="recordingTimerSpeechDivider">%1$s out of %2$s</string>
+    <string name="replay">Replay</string>
+    <string name="stop">Stop</string>
+    <string name="startRecordingAudio">Start recording audio</string>
+    <string name="stopRecordingAudio">Stop recording audio</string>
+    <string name="startRecordingVideo">Start recording video</string>
+    <string name="stopRecordingVideo">Stop recording video</string>
+    <string name="closeRecordingView">Close recording view</string>
+    <string name="deleteRecording">Delete recording</string>
+    <string name="videoCommentReplay">Video Comment Replay</string>
+    <string name="errorShowingVideoReplay">There was an error attempting to view the replay.</string>
+    <string name="errorSubmittingMediaComment">There was an error attempting to submit your media comment.</string>
+
+    <string name="addVideoComment">Add video comment</string>
+    <string name="addAudioComment">Add audio comment</string>
+
 </resources>

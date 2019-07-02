@@ -36,6 +36,7 @@ import io.mockk.*
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
+import java.io.File
 
 class SubmissionDetailsUpdateTest : Assert() {
 
@@ -651,4 +652,107 @@ class SubmissionDetailsUpdateTest : Assert() {
     // endregion getSubmissionContentType
 
     // endregion DataLoaded
+
+    // region FloatingRecordingView Tests
+
+    @Test
+    fun `AudioRecordingClicked results in ShowAudioRecordingView effect`() {
+        updateSpec
+                .given(initModel)
+                .whenEvent(SubmissionDetailsEvent.AudioRecordingClicked)
+                .then(
+                        assertThatNext(
+                                matchesEffects<SubmissionDetailsModel, SubmissionDetailsEffect>(
+                                        SubmissionDetailsEffect.ShowAudioRecordingView
+                                )
+                        )
+                )
+    }
+
+    @Test
+    fun `VideoRecordingClicked results in ShowVideoRecordingView effect`() {
+        updateSpec
+                .given(initModel)
+                .whenEvent(SubmissionDetailsEvent.VideoRecordingClicked)
+                .then(
+                        assertThatNext(
+                                matchesEffects<SubmissionDetailsModel, SubmissionDetailsEffect>(
+                                        SubmissionDetailsEffect.ShowVideoRecordingView
+                                )
+                        )
+                )
+    }
+
+    @Test
+    fun `VideoRecordingReplayClicked with null file results in ShowVideoRecordingPlaybackError effect`() {
+        updateSpec
+                .given(initModel)
+                .whenEvent(SubmissionDetailsEvent.VideoRecordingReplayClicked(null))
+                .then(
+                        assertThatNext(
+                                matchesEffects<SubmissionDetailsModel, SubmissionDetailsEffect>(
+                                        SubmissionDetailsEffect.ShowVideoRecordingPlaybackError
+                                )
+                        )
+                )
+    }
+
+    @Test
+    fun `VideoRecordingReplayClicked with file results in ShowVideoRecordingPlayback effect`() {
+        val file = File("test")
+        updateSpec
+                .given(initModel)
+                .whenEvent(SubmissionDetailsEvent.VideoRecordingReplayClicked(file))
+                .then(
+                        assertThatNext(
+                                matchesEffects<SubmissionDetailsModel, SubmissionDetailsEffect>(
+                                        SubmissionDetailsEffect.ShowVideoRecordingPlayback(file)
+                                )
+                        )
+                )
+    }
+
+    @Test
+    fun `StopMediaRecordingClicked results in MediaCommentDialogClosed effect`() {
+        updateSpec
+                .given(initModel)
+                .whenEvent(SubmissionDetailsEvent.StopMediaRecordingClicked)
+                .then(
+                        assertThatNext(
+                                matchesEffects<SubmissionDetailsModel, SubmissionDetailsEffect>(
+                                        SubmissionDetailsEffect.MediaCommentDialogClosed
+                                )
+                        )
+                )
+    }
+
+    @Test
+    fun `SendMediaCommentClicked with null file results in ShowMediaCommentError effect`() {
+        updateSpec
+                .given(initModel)
+                .whenEvent(SubmissionDetailsEvent.SendMediaCommentClicked(null))
+                .then(
+                        assertThatNext(
+                                matchesEffects<SubmissionDetailsModel, SubmissionDetailsEffect>(
+                                        SubmissionDetailsEffect.ShowMediaCommentError
+                                )
+                        )
+                )
+    }
+
+    @Test
+    fun `SendMediaCommentClicked with file results in UploadMediaComment effect`() {
+        val file = File("test")
+        updateSpec
+                .given(initModel)
+                .whenEvent(SubmissionDetailsEvent.SendMediaCommentClicked(file))
+                .then(
+                        assertThatNext(
+                                matchesEffects<SubmissionDetailsModel, SubmissionDetailsEffect>(
+                                        SubmissionDetailsEffect.UploadMediaComment(file)
+                                )
+                        )
+                )
+    }
+    // endregion FloatingRecordingView
 }

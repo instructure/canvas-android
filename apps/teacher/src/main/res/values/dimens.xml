@@ -110,8 +110,4 @@
     <dimen name="profileCameraIconSize">48dp</dimen>
 
     <dimen name="rceEditorEmbeddedHeight">300dp</dimen>
-
-    <dimen name="recordingViewHeight">127dp</dimen>
-    <dimen name="recordingViewWidth">195dp</dimen>
-    <dimen name="mediaRecordingButton">60dp</dimen>
 </resources>

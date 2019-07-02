@@ -92,8 +92,3 @@ class SGAddMediaCommentDialog : AppCompatDialogFragment() {
         }
     }
 }
-
-sealed class SGMediaCommentType {
-    class Video : SGMediaCommentType()
-    class Audio : SGMediaCommentType()
-}

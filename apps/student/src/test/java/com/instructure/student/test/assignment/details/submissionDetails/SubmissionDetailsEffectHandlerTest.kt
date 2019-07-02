@@ -28,7 +28,10 @@ import com.instructure.student.mobius.assignmentDetails.submissionDetails.Submis
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsEffect
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsEffectHandler
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsEvent
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.SubmissionCommentsSharedEvent
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsView
+import com.instructure.student.mobius.common.ChannelSource
+import com.instructure.student.test.util.receiveOnce
 import com.spotify.mobius.functions.Consumer
 import io.mockk.*
 import kotlinx.coroutines.Dispatchers
@@ -38,6 +41,7 @@ import kotlinx.coroutines.test.setMain
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
+import java.io.File
 import java.util.concurrent.Executors
 
 class SubmissionDetailsEffectHandlerTest : Assert() {
@@ -190,6 +194,85 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
         }
 
         confirmVerified(view)
+    }
+
+    @Test
+    fun `ShowAudioRecordingView results in view calling showAudioRecordingView`() {
+        connection.accept(SubmissionDetailsEffect.ShowAudioRecordingView)
+
+        verify(timeout = 100) {
+            view.showAudioRecordingView()
+        }
+
+        confirmVerified(view)
+    }
+
+    @Test
+    fun `ShowVideoRecordingView results in view calling showVideoRecordingView`() {
+        connection.accept(SubmissionDetailsEffect.ShowVideoRecordingView)
+
+        verify(timeout = 100) {
+            view.showVideoRecordingView()
+        }
+
+        confirmVerified(view)
+    }
+
+    @Test
+    fun `ShowVideoRecordingPlayback results in view calling showVideoRecordingPlayback`() {
+        val file = File("test")
+        connection.accept(SubmissionDetailsEffect.ShowVideoRecordingPlayback(file))
+
+        verify(timeout = 100) {
+            view.showVideoRecordingPlayback(file)
+        }
+
+        confirmVerified(view)
+    }
+
+    @Test
+    fun `ShowVideoRecordingPlaybackError results in view calling showVideoRecordingPlaybackError`() {
+        connection.accept(SubmissionDetailsEffect.ShowVideoRecordingPlaybackError)
+
+        verify(timeout = 100) {
+            view.showVideoRecordingPlaybackError()
+        }
+
+        confirmVerified(view)
+    }
+
+    @Test
+    fun `ShowMediaCommentError results in view calling showMediaCommentError`() {
+        connection.accept(SubmissionDetailsEffect.ShowMediaCommentError)
+
+        verify(timeout = 100) {
+            view.showMediaCommentError()
+        }
+
+        confirmVerified(view)
+    }
+
+    @Test
+    fun `UploadMediaComment results in SendMediaCommentClicked shared event`() {
+        val file = File("test")
+        val channel = ChannelSource.getChannel<SubmissionCommentsSharedEvent>()
+        val expectedEvent = SubmissionCommentsSharedEvent.SendMediaCommentClicked(file)
+        val actualEvent = channel.receiveOnce {
+            connection.accept(SubmissionDetailsEffect.UploadMediaComment(file))
+        }
+
+        assertEquals(expectedEvent, actualEvent)
+    }
+
+    @Test
+    fun `MediaCommentDialogClosed results in MediaCommentDialogClosed shared event`() {
+        val channel = ChannelSource.getChannel<SubmissionCommentsSharedEvent>()
+        val expectedEvent = SubmissionCommentsSharedEvent.MediaCommentDialogClosed
+        val actualEvent = channel.receiveOnce {
+            connection.accept(SubmissionDetailsEffect.MediaCommentDialogClosed)
+        }
+
+        assertEquals(expectedEvent, actualEvent)
     }
 
 }

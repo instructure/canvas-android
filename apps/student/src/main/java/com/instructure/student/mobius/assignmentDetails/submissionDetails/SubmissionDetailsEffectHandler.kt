@@ -23,19 +23,46 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.canvasapi2.utils.exhaustive
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.SubmissionCommentsSharedEvent
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsView
+import com.instructure.student.mobius.common.ChannelSource
 import com.instructure.student.mobius.common.ui.EffectHandler
 import com.instructure.student.util.isArcEnabled
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
+import java.io.File
 
 class SubmissionDetailsEffectHandler : EffectHandler<SubmissionDetailsView, SubmissionDetailsEvent, SubmissionDetailsEffect>() {
+    @ExperimentalCoroutinesApi
     override fun accept(effect: SubmissionDetailsEffect) {
         when (effect) {
             is SubmissionDetailsEffect.LoadData -> loadData(effect)
             is SubmissionDetailsEffect.ShowSubmissionContentType -> {
                 view?.showSubmissionContent(effect.submissionContentType)
             }
-        }
+            is SubmissionDetailsEffect.ShowAudioRecordingView -> {
+                view?.showAudioRecordingView()
+            }
+            is SubmissionDetailsEffect.ShowVideoRecordingView-> {
+                view?.showVideoRecordingView()
+            }
+            is SubmissionDetailsEffect.ShowVideoRecordingPlayback -> {
+                view?.showVideoRecordingPlayback(effect.file)
+            }
+            is SubmissionDetailsEffect.ShowVideoRecordingPlaybackError -> {
+                view?.showVideoRecordingPlaybackError()
+            }
+            is SubmissionDetailsEffect.ShowMediaCommentError -> {
+                view?.showMediaCommentError()
+            }
+            is SubmissionDetailsEffect.UploadMediaComment -> {
+                uploadMediaComment(effect.file)
+            }
+            is SubmissionDetailsEffect.MediaCommentDialogClosed -> {
+                mediaDialogClosed()
+            }
+        }.exhaustive
     }
 
     private fun loadData(effect: SubmissionDetailsEffect.LoadData) {
@@ -57,5 +84,19 @@ class SubmissionDetailsEffectHandler : EffectHandler<SubmissionDetailsView, Subm
 
             consumer.accept(SubmissionDetailsEvent.DataLoaded(assignment, submission, ltiUrl, isArcEnabled))
         }
+    }
+
+    @ExperimentalCoroutinesApi
+    private fun uploadMediaComment(file: File) {
+        ChannelSource.getChannel<SubmissionCommentsSharedEvent>().offer(
+                SubmissionCommentsSharedEvent.SendMediaCommentClicked(file)
+        )
+    }
+
+    @ExperimentalCoroutinesApi
+    private fun mediaDialogClosed() {
+        ChannelSource.getChannel<SubmissionCommentsSharedEvent>().offer(
+                SubmissionCommentsSharedEvent.MediaCommentDialogClosed
+        )
     }
 }

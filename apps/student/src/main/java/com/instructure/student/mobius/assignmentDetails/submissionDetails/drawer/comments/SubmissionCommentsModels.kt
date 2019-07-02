@@ -14,16 +14,41 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer
+package com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments
 
-import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.SubmissionComment
-import com.instructure.canvasapi2.models.postmodels.PendingSubmissionComment
-import com.instructure.canvasapi2.utils.DataResult
-import java.util.*
+import java.io.File
 
+sealed class SubmissionCommentsEvent {
+    object AddMediaCommentClicked : SubmissionCommentsEvent()
+    object AddAudioCommentClicked : SubmissionCommentsEvent()
+    object AddVideoCommentClicked : SubmissionCommentsEvent()
+    object MediaCommentDialogClosed : SubmissionCommentsEvent()
+    data class SendMediaCommentClicked(val file: File) : SubmissionCommentsEvent()
+}
+
+sealed class SubmissionCommentsEffect {
+    object ShowAudioRecordingView : SubmissionCommentsEffect()
+    object ShowVideoRecordingView : SubmissionCommentsEffect()
+    object ShowMediaCommentDialog : SubmissionCommentsEffect()
+    data class UploadMediaComment(val file: File, val assignmentId: Long, val courseId: Long) : SubmissionCommentsEffect()
+}
+
+data class SubmissionCommentsModel(
+    val comments: ArrayList<SubmissionComment>,
+    val submissionHistory: Submission,
+    val submissionId: Long,
+    val courseId: Long,
+    val assignmentId: Long,
+    val isGroupMessage: Boolean,
+    val isMediaCommentEnabled: Boolean = true
+)
+
+/*
+
+TODO - Here was the original moflow we did many moons ago, I'm sticking with the one above since
+this ticket is JUST the video/audio comments
 sealed class SubmissionCommentsEvent {
     // User Events
     object AddMediaCommentClicked : SubmissionCommentsEvent()
@@ -81,3 +106,6 @@ class SubmissionWrapper(val submission: Submission) : SubmissionCommentWrapper()
     override val date: Date get() = submission.submittedAt ?: Date(0)
 }
 // endregion
+
+
+ */

@@ -27,13 +27,18 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.tabs.TabLayout
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
+import com.instructure.interactions.router.Route
+import com.instructure.interactions.router.RouteContext
+import com.instructure.pandautils.activities.BaseViewMediaActivity
 import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.views.RecordingMediaType
 import com.instructure.student.R
 import com.instructure.student.fragment.LTIWebViewFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsContentType
@@ -41,9 +46,11 @@ import com.instructure.student.mobius.assignmentDetails.submissionDetails.Submis
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.*
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyContentFragment
 import com.instructure.student.mobius.common.ui.MobiusView
+import com.instructure.student.router.RouteMatcher
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import com.spotify.mobius.functions.Consumer
 import kotlinx.android.synthetic.main.fragment_submission_details.*
+import java.io.File
 
 class SubmissionDetailsView(
     layoutInflater: LayoutInflater,
@@ -195,6 +202,44 @@ class SubmissionDetailsView(
             replace(R.id.submissionContent, getFragmentForContent(type))
             commitAllowingStateLoss()
         }
+    }
+
+    fun showAudioRecordingView() {
+        floatingRecordingView.setContentType(RecordingMediaType.Audio)
+        floatingRecordingView.setVisible()
+        floatingRecordingView.stoppedCallback = {
+            consumer?.accept(SubmissionDetailsEvent.StopMediaRecordingClicked)
+        }
+        floatingRecordingView.recordingCallback = { file ->
+            consumer?.accept(SubmissionDetailsEvent.SendMediaCommentClicked(file))
+        }
+    }
+
+    fun showVideoRecordingView() {
+        floatingRecordingView.setContentType(RecordingMediaType.Video)
+        floatingRecordingView.startVideoView()
+        floatingRecordingView.recordingCallback = { file ->
+            consumer?.accept(SubmissionDetailsEvent.SendMediaCommentClicked(file))
+        }
+        floatingRecordingView.stoppedCallback = {
+            consumer?.accept(SubmissionDetailsEvent.StopMediaRecordingClicked)
+        }
+        floatingRecordingView.replayCallback = { file ->
+            consumer?.accept(SubmissionDetailsEvent.VideoRecordingReplayClicked(file))
+        }
+    }
+
+    fun showVideoRecordingPlayback(file: File) {
+        val bundle = BaseViewMediaActivity.makeBundle(file, "video", context.getString(R.string.videoCommentReplay), true)
+        RouteMatcher.route(context, Route(bundle, RouteContext.MEDIA))
+    }
+
+    fun showVideoRecordingPlaybackError() {
+        Toast.makeText(context, R.string.errorShowingVideoReplay, Toast.LENGTH_SHORT).show()
+    }
+
+    fun showMediaCommentError() {
+        Toast.makeText(context, R.string.errorSubmittingMediaComment, Toast.LENGTH_SHORT).show()
     }
 
     private fun getFragmentForContent(type: SubmissionDetailsContentType): Fragment {

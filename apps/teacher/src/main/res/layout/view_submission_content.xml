@@ -263,7 +263,7 @@
 
     </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 
-    <com.instructure.teacher.view.FloatingRecordingView
+    <com.instructure.pandautils.views.FloatingRecordingView
         android:id="@+id/floatingRecordingView"
         android:visibility="gone"
         android:layout_alignParentEnd="true"
