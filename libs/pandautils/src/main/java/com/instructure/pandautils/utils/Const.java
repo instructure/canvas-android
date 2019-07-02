@@ -52,6 +52,7 @@ public class Const {
     public static final String CALENDAR_DIALOG_CONTEXT_COURSE_IDS = "calendarDialogContextCourseIds";
     public static final String CALENDAR_EVENT_START_DATE = "calendarEventStartDate";
     public static final String CANVAS_CONTEXT = "canvasContext";
+    public static final String CANVAS_CONTEXT_ID = "canvasContextId";
     public static final String CANVAS_LOGIN = "canvas_login";
     public static final String CANVAS_USER_GUIDES = "https://community.canvaslms.com/community/answers/guides/mobile-guide/content?filterID=contentstatus%5Bpublished%5D~category%5Btable-of-contents%5D";
     public static final String CHANGED = "changed";
@@ -174,6 +175,7 @@ public class Const {
     public static final String REFRESH = "refresh";
     public static final String SUBMISSION_COMMENT_SUBMITTED = "submission-comment-submitted";
     public static final String SUBMISSION = "submission";
+    public static final String SUBMISSION_ID = "submission_id";
     public static final String SUBMISSION_TARGET = "submission_target";
     public static final String DISCUSSION_REPLY_SUBMITTED = "discussion_reply_submitted";
 

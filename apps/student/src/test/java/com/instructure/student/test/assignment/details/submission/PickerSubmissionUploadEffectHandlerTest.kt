@@ -16,17 +16,11 @@
 package com.instructure.student.test.assignment.details.submission
 
 import android.content.Context
-import android.content.Intent
 import android.net.Uri
 import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.utils.ProgressEvent
 import com.instructure.pandautils.models.FileSubmitObject
-import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.services.NotoriousUploadService
 import com.instructure.pandautils.utils.FileUploadUtils
-import com.instructure.student.FileSubmission
-import com.instructure.student.db.Db
-import com.instructure.student.db.StudentDb
-import com.instructure.student.db.getInstance
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadEffect
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadEffectHandler
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadEvent
@@ -238,17 +232,19 @@ class PickerSubmissionUploadEffectHandlerTest : Assert() {
 
     @Test
     fun `HandleSubmit and isMediaSubmission results in starting media submission`() {
+        val file = FileSubmitObject("file.mp4", 1L, "mimeType", "/path/to/the/file.mp4")
         val model = PickerSubmissionUploadModel(
             canvasContext = CanvasContext.emptyCourseContext(1L),
             assignmentId = 2L,
             assignmentGroupCategoryId = 3L,
             assignmentName = "AssignmentName",
             allowedExtensions = emptyList(),
-            isMediaSubmission = true
+            isMediaSubmission = true,
+            files = listOf(file)
         )
 
         mockkObject(SubmissionService.Companion)
-        every { SubmissionService.startMediaSubmission(any(), any(), any(), any()) } returns Unit
+        every { SubmissionService.startMediaSubmission(any(), any(), any(), any(), any(), any(), any()) } returns Unit
 
         connection.accept(PickerSubmissionUploadEffect.HandleSubmit(model))
 
@@ -257,7 +253,10 @@ class PickerSubmissionUploadEffectHandlerTest : Assert() {
                 context,
                 model.canvasContext,
                 model.assignmentId,
-                model.assignmentName
+                model.assignmentName,
+                model.assignmentGroupCategoryId,
+                model.files.first().fullPath,
+                NotoriousUploadService.ACTION.ASSIGNMENT_SUBMISSION
             )
             view.closeSubmissionView()
         }

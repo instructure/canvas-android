@@ -17,82 +17,96 @@
 package com.instructure.student.ui.interaction
 
 import com.instructure.canvas.espresso.Stub
+import com.instructure.panda_annotations.FeatureCategory
+import com.instructure.panda_annotations.Priority
+import com.instructure.panda_annotations.TestCategory
+import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.ui.utils.StudentTest
 import org.junit.Test
 
 class GroupLinksInteractionTest : StudentTest() {
-    override fun displaysPageObjects() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun displaysPageObjects() = Unit // Not used for interaction tests
 
     @Stub
     @Test
+    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, true)
     fun testGroupLink_base() {
         // Link to group opens group browser - eg: "/groups/:id"
     }
 
     @Stub
     @Test
+    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, true, FeatureCategory.DASHBOARD)
     fun testGroupLink_dashboard() {
         // Link to groups opens dashboard - eg: "/groups"
     }
 
     @Stub
     @Test
+    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, true, FeatureCategory.FILES)
     fun testGroupLink_filePreview() {
         // Link to file preview opens file - eg: "/groups/:id/files/folder/:id?preview=:id"
     }
 
     @Stub
     @Test
+    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, true, FeatureCategory.DISCUSSIONS)
     fun testGroupLink_announcement() {
         // Link to group announcement opens announcement - eg: "/groups/:id/discussion_topics/:id"
     }
 
     @Stub
     @Test
+    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, true, FeatureCategory.DISCUSSIONS)
     fun testGroupLink_announcementList() {
         // Link to group announcements list opens announcements - eg: "/groups/:id/announcements"
     }
 
     @Stub
     @Test
+    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, true, FeatureCategory.DISCUSSIONS)
     fun testGroupLink_discussion() {
         // Link to group discussion opens discussion - eg: "/groups/:id/discussion_topics/:id"
     }
 
     @Stub
     @Test
+    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, true, FeatureCategory.DISCUSSIONS)
     fun testGroupLink_discussionList() {
         // Link to group discussion list opens list - eg: "/groups/:id/discussion_topics"
     }
 
     @Stub
     @Test
+    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, true, FeatureCategory.FILES)
     fun testGroupLink_files() {
         // Link to group files list opens group files list - eg: "/groups/:id/files"
     }
 
     @Stub
     @Test
+    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, true, FeatureCategory.FILES)
     fun testGroupLink_fileFolder() {
         // Link to group files folder opens folder - eg: "/groups/:id/files/folder/:id/"
     }
 
     @Stub
     @Test
+    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, true, FeatureCategory.PAGES)
     fun testGroupLink_pagesList() {
         // Link to group page list opens pages - eg: "/groups/:id/pages"
     }
 
     @Stub
     @Test
+    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, true, FeatureCategory.PAGES)
     fun testGroupLink_Page() {
         // Link to group page opens page - eg: "/groups/:id/pages/:id"
     }
 
     @Stub
     @Test
+    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, true, FeatureCategory.PEOPLE)
     fun testGroupLink_people() {
         // Link to group people list opens list - eg: "/groups/:id/users"
     }

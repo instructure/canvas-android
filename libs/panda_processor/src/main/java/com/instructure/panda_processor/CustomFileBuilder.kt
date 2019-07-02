@@ -63,6 +63,8 @@ class CustomFileBuilder(
         Collaborations = stubbed(${featureCounts[FeatureCategory.COLLABORATIONS]?.stubbed}) / written(${featureCounts[FeatureCategory.COLLABORATIONS]?.written})
         Syllabus = stubbed(${featureCounts[FeatureCategory.SYLLABUS]?.stubbed}) / written(${featureCounts[FeatureCategory.SYLLABUS]?.written})
         Todos = stubbed(${featureCounts[FeatureCategory.TODOS]?.stubbed}) / written(${featureCounts[FeatureCategory.TODOS]?.written})
+        Quizzes = stubbed(${featureCounts[FeatureCategory.QUIZZES]?.stubbed}) / written(${featureCounts[FeatureCategory.QUIZZES]?.written})
+        Groups = stubbed(${featureCounts[FeatureCategory.GROUPS]?.stubbed}) / written(${featureCounts[FeatureCategory.GROUPS]?.written})
     """.trimIndent()
     fun getContent() : String{
         return contentTemplate

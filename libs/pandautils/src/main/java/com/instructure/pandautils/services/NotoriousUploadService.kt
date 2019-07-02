@@ -38,7 +38,7 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.pandautils.R
 import com.instructure.pandautils.services.FileUploadService.Companion.CHANNEL_ID
-import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.*
 import java.io.File
 import java.util.*
 
@@ -67,11 +67,15 @@ class NotoriousUploadService : IntentService(NotoriousUploadService::class.java.
 
     private var uploadJob: WeaveJob? = null
 
+    private var notificationId: Int = 0
+
     private val context: Context
         get() = applicationContext
 
     override fun onHandleIntent(intent: Intent?) {
         if (intent?.getSerializableExtra(Const.ACTION) == null) return
+
+        notificationId = intent.getLongExtra(Const.SUBMISSION_ID, NOTIFICATION_ID.toLong()).toInt()
 
         action = intent.getSerializableExtra(Const.ACTION) as ACTION
 
@@ -101,9 +105,9 @@ class NotoriousUploadService : IntentService(NotoriousUploadService::class.java.
 
         mediaPath = intent.getStringExtra(Const.MEDIA_FILE_PATH)
 
-        notificationManager.notify(NOTIFICATION_ID, builder.build())
+        notificationManager.notify(notificationId, builder.build())
 
-        startForeground(NOTIFICATION_ID, builder.build())
+        startForeground(notificationId, builder.build())
 
         startFileUpload()
     }
@@ -122,27 +126,27 @@ class NotoriousUploadService : IntentService(NotoriousUploadService::class.java.
         val name = ContextKeeper.appContext.getString(R.string.notificationChannelNameFileUploadsName)
         val description = ContextKeeper.appContext.getString(R.string.notificationChannelNameFileUploadsDescription)
 
-        //Create the channel and add the group
+        // Create the channel and add the group
         val importance = NotificationManager.IMPORTANCE_HIGH
         val channel = NotificationChannel(channelId, name, importance)
         channel.description = description
         channel.enableLights(false)
         channel.enableVibration(false)
 
-        //create the channel
+        // Create the channel
         notificationManager.createNotificationChannel(channel)
     }
 
     override fun onDestroy() {
-        //clean up
+        // Clean up
         builder.setOngoing(false)
-        notificationManager.cancel(NOTIFICATION_ID)
+        notificationManager.cancel(notificationId)
     }
 
     override fun onTaskRemoved(rootIntent: Intent) {
-        //clean up again in case of swipe to dismiss
+        // Clean up again in case of swipe to dismiss
         builder.setOngoing(false)
-        notificationManager.cancel(NOTIFICATION_ID)
+        notificationManager.cancel(notificationId)
         super.onTaskRemoved(rootIntent)
     }
 
@@ -165,13 +169,13 @@ class NotoriousUploadService : IntentService(NotoriousUploadService::class.java.
             val session = awaitApi<NotoriousSession> { NotoriousManager.startSession(it) }
             ApiPrefs.notoriousDomain = notoriousDomain
             ApiPrefs.notoriousToken = session.token.orEmpty()
-            notificationManager.notify(NOTIFICATION_ID, builder.build())
+            notificationManager.notify(notificationId, builder.build())
 
             // Get upload token
             val resultWrapper = awaitApi<NotoriousResultWrapper> { NotoriousManager.getUploadToken(it) }
             builder.setContentText(getString(R.string.uploadingFile))
             builder.setProgress(0, 0, true)
-            notificationManager.notify(NOTIFICATION_ID, builder.build())
+            notificationManager.notify(notificationId, builder.build())
             uploadToken = resultWrapper.result?.id.orEmpty()
             resultWrapper.result?.error?.let {
                 uploadError("NOTORIOUS XML/RESPONSE ERROR: $resultWrapper")
@@ -179,7 +183,7 @@ class NotoriousUploadService : IntentService(NotoriousUploadService::class.java.
             }
 
             // Perform upload
-            android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND)
+            Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND)
             uploadStartedToast()
             val contentType = FileUtils.getMimeType(mediaPath) ?: "application/octet-stream"
             val file = File(mediaPath)
@@ -244,20 +248,28 @@ class NotoriousUploadService : IntentService(NotoriousUploadService::class.java.
         builder.setContentText(getString(R.string.fileUploadSuccess))
             .setProgress(100, 100, false)
             .setOngoing(false)
-        notificationManager.notify(NOTIFICATION_ID, builder.build())
+        notificationManager.notify(notificationId, builder.build())
 
         val intent = Intent(Const.SUBMISSION_COMMENT_SUBMITTED)
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent)
 
+        // TODO: This is caught in ParentFragment, which we are moving away from as we integrate Mobius into more parts of the app.
+        //       We'll want to change out this intent with something like FileUploadService.ALL_UPLOADS_COMPLETED, which is caught in the
+        //       SubmissionFileUploadReceiver
         val successIntent = Intent(Const.UPLOAD_SUCCESS)
         LocalBroadcastManager.getInstance(context).sendBroadcast(successIntent)
+
+        val uploadCompleteIntent = Intent(FileUploadService.ALL_UPLOADS_COMPLETED)
+        uploadCompleteIntent.putExtra(Const.SUBMISSION_ID, notificationId.toLong())
+        assignment?.name?.let { uploadCompleteIntent.putExtra(Const.ASSIGNMENT_NAME, it)}
+        sendBroadcast(uploadCompleteIntent)
 
         val mediaUploadIntent = Intent(Const.ACTION_MEDIA_UPLOAD_SUCCESS)
         mediaUploadIntent.putExtra(Const.MEDIA_FILE_PATH, mediaPath)
         mediaUploadIntent.putExtra(Const.PAGE_ID, pageId)
         mediaUploadIntent.putParcelableArrayListExtra(
             Const.SUBMISSION_COMMENT_LIST,
-            ArrayList<SubmissionComment>(submission.submissionComments)
+            ArrayList(submission.submissionComments)
         )
         LocalBroadcastManager.getInstance(context).sendBroadcast(mediaUploadIntent)
     }
@@ -266,7 +278,7 @@ class NotoriousUploadService : IntentService(NotoriousUploadService::class.java.
         builder.setContentText(getString(R.string.fileUploadSuccess))
             .setProgress(100, 100, false)
             .setOngoing(false)
-        notificationManager.notify(NOTIFICATION_ID, builder.build())
+        notificationManager.notify(notificationId, builder.build())
 
         val intent = Intent(Const.DISCUSSION_REPLY_SUBMITTED)
         intent.putExtra(Const.DISCUSSION_ENTRY, entry as Parcelable?)
@@ -306,7 +318,7 @@ class NotoriousUploadService : IntentService(NotoriousUploadService::class.java.
             .setProgress(100, 100, false)
             .setOngoing(false)
         notificationManager.notify(
-            NOTIFICATION_ID,
+            notificationId,
             builder.build()
         )
     }
@@ -332,6 +344,6 @@ class NotoriousUploadService : IntentService(NotoriousUploadService::class.java.
     }
 
     companion object {
-        private const val NOTIFICATION_ID = 666
+        private const val NOTIFICATION_ID = 777
     }
 }

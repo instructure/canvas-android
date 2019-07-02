@@ -40,6 +40,7 @@ android {
 
         def dittoMode = findProperty("dittoMode") ?: "play"
         buildConfigField "String", "GLOBAL_DITTO_MODE", "\"$dittoMode\""
+        println "dittoMode: $dittoMode"
     }
 
     buildTypes {
@@ -73,7 +74,7 @@ android {
 dependencies {
     implementation project(':canvas-api-2')
     implementation 'com.github.javafaker:javafaker:0.18'
-    api('com.github.instructure:espresso:1.0.0') {
+    api('com.github.instructure:espresso:1.0.2') {
         exclude module: 'kotlin-stdlib'
     }
 }
