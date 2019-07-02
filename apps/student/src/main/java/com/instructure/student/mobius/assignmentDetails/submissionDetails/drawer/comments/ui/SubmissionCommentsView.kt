@@ -58,6 +58,10 @@ class SubmissionCommentsView(
             }
         }
 
+        dialog.setOnCancelListener {
+            consumer?.accept(SubmissionCommentsEvent.MediaCommentDialogClosed)
+        }
+
         dialog.show()
     }
 

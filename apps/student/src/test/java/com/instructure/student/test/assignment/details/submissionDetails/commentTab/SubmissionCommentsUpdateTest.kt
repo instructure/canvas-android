@@ -128,7 +128,8 @@ class SubmissionCommentsUpdateTest : Assert() {
                 .whenEvent(SubmissionCommentsEvent.MediaCommentDialogClosed)
                 .then(
                         assertThatNext(
-                                hasModel(expectedModel)
+                                hasModel(expectedModel),
+                                NextMatchers.hasNoEffects()
                         )
                 )
     }
