@@ -41,18 +41,18 @@ object HttpHelper {
      */
     fun externalHttpGet(context: Context?, getURL: String, includeAuthentication: Boolean): ApiHttpResponse {
         var getURL = getURL
-        //Explicit check for null.
+        // Explicit check for null.
         if (context == null) {
             return ApiHttpResponse()
         }
 
         try {
             getURL = MasqueradeHelper.addMasqueradeId(getURL)
-            //Remove spaces from the URL
+            // Remove spaces from the URL
             getURL = getURL.replace(" ", "%20")
 
             val api_protocol = ApiPrefs.protocol
-            //Make sure the URL begins with http(s)://
+            // Make sure the URL begins with http(s)://
             if (!getURL.startsWith("https://") && !getURL.startsWith("http://")) {
                 getURL = "$api_protocol://$getURL"
             }
