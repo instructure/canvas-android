@@ -398,4 +398,24 @@ class AssignmentDetailsPresenterTest : Assert() {
         assertEquals(false, state.isExternalToolSubmission)
     }
 
+    @Test
+    fun `Hide Submit button if submission type is ON_PAPER`() {
+        val assignment = baseAssignment.copy(
+            submissionTypesRaw = listOf(Assignment.SubmissionType.ON_PAPER.apiString)
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
+        assertEquals(false, state.visibilities.submitButton)
+    }
+
+    @Test
+    fun `Hide Submit button if submission type is NONE`() {
+        val assignment = baseAssignment.copy(
+            submissionTypesRaw = listOf(Assignment.SubmissionType.NONE.apiString)
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
+        assertEquals(false, state.visibilities.submitButton)
+    }
+
 }
