@@ -39,6 +39,7 @@ import com.instructure.student.activity.ShareFileSubmissionTarget
 import com.instructure.student.fragment.InternalWebviewFragment
 import com.instructure.student.fragment.LTIWebViewFragment
 import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsEvent
+import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submission.text.ui.TextSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submission.url.ui.UrlSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsFragment
@@ -174,7 +175,7 @@ class AssignmentDetailsView(
                 showOnlineUrlEntryView(assignment.id, assignment.name, canvasContext, assignment.submission?.url)
             }
             setupDialogRow(dialog, dialog.submissionEntryFile, visibilities.fileUpload) {
-                showFileUploadView(assignment, courseId)
+                showFileUploadView(assignment)
             }
             setupDialogRow(dialog, dialog.submissionEntryMedia, visibilities.mediaRecording) {
                 showMediaRecordingView(assignment, courseId)
@@ -224,12 +225,11 @@ class AssignmentDetailsView(
 
     fun showMediaRecordingView(assignment: Assignment, courseId: Long) {
         // TODO
-        context.toast("Route to media page")
+        context.toast("Show media recording dialog")
     }
 
-    fun showFileUploadView(assignment: Assignment, courseId: Long) {
-        // TODO
-        context.toast("Route to file upload page")
+    fun showFileUploadView(assignment: Assignment) {
+        RouteMatcher.route(context, PickerSubmissionUploadFragment.makeRoute(canvasContext, assignment, false))
     }
 
     fun showArcUploadView(assignment: Assignment, courseId: Long) {

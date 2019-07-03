@@ -16,6 +16,23 @@
  */
 package com.instructure.student.mobius.assignmentDetails.submission.picker.ui
 
-sealed class PickerSubmissionUploadViewState {
-
+sealed class PickerSubmissionUploadViewState(open val visibilities: PickerVisibilities) {
+    data class Empty(override val visibilities: PickerVisibilities) : PickerSubmissionUploadViewState(visibilities)
+    data class FileList(override val visibilities: PickerVisibilities, val list: List<PickerListItemViewState>) : PickerSubmissionUploadViewState(visibilities)
 }
+
+data class PickerVisibilities(
+    val fab: Boolean = false,
+    val fabCamera: Boolean = false,
+    val fabGallery: Boolean = false,
+    val fabFile: Boolean = false,
+    val submit: Boolean = false
+)
+
+data class PickerListItemViewState(
+    val position: Int,
+    val iconRes: Int,
+    val title: String,
+    val size: String,
+    val canDelete: Boolean = true
+)

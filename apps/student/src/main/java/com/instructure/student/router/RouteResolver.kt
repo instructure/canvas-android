@@ -7,6 +7,7 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.student.AnnotationComments.AnnotationCommentListFragment
 import com.instructure.student.features.files.search.FileSearchFragment
 import com.instructure.student.fragment.*
+import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submission.text.ui.TextSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submission.url.ui.UrlSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.ui.SubmissionRubricDescriptionFragment
@@ -110,6 +111,7 @@ object RouteResolver {
             cls.isA<ArcWebviewFragment>() -> ArcWebviewFragment.newInstance(route)
             cls.isA<TextSubmissionUploadFragment>() -> TextSubmissionUploadFragment.newInstance(route)
             cls.isA<UrlSubmissionUploadFragment>() -> UrlSubmissionUploadFragment.newInstance(route)
+            cls.isA<PickerSubmissionUploadFragment>() -> PickerSubmissionUploadFragment.newInstance(route)
             cls.isA<AnnotationCommentListFragment>() -> AnnotationCommentListFragment.newInstance(route)
             cls.isA<InternalWebviewFragment>() -> InternalWebviewFragment.newInstance(route) // Keep this at the end
             else -> null

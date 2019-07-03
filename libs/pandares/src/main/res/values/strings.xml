@@ -58,6 +58,8 @@
     <string name="submissionUrlClearTextError">No preview available for URLs using \'http://\'</string>
     <string name="submissionUrlNotAUrlError">Please enter a valid URL</string>
     <string name="enterAUrlHereForYourSubmission">Enter a URL here for your submission</string>
+    <string name="addFileFabContentDesc">Show Add File Options</string>
+    <string name="recordAudio">Record Audio</string>
 
     <!-- Student Submission -->
     <string name="submissionWrite">Write&#8230;</string>
@@ -974,6 +976,8 @@
     <!-- File Strings -->
     <string name="noFilesSubtextCourse">There are no files associated with this course.</string>
     <string name="noFilesSubtextGroup">There are no files associated with this group.</string>
+    <string name="fileTypeNotSupported">Unsupported File Type</string>
+    <string name="fileTypeNotSupportedBody">This assignment only allows certain file types: %s</string>
 
     <array name="file_size_units">
         <item>B</item>

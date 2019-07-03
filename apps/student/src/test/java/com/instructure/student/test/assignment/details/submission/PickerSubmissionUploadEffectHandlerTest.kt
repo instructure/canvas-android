@@ -15,10 +15,14 @@
  */
 package com.instructure.student.test.assignment.details.submission
 
-import android.content.Context
+import android.app.Activity
+import android.content.Intent
 import android.net.Uri
+import androidx.core.content.FileProvider
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.models.FileSubmitObject
+import com.instructure.pandautils.utils.*
+import com.instructure.student.R
 import com.instructure.pandautils.services.NotoriousUploadService
 import com.instructure.pandautils.utils.FileUploadUtils
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadEffect
@@ -36,10 +40,11 @@ import kotlinx.coroutines.test.setMain
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
+import java.io.File
 import java.util.concurrent.Executors
 
 class PickerSubmissionUploadEffectHandlerTest : Assert() {
-    private val context: Context = mockk(relaxed = true)
+    private val context: Activity = mockk(relaxed = true)
     private val view: PickerSubmissionUploadView = mockk(relaxed = true)
     private val eventConsumer: Consumer<PickerSubmissionUploadEvent> = mockk(relaxed = true)
     private val effectHandler = PickerSubmissionUploadEffectHandler(context)
@@ -53,58 +58,130 @@ class PickerSubmissionUploadEffectHandlerTest : Assert() {
     }
 
     @Test
-    fun `LaunchCamera results in view calling launchCamera`() {
+    fun `LaunchCamera without permission will request permission and show an error message when denied`() {
+        // Mock both so we can mockk the class and the extensions in the same file
+        mockkStatic(PermissionUtils::class)
+        mockkStatic("${PermissionUtils::class.java.canonicalName}Kt")
+        every { PermissionUtils.hasPermissions(context, *anyVararg()) } returns false
+
+        val block = slot<(Map<String, Boolean>) -> Unit>()
+
+        every { context.requestPermissions(any(), capture(block)) } answers {
+            block.invoke(mapOf(Pair("any", false)))
+        }
+
         connection.accept(PickerSubmissionUploadEffect.LaunchCamera)
 
         verify(timeout = 100) {
-            view.launchCamera()
+            view.showErrorMessage(R.string.permissionDenied)
         }
 
         confirmVerified(view)
+
+        unmockkStatic(PermissionUtils::class)
+        unmockkStatic("${PermissionUtils::class.java.canonicalName}Kt")
     }
 
     @Test
-    fun `LaunchGallery results in view calling launchGallery`() {
+    fun `LaunchCamera without permission will request permission and send CameraClicked event when successful`() {
+        // Mock both so we can mockk the class and the extensions in the same file
+        mockkStatic(PermissionUtils::class)
+        mockkStatic("${PermissionUtils::class.java.canonicalName}Kt")
+        every { PermissionUtils.hasPermissions(context, *anyVararg()) } returns false
+
+        val block = slot<(Map<String, Boolean>) -> Unit>()
+
+        every { context.requestPermissions(any(), capture(block)) } answers {
+            block.invoke(mapOf(Pair("any", true)))
+        }
+
+        connection.accept(PickerSubmissionUploadEffect.LaunchCamera)
+
+        verify(timeout = 100) {
+            eventConsumer.accept(PickerSubmissionUploadEvent.CameraClicked)
+        }
+
+        confirmVerified(eventConsumer)
+
+        unmockkStatic(PermissionUtils::class)
+        unmockkStatic("${PermissionUtils::class.java.canonicalName}Kt")
+    }
+
+    @Test
+    fun `LaunchCamera results in launching intent`() {
+        val uri = mockk<Uri>()
+        val intent = mockk<Intent>()
+        every { intent.action } returns ""
+        every { context.packageManager.queryIntentActivities(any(), any()).size } returns 1
+
+        mockkStatic(PermissionUtils::class)
+        every { PermissionUtils.hasPermissions(context, *anyVararg()) } returns true
+
+        mockkStatic(FileUploadUtils::class)
+        every { FileUploadUtils.getExternalCacheDir(context) } returns File("")
+
+        mockkStatic(FileProvider::class)
+        every { FileProvider.getUriForFile(any(), any(), any()) } returns uri
+
+        mockkStatic(FilePrefs::class)
+        every { FilePrefs.tempCaptureUri = any() } answers { "" }
+
+        every { view.getCameraIntent(uri) } returns intent
+
+        connection.accept(PickerSubmissionUploadEffect.LaunchCamera)
+
+        verify(timeout = 100) {
+            context.startActivityForResult(intent, PickerSubmissionUploadEffectHandler.REQUEST_CAMERA_PIC)
+        }
+
+        confirmVerified(eventConsumer)
+
+        unmockkStatic(PermissionUtils::class)
+    }
+
+    @Test
+    fun `LaunchGallery results in launching intent`() {
+        val uri = mockk<Uri>()
+        val intent = mockk<Intent>()
+
+        every { context.packageName } returns "package"
+        every { context.filesDir } returns File("")
+
+        mockkStatic(FileProvider::class)
+        every { FileProvider.getUriForFile(any(), any(), any()) } returns uri
+
+        every { view.getGalleryIntent(uri) } returns intent
+
         connection.accept(PickerSubmissionUploadEffect.LaunchGallery)
 
         verify(timeout = 100) {
-            view.launchGallery()
+            context.packageName
+            context.filesDir
+            context.startActivityForResult(
+                intent,
+                PickerSubmissionUploadEffectHandler.REQUEST_PICK_IMAGE_GALLERY
+            )
         }
 
-        confirmVerified(view)
+        confirmVerified(context)
     }
 
     @Test
-    fun `LaunchVideoRecorder results in view calling launchVideoRecorder`() {
-        connection.accept(PickerSubmissionUploadEffect.LaunchVideoRecorder)
+    fun `LaunchSelectFile results in launching intent`() {
+        val intent = mockk<Intent>()
 
-        verify(timeout = 100) {
-            view.launchVideoRecorder()
-        }
+        every { view.getSelectFileIntent() } returns intent
 
-        confirmVerified(view)
-    }
-
-    @Test
-    fun `LaunchAudioRecorder results in view calling launchAudioRecorder`() {
-        connection.accept(PickerSubmissionUploadEffect.LaunchAudioRecorder)
-
-        verify(timeout = 100) {
-            view.launchAudioRecorder()
-        }
-
-        confirmVerified(view)
-    }
-
-    @Test
-    fun `LaunchSelectFile results in view calling launchSelectFile`() {
         connection.accept(PickerSubmissionUploadEffect.LaunchSelectFile)
 
         verify(timeout = 100) {
-            view.launchSelectFile()
+            context.startActivityForResult(
+                intent,
+                PickerSubmissionUploadEffectHandler.REQUEST_PICK_FILE_FROM_DEVICE
+            )
         }
 
-        confirmVerified(view)
+        confirmVerified(context)
     }
 
     @Test
@@ -297,5 +374,147 @@ class PickerSubmissionUploadEffectHandlerTest : Assert() {
 
         confirmVerified(view)
         confirmVerified(SubmissionService)
+    }
+
+    @Test
+    fun `eventBus onActivityResults results in no event if resultCode is not RESULT_OK`() {
+        val result = ActivityResult(
+            PickerSubmissionUploadEffectHandler.REQUEST_PICK_FILE_FROM_DEVICE,
+            Activity.RESULT_CANCELED,
+            null
+        )
+
+        effectHandler.onActivityResults(OnActivityResults(result))
+
+        verify(exactly = 0) {
+            eventConsumer.accept(any())
+            view.showErrorMessage(any())
+        }
+
+        confirmVerified(view)
+        confirmVerified(eventConsumer)
+    }
+
+    @Test
+    fun `eventBus onActivityResults results in no event when there is no uri data`() {
+        val result = ActivityResult(
+            PickerSubmissionUploadEffectHandler.REQUEST_PICK_FILE_FROM_DEVICE,
+            Activity.RESULT_OK,
+            null
+        )
+
+        effectHandler.onActivityResults(OnActivityResults(result))
+
+        verify(timeout = 100) {
+            view.showErrorMessage(R.string.unexpectedErrorOpeningFile)
+        }
+        verify(exactly = 0) {
+            eventConsumer.accept(any())
+        }
+
+        confirmVerified(view)
+        confirmVerified(eventConsumer)
+    }
+
+    @Test
+    fun `eventBus onActivityResults results in OnFileSelected event`() {
+        val uri = mockk<Uri>()
+        val intent = mockk<Intent>()
+        every { intent.data } returns uri
+
+        val result = ActivityResult(
+            PickerSubmissionUploadEffectHandler.REQUEST_PICK_FILE_FROM_DEVICE,
+            Activity.RESULT_OK,
+            intent
+        )
+
+        effectHandler.onActivityResults(OnActivityResults(result))
+
+        verify(timeout = 100) {
+            eventConsumer.accept(PickerSubmissionUploadEvent.OnFileSelected(uri))
+        }
+
+        confirmVerified(eventConsumer)
+    }
+
+    @Test
+    fun `eventBus onActivityResults results in OnFileSelected event when requestCode is CAMERA_PIC_REQUEST`() {
+        val uri = mockk<Uri>()
+
+        mockkStatic(Uri::class)
+        mockkObject(FilePrefs)
+        every { FilePrefs.tempCaptureUri } returns ""
+        every { Uri.parse("") } returns uri
+
+        val result = ActivityResult(
+            PickerSubmissionUploadEffectHandler.REQUEST_CAMERA_PIC,
+            Activity.RESULT_OK,
+            null
+        )
+
+        effectHandler.onActivityResults(OnActivityResults(result))
+
+        verify(timeout = 100) {
+            eventConsumer.accept(PickerSubmissionUploadEvent.OnFileSelected(uri))
+        }
+
+        confirmVerified(eventConsumer)
+    }
+
+    @Test
+    fun `eventBus onActivityResults results in view calling showFileErrorMessage when requestCode is CAMERA_PIC_REQUEST with no uri data`() {
+        mockkStatic(Uri::class)
+        mockkObject(FilePrefs)
+        every { FilePrefs.tempCaptureUri } returns ""
+        every { Uri.parse("") } returns null
+
+        val result = ActivityResult(
+            PickerSubmissionUploadEffectHandler.REQUEST_CAMERA_PIC,
+            Activity.RESULT_OK,
+            null
+        )
+
+        effectHandler.onActivityResults(OnActivityResults(result))
+
+        verify(timeout = 100) {
+            view.showErrorMessage(R.string.utils_errorGettingPhoto)
+        }
+        verify(exactly = 0) {
+            eventConsumer.accept(any())
+        }
+
+        confirmVerified(eventConsumer)
+    }
+
+    @Test
+    fun `isPickerRequest with REQUEST_CAMERA_PIC code returns true`() {
+        assertTrue(
+            PickerSubmissionUploadEffectHandler.isPickerRequest(
+                PickerSubmissionUploadEffectHandler.REQUEST_CAMERA_PIC
+            )
+        )
+    }
+
+    @Test
+    fun `isPickerRequest with REQUEST_PICK_IMAGE_GALLERY code returns true`() {
+        assertTrue(
+            PickerSubmissionUploadEffectHandler.isPickerRequest(
+                PickerSubmissionUploadEffectHandler.REQUEST_PICK_IMAGE_GALLERY
+            )
+        )
+    }
+
+    @Test
+    fun `isPickerRequest with REQUEST_PICK_FILE_FROM_DEVICE code returns true`() {
+        assertTrue(
+            PickerSubmissionUploadEffectHandler.isPickerRequest(
+                PickerSubmissionUploadEffectHandler.REQUEST_PICK_FILE_FROM_DEVICE
+            )
+        )
+    }
+
+    @Test
+    fun `isPickerRequest with invalid code return false`() {
+        assertFalse(PickerSubmissionUploadEffectHandler.isPickerRequest(1))
     }
 }

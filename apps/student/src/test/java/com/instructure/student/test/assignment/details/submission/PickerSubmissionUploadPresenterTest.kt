@@ -1,0 +1,157 @@
+/*
+ * Copyright (C) 2019 - present Instructure, Inc.
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, version 3 of the License.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+package com.instructure.student.test.assignment.details.submission
+
+import android.content.Context
+import androidx.test.core.app.ApplicationProvider
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.instructure.canvasapi2.models.Course
+import com.instructure.pandautils.models.FileSubmitObject
+import com.instructure.student.R
+import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadModel
+import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadPresenter
+import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerListItemViewState
+import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerSubmissionUploadViewState
+import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerVisibilities
+import org.junit.Assert
+import org.junit.Before
+import org.junit.Test
+import org.junit.runner.RunWith
+
+@RunWith(AndroidJUnit4::class)
+class PickerSubmissionUploadPresenterTest : Assert() {
+
+    private lateinit var context: Context
+    private lateinit var baseFile: FileSubmitObject
+    private lateinit var baseModel: PickerSubmissionUploadModel
+    private lateinit var baseVisibilities: PickerVisibilities
+
+    @Before
+    fun setup() {
+        baseFile = FileSubmitObject("FileName", 135L, "ContentType", "FullPath")
+        context = ApplicationProvider.getApplicationContext()
+        baseModel = PickerSubmissionUploadModel(
+            canvasContext = Course(),
+            assignmentId = 123L,
+            assignmentName = "AssignmentName",
+            assignmentGroupCategoryId = 321L,
+            allowedExtensions = emptyList(),
+            isMediaSubmission = false
+        )
+        baseVisibilities = PickerVisibilities(
+            fab = true,
+            fabGallery = true,
+            fabCamera = true,
+            fabFile = true
+        )
+    }
+
+    @Test
+    fun `returns Empty state when files are empty`() {
+        val model = baseModel
+        val expectedState = PickerSubmissionUploadViewState.Empty(baseVisibilities)
+        val actualState = PickerSubmissionUploadPresenter.present(model, context)
+        assertEquals(expectedState, actualState)
+    }
+
+    @Test
+    fun `returns camera and gallery hidden when pictures are not allowed filetypes`() {
+        val model = baseModel.copy(allowedExtensions = listOf("broken"))
+        val expectedState = PickerSubmissionUploadViewState.Empty(
+            baseVisibilities.copy(
+                fabCamera = false,
+                fabGallery = false
+            )
+        )
+        val actualState = PickerSubmissionUploadPresenter.present(model, context)
+        assertEquals(expectedState, actualState)
+    }
+
+    @Test
+    fun `returns file view states and submit visible when there are files`() {
+        val model = baseModel.copy(files = listOf(baseFile, baseFile, baseFile))
+        val fileViewStates = listOf(
+            PickerListItemViewState(
+                0,
+                R.drawable.vd_media_recordings,
+                baseFile.name,
+                "${baseFile.size} B"
+            ),
+            PickerListItemViewState(
+                1,
+                R.drawable.vd_media_recordings,
+                baseFile.name,
+                "${baseFile.size} B"
+            ),
+            PickerListItemViewState(
+                2,
+                R.drawable.vd_media_recordings,
+                baseFile.name,
+                "${baseFile.size} B"
+            )
+        )
+        val expectedState = PickerSubmissionUploadViewState.FileList(
+            baseVisibilities.copy(submit = true),
+            fileViewStates
+        )
+        val actualState = PickerSubmissionUploadPresenter.present(model, context)
+        assertEquals(expectedState, actualState)
+    }
+
+    @Test
+    fun `returns correct file size`() {
+        val smallFile = FileSubmitObject("name", 1024L, "type", "path")
+        val mediumFile = FileSubmitObject("name", 1048576L, "type", "path")
+        val largeFile = FileSubmitObject("name", 1073741824L, "type", "path")
+        val model = baseModel.copy(files = listOf(smallFile, mediumFile, largeFile))
+        val fileViewStates = listOf(
+            PickerListItemViewState(0, R.drawable.vd_media_recordings, smallFile.name, "1 KB"),
+            PickerListItemViewState(1, R.drawable.vd_media_recordings, mediumFile.name, "1 MB"),
+            PickerListItemViewState(2, R.drawable.vd_media_recordings, largeFile.name, "1 GB")
+        )
+        val expectedState = PickerSubmissionUploadViewState.FileList(
+            baseVisibilities.copy(submit = true),
+            fileViewStates
+        )
+        val actualState = PickerSubmissionUploadPresenter.present(model, context)
+        assertEquals(expectedState, actualState)
+    }
+
+    @Test
+    fun `returns file view states with canDelete false when it is a media submission`() {
+        val model = baseModel.copy(isMediaSubmission = true, files = listOf(baseFile))
+        val fileViewStates = listOf(
+            PickerListItemViewState(
+                0,
+                R.drawable.vd_media_recordings,
+                baseFile.name,
+                "${baseFile.size} B",
+                false)
+        )
+        val expectedState = PickerSubmissionUploadViewState.FileList(
+            baseVisibilities.copy(
+                submit = true,
+                fab = false,
+                fabCamera = false,
+                fabGallery = false,
+                fabFile = false
+            ), fileViewStates
+        )
+        val actualState = PickerSubmissionUploadPresenter.present(model, context)
+        assertEquals(expectedState, actualState)
+    }
+}

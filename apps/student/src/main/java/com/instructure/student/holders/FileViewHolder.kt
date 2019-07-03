@@ -18,17 +18,17 @@
 package com.instructure.student.holders
 
 import android.content.Context
-import androidx.recyclerview.widget.RecyclerView
 import android.view.View
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.instructure.canvasapi2.models.FileFolder
+import com.instructure.canvasapi2.utils.NumberHelper
+import com.instructure.canvasapi2.utils.isValid
+import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.FileFolderCallback
 import com.instructure.student.fragment.FileListFragment
-import com.instructure.canvasapi2.models.FileFolder
-import com.instructure.canvasapi2.utils.isValid
-import com.instructure.pandautils.utils.*
 import kotlinx.android.synthetic.main.viewholder_file.view.*
-import java.text.DecimalFormat
 
 class FileViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -51,7 +51,7 @@ class FileViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             // This is a file
             fileName.text = item.displayName
             fileName.contentDescription = itemView.resources.getString(R.string.fileTalkBack, item.displayName)
-            fileSize.text = readableFileSize(context, item.size)
+            fileSize.text = NumberHelper.readableFileSize(context, item.size)
             if (item.thumbnailUrl.isValid()) {
                 val glide = Glide.with(context)
                 glide.clear(fileIcon)
@@ -81,14 +81,5 @@ class FileViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     companion object {
         const val HOLDER_RES_ID = R.layout.viewholder_file
-    }
-
-    // Helper function to make the size of a file look better
-    private fun readableFileSize(context: Context, size: Long): String {
-        val units = context.resources.getStringArray(R.array.file_size_units)
-        var digitGroups = 0
-        if (size > 0) digitGroups = (Math.log10(size.toDouble()) / Math.log10(1024.0)).toInt()
-        val displaySize = size / Math.pow(1024.0, digitGroups.toDouble())
-        return DecimalFormat("#,##0.#").format(displaySize) + " " + units[digitGroups]
     }
 }
