@@ -57,7 +57,7 @@ class PickerSubmissionUploadEffectHandler(private val context: Context) :
     @Subscribe(sticky = true)
     fun onActivityResults(event: OnActivityResults) {
         event.get {
-            event.remove() //Remove the event so it doesn't show up again somewhere else.
+            event.remove() // Remove the event so it doesn't show up again somewhere else.
             if (it.resultCode == Activity.RESULT_OK) {
                 if (it.requestCode == REQUEST_CAMERA_PIC) {
                     // Attempt to restore URI in case were were booted from memory
