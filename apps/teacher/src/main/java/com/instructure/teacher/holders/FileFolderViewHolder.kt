@@ -20,6 +20,7 @@ import android.content.Context
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.FileFolder
+import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.setGone
@@ -27,7 +28,6 @@ import com.instructure.pandautils.utils.setInvisible
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
 import kotlinx.android.synthetic.main.adapter_file_folder.view.*
-import java.text.DecimalFormat
 
 class FileFolderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -52,7 +52,7 @@ class FileFolderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         if(item.displayName.isValid()) { // This is a file
             fileName.text = item.displayName
-            fileSize.text = readableFileSize(context, item.size)
+            fileSize.text = NumberHelper.readableFileSize(context, item.size)
             if(item.thumbnailUrl.isValid()) {
                 fileIconOrImage.setImage(item.thumbnailUrl!!)
             } else {
@@ -72,14 +72,6 @@ class FileFolderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             fileSize.text = ""
             fileIconOrImage.setIcon(R.drawable.vd_folder_solid, courseColor)
         }
-    }
-
-    //helper function to make the size of a file look better
-    fun readableFileSize(context: Context, size: Long): String {
-        val units = context.resources.getStringArray(R.array.file_size_units)
-        var digitGroups = 0
-        if (size > 0) digitGroups = (Math.log10(size.toDouble()) / Math.log10(1024.0)).toInt()
-        return DecimalFormat("#,##0.#").format(size / Math.pow(1024.0, digitGroups.toDouble())) + " " + units[digitGroups]
     }
 
     companion object {

@@ -17,10 +17,14 @@
 
 package com.instructure.canvasapi2.utils
 
+import android.content.Context
+import com.instructure.canvasapi2.R
 import java.math.RoundingMode
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.*
+import kotlin.math.log10
+import kotlin.math.pow
 
 object NumberHelper {
 
@@ -63,6 +67,17 @@ object NumberHelper {
             format.roundingMode = RoundingMode.FLOOR
         }
         return format.format(number)
+    }
+
+    @JvmStatic
+    fun readableFileSize(context: Context, size: Long): String {
+        val units = context.resources.getStringArray(R.array.file_size_units)
+        var digitGroups = 0
+        if (size > 0) digitGroups = (log10(size.toDouble()) / log10(1024.0)).toInt()
+        val byteSize = size / 1024.0.pow(digitGroups.toDouble())
+        val displaySize = DecimalFormat("#,##0.#").format(byteSize)
+
+        return "$displaySize ${units[digitGroups]}"
     }
 }
 

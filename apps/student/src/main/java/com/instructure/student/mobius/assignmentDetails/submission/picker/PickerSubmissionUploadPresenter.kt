@@ -17,14 +17,12 @@
 package com.instructure.student.mobius.assignmentDetails.submission.picker
 
 import android.content.Context
+import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.student.R
 import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerListItemViewState
 import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerSubmissionUploadViewState
 import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerVisibilities
 import com.instructure.student.mobius.common.ui.Presenter
-import java.text.DecimalFormat
-import kotlin.math.log10
-import kotlin.math.pow
 
 object PickerSubmissionUploadPresenter : Presenter<PickerSubmissionUploadModel, PickerSubmissionUploadViewState> {
     override fun present(
@@ -46,18 +44,16 @@ object PickerSubmissionUploadPresenter : Presenter<PickerSubmissionUploadModel, 
         val visibilities = getVisibilities(model)
 
         val fileStates = model.files.mapIndexed { index, file ->
-            PickerListItemViewState(index, R.drawable.vd_media_recordings, file.name, readableFileSize(context, file.size), !model.isMediaSubmission)
+            PickerListItemViewState(
+                index,
+                R.drawable.vd_media_recordings,
+                file.name,
+                NumberHelper.readableFileSize(context, file.size),
+                !model.isMediaSubmission
+            )
         }
 
         return PickerSubmissionUploadViewState.FileList(visibilities, fileStates)
-    }
-
-    private fun readableFileSize(context: Context, size: Long): String {
-        val units = context.resources.getStringArray(R.array.file_size_units)
-        var digitGroups = 0
-        if (size > 0) digitGroups = (log10(size.toDouble()) / log10(1024.0)).toInt()
-        val displaySize = size / 1024.0.pow(digitGroups.toDouble())
-        return String.format("%s %s", DecimalFormat("#,##0.#").format(displaySize), units[digitGroups])
     }
 
     private fun getVisibilities(model: PickerSubmissionUploadModel) = PickerVisibilities(

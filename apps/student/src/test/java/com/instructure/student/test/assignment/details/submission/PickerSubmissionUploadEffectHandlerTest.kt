@@ -487,23 +487,32 @@ class PickerSubmissionUploadEffectHandlerTest : Assert() {
     }
 
     @Test
-    fun `isPickerRequest with valid codes return true`() {
+    fun `isPickerRequest with REQUEST_CAMERA_PIC code returns true`() {
         assertTrue(
             PickerSubmissionUploadEffectHandler.isPickerRequest(
                 PickerSubmissionUploadEffectHandler.REQUEST_CAMERA_PIC
             )
         )
+    }
+
+    @Test
+    fun `isPickerRequest with REQUEST_PICK_IMAGE_GALLERY code returns true`() {
         assertTrue(
             PickerSubmissionUploadEffectHandler.isPickerRequest(
                 PickerSubmissionUploadEffectHandler.REQUEST_PICK_IMAGE_GALLERY
             )
         )
+    }
+
+    @Test
+    fun `isPickerRequest with REQUEST_PICK_FILE_FROM_DEVICE code returns true`() {
         assertTrue(
             PickerSubmissionUploadEffectHandler.isPickerRequest(
                 PickerSubmissionUploadEffectHandler.REQUEST_PICK_FILE_FROM_DEVICE
             )
         )
     }
+
     @Test
     fun `isPickerRequest with invalid code return false`() {
         assertFalse(PickerSubmissionUploadEffectHandler.isPickerRequest(1))

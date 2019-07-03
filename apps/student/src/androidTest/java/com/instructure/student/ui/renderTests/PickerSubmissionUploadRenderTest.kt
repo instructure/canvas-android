@@ -45,7 +45,7 @@ class PickerSubmissionUploadRenderTest : StudentRenderTest() {
     private val baseVisibilities = PickerVisibilities(fab = true)
 
     @Test
-    @TestMetaData(Priority.P2, FeatureCategory.SUBMISSIONS, TestCategory.RENDER, false)
+    @TestMetaData(Priority.P3, FeatureCategory.SUBMISSIONS, TestCategory.RENDER)
     fun displaysEmptyState() {
         loadPageWithViewState(PickerSubmissionUploadViewState.Empty(baseVisibilities))
         page.emptyView.assertVisible()
@@ -57,7 +57,7 @@ class PickerSubmissionUploadRenderTest : StudentRenderTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P2, FeatureCategory.SUBMISSIONS, TestCategory.RENDER, false)
+    @TestMetaData(Priority.P3, FeatureCategory.SUBMISSIONS, TestCategory.RENDER)
     fun displaysListState() {
         val fileItemStates = listOf(
             PickerListItemViewState(0, R.drawable.vd_media_recordings, "title", "12.3 KB")
@@ -77,7 +77,7 @@ class PickerSubmissionUploadRenderTest : StudentRenderTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P2, FeatureCategory.SUBMISSIONS, TestCategory.RENDER, false)
+    @TestMetaData(Priority.P3, FeatureCategory.SUBMISSIONS, TestCategory.RENDER)
     fun displaysFabsAndHandlesClicks() {
         loadPageWithViewState(
             PickerSubmissionUploadViewState.Empty(
@@ -114,6 +114,76 @@ class PickerSubmissionUploadRenderTest : StudentRenderTest() {
         // Test camera click closes fab
         page.fabCamera.click()
         assertExtraFabsNotDisplayed()
+    }
+
+    @Test
+    @TestMetaData(Priority.P3, FeatureCategory.SUBMISSIONS, TestCategory.RENDER)
+    fun showsOnlyFabFile() {
+        loadPageWithViewState(
+            PickerSubmissionUploadViewState.Empty(
+                baseVisibilities.copy(
+                    fabCamera = false,
+                    fabGallery = false,
+                    fabFile = true
+                )
+            )
+        )
+        page.fabPick.assertVisible()
+        assertExtraFabsNotDisplayed()
+
+        // Perform click and assert displayed
+        page.fabPick.click()
+        page.fabFile.assertDisplayed()
+
+        page.fabCamera.assertNotDisplayed()
+        page.fabGallery.assertNotDisplayed()
+    }
+
+    @Test
+    @TestMetaData(Priority.P3, FeatureCategory.SUBMISSIONS, TestCategory.RENDER)
+    fun showsOnlyFabCamera() {
+        loadPageWithViewState(
+            PickerSubmissionUploadViewState.Empty(
+                baseVisibilities.copy(
+                    fabCamera = true,
+                    fabGallery = false,
+                    fabFile = false
+                )
+            )
+        )
+        page.fabPick.assertVisible()
+        assertExtraFabsNotDisplayed()
+
+        // Perform click and assert displayed
+        page.fabPick.click()
+        page.fabCamera.assertDisplayed()
+
+        page.fabFile.assertNotDisplayed()
+        page.fabGallery.assertNotDisplayed()
+    }
+
+    @Test
+    @TestMetaData(Priority.P3, FeatureCategory.SUBMISSIONS, TestCategory.RENDER)
+    fun showsOnlyFabGallery() {
+        loadPageWithViewState(
+            PickerSubmissionUploadViewState.Empty(
+                baseVisibilities.copy(
+                    fabCamera = false,
+                    fabGallery = true,
+                    fabFile = false
+                )
+            )
+        )
+        page.fabPick.assertVisible()
+        assertExtraFabsNotDisplayed()
+
+        // Perform click and assert displayed
+        page.fabPick.click()
+        page.fabGallery.assertDisplayed()
+
+        page.fabFile.assertNotDisplayed()
+        page.fabCamera.assertNotDisplayed()
+
     }
 
     private fun assertExtraFabsDisplayed() {
