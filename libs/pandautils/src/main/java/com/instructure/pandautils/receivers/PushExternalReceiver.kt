@@ -98,9 +98,10 @@ abstract class PushExternalReceiver : GcmListenerService() {
                 return
             }
 
-            val pushes = PushNotification.getStoredPushes()
+            // Only the first few lines get shown in the notification, and taking all could result in a crash (given an EXTREMELY large amount)
+            val pushes = PushNotification.getStoredPushes().takeLast(10)
 
-            if (pushes.size == 0 && extras == null) {
+            if (pushes.isEmpty() && extras == null) {
                 // Nothing to post, situation would occur from the BootReceiver
                 return
             }

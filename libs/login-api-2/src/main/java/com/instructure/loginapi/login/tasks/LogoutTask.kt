@@ -27,6 +27,7 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.MasqueradeHelper
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.loginapi.login.util.PreviousUsersUtils
+import com.instructure.pandautils.models.PushNotification
 import com.instructure.pandautils.utils.FilePrefs
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.Utils
@@ -61,6 +62,7 @@ abstract class LogoutTask(val type: Type) {
                 RestBuilder.clearCacheDirectory()
                 Utils.getAttachmentsDirectory(ContextKeeper.appContext).deleteRecursively()
                 File(ContextKeeper.appContext.filesDir, "cache").deleteRecursively()
+                PushNotification.clearPushHistory()
 
                 // Clear prefs
                 ApiPrefs.clearAllData()
