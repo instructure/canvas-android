@@ -184,8 +184,7 @@ android {
                     android,
                     new MasqueradeUITransformer('com.instructure.student.activity.NavigationActivity.class'),
                     new PageViewTransformer(),
-                    new LocaleTransformer(),
-                    new PDFKitCrashFixTransformer()
+                    new LocaleTransformer()
             )
     )
 
@@ -232,6 +231,9 @@ dependencies {
     testImplementation Libs.MOCKK
     androidTestImplementation Libs.ANDROIDX_TEST_JUNIT
     testImplementation Libs.KOTLIN_COROUTINES_TEST
+    implementation(Libs.ANDROIDX_FRAGMENT) {
+        exclude module: 'fragment'
+    }
 
     /* Crashlytics */
     implementation(Libs.CRASHLYTICS) {

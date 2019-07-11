@@ -51,12 +51,17 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="windowActionModeOverlay">true</item>
-        <item name="pspdf__contextualToolbarBackground">@color/annotationToolbarBackground</item>
-        <item name="pspdf__contextualToolbarSubmenuBackground">@color/submenuAnnotationToolbarBackground</item>
+        <item name="pspdf__contextualToolbarStyle">@style/ContextualToolbarStyle</item>
         <item name="pspdf__annotationCreationToolbarIconsStyle">@style/AnnotationCreationToolbarIconsStyle</item>
         <item name="pspdf__annotationEditingToolbarIconsStyle">@style/AnnotationEditingToolbarIconsStyle</item>
         <item name="pspdf__stampPickerStyle">@style/StampPickerStyle</item>
         <item name="pspdf__modalDialogStyle">@style/ModalDialogStyle</item>
+    </style>
+
+
+    <style name="ContextualToolbarStyle">
+        <item name="pspdf__backgroundColor">@color/annotationToolbarBackground</item>
+        <item name="pspdf__submenuBackgroundColor">@color/submenuAnnotationToolbarBackground</item>
     </style>
 
     <style name="AnnotationCreationToolbarIconsStyle">
@@ -64,7 +69,7 @@
         <item name="pspdf__highlightIcon">@drawable/vd_highlighter_icon</item>
         <item name="pspdf__strikeoutIcon">@drawable/vd_strike_through_icon</item>
         <item name="pspdf__stampIcon">@drawable/vd_stamp_icon</item>
-        <item name="pspdf__inkIcon">@drawable/vd_ink_icon</item>
+        <item name="pspdf__inkPenIcon">@drawable/vd_ink_icon</item>
         <item name="pspdf__freeTextIcon">@drawable/vd_text_box_icon</item>
         <item name="pspdf__squareIcon">@drawable/vd_square_icon</item>
     </style>

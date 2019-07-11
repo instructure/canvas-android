@@ -22,7 +22,7 @@ class CanvaInkAnnotation(info: CanvaPdfAnnotation) : InkAnnotation(info.page), P
 
 class CanvaHighlightAnnotation(info: CanvaPdfAnnotation) : HighlightAnnotation(info.page, info.rectList ?: emptyList()), PSCanvaInterface by info
 
-class CanvaStrikeOutAnnotation(info: CanvaPdfAnnotation) : StrikeOutAnnotation(info.page, info.rectList), PSCanvaInterface by info
+class CanvaStrikeOutAnnotation(info: CanvaPdfAnnotation) : StrikeOutAnnotation(info.page, info.rectList ?: emptyList()), PSCanvaInterface by info
 
 class CanvaSquareAnnotation(info: CanvaPdfAnnotation) : SquareAnnotation(info.page, info.rect ?: RectF()), PSCanvaInterface by info
 

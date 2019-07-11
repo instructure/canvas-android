@@ -261,7 +261,9 @@ dependencies {
     implementation Libs.ANDROIDX_PALETTE
     implementation Libs.ANDROIDX_PERCENT
     implementation Libs.ANDROIDX_ANNOTATION
-    implementation Libs.ANDROIDX_FRAGMENT
+    implementation(Libs.ANDROIDX_FRAGMENT) {
+        exclude module: 'fragment'
+    }
     implementation Libs.ANDROIDX_VECTOR
     implementation Libs.PLAY_SERVICES
 
