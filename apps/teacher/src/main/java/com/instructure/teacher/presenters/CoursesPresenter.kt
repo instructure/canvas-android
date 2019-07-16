@@ -47,7 +47,7 @@ class CoursesPresenter : SyncPresenter<Course, CoursesView>(Course::class.java) 
     }
 
     private suspend fun loadCourses(forceNetwork: Boolean) {
-        apiAsync<List<Course>> { CourseManager.getCourses(forceNetwork, it) }.await()
+        apiAsync<List<Course>> { CourseManager.getCoursesTeacher(forceNetwork, it) }.await()
             .onFailure { notifyRefreshFinished() }
             .onSuccess { courses ->
                 // Make a call to get which courses are visible on the dashboard as well as their position
