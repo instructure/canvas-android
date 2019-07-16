@@ -18,15 +18,15 @@ package com.instructure.student.ui.pages.renderPages
 
 import androidx.test.espresso.action.ViewActions.swipeLeft
 import androidx.test.espresso.action.ViewActions.swipeRight
-import com.instructure.espresso.*
-import com.instructure.student.R
-import com.instructure.student.ui.pages.SyllabusPage
 import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
 import androidx.test.espresso.web.sugar.Web.onWebView
 import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
 import androidx.test.espresso.web.webdriver.DriverAtoms.getText
 import androidx.test.espresso.web.webdriver.Locator
+import com.instructure.espresso.*
 import com.instructure.espresso.page.*
+import com.instructure.student.R
+import com.instructure.student.ui.pages.SyllabusPage
 import org.hamcrest.CoreMatchers
 import org.hamcrest.Matchers
 import org.hamcrest.Matchers.allOf
@@ -72,7 +72,7 @@ class SyllabusRenderPage : SyllabusPage() {
     }
 
     fun clickEventsTab() {
-        onView(CoreMatchers.allOf(withAncestor(R.id.syllabusTabLayout), withText("Assignments"))).click()
+        onView(CoreMatchers.allOf(withAncestor(R.id.syllabusTabLayout), withText("Summary"))).click()
     }
 
     fun swipeToEventsTab() {

@@ -143,7 +143,7 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
 
     private fun getTabTitles(): List<String> = listOf(
         context.getString(com.instructure.pandares.R.string.syllabus),
-        context.getString(com.instructure.pandares.R.string.assignments)
+        context.getString(com.instructure.pandares.R.string.summary)
     )
 
     private fun setEmptyView(emptyView: EmptyView?, drawableId: Int, titleId: Int, messageId: Int) {
