@@ -53,7 +53,7 @@ project.afterEvaluate {
                                '**/Manifest*.*']
             )
 
-            sourceDirectories = files(['src/main/java'].plus(android.sourceSets[name].java.srcDirs))
+            sourceDirectories = files(['src/main/java'] + android.sourceSets[name].java.srcDirs)
             executionData = files("${project.buildDir}/jacoco/${testTaskName}.exec")
 
             reports {

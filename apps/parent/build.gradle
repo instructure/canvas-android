@@ -211,7 +211,7 @@ task firebaseJacoco(type: JacocoReport) {
     )
 
     // project.buildDir is /canvas-android/apps/parent/build
-    sourceDirectories = files(['src/main/java'].plus(android.sourceSets[flavor].java.srcDirs))
+    sourceDirectories = files(['src/main/java'] + android.sourceSets[flavor].java.srcDirs)
     executionData = files("${project.buildDir}/firebase.ec")
 
     reports {
