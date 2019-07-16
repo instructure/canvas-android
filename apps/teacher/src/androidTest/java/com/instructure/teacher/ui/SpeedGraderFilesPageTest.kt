@@ -46,12 +46,13 @@ class SpeedGraderFilesPageTest : TeacherTest() {
         speedGraderFilesPage.assertPageObjects()
     }
 
-    @Test
-    @Ditto(mode= DittoMode.LIVE)
-    fun displaysEmptyFilesView() {
-        goToSpeedGraderFilesPage()
-        speedGraderFilesPage.assertDisplaysEmptyView()
-    }
+    // MBL-12387: This is broken right now due to a canvas bug.
+//    @Test
+//    @Ditto(mode= DittoMode.LIVE)
+//    fun displaysEmptyFilesView() {
+//        goToSpeedGraderFilesPage()
+//        speedGraderFilesPage.assertDisplaysEmptyView()
+//    }
 
     @Test
     @Ditto(mode= DittoMode.LIVE)
