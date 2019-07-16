@@ -17,6 +17,7 @@ package com.instructure.annotations
 
 import android.graphics.RectF
 import com.pspdfkit.annotations.*
+import com.pspdfkit.annotations.stamps.StampType
 
 class CanvaInkAnnotation(info: CanvaPdfAnnotation) : InkAnnotation(info.page), PSCanvaInterface by info
 

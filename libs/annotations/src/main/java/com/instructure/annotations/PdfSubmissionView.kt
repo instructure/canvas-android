@@ -53,6 +53,8 @@ import com.pspdfkit.annotations.AnnotationFlags
 import com.pspdfkit.annotations.AnnotationProvider
 import com.pspdfkit.annotations.AnnotationType
 import com.pspdfkit.annotations.appearance.AssetAppearanceStreamGenerator
+import com.pspdfkit.annotations.configuration.*
+import com.pspdfkit.annotations.configuration.AnnotationProperty
 import com.pspdfkit.annotations.defaults.*
 import com.pspdfkit.annotations.stamps.CustomStampAppearanceStreamGenerator
 import com.pspdfkit.annotations.stamps.StampPickerItem
@@ -60,7 +62,6 @@ import com.pspdfkit.configuration.PdfConfiguration
 import com.pspdfkit.configuration.page.PageLayoutMode
 import com.pspdfkit.configuration.page.PageScrollDirection
 import com.pspdfkit.document.PdfDocument
-import com.pspdfkit.events.Commands
 import com.pspdfkit.listeners.DocumentListener
 import com.pspdfkit.ui.PdfFragment
 import com.pspdfkit.ui.inspector.PropertyInspectorCoordinatorLayout
@@ -274,7 +275,6 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
         }
 
         attachDocListener()
-        setupPdfAnnotationDefaults()
     }
 
     @Suppress("EXPERIMENTAL_FEATURE_WARNING")
@@ -367,6 +367,8 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
                 toast(R.string.annotationErrorOccurred)
                 it.printStackTrace()
             }
+
+            setupPdfAnnotationDefaults()
         }
     }
 
@@ -678,43 +680,75 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
     }
 
     private fun setupPdfAnnotationDefaults() {
-        pdfFragment?.setAnnotationDefaultsProvider(AnnotationType.INK, object : InkAnnotationDefaultsProvider(context) {
-            override fun getAvailableColors(): IntArray = context.resources.getIntArray(R.array.standardAnnotationColors)
-            override fun getDefaultColor(): Int = ContextCompat.getColor(context, R.color.blueAnnotation)
-            override fun getSupportedProperties(): EnumSet<AnnotationProperty> = EnumSet.of(AnnotationProperty.COLOR)
-            override fun getDefaultThickness(): Float = 2f
-        })
-        pdfFragment?.setAnnotationDefaultsProvider(AnnotationType.FREETEXT, object : FreeTextAnnotationDefaultsProvider(context) {
-            override fun getAvailableColors(): IntArray = context.resources.getIntArray(R.array.standardAnnotationColors)
-            override fun getDefaultColor(): Int = ContextCompat.getColor(context, R.color.darkGrayAnnotation)
-            override fun getSupportedProperties(): EnumSet<AnnotationProperty> = EnumSet.of(AnnotationProperty.COLOR)
-            override fun getDefaultTextSize(): Float = 12f
-            override fun getDefaultFillColor(): Int = ContextCompat.getColor(context, R.color.white)
-        })
-        pdfFragment?.setAnnotationDefaultsProvider(AnnotationType.SQUARE, object : ShapeAnnotationDefaultsProvider(context, AnnotationType.SQUARE) {
-            override fun getAvailableColors(): IntArray = context.resources.getIntArray(R.array.standardAnnotationColors)
-            override fun getDefaultColor(): Int = ContextCompat.getColor(context, R.color.blueAnnotation)
-            override fun getSupportedProperties(): EnumSet<AnnotationProperty> = EnumSet.of(AnnotationProperty.COLOR)
-            override fun getDefaultThickness(): Float = 2f
-        })
-        pdfFragment?.setAnnotationDefaultsProvider(AnnotationType.STRIKEOUT, object : MarkupAnnotationDefaultsProvider(context, AnnotationType.STRIKEOUT) {
-            override fun getAvailableColors(): IntArray = context.resources.getIntArray(R.array.standardAnnotationColors)
-            override fun getDefaultColor(): Int = ContextCompat.getColor(context, R.color.redAnnotation)
-        })
-        pdfFragment?.setAnnotationDefaultsProvider(AnnotationType.HIGHLIGHT, object : MarkupAnnotationDefaultsProvider(context, AnnotationType.HIGHLIGHT) {
-            override fun getAvailableColors(): IntArray = context.resources.getIntArray(R.array.highlightAnnotationColors)
-            override fun getDefaultColor(): Int = ContextCompat.getColor(context, R.color.yellowHighlightAnnotation)
-        })
-        pdfFragment?.setAnnotationDefaultsProvider(AnnotationType.STAMP, object : StampAnnotationDefaultsProvider(context) {
-            override fun getStampsForPicker() = getAppearenceStreams()
-            override fun getSupportedProperties() = EnumSet.noneOf(AnnotationProperty::class.java)
-        })
-        pdfFragment?.annotationDefaults?.setAnnotationDefaultsProvider(AnnotationTool.ERASER, object : EraserDefaultsProvider() {
-            override fun getDefaultThickness(): Float {
-                return 5f
-            }
-        })
+        // TODO - In order for Ink config to work we need an update from pspdfkit
+        pdfFragment?.annotationConfiguration?.put(
+                AnnotationType.INK,
+                InkAnnotationConfiguration.builder(context)
+                        .setAvailableColors(context.resources.getIntArray(R.array.standardAnnotationColors).toMutableList())
+                        .setCustomColorPickerEnabled(false)
+                        .setSupportedProperties(EnumSet.of(AnnotationProperty.COLOR))
+                        .setDefaultColor(ContextCompat.getColor(context, R.color.blueAnnotation))
+                        .setDefaultThickness(2f)
+                        .setForceDefaults(true)
+                        .build()
+        )
+        pdfFragment?.annotationConfiguration?.put(
+                AnnotationType.SQUARE,
+                ShapeAnnotationConfiguration.builder(context, AnnotationTool.SQUARE)
+                        .setAvailableColors(context.resources.getIntArray(R.array.standardAnnotationColors).toMutableList())
+                        .setCustomColorPickerEnabled(false)
+                        .setSupportedProperties(EnumSet.of(AnnotationProperty.COLOR))
+                        .setDefaultColor(ContextCompat.getColor(context, R.color.blueAnnotation))
+                        .setDefaultThickness(2f)
+                        .setForceDefaults(true)
+                        .build()
+        )
+        pdfFragment?.annotationConfiguration?.put(
+                AnnotationType.HIGHLIGHT,
+                MarkupAnnotationConfiguration.builder(context, AnnotationTool.HIGHLIGHT)
+                        .setAvailableColors(context.resources.getIntArray(R.array.highlightAnnotationColors).toMutableList())
+                        .disableProperty(AnnotationProperty.ANNOTATION_ALPHA)
+                        .setDefaultColor(ContextCompat.getColor(context, R.color.yellowHighlightAnnotation))
+                        .setForceDefaults(true)
+                        .build()
+        )
+        pdfFragment?.annotationConfiguration?.put(
+                AnnotationType.STRIKEOUT,
+                MarkupAnnotationConfiguration.builder(context, AnnotationTool.STRIKEOUT)
+                        .setAvailableColors(context.resources.getIntArray(R.array.highlightAnnotationColors).toMutableList())
+                        .setSupportedProperties(EnumSet.of(AnnotationProperty.COLOR))
+                        .setDefaultColor(ContextCompat.getColor(context, R.color.redHighlightAnnotation))
+                        .setForceDefaults(true)
+                        .build()
+        )
+        pdfFragment?.annotationConfiguration?.put(
+                AnnotationType.FREETEXT,
+                FreeTextAnnotationConfiguration.builder(context)
+                        .setSupportedProperties(EnumSet.of(AnnotationProperty.COLOR))
+                        .setAvailableColors(context.resources.getIntArray(R.array.standardAnnotationColors).toMutableList())
+                        .setDefaultColor(ContextCompat.getColor(context, R.color.darkGrayAnnotation))
+                        .setDefaultTextSize(10f)
+                        .setDefaultFillColor(Color.TRANSPARENT)
+                        .setCustomColorPickerEnabled(false)
+                        .setForceDefaults(true)
+                        .build()
+        )
+        pdfFragment?.annotationConfiguration?.put(
+                AnnotationType.STAMP,
+                StampAnnotationConfiguration.builder(context)
+                        .setAvailableStampPickerItems(getAppearenceStreams())
+                        .setSupportedProperties(EnumSet.noneOf(AnnotationProperty::class.java))
+                        .build()
+        )
+        pdfFragment?.annotationConfiguration?.put(
+                AnnotationTool.ERASER,
+                EraserToolConfiguration.builder()
+                        .setDefaultThickness(5f)
+                        .setForceDefaults(true)
+                        .build()
+        )
     }
+
 
     // region Stamp Appearance Streams
     private fun getAppearenceStreams(): MutableList<StampPickerItem> {
@@ -832,36 +866,36 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
         var eraser: ContextualToolbarMenuItem? = null
 
         for (item in toolbarMenuItems) {
-            when (item.title) {
-                context.getString(com.pspdfkit.R.string.pspdf__annotation_type_freetext) -> {
+            when (item.id) {
+                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_freetext -> {
                     freeText = item
                 }
-                context.getString(com.pspdfkit.R.string.pspdf__annotation_type_stamp) -> {
+                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_stamp -> {
                     stamp = item
                 }
-                context.getString(com.pspdfkit.R.string.pspdf__annotation_type_strikeout) -> {
+                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_strikeout -> {
                     strikeOut = item
                 }
-                context.getString(com.pspdfkit.R.string.pspdf__annotation_type_highlight) -> {
+                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_highlight -> {
                     highlight = item
                 }
-                context.getString(com.pspdfkit.R.string.pspdf__annotation_type_ink) -> {
+                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_ink_pen -> {
                     ink = item
                 }
-                context.getString(com.pspdfkit.R.string.pspdf__annotation_type_square) -> {
+                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_square -> {
                     rectangle = item
                 }
-                context.getString(com.pspdfkit.R.string.pspdf__edit_menu_color) -> {
+                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_picker -> {
                     color = item
                 }
-                context.getString(com.pspdfkit.R.string.pspdf__undo) -> {
+                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_undo -> {
                     // There are two menu items called undo, we want the first one.
                     if (undo == null) undo = item
                 }
-                context.getString(com.pspdfkit.R.string.pspdf__redo) -> {
+                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_redo -> {
                     redo = item
                 }
-                context.getString(com.pspdfkit.R.string.pspdf__annotation_type_eraser) -> {
+                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_eraser -> {
                     eraser = item
                 }
             }
