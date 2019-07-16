@@ -118,11 +118,12 @@ class ModuleListView(
                 Route(null, QuizDetailsFragment::class.java, canvasContext, args)
             }
             ModuleItem.Type.ExternalUrl, ModuleItem.Type.ExternalTool -> {
-                val args = InternalWebViewFragment.makeBundle(
-                    item.externalUrl.orEmpty(),
-                    item.title.orEmpty()
+                val args = LTIWebViewFragment.makeLTIBundle(
+                    ltiUrl = item.url.orEmpty(),
+                    title = item.title.orEmpty(),
+                    sessionLessLaunch = true
                 )
-                Route(null, InternalWebViewFragment::class.java, canvasContext, args)
+                Route(null, LTIWebViewFragment::class.java, canvasContext, args)
             }
             else -> null
         }

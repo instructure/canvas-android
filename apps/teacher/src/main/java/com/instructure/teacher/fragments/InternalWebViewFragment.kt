@@ -76,7 +76,6 @@ open class InternalWebViewFragment : BaseFragment() {
 
      override fun onCreate(savedInstanceState: Bundle?) {
          super.onCreate(savedInstanceState)
-         // notify that we have action bar items
          retainInstance = true
      }
 
@@ -103,7 +102,7 @@ open class InternalWebViewFragment : BaseFragment() {
 
         toolbar?.title = title.validOrNull() ?: url
 
-        // if we are displaying html we don't want them to view the url in a different browser
+        // If we are displaying html we don't want them to view the url in a different browser
         if(!html.isValid()) {
             toolbar.setupMenu(R.menu.menu_internal_webview) {
                 val browserIntent = Intent("android.intent.action.VIEW").apply {
