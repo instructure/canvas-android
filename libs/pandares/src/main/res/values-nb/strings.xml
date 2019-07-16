@@ -81,6 +81,8 @@
     <string name="finalGradeFormatted">Slutt karakter: %s</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Egendefinert resultat</string>
+    <string name="rubricEmptyMessage">Det er ingen vurderingsveiledning for denne oppgaven</string>
+    <string name="rubricViewLongDescription">Vis lang beskrivelse</string>
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">Versjon:</string>
 
@@ -292,6 +294,7 @@
     <string name="allCourses">Alle emner</string>
     <string name="allGroups">Alle grupper</string>
     <string name="courseOptions">Emne alternativer</string>
+    <string name="courseOptionsFormatted">Emnevalg for %s</string>
     <string name="editNickname">Rediger kallenavn</string>
     <string name="editCourseColor">Rediger emnefarge</string>
     <string name="open">Åpen</string>
@@ -383,6 +386,7 @@
     <string name="calendar">Kalender</string>
     <string name="bookmarks">Bokmerker</string>
     <string name="showGrades">Vis karakterer</string>
+    <string name="colorOverlay">Fargeoverlegg</string>
     <string name="gradesAreHidden">Klasser er ikke synlig for dette emnet.</string>
 
     <string name="entireGroupSelected">Hele gruppen er allerede valgt.</string>
@@ -925,8 +929,9 @@
     <string name="courseNickname">Kallenavn for emne</string>
 
     <string name="notAvailableOffline">Funksjonalitet utilgjengelig når du er offline</string>
-    <string name="editDashboard">Rediger emner</string>
-
+    <string name="editDashboard">Rediger dashbord</string>
+    <string name="editDashboardDescriptor">Velg hvilke emner du vil se på dashbordet</string>
+    <string name="a11y_editYourCourseList">Rediger emnelisten</string>
     <string name="dashboard">Instrumentbord</string>
     <string name="previous">Forrige</string>
     <string name="pageNum" formatted="false">Side %d av %d</string>
@@ -958,6 +963,8 @@
     <string name="declineCourseInvitation">Avslå</string>
 
     <!-- File Strings -->
+    <string name="noFilesSubtextCourse">Det finnes ingen filer assosiert med dette kurset.</string>
+    <string name="noFilesSubtextGroup">Det finnes ingen filer assosiert med denne gruppa.</string>
     <array name="file_size_units">
         <item>B</item>
         <item>KB</item>

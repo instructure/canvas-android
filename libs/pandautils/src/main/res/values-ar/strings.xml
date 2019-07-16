@@ -41,10 +41,8 @@
     <string name="upload">تحميل</string>
     <string name="errorSendingMessage">حدث خطأ أثناء إرسال رسالتك. يرجى إعادة المحاولة.</string>
 
-    <string name="notificationChannelNameFileUploadsName">إخطارات تحميل الملف</string>
-    <string name="notificationChannelNameFileUploadsDescription">إخطارات Canvas لعمليات تحميل الملفات الجارية.</string>
-
-
+    <string name="notificationChannelNameFileUploadsName">إخطارات التحميل</string>
+    <string name="notificationChannelNameFileUploadsDescription">إخطارات Canvas لعمليات التحميل الجارية.</string>
     <!-- Turn in Files -->
     <string name="chooseFileSource">اختيار ملف من&#8230;</string>
     <string name="addFile">إضافة ملف</string>
@@ -101,10 +99,9 @@
     <string name="pleaseTryAgain">تم منح الإذن، الرجاء إعادة المحاولة.</string>
     <string name="pickVideo">قم بتحديد مقطع فيديو</string>
 
-    <string name="assignmentSubmissionUpload">جاري تحميل الإرسال لـ "%s"</string>
-    <string name="assignmentSubmissionError">الإرسال فشل لـ "%s"</string>
-    <string name="notificationChannelNameSubmissionUploadsName">إخطارات تحميل الإرسال</string>
-    <string name="notificationChannelNameSubmissionUploadsDescription">إخطارات Canvas لعمليات تحميل الإرسالات الجارية.</string>
+    <string name="assignmentSubmissionUpload">جاري تحميل الإرسال لـ %s</string>
+    <string name="assignmentSubmissionError">الإرسال فشل لـ %s</string>
+    <string name="assignmentSubmissionComplete">تم إرسال %s بنجاح</string>
     <!--Errors-->
     <string name="errorOccurred">حدث خطأ غير متوقع.</string>
     <string name="serverError">حدث خطأ بالخادم.</string>

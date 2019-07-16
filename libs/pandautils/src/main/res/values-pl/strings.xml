@@ -41,10 +41,8 @@
     <string name="upload">Prześlij</string>
     <string name="errorSendingMessage">Podczas wysyłania wiadomości wystąpił błąd. Spróbuj ponownie.</string>
 
-    <string name="notificationChannelNameFileUploadsName">Powiadomienia dotyczące przesyłania plików</string>
-    <string name="notificationChannelNameFileUploadsDescription">Powiadomienia Canvas dla przesyłanych obecnie plików.</string>
-
-
+    <string name="notificationChannelNameFileUploadsName">Powiadomienia dotyczące przesyłek</string>
+    <string name="notificationChannelNameFileUploadsDescription">Powiadomienia Canvas dotyczące przesyłanych obecnie plików.</string>
     <!-- Turn in Files -->
     <string name="chooseFileSource">Wybierz plik z&#8230;</string>
     <string name="addFile">Dodaj plik</string>
@@ -103,8 +101,7 @@
 
     <string name="assignmentSubmissionUpload">Przesyłanie plików dla %s</string>
     <string name="assignmentSubmissionError">Nie udało się przesłać plików dla %s</string>
-    <string name="notificationChannelNameSubmissionUploadsName">Powiadomienia dotyczące przesyłek</string>
-    <string name="notificationChannelNameSubmissionUploadsDescription">Powiadomienia Canvas dla przesyłanych obecnie plików.</string>
+    <string name="assignmentSubmissionComplete">Przesłano pomyślnie %s</string>
     <!--Errors-->
     <string name="errorOccurred">Wystąpił nieoczekiwany błąd.</string>
     <string name="serverError">Wystąpił błąd serwera.</string>

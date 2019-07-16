@@ -81,6 +81,8 @@
     <string name="finalGradeFormatted">Nota final: %s</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Pontuação personalizada</string>
+    <string name="rubricEmptyMessage">Não há nenhuma rubrica para essa tarefa</string>
+    <string name="rubricViewLongDescription">Exibir descrição longa</string>
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">Versão:</string>
 
@@ -292,6 +294,7 @@
     <string name="allCourses">Todos os cursos</string>
     <string name="allGroups">Todos os grupos</string>
     <string name="courseOptions">Opções do curso</string>
+    <string name="courseOptionsFormatted">Opções do curso para %s</string>
     <string name="editNickname">Editar apelido</string>
     <string name="editCourseColor">Editar cor do curso</string>
     <string name="open">Abrir</string>
@@ -383,6 +386,7 @@
     <string name="calendar">Calendário</string>
     <string name="bookmarks">Favoritos</string>
     <string name="showGrades">Mostrar Notas</string>
+    <string name="colorOverlay">Sobreposição de cores</string>
     <string name="gradesAreHidden">Notas não estão visíveis para este curso.</string>
 
     <string name="entireGroupSelected">Este grupo inteiro já foi selecionado.</string>
@@ -925,8 +929,9 @@
     <string name="courseNickname">Apelido do Curso</string>
 
     <string name="notAvailableOffline">Funcionalidade indisponível no modo off-line</string>
-    <string name="editDashboard">Editar Cursos</string>
-
+    <string name="editDashboard">Editar painel</string>
+    <string name="editDashboardDescriptor">Selecione quais cursos você gostaria de ver no Painel</string>
+    <string name="a11y_editYourCourseList">Editar sua lista de cursos</string>
     <string name="dashboard">Painel</string>
     <string name="previous">Anterior</string>
     <string name="pageNum" formatted="false">Página %d de %d</string>
@@ -958,6 +963,8 @@
     <string name="declineCourseInvitation">Recusar</string>
 
     <!-- File Strings -->
+    <string name="noFilesSubtextCourse">Não há nenhum arquivo associado a este curso.</string>
+    <string name="noFilesSubtextGroup">Não há nenhum arquivo associado a este grupo.</string>
     <array name="file_size_units">
         <item>B</item>
         <item>KB</item>

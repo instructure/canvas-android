@@ -41,10 +41,8 @@
     <string name="upload">Uploaden</string>
     <string name="errorSendingMessage">Er is een fout opgetreden bij het verzenden van je bericht. Probeer het opnieuw.</string>
 
-    <string name="notificationChannelNameFileUploadsName">Meldingen voor uploaden van bestanden</string>
-    <string name="notificationChannelNameFileUploadsDescription">Canvas-meldingen voor actieve uploads van bestanden.</string>
-
-
+    <string name="notificationChannelNameFileUploadsName">Meldingen voor uploaden</string>
+    <string name="notificationChannelNameFileUploadsDescription">Canvas-meldingen voor actieve uploads.</string>
     <!-- Turn in Files -->
     <string name="chooseFileSource">Kies bestandsformulier&#8230;</string>
     <string name="addFile">Een bestand toevoegen</string>
@@ -101,10 +99,9 @@
     <string name="pleaseTryAgain">Toestemming verleend, probeer het opnieuw.</string>
     <string name="pickVideo">Selecteer een video</string>
 
-    <string name="assignmentSubmissionUpload">Uploaden van de inzending voor "%s"</string>
-    <string name="assignmentSubmissionError">Inzending mislukt voor "%s"</string>
-    <string name="notificationChannelNameSubmissionUploadsName">Meldingen voor uploaden van inzending</string>
-    <string name="notificationChannelNameSubmissionUploadsDescription">Canvas-meldingen voor actieve uploads van Inleveringen.</string>
+    <string name="assignmentSubmissionUpload">Bezig met uploaden van inlevering voor %s</string>
+    <string name="assignmentSubmissionError">Inlevering mislukt voor %s</string>
+    <string name="assignmentSubmissionComplete">Inlevering van %s is gelukt</string>
     <!--Errors-->
     <string name="errorOccurred">Er is een onverwachte fout opgetreden.</string>
     <string name="serverError">Er is een serverfout opgetreden.</string>

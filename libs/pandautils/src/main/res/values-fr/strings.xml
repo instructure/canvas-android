@@ -41,10 +41,8 @@
     <string name="upload">Télécharger</string>
     <string name="errorSendingMessage">Une erreur est survenue lors de l’envoi de votre message. Veuillez réessayer.</string>
 
-    <string name="notificationChannelNameFileUploadsName">Notifications d’envoi de fichier</string>
-    <string name="notificationChannelNameFileUploadsDescription">Notifications Canvas pour les envois de fichier en cours.</string>
-
-
+    <string name="notificationChannelNameFileUploadsName">Notifications de téléchargement</string>
+    <string name="notificationChannelNameFileUploadsDescription">Notifications Canvas pour les téléchargements en cours.</string>
     <!-- Turn in Files -->
     <string name="chooseFileSource">Choisir un fichier de&#8230;</string>
     <string name="addFile">Ajouter un fichier</string>
@@ -101,10 +99,9 @@
     <string name="pleaseTryAgain">Permission accordée, veuillez réessayer.</string>
     <string name="pickVideo">Sélectionnez une vidéo</string>
 
-    <string name="assignmentSubmissionUpload">Envoi de la soumission pour « %s »</string>
-    <string name="assignmentSubmissionError">Soumission échouée pour « %s »</string>
-    <string name="notificationChannelNameSubmissionUploadsName">Notifications d’envoi de soumission</string>
-    <string name="notificationChannelNameSubmissionUploadsDescription">Notifications Canvas pour les envois de soumissions en cours.</string>
+    <string name="assignmentSubmissionUpload">Téléchargement de la soumission pour %s</string>
+    <string name="assignmentSubmissionError">La soumission a échoué pour %s</string>
+    <string name="assignmentSubmissionComplete">%s soumis avec succès</string>
     <!--Errors-->
     <string name="errorOccurred">Une erreur inattendue est survenue.</string>
     <string name="serverError">Une erreur de serveur est survenue.</string>

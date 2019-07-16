@@ -81,6 +81,8 @@
     <string name="finalGradeFormatted">Note finale : %s</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Score personnalisé</string>
+    <string name="rubricEmptyMessage">Il n’existe aucun barème pour ce travail</string>
+    <string name="rubricViewLongDescription">Afficher la description longue</string>
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">Version :</string>
 
@@ -292,6 +294,7 @@
     <string name="allCourses">Tous les cours</string>
     <string name="allGroups">Tous les groupes</string>
     <string name="courseOptions">Options de cours</string>
+    <string name="courseOptionsFormatted">Options de cours pour %s</string>
     <string name="editNickname">Modifier surnom</string>
     <string name="editCourseColor">Modifier couleur du cours</string>
     <string name="open">Ouvrir</string>
@@ -383,6 +386,7 @@
     <string name="calendar">Agenda</string>
     <string name="bookmarks">Signets</string>
     <string name="showGrades">Afficher les notes</string>
+    <string name="colorOverlay">Surimpression couleurs</string>
     <string name="gradesAreHidden">Les notes ne sont pas visibles pour ce cours.</string>
 
     <string name="entireGroupSelected">Ce groupe entier a déjà été sélectionné.</string>
@@ -925,8 +929,9 @@
     <string name="courseNickname">Surnom du cours</string>
 
     <string name="notAvailableOffline">La fonctionnalité n\'est pas disponible hors ligne</string>
-    <string name="editDashboard">Modifier cours</string>
-
+    <string name="editDashboard">Modifier le tableau de bord</string>
+    <string name="editDashboardDescriptor">Sélectionnez les cours que vous souhaitez voir sur le tableau de bord</string>
+    <string name="a11y_editYourCourseList">Modifier votre liste de cours</string>
     <string name="dashboard">Tableau de bord</string>
     <string name="previous">Précédent</string>
     <string name="pageNum" formatted="false">Page %d sur %d</string>
@@ -958,6 +963,8 @@
     <string name="declineCourseInvitation">Refuser</string>
 
     <!-- File Strings -->
+    <string name="noFilesSubtextCourse">Il n\'y a aucun fichier associé à ce cours.</string>
+    <string name="noFilesSubtextGroup">Il n\'y a aucun fichier associé à ce groupe.</string>
     <array name="file_size_units">
         <item>O</item>
         <item>Ko</item>

@@ -41,10 +41,8 @@
     <string name="upload">Llwytho i fyny</string>
     <string name="errorSendingMessage">Gwall wrth anfon eich neges. Rhowch gynnig arall arni.</string>
 
-    <string name="notificationChannelNameFileUploadsName">Hysbysiadau llwytho ffeiliau i fyny</string>
-    <string name="notificationChannelNameFileUploadsDescription">Hysbysiadau Canvas o ffeiliau sy’n cael eu llwytho i fyny ar hyn o bryd.</string>
-
-
+    <string name="notificationChannelNameFileUploadsName">Llwytho Hysbysiadau i fyny</string>
+    <string name="notificationChannelNameFileUploadsDescription">Hysbysiadau Canvas ar gyfer ffeiliau sy’n cael eu llwytho i fyny ar hyn o bryd.</string>
     <!-- Turn in Files -->
     <string name="chooseFileSource">Dewiswch Ffeil O&#8230;</string>
     <string name="addFile">Ychwanegu Ffeil</string>
@@ -101,10 +99,9 @@
     <string name="pleaseTryAgain">Wedi cael caniatâd, rhowch gynnig arall arni.</string>
     <string name="pickVideo">Dewiswch Fideo</string>
 
-    <string name="assignmentSubmissionUpload">Wrthi\'n llwytho cyflwyniad i fyny ar gyfer "%s"</string>
-    <string name="assignmentSubmissionError">Cyflwyniad wedi methu ar gyfer "%s"</string>
-    <string name="notificationChannelNameSubmissionUploadsName">Hysbysiadau Llwytho Cyflwyniad i fyny</string>
-    <string name="notificationChannelNameSubmissionUploadsDescription">Hysbysiadau Canvas o gyflwyniadau sy’n cael eu llwytho i fyny ar hyn o bryd.</string>
+    <string name="assignmentSubmissionUpload">Wrthi\'n llwytho cyflwyniad i fyny ar gyfer %s</string>
+    <string name="assignmentSubmissionError">Cyflwyniad wedi methu ar gyfer %s</string>
+    <string name="assignmentSubmissionComplete">Wedi llwyddo i gyflwyno %s</string>
     <!--Errors-->
     <string name="errorOccurred">Gwall annisgwyl.</string>
     <string name="serverError">Gwall ar y gweinydd.</string>

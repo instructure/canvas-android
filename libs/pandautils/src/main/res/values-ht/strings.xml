@@ -41,10 +41,8 @@
     <string name="upload">Chajman</string>
     <string name="errorSendingMessage">Yon erè fèt pandan w ap voye mesaj ou a. Tanpri eseye ankò.</string>
 
-    <string name="notificationChannelNameFileUploadsName">Avètisman Transfè Fichye</string>
-    <string name="notificationChannelNameFileUploadsDescription">Avètisman Canvas pou transfè fichye ki an pwosesis yo.</string>
-
-
+    <string name="notificationChannelNameFileUploadsName">Notifikasyon Transfè</string>
+    <string name="notificationChannelNameFileUploadsDescription">Notifikasyon Canvas pou transfè k ap fèt.</string>
     <!-- Turn in Files -->
     <string name="chooseFileSource">Chwazi Fichye Apati de&#8230;</string>
     <string name="addFile">Ajoute Fichye</string>
@@ -101,10 +99,9 @@
     <string name="pleaseTryAgain">Pèmisyon Akòde, tanpri eseye ankò.</string>
     <string name="pickVideo">Seleksyone yon Videyo</string>
 
-    <string name="assignmentSubmissionUpload">Transfere soumisyon pou "%s"</string>
-    <string name="assignmentSubmissionError">Soumisyon echwe pou "%s"</string>
-    <string name="notificationChannelNameSubmissionUploadsName">Notifikasyon Transfè Soumisyon</string>
-    <string name="notificationChannelNameSubmissionUploadsDescription">Notifikasyon Canvas ou transfè soumisyon an atant yo.</string>
+    <string name="assignmentSubmissionUpload">Transfè soumisyon pou %s</string>
+    <string name="assignmentSubmissionError">Soumisyon echwe pou %s</string>
+    <string name="assignmentSubmissionComplete">Soumisyon reyisi %s</string>
     <!--Errors-->
     <string name="errorOccurred">Yon erè fèt sanzatann.</string>
     <string name="serverError">Gen yon erè sèvè ki fèt.</string>

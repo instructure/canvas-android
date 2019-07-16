@@ -81,6 +81,8 @@
     <string name="finalGradeFormatted">Kōeke whakamutunga: %s</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Kaute tikanga</string>
+    <string name="rubricEmptyMessage">Kaore he rubric mo tēnei whakataunga</string>
+    <string name="rubricViewLongDescription">Tirohia taipitopito roa</string>
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">Putanga:</string>
 
@@ -292,6 +294,7 @@
     <string name="allCourses">Ngā akoranga katoa</string>
     <string name="allGroups">Ngā rōpū katoa</string>
     <string name="courseOptions">Kōwhiringa akoranga</string>
+    <string name="courseOptionsFormatted">Ngā kōwhiringa mo %s</string>
     <string name="editNickname">Whakatika kārangaranga</string>
     <string name="editCourseColor">Whakatika akoranga tae</string>
     <string name="open">Whakatuwhera</string>
@@ -383,6 +386,7 @@
     <string name="calendar">Maramataka</string>
     <string name="bookmarks">Tohuwāhi</string>
     <string name="showGrades">Whakātu Ngā Kōeke</string>
+    <string name="colorOverlay">Tae Paparua</string>
     <string name="gradesAreHidden">Kaore e kitea tēnei akoranga auroro.</string>
 
     <string name="entireGroupSelected">Kua tīpakohia katoa tēnei rōpū.</string>
@@ -925,8 +929,9 @@
     <string name="courseNickname">Ingoakāinga akoranga</string>
 
     <string name="notAvailableOffline">Kaore te whakataunganga i te wātea i te wā o te tuimotu</string>
-    <string name="editDashboard">Whakatika i ngā akoranga</string>
-
+    <string name="editDashboard">Whakatika Papatohu</string>
+    <string name="editDashboardDescriptor">Tīpako ko tēhea ākoranga e hiahia ana koe ki te kite I runga i te Papatohu</string>
+    <string name="a11y_editYourCourseList">Whakatika i tō rārangi akoranga</string>
     <string name="dashboard">Papatohu</string>
     <string name="previous">ō muri</string>
     <string name="pageNum" formatted="false">Whārangi %d o %d</string>
@@ -958,6 +963,8 @@
     <string name="declineCourseInvitation">Te paheketanga</string>
 
     <!-- File Strings -->
+    <string name="noFilesSubtextCourse">Kaore ngā kōnae e pā ana ki tēnei akoranga</string>
+    <string name="noFilesSubtextGroup">Kaore ngā kōnae e pā ana ki tēnei rōpū</string>
     <array name="file_size_units">
         <item>B</item>
         <item>KB</item>

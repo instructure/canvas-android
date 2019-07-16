@@ -81,6 +81,8 @@
     <string name="finalGradeFormatted">Končna ocena: %s</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Po meri prilagojen rezultat</string>
+    <string name="rubricEmptyMessage">Za to nalogo ni ocenjevalnega vodnika</string>
+    <string name="rubricViewLongDescription">Ogled dolgega opisa</string>
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">Različica:</string>
 
@@ -292,6 +294,7 @@
     <string name="allCourses">Vsi predmeti</string>
     <string name="allGroups">Vse skupine</string>
     <string name="courseOptions">Možnosti predmeta</string>
+    <string name="courseOptionsFormatted">Možnosti predmeta za %s</string>
     <string name="editNickname">Uredi vzdevek</string>
     <string name="editCourseColor">Uredi barvo predmeta</string>
     <string name="open">Odpri</string>
@@ -383,6 +386,7 @@
     <string name="calendar">Koledar</string>
     <string name="bookmarks">Zaznamki</string>
     <string name="showGrades">Prikaži ocene</string>
+    <string name="colorOverlay">Prekrivanje barve</string>
     <string name="gradesAreHidden">Ocene za ta predmet niso vidne.</string>
 
     <string name="entireGroupSelected">Ta celotna skupina je že izbrana.</string>
@@ -925,8 +929,9 @@
     <string name="courseNickname">Vzdevek predmeta</string>
 
     <string name="notAvailableOffline">Med stanjem brez povezave funkcionalnost ni na voljo.</string>
-    <string name="editDashboard">Uredi predmete</string>
-
+    <string name="editDashboard">Uredi preglednico</string>
+    <string name="editDashboardDescriptor">Izberite, katere predmete želite videti na nadzorni plošči</string>
+    <string name="a11y_editYourCourseList">Uredi svoj seznam predmetov</string>
     <string name="dashboard">Preglednica</string>
     <string name="previous">Nazaj</string>
     <string name="pageNum" formatted="false">Stran %d od %d</string>
@@ -958,6 +963,8 @@
     <string name="declineCourseInvitation">Zavrni</string>
 
     <!-- File Strings -->
+    <string name="noFilesSubtextCourse">S tem predmetom ni povezana nobena datoteka.</string>
+    <string name="noFilesSubtextGroup">S to skupino ni povezana nobena datoteka.</string>
     <array name="file_size_units">
         <item>B</item>
         <item>kB</item>

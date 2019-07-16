@@ -79,6 +79,10 @@
     <string name="outOfPointsAbbreviatedFormatted">Av %s poeng</string>
     <string name="gradeExcused">Fritatt</string>
     <string name="finalGradeFormatted">Sluttvurdering: %s</string>
+    <!-- Student rubric tab -->
+    <string name="rubricCustomScore">Egendefinert resultat</string>
+    <string name="rubricEmptyMessage">Det er ingen vurderingskriterier for denne oppgaven</string>
+    <string name="rubricViewLongDescription">Vis lang beskrivelse</string>
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">Versjon:</string>
 
@@ -290,6 +294,7 @@
     <string name="allCourses">Alle fag</string>
     <string name="allGroups">Alle grupper</string>
     <string name="courseOptions">Fag-alternativer</string>
+    <string name="courseOptionsFormatted">Fagvalg for %s</string>
     <string name="editNickname">Rediger kallenavn</string>
     <string name="editCourseColor">Rediger fag-farge</string>
     <string name="open">Åpen</string>
@@ -381,6 +386,7 @@
     <string name="calendar">Kalender</string>
     <string name="bookmarks">Bokmerker</string>
     <string name="showGrades">Vis vurderinger</string>
+    <string name="colorOverlay">Fargeoverlegg</string>
     <string name="gradesAreHidden">Vurderinger er ikke synlig for dette faget.</string>
 
     <string name="entireGroupSelected">Hele gruppen er allerede valgt.</string>
@@ -923,8 +929,9 @@
     <string name="courseNickname">Kallenavn for fag</string>
 
     <string name="notAvailableOffline">Funksjonalitet utilgjengelig når du er offline</string>
-    <string name="editDashboard">Rediger fag</string>
-
+    <string name="editDashboard">Forandre oversikten</string>
+    <string name="editDashboardDescriptor">Velg hvilke fag du vil se på framsiden</string>
+    <string name="a11y_editYourCourseList">Forandre faglisten</string>
     <string name="dashboard">Oversikt</string>
     <string name="previous">Forrige</string>
     <string name="pageNum" formatted="false">Side %d av %d</string>
@@ -956,6 +963,8 @@
     <string name="declineCourseInvitation">Avslå</string>
 
     <!-- File Strings -->
+    <string name="noFilesSubtextCourse">Det finnes ingen filer knyttet til dette kurset.</string>
+    <string name="noFilesSubtextGroup">Det finnes ingen filer knyttet til denne gruppa.</string>
     <array name="file_size_units">
         <item>B</item>
         <item>KB</item>

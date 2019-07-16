@@ -41,10 +41,8 @@
     <string name="upload">Cargar</string>
     <string name="errorSendingMessage">Se produjo un error al enviar su mensaje. Inténtelo de nuevo.</string>
 
-    <string name="notificationChannelNameFileUploadsName">Notificaciones de carga de archivos</string>
-    <string name="notificationChannelNameFileUploadsDescription">Notificaciones de Canvas para cargas continuas de archivos.</string>
-
-
+    <string name="notificationChannelNameFileUploadsName">Cargar notificaciones</string>
+    <string name="notificationChannelNameFileUploadsDescription">Notificaciones de Canvas para cargas en curso.</string>
     <!-- Turn in Files -->
     <string name="chooseFileSource">Escoger archivo desde&#8230;</string>
     <string name="addFile">Agregar archivo</string>
@@ -101,10 +99,9 @@
     <string name="pleaseTryAgain">Permiso otorgado; intente nuevamente.</string>
     <string name="pickVideo">Seleccione un video</string>
 
-    <string name="assignmentSubmissionUpload">Cargando presentación para "%s"</string>
-    <string name="assignmentSubmissionError">No se pudo realizar la presentación para "%s"</string>
-    <string name="notificationChannelNameSubmissionUploadsName">Notificaciones de carga de presentaciones</string>
-    <string name="notificationChannelNameSubmissionUploadsDescription">Notificaciones de Canvas para cargas de presentaciones en curso.</string>
+    <string name="assignmentSubmissionUpload">Cargando presentación para %s</string>
+    <string name="assignmentSubmissionError">Falló la presentación para %s</string>
+    <string name="assignmentSubmissionComplete">Presentación correcta de %s</string>
     <!--Errors-->
     <string name="errorOccurred">Ha ocurrido un error inesperado.</string>
     <string name="serverError">Ocurrió un error del servidor.</string>

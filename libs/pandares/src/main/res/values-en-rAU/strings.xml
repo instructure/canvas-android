@@ -81,6 +81,8 @@
     <string name="finalGradeFormatted">Final Grade: %s</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Custom score</string>
+    <string name="rubricEmptyMessage">There is no rubric for this assignment</string>
+    <string name="rubricViewLongDescription">View long description</string>
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">Version:</string>
 
@@ -292,6 +294,7 @@
     <string name="allCourses">All Courses</string>
     <string name="allGroups">All Groups</string>
     <string name="courseOptions">Course Options</string>
+    <string name="courseOptionsFormatted">Course options for %s</string>
     <string name="editNickname">Edit nickname</string>
     <string name="editCourseColor">Edit course colour</string>
     <string name="open">Open</string>
@@ -383,6 +386,7 @@
     <string name="calendar">Calendar</string>
     <string name="bookmarks">Bookmarks</string>
     <string name="showGrades">Show Grades</string>
+    <string name="colorOverlay">Colour Overlay</string>
     <string name="gradesAreHidden">Marks are not visible for this course.</string>
 
     <string name="entireGroupSelected">This entire group has already been selected.</string>
@@ -925,8 +929,9 @@
     <string name="courseNickname">Course Nickname</string>
 
     <string name="notAvailableOffline">Functionality unavailable while offline</string>
-    <string name="editDashboard">Edit Courses</string>
-
+    <string name="editDashboard">Edit Dashboard</string>
+    <string name="editDashboardDescriptor">Select which courses you would like to see on the Dashboard</string>
+    <string name="a11y_editYourCourseList">Edit your course list</string>
     <string name="dashboard">Dashboard</string>
     <string name="previous">Previous</string>
     <string name="pageNum" formatted="false">Page %d of %d</string>
@@ -958,6 +963,8 @@
     <string name="declineCourseInvitation">Decline</string>
 
     <!-- File Strings -->
+    <string name="noFilesSubtextCourse">There are no files associated with this course.</string>
+    <string name="noFilesSubtextGroup">There are no files associated with this group.</string>
     <array name="file_size_units">
         <item>B</item>
         <item>KB</item>

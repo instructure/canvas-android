@@ -41,10 +41,8 @@
     <string name="upload">上傳</string>
     <string name="errorSendingMessage">發送訊息時發生錯誤。請重試。</string>
 
-    <string name="notificationChannelNameFileUploadsName">檔案上傳通知</string>
-    <string name="notificationChannelNameFileUploadsDescription">進行檔案上傳中的 Canvas 通知</string>
-
-
+    <string name="notificationChannelNameFileUploadsName">上傳通知</string>
+    <string name="notificationChannelNameFileUploadsDescription">持續上傳的 Canvas 通知。</string>
     <!-- Turn in Files -->
     <string name="chooseFileSource">從&#8230;選擇您的檔案</string>
     <string name="addFile">添加檔案</string>
@@ -101,10 +99,9 @@
     <string name="pleaseTryAgain">權限授予，請重試。</string>
     <string name="pickVideo">選取視頻</string>
 
-    <string name="assignmentSubmissionUpload">正在上傳 "%s" 的提交項目</string>
-    <string name="assignmentSubmissionError">"%s" 的提交項目失敗</string>
-    <string name="notificationChannelNameSubmissionUploadsName">提交項目上傳通知</string>
-    <string name="notificationChannelNameSubmissionUploadsDescription">持續上傳提交項目的 Canvas 通知</string>
+    <string name="assignmentSubmissionUpload">上傳 %s 的提交項目</string>
+    <string name="assignmentSubmissionError">%s 的提交項目提交失敗</string>
+    <string name="assignmentSubmissionComplete">成功提交 %s</string>
     <!--Errors-->
     <string name="errorOccurred">意外錯誤出現。</string>
     <string name="serverError">伺服器發生錯誤。</string>

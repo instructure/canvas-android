@@ -16,6 +16,7 @@
   -->
 
 <resources>
+
     <string name="action_settings">Asetukset</string>
     <string name="canvasLogo">Canvas-logo</string>
     <string name="email">Sähköposti</string>
@@ -117,6 +118,9 @@
     <string name="alarmNotSet">Hälytystä ei voitu määrittää. Yritä uudelleen.</string>
     <string name="could_not_route_course">Kurssin ilmoittautumista ei löydy.</string>
     <string name="could_not_route_assignment">Tehtävä ei löytynyt.</string>
+    <string name="could_not_route_announcement">Ilmoitusta ei löytynyt.</string>
+    <string name="could_not_route_event">Tapahtumaa ei löytynyt.</string>
+    <string name="could_not_route_account_notifications">Ilmoitusta ei löytynyt.</string>
     <string name="email_already_exists">Tätä sähköpostiosoitetta käyttävä käyttäjä on jo olemassa</string>
     <string name="password_reset_success">Salasanan palautusohjeet sisältävä sähköpostiviesti lähetetään.</string>
     <string name="password_reset_no_user">Ei löydy käyttäjiä kyseisellä sähköpostiosoitteella.</string>
@@ -224,4 +228,5 @@
     <string name="institutionAnnouncementUnavailable">Tämä ilmoitus on vanhentunut.</string>
     <string name="previousWeekBtn">edellisen viikon painike</string>
     <string name="nextWeekBtn">seuraavan viikon painike</string>
+    <string name="filesNotSupported">Tiedostoja ei tueta parhaillaan</string>
 </resources>

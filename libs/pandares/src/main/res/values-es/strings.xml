@@ -81,6 +81,8 @@
     <string name="finalGradeFormatted">Calificación final: %s</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Puntaje personalizado</string>
+    <string name="rubricEmptyMessage">No hay ninguna rúbrica para esta tarea</string>
+    <string name="rubricViewLongDescription">Ver una descripción detallada</string>
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">Versión:</string>
 
@@ -292,6 +294,7 @@
     <string name="allCourses">Todos los cursos</string>
     <string name="allGroups">Todos los grupos</string>
     <string name="courseOptions">Opciones del curso</string>
+    <string name="courseOptionsFormatted">Opciones del curso para %s</string>
     <string name="editNickname">Editar apodo</string>
     <string name="editCourseColor">Editar el color del curso</string>
     <string name="open">Abierto</string>
@@ -383,6 +386,7 @@
     <string name="calendar">Calendario</string>
     <string name="bookmarks">Favoritos</string>
     <string name="showGrades">Mostrar calificaciones</string>
+    <string name="colorOverlay">Superposición de colores</string>
     <string name="gradesAreHidden">Las calificaciones no son visibles para este curso.</string>
 
     <string name="entireGroupSelected">Todo este grupo ya ha sido seleccionado.</string>
@@ -925,8 +929,9 @@
     <string name="courseNickname">Apodo del curso</string>
 
     <string name="notAvailableOffline">La funcionalidad no está disponible cuando no está en línea</string>
-    <string name="editDashboard">Editar cursos</string>
-
+    <string name="editDashboard">Editar Tablero</string>
+    <string name="editDashboardDescriptor">Seleccione los cursos que desea ver en el Tablero</string>
+    <string name="a11y_editYourCourseList">Editar su lista de cursos</string>
     <string name="dashboard">Tablero</string>
     <string name="previous">Anterior</string>
     <string name="pageNum" formatted="false">Página %d de %d</string>
@@ -958,6 +963,8 @@
     <string name="declineCourseInvitation">Rechazar</string>
 
     <!-- File Strings -->
+    <string name="noFilesSubtextCourse">No hay archivos asociados con este curso.</string>
+    <string name="noFilesSubtextGroup">No hay archivos asociados con este grupo.</string>
     <array name="file_size_units">
         <item>B</item>
         <item>KB</item>

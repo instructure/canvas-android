@@ -41,10 +41,8 @@
     <string name="upload">アップロード</string>
     <string name="errorSendingMessage">あなたのメッセージを送信する際にエラーが発生しました。再度試してください。</string>
 
-    <string name="notificationChannelNameFileUploadsName">ファイルアップロード通知</string>
-    <string name="notificationChannelNameFileUploadsDescription">現在進行中のファイルアップロード Canvas 通知。</string>
-
-
+    <string name="notificationChannelNameFileUploadsName">アップロード通知</string>
+    <string name="notificationChannelNameFileUploadsDescription">アップロード中の Canvas 通知。</string>
     <!-- Turn in Files -->
     <string name="chooseFileSource">ファイルを&#8230;から選択</string>
     <string name="addFile">ファイルを追加</string>
@@ -101,10 +99,9 @@
     <string name="pleaseTryAgain">許可されました。再試行してください。</string>
     <string name="pickVideo">ビデオを選択</string>
 
-    <string name="assignmentSubmissionUpload">「%s」 用提出物をアップロード</string>
-    <string name="assignmentSubmissionError">「%s」の提出に失敗しました</string>
-    <string name="notificationChannelNameSubmissionUploadsName">提出アップロード通知</string>
-    <string name="notificationChannelNameSubmissionUploadsDescription">継続中の提出アップロードに関する Canvas 通知</string>
+    <string name="assignmentSubmissionUpload">%s の提出をアップロードしています</string>
+    <string name="assignmentSubmissionError">%s の提出に失敗しました</string>
+    <string name="assignmentSubmissionComplete">%s の提出に成功しました</string>
     <!--Errors-->
     <string name="errorOccurred">予期しないエラーが発生しました。</string>
     <string name="serverError">サーバーエラーが発生しました。</string>

@@ -34,7 +34,7 @@
     <string name="signIntoCanvasNetwork">试图登录到Canvas的网络？</string>
     <string name="remove">移除</string>
     <string name="exampleURLSimple">myschool.instructure.com</string>
-    <string name="userId">用户 ID</string>
+    <string name="userId">用户ID</string>
     <string name="domain">域</string>
 
     <string name="actAsUser">临时代理用户</string>
@@ -114,7 +114,7 @@
     <string name="versionNum">版本号</string>
     <string name="scrollInstructions">滚动以查看所有详情</string>
 
-    <string name="masqueradeErrorUserId">您必须输入用户 ID。</string>
+    <string name="masqueradeErrorUserId">您必须输入用户ID。</string>
     <string name="masqueradeErrorDomain">您必须输入有效的域。</string>
     <string name="masqueradeError">尝试伪装时出错。</string>
     <string name="masqueradeInfo">\"临时代理\"的本质是作为该用户不使用密码进行登录。您将能够像该用户一样执行该用户可以执行的任何操作，并且从其他用户看来，如同是由该用户在执行这些操作。但是，审计日志记录您是代表该用户执行操作的人。</string>

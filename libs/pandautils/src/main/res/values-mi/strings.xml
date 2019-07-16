@@ -41,10 +41,8 @@
     <string name="upload">tukuake</string>
     <string name="errorSendingMessage">He hapa i mahi i te wā e tuku ana i tō karere Tēnā koa ngana anō.</string>
 
-    <string name="notificationChannelNameFileUploadsName">Ngā Kōnae Tukuake Whakamōhiotanga</string>
-    <string name="notificationChannelNameFileUploadsDescription">Ngā Canvas whakamōhiotanga mō ngā kōnae tukuake e haere tonu ana.</string>
-
-
+    <string name="notificationChannelNameFileUploadsName">Kaweake ngā whakamōhiotanga</string>
+    <string name="notificationChannelNameFileUploadsDescription">Canvas whakamōhitanga mo ngā kaweake e haere tonu ana</string>
     <!-- Turn in Files -->
     <string name="chooseFileSource">Tīpako kōnae mai&#8230;</string>
     <string name="addFile">Tāpiri Kōnae</string>
@@ -100,10 +98,9 @@
     <string name="pleaseTryAgain">Kua whakāetia, tēnā koa ngana anō</string>
     <string name="pickVideo">Tīpako he Ataata</string>
 
-    <string name="assignmentSubmissionUpload">E tikiake ana tāpaetanga mō%s</string>
-    <string name="assignmentSubmissionError">I rahua te tapaetanga mo%s</string>
-    <string name="notificationChannelNameSubmissionUploadsName">Tapaetanga Tikiake Whakamōhiotanga</string>
-    <string name="notificationChannelNameSubmissionUploadsDescription">Canvas whaakmōhio mo ngā tapaetanga tikiake e haere tonu ana</string>
+    <string name="assignmentSubmissionUpload">Kaweake ana nghā whakamōhitanga mo %s</string>
+    <string name="assignmentSubmissionError">I hapa te tapaetanga mo %s</string>
+    <string name="assignmentSubmissionComplete">I pai te tuku %s</string>
     <!--Errors-->
     <string name="errorOccurred">He hapa ohorere i puta.</string>
     <string name="serverError">He hapa tūmau i puta</string>
