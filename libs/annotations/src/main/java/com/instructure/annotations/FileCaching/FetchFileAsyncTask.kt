@@ -19,10 +19,12 @@ package com.instructure.annotations.FileCaching
 
 import android.os.AsyncTask
 import android.util.Log
+import android.webkit.CookieManager
+import com.instructure.annotations.FileCaching.FetchFileAsyncTask.FetchFileCallback
 import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.utils.ContextKeeper
-import com.instructure.annotations.FileCaching.FetchFileAsyncTask.FetchFileCallback
+import com.instructure.canvasapi2.utils.validOrNull
 import okhttp3.Request
 import okio.Okio
 import java.io.File
@@ -75,10 +77,16 @@ class FetchFileAsyncTask private constructor(
 
             // We don't need the token information to download the file
             val params = RestParams(shouldIgnoreToken = true)
-            val request = Request.Builder()
+            val requestBuilder = Request.Builder()
                     .url(downloadUrl)
                     .tag(params)
-                    .build()
+
+            // Use the cookies cached for this URL, if available
+            CookieManager.getInstance().getCookie(downloadUrl)?.validOrNull()?.let {
+                requestBuilder.addHeader("Cookie", it)
+            }
+
+            val request = requestBuilder.build()
 
             val response = client
                     .newCall(request)

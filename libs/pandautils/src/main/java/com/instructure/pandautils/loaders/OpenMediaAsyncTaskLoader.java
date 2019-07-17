@@ -283,10 +283,12 @@ public class OpenMediaAsyncTaskLoader extends AsyncTaskLoader<OpenMediaAsyncTask
             final String connectedUrl = connection.getURL().toString();
             // When only the url is specified in the bundle arguments, mimeType and filename are null or empty.
             if (TextUtils.isEmpty(mimeType)) {
-                mimeType = connection.getContentType();
+                mimeType = connection.getContentType(); // Gets content type from headers
                 if (mimeType == null) {
-                    throw new IOException();
+                    // Gets content type from url query param
+                    mimeType = Uri.parse(url).getQueryParameter("content_type");
                 }
+                if (mimeType == null) throw new IOException();
             }
             Log.d(Const.OPEN_MEDIA_ASYNC_TASK_LOADER_LOG, "mimeType: " + mimeType);
             if (TextUtils.isEmpty(filename)) {
@@ -311,6 +313,7 @@ public class OpenMediaAsyncTaskLoader extends AsyncTaskLoader<OpenMediaAsyncTask
                 }
             }
         }
+        connection.disconnect();
         return uri;
     }
 
