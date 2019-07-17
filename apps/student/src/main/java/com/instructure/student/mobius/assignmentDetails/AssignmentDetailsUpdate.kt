@@ -43,7 +43,8 @@ class AssignmentDetailsUpdate : UpdateInit<AssignmentDetailsModel, AssignmentDet
             Next.dispatch(setOf(AssignmentDetailsEffect.ShowSubmissionView(model.assignmentId, model.course)))
         }
         AssignmentDetailsEvent.ViewUploadStatusClicked -> {
-            Next.dispatch(setOf(AssignmentDetailsEffect.ShowUploadStatusView(model.assignmentId, model.course)))
+            // Force non null, we should only have a click if there is a submission ID
+            Next.dispatch(setOf(AssignmentDetailsEffect.ShowUploadStatusView(model.databaseSubmissionId!!)))
         }
         AssignmentDetailsEvent.PullToRefresh -> {
             Next.next(model.copy(isLoading = true), setOf(AssignmentDetailsEffect.LoadData(model.assignmentId, model.course.id, true)))
@@ -56,7 +57,8 @@ class AssignmentDetailsUpdate : UpdateInit<AssignmentDetailsModel, AssignmentDet
                 isLoading = false,
                 assignmentResult = event.assignmentResult,
                 isArcEnabled = event.isArcEnabled,
-                ltiTool = event.ltiTool
+                ltiTool = event.ltiTool,
+                databaseSubmissionId = event.submissionId
             ))
         }
         is AssignmentDetailsEvent.SubmissionTypeClicked -> {

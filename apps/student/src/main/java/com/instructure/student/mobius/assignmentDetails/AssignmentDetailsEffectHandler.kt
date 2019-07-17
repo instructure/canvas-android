@@ -16,6 +16,7 @@
  */
 package com.instructure.student.mobius.assignmentDetails
 
+import android.content.Context
 import com.instructure.canvasapi2.managers.AssignmentManager
 import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.Assignment
@@ -23,18 +24,21 @@ import com.instructure.canvasapi2.models.DiscussionTopic
 import com.instructure.canvasapi2.utils.*
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
 import com.instructure.canvasapi2.utils.weave.awaitApiResponse
+import com.instructure.student.db.Db
+import com.instructure.student.db.getInstance
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsView
 import com.instructure.student.mobius.assignmentDetails.ui.SubmissionTypesVisibilities
 import com.instructure.student.mobius.common.ui.EffectHandler
 import com.instructure.student.util.isArcEnabled
 import kotlinx.coroutines.launch
+import org.threeten.bp.OffsetDateTime
 
-class AssignmentDetailsEffectHandler : EffectHandler<AssignmentDetailsView, AssignmentDetailsEvent, AssignmentDetailsEffect>() {
+class AssignmentDetailsEffectHandler(val context: Context) : EffectHandler<AssignmentDetailsView, AssignmentDetailsEvent, AssignmentDetailsEffect>() {
     override fun accept(effect: AssignmentDetailsEffect) {
         when (effect) {
             is AssignmentDetailsEffect.ShowSubmitDialogView -> view?.showSubmitDialogView(effect.assignment, effect.course.id, getSubmissionTypesVisibilities(effect.assignment, effect.isArcEnabled))
             is AssignmentDetailsEffect.ShowSubmissionView -> view?.showSubmissionView(effect.assignmentId, effect.course)
-            is AssignmentDetailsEffect.ShowUploadStatusView -> view?.showUploadStatusView(effect.assignmentId, effect.course)
+            is AssignmentDetailsEffect.ShowUploadStatusView -> view?.showUploadStatusView(effect.submissionId)
             is AssignmentDetailsEffect.LoadData -> {
                 loadData(effect)
             }
@@ -90,6 +94,23 @@ class AssignmentDetailsEffectHandler : EffectHandler<AssignmentDetailsView, Assi
                 }
             }
 
+            val db = Db.getInstance(context)
+            val dbSubmission = db.submissionQueries.getSubmissionsByAssignmentId(
+                effect.assignmentId,
+                ApiPrefs.user!!.id
+            ).executeAsList().lastOrNull()
+
+            val apiSubmission = result.dataOrNull?.submission
+
+            val databaseSubmissionId = when {
+                dbSubmission == null -> null
+                apiSubmission == null -> dbSubmission.id
+                apiSubmission.submittedAt == null -> dbSubmission.id
+                dbSubmission.lastActivityDate == null -> null
+                OffsetDateTime.parse(apiSubmission.submittedAt.toApiString()).isBefore(dbSubmission.lastActivityDate) -> dbSubmission.id
+                else -> null
+            }
+
             // Determine if we need to retrieve an authenticated LTI URL based on whether this assignment accepts external tool submissions
             val assignmentUrl = result.dataOrNull?.url
             val ltiTool = if (assignmentUrl != null && result.dataOrNull?.getSubmissionTypes()?.contains(Assignment.SubmissionType.EXTERNAL_TOOL) == true)
@@ -101,7 +122,7 @@ class AssignmentDetailsEffectHandler : EffectHandler<AssignmentDetailsView, Assi
                 effect.courseId.isArcEnabled()
             } else false
 
-            consumer.accept(AssignmentDetailsEvent.DataLoaded(result, isArcEnabled, ltiTool))
+            consumer.accept(AssignmentDetailsEvent.DataLoaded(result, isArcEnabled, ltiTool, databaseSubmissionId))
         }
     }
 
