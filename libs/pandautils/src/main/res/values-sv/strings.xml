@@ -41,10 +41,8 @@
     <string name="upload">Ladda upp</string>
     <string name="errorSendingMessage">Ett fel uppstod när du skickade ditt meddelande. Försök igen.</string>
 
-    <string name="notificationChannelNameFileUploadsName">Fil-uppladdningsmeddelanden</string>
-    <string name="notificationChannelNameFileUploadsDescription">Canvas-meddelanden för pågående fil-uppladdningar.</string>
-
-
+    <string name="notificationChannelNameFileUploadsName">Ladda upp meddelanden</string>
+    <string name="notificationChannelNameFileUploadsDescription">Canvas-meddelanden för pågående uppladdningar.</string>
     <!-- Turn in Files -->
     <string name="chooseFileSource">Väj fil från&#8230;</string>
     <string name="addFile">Lägg till fil</string>
@@ -101,10 +99,9 @@
     <string name="pleaseTryAgain">Kräver tillstånd, vänligen försök igen.</string>
     <string name="pickVideo">Välj en video</string>
 
-    <string name="assignmentSubmissionUpload">Laddar upp inlämningar för "%s"</string>
-    <string name="assignmentSubmissionError">Inlämningen för "%s" misslyckades</string>
-    <string name="notificationChannelNameSubmissionUploadsName">Uppladdningsmeddelanden för inlämning</string>
-    <string name="notificationChannelNameSubmissionUploadsDescription">Canvas-meddelanden för pågående uppladdningar av inlämning.</string>
+    <string name="assignmentSubmissionUpload">Laddar upp inlämningar för %s</string>
+    <string name="assignmentSubmissionError">Inlämning kunde inte genomföras för %s</string>
+    <string name="assignmentSubmissionComplete">Inlämning genomförd %s</string>
     <!--Errors-->
     <string name="errorOccurred">Ett oväntat fel uppstod.</string>
     <string name="serverError">Ett serverfel uppstod.</string>

@@ -83,6 +83,8 @@
     <string name="finalGradeFormatted">Итоговая оценка: %s</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Персонализированная оценка</string>
+    <string name="rubricEmptyMessage">Нет раздела для этого задания</string>
+    <string name="rubricViewLongDescription">Просмотреть длинное описание</string>
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">Версия:</string>
 
@@ -300,6 +302,7 @@
     <string name="allCourses">Все курсы</string>
     <string name="allGroups">Все группы</string>
     <string name="courseOptions">Опции курсов</string>
+    <string name="courseOptionsFormatted">Опции курсов для %s</string>
     <string name="editNickname">Редактировать псевдоним</string>
     <string name="editCourseColor">Редактировать цвет курса</string>
     <string name="open">Открыть</string>
@@ -395,6 +398,7 @@
     <string name="calendar">Календарь</string>
     <string name="bookmarks">Закладки</string>
     <string name="showGrades">Показать оценки</string>
+    <string name="colorOverlay">Наложение цветов</string>
     <string name="gradesAreHidden">Оценки не видны для этого курса.</string>
 
     <string name="entireGroupSelected">Вся эта группа уже была выбрана.</string>
@@ -942,8 +946,9 @@
     <string name="courseNickname">Прозвище курса</string>
 
     <string name="notAvailableOffline">Функциональность недоступна в автономном режиме</string>
-    <string name="editDashboard">Редактировать курсы</string>
-
+    <string name="editDashboard">Редактировать информационную панель</string>
+    <string name="editDashboardDescriptor">Выберите, какие курсы вы хотели бы видеть на информационной панели</string>
+    <string name="a11y_editYourCourseList">Редактировать свой список курсов</string>
     <string name="dashboard">Информационная панель</string>
     <string name="previous">Предыдущий</string>
     <string name="pageNum" formatted="false">Страница %d из %d</string>
@@ -975,6 +980,8 @@
     <string name="declineCourseInvitation">Снизить</string>
 
     <!-- File Strings -->
+    <string name="noFilesSubtextCourse">Отсутствуют файлы, связанные с этим курсом.</string>
+    <string name="noFilesSubtextGroup">Отсутствуют файлы, связанные с этой группой.</string>
     <array name="file_size_units">
         <item>B</item>
         <item>кб</item>

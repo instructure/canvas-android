@@ -81,6 +81,8 @@
     <string name="finalGradeFormatted">Nòt Final: %s</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Nòt pèsonalize</string>
+    <string name="rubricEmptyMessage">Pa gen ribrik pou devwa sa a</string>
+    <string name="rubricViewLongDescription">Afiche tout deskripsyon</string>
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">Vèsyon:</string>
 
@@ -292,6 +294,7 @@
     <string name="allCourses">Tout Kou</string>
     <string name="allGroups">Tout Gwoup</string>
     <string name="courseOptions">Opsyon Kou</string>
+    <string name="courseOptionsFormatted">Opsyon kou pou %s</string>
     <string name="editNickname">Modifye non jwèt</string>
     <string name="editCourseColor">Modifye koulè kou</string>
     <string name="open">Ouvri</string>
@@ -383,6 +386,7 @@
     <string name="calendar">Kalandriye</string>
     <string name="bookmarks">Preferans</string>
     <string name="showGrades">Afiche Klas</string>
+    <string name="colorOverlay">Sipèpozisyon Koulè</string>
     <string name="gradesAreHidden">Nòt yo pa vizib pou kou sa a.</string>
 
     <string name="entireGroupSelected">Tout gwoup la te seleksyone deja.</string>
@@ -925,8 +929,9 @@
     <string name="courseNickname">Ti Non Jwèt Kou a</string>
 
     <string name="notAvailableOffline">Fonksyonalite pa disponib lè w pa gen koneksyon</string>
-    <string name="editDashboard">Modifye Kou</string>
-
+    <string name="editDashboard">Modifye Tablo</string>
+    <string name="editDashboardDescriptor">Seleksyone ki kou ou ta renmen wè nan Tablo a</string>
+    <string name="a11y_editYourCourseList">Modifye lis kou w la</string>
     <string name="dashboard">Tablo</string>
     <string name="previous">Anvan</string>
     <string name="pageNum" formatted="false">Paj %d sou %d</string>
@@ -958,6 +963,8 @@
     <string name="declineCourseInvitation">Refize</string>
 
     <!-- File Strings -->
+    <string name="noFilesSubtextCourse">Pa gen fichye ki asosye ak kou sa a.</string>
+    <string name="noFilesSubtextGroup">Pa gen fichye ki asosye ak gwoup sa a.</string>
     <array name="file_size_units">
         <item>B</item>
         <item>KB</item>

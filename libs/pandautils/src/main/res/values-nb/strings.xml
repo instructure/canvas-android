@@ -41,10 +41,8 @@
     <string name="upload">Last opp</string>
     <string name="errorSendingMessage">Feil ved sending av melding. Vennligst prøv igjen.</string>
 
-    <string name="notificationChannelNameFileUploadsName">Filopplastingingsvarsler</string>
-    <string name="notificationChannelNameFileUploadsDescription">Canvas-varsler for pågående filopplastinger.</string>
-
-
+    <string name="notificationChannelNameFileUploadsName">Varslinger for opplastinger</string>
+    <string name="notificationChannelNameFileUploadsDescription">Canvas-varslinger for pågående opplastinger.</string>
     <!-- Turn in Files -->
     <string name="chooseFileSource">Velg fil fra&#8230;</string>
     <string name="addFile">Legg til fil</string>
@@ -101,10 +99,9 @@
     <string name="pleaseTryAgain">Tillatelse gitt, prøv igjen.</string>
     <string name="pickVideo">Velg en video</string>
 
-    <string name="assignmentSubmissionUpload">Laster opp innlevering for «%s»</string>
-    <string name="assignmentSubmissionError">Mislykket innlevering for «%s»</string>
-    <string name="notificationChannelNameSubmissionUploadsName">Varslinger for opplastet innlevering</string>
-    <string name="notificationChannelNameSubmissionUploadsDescription">Canvas varslinger for pågående opplastende innlevering.</string>
+    <string name="assignmentSubmissionUpload">Last opp innlevering for %s</string>
+    <string name="assignmentSubmissionError">Kunne ikke innlevere for %s</string>
+    <string name="assignmentSubmissionComplete">Innlevering fullført %s</string>
     <!--Errors-->
     <string name="errorOccurred">Det oppsto en uventet feil.</string>
     <string name="serverError">En serverfeil har oppstått.</string>

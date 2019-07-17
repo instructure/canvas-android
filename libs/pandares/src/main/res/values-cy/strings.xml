@@ -81,6 +81,8 @@
     <string name="finalGradeFormatted">Gradd Derfynol: %s</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Sgôr personol</string>
+    <string name="rubricEmptyMessage">Does dim cyfarwyddyd sgorio ar gyfer yr aseiniad hwn</string>
+    <string name="rubricViewLongDescription">Gweld disgrifiad hir</string>
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">Fersiwn:</string>
 
@@ -292,6 +294,7 @@
     <string name="allCourses">Pob Cwrs</string>
     <string name="allGroups">Pob Grŵp</string>
     <string name="courseOptions">Opsiynau Cwrs</string>
+    <string name="courseOptionsFormatted">Opsiynau cwrs ar gyfer %s</string>
     <string name="editNickname">Golygu Llysenw</string>
     <string name="editCourseColor">Golygu Lliw Cwrs</string>
     <string name="open">Agor</string>
@@ -383,6 +386,7 @@
     <string name="calendar">Calendr</string>
     <string name="bookmarks">Nodau tudalen</string>
     <string name="showGrades">Dangos Graddau</string>
+    <string name="colorOverlay">Gorchudd Lliw</string>
     <string name="gradesAreHidden">Dydy graddau ddim yn weladwy ar gyfer y cwrs hwn.</string>
 
     <string name="entireGroupSelected">Mae’r grŵp hwn wedi cael ei ddewis yn barod</string>
@@ -925,8 +929,9 @@
     <string name="courseNickname">Llysenw Cwrs</string>
 
     <string name="notAvailableOffline">Swyddogaethau ddim ar gael all-lein</string>
-    <string name="editDashboard">Golygu Cyrsiau</string>
-
+    <string name="editDashboard">Golygu Dangosfwrdd</string>
+    <string name="editDashboardDescriptor">Dewiswch y cyrsiau yr hoffech eu gweld ar y Dangosfwrdd</string>
+    <string name="a11y_editYourCourseList">Golygu eich rhestr cyrsiau</string>
     <string name="dashboard">Dangosfwrdd</string>
     <string name="previous">Blaenorol</string>
     <string name="pageNum" formatted="false">Tudalen %d o %d</string>
@@ -958,6 +963,8 @@
     <string name="declineCourseInvitation">Gwrthod</string>
 
     <!-- File Strings -->
+    <string name="noFilesSubtextCourse">Does dim ffeiliau\'n gysylltiedig â’r cwrs hwn.</string>
+    <string name="noFilesSubtextGroup">Does dim ffeiliau’n gysylltiedig â’r grŵp hwn.</string>
     <array name="file_size_units">
         <item>B</item>
         <item>KB</item>

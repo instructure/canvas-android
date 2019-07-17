@@ -84,6 +84,8 @@
     <string name="finalGradeFormatted">الدرجة النهائية: %s</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">نتيجة مخصصة</string>
+    <string name="rubricEmptyMessage">لا يوجد أي مقياس تقييم لهذه المهمة</string>
+    <string name="rubricViewLongDescription">عرض وصف طويل</string>
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">الإصدار:</string>
 
@@ -307,6 +309,7 @@
     <string name="allCourses">جميع المساقات</string>
     <string name="allGroups">جميع المجموعات</string>
     <string name="courseOptions">خيارات المساق</string>
+    <string name="courseOptionsFormatted">خيارات المساق لـ %s</string>
     <string name="editNickname">تحرير اللقب</string>
     <string name="editCourseColor">تحرير لون المساق</string>
     <string name="open">مفتوح</string>
@@ -406,6 +409,7 @@
     <string name="calendar">التقويم</string>
     <string name="bookmarks">الإشارات المرجعية</string>
     <string name="showGrades">عرض الدرجات</string>
+    <string name="colorOverlay">تراكب لوني</string>
     <string name="gradesAreHidden">لا يمكن رؤية درجات هذا المساق.</string>
 
     <string name="entireGroupSelected">لقد تم بالفعل تحديد هذه المجموعة بأكملها.</string>
@@ -960,8 +964,9 @@
     <string name="courseNickname">لقب المساق</string>
 
     <string name="notAvailableOffline">ميزة غير متوفرة دون الاتصال بالإنترنت</string>
-    <string name="editDashboard">تحرير مساقات</string>
-
+    <string name="editDashboard">تحرير لوحة المعلومات</string>
+    <string name="editDashboardDescriptor">حدد أي مساقات تود أن تراها على لوحة المعلومات</string>
+    <string name="a11y_editYourCourseList">تحرير قائمة المساق</string>
     <string name="dashboard">لوحة المعلومات</string>
     <string name="previous">السابق</string>
     <string name="pageNum" formatted="false">صفحة %d من %d</string>
@@ -993,6 +998,8 @@
     <string name="declineCourseInvitation">رفض</string>
 
     <!-- File Strings -->
+    <string name="noFilesSubtextCourse">لا توجد ملفات مقترنة بهذا المساق.</string>
+    <string name="noFilesSubtextGroup">لا توجد ملفات مقترنة بهذه المجموعة.</string>
     <array name="file_size_units">
         <item>بايت</item>
         <item>كيلوبايت</item>

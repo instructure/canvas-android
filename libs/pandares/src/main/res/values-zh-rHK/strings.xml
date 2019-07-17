@@ -80,6 +80,8 @@
     <string name="finalGradeFormatted">最終評分：%s</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">自訂分數</string>
+    <string name="rubricEmptyMessage">此作業沒有評分標準</string>
+    <string name="rubricViewLongDescription">檢視完整說明</string>
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">版本：</string>
 
@@ -288,6 +290,7 @@
     <string name="allCourses">所有課程</string>
     <string name="allGroups">所有群組</string>
     <string name="courseOptions">課程選項</string>
+    <string name="courseOptionsFormatted">%s 的課程選項</string>
     <string name="editNickname">編輯暱稱</string>
     <string name="editCourseColor">編輯課程顏色</string>
     <string name="open">打開</string>
@@ -377,6 +380,7 @@
     <string name="calendar">行事曆</string>
     <string name="bookmarks">書籤</string>
     <string name="showGrades">顯示成績</string>
+    <string name="colorOverlay">顏色覆蓋</string>
     <string name="gradesAreHidden">本課程評分不可見。</string>
 
     <string name="entireGroupSelected">整個群組已被選中。</string>
@@ -916,8 +920,9 @@
     <string name="courseNickname">課程暱稱</string>
 
     <string name="notAvailableOffline">離線功能不可用</string>
-    <string name="editDashboard">編輯課程</string>
-
+    <string name="editDashboard">編輯控制面板</string>
+    <string name="editDashboardDescriptor">選擇要在控制面板上查看哪些課程。</string>
+    <string name="a11y_editYourCourseList">編輯您的課程清單</string>
     <string name="dashboard">控制面板</string>
     <string name="previous">上一個</string>
     <string name="pageNum" formatted="false">第 %d 頁，共 %d 頁</string>
@@ -949,6 +954,8 @@
     <string name="declineCourseInvitation">拒絕</string>
 
     <!-- File Strings -->
+    <string name="noFilesSubtextCourse">沒有與此課程關聯的檔案。</string>
+    <string name="noFilesSubtextGroup">沒有與此群組關聯的檔案。</string>
     <array name="file_size_units">
         <item>B</item>
         <item>KB</item>

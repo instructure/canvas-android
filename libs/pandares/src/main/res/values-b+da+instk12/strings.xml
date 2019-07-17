@@ -79,6 +79,10 @@
     <string name="outOfPointsAbbreviatedFormatted">Ud af %s point</string>
     <string name="gradeExcused">Undskyldt</string>
     <string name="finalGradeFormatted">Endelig vurdering: %s</string>
+    <!-- Student rubric tab -->
+    <string name="rubricCustomScore">Brugerdefineret resultat</string>
+    <string name="rubricEmptyMessage">Der er ingen vurderingskriterier til denne opgave</string>
+    <string name="rubricViewLongDescription">Se lang beskrivelse</string>
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">Version:</string>
 
@@ -290,6 +294,7 @@
     <string name="allCourses">Alle fag</string>
     <string name="allGroups">Alle grupper</string>
     <string name="courseOptions">Fagindstillinger</string>
+    <string name="courseOptionsFormatted">Fagindstillinger for %s</string>
     <string name="editNickname">Rediger kaldenavn</string>
     <string name="editCourseColor">Rediger fagets farve</string>
     <string name="open">Åben</string>
@@ -381,6 +386,7 @@
     <string name="calendar">Kalender</string>
     <string name="bookmarks">Bogmærker</string>
     <string name="showGrades">Vis vurderinger</string>
+    <string name="colorOverlay">Farve overlag</string>
     <string name="gradesAreHidden">Vurderinger er ikke synlige for dette fag.</string>
 
     <string name="entireGroupSelected">Hele denne gruppe er allerede valgt.</string>
@@ -923,8 +929,9 @@
     <string name="courseNickname">Fagets kaldenavn</string>
 
     <string name="notAvailableOffline">Funktionalitet ikke tilgængelig mens offline</string>
-    <string name="editDashboard">Rediger fag</string>
-
+    <string name="editDashboard">Rediger oversigt</string>
+    <string name="editDashboardDescriptor">Vælg, hvilke fag du vil se i oversigten</string>
+    <string name="a11y_editYourCourseList">Rediger din fagliste</string>
     <string name="dashboard">Oversigt</string>
     <string name="previous">Forrige</string>
     <string name="pageNum" formatted="false">Side %d af %d</string>
@@ -956,6 +963,8 @@
     <string name="declineCourseInvitation">Afvis</string>
 
     <!-- File Strings -->
+    <string name="noFilesSubtextCourse">Der er ingen filer associeret med dette fag.</string>
+    <string name="noFilesSubtextGroup">Der er ingen filer associeret med denne gruppe.</string>
     <array name="file_size_units">
         <item>B</item>
         <item>KB</item>

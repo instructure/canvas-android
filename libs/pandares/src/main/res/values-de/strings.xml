@@ -81,6 +81,8 @@
     <string name="finalGradeFormatted">Gesamtnote: %s</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Benutzerdefinierte Punktzahl</string>
+    <string name="rubricEmptyMessage">Für diese Aufgabe gibt es kein Bewertungsschema</string>
+    <string name="rubricViewLongDescription">Lange Beschreibung anzeigen</string>
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">Version:</string>
 
@@ -292,6 +294,7 @@
     <string name="allCourses">Alle Kurse</string>
     <string name="allGroups">Alle Gruppen</string>
     <string name="courseOptions">Kursoptionen</string>
+    <string name="courseOptionsFormatted">Kursoptionen für %s</string>
     <string name="editNickname">Spitznamen ändern</string>
     <string name="editCourseColor">Kursfarbe ändern</string>
     <string name="open">Offen</string>
@@ -383,6 +386,7 @@
     <string name="calendar">Kalender</string>
     <string name="bookmarks">Lesezeichen</string>
     <string name="showGrades">Noten anzeigen</string>
+    <string name="colorOverlay">Farbüberlagerung</string>
     <string name="gradesAreHidden">Für diesen Kurs sind die Noten nicht sichtbar.</string>
 
     <string name="entireGroupSelected">Diese gesamte Gruppe wurde bereits ausgewählt.</string>
@@ -925,8 +929,9 @@
     <string name="courseNickname">Spitzname des Kurses</string>
 
     <string name="notAvailableOffline">Diese Funktionalität ist im Offline-Betrieb nicht verfügbar</string>
-    <string name="editDashboard">Kurse bearbeiten</string>
-
+    <string name="editDashboard">Dashboard bearbeiten</string>
+    <string name="editDashboardDescriptor">Wählen Sie aus, welche Kurse Sie auf dem Dashboard sehen möchten.</string>
+    <string name="a11y_editYourCourseList">Bearbeiten Sie Ihre Kursliste</string>
     <string name="dashboard">Dashboard</string>
     <string name="previous">Vorherige</string>
     <string name="pageNum" formatted="false">Seite %d von %d</string>
@@ -958,6 +963,8 @@
     <string name="declineCourseInvitation">Ablehnen</string>
 
     <!-- File Strings -->
+    <string name="noFilesSubtextCourse">Mit diesem Kurs sind keine Dateien verknüpft.</string>
+    <string name="noFilesSubtextGroup">Mit dieser Gruppe sind keine Dateien verknüpft.</string>
     <array name="file_size_units">
         <item>B</item>
         <item>KB</item>

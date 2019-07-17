@@ -16,6 +16,7 @@
   ~
   -->
 <resources>
+
     <string name="noFilesFound">Tiedostoja ei löytynyt</string>
     <string name="searchFilesHint">Tiedostojen etsiminen</string>
     <string name="fileSearchInstructions">Syötä hakutermi, jossa on vähintään kolme merkkiä</string>
@@ -33,6 +34,54 @@
     <string name="selectedListItem">Valittu: %s</string>
 
     <!-- Student Strings -->
+    <!-- Student Assignment Details -->
+    <string name="assignmentDetails">Tehtävän tiedot</string>
+    <string name="submission_types">Lähetystyypit</string>
+    <string name="noAssignmentDescriptionStudent">Ei sisältöä</string>
+    <string name="dueLabel">Määräpäivä</string>
+    <string name="submissionStatusSuccessTitle">Lähetetty onnistuneesti!</string>
+    <string name="submissionStatusSuccessSubtitle">Lähetyksesi osoittaa nyt arvostelua</string>
+    <string name="submissionStatusUploadingTitle">Lähetystä ladataan...</string>
+    <string name="submissionStatusUploadingSubtitle">Napauta tarkastellaksesi edistymistä</string>
+    <string name="submissionStatusFailedTitle">Lähetys epäonnistui</string>
+    <string name="submissionStatusFailedSubtitle">Napauta tarkastellaksesi tietoja</string>
+    <string name="submissionAndRubric">Lähetys &amp; Rubriikki</string>
+    <string name="errorLoadingAssignment">Tämän tehtävän lataamisessa ilmeni ongelma. Tarkasta yhteytesi ja yritä uudelleen.</string>
+    <string name="submitted">Lähetetty</string>
+    <string name="notSubmitted">Ei lähetetty</string>
+    <string name="allowedFileTypes">Sallittavat tiedostotyypit</string>
+    <string name="resubmitAssignment">Lähetä tehtävä uudelleen</string>
+    <string name="preview">Esikatsele</string>
+    <!--    Student Submission-->
+    <string name="submissionUrlClearTextError">Ei saatavissa esikatselua URL-linkeille, jotka käyttävät \'http://\'</string>
+    <string name="submissionUrlNotAUrlError">Syötä voimassa oleva URL</string>
+    <string name="enterAUrlHereForYourSubmission">Syötä tässä URL lähetyksellesi</string>
+    <!-- Student Submission -->
+    <string name="submissionWrite">Kirjoita&#8230;</string>
+    <!-- Student Submission Details -->
+    <string name="submission">Lähetys</string>
+    <string name="submissionVersions">Lähetyksen versiot</string>
+    <string name="submissionDetailsFileTabName">Tiedostot (%d)</string>
+    <string name="rubric">Rubriikki</string>
+    <string name="submissionDetailsErrorTitle">Lähetysvirhe</string>
+    <string name="urlSubmissionDisclaimer">Tämä lähetys oli URL ulkoiselle sivulle. Olemme sisällyttäneet tilannekuvan siitä, miltä sivu näytti, kun se lähetettiin.</string>
+    <string name="submissionDetailsNoSubmissionYet">Ei vielä lähetystä</string>
+    <string name="submissionDetailsAssignmentWasLockedOn">Tehtäväsi lukittiin %1$s kohteessa %2$s</string>
+    <string name="submissionDetailsAssignmentWillUnlockOn">Tehtäväsi lukitus poistettiin %1$s kohteessa %2$s</string>
+    <string name="submissionDetailsAssignmentLockedByModuleName">Tehtäväsi lukittiin moduulilla \"%1$s\"</string>
+    <string name="submissionDetailsAssignmentLockedByModulePrereqs">Tehtäväsi lukittiin moduulin vaatimuksella </string>
+    <string name="submissionDetailsAssignmentLocked">Tehtävä lukittu</string>
+    <string name="webPreview">Syötetyn URL-linkin esikatselu</string>
+    <string name="websiteUrl">Verkkosivuston URL</string>
+    <!-- Grade Cell -->
+    <string name="outOfPointsFormatted">/%s pisteestä</string>
+    <string name="outOfPointsAbbreviatedFormatted">/%s pistettä</string>
+    <string name="gradeExcused">Annettu anteeksi</string>
+    <string name="finalGradeFormatted">Lopullinen arvosana: %s</string>
+    <!-- Student rubric tab -->
+    <string name="rubricCustomScore">Mukautettu pistemäärä </string>
+    <string name="rubricEmptyMessage">Tälle tehtävälle ei ole rubriikkia</string>
+    <string name="rubricViewLongDescription">Näytä pitkä kuvaus</string>
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">Versio:</string>
 
@@ -77,6 +126,13 @@
     <string name="next7Days">Seuraavat seitsemän päivää</string>
     <string name="days">Päivää</string>
 
+    <string name="submissionDetailsDueTodayAt">Määräaika tänään %s</string>
+    <string name="submissionDetailsDueTomorrowAt">Määräaika huomenna %s</string>
+    <string name="submissionDetailsDueYesterdayAt">Määräaika eilen %s</string>
+    <string name="submissionDetailsHasNoDueDate">Tehtävälläsi ei ole määräpäivää</string>
+    <string name="submissionDetailsDueAt">Määräpäivä %1$s kohteessa %2$s</string> <!--Ex: Due April 2 at 11:59pm-->
+    <string name="lowercaseAM">a.m.</string>
+    <string name="lowercasePM">p.m.</string>
     <!--Assignments-->
     <string name="assignmentDue">Määräpäivä</string>
     <string name="assignmentDueColon">Määräpäivä: </string>
@@ -237,6 +293,7 @@
     <string name="allCourses">Kaikki kurssit</string>
     <string name="allGroups">Kaikki ryhmät</string>
     <string name="courseOptions">Kurssivaihtoehdot</string>
+    <string name="courseOptionsFormatted">Kurssiasetukset kohteelle %s</string>
     <string name="editNickname">Muokkaa lempinimeä</string>
     <string name="editCourseColor">Muokkaa kurssin väriä</string>
     <string name="open">Avaa</string>
@@ -309,6 +366,7 @@
     <string name="observers">Tarkkailijat</string>
     <string name="syllabusMissing">Opinto-ohjelmaa ei ole lisätty.</string>
 
+    <string name="syllabusEventsError">Moduulien latauksessa ilmeni virhe.</string>
     <string name="canvas">Canvas</string>
     <string name="chooseRecipient">Valitse vastaanottajat</string>
     <string name="messageHasNoRecipients">Tässä viestissä ei parhaillaan ole vastaanottajia.</string>
@@ -327,13 +385,14 @@
     <string name="calendar">Kalenteri</string>
     <string name="bookmarks">Kirjanmerkit</string>
     <string name="showGrades">Näytä arvosanat</string>
+    <string name="colorOverlay">Värin päällys</string>
     <string name="gradesAreHidden">Arvosanat eivät ole näkyvissä tälle kurssille.</string>
 
     <string name="entireGroupSelected">Koko ryhmä on jo valittu.</string>
     <string name="noUsersInGroup">Tässä ryhmässä ei ole käyttäjiä.</string>
 
     <!--Notifications-->
-    <string name="deleted">[Poistettu]</string>
+    <string name="deleted">Poistettu</string>
     <string name="gradedDiscussion">Arvosteltu keskustelu.</string>
     <string name="pointsPossible">Pisteet mahdollisia.</string>
     <string name="pointsPossibleNoPeriod">Mahdolliset pisteet</string>
@@ -428,6 +487,7 @@
     <string name="markDone">Merkitse valmiiksi</string>
     <string name="moduleItemNotFound">Moduulin kohdetta ei löytynyt</string>
 
+    <string name="errorLoadingModules">Moduulien latauksessa ilmeni virhe.</string>
     <string name="help">Ohje</string>
     <string name="instructor_question">Ohjaajan kysymys</string>
     <string name="link">Linkki</string>
@@ -440,13 +500,15 @@
 
 
     <!--New Submission Strings -->
-    <string name="textEntry"> Tekstin syöttäminen</string>
-    <string name="onlineURL"> Verkko-url</string>
+    <string name="textEntry">Tekstin syöttäminen</string>
+    <string name="onlineURL">Verkko-url</string>
     <string name="enterTextEntry">Syötä tekstiä</string>
     <string name="fileUpload"> Tiedoston lataus</string>
     <string name="oneFileOnly">Lähetys hyväksyy vain yhden tiedoston latauksen</string>
 
 
+    <string name="websiteEntry">Lisää verkkosivuston merkintä</string>
+    <string name="mediaRecordingEntry">Median nauhoitukset</string>
     <string name="submit">Lähetä</string>
     <string name="blankSubmission">Lähetys ei voi olla tyhjä.</string>
     <string name="errorPostingSubmission">Lähetyksen suorittamisessa tapahtui virhe.</string>
@@ -678,7 +740,7 @@
     <string name="calendarDialogNoneWarning">Valitse vähintään yksi kalenteri</string>
     <string name="enableFunMode">Kytke pandat pois päältä</string>
 
-    <string name="accountNotifications">Ilmoitukset</string>`
+    <string name="accountNotifications">Ilmoitukset</string>
     <string name="addAccount">Lisää tili</string>
 
     <string name="changeUser">Vaihda käyttäjää</string>
@@ -686,7 +748,6 @@
     <string name="no_data_connection">Tarkasta datayhteytesi ja yritä uudelleen.</string>
 
     <!--Notification Preferences-->
-
     <string name="notification_primary_inbox_title">Canvas-ilmoitus</string>
     <string name="notification_channel_name_primary">Yleiset Canvas-ilmoitukset</string>
     <string name="notification_channel_description_primary">Ilmoitusten lisäkonfigurointi voidaan tehdä Canvas-ilmoitusasetusten osassa.</string>
@@ -867,8 +928,9 @@
     <string name="courseNickname">Kurssin lempinimi</string>
 
     <string name="notAvailableOffline">Toiminto ei ole käytettävissä verkon ulkopuolella</string>
-    <string name="editDashboard">Muokkaa kursseja</string>
-
+    <string name="editDashboard">Muokkaa koontinäyttöä</string>
+    <string name="editDashboardDescriptor">Valitse, mitkä kurssit haluaisit nähdä koontinäytöllä</string>
+    <string name="a11y_editYourCourseList">Muokkaa kurssiluetteloa</string>
     <string name="dashboard">Koontinäyttö</string>
     <string name="previous">Edellinen</string>
     <string name="pageNum" formatted="false">Sivu %d/%d</string>
@@ -900,6 +962,8 @@
     <string name="declineCourseInvitation">Kiellä</string>
 
     <!-- File Strings -->
+    <string name="noFilesSubtextCourse">Tähän tiliin ei ole liitetty tiedostoja.</string>
+    <string name="noFilesSubtextGroup">Tähän ryhmään ei ole liitetty tiedostoja.</string>
     <array name="file_size_units">
         <item>B</item>
         <item>KB</item>
@@ -916,7 +980,7 @@
 
     <string name="homePageIdForNotifications">Viimeaikainen aktiviteetti</string>
     <string name="homePageIdForModules">Moduulit</string>
-    <string name="homePageIdForAssignments">Tehtävät</string>O
+    <string name="homePageIdForAssignments">Tehtävät</string>
     <string name="homePageIdForSyllabus">Opinto-ohjelma</string>
 
     <string name="contentDescriptionWidgetRefresh">Päivitä pienoisohjelma</string>

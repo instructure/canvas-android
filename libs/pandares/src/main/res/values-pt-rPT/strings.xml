@@ -81,6 +81,8 @@
     <string name="finalGradeFormatted">Nota final: %s</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Personalizar pontuação</string>
+    <string name="rubricEmptyMessage">Não existe rubrica para esta atribuição</string>
+    <string name="rubricViewLongDescription">Ver descrição longa</string>
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">Versão:</string>
 
@@ -292,6 +294,7 @@
     <string name="allCourses">Todas as disciplinas</string>
     <string name="allGroups">Todos os grupos</string>
     <string name="courseOptions">Opções de disciplina</string>
+    <string name="courseOptionsFormatted">Opções de disciplina para %s</string>
     <string name="editNickname">Editar alcunha</string>
     <string name="editCourseColor">Editar cor da disciplina</string>
     <string name="open">Abrir</string>
@@ -383,6 +386,7 @@
     <string name="calendar">Calendário</string>
     <string name="bookmarks">Marcadores</string>
     <string name="showGrades">Mostrar Classificações</string>
+    <string name="colorOverlay">Sobreposição de cores</string>
     <string name="gradesAreHidden">As classificações não estão visíveis para esta disciplina.</string>
 
     <string name="entireGroupSelected">Este grupo completo já foi selecionado.</string>
@@ -925,8 +929,9 @@
     <string name="courseNickname">Nome da Disciplina</string>
 
     <string name="notAvailableOffline">Funcionalidade não disponível enquanto offline</string>
-    <string name="editDashboard">Editar disciplinas</string>
-
+    <string name="editDashboard">Editar painel</string>
+    <string name="editDashboardDescriptor">Selecionar quais disciplinas você gostaria de ver no Painel</string>
+    <string name="a11y_editYourCourseList">Editar sua lista de disciplinas</string>
     <string name="dashboard">Painel de controlo</string>
     <string name="previous">Anterior</string>
     <string name="pageNum" formatted="false">Página %d de %d</string>
@@ -958,6 +963,8 @@
     <string name="declineCourseInvitation">Recusar</string>
 
     <!-- File Strings -->
+    <string name="noFilesSubtextCourse">Não há ficheiros associados a esta disciplina.</string>
+    <string name="noFilesSubtextGroup">Não há ficheiros associados a este grupo.</string>
     <array name="file_size_units">
         <item>B</item>
         <item>KB</item>

@@ -80,6 +80,8 @@
     <string name="finalGradeFormatted">最終的な成績：%s</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">カスタムスコア</string>
+    <string name="rubricEmptyMessage">この課題に説明はありません</string>
+    <string name="rubricViewLongDescription">長い説明を表示</string>
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">バージョン:</string>
 
@@ -288,6 +290,7 @@
     <string name="allCourses">すべてのコース</string>
     <string name="allGroups">すべてのグループ</string>
     <string name="courseOptions">コースのオプション</string>
+    <string name="courseOptionsFormatted">%s のコースオプション</string>
     <string name="editNickname">ニックネームを編集</string>
     <string name="editCourseColor">コースの色を編集</string>
     <string name="open">開く</string>
@@ -377,6 +380,7 @@
     <string name="calendar">予定表</string>
     <string name="bookmarks">ブックマーク</string>
     <string name="showGrades">成績を表示</string>
+    <string name="colorOverlay">カラーオーバーレイ</string>
     <string name="gradesAreHidden">このコースには、採点は表示されません。</string>
 
     <string name="entireGroupSelected">このグループ全体がすでに選択されています。</string>
@@ -916,8 +920,9 @@
     <string name="courseNickname">コースニックネーム</string>
 
     <string name="notAvailableOffline">オフラインで利用できない機能</string>
-    <string name="editDashboard">コースを編集する</string>
-
+    <string name="editDashboard">ダッシュボードの編集</string>
+    <string name="editDashboardDescriptor">ダッシュボードでどのコースをみるかを選択する</string>
+    <string name="a11y_editYourCourseList">コースリストを編集する</string>
     <string name="dashboard">ダッシュボード</string>
     <string name="previous">前</string>
     <string name="pageNum" formatted="false">ページ %d / %d</string>
@@ -949,6 +954,8 @@
     <string name="declineCourseInvitation">辞退する</string>
 
     <!-- File Strings -->
+    <string name="noFilesSubtextCourse">このコースに関連付けられたファイルはありません。</string>
+    <string name="noFilesSubtextGroup">このグループに関連付けられたファイルはありません。</string>
     <array name="file_size_units">
         <item>B</item>
         <item>キロバイト</item>

@@ -773,7 +773,7 @@
     <string name="filterPeople">筛选人员</string>
     <string name="loadMore">加载更多</string>
     <string name="latestStudentActivityAtFormatted">最新活动时间为 %1$s %2$s。</string>
-    <string name="sectionFormatted">分组：%s</string>
+    <string name="sectionFormatted">班次：%s</string>
     <string name="errorLoadingStudentContextCard">无法加载此用户的详细信息。</string>
     <string name="enrollmentTypeStudent">学生</string>
     <string name="enrollmentTypeTeacher">教师</string>
@@ -785,7 +785,7 @@
     <string name="markRemainingAsPresent">将其余的标记为出勤</string>
     <string name="markAllAsPresent">将所有标记为出勤</string>
     <string name="calendar">日历</string>
-    <string name="filterSections">筛选分组</string>
+    <string name="filterSections">筛选班次</string>
     <string name="addVideoComment">添加视频评论</string>
     <string name="addAudioComment">添加音频评论</string>
     <string name="recordingTimerDefault">00:00:00</string>
@@ -881,7 +881,7 @@
     <string name="errorDownloadingFile">下载文件时出错。请重试。</string>
 
     <string name="postTo">发布到</string>
-    <string name="allSections">所有分组</string>
+    <string name="allSections">所有班次</string>
 
     <string name="gauge">Gauge</string>
     <string name="arc">Arc</string>

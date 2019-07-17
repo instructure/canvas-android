@@ -41,10 +41,8 @@
     <string name="upload">上传</string>
     <string name="errorSendingMessage">发送消息时出错。请重试。</string>
 
-    <string name="notificationChannelNameFileUploadsName">文件上传通知</string>
-    <string name="notificationChannelNameFileUploadsDescription">Canvas 正在上传文件的通知</string>
-
-
+    <string name="notificationChannelNameFileUploadsName">上传通知</string>
+    <string name="notificationChannelNameFileUploadsDescription">Canvas关于正在上传项的通知。</string>
     <!-- Turn in Files -->
     <string name="chooseFileSource">从&#8230;中选择文件</string>
     <string name="addFile">添加文件</string>
@@ -101,10 +99,9 @@
     <string name="pleaseTryAgain">已授予权限，请重试。</string>
     <string name="pickVideo">选择视频</string>
 
-    <string name="assignmentSubmissionUpload">正在为“%s”上传提交项</string>
-    <string name="assignmentSubmissionError">为“%s”提交失败</string>
-    <string name="notificationChannelNameSubmissionUploadsName">提交项上传通知</string>
-    <string name="notificationChannelNameSubmissionUploadsDescription">Canvas 持续提交项上传通知。</string>
+    <string name="assignmentSubmissionUpload">正在为%s上传提交项</string>
+    <string name="assignmentSubmissionError">为%s提交失败</string>
+    <string name="assignmentSubmissionComplete">已成功提交%s</string>
     <!--Errors-->
     <string name="errorOccurred">发生意外错误。</string>
     <string name="serverError">发生服务器错误。</string>
@@ -152,7 +149,7 @@
     <string name="nothingUnread">收件箱为空！</string>
     <string name="nothingUnreadSubtext">您已经全部赶上了！</string>
     <string name="nothingStarred">未对消息标记星号</string>
-    <string name="nothingStarredSubtext">点击每条消息上的星星，将重要消息留在此分组</string>
+    <string name="nothingStarredSubtext">点击每条消息上的星星，将重要消息留在此班次</string>
     <string name="nothingSent">未发送任何消息</string>
     <string name="nothingSentSubtext">您没有发送任何消息。</string>
     <string name="nothingArchived">未归档任何消息</string>
@@ -178,7 +175,7 @@
     <string name="noDueDate">此作业没有截止日期。</string>
     <string name="locked">已锁定</string>
     <string name="lockedSubtext">此作业已锁定至%1$s%2$s。</string>
-    <string name="lockedModule">该作业是模块\"%1$s\"的组成部分，并且尚未锁定。</string>
+    <string name="lockedModule">该作业是单元\"%1$s\"的组成部分，并且尚未锁定。</string>
     <string name="chooseFile">选择文件</string>
     <string name="chooseFileSubtext">点击下方的选项可以在您的提交项中附加文件。</string>
     <string name="noNotifications">无通知</string>
@@ -189,8 +186,8 @@
     <string name="noSyllabusSubtext">暂时没有创建教学大纲。</string>
     <string name="noBookmarks">无书签</string>
     <string name="noBookmarksSubtext">书签是此应用程序内的任何屏幕的快捷方式。将它们添加到您要添加书签的屏幕。</string>
-    <string name="noModules">无模块</string>
-    <string name="noModulesSubtext">似乎没有创建任何模块。</string>
+    <string name="noModules">无单元</string>
+    <string name="noModulesSubtext">似乎没有创建任何单元。</string>
     <string name="noPages">无页面</string>
     <string name="noPagesSubtext">似乎没有创建任何页面。</string>
 
@@ -212,7 +209,7 @@
     <string name="deletedEntryNoChildren">该删除的讨论条目没有回复。</string>
     <string name="deleted">已删除</string>
     <string name="deleted_by">[被%1$s删除]</string>
-    <string name="lockedDiscussionDesc">该讨论是模块%s的组成部分，并且尚未锁定。</string>
+    <string name="lockedDiscussionDesc">该讨论是单元%s的组成部分，并且尚未锁定。</string>
     <string name="gradedDiscussion">评分讨论</string>
     <string name="pointsPossible">可能得分</string>
     <string name="sideCommentEntry">在该类型的讨论中，您不能评论该级别的任何条目。</string>
@@ -245,7 +242,7 @@
     <string name="utils_suggestions">给安卓的建议</string>
     <string name="utils_domain">域</string>
     <string name="utils_versionNum">版本：</string>
-    <string name="utils_userId">用户 ID</string>
+    <string name="utils_userId">用户ID</string>
     <string name="utils_email">电子邮件</string>
     <string name="utils_dontShowAgain">不再显示</string>
     <string name="utils_installDate">安装日期：</string>

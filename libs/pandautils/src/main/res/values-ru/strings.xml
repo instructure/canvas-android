@@ -41,10 +41,8 @@
     <string name="upload">Отправить</string>
     <string name="errorSendingMessage">Произошла ошибка при отправке вам сообщения. Попробуйте еще раз.</string>
 
-    <string name="notificationChannelNameFileUploadsName">Уведомления об отправке файлов</string>
-    <string name="notificationChannelNameFileUploadsDescription">Уведомления Canvas о текущих отправках файлов.</string>
-
-
+    <string name="notificationChannelNameFileUploadsName">Загрузить уведомления</string>
+    <string name="notificationChannelNameFileUploadsDescription">Уведомления Canvas для текущих загрузок.</string>
     <!-- Turn in Files -->
     <string name="chooseFileSource">Выбрать файлы из&#8230;</string>
     <string name="addFile">Добавить файл</string>
@@ -101,10 +99,9 @@
     <string name="pleaseTryAgain">Разрешение дано, пожалуйста, попробуйте еще раз.</string>
     <string name="pickVideo">Выберите видеоролик</string>
 
-    <string name="assignmentSubmissionUpload">Загрузить отправку для "%s"</string>
-    <string name="assignmentSubmissionError">Сбой отправки для "%s"</string>
-    <string name="notificationChannelNameSubmissionUploadsName">Уведомления о загрузке отправок</string>
-    <string name="notificationChannelNameSubmissionUploadsDescription">Уведомления Canvas для текущих загрузок отправок.</string>
+    <string name="assignmentSubmissionUpload">Загрузка отправки для %s</string>
+    <string name="assignmentSubmissionError">Сбой отправки для %s</string>
+    <string name="assignmentSubmissionComplete">Успешно отправлено %s</string>
     <!--Errors-->
     <string name="errorOccurred">Произошла непредвиденная ошибка.</string>
     <string name="serverError">Произошла ошибка сервера.</string>

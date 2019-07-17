@@ -310,7 +310,7 @@
     <!--Course Settings-->
     <string name="course_settings">Kurssiasetukset</string>
     <string name="course_name">Kurssin nimi</string>
-    <string name="set_home_to">Määritä \”Etusivu\” arvoon&#8230;</string>
+    <string name="set_home_to">Määritä ”Etusivu” arvoon&#8230;</string>
     <string name="course_activity_stream">Kurssin aktiviteetin virtaus</string>
     <string name="pages_front_page">Sivut-etusivu</string>
     <string name="frontPage">Etusivu</string>
@@ -318,7 +318,6 @@
     <string name="assignments_list">Tehtäväluettelo</string>
     <string name="syllabus">Opinto-ohjelma</string>
     <!--End Course Settings-->
-
     <!-- Assignment Details -->
     <string name="multiple_due_dates">Useita määräpäiviä</string>
     <string name="everyone">Kaikki</string>
@@ -351,6 +350,8 @@
     <string name="description">Kuvaus</string>
     <string name="grade_total">Arvosana yhteensä</string>
     <string name="grade">Arvosana</string>
+    <string name="enter_grade">Syötä arvosana</string>
+    <string name="override">Korvaa</string>
     <string name="calculated_by_rubric">Laskettu ohjeiden mukaan</string>
     <string name="customize_grade">Mukautettu arvosana</string>
     <string name="out_of_points">/%1$s</string>
@@ -371,6 +372,7 @@
     <string name="announcement_name_must_be_set">Ilmoituksen otsikko täytyy määrittää.</string>
     <string name="quiz_title_must_be_set">Tietovisan otsikko täytyy määrittää.</string>
     <string name="assignment_points_must_be_set">Tehtävän pisteet täytyy määrittää.</string>
+    <string name="assignment_points_must_be_a_number">Pisteet on annettava numerona</string>
     <string name="quiz_points_must_be_set">Tietovisan pisteet täytyy määrittää.</string>
     <string name="assignee_type_course_sections">Kurssin osat</string>
     <string name="assignee_type_groups">Ryhmät</string>
@@ -417,9 +419,7 @@
 
   <string name="not_a_teacher">Et ole opettaja?</string>
     <string name="not_a_teacher_tap_to_visit_play_store">Yksi muista sovelluksistamme saattaa olla paremmin sopiva. Napsauta yhtä vieraillaksesi Play Storessa.</string>
-    <string name="canvas_lowercase">canvas</string>
-
-  <string name="sg_tab_grade">Arvosana</string>
+    <string name="sg_tab_grade">Arvosana</string>
     <string name="sg_tab_comments">Kommentit</string>
     <string name="sg_tab_files">Tiedostot</string>
     <string name="filter_submissions">Suodattimen lähetykset</string>
@@ -646,7 +646,7 @@
     <string name="tryAgain">Yritä uudestaan</string>
     <string name="couldNotPlayFormat">Tätä mediaformaattia ei tueta</string>
     <string name="openWithAnotherApp">Avaa sovelluksessa...</string>
-    
+
     <string name="speedgraderCommentAddedSubmission">Tehtävä lähetetty. Katso napauttamalla.</string>
     <string name="speedgraderCommentSubmittedFiles">Lähetetyt tiedostot.</string>
     <string name="no_submission_comments">Lähetykseen ei ole kommentteja</string>

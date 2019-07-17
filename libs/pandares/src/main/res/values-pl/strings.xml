@@ -83,6 +83,8 @@
     <string name="finalGradeFormatted">Ocena końcowa: %s</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Niestandardowy wynik punktowy</string>
+    <string name="rubricEmptyMessage">Nie ma rubryki dla tego zadania</string>
+    <string name="rubricViewLongDescription">Wyświetl długi opis</string>
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">Wersja:</string>
 
@@ -300,6 +302,7 @@
     <string name="allCourses">Wszystkie kursy</string>
     <string name="allGroups">Wszystkie grupy</string>
     <string name="courseOptions">Opcje kursu</string>
+    <string name="courseOptionsFormatted">Opcje kursu dot. %s</string>
     <string name="editNickname">Edytuj pseudonim</string>
     <string name="editCourseColor">Edytuj kolor kursu</string>
     <string name="open">Otwarty</string>
@@ -395,6 +398,7 @@
     <string name="calendar">Kalendarz</string>
     <string name="bookmarks">Zakładki</string>
     <string name="showGrades">Pokaż oceny</string>
+    <string name="colorOverlay">Kolor nakładki</string>
     <string name="gradesAreHidden">Oceny dla danego kursu nie są widoczne.</string>
 
     <string name="entireGroupSelected">Cała grupa została już wybrana.</string>
@@ -943,8 +947,9 @@
     <string name="courseNickname">Przydomek kursu</string>
 
     <string name="notAvailableOffline">Funkcje niedostępne w trybie offline</string>
-    <string name="editDashboard">Edytuj kursy</string>
-
+    <string name="editDashboard">Edytuj panel nawigacyjny</string>
+    <string name="editDashboardDescriptor">Określ, które kursy mają pojawiać się na panelu nawigacyjnym</string>
+    <string name="a11y_editYourCourseList">Edytuj listę kursów</string>
     <string name="dashboard">Panel nawigacyjny</string>
     <string name="previous">Poprzednie</string>
     <string name="pageNum" formatted="false">Strona %d z %d</string>
@@ -976,6 +981,8 @@
     <string name="declineCourseInvitation">Odrzuć</string>
 
     <!-- File Strings -->
+    <string name="noFilesSubtextCourse">Brak plików powiązanych z tym kursem.</string>
+    <string name="noFilesSubtextGroup">Brak plików powiązanych z tą grupą.</string>
     <array name="file_size_units">
         <item>B</item>
         <item>KB</item>

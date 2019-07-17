@@ -79,6 +79,10 @@
     <string name="outOfPointsAbbreviatedFormatted">Av %s poäng</string>
     <string name="gradeExcused">Slipper göra</string>
     <string name="finalGradeFormatted">Total bedömning: %s</string>
+    <!-- Student rubric tab -->
+    <string name="rubricCustomScore">Anpassad resultat</string>
+    <string name="rubricEmptyMessage">Det finns ingen matris för den här uppgiften</string>
+    <string name="rubricViewLongDescription">Visa lång beskrivning</string>
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">Version:</string>
 
@@ -290,6 +294,7 @@
     <string name="allCourses">Alla kurser</string>
     <string name="allGroups">Alla grupper</string>
     <string name="courseOptions">Alternativ för kurs</string>
+    <string name="courseOptionsFormatted">Kursval för %s</string>
     <string name="editNickname">Redigera smeknamn</string>
     <string name="editCourseColor">Redigera kursfärg</string>
     <string name="open">Öppen</string>
@@ -381,6 +386,7 @@
     <string name="calendar">Kalender</string>
     <string name="bookmarks">Bokmärken</string>
     <string name="showGrades">Visa bedömningar</string>
+    <string name="colorOverlay">Färgöverlagring</string>
     <string name="gradesAreHidden">Bedömningar är inte synliga för den här kursen.</string>
 
     <string name="entireGroupSelected">Hela den här gruppen har redan valts</string>
@@ -923,8 +929,9 @@
     <string name="courseNickname">Alias för kurs</string>
 
     <string name="notAvailableOffline">Funktionen är inte tillgänglig offline</string>
-    <string name="editDashboard">Redigera kurser</string>
-
+    <string name="editDashboard">Redigera instrumentpanel</string>
+    <string name="editDashboardDescriptor">Välj vilka kurser du skulle vilja se på instrumentpanelen</string>
+    <string name="a11y_editYourCourseList">Redigera din kurslista</string>
     <string name="dashboard">Översikt</string>
     <string name="previous">Föregående</string>
     <string name="pageNum" formatted="false">Sida %d av %d</string>
@@ -956,6 +963,8 @@
     <string name="declineCourseInvitation">Neka</string>
 
     <!-- File Strings -->
+    <string name="noFilesSubtextCourse">Det finns inga filer associerade med denna kurs.</string>
+    <string name="noFilesSubtextGroup">Det finns inga filer associerade med denna grupp.</string>
     <array name="file_size_units">
         <item>B</item>
         <item>KB</item>

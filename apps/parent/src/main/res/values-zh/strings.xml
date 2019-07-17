@@ -107,7 +107,7 @@
     <string name="sendMail">发送电邮</string>
     <string name="help_domain">域：</string>
     <string name="help_versionNum">版本：</string>
-    <string name="help_userId">用户 ID：</string>
+    <string name="help_userId">用户ID：</string>
     <string name="help_email">电子邮箱：</string>
     <string name="help_locale">区域设置：</string>
     <string name="installDate">安装日期：</string>
@@ -144,7 +144,7 @@
     <string name="dismiss">撤销</string>
     <string name="invalid_username_password">电子邮件和密码组合无效。</string>
     <string name="opening">正在打开&#8230;</string>
-    <string name="locked_assignment_desc">该作业是模块%s的一部分，并且尚未锁定。</string>
+    <string name="locked_assignment_desc">该作业是单元%s的一部分，并且尚未锁定。</string>
     <string name="locked_assignment_desc_line2">在浏览器访问如何解锁此内容信息的课程单元页面。</string>
     <string name="locked_assignment_not_module">此作业被锁定。</string>
     <string name="no_description">没有此作业的说明</string>

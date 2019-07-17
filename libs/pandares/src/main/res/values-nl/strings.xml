@@ -81,6 +81,8 @@
     <string name="finalGradeFormatted">Eindcijfer: %s</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Aangepaste score</string>
+    <string name="rubricEmptyMessage">Er is geen rubriek voor deze opdracht</string>
+    <string name="rubricViewLongDescription">Uitgebreide beschrijving bekijken</string>
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">Versie:</string>
 
@@ -292,6 +294,7 @@
     <string name="allCourses">Alle cursussen</string>
     <string name="allGroups">Alle groepen</string>
     <string name="courseOptions">Cursusopties</string>
+    <string name="courseOptionsFormatted">Cursusopties voor %s</string>
     <string name="editNickname">Bijnaam bewerken</string>
     <string name="editCourseColor">Cursuskleur bewerken</string>
     <string name="open">Open</string>
@@ -383,6 +386,7 @@
     <string name="calendar">Kalender</string>
     <string name="bookmarks">Bladwijzers</string>
     <string name="showGrades">Cijfers tonen</string>
+    <string name="colorOverlay">Kleurenoverlay</string>
     <string name="gradesAreHidden">Cijfers zijn niet zichtbaar voor deze cursus.</string>
 
     <string name="entireGroupSelected">Deze hele groep is al geselecteerd.</string>
@@ -925,8 +929,9 @@
     <string name="courseNickname">Bijnaam cursus</string>
 
     <string name="notAvailableOffline">Functionaliteit niet beschikbaar als je offline bent</string>
-    <string name="editDashboard">Cursussen bewerken</string>
-
+    <string name="editDashboard">Dashboard bewerken</string>
+    <string name="editDashboardDescriptor">Selecteer de cursussen die je in het Dashboard wilt weergeven</string>
+    <string name="a11y_editYourCourseList">Bewerk je lijst met cursussen</string>
     <string name="dashboard">Dashboard</string>
     <string name="previous">Vorige</string>
     <string name="pageNum" formatted="false">Pagina %d van %d</string>
@@ -958,6 +963,8 @@
     <string name="declineCourseInvitation">Weigeren</string>
 
     <!-- File Strings -->
+    <string name="noFilesSubtextCourse">Er zijn geen bestanden gekoppeld aan deze cursus.</string>
+    <string name="noFilesSubtextGroup">Er zijn geen bestanden gekoppeld aan deze groep.</string>
     <array name="file_size_units">
         <item>B</item>
         <item>kB</item>

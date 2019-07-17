@@ -41,10 +41,8 @@
     <string name="upload">Upload</string>
     <string name="errorSendingMessage">En uventet fejl opstod ved afsendelse af beskeden. Prøv igen.</string>
 
-    <string name="notificationChannelNameFileUploadsName">Meddelelser for filoverførsler</string>
-    <string name="notificationChannelNameFileUploadsDescription">Canvas-meddelelser for løbende filuploads.</string>
-
-
+    <string name="notificationChannelNameFileUploadsName">Upload meddelelser</string>
+    <string name="notificationChannelNameFileUploadsDescription">Canvas-meddelelser til løbende uploads.</string>
     <!-- Turn in Files -->
     <string name="chooseFileSource">Vælg fil fra&#8230;</string>
     <string name="addFile">Tilføj fil</string>
@@ -100,10 +98,9 @@
     <string name="pleaseTryAgain">Tilladelse givet, prøv igen.</string>
     <string name="pickVideo">Vælg en video</string>
 
-    <string name="assignmentSubmissionUpload">Uploader aflevering til "%s”</string>
-    <string name="assignmentSubmissionError">Aflevering mislykkedes for "%s"</string>
-    <string name="notificationChannelNameSubmissionUploadsName">Meddelelser for afleveringsupload</string>
-    <string name="notificationChannelNameSubmissionUploadsDescription">Canvas-meddelelser for løbende afleveringsuploads.</string>
+    <string name="assignmentSubmissionUpload">Uploader aflevering til %s</string>
+    <string name="assignmentSubmissionError">Aflevering mislykkedes for %s</string>
+    <string name="assignmentSubmissionComplete">%s blev indsendt</string>
     <!--Errors-->
     <string name="errorOccurred">En uventet fejl opstod.</string>
     <string name="serverError">En serverfejl opstod.</string>

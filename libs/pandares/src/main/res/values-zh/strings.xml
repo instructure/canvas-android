@@ -44,7 +44,7 @@
     <string name="submissionStatusUploadingSubtitle">轻按以查看进度</string>
     <string name="submissionStatusFailedTitle">提交文件失败</string>
     <string name="submissionStatusFailedSubtitle">轻按以查看详细信息</string>
-    <string name="submissionAndRubric">提交项和评估表格</string>
+    <string name="submissionAndRubric">提交项和评价量规</string>
     <string name="errorLoadingAssignment">加载此作业时发生问题。请检查您的连接，然后再试一次。</string>
     <string name="submitted">已提交</string>
     <string name="notSubmitted">未提交</string>
@@ -68,8 +68,8 @@
     <string name="submissionDetailsNoSubmissionYet">尚无提交项</string>
     <string name="submissionDetailsAssignmentWasLockedOn">您的作业在 %1$s %2$s 锁定</string>
     <string name="submissionDetailsAssignmentWillUnlockOn">您的作业将在 %1$s %2$s 解锁</string>
-    <string name="submissionDetailsAssignmentLockedByModuleName">您的作业由模块\"%1$s\"锁定</string>
-    <string name="submissionDetailsAssignmentLockedByModulePrereqs">您的作业由模块要求锁定</string>
+    <string name="submissionDetailsAssignmentLockedByModuleName">您的作业由单元\"%1$s\"锁定</string>
+    <string name="submissionDetailsAssignmentLockedByModulePrereqs">您的作业由单元要求锁定</string>
     <string name="submissionDetailsAssignmentLocked">作业已锁定</string>
     <string name="webPreview">输入的 URL 预览</string>
     <string name="websiteUrl">网站 URL</string>
@@ -80,6 +80,8 @@
     <string name="finalGradeFormatted">最终评分：%s</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">自定义评分</string>
+    <string name="rubricEmptyMessage">此作业没有评估表格</string>
+    <string name="rubricViewLongDescription">查看长说明</string>
     <!--Profile Fragment Strings -->
     <string name="canvasVersionNum">版本：</string>
 
@@ -288,6 +290,7 @@
     <string name="allCourses">所有课程</string>
     <string name="allGroups">所有组</string>
     <string name="courseOptions">课程选项</string>
+    <string name="courseOptionsFormatted">%s的课程选项</string>
     <string name="editNickname">编辑别名</string>
     <string name="editCourseColor">编辑课程颜色</string>
     <string name="open">打开</string>
@@ -358,7 +361,7 @@
     <string name="observers">观察员</string>
     <string name="syllabusMissing">未添加教学大纲。</string>
 
-    <string name="syllabusEventsError">加载模块时出错。</string>
+    <string name="syllabusEventsError">加载单元时出错。</string>
     <string name="canvas">Canvas</string>
     <string name="chooseRecipient">选择收件人(s)</string>
     <string name="messageHasNoRecipients">这个消息目前还没有收件人。</string>
@@ -377,6 +380,7 @@
     <string name="calendar">日历</string>
     <string name="bookmarks">书签</string>
     <string name="showGrades">显示评分</string>
+    <string name="colorOverlay">颜色覆盖</string>
     <string name="gradesAreHidden">本课程的成绩不可见。</string>
 
     <string name="entireGroupSelected">整个小组已被选定。</string>
@@ -404,10 +408,10 @@
     <string name="modified">上一次更改：</string>
     <string name="lastModified">上一次更改：%1$s</string>
 
-    <string name="masqueradeUserId">伪装的用户 ID</string>
+    <string name="masqueradeUserId">伪装的用户ID</string>
     <string name="startMasquerading">开始伪装</string>
     <string name="stopMasquerading">停止伪装</string>
-    <string name="userId">用户 ID</string>
+    <string name="userId">用户ID</string>
     <string name="masqueradeFail">试图伪装时出错</string>
 
     <string name="emptyId">该ID不能为空白</string>
@@ -463,22 +467,22 @@
     <string name="moduleItemContributed">您作出了贡献</string>
     <string name="moduleItemMinScore">分数至少为</string>
     <string name="moduleItemMinScoreMet">满足最低得分</string>
-    <string name="prerequisites">先决条件：</string>
+    <string name="prerequisites">先修课程：</string>
     <string name="unlocked">解锁：</string>
     <string name="locked">已锁定</string>
-    <string name="lockedAssignmentDesc">该作业是模块%s的一部分，尚未解除锁定。</string>
-    <string name="lockedPageDesc">该页面是模块%s的一部分，并且尚未锁定。</string>
-    <string name="lockedFileDesc">该文件是模块%s的一部分，并且尚未锁定。</string>
-    <string name="lockedQuizDesc">该测验是模块%s的一部分，并且尚未锁定。</string>
-    <string name="lockedDiscussionDesc">该讨论是模块%s的一部分，并且尚未锁定。</string>
+    <string name="lockedAssignmentDesc">该作业是单元%s的一部分，尚未解除锁定。</string>
+    <string name="lockedPageDesc">该页面是单元%s的一部分，并且尚未锁定。</string>
+    <string name="lockedFileDesc">该文件是单元%s的一部分，并且尚未锁定。</string>
+    <string name="lockedQuizDesc">该测验是单元%s的一部分，并且尚未锁定。</string>
+    <string name="lockedDiscussionDesc">该讨论是单元%s的一部分，并且尚未锁定。</string>
     <string name="lockedAssignmentDescLine2">访问课程单元页面关于如何解锁此内容的信息。</string>
     <string name="mustComplete">您必须首先完成：</string>
     <string name="unlockedAt">将被解锁于：</string>
     <string name="goToModules">转到单元</string>
     <string name="markDone">标记为完成</string>
-    <string name="moduleItemNotFound">找不到模块项目</string>
+    <string name="moduleItemNotFound">找不到单元项目</string>
 
-    <string name="errorLoadingModules">加载模块时出错。</string>
+    <string name="errorLoadingModules">加载单元时出错。</string>
     <string name="help">帮助</string>
     <string name="instructor_question">讲师的问题</string>
     <string name="link">链接</string>
@@ -542,9 +546,9 @@
     <string name="Notifications">通知</string>
 
     <string name="icon">图标</string>
-    <string name="rootUser">根用户文件夹</string>
-    <string name="rootCourse">根课程文件夹</string>
-    <string name="rootGroup">根小组文件夹</string>
+    <string name="rootUser">母用户文件夹</string>
+    <string name="rootCourse">母课程文件夹</string>
+    <string name="rootGroup">母小组文件夹</string>
 
     <!-- Course Settings -->
     <string name="privatelyAvailable">私自可用</string>
@@ -752,7 +756,7 @@
     <string name="notification_cat_conferences">会议</string>
 
     <string name="notification_pref_due_date">截止日期</string>
-    <string name="notification_pref_grading_policies">评分政策</string>
+    <string name="notification_pref_grading_policies">评分细则</string>
     <string name="notification_pref_course_content">课程内容</string>
     <string name="notification_pref_files">文件</string>
     <string name="notification_pref_announcement">公告</string>
@@ -804,10 +808,10 @@
     <string name="notification_desc_add_to_conversation">当您被添加到对话中时收到通知。</string>
     <string name="notification_desc_conversation_message">当您的收件箱中收到新消息时收到通知。</string>
     <string name="notification_desc_conversations_created_by_you">当您创建新对话时收到通知。</string>
-    <string name="notification_desc_student_appointment_signups">仅限讲师和管理员。当注册约会时收到通知。</string>
+    <string name="notification_desc_student_appointment_signups">仅限讲师和管理员。当注册预约时收到通知。</string>
     <string name="notification_desc_appointment_signups">当日历上出现新注册时收到通知。</string>
-    <string name="notification_desc_appointment_cancelations">当取消约会时收到通知。</string>
-    <string name="notification_desc_appointment_availability">当约会时间段空闲时收到通知。</string>
+    <string name="notification_desc_appointment_cancelations">当取消预约时收到通知。</string>
+    <string name="notification_desc_appointment_availability">当预约时间段空闲时收到通知。</string>
     <string name="notification_desc_calendar">当新建和更新日历项时收到通知。</string>
     <string name="notification_desc_membership_update">仅限管理员，已激活待处理的注册。小组注册被接受或拒绝时收到通知。</string>
     <string name="notification_desc_admin">仅限讲师和管理员。接收与课程注册、生成的报告、导出课程、迁移报告、新帐户用户和新学生组有关的通知。</string>
@@ -916,8 +920,9 @@
     <string name="courseNickname">课程昵称</string>
 
     <string name="notAvailableOffline">离线时功能不可用。</string>
-    <string name="editDashboard">编辑课程</string>
-
+    <string name="editDashboard">编辑控制面板</string>
+    <string name="editDashboardDescriptor">选择您想在控制面板上查看哪些课程</string>
+    <string name="a11y_editYourCourseList">编辑您的课程列表</string>
     <string name="dashboard">控制面板</string>
     <string name="previous">上一个</string>
     <string name="pageNum" formatted="false">第 %d 页，共 %d 页</string>
@@ -932,7 +937,7 @@
     <string name="chooseAssignmentPath">选择作业路径</string>
     <string name="select">选择</string>
     <string name="choice_position">选项 %d</string>
-    <string name="updating_module_info">正在更新模块信息&#8230;</string>
+    <string name="updating_module_info">正在更新单元信息&#8230;</string>
     <string name="arc">Arc</string>
     <string name="pending_review">等待审核</string>
     <string name="totalPoints">%s 分</string>
@@ -949,6 +954,8 @@
     <string name="declineCourseInvitation">拒绝</string>
 
     <!-- File Strings -->
+    <string name="noFilesSubtextCourse">没有与此课程关联的文件。</string>
+    <string name="noFilesSubtextGroup">没有与此小组关联的文件。</string>
     <array name="file_size_units">
         <item>字节</item>
         <item>千字节</item>

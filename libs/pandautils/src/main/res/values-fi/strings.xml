@@ -17,6 +17,7 @@
   -->
 
 <resources>
+
     <string name="chooseMedia">Valitse media</string>
     <string name="takeVideo">Ota video</string>
     <string name="noCameraOnDevice">Ei kameraa</string>
@@ -40,10 +41,8 @@
     <string name="upload">Lataa</string>
     <string name="errorSendingMessage">Viestin lähettämisen yhteydessä ilmeni virhe. Yritä uudelleen.</string>
 
-    <string name="notificationChannelNameFileUploadsName">Tiedoston latausilmoitukset</string>
-    <string name="notificationChannelNameFileUploadsDescription">Canvas-ilmoitukset meneillään olevien tiedostolatausten tilasta.</string>
-
-
+    <string name="notificationChannelNameFileUploadsName">Latausilmoitukset</string>
+    <string name="notificationChannelNameFileUploadsDescription">Canvas-ilmoitukset meneillään olevien latausten tilasta.</string>
     <!-- Turn in Files -->
     <string name="chooseFileSource">Valitse tiedosto kohteesta&#8230;</string>
     <string name="addFile">Tiedoston lisäysikkuna</string>
@@ -99,6 +98,9 @@
     <string name="pleaseTryAgain">Käyttöoikeudet myönnetty, yritä uudelleen.</string>
     <string name="pickVideo">Valitse video</string>
 
+    <string name="assignmentSubmissionUpload">Ladataan lähetystä kohteelle %s</string>
+    <string name="assignmentSubmissionError">Lähetys epäonnistui kohteelle %s</string>
+    <string name="assignmentSubmissionComplete">Lähetetty onnistuneesti %s</string>
     <!--Errors-->
     <string name="errorOccurred">Ilmeni odottamaton virhe.</string>
     <string name="serverError">Palvelinvirhe ilmeni.</string>
@@ -204,7 +206,7 @@
     <string name="likes">Tykkäystä</string>
     <string name="lockedAssignmentNotModule">Tämä tehtävä on lukittu.</string>
     <string name="deletedEntryNoChildren">Tälle poistetulle keskustelumerkinnälle ei ole vastauksia.</string>
-    <string name="deleted">[Poistettu]</string>
+    <string name="deleted">Poistettu</string>
     <string name="deleted_by">[Kohteen poistaja %1$s]</string>
     <string name="lockedDiscussionDesc">Tämä keskustelu on osa moduulia %s eikä sen lukitusta ole vielä poistettu.</string>
     <string name="gradedDiscussion">Arvosteltu keskustelu</string>
@@ -328,7 +330,6 @@
     </plurals>
 
     <!-- Assignment Override !-->
-
     <string name="utils_unlockAfterDueDateError">Lukituspäivä ei voi olla määräpäivän jälkeen.</string>
     <string name="utils_lockBeforeDueDateError">Lukituspäivä ei voi olla ennen määräpäivää.</string>
     <string name="utils_lockAfterUnlockError">Lukituspäivä ei voi olla ennen lukituksen poistopäivää.</string>

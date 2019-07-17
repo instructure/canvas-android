@@ -41,10 +41,8 @@
     <string name="upload">Carregar</string>
     <string name="errorSendingMessage">Ocorreu um erro ao enviar sua mensagem. É favor tentar novamente.</string>
 
-    <string name="notificationChannelNameFileUploadsName">Notificações de transferência de ficheiro</string>
-    <string name="notificationChannelNameFileUploadsDescription">Notificações em tela para carregamentos contínuos de ficheiros.</string>
-
-
+    <string name="notificationChannelNameFileUploadsName">Notificações de transferência</string>
+    <string name="notificationChannelNameFileUploadsDescription">Notificações de exrã para transferências em andamento.</string>
     <!-- Turn in Files -->
     <string name="chooseFileSource">Escolher ficheiro de&#8230;</string>
     <string name="addFile">Adicionar ficheiro</string>
@@ -101,10 +99,9 @@
     <string name="pleaseTryAgain">Permissão concedida, tente novamente.</string>
     <string name="pickVideo">Seleione um vídeo</string>
 
-    <string name="assignmentSubmissionUpload">A carregar envio para "%s"</string>
-    <string name="assignmentSubmissionError">A submissão falhou por "%s"</string>
-    <string name="notificationChannelNameSubmissionUploadsName">Notificações de carregamento de envios</string>
-    <string name="notificationChannelNameSubmissionUploadsDescription">Notificações Canvas para carregamentos de envio em andamento.</string>
+    <string name="assignmentSubmissionUpload">Enviando envio para %s</string>
+    <string name="assignmentSubmissionError">A submissão falhou para %s</string>
+    <string name="assignmentSubmissionComplete">Submetido com sucesso %s</string>
     <!--Errors-->
     <string name="errorOccurred">Ocorreu um erro inesperado.</string>
     <string name="serverError">Ocorreu um erro no servidor.</string>

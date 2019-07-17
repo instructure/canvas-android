@@ -41,10 +41,8 @@
     <string name="upload">Téléversement</string>
     <string name="errorSendingMessage">Une erreur s\'est produite lors de l\'envoi de votre message. Veuillez réessayer.</string>
 
-    <string name="notificationChannelNameFileUploadsName">Notifications de téléversement de fichier</string>
-    <string name="notificationChannelNameFileUploadsDescription">Notifications de Canvas pour les téléversements de fichier en cours.</string>
-
-
+    <string name="notificationChannelNameFileUploadsName">Notifications de téléversement</string>
+    <string name="notificationChannelNameFileUploadsDescription">Notifications de Canvas pour les téléversements en cours.</string>
     <!-- Turn in Files -->
     <string name="chooseFileSource">Choisir un fichier depuis&#8230;</string>
     <string name="addFile">Ajouter un fichier</string>
@@ -101,10 +99,9 @@
     <string name="pleaseTryAgain">Permission accordée, veuillez réessayer.</string>
     <string name="pickVideo">Sélectionner une vidéo</string>
 
-    <string name="assignmentSubmissionUpload">Téléversement de l’envoi pour « %s »</string>
-    <string name="assignmentSubmissionError">Échec de l’envoi pour « %s »</string>
-    <string name="notificationChannelNameSubmissionUploadsName">Notifications de téléversement d’envoi</string>
-    <string name="notificationChannelNameSubmissionUploadsDescription">Notifications de Canvas pour les téléversements d’envoi en cours.</string>
+    <string name="assignmentSubmissionUpload">Téléversement de l’envoi pour %s</string>
+    <string name="assignmentSubmissionError">Échec de l’envoi pour %s</string>
+    <string name="assignmentSubmissionComplete">%s envoyé avec succès!</string>
     <!--Errors-->
     <string name="errorOccurred">Une erreur inattendue s’est produite.</string>
     <string name="serverError">Une erreur de serveur s\'est produite.</string>
