@@ -146,21 +146,20 @@ class SpeedGraderCommentsPageTest : TeacherTest() {
         speedGraderCommentsPage.assertDisplaysCommentText(newComment)
     }
 
-    // MBL-12837: Commenting out for now due to Canvas bug.
-//    @Test
-//    @Ditto(mode=DittoMode.LIVE)
-//    fun showsNoCommentsMessage() {
-//        goToSpeedGraderCommentsPage(
-//                submissions = listOf(
-//                        SubmissionsApi.SubmissionSeedInfo(
-//                                amount = 0,
-//                                submissionType = ON_PAPER
-//                        )
-//                )
-//        )
-//
-//        speedGraderCommentsPage.assertDisplaysEmptyState()
-//    }
+    @Test
+    @Ditto(mode=DittoMode.LIVE)
+    fun showsNoCommentsMessage() {
+        goToSpeedGraderCommentsPage(
+                submissions = listOf(
+                        SubmissionsApi.SubmissionSeedInfo(
+                                amount = 0,
+                                submissionType = ON_PAPER
+                        )
+                )
+        )
+
+        speedGraderCommentsPage.assertDisplaysEmptyState()
+    }
 
     private fun goToSpeedGraderCommentsPage(
             assignments: Int = 1,
