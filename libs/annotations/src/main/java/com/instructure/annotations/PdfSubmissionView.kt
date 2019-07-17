@@ -667,7 +667,7 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
     override fun onChangeAnnotationCreationMode(controller: AnnotationCreationController) {
         //we only want to disable the viewpager if they are actively annotating
         if(controller.activeAnnotationTool != AnnotationTool.NONE) disableViewPager()
-        enableViewPager()
+        else enableViewPager()
 
         //we want to make sure that the keyboard doesn't mess up the view if they are using these annotations
         setIsCurrentlyAnnotating(controller.activeAnnotationTool != AnnotationTool.NONE)
