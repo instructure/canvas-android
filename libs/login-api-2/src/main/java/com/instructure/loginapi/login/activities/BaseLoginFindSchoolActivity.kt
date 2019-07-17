@@ -222,7 +222,7 @@ abstract class BaseLoginFindSchoolActivity : AppCompatActivity(), ErrorReportDia
 
         //URIs need to to start with a scheme.
         if (!url.startsWith("http://") && !url.startsWith("https://")) {
-            url = "http://$url"
+            url = "https://$url"
         }
 
         //Get just the host.
