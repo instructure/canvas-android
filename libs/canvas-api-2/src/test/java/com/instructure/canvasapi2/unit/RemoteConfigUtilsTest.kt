@@ -142,9 +142,4 @@ class RemoteConfigUtilsTest : Assert() {
     fun `throws on use without initialization`() {
         RemoteConfigUtils.getString(RemoteConfigParam.TEST_STRING)
     }
-
-    @Test
-    fun `fail every time` () {
-        assertTrue(false)
-    }
 }
