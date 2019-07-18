@@ -85,7 +85,7 @@ import kotlin.reflect.KProperty
  * ```
  */
 @SuppressLint("CommitPrefEdits")
-abstract class PrefManager(prefFileName: String) {
+abstract class PrefManager(prefFileName: String) : PrefRepoInterface {
 
     /* The [SharedPreferences] instance which serves as the core persistence mechanism */
     internal val prefs by lazy {
@@ -148,20 +148,20 @@ abstract class PrefManager(prefFileName: String) {
 
     private inline fun Editor.save(block: Editor.() -> Unit) { block(); apply() }
 
-    fun getInt(key: String, default: Int = 0): Int = prefs.getInt(key, default)
-    fun putInt(key: String, value: Int) = editor.save { putInt(key, value) }
+    override fun getInt(key: String, default: Int): Int = prefs.getInt(key, default)
+    override fun putInt(key: String, value: Int) = editor.save { putInt(key, value) }
 
-    fun getBoolean(key: String, default: Boolean = false): Boolean = prefs.getBoolean(key, default)
-    fun putBoolean(key: String, value: Boolean) = editor.save { putBoolean(key, value) }
+    override fun getBoolean(key: String, default: Boolean): Boolean = prefs.getBoolean(key, default)
+    override fun putBoolean(key: String, value: Boolean) = editor.save { putBoolean(key, value) }
 
-    fun getString(key: String, default: String? = null): String? = prefs.getString(key, default)
-    fun putString(key: String, value: String) = editor.save { putString(key, value) }
+    override fun getString(key: String, default: String?): String? = prefs.getString(key, default)
+    override fun putString(key: String, value: String) = editor.save { putString(key, value) }
 
-    fun getFloat(key: String, default: Float = 0f): Float = prefs.getFloat(key, default)
-    fun putFloat(key: String, value: Float) = editor.save { putFloat(key, value) }
+    override fun getFloat(key: String, default: Float): Float = prefs.getFloat(key, default)
+    override fun putFloat(key: String, value: Float) = editor.save { putFloat(key, value) }
 
-    fun getLong(key: String, default: Long = 0L): Long = prefs.getLong(key, default)
-    fun putLong(key: String, value: Long) = editor.save { putLong(key, value) }
+    override fun getLong(key: String, default: Long): Long = prefs.getLong(key, default)
+    override fun putLong(key: String, value: Long) = editor.save { putLong(key, value) }
 
     fun remove(key: String) = editor.remove(key).apply()
 }

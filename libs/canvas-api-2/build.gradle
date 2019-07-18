@@ -135,6 +135,9 @@ dependencies {
 
     /* Paper No SQl Storage */
     api 'io.paperdb:paperdb:2.6'
+
+    // Remote Config
+    implementation Libs.FIREBASE_CONFIG
 }
 
 // MBL-12312: I added this as a way to publish Pact contract updates.
