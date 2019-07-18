@@ -28,6 +28,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 
+import com.instructure.canvasapi2.utils.Analytics;
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants;
+import com.instructure.canvasapi2.utils.AnalyticsParamConstants;
 import com.instructure.loginapi.login.R;
 
 public class AuthenticationDialog extends DialogFragment {
@@ -38,9 +41,13 @@ public class AuthenticationDialog extends DialogFragment {
 
     private OnAuthenticationSet mCallback;
     private EditText mUsername, mPassword;
+    private static final String DOMAIN = "domain";
 
-    public static AuthenticationDialog get(Fragment...target) {
+    public static AuthenticationDialog newInstance(String domain, Fragment...target) {
         AuthenticationDialog dialog = new AuthenticationDialog();
+        Bundle args = new Bundle();
+        args.putString(DOMAIN, domain);
+        dialog.setArguments(args);
         if(target != null && target.length > 0) {
             dialog.setTargetFragment(target[0], 1);
         }
@@ -60,6 +67,11 @@ public class AuthenticationDialog extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        if(getArguments() != null && getArguments().get(DOMAIN) != null) {
+            Bundle bundle = new Bundle();
+            bundle.putString(AnalyticsParamConstants.DOMAIN_PARAM, getArguments().getString(DOMAIN));
+            Analytics.logEvent(AnalyticsEventConstants.AUTHENTICATION_DIALOG, bundle);
+        }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle(R.string.authenticationRequired);

@@ -222,7 +222,7 @@ public abstract class BaseLoginSignInActivity extends AppCompatActivity implemen
         @Override
         public void onReceivedHttpAuthRequest(WebView view, HttpAuthHandler handler, String host, String realm) {
             mHttpAuthHandler = handler;
-            AuthenticationDialog.get().show(getSupportFragmentManager(), AuthenticationDialog.class.getSimpleName());
+            AuthenticationDialog.newInstance(getAccountDomain().getDomain()).show(getSupportFragmentManager(), AuthenticationDialog.class.getSimpleName());
         }
 
         @Override

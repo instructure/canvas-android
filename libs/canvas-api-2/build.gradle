@@ -83,6 +83,8 @@ dependencies {
     api Libs.KOTLIN_COROUTINES_ANDROID
     testImplementation Libs.KOTLIN_COROUTINES_TEST
 
+    implementation Libs.FIREBASE_CORE
+
     /* Retrofit / GSON */
     api("com.squareup.retrofit2:retrofit:$retrofitVersion") {
         exclude module: 'okhttp'

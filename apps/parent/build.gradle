@@ -180,7 +180,6 @@ dependencies {
     testImplementation Libs.ROBOLECTRIC
 
     /* Crashlytics */
-    implementation Libs.FIREBASE_CORE
     implementation(Libs.CRASHLYTICS) {
         transitive = true
     }
