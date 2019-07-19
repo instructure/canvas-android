@@ -210,7 +210,6 @@ dependencies {
     implementation Libs.MOBIUS_EXTRAS
 
     /* Crashlytics */
-    implementation Libs.FIREBASE_CORE
     implementation(Libs.CRASHLYTICS) {
         transitive = true
     }

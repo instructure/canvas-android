@@ -17,10 +17,13 @@
 
 package com.instructure.canvasapi2
 
+import android.annotation.SuppressLint
 import android.app.Application
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.CanvasAuthError
 import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.utils.Analytics
 import com.jakewharton.threetenabp.AndroidThreeTen
 import io.paperdb.Paper
 import org.greenrobot.eventbus.EventBus
@@ -30,10 +33,13 @@ import retrofit2.Response
 
 abstract class AppManager : Application() {
 
+    @SuppressLint("MissingPermission")
     override fun onCreate() {
         super.onCreate()
         AndroidThreeTen.init(this)
         Paper.init(this)
+        // Permissions missing lint suppressed - we have the permissions in the app manifests
+        Analytics.firebase = FirebaseAnalytics.getInstance(this)
         EventBus.getDefault().register(this)
     }
 
