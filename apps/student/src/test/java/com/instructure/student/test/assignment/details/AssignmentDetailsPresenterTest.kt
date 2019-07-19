@@ -383,7 +383,10 @@ class AssignmentDetailsPresenterTest : Assert() {
             null,
             null
         )
-        val model = baseModel.copy(databaseSubmission = submission)
+        val model = baseModel.copy(
+            assignmentResult = DataResult.Success(baseAssignment),
+            databaseSubmission = submission
+        )
         val actual = AssignmentDetailsPresenter.present(model, context).visibilities.submissionUploadStatusInProgress
         assertTrue(actual)
     }
@@ -402,7 +405,10 @@ class AssignmentDetailsPresenterTest : Assert() {
             null,
             null
         )
-        val model = baseModel.copy(databaseSubmission = submission)
+        val model = baseModel.copy(
+            assignmentResult = DataResult.Success(baseAssignment),
+            databaseSubmission = submission
+        )
         val actual = AssignmentDetailsPresenter.present(model, context).visibilities.submissionUploadStatusFailed
         assertTrue(actual)
     }

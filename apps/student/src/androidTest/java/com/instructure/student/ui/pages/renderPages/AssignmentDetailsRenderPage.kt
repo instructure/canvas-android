@@ -23,6 +23,8 @@ import androidx.test.espresso.web.webdriver.DriverAtoms.getText
 import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.espresso.*
 import com.instructure.espresso.page.onViewWithText
+import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withText
 import com.instructure.student.R
 import com.instructure.student.ui.pages.AssignmentDetailsPage
 import org.hamcrest.Matchers
@@ -39,6 +41,9 @@ class AssignmentDetailsRenderPage : AssignmentDetailsPage() {
     val noDescription by OnViewWithId(R.id.noDescriptionContainer)
     val descriptionWebView by OnViewWithId(R.id.descriptionWebView)
     val gradeContainer by OnViewWithId(R.id.gradeContainer)
+    val submissionSuceeded by OnViewWithText(R.string.submissionStatusSuccessTitle)
+    val submissionStatusUploading by OnViewWithId(R.id.submissionStatusUploading)
+    val submissionStatusFailed by OnViewWithId(R.id.submissionStatusFailed)
 
     fun assertDisplaysToolbarTitle(text: String) {
         onViewWithText(text).assertDisplayed()
@@ -79,6 +84,19 @@ class AssignmentDetailsRenderPage : AssignmentDetailsPage() {
 
     fun assertDisplaysGrade() {
         gradeContainer.assertVisible()
+    }
+
+    fun assertDisplaysSuccessfulSubmit() {
+        assertDisplaysGrade()
+        submissionSuceeded.assertVisible()
+    }
+
+    fun assertDisplaysUploadingSubmission() {
+        submissionStatusUploading.assertVisible()
+    }
+
+    fun assertDisplaysFailedSubmission() {
+        submissionStatusFailed.assertVisible()
     }
 
     fun assertDisplaysDescription(text: String) {
