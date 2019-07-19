@@ -204,6 +204,7 @@ open class GradesListRecyclerAdapter(
            // If we've made it this far, MGP is not enabled, so we do the standard behavior
            isRefresh = true
            updateCourseGrade()
+           updateWithAllAssignments()
         }
     }
 
