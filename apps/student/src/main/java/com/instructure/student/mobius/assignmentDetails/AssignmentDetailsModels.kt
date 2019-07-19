@@ -27,7 +27,7 @@ sealed class AssignmentDetailsEvent {
     object ViewUploadStatusClicked : AssignmentDetailsEvent()
     object PullToRefresh : AssignmentDetailsEvent()
     data class SubmissionTypeClicked(val submissionType: Assignment.SubmissionType) : AssignmentDetailsEvent()
-    data class DataLoaded(val assignmentResult: DataResult<Assignment>?, val isArcEnabled: Boolean, val ltiTool: DataResult<LTITool>?) : AssignmentDetailsEvent()
+    data class DataLoaded(val assignmentResult: DataResult<Assignment>?, val isArcEnabled: Boolean, val ltiTool: DataResult<LTITool>?, val submissionId: Long?) : AssignmentDetailsEvent()
     data class SubmissionStatusUpdated(val status: SubmissionUploadStatus) : AssignmentDetailsEvent()
     data class InternalRouteRequested(val url: String) : AssignmentDetailsEvent()
 }
@@ -35,7 +35,7 @@ sealed class AssignmentDetailsEvent {
 sealed class AssignmentDetailsEffect {
     data class ShowSubmitDialogView(val assignment: Assignment, val course: Course, val isArcEnabled: Boolean) : AssignmentDetailsEffect()
     data class ShowSubmissionView(val assignmentId: Long, val course: Course) : AssignmentDetailsEffect()
-    data class ShowUploadStatusView(val assignmentId: Long, val course: Course) : AssignmentDetailsEffect()
+    data class ShowUploadStatusView(val submissionId: Long) : AssignmentDetailsEffect()
     data class ShowCreateSubmissionView(val submissionType: Assignment.SubmissionType, val course: Course, val assignment: Assignment, val ltiUrl: String? = null) : AssignmentDetailsEffect()
     data class LoadData(val assignmentId: Long, val courseId: Long, val forceNetwork: Boolean) : AssignmentDetailsEffect()
     data class ObserveSubmissionStatus(val assignmentId: Long) : AssignmentDetailsEffect()
@@ -53,7 +53,8 @@ data class AssignmentDetailsModel(
     val assignmentResult: DataResult<Assignment>? = null,
     val isArcEnabled: Boolean = false,
     val status: SubmissionUploadStatus = SubmissionUploadStatus.Empty,
-    val ltiTool: DataResult<LTITool>? = null
+    val ltiTool: DataResult<LTITool>? = null,
+    val databaseSubmissionId: Long? = null
 )
 
 sealed class SubmissionUploadStatus {

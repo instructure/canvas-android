@@ -46,6 +46,7 @@ import com.instructure.student.db.Db
 import com.instructure.student.db.getInstance
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import org.threeten.bp.OffsetDateTime
 import java.io.File
 import java.util.*
 
@@ -106,6 +107,8 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
         setIntentRedelivery(true)
     }
 
+    private fun getUserId() = ApiPrefs.user!!.id
+
     override fun onHandleIntent(intent: Intent) {
         val action = intent.action!!
 
@@ -127,7 +130,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
         val db = Db.getInstance(this).submissionQueries
 
         // Save to persistence
-        db.insertOnlineTextSubmission(text, assignmentName, assignmentId, context)
+        db.insertOnlineTextSubmission(text, assignmentName, assignmentId, context, getUserId(), OffsetDateTime.now())
         dbSubmissionId = db.getLastInsert().executeAsOne()
 
         showProgressNotification(assignmentName, dbSubmissionId)
@@ -153,7 +156,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
         val db = Db.getInstance(this).submissionQueries
 
         // Save to persistence
-        db.insertOnlineUrlSubmission(url, assignmentName, assignmentId, context)
+        db.insertOnlineUrlSubmission(url, assignmentName, assignmentId, context, getUserId(), OffsetDateTime.now())
         dbSubmissionId = db.getLastInsert().executeAsOne()
 
         showProgressNotification(assignmentName, dbSubmissionId)
@@ -197,7 +200,9 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
                 assignment.name,
                 assignment.id,
                 assignment.groupCategoryId,
-                canvasContext
+                canvasContext,
+                getUserId(),
+                OffsetDateTime.now()
             )
             dbSubmissionId = submissionsDb.getLastInsert().executeAsOne()
 
@@ -256,7 +261,9 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
                 assignment.name,
                 assignment.id,
                 assignment.groupCategoryId,
-                context
+                context,
+                getUserId(),
+                OffsetDateTime.now()
             )
             dbSubmissionId = submissionsDb.getLastInsert().executeAsOne()
 

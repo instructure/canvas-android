@@ -19,6 +19,7 @@ import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.student.Submission
 import com.instructure.student.SubmissionQueries
 import com.instructure.student.db.Db
@@ -29,6 +30,7 @@ import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.threeten.bp.OffsetDateTime
 
 
 @RunWith(AndroidJUnit4::class)
@@ -39,6 +41,7 @@ class SubmissionDbQueriesTest : Assert() {
     lateinit var context: Context
     val assignmentName = "Assignment"
     val assignmentId = 1234L
+    val userId = 1357L
 
     @Before
     fun setup() {
@@ -74,7 +77,7 @@ class SubmissionDbQueriesTest : Assert() {
         val submissionEntry = "https://www.instructure.com"
         val submissionType = "online_url"
 
-        db.insertOnlineUrlSubmission(submissionEntry, assignmentName, assignmentId, courseCanvasContext)
+        db.insertOnlineUrlSubmission(submissionEntry, assignmentName, assignmentId, courseCanvasContext, userId, OffsetDateTime.now())
         val submissionId = db.getLastInsert().executeAsOne()
         val submission = db.getSubmissionById(submissionId).executeAsOne()
 
@@ -136,10 +139,27 @@ class SubmissionDbQueriesTest : Assert() {
         assertEquals(submissionId, lastInsertedRowId)
     }
 
+    @Test
+    fun `Getting submission for an assignment works`() {
+        val (_, submissionId, _) = insertTextSubmission()
+        val submissions = db.getSubmissionsByAssignmentId(assignmentId, userId).executeAsList()
+
+        assertTrue(submissions.isNotEmpty())
+        assertEquals(submissionId, submissions.last().id)
+    }
+
+    @Test
+    fun `Getting submission for an assignment with a non used user id gives an empty list`() {
+        insertTextSubmission()
+        val submissions = db.getSubmissionsByAssignmentId(assignmentId, userId + 1).executeAsList()
+
+        assertTrue(submissions.isEmpty())
+    }
+
     private fun insertTextSubmission(): Triple<String, Long, Submission> {
         val submissionEntry = "Canvas"
 
-        db.insertOnlineTextSubmission(submissionEntry, assignmentName, assignmentId, courseCanvasContext)
+        db.insertOnlineTextSubmission(submissionEntry, assignmentName, assignmentId, courseCanvasContext, userId, OffsetDateTime.now())
         val submissionId = db.getLastInsert().executeAsOne()
         val submission = db.getSubmissionById(submissionId).executeAsOne()
         return Triple(submissionEntry, submissionId, submission)

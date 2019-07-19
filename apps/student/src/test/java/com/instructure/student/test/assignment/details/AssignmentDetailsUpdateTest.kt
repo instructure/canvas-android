@@ -38,11 +38,13 @@ class AssignmentDetailsUpdateTest : Assert() {
     private lateinit var initModel: AssignmentDetailsModel
     private lateinit var course: Course
     private lateinit var assignment: Assignment
+    private var submissionId: Long = 0
     private var assignmentId: Long = 0
     private var courseId: Long = 0
 
     @Before
     fun setup() {
+        submissionId = 2468L
         assignmentId = 4321L
         courseId = 1234L
         course = Course(id = courseId)
@@ -195,14 +197,13 @@ class AssignmentDetailsUpdateTest : Assert() {
     @Test
     fun `ViewUploadStatusClicked event results in ShowUploadStatusView effect`() {
         updateSpec
-            .given(initModel)
+            .given(initModel.copy(databaseSubmissionId = submissionId))
             .whenEvent(AssignmentDetailsEvent.ViewUploadStatusClicked)
             .then(
                 assertThatNext(
                     matchesEffects<AssignmentDetailsModel, AssignmentDetailsEffect>(
                         AssignmentDetailsEffect.ShowUploadStatusView(
-                            assignmentId,
-                            course
+                            submissionId
                         )
                     )
                 )
@@ -241,7 +242,8 @@ class AssignmentDetailsUpdateTest : Assert() {
             status = SubmissionUploadStatus.Uploading,
             assignmentResult = DataResult.Success(assignment),
             isArcEnabled = true,
-            ltiTool = DataResult.Fail(null)
+            ltiTool = DataResult.Fail(null),
+            databaseSubmissionId = submissionId
         )
         updateSpec
             .given(startModel)
@@ -249,7 +251,8 @@ class AssignmentDetailsUpdateTest : Assert() {
                 AssignmentDetailsEvent.DataLoaded(
                     assignmentResult = expectedModel.assignmentResult,
                     isArcEnabled = true,
-                    ltiTool = expectedModel.ltiTool
+                    ltiTool = expectedModel.ltiTool,
+                    submissionId = submissionId
                 )
             )
             .then(assertThatNext(NextMatchers.hasModel(expectedModel)))
@@ -262,7 +265,8 @@ class AssignmentDetailsUpdateTest : Assert() {
             isLoading = false,
             status = SubmissionUploadStatus.Uploading,
             assignmentResult = DataResult.Fail(),
-            ltiTool = DataResult.Fail()
+            ltiTool = DataResult.Fail(),
+            databaseSubmissionId = submissionId
         )
         updateSpec
             .given(startModel)
@@ -270,7 +274,8 @@ class AssignmentDetailsUpdateTest : Assert() {
                 AssignmentDetailsEvent.DataLoaded(
                     assignmentResult = expectedModel.assignmentResult,
                     isArcEnabled = false,
-                    ltiTool = expectedModel.ltiTool
+                    ltiTool = expectedModel.ltiTool,
+                    submissionId = submissionId
                 )
             )
             .then(assertThatNext(NextMatchers.hasModel(expectedModel)))
@@ -279,15 +284,21 @@ class AssignmentDetailsUpdateTest : Assert() {
     @Test
     fun `DataLoaded event with a null assignment updates the model`() {
         val startModel = initModel.copy(status = SubmissionUploadStatus.Uploading)
-        val expectedModel =
-            initModel.copy(isLoading = false, status = SubmissionUploadStatus.Uploading, assignmentResult = null, ltiTool = null)
+        val expectedModel = initModel.copy(
+            isLoading = false,
+            status = SubmissionUploadStatus.Uploading,
+            assignmentResult = null,
+            ltiTool = null,
+            databaseSubmissionId = submissionId
+        )
         updateSpec
             .given(startModel)
             .whenEvent(
                 AssignmentDetailsEvent.DataLoaded(
                     assignmentResult = expectedModel.assignmentResult,
                     isArcEnabled = false,
-                    ltiTool = expectedModel.ltiTool
+                    ltiTool = expectedModel.ltiTool,
+                    submissionId = submissionId
                 )
             )
             .then(assertThatNext(NextMatchers.hasModel(expectedModel)))
