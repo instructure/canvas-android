@@ -24,6 +24,7 @@ import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.canvasapi2.utils.isRtl
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.student.R
+import com.instructure.student.Submission
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsViewState
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsVisibilities
 import com.instructure.student.mobius.assignmentDetails.ui.gradeCell.GradeCellViewState
@@ -45,11 +46,12 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
         assignment.isArcEnabled = model.isArcEnabled
 
         // Loaded state
-        return presentLoadedState(assignment, context)
+        return presentLoadedState(assignment, model.databaseSubmission, context)
     }
 
     private fun presentLoadedState(
         assignment: Assignment,
+        databaseSubmission: Submission?,
         context: Context
     ): AssignmentDetailsViewState.Loaded {
         val visibilities = AssignmentDetailsVisibilities()
@@ -143,8 +145,14 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
             }
         )
 
+        // Show the grade cell if there's not a database submission and the grade state isn't empty
         val gradeState = GradeCellViewState.fromSubmission(context, assignment, assignment.submission)
-        visibilities.grade = gradeState != GradeCellViewState.Empty
+        if (databaseSubmission == null) {
+            visibilities.grade = gradeState != GradeCellViewState.Empty
+        } else {
+            visibilities.submissionUploadStatusInProgress = !databaseSubmission.errorFlag
+            visibilities.submissionUploadStatusFailed = databaseSubmission.errorFlag
+        }
 
         return AssignmentDetailsViewState.Loaded(
             assignmentName = assignment.name.orEmpty(),

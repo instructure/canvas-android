@@ -65,6 +65,12 @@ DELETE
 FROM submission
 WHERE id = ?;
 
+deleteSubmissionsForAssignmentId:
+DELETE
+FROM submission
+WHERE assignmentId = ?
+AND userId = ?;
+
 setSubmissionError:
 UPDATE submission
 SET errorFlag = ?

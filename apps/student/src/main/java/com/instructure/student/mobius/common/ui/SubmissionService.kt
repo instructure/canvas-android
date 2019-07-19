@@ -43,6 +43,7 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.student.R
 import com.instructure.student.activity.NavigationActivity
 import com.instructure.student.db.Db
+import com.instructure.student.db.StudentDb
 import com.instructure.student.db.getInstance
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -130,6 +131,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
         val db = Db.getInstance(this).submissionQueries
 
         // Save to persistence
+        db.deleteSubmissionsForAssignmentId(assignmentId, getUserId())
         db.insertOnlineTextSubmission(text, assignmentName, assignmentId, context, getUserId(), OffsetDateTime.now())
         dbSubmissionId = db.getLastInsert().executeAsOne()
 
@@ -156,6 +158,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
         val db = Db.getInstance(this).submissionQueries
 
         // Save to persistence
+        db.deleteSubmissionsForAssignmentId(assignmentId, getUserId())
         db.insertOnlineUrlSubmission(url, assignmentName, assignmentId, context, getUserId(), OffsetDateTime.now())
         dbSubmissionId = db.getLastInsert().executeAsOne()
 
@@ -196,6 +199,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
             )
         } else {
             // New submission - store submission details in the db
+            submissionsDb.deleteSubmissionsForAssignmentId(assignment.id, getUserId())
             submissionsDb.insertOnlineUploadSubmission(
                 assignment.name,
                 assignment.id,
@@ -257,6 +261,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
                 groupCategoryId = submission.assignmentGroupCategoryId ?: 0
             )
         } else {
+            submissionsDb.deleteSubmissionsForAssignmentId(assignment.id, getUserId())
             submissionsDb.insertOnlineUploadSubmission(
                 assignment.name,
                 assignment.id,

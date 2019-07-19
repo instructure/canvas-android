@@ -26,6 +26,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
+import android.widget.Toast
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
@@ -125,7 +126,9 @@ class AssignmentDetailsView(
             noDescriptionContainer.setVisible(visibilities.noDescriptionLabel)
             descriptionWebView.setVisible(visibilities.description)
             submitButton.setVisible(visibilities.submitButton)
-            submissionUploadStatusContainer.setVisible(visibilities.submissionUploadStatus)
+            submissionUploadStatusContainer.setVisible(visibilities.submissionUploadStatusInProgress || visibilities.submissionUploadStatusFailed)
+            submissionStatusUploading.setVisible(visibilities.submissionUploadStatusInProgress)
+            submissionStatusFailed.setVisible(visibilities.submissionUploadStatusFailed)
             descriptionContainer.setVisible(visibilities.description || visibilities.noDescriptionLabel)
         }
 
@@ -152,11 +155,6 @@ class AssignmentDetailsView(
         if (state.visibilities.description) {
             descriptionWebView.formatHTML(state.description, state.assignmentName)
         }
-        renderSubmissionStatus(state)
-    }
-
-    private fun renderSubmissionStatus(state: AssignmentDetailsViewState.Loaded) {
-        // TODO
     }
 
     override fun onDispose() {
@@ -207,6 +205,7 @@ class AssignmentDetailsView(
     }
 
     fun showUploadStatusView(submissionId: Long) {
+        Toast.makeText(context, "Route to upload status", Toast.LENGTH_SHORT).show()
     }
 
     fun showOnlineTextEntryView(assignmentId: Long, assignmentName: String?, submittedText: String? = null) {
