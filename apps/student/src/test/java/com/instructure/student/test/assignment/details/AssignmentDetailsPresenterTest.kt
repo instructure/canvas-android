@@ -35,6 +35,7 @@ import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.threeten.bp.OffsetDateTime
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -365,6 +366,50 @@ class AssignmentDetailsPresenterTest : Assert() {
         )
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         val actual = AssignmentDetailsPresenter.present(model, context).visibilities.grade
+        assertTrue(actual)
+    }
+
+    @Test
+    fun `Displays upload in progress when database submission is not failed`() {
+        val submission = com.instructure.student.Submission.Impl(
+            123L,
+            null,
+            OffsetDateTime.now(),
+            null,
+            baseAssignment.id,
+            null,
+            null,
+            false,
+            null,
+            null
+        )
+        val model = baseModel.copy(
+            assignmentResult = DataResult.Success(baseAssignment),
+            databaseSubmission = submission
+        )
+        val actual = AssignmentDetailsPresenter.present(model, context).visibilities.submissionUploadStatusInProgress
+        assertTrue(actual)
+    }
+
+    @Test
+    fun `Displays failed submission when database submission is failed`() {
+        val submission = com.instructure.student.Submission.Impl(
+            123L,
+            null,
+            OffsetDateTime.now(),
+            null,
+            baseAssignment.id,
+            null,
+            null,
+            true,
+            null,
+            null
+        )
+        val model = baseModel.copy(
+            assignmentResult = DataResult.Success(baseAssignment),
+            databaseSubmission = submission
+        )
+        val actual = AssignmentDetailsPresenter.present(model, context).visibilities.submissionUploadStatusFailed
         assertTrue(actual)
     }
 

@@ -31,10 +31,11 @@ import com.instructure.student.db.getInstance
 import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsEffect
 import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsEffectHandler
 import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsEvent
-import com.instructure.student.mobius.assignmentDetails.SubmissionUploadStatus
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsView
 import com.instructure.student.mobius.assignmentDetails.ui.SubmissionTypesVisibilities
+import com.spotify.mobius.Connection
 import com.spotify.mobius.functions.Consumer
+import com.squareup.sqldelight.Query
 import io.mockk.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -52,42 +53,50 @@ import java.util.*
 import java.util.concurrent.Executors
 
 class AssignmentDetailsEffectHandlerTest : Assert() {
+    private val assignmentId = 2468L
     private val view: AssignmentDetailsView = mockk(relaxed = true)
     private val context: Context = mockk(relaxed = true)
-    private val effectHandler =
-        AssignmentDetailsEffectHandler(context).apply { view = this@AssignmentDetailsEffectHandlerTest.view }
+    private var effectHandler =
+        AssignmentDetailsEffectHandler(context, assignmentId).apply { view = this@AssignmentDetailsEffectHandlerTest.view }
     private val eventConsumer: Consumer<AssignmentDetailsEvent> = mockk(relaxed = true)
-    private val connection = effectHandler.connect(eventConsumer)
+    private lateinit var connection: Connection<AssignmentDetailsEffect>
 
     lateinit var assignment: Assignment
     lateinit var course: Course
+    lateinit var queryMockk: Query<Submission>
     private var userId: Long = 0
 
     @ExperimentalCoroutinesApi
     @Before
     fun setup() {
         Dispatchers.setMain(Executors.newSingleThreadExecutor().asCoroutineDispatcher())
-        assignment = Assignment(id = 2468, courseId = 8642)
+        assignment = Assignment(id = assignmentId, courseId = 8642)
         course = Course()
         userId = 6789L
-    }
 
-    private fun mockkDatabase(data: List<Submission> = emptyList()) {
         mockkStatic(ApiPrefs::class)
         every { ApiPrefs.user } returns User(id = userId)
 
         mockkStatic("com.instructure.student.db.ExtensionsKt")
 
+        queryMockk = mockk(relaxed = true)
         val db: StudentDb = mockk {
             every {
-                submissionQueries.getSubmissionsByAssignmentId(assignment.id, userId).executeAsList()
-            } returns data
+                submissionQueries.getSubmissionsByAssignmentId(assignment.id, userId)
+            } returns queryMockk
         }
 
         every { Db.getInstance(context) } returns db
+
+        // Connect after mocks, so database is setup properly
+        connection = effectHandler.connect(eventConsumer)
     }
 
-    private fun mockkSubmission(submissionId: Long, daysAgo: Long = 0): Submission {
+    private fun mockkDatabase(data: List<Submission> = emptyList()) {
+        every { queryMockk.executeAsList() } returns data
+    }
+
+    private fun mockkSubmission(submissionId: Long, daysAgo: Long = 0, failed: Boolean = false): Submission {
         return Submission.Impl(
             submissionId,
             null,
@@ -96,7 +105,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
             assignment.id,
             course,
             null,
-            false,
+            failed,
             null,
             userId
         )
@@ -155,14 +164,14 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     @Test
     fun `Successful LoadData results in DataLoaded`() {
         val courseId = 1L
-        val submissionId = 9876L
+        val submission = mockkSubmission(9876L)
         val ltiTool = LTITool(url = "https://www.instructure.com")
         assignment = assignment.copy(submissionTypesRaw = listOf(Assignment.SubmissionType.EXTERNAL_TOOL.apiString), url = "https://www.instructure.com")
         val expectedEvent = AssignmentDetailsEvent.DataLoaded(
             DataResult.Success(assignment),
             false,
             DataResult.Success(ltiTool),
-            submissionId
+            submission
         )
 
         mockkStatic("com.instructure.canvasapi2.utils.weave.AwaitApiKt")
@@ -173,43 +182,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
             coEvery { await() } returns DataResult.Success(ltiTool)
         }
 
-        mockkDatabase(listOf(mockkSubmission(submissionId)))
-
-        connection.accept(AssignmentDetailsEffect.LoadData(assignment.id, courseId, false))
-
-        verify(timeout = 100) {
-            eventConsumer.accept(expectedEvent)
-        }
-
-        confirmVerified(eventConsumer)
-    }
-
-    @Test
-    fun `Successful LoadData results in DataLoaded without submissionId if a newer submission exists from API`() {
-        val courseId = 1L
-        val submissionId = 9876L
-        val ltiTool = LTITool(url = "https://www.instructure.com")
-        assignment = assignment.copy(
-            submissionTypesRaw = listOf(Assignment.SubmissionType.EXTERNAL_TOOL.apiString),
-            url = "https://www.instructure.com",
-            submission = Submission(submittedAt = Date())
-        )
-        val expectedEvent = AssignmentDetailsEvent.DataLoaded(
-            DataResult.Success(assignment),
-            false,
-            DataResult.Success(ltiTool),
-            null
-        )
-
-        mockkStatic("com.instructure.canvasapi2.utils.weave.AwaitApiKt")
-        coEvery { awaitApiResponse<Assignment>(any()) } returns Response.success(assignment)
-
-        mockkObject(SubmissionManager)
-        every { SubmissionManager.getLtiFromAuthenticationUrlAsync(any(), any()) } returns mockk {
-            coEvery { await() } returns DataResult.Success(ltiTool)
-        }
-
-        mockkDatabase(listOf(mockkSubmission(submissionId, 1)))
+        mockkDatabase(listOf(submission))
 
         connection.accept(AssignmentDetailsEffect.LoadData(assignment.id, courseId, false))
 
@@ -223,7 +196,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     @Test
     fun `Successful LoadData results in DataLoaded with submissionId if an older submission exists from API`() {
         val courseId = 1L
-        val submissionId = 9876L
+        val submission = mockkSubmission(9876L, daysAgo = -1, failed = true)
         val ltiTool = LTITool(url = "https://www.instructure.com")
         assignment = assignment.copy(
             submissionTypesRaw = listOf(Assignment.SubmissionType.EXTERNAL_TOOL.apiString),
@@ -234,7 +207,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
             DataResult.Success(assignment),
             false,
             DataResult.Success(ltiTool),
-            submissionId
+            submission
         )
 
         mockkStatic("com.instructure.canvasapi2.utils.weave.AwaitApiKt")
@@ -245,7 +218,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
             coEvery { await() } returns DataResult.Success(ltiTool)
         }
 
-        mockkDatabase(listOf(mockkSubmission(submissionId, -1)))
+        mockkDatabase(listOf(submission))
 
         connection.accept(AssignmentDetailsEffect.LoadData(assignment.id, courseId, false))
 
@@ -259,7 +232,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     @Test
     fun `Successful LoadData results in DataLoaded with submissionId if submittedAt on submission is null from API`() {
         val courseId = 1L
-        val submissionId = 9876L
+        val submission = mockkSubmission(9876L)
         val ltiTool = LTITool(url = "https://www.instructure.com")
         assignment = assignment.copy(
             submissionTypesRaw = listOf(Assignment.SubmissionType.EXTERNAL_TOOL.apiString),
@@ -270,7 +243,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
             DataResult.Success(assignment),
             false,
             DataResult.Success(ltiTool),
-            submissionId
+            submission
         )
 
         mockkStatic("com.instructure.canvasapi2.utils.weave.AwaitApiKt")
@@ -281,7 +254,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
             coEvery { await() } returns DataResult.Success(ltiTool)
         }
 
-        mockkDatabase(listOf(mockkSubmission(submissionId)))
+        mockkDatabase(listOf(submission))
 
         connection.accept(AssignmentDetailsEffect.LoadData(assignment.id, courseId, false))
 
@@ -295,13 +268,13 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     @Test
     fun `Successful LoadData with ONLINE_UPLOAD submissionType with arc enabled results in DataLoaded`() {
         val courseId = 1L
-        val submissionId = 9876L
+        val submission = mockkSubmission(9876L)
         val assignment = assignment.copy(submissionTypesRaw = listOf("online_upload"))
         val expectedEvent = AssignmentDetailsEvent.DataLoaded(
             DataResult.Success(assignment),
             true,
             DataResult.Fail(null),
-            submissionId
+            submission
         )
 
         mockkStatic("com.instructure.canvasapi2.utils.weave.AwaitApiKt")
@@ -312,7 +285,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
             coEvery { await() } returns DataResult.Success(listOf(LTITool(url = "instructuremedia.com/lti/launch")))
         }
 
-        mockkDatabase(listOf(mockkSubmission(submissionId)))
+        mockkDatabase(listOf(submission))
 
         connection.accept(AssignmentDetailsEffect.LoadData(assignment.id, courseId, false))
 
@@ -441,27 +414,26 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
 
     @Test
     fun `ShowUploadStatusView calls showUploadStatusView on the view`() {
-        val submissionId = 9876L
-
-        connection.accept(AssignmentDetailsEffect.ShowUploadStatusView(submissionId))
+        val submission = mockkSubmission(9876L)
+        connection.accept(AssignmentDetailsEffect.ShowUploadStatusView(submission))
 
         verify(timeout = 100) {
-            view.showUploadStatusView(submissionId)
+            view.showUploadStatusView(submission.id)
         }
 
         confirmVerified(view)
     }
 
-    // TODO: Finish submission status events once implemented
-
     @Test
-    fun `ObserveSubmissionStatus results in SubmissionStatusUpdated event`() {
-        val expectedEvent = AssignmentDetailsEvent.SubmissionStatusUpdated(SubmissionUploadStatus.Empty)
+    fun `queryResultsChanged calls from the database send SubmissionStatusUpdated events`() {
+        val submission = mockkSubmission(9876L)
 
-        connection.accept(AssignmentDetailsEffect.ObserveSubmissionStatus(assignment.id))
+        mockkDatabase(listOf(submission))
+
+        effectHandler.queryResultsChanged()
 
         verify(timeout = 100) {
-            eventConsumer.accept(expectedEvent)
+            eventConsumer.accept(AssignmentDetailsEvent.SubmissionStatusUpdated(submission))
         }
 
         confirmVerified(eventConsumer)

@@ -24,27 +24,52 @@ import com.instructure.canvasapi2.models.DiscussionTopic
 import com.instructure.canvasapi2.utils.*
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
 import com.instructure.canvasapi2.utils.weave.awaitApiResponse
+import com.instructure.student.Submission
 import com.instructure.student.db.Db
 import com.instructure.student.db.getInstance
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsView
 import com.instructure.student.mobius.assignmentDetails.ui.SubmissionTypesVisibilities
 import com.instructure.student.mobius.common.ui.EffectHandler
 import com.instructure.student.util.isArcEnabled
+import com.spotify.mobius.Connection
+import com.spotify.mobius.functions.Consumer
+import com.squareup.sqldelight.Query
 import kotlinx.coroutines.launch
-import org.threeten.bp.OffsetDateTime
 
-class AssignmentDetailsEffectHandler(val context: Context) : EffectHandler<AssignmentDetailsView, AssignmentDetailsEvent, AssignmentDetailsEffect>() {
+class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Long) :
+    EffectHandler<AssignmentDetailsView, AssignmentDetailsEvent, AssignmentDetailsEffect>(),
+    Query.Listener {
+
+    private var submissionQuery: Query<Submission>? = null
+
+    override fun connect(output: Consumer<AssignmentDetailsEvent>): Connection<AssignmentDetailsEffect> {
+        val db = Db.getInstance(context)
+        submissionQuery = db.submissionQueries.getSubmissionsByAssignmentId(assignmentId, ApiPrefs.user!!.id)
+        submissionQuery!!.addListener(this@AssignmentDetailsEffectHandler)
+
+        return super.connect(output)
+    }
+
+    override fun dispose() {
+        super.dispose()
+        submissionQuery?.removeListener(this)
+        submissionQuery = null
+    }
+
+    override fun queryResultsChanged() {
+        launch {
+            val submission = submissionQuery?.executeAsList()?.lastOrNull()
+            consumer.accept(AssignmentDetailsEvent.SubmissionStatusUpdated(submission))
+        }
+    }
+
     override fun accept(effect: AssignmentDetailsEffect) {
         when (effect) {
             is AssignmentDetailsEffect.ShowSubmitDialogView -> view?.showSubmitDialogView(effect.assignment, effect.course.id, getSubmissionTypesVisibilities(effect.assignment, effect.isArcEnabled))
             is AssignmentDetailsEffect.ShowSubmissionView -> view?.showSubmissionView(effect.assignmentId, effect.course)
-            is AssignmentDetailsEffect.ShowUploadStatusView -> view?.showUploadStatusView(effect.submissionId)
+            is AssignmentDetailsEffect.ShowUploadStatusView -> view?.showUploadStatusView(effect.submission.id) // TODO: show upload status for files/media, otherwise show the appropriate submission screen (text/url/etc...)
             is AssignmentDetailsEffect.LoadData -> {
                 loadData(effect)
-            }
-            is AssignmentDetailsEffect.ObserveSubmissionStatus -> {
-                // TODO: Get status from upload manager
-                consumer.accept(AssignmentDetailsEvent.SubmissionStatusUpdated(SubmissionUploadStatus.Empty))
             }
             is AssignmentDetailsEffect.ShowCreateSubmissionView -> {
                 when (effect.submissionType) {
@@ -94,22 +119,7 @@ class AssignmentDetailsEffectHandler(val context: Context) : EffectHandler<Assig
                 }
             }
 
-            val db = Db.getInstance(context)
-            val dbSubmission = db.submissionQueries.getSubmissionsByAssignmentId(
-                effect.assignmentId,
-                ApiPrefs.user!!.id
-            ).executeAsList().lastOrNull()
-
-            val apiSubmission = result.dataOrNull?.submission
-
-            val databaseSubmissionId = when {
-                dbSubmission == null -> null
-                apiSubmission == null -> dbSubmission.id
-                apiSubmission.submittedAt == null -> dbSubmission.id
-                dbSubmission.lastActivityDate == null -> null
-                OffsetDateTime.parse(apiSubmission.submittedAt.toApiString()).isBefore(dbSubmission.lastActivityDate) -> dbSubmission.id
-                else -> null
-            }
+            val dbSubmission = submissionQuery?.executeAsList()?.lastOrNull()
 
             // Determine if we need to retrieve an authenticated LTI URL based on whether this assignment accepts external tool submissions
             val assignmentUrl = result.dataOrNull?.url
@@ -122,7 +132,14 @@ class AssignmentDetailsEffectHandler(val context: Context) : EffectHandler<Assig
                 effect.courseId.isArcEnabled()
             } else false
 
-            consumer.accept(AssignmentDetailsEvent.DataLoaded(result, isArcEnabled, ltiTool, databaseSubmissionId))
+            consumer.accept(
+                AssignmentDetailsEvent.DataLoaded(
+                    result,
+                    isArcEnabled,
+                    ltiTool,
+                    dbSubmission
+                )
+            )
         }
     }
 
