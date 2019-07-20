@@ -37,7 +37,7 @@ class AssignmentDetailsFragment :
     @get:PageViewUrlParam(name = "assignmentId")
     val assignmentId by LongArg(key = Const.ASSIGNMENT_ID)
 
-    override fun makeEffectHandler() = AssignmentDetailsEffectHandler()
+    override fun makeEffectHandler() = AssignmentDetailsEffectHandler(requireContext(), assignmentId)
 
     override fun makeUpdate() = AssignmentDetailsUpdate()
 

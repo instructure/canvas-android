@@ -18,6 +18,7 @@ package com.instructure.student.mobius.assignmentDetails
 
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.student.Submission
 
 sealed class AssignmentDetailsEvent {
     object SubmitAssignmentClicked : AssignmentDetailsEvent()
@@ -26,8 +27,14 @@ sealed class AssignmentDetailsEvent {
     object DiscussionAttachmentClicked : AssignmentDetailsEvent()
     object PullToRefresh : AssignmentDetailsEvent()
     data class SubmissionTypeClicked(val submissionType: Assignment.SubmissionType) : AssignmentDetailsEvent()
-    data class DataLoaded(val assignmentResult: DataResult<Assignment>?, val isArcEnabled: Boolean, val ltiTool: DataResult<LTITool>?, val quizResult: DataResult<Quiz>?) : AssignmentDetailsEvent()
-    data class SubmissionStatusUpdated(val status: SubmissionUploadStatus) : AssignmentDetailsEvent()
+    data class DataLoaded(
+        val assignmentResult: DataResult<Assignment>?,
+        val isArcEnabled: Boolean,
+        val ltiTool: DataResult<LTITool>?,
+        val submission: Submission?,
+        val quizResult: DataResult<Quiz>?
+    ) : AssignmentDetailsEvent()
+    data class SubmissionStatusUpdated(val submission: Submission?) : AssignmentDetailsEvent()
     data class InternalRouteRequested(val url: String) : AssignmentDetailsEvent()
 }
 
@@ -37,10 +44,9 @@ sealed class AssignmentDetailsEffect {
     data class ShowDiscussionDetailView(val discussionTopicHeaderId: Long, val course: Course) : AssignmentDetailsEffect()
     data class ShowDiscussionAttachment(val discussionAttachment: Attachment, val course: Course) : AssignmentDetailsEffect()
     data class ShowSubmissionView(val assignmentId: Long, val course: Course) : AssignmentDetailsEffect()
-    data class ShowUploadStatusView(val assignmentId: Long, val course: Course) : AssignmentDetailsEffect()
+    data class ShowUploadStatusView(val submission: Submission) : AssignmentDetailsEffect()
     data class ShowCreateSubmissionView(val submissionType: Assignment.SubmissionType, val course: Course, val assignment: Assignment, val ltiUrl: String? = null) : AssignmentDetailsEffect()
     data class LoadData(val assignmentId: Long, val courseId: Long, val forceNetwork: Boolean) : AssignmentDetailsEffect()
-    data class ObserveSubmissionStatus(val assignmentId: Long) : AssignmentDetailsEffect()
     data class RouteInternally(
         val url: String,
         val course: Course,
@@ -55,13 +61,6 @@ data class AssignmentDetailsModel(
     val assignmentResult: DataResult<Assignment>? = null,
     val quizResult: DataResult<Quiz>? = null,
     val isArcEnabled: Boolean = false,
-    val status: SubmissionUploadStatus = SubmissionUploadStatus.Empty,
-    val ltiTool: DataResult<LTITool>? = null
+    val ltiTool: DataResult<LTITool>? = null,
+    val databaseSubmission: Submission? = null
 )
-
-sealed class SubmissionUploadStatus {
-    object Uploading : SubmissionUploadStatus()
-    object Failure : SubmissionUploadStatus()
-    object Finished : SubmissionUploadStatus()
-    object Empty : SubmissionUploadStatus()
-}

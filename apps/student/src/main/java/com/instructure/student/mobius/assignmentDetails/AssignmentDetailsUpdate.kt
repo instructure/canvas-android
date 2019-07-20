@@ -18,9 +18,12 @@ package com.instructure.student.mobius.assignmentDetails
 
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.utils.mapToAttachment
+import com.instructure.canvasapi2.utils.toApiString
+import com.instructure.student.Submission
 import com.instructure.student.mobius.common.ui.UpdateInit
 import com.spotify.mobius.First
 import com.spotify.mobius.Next
+import org.threeten.bp.OffsetDateTime
 
 class AssignmentDetailsUpdate : UpdateInit<AssignmentDetailsModel, AssignmentDetailsEvent, AssignmentDetailsEffect>() {
     override fun performInit(model: AssignmentDetailsModel): First<AssignmentDetailsModel, AssignmentDetailsEffect> {
@@ -52,21 +55,28 @@ class AssignmentDetailsUpdate : UpdateInit<AssignmentDetailsModel, AssignmentDet
             Next.dispatch(setOf(AssignmentDetailsEffect.ShowDiscussionAttachment(model.assignmentResult!!.dataOrThrow.discussionTopicHeader?.attachments?.first()?.mapToAttachment()!!, model.course)))
         }
         AssignmentDetailsEvent.ViewUploadStatusClicked -> {
-            Next.dispatch(setOf(AssignmentDetailsEffect.ShowUploadStatusView(model.assignmentId, model.course)))
+            // Force non null, we should only have a click if there is a submission ID
+            Next.dispatch(setOf(AssignmentDetailsEffect.ShowUploadStatusView(model.databaseSubmission!!)))
         }
         AssignmentDetailsEvent.PullToRefresh -> {
             Next.next(model.copy(isLoading = true), setOf(AssignmentDetailsEffect.LoadData(model.assignmentId, model.course.id, true)))
         }
         is AssignmentDetailsEvent.SubmissionStatusUpdated -> {
-            Next.next(model.copy(status = event.status))
+            Next.next(
+                model.copy(
+                    databaseSubmission = event.submission
+                )
+            )
         }
         is AssignmentDetailsEvent.DataLoaded -> {
+            val dbSubmission = dbSubmissionIfNewest(event.submission, event.assignmentResult?.dataOrNull?.submission)
             Next.next(model.copy(
                 isLoading = false,
                 assignmentResult = event.assignmentResult,
                 isArcEnabled = event.isArcEnabled,
                 ltiTool = event.ltiTool,
-                quizResult = event.quizResult
+                quizResult = event.quizResult,
+                databaseSubmission = dbSubmission
             ))
         }
         is AssignmentDetailsEvent.SubmissionTypeClicked -> {
@@ -80,6 +90,17 @@ class AssignmentDetailsUpdate : UpdateInit<AssignmentDetailsModel, AssignmentDet
                 assignment = model.assignmentResult!!.dataOrThrow
             )
             Next.dispatch(setOf(effect))
+        }
+    }
+
+    private fun dbSubmissionIfNewest(dbSubmission: Submission?, apiSubmission: com.instructure.canvasapi2.models.Submission?): Submission? {
+        return when {
+            dbSubmission == null -> null
+            apiSubmission == null -> dbSubmission
+            apiSubmission.submittedAt == null -> dbSubmission
+            dbSubmission.lastActivityDate == null -> null
+            OffsetDateTime.parse(apiSubmission.submittedAt.toApiString()).isBefore(dbSubmission.lastActivityDate) -> dbSubmission
+            else -> null
         }
     }
 }

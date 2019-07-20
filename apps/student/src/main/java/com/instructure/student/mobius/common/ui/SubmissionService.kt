@@ -43,9 +43,11 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.student.R
 import com.instructure.student.activity.NavigationActivity
 import com.instructure.student.db.Db
+import com.instructure.student.db.StudentDb
 import com.instructure.student.db.getInstance
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import org.threeten.bp.OffsetDateTime
 import java.io.File
 import java.util.*
 
@@ -106,6 +108,8 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
         setIntentRedelivery(true)
     }
 
+    private fun getUserId() = ApiPrefs.user!!.id
+
     override fun onHandleIntent(intent: Intent) {
         val action = intent.action!!
 
@@ -127,7 +131,8 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
         val db = Db.getInstance(this).submissionQueries
 
         // Save to persistence
-        db.insertOnlineTextSubmission(text, assignmentName, assignmentId, context)
+        db.deleteSubmissionsForAssignmentId(assignmentId, getUserId())
+        db.insertOnlineTextSubmission(text, assignmentName, assignmentId, context, getUserId(), OffsetDateTime.now())
         dbSubmissionId = db.getLastInsert().executeAsOne()
 
         showProgressNotification(assignmentName, dbSubmissionId)
@@ -153,7 +158,8 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
         val db = Db.getInstance(this).submissionQueries
 
         // Save to persistence
-        db.insertOnlineUrlSubmission(url, assignmentName, assignmentId, context)
+        db.deleteSubmissionsForAssignmentId(assignmentId, getUserId())
+        db.insertOnlineUrlSubmission(url, assignmentName, assignmentId, context, getUserId(), OffsetDateTime.now())
         dbSubmissionId = db.getLastInsert().executeAsOne()
 
         showProgressNotification(assignmentName, dbSubmissionId)
@@ -193,11 +199,14 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
             )
         } else {
             // New submission - store submission details in the db
+            submissionsDb.deleteSubmissionsForAssignmentId(assignment.id, getUserId())
             submissionsDb.insertOnlineUploadSubmission(
                 assignment.name,
                 assignment.id,
                 assignment.groupCategoryId,
-                canvasContext
+                canvasContext,
+                getUserId(),
+                OffsetDateTime.now()
             )
             dbSubmissionId = submissionsDb.getLastInsert().executeAsOne()
 
@@ -252,11 +261,14 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
                 groupCategoryId = submission.assignmentGroupCategoryId ?: 0
             )
         } else {
+            submissionsDb.deleteSubmissionsForAssignmentId(assignment.id, getUserId())
             submissionsDb.insertOnlineUploadSubmission(
                 assignment.name,
                 assignment.id,
                 assignment.groupCategoryId,
-                context
+                context,
+                getUserId(),
+                OffsetDateTime.now()
             )
             dbSubmissionId = submissionsDb.getLastInsert().executeAsOne()
 

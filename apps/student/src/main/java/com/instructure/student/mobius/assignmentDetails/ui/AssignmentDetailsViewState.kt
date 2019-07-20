@@ -18,10 +18,7 @@ package com.instructure.student.mobius.assignmentDetails.ui
 
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
-import com.instructure.canvasapi2.models.Assignment
-import com.instructure.student.mobius.assignmentDetails.SubmissionUploadStatus
 import com.instructure.student.mobius.assignmentDetails.ui.gradeCell.GradeCellViewState
-import java.util.*
 
 sealed class AssignmentDetailsViewState(val visibilities: AssignmentDetailsVisibilities) {
     object Loading : AssignmentDetailsViewState(AssignmentDetailsVisibilities(loading = true))
@@ -35,7 +32,6 @@ sealed class AssignmentDetailsViewState(val visibilities: AssignmentDetailsVisib
         val submittedStateLabel: String,
         @ColorInt val submittedStateColor: Int,
         @DrawableRes val submittedStateIcon: Int,
-        val submissionUploadStatus: SubmissionUploadStatus = SubmissionUploadStatus.Empty,
         val dueDate: String = "",
         val lockMessage: String = "",
         val submissionTypes: String = "",
@@ -67,7 +63,9 @@ data class AssignmentDetailsVisibilities (
     var submitButton: Boolean = false,
     var submissionUploadStatus: Boolean = false,
     var quizDetails: Boolean = false,
-    var discussionTopicHeader: Boolean = false
+    var discussionTopicHeader: Boolean = false,
+    var submissionUploadStatusInProgress: Boolean = false,
+    var submissionUploadStatusFailed: Boolean = false
 )
 
 data class SubmissionTypesVisibilities(

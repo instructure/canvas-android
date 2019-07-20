@@ -29,20 +29,21 @@ CREATE TABLE submission (
     canvasContext TEXT as CanvasContext,
     submissionType TEXT,
     errorFlag INTEGER as Boolean NOT NULL DEFAULT 0,
-    assignmentGroupCategoryId INTEGER
+    assignmentGroupCategoryId INTEGER,
+    userId INTEGER
 );
 
 insertOnlineTextSubmission:
-INSERT INTO submission (submissionEntry, assignmentName, assignmentId, canvasContext, submissionType)
-VALUES (?, ?, ?, ?, "online_text_entry");
+INSERT INTO submission (submissionEntry, assignmentName, assignmentId, canvasContext, userId, lastActivityDate, submissionType)
+VALUES (?, ?, ?, ?, ?, ?, "online_text_entry");
 
 insertOnlineUrlSubmission:
-INSERT INTO submission (submissionEntry, assignmentName, assignmentId, canvasContext, submissionType)
-VALUES (?, ?, ?, ?, "online_url"); --"basic_lti_launch" else "online_url"
+INSERT INTO submission (submissionEntry, assignmentName, assignmentId, canvasContext, userId, lastActivityDate, submissionType)
+VALUES (?, ?, ?, ?, ?, ?, "online_url"); --"basic_lti_launch" else "online_url"
 
 insertOnlineUploadSubmission:
-INSERT INTO submission (assignmentName, assignmentId, assignmentGroupCategoryId, canvasContext, submissionType)
-VALUES (?, ?, ?, ?, "online_upload");
+INSERT INTO submission (assignmentName, assignmentId, assignmentGroupCategoryId, canvasContext, userId, lastActivityDate, submissionType)
+VALUES (?, ?, ?, ?, ?, ?, "online_upload");
 
 getAllSubmissions:
 SELECT *
@@ -56,12 +57,19 @@ WHERE id = ?;
 getSubmissionsByAssignmentId:
 SELECT *
 FROM submission
-WHERE assignmentId = ?;
+WHERE assignmentId = ?
+AND userId = ?;
 
 deleteSubmissionById:
 DELETE
 FROM submission
 WHERE id = ?;
+
+deleteSubmissionsForAssignmentId:
+DELETE
+FROM submission
+WHERE assignmentId = ?
+AND userId = ?;
 
 setSubmissionError:
 UPDATE submission

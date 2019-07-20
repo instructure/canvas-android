@@ -27,6 +27,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import com.instructure.canvasapi2.models.*
+import android.widget.Toast
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.pandautils.utils.*
@@ -127,7 +128,9 @@ class AssignmentDetailsView(
             noDescriptionContainer.setVisible(visibilities.noDescriptionLabel)
             descriptionWebView.setVisible(visibilities.description)
             submitButton.setVisible(visibilities.submitButton)
-            submissionUploadStatusContainer.setVisible(visibilities.submissionUploadStatus)
+            submissionUploadStatusContainer.setVisible(visibilities.submissionUploadStatusInProgress || visibilities.submissionUploadStatusFailed)
+            submissionStatusUploading.setVisible(visibilities.submissionUploadStatusInProgress)
+            submissionStatusFailed.setVisible(visibilities.submissionUploadStatusFailed)
             descriptionContainer.setVisible(visibilities.description || visibilities.noDescriptionLabel)
             quizDetails.setVisible(visibilities.quizDetails)
             discussionTopicHeaderContainer.setVisible(visibilities.discussionTopicHeader)
@@ -227,9 +230,8 @@ class AssignmentDetailsView(
         RouteMatcher.route(context, SubmissionDetailsFragment.makeRoute(course, assignmentId))
     }
 
-    fun showUploadStatusView(assignmentId: Long, course: Course) {
-        // TODO
-        context.toast("Route to status page")
+    fun showUploadStatusView(submissionId: Long) {
+        Toast.makeText(context, "Route to upload status", Toast.LENGTH_SHORT).show()
     }
 
     fun showOnlineTextEntryView(assignmentId: Long, assignmentName: String?, submittedText: String? = null) {

@@ -20,6 +20,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.panda_annotations.FeatureCategory
@@ -28,7 +30,6 @@ import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.espresso.StudentRenderTest
 import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsModel
-import com.instructure.student.mobius.assignmentDetails.SubmissionUploadStatus
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.spotify.mobius.runners.WorkRunner
 import org.junit.Before
@@ -43,12 +44,12 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
 
     @Before
     fun setup() {
+        ApiPrefs.user = User()
         baseModel = AssignmentDetailsModel(
             assignmentId = 0,
             course = Course(name = "Test Course"),
             isLoading = false,
-            assignmentResult = DataResult.Fail(),
-            status = SubmissionUploadStatus.Empty
+            assignmentResult = DataResult.Fail()
         )
     }
 
@@ -245,6 +246,53 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
         loadPageWithModel(model)
         assignmentDetailsRenderPage.assertDisplaysGrade()
     }
+
+    @Test
+    fun displaysSubmitted() {
+        val assignment = Assignment(
+            name = "Test Assignment",
+            submission = Submission(attempt = 1L, workflowState = "submitted")
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        loadPageWithModel(model)
+        assignmentDetailsRenderPage.assertDisplaysSuccessfulSubmit()
+    }
+
+    @Test
+    fun displaysUploading() {
+        val assignment = Assignment(name = "Test Assignment")
+        val model = baseModel.copy(
+            assignmentResult = DataResult.Success(assignment),
+            databaseSubmission = mockkSubmission()
+        )
+        loadPageWithModel(model)
+        assignmentDetailsRenderPage.assertDisplaysUploadingSubmission()
+    }
+
+
+    @Test
+    fun displaysFailed() {
+        val assignment = Assignment(name = "Test Assignment")
+        val model = baseModel.copy(
+            assignmentResult = DataResult.Success(assignment),
+            databaseSubmission = mockkSubmission(true)
+        )
+        loadPageWithModel(model)
+        assignmentDetailsRenderPage.assertDisplaysFailedSubmission()
+    }
+
+    private fun mockkSubmission(failed: Boolean = false) = com.instructure.student.Submission.Impl(
+        123L,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        failed,
+        null,
+        null
+    )
 
     private fun loadPageWithModel(model: AssignmentDetailsModel) {
         val emptyEffectRunner = object : WorkRunner {

@@ -16,6 +16,7 @@
  */
 package com.instructure.student.mobius.assignmentDetails
 
+import android.content.Context
 import com.instructure.canvasapi2.managers.AssignmentManager
 import com.instructure.canvasapi2.managers.QuizManager
 import com.instructure.canvasapi2.managers.SubmissionManager
@@ -25,27 +26,55 @@ import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.utils.*
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
 import com.instructure.canvasapi2.utils.weave.awaitApiResponse
+import com.instructure.student.Submission
+import com.instructure.student.db.Db
+import com.instructure.student.db.getInstance
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsView
 import com.instructure.student.mobius.assignmentDetails.ui.SubmissionTypesVisibilities
 import com.instructure.student.mobius.common.ui.EffectHandler
 import com.instructure.student.util.isArcEnabled
+import com.spotify.mobius.Connection
+import com.spotify.mobius.functions.Consumer
+import com.squareup.sqldelight.Query
 import kotlinx.coroutines.launch
 
-class AssignmentDetailsEffectHandler : EffectHandler<AssignmentDetailsView, AssignmentDetailsEvent, AssignmentDetailsEffect>() {
+class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Long) :
+    EffectHandler<AssignmentDetailsView, AssignmentDetailsEvent, AssignmentDetailsEffect>(),
+    Query.Listener {
+
+    private var submissionQuery: Query<Submission>? = null
+
+    override fun connect(output: Consumer<AssignmentDetailsEvent>): Connection<AssignmentDetailsEffect> {
+        val db = Db.getInstance(context)
+        submissionQuery = db.submissionQueries.getSubmissionsByAssignmentId(assignmentId, ApiPrefs.user!!.id)
+        submissionQuery!!.addListener(this@AssignmentDetailsEffectHandler)
+
+        return super.connect(output)
+    }
+
+    override fun dispose() {
+        super.dispose()
+        submissionQuery?.removeListener(this)
+        submissionQuery = null
+    }
+
+    override fun queryResultsChanged() {
+        launch {
+            val submission = submissionQuery?.executeAsList()?.lastOrNull()
+            consumer.accept(AssignmentDetailsEvent.SubmissionStatusUpdated(submission))
+        }
+    }
+
     override fun accept(effect: AssignmentDetailsEffect) {
         when (effect) {
             is AssignmentDetailsEffect.ShowSubmitDialogView -> view?.showSubmitDialogView(effect.assignment, effect.course.id, getSubmissionTypesVisibilities(effect.assignment, effect.isArcEnabled))
             is AssignmentDetailsEffect.ShowSubmissionView -> view?.showSubmissionView(effect.assignmentId, effect.course)
-            is AssignmentDetailsEffect.ShowUploadStatusView -> view?.showUploadStatusView(effect.assignmentId, effect.course)
             is AssignmentDetailsEffect.ShowQuizStartView -> view?.showQuizStartView(effect.course, effect.quiz)
             is AssignmentDetailsEffect.ShowDiscussionDetailView -> view?.showDiscussionDetailView(effect.course, effect.discussionTopicHeaderId)
             is AssignmentDetailsEffect.ShowDiscussionAttachment -> view?.showDiscussionAttachment(effect.course, effect.discussionAttachment)
+            is AssignmentDetailsEffect.ShowUploadStatusView -> view?.showUploadStatusView(effect.submission.id) // TODO: show upload status for files/media, otherwise show the appropriate submission screen (text/url/etc...)
             is AssignmentDetailsEffect.LoadData -> {
                 loadData(effect)
-            }
-            is AssignmentDetailsEffect.ObserveSubmissionStatus -> {
-                // TODO: Get status from upload manager
-                consumer.accept(AssignmentDetailsEvent.SubmissionStatusUpdated(SubmissionUploadStatus.Empty))
             }
             is AssignmentDetailsEffect.ShowCreateSubmissionView -> {
                 when (effect.submissionType) {
@@ -95,6 +124,8 @@ class AssignmentDetailsEffectHandler : EffectHandler<AssignmentDetailsView, Assi
                 }
             }
 
+            val dbSubmission = submissionQuery?.executeAsList()?.lastOrNull()
+
             // Determine if we need to retrieve an authenticated LTI URL based on whether this assignment accepts external tool submissions
             val assignmentUrl = result.dataOrNull?.url
             val ltiTool = if (assignmentUrl != null && result.dataOrNull?.getSubmissionTypes()?.contains(Assignment.SubmissionType.EXTERNAL_TOOL) == true)
@@ -121,7 +152,15 @@ class AssignmentDetailsEffectHandler : EffectHandler<AssignmentDetailsView, Assi
                 }
             } else null
 
-            consumer.accept(AssignmentDetailsEvent.DataLoaded(result, isArcEnabled, ltiTool, quizResult))
+            consumer.accept(
+                AssignmentDetailsEvent.DataLoaded(
+                    result,
+                    isArcEnabled,
+                    ltiTool,
+                    dbSubmission,
+                    quizResult
+                )
+            )
         }
     }
 

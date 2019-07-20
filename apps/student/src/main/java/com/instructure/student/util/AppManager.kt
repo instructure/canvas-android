@@ -25,6 +25,7 @@ import com.google.android.gms.analytics.GoogleAnalytics
 import com.google.android.gms.analytics.HitBuilders
 import com.google.android.gms.analytics.Tracker
 import com.instructure.canvasapi2.utils.Logger
+import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.canvasapi2.utils.pageview.PageViewUploadService
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.utils.ColorKeeper
@@ -46,6 +47,7 @@ class AppManager : com.instructure.canvasapi2.AppManager(), AnalyticsEventHandli
     }
 
     override fun onCreate() {
+        RemoteConfigUtils.initialize()
         super.onCreate()
         initPSPDFKit()
 

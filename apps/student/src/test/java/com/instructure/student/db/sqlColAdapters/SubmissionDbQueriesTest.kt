@@ -16,9 +16,11 @@
 package com.instructure.student.db.sqlColAdapters
 
 import android.content.Context
+import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.student.FileSubmissionQueries
 import com.instructure.student.Submission
 import com.instructure.student.SubmissionQueries
 import com.instructure.student.db.Db
@@ -29,6 +31,7 @@ import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.threeten.bp.OffsetDateTime
 
 
 @RunWith(AndroidJUnit4::class)
@@ -39,6 +42,8 @@ class SubmissionDbQueriesTest : Assert() {
     lateinit var context: Context
     val assignmentName = "Assignment"
     val assignmentId = 1234L
+    val assignmentGroupCategoryId = 4321L
+    val userId = 1357L
 
     @Before
     fun setup() {
@@ -46,7 +51,12 @@ class SubmissionDbQueriesTest : Assert() {
         courseCanvasContext = CanvasContext.emptyCourseContext()
 
         if (!Db.ready) {
-            Db.dbSetup(AndroidSqliteDriver(Schema, context)) // In-memory database
+            Db.dbSetup(AndroidSqliteDriver(Schema, context, callback = object : AndroidSqliteDriver.Callback(Schema) {
+                override fun onOpen(db: SupportSQLiteDatabase?) {
+                    super.onOpen(db)
+                    db?.execSQL("PRAGMA foreign_keys=ON;")
+                }
+            })) // In-memory database
         }
 
         db = Db.instance.submissionQueries
@@ -74,7 +84,7 @@ class SubmissionDbQueriesTest : Assert() {
         val submissionEntry = "https://www.instructure.com"
         val submissionType = "online_url"
 
-        db.insertOnlineUrlSubmission(submissionEntry, assignmentName, assignmentId, courseCanvasContext)
+        db.insertOnlineUrlSubmission(submissionEntry, assignmentName, assignmentId, courseCanvasContext, userId, OffsetDateTime.now())
         val submissionId = db.getLastInsert().executeAsOne()
         val submission = db.getSubmissionById(submissionId).executeAsOne()
 
@@ -136,12 +146,94 @@ class SubmissionDbQueriesTest : Assert() {
         assertEquals(submissionId, lastInsertedRowId)
     }
 
+    @Test
+    fun `Getting submission for an assignment works`() {
+        val (_, submissionId, _) = insertTextSubmission()
+        val submissions = db.getSubmissionsByAssignmentId(assignmentId, userId).executeAsList()
+
+        assertTrue(submissions.isNotEmpty())
+        assertEquals(submissionId, submissions.last().id)
+    }
+
+    @Test
+    fun `Getting submission for an assignment with a non used user id gives an empty list`() {
+        insertTextSubmission()
+        val submissions = db.getSubmissionsByAssignmentId(assignmentId, userId + 1).executeAsList()
+
+        assertTrue(submissions.isEmpty())
+    }
+
+    @Test
+    fun `Deleting submissions for an assignment works`() {
+        val count = 3
+        repeat(count) {
+            insertTextSubmission()
+        }
+
+        var submissions = db.getSubmissionsByAssignmentId(assignmentId, userId).executeAsList()
+        assertEquals(submissions.size, count)
+
+        db.deleteSubmissionsForAssignmentId(assignmentId, userId)
+        submissions = db.getSubmissionsByAssignmentId(assignmentId, userId).executeAsList()
+        assertTrue(submissions.isEmpty())
+    }
+
+    @Test
+    fun `Deleting a file submission for an assignment cascades delete to file table`() {
+        val fileQuery = Db.instance.fileSubmissionQueries
+        val submissionId = insertFileSubmission(fileQuery)
+
+        var files = fileQuery.getFilesForSubmissionId(submissionId).executeAsList()
+        assertTrue(files.isNotEmpty())
+
+        db.deleteSubmissionsForAssignmentId(assignmentId, userId)
+        files = fileQuery.getFilesForSubmissionId(submissionId).executeAsList()
+        assertTrue(files.isEmpty())
+    }
+
+    @Test
+    fun `Deleting submissions for an assignment won't delete other users submissions`() {
+        val count = 3
+        repeat(count) {
+            insertTextSubmission()
+        }
+
+        db.insertOnlineTextSubmission("Canvas", assignmentName, assignmentId, courseCanvasContext, userId + 1, OffsetDateTime.now())
+
+        var submissions = db.getSubmissionsByAssignmentId(assignmentId, userId).executeAsList()
+        var altSubmissions = db.getSubmissionsByAssignmentId(assignmentId, userId + 1).executeAsList()
+        assertEquals(submissions.size, count)
+        assertEquals(altSubmissions.size, 1)
+
+        db.deleteSubmissionsForAssignmentId(assignmentId, userId)
+        submissions = db.getSubmissionsByAssignmentId(assignmentId, userId).executeAsList()
+        altSubmissions = db.getSubmissionsByAssignmentId(assignmentId, userId + 1).executeAsList()
+        assertTrue(submissions.isEmpty())
+        assertEquals(altSubmissions.size, 1)
+    }
+
     private fun insertTextSubmission(): Triple<String, Long, Submission> {
         val submissionEntry = "Canvas"
 
-        db.insertOnlineTextSubmission(submissionEntry, assignmentName, assignmentId, courseCanvasContext)
+        db.insertOnlineTextSubmission(submissionEntry, assignmentName, assignmentId, courseCanvasContext, userId, OffsetDateTime.now())
         val submissionId = db.getLastInsert().executeAsOne()
         val submission = db.getSubmissionById(submissionId).executeAsOne()
         return Triple(submissionEntry, submissionId, submission)
+    }
+
+    private fun insertFileSubmission(fileQuery: FileSubmissionQueries): Long {
+        db.insertOnlineUploadSubmission(
+            assignmentName,
+            assignmentId,
+            assignmentGroupCategoryId,
+            courseCanvasContext,
+            userId,
+            OffsetDateTime.now()
+        )
+        val submissionId = db.getLastInsert().executeAsOne()
+
+        fileQuery.insertFile(submissionId, "file", 1, "content", "path")
+
+        return submissionId
     }
 }

@@ -18,6 +18,7 @@ package com.instructure.student.test.assignment.details
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.student.Submission
 import com.instructure.student.mobius.assignmentDetails.*
 import com.instructure.student.test.util.matchesEffects
 import com.instructure.student.test.util.matchesFirstEffects
@@ -30,6 +31,8 @@ import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
+import org.threeten.bp.OffsetDateTime
+import java.util.*
 
 class AssignmentDetailsUpdateTest : Assert() {
     private val initSpec = InitSpec(AssignmentDetailsUpdate()::init)
@@ -38,16 +41,35 @@ class AssignmentDetailsUpdateTest : Assert() {
     private lateinit var initModel: AssignmentDetailsModel
     private lateinit var course: Course
     private lateinit var assignment: Assignment
+    private var submissionId: Long = 0
     private var assignmentId: Long = 0
     private var courseId: Long = 0
+    private var userId: Long = 0
 
     @Before
     fun setup() {
+        submissionId = 2468L
         assignmentId = 4321L
         courseId = 1234L
+        userId = 4321L
         course = Course(id = courseId)
         assignment = Assignment(id = assignmentId)
         initModel = AssignmentDetailsModel(assignmentId = assignmentId, course = course)
+    }
+
+    private fun mockkSubmission(submissionId: Long = this.submissionId, daysAgo: Long = 0): Submission {
+        return Submission.Impl(
+            submissionId,
+            null,
+            OffsetDateTime.now().minusDays(daysAgo),
+            null,
+            assignment.id,
+            course,
+            null,
+            false,
+            null,
+            userId
+        )
     }
 
     @Test
@@ -194,15 +216,15 @@ class AssignmentDetailsUpdateTest : Assert() {
 
     @Test
     fun `ViewUploadStatusClicked event results in ShowUploadStatusView effect`() {
+        val submission = mockkSubmission()
         updateSpec
-            .given(initModel)
+            .given(initModel.copy(databaseSubmission = submission))
             .whenEvent(AssignmentDetailsEvent.ViewUploadStatusClicked)
             .then(
                 assertThatNext(
                     matchesEffects<AssignmentDetailsModel, AssignmentDetailsEffect>(
                         AssignmentDetailsEffect.ShowUploadStatusView(
-                            assignmentId,
-                            course
+                            submission
                         )
                     )
                 )
@@ -210,38 +232,16 @@ class AssignmentDetailsUpdateTest : Assert() {
     }
 
     @Test
-    fun `SubmissionStatusUpdated event with Empty results in model update`() {
-        testStatusUpdate(
-            status = SubmissionUploadStatus.Empty,
-            model = initModel.copy(status = SubmissionUploadStatus.Failure) // Add init model with different status as we initialize to empty
-        )
-    }
-
-    @Test
-    fun `SubmissionStatusUpdated event with Failure results in model update`() {
-        testStatusUpdate(SubmissionUploadStatus.Failure)
-    }
-
-    @Test
-    fun `SubmissionStatusUpdated event with Uploading results in model update`() {
-        testStatusUpdate(SubmissionUploadStatus.Uploading)
-    }
-
-    @Test
-    fun `SubmissionStatusUpdated event with Finished results in model update`() {
-        testStatusUpdate(SubmissionUploadStatus.Finished)
-    }
-
-    @Test
     fun `DataLoaded event updates the model`() {
         val assignment = Assignment(id = assignmentId)
-        val startModel = initModel.copy(status = SubmissionUploadStatus.Uploading)
+        val submission = mockkSubmission()
+        val startModel = initModel
         val expectedModel = initModel.copy(
             isLoading = false,
-            status = SubmissionUploadStatus.Uploading,
             assignmentResult = DataResult.Success(assignment),
             isArcEnabled = true,
-            ltiTool = DataResult.Fail(null)
+            ltiTool = DataResult.Fail(null),
+            databaseSubmission = submission
         )
         updateSpec
             .given(startModel)
@@ -249,7 +249,8 @@ class AssignmentDetailsUpdateTest : Assert() {
                 AssignmentDetailsEvent.DataLoaded(
                     assignmentResult = expectedModel.assignmentResult,
                     isArcEnabled = true,
-                    ltiTool = expectedModel.ltiTool
+                    ltiTool = expectedModel.ltiTool,
+                    submission = submission
                 )
             )
             .then(assertThatNext(NextMatchers.hasModel(expectedModel)))
@@ -257,12 +258,13 @@ class AssignmentDetailsUpdateTest : Assert() {
 
     @Test
     fun `DataLoaded event with assignment load failure updates the model`() {
-        val startModel = initModel.copy(status = SubmissionUploadStatus.Uploading)
+        val submission = mockkSubmission()
+        val startModel = initModel
         val expectedModel = initModel.copy(
             isLoading = false,
-            status = SubmissionUploadStatus.Uploading,
             assignmentResult = DataResult.Fail(),
-            ltiTool = DataResult.Fail()
+            ltiTool = DataResult.Fail(),
+            databaseSubmission = submission
         )
         updateSpec
             .given(startModel)
@@ -270,7 +272,8 @@ class AssignmentDetailsUpdateTest : Assert() {
                 AssignmentDetailsEvent.DataLoaded(
                     assignmentResult = expectedModel.assignmentResult,
                     isArcEnabled = false,
-                    ltiTool = expectedModel.ltiTool
+                    ltiTool = expectedModel.ltiTool,
+                    submission = submission
                 )
             )
             .then(assertThatNext(NextMatchers.hasModel(expectedModel)))
@@ -278,18 +281,64 @@ class AssignmentDetailsUpdateTest : Assert() {
 
     @Test
     fun `DataLoaded event with a null assignment updates the model`() {
-        val startModel = initModel.copy(status = SubmissionUploadStatus.Uploading)
-        val expectedModel =
-            initModel.copy(isLoading = false, status = SubmissionUploadStatus.Uploading, assignmentResult = null, ltiTool = null)
+        val startModel = initModel
+        val expectedModel = initModel.copy(
+            isLoading = false,
+            assignmentResult = null,
+            ltiTool = null,
+            databaseSubmission = null
+        )
         updateSpec
             .given(startModel)
             .whenEvent(
                 AssignmentDetailsEvent.DataLoaded(
                     assignmentResult = expectedModel.assignmentResult,
                     isArcEnabled = false,
-                    ltiTool = expectedModel.ltiTool
+                    ltiTool = expectedModel.ltiTool,
+                    submission = null
                 )
             )
+            .then(assertThatNext(NextMatchers.hasModel(expectedModel)))
+    }
+
+    @Test
+    fun `DataLoaded event ignores database submission if a newer submission exists from API`() {
+        val assignment = Assignment(
+            id = assignmentId,
+            submission = com.instructure.canvasapi2.models.Submission(submittedAt = Date())
+        )
+        val submission = mockkSubmission(daysAgo = 1)
+        val startModel = initModel
+        val expectedModel = initModel.copy(
+            isLoading = false,
+            assignmentResult = DataResult.Success(assignment),
+            isArcEnabled = true,
+            ltiTool = DataResult.Fail(null),
+            databaseSubmission = null
+        )
+        updateSpec
+            .given(startModel)
+            .whenEvent(
+                AssignmentDetailsEvent.DataLoaded(
+                    assignmentResult = expectedModel.assignmentResult,
+                    isArcEnabled = true,
+                    ltiTool = expectedModel.ltiTool,
+                    submission = submission
+                )
+            )
+            .then(assertThatNext(NextMatchers.hasModel(expectedModel)))
+    }
+
+    @Test
+    fun `SubmissionStatusUpdated event updates the model`() {
+        val submission = mockkSubmission()
+        val startModel = initModel
+        val expectedModel = initModel.copy(
+            databaseSubmission = submission
+        )
+        updateSpec
+            .given(startModel)
+            .whenEvent(AssignmentDetailsEvent.SubmissionStatusUpdated(submission = submission))
             .then(assertThatNext(NextMatchers.hasModel(expectedModel)))
     }
 
@@ -333,13 +382,5 @@ class AssignmentDetailsUpdateTest : Assert() {
                     matchesEffects<AssignmentDetailsModel, AssignmentDetailsEffect>(expectedEffect)
                 )
             )
-    }
-
-    private fun testStatusUpdate(status: SubmissionUploadStatus, model: AssignmentDetailsModel = initModel) {
-        val expectedModel = model.copy(status = status)
-        updateSpec
-            .given(model)
-            .whenEvent(AssignmentDetailsEvent.SubmissionStatusUpdated(expectedModel.status))
-            .then(assertThatNext(NextMatchers.hasModel(expectedModel)))
     }
 }
