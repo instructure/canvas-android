@@ -179,6 +179,7 @@ data class Assignment(
             SubmissionType.DISCUSSION_TOPIC -> TurnInType.DISCUSSION
             SubmissionType.ON_PAPER -> TurnInType.ON_PAPER
             SubmissionType.EXTERNAL_TOOL -> TurnInType.EXTERNAL_TOOL
+            SubmissionType.BASIC_LTI_LAUNCH -> TurnInType.EXTERNAL_TOOL
             else -> TurnInType.NONE
         }
 

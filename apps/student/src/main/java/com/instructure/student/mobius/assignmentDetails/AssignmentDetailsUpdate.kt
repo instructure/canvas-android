@@ -17,6 +17,7 @@
 package com.instructure.student.mobius.assignmentDetails
 
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.utils.mapToAttachment
 import com.instructure.student.mobius.common.ui.UpdateInit
 import com.spotify.mobius.First
 import com.spotify.mobius.Next
@@ -35,12 +36,20 @@ class AssignmentDetailsUpdate : UpdateInit<AssignmentDetailsModel, AssignmentDet
             val submissionTypes = model.assignmentResult!!.dataOrThrow.getSubmissionTypes()
             if(submissionTypes.size == 1 && !(submissionTypes.contains(Assignment.SubmissionType.ONLINE_UPLOAD) && model.isArcEnabled)) {
                 Next.dispatch<AssignmentDetailsModel, AssignmentDetailsEffect>(setOf(AssignmentDetailsEffect.ShowCreateSubmissionView(submissionTypes.first(), model.course, model.assignmentResult.dataOrThrow, model.assignmentResult.dataOrThrow.url)))
+            } else if (model.assignmentResult.dataOrNull!!.turnInType == Assignment.TurnInType.QUIZ) {
+                Next.dispatch<AssignmentDetailsModel, AssignmentDetailsEffect>(setOf(AssignmentDetailsEffect.ShowQuizStartView(model.quizResult!!.dataOrThrow, model.course)))
+            } else if (model.assignmentResult.dataOrNull!!.turnInType == Assignment.TurnInType.DISCUSSION) {
+                Next.dispatch<AssignmentDetailsModel, AssignmentDetailsEffect>(setOf(AssignmentDetailsEffect.ShowDiscussionDetailView(model.assignmentResult.dataOrThrow.discussionTopicHeader!!.id, model.course)))
             } else {
                 Next.dispatch<AssignmentDetailsModel, AssignmentDetailsEffect>(setOf(AssignmentDetailsEffect.ShowSubmitDialogView(model.assignmentResult.dataOrThrow, model.course, model.isArcEnabled)))
             }
         }
         AssignmentDetailsEvent.ViewSubmissionClicked -> {
             Next.dispatch(setOf(AssignmentDetailsEffect.ShowSubmissionView(model.assignmentId, model.course)))
+        }
+        AssignmentDetailsEvent.DiscussionAttachmentClicked -> {
+            // They can't click on an attachment if there aren't any present
+            Next.dispatch(setOf(AssignmentDetailsEffect.ShowDiscussionAttachment(model.assignmentResult!!.dataOrThrow.discussionTopicHeader?.attachments?.first()?.mapToAttachment()!!, model.course)))
         }
         AssignmentDetailsEvent.ViewUploadStatusClicked -> {
             Next.dispatch(setOf(AssignmentDetailsEffect.ShowUploadStatusView(model.assignmentId, model.course)))
@@ -56,7 +65,8 @@ class AssignmentDetailsUpdate : UpdateInit<AssignmentDetailsModel, AssignmentDet
                 isLoading = false,
                 assignmentResult = event.assignmentResult,
                 isArcEnabled = event.isArcEnabled,
-                ltiTool = event.ltiTool
+                ltiTool = event.ltiTool,
+                quizResult = event.quizResult
             ))
         }
         is AssignmentDetailsEvent.SubmissionTypeClicked -> {

@@ -17,9 +17,11 @@
 package com.instructure.student.mobius.assignmentDetails
 
 import com.instructure.canvasapi2.managers.AssignmentManager
+import com.instructure.canvasapi2.managers.QuizManager
 import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.DiscussionTopic
+import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.utils.*
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
 import com.instructure.canvasapi2.utils.weave.awaitApiResponse
@@ -35,6 +37,9 @@ class AssignmentDetailsEffectHandler : EffectHandler<AssignmentDetailsView, Assi
             is AssignmentDetailsEffect.ShowSubmitDialogView -> view?.showSubmitDialogView(effect.assignment, effect.course.id, getSubmissionTypesVisibilities(effect.assignment, effect.isArcEnabled))
             is AssignmentDetailsEffect.ShowSubmissionView -> view?.showSubmissionView(effect.assignmentId, effect.course)
             is AssignmentDetailsEffect.ShowUploadStatusView -> view?.showUploadStatusView(effect.assignmentId, effect.course)
+            is AssignmentDetailsEffect.ShowQuizStartView -> view?.showQuizStartView(effect.course, effect.quiz)
+            is AssignmentDetailsEffect.ShowDiscussionDetailView -> view?.showDiscussionDetailView(effect.course, effect.discussionTopicHeaderId)
+            is AssignmentDetailsEffect.ShowDiscussionAttachment -> view?.showDiscussionAttachment(effect.course, effect.discussionAttachment)
             is AssignmentDetailsEffect.LoadData -> {
                 loadData(effect)
             }
@@ -101,7 +106,22 @@ class AssignmentDetailsEffectHandler : EffectHandler<AssignmentDetailsView, Assi
                 effect.courseId.isArcEnabled()
             } else false
 
-            consumer.accept(AssignmentDetailsEvent.DataLoaded(result, isArcEnabled, ltiTool))
+            val quizResult = if (result.dataOrNull?.turnInType == (Assignment.TurnInType.QUIZ) && result.dataOrNull?.quizId != 0L) {
+                try {
+                    val quizResponse = awaitApiResponse<Quiz> {
+                        QuizManager.getQuiz(effect.courseId, result.dataOrNull?.quizId!!, effect.forceNetwork, it)
+                    }
+                    DataResult.Success(quizResponse.body()!!)
+                } catch (e: StatusCallbackError) {
+                    if (e.response?.code() == 401) {
+                        DataResult.Fail(Failure.Authorization(e.response?.message()))
+                    } else {
+                        DataResult.Fail(Failure.Network(e.response?.message()))
+                    }
+                }
+            } else null
+
+            consumer.accept(AssignmentDetailsEvent.DataLoaded(result, isArcEnabled, ltiTool, quizResult))
         }
     }
 

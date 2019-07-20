@@ -1078,4 +1078,12 @@
     <string name="addVideoComment">Add video comment</string>
     <string name="addAudioComment">Add audio comment</string>
 
+    <string name="quizQuestionLabel">Questions:</string>
+    <string name="timeLimitLabel">Time Limit:</string>
+    <string name="allowedAttemptsLabel">Allowed Attempts:</string>
+    <string name="instructions">Instructions</string>
+    <string name="quizNoTimeLimit">None</string>
+    <string name="viewQuiz">View Quiz</string>
+    <string name="viewDiscussion">View Discussion</string>
+
 </resources>

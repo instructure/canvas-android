@@ -18,8 +18,10 @@ package com.instructure.student.mobius.assignmentDetails.ui
 
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.student.mobius.assignmentDetails.SubmissionUploadStatus
 import com.instructure.student.mobius.assignmentDetails.ui.gradeCell.GradeCellViewState
+import java.util.*
 
 sealed class AssignmentDetailsViewState(val visibilities: AssignmentDetailsVisibilities) {
     object Loading : AssignmentDetailsViewState(AssignmentDetailsVisibilities(loading = true))
@@ -39,10 +41,13 @@ sealed class AssignmentDetailsViewState(val visibilities: AssignmentDetailsVisib
         val submissionTypes: String = "",
         val fileTypes: String = "",
         val description: String = "",
+        val descriptionLabel: String = "",
         val submitButtonText: String = "",
         val gradeState: GradeCellViewState = GradeCellViewState.Empty,
         val assignmentDetailsVisibilities: AssignmentDetailsVisibilities,
-        val isExternalToolSubmission: Boolean = false
+        val isExternalToolSubmission: Boolean = false,
+        val quizDescriptionViewState: QuizDescriptionViewState? = null,
+        val discussionHeaderViewState: DiscussionHeaderViewState? = null
     ) : AssignmentDetailsViewState(assignmentDetailsVisibilities)
 }
 
@@ -60,7 +65,9 @@ data class AssignmentDetailsVisibilities (
     var noDescriptionLabel: Boolean = false,
     var description: Boolean = false,
     var submitButton: Boolean = false,
-    var submissionUploadStatus: Boolean = false
+    var submissionUploadStatus: Boolean = false,
+    var quizDetails: Boolean = false,
+    var discussionTopicHeader: Boolean = false
 )
 
 data class SubmissionTypesVisibilities(
@@ -69,4 +76,17 @@ data class SubmissionTypesVisibilities(
     var fileUpload: Boolean = false,
     var mediaRecording: Boolean = false,
     var arcUpload: Boolean = false
+)
+
+data class QuizDescriptionViewState(
+    val questionCount: String,
+    val timeLimit: String,
+    val allowedAttempts: String
+)
+
+data class DiscussionHeaderViewState(
+    val authorAvatarUrl: String? = null,
+    val authorName: String,
+    val authoredDate: String,
+    val attachmentIconVisibility: Boolean
 )
