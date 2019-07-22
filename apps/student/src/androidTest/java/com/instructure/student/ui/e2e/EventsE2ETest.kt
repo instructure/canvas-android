@@ -1,12 +1,18 @@
 package com.instructure.student.ui.e2e
 
 import com.instructure.canvas.espresso.E2E
-import com.instructure.canvas.espresso.Stub
+import com.instructure.dataseeding.api.QuizzesApi
+import com.instructure.dataseeding.util.days
+import com.instructure.dataseeding.util.fromNow
+import com.instructure.dataseeding.util.iso8601
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.seedAssignments
+import com.instructure.student.ui.utils.seedData
+import com.instructure.student.ui.utils.tokenLogin
 import org.junit.Test
 
 class EventsE2ETest: StudentTest() {
@@ -14,11 +20,55 @@ class EventsE2ETest: StudentTest() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    @Stub
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.EVENTS, TestCategory.E2E, true)
+    @TestMetaData(Priority.P0, FeatureCategory.EVENTS, TestCategory.E2E)
     fun testEventsE2E() {
+        // Seed data
+        val data = seedData(students = 1, teachers = 1, courses = 1)
+        val student = data.studentsList[0]
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
 
+        // Seed an assignment due today, for calendar tab
+        val seededAssignments = seedAssignments(
+                courseId = course.id,
+                teacherToken = teacher.token,
+                dueAt = 0.days.fromNow.iso8601,
+                assignments = 1
+        )
+
+        // Seed a quiz due today, for calendar tab
+        val quiz = QuizzesApi.createQuiz(
+                QuizzesApi.CreateQuizRequest(
+                        courseId = course.id,
+                        withDescription = true,
+                        published = true,
+                        token = teacher.token,
+                        dueAt = 0.days.fromNow.iso8601)
+
+        )
+
+        // Sign in with lone student
+        tokenLogin(student)
+
+        // Navigate to calendar
+        dashboardPage.waitForRender()
+        dashboardPage.clickCalendarTab()
+        //calendarPage.waitForRender()
+
+        // Select the calendar for your course
+        calendarPage.selectDesiredCalendarsAndDismiss(course.name)
+
+        // Make sure that your assignment shows up on the calendar
+        calendarPage.assertAssignmentDisplayed(seededAssignments.assignmentList[0])
+
+        // Make sure that your quiz shows up on the calendar
+        calendarPage.assertQuizDisplayed(quiz)
     }
+
+    // TODO: Can we test other types of events?
+    // https://mobileqa.test.instructure.com/api/v1/calendar_events/?all_events=false&type=assignment -- covered
+    // https://mobileqa.test.instructure.com/api/v1/calendar_events/?all_events=false&type=event... -- ??
+
 }

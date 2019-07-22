@@ -19,16 +19,24 @@
 package com.instructure.student.ui.pages
 
 import androidx.test.espresso.Espresso
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import com.instructure.dataseeding.model.CanvasUserApiModel
+import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.espresso.OnViewWithContentDescription
-import com.instructure.student.R
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.WaitForViewWithId
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.click
-import com.instructure.espresso.page.*
+import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.onViewWithId
+import com.instructure.espresso.page.onViewWithText
+import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withParent
+import com.instructure.espresso.page.withText
+import com.instructure.student.R
+import org.hamcrest.CoreMatchers.allOf
 
 class DashboardPage : BasePage(R.id.dashboardPage) {
 
@@ -43,6 +51,10 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         listView.assertDisplayed()
         onViewWithText("Courses").assertDisplayed()
         onViewWithText("See All").assertDisplayed()
+    }
+
+    fun assertDisplaysCourse(course: CourseApiModel) {
+        onViewWithText(course.name).assertDisplayed()
     }
 
     fun assertDisplaysAddCourseMessage() {
@@ -69,7 +81,21 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         Espresso.pressBack()
     }
 
+    fun assertUnreadEmails(count: Int) {
+        onView(allOf(withParent(R.id.bottomNavigationInbox), withId(R.id.badge), withText(count.toString()))).assertDisplayed()
+    }
+
+    fun clickCalendarTab() {
+        onView(withId(R.id.bottomNavigationCalendar)).click()
+    }
+
+    fun clickTodoTab() {
+        onView(withId(R.id.bottomNavigationToDo)).click()
+    }
+
     fun waitForRender() {
         listView.assertDisplayed() // Oddly, this seems sufficient as a wait-for-render mechanism
     }
+
+
 }
