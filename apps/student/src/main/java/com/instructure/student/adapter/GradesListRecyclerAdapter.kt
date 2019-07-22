@@ -174,20 +174,21 @@ open class GradesListRecyclerAdapter(
                         // Get the first student this user is observing
                         val student = awaitApi<List<Enrollment>> { EnrollmentManager.getObserveeEnrollments(true, it) }.filter { it.courseId == course.id }.filter { it.observedUser != null }[0].observedUser
                         // Get Assignment Groups
-                        val list = awaitApi<List<AssignmentGroup>> { AssignmentManager.getAssignmentGroupsWithAssignmentsForGradingPeriod(canvasContext!!.id, currentGradingPeriod!!.id,
+                        val assignmentGroups = awaitApi<List<AssignmentGroup>> { AssignmentManager.getAssignmentGroupsWithAssignmentsForGradingPeriod(canvasContext!!.id, currentGradingPeriod!!.id,
                             scopeToStudent = false,
                             forceNetwork = true,
                             callback = it
                         ) }
                         // The assignments in the assignment groups do not come with their submissions (with the associated grades), so we get them all here
-                        list.forEach { group ->
+                        val assignmentIds = assignmentGroups.map { it.assignments }.flatten().map { it.id }
+                        val submissions = awaitApi<List<Submission>>{ SubmissionManager.getSubmissionsForMultipleAssignments(student!!.id, course.id, assignmentIds, it, true) }
+                        assignmentGroups.forEach { group ->
                             group.assignments.forEach { assignment ->
-                                val submission = awaitApi<Submission> { SubmissionManager.getSingleSubmission(course.id, assignment.id, student!!.id, it, true)}
-                                assignment.submission = submission
+                                assignment.submission = submissions.first { it.assignmentId == assignment.id }
                             }
                         }
 
-                        updateAssignmentGroups(list)
+                        updateAssignmentGroups(assignmentGroups)
 
                         awaitApi<List<Course>> { CourseManager.getCoursesWithSyllabus(true, it) }
                             .onEach { course ->
