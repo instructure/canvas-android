@@ -140,13 +140,14 @@ open class GradesListRecyclerAdapter(
 
             for (enrollment in course.enrollments!!) {
                 if (enrollment.isStudent && enrollment.multipleGradingPeriodsEnabled) {
-                    // We load current term
-                    currentGradingPeriod = GradingPeriod(
-                        id = enrollment.currentGradingPeriodId,
-                        title = enrollment.currentGradingPeriodTitle
-                    )
 
                     if (currentGradingPeriod == null || currentGradingPeriod?.title == null) {
+                        // We load current term
+                        currentGradingPeriod = GradingPeriod(
+                            id = enrollment.currentGradingPeriodId,
+                            title = enrollment.currentGradingPeriodTitle
+                        )
+
                         // Request the grading period objects and make the assignment calls
                         // This callback is fulfilled in the grade list fragment.
                         CourseManager.getGradingPeriodsForCourse(gradingPeriodsCallback!!, course.id, true)
