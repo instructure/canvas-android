@@ -16,6 +16,7 @@
  */
 package com.instructure.student.db
 
+import com.instructure.student.PendingSubmissionComment
 import com.instructure.student.Submission
 import com.instructure.student.db.sqlColAdapters.CanvasContextColAdapter
 import com.instructure.student.db.sqlColAdapters.DateAdapter
@@ -27,7 +28,10 @@ fun createQueryWrapper(driver: SqlDriver): StudentDb {
         submissionAdapter = Submission.Adapter(
             lastActivityDateAdapter = DateAdapter(),
             canvasContextAdapter = CanvasContextColAdapter()
-
+        ),
+        pendingSubmissionCommentAdapter = PendingSubmissionComment.Adapter(
+            canvasContextAdapter = CanvasContextColAdapter(),
+            lastActivityDateAdapter = DateAdapter()
         )
     )
 }

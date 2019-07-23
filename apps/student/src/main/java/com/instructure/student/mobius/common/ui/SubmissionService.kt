@@ -27,29 +27,38 @@ import android.os.Bundle
 import android.os.Parcelable
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import com.instructure.canvasapi2.CanvasRestAdapter
+import com.instructure.canvasapi2.managers.FileUploadConfig
+import com.instructure.canvasapi2.managers.FileUploadManager
 import com.instructure.canvasapi2.managers.SubmissionManager
-import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.models.Attachment
-import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.notorious.NotoriousResult
+import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.FileUtils
 import com.instructure.canvasapi2.utils.exhaustive
+import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.weave.apiAsync
-import com.instructure.pandautils.models.FileSubmitObject
+import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.pandautils.models.PushNotification
 import com.instructure.pandautils.services.FileUploadService
 import com.instructure.pandautils.services.NotoriousUploadService
 import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.NotoriousUploader
+import com.instructure.student.PendingSubmissionComment
 import com.instructure.student.R
 import com.instructure.student.activity.NavigationActivity
 import com.instructure.student.db.Db
-import com.instructure.student.db.StudentDb
 import com.instructure.student.db.getInstance
+import com.instructure.student.db.sqlColAdapters.Date
+import com.instructure.student.mobius.common.ChannelSource
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.threeten.bp.OffsetDateTime
 import java.io.File
-import java.util.*
+
 
 class SubmissionFileUploadReceiver(private val dbSubmissionId: Long) : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
@@ -119,6 +128,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
             Action.MEDIA_ENTRY -> uploadMedia(intent)
             Action.URL_ENTRY -> uploadUrl(intent, false)
             Action.ARC_ENTRY -> uploadUrl(intent, true)
+            Action.COMMENT_ENTRY -> uploadComment(intent)
         }.exhaustive
     }
 
@@ -253,7 +263,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
             val dbFiles = db.fileSubmissionQueries.getFilesForSubmissionId(dbSubmissionId).executeAsList()
 
             files = ArrayList(dbFiles.filter { it.attachmentId == null }
-                .map { FileSubmitObject(it.name, it.size!!, it.contentType, it.fullPath, it.error) })
+                .map { FileSubmitObject(it.name!!, it.size!!, it.contentType!!, it.fullPath!!, it.error) })
             attachmentIds = ArrayList(dbFiles.mapNotNull { it.attachmentId })
             assignment = Assignment(
                 id = submission.assignmentId!!.toLong(),
@@ -295,6 +305,190 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
         startService(fileUploadIntent)
     }
 
+    @UseExperimental(ExperimentalCoroutinesApi::class)
+    private fun uploadComment(intent: Intent) {
+        runBlocking {
+            val db = Db.getInstance(this@SubmissionService)
+            val commentDb = db.pendingSubmissionCommentQueries
+            val fileDb = db.submissionCommentFileQueries
+
+            // Get existing pending comment from db, or create and insert a new one
+            val comment: PendingSubmissionComment = if (intent.hasExtra(Const.ID)) {
+                commentDb.getCommentById(intent.getLongExtra(Const.ID, 0)).executeAsOne()
+            } else {
+                commentDb.insertComment(
+                    accountDomain = ApiPrefs.domain,
+                    canvasContext = intent.getParcelableExtra(Const.CANVAS_CONTEXT),
+                    assignmentName = intent.getStringExtra(Const.ASSIGNMENT_NAME),
+                    assignmentId = intent.getLongExtra(Const.ASSIGNMENT_ID, 0L),
+                    lastActivityDate = Date.now(),
+                    isGroupMessage = intent.getBooleanExtra(Const.IS_GROUP, false),
+                    message = intent.getStringExtra(Const.MESSAGE),
+                    mediaPath = intent.getStringExtra(Const.MEDIA_FILE_PATH)
+                )
+                val id = commentDb.getLastInsert().executeAsOne()
+                val files = intent.getParcelableArrayListExtra<FileSubmitObject>(Const.FILES)
+                files?.forEach { fileDb.insertFile(id, it.name, it.size, it.contentType, it.fullPath) }
+                commentDb.getCommentById(id).executeAsOne()
+            }
+
+            // Set up notifications
+            FileUploadService.createNotificationChannel(notificationManager, COMMENT_CHANNEL_ID)
+            val notification = NotificationCompat.Builder(this@SubmissionService, COMMENT_CHANNEL_ID)
+                .setOngoing(true)
+                .setSmallIcon(R.drawable.ic_notification_canvas_logo)
+                .setContentTitle(getString(R.string.assignmentSubmissionCommentUpload, comment.assignmentName))
+                .setProgress(0, 0, true)
+
+            startForeground(comment.assignmentId.toInt(), notification.build())
+
+            fun setError() {
+                // Update notification
+                notification.setContentTitle(getString(R.string.assignmentSubmissionCommentError))
+                notification.setContentText("")
+                notification.setProgress(0, 0, false)
+                notification.setOngoing(false)
+                // TODO: MBL-11333, Set pending intent to route to submission page
+                notificationManager.notify(comment.assignmentId.toInt(), notification.build())
+
+                // Set error in db
+                commentDb.setCommentError(true, comment.id)
+
+                // Stop service
+                stopForeground(false)
+            }
+
+            // Clear existing error state, if any
+            commentDb.setCommentError(false, comment.id)
+
+            // Get attachments, partition by completed vs pending
+            val (completed, pending) = fileDb
+                .getFilesForPendingComment(comment.id)
+                .executeAsList()
+                .partition { it.attachmentId != null }
+
+            // Upload pending attachments
+            pending.forEachIndexed { idx, pendingAttachment ->
+                // Update notification
+                notification.setContentText(getString(R.string.assignmentSubmissionCommentUploadingFile, idx + 1, pending.size))
+                notification.setProgress(0, 0, true)
+                notificationManager.notify(comment.assignmentId.toInt(), notification.build())
+
+                // Set initial progress
+                commentDb.updateCommentProgress(
+                    id = comment.id,
+                    currentFile = (completed.size + idx).toLong(),
+                    fileCount = (completed.size + pending.size).toLong(),
+                    progress = 0.0
+                )
+
+                // Upload config setup
+                val fso = FileSubmitObject(pendingAttachment.name, pendingAttachment.size, pendingAttachment.contentType, pendingAttachment.fullPath)
+                val config = FileUploadConfig.forSubmissionComment(fso, comment.canvasContext.id, comment.assignmentId)
+
+                // Perform upload
+                FileUploadManager.uploadFile(config) { progress ->
+                    // Update notification
+                    notification.setProgress(1000, (progress * 1000).toInt(), false)
+                    notificationManager.notify(comment.assignmentId.toInt(), notification.build())
+
+                    // Update progress in db
+                    commentDb.updateCommentProgress(
+                        id = comment.id,
+                        currentFile = (completed.size + idx).toLong(),
+                        fileCount = (completed.size + pending.size).toLong(),
+                        progress = progress.toDouble()
+                    )
+                }.onSuccess { attachment ->
+                    // Update db
+                    fileDb.setFileAttachmentId(attachment.id, pendingAttachment.id)
+                }.onFailure {
+                    setError()
+                    return@runBlocking
+                }
+            }
+
+            // Upload media file if present
+            var notoriousResult: NotoriousResult? = null
+            if (comment.mediaPath != null) {
+                // Update notification
+                notification.setContentText(getString(R.string.assignmentSubmissionCommentUploadingMedia))
+                notification.setProgress(0, 0, true)
+                notificationManager.notify(comment.assignmentId.toInt(), notification.build())
+
+                NotoriousUploader.performUpload(comment.mediaPath!!) { progress ->
+                    // Update notification
+                    notification.setProgress(1000, (progress * 1000).toInt(), false)
+                    notificationManager.notify(comment.assignmentId.toInt(), notification.build())
+
+                    // Update progress in db
+                    commentDb.updateCommentProgress(
+                        id = comment.id,
+                        currentFile = 0,
+                        fileCount = 1,
+                        progress = progress.toDouble()
+                    )
+                }.onSuccess {
+                    notoriousResult = it
+                }.onFailure {
+                    setError()
+                    return@runBlocking
+                }
+            }
+
+            // Update notification
+            notification.setContentText("")
+            notification.setProgress(0, 0, true)
+            notificationManager.notify(comment.assignmentId.toInt(), notification.build())
+
+            try {
+                val submission: Submission = notoriousResult?.let { result ->
+                    awaitApi<Submission> { callback ->
+                        SubmissionManager.postMediaSubmissionComment(
+                            comment.canvasContext,
+                            comment.assignmentId,
+                            getUserId(),
+                            result.id!!,
+                            FileUtils.mediaTypeFromNotoriousCode(result.mediaType),
+                            comment.isGroupMessage,
+                            callback
+                        )
+                    }
+                } ?: awaitApi { callback ->
+                    val attachments = fileDb
+                        .getFilesForPendingComment(comment.id)
+                        .executeAsList()
+                    val attachmentIds = attachments.map { file -> file.attachmentId!! }
+                    SubmissionManager.postSubmissionComment(
+                        comment.canvasContext.id,
+                        comment.assignmentId,
+                        getUserId(),
+                        comment.message.orEmpty(),
+                        comment.isGroupMessage,
+                        attachmentIds,
+                        callback
+                    )
+                }
+
+                val newComment = submission.submissionComments.last()
+                ChannelSource.getChannel<SubmissionComment>().offer(newComment)
+
+                // Remove db entry
+                commentDb.deleteCommentById(comment.id)
+
+                // Clear network cache so we don't fetch a stale comment list
+                CanvasRestAdapter.clearCacheUrls("assignments/${comment.assignmentId}")
+
+                // Dismiss notification
+                stopForeground(true)
+            } catch (e: Throwable) {
+                setError()
+            }
+
+        }
+
+    }
+
     // region Notifications
 
     private fun showProgressNotification(assignmentName: String?, submissionId: Long, inForeground: Boolean = true) {
@@ -313,11 +507,13 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
     // endregion
 
     enum class Action {
-        TEXT_ENTRY, URL_ENTRY, MEDIA_ENTRY, FILE_ENTRY, ARC_ENTRY
+        TEXT_ENTRY, URL_ENTRY, MEDIA_ENTRY, FILE_ENTRY, ARC_ENTRY, COMMENT_ENTRY
     }
 
     companion object {
         const val FILE_SUBMISSION_FINISHED = "file_submission_finished"
+
+        const val COMMENT_CHANNEL_ID = "commentUploadChannel"
 
         private fun getSubmissionIntent(context: Context, canvasContext: CanvasContext, assignmentId: Long): PendingIntent {
             val intent = Intent(context, NavigationActivity.startActivityClass).apply {
@@ -431,6 +627,62 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
             }
 
             startService(context, Action.ARC_ENTRY, bundle)
+        }
+
+        /**
+         * Begins the process of uploading a submission comment for the given assignment. A valid value *must* be
+         * provided for [message] and/or [attachments]. If no message is provided, the API will use the message "This
+         * is a media comment" - or its applicable translation. If one or more attachments are provided, a progress
+         * notification will be displayed while the upload occurs.
+         */
+        fun startCommentUpload(
+            context: Context,
+            canvasContext: CanvasContext,
+            assignmentId: Long,
+            assignmentName: String,
+            message: String?,
+            attachments: List<FileSubmitObject>?,
+            isGroupMessage: Boolean
+        ) {
+            require(message.isValid() || attachments?.isNotEmpty() == true)
+            val bundle = Bundle().apply {
+                putParcelable(Const.CANVAS_CONTEXT, canvasContext)
+                putLong(Const.ASSIGNMENT_ID, assignmentId)
+                putString(Const.ASSIGNMENT_NAME, assignmentName)
+                putString(Const.MESSAGE, message)
+                putBoolean(Const.IS_GROUP, isGroupMessage)
+                attachments?.let { putParcelableArrayList(Const.FILES, ArrayList(it)) }
+            }
+            startService(context, Action.COMMENT_ENTRY, bundle)
+        }
+
+        /**
+         * Begins the process of uploading a media submission comment for the given assignment. A progress notification
+         * will be displayed while the upload occurs.
+         */
+        fun startMediaCommentUpload(
+            context: Context,
+            canvasContext: CanvasContext,
+            assignmentId: Long,
+            assignmentName: String,
+            mediaFile: File,
+            isGroupMessage: Boolean
+        ) {
+            val bundle = Bundle().apply {
+                putParcelable(Const.CANVAS_CONTEXT, canvasContext)
+                putLong(Const.ASSIGNMENT_ID, assignmentId)
+                putString(Const.ASSIGNMENT_NAME, assignmentName)
+                putString(Const.MEDIA_FILE_PATH, mediaFile.absolutePath)
+                putBoolean(Const.IS_GROUP, isGroupMessage)
+            }
+            startService(context, Action.COMMENT_ENTRY, bundle)
+        }
+
+        fun retryCommentUpload(context: Context, commentId: Long) {
+            val bundle = Bundle().apply {
+                putLong(Const.ID, commentId)
+            }
+            startService(context, Action.COMMENT_ENTRY, bundle)
         }
         // endregion
     }

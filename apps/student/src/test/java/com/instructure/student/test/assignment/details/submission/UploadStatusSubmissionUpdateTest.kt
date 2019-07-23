@@ -16,7 +16,7 @@
  */
 package com.instructure.student.test.assignment.details.submission
 
-import com.instructure.pandautils.models.FileSubmitObject
+import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.student.mobius.assignmentDetails.submission.file.UploadStatusSubmissionEffect
 import com.instructure.student.mobius.assignmentDetails.submission.file.UploadStatusSubmissionEvent
 import com.instructure.student.mobius.assignmentDetails.submission.file.UploadStatusSubmissionModel

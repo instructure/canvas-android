@@ -16,6 +16,7 @@
  */
 package com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments
 
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.student.mobius.common.ui.UpdateInit
 import com.spotify.mobius.First
 import com.spotify.mobius.Next
@@ -40,10 +41,50 @@ class SubmissionCommentsUpdate : UpdateInit<SubmissionCommentsModel, SubmissionC
                 Next.dispatch(setOf(SubmissionCommentsEffect.ShowVideoRecordingView))
             }
             is SubmissionCommentsEvent.SendMediaCommentClicked -> {
-                Next.dispatch(setOf(SubmissionCommentsEffect.UploadMediaComment(event.file, model.assignmentId, model.courseId)))
+                val effect = SubmissionCommentsEffect.UploadMediaComment(
+                    event.file,
+                    model.assignment.id,
+                    model.assignment.name.orEmpty(),
+                    model.assignment.courseId,
+                    model.assignment.groupCategoryId > 0
+                )
+                Next.next(
+                    model.copy(isMediaCommentEnabled = true),
+                    setOf(effect)
+                )
             }
             is SubmissionCommentsEvent.MediaCommentDialogClosed -> {
                 Next.next(model.copy(isMediaCommentEnabled = true))
+            }
+            is SubmissionCommentsEvent.SendTextCommentClicked -> {
+                val effect = SubmissionCommentsEffect.SendTextComment(
+                    event.message,
+                    model.assignment.id,
+                    model.assignment.name.orEmpty(),
+                    model.assignment.courseId,
+                    model.assignment.groupCategoryId > 0
+                )
+                Next.dispatch(setOf(effect, SubmissionCommentsEffect.ClearTextInput))
+            }
+            is SubmissionCommentsEvent.SubmissionCommentAdded -> {
+                Next.next(model.copy(comments = model.comments + event.comment))
+            }
+            SubmissionCommentsEvent.UploadFilesClicked -> {
+                val effect = SubmissionCommentsEffect.ShowFilePicker(
+                    CanvasContext.emptyCourseContext(model.assignment.courseId),
+                    model.assignment
+                )
+                Next.dispatch(setOf(effect))
+            }
+            is SubmissionCommentsEvent.PendingSubmissionsUpdated -> {
+                if (event.ids == model.pendingCommentIds) {
+                    Next.noChange()
+                } else {
+                    Next.next(model.copy(pendingCommentIds = event.ids))
+                }
+            }
+            is SubmissionCommentsEvent.RetryCommentUploadClicked -> {
+                Next.dispatch(setOf(SubmissionCommentsEffect.RetryCommentUpload(event.commentId)))
             }
         }
     }

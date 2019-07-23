@@ -38,12 +38,12 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.pandautils.R
-import com.instructure.pandautils.models.FileSubmitObject
 import com.instructure.pandautils.services.FileUploadService
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.AttachmentView

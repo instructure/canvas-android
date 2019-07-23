@@ -25,14 +25,17 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
 import androidx.core.app.NotificationCompat
-import com.instructure.canvasapi2.managers.*
+import com.instructure.canvasapi2.managers.FileUploadConfig
+import com.instructure.canvasapi2.managers.FileUploadManager
+import com.instructure.canvasapi2.managers.GroupManager
+import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.Conversation
+import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.ProgressEvent
 import com.instructure.pandautils.R
-import com.instructure.pandautils.models.FileSubmitObject
 import com.instructure.pandautils.utils.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -67,7 +70,7 @@ class FileUploadService @JvmOverloads constructor(name: String = FileUploadServi
     override fun onHandleIntent(intent: Intent) {
         val action = intent.action
         val bundle = intent.extras
-        
+
         if (isCanceled) return
 
         val notificationId = notificationId(bundle)
@@ -105,36 +108,32 @@ class FileUploadService @JvmOverloads constructor(name: String = FileUploadServi
         try {
             fileSubmitObjects.forEachIndexed { idx, fso ->
                 updateNotificationCount(notificationId, fso.name, idx + 1)
-                val config = FileUploadConfig(fso.name, fso.fullPath, fso.size, fso.contentType)
-                when (action) {
+                val config: FileUploadConfig = when (action) {
                     ACTION_ASSIGNMENT_SUBMISSION -> {
-                        val uploadContext = if (groupId == null) SubmissionUploadContext(courseId, assignment!!.id) else GroupUploadContext(groupId)
-                        attachments += FileUploadManager.uploadFileSynchronous(uploadContext, config, idx, submissionId)!!
+                        if (groupId == null) {
+                            FileUploadConfig.forSubmission(fso, courseId, assignment!!.id)
+                        } else {
+                            FileUploadConfig.forGroup(fso, groupId)
+                        }
                     }
-                    ACTION_COURSE_FILE -> {
-                        config.parentFolderId = parentFolderId
-                        attachments += FileUploadManager.uploadFileSynchronous(CourseUploadContext(courseId), config)!!
-                    }
-                    ACTION_USER_FILE -> {
-                        config.parentFolderId = parentFolderId
-                        attachments += FileUploadManager.uploadFileSynchronous(UserUploadContext(), config)!!
-                    }
-                    ACTION_MESSAGE_ATTACHMENTS -> {
-                        config.parentFolderPath = MESSAGE_ATTACHMENT_PATH
-                        attachments += FileUploadManager.uploadFileSynchronous(UserUploadContext(), config)!!
-                    }
-                    ACTION_QUIZ_FILE -> {
-                        attachments += FileUploadManager.uploadFileSynchronous(QuizUploadContext(courseId, quizId), config)!!
-                    }
-                    ACTION_DISCUSSION_ATTACHMENT -> {
-                        config.parentFolderPath = DISCUSSION_ATTACHMENT_PATH
-                        attachments += FileUploadManager.uploadFileSynchronous(UserUploadContext(), config)!!
-                    }
-                    ACTION_SUBMISSION_COMMENT -> {
-                        val uploadContext = SubmissionCommentUploadContext(courseId, assignment!!.id)
-                        attachments += FileUploadManager.uploadFileSynchronous(uploadContext, config)!!
-                    }
+                    ACTION_COURSE_FILE -> FileUploadConfig.forCourse(fso, courseId, parentFolderId)
+                    ACTION_USER_FILE -> FileUploadConfig.forUser(fso, parentFolderId)
+                    ACTION_MESSAGE_ATTACHMENTS -> FileUploadConfig.forUser(fso, parentFolderPath = MESSAGE_ATTACHMENT_PATH)
+                    ACTION_QUIZ_FILE -> FileUploadConfig.forQuiz(fso, courseId, quizId)
+                    ACTION_DISCUSSION_ATTACHMENT -> FileUploadConfig.forUser(fso, parentFolderPath = DISCUSSION_ATTACHMENT_PATH)
+                    ACTION_SUBMISSION_COMMENT -> FileUploadConfig.forSubmissionComment(fso, courseId, assignment!!.id)
+                    else -> throw IllegalArgumentException("Unknown file upload action: $action")
                 }
+                attachments += FileUploadManager.uploadFile(config){ progress ->
+                    /*
+                     * TEMPORARY: Post progress events for UploadStatusSubmissionEffectHandler from here until submission
+                     * file uploads are directly handled in SubmissionService
+                     */
+                    if (submissionId != null) {
+                        val event = ProgressEvent(idx, submissionId, (progress * fso.size).toLong(), fso.size)
+                        EventBus.getDefault().postSticky(event)
+                    }
+                }.dataOrThrow
             }
             // Submit fileIds to the assignment
             val attachmentsIds = attachments.map { it.id }.plus(bundle.getLongArray(Const.ATTACHMENTS)?.toList() ?: emptyList())
@@ -346,18 +345,18 @@ class FileUploadService @JvmOverloads constructor(name: String = FileUploadServi
             FileUploadUtils.deleteTempDirectory(context)
         }
 
-        fun createNotificationChannel(notificationManager: NotificationManager) {
+        fun createNotificationChannel(notificationManager: NotificationManager, channelId: String = CHANNEL_ID) {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
 
             // Prevents recreation of notification channel if it exists.
-            if (notificationManager.notificationChannels.any { it.id == CHANNEL_ID }) return
+            if (notificationManager.notificationChannels.any { it.id == channelId }) return
 
             val name = ContextKeeper.appContext.getString(R.string.notificationChannelNameFileUploadsName)
             val description = ContextKeeper.appContext.getString(R.string.notificationChannelNameFileUploadsDescription)
 
             // Create the channel and add the group
             val importance = NotificationManager.IMPORTANCE_HIGH
-            val channel = NotificationChannel(CHANNEL_ID, name, importance)
+            val channel = NotificationChannel(channelId, name, importance)
             channel.description = description
             channel.enableLights(false)
             channel.enableVibration(false)

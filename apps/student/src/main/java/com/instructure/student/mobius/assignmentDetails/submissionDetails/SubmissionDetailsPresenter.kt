@@ -55,7 +55,8 @@ object SubmissionDetailsPresenter : Presenter<SubmissionDetailsModel, Submission
         // Comments tab
         tabData += SubmissionDetailsTabData.CommentData(
             name = context.getString(R.string.comments),
-            assignmentId = model.assignmentId
+            assignment = assignment,
+            submission = rootSubmission
         )
 
         // Files tab

@@ -18,13 +18,9 @@ package com.instructure.student.test.assignment.details.submission
 
 import android.net.Uri
 import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.pandautils.models.FileSubmitObject
-import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadEffect
-import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadEvent
-import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadModel
-import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadUpdate
+import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
+import com.instructure.student.mobius.assignmentDetails.submission.picker.*
 import com.instructure.student.test.util.matchesEffects
-import com.instructure.student.test.util.matchesFirstEffects
 import com.spotify.mobius.test.FirstMatchers
 import com.spotify.mobius.test.InitSpec
 import com.spotify.mobius.test.InitSpec.assertThatFirst
@@ -51,8 +47,8 @@ class PickerSubmissionUploadUpdateTest : Assert() {
             assignmentId = 123L,
             assignmentGroupCategoryId = 321L,
             canvasContext = CanvasContext.emptyCourseContext(135L),
-            isMediaSubmission = false,
-            allowedExtensions = listOf("pdf", "jpg")
+            allowedExtensions = listOf("pdf", "jpg"),
+            mode = PickerSubmissionMode.FileSubmission
         )
     }
 

@@ -25,10 +25,9 @@ import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
-import com.instructure.pandautils.utils.Const
-import com.instructure.pandautils.utils.makeBundle
 import com.instructure.student.R
 import com.instructure.student.espresso.StudentRenderTest
+import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionMode
 import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerListItemViewState
 import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerSubmissionUploadViewState
@@ -186,6 +185,27 @@ class PickerSubmissionUploadRenderTest : StudentRenderTest() {
         page.fabGallery.assertNotDisplayed()
     }
 
+    @Test
+    @TestMetaData(Priority.P3, FeatureCategory.SUBMISSIONS, TestCategory.RENDER)
+    fun displaysCorrectStringsForSubmissionMode() {
+        loadPageWithViewState(
+            PickerSubmissionUploadViewState.Empty(baseVisibilities)
+        )
+        page.assertHasTitle(R.string.submission)
+        page.emptyMessage.assertHasText(R.string.chooseFileSubtext)
+    }
+
+    @Test
+    @TestMetaData(Priority.P3, FeatureCategory.SUBMISSIONS, TestCategory.RENDER)
+    fun displaysCorrectStringsForCommentMode() {
+        loadPageWithViewState(
+            viewState = PickerSubmissionUploadViewState.Empty(baseVisibilities),
+            mode = PickerSubmissionMode.CommentAttachment
+        )
+        page.assertHasTitle(R.string.commentUpload)
+        page.emptyMessage.assertHasText(R.string.chooseFileForCommentSubtext)
+    }
+
     private fun assertExtraFabsDisplayed() {
         page.fabFile.assertDisplayed()
         page.fabCamera.assertDisplayed()
@@ -198,7 +218,10 @@ class PickerSubmissionUploadRenderTest : StudentRenderTest() {
         page.fabGallery.assertNotDisplayed()
     }
 
-    private fun loadPageWithViewState(viewState: PickerSubmissionUploadViewState): PickerSubmissionUploadFragment {
+    private fun loadPageWithViewState(
+        viewState: PickerSubmissionUploadViewState,
+        mode: PickerSubmissionMode = PickerSubmissionMode.FileSubmission
+    ): PickerSubmissionUploadFragment {
         val course = Course()
         val assignment = Assignment()
 
@@ -209,10 +232,7 @@ class PickerSubmissionUploadRenderTest : StudentRenderTest() {
         val fragment = PickerSubmissionUploadFragment().apply {
             overrideInitViewState = viewState
             loopMod = { it.effectRunner { emptyEffectRunner } }
-            arguments = course.makeBundle {
-                putParcelable(Const.ASSIGNMENT, assignment)
-                putBoolean(Const.IS_MEDIA_TYPE, false)
-            }
+            arguments = PickerSubmissionUploadFragment.makeRoute(course, assignment, mode).arguments
         }
         activityRule.activity.loadFragment(fragment)
         return fragment

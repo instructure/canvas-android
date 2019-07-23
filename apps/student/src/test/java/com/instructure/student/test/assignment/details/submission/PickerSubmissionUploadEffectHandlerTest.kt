@@ -20,15 +20,11 @@ import android.content.Intent
 import android.net.Uri
 import androidx.core.content.FileProvider
 import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.pandautils.models.FileSubmitObject
+import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
+import com.instructure.pandautils.services.NotoriousUploadService
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
-import com.instructure.pandautils.services.NotoriousUploadService
-import com.instructure.pandautils.utils.FileUploadUtils
-import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadEffect
-import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadEffectHandler
-import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadEvent
-import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadModel
+import com.instructure.student.mobius.assignmentDetails.submission.picker.*
 import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerSubmissionUploadView
 import com.instructure.student.mobius.common.ui.SubmissionService
 import com.spotify.mobius.functions.Consumer
@@ -308,7 +304,7 @@ class PickerSubmissionUploadEffectHandlerTest : Assert() {
     }
 
     @Test
-    fun `HandleSubmit and isMediaSubmission results in starting media submission`() {
+    fun `HandleSubmit and MediaSubmission mode results in starting media submission`() {
         val file = FileSubmitObject("file.mp4", 1L, "mimeType", "/path/to/the/file.mp4")
         val model = PickerSubmissionUploadModel(
             canvasContext = CanvasContext.emptyCourseContext(1L),
@@ -316,8 +312,8 @@ class PickerSubmissionUploadEffectHandlerTest : Assert() {
             assignmentGroupCategoryId = 3L,
             assignmentName = "AssignmentName",
             allowedExtensions = emptyList(),
-            isMediaSubmission = true,
-            files = listOf(file)
+            files = listOf(file),
+            mode = PickerSubmissionMode.MediaSubmission
         )
 
         mockkObject(SubmissionService.Companion)
@@ -343,14 +339,14 @@ class PickerSubmissionUploadEffectHandlerTest : Assert() {
     }
 
     @Test
-    fun `HandleSubmit and not isMediaSubmission results in starting file submission`() {
+    fun `HandleSubmit and FileSubmission mode results in starting file submission`() {
         val model = PickerSubmissionUploadModel(
             canvasContext = CanvasContext.emptyCourseContext(1L),
             assignmentId = 2L,
             assignmentGroupCategoryId = 3L,
             assignmentName = "AssignmentName",
             allowedExtensions = emptyList(),
-            isMediaSubmission = false
+            mode = PickerSubmissionMode.FileSubmission
         )
 
         mockkObject(SubmissionService.Companion)
@@ -368,6 +364,41 @@ class PickerSubmissionUploadEffectHandlerTest : Assert() {
                 model.assignmentName,
                 model.assignmentGroupCategoryId,
                 ArrayList(model.files)
+            )
+            view.closeSubmissionView()
+        }
+
+        confirmVerified(view)
+        confirmVerified(SubmissionService)
+    }
+
+    @Test
+    fun `HandleSubmit and CommentAttachment mode results in starting file comment upload`() {
+        val model = PickerSubmissionUploadModel(
+            canvasContext = CanvasContext.emptyCourseContext(1L),
+            assignmentId = 2L,
+            assignmentGroupCategoryId = 3L,
+            assignmentName = "AssignmentName",
+            allowedExtensions = emptyList(),
+            mode = PickerSubmissionMode.CommentAttachment
+        )
+
+        mockkObject(SubmissionService.Companion)
+        every {
+            SubmissionService.startCommentUpload(any(), any(), any(), any(), any(), any(), any())
+        } returns Unit
+
+        connection.accept(PickerSubmissionUploadEffect.HandleSubmit(model))
+
+        verify(timeout = 100) {
+            SubmissionService.startCommentUpload(
+                context,
+                model.canvasContext,
+                model.assignmentId,
+                model.assignmentName,
+                null,
+                ArrayList(model.files),
+                true
             )
             view.closeSubmissionView()
         }

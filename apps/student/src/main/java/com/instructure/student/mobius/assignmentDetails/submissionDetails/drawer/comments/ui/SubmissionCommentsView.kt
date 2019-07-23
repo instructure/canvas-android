@@ -20,10 +20,15 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.student.R
+import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionMode
+import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.SubmissionCommentsEvent
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.SubmissionCommentsViewState
 import com.instructure.student.mobius.common.ui.MobiusView
+import com.instructure.student.router.RouteMatcher
 import com.spotify.mobius.functions.Consumer
 import kotlinx.android.synthetic.main.dialog_media_comment_picker.*
 import kotlinx.android.synthetic.main.fragment_submission_comments.*
@@ -36,6 +41,9 @@ class SubmissionCommentsView(
     override fun render(state: SubmissionCommentsViewState) {
         addMediaCommentButton.setOnClickListener {
             consumer?.accept(SubmissionCommentsEvent.AddMediaCommentClicked)
+        }
+        addFileCommentButton.setOnClickListener {
+            consumer?.accept(SubmissionCommentsEvent.UploadFilesClicked)
         }
     }
 
@@ -65,8 +73,15 @@ class SubmissionCommentsView(
         dialog.show()
     }
 
-    fun showMediaUploadToast() {
-        Toast.makeText(context, "Media Upload Attempted! This is a placeholder", Toast.LENGTH_SHORT).show()
+    fun showFilePicker(canvasContext: CanvasContext, assignment: Assignment) {
+        RouteMatcher.route(
+            context,
+            PickerSubmissionUploadFragment.makeRoute(canvasContext, assignment, PickerSubmissionMode.CommentAttachment)
+        )
+    }
+
+    fun clearTextInput() {
+        // TODO: MBL-11333
     }
 
     fun showPermissionDeniedToast() {

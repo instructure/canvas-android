@@ -49,7 +49,7 @@ object PickerSubmissionUploadPresenter : Presenter<PickerSubmissionUploadModel, 
                 R.drawable.vd_media_recordings,
                 file.name,
                 NumberHelper.readableFileSize(context, file.size),
-                !model.isMediaSubmission
+                !model.mode.isMediaSubmission
             )
         }
 
@@ -57,11 +57,11 @@ object PickerSubmissionUploadPresenter : Presenter<PickerSubmissionUploadModel, 
     }
 
     private fun getVisibilities(model: PickerSubmissionUploadModel) = PickerVisibilities(
-        fab = !model.isMediaSubmission,
+        fab = !model.mode.isMediaSubmission,
         submit = model.files.isNotEmpty(),
-        fabFile = !model.isMediaSubmission,
-        fabCamera = !model.isMediaSubmission && allowsCameraImages(model.allowedExtensions),
-        fabGallery = !model.isMediaSubmission && allowsGalleryImages(model.allowedExtensions)
+        fabFile = !model.mode.isMediaSubmission,
+        fabCamera = !model.mode.isMediaSubmission && allowsCameraImages(model.allowedExtensions),
+        fabGallery = !model.mode.isMediaSubmission && allowsGalleryImages(model.allowedExtensions)
     )
 
     private fun allowsCameraImages(allowedExtensions: List<String>): Boolean {

@@ -16,11 +16,15 @@
  */
 package com.instructure.student.ui.pages.renderPages
 
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.hasDescendant
+import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.page.BasePage
 import com.instructure.student.R
 
 class PickerSubmissionUploadRenderPage : BasePage(R.id.pickerSubmissionUploadPage) {
+    val toolbar by OnViewWithId(R.id.toolbar)
     val emptyView by OnViewWithId(R.id.pickerEmptyView)
     val recycler by OnViewWithId(R.id.filePickerRecycler)
     val submitButton by OnViewWithId(R.id.menuSubmit)
@@ -29,4 +33,10 @@ class PickerSubmissionUploadRenderPage : BasePage(R.id.pickerSubmissionUploadPag
     val fabFile by OnViewWithId(R.id.pickFabFile)
     val fabCamera by OnViewWithId(R.id.pickFabCamera)
     val fabGallery by OnViewWithId(R.id.pickFabGallery)
+
+    val emptyMessage by OnViewWithId(R.id.message)
+
+    fun assertHasTitle(stringResId: Int) {
+        toolbar.check(matches(hasDescendant(withText(stringResId))))
+    }
 }
