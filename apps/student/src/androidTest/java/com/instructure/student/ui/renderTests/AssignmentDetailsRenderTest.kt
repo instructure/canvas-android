@@ -17,17 +17,16 @@
 package com.instructure.student.ui.renderTests
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.Submission
-import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.toApiString
+import com.instructure.espresso.assertGone
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
+import com.instructure.student.R
 import com.instructure.student.espresso.StudentRenderTest
 import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsModel
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
@@ -139,25 +138,183 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
     }
 
     @Test
-    fun displaysQuizSubmissionType() {
+    fun displaysQuizDetails() {
+        val quizId = 123L
+        val timeLimit = 10
+        val allowedAttempts = 1
+        val questionCount = 1
         val assignment = Assignment(
             name = "Test Assignment",
-            submissionTypesRaw = listOf("online_quiz")
+            submissionTypesRaw = listOf("online_quiz"),
+            quizId = quizId
         )
-        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        val quiz = Quiz(
+            id = quizId,
+            timeLimit = timeLimit,
+            allowedAttempts = allowedAttempts,
+            questionCount = questionCount
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment), quizResult = DataResult.Success(quiz))
         loadPageWithModel(model)
-        assignmentDetailsRenderPage.assertDisplaysSubmissionTypes("Online Quiz")
+        assignmentDetailsRenderPage.assertQuizDescription(timeLimit.toString(), allowedAttempts.toString(), questionCount.toString())
     }
 
     @Test
-    fun displaysDiscussionSubmissionType() {
+    fun displaysQuizDetailsNoTimeLimit() {
+        val quizId = 123L
+        val timeLimit = 0
+        val allowedAttempts = 1
+        val questionCount = 1
         val assignment = Assignment(
-            name = "Test Assignment",
-            submissionTypesRaw = listOf("discussion_topic")
+                name = "Test Assignment",
+                submissionTypesRaw = listOf("online_quiz"),
+                quizId = quizId
+        )
+        val quiz = Quiz(
+                id = quizId,
+                timeLimit = timeLimit,
+                allowedAttempts = allowedAttempts,
+                questionCount = questionCount
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment), quizResult = DataResult.Success(quiz))
+        loadPageWithModel(model)
+        assignmentDetailsRenderPage.assertQuizDescription(R.string.quizNoTimeLimit, allowedAttempts.toString(), questionCount.toString())
+    }
+
+    @Test
+    fun displaysQuizDetailsUnlimitedAttempts() {
+        val quizId = 123L
+        val timeLimit = 10
+        val allowedAttempts = -1
+        val questionCount = 1
+        val assignment = Assignment(
+                name = "Test Assignment",
+                submissionTypesRaw = listOf("online_quiz"),
+                quizId = quizId
+        )
+        val quiz = Quiz(
+                id = quizId,
+                timeLimit = timeLimit,
+                allowedAttempts = allowedAttempts,
+                questionCount = questionCount
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment), quizResult = DataResult.Success(quiz))
+        loadPageWithModel(model)
+        assignmentDetailsRenderPage.assertQuizDescription(timeLimit.toString(), R.string.unlimited, questionCount.toString())
+    }
+
+    @Test
+    fun displaysNoSubmissionTypesForQuiz() {
+        val quizId = 123L
+        val assignment = Assignment(
+                name = "Test Assignment",
+                submissionTypesRaw = listOf("online_quiz"),
+                quizId = quizId
+        )
+        val quiz = Quiz(id = quizId)
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment), quizResult = DataResult.Success(quiz))
+        loadPageWithModel(model)
+        assignmentDetailsRenderPage.submissionTypes.assertGone()
+    }
+
+    @Test
+    fun displaysNoSubmissionTypesForDiscussion() {
+        val assignment = Assignment(
+                name = "Test Assignment",
+                submissionTypesRaw = listOf("discussion_topic"),
+                discussionTopicHeader = DiscussionTopicHeader(id = 123L, author = DiscussionParticipant(displayName = "hodor"), postedDate = Date())
         )
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         loadPageWithModel(model)
-        assignmentDetailsRenderPage.assertDisplaysSubmissionTypes("Discussion Topic")
+        assignmentDetailsRenderPage.submissionTypes.assertGone()
+    }
+
+    @Test
+    fun displaysDiscussionTopicHeader() {
+        val authorAvatarUrl = "pretty-hodor.com"
+        val authorName = "hodor"
+        val authoredDate = "Jul 23 at 9:59 AM"
+        val attachmentIconVisibility = false
+        val discussionMessage = "yo yo yo"
+        val calendar = GregorianCalendar.getInstance()
+        calendar.set(2019, 6, 23, 9, 59)
+        val discussionTopicHeader = DiscussionTopicHeader(id = 123L, message = discussionMessage, author = DiscussionParticipant(displayName = authorName, avatarImageUrl = authorAvatarUrl), postedDate = calendar.time)
+        val assignment = Assignment(
+                name = "Test Assignment",
+                submissionTypesRaw = listOf("discussion_topic"),
+                discussionTopicHeader = discussionTopicHeader
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        loadPageWithModel(model)
+        assignmentDetailsRenderPage.assertDiscussionHeader(authorName, authoredDate, attachmentIconVisibility)
+    }
+
+    @Test
+    fun displaysDiscussionTopicHeaderWithAttachments() {
+        val authorAvatarUrl = "pretty-hodor.com"
+        val authorName = "hodor"
+        val authoredDate = "Jul 23 at 9:59 AM"
+        val attachmentIconVisibility = true
+        val attachmentId = 12345L
+        val remoteFiles = mutableListOf(RemoteFile(id = attachmentId))
+        val discussionMessage = "yo yo yo"
+        val calendar = GregorianCalendar.getInstance()
+        calendar.set(2019, 6, 23, 9, 59)
+        val discussionTopicHeader = DiscussionTopicHeader(id = 123L, attachments = remoteFiles, message = discussionMessage, author = DiscussionParticipant(displayName = authorName, avatarImageUrl = authorAvatarUrl), postedDate = calendar.time)
+        val assignment = Assignment(
+                name = "Test Assignment",
+                submissionTypesRaw = listOf("discussion_topic"),
+                discussionTopicHeader = discussionTopicHeader
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        loadPageWithModel(model)
+        assignmentDetailsRenderPage.assertDiscussionHeader(authorName, authoredDate, attachmentIconVisibility)
+    }
+
+    @Test
+    fun displaysDiscussionDescription() {
+        val authorAvatarUrl = "pretty-hodor.com"
+        val authorName = "hodor"
+        val attachmentId = 12345L
+        val remoteFiles = mutableListOf(RemoteFile(id = attachmentId))
+        val discussionMessage = "yo yo yo"
+        val calendar = GregorianCalendar.getInstance()
+        calendar.set(2019, 6, 23, 9, 59)
+        val discussionTopicHeader = DiscussionTopicHeader(id = 123L, attachments = remoteFiles, message = discussionMessage, author = DiscussionParticipant(displayName = authorName, avatarImageUrl = authorAvatarUrl), postedDate = calendar.time)
+        val assignment = Assignment(
+                name = "Test Assignment",
+                submissionTypesRaw = listOf("discussion_topic"),
+                discussionTopicHeader = discussionTopicHeader
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        loadPageWithModel(model)
+        assignmentDetailsRenderPage.assertDisplaysDiscussionDescription(discussionMessage)
+    }
+
+    @Test
+    fun displaysViewQuizButton() {
+        val quizId = 123L
+        val assignment = Assignment(
+                name = "Test Assignment",
+                submissionTypesRaw = listOf("online_quiz"),
+                quizId = quizId
+        )
+        val quiz = Quiz(id = quizId)
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment), quizResult = DataResult.Success(quiz))
+        loadPageWithModel(model)
+        assignmentDetailsRenderPage.assertSubmitButton(R.string.viewQuiz)
+    }
+
+    @Test
+    fun displaysViewDiscussionButton() {
+        val assignment = Assignment(
+                name = "Test Assignment",
+                submissionTypesRaw = listOf("discussion_topic"),
+                discussionTopicHeader = DiscussionTopicHeader(id = 123L, author = DiscussionParticipant(displayName = "hodor"), postedDate = Date())
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        loadPageWithModel(model)
+        assignmentDetailsRenderPage.assertSubmitButton(R.string.viewDiscussion)
     }
 
     @Test

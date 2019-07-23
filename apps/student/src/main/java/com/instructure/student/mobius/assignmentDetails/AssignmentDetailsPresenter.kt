@@ -164,8 +164,7 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
         //Configure stickied submit button visibility state,
         visibilities.submitButton = when(assignment.turnInType) {
             // We always show the button for quizzes and discussions, so the users can always route
-            Assignment.TurnInType.QUIZ -> true
-            Assignment.TurnInType.DISCUSSION -> true
+            Assignment.TurnInType.QUIZ, Assignment.TurnInType.DISCUSSION -> true
             Assignment.TurnInType.ONLINE -> assignment.isAllowedToSubmit
             else -> false // On Paper / etc
         }
@@ -173,7 +172,7 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
         // Configure stickied submit button
         val submitButtonText = when(assignment.turnInType) {
             Assignment.TurnInType.QUIZ -> context.getString(R.string.viewQuiz)
-            Assignment.TurnInType.ONLINE -> getAssignmentSubmitButtonText(context, isExternalToolSubmission, submitted)
+            Assignment.TurnInType.ONLINE, Assignment.TurnInType.EXTERNAL_TOOL -> getAssignmentSubmitButtonText(context, isExternalToolSubmission, submitted)
             else -> context.getString(R.string.viewDiscussion)
         }
 
@@ -290,9 +289,11 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
     }
 
     private fun getDiscussionText(discussionTopicHeader: DiscussionTopicHeader): String {
-        return if (discussionTopicHeader.message.isNullOrEmpty()) {
-            discussionTopicHeader.title ?: ""
-        } else ""
+        return when {
+            discussionTopicHeader.message.isValid() -> discussionTopicHeader.message!!
+            discussionTopicHeader.title.isValid() -> discussionTopicHeader.title!!
+            else -> ""
+        }
     }
 
     private fun getAssignmentSubmitButtonText(context: Context, isExternalToolSubmission: Boolean, submitted: Boolean): String {

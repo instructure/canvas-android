@@ -37,12 +37,12 @@ class AssignmentDetailsUpdate : UpdateInit<AssignmentDetailsModel, AssignmentDet
         AssignmentDetailsEvent.SubmitAssignmentClicked -> {
             // If a user is trying to submit something to an assignment and the assignment is null, something is terribly wrong.
             val submissionTypes = model.assignmentResult!!.dataOrThrow.getSubmissionTypes()
-            if(submissionTypes.size == 1 && !(submissionTypes.contains(Assignment.SubmissionType.ONLINE_UPLOAD) && model.isArcEnabled)) {
-                Next.dispatch<AssignmentDetailsModel, AssignmentDetailsEffect>(setOf(AssignmentDetailsEffect.ShowCreateSubmissionView(submissionTypes.first(), model.course, model.assignmentResult.dataOrThrow, model.assignmentResult.dataOrThrow.url)))
-            } else if (model.assignmentResult.dataOrNull!!.turnInType == Assignment.TurnInType.QUIZ) {
+            if(model.assignmentResult.dataOrNull!!.turnInType == Assignment.TurnInType.QUIZ) {
                 Next.dispatch<AssignmentDetailsModel, AssignmentDetailsEffect>(setOf(AssignmentDetailsEffect.ShowQuizStartView(model.quizResult!!.dataOrThrow, model.course)))
             } else if (model.assignmentResult.dataOrNull!!.turnInType == Assignment.TurnInType.DISCUSSION) {
                 Next.dispatch<AssignmentDetailsModel, AssignmentDetailsEffect>(setOf(AssignmentDetailsEffect.ShowDiscussionDetailView(model.assignmentResult.dataOrThrow.discussionTopicHeader!!.id, model.course)))
+            } else if (submissionTypes.size == 1 && !(submissionTypes.contains(Assignment.SubmissionType.ONLINE_UPLOAD) && model.isArcEnabled)) {
+                Next.dispatch<AssignmentDetailsModel, AssignmentDetailsEffect>(setOf(AssignmentDetailsEffect.ShowCreateSubmissionView(submissionTypes.first(), model.course, model.assignmentResult.dataOrThrow, model.assignmentResult.dataOrThrow.url)))
             } else {
                 Next.dispatch<AssignmentDetailsModel, AssignmentDetailsEffect>(setOf(AssignmentDetailsEffect.ShowSubmitDialogView(model.assignmentResult.dataOrThrow, model.course, model.isArcEnabled)))
             }

@@ -139,10 +139,7 @@ class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Lon
 
             val quizResult = if (result.dataOrNull?.turnInType == (Assignment.TurnInType.QUIZ) && result.dataOrNull?.quizId != 0L) {
                 try {
-                    val quizResponse = awaitApiResponse<Quiz> {
-                        QuizManager.getQuiz(effect.courseId, result.dataOrNull?.quizId!!, effect.forceNetwork, it)
-                    }
-                    DataResult.Success(quizResponse.body()!!)
+                    QuizManager.getQuizAsync(effect.courseId, result.dataOrNull?.quizId!!, effect.forceNetwork).await()
                 } catch (e: StatusCallbackError) {
                     if (e.response?.code() == 401) {
                         DataResult.Fail(Failure.Authorization(e.response?.message()))
