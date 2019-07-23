@@ -18,9 +18,14 @@
 
 package com.instructure.student.ui.pages
 
+import android.view.View
+import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.contrib.RecyclerViewActions
+import androidx.test.espresso.matcher.ViewMatchers
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.dataseeding.model.CourseApiModel
+import com.instructure.dataseeding.model.GroupApiModel
 import com.instructure.espresso.OnViewWithContentDescription
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.WaitForViewWithId
@@ -37,6 +42,8 @@ import com.instructure.espresso.page.withParent
 import com.instructure.espresso.page.withText
 import com.instructure.student.R
 import org.hamcrest.CoreMatchers.allOf
+import org.hamcrest.Matcher
+import org.hamcrest.core.AllOf
 
 class DashboardPage : BasePage(R.id.dashboardPage) {
 
@@ -54,7 +61,15 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     }
 
     fun assertDisplaysCourse(course: CourseApiModel) {
-        onViewWithText(course.name).assertDisplayed()
+        val matcher = allOf(withText(course.name), withId(R.id.titleTextView))
+        scrollAndAssertDisplayed(matcher)
+    }
+
+    fun assertDisplaysGroup(group: GroupApiModel, course: CourseApiModel) {
+        val groupNameMatcher = allOf(withText(group.name), withId(R.id.groupNameView))
+        scrollAndAssertDisplayed(groupNameMatcher)
+        val groupDescriptionMatcher = allOf(withText(course.name), withId(R.id.groupCourseView))
+        scrollAndAssertDisplayed(groupDescriptionMatcher)
     }
 
     fun assertDisplaysAddCourseMessage() {
@@ -95,6 +110,15 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
 
     fun waitForRender() {
         listView.assertDisplayed() // Oddly, this seems sufficient as a wait-for-render mechanism
+    }
+
+    private fun scrollAndAssertDisplayed(matcher: Matcher<View>) {
+        // Scroll RecyclerView item into view, if necessary
+        onView(AllOf.allOf(ViewMatchers.withId(R.id.listView), ViewMatchers.isDisplayed())) // The drawer (not displayed) also has a listView
+                .perform(RecyclerViewActions.scrollTo<RecyclerView.ViewHolder>(ViewMatchers.hasDescendant(matcher)))
+
+        // Now make sure that it is displayed
+        Espresso.onView(matcher).assertDisplayed()
     }
 
 

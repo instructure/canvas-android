@@ -2,8 +2,10 @@ package com.instructure.student.ui.pages
 
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.dataseeding.model.AssignmentApiModel
@@ -15,6 +17,7 @@ import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
 import com.instructure.student.R
 import org.hamcrest.Matchers
+import org.hamcrest.Matchers.allOf
 
 class CalendarPage: BasePage(R.id.calendarPage) {
 
@@ -23,7 +26,7 @@ class CalendarPage: BasePage(R.id.calendarPage) {
 
     fun selectDesiredCalendarsAndDismiss(vararg courseNames: String) {
         for(courseName in courseNames) {
-            onView(withText(courseName)).click()
+            onView(allOf(withText(courseName), isDisplayed(), withId(R.id.courseName))).click()
         }
         onView(withText(R.string.done)).click()
     }

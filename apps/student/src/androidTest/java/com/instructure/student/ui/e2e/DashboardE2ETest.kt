@@ -2,6 +2,7 @@ package com.instructure.student.ui.e2e
 
 import com.instructure.canvas.espresso.E2E
 import com.instructure.dataseeding.api.ConversationsApi
+import com.instructure.dataseeding.api.GroupsApi
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
@@ -9,6 +10,7 @@ import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.seedData
 import com.instructure.student.ui.utils.tokenLogin
+import junit.framework.Assert.assertEquals
 import org.junit.Test
 
 class DashboardE2ETest : StudentTest() {
@@ -35,6 +37,13 @@ class DashboardE2ETest : StudentTest() {
                 recipients = listOf(student.id.toString())
         )
 
+        val groupCategory = GroupsApi.createCourseGroupCategory(data.coursesList[0].id, teacher.token)
+        val group = GroupsApi.createGroup(groupCategory.id, teacher.token)
+        val groupMembership = GroupsApi.createGroupMembership(group.id, student.id, teacher.token)
+
+        // Sanity check
+        assertEquals("course id for group", data.coursesList[0].id, group.courseId)
+
         // Sign in with lone student
         tokenLogin(student)
 
@@ -45,6 +54,9 @@ class DashboardE2ETest : StudentTest() {
         for(course in data.coursesList) {
             dashboardPage.assertDisplaysCourse(course)
         }
+
+        // Verify that our group is displayed
+        dashboardPage.assertDisplaysGroup(group, data.coursesList[0])
 
         // Verify that our email conversation is represented
         //dashboardPage.assertUnreadEmails(count = 1)  // Not reliable :-(

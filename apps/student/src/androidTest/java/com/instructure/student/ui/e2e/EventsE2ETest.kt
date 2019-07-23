@@ -1,6 +1,8 @@
 package com.instructure.student.ui.e2e
 
 import com.instructure.canvas.espresso.E2E
+import com.instructure.dataseeding.api.AssignmentsApi
+import com.instructure.dataseeding.api.GroupsApi
 import com.instructure.dataseeding.api.QuizzesApi
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
@@ -38,6 +40,21 @@ class EventsE2ETest: StudentTest() {
                 assignments = 1
         )
 
+        // Seed a grouped assignment due today, for calendar tab
+        var groupCategory = GroupsApi.createCourseGroupCategory(course.id, teacher.token)
+        var group = GroupsApi.createGroup(groupCategory.id, teacher.token)
+        GroupsApi.createGroupMembership(group.id, student.id, teacher.token)
+
+        val groupedAssignmentRequest = AssignmentsApi.CreateAssignmentRequest(
+                courseId = course.id,
+                teacherToken = teacher.token,
+                dueAt = 0.days.fromNow.iso8601,
+                groupCategoryId = groupCategory.id,
+                submissionTypes = emptyList()
+        )
+        val groupedAssignment = AssignmentsApi.createAssignment(groupedAssignmentRequest)
+
+
         // Seed a quiz due today, for calendar tab
         val quiz = QuizzesApi.createQuiz(
                 QuizzesApi.CreateQuizRequest(
@@ -57,11 +74,14 @@ class EventsE2ETest: StudentTest() {
         dashboardPage.clickCalendarTab()
         //calendarPage.waitForRender()
 
-        // Select the calendar for your course
-        calendarPage.selectDesiredCalendarsAndDismiss(course.name)
+        // Select the calendars for your courses/groups
+        calendarPage.selectDesiredCalendarsAndDismiss(course.name, group.name)
 
         // Make sure that your assignment shows up on the calendar
         calendarPage.assertAssignmentDisplayed(seededAssignments.assignmentList[0])
+
+        // Assert that the grouped assignment is there
+        calendarPage.assertAssignmentDisplayed(groupedAssignment)
 
         // Make sure that your quiz shows up on the calendar
         calendarPage.assertQuizDisplayed(quiz)
