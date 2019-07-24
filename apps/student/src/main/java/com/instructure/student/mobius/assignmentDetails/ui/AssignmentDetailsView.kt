@@ -162,7 +162,6 @@ class AssignmentDetailsView(
         }
         if(state.visibilities.quizDetails) renderQuizDetails(state.quizDescriptionViewState!!)
         if(state.visibilities.discussionTopicHeader) renderDiscussionTopicHeader(state.discussionHeaderViewState!!)
-        renderSubmissionStatus(state)
     }
 
     private fun renderQuizDetails(quizDescriptionViewState: QuizDescriptionViewState) {
@@ -177,10 +176,6 @@ class AssignmentDetailsView(
         authorName.text = discussionHeaderViewState.authorName
         authoredDate.text = discussionHeaderViewState.authoredDate
         attachmentIcon.setVisible(discussionHeaderViewState.attachmentIconVisibility)
-    }
-
-    private fun renderSubmissionStatus(state: AssignmentDetailsViewState.Loaded) {
-        // TODO
     }
 
     override fun onDispose() {

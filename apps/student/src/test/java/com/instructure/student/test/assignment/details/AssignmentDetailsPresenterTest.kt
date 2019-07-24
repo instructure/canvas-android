@@ -48,6 +48,8 @@ class AssignmentDetailsPresenterTest : Assert() {
     private lateinit var baseAssignment: Assignment
     private lateinit var baseVisibilities: AssignmentDetailsVisibilities
     private lateinit var baseSubmission: Submission
+    private lateinit var baseDiscussion: DiscussionTopicHeader
+    private lateinit var baseQuiz: Quiz
 
     @Before
     fun setup() {
@@ -69,6 +71,18 @@ class AssignmentDetailsPresenterTest : Assert() {
         baseSubmission = Submission(
             attempt = 1,
             workflowState = "submitted"
+        )
+        baseQuiz = Quiz(
+            id = 123L
+        )
+        baseDiscussion = DiscussionTopicHeader(
+                id = 123L,
+                message = "discussion message",
+                author = DiscussionParticipant(
+                        displayName = "Hodor",
+                        avatarImageUrl = "pretty-hodor.com"
+                ),
+                postedDate = Date()
         )
     }
 
@@ -303,10 +317,10 @@ class AssignmentDetailsPresenterTest : Assert() {
         val allTypes = listOf(Assignment.SubmissionType.ONLINE_QUIZ)
         val expected = allTypes.map { Assignment.submissionTypeToPrettyPrintString(it, context) }.joinToString(", ")
         val assignment = baseAssignment.copy(
-                submissionTypesRaw = allTypes.map { it.apiString }
+                submissionTypesRaw = allTypes.map { it.apiString },
+                quizId = baseQuiz.id
         )
-        val quiz = Quiz(id = 123L)
-        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment), quizResult = DataResult.Success(quiz))
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment), quizResult = DataResult.Success(baseQuiz))
         val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
         assertEquals(expected, state.submissionTypes)
     }
@@ -363,6 +377,62 @@ class AssignmentDetailsPresenterTest : Assert() {
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
         assertEquals("Resubmit Assignment", state.submitButtonText)
+    }
+
+    @Test
+    fun `Submit button reads "View Quiz" if its a quiz with a submission`() {
+        val assignment = baseAssignment.copy(
+                submissionTypesRaw = listOf("online_quiz"),
+                submission = baseSubmission,
+                quizId = baseQuiz.id
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment), quizResult = DataResult.Success(baseQuiz))
+        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
+        assertEquals("View Quiz", state.submitButtonText)
+    }
+
+    @Test
+    fun `Submit button reads "View Quiz" if its a quiz with no submission`() {
+        val assignment = baseAssignment.copy(
+                submissionTypesRaw = listOf("online_quiz"),
+                quizId = baseQuiz.id
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment), quizResult = DataResult.Success(baseQuiz))
+        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
+        assertEquals("View Quiz", state.submitButtonText)
+    }
+
+    @Test
+    fun `Submit button reads "View Discussion" if its a discussion with a submission`() {
+        val assignment = baseAssignment.copy(
+                submissionTypesRaw = listOf("discussion_topic"),
+                submission = baseSubmission,
+                discussionTopicHeader = baseDiscussion
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
+        assertEquals("View Discussion", state.submitButtonText)
+    }
+
+    @Test
+    fun `Submit button reads "View Discussion" if its a discussion with no submission`() {
+        val assignment = baseAssignment.copy(
+                submissionTypesRaw = listOf("discussion_topic"),
+                discussionTopicHeader = baseDiscussion
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
+        assertEquals("View Discussion", state.submitButtonText)
+    }
+
+    @Test
+    fun `Submit button reads "Launch External Tool" if submission type is external tool`() {
+        val assignment = baseAssignment.copy(
+                submissionTypesRaw = listOf(Assignment.SubmissionType.EXTERNAL_TOOL.apiString)
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
+        assertEquals("Launch External Tool", state.submitButtonText)
     }
 
     @Test
@@ -443,16 +513,6 @@ class AssignmentDetailsPresenterTest : Assert() {
     }
 
     @Test
-    fun `Displays Launch External Tool if submission type is external tool`() {
-        val assignment = baseAssignment.copy(
-            submissionTypesRaw = listOf(Assignment.SubmissionType.EXTERNAL_TOOL.apiString)
-        )
-        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
-        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
-        assertEquals("Launch External Tool", state.submitButtonText)
-    }
-
-    @Test
     fun `isExternalToolSubmission is true if submission type is external tool`() {
         val assignment = baseAssignment.copy(
             submissionTypesRaw = listOf(Assignment.SubmissionType.EXTERNAL_TOOL.apiString)
@@ -501,7 +561,7 @@ class AssignmentDetailsPresenterTest : Assert() {
         val discussionMessage = "yo yo yo"
         val calendar = GregorianCalendar.getInstance()
         calendar.set(2019, 6, 23, 9, 59)
-        val discussionTopicHeader = DiscussionTopicHeader(id = 123L, message = discussionMessage, author = DiscussionParticipant(displayName = authorName, avatarImageUrl = authorAvatarUrl), postedDate = calendar.time)
+        val discussionTopicHeader = baseDiscussion.copy(message = discussionMessage, author = DiscussionParticipant(displayName = authorName, avatarImageUrl = authorAvatarUrl), postedDate = calendar.time)
         val assignment = baseAssignment.copy(submissionTypesRaw = listOf("discussion_topic"), discussionTopicHeader = discussionTopicHeader)
 
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
@@ -522,7 +582,7 @@ class AssignmentDetailsPresenterTest : Assert() {
         val remoteFiles = mutableListOf(RemoteFile(id = attachmentId))
         val calendar = GregorianCalendar.getInstance()
         calendar.set(2019, 6, 23, 9, 59)
-        val discussionTopicHeader = DiscussionTopicHeader(id = 123L, attachments = remoteFiles, message = discussionMessage, author = DiscussionParticipant(displayName = authorName, avatarImageUrl = authorAvatarUrl), postedDate = calendar.time)
+        val discussionTopicHeader = baseDiscussion.copy(attachments = remoteFiles, message = discussionMessage, author = DiscussionParticipant(displayName = authorName, avatarImageUrl = authorAvatarUrl), postedDate = calendar.time)
         val assignment = baseAssignment.copy(submissionTypesRaw = listOf("discussion_topic"), discussionTopicHeader = discussionTopicHeader)
 
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
@@ -535,9 +595,7 @@ class AssignmentDetailsPresenterTest : Assert() {
 
     @Test
     fun `Description contains discussion topic header message when assignment is discussion`() {
-        val discussionMessage = "yo yo yo"
-        val discussionTopicHeader = DiscussionTopicHeader(id = 123L, message = discussionMessage, author = DiscussionParticipant(displayName = "Hodor", avatarImageUrl = "pretty-hodor.com"), postedDate = Date())
-        val assignment = baseAssignment.copy(submissionTypesRaw = listOf("discussion_topic"), discussionTopicHeader = discussionTopicHeader)
+        val assignment = baseAssignment.copy(submissionTypesRaw = listOf("discussion_topic"), discussionTopicHeader = baseDiscussion)
 
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
@@ -547,9 +605,7 @@ class AssignmentDetailsPresenterTest : Assert() {
 
     @Test
     fun `SubmitButton is visible when assignment is discussion`() {
-        val discussionMessage = "yo yo yo"
-        val discussionTopicHeader = DiscussionTopicHeader(id = 123L, message = discussionMessage, author = DiscussionParticipant(displayName = "Hodor", avatarImageUrl = "pretty-hodor.com"), postedDate = Date())
-        val assignment = baseAssignment.copy(submissionTypesRaw = listOf("discussion_topic"), discussionTopicHeader = discussionTopicHeader)
+        val assignment = baseAssignment.copy(submissionTypesRaw = listOf("discussion_topic"), discussionTopicHeader = baseDiscussion)
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
         assertEquals(true, state.visibilities.submitButton)
@@ -560,8 +616,7 @@ class AssignmentDetailsPresenterTest : Assert() {
         val assignment = baseAssignment.copy(
                 submissionTypesRaw = listOf(Assignment.SubmissionType.ONLINE_QUIZ.apiString)
         )
-        val quiz = Quiz(id = 123L)
-        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment), quizResult = DataResult.Success(quiz))
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment), quizResult = DataResult.Success(baseQuiz))
         val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
         assertEquals(true, state.visibilities.submitButton)
     }
@@ -588,7 +643,7 @@ class AssignmentDetailsPresenterTest : Assert() {
     fun `Returns error state when assignment quiz fails`() {
         val assignment = baseAssignment.copy(
                 submissionTypesRaw = listOf(Assignment.SubmissionType.ONLINE_QUIZ.apiString),
-                quizId = 123L
+                quizId = baseQuiz.id
         )
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment), quizResult = DataResult.Fail())
         val expectedState = AssignmentDetailsViewState.Error
@@ -601,7 +656,7 @@ class AssignmentDetailsPresenterTest : Assert() {
     fun `Returns error state when assignment quiz is null`() {
         val assignment = baseAssignment.copy(
                 submissionTypesRaw = listOf(Assignment.SubmissionType.ONLINE_QUIZ.apiString),
-                quizId = 123L
+                quizId = baseQuiz.id
         )
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment), quizResult = null)
         val expectedState = AssignmentDetailsViewState.Error
@@ -637,7 +692,7 @@ class AssignmentDetailsPresenterTest : Assert() {
             "\t\t</style>\n" +
             "\t</head>\n" +
             "\t<body>\n" +
-            "\t\t<div id=\"header_content\">yo yo yo</div>\n" +
+            "\t\t<div id=\"header_content\">discussion message</div>\n" +
             "\t\t<script type=\"text/javascript\">\n" +
             "\n" +
             "\t\t\tfunction onLtiToolButtonPressed(id) {\n" +

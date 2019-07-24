@@ -138,6 +138,7 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
     }
 
     @Test
+    @TestMetaData(Priority.P2, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER, secondaryFeature = FeatureCategory.QUIZZES)
     fun displaysQuizDetails() {
         val quizId = 123L
         val timeLimit = 10
@@ -160,6 +161,7 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
     }
 
     @Test
+    @TestMetaData(Priority.P2, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER, secondaryFeature = FeatureCategory.QUIZZES)
     fun displaysQuizDetailsNoTimeLimit() {
         val quizId = 123L
         val timeLimit = 0
@@ -182,6 +184,7 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
     }
 
     @Test
+    @TestMetaData(Priority.P2, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER, secondaryFeature = FeatureCategory.QUIZZES)
     fun displaysQuizDetailsUnlimitedAttempts() {
         val quizId = 123L
         val timeLimit = 10
@@ -204,6 +207,7 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
     }
 
     @Test
+    @TestMetaData(Priority.P2, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER, secondaryFeature = FeatureCategory.QUIZZES)
     fun displaysNoSubmissionTypesForQuiz() {
         val quizId = 123L
         val assignment = Assignment(
@@ -218,6 +222,7 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
     }
 
     @Test
+    @TestMetaData(Priority.P2, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER, secondaryFeature = FeatureCategory.DISCUSSIONS)
     fun displaysNoSubmissionTypesForDiscussion() {
         val assignment = Assignment(
                 name = "Test Assignment",
@@ -230,6 +235,7 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
     }
 
     @Test
+    @TestMetaData(Priority.P2, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER, secondaryFeature = FeatureCategory.DISCUSSIONS)
     fun displaysDiscussionTopicHeader() {
         val authorAvatarUrl = "pretty-hodor.com"
         val authorName = "hodor"
@@ -250,6 +256,7 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
     }
 
     @Test
+    @TestMetaData(Priority.P2, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER, secondaryFeature = FeatureCategory.DISCUSSIONS)
     fun displaysDiscussionTopicHeaderWithAttachments() {
         val authorAvatarUrl = "pretty-hodor.com"
         val authorName = "hodor"
@@ -272,6 +279,7 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
     }
 
     @Test
+    @TestMetaData(Priority.P2, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER, secondaryFeature = FeatureCategory.DISCUSSIONS)
     fun displaysDiscussionDescription() {
         val authorAvatarUrl = "pretty-hodor.com"
         val authorName = "hodor"
@@ -292,6 +300,7 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
     }
 
     @Test
+    @TestMetaData(Priority.P2, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER, secondaryFeature = FeatureCategory.QUIZZES)
     fun displaysViewQuizButton() {
         val quizId = 123L
         val assignment = Assignment(
@@ -306,6 +315,7 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
     }
 
     @Test
+    @TestMetaData(Priority.P2, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER, secondaryFeature = FeatureCategory.DISCUSSIONS)
     fun displaysViewDiscussionButton() {
         val assignment = Assignment(
                 name = "Test Assignment",
@@ -318,6 +328,7 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
     }
 
     @Test
+    @TestMetaData(Priority.P2, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER)
     fun displaysOnPaperSubmissionType() {
         val assignment = Assignment(
             name = "Test Assignment",
@@ -329,6 +340,7 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
     }
 
     @Test
+    @TestMetaData(Priority.P2, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER)
     fun displaysExternalToolSubmissionType() {
         val assignment = Assignment(
             name = "Test Assignment",
@@ -340,6 +352,7 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
     }
 
     @Test
+    @TestMetaData(Priority.P2, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER)
     fun displaysOtherSubmissionTypes() {
         val assignment = Assignment(
             name = "Test Assignment",
@@ -359,6 +372,7 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
     }
 
     @Test
+    @TestMetaData(Priority.P2, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER)
     fun displaysFileTypes() {
         val assignment = Assignment(
             name = "Test Assignment",
@@ -371,6 +385,7 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
     }
 
     @Test
+    @TestMetaData(Priority.P2, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER)
     fun displaysDescription() {
         val descriptionText = "This is a description!"
         val assignment = Assignment(description = "<p>$descriptionText</p>")
@@ -380,6 +395,7 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
     }
 
     @Test
+    @TestMetaData(Priority.P2, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER)
     fun displaysNoDescription() {
         val model = baseModel.copy(assignmentResult = DataResult.Success(Assignment()))
         loadPageWithModel(model)
@@ -387,6 +403,7 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
     }
 
     @Test
+    @TestMetaData(Priority.P2, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER)
     fun displaysGradeCell() {
         val assignment = Assignment(
             name = "Test Assignment",
@@ -405,6 +422,7 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
     }
 
     @Test
+    @TestMetaData(Priority.P2, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER)
     fun displaysSubmitted() {
         val assignment = Assignment(
             name = "Test Assignment",
@@ -416,6 +434,7 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
     }
 
     @Test
+    @TestMetaData(Priority.P2, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER)
     fun displaysUploading() {
         val assignment = Assignment(name = "Test Assignment")
         val model = baseModel.copy(
@@ -428,6 +447,7 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
 
 
     @Test
+    @TestMetaData(Priority.P2, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER)
     fun displaysFailed() {
         val assignment = Assignment(name = "Test Assignment")
         val model = baseModel.copy(
