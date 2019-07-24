@@ -72,7 +72,15 @@ class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Lon
             is AssignmentDetailsEffect.ShowQuizStartView -> view?.showQuizStartView(effect.course, effect.quiz)
             is AssignmentDetailsEffect.ShowDiscussionDetailView -> view?.showDiscussionDetailView(effect.course, effect.discussionTopicHeaderId)
             is AssignmentDetailsEffect.ShowDiscussionAttachment -> view?.showDiscussionAttachment(effect.course, effect.discussionAttachment)
-            is AssignmentDetailsEffect.ShowUploadStatusView -> view?.showUploadStatusView(effect.submission.id) // TODO: show upload status for files/media, otherwise show the appropriate submission screen (text/url/etc...)
+            is AssignmentDetailsEffect.ShowUploadStatusView -> {
+                when (effect.submission.submissionType) {
+                    Assignment.SubmissionType.ONLINE_UPLOAD.apiString, Assignment.SubmissionType.MEDIA_RECORDING.apiString -> {
+                        view?.showUploadStatusView(effect.submission.id)
+                    }
+                    // TODO: show the appropriate submission screen (text/url/etc...)
+                    else -> Unit
+                }
+            }
             is AssignmentDetailsEffect.LoadData -> {
                 loadData(effect)
             }

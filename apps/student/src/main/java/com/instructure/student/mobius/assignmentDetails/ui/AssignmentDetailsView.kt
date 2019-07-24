@@ -27,7 +27,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import com.instructure.canvasapi2.models.*
-import android.widget.Toast
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.pandautils.utils.*
@@ -42,6 +41,7 @@ import com.instructure.student.fragment.LTIWebViewFragment
 import com.instructure.student.fragment.QuizStartFragment
 import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsEvent
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionMode
+import com.instructure.student.mobius.assignmentDetails.submission.file.ui.UploadStatusSubmissionFragment
 import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submission.text.ui.TextSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submission.url.ui.UrlSubmissionUploadFragment
@@ -227,7 +227,7 @@ class AssignmentDetailsView(
     }
 
     fun showUploadStatusView(submissionId: Long) {
-        Toast.makeText(context, "Route to upload status", Toast.LENGTH_SHORT).show()
+        RouteMatcher.route(context, UploadStatusSubmissionFragment.makeRoute(submissionId))
     }
 
     fun showOnlineTextEntryView(assignmentId: Long, assignmentName: String?, submittedText: String? = null) {

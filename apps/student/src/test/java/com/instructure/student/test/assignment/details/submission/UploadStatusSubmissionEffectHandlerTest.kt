@@ -17,8 +17,8 @@ package com.instructure.student.test.assignment.details.submission
 
 import android.content.Context
 import android.content.Intent
+import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ProgressEvent
-import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.pandautils.utils.Const
 import com.instructure.student.FileSubmission
 import com.instructure.student.db.Db
@@ -28,6 +28,7 @@ import com.instructure.student.mobius.assignmentDetails.submission.file.UploadSt
 import com.instructure.student.mobius.assignmentDetails.submission.file.UploadStatusSubmissionEffectHandler
 import com.instructure.student.mobius.assignmentDetails.submission.file.UploadStatusSubmissionEvent
 import com.instructure.student.mobius.assignmentDetails.submission.file.ui.UploadStatusSubmissionView
+import com.instructure.student.mobius.common.ui.SubmissionService
 import com.spotify.mobius.functions.Consumer
 import io.mockk.*
 import kotlinx.coroutines.Dispatchers
@@ -56,6 +57,8 @@ class UploadStatusSubmissionEffectHandlerTest : Assert() {
 
     @Test
     fun `LoadPersistedFiles results in OnPersistedSubmissionLoaded event`() {
+        val name = "assignment"
+        val failed = false
         val list = listOf(
             FileSubmission.Impl(
                 0,
@@ -74,8 +77,11 @@ class UploadStatusSubmissionEffectHandlerTest : Assert() {
 
         val db: StudentDb = mockk {
             every {
-                submissionQueries.getSubmissionById(submissionId).executeAsOne().errorFlag
-            } returns false
+                submissionQueries.getSubmissionById(submissionId).executeAsOneOrNull()
+            } returns mockk {
+                every { errorFlag } returns failed
+                every { assignmentName } returns name
+            }
             every {
                 fileSubmissionQueries.getFilesForSubmissionId(submissionId).executeAsList()
             } returns list
@@ -87,10 +93,30 @@ class UploadStatusSubmissionEffectHandlerTest : Assert() {
 
         verify(timeout = 100) {
             eventConsumer.accept(
-                UploadStatusSubmissionEvent.OnPersistedSubmissionLoaded(
-                    false,
-                    listOf(FileSubmitObject("File Name", 1L, "contentType", "fullPath"))
-                )
+                UploadStatusSubmissionEvent.OnPersistedSubmissionLoaded(name, failed, list)
+            )
+        }
+
+        confirmVerified(eventConsumer)
+    }
+
+    @Test
+    fun `LoadPersistedFiles results in OnPersistedSubmissionLoaded event with success submission`() {
+        mockkStatic("com.instructure.student.db.ExtensionsKt")
+
+        val db: StudentDb = mockk {
+            every {
+                submissionQueries.getSubmissionById(submissionId).executeAsOneOrNull()
+            } returns null
+        }
+
+        every { Db.getInstance(context) } returns db
+
+        connection.accept(UploadStatusSubmissionEffect.LoadPersistedFiles(submissionId))
+
+        verify(timeout = 100) {
+            eventConsumer.accept(
+                UploadStatusSubmissionEvent.OnPersistedSubmissionLoaded(null, false, emptyList())
             )
         }
 
@@ -99,16 +125,16 @@ class UploadStatusSubmissionEffectHandlerTest : Assert() {
 
     @Test
     fun `receiver getting called results in OnFilesRefreshed event`() {
-        val file = FileSubmitObject("File Name", 1L, "contentType", "fullPath")
+        val failed = false
         val list = listOf(
             FileSubmission.Impl(
                 0,
                 submissionId,
                 null,
-                file.name,
-                file.size,
-                file.contentType,
-                file.fullPath,
+                "File Name",
+                1L,
+                "contentType",
+                "fullPath",
                 null,
                 false
             )
@@ -118,8 +144,12 @@ class UploadStatusSubmissionEffectHandlerTest : Assert() {
 
         val db: StudentDb = mockk {
             every {
-                submissionQueries.getSubmissionById(submissionId).executeAsOne().errorFlag
-            } returns false
+                submissionQueries.getSubmissionById(submissionId).executeAsOneOrNull()
+            } returns mockk {
+                every { errorFlag } returns failed
+                every { assignmentName } returns null
+            }
+
             every {
                 fileSubmissionQueries.getFilesForSubmissionId(submissionId).executeAsList()
             } returns list
@@ -129,17 +159,13 @@ class UploadStatusSubmissionEffectHandlerTest : Assert() {
 
         val intent = mockk<Intent>()
         every { intent.hasExtra(Const.SUBMISSION) } returns true
-        every { intent.extras.getLong(Const.SUBMISSION) } returns submissionId
+        every { intent.extras?.getLong(Const.SUBMISSION) } returns submissionId
 
-        effectHandler.receiver.onReceive(context, intent)
+        effectHandler.receiver?.onReceive(context, intent)
 
         verify(timeout = 100) {
             eventConsumer.accept(
-                UploadStatusSubmissionEvent.OnFilesRefreshed(
-                    false,
-                    submissionId,
-                    listOf(file)
-                )
+                UploadStatusSubmissionEvent.OnFilesRefreshed(failed, submissionId, list)
             )
         }
 
@@ -150,9 +176,9 @@ class UploadStatusSubmissionEffectHandlerTest : Assert() {
     fun `receiver getting called with wrong submission ID results in no event`() {
         val intent = mockk<Intent>()
         every { intent.hasExtra(Const.SUBMISSION) } returns true
-        every { intent.extras.getLong(Const.SUBMISSION) } returns submissionId + 1
+        every { intent.extras?.getLong(Const.SUBMISSION) } returns submissionId + 1
 
-        effectHandler.receiver.onReceive(context, intent)
+        effectHandler.receiver?.onReceive(context, intent)
 
         verify(exactly = 0) {
             eventConsumer.accept(any())
@@ -166,7 +192,7 @@ class UploadStatusSubmissionEffectHandlerTest : Assert() {
         val intent = mockk<Intent>()
         every { intent.hasExtra(Const.SUBMISSION) } returns false
 
-        effectHandler.receiver.onReceive(context, intent)
+        effectHandler.receiver?.onReceive(context, intent)
 
         verify(exactly = 0) {
             eventConsumer.accept(any())
@@ -180,7 +206,7 @@ class UploadStatusSubmissionEffectHandlerTest : Assert() {
         val intent = mockk<Intent>()
         every { intent.hasExtra(Const.SUBMISSION) } returns true
 
-        effectHandler.receiver.onReceive(null, intent)
+        effectHandler.receiver?.onReceive(null, intent)
 
         verify(exactly = 0) {
             eventConsumer.accept(any())
@@ -207,5 +233,106 @@ class UploadStatusSubmissionEffectHandlerTest : Assert() {
         verify(exactly = 0) {
             eventConsumer.accept(any())
         }
+    }
+
+    @Test
+    fun `OnDeleteSubmission results in view call for submissionDeleted`() {
+
+        mockkStatic("com.instructure.student.db.ExtensionsKt")
+
+        val db: StudentDb = mockk {
+            every {
+                submissionQueries.deleteSubmissionById(submissionId)
+            } returns Unit
+
+            every {
+                fileSubmissionQueries.deleteFilesForSubmissionId(submissionId)
+            } returns Unit
+        }
+
+        every { Db.getInstance(context) } returns db
+
+        effectHandler.accept(UploadStatusSubmissionEffect.OnDeleteSubmission(submissionId))
+
+        verify (timeout = 100) {
+            db.submissionQueries.deleteSubmissionById(submissionId)
+            db.fileSubmissionQueries.deleteFilesForSubmissionId(submissionId)
+            view.submissionDeleted()
+        }
+
+        confirmVerified(db, view)
+    }
+
+    @Test
+    fun `OnCancelAllSubmissions results in stopping services`() {
+        val count = 2
+        every { view.getServiceIntents() } returns List(count) { mockk<Intent>(relaxed = true) }
+
+        effectHandler.accept(UploadStatusSubmissionEffect.OnCancelAllSubmissions)
+
+        excludeRecords {
+            context.registerReceiver(any(), any())
+        }
+
+        verify (timeout = 100) {
+            view.getServiceIntents()
+        }
+
+        verify (timeout = 100, exactly = count) {
+            context.stopService(any())
+        }
+
+        confirmVerified(view, context)
+    }
+
+    @Test
+    fun `RetrySubmission results in view call for submissionDeleted`() {
+        val course = Course()
+
+        mockkObject(SubmissionService.Companion)
+        every {
+            SubmissionService.retryFileSubmission(any(), any(), any())
+        } returns Unit
+
+        mockkStatic("com.instructure.student.db.ExtensionsKt")
+
+        val db: StudentDb = mockk {
+            every {
+                submissionQueries.getSubmissionById(submissionId).executeAsOne().canvasContext
+            } returns course
+        }
+
+        every { Db.getInstance(context) } returns db
+
+        effectHandler.accept(UploadStatusSubmissionEffect.RetrySubmission(submissionId))
+
+        verify (timeout = 100) {
+            SubmissionService.retryFileSubmission(context, course, submissionId)
+            view.submissionRetrying()
+        }
+
+        confirmVerified(view, SubmissionService)
+    }
+
+    @Test
+    fun `OnDeleteFileFromSubmission results in db deletion`() {
+        val fileId = 101L
+        mockkStatic("com.instructure.student.db.ExtensionsKt")
+
+        val db: StudentDb = mockk {
+            every {
+                fileSubmissionQueries.deleteFileById(fileId)
+            } returns Unit
+        }
+
+        every { Db.getInstance(context) } returns db
+
+        effectHandler.accept(UploadStatusSubmissionEffect.OnDeleteFileFromSubmission(fileId))
+
+        verify (timeout = 100) {
+            db.fileSubmissionQueries.deleteFileById(fileId)
+        }
+
+        confirmVerified(db)
     }
 }
