@@ -67,5 +67,5 @@ data class SubmissionTypesVisibilities(
     var urlEntry: Boolean = false,
     var fileUpload: Boolean = false,
     var mediaRecording: Boolean = false,
-    var arcUpload: Boolean = false
+    var studioUpload: Boolean = false
 )

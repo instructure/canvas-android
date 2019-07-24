@@ -61,7 +61,7 @@ class InitActivityPresenter : Presenter<InitActivityView> {
 
             val launchDefinitions = awaitApi<List<LaunchDefinition>?> { LaunchDefinitionsManager.getLaunchDefinitions(it, false) }
             launchDefinitions?.let {
-                val definitions = launchDefinitions.filter { it.domain == LaunchDefinition._ARC_DOMAIN || it.domain == LaunchDefinition._GAUGE_DOMAIN }
+                val definitions = launchDefinitions.filter { it.domain == LaunchDefinition._STUDIO_DOMAIN || it.domain == LaunchDefinition._GAUGE_DOMAIN }
                 view?.gotLaunchDefinitions(definitions)
             }
 

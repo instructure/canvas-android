@@ -159,7 +159,7 @@ class AddSubmissionFragment : ParentFragment(), Bookmarkable {
     override fun onStart() {
         super.onStart()
         EventBus.getDefault().register(this)
-        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(mArcSubmissionReceiver, IntentFilter(Const.ARC_SUBMISSION))
+        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(mArcSubmissionReceiver, IntentFilter(Const.STUDIO_SUBMISSION))
     }
 
     override fun onResume() {
@@ -367,7 +367,7 @@ class AddSubmissionFragment : ParentFragment(), Bookmarkable {
 
         arcSubmission.setOnClickListener {
             val url = String.format(Locale.getDefault(), "%s/%s/external_tools/%d/resource_selection?launch_type=homework_submission&assignment_id=%d", ApiPrefs.fullDomain, canvasContext.toAPIString(), arcLTITool!!.id, assignment.id)
-            RouteMatcher.route(requireActivity(), ArcWebviewFragment.makeRoute(canvasContext, url, arcLTITool!!.name!!, true))
+            RouteMatcher.route(requireActivity(), StudioWebViewFragment.makeRoute(canvasContext, url, arcLTITool!!.name!!, true, assignment))
         }
 
         submitArcEntry.setOnClickListener { tryToSubmitArc() }

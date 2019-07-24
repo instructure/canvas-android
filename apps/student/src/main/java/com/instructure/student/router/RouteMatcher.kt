@@ -156,7 +156,7 @@ object RouteMatcher : BaseRouteMatcher() {
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}"), CalendarListViewFragment::class.java, assignmentDetailsClass))
 
         // Arc
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/external_tools/:${RouterParams.EXTERNAL_ID}/resource_selection"), ArcWebviewFragment::class.java))
+        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/external_tools/:${RouterParams.EXTERNAL_ID}/resource_selection"), StudioWebViewFragment::class.java))
 
 
         // Submissions

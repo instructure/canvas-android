@@ -39,6 +39,7 @@ import com.instructure.student.activity.InternalWebViewActivity
 import com.instructure.student.activity.ShareFileSubmissionTarget
 import com.instructure.student.fragment.InternalWebviewFragment
 import com.instructure.student.fragment.LTIWebViewFragment
+import com.instructure.student.fragment.StudioWebViewFragment
 import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsEvent
 import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submission.text.ui.TextSubmissionUploadFragment
@@ -161,7 +162,7 @@ class AssignmentDetailsView(
         descriptionWebView.stopLoading()
     }
 
-    fun showSubmitDialogView(assignment: Assignment, courseId: Long, visibilities: SubmissionTypesVisibilities) {
+    fun showSubmitDialogView(assignment: Assignment, courseId: Long, visibilities: SubmissionTypesVisibilities, ltiToolUrl: String? = null, ltiToolName: String? = null) {
         val builder = AlertDialog.Builder(context)
         val dialog = builder.setView(R.layout.dialog_submission_picker).create()
 
@@ -178,8 +179,9 @@ class AssignmentDetailsView(
             setupDialogRow(dialog, dialog.submissionEntryMedia, visibilities.mediaRecording) {
                 showMediaRecordingView(assignment, courseId)
             }
-            setupDialogRow(dialog, dialog.submissionEntryArc, visibilities.arcUpload) {
-                showArcUploadView(assignment, courseId)
+            setupDialogRow(dialog, dialog.submissionEntryStudio, visibilities.studioUpload) {
+                // The LTI info shouldn't be null if we are showing the Studio upload option
+                showStudioUploadView(assignment, courseId, ltiToolUrl!!, ltiToolName!!)
             }
         }
         dialog.show()
@@ -229,9 +231,8 @@ class AssignmentDetailsView(
         RouteMatcher.route(context, PickerSubmissionUploadFragment.makeRoute(canvasContext, assignment, false))
     }
 
-    fun showArcUploadView(assignment: Assignment, courseId: Long) {
-        // TODO
-        context.toast("Route to arc upload page")
+    fun showStudioUploadView(assignment: Assignment, courseId: Long, ltiUrl: String, studioLtiToolName: String) {
+        RouteMatcher.route(context, StudioWebViewFragment.makeRoute(canvasContext, ltiUrl, studioLtiToolName, true, assignment))
     }
 
     fun showQuizOrDiscussionView(url: String) {

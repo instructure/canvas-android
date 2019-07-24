@@ -69,11 +69,11 @@ class LTIWebViewFragment : InternalWebViewFragment() {
         // Setup the toolbar here so the LTI fragment uses this menu instead of InternalWebViewFragment's
         toolbar.setupMenu(R.menu.menu_internal_webview) {
             if(ltiTab != null) {
-                //coming from a tab that is an lti tool
+                // Coming from a tab that is an lti tool
                 sessionAuthJob = tryWeave {
 
                     val result = inBackground {
-                        // we have to get a new sessionless url
+                        // We have to get a new sessionless url
                         getLTIUrlForTab(ltiTab as Tab)
                     }
                     launchIntent(result)
@@ -92,7 +92,6 @@ class LTIWebViewFragment : InternalWebViewFragment() {
 
                             launchIntent(result)
                         }
-
                     }
                 } catch  {
                     Toast.makeText(this@LTIWebViewFragment.requireContext(), R.string.no_apps, Toast.LENGTH_SHORT).show()
@@ -105,19 +104,19 @@ class LTIWebViewFragment : InternalWebViewFragment() {
 
     override fun onResume() {
         super.onResume()
-        // After we request permissions to access files (like in Arc) this webview will reload and call onResume again. In order to not break any other LTI things, this flag should skip
+        // After we request permissions to access files (like in Studio) this WebView will reload and call onResume again. In order to not break any other LTI things, this flag should skip
         // reloading the url and keep the user where they are
-        if(skipReload) {
+        if (skipReload) {
             skipReload = false
             return
         }
 
         try {
-            if(ltiTab != null) {
+            if (ltiTab != null) {
                 getLtiUrl(ltiTab)
             } else {
                 if (ltiUrl.isNotBlank()) {
-                    //modify the url
+                    // Modify the url
                     if (ltiUrl.startsWith("canvas-courses://")) {
                         ltiUrl = ltiUrl.replaceFirst("canvas-courses".toRegex(), ApiPrefs.protocol)
                     }
@@ -147,7 +146,7 @@ class LTIWebViewFragment : InternalWebViewFragment() {
                 }
             }
         } catch (e: Exception) {
-            //if it gets here we're in trouble and won't know what the tab is, so just display an error message
+            // If it gets here we're in trouble and won't know what the tab is, so just display an error message
             loadDisplayError()
         }
 
@@ -168,7 +167,7 @@ class LTIWebViewFragment : InternalWebViewFragment() {
     }
 
     private fun getLtiUrl(ltiTab: Tab?) {
-        if(ltiTab == null) {
+        if (ltiTab == null) {
             loadDisplayError()
             return
         }
@@ -179,7 +178,7 @@ class LTIWebViewFragment : InternalWebViewFragment() {
                 result = getLTIUrlForTab(ltiTab)
             }
 
-            if(result != null) {
+            if (result != null) {
                 val uri = Uri.parse(result).buildUpon()
                         .appendQueryParameter("display", "borderless")
                         .appendQueryParameter("platform", "android")
@@ -187,7 +186,7 @@ class LTIWebViewFragment : InternalWebViewFragment() {
                 externalUrlToLoad = uri.toString()
                 loadUrl(uri.toString())
             } else {
-                //error
+                // Error
                 loadDisplayError()
             }
         }
@@ -200,7 +199,7 @@ class LTIWebViewFragment : InternalWebViewFragment() {
                 result = getLTIUrl(ltiUrl)
             }
 
-            if(result != null) {
+            if (result != null) {
                 val uri = Uri.parse(result).buildUpon()
                         .appendQueryParameter("display", "borderless")
                         .appendQueryParameter("platform", "android")
@@ -208,13 +207,13 @@ class LTIWebViewFragment : InternalWebViewFragment() {
                 // Set the sessionless url here in case the user wants to use an external browser
                 externalUrlToLoad = uri.toString()
 
-                if(loadExternally) {
+                if (loadExternally) {
                     launchIntent(uri.toString())
                 } else {
                     loadUrl(uri.toString())
                 }
             } else {
-                //error
+                // Error
                 loadDisplayError()
             }
         }
@@ -231,13 +230,12 @@ class LTIWebViewFragment : InternalWebViewFragment() {
     }
 
     override fun onHandleBackPressed(): Boolean {
-
-        if(canGoBack()) {
-            //This prevents a silly bug where the arc webview cannot go back far enough to pop it's fragment, but we also want to
-            // be able to navigate within the arc webview.
+        if (canGoBack()) {
+            // This prevents a silly bug where the Studio WebView cannot go back far enough to pop it's fragment, but we also want to
+            // be able to navigate within the Studio WebView.
             val webBackForwardList = canvasWebView?.copyBackForwardList()
             val historyUrl = webBackForwardList?.getItemAtIndex(webBackForwardList.currentIndex - 1)?.url
-            if(historyUrl != null && (historyUrl.contains("external_tools/")
+            if (historyUrl != null && (historyUrl.contains("external_tools/")
                     && historyUrl.contains("resource_selection")
                     || (historyUrl.contains("media-picker")))) {
                 canvasWebView?.handleGoBack()
@@ -251,7 +249,7 @@ class LTIWebViewFragment : InternalWebViewFragment() {
         if ((canvasWebView?.handleOnActivityResult(requestCode, resultCode, data)) != true) {
             super.onActivityResult(requestCode, resultCode, data)
         }
-        // we don't want to reload the LTI now, it may cancel the upload
+        // We don't want to reload the LTI now, it may cancel the upload
         skipReload = true
     }
 
@@ -330,7 +328,7 @@ class LTIWebViewFragment : InternalWebViewFragment() {
             ltiUrl = args.getString(LTI_URL, "")
             title = args.getString(TITLE, "")
             sessionLessLaunch = args.getBoolean(SESSION_LESS, false)
-            if(args.containsKey(TAB)) {
+            if (args.containsKey(TAB)) {
                 ltiTab = args.getParcelable(TAB)
             }
             hideToolbar = args.getBoolean(HIDE_TOOLBAR, false)

@@ -17,6 +17,7 @@ package com.instructure.student.test.assignment.details
 
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.student.Submission
 import com.instructure.student.mobius.assignmentDetails.*
@@ -133,10 +134,12 @@ class AssignmentDetailsUpdateTest : Assert() {
     }
 
     @Test
-    fun `SubmitAssignmentClicked event with only ONLINE_UPLOAD submission type and having arc enabled results in ShowSubmitDialogView effect`() {
+    fun `SubmitAssignmentClicked event with only ONLINE_UPLOAD submission type and having Studio enabled results in ShowSubmitDialogView effect`() {
         val submissionTypes = listOf("online_upload")
         val assignmentCopy = assignment.copy(submissionTypesRaw = submissionTypes)
-        val givenModel = initModel.copy(assignmentResult = DataResult.Success(assignmentCopy), isArcEnabled = true)
+        val studioLTITool = LTITool(url = "instructuremedia.com/lti/launch")
+        val givenModel = initModel.copy(assignmentResult = DataResult.Success(assignmentCopy), isStudioEnabled = true, studioLTIToolResult = DataResult.Success(studioLTITool))
+
         updateSpec
             .given(givenModel)
             .whenEvent(AssignmentDetailsEvent.SubmitAssignmentClicked)
@@ -146,7 +149,8 @@ class AssignmentDetailsUpdateTest : Assert() {
                         AssignmentDetailsEffect.ShowSubmitDialogView(
                             assignmentCopy,
                             course,
-                            true
+                            true,
+                            studioLTITool
                         )
                     )
                 )
@@ -154,7 +158,7 @@ class AssignmentDetailsUpdateTest : Assert() {
     }
 
     @Test
-    fun `SubmitAssignmentClicked event with only ONLINE_UPLOAD submission type and without arc enabled results in ShowCreateSubmissionView effect`() {
+    fun `SubmitAssignmentClicked event with only ONLINE_UPLOAD submission type and without Studio enabled results in ShowCreateSubmissionView effect`() {
         val submissionType = Assignment.SubmissionType.ONLINE_UPLOAD
         val submissionTypes = listOf("online_upload")
         val assignmentCopy = assignment.copy(submissionTypesRaw = submissionTypes)
@@ -239,7 +243,7 @@ class AssignmentDetailsUpdateTest : Assert() {
         val expectedModel = initModel.copy(
             isLoading = false,
             assignmentResult = DataResult.Success(assignment),
-            isArcEnabled = true,
+            isStudioEnabled = true,
             ltiTool = DataResult.Fail(null),
             databaseSubmission = submission
         )
@@ -248,7 +252,8 @@ class AssignmentDetailsUpdateTest : Assert() {
             .whenEvent(
                 AssignmentDetailsEvent.DataLoaded(
                     assignmentResult = expectedModel.assignmentResult,
-                    isArcEnabled = true,
+                    isStudioEnabled = true,
+                    studioLTITool = null,
                     ltiTool = expectedModel.ltiTool,
                     submission = submission
                 )
@@ -271,7 +276,8 @@ class AssignmentDetailsUpdateTest : Assert() {
             .whenEvent(
                 AssignmentDetailsEvent.DataLoaded(
                     assignmentResult = expectedModel.assignmentResult,
-                    isArcEnabled = false,
+                    isStudioEnabled = false,
+                    studioLTITool = null,
                     ltiTool = expectedModel.ltiTool,
                     submission = submission
                 )
@@ -293,7 +299,8 @@ class AssignmentDetailsUpdateTest : Assert() {
             .whenEvent(
                 AssignmentDetailsEvent.DataLoaded(
                     assignmentResult = expectedModel.assignmentResult,
-                    isArcEnabled = false,
+                    isStudioEnabled = false,
+                    studioLTITool = null,
                     ltiTool = expectedModel.ltiTool,
                     submission = null
                 )
@@ -312,7 +319,7 @@ class AssignmentDetailsUpdateTest : Assert() {
         val expectedModel = initModel.copy(
             isLoading = false,
             assignmentResult = DataResult.Success(assignment),
-            isArcEnabled = true,
+            isStudioEnabled = true,
             ltiTool = DataResult.Fail(null),
             databaseSubmission = null
         )
@@ -321,7 +328,8 @@ class AssignmentDetailsUpdateTest : Assert() {
             .whenEvent(
                 AssignmentDetailsEvent.DataLoaded(
                     assignmentResult = expectedModel.assignmentResult,
-                    isArcEnabled = true,
+                    isStudioEnabled = true,
+                    studioLTITool = null,
                     ltiTool = expectedModel.ltiTool,
                     submission = submission
                 )

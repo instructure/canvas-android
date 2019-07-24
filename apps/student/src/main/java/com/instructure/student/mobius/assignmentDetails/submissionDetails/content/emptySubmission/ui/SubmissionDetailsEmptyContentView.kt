@@ -24,7 +24,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
@@ -33,13 +32,11 @@ import com.instructure.student.mobius.assignmentDetails.submission.text.ui.TextS
 import com.instructure.student.mobius.assignmentDetails.submission.url.ui.UrlSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.SubmissionDetailsEmptyContentEvent
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyContentViewState.Loaded
-import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsFragment
 import com.instructure.student.mobius.assignmentDetails.ui.SubmissionTypesVisibilities
 import com.instructure.student.mobius.common.ui.MobiusView
 import com.instructure.student.router.RouteMatcher
 import com.spotify.mobius.functions.Consumer
 import kotlinx.android.synthetic.main.dialog_submission_picker.*
-import kotlinx.android.synthetic.main.fragment_assignment_details.*
 import kotlinx.android.synthetic.main.fragment_submission_details_empty_content.*
 import kotlinx.android.synthetic.main.fragment_submission_details_empty_content.submitButton
 
@@ -92,7 +89,7 @@ class SubmissionDetailsEmptyContentView(
             setupDialogRow(dialog, dialog.submissionEntryMedia, visibilities.mediaRecording) {
                 showMediaRecordingView(assignment, courseId)
             }
-            setupDialogRow(dialog, dialog.submissionEntryArc, visibilities.arcUpload) {
+            setupDialogRow(dialog, dialog.submissionEntryStudio, visibilities.studioUpload) {
                 showArcUploadView(assignment, courseId)
             }
         }

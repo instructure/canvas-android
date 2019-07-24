@@ -43,7 +43,7 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
         }
 
         val assignment = model.assignmentResult.dataOrNull!!
-        assignment.isArcEnabled = model.isArcEnabled
+        assignment.isStudioEnabled = model.isStudioEnabled
 
         // Loaded state
         return presentLoadedState(assignment, model.databaseSubmission, context)

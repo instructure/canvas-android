@@ -168,7 +168,7 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
         connection.accept(SubmissionDetailsEmptyContentEffect.ShowSubmitDialogView(assignment, course, true))
 
         verify(timeout = 100) {
-            view.showSubmitDialogView(assignment, course.id, SubmissionTypesVisibilities(fileUpload = true, arcUpload = true))
+            view.showSubmitDialogView(assignment, course.id, SubmissionTypesVisibilities(fileUpload = true, studioUpload = true))
         }
 
         confirmVerified(view)

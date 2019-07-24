@@ -30,7 +30,8 @@ sealed class AssignmentDetailsEvent {
     data class SubmissionTypeClicked(val submissionType: Assignment.SubmissionType) : AssignmentDetailsEvent()
     data class DataLoaded(
         val assignmentResult: DataResult<Assignment>?,
-        val isArcEnabled: Boolean,
+        val isStudioEnabled: Boolean,
+        val studioLTITool: DataResult<LTITool>?,
         val ltiTool: DataResult<LTITool>?,
         val submission: Submission?
     ) : AssignmentDetailsEvent()
@@ -39,7 +40,7 @@ sealed class AssignmentDetailsEvent {
 }
 
 sealed class AssignmentDetailsEffect {
-    data class ShowSubmitDialogView(val assignment: Assignment, val course: Course, val isArcEnabled: Boolean) : AssignmentDetailsEffect()
+    data class ShowSubmitDialogView(val assignment: Assignment, val course: Course, val isStudioEnabled: Boolean, val studioLTITool: LTITool? = null) : AssignmentDetailsEffect()
     data class ShowSubmissionView(val assignmentId: Long, val course: Course) : AssignmentDetailsEffect()
     data class ShowUploadStatusView(val submission: Submission) : AssignmentDetailsEffect()
     data class ShowCreateSubmissionView(val submissionType: Assignment.SubmissionType, val course: Course, val assignment: Assignment, val ltiUrl: String? = null) : AssignmentDetailsEffect()
@@ -56,7 +57,8 @@ data class AssignmentDetailsModel(
     val course: Course, // Will always pull from cache for the course
     val isLoading: Boolean = false,
     val assignmentResult: DataResult<Assignment>? = null,
-    val isArcEnabled: Boolean = false,
+    val isStudioEnabled: Boolean = false,
+    val studioLTIToolResult: DataResult<LTITool>? = null,
     val ltiTool: DataResult<LTITool>? = null,
     val databaseSubmission: Submission? = null
 )

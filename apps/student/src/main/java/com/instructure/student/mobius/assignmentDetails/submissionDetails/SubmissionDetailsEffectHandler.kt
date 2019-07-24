@@ -20,7 +20,6 @@ package com.instructure.student.mobius.assignmentDetails.submissionDetails
 import com.instructure.canvasapi2.managers.AssignmentManager
 import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.exhaustive
@@ -28,7 +27,7 @@ import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsView
 import com.instructure.student.mobius.common.ChannelSource
 import com.instructure.student.mobius.common.ui.EffectHandler
-import com.instructure.student.util.isArcEnabled
+import com.instructure.student.util.isStudioEnabled
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import java.io.File
@@ -73,7 +72,7 @@ class SubmissionDetailsEffectHandler : EffectHandler<SubmissionDetailsView, Subm
 
             // We need to know if they can make submissions through arc, only for file uploads - This is for empty submissions
             val isArcEnabled = if (assignment.isSuccess && assignment.dataOrThrow.getSubmissionTypes().contains(Assignment.SubmissionType.ONLINE_UPLOAD)) {
-                effect.courseId.isArcEnabled()
+                effect.courseId.isStudioEnabled()
             } else false
 
             // Determine if we need to retrieve an authenticated LTI URL based on whether this assignment accepts external tool submissions
