@@ -23,11 +23,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.managers.AssignmentManager
 import com.instructure.canvasapi2.managers.CourseManager
+import com.instructure.canvasapi2.managers.EnrollmentManager
+import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.ApiType
-import com.instructure.canvasapi2.utils.LinkHeaders
 import com.instructure.canvasapi2.utils.isNullOrEmpty
+import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.pandarecycler.util.GroupSortedList
 import com.instructure.pandarecycler.util.Types
 import com.instructure.pandautils.utils.ColorKeeper
@@ -40,17 +41,19 @@ import com.instructure.student.holders.EmptyViewHolder
 import com.instructure.student.holders.ExpandableViewHolder
 import com.instructure.student.holders.GradeViewHolder
 import com.instructure.student.interfaces.AdapterToFragmentCallback
-import retrofit2.Call
-import retrofit2.Response
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import java.util.*
 
 open class GradesListRecyclerAdapter(
-        context: Context,
-        var canvasContext: CanvasContext? = null,
-        val adapterToFragmentCallback: AdapterToFragmentCallback<Assignment>? = null,
-        val adapterToGradesCallback: AdapterToGradesCallback? = null,
-        val gradingPeriodsCallback: StatusCallback<GradingPeriodResponse>? = null,
-        private val whatIfDialogCallback: WhatIfDialogStyled.WhatIfDialogCallback? = null
+    context: Context,
+    var canvasContext: CanvasContext? = null,
+    val adapterToFragmentCallback: AdapterToFragmentCallback<Assignment>? = null,
+    private val adapterToGradesCallback: AdapterToGradesCallback? = null,
+    private val gradingPeriodsCallback: StatusCallback<GradingPeriodResponse>? = null,
+    private val whatIfDialogCallback: WhatIfDialogStyled.WhatIfDialogCallback? = null
 ) : ExpandableRecyclerAdapter<AssignmentGroup, Assignment, RecyclerView.ViewHolder>(context, AssignmentGroup::class.java, Assignment::class.java) {
 
     init {
@@ -58,9 +61,7 @@ open class GradesListRecyclerAdapter(
         if (adapterToFragmentCallback != null) loadData() // Callback is null when testing
     }
 
-    private var assignmentGroupCallback: StatusCallback<List<AssignmentGroup>>? = null
-    private var courseCallback: StatusCallback<Course>? = null
-    private var enrollmentCallback: StatusCallback<List<Enrollment>>? = null
+    private var allAssignmentsAndGroupsJob: Job? = null
 
     private var selectedItemCallback: SetSelectedItemCallback? = null
 
@@ -69,6 +70,10 @@ open class GradesListRecyclerAdapter(
 
     var whatIfGrade: Double? = null
     var currentGradingPeriod: GradingPeriod? = null
+
+    private var observerCourseGradeJob: Job? = null
+    private var loadDataJob: Job? = null
+    private var assignmentsForGradingPeriodJob: Job? = null
 
     // State for keeping track of grades for what/if and switching between periods
     var courseGrade: CourseGrade? = null
@@ -103,8 +108,106 @@ open class GradesListRecyclerAdapter(
         else -> GradeViewHolder.HOLDER_RES_ID
     }
 
-    override fun loadData() {
-        CourseManager.getCourseWithGrade(canvasContext!!.id, courseCallback!!, true)
+    final override fun loadData() {
+       loadDataJob = GlobalScope.launch(Dispatchers.Main) {
+            // Logic regarding MGP is similar here as it is in both assignment recycler adapters,
+            // if changes are made here, check if they are needed in the other recycler adapters
+            val course = awaitApi<Course>{CourseManager.getCourseWithGrade(canvasContext!!.id, it, true)}
+            val enrollments = (canvasContext as Course).enrollments
+            canvasContext = course
+
+            // Use the enrollments that were passed in with the course if one returned has none
+            // Should only be concluded courses that this applies
+            (canvasContext as Course).apply {
+                if (this.enrollments.isNullOrEmpty()) {
+                    this.enrollments = enrollments
+                }
+            }
+
+            // We want to disable what if grading if MGP weights are enabled
+            if (course.isWeightedGradingPeriods) {
+                adapterToGradesCallback?.setIsWhatIfGrading(false)
+            } else {
+                adapterToGradesCallback?.setIsWhatIfGrading(true)
+            }
+
+            if (isAllGradingPeriodsSelected) {
+                isRefresh = true
+                updateCourseGrade()
+                updateWithAllAssignments()
+                return@launch
+            }
+
+            for (enrollment in course.enrollments!!) {
+                if (enrollment.isStudent && enrollment.multipleGradingPeriodsEnabled) {
+
+                    if (currentGradingPeriod == null || currentGradingPeriod?.title == null) {
+                        // We load current term
+                        currentGradingPeriod = GradingPeriod(
+                            id = enrollment.currentGradingPeriodId,
+                            title = enrollment.currentGradingPeriodTitle
+                        )
+
+                        // Request the grading period objects and make the assignment calls
+                        // This callback is fulfilled in the grade list fragment.
+                        CourseManager.getGradingPeriodsForCourse(gradingPeriodsCallback!!, course.id, true)
+                        return@launch
+                    } else {
+                        // Otherwise we load the info from the current grading period
+                        loadAssignmentsForGradingPeriod(currentGradingPeriod!!.id, true)
+                        return@launch
+                    }
+
+                } else if (enrollment.isObserver) {
+                    // We still need to show grades if the user is an observer
+
+                    // Load current term
+                    currentGradingPeriod = GradingPeriod(
+                        id = enrollment.currentGradingPeriodId,
+                        title = enrollment.currentGradingPeriodTitle
+                    )
+
+                    // Get the first student that this user is observing
+                    observerCourseGradeJob = GlobalScope.launch(Dispatchers.Main) {
+                        // We need to use an ID from an observee, not the user (who is currently logged in as an observer) when retrieving the enrollments
+
+                        // Get the first student this user is observing
+                        val student = awaitApi<List<Enrollment>> { EnrollmentManager.getObserveeEnrollments(true, it) }.filter { it.courseId == course.id }.filter { it.observedUser != null }[0].observedUser
+                        // Get Assignment Groups
+                        val assignmentGroups = awaitApi<List<AssignmentGroup>> { AssignmentManager.getAssignmentGroupsWithAssignmentsForGradingPeriod(canvasContext!!.id, currentGradingPeriod!!.id,
+                            scopeToStudent = false,
+                            forceNetwork = true,
+                            callback = it
+                        ) }
+                        // The assignments in the assignment groups do not come with their submissions (with the associated grades), so we get them all here
+                        val assignmentIds = assignmentGroups.map { it.assignments }.flatten().map { it.id }
+                        val submissions = awaitApi<List<Submission>>{ SubmissionManager.getSubmissionsForMultipleAssignments(student!!.id, course.id, assignmentIds, it, true) }
+                        assignmentGroups.forEach { group ->
+                            group.assignments.forEach { assignment ->
+                                assignment.submission = submissions.first { it.assignmentId == assignment.id }
+                            }
+                        }
+
+                        updateAssignmentGroups(assignmentGroups)
+
+                        awaitApi<List<Course>> { CourseManager.getCoursesWithSyllabus(true, it) }
+                            .onEach { course ->
+                                course.enrollments?.find { it.userId == student?.id }?.let {
+                                    course.enrollments = mutableListOf(it)
+                                    courseGrade = course.getCourseGradeFromEnrollment(it, false)
+                                    adapterToGradesCallback?.notifyGradeChanged(courseGrade)
+                                }
+                            }
+                    }
+                    return@launch
+                }
+            }
+
+           // If we've made it this far, MGP is not enabled, so we do the standard behavior
+           isRefresh = true
+           updateCourseGrade()
+           updateWithAllAssignments()
+        }
     }
 
     fun loadAssignmentsForGradingPeriod(gradingPeriodID: Long, refreshFirst: Boolean) {
@@ -114,127 +217,69 @@ open class GradesListRecyclerAdapter(
             resetData()
         }
 
-        // Scope assignments if its for a student
+        // Scope assignments if it's for a student
         val scopeToStudent = (canvasContext as Course).isStudent
-        AssignmentManager.getAssignmentGroupsWithAssignmentsForGradingPeriod(canvasContext!!.id, gradingPeriodID, scopeToStudent, isRefresh, assignmentGroupCallback!!)
+        if (scopeToStudent) {
+            assignmentsForGradingPeriodJob = GlobalScope.launch(Dispatchers.Main) {
+                val assignmentGroups = awaitApi<List<AssignmentGroup>>{AssignmentManager.getAssignmentGroupsWithAssignmentsForGradingPeriod(canvasContext!!.id, gradingPeriodID, scopeToStudent, true, it)}
+                updateAssignmentGroups(assignmentGroups)
 
-        // Fetch the enrollments associated with the selected gradingPeriodID, these will contain the
-        // correct grade for the period
-        CourseManager.getUserEnrollmentsForGradingPeriod(canvasContext!!.id, ApiPrefs.user!!.id, gradingPeriodID, enrollmentCallback!!, true)
+                // Fetch the enrollments associated with the selected gradingPeriodID, these will contain the
+                // correct grade for the period
+                val enrollments = awaitApi<List<Enrollment>>{CourseManager.getUserEnrollmentsForGradingPeriod(canvasContext!!.id, ApiPrefs.user!!.id, gradingPeriodID, it, true)}
+                updateCourseGradeFromEnrollments(enrollments)
+
+                // Inform the spinner things are done
+                adapterToGradesCallback?.setTermSpinnerState(true)
+            }
+        }
     }
 
-    private fun loadAssignment() {
+    private fun updateCourseGradeFromEnrollments(enrollments: List<Enrollment>) {
+        for (enrollment in enrollments) {
+            if (enrollment.isStudent && enrollment.userId == ApiPrefs.user!!.id) {
+                val course = canvasContext as Course?
+                courseGrade = course!!.getCourseGradeFromEnrollment(enrollment, false)
+                adapterToGradesCallback?.notifyGradeChanged(courseGrade)
+                // We need to update the course that the fragment is using
+                course.addEnrollment(enrollment)
+            }
+        }
+    }
+
+    private fun updateCourseGrade() {
         // All grading periods and no grading periods are the same case
         courseGrade = (canvasContext as Course).getCourseGrade(true)
         adapterToGradesCallback?.notifyGradeChanged(courseGrade)
+    }
 
-        // Standard load assignments, unfiltered
-        AssignmentManager.getAssignmentGroupsWithAssignments(canvasContext!!.id, isRefresh, assignmentGroupCallback!!)
+    private fun updateWithAllAssignments() {
+        allAssignmentsAndGroupsJob = GlobalScope.launch(Dispatchers.Main) {
+            // Standard load assignments, unfiltered
+            val aGroups = awaitApi<List<AssignmentGroup>>{AssignmentManager.getAssignmentGroupsWithAssignments(canvasContext!!.id, true, it)}
+            updateAssignmentGroups(aGroups)
+        }
+    }
+
+    private fun updateAssignmentGroups(aGroups: List<AssignmentGroup>) {
+        // We still need to maintain local copies of the assignments/groups for what-if grades
+        // so that we have the assignments Hash and assignments group list
+        for (group in aGroups) {
+            addOrUpdateAllItems(group, group.assignments)
+            for (assignment in group.assignments) {
+                assignmentsHash[assignment.id] = assignment
+            }
+            if (!assignmentGroups.contains(group)) {
+                assignmentGroups.add(group)
+            }
+        }
+        isAllPagesLoaded = true
+
+        adapterToFragmentCallback?.onRefreshFinished()
+        this@GradesListRecyclerAdapter.onCallbackFinished(null)
     }
 
     override fun setupCallbacks() {
-        // Logic regarding MGP is similar here as it is in both assignment recycler adapters,
-        // if changes are made here, check if they are needed in the other recycler adapters
-        courseCallback = object : StatusCallback<Course>() {
-
-            override fun onResponse(response: Response<Course>, linkHeaders: LinkHeaders, type: ApiType) {
-                val course = response.body()
-                val enrollments = (canvasContext as Course).enrollments
-                canvasContext = course as Course
-
-                // Use the enrollments that were passed in with the course if one returned has none
-                // Should only be concluded courses that this applies
-                // TODO: Fix in canvas API to have a single course return ALL enrollments, not just current ones
-                (canvasContext as Course).apply {
-                    if (this.enrollments.isNullOrEmpty()) {
-                        this.enrollments = enrollments
-                    }
-                }
-
-                // We want to disable what if grading if MGP weights are enabled
-                if (course.isWeightedGradingPeriods) {
-                    adapterToGradesCallback?.setIsWhatIfGrading(false)
-                } else {
-                    adapterToGradesCallback?.setIsWhatIfGrading(true)
-                }
-
-                if (isAllGradingPeriodsSelected) {
-                    isRefresh = true
-                    loadAssignment()
-                    return
-                }
-
-                for (enrollment in course.enrollments!!) {
-                    if (enrollment.isStudent && enrollment.multipleGradingPeriodsEnabled) {
-                        if (currentGradingPeriod == null || currentGradingPeriod!!.title == null) {
-                            // we load current term
-                            currentGradingPeriod = GradingPeriod()
-                            currentGradingPeriod!!.id = enrollment.currentGradingPeriodId
-                            currentGradingPeriod!!.title = enrollment.currentGradingPeriodTitle
-                            // request the grading period objects and make the assignment calls
-                            // This callback is fulfilled in the grade list fragment.
-                            CourseManager.getGradingPeriodsForCourse(gradingPeriodsCallback!!, course.id, true)
-                            return
-                        } else {
-                            // Otherwise we load the info from the current grading period
-                            loadAssignmentsForGradingPeriod(currentGradingPeriod!!.id, true)
-                            return
-                        }
-                    }
-                }
-
-                // if we've made it this far, MGP is not enabled, so we do the standard behavior
-                isRefresh = true
-                loadAssignment()
-            }
-        }
-
-        assignmentGroupCallback = object : StatusCallback<List<AssignmentGroup>>() {
-            override fun onResponse(response: Response<List<AssignmentGroup>>, linkHeaders: LinkHeaders, type: ApiType) {
-                // We still need to maintain local copies of the assignments/groups for what if grades
-                // so we have the assignments Hash and assignments group list
-                for (group in response.body()!!) {
-                    addOrUpdateAllItems(group, group.assignments)
-                    for (assignment in group.assignments) {
-                        assignmentsHash[assignment.id] = assignment
-                    }
-                    if (!assignmentGroups.contains(group)) {
-                        assignmentGroups.add(group)
-                    }
-                }
-                isAllPagesLoaded = true
-
-                adapterToFragmentCallback?.onRefreshFinished()
-            }
-
-            override fun onFinished(type: ApiType) {
-                this@GradesListRecyclerAdapter.onCallbackFinished(type)
-            }
-        }
-
-        enrollmentCallback = object : StatusCallback<List<Enrollment>>() {
-
-            override fun onResponse(response: Response<List<Enrollment>>, linkHeaders: LinkHeaders, type: ApiType) {
-                for (enrollment in response.body()!!) {
-                    if (enrollment.isStudent && enrollment.userId == ApiPrefs.user!!.id) {
-                        val course = canvasContext as Course?
-                        courseGrade = course!!.getCourseGradeFromEnrollment(enrollment, false)
-                        adapterToGradesCallback?.notifyGradeChanged(courseGrade)
-                        // Inform the spinner things are done
-                        adapterToGradesCallback?.setTermSpinnerState(true)
-                        // We need to update the course that the fragment is using
-                        //                        course = course.copy(enrollments = course.enrollments + enrollment)
-                        course.addEnrollment(enrollment)
-                    }
-                }
-            }
-
-            override fun onFail(call: Call<List<Enrollment>>?, error: Throwable, response: Response<*>?) {
-                adapterToGradesCallback?.setTermSpinnerState(true)
-            }
-
-        }
-
         selectedItemCallback = object : SetSelectedItemCallback {
             override fun setSelected(position: Int) {
                 selectedPosition = position
@@ -261,49 +306,21 @@ open class GradesListRecyclerAdapter(
 
     override fun createGroupCallback(): GroupSortedList.GroupComparatorCallback<AssignmentGroup> {
         return object : GroupSortedList.GroupComparatorCallback<AssignmentGroup> {
-            override fun compare(o1: AssignmentGroup, o2: AssignmentGroup): Int {
-                return o1.position - o2.position
-            }
-
-            override fun areContentsTheSame(oldGroup: AssignmentGroup, newGroup: AssignmentGroup): Boolean {
-                return oldGroup.name == newGroup.name
-            }
-
-            override fun areItemsTheSame(group1: AssignmentGroup, group2: AssignmentGroup): Boolean {
-                return group1.id == group2.id
-            }
-
-            override fun getGroupType(group: AssignmentGroup): Int {
-                return Types.TYPE_HEADER
-            }
-
-            override fun getUniqueGroupId(group: AssignmentGroup): Long {
-                return group.id
-            }
+            override fun compare(o1: AssignmentGroup, o2: AssignmentGroup) = o1.position - o2.position
+            override fun areContentsTheSame(oldGroup: AssignmentGroup, newGroup: AssignmentGroup) = oldGroup.name == newGroup.name
+            override fun areItemsTheSame(group1: AssignmentGroup, group2: AssignmentGroup) = group1.id == group2.id
+            override fun getGroupType(group: AssignmentGroup) = Types.TYPE_HEADER
+            override fun getUniqueGroupId(group: AssignmentGroup) = group.id
         }
     }
 
     override fun createItemCallback(): GroupSortedList.ItemComparatorCallback<AssignmentGroup, Assignment> {
         return object : GroupSortedList.ItemComparatorCallback<AssignmentGroup, Assignment> {
-            override fun compare(group: AssignmentGroup, o1: Assignment, o2: Assignment): Int {
-                return o1.position - o2.position
-            }
-
-            override fun areContentsTheSame(oldItem: Assignment, newItem: Assignment): Boolean {
-                return compareAssignments(oldItem, newItem)
-            }
-
-            override fun areItemsTheSame(item1: Assignment, item2: Assignment): Boolean {
-                return item1.id == item2.id
-            }
-
-            override fun getUniqueItemId(item: Assignment): Long {
-                return item.id
-            }
-
-            override fun getChildType(group: AssignmentGroup, item: Assignment): Int {
-                return Types.TYPE_ITEM
-            }
+            override fun compare(group: AssignmentGroup, o1: Assignment, o2: Assignment) = o1.position - o2.position
+            override fun areContentsTheSame(oldItem: Assignment, newItem: Assignment) = compareAssignments(oldItem, newItem)
+            override fun areItemsTheSame(item1: Assignment, item2: Assignment) = item1.id == item2.id
+            override fun getUniqueItemId(item: Assignment) = item.id
+            override fun getChildType(group: AssignmentGroup, item: Assignment) = Types.TYPE_ITEM
         }
     }
 
@@ -338,9 +355,10 @@ open class GradesListRecyclerAdapter(
 
     override fun cancel() {
         super.cancel()
-        assignmentGroupCallback!!.cancel()
-        courseCallback!!.cancel()
         gradingPeriodsCallback?.cancel()
-        enrollmentCallback!!.cancel()
+        observerCourseGradeJob?.cancel()
+        loadDataJob?.cancel()
+        allAssignmentsAndGroupsJob?.cancel()
+        assignmentsForGradingPeriodJob?.cancel()
     }
 }

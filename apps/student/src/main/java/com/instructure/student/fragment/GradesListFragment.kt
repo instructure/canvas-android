@@ -199,7 +199,7 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
         override fun notifyGradeChanged(courseGrade: CourseGrade?) {
             if (!isAdded) return
             txtOverallGrade.text = formatGrade(courseGrade, !showTotalCheckBox.isChecked)
-            lockGrade(course.hideFinalGrades)
+            lockGrade(course.hideFinalGrades || courseGrade?.isLocked == true)
         }
 
         // showWhatIfCheckBox is accessed a little too early when this fragment is loaded, so we add an elvis operator here
