@@ -459,6 +459,14 @@
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
+    <com.instructure.pandautils.views.FloatingRecordingView
+        android:id="@+id/floatingRecordingView"
+        android:visibility="gone"
+        android:elevation="12dp"
+        android:layout_gravity="bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
     <Button
         android:id="@+id/submitButton"
         android:layout_width="match_parent"

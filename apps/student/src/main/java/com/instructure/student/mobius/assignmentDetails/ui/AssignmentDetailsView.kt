@@ -34,6 +34,7 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
+import com.instructure.pandautils.views.RecordingMediaType
 import com.instructure.student.R
 import com.instructure.student.activity.InternalWebViewActivity
 import com.instructure.student.activity.ShareFileSubmissionTarget
@@ -221,8 +222,28 @@ class AssignmentDetailsView(
     }
 
     fun showMediaRecordingView(assignment: Assignment, courseId: Long) {
-        // TODO
-        context.toast("Show media recording dialog")
+        startAudioDialog()
+    }
+
+    private fun startAudioDialog() {
+        consumer?.accept(AssignmentDetailsEvent.AudioRecordingClicked)
+    }
+
+    fun showAudioRecordingView() {
+        floatingRecordingView.setContentType(RecordingMediaType.Audio)
+        floatingRecordingView.setVisible()
+        floatingRecordingView.recordingCallback = { file ->
+            consumer?.accept(AssignmentDetailsEvent.SendAudioRecordingClicked(file))
+        }
+        floatingRecordingView.stoppedCallback = {}
+    }
+
+    fun showPermissionDeniedToast() {
+        Toast.makeText(context, com.instructure.pandautils.R.string.permissionDenied, Toast.LENGTH_LONG).show()
+    }
+
+    fun showAudioRecordingError() {
+        Toast.makeText(context, com.instructure.pandautils.R.string.audioRecordingError, Toast.LENGTH_LONG).show()
     }
 
     fun showFileUploadView(assignment: Assignment) {

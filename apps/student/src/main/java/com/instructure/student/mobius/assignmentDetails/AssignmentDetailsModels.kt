@@ -21,12 +21,15 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.student.Submission
+import java.io.File
 
 sealed class AssignmentDetailsEvent {
     object SubmitAssignmentClicked : AssignmentDetailsEvent()
     object ViewSubmissionClicked : AssignmentDetailsEvent()
     object ViewUploadStatusClicked : AssignmentDetailsEvent()
+    object AudioRecordingClicked : AssignmentDetailsEvent()
     object PullToRefresh : AssignmentDetailsEvent()
+    data class SendAudioRecordingClicked(val file: File?) : AssignmentDetailsEvent()
     data class SubmissionTypeClicked(val submissionType: Assignment.SubmissionType) : AssignmentDetailsEvent()
     data class DataLoaded(
         val assignmentResult: DataResult<Assignment>?,
@@ -39,6 +42,9 @@ sealed class AssignmentDetailsEvent {
 }
 
 sealed class AssignmentDetailsEffect {
+    object ShowAudioRecordingView : AssignmentDetailsEffect()
+    object ShowAudioRecordingError : AssignmentDetailsEffect()
+    data class UploadAudioMediaSubmission(val file: File, val course: Course, val assignment: Assignment) : AssignmentDetailsEffect()
     data class ShowSubmitDialogView(val assignment: Assignment, val course: Course, val isArcEnabled: Boolean) : AssignmentDetailsEffect()
     data class ShowSubmissionView(val assignmentId: Long, val course: Course) : AssignmentDetailsEffect()
     data class ShowUploadStatusView(val submission: Submission) : AssignmentDetailsEffect()
