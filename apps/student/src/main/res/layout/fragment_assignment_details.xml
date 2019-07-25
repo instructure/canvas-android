@@ -14,7 +14,7 @@
   ~     You should have received a copy of the GNU General Public License
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/assignmentDetailsPage"
@@ -22,608 +22,624 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:elevation="6dp"
-        tools:background="#00bcd5"
-        tools:navigationIcon="@drawable/vd_back_arrow"
-        tools:subtitle="Biology 101"
-        tools:subtitleTextColor="@color/white"
-        tools:title="Ecosystem Health and Human Well-Being"
-        tools:titleTextColor="@color/white"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipeRefreshLayout"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-
-        <ScrollView
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:contentDescription="@string/scrollInstructions"
-            android:fillViewport="true">
+            android:layout_height="wrap_content"
+            android:elevation="6dp"
+            tools:background="#00bcd5"
+            tools:navigationIcon="@drawable/vd_back_arrow"
+            tools:subtitle="Biology 101"
+            tools:subtitleTextColor="@color/white"
+            tools:title="Ecosystem Health and Human Well-Being"
+            tools:titleTextColor="@color/white"/>
 
-            <LinearLayout
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefreshLayout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:divider="@drawable/divider"
-                android:orientation="vertical"
-                android:showDividers="middle">
-
-                <!-- Error View -->
+                android:layout_height="match_parent"
+                android:contentDescription="@string/scrollInstructions"
+                android:fillViewport="true">
 
                 <LinearLayout
-                    android:id="@+id/errorContainer"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:padding="32dp"
-                    android:visibility="gone"
-                    tools:ignore="UseCompoundDrawables"
-                    tools:visibility="gone">
-
-                    <ImageView
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:importantForAccessibility="no"
-                        android:src="@drawable/vd_warning"
-                        android:tint="@color/defaultTextGray"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:gravity="center"
-                        android:text="@string/errorLoadingAssignment"/>
-
-                </LinearLayout>
-
-                <!-- Title, points, submission status -->
-
-                <LinearLayout
-                    android:id="@+id/titleContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:divider="@drawable/divider"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:showDividers="middle">
 
-                    <TextView
-                        android:id="@+id/assignmentName"
-                        style="@style/TextFont.Medium"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textSize="20sp"
-                        tools:text="Ecosystem Health and Human Well-Being"/>
+                    <!-- Error View -->
 
                     <LinearLayout
+                        android:id="@+id/errorContainer"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/points"
-                            style="@style/TextFont.Medium"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/defaultTextGray"
-                            tools:text="30 pts"/>
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="32dp"
+                        android:visibility="gone"
+                        tools:ignore="UseCompoundDrawables"
+                        tools:visibility="gone">
 
                         <ImageView
-                            android:id="@+id/submissionStatusIcon"
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
-                            android:layout_marginStart="12dp"
-                            android:importantForAccessibility="no"
-                            tools:src="@drawable/vd_published"
-                            tools:tint="@color/alertGreen"/>
-
-                        <TextView
-                            android:id="@+id/submissionStatus"
-                            style="@style/TextFont.Medium"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="4dp"
-                            tools:text="Submitted"
-                            tools:textColor="#00ac18"/>
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <!-- Submission Upload Status -->
-
-                <FrameLayout
-                    android:id="@+id/submissionUploadStatusContainer"
-                    android:layout_width="match_parent"
-                    android:layout_height="120dp"
-                    android:orientation="vertical"
-                    android:visibility="gone"
-                    tools:visibility="visible">
-
-                    <LinearLayout
-                        android:id="@+id/submissionStatusUploading"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:padding="16dp"
-                        android:background="?attr/selectableItemBackground"
-                        android:visibility="gone"
-                        tools:visibility="visible">
-
-                        <TextView
-                            style="@style/TextFont.Medium"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:text="@string/submissionStatusUploadingTitle"
-                            android:textColor="@color/defaultTextDark"
-                            android:textSize="20sp"/>
-
-                        <TextView
-                            android:id="@+id/submissionStatusUploadingSubtitle"
-                            style="@style/TextFont.Regular"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="6dp"
-                            android:gravity="center"
-                            android:text="@string/submissionStatusUploadingSubtitle"
-                            android:textColor="@color/canvasDefaultAccent"/>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/submissionStatusFailed"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:padding="16dp"
-                        android:background="?attr/selectableItemBackground"
-                        android:visibility="gone">
-
-                        <TextView
-                            style="@style/TextFont.Medium"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:text="@string/submissionStatusFailedTitle"
-                            android:textColor="@color/defaultTextDark"
-                            android:textSize="20sp"/>
-
-                        <TextView
-                            android:id="@+id/submissionStatusFailedSubtitle"
-                            style="@style/TextFont.Regular"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="6dp"
-                            android:gravity="center"
-                            android:text="@string/submissionStatusFailedSubtitle"
-                            android:textColor="@color/canvasDefaultAccent"/>
-
-                    </LinearLayout>
-
-                </FrameLayout>
-
-                <!-- Due Date -->
-
-                <LinearLayout
-                    android:id="@+id/dueDateContainer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <TextView
-                        style="@style/TextFont.Medium"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="4dp"
-                        android:text="@string/dueLabel"
-                        android:textColor="@color/defaultTextGray"/>
-
-                    <TextView
-                        android:id="@+id/dueDateTextView"
-                        style="@style/TextFont.Regular"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="16sp"
-                        android:tint="@color/defaultTextGray"
-                        tools:text="April 1 at 11:59 PM"/>
-
-                </LinearLayout>
-
-                <!-- Submission Types -->
-
-                <LinearLayout
-                    android:id="@+id/submissionTypesContainer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <TextView
-                        android:id="@+id/submissionTypesSectionLabel"
-                        style="@style/TextFont.Medium"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/submission_types"
-                        android:textColor="@color/defaultTextGray"/>
-
-                    <TextView
-                        android:id="@+id/submissionTypesTextView"
-                        style="@style/TextFont.Regular"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:lineSpacingExtra="4dp"
-                        android:textSize="16sp"
-                        tools:text="File upload, Website URL"/>
-
-                </LinearLayout>
-
-                <!-- Allowed File Types -->
-
-                <LinearLayout
-                    android:id="@+id/fileTypesContainer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <TextView
-                        android:id="@+id/fileTypesSectionLabel"
-                        style="@style/TextFont.Medium"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/allowedFileTypes"
-                        android:textColor="@color/defaultTextGray"/>
-
-                    <TextView
-                        android:id="@+id/fileTypesTextView"
-                        style="@style/TextFont.Regular"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:lineSpacingExtra="4dp"
-                        android:textSize="16sp"
-                        tools:text="png, pdf, xls, SVG"/>
-
-                </LinearLayout>
-
-                <!-- Grade -->
-
-                <LinearLayout
-                    android:id="@+id/gradeContainer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <TextView
-                        android:id="@+id/gradeSectionLabel"
-                        style="@style/TextFont.Medium"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/grade"
-                        android:textColor="@color/defaultTextGray"/>
-
-                    <com.instructure.student.mobius.assignmentDetails.ui.gradeCell.GradeCellView
-                        android:id="@+id/gradeCell"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"/>
-
-                </LinearLayout>
-
-                <!-- Locked Message -->
-
-                <LinearLayout
-                    android:id="@+id/lockMessageContainer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <TextView
-                        style="@style/TextFont.Medium"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="4dp"
-                        android:text="@string/locked"
-                        android:textColor="@color/defaultTextGray"/>
-
-                    <TextView
-                        android:id="@+id/lockMessageTextView"
-                        style="@style/TextFont.Regular"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="16sp"
-                        android:tint="@color/defaultTextGray"
-                        tools:text="April 1 at 11:59 PM"/>
-
-                </LinearLayout>
-
-                <!-- Submission & Rubric button -->
-
-                <LinearLayout
-                    android:id="@+id/submissionRubricButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:background="?attr/selectableItemBackground"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
-                    android:visibility="gone">
-
-                    <TextView
-                        android:id="@+id/submissionAndRubricLabel"
-                        style="@style/TextFont.Medium"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/submissionAndRubric"
-                        android:textColor="@color/canvasDefaultAccent"
-                        android:textSize="16sp" />
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:importantForAccessibility="no"
-                        android:src="@drawable/vd_forward_arrow"
-                        android:tint="@color/textLightGray" />
-
-                </LinearLayout>
-
-
-                <!-- Locked Image -->
-
-                <LinearLayout
-                    android:id="@+id/lockImageContainer"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:padding="32dp"
-                    android:visibility="gone"
-                    tools:visibility="visible">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:importantForAccessibility="no"
-                        android:src="@drawable/vd_panda_locked"/>
-
-                </LinearLayout>
-
-                <!-- Assignment Description -->
-
-                <LinearLayout
-                    android:id="@+id/quizDetails"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:orientation="vertical"
-                    android:padding="16dp"
-                    tools:visibility="visible">
-
-
-                    <LinearLayout
-                        android:id="@+id/questionsContainer"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/questionCountLabel"
-                            style="@style/TextFont.Regular"
-                            android:textStyle="bold"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="16sp"
-                            android:tint="@color/defaultTextGray"
-                            android:text="@string/quizQuestionLabel"/>
-
-                        <TextView
-                            android:id="@+id/questionCountText"
-                            style="@style/TextFont.Regular"
-                            android:paddingStart="8dp"
-                            android:paddingEnd="8dp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="16sp"
-                            android:tint="@color/defaultTextGray"
-                            tools:text="5"/>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/timeLimitContainer"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/timeLimitLabel"
-                            style="@style/TextFont.Regular"
-                            android:textStyle="bold"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="16sp"
-                            android:tint="@color/defaultTextGray"
-                            android:text="@string/timeLimitLabel"/>
-
-                        <TextView
-                            android:id="@+id/timeLimitText"
-                            style="@style/TextFont.Regular"
-                            android:paddingStart="8dp"
-                            android:paddingEnd="8dp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="16sp"
-                            android:tint="@color/defaultTextGray"
-                            tools:text="None"/>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/allowedAttemptsContainer"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/allowedAttemptsLabel"
-                            style="@style/TextFont.Regular"
-                            android:textStyle="bold"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="16sp"
-                            android:tint="@color/defaultTextGray"
-                            android:text="@string/allowedAttemptsLabel"/>
-
-                        <TextView
-                            android:id="@+id/allowedAttemptsText"
-                            style="@style/TextFont.Regular"
-                            android:paddingStart="8dp"
-                            android:paddingEnd="8dp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="16sp"
-                            android:tint="@color/defaultTextGray"
-                            tools:text="Unlimited"/>
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <!-- Assignment Description -->
-
-                <LinearLayout
-                    android:id="@+id/descriptionContainer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/descriptionLabel"
-                        style="@style/TextFont.Medium"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginEnd="16dp"
-                        android:labelFor="@+id/noDescriptionContainer"
-                        android:text="@string/description"
-                        android:textColor="@color/defaultTextGray"/>
-
-                    <TextView
-                        android:id="@+id/noDescriptionContainer"
-                        style="@style/TextFont.Regular"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="16dp"
-                        android:layout_marginBottom="16dp"
-                        android:importantForAccessibility="yes"
-                        android:text="@string/noAssignmentDescriptionStudent"
-                        android:textColor="@color/defaultTextDark"
-                        android:visibility="gone"
-                        tools:visibility="visible"/>
-
-                    <!-- Discussion Topic Header -->
-
-                    <LinearLayout
-                        android:id="@+id/discussionTopicHeaderContainer"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginEnd="16dp"
-                        android:visibility="gone"
-                        android:orientation="horizontal"
-                        tools:visibility="visible">
-
-                        <de.hdodenhof.circleimageview.CircleImageView
-                            android:id="@+id/authorAvatar"
                             android:layout_width="32dp"
                             android:layout_height="32dp"
-                            tools:src="@mipmap/ic_launcher" />
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/vd_warning"
+                            android:tint="@color/defaultTextGray"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:gravity="center"
+                            android:text="@string/errorLoadingAssignment"/>
+
+                    </LinearLayout>
+
+                    <!-- Title, points, submission status -->
+
+                    <LinearLayout
+                        android:id="@+id/titleContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:id="@+id/assignmentName"
+                            style="@style/TextFont.Medium"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="20sp"
+                            tools:text="Ecosystem Health and Human Well-Being"/>
 
                         <LinearLayout
-                            android:layout_width="0dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
+                            android:layout_marginTop="8dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
 
                             <TextView
-                                android:id="@+id/authorName"
+                                android:id="@+id/points"
                                 style="@style/TextFont.Medium"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:ellipsize="end"
-                                android:maxLines="2"
-                                android:textSize="14sp"
-                                tools:text="Hackdown Hodor" />
+                                android:textColor="@color/defaultTextGray"
+                                tools:text="30 pts"/>
+
+                            <ImageView
+                                android:id="@+id/submissionStatusIcon"
+                                android:layout_width="18dp"
+                                android:layout_height="18dp"
+                                android:layout_marginStart="12dp"
+                                android:importantForAccessibility="no"
+                                tools:src="@drawable/vd_published"
+                                tools:tint="@color/alertGreen"/>
 
                             <TextView
-                                android:id="@+id/authoredDate"
-                                style="@style/TextFont.Regular"
+                                android:id="@+id/submissionStatus"
+                                style="@style/TextFont.Medium"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:ellipsize="end"
-                                android:maxLines="2"
-                                android:textColor="@color/defaultTextGray"
-                                android:textSize="12sp"
-                                tools:text="July 1 at 5:21 PM" />
+                                android:layout_marginStart="4dp"
+                                tools:text="Submitted"
+                                tools:textColor="#00ac18"/>
 
                         </LinearLayout>
 
-                        <ImageView
-                            android:id="@+id/attachmentIcon"
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
-                            android:layout_gravity="center_vertical"
+                    </LinearLayout>
+
+                    <!-- Submission Upload Status -->
+
+                    <FrameLayout
+                        android:id="@+id/submissionUploadStatusContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="120dp"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        tools:visibility="visible">
+
+                        <LinearLayout
+                            android:id="@+id/submissionStatusUploading"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="16dp"
                             android:background="?attr/selectableItemBackground"
-                            android:contentDescription="@string/attachment"
-                            android:padding="6dp"
-                            android:scaleType="centerInside"
                             android:visibility="gone"
-                            app:srcCompat="@drawable/vd_attachment" />
+                            tools:visibility="visible">
+
+                            <TextView
+                                style="@style/TextFont.Medium"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="@string/submissionStatusUploadingTitle"
+                                android:textColor="@color/defaultTextDark"
+                                android:textSize="20sp"/>
+
+                            <TextView
+                                android:id="@+id/submissionStatusUploadingSubtitle"
+                                style="@style/TextFont.Regular"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="6dp"
+                                android:gravity="center"
+                                android:text="@string/submissionStatusUploadingSubtitle"
+                                android:textColor="@color/canvasDefaultAccent"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/submissionStatusFailed"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="16dp"
+                            android:background="?attr/selectableItemBackground"
+                            android:visibility="gone">
+
+                            <TextView
+                                style="@style/TextFont.Medium"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="@string/submissionStatusFailedTitle"
+                                android:textColor="@color/defaultTextDark"
+                                android:textSize="20sp"/>
+
+                            <TextView
+                                android:id="@+id/submissionStatusFailedSubtitle"
+                                style="@style/TextFont.Regular"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="6dp"
+                                android:gravity="center"
+                                android:text="@string/submissionStatusFailedSubtitle"
+                                android:textColor="@color/canvasDefaultAccent"/>
+
+                        </LinearLayout>
+
+                    </FrameLayout>
+
+                    <!-- Due Date -->
+
+                    <LinearLayout
+                        android:id="@+id/dueDateContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            style="@style/TextFont.Medium"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="4dp"
+                            android:text="@string/dueLabel"
+                            android:textColor="@color/defaultTextGray"/>
+
+                        <TextView
+                            android:id="@+id/dueDateTextView"
+                            style="@style/TextFont.Regular"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="16sp"
+                            android:tint="@color/defaultTextGray"
+                            tools:text="April 1 at 11:59 PM"/>
 
                     </LinearLayout>
 
-                    <com.instructure.pandautils.views.CanvasWebView
-                        android:id="@+id/descriptionWebView"
+                    <!-- Submission Types -->
+
+                    <LinearLayout
+                        android:id="@+id/submissionTypesContainer"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:minHeight="24dp"
-                        android:scrollbars="none"/>
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:id="@+id/submissionTypesSectionLabel"
+                            style="@style/TextFont.Medium"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/submission_types"
+                            android:textColor="@color/defaultTextGray"/>
+
+                        <TextView
+                            android:id="@+id/submissionTypesTextView"
+                            style="@style/TextFont.Regular"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:lineSpacingExtra="4dp"
+                            android:textSize="16sp"
+                            tools:text="File upload, Website URL"/>
+
+                    </LinearLayout>
+
+                    <!-- Allowed File Types -->
+
+                    <LinearLayout
+                        android:id="@+id/fileTypesContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:id="@+id/fileTypesSectionLabel"
+                            style="@style/TextFont.Medium"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/allowedFileTypes"
+                            android:textColor="@color/defaultTextGray"/>
+
+                        <TextView
+                            android:id="@+id/fileTypesTextView"
+                            style="@style/TextFont.Regular"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:lineSpacingExtra="4dp"
+                            android:textSize="16sp"
+                            tools:text="png, pdf, xls, SVG"/>
+
+                    </LinearLayout>
+
+                    <!-- Grade -->
+
+                    <LinearLayout
+                        android:id="@+id/gradeContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:id="@+id/gradeSectionLabel"
+                            style="@style/TextFont.Medium"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/grade"
+                            android:textColor="@color/defaultTextGray"/>
+
+                        <com.instructure.student.mobius.assignmentDetails.ui.gradeCell.GradeCellView
+                            android:id="@+id/gradeCell"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"/>
+
+                    </LinearLayout>
+
+                    <!-- Locked Message -->
+
+                    <LinearLayout
+                        android:id="@+id/lockMessageContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            style="@style/TextFont.Medium"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="4dp"
+                            android:text="@string/locked"
+                            android:textColor="@color/defaultTextGray"/>
+
+                        <TextView
+                            android:id="@+id/lockMessageTextView"
+                            style="@style/TextFont.Regular"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="16sp"
+                            android:tint="@color/defaultTextGray"
+                            tools:text="April 1 at 11:59 PM"/>
+
+                    </LinearLayout>
+
+                    <!-- Submission & Rubric button -->
+
+                    <LinearLayout
+                        android:id="@+id/submissionRubricButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:id="@+id/submissionAndRubricLabel"
+                            style="@style/TextFont.Medium"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/submissionAndRubric"
+                            android:textColor="@color/canvasDefaultAccent"
+                            android:textSize="16sp" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/vd_forward_arrow"
+                            android:tint="@color/textLightGray" />
+
+                    </LinearLayout>
+
+
+                    <!-- Locked Image -->
+
+                    <LinearLayout
+                        android:id="@+id/lockImageContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="32dp"
+                        android:visibility="gone"
+                        tools:visibility="visible">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/vd_panda_locked"/>
+
+                    </LinearLayout>
+
+                    <!-- Assignment Description -->
+
+                    <LinearLayout
+                        android:id="@+id/quizDetails"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        android:orientation="vertical"
+                        android:padding="16dp"
+                        tools:visibility="visible">
+
+
+                        <LinearLayout
+                            android:id="@+id/questionsContainer"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/questionCountLabel"
+                                style="@style/TextFont.Regular"
+                                android:textStyle="bold"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="16sp"
+                                android:tint="@color/defaultTextGray"
+                                android:text="@string/quizQuestionLabel"/>
+
+                            <TextView
+                                android:id="@+id/questionCountText"
+                                style="@style/TextFont.Regular"
+                                android:paddingStart="8dp"
+                                android:paddingEnd="8dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="16sp"
+                                android:tint="@color/defaultTextGray"
+                                tools:text="5"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/timeLimitContainer"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/timeLimitLabel"
+                                style="@style/TextFont.Regular"
+                                android:textStyle="bold"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="16sp"
+                                android:tint="@color/defaultTextGray"
+                                android:text="@string/timeLimitLabel"/>
+
+                            <TextView
+                                android:id="@+id/timeLimitText"
+                                style="@style/TextFont.Regular"
+                                android:paddingStart="8dp"
+                                android:paddingEnd="8dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="16sp"
+                                android:tint="@color/defaultTextGray"
+                                tools:text="None"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/allowedAttemptsContainer"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/allowedAttemptsLabel"
+                                style="@style/TextFont.Regular"
+                                android:textStyle="bold"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="16sp"
+                                android:tint="@color/defaultTextGray"
+                                android:text="@string/allowedAttemptsLabel"/>
+
+                            <TextView
+                                android:id="@+id/allowedAttemptsText"
+                                style="@style/TextFont.Regular"
+                                android:paddingStart="8dp"
+                                android:paddingEnd="8dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="16sp"
+                                android:tint="@color/defaultTextGray"
+                                tools:text="Unlimited"/>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <!-- Assignment Description -->
+
+                    <LinearLayout
+                        android:id="@+id/descriptionContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/descriptionLabel"
+                            style="@style/TextFont.Medium"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginEnd="16dp"
+                            android:labelFor="@+id/noDescriptionContainer"
+                            android:text="@string/description"
+                            android:textColor="@color/defaultTextGray"/>
+
+                        <TextView
+                            android:id="@+id/noDescriptionContainer"
+                            style="@style/TextFont.Regular"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="16dp"
+                            android:layout_marginBottom="16dp"
+                            android:importantForAccessibility="yes"
+                            android:text="@string/noAssignmentDescriptionStudent"
+                            android:textColor="@color/defaultTextDark"
+                            android:visibility="gone"
+                            tools:visibility="visible"/>
+
+                        <!-- Discussion Topic Header -->
+
+                        <LinearLayout
+                            android:id="@+id/discussionTopicHeaderContainer"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginEnd="16dp"
+                            android:visibility="gone"
+                            android:orientation="horizontal"
+                            tools:visibility="visible">
+
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:id="@+id/authorAvatar"
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                tools:src="@mipmap/ic_launcher" />
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/authorName"
+                                    style="@style/TextFont.Medium"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:ellipsize="end"
+                                    android:maxLines="2"
+                                    android:textSize="14sp"
+                                    tools:text="Hackdown Hodor" />
+
+                                <TextView
+                                    android:id="@+id/authoredDate"
+                                    style="@style/TextFont.Regular"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:ellipsize="end"
+                                    android:maxLines="2"
+                                    android:textColor="@color/defaultTextGray"
+                                    android:textSize="12sp"
+                                    tools:text="July 1 at 5:21 PM" />
+
+                            </LinearLayout>
+
+                            <ImageView
+                                android:id="@+id/attachmentIcon"
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:layout_gravity="center_vertical"
+                                android:background="?attr/selectableItemBackground"
+                                android:contentDescription="@string/attachment"
+                                android:padding="6dp"
+                                android:scaleType="centerInside"
+                                android:visibility="gone"
+                                app:srcCompat="@drawable/vd_attachment" />
+
+                        </LinearLayout>
+
+                        <com.instructure.pandautils.views.CanvasWebView
+                            android:id="@+id/descriptionWebView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:minHeight="24dp"
+                            android:scrollbars="none"/>
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
-            </LinearLayout>
+            </ScrollView>
 
-        </ScrollView>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        <Button
+            android:id="@+id/submitButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/canvasDefaultAccent"
+            android:text="@string/submitAssignment"
+            android:textAllCaps="false"
+            android:textColor="@color/white"/>
+
+    </LinearLayout>
 
     <com.instructure.pandautils.views.FloatingRecordingView
         android:id="@+id/floatingRecordingView"
@@ -632,14 +648,5 @@
         android:layout_gravity="bottom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
-
-    <Button
-        android:id="@+id/submitButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/canvasDefaultAccent"
-        android:text="@string/submitAssignment"
-        android:textAllCaps="false"
-        android:textColor="@color/white"/>
-
-</LinearLayout>
+    
+</FrameLayout>
