@@ -20,9 +20,9 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.ProgressEvent
 import com.instructure.canvasapi2.utils.exhaustive
-import com.instructure.pandautils.models.FileSubmitObject
 import com.instructure.pandautils.utils.Const
 import com.instructure.student.db.Db
 import com.instructure.student.db.getInstance
@@ -114,10 +114,10 @@ class UploadStatusSubmissionEffectHandler(val context: Context, val submissionId
         val files = db.fileSubmissionQueries.getFilesForSubmissionId(submissionId).executeAsList()
             .map { file ->
                 FileSubmitObject(
-                    file.name,
+                    file.name!!,
                     file.size!!,
-                    file.contentType,
-                    file.fullPath,
+                    file.contentType!!,
+                    file.fullPath!!,
                     file.error
                 )
             }

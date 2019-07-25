@@ -16,7 +16,7 @@
  */
 package com.instructure.student.mobius.assignmentDetails.submission.file
 
-import com.instructure.pandautils.models.FileSubmitObject
+import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 
 sealed class UploadStatusSubmissionEvent {
     data class OnFilesRefreshed(

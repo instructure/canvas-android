@@ -16,6 +16,8 @@
  */
 package com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments
 
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.SubmissionComment
 import java.io.File
@@ -25,87 +27,48 @@ sealed class SubmissionCommentsEvent {
     object AddAudioCommentClicked : SubmissionCommentsEvent()
     object AddVideoCommentClicked : SubmissionCommentsEvent()
     object MediaCommentDialogClosed : SubmissionCommentsEvent()
+    object UploadFilesClicked : SubmissionCommentsEvent()
+    data class SendTextCommentClicked(val message: String) : SubmissionCommentsEvent()
     data class SendMediaCommentClicked(val file: File) : SubmissionCommentsEvent()
+    data class SubmissionCommentAdded(val comment: SubmissionComment) : SubmissionCommentsEvent()
+    data class PendingSubmissionsUpdated(val ids: List<Long>) : SubmissionCommentsEvent()
+    data class RetryCommentUploadClicked(val commentId: Long) : SubmissionCommentsEvent()
 }
 
 sealed class SubmissionCommentsEffect {
     object ShowAudioRecordingView : SubmissionCommentsEffect()
     object ShowVideoRecordingView : SubmissionCommentsEffect()
     object ShowMediaCommentDialog : SubmissionCommentsEffect()
-    data class UploadMediaComment(val file: File, val assignmentId: Long, val courseId: Long) : SubmissionCommentsEffect()
+    object ClearTextInput : SubmissionCommentsEffect()
+    data class SendTextComment(
+        val message: String,
+        val assignmentId: Long,
+        val assignmentName: String,
+        val courseId: Long,
+        val isGroupMessage: Boolean
+    ) : SubmissionCommentsEffect()
+
+    data class ShowFilePicker(
+        val canvasContext: CanvasContext,
+        val assignment: Assignment
+    ) : SubmissionCommentsEffect()
+
+    data class UploadMediaComment constructor(
+        val file: File,
+        val assignmentId: Long,
+        val assignmentName: String,
+        val courseId: Long,
+        val isGroupMessage: Boolean
+    ) : SubmissionCommentsEffect()
+
+    data class RetryCommentUpload(val commentId: Long) : SubmissionCommentsEffect()
 }
 
 data class SubmissionCommentsModel(
-    val comments: ArrayList<SubmissionComment>,
-    val submissionHistory: Submission,
-    val submissionId: Long,
-    val courseId: Long,
-    val assignmentId: Long,
-    val isGroupMessage: Boolean,
-    val isMediaCommentEnabled: Boolean = true
+    val comments: List<SubmissionComment>,
+    val submissionHistory: List<Submission>,
+    val assignment: Assignment,
+    val pendingCommentIds: List<Long> = emptyList(),
+    val isMediaCommentEnabled: Boolean = true,
+    val showSendButton: Boolean = false
 )
-
-/*
-
-TODO - Here was the original moflow we did many moons ago, I'm sticking with the one above since
-this ticket is JUST the video/audio comments
-sealed class SubmissionCommentsEvent {
-    // User Events
-    object AddMediaCommentClicked : SubmissionCommentsEvent()
-    object AddAudioCommentClicked : SubmissionCommentsEvent()
-    object AddVideoCommentClicked : SubmissionCommentsEvent()
-    data class MediaCommentClicked(val comment: SubmissionComment) : SubmissionCommentsEvent()
-    data class AttachmentClicked(val attachment: Attachment) : SubmissionCommentsEvent()
-    data class SubmissionClicked(val submission: Submission) : SubmissionCommentsEvent()
-    data class SubmissionFileClicked(val submissionAttachment: Attachment, val submission: Submission) : SubmissionCommentsEvent()
-    data class AddTextComment(val commentText: String) : SubmissionCommentsEvent()
-    data class retryAddComment(val pendingComment: PendingCommentWrapper) : SubmissionCommentsEvent()
-
-    // External Events
-    data class DataLoaded(val submissionComments: DataResult<List<SubmissionCommentWrapper>>, val draftComment: String?) : SubmissionCommentsEvent()
-    data class pendingCommentUpdated(val pendingComment: PendingCommentWrapper) : SubmissionCommentsEvent()
-}
-
-sealed class SubmissionCommentsEffect {
-    data class ShowMediaComment(val comment: SubmissionComment) : SubmissionCommentsEffect()
-    data class ShowAttachment(val attachment: Attachment) : SubmissionCommentsEffect()
-    data class ShowSubmission(val submission: Submission) : SubmissionCommentsEffect()
-    data class ShowSubmissionFile(val submissionAttachment: Attachment, val submission: Submission) : SubmissionCommentsEffect()
-    data class UploadComment(val pendingComment: PendingCommentWrapper, val courseId: Long, val assignmentId: Long, val groupMessage: Boolean) : SubmissionCommentsEffect() // todo do we need a separate effect for media?
-
-    data class LoadData(val courseId: Long, val assignmentId: Long, val forceNetwork: Boolean) : SubmissionCommentsEffect()
-}
-
-data class SubmissionCommentsModel(
-    val courseId: Long,
-    val assignmentId: Long,
-    val isLoading: Boolean = false,
-    val assignment: DataResult<Assignment>? = null,
-    val submissionComments: DataResult<List<SubmissionCommentWrapper>>? = null
-)
-
-// region Submission Comment Wrapper
-
-sealed class SubmissionCommentWrapper {
-    abstract val id: Long
-    abstract val date: Date
-}
-
-class CommentWrapper(val comment: SubmissionComment) : SubmissionCommentWrapper() {
-    override val date: Date get() = comment.createdAt ?: Date(0)
-    override val id: Long get() = comment.id
-}
-
-class PendingCommentWrapper(val pendingComment: PendingSubmissionComment) : SubmissionCommentWrapper() {
-    override val id: Long get() = pendingComment.id
-    override val date: Date get() = pendingComment.date
-}
-
-class SubmissionWrapper(val submission: Submission) : SubmissionCommentWrapper() {
-    override val id: Long get() = submission.hashCode().toLong()
-    override val date: Date get() = submission.submittedAt ?: Date(0)
-}
-// endregion
-
-
- */

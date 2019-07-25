@@ -41,6 +41,7 @@ import com.instructure.student.fragment.InternalWebviewFragment
 import com.instructure.student.fragment.LTIWebViewFragment
 import com.instructure.student.fragment.QuizStartFragment
 import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsEvent
+import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionMode
 import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submission.text.ui.TextSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submission.url.ui.UrlSubmissionUploadFragment
@@ -259,7 +260,10 @@ class AssignmentDetailsView(
     }
 
     fun showFileUploadView(assignment: Assignment) {
-        RouteMatcher.route(context, PickerSubmissionUploadFragment.makeRoute(canvasContext, assignment, false))
+        RouteMatcher.route(
+            context,
+            PickerSubmissionUploadFragment.makeRoute(canvasContext, assignment, PickerSubmissionMode.FileSubmission)
+        )
     }
 
     fun showArcUploadView(assignment: Assignment, courseId: Long) {

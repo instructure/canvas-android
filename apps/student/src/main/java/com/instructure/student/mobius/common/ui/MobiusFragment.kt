@@ -64,7 +64,9 @@ abstract class MobiusFragment<MODEL, EVENT, EFFECT, VIEW : MobiusView<VIEW_STATE
 
     abstract fun makeInitModel(): MODEL
 
-    open val eventSources : List<EventSource<EVENT>> = emptyList()
+    open fun getExternalEventSources() : List<EventSource<EVENT>> = emptyList()
+
+    private val eventSources by lazy { getExternalEventSources() }
 
     // FragmentInteractions override
     override val navigation: Navigation? get() = context as? Navigation

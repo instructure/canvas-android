@@ -29,19 +29,20 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
-import androidx.annotation.Nullable;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 
 import com.instructure.canvasapi2.models.CanvasContext;
+import com.instructure.canvasapi2.models.postmodels.FileSubmitObject;
 import com.instructure.pandautils.R;
-import com.instructure.pandautils.models.FileSubmitObject;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+
+import androidx.annotation.Nullable;
 
 public class FileUploadUtils {
 
@@ -298,9 +299,9 @@ public class FileUploadUtils {
         }
 
         if (file != null) {
-            return new FileSubmitObject(fileName, file.length(), mimeType, file.getAbsolutePath(), errorMessage);
+            return new FileSubmitObject(fileName, file.length(), mimeType, file.getAbsolutePath(), errorMessage, FileSubmitObject.STATE.NORMAL);
         }
-        return new FileSubmitObject(fileName, 0, mimeType, "", errorMessage);
+        return new FileSubmitObject(fileName, 0, mimeType, "", errorMessage, FileSubmitObject.STATE.NORMAL);
     }
 
     public static String getFileNameWithDefault(ContentResolver resolver, Uri uri, String mimeType) {

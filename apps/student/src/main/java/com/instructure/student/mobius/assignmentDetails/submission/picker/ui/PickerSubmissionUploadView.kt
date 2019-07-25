@@ -18,7 +18,6 @@ package com.instructure.student.mobius.assignmentDetails.submission.picker.ui
 
 import android.app.Activity
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Color
 import android.net.Uri
 import android.provider.MediaStore
@@ -27,7 +26,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.Toast
-import androidx.core.content.FileProvider
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.instructure.pandautils.utils.*
@@ -35,14 +33,14 @@ import com.instructure.student.R
 import com.instructure.student.adapter.BasicItemBinder
 import com.instructure.student.adapter.BasicItemCallback
 import com.instructure.student.adapter.BasicRecyclerAdapter
+import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionMode
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadEvent
 import com.instructure.student.mobius.common.ui.MobiusView
 import com.spotify.mobius.functions.Consumer
 import kotlinx.android.synthetic.main.fragment_picker_submission_upload.*
 import kotlinx.android.synthetic.main.viewholder_file_upload.view.*
-import java.io.File
 
-class PickerSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) :
+class PickerSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup, val mode: PickerSubmissionMode) :
     MobiusView<PickerSubmissionUploadViewState, PickerSubmissionUploadEvent>(
         R.layout.fragment_picker_submission_upload,
         inflater,
@@ -66,7 +64,7 @@ class PickerSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) :
 
     init {
         toolbar.setupAsBackButton { (context as? Activity)?.onBackPressed() }
-        toolbar.title = context.getString(R.string.submission)
+        toolbar.title = context.getString(if (mode.isForComment) R.string.commentUpload else R.string.submission)
 
         filePickerRecycler.layoutManager = LinearLayoutManager(context)
         filePickerRecycler.adapter = adapter
@@ -118,7 +116,9 @@ class PickerSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) :
         pickerEmptyView.setImageVisible(true)
         pickerEmptyView.setEmptyViewImage(context.getDrawableCompat(R.drawable.vd_panda_choosefile))
         pickerEmptyView.setTitleText(R.string.chooseFile)
-        pickerEmptyView.setMessageText(R.string.chooseFileSubtext)
+        pickerEmptyView.setMessageText(
+            if (mode.isForComment) R.string.chooseFileForCommentSubtext else R.string.chooseFileSubtext
+        )
     }
 
     //region Fabs

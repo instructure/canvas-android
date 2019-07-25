@@ -28,7 +28,7 @@ import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.pandautils.dialogs.UploadFilesDialog
 import com.instructure.pandautils.fragments.BasePresenterFragment
-import com.instructure.pandautils.models.FileSubmitObject
+import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.AttachmentView
 import com.instructure.teacher.R

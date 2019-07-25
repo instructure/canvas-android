@@ -23,23 +23,24 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.os.*
+import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import android.widget.Toast
 import com.instructure.canvasapi2.managers.DiscussionManager
-import com.instructure.canvasapi2.managers.NotoriousManager
 import com.instructure.canvasapi2.managers.SubmissionManager
-import com.instructure.canvasapi2.models.*
-import com.instructure.canvasapi2.models.notorious.NotoriousResultWrapper
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.DiscussionEntry
+import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.models.notorious.NotoriousResult
 import com.instructure.canvasapi2.utils.*
 import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.awaitApi
-import com.instructure.canvasapi2.utils.weave.catch
-import com.instructure.canvasapi2.utils.weave.tryWeave
+import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.pandautils.R
 import com.instructure.pandautils.services.FileUploadService.Companion.CHANNEL_ID
-import com.instructure.pandautils.utils.*
-import java.io.File
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.NotoriousUploader
 import java.util.*
 
 class NotoriousUploadService : IntentService(NotoriousUploadService::class.java.simpleName) {
@@ -47,9 +48,6 @@ class NotoriousUploadService : IntentService(NotoriousUploadService::class.java.
     private val notificationManager by lazy { getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager }
 
     private lateinit var builder: NotificationCompat.Builder
-
-    private var notoriousDomain: String = ""
-    private var uploadToken: String = ""
 
     private lateinit var mediaPath: String
 
@@ -155,71 +153,59 @@ class NotoriousUploadService : IntentService(NotoriousUploadService::class.java.
     }
 
     private fun startFileUpload() {
-        uploadJob = tryWeave(true) {
-            // Get NotoriousConfig
-            val config = awaitApi<NotoriousConfig> { NotoriousManager.getConfiguration(it) }
-            if (config.isEnabled) {
-                notoriousDomain = config.domain.orEmpty()
-            } else {
-                uploadError("NOTORIOUS CONFIG/RESPONSE ERROR: $config")
-                return@tryWeave
-            }
-
-            // Start session
-            val session = awaitApi<NotoriousSession> { NotoriousManager.startSession(it) }
-            ApiPrefs.notoriousDomain = notoriousDomain
-            ApiPrefs.notoriousToken = session.token.orEmpty()
-            notificationManager.notify(notificationId, builder.build())
-
-            // Get upload token
-            val resultWrapper = awaitApi<NotoriousResultWrapper> { NotoriousManager.getUploadToken(it) }
+        uploadJob = weave(true) {
+            // Set initial progress in notification
             builder.setContentText(getString(R.string.uploadingFile))
             builder.setProgress(0, 0, true)
             notificationManager.notify(notificationId, builder.build())
-            uploadToken = resultWrapper.result?.id.orEmpty()
-            resultWrapper.result?.error?.let {
-                uploadError("NOTORIOUS XML/RESPONSE ERROR: $resultWrapper")
-                return@tryWeave
-            }
-
-            // Perform upload
-            Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND)
             uploadStartedToast()
-            val contentType = FileUtils.getMimeType(mediaPath) ?: "application/octet-stream"
-            val file = File(mediaPath)
-            val response = NotoriousManager.uploadFileSynchronous(uploadToken, file, contentType)
-            if (response == null || response.code() != 201) {
-                uploadError("NOTORIOUS RESPONSE ERROR: ${response?.message()}, CODE: ${response?.code()}")
-                return@tryWeave
+
+            NotoriousUploader.performUpload(mediaPath){ progress ->
+                // Update progress in notification
+                builder.setProgress(1000, (progress * 1000).toInt(), false)
+                notificationManager.notify(notificationId, builder.build())
+            }.onSuccess {
+                handleSuccess(it)
+            }.onFailure {
+                handleFailure(it)
             }
+        }
+    }
 
-            // Get uploaded media ID
-            val mediaInfo = NotoriousManager.getMediaIdSynchronous(uploadToken, file.name, contentType)!!.result!!
+    private fun handleFailure(failure: Failure?) {
+        when(failure) {
+            is Failure.Network -> uploadError(failure.message)
+            is Failure.Exception -> uploadError(failure.exception)
+            else -> uploadError("Unknown error")
+        }
+    }
 
-            // Create course context
-            val course = if (assignment != null) {
-                CanvasContext.getGenericContext(CanvasContext.Type.COURSE, assignment!!.courseId, Const.COURSE)
-            } else {
-                CanvasContext.getGenericContext(CanvasContext.Type.COURSE, canvasContext!!.id, Const.COURSE)
-            }
+    private suspend fun handleSuccess(result: NotoriousResult) {
+        // Create course context
+        val course = if (assignment != null) {
+            CanvasContext.getGenericContext(CanvasContext.Type.COURSE, assignment!!.courseId, Const.COURSE)
+        } else {
+            CanvasContext.getGenericContext(CanvasContext.Type.COURSE, canvasContext!!.id, Const.COURSE)
+        }
 
-            val mediaType = FileUtils.mediaTypeFromNotoriousCode(mediaInfo.mediaType)
+        val mediaType = FileUtils.mediaTypeFromNotoriousCode(result.mediaType)
+        try {
             when (action) {
                 ACTION.SUBMISSION_COMMENT -> broadcastSubmission(awaitApi {
                     SubmissionManager.postMediaSubmissionComment(
-                        course, assignment?.id ?: 0, studentId, mediaInfo.id!!, mediaType, isGroupComment, it
+                        course, assignment?.id ?: 0, studentId, result.id!!, mediaType, isGroupComment, it
                     )
                 })
                 ACTION.ASSIGNMENT_SUBMISSION -> broadcastSubmission(awaitApi {
                     SubmissionManager.postMediaSubmission(
-                        course, assignment!!.id, Const.MEDIA_RECORDING, mediaInfo.id!!, mediaType, it
+                        course, assignment!!.id, Const.MEDIA_RECORDING, result.id!!, mediaType, it
                     )
                 })
                 ACTION.DISCUSSION_COMMENT -> {
                     // This is the format that Canvas expects
-                    val attachment = "<p><a id='media_comment_${mediaInfo.id}' " +
+                    val attachment = "<p><a id='media_comment_${result.id}' " +
                             "class='instructure_inline_media_comment $mediaType'" +
-                            "href='/media_objects/${mediaInfo.id}'>this is a media comment</a></p>\n$message"
+                            "href='/media_objects/${result.id}'>this is a media comment</a></p>\n$message"
 
                     if (discussionEntry!!.parent == null) {
                         broadcastDiscussion(awaitApi {
@@ -232,17 +218,17 @@ class NotoriousUploadService : IntentService(NotoriousUploadService::class.java.
                     }
                 }
             }
-
-            stopSelf()
-
-        } catch {
+        } catch (e: Throwable) {
             if (!APIHelper.hasNetworkConnection()) {
                 onNoNetwork()
             } else {
-                uploadError(it)
+                uploadError(e)
             }
         }
+
+        stopSelf()
     }
+
 
     private fun broadcastSubmission(submission: Submission) {
         builder.setContentText(getString(R.string.fileUploadSuccess))
