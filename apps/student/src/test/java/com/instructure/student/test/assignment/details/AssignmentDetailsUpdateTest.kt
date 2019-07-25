@@ -32,6 +32,7 @@ import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.threeten.bp.OffsetDateTime
+import java.io.File
 import java.util.*
 
 class AssignmentDetailsUpdateTest : Assert() {
@@ -380,6 +381,45 @@ class AssignmentDetailsUpdateTest : Assert() {
             .then(
                 assertThatNext(
                     matchesEffects<AssignmentDetailsModel, AssignmentDetailsEffect>(expectedEffect)
+                )
+            )
+    }
+
+    @Test
+    fun `SendAudioRecordingClicked with valid file results in UploadMediaSubmission effect`() {
+        val file = File("hodorpath")
+        val model = initModel.copy(assignmentResult = DataResult.Success(assignment))
+        updateSpec
+            .given(model)
+            .whenEvent(AssignmentDetailsEvent.SendAudioRecordingClicked(file))
+            .then(
+                assertThatNext(
+                    matchesEffects<AssignmentDetailsModel, AssignmentDetailsEffect>(AssignmentDetailsEffect.UploadMediaSubmission(file, course, assignment))
+                )
+            )
+    }
+
+    @Test
+    fun `SendAudioRecordingClicked with invalid file results in UploadMediaSubmission effect`() {
+        val model = initModel.copy(assignmentResult = DataResult.Success(assignment))
+        updateSpec
+            .given(model)
+            .whenEvent(AssignmentDetailsEvent.SendAudioRecordingClicked(null))
+            .then(
+                assertThatNext(
+                    matchesEffects<AssignmentDetailsModel, AssignmentDetailsEffect>(AssignmentDetailsEffect.ShowAudioRecordingError)
+                )
+            )
+    }
+
+    @Test
+    fun `AudioRecordingClicked results in ShowAudioRecordingView effect`() {
+        updateSpec
+            .given(initModel)
+            .whenEvent(AssignmentDetailsEvent.AudioRecordingClicked)
+            .then(
+                assertThatNext(
+                    matchesEffects<AssignmentDetailsModel, AssignmentDetailsEffect>(AssignmentDetailsEffect.ShowAudioRecordingView)
                 )
             )
     }
