@@ -209,8 +209,7 @@ class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Lon
 
         context.requestPermissions(setOf(*permissions)) { results ->
             if (results.isNotEmpty() && results.all { it.value }) {
-                // If permissions list is not empty and all are granted, retry camera
-                successCallback()
+                successCallback()gi
             } else {
                 view?.showPermissionDeniedToast()
             }
