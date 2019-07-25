@@ -225,6 +225,7 @@ interface PickerListCallback : BasicItemCallback {
 }
 
 class PickerListBinder : BasicItemBinder<PickerListItemViewState, PickerListCallback>() {
+    override fun getItemId(item: PickerListItemViewState) = item.position.toLong()
     override val layoutResId = R.layout.viewholder_file_upload
     override val bindBehavior = Item { state, pickerListCallback, _ ->
         fileIcon.setImageResource(state.iconRes)
