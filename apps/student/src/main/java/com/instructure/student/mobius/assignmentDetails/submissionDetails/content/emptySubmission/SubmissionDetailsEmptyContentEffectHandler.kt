@@ -57,7 +57,7 @@ class SubmissionDetailsEmptyContentEffectHandler : EffectHandler<SubmissionDetai
         }.exhaustive
     }
 
-    private fun getSubmissionTypesVisibilities(assignment: Assignment, isArcEnabled: Boolean): SubmissionTypesVisibilities {
+    private fun getSubmissionTypesVisibilities(assignment: Assignment, isStudioEnabled: Boolean): SubmissionTypesVisibilities {
         val visibilities = SubmissionTypesVisibilities()
 
         val submissionTypes = assignment.getSubmissionTypes()
@@ -67,7 +67,7 @@ class SubmissionDetailsEmptyContentEffectHandler : EffectHandler<SubmissionDetai
             when (submissionType) {
                 Assignment.SubmissionType.ONLINE_UPLOAD -> {
                     visibilities.fileUpload = true
-                    visibilities.arcUpload = isArcEnabled
+                    visibilities.studioUpload = isStudioEnabled
                 }
                 Assignment.SubmissionType.ONLINE_TEXT_ENTRY -> visibilities.textEntry = true
                 Assignment.SubmissionType.ONLINE_URL -> visibilities.urlEntry = true

@@ -127,7 +127,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
             Action.FILE_ENTRY -> uploadFile(intent)
             Action.MEDIA_ENTRY -> uploadMedia(intent)
             Action.URL_ENTRY -> uploadUrl(intent, false)
-            Action.ARC_ENTRY -> uploadUrl(intent, true)
+            Action.STUDIO_ENTRY -> uploadUrl(intent, true)
             Action.COMMENT_ENTRY -> uploadComment(intent)
         }.exhaustive
     }
@@ -507,7 +507,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
     // endregion
 
     enum class Action {
-        TEXT_ENTRY, URL_ENTRY, MEDIA_ENTRY, FILE_ENTRY, ARC_ENTRY, COMMENT_ENTRY
+        TEXT_ENTRY, URL_ENTRY, MEDIA_ENTRY, FILE_ENTRY, STUDIO_ENTRY, COMMENT_ENTRY
     }
 
     companion object {
@@ -618,7 +618,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
             startService(context, Action.MEDIA_ENTRY, bundle)
         }
 
-        fun startArcSubmission(context: Context, canvasContext: CanvasContext, assignmentId: Long, assignmentName: String?, url: String) {
+        fun startStudioSubmission(context: Context, canvasContext: CanvasContext, assignmentId: Long, assignmentName: String?, url: String) {
             val bundle = Bundle().apply {
                 putParcelable(Const.CANVAS_CONTEXT, canvasContext)
                 putLong(Const.ASSIGNMENT_ID, assignmentId)
@@ -626,7 +626,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
                 putString(Const.URL, url)
             }
 
-            startService(context, Action.ARC_ENTRY, bundle)
+            startService(context, Action.STUDIO_ENTRY, bundle)
         }
 
         /**

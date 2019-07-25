@@ -29,7 +29,8 @@ sealed class AssignmentDetailsEvent {
     data class SubmissionTypeClicked(val submissionType: Assignment.SubmissionType) : AssignmentDetailsEvent()
     data class DataLoaded(
         val assignmentResult: DataResult<Assignment>?,
-        val isArcEnabled: Boolean,
+        val isStudioEnabled: Boolean,
+        val studioLTITool: DataResult<LTITool>?,
         val ltiTool: DataResult<LTITool>?,
         val submission: Submission?,
         val quizResult: DataResult<Quiz>?
@@ -39,7 +40,7 @@ sealed class AssignmentDetailsEvent {
 }
 
 sealed class AssignmentDetailsEffect {
-    data class ShowSubmitDialogView(val assignment: Assignment, val course: Course, val isArcEnabled: Boolean) : AssignmentDetailsEffect()
+    data class ShowSubmitDialogView(val assignment: Assignment, val course: Course, val isStudioEnabled: Boolean, val studioLTITool: LTITool? = null) : AssignmentDetailsEffect()
     data class ShowQuizStartView(val quiz: Quiz, val course: Course) : AssignmentDetailsEffect()
     data class ShowDiscussionDetailView(val discussionTopicHeaderId: Long, val course: Course) : AssignmentDetailsEffect()
     data class ShowDiscussionAttachment(val discussionAttachment: Attachment, val course: Course) : AssignmentDetailsEffect()
@@ -59,8 +60,9 @@ data class AssignmentDetailsModel(
     val course: Course, // Will always pull from cache for the course
     val isLoading: Boolean = false,
     val assignmentResult: DataResult<Assignment>? = null,
+    val isStudioEnabled: Boolean = false,
+    val studioLTIToolResult: DataResult<LTITool>? = null,
     val quizResult: DataResult<Quiz>? = null,
-    val isArcEnabled: Boolean = false,
     val ltiTool: DataResult<LTITool>? = null,
     val databaseSubmission: Submission? = null
 )

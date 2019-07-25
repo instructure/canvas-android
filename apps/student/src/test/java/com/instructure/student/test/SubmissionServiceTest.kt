@@ -140,9 +140,9 @@ class SubmissionServiceTest : Assert() {
 
         every { context.startService(capture(intent)) } returns null
 
-        SubmissionService.startArcSubmission(context, canvasContext, assignmentId, assignmentName, url)
+        SubmissionService.startStudioSubmission(context, canvasContext, assignmentId, assignmentName, url)
 
-        assertEquals(SubmissionService.Action.ARC_ENTRY.name, intent.captured.action)
+        assertEquals(SubmissionService.Action.STUDIO_ENTRY.name, intent.captured.action)
         assertEquals(canvasContext, intent.captured.getParcelableExtra(Const.CANVAS_CONTEXT))
         assertEquals(assignmentId, intent.captured.getLongExtra(Const.ASSIGNMENT_ID, -1))
         assertEquals(assignmentName, intent.captured.getStringExtra(Const.ASSIGNMENT_NAME))

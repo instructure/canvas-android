@@ -367,7 +367,7 @@ class EditAssignmentDetailsFragment : BaseFragment() {
         descriptionProgressBar.announceForAccessibility(getString(R.string.loading))
         descriptionProgressBar.setVisible()
         // Load description
-        //if the html has an arc lti url, we want to authenticate so the user doesn't have to login again
+        // If the html has a Studio LTI url, we want to authenticate so the user doesn't have to login again
         if (CanvasWebView.containsLTI(mAssignment.description.orEmpty(), "UTF-8")) {
             descriptionEditor.setHtml(DiscussionUtils.createLTIPlaceHolders(requireContext(), mAssignment.description ?: "") { _, placeholder ->
                 placeHolderList.add(placeholder)

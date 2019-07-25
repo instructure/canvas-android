@@ -164,18 +164,18 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/arcSubmission"
+                android:id="@+id/studioSubmission"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
                 android:background="@color/canvasBackgroundMedium"
                 android:padding="16dp"
-                android:text="@string/arc"
+                android:text="@string/studio"
                 android:textColor="@color/canvasTextMedium"
                 android:textStyle="bold" />
 
             <LinearLayout
-                android:id="@+id/arcEntryContainer"
+                android:id="@+id/studioEntryContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
@@ -183,7 +183,7 @@
                 android:visibility="gone">
 
                 <androidx.appcompat.widget.AppCompatEditText
-                    android:id="@+id/arcEntry"
+                    android:id="@+id/studioEntry"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -194,7 +194,7 @@
                     android:textCursorDrawable="@null" />
 
                 <Button
-                    android:id="@+id/submitArcEntry"
+                    android:id="@+id/submitStudioEntry"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"

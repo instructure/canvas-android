@@ -947,7 +947,6 @@
     <string name="select">Izberi</string>
     <string name="choice_position">Izbor %d</string>
     <string name="updating_module_info">Posodabljanje informacij o modulu&#8230;</string>
-    <string name="arc">Arc</string>
     <string name="pending_review">Čaka na pregled</string>
     <string name="totalPoints">%s točk</string>
     <string name="totalPointsText">Vsota točk:</string>

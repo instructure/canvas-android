@@ -479,7 +479,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
     //region Display Helpers
 
     /**
-     * Method to put an authenticated URL in place of a non-authenticated URL (like when we try to load Arc LTI in a webview)
+     * Method to put an authenticated URL in place of a non-authenticated URL (like when we try to load the Studio LTI in a WebView)
      */
     private fun getAuthenticatedURL(html: String, loadHtml: (newUrl: String, originalUrl: String?) -> Unit) {
         if (authenticatedSessionURL.isNullOrBlank()) {
@@ -646,9 +646,9 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
         replyToDiscussionTopic.setVisible(discussionTopicHeader.permissions!!.reply)
         replyToDiscussionTopic.onClick { showReplyView(discussionTopicHeader.id) }
 
-        // If the html has an arc lti url, we want to authenticate so the user doesn't have to login again
-        if (CanvasWebView.containsArcLTI(discussionTopicHeader.message.orEmpty(), "UTF-8")) {
-            // We are only handling ARC because there is not a predictable way for use to determine if a URL is and LTI launch
+        // If the html has a Studio LTI url, we want to authenticate so the user doesn't have to login again
+        if (CanvasWebView.containsStudioLTI(discussionTopicHeader.message.orEmpty(), "UTF-8")) {
+            // We are only handling Studio because there is not a predictable way for use to determine if a URL is and LTI launch
             getAuthenticatedURL(discussionTopicHeader.message.orEmpty()) { authenticatedHtml, originalUrl -> loadHTMLTopic(authenticatedHtml, originalUrl) }
         } else {
             loadHTMLTopic(discussionTopicHeader.message ?: "")
@@ -663,8 +663,8 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
     private fun loadDiscussionTopicViews(html: String) {
         discussionRepliesWebView.setVisible()
         discussionProgressBar.setGone()
-        // We are only handling ARC because there is not a predictable way for use to determine if a URL is an LTI launch
-        if (CanvasWebView.containsArcLTI(html, "UTF-8")) getAuthenticatedURL(html) { authenticatedHtml, _ -> loadHTMLReplies(authenticatedHtml) }
+        // We are only handling Studio because there is not a predictable way for use to determine if a URL is an LTI launch
+        if (CanvasWebView.containsStudioLTI(html, "UTF-8")) getAuthenticatedURL(html) { authenticatedHtml, _ -> loadHTMLReplies(authenticatedHtml) }
         else discussionRepliesWebView.loadDataWithBaseURL(CanvasWebView.getReferrer(), html, "text/html", "UTF-8", null)
         swipeRefreshLayout.isRefreshing = false
         discussionTopicRepliesTitle.setVisible(discussionTopicHeader.shouldShowReplies)

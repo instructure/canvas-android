@@ -21,23 +21,25 @@ import android.annotation.TargetApi
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import android.view.View
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import android.widget.Toast
-import com.instructure.student.R
-import com.instructure.student.router.RouteMatcher
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
-import com.instructure.pandautils.utils.Const
-import com.instructure.pandautils.utils.PermissionUtils
-import com.instructure.pandautils.utils.makeBundle
+import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
+import com.instructure.student.R
+import com.instructure.student.mobius.common.ui.SubmissionService
+import com.instructure.student.router.RouteMatcher
 import org.apache.commons.text.StringEscapeUtils
 
-class ArcWebviewFragment : InternalWebviewFragment() {
+class StudioWebViewFragment : InternalWebviewFragment() {
+    val assignmentId: Long by LongArg(key = Const.ASSIGNMENT_ID)
+    val assignmentName: String by StringArg(key = Const.ASSIGNMENT_NAME)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,9 +58,8 @@ class ArcWebviewFragment : InternalWebviewFragment() {
             override fun onPageFinishedCallback(webView: WebView, url: String) {
                 getCanvasLoading()?.visibility = View.GONE
 
-                //check for a successful arc submission
+                // Check for a successful Studio submission
                 if (url.contains("success/external_tool_dialog")) {
-
                     webView.loadUrl("javascript:HtmlViewer.showHTML" + "('<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>');")
                 }
             }
@@ -93,11 +94,11 @@ class ArcWebviewFragment : InternalWebviewFragment() {
     }
 
     override fun handleBackPressed(): Boolean {
-        if(canGoBack()) {
-            //This prevents a silly bug where the arc webview cannot go back far enough to pop it's fragment.
+        if (canGoBack()) {
+            // This prevents a silly bug where the Studio WebView cannot go back far enough to pop its fragment
             val webBackForwardList = getCanvasWebView()?.copyBackForwardList()
             val historyUrl = webBackForwardList?.getItemAtIndex(webBackForwardList.currentIndex - 1)?.url
-            if(historyUrl != null && historyUrl.contains("external_tools/") && historyUrl.contains("resource_selection")) {
+            if (historyUrl != null && historyUrl.contains("external_tools/") && historyUrl.contains("resource_selection")) {
                 navigation?.popCurrentFragment()
                 return true
             }
@@ -119,11 +120,9 @@ class ArcWebviewFragment : InternalWebviewFragment() {
     }
 
     internal inner class JSInterface {
-
         @Suppress("unused")
         @JavascriptInterface
         fun showHTML(html: String) {
-
             val mark = "@id\":\""
             val index = html.indexOf(mark)
             if (index != -1) {
@@ -131,14 +130,10 @@ class ArcWebviewFragment : InternalWebviewFragment() {
                 var url = html.substring(index + mark.length, endIndex - 1)
                 url = StringEscapeUtils.unescapeJava(url)
 
-                val intent = Intent(Const.ARC_SUBMISSION)
-                val extras = Bundle()
-                extras.putString(Const.URL, url)
+                // Upload the url as a submission
+                SubmissionService.startStudioSubmission(requireContext(), canvasContext, assignmentId, assignmentName, url)
 
-                intent.putExtras(extras)
-                //let the add submission fragment know that we have an arc submission
-                LocalBroadcastManager.getInstance(requireContext()).sendBroadcast(intent)
-                //close this page
+                // Close this page
                 navigation?.popCurrentFragment()
             }
         }
@@ -151,25 +146,29 @@ class ArcWebviewFragment : InternalWebviewFragment() {
     }
 
     companion object {
-
         fun newInstance(route: Route) = if (validRoute(route)) {
-            ArcWebviewFragment().apply {
+            StudioWebViewFragment().apply {
                 arguments = route.arguments
             }
         } else null
 
-        fun makeRoute(canvasContext: CanvasContext, url: String, title: String, authenticate: Boolean): Route =
-                Route(ArcWebviewFragment::class.java, canvasContext,
+        fun makeRoute(canvasContext: CanvasContext, url: String, title: String, authenticate: Boolean, assignment: Assignment): Route =
+            Route(
+                StudioWebViewFragment::class.java, canvasContext,
                         canvasContext.makeBundle().apply {
                             putString(Const.INTERNAL_URL, url)
                             putBoolean(Const.AUTHENTICATE, authenticate)
                             putString(Const.ACTION_BAR_TITLE, title)
+                            putString(Const.ASSIGNMENT_NAME, assignment.name)
+                            putLong(Const.ASSIGNMENT_ID, assignment.id)
                         })
 
         fun validRoute(route: Route) : Boolean {
             return route.canvasContext != null &&
                     route.arguments.containsKey(Const.INTERNAL_URL) &&
-                    route.arguments.containsKey(Const.ACTION_BAR_TITLE)
+                    route.arguments.containsKey(Const.ACTION_BAR_TITLE) &&
+                    route.arguments.containsKey(Const.ASSIGNMENT_NAME) &&
+                    route.arguments.containsKey(Const.ASSIGNMENT_ID)
         }
     }
 }
