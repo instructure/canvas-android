@@ -209,7 +209,7 @@ class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Lon
 
         context.requestPermissions(setOf(*permissions)) { results ->
             if (results.isNotEmpty() && results.all { it.value }) {
-                successCallback()gi
+                successCallback()
             } else {
                 view?.showPermissionDeniedToast()
             }
