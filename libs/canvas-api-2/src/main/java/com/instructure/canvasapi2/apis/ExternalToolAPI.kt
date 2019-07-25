@@ -29,7 +29,6 @@ import retrofit2.http.Url
 
 
 internal object ExternalToolAPI {
-
     internal interface ExternalToolInterface {
         @GET("{contextId}/external_tools?include_parents=true")
         fun getExternalToolsForCanvasContext(@Path("contextId") contextId: Long): Call<List<LTITool>>

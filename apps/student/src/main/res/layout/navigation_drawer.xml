@@ -134,7 +134,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/navigationDrawerItem_arc"
+                android:id="@+id/navigationDrawerItem_studio"
                 style="@style/NavigationDrawerItem"
                 android:visibility="gone"
                 tools:ignore="UseCompoundDrawables"
@@ -142,13 +142,13 @@
 
                 <androidx.appcompat.widget.AppCompatImageView
                     style="@style/NavigationDrawerIcon"
-                    app:srcCompat="@drawable/vd_navigation_arc"/>
+                    app:srcCompat="@drawable/vd_navigation_studio"/>
 
                 <TextView
                     style="@style/TextFont.Medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/arc"
+                    android:text="@string/studio"
                     android:textSize="16sp"/>
 
             </LinearLayout>
@@ -249,7 +249,7 @@
 
             </LinearLayout>
 
-            <!--Where we dynamically add items from the Launch Definitions API (Arc, etc) (Except Gauge we support that above)-->
+            <!--Where we dynamically add items from the Launch Definitions API (Studio, etc) (Except Gauge we support that above)-->
             <FrameLayout
                 android:id="@+id/navigationDrawerLaunchDefinitions"
                 android:layout_width="match_parent"

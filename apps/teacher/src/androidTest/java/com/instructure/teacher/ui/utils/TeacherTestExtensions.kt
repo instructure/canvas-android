@@ -68,19 +68,18 @@ fun TeacherTest.slowLogInAsStudent(): CanvasUserApiModel = slowLogIn(EnrollmentT
 fun TeacherTest.logIn(
     skipSplash: Boolean = true,
     enrollmentType: String = EnrollmentTypes.TEACHER_ENROLLMENT,
-    defaultToPastCourse: Boolean = false
+    noCourses: Boolean = false
 ): CanvasUserApiModel {
     val teacher = mockableSeed {
         UserApi.createCanvasUser()
     }
-    val course = mockableSeed {
-        CoursesApi.createCourse()
-    }
-    mockableSeed {
-        EnrollmentsApi.enrollUser(course.id, teacher.id, enrollmentType)
-    }
-    if (defaultToPastCourse) {
-        CoursesApi.concludeCourse(course.id)
+    if(!noCourses) {
+        val course = mockableSeed {
+            CoursesApi.createCourse()
+        }
+        mockableSeed {
+            EnrollmentsApi.enrollUser(course.id, teacher.id, enrollmentType)
+        }
     }
 
     activityRule.runOnUiThread {
@@ -107,7 +106,8 @@ fun TeacherTest.seedData(
         favoriteCourses: Int = 0,
         announcements: Int = 0,
         discussions: Int = 0,
-        gradingPeriods: Boolean = false): SeedApi.SeededDataApiModel {
+        gradingPeriods: Boolean = false,
+        pastCourses: Int = 0): SeedApi.SeededDataApiModel {
 
     val request = SeedApi.SeedDataRequest(
             teachers = teachers,
@@ -116,7 +116,8 @@ fun TeacherTest.seedData(
             favoriteCourses = favoriteCourses,
             announcements = announcements,
             discussions = discussions,
-            gradingPeriods = gradingPeriods
+            gradingPeriods = gradingPeriods,
+            pastCourses = pastCourses
     )
 
     return mockableSeed {

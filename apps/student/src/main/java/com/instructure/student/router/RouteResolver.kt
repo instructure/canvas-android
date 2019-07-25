@@ -109,7 +109,7 @@ object RouteResolver {
             cls.isA<DiscussionsReplyFragment>() -> DiscussionsReplyFragment.newInstance(route)
             cls.isA<CreateDiscussionFragment>() -> CreateDiscussionFragment.newInstance(route)
             cls.isA<DiscussionsUpdateFragment>() -> DiscussionsUpdateFragment.newInstance(route)
-            cls.isA<ArcWebviewFragment>() -> ArcWebviewFragment.newInstance(route)
+            cls.isA<StudioWebViewFragment>() -> StudioWebViewFragment.newInstance(route)
             cls.isA<TextSubmissionUploadFragment>() -> TextSubmissionUploadFragment.newInstance(route)
             cls.isA<UrlSubmissionUploadFragment>() -> UrlSubmissionUploadFragment.newInstance(route)
             cls.isA<PickerSubmissionUploadFragment>() -> PickerSubmissionUploadFragment.newInstance(route)

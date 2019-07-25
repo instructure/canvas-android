@@ -37,7 +37,8 @@ class CoursesListPageTest : TeacherTest() {
     @Ditto(mode = DittoMode.LIVE)
     @TestRail(ID = "C3109494")
     fun displaysNoCoursesView() {
-        logIn(defaultToPastCourse = true)
+        val data = seedData(teachers = 1, pastCourses = 1)
+        tokenLogin(data.teachersList[0])
         coursesListPage.assertDisplaysNoCoursesView()
     }
 

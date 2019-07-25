@@ -16,7 +16,6 @@
 package com.instructure.student.test.assignment.details
 
 import android.content.Context
-import com.google.android.gms.tasks.Tasks.await
 import com.instructure.canvasapi2.managers.ExternalToolManager
 import com.instructure.canvasapi2.managers.QuizManager
 import com.instructure.canvasapi2.managers.SubmissionManager
@@ -128,6 +127,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
             DataResult.Fail(Failure.Network(errorMessage)),
             false,
             DataResult.Fail(null),
+            DataResult.Fail(null),
             null,
             null
         )
@@ -153,6 +153,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
         val expectedEvent = AssignmentDetailsEvent.DataLoaded(
             DataResult.Fail(Failure.Authorization(errorMessage)),
             false,
+            DataResult.Fail(null),
             DataResult.Fail(null),
             null,
             null
@@ -181,6 +182,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
         val expectedEvent = AssignmentDetailsEvent.DataLoaded(
             DataResult.Success(assignment),
             false,
+            DataResult.Fail(null),
             DataResult.Success(ltiTool),
             submission,
             null
@@ -218,6 +220,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
         val expectedEvent = AssignmentDetailsEvent.DataLoaded(
             DataResult.Success(assignment),
             false,
+            DataResult.Fail(null),
             DataResult.Success(ltiTool),
             submission,
             null
@@ -255,6 +258,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
         val expectedEvent = AssignmentDetailsEvent.DataLoaded(
             DataResult.Success(assignment),
             false,
+            DataResult.Fail(null),
             DataResult.Success(ltiTool),
             submission,
             null
@@ -280,13 +284,15 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     }
 
     @Test
-    fun `Successful LoadData with ONLINE_UPLOAD submissionType with arc enabled results in DataLoaded`() {
+    fun `Successful LoadData with ONLINE_UPLOAD submissionType with Studio enabled results in DataLoaded`() {
         val courseId = 1L
         val submission = mockkSubmission(9876L)
         val assignment = assignment.copy(submissionTypesRaw = listOf("online_upload"))
+        val ltiTool = LTITool(url = "instructuremedia.com/lti/launch")
         val expectedEvent = AssignmentDetailsEvent.DataLoaded(
             DataResult.Success(assignment),
             true,
+            DataResult.Success(ltiTool),
             DataResult.Fail(null),
             submission,
             null
@@ -312,12 +318,13 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     }
 
     @Test
-    fun `Successful LoadData with ONLINE_UPLOAD submissionType without arc enabled results in DataLoaded`() {
+    fun `Successful LoadData with ONLINE_UPLOAD submissionType without Studio enabled results in DataLoaded`() {
         val courseId = 1L
         val assignment = assignment.copy(submissionTypesRaw = listOf("online_upload"))
         val expectedEvent = AssignmentDetailsEvent.DataLoaded(
             DataResult.Success(assignment),
             false,
+            DataResult.Fail(null),
             DataResult.Fail(null),
             null,
             null
@@ -350,6 +357,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
             DataResult.Success(assignment),
             false,
             DataResult.Fail(null),
+            DataResult.Fail(null),
             null,
             null
         )
@@ -380,7 +388,8 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
         val expectedEvent = AssignmentDetailsEvent.DataLoaded(
             DataResult.Success(assignment),
             false,
-            DataResult.Fail(null),
+            DataResult.Fail(),
+            DataResult.Fail(),
             null,
             null
         )
@@ -413,6 +422,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
                 DataResult.Success(assignment),
                 false,
                 DataResult.Fail(null),
+                DataResult.Fail(null),
                 submission,
                 DataResult.Success(quiz)
         )
@@ -444,6 +454,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
         val expectedEvent = AssignmentDetailsEvent.DataLoaded(
                 DataResult.Success(assignment),
                 false,
+                DataResult.Fail(null),
                 DataResult.Fail(null),
                 submission,
                 DataResult.Fail(null)
@@ -478,6 +489,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
         val expectedEvent = AssignmentDetailsEvent.DataLoaded(
                 DataResult.Success(assignment),
                 false,
+                DataResult.Fail(null),
                 DataResult.Fail(null),
                 submission,
                 DataResult.Fail(authFailure)
@@ -682,21 +694,30 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     }
 
     @Test
-    fun `Displays arc when submission type is fileUpload and arc is enabled`() {
+    fun `Displays Studio when submission type is fileUpload and Studio is enabled`() {
         val course = Course()
+        val studioLTITool = LTITool(url = "instructuremedia.com/lti/launch")
+        val domain = "domain.com"
+        val ltiUrl = "domain.com//courses/0/external_tools/0/resource_selection?launch_type=homework_submission&assignment_id=2468"
+
+        mockkStatic(ApiPrefs::class)
+        every { ApiPrefs.fullDomain } returns domain
 
         val assignment = assignment.copy(submissionTypesRaw = listOf("online_upload"))
-        connection.accept(AssignmentDetailsEffect.ShowSubmitDialogView(assignment, course, true))
+        connection.accept(AssignmentDetailsEffect.ShowSubmitDialogView(assignment, course, true, studioLTITool))
 
         verify(timeout = 100) {
             view.showSubmitDialogView(
                 assignment,
                 course.id,
-                SubmissionTypesVisibilities(fileUpload = true, arcUpload = true)
+                SubmissionTypesVisibilities(fileUpload = true, studioUpload = true),
+                ltiUrl,
+                studioLTITool.name
             )
         }
 
         confirmVerified(view)
+        unmockkStatic(ApiPrefs::class)
     }
 
     @Test

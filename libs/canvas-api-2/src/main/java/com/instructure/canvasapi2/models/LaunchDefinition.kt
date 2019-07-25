@@ -34,6 +34,6 @@ data class LaunchDefinition(
 
     companion object {
         val _GAUGE_DOMAIN = "gauge.instructure.com"
-        val _ARC_DOMAIN = "arc.instructure.com"
+        val _STUDIO_DOMAIN = "arc.instructure.com" // NOTE: The subdomain hasn't changed to reflect the rebranding of Arc -> Studio yet
     }
 }

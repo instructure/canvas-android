@@ -304,7 +304,7 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
     }
 
     override fun gotLaunchDefinitions(launchDefinitions: List<LaunchDefinition>?) {
-        val arcLaunchDefinition = launchDefinitions?.firstOrNull { it.domain == LaunchDefinition._ARC_DOMAIN }
+        val arcLaunchDefinition = launchDefinitions?.firstOrNull { it.domain == LaunchDefinition._STUDIO_DOMAIN }
         val gaugeLaunchDefinition = launchDefinitions?.firstOrNull { it.domain == LaunchDefinition._GAUGE_DOMAIN }
 
         navigationDrawerItem_arc.setVisible(arcLaunchDefinition != null)

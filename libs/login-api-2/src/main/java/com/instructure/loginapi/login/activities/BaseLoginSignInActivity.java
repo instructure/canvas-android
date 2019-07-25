@@ -477,7 +477,7 @@ public abstract class BaseLoginSignInActivity extends AppCompatActivity implemen
 
         //If an authentication provider is supplied we need to pass that along. This should only be appended if one exists.
         String authenticationProvider = accountDomain.getAuthenticationProvider();
-        if(authenticationProvider != null && authenticationProvider.length() > 0) {
+        if(authenticationProvider != null && authenticationProvider.length() > 0 && !authenticationProvider.equalsIgnoreCase("null")) {
             Logger.d("authentication_provider=" + authenticationProvider);
             builder.appendQueryParameter("authentication_provider", authenticationProvider);
         }

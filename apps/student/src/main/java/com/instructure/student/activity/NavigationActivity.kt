@@ -114,7 +114,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                 R.id.navigationDrawerItem_files -> {
                     ApiPrefs.user?.let { handleRoute(FileListFragment.makeRoute(it)) }
                 }
-                R.id.navigationDrawerItem_gauge, R.id.navigationDrawerItem_arc -> {
+                R.id.navigationDrawerItem_gauge, R.id.navigationDrawerItem_studio -> {
                     val launchDefinition = v.tag as? LaunchDefinition
                     if (launchDefinition != null) startActivity(LTIActivity.createIntent(this@NavigationActivity, launchDefinition))
                 }
@@ -334,7 +334,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         //Navigation items
         navigationDrawerItem_files.setOnClickListener(mNavigationDrawerItemClickListener)
         navigationDrawerItem_gauge.setOnClickListener(mNavigationDrawerItemClickListener)
-        navigationDrawerItem_arc.setOnClickListener(mNavigationDrawerItemClickListener)
+        navigationDrawerItem_studio.setOnClickListener(mNavigationDrawerItemClickListener)
         navigationDrawerItem_bookmarks.setOnClickListener(mNavigationDrawerItemClickListener)
         navigationDrawerItem_changeUser.setOnClickListener(mNavigationDrawerItemClickListener)
         navigationDrawerItem_logout.setOnClickListener(mNavigationDrawerItemClickListener)
@@ -820,12 +820,12 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     //endregion
 
     override fun gotLaunchDefinitions(launchDefinitions: List<LaunchDefinition>?) {
-        val arcLaunchDefinition = launchDefinitions?.firstOrNull { it.domain == LaunchDefinition._ARC_DOMAIN }
+        val studioLaunchDefinition = launchDefinitions?.firstOrNull { it.domain == LaunchDefinition._STUDIO_DOMAIN }
         val gaugeLaunchDefinition = launchDefinitions?.firstOrNull { it.domain == LaunchDefinition._GAUGE_DOMAIN }
 
-        val arc = findViewById<View>(R.id.navigationDrawerItem_arc)
-        arc.visibility = if (arcLaunchDefinition != null) View.VISIBLE else View.GONE
-        arc.tag = arcLaunchDefinition
+        val studio = findViewById<View>(R.id.navigationDrawerItem_studio)
+        studio.visibility = if (studioLaunchDefinition != null) View.VISIBLE else View.GONE
+        studio.tag = studioLaunchDefinition
 
         val gauge = findViewById<View>(R.id.navigationDrawerItem_gauge)
         gauge.visibility = if (gaugeLaunchDefinition != null) View.VISIBLE else View.GONE

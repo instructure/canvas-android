@@ -947,7 +947,6 @@
     <string name="select">Auswählen</string>
     <string name="choice_position">Wahl %d</string>
     <string name="updating_module_info">Aktualisierung der Modulinformationen&#8230;</string>
-    <string name="arc">Arc</string>
     <string name="pending_review">Ausstehende Überprüfung</string>
     <string name="totalPoints">%s Pkte.</string>
     <string name="totalPointsText">Gesamtpunkte</string>

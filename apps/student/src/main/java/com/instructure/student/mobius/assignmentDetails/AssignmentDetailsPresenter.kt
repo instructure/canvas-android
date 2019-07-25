@@ -54,7 +54,7 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
         }
 
         val assignment = model.assignmentResult.dataOrNull!!
-        assignment.isArcEnabled = model.isArcEnabled
+        assignment.isStudioEnabled = model.isStudioEnabled
 
         val quiz = model.quizResult?.dataOrNull
 
