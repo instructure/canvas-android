@@ -53,6 +53,11 @@
     <string name="resubmitAssignment">Resubmit Assignment</string>
     <string name="launchExternalTool">Launch External Tool</string>
     <string name="preview">Preview</string>
+    <string name="submissionUploadFailedMessage">One or more files failed to upload. Check your internet connection and retry to submit.</string>
+    <string name="submissionUploadByteProgress">%1$s of %2$s</string>
+    <string name="submissionSuccessTitle">Submission Success!</string>
+    <string name="submissionSuccessMessage">Your assignment was successfully submitted. Enjoy your day!</string>
+    <string name="cancelAllSubmissions">Cancel All Assignment Submissions</string>
 
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">No preview available for URLs using \'http://\'</string>

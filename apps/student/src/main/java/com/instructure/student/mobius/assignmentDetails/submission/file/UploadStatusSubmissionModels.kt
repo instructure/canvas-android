@@ -16,16 +16,19 @@
  */
 package com.instructure.student.mobius.assignmentDetails.submission.file
 
-import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
+import com.instructure.student.FileSubmission
 
 sealed class UploadStatusSubmissionEvent {
+    object OnRetryClicked : UploadStatusSubmissionEvent()
+    object OnCancelClicked : UploadStatusSubmissionEvent()
+    object OnCancelAllClicked : UploadStatusSubmissionEvent()
     data class OnFilesRefreshed(
         val failed: Boolean,
         val submissionId: Long,
-        val files: List<FileSubmitObject>
+        val files: List<FileSubmission>
     ) : UploadStatusSubmissionEvent()
 
-    data class OnPersistedSubmissionLoaded(val failed: Boolean, val files: List<FileSubmitObject>) :
+    data class OnPersistedSubmissionLoaded(val assignmentName: String?, val failed: Boolean, val files: List<FileSubmission>) :
         UploadStatusSubmissionEvent()
 
     data class OnUploadProgressChanged(
@@ -33,10 +36,16 @@ sealed class UploadStatusSubmissionEvent {
         val submissionId: Long,
         val uploaded: Long
     ) : UploadStatusSubmissionEvent()
+    
+    data class OnDeleteFile(val position: Int) : UploadStatusSubmissionEvent()
 }
 
 sealed class UploadStatusSubmissionEffect {
+    object OnCancelAllSubmissions : UploadStatusSubmissionEffect()
+    data class RetrySubmission(val submissionId: Long) : UploadStatusSubmissionEffect()
     data class LoadPersistedFiles(val submissionId: Long) : UploadStatusSubmissionEffect()
+    data class OnDeleteSubmission(val submissionId: Long) : UploadStatusSubmissionEffect()
+    data class OnDeleteFileFromSubmission(val fileId: Long) : UploadStatusSubmissionEffect()
 }
 
 data class UploadStatusSubmissionModel(
@@ -44,6 +53,6 @@ data class UploadStatusSubmissionModel(
     val assignmentName: String? = null,
     val isLoading: Boolean = false,
     val isFailed: Boolean = false,
-    val uploadedBytes: Int? = null,
-    val files: List<FileSubmitObject> = emptyList()
+    val uploadedBytes: Long? = null,
+    val files: List<FileSubmission> = emptyList()
 )

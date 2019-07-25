@@ -20,10 +20,10 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.ProgressEvent
 import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.pandautils.utils.Const
+import com.instructure.student.FileSubmission
 import com.instructure.student.db.Db
 import com.instructure.student.db.getInstance
 import com.instructure.student.mobius.assignmentDetails.submission.file.ui.UploadStatusSubmissionView
@@ -36,28 +36,29 @@ import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 
-class UploadStatusSubmissionEffectHandler(val context: Context, val submissionId: Long) : EffectHandler<UploadStatusSubmissionView, UploadStatusSubmissionEvent, UploadStatusSubmissionEffect>() {
+class UploadStatusSubmissionEffectHandler(val context: Context, val submissionId: Long) :
+    EffectHandler<UploadStatusSubmissionView, UploadStatusSubmissionEvent, UploadStatusSubmissionEffect>() {
 
-    internal val receiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            if (context == null || intent?.hasExtra(Const.SUBMISSION) == false) {
-                return // stop early if we don't have a context or if there's no submission id
-            }
+    internal var receiver: BroadcastReceiver? = null
 
-            val submissionId = intent!!.extras!!.getLong(Const.SUBMISSION)
+    private fun setupReceiver() {
+        receiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                if (context == null || intent?.hasExtra(Const.SUBMISSION) == false) {
+                    return // stop early if we don't have a context or if there's no submission id
+                }
 
-            if (submissionId != this@UploadStatusSubmissionEffectHandler.submissionId) {
-                return // Since there could be multiple submissions at the same time, we only care about events for our submission id
-            }
-            launch {
-                val data = loadPersistedData(submissionId, context)
-                consumer.accept(
-                    UploadStatusSubmissionEvent.OnFilesRefreshed(
-                        data.first,
-                        submissionId,
-                        data.second
+                val submissionId = intent!!.extras!!.getLong(Const.SUBMISSION)
+
+                if (submissionId != this@UploadStatusSubmissionEffectHandler.submissionId) {
+                    return // Since there could be multiple submissions at the same time, we only care about events for our submission id
+                }
+                launch {
+                    val (_, error, files) = loadPersistedData(submissionId, context)
+                    consumer.accept(
+                        UploadStatusSubmissionEvent.OnFilesRefreshed(error, submissionId, files)
                     )
-                )
+                }
             }
         }
     }
@@ -78,6 +79,7 @@ class UploadStatusSubmissionEffectHandler(val context: Context, val submissionId
     }
 
     override fun connect(output: Consumer<UploadStatusSubmissionEvent>): Connection<UploadStatusSubmissionEffect> {
+        setupReceiver()
         EventBus.getDefault().register(this)
         context.registerReceiver(receiver, IntentFilter(SubmissionService.FILE_SUBMISSION_FINISHED))
         return super.connect(output)
@@ -85,7 +87,10 @@ class UploadStatusSubmissionEffectHandler(val context: Context, val submissionId
 
     override fun dispose() {
         EventBus.getDefault().unregister(this)
-        context.unregisterReceiver(receiver)
+        if (receiver != null) {
+            context.unregisterReceiver(receiver)
+            receiver = null
+        }
         super.dispose()
     }
 
@@ -93,14 +98,23 @@ class UploadStatusSubmissionEffectHandler(val context: Context, val submissionId
         when (effect) {
             is UploadStatusSubmissionEffect.LoadPersistedFiles -> {
                 launch(Dispatchers.Main) {
-                    val data = loadPersistedData(effect.submissionId, context)
+                    val (name, error, files) = loadPersistedData(effect.submissionId, context)
                     consumer.accept(
-                        UploadStatusSubmissionEvent.OnPersistedSubmissionLoaded(
-                            data.first,
-                            data.second
-                        )
+                        UploadStatusSubmissionEvent.OnPersistedSubmissionLoaded(name, error, files)
                     )
                 }
+            }
+            is UploadStatusSubmissionEffect.OnDeleteSubmission -> {
+                launch { deleteSubmission(effect.submissionId) }
+            }
+            is UploadStatusSubmissionEffect.OnCancelAllSubmissions -> {
+                launch { clearAllSubmissions() }
+            }
+            is UploadStatusSubmissionEffect.RetrySubmission -> {
+                launch(Dispatchers.Main) { retrySubmission(effect.submissionId) }
+            }
+            is UploadStatusSubmissionEffect.OnDeleteFileFromSubmission -> {
+                launch { deleteFileForSubmission(effect.fileId) }
             }
         }.exhaustive
     }
@@ -108,20 +122,54 @@ class UploadStatusSubmissionEffectHandler(val context: Context, val submissionId
     private fun loadPersistedData(
         submissionId: Long,
         context: Context
-    ): Pair<Boolean, List<FileSubmitObject>> {
-        val db = Db.getInstance(context)
-        val error = db.submissionQueries.getSubmissionById(submissionId).executeAsOne().errorFlag
-        val files = db.fileSubmissionQueries.getFilesForSubmissionId(submissionId).executeAsList()
-            .map { file ->
-                FileSubmitObject(
-                    file.name!!,
-                    file.size!!,
-                    file.contentType!!,
-                    file.fullPath!!,
-                    file.error
-                )
-            }
+    ): Triple<String?, Boolean, List<FileSubmission>> {
+        // If we can't find the submissionId, it was successful and was deleted from the database
+        val successSubmission =
+            Triple<String?, Boolean, List<FileSubmission>>(null, false, emptyList())
 
-        return Pair(error, files)
+        val db = Db.getInstance(context)
+        val submission = db.submissionQueries.getSubmissionById(submissionId).executeAsOneOrNull()
+            ?: return successSubmission
+        val files = db.fileSubmissionQueries.getFilesForSubmissionId(submissionId).executeAsList()
+
+        return Triple(submission.assignmentName, submission.errorFlag, files)
+    }
+
+    private fun deleteSubmission(submissionId: Long) {
+        val db = Db.getInstance(context)
+        db.fileSubmissionQueries.deleteFilesForSubmissionId(submissionId)
+        db.submissionQueries.deleteSubmissionById(submissionId)
+
+        view?.submissionDeleted()
+    }
+
+    private fun deleteFileForSubmission(fileId: Long) {
+        val db = Db.getInstance(context)
+        db.fileSubmissionQueries.deleteFileById(fileId)
+    }
+
+    /**
+     * TODO: Support this better
+     * This has to clear all submissions to stop any that are in progress. Once the file/submission
+     * services have been merged together, we can add support to cancel a submission for a specific
+     * assignment.
+     */
+    private fun clearAllSubmissions() {
+        // Cancel Submission/FileUpload services, this will also mark the submissions as errors
+        view?.getServiceIntents()?.forEach { context.stopService(it) }
+    }
+
+    /**
+     * TODO: Add support for retry
+     * This doesn't work currently. The problem is that the FileUploadService will delete the temp
+     * directory where the files are accessible when onDestroy is called. Any retry after the service
+     * has "finished" will fail as it can no longer find the file on the device.
+     */
+    private fun retrySubmission(submissionId: Long) {
+        val canvasContext =
+            Db.getInstance(context).submissionQueries.getSubmissionById(submissionId).executeAsOne().canvasContext!!
+        SubmissionService.retryFileSubmission(context, canvasContext, submissionId)
+
+        view?.submissionRetrying()
     }
 }

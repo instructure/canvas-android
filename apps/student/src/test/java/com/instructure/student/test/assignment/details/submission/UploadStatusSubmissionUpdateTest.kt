@@ -16,7 +16,7 @@
  */
 package com.instructure.student.test.assignment.details.submission
 
-import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
+import com.instructure.student.FileSubmission
 import com.instructure.student.mobius.assignmentDetails.submission.file.UploadStatusSubmissionEffect
 import com.instructure.student.mobius.assignmentDetails.submission.file.UploadStatusSubmissionEvent
 import com.instructure.student.mobius.assignmentDetails.submission.file.UploadStatusSubmissionModel
@@ -36,15 +36,27 @@ class UploadStatusSubmissionUpdateTest : Assert() {
     private val initSpec = InitSpec(UploadStatusSubmissionUpdate()::init)
     private val updateSpec = UpdateSpec(UploadStatusSubmissionUpdate()::update)
 
-    private lateinit var initFile: FileSubmitObject
+    private lateinit var initFile: FileSubmission
     private lateinit var initModel: UploadStatusSubmissionModel
+    private lateinit var assignmentName: String
     private val submissionId = 123L
 
     @Before
     fun setup() {
-        initFile = FileSubmitObject("Test File", 1L, "contentType", "fullPath")
+        assignmentName = "Assignment"
         initModel = UploadStatusSubmissionModel(
             submissionId = submissionId
+        )
+        initFile = FileSubmission.Impl(
+            12L,
+            submissionId,
+            null,
+            "Test File",
+            1L,
+            "contentType",
+            "fullPath",
+            null,
+            false
         )
     }
 
@@ -66,12 +78,17 @@ class UploadStatusSubmissionUpdateTest : Assert() {
     @Test
     fun `OnPersistedSubmissionLoaded event results in model change`() {
         val startModel = initModel.copy(isLoading = true, isFailed = false, files = emptyList())
-        val expectedModel = startModel.copy(isLoading = false, files = listOf(initFile))
+        val expectedModel = startModel.copy(
+            isLoading = false,
+            files = listOf(initFile),
+            assignmentName = assignmentName
+        )
 
         updateSpec
             .given(startModel)
             .whenEvent(
                 UploadStatusSubmissionEvent.OnPersistedSubmissionLoaded(
+                    assignmentName,
                     false,
                     listOf(initFile)
                 )
@@ -87,13 +104,18 @@ class UploadStatusSubmissionUpdateTest : Assert() {
     @Test
     fun `OnPersistedSubmissionLoaded with failed submission event results in model change`() {
         val startModel = initModel.copy(isLoading = true, isFailed = false, files = emptyList())
-        val expectedModel =
-            startModel.copy(isLoading = false, isFailed = true, files = listOf(initFile))
+        val expectedModel = startModel.copy(
+            isLoading = false,
+            isFailed = true,
+            files = listOf(initFile),
+            assignmentName = assignmentName
+        )
 
         updateSpec
             .given(startModel)
             .whenEvent(
                 UploadStatusSubmissionEvent.OnPersistedSubmissionLoaded(
+                    assignmentName,
                     true,
                     listOf(initFile)
                 )
@@ -109,16 +131,22 @@ class UploadStatusSubmissionUpdateTest : Assert() {
     @Test
     fun `OnPersistedSubmissionLoaded event results in model files getting reset`() {
         val startModel = initModel.copy(
+            assignmentName = assignmentName + "bad",
             isLoading = true,
             isFailed = false,
-            files = listOf(FileSubmitObject("Bad File", 0L, "", ""))
+            files = listOf(FileSubmission.Impl(0, 0, null, null, null, null, null, null, false))
         )
-        val expectedModel = startModel.copy(isLoading = false, files = listOf(initFile))
+        val expectedModel = startModel.copy(
+            isLoading = false,
+            files = listOf(initFile),
+            assignmentName = assignmentName
+        )
 
         updateSpec
             .given(startModel)
             .whenEvent(
                 UploadStatusSubmissionEvent.OnPersistedSubmissionLoaded(
+                    assignmentName,
                     false,
                     listOf(initFile)
                 )
@@ -136,7 +164,7 @@ class UploadStatusSubmissionUpdateTest : Assert() {
         val startModel = initModel.copy(
             isFailed = false,
             uploadedBytes = 1,
-            files = listOf(FileSubmitObject("Bad File", 0L, "", ""))
+            files = listOf(FileSubmission.Impl(0, 0, null, null, null, null, null, null, false))
         )
         val expectedModel = startModel.copy(uploadedBytes = null, files = listOf(initFile))
 
@@ -222,6 +250,95 @@ class UploadStatusSubmissionUpdateTest : Assert() {
                 assertThatNext(
                     NextMatchers.hasModel(expectedModel),
                     NextMatchers.hasNoEffects()
+                )
+            )
+    }
+
+    @Test
+    fun `OnCancelClicked results in an OnDeleteSubmission effect`() {
+        updateSpec
+            .given(initModel)
+            .whenEvent(
+                UploadStatusSubmissionEvent.OnCancelClicked
+            )
+            .then(
+                assertThatNext(
+                    NextMatchers.hasNoModel(),
+                    NextMatchers.hasEffects<UploadStatusSubmissionModel, UploadStatusSubmissionEffect>(
+                        UploadStatusSubmissionEffect.OnDeleteSubmission(submissionId)
+                    )
+                )
+            )
+    }
+
+    @Test
+    fun `OnCancelAllClicked results in an OnCancelAllSubmissions effect`() {
+        updateSpec
+            .given(initModel)
+            .whenEvent(
+                UploadStatusSubmissionEvent.OnCancelAllClicked
+            )
+            .then(
+                assertThatNext(
+                    NextMatchers.hasNoModel(),
+                    NextMatchers.hasEffects<UploadStatusSubmissionModel, UploadStatusSubmissionEffect>(
+                        UploadStatusSubmissionEffect.OnCancelAllSubmissions
+                    )
+                )
+            )
+    }
+
+    @Test
+    fun `OnRetryClicked results in a RetrySubmission effect`() {
+        updateSpec
+            .given(initModel)
+            .whenEvent(
+                UploadStatusSubmissionEvent.OnRetryClicked
+            )
+            .then(
+                assertThatNext(
+                    NextMatchers.hasNoModel(),
+                    NextMatchers.hasEffects<UploadStatusSubmissionModel, UploadStatusSubmissionEffect>(
+                        UploadStatusSubmissionEffect.RetrySubmission(submissionId)
+                    )
+                )
+            )
+    }
+
+    @Test
+    fun `OnDeleteFile results in a OnDeleteSubmission effect when only 1 file exists`() {
+        val startModel = initModel.copy(files = listOf(initFile))
+        updateSpec
+            .given(startModel)
+            .whenEvent(
+                UploadStatusSubmissionEvent.OnDeleteFile(0)
+            )
+            .then(
+                assertThatNext(
+                    NextMatchers.hasNoModel(),
+                    NextMatchers.hasEffects<UploadStatusSubmissionModel, UploadStatusSubmissionEffect>(
+                        UploadStatusSubmissionEffect.OnDeleteSubmission(submissionId)
+                    )
+                )
+            )
+    }
+
+    @Test
+    fun `OnDeleteFile results in a OnDeleteFileFromSubmission effect with a model change`() {
+        val deleteFile = FileSubmission.Impl(409L, submissionId, null, null, null, null, null, null, false)
+        val startModel = initModel.copy(files = listOf(initFile, deleteFile))
+        val expectedModel = initModel.copy(files = listOf(initFile))
+        updateSpec
+            .given(startModel)
+            .whenEvent(
+                UploadStatusSubmissionEvent.OnDeleteFile(1)
+            )
+            .then(
+                assertThatNext(
+                    NextMatchers.hasModel(expectedModel),
+                    NextMatchers.hasEffects<UploadStatusSubmissionModel, UploadStatusSubmissionEffect>(
+                        UploadStatusSubmissionEffect.OnDeleteFileFromSubmission(deleteFile.id)
+                    )
                 )
             )
     }
