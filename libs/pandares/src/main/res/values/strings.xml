@@ -96,6 +96,26 @@
     <string name="rubricEmptyMessage">There is no rubric for this assignment</string>
     <string name="rubricViewLongDescription">View long description</string>
 
+    <!-- Student Submission Comments -->
+    <string name="assignmentSubmissionCommentUpload">Uploading comment for %s</string>
+    <string name="assignmentSubmissionCommentUploadingFile">Uploading file %1$d of %2$d</string>
+    <string name="assignmentSubmissionCommentUploadingMedia">Uploading media file</string>
+    <string name="assignmentSubmissionCommentError">Comment upload failed for %s</string>
+    <string name="chooseFileForCommentSubtext">Attach files to your comment by tapping an option below</string>
+    <string name="emptySubmissionCommentsSubtext">Have questions about your assignment? Message your instructure.</string>
+    <string name="submissionCommentErrorMessage">This message could not be sent. Tap to try again.</string>
+    <string name="mediaUploadAudio">Media Upload - Audio</string>
+    <string name="mediaUploadVideo">Media Upload - Video</string>
+    <string name="commentSubmissionTypeText">Text Submission</string>
+    <string name="commentSubmissionTypeExternalTool">External Tool Submission</string>
+    <string name="commentSubmissionTypeDiscussion">Discussion Submission</string>
+    <string name="commentSubmissionTypeQuiz">Quiz Submission</string>
+    <string name="commentSubmissionTypeQuizAttempt">Attempt %d</string>
+    <string name="commentSubmissionTypeMediaFile">Media File</string>
+    <string name="commentSubmissionTypeAudio">Audio</string>
+    <string name="commentSubmissionTypeVideo">Video</string>
+    <string name="submissionCommentSubmittedFiles">Submitted files:</string>
+
     <!-- Profile Fragment Strings -->
     <string name="canvasVersionNum">Version:</string>
 

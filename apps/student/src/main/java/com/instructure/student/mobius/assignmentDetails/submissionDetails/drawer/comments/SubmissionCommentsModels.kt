@@ -16,23 +16,26 @@
  */
 package com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments
 
-import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.Submission
-import com.instructure.canvasapi2.models.SubmissionComment
+import com.instructure.canvasapi2.models.*
 import java.io.File
 
 sealed class SubmissionCommentsEvent {
-    object AddMediaCommentClicked : SubmissionCommentsEvent()
+    object AddFilesClicked : SubmissionCommentsEvent()
     object AddAudioCommentClicked : SubmissionCommentsEvent()
     object AddVideoCommentClicked : SubmissionCommentsEvent()
-    object MediaCommentDialogClosed : SubmissionCommentsEvent()
+    object AddFilesDialogClosed : SubmissionCommentsEvent()
     object UploadFilesClicked : SubmissionCommentsEvent()
     data class SendTextCommentClicked(val message: String) : SubmissionCommentsEvent()
     data class SendMediaCommentClicked(val file: File) : SubmissionCommentsEvent()
     data class SubmissionCommentAdded(val comment: SubmissionComment) : SubmissionCommentsEvent()
     data class PendingSubmissionsUpdated(val ids: List<Long>) : SubmissionCommentsEvent()
     data class RetryCommentUploadClicked(val commentId: Long) : SubmissionCommentsEvent()
+    data class SubmissionClicked(val submission: Submission) : SubmissionCommentsEvent()
+    data class SubmissionAttachmentClicked(
+        val submission: Submission,
+        val attachment: Attachment
+    ) : SubmissionCommentsEvent()
+    data class CommentAttachmentClicked(val attachment: Attachment) : SubmissionCommentsEvent()
 }
 
 sealed class SubmissionCommentsEffect {
@@ -40,6 +43,7 @@ sealed class SubmissionCommentsEffect {
     object ShowVideoRecordingView : SubmissionCommentsEffect()
     object ShowMediaCommentDialog : SubmissionCommentsEffect()
     object ClearTextInput : SubmissionCommentsEffect()
+    object ScrollToBottom : SubmissionCommentsEffect()
     data class SendTextComment(
         val message: String,
         val assignmentId: Long,
@@ -62,6 +66,20 @@ sealed class SubmissionCommentsEffect {
     ) : SubmissionCommentsEffect()
 
     data class RetryCommentUpload(val commentId: Long) : SubmissionCommentsEffect()
+
+    data class BroadcastSubmissionSelected(val submission: Submission) : SubmissionCommentsEffect()
+
+    data class BroadcastSubmissionAttachmentSelected(
+        val submission: Submission,
+        val attachment: Attachment
+    ) : SubmissionCommentsEffect()
+
+    data class OpenMedia(
+        val canvasContext: CanvasContext,
+        val contentType: String,
+        val url: String,
+        val fileName: String
+    ) : SubmissionCommentsEffect()
 }
 
 data class SubmissionCommentsModel(
@@ -69,6 +87,6 @@ data class SubmissionCommentsModel(
     val submissionHistory: List<Submission>,
     val assignment: Assignment,
     val pendingCommentIds: List<Long> = emptyList(),
-    val isMediaCommentEnabled: Boolean = true,
+    val isFileButtonEnabled: Boolean = true,
     val showSendButton: Boolean = false
 )

@@ -55,6 +55,12 @@ class SubmissionDetailsFragment :
                 is SubmissionDetailsSharedEvent.FileSelected -> SubmissionDetailsEvent.AttachmentClicked(it.file)
                 is SubmissionDetailsSharedEvent.AudioRecordingViewLaunched -> SubmissionDetailsEvent.AudioRecordingClicked
                 is SubmissionDetailsSharedEvent.VideoRecordingViewLaunched -> SubmissionDetailsEvent.VideoRecordingClicked
+                is SubmissionDetailsSharedEvent.SubmissionClicked -> {
+                    SubmissionDetailsEvent.SubmissionClicked(it.submission.attempt)
+                }
+                is SubmissionDetailsSharedEvent.SubmissionAttachmentClicked -> {
+                    SubmissionDetailsEvent.SubmissionAndAttachmentClicked(it.submission.attempt, it.attachment)
+                }
             }
         }
     )

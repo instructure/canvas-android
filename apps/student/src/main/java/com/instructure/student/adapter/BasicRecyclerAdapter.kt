@@ -100,6 +100,15 @@ abstract class BasicRecyclerAdapter<T : Any, C : BasicItemCallback>(val callback
         registeredBinders[item::class.java] as? BasicItemBinder<I, C>
                 ?: throw IllegalStateException("No binder registered for ${item::class.java.name}")
 
+    @Suppress("UNCHECKED_CAST")
+    internal fun getBinderByType(viewType: Int): BasicItemBinder<*, C> =
+        registeredBinders.values.find { it.viewType == viewType }
+                ?: throw IllegalStateException("No binder registered for view type '$viewType'")
+
+    override fun onViewRecycled(holder: ViewHolder) {
+        getBinderByType(holder.itemViewType).onRecycle(holder)
+    }
+
     private fun performBind(
         item: T,
         holder: ViewHolder,
@@ -108,6 +117,7 @@ abstract class BasicRecyclerAdapter<T : Any, C : BasicItemCallback>(val callback
         val binder = getBinder(item)
         when (val behavior = binder.bindBehavior) {
             is BasicItemBinder.Item -> behavior.onBind(holder.itemView, item, callback, itemDiff)
+            is BasicItemBinder.ItemWithHolder -> behavior.onBind(holder.itemView, holder, item, callback, itemDiff)
             is BasicItemBinder.Header -> {
                 if (behavior.collapsible) {
                     val groupId = binder.getItemId(item)
@@ -190,6 +200,10 @@ abstract class BasicItemBinder<T : Any, C : BasicItemCallback> {
     fun createViewHolder(context: Context, parent: ViewGroup): ViewHolder {
         val view = LayoutInflater.from(context).inflate(layoutResId, parent, false)
         initView(view)
+        return constructViewHolder(context, view)
+    }
+
+    open fun constructViewHolder(context: Context, view: View): ViewHolder {
         return object : ViewHolder(view) {}
     }
 
@@ -198,6 +212,8 @@ abstract class BasicItemBinder<T : Any, C : BasicItemCallback> {
     open val comparator: Comparator<T> = Comparator { _, _ -> -1 }
 
     abstract val bindBehavior: BindBehavior<T, C>
+
+    open fun onRecycle(holder: ViewHolder) {}
 
     // region BindBehavior
 
@@ -211,6 +227,10 @@ abstract class BasicItemBinder<T : Any, C : BasicItemCallback> {
 
     inner class Item(
         val onBind: View.(item: T, callback: C, diff: ItemDiff<T>?) -> Unit
+    ) : BindBehavior<T, C>()
+
+    inner class ItemWithHolder(
+        val onBind: View.(holder: ViewHolder, item: T, callback: C, diff: ItemDiff<T>?) -> Unit
     ) : BindBehavior<T, C>()
 
     inner class Header(

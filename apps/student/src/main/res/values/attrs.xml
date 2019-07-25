@@ -156,4 +156,21 @@
         <attr name="ctv_color" format="color"/>
     </declare-styleable>
 
+    <declare-styleable name="CommentTextView">
+        <attr name="bubbleColor" format="color"/>
+        <attr name="targetAvatarId" format="reference"/>
+    </declare-styleable>
+
+    <declare-styleable name="CommentView">
+        <attr name="comment_direction" format="enum">
+            <enum name="INCOMING" value="0"/>
+            <enum name="OUTGOING" value="1"/>
+        </attr>
+        <attr name="comment_bubbleColor" format="color"/>
+        <attr name="comment_textColor" format="color"/>
+        <attr name="comment_previewText" format="string"/>
+        <attr name="comment_previewName" format="string"/>
+        <attr name="comment_previewAvatar" format="reference"/>
+    </declare-styleable>
+
 </resources>

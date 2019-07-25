@@ -23,8 +23,6 @@ import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.validOrNull
 import com.instructure.pandautils.utils.AssignmentUtils2
-import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.SubmissionCommentsSharedEvent
-import com.instructure.student.mobius.common.ChannelSource
 import com.instructure.student.mobius.common.ui.UpdateInit
 import com.instructure.student.util.Const
 import com.spotify.mobius.First
@@ -90,6 +88,23 @@ class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDet
                     Next.next<SubmissionDetailsModel, SubmissionDetailsEffect>(
                         model.copy(selectedAttachmentId = event.file.id),
                         setOf(SubmissionDetailsEffect.ShowSubmissionContentType(content))
+                    )
+                }
+            }
+            is SubmissionDetailsEvent.SubmissionAndAttachmentClicked -> {
+                if (event.submissionAttempt == model.selectedSubmissionAttempt
+                    && model.selectedAttachmentId == event.attachment.id) {
+                    Next.noChange<SubmissionDetailsModel, SubmissionDetailsEffect>()
+                } else {
+                    val content = getAttachmentContent(event.attachment)
+                    Next.next<SubmissionDetailsModel, SubmissionDetailsEffect>(
+                        model.copy(
+                            selectedSubmissionAttempt = event.submissionAttempt,
+                            selectedAttachmentId = event.attachment.id
+                        ),
+                        setOf(
+                            SubmissionDetailsEffect.ShowSubmissionContentType(content)
+                        )
                     )
                 }
             }

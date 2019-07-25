@@ -57,6 +57,7 @@ import com.bumptech.glide.load.resource.bitmap.DownsampleStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.signature.ObjectKey
+import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.ContextKeeper
@@ -684,3 +685,20 @@ fun Toolbar?.addSearch(hintText: String? = null, @ColorInt color: Int = Color.WH
 fun Toolbar?.closeSearch() : Boolean {
     return this?.menu?.findItem(R.id.search)?.collapseActionView() == true
 }
+
+val Attachment.iconRes: Int
+    get() = when {
+        contentType == null -> R.drawable.vd_utils_attachment
+        contentType!!.startsWith("image") -> R.drawable.vd_image
+        contentType!!.startsWith("video") -> R.drawable.vd_utils_media
+        contentType!!.startsWith("audio") -> R.drawable.vd_audio
+        else -> when (filename!!.substringAfterLast('.', "").toLowerCase()) {
+            "doc", "docx" -> R.drawable.vd_utils_document
+            "txt" -> R.drawable.vd_utils_document
+            "rtf" -> R.drawable.vd_utils_document
+            "pdf" -> R.drawable.vd_utils_pdf
+            "xls" -> R.drawable.vd_utils_document
+            "zip","tar", "7z", "apk", "jar", "rar" -> R.drawable.vd_utils_attachment
+            else -> R.drawable.vd_utils_attachment
+        }
+    }

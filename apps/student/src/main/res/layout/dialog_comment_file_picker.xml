@@ -16,41 +16,59 @@
   ~
   -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <TextView
         android:id="@+id/audioComment"
+        style="@style/TextFont.Regular"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/TextFont.Regular"
-        android:text="@string/addAudioComment"
-        android:textSize="16sp"
-        android:drawableStart="@drawable/vd_audio"
-        android:paddingTop="14dp"
-        android:paddingBottom="14dp"
-        android:paddingStart="18dp"
-        android:paddingEnd="18dp"
-        android:drawablePadding="18dp"
         android:background="?attr/selectableItemBackground"
-        tools:visibility="visible" />
+        android:drawableStart="@drawable/vd_audio"
+        android:drawablePadding="18dp"
+        android:drawableTint="@color/defaultTextDark"
+        android:paddingStart="18dp"
+        android:paddingTop="14dp"
+        android:paddingEnd="18dp"
+        android:paddingBottom="14dp"
+        android:text="@string/addAudioComment"
+        android:textColor="@color/defaultTextDark"
+        android:textSize="16sp"/>
 
     <TextView
         android:id="@+id/videoComment"
+        style="@style/TextFont.Regular"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/TextFont.Regular"
-        android:text="@string/addVideoComment"
-        android:textSize="16sp"
-        android:drawableStart="@drawable/vd_video"
-        android:paddingTop="14dp"
-        android:paddingBottom="14dp"
-        android:paddingStart="18dp"
-        android:paddingEnd="18dp"
-        android:drawablePadding="18dp"
         android:background="?attr/selectableItemBackground"
-        tools:visibility="visible" />
+        android:drawableStart="@drawable/vd_video"
+        android:drawablePadding="18dp"
+        android:drawableTint="@color/defaultTextDark"
+        android:paddingStart="18dp"
+        android:paddingTop="14dp"
+        android:paddingEnd="18dp"
+        android:paddingBottom="14dp"
+        android:text="@string/addVideoComment"
+        android:textColor="@color/defaultTextDark"
+        android:textSize="16sp"/>
+
+    <TextView
+        android:id="@+id/fileComment"
+        style="@style/TextFont.Regular"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:drawableStart="@drawable/vd_files"
+        android:drawablePadding="18dp"
+        android:drawableTint="@color/defaultTextDark"
+        android:paddingStart="18dp"
+        android:paddingTop="14dp"
+        android:paddingEnd="18dp"
+        android:paddingBottom="14dp"
+        android:text="@string/addFile"
+        android:textColor="@color/defaultTextDark"
+        android:textSize="16sp"/>
 
 </LinearLayout>

@@ -49,7 +49,7 @@ class SubmissionCommentsFragment :
         ChannelSource.getSource<SubmissionCommentsSharedEvent, SubmissionCommentsEvent> {
             when (it) {
                 is SubmissionCommentsSharedEvent.SendMediaCommentClicked -> SubmissionCommentsEvent.SendMediaCommentClicked(it.file)
-                is SubmissionCommentsSharedEvent.MediaCommentDialogClosed -> SubmissionCommentsEvent.MediaCommentDialogClosed
+                is SubmissionCommentsSharedEvent.MediaCommentDialogClosed -> SubmissionCommentsEvent.AddFilesDialogClosed
             }
         },
         ChannelSource.getSource<SubmissionComment, SubmissionCommentsEvent> {
