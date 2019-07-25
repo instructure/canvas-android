@@ -33,7 +33,7 @@ class UrlSubmissionUploadUpdate : UpdateInit<UrlSubmissionUploadModel, UrlSubmis
             is UrlSubmissionUploadEvent.UrlChanged -> {
                 var url = event.url
 
-                if (url.toLowerCase().contains("http://")) {
+                if (url.contains("http://", true)) {
                     // Cleartext URLs won't render in a WebView (unless it redirects to https) - let's just show an error and clear the preview
                     return Next.next(model.copy(isSubmittable = true),
                         setOf(showEmptyPreviewEffect,
@@ -46,7 +46,7 @@ class UrlSubmissionUploadUpdate : UpdateInit<UrlSubmissionUploadModel, UrlSubmis
                 }
 
                 // Prepend 'https://' if the URL doesn't already have it
-                if (!url.toLowerCase().contains("https://")) {
+                if (!url.contains("https://", true)) {
                     // Adding https to the front if it's not there
                     url = "https://$url"
                 }

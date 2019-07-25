@@ -32,7 +32,7 @@ class UrlSubmissionUploadFragment : MobiusFragment<UrlSubmissionUploadModel, Url
 
     private val course by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
     private val assignmentId by LongArg(key = Const.ASSIGNMENT_ID)
-    private val initialUrl by StringArg(key = Const.URL, default = ApiPrefs.fullDomain)
+    private val initialUrl by StringArg(key = Const.URL)
     private val assignmentName by StringArg(key = Const.ASSIGNMENT_NAME)
 
     override fun makeEffectHandler(): EffectHandler<UrlSubmissionUploadView, UrlSubmissionUploadEvent, UrlSubmissionUploadEffect> = UrlSubmissionUploadEffectHandler()
