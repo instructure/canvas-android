@@ -50,6 +50,19 @@
         <item name="android:textColor">@color/canvasTextDark</item>
     </style>
 
+    <style name="FlatButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minWidth">48dp</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:padding">8dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@color/defaultActionColor</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <style name="ButtonCanvasTheme" parent="android:Widget.Holo.Light.Button">
         <item name="android:background">@drawable/button_states</item>
         <item name="android:minHeight">36dp</item>
