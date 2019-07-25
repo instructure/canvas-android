@@ -44,7 +44,7 @@ sealed class AssignmentDetailsEvent {
 sealed class AssignmentDetailsEffect {
     object ShowAudioRecordingView : AssignmentDetailsEffect()
     object ShowAudioRecordingError : AssignmentDetailsEffect()
-    data class UploadAudioMediaSubmission(val file: File, val course: Course, val assignment: Assignment) : AssignmentDetailsEffect()
+    data class UploadMediaSubmission(val file: File, val course: Course, val assignment: Assignment) : AssignmentDetailsEffect()
     data class ShowSubmitDialogView(val assignment: Assignment, val course: Course, val isArcEnabled: Boolean) : AssignmentDetailsEffect()
     data class ShowSubmissionView(val assignmentId: Long, val course: Course) : AssignmentDetailsEffect()
     data class ShowUploadStatusView(val submission: Submission) : AssignmentDetailsEffect()

@@ -60,7 +60,7 @@ class AssignmentDetailsUpdate : UpdateInit<AssignmentDetailsModel, AssignmentDet
                 Next.dispatch<AssignmentDetailsModel, AssignmentDetailsEffect>(setOf(AssignmentDetailsEffect.ShowAudioRecordingError))
             } else {
                 val assignment = model.assignmentResult!!.dataOrThrow
-                Next.dispatch<AssignmentDetailsModel, AssignmentDetailsEffect>(setOf(AssignmentDetailsEffect.UploadAudioMediaSubmission(event.file, model.course, assignment)))
+                Next.dispatch<AssignmentDetailsModel, AssignmentDetailsEffect>(setOf(AssignmentDetailsEffect.UploadMediaSubmission(event.file, model.course, assignment)))
             }
         }
         is AssignmentDetailsEvent.SubmissionStatusUpdated -> {

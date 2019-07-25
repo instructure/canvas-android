@@ -77,7 +77,7 @@ class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Lon
             is AssignmentDetailsEffect.ShowSubmitDialogView -> view?.showSubmitDialogView(effect.assignment, effect.course.id, getSubmissionTypesVisibilities(effect.assignment, effect.isArcEnabled))
             is AssignmentDetailsEffect.ShowSubmissionView -> view?.showSubmissionView(effect.assignmentId, effect.course)
             is AssignmentDetailsEffect.ShowUploadStatusView -> view?.showUploadStatusView(effect.submission.id) // TODO: show upload status for files/media, otherwise show the appropriate submission screen (text/url/etc...)
-            is AssignmentDetailsEffect.UploadAudioMediaSubmission -> uploadAudioRecording(effect.file, effect.assignment, effect.course)
+            is AssignmentDetailsEffect.UploadMediaSubmission -> uploadAudioRecording(effect.file, effect.assignment, effect.course)
             is AssignmentDetailsEffect.LoadData -> {
                 loadData(effect)
             }
