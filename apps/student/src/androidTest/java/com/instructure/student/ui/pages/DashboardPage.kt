@@ -18,17 +18,32 @@
 
 package com.instructure.student.ui.pages
 
+import android.view.View
+import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.contrib.RecyclerViewActions
+import androidx.test.espresso.matcher.ViewMatchers
 import com.instructure.dataseeding.model.CanvasUserApiModel
+import com.instructure.dataseeding.model.CourseApiModel
+import com.instructure.dataseeding.model.GroupApiModel
 import com.instructure.espresso.OnViewWithContentDescription
-import com.instructure.student.R
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.WaitForViewWithId
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.click
-import com.instructure.espresso.page.*
+import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.onViewWithId
+import com.instructure.espresso.page.onViewWithText
+import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withParent
+import com.instructure.espresso.page.withText
+import com.instructure.student.R
+import org.hamcrest.CoreMatchers.allOf
+import org.hamcrest.Matcher
+import org.hamcrest.core.AllOf
 
 class DashboardPage : BasePage(R.id.dashboardPage) {
 
@@ -43,6 +58,18 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         listView.assertDisplayed()
         onViewWithText("Courses").assertDisplayed()
         onViewWithText("See All").assertDisplayed()
+    }
+
+    fun assertDisplaysCourse(course: CourseApiModel) {
+        val matcher = allOf(withText(course.name), withId(R.id.titleTextView))
+        scrollAndAssertDisplayed(matcher)
+    }
+
+    fun assertDisplaysGroup(group: GroupApiModel, course: CourseApiModel) {
+        val groupNameMatcher = allOf(withText(group.name), withId(R.id.groupNameView))
+        scrollAndAssertDisplayed(groupNameMatcher)
+        val groupDescriptionMatcher = allOf(withText(course.name), withId(R.id.groupCourseView))
+        scrollAndAssertDisplayed(groupDescriptionMatcher)
     }
 
     fun assertDisplaysAddCourseMessage() {
@@ -69,7 +96,30 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         Espresso.pressBack()
     }
 
+    fun assertUnreadEmails(count: Int) {
+        onView(allOf(withParent(R.id.bottomNavigationInbox), withId(R.id.badge), withText(count.toString()))).assertDisplayed()
+    }
+
+    fun clickCalendarTab() {
+        onView(withId(R.id.bottomNavigationCalendar)).click()
+    }
+
+    fun clickTodoTab() {
+        onView(withId(R.id.bottomNavigationToDo)).click()
+    }
+
     fun waitForRender() {
         listView.assertDisplayed() // Oddly, this seems sufficient as a wait-for-render mechanism
     }
+
+    private fun scrollAndAssertDisplayed(matcher: Matcher<View>) {
+        // Scroll RecyclerView item into view, if necessary
+        onView(AllOf.allOf(ViewMatchers.withId(R.id.listView), ViewMatchers.isDisplayed())) // The drawer (not displayed) also has a listView
+                .perform(RecyclerViewActions.scrollTo<RecyclerView.ViewHolder>(ViewMatchers.hasDescendant(matcher)))
+
+        // Now make sure that it is displayed
+        Espresso.onView(matcher).assertDisplayed()
+    }
+
+
 }
