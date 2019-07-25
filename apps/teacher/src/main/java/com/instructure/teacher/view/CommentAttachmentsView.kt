@@ -21,9 +21,9 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import com.instructure.canvasapi2.models.Attachment
+import com.instructure.pandautils.utils.iconRes
 import com.instructure.pandautils.utils.onClick
 import com.instructure.teacher.R
-import com.instructure.teacher.utils.iconRes
 import kotlinx.android.synthetic.main.comment_attachment_view.view.*
 
 @SuppressLint("ViewConstructor")

@@ -19,23 +19,19 @@ package com.instructure.teacher.view
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Typeface
-import androidx.appcompat.widget.AppCompatTextView
 import android.text.Html
 import android.text.format.Formatter
 import android.view.LayoutInflater
 import android.widget.LinearLayout
+import androidx.appcompat.widget.AppCompatTextView
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Assignment.SubmissionType
 import com.instructure.canvasapi2.models.MediaComment
 import com.instructure.canvasapi2.models.Submission
-import com.instructure.pandautils.utils.DP
-import com.instructure.pandautils.utils.ThemePrefs
-import com.instructure.pandautils.utils.onClick
-import com.instructure.pandautils.utils.setGone
+import com.instructure.canvasapi2.utils.prettyPrint
+import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
 import com.instructure.teacher.utils.getColorCompat
-import com.instructure.teacher.utils.iconRes
-import com.instructure.canvasapi2.utils.prettyPrint
 import kotlinx.android.synthetic.main.comment_submission_attachment_view.view.*
 import org.greenrobot.eventbus.EventBus
 

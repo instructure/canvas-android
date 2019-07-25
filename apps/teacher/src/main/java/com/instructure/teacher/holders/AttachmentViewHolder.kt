@@ -22,10 +22,10 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.iconRes
 import com.instructure.pandautils.utils.loadUri
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
-import com.instructure.teacher.utils.iconRes
 import com.instructure.teacher.utils.isMediaSubmissionPlaceholder
 import kotlinx.android.synthetic.main.adapter_attachment.view.*
 
