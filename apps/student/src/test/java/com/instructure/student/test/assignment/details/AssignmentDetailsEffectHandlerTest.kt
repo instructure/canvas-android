@@ -124,7 +124,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
             DataResult.Fail(null),
             DataResult.Fail(null),
             null,
-            DataResult.Fail(null)
+            null
         )
 
         mockkStatic("com.instructure.canvasapi2.utils.weave.AwaitApiKt")
@@ -354,7 +354,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
             DataResult.Fail(null),
             DataResult.Fail(null),
             null,
-            DataResult.Fail(null)
+            null
         )
 
         mockkStatic("com.instructure.canvasapi2.utils.weave.AwaitApiKt")
@@ -383,10 +383,10 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
         val expectedEvent = AssignmentDetailsEvent.DataLoaded(
             DataResult.Success(assignment),
             false,
-            DataResult.Fail(null),
-            DataResult.Fail(null),
+            DataResult.Fail(),
+            DataResult.Fail(),
             null,
-            DataResult.Fail(null)
+            null
         )
 
         mockkStatic("com.instructure.canvasapi2.utils.weave.AwaitApiKt")

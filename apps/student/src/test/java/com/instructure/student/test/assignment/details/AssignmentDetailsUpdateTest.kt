@@ -424,24 +424,24 @@ class AssignmentDetailsUpdateTest : Assert() {
     @Test
     fun `DataLoaded event with a quiz updates the model`() {
         val submissionTypes = listOf("online_quiz")
-        val assignment =
-            Assignment(id = assignmentId, quizId = quizId, submissionTypesRaw = submissionTypes)
+        val assignment = Assignment(id = assignmentId, quizId = quizId, submissionTypesRaw = submissionTypes)
         val submission = mockkSubmission()
         val startModel = initModel
         val expectedModel = initModel.copy(
             isLoading = false,
             assignmentResult = DataResult.Success(assignment),
-            isStudioEnabled = true,
+            isStudioEnabled = false,
             ltiTool = DataResult.Fail(null),
             databaseSubmission = submission,
-            quizResult = DataResult.Success(quiz)
+            quizResult = DataResult.Success(quiz),
+            studioLTIToolResult = DataResult.Fail(null)
         )
         updateSpec
             .given(startModel)
             .whenEvent(
                 AssignmentDetailsEvent.DataLoaded(
                     assignmentResult = expectedModel.assignmentResult,
-                    isStudioEnabled = true,
+                    isStudioEnabled = false,
                     ltiTool = expectedModel.ltiTool,
                     submission = submission,
                     quizResult = DataResult.Success(quiz),
@@ -464,7 +464,8 @@ class AssignmentDetailsUpdateTest : Assert() {
             isStudioEnabled = true,
             ltiTool = DataResult.Fail(null),
             databaseSubmission = submission,
-            quizResult = DataResult.Fail(null)
+            quizResult = DataResult.Fail(null),
+            studioLTIToolResult = DataResult.Fail(null)
         )
         updateSpec
             .given(startModel)
