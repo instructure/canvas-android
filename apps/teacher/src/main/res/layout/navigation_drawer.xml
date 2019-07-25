@@ -147,7 +147,7 @@
                     style="@style/TextFont.Medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/arc"
+                    android:text="@string/studio"
                     android:textSize="16sp"/>
 
             </LinearLayout>

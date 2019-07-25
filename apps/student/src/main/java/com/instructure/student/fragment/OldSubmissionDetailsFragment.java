@@ -84,7 +84,7 @@ import com.instructure.canvasapi2.utils.pageview.PageViewUrlQuery;
 import com.instructure.interactions.router.Route;
 import com.instructure.pandautils.activities.NotoriousMediaUploadPicker;
 import com.instructure.pandautils.dialogs.UploadFilesDialog;
-import com.instructure.pandautils.models.FileSubmitObject;
+import com.instructure.canvasapi2.models.postmodels.FileSubmitObject;
 import com.instructure.pandautils.services.FileUploadService;
 import com.instructure.pandautils.utils.ColorKeeper;
 import com.instructure.pandautils.utils.Const;

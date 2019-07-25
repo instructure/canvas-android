@@ -249,7 +249,7 @@
 
             </LinearLayout>
 
-            <!--Where we dynamically add items from the Launch Definitions API (Arc, etc) (Except Gauge we support that above)-->
+            <!--Where we dynamically add items from the Launch Definitions API (Studio, etc) (Except Gauge we support that above)-->
             <FrameLayout
                 android:id="@+id/navigationDrawerLaunchDefinitions"
                 android:layout_width="match_parent"

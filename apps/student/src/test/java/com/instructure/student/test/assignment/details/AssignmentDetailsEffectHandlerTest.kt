@@ -17,10 +17,10 @@ package com.instructure.student.test.assignment.details
 
 import android.content.Context
 import com.instructure.canvasapi2.managers.ExternalToolManager
+import com.instructure.canvasapi2.managers.QuizManager
 import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.ApiPrefs.domain
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Failure
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
@@ -63,6 +63,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     private lateinit var connection: Connection<AssignmentDetailsEffect>
 
     lateinit var assignment: Assignment
+    lateinit var quiz: Quiz
     lateinit var course: Course
     lateinit var queryMockk: Query<Submission>
     private var userId: Long = 0
@@ -72,6 +73,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     fun setup() {
         Dispatchers.setMain(Executors.newSingleThreadExecutor().asCoroutineDispatcher())
         assignment = Assignment(id = assignmentId, courseId = 8642)
+        quiz = Quiz(id = 12345L)
         course = Course()
         userId = 6789L
 
@@ -121,7 +123,8 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
             false,
             DataResult.Fail(null),
             DataResult.Fail(null),
-            null
+            null,
+            DataResult.Fail(null)
         )
 
         mockkStatic("com.instructure.canvasapi2.utils.weave.AwaitApiKt")
@@ -147,6 +150,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
             false,
             DataResult.Fail(null),
             DataResult.Fail(null),
+            null,
             null
         )
 
@@ -175,7 +179,8 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
             false,
             DataResult.Fail(null),
             DataResult.Success(ltiTool),
-            submission
+            submission,
+            null
         )
 
         mockkStatic("com.instructure.canvasapi2.utils.weave.AwaitApiKt")
@@ -212,7 +217,8 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
             false,
             DataResult.Fail(null),
             DataResult.Success(ltiTool),
-            submission
+            submission,
+            null
         )
 
         mockkStatic("com.instructure.canvasapi2.utils.weave.AwaitApiKt")
@@ -249,7 +255,8 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
             false,
             DataResult.Fail(null),
             DataResult.Success(ltiTool),
-            submission
+            submission,
+            null
         )
 
         mockkStatic("com.instructure.canvasapi2.utils.weave.AwaitApiKt")
@@ -272,7 +279,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     }
 
     @Test
-    fun `Successful LoadData with ONLINE_UPLOAD submissionType with arc enabled results in DataLoaded`() {
+    fun `Successful LoadData with ONLINE_UPLOAD submissionType with Studio enabled results in DataLoaded`() {
         val courseId = 1L
         val submission = mockkSubmission(9876L)
         val assignment = assignment.copy(submissionTypesRaw = listOf("online_upload"))
@@ -282,7 +289,8 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
             true,
             DataResult.Success(ltiTool),
             DataResult.Fail(null),
-            submission
+            submission,
+            null
         )
 
         mockkStatic("com.instructure.canvasapi2.utils.weave.AwaitApiKt")
@@ -305,7 +313,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     }
 
     @Test
-    fun `Successful LoadData with ONLINE_UPLOAD submissionType without arc enabled results in DataLoaded`() {
+    fun `Successful LoadData with ONLINE_UPLOAD submissionType without Studio enabled results in DataLoaded`() {
         val courseId = 1L
         val assignment = assignment.copy(submissionTypesRaw = listOf("online_upload"))
         val expectedEvent = AssignmentDetailsEvent.DataLoaded(
@@ -313,6 +321,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
             false,
             DataResult.Fail(null),
             DataResult.Fail(null),
+            null,
             null
         )
 
@@ -344,7 +353,8 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
             false,
             DataResult.Fail(null),
             DataResult.Fail(null),
-            null
+            null,
+            DataResult.Fail(null)
         )
 
         mockkStatic("com.instructure.canvasapi2.utils.weave.AwaitApiKt")
@@ -375,7 +385,8 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
             false,
             DataResult.Fail(null),
             DataResult.Fail(null),
-            null
+            null,
+            DataResult.Fail(null)
         )
 
         mockkStatic("com.instructure.canvasapi2.utils.weave.AwaitApiKt")
@@ -387,6 +398,107 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
         }
 
         mockkDatabase()
+
+        connection.accept(AssignmentDetailsEffect.LoadData(assignment.id, courseId, false))
+
+        verify(timeout = 100) {
+            eventConsumer.accept(expectedEvent)
+        }
+
+        confirmVerified(eventConsumer)
+    }
+
+    @Test
+    fun `Successful LoadData with QUIZ results in DataLoaded`() {
+        val courseId = 1L
+        val submission = mockkSubmission(9876L)
+        assignment = assignment.copy(submissionTypesRaw = listOf("online_quiz"), quizId = quiz.id)
+        val expectedEvent = AssignmentDetailsEvent.DataLoaded(
+                DataResult.Success(assignment),
+                false,
+                DataResult.Fail(null),
+                DataResult.Fail(null),
+                submission,
+                DataResult.Success(quiz)
+        )
+
+        mockkStatic("com.instructure.canvasapi2.utils.weave.AwaitApiKt")
+        coEvery { awaitApiResponse<Assignment>(any()) } returns Response.success(assignment)
+
+        mockkObject(QuizManager)
+        every { QuizManager.getQuizAsync(any(), any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(quiz)
+        }
+
+        mockkDatabase(listOf(submission))
+
+        connection.accept(AssignmentDetailsEffect.LoadData(assignment.id, courseId, false))
+
+        verify(timeout = 100) {
+            eventConsumer.accept(expectedEvent)
+        }
+
+        confirmVerified(eventConsumer)
+    }
+
+    @Test
+    fun `Successful LoadData with QUIZ failure results in DataLoaded`() {
+        val courseId = 1L
+        val submission = mockkSubmission(9876L)
+        assignment = assignment.copy(submissionTypesRaw = listOf("online_quiz"), quizId = quiz.id)
+        val expectedEvent = AssignmentDetailsEvent.DataLoaded(
+                DataResult.Success(assignment),
+                false,
+                DataResult.Fail(null),
+                DataResult.Fail(null),
+                submission,
+                DataResult.Fail(null)
+        )
+
+        mockkStatic("com.instructure.canvasapi2.utils.weave.AwaitApiKt")
+        coEvery { awaitApiResponse<Assignment>(any()) } returns Response.success(assignment)
+
+        mockkObject(QuizManager)
+        every { QuizManager.getQuizAsync(any(), any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Fail(null)
+        }
+
+        mockkDatabase(listOf(submission))
+
+        connection.accept(AssignmentDetailsEffect.LoadData(assignment.id, courseId, false))
+
+        verify(timeout = 100) {
+            eventConsumer.accept(expectedEvent)
+        }
+
+        confirmVerified(eventConsumer)
+    }
+
+    @Test
+    fun `Successful LoadData with QUIZ authFail results in DataLoaded`() {
+        val courseId = 1L
+        val submission = mockkSubmission(9876L)
+        val errorMessage = "Error"
+        val authFailure = Failure.Authorization(errorMessage)
+        assignment = assignment.copy(submissionTypesRaw = listOf("online_quiz"), quizId = quiz.id)
+        val expectedEvent = AssignmentDetailsEvent.DataLoaded(
+                DataResult.Success(assignment),
+                false,
+                DataResult.Fail(null),
+                DataResult.Fail(null),
+                submission,
+                DataResult.Fail(authFailure)
+        )
+
+        mockkStatic("com.instructure.canvasapi2.utils.weave.AwaitApiKt")
+        coEvery { awaitApiResponse<Assignment>(any()) } returns Response.success(assignment)
+
+        mockkObject(QuizManager)
+        every { QuizManager.getQuizAsync(any(), any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Fail(authFailure)
+        }
+
+        mockkDatabase(listOf(submission))
 
         connection.accept(AssignmentDetailsEffect.LoadData(assignment.id, courseId, false))
 
@@ -670,6 +782,77 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
 
         confirmVerified(view)
     }
+
+    @Test
+    fun `ShowQuizStartView calls showQuizStartView on the view`() {
+        val quiz = Quiz(id = 123L)
+        val course = Course(id = 123L)
+
+        connection.accept(AssignmentDetailsEffect.ShowQuizStartView(quiz, course))
+
+        verify(timeout = 100) {
+            view.showQuizStartView(course, quiz)
+        }
+
+        confirmVerified(view)
+    }
+
+    @Test
+    fun `ShowDiscussionDetailView calls showDiscussionDetailView on the view`() {
+        val discussionTopicHeaderId = 112233L
+        val course = Course(id = 123L)
+
+        connection.accept(AssignmentDetailsEffect.ShowDiscussionDetailView(discussionTopicHeaderId, course))
+
+        verify(timeout = 100) {
+            view.showDiscussionDetailView(course, discussionTopicHeaderId)
+        }
+
+        confirmVerified(view)
+    }
+
+    @Test
+    fun `ShowDiscussionAttachment calls showDiscussionAttachment on the view`() {
+        val attachment = Attachment(id = 123L)
+        val course = Course(id = 123L)
+
+        connection.accept(AssignmentDetailsEffect.ShowDiscussionAttachment(attachment, course))
+
+        verify(timeout = 100) {
+            view.showDiscussionAttachment(course, attachment)
+        }
+
+        confirmVerified(view)
+    }
+
+    @Test
+    fun `ShowCreateSubmissionView with type external tool calls showLTIView`() {
+        val ltiUrl = "https://www.instructure.com"
+        val assignmentName = "hodor"
+        val assignmentCopy = assignment.copy(name = assignmentName)
+        connection.accept(AssignmentDetailsEffect.ShowCreateSubmissionView(Assignment.SubmissionType.EXTERNAL_TOOL, course, assignmentCopy, ltiUrl))
+
+        verify(timeout = 100) {
+            view.showLTIView(course, ltiUrl, assignmentName)
+        }
+
+        confirmVerified(view)
+    }
+
+    @Test
+    fun `ShowCreateSubmissionView with type basic lti launchcalls showLTIView`() {
+        val ltiUrl = "https://www.instructure.com"
+        val assignmentName = "hodor"
+        val assignmentCopy = assignment.copy(name = assignmentName)
+        connection.accept(AssignmentDetailsEffect.ShowCreateSubmissionView(Assignment.SubmissionType.BASIC_LTI_LAUNCH, course, assignmentCopy, ltiUrl))
+
+        verify(timeout = 100) {
+            view.showLTIView(course, ltiUrl, assignmentName)
+        }
+
+        confirmVerified(view)
+    }
+
 
     private fun <T> createError(message: String = "Error", code: Int = 400) = StatusCallbackError(
         null,

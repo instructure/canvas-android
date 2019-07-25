@@ -982,7 +982,6 @@
     <string name="select">تحديد</string>
     <string name="choice_position">اختر %d</string>
     <string name="updating_module_info">جارٍ تحميل معلومات الوحدة النمطية&#8230;</string>
-    <string name="arc">Arc</string>
     <string name="pending_review">بانتظار المراجعة</string>
     <string name="totalPoints">%s نقاط</string>
     <string name="totalPointsText">إجمالي النقاط</string>

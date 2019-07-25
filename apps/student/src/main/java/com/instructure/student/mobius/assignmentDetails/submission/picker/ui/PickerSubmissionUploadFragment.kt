@@ -32,14 +32,14 @@ class PickerSubmissionUploadFragment :
 
     private val assignment by ParcelableArg<Assignment>(key = Const.ASSIGNMENT)
     private val canvasContext by ParcelableArg<Course>(key = Const.CANVAS_CONTEXT)
-    private val isMediaPicker by BooleanArg(key = Const.IS_MEDIA_TYPE)
+    private val mode by SerializableArg(key = PICKER_MODE, default = PickerSubmissionMode.FileSubmission)
 
     override fun makeEffectHandler() = PickerSubmissionUploadEffectHandler(requireContext())
 
     override fun makeUpdate() = PickerSubmissionUploadUpdate()
 
     override fun makeView(inflater: LayoutInflater, parent: ViewGroup) =
-        PickerSubmissionUploadView(inflater, parent)
+        PickerSubmissionUploadView(inflater, parent, mode)
 
     override fun makePresenter() = PickerSubmissionUploadPresenter
 
@@ -48,23 +48,26 @@ class PickerSubmissionUploadFragment :
         assignment.id,
         assignment.name ?: "",
         assignment.groupCategoryId,
-        assignment.allowedExtensions,
-        isMediaPicker
+        if (mode.isForComment) emptyList() else assignment.allowedExtensions,
+        mode
     )
 
     companion object {
+
+        private const val PICKER_MODE = "pickerMode"
+
         private fun validRoute(route: Route) = route.canvasContext?.isCourseOrGroup == true
             && route.arguments.containsKey(Const.ASSIGNMENT)
-            && route.arguments.containsKey(Const.IS_MEDIA_TYPE)
+            && route.arguments.containsKey(PICKER_MODE)
 
         fun makeRoute(
             canvasContext: CanvasContext,
             assignment: Assignment,
-            isMediaPicker: Boolean
+            mode: PickerSubmissionMode
         ): Route {
             val bundle = canvasContext.makeBundle {
                 putParcelable(Const.ASSIGNMENT, assignment)
-                putBoolean(Const.IS_MEDIA_TYPE, isMediaPicker)
+                putSerializable(PICKER_MODE, mode)
             }
 
             return Route(PickerSubmissionUploadFragment::class.java, canvasContext, bundle)
@@ -80,6 +83,7 @@ class PickerSubmissionUploadFragment :
                 putParcelable(Const.ASSIGNMENT, assignment)
                 putBoolean(Const.IS_MEDIA_TYPE, true)
                 putParcelable(Const.PASSED_URI, mediaUri)
+                putSerializable(PICKER_MODE, PickerSubmissionMode.MediaSubmission)
             }
 
             return Route(PickerSubmissionUploadFragment::class.java, canvasContext, bundle)

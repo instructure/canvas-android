@@ -28,8 +28,12 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
-import com.instructure.canvasapi2.managers.*
+import com.instructure.canvasapi2.managers.FeaturesManager
+import com.instructure.canvasapi2.managers.FileFolderManager
+import com.instructure.canvasapi2.managers.FileUploadConfig
+import com.instructure.canvasapi2.managers.FileUploadManager
 import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.copyTo
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.canvasapi2.utils.weave.WeaveCoroutine
@@ -137,28 +141,31 @@ object MediaUploadUtils {
                     }.create()
             progressDialog?.show()
 
-            var uploadedFile: Attachment? = null
-            inBackground {
+            val uploadedFile = inBackground {
                 // Copy image to a temp location
                 activity.contentResolver.openInputStream(uri)?.copyTo(tempFile)
 
-                // Start file upload
-                uploadedFile = FileUploadManager.uploadFileSynchronous(
-                        if (isTeacher) CourseUploadContext(canvasContext.id) else UserUploadContext(),
-                        FileUploadConfig("rce-${UUID.randomUUID()}.jpeg", tempFile.absolutePath, tempFile.length(), "image/jpeg")
+                val fso = FileSubmitObject(
+                    "rce-${UUID.randomUUID()}.jpeg",
+                    tempFile.length(),
+                    "image/jpeg",
+                    tempFile.absolutePath
                 )
 
-                if (uploadedFile == null) {
-                    // Error uploading file
-                    throw RuntimeException()
+                val uploadConfig = if (isTeacher) {
+                    FileUploadConfig.forCourse(fso, canvasContext.id)
+                } else {
+                    FileUploadConfig.forUser(fso)
                 }
+
+                // Perform file upload
+                FileUploadManager.uploadFile(uploadConfig).dataOrThrow
             }
 
             // Grab the file data so we can get the URL we need to insert into the img tag
             var file = awaitApi<FileFolder> {
-                if (isTeacher) FileFolderManager.getCourseFile(canvasContext.id, uploadedFile?.id
-                        ?: 0L, true, it)
-                else FileFolderManager.getUserFile(uploadedFile?.id ?: 0L, true, it)
+                if (isTeacher) FileFolderManager.getCourseFile(canvasContext.id, uploadedFile.id , true, it)
+                else FileFolderManager.getUserFile(uploadedFile.id, true, it)
             }
 
             if (isTeacher) {

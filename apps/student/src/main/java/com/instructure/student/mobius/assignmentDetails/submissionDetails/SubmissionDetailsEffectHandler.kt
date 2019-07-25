@@ -70,7 +70,7 @@ class SubmissionDetailsEffectHandler : EffectHandler<SubmissionDetailsView, Subm
             val assignment = AssignmentManager.getAssignmentAsync(effect.assignmentId, effect.courseId, true).await()
 
 
-            // We need to know if they can make submissions through arc, only for file uploads - This is for empty submissions
+            // We need to know if they can make submissions through Studio, only for file uploads - This is for empty submissions
             val isArcEnabled = if (assignment.isSuccess && assignment.dataOrThrow.getSubmissionTypes().contains(Assignment.SubmissionType.ONLINE_UPLOAD)) {
                 effect.courseId.isStudioEnabled()
             } else false

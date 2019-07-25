@@ -19,6 +19,8 @@
 package com.instructure.student.test.assignment.details.submissionDetails.commentTab
 
 import android.app.Activity
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Course
 import com.instructure.pandautils.utils.PermissionUtils
 import com.instructure.pandautils.utils.requestPermissions
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsSharedEvent
@@ -27,6 +29,7 @@ import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.SubmissionCommentsEvent
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.ui.SubmissionCommentsView
 import com.instructure.student.mobius.common.ChannelSource
+import com.instructure.student.mobius.common.ui.SubmissionService
 import com.instructure.student.test.util.receiveOnce
 import com.spotify.mobius.functions.Consumer
 import io.mockk.*
@@ -64,14 +67,33 @@ class SubmissionCommentsEffectHandlerTest : Assert(){
     }
 
     @Test
-    fun `UploadMediaComment effect results in view calling showMediaUploadToast`() {
-        connection.accept(SubmissionCommentsEffect.UploadMediaComment(File("test"), 123L, 123L))
+    fun `UploadMediaComment effect results in calling SubmissionService startMediaCommentUpload`() {
+        val effect = SubmissionCommentsEffect.UploadMediaComment(
+            file = File("test"),
+            assignmentId = 123L,
+            assignmentName = "Test Assignment",
+            courseId = 123L,
+            isGroupMessage = false
+        )
+        mockkObject(SubmissionService.Companion)
+        every {
+            SubmissionService.startMediaCommentUpload(any(), any(), any(), any(), any(), any())
+        } returns Unit
+
+        connection.accept(effect)
 
         verify(timeout = 100) {
-            mockView.showMediaUploadToast()
+            SubmissionService.startMediaCommentUpload(
+                context,
+                Course(123L),
+                123L,
+                "Test Assignment",
+                File("test"),
+                false
+            )
         }
 
-        confirmVerified(mockView)
+        confirmVerified(SubmissionService)
     }
 
     @Test
@@ -167,6 +189,80 @@ class SubmissionCommentsEffectHandlerTest : Assert(){
             connection.accept(SubmissionCommentsEffect.ShowVideoRecordingView)
         }
         assertEquals(expectedEvent, actualEvent)
+    }
+
+    @Test
+    fun `SendTextComment effect results in calling SubmissionService startCommentUpload`() {
+        val effect = SubmissionCommentsEffect.SendTextComment(
+            message = "Test message",
+            assignmentId = 123L,
+            assignmentName = "Test Assignment",
+            courseId = 456L,
+            isGroupMessage = false
+        )
+
+        mockkObject(SubmissionService.Companion)
+        every {
+            SubmissionService.startCommentUpload(any(), any(), any(), any(), any(), any(), any())
+        } returns Unit
+
+        connection.accept(effect)
+
+        verify(timeout = 100) {
+            SubmissionService.startCommentUpload(
+                context = context,
+                canvasContext = Course(456L),
+                assignmentId = 123L,
+                assignmentName = "Test Assignment",
+                message = "Test message",
+                attachments = emptyList(),
+                isGroupMessage = false
+            )
+        }
+
+        confirmVerified(SubmissionService)
+    }
+
+    @Test
+    fun `ShowFilePicker effect results in view calling showFilePicker`() {
+        val course = Course(name = "Test Course")
+        val assignment = Assignment(name = "Test Assignment")
+        val effect = SubmissionCommentsEffect.ShowFilePicker(course, assignment)
+        connection.accept(effect)
+
+        verify(timeout = 100) {
+            mockView.showFilePicker(course, assignment)
+        }
+
+        confirmVerified(mockView)
+    }
+
+    @Test
+    fun `ClearTextInput effect results in view calling clearTextInput`() {
+        connection.accept(SubmissionCommentsEffect.ClearTextInput)
+
+        verify(timeout = 100) {
+            mockView.clearTextInput()
+        }
+
+        confirmVerified(mockView)
+    }
+
+    @Test
+    fun `RetryCommentUpload effect results in calling SubmissionService retryCommentUpload`() {
+        val effect = SubmissionCommentsEffect.RetryCommentUpload(123L)
+        mockkObject(SubmissionService.Companion)
+        every {
+            SubmissionService.retryCommentUpload(any(), any())
+        } returns Unit
+
+        connection.accept(effect)
+
+        verify(timeout = 100) {
+            SubmissionService.retryCommentUpload(context, 123L)
+        }
+
+        confirmVerified(SubmissionService)
     }
 
     private fun mockPermissions(hasPermission: Boolean, permissionGranted: Boolean = false) {

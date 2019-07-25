@@ -90,7 +90,7 @@ class SubmissionDetailsEmptyContentView(
                 showMediaRecordingView(assignment, courseId)
             }
             setupDialogRow(dialog, dialog.submissionEntryStudio, visibilities.studioUpload) {
-                showArcUploadView(assignment, courseId)
+                showStudioUploadView(assignment, courseId)
             }
         }
         dialog.show()
@@ -122,9 +122,9 @@ class SubmissionDetailsEmptyContentView(
         context.toast("Route to file upload page")
     }
 
-    fun showArcUploadView(assignment: Assignment, courseId: Long) {
+    fun showStudioUploadView(assignment: Assignment, courseId: Long) {
         // TODO
-        context.toast("Route to arc upload page")
+        context.toast("Route to Studio upload page")
     }
 
     fun showQuizOrDiscussionView(url: String) {

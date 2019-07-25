@@ -899,7 +899,6 @@
     <string name="allSections">Vse sekcije</string>
 
     <string name="gauge">Merilo</string>
-    <string name="arc">Arc</string>
     <string name="ltiLaunchFailure">Tega orodja LTI ni mogoče naložiti.</string>
     <string name="downloading">Prenos ...</string>
 

@@ -66,12 +66,12 @@ class FileDownloadService @JvmOverloads constructor(name: String = FileUploadSer
         if (isCanceled) return
 
         val bundle = intent?.extras ?: return
-        val route: Route? = bundle.getParcelable(Route.ROUTE) // Route could be null if coming from an Arc video download
+        val route: Route? = bundle.getParcelable(Route.ROUTE) // Route could be null if coming from a Studio video download
         url = bundle.getString(Const.URL) ?: return
         fileName = bundle.getString(Const.FILENAME) ?: getFilename(url)
 
         if (route == null) {
-            // Arc download - we don't associate a route with an Arc video download
+            // Studio download - we don't associate a route with an Studio video download
             file = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), fileName)
             showNotification()
             downloadFile(url, file, fileName)
@@ -168,7 +168,7 @@ class FileDownloadService @JvmOverloads constructor(name: String = FileUploadSer
 
     /**
      * Downloads a file to the users Download directory
-     * Currently used only for Arc
+     * Currently used only for Studio
      */
     @Throws(Exception::class)
     private fun downloadFile(url: String, file: File, fileName: String): File {

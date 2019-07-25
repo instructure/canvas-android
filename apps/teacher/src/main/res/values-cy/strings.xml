@@ -899,7 +899,6 @@
     <string name="allSections">Pob Adran</string>
 
     <string name="gauge">Medrydd</string>
-    <string name="arc">Arc</string>
     <string name="ltiLaunchFailure">Doedd dim modd llwytho’r adnodd LTI hwn y tro hwn.</string>
     <string name="downloading">Wrthi\'n llwytho i lawr...</string>
 

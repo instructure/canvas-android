@@ -161,7 +161,7 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
 
 
     @Test
-    fun `Displays arc when submission type is fileUpload and arc is enabled`() {
+    fun `Displays Studio when submission type is fileUpload and Studio is enabled`() {
         val course = Course()
 
         val assignment = assignment.copy(submissionTypesRaw = listOf("online_upload"))

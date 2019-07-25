@@ -3,8 +3,7 @@ package com.instructure.pandautils.utils
 import android.content.Intent
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.FileFolder
-import com.instructure.pandautils.models.FileSubmitObject
-import java.util.ArrayList
+import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 
 /**
  * A bus event which only allows each subscriber access to the event payload once. Designed to be

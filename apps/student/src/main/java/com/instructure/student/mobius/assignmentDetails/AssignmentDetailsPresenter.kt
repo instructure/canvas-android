@@ -19,14 +19,19 @@ package com.instructure.student.mobius.assignmentDetails
 import android.content.Context
 import androidx.core.content.ContextCompat
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.DiscussionTopicHeader
+import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.canvasapi2.utils.isRtl
 import com.instructure.canvasapi2.utils.isValid
+import com.instructure.pandautils.discussions.DiscussionUtils
 import com.instructure.student.R
 import com.instructure.student.Submission
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsViewState
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsVisibilities
+import com.instructure.student.mobius.assignmentDetails.ui.DiscussionHeaderViewState
+import com.instructure.student.mobius.assignmentDetails.ui.QuizDescriptionViewState
 import com.instructure.student.mobius.assignmentDetails.ui.gradeCell.GradeCellViewState
 import com.instructure.student.mobius.common.ui.Presenter
 import java.text.DateFormat
@@ -38,19 +43,28 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
         if (model.isLoading) return AssignmentDetailsViewState.Loading
 
         // Failed state
-        if (model.assignmentResult == null || model.assignmentResult.isFail) {
+        if (model.assignmentResult == null || model.assignmentResult.isFail){
+            return AssignmentDetailsViewState.Error
+        }
+
+        // Failed Quiz state
+        if(model.assignmentResult.dataOrNull?.turnInType == Assignment.TurnInType.QUIZ
+                && (model.quizResult == null || model.quizResult.isFail)) {
             return AssignmentDetailsViewState.Error
         }
 
         val assignment = model.assignmentResult.dataOrNull!!
         assignment.isStudioEnabled = model.isStudioEnabled
 
+        val quiz = model.quizResult?.dataOrNull
+
         // Loaded state
-        return presentLoadedState(assignment, model.databaseSubmission, context)
+        return presentLoadedState(assignment, quiz, model.databaseSubmission, context)
     }
 
     private fun presentLoadedState(
         assignment: Assignment,
+        quiz: Quiz?,
         databaseSubmission: Submission?,
         context: Context
     ): AssignmentDetailsViewState.Loaded {
@@ -109,7 +123,15 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
         visibilities.submissionAndRubricButton = true // Always show the submission and rubric button
 
         // Description
-        val description = if (assignment.description.isValid()) {
+        val description = if (assignment.turnInType == Assignment.TurnInType.DISCUSSION && getDiscussionText(assignment.discussionTopicHeader!!).isNotEmpty()) {
+            visibilities.description = true
+            DiscussionUtils.createDiscussionTopicHeaderHtml(
+                context,
+                context.resources.getBoolean(R.bool.isDeviceTablet),
+                getDiscussionText(assignment.discussionTopicHeader!!),
+                null
+            )
+        } else if (assignment.description.isValid()) {
             visibilities.description = true
             if (Locale.getDefault().isRtl) {
                 "<body dir=\"rtl\">${assignment.description}</body>"
@@ -122,7 +144,11 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
         }
 
         // Submission types
-        visibilities.submissionTypes = true
+        visibilities.submissionTypes = when(assignment.turnInType) {
+            Assignment.TurnInType.ONLINE -> true
+            else -> false // Discussions / On Paper / Quizzes
+        }
+
         val submissionTypes = assignment.getSubmissionTypes()
             .map { Assignment.submissionTypeToPrettyPrintString(it, context) }
             .joinToString(", ")
@@ -135,15 +161,34 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
         val fileTypes = assignment.allowedExtensions.joinToString(", ")
 
 
-        // SubmitButton TODO - Check logic around enabling this
-        visibilities.submitButton = assignment.isAllowedToSubmit
-        val submitButtonText = context.getString(
-            when {
-                isExternalToolSubmission -> R.string.launchExternalTool
-                submitted -> R.string.resubmitAssignment
-                else -> R.string.submitAssignment
-            }
-        )
+        //Configure stickied submit button visibility state,
+        visibilities.submitButton = when(assignment.turnInType) {
+            // We always show the button for quizzes and discussions, so the users can always route
+            Assignment.TurnInType.QUIZ, Assignment.TurnInType.DISCUSSION -> true
+            Assignment.TurnInType.ONLINE -> assignment.isAllowedToSubmit
+            else -> false // On Paper / etc
+        }
+
+        // Configure stickied submit button
+        val submitButtonText = getSubmitButtonText(context, isExternalToolSubmission, submitted, assignment.turnInType)
+
+        // Configure description label
+        val descriptionLabel = when(assignment.turnInType) {
+            Assignment.TurnInType.QUIZ -> context.getString(R.string.instructions)
+            else -> context.getString(R.string.description)
+        }
+
+        // Configure quiz specific details
+        visibilities.quizDetails = assignment.turnInType == Assignment.TurnInType.QUIZ
+        val quizDescriptionViewState = if (assignment.turnInType == Assignment.TurnInType.QUIZ) {
+            getQuizDescriptionViewState(context, quiz!!)
+        } else null
+
+        // Configure discussion specific description/topic header view
+        visibilities.discussionTopicHeader = assignment.turnInType == Assignment.TurnInType.DISCUSSION
+        val discussionHeaderViewState = if (assignment.turnInType == Assignment.TurnInType.DISCUSSION) {
+            getDiscussionHeaderViewState(context, assignment.discussionTopicHeader!!)
+        } else null
 
         // Show the grade cell if there's not a database submission and the grade state isn't empty
         val gradeState = GradeCellViewState.fromSubmission(context, assignment, assignment.submission)
@@ -166,10 +211,13 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
             submissionTypes = submissionTypes,
             fileTypes = fileTypes,
             description = description.orEmpty(),
+            descriptionLabel = descriptionLabel,
             submitButtonText = submitButtonText,
             gradeState = gradeState,
             assignmentDetailsVisibilities = visibilities,
-            isExternalToolSubmission = isExternalToolSubmission
+            isExternalToolSubmission = isExternalToolSubmission,
+            quizDescriptionViewState = quizDescriptionViewState,
+            discussionHeaderViewState = discussionHeaderViewState
         )
     }
 
@@ -204,6 +252,55 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
             submittedStateIcon = submittedIconRes,
             lockMessage = lockMessage,
             assignmentDetailsVisibilities = visibilities
+        )
+    }
+
+    private fun getQuizDescriptionViewState(context: Context, quiz: Quiz): QuizDescriptionViewState {
+        val questionCount = NumberHelper.formatInt(quiz.questionCount.toLong())
+
+        val timeLimit = if (quiz.timeLimit != 0) {
+            context.getString(R.string.timeLimit)
+            NumberHelper.formatInt(quiz.timeLimit.toLong())
+        } else {
+            context.getString(R.string.quizNoTimeLimit)
+        }
+
+        val allowedAttempts = if (quiz.allowedAttempts == -1) {
+            context.getString(R.string.unlimited)
+        } else {
+            NumberHelper.formatInt(quiz.allowedAttempts.toLong())
+        }
+
+        return QuizDescriptionViewState(questionCount, timeLimit, allowedAttempts)
+    }
+
+    private fun getDiscussionHeaderViewState(context: Context, discussionTopicHeader: DiscussionTopicHeader): DiscussionHeaderViewState {
+        val authorAvatarUrl = discussionTopicHeader.author?.avatarImageUrl
+        // Can't have a discussion topic header with a null author or date
+        val authorName = discussionTopicHeader.author!!.displayName!!
+        val authoredDate = DateHelper.getMonthDayAtTime(context, discussionTopicHeader.postedDate, context.getString(R.string.at))!!
+        val attachmentIconVisibility = discussionTopicHeader.attachments.isNotEmpty()
+
+        return DiscussionHeaderViewState(authorAvatarUrl, authorName, authoredDate, attachmentIconVisibility)
+    }
+
+    private fun getDiscussionText(discussionTopicHeader: DiscussionTopicHeader): String {
+        return when {
+            discussionTopicHeader.message.isValid() -> discussionTopicHeader.message!!
+            discussionTopicHeader.title.isValid() -> discussionTopicHeader.title!!
+            else -> ""
+        }
+    }
+
+    private fun getSubmitButtonText(context: Context, isExternalToolSubmission: Boolean, submitted: Boolean, turnInType: Assignment.TurnInType): String {
+        return context.getString(
+                when {
+                    turnInType == Assignment.TurnInType.QUIZ -> R.string.viewQuiz
+                    turnInType == Assignment.TurnInType.DISCUSSION -> R.string.viewDiscussion
+                    isExternalToolSubmission -> R.string.launchExternalTool
+                    submitted -> R.string.resubmitAssignment
+                    else -> R.string.submitAssignment
+                }
         )
     }
 

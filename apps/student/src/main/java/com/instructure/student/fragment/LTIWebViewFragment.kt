@@ -130,7 +130,7 @@ class LTIWebViewFragment : InternalWebviewFragment() {
                     }
 
                     when {
-                        sessionLessLaunch -> // This is specific for Arc and Gauge
+                        sessionLessLaunch -> // This is specific for Studio and Gauge
                             getSessionlessLtiUrl(ApiPrefs.fullDomain + "/api/v1/accounts/self/external_tools/sessionless_launch?url=" + ltiUrl)
                         isAssignmentLTI -> getSessionlessLtiUrl(ltiUrl)
                         else -> {

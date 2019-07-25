@@ -27,20 +27,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import android.widget.Toast
-import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.student.R
+import com.instructure.student.activity.BaseRouterActivity
 import com.instructure.student.activity.InternalWebViewActivity
 import com.instructure.student.activity.ShareFileSubmissionTarget
-import com.instructure.student.fragment.InternalWebviewFragment
-import com.instructure.student.fragment.LTIWebViewFragment
-import com.instructure.student.fragment.StudioWebViewFragment
+import com.instructure.student.fragment.*
 import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsEvent
+import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionMode
 import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submission.text.ui.TextSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submission.url.ui.UrlSubmissionUploadFragment
@@ -82,6 +80,7 @@ class AssignmentDetailsView(
         submissionStatusUploading.onClick { output.accept(AssignmentDetailsEvent.ViewUploadStatusClicked) }
         submissionRubricButton.onClick { output.accept(AssignmentDetailsEvent.ViewSubmissionClicked) }
         submitButton.onClick { output.accept(AssignmentDetailsEvent.SubmitAssignmentClicked) }
+        attachmentIcon.onClick { output.accept(AssignmentDetailsEvent.DiscussionAttachmentClicked) }
         swipeRefreshLayout.setOnRefreshListener { output.accept(AssignmentDetailsEvent.PullToRefresh) }
         setupDescriptionView()
     }
@@ -131,6 +130,8 @@ class AssignmentDetailsView(
             submissionStatusUploading.setVisible(visibilities.submissionUploadStatusInProgress)
             submissionStatusFailed.setVisible(visibilities.submissionUploadStatusFailed)
             descriptionContainer.setVisible(visibilities.description || visibilities.noDescriptionLabel)
+            quizDetails.setVisible(visibilities.quizDetails)
+            discussionTopicHeaderContainer.setVisible(visibilities.discussionTopicHeader)
         }
 
         when (state) {
@@ -154,8 +155,25 @@ class AssignmentDetailsView(
         gradeCell.setState(state.gradeState)
         submitButton.text = state.submitButtonText
         if (state.visibilities.description) {
+            descriptionLabel.text = state.descriptionLabel
             descriptionWebView.formatHTML(state.description, state.assignmentName)
         }
+        if(state.visibilities.quizDetails) renderQuizDetails(state.quizDescriptionViewState!!)
+        if(state.visibilities.discussionTopicHeader) renderDiscussionTopicHeader(state.discussionHeaderViewState!!)
+    }
+
+    private fun renderQuizDetails(quizDescriptionViewState: QuizDescriptionViewState) {
+        questionCountText.text = quizDescriptionViewState.questionCount
+        timeLimitText.text = quizDescriptionViewState.timeLimit
+        allowedAttemptsText.text = quizDescriptionViewState.allowedAttempts
+    }
+
+    private fun renderDiscussionTopicHeader(discussionHeaderViewState: DiscussionHeaderViewState) {
+        ProfileUtils.loadAvatarForUser(authorAvatar, discussionHeaderViewState.authorName, discussionHeaderViewState.authorAvatarUrl)
+        authorAvatar.setupAvatarA11y(discussionHeaderViewState.authorName)
+        authorName.text = discussionHeaderViewState.authorName
+        authoredDate.text = discussionHeaderViewState.authoredDate
+        attachmentIcon.setVisible(discussionHeaderViewState.attachmentIconVisibility)
     }
 
     override fun onDispose() {
@@ -222,13 +240,28 @@ class AssignmentDetailsView(
         RouteMatcher.route(context, LTIWebViewFragment.makeRoute(canvasContext, url, title, isAssignmentLTI = true))
     }
 
+    fun showQuizStartView(canvasContext: CanvasContext, quiz: Quiz) {
+        RouteMatcher.route(context, QuizStartFragment.makeRoute(canvasContext, quiz))
+    }
+
+    fun showDiscussionDetailView(canvasContext: CanvasContext, discussionTopicHeaderId: Long) {
+        RouteMatcher.route(context, DiscussionDetailsFragment.makeRoute(canvasContext, discussionTopicHeaderId))
+    }
+
+    fun showDiscussionAttachment(canvasContext: CanvasContext, discussionAttachment: Attachment) {
+        (context as BaseRouterActivity).openMedia(canvasContext, discussionAttachment.contentType ?: "", discussionAttachment.url ?: "", discussionAttachment.filename ?: "")
+    }
+
     fun showMediaRecordingView(assignment: Assignment, courseId: Long) {
         // TODO
         context.toast("Show media recording dialog")
     }
 
     fun showFileUploadView(assignment: Assignment) {
-        RouteMatcher.route(context, PickerSubmissionUploadFragment.makeRoute(canvasContext, assignment, false))
+        RouteMatcher.route(
+            context,
+            PickerSubmissionUploadFragment.makeRoute(canvasContext, assignment, PickerSubmissionMode.FileSubmission)
+        )
     }
 
     fun showStudioUploadView(assignment: Assignment, courseId: Long, ltiUrl: String, studioLtiToolName: String) {

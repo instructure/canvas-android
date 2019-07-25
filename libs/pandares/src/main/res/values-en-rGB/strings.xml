@@ -947,7 +947,6 @@
     <string name="select">Select</string>
     <string name="choice_position">Choice %d</string>
     <string name="updating_module_info">Updating module information&#8230;</string>
-    <string name="arc">Arc</string>
     <string name="pending_review">Pending review</string>
     <string name="totalPoints">%s pts</string>
     <string name="totalPointsText">Total points</string>

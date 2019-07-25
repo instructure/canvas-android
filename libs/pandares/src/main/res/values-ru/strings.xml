@@ -964,7 +964,6 @@
     <string name="select">Выбрать</string>
     <string name="choice_position">Выбор %d</string>
     <string name="updating_module_info">Обновление информации о модуле&#8230;</string>
-    <string name="arc">Arc</string>
     <string name="pending_review">В ожидании рассмотрения</string>
     <string name="totalPoints">%s баллов</string>
     <string name="totalPointsText">Общее число баллов</string>

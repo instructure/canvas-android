@@ -18,64 +18,57 @@ import com.instructure.canvasapi2.models.CanvasContext;
 import com.instructure.student.db.sqlColAdapters.ErrorColAdapter;
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject;
 
-CREATE TABLE fileSubmission (
+CREATE TABLE submissionCommentFile (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    dbSubmissionId INTEGER NOT NULL,
-    attachmentId INTEGER,
-    name TEXT,
-    size INTEGER,
-    contentType TEXT,
-    fullPath TEXT,
-    error TEXT,
-    errorFlag INTEGER as Boolean NOT NULL DEFAULT 0,
-    FOREIGN KEY (dbSubmissionId) REFERENCES submission(id) ON DELETE CASCADE
+    pendingCommentId INTEGER NOT NULL,
+    attachmentId INTEGER, -- Will be null if file has not been successfully uploaded
+    name TEXT NOT NULL,
+    size INTEGER NOT NULL,
+    contentType TEXT NOT NULL,
+    fullPath TEXT NOT NULL,
+    FOREIGN KEY (pendingCommentId) REFERENCES pendingSubmissionComment(id) ON DELETE CASCADE
 );
 
-CREATE INDEX fileSubmission_dbSubmissionId ON fileSubmission(dbSubmissionId);
+CREATE INDEX submissionCommentFile_pendingCommentId ON submissionCommentFile(pendingCommentId);
 
 --
 insertFile:
-INSERT INTO fileSubmission (dbSubmissionId, name, size, contentType, fullPath)
+INSERT INTO submissionCommentFile (pendingCommentId, name, size, contentType, fullPath)
 VALUES (?, ?, ?, ?, ?);
 --
 
 getAllFiles:
 SELECT *
-FROM fileSubmission;
+FROM submissionCommentFile;
 
 getFileById:
 SELECT *
-FROM fileSubmission
+FROM submissionCommentFile
 WHERE id = ?;
 
-getFilesForSubmissionId:
+getFilesForPendingComment:
 SELECT *
-FROM fileSubmission
-WHERE dbSubmissionId = ?;
+FROM submissionCommentFile
+WHERE pendingCommentId = ?;
 
 getFilesWithoutAttachmentsForSubmissionId:
 SELECT *
-FROM fileSubmission
-WHERE dbSubmissionId = ? AND attachmentId IS NULL;
+FROM submissionCommentFile
+WHERE pendingCommentId = ? AND attachmentId IS NULL;
 
 deleteFileById:
 DELETE
-FROM fileSubmission
+FROM submissionCommentFile
 WHERE id = ?;
 
-deleteFilesForSubmissionId:
+deleteFilesForCommentId:
 DELETE
-FROM fileSubmission
-WHERE dbSubmissionId = ?;
+FROM submissionCommentFile
+WHERE pendingCommentId = ?;
 
-setFileError:
-UPDATE fileSubmission
-SET errorFlag = ?, error = ?
-WHERE id = ?;
-
-setFileAttachmentIdAndError:
-UPDATE fileSubmission
-SET attachmentId = ?, errorFlag = ?, error = ?
+setFileAttachmentId:
+UPDATE submissionCommentFile
+SET attachmentId = ?
 WHERE id = ?;
 
 getLastInsertId:

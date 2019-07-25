@@ -52,7 +52,6 @@ import com.instructure.pandautils.activities.NotoriousMediaUploadPicker
 import com.instructure.pandautils.dialogs.UploadFilesDialog
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
-import com.instructure.student.mobius.common.ui.SubmissionService
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.Analytics
 import com.instructure.student.util.VisibilityAnimator
@@ -108,8 +107,8 @@ class AddSubmissionFragment : ParentFragment(), Bookmarkable {
         override fun onReceive(context: Context, intent: Intent?) {
             val extras = intent?.extras
             val url = extras?.getString(Const.URL)
-            arcEntryContainer!!.visibility = View.VISIBLE
-            arcEntry!!.setText(url)
+            studioEntryContainer!!.visibility = View.VISIBLE
+            studioEntry!!.setText(url)
         }
     }
 
@@ -120,7 +119,7 @@ class AddSubmissionFragment : ParentFragment(), Bookmarkable {
         setupViews()
         setupListeners()
 
-        // If file entry is allowed check to see if the account has arc installed
+        // If file entry is allowed check to see if the account has Studio installed
         if (isFileUploadAllowed) {
             ExternalToolManager.getExternalToolsForCanvasContext(canvasContext, ltiToolCallback, true)
         }
@@ -143,11 +142,11 @@ class AddSubmissionFragment : ParentFragment(), Bookmarkable {
         // Styling
         ViewStyler.themeButton(submitTextEntry)
         ViewStyler.themeButton(submitURLEntry)
-        ViewStyler.themeButton(submitArcEntry)
+        ViewStyler.themeButton(submitStudioEntry)
 
         ViewStyler.themeEditText(requireContext(), textEntry, ThemePrefs.brandColor)
         ViewStyler.themeEditText(requireContext(), onlineURL, ThemePrefs.brandColor)
-        ViewStyler.themeEditText(requireContext(), arcEntry, ThemePrefs.brandColor)
+        ViewStyler.themeEditText(requireContext(), studioEntry, ThemePrefs.brandColor)
     }
 
     override fun onDestroyView() {
@@ -197,8 +196,8 @@ class AddSubmissionFragment : ParentFragment(), Bookmarkable {
     private fun setupViews() {
         webView.settings.javaScriptEnabled = true
 
-        // Hide arc until we can figure out if arc is installed for the course
-        arcSubmission.setGone()
+        // Hide Studio until we can figure out if Studio is installed for the course
+        studioSubmission.setGone()
 
         // Hide text if it's not allowed.
         textEntryHeader.setVisible(isOnlineTextAllowed)
@@ -365,12 +364,12 @@ class AddSubmissionFragment : ParentFragment(), Bookmarkable {
             startActivityForResult(intent, RequestCodes.NOTORIOUS_REQUEST)
         }
 
-        arcSubmission.setOnClickListener {
+        studioSubmission.setOnClickListener {
             val url = String.format(Locale.getDefault(), "%s/%s/external_tools/%d/resource_selection?launch_type=homework_submission&assignment_id=%d", ApiPrefs.fullDomain, canvasContext.toAPIString(), arcLTITool!!.id, assignment.id)
             RouteMatcher.route(requireActivity(), StudioWebViewFragment.makeRoute(canvasContext, url, arcLTITool!!.name!!, true, assignment))
         }
 
-        submitArcEntry.setOnClickListener { tryToSubmitArc() }
+        submitStudioEntry.setOnClickListener { tryToSubmitArc() }
     }
 
     private fun setUpCallbacks() {
@@ -402,7 +401,7 @@ class AddSubmissionFragment : ParentFragment(), Bookmarkable {
                     for (ltiTool in it) {
                         val url = ltiTool.url
                         if (url != null && url.contains("instructuremedia.com/lti/launch")) {
-                            arcSubmission.setVisible()
+                            studioSubmission.setVisible()
                             arcLTITool = ltiTool
                             break
                         }
@@ -508,13 +507,13 @@ class AddSubmissionFragment : ParentFragment(), Bookmarkable {
     }
 
     private fun tryToSubmitArc() {
-        val urlToSubmit = arcEntry.text.toString()
+        val urlToSubmit = studioEntry.text.toString()
         if (urlToSubmit.trim { it <= ' ' }.isEmpty()) {
             // It's an empty submission
             toast(R.string.blankSubmission, Toast.LENGTH_LONG)
         } else {
             // Log to GA
-            Analytics.trackButtonPressed(requireActivity(), "Submit Arc Assignment", null)
+            Analytics.trackButtonPressed(requireActivity(), "Submit Studio Assignment", null)
 
             SubmissionManager.postUrlSubmission(canvasContext as Course, assignment.id, urlToSubmit, true, canvasCallbackSubmission)
             dataLossDeleteStoredData(Const.DATA_LOSS_ADD_SUBMISSION_URL)

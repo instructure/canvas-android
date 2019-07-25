@@ -16,8 +16,9 @@
  */
 package com.instructure.student.test.assignment.details.submissionDetails.commentTab
 
-import com.instructure.canvasapi2.models.Submission
-import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsEffect
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.SubmissionComment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.SubmissionCommentsEffect
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.SubmissionCommentsEvent
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.SubmissionCommentsModel
@@ -45,12 +46,9 @@ class SubmissionCommentsUpdateTest : Assert() {
     @Before
     fun setup() {
         initModel = SubmissionCommentsModel(
-                comments = arrayListOf(),
-                submissionHistory = Submission(),
-                submissionId = 123L,
-                courseId = 123L,
-                assignmentId = 123L,
-                isGroupMessage = false
+            comments = arrayListOf(),
+            submissionHistory = emptyList(),
+            assignment = Assignment(id = 123L, name = "Test Assignment", courseId = 456L)
         )
     }
 
@@ -58,65 +56,91 @@ class SubmissionCommentsUpdateTest : Assert() {
     fun `Initializes without model changes and without effects`() {
         val expectedModel = initModel.copy()
         initSpec
-                .whenInit(initModel)
-                .then(
-                        assertThatFirst(
-                                FirstMatchers.hasModel(expectedModel),
-                                FirstMatchers.hasNoEffects()
-                        )
+            .whenInit(initModel)
+            .then(
+                assertThatFirst(
+                    FirstMatchers.hasModel(expectedModel),
+                    FirstMatchers.hasNoEffects()
                 )
+            )
     }
 
     @Test
     fun `AddMediaCommentClicked results in ShowMediaCommentDialog effect and model change`() {
         val expectedModel = initModel.copy(isMediaCommentEnabled = false)
         updateSpec
-                .given(initModel)
-                .whenEvent(SubmissionCommentsEvent.AddMediaCommentClicked)
-                .then(
-                        assertThatNext(
-                                hasModel(expectedModel),
-                                matchesEffects<SubmissionCommentsModel, SubmissionCommentsEffect>(SubmissionCommentsEffect.ShowMediaCommentDialog)
-                        )
+            .given(initModel)
+            .whenEvent(SubmissionCommentsEvent.AddMediaCommentClicked)
+            .then(
+                assertThatNext(
+                    hasModel(expectedModel),
+                    matchesEffects<SubmissionCommentsModel, SubmissionCommentsEffect>(SubmissionCommentsEffect.ShowMediaCommentDialog)
                 )
+            )
     }
 
     @Test
     fun `AddAudioCommentClicked results in ShowAudioRecordingView effect`() {
         updateSpec
-                .given(initModel)
-                .whenEvent(SubmissionCommentsEvent.AddAudioCommentClicked)
-                .then(
-                        assertThatNext(
-                                matchesEffects<SubmissionCommentsModel, SubmissionCommentsEffect>(SubmissionCommentsEffect.ShowAudioRecordingView)
-                        )
+            .given(initModel)
+            .whenEvent(SubmissionCommentsEvent.AddAudioCommentClicked)
+            .then(
+                assertThatNext(
+                    matchesEffects<SubmissionCommentsModel, SubmissionCommentsEffect>(SubmissionCommentsEffect.ShowAudioRecordingView)
                 )
+            )
     }
 
     @Test
     fun `AddVideoCommentClicked results in ShowVideoRecordingView effect`() {
         updateSpec
-                .given(initModel)
-                .whenEvent(SubmissionCommentsEvent.AddVideoCommentClicked)
-                .then(
-                        assertThatNext(
-                                matchesEffects<SubmissionCommentsModel, SubmissionCommentsEffect>(SubmissionCommentsEffect.ShowVideoRecordingView)
-                        )
+            .given(initModel)
+            .whenEvent(SubmissionCommentsEvent.AddVideoCommentClicked)
+            .then(
+                assertThatNext(
+                    matchesEffects<SubmissionCommentsModel, SubmissionCommentsEffect>(SubmissionCommentsEffect.ShowVideoRecordingView)
                 )
+            )
     }
 
     @Test
     fun `SendMediaCommentClicked results in UploadMediaComment effect`() {
         val file = File("test")
-        val expectedEffect = SubmissionCommentsEffect.UploadMediaComment(file, initModel.assignmentId, initModel.courseId)
+        val expectedEffect = SubmissionCommentsEffect.UploadMediaComment(
+            file = file,
+            assignmentId = 123L,
+            assignmentName = "Test Assignment",
+            courseId = 456L,
+            isGroupMessage = false
+        )
         updateSpec
-                .given(initModel)
-                .whenEvent(SubmissionCommentsEvent.SendMediaCommentClicked(file))
-                .then(
-                        assertThatNext(
-                                matchesEffects<SubmissionCommentsModel, SubmissionCommentsEffect>(expectedEffect)
-                        )
+            .given(initModel)
+            .whenEvent(SubmissionCommentsEvent.SendMediaCommentClicked(file))
+            .then(
+                assertThatNext(
+                    matchesEffects<SubmissionCommentsModel, SubmissionCommentsEffect>(expectedEffect)
                 )
+            )
+    }
+
+    @Test
+    fun `SendTextCommentClicked results in SendTextComment effect and ClearTextInput effect`() {
+        val message = "Test message"
+        val expectedEffect = SubmissionCommentsEffect.SendTextComment(
+            assignmentId = 123L,
+            assignmentName = "Test Assignment",
+            courseId = 456L,
+            isGroupMessage = false,
+            message = message
+        )
+        updateSpec
+            .given(initModel)
+            .whenEvent(SubmissionCommentsEvent.SendTextCommentClicked(message))
+            .then(
+                assertThatNext<SubmissionCommentsModel, SubmissionCommentsEffect>(
+                    matchesEffects(expectedEffect, SubmissionCommentsEffect.ClearTextInput)
+                )
+            )
     }
 
     @Test
@@ -124,14 +148,89 @@ class SubmissionCommentsUpdateTest : Assert() {
         val givenModel = initModel.copy(isMediaCommentEnabled = false)
         val expectedModel = initModel.copy(isMediaCommentEnabled = true)
         updateSpec
-                .given(givenModel)
-                .whenEvent(SubmissionCommentsEvent.MediaCommentDialogClosed)
-                .then(
-                        assertThatNext(
-                                hasModel(expectedModel),
-                                NextMatchers.hasNoEffects()
-                        )
+            .given(givenModel)
+            .whenEvent(SubmissionCommentsEvent.MediaCommentDialogClosed)
+            .then(
+                assertThatNext(
+                    hasModel(expectedModel),
+                    NextMatchers.hasNoEffects()
                 )
+            )
+    }
+
+    @Test
+    fun `SubmissionCommentAdded results in no effects and a model change`() {
+        val existingComment = SubmissionComment(comment = "Existing comment")
+        val newComment = SubmissionComment(comment = "New comment")
+        val givenModel = initModel.copy(comments = listOf(existingComment))
+        val expectedModel = initModel.copy(comments = listOf(existingComment, newComment))
+        updateSpec
+            .given(givenModel)
+            .whenEvent(SubmissionCommentsEvent.SubmissionCommentAdded(newComment))
+            .then(
+                assertThatNext(
+                    hasModel(expectedModel),
+                    NextMatchers.hasNoEffects()
+                )
+            )
+    }
+
+    @Test
+    fun `PendingSubmissionsUpdated results in nothing if IDs have changed`() {
+        val model = initModel.copy(pendingCommentIds = listOf(1L, 2L))
+        updateSpec
+            .given(model)
+            .whenEvent(SubmissionCommentsEvent.PendingSubmissionsUpdated(listOf(1L, 2L)))
+            .then(
+                assertThatNext(
+                    NextMatchers.hasNothing()
+                )
+            )
+    }
+
+    @Test
+    fun `PendingSubmissionsUpdated results in no model change if IDs have changed`() {
+        val model = initModel.copy(pendingCommentIds = listOf(1L, 2L))
+        val expectedModel = initModel.copy(pendingCommentIds = listOf(1L))
+        updateSpec
+            .given(model)
+            .whenEvent(SubmissionCommentsEvent.PendingSubmissionsUpdated(listOf(1L)))
+            .then(
+                assertThatNext(
+                    hasModel(expectedModel)
+                )
+            )
+    }
+
+    @Test
+    fun `UploadFilesClicked results in ShowFilePicker effect`() {
+        val expectedEffect = SubmissionCommentsEffect.ShowFilePicker(
+            canvasContext = Course(456L),
+            assignment = initModel.assignment
+        )
+        updateSpec
+            .given(initModel)
+            .whenEvent(SubmissionCommentsEvent.UploadFilesClicked)
+            .then(
+                assertThatNext<SubmissionCommentsModel, SubmissionCommentsEffect>(
+                    NextMatchers.hasNoModel(),
+                    matchesEffects(expectedEffect)
+                )
+            )
+    }
+
+    @Test
+    fun `RetryCommentUploadClicked results in RetryCommentUpload effect`() {
+        val event = SubmissionCommentsEvent.RetryCommentUploadClicked(123L)
+        val effect = SubmissionCommentsEffect.RetryCommentUpload(123L)
+        updateSpec
+            .given(initModel)
+            .whenEvent(event)
+            .then(
+                assertThatNext<SubmissionCommentsModel, SubmissionCommentsEffect>(
+                    matchesEffects(effect)
+                )
+            )
     }
 
 }

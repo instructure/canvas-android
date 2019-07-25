@@ -18,7 +18,7 @@ package com.instructure.student.mobius.assignmentDetails.submission.picker
 
 import android.net.Uri
 import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.pandautils.models.FileSubmitObject
+import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 
 sealed class PickerSubmissionUploadEvent {
     object SubmitClicked : PickerSubmissionUploadEvent()
@@ -45,6 +45,15 @@ data class PickerSubmissionUploadModel(
     val assignmentName: String,
     val assignmentGroupCategoryId: Long,
     val allowedExtensions: List<String>,
-    val isMediaSubmission: Boolean,
+    val mode: PickerSubmissionMode,
     val files: List<FileSubmitObject> = emptyList()
 )
+
+enum class PickerSubmissionMode {
+    MediaSubmission,
+    FileSubmission,
+    CommentAttachment;
+
+    val isMediaSubmission get() = this == MediaSubmission
+    val isForComment get() = this == CommentAttachment
+}

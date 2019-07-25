@@ -24,9 +24,8 @@ import com.instructure.canvasapi2.models.NotoriousConfig
 import com.instructure.canvasapi2.models.NotoriousSession
 import com.instructure.canvasapi2.models.notorious.NotoriousResultWrapper
 import com.instructure.canvasapi2.utils.ApiPrefs
-import okhttp3.MediaType
+import com.instructure.canvasapi2.utils.ProgressRequestBody
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import retrofit2.Response
 import java.io.File
 
@@ -53,8 +52,13 @@ object NotoriousManager {
     }
 
     @JvmStatic
-    fun uploadFileSynchronous(uploadToken: String, file: File, contentType: String): Response<Void>? {
-        val requestBody = RequestBody.create(MediaType.parse(contentType), file)
+    fun uploadFileSynchronous(
+        uploadToken: String,
+        file: File,
+        contentType: String,
+        onProgress: ((Float) -> Unit)? = null
+    ): Response<Void>? {
+        val requestBody = ProgressRequestBody(file, contentType, onProgress = onProgress)
         val filePart = MultipartBody.Part.createFormData("fileData", file.name, requestBody)
         val adapter = RestBuilder()
         return NotoriousAPI.uploadFileSynchronous(ApiPrefs.notoriousToken, uploadToken, filePart, adapter)
