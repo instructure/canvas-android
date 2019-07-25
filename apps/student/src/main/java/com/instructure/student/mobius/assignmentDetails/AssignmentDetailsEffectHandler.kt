@@ -16,28 +16,35 @@
  */
 package com.instructure.student.mobius.assignmentDetails
 
+import android.app.Activity
 import android.content.Context
 import com.instructure.canvasapi2.managers.AssignmentManager
 import com.instructure.canvasapi2.managers.QuizManager
 import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DiscussionTopic
 import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.utils.*
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
 import com.instructure.canvasapi2.utils.weave.awaitApiResponse
+import com.instructure.pandautils.services.NotoriousUploadService
+import com.instructure.pandautils.utils.PermissionUtils
+import com.instructure.pandautils.utils.requestPermissions
 import com.instructure.student.Submission
 import com.instructure.student.db.Db
 import com.instructure.student.db.getInstance
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsView
 import com.instructure.student.mobius.assignmentDetails.ui.SubmissionTypesVisibilities
 import com.instructure.student.mobius.common.ui.EffectHandler
+import com.instructure.student.mobius.common.ui.SubmissionService
 import com.instructure.student.util.getResourceSelectorUrl
 import com.instructure.student.util.getStudioLTITool
 import com.spotify.mobius.Connection
 import com.spotify.mobius.functions.Consumer
 import com.squareup.sqldelight.Query
 import kotlinx.coroutines.launch
+import java.io.File
 
 class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Long) :
     EffectHandler<AssignmentDetailsView, AssignmentDetailsEvent, AssignmentDetailsEffect>(),
@@ -68,6 +75,8 @@ class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Lon
 
     override fun accept(effect: AssignmentDetailsEffect) {
         when (effect) {
+            AssignmentDetailsEffect.ShowAudioRecordingView -> launchAudio()
+            AssignmentDetailsEffect.ShowAudioRecordingError -> view?.showAudioRecordingError()
             is AssignmentDetailsEffect.ShowSubmitDialogView -> {
                 val studioUrl = effect.studioLTITool?.getResourceSelectorUrl(effect.course, effect.assignment)
                 view?.showSubmitDialogView(effect.assignment, effect.course.id, getSubmissionTypesVisibilities(effect.assignment, effect.isStudioEnabled), studioUrl, effect.studioLTITool?.name)
@@ -76,6 +85,7 @@ class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Lon
             is AssignmentDetailsEffect.ShowQuizStartView -> view?.showQuizStartView(effect.course, effect.quiz)
             is AssignmentDetailsEffect.ShowDiscussionDetailView -> view?.showDiscussionDetailView(effect.course, effect.discussionTopicHeaderId)
             is AssignmentDetailsEffect.ShowDiscussionAttachment -> view?.showDiscussionAttachment(effect.course, effect.discussionAttachment)
+            is AssignmentDetailsEffect.UploadMediaSubmission -> uploadAudioRecording(effect.file, effect.assignment, effect.course)
             is AssignmentDetailsEffect.ShowUploadStatusView -> {
                 when (effect.submission.submissionType) {
                     Assignment.SubmissionType.ONLINE_UPLOAD.apiString, Assignment.SubmissionType.MEDIA_RECORDING.apiString -> {
@@ -193,5 +203,37 @@ class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Lon
         }
 
         return visibilities
+    }
+
+    private fun launchAudio() {
+        if(needsPermissions(::launchAudio, PermissionUtils.RECORD_AUDIO)) return
+        view?.showAudioRecordingView()
+    }
+
+    private fun needsPermissions(successCallback: () -> Unit, vararg permissions: String): Boolean {
+        if (PermissionUtils.hasPermissions(context as Activity, *permissions)) {
+            return false
+        }
+
+        context.requestPermissions(setOf(*permissions)) { results ->
+            if (results.isNotEmpty() && results.all { it.value }) {
+                successCallback()
+            } else {
+                view?.showPermissionDeniedToast()
+            }
+        }
+        return true
+    }
+
+    private fun uploadAudioRecording(file: File, assignment: Assignment, course: Course) {
+        SubmissionService.startMediaSubmission(
+                context = context,
+                canvasContext = course,
+                assignmentId = assignment.id,
+                assignmentGroupCategoryId = assignment.groupCategoryId,
+                assignmentName = assignment.name,
+                mediaFilePath = file.path,
+                notoriousAction = NotoriousUploadService.ACTION.ASSIGNMENT_SUBMISSION
+        )
     }
 }

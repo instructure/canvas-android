@@ -15,6 +15,7 @@
  */
 package com.instructure.student.test.assignment.details
 
+import android.app.Activity
 import android.content.Context
 import com.instructure.canvasapi2.managers.ExternalToolManager
 import com.instructure.canvasapi2.managers.QuizManager
@@ -25,6 +26,8 @@ import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Failure
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
 import com.instructure.canvasapi2.utils.weave.awaitApiResponse
+import com.instructure.pandautils.utils.PermissionUtils
+import com.instructure.pandautils.utils.requestPermissions
 import com.instructure.student.Submission
 import com.instructure.student.db.Db
 import com.instructure.student.db.StudentDb
@@ -56,7 +59,7 @@ import java.util.concurrent.Executors
 class AssignmentDetailsEffectHandlerTest : Assert() {
     private val assignmentId = 2468L
     private val view: AssignmentDetailsView = mockk(relaxed = true)
-    private val context: Context = mockk(relaxed = true)
+    private val context: Activity = mockk(relaxed = true)
     private var effectHandler =
         AssignmentDetailsEffectHandler(context, assignmentId).apply { view = this@AssignmentDetailsEffectHandlerTest.view }
     private val eventConsumer: Consumer<AssignmentDetailsEvent> = mockk(relaxed = true)
@@ -801,6 +804,19 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     }
 
     @Test
+    fun `ShowAudioRecordingView with permission results in view calling showAudioRecordingView`() {
+        mockPermissions(hasPermission = true)
+
+        connection.accept(AssignmentDetailsEffect.ShowAudioRecordingView)
+
+        verify(timeout = 100) {
+            view.showAudioRecordingView()
+        }
+
+        confirmVerified(view)
+    }
+
+    @Test
     fun `ShowQuizStartView calls showQuizStartView on the view`() {
         val quiz = Quiz(id = 123L)
         val course = Course(id = 123L)
@@ -815,6 +831,18 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     }
 
     @Test
+    fun `ShowAudioRecordingView without permission results in view calling showPermissionDeniedToast`() {
+        mockPermissions(hasPermission = false)
+
+        connection.accept(AssignmentDetailsEffect.ShowAudioRecordingView)
+
+        verify(timeout = 100) {
+            view.showPermissionDeniedToast()
+        }
+
+        confirmVerified(view)
+    }
+    @Test
     fun `ShowDiscussionDetailView calls showDiscussionDetailView on the view`() {
         val discussionTopicHeaderId = 112233L
         val course = Course(id = 123L)
@@ -823,6 +851,17 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
 
         verify(timeout = 100) {
             view.showDiscussionDetailView(course, discussionTopicHeaderId)
+        }
+
+        confirmVerified(view)
+    }
+
+    @Test
+    fun `ShowAudioRecordingError results in view calling showAudioRecordingError`() {
+        connection.accept(AssignmentDetailsEffect.ShowAudioRecordingError)
+
+        verify(timeout = 100) {
+            view.showAudioRecordingError()
         }
 
         confirmVerified(view)
@@ -870,6 +909,18 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
         confirmVerified(view)
     }
 
+    private fun mockPermissions(hasPermission: Boolean, permissionGranted: Boolean = false) {
+        // Mock both so we can mockk the class and the extensions in the same file
+        mockkStatic(PermissionUtils::class)
+        mockkStatic("${PermissionUtils::class.java.canonicalName}Kt")
+        every { PermissionUtils.hasPermissions(context, *anyVararg()) } returns hasPermission andThen permissionGranted
+
+        val block = slot<(Map<String, Boolean>) -> Unit>()
+
+        every { context.requestPermissions(any(), capture(block)) } answers {
+            block.invoke(mapOf(Pair("any", permissionGranted)))
+        }
+    }
 
     private fun <T> createError(message: String = "Error", code: Int = 400) = StatusCallbackError(
         null,

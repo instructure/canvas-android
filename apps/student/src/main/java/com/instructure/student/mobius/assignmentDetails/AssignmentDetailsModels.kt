@@ -19,13 +19,16 @@ package com.instructure.student.mobius.assignmentDetails
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.student.Submission
+import java.io.File
 
 sealed class AssignmentDetailsEvent {
     object SubmitAssignmentClicked : AssignmentDetailsEvent()
     object ViewSubmissionClicked : AssignmentDetailsEvent()
     object ViewUploadStatusClicked : AssignmentDetailsEvent()
+    object AudioRecordingClicked : AssignmentDetailsEvent()
     object DiscussionAttachmentClicked : AssignmentDetailsEvent()
     object PullToRefresh : AssignmentDetailsEvent()
+    data class SendAudioRecordingClicked(val file: File?) : AssignmentDetailsEvent()
     data class SubmissionTypeClicked(val submissionType: Assignment.SubmissionType) : AssignmentDetailsEvent()
     data class DataLoaded(
         val assignmentResult: DataResult<Assignment>?,
@@ -40,6 +43,9 @@ sealed class AssignmentDetailsEvent {
 }
 
 sealed class AssignmentDetailsEffect {
+    object ShowAudioRecordingView : AssignmentDetailsEffect()
+    object ShowAudioRecordingError : AssignmentDetailsEffect()
+    data class UploadMediaSubmission(val file: File, val course: Course, val assignment: Assignment) : AssignmentDetailsEffect()
     data class ShowSubmitDialogView(val assignment: Assignment, val course: Course, val isStudioEnabled: Boolean, val studioLTITool: LTITool? = null) : AssignmentDetailsEffect()
     data class ShowQuizStartView(val quiz: Quiz, val course: Course) : AssignmentDetailsEffect()
     data class ShowDiscussionDetailView(val discussionTopicHeaderId: Long, val course: Course) : AssignmentDetailsEffect()

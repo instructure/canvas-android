@@ -1081,6 +1081,7 @@
 
     <string name="addVideoComment">Add video comment</string>
     <string name="addAudioComment">Add audio comment</string>
+    <string name="audioRecordingError">An unexpected error occurred while trying to record audio.</string>
 
     <string name="quizQuestionLabel">Questions:</string>
     <string name="timeLimitLabel">Time Limit:</string>

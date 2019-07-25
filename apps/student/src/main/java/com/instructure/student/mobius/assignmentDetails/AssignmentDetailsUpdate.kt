@@ -58,6 +58,17 @@ class AssignmentDetailsUpdate : UpdateInit<AssignmentDetailsModel, AssignmentDet
         AssignmentDetailsEvent.PullToRefresh -> {
             Next.next(model.copy(isLoading = true), setOf(AssignmentDetailsEffect.LoadData(model.assignmentId, model.course.id, true)))
         }
+        AssignmentDetailsEvent.AudioRecordingClicked -> {
+            Next.dispatch(setOf(AssignmentDetailsEffect.ShowAudioRecordingView))
+        }
+        is AssignmentDetailsEvent.SendAudioRecordingClicked -> {
+            if(event.file == null) {
+                Next.dispatch<AssignmentDetailsModel, AssignmentDetailsEffect>(setOf(AssignmentDetailsEffect.ShowAudioRecordingError))
+            } else {
+                val assignment = model.assignmentResult!!.dataOrThrow
+                Next.dispatch<AssignmentDetailsModel, AssignmentDetailsEffect>(setOf(AssignmentDetailsEffect.UploadMediaSubmission(event.file, model.course, assignment)))
+            }
+        }
         is AssignmentDetailsEvent.SubmissionStatusUpdated -> {
             Next.next(
                 model.copy(
