@@ -186,7 +186,7 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
 
             if (CanvasWebView.containsLTI(page.body.orEmpty(), "UTF-8")) {
                 if (page.body.orEmpty().contains("arc_media")) {
-                    // For embedded ARC videos, we just want to load the HTML we get back from the server
+                    // For embedded Studio videos, we just want to load the HTML we get back from the server
                     loadPageHtml(page.body.orEmpty())
                 } else {
                     canvasWebView.addJavascriptInterface(JsExternalToolInterface {

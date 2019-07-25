@@ -16,6 +16,32 @@
  */
 package com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments
 
-sealed class SubmissionCommentsViewState {
-    object Empty : SubmissionCommentsViewState()
+data class SubmissionCommentsViewState(
+    val enableMediaButton: Boolean = true,
+    val enableCommentInput: Boolean = true,
+    val showSendButton: Boolean = false,
+    val showProgressIndicator: Boolean = false,
+    val commentStates: List<CommentItemState> = listOf(CommentItemState.Empty)
+)
+
+sealed class CommentItemState {
+    object Empty : CommentItemState()
+
+    data class CommentItem(
+        val avatarUrl: String,
+        val avatarInitials: String,
+        val comment: String,
+        val isAudience: Boolean
+    ) : CommentItemState()
+
+    data class PendingCommentItem(
+        val avatarUrl: String,
+        val avatarInitials: String,
+        val comment: String,
+        val status: String
+    )
+
+    data class SubmissionItem(
+        val name: String
+    ) : CommentItemState()
 }

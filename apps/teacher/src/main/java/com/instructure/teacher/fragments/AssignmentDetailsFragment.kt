@@ -277,7 +277,7 @@ class AssignmentDetailsFragment : BasePresenterFragment<
 
         // Load description
 
-        //if the html has an arc lti url, we want to authenticate so the user doesn't have to login again
+        // If the html has a Studio LTI url, we want to authenticate so the user doesn't have to login again
         if (CanvasWebView.containsLTI(description.orEmpty(), "UTF-8")) {
             descriptionWebView.addJavascriptInterface(JsExternalToolInterface {
                 val args = LTIWebViewFragment.makeLTIBundle(URLDecoder.decode(it, "utf-8"), requireContext().getString(R.string.utils_externalToolTitle), true)

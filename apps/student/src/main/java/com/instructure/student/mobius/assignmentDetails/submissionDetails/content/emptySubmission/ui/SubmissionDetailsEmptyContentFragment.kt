@@ -28,7 +28,7 @@ class SubmissionDetailsEmptyContentFragment :
 
     val canvasContext by ParcelableArg<Course>(key = Const.CANVAS_CONTEXT)
     val assignment by ParcelableArg<Assignment>(key = Const.ASSIGNMENT)
-    val isArcEnabled by BooleanArg(key = Const.IS_ARC_ENABLED)
+    val isArcEnabled by BooleanArg(key = Const.IS_STUDIO_ENABLED)
 
     override fun makeEffectHandler() = SubmissionDetailsEmptyContentEffectHandler()
     override fun makeUpdate() = SubmissionDetailsEmptyContentUpdate()
@@ -41,7 +41,7 @@ class SubmissionDetailsEmptyContentFragment :
         fun newInstance(course: Course, assignment: Assignment, isArcEnabled: Boolean): SubmissionDetailsEmptyContentFragment {
             val bundle = course.makeBundle {
                 putParcelable(Const.ASSIGNMENT, assignment)
-                putBoolean(Const.IS_ARC_ENABLED, isArcEnabled)
+                putBoolean(Const.IS_STUDIO_ENABLED, isArcEnabled)
             }
 
             return SubmissionDetailsEmptyContentFragment().withArgs(bundle)

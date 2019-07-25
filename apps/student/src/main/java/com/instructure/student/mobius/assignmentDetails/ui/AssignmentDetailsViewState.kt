@@ -37,10 +37,13 @@ sealed class AssignmentDetailsViewState(val visibilities: AssignmentDetailsVisib
         val submissionTypes: String = "",
         val fileTypes: String = "",
         val description: String = "",
+        val descriptionLabel: String = "",
         val submitButtonText: String = "",
         val gradeState: GradeCellViewState = GradeCellViewState.Empty,
         val assignmentDetailsVisibilities: AssignmentDetailsVisibilities,
-        val isExternalToolSubmission: Boolean = false
+        val isExternalToolSubmission: Boolean = false,
+        val quizDescriptionViewState: QuizDescriptionViewState? = null,
+        val discussionHeaderViewState: DiscussionHeaderViewState? = null
     ) : AssignmentDetailsViewState(assignmentDetailsVisibilities)
 }
 
@@ -58,6 +61,9 @@ data class AssignmentDetailsVisibilities (
     var noDescriptionLabel: Boolean = false,
     var description: Boolean = false,
     var submitButton: Boolean = false,
+    var submissionUploadStatus: Boolean = false,
+    var quizDetails: Boolean = false,
+    var discussionTopicHeader: Boolean = false,
     var submissionUploadStatusInProgress: Boolean = false,
     var submissionUploadStatusFailed: Boolean = false
 )
@@ -67,5 +73,18 @@ data class SubmissionTypesVisibilities(
     var urlEntry: Boolean = false,
     var fileUpload: Boolean = false,
     var mediaRecording: Boolean = false,
-    var arcUpload: Boolean = false
+    var studioUpload: Boolean = false
+)
+
+data class QuizDescriptionViewState(
+    val questionCount: String,
+    val timeLimit: String,
+    val allowedAttempts: String
+)
+
+data class DiscussionHeaderViewState(
+    val authorAvatarUrl: String? = null,
+    val authorName: String,
+    val authoredDate: String,
+    val attachmentIconVisibility: Boolean
 )

@@ -19,10 +19,12 @@ package com.instructure.student.mobius.assignmentDetails
 import android.app.Activity
 import android.content.Context
 import com.instructure.canvasapi2.managers.AssignmentManager
+import com.instructure.canvasapi2.managers.QuizManager
 import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DiscussionTopic
+import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.utils.*
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
 import com.instructure.canvasapi2.utils.weave.awaitApiResponse
@@ -36,7 +38,8 @@ import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsView
 import com.instructure.student.mobius.assignmentDetails.ui.SubmissionTypesVisibilities
 import com.instructure.student.mobius.common.ui.EffectHandler
 import com.instructure.student.mobius.common.ui.SubmissionService
-import com.instructure.student.util.isArcEnabled
+import com.instructure.student.util.getResourceSelectorUrl
+import com.instructure.student.util.getStudioLTITool
 import com.spotify.mobius.Connection
 import com.spotify.mobius.functions.Consumer
 import com.squareup.sqldelight.Query
@@ -74,13 +77,17 @@ class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Lon
         when (effect) {
             AssignmentDetailsEffect.ShowAudioRecordingView -> launchAudio()
             AssignmentDetailsEffect.ShowAudioRecordingError -> view?.showAudioRecordingError()
-            is AssignmentDetailsEffect.ShowSubmitDialogView -> view?.showSubmitDialogView(effect.assignment, effect.course.id, getSubmissionTypesVisibilities(effect.assignment, effect.isArcEnabled))
+            is AssignmentDetailsEffect.ShowSubmitDialogView -> {
+                val studioUrl = effect.studioLTITool?.getResourceSelectorUrl(effect.course, effect.assignment)
+                view?.showSubmitDialogView(effect.assignment, effect.course.id, getSubmissionTypesVisibilities(effect.assignment, effect.isStudioEnabled), studioUrl, effect.studioLTITool?.name)
+            }
             is AssignmentDetailsEffect.ShowSubmissionView -> view?.showSubmissionView(effect.assignmentId, effect.course)
+            is AssignmentDetailsEffect.ShowQuizStartView -> view?.showQuizStartView(effect.course, effect.quiz)
+            is AssignmentDetailsEffect.ShowDiscussionDetailView -> view?.showDiscussionDetailView(effect.course, effect.discussionTopicHeaderId)
+            is AssignmentDetailsEffect.ShowDiscussionAttachment -> view?.showDiscussionAttachment(effect.course, effect.discussionAttachment)
             is AssignmentDetailsEffect.ShowUploadStatusView -> view?.showUploadStatusView(effect.submission.id) // TODO: show upload status for files/media, otherwise show the appropriate submission screen (text/url/etc...)
             is AssignmentDetailsEffect.UploadMediaSubmission -> uploadAudioRecording(effect.file, effect.assignment, effect.course)
-            is AssignmentDetailsEffect.LoadData -> {
-                loadData(effect)
-            }
+            is AssignmentDetailsEffect.LoadData -> loadData(effect)
             is AssignmentDetailsEffect.ShowCreateSubmissionView -> {
                 when (effect.submissionType) {
                     Assignment.SubmissionType.ONLINE_QUIZ -> {
@@ -116,7 +123,7 @@ class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Lon
 
     private fun loadData(effect: AssignmentDetailsEffect.LoadData) {
         launch {
-            val result = try {
+            val assignmentResult = try {
                 val assignmentResponse = awaitApiResponse<Assignment> {
                     AssignmentManager.getAssignment(effect.assignmentId, effect.courseId, effect.forceNetwork, it)
                 }
@@ -132,28 +139,44 @@ class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Lon
             val dbSubmission = submissionQuery?.executeAsList()?.lastOrNull()
 
             // Determine if we need to retrieve an authenticated LTI URL based on whether this assignment accepts external tool submissions
-            val assignmentUrl = result.dataOrNull?.url
-            val ltiTool = if (assignmentUrl != null && result.dataOrNull?.getSubmissionTypes()?.contains(Assignment.SubmissionType.EXTERNAL_TOOL) == true)
+            val assignmentUrl = assignmentResult.dataOrNull?.url
+            val ltiTool = if (assignmentUrl != null && assignmentResult.dataOrNull?.getSubmissionTypes()?.contains(Assignment.SubmissionType.EXTERNAL_TOOL) == true)
                 SubmissionManager.getLtiFromAuthenticationUrlAsync(assignmentUrl, true).await()
             else DataResult.Fail(null)
 
-            // We need to know if they can make submissions through arc, only for file uploads
-            val isArcEnabled = if (result.isSuccess && result.dataOrThrow.getSubmissionTypes().contains(Assignment.SubmissionType.ONLINE_UPLOAD)) {
-                effect.courseId.isArcEnabled()
-            } else false
+            // We need to know if they can make submissions through Studio, only for file uploads
+            val studioLTITool: DataResult<LTITool> = if (assignmentResult.isSuccess && assignmentResult.dataOrThrow.getSubmissionTypes().contains(Assignment.SubmissionType.ONLINE_UPLOAD)) {
+               effect.courseId.getStudioLTITool()
+            } else DataResult.Fail(null)
+
+            val isStudioEnabled = studioLTITool.isSuccess
+
+            val quizResult = if (assignmentResult.dataOrNull?.turnInType == (Assignment.TurnInType.QUIZ) && assignmentResult.dataOrNull?.quizId != 0L) {
+                try {
+                    QuizManager.getQuizAsync(effect.courseId, assignmentResult.dataOrNull?.quizId!!, effect.forceNetwork).await()
+                } catch (e: StatusCallbackError) {
+                    if (e.response?.code() == 401) {
+                        DataResult.Fail(Failure.Authorization(e.response?.message()))
+                    } else {
+                        DataResult.Fail(Failure.Network(e.response?.message()))
+                    }
+                }
+            } else null
 
             consumer.accept(
                 AssignmentDetailsEvent.DataLoaded(
-                    result,
-                    isArcEnabled,
+                    assignmentResult,
+                    isStudioEnabled,
+                    studioLTITool,
                     ltiTool,
-                    dbSubmission
+                    dbSubmission,
+                    quizResult
                 )
             )
         }
     }
 
-    private fun getSubmissionTypesVisibilities(assignment: Assignment, isArcEnabled: Boolean): SubmissionTypesVisibilities {
+    private fun getSubmissionTypesVisibilities(assignment: Assignment, isStudioEnabled: Boolean): SubmissionTypesVisibilities {
         val visibilities = SubmissionTypesVisibilities()
 
         val submissionTypes = assignment.getSubmissionTypes()
@@ -163,7 +186,7 @@ class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Lon
             when (submissionType) {
                 Assignment.SubmissionType.ONLINE_UPLOAD -> {
                     visibilities.fileUpload = true
-                    visibilities.arcUpload = isArcEnabled
+                    visibilities.studioUpload = isStudioEnabled
                 }
                 Assignment.SubmissionType.ONLINE_TEXT_ENTRY -> visibilities.textEntry = true
                 Assignment.SubmissionType.ONLINE_URL -> visibilities.urlEntry = true

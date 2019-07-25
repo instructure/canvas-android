@@ -25,6 +25,8 @@ import com.instructure.canvasapi2.models.postmodels.QuizPostBody
 import com.instructure.canvasapi2.models.postmodels.QuizPostBodyWrapper
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ExhaustiveListCallback
+import com.instructure.canvasapi2.utils.weave.apiAsync
+import com.instructure.canvasapi2.utils.weave.awaitApi
 import okhttp3.ResponseBody
 import java.util.*
 
@@ -48,6 +50,10 @@ object QuizManager {
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
 
         QuizAPI.getQuiz(courseId, quizId, adapter, callback, params)
+    }
+
+    fun getQuizAsync(courseId: Long, quizId: Long, forceNetwork: Boolean) = apiAsync<Quiz> {
+        getQuiz(courseId, quizId, forceNetwork, it)
     }
 
     @JvmStatic

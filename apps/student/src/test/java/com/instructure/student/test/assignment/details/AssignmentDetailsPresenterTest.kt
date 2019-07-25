@@ -28,6 +28,7 @@ import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsPresent
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsViewState
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsVisibilities
 import com.instructure.canvasapi2.utils.isRtl
+import com.instructure.student.mobius.assignmentDetails.ui.DiscussionHeaderViewState
 import io.mockk.every
 import io.mockk.mockkStatic
 import io.mockk.unmockkStatic
@@ -47,6 +48,8 @@ class AssignmentDetailsPresenterTest : Assert() {
     private lateinit var baseAssignment: Assignment
     private lateinit var baseVisibilities: AssignmentDetailsVisibilities
     private lateinit var baseSubmission: Submission
+    private lateinit var baseDiscussion: DiscussionTopicHeader
+    private lateinit var baseQuiz: Quiz
 
     @Before
     fun setup() {
@@ -68,6 +71,18 @@ class AssignmentDetailsPresenterTest : Assert() {
         baseSubmission = Submission(
             attempt = 1,
             workflowState = "submitted"
+        )
+        baseQuiz = Quiz(
+            id = 123L
+        )
+        baseDiscussion = DiscussionTopicHeader(
+                id = 123L,
+                message = "discussion message",
+                author = DiscussionParticipant(
+                        displayName = "Hodor",
+                        avatarImageUrl = "pretty-hodor.com"
+                ),
+                postedDate = Date()
         )
     }
 
@@ -128,7 +143,9 @@ class AssignmentDetailsPresenterTest : Assert() {
         val lockMessage = "Locked by test"
         val assignment = baseAssignment.copy(
             lockAt = lockDate.toApiString(),
-            lockExplanation = lockMessage
+            lockedForUser = true,
+            lockExplanation = lockMessage,
+            submissionTypesRaw = listOf("online_upload")
         )
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         val expected = baseVisibilities.copy(
@@ -156,7 +173,7 @@ class AssignmentDetailsPresenterTest : Assert() {
             allowedExtensions = listOf("pdf", "JPG", "PNG", "zip")
         )
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
-        val expected = baseVisibilities.copy(fileTypes = false)
+        val expected = baseVisibilities.copy(fileTypes = false, submissionTypes = false)
         val actual = AssignmentDetailsPresenter.present(model, context).visibilities
         assertEquals(expected, actual)
     }
@@ -283,11 +300,37 @@ class AssignmentDetailsPresenterTest : Assert() {
     }
 
     @Test
-    fun `Formats submission types correctly`() {
-        val allTypes = Assignment.SubmissionType.values()
+    fun `Formats online submission types correctly`() {
+        // You can't have an assignment that is both a standard online assignment and a quiz
+        val allTypes = listOf(Assignment.SubmissionType.ONLINE_UPLOAD, Assignment.SubmissionType.ONLINE_TEXT_ENTRY, Assignment.SubmissionType.ONLINE_URL, Assignment.SubmissionType.DISCUSSION_TOPIC, Assignment.SubmissionType.BASIC_LTI_LAUNCH, Assignment.SubmissionType.ATTENDANCE, Assignment.SubmissionType.MEDIA_RECORDING)
         val expected = allTypes.map { Assignment.submissionTypeToPrettyPrintString(it, context) }.joinToString(", ")
         val assignment = baseAssignment.copy(
             submissionTypesRaw = allTypes.map { it.apiString }
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
+        assertEquals(expected, state.submissionTypes)
+    }
+
+    @Test
+    fun `Formats online quiz submission type correctly`() {
+        val allTypes = listOf(Assignment.SubmissionType.ONLINE_QUIZ)
+        val expected = allTypes.map { Assignment.submissionTypeToPrettyPrintString(it, context) }.joinToString(", ")
+        val assignment = baseAssignment.copy(
+                submissionTypesRaw = allTypes.map { it.apiString },
+                quizId = baseQuiz.id
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment), quizResult = DataResult.Success(baseQuiz))
+        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
+        assertEquals(expected, state.submissionTypes)
+    }
+
+    @Test
+    fun `Formats offline submission type correctly`() {
+        val allTypes = listOf(Assignment.SubmissionType.ON_PAPER)
+        val expected = allTypes.map { Assignment.submissionTypeToPrettyPrintString(it, context) }.joinToString(", ")
+        val assignment = baseAssignment.copy(
+                submissionTypesRaw = allTypes.map { it.apiString }
         )
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
@@ -334,6 +377,62 @@ class AssignmentDetailsPresenterTest : Assert() {
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
         assertEquals("Resubmit Assignment", state.submitButtonText)
+    }
+
+    @Test
+    fun `Submit button reads "View Quiz" if its a quiz with a submission`() {
+        val assignment = baseAssignment.copy(
+                submissionTypesRaw = listOf("online_quiz"),
+                submission = baseSubmission,
+                quizId = baseQuiz.id
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment), quizResult = DataResult.Success(baseQuiz))
+        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
+        assertEquals("View Quiz", state.submitButtonText)
+    }
+
+    @Test
+    fun `Submit button reads "View Quiz" if its a quiz with no submission`() {
+        val assignment = baseAssignment.copy(
+                submissionTypesRaw = listOf("online_quiz"),
+                quizId = baseQuiz.id
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment), quizResult = DataResult.Success(baseQuiz))
+        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
+        assertEquals("View Quiz", state.submitButtonText)
+    }
+
+    @Test
+    fun `Submit button reads "View Discussion" if its a discussion with a submission`() {
+        val assignment = baseAssignment.copy(
+                submissionTypesRaw = listOf("discussion_topic"),
+                submission = baseSubmission,
+                discussionTopicHeader = baseDiscussion
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
+        assertEquals("View Discussion", state.submitButtonText)
+    }
+
+    @Test
+    fun `Submit button reads "View Discussion" if its a discussion with no submission`() {
+        val assignment = baseAssignment.copy(
+                submissionTypesRaw = listOf("discussion_topic"),
+                discussionTopicHeader = baseDiscussion
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
+        assertEquals("View Discussion", state.submitButtonText)
+    }
+
+    @Test
+    fun `Submit button reads "Launch External Tool" if submission type is external tool`() {
+        val assignment = baseAssignment.copy(
+                submissionTypesRaw = listOf(Assignment.SubmissionType.EXTERNAL_TOOL.apiString)
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
+        assertEquals("Launch External Tool", state.submitButtonText)
     }
 
     @Test
@@ -414,16 +513,6 @@ class AssignmentDetailsPresenterTest : Assert() {
     }
 
     @Test
-    fun `Displays Launch External Tool if submission type is external tool`() {
-        val assignment = baseAssignment.copy(
-            submissionTypesRaw = listOf(Assignment.SubmissionType.EXTERNAL_TOOL.apiString)
-        )
-        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
-        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
-        assertEquals("Launch External Tool", state.submitButtonText)
-    }
-
-    @Test
     fun `isExternalToolSubmission is true if submission type is external tool`() {
         val assignment = baseAssignment.copy(
             submissionTypesRaw = listOf(Assignment.SubmissionType.EXTERNAL_TOOL.apiString)
@@ -463,4 +552,156 @@ class AssignmentDetailsPresenterTest : Assert() {
         assertEquals(false, state.visibilities.submitButton)
     }
 
+    @Test
+    fun `Description contains DiscussionHeaderState with no attachments when assignment is discussion`() {
+        val authorAvatarUrl = "pretty-hodor.com"
+        val authorName = "hodor"
+        val authoredDate = "Jul 23 at 9:59 AM"
+        val attachmentIconVisibility = false
+        val discussionMessage = "yo yo yo"
+        val calendar = GregorianCalendar.getInstance()
+        calendar.set(2019, 6, 23, 9, 59)
+        val discussionTopicHeader = baseDiscussion.copy(message = discussionMessage, author = DiscussionParticipant(displayName = authorName, avatarImageUrl = authorAvatarUrl), postedDate = calendar.time)
+        val assignment = baseAssignment.copy(submissionTypesRaw = listOf("discussion_topic"), discussionTopicHeader = discussionTopicHeader)
+
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
+        val expectedState = DiscussionHeaderViewState(authorAvatarUrl, authorName, authoredDate, attachmentIconVisibility)
+
+        assertEquals(expectedState, state.discussionHeaderViewState)
+    }
+
+    @Test
+    fun `Description contains DiscussionHeaderState with attachments when assignment is discussion`() {
+        val authorAvatarUrl = "pretty-hodor.com"
+        val authorName = "hodor"
+        val authoredDate = "Jul 23 at 9:59 AM"
+        val attachmentIconVisibility = true
+        val discussionMessage = "yo yo yo"
+        val attachmentId = 12345L
+        val remoteFiles = mutableListOf(RemoteFile(id = attachmentId))
+        val calendar = GregorianCalendar.getInstance()
+        calendar.set(2019, 6, 23, 9, 59)
+        val discussionTopicHeader = baseDiscussion.copy(attachments = remoteFiles, message = discussionMessage, author = DiscussionParticipant(displayName = authorName, avatarImageUrl = authorAvatarUrl), postedDate = calendar.time)
+        val assignment = baseAssignment.copy(submissionTypesRaw = listOf("discussion_topic"), discussionTopicHeader = discussionTopicHeader)
+
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
+        val expectedState = DiscussionHeaderViewState(authorAvatarUrl, authorName, authoredDate, attachmentIconVisibility)
+
+        assertEquals(expectedState, state.discussionHeaderViewState)
+    }
+    //val remoteFiles = mutableListOf(RemoteFile(id = attachmentId))
+
+    @Test
+    fun `Description contains discussion topic header message when assignment is discussion`() {
+        val assignment = baseAssignment.copy(submissionTypesRaw = listOf("discussion_topic"), discussionTopicHeader = baseDiscussion)
+
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
+
+        assertEquals(discussionHtml, state.description)
+    }
+
+    @Test
+    fun `SubmitButton is visible when assignment is discussion`() {
+        val assignment = baseAssignment.copy(submissionTypesRaw = listOf("discussion_topic"), discussionTopicHeader = baseDiscussion)
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
+        assertEquals(true, state.visibilities.submitButton)
+    }
+
+    @Test
+    fun `SubmitButton is visible when assignment is quiz`() {
+        val assignment = baseAssignment.copy(
+                submissionTypesRaw = listOf(Assignment.SubmissionType.ONLINE_QUIZ.apiString)
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment), quizResult = DataResult.Success(baseQuiz))
+        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
+        assertEquals(true, state.visibilities.submitButton)
+    }
+
+    @Test
+    fun `makeLockedState contains appropriate lock message when unlockDate is present`() {
+        val unlockDate = Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(10))
+        val assignment = baseAssignment.copy(
+                unlockAt = unlockDate.toApiString(),
+                lockInfo = LockInfo(unlockAt = unlockDate.toApiString())
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        val expected = AssignmentDetailsVisibilities(
+                title = true,
+                lockedMessage = true,
+                lockedImage = true,
+                submissionAndRubricButton = true
+        )
+        val actual = AssignmentDetailsPresenter.present(model, context).visibilities
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `Returns error state when assignment quiz fails`() {
+        val assignment = baseAssignment.copy(
+                submissionTypesRaw = listOf(Assignment.SubmissionType.ONLINE_QUIZ.apiString),
+                quizId = baseQuiz.id
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment), quizResult = DataResult.Fail())
+        val expectedState = AssignmentDetailsViewState.Error
+        val actualState = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Error
+
+        assertEquals(expectedState, actualState)
+    }
+
+    @Test
+    fun `Returns error state when assignment quiz is null`() {
+        val assignment = baseAssignment.copy(
+                submissionTypesRaw = listOf(Assignment.SubmissionType.ONLINE_QUIZ.apiString),
+                quizId = baseQuiz.id
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment), quizResult = null)
+        val expectedState = AssignmentDetailsViewState.Error
+        val actualState = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Error
+
+        assertEquals(expectedState, actualState)
+    }
+
+    private val discussionHtml = "<!DOCTYPE html>\n" +
+            "<html>\n" +
+            "\t<head>\n" +
+            "\t\t<meta name=\"viewport\" charset=\"utf-8\" content=\"width=device-width, initial-scale=1.0, maximum-scale=1.0\" />\n" +
+            "\t\t<style>\n" +
+            "\n" +
+            "        \t.lti_button {\n" +
+            "\t\t\t\tmargin-bottom: 12px;\n" +
+            "\t\t\t\theight: 38px;\n" +
+            "\t\t\t\twidth: 100%;\n" +
+            "\t\t\t\tborder: 0.5px solid #C7CDD1;\n" +
+            "\t\t\t\tborder-radius: 4px;\n" +
+            "\t\t\t\tbackground-color: #F5F5F5;\n" +
+            "\t\t\t\ttext-align: center;\n" +
+            "\t\t\t\tvertical-align: middle;\n" +
+            "\t\t\t\tline-height: 38px;\n" +
+            "\t\t\t\tcolor: #394B58;\n" +
+            "\t\t\t\tfont-size: 13px;\n" +
+            "\t\t\t\tmargin: auto;\n" +
+            "\t    \t}\n" +
+            "\n" +
+            "        \t/* makes the videos in fullscreen black */\n" +
+            "            :-webkit-full-screen-ancestor:not(iframe) { background-color: black }\n" +
+            "\n" +
+            "\t\t</style>\n" +
+            "\t</head>\n" +
+            "\t<body>\n" +
+            "\t\t<div id=\"header_content\">discussion message</div>\n" +
+            "\t\t<script type=\"text/javascript\">\n" +
+            "\n" +
+            "\t\t\tfunction onLtiToolButtonPressed(id) {\n" +
+            "\t\t\t\taccessor.onLtiToolButtonPressed(id);\n" +
+            "\t\t\t\twindow.event.cancelBubble = true;\n" +
+            "\t\t\t\twindow.event.stopPropagation();\n" +
+            "\t\t\t}\n" +
+            "\n" +
+            "\t\t</script>\n" +
+            "\t</body>\n" +
+            "</html>"
 }

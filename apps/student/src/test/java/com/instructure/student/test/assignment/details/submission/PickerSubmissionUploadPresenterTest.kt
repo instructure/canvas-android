@@ -20,8 +20,9 @@ import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.Course
-import com.instructure.pandautils.models.FileSubmitObject
+import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.student.R
+import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionMode
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadModel
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadPresenter
 import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerListItemViewState
@@ -50,7 +51,7 @@ class PickerSubmissionUploadPresenterTest : Assert() {
             assignmentName = "AssignmentName",
             assignmentGroupCategoryId = 321L,
             allowedExtensions = emptyList(),
-            isMediaSubmission = false
+            mode = PickerSubmissionMode.FileSubmission
         )
         baseVisibilities = PickerVisibilities(
             fab = true,
@@ -133,7 +134,7 @@ class PickerSubmissionUploadPresenterTest : Assert() {
 
     @Test
     fun `returns file view states with canDelete false when it is a media submission`() {
-        val model = baseModel.copy(isMediaSubmission = true, files = listOf(baseFile))
+        val model = baseModel.copy(mode = PickerSubmissionMode.MediaSubmission, files = listOf(baseFile))
         val fileViewStates = listOf(
             PickerListItemViewState(
                 0,

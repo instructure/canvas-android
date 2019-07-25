@@ -49,7 +49,7 @@ class SubmissionDetailsFragment :
 
     override fun makeInitModel() = SubmissionDetailsModel(canvasContext = canvasContext, assignmentId = assignmentId)
 
-    override val eventSources = listOf(
+    override fun getExternalEventSources() = listOf(
         ChannelSource.getSource<SubmissionDetailsSharedEvent, SubmissionDetailsEvent> {
             when (it) {
                 is SubmissionDetailsSharedEvent.FileSelected -> SubmissionDetailsEvent.AttachmentClicked(it.file)

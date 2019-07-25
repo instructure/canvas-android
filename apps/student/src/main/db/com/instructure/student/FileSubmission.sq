@@ -16,7 +16,7 @@
 
 import com.instructure.canvasapi2.models.CanvasContext;
 import com.instructure.student.db.sqlColAdapters.ErrorColAdapter;
-import com.instructure.pandautils.models.FileSubmitObject;
+import com.instructure.canvasapi2.models.postmodels.FileSubmitObject;
 
 CREATE TABLE fileSubmission (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,

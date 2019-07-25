@@ -20,14 +20,15 @@ package com.instructure.student.mobius.assignmentDetails.submissionDetails.drawe
 
 import android.app.Activity
 import android.content.Context
-import android.widget.Toast
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.exhaustive
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.PermissionUtils
+import com.instructure.pandautils.utils.requestPermissions
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsSharedEvent
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.ui.SubmissionCommentsView
 import com.instructure.student.mobius.common.ChannelSource
 import com.instructure.student.mobius.common.ui.EffectHandler
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import com.instructure.student.mobius.common.ui.SubmissionService
 
 class SubmissionCommentsEffectHandler(val context: Context) : EffectHandler<SubmissionCommentsView, SubmissionCommentsEvent, SubmissionCommentsEffect>() {
     override fun accept(effect: SubmissionCommentsEffect) {
@@ -42,8 +43,34 @@ class SubmissionCommentsEffectHandler(val context: Context) : EffectHandler<Subm
                 launchVideo()
             }
             is SubmissionCommentsEffect.UploadMediaComment -> {
-                //TODO - the result from this upload must set isMediaCommentEnabled to true
-                view?.showMediaUploadToast()
+                SubmissionService.startMediaCommentUpload(
+                    context = context,
+                    canvasContext = CanvasContext.emptyCourseContext(effect.courseId),
+                    assignmentId = effect.assignmentId,
+                    assignmentName = effect.assignmentName,
+                    mediaFile = effect.file,
+                    isGroupMessage = effect.isGroupMessage
+                )
+            }
+            is SubmissionCommentsEffect.ShowFilePicker -> {
+                view?.showFilePicker(effect.canvasContext, effect.assignment)
+            }
+            SubmissionCommentsEffect.ClearTextInput -> {
+                view?.clearTextInput()
+            }
+            is SubmissionCommentsEffect.SendTextComment -> {
+                SubmissionService.startCommentUpload(
+                    context,
+                    CanvasContext.emptyCourseContext(effect.courseId),
+                    effect.assignmentId,
+                    effect.assignmentName,
+                    effect.message,
+                    emptyList(),
+                    effect.isGroupMessage
+                )
+            }
+            is SubmissionCommentsEffect.RetryCommentUpload -> {
+                SubmissionService.retryCommentUpload(context, effect.commentId)
             }
         }.exhaustive
     }

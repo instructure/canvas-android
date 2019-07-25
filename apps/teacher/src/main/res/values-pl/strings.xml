@@ -929,7 +929,6 @@
     <string name="allSections">Wszystkie sekcje</string>
 
     <string name="gauge">Gauge</string>
-    <string name="arc">Arc</string>
     <string name="ltiLaunchFailure">Nie udało się wczytać narzędzia LTI.</string>
     <string name="downloading">Pobieranie...</string>
 

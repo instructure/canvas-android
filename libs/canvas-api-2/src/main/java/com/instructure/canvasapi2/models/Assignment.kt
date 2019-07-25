@@ -95,7 +95,7 @@ data class Assignment(
         val moderatedGrading: Boolean = false,
         @SerializedName("anonymous_grading")
         val anonymousGrading: Boolean = false,
-        var isArcEnabled: Boolean = false
+        var isStudioEnabled: Boolean = false
 ) : CanvasModel<Assignment>() {
     override val comparisonDate get() = dueDate
     override val comparisonString get() = dueAt
@@ -179,6 +179,7 @@ data class Assignment(
             SubmissionType.DISCUSSION_TOPIC -> TurnInType.DISCUSSION
             SubmissionType.ON_PAPER -> TurnInType.ON_PAPER
             SubmissionType.EXTERNAL_TOOL -> TurnInType.EXTERNAL_TOOL
+            SubmissionType.BASIC_LTI_LAUNCH -> TurnInType.EXTERNAL_TOOL
             else -> TurnInType.NONE
         }
 

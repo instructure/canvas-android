@@ -17,18 +17,37 @@ package com.instructure.student.util
 
 import android.content.Context
 import com.instructure.canvasapi2.managers.ExternalToolManager
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.LTITool
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.DataResult
 import org.threeten.bp.LocalDate
 import org.threeten.bp.OffsetDateTime
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.format.DateTimeFormatterBuilder
+import java.util.*
 
-suspend fun Long.isArcEnabled(): Boolean {
+suspend fun Long.isStudioEnabled(): Boolean {
     val context = CanvasContext.getGenericContext(CanvasContext.Type.COURSE, this)
     return ExternalToolManager.getExternalToolsForCanvasContextAsync(context, true).await().dataOrNull?.any {
         it.url?.contains("instructuremedia.com/lti/launch") ?: false
     } ?: false
 }
+
+suspend fun Long.getStudioLTITool(): DataResult<LTITool> {
+    val context = CanvasContext.getGenericContext(CanvasContext.Type.COURSE, this)
+    val studioLTITool = ExternalToolManager.getExternalToolsForCanvasContextAsync(context, true).await()
+        .dataOrNull?.firstOrNull {
+        it.url?.contains("instructuremedia.com/lti/launch") ?: false
+    }
+    return if (studioLTITool != null)
+        DataResult.Success(studioLTITool)
+    else DataResult.Fail()
+}
+
+fun LTITool.getResourceSelectorUrl(canvasContext: CanvasContext, assignment: Assignment) =
+    String.format(Locale.getDefault(), "%s/%s/external_tools/%d/resource_selection?launch_type=homework_submission&assignment_id=%d", ApiPrefs.fullDomain, canvasContext.toAPIString(), this.id, assignment.id)
 
 fun String.toDueAtString(context: Context): String {
     val dueDateTime = OffsetDateTime.parse(this).withOffsetSameInstant(OffsetDateTime.now().offset)

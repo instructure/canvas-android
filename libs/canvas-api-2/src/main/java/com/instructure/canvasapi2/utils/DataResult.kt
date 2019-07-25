@@ -59,6 +59,14 @@ sealed class DataResult<out A> {
             is Fail -> this
         }
     }
+
+    fun <B> then(block: (A) -> DataResult<B>): DataResult<B> {
+        return when (this) {
+            is Success -> block(data)
+            is Fail -> this
+        }
+    }
+
 }
 
 // Simple abstraction for repository layer errors, add to as needed

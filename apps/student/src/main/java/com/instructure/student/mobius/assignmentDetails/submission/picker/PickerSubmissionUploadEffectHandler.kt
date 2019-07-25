@@ -22,12 +22,12 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.core.content.FileProvider
+import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.exhaustive
-import com.instructure.pandautils.models.FileSubmitObject
+import com.instructure.pandautils.services.NotoriousUploadService
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
-import com.instructure.pandautils.services.NotoriousUploadService
-import com.instructure.pandautils.utils.FileUploadUtils
+import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionMode.*
 import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerSubmissionUploadView
 import com.instructure.student.mobius.common.ui.EffectHandler
 import com.instructure.student.mobius.common.ui.SubmissionService
@@ -40,8 +40,9 @@ import org.greenrobot.eventbus.Subscribe
 import java.io.File
 
 // We need a context in this class to register receivers and to access the database
-class PickerSubmissionUploadEffectHandler(private val context: Context) :
-    EffectHandler<PickerSubmissionUploadView, PickerSubmissionUploadEvent, PickerSubmissionUploadEffect>() {
+class PickerSubmissionUploadEffectHandler constructor(
+    private val context: Context
+) : EffectHandler<PickerSubmissionUploadView, PickerSubmissionUploadEvent, PickerSubmissionUploadEffect>() {
 
     override fun connect(output: Consumer<PickerSubmissionUploadEvent>): Connection<PickerSubmissionUploadEffect> {
         EventBus.getDefault().register(this)
@@ -100,25 +101,39 @@ class PickerSubmissionUploadEffectHandler(private val context: Context) :
     }
 
     private fun handleSubmit(model: PickerSubmissionUploadModel) {
-        if (model.isMediaSubmission) {
-            SubmissionService.startMediaSubmission(
-                context,
-                model.canvasContext,
-                model.assignmentId,
-                model.assignmentName,
-                model.assignmentGroupCategoryId,
-                model.files.first().fullPath,
-                NotoriousUploadService.ACTION.ASSIGNMENT_SUBMISSION // TODO: Make this more dynamic when everything else is wired up
-            )
-        } else {
-            SubmissionService.startFileSubmission(
-                context,
-                model.canvasContext,
-                model.assignmentId,
-                model.assignmentName,
-                model.assignmentGroupCategoryId,
-                ArrayList(model.files)
-            )
+        when (model.mode) {
+            MediaSubmission -> {
+                SubmissionService.startMediaSubmission(
+                    context = context,
+                    canvasContext = model.canvasContext,
+                    assignmentId = model.assignmentId,
+                    assignmentName = model.assignmentName,
+                    assignmentGroupCategoryId = model.assignmentGroupCategoryId,
+                    mediaFilePath = model.files.first().fullPath,
+                    notoriousAction = NotoriousUploadService.ACTION.ASSIGNMENT_SUBMISSION // TODO: Make this more dynamic when everything else is wired up
+                )
+            }
+            FileSubmission -> {
+                SubmissionService.startFileSubmission(
+                    context = context,
+                    canvasContext = model.canvasContext,
+                    assignmentId = model.assignmentId,
+                    assignmentName = model.assignmentName,
+                    assignmentGroupCategoryId = model.assignmentGroupCategoryId,
+                    files = ArrayList(model.files)
+                )
+            }
+            CommentAttachment -> {
+                SubmissionService.startCommentUpload(
+                    context = context,
+                    canvasContext = model.canvasContext,
+                    assignmentId = model.assignmentId,
+                    assignmentName = model.assignmentName,
+                    message = null,
+                    attachments = model.files,
+                    isGroupMessage = model.assignmentGroupCategoryId > 0
+                )
+            }
         }
         view?.closeSubmissionView()
     }
@@ -141,7 +156,7 @@ class PickerSubmissionUploadEffectHandler(private val context: Context) :
                         view?.showBadExtensionDialog(allowedExtensions)
                     }
                 } else {
-                    view?.showFileErrorMessage(it.errorMessage)
+                    view?.showFileErrorMessage(it.errorMessage.orEmpty())
                 }
             }
         }

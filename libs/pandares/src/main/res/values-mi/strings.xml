@@ -947,7 +947,6 @@
     <string name="select">Tīpakohia</string>
     <string name="choice_position">Kōwhiri %d</string>
     <string name="updating_module_info">E whakahou ana i ngā kōrero a te kōwae&#8230;</string>
-    <string name="arc">Arc</string>
     <string name="pending_review">E tatari arotake ana</string>
     <string name="totalPoints">%s ngā koinga</string>
     <string name="totalPointsText">Koinga katoa</string>

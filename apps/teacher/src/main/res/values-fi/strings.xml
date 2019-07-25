@@ -897,7 +897,6 @@
     <string name="allSections">Kaikki osat</string>
 
     <string name="gauge">Mittari</string>
-    <string name="arc">Kaari</string>
     <string name="ltiLaunchFailure">Tämän LTI-työkalun lataaminen ei onnistu juuri nyt.</string>
     <string name="downloading">Ladataan...</string>
 

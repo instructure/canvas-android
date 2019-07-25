@@ -44,6 +44,16 @@ class AssignmentDetailsRenderPage : AssignmentDetailsPage() {
     val submissionSuceeded by OnViewWithText(R.string.submissionStatusSuccessTitle)
     val submissionStatusUploading by OnViewWithId(R.id.submissionStatusUploading)
     val submissionStatusFailed by OnViewWithId(R.id.submissionStatusFailed)
+    val quizDetails by OnViewWithId(R.id.quizDetails)
+    val questionCountText by OnViewWithId(R.id.questionCountText)
+    val timeLimitText by OnViewWithId(R.id.timeLimitText)
+    val allowedAttemptsText by OnViewWithId(R.id.allowedAttemptsText)
+    val discussionTopicHeaderContainer by OnViewWithId(R.id.discussionTopicHeaderContainer)
+    val authorAvatar by OnViewWithId(R.id.authorAvatar)
+    val authorName by OnViewWithId(R.id.authorName)
+    val authoredDate by OnViewWithId(R.id.authoredDate)
+    val attachmentIcon by OnViewWithId(R.id.attachmentIcon)
+    val submitButton by OnViewWithId(R.id.submitButton)
 
     fun assertDisplaysToolbarTitle(text: String) {
         onViewWithText(text).assertDisplayed()
@@ -102,6 +112,46 @@ class AssignmentDetailsRenderPage : AssignmentDetailsPage() {
     fun assertDisplaysDescription(text: String) {
         descriptionWebView.assertVisible()
         noDescription.assertGone()
-        onWebView().withElement(findElement(Locator.TAG_NAME, "p")).check(webMatches(getText(), Matchers.comparesEqualTo(text)))
+        onWebView().withElement(findElement(Locator.TAG_NAME, "p")).check(webMatches(getText(), Matchers.comparesEqualTo(text)))    }
+
+    fun assertDisplaysDiscussionDescription(text: String) {
+        descriptionWebView.assertVisible()
+        noDescription.assertGone()
+        onWebView().withElement(findElement(Locator.ID, "header_content")).check(webMatches(getText(), Matchers.comparesEqualTo(text)))
+    }
+
+    fun assertQuizDescription(timeLimit: String, allowedAttempts: String, questionCount: String) {
+        quizDetails.assertVisible()
+        questionCountText.assertHasText(questionCount)
+        allowedAttemptsText.assertHasText(allowedAttempts)
+        timeLimitText.assertHasText(timeLimit)
+    }
+
+    fun assertQuizDescription(timeLimit: Int, allowedAttempts: String, questionCount: String) {
+        quizDetails.assertVisible()
+        questionCountText.assertHasText(questionCount)
+        allowedAttemptsText.assertHasText(allowedAttempts)
+        timeLimitText.assertHasText(timeLimit)
+    }
+
+    fun assertQuizDescription(timeLimit: String, allowedAttempts: Int, questionCount: String) {
+        quizDetails.assertVisible()
+        questionCountText.assertHasText(questionCount)
+        allowedAttemptsText.assertHasText(allowedAttempts)
+        timeLimitText.assertHasText(timeLimit)
+    }
+
+    fun assertDiscussionHeader(name: String, date: String, iconVisibility: Boolean) {
+        discussionTopicHeaderContainer.assertVisible()
+        authorAvatar.assertVisible()
+        authorName.assertHasText(name)
+        authoredDate.assertHasText(date)
+        if (iconVisibility) attachmentIcon.assertVisible()
+        else attachmentIcon.assertGone()
+    }
+
+    fun assertSubmitButton(submitButtonText: Int) {
+        submitButton.assertVisible()
+        submitButton.assertHasText(submitButtonText)
     }
 }

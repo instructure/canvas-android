@@ -15,11 +15,14 @@
  */
 package com.instructure.student.test.assignment.details
 
+import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.student.Submission
-import com.instructure.student.mobius.assignmentDetails.*
+import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsEffect
+import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsEvent
+import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsModel
+import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsUpdate
 import com.instructure.student.test.util.matchesEffects
 import com.instructure.student.test.util.matchesFirstEffects
 import com.spotify.mobius.test.FirstMatchers
@@ -42,10 +45,12 @@ class AssignmentDetailsUpdateTest : Assert() {
     private lateinit var initModel: AssignmentDetailsModel
     private lateinit var course: Course
     private lateinit var assignment: Assignment
+    private lateinit var quiz: Quiz
     private var submissionId: Long = 0
     private var assignmentId: Long = 0
     private var courseId: Long = 0
     private var userId: Long = 0
+    private var quizId: Long = 0
 
     @Before
     fun setup() {
@@ -53,8 +58,10 @@ class AssignmentDetailsUpdateTest : Assert() {
         assignmentId = 4321L
         courseId = 1234L
         userId = 4321L
+        quizId = 1337L
         course = Course(id = courseId)
         assignment = Assignment(id = assignmentId)
+        quiz = Quiz(id = quizId)
         initModel = AssignmentDetailsModel(assignmentId = assignmentId, course = course)
     }
 
@@ -134,10 +141,12 @@ class AssignmentDetailsUpdateTest : Assert() {
     }
 
     @Test
-    fun `SubmitAssignmentClicked event with only ONLINE_UPLOAD submission type and having arc enabled results in ShowSubmitDialogView effect`() {
+    fun `SubmitAssignmentClicked event with only ONLINE_UPLOAD submission type and having Studio enabled results in ShowSubmitDialogView effect`() {
         val submissionTypes = listOf("online_upload")
         val assignmentCopy = assignment.copy(submissionTypesRaw = submissionTypes)
-        val givenModel = initModel.copy(assignmentResult = DataResult.Success(assignmentCopy), isArcEnabled = true)
+        val studioLTITool = LTITool(url = "instructuremedia.com/lti/launch")
+        val givenModel = initModel.copy(assignmentResult = DataResult.Success(assignmentCopy), isStudioEnabled = true, studioLTIToolResult = DataResult.Success(studioLTITool))
+
         updateSpec
             .given(givenModel)
             .whenEvent(AssignmentDetailsEvent.SubmitAssignmentClicked)
@@ -147,7 +156,8 @@ class AssignmentDetailsUpdateTest : Assert() {
                         AssignmentDetailsEffect.ShowSubmitDialogView(
                             assignmentCopy,
                             course,
-                            true
+                            true,
+                            studioLTITool
                         )
                     )
                 )
@@ -155,7 +165,7 @@ class AssignmentDetailsUpdateTest : Assert() {
     }
 
     @Test
-    fun `SubmitAssignmentClicked event with only ONLINE_UPLOAD submission type and without arc enabled results in ShowCreateSubmissionView effect`() {
+    fun `SubmitAssignmentClicked event with only ONLINE_UPLOAD submission type and without Studio enabled results in ShowCreateSubmissionView effect`() {
         val submissionType = Assignment.SubmissionType.ONLINE_UPLOAD
         val submissionTypes = listOf("online_upload")
         val assignmentCopy = assignment.copy(submissionTypesRaw = submissionTypes)
@@ -199,6 +209,53 @@ class AssignmentDetailsUpdateTest : Assert() {
     }
 
     @Test
+    fun `SubmitAssignmentClicked event with quiz submission type results in ShowQuizStartView effect`() {
+        val submissionTypes = listOf("online_quiz")
+        val assignmentCopy = assignment.copy(submissionTypesRaw = submissionTypes, quizId = quizId)
+        val givenModel = initModel.copy(
+            assignmentResult = DataResult.Success(assignmentCopy),
+            quizResult = DataResult.Success(quiz)
+        )
+        updateSpec
+            .given(givenModel)
+            .whenEvent(AssignmentDetailsEvent.SubmitAssignmentClicked)
+            .then(
+                assertThatNext(
+                    matchesEffects<AssignmentDetailsModel, AssignmentDetailsEffect>(
+                        AssignmentDetailsEffect.ShowQuizStartView(
+                            quiz,
+                            course
+                        )
+                    )
+                )
+            )
+    }
+
+    @Test
+    fun `SubmitAssignmentClicked event with discussion submission type results in ShowQuizStartView effect`() {
+        val discussionTopicHeader = DiscussionTopicHeader(id = 123L)
+        val submissionTypes = listOf("discussion_topic")
+        val assignmentCopy = assignment.copy(
+            submissionTypesRaw = submissionTypes,
+            discussionTopicHeader = discussionTopicHeader
+        )
+        val givenModel = initModel.copy(assignmentResult = DataResult.Success(assignmentCopy))
+        updateSpec
+            .given(givenModel)
+            .whenEvent(AssignmentDetailsEvent.SubmitAssignmentClicked)
+            .then(
+                assertThatNext(
+                    matchesEffects<AssignmentDetailsModel, AssignmentDetailsEffect>(
+                        AssignmentDetailsEffect.ShowDiscussionDetailView(
+                            discussionTopicHeader.id,
+                            course
+                        )
+                    )
+                )
+            )
+    }
+
+    @Test
     fun `ViewSubmissionClicked event results in ShowSubmissionView effect`() {
         updateSpec
             .given(initModel)
@@ -208,6 +265,33 @@ class AssignmentDetailsUpdateTest : Assert() {
                     matchesEffects<AssignmentDetailsModel, AssignmentDetailsEffect>(
                         AssignmentDetailsEffect.ShowSubmissionView(
                             assignmentId,
+                            course
+                        )
+                    )
+                )
+            )
+    }
+
+    @Test
+    fun `ViewDiscussionAttachmentClicked event results in ShowDiscussionAttachment effect`() {
+        val attachmentId = 12345L
+        val remoteFiles = mutableListOf(RemoteFile(id = attachmentId))
+        val discussionTopicHeader = DiscussionTopicHeader(id = 123L, attachments = remoteFiles)
+        val assignment = assignment.copy()
+        val submissionTypes = listOf("discussion_topic")
+        val assignmentCopy = assignment.copy(
+            submissionTypesRaw = submissionTypes,
+            discussionTopicHeader = discussionTopicHeader
+        )
+        val givenModel = initModel.copy(assignmentResult = DataResult.Success(assignmentCopy))
+        updateSpec
+            .given(givenModel)
+            .whenEvent(AssignmentDetailsEvent.DiscussionAttachmentClicked)
+            .then(
+                assertThatNext(
+                    matchesEffects<AssignmentDetailsModel, AssignmentDetailsEffect>(
+                        AssignmentDetailsEffect.ShowDiscussionAttachment(
+                            Attachment(id = attachmentId),
                             course
                         )
                     )
@@ -240,7 +324,7 @@ class AssignmentDetailsUpdateTest : Assert() {
         val expectedModel = initModel.copy(
             isLoading = false,
             assignmentResult = DataResult.Success(assignment),
-            isArcEnabled = true,
+            isStudioEnabled = true,
             ltiTool = DataResult.Fail(null),
             databaseSubmission = submission
         )
@@ -249,9 +333,11 @@ class AssignmentDetailsUpdateTest : Assert() {
             .whenEvent(
                 AssignmentDetailsEvent.DataLoaded(
                     assignmentResult = expectedModel.assignmentResult,
-                    isArcEnabled = true,
+                    isStudioEnabled = true,
+                    studioLTITool = null,
                     ltiTool = expectedModel.ltiTool,
-                    submission = submission
+                    submission = submission,
+                    quizResult = null
                 )
             )
             .then(assertThatNext(NextMatchers.hasModel(expectedModel)))
@@ -272,9 +358,11 @@ class AssignmentDetailsUpdateTest : Assert() {
             .whenEvent(
                 AssignmentDetailsEvent.DataLoaded(
                     assignmentResult = expectedModel.assignmentResult,
-                    isArcEnabled = false,
+                    isStudioEnabled = false,
+                    studioLTITool = null,
                     ltiTool = expectedModel.ltiTool,
-                    submission = submission
+                    submission = submission,
+                    quizResult = null
                 )
             )
             .then(assertThatNext(NextMatchers.hasModel(expectedModel)))
@@ -294,9 +382,11 @@ class AssignmentDetailsUpdateTest : Assert() {
             .whenEvent(
                 AssignmentDetailsEvent.DataLoaded(
                     assignmentResult = expectedModel.assignmentResult,
-                    isArcEnabled = false,
+                    isStudioEnabled = false,
+                    studioLTITool = null,
                     ltiTool = expectedModel.ltiTool,
-                    submission = null
+                    submission = null,
+                    quizResult = null
                 )
             )
             .then(assertThatNext(NextMatchers.hasModel(expectedModel)))
@@ -306,14 +396,14 @@ class AssignmentDetailsUpdateTest : Assert() {
     fun `DataLoaded event ignores database submission if a newer submission exists from API`() {
         val assignment = Assignment(
             id = assignmentId,
-            submission = com.instructure.canvasapi2.models.Submission(submittedAt = Date())
+            submission = Submission(submittedAt = Date())
         )
         val submission = mockkSubmission(daysAgo = 1)
         val startModel = initModel
         val expectedModel = initModel.copy(
             isLoading = false,
             assignmentResult = DataResult.Success(assignment),
-            isArcEnabled = true,
+            isStudioEnabled = true,
             ltiTool = DataResult.Fail(null),
             databaseSubmission = null
         )
@@ -322,9 +412,72 @@ class AssignmentDetailsUpdateTest : Assert() {
             .whenEvent(
                 AssignmentDetailsEvent.DataLoaded(
                     assignmentResult = expectedModel.assignmentResult,
-                    isArcEnabled = true,
+                    isStudioEnabled = true,
+                    studioLTITool = null,
                     ltiTool = expectedModel.ltiTool,
-                    submission = submission
+                    submission = submission,
+                    quizResult = null
+                )
+            )
+            .then(assertThatNext(NextMatchers.hasModel(expectedModel)))
+    }
+
+    @Test
+    fun `DataLoaded event with a quiz updates the model`() {
+        val submissionTypes = listOf("online_quiz")
+        val assignment = Assignment(id = assignmentId, quizId = quizId, submissionTypesRaw = submissionTypes)
+        val submission = mockkSubmission()
+        val startModel = initModel
+        val expectedModel = initModel.copy(
+            isLoading = false,
+            assignmentResult = DataResult.Success(assignment),
+            isStudioEnabled = false,
+            ltiTool = DataResult.Fail(null),
+            databaseSubmission = submission,
+            quizResult = DataResult.Success(quiz),
+            studioLTIToolResult = DataResult.Fail(null)
+        )
+        updateSpec
+            .given(startModel)
+            .whenEvent(
+                AssignmentDetailsEvent.DataLoaded(
+                    assignmentResult = expectedModel.assignmentResult,
+                    isStudioEnabled = false,
+                    ltiTool = expectedModel.ltiTool,
+                    submission = submission,
+                    quizResult = DataResult.Success(quiz),
+                    studioLTITool = DataResult.Fail(null)
+                )
+            )
+            .then(assertThatNext(NextMatchers.hasModel(expectedModel)))
+    }
+
+    @Test
+    fun `DataLoaded event with a quiz load failure updates the model`() {
+        val submissionTypes = listOf("online_quiz")
+        val assignment =
+            Assignment(id = assignmentId, quizId = quizId, submissionTypesRaw = submissionTypes)
+        val submission = mockkSubmission()
+        val startModel = initModel
+        val expectedModel = initModel.copy(
+            isLoading = false,
+            assignmentResult = DataResult.Success(assignment),
+            isStudioEnabled = true,
+            ltiTool = DataResult.Fail(null),
+            databaseSubmission = submission,
+            quizResult = DataResult.Fail(null),
+            studioLTIToolResult = DataResult.Fail(null)
+        )
+        updateSpec
+            .given(startModel)
+            .whenEvent(
+                AssignmentDetailsEvent.DataLoaded(
+                    assignmentResult = expectedModel.assignmentResult,
+                    isStudioEnabled = true,
+                    ltiTool = expectedModel.ltiTool,
+                    submission = submission,
+                    quizResult = DataResult.Fail(null),
+                    studioLTITool = DataResult.Fail(null)
                 )
             )
             .then(assertThatNext(NextMatchers.hasModel(expectedModel)))

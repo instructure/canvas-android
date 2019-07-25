@@ -35,7 +35,7 @@ import com.instructure.interactions.router.Route
 import com.instructure.loginapi.login.dialog.NoInternetConnectionDialog
 import com.instructure.pandautils.dialogs.UploadFilesDialog
 import com.instructure.pandautils.discussions.DiscussionCaching
-import com.instructure.pandautils.models.FileSubmitObject
+import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.AttachmentView
 import com.instructure.student.R

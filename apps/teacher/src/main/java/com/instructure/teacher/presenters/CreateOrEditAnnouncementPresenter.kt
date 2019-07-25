@@ -29,7 +29,7 @@ import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
-import com.instructure.pandautils.models.FileSubmitObject
+import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.pandautils.utils.MediaUploadUtils
 import com.instructure.teacher.events.DiscussionCreatedEvent
 import com.instructure.teacher.events.DiscussionTopicHeaderDeletedEvent

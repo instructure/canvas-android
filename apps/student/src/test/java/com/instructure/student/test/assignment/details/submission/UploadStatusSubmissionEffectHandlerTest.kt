@@ -18,7 +18,7 @@ package com.instructure.student.test.assignment.details.submission
 import android.content.Context
 import android.content.Intent
 import com.instructure.canvasapi2.utils.ProgressEvent
-import com.instructure.pandautils.models.FileSubmitObject
+import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.pandautils.utils.Const
 import com.instructure.student.FileSubmission
 import com.instructure.student.db.Db

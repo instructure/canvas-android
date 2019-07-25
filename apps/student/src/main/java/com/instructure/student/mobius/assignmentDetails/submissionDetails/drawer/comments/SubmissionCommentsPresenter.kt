@@ -22,6 +22,6 @@ import com.instructure.student.mobius.common.ui.Presenter
 
 object SubmissionCommentsPresenter : Presenter<SubmissionCommentsModel, SubmissionCommentsViewState> {
     override fun present(model: SubmissionCommentsModel, context: Context): SubmissionCommentsViewState {
-        return SubmissionCommentsViewState.Empty
+        return SubmissionCommentsViewState()
     }
 }

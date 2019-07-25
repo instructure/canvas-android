@@ -660,9 +660,9 @@ public class CanvasWebView extends WebView implements NestedScrollingChild {
         return url.contains("instructuremedia.com/fetch/") && url.contains("disposition=download");
     }
 
-    public static boolean containsArcLTI(@NonNull String html, String encoding) {
-        // BaseURL is set as Referer. Referer needed for some vimeo videos to play
-        // Arc needs the protocol attached to the referrer, so use that if we're using arc
+    public static boolean containsStudioLTI(@NonNull String html, String encoding) {
+        // BaseURL is set as Referer. Referer needed for some Vimeo videos to play
+        // Studio needs the protocol attached to the referrer, so use that if we're using Studio
         try {
             //sanitize the html
             String sanitized = html.replaceAll("%(?![0-9a-fA-F]{2})", "%25");
@@ -672,8 +672,8 @@ public class CanvasWebView extends WebView implements NestedScrollingChild {
     }
 
     public static boolean containsLTI(@NonNull String html, String encoding) {
-        // BaseURL is set as Referer. Referer needed for some vimeo videos to play
-        // Arc needs the protocol attached to the referrer, so use that if we're using arc
+        // BaseURL is set as Referer. Referer needed for some Vimeo videos to play
+        // Studio needs the protocol attached to the referrer, so use that if we're using Studio
         try {
             //sanitize the html
             String sanitized = html.replaceAll("%(?![0-9a-fA-F]{2})", "%25");
@@ -781,7 +781,7 @@ public class CanvasWebView extends WebView implements NestedScrollingChild {
     // endregion
 
 
-    //region Video Picking for WebView (Used for ARC)
+    //region Video Picking for WebView (Used for Studio)
 
     public void clearPickerCallback() {
         mFilePathCallback = null;

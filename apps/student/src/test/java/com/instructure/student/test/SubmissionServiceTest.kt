@@ -21,11 +21,14 @@ import android.content.Intent
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
-import com.instructure.pandautils.models.FileSubmitObject
+import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.pandautils.services.NotoriousUploadService
 import com.instructure.pandautils.utils.Const
 import com.instructure.student.mobius.common.ui.SubmissionService
-import io.mockk.*
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.slot
+import io.mockk.verify
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -89,7 +92,7 @@ class SubmissionServiceTest : Assert() {
         val intent = slot<Intent>()
         val assignmentGroupCategoryId = 0L
         val assignment = Assignment(id = assignmentId, name = assignmentName, groupCategoryId = assignmentGroupCategoryId)
-        val files = arrayListOf(FileSubmitObject())
+        val files = arrayListOf(FileSubmitObject("", 0L, "", ""))
 
         every { context.startService(capture(intent)) } returns null
 
@@ -137,9 +140,9 @@ class SubmissionServiceTest : Assert() {
 
         every { context.startService(capture(intent)) } returns null
 
-        SubmissionService.startArcSubmission(context, canvasContext, assignmentId, assignmentName, url)
+        SubmissionService.startStudioSubmission(context, canvasContext, assignmentId, assignmentName, url)
 
-        assertEquals(SubmissionService.Action.ARC_ENTRY.name, intent.captured.action)
+        assertEquals(SubmissionService.Action.STUDIO_ENTRY.name, intent.captured.action)
         assertEquals(canvasContext, intent.captured.getParcelableExtra(Const.CANVAS_CONTEXT))
         assertEquals(assignmentId, intent.captured.getLongExtra(Const.ASSIGNMENT_ID, -1))
         assertEquals(assignmentName, intent.captured.getStringExtra(Const.ASSIGNMENT_NAME))
