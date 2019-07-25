@@ -102,7 +102,12 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
         every { queryMockk.executeAsList() } returns data
     }
 
-    private fun mockkSubmission(submissionId: Long, daysAgo: Long = 0, failed: Boolean = false): Submission {
+    private fun mockkSubmission(
+        submissionId: Long,
+        daysAgo: Long = 0,
+        failed: Boolean = false,
+        submissionType: String? = null
+    ): Submission {
         return Submission.Impl(
             submissionId,
             null,
@@ -110,7 +115,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
             null,
             assignment.id,
             course,
-            null,
+            submissionType,
             failed,
             null,
             userId
@@ -539,8 +544,20 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     }
 
     @Test
-    fun `ShowUploadStatusView calls showUploadStatusView on the view`() {
-        val submission = mockkSubmission(9876L)
+    fun `ShowUploadStatusView calls showUploadStatusView on the view for online uploads`() {
+        val submission = mockkSubmission(9876L, submissionType = "online_upload")
+        connection.accept(AssignmentDetailsEffect.ShowUploadStatusView(submission))
+
+        verify(timeout = 100) {
+            view.showUploadStatusView(submission.id)
+        }
+
+        confirmVerified(view)
+    }
+
+    @Test
+    fun `ShowUploadStatusView calls showUploadStatusView on the view for media uploads`() {
+        val submission = mockkSubmission(9876L, submissionType = "media_recording")
         connection.accept(AssignmentDetailsEffect.ShowUploadStatusView(submission))
 
         verify(timeout = 100) {

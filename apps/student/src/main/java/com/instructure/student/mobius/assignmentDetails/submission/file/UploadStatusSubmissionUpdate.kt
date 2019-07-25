@@ -34,7 +34,14 @@ class UploadStatusSubmissionUpdate :
         event: UploadStatusSubmissionEvent
     ): Next<UploadStatusSubmissionModel, UploadStatusSubmissionEffect> = when (event) {
         is UploadStatusSubmissionEvent.OnPersistedSubmissionLoaded -> {
-            Next.next(model.copy(isLoading = false, files = event.files, isFailed = event.failed))
+            Next.next(
+                model.copy(
+                    isLoading = false,
+                    assignmentName = event.assignmentName,
+                    files = event.files,
+                    isFailed = event.failed
+                )
+            )
         }
         is UploadStatusSubmissionEvent.OnFilesRefreshed -> {
             Next.next(
@@ -43,9 +50,30 @@ class UploadStatusSubmissionUpdate :
         }
         is UploadStatusSubmissionEvent.OnUploadProgressChanged -> {
             val uploadedFileSize = model.files.take(event.fileIndex).fold(0) { sum, file ->
-                sum + file.size.toInt()
+                sum + (file.size ?: 0).toInt()
             }
-            Next.next(model.copy(uploadedBytes = uploadedFileSize + event.uploaded.toInt()))
+            Next.next(model.copy(uploadedBytes = uploadedFileSize + event.uploaded))
+        }
+        UploadStatusSubmissionEvent.OnCancelClicked -> {
+            Next.dispatch(setOf(UploadStatusSubmissionEffect.OnDeleteSubmission(model.submissionId)))
+        }
+        UploadStatusSubmissionEvent.OnCancelAllClicked -> {
+            Next.dispatch(setOf(UploadStatusSubmissionEffect.OnCancelAllSubmissions))
+        }
+        UploadStatusSubmissionEvent.OnRetryClicked -> {
+            Next.dispatch(setOf(UploadStatusSubmissionEffect.RetrySubmission(model.submissionId)))
+        }
+        is UploadStatusSubmissionEvent.OnDeleteFile -> {
+            // If we're deleting the last file in the list, just delete the whole submission
+            if (model.files.size == 1) {
+                Next.dispatch<UploadStatusSubmissionModel, UploadStatusSubmissionEffect>(setOf(UploadStatusSubmissionEffect.OnDeleteSubmission(model.submissionId)))
+            } else {
+                val deletedFile = model.files[event.position]
+                Next.next<UploadStatusSubmissionModel, UploadStatusSubmissionEffect>(
+                    model.copy(files = model.files.minus(deletedFile)),
+                    setOf(UploadStatusSubmissionEffect.OnDeleteFileFromSubmission(deletedFile.id))
+                )
+            }
         }
     }
 }

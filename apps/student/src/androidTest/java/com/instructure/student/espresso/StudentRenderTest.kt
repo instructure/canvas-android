@@ -41,4 +41,5 @@ abstract class StudentRenderTest : StudentTest() {
     val textSubmissionUploadPage = TextSubmissionUploadPage()
     val urlSubmissionViewRenderPage = UrlSubmissionViewRenderPage()
     val urlSubmissionUploadRenderPage = UrlSubmissionUploadRenderPage()
+    val uploadStatusSubmissionViewRenderPage = UploadStatusSubmissionViewRenderPage()
 }

@@ -51,14 +51,31 @@
     <TextView
         android:id="@+id/fileSize"
         style="@style/TextFont.Regular"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
         android:textColor="@color/defaultTextGray"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@id/fileName"
+        app:layout_constraintEnd_toEndOf="@id/fileName"
         app:layout_constraintTop_toBottomOf="@id/fileName"
         tools:text="234 KB" />
+
+    <TextView
+        android:id="@+id/fileError"
+        style="@style/TextFont.Regular"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/destructive"
+        android:textSize="12sp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@id/fileName"
+        app:layout_constraintEnd_toEndOf="@id/fileName"
+        app:layout_constraintTop_toBottomOf="@id/fileSize"
+        tools:text="234 KB" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="16dp"
+        app:layout_constraintTop_toBottomOf="@id/fileError" />
 
     <ImageView
         android:id="@+id/deleteButton"
