@@ -297,7 +297,9 @@ class FileUploadService @JvmOverloads constructor(name: String = FileUploadServi
     @Suppress("unused", "UNUSED_PARAMETER")
     @Subscribe
     fun onUploadProgress(event: ProgressEvent) {
-        notificationBuilder.setProgress(100, (event.uploaded * 100f / event.contentLength).toInt(), false)
+        notificationBuilder
+            .setProgress(100, (event.uploaded * 100f / event.contentLength).toInt(), false)
+            .setOnlyAlertOnce(true)
         notificationManager.notify(event.submissionId.toInt(), notificationBuilder.build())
     }
 
