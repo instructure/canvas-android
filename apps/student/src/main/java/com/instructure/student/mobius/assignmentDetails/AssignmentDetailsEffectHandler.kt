@@ -110,7 +110,7 @@ class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Lon
                         view?.showFileUploadView(effect.assignment)
                     }
                     Assignment.SubmissionType.ONLINE_TEXT_ENTRY -> {
-                        view?.showOnlineTextEntryView(effect.assignment.id, effect.assignment.name, effect.assignment.submission?.body)
+                        view?.showOnlineTextEntryView(effect.assignment.id, effect.assignment.name)
                     }
                     Assignment.SubmissionType.ONLINE_URL -> {
                         view?.showOnlineUrlEntryView(effect.assignment.id, effect.assignment.name, effect.course)

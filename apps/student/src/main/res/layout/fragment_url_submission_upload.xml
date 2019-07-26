@@ -45,6 +45,7 @@
         android:layout_marginTop="8dp"
         android:textColor="@color/red"
         android:textSize="16sp"
+        android:visibility="gone"
         tools:text="Something went wrong on submission upload. Submit again" />
 
     <EditText
