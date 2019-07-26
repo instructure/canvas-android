@@ -28,10 +28,10 @@ import java.io.File
 
 object NotoriousUploader {
 
-    suspend fun performUpload(mediaPath: String, onProgress: ((Float) -> Unit)? = null) : DataResult<NotoriousResult> {
+    suspend fun performUpload(mediaPath: String, onProgress: ((Float, Long) -> Unit)? = null) : DataResult<NotoriousResult> {
         try{
             // Set initial progress
-            onProgress?.invoke(0f)
+            onProgress?.invoke(0f, 0)
 
             // Get NotoriousConfig
             val config = awaitApi<NotoriousConfig> { NotoriousManager.getConfiguration(it) }

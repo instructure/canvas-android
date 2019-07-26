@@ -124,13 +124,13 @@ class FileUploadService @JvmOverloads constructor(name: String = FileUploadServi
                     ACTION_SUBMISSION_COMMENT -> FileUploadConfig.forSubmissionComment(fso, courseId, assignment!!.id)
                     else -> throw IllegalArgumentException("Unknown file upload action: $action")
                 }
-                attachments += FileUploadManager.uploadFile(config){ progress ->
+                attachments += FileUploadManager.uploadFile(config){ progress, length ->
                     /*
                      * TEMPORARY: Post progress events for UploadStatusSubmissionEffectHandler from here until submission
                      * file uploads are directly handled in SubmissionService
                      */
                     if (submissionId != null) {
-                        val event = ProgressEvent(idx, submissionId, (progress * fso.size).toLong(), fso.size)
+                        val event = ProgressEvent(idx, submissionId, (progress * length).toLong(), length)
                         EventBus.getDefault().postSticky(event)
                     }
                 }.dataOrThrow

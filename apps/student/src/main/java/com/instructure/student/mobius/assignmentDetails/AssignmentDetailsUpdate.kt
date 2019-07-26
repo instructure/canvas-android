@@ -61,13 +61,27 @@ class AssignmentDetailsUpdate : UpdateInit<AssignmentDetailsModel, AssignmentDet
         AssignmentDetailsEvent.AudioRecordingClicked -> {
             Next.dispatch(setOf(AssignmentDetailsEffect.ShowAudioRecordingView))
         }
+        AssignmentDetailsEvent.VideoRecordingClicked -> {
+            Next.dispatch(setOf(AssignmentDetailsEffect.ShowVideoRecordingView))
+        }
         is AssignmentDetailsEvent.SendAudioRecordingClicked -> {
             if(event.file == null) {
                 Next.dispatch<AssignmentDetailsModel, AssignmentDetailsEffect>(setOf(AssignmentDetailsEffect.ShowAudioRecordingError))
             } else {
                 val assignment = model.assignmentResult!!.dataOrThrow
-                Next.dispatch<AssignmentDetailsModel, AssignmentDetailsEffect>(setOf(AssignmentDetailsEffect.UploadMediaSubmission(event.file, model.course, assignment)))
+                Next.dispatch<AssignmentDetailsModel, AssignmentDetailsEffect>(setOf(AssignmentDetailsEffect.UploadAudioSubmission(event.file, model.course, assignment)))
             }
+        }
+        is AssignmentDetailsEvent.SendVideoRecording -> {
+            if (model.videoFileUri == null) {
+                Next.dispatch<AssignmentDetailsModel, AssignmentDetailsEffect>(setOf(AssignmentDetailsEffect.ShowVideoRecordingError))
+            } else {
+                val assignment = model.assignmentResult!!.dataOrThrow
+                Next.dispatch<AssignmentDetailsModel, AssignmentDetailsEffect>(setOf(AssignmentDetailsEffect.UploadVideoSubmission(model.videoFileUri, model.course, assignment)))
+            }
+        }
+        is AssignmentDetailsEvent.OnVideoRecordingError -> {
+            Next.dispatch(setOf(AssignmentDetailsEffect.ShowVideoRecordingError))
         }
         is AssignmentDetailsEvent.SubmissionStatusUpdated -> {
             Next.next(
@@ -99,6 +113,9 @@ class AssignmentDetailsUpdate : UpdateInit<AssignmentDetailsModel, AssignmentDet
                 assignment = model.assignmentResult!!.dataOrThrow
             )
             Next.dispatch(setOf(effect))
+        }
+        is AssignmentDetailsEvent.StoreVideoUri -> {
+            Next.next(model.copy(videoFileUri = event.uri))
         }
     }
 

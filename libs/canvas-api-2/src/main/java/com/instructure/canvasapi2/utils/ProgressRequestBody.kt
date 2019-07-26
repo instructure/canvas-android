@@ -26,7 +26,7 @@ class ProgressRequestBody(
     private val file: File,
     private val contentType: String,
     updateInterval: Duration = Duration.ofMillis(250),
-    private val onProgress: ((progress: Float) -> Unit)? = null
+    private val onProgress: ((progress: Float, length: Long) -> Unit)? = null
 ) : RequestBody() {
 
     private val interval = updateInterval.toMillis()
@@ -52,7 +52,7 @@ class ProgressRequestBody(
                 // Send out updates
                 if (onProgress != null && System.currentTimeMillis() > lastUpdate + interval) {
                     val progress = uploaded.toDouble() / contentLength().toDouble()
-                    onProgress.invoke(progress.toFloat())
+                    onProgress.invoke(progress.toFloat(), contentLength())
                     lastUpdate = System.currentTimeMillis()
                 }
 
