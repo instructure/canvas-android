@@ -24,19 +24,20 @@
     tools:ignore="UseCompoundDrawables">
 
     <ImageView
-        android:layout_width="36dp"
-        android:layout_height="36dp"
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        android:adjustViewBounds="true"
         android:importantForAccessibility="no"
-        android:src="@drawable/vd_rubric"
-        android:tint="@color/defaultTextGray"/>
+        android:src="@drawable/vd_panda_nosyllabus" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
+        android:fontFamily="sans-serif-medium"
         android:gravity="center"
         android:text="@string/rubricEmptyMessage"
-        android:textColor="@color/defaultTextGray"
-        android:textSize="16sp"/>
+        android:textColor="@color/defaultTextDark"
+        android:textSize="18sp"/>
 
 </LinearLayout>

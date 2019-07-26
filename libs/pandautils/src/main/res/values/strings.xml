@@ -169,6 +169,7 @@
     <string name="noAssignmentsSubtext">It looks like assignments haven\'t been created in this space. Time to go out and explore.</string>
     <string name="noAssignmentsTeacher">It looks like no assignments have been published yet.</string>
     <string name="noFiles">No Files</string>
+    <string name="noFilesForAssignment">There are no files for this assignment</string>
     <string name="noFilesSubtext">There are no files associated with this account.</string>
     <string name="notSupported">Not Supported</string>
     <string name="noEvents">No Events Today!</string>
