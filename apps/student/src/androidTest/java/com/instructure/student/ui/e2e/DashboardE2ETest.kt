@@ -37,6 +37,7 @@ class DashboardE2ETest : StudentTest() {
                 recipients = listOf(student.id.toString())
         )
 
+        // Seed some group info
         val groupCategory = GroupsApi.createCourseGroupCategory(data.coursesList[0].id, teacher.token)
         val group = GroupsApi.createGroup(groupCategory.id, teacher.token)
         val groupMembership = GroupsApi.createGroupMembership(group.id, student.id, teacher.token)

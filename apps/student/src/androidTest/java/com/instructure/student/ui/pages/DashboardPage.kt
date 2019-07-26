@@ -44,6 +44,7 @@ import com.instructure.student.R
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.Matcher
 import org.hamcrest.core.AllOf
+import com.instructure.espresso.scrollTo
 
 class DashboardPage : BasePage(R.id.dashboardPage) {
 
@@ -108,6 +109,10 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         onView(withId(R.id.bottomNavigationToDo)).click()
     }
 
+    fun clickInboxTab() {
+        onView(withId(R.id.bottomNavigationInbox)).click()
+    }
+
     fun waitForRender() {
         listView.assertDisplayed() // Oddly, this seems sufficient as a wait-for-render mechanism
     }
@@ -121,5 +126,8 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         Espresso.onView(matcher).assertDisplayed()
     }
 
-
+    fun launchSettingsPage() {
+        hamburgerButton.click()
+        onViewWithId(R.id.navigationDrawerSettings).click()
+    }
 }
