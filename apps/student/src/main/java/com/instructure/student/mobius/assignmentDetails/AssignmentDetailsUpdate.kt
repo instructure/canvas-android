@@ -73,11 +73,11 @@ class AssignmentDetailsUpdate : UpdateInit<AssignmentDetailsModel, AssignmentDet
             }
         }
         is AssignmentDetailsEvent.SendVideoRecording -> {
-            if (event.uri == null) {
+            if (model.videoFileUri == null) {
                 Next.dispatch<AssignmentDetailsModel, AssignmentDetailsEffect>(setOf(AssignmentDetailsEffect.ShowVideoRecordingError))
             } else {
                 val assignment = model.assignmentResult!!.dataOrThrow
-                Next.dispatch<AssignmentDetailsModel, AssignmentDetailsEffect>(setOf(AssignmentDetailsEffect.UploadVideoSubmission(event.uri, model.course, assignment)))
+                Next.dispatch<AssignmentDetailsModel, AssignmentDetailsEffect>(setOf(AssignmentDetailsEffect.UploadVideoSubmission(model.videoFileUri, model.course, assignment)))
             }
         }
         is AssignmentDetailsEvent.OnVideoRecordingError -> {
@@ -113,6 +113,9 @@ class AssignmentDetailsUpdate : UpdateInit<AssignmentDetailsModel, AssignmentDet
                 assignment = model.assignmentResult!!.dataOrThrow
             )
             Next.dispatch(setOf(effect))
+        }
+        is AssignmentDetailsEvent.StoreVideoUri -> {
+            Next.next(model.copy(videoFileUri = event.uri))
         }
     }
 

@@ -31,8 +31,9 @@ sealed class AssignmentDetailsEvent {
     object OnVideoRecordingError : AssignmentDetailsEvent()
     object DiscussionAttachmentClicked : AssignmentDetailsEvent()
     object PullToRefresh : AssignmentDetailsEvent()
+    object SendVideoRecording : AssignmentDetailsEvent()
+    data class StoreVideoUri(val uri: Uri?) : AssignmentDetailsEvent()
     data class SendAudioRecordingClicked(val file: File?) : AssignmentDetailsEvent()
-    data class SendVideoRecording(val uri: Uri?) : AssignmentDetailsEvent()
     data class SubmissionTypeClicked(val submissionType: Assignment.SubmissionType) : AssignmentDetailsEvent()
     data class DataLoaded(
         val assignmentResult: DataResult<Assignment>?,
@@ -77,5 +78,6 @@ data class AssignmentDetailsModel(
     val studioLTIToolResult: DataResult<LTITool>? = null,
     val quizResult: DataResult<Quiz>? = null,
     val ltiTool: DataResult<LTITool>? = null,
-    val databaseSubmission: Submission? = null
+    val databaseSubmission: Submission? = null,
+    val videoFileUri: Uri? = null
 )

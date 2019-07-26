@@ -993,10 +993,11 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
         connection.accept(AssignmentDetailsEffect.ShowVideoRecordingView)
 
         verify(timeout = 100) {
+            eventConsumer.accept(AssignmentDetailsEvent.StoreVideoUri(uri))
             context.startActivityForResult(intent, AssignmentDetailsFragment.VIDEO_REQUEST_CODE)
         }
 
-        confirmVerified(context)
+        confirmVerified(eventConsumer, context)
     }
 
     private fun mockPermissions(hasPermission: Boolean, permissionGranted: Boolean = false) {

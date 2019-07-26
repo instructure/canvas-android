@@ -570,10 +570,10 @@ class AssignmentDetailsUpdateTest : Assert() {
     @Test
     fun `SendVideoRecording with valid file results in UploadMediaSubmission effect`() {
         val uri = mockk<Uri>()
-        val model = initModel.copy(assignmentResult = DataResult.Success(assignment))
+        val model = initModel.copy(assignmentResult = DataResult.Success(assignment), videoFileUri = uri)
         updateSpec
             .given(model)
-            .whenEvent(AssignmentDetailsEvent.SendVideoRecording(uri))
+            .whenEvent(AssignmentDetailsEvent.SendVideoRecording)
             .then(
                 assertThatNext(
                     matchesEffects<AssignmentDetailsModel, AssignmentDetailsEffect>(AssignmentDetailsEffect.UploadVideoSubmission(uri, course, assignment))
@@ -583,10 +583,10 @@ class AssignmentDetailsUpdateTest : Assert() {
 
     @Test
     fun `SendVideoRecording with invalid file results in UploadMediaSubmission effect`() {
-        val model = initModel
+        val model = initModel.copy(videoFileUri = null)
         updateSpec
             .given(model)
-            .whenEvent(AssignmentDetailsEvent.SendVideoRecording(null))
+            .whenEvent(AssignmentDetailsEvent.SendVideoRecording)
             .then(
                 assertThatNext(
                     matchesEffects<AssignmentDetailsModel, AssignmentDetailsEffect>(AssignmentDetailsEffect.ShowVideoRecordingError)
@@ -615,6 +615,20 @@ class AssignmentDetailsUpdateTest : Assert() {
             .then(
                 assertThatNext(
                     matchesEffects<AssignmentDetailsModel, AssignmentDetailsEffect>(AssignmentDetailsEffect.ShowAudioRecordingView)
+                )
+            )
+    }
+
+    @Test
+    fun `StoreVideoUri results in model change`() {
+        val uri = mockk<Uri>()
+        updateSpec
+            .given(initModel)
+            .whenEvent(AssignmentDetailsEvent.StoreVideoUri(uri))
+            .then(
+                assertThatNext(
+                    NextMatchers.hasModel(initModel.copy(videoFileUri = uri)),
+                    NextMatchers.hasNoEffects()
                 )
             )
     }

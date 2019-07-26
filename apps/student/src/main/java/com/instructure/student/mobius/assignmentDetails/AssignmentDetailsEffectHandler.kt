@@ -241,10 +241,9 @@ class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Lon
             context.packageName + Const.FILE_PROVIDER_AUTHORITY,
             file
         )
-        if (uri != null) {
-            // TODO: Replace with event to update to hold this uri?
-            FilePrefs.tempCaptureUri = uri.toString()
-        }
+
+        // Store our reference to the URI that's being passed to the video view
+        consumer.accept(AssignmentDetailsEvent.StoreVideoUri(uri))
 
         // Create new Intent and launch
         val intent = view?.getVideoIntent(uri)

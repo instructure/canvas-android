@@ -34,16 +34,7 @@ class AssignmentDetailsEventBusSource : EventBusSource<AssignmentDetailsEvent>()
         event.once(subId) {
             if (it.requestCode == AssignmentDetailsFragment.VIDEO_REQUEST_CODE) {
                 if (it.resultCode == Activity.RESULT_OK) {
-                    // Attempt to restore URI in case were were booted from memory
-                    val cameraImageUri = Uri.parse(FilePrefs.tempCaptureUri)
-
-                    // If it's still null, tell the user there is an error and return.
-                    if (cameraImageUri == null) {
-                        sendEvent(AssignmentDetailsEvent.OnVideoRecordingError)
-                        return@once
-                    }
-
-                    sendEvent(AssignmentDetailsEvent.SendVideoRecording(cameraImageUri))
+                    sendEvent(AssignmentDetailsEvent.SendVideoRecording)
                 } else {
                     sendEvent(AssignmentDetailsEvent.OnVideoRecordingError)
                 }
