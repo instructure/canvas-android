@@ -353,7 +353,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
 
             fun setError() {
                 // Update notification
-                notification.setContentTitle(getString(R.string.assignmentSubmissionCommentError))
+                notification.setContentTitle(getString(R.string.assignmentSubmissionCommentError, comment.assignmentName))
                 notification.setContentText("")
                 notification.setProgress(0, 0, false)
                 notification.setOngoing(false)
