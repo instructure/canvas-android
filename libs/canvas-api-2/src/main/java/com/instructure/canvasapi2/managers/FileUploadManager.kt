@@ -32,7 +32,7 @@ object FileUploadManager {
     private fun performUpload(
         file: File,
         uploadParams: FileUploadParams,
-        onProgress: ((Float) -> Unit)? = null
+        onProgress: ((Float, Long) -> Unit)? = null
     ): DataResult<Attachment> {
         val adapter = RestBuilder()
         val params = RestParams(shouldIgnoreToken = true)
@@ -40,7 +40,7 @@ object FileUploadManager {
         return if (attachment != null) DataResult.Success(attachment) else DataResult.Fail()
     }
 
-    fun uploadFile(config: FileUploadConfig, onProgress: ((Float) -> Unit)? = null): DataResult<Attachment> {
+    fun uploadFile(config: FileUploadConfig, onProgress: ((Float, Long) -> Unit)? = null): DataResult<Attachment> {
         return FileUploadAPI.getUploadParams(config)
             .then { performUpload(File(config.filePath), it, onProgress) }
     }

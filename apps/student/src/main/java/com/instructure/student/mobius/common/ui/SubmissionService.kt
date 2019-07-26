@@ -390,7 +390,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
                 val config = FileUploadConfig.forSubmissionComment(fso, comment.canvasContext.id, comment.assignmentId)
 
                 // Perform upload
-                FileUploadManager.uploadFile(config) { progress ->
+                FileUploadManager.uploadFile(config) { progress, _ ->
                     // Update notification
                     notification.setProgress(1000, (progress * 1000).toInt(), false)
                     notificationManager.notify(comment.assignmentId.toInt(), notification.build())
@@ -419,7 +419,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
                 notification.setProgress(0, 0, true)
                 notificationManager.notify(comment.assignmentId.toInt(), notification.build())
 
-                NotoriousUploader.performUpload(comment.mediaPath!!) { progress ->
+                NotoriousUploader.performUpload(comment.mediaPath!!) { progress, _ ->
                     // Update notification
                     notification.setProgress(1000, (progress * 1000).toInt(), false)
                     notificationManager.notify(comment.assignmentId.toInt(), notification.build())

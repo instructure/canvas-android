@@ -46,6 +46,7 @@ data class PickerSubmissionUploadModel(
     val assignmentGroupCategoryId: Long,
     val allowedExtensions: List<String>,
     val mode: PickerSubmissionMode,
+    val mediaFileUri: Uri? = null,
     val files: List<FileSubmitObject> = emptyList()
 )
 

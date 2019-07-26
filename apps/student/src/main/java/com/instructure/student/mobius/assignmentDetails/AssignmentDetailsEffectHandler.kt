@@ -18,22 +18,22 @@ package com.instructure.student.mobius.assignmentDetails
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import androidx.core.content.FileProvider
 import com.instructure.canvasapi2.managers.AssignmentManager
 import com.instructure.canvasapi2.managers.QuizManager
 import com.instructure.canvasapi2.managers.SubmissionManager
-import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.DiscussionTopic
-import com.instructure.canvasapi2.models.LTITool
+import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.*
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
 import com.instructure.canvasapi2.utils.weave.awaitApiResponse
 import com.instructure.pandautils.services.NotoriousUploadService
-import com.instructure.pandautils.utils.PermissionUtils
-import com.instructure.pandautils.utils.requestPermissions
+import com.instructure.pandautils.utils.*
 import com.instructure.student.Submission
 import com.instructure.student.db.Db
 import com.instructure.student.db.getInstance
+import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsView
 import com.instructure.student.mobius.assignmentDetails.ui.SubmissionTypesVisibilities
 import com.instructure.student.mobius.common.ui.EffectHandler
@@ -45,6 +45,8 @@ import com.spotify.mobius.functions.Consumer
 import com.squareup.sqldelight.Query
 import kotlinx.coroutines.launch
 import java.io.File
+import java.text.SimpleDateFormat
+import java.util.*
 
 class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Long) :
     EffectHandler<AssignmentDetailsView, AssignmentDetailsEvent, AssignmentDetailsEffect>(),
@@ -75,17 +77,38 @@ class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Lon
 
     override fun accept(effect: AssignmentDetailsEffect) {
         when (effect) {
+            AssignmentDetailsEffect.ShowVideoRecordingView -> launchVideo()
             AssignmentDetailsEffect.ShowAudioRecordingView -> launchAudio()
+            AssignmentDetailsEffect.ShowVideoRecordingError -> view?.showVideoRecordingError()
             AssignmentDetailsEffect.ShowAudioRecordingError -> view?.showAudioRecordingError()
+            is AssignmentDetailsEffect.UploadVideoSubmission -> {
+                view?.launchFilePickerView(effect.uri, effect.course, effect.assignment)
+            }
             is AssignmentDetailsEffect.ShowSubmitDialogView -> {
                 val studioUrl = effect.studioLTITool?.getResourceSelectorUrl(effect.course, effect.assignment)
-                view?.showSubmitDialogView(effect.assignment, effect.course.id, getSubmissionTypesVisibilities(effect.assignment, effect.isStudioEnabled), studioUrl, effect.studioLTITool?.name)
+                view?.showSubmitDialogView(
+                    effect.assignment,
+                    effect.course.id,
+                    getSubmissionTypesVisibilities(effect.assignment, effect.isStudioEnabled),
+                    studioUrl,
+                    effect.studioLTITool?.name
+                )
             }
-            is AssignmentDetailsEffect.ShowSubmissionView -> view?.showSubmissionView(effect.assignmentId, effect.course)
-            is AssignmentDetailsEffect.ShowQuizStartView -> view?.showQuizStartView(effect.course, effect.quiz)
-            is AssignmentDetailsEffect.ShowDiscussionDetailView -> view?.showDiscussionDetailView(effect.course, effect.discussionTopicHeaderId)
-            is AssignmentDetailsEffect.ShowDiscussionAttachment -> view?.showDiscussionAttachment(effect.course, effect.discussionAttachment)
-            is AssignmentDetailsEffect.UploadMediaSubmission -> uploadAudioRecording(effect.file, effect.assignment, effect.course)
+            is AssignmentDetailsEffect.ShowSubmissionView -> {
+                view?.showSubmissionView(effect.assignmentId, effect.course)
+            }
+            is AssignmentDetailsEffect.ShowQuizStartView -> {
+                view?.showQuizStartView(effect.course, effect.quiz)
+            }
+            is AssignmentDetailsEffect.ShowDiscussionDetailView -> {
+                view?.showDiscussionDetailView(effect.course, effect.discussionTopicHeaderId)
+            }
+            is AssignmentDetailsEffect.ShowDiscussionAttachment -> {
+                view?.showDiscussionAttachment(effect.course, effect.discussionAttachment)
+            }
+            is AssignmentDetailsEffect.UploadAudioSubmission -> {
+                uploadAudioRecording(effect.file, effect.assignment, effect.course)
+            }
             is AssignmentDetailsEffect.ShowUploadStatusView -> {
                 when (effect.submission.submissionType) {
                     Assignment.SubmissionType.ONLINE_UPLOAD.apiString, Assignment.SubmissionType.MEDIA_RECORDING.apiString -> {
@@ -119,7 +142,7 @@ class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Lon
                         view?.showLTIView(effect.course, effect.ltiUrl ?: "", effect.assignment.name ?: "")
                     }
                     else -> { // Assignment.SubmissionType.MEDIA_RECORDING
-                        view?.showMediaRecordingView(effect.assignment, effect.course.id)
+                        view?.showMediaRecordingView(effect.assignment)
                     }
                 }
             }
@@ -205,8 +228,34 @@ class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Lon
         return visibilities
     }
 
+    private fun launchVideo() {
+        if (needsPermissions(::launchVideo, PermissionUtils.CAMERA, PermissionUtils.RECORD_AUDIO)) {
+            return
+        }
+
+        // Store the uri that we're saving the file to
+        val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date())
+        val file = File(FileUploadUtils.getExternalCacheDir(context), "video_$timeStamp.mp4")
+        val uri = FileProvider.getUriForFile(
+            context,
+            context.packageName + Const.FILE_PROVIDER_AUTHORITY,
+            file
+        )
+        if (uri != null) {
+            // TODO: Replace with event to update to hold this uri?
+            FilePrefs.tempCaptureUri = uri.toString()
+        }
+
+        // Create new Intent and launch
+        val intent = view?.getVideoIntent(uri)
+
+        if (intent != null && isIntentAvailable(intent.action)) {
+            (context as Activity).startActivityForResult(intent, AssignmentDetailsFragment.VIDEO_REQUEST_CODE)
+        }
+    }
+
     private fun launchAudio() {
-        if(needsPermissions(::launchAudio, PermissionUtils.RECORD_AUDIO)) return
+        if (needsPermissions(::launchAudio, PermissionUtils.RECORD_AUDIO)) return
         view?.showAudioRecordingView()
     }
 
@@ -223,6 +272,13 @@ class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Lon
             }
         }
         return true
+    }
+
+    private fun isIntentAvailable(action: String?): Boolean {
+        return context.packageManager.queryIntentActivities(
+            Intent(action),
+            PackageManager.MATCH_DEFAULT_ONLY
+        ).size > 0
     }
 
     private fun uploadAudioRecording(file: File, assignment: Assignment, course: Course) {

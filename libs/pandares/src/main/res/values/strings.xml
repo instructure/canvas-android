@@ -65,6 +65,7 @@
     <string name="enterAUrlHereForYourSubmission">Enter a URL here for your submission</string>
     <string name="addFileFabContentDesc">Show Add File Options</string>
     <string name="recordAudio">Record Audio</string>
+    <string name="recordVideo">Record Video</string>
 
     <!-- Student Submission -->
     <string name="submissionWrite">Write&#8230;</string>
@@ -1102,6 +1103,7 @@
     <string name="addVideoComment">Add video comment</string>
     <string name="addAudioComment">Add audio comment</string>
     <string name="audioRecordingError">An unexpected error occurred while trying to record audio.</string>
+    <string name="videoRecordingError">An unexpected error occurred while trying to record video.</string>
 
     <string name="quizQuestionLabel">Questions:</string>
     <string name="timeLimitLabel">Time Limit:</string>

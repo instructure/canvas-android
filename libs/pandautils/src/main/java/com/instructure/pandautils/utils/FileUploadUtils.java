@@ -249,6 +249,13 @@ public class FileUploadUtils {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
     }
 
+    public static FileSubmitObject getFile(Context context, Uri uri) {
+        ContentResolver contentResolver = context.getContentResolver();
+        String mimeType = FileUploadUtils.getFileMimeType(contentResolver, uri);
+        String fileName = FileUploadUtils.getFileNameWithDefault(contentResolver, uri, mimeType);
+        return FileUploadUtils.getFileSubmitObjectFromInputStream(context, uri, fileName, mimeType);
+    }
+
     public static FileSubmitObject getFileSubmitObjectFromInputStream(Context context, Uri uri, String fileName, final String mimeType) {
         if (uri == null) return null;
         File file;

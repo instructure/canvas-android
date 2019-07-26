@@ -23,7 +23,10 @@ import com.spotify.mobius.Next
 class PickerSubmissionUploadUpdate :
     UpdateInit<PickerSubmissionUploadModel, PickerSubmissionUploadEvent, PickerSubmissionUploadEffect>() {
     override fun performInit(model: PickerSubmissionUploadModel): First<PickerSubmissionUploadModel, PickerSubmissionUploadEffect> {
-        return First.first(model)
+        val effects = if (model.mediaFileUri == null) emptySet() else {
+            setOf(PickerSubmissionUploadEffect.LoadFileContents(model.mediaFileUri, model.allowedExtensions))
+        }
+        return First.first(model, effects)
     }
 
     override fun update(

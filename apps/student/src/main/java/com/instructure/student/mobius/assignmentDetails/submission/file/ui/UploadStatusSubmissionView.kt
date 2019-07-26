@@ -161,11 +161,12 @@ class UploadListBinder : BasicItemBinder<UploadListItemViewState, UploadListCall
         fileSize.text = state.size
 
         // TODO: Error messages are useless right now, we aren't handling anything from the API right now and that has to change
-        if (state.errorMessage.isNullOrBlank()) {
-            fileError.setGone()
-        } else {
-            fileError.setVisible().text = state.errorMessage
-        }
+        fileError.setGone()
+//        if (state.errorMessage.isNullOrBlank()) {
+//            fileError.setGone()
+//        } else {
+//            fileError.setVisible().text = state.errorMessage
+//        }
 
         // TODO: Not functionally useful right now since retry isn't enabled (no need to delete items yet)
         deleteButton.setGone() // TODO: Remove this line

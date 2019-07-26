@@ -91,7 +91,7 @@ internal object FileUploadAPI {
         file: File,
         adapter: RestBuilder,
         params: RestParams,
-        onProgress: ((Float) -> Unit)? = null
+        onProgress: ((Float, Long) -> Unit)? = null
     ): Attachment? {
         val requestFile = ProgressRequestBody(file, "application/octet-stream", onProgress = onProgress)
         val requestFilePart = MultipartBody.Part.createFormData("file", file.name, requestFile)

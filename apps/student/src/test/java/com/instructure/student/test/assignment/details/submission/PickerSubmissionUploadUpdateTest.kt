@@ -66,6 +66,25 @@ class PickerSubmissionUploadUpdateTest : Assert() {
     }
 
     @Test
+    fun `Initializes with LoadFileContents effect given a media uri`() {
+        val uri = mockk<Uri>()
+        val startModel = initModel.copy(mediaFileUri = uri)
+        initSpec
+            .whenInit(startModel)
+            .then(
+                assertThatFirst(
+                    FirstMatchers.hasModel(startModel),
+                    FirstMatchers.hasEffects<PickerSubmissionUploadModel, PickerSubmissionUploadEffect>(
+                        PickerSubmissionUploadEffect.LoadFileContents(
+                            uri,
+                            startModel.allowedExtensions
+                        )
+                    )
+                )
+            )
+    }
+
+    @Test
     fun `SubmitClicked event results in HandleSubmit effect`() {
         updateSpec
             .given(initModel)

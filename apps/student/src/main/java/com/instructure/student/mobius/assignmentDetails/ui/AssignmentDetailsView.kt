@@ -21,7 +21,9 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Intent
 import android.content.res.ColorStateList
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -49,6 +51,7 @@ import com.instructure.student.mobius.common.ui.MobiusView
 import com.instructure.student.router.RouteMatcher
 import com.spotify.mobius.functions.Consumer
 import kotlinx.android.synthetic.main.dialog_submission_picker.*
+import kotlinx.android.synthetic.main.dialog_submission_picker_media.*
 import kotlinx.android.synthetic.main.fragment_assignment_details.*
 
 class AssignmentDetailsView(
@@ -197,7 +200,7 @@ class AssignmentDetailsView(
                 showFileUploadView(assignment)
             }
             setupDialogRow(dialog, dialog.submissionEntryMedia, visibilities.mediaRecording) {
-                showMediaRecordingView(assignment, courseId)
+                showMediaRecordingView(assignment)
             }
             setupDialogRow(dialog, dialog.submissionEntryStudio, visibilities.studioUpload) {
                 // The LTI info shouldn't be null if we are showing the Studio upload option
@@ -254,13 +257,19 @@ class AssignmentDetailsView(
         (context as BaseRouterActivity).openMedia(canvasContext, discussionAttachment.contentType ?: "", discussionAttachment.url ?: "", discussionAttachment.filename ?: "")
     }
 
-    fun showMediaRecordingView(assignment: Assignment, courseId: Long) {
-        // TODO - remove this call and connect it to the secondary media dialog
-        startAudioDialog()
-    }
+    fun showMediaRecordingView(assignment: Assignment) {
+        val builder = AlertDialog.Builder(context)
+        val dialog = builder.setView(R.layout.dialog_submission_picker_media).create()
 
-    private fun startAudioDialog() {
-        consumer?.accept(AssignmentDetailsEvent.AudioRecordingClicked)
+        dialog.setOnShowListener {
+            setupDialogRow(dialog, dialog.submissionEntryAudio, true) {
+                consumer?.accept(AssignmentDetailsEvent.AudioRecordingClicked)
+            }
+            setupDialogRow(dialog, dialog.submissionEntryVideo, true) {
+                consumer?.accept(AssignmentDetailsEvent.VideoRecordingClicked)
+            }
+        }
+        dialog.show()
     }
 
     fun showAudioRecordingView() {
@@ -272,12 +281,23 @@ class AssignmentDetailsView(
         floatingRecordingView.stoppedCallback = {}
     }
 
+    fun getVideoIntent(fileUri: Uri): Intent {
+        return Intent(MediaStore.ACTION_VIDEO_CAPTURE).apply {
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            putExtra(MediaStore.EXTRA_OUTPUT, fileUri)
+        }
+    }
+
     fun showPermissionDeniedToast() {
         Toast.makeText(context, com.instructure.pandautils.R.string.permissionDenied, Toast.LENGTH_LONG).show()
     }
 
     fun showAudioRecordingError() {
         Toast.makeText(context, com.instructure.pandautils.R.string.audioRecordingError, Toast.LENGTH_LONG).show()
+    }
+
+    fun showVideoRecordingError() {
+        Toast.makeText(context, com.instructure.pandautils.R.string.videoRecordingError, Toast.LENGTH_LONG).show()
     }
 
     fun showFileUploadView(assignment: Assignment) {
@@ -296,5 +316,9 @@ class AssignmentDetailsView(
             val intent = Intent(context, InternalWebViewActivity::class.java)
             context.startActivity(intent)
         }
+    }
+
+    fun launchFilePickerView(uri: Uri, course: Course, assignment: Assignment) {
+        RouteMatcher.route(context, PickerSubmissionUploadFragment.makeRoute(course, assignment, uri))
     }
 }
