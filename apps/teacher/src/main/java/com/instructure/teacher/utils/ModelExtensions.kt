@@ -30,6 +30,7 @@ import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouteContext
 import com.instructure.pandautils.activities.BaseViewMediaActivity
 import com.instructure.pandautils.models.EditableFile
+import com.instructure.pandautils.utils.iconRes
 import com.instructure.pandautils.utils.nonNullArgs
 import com.instructure.teacher.R
 import com.instructure.teacher.fragments.ViewHtmlFragment
@@ -45,24 +46,6 @@ fun Parcel.readBoolean() = readByte() != 0.toByte()
 // region Attachment extensions
 
 private const val MEDIA_PLACEHOLDER_ID = -123L
-
-val Attachment.iconRes: Int
-    get() = when {
-        contentType == null -> R.drawable.vd_utils_attachment
-        contentType!!.startsWith("image") -> R.drawable.vd_image
-        contentType!!.startsWith("video") -> R.drawable.vd_media
-        contentType!!.startsWith("audio") -> R.drawable.vd_audio
-        else -> when (filename!!.substringAfterLast('.', "").toLowerCase()) {
-            "doc", "docx" -> R.drawable.vd_document
-            "txt" -> R.drawable.vd_document
-            "rtf" -> R.drawable.vd_document
-            "pdf" -> R.drawable.vd_pdf
-            "xls" -> R.drawable.vd_document
-            "zip","tar", "7z", "apk", "jar", "rar" -> R.drawable.vd_utils_attachment
-            else -> R.drawable.vd_utils_attachment
-        }
-    }
-
 
 fun Attachment.asMediaSubmissionPlaceholder(submission: Submission?): Attachment {
     submission?.mediaComment?.let {

@@ -69,7 +69,7 @@ object SubmissionDetailsPresenter : Presenter<SubmissionDetailsModel, Submission
             tabData += SubmissionDetailsTabData.FileData(
                 name = name,
                 files = this,
-                selectedFileId = getOrNull(0)?.id ?: 0,
+                selectedFileId = model.selectedAttachmentId ?: getOrNull(0)?.id ?: 0,
                 canvasContext = model.canvasContext
             )
         }

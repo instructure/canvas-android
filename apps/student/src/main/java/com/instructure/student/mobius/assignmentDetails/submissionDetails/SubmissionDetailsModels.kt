@@ -30,7 +30,8 @@ sealed class SubmissionDetailsEvent {
     data class VideoRecordingReplayClicked(val file: File?) : SubmissionDetailsEvent()
     data class SendMediaCommentClicked(val file: File?) : SubmissionDetailsEvent()
     data class AttachmentClicked(val file: Attachment) : SubmissionDetailsEvent()
-    data class SubmissionClicked(val submissionAttempt: Long, val attachmentId: Int = 0) : SubmissionDetailsEvent()
+    data class SubmissionClicked(val submissionAttempt: Long) : SubmissionDetailsEvent()
+    data class SubmissionAndAttachmentClicked(val submissionAttempt: Long, val attachment: Attachment) : SubmissionDetailsEvent()
     data class DataLoaded(val assignment: DataResult<Assignment>, val rootSubmission: DataResult<Submission>, val ltiUrl: DataResult<LTITool?>, val isArcEnabled: Boolean) :
         SubmissionDetailsEvent()
 }

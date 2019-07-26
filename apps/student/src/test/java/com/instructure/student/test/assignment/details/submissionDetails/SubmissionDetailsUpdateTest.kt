@@ -30,9 +30,13 @@ import com.spotify.mobius.test.InitSpec
 import com.spotify.mobius.test.InitSpec.assertThatFirst
 import com.spotify.mobius.test.NextMatchers
 import com.spotify.mobius.test.NextMatchers.hasModel
+import com.spotify.mobius.test.NextMatchers.hasNothing
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
-import io.mockk.*
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.mockkStatic
+import io.mockk.unmockkStatic
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -175,6 +179,54 @@ class SubmissionDetailsUpdateTest : Assert() {
                     matchesEffects<SubmissionDetailsModel, SubmissionDetailsEffect>(
                         SubmissionDetailsEffect.ShowSubmissionContentType(contentType)
                     )
+                )
+            )
+    }
+
+    @Test
+    fun `SubmissionAndAttachmentClicked event returns in no change if both submission attempt and attachment Id are unchanged`() {
+        val model = initModel.copy(
+            selectedSubmissionAttempt = 123L,
+            selectedAttachmentId = 456L
+        )
+
+        val event = SubmissionDetailsEvent.SubmissionAndAttachmentClicked(123L, Attachment(456L))
+
+        updateSpec
+            .given(model)
+            .whenEvent(event)
+            .then(
+                assertThatNext(
+                    hasNothing()
+                )
+            )
+    }
+
+    @Test
+    fun `SubmissionAndAttachmentClicked event returns in model change and ShowSubmissionContentType effect`() {
+        val model = initModel.copy(
+            selectedSubmissionAttempt = 123L,
+            selectedAttachmentId = 456L
+        )
+
+        val expectedModel = initModel.copy(
+            selectedSubmissionAttempt = 321L,
+            selectedAttachmentId = 654L
+        )
+
+        val attachment = Attachment(654L)
+        val event = SubmissionDetailsEvent.SubmissionAndAttachmentClicked(321L, Attachment(654L))
+        val expectedEffect = SubmissionDetailsEffect.ShowSubmissionContentType(
+            SubmissionDetailsContentType.OtherAttachmentContent(attachment)
+        )
+
+        updateSpec
+            .given(model)
+            .whenEvent(event)
+            .then(
+                assertThatNext<SubmissionDetailsModel, SubmissionDetailsEffect>(
+                    hasModel(expectedModel),
+                    matchesEffects(expectedEffect)
                 )
             )
     }
@@ -639,7 +691,14 @@ class SubmissionDetailsUpdateTest : Assert() {
 
         updateSpec
             .given(initModel)
-            .whenEvent(SubmissionDetailsEvent.DataLoaded(assignmentResult, submissionResult, ltiToolResult, isArcEnabled))
+            .whenEvent(
+                SubmissionDetailsEvent.DataLoaded(
+                    assignmentResult,
+                    submissionResult,
+                    ltiToolResult,
+                    isArcEnabled
+                )
+            )
             .then(
                 assertThatNext(
                     hasModel(expectedModel),
@@ -658,101 +717,101 @@ class SubmissionDetailsUpdateTest : Assert() {
     @Test
     fun `AudioRecordingClicked results in ShowAudioRecordingView effect`() {
         updateSpec
-                .given(initModel)
-                .whenEvent(SubmissionDetailsEvent.AudioRecordingClicked)
-                .then(
-                        assertThatNext(
-                                matchesEffects<SubmissionDetailsModel, SubmissionDetailsEffect>(
-                                        SubmissionDetailsEffect.ShowAudioRecordingView
-                                )
-                        )
+            .given(initModel)
+            .whenEvent(SubmissionDetailsEvent.AudioRecordingClicked)
+            .then(
+                assertThatNext(
+                    matchesEffects<SubmissionDetailsModel, SubmissionDetailsEffect>(
+                        SubmissionDetailsEffect.ShowAudioRecordingView
+                    )
                 )
+            )
     }
 
     @Test
     fun `VideoRecordingClicked results in ShowVideoRecordingView effect`() {
         updateSpec
-                .given(initModel)
-                .whenEvent(SubmissionDetailsEvent.VideoRecordingClicked)
-                .then(
-                        assertThatNext(
-                                matchesEffects<SubmissionDetailsModel, SubmissionDetailsEffect>(
-                                        SubmissionDetailsEffect.ShowVideoRecordingView
-                                )
-                        )
+            .given(initModel)
+            .whenEvent(SubmissionDetailsEvent.VideoRecordingClicked)
+            .then(
+                assertThatNext(
+                    matchesEffects<SubmissionDetailsModel, SubmissionDetailsEffect>(
+                        SubmissionDetailsEffect.ShowVideoRecordingView
+                    )
                 )
+            )
     }
 
     @Test
     fun `VideoRecordingReplayClicked with null file results in ShowVideoRecordingPlaybackError effect`() {
         updateSpec
-                .given(initModel)
-                .whenEvent(SubmissionDetailsEvent.VideoRecordingReplayClicked(null))
-                .then(
-                        assertThatNext(
-                                matchesEffects<SubmissionDetailsModel, SubmissionDetailsEffect>(
-                                        SubmissionDetailsEffect.ShowVideoRecordingPlaybackError
-                                )
-                        )
+            .given(initModel)
+            .whenEvent(SubmissionDetailsEvent.VideoRecordingReplayClicked(null))
+            .then(
+                assertThatNext(
+                    matchesEffects<SubmissionDetailsModel, SubmissionDetailsEffect>(
+                        SubmissionDetailsEffect.ShowVideoRecordingPlaybackError
+                    )
                 )
+            )
     }
 
     @Test
     fun `VideoRecordingReplayClicked with file results in ShowVideoRecordingPlayback effect`() {
         val file = File("test")
         updateSpec
-                .given(initModel)
-                .whenEvent(SubmissionDetailsEvent.VideoRecordingReplayClicked(file))
-                .then(
-                        assertThatNext(
-                                matchesEffects<SubmissionDetailsModel, SubmissionDetailsEffect>(
-                                        SubmissionDetailsEffect.ShowVideoRecordingPlayback(file)
-                                )
-                        )
+            .given(initModel)
+            .whenEvent(SubmissionDetailsEvent.VideoRecordingReplayClicked(file))
+            .then(
+                assertThatNext(
+                    matchesEffects<SubmissionDetailsModel, SubmissionDetailsEffect>(
+                        SubmissionDetailsEffect.ShowVideoRecordingPlayback(file)
+                    )
                 )
+            )
     }
 
     @Test
     fun `StopMediaRecordingClicked results in MediaCommentDialogClosed effect`() {
         updateSpec
-                .given(initModel)
-                .whenEvent(SubmissionDetailsEvent.StopMediaRecordingClicked)
-                .then(
-                        assertThatNext(
-                                matchesEffects<SubmissionDetailsModel, SubmissionDetailsEffect>(
-                                        SubmissionDetailsEffect.MediaCommentDialogClosed
-                                )
-                        )
+            .given(initModel)
+            .whenEvent(SubmissionDetailsEvent.StopMediaRecordingClicked)
+            .then(
+                assertThatNext(
+                    matchesEffects<SubmissionDetailsModel, SubmissionDetailsEffect>(
+                        SubmissionDetailsEffect.MediaCommentDialogClosed
+                    )
                 )
+            )
     }
 
     @Test
     fun `SendMediaCommentClicked with null file results in ShowMediaCommentError effect`() {
         updateSpec
-                .given(initModel)
-                .whenEvent(SubmissionDetailsEvent.SendMediaCommentClicked(null))
-                .then(
-                        assertThatNext(
-                                matchesEffects<SubmissionDetailsModel, SubmissionDetailsEffect>(
-                                        SubmissionDetailsEffect.ShowMediaCommentError
-                                )
-                        )
+            .given(initModel)
+            .whenEvent(SubmissionDetailsEvent.SendMediaCommentClicked(null))
+            .then(
+                assertThatNext(
+                    matchesEffects<SubmissionDetailsModel, SubmissionDetailsEffect>(
+                        SubmissionDetailsEffect.ShowMediaCommentError
+                    )
                 )
+            )
     }
 
     @Test
     fun `SendMediaCommentClicked with file results in UploadMediaComment effect`() {
         val file = File("test")
         updateSpec
-                .given(initModel)
-                .whenEvent(SubmissionDetailsEvent.SendMediaCommentClicked(file))
-                .then(
-                        assertThatNext(
-                                matchesEffects<SubmissionDetailsModel, SubmissionDetailsEffect>(
-                                        SubmissionDetailsEffect.UploadMediaComment(file)
-                                )
-                        )
+            .given(initModel)
+            .whenEvent(SubmissionDetailsEvent.SendMediaCommentClicked(file))
+            .then(
+                assertThatNext(
+                    matchesEffects<SubmissionDetailsModel, SubmissionDetailsEffect>(
+                        SubmissionDetailsEffect.UploadMediaComment(file)
+                    )
                 )
+            )
     }
     // endregion FloatingRecordingView
 }

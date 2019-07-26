@@ -332,6 +332,15 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
                 commentDb.getCommentById(id).executeAsOne()
             }
 
+            // Get attachments, partition by completed vs pending
+            val (completed, pending) = fileDb
+                .getFilesForPendingComment(comment.id)
+                .executeAsList()
+                .partition { it.attachmentId != null }
+
+            // Use foreground if there are files and/or media to upload
+            val foreground = comment.mediaPath != null || pending.isNotEmpty()
+
             // Set up notifications
             FileUploadService.createNotificationChannel(notificationManager, COMMENT_CHANNEL_ID)
             val notification = NotificationCompat.Builder(this@SubmissionService, COMMENT_CHANNEL_ID)
@@ -340,7 +349,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
                 .setContentTitle(getString(R.string.assignmentSubmissionCommentUpload, comment.assignmentName))
                 .setProgress(0, 0, true)
 
-            startForeground(comment.assignmentId.toInt(), notification.build())
+            if (foreground) startForeground(comment.assignmentId.toInt(), notification.build())
 
             fun setError() {
                 // Update notification
@@ -348,7 +357,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
                 notification.setContentText("")
                 notification.setProgress(0, 0, false)
                 notification.setOngoing(false)
-                // TODO: MBL-11333, Set pending intent to route to submission page
+                // TODO: Set pending intent to route to submission page
                 notificationManager.notify(comment.assignmentId.toInt(), notification.build())
 
                 // Set error in db
@@ -361,23 +370,17 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
             // Clear existing error state, if any
             commentDb.setCommentError(false, comment.id)
 
-            // Get attachments, partition by completed vs pending
-            val (completed, pending) = fileDb
-                .getFilesForPendingComment(comment.id)
-                .executeAsList()
-                .partition { it.attachmentId != null }
-
             // Upload pending attachments
-            pending.forEachIndexed { idx, pendingAttachment ->
+            pending.forEachIndexed { index, pendingAttachment ->
                 // Update notification
-                notification.setContentText(getString(R.string.assignmentSubmissionCommentUploadingFile, idx + 1, pending.size))
+                notification.setContentText(getString(R.string.assignmentSubmissionCommentUploadingFile, index + 1, pending.size))
                 notification.setProgress(0, 0, true)
                 notificationManager.notify(comment.assignmentId.toInt(), notification.build())
 
                 // Set initial progress
                 commentDb.updateCommentProgress(
                     id = comment.id,
-                    currentFile = (completed.size + idx).toLong(),
+                    currentFile = (completed.size + index).toLong(),
                     fileCount = (completed.size + pending.size).toLong(),
                     progress = 0.0
                 )
@@ -395,7 +398,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
                     // Update progress in db
                     commentDb.updateCommentProgress(
                         id = comment.id,
-                        currentFile = (completed.size + idx).toLong(),
+                        currentFile = (completed.size + index).toLong(),
                         fileCount = (completed.size + pending.size).toLong(),
                         progress = progress.toDouble()
                     )
@@ -437,9 +440,11 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
             }
 
             // Update notification
-            notification.setContentText("")
-            notification.setProgress(0, 0, true)
-            notificationManager.notify(comment.assignmentId.toInt(), notification.build())
+            if (foreground) {
+                notification.setContentText("")
+                notification.setProgress(0, 0, true)
+                notificationManager.notify(comment.assignmentId.toInt(), notification.build())
+            }
 
             try {
                 val submission: Submission = notoriousResult?.let { result ->

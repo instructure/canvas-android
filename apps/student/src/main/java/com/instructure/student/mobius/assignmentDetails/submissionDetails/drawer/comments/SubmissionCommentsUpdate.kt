@@ -21,18 +21,22 @@ import com.instructure.student.mobius.common.ui.UpdateInit
 import com.spotify.mobius.First
 import com.spotify.mobius.Next
 
-class SubmissionCommentsUpdate : UpdateInit<SubmissionCommentsModel, SubmissionCommentsEvent, SubmissionCommentsEffect>() {
+class SubmissionCommentsUpdate :
+    UpdateInit<SubmissionCommentsModel, SubmissionCommentsEvent, SubmissionCommentsEffect>() {
     override fun performInit(model: SubmissionCommentsModel): First<SubmissionCommentsModel, SubmissionCommentsEffect> {
         return First.first(model)
     }
 
     override fun update(
-            model: SubmissionCommentsModel,
-            event: SubmissionCommentsEvent
+        model: SubmissionCommentsModel,
+        event: SubmissionCommentsEvent
     ): Next<SubmissionCommentsModel, SubmissionCommentsEffect> {
         return when (event) {
-            is SubmissionCommentsEvent.AddMediaCommentClicked -> {
-                Next.next(model.copy(isMediaCommentEnabled = false), setOf(SubmissionCommentsEffect.ShowMediaCommentDialog))
+            is SubmissionCommentsEvent.AddFilesClicked -> {
+                Next.next(
+                    model.copy(isFileButtonEnabled = false),
+                    setOf(SubmissionCommentsEffect.ShowMediaCommentDialog)
+                )
             }
             is SubmissionCommentsEvent.AddAudioCommentClicked -> {
                 Next.dispatch(setOf(SubmissionCommentsEffect.ShowAudioRecordingView))
@@ -49,12 +53,12 @@ class SubmissionCommentsUpdate : UpdateInit<SubmissionCommentsModel, SubmissionC
                     model.assignment.groupCategoryId > 0
                 )
                 Next.next(
-                    model.copy(isMediaCommentEnabled = true),
+                    model.copy(isFileButtonEnabled = true),
                     setOf(effect)
                 )
             }
-            is SubmissionCommentsEvent.MediaCommentDialogClosed -> {
-                Next.next(model.copy(isMediaCommentEnabled = true))
+            is SubmissionCommentsEvent.AddFilesDialogClosed -> {
+                Next.next(model.copy(isFileButtonEnabled = true))
             }
             is SubmissionCommentsEvent.SendTextCommentClicked -> {
                 val effect = SubmissionCommentsEffect.SendTextComment(
@@ -67,7 +71,10 @@ class SubmissionCommentsUpdate : UpdateInit<SubmissionCommentsModel, SubmissionC
                 Next.dispatch(setOf(effect, SubmissionCommentsEffect.ClearTextInput))
             }
             is SubmissionCommentsEvent.SubmissionCommentAdded -> {
-                Next.next(model.copy(comments = model.comments + event.comment))
+                Next.next(
+                    model.copy(comments = model.comments + event.comment),
+                    setOf(SubmissionCommentsEffect.ScrollToBottom)
+                )
             }
             SubmissionCommentsEvent.UploadFilesClicked -> {
                 val effect = SubmissionCommentsEffect.ShowFilePicker(
@@ -77,14 +84,44 @@ class SubmissionCommentsUpdate : UpdateInit<SubmissionCommentsModel, SubmissionC
                 Next.dispatch(setOf(effect))
             }
             is SubmissionCommentsEvent.PendingSubmissionsUpdated -> {
-                if (event.ids == model.pendingCommentIds) {
-                    Next.noChange()
-                } else {
-                    Next.next(model.copy(pendingCommentIds = event.ids))
+                when {
+                    event.ids == model.pendingCommentIds -> Next.noChange()
+                    event.ids.size > model.pendingCommentIds.size -> {
+                        Next.next<SubmissionCommentsModel, SubmissionCommentsEffect>(
+                            model.copy(pendingCommentIds = event.ids),
+                            setOf(SubmissionCommentsEffect.ScrollToBottom)
+                        )
+                    }
+                    else -> Next.next(model.copy(pendingCommentIds = event.ids))
                 }
             }
             is SubmissionCommentsEvent.RetryCommentUploadClicked -> {
                 Next.dispatch(setOf(SubmissionCommentsEffect.RetryCommentUpload(event.commentId)))
+            }
+            is SubmissionCommentsEvent.SubmissionClicked -> {
+                Next.dispatch(setOf(SubmissionCommentsEffect.BroadcastSubmissionSelected(event.submission)))
+            }
+            is SubmissionCommentsEvent.SubmissionAttachmentClicked -> {
+                Next.dispatch(
+                    setOf(
+                        SubmissionCommentsEffect.BroadcastSubmissionAttachmentSelected(
+                            event.submission,
+                            event.attachment
+                        )
+                    )
+                )
+            }
+            is SubmissionCommentsEvent.CommentAttachmentClicked -> {
+                Next.dispatch(
+                    setOf(
+                        SubmissionCommentsEffect.OpenMedia(
+                            CanvasContext.emptyCourseContext(model.assignment.courseId),
+                            event.attachment.contentType.orEmpty(),
+                            event.attachment.url.orEmpty(),
+                            event.attachment.filename.orEmpty()
+                        )
+                    )
+                )
             }
         }
     }

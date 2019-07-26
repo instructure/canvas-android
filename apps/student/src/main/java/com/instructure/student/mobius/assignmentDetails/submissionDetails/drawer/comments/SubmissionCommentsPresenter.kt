@@ -17,11 +17,83 @@
 package com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments
 
 import android.content.Context
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.DateHelper
+import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.student.R
+import com.instructure.student.db.Db
+import com.instructure.student.db.getInstance
 import com.instructure.student.mobius.common.ui.Presenter
-
+import java.util.*
 
 object SubmissionCommentsPresenter : Presenter<SubmissionCommentsModel, SubmissionCommentsViewState> {
+
+    private fun Date?.getSubmissionFormattedDate(context: Context): String {
+        val atSeparator = context.getString(R.string.at)
+        return DateHelper.getMonthDayAtTime(context, this, atSeparator) ?: ""
+    }
+
     override fun present(model: SubmissionCommentsModel, context: Context): SubmissionCommentsViewState {
-        return SubmissionCommentsViewState()
+        val self = ApiPrefs.user ?: return SubmissionCommentsViewState(false, listOf(CommentItemState.Empty))
+
+        val tint = ColorKeeper.colorFromCourseId(model.assignment.courseId)
+
+        val comments = model.comments.map { comment ->
+            val date = comment.createdAt ?: Date(0)
+            CommentItemState.CommentItem(
+                id = comment.id,
+                authorName = comment.author?.displayName.orEmpty(),
+                avatarUrl = comment.author?.avatarImageUrl.orEmpty(),
+                sortDate = date,
+                dateText = date.getSubmissionFormattedDate(context),
+                message = comment.comment.orEmpty(),
+                isAudience = comment.authorId != self.id,
+                media = comment.mediaComment,
+                attachments = comment.attachments,
+                tint = tint
+            )
+        }
+
+        val submissions = model.submissionHistory
+            .filter { it.workflowState != "unsubmitted" && it.submissionType != null }
+            .map { submission ->
+                val date = submission.submittedAt ?: Date(0)
+                CommentItemState.SubmissionItem(
+                    authorName = self.shortName ?: self.name,
+                    avatarUrl = self.avatarUrl.orEmpty(),
+                    sortDate = date,
+                    dateText = date.getSubmissionFormattedDate(context),
+                    submission = submission,
+                    tint = tint
+                )
+            }
+
+        val pendingItems = Db.getInstance(context)
+            .pendingSubmissionCommentQueries
+            .getCommentsByAccountAssignment(ApiPrefs.domain, model.assignment.id)
+            .executeAsList()
+            .map { pendingComment ->
+                val date = Date(pendingComment.lastActivityDate.toInstant().toEpochMilli())
+                CommentItemState.PendingCommentItem(
+                    authorName = self.shortName ?: self.name,
+                    avatarUrl = self.avatarUrl.orEmpty(),
+                    sortDate = date,
+                    pendingComment = pendingComment
+                )
+            }
+
+        val items = (comments + submissions + pendingItems).sortedByDescending {
+            when (it) {
+                is CommentItemState.CommentItem -> it.sortDate
+                is CommentItemState.PendingCommentItem -> it.sortDate
+                is CommentItemState.SubmissionItem -> it.sortDate
+                else -> throw IllegalArgumentException("Unhandled CommentItemState type: ${it::class.java.simpleName}")
+            }
+        }
+
+        return SubmissionCommentsViewState(
+            model.isFileButtonEnabled,
+            items.takeUnless { it.isEmpty() } ?: listOf(CommentItemState.Empty)
+        )
     }
 }

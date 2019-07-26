@@ -72,6 +72,22 @@ class SubmissionCommentsEffectHandler(val context: Context) : EffectHandler<Subm
             is SubmissionCommentsEffect.RetryCommentUpload -> {
                 SubmissionService.retryCommentUpload(context, effect.commentId)
             }
+            SubmissionCommentsEffect.ScrollToBottom -> view?.scrollToBottom()
+            is SubmissionCommentsEffect.BroadcastSubmissionSelected -> {
+                ChannelSource.getChannel<SubmissionDetailsSharedEvent>().offer(
+                    SubmissionDetailsSharedEvent.SubmissionClicked(effect.submission)
+                )
+                Unit
+            }
+            is SubmissionCommentsEffect.BroadcastSubmissionAttachmentSelected -> {
+                ChannelSource.getChannel<SubmissionDetailsSharedEvent>().offer(
+                    SubmissionDetailsSharedEvent.SubmissionAttachmentClicked(effect.submission, effect.attachment)
+                )
+                Unit
+            }
+            is SubmissionCommentsEffect.OpenMedia -> {
+                view?.openMedia(effect.canvasContext, effect.contentType, effect.url, effect.fileName)
+            }
         }.exhaustive
     }
 

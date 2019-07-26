@@ -16,9 +16,7 @@
  */
 package com.instructure.student.test.assignment.details.submissionDetails.commentTab
 
-import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.SubmissionComment
+import com.instructure.canvasapi2.models.*
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.SubmissionCommentsEffect
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.SubmissionCommentsEvent
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.SubmissionCommentsModel
@@ -29,6 +27,7 @@ import com.spotify.mobius.test.InitSpec
 import com.spotify.mobius.test.InitSpec.assertThatFirst
 import com.spotify.mobius.test.NextMatchers
 import com.spotify.mobius.test.NextMatchers.hasModel
+import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Assert
@@ -67,10 +66,10 @@ class SubmissionCommentsUpdateTest : Assert() {
 
     @Test
     fun `AddMediaCommentClicked results in ShowMediaCommentDialog effect and model change`() {
-        val expectedModel = initModel.copy(isMediaCommentEnabled = false)
+        val expectedModel = initModel.copy(isFileButtonEnabled = false)
         updateSpec
             .given(initModel)
-            .whenEvent(SubmissionCommentsEvent.AddMediaCommentClicked)
+            .whenEvent(SubmissionCommentsEvent.AddFilesClicked)
             .then(
                 assertThatNext(
                     hasModel(expectedModel),
@@ -145,11 +144,11 @@ class SubmissionCommentsUpdateTest : Assert() {
 
     @Test
     fun `MediaCommentDialogClosed results in no effects and a model change`() {
-        val givenModel = initModel.copy(isMediaCommentEnabled = false)
-        val expectedModel = initModel.copy(isMediaCommentEnabled = true)
+        val givenModel = initModel.copy(isFileButtonEnabled = false)
+        val expectedModel = initModel.copy(isFileButtonEnabled = true)
         updateSpec
             .given(givenModel)
-            .whenEvent(SubmissionCommentsEvent.MediaCommentDialogClosed)
+            .whenEvent(SubmissionCommentsEvent.AddFilesDialogClosed)
             .then(
                 assertThatNext(
                     hasModel(expectedModel),
@@ -159,7 +158,7 @@ class SubmissionCommentsUpdateTest : Assert() {
     }
 
     @Test
-    fun `SubmissionCommentAdded results in no effects and a model change`() {
+    fun `SubmissionCommentAdded results a model change and ScrollToBottom effect`() {
         val existingComment = SubmissionComment(comment = "Existing comment")
         val newComment = SubmissionComment(comment = "New comment")
         val givenModel = initModel.copy(comments = listOf(existingComment))
@@ -168,9 +167,9 @@ class SubmissionCommentsUpdateTest : Assert() {
             .given(givenModel)
             .whenEvent(SubmissionCommentsEvent.SubmissionCommentAdded(newComment))
             .then(
-                assertThatNext(
+                assertThatNext<SubmissionCommentsModel, SubmissionCommentsEffect>(
                     hasModel(expectedModel),
-                    NextMatchers.hasNoEffects()
+                    matchesEffects(SubmissionCommentsEffect.ScrollToBottom)
                 )
             )
     }
@@ -189,7 +188,7 @@ class SubmissionCommentsUpdateTest : Assert() {
     }
 
     @Test
-    fun `PendingSubmissionsUpdated results in no model change if IDs have changed`() {
+    fun `PendingSubmissionsUpdated results in model change if IDs have changed`() {
         val model = initModel.copy(pendingCommentIds = listOf(1L, 2L))
         val expectedModel = initModel.copy(pendingCommentIds = listOf(1L))
         updateSpec
@@ -198,6 +197,22 @@ class SubmissionCommentsUpdateTest : Assert() {
             .then(
                 assertThatNext(
                     hasModel(expectedModel)
+                )
+            )
+    }
+
+    @Test
+    fun `PendingSubmissionsUpdated results in model change and ScrollToBottom effect if ID count has increased`() {
+        val model = initModel.copy(pendingCommentIds = listOf(1L))
+        val expectedModel = initModel.copy(pendingCommentIds = listOf(1L, 2L))
+        val expectedEffect = SubmissionCommentsEffect.ScrollToBottom
+        updateSpec
+            .given(model)
+            .whenEvent(SubmissionCommentsEvent.PendingSubmissionsUpdated(listOf(1L, 2L)))
+            .then(
+                assertThatNext<SubmissionCommentsModel, SubmissionCommentsEffect>(
+                    hasModel(expectedModel),
+                    matchesEffects(expectedEffect)
                 )
             )
     }
@@ -231,6 +246,61 @@ class SubmissionCommentsUpdateTest : Assert() {
                     matchesEffects(effect)
                 )
             )
+    }
+
+    @Test
+    fun `SubmissionClicked results in BroadcastSubmissionSelected effect`() {
+        val submission = Submission(123L)
+        val event = SubmissionCommentsEvent.SubmissionClicked(submission)
+        val effect = SubmissionCommentsEffect.BroadcastSubmissionSelected(submission)
+        updateSpec
+            .given(initModel)
+            .whenEvent(event)
+            .then(
+                assertThatNext<SubmissionCommentsModel, SubmissionCommentsEffect>(
+                    matchesEffects(effect)
+                )
+            )
+    }
+
+    @Test
+    fun `SubmissionAttachmentClicked results in BroadcastSubmissionAttachmentSelected effect`() {
+        val submission = Submission(123L)
+        val attachment = Attachment(456L)
+        val event = SubmissionCommentsEvent.SubmissionAttachmentClicked(submission, attachment)
+        val effect = SubmissionCommentsEffect.BroadcastSubmissionAttachmentSelected(submission, attachment)
+        updateSpec
+            .given(initModel)
+            .whenEvent(event)
+            .then(
+                assertThatNext<SubmissionCommentsModel, SubmissionCommentsEffect>(
+                    matchesEffects(effect)
+                )
+            )
+    }
+
+    @Test
+    fun `CommentAttachmentClicked event results in OpenMedia effect`() {
+        val attachment = Attachment(
+            contentType = "contentType",
+            url = "url",
+            filename = "fileName"
+        )
+        val expectedEffect = SubmissionCommentsEffect.OpenMedia(
+            canvasContext = Course(initModel.assignment.courseId),
+            contentType = "contentType",
+            url = "url",
+            fileName = "fileName"
+        )
+        updateSpec
+            .given(initModel)
+            .whenEvent(SubmissionCommentsEvent.CommentAttachmentClicked(attachment))
+            .then {
+                assertThatNext<SubmissionCommentsModel, SubmissionCommentsEffect>(
+                    hasNoModel(),
+                    matchesEffects(expectedEffect)
+                )
+            }
     }
 
 }

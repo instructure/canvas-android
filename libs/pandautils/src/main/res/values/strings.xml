@@ -99,11 +99,7 @@
     <string name="pleaseTryAgain">Permission Granted, please try again.</string>
     <string name="pickVideo">Select a Video</string>
     <string name="assignmentSubmissionUpload">Uploading submission for %s</string>
-    <string name="assignmentSubmissionCommentUpload">Uploading comment for %s</string>
-    <string name="assignmentSubmissionCommentUploadingFile">Uploading file %1$d of %2$d</string>
-    <string name="assignmentSubmissionCommentUploadingMedia">Uploading media file</string>
     <string name="assignmentSubmissionError">Submission failed for %s</string>
-    <string name="assignmentSubmissionCommentError">Comment upload failed for %s</string>
     <string name="assignmentSubmissionComplete">Successfully submitted %s</string>
 
     <!--Errors-->
@@ -183,7 +179,6 @@
     <string name="lockedModule">This assignment is part of the module \"%1$s\" and hasn\'t been unlocked yet.</string>
     <string name="chooseFile">Choose a File</string>
     <string name="chooseFileSubtext">Attach a file to your submission by tapping an option below.</string>
-    <string name="chooseFileForCommentSubtext">Attach files to your comment by tapping an option below</string>
     <string name="noNotifications">No Notifications</string>
     <string name="noNotificationsSubtext">There\'s nothing to be notified of yet.</string>
     <string name="noTodos">Well Done!</string>

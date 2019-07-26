@@ -20,7 +20,9 @@ package com.instructure.student.test.assignment.details.submissionDetails.commen
 
 import android.app.Activity
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Submission
 import com.instructure.pandautils.utils.PermissionUtils
 import com.instructure.pandautils.utils.requestPermissions
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsSharedEvent
@@ -249,6 +251,17 @@ class SubmissionCommentsEffectHandlerTest : Assert(){
     }
 
     @Test
+    fun `ScrollToBottom effect results in view calling scrollToBottom`() {
+        connection.accept(SubmissionCommentsEffect.ScrollToBottom)
+
+        verify(timeout = 100) {
+            mockView.scrollToBottom()
+        }
+
+        confirmVerified(mockView)
+    }
+
+    @Test
     fun `RetryCommentUpload effect results in calling SubmissionService retryCommentUpload`() {
         val effect = SubmissionCommentsEffect.RetryCommentUpload(123L)
         mockkObject(SubmissionService.Companion)
@@ -276,6 +289,51 @@ class SubmissionCommentsEffectHandlerTest : Assert(){
         every { context.requestPermissions(any(), capture(block)) } answers {
             block.invoke(mapOf(Pair("any", permissionGranted)))
         }
+    }
+
+    @Test
+    fun `BroadcastSubmissionSelected effect sends SubmissionClicked shared event`() {
+        val channel = ChannelSource.getChannel<SubmissionDetailsSharedEvent>()
+        val submission = Submission(123L)
+        val expectedEvent = SubmissionDetailsSharedEvent.SubmissionClicked(submission)
+        val actualEvent = channel.receiveOnce {
+            connection.accept(SubmissionCommentsEffect.BroadcastSubmissionSelected(submission))
+        }
+        assertEquals(expectedEvent, actualEvent)
+    }
+
+    @Test
+    fun `BroadcastSubmissionAttachmentSelected effect sends SubmissionAttachmentClicked shared event`() {
+        val channel = ChannelSource.getChannel<SubmissionDetailsSharedEvent>()
+        val submission = Submission(123L)
+        val attachment = Attachment(id = 456L, contentType = "test/data")
+        val expectedEvent = SubmissionDetailsSharedEvent.SubmissionAttachmentClicked(submission, attachment)
+        val actualEvent = channel.receiveOnce {
+            connection.accept(SubmissionCommentsEffect.BroadcastSubmissionAttachmentSelected(submission, attachment))
+        }
+        assertEquals(expectedEvent, actualEvent)
+    }
+
+    @Test
+    fun `OpenMedia effect results in view calling openMedia`() {
+        val effect = SubmissionCommentsEffect.OpenMedia(
+            Course(123L),
+            "contentType",
+            "url",
+            "fileName"
+        )
+        connection.accept(effect)
+
+        verify(timeout = 100) {
+            mockView.openMedia(
+                Course(123L),
+                "contentType",
+                "url",
+                "fileName"
+            )
+        }
+
+        confirmVerified(mockView)
     }
 
 }

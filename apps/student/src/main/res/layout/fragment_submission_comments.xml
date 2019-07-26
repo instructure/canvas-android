@@ -15,26 +15,62 @@
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/submissionCommentsLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
     android:orientation="vertical">
 
-    <!-- PLACEHOLDER -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:cacheColorHint="@android:color/transparent"/>
 
-    <Button
-        android:id="@+id/addMediaCommentButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Add Media Comment"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/divider"/>
 
-    <Button
-        android:id="@+id/addFileCommentButton"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/commentInputContainer"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Add File Comment"/>
+        android:animateLayoutChanges="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/addFileButton"
+            android:layout_width="56dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/uploadFiles"
+            android:src="@drawable/vd_add"
+            android:tint="@color/gray"/>
+
+        <EditText
+            android:id="@+id/commentInput"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/transparent"
+            android:hint="@string/comment"
+            android:inputType="textCapSentences|textMultiLine"
+            android:maxLines="5"
+            android:minHeight="50dp"
+            android:paddingTop="0dp"
+            android:paddingBottom="0dp"
+            android:textSize="16sp"/>
+
+        <ImageButton
+            android:id="@+id/sendCommentButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/send"
+            android:src="@drawable/vd_send"
+            android:tint="@color/canvasDefaultButton"/>
+
+    </LinearLayout>
 
 </LinearLayout>

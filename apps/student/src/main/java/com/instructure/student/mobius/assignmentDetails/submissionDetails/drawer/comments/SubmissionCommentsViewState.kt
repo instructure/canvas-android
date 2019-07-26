@@ -16,11 +16,14 @@
  */
 package com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments
 
+import com.instructure.canvasapi2.models.Attachment
+import com.instructure.canvasapi2.models.MediaComment
+import com.instructure.canvasapi2.models.Submission
+import com.instructure.student.PendingSubmissionComment
+import java.util.*
+
 data class SubmissionCommentsViewState(
-    val enableMediaButton: Boolean = true,
-    val enableCommentInput: Boolean = true,
-    val showSendButton: Boolean = false,
-    val showProgressIndicator: Boolean = false,
+    val enableFilesButton: Boolean = true,
     val commentStates: List<CommentItemState> = listOf(CommentItemState.Empty)
 )
 
@@ -28,20 +31,31 @@ sealed class CommentItemState {
     object Empty : CommentItemState()
 
     data class CommentItem(
+        val id: Long,
+        val authorName: String,
         val avatarUrl: String,
-        val avatarInitials: String,
-        val comment: String,
-        val isAudience: Boolean
+        val sortDate: Date,
+        val dateText: String,
+        val message: String,
+        val isAudience: Boolean,
+        val media: MediaComment? = null,
+        val attachments: List<Attachment> = emptyList(),
+        val tint: Int
     ) : CommentItemState()
 
     data class PendingCommentItem(
+        val authorName: String,
         val avatarUrl: String,
-        val avatarInitials: String,
-        val comment: String,
-        val status: String
-    )
+        val sortDate: Date,
+        val pendingComment: PendingSubmissionComment
+    ) : CommentItemState()
 
     data class SubmissionItem(
-        val name: String
+        val authorName: String,
+        val avatarUrl: String,
+        val sortDate: Date,
+        val dateText: String,
+        val submission: Submission,
+        val tint: Int
     ) : CommentItemState()
 }
