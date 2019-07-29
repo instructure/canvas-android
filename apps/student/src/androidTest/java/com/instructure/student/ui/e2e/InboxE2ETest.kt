@@ -73,6 +73,21 @@ class InboxE2ETest: StudentTest() {
         )
         newMessagePage.hitSend()
 
-        sleep(3000)
+        sleep(3000) // Allow time for messages to propagate
+
+        // Now sign out and sign back in as student2
+        inboxPage.goToDashboard()
+
+        dashboardPage.waitForRender()
+        dashboardPage.signOut()
+
+        tokenLogin(student2)
+
+        dashboardPage.waitForRender()
+        dashboardPage.clickInboxTab()
+
+        inboxPage.assertConversationDisplayed(seededConversation)
+        inboxPage.assertConversationDisplayed("Hey There")
+        inboxPage.assertConversationDisplayed("Group Message")
     }
 }

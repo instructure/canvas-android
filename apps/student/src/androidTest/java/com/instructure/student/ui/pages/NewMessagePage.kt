@@ -47,15 +47,11 @@ class NewMessagePage : BasePage() {
         onView(ViewMatchers.withText(group.name)).click()
     }
 
-    fun setRecipient(user: CanvasUserApiModel) {
+    fun setRecipient(user: CanvasUserApiModel, isGroupRecipient: Boolean = false) {
         addContactsButton.click()
-        onView(withText("Students")).click()
+        if(!isGroupRecipient) onView(withText("Students")).click()
         onView(withText(user.shortName)).click()
         onView(withText(R.string.done)).click()
-    }
-
-    fun setRecipient(group: GroupApiModel) {
-        recipientsEditTextView.typeText(group.name)
     }
 
     fun setSubject(subject: String) {
@@ -68,8 +64,7 @@ class NewMessagePage : BasePage() {
     }
 
     fun hitSend() {
-        // Evidently the send icon is not 100% visible.  So we'll add some logic to compensate.
-        sendButton.clickPartial()
+        sendButton.click()
     }
 
     fun populateMessage(course: CourseApiModel, toUser: CanvasUserApiModel, subject: String, message: String) {
@@ -83,26 +78,10 @@ class NewMessagePage : BasePage() {
 
     fun populateGroupMessage(group: GroupApiModel, toUser: CanvasUserApiModel, subject: String, message: String) {
         selectGroup(group)
-        setRecipient(toUser)
+        setRecipient(toUser, true)
         setSubject(subject)
+        Espresso.closeSoftKeyboard()
         setMessage(message)
+        Espresso.closeSoftKeyboard()
     }
-
-    fun ViewInteraction.clickPartial() {
-        perform(object : ViewAction {
-            override fun getConstraints(): Matcher<View> {
-                return ViewMatchers.isEnabled() // no constraints, they are checked above
-            }
-
-            override fun getDescription(): String {
-                return "hit partially visible view"
-            }
-
-            override fun perform(uiController: UiController, view: View) {
-                view.performClick()
-            }
-        })
-    }
-
-
 }

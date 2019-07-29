@@ -23,6 +23,8 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.dataseeding.model.GroupApiModel
@@ -53,6 +55,10 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     private val listView by WaitForViewWithId(R.id.listView, autoAssert = false)
     private val hamburgerButton by OnViewWithContentDescription(R.string.navigation_drawer_open)
 
+    // Sometimes when we navigate back to the dashboard page, there can be several hamburger buttons
+    // in the UI stack.  We want to choose the one that is displayed.
+    private val hamburgerButtonMatcher = allOf(withContentDescription(R.string.navigation_drawer_open), isDisplayed())
+
     fun assertDisplaysCourses() {
         emptyView.assertNotDisplayed()
         onView(withParent(R.id.toolbar) + withText(R.string.dashboard)).assertDisplayed()
@@ -81,18 +87,21 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     }
 
     fun signOut() {
-        hamburgerButton.click()
+        onView(hamburgerButtonMatcher).click()
+        //hamburgerButton.click()
         onViewWithId(R.id.navigationDrawerItem_logout).click()
         onViewWithText(android.R.string.yes).click()
     }
 
     fun pressChangeUser() {
-        hamburgerButton.click()
+        onView(hamburgerButtonMatcher).click()
+        //hamburgerButton.click()
         onViewWithId(R.id.navigationDrawerItem_changeUser).click()
     }
 
     fun assertUserLoggedIn(user: CanvasUserApiModel) {
-        hamburgerButton.click()
+        onView(hamburgerButtonMatcher).click()
+        //hamburgerButton.click()
         onViewWithText(user.shortName).assertDisplayed()
         Espresso.pressBack()
     }
@@ -114,6 +123,7 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     }
 
     fun waitForRender() {
+        //onView(allOf(withId(R.id.listView),isDisplayed())).assertDisplayed()
         listView.assertDisplayed() // Oddly, this seems sufficient as a wait-for-render mechanism
     }
 
@@ -127,7 +137,8 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     }
 
     fun launchSettingsPage() {
-        hamburgerButton.click()
+        onView(hamburgerButtonMatcher).click()
+        //hamburgerButton.click()
         onViewWithId(R.id.navigationDrawerSettings).click()
     }
 }

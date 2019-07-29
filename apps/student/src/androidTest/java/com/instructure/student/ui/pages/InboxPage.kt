@@ -8,6 +8,7 @@ import androidx.test.espresso.ViewAction
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.dataseeding.model.ConversationApiModel
@@ -38,7 +39,11 @@ class InboxPage : BasePage(R.id.inboxPage) {
     }
 
     fun assertConversationDisplayed(conversation: ConversationApiModel) {
-        val matcher = withText(conversation.subject)
+        assertConversationDisplayed(conversation.subject)
+    }
+
+    fun assertConversationDisplayed(subject: String) {
+        val matcher = withText(subject)
         scrollToRecyclerViewItem(matcher)
         onView(matcher).assertDisplayed()
     }
@@ -50,22 +55,10 @@ class InboxPage : BasePage(R.id.inboxPage) {
     }
 
     fun pressNewMessageButton() {
-        createMessageButton.clickPartial()
+        createMessageButton.click()
     }
 
-    fun ViewInteraction.clickPartial() {
-        perform(object : ViewAction {
-            override fun getConstraints(): Matcher<View> {
-                return ViewMatchers.isEnabled() // no constraints, they are checked above
-            }
-
-            override fun getDescription(): String {
-                return "hit partially visible view"
-            }
-
-            override fun perform(uiController: UiController, view: View) {
-                view.performClick()
-            }
-        })
+    fun goToDashboard() {
+        onView(withId(R.id.bottomNavigationCourses)).click()
     }
 }
