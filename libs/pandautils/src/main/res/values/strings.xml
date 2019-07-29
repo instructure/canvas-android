@@ -176,7 +176,6 @@
     <string name="noDueDate">This assignment doesn\'t have a due date.</string>
     <string name="locked">Locked</string>
     <string name="lockedSubtext">This assignment is locked until %1$s at %2$s.</string>
-    <string name="lockedModule">This assignment is part of the module \"%1$s\" and hasn\'t been unlocked yet.</string>
     <string name="chooseFile">Choose a File</string>
     <string name="chooseFileSubtext">Attach a file to your submission by tapping an option below.</string>
     <string name="noNotifications">No Notifications</string>

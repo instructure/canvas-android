@@ -235,13 +235,13 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
         visibilities.lockedImage = true
         visibilities.submissionAndRubricButton = true
         val unlockDate = assignment.unlockDate
-        val lockMessage = if (unlockDate != null) {
+        val lockMessage = if (assignment.lockInfo?.contextModule != null) {
+            val name = assignment.lockInfo?.lockedModuleName
+            context.getString(R.string.lockedModule, name)
+        } else {
             val dateString = DateFormat.getDateInstance().format(unlockDate)
             val timeString = DateFormat.getTimeInstance(DateFormat.SHORT).format(unlockDate)
             context.getString(R.string.lockedSubtext, dateString, timeString)
-        } else {
-            val name = assignment.lockInfo?.lockedModuleName
-            context.getString(R.string.lockedModule, name)
         }
         return AssignmentDetailsViewState.Loaded(
             assignmentName = assignment.name.orEmpty(),
