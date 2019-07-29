@@ -59,7 +59,7 @@ class UrlSubmissionUploadPresenterTest : Assert() {
     }
 
     @Test
-    fun `returns not isFailure when model urlError is CLEARTEXT`() {
+    fun `returns not isFailure when model urlError is NONE`() {
         val model = baseModel.copy(urlError = MalformedUrlError.NONE, isFailure = false)
         val actual = UrlSubmissionUploadPresenter.present(model, context)
         assertFalse(actual.isFailure)

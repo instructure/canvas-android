@@ -589,7 +589,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     }
 
     @Test
-    fun `ShowUploadStatusView calls showOnlineUrlEntryView on the view for text submissions`() {
+    fun `ShowUploadStatusView calls showOnlineUrlEntryView on the view for url submissions`() {
         val submission = mockkSubmission(9876L, submissionType = Assignment.SubmissionType.ONLINE_URL.apiString)
         connection.accept(AssignmentDetailsEffect.ShowUploadStatusView(submission))
 
