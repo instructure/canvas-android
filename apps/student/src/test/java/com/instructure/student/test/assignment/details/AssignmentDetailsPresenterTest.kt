@@ -106,7 +106,8 @@ class AssignmentDetailsPresenterTest : Assert() {
     fun `Shows only title content, submission and rubric button, and lock views when assignment locked by date`() {
         val unlockDate = Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(10))
         val assignment = baseAssignment.copy(
-            lockInfo = LockInfo(unlockAt = unlockDate.toApiString())
+            lockInfo = LockInfo(unlockAt = unlockDate.toApiString()),
+            unlockAt = unlockDate.toApiString()
         )
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         val expected = AssignmentDetailsVisibilities(
