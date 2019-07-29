@@ -61,20 +61,12 @@ class UrlSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) : Mob
     override fun render(state: UrlSubmissionUploadViewState) {
         editUrl.hint = state.urlHint
         toolbar.menu.findItem(R.id.menuSubmit).isEnabled = state.submitEnabled
+        errorMsg.setVisible(state.isFailure).text = state.failureText
+        errorDivider.setVisible(state.isFailure)
     }
 
     override fun onDispose() {}
     override fun applyTheme() {}
-
-    fun showMalformedUrl(error: MalformedUrlError) {
-        when(error) {
-            MalformedUrlError.CLEARTEXT -> errorMsg.setVisible().text = context.getString(R.string.submissionUrlClearTextError)
-            MalformedUrlError.NONE -> {
-                errorMsg.setVisible(false)
-                toolbar.menu.getItem(R.id.menuSubmit).isEnabled = true
-            }
-        }
-    }
 
     fun showPreviewUrl(url: String) {
         urlPreviewWebView.loadUrl(url)

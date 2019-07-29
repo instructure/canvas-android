@@ -23,9 +23,6 @@ import com.instructure.student.mobius.common.ui.EffectHandler
 class UrlSubmissionUploadEffectHandler : EffectHandler<UrlSubmissionUploadView, UrlSubmissionUploadEvent, UrlSubmissionUploadEffect>() {
     override fun accept(effect: UrlSubmissionUploadEffect) {
         when (effect) {
-            is UrlSubmissionUploadEffect.ShowMalformedUrl-> {
-                view?.showMalformedUrl(effect.error)
-            }
             is UrlSubmissionUploadEffect.ShowUrlPreview -> {
                 view?.showPreviewUrl(effect.url)
             }

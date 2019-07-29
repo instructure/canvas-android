@@ -29,6 +29,7 @@ import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Failure
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
 import com.instructure.canvasapi2.utils.weave.awaitApiResponse
+import com.instructure.pandautils.services.NotoriousUploadService
 import com.instructure.pandautils.utils.FilePrefs
 import com.instructure.pandautils.utils.FileUploadUtils
 import com.instructure.pandautils.utils.PermissionUtils
@@ -43,6 +44,7 @@ import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsEvent
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsView
 import com.instructure.student.mobius.assignmentDetails.ui.SubmissionTypesVisibilities
+import com.instructure.student.mobius.common.ui.SubmissionService
 import com.spotify.mobius.Connection
 import com.spotify.mobius.functions.Consumer
 import com.squareup.sqldelight.Query
@@ -117,9 +119,9 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     ): Submission {
         return Submission.Impl(
             submissionId,
-            null,
+            "Entry text",
             OffsetDateTime.now().minusDays(daysAgo),
-            null,
+            "Assignment Name",
             assignment.id,
             course,
             submissionType,
@@ -552,7 +554,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
 
     @Test
     fun `ShowUploadStatusView calls showUploadStatusView on the view for online uploads`() {
-        val submission = mockkSubmission(9876L, submissionType = "online_upload")
+        val submission = mockkSubmission(9876L, submissionType = Assignment.SubmissionType.ONLINE_UPLOAD.apiString)
         connection.accept(AssignmentDetailsEffect.ShowUploadStatusView(submission))
 
         verify(timeout = 100) {
@@ -564,11 +566,35 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
 
     @Test
     fun `ShowUploadStatusView calls showUploadStatusView on the view for media uploads`() {
-        val submission = mockkSubmission(9876L, submissionType = "media_recording")
+        val submission = mockkSubmission(9876L, submissionType = Assignment.SubmissionType.MEDIA_RECORDING.apiString)
         connection.accept(AssignmentDetailsEffect.ShowUploadStatusView(submission))
 
         verify(timeout = 100) {
             view.showUploadStatusView(submission.id)
+        }
+
+        confirmVerified(view)
+    }
+
+    @Test
+    fun `ShowUploadStatusView calls showOnlineTextEntryView on the view for text submissions`() {
+        val submission = mockkSubmission(9876L, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString)
+        connection.accept(AssignmentDetailsEffect.ShowUploadStatusView(submission))
+
+        verify(timeout = 100) {
+            view.showOnlineTextEntryView(submission.assignmentId!!, submission.assignmentName, submission.submissionEntry)
+        }
+
+        confirmVerified(view)
+    }
+
+    @Test
+    fun `ShowUploadStatusView calls showOnlineUrlEntryView on the view for text submissions`() {
+        val submission = mockkSubmission(9876L, submissionType = Assignment.SubmissionType.ONLINE_URL.apiString)
+        connection.accept(AssignmentDetailsEffect.ShowUploadStatusView(submission))
+
+        verify(timeout = 100) {
+            view.showOnlineUrlEntryView(submission.assignmentId!!, submission.assignmentName, course, submission.submissionEntry)
         }
 
         confirmVerified(view)
@@ -883,6 +909,41 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
         }
 
         confirmVerified(view)
+    }
+
+    @Test
+    fun `UploadAudioSubmission results in starting submission service`() {
+        val file: File = mockk()
+        every { file.path } returns "Path"
+
+        mockkObject(SubmissionService)
+        every {
+            SubmissionService.startMediaSubmission(
+                context,
+                course,
+                assignment.id,
+                assignment.name,
+                assignment.groupCategoryId,
+                "Path",
+                NotoriousUploadService.ACTION.ASSIGNMENT_SUBMISSION
+            )
+        } returns Unit
+
+
+        connection.accept(AssignmentDetailsEffect.UploadAudioSubmission(file, course, assignment))
+        verify(timeout = 100) {
+            SubmissionService.startMediaSubmission(
+                context,
+                course,
+                assignment.id,
+                assignment.name,
+                assignment.groupCategoryId,
+                "Path",
+                NotoriousUploadService.ACTION.ASSIGNMENT_SUBMISSION
+            )
+        }
+
+        confirmVerified(SubmissionService)
     }
 
     @Test

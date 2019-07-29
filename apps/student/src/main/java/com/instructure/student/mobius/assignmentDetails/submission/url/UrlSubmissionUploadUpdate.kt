@@ -27,7 +27,6 @@ class UrlSubmissionUploadUpdate : UpdateInit<UrlSubmissionUploadModel, UrlSubmis
     }
 
     override fun update(model: UrlSubmissionUploadModel, event: UrlSubmissionUploadEvent): Next<UrlSubmissionUploadModel, UrlSubmissionUploadEffect> {
-        val hideErrorEffect = UrlSubmissionUploadEffect.ShowMalformedUrl(MalformedUrlError.NONE)
         val showEmptyPreviewEffect = UrlSubmissionUploadEffect.ShowUrlPreview("")
         return when(event) {
             is UrlSubmissionUploadEvent.UrlChanged -> {
@@ -35,14 +34,12 @@ class UrlSubmissionUploadUpdate : UpdateInit<UrlSubmissionUploadModel, UrlSubmis
 
                 if (url.contains("http://", true)) {
                     // Cleartext URLs won't render in a WebView (unless it redirects to https) - let's just show an error and clear the preview
-                    return Next.next(model.copy(isSubmittable = true),
-                        setOf(showEmptyPreviewEffect,
-                            UrlSubmissionUploadEffect.ShowMalformedUrl(MalformedUrlError.CLEARTEXT)))
+                    return Next.next(model.copy(isSubmittable = true, urlError = MalformedUrlError.CLEARTEXT), setOf(showEmptyPreviewEffect))
                 }
 
                 if (!isValidUrl(url)) {
                     // Url is not valid
-                    return Next.next(model.copy(isSubmittable = false), setOf(showEmptyPreviewEffect, hideErrorEffect))
+                    return Next.next(model.copy(isSubmittable = false, urlError = MalformedUrlError.NONE), setOf(showEmptyPreviewEffect))
                 }
 
                 // Prepend 'https://' if the URL doesn't already have it
@@ -51,7 +48,7 @@ class UrlSubmissionUploadUpdate : UpdateInit<UrlSubmissionUploadModel, UrlSubmis
                     url = "https://$url"
                 }
 
-                Next.next(model.copy(isSubmittable = true), setOf(UrlSubmissionUploadEffect.ShowUrlPreview(url), hideErrorEffect))
+                Next.next(model.copy(isSubmittable = true, urlError = MalformedUrlError.NONE), setOf(UrlSubmissionUploadEffect.ShowUrlPreview(url)))
             }
             is UrlSubmissionUploadEvent.SubmitClicked -> {
                 Next.dispatch(Effects.effects((UrlSubmissionUploadEffect.SubmitUrl(event.url, model.course, model.assignmentId, model.assignmentName)) as UrlSubmissionUploadEffect))

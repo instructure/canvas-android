@@ -15,14 +15,12 @@
  */
 package com.instructure.student.ui.renderTests
 
-import androidx.test.espresso.ViewAssertion
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isEnabled
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.espresso.assertHasText
-import com.instructure.espresso.click
 import com.instructure.espresso.replaceText
 import com.instructure.espresso.waitForCheck
 import com.instructure.student.espresso.StudentRenderTest
@@ -47,6 +45,18 @@ class UrlSubmissionUploadRenderTest : StudentRenderTest() {
     }
 
     @Test
+    fun displaysCleartextErrorOnFailedSubmission() {
+        loadPageWithData("http://www.instructure.com", true)
+        urlSubmissionUploadRenderPage.errorMsg.waitForCheck(matches(withText("Something went wrong on submission upload. Submit again\nNo preview available for URLs using \'http://\'")))
+    }
+
+    @Test
+    fun displaysFailedSubmissionError() {
+        loadPageWithData("http://www.instructure.com", true)
+        urlSubmissionUploadRenderPage.errorMsg.waitForCheck(matches(withText("Something went wrong on submission upload. Submit again")))
+    }
+
+    @Test
     fun invalidUrlDisablesSubmitButton() {
         loadPageWithData("www.instructure.com")
         urlSubmissionUploadRenderPage.url.replaceText("abc123")
@@ -60,8 +70,8 @@ class UrlSubmissionUploadRenderTest : StudentRenderTest() {
         urlSubmissionUploadRenderPage.submit.waitForCheck(matches(isEnabled()))
     }
 
-    private fun loadPageWithData(initialUrl: String? = null, course: Course = Course(), assignment: Assignment = Assignment()) {
-        val route = UrlSubmissionUploadFragment.makeRoute(course, assignment.id, assignment.name, initialUrl)
+    private fun loadPageWithData(initialUrl: String? = null, isFailure: Boolean = false, course: Course = Course(), assignment: Assignment = Assignment()) {
+        val route = UrlSubmissionUploadFragment.makeRoute(course, assignment.id, assignment.name, initialUrl, isFailure)
         val fragment = UrlSubmissionUploadFragment.newInstance(route)!!
         activityRule.activity.loadFragment(fragment)
     }

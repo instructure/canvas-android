@@ -46,18 +46,6 @@ class UrlSubmissionUploadEffectHandlerTest : Assert() {
     }
 
     @Test
-    fun `ShowMalformedUrl effect calls showMalformedUrl on view`() {
-        val error = MalformedUrlError.CLEARTEXT
-        connection.accept(UrlSubmissionUploadEffect.ShowMalformedUrl(error))
-
-        verify(timeout = 100) {
-            view.showMalformedUrl(error)
-        }
-
-        confirmVerified(view)
-    }
-
-    @Test
     fun `ShowUrlPreview effect calls showPreviewUrl on view`() {
         val url = "www.instructure.com"
         connection.accept(UrlSubmissionUploadEffect.ShowUrlPreview(url))

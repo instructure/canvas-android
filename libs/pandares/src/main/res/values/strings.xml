@@ -69,6 +69,7 @@
 
     <!-- Student Submission -->
     <string name="submissionWrite">Write&#8230;</string>
+    <string name="textSubmissionFailureMessage">Something went wrong on submission upload. Submit again</string>
 
     <!-- Student Submission Details -->
     <string name="submission">Submission</string>

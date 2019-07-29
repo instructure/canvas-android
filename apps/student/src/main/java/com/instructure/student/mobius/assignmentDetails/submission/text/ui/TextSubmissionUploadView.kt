@@ -21,10 +21,7 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.pandautils.utils.ThemePrefs
-import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.setMenu
-import com.instructure.pandautils.utils.setupAsBackButton
+import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.mobius.assignmentDetails.submission.text.TextSubmissionUploadEvent
 import com.instructure.student.mobius.common.ui.MobiusView
@@ -57,6 +54,8 @@ class TextSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) : Mo
 
     override fun render(state: TextSubmissionUploadViewState) {
         toolbar.menu.findItem(R.id.menuSubmit).isEnabled = state.submitEnabled
+        errorMsg.setVisible(state.isFailure)
+        errorDivider.setVisible(state.isFailure)
     }
 
     override fun onDispose() { }

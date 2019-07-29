@@ -16,6 +16,7 @@
 package com.instructure.student.ui.renderTests
 
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isEnabled
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
@@ -43,8 +44,14 @@ class TextSubmissionUploadRenderTest : StudentRenderTest() {
         page.submitButton.waitForCheck(matches(not(isEnabled())))
     }
 
-    private fun loadPageWithData(initialText: String? = null, course: Course = Course(), assignment: Assignment = Assignment()) {
-        val route = TextSubmissionUploadFragment.makeRoute(course, assignment.id, assignment.name, initialText)
+    @Test
+    fun displaysFailedSubmissionError() {
+        loadPageWithData("http://www.instructure.com", true)
+        page.errorMessage.waitForCheck(matches(ViewMatchers.withText("Something went wrong on submission upload. Submit again")))
+    }
+
+    private fun loadPageWithData(initialText: String? = null, isFailure: Boolean = false, course: Course = Course(), assignment: Assignment = Assignment()) {
+        val route = TextSubmissionUploadFragment.makeRoute(course, assignment.id, assignment.name, initialText, isFailure)
         val fragment = TextSubmissionUploadFragment.newInstance(route)!!
         activityRule.activity.loadFragment(fragment)
     }
