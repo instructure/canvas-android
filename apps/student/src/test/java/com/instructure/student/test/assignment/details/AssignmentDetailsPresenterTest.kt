@@ -189,9 +189,7 @@ class AssignmentDetailsPresenterTest : Assert() {
 
     @Test
     fun `Uses correct label text for submitted status`() {
-        val assignment = baseAssignment.copy(
-            submission = baseSubmission.copy(workflowState = "graded")
-        )
+        val assignment = baseAssignment.copy(submission = baseSubmission)
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
         assertEquals("Submitted", state.submittedStateLabel)
@@ -199,10 +197,58 @@ class AssignmentDetailsPresenterTest : Assert() {
 
     @Test
     fun `Uses correct label text for submitted status when submission is graded`() {
-        val assignment = baseAssignment.copy(submission = baseSubmission)
+        val submission = baseSubmission.copy(grade = "8")
+        val assignment = baseAssignment.copy(submission = submission)
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
-        assertEquals("Submitted", state.submittedStateLabel)
+        assertEquals("Graded", state.submittedStateLabel)
+    }
+
+    @Test
+    fun `Uses correct label text for submitted status when submission is missing`() {
+        val submission = baseSubmission.copy(attempt = 0, missing = true, workflowState = "unsubmitted")
+        val assignment = baseAssignment.copy(submission = submission)
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
+        assertEquals("Missing", state.submittedStateLabel)
+    }
+
+    @Test
+    fun `Uses correct label text for submitted status when submission is past due`() {
+        val calendar = Calendar.getInstance().apply { set(2000, 0, 31, 23, 59, 0) }
+
+        val submission = baseSubmission.copy(attempt = 0, workflowState = "unsubmitted")
+        val assignment = baseAssignment.copy(submission = submission, dueAt = calendar.time.toApiString())
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
+        assertEquals("Missing", state.submittedStateLabel)
+    }
+
+    @Test
+    fun `Uses correct label text for submitted status when submission is past due and null`() {
+        val calendar = Calendar.getInstance().apply { set(2000, 0, 31, 23, 59, 0) }
+
+        val assignment = baseAssignment.copy(submission = null, dueAt = calendar.time.toApiString())
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
+        assertEquals("Missing", state.submittedStateLabel)
+    }
+
+    @Test
+    fun `Uses correct label text for submitted status when submission is null`() {
+        val assignment = baseAssignment.copy(submission = null, dueAt = null)
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
+        assertEquals("Not Submitted", state.submittedStateLabel)
+    }
+
+    @Test
+    fun `Uses correct label text for submitted status when submission is not submitted`() {
+        val submission = baseSubmission.copy(attempt = 0, workflowState = "unsubmitted")
+        val assignment = baseAssignment.copy(submission = submission)
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
+        assertEquals("Not Submitted", state.submittedStateLabel)
     }
 
     @Test
