@@ -623,6 +623,22 @@ class AssignmentDetailsPresenterTest : Assert() {
     }
 
     @Test
+    fun `SubmitButton is visible when assignment is external tool`() {
+        val assignment = baseAssignment.copy(submissionTypesRaw = listOf(Assignment.SubmissionType.EXTERNAL_TOOL.apiString))
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
+        assertEquals(true, state.visibilities.submitButton)
+    }
+
+    @Test
+    fun `SubmitButton is visible when assignment is online`() {
+        val assignment = baseAssignment.copy(submissionTypesRaw = listOf(Assignment.SubmissionType.ONLINE_UPLOAD.apiString, Assignment.SubmissionType.ONLINE_URL.apiString, Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString))
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
+        assertEquals(true, state.visibilities.submitButton)
+    }
+
+    @Test
     fun `makeLockedState contains appropriate lock message when unlockDate is present`() {
         val unlockDate = Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(10))
         val assignment = baseAssignment.copy(

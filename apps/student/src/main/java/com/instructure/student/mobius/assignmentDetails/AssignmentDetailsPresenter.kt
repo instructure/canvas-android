@@ -165,7 +165,7 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
         visibilities.submitButton = when(assignment.turnInType) {
             // We always show the button for quizzes and discussions, so the users can always route
             Assignment.TurnInType.QUIZ, Assignment.TurnInType.DISCUSSION -> true
-            Assignment.TurnInType.ONLINE -> assignment.isAllowedToSubmit
+            Assignment.TurnInType.ONLINE, Assignment.TurnInType.EXTERNAL_TOOL -> assignment.isAllowedToSubmit
             else -> false // On Paper / etc
         }
 
