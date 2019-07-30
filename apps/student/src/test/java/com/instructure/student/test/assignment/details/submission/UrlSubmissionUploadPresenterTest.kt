@@ -69,14 +69,14 @@ class UrlSubmissionUploadPresenterTest : Assert() {
     fun `returns failed message when model is failure`() {
         val model = baseModel.copy(urlError = MalformedUrlError.NONE, isFailure = true)
         val actual = UrlSubmissionUploadPresenter.present(model, context)
-        assertEquals(actual.failureText, "Something went wrong on submission upload. Submit again")
+        assertEquals(actual.failureText, "Something went wrong on submission upload. Submit again.")
     }
 
     @Test
     fun `returns failed message with http warning when model is failure`() {
         val model = baseModel.copy(urlError = MalformedUrlError.CLEARTEXT, isFailure = true)
         val actual = UrlSubmissionUploadPresenter.present(model, context)
-        assertEquals(actual.failureText, "Something went wrong on submission upload. Submit again\nNo preview available for URLs using 'http://'")
+        assertEquals(actual.failureText, "Something went wrong on submission upload. Submit again.\nNo preview available for URLs using 'http://'")
     }
 
     @Test

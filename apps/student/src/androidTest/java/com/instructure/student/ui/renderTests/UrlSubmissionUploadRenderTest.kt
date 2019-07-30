@@ -47,13 +47,13 @@ class UrlSubmissionUploadRenderTest : StudentRenderTest() {
     @Test
     fun displaysCleartextErrorOnFailedSubmission() {
         loadPageWithData("http://www.instructure.com", true)
-        urlSubmissionUploadRenderPage.errorMsg.waitForCheck(matches(withText("Something went wrong on submission upload. Submit again\nNo preview available for URLs using \'http://\'")))
+        urlSubmissionUploadRenderPage.errorMsg.waitForCheck(matches(withText("Something went wrong on submission upload. Submit again.\nNo preview available for URLs using \'http://\'")))
     }
 
     @Test
     fun displaysFailedSubmissionError() {
         loadPageWithData("http://www.instructure.com", true)
-        urlSubmissionUploadRenderPage.errorMsg.waitForCheck(matches(withText("Something went wrong on submission upload. Submit again")))
+        urlSubmissionUploadRenderPage.errorMsg.waitForCheck(matches(withText("Something went wrong on submission upload. Submit again.")))
     }
 
     @Test
