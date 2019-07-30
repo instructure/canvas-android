@@ -268,6 +268,10 @@ class AssignmentDetailsView(
             setupDialogRow(dialog, dialog.submissionEntryVideo, true) {
                 consumer?.accept(AssignmentDetailsEvent.VideoRecordingClicked)
             }
+
+            setupDialogRow(dialog, dialog.submissionEntryMediaFile, true) {
+                consumer?.accept(AssignmentDetailsEvent.ChooseMediaClicked)
+            }
         }
         dialog.show()
     }
@@ -288,6 +292,12 @@ class AssignmentDetailsView(
         }
     }
 
+    fun getChooseMediaIntent() = Intent(Intent.ACTION_GET_CONTENT).apply {
+        flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+        type = "video/*, audio/*"
+        addCategory(Intent.CATEGORY_OPENABLE)
+    }
+
     fun showPermissionDeniedToast() {
         Toast.makeText(context, com.instructure.pandautils.R.string.permissionDenied, Toast.LENGTH_LONG).show()
     }
@@ -298,6 +308,10 @@ class AssignmentDetailsView(
 
     fun showVideoRecordingError() {
         Toast.makeText(context, com.instructure.pandautils.R.string.videoRecordingError, Toast.LENGTH_LONG).show()
+    }
+
+    fun showMediaPickingError() {
+        Toast.makeText(context, com.instructure.pandautils.R.string.unexpectedErrorOpeningFile, Toast.LENGTH_LONG).show()
     }
 
     fun showFileUploadView(assignment: Assignment) {

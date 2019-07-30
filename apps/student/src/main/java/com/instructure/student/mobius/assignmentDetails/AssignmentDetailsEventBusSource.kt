@@ -32,11 +32,20 @@ class AssignmentDetailsEventBusSource : EventBusSource<AssignmentDetailsEvent>()
     @Subscribe(sticky = true)
     fun onActivityResults(event: OnActivityResults) {
         event.once(subId) {
-            if (it.requestCode == AssignmentDetailsFragment.VIDEO_REQUEST_CODE) {
-                if (it.resultCode == Activity.RESULT_OK) {
-                    sendEvent(AssignmentDetailsEvent.SendVideoRecording)
-                } else {
-                    sendEvent(AssignmentDetailsEvent.OnVideoRecordingError)
+            when(it.requestCode) {
+                AssignmentDetailsFragment.VIDEO_REQUEST_CODE -> {
+                    if (it.resultCode == Activity.RESULT_OK) {
+                        sendEvent(AssignmentDetailsEvent.SendVideoRecording)
+                    } else {
+                        sendEvent(AssignmentDetailsEvent.OnVideoRecordingError)
+                    }
+                }
+                AssignmentDetailsFragment.CHOOSE_MEDIA_REQUEST_CODE -> {
+                    if (it.resultCode == Activity.RESULT_OK && it.data != null && it.data?.data != null) {
+                        sendEvent(AssignmentDetailsEvent.SendMediaFile(it.data!!.data!!))
+                    } else {
+                        sendEvent(AssignmentDetailsEvent.OnMediaPickingError)
+                    }
                 }
             }
         }

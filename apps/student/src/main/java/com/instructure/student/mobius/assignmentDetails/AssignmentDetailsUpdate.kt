@@ -64,6 +64,12 @@ class AssignmentDetailsUpdate : UpdateInit<AssignmentDetailsModel, AssignmentDet
         AssignmentDetailsEvent.VideoRecordingClicked -> {
             Next.dispatch(setOf(AssignmentDetailsEffect.ShowVideoRecordingView))
         }
+        AssignmentDetailsEvent.ChooseMediaClicked -> {
+            Next.dispatch(setOf(AssignmentDetailsEffect.ShowMediaPickerView))
+        }
+        AssignmentDetailsEvent.OnMediaPickingError -> {
+            Next.dispatch(setOf(AssignmentDetailsEffect.ShowMediaPickingError))
+        }
         is AssignmentDetailsEvent.SendAudioRecordingClicked -> {
             if(event.file == null) {
                 Next.dispatch<AssignmentDetailsModel, AssignmentDetailsEffect>(setOf(AssignmentDetailsEffect.ShowAudioRecordingError))
@@ -79,6 +85,9 @@ class AssignmentDetailsUpdate : UpdateInit<AssignmentDetailsModel, AssignmentDet
                 val assignment = model.assignmentResult!!.dataOrThrow
                 Next.dispatch<AssignmentDetailsModel, AssignmentDetailsEffect>(setOf(AssignmentDetailsEffect.UploadVideoSubmission(model.videoFileUri, model.course, assignment)))
             }
+        }
+        is AssignmentDetailsEvent.SendMediaFile -> {
+            Next.dispatch(setOf(AssignmentDetailsEffect.UploadMediaFileSubmission(event.uri, model.course, model.assignmentResult!!.dataOrThrow)))
         }
         is AssignmentDetailsEvent.OnVideoRecordingError -> {
             Next.dispatch(setOf(AssignmentDetailsEffect.ShowVideoRecordingError))

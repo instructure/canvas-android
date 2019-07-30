@@ -1028,6 +1028,37 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
         testVideo()
     }
 
+    @Test
+    fun `ShowMediaPickerView results in startActivityForResult with choose media request code`() {
+        testMediaPicker()
+    }
+
+    @Test
+    fun `ShowMediaPickingError results in view calling showMediaPickingError`() {
+        connection.accept(AssignmentDetailsEffect.ShowMediaPickingError)
+
+        verify(timeout = 100) {
+            view.showMediaPickingError()
+        }
+
+        confirmVerified(view)
+    }
+
+    @Test
+    fun `UploadMediaFileSubmission results in view calling launchFilePickerView`() {
+        val uri = mockk<Uri>(relaxed = true)
+        val course = Course()
+        val assignment = Assignment()
+
+        connection.accept(AssignmentDetailsEffect.UploadMediaFileSubmission(uri, course, assignment))
+
+        verify(timeout = 100) {
+            view.launchFilePickerView(uri, course, assignment)
+        }
+
+        confirmVerified(view)
+    }
+
     private fun testVideo() {
 
         val uri = mockk<Uri>()
@@ -1059,6 +1090,29 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
         }
 
         confirmVerified(eventConsumer, context)
+    }
+
+    private fun testMediaPicker() {
+
+        val uri = mockk<Uri>()
+        val intent = mockk<Intent>()
+        every { intent.action } returns ""
+        every { context.packageManager.queryIntentActivities(any(), any()).size } returns 1
+
+        every { view.getChooseMediaIntent() } returns intent
+
+        excludeRecords {
+            context.packageName
+            context.packageManager
+        }
+
+        connection.accept(AssignmentDetailsEffect.ShowMediaPickerView)
+
+        verify(timeout = 100) {
+            context.startActivityForResult(intent, AssignmentDetailsFragment.CHOOSE_MEDIA_REQUEST_CODE)
+        }
+
+        confirmVerified(context)
     }
 
     private fun mockPermissions(hasPermission: Boolean, permissionGranted: Boolean = false) {

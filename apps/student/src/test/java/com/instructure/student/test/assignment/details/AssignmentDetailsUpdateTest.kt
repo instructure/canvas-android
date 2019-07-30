@@ -662,4 +662,42 @@ class AssignmentDetailsUpdateTest : Assert() {
             )
     }
 
+    @Test
+    fun `ChooseMediaClicked results in ShowMediaPickerView effect`() {
+        updateSpec
+            .given(initModel)
+            .whenEvent(AssignmentDetailsEvent.ChooseMediaClicked)
+            .then(
+                assertThatNext(
+                    matchesEffects<AssignmentDetailsModel, AssignmentDetailsEffect>(AssignmentDetailsEffect.ShowMediaPickerView)
+                )
+            )
+    }
+
+    @Test
+    fun `OnMediaPickingError results in ShowMediaPickingError effect`() {
+        updateSpec
+            .given(initModel)
+            .whenEvent(AssignmentDetailsEvent.OnMediaPickingError)
+            .then(
+                assertThatNext(
+                    matchesEffects<AssignmentDetailsModel, AssignmentDetailsEffect>(AssignmentDetailsEffect.ShowMediaPickingError)
+                )
+            )
+    }
+
+    @Test
+    fun `SendMediaFile results in UploadMediaFileSubmission effect`() {
+        val uri = mockk<Uri>()
+        val model = initModel.copy(assignmentResult = DataResult.Success(assignment))
+        updateSpec
+            .given(model)
+            .whenEvent(AssignmentDetailsEvent.SendMediaFile(uri))
+            .then(
+                assertThatNext(
+                        matchesEffects<AssignmentDetailsModel, AssignmentDetailsEffect>(AssignmentDetailsEffect.UploadMediaFileSubmission(uri, course, assignment))
+                )
+            )
+    }
+
 }

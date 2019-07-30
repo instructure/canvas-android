@@ -54,6 +54,7 @@ class AssignmentDetailsFragment :
     companion object {
 
         const val VIDEO_REQUEST_CODE = 45519
+        const val CHOOSE_MEDIA_REQUEST_CODE = 45520
 
         @JvmStatic
         fun makeRoute(course: CanvasContext, assignmentId: Long): Route {
@@ -82,7 +83,7 @@ class AssignmentDetailsFragment :
         }
 
         fun isFileRequest(requestCode: Int): Boolean {
-            return requestCode == VIDEO_REQUEST_CODE
+            return requestCode in listOf(VIDEO_REQUEST_CODE, CHOOSE_MEDIA_REQUEST_CODE)
         }
 
     }
