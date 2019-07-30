@@ -84,11 +84,24 @@ class AssignmentDetailsUpdate : UpdateInit<AssignmentDetailsModel, AssignmentDet
             Next.dispatch(setOf(AssignmentDetailsEffect.ShowVideoRecordingError))
         }
         is AssignmentDetailsEvent.SubmissionStatusUpdated -> {
-            Next.next(
-                model.copy(
-                    databaseSubmission = event.submission
-                )
+            val newModel = model.copy(
+                databaseSubmission = event.submission
             )
+            // Null submission emitted to this event means that the submission was successful and was deleted, so we need to load
+            if (event.submission == null) {
+                Next.next<AssignmentDetailsModel, AssignmentDetailsEffect>(
+                    newModel,
+                    setOf(
+                        AssignmentDetailsEffect.LoadData(
+                            model.assignmentId,
+                            model.course.id,
+                            true
+                        )
+                    )
+                )
+            } else {
+                Next.next(newModel)
+            }
         }
         is AssignmentDetailsEvent.DataLoaded -> {
             val dbSubmission = dbSubmissionIfNewest(event.submission, event.assignmentResult?.dataOrNull?.submission)

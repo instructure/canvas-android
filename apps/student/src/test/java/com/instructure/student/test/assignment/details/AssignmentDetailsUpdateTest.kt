@@ -499,6 +499,23 @@ class AssignmentDetailsUpdateTest : Assert() {
     }
 
     @Test
+    fun `SubmissionStatusUpdated event updates the model and loads data when given a null submission`() {
+        val submission = mockkSubmission()
+        val startModel = initModel.copy(databaseSubmission = submission)
+        val expectedModel = startModel.copy(
+            databaseSubmission = null
+        )
+
+        updateSpec
+            .given(startModel)
+            .whenEvent(AssignmentDetailsEvent.SubmissionStatusUpdated(submission = null))
+            .then(assertThatNext(
+                NextMatchers.hasModel(expectedModel),
+                matchesEffects<AssignmentDetailsModel, AssignmentDetailsEffect>(AssignmentDetailsEffect.LoadData(startModel.assignmentId, startModel.course.id, true))
+            ))
+    }
+
+    @Test
     fun `SubmissionTypeClicked event results in ShowCreateSubmissionView effect`() {
         val submissionType = Assignment.SubmissionType.ONLINE_UPLOAD
         val submissionTypes = listOf("online_upload")
