@@ -32,6 +32,22 @@
         tools:background="#00bcd5"
         tools:ignore="UnusedAttribute" />
 
+    <TextView
+        android:id="@+id/errorMsg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:textColor="@color/red"
+        android:text="@string/textSubmissionFailureMessage"
+        android:textSize="16sp"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+    <include android:id="@+id/errorDivider" layout="@layout/divider" />
+
     <instructure.rceditor.RCETextEditorView
         android:id="@+id/rce"
         android:layout_width="match_parent"

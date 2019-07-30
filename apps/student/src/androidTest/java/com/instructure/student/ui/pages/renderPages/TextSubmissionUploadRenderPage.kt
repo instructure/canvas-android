@@ -24,4 +24,5 @@ class TextSubmissionUploadRenderPage : BasePage(R.id.textSubmissionUpload) {
     val submitButton by OnViewWithId(R.id.menuSubmit)
     val rce by OnViewWithId(R.id.rce)
     val rceWebView by OnViewWithId(R.id.rce_webView)
+    val errorMessage by OnViewWithId(R.id.errorMsg)
 }

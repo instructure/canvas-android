@@ -191,10 +191,10 @@ class AssignmentDetailsView(
 
         dialog.setOnShowListener {
             setupDialogRow(dialog, dialog.submissionEntryText, visibilities.textEntry) {
-                showOnlineTextEntryView(assignment.id, assignment.name, assignment.submission?.body)
+                showOnlineTextEntryView(assignment.id, assignment.name)
             }
             setupDialogRow(dialog, dialog.submissionEntryWebsite, visibilities.urlEntry) {
-                showOnlineUrlEntryView(assignment.id, assignment.name, canvasContext, assignment.submission?.url)
+                showOnlineUrlEntryView(assignment.id, assignment.name, canvasContext)
             }
             setupDialogRow(dialog, dialog.submissionEntryFile, visibilities.fileUpload) {
                 showFileUploadView(assignment)
@@ -233,12 +233,12 @@ class AssignmentDetailsView(
         RouteMatcher.route(context, UploadStatusSubmissionFragment.makeRoute(submissionId))
     }
 
-    fun showOnlineTextEntryView(assignmentId: Long, assignmentName: String?, submittedText: String? = null) {
-        RouteMatcher.route(context, TextSubmissionUploadFragment.makeRoute(canvasContext, assignmentId, assignmentName, submittedText))
+    fun showOnlineTextEntryView(assignmentId: Long, assignmentName: String?, submittedText: String? = null, isFailure: Boolean = false) {
+        RouteMatcher.route(context, TextSubmissionUploadFragment.makeRoute(canvasContext, assignmentId, assignmentName, submittedText, isFailure))
     }
 
-    fun showOnlineUrlEntryView(assignmentId: Long, assignmentName: String?, canvasContext: CanvasContext, submittedUrl: String? = null) {
-        RouteMatcher.route(context, UrlSubmissionUploadFragment.makeRoute(canvasContext, assignmentId, assignmentName, submittedUrl))
+    fun showOnlineUrlEntryView(assignmentId: Long, assignmentName: String?, canvasContext: CanvasContext, submittedUrl: String? = null, isFailure: Boolean = false) {
+        RouteMatcher.route(context, UrlSubmissionUploadFragment.makeRoute(canvasContext, assignmentId, assignmentName, submittedUrl, isFailure))
     }
 
     fun showLTIView(canvasContext: CanvasContext, url: String, title: String) {

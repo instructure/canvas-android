@@ -314,6 +314,7 @@ public class Const {
     public static final String ACTION_MEDIA_UPLOAD_FAIL = "com.instructure.action.NOTORIOUS_UPLOAD_ERROR";
     public static final String ERROR = "UPLOAD_ERROR";
     public static final String IS_SUBMISSION = "isSubmission";
+    public static final String IS_FAILURE = "isFailure";
 
     // Language intent strings used for checking the incoming pending intent for a push notification
     public static final String LOCAL_NOTIFICATION = "localNotification";

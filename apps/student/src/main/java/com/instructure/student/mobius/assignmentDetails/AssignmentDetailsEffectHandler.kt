@@ -114,7 +114,23 @@ class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Lon
                     Assignment.SubmissionType.ONLINE_UPLOAD.apiString, Assignment.SubmissionType.MEDIA_RECORDING.apiString -> {
                         view?.showUploadStatusView(effect.submission.id)
                     }
-                    // TODO: show the appropriate submission screen (text/url/etc...)
+                    Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString -> {
+                        view?.showOnlineTextEntryView(
+                            effect.submission.assignmentId!!,
+                            effect.submission.assignmentName,
+                            effect.submission.submissionEntry,
+                            effect.submission.errorFlag
+                        )
+                    }
+                    Assignment.SubmissionType.ONLINE_URL.apiString -> {
+                        view?.showOnlineUrlEntryView(
+                            effect.submission.assignmentId!!,
+                            effect.submission.assignmentName,
+                            effect.submission.canvasContext!!,
+                            effect.submission.submissionEntry,
+                            effect.submission.errorFlag
+                        )
+                    }
                     else -> Unit
                 }
             }

@@ -43,10 +43,14 @@
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:textColor="@color/red"
+        android:text="@string/textSubmissionFailureMessage"
         android:textSize="16sp"
         android:visibility="gone"
-        tools:text="Something went wrong on submission upload. Submit again" />
+        tools:visibility="visible" />
+
+    <include android:id="@+id/errorDivider" layout="@layout/divider" />
 
     <EditText
         android:id="@+id/editUrl"

@@ -620,6 +620,18 @@ class AssignmentDetailsUpdateTest : Assert() {
     }
 
     @Test
+    fun `VideoRecordingClicked results in ShowAudioRecordingView effect`() {
+        updateSpec
+            .given(initModel)
+            .whenEvent(AssignmentDetailsEvent.VideoRecordingClicked)
+            .then(
+                assertThatNext(
+                    matchesEffects<AssignmentDetailsModel, AssignmentDetailsEffect>(AssignmentDetailsEffect.ShowVideoRecordingView)
+                )
+            )
+    }
+
+    @Test
     fun `StoreVideoUri results in model change`() {
         val uri = mockk<Uri>()
         updateSpec

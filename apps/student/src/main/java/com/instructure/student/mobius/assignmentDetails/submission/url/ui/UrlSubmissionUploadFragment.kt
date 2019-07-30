@@ -34,6 +34,7 @@ class UrlSubmissionUploadFragment : MobiusFragment<UrlSubmissionUploadModel, Url
     private val assignmentId by LongArg(key = Const.ASSIGNMENT_ID)
     private val initialUrl by StringArg(key = Const.URL)
     private val assignmentName by StringArg(key = Const.ASSIGNMENT_NAME)
+    private val isFailure by BooleanArg(key = Const.IS_FAILURE)
 
     override fun makeEffectHandler(): EffectHandler<UrlSubmissionUploadView, UrlSubmissionUploadEvent, UrlSubmissionUploadEffect> = UrlSubmissionUploadEffectHandler()
 
@@ -43,16 +44,17 @@ class UrlSubmissionUploadFragment : MobiusFragment<UrlSubmissionUploadModel, Url
 
     override fun makePresenter(): Presenter<UrlSubmissionUploadModel, UrlSubmissionUploadViewState> = UrlSubmissionUploadPresenter
 
-    override fun makeInitModel(): UrlSubmissionUploadModel = UrlSubmissionUploadModel(course, assignmentId, assignmentName, initialUrl)
+    override fun makeInitModel(): UrlSubmissionUploadModel = UrlSubmissionUploadModel(course, assignmentId, assignmentName, initialUrl, isFailure)
 
     companion object {
 
         @JvmStatic
-        fun makeRoute(course: CanvasContext, assignmentId: Long, assignmentName: String? = "", initialUrl: String?): Route {
+        fun makeRoute(course: CanvasContext, assignmentId: Long, assignmentName: String? = "", initialUrl: String?, isFailure: Boolean = false): Route {
             val bundle = course.makeBundle{
                 putLong(Const.ASSIGNMENT_ID, assignmentId)
                 putString(Const.ASSIGNMENT_NAME, assignmentName)
                 putString(Const.URL, initialUrl)
+                putBoolean(Const.IS_FAILURE, isFailure)
             }
 
             return Route(null, UrlSubmissionUploadFragment::class.java, course, bundle)
