@@ -47,7 +47,7 @@ class TextSubmissionUploadRenderTest : StudentRenderTest() {
     @Test
     fun displaysFailedSubmissionError() {
         loadPageWithData("http://www.instructure.com", true)
-        page.errorMessage.waitForCheck(matches(ViewMatchers.withText("Something went wrong on submission upload. Submit again")))
+        page.errorMessage.waitForCheck(matches(ViewMatchers.withText("Something went wrong on submission upload. Submit again.")))
     }
 
     private fun loadPageWithData(initialText: String? = null, isFailure: Boolean = false, course: Course = Course(), assignment: Assignment = Assignment()) {
