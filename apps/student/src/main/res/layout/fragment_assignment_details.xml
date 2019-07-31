@@ -45,7 +45,7 @@
             android:layout_height="0dp"
             android:layout_weight="1">
 
-            <ScrollView
+            <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:contentDescription="@string/scrollInstructions"
@@ -56,6 +56,7 @@
                     android:layout_height="wrap_content"
                     android:divider="@drawable/divider"
                     android:orientation="vertical"
+                    android:nestedScrollingEnabled="true"
                     android:showDividers="middle">
 
                     <!-- Error View -->
@@ -521,6 +522,7 @@
                         android:id="@+id/descriptionContainer"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:nestedScrollingEnabled="true"
                         android:orientation="vertical">
 
                         <TextView
@@ -613,6 +615,11 @@
 
                         </LinearLayout>
 
+                        <androidx.coordinatorlayout.widget.CoordinatorLayout
+                            android:layout_width="match_parent"
+                            android:nestedScrollingEnabled="true"
+                            android:layout_height="wrap_content">
+
                         <com.instructure.pandautils.views.CanvasWebView
                             android:id="@+id/descriptionWebView"
                             android:layout_width="match_parent"
@@ -622,13 +629,16 @@
                             android:minHeight="24dp"
                             android:scrollbars="none"
                             android:focusable="false"
-                            android:focusableInTouchMode="false"/>
+                            android:focusableInTouchMode="false"
+                            android:nestedScrollingEnabled="true" />
+
+                        </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
                     </LinearLayout>
 
                 </LinearLayout>
 
-            </ScrollView>
+            </androidx.core.widget.NestedScrollView>
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
@@ -650,5 +660,5 @@
         android:layout_gravity="bottom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
-    
+
 </FrameLayout>
