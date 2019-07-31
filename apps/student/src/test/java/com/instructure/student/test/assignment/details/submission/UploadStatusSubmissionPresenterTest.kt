@@ -27,6 +27,9 @@ import com.instructure.student.mobius.assignmentDetails.submission.file.UploadSt
 import com.instructure.student.mobius.assignmentDetails.submission.file.ui.UploadListItemViewState
 import com.instructure.student.mobius.assignmentDetails.submission.file.ui.UploadStatusSubmissionViewState
 import com.instructure.student.mobius.assignmentDetails.submission.file.ui.UploadVisibilities
+import com.instructure.student.util.FileUtils
+import io.mockk.every
+import io.mockk.mockkObject
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -88,7 +91,7 @@ class UploadStatusSubmissionPresenterTest : Assert() {
             listOf(
                 UploadListItemViewState(
                     0,
-                    R.drawable.vd_media,
+                    R.drawable.vd_utils_attachment,
                     ContextCompat.getColor(context, R.color.defaultActionColor),
                     "File",
                     "1 B",
@@ -124,7 +127,7 @@ class UploadStatusSubmissionPresenterTest : Assert() {
             listOf(
                 UploadListItemViewState(
                     0,
-                    R.drawable.vd_media,
+                    R.drawable.vd_utils_attachment,
                     ContextCompat.getColor(context, R.color.defaultActionColor),
                     "File",
                     "1 B",
@@ -133,7 +136,7 @@ class UploadStatusSubmissionPresenterTest : Assert() {
                 ),
                 UploadListItemViewState(
                     1,
-                    R.drawable.vd_media,
+                    R.drawable.vd_utils_attachment,
                     ContextCompat.getColor(context, R.color.defaultActionColor),
                     "File",
                     "1 B",
@@ -160,7 +163,7 @@ class UploadStatusSubmissionPresenterTest : Assert() {
             listOf(
                 UploadListItemViewState(
                     0,
-                    R.drawable.vd_media,
+                    R.drawable.vd_utils_attachment,
                     ContextCompat.getColor(context, R.color.defaultActionColor),
                     "File",
                     "1 B",
@@ -169,7 +172,7 @@ class UploadStatusSubmissionPresenterTest : Assert() {
                 ),
                 UploadListItemViewState(
                     1,
-                    R.drawable.vd_media,
+                    R.drawable.vd_utils_attachment,
                     ContextCompat.getColor(context, R.color.defaultActionColor),
                     "File",
                     "1 B",
@@ -178,7 +181,7 @@ class UploadStatusSubmissionPresenterTest : Assert() {
                 ),
                 UploadListItemViewState(
                     2,
-                    R.drawable.vd_media,
+                    R.drawable.vd_utils_attachment,
                     ContextCompat.getColor(context, R.color.defaultActionColor),
                     "File",
                     "1 B",
