@@ -26,6 +26,7 @@ import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.canvasapi2.utils.isRtl
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.pandautils.discussions.DiscussionUtils
+import com.instructure.pandautils.utils.AssignmentUtils2
 import com.instructure.student.R
 import com.instructure.student.Submission
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsViewState
@@ -84,12 +85,23 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
         )
 
         // Submission state
-        val submitted = assignment.isSubmitted
-        val (submittedLabelRes, submittedColorRes, submittedIconRes) = if (submitted) {
-            Triple(R.string.submitted, R.color.alertGreen, R.drawable.vd_submitted)
+        val assignmentState = AssignmentUtils2.getAssignmentState(assignment, assignment.submission, false)
+        val (submittedLabelRes, submittedColorRes, submittedIconRes) = if (assignment.isSubmitted) {
+            Triple(
+                if (assignmentState == AssignmentUtils2.ASSIGNMENT_STATE_GRADED) R.string.gradedSubmissionLabel else R.string.submitted,
+                R.color.alertGreen,
+                R.drawable.vd_submitted
+            )
         } else {
-            Triple(R.string.notSubmitted, R.color.defaultTextGray, R.drawable.vd_unsubmitted)
+            if (assignment.submission?.missing == true ||
+                (assignment.dueAt != null && assignmentState == AssignmentUtils2.ASSIGNMENT_STATE_MISSING)) {
+                // Mark it missing if the teacher marked it missing or if it's past due
+                Triple(R.string.missingSubmissionLabel, R.color.submissionStatusColorMissing, R.drawable.vd_unsubmitted)
+            } else {
+                Triple(R.string.notSubmitted, R.color.defaultTextGray, R.drawable.vd_unsubmitted)
+            }
         }
+
         val submittedLabel = context.getString(submittedLabelRes)
         val submittedColor = ContextCompat.getColor(context, submittedColorRes)
 
@@ -170,7 +182,7 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
         }
 
         // Configure stickied submit button
-        val submitButtonText = getSubmitButtonText(context, isExternalToolSubmission, submitted, assignment.turnInType)
+        val submitButtonText = getSubmitButtonText(context, isExternalToolSubmission, assignment.isSubmitted, assignment.turnInType)
 
         // Configure description label
         val descriptionLabel = when(assignment.turnInType) {
