@@ -19,8 +19,10 @@ package com.instructure.student.util
 
 import android.content.Context
 import android.net.Uri
+import androidx.annotation.IntegerRes
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.loaders.OpenMediaAsyncTaskLoader
+import com.instructure.student.R
 import com.instructure.student.activity.CandroidPSPDFActivity
 import com.instructure.student.activity.ShareFileSubmissionTarget
 import com.pspdfkit.PSPDFKit
@@ -103,5 +105,22 @@ object FileUtils {
             context.startActivity(loadedMedia.intent)
         }
 
+    }
+
+    @IntegerRes
+    fun getFileIcon(filename: String, contentType: String): Int {
+        return when {
+            contentType.startsWith("image") -> R.drawable.vd_utils_image
+            contentType.startsWith("video") -> R.drawable.vd_utils_media
+            contentType.startsWith("audio") -> R.drawable.vd_utils_audio
+            else -> when (filename.substringAfterLast(".")) {
+                "doc", "docx" -> R.drawable.vd_utils_document
+                "txt", "rtf" -> R.drawable.vd_utils_document
+                "pdf" -> R.drawable.vd_utils_document
+                "xls" -> R.drawable.vd_utils_document
+                "zip", "tar", "7z", "apk", "jar", "rar" -> R.drawable.vd_utils_attachment
+                else -> R.drawable.vd_utils_attachment
+            }
+        }
     }
 }

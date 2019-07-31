@@ -23,6 +23,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
 import androidx.core.app.NotificationCompat
@@ -44,6 +45,7 @@ import com.instructure.pandautils.models.PushNotification
 import com.instructure.pandautils.services.FileUploadService
 import com.instructure.pandautils.services.NotoriousUploadService
 import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.FileUploadUtils
 import com.instructure.pandautils.utils.NotoriousUploader
 import com.instructure.student.PendingSubmissionComment
 import com.instructure.student.R
@@ -221,7 +223,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
             dbSubmissionId = submissionsDb.getLastInsert().executeAsOne()
 
             val file = File(mediaFilePath)
-            filesDb.insertFile(dbSubmissionId, file.name, file.length(), "", mediaFilePath)
+            filesDb.insertFile(dbSubmissionId, file.name, file.length(), FileUtils.getMimeType(file.path), mediaFilePath)
         }
 
         // Don't show the notification in the foreground so it doesn't disappear when this service dies
