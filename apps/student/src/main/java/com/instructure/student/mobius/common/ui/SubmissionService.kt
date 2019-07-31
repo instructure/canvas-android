@@ -19,10 +19,12 @@ package com.instructure.student.mobius.common.ui
 import android.app.IntentService
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.app.Service
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
 import androidx.core.app.NotificationCompat
@@ -344,7 +346,6 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
             // Set up notifications
             FileUploadService.createNotificationChannel(notificationManager, COMMENT_CHANNEL_ID)
             val notification = NotificationCompat.Builder(this@SubmissionService, COMMENT_CHANNEL_ID)
-                .setOngoing(true)
                 .setSmallIcon(R.drawable.ic_notification_canvas_logo)
                 .setContentTitle(getString(R.string.assignmentSubmissionCommentUpload, comment.assignmentName))
                 .setProgress(0, 0, true)
@@ -352,19 +353,28 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
             if (foreground) startForeground(comment.assignmentId.toInt(), notification.build())
 
             fun setError() {
+                val pendingIntent = getSubmissionIntent(this@SubmissionService, comment.canvasContext, comment.assignmentId, true)
+
                 // Update notification
                 notification.setContentTitle(getString(R.string.assignmentSubmissionCommentError, comment.assignmentName))
                 notification.setContentText("")
                 notification.setProgress(0, 0, false)
-                notification.setOngoing(false)
-                // TODO: Set pending intent to route to submission page
-                notificationManager.notify(comment.assignmentId.toInt(), notification.build())
+                notification.setContentIntent(pendingIntent)
+                notification.setAutoCancel(true)
 
                 // Set error in db
                 commentDb.setCommentError(true, comment.id)
 
                 // Stop service
-                stopForeground(false)
+                if (foreground) {
+                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+                        stopForeground(Service.STOP_FOREGROUND_DETACH)
+                    else
+                        stopForeground(false)
+                }
+
+                // Notify after we stop the service so that it shows on api versions less than N (stopForeground(false) is a little odd in behavior)
+                notificationManager.notify(comment.assignmentId.toInt(), notification.build())
             }
 
             // Clear existing error state, if any
@@ -520,12 +530,13 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
 
         const val COMMENT_CHANNEL_ID = "commentUploadChannel"
 
-        private fun getSubmissionIntent(context: Context, canvasContext: CanvasContext, assignmentId: Long): PendingIntent {
+        private fun getSubmissionIntent(context: Context, canvasContext: CanvasContext, assignmentId: Long, goToSubmissionDetail: Boolean = false): PendingIntent {
+            val submissionPage = if (goToSubmissionDetail) "/submissions" else ""
             val intent = Intent(context, NavigationActivity.startActivityClass).apply {
                 putExtra(Const.LOCAL_NOTIFICATION, true)
                 putExtra(
                     PushNotification.HTML_URL,
-                    "${ApiPrefs.fullDomain}/${canvasContext.apiContext()}/${canvasContext.id}/assignments/$assignmentId"
+                    "${ApiPrefs.fullDomain}/${canvasContext.apiContext()}/${canvasContext.id}/assignments/$assignmentId$submissionPage"
                 )
             }
 

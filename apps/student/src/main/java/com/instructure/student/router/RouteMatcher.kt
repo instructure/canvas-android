@@ -44,6 +44,7 @@ import com.instructure.pandautils.utils.nonNullArgs
 import com.instructure.student.R
 import com.instructure.student.activity.*
 import com.instructure.student.fragment.*
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsFragment
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.mobius.syllabus.ui.SyllabusFragment
 import com.instructure.student.util.FeatureFlagPrefs
@@ -161,8 +162,8 @@ object RouteMatcher : BaseRouteMatcher() {
 
         // Submissions
         // :sliding_tab_type can be /rubric or /submissions (used to navigate to the nested fragment)
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}/:${RouterParams.SLIDING_TAB_TYPE}"), AssignmentListFragment::class.java, assignmentDetailsClass))
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}/:${RouterParams.SLIDING_TAB_TYPE}/:${RouterParams.SUBMISSION_ID}"), AssignmentListFragment::class.java, assignmentDetailsClass))
+        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}/:${RouterParams.SLIDING_TAB_TYPE}"), assignmentDetailsClass, SubmissionDetailsFragment::class.java))
+        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}/:${RouterParams.SLIDING_TAB_TYPE}/:${RouterParams.SUBMISSION_ID}"), assignmentDetailsClass, SubmissionDetailsFragment::class.java))
 
         // Settings
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/settings"), CourseSettingsFragment::class.java))
