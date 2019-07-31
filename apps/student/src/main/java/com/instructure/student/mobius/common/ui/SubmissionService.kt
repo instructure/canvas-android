@@ -23,7 +23,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
 import androidx.core.app.NotificationCompat
@@ -45,7 +44,6 @@ import com.instructure.pandautils.models.PushNotification
 import com.instructure.pandautils.services.FileUploadService
 import com.instructure.pandautils.services.NotoriousUploadService
 import com.instructure.pandautils.utils.Const
-import com.instructure.pandautils.utils.FileUploadUtils
 import com.instructure.pandautils.utils.NotoriousUploader
 import com.instructure.student.PendingSubmissionComment
 import com.instructure.student.R
