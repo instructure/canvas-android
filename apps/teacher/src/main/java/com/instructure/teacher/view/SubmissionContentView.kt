@@ -820,15 +820,23 @@ class SubmissionContentView(
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onAudioPermissionGranted(event: AudioPermissionGrantedEvent) {
-        if (event.assigneeId == mAssignee.id)
+        if (compareAssignees(event.assigneeId))
             showAudioCommentDialog()
     }
 
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onVideoPermissionGranted(event: VideoPermissionGrantedEvent) {
-        if (event.assigneeId == mAssignee.id)
+        if (compareAssignees(event.assigneeId))
             showVideoCommentDialog()
+    }
+
+    private fun compareAssignees(eventAssigneeId: Long): Boolean{
+        return if(mAssignee is GroupAssignee) {
+            (mAssignee as GroupAssignee).group.users.any { it.id == eventAssigneeId }
+        } else {
+            return eventAssigneeId == mAssignee.id
+        }
     }
     //endregion
 }
