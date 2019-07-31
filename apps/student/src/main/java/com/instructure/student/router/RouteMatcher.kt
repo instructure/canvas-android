@@ -68,6 +68,7 @@ object RouteMatcher : BaseRouteMatcher() {
     private fun initRoutes() {
 
         val assignmentDetailsClass: Class<out Fragment> = if (FeatureFlagPrefs.newAssignmentPage) AssignmentDetailsFragment::class.java else AssignmentFragment::class.java
+        val submissionDetailsClass: Class<out Fragment>? = if (FeatureFlagPrefs.newAssignmentPage) SubmissionDetailsFragment::class.java else null
 
         routes.add(Route("/", DashboardFragment::class.java))
         // region Conversations
@@ -162,8 +163,8 @@ object RouteMatcher : BaseRouteMatcher() {
 
         // Submissions
         // :sliding_tab_type can be /rubric or /submissions (used to navigate to the nested fragment)
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}/:${RouterParams.SLIDING_TAB_TYPE}"), assignmentDetailsClass, SubmissionDetailsFragment::class.java))
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}/:${RouterParams.SLIDING_TAB_TYPE}/:${RouterParams.SUBMISSION_ID}"), assignmentDetailsClass, SubmissionDetailsFragment::class.java))
+        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}/:${RouterParams.SLIDING_TAB_TYPE}"), assignmentDetailsClass, submissionDetailsClass))
+        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}/:${RouterParams.SLIDING_TAB_TYPE}/:${RouterParams.SUBMISSION_ID}"), assignmentDetailsClass, submissionDetailsClass))
 
         // Settings
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/settings"), CourseSettingsFragment::class.java))
