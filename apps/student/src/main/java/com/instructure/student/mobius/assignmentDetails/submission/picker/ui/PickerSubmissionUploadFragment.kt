@@ -49,7 +49,7 @@ class PickerSubmissionUploadFragment :
         assignment.id,
         assignment.name ?: "",
         assignment.groupCategoryId,
-        if (mode.isForComment) emptyList() else assignment.allowedExtensions,
+        if (mode.isForComment || mode.isMediaSubmission) emptyList() else assignment.allowedExtensions,
         mode,
         mediaUri
     )

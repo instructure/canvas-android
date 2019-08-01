@@ -79,9 +79,14 @@ class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Lon
         when (effect) {
             AssignmentDetailsEffect.ShowVideoRecordingView -> launchVideo()
             AssignmentDetailsEffect.ShowAudioRecordingView -> launchAudio()
+            AssignmentDetailsEffect.ShowMediaPickerView -> launchMediaPicker()
             AssignmentDetailsEffect.ShowVideoRecordingError -> view?.showVideoRecordingError()
             AssignmentDetailsEffect.ShowAudioRecordingError -> view?.showAudioRecordingError()
+            AssignmentDetailsEffect.ShowMediaPickingError -> view?.showMediaPickingError()
             is AssignmentDetailsEffect.UploadVideoSubmission -> {
+                view?.launchFilePickerView(effect.uri, effect.course, effect.assignment)
+            }
+            is AssignmentDetailsEffect.UploadMediaFileSubmission -> {
                 view?.launchFilePickerView(effect.uri, effect.course, effect.assignment)
             }
             is AssignmentDetailsEffect.ShowSubmitDialogView -> {
@@ -272,6 +277,12 @@ class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Lon
     private fun launchAudio() {
         if (needsPermissions(::launchAudio, PermissionUtils.RECORD_AUDIO)) return
         view?.showAudioRecordingView()
+    }
+
+    private fun launchMediaPicker() {
+        view?.getChooseMediaIntent()?.let {
+            (context as Activity).startActivityForResult(it, AssignmentDetailsFragment.CHOOSE_MEDIA_REQUEST_CODE)
+        }
     }
 
     private fun needsPermissions(successCallback: () -> Unit, vararg permissions: String): Boolean {
