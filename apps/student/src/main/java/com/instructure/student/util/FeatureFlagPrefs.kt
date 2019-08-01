@@ -20,6 +20,6 @@ import com.instructure.canvasapi2.utils.PrefManager
 
 object FeatureFlagPrefs : PrefManager("feature_flags") {
 
-    var newAssignmentPage by FeatureFlagPref("New Assignment Page")
+    var newAssignmentPage by FeatureFlagPref("New Assignment Page", true)
 
 }
