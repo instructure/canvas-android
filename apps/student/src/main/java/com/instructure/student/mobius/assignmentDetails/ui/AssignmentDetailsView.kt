@@ -84,6 +84,7 @@ class AssignmentDetailsView(
         submissionStatusFailed.onClick { output.accept(AssignmentDetailsEvent.ViewUploadStatusClicked) }
         submissionStatusUploading.onClick { output.accept(AssignmentDetailsEvent.ViewUploadStatusClicked) }
         submissionRubricButton.onClick { output.accept(AssignmentDetailsEvent.ViewSubmissionClicked) }
+        gradeContainer.onClick { output.accept(AssignmentDetailsEvent.ViewSubmissionClicked) }
         submitButton.onClick { output.accept(AssignmentDetailsEvent.SubmitAssignmentClicked) }
         attachmentIcon.onClick { output.accept(AssignmentDetailsEvent.DiscussionAttachmentClicked) }
         swipeRefreshLayout.setOnRefreshListener { output.accept(AssignmentDetailsEvent.PullToRefresh) }
