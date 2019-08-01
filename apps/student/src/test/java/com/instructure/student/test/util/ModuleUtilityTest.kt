@@ -24,6 +24,7 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.student.fragment.*
+import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.util.Const
 import com.instructure.student.util.ModuleUtility
 import junit.framework.TestCase
@@ -109,7 +110,7 @@ class ModuleUtilityTest : TestCase() {
 
         val parentFragment = callGetFragment(moduleItem, course, null)
         TestCase.assertNotNull(parentFragment)
-        TestCase.assertEquals(AssignmentFragment::class.java, parentFragment!!.javaClass)
+        TestCase.assertEquals(AssignmentDetailsFragment::class.java, parentFragment!!.javaClass)
         TestCase.assertEquals(expectedBundle.toString(), parentFragment.arguments!!.toString())
     }
 

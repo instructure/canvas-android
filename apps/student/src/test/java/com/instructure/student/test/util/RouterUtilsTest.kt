@@ -367,7 +367,7 @@ class RouterUtilsTest : TestCase() {
         route = callGetInternalRoute("https://mobiledev.instructure.com/courses/836357/assignments/213445213445213445213445213445213445213445213445213445213445213445213445")
         TestCase.assertNotNull(route)
         TestCase.assertEquals(AssignmentListFragment::class.java, route!!.primaryClass)
-        TestCase.assertEquals(AssignmentFragment::class.java, route.secondaryClass)
+        TestCase.assertEquals(AssignmentDetailsFragment::class.java, route.secondaryClass)
 
         val expectedParams = HashMap<String, String>()
         expectedParams[RouterParams.COURSE_ID] = "836357"
@@ -380,8 +380,8 @@ class RouterUtilsTest : TestCase() {
         // TODO: This test needs to change when we remove the assignment feature flag
         var route = callGetInternalRoute("https://mobiledev.instructure.com/courses/836357/assignments/12345/rubric")
         TestCase.assertNotNull(route)
-        TestCase.assertEquals(AssignmentFragment::class.java, route!!.primaryClass)
-        TestCase.assertEquals(null, route.secondaryClass)
+        TestCase.assertEquals(AssignmentDetailsFragment::class.java, route!!.primaryClass)
+        TestCase.assertEquals(SubmissionDetailsFragment::class.java, route.secondaryClass)
 
         var expectedParams = HashMap<String, String>()
         expectedParams[RouterParams.COURSE_ID] = "836357"
@@ -392,8 +392,8 @@ class RouterUtilsTest : TestCase() {
 
         route = callGetInternalRoute("https://mobiledev.instructure.com/courses/836357/assignments/213445213445213445213445213445213445213445213445213445213445213445213445/submissions/1234")
         TestCase.assertNotNull(route)
-        TestCase.assertEquals(AssignmentFragment::class.java, route!!.primaryClass)
-        TestCase.assertEquals(null, route.secondaryClass)
+        TestCase.assertEquals(AssignmentDetailsFragment::class.java, route!!.primaryClass)
+        TestCase.assertEquals(SubmissionDetailsFragment::class.java, route.secondaryClass)
 
         expectedParams = HashMap()
         expectedParams[RouterParams.COURSE_ID] = "836357"
