@@ -23,10 +23,11 @@ import com.spotify.mobius.Next
 class PickerSubmissionUploadUpdate :
     UpdateInit<PickerSubmissionUploadModel, PickerSubmissionUploadEvent, PickerSubmissionUploadEffect>() {
     override fun performInit(model: PickerSubmissionUploadModel): First<PickerSubmissionUploadModel, PickerSubmissionUploadEffect> {
-        val effects = if (model.mediaFileUri == null) emptySet() else {
-            setOf(PickerSubmissionUploadEffect.LoadFileContents(model.mediaFileUri, model.allowedExtensions))
+        return if (model.mediaFileUri == null) {
+            First.first(model)
+        } else {
+            First.first(model.copy(isLoadingFile = true), setOf(PickerSubmissionUploadEffect.LoadFileContents(model.mediaFileUri, model.allowedExtensions)))
         }
-        return First.first(model, effects)
     }
 
     override fun update(
@@ -37,7 +38,11 @@ class PickerSubmissionUploadUpdate :
         PickerSubmissionUploadEvent.CameraClicked -> Next.dispatch(setOf(PickerSubmissionUploadEffect.LaunchCamera))
         PickerSubmissionUploadEvent.GalleryClicked -> Next.dispatch(setOf(PickerSubmissionUploadEffect.LaunchGallery))
         PickerSubmissionUploadEvent.SelectFileClicked -> Next.dispatch(setOf(PickerSubmissionUploadEffect.LaunchSelectFile))
-        is PickerSubmissionUploadEvent.OnFileSelected -> Next.dispatch(setOf(PickerSubmissionUploadEffect.LoadFileContents(event.uri, model.allowedExtensions)))
+        is PickerSubmissionUploadEvent.OnFileSelected -> {
+            Next.next(
+                model.copy(isLoadingFile = true),
+                setOf(PickerSubmissionUploadEffect.LoadFileContents(event.uri, model.allowedExtensions)))
+        }
         is PickerSubmissionUploadEvent.OnFileRemoved -> {
             val files = model.files.toMutableList()
             files.removeAt(event.fileIndex)
@@ -46,7 +51,7 @@ class PickerSubmissionUploadUpdate :
         is PickerSubmissionUploadEvent.OnFileAdded -> {
             val files = model.files.toMutableList()
             files.add(event.file)
-            Next.next(model.copy(files = files.toList()))
+            Next.next(model.copy(isLoadingFile = false, files = files.toList()))
         }
     }
 }

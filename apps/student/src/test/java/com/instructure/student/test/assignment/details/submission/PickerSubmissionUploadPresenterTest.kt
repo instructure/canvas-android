@@ -57,7 +57,8 @@ class PickerSubmissionUploadPresenterTest : Assert() {
             fab = true,
             fabGallery = true,
             fabCamera = true,
-            fabFile = true
+            fabFile = true,
+            loading = false
         )
     }
 
@@ -65,6 +66,14 @@ class PickerSubmissionUploadPresenterTest : Assert() {
     fun `returns Empty state when files are empty`() {
         val model = baseModel
         val expectedState = PickerSubmissionUploadViewState.Empty(baseVisibilities)
+        val actualState = PickerSubmissionUploadPresenter.present(model, context)
+        assertEquals(expectedState, actualState)
+    }
+
+    @Test
+    fun `returns Empty state with loading when files are empty`() {
+        val model = baseModel.copy(isLoadingFile = true)
+        val expectedState = PickerSubmissionUploadViewState.Empty(baseVisibilities.copy(loading = true))
         val actualState = PickerSubmissionUploadPresenter.present(model, context)
         assertEquals(expectedState, actualState)
     }
@@ -107,6 +116,25 @@ class PickerSubmissionUploadPresenterTest : Assert() {
         )
         val expectedState = PickerSubmissionUploadViewState.FileList(
             baseVisibilities.copy(submit = true),
+            fileViewStates
+        )
+        val actualState = PickerSubmissionUploadPresenter.present(model, context)
+        assertEquals(expectedState, actualState)
+    }
+
+    @Test
+    fun `returns file view states and submit and loading visible when there are files and it is loading`() {
+        val model = baseModel.copy(files = listOf(baseFile), isLoadingFile = true)
+        val fileViewStates = listOf(
+            PickerListItemViewState(
+                0,
+                R.drawable.vd_media_recordings,
+                baseFile.name,
+                "${baseFile.size} B"
+            )
+        )
+        val expectedState = PickerSubmissionUploadViewState.FileList(
+            baseVisibilities.copy(submit = true, loading = true),
             fileViewStates
         )
         val actualState = PickerSubmissionUploadPresenter.present(model, context)

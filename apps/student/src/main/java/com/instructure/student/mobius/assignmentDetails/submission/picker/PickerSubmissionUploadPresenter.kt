@@ -59,6 +59,7 @@ object PickerSubmissionUploadPresenter : Presenter<PickerSubmissionUploadModel, 
     }
 
     private fun getVisibilities(model: PickerSubmissionUploadModel) = PickerVisibilities(
+        loading = model.isLoadingFile,
         fab = !model.mode.isMediaSubmission,
         submit = model.files.isNotEmpty(),
         fabFile = !model.mode.isMediaSubmission,
