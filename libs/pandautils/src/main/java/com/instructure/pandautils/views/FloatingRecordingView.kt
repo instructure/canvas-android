@@ -59,7 +59,7 @@ class FloatingRecordingView @JvmOverloads constructor(
     // Audio related
     var mediaRecorder: MediaRecorder? = null
     var mediaPlayer: MediaPlayer? = null
-    private val TEMP_FILENAME = "audio.3gp"
+    private val TEMP_FILENAME = "audio.amr"
 
     private var mediaType: RecordingMediaType? = null
 
@@ -306,7 +306,7 @@ class FloatingRecordingView @JvmOverloads constructor(
 
             mediaRecorder = MediaRecorder().apply {
                 setAudioSource(MediaRecorder.AudioSource.MIC)
-                setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
+                setOutputFormat(MediaRecorder.OutputFormat.AMR_NB)
                 setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
                 setOutputFile(audioFile.absolutePath)
                 prepare()

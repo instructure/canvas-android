@@ -223,7 +223,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
             dbSubmissionId = submissionsDb.getLastInsert().executeAsOne()
 
             val file = File(mediaFilePath)
-            filesDb.insertFile(dbSubmissionId, file.name, file.length(), "", mediaFilePath)
+            filesDb.insertFile(dbSubmissionId, file.name, file.length(), FileUtils.getMimeType(file.path), mediaFilePath)
         }
 
         // Don't show the notification in the foreground so it doesn't disappear when this service dies

@@ -19,8 +19,10 @@ package com.instructure.student.util
 
 import android.content.Context
 import android.net.Uri
+import androidx.annotation.IntegerRes
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.loaders.OpenMediaAsyncTaskLoader
+import com.instructure.student.R
 import com.instructure.student.activity.CandroidPSPDFActivity
 import com.instructure.student.activity.ShareFileSubmissionTarget
 import com.pspdfkit.PSPDFKit
@@ -35,31 +37,30 @@ import com.pspdfkit.ui.special_mode.controller.AnnotationTool
 
 object FileUtils {
 
-    private val annotationCreationList = listOf(
-        AnnotationTool.INK,
-        AnnotationTool.HIGHLIGHT,
-        AnnotationTool.STRIKEOUT,
-        AnnotationTool.SQUARE,
-        AnnotationTool.NOTE,
-        AnnotationTool.FREETEXT,
-        AnnotationTool.ERASER
-    )
-
-    private val annotationEditList = listOf(
-        AnnotationType.INK,
-        AnnotationType.HIGHLIGHT,
-        AnnotationType.STRIKEOUT,
-        AnnotationType.SQUARE,
-        AnnotationType.NOTE,
-        AnnotationType.FREETEXT
-    )
-
     fun showPdfDocument(
         uri: Uri,
         loadedMedia: OpenMediaAsyncTaskLoader.LoadedMedia,
         context: Context,
         submissionTarget: ShareFileSubmissionTarget? = null
     ) {
+        val annotationCreationList = listOf(
+                AnnotationTool.INK,
+                AnnotationTool.HIGHLIGHT,
+                AnnotationTool.STRIKEOUT,
+                AnnotationTool.SQUARE,
+                AnnotationTool.NOTE,
+                AnnotationTool.FREETEXT,
+                AnnotationTool.ERASER
+        )
+
+        val annotationEditList = listOf(
+                AnnotationType.INK,
+                AnnotationType.HIGHLIGHT,
+                AnnotationType.STRIKEOUT,
+                AnnotationType.SQUARE,
+                AnnotationType.NOTE,
+                AnnotationType.FREETEXT
+        )
         if (!PSPDFKitPreferences.get(context).isAnnotationCreatorSet) {
             PSPDFKitPreferences.get(context).setAnnotationCreator(ApiPrefs.user?.shortName.orEmpty())
         }
@@ -103,5 +104,19 @@ object FileUtils {
             context.startActivity(loadedMedia.intent)
         }
 
+    }
+
+    @IntegerRes
+    fun getFileIcon(filename: String, contentType: String): Int {
+        return when {
+            contentType.startsWith("image") -> R.drawable.vd_utils_image
+            contentType.startsWith("video") -> R.drawable.vd_utils_media
+            contentType.startsWith("audio") -> R.drawable.vd_utils_audio
+            else -> when (filename.substringAfterLast(".")) {
+                "doc", "docx", "txt", "rtf", "pdf", "xls" -> R.drawable.vd_utils_document
+                "zip", "tar", "7z", "apk", "jar", "rar" -> R.drawable.vd_utils_attachment
+                else -> R.drawable.vd_utils_attachment
+            }
+        }
     }
 }
