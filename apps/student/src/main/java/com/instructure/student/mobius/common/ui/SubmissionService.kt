@@ -346,6 +346,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
             // Set up notifications
             FileUploadService.createNotificationChannel(notificationManager, COMMENT_CHANNEL_ID)
             val notification = NotificationCompat.Builder(this@SubmissionService, COMMENT_CHANNEL_ID)
+                .setOngoing(true)
                 .setSmallIcon(R.drawable.ic_notification_canvas_logo)
                 .setContentTitle(getString(R.string.assignmentSubmissionCommentUpload, comment.assignmentName))
                 .setProgress(0, 0, true)
@@ -359,8 +360,9 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
                 notification.setContentTitle(getString(R.string.assignmentSubmissionCommentError, comment.assignmentName))
                 notification.setContentText("")
                 notification.setProgress(0, 0, false)
+                notification.setOngoing(false)
                 notification.setContentIntent(pendingIntent)
-                notification.setAutoCancel(true)
+                notification.setAutoCancel(true) // Still need auto cancel for clicks, false to ongoing only makes it possible to swipe away
 
                 // Set error in db
                 commentDb.setCommentError(true, comment.id)
