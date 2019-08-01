@@ -339,7 +339,7 @@ class AssignmentDetailsPresenterTest : Assert() {
 
     @Test
     fun `Shows no due date message when there is no due date`() {
-        val expectedDueDate = "This assignment doesn't have a due date."
+        val expectedDueDate = "No Due Date"
         val assignment = baseAssignment.copy(dueAt = null)
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
