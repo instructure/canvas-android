@@ -128,7 +128,7 @@ class PickerSubmissionUploadPresenterTest : Assert() {
         val fileViewStates = listOf(
             PickerListItemViewState(
                 0,
-                R.drawable.vd_media_recordings,
+                R.drawable.vd_utils_attachment,
                 baseFile.name,
                 "${baseFile.size} B"
             )
