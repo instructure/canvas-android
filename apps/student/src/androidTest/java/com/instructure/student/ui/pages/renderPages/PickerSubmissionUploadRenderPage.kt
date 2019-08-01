@@ -28,6 +28,7 @@ class PickerSubmissionUploadRenderPage : BasePage(R.id.pickerSubmissionUploadPag
     val emptyView by OnViewWithId(R.id.pickerEmptyView)
     val recycler by OnViewWithId(R.id.filePickerRecycler)
     val submitButton by OnViewWithId(R.id.menuSubmit)
+    val loading by OnViewWithId(R.id.fileLoading)
 
     val fabPick by OnViewWithId(R.id.pickFab)
     val fabFile by OnViewWithId(R.id.pickFabFile)

@@ -47,7 +47,8 @@ data class PickerSubmissionUploadModel(
     val allowedExtensions: List<String>,
     val mode: PickerSubmissionMode,
     val mediaFileUri: Uri? = null,
-    val files: List<FileSubmitObject> = emptyList()
+    val files: List<FileSubmitObject> = emptyList(),
+    val isLoadingFile: Boolean = false
 )
 
 enum class PickerSubmissionMode {

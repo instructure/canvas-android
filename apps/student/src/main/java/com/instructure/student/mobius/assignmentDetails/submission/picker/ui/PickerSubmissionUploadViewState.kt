@@ -22,6 +22,7 @@ sealed class PickerSubmissionUploadViewState(open val visibilities: PickerVisibi
 }
 
 data class PickerVisibilities(
+    val loading: Boolean = false,
     val fab: Boolean = false,
     val fabCamera: Boolean = false,
     val fabGallery: Boolean = false,
