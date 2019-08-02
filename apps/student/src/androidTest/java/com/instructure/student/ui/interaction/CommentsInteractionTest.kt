@@ -28,7 +28,7 @@ class CommentsInteractionTest: StudentTest() {
 
     @Stub
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.COMMENTS, TestCategory.INTERACTION, true, FeatureCategory.ASSIGNMENTS)
+    @TestMetaData(Priority.P0, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, true, FeatureCategory.COMMENTS)
     fun testComments_addComment() {
         // Test adding a comment to an assignment comment stream
     }

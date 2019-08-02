@@ -109,39 +109,26 @@ class SubmissionCommentsRenderTest: StudentRenderTest() {
                 authorName = user.shortName!!,
                 avatarUrl = user.avatarUrl!!,
                 sortDate = Date(119, 6, 4, 13, 20),
-                pendingComment = object : PendingSubmissionComment {
-                    override val id: Long
-                        get() = 15L
-                    override val accountDomain = "myDomain.com"
-                    override val assignmentId
-                        get() = 42L
-                    override val assignmentName: String
-                        get() = "Special assignment"
-                    override val canvasContext: CanvasContext
-                        get() = CanvasContext.defaultCanvasContext()
-                    override val currentFile: Long
-                        get() = 12
-                    override val errorFlag: Boolean
-                        get() = false
-                    override val fileCount: Long
-                        get() = 0
-                    override val isGroupMessage: Boolean
-                        get() = false
-                    override val lastActivityDate: Date
-                        get() = Date.now()
-                    override val mediaPath: String?
-                        get() = "/blah/blah/blah"
-                    override val message: String?
-                        get() = "Pending message"
-                    override val progress: Double?
-                        get() = 0.45
-
-                }
+                pendingComment = PendingSubmissionComment.Impl(
+                        id = 15L,
+                        accountDomain = "myDomain.com",
+                        assignmentId = 42,
+                        assignmentName = "Special assignment",
+                        canvasContext = CanvasContext.defaultCanvasContext(),
+                        currentFile = 12,
+                        errorFlag = false,
+                        fileCount = 0,
+                        isGroupMessage = false,
+                        lastActivityDate = Date.now(),
+                        mediaPath = "/media/path",
+                        message = "Pending Message",
+                        progress = 0.45
+                )
         )
     }
 
     @Test
-    @TestMetaData(Priority.P1,FeatureCategory.COMMENTS,TestCategory.RENDER,secondaryFeature = FeatureCategory.ASSIGNMENTS)
+    @TestMetaData(Priority.P1,FeatureCategory.ASSIGNMENTS,TestCategory.RENDER,secondaryFeature = FeatureCategory.COMMENTS)
     fun testSingleComment() {
         val state = SubmissionCommentsViewState(
             commentStates = listOf(commentItemIsAudience),
@@ -153,7 +140,7 @@ class SubmissionCommentsRenderTest: StudentRenderTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P1,FeatureCategory.COMMENTS,TestCategory.RENDER,secondaryFeature = FeatureCategory.ASSIGNMENTS)
+    @TestMetaData(Priority.P1,FeatureCategory.ASSIGNMENTS,TestCategory.RENDER,secondaryFeature = FeatureCategory.COMMENTS)
     fun testSingleSubmission() {
         val state = SubmissionCommentsViewState(
                 commentStates = listOf(submissionItem)
@@ -175,7 +162,7 @@ class SubmissionCommentsRenderTest: StudentRenderTest() {
 //    }
 
     @Test
-    @TestMetaData(Priority.P1,FeatureCategory.COMMENTS,TestCategory.RENDER,secondaryFeature = FeatureCategory.ASSIGNMENTS)
+    @TestMetaData(Priority.P1,FeatureCategory.ASSIGNMENTS,TestCategory.RENDER,secondaryFeature = FeatureCategory.COMMENTS)
     fun testMixedCommentsAndSubmission() {
         val state = SubmissionCommentsViewState(
                 commentStates = listOf(commentItemIsAudience, submissionItem, commentItemNotAudience)
@@ -191,7 +178,7 @@ class SubmissionCommentsRenderTest: StudentRenderTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P1,FeatureCategory.COMMENTS,TestCategory.RENDER,secondaryFeature = FeatureCategory.ASSIGNMENTS)
+    @TestMetaData(Priority.P1,FeatureCategory.ASSIGNMENTS,TestCategory.RENDER,secondaryFeature = FeatureCategory.COMMENTS)
     fun testAudienceDistinction() {
         val state = SubmissionCommentsViewState(
                 commentStates = listOf(commentItemIsAudience, commentItemNotAudience)

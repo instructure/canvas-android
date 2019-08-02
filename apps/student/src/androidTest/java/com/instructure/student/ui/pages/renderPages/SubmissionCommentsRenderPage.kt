@@ -68,7 +68,7 @@ class SubmissionCommentsRenderPage: BasePage(R.id.submissionCommentsPage) {
         return when(commentState) {
             is CommentItemState.CommentItem -> commentState.dateText
             is CommentItemState.SubmissionItem -> commentState.dateText
-            is CommentItemState.PendingCommentItem -> commentState.sortDate.toLocaleString() // (Maybe??)
+            is CommentItemState.PendingCommentItem -> commentState.sortDate.toLocaleString() // Probably wrong.  Fix this when we actually test pending comments.
             else -> throw IllegalStateException("Unknown comment item state type ${commentState::class.java.simpleName}")
         }
     }
