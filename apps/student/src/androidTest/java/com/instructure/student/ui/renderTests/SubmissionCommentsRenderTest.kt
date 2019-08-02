@@ -128,7 +128,7 @@ class SubmissionCommentsRenderTest: StudentRenderTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P1,FeatureCategory.ASSIGNMENTS,TestCategory.RENDER,secondaryFeature = FeatureCategory.COMMENTS)
+    @TestMetaData(Priority.P2,FeatureCategory.ASSIGNMENTS,TestCategory.RENDER,secondaryFeature = FeatureCategory.COMMENTS)
     fun testSingleComment() {
         val state = SubmissionCommentsViewState(
             commentStates = listOf(commentItemIsAudience),
@@ -140,7 +140,7 @@ class SubmissionCommentsRenderTest: StudentRenderTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P1,FeatureCategory.ASSIGNMENTS,TestCategory.RENDER,secondaryFeature = FeatureCategory.COMMENTS)
+    @TestMetaData(Priority.P2,FeatureCategory.ASSIGNMENTS,TestCategory.RENDER,secondaryFeature = FeatureCategory.COMMENTS)
     fun testSingleSubmission() {
         val state = SubmissionCommentsViewState(
                 commentStates = listOf(submissionItem)
@@ -162,7 +162,7 @@ class SubmissionCommentsRenderTest: StudentRenderTest() {
 //    }
 
     @Test
-    @TestMetaData(Priority.P1,FeatureCategory.ASSIGNMENTS,TestCategory.RENDER,secondaryFeature = FeatureCategory.COMMENTS)
+    @TestMetaData(Priority.P2,FeatureCategory.ASSIGNMENTS,TestCategory.RENDER,secondaryFeature = FeatureCategory.COMMENTS)
     fun testMixedCommentsAndSubmission() {
         val state = SubmissionCommentsViewState(
                 commentStates = listOf(commentItemIsAudience, submissionItem, commentItemNotAudience)
@@ -178,7 +178,7 @@ class SubmissionCommentsRenderTest: StudentRenderTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P1,FeatureCategory.ASSIGNMENTS,TestCategory.RENDER,secondaryFeature = FeatureCategory.COMMENTS)
+    @TestMetaData(Priority.P2,FeatureCategory.ASSIGNMENTS,TestCategory.RENDER,secondaryFeature = FeatureCategory.COMMENTS)
     fun testAudienceDistinction() {
         val state = SubmissionCommentsViewState(
                 commentStates = listOf(commentItemIsAudience, commentItemNotAudience)
