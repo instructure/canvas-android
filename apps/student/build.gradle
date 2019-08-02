@@ -34,7 +34,7 @@ sqldelight {
     StudentDb {
         packageName = "com.instructure.student.db"
         sourceFolders = ["db"]
-        schemaOutputDirectory = file("src/main/db/migrations")
+        schemaOutputDirectory = file("src/main/db/schemas")
     }
 }
 

@@ -69,16 +69,19 @@ class AssignmentDetailsUpdateTest : Assert() {
 
     private fun mockkSubmission(submissionId: Long = this.submissionId, daysAgo: Long = 0): Submission {
         return Submission.Impl(
-            submissionId,
-            null,
-            OffsetDateTime.now().minusDays(daysAgo),
-            null,
-            assignment.id,
-            course,
-            null,
-            false,
-            null,
-            userId
+            id = submissionId,
+            submissionEntry = null,
+            lastActivityDate = OffsetDateTime.now().minusDays(daysAgo),
+            assignmentName = null,
+            assignmentId = assignment.id,
+            canvasContext = course,
+            submissionType = "online_text_entry",
+            errorFlag = false,
+            assignmentGroupCategoryId = null,
+            userId = userId,
+            currentFile = 0,
+            fileCount = 0,
+            progress = null
         )
     }
 
