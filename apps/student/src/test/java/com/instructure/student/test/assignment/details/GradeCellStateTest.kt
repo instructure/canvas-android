@@ -243,4 +243,21 @@ class GradeCellStateTest : Assert() {
         assertEquals(expected, actual)
     }
 
+    @Test
+    fun `Includes content description for letter grade with minus`() {
+        val assignment = baseAssignment.copy(
+                gradingType = Assignment.LETTER_GRADE_TYPE
+        )
+        val submission = baseSubmission.copy(
+                grade = "B-"
+        )
+        val expected = baseGradedState.copy(
+                graphPercent = 0.85f,
+                score = "85",
+                showPointsLabel = true,
+                grade = "B-",
+                gradeContentDescription = "B. minus"
+        )
+    }
+
 }

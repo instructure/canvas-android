@@ -37,6 +37,7 @@ sealed class GradeCellViewState {
         val graphPercent: Float = 0f,
         val score: String = "",
         val grade: String = "",
+        val gradeContentDescription: String = "",
         val outOf: String = "",
         val outOfContentDescription: String = "",
         val latePenalty: String = "",
@@ -106,6 +107,8 @@ sealed class GradeCellViewState {
 
             // If grading type is Points, don't show the grade since we're already showing it as the score
             var grade = if (assignment.gradingType != Assignment.POINTS_TYPE) submission.grade.orEmpty() else ""
+            // Google talkback fails hard on "minus", so we need to remove the dash and replace it with the word
+            var gradeContentDescription = if (grade.contains("-")) context.getString(R.string.a11y_minusContentDescription, grade.substringBefore("-")) else ""
 
             var latePenalty = ""
             var finalGrade = ""
@@ -126,6 +129,7 @@ sealed class GradeCellViewState {
                 outOf = outOfText,
                 outOfContentDescription = outOfContentDescriptionText,
                 grade = grade,
+                gradeContentDescription = gradeContentDescription,
                 latePenalty = latePenalty,
                 finalGrade = finalGrade
             )
