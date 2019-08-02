@@ -463,11 +463,14 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
         null,
         null,
         null,
-        null,
-        null,
-        null,
+        0,
+        CanvasContext.emptyCourseContext(0),
+        "online_text_entry",
         failed,
         null,
+        0,
+        0,
+        0,
         null
     )
 
