@@ -39,7 +39,7 @@
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="140dp"
+                android:layout_height="120dp"
                 android:adjustViewBounds="true"
                 android:importantForAccessibility="no"
                 android:src="@drawable/vd_panda_nofiles"/>
@@ -48,11 +48,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
-                android:fontFamily="sans-serif-medium"
                 android:gravity="center"
                 android:text="@string/noFilesForAssignment"
                 android:textColor="@color/defaultTextDark"
-                android:textSize="18sp"/>
+                android:textSize="14sp"/>
 
         </LinearLayout>
 
