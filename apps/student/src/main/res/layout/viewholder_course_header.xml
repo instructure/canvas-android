@@ -15,7 +15,8 @@
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
   ~
   -->
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/header"
     android:layout_width="match_parent"
     android:layout_height="48dp">
@@ -25,7 +26,8 @@
         style="@style/TextFont.Bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|start"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBaseline_toBaselineOf="@id/seeAllTextView"
         android:text="@string/courses"
         android:textColor="@color/defaultTextDark"
         android:textSize="24sp"/>
@@ -37,10 +39,11 @@
         android:layout_height="wrap_content"
         android:minHeight="48dp"
         android:minWidth="48dp"
-        android:layout_gravity="bottom|end"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:background="?android:selectableItemBackground"
         android:paddingBottom="2dp"
         android:paddingTop="16dp"
         android:text="@string/seeAll"/>
 
-</FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
