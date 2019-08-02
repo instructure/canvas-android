@@ -122,7 +122,7 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
         )
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         loadPageWithModel(model)
-        assignmentDetailsRenderPage.assertDisplaysSubmissionTypes("None")
+        assignmentDetailsRenderPage.assertDisplaysSubmissionTypes("No Submission")
     }
 
     @Test
