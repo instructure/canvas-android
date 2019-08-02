@@ -110,7 +110,7 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
     fun displaysNoDueDate() {
         val model = baseModel.copy(assignmentResult = DataResult.Success(Assignment(name = "Test Assignment")))
         loadPageWithModel(model)
-        assignmentDetailsRenderPage.assertDisplaysDate("This assignment doesn't have a due date.")
+        assignmentDetailsRenderPage.assertDisplaysDate("No Due Date")
     }
 
     @Test

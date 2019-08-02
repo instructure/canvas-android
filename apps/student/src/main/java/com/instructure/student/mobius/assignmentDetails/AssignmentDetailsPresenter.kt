@@ -126,7 +126,7 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
         // Due date
         visibilities.dueDate = true
         val dueDate = if (assignment.dueDate == null) {
-            context.getString(R.string.noDueDate)
+            context.getString(R.string.toDoNoDueDate)
         } else {
             DateHelper.getMonthDayTimeMaybeMinutesMaybeYear(context, assignment.dueDate, R.string.at)!!
         }
