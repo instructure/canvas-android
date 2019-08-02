@@ -27,7 +27,7 @@ sealed class PickerSubmissionUploadEvent {
     object SelectFileClicked : PickerSubmissionUploadEvent()
     data class OnFileSelected(val uri: Uri) : PickerSubmissionUploadEvent()
     data class OnFileRemoved(val fileIndex: Int) : PickerSubmissionUploadEvent()
-    data class OnFileAdded(val file: FileSubmitObject) : PickerSubmissionUploadEvent()
+    data class OnFileAdded(val file: FileSubmitObject?) : PickerSubmissionUploadEvent()
 }
 
 sealed class PickerSubmissionUploadEffect {
