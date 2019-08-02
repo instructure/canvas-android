@@ -181,6 +181,22 @@ class PickerSubmissionUploadUpdateTest : Assert() {
     }
 
     @Test
+    fun `OnFileAdded event with null file results in model change to loading`() {
+        val startModel = initModel.copy(files = listOf(initFile), isLoadingFile = true)
+        val expectedModel = startModel.copy(isLoadingFile = false)
+
+        updateSpec
+            .given(startModel)
+            .whenEvent(PickerSubmissionUploadEvent.OnFileAdded(null))
+            .then(
+                assertThatNext(
+                    NextMatchers.hasModel(expectedModel),
+                    NextMatchers.hasNoEffects()
+                )
+            )
+    }
+
+    @Test
     fun `OnFileRemoved event results in model change to files and no effects`() {
         val startModel = initModel.copy(files = listOf(initFile))
         val expectedModel = startModel.copy(files = emptyList())

@@ -50,7 +50,7 @@ class PickerSubmissionUploadUpdate :
         }
         is PickerSubmissionUploadEvent.OnFileAdded -> {
             val files = model.files.toMutableList()
-            files.add(event.file)
+            if (event.file != null) files.add(event.file)
             Next.next(model.copy(isLoadingFile = false, files = files.toList()))
         }
     }

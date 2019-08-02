@@ -149,15 +149,17 @@ class PickerSubmissionUploadEffectHandler constructor(
             val submitObject = FileUploadUtils.getFile(context, uri)
 
             submitObject?.let {
+                var fileToSubmit: FileSubmitObject? = null
                 if (it.errorMessage.isNullOrBlank()) {
                     if (isExtensionAllowed(it, allowedExtensions)) {
-                        consumer.accept(PickerSubmissionUploadEvent.OnFileAdded(it))
+                        fileToSubmit = it
                     } else {
                         view?.showBadExtensionDialog(allowedExtensions)
                     }
                 } else {
                     view?.showFileErrorMessage(it.errorMessage.orEmpty())
                 }
+                consumer.accept(PickerSubmissionUploadEvent.OnFileAdded(fileToSubmit))
             }
         }
     }
