@@ -210,7 +210,11 @@ class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDet
                     displayName = displayName
                 )
             }
-            type.startsWith("image") -> SubmissionDetailsContentType.ImageContent(attachment.url ?: "", attachment.contentType!!)
+            type.startsWith("image") -> SubmissionDetailsContentType.ImageContent(
+                title = attachment.displayName ?: attachment.filename ?: "",
+                url = attachment.url ?: "",
+                contentType = attachment.contentType!!
+            )
             else -> SubmissionDetailsContentType.OtherAttachmentContent(attachment)
         }
     }
