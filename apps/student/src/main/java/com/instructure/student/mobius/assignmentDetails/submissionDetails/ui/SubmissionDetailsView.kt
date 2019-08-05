@@ -17,16 +17,12 @@
 
 package com.instructure.student.mobius.assignmentDetails.submissionDetails.ui
 
-import android.annotation.SuppressLint
 import android.app.Activity
-import android.os.Bundle
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -252,33 +248,15 @@ class SubmissionDetailsView(
             is SubmissionDetailsContentType.PdfContent -> PdfSubmissionViewFragment.newInstance(type.url)
             is SubmissionDetailsContentType.ExternalToolContent -> LTIWebViewFragment.newInstance(LTIWebViewFragment.makeRoute(type.canvasContext, type.url, hideToolbar = true))!!
             is SubmissionDetailsContentType.MediaContent -> MediaSubmissionViewFragment.newInstance(type)
-            else -> PlaceholderFragment().apply {
-                typeName = type::class.java.simpleName
-                typeContents = type.toString()
-            }
+            is SubmissionDetailsContentType.OtherAttachmentContent -> TODO()
+            is SubmissionDetailsContentType.ImageContent -> TODO()
+            SubmissionDetailsContentType.NoneContent -> TODO()
+            SubmissionDetailsContentType.OnPaperContent -> TODO()
+            SubmissionDetailsContentType.UnsupportedContent -> TODO()
         }
     }
 
     companion object {
         private const val ANCHOR_POINT = 0.5f
     }
-}
-
-
-class PlaceholderFragment : Fragment() {
-
-    var typeName: String = ""
-    var typeContents: String = ""
-
-    @SuppressLint("SetTextI18n")
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = TextView(context).apply {
-            text = "PLACEHOLDER\n$typeName\n\n$typeContents"
-            gravity = Gravity.CENTER
-        }
-        view.layoutParams =
-            ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-        return view
-    }
-
 }
