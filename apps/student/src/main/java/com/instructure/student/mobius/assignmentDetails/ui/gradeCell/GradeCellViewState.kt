@@ -112,10 +112,10 @@ sealed class GradeCellViewState {
             // Google talkback fails hard on "minus", so we need to remove the dash and replace it with the word
             val accessibleGradeString = getAccessibleGradeString(grade, context)
             // We also need the entire grade cell to be read in a reasonable fashion
-            val gradeCellContentDescription = if (accessibleGradeString.isNotEmpty()) {
-                "$score $outOfContentDescriptionText, $accessibleGradeString"
-            } else {
-                "$score $outOfContentDescriptionText"
+            val gradeCellContentDescription = when {
+                accessibleGradeString.isNotEmpty() -> context.getString(R.string.a11y_gradeCellContentDescriptionWithLetterGrade, score, outOfContentDescriptionText, accessibleGradeString)
+                grade.isNotEmpty() -> context.getString(R.string.a11y_gradeCellContentDescriptionWithLetterGrade, score, outOfContentDescriptionText, grade)
+                else -> context.getString(R.string.a11y_gradeCellContentDescription, score, outOfContentDescriptionText)
             }
 
             var latePenalty = ""
