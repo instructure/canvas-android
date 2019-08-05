@@ -24,7 +24,7 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.utils.ColorKeeper
-import com.instructure.pandautils.utils.getAccessibleGradeString
+import com.instructure.pandautils.utils.getContentDescriptionForMinusGradeString
 import com.instructure.student.R
 
 sealed class GradeCellViewState {
@@ -110,7 +110,7 @@ sealed class GradeCellViewState {
             // If grading type is Points, don't show the grade since we're already showing it as the score
             var grade = if (assignment.gradingType != Assignment.POINTS_TYPE) submission.grade.orEmpty() else ""
             // Google talkback fails hard on "minus", so we need to remove the dash and replace it with the word
-            val accessibleGradeString = getAccessibleGradeString(grade, context)
+            val accessibleGradeString = getContentDescriptionForMinusGradeString(grade, context)
             // We also need the entire grade cell to be read in a reasonable fashion
             val gradeCellContentDescription = when {
                 accessibleGradeString.isNotEmpty() -> context.getString(R.string.a11y_gradeCellContentDescriptionWithLetterGrade, score, outOfContentDescriptionText, accessibleGradeString)

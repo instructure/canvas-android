@@ -29,7 +29,7 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.utils.ColorUtils
-import com.instructure.pandautils.utils.getAccessibleGradeString
+import com.instructure.pandautils.utils.getContentDescriptionForMinusGradeString
 import com.instructure.student.R
 import com.instructure.student.util.StringUtilities
 
@@ -128,7 +128,7 @@ open class BaseBinder {
                 textView.setBackgroundDrawable(createGradeIndicatorBackground(context, color))
                 // Set accessibility text
                 val outOf = context.resources.getString(R.string.outOf)
-                val a11yGradeString = getAccessibleGradeString(grade ?: "", context)
+                val a11yGradeString = getContentDescriptionForMinusGradeString(grade ?: "", context)
                 if (a11yGradeString.isNotEmpty()) {
                     textView.contentDescription = a11yGradeString
                 } else {

@@ -69,7 +69,8 @@ class GradeCellStateTest : Assert() {
         baseGradedState = GradeCellViewState.GradeData(
             accentColor = courseColor,
             outOf = "Out of 100 pts",
-            outOfContentDescription = "Out of 100 points"
+            outOfContentDescription = "Out of 100 points",
+            gradeCellContentDescription = "85 Out of 100 points"
         )
     }
 
@@ -108,7 +109,8 @@ class GradeCellStateTest : Assert() {
         val expected = baseGradedState.copy(
             graphPercent = 1.0f,
             showCompleteIcon = true,
-            grade = "Excused"
+            grade = "Excused",
+            gradeCellContentDescription = ""
         )
         val actual = GradeCellViewState.fromSubmission(context, baseAssignment, submission)
         assertEquals(expected, actual)
@@ -126,7 +128,8 @@ class GradeCellStateTest : Assert() {
             graphPercent = 0.85f,
             score = "85",
             showPointsLabel = true,
-            grade = "85%"
+            grade = "85%",
+            gradeCellContentDescription = "85 Out of 100 points, 85%"
         )
         val actual = GradeCellViewState.fromSubmission(context, assignment, submission)
         assertEquals(expected, actual)
@@ -143,7 +146,8 @@ class GradeCellStateTest : Assert() {
         val expected = baseGradedState.copy(
             graphPercent = 1.0f,
             showCompleteIcon = true,
-            grade = "Complete"
+            grade = "Complete",
+            gradeCellContentDescription = ""
         )
         val actual = GradeCellViewState.fromSubmission(context, assignment, submission)
         assertEquals(expected, actual)
@@ -162,7 +166,8 @@ class GradeCellStateTest : Assert() {
             accentColor = 0xFF8B969E.toInt(),
             graphPercent = 1.0f,
             showIncompleteIcon = true,
-            grade = "Incomplete"
+            grade = "Incomplete",
+            gradeCellContentDescription = ""
         )
         val actual = GradeCellViewState.fromSubmission(context, assignment, submission)
         assertEquals(expected, actual)
@@ -191,7 +196,8 @@ class GradeCellStateTest : Assert() {
             graphPercent = 0.85f,
             score = "85",
             showPointsLabel = true,
-            grade = "B+"
+            grade = "B+",
+            gradeCellContentDescription = "85 Out of 100 points, B+"
         )
         val actual = GradeCellViewState.fromSubmission(context, assignment, submission)
         assertEquals(expected, actual)
@@ -209,7 +215,8 @@ class GradeCellStateTest : Assert() {
             graphPercent = 0.85f,
             score = "85",
             showPointsLabel = true,
-            grade = "3.8 GPA"
+            grade = "3.8 GPA",
+            gradeCellContentDescription = "85 Out of 100 points, 3.8 GPA"
         )
         val actual = GradeCellViewState.fromSubmission(context, assignment, submission)
         assertEquals(expected, actual)
@@ -280,7 +287,7 @@ class GradeCellStateTest : Assert() {
                 showPointsLabel = true,
                 grade = "B",
                 gradeContentDescription = "", // We don't need one for regular letter grades
-                gradeCellContentDescription = "88 Out of 100 points"
+                gradeCellContentDescription = "88 Out of 100 points, B"
         )
         val actual = GradeCellViewState.fromSubmission(context, assignment, submission)
         assertEquals(expected, actual)
