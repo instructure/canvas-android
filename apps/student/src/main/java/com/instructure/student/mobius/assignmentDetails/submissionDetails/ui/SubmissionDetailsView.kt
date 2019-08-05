@@ -18,6 +18,7 @@
 package com.instructure.student.mobius.assignmentDetails.submissionDetails.ui
 
 import android.app.Activity
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -37,6 +38,7 @@ import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.RecordingMediaType
 import com.instructure.student.R
 import com.instructure.student.fragment.LTIWebViewFragment
+import com.instructure.student.fragment.ViewUnsupportedFileFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsContentType
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsEvent
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.*
@@ -248,7 +250,13 @@ class SubmissionDetailsView(
             is SubmissionDetailsContentType.PdfContent -> PdfSubmissionViewFragment.newInstance(type.url)
             is SubmissionDetailsContentType.ExternalToolContent -> LTIWebViewFragment.newInstance(LTIWebViewFragment.makeRoute(type.canvasContext, type.url, hideToolbar = true))!!
             is SubmissionDetailsContentType.MediaContent -> MediaSubmissionViewFragment.newInstance(type)
-            is SubmissionDetailsContentType.OtherAttachmentContent -> TODO()
+            is SubmissionDetailsContentType.OtherAttachmentContent -> ViewUnsupportedFileFragment.newInstance(
+                uri = Uri.parse(type.attachment.url),
+                displayName = type.attachment.displayName ?: "",
+                contentType = type.attachment.contentType ?: "",
+                previewUri = type.attachment.previewUrl?.let { Uri.parse(it) },
+                fallbackIcon = R.drawable.vd_attachment
+            )
             is SubmissionDetailsContentType.ImageContent -> TODO()
             SubmissionDetailsContentType.NoneContent -> TODO()
             SubmissionDetailsContentType.OnPaperContent -> TODO()
