@@ -518,16 +518,19 @@ class AssignmentDetailsPresenterTest : Assert() {
     @Test
     fun `Displays upload in progress when database submission is not failed`() {
         val submission = com.instructure.student.Submission.Impl(
-            123L,
-            null,
-            OffsetDateTime.now(),
-            null,
-            baseAssignment.id,
-            null,
-            null,
-            false,
-            null,
-            null
+            id = 123L,
+            submissionEntry = null,
+            lastActivityDate = OffsetDateTime.now(),
+            assignmentName = null,
+            assignmentId = baseAssignment.id,
+            canvasContext = CanvasContext.emptyCourseContext(0),
+            submissionType = "online_text_entry",
+            errorFlag = false,
+            assignmentGroupCategoryId = null,
+            userId = 0,
+            currentFile = 0,
+            fileCount = 0,
+            progress = null
         )
         val model = baseModel.copy(
             assignmentResult = DataResult.Success(baseAssignment),
@@ -540,16 +543,19 @@ class AssignmentDetailsPresenterTest : Assert() {
     @Test
     fun `Displays failed submission when database submission is failed`() {
         val submission = com.instructure.student.Submission.Impl(
-            123L,
-            null,
-            OffsetDateTime.now(),
-            null,
-            baseAssignment.id,
-            null,
-            null,
-            true,
-            null,
-            null
+            id = 123L,
+            submissionEntry = null,
+            lastActivityDate = OffsetDateTime.now(),
+            assignmentName = null,
+            assignmentId = baseAssignment.id,
+            canvasContext = CanvasContext.emptyCourseContext(0),
+            submissionType = "online_text_entry",
+            errorFlag = true,
+            assignmentGroupCategoryId = null,
+            userId = 0,
+            currentFile = 0,
+            fileCount = 0,
+            progress = null
         )
         val model = baseModel.copy(
             assignmentResult = DataResult.Success(baseAssignment),

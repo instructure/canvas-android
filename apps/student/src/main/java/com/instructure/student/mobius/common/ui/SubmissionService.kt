@@ -76,7 +76,7 @@ class SubmissionFileUploadReceiver(private val dbSubmissionId: Long) : Broadcast
 
         when (intent.action) {
             FileUploadService.UPLOAD_ERROR -> {
-                SubmissionService.showErrorNotification(context, submission.canvasContext!!, submission.assignmentId!!, assignmentName, submissionId)
+                SubmissionService.showErrorNotification(context, submission.canvasContext, submission.assignmentId, assignmentName, submissionId)
 
                 val message = intent.getStringExtra(Const.MESSAGE)
                 val attachments = intent.getParcelableArrayListExtra<Attachment>(Const.ATTACHMENTS)
@@ -93,7 +93,7 @@ class SubmissionFileUploadReceiver(private val dbSubmissionId: Long) : Broadcast
                 }
             }
             FileUploadService.ALL_UPLOADS_COMPLETED -> {
-                SubmissionService.showCompleteNotification(context, submission.canvasContext!!, submission.assignmentId!!, assignmentName, submissionId)
+                SubmissionService.showCompleteNotification(context, submission.canvasContext, submission.assignmentId, assignmentName, submissionId)
 
                 // Clear out the db for the successful submission
                 db.fileSubmissionQueries.deleteFilesForSubmissionId(submissionId)
@@ -205,7 +205,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
             val submission = submissionsDb.getSubmissionById(dbSubmissionId).executeAsOne()
 
             assignment = Assignment(
-                id = submission.assignmentId!!.toLong(),
+                id = submission.assignmentId,
                 name = submission.assignmentName,
                 groupCategoryId = submission.assignmentGroupCategoryId ?: 0
             )
@@ -261,14 +261,14 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
         // Check if we're retrying a submission or if it's a new one that needs to be persisted
         if (intent.hasExtra(Const.SUBMISSION_ID)) {
             dbSubmissionId = intent.extras!!.getLong(Const.SUBMISSION_ID)
-            val submission = db.submissionQueries.getSubmissionById(dbSubmissionId).executeAsOne()
-            val dbFiles = db.fileSubmissionQueries.getFilesForSubmissionId(dbSubmissionId).executeAsList()
+            val submission = submissionsDb.getSubmissionById(dbSubmissionId).executeAsOne()
+            val dbFiles = filesDb.getFilesForSubmissionId(dbSubmissionId).executeAsList()
 
             files = ArrayList(dbFiles.filter { it.attachmentId == null }
                 .map { FileSubmitObject(it.name!!, it.size!!, it.contentType!!, it.fullPath!!, it.error) })
             attachmentIds = ArrayList(dbFiles.mapNotNull { it.attachmentId })
             assignment = Assignment(
-                id = submission.assignmentId!!.toLong(),
+                id = submission.assignmentId,
                 name = submission.assignmentName,
                 groupCategoryId = submission.assignmentGroupCategoryId ?: 0
             )

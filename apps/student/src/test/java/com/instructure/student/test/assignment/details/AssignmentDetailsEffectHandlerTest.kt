@@ -115,19 +115,22 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
         submissionId: Long,
         daysAgo: Long = 0,
         failed: Boolean = false,
-        submissionType: String? = null
+        submissionType: String = "online_text_entry"
     ): Submission {
         return Submission.Impl(
-            submissionId,
-            "Entry text",
-            OffsetDateTime.now().minusDays(daysAgo),
-            "Assignment Name",
-            assignment.id,
-            course,
-            submissionType,
-            failed,
-            null,
-            userId
+            id = submissionId,
+            submissionEntry = "Entry text",
+            lastActivityDate = OffsetDateTime.now().minusDays(daysAgo),
+            assignmentName = "Assignment Name",
+            assignmentId = assignment.id,
+            canvasContext = course,
+            submissionType = submissionType,
+            errorFlag = failed,
+            assignmentGroupCategoryId = null,
+            userId = userId,
+            currentFile = 0,
+            fileCount = 0,
+            progress = null
         )
     }
 
