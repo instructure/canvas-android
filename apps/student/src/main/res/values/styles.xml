@@ -413,4 +413,22 @@
         <item name="android:windowExitAnimation">@anim/rubric_tooltip_exit</item>
     </style>
 
+    <style name="SubmissionPickerDialogItem">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
+        <item name="android:paddingStart">18dp</item>
+        <item name="android:paddingTop">14dp</item>
+        <item name="android:paddingEnd">18dp</item>
+        <item name="android:paddingBottom">14dp</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="SubmissionPickerDialogIcon">
+        <item name="android:layout_width">24dp</item>
+        <item name="android:layout_height">24dp</item>
+        <item name="android:layout_marginEnd">18dp</item>
+        <item name="android:tint">@color/textLightGray</item>
+    </style>
+
 </resources>
