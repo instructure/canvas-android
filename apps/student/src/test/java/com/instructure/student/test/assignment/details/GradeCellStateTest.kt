@@ -244,7 +244,7 @@ class GradeCellStateTest : Assert() {
     }
 
     @Test
-    fun `Includes content description for letter grade with minus`() {
+    fun `Includes content descriptions for letter grade with minus`() {
         val assignment = baseAssignment.copy(
                 gradingType = Assignment.LETTER_GRADE_TYPE
         )
@@ -256,8 +256,34 @@ class GradeCellStateTest : Assert() {
                 score = "85",
                 showPointsLabel = true,
                 grade = "B-",
-                gradeContentDescription = "B. minus"
+                gradeContentDescription = "B. minus",
+                gradeCellContentDescription = "85 Out of 100 points, B. minus"
         )
+        val actual = GradeCellViewState.fromSubmission(context, assignment, submission)
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `Includes content descriptions for grades`() {
+        val assignment = baseAssignment.copy(
+                gradingType = Assignment.LETTER_GRADE_TYPE
+        )
+        val submission = baseSubmission.copy(
+                grade = "B",
+                enteredGrade = "88",
+                enteredScore = 88.0,
+                score = 88.0
+        )
+        val expected = baseGradedState.copy(
+                graphPercent = 0.88f,
+                score = "88",
+                showPointsLabel = true,
+                grade = "B",
+                gradeContentDescription = "", // We don't need one for regular letter grades
+                gradeCellContentDescription = "88 Out of 100 points"
+        )
+        val actual = GradeCellViewState.fromSubmission(context, assignment, submission)
+        assertEquals(expected, actual)
     }
 
 }
