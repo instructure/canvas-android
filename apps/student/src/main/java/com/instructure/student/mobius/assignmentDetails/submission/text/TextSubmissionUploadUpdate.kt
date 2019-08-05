@@ -35,12 +35,7 @@ class TextSubmissionUploadUpdate : UpdateInit<TextSubmissionUploadModel, TextSub
                 Next.next(model.copy(isSubmittable = event.text.isNotEmpty()))
             }
             is TextSubmissionUploadEvent.SubmitClicked -> {
-                var textToSubmit = event.text
-                try {
-                    textToSubmit = URLEncoder.encode(textToSubmit, "UTF-8")
-                } catch (e: UnsupportedEncodingException) {}
-
-                Next.dispatch(effects(TextSubmissionUploadEffect.SubmitText(textToSubmit, model.canvasContext, model.assignmentId, model.assignmentName)))
+                Next.dispatch(effects(TextSubmissionUploadEffect.SubmitText(event.text, model.canvasContext, model.assignmentId, model.assignmentName)))
             }
         }
     }
