@@ -2,7 +2,6 @@ package com.instructure.student.ui.e2e
 
 import android.os.SystemClock.sleep
 import com.instructure.canvas.espresso.E2E
-import com.instructure.canvas.espresso.Stub
 import com.instructure.dataseeding.api.ConversationsApi
 import com.instructure.dataseeding.api.GroupsApi
 import com.instructure.panda_annotations.FeatureCategory
@@ -19,10 +18,9 @@ class InboxE2ETest: StudentTest() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    @Stub
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.INBOX, TestCategory.E2E,  true)
+    @TestMetaData(Priority.P0, FeatureCategory.INBOX, TestCategory.E2E)
     fun testInboxE2E() {
         val data = seedData(students = 2, teachers = 1, courses = 1)
         val teacher = data.teachersList[0]
@@ -83,6 +81,7 @@ class InboxE2ETest: StudentTest() {
 
         tokenLogin(student2)
 
+        // Navigate to the inbox and verify that the expected messages are there
         dashboardPage.waitForRender()
         dashboardPage.clickInboxTab()
 

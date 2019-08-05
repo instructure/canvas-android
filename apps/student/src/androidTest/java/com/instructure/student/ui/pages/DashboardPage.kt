@@ -18,9 +18,11 @@
 
 package com.instructure.student.ui.pages
 
+import android.os.SystemClock.sleep
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
@@ -123,8 +125,21 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     }
 
     fun waitForRender() {
-        //onView(allOf(withId(R.id.listView),isDisplayed())).assertDisplayed()
-        listView.assertDisplayed() // Oddly, this seems sufficient as a wait-for-render mechanism
+        var secsToWait = 10
+        while(secsToWait > 0) {
+            secsToWait -= 1
+            try {
+                onView(hamburgerButtonMatcher).assertDisplayed()
+                return
+            }
+            catch(e: NoMatchingViewException) {
+                // Swallow the exception for now
+            }
+            sleep(1000)
+        }
+
+        // Give it one more try, propagating an exception on failure
+        onView(hamburgerButtonMatcher).assertDisplayed()
     }
 
     private fun scrollAndAssertDisplayed(matcher: Matcher<View>) {
