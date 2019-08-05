@@ -67,8 +67,12 @@ object GradeBinder : BaseBinder() {
                 val grade = getGrade(submission, assignment.pointsPossible, context)
                 holder.points.text = grade
                 val accessibleGrade = getContentDescriptionForMinusGradeString(grade ?: "", context)
-                holder.points.contentDescription = if (accessibleGrade.isNotEmpty()) accessibleGrade
-                else context.getString(R.string.a11y_letterGrade, grade)
+                val outOf = context.resources.getString(R.string.outOf)
+                holder.points.contentDescription = if (accessibleGrade.isNotEmpty()) {
+                    accessibleGrade
+                } else {
+                    context.getString(R.string.a11y_letterGrade, grade?.replace("/", " $outOf "))
+                }
             }
         }
 
