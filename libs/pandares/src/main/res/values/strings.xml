@@ -118,7 +118,6 @@
     <string name="commentSubmissionTypeMediaFile">Media File</string>
     <string name="commentSubmissionTypeAudio">Audio</string>
     <string name="commentSubmissionTypeVideo">Video</string>
-    <string name="submissionCommentSubmittedFiles">Submitted files:</string>
 
     <!-- Profile Fragment Strings -->
     <string name="canvasVersionNum">Version:</string>
