@@ -64,7 +64,9 @@ object GradeBinder : BaseBinder() {
                 holder.icon.setNestedIcon(R.drawable.vd_published, courseColor)
             } else {
                 holder.points.setVisible()
-                holder.points.text = getGrade(submission, assignment.pointsPossible, context)
+                val grade = getGrade(submission, assignment.pointsPossible, context)
+                holder.points.text = grade
+                holder.points.contentDescription = getAccessibleGradeString(grade ?: "", context)
             }
         }
 

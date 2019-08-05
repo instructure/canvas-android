@@ -102,6 +102,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textSize="20sp"
+                            android:accessibilityHeading="true"
                             tools:text="Ecosystem Health and Human Well-Being"/>
 
                         <LinearLayout
@@ -227,6 +228,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
+                        android:accessibilityHeading="true"
                         android:padding="16dp">
 
                         <TextView
@@ -255,6 +257,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
+                        android:accessibilityHeading="true"
                         android:padding="16dp">
 
                         <TextView
@@ -284,6 +287,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
+                        android:accessibilityHeading="true"
                         android:padding="16dp">
 
                         <TextView
@@ -313,6 +317,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
+                        android:accessibilityHeading="true"
                         android:padding="16dp">
 
                         <TextView
@@ -423,6 +428,7 @@
                         android:visibility="gone"
                         android:orientation="vertical"
                         android:padding="16dp"
+                        android:accessibilityHeading="true"
                         tools:visibility="visible">
 
 
@@ -521,6 +527,7 @@
                         android:id="@+id/descriptionContainer"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:accessibilityHeading="true"
                         android:orientation="vertical">
 
                         <TextView

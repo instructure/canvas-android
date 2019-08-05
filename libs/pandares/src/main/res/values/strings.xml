@@ -1117,6 +1117,6 @@
     <string name="viewDiscussion">View Discussion</string>
     <string name="lockedModule">This assignment is locked by the module \"%1$s\".</string>
     <string name="chooseMediaFile">Choose Media File</string>
-    <string name="a11y_minusContentDescription">%s. minus</string>
+    <string name="a11y_gradeLetterMinusContentDescription">%s. minus</string>
 
 </resources>
