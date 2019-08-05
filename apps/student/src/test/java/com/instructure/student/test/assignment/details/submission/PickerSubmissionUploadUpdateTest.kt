@@ -66,6 +66,26 @@ class PickerSubmissionUploadUpdateTest : Assert() {
     }
 
     @Test
+    fun `Initializes with LoadFileContents effect given a media uri`() {
+        val uri = mockk<Uri>()
+        val startModel = initModel.copy(mediaFileUri = uri, isLoadingFile = false)
+        val expectedModel = startModel.copy(isLoadingFile = true)
+        initSpec
+            .whenInit(startModel)
+            .then(
+                assertThatFirst(
+                    FirstMatchers.hasModel(expectedModel),
+                    FirstMatchers.hasEffects<PickerSubmissionUploadModel, PickerSubmissionUploadEffect>(
+                        PickerSubmissionUploadEffect.LoadFileContents(
+                            uri,
+                            startModel.allowedExtensions
+                        )
+                    )
+                )
+            )
+    }
+
+    @Test
     fun `SubmitClicked event results in HandleSubmit effect`() {
         updateSpec
             .given(initModel)
@@ -125,11 +145,15 @@ class PickerSubmissionUploadUpdateTest : Assert() {
     fun `OnFileSelected event results in LoadFileContents effect`() {
         val uri = mockk<Uri>()
 
+        val startModel = initModel.copy(isLoadingFile = false)
+        val expectedModel = startModel.copy(isLoadingFile = true)
+
         updateSpec
-            .given(initModel)
+            .given(startModel)
             .whenEvent(PickerSubmissionUploadEvent.OnFileSelected(uri))
             .then(
                 assertThatNext(
+                    NextMatchers.hasModel(expectedModel),
                     matchesEffects<PickerSubmissionUploadModel, PickerSubmissionUploadEffect>(
                         PickerSubmissionUploadEffect.LoadFileContents(
                             uri,
@@ -142,12 +166,28 @@ class PickerSubmissionUploadUpdateTest : Assert() {
 
     @Test
     fun `OnFileAdded event results in model change to files`() {
-        val startModel = initModel.copy(files = emptyList())
-        val expectedModel = startModel.copy(files = listOf(initFile))
+        val startModel = initModel.copy(files = emptyList(), isLoadingFile = true)
+        val expectedModel = startModel.copy(files = listOf(initFile), isLoadingFile = false)
 
         updateSpec
             .given(startModel)
             .whenEvent(PickerSubmissionUploadEvent.OnFileAdded(initFile))
+            .then(
+                assertThatNext(
+                    NextMatchers.hasModel(expectedModel),
+                    NextMatchers.hasNoEffects()
+                )
+            )
+    }
+
+    @Test
+    fun `OnFileAdded event with null file results in model change to loading`() {
+        val startModel = initModel.copy(files = listOf(initFile), isLoadingFile = true)
+        val expectedModel = startModel.copy(isLoadingFile = false)
+
+        updateSpec
+            .given(startModel)
+            .whenEvent(PickerSubmissionUploadEvent.OnFileAdded(null))
             .then(
                 assertThatNext(
                     NextMatchers.hasModel(expectedModel),

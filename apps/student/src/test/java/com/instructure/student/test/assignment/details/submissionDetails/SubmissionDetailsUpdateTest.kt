@@ -311,6 +311,16 @@ class SubmissionDetailsUpdateTest : Assert() {
     }
 
     @Test
+    fun `ASSIGNMENT_STATE_GRADED_MISSING and workflow submitted results in SubmissionDetailsContentType of TextContent`() {
+        val body = "submission body"
+        verifyGetSubmissionContentType(
+                assignment,
+                submission.copy(missing = true, workflowState = "submitted", body = body, submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString),
+                SubmissionDetailsContentType.TextContent(body)
+        )
+    }
+
+    @Test
     fun `ONLINE_TEXT_ENTRY results in SubmissionDetailsContentType of TextContent`() {
         val body = "submission body"
         verifyGetSubmissionContentType(

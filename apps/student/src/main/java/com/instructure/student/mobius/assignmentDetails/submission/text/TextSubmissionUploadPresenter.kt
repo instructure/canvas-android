@@ -23,6 +23,6 @@ import com.instructure.student.mobius.common.ui.Presenter
 object TextSubmissionUploadPresenter :
     Presenter<TextSubmissionUploadModel, TextSubmissionUploadViewState> {
     override fun present(model: TextSubmissionUploadModel, context: Context): TextSubmissionUploadViewState {
-        return TextSubmissionUploadViewState(model.initialText,  submitEnabled = model.isSubmittable)
+        return TextSubmissionUploadViewState(model.initialText,  submitEnabled = model.isSubmittable, isFailure = model.isFailure)
     }
 }

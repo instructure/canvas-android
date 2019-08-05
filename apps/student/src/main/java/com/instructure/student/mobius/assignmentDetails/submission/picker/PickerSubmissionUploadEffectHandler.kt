@@ -23,6 +23,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.core.content.FileProvider
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
+import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.pandautils.services.NotoriousUploadService
 import com.instructure.pandautils.utils.*
@@ -54,11 +55,12 @@ class PickerSubmissionUploadEffectHandler constructor(
         super.dispose()
     }
 
+    val subId = PickerSubmissionUploadEffectHandler::class.java.name
+
     @Suppress("unused", "UNUSED_PARAMETER")
     @Subscribe(sticky = true)
     fun onActivityResults(event: OnActivityResults) {
-        event.get {
-            event.remove() // Remove the event so it doesn't show up again somewhere else.
+        event.once(subId) {
             if (it.resultCode == Activity.RESULT_OK) {
                 if (it.requestCode == REQUEST_CAMERA_PIC) {
                     // Attempt to restore URI in case were were booted from memory
@@ -67,14 +69,16 @@ class PickerSubmissionUploadEffectHandler constructor(
                     // If it's still null, tell the user there is an error and return.
                     if (cameraImageUri == null) {
                         view?.showErrorMessage(R.string.utils_errorGettingPhoto)
-                        return@get
+                        return@once
                     }
 
                     consumer.accept(PickerSubmissionUploadEvent.OnFileSelected(cameraImageUri))
-                } else if (it.data != null && it.data?.data != null) {
-                    consumer.accept(PickerSubmissionUploadEvent.OnFileSelected(it.data!!.data!!))
-                } else {
-                    view?.showErrorMessage(R.string.unexpectedErrorOpeningFile)
+                } else if (it.requestCode in listOf(REQUEST_PICK_IMAGE_GALLERY, REQUEST_PICK_FILE_FROM_DEVICE)) {
+                    if (it.data != null && it.data?.data != null) {
+                        consumer.accept(PickerSubmissionUploadEvent.OnFileSelected(it.data!!.data!!))
+                    } else {
+                        view?.showErrorMessage(R.string.unexpectedErrorOpeningFile)
+                    }
                 }
             }
         }
@@ -142,22 +146,20 @@ class PickerSubmissionUploadEffectHandler constructor(
 
     private fun loadFile(allowedExtensions: List<String>, uri: Uri, context: Context) {
         launch(Dispatchers.Main) {
-            val contentResolver = context.contentResolver
-            val mimeType = FileUploadUtils.getFileMimeType(contentResolver, uri)
-            val fileName = FileUploadUtils.getFileNameWithDefault(contentResolver, uri, mimeType)
-            val submitObject =
-                FileUploadUtils.getFileSubmitObjectFromInputStream(context, uri, fileName, mimeType)
+            val submitObject = FileUploadUtils.getFile(context, uri)
 
             submitObject?.let {
+                var fileToSubmit: FileSubmitObject? = null
                 if (it.errorMessage.isNullOrBlank()) {
                     if (isExtensionAllowed(it, allowedExtensions)) {
-                        consumer.accept(PickerSubmissionUploadEvent.OnFileAdded(it))
+                        fileToSubmit = it
                     } else {
                         view?.showBadExtensionDialog(allowedExtensions)
                     }
                 } else {
                     view?.showFileErrorMessage(it.errorMessage.orEmpty())
                 }
+                consumer.accept(PickerSubmissionUploadEvent.OnFileAdded(fileToSubmit))
             }
         }
     }

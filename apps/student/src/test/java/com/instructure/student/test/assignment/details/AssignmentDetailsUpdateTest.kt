@@ -15,6 +15,7 @@
  */
 package com.instructure.student.test.assignment.details
 
+import android.net.Uri
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.utils.DataResult
@@ -31,6 +32,7 @@ import com.spotify.mobius.test.InitSpec.assertThatFirst
 import com.spotify.mobius.test.NextMatchers
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
+import io.mockk.mockk
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -497,6 +499,23 @@ class AssignmentDetailsUpdateTest : Assert() {
     }
 
     @Test
+    fun `SubmissionStatusUpdated event updates the model and loads data when given a null submission`() {
+        val submission = mockkSubmission()
+        val startModel = initModel.copy(databaseSubmission = submission)
+        val expectedModel = startModel.copy(
+            databaseSubmission = null
+        )
+
+        updateSpec
+            .given(startModel)
+            .whenEvent(AssignmentDetailsEvent.SubmissionStatusUpdated(submission = null))
+            .then(assertThatNext(
+                NextMatchers.hasModel(expectedModel),
+                matchesEffects<AssignmentDetailsModel, AssignmentDetailsEffect>(AssignmentDetailsEffect.LoadData(startModel.assignmentId, startModel.course.id, true))
+            ))
+    }
+
+    @Test
     fun `SubmissionTypeClicked event results in ShowCreateSubmissionView effect`() {
         val submissionType = Assignment.SubmissionType.ONLINE_UPLOAD
         val submissionTypes = listOf("online_upload")
@@ -547,7 +566,7 @@ class AssignmentDetailsUpdateTest : Assert() {
             .whenEvent(AssignmentDetailsEvent.SendAudioRecordingClicked(file))
             .then(
                 assertThatNext(
-                    matchesEffects<AssignmentDetailsModel, AssignmentDetailsEffect>(AssignmentDetailsEffect.UploadMediaSubmission(file, course, assignment))
+                    matchesEffects<AssignmentDetailsModel, AssignmentDetailsEffect>(AssignmentDetailsEffect.UploadAudioSubmission(file, course, assignment))
                 )
             )
     }
@@ -566,6 +585,46 @@ class AssignmentDetailsUpdateTest : Assert() {
     }
 
     @Test
+    fun `SendVideoRecording with valid file results in UploadMediaSubmission effect`() {
+        val uri = mockk<Uri>()
+        val model = initModel.copy(assignmentResult = DataResult.Success(assignment), videoFileUri = uri)
+        updateSpec
+            .given(model)
+            .whenEvent(AssignmentDetailsEvent.SendVideoRecording)
+            .then(
+                assertThatNext(
+                    matchesEffects<AssignmentDetailsModel, AssignmentDetailsEffect>(AssignmentDetailsEffect.UploadVideoSubmission(uri, course, assignment))
+                )
+            )
+    }
+
+    @Test
+    fun `SendVideoRecording with invalid file results in UploadMediaSubmission effect`() {
+        val model = initModel.copy(videoFileUri = null)
+        updateSpec
+            .given(model)
+            .whenEvent(AssignmentDetailsEvent.SendVideoRecording)
+            .then(
+                assertThatNext(
+                    matchesEffects<AssignmentDetailsModel, AssignmentDetailsEffect>(AssignmentDetailsEffect.ShowVideoRecordingError)
+                )
+            )
+    }
+
+    @Test
+    fun `OnVideoRecordingError with invalid file results in UploadMediaSubmission effect`() {
+        val model = initModel
+        updateSpec
+            .given(model)
+            .whenEvent(AssignmentDetailsEvent.OnVideoRecordingError)
+            .then(
+                assertThatNext(
+                    matchesEffects<AssignmentDetailsModel, AssignmentDetailsEffect>(AssignmentDetailsEffect.ShowVideoRecordingError)
+                )
+            )
+    }
+
+    @Test
     fun `AudioRecordingClicked results in ShowAudioRecordingView effect`() {
         updateSpec
             .given(initModel)
@@ -576,4 +635,69 @@ class AssignmentDetailsUpdateTest : Assert() {
                 )
             )
     }
+
+    @Test
+    fun `VideoRecordingClicked results in ShowAudioRecordingView effect`() {
+        updateSpec
+            .given(initModel)
+            .whenEvent(AssignmentDetailsEvent.VideoRecordingClicked)
+            .then(
+                assertThatNext(
+                    matchesEffects<AssignmentDetailsModel, AssignmentDetailsEffect>(AssignmentDetailsEffect.ShowVideoRecordingView)
+                )
+            )
+    }
+
+    @Test
+    fun `StoreVideoUri results in model change`() {
+        val uri = mockk<Uri>()
+        updateSpec
+            .given(initModel)
+            .whenEvent(AssignmentDetailsEvent.StoreVideoUri(uri))
+            .then(
+                assertThatNext(
+                    NextMatchers.hasModel(initModel.copy(videoFileUri = uri)),
+                    NextMatchers.hasNoEffects()
+                )
+            )
+    }
+
+    @Test
+    fun `ChooseMediaClicked results in ShowMediaPickerView effect`() {
+        updateSpec
+            .given(initModel)
+            .whenEvent(AssignmentDetailsEvent.ChooseMediaClicked)
+            .then(
+                assertThatNext(
+                    matchesEffects<AssignmentDetailsModel, AssignmentDetailsEffect>(AssignmentDetailsEffect.ShowMediaPickerView)
+                )
+            )
+    }
+
+    @Test
+    fun `OnMediaPickingError results in ShowMediaPickingError effect`() {
+        updateSpec
+            .given(initModel)
+            .whenEvent(AssignmentDetailsEvent.OnMediaPickingError)
+            .then(
+                assertThatNext(
+                    matchesEffects<AssignmentDetailsModel, AssignmentDetailsEffect>(AssignmentDetailsEffect.ShowMediaPickingError)
+                )
+            )
+    }
+
+    @Test
+    fun `SendMediaFile results in UploadMediaFileSubmission effect`() {
+        val uri = mockk<Uri>()
+        val model = initModel.copy(assignmentResult = DataResult.Success(assignment))
+        updateSpec
+            .given(model)
+            .whenEvent(AssignmentDetailsEvent.SendMediaFile(uri))
+            .then(
+                assertThatNext(
+                        matchesEffects<AssignmentDetailsModel, AssignmentDetailsEffect>(AssignmentDetailsEffect.UploadMediaFileSubmission(uri, course, assignment))
+                )
+            )
+    }
+
 }

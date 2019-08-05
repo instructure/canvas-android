@@ -110,7 +110,7 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
     fun displaysNoDueDate() {
         val model = baseModel.copy(assignmentResult = DataResult.Success(Assignment(name = "Test Assignment")))
         loadPageWithModel(model)
-        assignmentDetailsRenderPage.assertDisplaysDate("This assignment doesn't have a due date.")
+        assignmentDetailsRenderPage.assertDisplaysDate("No Due Date")
     }
 
     @Test
@@ -122,7 +122,7 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
         )
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         loadPageWithModel(model)
-        assignmentDetailsRenderPage.assertDisplaysSubmissionTypes("None")
+        assignmentDetailsRenderPage.assertDisplaysSubmissionTypes("No Submission")
     }
 
     @Test
@@ -367,7 +367,7 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
         )
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         loadPageWithModel(model)
-        val expected = "External Tool, Online Upload, Online Text Entry, Online URL, Media Recording, Attendance"
+        val expected = "External Tool, File Upload, Text Entry, Website URL, Media Recording, Attendance"
         assignmentDetailsRenderPage.assertDisplaysSubmissionTypes(expected)
     }
 

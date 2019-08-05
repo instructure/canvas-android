@@ -106,7 +106,8 @@ class AssignmentDetailsPresenterTest : Assert() {
     fun `Shows only title content, submission and rubric button, and lock views when assignment locked by date`() {
         val unlockDate = Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(10))
         val assignment = baseAssignment.copy(
-            lockInfo = LockInfo(unlockAt = unlockDate.toApiString())
+            lockInfo = LockInfo(unlockAt = unlockDate.toApiString()),
+            unlockAt = unlockDate.toApiString()
         )
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         val expected = AssignmentDetailsVisibilities(
@@ -188,9 +189,7 @@ class AssignmentDetailsPresenterTest : Assert() {
 
     @Test
     fun `Uses correct label text for submitted status`() {
-        val assignment = baseAssignment.copy(
-            submission = baseSubmission.copy(workflowState = "graded")
-        )
+        val assignment = baseAssignment.copy(submission = baseSubmission)
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
         assertEquals("Submitted", state.submittedStateLabel)
@@ -198,10 +197,58 @@ class AssignmentDetailsPresenterTest : Assert() {
 
     @Test
     fun `Uses correct label text for submitted status when submission is graded`() {
-        val assignment = baseAssignment.copy(submission = baseSubmission)
+        val submission = baseSubmission.copy(grade = "8")
+        val assignment = baseAssignment.copy(submission = submission)
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
-        assertEquals("Submitted", state.submittedStateLabel)
+        assertEquals("Graded", state.submittedStateLabel)
+    }
+
+    @Test
+    fun `Uses correct label text for submitted status when submission is missing`() {
+        val submission = baseSubmission.copy(attempt = 0, missing = true, workflowState = "unsubmitted")
+        val assignment = baseAssignment.copy(submission = submission)
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
+        assertEquals("Missing", state.submittedStateLabel)
+    }
+
+    @Test
+    fun `Uses correct label text for submitted status when submission is past due`() {
+        val calendar = Calendar.getInstance().apply { set(2000, 0, 31, 23, 59, 0) }
+
+        val submission = baseSubmission.copy(attempt = 0, workflowState = "unsubmitted")
+        val assignment = baseAssignment.copy(submission = submission, dueAt = calendar.time.toApiString())
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
+        assertEquals("Missing", state.submittedStateLabel)
+    }
+
+    @Test
+    fun `Uses correct label text for submitted status when submission is past due and null`() {
+        val calendar = Calendar.getInstance().apply { set(2000, 0, 31, 23, 59, 0) }
+
+        val assignment = baseAssignment.copy(submission = null, dueAt = calendar.time.toApiString())
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
+        assertEquals("Missing", state.submittedStateLabel)
+    }
+
+    @Test
+    fun `Uses correct label text for submitted status when submission is null`() {
+        val assignment = baseAssignment.copy(submission = null, dueAt = null)
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
+        assertEquals("Not Submitted", state.submittedStateLabel)
+    }
+
+    @Test
+    fun `Uses correct label text for submitted status when submission is not submitted`() {
+        val submission = baseSubmission.copy(attempt = 0, workflowState = "unsubmitted")
+        val assignment = baseAssignment.copy(submission = submission)
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
+        assertEquals("Not Submitted", state.submittedStateLabel)
     }
 
     @Test
@@ -292,7 +339,7 @@ class AssignmentDetailsPresenterTest : Assert() {
 
     @Test
     fun `Shows no due date message when there is no due date`() {
-        val expectedDueDate = "This assignment doesn't have a due date."
+        val expectedDueDate = "No Due Date"
         val assignment = baseAssignment.copy(dueAt = null)
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
@@ -617,6 +664,22 @@ class AssignmentDetailsPresenterTest : Assert() {
                 submissionTypesRaw = listOf(Assignment.SubmissionType.ONLINE_QUIZ.apiString)
         )
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment), quizResult = DataResult.Success(baseQuiz))
+        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
+        assertEquals(true, state.visibilities.submitButton)
+    }
+
+    @Test
+    fun `SubmitButton is visible when assignment is external tool`() {
+        val assignment = baseAssignment.copy(submissionTypesRaw = listOf(Assignment.SubmissionType.EXTERNAL_TOOL.apiString))
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
+        assertEquals(true, state.visibilities.submitButton)
+    }
+
+    @Test
+    fun `SubmitButton is visible when assignment is online`() {
+        val assignment = baseAssignment.copy(submissionTypesRaw = listOf(Assignment.SubmissionType.ONLINE_UPLOAD.apiString, Assignment.SubmissionType.ONLINE_URL.apiString, Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString))
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
         assertEquals(true, state.visibilities.submitButton)
     }

@@ -269,9 +269,10 @@ class PickerSubmissionUploadEffectHandlerTest : Assert() {
 
         verify(timeout = 1000) {
             view.showBadExtensionDialog(allowedExtensions)
+            eventConsumer.accept(PickerSubmissionUploadEvent.OnFileAdded(null))
         }
 
-        confirmVerified(view)
+        confirmVerified(view, eventConsumer)
     }
 
     @Test
@@ -298,9 +299,10 @@ class PickerSubmissionUploadEffectHandlerTest : Assert() {
 
         verify(timeout = 1000) {
             view.showFileErrorMessage(errorMessage)
+            eventConsumer.accept(PickerSubmissionUploadEvent.OnFileAdded(null))
         }
 
-        confirmVerified(view)
+        confirmVerified(view, eventConsumer)
     }
 
     @Test

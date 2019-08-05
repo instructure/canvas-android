@@ -57,7 +57,8 @@ class PickerSubmissionUploadPresenterTest : Assert() {
             fab = true,
             fabGallery = true,
             fabCamera = true,
-            fabFile = true
+            fabFile = true,
+            loading = false
         )
     }
 
@@ -65,6 +66,14 @@ class PickerSubmissionUploadPresenterTest : Assert() {
     fun `returns Empty state when files are empty`() {
         val model = baseModel
         val expectedState = PickerSubmissionUploadViewState.Empty(baseVisibilities)
+        val actualState = PickerSubmissionUploadPresenter.present(model, context)
+        assertEquals(expectedState, actualState)
+    }
+
+    @Test
+    fun `returns Empty state with loading when files are empty`() {
+        val model = baseModel.copy(isLoadingFile = true)
+        val expectedState = PickerSubmissionUploadViewState.Empty(baseVisibilities.copy(loading = true))
         val actualState = PickerSubmissionUploadPresenter.present(model, context)
         assertEquals(expectedState, actualState)
     }
@@ -88,19 +97,19 @@ class PickerSubmissionUploadPresenterTest : Assert() {
         val fileViewStates = listOf(
             PickerListItemViewState(
                 0,
-                R.drawable.vd_media_recordings,
+                R.drawable.vd_utils_attachment,
                 baseFile.name,
                 "${baseFile.size} B"
             ),
             PickerListItemViewState(
                 1,
-                R.drawable.vd_media_recordings,
+                R.drawable.vd_utils_attachment,
                 baseFile.name,
                 "${baseFile.size} B"
             ),
             PickerListItemViewState(
                 2,
-                R.drawable.vd_media_recordings,
+                R.drawable.vd_utils_attachment,
                 baseFile.name,
                 "${baseFile.size} B"
             )
@@ -114,15 +123,34 @@ class PickerSubmissionUploadPresenterTest : Assert() {
     }
 
     @Test
+    fun `returns file view states and submit and loading visible when there are files and it is loading`() {
+        val model = baseModel.copy(files = listOf(baseFile), isLoadingFile = true)
+        val fileViewStates = listOf(
+            PickerListItemViewState(
+                0,
+                R.drawable.vd_utils_attachment,
+                baseFile.name,
+                "${baseFile.size} B"
+            )
+        )
+        val expectedState = PickerSubmissionUploadViewState.FileList(
+            baseVisibilities.copy(submit = true, loading = true),
+            fileViewStates
+        )
+        val actualState = PickerSubmissionUploadPresenter.present(model, context)
+        assertEquals(expectedState, actualState)
+    }
+
+    @Test
     fun `returns correct file size`() {
         val smallFile = FileSubmitObject("name", 1024L, "type", "path")
         val mediumFile = FileSubmitObject("name", 1048576L, "type", "path")
         val largeFile = FileSubmitObject("name", 1073741824L, "type", "path")
         val model = baseModel.copy(files = listOf(smallFile, mediumFile, largeFile))
         val fileViewStates = listOf(
-            PickerListItemViewState(0, R.drawable.vd_media_recordings, smallFile.name, "1 KB"),
-            PickerListItemViewState(1, R.drawable.vd_media_recordings, mediumFile.name, "1 MB"),
-            PickerListItemViewState(2, R.drawable.vd_media_recordings, largeFile.name, "1 GB")
+            PickerListItemViewState(0, R.drawable.vd_utils_attachment, smallFile.name, "1 KB"),
+            PickerListItemViewState(1, R.drawable.vd_utils_attachment, mediumFile.name, "1 MB"),
+            PickerListItemViewState(2, R.drawable.vd_utils_attachment, largeFile.name, "1 GB")
         )
         val expectedState = PickerSubmissionUploadViewState.FileList(
             baseVisibilities.copy(submit = true),
@@ -138,7 +166,7 @@ class PickerSubmissionUploadPresenterTest : Assert() {
         val fileViewStates = listOf(
             PickerListItemViewState(
                 0,
-                R.drawable.vd_media_recordings,
+                R.drawable.vd_utils_attachment,
                 baseFile.name,
                 "${baseFile.size} B",
                 false)

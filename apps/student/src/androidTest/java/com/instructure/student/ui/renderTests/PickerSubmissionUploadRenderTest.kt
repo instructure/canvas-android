@@ -16,6 +16,7 @@
  */
 package com.instructure.student.ui.renderTests
 
+import android.os.Build
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.Assignment
@@ -57,6 +58,25 @@ class PickerSubmissionUploadRenderTest : StudentRenderTest() {
 
     @Test
     @TestMetaData(Priority.P3, FeatureCategory.SUBMISSIONS, TestCategory.RENDER)
+    fun displaysEmptyStateWithLoading() {
+
+        // API 23 doesn't do well with progress bars
+        if(Build.VERSION.SDK_INT < 24) {
+            return
+        }
+
+        loadPageWithViewState(PickerSubmissionUploadViewState.Empty(baseVisibilities.copy(loading = true)))
+        page.emptyView.assertVisible()
+        page.fabPick.assertVisible()
+        page.loading.assertVisible()
+
+        page.recycler.assertNotDisplayed()
+        page.submitButton.check(doesNotExist())
+        assertExtraFabsNotDisplayed()
+    }
+
+    @Test
+    @TestMetaData(Priority.P3, FeatureCategory.SUBMISSIONS, TestCategory.RENDER)
     fun displaysListState() {
         val fileItemStates = listOf(
             PickerListItemViewState(0, R.drawable.vd_media_recordings, "title", "12.3 KB")
@@ -70,6 +90,33 @@ class PickerSubmissionUploadRenderTest : StudentRenderTest() {
         page.recycler.assertVisible()
         page.fabPick.assertVisible()
         page.submitButton.assertVisible()
+
+        page.emptyView.assertNotDisplayed()
+        assertExtraFabsNotDisplayed()
+    }
+
+    @Test
+    @TestMetaData(Priority.P3, FeatureCategory.SUBMISSIONS, TestCategory.RENDER)
+    fun displaysListStateWithLoading() {
+
+        // API 23 doesn't do well with progress bars
+        if(Build.VERSION.SDK_INT < 24) {
+            return
+        }
+
+        val fileItemStates = listOf(
+            PickerListItemViewState(0, R.drawable.vd_media_recordings, "title", "12.3 KB")
+        )
+        loadPageWithViewState(
+            PickerSubmissionUploadViewState.FileList(
+                baseVisibilities.copy(submit = true, loading = true),
+                fileItemStates
+            )
+        )
+        page.recycler.assertVisible()
+        page.fabPick.assertVisible()
+        page.submitButton.assertVisible()
+        page.loading.assertVisible()
 
         page.emptyView.assertNotDisplayed()
         assertExtraFabsNotDisplayed()

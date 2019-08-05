@@ -18,6 +18,6 @@ package com.instructure.student.mobius.assignmentDetails.submission.text.ui
 
 data class TextSubmissionUploadViewState (
         val text: String? = null,
-        val errorMsg: String = "",
+        val isFailure: Boolean = false,
         val submitEnabled: Boolean = false
 )

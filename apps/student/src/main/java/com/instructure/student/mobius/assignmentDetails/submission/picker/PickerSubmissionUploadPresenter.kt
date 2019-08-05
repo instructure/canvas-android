@@ -17,12 +17,14 @@
 package com.instructure.student.mobius.assignmentDetails.submission.picker
 
 import android.content.Context
+import androidx.annotation.IntegerRes
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.student.R
 import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerListItemViewState
 import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerSubmissionUploadViewState
 import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerVisibilities
 import com.instructure.student.mobius.common.ui.Presenter
+import com.instructure.student.util.FileUtils
 
 object PickerSubmissionUploadPresenter : Presenter<PickerSubmissionUploadModel, PickerSubmissionUploadViewState> {
     override fun present(
@@ -45,11 +47,11 @@ object PickerSubmissionUploadPresenter : Presenter<PickerSubmissionUploadModel, 
 
         val fileStates = model.files.mapIndexed { index, file ->
             PickerListItemViewState(
-                index,
-                R.drawable.vd_media_recordings,
-                file.name,
-                NumberHelper.readableFileSize(context, file.size),
-                !model.mode.isMediaSubmission
+                position = index,
+                iconRes = FileUtils.getFileIcon(file.name, file.contentType),
+                title = file.name,
+                size = NumberHelper.readableFileSize(context, file.size),
+                canDelete = !model.mode.isMediaSubmission
             )
         }
 
@@ -57,6 +59,7 @@ object PickerSubmissionUploadPresenter : Presenter<PickerSubmissionUploadModel, 
     }
 
     private fun getVisibilities(model: PickerSubmissionUploadModel) = PickerVisibilities(
+        loading = model.isLoadingFile,
         fab = !model.mode.isMediaSubmission,
         submit = model.files.isNotEmpty(),
         fabFile = !model.mode.isMediaSubmission,

@@ -19,10 +19,12 @@ package com.instructure.student.mobius.common.ui
 import android.app.IntentService
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.app.Service
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
 import androidx.core.app.NotificationCompat
@@ -221,7 +223,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
             dbSubmissionId = submissionsDb.getLastInsert().executeAsOne()
 
             val file = File(mediaFilePath)
-            filesDb.insertFile(dbSubmissionId, file.name, file.length(), "", mediaFilePath)
+            filesDb.insertFile(dbSubmissionId, file.name, file.length(), FileUtils.getMimeType(file.path), mediaFilePath)
         }
 
         // Don't show the notification in the foreground so it doesn't disappear when this service dies
@@ -352,19 +354,29 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
             if (foreground) startForeground(comment.assignmentId.toInt(), notification.build())
 
             fun setError() {
+                val pendingIntent = getSubmissionIntent(this@SubmissionService, comment.canvasContext, comment.assignmentId, true)
+
                 // Update notification
                 notification.setContentTitle(getString(R.string.assignmentSubmissionCommentError, comment.assignmentName))
                 notification.setContentText("")
                 notification.setProgress(0, 0, false)
                 notification.setOngoing(false)
-                // TODO: Set pending intent to route to submission page
-                notificationManager.notify(comment.assignmentId.toInt(), notification.build())
+                notification.setContentIntent(pendingIntent)
+                notification.setAutoCancel(true) // Still need auto cancel for clicks, false to ongoing only makes it possible to swipe away
 
                 // Set error in db
                 commentDb.setCommentError(true, comment.id)
 
                 // Stop service
-                stopForeground(false)
+                if (foreground) {
+                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+                        stopForeground(Service.STOP_FOREGROUND_DETACH)
+                    else
+                        stopForeground(false)
+                }
+
+                // Notify after we stop the service so that it shows on api versions less than N (stopForeground(false) is a little odd in behavior)
+                notificationManager.notify(comment.assignmentId.toInt(), notification.build())
             }
 
             // Clear existing error state, if any
@@ -390,7 +402,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
                 val config = FileUploadConfig.forSubmissionComment(fso, comment.canvasContext.id, comment.assignmentId)
 
                 // Perform upload
-                FileUploadManager.uploadFile(config) { progress ->
+                FileUploadManager.uploadFile(config) { progress, _ ->
                     // Update notification
                     notification.setProgress(1000, (progress * 1000).toInt(), false)
                     notificationManager.notify(comment.assignmentId.toInt(), notification.build())
@@ -419,7 +431,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
                 notification.setProgress(0, 0, true)
                 notificationManager.notify(comment.assignmentId.toInt(), notification.build())
 
-                NotoriousUploader.performUpload(comment.mediaPath!!) { progress ->
+                NotoriousUploader.performUpload(comment.mediaPath!!) { progress, _ ->
                     // Update notification
                     notification.setProgress(1000, (progress * 1000).toInt(), false)
                     notificationManager.notify(comment.assignmentId.toInt(), notification.build())
@@ -520,12 +532,13 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
 
         const val COMMENT_CHANNEL_ID = "commentUploadChannel"
 
-        private fun getSubmissionIntent(context: Context, canvasContext: CanvasContext, assignmentId: Long): PendingIntent {
+        private fun getSubmissionIntent(context: Context, canvasContext: CanvasContext, assignmentId: Long, goToSubmissionDetail: Boolean = false): PendingIntent {
+            val submissionPage = if (goToSubmissionDetail) "/submissions" else ""
             val intent = Intent(context, NavigationActivity.startActivityClass).apply {
                 putExtra(Const.LOCAL_NOTIFICATION, true)
                 putExtra(
                     PushNotification.HTML_URL,
-                    "${ApiPrefs.fullDomain}/${canvasContext.apiContext()}/${canvasContext.id}/assignments/$assignmentId"
+                    "${ApiPrefs.fullDomain}/${canvasContext.apiContext()}/${canvasContext.id}/assignments/$assignmentId$submissionPage"
                 )
             }
 

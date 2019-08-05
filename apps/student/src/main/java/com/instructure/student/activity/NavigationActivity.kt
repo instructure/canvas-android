@@ -75,6 +75,7 @@ import com.instructure.student.events.ShowGradesToggledEvent
 import com.instructure.student.events.UserUpdatedEvent
 import com.instructure.student.fragment.*
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadEffectHandler
+import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.router.RouteResolver
 import com.instructure.student.tasks.StudentLogoutTask
@@ -224,7 +225,8 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         if (requestCode == UploadFilesDialog.CAMERA_PIC_REQUEST ||
             requestCode == UploadFilesDialog.PICK_FILE_FROM_DEVICE ||
             requestCode == UploadFilesDialog.PICK_IMAGE_GALLERY ||
-            PickerSubmissionUploadEffectHandler.isPickerRequest(requestCode)) {
+            PickerSubmissionUploadEffectHandler.isPickerRequest(requestCode) ||
+            AssignmentDetailsFragment.isFileRequest(requestCode)) {
             // UploadFilesFragment will not be notified of onActivityResult(), alert manually
             OnActivityResults(ActivityResult(requestCode, resultCode, data), null).postSticky()
         }

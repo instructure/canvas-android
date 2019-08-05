@@ -21,7 +21,9 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Intent
 import android.content.res.ColorStateList
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -49,6 +51,7 @@ import com.instructure.student.mobius.common.ui.MobiusView
 import com.instructure.student.router.RouteMatcher
 import com.spotify.mobius.functions.Consumer
 import kotlinx.android.synthetic.main.dialog_submission_picker.*
+import kotlinx.android.synthetic.main.dialog_submission_picker_media.*
 import kotlinx.android.synthetic.main.fragment_assignment_details.*
 
 class AssignmentDetailsView(
@@ -81,6 +84,7 @@ class AssignmentDetailsView(
         submissionStatusFailed.onClick { output.accept(AssignmentDetailsEvent.ViewUploadStatusClicked) }
         submissionStatusUploading.onClick { output.accept(AssignmentDetailsEvent.ViewUploadStatusClicked) }
         submissionRubricButton.onClick { output.accept(AssignmentDetailsEvent.ViewSubmissionClicked) }
+        gradeContainer.onClick { output.accept(AssignmentDetailsEvent.ViewSubmissionClicked) }
         submitButton.onClick { output.accept(AssignmentDetailsEvent.SubmitAssignmentClicked) }
         attachmentIcon.onClick { output.accept(AssignmentDetailsEvent.DiscussionAttachmentClicked) }
         swipeRefreshLayout.setOnRefreshListener { output.accept(AssignmentDetailsEvent.PullToRefresh) }
@@ -188,16 +192,16 @@ class AssignmentDetailsView(
 
         dialog.setOnShowListener {
             setupDialogRow(dialog, dialog.submissionEntryText, visibilities.textEntry) {
-                showOnlineTextEntryView(assignment.id, assignment.name, assignment.submission?.body)
+                showOnlineTextEntryView(assignment.id, assignment.name)
             }
             setupDialogRow(dialog, dialog.submissionEntryWebsite, visibilities.urlEntry) {
-                showOnlineUrlEntryView(assignment.id, assignment.name, canvasContext, assignment.submission?.url)
+                showOnlineUrlEntryView(assignment.id, assignment.name, canvasContext)
             }
             setupDialogRow(dialog, dialog.submissionEntryFile, visibilities.fileUpload) {
                 showFileUploadView(assignment)
             }
             setupDialogRow(dialog, dialog.submissionEntryMedia, visibilities.mediaRecording) {
-                showMediaRecordingView(assignment, courseId)
+                showMediaRecordingView(assignment)
             }
             setupDialogRow(dialog, dialog.submissionEntryStudio, visibilities.studioUpload) {
                 // The LTI info shouldn't be null if we are showing the Studio upload option
@@ -230,12 +234,12 @@ class AssignmentDetailsView(
         RouteMatcher.route(context, UploadStatusSubmissionFragment.makeRoute(submissionId))
     }
 
-    fun showOnlineTextEntryView(assignmentId: Long, assignmentName: String?, submittedText: String? = null) {
-        RouteMatcher.route(context, TextSubmissionUploadFragment.makeRoute(canvasContext, assignmentId, assignmentName, submittedText))
+    fun showOnlineTextEntryView(assignmentId: Long, assignmentName: String?, submittedText: String? = null, isFailure: Boolean = false) {
+        RouteMatcher.route(context, TextSubmissionUploadFragment.makeRoute(canvasContext, assignmentId, assignmentName, submittedText, isFailure))
     }
 
-    fun showOnlineUrlEntryView(assignmentId: Long, assignmentName: String?, canvasContext: CanvasContext, submittedUrl: String? = null) {
-        RouteMatcher.route(context, UrlSubmissionUploadFragment.makeRoute(canvasContext, assignmentId, assignmentName, submittedUrl))
+    fun showOnlineUrlEntryView(assignmentId: Long, assignmentName: String?, canvasContext: CanvasContext, submittedUrl: String? = null, isFailure: Boolean = false) {
+        RouteMatcher.route(context, UrlSubmissionUploadFragment.makeRoute(canvasContext, assignmentId, assignmentName, submittedUrl, isFailure))
     }
 
     fun showLTIView(canvasContext: CanvasContext, url: String, title: String) {
@@ -254,13 +258,23 @@ class AssignmentDetailsView(
         (context as BaseRouterActivity).openMedia(canvasContext, discussionAttachment.contentType ?: "", discussionAttachment.url ?: "", discussionAttachment.filename ?: "")
     }
 
-    fun showMediaRecordingView(assignment: Assignment, courseId: Long) {
-        // TODO - remove this call and connect it to the secondary media dialog
-        startAudioDialog()
-    }
+    fun showMediaRecordingView(assignment: Assignment) {
+        val builder = AlertDialog.Builder(context)
+        val dialog = builder.setView(R.layout.dialog_submission_picker_media).create()
 
-    private fun startAudioDialog() {
-        consumer?.accept(AssignmentDetailsEvent.AudioRecordingClicked)
+        dialog.setOnShowListener {
+            setupDialogRow(dialog, dialog.submissionEntryAudio, true) {
+                consumer?.accept(AssignmentDetailsEvent.AudioRecordingClicked)
+            }
+            setupDialogRow(dialog, dialog.submissionEntryVideo, true) {
+                consumer?.accept(AssignmentDetailsEvent.VideoRecordingClicked)
+            }
+
+            setupDialogRow(dialog, dialog.submissionEntryMediaFile, true) {
+                consumer?.accept(AssignmentDetailsEvent.ChooseMediaClicked)
+            }
+        }
+        dialog.show()
     }
 
     fun showAudioRecordingView() {
@@ -272,12 +286,33 @@ class AssignmentDetailsView(
         floatingRecordingView.stoppedCallback = {}
     }
 
+    fun getVideoIntent(fileUri: Uri): Intent {
+        return Intent(MediaStore.ACTION_VIDEO_CAPTURE).apply {
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            putExtra(MediaStore.EXTRA_OUTPUT, fileUri)
+        }
+    }
+
+    fun getChooseMediaIntent() = Intent(Intent.ACTION_GET_CONTENT).apply {
+        flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+        type = "video/*, audio/*"
+        addCategory(Intent.CATEGORY_OPENABLE)
+    }
+
     fun showPermissionDeniedToast() {
         Toast.makeText(context, com.instructure.pandautils.R.string.permissionDenied, Toast.LENGTH_LONG).show()
     }
 
     fun showAudioRecordingError() {
         Toast.makeText(context, com.instructure.pandautils.R.string.audioRecordingError, Toast.LENGTH_LONG).show()
+    }
+
+    fun showVideoRecordingError() {
+        Toast.makeText(context, com.instructure.pandautils.R.string.videoRecordingError, Toast.LENGTH_LONG).show()
+    }
+
+    fun showMediaPickingError() {
+        Toast.makeText(context, com.instructure.pandautils.R.string.unexpectedErrorOpeningFile, Toast.LENGTH_LONG).show()
     }
 
     fun showFileUploadView(assignment: Assignment) {
@@ -296,5 +331,9 @@ class AssignmentDetailsView(
             val intent = Intent(context, InternalWebViewActivity::class.java)
             context.startActivity(intent)
         }
+    }
+
+    fun launchFilePickerView(uri: Uri, course: Course, assignment: Assignment) {
+        RouteMatcher.route(context, PickerSubmissionUploadFragment.makeRoute(course, assignment, uri))
     }
 }

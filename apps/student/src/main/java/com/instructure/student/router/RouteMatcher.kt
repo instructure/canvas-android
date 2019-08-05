@@ -44,6 +44,7 @@ import com.instructure.pandautils.utils.nonNullArgs
 import com.instructure.student.R
 import com.instructure.student.activity.*
 import com.instructure.student.fragment.*
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsFragment
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.mobius.syllabus.ui.SyllabusFragment
 import com.instructure.student.util.FeatureFlagPrefs
@@ -67,6 +68,7 @@ object RouteMatcher : BaseRouteMatcher() {
     private fun initRoutes() {
 
         val assignmentDetailsClass: Class<out Fragment> = if (FeatureFlagPrefs.newAssignmentPage) AssignmentDetailsFragment::class.java else AssignmentFragment::class.java
+        val submissionDetailsClass: Class<out Fragment>? = if (FeatureFlagPrefs.newAssignmentPage) SubmissionDetailsFragment::class.java else null
 
         routes.add(Route("/", DashboardFragment::class.java))
         // region Conversations
@@ -161,8 +163,8 @@ object RouteMatcher : BaseRouteMatcher() {
 
         // Submissions
         // :sliding_tab_type can be /rubric or /submissions (used to navigate to the nested fragment)
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}/:${RouterParams.SLIDING_TAB_TYPE}"), AssignmentListFragment::class.java, assignmentDetailsClass))
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}/:${RouterParams.SLIDING_TAB_TYPE}/:${RouterParams.SUBMISSION_ID}"), AssignmentListFragment::class.java, assignmentDetailsClass))
+        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}/:${RouterParams.SLIDING_TAB_TYPE}"), assignmentDetailsClass, submissionDetailsClass))
+        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}/:${RouterParams.SLIDING_TAB_TYPE}/:${RouterParams.SUBMISSION_ID}"), assignmentDetailsClass, submissionDetailsClass))
 
         // Settings
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/settings"), CourseSettingsFragment::class.java))

@@ -23,6 +23,7 @@ import com.instructure.student.R
 import com.instructure.student.mobius.assignmentDetails.submission.file.ui.UploadListItemViewState
 import com.instructure.student.mobius.assignmentDetails.submission.file.ui.UploadStatusSubmissionViewState
 import com.instructure.student.mobius.common.ui.Presenter
+import com.instructure.student.util.FileUtils
 
 object UploadStatusSubmissionPresenter :
     Presenter<UploadStatusSubmissionModel, UploadStatusSubmissionViewState> {
@@ -90,7 +91,7 @@ object UploadStatusSubmissionPresenter :
         failedIcon: Int?,
         deletableIfError: Boolean
     ): List<UploadListItemViewState> {
-        var icon: Int = R.drawable.vd_media
+        var icon: Int
         var color: Int = R.color.defaultActionColor
         var canDelete = false
 
@@ -99,6 +100,8 @@ object UploadStatusSubmissionPresenter :
                 icon = failedIcon
                 color = R.color.destructive
                 canDelete = deletableIfError
+            } else {
+                icon = FileUtils.getFileIcon(file.name ?: "", file.contentType ?: "")
             }
 
              UploadListItemViewState(

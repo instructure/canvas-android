@@ -34,6 +34,6 @@ data class TextSubmissionUploadModel(
         val assignmentId: Long,
         val assignmentName: String?,
         val initialText: String? = null,
-        val failureMessage: String? = null,
+        val isFailure: Boolean = false,
         val isSubmittable: Boolean = false
 )

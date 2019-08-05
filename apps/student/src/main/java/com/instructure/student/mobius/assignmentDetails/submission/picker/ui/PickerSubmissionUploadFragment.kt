@@ -33,6 +33,7 @@ class PickerSubmissionUploadFragment :
     private val assignment by ParcelableArg<Assignment>(key = Const.ASSIGNMENT)
     private val canvasContext by ParcelableArg<Course>(key = Const.CANVAS_CONTEXT)
     private val mode by SerializableArg(key = PICKER_MODE, default = PickerSubmissionMode.FileSubmission)
+    private val mediaUri by NullableParcelableArg<Uri>(key = Const.PASSED_URI, default = null)
 
     override fun makeEffectHandler() = PickerSubmissionUploadEffectHandler(requireContext())
 
@@ -48,8 +49,9 @@ class PickerSubmissionUploadFragment :
         assignment.id,
         assignment.name ?: "",
         assignment.groupCategoryId,
-        if (mode.isForComment) emptyList() else assignment.allowedExtensions,
-        mode
+        if (mode.isForComment || mode.isMediaSubmission) emptyList() else assignment.allowedExtensions,
+        mode,
+        mediaUri
     )
 
     companion object {
@@ -81,7 +83,6 @@ class PickerSubmissionUploadFragment :
         ): Route {
             val bundle = canvasContext.makeBundle {
                 putParcelable(Const.ASSIGNMENT, assignment)
-                putBoolean(Const.IS_MEDIA_TYPE, true)
                 putParcelable(Const.PASSED_URI, mediaUri)
                 putSerializable(PICKER_MODE, PickerSubmissionMode.MediaSubmission)
             }

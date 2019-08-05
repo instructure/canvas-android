@@ -65,30 +65,30 @@ class UrlSubmissionUploadUpdateTest : Assert() {
     }
 
     @Test
-    fun `UrlChanged event with url containing http protocol sends empty preview and cleartext error events`() {
-        val startModel = initModel
+    fun `UrlChanged event with url containing http protocol sends empty preview effect`() {
+        val startModel = initModel.copy(isSubmittable = false, urlError = MalformedUrlError.NONE)
+        val expectedModel = startModel.copy(isSubmittable = true, urlError = MalformedUrlError.CLEARTEXT)
         val url = "http://www.instructure.com"
         val expectedPreviewUrl = ""
-        val expectedError = MalformedUrlError.CLEARTEXT
 
         updateSpec
             .given(startModel)
             .whenEvent(UrlSubmissionUploadEvent.UrlChanged(url))
             .then(
-                UpdateSpec.assertThatNext(
+                UpdateSpec.assertThatNext<UrlSubmissionUploadModel, UrlSubmissionUploadEffect>(
+                    NextMatchers.hasModel(expectedModel),
                     matchesEffects(
-                        UrlSubmissionUploadEffect.ShowUrlPreview(expectedPreviewUrl),
-                        UrlSubmissionUploadEffect.ShowMalformedUrl(expectedError)
+                        UrlSubmissionUploadEffect.ShowUrlPreview(expectedPreviewUrl)
                     )
                 )
             )
     }
 
     @Test
-    fun `UrlChanged event with blank url results in model change to !isSubmittable`() {
+    fun `UrlChanged event with blank url results in model change`() {
         val url = ""
-        val startModel = initModel.copy(isSubmittable = true)
-        val expectedModel = startModel.copy(isSubmittable = false)
+        val startModel = initModel.copy(isSubmittable = true, urlError = MalformedUrlError.CLEARTEXT)
+        val expectedModel = startModel.copy(isSubmittable = false, urlError = MalformedUrlError.NONE)
 
         updateSpec
             .given(startModel)
@@ -125,15 +125,14 @@ class UrlSubmissionUploadUpdateTest : Assert() {
         val url = "www.instructure.com"
         val expectedPreviewUrl = "https://$url"
         val expectedPreviewUrlEffect = UrlSubmissionUploadEffect.ShowUrlPreview(expectedPreviewUrl)
-        val expectedErrorEffect = UrlSubmissionUploadEffect.ShowMalformedUrl(MalformedUrlError.NONE)
 
         updateSpec
             .given(startModel)
             .whenEvent(UrlSubmissionUploadEvent.UrlChanged(url))
             .then(
-                UpdateSpec.assertThatNext(
+                UpdateSpec.assertThatNext<UrlSubmissionUploadModel, UrlSubmissionUploadEffect>(
                     NextMatchers.hasModel(expectedModel),
-                    NextMatchers.hasEffects(expectedPreviewUrlEffect, expectedErrorEffect)
+                    NextMatchers.hasEffects(expectedPreviewUrlEffect)
                 )
             )
     }
@@ -142,15 +141,14 @@ class UrlSubmissionUploadUpdateTest : Assert() {
     fun `UrlChanged event with valid url results in model change to isSubmittable and hide error effect`() {
         val startModel = initModel.copy(isSubmittable = false, initialUrl = "")
         val expectedModel = startModel.copy(isSubmittable = true)
-        val expectedErrorEffect: UrlSubmissionUploadEffect = UrlSubmissionUploadEffect.ShowMalformedUrl(MalformedUrlError.NONE)
 
         updateSpec
             .given(startModel)
             .whenEvent(UrlSubmissionUploadEvent.UrlChanged(defaultValidUrl))
             .then(
-                UpdateSpec.assertThatNext(
+                UpdateSpec.assertThatNext<UrlSubmissionUploadModel, UrlSubmissionUploadEffect>(
                     NextMatchers.hasModel(expectedModel),
-                    NextMatchers.hasEffects(expectedErrorEffect)
+                    NextMatchers.hasEffects(UrlSubmissionUploadEffect.ShowUrlPreview(defaultValidUrl))
                 )
             )
     }

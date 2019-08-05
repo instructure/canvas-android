@@ -26,6 +26,7 @@ import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.canvasapi2.utils.isRtl
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.pandautils.discussions.DiscussionUtils
+import com.instructure.pandautils.utils.AssignmentUtils2
 import com.instructure.student.R
 import com.instructure.student.Submission
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsViewState
@@ -84,12 +85,23 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
         )
 
         // Submission state
-        val submitted = assignment.isSubmitted
-        val (submittedLabelRes, submittedColorRes, submittedIconRes) = if (submitted) {
-            Triple(R.string.submitted, R.color.alertGreen, R.drawable.vd_submitted)
+        val assignmentState = AssignmentUtils2.getAssignmentState(assignment, assignment.submission, false)
+        val (submittedLabelRes, submittedColorRes, submittedIconRes) = if (assignment.isSubmitted) {
+            Triple(
+                if (assignmentState == AssignmentUtils2.ASSIGNMENT_STATE_GRADED) R.string.gradedSubmissionLabel else R.string.submitted,
+                R.color.alertGreen,
+                R.drawable.vd_submitted
+            )
         } else {
-            Triple(R.string.notSubmitted, R.color.defaultTextGray, R.drawable.vd_unsubmitted)
+            if (assignment.submission?.missing == true ||
+                (assignment.dueAt != null && assignmentState == AssignmentUtils2.ASSIGNMENT_STATE_MISSING)) {
+                // Mark it missing if the teacher marked it missing or if it's past due
+                Triple(R.string.missingSubmissionLabel, R.color.submissionStatusColorMissing, R.drawable.vd_unsubmitted)
+            } else {
+                Triple(R.string.notSubmitted, R.color.defaultTextGray, R.drawable.vd_unsubmitted)
+            }
         }
+
         val submittedLabel = context.getString(submittedLabelRes)
         val submittedColor = ContextCompat.getColor(context, submittedColorRes)
 
@@ -114,7 +126,7 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
         // Due date
         visibilities.dueDate = true
         val dueDate = if (assignment.dueDate == null) {
-            context.getString(R.string.noDueDate)
+            context.getString(R.string.toDoNoDueDate)
         } else {
             DateHelper.getMonthDayTimeMaybeMinutesMaybeYear(context, assignment.dueDate, R.string.at)!!
         }
@@ -165,12 +177,12 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
         visibilities.submitButton = when(assignment.turnInType) {
             // We always show the button for quizzes and discussions, so the users can always route
             Assignment.TurnInType.QUIZ, Assignment.TurnInType.DISCUSSION -> true
-            Assignment.TurnInType.ONLINE -> assignment.isAllowedToSubmit
+            Assignment.TurnInType.ONLINE, Assignment.TurnInType.EXTERNAL_TOOL -> assignment.isAllowedToSubmit
             else -> false // On Paper / etc
         }
 
         // Configure stickied submit button
-        val submitButtonText = getSubmitButtonText(context, isExternalToolSubmission, submitted, assignment.turnInType)
+        val submitButtonText = getSubmitButtonText(context, isExternalToolSubmission, assignment.isSubmitted, assignment.turnInType)
 
         // Configure description label
         val descriptionLabel = when(assignment.turnInType) {
@@ -235,13 +247,13 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
         visibilities.lockedImage = true
         visibilities.submissionAndRubricButton = true
         val unlockDate = assignment.unlockDate
-        val lockMessage = if (unlockDate != null) {
+        val lockMessage = if (assignment.lockInfo?.contextModule != null) {
+            val name = assignment.lockInfo?.lockedModuleName
+            context.getString(R.string.lockedModule, name)
+        } else {
             val dateString = DateFormat.getDateInstance().format(unlockDate)
             val timeString = DateFormat.getTimeInstance(DateFormat.SHORT).format(unlockDate)
             context.getString(R.string.lockedSubtext, dateString, timeString)
-        } else {
-            val name = assignment.lockInfo?.lockedModuleName
-            context.getString(R.string.lockedModule, name)
         }
         return AssignmentDetailsViewState.Loaded(
             assignmentName = assignment.name.orEmpty(),

@@ -27,7 +27,7 @@ sealed class PickerSubmissionUploadEvent {
     object SelectFileClicked : PickerSubmissionUploadEvent()
     data class OnFileSelected(val uri: Uri) : PickerSubmissionUploadEvent()
     data class OnFileRemoved(val fileIndex: Int) : PickerSubmissionUploadEvent()
-    data class OnFileAdded(val file: FileSubmitObject) : PickerSubmissionUploadEvent()
+    data class OnFileAdded(val file: FileSubmitObject?) : PickerSubmissionUploadEvent()
 }
 
 sealed class PickerSubmissionUploadEffect {
@@ -46,7 +46,9 @@ data class PickerSubmissionUploadModel(
     val assignmentGroupCategoryId: Long,
     val allowedExtensions: List<String>,
     val mode: PickerSubmissionMode,
-    val files: List<FileSubmitObject> = emptyList()
+    val mediaFileUri: Uri? = null,
+    val files: List<FileSubmitObject> = emptyList(),
+    val isLoadingFile: Boolean = false
 )
 
 enum class PickerSubmissionMode {

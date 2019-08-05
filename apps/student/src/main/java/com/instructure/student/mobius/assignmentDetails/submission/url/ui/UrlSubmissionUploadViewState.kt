@@ -18,6 +18,7 @@ package com.instructure.student.mobius.assignmentDetails.submission.url.ui
 data class UrlSubmissionUploadViewState(
         val urlHint: String,
         val url: String? = null,
-        val errorMsg: String = "",
+        val isFailure: Boolean = false,
+        val failureText: String? = null,
         val submitEnabled: Boolean = false
 )

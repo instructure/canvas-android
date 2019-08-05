@@ -94,6 +94,7 @@ class PickerSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup, va
 
     override fun render(state: PickerSubmissionUploadViewState) {
         toolbar.menu.findItem(R.id.menuSubmit).isVisible = state.visibilities.submit
+        fileLoading.setVisible(state.visibilities.loading)
         renderFabOptions(state.visibilities)
 
         when (state) {

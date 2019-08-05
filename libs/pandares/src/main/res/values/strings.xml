@@ -58,6 +58,8 @@
     <string name="submissionSuccessTitle">Submission Success!</string>
     <string name="submissionSuccessMessage">Your assignment was successfully submitted. Enjoy your day!</string>
     <string name="cancelAllSubmissions">Cancel All Assignment Submissions</string>
+    <string name="missingSubmissionLabel">Missing</string>
+    <string name="gradedSubmissionLabel">Graded</string>
 
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">No preview available for URLs using \'http://\'</string>
@@ -65,9 +67,11 @@
     <string name="enterAUrlHereForYourSubmission">Enter a URL here for your submission</string>
     <string name="addFileFabContentDesc">Show Add File Options</string>
     <string name="recordAudio">Record Audio</string>
+    <string name="recordVideo">Record Video</string>
 
     <!-- Student Submission -->
     <string name="submissionWrite">Write&#8230;</string>
+    <string name="textSubmissionFailureMessage">Something went wrong on submission upload. Submit again.</string>
 
     <!-- Student Submission Details -->
     <string name="submission">Submission</string>
@@ -102,7 +106,7 @@
     <string name="assignmentSubmissionCommentUploadingMedia">Uploading media file</string>
     <string name="assignmentSubmissionCommentError">Comment upload failed for %s</string>
     <string name="chooseFileForCommentSubtext">Attach files to your comment by tapping an option below</string>
-    <string name="emptySubmissionCommentsSubtext">Have questions about your assignment? Message your instructure.</string>
+    <string name="emptySubmissionCommentsSubtext">Have questions about your assignment?\nMessage your instructor.</string>
     <string name="submissionCommentErrorMessage">This message could not be sent. Tap to try again.</string>
     <string name="mediaUploadAudio">Media Upload - Audio</string>
     <string name="mediaUploadVideo">Media Upload - Video</string>
@@ -1102,6 +1106,7 @@
     <string name="addVideoComment">Add video comment</string>
     <string name="addAudioComment">Add audio comment</string>
     <string name="audioRecordingError">An unexpected error occurred while trying to record audio.</string>
+    <string name="videoRecordingError">An unexpected error occurred while trying to record video.</string>
 
     <string name="quizQuestionLabel">Questions:</string>
     <string name="timeLimitLabel">Time Limit:</string>
@@ -1110,5 +1115,7 @@
     <string name="quizNoTimeLimit">None</string>
     <string name="viewQuiz">View Quiz</string>
     <string name="viewDiscussion">View Discussion</string>
+    <string name="lockedModule">This assignment is locked by the module \"%1$s\".</string>
+    <string name="chooseMediaFile">Choose Media File</string>
 
 </resources>

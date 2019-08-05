@@ -41,6 +41,7 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.services.FileUploadService.Companion.CHANNEL_ID
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.NotoriousUploader
+import org.greenrobot.eventbus.EventBus
 import java.util.*
 
 class NotoriousUploadService : IntentService(NotoriousUploadService::class.java.simpleName) {
@@ -73,7 +74,8 @@ class NotoriousUploadService : IntentService(NotoriousUploadService::class.java.
     override fun onHandleIntent(intent: Intent?) {
         if (intent?.getSerializableExtra(Const.ACTION) == null) return
 
-        notificationId = intent.getLongExtra(Const.SUBMISSION_ID, NOTIFICATION_ID.toLong()).toInt()
+        val submissionId = if (intent.hasExtra(Const.SUBMISSION_ID)) intent.getLongExtra(Const.SUBMISSION_ID, 0) else null
+        notificationId = submissionId?.toInt() ?: NOTIFICATION_ID
 
         action = intent.getSerializableExtra(Const.ACTION) as ACTION
 
@@ -107,7 +109,7 @@ class NotoriousUploadService : IntentService(NotoriousUploadService::class.java.
 
         startForeground(notificationId, builder.build())
 
-        startFileUpload()
+        startFileUpload(submissionId)
     }
 
     private fun createNotificationChannel(channelId: String) {
@@ -152,7 +154,7 @@ class NotoriousUploadService : IntentService(NotoriousUploadService::class.java.
         return null
     }
 
-    private fun startFileUpload() {
+    private fun startFileUpload(submissionId: Long?) {
         uploadJob = weave(true) {
             // Set initial progress in notification
             builder.setContentText(getString(R.string.uploadingFile))
@@ -160,10 +162,14 @@ class NotoriousUploadService : IntentService(NotoriousUploadService::class.java.
             notificationManager.notify(notificationId, builder.build())
             uploadStartedToast()
 
-            NotoriousUploader.performUpload(mediaPath){ progress ->
+            NotoriousUploader.performUpload(mediaPath) { progress, length ->
                 // Update progress in notification
                 builder.setProgress(1000, (progress * 1000).toInt(), false)
                 notificationManager.notify(notificationId, builder.build())
+                if (submissionId != null) {
+                    val event = ProgressEvent(0, submissionId, (progress * length).toLong(), length)
+                    EventBus.getDefault().postSticky(event)
+                }
             }.onSuccess {
                 handleSuccess(it)
             }.onFailure {

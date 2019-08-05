@@ -29,6 +29,7 @@ class TextSubmissionUploadFragment : MobiusFragment<TextSubmissionUploadModel, T
     private val course by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
     private val assignmentId by LongArg(key = Const.ASSIGNMENT_ID)
     private val initialText by StringArg(key = Const.TEXT)
+    private val isFailure by BooleanArg(key = Const.IS_FAILURE)
     private val assignmentName by StringArg(key = Const.ASSIGNMENT_NAME)
 
     override fun makeEffectHandler() = TextSubmissionUploadEffectHandler()
@@ -39,16 +40,17 @@ class TextSubmissionUploadFragment : MobiusFragment<TextSubmissionUploadModel, T
 
     override fun makePresenter() = TextSubmissionUploadPresenter
 
-    override fun makeInitModel() = TextSubmissionUploadModel(course, assignmentId, assignmentName, initialText)
+    override fun makeInitModel() = TextSubmissionUploadModel(course, assignmentId, assignmentName, initialText, isFailure)
 
     companion object {
 
         @JvmStatic
-        fun makeRoute(course: CanvasContext, assignmentId: Long, assignmentName: String? = "", initialText: String?): Route {
+        fun makeRoute(course: CanvasContext, assignmentId: Long, assignmentName: String? = "", initialText: String? = null, isFailure: Boolean = false): Route {
             val bundle = course.makeBundle{
                 putLong(Const.ASSIGNMENT_ID, assignmentId)
                 putString(Const.ASSIGNMENT_NAME, assignmentName)
                 putString(Const.TEXT, initialText)
+                putBoolean(Const.IS_FAILURE, isFailure)
             }
 
             return Route(null, TextSubmissionUploadFragment::class.java, course, bundle)

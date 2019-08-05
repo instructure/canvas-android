@@ -56,7 +56,7 @@ object NotoriousManager {
         uploadToken: String,
         file: File,
         contentType: String,
-        onProgress: ((Float) -> Unit)? = null
+        onProgress: ((Float, Long) -> Unit)? = null
     ): Response<Void>? {
         val requestBody = ProgressRequestBody(file, contentType, onProgress = onProgress)
         val filePart = MultipartBody.Part.createFormData("fileData", file.name, requestBody)

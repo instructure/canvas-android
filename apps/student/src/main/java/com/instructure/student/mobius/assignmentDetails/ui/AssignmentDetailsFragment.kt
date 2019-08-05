@@ -27,6 +27,7 @@ import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.utils.*
 import com.instructure.student.mobius.assignmentDetails.*
 import com.instructure.student.mobius.common.ui.MobiusFragment
+import com.spotify.mobius.EventSource
 
 @PageView(url = "{canvasContext}/assignments/{assignmentId}")
 class AssignmentDetailsFragment :
@@ -48,7 +49,12 @@ class AssignmentDetailsFragment :
 
     override fun makeInitModel() = AssignmentDetailsModel(assignmentId, canvasContext)
 
+    override fun getExternalEventSources() = listOf(AssignmentDetailsEventBusSource())
+
     companion object {
+
+        const val VIDEO_REQUEST_CODE = 45519
+        const val CHOOSE_MEDIA_REQUEST_CODE = 45520
 
         @JvmStatic
         fun makeRoute(course: CanvasContext, assignmentId: Long): Route {
@@ -74,6 +80,10 @@ class AssignmentDetailsFragment :
             }
 
             return AssignmentDetailsFragment().withArgs(route.arguments)
+        }
+
+        fun isFileRequest(requestCode: Int): Boolean {
+            return requestCode in listOf(VIDEO_REQUEST_CODE, CHOOSE_MEDIA_REQUEST_CODE)
         }
 
     }

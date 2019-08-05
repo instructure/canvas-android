@@ -25,6 +25,8 @@ import com.instructure.interactions.router.RouteContext
 import com.instructure.interactions.router.RouterParams
 import com.instructure.student.activity.BaseRouterActivity
 import com.instructure.student.fragment.*
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsFragment
+import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.mobius.syllabus.ui.SyllabusFragment
 import com.instructure.student.router.RouteMatcher
 import junit.framework.TestCase
@@ -365,7 +367,7 @@ class RouterUtilsTest : TestCase() {
         route = callGetInternalRoute("https://mobiledev.instructure.com/courses/836357/assignments/213445213445213445213445213445213445213445213445213445213445213445213445")
         TestCase.assertNotNull(route)
         TestCase.assertEquals(AssignmentListFragment::class.java, route!!.primaryClass)
-        TestCase.assertEquals(AssignmentFragment::class.java, route.secondaryClass)
+        TestCase.assertEquals(AssignmentDetailsFragment::class.java, route.secondaryClass)
 
         val expectedParams = HashMap<String, String>()
         expectedParams[RouterParams.COURSE_ID] = "836357"
@@ -375,10 +377,11 @@ class RouterUtilsTest : TestCase() {
 
     @Test
     fun testGetInternalRoute_submissions_rubric() {
+        // TODO: This test needs to change when we remove the assignment feature flag
         var route = callGetInternalRoute("https://mobiledev.instructure.com/courses/836357/assignments/12345/rubric")
         TestCase.assertNotNull(route)
-        TestCase.assertEquals(AssignmentListFragment::class.java, route!!.primaryClass)
-        TestCase.assertEquals(AssignmentFragment::class.java, route.secondaryClass)
+        TestCase.assertEquals(AssignmentDetailsFragment::class.java, route!!.primaryClass)
+        TestCase.assertEquals(SubmissionDetailsFragment::class.java, route.secondaryClass)
 
         var expectedParams = HashMap<String, String>()
         expectedParams[RouterParams.COURSE_ID] = "836357"
@@ -389,8 +392,8 @@ class RouterUtilsTest : TestCase() {
 
         route = callGetInternalRoute("https://mobiledev.instructure.com/courses/836357/assignments/213445213445213445213445213445213445213445213445213445213445213445213445/submissions/1234")
         TestCase.assertNotNull(route)
-        TestCase.assertEquals(AssignmentListFragment::class.java, route!!.primaryClass)
-        TestCase.assertEquals(AssignmentFragment::class.java, route.secondaryClass)
+        TestCase.assertEquals(AssignmentDetailsFragment::class.java, route!!.primaryClass)
+        TestCase.assertEquals(SubmissionDetailsFragment::class.java, route.secondaryClass)
 
         expectedParams = HashMap()
         expectedParams[RouterParams.COURSE_ID] = "836357"
