@@ -32,6 +32,8 @@ import androidx.fragment.app.FragmentManager
 import com.google.android.material.tabs.TabLayout
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.AnalyticsParamConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
@@ -267,12 +269,15 @@ class SubmissionDetailsView(
             SubmissionDetailsContentType.OnPaperContent -> SubmissionMessageFragment.newInstance(title = R.string.noOnlineSubmissions, subtitle = R.string.onPaperContentMessage)
             is SubmissionDetailsContentType.UnsupportedContent -> {
                 // Users shouldn't get here, but we'll handle the case and send up some analytics if they do
-                Bundle().apply {
+                val bundle = Bundle().apply {
                     putString(AnalyticsParamConstants.DOMAIN_PARAM, ApiPrefs.fullDomain)
                     putString(AnalyticsParamConstants.USER_CONTEXT_ID, ApiPrefs.user?.contextId)
                     putString(AnalyticsParamConstants.CANVAS_CONTEXT_ID, canvasContext.contextId)
                     putLong(AnalyticsParamConstants.ASSIGNMENT_ID, type.assignmentId)
                 }
+
+                Analytics.logEvent(AnalyticsEventConstants.SUBMISSIONS, bundle)
+
                 SubmissionMessageFragment.newInstance(
                     title = R.string.noOnlineSubmissions,
                     subtitle = R.string.unsupportedContentMessage
