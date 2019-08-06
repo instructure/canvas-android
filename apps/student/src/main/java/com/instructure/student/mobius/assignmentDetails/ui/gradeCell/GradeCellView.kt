@@ -58,6 +58,7 @@ class GradeCellView @JvmOverloads constructor(
             is GradeCellViewState.GradeData -> {
                 submittedState.setGone()
                 gradeState.setVisible()
+                gradeState.contentDescription = state.gradeCellContentDescription
 
                 // Text and visibility
                 score.setTextForVisibility(state.score)
@@ -67,6 +68,7 @@ class GradeCellView @JvmOverloads constructor(
                 latePenalty.setTextForVisibility(state.latePenalty)
                 finalGrade.setTextForVisibility(state.finalGrade)
                 grade.setTextForVisibility(state.grade)
+                grade.contentDescription = state.gradeContentDescription
                 outOf.setTextForVisibility(state.outOf)
                 outOf.contentDescription = state.outOfContentDescription
 

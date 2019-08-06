@@ -64,7 +64,15 @@ object GradeBinder : BaseBinder() {
                 holder.icon.setNestedIcon(R.drawable.vd_published, courseColor)
             } else {
                 holder.points.setVisible()
-                holder.points.text = getGrade(submission, assignment.pointsPossible, context)
+                val grade = getGrade(submission, assignment.pointsPossible, context)
+                holder.points.text = grade
+                val accessibleGrade = getContentDescriptionForMinusGradeString(grade ?: "", context)
+                val outOf = context.resources.getString(R.string.outOf)
+                holder.points.contentDescription = if (accessibleGrade.isNotEmpty()) {
+                    accessibleGrade
+                } else {
+                    context.getString(R.string.a11y_letterGrade, grade?.replace("/", " $outOf "))
+                }
             }
         }
 

@@ -20,6 +20,7 @@ package com.instructure.pandautils.utils
 import android.accessibilityservice.AccessibilityServiceInfo
 import android.content.Context
 import android.view.accessibility.AccessibilityManager
+import com.instructure.pandautils.R
 
 val Context.a11yManager get() = getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
 
@@ -39,5 +40,13 @@ val AccessibilityManager.hasVisualFeedback get() = isServiceEnabled(Accessibilit
 
 val AccessibilityManager.isSwitchAccessEnabled: Boolean
     get() = getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_ALL_MASK).any { "com.android.switchaccess.SwitchAccessService" in it.id }
+
+fun getContentDescriptionForMinusGradeString(grade: String, context: Context): String {
+    return if (grade.contains("-")) {
+        context.getString(
+                R.string.a11y_gradeLetterMinusContentDescription,
+                grade.substringBefore("-"))
+    } else ""
+}
 
 
