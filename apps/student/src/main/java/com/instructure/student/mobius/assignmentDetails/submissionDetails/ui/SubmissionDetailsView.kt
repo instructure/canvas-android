@@ -19,6 +19,7 @@ package com.instructure.student.mobius.assignmentDetails.submissionDetails.ui
 
 import android.app.Activity
 import android.net.Uri
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,6 +32,8 @@ import androidx.fragment.app.FragmentManager
 import com.google.android.material.tabs.TabLayout
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.utils.AnalyticsParamConstants
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouteContext
 import com.instructure.pandautils.activities.BaseViewMediaActivity
@@ -44,6 +47,7 @@ import com.instructure.student.mobius.assignmentDetails.submissionDetails.Submis
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsEvent
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.*
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyContentFragment
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionMessageFragment
 import com.instructure.student.mobius.common.ui.MobiusView
 import com.instructure.student.router.RouteMatcher
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
@@ -259,9 +263,21 @@ class SubmissionDetailsView(
                 fallbackIcon = R.drawable.vd_attachment
             )
             is SubmissionDetailsContentType.ImageContent -> ViewImageFragment.newInstance(type.title, Uri.parse(type.url), type.contentType, false)
-            SubmissionDetailsContentType.NoneContent -> TODO()
-            SubmissionDetailsContentType.OnPaperContent -> TODO()
-            SubmissionDetailsContentType.UnsupportedContent -> TODO()
+            SubmissionDetailsContentType.NoneContent -> SubmissionMessageFragment.newInstance(title = R.string.noOnlineSubmissions,  subtitle = R.string.noneContentMessage)
+            SubmissionDetailsContentType.OnPaperContent -> SubmissionMessageFragment.newInstance(title = R.string.noOnlineSubmissions, subtitle = R.string.onPaperContentMessage)
+            is SubmissionDetailsContentType.UnsupportedContent -> {
+                // Users shouldn't get here, but we'll handle the case and send up some analytics if they do
+                Bundle().apply {
+                    putString(AnalyticsParamConstants.DOMAIN_PARAM, ApiPrefs.fullDomain)
+                    putString(AnalyticsParamConstants.USER_CONTEXT_ID, ApiPrefs.user?.contextId)
+                    putString(AnalyticsParamConstants.CANVAS_CONTEXT_ID, canvasContext.contextId)
+                    putLong(AnalyticsParamConstants.ASSIGNMENT_ID, type.assignmentId)
+                }
+                SubmissionMessageFragment.newInstance(
+                    title = R.string.noOnlineSubmissions,
+                    subtitle = R.string.unsupportedContentMessage
+                )
+            }
         }
     }
 
