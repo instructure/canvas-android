@@ -18,6 +18,8 @@ package com.instructure.student.fragment
 
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -85,9 +87,9 @@ class ViewImageFragment : Fragment(), ShareableFile {
         }
     }
 
-    private val requestListener = object : RequestListener<Bitmap> {
+    private val requestListener = object : RequestListener<Drawable> {
 
-        override fun onLoadFailed(p0: GlideException?, p1: Any?, p2: Target<Bitmap>?, p3: Boolean): Boolean {
+        override fun onLoadFailed(p0: GlideException?, p1: Any?, p2: Target<Drawable>?, p3: Boolean): Boolean {
             photoView.setGone()
             progressBar.setGone()
             errorContainer.setVisible()
@@ -96,11 +98,11 @@ class ViewImageFragment : Fragment(), ShareableFile {
             return false
         }
 
-        override fun onResourceReady(bitmap: Bitmap?, p1: Any?, p2: Target<Bitmap>?, p3: DataSource?, p4: Boolean): Boolean {
+        override fun onResourceReady(drawable: Drawable?, p1: Any?, p2: Target<Drawable>?, p3: DataSource?, p4: Boolean): Boolean {
             progressBar.setGone()
 
             // Try to set the background color using palette if we can
-            bitmap?.let { colorBackground(it) }
+            (drawable as? BitmapDrawable)?.bitmap?.let { colorBackground(it) }
             return false
         }
     }
@@ -109,7 +111,6 @@ class ViewImageFragment : Fragment(), ShareableFile {
         super.onStart()
         progressBar.announceForAccessibility(getString(R.string.loading))
         Glide.with(this)
-                .asBitmap()
                 .load(mUri)
                 .listener(requestListener)
                 .into(photoView)

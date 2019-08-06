@@ -18,6 +18,7 @@
 package com.instructure.student.mobius.assignmentDetails.submissionDetails.ui
 
 import android.app.Activity
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -37,6 +38,7 @@ import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.RecordingMediaType
 import com.instructure.student.R
 import com.instructure.student.fragment.LTIWebViewFragment
+import com.instructure.student.fragment.ViewImageFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsContentType
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsEvent
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.*
@@ -249,7 +251,7 @@ class SubmissionDetailsView(
             is SubmissionDetailsContentType.ExternalToolContent -> LTIWebViewFragment.newInstance(LTIWebViewFragment.makeRoute(type.canvasContext, type.url, hideToolbar = true))!!
             is SubmissionDetailsContentType.MediaContent -> MediaSubmissionViewFragment.newInstance(type)
             is SubmissionDetailsContentType.OtherAttachmentContent -> TODO()
-            is SubmissionDetailsContentType.ImageContent -> TODO()
+            is SubmissionDetailsContentType.ImageContent -> ViewImageFragment.newInstance(type.title, Uri.parse(type.url), type.contentType, false)
             SubmissionDetailsContentType.NoneContent -> TODO()
             SubmissionDetailsContentType.OnPaperContent -> TODO()
             SubmissionDetailsContentType.UnsupportedContent -> TODO()
