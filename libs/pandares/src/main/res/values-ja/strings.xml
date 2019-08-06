@@ -51,11 +51,16 @@
     <string name="allowedFileTypes">許可されているファイルタイプ</string>
     <string name="resubmitAssignment">課題を再提出する</string>
 
+    <string name="launchExternalTool">外部ツールを起動する</string>
+
     <string name="preview">プレビュー</string>
-    <!--    Student Submission-->
+    <!-- Student Submission -->
     <string name="submissionUrlClearTextError">URL を \'http://\' でプレビューすることはできません</string>
     <string name="submissionUrlNotAUrlError">有効なURLを入力してください</string>
     <string name="enterAUrlHereForYourSubmission">提出するにはこちらに URL を入力してください</string>
+    <string name="addFileFabContentDesc">追加ファイルオプションを表示する</string>
+    <string name="recordAudio">オーディオを録音する</string>
+
     <!-- Student Submission -->
     <string name="submissionWrite">&#8230; を書く</string>
     <!-- Student Submission Details -->
@@ -82,10 +87,10 @@
     <string name="rubricCustomScore">カスタムスコア</string>
     <string name="rubricEmptyMessage">この課題に説明はありません</string>
     <string name="rubricViewLongDescription">長い説明を表示</string>
-    <!--Profile Fragment Strings -->
+    <!-- Profile Fragment Strings -->
     <string name="canvasVersionNum">バージョン:</string>
 
-    <!--Content Descriptions-->
+    <!-- Content Descriptions -->
     <string name="canvasLogo">Canvas ロゴ</string>
     <string name="enterURL">Canvas URLを入力してください:</string>
     <string name="exampleURLSimple">myschool.instructure.com</string>
@@ -118,7 +123,7 @@
     <string name="bookmarkUpdated">ブックｋマークを更新する</string>
     <string name="no_bookmarks">ブックマークを作成し、それをここで表示します！</string>
 
-    <!--Date strings-->
+    <!-- Date strings -->
     <string name="today">今日</string>
     <string name="past">過去</string>
     <string name="noDate">日付なし</string>
@@ -133,7 +138,7 @@
     <string name="submissionDetailsDueAt">%1$s の %2$s が期限</string> <!--Ex: Due April 2 at 11:59pm-->
     <string name="lowercaseAM">am</string>
     <string name="lowercasePM">pm</string>
-    <!--Assignments-->
+    <!-- Assignments -->
     <string name="assignmentDue">締切日</string>
     <string name="assignmentDueColon">期限：</string>
     <string name="assignmentLastSubmission">最後の提出物</string>
@@ -164,10 +169,10 @@
     <string name="cancel">キャンセル</string>
     <string name="sendNotification">このコンテンツが変更されたことをユーザーに通知する</string>
 
-    <!--Discussions-->
+    <!-- Discussions -->
     <string name="forbidden">回答は、少なくとも一つの回答を掲載している人にのみ表示されます。</string>
 
-    <!--Events-->
+    <!-- Events -->
     <string name="Starts">開始</string>
     <string name="Ends">終了</string>
     <string name="allDayEvent">終日イベント</string>
@@ -386,7 +391,7 @@
     <string name="entireGroupSelected">このグループ全体がすでに選択されています。</string>
     <string name="noUsersInGroup">このグループにはユーザーが存在しません</string>
 
-    <!--Notifications-->
+    <!-- Notifications -->
     <string name="deleted">削除されました</string>
     <string name="gradedDiscussion">採点ディスカッション。</string>
     <string name="pointsPossible">可能な得点。</string>
@@ -490,11 +495,11 @@
     <!-- LockInfoHTMLHelper Strings -->
     <string name="lockedAssignmentNotModule">この課題はロックされています。</string>
 
-    <!--New Course Layout Strings -->
+    <!-- New Course Layout Strings -->
     <string name="myCourses">マイコース</string>
 
 
-    <!--New Submission Strings -->
+    <!-- New Submission Strings -->
     <string name="textEntry">テキストエントリ</string>
     <string name="onlineURL">オンラインURL</string>
     <string name="enterTextEntry">テキストエントリを入力</string>
@@ -513,18 +518,18 @@
 
 
 
-    <!--DataLoss Fragment Strings -->
+    <!-- DataLoss Fragment Strings -->
     <string name="unsavedProgress">保存されていない進展</string>
     <string name="informationLost">保存されていない情報は失われます。続けますか?</string>
     <string name="slash">/</string>
 
-    <!--Delete Notification Strings -->
+    <!-- Delete Notification Strings -->
     <string name="confirm">確認</string>
 
-    <!--Dismiss To do String-->
+    <!-- Dismiss To do String -->
     <string name="markAsDone">完了にする</string>
 
-    <!--Submission Details Strings -->
+    <!-- Submission Details Strings -->
     <string name="next">次</string>
     <string name="addSubmission">提出する</string>
     <string name="addAnotherSubmission">再度提出する</string>
@@ -607,7 +612,7 @@
     <string name="choose_answers_below">下の回答を選択してください</string>
 
 
-    <!--Widget Strings-->
+    <!-- Widget Strings -->
     <string name="todoWidgetTitle">タスク</string>
     <string name="gradesWidgetTitle">成績</string>
     <string name="notificationWidgetTitle">通知</string>
@@ -661,13 +666,13 @@
     <string name="search_course">コース コース クラス クラス</string>
     <string name="search_grades">採点 採点</string>
 
-    <!-- ShareFileOptions Dialog-->
+    <!-- ShareFileOptions Dialog -->
     <string name="uploadTo">アップロードする</string>
     <string name="uploadToCanvas">Canvasにアップロードする</string>
     <string name="uploadMyFiles">マイファイル</string>
     <string name="uploadCourseFiles">コースファイル</string>
     <string name="uploadToSubmissionComment">コメント送信をアップロード</string>
-    <!-- ChangeLog Dialog-->
+    <!-- ChangeLog Dialog -->
     <string name="changelog">変更ログ</string>
 
     <string name="editUserName">ユーザー名を編集</string>
@@ -680,7 +685,7 @@
     <string name="no_courses">タップしてコースに追加する</string>
     <string name="no_courses_available">ここにはコースはありません、休みを取りましょう！</string>
     <string name="no_courses_grades">コースに登録して、成績を表示してください</string>
-    <!--Navigation Drawer-->
+    <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">ナビゲーションの引き出しを開く</string>
     <string name="navigation_drawer_close">ナビゲーションの引き出しを閉じる</string>
 
@@ -742,7 +747,7 @@
 
     <string name="no_data_connection">データの接続を確認し、やり直してください。</string>
 
-    <!--Notification Preferences-->
+    <!-- Notification Preferences -->
     <string name="notification_primary_inbox_title">Canvas 通知</string>
     <string name="notification_channel_name_primary">一般的な Canvas 通知</string>
     <string name="notification_channel_description_primary">通知の詳細設定は、Canvas キャンバス通知設定のセクションで行うことができます。</string>
@@ -910,7 +915,7 @@
     <string name="groupNotFavorited">グループ%s、お気に入りではない</string>
     <string name="accountGroup">アカウントグループ</string>
 
-    <!--Recents-->
+    <!-- Recents -->
     <string name="recents_empty">コースカスタマイズ画面からコース、またはグループを追加して、ここでそれらを表示してください。</string>
 
     <string name="toolbar_close">ツールバーを閉じる</string>
@@ -938,6 +943,7 @@
     <string name="select">選択</string>
     <string name="choice_position">選択肢%d</string>
     <string name="updating_module_info">モジュール情報&#8230;を更新する</string>
+    <string name="arc">Arc</string>
     <string name="pending_review">保留中のレビュー</string>
     <string name="totalPoints">%s 点</string>
     <string name="totalPointsText">合計点</string>
@@ -952,9 +958,13 @@
     <string name="acceptCourseInvitation">受諾</string>
     <string name="declineCourseInvitation">辞退する</string>
 
+    <string name="outOf">中</string>
     <!-- File Strings -->
     <string name="noFilesSubtextCourse">このコースに関連付けられたファイルはありません。</string>
     <string name="noFilesSubtextGroup">このグループに関連付けられたファイルはありません。</string>
+    <string name="fileTypeNotSupported">サポートされていないファイルタイプ</string>
+    <string name="fileTypeNotSupportedBody">この割当では特定ファイルタイプのみ可能です。%s</string>
+
     <array name="file_size_units">
         <item>B</item>
         <item>キロバイト</item>
@@ -1031,4 +1041,23 @@
     <string name="addChildErrorMessage">ペアリングに失敗しました。ペアリングコードが正しいこと、使用期限内であることを確認してください。</string>
     <string name="gradeComplete">完了</string>
     <string name="gradeIncomplete">不完全</string>
+    <!-- Floating Recording View Strings -->
+    <string name="recordingTimerDefault">0:00:00</string>
+    <string name="recordingTimerContentDescription">%1$d 時間、%2$d 分、および %3$d 秒</string>
+    <string name="recordingTimerSpeechDivider">%1$s / %2$s</string>
+    <string name="replay">再度再生</string>
+    <string name="stop">停止</string>
+    <string name="startRecordingAudio">録音開始</string>
+    <string name="stopRecordingAudio">録音開始</string>
+    <string name="startRecordingVideo">録画開始</string>
+    <string name="stopRecordingVideo">録画開始</string>
+    <string name="closeRecordingView">録画・録音ビューを閉じる</string>
+    <string name="deleteRecording">記録を削除</string>
+    <string name="videoCommentReplay">動画コメントを再度再生</string>
+    <string name="errorShowingVideoReplay">再生の表示中にエラーが発生しました</string>
+    <string name="errorSubmittingMediaComment">メディアコメントの提出中にエラーが発生しました</string>
+
+    <string name="addVideoComment">動画コメントを追加</string>
+    <string name="addAudioComment">音声コメントを追加</string>
+
 </resources>

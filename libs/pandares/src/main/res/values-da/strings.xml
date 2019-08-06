@@ -52,11 +52,16 @@
     <string name="allowedFileTypes">Tilladte filtyper</string>
     <string name="resubmitAssignment">Gen-indsend opgave</string>
 
+    <string name="launchExternalTool">Start eksternt værktøj</string>
+
     <string name="preview">Eksempel</string>
-    <!--    Student Submission-->
+    <!-- Student Submission -->
     <string name="submissionUrlClearTextError">Der findes ingen forhåndsvisning for URL’er, der bruger \'http://\'</string>
     <string name="submissionUrlNotAUrlError">Indtast venligst en gyldig URL</string>
     <string name="enterAUrlHereForYourSubmission">Indtast en URL for din aflevering her</string>
+    <string name="addFileFabContentDesc">Vis indstillinger for Tilføj fil</string>
+    <string name="recordAudio">Optage audio</string>
+
     <!-- Student Submission -->
     <string name="submissionWrite">Skriv&#8230;</string>
     <!-- Student Submission Details -->
@@ -83,10 +88,10 @@
     <string name="rubricCustomScore">Brugerdefineret resultat</string>
     <string name="rubricEmptyMessage">Der er ingen rubrik til denne opgave</string>
     <string name="rubricViewLongDescription">Se lang beskrivelse</string>
-    <!--Profile Fragment Strings -->
+    <!-- Profile Fragment Strings -->
     <string name="canvasVersionNum">Version:</string>
 
-    <!--Content Descriptions-->
+    <!-- Content Descriptions -->
     <string name="canvasLogo">Canvas Logo</string>
     <string name="enterURL">Indtast dit Canvas URL:</string>
     <string name="exampleURLSimple">myschool.instructure.com</string>
@@ -119,7 +124,7 @@
     <string name="bookmarkUpdated">Bogmærke opdateret</string>
     <string name="no_bookmarks">Opret et bogmærke og se det her!</string>
 
-    <!--Date strings-->
+    <!-- Date strings -->
     <string name="today">I dag</string>
     <string name="past">Tidligere</string>
     <string name="noDate">Ingen dato</string>
@@ -134,7 +139,7 @@
     <string name="submissionDetailsDueAt">Forfalder d. %1$s kl. %2$s</string> <!--Ex: Due April 2 at 11:59pm-->
     <string name="lowercaseAM">am</string>
     <string name="lowercasePM">pm</string>
-    <!--Assignments-->
+    <!-- Assignments -->
     <string name="assignmentDue">Forfalder</string>
     <string name="assignmentDueColon">Forfalder: </string>
     <string name="assignmentLastSubmission">Sidste indsendelse</string>
@@ -165,10 +170,10 @@
     <string name="cancel">Annullér</string>
     <string name="sendNotification">Informer brugere om, at dette indhold er blevet ændret</string>
 
-    <!--Discussions-->
+    <!-- Discussions -->
     <string name="forbidden">Svar er kun synlige for dem, der har lagt mindst ét svar ud.</string>
 
-    <!--Events-->
+    <!-- Events -->
     <string name="Starts">Starter</string>
     <string name="Ends">Slutter</string>
     <string name="allDayEvent">Heldagsbegivenhed</string>
@@ -392,7 +397,7 @@
     <string name="entireGroupSelected">Hele denne grupper er allerede valgt.</string>
     <string name="noUsersInGroup">Der er ingen brugere i denne gruppe</string>
 
-    <!--Notifications-->
+    <!-- Notifications -->
     <string name="deleted">Slettet</string>
     <string name="gradedDiscussion">Bedømt diskussion.</string>
     <string name="pointsPossible">Mulige points.</string>
@@ -496,11 +501,11 @@
     <!-- LockInfoHTMLHelper Strings -->
     <string name="lockedAssignmentNotModule">Denne opgave er låst.</string>
 
-    <!--New Course Layout Strings -->
+    <!-- New Course Layout Strings -->
     <string name="myCourses">Mine fag</string>
 
 
-    <!--New Submission Strings -->
+    <!-- New Submission Strings -->
     <string name="textEntry">Tekstindlæg</string>
     <string name="onlineURL">Online URL</string>
     <string name="enterTextEntry">Indtast tekstpostering</string>
@@ -519,18 +524,18 @@
 
 
 
-    <!--DataLoss Fragment Strings -->
+    <!-- DataLoss Fragment Strings -->
     <string name="unsavedProgress">Ikke gemt fremgang</string>
     <string name="informationLost">Ikke-gemte oplysninger vil gå tabt. Vil du fortsætte?</string>
     <string name="slash"> / </string>
 
-    <!--Delete Notification Strings -->
+    <!-- Delete Notification Strings -->
     <string name="confirm">Bekræft</string>
 
-    <!--Dismiss To do String-->
+    <!-- Dismiss To do String -->
     <string name="markAsDone">Marker som færdig</string>
 
-    <!--Submission Details Strings -->
+    <!-- Submission Details Strings -->
     <string name="next">Næste</string>
     <string name="addSubmission">Indsend</string>
     <string name="addAnotherSubmission">Indsend igen</string>
@@ -613,7 +618,7 @@
     <string name="choose_answers_below">Vælg dine svar nedenfor</string>
 
 
-    <!--Widget Strings-->
+    <!-- Widget Strings -->
     <string name="todoWidgetTitle">Opgaveliste</string>
     <string name="gradesWidgetTitle">Karakterer</string>
     <string name="notificationWidgetTitle">Notifikationer</string>
@@ -667,13 +672,13 @@
     <string name="search_course">kursus kuser klasse klasser</string>
     <string name="search_grades">karakter karakterer</string>
 
-    <!-- ShareFileOptions Dialog-->
+    <!-- ShareFileOptions Dialog -->
     <string name="uploadTo">Overfør til </string>
     <string name="uploadToCanvas">Overfør til Canvas</string>
     <string name="uploadMyFiles">Mine filer</string>
     <string name="uploadCourseFiles">Fagets filer</string>
     <string name="uploadToSubmissionComment">Upload til afleveringskommentar</string>
-    <!-- ChangeLog Dialog-->
+    <!-- ChangeLog Dialog -->
     <string name="changelog">Ændrings-log</string>
 
     <string name="editUserName">Rediger brugernavn</string>
@@ -686,7 +691,7 @@
     <string name="no_courses">Tryk for at tilføje et kursus</string>
     <string name="no_courses_available">Intet kursus her, tag en fridag!</string>
     <string name="no_courses_grades">Tilmeld venligst til kurset for at se dine karakterer</string>
-    <!--Navigation Drawer-->
+    <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">Åbn navigationsskuffe</string>
     <string name="navigation_drawer_close">Luk navigationsskuffe</string>
 
@@ -748,7 +753,7 @@
 
     <string name="no_data_connection">Kontrollér din dataforbindelse, og prøv igen.</string>
 
-    <!--Notification Preferences-->
+    <!-- Notification Preferences -->
     <string name="notification_primary_inbox_title">Canvas-meddelelse</string>
     <string name="notification_channel_name_primary">Almindelige Canvas-meddelelser</string>
     <string name="notification_channel_description_primary">Yderligere konfiguration af meddelelser kan ske i sektionen Canvas-meddelelsesindstillinger.</string>
@@ -919,7 +924,7 @@
     <string name="groupNotFavorited">Gruppe %s, ikke favorit.</string>
     <string name="accountGroup">Kontogruppe</string>
 
-    <!--Recents-->
+    <!-- Recents -->
     <string name="recents_empty">Fra kursustilpasningsskærmen tilføj et kursus eller gruppe for at se dem her.</string>
 
     <string name="toolbar_close">Luk Værktøjsbar</string>
@@ -947,6 +952,7 @@
     <string name="select">Vælg</string>
     <string name="choice_position">Valg %d</string>
     <string name="updating_module_info">Opdaterer forløbinformation&#8230;</string>
+    <string name="arc">Arc</string>
     <string name="pending_review">Afventer revision</string>
     <string name="totalPoints">%s point</string>
     <string name="totalPointsText">Samlede point</string>
@@ -961,9 +967,13 @@
     <string name="acceptCourseInvitation">Acceptér</string>
     <string name="declineCourseInvitation">Afvis</string>
 
+    <string name="outOf">ud af</string>
     <!-- File Strings -->
     <string name="noFilesSubtextCourse">Der er ingen filer associeret med dette fag.</string>
     <string name="noFilesSubtextGroup">Der er ingen filer associeret med denne gruppe.</string>
+    <string name="fileTypeNotSupported">Ikke-understøttet filtype</string>
+    <string name="fileTypeNotSupportedBody">Denne opgave tillader kun bestemte filtyper: %s</string>
+
     <array name="file_size_units">
         <item>B</item>
         <item>KB</item>
@@ -1042,4 +1052,23 @@
     <string name="addChildErrorMessage">Parring mislykkedes. Sørg for, at din parringskode er korrekt og ikke udløbet.</string>
     <string name="gradeComplete">Fuldført</string>
     <string name="gradeIncomplete">Ufuldstændig</string>
+    <!-- Floating Recording View Strings -->
+    <string name="recordingTimerDefault">00:00:00</string>
+    <string name="recordingTimerContentDescription">%1$d timer, %2$d minutter og %3$d sekunder</string>
+    <string name="recordingTimerSpeechDivider">%1$s ud af %2$s</string>
+    <string name="replay">Genspil</string>
+    <string name="stop">Stop</string>
+    <string name="startRecordingAudio">Start optagelse af lyd</string>
+    <string name="stopRecordingAudio">Stop optagelse af lyd</string>
+    <string name="startRecordingVideo">Start optagelse af video</string>
+    <string name="stopRecordingVideo">Stop optagelse af video</string>
+    <string name="closeRecordingView">Luk optagelsesvisning</string>
+    <string name="deleteRecording">Slet optagelse</string>
+    <string name="videoCommentReplay">Genspil videokommentar</string>
+    <string name="errorShowingVideoReplay">Der opstod en fejl under forsøg på at se genafspilningen.</string>
+    <string name="errorSubmittingMediaComment">Der opstod en fejl under forsøg på at indsende din mediekommentar.</string>
+
+    <string name="addVideoComment">Tilføj en videokommentar</string>
+    <string name="addAudioComment">Tilføj en lydkommentar</string>
+
 </resources>

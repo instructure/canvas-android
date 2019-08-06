@@ -929,6 +929,7 @@
     <string name="allSections">Все разделы</string>
 
     <string name="gauge">Gauge</string>
+    <string name="arc">Arc</string>
     <string name="ltiLaunchFailure">В данный момент загрузка этого LTI невозможна.</string>
     <string name="downloading">Загрузка...</string>
 

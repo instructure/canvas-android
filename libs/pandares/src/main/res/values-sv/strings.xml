@@ -52,11 +52,16 @@
     <string name="allowedFileTypes">Filtyper som tillåts</string>
     <string name="resubmitAssignment">Lämna in uppgift igen</string>
 
+    <string name="launchExternalTool">Starta externt verktyg</string>
+
     <string name="preview">Förhandsvisa</string>
-    <!--    Student Submission-->
+    <!-- Student Submission -->
     <string name="submissionUrlClearTextError">Ingen förhandsgranskning är tillgänglig för URL:er som använder \'http://\'</string>
     <string name="submissionUrlNotAUrlError">Vänligen ange en giltig URL</string>
     <string name="enterAUrlHereForYourSubmission">Ange en URL här för din inlämning</string>
+    <string name="addFileFabContentDesc">Visa alternativ för Lägg till fil</string>
+    <string name="recordAudio">Spela in ljud</string>
+
     <!-- Student Submission -->
     <string name="submissionWrite">Skriv&#8230;</string>
     <!-- Student Submission Details -->
@@ -83,10 +88,10 @@
     <string name="rubricCustomScore">Anpassad poäng</string>
     <string name="rubricEmptyMessage">Det finns ingen matris för den här uppgiften</string>
     <string name="rubricViewLongDescription">Visa lång beskrivning</string>
-    <!--Profile Fragment Strings -->
+    <!-- Profile Fragment Strings -->
     <string name="canvasVersionNum">Version:</string>
 
-    <!--Content Descriptions-->
+    <!-- Content Descriptions -->
     <string name="canvasLogo">Canvas Logo</string>
     <string name="enterURL">Fyll i din Canvas URL:</string>
     <string name="exampleURLSimple">myschool.instructure.com</string>
@@ -119,7 +124,7 @@
     <string name="bookmarkUpdated">Bokmärket uppdaterades</string>
     <string name="no_bookmarks">Skapa ett bokmärke och se det här!</string>
 
-    <!--Date strings-->
+    <!-- Date strings -->
     <string name="today">Idag</string>
     <string name="past">Tidigare</string>
     <string name="noDate">Inget datum</string>
@@ -134,7 +139,7 @@
     <string name="submissionDetailsDueAt">Ska vara klar %1$s klockan %2$s</string> <!--Ex: Due April 2 at 11:59pm-->
     <string name="lowercaseAM">am</string>
     <string name="lowercasePM">pm</string>
-    <!--Assignments-->
+    <!-- Assignments -->
     <string name="assignmentDue">Förfallodatum</string>
     <string name="assignmentDueColon">Förfallodatum: </string>
     <string name="assignmentLastSubmission">Senaste inlämning</string>
@@ -165,10 +170,10 @@
     <string name="cancel">Avbryt</string>
     <string name="sendNotification">Meddela användare att innehållet har ändrats</string>
 
-    <!--Discussions-->
+    <!-- Discussions -->
     <string name="forbidden">Svar är endast synliga för de som har publicerat minst ett svar.</string>
 
-    <!--Events-->
+    <!-- Events -->
     <string name="Starts">Börjar</string>
     <string name="Ends">Avslutas</string>
     <string name="allDayEvent">Heldagsaktivitet</string>
@@ -392,7 +397,7 @@
     <string name="entireGroupSelected">Hela den här gruppen har redan valts</string>
     <string name="noUsersInGroup">Det finns inga användare i den här gruppen</string>
 
-    <!--Notifications-->
+    <!-- Notifications -->
     <string name="deleted">Raderad</string>
     <string name="gradedDiscussion">Betygsatt diskussion.</string>
     <string name="pointsPossible">Möjliga poäng.</string>
@@ -496,11 +501,11 @@
     <!-- LockInfoHTMLHelper Strings -->
     <string name="lockedAssignmentNotModule">Den här uppgiften är låst.</string>
 
-    <!--New Course Layout Strings -->
+    <!-- New Course Layout Strings -->
     <string name="myCourses">Min kurser</string>
 
 
-    <!--New Submission Strings -->
+    <!-- New Submission Strings -->
     <string name="textEntry">Textinlägg</string>
     <string name="onlineURL">Online URL</string>
     <string name="enterTextEntry">Gör textinlägg</string>
@@ -519,18 +524,18 @@
 
 
 
-    <!--DataLoss Fragment Strings -->
+    <!-- DataLoss Fragment Strings -->
     <string name="unsavedProgress">Framsteg som inte sparats</string>
     <string name="informationLost">Ej sparad information kommer att förloras. Vill du fortsätta?</string>
     <string name="slash"> / </string>
 
-    <!--Delete Notification Strings -->
+    <!-- Delete Notification Strings -->
     <string name="confirm">Bekräfta</string>
 
-    <!--Dismiss To do String-->
+    <!-- Dismiss To do String -->
     <string name="markAsDone">Markera som färdig</string>
 
-    <!--Submission Details Strings -->
+    <!-- Submission Details Strings -->
     <string name="next">Nästa</string>
     <string name="addSubmission">Lämna in</string>
     <string name="addAnotherSubmission">Lämna in igen</string>
@@ -613,7 +618,7 @@
     <string name="choose_answers_below">Välj dina svar nedan</string>
 
 
-    <!--Widget Strings-->
+    <!-- Widget Strings -->
     <string name="todoWidgetTitle">Att göra</string>
     <string name="gradesWidgetTitle">Omdömen</string>
     <string name="notificationWidgetTitle">Meddelanden</string>
@@ -667,13 +672,13 @@
     <string name="search_course">kurs kurser klass klasser</string>
     <string name="search_grades">betyg betyg</string>
 
-    <!-- ShareFileOptions Dialog-->
+    <!-- ShareFileOptions Dialog -->
     <string name="uploadTo">Ladda upp till </string>
     <string name="uploadToCanvas">Ladda upp till Canvas</string>
     <string name="uploadMyFiles">Mina filer</string>
     <string name="uploadCourseFiles">Kursfiler</string>
     <string name="uploadToSubmissionComment">Ladda upp till inlämningskommentar</string>
-    <!-- ChangeLog Dialog-->
+    <!-- ChangeLog Dialog -->
     <string name="changelog">Ändringslogg</string>
 
     <string name="editUserName">Redigera användarnamn</string>
@@ -686,7 +691,7 @@
     <string name="no_courses">Peka för att lägga till en kurs</string>
     <string name="no_courses_available">Inga kurser här, ta ledigt!</string>
     <string name="no_courses_grades">Delta i en kurs för att se dina betyg</string>
-    <!--Navigation Drawer-->
+    <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">Öppna navigeringsmeny</string>
     <string name="navigation_drawer_close">Stäng navigeringsmeny</string>
 
@@ -748,7 +753,7 @@
 
     <string name="no_data_connection">Kontrollera din dataanslutning och försök igen.</string>
 
-    <!--Notification Preferences-->
+    <!-- Notification Preferences -->
     <string name="notification_primary_inbox_title">Canvas meddelande</string>
     <string name="notification_channel_name_primary">Allmänna Canvas meddelanden</string>
     <string name="notification_channel_description_primary">Ytterligare konfiguration av meddelanden kan göras inom Canvas meddelande preferenssektion.</string>
@@ -919,7 +924,7 @@
     <string name="groupNotFavorited">Grupp %s, inte favorit.</string>
     <string name="accountGroup">Kontogrupp</string>
 
-    <!--Recents-->
+    <!-- Recents -->
     <string name="recents_empty">Lägg till en kurs eller grupp i fönstret för kursanpassning för att se dem här.</string>
 
     <string name="toolbar_close">Stäng verktygsfältet</string>
@@ -947,6 +952,7 @@
     <string name="select">Välj</string>
     <string name="choice_position">Val %d</string>
     <string name="updating_module_info">Uppdaterar modulinformation&#8230;</string>
+    <string name="arc">Cirkelbåge</string>
     <string name="pending_review">Väntar på granskning</string>
     <string name="totalPoints">%s poäng</string>
     <string name="totalPointsText">Totala poäng</string>
@@ -961,9 +967,13 @@
     <string name="acceptCourseInvitation">Acceptera</string>
     <string name="declineCourseInvitation">Neka</string>
 
+    <string name="outOf">av</string>
     <!-- File Strings -->
     <string name="noFilesSubtextCourse">Det finns inga filer associerade med denna kurs.</string>
     <string name="noFilesSubtextGroup">Det finns inga filer associerade med denna grupp.</string>
+    <string name="fileTypeNotSupported">Filtyper som inte stöds</string>
+    <string name="fileTypeNotSupportedBody">Den här uppgiften tillåter endast vissa filtyper: %s</string>
+
     <array name="file_size_units">
         <item>B</item>
         <item>KB</item>
@@ -1042,4 +1052,23 @@
     <string name="addChildErrorMessage">Det gick inte att koppla. Se till att din kopplingskod är korrekt och att dess tidsgräns inte har överskridits.</string>
     <string name="gradeComplete">Färdig</string>
     <string name="gradeIncomplete">Ofullständig</string>
+    <!-- Floating Recording View Strings -->
+    <string name="recordingTimerDefault">00:00:00</string>
+    <string name="recordingTimerContentDescription">%1$d timmar, %2$d minuter och %3$d sekunder</string>
+    <string name="recordingTimerSpeechDivider">%1$s av %2$s</string>
+    <string name="replay">Repris</string>
+    <string name="stop">Stopp</string>
+    <string name="startRecordingAudio">Börja spela in ljud</string>
+    <string name="stopRecordingAudio">Sluta spela in ljud</string>
+    <string name="startRecordingVideo">Börja spela in video</string>
+    <string name="stopRecordingVideo">Sluta spela in video</string>
+    <string name="closeRecordingView">Stäng inspelningsvyn</string>
+    <string name="deleteRecording">Radera inspelning</string>
+    <string name="videoCommentReplay">Video-kommentar repris</string>
+    <string name="errorShowingVideoReplay">Det gick inte att visa återuppspelningen.</string>
+    <string name="errorSubmittingMediaComment">Försöket att skicka in ditt medieinnehåll misslyckades.</string>
+
+    <string name="addVideoComment">Lägg till video-kommentar</string>
+    <string name="addAudioComment">Lägg till ljud-kommentar</string>
+
 </resources>
