@@ -51,11 +51,16 @@
     <string name="allowedFileTypes">允許的檔案類型</string>
     <string name="resubmitAssignment">重新提交作業</string>
 
+    <string name="launchExternalTool">啟動外部工具</string>
+
     <string name="preview">預覽</string>
-    <!--    Student Submission-->
+    <!-- Student Submission -->
     <string name="submissionUrlClearTextError">沒有使用 \'http://\' 的 URL 的可用預覽</string>
     <string name="submissionUrlNotAUrlError">請輸入有效的 URL</string>
     <string name="enterAUrlHereForYourSubmission">請在此輸入您的提交項目的 URL</string>
+    <string name="addFileFabContentDesc">顯示添加檔案選項</string>
+    <string name="recordAudio">錄製音訊</string>
+
     <!-- Student Submission -->
     <string name="submissionWrite">寫入&#8230;</string>
     <!-- Student Submission Details -->
@@ -82,10 +87,10 @@
     <string name="rubricCustomScore">自訂分數</string>
     <string name="rubricEmptyMessage">此作業沒有評分標準</string>
     <string name="rubricViewLongDescription">檢視完整說明</string>
-    <!--Profile Fragment Strings -->
+    <!-- Profile Fragment Strings -->
     <string name="canvasVersionNum">版本：</string>
 
-    <!--Content Descriptions-->
+    <!-- Content Descriptions -->
     <string name="canvasLogo">Canvas 標誌</string>
     <string name="enterURL">請輸入您的 Canvas URL：</string>
     <string name="exampleURLSimple">myschool.instructure.com</string>
@@ -118,7 +123,7 @@
     <string name="bookmarkUpdated">書籤已更新</string>
     <string name="no_bookmarks">創建一個書籤，然後在此處查看！</string>
 
-    <!--Date strings-->
+    <!-- Date strings -->
     <string name="today">今天</string>
     <string name="past">歷史</string>
     <string name="noDate">無日期</string>
@@ -133,7 +138,7 @@
     <string name="submissionDetailsDueAt">截止於 %1$s 的 %2$s</string> <!--Ex: Due April 2 at 11:59pm-->
     <string name="lowercaseAM">上午</string>
     <string name="lowercasePM">下午</string>
-    <!--Assignments-->
+    <!-- Assignments -->
     <string name="assignmentDue">截止日期</string>
     <string name="assignmentDueColon">截止日期：</string>
     <string name="assignmentLastSubmission">最後一次提交</string>
@@ -164,10 +169,10 @@
     <string name="cancel">取消</string>
     <string name="sendNotification">通知使用者該內容已變更</string>
 
-    <!--Discussions-->
+    <!-- Discussions -->
     <string name="forbidden">只有曾發送一個或以上回覆的才能查閱回覆。</string>
 
-    <!--Events-->
+    <!-- Events -->
     <string name="Starts">開始</string>
     <string name="Ends">結束</string>
     <string name="allDayEvent">所有日期活動</string>
@@ -386,7 +391,7 @@
     <string name="entireGroupSelected">整個群組已被選中。</string>
     <string name="noUsersInGroup">該群組中沒有使用者</string>
 
-    <!--Notifications-->
+    <!-- Notifications -->
     <string name="deleted">已刪除</string>
     <string name="gradedDiscussion">已評分的討論。</string>
     <string name="pointsPossible">可能的分數。</string>
@@ -490,11 +495,11 @@
     <!-- LockInfoHTMLHelper Strings -->
     <string name="lockedAssignmentNotModule">該作業已被鎖定。</string>
 
-    <!--New Course Layout Strings -->
+    <!-- New Course Layout Strings -->
     <string name="myCourses">我的課程</string>
 
 
-    <!--New Submission Strings -->
+    <!-- New Submission Strings -->
     <string name="textEntry">文字條目</string>
     <string name="onlineURL">線上 URL</string>
     <string name="enterTextEntry">輸入文字條目</string>
@@ -513,18 +518,18 @@
 
 
 
-    <!--DataLoss Fragment Strings -->
+    <!-- DataLoss Fragment Strings -->
     <string name="unsavedProgress">進度未儲存</string>
     <string name="informationLost">未儲存的資料將丟失。您確定要繼續嗎？</string>
     <string name="slash">/</string>
 
-    <!--Delete Notification Strings -->
+    <!-- Delete Notification Strings -->
     <string name="confirm">確認</string>
 
-    <!--Dismiss To do String-->
+    <!-- Dismiss To do String -->
     <string name="markAsDone">標記為已完成</string>
 
-    <!--Submission Details Strings -->
+    <!-- Submission Details Strings -->
     <string name="next">下一個</string>
     <string name="addSubmission">提交</string>
     <string name="addAnotherSubmission">再次提交</string>
@@ -607,7 +612,7 @@
     <string name="choose_answers_below">於下方選擇您的回答</string>
 
 
-    <!--Widget Strings-->
+    <!-- Widget Strings -->
     <string name="todoWidgetTitle">待辦事項</string>
     <string name="gradesWidgetTitle">成績</string>
     <string name="notificationWidgetTitle">通知</string>
@@ -661,13 +666,13 @@
     <string name="search_course">課程 課程 班級 班級</string>
     <string name="search_grades">評分 成績</string>
 
-    <!-- ShareFileOptions Dialog-->
+    <!-- ShareFileOptions Dialog -->
     <string name="uploadTo">上載至</string>
     <string name="uploadToCanvas">上載至 Canvas</string>
     <string name="uploadMyFiles">我的檔案</string>
     <string name="uploadCourseFiles">課程檔案</string>
     <string name="uploadToSubmissionComment">上載到提交項目評論</string>
-    <!-- ChangeLog Dialog-->
+    <!-- ChangeLog Dialog -->
     <string name="changelog">變更記錄</string>
 
     <string name="editUserName">編輯使用者名稱</string>
@@ -680,7 +685,7 @@
     <string name="no_courses">點選以添加一門課程</string>
     <string name="no_courses_available">這裡沒有課程，不妨放鬆一天吧！</string>
     <string name="no_courses_grades">請註冊一門課程以查看您的成績</string>
-    <!--Navigation Drawer-->
+    <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">打開導航工具檔案夾</string>
     <string name="navigation_drawer_close">關閉導航工具檔案夾</string>
 
@@ -742,7 +747,7 @@
 
     <string name="no_data_connection">請檢查您的資料連接並重試。</string>
 
-    <!--Notification Preferences-->
+    <!-- Notification Preferences -->
     <string name="notification_primary_inbox_title">Canvas 通知</string>
     <string name="notification_channel_name_primary">一般 Canvas 通知</string>
     <string name="notification_channel_description_primary">可於 Canvas 通知偏好的部分進行更多通知配置。</string>
@@ -910,7 +915,7 @@
     <string name="groupNotFavorited">群組 %s，非最愛。</string>
     <string name="accountGroup">帳戶群組</string>
 
-    <!--Recents-->
+    <!-- Recents -->
     <string name="recents_empty">從個性化課程設定畫面添加課程或群組，以便在此瀏覽。</string>
 
     <string name="toolbar_close">工具欄關閉</string>
@@ -938,6 +943,7 @@
     <string name="select">選擇</string>
     <string name="choice_position">選擇 %d</string>
     <string name="updating_module_info">更新單元資料&#8230;</string>
+    <string name="arc">Arc</string>
     <string name="pending_review">待檢閱</string>
     <string name="totalPoints">%s 分</string>
     <string name="totalPointsText">總分</string>
@@ -952,9 +958,13 @@
     <string name="acceptCourseInvitation">接受</string>
     <string name="declineCourseInvitation">拒絕</string>
 
+    <string name="outOf">滿分為</string>
     <!-- File Strings -->
     <string name="noFilesSubtextCourse">沒有與此課程關聯的檔案。</string>
     <string name="noFilesSubtextGroup">沒有與此群組關聯的檔案。</string>
+    <string name="fileTypeNotSupported">不支援的檔案類型</string>
+    <string name="fileTypeNotSupportedBody">此作業僅允許部分檔案類型：%s</string>
+
     <array name="file_size_units">
         <item>B</item>
         <item>KB</item>
@@ -1031,4 +1041,23 @@
     <string name="addChildErrorMessage">配對失敗。請確保您的配對代碼正確，並在使用限期內。</string>
     <string name="gradeComplete">完成</string>
     <string name="gradeIncomplete">未完成</string>
+    <!-- Floating Recording View Strings -->
+    <string name="recordingTimerDefault">00:00:00</string>
+    <string name="recordingTimerContentDescription">%1$d 小時 %2$d 分鐘 %3$d 秒</string>
+    <string name="recordingTimerSpeechDivider">%1$s 分，滿分為 %2$s</string>
+    <string name="replay">重播</string>
+    <string name="stop">停止</string>
+    <string name="startRecordingAudio">開始錄製音訊</string>
+    <string name="stopRecordingAudio">停止錄製音訊</string>
+    <string name="startRecordingVideo">開始錄製視訊</string>
+    <string name="stopRecordingVideo">停止錄製視訊</string>
+    <string name="closeRecordingView">關閉錄製畫面</string>
+    <string name="deleteRecording">刪除錄製內容</string>
+    <string name="videoCommentReplay">視訊評論重播</string>
+    <string name="errorShowingVideoReplay">嘗試檢視重播時發生錯誤。</string>
+    <string name="errorSubmittingMediaComment">嘗試提交您的媒體評論時發生錯誤。</string>
+
+    <string name="addVideoComment">添加視訊評論</string>
+    <string name="addAudioComment">添加音訊評論</string>
+
 </resources>

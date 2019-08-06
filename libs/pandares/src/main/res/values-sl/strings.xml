@@ -52,11 +52,16 @@
     <string name="allowedFileTypes">Dovoljene vrste datotek</string>
     <string name="resubmitAssignment">Ponovno pošlji nalogo</string>
 
+    <string name="launchExternalTool">Zaženi zunanje orodje</string>
+
     <string name="preview">Predogled</string>
-    <!--    Student Submission-->
+    <!-- Student Submission -->
     <string name="submissionUrlClearTextError">Za naslove URL, ki uporabljajo »http://«, predogled ni na voljo.</string>
     <string name="submissionUrlNotAUrlError">Vnesite veljaven naslov URL.</string>
     <string name="enterAUrlHereForYourSubmission">Tukaj vnesite naslov URL za svojo oddajo</string>
+    <string name="addFileFabContentDesc">Prikaži možnosti za Dodaj datoteko</string>
+    <string name="recordAudio">Posnemi zvok</string>
+
     <!-- Student Submission -->
     <string name="submissionWrite">Zapis&#8230;</string>
     <!-- Student Submission Details -->
@@ -83,10 +88,10 @@
     <string name="rubricCustomScore">Po meri prilagojen rezultat</string>
     <string name="rubricEmptyMessage">Za to nalogo ni ocenjevalnega vodnika</string>
     <string name="rubricViewLongDescription">Ogled dolgega opisa</string>
-    <!--Profile Fragment Strings -->
+    <!-- Profile Fragment Strings -->
     <string name="canvasVersionNum">Različica:</string>
 
-    <!--Content Descriptions-->
+    <!-- Content Descriptions -->
     <string name="canvasLogo">Logotip sistema Canvas</string>
     <string name="enterURL">Vnesite svoj naslov URL Canvas:</string>
     <string name="exampleURLSimple">myschool.instructure.com</string>
@@ -119,7 +124,7 @@
     <string name="bookmarkUpdated">Zaznamek je posodobljen.</string>
     <string name="no_bookmarks">Ustvarite zaznamek in si ga nato oglejte tukaj.</string>
 
-    <!--Date strings-->
+    <!-- Date strings -->
     <string name="today">Danes</string>
     <string name="past">Preteklo</string>
     <string name="noDate">Brez datuma</string>
@@ -134,7 +139,7 @@
     <string name="submissionDetailsDueAt">Rok %1$s ob %2$s.</string> <!--Ex: Due April 2 at 11:59pm-->
     <string name="lowercaseAM">dop.</string>
     <string name="lowercasePM">pop.</string>
-    <!--Assignments-->
+    <!-- Assignments -->
     <string name="assignmentDue">Rok</string>
     <string name="assignmentDueColon">Rok: </string>
     <string name="assignmentLastSubmission">Zadnja oddaja:</string>
@@ -165,10 +170,10 @@
     <string name="cancel">Prekliči</string>
     <string name="sendNotification">Obvestite uporabnike, da se je ta vsebina spremenila.</string>
 
-    <!--Discussions-->
+    <!-- Discussions -->
     <string name="forbidden">Odgovori so vidni samo tistim, ki so objavili vsaj en odgovor.</string>
 
-    <!--Events-->
+    <!-- Events -->
     <string name="Starts">Začne se</string>
     <string name="Ends">Konča se</string>
     <string name="allDayEvent">Celodnevni dogodek</string>
@@ -392,7 +397,7 @@
     <string name="entireGroupSelected">Ta celotna skupina je že izbrana.</string>
     <string name="noUsersInGroup">V tej skupini ni uporabnikov.</string>
 
-    <!--Notifications-->
+    <!-- Notifications -->
     <string name="deleted">Odstranjeno</string>
     <string name="gradedDiscussion">Ocenjena razprava</string>
     <string name="pointsPossible">Mogoče točke</string>
@@ -496,11 +501,11 @@
     <!-- LockInfoHTMLHelper Strings -->
     <string name="lockedAssignmentNotModule">Ta naloga je zaklenjena.</string>
 
-    <!--New Course Layout Strings -->
+    <!-- New Course Layout Strings -->
     <string name="myCourses">Moji predmeti</string>
 
 
-    <!--New Submission Strings -->
+    <!-- New Submission Strings -->
     <string name="textEntry">Vnos besedila</string>
     <string name="onlineURL">Spletni naslov URL</string>
     <string name="enterTextEntry">Vnos besedila</string>
@@ -519,18 +524,18 @@
 
 
 
-    <!--DataLoss Fragment Strings -->
+    <!-- DataLoss Fragment Strings -->
     <string name="unsavedProgress">Neshranjeni napredek</string>
     <string name="informationLost">Neshranjene informacije bodo izgubljene. Ali želite nadaljevati?</string>
     <string name="slash"> / </string>
 
-    <!--Delete Notification Strings -->
+    <!-- Delete Notification Strings -->
     <string name="confirm">Potrdi</string>
 
-    <!--Dismiss To do String-->
+    <!-- Dismiss To do String -->
     <string name="markAsDone">Označi kot dokončano</string>
 
-    <!--Submission Details Strings -->
+    <!-- Submission Details Strings -->
     <string name="next">Naprej</string>
     <string name="addSubmission">Oddaj</string>
     <string name="addAnotherSubmission">Znova oddaj</string>
@@ -613,7 +618,7 @@
     <string name="choose_answers_below">Spodaj izberite svoje odgovore.</string>
 
 
-    <!--Widget Strings-->
+    <!-- Widget Strings -->
     <string name="todoWidgetTitle">Seznam opravil</string>
     <string name="gradesWidgetTitle">Ocene</string>
     <string name="notificationWidgetTitle">Obvestila</string>
@@ -667,13 +672,13 @@
     <string name="search_course">predmet predmeti razred razredi</string>
     <string name="search_grades">ocena ocene</string>
 
-    <!-- ShareFileOptions Dialog-->
+    <!-- ShareFileOptions Dialog -->
     <string name="uploadTo">Naloži v/na </string>
     <string name="uploadToCanvas">Naloži v Canvas</string>
     <string name="uploadMyFiles">Moje datoteke</string>
     <string name="uploadCourseFiles">Datoteke predmeta</string>
     <string name="uploadToSubmissionComment">Naloži v komentar oddaje</string>
-    <!-- ChangeLog Dialog-->
+    <!-- ChangeLog Dialog -->
     <string name="changelog">Dnevnik sprememb</string>
 
     <string name="editUserName">Uredi uporabniško ime</string>
@@ -686,7 +691,7 @@
     <string name="no_courses">Tapnite, da dodate predmet</string>
     <string name="no_courses_available">Tu ni predmetov, vzemite si prost dan.</string>
     <string name="no_courses_grades">Za ogled ocen se vpišite v predmet.</string>
-    <!--Navigation Drawer-->
+    <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">Odprite predal za navigacijo</string>
     <string name="navigation_drawer_close">Zaprite predal za navigacijo</string>
 
@@ -748,7 +753,7 @@
 
     <string name="no_data_connection">Preverite svojo podatkovno povezavo in poskusite znova.</string>
 
-    <!--Notification Preferences-->
+    <!-- Notification Preferences -->
     <string name="notification_primary_inbox_title">Obvestila Canvas</string>
     <string name="notification_channel_name_primary">Splošna obvestila Canvas</string>
     <string name="notification_channel_description_primary">Dodatno konfiguriranje obvestil je mogoče v sekciji Canvas »Prednostne nastavitve«.</string>
@@ -919,7 +924,7 @@
     <string name="groupNotFavorited">%s skupine, ni priljubljeno.</string>
     <string name="accountGroup">Skupina računov</string>
 
-    <!--Recents-->
+    <!-- Recents -->
     <string name="recents_empty">Z zaslona za prilagoditev predmeta po meri dodajte predmet ali skupino, da si jih ogledate tukaj.</string>
 
     <string name="toolbar_close">Zapri orodno vrstico</string>
@@ -947,6 +952,7 @@
     <string name="select">Izberi</string>
     <string name="choice_position">Izbor %d</string>
     <string name="updating_module_info">Posodabljanje informacij o modulu&#8230;</string>
+    <string name="arc">Arc</string>
     <string name="pending_review">Čaka na pregled</string>
     <string name="totalPoints">%s točk</string>
     <string name="totalPointsText">Vsota točk:</string>
@@ -961,9 +967,13 @@
     <string name="acceptCourseInvitation">Sprejmi</string>
     <string name="declineCourseInvitation">Zavrni</string>
 
+    <string name="outOf">od</string>
     <!-- File Strings -->
     <string name="noFilesSubtextCourse">S tem predmetom ni povezana nobena datoteka.</string>
     <string name="noFilesSubtextGroup">S to skupino ni povezana nobena datoteka.</string>
+    <string name="fileTypeNotSupported">Nepodprta vrsta datoteke</string>
+    <string name="fileTypeNotSupportedBody">Pri tej nalogi so dovoljene le datoteke določene vrste: %s</string>
+
     <array name="file_size_units">
         <item>B</item>
         <item>kB</item>
@@ -1042,4 +1052,23 @@
     <string name="addChildErrorMessage">Vzpostavljanje povezave ni bilo uspešno. Prepričajte se, da je vaša koda za vzpostavljanje povezave pravilna in veljavna glede na časovno omejitev uporabe.</string>
     <string name="gradeComplete">Zaključeno</string>
     <string name="gradeIncomplete">Nezaključeno</string>
+    <!-- Floating Recording View Strings -->
+    <string name="recordingTimerDefault">00:00:00</string>
+    <string name="recordingTimerContentDescription">%1$d ur, %2$d minut in %3$d sekund</string>
+    <string name="recordingTimerSpeechDivider">%1$s od %2$s</string>
+    <string name="replay">Ponovno predvajaj</string>
+    <string name="stop">Zaustavi</string>
+    <string name="startRecordingAudio">Začni snemati zvočni posnetek</string>
+    <string name="stopRecordingAudio">Zaustavi snemanje zvočnega posnetka</string>
+    <string name="startRecordingVideo">Začni snemati videoposnetek</string>
+    <string name="stopRecordingVideo">Zaustavi snemanje videoposnetka</string>
+    <string name="closeRecordingView">Zapri prikaz snemanja</string>
+    <string name="deleteRecording">Izbriši posnetek</string>
+    <string name="videoCommentReplay">Ponovno predvajanje komentarja v obliki videoposnetka</string>
+    <string name="errorShowingVideoReplay">Pri poskusu ogleda predmeta je prišlo do napake.</string>
+    <string name="errorSubmittingMediaComment">Pri poskusu pošiljanja vašega komentarja v obliki medija je prišlo do napake.</string>
+
+    <string name="addVideoComment">Dodaj komentar v obliki videoposnetka</string>
+    <string name="addAudioComment">Dodaj komentar v obliki zvočnega posnetka</string>
+
 </resources>

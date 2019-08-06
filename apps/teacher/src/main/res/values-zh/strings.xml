@@ -884,6 +884,7 @@
     <string name="allSections">所有班次</string>
 
     <string name="gauge">Gauge</string>
+    <string name="arc">Arc</string>
     <string name="ltiLaunchFailure">此时不能加载此 LTI 工具。</string>
     <string name="downloading">正在下载...</string>
 

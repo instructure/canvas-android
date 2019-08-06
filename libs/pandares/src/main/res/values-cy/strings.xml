@@ -52,11 +52,16 @@
     <string name="allowedFileTypes">Mathau o Ffeiliau a Ganiateir</string>
     <string name="resubmitAssignment">Ailgyflwyno Aseiniad</string>
 
+    <string name="launchExternalTool">Lansio Adnodd Allanol</string>
+
     <string name="preview">Rhagolwg</string>
-    <!--    Student Submission-->
+    <!-- Student Submission -->
     <string name="submissionUrlClearTextError">Does dim rhagolwg ar gael ar gyfer URL sy\'n defnyddio \'http://\'</string>
     <string name="submissionUrlNotAUrlError">Rhowch URL dilys</string>
     <string name="enterAUrlHereForYourSubmission">Rhowch URL yma ar gyfer eich cyflwyniad</string>
+    <string name="addFileFabContentDesc">Dangos Ychwanegu Opsiynau Ffeiliau</string>
+    <string name="recordAudio">Recordio Sain</string>
+
     <!-- Student Submission -->
     <string name="submissionWrite">Ysgrifennwch&#8230;</string>
     <!-- Student Submission Details -->
@@ -83,10 +88,10 @@
     <string name="rubricCustomScore">Sgôr personol</string>
     <string name="rubricEmptyMessage">Does dim cyfarwyddyd sgorio ar gyfer yr aseiniad hwn</string>
     <string name="rubricViewLongDescription">Gweld disgrifiad hir</string>
-    <!--Profile Fragment Strings -->
+    <!-- Profile Fragment Strings -->
     <string name="canvasVersionNum">Fersiwn:</string>
 
-    <!--Content Descriptions-->
+    <!-- Content Descriptions -->
     <string name="canvasLogo">Logo Canvas</string>
     <string name="enterURL">Rhowch eich URL Canvas:</string>
     <string name="exampleURLSimple">myschool.instructure.com</string>
@@ -119,7 +124,7 @@
     <string name="bookmarkUpdated">Wedi Diweddaru Nod Tudalen</string>
     <string name="no_bookmarks">Creu nod tudalen a’i weld yma!</string>
 
-    <!--Date strings-->
+    <!-- Date strings -->
     <string name="today">Heddiw</string>
     <string name="past">Ddoe</string>
     <string name="noDate">Dim Dyddiad</string>
@@ -134,7 +139,7 @@
     <string name="submissionDetailsDueAt">Erbyn %1$s am %2$s</string> <!--Ex: Due April 2 at 11:59pm-->
     <string name="lowercaseAM">am</string>
     <string name="lowercasePM">pm</string>
-    <!--Assignments-->
+    <!-- Assignments -->
     <string name="assignmentDue">Erbyn</string>
     <string name="assignmentDueColon">Erbyn: </string>
     <string name="assignmentLastSubmission">Cyflwyniad Diwethaf</string>
@@ -165,10 +170,10 @@
     <string name="cancel">Canslo</string>
     <string name="sendNotification">Rhoi gwybod i ddefnyddwyr bod y cynnwys hwn wedi newid</string>
 
-    <!--Discussions-->
+    <!-- Discussions -->
     <string name="forbidden">Dim ond y rheini sydd wedi cyflwyno o leiaf un ateb sy’n gallu gweld yr atebion.</string>
 
-    <!--Events-->
+    <!-- Events -->
     <string name="Starts">Yn dechrau</string>
     <string name="Ends">Yn gorffen</string>
     <string name="allDayEvent">Digwyddiad Diwrnod Cyfan</string>
@@ -392,7 +397,7 @@
     <string name="entireGroupSelected">Mae’r grŵp hwn wedi cael ei ddewis yn barod</string>
     <string name="noUsersInGroup">Does dim defnyddwyr yn y grŵp hwn</string>
 
-    <!--Notifications-->
+    <!-- Notifications -->
     <string name="deleted">Wedi dileu</string>
     <string name="gradedDiscussion">Trafodaeth wedi’i Graddio.</string>
     <string name="pointsPossible">Pwynt yn bosib.</string>
@@ -496,11 +501,11 @@
     <!-- LockInfoHTMLHelper Strings -->
     <string name="lockedAssignmentNotModule">Mae’r aseiniad hwn wedi’i gloi.</string>
 
-    <!--New Course Layout Strings -->
+    <!-- New Course Layout Strings -->
     <string name="myCourses">Fy Nghyrsiau</string>
 
 
-    <!--New Submission Strings -->
+    <!-- New Submission Strings -->
     <string name="textEntry">Cofnod Testun</string>
     <string name="onlineURL">URL Ar-lein</string>
     <string name="enterTextEntry">Rhowch Gofnod Testun</string>
@@ -519,18 +524,18 @@
 
 
 
-    <!--DataLoss Fragment Strings -->
+    <!-- DataLoss Fragment Strings -->
     <string name="unsavedProgress">Cynnydd heb ei gadw</string>
     <string name="informationLost">Bydd gwybodaeth sydd heb ei chadw yn cael ei cholli. Ydych chi am barhau?</string>
     <string name="slash"> / </string>
 
-    <!--Delete Notification Strings -->
+    <!-- Delete Notification Strings -->
     <string name="confirm">Cadarnhau</string>
 
-    <!--Dismiss To do String-->
+    <!-- Dismiss To do String -->
     <string name="markAsDone">Marcio eu bod wedi’u gwneud</string>
 
-    <!--Submission Details Strings -->
+    <!-- Submission Details Strings -->
     <string name="next">Nesaf</string>
     <string name="addSubmission">Cyflwyno</string>
     <string name="addAnotherSubmission">Cyflwyno eto</string>
@@ -613,7 +618,7 @@
     <string name="choose_answers_below">Dewiswch eich atebion isod</string>
 
 
-    <!--Widget Strings-->
+    <!-- Widget Strings -->
     <string name="todoWidgetTitle">Tasgau i’w Gwneud</string>
     <string name="gradesWidgetTitle">Graddau</string>
     <string name="notificationWidgetTitle">Hysbysiadau</string>
@@ -667,13 +672,13 @@
     <string name="search_course">cwrs cyrsiau dosbarth dosbarthiadau</string>
     <string name="search_grades">gradd graddau</string>
 
-    <!-- ShareFileOptions Dialog-->
+    <!-- ShareFileOptions Dialog -->
     <string name="uploadTo">Llwytho i fyny i </string>
     <string name="uploadToCanvas">Llwytho i fyny i Canvas</string>
     <string name="uploadMyFiles">Fy Ffeiliau</string>
     <string name="uploadCourseFiles">Ffeiliau Cwrs</string>
     <string name="uploadToSubmissionComment">Llwytho i fyny i Sylw ar y cyflwyniad</string>
-    <!-- ChangeLog Dialog-->
+    <!-- ChangeLog Dialog -->
     <string name="changelog">Changelog</string>
 
     <string name="editUserName">Golygu Enw Defnyddiwr</string>
@@ -686,7 +691,7 @@
     <string name="no_courses">Tapiwch i ychwanegu cwrs</string>
     <string name="no_courses_available">Dim cyrsiau yma, cymrwch ddiwrnod o wyliau!</string>
     <string name="no_courses_grades">Ymrestrwch ar gwrs i weld eich graddau</string>
-    <!--Navigation Drawer-->
+    <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">Agor drôr llywio</string>
     <string name="navigation_drawer_close">Cau drôr llywio</string>
 
@@ -748,7 +753,7 @@
 
     <string name="no_data_connection">Gwiriwch eich cyswllt data a rhowch gynnig arall arni.</string>
 
-    <!--Notification Preferences-->
+    <!-- Notification Preferences -->
     <string name="notification_primary_inbox_title">Hysbysiad Canvas</string>
     <string name="notification_channel_name_primary">Hysbysiadau Cyffredinol Canvas</string>
     <string name="notification_channel_description_primary">Gellir ffurfweddu hysbysiadau ymhellach o fewn yr adran Dewisiadau Hysbysiadau Canvas.</string>
@@ -919,7 +924,7 @@
     <string name="groupNotFavorited">Grŵp %s, ddim yn ffefryn.</string>
     <string name="accountGroup">Grŵp Cyfrif</string>
 
-    <!--Recents-->
+    <!-- Recents -->
     <string name="recents_empty">O’r sgrin addasu cwrs, ychwanegwch gwrs neu grŵp i’w gweld yma.</string>
 
     <string name="toolbar_close">Cau bar offer</string>
@@ -947,6 +952,7 @@
     <string name="select">Dewiswch</string>
     <string name="choice_position">Dewis %d</string>
     <string name="updating_module_info">Diweddaru gwybodaeth modiwl&#8230;</string>
+    <string name="arc">Arc</string>
     <string name="pending_review">Nes ceir adolygiad</string>
     <string name="totalPoints">%s pwynt</string>
     <string name="totalPointsText">Cyfanswm Pwyntiau</string>
@@ -961,9 +967,13 @@
     <string name="acceptCourseInvitation">Derbyn</string>
     <string name="declineCourseInvitation">Gwrthod</string>
 
+    <string name="outOf">allan o</string>
     <!-- File Strings -->
     <string name="noFilesSubtextCourse">Does dim ffeiliau\'n gysylltiedig â’r cwrs hwn.</string>
     <string name="noFilesSubtextGroup">Does dim ffeiliau’n gysylltiedig â’r grŵp hwn.</string>
+    <string name="fileTypeNotSupported">Mathau o Ffeil Anghydnaws</string>
+    <string name="fileTypeNotSupportedBody">Dydy&apos;r aseiniad hwn ddim ond yn caniatáu mathau penodol o ffeil: %s</string>
+
     <array name="file_size_units">
         <item>B</item>
         <item>KB</item>
@@ -1042,4 +1052,23 @@
     <string name="addChildErrorMessage">Wedi methu paru. Gwnewch yn siŵr bod eich cod paru yn gywir ac o fewn terfyn amser ar gyfer ei ddefnyddio.</string>
     <string name="gradeComplete">Cwblhau</string>
     <string name="gradeIncomplete">Heb Gwblhau</string>
+    <!-- Floating Recording View Strings -->
+    <string name="recordingTimerDefault">00:00:00</string>
+    <string name="recordingTimerContentDescription">%1$d awr, %2$d munud, a %3$d eiliad</string>
+    <string name="recordingTimerSpeechDivider">%1$s allan o %2$s</string>
+    <string name="replay">Ailadrodd</string>
+    <string name="stop">Stopio</string>
+    <string name="startRecordingAudio">Dechrau recordio sain</string>
+    <string name="stopRecordingAudio">Stopio recordio sain</string>
+    <string name="startRecordingVideo">Dechrau recordio fideo</string>
+    <string name="stopRecordingVideo">Stopio recordio fideo</string>
+    <string name="closeRecordingView">Cau gwedd recordio</string>
+    <string name="deleteRecording">Dileu’r recordiad</string>
+    <string name="videoCommentReplay">Ailadrodd Sylw Fideo</string>
+    <string name="errorShowingVideoReplay">Gwall wrth geisio ailchwarae.</string>
+    <string name="errorSubmittingMediaComment">Gwall wrth geisio cyflwyno eich sylw ar gyfryngau.</string>
+
+    <string name="addVideoComment">Ychwanegu sylw fideo</string>
+    <string name="addAudioComment">Ychwanegu sylw sain</string>
+
 </resources>

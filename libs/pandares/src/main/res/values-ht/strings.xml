@@ -52,11 +52,16 @@
     <string name="allowedFileTypes">Tip Fichye Otorize</string>
     <string name="resubmitAssignment">Resoumèt Sesyon</string>
 
+    <string name="launchExternalTool">Lanse Zouti Eksteryè</string>
+
     <string name="preview">Apèsi</string>
-    <!--    Student Submission-->
+    <!-- Student Submission -->
     <string name="submissionUrlClearTextError">Okenn apèsi disponib pou URL ki itilize \'http://\'</string>
     <string name="submissionUrlNotAUrlError">Tanpri antre yon URL ki valid</string>
     <string name="enterAUrlHereForYourSubmission">Antre yon URL la a pou soumisyon an</string>
+    <string name="addFileFabContentDesc">Afiche Opsyon Ajoute Fichye</string>
+    <string name="recordAudio">Anrejistre Son</string>
+
     <!-- Student Submission -->
     <string name="submissionWrite">Ekri&#8230;</string>
     <!-- Student Submission Details -->
@@ -83,10 +88,10 @@
     <string name="rubricCustomScore">Nòt pèsonalize</string>
     <string name="rubricEmptyMessage">Pa gen ribrik pou devwa sa a</string>
     <string name="rubricViewLongDescription">Afiche tout deskripsyon</string>
-    <!--Profile Fragment Strings -->
+    <!-- Profile Fragment Strings -->
     <string name="canvasVersionNum">Vèsyon:</string>
 
-    <!--Content Descriptions-->
+    <!-- Content Descriptions -->
     <string name="canvasLogo">Logo Canvas</string>
     <string name="enterURL">Antre URL Canvas ou a:</string>
     <string name="exampleURLSimple">myschool.instructure.com</string>
@@ -119,7 +124,7 @@
     <string name="bookmarkUpdated">Preferans Aktyalize</string>
     <string name="no_bookmarks">Kreye yon preferans epi afiche li la!</string>
 
-    <!--Date strings-->
+    <!-- Date strings -->
     <string name="today">Jodi a</string>
     <string name="past">Pase</string>
     <string name="noDate">San Dat</string>
@@ -134,7 +139,7 @@
     <string name="submissionDetailsDueAt">Delè %1$s a %2$s</string> <!--Ex: Due April 2 at 11:59pm-->
     <string name="lowercaseAM">am</string>
     <string name="lowercasePM">pm</string>
-    <!--Assignments-->
+    <!-- Assignments -->
     <string name="assignmentDue">Delè</string>
     <string name="assignmentDueColon">Delè: </string>
     <string name="assignmentLastSubmission">Dènye Soumisyon</string>
@@ -165,10 +170,10 @@
     <string name="cancel">Anile</string>
     <string name="sendNotification">Avèti itilizatè yo ke kontni sa a chanje</string>
 
-    <!--Discussions-->
+    <!-- Discussions -->
     <string name="forbidden">Sèlman moun ki poste yon repons pou pi piti k ap ka wè repons yo.</string>
 
-    <!--Events-->
+    <!-- Events -->
     <string name="Starts">Kòmanse</string>
     <string name="Ends">Fini</string>
     <string name="allDayEvent">Aktivite Tout Jounen</string>
@@ -392,7 +397,7 @@
     <string name="entireGroupSelected">Tout gwoup la te seleksyone deja.</string>
     <string name="noUsersInGroup">Pa gen itilizatè nan gwoup sa a</string>
 
-    <!--Notifications-->
+    <!-- Notifications -->
     <string name="deleted">Efase</string>
     <string name="gradedDiscussion">Diskisyon Klase.</string>
     <string name="pointsPossible">Pwen Posib.</string>
@@ -496,11 +501,11 @@
     <!-- LockInfoHTMLHelper Strings -->
     <string name="lockedAssignmentNotModule">Sesyon sa a bloke.</string>
 
-    <!--New Course Layout Strings -->
+    <!-- New Course Layout Strings -->
     <string name="myCourses">Kou Mwen</string>
 
 
-    <!--New Submission Strings -->
+    <!-- New Submission Strings -->
     <string name="textEntry">Antre Tèks</string>
     <string name="onlineURL">URL an liy</string>
     <string name="enterTextEntry">Antre Antre Tèks</string>
@@ -519,18 +524,18 @@
 
 
 
-    <!--DataLoss Fragment Strings -->
+    <!-- DataLoss Fragment Strings -->
     <string name="unsavedProgress">Pwogrè non Anrejistre</string>
     <string name="informationLost">Enfòmasyon ki pa sovgade ap pèdi. Èske w vle kontinye?</string>
     <string name="slash"> / </string>
 
-    <!--Delete Notification Strings -->
+    <!-- Delete Notification Strings -->
     <string name="confirm">Konfime</string>
 
-    <!--Dismiss To do String-->
+    <!-- Dismiss To do String -->
     <string name="markAsDone">Make tankou li fini</string>
 
-    <!--Submission Details Strings -->
+    <!-- Submission Details Strings -->
     <string name="next">Pwochen</string>
     <string name="addSubmission">Aktive</string>
     <string name="addAnotherSubmission">Soumèt ankò</string>
@@ -613,7 +618,7 @@
     <string name="choose_answers_below">Chwazi repons ou yo pi ba a</string>
 
 
-    <!--Widget Strings-->
+    <!-- Widget Strings -->
     <string name="todoWidgetTitle">Pou Fè</string>
     <string name="gradesWidgetTitle">Nòt</string>
     <string name="notificationWidgetTitle">Notifikasyon</string>
@@ -667,13 +672,13 @@
     <string name="search_course">kou kou klas klas</string>
     <string name="search_grades">klas klas</string>
 
-    <!-- ShareFileOptions Dialog-->
+    <!-- ShareFileOptions Dialog -->
     <string name="uploadTo">Transfere nan </string>
     <string name="uploadToCanvas">Transfere nan Canvas</string>
     <string name="uploadMyFiles">Fichye Mwen</string>
     <string name="uploadCourseFiles">Fichye Kou</string>
     <string name="uploadToSubmissionComment">Soumèt nan Kòmantè Soumisyon</string>
-    <!-- ChangeLog Dialog-->
+    <!-- ChangeLog Dialog -->
     <string name="changelog">Changelog</string>
 
     <string name="editUserName">Modifye Non Itilizatè</string>
@@ -686,7 +691,7 @@
     <string name="no_courses">Tape pou ajoute yon kou</string>
     <string name="no_courses_available">Pa gen kou la a, pran yon jou konje!</string>
     <string name="no_courses_grades">Tanpri enskri nan yon kou pou wè nòt ou</string>
-    <!--Navigation Drawer-->
+    <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">Ouvri meni navigasyon</string>
     <string name="navigation_drawer_close">Fèmen meni navigasyon</string>
 
@@ -748,7 +753,7 @@
 
     <string name="no_data_connection">Tanpri verifye koneksyon entènèt ou a epi eseye ankò.</string>
 
-    <!--Notification Preferences-->
+    <!-- Notification Preferences -->
     <string name="notification_primary_inbox_title">Avètisman Canvas</string>
     <string name="notification_channel_name_primary">Avètisman Jeneral Canvas</string>
     <string name="notification_channel_description_primary">Plis konfigirasyon avètisman posib nan seksyon Preferans Avètisman Canvas la.</string>
@@ -919,7 +924,7 @@
     <string name="groupNotFavorited">Gwoup %s, pa favori.</string>
     <string name="accountGroup">Gwoup Kont</string>
 
-    <!--Recents-->
+    <!-- Recents -->
     <string name="recents_empty">Nan ekran pèsonalizasyon kou yo, ajoute yon kou oswa gwoup pou ka wè yo la a.</string>
 
     <string name="toolbar_close">Fèmen ba ikòn nan</string>
@@ -947,6 +952,7 @@
     <string name="select">Seleksyone</string>
     <string name="choice_position">Chwa %d</string>
     <string name="updating_module_info">Mizajou enfòmasyon modil&#8230;</string>
+    <string name="arc">Arc</string>
     <string name="pending_review">Revizyon anatant</string>
     <string name="totalPoints">%s pwen</string>
     <string name="totalPointsText">Total Pwen</string>
@@ -961,9 +967,13 @@
     <string name="acceptCourseInvitation">Aksepte</string>
     <string name="declineCourseInvitation">Refize</string>
 
+    <string name="outOf">sou</string>
     <!-- File Strings -->
     <string name="noFilesSubtextCourse">Pa gen fichye ki asosye ak kou sa a.</string>
     <string name="noFilesSubtextGroup">Pa gen fichye ki asosye ak gwoup sa a.</string>
+    <string name="fileTypeNotSupported">Tip Fichye ki pa Sipòte</string>
+    <string name="fileTypeNotSupportedBody">Devwa sa a pèmèt kèk tip fichye sèlman: %s</string>
+
     <array name="file_size_units">
         <item>B</item>
         <item>KB</item>
@@ -1042,4 +1052,23 @@
     <string name="addChildErrorMessage">Asosyasyon Echwe... asire w ke kòd kouplaj ou a kòrèke li pa depase limit itilizasyon an.</string>
     <string name="gradeComplete">Fini</string>
     <string name="gradeIncomplete">Enkonplè</string>
+    <!-- Floating Recording View Strings -->
+    <string name="recordingTimerDefault">00:00:00</string>
+    <string name="recordingTimerContentDescription">%1$d èdtan, %2$d minit, e %3$d segond</string>
+    <string name="recordingTimerSpeechDivider">%1$s sou %2$s</string>
+    <string name="replay">Rejwe</string>
+    <string name="stop">Kanpe</string>
+    <string name="startRecordingAudio">Kòmanse anrejistreman odyo</string>
+    <string name="stopRecordingAudio">Kanpe anrejistreman odyo</string>
+    <string name="startRecordingVideo">Kòmanse anrejistreman videyo</string>
+    <string name="stopRecordingVideo">Kanpe anrejistreman videyo</string>
+    <string name="closeRecordingView">Fèmen afichaj anrejistreman</string>
+    <string name="deleteRecording">Efase anrejistreman</string>
+    <string name="videoCommentReplay">Rejwe Kòmantè Videyo</string>
+    <string name="errorShowingVideoReplay">Te gen yon erè ki fèt pandan tantativ pou gade redifizyon an.</string>
+    <string name="errorSubmittingMediaComment">Te gen yon erè ki fèt pandan tantativ pou soumèt kòmantè miltimedya ou a.</string>
+
+    <string name="addVideoComment">Ajoute yon kòmantè videyo</string>
+    <string name="addAudioComment">Ajoute yon kòmantè odyo</string>
+
 </resources>

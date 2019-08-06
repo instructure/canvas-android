@@ -55,11 +55,16 @@
     <string name="allowedFileTypes">أنواع الملفات المسموح بها</string>
     <string name="resubmitAssignment">إعادة إرسال المهمة</string>
 
+    <string name="launchExternalTool">تشغيل الأداة الخارجية</string>
+
     <string name="preview">معاينة</string>
-    <!--    Student Submission-->
+    <!-- Student Submission -->
     <string name="submissionUrlClearTextError">لا توجد معاينة متوفرة لعناوين URL باستخدام \'http://\'</string>
     <string name="submissionUrlNotAUrlError">يُرجى إدخال عنوان URL صالح</string>
     <string name="enterAUrlHereForYourSubmission">أدخل عنوان URL هنا لإرسالك</string>
+    <string name="addFileFabContentDesc">إظهار خيارات إضافة الملف</string>
+    <string name="recordAudio">تسجيل الصوت</string>
+
     <!-- Student Submission -->
     <string name="submissionWrite">كتابة&#8230;</string>
     <!-- Student Submission Details -->
@@ -86,10 +91,10 @@
     <string name="rubricCustomScore">نتيجة مخصصة</string>
     <string name="rubricEmptyMessage">لا يوجد أي مقياس تقييم لهذه المهمة</string>
     <string name="rubricViewLongDescription">عرض وصف طويل</string>
-    <!--Profile Fragment Strings -->
+    <!-- Profile Fragment Strings -->
     <string name="canvasVersionNum">الإصدار:</string>
 
-    <!--Content Descriptions-->
+    <!-- Content Descriptions -->
     <string name="canvasLogo">شعار Canvas</string>
     <string name="enterURL">أدخل عنوان URL لـ Canvas الخاص بك:</string>
     <string name="exampleURLSimple">myschool.instructure.com</string>
@@ -122,7 +127,7 @@
     <string name="bookmarkUpdated">تم تحديث الإشارة المرجعية</string>
     <string name="no_bookmarks">إنشاء إشارة مرجعية ثم عرضها هنا!</string>
 
-    <!--Date strings-->
+    <!-- Date strings -->
     <string name="today">اليوم</string>
     <string name="past">الماضي</string>
     <string name="noDate">بلا تاريخ</string>
@@ -137,7 +142,7 @@
     <string name="submissionDetailsDueAt">تاريخ الاستحقاق %1$s في %2$s</string> <!--Ex: Due April 2 at 11:59pm-->
     <string name="lowercaseAM">ص</string>
     <string name="lowercasePM">م</string>
-    <!--Assignments-->
+    <!-- Assignments -->
     <string name="assignmentDue">الاستحقاق</string>
     <string name="assignmentDueColon">تاريخ الاستحقاق: </string>
     <string name="assignmentLastSubmission">آخر إرسال</string>
@@ -168,10 +173,10 @@
     <string name="cancel">إلغاء</string>
     <string name="sendNotification">إعلام المستخدمين بأنه تم تغيير هذا المحتوى</string>
 
-    <!--Discussions-->
+    <!-- Discussions -->
     <string name="forbidden">تظهر الردود فقط للأشخاص الذين أرسلوا ردًا واحدًا على الأقل.</string>
 
-    <!--Events-->
+    <!-- Events -->
     <string name="Starts">يبدأ</string>
     <string name="Ends">ينتهي</string>
     <string name="allDayEvent">حدث يوم كامل</string>
@@ -415,7 +420,7 @@
     <string name="entireGroupSelected">لقد تم بالفعل تحديد هذه المجموعة بأكملها.</string>
     <string name="noUsersInGroup">لا يوجد مستخدمين في هذه المجموعة</string>
 
-    <!--Notifications-->
+    <!-- Notifications -->
     <string name="deleted">تم الحذف</string>
     <string name="gradedDiscussion">مناقشة تم تقييمها.</string>
     <string name="pointsPossible">النقاط الممكنة.</string>
@@ -519,11 +524,11 @@
     <!-- LockInfoHTMLHelper Strings -->
     <string name="lockedAssignmentNotModule">هذه المهمة مؤمّنة.</string>
 
-    <!--New Course Layout Strings -->
+    <!-- New Course Layout Strings -->
     <string name="myCourses">مساقاتي</string>
 
 
-    <!--New Submission Strings -->
+    <!-- New Submission Strings -->
     <string name="textEntry">إدخال النص</string>
     <string name="onlineURL">عنوان URL عبر الإنترنت</string>
     <string name="enterTextEntry">الدخول إلى إدخال النص</string>
@@ -542,18 +547,18 @@
 
 
 
-    <!--DataLoss Fragment Strings -->
+    <!-- DataLoss Fragment Strings -->
     <string name="unsavedProgress">لم يتم حفظ التقدم</string>
     <string name="informationLost">سيتم فقد المعلومات غير المحفوظة. هل تريد المواصلة؟</string>
     <string name="slash"> / </string>
 
-    <!--Delete Notification Strings -->
+    <!-- Delete Notification Strings -->
     <string name="confirm">تأكيد</string>
 
-    <!--Dismiss To do String-->
+    <!-- Dismiss To do String -->
     <string name="markAsDone">وضع علامة "تم"</string>
 
-    <!--Submission Details Strings -->
+    <!-- Submission Details Strings -->
     <string name="next">التالي</string>
     <string name="addSubmission">التسليم</string>
     <string name="addAnotherSubmission">التسليم من جديد</string>
@@ -636,7 +641,7 @@
     <string name="choose_answers_below">اختر إجاباتك أدناه</string>
 
 
-    <!--Widget Strings-->
+    <!-- Widget Strings -->
     <string name="todoWidgetTitle">قائمة مهام</string>
     <string name="gradesWidgetTitle">الدرجات</string>
     <string name="notificationWidgetTitle">الإعلامات</string>
@@ -690,13 +695,13 @@
     <string name="search_course">مساق مساقات صف صفوف</string>
     <string name="search_grades">درجة درجات</string>
 
-    <!-- ShareFileOptions Dialog-->
+    <!-- ShareFileOptions Dialog -->
     <string name="uploadTo">التحميل إلى </string>
     <string name="uploadToCanvas">التحميل إلى Canvas</string>
     <string name="uploadMyFiles">ملفاتي</string>
     <string name="uploadCourseFiles">ملفات المساق</string>
     <string name="uploadToSubmissionComment">التحميل إلى تعليق الإرسال</string>
-    <!-- ChangeLog Dialog-->
+    <!-- ChangeLog Dialog -->
     <string name="changelog">Changelog</string>
 
     <string name="editUserName">تحرير اسم المستخدم</string>
@@ -709,7 +714,7 @@
     <string name="no_courses">اضغط لإضافة مساق</string>
     <string name="no_courses_available">لا توجد مساقات هنا، خذ يوم راحة!</string>
     <string name="no_courses_grades">يرجى التسجيل في مساق لمشاهدة درجاتك</string>
-    <!--Navigation Drawer-->
+    <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">فتح درج التنقل</string>
     <string name="navigation_drawer_close">إغلاق درج التنقل</string>
 
@@ -771,7 +776,7 @@
 
     <string name="no_data_connection">يرجى التأكد من اتصال البيانات والمحاولة من جديد.</string>
 
-    <!--Notification Preferences-->
+    <!-- Notification Preferences -->
     <string name="notification_primary_inbox_title">إعلام Canvas</string>
     <string name="notification_channel_name_primary">إعلامات Canvas عامة</string>
     <string name="notification_channel_description_primary">يمكن إجراء تكوين إضافي للإعلامات داخل قسم تفضيلات إعلام Canvas.</string>
@@ -954,7 +959,7 @@
     <string name="groupNotFavorited">المجموعة %s، غير مفضلة.</string>
     <string name="accountGroup">مجموعة الحساب</string>
 
-    <!--Recents-->
+    <!-- Recents -->
     <string name="recents_empty">من شاشة تخصيص المساقات، قم بإضافة مساق أو مجموعة لعرضهما هنا.</string>
 
     <string name="toolbar_close">إغلاق شريط الأدوات</string>
@@ -982,6 +987,7 @@
     <string name="select">تحديد</string>
     <string name="choice_position">اختر %d</string>
     <string name="updating_module_info">جارٍ تحميل معلومات الوحدة النمطية&#8230;</string>
+    <string name="arc">Arc</string>
     <string name="pending_review">بانتظار المراجعة</string>
     <string name="totalPoints">%s نقاط</string>
     <string name="totalPointsText">إجمالي النقاط</string>
@@ -996,9 +1002,13 @@
     <string name="acceptCourseInvitation">قبول</string>
     <string name="declineCourseInvitation">رفض</string>
 
+    <string name="outOf">من إجمالي</string>
     <!-- File Strings -->
     <string name="noFilesSubtextCourse">لا توجد ملفات مقترنة بهذا المساق.</string>
     <string name="noFilesSubtextGroup">لا توجد ملفات مقترنة بهذه المجموعة.</string>
+    <string name="fileTypeNotSupported">نوع ملف غير مدعوم</string>
+    <string name="fileTypeNotSupportedBody">هذه المهمة تظهر أنواع ملفات محددة فقط: %s</string>
+
     <array name="file_size_units">
         <item>بايت</item>
         <item>كيلوبايت</item>
@@ -1085,4 +1095,23 @@
     <string name="addChildErrorMessage">تعذر الإقران. تأكد من أن رمز الإقران صحيح وفي إطار الحد الزمني للاستخدام.</string>
     <string name="gradeComplete">مكتمل</string>
     <string name="gradeIncomplete">غير مكتمل</string>
+    <!-- Floating Recording View Strings -->
+    <string name="recordingTimerDefault">00:00:00</string>
+    <string name="recordingTimerContentDescription">%1$d من الساعات و%2$d من الدقائق و%3$d من الثواني</string>
+    <string name="recordingTimerSpeechDivider">%1$s من إجمالي %2$s</string>
+    <string name="replay">الرد</string>
+    <string name="stop">إيقاف</string>
+    <string name="startRecordingAudio">بدء تسجيل الصوت</string>
+    <string name="stopRecordingAudio">إيقاف تسجيل الصوت</string>
+    <string name="startRecordingVideo">بدء تسجيل الفيديو</string>
+    <string name="stopRecordingVideo">إيقاف تسجيل الفيديو</string>
+    <string name="closeRecordingView">إغلاق عرض التسجيل</string>
+    <string name="deleteRecording">حذف التسجيل</string>
+    <string name="videoCommentReplay">رد تعليق الفيديو</string>
+    <string name="errorShowingVideoReplay">حدث خطأ في محاولة عرض الإعادة.</string>
+    <string name="errorSubmittingMediaComment">حدث خطأ في محاولة إرسال تعليق الوسائط.</string>
+
+    <string name="addVideoComment">إضافة تعليق فيديو</string>
+    <string name="addAudioComment">إضافة تعليق صوتي</string>
+
 </resources>

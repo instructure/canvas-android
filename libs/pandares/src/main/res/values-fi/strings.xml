@@ -51,11 +51,16 @@
     <string name="notSubmitted">Ei lähetetty</string>
     <string name="allowedFileTypes">Sallittavat tiedostotyypit</string>
     <string name="resubmitAssignment">Lähetä tehtävä uudelleen</string>
+    <string name="launchExternalTool">Käynnistä ulkoinen työkalu</string>
+
     <string name="preview">Esikatsele</string>
-    <!--    Student Submission-->
+    <!-- Student Submission -->
     <string name="submissionUrlClearTextError">Ei saatavissa esikatselua URL-linkeille, jotka käyttävät \'http://\'</string>
     <string name="submissionUrlNotAUrlError">Syötä voimassa oleva URL</string>
     <string name="enterAUrlHereForYourSubmission">Syötä tässä URL lähetyksellesi</string>
+    <string name="addFileFabContentDesc">Näytä Lisää tiedosto -asetukset</string>
+    <string name="recordAudio">Nauhoita ääni</string>
+
     <!-- Student Submission -->
     <string name="submissionWrite">Kirjoita&#8230;</string>
     <!-- Student Submission Details -->
@@ -82,10 +87,10 @@
     <string name="rubricCustomScore">Mukautettu pistemäärä </string>
     <string name="rubricEmptyMessage">Tälle tehtävälle ei ole rubriikkia</string>
     <string name="rubricViewLongDescription">Näytä pitkä kuvaus</string>
-    <!--Profile Fragment Strings -->
+    <!-- Profile Fragment Strings -->
     <string name="canvasVersionNum">Versio:</string>
 
-    <!--Content Descriptions-->
+    <!-- Content Descriptions -->
     <string name="canvasLogo">Canvas-logo</string>
     <string name="enterURL">Syötä Canvas-URL:</string>
     <string name="exampleURLSimple">myschool.instructure.com</string>
@@ -118,7 +123,7 @@
     <string name="bookmarkUpdated">Kirjanmerkki päivitetty</string>
     <string name="no_bookmarks">Luo kirjanmerkki ja katso sitten täällä!</string>
 
-    <!--Date strings-->
+    <!-- Date strings -->
     <string name="today">Tänään</string>
     <string name="past">Edelliset</string>
     <string name="noDate">Ei päivämäärää</string>
@@ -133,7 +138,7 @@
     <string name="submissionDetailsDueAt">Määräpäivä %1$s kohteessa %2$s</string> <!--Ex: Due April 2 at 11:59pm-->
     <string name="lowercaseAM">a.m.</string>
     <string name="lowercasePM">p.m.</string>
-    <!--Assignments-->
+    <!-- Assignments -->
     <string name="assignmentDue">Määräpäivä</string>
     <string name="assignmentDueColon">Määräpäivä: </string>
     <string name="assignmentLastSubmission">Edellinen lähetys</string>
@@ -164,10 +169,10 @@
     <string name="cancel">Peruuta</string>
     <string name="sendNotification">Ilmoita käyttäjille, että tämä sisältö on muuttunut</string>
 
-    <!--Discussions-->
+    <!-- Discussions -->
     <string name="forbidden">Vastaukset ovat näkyvissä vai niille, jotka ovat lähettäneet vähintään yhden vastauksen.</string>
 
-    <!--Events-->
+    <!-- Events -->
     <string name="Starts">Alkaa</string>
     <string name="Ends">Päättyy</string>
     <string name="allDayEvent">Koko päivän tapahtuma</string>
@@ -391,7 +396,7 @@
     <string name="entireGroupSelected">Koko ryhmä on jo valittu.</string>
     <string name="noUsersInGroup">Tässä ryhmässä ei ole käyttäjiä.</string>
 
-    <!--Notifications-->
+    <!-- Notifications -->
     <string name="deleted">Poistettu</string>
     <string name="gradedDiscussion">Arvosteltu keskustelu.</string>
     <string name="pointsPossible">Pisteet mahdollisia.</string>
@@ -495,11 +500,11 @@
     <!-- LockInfoHTMLHelper Strings -->
     <string name="lockedAssignmentNotModule">Tämä tehtävä on lukittu.</string>
 
-    <!--New Course Layout Strings -->
+    <!-- New Course Layout Strings -->
     <string name="myCourses">Omat kurssit</string>
 
 
-    <!--New Submission Strings -->
+    <!-- New Submission Strings -->
     <string name="textEntry">Tekstin syöttäminen</string>
     <string name="onlineURL">Verkko-url</string>
     <string name="enterTextEntry">Syötä tekstiä</string>
@@ -518,18 +523,18 @@
 
 
 
-    <!--DataLoss Fragment Strings -->
+    <!-- DataLoss Fragment Strings -->
     <string name="unsavedProgress">Tallentamaton edistyminen</string>
     <string name="informationLost">Tallentamattomat muutokset menetetään. Haluatko jatkaa?</string>
     <string name="slash"> / </string>
 
-    <!--Delete Notification Strings -->
+    <!-- Delete Notification Strings -->
     <string name="confirm">Vahvista</string>
 
-    <!--Dismiss To do String-->
+    <!-- Dismiss To do String -->
     <string name="markAsDone">Merkitse valmiiksi</string>
 
-    <!--Submission Details Strings -->
+    <!-- Submission Details Strings -->
     <string name="next">Seuraava</string>
     <string name="addSubmission">Luovuttaminen</string>
     <string name="addAnotherSubmission">Luovuta uudelleen</string>
@@ -612,7 +617,7 @@
     <string name="choose_answers_below">Valitse vastauksesi alla</string>
 
 
-    <!--Widget Strings-->
+    <!-- Widget Strings -->
     <string name="todoWidgetTitle">Tehtävä</string>
     <string name="gradesWidgetTitle">Arvosanat</string>
     <string name="notificationWidgetTitle">Ilmoitukset</string>
@@ -666,13 +671,13 @@
     <string name="search_course">kurssi kurssit luokka luokat</string>
     <string name="search_grades">arvosanat arvosanat</string>
 
-    <!-- ShareFileOptions Dialog-->
+    <!-- ShareFileOptions Dialog -->
     <string name="uploadTo">Lataa </string>
     <string name="uploadToCanvas">Lataa Canvas-sovellukseen</string>
     <string name="uploadMyFiles">Omat tiedostot</string>
     <string name="uploadCourseFiles">Kurssitiedostot</string>
     <string name="uploadToSubmissionComment">Lataa lähetyksen kommenttiin</string>
-    <!-- ChangeLog Dialog-->
+    <!-- ChangeLog Dialog -->
     <string name="changelog">Muutosloki</string>
 
     <string name="editUserName">Muokkaa käyttäjätunnusta</string>
@@ -685,7 +690,7 @@
     <string name="no_courses">Napauta lisätäksesi kurssiin</string>
     <string name="no_courses_available">Ei kursseja täällä, pidä päivä vapaata!</string>
     <string name="no_courses_grades">Ilmoittaudu kurssille, jos haluat nähdä arvosanasi</string>
-    <!--Navigation Drawer-->
+    <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">Avaa siirtymisvalikko</string>
     <string name="navigation_drawer_close">Sulje siirtymisvalikko</string>
 
@@ -747,7 +752,7 @@
 
     <string name="no_data_connection">Tarkasta datayhteytesi ja yritä uudelleen.</string>
 
-    <!--Notification Preferences-->
+    <!-- Notification Preferences -->
     <string name="notification_primary_inbox_title">Canvas-ilmoitus</string>
     <string name="notification_channel_name_primary">Yleiset Canvas-ilmoitukset</string>
     <string name="notification_channel_description_primary">Ilmoitusten lisäkonfigurointi voidaan tehdä Canvas-ilmoitusasetusten osassa.</string>
@@ -918,7 +923,7 @@
     <string name="groupNotFavorited">Ryhmä %s, ei suosikki.</string>
     <string name="accountGroup">Tilin ryhmä</string>
 
-    <!--Recents-->
+    <!-- Recents -->
     <string name="recents_empty">Lisää kurssi tai ryhmä kurssin mukautusnäytöltä tarkastellaksesi niitä täällä.</string>
 
     <string name="toolbar_close">Työkalupalkki, sulje</string>
@@ -946,6 +951,7 @@
     <string name="select">Valitse</string>
     <string name="choice_position">Valitse %d</string>
     <string name="updating_module_info">Päivitetään moduulin&#8230; tietoja</string>
+    <string name="arc">Kaari</string>
     <string name="pending_review">Odottaa tarkastelua</string>
     <string name="totalPoints">%s pistettä</string>
     <string name="totalPointsText">Pisteitä yhteensä</string>
@@ -960,9 +966,13 @@
     <string name="acceptCourseInvitation">Hyväksy</string>
     <string name="declineCourseInvitation">Kiellä</string>
 
+    <string name="outOf">/</string>
     <!-- File Strings -->
     <string name="noFilesSubtextCourse">Tähän tiliin ei ole liitetty tiedostoja.</string>
     <string name="noFilesSubtextGroup">Tähän ryhmään ei ole liitetty tiedostoja.</string>
+    <string name="fileTypeNotSupported">Tukemattomat tiedostotyypit:</string>
+    <string name="fileTypeNotSupportedBody">Tämä tehtävä sallii vain määrätyt tiedostotyypit: %s</string>
+
     <array name="file_size_units">
         <item>B</item>
         <item>KB</item>
@@ -1041,4 +1051,23 @@
     <string name="addChildErrorMessage">Parinmuodostus epäonnistui. Varmista, että parinmuodostuskoodisi on oikein ja käyttöajan rajoissa.</string>
     <string name="gradeComplete">Valmis</string>
     <string name="gradeIncomplete">Keskeneräinen</string>
+    <!-- Floating Recording View Strings -->
+    <string name="recordingTimerDefault">00:00:00</string>
+    <string name="recordingTimerContentDescription">%1$d tuntia, %2$d minuuttia ja %3$d sekuntia</string>
+    <string name="recordingTimerSpeechDivider">%1$s/%2$s</string>
+    <string name="replay">Toista</string>
+    <string name="stop">Lopeta</string>
+    <string name="startRecordingAudio">Aloita äänen nauhoitus nyt</string>
+    <string name="stopRecordingAudio">Lopeta äänen nauhoitus</string>
+    <string name="startRecordingVideo">Aloita videon nauhoitus nyt</string>
+    <string name="stopRecordingVideo">Lopeta videon nauhoitus</string>
+    <string name="closeRecordingView">Sulje nauhoitusnäkymä</string>
+    <string name="deleteRecording">Poista nauhoitus</string>
+    <string name="videoCommentReplay">Videon kommentin vastaus</string>
+    <string name="errorShowingVideoReplay">Virhe yritettäessä tarkastella toistoa.</string>
+    <string name="errorSubmittingMediaComment">Virhe yritettäessä lähettää mediakommenttia.</string>
+
+    <string name="addVideoComment">Lisää videon kommentti</string>
+    <string name="addAudioComment">Lisää videon kommentti</string>
+
 </resources>

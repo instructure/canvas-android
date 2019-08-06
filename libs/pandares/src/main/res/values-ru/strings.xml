@@ -54,11 +54,16 @@
     <string name="allowedFileTypes">Разрешенные типы файлов</string>
     <string name="resubmitAssignment">Повторная отправка задания</string>
 
+    <string name="launchExternalTool">Запуск внешнего инструмента</string>
+
     <string name="preview">Предпросмотр</string>
-    <!--    Student Submission-->
+    <!-- Student Submission -->
     <string name="submissionUrlClearTextError">Предпросмотр для URL-адресов с использованием \'http://\' недоступен</string>
     <string name="submissionUrlNotAUrlError">Введите действительный URL-адрес</string>
     <string name="enterAUrlHereForYourSubmission">Введите здесь URL-адрес для отправки</string>
+    <string name="addFileFabContentDesc">Показать параметры добавления файла</string>
+    <string name="recordAudio">Записать аудио</string>
+
     <!-- Student Submission -->
     <string name="submissionWrite">Запись&#8230;</string>
     <!-- Student Submission Details -->
@@ -85,10 +90,10 @@
     <string name="rubricCustomScore">Персонализированная оценка</string>
     <string name="rubricEmptyMessage">Нет раздела для этого задания</string>
     <string name="rubricViewLongDescription">Просмотреть длинное описание</string>
-    <!--Profile Fragment Strings -->
+    <!-- Profile Fragment Strings -->
     <string name="canvasVersionNum">Версия:</string>
 
-    <!--Content Descriptions-->
+    <!-- Content Descriptions -->
     <string name="canvasLogo">Логотип Canvas</string>
     <string name="enterURL">Введите Ваш URL Canvas:</string>
     <string name="exampleURLSimple">myschool.instructure.com</string>
@@ -121,7 +126,7 @@
     <string name="bookmarkUpdated">Закладка обновлена</string>
     <string name="no_bookmarks">Создать закладку, а затем просмотреть ее здесь!</string>
 
-    <!--Date strings-->
+    <!-- Date strings -->
     <string name="today">Сегодня</string>
     <string name="past">Прошлый</string>
     <string name="noDate">Дата отсутствует</string>
@@ -136,7 +141,7 @@
     <string name="submissionDetailsDueAt">Срок выполнения %1$s в %2$s</string> <!--Ex: Due April 2 at 11:59pm-->
     <string name="lowercaseAM">до обеда</string>
     <string name="lowercasePM">после обеда</string>
-    <!--Assignments-->
+    <!-- Assignments -->
     <string name="assignmentDue">Срок</string>
     <string name="assignmentDueColon">Срок: </string>
     <string name="assignmentLastSubmission">Последняя отправка</string>
@@ -167,10 +172,10 @@
     <string name="cancel">Отменить</string>
     <string name="sendNotification">Уведомить пользователей об изменении данного контента</string>
 
-    <!--Discussions-->
+    <!-- Discussions -->
     <string name="forbidden">Ответы видны только тем, кто опубликовал не менее одного ответа.</string>
 
-    <!--Events-->
+    <!-- Events -->
     <string name="Starts">Начинается</string>
     <string name="Ends">Заканчивается</string>
     <string name="allDayEvent">Мероприятие на весь день</string>
@@ -404,7 +409,7 @@
     <string name="entireGroupSelected">Вся эта группа уже была выбрана.</string>
     <string name="noUsersInGroup">Нет пользователей в этой группе</string>
 
-    <!--Notifications-->
+    <!-- Notifications -->
     <string name="deleted">Удалено</string>
     <string name="gradedDiscussion">Оцениваемое обсуждение.</string>
     <string name="pointsPossible">Возможные баллы.</string>
@@ -508,11 +513,11 @@
     <!-- LockInfoHTMLHelper Strings -->
     <string name="lockedAssignmentNotModule">Это задание заблокировано.</string>
 
-    <!--New Course Layout Strings -->
+    <!-- New Course Layout Strings -->
     <string name="myCourses">Мои курсы</string>
 
 
-    <!--New Submission Strings -->
+    <!-- New Submission Strings -->
     <string name="textEntry">Ввод текста</string>
     <string name="onlineURL">URL-адрес в Интернете</string>
     <string name="enterTextEntry">Введите текст</string>
@@ -531,18 +536,18 @@
 
 
 
-    <!--DataLoss Fragment Strings -->
+    <!-- DataLoss Fragment Strings -->
     <string name="unsavedProgress">Несохраненный прогресс</string>
     <string name="informationLost">Несохраненные данные будут утеряны. Продолжить?</string>
     <string name="slash"> / </string>
 
-    <!--Delete Notification Strings -->
+    <!-- Delete Notification Strings -->
     <string name="confirm">Подтвердить</string>
 
-    <!--Dismiss To do String-->
+    <!-- Dismiss To do String -->
     <string name="markAsDone">Отметить как выполненное</string>
 
-    <!--Submission Details Strings -->
+    <!-- Submission Details Strings -->
     <string name="next">Далее</string>
     <string name="addSubmission">Включить</string>
     <string name="addAnotherSubmission">Включить еще раз</string>
@@ -625,7 +630,7 @@
     <string name="choose_answers_below">Выберите несколько из представленных ниже вариантов ответов</string>
 
 
-    <!--Widget Strings-->
+    <!-- Widget Strings -->
     <string name="todoWidgetTitle">Задачи</string>
     <string name="gradesWidgetTitle">Оценки</string>
     <string name="notificationWidgetTitle">Уведомления</string>
@@ -679,13 +684,13 @@
     <string name="search_course">курс курсы класс классы</string>
     <string name="search_grades">оценка оценки</string>
 
-    <!-- ShareFileOptions Dialog-->
+    <!-- ShareFileOptions Dialog -->
     <string name="uploadTo">Загрузить на </string>
     <string name="uploadToCanvas">Загрузить на Canvas</string>
     <string name="uploadMyFiles">Мои файлы</string>
     <string name="uploadCourseFiles">Файлы курса</string>
     <string name="uploadToSubmissionComment">Загрузить в комментарий к отправке</string>
-    <!-- ChangeLog Dialog-->
+    <!-- ChangeLog Dialog -->
     <string name="changelog">Список изменений</string>
 
     <string name="editUserName">Редактировать имя пользователя</string>
@@ -698,7 +703,7 @@
     <string name="no_courses">Нажмите, чтобы добавить курс</string>
     <string name="no_courses_available">Здесь нет курсов, возьмите выходной!</string>
     <string name="no_courses_grades">Пожалуйста зарегистрируйтесь на курс, чтобы увидеть свои оценки</string>
-    <!--Navigation Drawer-->
+    <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">Открыть панель навигации</string>
     <string name="navigation_drawer_close">Закрыть панель навигации</string>
 
@@ -760,7 +765,7 @@
 
     <string name="no_data_connection">Проверьте подключение и повторите попытку.</string>
 
-    <!--Notification Preferences-->
+    <!-- Notification Preferences -->
     <string name="notification_primary_inbox_title">Уведомление Canvas</string>
     <string name="notification_channel_name_primary">Общие уведомления Canvas</string>
     <string name="notification_channel_description_primary">Дополнительная настройка уведомлений осуществляется в разделе настроек уведомлений Canvas.</string>
@@ -936,7 +941,7 @@
     <string name="groupNotFavorited">Группа %s, не предпочтительная.</string>
     <string name="accountGroup">Рабочая группа клиента</string>
 
-    <!--Recents-->
+    <!-- Recents -->
     <string name="recents_empty">На экране настройки курса добавьте курс или группу, чтобы посмотреть их здесь.</string>
 
     <string name="toolbar_close">Закрыть панель</string>
@@ -964,6 +969,7 @@
     <string name="select">Выбрать</string>
     <string name="choice_position">Выбор %d</string>
     <string name="updating_module_info">Обновление информации о модуле&#8230;</string>
+    <string name="arc">Arc</string>
     <string name="pending_review">В ожидании рассмотрения</string>
     <string name="totalPoints">%s баллов</string>
     <string name="totalPointsText">Общее число баллов</string>
@@ -978,9 +984,13 @@
     <string name="acceptCourseInvitation">Принять</string>
     <string name="declineCourseInvitation">Снизить</string>
 
+    <string name="outOf">из</string>
     <!-- File Strings -->
     <string name="noFilesSubtextCourse">Отсутствуют файлы, связанные с этим курсом.</string>
     <string name="noFilesSubtextGroup">Отсутствуют файлы, связанные с этой группой.</string>
+    <string name="fileTypeNotSupported">Неподдерживаемый тип файла</string>
+    <string name="fileTypeNotSupportedBody">Это задание допускает только определенные типы файлов: %s</string>
+
     <array name="file_size_units">
         <item>B</item>
         <item>кб</item>
@@ -1063,4 +1073,23 @@
     <string name="addChildErrorMessage">Не удалось выполнить привязку. Убедитесь в том, что код привязки верен и срок его действия не истек.</string>
     <string name="gradeComplete">Завершить</string>
     <string name="gradeIncomplete">Не завершено</string>
+    <!-- Floating Recording View Strings -->
+    <string name="recordingTimerDefault">00:00:00</string>
+    <string name="recordingTimerContentDescription">%1$d часов, %2$d минут и %3$d секунд</string>
+    <string name="recordingTimerSpeechDivider">%1$s из %2$s</string>
+    <string name="replay">Воспроизведение</string>
+    <string name="stop">Стоп</string>
+    <string name="startRecordingAudio">Начать запись аудио</string>
+    <string name="stopRecordingAudio">Остановить запись аудио</string>
+    <string name="startRecordingVideo">Начать запись видео</string>
+    <string name="stopRecordingVideo">Остановить запись видео</string>
+    <string name="closeRecordingView">Закрыть окно записи</string>
+    <string name="deleteRecording">Удалить запись</string>
+    <string name="videoCommentReplay">Воспроизведение видеокомментария</string>
+    <string name="errorShowingVideoReplay">При попытке просмотра воспроизведения произошла ошибка.</string>
+    <string name="errorSubmittingMediaComment">При попытке отправить мультимедийный комментарий произошла ошибка.</string>
+
+    <string name="addVideoComment">Добавить видеокомментарий</string>
+    <string name="addAudioComment">Добавить аудиокомментарий</string>
+
 </resources>
