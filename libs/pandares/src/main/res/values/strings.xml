@@ -88,6 +88,9 @@
     <string name="submissionDetailsAssignmentLocked">Assignment Locked</string>
     <string name="webPreview">Preview of the entered URL</string>
     <string name="websiteUrl">Website URL</string>
+    <string name="noneContentMessage">This assignment does not allow online submissions</string>
+    <string name="onPaperContentMessage">This assignment does not allow online submissions</string>
+    <string name="noOnlineSubmissions">No Online Submissions</string>
 
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Out of %s points</string>

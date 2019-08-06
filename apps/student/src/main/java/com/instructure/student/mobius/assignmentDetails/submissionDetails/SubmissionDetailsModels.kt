@@ -76,7 +76,7 @@ sealed class SubmissionDetailsContentType {
     object NoneContent : SubmissionDetailsContentType()
     data class ExternalToolContent(val canvasContext: CanvasContext, val url: String) : SubmissionDetailsContentType()
     object OnPaperContent : SubmissionDetailsContentType()
-    object UnsupportedContent : SubmissionDetailsContentType()
+    data class UnsupportedContent(val assignmentId: Long) : SubmissionDetailsContentType()
     data class OtherAttachmentContent(val attachment: Attachment) : SubmissionDetailsContentType()
     data class PdfContent(val url: String) : SubmissionDetailsContentType()
     data class TextContent(val text: String) : SubmissionDetailsContentType()
