@@ -80,7 +80,7 @@ sealed class SubmissionDetailsContentType {
     data class OtherAttachmentContent(val attachment: Attachment) : SubmissionDetailsContentType()
     data class PdfContent(val url: String) : SubmissionDetailsContentType()
     data class TextContent(val text: String) : SubmissionDetailsContentType()
-    data class ImageContent(val url: String, val contentType: String) : SubmissionDetailsContentType()
+    data class ImageContent(val title: String, val url: String, val contentType: String) : SubmissionDetailsContentType()
     data class UrlContent(val url: String, val previewUrl: String?) : SubmissionDetailsContentType()
     data class DiscussionContent(val previewUrl: String?) : SubmissionDetailsContentType()
 }

@@ -39,6 +39,7 @@ import com.instructure.pandautils.views.RecordingMediaType
 import com.instructure.student.R
 import com.instructure.student.fragment.LTIWebViewFragment
 import com.instructure.student.fragment.ViewUnsupportedFileFragment
+import com.instructure.student.fragment.ViewImageFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsContentType
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsEvent
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.*
@@ -257,7 +258,7 @@ class SubmissionDetailsView(
                 previewUri = type.attachment.previewUrl?.let { Uri.parse(it) },
                 fallbackIcon = R.drawable.vd_attachment
             )
-            is SubmissionDetailsContentType.ImageContent -> TODO()
+            is SubmissionDetailsContentType.ImageContent -> ViewImageFragment.newInstance(type.title, Uri.parse(type.url), type.contentType, false)
             SubmissionDetailsContentType.NoneContent -> TODO()
             SubmissionDetailsContentType.OnPaperContent -> TODO()
             SubmissionDetailsContentType.UnsupportedContent -> TODO()
