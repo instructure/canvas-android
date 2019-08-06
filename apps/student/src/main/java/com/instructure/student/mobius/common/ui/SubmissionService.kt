@@ -60,6 +60,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.threeten.bp.OffsetDateTime
 import java.io.File
+import java.io.UnsupportedEncodingException
+import java.net.URLEncoder
 
 
 class SubmissionFileUploadReceiver(private val dbSubmissionId: Long) : BroadcastReceiver() {
@@ -148,7 +150,11 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
         dbSubmissionId = db.getLastInsert().executeAsOne()
 
         showProgressNotification(assignmentName, dbSubmissionId)
-        val result = apiAsync<Submission> { SubmissionManager.postTextSubmission(context, assignmentId, text, it) }
+        val textToSubmit = try {
+            URLEncoder.encode(text, "UTF-8")
+        } catch (e: UnsupportedEncodingException) { text }
+
+        val result = apiAsync<Submission> { SubmissionManager.postTextSubmission(context, assignmentId, textToSubmit, it) }
 
         GlobalScope.launch {
             val uploadResult = result.await()

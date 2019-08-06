@@ -103,9 +103,6 @@ class TextSubmissionUploadUpdateTest : Assert() {
     fun `SubmitClicked event results in SubmitText effect`() {
         val text = "Some text to submit"
 
-        mockkStatic(URLEncoder::class)
-        every { URLEncoder.encode(any(), any()) } returns text
-
         updateSpec
                 .given(initModel)
                 .whenEvent(TextSubmissionUploadEvent.SubmitClicked(text))
@@ -119,17 +116,13 @@ class TextSubmissionUploadUpdateTest : Assert() {
     @Test
     fun `SubmitClicked event with new lines in text results in SubmitText effect`() {
         val text = "Some text to submit\nWith a new line"
-        val expected = "Some text to submit<br/>With a new line"
-
-        mockkStatic(URLEncoder::class)
-        every { URLEncoder.encode(any(), any()) } returns expected
 
         updateSpec
                 .given(initModel)
                 .whenEvent(TextSubmissionUploadEvent.SubmitClicked(text))
                 .then(
                         assertThatNext(
-                                matchesEffects<TextSubmissionUploadModel, TextSubmissionUploadEffect>(TextSubmissionUploadEffect.SubmitText(expected, course, assignment.id, assignment.name))
+                                matchesEffects<TextSubmissionUploadModel, TextSubmissionUploadEffect>(TextSubmissionUploadEffect.SubmitText(text, course, assignment.id, assignment.name))
                         )
                 )
     }
@@ -137,9 +130,6 @@ class TextSubmissionUploadUpdateTest : Assert() {
     @Test
     fun `SubmitClicked event with unsupported encoding characters in text results in SubmitText effect`() {
         val text = "Some text to submit"
-
-        mockkStatic(URLEncoder::class)
-        every { URLEncoder.encode(any(), any()) } throws UnsupportedEncodingException()
 
         updateSpec
                 .given(initModel)
