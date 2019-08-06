@@ -421,7 +421,7 @@ class SubmissionDetailsUpdateTest : Assert() {
         verifyGetSubmissionContentType(
             assignment,
             submission.copy(mediaComment = null, submissionType = Assignment.SubmissionType.MEDIA_RECORDING.apiString),
-            SubmissionDetailsContentType.UnsupportedContent
+            SubmissionDetailsContentType.UnsupportedContent(assignment.id)
         )
     }
 
@@ -482,7 +482,7 @@ class SubmissionDetailsUpdateTest : Assert() {
         verifyGetSubmissionContentType(
             assignment,
             submission.copy(submissionType = "BROKEN_TYPE"),
-            SubmissionDetailsContentType.UnsupportedContent
+            SubmissionDetailsContentType.UnsupportedContent(assignment.id)
         )
     }
 
