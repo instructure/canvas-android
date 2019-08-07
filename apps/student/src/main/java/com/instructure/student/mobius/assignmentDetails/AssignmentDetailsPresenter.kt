@@ -19,6 +19,7 @@ package com.instructure.student.mobius.assignmentDetails
 import android.content.Context
 import androidx.core.content.ContextCompat
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.DiscussionParticipant
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.utils.DateHelper
@@ -287,13 +288,21 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
     }
 
     private fun getDiscussionHeaderViewState(context: Context, discussionTopicHeader: DiscussionTopicHeader): DiscussionHeaderViewState {
-        val authorAvatarUrl = discussionTopicHeader.author?.avatarImageUrl
-        // Can't have a discussion topic header with a null author or date
-        val authorName = discussionTopicHeader.author!!.displayName!!
-        val authoredDate = DateHelper.getMonthDayAtTime(context, discussionTopicHeader.postedDate, context.getString(R.string.at))!!
-        val attachmentIconVisibility = discussionTopicHeader.attachments.isNotEmpty()
+        return if (isDiscussionAuthorNull(discussionTopicHeader.author)) {
+            DiscussionHeaderViewState.NoAuthor
+        } else {
+            val authorAvatarUrl = discussionTopicHeader.author?.avatarImageUrl
+            // Can't have a discussion topic header with a null author or date
+            val authorName = discussionTopicHeader.author?.displayName ?: context.getString(R.string.discussions_unknown_author)
+            val authoredDate = DateHelper.getMonthDayAtTime(context, discussionTopicHeader.postedDate, context.getString(R.string.at)) ?: context.getString(R.string.discussions_unknown_date)
+            val attachmentIconVisibility = discussionTopicHeader.attachments.isNotEmpty()
 
-        return DiscussionHeaderViewState(authorAvatarUrl, authorName, authoredDate, attachmentIconVisibility)
+            DiscussionHeaderViewState.Loaded(authorAvatarUrl, authorName, authoredDate, attachmentIconVisibility)
+        }
+    }
+
+    private fun isDiscussionAuthorNull(author: DiscussionParticipant?): Boolean {
+        return author?.id == 0L && author.displayName == null && author.avatarImageUrl == null && author.htmlUrl == null
     }
 
     private fun getDiscussionText(discussionTopicHeader: DiscussionTopicHeader): String {

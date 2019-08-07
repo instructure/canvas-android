@@ -175,11 +175,15 @@ class AssignmentDetailsView(
     }
 
     private fun renderDiscussionTopicHeader(discussionHeaderViewState: DiscussionHeaderViewState) {
-        ProfileUtils.loadAvatarForUser(authorAvatar, discussionHeaderViewState.authorName, discussionHeaderViewState.authorAvatarUrl)
-        authorAvatar.setupAvatarA11y(discussionHeaderViewState.authorName)
-        authorName.text = discussionHeaderViewState.authorName
-        authoredDate.text = discussionHeaderViewState.authoredDate
-        attachmentIcon.setVisible(discussionHeaderViewState.attachmentIconVisibility)
+        if(discussionHeaderViewState is DiscussionHeaderViewState.Loaded) {
+            ProfileUtils.loadAvatarForUser(authorAvatar, discussionHeaderViewState.authorName, discussionHeaderViewState.authorAvatarUrl)
+            authorAvatar.setupAvatarA11y(discussionHeaderViewState.authorName)
+            authorName.text = discussionHeaderViewState.authorName
+            authoredDate.text = discussionHeaderViewState.authoredDate
+            attachmentIcon.setVisible(discussionHeaderViewState.attachmentIconVisibility)
+        } else {
+            discussionTopicHeaderContainer.setVisible(false)
+        }
     }
 
     override fun onDispose() {

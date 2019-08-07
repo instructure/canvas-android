@@ -619,7 +619,39 @@ class AssignmentDetailsPresenterTest : Assert() {
 
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
-        val expectedState = DiscussionHeaderViewState(authorAvatarUrl, authorName, authoredDate, attachmentIconVisibility)
+        val expectedState = DiscussionHeaderViewState.Loaded(authorAvatarUrl, authorName, authoredDate, attachmentIconVisibility)
+
+        assertEquals(expectedState, state.discussionHeaderViewState)
+    }
+
+    @Test
+    fun `Description contains DiscussionHeaderState with unknown author and date, when assignment is discussion with no author name or date`() {
+        val authorAvatarUrl = "pretty-hodor.com"
+        val authorName = "Unknown Author"
+        val authoredDate = "Unknown Date"
+        val discussionMessage = "yo yo yo"
+        val attachmentIconVisibility = false
+        val discussionTopicHeader = baseDiscussion.copy(message = discussionMessage, author = DiscussionParticipant(avatarImageUrl = authorAvatarUrl), postedDate = null)
+        val assignment = baseAssignment.copy(submissionTypesRaw = listOf("discussion_topic"), discussionTopicHeader = discussionTopicHeader)
+
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
+        val expectedState = DiscussionHeaderViewState.Loaded(authorAvatarUrl, authorName, authoredDate, attachmentIconVisibility)
+
+        assertEquals(expectedState, state.discussionHeaderViewState)
+    }
+
+    @Test
+    fun `Description contains DiscussionHeaderState NoAuthor with when assignment is discussion with no author`() {
+        val discussionMessage = "yo yo yo"
+        val calendar = GregorianCalendar.getInstance()
+        calendar.set(2019, 6, 23, 9, 59)
+        val discussionTopicHeader = baseDiscussion.copy(message = discussionMessage, author = DiscussionParticipant(), postedDate = calendar.time)
+        val assignment = baseAssignment.copy(submissionTypesRaw = listOf("discussion_topic"), discussionTopicHeader = discussionTopicHeader)
+
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
+        val expectedState = DiscussionHeaderViewState.NoAuthor
 
         assertEquals(expectedState, state.discussionHeaderViewState)
     }
@@ -640,7 +672,7 @@ class AssignmentDetailsPresenterTest : Assert() {
 
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
-        val expectedState = DiscussionHeaderViewState(authorAvatarUrl, authorName, authoredDate, attachmentIconVisibility)
+        val expectedState = DiscussionHeaderViewState.Loaded(authorAvatarUrl, authorName, authoredDate, attachmentIconVisibility)
 
         assertEquals(expectedState, state.discussionHeaderViewState)
     }

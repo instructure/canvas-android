@@ -82,9 +82,15 @@ data class QuizDescriptionViewState(
     val allowedAttempts: String
 )
 
-data class DiscussionHeaderViewState(
-    val authorAvatarUrl: String? = null,
-    val authorName: String,
-    val authoredDate: String,
-    val attachmentIconVisibility: Boolean
-)
+sealed class DiscussionHeaderViewState {
+
+    data class Loaded(
+            val authorAvatarUrl: String? = null,
+            val authorName: String,
+            val authoredDate: String,
+            val attachmentIconVisibility: Boolean
+    ) : DiscussionHeaderViewState()
+
+    object NoAuthor : DiscussionHeaderViewState()
+
+}
