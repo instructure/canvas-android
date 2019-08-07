@@ -404,9 +404,7 @@ class FileListFragment : ParentFragment(), Bookmarkable {
     private fun uploadFile() {
         folder?.let {
             val bundle = UploadFilesDialog.createFilesBundle(null, it.id)
-            UploadFilesDialog.show(fragmentManager, bundle) { event ->
-                if (event == EVENT_ON_UPLOAD_BEGIN) isExpectingUpload = true
-            }
+            UploadFilesDialog.show(fragmentManager, bundle) { _ -> }
         }
     }
 
@@ -473,8 +471,6 @@ class FileListFragment : ParentFragment(), Bookmarkable {
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: FileUploadEvent) {
         event.once(FileListFragment::class.java.name + folder?.id) { _ ->
-            if (!isExpectingUpload) return@once
-            isExpectingUpload = false
             recyclerAdapter?.refresh()
             folder?.let {
                 StudentPrefs.staleFolderIds = StudentPrefs.staleFolderIds + it.id
