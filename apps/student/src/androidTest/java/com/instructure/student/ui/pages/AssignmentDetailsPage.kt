@@ -16,8 +16,15 @@
  */
 package com.instructure.student.ui.pages
 
+import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.student.R
 
 open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
+    private val submitButton by OnViewWithId(R.id.submitButton)
+
+    fun pressSubmitButton()  {
+        submitButton.click()
+    }
 }

@@ -121,5 +121,10 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         Espresso.onView(matcher).assertDisplayed()
     }
 
+    fun selectCourse(course: CourseApiModel) {
+        assertDisplaysCourse(course)
+        onView(withText(course.name)).click()
+    }
+
 
 }
