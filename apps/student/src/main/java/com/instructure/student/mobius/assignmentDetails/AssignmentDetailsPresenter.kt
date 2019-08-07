@@ -93,8 +93,12 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
                 R.drawable.vd_submitted
             )
         } else {
-            if (assignment.submission?.missing == true ||
-                (assignment.dueAt != null && assignmentState == AssignmentUtils2.ASSIGNMENT_STATE_MISSING)) {
+            // Don't mark LTI assignments as missing when overdue as they usually won't have a real submission for it
+            val isMissingFromDueDate = assignment.turnInType != Assignment.TurnInType.EXTERNAL_TOOL
+                && assignment.dueAt != null
+                && assignmentState == AssignmentUtils2.ASSIGNMENT_STATE_MISSING
+
+            if (assignment.submission?.missing == true || isMissingFromDueDate) {
                 // Mark it missing if the teacher marked it missing or if it's past due
                 Triple(R.string.missingSubmissionLabel, R.color.submissionStatusColorMissing, R.drawable.vd_unsubmitted)
             } else {
@@ -165,8 +169,7 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
             .map { Assignment.submissionTypeToPrettyPrintString(it, context) }
             .joinToString(", ")
 
-        val isExternalToolSubmission = assignment.getSubmissionTypes()
-            .any { it == Assignment.SubmissionType.EXTERNAL_TOOL || it == Assignment.SubmissionType.BASIC_LTI_LAUNCH }
+        val isExternalToolSubmission = assignment.turnInType == Assignment.TurnInType.EXTERNAL_TOOL
 
         // File types
         visibilities.fileTypes = assignment.allowedExtensions.isNotEmpty() && assignment.getSubmissionTypes().contains(Assignment.SubmissionType.ONLINE_UPLOAD)
