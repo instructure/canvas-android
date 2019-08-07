@@ -18,10 +18,7 @@ package com.instructure.student.mobius.assignmentDetails
 
 import android.content.Context
 import androidx.core.content.ContextCompat
-import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.models.DiscussionParticipant
-import com.instructure.canvasapi2.models.DiscussionTopicHeader
-import com.instructure.canvasapi2.models.Quiz
+import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.canvasapi2.utils.isRtl
@@ -38,6 +35,8 @@ import com.instructure.student.mobius.assignmentDetails.ui.gradeCell.GradeCellVi
 import com.instructure.student.mobius.common.ui.Presenter
 import java.text.DateFormat
 import java.util.*
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.contract
 
 object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, AssignmentDetailsViewState> {
     override fun present(model: AssignmentDetailsModel, context: Context): AssignmentDetailsViewState {
@@ -288,7 +287,7 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
     }
 
     private fun getDiscussionHeaderViewState(context: Context, discussionTopicHeader: DiscussionTopicHeader): DiscussionHeaderViewState {
-        return if (isDiscussionAuthorNull(discussionTopicHeader.author)) {
+        return if (discussionTopicHeader.author.isDiscussionAuthorNull()) {
             DiscussionHeaderViewState.NoAuthor
         } else {
             val authorAvatarUrl = discussionTopicHeader.author?.avatarImageUrl
@@ -299,10 +298,6 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
 
             DiscussionHeaderViewState.Loaded(authorAvatarUrl, authorName, authoredDate, attachmentIconVisibility)
         }
-    }
-
-    private fun isDiscussionAuthorNull(author: DiscussionParticipant?): Boolean {
-        return author?.id == 0L && author.displayName == null && author.avatarImageUrl == null && author.htmlUrl == null
     }
 
     private fun getDiscussionText(discussionTopicHeader: DiscussionTopicHeader): String {
