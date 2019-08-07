@@ -63,7 +63,8 @@ class SubmissionDetailsEmptyContentView(
             is Loaded -> {
                 title.text = if (state.isAllowedToSubmit) context.getString(R.string.submissionDetailsNoSubmissionYet) else context.getString(R.string.submissionDetailsAssignmentLocked)
                 message.text = state.dueDateText
-                submitButton.setHidden(state.isAllowedToSubmit)
+//                submitButton.setHidden(state.isAllowedToSubmit)
+                submitButton.setHidden(false)
             }
         }
     }
