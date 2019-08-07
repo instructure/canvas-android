@@ -67,8 +67,6 @@ class FileListFragment : ParentFragment(), Bookmarkable {
 
     private var canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
 
-    private var isExpectingUpload by BooleanArg()
-
     @Suppress("unused")
     @PageViewUrl
     private fun makePageViewUrl() =
