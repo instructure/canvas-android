@@ -18,13 +18,21 @@ package com.instructure.student.mobius.assignmentDetails.submissionDetails.drawe
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.instructure.canvasapi2.models.Attachment
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.pandautils.utils.LongArg
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.ParcelableListArg
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.files.*
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsTabData
 import com.instructure.student.mobius.common.ui.MobiusFragment
 
 class SubmissionFilesFragment :
     MobiusFragment<SubmissionFilesModel, SubmissionFilesEvent, SubmissionFilesEffect, SubmissionFilesView, SubmissionFilesViewState>() {
-    lateinit var data: SubmissionDetailsTabData.FileData
+
+    private var files: List<Attachment> by ParcelableListArg()
+    private var selectedFileId: Long by LongArg()
+    private var canvasContext: CanvasContext by ParcelableArg()
 
     override fun makeEffectHandler() = SubmissionFilesEffectHandler()
 
@@ -34,5 +42,13 @@ class SubmissionFilesFragment :
 
     override fun makePresenter() = SubmissionFilesPresenter
 
-    override fun makeInitModel() = SubmissionFilesModel(data.canvasContext, data.files, data.selectedFileId)
+    override fun makeInitModel() = SubmissionFilesModel(canvasContext, files, selectedFileId)
+
+    companion object {
+        fun newInstance(data: SubmissionDetailsTabData.FileData) = SubmissionFilesFragment().apply {
+            files = data.files
+            selectedFileId = data.selectedFileId
+            canvasContext = data.canvasContext
+        }
+    }
 }

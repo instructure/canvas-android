@@ -18,13 +18,18 @@ package com.instructure.student.mobius.assignmentDetails.submissionDetails.drawe
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Submission
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.*
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsTabData
 import com.instructure.student.mobius.common.ui.MobiusFragment
 
 class SubmissionRubricFragment :
     MobiusFragment<SubmissionRubricModel, SubmissionRubricEvent, SubmissionRubricEffect, SubmissionRubricView, SubmissionRubricViewState>() {
-    lateinit var data: SubmissionDetailsTabData.RubricData
+    private var submission by ParcelableArg<Submission>(key = Const.SUBMISSION)
+    private var assignment by ParcelableArg<Assignment>(key = Const.ASSIGNMENT)
 
     override fun makeEffectHandler() = SubmissionRubricEffectHandler()
 
@@ -34,5 +39,13 @@ class SubmissionRubricFragment :
 
     override fun makePresenter() = SubmissionRubricPresenter
 
-    override fun makeInitModel() = SubmissionRubricModel(data.assignment, data.submission)
+    override fun makeInitModel() = SubmissionRubricModel(assignment, submission)
+
+    companion object {
+        fun newInstance(data: SubmissionDetailsTabData.RubricData) = SubmissionRubricFragment().apply {
+            submission = data.submission
+            assignment = data.assignment
+        }
+    }
+
 }

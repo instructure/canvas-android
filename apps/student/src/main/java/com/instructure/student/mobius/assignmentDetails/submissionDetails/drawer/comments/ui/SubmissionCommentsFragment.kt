@@ -18,9 +18,13 @@ package com.instructure.student.mobius.assignmentDetails.submissionDetails.drawe
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.SubmissionComment
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.student.PendingSubmissionComment
 import com.instructure.student.db.Db
 import com.instructure.student.db.getInstance
@@ -32,7 +36,9 @@ import com.instructure.student.mobius.common.ui.MobiusFragment
 
 class SubmissionCommentsFragment :
         MobiusFragment<SubmissionCommentsModel, SubmissionCommentsEvent, SubmissionCommentsEffect, SubmissionCommentsView, SubmissionCommentsViewState>() {
-    lateinit var data: SubmissionDetailsTabData.CommentData
+
+    private var submission by ParcelableArg<Submission>(key = Const.SUBMISSION)
+    private var assignment by ParcelableArg<Assignment>(key = Const.ASSIGNMENT)
 
     override fun makeEffectHandler() = SubmissionCommentsEffectHandler(requireContext())
     override fun makeUpdate() = SubmissionCommentsUpdate()
@@ -40,9 +46,9 @@ class SubmissionCommentsFragment :
     override fun makePresenter() = SubmissionCommentsPresenter
 
     override fun makeInitModel() = SubmissionCommentsModel(
-        comments = data.submission.submissionComments,
-        submissionHistory = data.submission.submissionHistory.filterNotNull(),
-        assignment = data.assignment
+        comments = submission.submissionComments,
+        submissionHistory = submission.submissionHistory.filterNotNull(),
+        assignment = assignment
     )
 
     override fun getExternalEventSources() = listOf(
@@ -58,10 +64,17 @@ class SubmissionCommentsFragment :
         DBSource.ofList<PendingSubmissionComment, SubmissionCommentsEvent>(
             Db.getInstance(ContextKeeper.appContext)
                 .pendingSubmissionCommentQueries
-                .getCommentsByAccountAssignment(ApiPrefs.domain, data.assignment.id)
+                .getCommentsByAccountAssignment(ApiPrefs.domain, assignment.id)
         ) { pendingComments ->
             val commentIds = pendingComments.map { it.id }
             SubmissionCommentsEvent.PendingSubmissionsUpdated(commentIds)
         }
     )
+
+    companion object {
+        fun newInstance(data: SubmissionDetailsTabData.CommentData) = SubmissionCommentsFragment().apply {
+            submission = data.submission
+            assignment = data.assignment
+        }
+    }
 }

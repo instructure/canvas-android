@@ -98,15 +98,15 @@ class SubmissionFilesRenderTest : StudentRenderTest() {
             override fun dispose() = Unit
             override fun post(runnable: Runnable) = Unit
         }
-        val fragment = SubmissionFilesFragment().apply {
+        val data = SubmissionDetailsTabData.FileData(
+            name = "Files",
+            files = emptyList(),
+            selectedFileId = 0L,
+            canvasContext = Course()
+        )
+        val fragment = SubmissionFilesFragment.newInstance(data).apply {
             overrideInitViewState = state
             loopMod = { it.effectRunner { emptyEffectRunner } }
-            data = SubmissionDetailsTabData.FileData(
-                name = "Files",
-                files = emptyList(),
-                selectedFileId = 0L,
-                canvasContext = Course()
-            )
         }
         activityRule.activity.loadFragment(fragment)
         return fragment
