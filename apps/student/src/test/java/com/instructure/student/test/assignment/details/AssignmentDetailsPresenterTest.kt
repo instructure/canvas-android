@@ -235,6 +235,28 @@ class AssignmentDetailsPresenterTest : Assert() {
     }
 
     @Test
+    fun `Uses correct label text for submitted status when submission is past due for an LTI assignment`() {
+        val calendar = Calendar.getInstance().apply { set(2000, 0, 31, 23, 59, 0) }
+
+        val submission = baseSubmission.copy(attempt = 0, workflowState = "unsubmitted")
+        val assignment = baseAssignment.copy(submission = submission, dueAt = calendar.time.toApiString(), submissionTypesRaw = listOf("basic_lti_launch"))
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
+        assertEquals("Not Submitted", state.submittedStateLabel)
+    }
+
+    @Test
+    fun `Uses correct label text for submitted status when submission is past due for an external assignment`() {
+        val calendar = Calendar.getInstance().apply { set(2000, 0, 31, 23, 59, 0) }
+
+        val submission = baseSubmission.copy(attempt = 0, workflowState = "unsubmitted")
+        val assignment = baseAssignment.copy(submission = submission, dueAt = calendar.time.toApiString(), submissionTypesRaw = listOf("external_tool"))
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
+        assertEquals("Not Submitted", state.submittedStateLabel)
+    }
+
+    @Test
     fun `Uses correct label text for submitted status when submission is null`() {
         val assignment = baseAssignment.copy(submission = null, dueAt = null)
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
