@@ -290,14 +290,15 @@ class SubmissionRubricRenderTest : StudentRenderTest() {
             override fun dispose() = Unit
             override fun post(runnable: Runnable) = Unit
         }
-        val fragment = SubmissionRubricFragment().apply {
+        val data = SubmissionDetailsTabData.RubricData(
+            name = "Rubric",
+            assignment = Assignment(),
+            submission = Submission()
+        )
+        val fragment = SubmissionRubricFragment.newInstance(data).apply {
             overrideInitViewState = SubmissionRubricViewState(listOf(listData))
             loopMod = { it.effectRunner { emptyEffectRunner } }
-            data = SubmissionDetailsTabData.RubricData(
-                name = "Rubric",
-                assignment = Assignment(),
-                submission = Submission()
-            )
+
         }
         activityRule.activity.loadFragment(fragment)
         return fragment
@@ -308,14 +309,14 @@ class SubmissionRubricRenderTest : StudentRenderTest() {
             override fun dispose() = Unit
             override fun post(runnable: Runnable) = Unit
         }
-        val fragment = SubmissionRubricFragment().apply {
+        val data = SubmissionDetailsTabData.RubricData(
+            name = "Rubric",
+            assignment = Assignment(),
+            submission = Submission()
+        )
+        val fragment = SubmissionRubricFragment.newInstance(data).apply {
             overrideInitModel = model
             loopMod = { it.effectRunner { emptyEffectRunner } }
-            data = SubmissionDetailsTabData.RubricData(
-                name = "Rubric",
-                assignment = Assignment(),
-                submission = Submission()
-            )
         }
         activityRule.activity.loadFragment(fragment)
         return fragment
