@@ -18,9 +18,7 @@ package com.instructure.student.mobius.assignmentDetails
 
 import android.content.Context
 import androidx.core.content.ContextCompat
-import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.models.DiscussionTopicHeader
-import com.instructure.canvasapi2.models.Quiz
+import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.canvasapi2.utils.isRtl
@@ -37,6 +35,8 @@ import com.instructure.student.mobius.assignmentDetails.ui.gradeCell.GradeCellVi
 import com.instructure.student.mobius.common.ui.Presenter
 import java.text.DateFormat
 import java.util.*
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.contract
 
 object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, AssignmentDetailsViewState> {
     override fun present(model: AssignmentDetailsModel, context: Context): AssignmentDetailsViewState {
@@ -290,13 +290,17 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
     }
 
     private fun getDiscussionHeaderViewState(context: Context, discussionTopicHeader: DiscussionTopicHeader): DiscussionHeaderViewState {
-        val authorAvatarUrl = discussionTopicHeader.author?.avatarImageUrl
-        // Can't have a discussion topic header with a null author or date
-        val authorName = discussionTopicHeader.author!!.displayName!!
-        val authoredDate = DateHelper.getMonthDayAtTime(context, discussionTopicHeader.postedDate, context.getString(R.string.at))!!
-        val attachmentIconVisibility = discussionTopicHeader.attachments.isNotEmpty()
+        return if (discussionTopicHeader.author.isDiscussionAuthorNull()) {
+            DiscussionHeaderViewState.NoAuthor
+        } else {
+            val authorAvatarUrl = discussionTopicHeader.author?.avatarImageUrl
+            // Can't have a discussion topic header with a null author or date
+            val authorName = discussionTopicHeader.author?.displayName ?: context.getString(R.string.discussions_unknown_author)
+            val authoredDate = DateHelper.getMonthDayAtTime(context, discussionTopicHeader.postedDate, context.getString(R.string.at)) ?: context.getString(R.string.discussions_unknown_date)
+            val attachmentIconVisibility = discussionTopicHeader.attachments.isNotEmpty()
 
-        return DiscussionHeaderViewState(authorAvatarUrl, authorName, authoredDate, attachmentIconVisibility)
+            DiscussionHeaderViewState.Loaded(authorAvatarUrl, authorName, authoredDate, attachmentIconVisibility)
+        }
     }
 
     private fun getDiscussionText(discussionTopicHeader: DiscussionTopicHeader): String {
