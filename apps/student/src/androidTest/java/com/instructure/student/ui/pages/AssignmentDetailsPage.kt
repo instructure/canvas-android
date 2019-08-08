@@ -40,26 +40,15 @@ import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.containsString
 
 open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
-    private val submitButton by OnViewWithId(R.id.submitButton)
-
-    fun pressSubmitButton()  {
-        submitButton.click()
-    }
-
-    fun submitTextAssignment(text: String) {
-        // Go to submission page
-        submitButton.click()
-        onView(withId(R.id.rce_webView)).typeText(text).closeSoftKeyboard()
-        onView(withId(R.id.menuSubmit)).click()
-    }
-
     fun verifyAssignmentSubmitted() {
         onView(withText(R.string.submissionStatusSuccessTitle)).assertDisplayed()
+        onView(allOf(withId(R.id.submissionStatus), withText(R.string.submitted))).assertDisplayed()
     }
 
     fun verifyAssignmentGraded(score: String) {
         onView(allOf(withId(R.id.gradeContainer), isDisplayed())).scrollTo().assertDisplayed()
         onView(allOf(withId(R.id.score), isDisplayed())).scrollTo().assertContainsText(score)
+        onView(allOf(withId(R.id.submissionStatus), withText(R.string.gradedSubmissionLabel))).assertDisplayed()
     }
 
     fun refresh() {

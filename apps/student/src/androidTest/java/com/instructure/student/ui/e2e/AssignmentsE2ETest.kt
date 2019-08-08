@@ -3,7 +3,6 @@ package com.instructure.student.ui.e2e
 import android.os.SystemClock.sleep
 import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
-import com.instructure.canvas.espresso.Stub
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.SubmissionsApi
 import com.instructure.dataseeding.model.FileUploadType
@@ -55,6 +54,16 @@ class AssignmentsE2ETest: StudentTest() {
                 pointsPossible = 20.0
         ))
 
+        val percentageFileAssignment = AssignmentsApi.createAssignment(AssignmentsApi.CreateAssignmentRequest(
+                courseId = course.id,
+                submissionTypes = listOf(SubmissionType.ONLINE_UPLOAD),
+                gradingType = GradingType.PERCENT,
+                teacherToken = teacher.token,
+                pointsPossible = 25.0,
+                allowedExtensions = listOf("txt", "pdf", "jpg")
+        ))
+
+        // Pre-seed a submission and a grade for the letter grade assignment
         SubmissionsApi.seedAssignmentSubmission(SubmissionsApi.SubmissionSeedRequest(
                 assignmentId = letterGradeTextAssignment.id,
                 courseId = course.id,
@@ -74,14 +83,6 @@ class AssignmentsE2ETest: StudentTest() {
                 excused = false
         )
 
-        val percentageFileAssignment = AssignmentsApi.createAssignment(AssignmentsApi.CreateAssignmentRequest(
-                courseId = course.id,
-                submissionTypes = listOf(SubmissionType.ONLINE_UPLOAD),
-                gradingType = GradingType.PERCENT,
-                teacherToken = teacher.token,
-                pointsPossible = 25.0,
-                allowedExtensions = listOf("txt", "pdf", "jpg")
-        ))
 
         // Sign in with lone student
         tokenLogin(student)
@@ -99,6 +100,8 @@ class AssignmentsE2ETest: StudentTest() {
         assignmentListPage.assertHasAssignment(percentageFileAssignment)
 
         // Let's submit a text assignment
+        assignmentListPage.clickAssignment(pointsTextAssignment)
+
         SubmissionsApi.submitCourseAssignment(
                 submissionType = SubmissionType.ONLINE_TEXT_ENTRY,
                 courseId = course.id,
@@ -107,7 +110,6 @@ class AssignmentsE2ETest: StudentTest() {
                 fileIds = emptyList<Long>().toMutableList()
         )
 
-        assignmentListPage.clickAssignment(pointsTextAssignment)
         assignmentDetailsPage.refresh()
         assignmentDetailsPage.verifyAssignmentSubmitted()
 
@@ -127,6 +129,7 @@ class AssignmentsE2ETest: StudentTest() {
         Espresso.pressBack() // Back to assignment list
 
         // Upload a text file for submission
+        assignmentListPage.clickAssignment(percentageFileAssignment)
         val uploadInfo = uploadTextFile(
                 courseId = course.id,
                 assignmentId = percentageFileAssignment.id,
@@ -144,7 +147,6 @@ class AssignmentsE2ETest: StudentTest() {
         )
 
         // Verify that assignment has been submitted
-        assignmentListPage.clickAssignment(percentageFileAssignment)
         assignmentDetailsPage.refresh()
         assignmentDetailsPage.verifyAssignmentSubmitted()
 

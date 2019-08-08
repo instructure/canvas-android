@@ -16,6 +16,7 @@
  */
 package com.instructure.student.ui.pages
 
+import androidx.test.espresso.matcher.ViewMatchers.hasDescendant
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.dataseeding.model.CanvasUserApiModel
@@ -30,7 +31,6 @@ import org.hamcrest.Matchers.containsString
 
 open class SubmissionDetailsPage : BasePage(R.id.submissionDetails) {
     private val commentsButton by OnViewWithStringTextIgnoreCase("comments")
-    private val filesButton by OnViewWithStringTextIgnoreCase("files")
 
     private val submissionCommentsRenderPage = SubmissionCommentsRenderPage()
 
@@ -38,17 +38,19 @@ open class SubmissionDetailsPage : BasePage(R.id.submissionDetails) {
         commentsButton.click()
     }
 
-    fun openFiles() {
-        filesButton.click()
-    }
-
+    /**
+     * Assert that a comment is displayed
+     * [description] contains some text that is in the comment
+     * [user] is the author of the comment
+     */
     fun assertCommentDisplayed(description: String, user: CanvasUserApiModel) {
-        // This doesn't work so well when one user has multiple comments.  So "user" will go unused, for now.
-//        val studentMatcher = allOf(withText(user.shortName),withId(R.id.userNameTextView))
-//        submissionCommentsRenderPage.scrollAndAssertDisplayed(studentMatcher)
+        val commentMatcher = allOf(
+                withId(R.id.commentHolder),
+                hasDescendant(allOf(withText(user.shortName), withId(R.id.userNameTextView))),
+                hasDescendant(allOf(withText(containsString(description)), anyOf(withId(R.id.titleTextView), withId(R.id.commentTextView))))
+        )
 
-        val descriptionMatcher = allOf(withText(containsString(description)), anyOf(withId(R.id.titleTextView), withId(R.id.commentTextView)))
-        submissionCommentsRenderPage.scrollAndAssertDisplayed(descriptionMatcher)
+        submissionCommentsRenderPage.scrollAndAssertDisplayed(commentMatcher)
     }
 
     fun addAndSendComment(comment: String) {
