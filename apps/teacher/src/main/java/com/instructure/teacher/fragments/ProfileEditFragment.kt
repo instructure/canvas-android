@@ -163,7 +163,7 @@ class ProfileEditFragment : BasePresenterFragment<
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == MediaUploadUtils.REQUEST_CODE_PERMISSIONS_TAKE_PHOTO) {
             if (PermissionUtils.allPermissionsGrantedResultSummary(grantResults)) {
-                takeNewPhotoBecausePermissionsAlreadyGranted(this)
+                takeNewPhotoBecausePermissionsAlreadyGranted(this, requireActivity())
             } else {
                 Toast.makeText(requireActivity(), R.string.permissionDenied, Toast.LENGTH_LONG).show()
             }
