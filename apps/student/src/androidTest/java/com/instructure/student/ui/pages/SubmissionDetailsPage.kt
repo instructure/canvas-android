@@ -16,8 +16,42 @@
  */
 package com.instructure.student.ui.pages
 
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withText
+import com.instructure.dataseeding.model.CanvasUserApiModel
+import com.instructure.espresso.OnViewWithStringTextIgnoreCase
+import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.student.R
+import com.instructure.student.ui.pages.renderPages.SubmissionCommentsRenderPage
+import org.hamcrest.Matchers.allOf
+import org.hamcrest.Matchers.anyOf
+import org.hamcrest.Matchers.containsString
 
 open class SubmissionDetailsPage : BasePage(R.id.submissionDetails) {
+    private val commentsButton by OnViewWithStringTextIgnoreCase("comments")
+    private val filesButton by OnViewWithStringTextIgnoreCase("files")
+
+    private val submissionCommentsRenderPage = SubmissionCommentsRenderPage()
+
+    fun openComments() {
+        commentsButton.click()
+    }
+
+    fun openFiles() {
+        filesButton.click()
+    }
+
+    fun assertCommentDisplayed(description: String, user: CanvasUserApiModel) {
+        // This doesn't work so well when one user has multiple comments.  So "user" will go unused, for now.
+//        val studentMatcher = allOf(withText(user.shortName),withId(R.id.userNameTextView))
+//        submissionCommentsRenderPage.scrollAndAssertDisplayed(studentMatcher)
+
+        val descriptionMatcher = allOf(withText(containsString(description)), anyOf(withId(R.id.titleTextView), withId(R.id.commentTextView)))
+        submissionCommentsRenderPage.scrollAndAssertDisplayed(descriptionMatcher)
+    }
+
+    fun addAndSendComment(comment: String) {
+        submissionCommentsRenderPage.addAndSendComment(comment)
+    }
 }

@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withChild
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withParent
@@ -55,7 +56,7 @@ class AssignmentListPage : BasePage(pageResId = R.id.assignmentListPage) {
         emptyView.assertDisplayed()
     }
 
-    fun assertHasAssignment(assignment: AssignmentApiModel, expectedGrade : String? = null) {
+    fun assertHasAssignment(assignment: AssignmentApiModel, expectedGrade: String? = null) {
 
         waitForViewWithText(assignment.name).assertDisplayed()
 
@@ -79,11 +80,15 @@ class AssignmentListPage : BasePage(pageResId = R.id.assignmentListPage) {
         //println("expectedGrade=$expectedGrade")
         if(expectedGrade != null) {
             val matcher =  allOf(
-                    withText(expectedGrade),
+                    withText(containsString(expectedGrade)), // grade might be "13", total string "13/15"
                     withId(R.id.points),
                     withParent(withParent(withChild(withText(assignment.name)))))
             scrollToAndAssertDisplayed(matcher)
         }
+    }
+
+    fun refresh() {
+        onView(allOf(withId(R.id.swipeRefreshLayout), isDisplayed())).swipeDown()
     }
 
     private fun scrollToAndAssertDisplayed(matcher: Matcher<View>) {
