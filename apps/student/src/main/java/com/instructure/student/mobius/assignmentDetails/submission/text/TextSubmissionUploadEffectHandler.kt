@@ -20,15 +20,29 @@ import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.student.mobius.assignmentDetails.submission.text.ui.TextSubmissionUploadView
 import com.instructure.student.mobius.common.ui.EffectHandler
 
-class TextSubmissionUploadEffectHandler : EffectHandler<TextSubmissionUploadView, TextSubmissionUploadEvent, TextSubmissionUploadEffect>() {
+class TextSubmissionUploadEffectHandler :
+    EffectHandler<TextSubmissionUploadView, TextSubmissionUploadEvent, TextSubmissionUploadEffect>() {
     override fun accept(effect: TextSubmissionUploadEffect) {
         when (effect) {
-            is TextSubmissionUploadEffect.SubmitText -> {
-                view?.onTextSubmitted(effect.text, effect.canvasContext, effect.assignmentId, effect.assignmentName)
-            }
-            is TextSubmissionUploadEffect.InitializeText -> {
-                view?.setInitialSubmissionText(effect.text)
-            }
+            is TextSubmissionUploadEffect.SubmitText -> view?.onTextSubmitted(
+                effect.text,
+                effect.canvasContext,
+                effect.assignmentId,
+                effect.assignmentName
+            )
+            is TextSubmissionUploadEffect.InitializeText -> view?.setInitialSubmissionText(effect.text)
+            is TextSubmissionUploadEffect.AddImage -> view?.addImageToSubmission(
+                effect.uri,
+                effect.canvasContext
+            )
+            TextSubmissionUploadEffect.ProcessCameraImage -> processCameraImage()
+            TextSubmissionUploadEffect.ShowFailedImageMessage -> view?.showFailedImageMessage()
         }.exhaustive
+    }
+
+    private fun processCameraImage() {
+        view?.retrieveCameraImage()?.let { uri ->
+            consumer.accept(TextSubmissionUploadEvent.ImageAdded(uri))
+        } ?: consumer.accept(TextSubmissionUploadEvent.ImageFailed)
     }
 }

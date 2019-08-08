@@ -18,8 +18,10 @@ package com.instructure.student.mobius.assignmentDetails.submission.text.ui
 
 import android.app.Activity
 import android.graphics.Color
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
@@ -29,7 +31,12 @@ import com.instructure.student.mobius.common.ui.SubmissionService
 import com.spotify.mobius.functions.Consumer
 import kotlinx.android.synthetic.main.fragment_text_submission_upload.*
 
-class TextSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) : MobiusView<TextSubmissionUploadViewState, TextSubmissionUploadEvent>(R.layout.fragment_text_submission_upload, inflater, parent) {
+class TextSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) :
+    MobiusView<TextSubmissionUploadViewState, TextSubmissionUploadEvent>(
+        R.layout.fragment_text_submission_upload,
+        inflater,
+        parent
+    ) {
 
     init {
         toolbar.setupAsBackButton { (context as? Activity)?.onBackPressed() }
@@ -49,6 +56,9 @@ class TextSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) : Mo
 
         rce.setOnTextChangeListener {
             output.accept(TextSubmissionUploadEvent.TextChanged(it))
+        }
+        rce.actionUploadImageCallback = {
+            MediaUploadUtils.showPickImageDialog(null, context as Activity)
         }
     }
 
@@ -73,5 +83,28 @@ class TextSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) : Mo
         SubmissionService.startTextSubmission(context, canvasContext, assignmentId, assignmentName, text)
 
         (context as? Activity)?.onBackPressed()
+    }
+
+    fun retrieveCameraImage(): Uri? {
+        return (context as? Activity)?.let { activity ->
+            MediaUploadUtils.handleCameraPicResult(activity, null)
+        }
+    }
+
+    /**
+     * Add the image here, rather than in the loop, so that it is placed at the cursor position
+     */
+    fun addImageToSubmission(uri: Uri, canvasContext: CanvasContext) {
+        (context as? Activity)?.let { activity ->
+            MediaUploadUtils.uploadRceImageJob(uri, canvasContext, activity, ::insertImage)
+        }
+    }
+
+    private fun insertImage(text: String, alt: String) {
+        rce.insertImage(text, alt)
+    }
+
+    fun showFailedImageMessage() {
+        Toast.makeText(context, R.string.errorGettingPhoto, Toast.LENGTH_LONG).show()
     }
 }

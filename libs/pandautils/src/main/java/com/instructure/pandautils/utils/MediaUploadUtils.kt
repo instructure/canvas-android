@@ -46,13 +46,12 @@ import java.util.*
 
 object MediaUploadUtils {
 
-    fun takeNewPhotoBecausePermissionsAlreadyGranted(fragment: Fragment): Uri {
+    fun takeNewPhotoBecausePermissionsAlreadyGranted(fragment: Fragment?, activity: Activity): Uri {
         // Get the location of the saved picture
         val fileName = "rce_${System.currentTimeMillis()}.jpg"
         val values = ContentValues()
         values.put(MediaStore.Images.Media.TITLE, fileName)
 
-        val activity = fragment.requireActivity()
         val imageUri = activity.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
 
         if (imageUri != null) {
@@ -64,7 +63,8 @@ object MediaUploadUtils {
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
         cameraIntent.putExtra(Const.IS_OVERRIDDEN, true)
         cameraIntent.putExtra("android.intent.extras.CAMERA_FACING", 1) // Requests front camera on some apps
-        fragment.startActivityForResult(cameraIntent, RequestCodes.CAMERA_PIC_REQUEST)
+        fragment?.startActivityForResult(cameraIntent, RequestCodes.CAMERA_PIC_REQUEST)
+            ?: activity.startActivityForResult(cameraIntent, RequestCodes.CAMERA_PIC_REQUEST)
 
         return imageUri
     }
@@ -77,19 +77,23 @@ object MediaUploadUtils {
     }
 
     fun showPickImageDialog(fragment: Fragment) {
-        val context = fragment.requireActivity()
-        val root = LayoutInflater.from(context).inflate(R.layout.dialog_profile_source, null)
-        val dialog = AlertDialog.Builder(context)
+        showPickImageDialog(fragment, fragment.requireActivity())
+    }
+
+    // Allows fragments to request permissions and receive results for start activity, but defaults to activity if fragment is null
+    fun showPickImageDialog(fragment: Fragment?, activity: Activity) {
+        val root = LayoutInflater.from(activity).inflate(R.layout.dialog_profile_source, null)
+        val dialog = AlertDialog.Builder(activity)
                 .setView(root)
                 .create()
 
         root.findViewById<View>(R.id.takePhotoItem).onClick {
-            newPhoto(fragment)
+            newPhoto(fragment, activity)
             dialog.dismiss()
         }
 
         root.findViewById<View>(R.id.chooseFromGalleryItem).onClick {
-            chooseFromGallery(fragment)
+            chooseFromGallery(fragment, activity)
             dialog.dismiss()
         }
 
@@ -97,32 +101,46 @@ object MediaUploadUtils {
     }
 
     const val REQUEST_CODE_PERMISSIONS_TAKE_PHOTO = 223
-    private fun newPhoto(fragment: Fragment) {
-        val activity = fragment.requireActivity()
+    private fun newPhoto(fragment: Fragment?, activity: Activity) {
         if (!Utils.hasCameraAvailable(activity)) {
             Toast.makeText(activity, R.string.noCameraOnDevice, Toast.LENGTH_SHORT).show()
             return
         }
 
         if (PermissionUtils.hasPermissions(activity, PermissionUtils.WRITE_EXTERNAL_STORAGE, PermissionUtils.CAMERA)) {
-            takeNewPhotoBecausePermissionsAlreadyGranted(fragment)
+            takeNewPhotoBecausePermissionsAlreadyGranted(fragment, activity)
         } else {
-            fragment.requestPermissions(PermissionUtils.makeArray(PermissionUtils.WRITE_EXTERNAL_STORAGE, PermissionUtils.CAMERA), REQUEST_CODE_PERMISSIONS_TAKE_PHOTO)
+            val permissions = PermissionUtils.makeArray(PermissionUtils.WRITE_EXTERNAL_STORAGE, PermissionUtils.CAMERA)
+            fragment?.requestPermissions(permissions, REQUEST_CODE_PERMISSIONS_TAKE_PHOTO)
+                ?: activity.requestPermissions(permissions.toSet()) { results ->
+                    if (results.isNotEmpty() && results.all { it.value }) {
+                        takeNewPhotoBecausePermissionsAlreadyGranted(fragment, activity)
+                    } else {
+                        Toast.makeText(activity, R.string.permissionDenied, Toast.LENGTH_LONG).show()
+                    }
+                }
         }
     }
 
     const val REQUEST_CODE_PERMISSIONS_GALLERY = 332
-    private fun chooseFromGallery(fragment: Fragment) {
-        val activity = fragment.requireActivity()
+    private fun chooseFromGallery(fragment: Fragment?, activity: Activity) {
         if (!PermissionUtils.hasPermissions(activity, PermissionUtils.WRITE_EXTERNAL_STORAGE)) {
-            fragment.requestPermissions(PermissionUtils.makeArray(PermissionUtils.WRITE_EXTERNAL_STORAGE), REQUEST_CODE_PERMISSIONS_GALLERY)
+            fragment?.requestPermissions(PermissionUtils.makeArray(PermissionUtils.WRITE_EXTERNAL_STORAGE), REQUEST_CODE_PERMISSIONS_GALLERY)
+                ?: activity.requestPermissions(setOf(PermissionUtils.WRITE_EXTERNAL_STORAGE)) { results ->
+                    if (results.isNotEmpty() && results.all { it.value }) {
+                        chooseFromGallery(fragment, activity)
+                    } else {
+                        Toast.makeText(activity, R.string.permissionDenied, Toast.LENGTH_LONG).show()
+                    }
+                }
             return
         }
 
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         val file = File(activity.filesDir, "/image/*")
         intent.setDataAndType(FileProvider.getUriForFile(activity, activity.applicationContext.packageName + Const.FILE_PROVIDER_AUTHORITY, file), "image/*")
-        fragment.startActivityForResult(intent, RequestCodes.PICK_IMAGE_GALLERY)
+        fragment?.startActivityForResult(intent, RequestCodes.PICK_IMAGE_GALLERY)
+            ?: activity.startActivityForResult(intent, RequestCodes.PICK_IMAGE_GALLERY)
     }
 
     fun uploadRceImageJob(uri: Uri, canvasContext: CanvasContext, activity: Activity, insertImageCallback: (text: String, altText: String) -> Unit): WeaveCoroutine {
