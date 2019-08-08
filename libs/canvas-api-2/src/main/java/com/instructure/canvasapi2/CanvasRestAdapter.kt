@@ -319,7 +319,7 @@ protected constructor(var statusCallback: StatusCallback<*>?, private val authUs
         }
 
         /**
-         * Removes cached responses for the urls in which the provided [regex] contains a match
+         * Removes cached responses for all urls containing the provided regex [pattern]
          */
         fun clearCacheUrls(pattern: String) {
             synchronized(okHttpClient) {
