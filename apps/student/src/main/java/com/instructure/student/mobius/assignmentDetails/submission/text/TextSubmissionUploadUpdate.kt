@@ -23,20 +23,39 @@ import com.spotify.mobius.Next
 import java.io.UnsupportedEncodingException
 import java.net.URLEncoder
 
-class TextSubmissionUploadUpdate : UpdateInit<TextSubmissionUploadModel, TextSubmissionUploadEvent, TextSubmissionUploadEffect>() {
+class TextSubmissionUploadUpdate :
+    UpdateInit<TextSubmissionUploadModel, TextSubmissionUploadEvent, TextSubmissionUploadEffect>() {
     override fun performInit(model: TextSubmissionUploadModel): First<TextSubmissionUploadModel, TextSubmissionUploadEffect> {
-        return First.first(model, setOf<TextSubmissionUploadEffect>(TextSubmissionUploadEffect.InitializeText(model.initialText
-                ?: "")))
+        return First.first(model, setOf<TextSubmissionUploadEffect>(TextSubmissionUploadEffect.InitializeText(model.initialText ?: "")))
     }
 
-    override fun update(model: TextSubmissionUploadModel, event: TextSubmissionUploadEvent): Next<TextSubmissionUploadModel, TextSubmissionUploadEffect> {
+    override fun update(
+        model: TextSubmissionUploadModel,
+        event: TextSubmissionUploadEvent
+    ): Next<TextSubmissionUploadModel, TextSubmissionUploadEffect> {
         return when(event) {
-            is TextSubmissionUploadEvent.TextChanged -> {
-                Next.next(model.copy(isSubmittable = event.text.isNotEmpty()))
-            }
-            is TextSubmissionUploadEvent.SubmitClicked -> {
-                Next.dispatch(effects(TextSubmissionUploadEffect.SubmitText(event.text, model.canvasContext, model.assignmentId, model.assignmentName)))
-            }
+            is TextSubmissionUploadEvent.TextChanged -> Next.next(
+                model.copy(isSubmittable = event.text.isNotEmpty())
+            )
+            is TextSubmissionUploadEvent.SubmitClicked -> Next.dispatch(
+                effects(
+                    TextSubmissionUploadEffect.SubmitText(
+                        event.text,
+                        model.canvasContext,
+                        model.assignmentId,
+                        model.assignmentName
+                    )
+                )
+            )
+            is TextSubmissionUploadEvent.ImageAdded -> Next.dispatch(
+                effects(TextSubmissionUploadEffect.AddImage(event.uri, model.canvasContext))
+            )
+            TextSubmissionUploadEvent.CameraImageTaken -> Next.dispatch(
+                effects(TextSubmissionUploadEffect.ProcessCameraImage)
+            )
+            TextSubmissionUploadEvent.ImageFailed -> Next.dispatch(
+                effects(TextSubmissionUploadEffect.ShowFailedImageMessage)
+            )
         }
     }
 }
