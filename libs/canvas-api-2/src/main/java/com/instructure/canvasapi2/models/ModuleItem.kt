@@ -37,7 +37,7 @@ data class ModuleItem(
     val completionRequirement: CompletionRequirement? = null,
     @SerializedName("content_details")
     val moduleDetails: ModuleContentDetails? = null,
-    val published: Boolean = false,
+    val published: Boolean? = null,
     @SerializedName("content_id")
     val contentId: Long = 0,
     @SerializedName("external_url")

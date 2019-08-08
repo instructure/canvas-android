@@ -37,7 +37,7 @@ sealed class ModuleListItemData {
     data class ModuleData(
         val id: Long,
         val name: String,
-        val isPublished: Boolean,
+        val isPublished: Boolean?,
         val moduleItems: List<ModuleItemData>
     ): ModuleListItemData()
 
@@ -54,8 +54,8 @@ sealed class ModuleListItemData {
         /** The resource ID of the icon to show for this item. If null, the icon should be hidden. */
         val iconResId: Int?,
 
-        /** Whether this module item is published */
-        val isPublished: Boolean,
+        /** Whether this module item is published. Should not display any publish icon if null. */
+        val isPublished: Boolean?,
 
         /** The indent in pixels */
         val indent: Int,
