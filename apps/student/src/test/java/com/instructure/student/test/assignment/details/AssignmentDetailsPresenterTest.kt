@@ -516,6 +516,91 @@ class AssignmentDetailsPresenterTest : Assert() {
     }
 
     @Test
+    fun `Displays grade cell when grade is not empty and there is a failed submission`() {
+        val submission = com.instructure.student.Submission.Impl(
+            id = 123L,
+            submissionEntry = null,
+            lastActivityDate = OffsetDateTime.now(),
+            assignmentName = null,
+            assignmentId = baseAssignment.id,
+            canvasContext = CanvasContext.emptyCourseContext(0),
+            submissionType = "online_text_entry",
+            errorFlag = false,
+            assignmentGroupCategoryId = null,
+            userId = 0,
+            currentFile = 0,
+            fileCount = 0,
+            progress = null
+        )
+        val assignment = baseAssignment.copy(
+            submission = baseSubmission.copy(
+                enteredScore = 85.0,
+                enteredGrade = "85",
+                score = 85.0,
+                grade = "85"
+            )
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment), databaseSubmission = submission)
+        val actual = AssignmentDetailsPresenter.present(model, context).visibilities.grade
+        assertTrue(actual)
+    }
+
+    @Test
+    fun `Does not display submitted cell when grade is null and there is a failed submission`() {
+        val submission = com.instructure.student.Submission.Impl(
+            id = 123L,
+            submissionEntry = null,
+            lastActivityDate = OffsetDateTime.now(),
+            assignmentName = null,
+            assignmentId = baseAssignment.id,
+            canvasContext = CanvasContext.emptyCourseContext(0),
+            submissionType = "online_text_entry",
+            errorFlag = false,
+            assignmentGroupCategoryId = null,
+            userId = 0,
+            currentFile = 0,
+            fileCount = 0,
+            progress = null
+        )
+        val assignment = baseAssignment.copy(
+            submission = baseSubmission.copy(
+                workflowState = "submitted",
+                grade = null
+            )
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment), databaseSubmission = submission)
+        val actual = AssignmentDetailsPresenter.present(model, context).visibilities.grade
+        assertFalse(actual)
+    }
+
+    @Test
+    fun `Does not display empty cell when grade is empty and there is a failed submission`() {
+        val submission = com.instructure.student.Submission.Impl(
+            id = 123L,
+            submissionEntry = null,
+            lastActivityDate = OffsetDateTime.now(),
+            assignmentName = null,
+            assignmentId = baseAssignment.id,
+            canvasContext = CanvasContext.emptyCourseContext(0),
+            submissionType = "online_text_entry",
+            errorFlag = false,
+            assignmentGroupCategoryId = null,
+            userId = 0,
+            currentFile = 0,
+            fileCount = 0,
+            progress = null
+        )
+        val assignment = baseAssignment.copy(
+            submission = baseSubmission.copy(
+                workflowState = "unsubmitted"
+            )
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment), databaseSubmission = submission)
+        val actual = AssignmentDetailsPresenter.present(model, context).visibilities.grade
+        assertFalse(actual)
+    }
+
+    @Test
     fun `Displays upload in progress when database submission is not failed`() {
         val submission = com.instructure.student.Submission.Impl(
             id = 123L,
