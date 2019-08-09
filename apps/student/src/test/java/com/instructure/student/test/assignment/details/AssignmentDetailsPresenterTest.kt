@@ -19,19 +19,21 @@ package com.instructure.student.test.assignment.details
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.canvasapi2.utils.isRtl
 import com.instructure.canvasapi2.utils.toApiString
+import com.instructure.interactions.router.Route
+import com.instructure.interactions.router.RouterParams
 import com.instructure.student.R
 import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsModel
 import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsPresenter
+import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsViewState
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsVisibilities
-import com.instructure.canvasapi2.utils.isRtl
 import com.instructure.student.mobius.assignmentDetails.ui.DiscussionHeaderViewState
-import io.mockk.every
-import io.mockk.mockkStatic
-import io.mockk.unmockkStatic
+import io.mockk.*
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -732,6 +734,22 @@ class AssignmentDetailsPresenterTest : Assert() {
         val actualState = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Error
 
         assertEquals(expectedState, actualState)
+    }
+
+    @Test
+    fun `Clears URL cache when routing from a URL`() {
+        mockkObject(CanvasRestAdapter.Companion)
+        every { CanvasRestAdapter.clearCacheUrls(any()) } returns Unit
+
+        val route = Route(AssignmentDetailsFragment::class.java, Course())
+        route.paramsHash[RouterParams.ASSIGNMENT_ID] = "123"
+
+        AssignmentDetailsFragment.newInstance(route)
+
+        verify { CanvasRestAdapter.clearCacheUrls("assignments/123") }
+        confirmVerified(CanvasRestAdapter)
+
+        unmockkObject(CanvasRestAdapter.Companion)
     }
 
     private val discussionHtml = "<!DOCTYPE html>\n" +
