@@ -207,6 +207,7 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
         if (databaseSubmission == null) {
             visibilities.grade = gradeState != GradeCellViewState.Empty
         } else {
+            visibilities.grade = gradeState is GradeCellViewState.GradeData
             visibilities.submissionUploadStatusInProgress = !databaseSubmission.errorFlag
             visibilities.submissionUploadStatusFailed = databaseSubmission.errorFlag
         }
