@@ -47,13 +47,9 @@ class AssignmentBinder : BaseBinder() {
 
             val submission = assignment.submission
 
-            if (assignment.muted) {
-                // Mute that score
-                holder.points.visibility = View.GONE
-            } else {
-                holder.points.visibility = View.VISIBLE
-                BaseBinder.setupGradeText(context, holder.points, assignment, submission, courseColor)
-            }
+            // Don't care about assignment.muted, the API should restrict our grade if we shouldn't see it
+            holder.points.visibility = View.VISIBLE
+            BaseBinder.setupGradeText(context, holder.points, assignment, submission, courseColor)
 
 
             val drawable = BaseBinder.getAssignmentIcon(assignment)

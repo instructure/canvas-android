@@ -54,25 +54,21 @@ object GradeBinder : BaseBinder() {
 
         holder.points.setTextColor(ThemePrefs.brandColor)
 
-        if (assignment.muted && !isEdit) {
-            // Mute that score
+        // Don't care about assignment.muted, the API should restrict our grade if we shouldn't see it
+        val submission = assignment.submission
+        if (submission != null && Const.PENDING_REVIEW == submission.workflowState) {
             holder.points.setGone()
+            holder.icon.setNestedIcon(R.drawable.vd_published, courseColor)
         } else {
-            val submission = assignment.submission
-            if (submission != null && Const.PENDING_REVIEW == submission.workflowState) {
-                holder.points.setGone()
-                holder.icon.setNestedIcon(R.drawable.vd_published, courseColor)
+            holder.points.setVisible()
+            val grade = getGrade(submission, assignment.pointsPossible, context)
+            holder.points.text = grade
+            val accessibleGrade = getContentDescriptionForMinusGradeString(grade ?: "", context)
+            val outOf = context.resources.getString(R.string.outOf)
+            holder.points.contentDescription = if (accessibleGrade.isNotEmpty()) {
+                accessibleGrade
             } else {
-                holder.points.setVisible()
-                val grade = getGrade(submission, assignment.pointsPossible, context)
-                holder.points.text = grade
-                val accessibleGrade = getContentDescriptionForMinusGradeString(grade ?: "", context)
-                val outOf = context.resources.getString(R.string.outOf)
-                holder.points.contentDescription = if (accessibleGrade.isNotEmpty()) {
-                    accessibleGrade
-                } else {
-                    context.getString(R.string.a11y_letterGrade, grade?.replace("/", " $outOf "))
-                }
+                context.getString(R.string.a11y_letterGrade, grade?.replace("/", " $outOf "))
             }
         }
 
