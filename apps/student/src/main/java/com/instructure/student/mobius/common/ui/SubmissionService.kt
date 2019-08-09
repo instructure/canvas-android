@@ -81,7 +81,7 @@ class SubmissionFileUploadReceiver(private val dbSubmissionId: Long) : Broadcast
                 SubmissionService.showErrorNotification(context, submission.canvasContext, submission.assignmentId, assignmentName, submissionId)
 
                 val message = intent.getStringExtra(Const.MESSAGE)
-                val attachments = intent.getParcelableArrayListExtra<Attachment>(Const.ATTACHMENTS)
+                val attachments = intent.getParcelableArrayListExtra<Attachment>(Const.ATTACHMENTS) ?: ArrayList()
                 val files = db.fileSubmissionQueries.getFilesWithoutAttachmentsForSubmissionId(submissionId).executeAsList()
 
                 // Update files, if we have an attachment it uploaded, otherwise it failed
