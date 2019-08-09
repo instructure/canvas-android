@@ -195,15 +195,14 @@ class SubmissionCommentsRenderTest: StudentRenderTest() {
             override fun dispose() = Unit
             override fun post(runnable: Runnable) = Unit
         }
-        val fragment = SubmissionCommentsFragment().apply {
+        val data = SubmissionDetailsTabData.CommentData( // ?? I don't know what this does, but I need to provide it
+            name = "Name",
+            assignment = baseAssignment,
+            submission = baseSubmission
+        )
+        val fragment = SubmissionCommentsFragment.newInstance(data).apply {
             overrideInitViewState = state
             loopMod = { it.effectRunner { emptyEffectRunner } }
-            data = SubmissionDetailsTabData.CommentData( // ?? I don't know what this does, but I need to provide it
-                    name = "Name",
-                    assignment = baseAssignment,
-                    submission = baseSubmission
-            )
-
         }
         activityRule.activity.loadFragment(fragment)
         page.assertPageObjects()

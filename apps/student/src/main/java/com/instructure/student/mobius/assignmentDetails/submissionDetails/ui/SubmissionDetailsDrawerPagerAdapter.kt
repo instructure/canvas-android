@@ -46,9 +46,9 @@ class SubmissionDetailsDrawerPagerAdapter(fragmentManager: FragmentManager) : Fr
         if (cachedFragment == null) {
             val tabData = tabData[position]
             cachedFragment = when (tabData) {
-                is SubmissionDetailsTabData.FileData -> SubmissionFilesFragment().apply { data = tabData }
-                is SubmissionDetailsTabData.RubricData -> SubmissionRubricFragment().apply { data = tabData }
-                is SubmissionDetailsTabData.CommentData -> SubmissionCommentsFragment().apply { data = tabData }
+                is SubmissionDetailsTabData.FileData -> SubmissionFilesFragment.newInstance(data = tabData)
+                is SubmissionDetailsTabData.RubricData -> SubmissionRubricFragment.newInstance(tabData)
+                is SubmissionDetailsTabData.CommentData -> SubmissionCommentsFragment.newInstance(tabData)
             }
             cachedFragments[position] = cachedFragment
         }

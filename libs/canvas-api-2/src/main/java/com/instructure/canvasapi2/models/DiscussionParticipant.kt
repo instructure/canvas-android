@@ -30,3 +30,8 @@ data class DiscussionParticipant(
         @SerializedName("html_url")
         var htmlUrl: String? = null
 ) : CanvasModel<DiscussionParticipant>()
+
+fun DiscussionParticipant?.isDiscussionAuthorNull(): Boolean {
+        return this == null ||
+                (id == 0L && displayName == null && avatarImageUrl == null && htmlUrl == null)
+}
