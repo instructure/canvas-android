@@ -22,13 +22,8 @@ import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Enrollment
-
 import retrofit2.Call
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Path
-import retrofit2.http.Query
-import retrofit2.http.Url
+import retrofit2.http.*
 
 object EnrollmentAPI {
 
@@ -39,7 +34,7 @@ object EnrollmentAPI {
 
     internal interface EnrollmentInterface {
 
-        @get:GET("users/self/enrollments?include[]=observed_users&include[]=avatar_url&state[]=creation_pending&state[]=invited&state[]=active")
+        @get:GET("users/self/enrollments?include[]=observed_users&include[]=avatar_url&state[]=creation_pending&state[]=invited&state[]=active&state[]=completed")
         val firstPageObserveeEnrollments: Call<List<Enrollment>>
 
         @GET("courses/{courseId}/enrollments?include[]=avatar_url&state[]=active")
