@@ -18,11 +18,6 @@
 
 <resources>
 
-    <string-array name="discussion_attachments">
-        <item>@string/discussionAttachment</item>
-        <item>@string/discussionUpload</item>
-    </string-array>
-
     <string-array name="supported_languages">
         <item>@string/systemDefault</item>
         <item>@string/arabic</item>
