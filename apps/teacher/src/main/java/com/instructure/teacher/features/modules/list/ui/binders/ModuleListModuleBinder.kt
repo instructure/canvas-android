@@ -34,8 +34,8 @@ class ModuleListModuleBinder : ListItemBinder<ModuleListItemData.ModuleData, Mod
         onBind = { item, view, isCollapsed, _ ->
             with(view) {
                 moduleName.text = item.name
-                publishedIcon.setVisible(item.isPublished)
-                unpublishedIcon.setVisible(!item.isPublished)
+                publishedIcon.setVisible(item.isPublished == true)
+                unpublishedIcon.setVisible(item.isPublished == false)
                 collapseIcon.rotation = if (isCollapsed) 0f else 180f
             }
         }
