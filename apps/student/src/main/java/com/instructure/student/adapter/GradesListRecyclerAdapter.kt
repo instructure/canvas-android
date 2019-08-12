@@ -141,71 +141,79 @@ open class GradesListRecyclerAdapter(
             course.enrollments!!.firstOrNull {
                 it.isStudent && it.multipleGradingPeriodsEnabled
             }?.let { enrollment ->
-                if (currentGradingPeriod == null || currentGradingPeriod?.title == null) {
-                    // We load current term
-                    currentGradingPeriod = GradingPeriod(
-                        id = enrollment.currentGradingPeriodId,
-                        title = enrollment.currentGradingPeriodTitle
-                    )
-
-                    // Request the grading period objects and make the assignment calls
-                    // This callback is fulfilled in the grade list fragment.
-                    CourseManager.getGradingPeriodsForCourse(gradingPeriodsCallback!!, course.id, true)
-                    return@launch
-                } else {
-                    // Otherwise we load the info from the current grading period
-                    loadAssignmentsForGradingPeriod(currentGradingPeriod!!.id, true)
-                    return@launch
-                }
+                setupStudentGrades(enrollment, course)
             } ?: course.enrollments!!.firstOrNull { it.isObserver }?.let { enrollment ->
-                // We still need to show grades if the user is an observer
-
-                // Load current term
-                currentGradingPeriod = GradingPeriod(
-                    id = enrollment.currentGradingPeriodId,
-                    title = enrollment.currentGradingPeriodTitle
-                )
-
-                // Get the first student that this user is observing
-                observerCourseGradeJob = GlobalScope.launch(Dispatchers.Main) {
-                    // We need to use an ID from an observee, not the user (who is currently logged in as an observer) when retrieving the enrollments
-
-                    // Get the first student this user is observing
-                    val enrls = awaitApi<List<Enrollment>> { EnrollmentManager.getObserveeEnrollments(true, it) }
-                    val student = enrls.firstOrNull { it.courseId == course.id && it.observedUser != null }?.observedUser ?: return@launch updateAssignmentGroups(emptyList())
-                    // Get Assignment Groups
-                    val assignmentGroups = awaitApi<List<AssignmentGroup>> { AssignmentManager.getAssignmentGroupsWithAssignmentsForGradingPeriod(canvasContext!!.id, currentGradingPeriod!!.id,
-                        scopeToStudent = false,
-                        forceNetwork = true,
-                        callback = it
-                    ) }
-                    // The assignments in the assignment groups do not come with their submissions (with the associated grades), so we get them all here
-                    val assignmentIds = assignmentGroups.map { it.assignments }.flatten().map { it.id }
-                    val submissions = awaitApi<List<Submission>>{ SubmissionManager.getSubmissionsForMultipleAssignments(student.id, course.id, assignmentIds, it, true) }
-                    assignmentGroups.forEach { group ->
-                        group.assignments.forEach { assignment ->
-                            assignment.submission = submissions.firstOrNull { it.assignmentId == assignment.id }
-                        }
-                    }
-
-                    updateAssignmentGroups(assignmentGroups)
-
-                    awaitApi<List<Course>> { CourseManager.getCoursesWithSyllabus(true, it) }
-                        .onEach { course ->
-                            course.enrollments?.find { it.userId == student.id }?.let {
-                                course.enrollments = mutableListOf(it)
-                                courseGrade = course.getCourseGradeFromEnrollment(it, false)
-                                adapterToGradesCallback?.notifyGradeChanged(courseGrade)
-                            }
-                        }
-                }
-                return@launch
+                setupObserverGrades(enrollment, course)
             }
 
            // If we've made it this far, MGP is not enabled, so we do the standard behavior
            isRefresh = true
            updateCourseGrade()
            updateWithAllAssignments()
+        }
+    }
+
+    private fun setupObserverGrades(enrollment: Enrollment, course: Course) {
+        // Load current term
+        currentGradingPeriod = GradingPeriod(
+            id = enrollment.currentGradingPeriodId,
+            title = enrollment.currentGradingPeriodTitle
+        )
+
+        // Get the first student that this user is observing
+        observerCourseGradeJob = GlobalScope.launch(Dispatchers.Main) {
+            // We need to use an ID from an observee, not the user (who is currently logged in as an observer) when retrieving the enrollments
+
+            // Get the first student this user is observing, if none show empty assignments
+            val student = awaitApi<List<Enrollment>> { EnrollmentManager.getObserveeEnrollments(true, it) }
+                .firstOrNull { it.courseId == course.id && it.observedUser != null }?.observedUser
+                ?: return@launch updateAssignmentGroups(emptyList())
+
+            // Get Assignment Groups
+            val assignmentGroups = awaitApi<List<AssignmentGroup>> { AssignmentManager.getAssignmentGroupsWithAssignmentsForGradingPeriod(canvasContext!!.id, currentGradingPeriod!!.id,
+                scopeToStudent = false,
+                forceNetwork = true,
+                callback = it
+            ) }
+            // The assignments in the assignment groups do not come with their submissions (with the associated grades), so we get them all here
+            val assignmentIds = assignmentGroups.map { it.assignments }.flatten().map { it.id }
+            val submissions = awaitApi<List<Submission>>{ SubmissionManager.getSubmissionsForMultipleAssignments(student.id, course.id, assignmentIds, it, true) }
+            assignmentGroups.forEach { group ->
+                group.assignments.forEach { assignment ->
+                    assignment.submission = submissions.firstOrNull { it.assignmentId == assignment.id }
+                }
+            }
+
+            updateAssignmentGroups(assignmentGroups)
+
+            awaitApi<List<Course>> { CourseManager.getCoursesWithSyllabus(true, it) }
+                .onEach { course ->
+                    course.enrollments?.find { it.userId == student.id }?.let {
+                        course.enrollments = mutableListOf(it)
+                        courseGrade = course.getCourseGradeFromEnrollment(it, false)
+                        adapterToGradesCallback?.notifyGradeChanged(courseGrade)
+                    }
+                }
+        }
+        return
+    }
+
+    private fun setupStudentGrades(enrollment: Enrollment, course: Course) {
+        if (currentGradingPeriod == null || currentGradingPeriod?.title == null) {
+            // We load current term
+            currentGradingPeriod = GradingPeriod(
+                id = enrollment.currentGradingPeriodId,
+                title = enrollment.currentGradingPeriodTitle
+            )
+
+            // Request the grading period objects and make the assignment calls
+            // This callback is fulfilled in the grade list fragment.
+            CourseManager.getGradingPeriodsForCourse(gradingPeriodsCallback!!, course.id, true)
+            return
+        } else {
+            // Otherwise we load the info from the current grading period
+            loadAssignmentsForGradingPeriod(currentGradingPeriod!!.id, true)
+            return
         }
     }
 
