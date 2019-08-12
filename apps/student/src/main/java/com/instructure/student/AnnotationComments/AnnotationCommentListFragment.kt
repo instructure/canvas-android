@@ -31,8 +31,8 @@ import com.instructure.annotations.createCommentReplyAnnotation
 import com.instructure.annotations.generateAnnotationId
 import com.instructure.canvasapi2.managers.CanvaDocsManager
 import com.instructure.canvasapi2.models.ApiValues
-import com.instructure.canvasapi2.models.canvadocs.CanvaDocAnnotation
 import com.instructure.canvasapi2.models.DocSession
+import com.instructure.canvasapi2.models.canvadocs.CanvaDocAnnotation
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
@@ -43,8 +43,6 @@ import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.fragment.ParentFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.PdfStudentSubmissionView
-import com.instructure.student.util.FeatureFlagPrefs
-import com.instructure.student.view.OldStudentSubmissionView
 import kotlinx.android.synthetic.main.fragment_annotation_comment_list.*
 import kotlinx.coroutines.Job
 import okhttp3.ResponseBody
@@ -115,18 +113,10 @@ class AnnotationCommentListFragment : ParentFragment() {
         sendCommentJob?.cancel()
         editCommentJob?.cancel()
         deleteCommentJob?.cancel()
-        if (FeatureFlagPrefs.newAssignmentPage) {
-            EventBus.getDefault().post(
-                    PdfStudentSubmissionView.AnnotationCommentDeleteAcknowledged(
-                            annotations.filter { it.deleted && it.deleteAcknowledged.isNullOrEmpty() },
-                            assigneeId))
-        } else {
-            EventBus.getDefault().post(
-                    OldStudentSubmissionView.AnnotationCommentDeleteAcknowledged(
-                            annotations.filter { it.deleted && it.deleteAcknowledged.isNullOrEmpty() },
-                            assigneeId))
-        }
-
+        EventBus.getDefault().post(
+            PdfStudentSubmissionView.AnnotationCommentDeleteAcknowledged(
+                annotations.filter { it.deleted && it.deleteAcknowledged.isNullOrEmpty() },
+                assigneeId))
     }
 
     fun configureRecyclerView() {
@@ -185,11 +175,7 @@ class AnnotationCommentListFragment : ParentFragment() {
                 val rootComment = annotations.firstOrNull()
                 if (rootComment != null) {
                     val newCommentReply = awaitApi<CanvaDocAnnotation> { CanvaDocsManager.putAnnotation(apiValues.sessionId, generateAnnotationId(), createCommentReplyAnnotation(comment, headAnnotationId, apiValues.documentId, ApiPrefs.user?.id.toString(), rootComment.page), apiValues.canvaDocsDomain, it) }
-                    if (FeatureFlagPrefs.newAssignmentPage) {
-                        EventBus.getDefault().post(PdfStudentSubmissionView.AnnotationCommentAdded(newCommentReply, assigneeId))
-                    } else {
-                        EventBus.getDefault().post(OldStudentSubmissionView.AnnotationCommentAdded(newCommentReply, assigneeId))
-                    }
+                    EventBus.getDefault().post(PdfStudentSubmissionView.AnnotationCommentAdded(newCommentReply, assigneeId))
                     // The put request doesn't return this property, so we need to set it to true
                     newCommentReply.isEditable = true
                     recyclerAdapter?.add(newCommentReply) //ALSO, add it to the UI
@@ -207,11 +193,7 @@ class AnnotationCommentListFragment : ParentFragment() {
     private fun editComment(annotation: CanvaDocAnnotation, position: Int) {
         editCommentJob = tryWeave {
             awaitApi<CanvaDocAnnotation> { CanvaDocsManager.putAnnotation(apiValues.sessionId, annotation.annotationId, annotation, apiValues.canvaDocsDomain, it) }
-            if (FeatureFlagPrefs.newAssignmentPage) {
-                EventBus.getDefault().post(PdfStudentSubmissionView.AnnotationCommentEdited(annotation, assigneeId))
-            } else {
-                EventBus.getDefault().post(OldStudentSubmissionView.AnnotationCommentEdited(annotation, assigneeId))
-            }
+            EventBus.getDefault().post(PdfStudentSubmissionView.AnnotationCommentEdited(annotation, assigneeId))
             // Update the UI
             recyclerAdapter?.add(annotation)
             recyclerAdapter?.notifyItemChanged(position)
@@ -226,18 +208,10 @@ class AnnotationCommentListFragment : ParentFragment() {
             awaitApi<ResponseBody> { CanvaDocsManager.deleteAnnotation(apiValues.sessionId, annotation.annotationId, apiValues.canvaDocsDomain, it) }
             if(annotation.annotationId == annotations.firstOrNull()?.annotationId) {
                 //this is the root comment, deleting this deletes the entire thread
-                if (FeatureFlagPrefs.newAssignmentPage) {
-                    EventBus.getDefault().post(PdfStudentSubmissionView.AnnotationCommentDeleted(annotation, true, assigneeId))
-                } else {
-                    EventBus.getDefault().post(OldStudentSubmissionView.AnnotationCommentDeleted(annotation, true, assigneeId))
-                }
+                EventBus.getDefault().post(PdfStudentSubmissionView.AnnotationCommentDeleted(annotation, true, assigneeId))
                 headAnnotationDeleted()
             } else {
-                if (FeatureFlagPrefs.newAssignmentPage) {
-                    EventBus.getDefault().post(PdfStudentSubmissionView.AnnotationCommentDeleted(annotation, false, assigneeId))
-                } else {
-                    EventBus.getDefault().post(OldStudentSubmissionView.AnnotationCommentDeleted(annotation, false, assigneeId))
-                }
+                EventBus.getDefault().post(PdfStudentSubmissionView.AnnotationCommentDeleted(annotation, false, assigneeId))
                 recyclerAdapter?.remove(annotation)
                 recyclerAdapter?.notifyItemChanged(position)
             }

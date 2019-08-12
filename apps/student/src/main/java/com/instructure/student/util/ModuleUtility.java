@@ -24,7 +24,6 @@ import com.instructure.canvasapi2.models.Course;
 import com.instructure.canvasapi2.models.ModuleItem;
 import com.instructure.canvasapi2.models.ModuleObject;
 import com.instructure.interactions.router.Route;
-import com.instructure.student.fragment.AssignmentFragment;
 import com.instructure.student.fragment.DiscussionDetailsFragment;
 import com.instructure.student.fragment.FileDetailsFragment;
 import com.instructure.student.fragment.InternalWebviewFragment;
@@ -74,11 +73,7 @@ public class ModuleUtility {
 
         //deal with assignments
         if(moduleItem.getType().equals("Assignment")) {
-            if (FeatureFlagPrefs.INSTANCE.getNewAssignmentPage()) {
-                return AssignmentDetailsFragment.newInstance(AssignmentDetailsFragment.makeRoute(course, getAssignmentId(moduleItem, course)));
-            } else {
-                return AssignmentFragment.newInstance(AssignmentFragment.makeRoute(course, getAssignmentId(moduleItem, course)));
-            }
+            return AssignmentDetailsFragment.newInstance(AssignmentDetailsFragment.makeRoute(course, getAssignmentId(moduleItem, course)));
         }
 
         //deal with external urls
