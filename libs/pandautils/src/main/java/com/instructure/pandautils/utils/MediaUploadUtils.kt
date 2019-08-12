@@ -222,12 +222,14 @@ object MediaUploadUtils {
             progressDialog?.dismiss()
         } catch {
             progressDialog?.dismiss()
-            AlertDialog.Builder(activity)
-                    .setTitle(R.string.image_upload_error)
-                    .setPositiveButton(R.string.retry) { _, _ -> uploadRceImageJob(uri, canvasContext, activity, insertImageCallback) }
-                    .setNegativeButton(android.R.string.cancel, null)
-                    .create()
-                    .show()
+            activity.runOnUiThread {
+                AlertDialog.Builder(activity)
+                        .setTitle(R.string.image_upload_error)
+                        .setPositiveButton(R.string.retry) { _, _ -> uploadRceImageJob(uri, canvasContext, activity, insertImageCallback) }
+                        .setNegativeButton(android.R.string.cancel, null)
+                        .create()
+                        .show()
+            }
         }
     }
 

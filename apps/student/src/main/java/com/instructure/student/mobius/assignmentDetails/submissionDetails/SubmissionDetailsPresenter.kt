@@ -38,7 +38,7 @@ object SubmissionDetailsPresenter : Presenter<SubmissionDetailsModel, Submission
             .filterNotNull()
             .sortedByDescending { it.submittedAt }
 
-        val selectedSubmission = validSubmissions.first { it.attempt == model.selectedSubmissionAttempt }
+        val selectedSubmission = validSubmissions.firstOrNull { it.attempt == model.selectedSubmissionAttempt }
 
         val submissionVersions: List<Pair<Long, String>> = validSubmissions
             .map {
@@ -60,7 +60,7 @@ object SubmissionDetailsPresenter : Presenter<SubmissionDetailsModel, Submission
         )
 
         // Files tab
-        with (selectedSubmission.attachments) {
+        with (selectedSubmission?.attachments ?: ArrayList()) {
             val name = if (isEmpty()) {
                 context.getString(R.string.files)
             } else {
