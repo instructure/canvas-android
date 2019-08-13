@@ -99,4 +99,13 @@
         app:layout_constraintLeft_toLeftOf="@id/textRight"
         app:layout_constraintRight_toRightOf="@id/textLeft" />
 
+    <com.instructure.pandautils.views.FloatingRecordingView
+        android:id="@+id/floatingRecordingView"
+        android:visibility="gone"
+        android:elevation="12dp"
+        android:layout_gravity="bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

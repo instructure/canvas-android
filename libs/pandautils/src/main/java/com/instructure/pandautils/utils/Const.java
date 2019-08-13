@@ -17,6 +17,8 @@
 
 package com.instructure.pandautils.utils;
 
+import org.jetbrains.annotations.Nullable;
+
 public class Const {
     public static final String PANDA_UTILS = "panda_utils";
     public static final String PANDA_UTILS_FILE_UPLOAD_UTILS_LOG = "file_upload_utils";
@@ -320,4 +322,5 @@ public class Const {
     public static final String LOCAL_NOTIFICATION = "localNotification";
 
     public static final String HIDE_TOOLBAR = "hideToolbar";
+    public static final String STUDIO_LTI_TOOL = "studioLTITool";
 }

@@ -24,15 +24,35 @@ import com.instructure.student.util.getShortMonthAndDay
 import com.instructure.student.util.getTime
 import org.threeten.bp.LocalDate
 import org.threeten.bp.OffsetDateTime
-import org.threeten.bp.format.DateTimeFormatter
-import org.threeten.bp.format.DateTimeFormatterBuilder
 import org.threeten.bp.temporal.ChronoUnit
 
 object SubmissionDetailsEmptyContentPresenter : Presenter<SubmissionDetailsEmptyContentModel, SubmissionDetailsEmptyContentViewState> {
     override fun present(model: SubmissionDetailsEmptyContentModel, context: Context): SubmissionDetailsEmptyContentViewState {
         return SubmissionDetailsEmptyContentViewState.Loaded(
-                model.assignment.isAllowedToSubmit,
-                model.assignment.getDueString(context)
+            allowedToSubmit(model.assignment),
+            model.assignment.getDueString(context),
+            getSubmitButtonTextResource(context, model.assignment)
+        )
+    }
+
+    private fun allowedToSubmit(assignment: Assignment): Boolean =
+        if (assignment.turnInType == Assignment.TurnInType.ONLINE || assignment.turnInType == Assignment.TurnInType.EXTERNAL_TOOL)
+            assignment.isAllowedToSubmit
+        else true
+
+    private fun getSubmitButtonTextResource(context: Context, assignment: Assignment): String {
+        val isExternalToolSubmission = assignment.getSubmissionTypes()
+            .any { it == Assignment.SubmissionType.EXTERNAL_TOOL || it == Assignment.SubmissionType.BASIC_LTI_LAUNCH }
+
+        val turnInType = assignment.turnInType
+
+        return context.getString(
+            when {
+                turnInType == Assignment.TurnInType.QUIZ -> R.string.viewQuiz
+                turnInType == Assignment.TurnInType.DISCUSSION -> R.string.viewDiscussion
+                isExternalToolSubmission -> R.string.launchExternalTool
+                else -> R.string.submitAssignment
+            }
         )
     }
 }
@@ -43,7 +63,6 @@ fun Assignment.getDueString(context: Context): String {
 
     if (dueAt.isNullOrBlank())
         return context.getString(R.string.submissionDetailsHasNoDueDate)
-
 
     // There doesn't appear to be an easy way to convert the UTC time to the user's time, so we do this dance
     val dueDateTime = OffsetDateTime.parse(dueAt).withOffsetSameInstant(OffsetDateTime.now().offset)

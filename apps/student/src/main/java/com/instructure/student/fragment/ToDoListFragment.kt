@@ -173,7 +173,7 @@ class ToDoListFragment : ParentFragment() {
             }
             toDo?.scheduleItem != null -> // It's a Calendar event from the Upcoming API.
                 RouteMatcher.route(requireContext(), CalendarEventFragment.makeRoute(toDo.canvasContext!!, toDo.scheduleItem!!))
-            toDo?.quiz != null -> // It's a Quiz let's launch the quiz details fragment
+            toDo?.quiz != null -> // It's a Quiz let's launch the quizResult details fragment
                 RouteMatcher.route(requireContext(), QuizStartFragment.makeRoute(toDo.canvasContext!!, toDo.quiz!!))
         }
     }

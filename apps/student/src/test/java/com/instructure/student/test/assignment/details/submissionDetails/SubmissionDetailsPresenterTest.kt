@@ -71,7 +71,7 @@ class SubmissionDetailsPresenterTest : Assert() {
     @Test
     fun `Returns failed state when assignment result is failed`() {
         val expectedState = SubmissionDetailsViewState.Error
-        val model = baseModel.copy(assignment = DataResult.Fail())
+        val model = baseModel.copy(assignmentResult = DataResult.Fail())
         val actualState = SubmissionDetailsPresenter.present(model, context)
         assertEquals(expectedState, actualState)
     }
@@ -79,7 +79,7 @@ class SubmissionDetailsPresenterTest : Assert() {
     @Test
     fun `Returns failed state when submission result is failed`() {
         val expectedState = SubmissionDetailsViewState.Error
-        val model = baseModel.copy(rootSubmission = DataResult.Fail())
+        val model = baseModel.copy(rootSubmissionResult = DataResult.Fail())
         val actualState = SubmissionDetailsPresenter.present(model, context)
         assertEquals(expectedState, actualState)
     }
@@ -90,8 +90,8 @@ class SubmissionDetailsPresenterTest : Assert() {
             submissionHistory = listOf(baseSubmission)
         )
         val model = baseModel.copy(
-            assignment = DataResult.Success(baseAssignment),
-            rootSubmission = DataResult.Success(submission)
+            assignmentResult = DataResult.Success(baseAssignment),
+            rootSubmissionResult = DataResult.Success(submission)
         )
         val actualState = SubmissionDetailsPresenter.present(model, context)
         assertTrue(actualState is SubmissionDetailsViewState.Loaded)
@@ -108,8 +108,8 @@ class SubmissionDetailsPresenterTest : Assert() {
             )
         )
         val model = baseModel.copy(
-            assignment = DataResult.Success(baseAssignment),
-            rootSubmission = DataResult.Success(submission)
+            assignmentResult = DataResult.Success(baseAssignment),
+            rootSubmissionResult = DataResult.Success(submission)
         )
         val actualState = SubmissionDetailsPresenter.present(model, context) as SubmissionDetailsViewState.Loaded
         assertTrue(actualState.showVersionsSpinner)
@@ -121,8 +121,8 @@ class SubmissionDetailsPresenterTest : Assert() {
             submissionHistory = listOf(baseSubmission)
         )
         val model = baseModel.copy(
-            assignment = DataResult.Success(baseAssignment),
-            rootSubmission = DataResult.Success(submission)
+            assignmentResult = DataResult.Success(baseAssignment),
+            rootSubmissionResult = DataResult.Success(submission)
         )
         val actualState = SubmissionDetailsPresenter.present(model, context) as SubmissionDetailsViewState.Loaded
         assertFalse(actualState.showVersionsSpinner)
@@ -139,8 +139,8 @@ class SubmissionDetailsPresenterTest : Assert() {
             submittedAt = DateHelper.makeDate(2050, 0, 31, 23, 59, 0)
         )
         val model = baseModel.copy(
-            assignment = DataResult.Success(baseAssignment),
-            rootSubmission = DataResult.Success(
+            assignmentResult = DataResult.Success(baseAssignment),
+            rootSubmissionResult = DataResult.Success(
                 Submission(submissionHistory = listOf(firstSubmission, secondSubmission))
             )
         )
@@ -168,8 +168,8 @@ class SubmissionDetailsPresenterTest : Assert() {
             submittedAt = DateHelper.makeDate(2050, 0, 31, 23, 59, 0)
         )
         val model = baseModel.copy(
-            assignment = DataResult.Success(baseAssignment),
-            rootSubmission = DataResult.Success(
+            assignmentResult = DataResult.Success(baseAssignment),
+            rootSubmissionResult = DataResult.Success(
                 Submission(
                     submissionHistory = listOf(firstSubmission, secondSubmission, thirdSubmission)
                 )
@@ -183,8 +183,8 @@ class SubmissionDetailsPresenterTest : Assert() {
     @Test
     fun `Shows correct Files tab name when there are no files`() {
         val model = baseModel.copy(
-            assignment = DataResult.Success(baseAssignment),
-            rootSubmission = DataResult.Success(
+            assignmentResult = DataResult.Success(baseAssignment),
+            rootSubmissionResult = DataResult.Success(
                 Submission(submissionHistory = listOf(baseSubmission))
             )
         )
@@ -197,8 +197,8 @@ class SubmissionDetailsPresenterTest : Assert() {
     fun `Shows correct Files tab name when there are files`() {
         val fileCount = 3
         val model = baseModel.copy(
-            assignment = DataResult.Success(baseAssignment),
-            rootSubmission = DataResult.Success(
+            assignmentResult = DataResult.Success(baseAssignment),
+            rootSubmissionResult = DataResult.Success(
                 Submission(
                     submissionHistory = listOf(
                         baseSubmission.copy(attachments = ArrayList(List(fileCount) { Attachment() }))
@@ -217,20 +217,20 @@ class SubmissionDetailsPresenterTest : Assert() {
             rubricAssessment = hashMapOf("1" to RubricCriterionAssessment())
         )
         val model = baseModel.copy(
-            assignment = DataResult.Success(
+            assignmentResult = DataResult.Success(
                 baseAssignment.copy(
                     rubric = listOf(RubricCriterion("1"))
                 )
             ),
-            rootSubmission = DataResult.Success(
+            rootSubmissionResult = DataResult.Success(
                 submission.copy(submissionHistory = listOf(submission))
             )
         )
         val viewState = SubmissionDetailsPresenter.present(model, context) as SubmissionDetailsViewState.Loaded
         val expectedTab = SubmissionDetailsTabData.RubricData(
             "Rubric",
-            model.assignment!!.dataOrThrow,
-            model.rootSubmission!!.dataOrThrow
+            model.assignmentResult!!.dataOrThrow,
+            model.rootSubmissionResult!!.dataOrThrow
         )
         val actualTab = viewState.tabData.single { it is SubmissionDetailsTabData.RubricData }
         assertEquals(expectedTab, actualTab)

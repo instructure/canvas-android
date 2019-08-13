@@ -131,8 +131,8 @@ class QuizListFragment : ParentFragment(), Bookmarkable {
     private fun rowClick(quiz: Quiz) {
         val navigation = navigation
         if (navigation != null) {
-            /* The quiz list endpoint is currently missing the quiz question types, so we'll route using the quiz url
-            which should pull the full quiz details including the question types. */
+            /* The quizResult list endpoint is currently missing the quizResult question types, so we'll route using the quizResult url
+            which should pull the full quizResult details including the question types. */
             if (!RouteMatcher.canRouteInternally(requireActivity(), quiz.htmlUrl!!, ApiPrefs.domain, true)) {
                 RouteMatcher.route(requireContext(), BasicQuizViewFragment.makeRoute(canvasContext, quiz, quiz.url!!))
             }

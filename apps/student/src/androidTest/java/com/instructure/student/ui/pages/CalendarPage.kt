@@ -36,7 +36,7 @@ class CalendarPage: BasePage(R.id.calendarPage) {
         assertTextDisplayedInRecyclerView(assignment.name)
     }
 
-    // Tolerant of quiz being scrolled off the page
+    // Tolerant of quizResult being scrolled off the page
     fun assertQuizDisplayed(quiz: QuizApiModel) {
         assertTextDisplayedInRecyclerView(quiz.title)
     }

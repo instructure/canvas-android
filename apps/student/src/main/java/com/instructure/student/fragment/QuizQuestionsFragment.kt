@@ -381,7 +381,7 @@ class QuizQuestionsFragment : ParentFragment() {
 
         chronometer.onChronometerTickListener = Chronometer.OnChronometerTickListener {
             val elapsed = System.currentTimeMillis() - quizSubmission!!.startedDate!!.time
-            // if the user has set a custom time the date on their device could be set to before the started time of the quiz.
+            // if the user has set a custom time the date on their device could be set to before the started time of the quizResult.
             // if this is the case then just start from 0.
             if (elapsed >= 0) {
                 val seconds = elapsed / 1000
@@ -402,14 +402,14 @@ class QuizQuestionsFragment : ParentFragment() {
         chronometer.start()
     }
 
-    //quiz has a time limit, count down
+    //quizResult has a time limit, count down
     private fun timeLimitCountDown(secondsVal: Int) {
         var seconds = secondsVal
         chronometer.visibility = View.GONE
         timer.visibility = View.VISIBLE
         //need to start a countdown
 
-        //a quiz might be overdue, but they can still take it again. In this case we'll set the timer to be
+        //a quizResult might be overdue, but they can still take it again. In this case we'll set the timer to be
         //the time limit
         if (seconds < 0) {
             seconds = quiz!!.timeLimit * MILLISECOND
@@ -423,7 +423,7 @@ class QuizQuestionsFragment : ParentFragment() {
             override fun onTick(millisUntilFinished: Long) {
                 if (!isAdded) return
 
-                //subtract the warning seconds. We try to submit the quiz at 5 seconds, but the user might try to wait until the last second
+                //subtract the warning seconds. We try to submit the quizResult at 5 seconds, but the user might try to wait until the last second
                 //to submit it, and this would lead to unexpected behavior. So we'll subtract 5 seconds from the timer so it will submit when
                 //the timer reaches 0
                 val secondsTick = (millisUntilFinished / MILLISECOND).toInt() - LAST_WARNING_SECONDS
@@ -436,7 +436,7 @@ class QuizQuestionsFragment : ParentFragment() {
                 }
                 //there are actually 5 seconds left, but the timer will show 0 seconds because we subtract it when we set the variable "seconds"
                 if (secondsTick == 0) {
-                    //auto-submit the quiz.
+                    //auto-submit the quizResult.
                     QuizManager.postQuizSubmit(course, quizSubmission!!, true, submitQuizCallback!!)
                     autoSubmitReason = AUTO_SUBMIT_REASON.TIMED_QUIZ
                     showToast(R.string.autoSubmitting)
@@ -479,7 +479,7 @@ class QuizQuestionsFragment : ParentFragment() {
                 }
                 if (seconds == 0) {
 
-                    //auto-submit the quiz if it's a lock_date type. We don't auto submit at the due date
+                    //auto-submit the quizResult if it's a lock_date type. We don't auto submit at the due date
                     if (autoSubmitReason == AUTO_SUBMIT_REASON.LOCK_DATE) {
                         QuizManager.postQuizSubmit(course, quizSubmission!!, false, submitQuizCallback!!)
 

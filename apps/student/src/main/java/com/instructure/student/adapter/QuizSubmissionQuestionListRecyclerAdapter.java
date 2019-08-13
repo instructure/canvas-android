@@ -270,7 +270,7 @@ public class QuizSubmissionQuestionListRecyclerAdapter extends BaseListRecyclerA
 
     /**
      * Adds the question id to the list of ids so we have a complete list of answered questions. It is
-     * possible that the user answered a question and then came back later to the quiz. This function
+     * possible that the user answered a question and then came back later to the quizResult. This function
      * will help track those cases.
      *
      * @param quizSubmissionQuestion id of the question to add to the array list

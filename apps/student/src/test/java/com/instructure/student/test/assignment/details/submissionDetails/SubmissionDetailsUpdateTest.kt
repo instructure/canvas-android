@@ -53,14 +53,14 @@ class SubmissionDetailsUpdateTest : Assert() {
     private lateinit var submission: Submission
     private lateinit var initModel: SubmissionDetailsModel
     private lateinit var ltiTool: LTITool
-    private var isArcEnabled = false
+    private var isStudioEnabled = false
 
     @Before
     fun setup() {
         course = Course()
         assignment = Assignment(id = 1234L, courseId = course.id)
         submission = Submission(id = 30L, attempt = 1L, assignmentId = assignment.id)
-        initModel = SubmissionDetailsModel(assignmentId = assignment.id, canvasContext = course, isArcEnabled = isArcEnabled)
+        initModel = SubmissionDetailsModel(assignmentId = assignment.id, canvasContext = course, isStudioEnabled = isStudioEnabled)
         ltiTool = LTITool(url = "https://www.instructure.com")
     }
 
@@ -102,8 +102,8 @@ class SubmissionDetailsUpdateTest : Assert() {
             submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString
         )
         initModel = initModel.copy(
-            assignment = DataResult.Success(assignment),
-            rootSubmission = DataResult.Success(
+            assignmentResult = DataResult.Success(assignment),
+            rootSubmissionResult = DataResult.Success(
                 Submission(
                     submissionHistory = listOf(
                         Submission(id = 1),
@@ -139,8 +139,8 @@ class SubmissionDetailsUpdateTest : Assert() {
         )
         initModel = initModel.copy(
             selectedSubmissionAttempt = submission.attempt,
-            assignment = DataResult.Success(assignment),
-            rootSubmission = DataResult.Success(
+            assignmentResult = DataResult.Success(assignment),
+            rootSubmissionResult = DataResult.Success(
                 Submission(
                     submissionHistory = listOf(
                         Submission(id = 1),
@@ -161,13 +161,13 @@ class SubmissionDetailsUpdateTest : Assert() {
     fun `SubmissionClicked event with no corresponding submission results in model change and a ShowSubmissionContentType effect of NoSubmissionContent`() {
         val submissionId = 1234L
         val contentType =
-            SubmissionDetailsContentType.NoSubmissionContent(course, assignment, isArcEnabled) // No submission in the model with the selected ID maps to NoSubmissionContent type
+            SubmissionDetailsContentType.NoSubmissionContent(course, assignment, isStudioEnabled) // No submission in the model with the selected ID maps to NoSubmissionContent type
 
-        initModel = initModel.copy(assignment = DataResult.Success(assignment))
+        initModel = initModel.copy(assignmentResult = DataResult.Success(assignment))
 
         val expectedModel = initModel.copy(
                 selectedSubmissionAttempt = submissionId,
-                assignment = DataResult.Success(assignment)
+                assignmentResult = DataResult.Success(assignment)
         )
 
         updateSpec
@@ -241,17 +241,17 @@ class SubmissionDetailsUpdateTest : Assert() {
         val assignment = DataResult.Success(assignment)
         val submission = DataResult.Fail(Failure.Network("ErRoR"))
         val ltiTool = DataResult.Fail(Failure.Network("ErRoR"))
-        val contentType = SubmissionDetailsContentType.NoSubmissionContent(course, assignment.data, isArcEnabled)
+        val contentType = SubmissionDetailsContentType.NoSubmissionContent(course, assignment.data, isStudioEnabled)
         val expectedModel = initModel.copy(
             isLoading = false,
-            assignment = assignment,
-            rootSubmission = submission,
+            assignmentResult = assignment,
+            rootSubmissionResult = submission,
             selectedSubmissionAttempt = null,
-            isArcEnabled = isArcEnabled
+            isStudioEnabled = isStudioEnabled
         )
         updateSpec
             .given(initModel)
-            .whenEvent(SubmissionDetailsEvent.DataLoaded(assignment, submission, ltiTool, isArcEnabled))
+            .whenEvent(SubmissionDetailsEvent.DataLoaded(assignment, submission, ltiTool, isStudioEnabled, null, null))
             .then(
                 assertThatNext(
                     hasModel(expectedModel),
@@ -297,7 +297,7 @@ class SubmissionDetailsUpdateTest : Assert() {
         verifyGetSubmissionContentType(
             assignment,
             submission.copy(attempt = 0),
-            SubmissionDetailsContentType.NoSubmissionContent(course, assignment, isArcEnabled)
+            SubmissionDetailsContentType.NoSubmissionContent(course, assignment, isStudioEnabled)
         )
     }
 
@@ -306,7 +306,7 @@ class SubmissionDetailsUpdateTest : Assert() {
         verifyGetSubmissionContentType(
             assignment,
             submission.copy(missing = true),
-            SubmissionDetailsContentType.NoSubmissionContent(course, assignment, isArcEnabled)
+            SubmissionDetailsContentType.NoSubmissionContent(course, assignment, isStudioEnabled)
         )
     }
 
@@ -687,15 +687,16 @@ class SubmissionDetailsUpdateTest : Assert() {
         assignment: Assignment,
         submission: Submission,
         expectedContentType: SubmissionDetailsContentType,
-        lti: LTITool? = null
+        lti: LTITool? = null,
+        quiz: Quiz? = null
     ) {
         val assignmentResult = DataResult.Success(assignment)
         val submissionResult = DataResult.Success(submission)
         val ltiToolResult = DataResult.Success(lti)
         val expectedModel = initModel.copy(
             isLoading = false,
-            assignment = assignmentResult,
-            rootSubmission = submissionResult,
+            assignmentResult = assignmentResult,
+            rootSubmissionResult = submissionResult,
             selectedSubmissionAttempt = submission.attempt
         )
 
@@ -706,7 +707,9 @@ class SubmissionDetailsUpdateTest : Assert() {
                     assignmentResult,
                     submissionResult,
                     ltiToolResult,
-                    isArcEnabled
+                    isStudioEnabled,
+                    null,
+                    null
                 )
             )
             .then(

@@ -943,7 +943,6 @@
     <string name="select">選択</string>
     <string name="choice_position">選択肢%d</string>
     <string name="updating_module_info">モジュール情報&#8230;を更新する</string>
-    <string name="arc">Arc</string>
     <string name="pending_review">保留中のレビュー</string>
     <string name="totalPoints">%s 点</string>
     <string name="totalPointsText">合計点</string>

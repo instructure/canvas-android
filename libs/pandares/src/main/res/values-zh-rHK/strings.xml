@@ -943,7 +943,6 @@
     <string name="select">選擇</string>
     <string name="choice_position">選擇 %d</string>
     <string name="updating_module_info">更新單元資料&#8230;</string>
-    <string name="arc">Arc</string>
     <string name="pending_review">待檢閱</string>
     <string name="totalPoints">%s 分</string>
     <string name="totalPointsText">總分</string>

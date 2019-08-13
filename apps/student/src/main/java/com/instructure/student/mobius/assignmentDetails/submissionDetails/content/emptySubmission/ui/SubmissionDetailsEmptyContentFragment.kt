@@ -19,29 +19,40 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.LTITool
+import com.instructure.canvasapi2.models.Quiz
 import com.instructure.pandautils.utils.*
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsEmptyContentEventBusSource
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.*
 import com.instructure.student.mobius.common.ui.MobiusFragment
 
 class SubmissionDetailsEmptyContentFragment :
         MobiusFragment<SubmissionDetailsEmptyContentModel, SubmissionDetailsEmptyContentEvent, SubmissionDetailsEmptyContentEffect, SubmissionDetailsEmptyContentView, SubmissionDetailsEmptyContentViewState>() {
 
-    val canvasContext by ParcelableArg<Course>(key = Const.CANVAS_CONTEXT)
     val assignment by ParcelableArg<Assignment>(key = Const.ASSIGNMENT)
-    val isArcEnabled by BooleanArg(key = Const.IS_STUDIO_ENABLED)
+    val isStudioEnabled by BooleanArg(key = Const.IS_STUDIO_ENABLED)
+    val canvasContext by ParcelableArg<Course>(key = Const.CANVAS_CONTEXT)
+    val quiz by NullableParcelableArg<Quiz>(key = Const.QUIZ)
+    val studioLTITool by NullableParcelableArg<LTITool>(key = Const.STUDIO_LTI_TOOL)
 
-    override fun makeEffectHandler() = SubmissionDetailsEmptyContentEffectHandler()
+    override fun makeEffectHandler() = SubmissionDetailsEmptyContentEffectHandler(requireContext(), assignment.id)
     override fun makeUpdate() = SubmissionDetailsEmptyContentUpdate()
-    override fun makeView(inflater: LayoutInflater, parent: ViewGroup) = SubmissionDetailsEmptyContentView(inflater, parent)
+    override fun makeView(inflater: LayoutInflater, parent: ViewGroup) = SubmissionDetailsEmptyContentView(canvasContext, inflater, parent)
     override fun makePresenter() = SubmissionDetailsEmptyContentPresenter
-    override fun makeInitModel() = SubmissionDetailsEmptyContentModel(assignment, canvasContext, isArcEnabled)
+    override fun makeInitModel() = SubmissionDetailsEmptyContentModel(assignment, canvasContext, isStudioEnabled, quiz, studioLTITool = studioLTITool)
+    override fun getExternalEventSources() = listOf(SubmissionDetailsEmptyContentEventBusSource())
 
     companion object {
+        const val VIDEO_REQUEST_CODE = 45520
+        const val CHOOSE_MEDIA_REQUEST_CODE = 45521
+
         @JvmStatic
-        fun newInstance(course: Course, assignment: Assignment, isArcEnabled: Boolean): SubmissionDetailsEmptyContentFragment {
+        fun newInstance(course: Course, assignment: Assignment, isStudioEnabled: Boolean, quiz: Quiz? = null, studioLTITool: LTITool? = null): SubmissionDetailsEmptyContentFragment {
             val bundle = course.makeBundle {
                 putParcelable(Const.ASSIGNMENT, assignment)
-                putBoolean(Const.IS_STUDIO_ENABLED, isArcEnabled)
+                putParcelable(Const.QUIZ, quiz)
+                putBoolean(Const.IS_STUDIO_ENABLED, isStudioEnabled)
+                putParcelable(Const.STUDIO_LTI_TOOL, studioLTITool)
             }
 
             return SubmissionDetailsEmptyContentFragment().withArgs(bundle)

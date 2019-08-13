@@ -18,6 +18,7 @@ package com.instructure.student.mobius.assignmentDetails.submissionDetails.conte
 sealed class SubmissionDetailsEmptyContentViewState {
     data class Loaded(
         val isAllowedToSubmit: Boolean = true,
-        val dueDateText: String = ""
+        val dueDateText: String = "",
+        val submitButtonText: String = ""
     ) : SubmissionDetailsEmptyContentViewState()
 }

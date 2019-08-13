@@ -51,11 +51,13 @@ class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDet
                     Next.noChange<SubmissionDetailsModel, SubmissionDetailsEffect>()
                 } else {
                     val submissionType = getSubmissionContentType(
-                        model.rootSubmission?.dataOrNull?.submissionHistory?.find { it?.attempt == event.submissionAttempt },
-                        model.assignment?.dataOrNull,
+                        model.rootSubmissionResult?.dataOrNull?.submissionHistory?.find { it?.attempt == event.submissionAttempt },
+                        model.assignmentResult?.dataOrNull,
                         model.canvasContext,
-                        model.isArcEnabled,
-                        null
+                        model.isStudioEnabled,
+                        null,
+                        quiz = model.quizResult?.dataOrNull,
+                        studioLTITool = model.studioLTIToolResult?.dataOrNull
                     )
                     Next.next<SubmissionDetailsModel, SubmissionDetailsEffect>(
                         model.copy(
@@ -66,17 +68,20 @@ class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDet
             }
             is SubmissionDetailsEvent.DataLoaded -> {
                 val submissionType = getSubmissionContentType(
-                    event.rootSubmission.dataOrNull,
+                    event.rootSubmissionResult.dataOrNull,
                     event.assignment.dataOrNull,
                     model.canvasContext,
-                    event.isArcEnabled,
-                    event.ltiUrl.dataOrNull)
+                    event.isStudioEnabled,
+                    event.ltiUrlResult.dataOrNull,
+                    event.quizResult?.dataOrNull,
+                    event.studioLTIToolResult?.dataOrNull)
                 Next.next(
                     model.copy(
                         isLoading = false,
-                        assignment = event.assignment,
-                        rootSubmission = event.rootSubmission,
-                        selectedSubmissionAttempt = event.rootSubmission.dataOrNull?.attempt
+                        assignmentResult = event.assignment,
+                        rootSubmissionResult = event.rootSubmissionResult,
+                        selectedSubmissionAttempt = event.rootSubmissionResult.dataOrNull?.attempt,
+                        quizResult = event.quizResult
                     ), setOf(SubmissionDetailsEffect.ShowSubmissionContentType(submissionType))
                 )
             }
@@ -138,15 +143,17 @@ class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDet
         submission: Submission?,
         assignment: Assignment?,
         canvasContext: CanvasContext,
-        isArcEnabled: Boolean?,
-        ltiUrl: LTITool?
+        isStudioEnabled: Boolean?,
+        ltiUrl: LTITool?,
+        quiz: Quiz?,
+        studioLTITool: LTITool?
     ): SubmissionDetailsContentType {
         return when {
             Assignment.SubmissionType.NONE.apiString in assignment?.submissionTypesRaw ?: emptyList() -> SubmissionDetailsContentType.NoneContent
             Assignment.SubmissionType.ON_PAPER.apiString in assignment?.submissionTypesRaw ?: emptyList() -> SubmissionDetailsContentType.OnPaperContent
             Assignment.SubmissionType.EXTERNAL_TOOL.apiString in assignment?.submissionTypesRaw ?: emptyList() -> SubmissionDetailsContentType.ExternalToolContent(canvasContext, ltiUrl?.url ?: "")
-            submission?.submissionType == null -> SubmissionDetailsContentType.NoSubmissionContent(canvasContext, assignment!!, isArcEnabled!!)
-            submission.workflowState != "submitted" && AssignmentUtils2.getAssignmentState(assignment, submission) in listOf(AssignmentUtils2.ASSIGNMENT_STATE_MISSING, AssignmentUtils2.ASSIGNMENT_STATE_GRADED_MISSING) -> SubmissionDetailsContentType.NoSubmissionContent(canvasContext, assignment!!, isArcEnabled!!)
+            submission?.submissionType == null -> SubmissionDetailsContentType.NoSubmissionContent(canvasContext, assignment!!, isStudioEnabled!!, quiz, studioLTITool)
+            submission.workflowState != "submitted" && AssignmentUtils2.getAssignmentState(assignment, submission) in listOf(AssignmentUtils2.ASSIGNMENT_STATE_MISSING, AssignmentUtils2.ASSIGNMENT_STATE_GRADED_MISSING) -> SubmissionDetailsContentType.NoSubmissionContent(canvasContext, assignment!!, isStudioEnabled!!, quiz)
             else -> when (Assignment.getSubmissionTypeFromAPIString(submission.submissionType)) {
 
                 // LTI submission

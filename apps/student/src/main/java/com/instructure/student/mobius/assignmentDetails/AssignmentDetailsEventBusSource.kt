@@ -17,9 +17,6 @@
 package com.instructure.student.mobius.assignmentDetails
 
 import android.app.Activity
-import android.net.Uri
-import com.instructure.canvasapi2.utils.Logger
-import com.instructure.pandautils.utils.FilePrefs
 import com.instructure.pandautils.utils.OnActivityResults
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.mobius.common.EventBusSource
@@ -50,5 +47,4 @@ class AssignmentDetailsEventBusSource : EventBusSource<AssignmentDetailsEvent>()
             }
         }
     }
-
 }

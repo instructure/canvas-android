@@ -38,7 +38,7 @@ import org.junit.runner.RunWith
 class SubmissionDetailsRenderTest : StudentRenderTest() {
 
     private lateinit var baseModel: SubmissionDetailsModel
-    private var isArcEnabled = false
+    private var isStudioEnabled = false
 
     @Before
     fun setup() {
@@ -46,9 +46,9 @@ class SubmissionDetailsRenderTest : StudentRenderTest() {
             assignmentId = 0,
             isLoading = false,
             canvasContext = Course(name = "Test Course"),
-            assignment = DataResult.Fail(),
-            rootSubmission = DataResult.Fail(),
-            isArcEnabled = isArcEnabled
+            assignmentResult = DataResult.Fail(),
+            rootSubmissionResult = DataResult.Fail(),
+            isStudioEnabled = isStudioEnabled
         )
     }
 
@@ -75,8 +75,8 @@ class SubmissionDetailsRenderTest : StudentRenderTest() {
         loadPageWithModel(
             baseModel.copy(
                 selectedSubmissionAttempt = 1,
-                assignment = DataResult.Success(Assignment()),
-                rootSubmission = DataResult.Success(
+                assignmentResult = DataResult.Success(Assignment()),
+                rootSubmissionResult = DataResult.Success(
                     Submission(submissionHistory = listOf(Submission(attempt = 1)))
                 )
             )
@@ -89,8 +89,8 @@ class SubmissionDetailsRenderTest : StudentRenderTest() {
         loadPageWithModel(
             baseModel.copy(
                 selectedSubmissionAttempt = 1,
-                assignment = DataResult.Success(Assignment()),
-                rootSubmission = DataResult.Success(
+                assignmentResult = DataResult.Success(Assignment()),
+                rootSubmissionResult = DataResult.Success(
                     Submission(submissionHistory = listOf(Submission(attempt = 1)))
                 )
             )
@@ -105,8 +105,8 @@ class SubmissionDetailsRenderTest : StudentRenderTest() {
         loadPageWithModel(
             baseModel.copy(
                 selectedSubmissionAttempt = 1,
-                assignment = DataResult.Success(Assignment()),
-                rootSubmission = DataResult.Success(
+                assignmentResult = DataResult.Success(Assignment()),
+                rootSubmissionResult = DataResult.Success(
                     Submission(submissionHistory = listOf(firstSubmission, secondSubmission))
                 )
             )
@@ -127,8 +127,8 @@ class SubmissionDetailsRenderTest : StudentRenderTest() {
         loadPageWithModel(
             baseModel.copy(
                 selectedSubmissionAttempt = 2,
-                assignment = DataResult.Success(Assignment()),
-                rootSubmission = DataResult.Success(
+                assignmentResult = DataResult.Success(Assignment()),
+                rootSubmissionResult = DataResult.Success(
                     Submission(submissionHistory = listOf(firstSubmission, secondSubmission))
                 )
             )
@@ -149,8 +149,8 @@ class SubmissionDetailsRenderTest : StudentRenderTest() {
         loadPageWithModel(
             baseModel.copy(
                 selectedSubmissionAttempt = 2,
-                assignment = DataResult.Success(Assignment()),
-                rootSubmission = DataResult.Success(
+                assignmentResult = DataResult.Success(Assignment()),
+                rootSubmissionResult = DataResult.Success(
                     Submission(submissionHistory = listOf(firstSubmission, secondSubmission))
                 )
             )
@@ -165,8 +165,8 @@ class SubmissionDetailsRenderTest : StudentRenderTest() {
         loadPageWithModel(
             baseModel.copy(
                 selectedSubmissionAttempt = 1,
-                assignment = DataResult.Success(Assignment()),
-                rootSubmission = DataResult.Success(
+                assignmentResult = DataResult.Success(Assignment()),
+                rootSubmissionResult = DataResult.Success(
                     Submission(submissionHistory = listOf(Submission(attempt = 1)))
                 )
             )
@@ -180,8 +180,8 @@ class SubmissionDetailsRenderTest : StudentRenderTest() {
         loadPageWithModel(
             baseModel.copy(
                 selectedSubmissionAttempt = 1,
-                assignment = DataResult.Success(Assignment()),
-                rootSubmission = DataResult.Success(
+                assignmentResult = DataResult.Success(Assignment()),
+                rootSubmissionResult = DataResult.Success(
                     Submission(submissionHistory = listOf(Submission(attempt = 1)))
                 )
             )
@@ -195,8 +195,8 @@ class SubmissionDetailsRenderTest : StudentRenderTest() {
         loadPageWithModel(
             baseModel.copy(
                 selectedSubmissionAttempt = 1,
-                assignment = DataResult.Success(Assignment()),
-                rootSubmission = DataResult.Success(
+                assignmentResult = DataResult.Success(Assignment()),
+                rootSubmissionResult = DataResult.Success(
                     Submission(submissionHistory = listOf(Submission(attempt = 1)))
                 )
             )
@@ -210,8 +210,8 @@ class SubmissionDetailsRenderTest : StudentRenderTest() {
         loadPageWithModel(
             baseModel.copy(
                 selectedSubmissionAttempt = 1,
-                assignment = DataResult.Success(Assignment()),
-                rootSubmission = DataResult.Success(
+                assignmentResult = DataResult.Success(Assignment()),
+                rootSubmissionResult = DataResult.Success(
                     Submission(submissionHistory = listOf(Submission(attempt = 1)))
                 )
             )
@@ -231,8 +231,8 @@ class SubmissionDetailsRenderTest : StudentRenderTest() {
         loadPageWithModel(
             baseModel.copy(
                 selectedSubmissionAttempt = 1,
-                assignment = DataResult.Success(Assignment()),
-                rootSubmission = DataResult.Success(
+                assignmentResult = DataResult.Success(Assignment()),
+                rootSubmissionResult = DataResult.Success(
                     Submission(submissionHistory = listOf(Submission(attempt = 1)))
                 )
             )
@@ -247,8 +247,8 @@ class SubmissionDetailsRenderTest : StudentRenderTest() {
         loadPageWithModel(
             baseModel.copy(
                 selectedSubmissionAttempt = 1,
-                assignment = DataResult.Success(Assignment()),
-                rootSubmission = DataResult.Success(
+                assignmentResult = DataResult.Success(Assignment()),
+                rootSubmissionResult = DataResult.Success(
                     Submission(submissionHistory = listOf(Submission(attempt = 1)))
                 )
             )

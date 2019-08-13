@@ -100,35 +100,35 @@ class QuizInteractionTest : StudentTest() {
     @Test
     @TestMetaData(Priority.P0, FeatureCategory.QUIZZES, TestCategory.INTERACTION, true)
     fun testQuiz_canTakeQuiz() {
-        // User should be able to take a valid quiz
+        // User should be able to take a valid quizResult
     }
 
     @Stub
     @Test
     @TestMetaData(Priority.P0, FeatureCategory.QUIZZES, TestCategory.INTERACTION, true)
     fun testQuiz_canResumeQuiz() {
-        // User should be able to resume a valid quiz
+        // User should be able to resume a valid quizResult
     }
 
     @Stub
     @Test
     @TestMetaData(Priority.P0, FeatureCategory.QUIZZES, TestCategory.INTERACTION, true)
     fun testQuiz_canSubmitQuiz() {
-        // User should be able to submit a valid quiz
+        // User should be able to submit a valid quizResult
     }
 
     @Stub
     @Test
     @TestMetaData(Priority.P1, FeatureCategory.QUIZZES, TestCategory.INTERACTION, true)
     fun testQuiz_resumingTimedQuizShowsCorrectTime() {
-        // User should be able to resume a timed quiz with the correct time displayed
+        // User should be able to resume a timed quizResult with the correct time displayed
     }
 
     @Stub
     @Test
     @TestMetaData(Priority.P1, FeatureCategory.QUIZZES, TestCategory.INTERACTION, true)
     fun testQuiz_quizTimerCountsDownAndEndsSessionIfQuizNotCompleted() {
-        // Timer counts down and ends the session if quiz has not been completed
+        // Timer counts down and ends the session if quizResult has not been completed
     }
 
 }

@@ -41,6 +41,7 @@ import com.instructure.student.db.getInstance
 import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsEffect
 import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsEffectHandler
 import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsEvent
+import com.instructure.student.mobius.assignmentDetails.getVideoIntent
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsView
 import com.instructure.student.mobius.assignmentDetails.ui.SubmissionTypesVisibilities
@@ -608,7 +609,6 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
         val submission = mockkSubmission(9876L)
 
         mockkDatabase(listOf(submission))
-
         effectHandler.queryResultsChanged()
 
         verify(timeout = 100) {
@@ -993,7 +993,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     }
 
     @Test
-    fun `ShowCreateSubmissionView with type basic lti launchcalls showLTIView`() {
+    fun `ShowCreateSubmissionView with type basic lti launch calls showLTIView`() {
         val ltiUrl = "https://www.instructure.com"
         val assignmentName = "hodor"
         val assignmentCopy = assignment.copy(name = assignmentName)
@@ -1063,7 +1063,6 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     }
 
     private fun testVideo() {
-
         val uri = mockk<Uri>()
         val intent = mockk<Intent>()
         every { intent.action } returns ""
@@ -1078,7 +1077,9 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
         mockkStatic(FilePrefs::class)
         every { FilePrefs.tempCaptureUri = any() } answers { "" }
 
-        every { view.getVideoIntent(uri) } returns intent
+        mockkStatic("com.instructure.student.mobius.assignmentDetails.SubmissionUtilsKt")
+        every { any<Uri>().getVideoIntent() } returns intent
+
 
         excludeRecords {
             context.packageName

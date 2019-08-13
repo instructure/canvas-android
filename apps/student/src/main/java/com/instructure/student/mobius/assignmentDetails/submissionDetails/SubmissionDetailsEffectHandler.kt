@@ -18,15 +18,20 @@
 package com.instructure.student.mobius.assignmentDetails.submissionDetails
 
 import com.instructure.canvasapi2.managers.AssignmentManager
+import com.instructure.canvasapi2.managers.QuizManager
 import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.canvasapi2.utils.Failure
 import com.instructure.canvasapi2.utils.exhaustive
+import com.instructure.canvasapi2.utils.weave.StatusCallbackError
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.SubmissionCommentsSharedEvent
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsView
 import com.instructure.student.mobius.common.ChannelSource
 import com.instructure.student.mobius.common.ui.EffectHandler
+import com.instructure.student.util.getStudioLTITool
 import com.instructure.student.util.isStudioEnabled
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
@@ -66,22 +71,36 @@ class SubmissionDetailsEffectHandler : EffectHandler<SubmissionDetailsView, Subm
 
     private fun loadData(effect: SubmissionDetailsEffect.LoadData) {
         launch {
-            val submission = SubmissionManager.getSingleSubmissionAsync(effect.courseId, effect.assignmentId, ApiPrefs.user!!.id, true).await()
-            val assignment = AssignmentManager.getAssignmentAsync(effect.assignmentId, effect.courseId, true).await()
+            val submissionResult = SubmissionManager.getSingleSubmissionAsync(effect.courseId, effect.assignmentId, ApiPrefs.user!!.id, true).await()
+            val assignmentResult = AssignmentManager.getAssignmentAsync(effect.assignmentId, effect.courseId, true).await()
 
+            val studioLTIToolResult: DataResult<LTITool> = if (assignmentResult.isSuccess && assignmentResult.dataOrThrow.getSubmissionTypes().contains(Assignment.SubmissionType.ONLINE_UPLOAD)) {
+                effect.courseId.getStudioLTITool()
+            } else DataResult.Fail(null)
 
-            // We need to know if they can make submissions through Studio, only for file uploads - This is for empty submissions
-            val isArcEnabled = if (assignment.isSuccess && assignment.dataOrThrow.getSubmissionTypes().contains(Assignment.SubmissionType.ONLINE_UPLOAD)) {
-                effect.courseId.isStudioEnabled()
-            } else false
+            // For empty submissions - We need to know if they can make submissions through Studio, only used for file uploads
+            val isStudioEnabled = studioLTIToolResult.dataOrNull != null
 
             // Determine if we need to retrieve an authenticated LTI URL based on whether this assignment accepts external tool submissions
-            val assignmentUrl = assignment.dataOrNull?.url
-            val ltiUrl = if (assignmentUrl != null && assignment.dataOrNull?.getSubmissionTypes()?.contains(Assignment.SubmissionType.EXTERNAL_TOOL) == true)
+            val assignmentUrl = assignmentResult.dataOrNull?.url
+            val ltiUrl = if (assignmentUrl != null && assignmentResult.dataOrNull?.getSubmissionTypes()?.contains(Assignment.SubmissionType.EXTERNAL_TOOL) == true)
                  SubmissionManager.getLtiFromAuthenticationUrlAsync(assignmentUrl, true).await()
             else DataResult.Fail(null)
 
-            consumer.accept(SubmissionDetailsEvent.DataLoaded(assignment, submission, ltiUrl, isArcEnabled))
+            // We need to get the quiz for the empty submission page
+            val quizResult = if (assignmentResult.dataOrNull?.turnInType == (Assignment.TurnInType.QUIZ) && assignmentResult.dataOrNull?.quizId != 0L) {
+                try {
+                    QuizManager.getQuizAsync(effect.courseId, assignmentResult.dataOrNull?.quizId!!, true).await()
+                } catch (e: StatusCallbackError) {
+                    if (e.response?.code() == 401) {
+                        DataResult.Fail(Failure.Authorization(e.response?.message()))
+                    } else {
+                        DataResult.Fail(Failure.Network(e.response?.message()))
+                    }
+                }
+            } else null
+
+            consumer.accept(SubmissionDetailsEvent.DataLoaded(assignmentResult, submissionResult, ltiUrl, isStudioEnabled, quizResult, studioLTIToolResult))
         }
     }
 

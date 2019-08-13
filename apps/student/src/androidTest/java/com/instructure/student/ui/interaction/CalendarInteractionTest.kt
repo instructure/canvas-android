@@ -102,7 +102,7 @@ class CalendarInteractionTest : StudentTest() {
     @Test
     @TestMetaData(Priority.P0, FeatureCategory.EVENTS, TestCategory.INTERACTION, true, FeatureCategory.QUIZZES)
     fun testMonthView_tappingQuizItemDisplaysDetails() {
-        // Tapping Quiz item navigates user to quiz details
+        // Tapping Quiz item navigates user to quizResult details
     }
 
     @Stub
