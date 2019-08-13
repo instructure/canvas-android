@@ -50,6 +50,10 @@ sealed class AssignmentDetailsEvent {
     data class InternalRouteRequested(val url: String) : AssignmentDetailsEvent()
 }
 
+/**
+ * NOTE: If you make any submission changes here, make sure to make the same changes
+ * in the empty submission details page as well, which also has a submit button.
+ */
 sealed class AssignmentDetailsEffect {
     object ShowAudioRecordingView : AssignmentDetailsEffect()
     object ShowVideoRecordingView : AssignmentDetailsEffect()
