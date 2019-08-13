@@ -41,8 +41,8 @@ sealed class AssignmentDetailsEvent {
     data class DataLoaded(
         val assignmentResult: DataResult<Assignment>?,
         val isStudioEnabled: Boolean,
-        val studioLTITool: DataResult<LTITool>?,
-        val ltiTool: DataResult<LTITool>?,
+        val studioLTIToolResult: DataResult<LTITool>?,
+        val ltiToolResult: DataResult<LTITool>?,
         val submission: Submission?,
         val quizResult: DataResult<Quiz>?
     ) : AssignmentDetailsEvent()

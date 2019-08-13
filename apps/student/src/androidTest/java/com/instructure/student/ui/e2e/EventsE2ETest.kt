@@ -55,7 +55,7 @@ class EventsE2ETest: StudentTest() {
         val groupedAssignment = AssignmentsApi.createAssignment(groupedAssignmentRequest)
 
 
-        // Seed a quizResult due today, for calendar tab
+        // Seed a quiz due today, for calendar tab
         val quiz = QuizzesApi.createQuiz(
                 QuizzesApi.CreateQuizRequest(
                         courseId = course.id,
@@ -83,7 +83,7 @@ class EventsE2ETest: StudentTest() {
         // Assert that the grouped assignment is there
         calendarPage.assertAssignmentDisplayed(groupedAssignment)
 
-        // Make sure that your quizResult shows up on the calendar
+        // Make sure that your quiz shows up on the calendar
         calendarPage.assertQuizDisplayed(quiz)
     }
 

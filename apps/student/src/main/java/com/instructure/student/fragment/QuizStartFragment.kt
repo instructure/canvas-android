@@ -104,10 +104,10 @@ class QuizStartFragment : ParentFragment(), Bookmarkable {
         ViewStyler.themeToolbar(requireActivity(), toolbar, canvasContext)
     }
 
-    // Called after submitting a quizResult
+    // Called after submitting a quiz
     fun updateQuizInfo() {
         loading.setVisible()
-        // Don't let them try to start the quizResult until the data loads
+        // Don't let them try to start the quiz until the data loads
         next.isEnabled = false
         quizSubmissionResponseCanvasCallback!!.reset() // Reset to clear out any link headers
         QuizManager.getQuizSubmissions(course, quiz.id, true, quizSubmissionResponseCanvasCallback!!)
@@ -124,7 +124,7 @@ class QuizStartFragment : ParentFragment(), Bookmarkable {
 
             if (shouldStartQuiz) {
                 QuizManager.startQuiz(course, quiz.id, true, quizStartResponseCallback!!)
-                // If the user hits the back button, we don't want them to try to start the quizResult again
+                // If the user hits the back button, we don't want them to try to start the quiz again
                 shouldStartQuiz = false
             } else if (quizSubmission != null) {
                 showQuiz()
@@ -145,7 +145,7 @@ class QuizStartFragment : ParentFragment(), Bookmarkable {
 
         quiz_details.loadHtml(quiz.description, "")
         quiz_details.setBackgroundColor(Color.TRANSPARENT)
-        // Set some callbacks in case there is a link in the quizResult description. We want it to open up in a new InternalWebViewFragment
+        // Set some callbacks in case there is a link in the quiz description. We want it to open up in a new InternalWebViewFragment
         quiz_details.canvasEmbeddedWebViewCallback = embeddedWebViewCallback
         quiz_details.canvasWebViewClientCallback = webViewClientCallback
         quiz_question_count_details.text = NumberHelper.formatInt(quiz.questionCount.toLong())
@@ -228,7 +228,7 @@ class QuizStartFragment : ParentFragment(), Bookmarkable {
 
                 val quizSubmissionResponse = response.body()?.copy(quizSubmissions = submissions)
                 if (quizSubmissionResponse?.quizSubmissions == null || quizSubmissionResponse.quizSubmissions.isEmpty()) {
-                    // No quizResult submissions, let the user start the quizResult.
+                    // No quiz submissions, let the user start the quiz.
 
                     // They haven't turned it in yet, so don't show the turned-in view
                     quiz_turned_in_container.setGone()
@@ -241,7 +241,7 @@ class QuizStartFragment : ParentFragment(), Bookmarkable {
                     next?.isEnabled = true
 
                     val hasUnlimitedAttempts = quiz.allowedAttempts == -1
-                    val teacherUnlockedQuizAttempts = quizSubmission!!.manuallyUnlocked // Teacher can manually unlock a quizResult for an individual student
+                    val teacherUnlockedQuizAttempts = quizSubmission!!.manuallyUnlocked // Teacher can manually unlock a quiz for an individual student
                     val hasMoreAttemptsLeft = quizSubmission!!.attemptsLeft > 0
 
                     val canTakeQuizAgain = hasUnlimitedAttempts or teacherUnlockedQuizAttempts or hasMoreAttemptsLeft
@@ -254,24 +254,24 @@ class QuizStartFragment : ParentFragment(), Bookmarkable {
                         next.setGone()
                     }
 
-                    // They can -take- the quizResult if there's no finished time and they have attempts left, OR the teacher has unlocked the quizResult for them
+                    // They can -take- the quiz if there's no finished time and they have attempts left, OR the teacher has unlocked the quiz for them
 
-                    // If they've finished the quizResult and have no more attempt chances, or the teacher has locked the quizResult, then they're done
+                    // If they've finished the quiz and have no more attempt chances, or the teacher has locked the quiz, then they're done
                     // -1 allowed attempts == unlimited
                     if (quizSubmission!!.finishedAt != null && !canTakeQuizAgain) {
-                        // They've finished the quizResult and they can't take it anymore; let them see results
+                        // They've finished the quiz and they can't take it anymore; let them see results
                         next.setVisible()
                         next.text = getString(R.string.viewQuestions)
                         shouldLetAnswer = false
                     } else {
-                        // They are allowed to take the quizResult...
+                        // They are allowed to take the quiz...
                         next.setVisible()
 
                         if (quizSubmission!!.finishedAt != null) {
                             shouldStartQuiz = true
                             next.text = getString(R.string.takeQuizAgain)
                         } else {
-                            // Let the user resume their quizResult
+                            // Let the user resume their quiz
                             next.text = getString(R.string.resumeQuiz)
                         }
                     }
@@ -279,20 +279,20 @@ class QuizStartFragment : ParentFragment(), Bookmarkable {
                     if (quizSubmission!!.finishedAt != null) {
                         quiz_turned_in.text = getString(R.string.turnedIn)
                         quiz_turned_in_details.text = DateHelper.getDateTimeString(requireActivity(), quizSubmission!!.finishedDate)
-                        // The user has turned in the quizResult, let them see the results
+                        // The user has turned in the quiz, let them see the results
                         quiz_results.setVisible()
                     } else {
                         quiz_turned_in_container.setGone()
                     }
 
-                    // Weird hack where if the time expires and the user hasn't submitted it doesn't let you start the quizResult
+                    // Weird hack where if the time expires and the user hasn't submitted it doesn't let you start the quiz
                     if (parseWorkflowState(quizSubmission!!.workflowState!!) == QuizSubmission.WorkflowState.UNTAKEN && quizSubmission!!.endAt != null && quizSubmissionTime != null && quizSubmissionTime!!.timeLeft > 0) {
                         next.isEnabled = false
-                        // Submit the quizResult for them
+                        // Submit the quiz for them
                         QuizManager.submitQuiz(course, quizSubmission!!, true, object : StatusCallback<QuizSubmissionResponse>() {
                             override fun onResponse(response: Response<QuizSubmissionResponse>, linkHeaders: LinkHeaders, type: ApiType) {
                                 if (type == ApiType.CACHE) return
-                                // The user has turned in the quizResult, let them see the results
+                                // The user has turned in the quiz, let them see the results
                                 quiz_results.setVisible()
                                 next.isEnabled = true
                                 shouldStartQuiz = true
@@ -337,11 +337,11 @@ class QuizStartFragment : ParentFragment(), Bookmarkable {
 
             override fun onFail(call: Call<QuizSubmissionResponse>?, error: Throwable, response: Response<*>?) {
                 loading.setGone()
-                // If a quizResult is excused we get a 401 error when trying to get the submissions. This is a workaround until we have an excused field
+                // If a quiz is excused we get a 401 error when trying to get the submissions. This is a workaround until we have an excused field
                 // on quizzes.
                 if (response != null && response.code() == 401) {
                     populateQuizInfo()
-                    // There is a not authorized error, so don't let them start the quizResult
+                    // There is a not authorized error, so don't let them start the quiz
                     next.setGone()
                 }
             }
@@ -351,7 +351,7 @@ class QuizStartFragment : ParentFragment(), Bookmarkable {
 
             override fun onResponse(response: Response<QuizSubmissionResponse>, linkHeaders: LinkHeaders, type: ApiType) {
                 if (response.code() == 200 && type == ApiType.API) {
-                    // We want to show the quizResult here, but we need to get the quizSubmissionId first so our
+                    // We want to show the quiz here, but we need to get the quizSubmissionId first so our
                     // api call for the QuizQuestionsFragment knows which questions to get
                     val quizSubmissionResponseCallback = object : StatusCallback<QuizSubmissionResponse>() {
 

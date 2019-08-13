@@ -45,7 +45,7 @@ public class SubmitButtonBinder {
             @Override
             public void onClick(View view) {
 
-                //check to see if there are unanswered quizResult questions
+                //check to see if there are unanswered quiz questions
                 boolean hasUnanswered = false;
                 int numUnanswered = 0;
                 if(adapter.getAnsweredQuestions().size() != adapter.getAnswerableQuestionCount()) {

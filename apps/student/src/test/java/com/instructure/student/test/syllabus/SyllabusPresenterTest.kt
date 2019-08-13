@@ -65,7 +65,7 @@ class SyllabusPresenterTest : Assert() {
         ),
         ScheduleItem(
             itemId = "2",
-            title = "quizResult",
+            title = "quiz",
             assignment = Assignment(id = 124L, submissionTypesRaw = listOf("online_quiz")),
             startAt = baseDate.plusDays(2).withHour(2).withMinute(0).format(DateTimeFormatter.ISO_DATE_TIME),
             itemType = ScheduleItem.Type.TYPE_ASSIGNMENT
@@ -102,7 +102,7 @@ class SyllabusPresenterTest : Assert() {
             ),
             ScheduleItemViewState(
                 id = "2",
-                title = "quizResult",
+                title = "quiz",
                 date = "Due Apr 4 at 2:00 am",
                 iconRes = R.drawable.vd_quiz,
                 color = baseCourse.color

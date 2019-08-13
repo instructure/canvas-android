@@ -162,7 +162,7 @@ public class QuizQuestionDialog extends DialogFragment {
      *
      * flaggedQuestions is an arrayList that is populated based on which questions have been flagged by the user
      *
-     * allQuestions is an arrayList of all the questions that are available on the quizResult
+     * allQuestions is an arrayList of all the questions that are available on the quiz
      *
      * questionIds is an arrayList of longs that correspond to question ids. We use this to indicate which questions
      * have been answered. This list is populated when the user selects an answer

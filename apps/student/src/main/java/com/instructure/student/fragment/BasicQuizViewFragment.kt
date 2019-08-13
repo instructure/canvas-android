@@ -58,7 +58,7 @@ class BasicQuizViewFragment : InternalWebviewFragment() {
         if (apiURL != null) {
             getQuizDetails(apiURL!!)
         } else if (quiz != null && quiz?.lockInfo != null && CanvasContext.Type.isCourse(canvasContext) && !(canvasContext as Course).isTeacher) {
-            // If the quizResult is locked we don't care if they're a teacher
+            // If the quiz is locked we don't care if they're a teacher
             populateWebView(LockInfoHTMLHelper.getLockedInfoHTML(quiz?.lockInfo, activity, R.string.lockedQuizDesc))
         } else if (quizId != 0L) {
             getQuizDetails(quizId)
@@ -75,8 +75,8 @@ class BasicQuizViewFragment : InternalWebviewFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        // We need to set the WebViewClient before we get the quizResult so it doesn't try to open the
-        // quizResult in a different browser
+        // We need to set the WebViewClient before we get the quiz so it doesn't try to open the
+        // quiz in a different browser
         if (baseURL == null) {
             // If the baseURL is null something went wrong, nothing will show here
             // but at least it won't crash
@@ -94,16 +94,16 @@ class BasicQuizViewFragment : InternalWebviewFragment() {
                 val currentUri = Uri.parse(url)
 
                 if (url.contains(host)) { //we need to handle it.
-                    return if (currentUri != null && currentUri.pathSegments.size >= 3 && currentUri.pathSegments[2] == "quizzes") {  //if it's a quizResult, stay here.
+                    return if (currentUri != null && currentUri.pathSegments.size >= 3 && currentUri.pathSegments[2] == "quizzes") {  //if it's a quiz, stay here.
                         view.loadUrl(url, APIHelper.referrer)
                         true
                     } else if (currentUri != null && currentUri.pathSegments.size >= 1 && currentUri.pathSegments[0].equals("login", ignoreCase = true)) {
                         view.loadUrl(url, APIHelper.referrer)
                         true
-                    } else { // It's content but not a quizResult. Could link to a discussion (or whatever) in a quizResult. Route
+                    } else { // It's content but not a quiz. Could link to a discussion (or whatever) in a quiz. Route
                         RouteMatcher.canRouteInternally(requireActivity(), url, ApiPrefs.domain, true)
-                    }// Might need to log in to take the quizResult -- the url would say domain/login. If we just use the AppRouter it will take the user
-                    // back to the dashboard. This check will keep them here and let them log in and take the quizResult
+                    }// Might need to log in to take the quiz -- the url would say domain/login. If we just use the AppRouter it will take the user
+                    // back to the dashboard. This check will keep them here and let them log in and take the quiz
                 }
                 return false
             }
@@ -125,7 +125,7 @@ class BasicQuizViewFragment : InternalWebviewFragment() {
             quiz = awaitApi<Quiz> { QuizManager.getDetailedQuizByUrl(quizUrl, true, it) }
 
             processQuizDetails(quiz?.url.validOrNull() ?: baseURL)
-        } catch { Logger.e("Error loading quizResult information: ${it.message}") }
+        } catch { Logger.e("Error loading quiz information: ${it.message}") }
     }
 
     private fun getQuizDetails(quizId: Long) {
@@ -134,7 +134,7 @@ class BasicQuizViewFragment : InternalWebviewFragment() {
             baseURL = quiz?.url ?: baseURL
 
             processQuizDetails(quiz?.url)
-        } catch { Logger.e("Error loading quizResult information: ${it.message}") }
+        } catch { Logger.e("Error loading quiz information: ${it.message}") }
     }
 
     private suspend fun processQuizDetails(url: String?) {
@@ -166,7 +166,7 @@ class BasicQuizViewFragment : InternalWebviewFragment() {
      */
     private fun shouldShowNatively(quiz: Quiz?): Boolean {
         if (QuizListFragment.isNativeQuiz(canvasContext, quiz!!)) {
-            //take them to the quizResult start fragment instead, let them take it natively
+            //take them to the quiz start fragment instead, let them take it natively
             navigation?.popCurrentFragment()
             quiz.let { RouteMatcher.route(requireContext(), QuizStartFragment.makeRoute(canvasContext, it).apply { ignoreDebounce = true }) }
             return true

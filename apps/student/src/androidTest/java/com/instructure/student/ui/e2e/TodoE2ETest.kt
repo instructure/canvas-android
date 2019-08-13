@@ -47,7 +47,7 @@ class TodoE2ETest: StudentTest() {
                 dueAt = 1.days.fromNow.iso8601
         )
 
-        // Seed a quizResult due tomorrow, for todo tab
+        // Seed a quiz due tomorrow, for todo tab
         val quiz = QuizzesApi.createQuiz(
                 QuizzesApi.CreateQuizRequest(
                         courseId = course.id,
@@ -69,7 +69,7 @@ class TodoE2ETest: StudentTest() {
         // Verify that your assignment shows up
         todoPage.assertAssignmentDisplayed(seededAssignments.assignmentList[0])
 
-        // Verify that your quizResult shows up
+        // Verify that your quiz shows up
         todoPage.assertQuizDisplayed(quiz)
     }
 }

@@ -118,7 +118,7 @@ class ModuleQuizDecider : ParentFragment() {
             quizDetails.formatHTML(quiz.description, "")
             quizDetails.setBackgroundColor(ContextCompat.getColor(requireActivity(), R.color.transparent))
 
-            // Set some callbacks in case there is a link in the quizResult description. We want it to open up in a new InternalWebViewFragment
+            // Set some callbacks in case there is a link in the quiz description. We want it to open up in a new InternalWebViewFragment
             quizDetails.canvasEmbeddedWebViewCallback = embeddedWebViewCallback
             quizDetails.canvasWebViewClientCallback = webViewClientCallback
 
