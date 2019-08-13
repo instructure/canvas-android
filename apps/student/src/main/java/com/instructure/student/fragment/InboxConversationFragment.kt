@@ -121,6 +121,8 @@ class InboxConversationFragment : ParentFragment() {
             when (action) {
                 MessageAdapterCallback.MessageClickAction.REPLY -> addMessage(message, true)
 
+                MessageAdapterCallback.MessageClickAction.REPLY_ALL -> replyAllMessage(message)
+
                 MessageAdapterCallback.MessageClickAction.FORWARD -> addMessage(message, false)
 
                 MessageAdapterCallback.MessageClickAction.DELETE -> {
@@ -340,14 +342,44 @@ class InboxConversationFragment : ParentFragment() {
         RouteMatcher.route(requireContext(), route)
     }
 
+    // Same as reply all but scoped to a message
+    private fun replyAllMessage(message: Message) {
+        val route = InboxComposeMessageFragment.makeRoute(
+                true,
+                conversation,
+                getMessageRecipientsForReplyAll(message),
+                longArrayOf(),
+                message)
+        RouteMatcher.route(requireContext(), route)
+    }
+
     private fun addMessage(message: Message, isReply: Boolean) {
         val route = InboxComposeMessageFragment.makeRoute(
                 isReply,
                 conversation,
-                adapter.participants.values.toList(),
+                getMessageRecipientsForReply(message),
                 adapter.getMessageChainIdsForMessage(message),
                 message)
         RouteMatcher.route(requireContext(), route)
+    }
+
+    private fun getMessageRecipientsForReplyAll(message: Message): List<BasicUser> {
+        return message.participatingUserIds
+                // Map the conversations participating users to the messages participating users
+                .mapNotNull { participatingUserId ->
+                    adapter.participants.values.find { basicUser ->
+                        basicUser.id == participatingUserId
+                    }
+                }
+    }
+
+    private fun getMessageRecipientsForReply(message: Message): List<BasicUser>  {
+        // If the author is self, we default to all other participants
+        return if (message.authorId == ApiPrefs.user!!.id) {
+            adapter.participants.values.toList()
+        } else {
+            listOf(adapter.participants.values.first { it.id == message.authorId })
+        }
     }
 
     private fun refreshConversationData() {

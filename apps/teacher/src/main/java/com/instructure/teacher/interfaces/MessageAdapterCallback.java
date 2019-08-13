@@ -27,6 +27,7 @@ public interface MessageAdapterCallback {
 
     enum MessageClickAction {
         REPLY(R.string.reply),
+        REPLY_ALL(R.string.replyAll),
         FORWARD(R.string.forward),
         DELETE(R.string.delete);
 
