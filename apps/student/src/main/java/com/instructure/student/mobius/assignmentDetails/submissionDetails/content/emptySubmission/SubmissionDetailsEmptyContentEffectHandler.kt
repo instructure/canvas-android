@@ -46,8 +46,8 @@ class SubmissionDetailsEmptyContentEffectHandler(val context: Context, val assig
 
     override fun connect(output: Consumer<SubmissionDetailsEmptyContentEvent>): Connection<SubmissionDetailsEmptyContentEffect> {
         val db = Db.getInstance(context)
-        submissionQuery = db.submissionQueries.getSubmissionsByAssignmentId(assignmentId, ApiPrefs.user!!.id)
-        submissionQuery!!.addListener(this@SubmissionDetailsEmptyContentEffectHandler)
+        submissionQuery = db.submissionQueries.getSubmissionsByAssignmentId(assignmentId, ApiPrefs.user?.id ?: -1)
+        submissionQuery?.addListener(this@SubmissionDetailsEmptyContentEffectHandler)
 
         return super.connect(output)
     }
