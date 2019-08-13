@@ -62,7 +62,7 @@ class SubmissionDetailsEmptyContentRenderTest : StudentRenderTest() {
     @Test
     fun submitButtonIsHiddenWhenUserCannotSubmit() {
         loadPageWithModel(baseModel.copy(
-            assignment = Assignment(lockedForUser = true)
+            assignment = baseAssignment.copy(lockedForUser = true)
         ))
 
         submissionDetailsEmptyContentRenderPage.assertSubmitButtonHidden()
