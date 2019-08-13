@@ -32,13 +32,7 @@ def prepareJacocoParams(variant) {
     params.variantName = variant.name
     params.variantCapName = variant.name.capitalize()
     params.fileFilter = [
-                          '**/adapter/*.*',
-                          '**/util/*.*',
-                          '**/presenters/*.*',
-                          '**/canvasapi2/*.*',
-                          '**/annotations/*.*',
-                          '**/pandautils/*.*',
-                          '**/login/*.*',
+                          '**/com/instructure/**/*.*',
     ]
     params.classDirectories = files([fileTree(
             dir: variant.javaCompiler.destinationDir,
