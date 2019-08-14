@@ -18,11 +18,10 @@
 
 package com.instructure.student.ui.pages
 
-import android.os.SystemClock.sleep
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso
-import androidx.test.espresso.NoMatchingViewException
+import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
@@ -44,11 +43,11 @@ import com.instructure.espresso.page.plus
 import com.instructure.espresso.page.withId
 import com.instructure.espresso.page.withParent
 import com.instructure.espresso.page.withText
+import com.instructure.espresso.waitForCheck
 import com.instructure.student.R
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.Matcher
 import org.hamcrest.core.AllOf
-import com.instructure.espresso.scrollTo
 
 class DashboardPage : BasePage(R.id.dashboardPage) {
 
@@ -90,20 +89,17 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
 
     fun signOut() {
         onView(hamburgerButtonMatcher).click()
-        //hamburgerButton.click()
         onViewWithId(R.id.navigationDrawerItem_logout).click()
         onViewWithText(android.R.string.yes).click()
     }
 
     fun pressChangeUser() {
         onView(hamburgerButtonMatcher).click()
-        //hamburgerButton.click()
         onViewWithId(R.id.navigationDrawerItem_changeUser).click()
     }
 
     fun assertUserLoggedIn(user: CanvasUserApiModel) {
         onView(hamburgerButtonMatcher).click()
-        //hamburgerButton.click()
         onViewWithText(user.shortName).assertDisplayed()
         Espresso.pressBack()
     }
@@ -125,21 +121,8 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     }
 
     fun waitForRender() {
-        var secsToWait = 10
-        while(secsToWait > 0) {
-            secsToWait -= 1
-            try {
-                onView(hamburgerButtonMatcher).assertDisplayed()
-                return
-            }
-            catch(e: NoMatchingViewException) {
-                // Swallow the exception for now
-            }
-            sleep(1000)
-        }
-
-        // Give it one more try, propagating an exception on failure
-        onView(hamburgerButtonMatcher).assertDisplayed()
+        WaitForViewWithId(R.id.listView)
+        onView(hamburgerButtonMatcher).waitForCheck(matches(isDisplayed()))
     }
 
     private fun scrollAndAssertDisplayed(matcher: Matcher<View>) {
@@ -153,7 +136,6 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
 
     fun launchSettingsPage() {
         onView(hamburgerButtonMatcher).click()
-        //hamburgerButton.click()
         onViewWithId(R.id.navigationDrawerSettings).click()
     }
 
