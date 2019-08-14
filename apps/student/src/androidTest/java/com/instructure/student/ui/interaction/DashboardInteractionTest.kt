@@ -16,7 +16,6 @@
  */
 package com.instructure.student.ui.interaction
 
-import android.os.SystemClock.sleep
 import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
@@ -27,13 +26,8 @@ import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLogin
-import org.junit.Test
-import androidx.test.espresso.IdlingRegistry
-import org.junit.After
-import org.junit.Before
-import androidx.test.espresso.IdlingResource
-import androidx.test.espresso.idling.CountingIdlingResource
 import junit.framework.TestCase.assertNotNull
+import org.junit.Test
 
 
 class DashboardInteractionTest : StudentTest() {

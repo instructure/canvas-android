@@ -1,0 +1,80 @@
+/*
+ * Copyright (C) 2019 - present Instructure, Inc.
+ *
+ *     Licensed under the Apache License, Version 2.0 (the "License");
+ *     you may not use this file except in compliance with the License.
+ *     You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *     Unless required by applicable law or agreed to in writing, software
+ *     distributed under the License is distributed on an "AS IS" BASIS,
+ *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *     See the License for the specific language governing permissions and
+ *     limitations under the License.
+ *
+ */
+package com.instructure.student.ui.pages
+
+import android.view.View
+import androidx.recyclerview.widget.RecyclerView
+import androidx.test.espresso.Espresso
+import androidx.test.espresso.UiController
+import androidx.test.espresso.ViewAction
+import androidx.test.espresso.ViewInteraction
+import androidx.test.espresso.contrib.RecyclerViewActions
+import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withText
+import com.instructure.dataseeding.model.CanvasUserApiModel
+import com.instructure.dataseeding.model.ConversationApiModel
+import com.instructure.dataseeding.model.CourseApiModel
+import com.instructure.dataseeding.model.GroupApiModel
+import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.OnViewWithStringText
+import com.instructure.espresso.OnViewWithText
+import com.instructure.espresso.WaitForViewWithId
+import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.click
+import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
+import com.instructure.espresso.typeText
+import com.instructure.student.R
+import org.hamcrest.Matcher
+import org.hamcrest.core.AllOf
+
+class InboxPage : BasePage(R.id.inboxPage) {
+
+    private val toolbar by OnViewWithId(R.id.toolbar)
+    private val createMessageButton by OnViewWithId(R.id.addMessage)
+
+    private fun scrollToRecyclerViewItem(matcher: Matcher<View>) {
+        // Scroll RecyclerView item into view, if necessary
+        onView(ViewMatchers.withId(R.id.inboxRecyclerView))
+                .perform(RecyclerViewActions.scrollTo<RecyclerView.ViewHolder>(ViewMatchers.hasDescendant(matcher)))
+    }
+
+    fun assertConversationDisplayed(conversation: ConversationApiModel) {
+        assertConversationDisplayed(conversation.subject)
+    }
+
+    fun assertConversationDisplayed(subject: String) {
+        val matcher = withText(subject)
+        scrollToRecyclerViewItem(matcher)
+        onView(matcher).assertDisplayed()
+    }
+
+    fun selectConversation(conversation: ConversationApiModel) {
+        val matcher = withText(conversation.subject)
+        scrollToRecyclerViewItem(matcher)
+        onView(matcher).click()
+    }
+
+    fun pressNewMessageButton() {
+        createMessageButton.click()
+    }
+
+    fun goToDashboard() {
+        onView(withId(R.id.bottomNavigationCourses)).click()
+    }
+}

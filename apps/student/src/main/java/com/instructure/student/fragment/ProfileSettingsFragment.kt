@@ -153,10 +153,12 @@ class ProfileSettingsFragment : ParentFragment(), LoaderManager.LoaderCallbacks<
             } catch (e: Throwable) {
                 toast(R.string.uploadAvatarFailMsg)
             } finally {
-                photoProgressBar.setGone()
-                createPandaProgressBar.setGone()
-                setEnabled(editPhoto, true)
-                setEnabled(createPandaAvatar, true)
+                if(this@ProfileSettingsFragment.isAdded) {
+                    photoProgressBar.setGone()
+                    createPandaProgressBar.setGone()
+                    setEnabled(editPhoto, true)
+                    setEnabled(createPandaAvatar, true)
+                }
             }
         }
     }

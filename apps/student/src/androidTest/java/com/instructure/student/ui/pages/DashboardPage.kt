@@ -19,6 +19,7 @@
 package com.instructure.student.ui.pages
 
 import android.view.View
+import android.widget.TextView
 import androidx.appcompat.widget.SwitchCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso
@@ -30,6 +31,7 @@ import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvasapi2.models.Course
 import com.instructure.dataseeding.model.CanvasUserApiModel
@@ -46,12 +48,16 @@ import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.onViewWithId
 import com.instructure.espresso.page.onViewWithText
 import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.withAncestor
 import com.instructure.espresso.page.withId
 import com.instructure.espresso.page.withParent
+import com.instructure.espresso.page.withText
 import com.instructure.espresso.waitForCheck
 import com.instructure.student.R
+import org.hamcrest.BaseMatcher
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.containsString
+import org.hamcrest.Description
 import org.hamcrest.Matcher
 
 class DashboardPage : BasePage(R.id.dashboardPage) {
@@ -63,6 +69,10 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     private val seeAllCoursesButton by WaitForViewWithId(R.id.seeAllTextView)
     private val hamburgerButton by OnViewWithContentDescription(R.string.navigation_drawer_open)
 
+    // Sometimes when we navigate back to the dashboard page, there can be several hamburger buttons
+    // in the UI stack.  We want to choose the one that is displayed.
+    private val hamburgerButtonMatcher = allOf(withContentDescription(R.string.navigation_drawer_open), isDisplayed())
+
     fun assertDisplaysCourses() {
         emptyView.assertNotDisplayed()
         onView(withParent(R.id.toolbar) + withText(R.string.dashboard)).assertDisplayed()
@@ -72,10 +82,7 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     }
 
     fun assertDisplaysCourse(course: CourseApiModel) {
-        // Odd to specify isDisplayed() when I'm about to assert that it is displayed,
-        // but it serves to differentiate the "all courses" version of the course from
-        // the "favorites" version of the course.  We'll select whichever is currently showing.
-        val matcher = allOf(withText(course.name), withId(R.id.titleTextView), isDisplayed())
+        val matcher = allOf(withText(course.name), withId(R.id.titleTextView),  withAncestor(R.id.dashboardPage))
         scrollAndAssertDisplayed(matcher)
     }
 
@@ -111,18 +118,18 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     }
 
     fun signOut() {
-        hamburgerButton.click()
+        onView(hamburgerButtonMatcher).click()
         onViewWithId(R.id.navigationDrawerItem_logout).click()
         onViewWithText(android.R.string.yes).click()
     }
 
     fun pressChangeUser() {
-        hamburgerButton.click()
+        onView(hamburgerButtonMatcher).click()
         onViewWithId(R.id.navigationDrawerItem_changeUser).click()
     }
 
     fun assertUserLoggedIn(user: CanvasUserApiModel) {
-        hamburgerButton.click()
+        onView(hamburgerButtonMatcher).click()
         onViewWithText(user.shortName).assertDisplayed()
         Espresso.pressBack()
     }
@@ -139,15 +146,23 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         onView(withId(R.id.bottomNavigationToDo)).click()
     }
 
+    fun clickInboxTab() {
+        onView(withId(R.id.bottomNavigationInbox)).click()
+    }
+
     fun waitForRender() {
-        listView.waitForCheck(matches(isDisplayed()))
-        //listView.assertDisplayed() // Oddly, this seems sufficient as a wait-for-render mechanism
+        //onView(allOf(withId(R.id.listView),  withAncestor(R.id.dashboardPage))).waitForCheck(matches(isDisplayed()))
+        //listView.waitForCheck(matches(isDisplayed()))
+        onView(hamburgerButtonMatcher).waitForCheck(matches(isDisplayed()))
     }
 
     private fun scrollAndAssertDisplayed(matcher: Matcher<View>) {
+        // Arggghhh... This scrolling logic on the recycler view is really unreliable and seems
+        // to fail for nonsensical reasons.  For now, "scrollAndAssertDisplayed"" is just going to
+        // have to be "assertDisplayed".
         // Scroll RecyclerView item into view, if necessary
-        onView(allOf(withId(R.id.listView), isDisplayed())) // There may be other listViews
-                .perform(RecyclerViewActions.scrollTo<RecyclerView.ViewHolder>(ViewMatchers.hasDescendant(matcher)))
+//        onView(allOf(withId(R.id.listView), withAncestor(R.id.dashboardPage))) // There may be other listViews
+//                .perform(RecyclerViewActions.scrollTo<RecyclerView.ViewHolder>(ViewMatchers.hasDescendant(matcher)))
 
         // Now make sure that it is displayed
         Espresso.onView(matcher).assertDisplayed()
@@ -178,11 +193,15 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         onView(withText(course.originalName)).click()
     }
 
+    fun launchSettingsPage() {
+        onView(hamburgerButtonMatcher).click()
+        onViewWithId(R.id.navigationDrawerSettings).click()
+    }
+
     fun selectCourse(course: CourseApiModel) {
         assertDisplaysCourse(course)
         onView(withText(course.name)).click()
     }
-
 }
 
 /**
@@ -204,6 +223,21 @@ class SetSwitchCompat(val position: Boolean) : ViewAction {
         if(switch != null) {
             switch.isChecked = position
         }
+    }
+
+}
+
+class ContainsSubtextOf(val superString: String, val minMatchChars: Int) : BaseMatcher<View>() {
+    override fun describeTo(description: Description?) {
+        description?.appendText("matches text that is contained  in $superString")
+    }
+
+    override fun matches(item: Any?): Boolean {
+        if(item is TextView) {
+            val itemText = item.text.toString()
+            return itemText.length >= minMatchChars && superString.contains(itemText, true)
+        }
+        return false
     }
 
 }
