@@ -24,7 +24,8 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:paddingBottom="16dp"
-    android:paddingTop="16dp">
+    android:paddingTop="16dp"
+    android:id="@+id/legalPage">
 
     <LinearLayout
         android:id="@+id/privacyPolicy"

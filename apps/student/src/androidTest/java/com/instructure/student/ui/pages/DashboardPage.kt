@@ -21,8 +21,11 @@ package com.instructure.student.ui.pages
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.dataseeding.model.GroupApiModel
@@ -40,6 +43,7 @@ import com.instructure.espresso.page.plus
 import com.instructure.espresso.page.withId
 import com.instructure.espresso.page.withParent
 import com.instructure.espresso.page.withText
+import com.instructure.espresso.waitForCheck
 import com.instructure.student.R
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.Matcher
@@ -51,6 +55,10 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     private val emptyView by OnViewWithId(R.id.emptyCoursesView, autoAssert = false)
     private val listView by WaitForViewWithId(R.id.listView, autoAssert = false)
     private val hamburgerButton by OnViewWithContentDescription(R.string.navigation_drawer_open)
+
+    // Sometimes when we navigate back to the dashboard page, there can be several hamburger buttons
+    // in the UI stack.  We want to choose the one that is displayed.
+    private val hamburgerButtonMatcher = allOf(withContentDescription(R.string.navigation_drawer_open), isDisplayed())
 
     fun assertDisplaysCourses() {
         emptyView.assertNotDisplayed()
@@ -80,18 +88,18 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     }
 
     fun signOut() {
-        hamburgerButton.click()
+        onView(hamburgerButtonMatcher).click()
         onViewWithId(R.id.navigationDrawerItem_logout).click()
         onViewWithText(android.R.string.yes).click()
     }
 
     fun pressChangeUser() {
-        hamburgerButton.click()
+        onView(hamburgerButtonMatcher).click()
         onViewWithId(R.id.navigationDrawerItem_changeUser).click()
     }
 
     fun assertUserLoggedIn(user: CanvasUserApiModel) {
-        hamburgerButton.click()
+        onView(hamburgerButtonMatcher).click()
         onViewWithText(user.shortName).assertDisplayed()
         Espresso.pressBack()
     }
@@ -108,8 +116,13 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         onView(withId(R.id.bottomNavigationToDo)).click()
     }
 
+    fun clickInboxTab() {
+        onView(withId(R.id.bottomNavigationInbox)).click()
+    }
+
     fun waitForRender() {
-        listView.assertDisplayed() // Oddly, this seems sufficient as a wait-for-render mechanism
+        WaitForViewWithId(R.id.listView)
+        onView(hamburgerButtonMatcher).waitForCheck(matches(isDisplayed()))
     }
 
     private fun scrollAndAssertDisplayed(matcher: Matcher<View>) {
@@ -121,10 +134,13 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         Espresso.onView(matcher).assertDisplayed()
     }
 
+    fun launchSettingsPage() {
+        onView(hamburgerButtonMatcher).click()
+        onViewWithId(R.id.navigationDrawerSettings).click()
+    }
+
     fun selectCourse(course: CourseApiModel) {
         assertDisplaysCourse(course)
         onView(withText(course.name)).click()
     }
-
-
 }
