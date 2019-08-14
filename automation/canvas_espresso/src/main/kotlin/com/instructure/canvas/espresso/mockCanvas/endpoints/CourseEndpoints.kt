@@ -42,15 +42,31 @@ object CourseListEndpoint : Endpoint(
 /**
  * Endpoint that can return the course specified by [PathVars.courseId]. If the request user is not enrolled in
  * the requested course, an unauthorized response is returned.
+ *
+ * ROUTES:
+ * - `tabs` -> [CourseTabsEndpoint]
  */
-object CourseEndpoint : Endpoint(response = {
+object CourseEndpoint : Endpoint(
+        Segment("tabs") to CourseTabsEndpoint,
+        response = {
+            GET {
+                val course = data.courses[pathVars.courseId]!!
+                val userId = pathVars.userId
+                if (data.enrollments.values.any { it.courseId == course.id && it.userId == userId }) {
+                    request.successResponse(course)
+                } else {
+                    request.unauthorizedResponse()
+                }
+            }
+        }
+)
+
+/**
+ * Endpoint that returns the tabs for a course
+ */
+object CourseTabsEndpoint : Endpoint( response = {
     GET {
         val course = data.courses[pathVars.courseId]!!
-        val userId = pathVars.userId
-        if (data.enrollments.values.any { it.courseId == course.id && it.userId == userId }) {
-            request.successResponse(course)
-        } else {
-            request.unauthorizedResponse()
-        }
+        request.successResponse(data.courseTabs[course.id]!!) // returns a list of tabs
     }
 })

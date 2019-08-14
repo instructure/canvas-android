@@ -85,6 +85,9 @@ class MockCanvas {
     /** Map of group id to group object */
     val groups = mutableMapOf<Long, Group>()
 
+    /** Map of course ID to tabs for the course */
+    val courseTabs = mutableMapOf<Long, List<Tab>>()
+
     //region Convenience functionality
 
     /** A list of users with at least one Student enrollment */
@@ -202,6 +205,12 @@ fun MockCanvas.addCourse(isFavorite: Boolean = false, concluded: Boolean = false
         isFavorite = isFavorite
     )
     courses += course.id to course
+
+    // For now, give all courses tabs for assignments and quizzes
+    val assignmentsTab = Tab(position = 0,label = "Assignments",visibility = "public")
+    val quizzesTab = Tab(position = 1,label = "Quizzes",visibility = "public")
+    courseTabs += course.id to listOf(assignmentsTab,quizzesTab)
+
     return course
 }
 
@@ -273,6 +282,6 @@ fun MockCanvas.addUser(): User {
     return user
 }
 
-fun MockCanvas.addAnnouncement() : DiscussionTopic {
-    val topic = DiscussionTopic()
-}
+//fun MockCanvas.addAnnouncement() : DiscussionTopic {
+//    val topic = DiscussionTopic()
+//}

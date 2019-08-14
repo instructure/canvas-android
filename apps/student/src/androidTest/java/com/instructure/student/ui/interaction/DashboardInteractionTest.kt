@@ -33,8 +33,7 @@ import org.junit.After
 import org.junit.Before
 import androidx.test.espresso.IdlingResource
 import androidx.test.espresso.idling.CountingIdlingResource
-
-
+import junit.framework.TestCase.assertNotNull
 
 
 class DashboardInteractionTest : StudentTest() {
@@ -157,7 +156,14 @@ class DashboardInteractionTest : StudentTest() {
         val data = getToDashboard(courseCount = 1, favoriteCourseCount = 1)
         val course = data.courses.values.first()
         dashboardPage.selectCourse(course)
-        //NEED ANOTHER PR TO be merged
+
+        courseBrowserPage.assertPageObjects()
+        courseBrowserPage.assertTitleCorrect(course)
+        var tabs = data.courseTabs[course.id]
+        assertNotNull("Expected course tabs to be populated", tabs)
+        for(tab in tabs!!) {
+            courseBrowserPage.assertTabPresent(tab)
+        }
     }
 
     @Stub
