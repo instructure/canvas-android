@@ -28,6 +28,8 @@ import android.widget.TextView
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.NumberHelper
+import com.instructure.canvasapi2.utils.isValid
+import com.instructure.canvasapi2.utils.validOrNull
 import com.instructure.pandautils.utils.ColorUtils
 import com.instructure.pandautils.utils.getContentDescriptionForMinusGradeString
 import com.instructure.student.R
@@ -73,22 +75,60 @@ open class BaseBinder {
             return NumberHelper.formatDecimal(points_possible, 2, true)
         }
 
-        fun getGrade(submission: Submission?, possiblePoints: Double, context: Context): String? {
+        fun getGrade(assignment: Assignment, submission: Submission?, context: Context): Pair<String?, String?> {
+            val possiblePoints = assignment.pointsPossible
+            val pointsPossibleText = getPointsPossible(possiblePoints)
+
             // No submission
             if (submission == null) {
                 return if (possiblePoints > 0) {
-                    NO_GRADE_INDICATOR + "/" + getPointsPossible(possiblePoints)
+                    context.getString(
+                        R.string.gradeFormatScoreOutOfPointsPossible,
+                        NO_GRADE_INDICATOR,
+                        pointsPossibleText
+                    ) to context.getString(R.string.outOfPointsFormatted, pointsPossibleText)
                 } else {
-                    NO_GRADE_INDICATOR
+                    NO_GRADE_INDICATOR to ""
                 }
             }
 
             // Excused
             if (submission.excused) {
-                return context.getString(R.string.excused) + "/" + getPointsPossible(possiblePoints)
+                return context.getString(
+                    R.string.gradeFormatScoreOutOfPointsPossible,
+                    context.getString(R.string.excused),
+                    pointsPossibleText
+                ) to context.getString(
+                    R.string.contentDescriptionScoreOutOfPointsPossible,
+                    context.getString(R.string.gradeExcused),
+                    pointsPossibleText
+                )
             }
 
-            val grade = submission.grade ?: return submission.grade
+            val grade = submission.grade ?: return null to null
+            val gradeContentDescription = getContentDescriptionForMinusGradeString(grade, context).validOrNull() ?: grade
+
+            val gradingType = Assignment.getGradingTypeFromAPIString(assignment.gradingType.orEmpty())
+
+            /*
+             * For letter grade or GPA scale grading types, format grade text as "score / pointsPossible (grade)" to
+             * more closely match web, e.g. "15 / 20 (2.0)" or "80 / 100 (B-)".
+             */
+            if (gradingType == Assignment.GradingType.LETTER_GRADE || gradingType == Assignment.GradingType.GPA_SCALE) {
+                val scoreText = NumberHelper.formatDecimal(submission.score, 2, true)
+                val possiblePointsText = NumberHelper.formatDecimal(possiblePoints, 2, true)
+                return context.getString(
+                    R.string.formattedScoreWithPointsPossibleAndGrade,
+                    scoreText,
+                    possiblePointsText,
+                    grade
+                ) to context.getString(
+                    R.string.contentDescriptionScoreWithPointsPossibleAndGrade,
+                    scoreText,
+                    possiblePointsText,
+                    gradeContentDescription
+                )
+            }
 
             // Numeric grade
             if (StringUtilities.isStringNumeric(submission.grade!!, true)) {
@@ -98,21 +138,23 @@ open class BaseBinder {
                     '.' in grade -> grade.take(grade.lastIndexOf('.') + 3)
                     else -> grade
                 }
-                return formattedGrade + "/" + getPointsPossible(possiblePoints)
+                return context.getString(
+                    R.string.gradeFormatScoreOutOfPointsPossible,
+                    formattedGrade,
+                    pointsPossibleText
+                ) to context.getString(
+                    R.string.contentDescriptionScoreOutOfPointsPossible,
+                    formattedGrade,
+                    pointsPossibleText
+                )
             }
 
             // Complete/incomplete
             return when(grade) {
-                "complete" -> return context.getString(R.string.gradeComplete)
-                "incomplete" -> return context.getString(R.string.gradeIncomplete)
-                else -> grade
+                "complete" -> return context.getString(R.string.gradeComplete) to null
+                "incomplete" -> return context.getString(R.string.gradeIncomplete) to null
+                else -> grade to gradeContentDescription
             }
-        }
-
-        private fun hasGrade(submission: Submission?): Boolean {
-            return if (submission != null) {
-                !TextUtils.isEmpty(submission.grade)
-            } else false
         }
 
         fun setupGradeText(context: Context?, textView: TextView?, assignment: Assignment?, submission: Submission?, color: Int) {
@@ -120,20 +162,13 @@ open class BaseBinder {
                 return
             }
 
-            val hasGrade = hasGrade(submission)
-            val grade = getGrade(submission, assignment.pointsPossible, context)
+            val hasGrade = submission.grade.isValid()
+            val (grade, contentDescription) = getGrade(assignment, submission, context)
             if (hasGrade) {
                 textView.text = grade
+                textView.contentDescription = contentDescription ?: grade
                 textView.setTextAppearance(context, R.style.TextStyle_Grade)
                 textView.setBackgroundDrawable(createGradeIndicatorBackground(context, color))
-                // Set accessibility text
-                val outOf = context.resources.getString(R.string.outOf)
-                val a11yGradeString = getContentDescriptionForMinusGradeString(grade ?: "", context)
-                if (a11yGradeString.isNotEmpty()) {
-                    textView.contentDescription = a11yGradeString
-                } else {
-                    textView.contentDescription = grade?.replace("/", " $outOf ")
-                }
             } else {
                 textView.text = grade
                 textView.setTextAppearance(context, R.style.TextStyle_NoGrade)
