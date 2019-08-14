@@ -22,14 +22,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.crashlytics.android.Crashlytics
 import com.instructure.interactions.FragmentInteractions
 import com.instructure.interactions.Navigation
+import com.instructure.student.BuildConfig
 import com.instructure.student.mobius.common.*
 import com.spotify.mobius.*
 import com.spotify.mobius.android.MobiusAndroid
 import com.spotify.mobius.android.runners.MainThreadWorkRunner
 import com.spotify.mobius.functions.Consumer
 import kotlinx.android.extensions.LayoutContainer
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 abstract class MobiusFragment<MODEL, EVENT, EFFECT, VIEW : MobiusView<VIEW_STATE, EVENT>, VIEW_STATE> : Fragment(), FragmentInteractions {
     var overrideInitModel: MODEL? = null
@@ -89,6 +94,7 @@ abstract class MobiusFragment<MODEL, EVENT, EFFECT, VIEW : MobiusView<VIEW_STATE
         loop = Mobius.loop(update, effectHandler)
             .effectRunner { MainThreadWorkRunner.create() }
             .eventSources(globalEventSource, *eventSources.toTypedArray())
+            .logger(MobiusExceptionLogger())
             .init(update::init)
         controller = MobiusAndroid.controller(loop, overrideInitModel ?: makeInitModel())
     }
@@ -195,9 +201,11 @@ abstract class EffectHandler<VIEW, EVENT, EFFECT> : CoroutineConnection<EFFECT>(
 
     protected var consumer = ConsumerQueueWrapper<EVENT>()
 
+    private val connectionWrapper by lazy { ExceptionLoggerConnectionWrapper(this) }
+
     override fun connect(output: Consumer<EVENT>): Connection<EFFECT> {
         consumer.attach(output)
-        return this
+        return connectionWrapper
     }
 
     override fun dispose() {
@@ -212,5 +220,29 @@ abstract class EffectHandler<VIEW, EVENT, EFFECT> : CoroutineConnection<EFFECT>(
 
     fun logEvent(eventName: String) {
         // TODO
+    }
+
+    /**
+     * Catches exceptions in the [accept] function of the provided [connection] and logs them to Crashlytics.
+     * For debug builds the exception will be logged locally and then thrown.
+     */
+    private class ExceptionLoggerConnectionWrapper<T>(private val connection: Connection<T>) : Connection<T> {
+        override fun accept(value: T) {
+            try {
+                connection.accept(value)
+            } catch (e: Throwable) {
+                if (BuildConfig.DEBUG) {
+                    e.printStackTrace()
+                    // Must throw as a separate message, otherwise Mobius might silently consume the exception
+                    GlobalScope.launch(Dispatchers.Main) { throw e }
+                } else {
+                    Crashlytics.logException(e)
+                }
+            }
+        }
+
+        override fun dispose() {
+            connection.dispose()
+        }
     }
 }
