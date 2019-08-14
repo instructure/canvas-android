@@ -421,7 +421,7 @@ class SubmissionDetailsUpdateTest : Assert() {
         verifyGetSubmissionContentType(
             assignment,
             submission.copy(mediaComment = null, submissionType = Assignment.SubmissionType.MEDIA_RECORDING.apiString),
-            SubmissionDetailsContentType.UnsupportedContent
+            SubmissionDetailsContentType.UnsupportedContent(assignment.id)
         )
     }
 
@@ -482,7 +482,7 @@ class SubmissionDetailsUpdateTest : Assert() {
         verifyGetSubmissionContentType(
             assignment,
             submission.copy(submissionType = "BROKEN_TYPE"),
-            SubmissionDetailsContentType.UnsupportedContent
+            SubmissionDetailsContentType.UnsupportedContent(assignment.id)
         )
     }
 
@@ -657,7 +657,7 @@ class SubmissionDetailsUpdateTest : Assert() {
 
     @Test
     fun `ONLINE_UPLOAD with image type results in SubmissionDetailsContentType of ImageContent`() {
-        val attachment = Attachment(contentType = "image", url = url)
+        val attachment = Attachment(contentType = "image", url = url, displayName = "Image.jpg")
 
         verifyGetSubmissionContentType(
             assignment,
@@ -665,13 +665,13 @@ class SubmissionDetailsUpdateTest : Assert() {
                 attachments = arrayListOf(attachment),
                 submissionType = Assignment.SubmissionType.ONLINE_UPLOAD.apiString
             ),
-            SubmissionDetailsContentType.ImageContent(url, attachment.contentType!!)
+            SubmissionDetailsContentType.ImageContent("Image.jpg", url, attachment.contentType!!)
         )
     }
 
     @Test
     fun `ONLINE_UPLOAD with image type and no url results in SubmissionDetailsContentType of ImageContent`() {
-        val attachment = Attachment(contentType = "image", url = null)
+        val attachment = Attachment(contentType = "image", url = null, displayName = "Image.jpg")
 
         verifyGetSubmissionContentType(
             assignment,
@@ -679,7 +679,7 @@ class SubmissionDetailsUpdateTest : Assert() {
                 attachments = arrayListOf(attachment),
                 submissionType = Assignment.SubmissionType.ONLINE_UPLOAD.apiString
             ),
-            SubmissionDetailsContentType.ImageContent("", attachment.contentType!!)
+            SubmissionDetailsContentType.ImageContent("Image.jpg", "", attachment.contentType!!)
         )
     }
 

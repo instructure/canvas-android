@@ -17,16 +17,14 @@
 
 package com.instructure.student.mobius.assignmentDetails.submissionDetails.ui
 
-import android.annotation.SuppressLint
 import android.app.Activity
+import android.net.Uri
 import android.os.Bundle
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -34,6 +32,10 @@ import androidx.fragment.app.FragmentManager
 import com.google.android.material.tabs.TabLayout
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
+import com.instructure.canvasapi2.utils.AnalyticsParamConstants
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouteContext
 import com.instructure.pandautils.activities.BaseViewMediaActivity
@@ -41,10 +43,13 @@ import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.RecordingMediaType
 import com.instructure.student.R
 import com.instructure.student.fragment.LTIWebViewFragment
+import com.instructure.student.fragment.ViewUnsupportedFileFragment
+import com.instructure.student.fragment.ViewImageFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsContentType
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsEvent
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.*
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyContentFragment
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionMessageFragment
 import com.instructure.student.mobius.common.ui.MobiusView
 import com.instructure.student.router.RouteMatcher
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
@@ -252,9 +257,31 @@ class SubmissionDetailsView(
             is SubmissionDetailsContentType.PdfContent -> PdfSubmissionViewFragment.newInstance(type.url)
             is SubmissionDetailsContentType.ExternalToolContent -> LTIWebViewFragment.newInstance(LTIWebViewFragment.makeRoute(type.canvasContext, type.url, hideToolbar = true))!!
             is SubmissionDetailsContentType.MediaContent -> MediaSubmissionViewFragment.newInstance(type)
-            else -> PlaceholderFragment().apply {
-                typeName = type::class.java.simpleName
-                typeContents = type.toString()
+            is SubmissionDetailsContentType.OtherAttachmentContent -> ViewUnsupportedFileFragment.newInstance(
+                uri = Uri.parse(type.attachment.url),
+                displayName = type.attachment.displayName ?: "",
+                contentType = type.attachment.contentType ?: "",
+                previewUri = type.attachment.previewUrl?.let { Uri.parse(it) },
+                fallbackIcon = R.drawable.vd_attachment
+            )
+            is SubmissionDetailsContentType.ImageContent -> ViewImageFragment.newInstance(type.title, Uri.parse(type.url), type.contentType, false)
+            SubmissionDetailsContentType.NoneContent -> SubmissionMessageFragment.newInstance(title = R.string.noOnlineSubmissions,  subtitle = R.string.noneContentMessage)
+            SubmissionDetailsContentType.OnPaperContent -> SubmissionMessageFragment.newInstance(title = R.string.noOnlineSubmissions, subtitle = R.string.onPaperContentMessage)
+            is SubmissionDetailsContentType.UnsupportedContent -> {
+                // Users shouldn't get here, but we'll handle the case and send up some analytics if they do
+                val bundle = Bundle().apply {
+                    putString(AnalyticsParamConstants.DOMAIN_PARAM, ApiPrefs.fullDomain)
+                    putString(AnalyticsParamConstants.USER_CONTEXT_ID, ApiPrefs.user?.contextId)
+                    putString(AnalyticsParamConstants.CANVAS_CONTEXT_ID, canvasContext.contextId)
+                    putLong(AnalyticsParamConstants.ASSIGNMENT_ID, type.assignmentId)
+                }
+
+                Analytics.logEvent(AnalyticsEventConstants.SUBMISSIONS, bundle)
+
+                SubmissionMessageFragment.newInstance(
+                    title = R.string.noOnlineSubmissions,
+                    subtitle = R.string.unsupportedContentMessage
+                )
             }
         }
     }
@@ -262,23 +289,4 @@ class SubmissionDetailsView(
     companion object {
         private const val ANCHOR_POINT = 0.5f
     }
-}
-
-
-class PlaceholderFragment : Fragment() {
-
-    var typeName: String = ""
-    var typeContents: String = ""
-
-    @SuppressLint("SetTextI18n")
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = TextView(context).apply {
-            text = "PLACEHOLDER\n$typeName\n\n$typeContents"
-            gravity = Gravity.CENTER
-        }
-        view.layoutParams =
-            ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-        return view
-    }
-
 }

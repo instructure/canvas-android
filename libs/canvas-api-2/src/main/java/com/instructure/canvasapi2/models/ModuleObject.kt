@@ -37,7 +37,7 @@ data class ModuleObject(
     val state: String? = null,
     @SerializedName("completed_at")
     val completedAt: String? = null,
-    val published: Boolean = false,
+    val published: Boolean? = null,
     @SerializedName("items_count")
     val itemCount: Int = 0,
     @SerializedName("items_url")

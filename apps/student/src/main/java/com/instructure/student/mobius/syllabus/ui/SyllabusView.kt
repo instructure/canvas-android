@@ -26,13 +26,11 @@ import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
-import com.instructure.student.fragment.AssignmentFragment
 import com.instructure.student.fragment.CalendarEventFragment
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.mobius.common.ui.MobiusView
 import com.instructure.student.mobius.syllabus.SyllabusEvent
 import com.instructure.student.router.RouteMatcher
-import com.instructure.student.util.FeatureFlagPrefs
 import com.instructure.student.view.EmptyView
 import com.spotify.mobius.functions.Consumer
 import kotlinx.android.synthetic.main.fragment_syllabus.*
@@ -130,11 +128,7 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
     }
 
     fun showAssignmentView(assignment: Assignment, canvasContext: CanvasContext) {
-        if (FeatureFlagPrefs.newAssignmentPage) {
-            RouteMatcher.route(context, AssignmentDetailsFragment.makeRoute(canvasContext, assignment.id))
-        } else {
-            RouteMatcher.route(context, AssignmentFragment.makeRoute(canvasContext, assignment))
-        }
+        RouteMatcher.route(context, AssignmentDetailsFragment.makeRoute(canvasContext, assignment.id))
     }
 
     fun showScheduleItemView(scheduleItem: ScheduleItem, canvasContext: CanvasContext) {

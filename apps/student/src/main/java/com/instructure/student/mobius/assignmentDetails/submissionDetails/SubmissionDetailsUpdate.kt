@@ -166,7 +166,7 @@ class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDet
                             displayName = it.displayName,
                             thumbnailUrl = null
                     )
-                } ?: SubmissionDetailsContentType.UnsupportedContent
+                } ?: SubmissionDetailsContentType.UnsupportedContent(assignment?.id ?: -1)
 
                 // File uploads
                 Assignment.SubmissionType.ONLINE_UPLOAD -> getAttachmentContent(submission.attachments[0])
@@ -181,7 +181,7 @@ class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDet
 
                 // Discussion Submission
                 Assignment.SubmissionType.DISCUSSION_TOPIC -> SubmissionDetailsContentType.DiscussionContent(submission.previewUrl)
-                else -> SubmissionDetailsContentType.UnsupportedContent
+                else -> SubmissionDetailsContentType.UnsupportedContent(assignment?.id ?: -1)
             }
         }
     }
@@ -210,7 +210,11 @@ class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDet
                     displayName = displayName
                 )
             }
-            type.startsWith("image") -> SubmissionDetailsContentType.ImageContent(attachment.url ?: "", attachment.contentType!!)
+            type.startsWith("image") -> SubmissionDetailsContentType.ImageContent(
+                title = attachment.displayName ?: attachment.filename ?: "",
+                url = attachment.url ?: "",
+                contentType = attachment.contentType!!
+            )
             else -> SubmissionDetailsContentType.OtherAttachmentContent(attachment)
         }
     }

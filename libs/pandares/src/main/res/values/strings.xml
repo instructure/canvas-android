@@ -88,6 +88,9 @@
     <string name="submissionDetailsAssignmentLocked">Assignment Locked</string>
     <string name="webPreview">Preview of the entered URL</string>
     <string name="websiteUrl">Website URL</string>
+    <string name="noneContentMessage">This assignment does not allow online submissions</string>
+    <string name="onPaperContentMessage">This assignment does not allow online submissions</string>
+    <string name="noOnlineSubmissions">No Online Submissions</string>
 
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Out of %s points</string>
@@ -118,7 +121,6 @@
     <string name="commentSubmissionTypeMediaFile">Media File</string>
     <string name="commentSubmissionTypeAudio">Audio</string>
     <string name="commentSubmissionTypeVideo">Video</string>
-    <string name="submissionCommentSubmittedFiles">Submitted files:</string>
 
     <!-- Profile Fragment Strings -->
     <string name="canvasVersionNum">Version:</string>
@@ -136,7 +138,6 @@
     <string name="options">Options</string>
 
     <string name="discussionAttachment">Attach a file</string>
-    <string name="discussionUpload">Upload video or audio</string>
     <string name="discussionPostEditing">Edit</string>
 
     <!--Multiple User Sign in -->
@@ -173,35 +174,17 @@
 
 
     <!-- Assignments -->
-    <string name="assignmentDue">Due</string>
-    <string name="assignmentDueColon">Due: </string>
-    <string name="assignmentLastSubmission">Last Submission</string>
-    <string name="assignmentNoSubmission">None</string>
-    <string name="assignmentTabDetails">Details</string>
-    <string name="assignmentTabSubmission">Submissions</string>
-    <string name="assignmentTabGrade">Grade</string>
     <string name="assignmentLocked">Locked</string>
     <string name="assignments">Assignments</string>
-    <string name="freeFormRubricPoints" formatted="false">%s / %s </string>
-    <string name="noRubric">There is no rubric for this assignment.</string>
     <string name="noDescription">There is no description for this assignment</string>
     <string name="noAssignmentsInGroup">No Assignments in this group</string>
     <string name="excusedAssignment">This assignment is excused and will not be considered in the total calculation</string>
-    <string name="droppedAssignment">This assignment is dropped and will not be considered in the total calculation</string>
     <string name="excused">EX</string>
-    <string name="mutedText">Grades are unavailable because the instructor is working on them.</string>
-    <string name="rubricRangePointsText" formatted="false">&#160;to &gt; %s pts</string>
-    <string name="contentDescriptionRubricRangePointsText" formatted="false">%s &#160;to &gt; %s points</string>
 
     <!-- Assignment editing -->
     <string name="points">Points\u0020</string>
-    <string name="assignmentGroup">Assignment Group:\u0020</string>
-    <string name="gradingType">Grading Type:\u0020</string>
-    <string name="submissionType">Submission Type:\u0020</string>
-    <string name="editAssignment">Edit Assignment</string>
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
-    <string name="sendNotification">Notify users that this content has changed</string>
 
     <!-- Discussions -->
     <string name="forbidden">Replies are only visible to those who have posted at least one reply.</string>
@@ -264,7 +247,6 @@
         <item quantity="one">%d needs grading</item>
         <item quantity="other">%d need grading</item>
     </plurals>
-    <string name="myFiles">Files</string>
     <string name="createAFolder">Create A Folder</string>
     <string name="createFolder">Create Folder</string>
     <string name="createAFile">Create A File</string>
@@ -306,7 +288,6 @@
     <string name="deleteEvent">Delete Event</string>
     <string name="selected">Selected</string>
     <string name="errorSendingMessage">An error occurred trying to send your message. Please try again.</string>
-    <string name="errorPostingComment">An error occurred trying to post your submission comment. Please try again.</string>
     <string name="deletedConversation">That conversation has been deleted.</string>
     <string name="uploadAvatarFailMsg">New avatar picture failed to upload</string>
     <string name="editPhoto">Edit Photo</string>
@@ -339,8 +320,6 @@
     <string name="openAlternate">Open with alternate app</string>
     <string name="opening">Opening File&#8230;</string>
     <string name="download">Download</string>
-    <string name="hideExtras">Hide Extras</string>
-    <string name="showExtras">Show Extras</string>
     <string name="messageAttachments">Message Attachments</string>
     <string name="discussionAttachmentLabel">Attachment</string>
     <string name="attachmentIcon">Attachment Icon</string>
@@ -433,12 +412,7 @@
 
     <!-- Notifications -->
     <string name="deleted">Deleted</string>
-    <string name="gradedDiscussion">Graded Discussion.</string>
-    <string name="pointsPossible">Points Possible.</string>
-    <string name="pointsPossibleNoPeriod">Points Possible</string>
 
-    <string name="deletedEntryNoChildren">This deleted discussion entry has no replies.</string>
-    <string name="sideCommentEntry">In this type of discussion, you can\'t comment on any entry on this level.</string>
     <string name="contentDescriptionFiles">File icon</string>
 
     <string name="loadingCanvas">Loading Canvas Content&#8230;</string>
@@ -462,11 +436,7 @@
     <string name="emptyId">The ID cannot be blank</string>
 
     <string name="goToQuiz">Go To Quiz</string>
-    <string name="goToExternalTool">Go To External Tool</string>
 
-    <string name="pastDueDate">Past Due Date</string>
-
-    <string name="goToDiscussion">Go To Discussion</string>
     <string name="quizzes">Quizzes</string>
 
     <string name="lastDiscussionPost">Last post</string>
@@ -520,7 +490,6 @@
     <string name="lockedFileDesc">This file is part of the module %s and hasn\'t been unlocked yet.</string>
     <string name="lockedQuizDesc">This quiz is part of the module %s and hasn\'t been unlocked yet.</string>
     <string name="lockedDiscussionDesc">This discussion is part of the module %s and hasn\'t been unlocked yet.</string>
-    <string name="lockedAssignmentDescLine2">Visit the course modules page for information on how to unlock this content.</string>
     <string name="mustComplete">You must first complete:</string>
     <string name="unlockedAt">It will be unlocked at:</string>
     <string name="goToModules">Go To Modules</string>
@@ -542,20 +511,10 @@
     <!-- New Submission Strings -->
     <string name="textEntry">Text Entry</string>
     <string name="onlineURL">Online URL</string>
-    <string name="enterTextEntry">Enter Text Entry</string>
-    <string name="fileUpload"> File Upload</string>
     <string name="oneFileOnly">This submission only accepts one file upload</string>
     <string name="websiteEntry">Add Website Entry</string>
     <string name="mediaRecordingEntry">Media Recordings</string>
-
-
     <string name="submit">Submit</string>
-    <string name="blankSubmission">The submission cannot be blank.</string>
-    <string name="errorPostingSubmission">There was an error posting the submission.</string>
-    <string name="successPostingSubmission">Successfully posted the submission.</string>
-
-    <string name="exampleSubmissionURL">http://www.example.com</string>
-
 
 
     <!-- DataLoss Fragment Strings -->
@@ -571,21 +530,8 @@
 
     <!-- Submission Details Strings -->
     <string name="next">Next</string>
-    <string name="addSubmission">Turn in</string>
-    <string name="addAnotherSubmission">Turn in again</string>
     <string name="turnedIn">Turned In:&#160;</string>
     <string name="addComment">Add a comment&#8230;</string>
-    <string name="addCommentNoEllipsis">Add a comment</string>
-    <string name="subTypeOnlineText">Online Text Entry</string>
-    <string name="subTypeFileUpload">Online eFile Upload</string>
-    <string name="subTypeOnlineURL">Website URL</string>
-    <string name="subTypeOnlineQuiz">Online Quiz</string>
-    <string name="subTypeMediaRecording">Media Recording</string>
-    <string name="sub_type_lti_launch">LTI Launch</string>
-    <string name="subTypeDiscussionTopic">Discussion</string>
-    <string name="turnInByHand">You must turn this assignment in by hand</string>
-    <string name="noSubRequired">No submission required</string>
-    <string name="noTurnInOnMobile">Mobile submission unsupported</string>
 
     <string name="home">Home</string>
     <string name="Notifications">Notifications</string>
@@ -616,7 +562,6 @@
     <string name="clickToViewSubmission">A snapshot of the website was taken when you turned it in. Tap and hold the image below to open or download the full image.</string>
     <string name="urlSubmissionNoPreview">This submission was a URL to an external page. Keep in mind that this page may have changed since the submission originally occurred.</string>
     <string name="contentDescriptionPreviewImage">A preview of the submitted url</string>
-    <string name="itemStillProcessing">This item is still processing on the server. Please try again.</string>
 
 
     <string name="isNotSupportedFeature">%1$s are not supported.</string>
@@ -635,7 +580,6 @@
     <string name="panda_fact_string">Panda Fact:&#160;</string>
     <string name="remove">Remove</string>
     <string name="founders">Founders</string>
-    <string name="image">Image</string>
 
     <string name="EULA">EULA</string>
     <string name="privacyPolicy">Privacy Policy</string>
@@ -664,8 +608,6 @@
     <string name="widgetMinimumStyle">Hide details on widget</string>
     <string name="light">Light</string>
     <string name="dark">Dark</string>
-
-    <string name="invalidExternal">This external tool is either expired or configured incorrectly.</string>
 
     <!-- Help dialog strings -->
     <string name="askInstructor">Ask Your Instructor a Question</string>
@@ -991,7 +933,6 @@
     <string name="totalPoints">%s pts</string>
     <string name="totalPointsText">Total Points</string>
     <string name="contentDescriptionPoints">%s points</string>
-    <string name="contentDescriptionRubricRangeGrade">%1$s out of %2$s points</string>
     <string name="score">Score</string>
     <string name="rangedRubricTotal" formatted="false">%s / %s pts</string>
     <string name="seeAll">See All</string>
@@ -1019,8 +960,6 @@
     <string name="launch_link_in_external_browser">Launch link in external browser</string>
     <string name="ltiLaunchFailure">This LTI tool could not be loaded at this time.</string>
     <string name="urlSubmission">URL Submission</string>
-
-    <string name="assignmentDeletedError">This assignment is no longer available.</string>
 
     <string name="homePageIdForNotifications">Recent Activity</string>
     <string name="homePageIdForModules">Modules</string>
@@ -1064,7 +1003,6 @@
     <string name="unableToViewInBrowser">We are unable to find an external app to view this LTI tool.</string>
 
     <string name="commentUpload">Comment Upload</string>
-    <string name="unableToUploadMediaComment">To send a media comment, send or delete your unsent text comment.</string>
 
     <string name="frontPage">Front Page</string>
     <string name="editPage">Edit Page</string>
@@ -1117,5 +1055,11 @@
     <string name="viewDiscussion">View Discussion</string>
     <string name="lockedModule">This assignment is locked by the module \"%1$s\".</string>
     <string name="chooseMediaFile">Choose Media File</string>
+    <string name="discussions_unknown_author">Unknown Author</string>
+    <string name="discussions_unknown_date">Unknown Date</string>
+    <string name="a11y_gradeLetterMinusContentDescription">%s. minus</string>
+    <string name="a11y_letterGrade">%s.</string>
+    <string name="a11y_gradeCellContentDescription">%s %s</string>
+    <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
 
 </resources>

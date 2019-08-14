@@ -899,6 +899,7 @@
     <string name="allSections">Alla sektioner</string>
 
     <string name="gauge">Mätare</string>
+    <string name="arc">Cirkelbåge</string>
     <string name="ltiLaunchFailure">Det här LTI-verktyget kunde inte laddas just nu.</string>
     <string name="downloading">Laddar ner...</string>
 

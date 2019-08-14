@@ -568,8 +568,8 @@ class UploadFilesDialog : AppCompatDialogFragment() {
 
     companion object {
         // Request codes, handled in Activity.onActivityResults(), activity required to implement EventBus in onActivityResults()
-        const val CAMERA_PIC_REQUEST = 4000
-        const val PICK_IMAGE_GALLERY = 4001
+        const val CAMERA_PIC_REQUEST = RequestCodes.CAMERA_PIC_REQUEST
+        const val PICK_IMAGE_GALLERY = RequestCodes.PICK_IMAGE_GALLERY
         const val PICK_FILE_FROM_DEVICE = 7000
 
         const val EVENT_DIALOG_CANCELED = 1

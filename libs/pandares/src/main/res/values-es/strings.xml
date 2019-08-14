@@ -52,11 +52,16 @@
     <string name="allowedFileTypes">Tipos de archivos habilitados</string>
     <string name="resubmitAssignment">Volver a presentar la tarea</string>
 
+    <string name="launchExternalTool">Iniciar la herramienta externa</string>
+
     <string name="preview">Vista previa</string>
-    <!--    Student Submission-->
+    <!-- Student Submission -->
     <string name="submissionUrlClearTextError">No hay vistas previas disponibles para las URL que usan \'http://\'</string>
     <string name="submissionUrlNotAUrlError">Ingrese una URL válida</string>
     <string name="enterAUrlHereForYourSubmission">Ingrese una URL aquí para la presentación</string>
+    <string name="addFileFabContentDesc">Mostrar opciones de Agregar archivo</string>
+    <string name="recordAudio">Grabar audio</string>
+
     <!-- Student Submission -->
     <string name="submissionWrite">Escriba&#8230;</string>
     <!-- Student Submission Details -->
@@ -83,10 +88,10 @@
     <string name="rubricCustomScore">Puntaje personalizado</string>
     <string name="rubricEmptyMessage">No hay ninguna rúbrica para esta tarea</string>
     <string name="rubricViewLongDescription">Ver una descripción detallada</string>
-    <!--Profile Fragment Strings -->
+    <!-- Profile Fragment Strings -->
     <string name="canvasVersionNum">Versión:</string>
 
-    <!--Content Descriptions-->
+    <!-- Content Descriptions -->
     <string name="canvasLogo">Logotipo de Canvas</string>
     <string name="enterURL">Ingrese su URL de Canvas:</string>
     <string name="exampleURLSimple">myschool.instructure.com</string>
@@ -119,7 +124,7 @@
     <string name="bookmarkUpdated">Favorito actualizado</string>
     <string name="no_bookmarks">¡Crear un favorito, luego véalo aquí!</string>
 
-    <!--Date strings-->
+    <!-- Date strings -->
     <string name="today">Hoy</string>
     <string name="past">Pasado</string>
     <string name="noDate">Sin fecha</string>
@@ -134,7 +139,7 @@
     <string name="submissionDetailsDueAt">Fecha límite el %1$s a las %2$s</string> <!--Ex: Due April 2 at 11:59pm-->
     <string name="lowercaseAM">a. m.</string>
     <string name="lowercasePM">p. m.</string>
-    <!--Assignments-->
+    <!-- Assignments -->
     <string name="assignmentDue">Fecha límite</string>
     <string name="assignmentDueColon">Fecha límite: </string>
     <string name="assignmentLastSubmission">Última presentación</string>
@@ -165,10 +170,10 @@
     <string name="cancel">Cancelar</string>
     <string name="sendNotification">Notificar a los usuarios que este contenido ha cambiado</string>
 
-    <!--Discussions-->
+    <!-- Discussions -->
     <string name="forbidden">Las respuestas son visibles solamente para aquellos que han publicado al menos una respuesta.</string>
 
-    <!--Events-->
+    <!-- Events -->
     <string name="Starts">Comienza</string>
     <string name="Ends">Finaliza</string>
     <string name="allDayEvent">Evento de todo el día</string>
@@ -392,7 +397,7 @@
     <string name="entireGroupSelected">Todo este grupo ya ha sido seleccionado.</string>
     <string name="noUsersInGroup">No hay usuarios en este grupo</string>
 
-    <!--Notifications-->
+    <!-- Notifications -->
     <string name="deleted">Eliminado</string>
     <string name="gradedDiscussion">Foro calificado.</string>
     <string name="pointsPossible">Puntos posibles.</string>
@@ -496,11 +501,11 @@
     <!-- LockInfoHTMLHelper Strings -->
     <string name="lockedAssignmentNotModule">Esta tarea está bloqueada.</string>
 
-    <!--New Course Layout Strings -->
+    <!-- New Course Layout Strings -->
     <string name="myCourses">Mis cursos</string>
 
 
-    <!--New Submission Strings -->
+    <!-- New Submission Strings -->
     <string name="textEntry">Entrada de texto</string>
     <string name="onlineURL">URL en línea</string>
     <string name="enterTextEntry">Ingrese el texto de entrada</string>
@@ -519,18 +524,18 @@
 
 
 
-    <!--DataLoss Fragment Strings -->
+    <!-- DataLoss Fragment Strings -->
     <string name="unsavedProgress">Progreso no guardado</string>
     <string name="informationLost">La información no guardada se perderá. ¿Desea continuar?</string>
     <string name="slash"> / </string>
 
-    <!--Delete Notification Strings -->
+    <!-- Delete Notification Strings -->
     <string name="confirm">Confirmar</string>
 
-    <!--Dismiss To do String-->
+    <!-- Dismiss To do String -->
     <string name="markAsDone">Marcar como hecho</string>
 
-    <!--Submission Details Strings -->
+    <!-- Submission Details Strings -->
     <string name="next">Siguiente</string>
     <string name="addSubmission">Entregar</string>
     <string name="addAnotherSubmission">Entregar nuevamente</string>
@@ -613,7 +618,7 @@
     <string name="choose_answers_below">Elija sus respuestas a continuación</string>
 
 
-    <!--Widget Strings-->
+    <!-- Widget Strings -->
     <string name="todoWidgetTitle">Por hacer</string>
     <string name="gradesWidgetTitle">Calificaciones</string>
     <string name="notificationWidgetTitle">Notificaciones</string>
@@ -667,13 +672,13 @@
     <string name="search_course">curso cursos clase clases</string>
     <string name="search_grades">calificación calificaciones</string>
 
-    <!-- ShareFileOptions Dialog-->
+    <!-- ShareFileOptions Dialog -->
     <string name="uploadTo">Cargar a </string>
     <string name="uploadToCanvas">Cargar a Canvas</string>
     <string name="uploadMyFiles">Mis archivos</string>
     <string name="uploadCourseFiles">Archivos del curso</string>
     <string name="uploadToSubmissionComment">Cargar a los comentarios de la presentación</string>
-    <!-- ChangeLog Dialog-->
+    <!-- ChangeLog Dialog -->
     <string name="changelog">Historial de cambios</string>
 
     <string name="editUserName">Editar nombre de usuario</string>
@@ -686,7 +691,7 @@
     <string name="no_courses">Toque para añadir un curso</string>
     <string name="no_courses_available">No hay cursos aquí, ¡tómese el día libre!</string>
     <string name="no_courses_grades">Por favor, inscríbase en un curso para ver sus calificaciones</string>
-    <!--Navigation Drawer-->
+    <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">Abrir Drawer de navegación</string>
     <string name="navigation_drawer_close">Cerrar Drawer de navegación</string>
 
@@ -748,7 +753,7 @@
 
     <string name="no_data_connection">Por favor, compruebe su conexión de datos y vuelva a intentarlo.</string>
 
-    <!--Notification Preferences-->
+    <!-- Notification Preferences -->
     <string name="notification_primary_inbox_title">Notificación de Canvas</string>
     <string name="notification_channel_name_primary">Notificaciones generales de Canvas</string>
     <string name="notification_channel_description_primary">Se puede realizar una posterior configuración de las notificaciones dentro de la sección de Preferencias de notificaciones de Canvas.</string>
@@ -919,7 +924,7 @@
     <string name="groupNotFavorited">Grupo %s, no favorito.</string>
     <string name="accountGroup">Grupo de cuenta</string>
 
-    <!--Recents-->
+    <!-- Recents -->
     <string name="recents_empty">Desde la pantalla de personalización del curso, añadir un curso o grupo que desee ver aquí.</string>
 
     <string name="toolbar_close">Cerrar la barra de herramienta</string>
@@ -947,6 +952,7 @@
     <string name="select">Seleccionar</string>
     <string name="choice_position">Elección %d</string>
     <string name="updating_module_info">Actualización de la información del módulo&#8230;</string>
+    <string name="arc">Arc</string>
     <string name="pending_review">Revisión pendiente</string>
     <string name="totalPoints">%s ptos.</string>
     <string name="totalPointsText">Puntos totales</string>
@@ -961,9 +967,13 @@
     <string name="acceptCourseInvitation">Aceptar</string>
     <string name="declineCourseInvitation">Rechazar</string>
 
+    <string name="outOf">de</string>
     <!-- File Strings -->
     <string name="noFilesSubtextCourse">No hay archivos asociados con este curso.</string>
     <string name="noFilesSubtextGroup">No hay archivos asociados con este grupo.</string>
+    <string name="fileTypeNotSupported">Tipo de archivo no compatible</string>
+    <string name="fileTypeNotSupportedBody">Esta tarea solo permite ciertos tipos de archivos: %s</string>
+
     <array name="file_size_units">
         <item>B</item>
         <item>KB</item>
@@ -1042,4 +1052,23 @@
     <string name="addChildErrorMessage">Se produjo un error en el emparejamiento. Asegúrese de que su código de emparejamiento sea correcto y esté dentro del límite de tiempo de utilización.</string>
     <string name="gradeComplete">Completa</string>
     <string name="gradeIncomplete">Incompleta</string>
+    <!-- Floating Recording View Strings -->
+    <string name="recordingTimerDefault">00:00:00</string>
+    <string name="recordingTimerContentDescription">%1$d horas, %2$d minutos y %3$d segundos</string>
+    <string name="recordingTimerSpeechDivider">%1$s de %2$s</string>
+    <string name="replay">Repetir</string>
+    <string name="stop">Detener</string>
+    <string name="startRecordingAudio">Comenzar grabación de audio</string>
+    <string name="stopRecordingAudio">Detener grabación de audio</string>
+    <string name="startRecordingVideo">Comenzar grabación de video</string>
+    <string name="stopRecordingVideo">Detener grabación de video</string>
+    <string name="closeRecordingView">Cerrar vista de grabación</string>
+    <string name="deleteRecording">Eliminar grabación</string>
+    <string name="videoCommentReplay">Repetir comentario en video</string>
+    <string name="errorShowingVideoReplay">Hubo un error al intentar ver la repetición.</string>
+    <string name="errorSubmittingMediaComment">Hubo un error al intentar presentar su comentario de medios.</string>
+
+    <string name="addVideoComment">Agregar un comentario de video</string>
+    <string name="addAudioComment">Agregar un comentario de audio</string>
+
 </resources>

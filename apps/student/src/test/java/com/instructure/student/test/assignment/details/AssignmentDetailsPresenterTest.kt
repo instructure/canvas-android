@@ -19,19 +19,21 @@ package com.instructure.student.test.assignment.details
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.canvasapi2.utils.isRtl
 import com.instructure.canvasapi2.utils.toApiString
+import com.instructure.interactions.router.Route
+import com.instructure.interactions.router.RouterParams
 import com.instructure.student.R
 import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsModel
 import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsPresenter
+import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsViewState
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsVisibilities
-import com.instructure.canvasapi2.utils.isRtl
 import com.instructure.student.mobius.assignmentDetails.ui.DiscussionHeaderViewState
-import io.mockk.every
-import io.mockk.mockkStatic
-import io.mockk.unmockkStatic
+import io.mockk.*
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -232,6 +234,28 @@ class AssignmentDetailsPresenterTest : Assert() {
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
         assertEquals("Missing", state.submittedStateLabel)
+    }
+
+    @Test
+    fun `Uses correct label text for submitted status when submission is past due for an LTI assignment`() {
+        val calendar = Calendar.getInstance().apply { set(2000, 0, 31, 23, 59, 0) }
+
+        val submission = baseSubmission.copy(attempt = 0, workflowState = "unsubmitted")
+        val assignment = baseAssignment.copy(submission = submission, dueAt = calendar.time.toApiString(), submissionTypesRaw = listOf("basic_lti_launch"))
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
+        assertEquals("Not Submitted", state.submittedStateLabel)
+    }
+
+    @Test
+    fun `Uses correct label text for submitted status when submission is past due for an external assignment`() {
+        val calendar = Calendar.getInstance().apply { set(2000, 0, 31, 23, 59, 0) }
+
+        val submission = baseSubmission.copy(attempt = 0, workflowState = "unsubmitted")
+        val assignment = baseAssignment.copy(submission = submission, dueAt = calendar.time.toApiString(), submissionTypesRaw = listOf("external_tool"))
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
+        assertEquals("Not Submitted", state.submittedStateLabel)
     }
 
     @Test
@@ -516,18 +540,106 @@ class AssignmentDetailsPresenterTest : Assert() {
     }
 
     @Test
+    fun `Displays grade cell when grade is not empty and there is a failed submission`() {
+        val submission = com.instructure.student.Submission.Impl(
+            id = 123L,
+            submissionEntry = null,
+            lastActivityDate = OffsetDateTime.now(),
+            assignmentName = null,
+            assignmentId = baseAssignment.id,
+            canvasContext = CanvasContext.emptyCourseContext(0),
+            submissionType = "online_text_entry",
+            errorFlag = false,
+            assignmentGroupCategoryId = null,
+            userId = 0,
+            currentFile = 0,
+            fileCount = 0,
+            progress = null
+        )
+        val assignment = baseAssignment.copy(
+            submission = baseSubmission.copy(
+                enteredScore = 85.0,
+                enteredGrade = "85",
+                score = 85.0,
+                grade = "85"
+            )
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment), databaseSubmission = submission)
+        val actual = AssignmentDetailsPresenter.present(model, context).visibilities.grade
+        assertTrue(actual)
+    }
+
+    @Test
+    fun `Does not display submitted cell when grade is null and there is a failed submission`() {
+        val submission = com.instructure.student.Submission.Impl(
+            id = 123L,
+            submissionEntry = null,
+            lastActivityDate = OffsetDateTime.now(),
+            assignmentName = null,
+            assignmentId = baseAssignment.id,
+            canvasContext = CanvasContext.emptyCourseContext(0),
+            submissionType = "online_text_entry",
+            errorFlag = false,
+            assignmentGroupCategoryId = null,
+            userId = 0,
+            currentFile = 0,
+            fileCount = 0,
+            progress = null
+        )
+        val assignment = baseAssignment.copy(
+            submission = baseSubmission.copy(
+                workflowState = "submitted",
+                grade = null
+            )
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment), databaseSubmission = submission)
+        val actual = AssignmentDetailsPresenter.present(model, context).visibilities.grade
+        assertFalse(actual)
+    }
+
+    @Test
+    fun `Does not display empty cell when grade is empty and there is a failed submission`() {
+        val submission = com.instructure.student.Submission.Impl(
+            id = 123L,
+            submissionEntry = null,
+            lastActivityDate = OffsetDateTime.now(),
+            assignmentName = null,
+            assignmentId = baseAssignment.id,
+            canvasContext = CanvasContext.emptyCourseContext(0),
+            submissionType = "online_text_entry",
+            errorFlag = false,
+            assignmentGroupCategoryId = null,
+            userId = 0,
+            currentFile = 0,
+            fileCount = 0,
+            progress = null
+        )
+        val assignment = baseAssignment.copy(
+            submission = baseSubmission.copy(
+                workflowState = "unsubmitted"
+            )
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment), databaseSubmission = submission)
+        val actual = AssignmentDetailsPresenter.present(model, context).visibilities.grade
+        assertFalse(actual)
+    }
+
+    @Test
     fun `Displays upload in progress when database submission is not failed`() {
         val submission = com.instructure.student.Submission.Impl(
-            123L,
-            null,
-            OffsetDateTime.now(),
-            null,
-            baseAssignment.id,
-            null,
-            null,
-            false,
-            null,
-            null
+            id = 123L,
+            submissionEntry = null,
+            lastActivityDate = OffsetDateTime.now(),
+            assignmentName = null,
+            assignmentId = baseAssignment.id,
+            canvasContext = CanvasContext.emptyCourseContext(0),
+            submissionType = "online_text_entry",
+            errorFlag = false,
+            assignmentGroupCategoryId = null,
+            userId = 0,
+            currentFile = 0,
+            fileCount = 0,
+            progress = null
         )
         val model = baseModel.copy(
             assignmentResult = DataResult.Success(baseAssignment),
@@ -540,16 +652,19 @@ class AssignmentDetailsPresenterTest : Assert() {
     @Test
     fun `Displays failed submission when database submission is failed`() {
         val submission = com.instructure.student.Submission.Impl(
-            123L,
-            null,
-            OffsetDateTime.now(),
-            null,
-            baseAssignment.id,
-            null,
-            null,
-            true,
-            null,
-            null
+            id = 123L,
+            submissionEntry = null,
+            lastActivityDate = OffsetDateTime.now(),
+            assignmentName = null,
+            assignmentId = baseAssignment.id,
+            canvasContext = CanvasContext.emptyCourseContext(0),
+            submissionType = "online_text_entry",
+            errorFlag = true,
+            assignmentGroupCategoryId = null,
+            userId = 0,
+            currentFile = 0,
+            fileCount = 0,
+            progress = null
         )
         val model = baseModel.copy(
             assignmentResult = DataResult.Success(baseAssignment),
@@ -613,7 +728,39 @@ class AssignmentDetailsPresenterTest : Assert() {
 
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
-        val expectedState = DiscussionHeaderViewState(authorAvatarUrl, authorName, authoredDate, attachmentIconVisibility)
+        val expectedState = DiscussionHeaderViewState.Loaded(authorAvatarUrl, authorName, authoredDate, attachmentIconVisibility)
+
+        assertEquals(expectedState, state.discussionHeaderViewState)
+    }
+
+    @Test
+    fun `Description contains DiscussionHeaderState with unknown author and date, when assignment is discussion with no author name or date`() {
+        val authorAvatarUrl = "pretty-hodor.com"
+        val authorName = "Unknown Author"
+        val authoredDate = "Unknown Date"
+        val discussionMessage = "yo yo yo"
+        val attachmentIconVisibility = false
+        val discussionTopicHeader = baseDiscussion.copy(message = discussionMessage, author = DiscussionParticipant(avatarImageUrl = authorAvatarUrl), postedDate = null)
+        val assignment = baseAssignment.copy(submissionTypesRaw = listOf("discussion_topic"), discussionTopicHeader = discussionTopicHeader)
+
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
+        val expectedState = DiscussionHeaderViewState.Loaded(authorAvatarUrl, authorName, authoredDate, attachmentIconVisibility)
+
+        assertEquals(expectedState, state.discussionHeaderViewState)
+    }
+
+    @Test
+    fun `Description contains DiscussionHeaderState NoAuthor with when assignment is discussion with no author`() {
+        val discussionMessage = "yo yo yo"
+        val calendar = GregorianCalendar.getInstance()
+        calendar.set(2019, 6, 23, 9, 59)
+        val discussionTopicHeader = baseDiscussion.copy(message = discussionMessage, author = DiscussionParticipant(), postedDate = calendar.time)
+        val assignment = baseAssignment.copy(submissionTypesRaw = listOf("discussion_topic"), discussionTopicHeader = discussionTopicHeader)
+
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
+        val expectedState = DiscussionHeaderViewState.NoAuthor
 
         assertEquals(expectedState, state.discussionHeaderViewState)
     }
@@ -634,7 +781,7 @@ class AssignmentDetailsPresenterTest : Assert() {
 
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
-        val expectedState = DiscussionHeaderViewState(authorAvatarUrl, authorName, authoredDate, attachmentIconVisibility)
+        val expectedState = DiscussionHeaderViewState.Loaded(authorAvatarUrl, authorName, authoredDate, attachmentIconVisibility)
 
         assertEquals(expectedState, state.discussionHeaderViewState)
     }
@@ -726,6 +873,22 @@ class AssignmentDetailsPresenterTest : Assert() {
         val actualState = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Error
 
         assertEquals(expectedState, actualState)
+    }
+
+    @Test
+    fun `Clears URL cache when routing from a URL`() {
+        mockkObject(CanvasRestAdapter.Companion)
+        every { CanvasRestAdapter.clearCacheUrls(any()) } returns Unit
+
+        val route = Route(AssignmentDetailsFragment::class.java, Course())
+        route.paramsHash[RouterParams.ASSIGNMENT_ID] = "123"
+
+        AssignmentDetailsFragment.newInstance(route)
+
+        verify { CanvasRestAdapter.clearCacheUrls("assignments/123") }
+        confirmVerified(CanvasRestAdapter)
+
+        unmockkObject(CanvasRestAdapter.Companion)
     }
 
     private val discussionHtml = "<!DOCTYPE html>\n" +

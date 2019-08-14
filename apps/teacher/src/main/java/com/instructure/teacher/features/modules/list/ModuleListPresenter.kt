@@ -56,10 +56,10 @@ object ModuleListPresenter : Presenter<ModuleListModel, ModuleListViewState> {
                 }
             }
             ModuleListItemData.ModuleData(
-                module.id,
-                module.name.orEmpty(),
-                module.published,
-                moduleItems
+                id = module.id,
+                name = module.name.orEmpty(),
+                isPublished = module.published,
+                moduleItems = moduleItems
             )
         }
 

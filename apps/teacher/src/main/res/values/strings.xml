@@ -635,7 +635,6 @@
     <string name="discussions_reply">Reply</string>
     <string name="discussions_edit">Edit</string>
     <string name="discussions_forbidden">Replies are only visible to those who have posted at least one reply.</string>
-    <string name="discussions_unknown_author">Unknown Author</string>
     <string name="discussions_delete">Delete Discussion</string>
     <string name="discussions_delete_title">Delete Discussion?</string>
     <string name="discussions_delete_message">This will delete the whole discussion and thread.</string>

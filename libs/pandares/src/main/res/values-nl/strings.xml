@@ -52,11 +52,16 @@
     <string name="allowedFileTypes">Toegestane bestandstypen</string>
     <string name="resubmitAssignment">Opdracht opnieuw inleveren</string>
 
+    <string name="launchExternalTool">Extern hulpmiddel lanceren</string>
+
     <string name="preview">Voorbeeld</string>
-    <!--    Student Submission-->
+    <!-- Student Submission -->
     <string name="submissionUrlClearTextError">Geen voorbeeld beschikbaar voor URL\'s die \'http://\' gebruiken</string>
     <string name="submissionUrlNotAUrlError">Voer een geldige URL in</string>
     <string name="enterAUrlHereForYourSubmission">Voer hier een URL in voor uw inzending</string>
+    <string name="addFileFabContentDesc">Opties weergeven voor bestand toevoegen</string>
+    <string name="recordAudio">Audio opnemen</string>
+
     <!-- Student Submission -->
     <string name="submissionWrite">Schrijven&#8230;</string>
     <!-- Student Submission Details -->
@@ -83,10 +88,10 @@
     <string name="rubricCustomScore">Aangepaste score</string>
     <string name="rubricEmptyMessage">Er is geen rubriek voor deze opdracht</string>
     <string name="rubricViewLongDescription">Uitgebreide beschrijving bekijken</string>
-    <!--Profile Fragment Strings -->
+    <!-- Profile Fragment Strings -->
     <string name="canvasVersionNum">Versie:</string>
 
-    <!--Content Descriptions-->
+    <!-- Content Descriptions -->
     <string name="canvasLogo">Canvas Logo</string>
     <string name="enterURL">Voer je Canvas URL in:</string>
     <string name="exampleURLSimple">myschool.instructure.com</string>
@@ -119,7 +124,7 @@
     <string name="bookmarkUpdated">Bladwijzer bijgewerkt</string>
     <string name="no_bookmarks">Een bladwijzer aanmaken en vervolgens hier bekijken!</string>
 
-    <!--Date strings-->
+    <!-- Date strings -->
     <string name="today">Vandaag</string>
     <string name="past">Vorige</string>
     <string name="noDate">Geen datum</string>
@@ -134,7 +139,7 @@
     <string name="submissionDetailsDueAt">In te leveren op %1$s om %2$s</string> <!--Ex: Due April 2 at 11:59pm-->
     <string name="lowercaseAM">s ochtends</string>
     <string name="lowercasePM">s middags</string>
-    <!--Assignments-->
+    <!-- Assignments -->
     <string name="assignmentDue">Inleverdatum</string>
     <string name="assignmentDueColon">Inleverdatum: </string>
     <string name="assignmentLastSubmission">Laatste indiening</string>
@@ -165,10 +170,10 @@
     <string name="cancel">Annuleren</string>
     <string name="sendNotification">Gebruikers op de hoogte stellen dat deze inhoud gewijzigd is</string>
 
-    <!--Discussions-->
+    <!-- Discussions -->
     <string name="forbidden">Antwoorden zijn alleen zichtbaar voor degenen die minimaal één antwoord hebben geplaatst.</string>
 
-    <!--Events-->
+    <!-- Events -->
     <string name="Starts">Begint op</string>
     <string name="Ends">Eindigt</string>
     <string name="allDayEvent">Evenement dat de hele dag duurt</string>
@@ -392,7 +397,7 @@
     <string name="entireGroupSelected">Deze hele groep is al geselecteerd.</string>
     <string name="noUsersInGroup">Er zijn geen gebruikers in deze groep</string>
 
-    <!--Notifications-->
+    <!-- Notifications -->
     <string name="deleted">Verwijderd</string>
     <string name="gradedDiscussion">Beoordeelde discussie.</string>
     <string name="pointsPossible">Punten mogelijk.</string>
@@ -496,11 +501,11 @@
     <!-- LockInfoHTMLHelper Strings -->
     <string name="lockedAssignmentNotModule">Deze opdracht is vergrendeld.</string>
 
-    <!--New Course Layout Strings -->
+    <!-- New Course Layout Strings -->
     <string name="myCourses">Mijn cursussen</string>
 
 
-    <!--New Submission Strings -->
+    <!-- New Submission Strings -->
     <string name="textEntry">Tekstinvoer</string>
     <string name="onlineURL">Online URL</string>
     <string name="enterTextEntry">Tekstonderwerp invoeren</string>
@@ -519,18 +524,18 @@
 
 
 
-    <!--DataLoss Fragment Strings -->
+    <!-- DataLoss Fragment Strings -->
     <string name="unsavedProgress">Onbeveiligde voortgang</string>
     <string name="informationLost">Niet-opgeslagen informatie gaat verloren. Wil je doorgaan?</string>
     <string name="slash"> / </string>
 
-    <!--Delete Notification Strings -->
+    <!-- Delete Notification Strings -->
     <string name="confirm">Bevestigen</string>
 
-    <!--Dismiss To do String-->
+    <!-- Dismiss To do String -->
     <string name="markAsDone">Markeren als gereed</string>
 
-    <!--Submission Details Strings -->
+    <!-- Submission Details Strings -->
     <string name="next">Volgende</string>
     <string name="addSubmission">Inleveren</string>
     <string name="addAnotherSubmission">Opnieuw inleveren</string>
@@ -613,7 +618,7 @@
     <string name="choose_answers_below">Kies je antwoorden hieronder</string>
 
 
-    <!--Widget Strings-->
+    <!-- Widget Strings -->
     <string name="todoWidgetTitle">To-do lijst</string>
     <string name="gradesWidgetTitle">Cijfers</string>
     <string name="notificationWidgetTitle">Meldingen</string>
@@ -667,13 +672,13 @@
     <string name="search_course">cursus cursussen les lessen</string>
     <string name="search_grades">cijfer cijfers</string>
 
-    <!-- ShareFileOptions Dialog-->
+    <!-- ShareFileOptions Dialog -->
     <string name="uploadTo">Uploaden naar </string>
     <string name="uploadToCanvas">Uploaden naar Canvas</string>
     <string name="uploadMyFiles">Al mijn bestanden</string>
     <string name="uploadCourseFiles">Cursusbestanden</string>
     <string name="uploadToSubmissionComment">Uploaden naar Opmerking bij inlevering</string>
-    <!-- ChangeLog Dialog-->
+    <!-- ChangeLog Dialog -->
     <string name="changelog">Changelog</string>
 
     <string name="editUserName">Gebruikersnaam bewerken</string>
@@ -686,7 +691,7 @@
     <string name="no_courses">Tik om een cursus toe te voegen</string>
     <string name="no_courses_available">Geen cursussen hier, neem een dag vrij!</string>
     <string name="no_courses_grades">Schrijf je in voor een cursus om je cijfers te zien</string>
-    <!--Navigation Drawer-->
+    <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">Open navigatielade</string>
     <string name="navigation_drawer_close">Sluit navigatielade</string>
 
@@ -748,7 +753,7 @@
 
     <string name="no_data_connection">Controleer je dataverbinding en probeer het nogmaals.</string>
 
-    <!--Notification Preferences-->
+    <!-- Notification Preferences -->
     <string name="notification_primary_inbox_title">Canvas-melding</string>
     <string name="notification_channel_name_primary">Algemene Canvas-meldingen</string>
     <string name="notification_channel_description_primary">Verdere configuratie van meldingen kan worden uitgevoerd in de sectie Voorkeuren Canvas-meldingen.</string>
@@ -919,7 +924,7 @@
     <string name="groupNotFavorited">Groep %s, niet favoriet.</string>
     <string name="accountGroup">Accountgroep</string>
 
-    <!--Recents-->
+    <!-- Recents -->
     <string name="recents_empty">Voeg een cursus of groep toe vanaf het cursus aanpassingsscherm om hier te bekijken.</string>
 
     <string name="toolbar_close">Taakbalk sluiten</string>
@@ -947,6 +952,7 @@
     <string name="select">Selecteren</string>
     <string name="choice_position">Keuze %d</string>
     <string name="updating_module_info">Module-informatie bijwerken&#8230;</string>
+    <string name="arc">Arc</string>
     <string name="pending_review">Moet nog nagekeken worden</string>
     <string name="totalPoints">%s punten</string>
     <string name="totalPointsText">Totaal aantal punten</string>
@@ -961,9 +967,13 @@
     <string name="acceptCourseInvitation">Accepteren</string>
     <string name="declineCourseInvitation">Weigeren</string>
 
+    <string name="outOf">van</string>
     <!-- File Strings -->
     <string name="noFilesSubtextCourse">Er zijn geen bestanden gekoppeld aan deze cursus.</string>
     <string name="noFilesSubtextGroup">Er zijn geen bestanden gekoppeld aan deze groep.</string>
+    <string name="fileTypeNotSupported">Niet-ondersteund bestandstype</string>
+    <string name="fileTypeNotSupportedBody">Voor deze opdracht zijn alleen bepaalde bestandstypen toegestaan: %s</string>
+
     <array name="file_size_units">
         <item>B</item>
         <item>kB</item>
@@ -1042,4 +1052,23 @@
     <string name="addChildErrorMessage">Koppelen mislukt. Zorg ervoor dat je koppelingscode juist is en dat deze binnen de ingestelde tijdslimiet valt.</string>
     <string name="gradeComplete">Voltooid</string>
     <string name="gradeIncomplete">Incompleet</string>
+    <!-- Floating Recording View Strings -->
+    <string name="recordingTimerDefault">00:00:00</string>
+    <string name="recordingTimerContentDescription">%1$d uur, %2$d minuten en %3$d seconden</string>
+    <string name="recordingTimerSpeechDivider">%1$s van %2$s</string>
+    <string name="replay">Opnieuw afspelen</string>
+    <string name="stop">Stoppen</string>
+    <string name="startRecordingAudio">Opname audio straten</string>
+    <string name="stopRecordingAudio">Opname audio stoppen</string>
+    <string name="startRecordingVideo">Opname video starten</string>
+    <string name="stopRecordingVideo">Opname video stoppen</string>
+    <string name="closeRecordingView">Opnamevenster sluiten</string>
+    <string name="deleteRecording">Opname verwijderen</string>
+    <string name="videoCommentReplay">Opnieuw afspelen videocommentaar</string>
+    <string name="errorShowingVideoReplay">Er is een fout opgetreden tijdens de weergave.</string>
+    <string name="errorSubmittingMediaComment">Er is een fout opgetreden tijdens het verzenden van je media-opmerking.</string>
+
+    <string name="addVideoComment">Videocommentaar toevoegen</string>
+    <string name="addAudioComment">Audiocommentaar toevoegen</string>
+
 </resources>

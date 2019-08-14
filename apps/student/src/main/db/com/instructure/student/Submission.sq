@@ -23,14 +23,16 @@ CREATE TABLE submission (
     submissionEntry TEXT, -- Text, URL, or a URI pointing to a file
     lastActivityDate TEXT as Date, -- Uploaded on, or day/time the upload failed
     assignmentName TEXT,
---     mediaCommentId TEXT,  -- Media submissions
---     mediaCommentType TEXT,
-    assignmentId INTEGER,
-    canvasContext TEXT as CanvasContext,
-    submissionType TEXT,
+    assignmentId INTEGER NOT NULL,
+    canvasContext TEXT as CanvasContext NOT NULL,
+    submissionType TEXT NOT NULL,
     errorFlag INTEGER as Boolean NOT NULL DEFAULT 0,
     assignmentGroupCategoryId INTEGER,
-    userId INTEGER
+    userId INTEGER NOT NULL,
+    -- Used for progress
+    currentFile INTEGER NOT NULL DEFAULT 0,
+    fileCount INTEGER NOT NULL DEFAULT 0,
+    progress REAL
 );
 
 insertOnlineTextSubmission:
@@ -74,6 +76,13 @@ AND userId = ?;
 setSubmissionError:
 UPDATE submission
 SET errorFlag = ?
+WHERE id = ?;
+
+updateProgress:
+UPDATE submission
+SET currentFile = ?,
+    fileCount = ?,
+    progress = ?
 WHERE id = ?;
 
 getLastInsert:

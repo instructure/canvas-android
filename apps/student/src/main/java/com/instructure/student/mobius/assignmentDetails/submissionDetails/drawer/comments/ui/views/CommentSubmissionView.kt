@@ -18,14 +18,11 @@ package com.instructure.student.mobius.assignmentDetails.submissionDetails.drawe
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Typeface
 import android.text.Html
 import android.text.format.Formatter
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.widget.LinearLayout
-import androidx.appcompat.widget.AppCompatTextView
-import androidx.core.content.ContextCompat
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Assignment.SubmissionType
 import com.instructure.canvasapi2.models.Attachment
@@ -55,7 +52,6 @@ class CommentSubmissionView(
         val hasSubmission = submission.workflowState != "unsubmitted" && type != null
         if (hasSubmission) {
             if (type == SubmissionType.ONLINE_UPLOAD) {
-                setupAttachmentLabel()
                 setupAttachments()
             } else {
                 setupSubmissionAsAttachment(type!!)
@@ -128,23 +124,17 @@ class CommentSubmissionView(
         return "\"" + Html.fromHtml(html) + "\""
     }
 
-    private fun setupAttachmentLabel() {
-        val titleView = AppCompatTextView(context)
-        titleView.typeface = Typeface.create("sans-serif-medium", Typeface.ITALIC)
-        addView(titleView, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
-        titleView.text = context.getString(R.string.submissionCommentSubmittedFiles)
-        titleView.setTextColor(ContextCompat.getColor(context, R.color.defaultTextGray))
-    }
-
     private fun setupAttachments() {
-        for (attachment in submission.attachments) {
+        submission.attachments.forEachIndexed { index, attachment ->
             val view = LayoutInflater.from(context).inflate(R.layout.view_comment_submission_attachment, this, false)
             view.iconImageView.setColorFilter(tint)
             view.iconImageView.setImageResource(attachment.iconRes)
             view.titleTextView.text = attachment.displayName
             view.subtitleTextView.text = Formatter.formatFileSize(context, attachment.size)
             view.onClick { onAttachmentClicked(submission, attachment) }
-            (view.layoutParams as LayoutParams).topMargin = context.DP(4).toInt()
+            if (index > 0) {
+                (view.layoutParams as LayoutParams).topMargin = context.DP(4).toInt()
+            }
             addView(view)
         }
     }

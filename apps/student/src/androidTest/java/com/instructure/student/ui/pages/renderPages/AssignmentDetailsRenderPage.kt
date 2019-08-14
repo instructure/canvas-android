@@ -23,8 +23,6 @@ import androidx.test.espresso.web.webdriver.DriverAtoms.getText
 import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.espresso.*
 import com.instructure.espresso.page.onViewWithText
-import com.instructure.espresso.page.withId
-import com.instructure.espresso.page.withText
 import com.instructure.student.R
 import com.instructure.student.ui.pages.AssignmentDetailsPage
 import org.hamcrest.Matchers
@@ -69,6 +67,10 @@ class AssignmentDetailsRenderPage : AssignmentDetailsPage() {
 
     fun assertDisplaysPoints(text: String) {
         points.assertHasText(text)
+    }
+
+    fun assertPointsContentDescription(text: String) {
+        points.assertHasContentDescription(text)
     }
 
     fun assertDisplaysSubmissionStatus(text: String) {

@@ -416,9 +416,12 @@ class QuizQuestionsFragment : ParentFragment() {
         } else {
             seconds *= MILLISECOND
         }
+
+        countDownTimer?.cancel()
         countDownTimer = object : CountDownTimer(seconds.toLong(), MILLISECOND.toLong()) {
 
             override fun onTick(millisUntilFinished: Long) {
+                if (!isAdded) return
 
                 //subtract the warning seconds. We try to submit the quiz at 5 seconds, but the user might try to wait until the last second
                 //to submit it, and this would lead to unexpected behavior. So we'll subtract 5 seconds from the timer so it will submit when
@@ -442,6 +445,7 @@ class QuizQuestionsFragment : ParentFragment() {
             }
 
             override fun onFinish() {
+                if (!isAdded) return
                 timer.text = getString(R.string.done)
             }
         }.start()
@@ -451,9 +455,11 @@ class QuizQuestionsFragment : ParentFragment() {
         //count up
         normalTimer()
 
+        countDownTimer?.cancel()
         countDownTimer = object : CountDownTimer(minutesMS, MILLISECOND.toLong()) {
 
             override fun onTick(millisUntilFinished: Long) {
+                if (!isAdded) return
 
                 val seconds = (millisUntilFinished / MILLISECOND).toInt() - LAST_WARNING_SECONDS
 
@@ -484,6 +490,7 @@ class QuizQuestionsFragment : ParentFragment() {
             }
 
             override fun onFinish() {
+                if (!isAdded) return
                 timer.text = getString(R.string.done)
             }
         }.start()

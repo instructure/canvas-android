@@ -32,7 +32,6 @@
     <string name="fileUploadSuccess">Upload Successful</string>
     <string name="noNetwork">Network not available - please try again later.</string>
     <string name="uploadMessage">"Upload in progress. Check notifications for upload status.</string>
-    <string name="mediaUpload">Media Upload</string>
     <string name="uploadingFile">Uploading file&#8230;</string>
     <string name="errorUploadingFile">An error occurred uploading your file. Please try again.</string>
     <string name="fileSubmission">Submit File(s)</string>
@@ -171,9 +170,7 @@
     <string name="noEvents">No Events Today!</string>
     <string name="noEventsSubtext">It looks like a great day to rest and relax.</string>
     <string name="noSubmission">No Submission</string>
-    <string name="noSubmissionSubtext">Submit your assignment by %1$s at %2$s.</string>
     <string name="noSubmissionTeacher">This student doesn\'t have a submission yet.</string>
-    <string name="noDueDate">This assignment doesn\'t have a due date.</string>
     <string name="locked">Locked</string>
     <string name="lockedSubtext">This assignment is locked until %1$s at %2$s.</string>
     <string name="chooseFile">Choose a File</string>

@@ -47,7 +47,6 @@ import com.instructure.student.fragment.*
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsFragment
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.mobius.syllabus.ui.SyllabusFragment
-import com.instructure.student.util.FeatureFlagPrefs
 import com.instructure.student.util.FileUtils
 import retrofit2.Call
 import retrofit2.Response
@@ -66,10 +65,6 @@ object RouteMatcher : BaseRouteMatcher() {
 
     // Be sensitive to the order of items. It really, really matters.
     private fun initRoutes() {
-
-        val assignmentDetailsClass: Class<out Fragment> = if (FeatureFlagPrefs.newAssignmentPage) AssignmentDetailsFragment::class.java else AssignmentFragment::class.java
-        val submissionDetailsClass: Class<out Fragment>? = if (FeatureFlagPrefs.newAssignmentPage) SubmissionDetailsFragment::class.java else null
-
         routes.add(Route("/", DashboardFragment::class.java))
         // region Conversations
         routes.add(Route("/conversations", InboxFragment::class.java))
@@ -108,7 +103,7 @@ object RouteMatcher : BaseRouteMatcher() {
 
         // Grades
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/grades"), GradesListFragment::class.java))
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/grades/:${RouterParams.ASSIGNMENT_ID}"), GradesListFragment::class.java, assignmentDetailsClass))
+        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/grades/:${RouterParams.ASSIGNMENT_ID}"), GradesListFragment::class.java, AssignmentDetailsFragment::class.java))
 
         // People
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/users"), PeopleListFragment::class.java))
@@ -153,9 +148,9 @@ object RouteMatcher : BaseRouteMatcher() {
 
         // Assignments
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments"), AssignmentListFragment::class.java))
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}"), AssignmentListFragment::class.java, assignmentDetailsClass))
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}"), NotificationListFragment::class.java, assignmentDetailsClass))
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}"), CalendarListViewFragment::class.java, assignmentDetailsClass))
+        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}"), AssignmentListFragment::class.java, AssignmentDetailsFragment::class.java))
+        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}"), NotificationListFragment::class.java, AssignmentDetailsFragment::class.java))
+        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}"), CalendarListViewFragment::class.java, AssignmentDetailsFragment::class.java))
 
         // Studio
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/external_tools/:${RouterParams.EXTERNAL_ID}/resource_selection"), StudioWebViewFragment::class.java))
@@ -163,8 +158,8 @@ object RouteMatcher : BaseRouteMatcher() {
 
         // Submissions
         // :sliding_tab_type can be /rubric or /submissions (used to navigate to the nested fragment)
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}/:${RouterParams.SLIDING_TAB_TYPE}"), assignmentDetailsClass, submissionDetailsClass))
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}/:${RouterParams.SLIDING_TAB_TYPE}/:${RouterParams.SUBMISSION_ID}"), assignmentDetailsClass, submissionDetailsClass))
+        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}/:${RouterParams.SLIDING_TAB_TYPE}"), AssignmentDetailsFragment::class.java, SubmissionDetailsFragment::class.java))
+        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}/:${RouterParams.SLIDING_TAB_TYPE}/:${RouterParams.SUBMISSION_ID}"), AssignmentDetailsFragment::class.java, SubmissionDetailsFragment::class.java))
 
         // Settings
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/settings"), CourseSettingsFragment::class.java))
@@ -192,7 +187,7 @@ object RouteMatcher : BaseRouteMatcher() {
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/external_tools/:${RouterParams.EXTERNAL_ID}"), RouteContext.LTI))
 
         //Single Detail Pages (Typically routing from To-dos (may not be handling every use case)
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}"), assignmentDetailsClass, null))
+        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}"), AssignmentDetailsFragment::class.java, null))
 
         // Catch all (when nothing has matched, these take over)
         // Note: Catch all only happens with supported domains such as instructure.com

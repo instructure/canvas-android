@@ -16,6 +16,7 @@
  */
 package com.instructure.student.test.assignment.details.submission
 
+import android.net.Uri
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.student.mobius.assignmentDetails.submission.text.TextSubmissionUploadEffect
@@ -31,6 +32,7 @@ import com.spotify.mobius.test.NextMatchers
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import io.mockk.every
+import io.mockk.mockk
 import io.mockk.mockkStatic
 import org.junit.Assert
 import org.junit.Before
@@ -50,7 +52,11 @@ class TextSubmissionUploadUpdateTest : Assert() {
     fun setup() {
         course = Course()
         assignment = Assignment(id = 1234L, courseId = course.id, name = "name")
-        initModel = TextSubmissionUploadModel(assignmentId = assignment.id, canvasContext = course, assignmentName = assignment.name)
+        initModel = TextSubmissionUploadModel(
+            assignmentId = assignment.id,
+            canvasContext = course,
+            assignmentName = assignment.name
+        )
     }
 
     @Test
@@ -58,13 +64,15 @@ class TextSubmissionUploadUpdateTest : Assert() {
         val text = "Some text from a save"
         val startModel = initModel.copy(initialText = text)
         initSpec
-                .whenInit(startModel)
-                .then(
-                        assertThatFirst(
-                                FirstMatchers.hasModel(startModel),
-                                matchesFirstEffects<TextSubmissionUploadModel, TextSubmissionUploadEffect>(TextSubmissionUploadEffect.InitializeText(text))
-                        )
+            .whenInit(startModel)
+            .then(
+                assertThatFirst(
+                    FirstMatchers.hasModel(startModel),
+                    matchesFirstEffects<TextSubmissionUploadModel, TextSubmissionUploadEffect>(
+                        TextSubmissionUploadEffect.InitializeText(text)
+                    )
                 )
+            )
     }
 
     @Test
@@ -74,13 +82,13 @@ class TextSubmissionUploadUpdateTest : Assert() {
         val expectedModel = startModel.copy(isSubmittable = true)
 
         updateSpec
-                .given(startModel)
-                .whenEvent(TextSubmissionUploadEvent.TextChanged(text))
-                .then(
-                        assertThatNext(
-                                NextMatchers.hasModel(expectedModel)
-                        )
+            .given(startModel)
+            .whenEvent(TextSubmissionUploadEvent.TextChanged(text))
+            .then(
+                assertThatNext(
+                    NextMatchers.hasModel(expectedModel)
                 )
+            )
     }
 
     @Test
@@ -90,65 +98,99 @@ class TextSubmissionUploadUpdateTest : Assert() {
         val expectedModel = startModel.copy(isSubmittable = false)
 
         updateSpec
-                .given(startModel)
-                .whenEvent(TextSubmissionUploadEvent.TextChanged(text))
-                .then(
-                        assertThatNext(
-                                NextMatchers.hasModel(expectedModel)
-                        )
+            .given(startModel)
+            .whenEvent(TextSubmissionUploadEvent.TextChanged(text))
+            .then(
+                assertThatNext(
+                    NextMatchers.hasModel(expectedModel)
                 )
+            )
     }
 
     @Test
     fun `SubmitClicked event results in SubmitText effect`() {
         val text = "Some text to submit"
 
-        mockkStatic(URLEncoder::class)
-        every { URLEncoder.encode(any(), any()) } returns text
-
         updateSpec
-                .given(initModel)
-                .whenEvent(TextSubmissionUploadEvent.SubmitClicked(text))
-                .then(
-                        assertThatNext(
-                                matchesEffects<TextSubmissionUploadModel, TextSubmissionUploadEffect>(TextSubmissionUploadEffect.SubmitText(text, course, assignment.id, assignment.name))
+            .given(initModel)
+            .whenEvent(TextSubmissionUploadEvent.SubmitClicked(text))
+            .then(
+                assertThatNext(
+                    matchesEffects<TextSubmissionUploadModel, TextSubmissionUploadEffect>(
+                        TextSubmissionUploadEffect.SubmitText(
+                            text,
+                            course,
+                            assignment.id,
+                            assignment.name
                         )
+                    )
                 )
+            )
     }
 
     @Test
     fun `SubmitClicked event with new lines in text results in SubmitText effect`() {
         val text = "Some text to submit\nWith a new line"
-        val expected = "Some text to submit<br/>With a new line"
-
-        mockkStatic(URLEncoder::class)
-        every { URLEncoder.encode(any(), any()) } returns expected
 
         updateSpec
-                .given(initModel)
-                .whenEvent(TextSubmissionUploadEvent.SubmitClicked(text))
-                .then(
-                        assertThatNext(
-                                matchesEffects<TextSubmissionUploadModel, TextSubmissionUploadEffect>(TextSubmissionUploadEffect.SubmitText(expected, course, assignment.id, assignment.name))
+            .given(initModel)
+            .whenEvent(TextSubmissionUploadEvent.SubmitClicked(text))
+            .then(
+                assertThatNext(
+                    matchesEffects<TextSubmissionUploadModel, TextSubmissionUploadEffect>(
+                        TextSubmissionUploadEffect.SubmitText(
+                            text,
+                            course,
+                            assignment.id,
+                            assignment.name
                         )
+                    )
                 )
+            )
     }
 
     @Test
-    fun `SubmitClicked event with unsupported encoding characters in text results in SubmitText effect`() {
-        val text = "Some text to submit"
-
-        mockkStatic(URLEncoder::class)
-        every { URLEncoder.encode(any(), any()) } throws UnsupportedEncodingException()
+    fun `ImageAdded results in AddImage effect`() {
+        val uri = mockk<Uri>()
 
         updateSpec
-                .given(initModel)
-                .whenEvent(TextSubmissionUploadEvent.SubmitClicked(text))
-                .then(
-                        assertThatNext(
-                                matchesEffects<TextSubmissionUploadModel, TextSubmissionUploadEffect>(TextSubmissionUploadEffect.SubmitText(text, course, assignment.id, assignment.name))
-                        )
+            .given(initModel)
+            .whenEvent(TextSubmissionUploadEvent.ImageAdded(uri))
+            .then(
+                assertThatNext(
+                    matchesEffects<TextSubmissionUploadModel, TextSubmissionUploadEffect>(
+                        TextSubmissionUploadEffect.AddImage(uri, initModel.canvasContext)
+                    )
                 )
+            )
+    }
+
+    @Test
+    fun `CameraImageTaken results in ProcessCameraImage effect`() {
+        updateSpec
+            .given(initModel)
+            .whenEvent(TextSubmissionUploadEvent.CameraImageTaken)
+            .then(
+                assertThatNext(
+                    matchesEffects<TextSubmissionUploadModel, TextSubmissionUploadEffect>(
+                        TextSubmissionUploadEffect.ProcessCameraImage
+                    )
+                )
+            )
+    }
+
+    @Test
+    fun `ImageFailed results in ShowFailedImageMessage effect`() {
+        updateSpec
+            .given(initModel)
+            .whenEvent(TextSubmissionUploadEvent.ImageFailed)
+            .then(
+                assertThatNext(
+                    matchesEffects<TextSubmissionUploadModel, TextSubmissionUploadEffect>(
+                        TextSubmissionUploadEffect.ShowFailedImageMessage
+                    )
+                )
+            )
     }
 
 }

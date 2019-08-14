@@ -41,8 +41,8 @@ import com.instructure.student.activity.InternalWebViewActivity
 import com.instructure.student.activity.ShareFileSubmissionTarget
 import com.instructure.student.fragment.*
 import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsEvent
-import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionMode
 import com.instructure.student.mobius.assignmentDetails.submission.file.ui.UploadStatusSubmissionFragment
+import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionMode
 import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submission.text.ui.TextSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submission.url.ui.UrlSubmissionUploadFragment
@@ -150,6 +150,7 @@ class AssignmentDetailsView(
     private fun renderLoadedState(state: AssignmentDetailsViewState.Loaded) {
         assignmentName.text = state.assignmentName
         points.text = state.assignmentPoints
+        points.contentDescription = state.assignmentPointsA11yText
         submissionStatusIcon.setImageResource(state.submittedStateIcon)
         submissionStatusIcon.imageTintList = ColorStateList.valueOf(state.submittedStateColor)
         submissionStatus.text = state.submittedStateLabel
@@ -175,11 +176,15 @@ class AssignmentDetailsView(
     }
 
     private fun renderDiscussionTopicHeader(discussionHeaderViewState: DiscussionHeaderViewState) {
-        ProfileUtils.loadAvatarForUser(authorAvatar, discussionHeaderViewState.authorName, discussionHeaderViewState.authorAvatarUrl)
-        authorAvatar.setupAvatarA11y(discussionHeaderViewState.authorName)
-        authorName.text = discussionHeaderViewState.authorName
-        authoredDate.text = discussionHeaderViewState.authoredDate
-        attachmentIcon.setVisible(discussionHeaderViewState.attachmentIconVisibility)
+        if(discussionHeaderViewState is DiscussionHeaderViewState.Loaded) {
+            ProfileUtils.loadAvatarForUser(authorAvatar, discussionHeaderViewState.authorName, discussionHeaderViewState.authorAvatarUrl)
+            authorAvatar.setupAvatarA11y(discussionHeaderViewState.authorName)
+            authorName.text = discussionHeaderViewState.authorName
+            authoredDate.text = discussionHeaderViewState.authoredDate
+            attachmentIcon.setVisible(discussionHeaderViewState.attachmentIconVisibility)
+        } else {
+            discussionTopicHeaderContainer.setVisible(false)
+        }
     }
 
     override fun onDispose() {

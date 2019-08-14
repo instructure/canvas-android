@@ -20,89 +20,105 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <TextView
+    <LinearLayout
         android:id="@+id/submissionEntryText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/TextFont.Regular"
-        android:text="@string/textEntry"
-        android:textSize="16sp"
-        android:drawableStart="@drawable/vd_text_submission"
-        android:paddingTop="14dp"
-        android:paddingBottom="14dp"
-        android:paddingStart="18dp"
-        android:paddingEnd="18dp"
-        android:drawablePadding="18dp"
-        android:background="?attr/selectableItemBackground"
-        android:visibility="gone"
-        tools:visibility="visible" />
+        style="@style/SubmissionPickerDialogItem"
+        tools:ignore="UseCompoundDrawables"
+        tools:visibility="visible">
 
-    <TextView
+        <ImageView
+            style="@style/SubmissionPickerDialogIcon"
+            android:importantForAccessibility="no"
+            android:padding="2dp"
+            android:src="@drawable/vd_text_submission"/>
+
+        <TextView
+            style="@style/TextFont.Regular"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/canvasAPI_onlineTextEntry"
+            android:textSize="16sp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/submissionEntryWebsite"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/TextFont.Regular"
-        android:text="@string/websiteEntry"
-        android:textSize="16sp"
-        android:drawableStart="@drawable/vd_website_address"
-        android:paddingTop="14dp"
-        android:paddingBottom="14dp"
-        android:paddingStart="18dp"
-        android:paddingEnd="18dp"
-        android:drawablePadding="18dp"
-        android:background="?attr/selectableItemBackground"
-        android:visibility="gone"
-        tools:visibility="visible" />
+        style="@style/SubmissionPickerDialogItem"
+        tools:ignore="UseCompoundDrawables"
+        tools:visibility="visible">
 
-    <TextView
+        <ImageView
+            style="@style/SubmissionPickerDialogIcon"
+            android:importantForAccessibility="no"
+            android:src="@drawable/vd_website_address"/>
+
+        <TextView
+            style="@style/TextFont.Regular"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/canvasAPI_onlineURL"
+            android:textSize="16sp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/submissionEntryFile"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/TextFont.Regular"
-        android:text="@string/fileUpload"
-        android:textSize="16sp"
-        android:drawableStart="@drawable/vd_attachment"
-        android:paddingTop="14dp"
-        android:paddingBottom="14dp"
-        android:paddingStart="18dp"
-        android:paddingEnd="18dp"
-        android:drawablePadding="18dp"
-        android:background="?attr/selectableItemBackground"
-        android:visibility="gone"
-        tools:visibility="visible" />
+        style="@style/SubmissionPickerDialogItem"
+        tools:ignore="UseCompoundDrawables"
+        tools:visibility="visible">
 
-    <TextView
+        <ImageView
+            style="@style/SubmissionPickerDialogIcon"
+            android:importantForAccessibility="no"
+            android:src="@drawable/vd_attachment"/>
+
+        <TextView
+            style="@style/TextFont.Regular"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/canvasAPI_onlineUpload"
+            android:textSize="16sp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/submissionEntryMedia"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/TextFont.Regular"
-        android:text="@string/mediaRecordingEntry"
-        android:textSize="16sp"
-        android:drawableStart="@drawable/vd_media_recordings"
-        android:paddingTop="14dp"
-        android:paddingBottom="14dp"
-        android:paddingStart="18dp"
-        android:paddingEnd="18dp"
-        android:drawablePadding="18dp"
-        android:background="?attr/selectableItemBackground"
-        android:visibility="gone"
-        tools:visibility="visible" />
+        style="@style/SubmissionPickerDialogItem"
+        tools:ignore="UseCompoundDrawables"
+        tools:visibility="visible">
 
-    <TextView
+        <ImageView
+            style="@style/SubmissionPickerDialogIcon"
+            android:importantForAccessibility="no"
+            android:src="@drawable/vd_media_recordings"/>
+
+        <TextView
+            style="@style/TextFont.Regular"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/canvasAPI_mediaRecording"
+            android:textSize="16sp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/submissionEntryStudio"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/TextFont.Regular"
-        android:text="@string/studio"
-        android:textSize="16sp"
-        android:drawableStart="@drawable/vd_navigation_studio"
-        android:paddingTop="14dp"
-        android:paddingBottom="14dp"
-        android:paddingStart="18dp"
-        android:paddingEnd="18dp"
-        android:drawablePadding="18dp"
-        android:background="?attr/selectableItemBackground"
-        android:visibility="gone"
-        tools:visibility="visible" />
+        style="@style/SubmissionPickerDialogItem"
+        tools:ignore="UseCompoundDrawables"
+        tools:visibility="visible">
+
+        <ImageView
+            style="@style/SubmissionPickerDialogIcon"
+            android:importantForAccessibility="no"
+            android:src="@drawable/vd_navigation_studio"/>
+
+        <TextView
+            style="@style/TextFont.Regular"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/studio"
+            android:textSize="16sp"/>
+
+    </LinearLayout>
 
 </LinearLayout>

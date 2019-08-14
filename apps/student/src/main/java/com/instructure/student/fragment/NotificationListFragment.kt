@@ -39,7 +39,6 @@ import com.instructure.student.adapter.NotificationListRecyclerAdapter
 import com.instructure.student.interfaces.NotificationAdapterToFragmentCallback
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.router.RouteMatcher
-import com.instructure.student.util.FeatureFlagPrefs
 import kotlinx.android.synthetic.main.fragment_list_notification.*
 import kotlinx.android.synthetic.main.panda_recycler_refresh_layout.*
 
@@ -219,19 +218,11 @@ class NotificationListFragment : ParentFragment(), Bookmarkable {
                     if (canvasContext !is Course) return
 
                     if (streamItem.assignment == null) {
-                        if (FeatureFlagPrefs.newAssignmentPage) {
-                            RouteMatcher.route(context, AssignmentDetailsFragment.makeRoute(canvasContext, streamItem.assignmentId))
-                        } else {
-                            RouteMatcher.route(context, AssignmentFragment.makeRoute(canvasContext, streamItem.assignmentId))
-                        }
+                        RouteMatcher.route(context, AssignmentDetailsFragment.makeRoute(canvasContext, streamItem.assignmentId))
                     } else {
                         // Add an empty submission with the grade to the assignment so that we can see the score.
                         streamItem.assignment?.submission = Submission(grade = streamItem.grade)
-                        if (FeatureFlagPrefs.newAssignmentPage) {
-                            RouteMatcher.route(context, AssignmentDetailsFragment.makeRoute(canvasContext, streamItem.assignment!!.id))
-                        } else {
-                            RouteMatcher.route(context, AssignmentFragment.makeRoute(canvasContext, streamItem.assignment!!))
-                        }
+                        RouteMatcher.route(context, AssignmentDetailsFragment.makeRoute(canvasContext, streamItem.assignment!!.id))
                     }
                     null
                 }
@@ -242,11 +233,7 @@ class NotificationListFragment : ParentFragment(), Bookmarkable {
                 }
                 MESSAGE -> {
                     if (streamItem.assignmentId > 0) {
-                        if (FeatureFlagPrefs.newAssignmentPage) {
-                            AssignmentDetailsFragment.makeRoute(canvasContext, streamItem.assignmentId)
-                        } else {
-                            AssignmentFragment.makeRoute(context, canvasContext, streamItem.assignmentId, streamItem)
-                        }
+                        AssignmentDetailsFragment.makeRoute(canvasContext, streamItem.assignmentId)
                     } else {
                         UnknownItemFragment.makeRoute(canvasContext, streamItem)
                     }

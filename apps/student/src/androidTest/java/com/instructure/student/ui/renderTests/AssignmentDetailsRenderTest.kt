@@ -458,16 +458,32 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
         assignmentDetailsRenderPage.assertDisplaysFailedSubmission()
     }
 
+    @Test
+    @TestMetaData(Priority.P2, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER)
+    fun setsPointsContentDescription() {
+        val assignment = Assignment(
+            name = "Test Assignment",
+            pointsPossible = 35.0
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        loadPageWithModel(model)
+        assignmentDetailsRenderPage.assertDisplaysPoints("35 pts")
+        assignmentDetailsRenderPage.assertPointsContentDescription("35 points")
+    }
+
     private fun mockkSubmission(failed: Boolean = false) = com.instructure.student.Submission.Impl(
         123L,
         null,
         null,
         null,
-        null,
-        null,
-        null,
+        0,
+        CanvasContext.emptyCourseContext(0),
+        "online_text_entry",
         failed,
         null,
+        0,
+        0,
+        0,
         null
     )
 

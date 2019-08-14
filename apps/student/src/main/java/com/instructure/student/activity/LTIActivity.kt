@@ -57,11 +57,11 @@ class LTIActivity : AppCompatActivity() {
         val user = ApiPrefs.user
         if(launchDefinition != null && user != null) {
             val route = LTIWebViewFragment.makeRoute(
-                CanvasContext.currentUserContext(user),
-                launchDefinition.placements.globalNavigation.url,
-                title,
-                true,
-                true
+                canvasContext = CanvasContext.currentUserContext(user),
+                url = launchDefinition.placements.globalNavigation.url,
+                title = title,
+                sessionLessLaunch = true,
+                hideToolbar = true
             )
             val fragment = LTIWebViewFragment.newInstance(route)
             fragment?.let {supportFragmentManager.beginTransaction().add(R.id.container, it, LTIWebViewFragment::class.java.simpleName).commit() }

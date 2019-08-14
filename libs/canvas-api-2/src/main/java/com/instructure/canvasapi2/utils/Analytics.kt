@@ -38,8 +38,12 @@ object Analytics {
 
 object AnalyticsEventConstants {
     const val AUTHENTICATION_DIALOG = "authentication_dialog"
+    const val SUBMISSIONS = "submissions"
 }
 
 object AnalyticsParamConstants {
     const val DOMAIN_PARAM = "domain"
+    const val USER_CONTEXT_ID = "user_context_id"
+    const val CANVAS_CONTEXT_ID = "canvas_context_id"
+    const val ASSIGNMENT_ID = "assignment_id"
 }

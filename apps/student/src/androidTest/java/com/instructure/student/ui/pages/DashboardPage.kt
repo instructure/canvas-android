@@ -156,4 +156,9 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         //hamburgerButton.click()
         onViewWithId(R.id.navigationDrawerSettings).click()
     }
+
+    fun selectCourse(course: CourseApiModel) {
+        assertDisplaysCourse(course)
+        onView(withText(course.name)).click()
+    }
 }

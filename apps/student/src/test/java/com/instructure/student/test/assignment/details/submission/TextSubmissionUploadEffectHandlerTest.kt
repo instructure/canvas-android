@@ -15,6 +15,8 @@
  */
 package com.instructure.student.test.assignment.details.submission
 
+import android.net.Uri
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.student.mobius.assignmentDetails.submission.text.TextSubmissionUploadEffect
 import com.instructure.student.mobius.assignmentDetails.submission.text.TextSubmissionUploadEffectHandler
@@ -22,6 +24,7 @@ import com.instructure.student.mobius.assignmentDetails.submission.text.TextSubm
 import com.instructure.student.mobius.assignmentDetails.submission.text.ui.TextSubmissionUploadView
 import com.spotify.mobius.functions.Consumer
 import io.mockk.confirmVerified
+import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
@@ -103,5 +106,58 @@ class TextSubmissionUploadEffectHandlerTest : Assert() {
         }
 
         confirmVerified(view)
+    }
+
+    @Test
+    fun `AddImage results in view calling addImageToSubmission`() {
+        val uri = mockk<Uri>()
+        val canvasContext = CanvasContext.emptyCourseContext(0)
+
+        connection.accept(TextSubmissionUploadEffect.AddImage(uri, canvasContext))
+
+        verify(timeout = 100) {
+            view.addImageToSubmission(uri, canvasContext)
+        }
+
+        confirmVerified(view)
+    }
+
+    @Test
+    fun `ShowFailedImageMessage results in view calling showFailedImageMessage`() {
+        connection.accept(TextSubmissionUploadEffect.ShowFailedImageMessage)
+
+        verify(timeout = 100) {
+            view.showFailedImageMessage()
+        }
+
+        confirmVerified(view)
+    }
+
+    @Test
+    fun `ProcessCameraImage results in ImageAdded event when the view returns a uri`() {
+        val uri = mockk<Uri>()
+
+        every { view.retrieveCameraImage() } returns uri
+
+        connection.accept(TextSubmissionUploadEffect.ProcessCameraImage)
+
+        verify(timeout = 100) {
+            eventConsumer.accept(TextSubmissionUploadEvent.ImageAdded(uri))
+        }
+
+        confirmVerified(eventConsumer)
+    }
+
+    @Test
+    fun `ProcessCameraImage results in ImageFailed event when the view returns a null uri`() {
+        every { view.retrieveCameraImage() } returns null
+
+        connection.accept(TextSubmissionUploadEffect.ProcessCameraImage)
+
+        verify(timeout = 100) {
+            eventConsumer.accept(TextSubmissionUploadEvent.ImageFailed)
+        }
+
+        confirmVerified(eventConsumer)
     }
 }

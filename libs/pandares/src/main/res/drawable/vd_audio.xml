@@ -15,17 +15,13 @@
   ~
   -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="24dp"
+    android:width="22.68dp"
     android:height="20dp"
-    android:viewportWidth="12"
+    android:viewportWidth="11.34"
     android:viewportHeight="10">
 
     <group
         android:translateY="-1.000000">
-        <path
-            android:fillType="evenOdd"
-            android:strokeWidth="1"
-            android:pathData="M 0 0 H 12 V 12 H 0 V 0 Z" />
         <path
             android:fillColor="#2D3B45"
             android:strokeWidth="1"
@@ -49,4 +45,5 @@ M2.66666667,4.33333333 L1,4.33333333 C0.816094917,4.33333333
 C0.666666667,7.51723842 0.816094917,7.66666667 1,7.66666667
 L2.66666667,7.66666667 L2.66666667,4.33333333 Z" />
     </group>
+
 </vector>

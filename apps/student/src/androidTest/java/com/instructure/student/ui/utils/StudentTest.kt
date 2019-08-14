@@ -45,5 +45,7 @@ abstract class StudentTest : CanvasTest() {
     val loginFindSchoolPage = LoginFindSchoolPage()
     val loginLandingPage = LoginLandingPage()
     val loginSignInPage = LoginSignInPage()
-
+    val courseBrowserPage = CourseBrowserPage()
+    val assignmentDetailsPage = AssignmentDetailsPage()
+    val submissionDetailsPage = SubmissionDetailsPage()
 }

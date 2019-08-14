@@ -171,6 +171,19 @@ class ModuleListRenderTest : TeacherRenderTest() {
     }
 
     @Test
+    fun doesNotDisplayModuleItemPublishStatusIcon() {
+        val moduleItem = moduleItemTemplate.copy(
+            isPublished = null
+        )
+        val state = ModuleListViewState(
+            items = listOf(moduleItem)
+        )
+        loadPageWithViewState(state)
+        page.moduleItemUnpublishedIcon.assertNotDisplayed()
+        page.moduleItemPublishedIcon.assertNotDisplayed()
+    }
+
+    @Test
     fun displaysSubHeaderModuleItem() {
         val moduleItem = moduleItemTemplate.copy(
             title = null,
@@ -244,6 +257,18 @@ class ModuleListRenderTest : TeacherRenderTest() {
         )
         loadPageWithViewState(state)
         page.moduleUnpublishedIcon.assertDisplayed()
+        page.modulePublishedIcon.assertNotDisplayed()
+    }
+
+    @Test
+    fun doesNotDisplayModulePublishStatusIcon() {
+        val state = ModuleListViewState(
+            items = listOf(
+                moduleTemplate.copy(isPublished = null)
+            )
+        )
+        loadPageWithViewState(state)
+        page.moduleUnpublishedIcon.assertNotDisplayed()
         page.modulePublishedIcon.assertNotDisplayed()
     }
 

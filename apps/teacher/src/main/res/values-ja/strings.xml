@@ -884,6 +884,7 @@
     <string name="allSections">すべてのセクション</string>
 
     <string name="gauge">Gauge</string>
+    <string name="arc">Arc</string>
     <string name="ltiLaunchFailure">今回 LTI ツールを読み込めませんでした。</string>
     <string name="downloading">ダウンロード中...</string>
 
