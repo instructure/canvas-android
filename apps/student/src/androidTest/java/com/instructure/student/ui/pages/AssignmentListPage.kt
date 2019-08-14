@@ -77,7 +77,6 @@ class AssignmentListPage : BasePage(pageResId = R.id.assignmentListPage) {
         }
 
         // Check that grade is present, if that is specified
-        //println("expectedGrade=$expectedGrade")
         if(expectedGrade != null) {
             val matcher =  allOf(
                     withText(containsString(expectedGrade)), // grade might be "13", total string "13/15"
