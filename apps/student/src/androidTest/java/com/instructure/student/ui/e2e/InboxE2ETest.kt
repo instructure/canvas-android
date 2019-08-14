@@ -22,6 +22,8 @@ class InboxE2ETest: StudentTest() {
     @Test
     @TestMetaData(Priority.P0, FeatureCategory.INBOX, TestCategory.E2E)
     fun testInboxE2E() {
+
+        // Seed basic data
         val data = seedData(students = 2, teachers = 1, courses = 1)
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
@@ -34,7 +36,7 @@ class InboxE2ETest: StudentTest() {
         GroupsApi.createGroupMembership(group.id, student1.id, teacher.token)
         GroupsApi.createGroupMembership(group.id, student2.id, teacher.token)
 
-        // Seed an email from the teachers to the students
+        // Seed an email from the teacher to the students
         val seededConversation = ConversationsApi.createConversation(
                 token = teacher.token,
                 recipients = listOf(student1.id.toString(), student2.id.toString())
@@ -43,6 +45,7 @@ class InboxE2ETest: StudentTest() {
         // Sign in with student1
         tokenLogin(student1)
 
+        // Make sure that the seeded conversation shows up
         dashboardPage.waitForRender()
         dashboardPage.clickInboxTab()
 
