@@ -210,7 +210,7 @@ class DiscussionsReplyFragment : ParentFragment() {
         } else {
             // Post failure
             // 400 will be handled elsewhere. it means the quota has been reached
-            if (response.code() != 400) {
+            if (response.code() != 400 && isAdded) {
                 messageFailure()
             }
         }
