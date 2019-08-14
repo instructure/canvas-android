@@ -19,6 +19,7 @@
 package com.instructure.canvas.espresso.mockCanvas
 
 import com.instructure.canvas.espresso.mockCanvas.utils.Randomizer
+import com.instructure.canvasapi2.apis.DiscussionAPI
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.toApiString
 import org.threeten.bp.OffsetDateTime
@@ -77,6 +78,9 @@ class MockCanvas {
 
     /** Map of conversation id to conversation object */
     val conversations = mutableMapOf<Long, Conversation>()
+
+    /** Map of announcement id to DiscussionTopic */
+    val announcements = mutableMapOf<Long, DiscussionTopic>()
 
     /** Map of group id to group object */
     val groups = mutableMapOf<Long, Group>()
@@ -148,7 +152,8 @@ fun MockCanvas.Companion.init(
     favoriteCourseCount: Int = 0,
     studentCount: Int = 0,
     teacherCount: Int = 0,
-    parentCount: Int = 0
+    parentCount: Int = 0,
+    announcementCount: Int = 0
 ): MockCanvas {
     data = MockCanvas()
 
@@ -224,9 +229,11 @@ fun MockCanvas.addEnrollment(
         courseId = course.id,
         enrollmentState = "active",
         userId = user.id,
-        observedUser = observedUser
+        observedUser = observedUser,
+        grades = Grades(currentScore = 88.1, currentGrade = "B+")
     )
     enrollments += enrollment.id to enrollment
+    course.enrollments?.add(enrollment) // You won't see grades in the dashboard unless the course has enrollments
     return enrollment
 }
 
@@ -264,4 +271,8 @@ fun MockCanvas.addUser(): User {
     tokens += UUID.randomUUID().toString() to user.id
     userSettings += user.id to UserSettings()
     return user
+}
+
+fun MockCanvas.addAnnouncement() : DiscussionTopic {
+    val topic = DiscussionTopic()
 }

@@ -48,7 +48,7 @@ import kotlinx.android.synthetic.main.fragment_all_courses.*
 import kotlinx.android.synthetic.main.panda_recycler_refresh_layout.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
-import kotlinx.android.synthetic.main.fragment_all_courses.fragment_container as rootView
+import kotlinx.android.synthetic.main.fragment_all_courses.all_courses_fragment_container as rootView
 import kotlinx.android.synthetic.main.panda_recycler_refresh_layout.listView as recyclerView
 
 @PageView(url = "courses")
