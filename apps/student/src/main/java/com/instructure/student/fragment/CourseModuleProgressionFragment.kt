@@ -718,8 +718,8 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
                 val current = moduleItemSequence.items!!.firstOrNull { it.current!!.id == moduleItemId.toLong() }?.current ?: moduleItemSequence.items!![0].current
                 val moduleItems = awaitApi<List<ModuleItem>> { ModuleManager.getAllModuleItems(canvasContext, current!!.moduleId, it, true) }
                 items = ArrayList<ArrayList<ModuleItem>>(1).apply { add(ArrayList(moduleItems)) }
-                modules = ArrayList<ModuleObject>(1).apply { add(moduleItemSequence.modules!![0]) }
-                val moduleHelper = ModuleProgressionUtility.prepareModulesForCourseProgression(this@CourseModuleProgressionFragment.context, current!!.id, modules, items)
+                modules = ArrayList<ModuleObject>(1).apply { moduleItemSequence.modules!!.firstOrNull { it.id == current?.moduleId }?.let { add(it) } }
+                val moduleHelper = ModuleProgressionUtility.prepareModulesForCourseProgression(requireContext(), current!!.id, modules, items)
                 groupPos = moduleHelper.newGroupPosition
                 childPos = moduleHelper.newChildPosition
             }

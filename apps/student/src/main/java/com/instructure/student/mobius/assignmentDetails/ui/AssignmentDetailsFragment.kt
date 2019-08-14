@@ -18,6 +18,7 @@ package com.instructure.student.mobius.assignmentDetails.ui
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.pageview.PageView
@@ -27,7 +28,6 @@ import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.utils.*
 import com.instructure.student.mobius.assignmentDetails.*
 import com.instructure.student.mobius.common.ui.MobiusFragment
-import com.spotify.mobius.EventSource
 
 @PageView(url = "{canvasContext}/assignments/{assignmentId}")
 class AssignmentDetailsFragment :
@@ -77,6 +77,8 @@ class AssignmentDetailsFragment :
             if (route.paramsHash.containsKey(RouterParams.ASSIGNMENT_ID)) {
                 val assignmentId = route.paramsHash[RouterParams.ASSIGNMENT_ID]?.toLong() ?: -1
                 route.arguments.putLong(Const.ASSIGNMENT_ID, assignmentId)
+                // Clear API cache when routing from a URL so we fetch fresh data from the network
+                CanvasRestAdapter.clearCacheUrls("assignments/$assignmentId")
             }
 
             return AssignmentDetailsFragment().withArgs(route.arguments)

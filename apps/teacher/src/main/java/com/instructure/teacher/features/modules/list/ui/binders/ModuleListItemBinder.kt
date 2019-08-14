@@ -41,8 +41,8 @@ class ModuleListItemBinder : ListItemBinder<ModuleListItemData.ModuleItemData, M
             moduleItemIndent.layoutParams.width = item.indent
             moduleItemTitle.setTextForVisibility(item.title)
             moduleItemSubtitle.setTextForVisibility(item.subtitle)
-            moduleItemPublishedIcon.setVisible(item.isPublished)
-            moduleItemUnpublishedIcon.setVisible(!item.isPublished)
+            moduleItemPublishedIcon.setVisible(item.isPublished == true)
+            moduleItemUnpublishedIcon.setVisible(item.isPublished == false)
             moduleItemLoadingView.setVisible(item.isLoading)
             setOnClickListener { callback.moduleItemClicked(item.id) }
             isEnabled = item.enabled

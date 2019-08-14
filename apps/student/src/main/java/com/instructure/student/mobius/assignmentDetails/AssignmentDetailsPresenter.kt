@@ -18,9 +18,7 @@ package com.instructure.student.mobius.assignmentDetails
 
 import android.content.Context
 import androidx.core.content.ContextCompat
-import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.models.DiscussionTopicHeader
-import com.instructure.canvasapi2.models.Quiz
+import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.canvasapi2.utils.isRtl
@@ -37,6 +35,8 @@ import com.instructure.student.mobius.assignmentDetails.ui.gradeCell.GradeCellVi
 import com.instructure.student.mobius.common.ui.Presenter
 import java.text.DateFormat
 import java.util.*
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.contract
 
 object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, AssignmentDetailsViewState> {
     override fun present(model: AssignmentDetailsModel, context: Context): AssignmentDetailsViewState {
@@ -93,8 +93,12 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
                 R.drawable.vd_submitted
             )
         } else {
-            if (assignment.submission?.missing == true ||
-                (assignment.dueAt != null && assignmentState == AssignmentUtils2.ASSIGNMENT_STATE_MISSING)) {
+            // Don't mark LTI assignments as missing when overdue as they usually won't have a real submission for it
+            val isMissingFromDueDate = assignment.turnInType != Assignment.TurnInType.EXTERNAL_TOOL
+                && assignment.dueAt != null
+                && assignmentState == AssignmentUtils2.ASSIGNMENT_STATE_MISSING
+
+            if (assignment.submission?.missing == true || isMissingFromDueDate) {
                 // Mark it missing if the teacher marked it missing or if it's past due
                 Triple(R.string.missingSubmissionLabel, R.color.submissionStatusColorMissing, R.drawable.vd_unsubmitted)
             } else {
@@ -165,8 +169,7 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
             .map { Assignment.submissionTypeToPrettyPrintString(it, context) }
             .joinToString(", ")
 
-        val isExternalToolSubmission = assignment.getSubmissionTypes()
-            .any { it == Assignment.SubmissionType.EXTERNAL_TOOL || it == Assignment.SubmissionType.BASIC_LTI_LAUNCH }
+        val isExternalToolSubmission = assignment.turnInType == Assignment.TurnInType.EXTERNAL_TOOL
 
         // File types
         visibilities.fileTypes = assignment.allowedExtensions.isNotEmpty() && assignment.getSubmissionTypes().contains(Assignment.SubmissionType.ONLINE_UPLOAD)
@@ -207,6 +210,7 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
         if (databaseSubmission == null) {
             visibilities.grade = gradeState != GradeCellViewState.Empty
         } else {
+            visibilities.grade = gradeState is GradeCellViewState.GradeData
             visibilities.submissionUploadStatusInProgress = !databaseSubmission.errorFlag
             visibilities.submissionUploadStatusFailed = databaseSubmission.errorFlag
         }
@@ -287,13 +291,17 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
     }
 
     private fun getDiscussionHeaderViewState(context: Context, discussionTopicHeader: DiscussionTopicHeader): DiscussionHeaderViewState {
-        val authorAvatarUrl = discussionTopicHeader.author?.avatarImageUrl
-        // Can't have a discussion topic header with a null author or date
-        val authorName = discussionTopicHeader.author!!.displayName!!
-        val authoredDate = DateHelper.getMonthDayAtTime(context, discussionTopicHeader.postedDate, context.getString(R.string.at))!!
-        val attachmentIconVisibility = discussionTopicHeader.attachments.isNotEmpty()
+        return if (discussionTopicHeader.author.isDiscussionAuthorNull()) {
+            DiscussionHeaderViewState.NoAuthor
+        } else {
+            val authorAvatarUrl = discussionTopicHeader.author?.avatarImageUrl
+            // Can't have a discussion topic header with a null author or date
+            val authorName = discussionTopicHeader.author?.displayName ?: context.getString(R.string.discussions_unknown_author)
+            val authoredDate = DateHelper.getMonthDayAtTime(context, discussionTopicHeader.postedDate, context.getString(R.string.at)) ?: context.getString(R.string.discussions_unknown_date)
+            val attachmentIconVisibility = discussionTopicHeader.attachments.isNotEmpty()
 
-        return DiscussionHeaderViewState(authorAvatarUrl, authorName, authoredDate, attachmentIconVisibility)
+            DiscussionHeaderViewState.Loaded(authorAvatarUrl, authorName, authoredDate, attachmentIconVisibility)
+        }
     }
 
     private fun getDiscussionText(discussionTopicHeader: DiscussionTopicHeader): String {

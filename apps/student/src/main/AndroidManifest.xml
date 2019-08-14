@@ -84,11 +84,6 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activity.StudentSubmissionActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:theme="@style/SubmissionPSPDFKitTheme" />
-
         <activity android:name=".activity.LoginLandingPageActivity"
             android:theme="@style/LoginFlowTheme.NoActionBar"
             android:launchMode="singleTop"/>

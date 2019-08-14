@@ -37,7 +37,6 @@ import com.instructure.student.adapter.TodoListRecyclerAdapter
 import com.instructure.student.interfaces.NotificationAdapterToFragmentCallback
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.router.RouteMatcher
-import com.instructure.student.util.FeatureFlagPrefs
 import kotlinx.android.synthetic.main.fragment_list_todo.*
 import kotlinx.android.synthetic.main.fragment_list_todo.view.*
 import kotlinx.android.synthetic.main.panda_recycler_refresh_layout.*
@@ -169,11 +168,7 @@ class ToDoListFragment : ParentFragment() {
                     }
                 } else {
                     // Launch assignment details fragment.
-                    if (FeatureFlagPrefs.newAssignmentPage) {
-                        RouteMatcher.route(requireContext(), AssignmentDetailsFragment.makeRoute(toDo.canvasContext!!, toDo.assignment!!.id))
-                    } else {
-                        RouteMatcher.route(requireContext(), AssignmentFragment.makeRoute(toDo.canvasContext!!, toDo.assignment!!))
-                    }
+                    RouteMatcher.route(requireContext(), AssignmentDetailsFragment.makeRoute(toDo.canvasContext!!, toDo.assignment!!.id))
                 }
             }
             toDo?.scheduleItem != null -> // It's a Calendar event from the Upcoming API.
