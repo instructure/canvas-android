@@ -44,8 +44,8 @@ android {
     defaultConfig {
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 21
-        versionName = '1.8.1'
+        versionCode = 22
+        versionName = '1.8.2'
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
         testInstrumentationRunner 'com.instructure.canvas.espresso.CanvasRunner'
