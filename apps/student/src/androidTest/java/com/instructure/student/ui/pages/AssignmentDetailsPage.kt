@@ -16,8 +16,47 @@
  */
 package com.instructure.student.ui.pages
 
+import android.view.View
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.UiController
+import androidx.test.espresso.ViewAction
+import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withText
+import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.assertContainsText
+import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.click
+import com.instructure.espresso.closeSoftKeyboard
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.scrollTo
+import com.instructure.espresso.swipeDown
+import com.instructure.espresso.typeText
 import com.instructure.student.R
+import org.hamcrest.Matcher
+import org.hamcrest.Matchers.allOf
+import org.hamcrest.Matchers.containsString
 
 open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
+    fun verifyAssignmentSubmitted() {
+        onView(withText(R.string.submissionStatusSuccessTitle)).assertDisplayed()
+        onView(allOf(withId(R.id.submissionStatus), withText(R.string.submitted))).assertDisplayed()
+    }
+
+    fun verifyAssignmentGraded(score: String) {
+        onView(allOf(withId(R.id.gradeContainer), isDisplayed())).scrollTo().assertDisplayed()
+        onView(allOf(withId(R.id.score), isDisplayed())).scrollTo().assertContainsText(score)
+        onView(allOf(withId(R.id.submissionStatus), withText(R.string.gradedSubmissionLabel))).assertDisplayed()
+    }
+
+    fun refresh() {
+        onView(allOf(withId(R.id.swipeRefreshLayout),  isDisplayed())).swipeDown()
+    }
+
+    fun goToSubmissionDetails() {
+        onView(withId(R.id.submissionAndRubricLabel)).scrollTo().click()
+    }
 }
+

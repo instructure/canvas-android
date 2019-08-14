@@ -19,7 +19,6 @@
 package com.instructure.student.ui.pages
 
 import android.view.View
-import android.widget.TextView
 import androidx.appcompat.widget.SwitchCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso
@@ -47,21 +46,13 @@ import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.onViewWithId
 import com.instructure.espresso.page.onViewWithText
 import com.instructure.espresso.page.plus
-import com.instructure.espresso.page.withAncestor
 import com.instructure.espresso.page.withId
 import com.instructure.espresso.page.withParent
 import com.instructure.espresso.waitForCheck
-//import com.instructure.espresso.page.withText
 import com.instructure.student.R
-import org.hamcrest.BaseMatcher
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.containsString
-import org.hamcrest.Description
 import org.hamcrest.Matcher
-import org.hamcrest.Matchers.anyOf
-import org.hamcrest.Matchers.not
-import org.hamcrest.TypeSafeMatcher
-import org.hamcrest.core.AllOf
 
 class DashboardPage : BasePage(R.id.dashboardPage) {
 
@@ -185,6 +176,11 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     fun selectCourse(course: Course) {
         assertDisplaysCourse(course)
         onView(withText(course.originalName)).click()
+    }
+
+    fun selectCourse(course: CourseApiModel) {
+        assertDisplaysCourse(course)
+        onView(withText(course.name)).click()
     }
 
 }
