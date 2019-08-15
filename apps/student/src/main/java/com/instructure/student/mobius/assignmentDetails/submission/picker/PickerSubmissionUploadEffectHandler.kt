@@ -63,6 +63,8 @@ class PickerSubmissionUploadEffectHandler constructor(
         event.once(subId) {
             if (it.resultCode == Activity.RESULT_OK) {
                 if (it.requestCode == REQUEST_CAMERA_PIC) {
+                    event.remove() //Remove the event so it doesn't show up again somewhere else
+
                     // Attempt to restore URI in case were were booted from memory
                     val cameraImageUri = Uri.parse(FilePrefs.tempCaptureUri)
 
@@ -74,6 +76,8 @@ class PickerSubmissionUploadEffectHandler constructor(
 
                     consumer.accept(PickerSubmissionUploadEvent.OnFileSelected(cameraImageUri))
                 } else if (it.requestCode in listOf(REQUEST_PICK_IMAGE_GALLERY, REQUEST_PICK_FILE_FROM_DEVICE)) {
+                    event.remove() //Remove the event so it doesn't show up again somewhere else
+
                     if (it.data != null && it.data?.data != null) {
                         consumer.accept(PickerSubmissionUploadEvent.OnFileSelected(it.data!!.data!!))
                     } else {

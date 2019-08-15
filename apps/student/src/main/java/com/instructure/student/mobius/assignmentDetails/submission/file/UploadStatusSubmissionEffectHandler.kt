@@ -107,9 +107,6 @@ class UploadStatusSubmissionEffectHandler(val context: Context, val submissionId
             is UploadStatusSubmissionEffect.OnDeleteSubmission -> {
                 launch { deleteSubmission(effect.submissionId) }
             }
-            is UploadStatusSubmissionEffect.OnCancelAllSubmissions -> {
-                launch { clearAllSubmissions() }
-            }
             is UploadStatusSubmissionEffect.RetrySubmission -> {
                 launch(Dispatchers.Main) { retrySubmission(effect.submissionId) }
             }
@@ -149,26 +146,12 @@ class UploadStatusSubmissionEffectHandler(val context: Context, val submissionId
     }
 
     /**
-     * TODO: Support this better
-     * This has to clear all submissions to stop any that are in progress. Once the file/submission
-     * services have been merged together, we can add support to cancel a submission for a specific
-     * assignment.
-     */
-    private fun clearAllSubmissions() {
-        // Cancel Submission/FileUpload services, this will also mark the submissions as errors
-        view?.getServiceIntents()?.forEach { context.stopService(it) }
-    }
-
-    /**
-     * TODO: Add support for retry
      * This doesn't work currently. The problem is that the FileUploadService will delete the temp
      * directory where the files are accessible when onDestroy is called. Any retry after the service
      * has "finished" will fail as it can no longer find the file on the device.
      */
     private fun retrySubmission(submissionId: Long) {
-        val canvasContext =
-            Db.getInstance(context).submissionQueries.getSubmissionById(submissionId).executeAsOne().canvasContext!!
-        SubmissionService.retryFileSubmission(context, canvasContext, submissionId)
+        SubmissionService.retryFileSubmission(context, submissionId)
 
         view?.submissionRetrying()
     }

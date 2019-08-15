@@ -264,34 +264,12 @@ class UploadStatusSubmissionEffectHandlerTest : Assert() {
     }
 
     @Test
-    fun `OnCancelAllSubmissions results in stopping services`() {
-        val count = 2
-        every { view.getServiceIntents() } returns List(count) { mockk<Intent>(relaxed = true) }
-
-        effectHandler.accept(UploadStatusSubmissionEffect.OnCancelAllSubmissions)
-
-        excludeRecords {
-            context.registerReceiver(any(), any())
-        }
-
-        verify (timeout = 100) {
-            view.getServiceIntents()
-        }
-
-        verify (timeout = 100, exactly = count) {
-            context.stopService(any())
-        }
-
-        confirmVerified(view, context)
-    }
-
-    @Test
     fun `RetrySubmission results in view call for submissionDeleted`() {
         val course = Course()
 
         mockkObject(SubmissionService.Companion)
         every {
-            SubmissionService.retryFileSubmission(any(), any(), any())
+            SubmissionService.retryFileSubmission(any(), any())
         } returns Unit
 
         mockkStatic("com.instructure.student.db.ExtensionsKt")
@@ -307,7 +285,7 @@ class UploadStatusSubmissionEffectHandlerTest : Assert() {
         effectHandler.accept(UploadStatusSubmissionEffect.RetrySubmission(submissionId))
 
         verify (timeout = 100) {
-            SubmissionService.retryFileSubmission(context, course, submissionId)
+            SubmissionService.retryFileSubmission(context, submissionId)
             view.submissionRetrying()
         }
 

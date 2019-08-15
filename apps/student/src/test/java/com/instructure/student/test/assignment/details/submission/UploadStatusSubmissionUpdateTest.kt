@@ -272,23 +272,6 @@ class UploadStatusSubmissionUpdateTest : Assert() {
     }
 
     @Test
-    fun `OnCancelAllClicked results in an OnCancelAllSubmissions effect`() {
-        updateSpec
-            .given(initModel)
-            .whenEvent(
-                UploadStatusSubmissionEvent.OnCancelAllClicked
-            )
-            .then(
-                assertThatNext(
-                    NextMatchers.hasNoModel(),
-                    NextMatchers.hasEffects<UploadStatusSubmissionModel, UploadStatusSubmissionEffect>(
-                        UploadStatusSubmissionEffect.OnCancelAllSubmissions
-                    )
-                )
-            )
-    }
-
-    @Test
     fun `OnRetryClicked results in a RetrySubmission effect`() {
         updateSpec
             .given(initModel)

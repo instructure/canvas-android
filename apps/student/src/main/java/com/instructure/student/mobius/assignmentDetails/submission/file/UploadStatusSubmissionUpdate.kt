@@ -57,9 +57,6 @@ class UploadStatusSubmissionUpdate :
         UploadStatusSubmissionEvent.OnCancelClicked -> {
             Next.dispatch(setOf(UploadStatusSubmissionEffect.OnDeleteSubmission(model.submissionId)))
         }
-        UploadStatusSubmissionEvent.OnCancelAllClicked -> {
-            Next.dispatch(setOf(UploadStatusSubmissionEffect.OnCancelAllSubmissions))
-        }
         UploadStatusSubmissionEvent.OnRetryClicked -> {
             Next.dispatch(setOf(UploadStatusSubmissionEffect.RetrySubmission(model.submissionId)))
         }

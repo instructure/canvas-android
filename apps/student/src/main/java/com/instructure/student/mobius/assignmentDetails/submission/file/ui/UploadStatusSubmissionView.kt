@@ -70,7 +70,6 @@ class UploadStatusSubmissionView(inflater: LayoutInflater, parent: ViewGroup) :
 
         uploadStatusStateDone.setOnClickListener { backPress() }
         uploadStatusStateCancel.setOnClickListener { output.accept(UploadStatusSubmissionEvent.OnCancelClicked) }
-        uploadStatusStateCancelAll.setOnClickListener { output.accept(UploadStatusSubmissionEvent.OnCancelAllClicked) }
         uploadStatusStateRetry.setOnClickListener { output.accept(UploadStatusSubmissionEvent.OnRetryClicked) }
     }
 
@@ -94,7 +93,7 @@ class UploadStatusSubmissionView(inflater: LayoutInflater, parent: ViewGroup) :
         uploadStatusLoading.setVisible(visibilities.loading)
 
         // Set button visibilities
-//        uploadStatusStateRetry.setVisible(visibilities.failed) // TODO: Enable when retry is supported in the FileUploadService
+        uploadStatusStateRetry.setVisible(visibilities.failed)
         uploadStatusStateDone.setVisible(visibilities.succeeded)
         uploadStatusStateCancel.setVisible(visibilities.cancelable)
     }
@@ -134,14 +133,6 @@ class UploadStatusSubmissionView(inflater: LayoutInflater, parent: ViewGroup) :
         Toast.makeText(context, R.string.submittingAssignment, Toast.LENGTH_SHORT).show()
         backPress()
     }
-
-    /**
-     * Define intents here so we don't leak android resources into unit tests
-     */
-    fun getServiceIntents() = listOf(
-        Intent(context, FileUploadService::class.java),
-        Intent(context, SubmissionService::class.java)
-    )
 }
 
 interface UploadListCallback : BasicItemCallback {
@@ -168,13 +159,11 @@ class UploadListBinder : BasicItemBinder<UploadListItemViewState, UploadListCall
 //            fileError.setVisible().text = state.errorMessage
 //        }
 
-        // TODO: Not functionally useful right now since retry isn't enabled (no need to delete items yet)
-        deleteButton.setGone() // TODO: Remove this line
-//        if (state.canDelete) {
-//            deleteButton.setVisible().setOnClickListener { pickerListCallback.deleteClicked(state.position) }
-//        } else {
-//            deleteButton.setGone().setOnClickListener(null)
-//        }
+        if (state.canDelete) {
+            deleteButton.setVisible().setOnClickListener { pickerListCallback.deleteClicked(state.position) }
+        } else {
+            deleteButton.setGone().setOnClickListener(null)
+        }
     }
 }
 
