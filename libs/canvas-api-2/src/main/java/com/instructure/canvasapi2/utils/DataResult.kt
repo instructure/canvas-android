@@ -70,8 +70,8 @@ sealed class DataResult<out A> {
 }
 
 // Simple abstraction for repository layer errors, add to as needed
-sealed class Failure {
-    data class Network(val message: String? = null) : Failure() // Covers 404/500, no internet, etc. Generic case for failed request
-    data class Authorization(val message: String? = null) : Failure() // Covers 401, or permission errors.
-    data class Exception(val exception: Throwable, val message: String? = null) : Failure()
+sealed class Failure(open val message: String?) {
+    data class Network(override val message: String? = null) : Failure(message) // Covers 404/500, no internet, etc. Generic case for failed request
+    data class Authorization(override val message: String? = null) : Failure(message) // Covers 401, or permission errors.
+    data class Exception(val exception: Throwable, override val message: String? = null) : Failure(message)
 }
