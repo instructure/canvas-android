@@ -35,16 +35,18 @@ import org.junit.Test
 class DashboardInteractionTest : StudentTest() {
     override fun displaysPageObjects() = Unit // Not used for interaction tests
 
-    @Stub
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.DASHBOARD, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P0, FeatureCategory.DASHBOARD, TestCategory.INTERACTION)
     fun testNavigateToDashboard() {
         // User should be able to tap and navigate to dashboard page
         val data = getToDashboard(courseCount = 1, favoriteCourseCount = 1)
         dashboardPage.clickInboxTab()
         inboxPage.goToDashboard()
-        dashboardPage.waitForRender()
-        dashboardPage.assertPageObjects()
+        dashboardPage.assertDisplaysCourse(data.courses.values.first()) // disambiguates via isDisplayed()
+
+        // These get confused by the existence of multiple DashboardPages in the layout
+        //dashboardPage.waitForRender()
+        //dashboardPage.assertPageObjects()
     }
 
     @Test

@@ -91,7 +91,7 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     }
 
     fun assertDisplaysCourse(course: Course) {
-        val matcher = withText(containsString(course.originalName!!)) + withId(R.id.titleTextView) // + isDisplayed()
+        val matcher = withText(containsString(course.originalName!!)) + withId(R.id.titleTextView) + isDisplayed()
         scrollAndAssertDisplayed(matcher)
     }
 
