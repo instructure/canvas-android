@@ -18,17 +18,23 @@ package com.instructure.student.test
 
 import android.content.Context
 import android.content.Intent
+import androidx.sqlite.db.SupportSQLiteDatabase
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.FileUtils
 import com.instructure.pandautils.services.NotoriousUploadService
 import com.instructure.pandautils.utils.Const
+import com.instructure.student.db.Db
+import com.instructure.student.db.Schema
 import com.instructure.student.mobius.common.ui.SubmissionService
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.slot
-import io.mockk.verify
+import com.squareup.sqldelight.android.AndroidSqliteDriver
+import io.mockk.*
+import org.junit.After
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -39,7 +45,7 @@ class SubmissionServiceTest : Assert() {
 
     private var assignmentId: Long = 0
     private var assignmentName: String = "Assignment Name"
-    private var mediaFilePath = "/some/path/to/a/file"
+    private var mediaFilePath = "some/path/to/a/file.mp4"
     private var notoriousAction = NotoriousUploadService.ACTION.ASSIGNMENT_SUBMISSION
 
     private lateinit var context: Context
@@ -49,13 +55,28 @@ class SubmissionServiceTest : Assert() {
     fun setup() {
         assignmentId = 123
 
-        context = mockk()
+        context = spyk(ApplicationProvider.getApplicationContext() as Context)
         canvasContext = Course()
 
-        every { context.packageName } returns "test"
+        mockkStatic(ApiPrefs::class)
+        every { ApiPrefs.user } returns User(id = 22)
+        if (!Db.ready) {
+            Db.dbSetup(AndroidSqliteDriver(Schema, context, callback = object : AndroidSqliteDriver.Callback(Schema) {
+                override fun onOpen(db: SupportSQLiteDatabase?) {
+                    super.onOpen(db)
+                    db?.execSQL("PRAGMA foreign_keys=ON;")
+                }
+            })) // In-memory database
+        }
     }
 
-    @Test
+    @After
+    fun cleanup() {
+        Db.dbClear()
+    }
+
+
+@Test
     fun `startTextSubmission starts the service with an intent`() {
         val text = "stuff"
         val intent = slot<Intent>()
@@ -65,10 +86,7 @@ class SubmissionServiceTest : Assert() {
         SubmissionService.startTextSubmission(context, canvasContext, assignmentId, assignmentName, text)
 
         assertEquals(SubmissionService.Action.TEXT_ENTRY.name, intent.captured.action)
-        assertEquals(canvasContext, intent.captured.getParcelableExtra(Const.CANVAS_CONTEXT))
-        assertEquals(assignmentId, intent.captured.getLongExtra(Const.ASSIGNMENT_ID, -1))
-        assertEquals(assignmentName, intent.captured.getStringExtra(Const.ASSIGNMENT_NAME))
-        assertEquals(text, intent.captured.getStringExtra(Const.MESSAGE))
+        assertTrue(intent.captured.hasExtra(Const.SUBMISSION_ID))
     }
 
     @Test
@@ -81,17 +99,13 @@ class SubmissionServiceTest : Assert() {
         SubmissionService.startUrlSubmission(context, canvasContext, assignmentId, assignmentName, url)
 
         assertEquals(SubmissionService.Action.URL_ENTRY.name, intent.captured.action)
-        assertEquals(canvasContext, intent.captured.getParcelableExtra(Const.CANVAS_CONTEXT))
-        assertEquals(assignmentId, intent.captured.getLongExtra(Const.ASSIGNMENT_ID, -1))
-        assertEquals(assignmentName, intent.captured.getStringExtra(Const.ASSIGNMENT_NAME))
-        assertEquals(url, intent.captured.getStringExtra(Const.URL))
+        assertTrue(intent.captured.hasExtra(Const.SUBMISSION_ID))
     }
 
     @Test
     fun `startFileSubmission starts the service with an intent`() {
         val intent = slot<Intent>()
         val assignmentGroupCategoryId = 0L
-        val assignment = Assignment(id = assignmentId, name = assignmentName, groupCategoryId = assignmentGroupCategoryId)
         val files = arrayListOf(FileSubmitObject("", 0L, "", ""))
 
         every { context.startService(capture(intent)) } returns null
@@ -99,9 +113,7 @@ class SubmissionServiceTest : Assert() {
         SubmissionService.startFileSubmission(context, canvasContext, assignmentId, assignmentName, assignmentGroupCategoryId, files)
 
         assertEquals(SubmissionService.Action.FILE_ENTRY.name, intent.captured.action)
-        assertEquals(canvasContext, intent.captured.getParcelableExtra(Const.CANVAS_CONTEXT))
-        assertEquals(assignment, intent.captured.getParcelableExtra(Const.ASSIGNMENT))
-        assertEquals(files, intent.captured.getParcelableArrayListExtra<FileSubmitObject>(Const.FILES))
+        assertTrue(intent.captured.hasExtra(Const.SUBMISSION_ID))
     }
 
     @Test
@@ -120,17 +132,15 @@ class SubmissionServiceTest : Assert() {
     fun `startMediaSubmission starts the service with an intent`() {
         val intent = slot<Intent>()
         val assignmentGroupCategoryId = 0L
-        val assignment = Assignment(id = assignmentId, name = assignmentName, groupCategoryId = assignmentGroupCategoryId)
 
         every { context.startService(capture(intent)) } returns null
 
-        SubmissionService.startMediaSubmission(context, canvasContext, assignment.id, assignment.name, assignment.groupCategoryId, mediaFilePath, notoriousAction)
+        mockkStatic(FileUtils::class)
+        every { FileUtils.getMimeType(any()) } returns "video"
+        SubmissionService.startMediaSubmission(context, canvasContext, assignmentId, assignmentName, assignmentGroupCategoryId, mediaFilePath, notoriousAction)
 
         assertEquals(SubmissionService.Action.MEDIA_ENTRY.name, intent.captured.action)
-        assertEquals(canvasContext, intent.captured.getParcelableExtra(Const.CANVAS_CONTEXT))
-        assertEquals(assignment, intent.captured.getParcelableExtra(Const.ASSIGNMENT))
-        assertEquals(mediaFilePath, intent.captured.getStringExtra(Const.MEDIA_FILE_PATH))
-        assertEquals(notoriousAction, intent.captured.getSerializableExtra(Const.ACTION))
+        assertTrue(intent.captured.hasExtra(Const.SUBMISSION_ID))
     }
 
     @Test
@@ -143,9 +153,6 @@ class SubmissionServiceTest : Assert() {
         SubmissionService.startStudioSubmission(context, canvasContext, assignmentId, assignmentName, url)
 
         assertEquals(SubmissionService.Action.STUDIO_ENTRY.name, intent.captured.action)
-        assertEquals(canvasContext, intent.captured.getParcelableExtra(Const.CANVAS_CONTEXT))
-        assertEquals(assignmentId, intent.captured.getLongExtra(Const.ASSIGNMENT_ID, -1))
-        assertEquals(assignmentName, intent.captured.getStringExtra(Const.ASSIGNMENT_NAME))
-        assertEquals(url, intent.captured.getStringExtra(Const.URL))
+        assertTrue(intent.captured.hasExtra(Const.SUBMISSION_ID))
     }
 }
