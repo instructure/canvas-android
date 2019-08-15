@@ -18,6 +18,7 @@
 
 package com.instructure.student.ui.pages
 
+import android.os.SystemClock.sleep
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.widget.SwitchCompat
@@ -33,6 +34,7 @@ import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import com.instructure.canvasapi2.models.AccountNotification
 import com.instructure.canvasapi2.models.Course
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.dataseeding.model.CourseApiModel
@@ -41,6 +43,7 @@ import com.instructure.espresso.OnViewWithContentDescription
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.WaitForViewWithId
 import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.assertGone
 import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
@@ -52,6 +55,7 @@ import com.instructure.espresso.page.withAncestor
 import com.instructure.espresso.page.withId
 import com.instructure.espresso.page.withParent
 import com.instructure.espresso.page.withText
+import com.instructure.espresso.swipeDown
 import com.instructure.espresso.waitForCheck
 import com.instructure.student.R
 import org.hamcrest.BaseMatcher
@@ -201,6 +205,31 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     fun selectCourse(course: CourseApiModel) {
         assertDisplaysCourse(course)
         onView(withText(course.name)).click()
+    }
+
+    fun assertAnnouncementShowing(announcement: AccountNotification) {
+        onView(withId(R.id.announcementIcon)).assertDisplayed()
+        onView(withId(R.id.announcementTitle) + withText(announcement.subject)).assertDisplayed()
+    }
+
+    fun assertAnnouncementsGone() {
+        onView(withId(R.id.announcementIcon)).check(doesNotExist())
+    }
+
+    // Assumes that a single announcement is showing
+    fun tapAnnouncementAndAssertDisplayed(announcement: AccountNotification) {
+        onView(withId(R.id.tapToView)).assertDisplayed().click()
+        WaitForViewWithId(R.id.canvasWebView)
+        // Include isDisplayed() in the matcher to differentiate from other views with this text
+        onView(withText(announcement.subject) + isDisplayed()).assertDisplayed()
+    }
+
+    fun dismissAnnouncement() {
+        onView(withId(R.id.dismissImageButton)).click()
+    }
+
+    fun refresh() {
+        onView(withId(R.id.swipeRefreshLayout) + withAncestor(R.id.dashboardPage)).swipeDown()
     }
 }
 

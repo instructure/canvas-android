@@ -156,7 +156,7 @@ fun MockCanvas.Companion.init(
     studentCount: Int = 0,
     teacherCount: Int = 0,
     parentCount: Int = 0,
-    announcementCount: Int = 0
+    accountNotificationCount: Int = 0
 ): MockCanvas {
     data = MockCanvas()
 
@@ -187,6 +187,8 @@ fun MockCanvas.Companion.init(
             }
         }
     }
+
+    repeat(accountNotificationCount) { data.addAccountNotification() }
 
     return data
 }
@@ -282,6 +284,3 @@ fun MockCanvas.addUser(): User {
     return user
 }
 
-//fun MockCanvas.addAnnouncement() : DiscussionTopic {
-//    val topic = DiscussionTopic()
-//}
