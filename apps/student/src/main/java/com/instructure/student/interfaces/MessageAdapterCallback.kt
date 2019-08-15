@@ -25,6 +25,7 @@ interface MessageAdapterCallback {
 
     enum class MessageClickAction(val labelResId: Int) {
         REPLY(R.string.reply),
+        REPLY_ALL(R.string.replyAll),
         FORWARD(R.string.forward),
         DELETE(R.string.delete)
     }
