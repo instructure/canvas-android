@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2019 - present Instructure, Inc.
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, version 3 of the License.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
 package com.instructure.student.ui.pages
 
 import android.view.View
@@ -28,8 +44,6 @@ import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.containsString
 
-// There are multiple views with the id "fragment_container".  Hopefully the
-// context of the reference will help to disambiguate.
 class AllCoursesPage : BasePage(R.id.all_courses_fragment_container) {
     private val toolbar by OnViewWithId(R.id.toolbar)
     private val emptyView by OnViewWithId(R.id.emptyView, autoAssert = false)
@@ -57,35 +71,10 @@ class AllCoursesPage : BasePage(R.id.all_courses_fragment_container) {
     }
 
     private fun scrollAndAssertDisplayed(matcher: Matcher<View>) {
-//        onView(allOf(withId(R.id.listView), withAncestor(R.id.all_courses_fragment_container))).assertDisplayed()
-//        onView(allOf(withId(R.id.listView), withAncestor(R.id.all_courses_fragment_container)))
-//                .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(2))
+
+        // The recycler view scrolling is buggy.  Hold off on scroll for now. :-(
 //        // Scroll RecyclerView item into view, if necessary
 //        onView(CoreMatchers.allOf(withId(R.id.listView), withAncestor(R.id.all_courses_fragment_container))) // There may be other listViews
-//                .check( object: ViewAssertion {
-//                    override fun check(view: View?, noViewFoundException: NoMatchingViewException?) {
-//                        println("Assert: top")
-//                        var v = view
-//                        while(v != null) {
-//                            var idString = "(unknown)"
-//                            try {
-//                                idString = view?.resources?.getResourceName(v.id) ?: "(undefined)"
-//                            }
-//                            catch(e: Exception) {}
-//                            println("  Assert: view=${v::class.java.simpleName}, id=$idString, visible=${v.isVisible}")
-//                            v = when(v.parent) {
-//                                is View -> v.parent as View
-//                                else -> null
-//                            }
-//                        }
-//                    }
-//                })
-//                .withFailureHandler { error, viewMatcher ->
-//                    println("FAILURE: isDisplayed = ${viewMatcher.matches(isDisplayed())}")
-//                    println("FAILURE: with correct Id = ${viewMatcher.matches(withId(R.id.titleTextView))}")
-//                    println("FAILURE: error = $error")
-//                    throw error
-//                }
 //                .perform(RecyclerViewActions.scrollTo<RecyclerView.ViewHolder>(ViewMatchers.hasDescendant(matcher)))
 
         // Now make sure that it is displayed

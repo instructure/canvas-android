@@ -256,18 +256,3 @@ class SetSwitchCompat(val position: Boolean) : ViewAction {
 
 }
 
-class ContainsSubtextOf(val superString: String, val minMatchChars: Int) : BaseMatcher<View>() {
-    override fun describeTo(description: Description?) {
-        description?.appendText("matches text that is contained  in $superString")
-    }
-
-    override fun matches(item: Any?): Boolean {
-        if(item is TextView) {
-            val itemText = item.text.toString()
-            return itemText.length >= minMatchChars && superString.contains(itemText, true)
-        }
-        return false
-    }
-
-}
-

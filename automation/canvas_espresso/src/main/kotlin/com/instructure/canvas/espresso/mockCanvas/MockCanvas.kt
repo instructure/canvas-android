@@ -79,9 +79,6 @@ class MockCanvas {
     /** Map of conversation id to conversation object */
     val conversations = mutableMapOf<Long, Conversation>()
 
-    /** Map of announcement id to DiscussionTopic */
-    val announcements = mutableMapOf<Long, DiscussionTopic>()
-
     /** Map of group id to group object */
     val groups = mutableMapOf<Long, Group>()
 
