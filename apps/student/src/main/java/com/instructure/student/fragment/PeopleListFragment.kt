@@ -50,6 +50,9 @@ class PeopleListFragment : ParentFragment(), Bookmarkable {
             }
         }
 
+
+
+        // WHOA!
         override fun onRefreshFinished() {
             setRefreshing(false)
         }
