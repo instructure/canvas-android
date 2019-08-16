@@ -17,6 +17,7 @@ package com.instructure.student.mobius.assignmentDetails.submissionDetails
 
 import android.app.Activity
 import com.instructure.pandautils.utils.OnActivityResults
+import com.instructure.pandautils.utils.remove
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.SubmissionDetailsEmptyContentEvent
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyContentFragment
 import com.instructure.student.mobius.common.EventBusSource
@@ -31,6 +32,7 @@ class SubmissionDetailsEmptyContentEventBusSource : EventBusSource<SubmissionDet
         event.once(subId) {
             when(it.requestCode) {
                 SubmissionDetailsEmptyContentFragment.VIDEO_REQUEST_CODE -> {
+                    event.remove()
                     if (it.resultCode == Activity.RESULT_OK) {
                         sendEvent(SubmissionDetailsEmptyContentEvent.SendVideoRecording)
                     } else {
@@ -38,6 +40,7 @@ class SubmissionDetailsEmptyContentEventBusSource : EventBusSource<SubmissionDet
                     }
                 }
                 SubmissionDetailsEmptyContentFragment.CHOOSE_MEDIA_REQUEST_CODE -> {
+                    event.remove()
                     if (it.resultCode == Activity.RESULT_OK && it.data != null && it.data?.data != null) {
                         sendEvent(SubmissionDetailsEmptyContentEvent.SendMediaFile(it.data!!.data!!))
                     } else {
