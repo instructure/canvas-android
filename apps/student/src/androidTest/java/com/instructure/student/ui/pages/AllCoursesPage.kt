@@ -17,12 +17,7 @@
 package com.instructure.student.ui.pages
 
 import android.view.View
-import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso
-import androidx.test.espresso.NoMatchingViewException
-import androidx.test.espresso.ViewAssertion
-import androidx.test.espresso.contrib.RecyclerViewActions
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvasapi2.models.Course
@@ -37,14 +32,11 @@ import com.instructure.espresso.page.plus
 import com.instructure.espresso.page.withAncestor
 import com.instructure.espresso.page.withId
 import com.instructure.espresso.page.withParent
-import com.instructure.pandautils.utils.isVisible
 import com.instructure.student.R
-import org.hamcrest.CoreMatchers
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
-import org.hamcrest.Matchers.containsString
 
-class AllCoursesPage : BasePage(R.id.all_courses_fragment_container) {
+class AllCoursesPage : BasePage(R.id.allCoursesFragmentContainer) {
     private val toolbar by OnViewWithId(R.id.toolbar)
     private val emptyView by OnViewWithId(R.id.emptyView, autoAssert = false)
     private val listView by WaitForViewWithId(R.id.listView, autoAssert = false)
@@ -59,7 +51,7 @@ class AllCoursesPage : BasePage(R.id.all_courses_fragment_container) {
 
     fun assertDisplaysCourse(course: Course) {
         //val matcher = allOf(withText(course.originalName!!), withId(R.id.titleTextView), isDisplayed())
-        val matcher = allOf(withText(course.originalName!!), withId(R.id.titleTextView), withAncestor(R.id.all_courses_fragment_container))
+        val matcher = allOf(withText(course.originalName!!), withId(R.id.titleTextView), withAncestor(R.id.allCoursesFragmentContainer))
         scrollAndAssertDisplayed(matcher)
     }
 
