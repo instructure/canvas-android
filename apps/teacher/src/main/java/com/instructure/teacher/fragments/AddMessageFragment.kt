@@ -133,10 +133,12 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
 
                 override fun onGlobalLayout() {
                     if (presenter.isReply) {
-                        if (currentMessage != null) {
-                            addInitialRecipients(currentMessage!!.participatingUserIds)
+                        if(currentMessage == null && presenter.conversation?.participants != null && presenter.conversation!!.participants.size == 1) {
+                            // This is the result of replyAll to a monologue
+                            addInitialRecipients(listOf(presenter.conversation!!.participants.first().id))
                         } else {
-                            addInitialRecipients(presenter.conversation!!.audience!!)
+                            addInitialRecipients(currentMessage?.participatingUserIds
+                                    ?: presenter.conversation?.audience ?: emptyList())
                         }
                     } else if (isMessageStudentsWho) {
                         addInitialRecipients(participants.map { it.id })
@@ -387,12 +389,6 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
             return
         }
 
-        // Can't send a message to yourself. Canvas throws a 400, but canvas lets you select yourself as part of a list of people
-        if (recipient.selectedRecipients.size == 1 && recipient.selectedRecipients[0].id == ApiPrefs.user!!.id) {
-            showToast(R.string.addMorePeopleToMessage)
-            return
-        }
-
         // Make the progress bar visible and the other buttons not there so they can't try to re-send the message multiple times
         toolbar.menu.findItem(R.id.menu_send).isVisible = false
         toolbar.menu.findItem(R.id.menu_attachment).isVisible = false
@@ -436,7 +432,7 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
             val recipientUser = presenter.getParticipantById(recipientId) ?: continue
 
             // Skip if the user is the current logged in user
-            if (ApiPrefs.user != null && recipientId == ApiPrefs.user!!.id) continue
+            if (initialRecipientIds.size > 1 && ApiPrefs.user != null && recipientId == ApiPrefs.user!!.id) continue
 
             // Skip if this recipient is already added
             @Suppress("LoopToCallChain") // Suppress converting to use std methods; Compiler thinks the code is jumping outside the method

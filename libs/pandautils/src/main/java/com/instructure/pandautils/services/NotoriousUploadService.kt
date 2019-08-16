@@ -162,15 +162,18 @@ class NotoriousUploadService : IntentService(NotoriousUploadService::class.java.
             notificationManager.notify(notificationId, builder.build())
             uploadStartedToast()
 
-            NotoriousUploader.performUpload(mediaPath) { progress, length ->
-                // Update progress in notification
-                builder.setProgress(1000, (progress * 1000).toInt(), false)
-                notificationManager.notify(notificationId, builder.build())
-                if (submissionId != null) {
-                    val event = ProgressEvent(0, submissionId, (progress * length).toLong(), length)
-                    EventBus.getDefault().postSticky(event)
+            NotoriousUploader.performUpload(mediaPath, object : ProgressRequestUpdateListener {
+                override fun onProgressUpdated(progressPercent: Float, length: Long): Boolean {
+                    // Update progress in notification
+                    builder.setProgress(1000, (progressPercent * 1000).toInt(), false)
+                    notificationManager.notify(notificationId, builder.build())
+                    if (submissionId != null) {
+                        val event = ProgressEvent(0, submissionId, (progressPercent * length).toLong(), length)
+                        EventBus.getDefault().postSticky(event)
+                    }
+                    return true
                 }
-            }.onSuccess {
+            }).onSuccess {
                 handleSuccess(it)
             }.onFailure {
                 handleFailure(it)
