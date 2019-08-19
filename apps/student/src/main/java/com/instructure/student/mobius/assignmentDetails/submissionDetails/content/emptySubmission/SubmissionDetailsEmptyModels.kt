@@ -35,6 +35,7 @@ sealed class SubmissionDetailsEmptyContentEvent {
     data class StoreVideoUri(val uri: Uri?) : SubmissionDetailsEmptyContentEvent()
     data class SendAudioRecordingClicked(val file: File?) : SubmissionDetailsEmptyContentEvent()
     data class SubmissionTypeClicked(val submissionType: Assignment.SubmissionType) : SubmissionDetailsEmptyContentEvent()
+    object SubmissionStarted : SubmissionDetailsEmptyContentEvent()
 }
 
 sealed class SubmissionDetailsEmptyContentEffect {
@@ -44,6 +45,7 @@ sealed class SubmissionDetailsEmptyContentEffect {
     object ShowAudioRecordingError : SubmissionDetailsEmptyContentEffect()
     object ShowVideoRecordingError : SubmissionDetailsEmptyContentEffect()
     object ShowMediaPickingError : SubmissionDetailsEmptyContentEffect()
+    object SubmissionStarted : SubmissionDetailsEmptyContentEffect()
     data class UploadVideoSubmission(val uri: Uri, val course: Course, val assignment: Assignment) : SubmissionDetailsEmptyContentEffect()
     data class UploadAudioSubmission(val file: File, val course: Course, val assignment: Assignment) : SubmissionDetailsEmptyContentEffect()
     data class UploadMediaFileSubmission(val uri: Uri, val course: Course, val assignment: Assignment) : SubmissionDetailsEmptyContentEffect()

@@ -35,6 +35,7 @@ import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsView
 import com.instructure.student.mobius.common.ui.EffectHandler
 import com.instructure.student.util.getResourceSelectorUrl
 import com.instructure.student.util.getStudioLTITool
+import com.pspdfkit.framework.it
 import com.spotify.mobius.Connection
 import com.spotify.mobius.functions.Consumer
 import com.squareup.sqldelight.Query
@@ -193,7 +194,7 @@ class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Lon
     }
 
     private fun launchMediaPicker() {
-        view?.getChooseMediaIntent()?.let {
+        chooseMediaIntent.let {
             (context as Activity).startActivityForResult(it, AssignmentDetailsFragment.CHOOSE_MEDIA_REQUEST_CODE)
         }
     }

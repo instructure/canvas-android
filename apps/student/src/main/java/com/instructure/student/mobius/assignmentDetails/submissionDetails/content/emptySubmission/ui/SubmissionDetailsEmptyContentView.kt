@@ -174,19 +174,6 @@ class SubmissionDetailsEmptyContentView(
         floatingRecordingView.stoppedCallback = {}
     }
 
-    fun getVideoIntent(fileUri: Uri?): Intent? {
-        return Intent(MediaStore.ACTION_VIDEO_CAPTURE).apply {
-            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            putExtra(MediaStore.EXTRA_OUTPUT, fileUri)
-        }
-    }
-
-    fun getChooseMediaIntent() = Intent(Intent.ACTION_GET_CONTENT).apply {
-        flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
-        type = "video/*, audio/*"
-        addCategory(Intent.CATEGORY_OPENABLE)
-    }
-
     fun showPermissionDeniedToast() {
         Toast.makeText(context, com.instructure.pandautils.R.string.permissionDenied, Toast.LENGTH_LONG).show()
     }

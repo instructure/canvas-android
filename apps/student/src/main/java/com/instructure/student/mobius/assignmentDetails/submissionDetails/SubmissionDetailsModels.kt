@@ -27,6 +27,7 @@ sealed class SubmissionDetailsEvent {
     object AudioRecordingClicked : SubmissionDetailsEvent()
     object VideoRecordingClicked : SubmissionDetailsEvent()
     object StopMediaRecordingClicked : SubmissionDetailsEvent()
+    object SubmissionUploadFinished : SubmissionDetailsEvent()
     data class VideoRecordingReplayClicked(val file: File?) : SubmissionDetailsEvent()
     data class SendMediaCommentClicked(val file: File?) : SubmissionDetailsEvent()
     data class AttachmentClicked(val file: Attachment) : SubmissionDetailsEvent()

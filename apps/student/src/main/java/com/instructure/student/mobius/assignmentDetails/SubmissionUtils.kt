@@ -132,3 +132,11 @@ fun getSubmissionTypesVisibilities(assignment: Assignment, isStudioEnabled: Bool
 
     return visibilities
 }
+
+val chooseMediaIntent: Intent by lazy {
+    Intent(Intent.ACTION_GET_CONTENT).apply {
+        flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+        type = "video/*, audio/*"
+        addCategory(Intent.CATEGORY_OPENABLE)
+    }
+}

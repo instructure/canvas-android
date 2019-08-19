@@ -16,7 +16,6 @@
 package com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission
 
 import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.student.mobius.common.ui.UpdateInit
 import com.spotify.mobius.First
 import com.spotify.mobius.Next
@@ -75,51 +74,13 @@ class SubmissionDetailsEmptyContentUpdate : UpdateInit<SubmissionDetailsEmptyCon
         is SubmissionDetailsEmptyContentEvent.OnVideoRecordingError -> {
             Next.dispatch(setOf(SubmissionDetailsEmptyContentEffect.ShowVideoRecordingError))
         }
-//        is SubmissionDetailsEmptyContentEvent.SubmissionStatusUpdated -> {
-//            val newModel = model.copy(
-//                databaseSubmission = event.submission
-//            )
-//            // Null submission emitted to this event means that the submission was successful and was deleted, so we need to load
-//            if (event.submission == null) {
-//                Next.next<SubmissionDetailsEmptyContentModel, SubmissionDetailsEmptyContentEffect>(
-//                    newModel,
-//                    setOf(
-//                        SubmissionDetailsEmptyContentEffect.LoadData(
-//                            model.assignmentId,
-//                            model.course.id,
-//                            true
-//                        )
-//                    )
-//                )
-//            } else {
-//                Next.next(newModel)
-//            }
-//        }
         is SubmissionDetailsEmptyContentEvent.SubmissionTypeClicked -> {
             // If a user is trying to submit something to an assignment and the assignment is null, something is terribly wrong.
             Next.dispatch(setOf(SubmissionDetailsEmptyContentEffect.ShowCreateSubmissionView(event.submissionType, model.course, model.assignment)))
         }
-//        is SubmissionDetailsEmptyContentEvent.InternalRouteRequested -> {
-//            val effect = SubmissionDetailsEmptyContentEffect.RouteInternally(
-//                url = event.url,
-//                course = model.course,
-//                assignment = model.assignment
-//            )
-//            Next.dispatch(setOf(effect))
-//        }
         is SubmissionDetailsEmptyContentEvent.StoreVideoUri -> {
             Next.next(model.copy(videoFileUri = event.uri))
         }
+        SubmissionDetailsEmptyContentEvent.SubmissionStarted -> Next.dispatch(setOf(SubmissionDetailsEmptyContentEffect.SubmissionStarted))
     }
-
-//    private fun dbSubmissionIfNewest(dbSubmission: Submission?, apiSubmission: com.instructure.canvasapi2.models.Submission?): Submission? {
-//        return when {
-//            dbSubmission == null -> null
-//            apiSubmission == null -> dbSubmission
-//            apiSubmission.submittedAt == null -> dbSubmission
-//            dbSubmission.lastActivityDate == null -> null
-//            OffsetDateTime.parse(apiSubmission.submittedAt.toApiString()).isBefore(dbSubmission.lastActivityDate) -> dbSubmission
-//            else -> null
-//        }
-//    }
 }

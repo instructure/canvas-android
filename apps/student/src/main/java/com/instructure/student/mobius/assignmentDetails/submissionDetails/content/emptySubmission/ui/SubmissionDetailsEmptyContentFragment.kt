@@ -21,10 +21,18 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.models.Quiz
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.utils.*
+import com.instructure.student.Submission
+import com.instructure.student.db.Db
+import com.instructure.student.db.getInstance
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsEmptyContentEventBusSource
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.*
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.SubmissionCommentsEvent
+import com.instructure.student.mobius.common.DBSource
 import com.instructure.student.mobius.common.ui.MobiusFragment
+import com.pspdfkit.framework.it
 
 class SubmissionDetailsEmptyContentFragment :
         MobiusFragment<SubmissionDetailsEmptyContentModel, SubmissionDetailsEmptyContentEvent, SubmissionDetailsEmptyContentEffect, SubmissionDetailsEmptyContentView, SubmissionDetailsEmptyContentViewState>() {
@@ -40,7 +48,20 @@ class SubmissionDetailsEmptyContentFragment :
     override fun makeView(inflater: LayoutInflater, parent: ViewGroup) = SubmissionDetailsEmptyContentView(canvasContext, inflater, parent)
     override fun makePresenter() = SubmissionDetailsEmptyContentPresenter
     override fun makeInitModel() = SubmissionDetailsEmptyContentModel(assignment, canvasContext, isStudioEnabled, quiz, studioLTITool = studioLTITool)
-    override fun getExternalEventSources() = listOf(SubmissionDetailsEmptyContentEventBusSource())
+    override fun getExternalEventSources() = listOf(
+        SubmissionDetailsEmptyContentEventBusSource(),
+        DBSource.ofSingle<Submission, SubmissionDetailsEmptyContentEvent>(
+            Db.getInstance(ContextKeeper.appContext)
+                .submissionQueries
+                .getSubmissionsByAssignmentId(assignment.id, ApiPrefs.user?.id ?: -1)
+        ) { submission ->
+            if (submission != null && submission.progress == null) {
+                // Submission was just inserted - back out to the assignment details screen
+               SubmissionDetailsEmptyContentEvent.SubmissionStarted
+            } else // Submission is either currently being uploaded, or there is no submission being uploaded - do nothing
+                null
+        }
+    )
 
     companion object {
         const val VIDEO_REQUEST_CODE = 45520
@@ -56,6 +77,13 @@ class SubmissionDetailsEmptyContentFragment :
             }
 
             return SubmissionDetailsEmptyContentFragment().withArgs(bundle)
+        }
+
+        fun isFileRequest(requestCode: Int): Boolean {
+            return requestCode in listOf(
+                VIDEO_REQUEST_CODE,
+                CHOOSE_MEDIA_REQUEST_CODE
+            )
         }
     }
 }

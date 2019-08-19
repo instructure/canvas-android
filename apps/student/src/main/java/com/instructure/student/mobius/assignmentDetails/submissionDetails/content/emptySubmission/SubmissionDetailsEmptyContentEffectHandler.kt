@@ -22,50 +22,14 @@ import com.instructure.canvasapi2.models.DiscussionTopic
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.exhaustive
-import com.instructure.student.Submission
-import com.instructure.student.db.Db
-import com.instructure.student.db.getInstance
-import com.instructure.student.mobius.assignmentDetails.getSubmissionTypesVisibilities
-import com.instructure.student.mobius.assignmentDetails.launchAudio
-import com.instructure.student.mobius.assignmentDetails.launchVideo
+import com.instructure.student.mobius.assignmentDetails.*
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyContentFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyContentView
-import com.instructure.student.mobius.assignmentDetails.ui.SubmissionTypesVisibilities
-import com.instructure.student.mobius.assignmentDetails.uploadAudioRecording
 import com.instructure.student.mobius.common.ui.EffectHandler
 import com.instructure.student.util.getResourceSelectorUrl
-import com.spotify.mobius.Connection
-import com.spotify.mobius.functions.Consumer
-import com.squareup.sqldelight.Query
 
 class SubmissionDetailsEmptyContentEffectHandler(val context: Context, val assignmentId: Long) :
-    EffectHandler<SubmissionDetailsEmptyContentView, SubmissionDetailsEmptyContentEvent, SubmissionDetailsEmptyContentEffect>(),
-    Query.Listener {
-
-    private var submissionQuery: Query<Submission>? = null
-
-    override fun connect(output: Consumer<SubmissionDetailsEmptyContentEvent>): Connection<SubmissionDetailsEmptyContentEffect> {
-        val db = Db.getInstance(context)
-        submissionQuery = db.submissionQueries.getSubmissionsByAssignmentId(assignmentId, ApiPrefs.user?.id ?: -1)
-        submissionQuery?.addListener(this@SubmissionDetailsEmptyContentEffectHandler)
-
-        return super.connect(output)
-    }
-
-    override fun dispose() {
-        super.dispose()
-        submissionQuery?.removeListener(this)
-        submissionQuery = null
-    }
-
-    override fun queryResultsChanged() {
-        // If we have a change in submission query, then a submission was made - go back to the Assignment details page
-        view?.returnToAssignmentDetails()
-
-        // Only want to catch the update once
-        submissionQuery?.removeListener(this)
-        submissionQuery = null
-    }
+    EffectHandler<SubmissionDetailsEmptyContentView, SubmissionDetailsEmptyContentEvent, SubmissionDetailsEmptyContentEffect>() {
 
     override fun accept(effect: SubmissionDetailsEmptyContentEffect) {
         when (effect) {
@@ -104,14 +68,15 @@ class SubmissionDetailsEmptyContentEffectHandler(val context: Context, val assig
                     Assignment.SubmissionType.ONLINE_TEXT_ENTRY -> view?.showOnlineTextEntryView(effect.assignment.id, effect.assignment.name)
                     Assignment.SubmissionType.ONLINE_URL -> view?.showOnlineUrlEntryView(effect.assignment.id, effect.assignment.name, effect.course)
                     Assignment.SubmissionType.EXTERNAL_TOOL, Assignment.SubmissionType.BASIC_LTI_LAUNCH -> view?.showLTIView(effect.course, effect.ltiUrl ?: "", effect.assignment.name ?: "")
-                    else -> view?.showMediaRecordingView() // Assignment.SubmissionType.MEDIA_RECORDING
+                    else -> view?.showMediaRecordingView() // e.g. Assignment.SubmissionType.MEDIA_RECORDING
                 }
             }
+            SubmissionDetailsEmptyContentEffect.SubmissionStarted -> view?.returnToAssignmentDetails()
         }.exhaustive
     }
 
     private fun launchMediaPicker() {
-        view?.getChooseMediaIntent()?.let {
+       chooseMediaIntent.let {
             (context as Activity).startActivityForResult(it, SubmissionDetailsEmptyContentFragment.CHOOSE_MEDIA_REQUEST_CODE)
         }
     }

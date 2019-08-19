@@ -136,6 +136,9 @@ class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDet
                     Next.dispatch<SubmissionDetailsModel, SubmissionDetailsEffect>(setOf(SubmissionDetailsEffect.ShowMediaCommentError))
                 }
             }
+            SubmissionDetailsEvent.SubmissionUploadFinished ->  Next.next(
+                model.copy(isLoading = true),
+                setOf(SubmissionDetailsEffect.LoadData(model.canvasContext.id, model.assignmentId)))
         }
     }
 
