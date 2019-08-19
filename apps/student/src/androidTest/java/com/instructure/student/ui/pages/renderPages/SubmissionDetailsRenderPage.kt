@@ -65,7 +65,7 @@ class SubmissionDetailsRenderPage : SubmissionDetailsPage() {
         errorView.assertVisible()
         onViewWithText(R.string.submissionDetailsErrorTitle).assertDisplayed()
         onViewWithText(R.string.error_loading_submission).assertDisplayed()
-        onViewWithId(R.id.retryButton).assertDisplayed()
+        onViewWithId(R.id.retryButton).scrollTo().assertDisplayed()
     }
 
     fun assertDisplaysContent() {
