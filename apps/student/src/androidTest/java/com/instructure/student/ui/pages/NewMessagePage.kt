@@ -16,7 +16,11 @@
  */
 package com.instructure.student.ui.pages
 
+import android.view.View
+import android.widget.TextView
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.NoMatchingViewException
+import androidx.test.espresso.ViewAssertion
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
@@ -31,6 +35,7 @@ import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
 import com.instructure.espresso.typeText
 import com.instructure.student.R
+import junit.framework.Assert.assertTrue
 import org.hamcrest.Matchers.allOf
 
 class NewMessagePage : BasePage() {
@@ -55,6 +60,10 @@ class NewMessagePage : BasePage() {
         onView(ViewMatchers.withText(group.name)).click()
     }
 
+    fun assertRecipientsNotEmpty() {
+        onView(withId(R.id.recipientsView)).check(AssertTextEmpty())
+    }
+
     fun setRecipient(user: CanvasUserApiModel, isGroupRecipient: Boolean = false) {
         addContactsButton.click()
         if(!isGroupRecipient) onView(withText("Students")).click()
@@ -75,9 +84,20 @@ class NewMessagePage : BasePage() {
         sendButton.click()
     }
 
-    fun populateMessage(course: CourseApiModel, toUser: CanvasUserApiModel, subject: String, message: String) {
+    /**
+     * Populate a normal non-group message
+     * Fills in [course], [toUser], [subject] and [message] (content) for the message.
+     * If [recipientPopulated] is true, then toUser is ignored.  If false, then [toUser] is put into the recipients section.
+     */
+    fun populateMessage(course: CourseApiModel, toUser: CanvasUserApiModel, subject: String, message: String, recipientPopulated: Boolean = false) {
         selectCourse(course)
-        setRecipient(toUser)
+        if(recipientPopulated) {
+            recipientsEditTextView.check(AssertTextPopulated())
+        }
+        else {
+            recipientsEditTextView.check(AssertTextEmpty())
+            setRecipient(toUser)
+        }
         setSubject(subject)
         Espresso.closeSoftKeyboard()
         setMessage(message)
@@ -91,5 +111,23 @@ class NewMessagePage : BasePage() {
         Espresso.closeSoftKeyboard()
         setMessage(message)
         Espresso.closeSoftKeyboard()
+    }
+}
+
+/** Custom ViewAssertion to make sure that a TextBox is empty */
+class AssertTextEmpty : ViewAssertion {
+    override fun check(view: View?, noViewFoundException: NoMatchingViewException?) {
+        when(view) {
+            is TextView -> assertTrue(view.text.isNullOrEmpty())
+        }
+    }
+}
+
+/** Custom ViewAssertion to make sure that a TextBox is populated with something */
+class AssertTextPopulated : ViewAssertion {
+    override fun check(view: View?, noViewFoundException: NoMatchingViewException?) {
+        when(view) {
+            is TextView -> assertTrue(view.text != null && view.text.length > 0)
+        }
     }
 }

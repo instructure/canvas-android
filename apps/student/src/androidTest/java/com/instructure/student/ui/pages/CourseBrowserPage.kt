@@ -43,6 +43,11 @@ class CourseBrowserPage : BasePage(R.id.courseBrowserPage) {
         selectSection(matcher)
     }
 
+    fun selectPeople() {
+        val matcher = withText("People")
+        selectSection(matcher)
+    }
+
     private fun selectSection(matcher: Matcher<View>) {
         // Scroll RecyclerView item into view, if necessary
         onView(allOf(withId(R.id.courseBrowserRecyclerView), isDisplayed()))
