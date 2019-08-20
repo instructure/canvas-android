@@ -84,7 +84,11 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
             NumberHelper.formatDecimal(assignment.pointsPossible, 1, true)
         )
 
-        // Submission state
+        // Submission Status under title
+        visibilities.submissionStatus = assignment.turnInType != Assignment.TurnInType.ON_PAPER
+                && assignment.turnInType != Assignment.TurnInType.NONE
+
+        // Submission state - Some of this may be hidden by the visibility above
         val assignmentState = AssignmentUtils2.getAssignmentState(assignment, assignment.submission, false)
         val (submittedLabelRes, submittedColorRes, submittedIconRes) = if (assignment.isSubmitted) {
             Triple(

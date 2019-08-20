@@ -50,6 +50,7 @@ sealed class AssignmentDetailsViewState(val visibilities: AssignmentDetailsVisib
 data class AssignmentDetailsVisibilities (
     var loading: Boolean = false,
     var errorMessage: Boolean = false,
+    var submissionStatus: Boolean = false,
     var title: Boolean = false,
     var dueDate: Boolean = false,
     var submissionTypes: Boolean = false,
