@@ -30,10 +30,11 @@ class PickerSubmissionUploadRenderPage : BasePage(R.id.pickerSubmissionUploadPag
     val submitButton by OnViewWithId(R.id.menuSubmit)
     val loading by OnViewWithId(R.id.fileLoading)
 
-    val fabPick by OnViewWithId(R.id.pickFab)
-    val fabFile by OnViewWithId(R.id.pickFabFile)
-    val fabCamera by OnViewWithId(R.id.pickFabCamera)
-    val fabGallery by OnViewWithId(R.id.pickFabGallery)
+    val sourcesContainer by OnViewWithId(R.id.sourcesContainer)
+    val sourcesDivider by OnViewWithId(R.id.sourcesDivider)
+    val deviceButton by OnViewWithId(R.id.sourceDevice)
+    val cameraButton by OnViewWithId(R.id.sourceCamera)
+    val galleryButton by OnViewWithId(R.id.sourceGallery)
 
     val emptyMessage by OnViewWithId(R.id.message)
 

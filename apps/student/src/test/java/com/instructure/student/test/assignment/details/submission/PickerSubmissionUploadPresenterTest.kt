@@ -54,10 +54,10 @@ class PickerSubmissionUploadPresenterTest : Assert() {
             mode = PickerSubmissionMode.FileSubmission
         )
         baseVisibilities = PickerVisibilities(
-            fab = true,
-            fabGallery = true,
-            fabCamera = true,
-            fabFile = true,
+            sources = true,
+            sourceGallery = true,
+            sourceCamera = true,
+            sourceFile = true,
             loading = false
         )
     }
@@ -83,8 +83,8 @@ class PickerSubmissionUploadPresenterTest : Assert() {
         val model = baseModel.copy(allowedExtensions = listOf("broken"))
         val expectedState = PickerSubmissionUploadViewState.Empty(
             baseVisibilities.copy(
-                fabCamera = false,
-                fabGallery = false
+                sourceCamera = false,
+                sourceGallery = false
             )
         )
         val actualState = PickerSubmissionUploadPresenter.present(model, context)
@@ -174,10 +174,10 @@ class PickerSubmissionUploadPresenterTest : Assert() {
         val expectedState = PickerSubmissionUploadViewState.FileList(
             baseVisibilities.copy(
                 submit = true,
-                fab = false,
-                fabCamera = false,
-                fabGallery = false,
-                fabFile = false
+                sources = false,
+                sourceCamera = false,
+                sourceGallery = false,
+                sourceFile = false
             ), fileViewStates
         )
         val actualState = PickerSubmissionUploadPresenter.present(model, context)
