@@ -31,6 +31,7 @@ import com.instructure.student.Submission
 import com.instructure.student.db.Db
 import com.instructure.student.db.StudentDb
 import com.instructure.student.db.getInstance
+import com.instructure.student.mobius.assignmentDetails.chooseMediaIntent
 import com.instructure.student.mobius.assignmentDetails.getVideoIntent
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.SubmissionDetailsEmptyContentEffect
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.SubmissionDetailsEmptyContentEffectHandler
@@ -540,7 +541,7 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
         every { FileProvider.getUriForFile(any(), any(), any()) } returns uri
 
         mockkStatic(FilePrefs::class)
-        every { FilePrefs.tempCaptureUri = any() } answers { "" }
+        every { FilePrefs.tempCaptureUri = any() }
 
         mockkStatic("com.instructure.student.mobius.assignmentDetails.SubmissionUtilsKt")
         every { any<Uri>().getVideoIntent() } returns intent
@@ -580,7 +581,9 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
         every { intent.putExtra(MediaStore.EXTRA_OUTPUT, uri) } returns intent
 
         every { context.packageManager.queryIntentActivities(any(), any()).size } returns 1
-        every { view.getChooseMediaIntent() } returns intent
+
+        mockkStatic("com.instructure.student.mobius.assignmentDetails.SubmissionUtilsKt")
+        every { chooseMediaIntent } returns intent
 
         excludeRecords {
             context.packageName

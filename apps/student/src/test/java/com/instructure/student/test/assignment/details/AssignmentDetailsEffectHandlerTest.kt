@@ -16,7 +16,6 @@
 package com.instructure.student.test.assignment.details
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.core.content.FileProvider
@@ -38,10 +37,7 @@ import com.instructure.student.Submission
 import com.instructure.student.db.Db
 import com.instructure.student.db.StudentDb
 import com.instructure.student.db.getInstance
-import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsEffect
-import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsEffectHandler
-import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsEvent
-import com.instructure.student.mobius.assignmentDetails.getVideoIntent
+import com.instructure.student.mobius.assignmentDetails.*
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsView
 import com.instructure.student.mobius.assignmentDetails.ui.SubmissionTypesVisibilities
@@ -586,7 +582,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
         connection.accept(AssignmentDetailsEffect.ShowUploadStatusView(submission))
 
         verify(timeout = 100) {
-            view.showOnlineTextEntryView(submission.assignmentId!!, submission.assignmentName, submission.submissionEntry)
+            view.showOnlineTextEntryView(submission.assignmentId, submission.assignmentName, submission.submissionEntry)
         }
 
         confirmVerified(view)
@@ -598,7 +594,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
         connection.accept(AssignmentDetailsEffect.ShowUploadStatusView(submission))
 
         verify(timeout = 100) {
-            view.showOnlineUrlEntryView(submission.assignmentId!!, submission.assignmentName, course, submission.submissionEntry)
+            view.showOnlineUrlEntryView(submission.assignmentId, submission.assignmentName, course, submission.submissionEntry)
         }
 
         confirmVerified(view)
@@ -1075,7 +1071,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
         every { FileProvider.getUriForFile(any(), any(), any()) } returns uri
 
         mockkStatic(FilePrefs::class)
-        every { FilePrefs.tempCaptureUri = any() } answers { "" }
+        every { FilePrefs.tempCaptureUri = any() }
 
         mockkStatic("com.instructure.student.mobius.assignmentDetails.SubmissionUtilsKt")
         every { any<Uri>().getVideoIntent() } returns intent
@@ -1097,13 +1093,12 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     }
 
     private fun testMediaPicker() {
-
-        val uri = mockk<Uri>()
         val intent = mockk<Intent>()
         every { intent.action } returns ""
         every { context.packageManager.queryIntentActivities(any(), any()).size } returns 1
 
-        every { view.getChooseMediaIntent() } returns intent
+        mockkStatic("com.instructure.student.mobius.assignmentDetails.SubmissionUtilsKt")
+        every { chooseMediaIntent } returns intent
 
         excludeRecords {
             context.packageName
