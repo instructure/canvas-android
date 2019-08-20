@@ -18,7 +18,6 @@ package com.instructure.panda_processor
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
-import com.instructure.panda_annotations.TestMetaData
 
 class CustomFileBuilder(
         totalWritten: Int,
@@ -70,6 +69,8 @@ class CustomFileBuilder(
         Notifications = stubbed(${featureCounts[FeatureCategory.NOTIFICATIONS]?.stubbed}) / written(${featureCounts[FeatureCategory.NOTIFICATIONS]?.written})
         Annotations = stubbed(${featureCounts[FeatureCategory.ANNOTATIONS]?.stubbed}) / written(${featureCounts[FeatureCategory.ANNOTATIONS]?.written})
         Announcements = stubbed(${featureCounts[FeatureCategory.ANNOUNCEMENTS]?.stubbed}) / written(${featureCounts[FeatureCategory.ANNOUNCEMENTS]?.written})
+        Comments = stubbed(${featureCounts[FeatureCategory.COMMENTS]?.stubbed}) / written(${featureCounts[FeatureCategory.COMMENTS]?.written})
+        Bookmarks = stubbed(${featureCounts[FeatureCategory.BOOKMARKS]?.stubbed}) / written(${featureCounts[FeatureCategory.BOOKMARKS]?.written})
         
         *** Manual Only ***
         ${manualOnly.forEach { formatManualTest(it) }}

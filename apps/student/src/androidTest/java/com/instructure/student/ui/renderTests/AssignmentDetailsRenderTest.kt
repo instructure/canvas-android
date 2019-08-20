@@ -460,6 +460,24 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
 
     @Test
     @TestMetaData(Priority.P2, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER)
+    fun displaysBookmarkMenuItem() {
+        val course = baseModel.course.copy(id = 123)
+        val assignment = Assignment(
+            name = "Test Assignment",
+            id = 456,
+            htmlUrl = "https://www.instructure.com/courses/123/assignments/456"
+        )
+        val model = baseModel.copy(
+            course = course,
+            assignmentResult = DataResult.Success(assignment)
+        )
+        loadPageWithModel(model)
+        assignmentDetailsRenderPage.openOverflowMenu()
+        assignmentDetailsRenderPage.assertDisplaysAddBookmarkButton()
+    }
+
+    @Test
+    @TestMetaData(Priority.P2, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER)
     fun setsPointsContentDescription() {
         val assignment = Assignment(
             name = "Test Assignment",

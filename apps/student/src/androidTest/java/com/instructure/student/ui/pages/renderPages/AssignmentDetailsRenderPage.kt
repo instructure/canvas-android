@@ -16,11 +16,13 @@
  */
 package com.instructure.student.ui.pages.renderPages
 
+import androidx.test.espresso.Espresso
 import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
 import androidx.test.espresso.web.sugar.Web.onWebView
 import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
 import androidx.test.espresso.web.webdriver.DriverAtoms.getText
 import androidx.test.espresso.web.webdriver.Locator
+import androidx.test.platform.app.InstrumentationRegistry
 import com.instructure.espresso.*
 import com.instructure.espresso.page.onViewWithText
 import com.instructure.student.R
@@ -109,6 +111,14 @@ class AssignmentDetailsRenderPage : AssignmentDetailsPage() {
 
     fun assertDisplaysFailedSubmission() {
         submissionStatusFailed.assertVisible()
+    }
+
+    fun assertDisplaysAddBookmarkButton() {
+        onViewWithText(R.string.addBookmark).assertDisplayed()
+    }
+
+    fun openOverflowMenu() {
+        Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().targetContext)
     }
 
     fun assertDisplaysDescription(text: String) {

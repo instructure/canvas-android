@@ -32,6 +32,7 @@ import android.widget.Toast
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.exhaustive
+import com.instructure.interactions.Navigation
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.pandautils.views.RecordingMediaType
@@ -69,6 +70,7 @@ class AssignmentDetailsView(
         toolbar.setupAsBackButton { (context as? Activity)?.onBackPressed() }
         toolbar.title = context.getString(R.string.assignmentDetails)
         toolbar.subtitle = canvasContext.name
+        toolbar.setMenu(R.menu.bookmark_menu) { consumer?.accept(AssignmentDetailsEvent.AddBookmarkClicked) }
         submissionStatusFailedSubtitle.setTextColor(ThemePrefs.buttonColor)
         submissionStatusUploadingSubtitle.setTextColor(ThemePrefs.buttonColor)
         submissionAndRubricLabel.setTextColor(ThemePrefs.buttonColor)
@@ -341,4 +343,6 @@ class AssignmentDetailsView(
     fun launchFilePickerView(uri: Uri, course: Course, assignment: Assignment) {
         RouteMatcher.route(context, PickerSubmissionUploadFragment.makeRoute(course, assignment, uri))
     }
+
+    fun showBookmarkDialog() = (context as? Navigation)?.addBookmark()
 }

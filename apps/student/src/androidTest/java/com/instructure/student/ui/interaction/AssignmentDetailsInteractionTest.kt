@@ -61,4 +61,11 @@ class AssignmentDetailsInteractionTest : StudentTest() {
         // Student can preview an assignment attachment
     }
 
+    @Stub
+    @Test
+    @TestMetaData(Priority.P2, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, true, FeatureCategory.BOOKMARKS)
+    fun testAssignments_createBookmark() {
+        // Student can bookmark the assignment
+    }
+
 }
