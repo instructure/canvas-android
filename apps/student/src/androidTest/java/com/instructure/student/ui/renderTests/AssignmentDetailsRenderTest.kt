@@ -16,6 +16,7 @@
  */
 package com.instructure.student.ui.renderTests
 
+import android.graphics.Color
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -26,6 +27,7 @@ import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
+import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.student.R
 import com.instructure.student.espresso.StudentRenderTest
 import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsModel
@@ -43,6 +45,8 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
 
     @Before
     fun setup() {
+        // Set a dark button color, otherwise the a11y checker might fail due to contrast ratio on small devices
+        ThemePrefs.buttonColor = Color.BLACK
         ApiPrefs.user = User()
         baseModel = AssignmentDetailsModel(
             assignmentId = 0,
