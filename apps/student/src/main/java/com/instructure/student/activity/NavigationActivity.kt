@@ -159,8 +159,8 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             OnBackStackChangedEvent(it::class.java).post()
             applyCurrentFragmentTheme()
 
-            /* Update nav bar visibility to show for specific 'root' fragment. Also show the nav bar when there is
-             only one fragment on the backstack, which commonly occurs when with non-root fragments when routing
+            /* Update nav bar visibility to show for specific 'root' fragments. Also show the nav bar when there is
+             only one fragment on the backstack, which commonly occurs with non-root fragments when routing
              from external sources. */
             bottomBar.setVisible(it::class.java in bottomNavBarFragments || supportFragmentManager.backStackEntryCount <= 1)
         }
