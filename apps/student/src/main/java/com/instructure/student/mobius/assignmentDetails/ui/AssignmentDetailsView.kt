@@ -74,7 +74,7 @@ class AssignmentDetailsView(
         submissionStatusFailedSubtitle.setTextColor(ThemePrefs.buttonColor)
         submissionStatusUploadingSubtitle.setTextColor(ThemePrefs.buttonColor)
         submissionAndRubricLabel.setTextColor(ThemePrefs.buttonColor)
-        submitButton.backgroundTintList = ColorStateList.valueOf(ThemePrefs.buttonColor)
+        submitButton.setBackgroundColor(ThemePrefs.buttonColor)
         submitButton.setTextColor(ThemePrefs.buttonTextColor)
     }
 
