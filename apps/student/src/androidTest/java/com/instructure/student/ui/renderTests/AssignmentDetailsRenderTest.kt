@@ -505,6 +505,23 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
 
     @Test
     @TestMetaData(Priority.P2, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER, false, FeatureCategory.SUBMISSIONS)
+    fun showsSubmissionStatusSubmissionTypeOnPaperWithGrade() {
+        val allTypes = listOf(Assignment.SubmissionType.ON_PAPER)
+        val assignment = Assignment(
+                id = 123,
+                name = "Assignment Name",
+                description = "This is a description",
+                pointsPossible = 35.0,
+                submission = Submission(id = 1, grade = "A", score = 35.0, late = false, attempt = 1, missing = false),
+                submissionTypesRaw = allTypes.map { it.apiString }
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        loadPageWithModel(model)
+        assignmentDetailsRenderPage.assertSubmissionStatusVisibility(true)
+    }
+
+    @Test
+    @TestMetaData(Priority.P2, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER, false, FeatureCategory.SUBMISSIONS)
     fun showSubmissionStatusSubmissionTypeOnline() {
         val allTypes = listOf(
                 Assignment.SubmissionType.ONLINE_UPLOAD,
@@ -520,6 +537,32 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
                 name = "Assignment Name",
                 description = "This is a description",
                 pointsPossible = 35.0,
+                submission = Submission(id = 1, grade = "A", score = 35.0, late = false, attempt = 1, missing = false),
+                submissionTypesRaw = allTypes.map { it.apiString }
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        loadPageWithModel(model)
+        assignmentDetailsRenderPage.assertSubmissionStatusVisibility(true)
+    }
+
+    @Test
+    @TestMetaData(Priority.P2, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER, false, FeatureCategory.SUBMISSIONS)
+    fun showSubmissionStatusSubmissionTypeOnlineWithGrade() {
+        val allTypes = listOf(
+                Assignment.SubmissionType.ONLINE_UPLOAD,
+                Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
+                Assignment.SubmissionType.ONLINE_URL,
+                Assignment.SubmissionType.BASIC_LTI_LAUNCH,
+                Assignment.SubmissionType.EXTERNAL_TOOL,
+                Assignment.SubmissionType.ATTENDANCE,
+                Assignment.SubmissionType.MEDIA_RECORDING
+        )
+        val assignment = Assignment(
+                id = 123,
+                name = "Assignment Name",
+                description = "This is a description",
+                pointsPossible = 35.0,
+
                 submissionTypesRaw = allTypes.map { it.apiString }
         )
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
