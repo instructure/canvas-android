@@ -19,6 +19,7 @@ package com.instructure.canvas.espresso.mockCanvas.endpoints
 import com.instructure.canvas.espresso.mockCanvas.Endpoint
 import com.instructure.canvas.espresso.mockCanvas.endpoint
 import com.instructure.canvas.espresso.mockCanvas.utils.*
+import com.instructure.canvasapi2.models.Favorite
 import com.instructure.canvasapi2.utils.pageview.PandataInfo
 
 /**
@@ -46,8 +47,73 @@ object UserEndpoint : Endpoint(
     },
     Segment("settings") to UserSettingsEndpoint,
     Segment("groups") to UserGroupListEndpoint,
-    Segment("enrollments") to UserEnrollmentEndpoint
+    Segment("enrollments") to UserEnrollmentEndpoint,
+        Segment("favorites") to UserFavoritesEndpoint
 )
+
+/**
+ * Endpoint (midpoint?) for user favorites
+ *
+ * ROUTES:
+ * - `courses` -> [UserFavoriteCourseListEndpoint]
+ */
+object UserFavoritesEndpoint : Endpoint (
+        Segment("courses") to UserFavoriteCourseListEndpoint
+)
+
+/**
+ * Endpoint for user favorite courses
+ *
+ * ROUTES:
+ * - `{courseId}` -> UserFavoriteCourseEndpoint
+ */
+object UserFavoriteCourseListEndpoint : Endpoint (
+        LongId(PathVars::courseId) to UserFavoriteCourseEndpoint,
+        response = {
+            GET {
+                val user = request.user!!
+                val courses = data.enrollments
+                        .values
+                        .filter { it.userId == user.id }
+                        .map { data.courses[it.courseId]!! }
+                        .filter { it.isFavorite }
+                request.successPaginatedResponse(courses)
+
+            }
+        }
+)
+
+/**
+ * Endpoint that handles setting / unsetting "favoriteness" of a course
+ * POST will favorite a course, DELETE will unfavorite a course
+ */
+object UserFavoriteCourseEndpoint : Endpoint ( response = {
+
+    POST {
+        val course = data.courses[pathVars.courseId]!!
+        val userId = pathVars.userId
+        if(data.enrollments.values.any{ it.courseId == course.id && it.userId == userId}) {
+            course.isFavorite = true
+            request.successResponse(Favorite())
+        }
+        else {
+            request.unauthorizedResponse()
+        }
+    }
+
+    DELETE {
+        val course = data.courses[pathVars.courseId]!!
+        val userId = pathVars.userId
+        if(data.enrollments.values.any{ it.courseId == course.id && it.userId == userId}) {
+            course.isFavorite = false
+            request.successResponse(Favorite())
+        }
+        else {
+            request.unauthorizedResponse()
+        }
+    }
+
+})
 
 /**
  * Endpoint that can return a list of enrollments for the user specified by [PathVars.userId]

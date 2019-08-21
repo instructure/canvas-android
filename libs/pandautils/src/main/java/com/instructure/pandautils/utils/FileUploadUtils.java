@@ -403,6 +403,11 @@ public class FileUploadUtils {
         return canvasFolder;
     }
 
+    public static boolean deleteTempFile(String filename) {
+        File file = new File(filename);
+        return file.delete();
+    }
+
     public static boolean deleteTempDirectory(Context context){
         return deleteDirectory(getCacheDir(context)) && deleteDirectory(getExternalCacheDir(context));
     }

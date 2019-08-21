@@ -900,6 +900,17 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     }
 
     @Test
+    fun `ShowBookmarkDialog results in view calling showBookmarkDialog`() {
+        connection.accept(AssignmentDetailsEffect.ShowBookmarkDialog)
+
+        verify(timeout = 100) {
+            view.showBookmarkDialog()
+        }
+
+        confirmVerified(view)
+    }
+
+    @Test
     fun `ShowVideoRecordingError results in view calling showAudioRecordingError`() {
         connection.accept(AssignmentDetailsEffect.ShowVideoRecordingError)
 

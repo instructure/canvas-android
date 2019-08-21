@@ -163,8 +163,13 @@ class InboxComposeMessageFragment : ParentFragment() {
         recipientsView.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
                 if (isReply) {
-                    addInitialRecipients(currentMessage?.participatingUserIds
-                            ?: conversation?.audience ?: emptyList())
+                    if(currentMessage == null && conversation?.participants != null && conversation!!.participants.size == 1) {
+                        // This is the result of replyAll to a monologue
+                        addInitialRecipients(listOf(conversation!!.participants.first().id))
+                    } else {
+                        addInitialRecipients(currentMessage?.participatingUserIds
+                                ?: conversation?.audience ?: emptyList())
+                    }
                 } else if (participants.isNotEmpty()) {
                     addInitialRecipients(participants.map {
                         it.id
@@ -351,12 +356,6 @@ class InboxComposeMessageFragment : ParentFragment() {
             return
         }
 
-        // Can't send a message to yourself. Canvas throws a 400, but canvas lets you select yourself as part of a list of people
-        if (recipientsView.selectedRecipients.size == 1 && recipientsView.selectedRecipients[0].id == ApiPrefs.user!!.id) {
-            toast(R.string.addMorePeopleToMessage)
-            return
-        }
-
         // Make the progress bar visible and the other buttons not there so they can't try to re-send the message multiple times
         toolbar.menu.findItem(R.id.menu_send).isVisible = false
         toolbar.menu.findItem(R.id.menu_attachment).isVisible = false
@@ -420,8 +419,12 @@ class InboxComposeMessageFragment : ParentFragment() {
         val selectedRecipients = recipientsView.selectedRecipients
         val myId = ApiPrefs.user!!.id
         initialRecipientIds
-                // Map IDs to participants (excluding the current user)
-                .mapNotNull { id -> participants.find { it.id == id && it.id != myId } }
+                // Map IDs to participants (only excluding the current user if not monologue)
+                .mapNotNull { id ->
+                    participants.find {
+                        if (initialRecipientIds.size == 1) it.id == id else it.id == id && it.id != myId
+                    }
+                }
                 // Filter out already-added participants
                 .filter { participant -> selectedRecipients.none { it.destination == participant.id.toString() } }
                 // Add new recipients

@@ -25,6 +25,7 @@ import com.instructure.canvasapi2.models.NotoriousSession
 import com.instructure.canvasapi2.models.notorious.NotoriousResultWrapper
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ProgressRequestBody
+import com.instructure.canvasapi2.utils.ProgressRequestUpdateListener
 import okhttp3.MultipartBody
 import retrofit2.Response
 import java.io.File
@@ -56,7 +57,7 @@ object NotoriousManager {
         uploadToken: String,
         file: File,
         contentType: String,
-        onProgress: ((Float, Long) -> Unit)? = null
+        onProgress: ProgressRequestUpdateListener? = null
     ): Response<Void>? {
         val requestBody = ProgressRequestBody(file, contentType, onProgress = onProgress)
         val filePart = MultipartBody.Part.createFormData("fileData", file.name, requestBody)

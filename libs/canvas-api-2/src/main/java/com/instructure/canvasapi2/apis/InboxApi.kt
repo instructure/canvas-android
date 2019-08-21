@@ -46,7 +46,7 @@ object InboxApi {
 
     internal interface InboxInterface {
 
-        @GET("conversations/?interleave_submissions=1&include[]=participant_avatars")
+        @GET("conversations?interleave_submissions=1&include[]=participant_avatars")
         fun getConversations(@Query("scope") scope: String): Call<List<Conversation>>
 
         @GET("conversations/?interleave_submissions=1&include[]=participant_avatars")

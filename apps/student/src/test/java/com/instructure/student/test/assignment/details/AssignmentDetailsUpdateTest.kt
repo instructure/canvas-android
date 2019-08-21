@@ -703,4 +703,16 @@ class AssignmentDetailsUpdateTest : Assert() {
             )
     }
 
+    @Test
+    fun `AddBookmarkClicked results in ShowBookmarkDialog effect`() {
+        updateSpec
+            .given(initModel)
+            .whenEvent(AssignmentDetailsEvent.AddBookmarkClicked)
+            .then(
+                assertThatNext<AssignmentDetailsModel, AssignmentDetailsEffect>(
+                    matchesEffects(AssignmentDetailsEffect.ShowBookmarkDialog)
+                )
+            )
+    }
+
 }

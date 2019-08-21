@@ -139,6 +139,7 @@ class AssignmentDetailsUpdate : UpdateInit<AssignmentDetailsModel, AssignmentDet
         is AssignmentDetailsEvent.StoreVideoUri -> {
             Next.next(model.copy(videoFileUri = event.uri))
         }
+        AssignmentDetailsEvent.AddBookmarkClicked -> Next.dispatch(setOf(AssignmentDetailsEffect.ShowBookmarkDialog))
     }
 
     private fun dbSubmissionIfNewest(dbSubmission: Submission?, apiSubmission: com.instructure.canvasapi2.models.Submission?): Submission? {

@@ -77,6 +77,7 @@ class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Lon
             AssignmentDetailsEffect.ShowMediaPickingError -> view?.showMediaPickingError()
             is AssignmentDetailsEffect.UploadVideoSubmission -> view?.launchFilePickerView(effect.uri, effect.course, effect.assignment)
             is AssignmentDetailsEffect.UploadMediaFileSubmission -> view?.launchFilePickerView(effect.uri, effect.course, effect.assignment)
+            AssignmentDetailsEffect.ShowBookmarkDialog -> view?.showBookmarkDialog()
             is AssignmentDetailsEffect.ShowSubmitDialogView -> {
                 val studioUrl = effect.studioLTITool?.getResourceSelectorUrl(effect.course, effect.assignment)
                 view?.showSubmitDialogView(

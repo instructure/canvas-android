@@ -97,6 +97,8 @@
     <string name="outOfPointsAbbreviatedFormatted">Out of %s pts</string>
     <string name="gradeExcused">Excused</string>
     <string name="finalGradeFormatted">Final Grade: %s</string>
+    <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
+    <string name="contentDescriptionScoreOutOfPointsPossible">%1$s out of %2$s points</string>
 
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Custom score</string>
@@ -104,8 +106,8 @@
     <string name="rubricViewLongDescription">View long description</string>
 
     <!-- Student Submission Comments -->
+    <string name="assignmentSubmissionUploadingFile">Uploading file %1$d of %2$d</string>
     <string name="assignmentSubmissionCommentUpload">Uploading comment for %s</string>
-    <string name="assignmentSubmissionCommentUploadingFile">Uploading file %1$d of %2$d</string>
     <string name="assignmentSubmissionCommentUploadingMedia">Uploading media file</string>
     <string name="assignmentSubmissionCommentError">Comment upload failed for %s</string>
     <string name="chooseFileForCommentSubtext">Attach files to your comment by tapping an option below</string>
@@ -205,6 +207,8 @@
     <string name="checkBoxFinalGradeOption">Base on graded assignments</string>
     <string name="checkBoxWhatIfGradeOption">Show What-If Score</string>
     <string name="whatIfDialogText">What-If Score</string>
+    <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
+    <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s out of %2$s points, %3$s</string>
     <string name="inbox">Inbox</string>
     <string name="unread">Unread</string>
     <string name="archived">Archived</string>

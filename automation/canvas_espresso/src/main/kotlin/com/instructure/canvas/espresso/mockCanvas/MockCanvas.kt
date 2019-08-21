@@ -19,6 +19,7 @@
 package com.instructure.canvas.espresso.mockCanvas
 
 import com.instructure.canvas.espresso.mockCanvas.utils.Randomizer
+import com.instructure.canvasapi2.apis.DiscussionAPI
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.toApiString
 import org.threeten.bp.OffsetDateTime
@@ -80,6 +81,9 @@ class MockCanvas {
 
     /** Map of group id to group object */
     val groups = mutableMapOf<Long, Group>()
+
+    /** Map of course ID to tabs for the course */
+    val courseTabs = mutableMapOf<Long, List<Tab>>()
 
     //region Convenience functionality
 
@@ -148,7 +152,8 @@ fun MockCanvas.Companion.init(
     favoriteCourseCount: Int = 0,
     studentCount: Int = 0,
     teacherCount: Int = 0,
-    parentCount: Int = 0
+    parentCount: Int = 0,
+    accountNotificationCount: Int = 0
 ): MockCanvas {
     data = MockCanvas()
 
@@ -180,6 +185,8 @@ fun MockCanvas.Companion.init(
         }
     }
 
+    repeat(accountNotificationCount) { data.addAccountNotification() }
+
     return data
 }
 
@@ -197,6 +204,12 @@ fun MockCanvas.addCourse(isFavorite: Boolean = false, concluded: Boolean = false
         isFavorite = isFavorite
     )
     courses += course.id to course
+
+    // For now, give all courses tabs for assignments and quizzes
+    val assignmentsTab = Tab(position = 0,label = "Assignments",visibility = "public")
+    val quizzesTab = Tab(position = 1,label = "Quizzes",visibility = "public")
+    courseTabs += course.id to listOf(assignmentsTab,quizzesTab)
+
     return course
 }
 
@@ -224,9 +237,11 @@ fun MockCanvas.addEnrollment(
         courseId = course.id,
         enrollmentState = "active",
         userId = user.id,
-        observedUser = observedUser
+        observedUser = observedUser,
+        grades = Grades(currentScore = 88.1, currentGrade = "B+")
     )
     enrollments += enrollment.id to enrollment
+    course.enrollments?.add(enrollment) // You won't see grades in the dashboard unless the course has enrollments
     return enrollment
 }
 
@@ -265,3 +280,4 @@ fun MockCanvas.addUser(): User {
     userSettings += user.id to UserSettings()
     return user
 }
+

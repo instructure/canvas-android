@@ -19,15 +19,14 @@ package com.instructure.student.binders
 
 import android.content.Context
 import androidx.core.content.ContextCompat
-
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.utils.DateHelper
+import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.GradesListRecyclerAdapter
 import com.instructure.student.dialog.WhatIfDialogStyled
 import com.instructure.student.holders.GradeViewHolder
 import com.instructure.student.interfaces.AdapterToFragmentCallback
-import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.utils.DateHelper
-import com.instructure.pandautils.utils.*
 
 object GradeBinder : BaseBinder() {
 
@@ -61,15 +60,9 @@ object GradeBinder : BaseBinder() {
             holder.icon.setNestedIcon(R.drawable.vd_published, courseColor)
         } else {
             holder.points.setVisible()
-            val grade = getGrade(submission, assignment.pointsPossible, context)
+            val (grade, contentDescription) = getGrade(assignment, submission, context)
             holder.points.text = grade
-            val accessibleGrade = getContentDescriptionForMinusGradeString(grade ?: "", context)
-            val outOf = context.resources.getString(R.string.outOf)
-            holder.points.contentDescription = if (accessibleGrade.isNotEmpty()) {
-                accessibleGrade
-            } else {
-                context.getString(R.string.a11y_letterGrade, grade?.replace("/", " $outOf "))
-            }
+            holder.points.contentDescription = contentDescription ?: grade
         }
 
         // Configures whatIf editing boxes and listener for dialog

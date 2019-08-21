@@ -35,10 +35,21 @@ abstract class StudentTest : CanvasTest() {
      */
     val assignmentListPage = AssignmentListPage()
     val dashboardPage = DashboardPage()
+    val allCoursesPage = AllCoursesPage()
+    val editFavoritesPage = EditFavoritesPage()
     val calendarPage = CalendarPage()
     val todoPage = TodoPage()
+    val inboxPage = InboxPage()
+    val newMessagePage = NewMessagePage()
+    val settingsPage = SettingsPage()
+    val legalPage = LegalPage()
+    val helpPage = HelpPage()
     val loginFindSchoolPage = LoginFindSchoolPage()
     val loginLandingPage = LoginLandingPage()
     val loginSignInPage = LoginSignInPage()
-
+    val courseBrowserPage = CourseBrowserPage()
+    val assignmentDetailsPage = AssignmentDetailsPage()
+    val submissionDetailsPage = SubmissionDetailsPage()
+    val peopleListPage = PeopleListPage()
+    val personDetailsPage = PersonDetailsPage()
 }

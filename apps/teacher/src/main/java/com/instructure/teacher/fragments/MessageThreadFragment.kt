@@ -145,6 +145,8 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
             when (action) {
                 MessageAdapterCallback.MessageClickAction.REPLY -> addMessage(message, true)
 
+                MessageAdapterCallback.MessageClickAction.REPLY_ALL -> replyAllMessage(message)
+
                 MessageAdapterCallback.MessageClickAction.FORWARD -> addMessage(message, false)
 
                 MessageAdapterCallback.MessageClickAction.DELETE -> {
@@ -334,14 +336,45 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
         RouteMatcher.route(requireContext(), Route(AddMessageFragment::class.java, null, args))
     }
 
+    // Same as reply all but scoped to a message
+    private fun replyAllMessage(message: Message) {
+        val args = AddMessageFragment.createBundle(
+                true,
+                conversation!!,
+                getMessageRecipientsForReplyAll(message),
+                presenter.getMessageChainForMessage(null),
+                message)
+        RouteMatcher.route(requireContext(), Route(AddMessageFragment::class.java, null, args))
+    }
+
     private fun addMessage(message: Message, isReply: Boolean) {
         val args = AddMessageFragment.createBundle(
                 isReply,
                 conversation!!,
-                presenter.participants,
+                getMessageRecipientsForReply(message),
                 presenter.getMessageChainForMessage(message),
                 message)
         RouteMatcher.route(requireContext(), Route(AddMessageFragment::class.java, null, args))
+    }
+
+    private fun getMessageRecipientsForReplyAll(message: Message): ArrayList<BasicUser> {
+        return ArrayList(message.participatingUserIds
+                // Map the conversations participating users to the messages participating users
+                .mapNotNull { participatingUserId ->
+                    presenter.participants.find { basicUser ->
+                        basicUser.id == participatingUserId
+                    }
+                })
+
+    }
+
+    private fun getMessageRecipientsForReply(message: Message): ArrayList<BasicUser>  {
+        // If the author is self, we default to all other participants
+        return if (message.authorId == ApiPrefs.user!!.id) {
+            presenter.participants
+        } else {
+            arrayListOf((presenter.participants.first { it.id == message.authorId }))
+        }
     }
 
     override fun getRecyclerView(): RecyclerView? = recyclerView

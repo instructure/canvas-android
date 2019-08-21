@@ -29,7 +29,9 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
+import com.instructure.espresso.closeSoftKeyboard
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.typeText
 import com.instructure.student.R
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.CommentItemState
 import org.hamcrest.Matcher
@@ -73,7 +75,7 @@ class SubmissionCommentsRenderPage: BasePage(R.id.submissionCommentsPage) {
         }
     }
 
-    private fun scrollAndAssertDisplayed(matcher: Matcher<View>) {
+    fun scrollAndAssertDisplayed(matcher: Matcher<View>) {
         onView(allOf(withId(R.id.recyclerView), isDisplayed()))
                 .perform(RecyclerViewActions.scrollTo<RecyclerView.ViewHolder>(ViewMatchers.hasDescendant(matcher)))
         onView(matcher).assertDisplayed()
@@ -90,6 +92,13 @@ class SubmissionCommentsRenderPage: BasePage(R.id.submissionCommentsPage) {
 
     fun clickInCommentBox() {
         commentInput.click()
+    }
+
+    fun addAndSendComment(comment: String) {
+        clickInCommentBox()
+        commentInput.typeText(comment)
+        commentInput.closeSoftKeyboard()
+        onView(withId(R.id.sendCommentButton)).click()
     }
 }
 

@@ -86,6 +86,7 @@
         android:id="@+id/checkBox"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
+        android:minWidth="48dp"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:layout_marginEnd="0dp"
