@@ -47,6 +47,8 @@ class UploadStatusSubmissionView(inflater: LayoutInflater, parent: ViewGroup) :
         parent
     ) {
 
+    private var dialog: AlertDialog? = null
+
     private val adapter = UploadRecyclerAdapter(object : UploadListCallback {
         override fun deleteClicked(position: Int) {
             consumer?.accept(UploadStatusSubmissionEvent.OnDeleteFile(position))
@@ -103,6 +105,9 @@ class UploadStatusSubmissionView(inflater: LayoutInflater, parent: ViewGroup) :
     private fun renderSucceeded(state: UploadStatusSubmissionViewState.Succeeded) {
         uploadStatusStateTitle.text = state.title
         uploadStatusStateMessage.text = state.message
+
+        dialog?.cancel()
+        dialog = null
     }
 
     private fun renderInProgress(state: UploadStatusSubmissionViewState.InProgress) {
@@ -137,7 +142,7 @@ class UploadStatusSubmissionView(inflater: LayoutInflater, parent: ViewGroup) :
     }
 
     fun showCancelSubmissionDialog() {
-        val dialog = AlertDialog.Builder(context)
+        dialog = AlertDialog.Builder(context)
             .setTitle(R.string.submissionDeleteTitle)
             .setMessage(R.string.submissionDeleteMessage)
             .setPositiveButton(R.string.yes) { _, _ ->
@@ -145,11 +150,14 @@ class UploadStatusSubmissionView(inflater: LayoutInflater, parent: ViewGroup) :
             }
             .setNegativeButton(R.string.no, null)
             .create()
-        dialog.setOnShowListener {
-            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(context, R.color.destructive))
-            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(context, R.color.gray))
+        dialog?.setOnShowListener {
+            dialog?.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(ContextCompat.getColor(context, R.color.destructive))
+            dialog?.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(ContextCompat.getColor(context, R.color.gray))
         }
-        dialog.show()
+        dialog?.setOnCancelListener {
+            dialog = null
+        }
+        dialog?.show()
     }
 }
 
