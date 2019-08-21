@@ -17,10 +17,12 @@
 package com.instructure.student.ui.pages
 
 import android.view.View
+import android.widget.ScrollView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
+import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
@@ -35,28 +37,54 @@ import com.instructure.espresso.scrollTo
 import com.instructure.espresso.swipeDown
 import com.instructure.espresso.typeText
 import com.instructure.student.R
+import kotlinx.android.synthetic.main.fragment_edit_page.view.*
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.containsString
 
 open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
     fun verifyAssignmentSubmitted() {
-        onView(withText(R.string.submissionStatusSuccessTitle)).assertDisplayed()
-        onView(allOf(withId(R.id.submissionStatus), withText(R.string.submitted))).assertDisplayed()
+        onView(withText(R.string.submissionStatusSuccessTitle)).scrollTo().assertDisplayed()
+        onView(allOf(withId(R.id.submissionStatus), withText(R.string.submitted))).scrollTo().assertDisplayed()
     }
 
     fun verifyAssignmentGraded(score: String) {
-        onView(allOf(withId(R.id.gradeContainer), isDisplayed())).scrollTo().assertDisplayed()
-        onView(allOf(withId(R.id.score), isDisplayed())).scrollTo().assertContainsText(score)
-        onView(allOf(withId(R.id.submissionStatus), withText(R.string.gradedSubmissionLabel))).assertDisplayed()
+        onView(withId(R.id.gradeContainer)).scrollTo().assertDisplayed()
+        onView(withId(R.id.score)).scrollTo().assertContainsText(score)
+        onView(allOf(withId(R.id.submissionStatus), withText(R.string.gradedSubmissionLabel))).scrollTo().assertDisplayed()
     }
 
     fun refresh() {
+        // Scroll up to the top in case we are not there already.
+        onView(allOf(isAssignableFrom(ScrollView::class.java), isDisplayed())).perform(ScrollToTop())
+
+        // Now swipe down
         onView(allOf(withId(R.id.swipeRefreshLayout),  isDisplayed())).swipeDown()
     }
 
     fun goToSubmissionDetails() {
         onView(withId(R.id.submissionAndRubricLabel)).scrollTo().click()
     }
+}
+
+/**
+ * Custom view action to scroll to top of scrollview.
+ * TODO: Move this to a central location, as we will probably want to reuse it.
+ */
+class ScrollToTop : ViewAction {
+    override fun getDescription(): String {
+        return "Scroll to top of scroll view"
+    }
+
+    override fun getConstraints(): Matcher<View> {
+        return isAssignableFrom(ScrollView::class.java)
+    }
+
+    override fun perform(uiController: UiController?, view: View?) {
+        when(view) {
+            is ScrollView -> view.smoothScrollTo(0,0)
+        }
+    }
+
 }
 
