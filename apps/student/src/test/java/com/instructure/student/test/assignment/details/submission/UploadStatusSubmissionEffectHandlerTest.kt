@@ -313,4 +313,13 @@ class UploadStatusSubmissionEffectHandlerTest : Assert() {
 
         confirmVerified(db)
     }
+
+    @Test
+    fun `ShowCancelDialog calls showCancelSubmissionDialog`() {
+        effectHandler.accept(UploadStatusSubmissionEffect.ShowCancelDialog)
+        verify(timeout = 100) {
+            view.showCancelSubmissionDialog()
+        }
+        confirmVerified(view)
+    }
 }

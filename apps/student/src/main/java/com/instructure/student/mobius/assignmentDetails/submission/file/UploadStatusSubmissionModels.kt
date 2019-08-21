@@ -21,6 +21,7 @@ import com.instructure.student.FileSubmission
 sealed class UploadStatusSubmissionEvent {
     object OnRetryClicked : UploadStatusSubmissionEvent()
     object OnCancelClicked : UploadStatusSubmissionEvent()
+    object OnRequestCancelClicked : UploadStatusSubmissionEvent()
     data class OnFilesRefreshed(
         val failed: Boolean,
         val submissionId: Long,
@@ -40,6 +41,7 @@ sealed class UploadStatusSubmissionEvent {
 }
 
 sealed class UploadStatusSubmissionEffect {
+    object ShowCancelDialog : UploadStatusSubmissionEffect()
     data class RetrySubmission(val submissionId: Long) : UploadStatusSubmissionEffect()
     data class LoadPersistedFiles(val submissionId: Long) : UploadStatusSubmissionEffect()
     data class OnDeleteSubmission(val submissionId: Long) : UploadStatusSubmissionEffect()

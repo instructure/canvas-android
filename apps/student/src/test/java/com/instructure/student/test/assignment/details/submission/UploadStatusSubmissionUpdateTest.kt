@@ -325,4 +325,22 @@ class UploadStatusSubmissionUpdateTest : Assert() {
                 )
             )
     }
+
+    @Test
+    fun `OnRequestCancelClicked results in ShowCancelDialog effect`() {
+        val startModel = initModel.copy(files = listOf(initFile))
+        updateSpec
+            .given(startModel)
+            .whenEvent(
+                UploadStatusSubmissionEvent.OnRequestCancelClicked
+            )
+            .then(
+                assertThatNext(
+                    NextMatchers.hasNoModel(),
+                    NextMatchers.hasEffects<UploadStatusSubmissionModel, UploadStatusSubmissionEffect>(
+                        UploadStatusSubmissionEffect.ShowCancelDialog
+                    )
+                )
+            )
+    }
 }

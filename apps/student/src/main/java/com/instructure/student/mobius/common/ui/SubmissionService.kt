@@ -188,7 +188,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
         )
 
         // Don't show the notification in the foreground so it doesn't disappear when this service dies
-        showProgressNotification(submission.assignmentName, submission.id, false)
+        showProgressNotification(submission.assignmentName, submission.id, inForeground = false)
 
         // Handle broadcasts from file upload service
         // Register the receiver on the application context so this service can die and handle the next submission
@@ -225,7 +225,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
             ?: return // Cancel submitting if any of the files failed to upload
 
         // Update the notification to show that we're doing the actual submission now
-        showProgressNotification(assignment.name, submission.id)
+        showProgressNotification(assignment.name, submission.id, alertOnlyOnce = true)
 
         val attachmentIds = completed.mapNotNull { it.attachmentId } + uploadedAttachmentIds
         SubmissionManager.postSubmissionAttachmentsSynchronous(submission.canvasContext.id, submission.assignmentId, attachmentIds)?.let {
@@ -469,13 +469,13 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
 
     // region Notifications
 
-    private fun showProgressNotification(assignmentName: String?, submissionId: Long, inForeground: Boolean = true) {
+    private fun showProgressNotification(assignmentName: String?, submissionId: Long, inForeground: Boolean = true, alertOnlyOnce: Boolean = false) {
         createNotificationChannel(notificationManager)
         notificationBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_notification_canvas_logo)
             .setContentTitle(getString(R.string.assignmentSubmissionUpload, assignmentName))
             .setProgress(0, 0, true)
-            .setOnlyAlertOnce(true)
+            .setOnlyAlertOnce(alertOnlyOnce)
         if (inForeground) {
             startForeground(submissionId.toInt(), notificationBuilder.build())
         } else {
@@ -538,7 +538,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
         private fun insertNewSubmission(assignmentId: Long, context: Context, files: List<FileSubmitObject> = emptyList(), insertBlock: (StudentDb) -> Unit): Long {
             val db = Db.getInstance(context)
             deleteSubmissionsForAssignment(assignmentId, db)
-            insertBlock.invoke(db)
+            insertBlock(db)
             val dbSubmissionId = db.submissionQueries.getLastInsert().executeAsOne()
 
             files.forEach {

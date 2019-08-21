@@ -17,12 +17,14 @@
 package com.instructure.student.mobius.assignmentDetails.submission.file.ui
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.instructure.pandautils.services.FileUploadService
 import com.instructure.pandautils.utils.*
@@ -69,7 +71,7 @@ class UploadStatusSubmissionView(inflater: LayoutInflater, parent: ViewGroup) :
         uploadStatusRecycler.adapter = adapter
 
         uploadStatusStateDone.setOnClickListener { backPress() }
-        uploadStatusStateCancel.setOnClickListener { output.accept(UploadStatusSubmissionEvent.OnCancelClicked) }
+        uploadStatusStateCancel.setOnClickListener { output.accept(UploadStatusSubmissionEvent.OnRequestCancelClicked) }
         uploadStatusStateRetry.setOnClickListener { output.accept(UploadStatusSubmissionEvent.OnRetryClicked) }
     }
 
@@ -125,13 +127,28 @@ class UploadStatusSubmissionView(inflater: LayoutInflater, parent: ViewGroup) :
 
     // Effect functions
     fun submissionDeleted() {
-        Toast.makeText(context, R.string.deleted, Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, R.string.submissionDeleted, Toast.LENGTH_SHORT).show()
         backPress()
     }
 
     fun submissionRetrying() {
         Toast.makeText(context, R.string.submittingAssignment, Toast.LENGTH_SHORT).show()
         backPress()
+    }
+
+    fun showCancelSubmissionDialog() {
+        val dialog = AlertDialog.Builder(context)
+            .setTitle(R.string.submissionDeleteTitle)
+            .setMessage(R.string.submissionDeleteMessage)
+            .setPositiveButton(R.string.delete) { _, _ ->
+                consumer?.accept(UploadStatusSubmissionEvent.OnCancelClicked)
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .create()
+        dialog.setOnShowListener {
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(context, R.color.destructive))
+        }
+        dialog.show()
     }
 }
 

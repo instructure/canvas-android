@@ -104,6 +104,9 @@ class UploadStatusSubmissionEffectHandler(val context: Context, val submissionId
                     )
                 }
             }
+            is UploadStatusSubmissionEffect.ShowCancelDialog -> {
+                launch(Dispatchers.Main) { view?.showCancelSubmissionDialog() }
+            }
             is UploadStatusSubmissionEffect.OnDeleteSubmission -> {
                 launch { deleteSubmission(effect.submissionId) }
             }
