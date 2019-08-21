@@ -24,12 +24,18 @@ import androidx.core.content.FileProvider
 import com.instructure.canvasapi2.managers.AssignmentManager
 import com.instructure.canvasapi2.managers.QuizManager
 import com.instructure.canvasapi2.managers.SubmissionManager
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.DiscussionTopic
+import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.utils.*
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
 import com.instructure.canvasapi2.utils.weave.awaitApiResponse
 import com.instructure.pandautils.services.NotoriousUploadService
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.FileUploadUtils
+import com.instructure.pandautils.utils.PermissionUtils
+import com.instructure.pandautils.utils.requestPermissions
 import com.instructure.student.Submission
 import com.instructure.student.db.Db
 import com.instructure.student.db.getInstance
@@ -83,6 +89,7 @@ class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Lon
             AssignmentDetailsEffect.ShowVideoRecordingError -> view?.showVideoRecordingError()
             AssignmentDetailsEffect.ShowAudioRecordingError -> view?.showAudioRecordingError()
             AssignmentDetailsEffect.ShowMediaPickingError -> view?.showMediaPickingError()
+            AssignmentDetailsEffect.ShowBookmarkDialog -> view?.showBookmarkDialog()
             is AssignmentDetailsEffect.UploadVideoSubmission -> {
                 view?.launchFilePickerView(effect.uri, effect.course, effect.assignment)
             }

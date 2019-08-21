@@ -23,6 +23,8 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
+import com.instructure.interactions.bookmarks.Bookmarkable
+import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.utils.*
@@ -31,7 +33,18 @@ import com.instructure.student.mobius.common.ui.MobiusFragment
 
 @PageView(url = "{canvasContext}/assignments/{assignmentId}")
 class AssignmentDetailsFragment :
-    MobiusFragment<AssignmentDetailsModel, AssignmentDetailsEvent, AssignmentDetailsEffect, AssignmentDetailsView, AssignmentDetailsViewState>() {
+    MobiusFragment<AssignmentDetailsModel, AssignmentDetailsEvent, AssignmentDetailsEffect, AssignmentDetailsView, AssignmentDetailsViewState>(),
+    Bookmarkable {
+
+    override val bookmark: Bookmarker
+        get() {
+            val assignment = controller.model.assignmentResult?.dataOrNull
+            return Bookmarker(true, canvasContext, assignment?.htmlUrl)
+                .withParam(
+                    RouterParams.ASSIGNMENT_ID,
+                    assignmentId.toString()
+                )
+        }
 
     val canvasContext by ParcelableArg<Course>(key = Const.CANVAS_CONTEXT)
 

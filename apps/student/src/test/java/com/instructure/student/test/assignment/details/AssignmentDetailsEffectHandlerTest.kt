@@ -16,7 +16,6 @@
 package com.instructure.student.test.assignment.details
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.core.content.FileProvider
@@ -898,6 +897,17 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
 
         verify(timeout = 100) {
             view.showAudioRecordingError()
+        }
+
+        confirmVerified(view)
+    }
+
+    @Test
+    fun `ShowBookmarkDialog results in view calling showBookmarkDialog`() {
+        connection.accept(AssignmentDetailsEffect.ShowBookmarkDialog)
+
+        verify(timeout = 100) {
+            view.showBookmarkDialog()
         }
 
         confirmVerified(view)
