@@ -1,0 +1,35 @@
+<!--
+  ~ Copyright (C) 2019 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <path
+        android:fillColor="#888"
+        android:pathData="M11.1164,4.1765L4.2876,4.1765L4.2876,21.8235L18.4052,21.8235L18.4055,12.9994C18.437,12.9998 18.4685,13 18.5,13C18.8674,13 19.2286,12.9736 19.5818,12.9226L19.5811,13.588L19.5811,14.764L19.5811,15.941L19.5811,17.117L19.5811,18.294L19.5811,21.823L19.5817,23L3.1111,23L3.1111,21.823L3.1111,18.294L3.1111,17.117L3.1111,15.941L3.1111,14.764L3.1111,13.588L3.1111,12.5L3.1111,12.499L3.1111,12.49L3.1111,12.462L3.1111,12.416L3.1111,12.411L3.1111,11.235L3.1111,10.058L3.1111,8.882L3.1111,7.705L3.1111,4.176L3.1111,3.874L3.1111,3.577L3.1111,3.285L3.1111,3L11.4271,2.9991C11.2929,3.3785 11.1884,3.7719 11.1164,4.1765ZM11.3464,17.1176L11.3464,18.2941L6.6405,18.2941L6.6405,17.1176L11.3464,17.1176ZM14.8758,14.7647L14.8758,15.9412L6.6405,15.9412L6.6405,14.7647L14.8758,14.7647ZM13.6993,12.4118L13.6993,13.5882L6.6405,13.5882L6.6405,12.4118L13.6993,12.4118ZM13.6672,11.2355L6.6405,11.2353L6.6405,10.0588L12.5437,10.0584C12.8747,10.4902 13.2517,10.885 13.6672,11.2355ZM11.3462,7.7589L11.3464,8.8824L6.6405,8.8824L6.6405,7.7059L11.3297,7.7059C11.3351,7.7236 11.3406,7.7413 11.3462,7.7589Z"
+        android:strokeWidth="1"
+        android:strokeColor="#00000000"/>
+
+    <path
+        android:fillColor="#888"
+        android:pathData="M18.5,0C21.5376,0 24,2.4624 24,5.5C24,8.5376 21.5376,11 18.5,11C15.4624,11 13,8.5376 13,5.5C13,2.4624 15.4624,0 18.5,0ZM19.25,2.5L17.75,2.5L17.75,4.75L15.5,4.75L15.5,6.25L17.75,6.25L17.75,8.5L19.25,8.5L19.25,6.25L21.5,6.25L21.5,4.75L19.25,4.75L19.25,2.5Z"
+        android:strokeWidth="1"
+        android:strokeColor="#00000000"/>
+
+</vector>

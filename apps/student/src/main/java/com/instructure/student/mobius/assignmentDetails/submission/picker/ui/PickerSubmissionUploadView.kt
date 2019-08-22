@@ -22,9 +22,7 @@ import android.graphics.Color
 import android.net.Uri
 import android.provider.MediaStore
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -47,15 +45,6 @@ class PickerSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup, va
         parent
     ) {
 
-    private val fabRotateForward by lazy {
-        AnimationUtils.loadAnimation(context, R.anim.fab_rotate_forward)
-    }
-    private val fabRotateBackwards by lazy {
-        AnimationUtils.loadAnimation(context, R.anim.fab_rotate_backward)
-    }
-    private val fabReveal by lazy { AnimationUtils.loadAnimation(context, R.anim.fab_reveal) }
-    private val fabHide by lazy { AnimationUtils.loadAnimation(context, R.anim.fab_hide) }
-
     private val adapter = PickerRecyclerAdapter(object : PickerListCallback {
         override fun deleteClicked(position: Int) {
             consumer?.accept(PickerSubmissionUploadEvent.OnFileRemoved(position))
@@ -69,9 +58,9 @@ class PickerSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup, va
         filePickerRecycler.layoutManager = LinearLayoutManager(context)
         filePickerRecycler.adapter = adapter
 
-        pickFabCamera.setOnClickListener { childFabClick(PickerSubmissionUploadEvent.CameraClicked) }
-        pickFabFile.setOnClickListener { childFabClick(PickerSubmissionUploadEvent.SelectFileClicked) }
-        pickFabGallery.setOnClickListener { childFabClick(PickerSubmissionUploadEvent.GalleryClicked) }
+        sourceCamera.setOnClickListener { consumer?.accept(PickerSubmissionUploadEvent.CameraClicked) }
+        sourceDevice.setOnClickListener { consumer?.accept(PickerSubmissionUploadEvent.SelectFileClicked) }
+        sourceGallery.setOnClickListener { consumer?.accept(PickerSubmissionUploadEvent.GalleryClicked) }
     }
 
     override fun onConnect(output: Consumer<PickerSubmissionUploadEvent>) {
@@ -95,7 +84,7 @@ class PickerSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup, va
     override fun render(state: PickerSubmissionUploadViewState) {
         toolbar.menu.findItem(R.id.menuSubmit).isVisible = state.visibilities.submit
         fileLoading.setVisible(state.visibilities.loading)
-        renderFabOptions(state.visibilities)
+        renderSourceOptions(state.visibilities)
 
         when (state) {
             is PickerSubmissionUploadViewState.Empty -> {
@@ -122,69 +111,13 @@ class PickerSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup, va
         )
     }
 
-    //region Fabs
-
-    private fun renderFabOptions(visibilities: PickerVisibilities) {
-        pickFab.setOnClickListener {
-            animateFabs(visibilities)
-        }
-
-        if (visibilities.fab) {
-            pickFab.show()
-            pickFab.isEnabled = true
-            pickFab.setVisible() // Needed for accessibility
-        } else {
-            pickFab.hide()
-            pickFab.isEnabled = false
-            pickFab.setInvisible() // Needed for accessibility
-        }
+    private fun renderSourceOptions(visibilities: PickerVisibilities) {
+        sourcesContainer.setVisible(visibilities.sources)
+        sourcesDivider.setVisible(visibilities.sources)
+        sourceCamera.setVisible(visibilities.sourceCamera)
+        sourceDevice.setVisible(visibilities.sourceFile)
+        sourceGallery.setVisible(visibilities.sourceGallery)
     }
-
-    private fun animateFabs(visibilities: PickerVisibilities) {
-        if (isFabExpanded()) {
-            closeFabs()
-        } else {
-            pickFab.startAnimation(fabRotateForward)
-            showFabs(
-                if (visibilities.fabCamera) pickFabCamera else null,
-                if (visibilities.fabFile) pickFabFile else null,
-                if (visibilities.fabGallery) pickFabGallery else null
-            )
-        }
-    }
-
-    private fun isFabExpanded(): Boolean =
-        pickFabCamera.isOrWillBeShown || pickFabFile.isOrWillBeShown || pickFabGallery.isOrWillBeShown
-
-    private fun childFabClick(event: PickerSubmissionUploadEvent) {
-        closeFabs()
-        consumer?.accept(event)
-    }
-
-    private fun closeFabs() {
-        pickFab.startAnimation(fabRotateBackwards)
-        hideFabs(pickFabFile, pickFabCamera, pickFabGallery)
-    }
-
-    private fun hideFabs(vararg fabs: View) {
-        fabs.forEach { fab ->
-            if (fab.isVisible) {
-                fab.startAnimation(fabHide)
-                fab.isEnabled = false
-                fab.setInvisible() // Needed for accessibility
-            }
-        }
-    }
-
-    private fun showFabs(vararg fabs: View?) {
-        fabs.forEach { fab ->
-            fab?.startAnimation(fabReveal)
-            fab?.isEnabled = true
-            fab?.setVisible() // Needed for accessibility
-        }
-    }
-
-    //endregion
 
     fun getSelectFileIntent() = Intent(Intent.ACTION_GET_CONTENT).apply {
         flags = Intent.FLAG_GRANT_READ_URI_PERMISSION

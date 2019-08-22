@@ -175,6 +175,7 @@
     <string name="lockedSubtext">This assignment is locked until %1$s at %2$s.</string>
     <string name="chooseFile">Choose a File</string>
     <string name="chooseFileSubtext">Attach a file to your submission by tapping an option below.</string>
+    <string name="chooseFileForUploadSubtext">Select a file to upload by tapping an option below</string>
     <string name="noNotifications">No Notifications</string>
     <string name="noNotificationsSubtext">There\'s nothing to be notified of yet.</string>
     <string name="noTodos">Well Done!</string>

@@ -101,7 +101,14 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     private var mDrawerToggle: ActionBarDrawerToggle? = null
     private var colorOverlayJob: Job? = null
 
-    //endregion
+    /** 'Root' fragments that should include the bottom nav bar */
+    private val bottomNavBarFragments = listOf(
+        DashboardFragment::class.java,
+        CalendarListViewFragment::class.java,
+        ToDoListFragment::class.java,
+        NotificationListFragment::class.java,
+        InboxFragment::class.java
+    )
 
     override fun contentResId(): Int = R.layout.activity_navigation
 
@@ -152,6 +159,11 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             // Sends a broadcast event to notify the backstack has changed and which fragment class is on top.
             OnBackStackChangedEvent(it::class.java).post()
             applyCurrentFragmentTheme()
+
+            /* Update nav bar visibility to show for specific 'root' fragments. Also show the nav bar when there is
+             only one fragment on the backstack, which commonly occurs with non-root fragments when routing
+             from external sources. */
+            bottomBar.setVisible(it::class.java in bottomNavBarFragments || supportFragmentManager.backStackEntryCount <= 1)
         }
     }
 

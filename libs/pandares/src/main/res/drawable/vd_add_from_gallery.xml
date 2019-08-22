@@ -1,0 +1,35 @@
+<!--
+  ~ Copyright (C) 2019 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <path
+        android:fillColor="#888"
+        android:pathData="M11.003,5.2873L2.1765,5.2876L2.1765,20.5829L19.8235,20.5829L19.8235,12.8836C20.2282,12.8115 20.6217,12.707 21.0011,12.5728L21,21.7582L1,21.7582L1,4.1111L11.1284,4.1108C11.0567,4.4935 11.0141,4.8865 11.003,5.2873ZM17.2005,12.8878C17.8353,13.9646 18.315,15.5182 18.64,17.5476L18.64,17.5476L18.7494,18.2288L3.1659,18.2288L3.3753,17.4817C4.2647,14.2935 5.1765,12.7205 6.3271,12.3805C7.3953,12.0664 8.2576,12.837 9.0235,13.517C9.4776,13.9182 9.9694,14.3617 10.3,14.3382C10.4659,14.3193 10.6353,14.1241 10.7494,13.9629C11.8903,12.3505 12.9071,11.5976 13.75,11.3023C14.725,12.1034 15.9057,12.6616 17.2005,12.8878ZM14.9282,12.3499C14.0635,12.1488 12.8859,12.9829 11.7106,14.6417C11.3435,15.1605 10.9153,15.4523 10.4365,15.5076C9.5918,15.6076 8.9153,14.9899 8.2447,14.3982C7.68,13.897 7.0918,13.3876 6.6612,13.5088C6.3024,13.6146 5.5953,14.2288 4.7259,17.0523L4.7259,17.0523L17.3588,17.0523C16.8329,14.2899 15.9588,12.5899 14.9282,12.3499ZM8.0588,6.4641C9.3565,6.4641 10.4118,7.5193 10.4118,8.817C10.4118,10.1146 9.3565,11.1699 8.0588,11.1699C6.7612,11.1699 5.7059,10.1146 5.7059,8.817C5.7059,7.5193 6.7612,6.4641 8.0588,6.4641ZM8.0588,7.6405C7.4094,7.6405 6.8824,8.1688 6.8824,8.817C6.8824,9.4652 7.4094,9.9935 8.0588,9.9935C8.7082,9.9935 9.2353,9.4652 9.2353,8.817C9.2353,8.1688 8.7082,7.6405 8.0588,7.6405Z"
+        android:strokeWidth="1"
+        android:strokeColor="#00000000"/>
+
+    <path
+        android:fillColor="#888"
+        android:pathData="M18.5,0C21.5376,0 24,2.4624 24,5.5C24,8.5376 21.5376,11 18.5,11C15.4624,11 13,8.5376 13,5.5C13,2.4624 15.4624,0 18.5,0ZM19.25,2.5L17.75,2.5L17.75,4.75L15.5,4.75L15.5,6.25L17.75,6.25L17.75,8.5L19.25,8.5L19.25,6.25L21.5,6.25L21.5,4.75L19.25,4.75L19.25,2.5Z"
+        android:strokeWidth="1"
+        android:strokeColor="#00000000"/>
+
+</vector>

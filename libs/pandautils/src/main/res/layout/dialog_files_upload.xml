@@ -59,7 +59,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="@string/chooseFileSubtext"
+            android:text="@string/chooseFileForUploadSubtext"
             android:textAlignment="center"
             style="@style/TextFont.Regular"
             android:textSize="14sp"
