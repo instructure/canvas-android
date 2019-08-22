@@ -19,16 +19,23 @@ package com.instructure.student.activity
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.os.Bundle
+import android.util.Log
 import androidx.core.content.ContextCompat
 import android.webkit.CookieManager
 import com.instructure.student.BuildConfig
 import com.instructure.student.R
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.RemoteConfigParam
+import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.interactions.router.Route
 import com.instructure.loginapi.login.activities.BaseLoginInitActivity
 import com.instructure.pandautils.services.PushNotificationRegistrationService
 import com.instructure.pandautils.utils.Utils
+import com.newrelic.agent.android.FeatureFlag
+import com.newrelic.agent.android.NewRelic
+
 
 class LoginActivity : BaseLoginInitActivity() {
 
@@ -65,6 +72,24 @@ class LoginActivity : BaseLoginInitActivity() {
 
     override fun isTesting(): Boolean {
         return BuildConfig.IS_TESTING
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        val startNewRelic =
+                RemoteConfigUtils.getString(RemoteConfigParam.USE_REMOTE_CONFIG)?.equals("true",ignoreCase = true) ?: false
+
+        Log.v("LoginActivity","startNewRelic=$startNewRelic")
+
+        if(startNewRelic) {
+            NewRelic.enableFeature(FeatureFlag.NetworkRequests)
+            NewRelic.enableFeature(FeatureFlag.NetworkErrorRequests)
+            NewRelic.withApplicationToken(BuildConfig.NEWRELIC_APP_TOKEN)
+                    .withCrashReportingEnabled(false) // might interfere with Crashlytics
+                    .withInteractionTracing(true)
+                    .withLoggingEnabled(false)
+                    .start(this.applicationContext)
+        }
+        super.onCreate(savedInstanceState)
     }
 
     /**

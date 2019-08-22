@@ -1,5 +1,6 @@
 # Private data
 fabric.properties
+newrelic.properties
 google-services.json
 src/main/res/xml/analytics.xml
 src/main/res/values/private_strings.xml
