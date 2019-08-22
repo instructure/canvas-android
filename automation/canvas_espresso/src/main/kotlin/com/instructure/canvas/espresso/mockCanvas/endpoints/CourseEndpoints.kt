@@ -48,6 +48,8 @@ object CourseListEndpoint : Endpoint(
  */
 object CourseEndpoint : Endpoint(
         Segment("tabs") to CourseTabsEndpoint,
+        Segment("assignments") to AssignmentIndexEndpoint,
+        Segment("assignment_groups") to AssignmentGroupListEndpoint,
         response = {
             GET {
                 val course = data.courses[pathVars.courseId]!!

@@ -80,6 +80,10 @@ object Randomizer {
 
     /** Creates a random Course Group Category name */
     fun randomCourseGroupCategoryName(): String = faker.harryPotter().character()
+
+    /** Creates random name for an assignment */
+    fun randomAssignmentName(): String = "${faker.starTrek().character()} Assignment"
+
 }
 
 /** Represents a fake user name */

@@ -85,6 +85,9 @@ class MockCanvas {
     /** Map of course ID to tabs for the course */
     val courseTabs = mutableMapOf<Long, List<Tab>>()
 
+    /** Map of course ID to assignment groups, these assignments also contain the submissions */
+    val assignmentGroups = mutableMapOf<Long, List<AssignmentGroup>>()
+
     //region Convenience functionality
 
     /** A list of users with at least one Student enrollment */
@@ -211,6 +214,64 @@ fun MockCanvas.addCourse(isFavorite: Boolean = false, concluded: Boolean = false
     courseTabs += course.id to listOf(assignmentsTab,quizzesTab)
 
     return course
+}
+
+/** Creates assignments for the standard groups (overdue, upcoming, undated, and past) for a course
+ * and adds it to MockCanvas
+ *
+ */
+fun MockCanvas.addAssignments(course: Course, assignmentCountPerGroup: Int = 1): List<AssignmentGroup> {
+    val overdueAssignments = ArrayList<Assignment>()
+    val upcomingAssignments = ArrayList<Assignment>()
+    val undatedAssignments = ArrayList<Assignment>()
+    val pastAssignments = ArrayList<Assignment>()
+
+    val futureDueDate = OffsetDateTime.now().plusWeeks(1).toApiString()
+    val pastDueDate = OffsetDateTime.now().minusWeeks(1).toApiString()
+
+    for (i in 1..assignmentCountPerGroup) {
+        overdueAssignments[i] = Assignment(
+                id = i.toLong(),
+                name = Randomizer.randomAssignmentName(),
+                courseId = course.id,
+                submission = Submission(grade = null, submissionType = null),
+                submissionTypesRaw = listOf(),
+                dueAt = pastDueDate
+        )
+        upcomingAssignments[i] = Assignment(
+                id = i.toLong(),
+                name = Randomizer.randomAssignmentName(),
+                courseId = course.id,
+                submission = Submission(),
+                dueAt = futureDueDate
+        )
+        undatedAssignments[i] = Assignment(
+                id = i.toLong(),
+                name = Randomizer.randomAssignmentName(),
+                courseId = course.id,
+                submission = Submission(),
+                dueAt = null
+        )
+        pastAssignments[i] = Assignment(
+                id = i.toLong(),
+                name = Randomizer.randomAssignmentName(),
+                courseId = course.id,
+                submission = Submission(grade = "A", submissionType = "online"),
+                submissionTypesRaw = listOf(),
+                dueAt = pastDueDate
+        )
+    }
+
+    val overdueAssignmentGroup = AssignmentGroup(id = 1, name = "overdue", assignments = overdueAssignments)
+    val upcomingAssignmentGroup = AssignmentGroup(id = 2, name = "upcoming", assignments = upcomingAssignments)
+    val undatedAssignmentGroup = AssignmentGroup(id = 3, name = "undated", assignments = undatedAssignments)
+    val pastAssignmentGroup = AssignmentGroup(id = 4, name = "past", assignments = pastAssignments)
+
+    return listOf(overdueAssignmentGroup, upcomingAssignmentGroup, undatedAssignmentGroup, pastAssignmentGroup)
+}
+
+fun MockCanvas.addAssignment() {
+    // TODO
 }
 
 /** Creates a new Term and adds it to MockCanvas */
