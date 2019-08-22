@@ -526,6 +526,17 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
         confirmVerified(view)
     }
 
+    @Test
+    fun `SubmissionStarted event calls returnToAssignmentDetails`() {
+        connection.accept(SubmissionDetailsEmptyContentEffect.SubmissionStarted)
+
+        verify(timeout = 100) {
+            view.returnToAssignmentDetails()
+        }
+
+        confirmVerified(view)
+    }
+
     private fun testVideo() {
         val uri = mockk<Uri>()
         val intent = mockk<Intent>()
