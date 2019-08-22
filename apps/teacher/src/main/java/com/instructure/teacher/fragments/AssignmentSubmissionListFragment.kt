@@ -40,6 +40,7 @@ import com.instructure.teacher.events.AssignmentGradedEvent
 import com.instructure.teacher.events.SubmissionCommentsUpdated
 import com.instructure.teacher.events.SubmissionFilterChangedEvent
 import com.instructure.teacher.factory.AssignmentSubmissionListPresenterFactory
+import com.instructure.teacher.features.postpolicies.PostPolicyFragment
 import com.instructure.teacher.holders.GradeableStudentSubmissionViewHolder
 import com.instructure.teacher.presenters.AssignmentSubmissionListPresenter
 import com.instructure.teacher.presenters.AssignmentSubmissionListPresenter.SubmissionListFilter
@@ -286,13 +287,20 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
                     EventBus.getDefault().post(SubmissionFilterChangedEvent(canvasContext = canvasContexts))
                 }.show(requireActivity().supportFragmentManager, PeopleListFilterDialog::class.java.simpleName)
             }
+            R.id.menuPostPolicies -> {
+                RouteMatcher.route(requireContext(), PostPolicyFragment.makeRoute(mCourse, mAssignment))
+            }
         }
     }
 
     private fun updateStatuses() {
         val isMuted = presenter.mAssignment.muted
         assignmentSubmissionListToolbar.menu.findItem(R.id.menuMuteGrades)?.let {
+            it.isVisible = !FeatureFlags.postPolicies
             it.title = getString(if (isMuted) R.string.unmuteGrades else R.string.muteGrades)
+        }
+        assignmentSubmissionListToolbar.menu.findItem(R.id.menuPostPolicies)?.let {
+            it.isVisible = FeatureFlags.postPolicies
         }
 
         val statuses = mutableListOf<String>()
