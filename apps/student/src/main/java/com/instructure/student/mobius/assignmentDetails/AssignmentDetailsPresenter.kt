@@ -84,7 +84,7 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
             NumberHelper.formatDecimal(assignment.pointsPossible, 1, true)
         )
 
-        // Submission state
+        // Submission state - Some of this may be hidden by the visibility above
         val assignmentState = AssignmentUtils2.getAssignmentState(assignment, assignment.submission, false)
         val (submittedLabelRes, submittedColorRes, submittedIconRes) = if (assignment.isSubmitted) {
             Triple(
@@ -104,6 +104,13 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
             } else {
                 Triple(R.string.notSubmitted, R.color.defaultTextGray, R.drawable.vd_unsubmitted)
             }
+        }
+
+        // Submission Status under title - We only show Graded or nothing at all for PAPER/NONE
+        visibilities.submissionStatus = if (assignmentState == AssignmentUtils2.ASSIGNMENT_STATE_GRADED) {
+            true
+        } else {
+            assignment.turnInType != Assignment.TurnInType.ON_PAPER && assignment.turnInType != Assignment.TurnInType.NONE
         }
 
         val submittedLabel = context.getString(submittedLabelRes)

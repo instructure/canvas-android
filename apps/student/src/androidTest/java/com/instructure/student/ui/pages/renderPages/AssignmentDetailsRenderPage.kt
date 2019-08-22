@@ -35,6 +35,7 @@ class AssignmentDetailsRenderPage : AssignmentDetailsPage() {
     val assignmentName by OnViewWithId(R.id.assignmentName)
     val points by OnViewWithId(R.id.points)
     val submissionStatus by OnViewWithId(R.id.submissionStatus)
+    val submissionStatusIcon by OnViewWithId(R.id.submissionStatusIcon)
     val date by OnViewWithId(R.id.dueDateTextView)
     val submissionTypes by OnViewWithId(R.id.submissionTypesTextView)
     val fileTypes by OnViewWithId(R.id.fileTypesTextView)
@@ -165,5 +166,16 @@ class AssignmentDetailsRenderPage : AssignmentDetailsPage() {
     fun assertSubmitButton(submitButtonText: Int) {
         submitButton.assertVisible()
         submitButton.assertHasText(submitButtonText)
+    }
+
+    fun assertSubmissionStatusVisibility(visible: Boolean) {
+        if(visible) {
+            submissionStatus.assertVisible()
+            submissionStatusIcon.assertVisible()
+        } else {
+            submissionStatus.assertGone()
+            submissionStatusIcon.assertGone()
+        }
+
     }
 }

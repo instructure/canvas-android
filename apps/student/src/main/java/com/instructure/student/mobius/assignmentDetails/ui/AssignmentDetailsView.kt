@@ -123,6 +123,8 @@ class AssignmentDetailsView(
             swipeRefreshLayout.isRefreshing = visibilities.loading
             errorContainer.setVisible(visibilities.errorMessage)
             titleContainer.setVisible(visibilities.title)
+            submissionStatusIcon.setVisible(visibilities.submissionStatus)
+            submissionStatus.setVisible(visibilities.submissionStatus)
             dueDateContainer.setVisible(visibilities.dueDate)
             submissionTypesContainer.setVisible(visibilities.submissionTypes)
             fileTypesContainer.setVisible(visibilities.fileTypes)
