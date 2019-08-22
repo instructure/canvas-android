@@ -240,6 +240,11 @@ class FloatingRecordingView @JvmOverloads constructor(
         videoView?.setGone()
         recordingView.audio.setGone()
         recordingView.errorView.setVisible()
+        recordingView.deleteButton.setGone()
+        recordingView.toolbarTitle.text = ""
+        recordingView.closeButton.onClick {
+            recordingView.setGone()
+        }
         return
     }
 
