@@ -54,11 +54,11 @@ class UploadStatusSubmissionUpdate :
             }
             Next.next(model.copy(uploadedBytes = uploadedFileSize + event.uploaded))
         }
+        UploadStatusSubmissionEvent.OnRequestCancelClicked -> {
+            Next.dispatch(setOf(UploadStatusSubmissionEffect.ShowCancelDialog))
+        }
         UploadStatusSubmissionEvent.OnCancelClicked -> {
             Next.dispatch(setOf(UploadStatusSubmissionEffect.OnDeleteSubmission(model.submissionId)))
-        }
-        UploadStatusSubmissionEvent.OnCancelAllClicked -> {
-            Next.dispatch(setOf(UploadStatusSubmissionEffect.OnCancelAllSubmissions))
         }
         UploadStatusSubmissionEvent.OnRetryClicked -> {
             Next.dispatch(setOf(UploadStatusSubmissionEffect.RetrySubmission(model.submissionId)))

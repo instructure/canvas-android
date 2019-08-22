@@ -57,7 +57,9 @@
     <string name="submissionUploadByteProgress">%1$s of %2$s</string>
     <string name="submissionSuccessTitle">Submission Success!</string>
     <string name="submissionSuccessMessage">Your assignment was successfully submitted. Enjoy your day!</string>
-    <string name="cancelAllSubmissions">Cancel All Assignment Submissions</string>
+    <string name="submissionDeleteTitle">Cancel Submission</string>
+    <string name="submissionDeleteMessage">This will cancel and delete your submission.</string>
+    <string name="submissionDeleted">Submission Deleted</string>
     <string name="missingSubmissionLabel">Missing</string>
     <string name="gradedSubmissionLabel">Graded</string>
 

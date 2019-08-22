@@ -272,23 +272,6 @@ class UploadStatusSubmissionUpdateTest : Assert() {
     }
 
     @Test
-    fun `OnCancelAllClicked results in an OnCancelAllSubmissions effect`() {
-        updateSpec
-            .given(initModel)
-            .whenEvent(
-                UploadStatusSubmissionEvent.OnCancelAllClicked
-            )
-            .then(
-                assertThatNext(
-                    NextMatchers.hasNoModel(),
-                    NextMatchers.hasEffects<UploadStatusSubmissionModel, UploadStatusSubmissionEffect>(
-                        UploadStatusSubmissionEffect.OnCancelAllSubmissions
-                    )
-                )
-            )
-    }
-
-    @Test
     fun `OnRetryClicked results in a RetrySubmission effect`() {
         updateSpec
             .given(initModel)
@@ -338,6 +321,24 @@ class UploadStatusSubmissionUpdateTest : Assert() {
                     NextMatchers.hasModel(expectedModel),
                     NextMatchers.hasEffects<UploadStatusSubmissionModel, UploadStatusSubmissionEffect>(
                         UploadStatusSubmissionEffect.OnDeleteFileFromSubmission(deleteFile.id)
+                    )
+                )
+            )
+    }
+
+    @Test
+    fun `OnRequestCancelClicked results in ShowCancelDialog effect`() {
+        val startModel = initModel.copy(files = listOf(initFile))
+        updateSpec
+            .given(startModel)
+            .whenEvent(
+                UploadStatusSubmissionEvent.OnRequestCancelClicked
+            )
+            .then(
+                assertThatNext(
+                    NextMatchers.hasNoModel(),
+                    NextMatchers.hasEffects<UploadStatusSubmissionModel, UploadStatusSubmissionEffect>(
+                        UploadStatusSubmissionEffect.ShowCancelDialog
                     )
                 )
             )
