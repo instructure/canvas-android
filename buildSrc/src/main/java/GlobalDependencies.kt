@@ -41,6 +41,7 @@ object Versions {
     const val ANDROID_SVG = "1.3"
     const val MOBIUS = "1.2.1"
     const val SQLDELIGHT = "1.1.3"
+    const val NEW_RELIC = "5.21.3"
 }
 
 object Libs {
@@ -97,6 +98,7 @@ object Libs {
     const val EXOPLAYER = "com.google.android.exoplayer:exoplayer:${Versions.EXOPLAYER}"
     const val PHOTO_VIEW = "com.github.chrisbanes:PhotoView:${Versions.PHOTO_VIEW}"
     const val ANDROID_SVG = "com.caverock:androidsvg:${Versions.ANDROID_SVG}"
+    const val NEW_RELIC = "com.newrelic.agent.android:android-agent:${Versions.NEW_RELIC}"
 }
 
 object Plugins {
@@ -110,6 +112,7 @@ object Plugins {
     const val BUILD_SCAN = "com.gradle:build-scan-plugin:${Versions.BUILD_SCAN}"
     const val JACOCO_ANDROID = "com.dicedmelon.gradle:jacoco-android:${Versions.JACOCO_ANDROID}"
     const val SQLDELIGHT = "com.squareup.sqldelight:gradle-plugin:${Versions.SQLDELIGHT}"
+    const val NEW_RELIC = "com.newrelic.agent.android:agent-gradle-plugin:${Versions.NEW_RELIC}"
 }
 
 object BuildScan {

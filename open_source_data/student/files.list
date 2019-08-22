@@ -12,3 +12,6 @@ analytics.xml=src/main/res/xml/analytics.xml
 
 # Polling List & Private Strings
 strings.xml=src/main/res/values/private_strings.xml
+
+# New Relic
+newrelic.properties=newrelic.properties
