@@ -72,10 +72,33 @@
 
         </RelativeLayout>
 
-        <include
-            android:id="@+id/video"
-            layout="@layout/view_floating_media_recorder_video"
-            android:visibility="gone" />
+        <LinearLayout
+            android:id="@+id/errorView"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/recordingViewHeight"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone"
+            tools:ignore="UseCompoundDrawables"
+            tools:visibility="visible">
+
+            <ImageView
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_gravity="center"
+                android:contentDescription="@string/error"
+                android:src="@drawable/vd_error"
+                android:tint="@color/error" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="@string/errorOccurred" />
+
+        </LinearLayout>
 
         <include
             android:id="@+id/audio"
