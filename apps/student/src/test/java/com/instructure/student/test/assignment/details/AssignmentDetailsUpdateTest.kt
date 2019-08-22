@@ -339,8 +339,8 @@ class AssignmentDetailsUpdateTest : Assert() {
                 AssignmentDetailsEvent.DataLoaded(
                     assignmentResult = expectedModel.assignmentResult,
                     isStudioEnabled = true,
-                    studioLTITool = null,
-                    ltiTool = expectedModel.ltiTool,
+                    studioLTIToolResult = null,
+                    ltiToolResult = expectedModel.ltiTool,
                     submission = submission,
                     quizResult = null
                 )
@@ -364,8 +364,8 @@ class AssignmentDetailsUpdateTest : Assert() {
                 AssignmentDetailsEvent.DataLoaded(
                     assignmentResult = expectedModel.assignmentResult,
                     isStudioEnabled = false,
-                    studioLTITool = null,
-                    ltiTool = expectedModel.ltiTool,
+                    studioLTIToolResult = null,
+                    ltiToolResult = expectedModel.ltiTool,
                     submission = submission,
                     quizResult = null
                 )
@@ -388,8 +388,8 @@ class AssignmentDetailsUpdateTest : Assert() {
                 AssignmentDetailsEvent.DataLoaded(
                     assignmentResult = expectedModel.assignmentResult,
                     isStudioEnabled = false,
-                    studioLTITool = null,
-                    ltiTool = expectedModel.ltiTool,
+                    studioLTIToolResult = null,
+                    ltiToolResult = expectedModel.ltiTool,
                     submission = null,
                     quizResult = null
                 )
@@ -418,8 +418,8 @@ class AssignmentDetailsUpdateTest : Assert() {
                 AssignmentDetailsEvent.DataLoaded(
                     assignmentResult = expectedModel.assignmentResult,
                     isStudioEnabled = true,
-                    studioLTITool = null,
-                    ltiTool = expectedModel.ltiTool,
+                    studioLTIToolResult = null,
+                    ltiToolResult = expectedModel.ltiTool,
                     submission = submission,
                     quizResult = null
                 )
@@ -448,10 +448,10 @@ class AssignmentDetailsUpdateTest : Assert() {
                 AssignmentDetailsEvent.DataLoaded(
                     assignmentResult = expectedModel.assignmentResult,
                     isStudioEnabled = false,
-                    ltiTool = expectedModel.ltiTool,
+                    ltiToolResult = expectedModel.ltiTool,
                     submission = submission,
                     quizResult = DataResult.Success(quiz),
-                    studioLTITool = DataResult.Fail(null)
+                    studioLTIToolResult = DataResult.Fail(null)
                 )
             )
             .then(assertThatNext(NextMatchers.hasModel(expectedModel)))
@@ -479,10 +479,10 @@ class AssignmentDetailsUpdateTest : Assert() {
                 AssignmentDetailsEvent.DataLoaded(
                     assignmentResult = expectedModel.assignmentResult,
                     isStudioEnabled = true,
-                    ltiTool = expectedModel.ltiTool,
+                    ltiToolResult = expectedModel.ltiTool,
                     submission = submission,
                     quizResult = DataResult.Fail(null),
-                    studioLTITool = DataResult.Fail(null)
+                    studioLTIToolResult = DataResult.Fail(null)
                 )
             )
             .then(assertThatNext(NextMatchers.hasModel(expectedModel)))

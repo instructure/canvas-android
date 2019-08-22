@@ -118,8 +118,8 @@ class AssignmentDetailsUpdate : UpdateInit<AssignmentDetailsModel, AssignmentDet
                 isLoading = false,
                 assignmentResult = event.assignmentResult,
                 isStudioEnabled = event.isStudioEnabled,
-                studioLTIToolResult = event.studioLTITool,
-                ltiTool = event.ltiTool,
+                studioLTIToolResult = event.studioLTIToolResult,
+                ltiTool = event.ltiToolResult,
                 quizResult = event.quizResult,
                 databaseSubmission = dbSubmission
             ))

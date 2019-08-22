@@ -99,7 +99,7 @@ public class InternalWebViewActivity extends BaseActionBarActivity {
     }
 
     public static Intent createIntent(Context context, String url, String title, boolean authenticate) {
-        // Assumes no canvasContext
+        // Assumes no CanvasContext
         Bundle extras = InternalWebViewActivity.createBundle(CanvasContext.Companion.emptyCourseContext(), url, title, authenticate);
 
         Intent intent = new Intent(context, InternalWebViewActivity.class);
@@ -113,7 +113,7 @@ public class InternalWebViewActivity extends BaseActionBarActivity {
     }
 
     public static Intent createIntent(Context context, String url, String html, String title, boolean authenticate) {
-        // Assumes no canvasContext
+        // Assumes no CanvasContext
         Bundle extras = InternalWebViewActivity.createBundle(CanvasContext.Companion.emptyCourseContext(), url, title, authenticate, html);
 
         Intent intent = new Intent(context, InternalWebViewActivity.class);

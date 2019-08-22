@@ -78,13 +78,13 @@ class AssignmentDetailsPresenterTest : Assert() {
             id = 123L
         )
         baseDiscussion = DiscussionTopicHeader(
-                id = 123L,
-                message = "discussion message",
-                author = DiscussionParticipant(
-                        displayName = "Hodor",
-                        avatarImageUrl = "pretty-hodor.com"
-                ),
-                postedDate = Date()
+            id = 123L,
+            message = "discussion message",
+            author = DiscussionParticipant(
+                displayName = "Hodor",
+                avatarImageUrl = "pretty-hodor.com"
+            ),
+            postedDate = Date()
         )
     }
 

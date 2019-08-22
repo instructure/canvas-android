@@ -20,13 +20,19 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.utils.*
+import com.instructure.student.Submission
+import com.instructure.student.db.Db
+import com.instructure.student.db.getInstance
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.*
 import com.instructure.student.mobius.common.ChannelSource
+import com.instructure.student.mobius.common.DBSource
 import com.instructure.student.mobius.common.ui.MobiusFragment
 
 @PageView(url = "{canvasContext}/assignments/{assignmentId}/submissions")
@@ -62,11 +68,23 @@ class SubmissionDetailsFragment :
                     SubmissionDetailsEvent.SubmissionAndAttachmentClicked(it.submission.attempt, it.attachment)
                 }
             }
-        }
-    )
+        },
+        DBSource.ofSingle<Submission, SubmissionDetailsEvent>(
+            Db.getInstance(ContextKeeper.appContext)
+                .submissionQueries
+                .getSubmissionsByAssignmentId(assignmentId, ApiPrefs.user?.id ?: -1)
+                ) { submission ->
+                    if (submission?.progress == 100.0) {
+                        // A submission for this assignment was finished - we'll want to reload data
+                        SubmissionDetailsEvent.SubmissionUploadFinished
+                    } else {
+                        // Submission is either currently being uploaded, or there is no submission being uploaded - do nothing
+                        null
+                    }
+                }
+        )
 
     companion object {
-
         @JvmStatic
         fun makeRoute(course: CanvasContext, assignmentId: Long): Route {
             val bundle = course.makeBundle {

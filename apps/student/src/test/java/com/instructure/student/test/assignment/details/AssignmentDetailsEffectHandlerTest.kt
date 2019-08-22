@@ -37,9 +37,7 @@ import com.instructure.student.Submission
 import com.instructure.student.db.Db
 import com.instructure.student.db.StudentDb
 import com.instructure.student.db.getInstance
-import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsEffect
-import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsEffectHandler
-import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsEvent
+import com.instructure.student.mobius.assignmentDetails.*
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsView
 import com.instructure.student.mobius.assignmentDetails.ui.SubmissionTypesVisibilities
@@ -584,7 +582,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
         connection.accept(AssignmentDetailsEffect.ShowUploadStatusView(submission))
 
         verify(timeout = 100) {
-            view.showOnlineTextEntryView(submission.assignmentId!!, submission.assignmentName, submission.submissionEntry)
+            view.showOnlineTextEntryView(submission.assignmentId, submission.assignmentName, submission.submissionEntry)
         }
 
         confirmVerified(view)
@@ -596,7 +594,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
         connection.accept(AssignmentDetailsEffect.ShowUploadStatusView(submission))
 
         verify(timeout = 100) {
-            view.showOnlineUrlEntryView(submission.assignmentId!!, submission.assignmentName, course, submission.submissionEntry)
+            view.showOnlineUrlEntryView(submission.assignmentId, submission.assignmentName, course, submission.submissionEntry)
         }
 
         confirmVerified(view)
@@ -607,7 +605,6 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
         val submission = mockkSubmission(9876L)
 
         mockkDatabase(listOf(submission))
-
         effectHandler.queryResultsChanged()
 
         verify(timeout = 100) {
@@ -1003,7 +1000,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     }
 
     @Test
-    fun `ShowCreateSubmissionView with type basic lti launchcalls showLTIView`() {
+    fun `ShowCreateSubmissionView with type basic lti launch calls showLTIView`() {
         val ltiUrl = "https://www.instructure.com"
         val assignmentName = "hodor"
         val assignmentCopy = assignment.copy(name = assignmentName)
@@ -1073,7 +1070,6 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     }
 
     private fun testVideo() {
-
         val uri = mockk<Uri>()
         val intent = mockk<Intent>()
         every { intent.action } returns ""
@@ -1086,9 +1082,11 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
         every { FileProvider.getUriForFile(any(), any(), any()) } returns uri
 
         mockkStatic(FilePrefs::class)
-        every { FilePrefs.tempCaptureUri = any() } answers { "" }
+        every { FilePrefs.tempCaptureUri = any() }
 
-        every { view.getVideoIntent(uri) } returns intent
+        mockkStatic("com.instructure.student.mobius.assignmentDetails.SubmissionUtilsKt")
+        every { any<Uri>().getVideoIntent() } returns intent
+
 
         excludeRecords {
             context.packageName
@@ -1106,13 +1104,12 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     }
 
     private fun testMediaPicker() {
-
-        val uri = mockk<Uri>()
         val intent = mockk<Intent>()
         every { intent.action } returns ""
         every { context.packageManager.queryIntentActivities(any(), any()).size } returns 1
 
-        every { view.getChooseMediaIntent() } returns intent
+        mockkStatic("com.instructure.student.mobius.assignmentDetails.SubmissionUtilsKt")
+        every { chooseMediaIntent } returns intent
 
         excludeRecords {
             context.packageName

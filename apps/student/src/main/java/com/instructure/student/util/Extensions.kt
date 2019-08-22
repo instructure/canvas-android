@@ -36,8 +36,8 @@ suspend fun Long.isStudioEnabled(): Boolean {
 }
 
 suspend fun Long.getStudioLTITool(): DataResult<LTITool> {
-    val context = CanvasContext.getGenericContext(CanvasContext.Type.COURSE, this)
-    val studioLTITool = ExternalToolManager.getExternalToolsForCanvasContextAsync(context, true).await()
+    val canvasContext = CanvasContext.getGenericContext(CanvasContext.Type.COURSE, this)
+    val studioLTITool = ExternalToolManager.getExternalToolsForCanvasContextAsync(canvasContext, true).await()
         .dataOrNull?.firstOrNull {
         it.url?.contains("instructuremedia.com/lti/launch") ?: false
     }

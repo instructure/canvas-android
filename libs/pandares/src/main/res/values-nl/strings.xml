@@ -952,7 +952,6 @@
     <string name="select">Selecteren</string>
     <string name="choice_position">Keuze %d</string>
     <string name="updating_module_info">Module-informatie bijwerken&#8230;</string>
-    <string name="arc">Arc</string>
     <string name="pending_review">Moet nog nagekeken worden</string>
     <string name="totalPoints">%s punten</string>
     <string name="totalPointsText">Totaal aantal punten</string>

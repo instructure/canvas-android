@@ -64,7 +64,8 @@ class SubmissionCommentsFragment :
         DBSource.ofList<PendingSubmissionComment, SubmissionCommentsEvent>(
             Db.getInstance(ContextKeeper.appContext)
                 .pendingSubmissionCommentQueries
-                .getCommentsByAccountAssignment(ApiPrefs.domain, assignment.id)
+                .getCommentsByAccountAssignment(ApiPrefs.domain, assignment.id),
+            performInitialQuery = false
         ) { pendingComments ->
             val commentIds = pendingComments.map { it.id }
             SubmissionCommentsEvent.PendingSubmissionsUpdated(commentIds)

@@ -23,7 +23,6 @@ import android.content.Intent
 import android.content.res.ColorStateList
 import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -212,7 +211,7 @@ class AssignmentDetailsView(
             }
             setupDialogRow(dialog, dialog.submissionEntryStudio, visibilities.studioUpload) {
                 // The LTI info shouldn't be null if we are showing the Studio upload option
-                showStudioUploadView(assignment, courseId, ltiToolUrl!!, ltiToolName!!)
+                showStudioUploadView(assignment, ltiToolUrl!!, ltiToolName!!)
             }
         }
         dialog.show()
@@ -293,19 +292,6 @@ class AssignmentDetailsView(
         floatingRecordingView.stoppedCallback = {}
     }
 
-    fun getVideoIntent(fileUri: Uri): Intent {
-        return Intent(MediaStore.ACTION_VIDEO_CAPTURE).apply {
-            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            putExtra(MediaStore.EXTRA_OUTPUT, fileUri)
-        }
-    }
-
-    fun getChooseMediaIntent() = Intent(Intent.ACTION_GET_CONTENT).apply {
-        flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
-        type = "video/*, audio/*"
-        addCategory(Intent.CATEGORY_OPENABLE)
-    }
-
     fun showPermissionDeniedToast() {
         Toast.makeText(context, com.instructure.pandautils.R.string.permissionDenied, Toast.LENGTH_LONG).show()
     }
@@ -329,7 +315,7 @@ class AssignmentDetailsView(
         )
     }
 
-    fun showStudioUploadView(assignment: Assignment, courseId: Long, ltiUrl: String, studioLtiToolName: String) {
+    private fun showStudioUploadView(assignment: Assignment, ltiUrl: String, studioLtiToolName: String) {
         RouteMatcher.route(context, StudioWebViewFragment.makeRoute(canvasContext, ltiUrl, studioLtiToolName, true, assignment))
     }
 

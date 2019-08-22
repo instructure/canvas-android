@@ -15,16 +15,34 @@
  */
 package com.instructure.student.test.assignment.details.submissionDetails
 
-import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.DiscussionTopicHeader
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
+import android.provider.MediaStore
+import androidx.core.content.FileProvider
+import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.services.NotoriousUploadService
+import com.instructure.pandautils.utils.FilePrefs
+import com.instructure.pandautils.utils.FileUploadUtils
+import com.instructure.pandautils.utils.PermissionUtils
+import com.instructure.pandautils.utils.requestPermissions
+import com.instructure.student.Submission
+import com.instructure.student.db.Db
+import com.instructure.student.db.StudentDb
+import com.instructure.student.db.getInstance
+import com.instructure.student.mobius.assignmentDetails.chooseMediaIntent
+import com.instructure.student.mobius.assignmentDetails.getVideoIntent
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.SubmissionDetailsEmptyContentEffect
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.SubmissionDetailsEmptyContentEffectHandler
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.SubmissionDetailsEmptyContentEvent
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyContentFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyContentView
 import com.instructure.student.mobius.assignmentDetails.ui.SubmissionTypesVisibilities
+import com.instructure.student.mobius.common.ui.SubmissionService
+import com.spotify.mobius.Connection
 import com.spotify.mobius.functions.Consumer
+import com.squareup.sqldelight.Query
 import io.mockk.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -33,40 +51,240 @@ import kotlinx.coroutines.test.setMain
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
+import java.io.File
 import java.util.concurrent.Executors
 
 
 class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
+    private val assignmentId = 2468L
     private val view: SubmissionDetailsEmptyContentView = mockk(relaxed = true)
-    private val effectHandler =
-            SubmissionDetailsEmptyContentEffectHandler().apply { view = this@SubmissionDetailsEmptyContentEffectHandlerTest.view }
+    private val context: Activity = mockk(relaxed = true)
+    private val effectHandler = SubmissionDetailsEmptyContentEffectHandler(context, assignmentId).apply { view = this@SubmissionDetailsEmptyContentEffectHandlerTest.view }
     private val eventConsumer: Consumer<SubmissionDetailsEmptyContentEvent> = mockk(relaxed = true)
-    private val connection = effectHandler.connect(eventConsumer)
+    private lateinit var connection: Connection<SubmissionDetailsEmptyContentEffect>
 
     lateinit var assignment: Assignment
     lateinit var course: Course
+    private lateinit var queryMockk: Query<Submission>
+    private var userId: Long = 0
+    val uri = mockk<Uri>(relaxed = true)
 
     @ExperimentalCoroutinesApi
     @Before
     fun setup() {
         Dispatchers.setMain(Executors.newSingleThreadExecutor().asCoroutineDispatcher())
-        assignment = Assignment(id = 2468, courseId = 8642)
         course = Course(id = 1234L)
+        assignment = Assignment(id = 2468, courseId = course.id, name = "Instructure")
+        userId = 6789L
+
+        mockkStatic(ApiPrefs::class)
+        every { ApiPrefs.user } returns User(id = userId)
+
+        mockkStatic("com.instructure.student.db.ExtensionsKt")
+
+        queryMockk = mockk(relaxed = true)
+        val db: StudentDb = mockk {
+            every {
+                submissionQueries.getSubmissionsByAssignmentId(assignment.id, userId)
+            } returns queryMockk
+        }
+
+        every { Db.getInstance(context) } returns db
+
+        val intent = mockk<Intent>()
+        every { intent.action } returns ""
+        every { intent.addFlags(any()) } returns intent
+        every { intent.putExtra(MediaStore.EXTRA_OUTPUT, uri) } returns intent
+
+
+        connection = effectHandler.connect(eventConsumer)
     }
 
     @Test
-    fun `ShowSubmitAssignmentView calls ShowSubmitDialogView on the view`() {
-        connection.accept(SubmissionDetailsEmptyContentEffect.ShowSubmitDialogView(assignment, course, false))
+    fun `ShowVideoRecordingView event with permission results in launching intent`() {
+        mockPermissions(true)
+        testVideo()
+    }
+
+    @Test
+    fun `ShowVideoRecordingView event without permission will request permission and show an error message when denied`() {
+        mockPermissions(false, permissionGranted = false)
+
+        connection.accept(SubmissionDetailsEmptyContentEffect.ShowVideoRecordingView)
 
         verify(timeout = 100) {
-            view.showSubmitDialogView(assignment, course.id, SubmissionTypesVisibilities())
+            view.showPermissionDeniedToast()
         }
 
         confirmVerified(view)
     }
 
     @Test
-    fun `ShowCreateSubmissionView with quiz submissionType calls showQuizOrDiscussionView`() {
+    fun `ShowVideoRecordingView event without permission will request permission and results in launching intent`() {
+        mockPermissions(false, permissionGranted = true)
+        testVideo()
+    }
+
+    @Test
+    fun `ShowAudioRecordingView event with permission results in view calling showAudioRecordingView`() {
+        mockPermissions(hasPermission = true)
+
+        connection.accept(SubmissionDetailsEmptyContentEffect.ShowAudioRecordingView)
+
+        verify(timeout = 100) {
+            view.showAudioRecordingView()
+        }
+
+        confirmVerified(view)
+    }
+
+    @Test
+    fun `ShowAudioRecordingView event without permission results in view calling showPermissionDeniedToast`() {
+        mockPermissions(hasPermission = false)
+
+        connection.accept(SubmissionDetailsEmptyContentEffect.ShowAudioRecordingView)
+
+        verify(timeout = 100) {
+            view.showPermissionDeniedToast()
+        }
+
+        confirmVerified(view)
+    }
+
+    @Test
+    fun `ShowMediaPickerView event results in startActivityForResult with choose media request code`() {
+        testMediaPicker()
+    }
+
+    @Test
+    fun `ShowVideoRecordingError event calls showVideoRecordingError() on view`() {
+        connection.accept(SubmissionDetailsEmptyContentEffect.ShowVideoRecordingError)
+
+        verify(timeout = 100) {
+            view.showVideoRecordingError()
+        }
+
+        confirmVerified(view)
+    }
+
+    @Test
+    fun `ShowAudioRecordingError event calls showAudioRecordingError() on view`() {
+        connection.accept(SubmissionDetailsEmptyContentEffect.ShowAudioRecordingError)
+
+        verify(timeout = 100) {
+            view.showAudioRecordingError()
+        }
+
+        confirmVerified(view)
+    }
+
+    @Test
+    fun `ShowMediaPickingError event calls showMediaPickingError() on view`() {
+        connection.accept(SubmissionDetailsEmptyContentEffect.ShowMediaPickingError)
+
+        verify(timeout = 100) {
+            view.showMediaPickingError()
+        }
+
+        confirmVerified(view)
+    }
+
+    @Test
+    fun `UploadVideoSubmission event calls launchFilePickerView() on view`() {
+        connection.accept(SubmissionDetailsEmptyContentEffect.UploadVideoSubmission(uri, course, assignment))
+
+        verify(timeout = 100) {
+            view.launchFilePickerView(uri, course, assignment)
+        }
+
+        confirmVerified(view)
+    }
+
+    @Test
+    fun `UploadMediaFileSubmission event calls launchFilePickerView() on view`() {
+        connection.accept(SubmissionDetailsEmptyContentEffect.UploadMediaFileSubmission(uri, course, assignment))
+
+        verify(timeout = 100) {
+            view.launchFilePickerView(uri, course, assignment)
+        }
+
+        confirmVerified(view)
+    }
+
+    @Test
+    fun `ShowSubmitDialogView event calls showSubmitDialogView() on view`() {
+        connection.accept(SubmissionDetailsEmptyContentEffect.ShowSubmitDialogView(assignment, course, false))
+
+        verify(timeout = 100) {
+            view.showSubmitDialogView(assignment, SubmissionTypesVisibilities())
+        }
+
+        confirmVerified(view)
+    }
+
+    @Test
+    fun `ShowQuizStartView event calls showQuizStartView() on view`() {
+        val quiz = Quiz(id = 123L)
+
+        connection.accept(SubmissionDetailsEmptyContentEffect.ShowQuizStartView(quiz, course))
+
+        verify(timeout = 100) {
+            view.showQuizStartView(course, quiz)
+        }
+
+        confirmVerified(view)
+    }
+
+    @Test
+    fun `ShowDiscussionDetailView event calls showDiscussionDetailView() on view`() {
+        val discussionTopicHeaderId = 112233L
+
+        connection.accept(SubmissionDetailsEmptyContentEffect.ShowDiscussionDetailView(discussionTopicHeaderId, course))
+
+        verify(timeout = 100) {
+            view.showDiscussionDetailView(course, discussionTopicHeaderId)
+        }
+
+        confirmVerified(view)
+    }
+
+    @Test
+    fun `UploadAudioSubmission event calls uploadAudioRecording`() {
+        val file: File = mockk()
+        every { file.path } returns "Path"
+
+        mockkObject(SubmissionService)
+        every {
+            SubmissionService.startMediaSubmission(
+                context,
+                course,
+                assignment.id,
+                assignment.name,
+                assignment.groupCategoryId,
+                "Path",
+                NotoriousUploadService.ACTION.ASSIGNMENT_SUBMISSION
+            )
+        } returns Unit
+
+
+        connection.accept(SubmissionDetailsEmptyContentEffect.UploadAudioSubmission(file, course, assignment))
+        verify(timeout = 100) {
+            SubmissionService.startMediaSubmission(
+                context,
+                course,
+                assignment.id,
+                assignment.name,
+                assignment.groupCategoryId,
+                "Path",
+                NotoriousUploadService.ACTION.ASSIGNMENT_SUBMISSION
+            )
+        }
+
+        confirmVerified(SubmissionService)
+    }
+
+    @Test
+    fun `ShowCreateSubmissionView event with ONLINE_QUIZ submissionType calls showQuizOrDiscussionView`() {
         val quizId = 1234L
         val domain = "mobiledev.instructure.com/api/v1"
         val protocol = "https"
@@ -89,7 +307,7 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
     }
 
     @Test
-    fun `ShowCreateSubmissionView with discussion submissionType calls showQuizOrDiscussionView`() {
+    fun `ShowCreateSubmissionView event with DISCUSSION_TOPIC submissionType calls showQuizOrDiscussionView`() {
         val discussionTopicId = 1234L
         val domain = "mobiledev.instructure.com/api/v1"
         val protocol = "https"
@@ -112,31 +330,31 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
     }
 
     @Test
-    fun `ShowCreateSubmissionView with fileUpload submissionType calls showFileUploadView`() {
+    fun `ShowCreateSubmissionView event with ONLINE_UPLOAD submissionType calls showFileUploadView`() {
         val submissionType = Assignment.SubmissionType.ONLINE_UPLOAD
 
         connection.accept(SubmissionDetailsEmptyContentEffect.ShowCreateSubmissionView(submissionType, course, assignment))
 
         verify(timeout = 100) {
-            view.showFileUploadView(assignment, course.id)
+            view.showFileUploadView(assignment)
         }
         confirmVerified(view)
     }
 
     @Test
-    fun `ShowCreateSubmissionView with textEntry submissionType calls showOnlineTextEntryView`() {
+    fun `ShowCreateSubmissionView event with ONLINE_TEXT_ENTRY submissionType calls showOnlineTextEntryView`() {
         val submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY
 
         connection.accept(SubmissionDetailsEmptyContentEffect.ShowCreateSubmissionView(submissionType, course, assignment))
 
         verify(timeout = 100) {
-            view.showOnlineTextEntryView(assignment.id, assignment.name, course)
+            view.showOnlineTextEntryView(assignment.id, assignment.name)
         }
         confirmVerified(view)
     }
 
     @Test
-    fun `ShowCreateSubmissionView with urlEntry submissionType calls showOnlineUrlEntryView`() {
+    fun `ShowCreateSubmissionView event with ONLINE_URL submissionType calls showOnlineUrlEntryView`() {
         val submissionType = Assignment.SubmissionType.ONLINE_URL
 
         connection.accept(SubmissionDetailsEmptyContentEffect.ShowCreateSubmissionView(submissionType, course, assignment))
@@ -148,34 +366,81 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
     }
 
     @Test
-    fun `ShowCreateSubmissionView with mediaRecording submissionType calls showMediaRecordingView`() {
+    fun `ShowCreateSubmissionView event with EXTERNAL_TOOL submissionType calls showLTIView() on the view`() {
+        val submissionType = Assignment.SubmissionType.EXTERNAL_TOOL
+        val ltiUrl = "https://www.instructure.com"
+
+        connection.accept(SubmissionDetailsEmptyContentEffect.ShowCreateSubmissionView(
+            submissionType = submissionType,
+            course = course,
+            assignment = assignment,
+            ltiUrl = ltiUrl))
+
+        verify(timeout = 100) {
+            view.showLTIView(course, ltiUrl, assignment.name!!)
+        }
+        confirmVerified(view)
+    }
+
+    @Test
+    fun `ShowCreateSubmissionView event with BASIC_LTI_LAUNCH submissionType calls showLTIView() on the view`() {
+        val submissionType = Assignment.SubmissionType.BASIC_LTI_LAUNCH
+        val ltiUrl = "https://www.instructure.com"
+
+        connection.accept(SubmissionDetailsEmptyContentEffect.ShowCreateSubmissionView(
+            submissionType = submissionType,
+            course = course,
+            assignment = assignment,
+            ltiUrl = ltiUrl))
+
+        verify(timeout = 100) {
+            view.showLTIView(course, ltiUrl, assignment.name!!)
+        }
+        confirmVerified(view)
+    }
+
+    @Test
+    fun `ShowCreateSubmissionView event with MEDIA_RECORDING submissionType calls showMediaRecordingView() on the view`() {
         val submissionType = Assignment.SubmissionType.MEDIA_RECORDING
 
         connection.accept(SubmissionDetailsEmptyContentEffect.ShowCreateSubmissionView(submissionType, course, assignment))
 
         verify(timeout = 100) {
-            view.showMediaRecordingView(assignment, course.id)
+            view.showMediaRecordingView()
         }
         confirmVerified(view)
     }
 
+    @Test
+    fun `ShowSubmitAssignmentView event calls ShowSubmitDialogView on the view`() {
+        connection.accept(SubmissionDetailsEmptyContentEffect.ShowSubmitDialogView(assignment, course, false))
+
+        verify(timeout = 100) {
+            view.showSubmitDialogView(assignment, SubmissionTypesVisibilities())
+        }
+
+        confirmVerified(view)
+    }
 
     @Test
-    fun `Displays Studio when submission type is fileUpload and Studio is enabled`() {
+    fun `ShowSubmitDialogView event calls showSubmitDialogView() with fileUpload|studioUpload == true when submission type is ONLINE_UPLOAD`() {
         val course = Course()
 
         val assignment = assignment.copy(submissionTypesRaw = listOf("online_upload"))
         connection.accept(SubmissionDetailsEmptyContentEffect.ShowSubmitDialogView(assignment, course, true))
 
         verify(timeout = 100) {
-            view.showSubmitDialogView(assignment, course.id, SubmissionTypesVisibilities(fileUpload = true, studioUpload = true))
+            view.showSubmitDialogView(
+                assignment,
+                SubmissionTypesVisibilities(fileUpload = true, studioUpload = true)
+            )
         }
 
         confirmVerified(view)
     }
 
     @Test
-    fun `Displays fileUpload when submission type is fileUpload`() {
+    fun `ShowSubmitDialogView event calls showSubmitDialogView() with fileUpload == true when submission type is ONLINE_UPLOAD`() {
         val course = Course()
         val assignment = assignment.copy(
                 submissionTypesRaw = listOf("online_upload")
@@ -184,14 +449,14 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
         connection.accept(SubmissionDetailsEmptyContentEffect.ShowSubmitDialogView(assignment, course, false))
 
         verify(timeout = 100) {
-            view.showSubmitDialogView(assignment, course.id, SubmissionTypesVisibilities(fileUpload = true))
+            view.showSubmitDialogView(assignment, SubmissionTypesVisibilities(fileUpload = true))
         }
 
         confirmVerified(view)
     }
 
     @Test
-    fun `Displays textEntry when submission type is textEntry`() {
+    fun `ShowSubmitDialogView event calls showSubmitDialogView() with textEntry == true when submission type is ONLINE_TEXT_ENTRY`() {
         val assignment = assignment.copy(
                 submissionTypesRaw = listOf("online_text_entry")
         )
@@ -199,14 +464,14 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
         connection.accept(SubmissionDetailsEmptyContentEffect.ShowSubmitDialogView(assignment, course, false))
 
         verify(timeout = 100) {
-            view.showSubmitDialogView(assignment, course.id, SubmissionTypesVisibilities(textEntry = true))
+            view.showSubmitDialogView(assignment, SubmissionTypesVisibilities(textEntry = true))
         }
 
         confirmVerified(view)
     }
 
     @Test
-    fun `Displays onlineUrl when submission type is onlineUrl`() {
+    fun `ShowSubmitDialogView event calls showSubmitDialogView() with urlEntry == true when submission type is ONLINE_URL`() {
         val assignment = assignment.copy(
                 submissionTypesRaw = listOf("online_url")
         )
@@ -214,14 +479,14 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
         connection.accept(SubmissionDetailsEmptyContentEffect.ShowSubmitDialogView(assignment, course, false))
 
         verify(timeout = 100) {
-            view.showSubmitDialogView(assignment, course.id, SubmissionTypesVisibilities(urlEntry = true))
+            view.showSubmitDialogView(assignment, SubmissionTypesVisibilities(urlEntry = true))
         }
 
         confirmVerified(view)
     }
 
     @Test
-    fun `Displays mediaRecording when submission type is mediaRecording`() {
+    fun `ShowSubmitDialogView event calls showSubmitDialogView() with mediaRecording == true when submission type is MEDIA_RECORDING`() {
         val assignment = assignment.copy(
                 submissionTypesRaw = listOf("media_recording")
         )
@@ -229,24 +494,119 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
         connection.accept(SubmissionDetailsEmptyContentEffect.ShowSubmitDialogView(assignment, course, false))
 
         verify(timeout = 100) {
-            view.showSubmitDialogView(assignment, course.id, SubmissionTypesVisibilities(mediaRecording = true))
+            view.showSubmitDialogView(
+                assignment,
+                SubmissionTypesVisibilities(mediaRecording = true)
+            )
         }
 
         confirmVerified(view)
     }
 
     @Test
-    fun `Displays all submission types when all are present`() {
+    fun `ShowSubmitDialogView event calls showSubmitDialogView() with all submission types == true when submission type is all submittable submission types`() {
         val assignment = assignment.copy(
                 submissionTypesRaw = listOf("media_recording", "online_url", "online_text_entry", "online_upload")
         )
 
-        connection.accept(SubmissionDetailsEmptyContentEffect.ShowSubmitDialogView(assignment, course, false))
+        connection.accept(SubmissionDetailsEmptyContentEffect.ShowSubmitDialogView(assignment, course, true))
 
         verify(timeout = 100) {
-            view.showSubmitDialogView(assignment, course.id, SubmissionTypesVisibilities(true, true, true, true))
+            view.showSubmitDialogView(
+                assignment,
+                SubmissionTypesVisibilities(
+                    textEntry = true,
+                    urlEntry = true,
+                    fileUpload = true,
+                    mediaRecording = true,
+                    studioUpload = true)
+            )
         }
 
         confirmVerified(view)
+    }
+
+    @Test
+    fun `SubmissionStarted event calls returnToAssignmentDetails`() {
+        connection.accept(SubmissionDetailsEmptyContentEffect.SubmissionStarted)
+
+        verify(timeout = 100) {
+            view.returnToAssignmentDetails()
+        }
+
+        confirmVerified(view)
+    }
+
+    private fun testVideo() {
+        val uri = mockk<Uri>()
+        val intent = mockk<Intent>()
+
+        every { intent.action } returns ""
+
+        every { context.packageManager.queryIntentActivities(any(), any()).size } returns 1
+
+        mockkStatic(FileUploadUtils::class)
+        every { FileUploadUtils.getExternalCacheDir(context) } returns File("")
+
+        mockkStatic(FileProvider::class)
+        every { FileProvider.getUriForFile(any(), any(), any()) } returns uri
+
+        mockkStatic(FilePrefs::class)
+        every { FilePrefs.tempCaptureUri = any() }
+
+        mockkStatic("com.instructure.student.mobius.assignmentDetails.SubmissionUtilsKt")
+        every { any<Uri>().getVideoIntent() } returns intent
+
+        excludeRecords {
+            context.packageName
+            context.packageManager
+        }
+
+        connection.accept(SubmissionDetailsEmptyContentEffect.ShowVideoRecordingView)
+
+        verify(timeout = 100) {
+            eventConsumer.accept(SubmissionDetailsEmptyContentEvent.StoreVideoUri(uri))
+            context.startActivityForResult(intent, SubmissionDetailsEmptyContentFragment.VIDEO_REQUEST_CODE)
+        }
+
+        confirmVerified(eventConsumer, context)
+    }
+
+    private fun mockPermissions(hasPermission: Boolean, permissionGranted: Boolean = false) {
+        // Mock both so we can mock the class and the extensions in the same file
+        mockkStatic(PermissionUtils::class)
+        mockkStatic("${PermissionUtils::class.java.canonicalName}Kt")
+        every { PermissionUtils.hasPermissions(context, *anyVararg()) } returns hasPermission andThen permissionGranted
+
+        val block = slot<(Map<String, Boolean>) -> Unit>()
+
+        every { context.requestPermissions(any(), capture(block)) } answers {
+            block.invoke(mapOf(Pair("any", permissionGranted)))
+        }
+    }
+
+    private fun testMediaPicker() {
+        val intent = mockk<Intent>()
+        every { intent.action } returns ""
+        every { intent.addFlags(any()) } returns intent
+        every { intent.putExtra(MediaStore.EXTRA_OUTPUT, uri) } returns intent
+
+        every { context.packageManager.queryIntentActivities(any(), any()).size } returns 1
+
+        mockkStatic("com.instructure.student.mobius.assignmentDetails.SubmissionUtilsKt")
+        every { chooseMediaIntent } returns intent
+
+        excludeRecords {
+            context.packageName
+            context.packageManager
+        }
+
+        connection.accept(SubmissionDetailsEmptyContentEffect.ShowMediaPickerView)
+
+        verify(timeout = 100) {
+            context.startActivityForResult(intent, SubmissionDetailsEmptyContentFragment.CHOOSE_MEDIA_REQUEST_CODE)
+        }
+
+        confirmVerified(context)
     }
 }
