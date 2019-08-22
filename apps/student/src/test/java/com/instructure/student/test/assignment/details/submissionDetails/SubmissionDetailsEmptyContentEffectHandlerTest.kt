@@ -261,8 +261,7 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
                 assignment.id,
                 assignment.name,
                 assignment.groupCategoryId,
-                "Path",
-                NotoriousUploadService.ACTION.ASSIGNMENT_SUBMISSION
+                "Path"
             )
         } returns Unit
 
@@ -275,8 +274,7 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
                 assignment.id,
                 assignment.name,
                 assignment.groupCategoryId,
-                "Path",
-                NotoriousUploadService.ACTION.ASSIGNMENT_SUBMISSION
+                "Path"
             )
         }
 

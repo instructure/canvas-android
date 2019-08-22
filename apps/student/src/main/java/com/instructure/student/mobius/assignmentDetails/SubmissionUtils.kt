@@ -107,8 +107,7 @@ fun uploadAudioRecording(context: Context, file: File, assignment: Assignment, c
         assignmentId = assignment.id,
         assignmentGroupCategoryId = assignment.groupCategoryId,
         assignmentName = assignment.name,
-        mediaFilePath = file.path,
-        notoriousAction = NotoriousUploadService.ACTION.ASSIGNMENT_SUBMISSION
+        mediaFilePath = file.path
     )
 }
 
