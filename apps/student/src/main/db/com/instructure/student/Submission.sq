@@ -47,6 +47,10 @@ insertOnlineUploadSubmission:
 INSERT INTO submission (assignmentName, assignmentId, assignmentGroupCategoryId, canvasContext, userId, lastActivityDate, submissionType)
 VALUES (?, ?, ?, ?, ?, ?, "online_upload");
 
+insertMediaUploadSubmission:
+INSERT INTO submission (assignmentName, assignmentId, assignmentGroupCategoryId, canvasContext, userId, lastActivityDate, submissionType)
+VALUES (?, ?, ?, ?, ?, ?, "media_recording");
+
 getAllSubmissions:
 SELECT *
 FROM submission;

@@ -28,7 +28,6 @@ import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Failure
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
 import com.instructure.canvasapi2.utils.weave.awaitApiResponse
-import com.instructure.pandautils.services.NotoriousUploadService
 import com.instructure.pandautils.utils.FilePrefs
 import com.instructure.pandautils.utils.FileUploadUtils
 import com.instructure.pandautils.utils.PermissionUtils
@@ -934,8 +933,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
                 assignment.id,
                 assignment.name,
                 assignment.groupCategoryId,
-                "Path",
-                NotoriousUploadService.ACTION.ASSIGNMENT_SUBMISSION
+                "Path"
             )
         } returns Unit
 
@@ -948,8 +946,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
                 assignment.id,
                 assignment.name,
                 assignment.groupCategoryId,
-                "Path",
-                NotoriousUploadService.ACTION.ASSIGNMENT_SUBMISSION
+                "Path"
             )
         }
 

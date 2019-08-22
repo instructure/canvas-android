@@ -21,13 +21,11 @@ import android.content.Intent
 import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.FileUtils
-import com.instructure.pandautils.services.NotoriousUploadService
 import com.instructure.pandautils.utils.Const
 import com.instructure.student.db.Db
 import com.instructure.student.db.Schema
@@ -46,7 +44,6 @@ class SubmissionServiceTest : Assert() {
     private var assignmentId: Long = 0
     private var assignmentName: String = "Assignment Name"
     private var mediaFilePath = "some/path/to/a/file.mp4"
-    private var notoriousAction = NotoriousUploadService.ACTION.ASSIGNMENT_SUBMISSION
 
     private lateinit var context: Context
     private lateinit var canvasContext: Course
@@ -137,7 +134,7 @@ class SubmissionServiceTest : Assert() {
 
         mockkStatic(FileUtils::class)
         every { FileUtils.getMimeType(any()) } returns "video"
-        SubmissionService.startMediaSubmission(context, canvasContext, assignmentId, assignmentName, assignmentGroupCategoryId, mediaFilePath, notoriousAction)
+        SubmissionService.startMediaSubmission(context, canvasContext, assignmentId, assignmentName, assignmentGroupCategoryId, mediaFilePath)
 
         assertEquals(SubmissionService.Action.MEDIA_ENTRY.name, intent.captured.action)
         assertTrue(intent.captured.hasExtra(Const.SUBMISSION_ID))

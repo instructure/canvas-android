@@ -21,7 +21,6 @@ import android.net.Uri
 import androidx.core.content.FileProvider
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
-import com.instructure.pandautils.services.NotoriousUploadService
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.mobius.assignmentDetails.submission.picker.*
@@ -319,7 +318,7 @@ class PickerSubmissionUploadEffectHandlerTest : Assert() {
         )
 
         mockkObject(SubmissionService.Companion)
-        every { SubmissionService.startMediaSubmission(any(), any(), any(), any(), any(), any(), any()) } returns Unit
+        every { SubmissionService.startMediaSubmission(any(), any(), any(), any(), any(), any()) } returns Unit
 
         connection.accept(PickerSubmissionUploadEffect.HandleSubmit(model))
 
@@ -330,8 +329,7 @@ class PickerSubmissionUploadEffectHandlerTest : Assert() {
                 model.assignmentId,
                 model.assignmentName,
                 model.assignmentGroupCategoryId,
-                model.files.first().fullPath,
-                NotoriousUploadService.ACTION.ASSIGNMENT_SUBMISSION
+                model.files.first().fullPath
             )
             view.closeSubmissionView()
         }

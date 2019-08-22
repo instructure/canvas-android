@@ -23,9 +23,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.core.content.FileProvider
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
-import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.exhaustive
-import com.instructure.pandautils.services.NotoriousUploadService
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionMode.*
@@ -117,8 +115,7 @@ class PickerSubmissionUploadEffectHandler constructor(
                     assignmentId = model.assignmentId,
                     assignmentName = model.assignmentName,
                     assignmentGroupCategoryId = model.assignmentGroupCategoryId,
-                    mediaFilePath = model.files.first().fullPath,
-                    notoriousAction = NotoriousUploadService.ACTION.ASSIGNMENT_SUBMISSION // TODO: Make this more dynamic when everything else is wired up
+                    mediaFilePath = model.files.first().fullPath
                 )
             }
             FileSubmission -> {
