@@ -31,7 +31,6 @@ class UploadStatusSubmissionViewRenderPage : BasePage(R.id.uploadStatusSubmissio
     val uploadStatusStateProgressSize by OnViewWithId(R.id.uploadStatusStateProgressSize)
 
     val uploadStatusStateRetry by OnViewWithId(R.id.uploadStatusStateRetry)
-    val uploadStatusStateCancelAll by OnViewWithId(R.id.uploadStatusStateCancelAll)
     val uploadStatusStateCancel by OnViewWithId(R.id.uploadStatusStateCancel)
     val uploadStatusStateDone by OnViewWithId(R.id.uploadStatusStateDone)
 
@@ -55,7 +54,7 @@ class UploadStatusSubmissionViewRenderPage : BasePage(R.id.uploadStatusSubmissio
         uploadStatusStateMessage.assertVisible()
         uploadStatusStateCancel.assertVisible()
         uploadStatusRecycler.assertVisible()
-//        uploadStatusStateRetry.assertVisible() // TODO: Comment out when retry is supported
+        uploadStatusStateRetry.assertVisible()
     }
 
     fun assertInProgressVisible() {
@@ -63,6 +62,6 @@ class UploadStatusSubmissionViewRenderPage : BasePage(R.id.uploadStatusSubmissio
         uploadStatusStateProgress.assertVisible()
         uploadStatusStateProgressPercent.assertVisible()
         uploadStatusStateProgressSize.assertVisible()
-        uploadStatusStateCancelAll.assertVisible()
+        uploadStatusStateCancel.assertVisible()
     }
 }

@@ -28,7 +28,7 @@ sealed class UploadStatusSubmissionViewState(val visibilities: UploadVisibilitie
         val percentageString: String = "",
         val percentage: Double = 0.0,
         val list: List<UploadListItemViewState>
-    ) : UploadStatusSubmissionViewState(UploadVisibilities(inProgress = true))
+    ) : UploadStatusSubmissionViewState(UploadVisibilities(inProgress = true, cancelable = true))
 
     data class Failed(
         val title: String = "",

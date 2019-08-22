@@ -119,220 +119,125 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
         setIntentRedelivery(true)
     }
 
-    private fun getUserId() = ApiPrefs.user!!.id
-
     override fun onHandleIntent(intent: Intent) {
         Logger.d("Handling intent: $intent")
         val action = intent.action!!
 
+        var submission: com.instructure.student.Submission? = null
+        val db = Db.getInstance(this)
+
+        // Try to get the submission, won't have one for comment uploads
+        if (intent.hasExtra(Const.SUBMISSION_ID)) {
+            val dbSubmissionId = intent.getLongExtra(Const.SUBMISSION_ID, 0)
+            submission = db.submissionQueries.getSubmissionById(dbSubmissionId).executeAsOneOrNull() ?: return // Return early if deleted, means it was canceled
+        }
+
         when (Action.valueOf(action)) {
-            Action.TEXT_ENTRY -> uploadText(intent)
-            Action.FILE_ENTRY -> uploadFileSubmission(intent)
-            Action.MEDIA_ENTRY -> uploadMedia(intent)
-            Action.URL_ENTRY -> uploadUrl(intent, false)
-            Action.STUDIO_ENTRY -> uploadUrl(intent, true)
+            Action.TEXT_ENTRY -> uploadText(db, submission!!)
+            Action.FILE_ENTRY -> uploadFileSubmission(db, submission!!)
+            Action.MEDIA_ENTRY -> uploadMedia(db, submission!!, intent)
+            Action.URL_ENTRY -> uploadUrl(db, submission!!, false)
+            Action.STUDIO_ENTRY -> uploadUrl(db, submission!!, true)
             Action.COMMENT_ENTRY -> uploadComment(intent)
         }.exhaustive
     }
 
-    private fun uploadText(intent: Intent) {
-        val text = intent.getStringExtra(Const.MESSAGE)
-        val assignmentId = intent.getLongExtra(Const.ASSIGNMENT_ID, 0)
-        val assignmentName = intent.getStringExtra(Const.ASSIGNMENT_NAME)
-        val context = intent.getParcelableExtra<CanvasContext>(Const.CANVAS_CONTEXT)
-        val dbSubmissionId: Long
-        val db = Db.getInstance(this).submissionQueries
-
-        // Save to persistence
-        db.deleteSubmissionsForAssignmentId(assignmentId, getUserId())
-        db.insertOnlineTextSubmission(text, assignmentName, assignmentId, context, getUserId(), OffsetDateTime.now())
-        dbSubmissionId = db.getLastInsert().executeAsOne()
-
-        showProgressNotification(assignmentName, dbSubmissionId)
+    private fun uploadText(db: StudentDb, submission: com.instructure.student.Submission) {
+        showProgressNotification(submission.assignmentName, submission.id)
         val textToSubmit = try {
-            URLEncoder.encode(text, "UTF-8")
-        } catch (e: UnsupportedEncodingException) { text }
+            URLEncoder.encode(submission.submissionEntry, "UTF-8")
+        } catch (e: UnsupportedEncodingException) { submission.submissionEntry!! }
 
-        val result = apiAsync<Submission> { SubmissionManager.postTextSubmission(context, assignmentId, textToSubmit, it) }
-
-        GlobalScope.launch {
-            val uploadResult = result.await()
-            uploadResult.onSuccess {
-                db.deleteSubmissionById(dbSubmissionId)
-            }.onFailure {
-                db.setSubmissionError(true, dbSubmissionId)
-                showErrorNotification(this@SubmissionService, context, assignmentId, assignmentName, dbSubmissionId)
-            }
-        }
-    }
-
-    private fun uploadUrl(intent: Intent, isLti: Boolean) {
-        val url = intent.getStringExtra(Const.URL)
-        val assignmentId = intent.getLongExtra(Const.ASSIGNMENT_ID, 0)
-        val assignmentName = intent.getStringExtra(Const.ASSIGNMENT_NAME)
-        val context = intent.getParcelableExtra<CanvasContext>(Const.CANVAS_CONTEXT)
-        val dbSubmissionId: Long
-        val db = Db.getInstance(this).submissionQueries
-
-        // Save to persistence
-        db.deleteSubmissionsForAssignmentId(assignmentId, getUserId())
-        db.insertOnlineUrlSubmission(url, assignmentName, assignmentId, context, getUserId(), OffsetDateTime.now())
-        dbSubmissionId = db.getLastInsert().executeAsOne()
-
-        showProgressNotification(assignmentName, dbSubmissionId)
-        val result = apiAsync<Submission> { SubmissionManager.postUrlSubmission(context, assignmentId, url, isLti, it) }
+        val result = apiAsync<Submission> { SubmissionManager.postTextSubmission(submission.canvasContext, submission.assignmentId, textToSubmit, it) }
 
         GlobalScope.launch {
             val uploadResult = result.await()
             uploadResult.onSuccess {
-                db.deleteSubmissionById(dbSubmissionId)
+                db.submissionQueries.deleteSubmissionById(submission.id)
             }.onFailure {
-                db.setSubmissionError(true, dbSubmissionId)
-                showErrorNotification(this@SubmissionService, context, assignmentId, assignmentName, dbSubmissionId)
+                db.submissionQueries.setSubmissionError(true, submission.id)
+                showErrorNotification(this@SubmissionService, submission.canvasContext, submission.assignmentId, submission.assignmentName, submission.id)
             }
         }
     }
 
-    private fun uploadMedia(intent: Intent) {
-        val mediaFilePath = intent.getStringExtra(Const.MEDIA_FILE_PATH)
-        var assignment = intent.getParcelableExtra<Assignment>(Const.ASSIGNMENT)
-        val canvasContext = intent.getParcelableExtra<CanvasContext>(Const.CANVAS_CONTEXT)
+    private fun uploadUrl(db: StudentDb, submission: com.instructure.student.Submission, isLti: Boolean) {
+        showProgressNotification(submission.assignmentName, submission.id)
+        val result = apiAsync<Submission> { SubmissionManager.postUrlSubmission(submission.canvasContext, submission.assignmentId, submission.submissionEntry!!, isLti, it) }
+
+        GlobalScope.launch {
+            val uploadResult = result.await()
+            uploadResult.onSuccess {
+                db.submissionQueries.deleteSubmissionById(submission.id)
+            }.onFailure {
+                db.submissionQueries.setSubmissionError(true, submission.id)
+                showErrorNotification(this@SubmissionService, submission.canvasContext, submission.assignmentId, submission.assignmentName, submission.id)
+            }
+        }
+    }
+
+    private fun uploadMedia(db: StudentDb, submission: com.instructure.student.Submission, intent: Intent) {
         val action = intent.getSerializableExtra(Const.ACTION) as NotoriousUploadService.ACTION
 
-        val dbSubmissionId: Long
-        val filesDb = Db.getInstance(this).fileSubmissionQueries
-        val submissionsDb = Db.getInstance(this).submissionQueries
-
         // Check if we're retrying a submission or if it's a new one that needs to be persisted
-        if (intent.hasExtra(Const.SUBMISSION_ID)) {
-            // Get previously attempted submission information so we can retry
-            dbSubmissionId = intent.extras!!.getLong(Const.SUBMISSION_ID)
-            val submission = submissionsDb.getSubmissionById(dbSubmissionId).executeAsOne()
-
-            assignment = Assignment(
-                id = submission.assignmentId,
-                name = submission.assignmentName,
-                groupCategoryId = submission.assignmentGroupCategoryId ?: 0
-            )
-        } else {
-            // Delete all temp files for old file submissions
-            submissionsDb.getSubmissionsByAssignmentId(assignment.id, getUserId()).executeAsList().forEach { submission ->
-                filesDb.getFilesForSubmissionId(submission.id).executeAsList().forEach { file ->
-                    FileUploadUtils.deleteTempFile(file.fullPath)
-                }
-            }
-            submissionsDb.deleteSubmissionsForAssignmentId(assignment.id, getUserId())
-
-            // New submission - store submission details in the db
-            submissionsDb.insertOnlineUploadSubmission(
-                assignment.name,
-                assignment.id,
-                assignment.groupCategoryId,
-                canvasContext,
-                getUserId(),
-                OffsetDateTime.now()
-            )
-            dbSubmissionId = submissionsDb.getLastInsert().executeAsOne()
-
-            val file = File(mediaFilePath)
-            filesDb.insertFile(dbSubmissionId, file.name, file.length(), FileUtils.getMimeType(file.path), mediaFilePath)
-        }
+        // Get previously attempted submission information so we can retry
+        val assignment = Assignment(
+            id = submission.assignmentId,
+            name = submission.assignmentName,
+            groupCategoryId = submission.assignmentGroupCategoryId ?: 0
+        )
 
         // Don't show the notification in the foreground so it doesn't disappear when this service dies
-        showProgressNotification(assignment.name, dbSubmissionId, false)
+        showProgressNotification(submission.assignmentName, submission.id, inForeground = false)
 
         // Handle broadcasts from file upload service
         // Register the receiver on the application context so this service can die and handle the next submission
-        val receiver = SubmissionFileUploadReceiver(dbSubmissionId)
+        val receiver = SubmissionFileUploadReceiver(submission.id)
 
         val filter = IntentFilter(FileUploadService.ALL_UPLOADS_COMPLETED)
         filter.addAction(FileUploadService.UPLOAD_ERROR)
         applicationContext.registerReceiver(receiver, filter)
 
+        val file = db.fileSubmissionQueries.getFilesForSubmissionId(submission.id).executeAsOneOrNull() ?: return // Nothing to upload, so return here
+
         val mediaFileUploadIntent = Intent(this, NotoriousUploadService::class.java).apply {
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            putExtra(Const.MEDIA_FILE_PATH, mediaFilePath)
+            putExtra(Const.MEDIA_FILE_PATH, file.fullPath)
             putExtra(Const.ACTION, action)
-            putExtra(Const.ASSIGNMENT, assignment.copy(courseId = canvasContext.id) as Parcelable)
-            putExtra(Const.SUBMISSION_ID, dbSubmissionId)
+            putExtra(Const.ASSIGNMENT, assignment.copy(courseId = submission.canvasContext.id) as Parcelable)
+            putExtra(Const.SUBMISSION_ID, submission.id)
         }
         startService(mediaFileUploadIntent)
     }
 
-    private fun uploadFileSubmission(intent: Intent) {
-        val dbSubmissionId: Long
-        val db = Db.getInstance(this)
-        val submissionsDb = db.submissionQueries
-        val filesDb = db.fileSubmissionQueries
-
-        var assignment = intent.getParcelableExtra<Assignment>(Const.ASSIGNMENT)
-        var context = intent.getParcelableExtra<CanvasContext>(Const.CANVAS_CONTEXT)
-
-        lateinit var attachments: List<FileSubmission>
-        var completedAttachments: List<FileSubmission> = emptyList()
-
-        // Check if we're retrying a submission or if it's a new one that needs to be persisted
-        if (intent.hasExtra(Const.SUBMISSION_ID)) {
-            dbSubmissionId = intent.extras!!.getLong(Const.SUBMISSION_ID)
-            val submission = submissionsDb.getSubmissionById(dbSubmissionId).executeAsOne()
-
-            val (completed, pending) = filesDb.getFilesForSubmissionId(dbSubmissionId).executeAsList().partition { it.attachmentId != null }
-            attachments = pending
-            completedAttachments = completed
-            context = submission.canvasContext
-            assignment = Assignment(
-                id = submission.assignmentId,
-                name = submission.assignmentName,
-                groupCategoryId = submission.assignmentGroupCategoryId ?: 0
-            )
-        } else {
-            val files = intent.getParcelableArrayListExtra<FileSubmitObject>(Const.FILES)
-
-            // Delete all temp files for old file submissions
-            submissionsDb.getSubmissionsByAssignmentId(assignment.id, getUserId()).executeAsList().forEach { submission ->
-                filesDb.getFilesForSubmissionId(submission.id).executeAsList().forEach { file ->
-                    FileUploadUtils.deleteTempFile(file.fullPath)
-                }
-            }
-            submissionsDb.deleteSubmissionsForAssignmentId(assignment.id, getUserId())
-
-            // Insert the new submission
-            submissionsDb.insertOnlineUploadSubmission(
-                assignment.name,
-                assignment.id,
-                assignment.groupCategoryId,
-                context,
-                getUserId(),
-                OffsetDateTime.now()
-            )
-            dbSubmissionId = submissionsDb.getLastInsert().executeAsOne()
-
-            files.forEach {
-                filesDb.insertFile(dbSubmissionId, it.name, it.size, it.contentType, it.fullPath)
-            }
-            attachments = filesDb.getFilesWithoutAttachmentsForSubmissionId(dbSubmissionId).executeAsList()
-        }
+    private fun uploadFileSubmission(db: StudentDb, submission: com.instructure.student.Submission) {
+        val assignment = Assignment(
+            id = submission.assignmentId,
+            name = submission.assignmentName,
+            groupCategoryId = submission.assignmentGroupCategoryId ?: 0
+        )
 
         // Don't show the notification in the foreground so it doesn't disappear when this service dies
-        showProgressNotification(assignment.name, dbSubmissionId)
+        showProgressNotification(assignment.name, submission.id)
 
-        val uploadedAttachmentIds = uploadFiles(dbSubmissionId, context, assignment, completedAttachments.size, attachments, db)
+        val (completed, pending) = db.fileSubmissionQueries.getFilesForSubmissionId(submission.id).executeAsList().partition { it.attachmentId != null }
+        val uploadedAttachmentIds = uploadFiles(submission.id, submission.canvasContext, assignment, completed.size, pending, db)
             ?: return // Cancel submitting if any of the files failed to upload
 
         // Update the notification to show that we're doing the actual submission now
-        showProgressNotification(assignment.name, dbSubmissionId)
+        showProgressNotification(assignment.name, submission.id, alertOnlyOnce = true)
 
-        val attachmentIds = completedAttachments.mapNotNull { it.attachmentId } + uploadedAttachmentIds
-        SubmissionManager.postSubmissionAttachmentsSynchronous(context.id, assignment.id, attachmentIds)?.let {
+        val attachmentIds = completed.mapNotNull { it.attachmentId } + uploadedAttachmentIds
+        SubmissionManager.postSubmissionAttachmentsSynchronous(submission.canvasContext.id, submission.assignmentId, attachmentIds)?.let {
             // Clear out the db for the successful submission
-            db.fileSubmissionQueries.deleteFilesForSubmissionId(dbSubmissionId)
-            db.submissionQueries.deleteSubmissionById(dbSubmissionId)
+            db.fileSubmissionQueries.deleteFilesForSubmissionId(submission.id)
+            db.submissionQueries.deleteSubmissionById(submission.id)
 
             detachForegroundNotification()
-            showCompleteNotification(this, context, assignment.id, assignment.name, dbSubmissionId)
+            showCompleteNotification(this, submission.canvasContext, submission.assignmentId, submission.assignmentName, submission.id)
         } ?: run {
             detachForegroundNotification()
-            showErrorNotification(this, context, assignment.id, assignment.name, dbSubmissionId)
+            showErrorNotification(this, submission.canvasContext, submission.assignmentId, submission.assignmentName, submission.id)
         }
     }
 
@@ -398,25 +303,8 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
             val commentDb = db.pendingSubmissionCommentQueries
             val fileDb = db.submissionCommentFileQueries
 
-            // Get existing pending comment from db, or create and insert a new one
-            val comment: PendingSubmissionComment = if (intent.hasExtra(Const.ID)) {
-                commentDb.getCommentById(intent.getLongExtra(Const.ID, 0)).executeAsOne()
-            } else {
-                commentDb.insertComment(
-                    accountDomain = ApiPrefs.domain,
-                    canvasContext = intent.getParcelableExtra(Const.CANVAS_CONTEXT),
-                    assignmentName = intent.getStringExtra(Const.ASSIGNMENT_NAME),
-                    assignmentId = intent.getLongExtra(Const.ASSIGNMENT_ID, 0L),
-                    lastActivityDate = Date.now(),
-                    isGroupMessage = intent.getBooleanExtra(Const.IS_GROUP, false),
-                    message = intent.getStringExtra(Const.MESSAGE),
-                    mediaPath = intent.getStringExtra(Const.MEDIA_FILE_PATH)
-                )
-                val id = commentDb.getLastInsert().executeAsOne()
-                val files = intent.getParcelableArrayListExtra<FileSubmitObject>(Const.FILES)
-                files?.forEach { fileDb.insertFile(id, it.name, it.size, it.contentType, it.fullPath) }
-                commentDb.getCommentById(id).executeAsOne()
-            }
+            // Get existing pending comment from db, or return if it was deleted
+            val comment = commentDb.getCommentById(intent.getLongExtra(Const.ID, 0)).executeAsOneOrNull() ?: return@runBlocking
 
             // Get attachments, partition by completed vs pending
             val (completed, pending) = fileDb
@@ -581,13 +469,13 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
 
     // region Notifications
 
-    private fun showProgressNotification(assignmentName: String?, submissionId: Long, inForeground: Boolean = true) {
+    private fun showProgressNotification(assignmentName: String?, submissionId: Long, inForeground: Boolean = true, alertOnlyOnce: Boolean = false) {
         createNotificationChannel(notificationManager)
         notificationBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_notification_canvas_logo)
             .setContentTitle(getString(R.string.assignmentSubmissionUpload, assignmentName))
             .setProgress(0, 0, true)
-            .setOnlyAlertOnce(true)
+            .setOnlyAlertOnce(alertOnlyOnce)
         if (inForeground) {
             startForeground(submissionId.toInt(), notificationBuilder.build())
         } else {
@@ -644,6 +532,30 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
 
         private const val CHANNEL_ID = "submissionChannel"
         const val COMMENT_CHANNEL_ID = "commentUploadChannel"
+
+        private fun getUserId() = ApiPrefs.user!!.id
+
+        private fun insertNewSubmission(assignmentId: Long, context: Context, files: List<FileSubmitObject> = emptyList(), insertBlock: (StudentDb) -> Unit): Long {
+            val db = Db.getInstance(context)
+            deleteSubmissionsForAssignment(assignmentId, db)
+            insertBlock(db)
+            val dbSubmissionId = db.submissionQueries.getLastInsert().executeAsOne()
+
+            files.forEach {
+                db.fileSubmissionQueries.insertFile(dbSubmissionId, it.name, it.size, it.contentType, it.fullPath)
+            }
+
+            return dbSubmissionId
+        }
+
+        private fun deleteSubmissionsForAssignment(id: Long, db: StudentDb) {
+            db.submissionQueries.getSubmissionsByAssignmentId(id, getUserId()).executeAsList().forEach { submission ->
+                db.fileSubmissionQueries.getFilesForSubmissionId(submission.id).executeAsList().forEach { file ->
+                    FileUploadUtils.deleteTempFile(file.fullPath)
+                }
+            }
+            db.submissionQueries.deleteSubmissionsForAssignmentId(id, getUserId())
+        }
 
         fun createNotificationChannel(notificationManager: NotificationManager, channelId: String = CHANNEL_ID) {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
@@ -740,11 +652,12 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
             assignmentName: String?,
             text: String
         ) {
+            val dbSubmissionId = insertNewSubmission(assignmentId, context) {
+                it.submissionQueries.insertOnlineTextSubmission(text, assignmentName, assignmentId, canvasContext, getUserId(), OffsetDateTime.now())
+            }
+
             val bundle = Bundle().apply {
-                putParcelable(Const.CANVAS_CONTEXT, canvasContext)
-                putLong(Const.ASSIGNMENT_ID, assignmentId)
-                putString(Const.ASSIGNMENT_NAME, assignmentName)
-                putString(Const.MESSAGE, text)
+                putLong(Const.SUBMISSION_ID, dbSubmissionId)
             }
 
             startService(context, Action.TEXT_ENTRY, bundle)
@@ -757,11 +670,12 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
             assignmentName: String?,
             url: String
         ) {
+            val dbSubmissionId = insertNewSubmission(assignmentId, context) {
+                it.submissionQueries.insertOnlineUrlSubmission(url, assignmentName, assignmentId, canvasContext, getUserId(), OffsetDateTime.now())
+            }
+
             val bundle = Bundle().apply {
-                putParcelable(Const.CANVAS_CONTEXT, canvasContext)
-                putLong(Const.ASSIGNMENT_ID, assignmentId)
-                putString(Const.ASSIGNMENT_NAME, assignmentName)
-                putString(Const.URL, url)
+                putLong(Const.SUBMISSION_ID, dbSubmissionId)
             }
 
             startService(context, Action.URL_ENTRY, bundle)
@@ -777,18 +691,19 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
         ) {
             files.ifEmpty { return } // No need to upload files if we aren't given any
 
+            val dbSubmissionId = insertNewSubmission(assignmentId, context, files) {
+                it.submissionQueries.insertOnlineUploadSubmission(assignmentName, assignmentId, assignmentGroupCategoryId, canvasContext, getUserId(), OffsetDateTime.now())
+            }
+
             val bundle = Bundle().apply {
-                putParcelable(Const.CANVAS_CONTEXT, canvasContext)
-                putParcelable(Const.ASSIGNMENT, Assignment(id = assignmentId, name = assignmentName, groupCategoryId = assignmentGroupCategoryId))
-                putParcelableArrayList(Const.FILES, files)
+                putLong(Const.SUBMISSION_ID, dbSubmissionId)
             }
 
             startService(context, Action.FILE_ENTRY, bundle)
         }
 
-        fun retryFileSubmission(context: Context, canvasContext: CanvasContext, dbSubmissionId: Long) {
+        fun retryFileSubmission(context: Context, dbSubmissionId: Long) {
             val bundle = Bundle().apply {
-                putParcelable(Const.CANVAS_CONTEXT, canvasContext)
                 putLong(Const.SUBMISSION_ID, dbSubmissionId)
             }
 
@@ -801,13 +716,16 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
             assignmentId: Long,
             assignmentName: String?,
             assignmentGroupCategoryId: Long,
-            mediaFilePath: String?,
+            mediaFilePath: String,
             notoriousAction: NotoriousUploadService.ACTION
         ) {
+            val file = File(mediaFilePath).let { FileSubmitObject(it.name, it.length(), FileUtils.getMimeType(it.path), mediaFilePath) }
+            val dbSubmissionId = insertNewSubmission(assignmentId, context, listOf(file)) {
+                it.submissionQueries.insertOnlineUploadSubmission(assignmentName, assignmentId, assignmentGroupCategoryId, canvasContext, getUserId(), OffsetDateTime.now())
+            }
+
             val bundle = Bundle().apply {
-                putParcelable(Const.CANVAS_CONTEXT, canvasContext)
-                putParcelable(Const.ASSIGNMENT, Assignment(id = assignmentId, name = assignmentName, groupCategoryId = assignmentGroupCategoryId))
-                putString(Const.MEDIA_FILE_PATH, mediaFilePath)
+                putLong(Const.SUBMISSION_ID, dbSubmissionId)
                 putSerializable(Const.ACTION, notoriousAction)
             }
 
@@ -821,11 +739,12 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
             assignmentName: String?,
             url: String
         ) {
+            val dbSubmissionId = insertNewSubmission(assignmentId, context) {
+                it.submissionQueries.insertOnlineUrlSubmission(url, assignmentName, assignmentId, canvasContext, getUserId(), OffsetDateTime.now())
+            }
+
             val bundle = Bundle().apply {
-                putParcelable(Const.CANVAS_CONTEXT, canvasContext)
-                putLong(Const.ASSIGNMENT_ID, assignmentId)
-                putString(Const.ASSIGNMENT_NAME, assignmentName)
-                putString(Const.URL, url)
+                putLong(Const.SUBMISSION_ID, dbSubmissionId)
             }
 
             startService(context, Action.STUDIO_ENTRY, bundle)
@@ -847,13 +766,22 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
             isGroupMessage: Boolean
         ) {
             require(message.isValid() || attachments?.isNotEmpty() == true)
+            val db = Db.getInstance(context)
+            db.pendingSubmissionCommentQueries.insertComment(
+                accountDomain = ApiPrefs.domain,
+                canvasContext = canvasContext,
+                assignmentName = assignmentName,
+                assignmentId = assignmentId,
+                lastActivityDate = Date.now(),
+                isGroupMessage = isGroupMessage,
+                message = message,
+                mediaPath = null
+            )
+            val commentId = db.pendingSubmissionCommentQueries.getLastInsert().executeAsOne()
+            attachments?.forEach { db.submissionCommentFileQueries.insertFile(commentId, it.name, it.size, it.contentType, it.fullPath) }
+
             val bundle = Bundle().apply {
-                putParcelable(Const.CANVAS_CONTEXT, canvasContext)
-                putLong(Const.ASSIGNMENT_ID, assignmentId)
-                putString(Const.ASSIGNMENT_NAME, assignmentName)
-                putString(Const.MESSAGE, message)
-                putBoolean(Const.IS_GROUP, isGroupMessage)
-                attachments?.let { putParcelableArrayList(Const.FILES, ArrayList(it)) }
+                putLong(Const.ID, commentId)
             }
             startService(context, Action.COMMENT_ENTRY, bundle)
         }
@@ -870,12 +798,21 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
             mediaFile: File,
             isGroupMessage: Boolean
         ) {
+            val db = Db.getInstance(context)
+            db.pendingSubmissionCommentQueries.insertComment(
+                accountDomain = ApiPrefs.domain,
+                canvasContext = canvasContext,
+                assignmentName = assignmentName,
+                assignmentId = assignmentId,
+                lastActivityDate = Date.now(),
+                isGroupMessage = isGroupMessage,
+                message = null,
+                mediaPath = mediaFile.absolutePath
+            )
+            val commentId = db.pendingSubmissionCommentQueries.getLastInsert().executeAsOne()
+
             val bundle = Bundle().apply {
-                putParcelable(Const.CANVAS_CONTEXT, canvasContext)
-                putLong(Const.ASSIGNMENT_ID, assignmentId)
-                putString(Const.ASSIGNMENT_NAME, assignmentName)
-                putString(Const.MEDIA_FILE_PATH, mediaFile.absolutePath)
-                putBoolean(Const.IS_GROUP, isGroupMessage)
+                putLong(Const.ID, commentId)
             }
             startService(context, Action.COMMENT_ENTRY, bundle)
         }
