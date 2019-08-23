@@ -21,6 +21,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.instructure.canvasapi2.CanvasRestAdapter
@@ -140,7 +141,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
                     return true
                 }
             }).onSuccess { result ->
-                updateFileProgress(db, submission.id, 100f, 0, 1, 0)
+                updateFileProgress(db, submission.id, 1.0f, 0, 1, 0)
                 db.fileSubmissionQueries.setFileAttachmentIdAndError(null, false, null, mediaFile.id)
 
                 // Update the notification to show that we're doing the actual submission now
@@ -228,7 +229,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
                     return true
                 }
             }).onSuccess { attachment ->
-                updateFileProgress(db, submission.id, 100f, index, attachments.size, completedAttachmentCount)
+                updateFileProgress(db, submission.id, 1.0f, index, attachments.size, completedAttachmentCount)
                 db.fileSubmissionQueries.setFileAttachmentIdAndError(attachment.id, false, null, pendingAttachment.id)
 
                 attachmentIds.add(attachment.id)
@@ -455,6 +456,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
         notificationManager.notify(dbSubmissionId.toInt(), notificationBuilder.build())
 
         // Set initial progress
+        Log.w("TAG", "Submission $dbSubmissionId updated. \n\tFile Index: $fileIndex\n\tFile Count: $fileCount\n\tProgress: $uploaded")
         db.submissionQueries.updateProgress(
             currentFile = (completedAttachmentCount + fileIndex).toLong(),
             fileCount = (completedAttachmentCount + fileCount).toLong(),

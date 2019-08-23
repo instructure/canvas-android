@@ -73,8 +73,7 @@ object UploadStatusSubmissionPresenter :
         val totalBytesString = NumberHelper.readableFileSize(context, totalBytes)
 
         val title = context.getString(R.string.assignmentSubmissionUpload, model.assignmentName)
-        val size =
-            context.getString(R.string.submissionUploadByteProgress, bytesString, totalBytesString)
+        val size = context.getString(R.string.submissionUploadByteProgress, bytesString, totalBytesString)
 
         return UploadStatusSubmissionViewState.InProgress(
             title,

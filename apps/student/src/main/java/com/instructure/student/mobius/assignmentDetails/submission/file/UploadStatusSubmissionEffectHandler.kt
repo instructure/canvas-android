@@ -20,7 +20,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import com.instructure.canvasapi2.utils.ProgressEvent
 import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.pandautils.utils.Const
 import com.instructure.student.FileSubmission
@@ -33,66 +32,9 @@ import com.spotify.mobius.Connection
 import com.spotify.mobius.functions.Consumer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
 
 class UploadStatusSubmissionEffectHandler(val context: Context, val submissionId: Long) :
     EffectHandler<UploadStatusSubmissionView, UploadStatusSubmissionEvent, UploadStatusSubmissionEffect>() {
-
-    internal var receiver: BroadcastReceiver? = null
-
-    private fun setupReceiver() {
-        receiver = object : BroadcastReceiver() {
-            override fun onReceive(context: Context?, intent: Intent?) {
-                if (context == null || intent?.hasExtra(Const.SUBMISSION) == false) {
-                    return // stop early if we don't have a context or if there's no submission id
-                }
-
-                val submissionId = intent!!.extras!!.getLong(Const.SUBMISSION)
-
-                if (submissionId != this@UploadStatusSubmissionEffectHandler.submissionId) {
-                    return // Since there could be multiple submissions at the same time, we only care about events for our submission id
-                }
-                launch {
-                    val (_, error, files) = loadPersistedData(submissionId, context)
-                    consumer.accept(
-                        UploadStatusSubmissionEvent.OnFilesRefreshed(error, submissionId, files)
-                    )
-                }
-            }
-        }
-    }
-
-    @Suppress("unused", "UNUSED_PARAMETER")
-    @Subscribe
-    fun onUploadProgress(event: ProgressEvent) {
-        if (event.submissionId != submissionId) {
-            return // Since there could be multiple submissions at the same time, we only care about events for our submission id
-        }
-        consumer.accept(
-            UploadStatusSubmissionEvent.OnUploadProgressChanged(
-                event.fileIndex,
-                event.submissionId,
-                event.uploaded
-            )
-        )
-    }
-
-    override fun connect(output: Consumer<UploadStatusSubmissionEvent>): Connection<UploadStatusSubmissionEffect> {
-        setupReceiver()
-        EventBus.getDefault().register(this)
-        context.registerReceiver(receiver, IntentFilter(SubmissionService.FILE_SUBMISSION_FINISHED))
-        return super.connect(output)
-    }
-
-    override fun dispose() {
-        EventBus.getDefault().unregister(this)
-        if (receiver != null) {
-            context.unregisterReceiver(receiver)
-            receiver = null
-        }
-        super.dispose()
-    }
 
     override fun accept(effect: UploadStatusSubmissionEffect) {
         when (effect) {

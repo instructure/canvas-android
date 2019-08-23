@@ -17,14 +17,21 @@
 package com.instructure.student.mobius.assignmentDetails.submission.file.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.LongArg
 import com.instructure.pandautils.utils.withArgs
+import com.instructure.student.Submission
+import com.instructure.student.db.Db
+import com.instructure.student.db.getInstance
 import com.instructure.student.mobius.assignmentDetails.submission.file.*
+import com.instructure.student.mobius.common.DBSource
 import com.instructure.student.mobius.common.ui.MobiusFragment
+import com.spotify.mobius.EventSource
 
 class UploadStatusSubmissionFragment :
     MobiusFragment<UploadStatusSubmissionModel, UploadStatusSubmissionEvent, UploadStatusSubmissionEffect, UploadStatusSubmissionView, UploadStatusSubmissionViewState>() {
@@ -42,6 +49,19 @@ class UploadStatusSubmissionFragment :
     override fun makePresenter() = UploadStatusSubmissionPresenter
 
     override fun makeInitModel() = UploadStatusSubmissionModel(submissionId)
+
+    @Suppress("RemoveExplicitTypeArguments") // DBSource.ofSingle type arguments required, but linter thinks they aren't
+    override fun getExternalEventSources(): List<EventSource<UploadStatusSubmissionEvent>> = listOf(
+        DBSource.ofSingle<Submission, UploadStatusSubmissionEvent>(
+            Db.getInstance(ContextKeeper.appContext)
+                .submissionQueries
+                .getSubmissionById(submissionId)
+        ) { submission ->
+            if (submission != null && !submission.errorFlag) {
+                UploadStatusSubmissionEvent.OnUploadProgressChanged(submission.currentFile.toInt(), submissionId, submission.progress ?: 0.0)
+            } else UploadStatusSubmissionEvent.RequestLoad
+        }
+    )
 
     companion object {
         private fun validRoute(route: Route) = route.arguments.containsKey(Const.SUBMISSION_ID)
