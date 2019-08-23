@@ -21,7 +21,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.instructure.canvasapi2.CanvasRestAdapter
@@ -29,7 +28,10 @@ import com.instructure.canvasapi2.managers.FileUploadConfig
 import com.instructure.canvasapi2.managers.FileUploadManager
 import com.instructure.canvasapi2.managers.GroupManager
 import com.instructure.canvasapi2.managers.SubmissionManager
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.models.SubmissionComment
 import com.instructure.canvasapi2.models.notorious.NotoriousResult
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.*
@@ -456,7 +458,6 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
         notificationManager.notify(dbSubmissionId.toInt(), notificationBuilder.build())
 
         // Set initial progress
-        Log.w("TAG", "Submission $dbSubmissionId updated. \n\tFile Index: $fileIndex\n\tFile Count: $fileCount\n\tProgress: $uploaded")
         db.submissionQueries.updateProgress(
             currentFile = (completedAttachmentCount + fileIndex).toLong(),
             fileCount = (completedAttachmentCount + fileCount).toLong(),

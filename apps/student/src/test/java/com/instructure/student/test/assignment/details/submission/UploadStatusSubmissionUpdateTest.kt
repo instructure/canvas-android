@@ -222,7 +222,7 @@ class UploadStatusSubmissionUpdateTest : Assert() {
         updateSpec
             .given(startModel)
             .whenEvent(
-                UploadStatusSubmissionEvent.OnUploadProgressChanged(0, submissionId, 1)
+                UploadStatusSubmissionEvent.OnUploadProgressChanged(0, submissionId, 1.0)
             )
             .then(
                 assertThatNext(
@@ -244,7 +244,7 @@ class UploadStatusSubmissionUpdateTest : Assert() {
         updateSpec
             .given(startModel)
             .whenEvent(
-                UploadStatusSubmissionEvent.OnUploadProgressChanged(2, submissionId, 1)
+                UploadStatusSubmissionEvent.OnUploadProgressChanged(2, submissionId, 1.0)
             )
             .then(
                 assertThatNext(
@@ -342,5 +342,20 @@ class UploadStatusSubmissionUpdateTest : Assert() {
                     )
                 )
             )
+    }
+
+    @Test
+    fun `RequestLoad event results in LoadPersistedFiles effect`() {
+        updateSpec
+            .given(initModel)
+            .whenEvent(UploadStatusSubmissionEvent.RequestLoad)
+            .then(
+                assertThatNext(
+                    NextMatchers.hasEffects<UploadStatusSubmissionModel, UploadStatusSubmissionEffect>(
+                        UploadStatusSubmissionEffect.LoadPersistedFiles(initModel.submissionId)
+                    )
+                )
+            )
+
     }
 }
