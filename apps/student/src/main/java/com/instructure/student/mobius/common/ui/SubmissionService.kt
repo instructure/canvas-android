@@ -28,7 +28,10 @@ import com.instructure.canvasapi2.managers.FileUploadConfig
 import com.instructure.canvasapi2.managers.FileUploadManager
 import com.instructure.canvasapi2.managers.GroupManager
 import com.instructure.canvasapi2.managers.SubmissionManager
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.models.SubmissionComment
 import com.instructure.canvasapi2.models.notorious.NotoriousResult
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.*
@@ -140,7 +143,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
                     return true
                 }
             }).onSuccess { result ->
-                updateFileProgress(db, submission.id, 100f, 0, 1, 0)
+                updateFileProgress(db, submission.id, 1.0f, 0, 1, 0)
                 db.fileSubmissionQueries.setFileAttachmentIdAndError(null, false, null, mediaFile.id)
 
                 // Update the notification to show that we're doing the actual submission now
@@ -228,7 +231,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
                     return true
                 }
             }).onSuccess { attachment ->
-                updateFileProgress(db, submission.id, 100f, index, attachments.size, completedAttachmentCount)
+                updateFileProgress(db, submission.id, 1.0f, index, attachments.size, completedAttachmentCount)
                 db.fileSubmissionQueries.setFileAttachmentIdAndError(attachment.id, false, null, pendingAttachment.id)
 
                 attachmentIds.add(attachment.id)

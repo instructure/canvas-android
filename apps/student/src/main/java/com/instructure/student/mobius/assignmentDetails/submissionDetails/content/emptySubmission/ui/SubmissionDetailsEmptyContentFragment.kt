@@ -53,7 +53,8 @@ class SubmissionDetailsEmptyContentFragment :
         DBSource.ofSingle<Submission, SubmissionDetailsEmptyContentEvent>(
             Db.getInstance(ContextKeeper.appContext)
                 .submissionQueries
-                .getSubmissionsByAssignmentId(assignment.id, ApiPrefs.user?.id ?: -1)
+                .getSubmissionsByAssignmentId(assignment.id, ApiPrefs.user?.id ?: -1),
+            performInitialQuery = false
         ) { submission ->
             if (submission != null && submission.progress == null) {
                 // Submission was just inserted - back out to the assignment details screen

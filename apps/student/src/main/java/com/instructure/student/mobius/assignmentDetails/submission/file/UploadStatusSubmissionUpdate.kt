@@ -52,7 +52,10 @@ class UploadStatusSubmissionUpdate :
             val uploadedFileSize = model.files.take(event.fileIndex).fold(0) { sum, file ->
                 sum + (file.size ?: 0).toInt()
             }
-            Next.next(model.copy(uploadedBytes = uploadedFileSize + event.uploaded))
+            var currentFileProgress = 0.0
+            if (model.files.isNotEmpty())
+                currentFileProgress = model.files[event.fileIndex].size?.times(event.uploaded) ?: 0.0
+            Next.next(model.copy(uploadedBytes = uploadedFileSize + currentFileProgress.toLong()))
         }
         UploadStatusSubmissionEvent.OnRequestCancelClicked -> {
             Next.dispatch(setOf(UploadStatusSubmissionEffect.ShowCancelDialog))
@@ -74,6 +77,9 @@ class UploadStatusSubmissionUpdate :
                     setOf(UploadStatusSubmissionEffect.OnDeleteFileFromSubmission(deletedFile.id))
                 )
             }
+        }
+        UploadStatusSubmissionEvent.RequestLoad -> {
+            Next.dispatch(setOf(UploadStatusSubmissionEffect.LoadPersistedFiles(model.submissionId)))
         }
     }
 }
