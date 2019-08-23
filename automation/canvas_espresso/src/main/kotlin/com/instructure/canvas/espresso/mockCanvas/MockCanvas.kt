@@ -229,37 +229,37 @@ fun MockCanvas.addAssignments(course: Course, assignmentCountPerGroup: Int = 1):
     val futureDueDate = OffsetDateTime.now().plusWeeks(1).toApiString()
     val pastDueDate = OffsetDateTime.now().minusWeeks(1).toApiString()
 
-    for (i in 1..assignmentCountPerGroup) {
-        overdueAssignments[i] = Assignment(
+    for (i in 0..assignmentCountPerGroup) {
+        overdueAssignments.add(Assignment(
                 id = i.toLong(),
                 name = Randomizer.randomAssignmentName(),
                 courseId = course.id,
                 submission = Submission(grade = null, submissionType = null),
                 submissionTypesRaw = listOf(),
                 dueAt = pastDueDate
-        )
-        upcomingAssignments[i] = Assignment(
+        ))
+        upcomingAssignments.add(Assignment(
                 id = i.toLong(),
                 name = Randomizer.randomAssignmentName(),
                 courseId = course.id,
                 submission = Submission(),
                 dueAt = futureDueDate
-        )
-        undatedAssignments[i] = Assignment(
+        ))
+        undatedAssignments.add(Assignment(
                 id = i.toLong(),
                 name = Randomizer.randomAssignmentName(),
                 courseId = course.id,
                 submission = Submission(),
                 dueAt = null
-        )
-        pastAssignments[i] = Assignment(
+        ))
+        pastAssignments.add(Assignment(
                 id = i.toLong(),
                 name = Randomizer.randomAssignmentName(),
                 courseId = course.id,
                 submission = Submission(grade = "A", submissionType = "online"),
                 submissionTypesRaw = listOf(),
                 dueAt = pastDueDate
-        )
+        ))
     }
 
     val overdueAssignmentGroup = AssignmentGroup(id = 1, name = "overdue", assignments = overdueAssignments)

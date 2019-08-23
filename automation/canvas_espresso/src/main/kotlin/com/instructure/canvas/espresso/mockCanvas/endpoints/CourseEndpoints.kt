@@ -53,7 +53,8 @@ object CourseEndpoint : Endpoint(
         response = {
             GET {
                 val course = data.courses[pathVars.courseId]!!
-                val userId = pathVars.userId
+//                val userId = pathVars.userId
+                val userId = request.user!!.id
                 if (data.enrollments.values.any { it.courseId == course.id && it.userId == userId }) {
                     request.successResponse(course)
                 } else {

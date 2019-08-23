@@ -16,11 +16,16 @@
 package com.instructure.student.ui.interaction
 
 import com.instructure.canvas.espresso.Stub
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.addAssignments
+import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.routeTo
+import com.instructure.student.ui.utils.tokenLogin
 import org.junit.Test
 
 class AssignmentDetailsInteractionTest : StudentTest() {
@@ -45,6 +50,20 @@ class AssignmentDetailsInteractionTest : StudentTest() {
     @TestMetaData(Priority.P0, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, true)
     fun testNavigating_viewAssignmentDetails() {
         // Test clicking on the Assignment item in the Assignment List to load the Assignment Details Page
+        val data = MockCanvas.init(
+            studentCount = 1,
+            courseCount = 1
+        )
+
+        val course = data.courses.values.first()
+        val student = data.students[0]
+        val token = data.tokenFor(student)!!
+        val assignmentGroups = data.addAssignments(course)
+        tokenLogin(data.domain, token, student)
+        routeTo("courses/${course.id}/assignments", data.domain)
+
+        assignmentListPage.clickAssignment(assignmentGroups.first().assignments.first())
+        assignmentDetailsPage.assertPageObjects()
     }
 
     @Stub

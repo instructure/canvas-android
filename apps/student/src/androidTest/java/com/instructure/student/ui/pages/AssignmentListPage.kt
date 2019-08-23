@@ -26,6 +26,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withChild
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withParent
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.dataseeding.model.AssignmentApiModel
 import com.instructure.student.R
 import com.instructure.espresso.*
@@ -50,6 +51,10 @@ class AssignmentListPage : BasePage(pageResId = R.id.assignmentListPage) {
 
     fun clickAssignment(assignment: AssignmentApiModel) {
         waitForViewWithText(assignment.name).click()
+    }
+
+    fun clickAssignment(assignment: Assignment) {
+        waitForViewWithText(assignment.name!!).click()
     }
 
     fun assertDisplaysNoAssignmentsView() {

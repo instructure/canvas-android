@@ -133,6 +133,16 @@ fun StudentTest.routeTo(route: String) {
     context.startActivity(intent)
 }
 
+fun StudentTest.routeTo(route: String, domain: String) {
+    val url = "canvas-student://$domain/$route"
+    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+    val context = InstrumentationRegistry.getInstrumentation().targetContext
+    if (context !is Activity) {
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    }
+    context.startActivity(intent)
+}
+
 fun StudentTest.routeTo(route: Route) {
     RouteMatcher.route(InstrumentationRegistry.getInstrumentation().targetContext, route)
 }

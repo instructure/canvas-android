@@ -16,11 +16,9 @@
 package com.instructure.canvas.espresso.mockCanvas.endpoints
 
 import com.instructure.canvas.espresso.mockCanvas.Endpoint
-import com.instructure.canvas.espresso.mockCanvas.utils.LongId
-import com.instructure.canvas.espresso.mockCanvas.utils.PathVars
-import com.instructure.canvas.espresso.mockCanvas.utils.Segment
-import com.instructure.canvas.espresso.mockCanvas.utils.successResponse
+import com.instructure.canvas.espresso.mockCanvas.utils.*
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.AssignmentGroup
 
 /**
  * Endpoint for assignment index, for a course
@@ -29,17 +27,12 @@ import com.instructure.canvasapi2.models.Assignment
  * - `{assignmentId}` -> [Assignment]
  */
 object AssignmentIndexEndpoint : Endpoint(
-    LongId(PathVars::assignmentId) to AssignmentEndpoint,
-    response = {
-        GET {
-            //TODO
-            request.successResponse(listOf(Assignment()))
-        }
-    }
+    LongId(PathVars::assignmentId) to AssignmentEndpoint
 )
 
 /**
- * Endpoint for a specific assignment for a course
+ * Endpoint that returns a specific assignment for a course. If the requested assignment does not
+ * exist in the assignment list, an unauth'd response is returned.
  *
  * ROUTES:
  * - `submissions` -> [SubmissionIndexEndpoint]
@@ -48,8 +41,17 @@ object AssignmentEndpoint : Endpoint(
     Segment("submissions") to SubmissionIndexEndpoint,
     response = {
         GET {
-            //TODO
-            request.successResponse(Assignment())
+            val assignment = data.assignmentGroups[pathVars.courseId]?.forEach { group ->
+                group.assignments.first { assignment ->
+                    assignment.id == pathVars.assignmentId
+                }
+            }
+            if (assignment != null) {
+                request.successResponse(assignment)
+            } else {
+                request.unauthorizedResponse()
+            }
+
         }
     }
 )
@@ -61,8 +63,7 @@ object AssignmentGroupListEndpoint : Endpoint(
     LongId(PathVars::assignmentId) to AssignmentEndpoint,
     response = {
         GET {
-            //TODO
-            request.successResponse(listOf(Assignment()))
+            request.successResponse(data.assignmentGroups[pathVars.courseId] ?: listOf(AssignmentGroup()))
         }
     }
 )
