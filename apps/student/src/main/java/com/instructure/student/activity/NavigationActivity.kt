@@ -163,7 +163,9 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             /* Update nav bar visibility to show for specific 'root' fragments. Also show the nav bar when there is
              only one fragment on the backstack, which commonly occurs with non-root fragments when routing
              from external sources. */
-            bottomBar.setVisible(it::class.java in bottomNavBarFragments || supportFragmentManager.backStackEntryCount <= 1)
+            val visible = it::class.java in bottomNavBarFragments || supportFragmentManager.backStackEntryCount <= 1
+            bottomBar.setVisible(visible)
+            bottomBarDivider.setVisible(visible)
         }
     }
 
