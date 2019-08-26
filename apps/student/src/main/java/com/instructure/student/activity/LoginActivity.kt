@@ -76,7 +76,7 @@ class LoginActivity : BaseLoginInitActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val startNewRelic =
-                RemoteConfigUtils.getString(RemoteConfigParam.USE_REMOTE_CONFIG)?.equals("true",ignoreCase = true) ?: false
+                RemoteConfigUtils.getString(RemoteConfigParam.USE_NEW_RELIC)?.equals("true",ignoreCase = true) ?: false
 
         Log.v("LoginActivity","startNewRelic=$startNewRelic")
 
