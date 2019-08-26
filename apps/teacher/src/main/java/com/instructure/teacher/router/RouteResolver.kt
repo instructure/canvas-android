@@ -6,10 +6,12 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.argsWithContext
 import com.instructure.teacher.PSPDFKit.AnnotationComments.AnnotationCommentListFragment
 import com.instructure.teacher.adapters.StudentContextFragment
 import com.instructure.teacher.features.files.search.FileSearchFragment
 import com.instructure.teacher.features.modules.list.ui.ModuleListFragment
+import com.instructure.teacher.features.postpolicies.PostPolicyFragment
 import com.instructure.teacher.fragments.*
 import instructure.rceditor.RCEFragment
 
@@ -76,6 +78,8 @@ object RouteResolver {
             fragment = DueDatesFragment.getInstance((canvasContext as Course?)!!, route.arguments)
         } else if (AssignmentSubmissionListFragment::class.java.isAssignableFrom(cls)) {
             fragment = AssignmentSubmissionListFragment.newInstance((canvasContext as Course?)!!, route.arguments)
+        } else if (PostPolicyFragment::class.java.isAssignableFrom(cls)) {
+            fragment = PostPolicyFragment.newInstance(route.argsWithContext)
         } else if (EditAssignmentDetailsFragment::class.java.isAssignableFrom(cls)) {
             fragment = EditAssignmentDetailsFragment.newInstance((canvasContext as Course?)!!, route.arguments)
         } else if (AssigneeListFragment::class.java.isAssignableFrom(cls)) {

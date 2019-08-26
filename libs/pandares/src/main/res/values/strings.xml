@@ -1031,6 +1031,23 @@
     <string name="gradeComplete">Complete</string>
     <string name="gradeIncomplete">Incomplete</string>
 
+    <!--Teacher Strings-->
+    <string name="postPolicyTitle">Post Settings</string>
+    <string name="postGradesTab">Post Grades</string>
+    <string name="hideGradesTab">Hide Grades</string>
+    <string name="gradesPostedCount">%d grades currently posted</string>
+    <string name="gradesHiddenCount">%d grades currently hidden</string>
+    <string name="postPolicyPostTo">Post to…</string>
+    <string name="postPolicySections">Specific Sections</string>
+    <string name="postToEveryoneTitle">Everyone</string>
+    <string name="postToEveryoneMessage">Grades will be made visible to all students</string>
+    <string name="postToGradedTitle">Graded</string>
+    <string name="postToGradedMessage">Grades will be made visible to students with graded submissions</string>
+    <string name="postPolicyAllHiddenTitle">All Hidden</string>
+    <string name="postPolicyAllHiddenMessage">All grades are currently hidden.</string>
+    <string name="postPolicyAllPostedTitle">All Posted</string>
+    <string name="postPolicyAllPostedMessage">All grades are currently posted.</string>
+
     <!-- Floating Recording View Strings -->
     <string name="recordingTimerDefault">00:00:00</string>
     <string name="recordingTimerContentDescription">%1$d hours, %2$d minutes, and %3$d seconds</string>
