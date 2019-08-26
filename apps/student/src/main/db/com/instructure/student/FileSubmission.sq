@@ -53,6 +53,11 @@ SELECT *
 FROM fileSubmission
 WHERE dbSubmissionId = ?;
 
+getFilesForPath:
+SELECT *
+FROM fileSubmission
+WHERE id != ? AND fullPath = ?;
+
 getFilesWithoutAttachmentsForSubmissionId:
 SELECT *
 FROM fileSubmission
