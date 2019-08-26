@@ -51,6 +51,7 @@ class PeopleE2ETest: StudentTest() {
         // Navigate to the "People" page of our course
         dashboardPage.waitForRender()
         dashboardPage.selectCourse(course)
+        courseBrowserPage.minimizeToolbar() // Topic scrolling doesn't seem to work without this
         courseBrowserPage.selectPeople()
 
         // Assert that all people are listed

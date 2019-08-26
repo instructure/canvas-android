@@ -55,6 +55,7 @@ import com.instructure.espresso.page.withAncestor
 import com.instructure.espresso.page.withId
 import com.instructure.espresso.page.withParent
 import com.instructure.espresso.page.withText
+import com.instructure.espresso.scrollTo
 import com.instructure.espresso.swipeDown
 import com.instructure.espresso.waitForCheck
 import com.instructure.student.R
@@ -123,13 +124,13 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
 
     fun signOut() {
         onView(hamburgerButtonMatcher).click()
-        onViewWithId(R.id.navigationDrawerItem_logout).click()
+        onViewWithId(R.id.navigationDrawerItem_logout).scrollTo().click()
         onViewWithText(android.R.string.yes).click()
     }
 
     fun pressChangeUser() {
         onView(hamburgerButtonMatcher).click()
-        onViewWithId(R.id.navigationDrawerItem_changeUser).click()
+        onViewWithId(R.id.navigationDrawerItem_changeUser).scrollTo().click()
     }
 
     fun assertUserLoggedIn(user: CanvasUserApiModel) {
