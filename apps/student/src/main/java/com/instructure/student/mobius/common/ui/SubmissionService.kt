@@ -161,6 +161,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
                     }
                 } catch (e: Throwable) {
                     detachForegroundNotification()
+                    db.submissionQueries.setSubmissionError(true, submission.id)
                     showErrorNotification(this@SubmissionService, submission)
                     return@runBlocking
                 }
@@ -190,12 +191,13 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
         val attachmentIds = completed.mapNotNull { it.attachmentId } + uploadedAttachmentIds
         SubmissionManager.postSubmissionAttachmentsSynchronous(submission.canvasContext.id, submission.assignmentId, attachmentIds)?.let {
             // Clear out the db for the successful submission
-            deleteSubmissionsForAssignment(submission.id, db)
+            deleteSubmissionsForAssignment(submission.assignmentId, db)
 
             detachForegroundNotification()
             showCompleteNotification(this, submission)
         } ?: run {
             detachForegroundNotification()
+            db.submissionQueries.setSubmissionError(true, submission.id)
             showErrorNotification(this, submission)
         }
     }
@@ -586,9 +588,9 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
                         FileUploadUtils.deleteTempFile(file.fullPath)
                     }
                 }
+                db.fileSubmissionQueries.deleteFilesForSubmissionId(submission.id)
             }
             db.submissionQueries.deleteSubmissionsForAssignmentId(id, getUserId())
-            db.fileSubmissionQueries.deleteFilesForSubmissionId(id)
         }
 
         // region start helpers
