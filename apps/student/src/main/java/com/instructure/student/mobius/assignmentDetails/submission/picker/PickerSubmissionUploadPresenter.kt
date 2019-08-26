@@ -29,7 +29,7 @@ object PickerSubmissionUploadPresenter : Presenter<PickerSubmissionUploadModel, 
         model: PickerSubmissionUploadModel,
         context: Context
     ): PickerSubmissionUploadViewState {
-        return if (model.files.isEmpty()) {
+        return if (model.files.isEmpty() && !model.isLoadingFile) {
             presentEmptyState(model)
         } else {
             presentListState(model, context)
