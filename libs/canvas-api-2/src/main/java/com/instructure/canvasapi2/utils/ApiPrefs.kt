@@ -53,6 +53,9 @@ object ApiPrefs : PrefManager(PREFERENCE_FILE_NAME) {
     var refreshToken by StringPref()
 
     @JvmStatic
+    fun getValidToken(): String = if (accessToken.isNotEmpty()) accessToken else token
+
+    @JvmStatic
     var protocol by StringPref("https", "api_protocol")
 
     @JvmStatic

@@ -22,6 +22,7 @@ import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.AuthenticatedSession
 import com.instructure.canvasapi2.models.OAuthToken
+import com.instructure.canvasapi2.models.OAuthTokenResponse
 import com.instructure.canvasapi2.utils.Logger
 
 object OAuthManager {
@@ -35,7 +36,7 @@ object OAuthManager {
     }
 
     @JvmStatic
-    fun getToken(clientID: String, clientSecret: String, oAuthRequest: String, callback: StatusCallback<OAuthToken>) {
+    fun getToken(clientID: String, clientSecret: String, oAuthRequest: String, callback: StatusCallback<OAuthTokenResponse>) {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = true)
         OAuthAPI.getToken(adapter, params, clientID, clientSecret, oAuthRequest, callback)

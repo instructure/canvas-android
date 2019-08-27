@@ -9,7 +9,7 @@ class RoboTesting {
 
     static void setAppStatePrefs() {
         //save token
-        ApiPrefs.setToken(BuildConfig.ROBO_USER_TOKEN);
+        ApiPrefs.setAccessToken(BuildConfig.ROBO_USER_TOKEN);
         ApiPrefs.setDomain(BuildConfig.ROBO_USER_DOMAIN);
         User user = new Gson().fromJson(BuildConfig.ROBO_USER_JSON, User.class);
         ApiPrefs.setUser(user);

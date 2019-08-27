@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.AuthenticatedSession
 import com.instructure.canvasapi2.models.OAuthToken
+import com.instructure.canvasapi2.models.OAuthTokenResponse
 import retrofit2.Call
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -36,7 +37,12 @@ object OAuthAPI {
         fun deleteToken(): Call<Void>
 
         @POST("/login/oauth2/token")
-        fun getToken(@Query("client_id") clientId: String, @Query("client_secret") clientSecret: String, @Query("code") oAuthRequest: String, @Query(value = "redirect_uri", encoded = true) redirectURI: String): Call<OAuthToken>
+        fun getToken(
+                @Query("client_id") clientId: String,
+                @Query("client_secret") clientSecret: String,
+                @Query("code") oAuthRequest: String,
+                @Query(value = "redirect_uri", encoded = true) redirectURI: String,
+                @Query("grant_type") grantType: String = "authorization_code"): Call<OAuthTokenResponse>
 
         @GET("/login/session_token")
         fun getAuthenticatedSession(@Query("return_to") targetUrl: String): Call<AuthenticatedSession>
@@ -46,7 +52,7 @@ object OAuthAPI {
         callback.addCall(adapter.build(OAuthInterface::class.java, params).deleteToken()).enqueue(callback)
     }
 
-    fun getToken(adapter: RestBuilder, params: RestParams, clientID: String, clientSecret: String, oAuthRequest: String, callback: StatusCallback<OAuthToken>) {
+    fun getToken(adapter: RestBuilder, params: RestParams, clientID: String, clientSecret: String, oAuthRequest: String, callback: StatusCallback<OAuthTokenResponse>) {
         callback.addCall(adapter.build(OAuthInterface::class.java, params).getToken(clientID, clientSecret, oAuthRequest, "urn:ietf:wg:oauth:2.0:oob")).enqueue(callback)
     }
 

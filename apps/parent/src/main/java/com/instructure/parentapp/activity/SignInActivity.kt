@@ -64,6 +64,7 @@ class SignInActivity : BaseLoginSignInActivity() {
                 return true
             }
 
+            // TODO - make sure this works with REFRESH TOKENS
             url.contains(PARENT_TOKEN_URL) -> {
                 // When a parent logs in with observer credentials
                 // Get the parent id from the url
@@ -77,7 +78,7 @@ class SignInActivity : BaseLoginSignInActivity() {
                 }
                 index = url.indexOf(token)
                 if (index != -1) {
-                    ApiPrefs.token = url.substring(index + token.length)
+                    ApiPrefs.accessToken = url.substring(index + token.length)
                 }
                 handleLaunchApplicationMainActivityIntent()
                 return true
