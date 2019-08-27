@@ -41,9 +41,16 @@ object ApiPrefs : PrefManager(PREFERENCE_FILE_NAME) {
     const val DEVICE_LOCALE: String = "root"
 
     const val ACCOUNT_LOCALE: String = "account"
-
+    
+    @Deprecated("Deprecated in favor of access token")
     @JvmStatic
     var token by StringPref()
+
+    @JvmStatic
+    var accessToken by StringPref()
+
+    @JvmStatic
+    var requestToken by StringPref()
 
     @JvmStatic
     var protocol by StringPref("https", "api_protocol")
