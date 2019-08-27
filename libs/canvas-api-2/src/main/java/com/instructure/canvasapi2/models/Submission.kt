@@ -19,7 +19,9 @@ package com.instructure.canvasapi2.models
 
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
-import java.util.*
+import java.util.ArrayList
+import java.util.Date
+import java.util.HashMap
 
 @JvmSuppressWildcards
 @Parcelize
@@ -78,7 +80,9 @@ data class Submission(
         @SerializedName("entered_score")
         val enteredScore: Double = 0.0,
         @SerializedName("entered_grade")
-        val enteredGrade: String? = null
+        val enteredGrade: String? = null,
+        @SerializedName("posted_at")
+        val postedAt: Date? = null
 ) : CanvasModel<Submission>() {
     override val comparisonDate get() = submittedAt
     override val comparisonString get() = submissionType
