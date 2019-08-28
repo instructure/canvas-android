@@ -22,6 +22,7 @@ import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Section
 import com.instructure.canvasapi2.utils.ExhaustiveListCallback
+import com.instructure.canvasapi2.utils.weave.apiAsync
 
 object SectionManager {
 
@@ -36,6 +37,10 @@ object SectionManager {
         }
         adapter.statusCallback = depaginatedCallback
         SectionAPI.getFirstSectionsForCourse(courseId, adapter, depaginatedCallback, params)
+    }
+
+    fun getAllSectionsForCourseAsync(courseId: Long, forceNetwork: Boolean) = apiAsync<List<Section>> {
+        getAllSectionsForCourse(courseId, it, forceNetwork)
     }
 
     @JvmStatic
