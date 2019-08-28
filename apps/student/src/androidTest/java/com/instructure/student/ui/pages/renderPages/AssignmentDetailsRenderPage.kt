@@ -17,6 +17,9 @@
 package com.instructure.student.ui.pages.renderPages
 
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
 import androidx.test.espresso.web.sugar.Web.onWebView
 import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
@@ -24,10 +27,12 @@ import androidx.test.espresso.web.webdriver.DriverAtoms.getText
 import androidx.test.espresso.web.webdriver.Locator
 import androidx.test.platform.app.InstrumentationRegistry
 import com.instructure.espresso.*
+import com.instructure.espresso.page.onViewWithContentDescription
 import com.instructure.espresso.page.onViewWithText
 import com.instructure.student.R
 import com.instructure.student.ui.pages.AssignmentDetailsPage
 import org.hamcrest.Matchers
+import org.hamcrest.Matchers.allOf
 
 class AssignmentDetailsRenderPage : AssignmentDetailsPage() {
 
@@ -119,7 +124,10 @@ class AssignmentDetailsRenderPage : AssignmentDetailsPage() {
     }
 
     fun openOverflowMenu() {
-        Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().targetContext)
+        //Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().targetContext)
+
+        // This worked better on a low-res device locally
+        onView(allOf(withContentDescription("More options"), isDisplayed())).click()
     }
 
     fun assertDisplaysDescription(text: String) {

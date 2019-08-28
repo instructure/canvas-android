@@ -19,9 +19,12 @@ package com.instructure.student.ui.pages
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.UiController
+import androidx.test.espresso.action.GeneralClickAction
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.hasDescendant
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvasapi2.models.Course
@@ -30,6 +33,7 @@ import com.instructure.espresso.WaitForViewWithId
 import com.instructure.espresso.assertHasText
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.swipeUp
 import com.instructure.student.R
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
@@ -46,6 +50,10 @@ class CourseBrowserPage : BasePage(R.id.courseBrowserPage) {
     fun selectPeople() {
         val matcher = withText("People")
         selectSection(matcher)
+    }
+
+    fun minimizeToolbar() {
+        onView(allOf(withId(R.id.collapsingToolbarLayout), isDisplayed())).swipeUp()
     }
 
     private fun selectSection(matcher: Matcher<View>) {
@@ -65,3 +73,4 @@ class CourseBrowserPage : BasePage(R.id.courseBrowserPage) {
         initialBrowserTitle.assertHasText(course.originalName!!)
     }
 }
+
