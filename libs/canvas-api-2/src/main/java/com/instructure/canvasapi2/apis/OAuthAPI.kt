@@ -22,11 +22,10 @@ import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.AuthenticatedSession
 import com.instructure.canvasapi2.models.OAuthToken
 import com.instructure.canvasapi2.models.OAuthTokenResponse
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.DataResult
 import retrofit2.Call
-import retrofit2.http.DELETE
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Query
+import retrofit2.http.*
 import java.io.IOException
 
 
@@ -46,6 +45,10 @@ object OAuthAPI {
 
         @GET("/login/session_token")
         fun getAuthenticatedSession(@Query("return_to") targetUrl: String): Call<AuthenticatedSession>
+
+        // TODO: Properly implement this
+//        @POST("/oauth2/refresh")
+//        fun refreshAccessToken(@Body body: TokenRefreshBody, @Header(value = AUTHORIZATION_HEADER) authToken: String): Call<OAuthTokenResponse>
     }
 
     fun deleteToken(adapter: RestBuilder, params: RestParams, callback: StatusCallback<Void>) {
@@ -67,6 +70,14 @@ object OAuthAPI {
             e.printStackTrace()
             null
         }
-
     }
+
+    fun refreshAccessToken(): DataResult<OAuthTokenResponse> {
+        // TODO: Properly implement this
+//        return RestAdapter.buildAuthApi(RestParams(getAuthmongerUrl(ApiPrefs.fullDomain()), shouldIgnoreToken = true), AuthInterface::class.java)
+//            .refreshAccessToken(TokenRefreshBody(ApiPrefs.refreshToken, REFRESH_GRANT_TYPE), authHeader(ApiPrefs.fullDomain)).dataResult()
+        return DataResult.Success(OAuthTokenResponse(accessToken = ApiPrefs.token, refreshToken = ApiPrefs.token))
+    }
+
+    fun authBearer(token: String) = "Bearer $token"
 }
