@@ -16,12 +16,10 @@
  */
 package com.instructure.canvasapi2.apis
 
-import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.AuthenticatedSession
-import com.instructure.canvasapi2.models.OAuthToken
 import com.instructure.canvasapi2.models.OAuthTokenResponse
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult

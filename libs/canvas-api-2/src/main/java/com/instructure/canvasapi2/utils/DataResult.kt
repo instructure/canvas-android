@@ -16,7 +16,6 @@
  */
 package com.instructure.canvasapi2.utils
 
-import okhttp3.Authenticator
 import retrofit2.Call
 
 sealed class DataResult<out A> {

@@ -39,16 +39,21 @@ import android.webkit.WebViewClient;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.Toolbar;
+
 import com.instructure.canvasapi2.RequestInterceptor;
 import com.instructure.canvasapi2.StatusCallback;
 import com.instructure.canvasapi2.managers.OAuthManager;
 import com.instructure.canvasapi2.managers.UserManager;
 import com.instructure.canvasapi2.models.AccountDomain;
-import com.instructure.canvasapi2.models.OAuthToken;
 import com.instructure.canvasapi2.models.OAuthTokenResponse;
 import com.instructure.canvasapi2.models.User;
 import com.instructure.canvasapi2.utils.ApiPrefs;
-import com.instructure.canvasapi2.utils.ApiPrefsKt;
 import com.instructure.canvasapi2.utils.ApiType;
 import com.instructure.canvasapi2.utils.LinkHeaders;
 import com.instructure.canvasapi2.utils.Logger;
@@ -66,12 +71,6 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.appcompat.widget.Toolbar;
 import retrofit2.Call;
 import retrofit2.Response;
 
