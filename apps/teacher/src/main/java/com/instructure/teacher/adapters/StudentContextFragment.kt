@@ -17,8 +17,16 @@ package com.instructure.teacher.adapters
 
 import android.graphics.Color
 import android.os.Bundle
-import android.view.*
-import com.instructure.canvasapi2.StudentContextCardQuery.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewConfiguration
+import android.view.ViewGroup
+import android.view.ViewTreeObserver
+import android.widget.TextView
+import com.instructure.canvasapi2.StudentContextCardQuery.Analytics
+import com.instructure.canvasapi2.StudentContextCardQuery.AsCourse
+import com.instructure.canvasapi2.StudentContextCardQuery.Submission
+import com.instructure.canvasapi2.StudentContextCardQuery.User
 import com.instructure.canvasapi2.models.BasicUser
 import com.instructure.canvasapi2.models.GradeableStudentSubmission
 import com.instructure.canvasapi2.models.StudentAssignee
@@ -28,7 +36,19 @@ import com.instructure.canvasapi2.utils.isValid
 import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouteContext
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.BooleanArg
+import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.LongArg
+import com.instructure.pandautils.utils.ProfileUtils
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.asStateList
+import com.instructure.pandautils.utils.children
+import com.instructure.pandautils.utils.nonNullArgs
+import com.instructure.pandautils.utils.onClick
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.toast
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.SpeedGraderActivity
 import com.instructure.teacher.events.AssignmentGradedEvent
@@ -151,42 +171,59 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
         // Course and section names
         courseNameView.text = course.name
         sectionNameView.text = if (isStudent) {
-            getString(R.string.sectionFormatted, student.enrollments.joinToString { it.section?.name ?: "" })
+            student.enrollments.joinToString(" | ") { it.section?.name ?: "" }
         } else {
-            val enrollmentsString = student.enrollments.joinToString { "${it.section?.name} (${it.type.displayText})" }
-            getString(R.string.sectionFormatted, enrollmentsString)
+            student.enrollments
+                .map { "${it.section?.name} (${it.type.displayText})" }
+                .distinct()
+                .joinToString(" | ")
         }
 
         // Latest activity
-        student.enrollments
-            .filter { it.lastActivityAt != null }
-            .sortedBy { it.lastActivityAt }
-            .firstOrNull()?.lastActivityAt
-            ?.let {
-                val dateString = DateHelper.getFormattedDate(requireContext(), it)
-                val timeString = DateHelper.getFormattedTime(requireContext(), it)
-                lastActivityView.text = getString(R.string.latestStudentActivityAtFormatted, dateString, timeString)
-            } ?: lastActivityView.setGone()
+        student.enrollments.mapNotNull { it.lastActivityAt }.max()?.let {
+            val dateString = DateHelper.getFormattedDate(requireContext(), it)
+            val timeString = DateHelper.getFormattedTime(requireContext(), it)
+            lastActivityView.text = getString(R.string.latestStudentActivityAtFormatted, dateString, timeString)
+        } ?: lastActivityView.setGone()
 
         if (isStudent) {
             val enrollmentGrades = student.enrollments.find { it.type == EnrollmentType.STUDENTENROLLMENT }?.grades
 
-            // Grade
-            gradeView.text = enrollmentGrades?.let { it.currentGrade ?: it.currentScore?.toString() } ?: "-"
+            // Grade before posting
+            gradeBeforePosting.text = enrollmentGrades?.let { it.currentGrade ?: it.currentScore?.toString() } ?: "--"
+
+            // Grade after posting
+            gradeAfterPosting.text = enrollmentGrades?.let { it.unpostedCurrentGrade ?: it.unpostedCurrentScore?.toString() } ?: "--"
 
             // Override Grade
             val overrideText = enrollmentGrades?.let { it.overrideGrade ?: it.overrideScore?.toString() }
             if (overrideText.isValid()) {
-                overrideGradeView.text = overrideText
+                gradeOverride.text = overrideText
+                gradeOverrideContainer.apply {
+                    backgroundTintList = courseColor.asStateList()
+                    children<TextView>().onEach { it.setTextColor(Color.WHITE) }
+                }
             } else {
-                overrideGradeContainer.setGone()
+                gradeOverrideContainer.setGone()
+                gradeAfterPostingContainer.apply {
+                    backgroundTintList = courseColor.asStateList()
+                    children<TextView>().onEach { it.setTextColor(Color.WHITE) }
+                }
             }
 
+            val onTime = summary?.tardinessBreakdown?.onTime?.toInt() ?: 0
+            val late = summary?.tardinessBreakdown?.late?.toInt() ?: 0
+            val missing = summary?.tardinessBreakdown?.missing?.toInt() ?: 0
+            val submitted = onTime + late
+
+            // Submitted
+            submittedCount.text = if (submitted <=0) "--" else submitted.toString()
+
             // Missing
-            missingCountView.text = summary?.tardinessBreakdown?.missing?.toInt()?.toString() ?: "-"
+            missingCount.text = if (missing <=0) "--" else missing.toString()
 
             // Late
-            lateCountView.text = summary?.tardinessBreakdown?.late?.toInt()?.toString() ?: "-"
+            lateCount.text = if (late <=0) "--" else late.toString()
         } else {
             messageButton.setGone()
             val lastIdx = scrollContent.indexOfChild(additionalInfoContainer)

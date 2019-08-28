@@ -23,7 +23,6 @@ import android.view.View
 import android.widget.FrameLayout
 import androidx.core.content.ContextCompat
 import com.instructure.canvasapi2.StudentContextCardQuery
-import com.instructure.canvasapi2.type.AssignmentState
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
@@ -45,11 +44,8 @@ class StudentContextSubmissionView(context: Context, submission: StudentContextC
 
         // Title, icon, and publish status
         assignmentTitle.text = assignment.name
-        assignmentIcon.setIcon(assignment.submissionTypes.getAssignmentIcon(), courseColor)
-
-        val isPublished = assignment.state == AssignmentState.PUBLISHED
-        assignmentIcon.setPublishedStatus(isPublished)
-        publishedBar.setVisible(isPublished)
+        assignmentIcon.setImageResource(assignment.submissionTypes.getAssignmentIcon())
+        assignmentIcon.setColorFilter(courseColor)
 
         // Submission status
         val (stringRes, colorRes) = getResForSubmission(submission.submissionStatus)
