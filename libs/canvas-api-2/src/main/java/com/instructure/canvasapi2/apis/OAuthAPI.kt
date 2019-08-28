@@ -16,6 +16,7 @@
  */
 package com.instructure.canvasapi2.apis
 
+import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
@@ -24,6 +25,7 @@ import com.instructure.canvasapi2.models.OAuthToken
 import com.instructure.canvasapi2.models.OAuthTokenResponse
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.canvasapi2.utils.dataResult
 import retrofit2.Call
 import retrofit2.http.*
 import java.io.IOException
@@ -46,9 +48,14 @@ object OAuthAPI {
         @GET("/login/session_token")
         fun getAuthenticatedSession(@Query("return_to") targetUrl: String): Call<AuthenticatedSession>
 
-        // TODO: Properly implement this
-//        @POST("/oauth2/refresh")
-//        fun refreshAccessToken(@Body body: TokenRefreshBody, @Header(value = AUTHORIZATION_HEADER) authToken: String): Call<OAuthTokenResponse>
+        @POST("/oauth2/refresh")
+        fun refreshAccessToken(
+            @Query("client_id") clientId: String,
+            @Query("client_secret") clientSecret: String,
+            @Query(value = "redirect_uri", encoded = true) redirectURI: String,
+            @Query("refresh_token") refreshToken: String,
+            @Query("grant_type") grantType: String = "refresh_token"
+        ): Call<OAuthTokenResponse>
     }
 
     fun deleteToken(adapter: RestBuilder, params: RestParams, callback: StatusCallback<Void>) {
@@ -57,6 +64,10 @@ object OAuthAPI {
 
     fun getToken(adapter: RestBuilder, params: RestParams, clientID: String, clientSecret: String, oAuthRequest: String, callback: StatusCallback<OAuthTokenResponse>) {
         callback.addCall(adapter.build(OAuthInterface::class.java, params).getToken(clientID, clientSecret, oAuthRequest, "urn:ietf:wg:oauth:2.0:oob")).enqueue(callback)
+    }
+
+    fun refreshAccessToken(adapter: RestBuilder, params: RestParams, clientID: String, clientSecret: String): DataResult<OAuthTokenResponse> {
+        return adapter.build(OAuthInterface::class.java, params).refreshAccessToken(clientID, clientSecret, "urn:ietf:wg:oauth:2.0:oob", ApiPrefs.refreshToken).dataResult()
     }
 
     fun getAuthenticatedSession(targetUrl: String, params: RestParams, adapter: RestBuilder, callback: StatusCallback<AuthenticatedSession>) {
@@ -70,13 +81,6 @@ object OAuthAPI {
             e.printStackTrace()
             null
         }
-    }
-
-    fun refreshAccessToken(): DataResult<OAuthTokenResponse> {
-        // TODO: Properly implement this
-//        return RestAdapter.buildAuthApi(RestParams(getAuthmongerUrl(ApiPrefs.fullDomain()), shouldIgnoreToken = true), AuthInterface::class.java)
-//            .refreshAccessToken(TokenRefreshBody(ApiPrefs.refreshToken, REFRESH_GRANT_TYPE), authHeader(ApiPrefs.fullDomain)).dataResult()
-        return DataResult.Success(OAuthTokenResponse(accessToken = ApiPrefs.token, refreshToken = ApiPrefs.token))
     }
 
     fun authBearer(token: String) = "Bearer $token"

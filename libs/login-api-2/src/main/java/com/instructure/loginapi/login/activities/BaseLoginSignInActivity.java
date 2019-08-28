@@ -48,6 +48,7 @@ import com.instructure.canvasapi2.models.OAuthToken;
 import com.instructure.canvasapi2.models.OAuthTokenResponse;
 import com.instructure.canvasapi2.models.User;
 import com.instructure.canvasapi2.utils.ApiPrefs;
+import com.instructure.canvasapi2.utils.ApiPrefsKt;
 import com.instructure.canvasapi2.utils.ApiType;
 import com.instructure.canvasapi2.utils.LinkHeaders;
 import com.instructure.canvasapi2.utils.Logger;
@@ -291,6 +292,8 @@ public abstract class BaseLoginSignInActivity extends AppCompatActivity implemen
                             ApiPrefs.setDomain(url);
                             mClientId = clientIdEditText.getText().toString();
                             mClientSecret = clientSecretEditText.getText().toString();
+                            ApiPrefs.setClientId(mClientId);
+                            ApiPrefs.setClientSecret(mClientSecret);
                             buildAuthenticationUrl(protocolEditText.getText().toString(), accountDomain, mClientId, false);
                             mWebView.loadUrl(mAuthenticationURL, getHeaders());
                         }
@@ -365,8 +368,11 @@ public abstract class BaseLoginSignInActivity extends AppCompatActivity implemen
                 }
 
                 mAccountDomain.setDomain(domain);
+
                 mClientId = domainVerificationResult.getClient_id();
                 mClientSecret = domainVerificationResult.getClient_secret();
+                ApiPrefs.setClientId(mClientId);
+                ApiPrefs.setClientSecret(mClientSecret);
 
                 //Get the protocol
                 final String apiProtocol = domainVerificationResult.getProtocol();

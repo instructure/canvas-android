@@ -16,6 +16,7 @@
 package com.instructure.canvasapi2.utils
 
 import com.instructure.canvasapi2.apis.OAuthAPI
+import com.instructure.canvasapi2.managers.OAuthManager
 import okhttp3.*
 
 private const val AUTH_HEADER = "Authorization"
@@ -27,8 +28,7 @@ class CanvasAuthenticator : Authenticator {
             return null // Give up, we've already failed to authenticate.
         }
 
-        // TODO: Enable when the call to refresh a token is implemented
-        val tokenResult = OAuthAPI.refreshAccessToken()
+        val tokenResult = OAuthManager.refreshToken()
 
         if (tokenResult.isSuccess) {
             tokenResult.dataOrNull?.refreshToken.let { ApiPrefs.refreshToken = it!! }
@@ -42,5 +42,4 @@ class CanvasAuthenticator : Authenticator {
 
         return null // Not a success
     }
-
 }
