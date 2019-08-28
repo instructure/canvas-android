@@ -154,7 +154,7 @@ class ShareFileUploadActivity : AppCompatActivity(), ShareFileDestinationDialog.
     }
 
     private fun checkLoggedIn(): Boolean {
-        return if (TextUtils.isEmpty(ApiPrefs.token)) {
+        return if (TextUtils.isEmpty(ApiPrefs.getValidToken())) {
             exitActivity()
             false
         } else {

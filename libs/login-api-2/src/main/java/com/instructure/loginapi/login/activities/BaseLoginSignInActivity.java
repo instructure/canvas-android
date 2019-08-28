@@ -45,6 +45,7 @@ import com.instructure.canvasapi2.managers.OAuthManager;
 import com.instructure.canvasapi2.managers.UserManager;
 import com.instructure.canvasapi2.models.AccountDomain;
 import com.instructure.canvasapi2.models.OAuthToken;
+import com.instructure.canvasapi2.models.OAuthTokenResponse;
 import com.instructure.canvasapi2.models.User;
 import com.instructure.canvasapi2.utils.ApiPrefs;
 import com.instructure.canvasapi2.utils.ApiType;
@@ -490,15 +491,15 @@ public abstract class BaseLoginSignInActivity extends AppCompatActivity implemen
         mAuthenticationURL = authUri.toString();
     }
 
-    private StatusCallback<OAuthToken> mGetTokenCallback = new StatusCallback<OAuthToken>() {
+    private StatusCallback<OAuthTokenResponse> mGetTokenCallback = new StatusCallback<OAuthTokenResponse>() {
 
         @Override
-        public void onResponse(@NonNull Response<OAuthToken> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
+        public void onResponse(@NonNull Response<OAuthTokenResponse> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
             if(type.isCache()) return;
 
-            OAuthToken token = response.body();
-            ApiPrefs.setToken(token.getAccessToken());
-            final String accessToken = token.getAccessToken();
+            final OAuthTokenResponse token = response.body();
+            ApiPrefs.setRefreshToken(token.getRefreshToken());
+            ApiPrefs.setAccessToken(token.getAccessToken());
 
             // We now need to get the cache user
             UserManager.getSelf(new StatusCallback<User>() {
@@ -511,7 +512,16 @@ public abstract class BaseLoginSignInActivity extends AppCompatActivity implemen
                         String domain = ApiPrefs.getDomain();
                         String protocol = ApiPrefs.getProtocol();
 
-                        SignedInUser user = new SignedInUser(userResponse, domain, protocol, accessToken, null, null);
+                        SignedInUser user = new SignedInUser(
+                            userResponse,
+                            domain,
+                            protocol,
+                            "", // TODO - delete once we move over 100% to refresh tokens
+                            token.getAccessToken(),
+                            token.getRefreshToken(),
+                            null,
+                            null
+                        );
                         PreviousUsersUtils.add(BaseLoginSignInActivity.this, user);
 
                         refreshWidgets();
@@ -523,7 +533,7 @@ public abstract class BaseLoginSignInActivity extends AppCompatActivity implemen
         }
 
         @Override
-        public void onFail(@Nullable Call<OAuthToken> call, @NonNull Throwable error, @Nullable Response<?> response) {
+        public void onFail(@Nullable Call<OAuthTokenResponse> call, @NonNull Throwable error, @Nullable Response<?> response) {
             if (!mSpecialCase) {
                 Toast.makeText(BaseLoginSignInActivity.this, R.string.errorOccurred, Toast.LENGTH_SHORT).show();
             } else {
