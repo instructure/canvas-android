@@ -52,6 +52,7 @@ object ApiPrefs : PrefManager(PREFERENCE_FILE_NAME) {
     @JvmStatic
     var refreshToken by StringPref()
 
+    // TODO - Remove in favor of just access token once refresh is 100%
     @JvmStatic
     fun getValidToken(): String = if (accessToken.isNotEmpty()) accessToken else token
 
