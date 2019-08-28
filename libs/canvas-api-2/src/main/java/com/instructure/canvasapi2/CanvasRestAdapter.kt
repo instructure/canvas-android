@@ -155,19 +155,6 @@ protected constructor(var statusCallback: StatusCallback<*>?, private val authUs
                 .build()
     }
 
-    fun buildPingAdapter(url: String): Retrofit {
-        return Retrofit.Builder()
-            .baseUrl(url)
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(
-                OkHttpClient.Builder()
-                    .readTimeout(TIMEOUT_IN_SECONDS.toLong(), TimeUnit.SECONDS)
-                    .authenticator(CanvasAuthenticator())
-                    .build()
-            )
-            .build()
-    }
-
     fun buildRollCallAdapter(url: String): Retrofit {
         val gson = GsonBuilder().setLenient().create()
         val loggingInterceptor = HttpLoggingInterceptor()
