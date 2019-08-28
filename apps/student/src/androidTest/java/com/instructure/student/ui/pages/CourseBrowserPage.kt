@@ -19,21 +19,28 @@ package com.instructure.student.ui.pages
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.PerformException
 import androidx.test.espresso.UiController
-import androidx.test.espresso.action.GeneralClickAction
+import androidx.test.espresso.ViewAction
+import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.hasDescendant
+import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Tab
+import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.espresso.WaitForViewWithId
 import com.instructure.espresso.assertHasText
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.swipeUp
+import com.instructure.pandautils.views.SwipeRefreshLayoutAppBar
 import com.instructure.student.R
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
@@ -52,25 +59,94 @@ class CourseBrowserPage : BasePage(R.id.courseBrowserPage) {
         selectSection(matcher)
     }
 
-    fun minimizeToolbar() {
-        onView(allOf(withId(R.id.collapsingToolbarLayout), isDisplayed())).swipeUp()
+    fun selectModules() {
+        val matcher = allOf(withText("Modules"), withId(R.id.label))
+        selectSection(matcher)
     }
+
+    fun selectHomeModules() {
+        onView(allOf(withId(R.id.homeLabel), isDisplayed())).click()
+    }
+
 
     private fun selectSection(matcher: Matcher<View>) {
         // Scroll RecyclerView item into view, if necessary
-        onView(allOf(withId(R.id.courseBrowserRecyclerView), isDisplayed()))
-                .perform(RecyclerViewActions.scrollTo<RecyclerView.ViewHolder>(hasDescendant(matcher)))
-
+        recyclerViewScrollTo(matcher)
         onView(matcher).click()
-    }
-
-    fun assertTabPresent(tab: Tab) {
-        onView(allOf(withId(R.id.courseBrowserRecyclerView), isDisplayed()))
-                .perform(RecyclerViewActions.scrollTo<RecyclerView.ViewHolder>(hasDescendant(withText(tab.label))))
     }
 
     fun assertTitleCorrect(course: Course) {
         initialBrowserTitle.assertHasText(course.originalName!!)
     }
+
+    fun assertTitleCorrect(course: CourseApiModel) {
+        initialBrowserTitle.assertHasText(course.name)
+    }
+
+    fun assertTabDisplayed(tab: Tab) {
+        assertTabDisplayed(tab.label!!)
+    }
+
+    fun assertTabDisplayed(tabTitle: String) {
+        recyclerViewScrollTo(allOf(withText(tabTitle),withId(R.id.label)))
+    }
+
+    fun assertTabNotDisplayed(tabTitle: String) {
+        onView(allOf(withText(tabTitle), withId(R.id.label))).check(doesNotExist())
+    }
+
+    // Minimizes toolbar if it is not already minimized
+    private fun minimizeToolbar() {
+        try {
+            onView(allOf(withId(R.id.collapsingToolbarLayout), isDisplayed())).swipeUp()
+        }
+        catch(pe: PerformException) {
+            // Eat this exception.  It will occur if the toolbar is already minimized.
+        }
+    }
+
+    fun refresh() {
+        // This gets our view in a state where it can be refreshed via pull-to-refresh.
+        onView(allOf(withId(R.id.swipeRefreshLayout), isDisplayed()))
+                .perform(ScrollRefreshLayoutToTop())
+
+        // Swiping on swipeRefreshLayout normally doesn't work because it is not 90%
+        // visible (thanks to the expanded toolbar).  So we'll call it with  a custom constraint.
+        //
+        // Also, depending on the current state of the toolbar (inflated or minimized), we may
+        // need either one or two swipe-downs to effect a refresh.  We'll go with two to cover
+        // our bases.
+        onView(allOf(withId(R.id.swipeRefreshLayout), isDisplayed()))
+                .perform(withCustomConstraints(ViewActions.swipeDown(), isDisplayingAtLeast(5)))
+                .perform(withCustomConstraints(ViewActions.swipeDown(), isDisplayingAtLeast(5)))
+    }
+
+    // When the toolbar is maximized, you can't  do any operations with the recyclerView
+    // because it is not 90% displayed.  So we funnel all scroll ops through this method, which
+    // minimizes the toolbar before scrolling.
+    private fun recyclerViewScrollTo(matcher: Matcher<View>) {
+        minimizeToolbar()
+        onView(allOf(withId(R.id.courseBrowserRecyclerView), isDisplayed()))
+                .perform(RecyclerViewActions.scrollTo<RecyclerView.ViewHolder>(hasDescendant(matcher)))
+    }
 }
 
+// Custom action to scroll to top of SwipeRefreshLayoutAppBar
+private class ScrollRefreshLayoutToTop : ViewAction {
+    override fun getDescription(): String {
+        return "Scroll to the top of a SwipeRefreshLayoutAppBar"
+    }
+
+    override fun getConstraints(): Matcher<View> {
+        return isAssignableFrom(SwipeRefreshLayoutAppBar::class.java)
+    }
+
+    override fun perform(uiController: UiController?, view: View?) {
+        when(view) {
+            is SwipeRefreshLayoutAppBar -> {
+                view.scrollTo(0,0)
+            }
+        }
+    }
+
+}
