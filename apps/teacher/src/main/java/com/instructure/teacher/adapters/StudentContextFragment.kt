@@ -217,13 +217,13 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
             val submitted = onTime + late
 
             // Submitted
-            submittedCount.text = if (submitted <=0) "--" else submitted.toString()
+            submittedCount.text = if (submitted <= 0) "--" else submitted.toString()
 
             // Missing
-            missingCount.text = if (missing <=0) "--" else missing.toString()
+            missingCount.text = if (missing <= 0) "--" else missing.toString()
 
             // Late
-            lateCount.text = if (late <=0) "--" else late.toString()
+            lateCount.text = if (late <= 0) "--" else late.toString()
         } else {
             messageButton.setGone()
             val lastIdx = scrollContent.indexOfChild(additionalInfoContainer)
