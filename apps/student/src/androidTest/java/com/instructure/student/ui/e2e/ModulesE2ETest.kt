@@ -67,7 +67,7 @@ class ModulesE2ETest: StudentTest() {
         // Assert that no modules are present, since none are published
         courseBrowserPage.assertTitleCorrect(course)
         courseBrowserPage.assertTabNotDisplayed("Modules")
-        courseBrowserPage.selectHomeModules()
+        courseBrowserPage.selectHome()
         modulesPage.assertEmptyView()
         Espresso.pressBack() // Back to course browser view
 
