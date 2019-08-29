@@ -64,7 +64,7 @@ class CourseBrowserPage : BasePage(R.id.courseBrowserPage) {
         selectSection(matcher)
     }
 
-    fun selectHomeModules() {
+    fun selectHome() {
         onView(allOf(withId(R.id.homeLabel), isDisplayed())).click()
     }
 
