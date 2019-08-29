@@ -34,11 +34,63 @@ object Analytics {
         firebase.logEvent(eventName, null)
     }
 
+    @JvmStatic
+    fun createAnalyticsBundle(
+            domain: String,
+            userId: String,
+            canvasContextId: String
+    ) : Bundle {
+        return Bundle().apply {
+            putString(AnalyticsParamConstants.DOMAIN_PARAM, domain)
+            putString(AnalyticsParamConstants.USER_CONTEXT_ID, userId)
+            putString(AnalyticsParamConstants.CANVAS_CONTEXT_ID, canvasContextId)
+        }
+    }
+
+    @JvmStatic
+    fun createAssignmentAnalyticsBundle(
+            domain: String,
+            userId: String,
+            canvasContextId: String,
+            assignmentId: Long
+    ): Bundle {
+        return createAnalyticsBundle(domain, userId, canvasContextId).apply {
+            putLong(AnalyticsParamConstants.ASSIGNMENT_ID, assignmentId)
+        }
+    }
+
 }
 
+/**
+ * The naming scheme for the majority of these is found in a google doc so that we can be consistent
+ * across the platforms.
+ */
 object AnalyticsEventConstants {
     const val AUTHENTICATION_DIALOG = "authentication_dialog"
-    const val SUBMISSIONS = "submissions"
+
+    /* ASSIGNMENTS 6.6 */
+    const val ASSIGNMENT_DETAIL_ASSIGNMENT = "assignment_detail_assignment"
+    const val ASSIGNMENT_DETAIL_QUIZ = "assignment_detail_quiz"
+    const val ASSIGNMENT_DETAIL_QUIZLAUNCH = "assignment_detail_quizlaunch"
+    const val ASSIGNMENT_DETAIL_DISCUSSION = "assignment_detail_discussion"
+    const val ASSIGNMENT_DETAIL_DISCUSSIONLAUNCH = "assignment_detail_discussionlaunch"
+    const val ASSIGNMENT_SUBMIT_SELECTED = "assignment_submit_selected"
+    const val ASSIGNMENT_LAUNCHLTI_SELECTED = "assignment_launchlti_selected"
+    const val SUBMIT_FILEUPLOAD_SELECTED = "submit_fileupload_selected"
+    const val SUBMIT_TEXTENTRY_SELECTED = "submit_textentry_selected"
+    const val SUBMIT_MEDIARECORDING_SELECTED = "submit_mediarecording_selected"
+    const val SUBMIT_ARC_SELECTED = "submit_arc_selected"
+    const val SUBMISSION_CELL_SELECTED = "submission_cell_selected"
+    const val SUBMISSION_COMMENTS_SELECTED = "assignment_submit_selected"
+    const val SUBMISSION_COMMENTS_TEXT_REPLY = "submission_comments_text_reply"
+    const val SUBMISSION_COMMENTS_MEDIA_REPLY = "submission_comments_media_reply"
+    const val SUBMISSION_RUBRIC_SELECTED = "submission_rubric_selected"
+    const val SUBMISSION_FILES_SELECTED = "submission_files_selected"
+    const val SUBMISSION_ANNOTATION_SELECTED = "SUBMISSION_RUBRIC_SELECTED"
+    const val SUBMIT_FILEUPLOAD_FAILED = "submit_fileupload_failed"
+    const val SUBMIT_FILEUPLOAD_SUCCEEDED = "submit_fileupload_succeeded"
+    const val UNSUPPORTED_SUBMISSION_CONTENT = "unsupported_submission_content"
+
 }
 
 object AnalyticsParamConstants {

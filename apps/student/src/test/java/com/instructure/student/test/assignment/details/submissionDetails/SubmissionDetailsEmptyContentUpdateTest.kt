@@ -213,28 +213,6 @@ class SubmissionDetailsEmptyContentUpdateTest : Assert() {
     }
 
     @Test
-    fun `SubmissionTypeClicked event results in ShowCreateSubmissionView effect`() {
-        val submissionType = Assignment.SubmissionType.ONLINE_UPLOAD
-        val submissionTypes = listOf("online_upload")
-        val assignmentCopy = assignment.copy(submissionTypesRaw = submissionTypes)
-        val givenModel = initModel.copy(assignment = assignmentCopy)
-        updateSpec
-            .given(givenModel)
-            .whenEvent(SubmissionDetailsEmptyContentEvent.SubmissionTypeClicked(submissionType))
-            .then(
-                assertThatNext(
-                    matchesEffects<SubmissionDetailsEmptyContentModel, SubmissionDetailsEmptyContentEffect>(
-                        SubmissionDetailsEmptyContentEffect.ShowCreateSubmissionView(
-                            submissionType,
-                            course,
-                            assignmentCopy
-                        )
-                    )
-                )
-            )
-    }
-
-    @Test
     fun `SendAudioRecordingClicked with valid file results in UploadMediaSubmission effect`() {
         val file = File("Instructure")
         val model = initModel.copy(assignment = assignment)

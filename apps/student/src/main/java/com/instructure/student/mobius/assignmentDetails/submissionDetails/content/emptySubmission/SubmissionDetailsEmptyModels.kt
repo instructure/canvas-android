@@ -34,7 +34,6 @@ sealed class SubmissionDetailsEmptyContentEvent {
     data class SendMediaFile(val uri: Uri) : SubmissionDetailsEmptyContentEvent()
     data class StoreVideoUri(val uri: Uri?) : SubmissionDetailsEmptyContentEvent()
     data class SendAudioRecordingClicked(val file: File?) : SubmissionDetailsEmptyContentEvent()
-    data class SubmissionTypeClicked(val submissionType: Assignment.SubmissionType) : SubmissionDetailsEmptyContentEvent()
     object SubmissionStarted : SubmissionDetailsEmptyContentEvent()
 }
 

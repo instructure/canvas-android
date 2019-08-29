@@ -17,9 +17,10 @@
 package com.instructure.student.mobius.assignmentDetails
 
 import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.utils.mapToAttachment
-import com.instructure.canvasapi2.utils.toApiString
+import com.instructure.canvasapi2.models.Quiz
+import com.instructure.canvasapi2.utils.*
 import com.instructure.student.Submission
+import com.instructure.student.analytics.logAssignmentSubmitClicked
 import com.instructure.student.mobius.common.ui.UpdateInit
 import com.spotify.mobius.First
 import com.spotify.mobius.Next
@@ -37,12 +38,7 @@ class AssignmentDetailsUpdate : UpdateInit<AssignmentDetailsModel, AssignmentDet
         AssignmentDetailsEvent.SubmitAssignmentClicked -> {
             // If a user is trying to submit something to an assignment and the assignment is null, something is terribly wrong.
             val submissionTypes = model.assignmentResult!!.dataOrThrow.getSubmissionTypes()
-            when {
-                model.assignmentResult.dataOrNull!!.turnInType == Assignment.TurnInType.QUIZ -> Next.dispatch<AssignmentDetailsModel, AssignmentDetailsEffect>(setOf(AssignmentDetailsEffect.ShowQuizStartView(model.quizResult!!.dataOrThrow, model.course)))
-                model.assignmentResult.dataOrNull!!.turnInType == Assignment.TurnInType.DISCUSSION -> Next.dispatch<AssignmentDetailsModel, AssignmentDetailsEffect>(setOf(AssignmentDetailsEffect.ShowDiscussionDetailView(model.assignmentResult.dataOrThrow.discussionTopicHeader!!.id, model.course)))
-                submissionTypes.size == 1 && !(submissionTypes.contains(Assignment.SubmissionType.ONLINE_UPLOAD) && model.isStudioEnabled) -> Next.dispatch<AssignmentDetailsModel, AssignmentDetailsEffect>(setOf(AssignmentDetailsEffect.ShowCreateSubmissionView(submissionTypes.first(), model.course, model.assignmentResult.dataOrThrow, model.assignmentResult.dataOrThrow.url)))
-                else -> Next.dispatch<AssignmentDetailsModel, AssignmentDetailsEffect>(setOf(AssignmentDetailsEffect.ShowSubmitDialogView(model.assignmentResult.dataOrThrow, model.course, model.isStudioEnabled, model.studioLTIToolResult?.dataOrNull)))
-            }
+            Next.dispatch<AssignmentDetailsModel, AssignmentDetailsEffect>(getSubmitClickedEffect(model.assignmentResult, model, submissionTypes))
         }
         AssignmentDetailsEvent.ViewSubmissionClicked -> {
             Next.dispatch(setOf(AssignmentDetailsEffect.ShowSubmissionView(model.assignmentId, model.course)))
@@ -114,19 +110,23 @@ class AssignmentDetailsUpdate : UpdateInit<AssignmentDetailsModel, AssignmentDet
         }
         is AssignmentDetailsEvent.DataLoaded -> {
             val dbSubmission = dbSubmissionIfNewest(event.submission, event.assignmentResult?.dataOrNull?.submission)
-            Next.next(model.copy(
-                isLoading = false,
-                assignmentResult = event.assignmentResult,
-                isStudioEnabled = event.isStudioEnabled,
-                studioLTIToolResult = event.studioLTIToolResult,
-                ltiTool = event.ltiToolResult,
-                quizResult = event.quizResult,
-                databaseSubmission = dbSubmission
-            ))
-        }
-        is AssignmentDetailsEvent.SubmissionTypeClicked -> {
-            // If a user is trying to submit something to an assignment and the assignment is null, something is terribly wrong.
-            Next.dispatch(setOf(AssignmentDetailsEffect.ShowCreateSubmissionView(event.submissionType, model.course, model.assignmentResult!!.dataOrThrow)))
+            Next.next<AssignmentDetailsModel, AssignmentDetailsEffect>(
+                    model.copy(
+                            isLoading = false,
+                            assignmentResult = event.assignmentResult,
+                            isStudioEnabled = event.isStudioEnabled,
+                            studioLTIToolResult = event.studioLTIToolResult,
+                            ltiTool = event.ltiToolResult,
+                            quizResult = event.quizResult,
+                            databaseSubmission = dbSubmission
+                    ),
+                    setOf(
+                            AssignmentDetailsEffect.LogAnalytics(
+                                    getAnalyticsString(event.assignmentResult, event.quizResult),
+                                    Analytics.createAssignmentAnalyticsBundle()
+                            )
+                    )
+            )
         }
         is AssignmentDetailsEvent.InternalRouteRequested -> {
             val effect = AssignmentDetailsEffect.RouteInternally(
@@ -140,6 +140,44 @@ class AssignmentDetailsUpdate : UpdateInit<AssignmentDetailsModel, AssignmentDet
             Next.next(model.copy(videoFileUri = event.uri))
         }
         AssignmentDetailsEvent.AddBookmarkClicked -> Next.dispatch(setOf(AssignmentDetailsEffect.ShowBookmarkDialog))
+    }
+
+    private fun getSubmitClickedEffect(assignmentResult: DataResult<Assignment>, model: AssignmentDetailsModel, submissionTypes: List<Assignment.SubmissionType>) : Set<AssignmentDetailsEffect> {
+        return setOf(when {
+            assignmentResult.dataOrNull!!.turnInType == Assignment.TurnInType.QUIZ -> {
+                AssignmentDetailsEffect.ShowQuizStartView(model.quizResult!!.dataOrThrow, model.course)
+            }
+            assignmentResult.dataOrNull!!.turnInType == Assignment.TurnInType.DISCUSSION -> {
+                AssignmentDetailsEffect.ShowDiscussionDetailView(
+                        assignmentResult.dataOrThrow.discussionTopicHeader!!.id,
+                        model.course
+                )
+            }
+            submissionTypes.size == 1 && !(submissionTypes.contains(Assignment.SubmissionType.ONLINE_UPLOAD) && model.isStudioEnabled) -> {
+                AssignmentDetailsEffect.ShowCreateSubmissionView(
+                        submissionTypes.first(),
+                        model.course,
+                        assignmentResult.dataOrThrow,
+                        assignmentResult.dataOrThrow.url
+                )
+            }
+            else -> {
+                AssignmentDetailsEffect.ShowSubmitDialogView(
+                        assignmentResult.dataOrThrow,
+                        model.course,
+                        model.isStudioEnabled,
+                        model.studioLTIToolResult?.dataOrNull
+                )
+            }
+        })
+    }
+
+    private fun getAnalyticsString(assignmentResult: DataResult<Assignment>?, quizResult: DataResult<Quiz>?): String {
+        return when {
+            quizResult != null -> AnalyticsEventConstants.ASSIGNMENT_DETAIL_QUIZ
+            assignmentResult?.dataOrNull?.discussionTopicHeader != null -> AnalyticsEventConstants.ASSIGNMENT_DETAIL_DISCUSSION
+            else -> AnalyticsEventConstants.ASSIGNMENT_DETAIL_ASSIGNMENT
+        }
     }
 
     private fun dbSubmissionIfNewest(dbSubmission: Submission?, apiSubmission: com.instructure.canvasapi2.models.Submission?): Submission? {

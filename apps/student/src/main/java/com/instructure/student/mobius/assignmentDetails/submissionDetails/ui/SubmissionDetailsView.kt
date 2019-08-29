@@ -269,14 +269,15 @@ class SubmissionDetailsView(
             SubmissionDetailsContentType.OnPaperContent -> SubmissionMessageFragment.newInstance(title = R.string.noOnlineSubmissions, subtitle = R.string.onPaperContentMessage)
             is SubmissionDetailsContentType.UnsupportedContent -> {
                 // Users shouldn't get here, but we'll handle the case and send up some analytics if they do
-                val bundle = Bundle().apply {
-                    putString(AnalyticsParamConstants.DOMAIN_PARAM, ApiPrefs.fullDomain)
-                    putString(AnalyticsParamConstants.USER_CONTEXT_ID, ApiPrefs.user?.contextId)
-                    putString(AnalyticsParamConstants.CANVAS_CONTEXT_ID, canvasContext.contextId)
-                    putLong(AnalyticsParamConstants.ASSIGNMENT_ID, type.assignmentId)
-                }
-
-                Analytics.logEvent(AnalyticsEventConstants.SUBMISSIONS, bundle)
+                Analytics.logEvent(
+                    AnalyticsEventConstants.UNSUPPORTED_SUBMISSION_CONTENT,
+                    Analytics.createAssignmentAnalyticsBundle(
+                        ApiPrefs.fullDomain,
+                        ApiPrefs.user!!.contextId,
+                        canvasContext.contextId,
+                        type.assignmentId
+                    )
+                )
 
                 SubmissionMessageFragment.newInstance(
                     title = R.string.noOnlineSubmissions,
