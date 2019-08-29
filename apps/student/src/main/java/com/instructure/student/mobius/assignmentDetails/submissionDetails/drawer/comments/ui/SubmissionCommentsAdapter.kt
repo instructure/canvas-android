@@ -18,8 +18,8 @@ package com.instructure.student.mobius.assignmentDetails.submissionDetails.drawe
 
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.Submission
-import com.instructure.student.adapter.BasicItemCallback
-import com.instructure.student.adapter.BasicRecyclerAdapter
+import com.instructure.pandautils.adapters.BasicItemCallback
+import com.instructure.pandautils.adapters.BasicRecyclerAdapter
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.CommentItemState
 
 interface SubmissionCommentsAdapterCallback : BasicItemCallback {

@@ -27,7 +27,7 @@ import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.student.PendingSubmissionComment
 import com.instructure.student.R
-import com.instructure.student.adapter.BasicItemBinder
+import com.instructure.pandautils.adapters.BasicItemBinder
 import com.instructure.student.db.Db
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.CommentItemState
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.ui.views.CommentDirection
