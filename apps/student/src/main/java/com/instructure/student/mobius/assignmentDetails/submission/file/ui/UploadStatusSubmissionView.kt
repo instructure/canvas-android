@@ -18,7 +18,6 @@ package com.instructure.student.mobius.assignmentDetails.submission.file.ui
 
 import android.app.Activity
 import android.app.AlertDialog
-import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.view.LayoutInflater
@@ -26,15 +25,13 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.instructure.pandautils.services.FileUploadService
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
-import com.instructure.student.adapter.BasicItemBinder
-import com.instructure.student.adapter.BasicItemCallback
-import com.instructure.student.adapter.BasicRecyclerAdapter
+import com.instructure.pandautils.adapters.BasicItemBinder
+import com.instructure.pandautils.adapters.BasicItemCallback
+import com.instructure.pandautils.adapters.BasicRecyclerAdapter
 import com.instructure.student.mobius.assignmentDetails.submission.file.UploadStatusSubmissionEvent
 import com.instructure.student.mobius.common.ui.MobiusView
-import com.instructure.student.mobius.common.ui.SubmissionService
 import com.spotify.mobius.functions.Consumer
 import kotlinx.android.synthetic.main.fragment_upload_status_submission.*
 import kotlinx.android.synthetic.main.fragment_upload_status_submission.toolbar
