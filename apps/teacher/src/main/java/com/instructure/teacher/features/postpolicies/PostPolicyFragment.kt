@@ -57,6 +57,7 @@ class PostPolicyFragment : Fragment() {
     }
 
     private fun applyTheme() {
+        postPolicyToolbar.subtitle = assignment.name
         postPolicyToolbar.setupBackButtonAsBackPressedOnly(this)
 
         ViewStyler.themeToolbar(requireActivity(), postPolicyToolbar, Color.WHITE, Color.BLACK)
