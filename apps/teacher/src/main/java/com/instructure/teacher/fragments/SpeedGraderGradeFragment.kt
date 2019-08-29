@@ -15,10 +15,22 @@
  */
 package com.instructure.teacher.fragments
 
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.Assignee
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.GroupAssignee
+import com.instructure.canvasapi2.models.StudentAssignee
+import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.fragments.BasePresenterFragment
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.NullableParcelableArg
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.onClickWithRequireNetwork
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.toast
 import com.instructure.teacher.R
 import com.instructure.teacher.dialog.CustomizeGradeDialog
 import com.instructure.teacher.dialog.PassFailGradeDailog
@@ -80,6 +92,9 @@ class SpeedGraderGradeFragment : BasePresenterFragment<SpeedGraderGradePresenter
     }
 
     override fun updateGradeText() {
+        // Show 'grade hidden' icon if the submission is graded but there is no postAt date
+        hiddenIcon.setVisible(presenter.submission?.isGradePosted)
+
         val grade = presenter.assignment.getGradeText(presenter.submission, requireContext())
         // Toggle visibility and set text
         if(grade == "null" || grade == "") {
