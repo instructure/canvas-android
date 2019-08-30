@@ -38,6 +38,8 @@ class CanvasAuthenticator : Authenticator {
                 .header(AUTH_HEADER, OAuthAPI.authBearer(ApiPrefs.accessToken))
                 .header(RETRY_HEADER, RETRY_HEADER) // Mark retry to prevent infinite recursion
                 .build()
+        } else {
+            // TODO: Take user back to the landing page
         }
 
         return null // Not a success

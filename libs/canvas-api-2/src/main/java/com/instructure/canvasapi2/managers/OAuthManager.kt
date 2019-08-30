@@ -48,7 +48,7 @@ object OAuthManager {
     fun refreshToken(): DataResult<OAuthTokenResponse> {
         val adapter = RestBuilder()
         val params = RestParams(isForceReadFromNetwork = true)
-        return OAuthAPI.refreshAccessToken(adapter, params, ApiPrefs.clientId, ApiPrefs.clientSecret)
+        return OAuthAPI.refreshAccessToken(adapter, params)
     }
 
     @JvmStatic
