@@ -23,6 +23,8 @@ import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.AuthenticatedSession
 import com.instructure.canvasapi2.models.OAuthToken
 import com.instructure.canvasapi2.models.OAuthTokenResponse
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Logger
 
 object OAuthManager {
@@ -43,6 +45,13 @@ object OAuthManager {
     }
 
     @JvmStatic
+    fun refreshToken(): DataResult<OAuthTokenResponse> {
+        val adapter = RestBuilder()
+        val params = RestParams(isForceReadFromNetwork = true)
+        return OAuthAPI.refreshAccessToken(adapter, params)
+    }
+
+    @JvmStatic
     fun getAuthenticatedSession(targetUrl: String, callback: StatusCallback<AuthenticatedSession>) {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = true)
@@ -57,5 +66,4 @@ object OAuthManager {
         Logger.d("targetURL to be authed: $targetUrl")
         return OAuthAPI.getAuthenticatedSessionSynchronous(targetUrl, params, adapter)
     }
-
 }

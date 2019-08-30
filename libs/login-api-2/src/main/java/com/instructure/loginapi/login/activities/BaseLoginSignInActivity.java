@@ -39,12 +39,18 @@ import android.webkit.WebViewClient;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.Toolbar;
+
 import com.instructure.canvasapi2.RequestInterceptor;
 import com.instructure.canvasapi2.StatusCallback;
 import com.instructure.canvasapi2.managers.OAuthManager;
 import com.instructure.canvasapi2.managers.UserManager;
 import com.instructure.canvasapi2.models.AccountDomain;
-import com.instructure.canvasapi2.models.OAuthToken;
 import com.instructure.canvasapi2.models.OAuthTokenResponse;
 import com.instructure.canvasapi2.models.User;
 import com.instructure.canvasapi2.utils.ApiPrefs;
@@ -65,12 +71,6 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.appcompat.widget.Toolbar;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -291,6 +291,8 @@ public abstract class BaseLoginSignInActivity extends AppCompatActivity implemen
                             ApiPrefs.setDomain(url);
                             mClientId = clientIdEditText.getText().toString();
                             mClientSecret = clientSecretEditText.getText().toString();
+                            ApiPrefs.setClientId(mClientId);
+                            ApiPrefs.setClientSecret(mClientSecret);
                             buildAuthenticationUrl(protocolEditText.getText().toString(), accountDomain, mClientId, false);
                             mWebView.loadUrl(mAuthenticationURL, getHeaders());
                         }
@@ -365,8 +367,11 @@ public abstract class BaseLoginSignInActivity extends AppCompatActivity implemen
                 }
 
                 mAccountDomain.setDomain(domain);
+
                 mClientId = domainVerificationResult.getClient_id();
                 mClientSecret = domainVerificationResult.getClient_secret();
+                ApiPrefs.setClientId(mClientId);
+                ApiPrefs.setClientSecret(mClientSecret);
 
                 //Get the protocol
                 final String apiProtocol = domainVerificationResult.getProtocol();

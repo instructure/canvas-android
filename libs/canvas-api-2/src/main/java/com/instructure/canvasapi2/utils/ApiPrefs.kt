@@ -63,6 +63,12 @@ object ApiPrefs : PrefManager(PREFERENCE_FILE_NAME) {
     var userAgent by StringPref("", "user_agent")
 
     @JvmStatic
+    var clientId by StringPref("", "client_id")
+
+    @JvmStatic
+    var clientSecret by StringPref("", "client_secret")
+
+    @JvmStatic
     var perPageCount = 100
 
     @JvmStatic
