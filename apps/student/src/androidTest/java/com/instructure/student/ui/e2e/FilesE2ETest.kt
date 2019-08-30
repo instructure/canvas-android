@@ -52,10 +52,9 @@ class FilesE2ETest: StudentTest() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    @Stub
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.FILES, TestCategory.E2E, true)
+    @TestMetaData(Priority.P0, FeatureCategory.FILES, TestCategory.E2E, false)
     fun testFilesE2E() {
 
         // Seed basic data
