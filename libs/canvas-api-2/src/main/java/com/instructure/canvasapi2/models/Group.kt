@@ -51,7 +51,9 @@ data class Group(
         val storageQuotaMb: Long = 0,
         @SerializedName("is_favorite")
         var isFavorite: Boolean = false,
-        var concluded: Boolean = false
+        var concluded: Boolean = false,
+        @SerializedName("can_access")
+        val canAccess: Boolean? = null
 ) : CanvasContext() {
     override val comparisonString get() = name
     override val type get() = CanvasContext.Type.GROUP
