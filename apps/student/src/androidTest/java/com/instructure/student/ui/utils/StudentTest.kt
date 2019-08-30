@@ -53,4 +53,7 @@ abstract class StudentTest : CanvasTest() {
     val peopleListPage = PeopleListPage()
     val personDetailsPage = PersonDetailsPage()
     val modulesPage = ModulesPage()
+    val syllabusPage = SyllabusPage()
+    val fileListPage = FileListPage()
+    val discussionListPage = DiscussionListPage()
 }

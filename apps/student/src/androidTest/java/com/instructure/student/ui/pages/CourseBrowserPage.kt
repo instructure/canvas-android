@@ -64,10 +64,19 @@ class CourseBrowserPage : BasePage(R.id.courseBrowserPage) {
         selectSection(matcher)
     }
 
+    fun selectDiscussions() {
+        val matcher = withText("Discussions")
+        selectSection(matcher)
+    }
+
+    fun selectSyllabus() {
+        val matcher = withText("Syllabus")
+        selectSection(matcher)
+    }
+
     fun selectHome() {
         onView(allOf(withId(R.id.homeLabel), isDisplayed())).click()
     }
-
 
     private fun selectSection(matcher: Matcher<View>) {
         // Scroll RecyclerView item into view, if necessary
