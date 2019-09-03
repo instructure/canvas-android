@@ -21,20 +21,13 @@
     android:layout_height="wrap_content"
     android:background="?android:selectableItemBackground">
 
-    <View
-        android:id="@+id/publishedBar"
-        android:layout_width="3dp"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="4dp"
-        android:layout_marginTop="4dp"
-        android:background="@color/publishedGreen"/>
-
-    <com.instructure.teacher.view.PublishedStatusIconView
+    <ImageView
         android:id="@+id/assignmentIcon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="12dp"
+        android:src="@drawable/vd_assignment"
+        android:layout_marginTop="14dp"
         tools:ignore="ContentDescription"/>
 
     <LinearLayout
@@ -42,7 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginStart="24dp"
+        android:layout_marginStart="32dp"
         android:layout_marginTop="12dp"
         android:orientation="vertical">
 

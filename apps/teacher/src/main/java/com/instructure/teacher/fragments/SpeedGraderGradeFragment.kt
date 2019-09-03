@@ -80,6 +80,10 @@ class SpeedGraderGradeFragment : BasePresenterFragment<SpeedGraderGradePresenter
     }
 
     override fun updateGradeText() {
+        // Show 'grade hidden' icon if the submission is graded but there is no postAt date
+        val showHiddenIcon = presenter.submission?.let { (it.isGraded || it.excused) && it.postedAt == null } ?: false
+        hiddenIcon.setVisible(showHiddenIcon)
+
         val grade = presenter.assignment.getGradeText(presenter.submission, requireContext())
         // Toggle visibility and set text
         if(grade == "null" || grade == "") {

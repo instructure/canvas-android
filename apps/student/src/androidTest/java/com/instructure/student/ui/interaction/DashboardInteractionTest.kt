@@ -17,11 +17,9 @@
 package com.instructure.student.ui.interaction
 
 import androidx.test.espresso.Espresso
-import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addAccountNotification
 import com.instructure.canvas.espresso.mockCanvas.init
-import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
@@ -172,7 +170,7 @@ class DashboardInteractionTest : StudentTest() {
         var tabs = data.courseTabs[course.id]
         assertNotNull("Expected course tabs to be populated", tabs)
         for(tab in tabs!!) {
-            courseBrowserPage.assertTabPresent(tab)
+            courseBrowserPage.assertTabDisplayed(tab)
         }
     }
 

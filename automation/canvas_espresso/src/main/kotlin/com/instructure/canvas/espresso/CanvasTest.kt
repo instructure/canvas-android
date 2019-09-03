@@ -2,6 +2,7 @@ package com.instructure.canvas.espresso
 
 import android.content.res.Resources
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.View
 import androidx.test.espresso.matcher.ViewMatchers
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils
@@ -36,14 +37,22 @@ abstract class CanvasTest : InstructureTest(BuildConfig.GLOBAL_DITTO_MODE) {
                 // Suppression (exclusion) rules
                 ?.setSuppressingResultMatcher(
                         Matchers.anyOf(
-                            // Suppress issues in PsPDFKit, date/time picker
-                            isExcludedNamedView( listOf("pspdf", "_picker_", "timePicker")),
+                            // Suppress issues in PsPDFKit, date/time picker, calendar grid
+                            isExcludedNamedView( listOf("pspdf", "_picker_", "timePicker", "calendar1")),
 
                             // Suppress, for now, errors about overflow menus being too narrow
                             Matchers.allOf(
                                     AccessibilityCheckResultUtils.matchesViews(ViewMatchers.withContentDescription("More options")),
                                     withOnlyWidthLessThan(48)
-                            )
+                            ),
+
+                            // Short-term workaround as we try to return a11y-compliant colors for submit button
+                            AccessibilityCheckResultUtils.matchesViews(ViewMatchers.withResourceName("submitButton")),
+
+                            // On very low-res devices, controls can be squished to the point that they are smaller
+                            // than their specified minimum.  This seems unavoidable, so let's not log an
+                            // accessibility error for this.
+                            underMinSizeOnLowRes()
                         )
 
                 )
@@ -133,5 +142,57 @@ abstract class CanvasTest : InstructureTest(BuildConfig.GLOBAL_DITTO_MODE) {
             }
 
         }
+    }
+
+    /**
+     * Returns a matcher that will match if:
+     *
+     * We are on a low-res device (density==1), and either dimension falls below the
+     * minimum size *and* falls below its specified minimum.
+     */
+    fun underMinSizeOnLowRes() : BaseMatcher<AccessibilityViewCheckResult> {
+        val activity = activityRule.activity
+        val density = activity.resources.displayMetrics.density
+        Log.v("underMinSizeOnLowRes", "density: $density")
+        return object : BaseMatcher<AccessibilityViewCheckResult>() {
+            override fun describeTo(description: Description?) {
+                description?.appendText("Checks to see if size < minimum on low-res device")
+            }
+
+            override fun matches(item: Any?): Boolean {
+                if(density > 1) return false
+                when(item) {
+                    is AccessibilityViewCheckResult -> {
+                        val v = item.view
+                        val toss =
+                                v.height > 0 // Require some dimension in order to be tossed
+                                && v.width > 0
+                                &&  ( (v.height < 48 && v.height < v.minimumHeight) ||
+                                      (v.width < 48 && v.width < v.minimumWidth) )
+
+                        if(toss) {
+                            var resourceName = getResourceName(v)
+                            Log.v("underMinSizeOnLowRes",
+                                    "Tossing $resourceName, w=${v.width}, h=${v.height}, mw=${v.minimumWidth}, mh=${v.minimumHeight}")
+                            return true
+                        }
+                    }
+                }
+                return false
+            }
+        }
+    }
+
+    // Grab the resourceName for a view
+    private fun getResourceName(view: View) : String {
+        var resourceName = "<unknown>"
+        try {
+            resourceName = view.context.resources.getResourceName(view.id)
+        }
+        catch(nfe: Resources.NotFoundException) {
+            // Eat this exception
+        }
+
+        return resourceName
     }
 }

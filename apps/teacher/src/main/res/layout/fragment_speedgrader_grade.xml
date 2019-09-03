@@ -81,18 +81,30 @@
                     tools:text="Calculated by rubric"
                     tools:visibility="gone"/>
 
+                <ImageView
+                    android:id="@+id/hiddenIcon"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_alignBottom="@+id/gradeValueText"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginStart="8dp"
+                    android:contentDescription="@string/hidden"
+                    android:src="@drawable/vd_grade_hidden"
+                    android:visibility="gone" />
+
                 <TextView
                     android:id="@+id/gradeValueText"
                     style="@style/TextFont.Medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
+                    android:layout_alignWithParentIfMissing="true"
+                    android:layout_toStartOf="@+id/hiddenIcon"
                     android:ellipsize="end"
                     android:focusable="true"
                     android:maxLines="1"
                     android:textSize="20sp"
                     android:visibility="gone"
-                    tools:text="Excusasdfsdfsdfdsfad"/>
+                    tools:text="Excusasdfsdfsdfdsfad" />
 
                 <ImageView
                     android:id="@+id/addGradeIcon"

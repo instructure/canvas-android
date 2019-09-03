@@ -1047,6 +1047,9 @@
     <string name="postPolicyAllHiddenMessage">All grades are currently hidden.</string>
     <string name="postPolicyAllPostedTitle">All Posted</string>
     <string name="postPolicyAllPostedMessage">All grades are currently posted.</string>
+    <string name="gradeBeforePosting">Grade before posting</string>
+    <string name="gradeAfterPosting">Grade after posting</string>
+    <string name="gradeOverride">Grade override</string>
 
     <!-- Floating Recording View Strings -->
     <string name="recordingTimerDefault">00:00:00</string>
@@ -1084,5 +1087,4 @@
     <string name="a11y_letterGrade">%s.</string>
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
-
 </resources>

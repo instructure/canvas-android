@@ -14,14 +14,6 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.ui.binders
+package com.instructure.teacher.features.postpolicies.ui
 
-import com.instructure.student.R
-import com.instructure.pandautils.adapters.BasicItemBinder
-import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.RubricListData
-import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.ui.RubricListCallback
-
-class RubricListEmptyBinder : BasicItemBinder<RubricListData.Empty, RubricListCallback>() {
-    override val layoutResId = R.layout.adapter_rubric_empty
-    override val bindBehavior = NoBind()
-}
+sealed class PostGradeViewState

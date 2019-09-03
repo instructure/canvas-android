@@ -16,7 +16,7 @@
  */
 @file:Suppress("unused")
 
-package com.instructure.student.adapter
+package com.instructure.pandautils.adapters
 
 import android.content.Context
 import android.view.LayoutInflater

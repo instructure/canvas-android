@@ -17,7 +17,7 @@
 package com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.ui.binders
 
 import com.instructure.student.R
-import com.instructure.student.adapter.BasicItemBinder
+import com.instructure.pandautils.adapters.BasicItemBinder
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.RubricListData
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.ui.RubricListCallback
 import kotlinx.android.synthetic.main.adapter_rubric_grade.view.*

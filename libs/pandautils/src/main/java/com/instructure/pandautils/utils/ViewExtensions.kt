@@ -85,8 +85,8 @@ inline fun View.onLongClick(noinline l: (v: View?) -> Boolean) {
 
 /** Set this view's visibility to View.VISIBLE **/
 @Suppress("NOTHING_TO_INLINE")
-inline fun <T : View> T.setVisible(isVisible: Boolean? = null): T = apply {
-    visibility = if (isVisible != false) View.VISIBLE else View.GONE
+inline fun <T : View> T.setVisible(isVisible: Boolean = true): T = apply {
+    visibility = if (isVisible) View.VISIBLE else View.GONE
 }
 
 /** Set this view's visibility to View.VISIBLE **/
