@@ -53,17 +53,22 @@ object GradeBinder : BaseBinder() {
 
         holder.points.setTextColor(ThemePrefs.brandColor)
 
-        // Don't care about assignment.muted, the API should restrict our grade if we shouldn't see it
-        val submission = assignment.submission
-        if (submission != null && Const.PENDING_REVIEW == submission.workflowState) {
+        if ((assignment.muted && assignment.submission?.postedAt == null) && !isEdit) {
+            // Mute that score
             holder.points.setGone()
-            holder.icon.setNestedIcon(R.drawable.vd_published, courseColor)
         } else {
-            holder.points.setVisible()
-            val (grade, contentDescription) = getGrade(assignment, submission, context)
-            holder.points.text = grade
-            holder.points.contentDescription = contentDescription ?: grade
+            val submission = assignment.submission
+            if (submission != null && Const.PENDING_REVIEW == submission.workflowState) {
+                holder.points.setGone()
+                holder.icon.setNestedIcon(R.drawable.vd_published, courseColor)
+            } else {
+                holder.points.setVisible()
+                val (grade, contentDescription) = getGrade(assignment, submission, context)
+                holder.points.text = grade
+                holder.points.contentDescription = contentDescription ?: grade
+            }
         }
+
 
         // Configures whatIf editing boxes and listener for dialog
         holder.edit.setVisible(isEdit)
