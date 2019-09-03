@@ -100,12 +100,12 @@ class PostGradeEffectHandlerTest : Assert() {
         val submissions = emptyList<Submission>()
 
         mockkObject(SectionManager)
-        every { SectionManager.getAllSectionsForCourseAsync(courseId, false) } returns mockk {
+        every { SectionManager.getAllSectionsForCourseAsync(courseId, true) } returns mockk {
             coEvery { await() } returns DataResult.Fail(Failure.Exception(Throwable()))
         }
 
         mockkObject(AssignmentManager)
-        every { AssignmentManager.getAllSubmissionsForAssignmentAsync(courseId, assignmentId, false) } returns mockk {
+        every { AssignmentManager.getAllSubmissionsForAssignmentAsync(courseId, assignmentId, true) } returns mockk {
             coEvery { await() } returns DataResult.Fail(Failure.Exception(Throwable()))
         }
 
