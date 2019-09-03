@@ -609,12 +609,12 @@
 
                             <ImageView
                                 android:id="@+id/attachmentIcon"
-                                android:layout_width="32dp"
-                                android:layout_height="32dp"
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
                                 android:layout_gravity="center_vertical"
                                 android:background="?attr/selectableItemBackground"
                                 android:contentDescription="@string/attachment"
-                                android:padding="6dp"
+                                android:padding="14dp"
                                 android:scaleType="centerInside"
                                 android:visibility="gone"
                                 app:srcCompat="@drawable/vd_attachment" />
@@ -627,7 +627,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
                             android:layout_marginEnd="8dp"
-                            android:minHeight="24dp"
+                            android:minHeight="48dp"
                             android:scrollbars="none"
                             android:focusable="false"
                             android:focusableInTouchMode="false"/>

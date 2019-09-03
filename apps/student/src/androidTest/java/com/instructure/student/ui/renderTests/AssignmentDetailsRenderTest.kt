@@ -18,7 +18,15 @@ package com.instructure.student.ui.renderTests
 
 import android.graphics.Color
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.DiscussionParticipant
+import com.instructure.canvasapi2.models.DiscussionTopicHeader
+import com.instructure.canvasapi2.models.Quiz
+import com.instructure.canvasapi2.models.RemoteFile
+import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.toApiString
@@ -669,6 +677,8 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
             loopMod = { it.effectRunner { emptyEffectRunner } }
         }
         activityRule.activity.loadFragment(fragment)
+
+        meaninglessSwipe() // Do-nothing swipe that triggers a11y checks
     }
 
 }
