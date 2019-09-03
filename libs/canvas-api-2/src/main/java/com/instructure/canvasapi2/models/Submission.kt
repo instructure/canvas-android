@@ -89,7 +89,6 @@ data class Submission(
 
     val isWithoutGradedSubmission: Boolean get() = !isGraded && submissionType == null
     val isGraded: Boolean get() = grade != null
-    val isGradePosted: Boolean get() = (isGraded || excused) && postedAt != null
 
     /* Submissions will have dummy submissions if they grade an assignment with no actual submissions. We want to see if any are not dummy submissions */
     fun hasRealSubmission() = submissionHistory.any { it?.submissionType != null }
