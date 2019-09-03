@@ -30,7 +30,6 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
-import com.instructure.teacher.features.postpolicies.ui.HideGradeFragment
 import com.instructure.teacher.features.postpolicies.ui.PostGradeFragment
 import com.instructure.teacher.utils.setupBackButtonAsBackPressedOnly
 import kotlinx.android.synthetic.main.fragment_post_policy_settings.*
@@ -81,8 +80,8 @@ private class PostPolicyPagerAdapter(val course: Course, val assignment: Assignm
 
     override fun getItem(position: Int): Fragment {
         return when (position) {
-            0 -> PostGradeFragment.newInstance(course, assignment)
-            1 -> HideGradeFragment.newInstance(course, assignment)
+            0 -> PostGradeFragment.newInstance(assignment, false)
+            1 -> PostGradeFragment.newInstance(assignment, true)
             else -> throw IndexOutOfBoundsException("No post policy adapter item at position $position")
         }
     }

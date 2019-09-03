@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.models.Section
 import com.instructure.canvasapi2.models.Submission
 
 sealed class PostGradeEvent {
+    object GradesPosted : PostGradeEvent()
     object PostGradesClicked : PostGradeEvent()
     object SpecificSectionsToggled : PostGradeEvent()
     data class GradedOnlySelected(val gradedOnly: Boolean) : PostGradeEvent()
@@ -32,12 +33,14 @@ sealed class PostGradeEffect {
     data class LoadData(val assignment: Assignment) : PostGradeEffect()
     data class HideGrades(val assignmentId: Long, val sectionIds: List<String>) : PostGradeEffect()
     data class PostGrades(val assignmentId: Long, val sectionIds: List<String>, val gradedOnly: Boolean) : PostGradeEffect()
+    data class ShowGradesPosted(val isHidingGrades: Boolean) : PostGradeEffect()
 }
 
 data class PostGradeModel(
     val assignment: Assignment,
     val isHidingGrades: Boolean,
     val isLoading: Boolean = false,
+    val isProcessing: Boolean = false,
     val postGradedOnly: Boolean = false,
     val specificSectionsVisible: Boolean = false,
     val sections: List<PostSection> = emptyList(),
@@ -46,5 +49,6 @@ data class PostGradeModel(
 
 data class PostSection(
     val section: Section,
-    val selected: Boolean = false
+    val selected: Boolean = false,
+    val courseColor: Int = 0
 )

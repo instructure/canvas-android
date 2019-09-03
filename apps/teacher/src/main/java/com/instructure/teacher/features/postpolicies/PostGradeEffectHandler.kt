@@ -32,13 +32,14 @@ class PostGradeEffectHandler : EffectHandler<PostGradeView, PostGradeEvent, Post
                 is PostGradeEffect.LoadData -> loadData(effect.assignment)
                 is PostGradeEffect.HideGrades -> hideGrades(effect.assignmentId, effect.sectionIds)
                 is PostGradeEffect.PostGrades -> postGrades(effect.assignmentId, effect.sectionIds, effect.gradedOnly)
+                is PostGradeEffect.ShowGradesPosted -> view?.showGradesPosted(effect.isHidingGrades)
             }.exhaustive
         }
     }
 
     private suspend fun loadData(assignment: Assignment) {
-        val sections = SectionManager.getAllSectionsForCourseAsync(assignment.courseId, false)
-        val submissions = AssignmentManager.getAllSubmissionsForAssignmentAsync(assignment.courseId, assignment.id, false)
+        val sections = SectionManager.getAllSectionsForCourseAsync(assignment.courseId, true)
+        val submissions = AssignmentManager.getAllSubmissionsForAssignmentAsync(assignment.courseId, assignment.id, true)
 
         consumer.accept(PostGradeEvent.DataLoaded(sections.await().dataOrNull ?: emptyList(), submissions.await().dataOrNull ?: emptyList()))
     }
@@ -49,6 +50,7 @@ class PostGradeEffectHandler : EffectHandler<PostGradeView, PostGradeEvent, Post
         } else {
             PostPolicyManager.hideGradesForSectionsAsync(assignmentId, sections)
         }
+        consumer.accept(PostGradeEvent.GradesPosted)
     }
 
     private suspend fun postGrades(assignmentId: Long, sections: List<String>, gradedOnly: Boolean) {
@@ -57,5 +59,6 @@ class PostGradeEffectHandler : EffectHandler<PostGradeView, PostGradeEvent, Post
         } else {
             PostPolicyManager.postGradesForSectionsAsync(assignmentId, gradedOnly, sections)
         }
+        consumer.accept(PostGradeEvent.GradesPosted)
     }
 }

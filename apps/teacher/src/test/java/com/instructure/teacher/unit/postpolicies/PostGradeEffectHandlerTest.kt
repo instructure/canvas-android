@@ -74,12 +74,12 @@ class PostGradeEffectHandlerTest : Assert() {
         )
 
         mockkObject(SectionManager)
-        every { SectionManager.getAllSectionsForCourseAsync(courseId, false) } returns mockk {
+        every { SectionManager.getAllSectionsForCourseAsync(courseId, true) } returns mockk {
             coEvery { await() } returns DataResult.Success(sections)
         }
 
         mockkObject(AssignmentManager)
-        every { AssignmentManager.getAllSubmissionsForAssignmentAsync(courseId, assignmentId, false) } returns mockk {
+        every { AssignmentManager.getAllSubmissionsForAssignmentAsync(courseId, assignmentId, true) } returns mockk {
             coEvery { await() } returns DataResult.Success(submissions)
         }
 
@@ -131,7 +131,10 @@ class PostGradeEffectHandlerTest : Assert() {
         coVerify(timeout = 100) {
             PostPolicyManager.hideGradesAsync(assignmentId)
         }
-        confirmVerified(PostPolicyManager)
+        verify(timeout = 100) {
+            consumer.accept(PostGradeEvent.GradesPosted)
+        }
+        confirmVerified(PostPolicyManager, consumer)
     }
 
     @Test
@@ -148,7 +151,10 @@ class PostGradeEffectHandlerTest : Assert() {
         coVerify(timeout = 100) {
             PostPolicyManager.hideGradesForSectionsAsync(assignmentId, sections)
         }
-        confirmVerified(PostPolicyManager)
+        verify(timeout = 100) {
+            consumer.accept(PostGradeEvent.GradesPosted)
+        }
+        confirmVerified(PostPolicyManager, consumer)
     }
 
     @Test
@@ -166,7 +172,10 @@ class PostGradeEffectHandlerTest : Assert() {
         coVerify(timeout = 100) {
             PostPolicyManager.postGradesAsync(assignmentId, gradedOnly)
         }
-        confirmVerified(PostPolicyManager)
+        verify(timeout = 100) {
+            consumer.accept(PostGradeEvent.GradesPosted)
+        }
+        confirmVerified(PostPolicyManager, consumer)
     }
 
     @Test
@@ -184,6 +193,21 @@ class PostGradeEffectHandlerTest : Assert() {
         coVerify(timeout = 100) {
             PostPolicyManager.postGradesForSectionsAsync(assignmentId, gradedOnly, sections)
         }
-        confirmVerified(PostPolicyManager)
+        verify(timeout = 100) {
+            consumer.accept(PostGradeEvent.GradesPosted)
+        }
+        confirmVerified(PostPolicyManager, consumer)
+    }
+
+    @Test
+    fun `ShowGradesPosted calls showGradesPosted on the view`() {
+        val isHidingGrades = true
+
+        connection.accept(PostGradeEffect.ShowGradesPosted(isHidingGrades))
+
+        verify(timeout = 100) {
+            view.showGradesPosted(isHidingGrades)
+        }
+        confirmVerified(view)
     }
 }

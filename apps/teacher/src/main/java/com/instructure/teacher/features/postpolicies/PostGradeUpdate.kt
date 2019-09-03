@@ -27,12 +27,17 @@ class PostGradeUpdate : UpdateInit<PostGradeModel, PostGradeEvent, PostGradeEffe
 
     override fun update(model: PostGradeModel, event: PostGradeEvent): Next<PostGradeModel, PostGradeEffect> {
         return when (event) {
+            PostGradeEvent.GradesPosted -> Next.dispatch(setOf<PostGradeEffect>(PostGradeEffect.ShowGradesPosted(model.isHidingGrades)))
             PostGradeEvent.PostGradesClicked -> {
-                if (model.isHidingGrades) {
-                    Next.dispatch(setOf<PostGradeEffect>(PostGradeEffect.HideGrades(model.assignment.id, getSelectedSectionIds(model))))
-                } else {
-                    Next.dispatch(setOf<PostGradeEffect>(PostGradeEffect.PostGrades(model.assignment.id, getSelectedSectionIds(model), model.postGradedOnly)))
-                }
+                Next.next(
+                    model.copy(isProcessing = true), setOf(
+                        if (model.isHidingGrades) {
+                            PostGradeEffect.HideGrades(model.assignment.id, getSelectedSectionIds(model))
+                        } else {
+                            PostGradeEffect.PostGrades(model.assignment.id, getSelectedSectionIds(model), model.postGradedOnly)
+                        }
+                    )
+                )
             }
             PostGradeEvent.SpecificSectionsToggled -> Next.next(model.copy(specificSectionsVisible = !model.specificSectionsVisible))
             is PostGradeEvent.SectionToggled -> Next.next(model.copy(sections = model.sections.map {
