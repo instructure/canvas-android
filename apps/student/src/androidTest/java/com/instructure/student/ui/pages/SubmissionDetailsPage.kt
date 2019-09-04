@@ -16,15 +16,13 @@
  */
 package com.instructure.student.ui.pages
 
-import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.contrib.RecyclerViewActions
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.hasDescendant
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
+import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.espresso.OnViewWithStringTextIgnoreCase
 import com.instructure.espresso.assertDisplayed
@@ -82,9 +80,8 @@ open class SubmissionDetailsPage : BasePage(R.id.submissionDetails) {
     fun assertFileDisplayed(fileName: String) {
         val matcher = allOf(withId(R.id.fileName),withText(fileName))
         openFiles() // Make sure that the files tab is open
-        onView(allOf(withId(R.id.recyclerView), isDisplayed()))
-                .perform(RecyclerViewActions.scrollTo<RecyclerView.ViewHolder>(ViewMatchers.hasDescendant(matcher)))
-                .assertDisplayed()
+        scrollRecyclerView(R.id.recyclerView, matcher)
+        onView(matcher).assertDisplayed()
     }
 
     fun addAndSendComment(comment: String) {

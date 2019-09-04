@@ -17,9 +17,14 @@
 package com.instructure.canvas.espresso
 
 import android.view.View
+import androidx.recyclerview.widget.RecyclerView
+import androidx.test.espresso.Espresso
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
+import androidx.test.espresso.contrib.RecyclerViewActions
+import androidx.test.espresso.matcher.ViewMatchers
 import org.hamcrest.Matcher
+import org.hamcrest.Matchers
 
 //
 // This is a repo for generally useful Espresso actions
@@ -42,4 +47,21 @@ fun withCustomConstraints(action: ViewAction, constraints: Matcher<View>): ViewA
             action.perform(uiController, view)
         }
     }
+}
+
+/**
+ * Scroll a recycler view to the given string target
+ */
+fun scrollRecyclerView(recyclerViewId: Int, target: String) {
+    val matcher = ViewMatchers.withText(target)
+    scrollRecyclerView(recyclerViewId, matcher)
+}
+
+/**
+ * Scroll a recycler view to the given matcher target
+ */
+fun scrollRecyclerView(recyclerViewId: Int, target: Matcher<View>) {
+    Espresso.onView(Matchers.allOf(ViewMatchers.withId(recyclerViewId), ViewMatchers.isDisplayed()))
+            .perform(RecyclerViewActions.scrollTo<RecyclerView.ViewHolder>(ViewMatchers.hasDescendant(target)))
+
 }

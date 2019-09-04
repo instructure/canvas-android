@@ -17,20 +17,18 @@
 package com.instructure.student.ui.pages
 
 import android.view.View
-import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.PerformException
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
-import androidx.test.espresso.contrib.RecyclerViewActions
-import androidx.test.espresso.matcher.ViewMatchers.hasDescendant
 import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Tab
@@ -135,8 +133,7 @@ class CourseBrowserPage : BasePage(R.id.courseBrowserPage) {
     // minimizes the toolbar before scrolling.
     private fun recyclerViewScrollTo(matcher: Matcher<View>) {
         minimizeToolbar()
-        onView(allOf(withId(R.id.courseBrowserRecyclerView), isDisplayed()))
-                .perform(RecyclerViewActions.scrollTo<RecyclerView.ViewHolder>(hasDescendant(matcher)))
+        scrollRecyclerView(R.id.courseBrowserRecyclerView, matcher)
     }
 }
 

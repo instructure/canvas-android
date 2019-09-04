@@ -1,19 +1,15 @@
 package com.instructure.student.ui.pages
 
-import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso
-import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.dataseeding.model.AssignmentApiModel
 import com.instructure.dataseeding.model.QuizApiModel
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.page.onView
 import com.instructure.student.R
 import org.hamcrest.Matchers
-import org.hamcrest.core.AllOf.allOf
 
 class TodoPage: BasePage(R.id.todoPage) {
 
@@ -34,8 +30,7 @@ class TodoPage: BasePage(R.id.todoPage) {
         val matcher = ViewMatchers.withText(Matchers.containsString(s))
 
         // Scroll RecyclerView item into view, if necessary
-        onView(allOf(ViewMatchers.withId(R.id.listView), isDisplayed())) // The drawer (not displayed) also has a listView
-                .perform(RecyclerViewActions.scrollTo<RecyclerView.ViewHolder>(ViewMatchers.hasDescendant(matcher)))
+        scrollRecyclerView(R.id.listView, matcher)
 
         // Now make sure that it is displayed
         Espresso.onView(matcher).assertDisplayed()
