@@ -24,23 +24,34 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
-import com.instructure.pandautils.utils.Const
-import com.instructure.pandautils.utils.ParcelableArg
-import com.instructure.pandautils.utils.makeBundle
-import com.instructure.pandautils.utils.withArgs
+import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
+import com.instructure.teacher.features.postpolicies.*
+import com.instructure.teacher.mobius.common.ui.EffectHandler
+import com.instructure.teacher.mobius.common.ui.MobiusFragment
+import com.instructure.teacher.mobius.common.ui.Presenter
+import com.instructure.teacher.mobius.common.ui.UpdateInit
 
-class PostGradeFragment : Fragment() {
+class PostGradeFragment : MobiusFragment<PostGradeModel, PostGradeEvent, PostGradeEffect, PostGradeView, PostGradeViewState>() {
     private var assignment: Assignment by ParcelableArg(Assignment(), Const.ASSIGNMENT)
-    private var course: Course by ParcelableArg(Course(), Const.CANVAS_CONTEXT)
+    private var isHidingGrades: Boolean by BooleanArg(false, IS_HIDE_GRADE_MODE)
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return TextView(requireContext()).apply { setText(R.string.postGradesTab) }
-    }
+    override fun makeEffectHandler() = PostGradeEffectHandler()
+
+    override fun makeUpdate() = PostGradeUpdate()
+
+    override fun makeView(inflater: LayoutInflater, parent: ViewGroup) = PostGradeView(inflater, parent)
+
+    override fun makePresenter() = PostGradePresenter
+
+    override fun makeInitModel() = PostGradeModel(assignment = assignment, isHidingGrades = isHidingGrades)
 
     companion object {
-        fun newInstance(course: Course, assignment: Assignment) = PostGradeFragment().withArgs(course.makeBundle {
+        private const val IS_HIDE_GRADE_MODE = "isHideGradeMode"
+
+        fun newInstance(assignment: Assignment, isHideGradeMode: Boolean) = PostGradeFragment().withArgs(Bundle().apply {
             putParcelable(Const.ASSIGNMENT, assignment)
+            putBoolean(IS_HIDE_GRADE_MODE, isHideGradeMode)
         })
     }
 }
