@@ -195,4 +195,5 @@ abstract class CanvasTest : InstructureTest(BuildConfig.GLOBAL_DITTO_MODE) {
 
         return resourceName
     }
+
 }

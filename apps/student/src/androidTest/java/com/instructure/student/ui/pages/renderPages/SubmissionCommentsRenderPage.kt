@@ -16,16 +16,13 @@
 package com.instructure.student.ui.pages.renderPages
 
 import android.view.View
-import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
-import androidx.test.espresso.contrib.RecyclerViewActions
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
@@ -76,8 +73,7 @@ class SubmissionCommentsRenderPage: BasePage(R.id.submissionCommentsPage) {
     }
 
     fun scrollAndAssertDisplayed(matcher: Matcher<View>) {
-        onView(allOf(withId(R.id.recyclerView), isDisplayed()))
-                .perform(RecyclerViewActions.scrollTo<RecyclerView.ViewHolder>(ViewMatchers.hasDescendant(matcher)))
+        scrollRecyclerView(R.id.recyclerView, matcher)
         onView(matcher).assertDisplayed()
     }
 
