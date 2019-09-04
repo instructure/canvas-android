@@ -16,11 +16,18 @@
  */
 package com.instructure.student.ui.pages
 
+import androidx.recyclerview.widget.RecyclerView
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.contrib.RecyclerViewActions
+import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.hasDescendant
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.espresso.OnViewWithStringTextIgnoreCase
+import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.student.R
@@ -38,6 +45,10 @@ open class SubmissionDetailsPage : BasePage(R.id.submissionDetails) {
         commentsButton.click()
     }
 
+    fun openFiles() {
+        onView(allOf(containsTextCaseInsensitive("files"), isDisplayed())).click()
+    }
+
     /**
      * Assert that a comment is displayed
      * [description] contains some text that is in the comment
@@ -53,7 +64,32 @@ open class SubmissionDetailsPage : BasePage(R.id.submissionDetails) {
         submissionCommentsRenderPage.scrollAndAssertDisplayed(commentMatcher)
     }
 
+    /**
+     * Assert that a comment is displayed
+     * [fileName] is the name of the attached file
+     * [user] is the author of the comment
+     */
+    fun assertCommentAttachmentDisplayed(fileName: String, user: CanvasUserApiModel) {
+        val commentMatcher = allOf(
+                withId(R.id.commentHolder),
+                hasDescendant(allOf(withText(user.shortName), withId(R.id.userNameTextView))),
+                hasDescendant(allOf(withText(fileName), withId(R.id.attachmentNameTextView)))
+        )
+
+        submissionCommentsRenderPage.scrollAndAssertDisplayed(commentMatcher)
+    }
+
+    fun assertFileDisplayed(fileName: String) {
+        val matcher = allOf(withId(R.id.fileName),withText(fileName))
+        openFiles() // Make sure that the files tab is open
+        onView(allOf(withId(R.id.recyclerView), isDisplayed()))
+                .perform(RecyclerViewActions.scrollTo<RecyclerView.ViewHolder>(ViewMatchers.hasDescendant(matcher)))
+                .assertDisplayed()
+    }
+
     fun addAndSendComment(comment: String) {
         submissionCommentsRenderPage.addAndSendComment(comment)
     }
+
 }
+
