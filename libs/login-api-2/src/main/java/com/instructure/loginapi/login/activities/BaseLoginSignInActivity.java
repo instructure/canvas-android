@@ -94,8 +94,6 @@ public abstract class BaseLoginSignInActivity extends AppCompatActivity implemen
 
     private WebView mWebView;
 
-    private String mClientId;
-    private String mClientSecret;
     private int mCanvasLogin = 0;
     boolean mSpecialCase = false;
     private String mAuthenticationURL;
@@ -185,7 +183,7 @@ public abstract class BaseLoginSignInActivity extends AppCompatActivity implemen
             if (url.contains(SUCCESS_URL)) {
                 ApiPrefs.setDomain(getAccountDomain().getDomain());
                 String oAuthRequest = url.substring(url.indexOf(SUCCESS_URL) + SUCCESS_URL.length());
-                OAuthManager.getToken(mClientId, mClientSecret, oAuthRequest, mGetTokenCallback);
+                OAuthManager.getToken(ApiPrefs.getClientId(), ApiPrefs.getClientSecret(), oAuthRequest, mGetTokenCallback);
             } else if (url.contains(ERROR_URL)) {
                 clearCookies();
                 view.loadUrl(mAuthenticationURL, getHeaders());
@@ -216,7 +214,7 @@ public abstract class BaseLoginSignInActivity extends AppCompatActivity implemen
                 mSpecialCase = true;
                 ApiPrefs.setDomain(getAccountDomain().getDomain());
                 String oAuthRequest = url.substring(url.indexOf("hash=") + "hash=".length());
-                OAuthManager.getToken(mClientId, mClientSecret, oAuthRequest, mGetTokenCallback);
+                OAuthManager.getToken(ApiPrefs.getClientId(), ApiPrefs.getClientSecret(), oAuthRequest, mGetTokenCallback);
             }
         }
 
@@ -234,7 +232,7 @@ public abstract class BaseLoginSignInActivity extends AppCompatActivity implemen
                         mAuthenticationURL.equals(request.getUrl().toString())) {
                     //If the institution does not support skipping the authentication screen this will catch that error and force the
                     //rebuilding of the authentication url with the authorization screen flow. Example: canvas.sfu.ca
-                    buildAuthenticationUrl(ApiPrefs.getProtocol(), getAccountDomain(), mClientId, true);
+                    buildAuthenticationUrl(ApiPrefs.getProtocol(), getAccountDomain(), ApiPrefs.getClientId(), true);
                     loadAuthenticationUrl(ApiPrefs.getProtocol(), getAccountDomain().getDomain());
                 }
             }
@@ -255,7 +253,7 @@ public abstract class BaseLoginSignInActivity extends AppCompatActivity implemen
                                 @Override
                                 public void onReceiveValue(String value) {
                                     if (value != null && value.contains("redirect_uri does not match client settings")) {
-                                        buildAuthenticationUrl(ApiPrefs.getProtocol(), getAccountDomain(), mClientId, true);
+                                        buildAuthenticationUrl(ApiPrefs.getProtocol(), getAccountDomain(), ApiPrefs.getClientId(), true);
                                         mWebView.loadUrl("about:blank");
                                         loadAuthenticationUrl(ApiPrefs.getProtocol(), getAccountDomain().getDomain());
                                     }
@@ -289,11 +287,9 @@ public abstract class BaseLoginSignInActivity extends AppCompatActivity implemen
                         public void onClick(DialogInterface dialog, int which) {
                             ApiPrefs.setProtocol(protocolEditText.getText().toString());
                             ApiPrefs.setDomain(url);
-                            mClientId = clientIdEditText.getText().toString();
-                            mClientSecret = clientSecretEditText.getText().toString();
-                            ApiPrefs.setClientId(mClientId);
-                            ApiPrefs.setClientSecret(mClientSecret);
-                            buildAuthenticationUrl(protocolEditText.getText().toString(), accountDomain, mClientId, false);
+                            ApiPrefs.setClientId(clientIdEditText.getText().toString());
+                            ApiPrefs.setClientSecret(clientSecretEditText.getText().toString());
+                            buildAuthenticationUrl(protocolEditText.getText().toString(), accountDomain, ApiPrefs.getClientId(), false);
                             mWebView.loadUrl(mAuthenticationURL, getHeaders());
                         }
                     })
@@ -368,10 +364,9 @@ public abstract class BaseLoginSignInActivity extends AppCompatActivity implemen
 
                 mAccountDomain.setDomain(domain);
 
-                mClientId = domainVerificationResult.getClient_id();
-                mClientSecret = domainVerificationResult.getClient_secret();
-                ApiPrefs.setClientId(mClientId);
-                ApiPrefs.setClientSecret(mClientSecret);
+                ApiPrefs.setClientId(domainVerificationResult.getClient_id());
+                ApiPrefs.setClientSecret(domainVerificationResult.getClient_secret());
+
 
                 //Get the protocol
                 final String apiProtocol = domainVerificationResult.getProtocol();
@@ -379,7 +374,7 @@ public abstract class BaseLoginSignInActivity extends AppCompatActivity implemen
                 //Set the protocol
                 ApiPrefs.setProtocol(domainVerificationResult.getProtocol());
 
-                buildAuthenticationUrl(apiProtocol, getAccountDomain(), mClientId, false);
+                buildAuthenticationUrl(apiProtocol, getAccountDomain(), ApiPrefs.getClientId(), false);
                 loadAuthenticationUrl(apiProtocol, domain);
             } else {
                 //Error message
@@ -406,8 +401,9 @@ public abstract class BaseLoginSignInActivity extends AppCompatActivity implemen
     };
 
     final protected void loadAuthenticationUrl(final String apiProtocol, final String domain, final String clientId, final String clientSecret) {
-        mClientId = clientId;
-        mClientSecret = clientSecret;
+        ApiPrefs.setClientId(clientId);
+        ApiPrefs.setClientSecret(clientSecret);
+        ApiPrefs.setToken(""); // TODO: Remove when we're 100% using refresh tokens
         loadAuthenticationUrl(apiProtocol, domain);
     }
 
@@ -453,9 +449,9 @@ public abstract class BaseLoginSignInActivity extends AppCompatActivity implemen
         if (deviceName == null || deviceName.equals("")) {
             deviceName = getString(R.string.unknownDevice);
         }
-        //Remove spaces
+        // Remove spaces
         deviceName = deviceName.replace(" ", "_");
-        //changed for the online update to have an actual formatted login page
+        // Changed for the online update to have an actual formatted login page
 
         String domain = accountDomain.getDomain();
 
@@ -500,11 +496,12 @@ public abstract class BaseLoginSignInActivity extends AppCompatActivity implemen
 
         @Override
         public void onResponse(@NonNull Response<OAuthTokenResponse> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
-            if(type.isCache()) return;
+            if (type.isCache()) return;
 
             final OAuthTokenResponse token = response.body();
             ApiPrefs.setRefreshToken(token.getRefreshToken());
             ApiPrefs.setAccessToken(token.getAccessToken());
+            ApiPrefs.setToken(""); // TODO: Remove when we're 100% using refresh tokens
 
             // We now need to get the cache user
             UserManager.getSelf(new StatusCallback<User>() {

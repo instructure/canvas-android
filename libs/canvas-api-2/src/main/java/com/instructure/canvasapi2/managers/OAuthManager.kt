@@ -21,9 +21,7 @@ import com.instructure.canvasapi2.apis.OAuthAPI
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.AuthenticatedSession
-import com.instructure.canvasapi2.models.OAuthToken
 import com.instructure.canvasapi2.models.OAuthTokenResponse
-import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Logger
 

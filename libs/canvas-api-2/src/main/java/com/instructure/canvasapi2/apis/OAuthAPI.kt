@@ -46,7 +46,7 @@ object OAuthAPI {
         @GET("/login/session_token")
         fun getAuthenticatedSession(@Query("return_to") targetUrl: String): Call<AuthenticatedSession>
 
-        @POST("/oauth2/refresh")
+        @POST("/login/oauth2/token")
         fun refreshAccessToken(
             @Query("client_id") clientId: String,
             @Query("client_secret") clientSecret: String,

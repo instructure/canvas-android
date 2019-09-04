@@ -82,7 +82,7 @@ internal fun <T> Call<T>.dataResult(): DataResult<T> {
     val response = execute()
     return when {
         response.isSuccessful && response.body() != null -> DataResult.Success(response.body()!!)
-        response.code() == 403 -> DataResult.Fail(Failure.Authorization(response.message()))
+        response.code() == 401 -> DataResult.Fail(Failure.Authorization(response.message()))
         else -> DataResult.Fail(Failure.Network(response.message()))
     }
 }
