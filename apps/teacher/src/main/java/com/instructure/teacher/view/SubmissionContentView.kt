@@ -41,6 +41,7 @@ import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import com.instructure.annotations.PdfSubmissionView
 import com.instructure.canvasapi2.managers.CanvaDocsManager
+import com.instructure.canvasapi2.managers.FeaturesManager
 import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.canvadocs.CanvaDocAnnotation
@@ -109,6 +110,7 @@ class SubmissionContentView(
         get() = R.color.login_teacherAppTheme
 
     private var mContainerId: Int = 0
+    private var newGradebookEnabled: Boolean = false
     private val mAssignee: Assignee get() = mStudentSubmission.assignee
     private val mRootSubmission: Submission? get() = mStudentSubmission.submission
     private val mBottomViewPager: ViewPagerNoSwipe
@@ -118,7 +120,7 @@ class SubmissionContentView(
 
     private var mIsCleanedUp = false
     private val activity: SpeedGraderActivity get() = context as SpeedGraderActivity
-    private val mGradeFragment by lazy { SpeedGraderGradeFragment.newInstance(mRootSubmission, mAssignment, mCourse, mAssignee) }
+    private val mGradeFragment by lazy { SpeedGraderGradeFragment.newInstance(mRootSubmission, mAssignment, mCourse, mAssignee, newGradebookEnabled) }
 
     val hasUnsavedChanges: Boolean
         get() = mGradeFragment.hasUnsavedChanges
@@ -201,6 +203,7 @@ class SubmissionContentView(
                 mStudentSubmission.submission = awaitApi<Submission> { SubmissionManager.getSingleSubmission(mCourse.id, mAssignment.id, mStudentSubmission.assigneeId, it, true) }
                 mStudentSubmission.isCached = true
             }
+            newGradebookEnabled = awaitApi<List<String>> { FeaturesManager.getEnabledFeaturesForCourse(mCourse.id, true, it) }.contains(FeaturesManager.NEW_GRADEBOOK)
             setup()
         } catch {
             loadingView.setGone()
