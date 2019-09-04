@@ -28,12 +28,12 @@ class GradeableStudentSubmissionAdapter(
         private val mAssignment: Assignment,
         private val mCourseId: Long,
         private val mContext: Context,
-        presenter: AssignmentSubmissionListPresenter,
+        private val presenter: AssignmentSubmissionListPresenter,
         val mCallback: (GradeableStudentSubmission) -> Unit) : SyncRecyclerAdapter<GradeableStudentSubmission, GradeableStudentSubmissionViewHolder>(mContext, presenter){
 
 
     override fun bindHolder(model: GradeableStudentSubmission, holderSubmission: GradeableStudentSubmissionViewHolder, position: Int) {
-        holderSubmission.bind(mContext, model, mAssignment, mCourseId, mCallback)
+        holderSubmission.bind(mContext, model, mAssignment, mCourseId, presenter.newGradebookEnabled, mCallback)
     }
 
     override fun createViewHolder(v: View, viewType: Int) = GradeableStudentSubmissionViewHolder(v)
