@@ -25,6 +25,7 @@ import com.instructure.canvasapi2.models.Progress
 import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.teacher.features.postpolicies.ui.PostGradeView
 import com.instructure.teacher.mobius.common.ui.EffectHandler
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class PostGradeEffectHandler : EffectHandler<PostGradeView, PostGradeEvent, PostGradeEffect>() {
@@ -84,6 +85,8 @@ class PostGradeEffectHandler : EffectHandler<PostGradeView, PostGradeEvent, Post
 
         lateinit var progress: Progress
         do {
+            delay(1000L) // Don't hit the API too hard while monitoring progress
+
             progress = ProgressManager.getProgressAsync(progressId).await().dataOrNull ?: run {
                 consumer.accept(PostGradeEvent.PostFailed)
                 return
