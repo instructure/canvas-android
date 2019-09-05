@@ -20,7 +20,7 @@ package com.instructure.canvasapi2.models
 import com.google.gson.annotations.SerializedName
 import com.instructure.canvasapi2.utils.NaturalOrderComparator
 import kotlinx.android.parcel.Parcelize
-import java.util.*
+import java.util.Date
 
 @Parcelize
 data class FileFolder(
@@ -84,6 +84,15 @@ data class FileFolder(
 ) : CanvasModel<FileFolder>() {
     val isRoot: Boolean get() = parentFolderId == 0L
     val isFile: Boolean get() = !displayName.isNullOrBlank()
+
+    val isHtmlFile: Boolean
+        get() = contentType?.contains("html") == true
+                || name?.endsWith(".htm") == true
+                || name?.endsWith(".html") == true
+
+    fun getFilePreviewUrl(fullDomain: String, canvasContext: CanvasContext): String {
+        return "$fullDomain${canvasContext.toAPIString()}/files/$id/preview"
+    }
 
     /* We override compareTo instead of using Canvas Comparable methods */
     override fun compareTo(other: FileFolder) = compareFiles(this, other)

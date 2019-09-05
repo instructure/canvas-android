@@ -472,7 +472,7 @@ object RouteMatcher : BaseRouteMatcher() {
                                 Toast.makeText(activity, activity.resources.getString(loadedMedia.errorMessage), Toast.LENGTH_LONG).show()
                             }
                         } else if (loadedMedia.isHtmlFile) {
-                            val args = ViewHtmlFragment.newInstance(loadedMedia.bundle.getString(Const.INTERNAL_URL)!!, loadedMedia.bundle.getString(Const.ACTION_BAR_TITLE)!!).nonNullArgs
+                            val args = ViewHtmlFragment.makeDownloadBundle(loadedMedia.bundle.getString(Const.INTERNAL_URL)!!, loadedMedia.bundle.getString(Const.ACTION_BAR_TITLE)!!)
                             RouteMatcher.route(activity, Route(ViewHtmlFragment::class.java, null, args))
                         } else if (loadedMedia.intent != null) {
                             if (loadedMedia.intent.type!!.contains("pdf") && !loadedMedia.isUseOutsideApps) {
