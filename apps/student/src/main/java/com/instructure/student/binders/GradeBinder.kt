@@ -53,7 +53,8 @@ object GradeBinder : BaseBinder() {
 
         holder.points.setTextColor(ThemePrefs.brandColor)
 
-        if ((assignment.muted && assignment.submission?.postedAt == null) && !isEdit) {
+        // Posted At now determines if an assignment is muted, even for old gradebook
+        if (assignment.submission?.postedAt == null && !isEdit) {
             // Mute that score
             holder.points.setGone()
         } else {

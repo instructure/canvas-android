@@ -47,7 +47,8 @@ class AssignmentBinder : BaseBinder() {
 
             val submission = assignment.submission
 
-            if(assignment.muted && assignment.submission?.postedAt == null) {
+            // Posted At now determines if an assignment is muted, even for old gradebook
+            if (assignment.submission?.postedAt == null) {
                 // Mute that score
                 holder.points.visibility = View.GONE
             } else {

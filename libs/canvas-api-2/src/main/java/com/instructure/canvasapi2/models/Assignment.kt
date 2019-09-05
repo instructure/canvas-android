@@ -78,6 +78,7 @@ data class Assignment(
         @SerializedName("free_form_criterion_comments")
         val freeFormCriterionComments: Boolean = false,
         val published: Boolean = false,
+        @Deprecated("This is on track to be deprecated by the API, being replaced by Submission.postedAt")
         var muted: Boolean = false,
         @SerializedName("group_category_id")
         val groupCategoryId: Long = 0,
