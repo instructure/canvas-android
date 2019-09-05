@@ -29,6 +29,8 @@ import android.view.ViewGroup
 import android.webkit.WebView
 import android.widget.Toast
 import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.interactions.Navigation
@@ -86,7 +88,10 @@ class AssignmentDetailsView(
         submissionStatusUploading.onClick { output.accept(AssignmentDetailsEvent.ViewUploadStatusClicked) }
         submissionRubricButton.onClick { output.accept(AssignmentDetailsEvent.ViewSubmissionClicked) }
         gradeContainer.onClick { output.accept(AssignmentDetailsEvent.ViewSubmissionClicked) }
-        submitButton.onClick { output.accept(AssignmentDetailsEvent.SubmitAssignmentClicked) }
+        submitButton.onClick {
+            Analytics.logEvent(AnalyticsEventConstants.ASSIGNMENT_SUBMIT_SELECTED)
+            output.accept(AssignmentDetailsEvent.SubmitAssignmentClicked)
+        }
         attachmentIcon.onClick { output.accept(AssignmentDetailsEvent.DiscussionAttachmentClicked) }
         swipeRefreshLayout.setOnRefreshListener { output.accept(AssignmentDetailsEvent.PullToRefresh) }
         setupDescriptionView()
@@ -235,6 +240,7 @@ class AssignmentDetailsView(
     }
 
     fun showSubmissionView(assignmentId: Long, course: Course) {
+        Analytics.logEvent(AnalyticsEventConstants.SUBMISSION_CELL_SELECTED)
         RouteMatcher.route(context, SubmissionDetailsFragment.makeRoute(course, assignmentId))
     }
 
@@ -243,22 +249,27 @@ class AssignmentDetailsView(
     }
 
     fun showOnlineTextEntryView(assignmentId: Long, assignmentName: String?, submittedText: String? = null, isFailure: Boolean = false) {
+        Analytics.logEvent(AnalyticsEventConstants.SUBMIT_TEXTENTRY_SELECTED)
         RouteMatcher.route(context, TextSubmissionUploadFragment.makeRoute(canvasContext, assignmentId, assignmentName, submittedText, isFailure))
     }
 
     fun showOnlineUrlEntryView(assignmentId: Long, assignmentName: String?, canvasContext: CanvasContext, submittedUrl: String? = null, isFailure: Boolean = false) {
+        Analytics.logEvent(AnalyticsEventConstants.SUBMIT_ONLINEURL_SELECTED)
         RouteMatcher.route(context, UrlSubmissionUploadFragment.makeRoute(canvasContext, assignmentId, assignmentName, submittedUrl, isFailure))
     }
 
     fun showLTIView(canvasContext: CanvasContext, url: String, title: String) {
+        Analytics.logEvent(AnalyticsEventConstants.ASSIGNMENT_LAUNCHLTI_SELECTED)
         RouteMatcher.route(context, LTIWebViewFragment.makeRoute(canvasContext, url, title, isAssignmentLTI = true))
     }
 
     fun showQuizStartView(canvasContext: CanvasContext, quiz: Quiz) {
+        Analytics.logEvent(AnalyticsEventConstants.ASSIGNMENT_DETAIL_QUIZLAUNCH)
         RouteMatcher.route(context, QuizStartFragment.makeRoute(canvasContext, quiz))
     }
 
     fun showDiscussionDetailView(canvasContext: CanvasContext, discussionTopicHeaderId: Long) {
+        Analytics.logEvent(AnalyticsEventConstants.ASSIGNMENT_DETAIL_DISCUSSIONLAUNCH)
         RouteMatcher.route(context, DiscussionDetailsFragment.makeRoute(canvasContext, discussionTopicHeaderId))
     }
 
@@ -267,6 +278,7 @@ class AssignmentDetailsView(
     }
 
     fun showMediaRecordingView(assignment: Assignment) {
+        Analytics.logEvent(AnalyticsEventConstants.SUBMIT_MEDIARECORDING_SELECTED)
         val builder = AlertDialog.Builder(context)
         val dialog = builder.setView(R.layout.dialog_submission_picker_media).create()
 
@@ -311,6 +323,7 @@ class AssignmentDetailsView(
     }
 
     fun showFileUploadView(assignment: Assignment) {
+        Analytics.logEvent(AnalyticsEventConstants.SUBMIT_FILEUPLOAD_SELECTED)
         RouteMatcher.route(
             context,
             PickerSubmissionUploadFragment.makeRoute(canvasContext, assignment, PickerSubmissionMode.FileSubmission)
@@ -318,6 +331,7 @@ class AssignmentDetailsView(
     }
 
     private fun showStudioUploadView(assignment: Assignment, ltiUrl: String, studioLtiToolName: String) {
+        Analytics.logEvent(AnalyticsEventConstants.SUBMIT_STUDIO_SELECTED)
         RouteMatcher.route(context, StudioWebViewFragment.makeRoute(canvasContext, ltiUrl, studioLtiToolName, true, assignment))
     }
 

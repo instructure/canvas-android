@@ -78,6 +78,15 @@ class SubmissionDetailsView(
             if (slidingUpPanelLayout?.panelState == SlidingUpPanelLayout.PanelState.COLLAPSED) {
                 slidingUpPanelLayout?.panelState = SlidingUpPanelLayout.PanelState.ANCHORED
             }
+            logTabSelected(tab?.position)
+        }
+    }
+
+    private fun logTabSelected(position: Int?) {
+        when (position) {
+            0 -> Analytics.logEvent(AnalyticsEventConstants.SUBMISSION_COMMENTS_SELECTED)
+            1 -> Analytics.logEvent(AnalyticsEventConstants.SUBMISSION_FILES_SELECTED)
+            2 -> Analytics.logEvent(AnalyticsEventConstants.SUBMISSION_RUBRIC_SELECTED)
         }
     }
 
@@ -269,15 +278,14 @@ class SubmissionDetailsView(
             SubmissionDetailsContentType.OnPaperContent -> SubmissionMessageFragment.newInstance(title = R.string.noOnlineSubmissions, subtitle = R.string.onPaperContentMessage)
             is SubmissionDetailsContentType.UnsupportedContent -> {
                 // Users shouldn't get here, but we'll handle the case and send up some analytics if they do
-                Analytics.logEvent(
-                    AnalyticsEventConstants.UNSUPPORTED_SUBMISSION_CONTENT,
-                    Analytics.createAssignmentAnalyticsBundle(
-                        ApiPrefs.fullDomain,
-                        ApiPrefs.user!!.contextId,
-                        canvasContext.contextId,
-                        type.assignmentId
-                    )
-                )
+                val bundle = Bundle().apply {
+                    putString(AnalyticsParamConstants.DOMAIN_PARAM, ApiPrefs.fullDomain)
+                    putString(AnalyticsParamConstants.USER_CONTEXT_ID, ApiPrefs.user?.contextId)
+                    putString(AnalyticsParamConstants.CANVAS_CONTEXT_ID, canvasContext.contextId)
+                    putLong(AnalyticsParamConstants.ASSIGNMENT_ID, type.assignmentId)
+                }
+
+                Analytics.logEvent(AnalyticsEventConstants.UNSUPPORTED_SUBMISSION_CONTENT, bundle)
 
                 SubmissionMessageFragment.newInstance(
                     title = R.string.noOnlineSubmissions,

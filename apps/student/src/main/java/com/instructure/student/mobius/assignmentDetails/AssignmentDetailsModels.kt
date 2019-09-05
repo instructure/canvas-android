@@ -63,7 +63,6 @@ sealed class AssignmentDetailsEffect {
     object ShowVideoRecordingError : AssignmentDetailsEffect()
     object ShowMediaPickingError : AssignmentDetailsEffect()
     object ShowBookmarkDialog : AssignmentDetailsEffect()
-    data class LogAnalytics(val analyticString: String, val bundle: Bundle? = null) : AssignmentDetailsEffect()
     data class UploadVideoSubmission(val uri: Uri, val course: Course, val assignment: Assignment) : AssignmentDetailsEffect()
     data class UploadAudioSubmission(val file: File, val course: Course, val assignment: Assignment) : AssignmentDetailsEffect()
     data class UploadMediaFileSubmission(val uri: Uri, val course: Course, val assignment: Assignment) : AssignmentDetailsEffect()

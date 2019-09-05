@@ -18,7 +18,6 @@ package com.instructure.student.mobius.assignmentDetails
 
 import android.app.Activity
 import android.content.Context
-import android.os.Bundle
 import com.instructure.canvasapi2.managers.AssignmentManager
 import com.instructure.canvasapi2.managers.QuizManager
 import com.instructure.canvasapi2.managers.SubmissionManager
@@ -27,10 +26,7 @@ import com.instructure.canvasapi2.utils.*
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
 import com.instructure.canvasapi2.utils.weave.awaitApiResponse
 import com.instructure.student.Submission
-import com.instructure.student.analytics.logAssignmentAnalytics
-import com.instructure.student.analytics.logAssignmentDiscussionAnalytics
-import com.instructure.student.analytics.logAssignmentQuizAnalytics
-import com.instructure.student.analytics.logAssignmentSubmitClicked
+import com.instructure.student.analytics.*
 import com.instructure.student.db.Db
 import com.instructure.student.db.getInstance
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
@@ -90,16 +86,13 @@ class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Lon
                     studioUrl,
                     effect.studioLTITool?.name
                 )
-//                logAssignmentSubmitClicked(effect)
             }
             is AssignmentDetailsEffect.ShowSubmissionView -> view?.showSubmissionView(effect.assignmentId, effect.course)
             is AssignmentDetailsEffect.ShowQuizStartView -> {
                 view?.showQuizStartView(effect.course, effect.quiz)
-//                logAssignmentQuizAnalytics(effect)
             }
             is AssignmentDetailsEffect.ShowDiscussionDetailView -> {
                 view?.showDiscussionDetailView(effect.course, effect.discussionTopicHeaderId)
-//                logAssignmentDiscussionAnalytics(effect, this.assignmentId)
             }
             is AssignmentDetailsEffect.ShowDiscussionAttachment -> view?.showDiscussionAttachment(effect.course, effect.discussionAttachment)
             is AssignmentDetailsEffect.UploadAudioSubmission -> uploadAudioRecording(context, effect.file, effect.assignment, effect.course)
@@ -190,7 +183,7 @@ class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Lon
                 }
             } else null
 
-//            logAssignmentAnalytics(effect, quizResult, assignmentResult)
+            Analytics.logEvent(getAnalyticsString(quizResult, assignmentResult))
 
             consumer.accept(
                 AssignmentDetailsEvent.DataLoaded(
@@ -208,6 +201,14 @@ class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Lon
     private fun launchMediaPicker() {
         chooseMediaIntent.let {
             (context as Activity).startActivityForResult(it, AssignmentDetailsFragment.CHOOSE_MEDIA_REQUEST_CODE)
+        }
+    }
+
+    private fun getAnalyticsString(quizResult: DataResult<Quiz>?, assignmentResult: DataResult<Assignment>): String {
+        return when {
+            quizResult != null -> AnalyticsEventConstants.ASSIGNMENT_DETAIL_QUIZ
+            assignmentResult.dataOrNull?.discussionTopicHeader != null -> AnalyticsEventConstants.ASSIGNMENT_DETAIL_DISCUSSION
+            else -> AnalyticsEventConstants.ASSIGNMENT_DETAIL_ASSIGNMENT
         }
     }
 }

@@ -19,13 +19,12 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import androidx.core.content.FileProvider
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.instructure.canvasapi2.managers.ExternalToolManager
 import com.instructure.canvasapi2.managers.QuizManager
 import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.*
-import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.DataResult
-import com.instructure.canvasapi2.utils.Failure
+import com.instructure.canvasapi2.utils.*
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
 import com.instructure.canvasapi2.utils.weave.awaitApiResponse
 import com.instructure.pandautils.utils.FilePrefs
@@ -65,6 +64,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     private val assignmentId = 2468L
     private val view: AssignmentDetailsView = mockk(relaxed = true)
     private val context: Activity = mockk(relaxed = true)
+    private val firebase: FirebaseAnalytics = mockk(relaxed = true)
     private var effectHandler =
         AssignmentDetailsEffectHandler(context, assignmentId).apply { view = this@AssignmentDetailsEffectHandlerTest.view }
     private val eventConsumer: Consumer<AssignmentDetailsEvent> = mockk(relaxed = true)
@@ -101,6 +101,8 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
 
         // Connect after mocks, so database is setup properly
         connection = effectHandler.connect(eventConsumer)
+
+        Analytics.firebase = firebase
     }
 
     private fun mockkDatabase(data: List<Submission> = emptyList()) {
@@ -215,6 +217,48 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
             eventConsumer.accept(expectedEvent)
         }
 
+        verify {
+            firebase.logEvent(AnalyticsEventConstants.ASSIGNMENT_DETAIL_ASSIGNMENT, null)
+        }
+
+        confirmVerified(firebase)
+        confirmVerified(eventConsumer)
+    }
+
+    @Test
+    fun `Successful LoadData with discussion results in DataLoaded`() {
+        val courseId = 1L
+        val discussionTopicId = 1234L
+        val submission = mockkSubmission(9876L)
+        assignment = assignment.copy(
+                submissionTypesRaw = listOf(Assignment.SubmissionType.DISCUSSION_TOPIC.apiString),
+                discussionTopicHeader = DiscussionTopicHeader(id = discussionTopicId)
+        )
+        val expectedEvent = AssignmentDetailsEvent.DataLoaded(
+                DataResult.Success(assignment),
+                false,
+                DataResult.Fail(null),
+                DataResult.Fail(null),
+                submission,
+                null
+        )
+
+        mockkStatic("com.instructure.canvasapi2.utils.weave.AwaitApiKt")
+        coEvery { awaitApiResponse<Assignment>(any()) } returns Response.success(assignment)
+
+        mockkDatabase(listOf(submission))
+
+        connection.accept(AssignmentDetailsEffect.LoadData(assignment.id, courseId, false))
+
+        verify(timeout = 100) {
+            eventConsumer.accept(expectedEvent)
+        }
+
+        verify {
+            firebase.logEvent(AnalyticsEventConstants.ASSIGNMENT_DETAIL_DISCUSSION, null)
+        }
+
+        confirmVerified(firebase)
         confirmVerified(eventConsumer)
     }
 
@@ -454,6 +498,11 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
             eventConsumer.accept(expectedEvent)
         }
 
+        verify {
+            firebase.logEvent(AnalyticsEventConstants.ASSIGNMENT_DETAIL_QUIZ, null)
+        }
+
+        confirmVerified(firebase)
         confirmVerified(eventConsumer)
     }
 

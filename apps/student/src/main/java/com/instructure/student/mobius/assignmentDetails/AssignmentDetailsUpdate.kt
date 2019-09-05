@@ -20,7 +20,6 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.utils.*
 import com.instructure.student.Submission
-import com.instructure.student.analytics.logAssignmentSubmitClicked
 import com.instructure.student.mobius.common.ui.UpdateInit
 import com.spotify.mobius.First
 import com.spotify.mobius.Next
@@ -111,21 +110,15 @@ class AssignmentDetailsUpdate : UpdateInit<AssignmentDetailsModel, AssignmentDet
         is AssignmentDetailsEvent.DataLoaded -> {
             val dbSubmission = dbSubmissionIfNewest(event.submission, event.assignmentResult?.dataOrNull?.submission)
             Next.next<AssignmentDetailsModel, AssignmentDetailsEffect>(
-                    model.copy(
-                            isLoading = false,
-                            assignmentResult = event.assignmentResult,
-                            isStudioEnabled = event.isStudioEnabled,
-                            studioLTIToolResult = event.studioLTIToolResult,
-                            ltiTool = event.ltiToolResult,
-                            quizResult = event.quizResult,
-                            databaseSubmission = dbSubmission
-                    ),
-                    setOf(
-                            AssignmentDetailsEffect.LogAnalytics(
-                                    getAnalyticsString(event.assignmentResult, event.quizResult),
-                                    Analytics.createAssignmentAnalyticsBundle()
-                            )
-                    )
+                model.copy(
+                    isLoading = false,
+                    assignmentResult = event.assignmentResult,
+                    isStudioEnabled = event.isStudioEnabled,
+                    studioLTIToolResult = event.studioLTIToolResult,
+                    ltiTool = event.ltiToolResult,
+                    quizResult = event.quizResult,
+                    databaseSubmission = dbSubmission
+                )
             )
         }
         is AssignmentDetailsEvent.InternalRouteRequested -> {
@@ -149,35 +142,27 @@ class AssignmentDetailsUpdate : UpdateInit<AssignmentDetailsModel, AssignmentDet
             }
             assignmentResult.dataOrNull!!.turnInType == Assignment.TurnInType.DISCUSSION -> {
                 AssignmentDetailsEffect.ShowDiscussionDetailView(
-                        assignmentResult.dataOrThrow.discussionTopicHeader!!.id,
-                        model.course
+                    assignmentResult.dataOrThrow.discussionTopicHeader!!.id,
+                    model.course
                 )
             }
             submissionTypes.size == 1 && !(submissionTypes.contains(Assignment.SubmissionType.ONLINE_UPLOAD) && model.isStudioEnabled) -> {
                 AssignmentDetailsEffect.ShowCreateSubmissionView(
-                        submissionTypes.first(),
-                        model.course,
-                        assignmentResult.dataOrThrow,
-                        assignmentResult.dataOrThrow.url
+                    submissionTypes.first(),
+                    model.course,
+                    assignmentResult.dataOrThrow,
+                    assignmentResult.dataOrThrow.url
                 )
             }
             else -> {
                 AssignmentDetailsEffect.ShowSubmitDialogView(
-                        assignmentResult.dataOrThrow,
-                        model.course,
-                        model.isStudioEnabled,
-                        model.studioLTIToolResult?.dataOrNull
+                    assignmentResult.dataOrThrow,
+                    model.course,
+                    model.isStudioEnabled,
+                    model.studioLTIToolResult?.dataOrNull
                 )
             }
         })
-    }
-
-    private fun getAnalyticsString(assignmentResult: DataResult<Assignment>?, quizResult: DataResult<Quiz>?): String {
-        return when {
-            quizResult != null -> AnalyticsEventConstants.ASSIGNMENT_DETAIL_QUIZ
-            assignmentResult?.dataOrNull?.discussionTopicHeader != null -> AnalyticsEventConstants.ASSIGNMENT_DETAIL_DISCUSSION
-            else -> AnalyticsEventConstants.ASSIGNMENT_DETAIL_ASSIGNMENT
-        }
     }
 
     private fun dbSubmissionIfNewest(dbSubmission: Submission?, apiSubmission: com.instructure.canvasapi2.models.Submission?): Submission? {
