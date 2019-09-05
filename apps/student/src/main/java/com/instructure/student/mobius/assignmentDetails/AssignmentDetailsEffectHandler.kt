@@ -88,12 +88,8 @@ class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Lon
                 )
             }
             is AssignmentDetailsEffect.ShowSubmissionView -> view?.showSubmissionView(effect.assignmentId, effect.course)
-            is AssignmentDetailsEffect.ShowQuizStartView -> {
-                view?.showQuizStartView(effect.course, effect.quiz)
-            }
-            is AssignmentDetailsEffect.ShowDiscussionDetailView -> {
-                view?.showDiscussionDetailView(effect.course, effect.discussionTopicHeaderId)
-            }
+            is AssignmentDetailsEffect.ShowQuizStartView -> view?.showQuizStartView(effect.course, effect.quiz)
+            is AssignmentDetailsEffect.ShowDiscussionDetailView -> view?.showDiscussionDetailView(effect.course, effect.discussionTopicHeaderId)
             is AssignmentDetailsEffect.ShowDiscussionAttachment -> view?.showDiscussionAttachment(effect.course, effect.discussionAttachment)
             is AssignmentDetailsEffect.UploadAudioSubmission -> uploadAudioRecording(context, effect.file, effect.assignment, effect.course)
             is AssignmentDetailsEffect.ShowUploadStatusView -> {
