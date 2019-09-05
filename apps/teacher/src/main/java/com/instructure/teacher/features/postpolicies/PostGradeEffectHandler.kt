@@ -49,23 +49,31 @@ class PostGradeEffectHandler : EffectHandler<PostGradeView, PostGradeEvent, Post
     }
 
     private suspend fun hideGrades(assignmentId: Long, sections: List<String>) {
-        val progressId = if (sections.isEmpty()) {
-            PostPolicyManager.hideGradesAsync(assignmentId).hideAssignmentGrades?.progress?._id
-        } else {
-            PostPolicyManager.hideGradesForSectionsAsync(assignmentId, sections).hideAssignmentGradesForSections?.progress?._id
-        }
+        try {
+            val progressId = if (sections.isEmpty()) {
+                PostPolicyManager.hideGradesAsync(assignmentId).hideAssignmentGrades?.progress?._id
+            } else {
+                PostPolicyManager.hideGradesForSectionsAsync(assignmentId, sections).hideAssignmentGradesForSections?.progress?._id
+            }
 
-        consumer.accept(PostGradeEvent.PostStarted(progressId))
+            consumer.accept(PostGradeEvent.PostStarted(progressId))
+        } catch (e: Throwable) {
+            consumer.accept(PostGradeEvent.PostFailed)
+        }
     }
 
     private suspend fun postGrades(assignmentId: Long, sections: List<String>, gradedOnly: Boolean) {
-        val progressId = if (sections.isEmpty()) {
-            PostPolicyManager.postGradesAsync(assignmentId, gradedOnly).postAssignmentGrades?.progress?._id
-        } else {
-            PostPolicyManager.postGradesForSectionsAsync(assignmentId, gradedOnly, sections).postAssignmentGradesForSections?.progress?._id
-        }
+        try {
+            val progressId = if (sections.isEmpty()) {
+                PostPolicyManager.postGradesAsync(assignmentId, gradedOnly).postAssignmentGrades?.progress?._id
+            } else {
+                PostPolicyManager.postGradesForSectionsAsync(assignmentId, gradedOnly, sections).postAssignmentGradesForSections?.progress?._id
+            }
 
-        consumer.accept(PostGradeEvent.PostStarted(progressId))
+            consumer.accept(PostGradeEvent.PostStarted(progressId))
+        } catch (e: Throwable) {
+            consumer.accept(PostGradeEvent.PostFailed)
+        }
     }
 
     private suspend fun watchProgress(progressId: String?) {

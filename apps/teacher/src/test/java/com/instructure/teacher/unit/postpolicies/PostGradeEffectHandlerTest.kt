@@ -122,6 +122,26 @@ class PostGradeEffectHandlerTest : Assert() {
     }
 
     @Test
+    fun `HideGrades calls the API to hide grades with exception`() {
+        val assignmentId = 123L
+
+        val sections = emptyList<String>()
+
+        mockkObject(PostPolicyManager)
+        coEvery { PostPolicyManager.hideGradesAsync(assignmentId) } throws Exception()
+
+        connection.accept(PostGradeEffect.HideGrades(assignmentId, sections))
+
+        coVerify(timeout = 100) {
+            PostPolicyManager.hideGradesAsync(assignmentId)
+        }
+        verify(timeout = 100) {
+            consumer.accept(PostGradeEvent.PostFailed)
+        }
+        confirmVerified(PostPolicyManager, consumer)
+    }
+
+    @Test
     fun `HideGrades calls the API to hide grades with null response`() {
         val assignmentId = 123L
 
@@ -189,6 +209,27 @@ class PostGradeEffectHandlerTest : Assert() {
         }
         verify(timeout = 100) {
             consumer.accept(PostGradeEvent.PostStarted(progressId))
+        }
+        confirmVerified(PostPolicyManager, consumer)
+    }
+
+    @Test
+    fun `PostGrades calls the API to hide grades with exception`() {
+        val assignmentId = 123L
+        val gradedOnly = false
+
+        val sections = emptyList<String>()
+
+        mockkObject(PostPolicyManager)
+        coEvery { PostPolicyManager.postGradesAsync(assignmentId, gradedOnly) } throws Exception()
+
+        connection.accept(PostGradeEffect.PostGrades(assignmentId, sections, gradedOnly))
+
+        coVerify(timeout = 100) {
+            PostPolicyManager.postGradesAsync(assignmentId, gradedOnly)
+        }
+        verify(timeout = 100) {
+            consumer.accept(PostGradeEvent.PostFailed)
         }
         confirmVerified(PostPolicyManager, consumer)
     }
