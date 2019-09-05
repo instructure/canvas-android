@@ -18,8 +18,10 @@ package com.instructure.teacher.features.postpolicies
 
 import com.instructure.canvasapi2.managers.AssignmentManager
 import com.instructure.canvasapi2.managers.PostPolicyManager
+import com.instructure.canvasapi2.managers.ProgressManager
 import com.instructure.canvasapi2.managers.SectionManager
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Progress
 import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.teacher.features.postpolicies.ui.PostGradeView
 import com.instructure.teacher.mobius.common.ui.EffectHandler
@@ -32,7 +34,9 @@ class PostGradeEffectHandler : EffectHandler<PostGradeView, PostGradeEvent, Post
                 is PostGradeEffect.LoadData -> loadData(effect.assignment)
                 is PostGradeEffect.HideGrades -> hideGrades(effect.assignmentId, effect.sectionIds)
                 is PostGradeEffect.PostGrades -> postGrades(effect.assignmentId, effect.sectionIds, effect.gradedOnly)
-                is PostGradeEffect.ShowGradesPosted -> view?.showGradesPosted(effect.isHidingGrades)
+                is PostGradeEffect.ShowGradesPosted -> view?.showGradesPosted(effect.isHidingGrades, effect.assignmentId)
+                is PostGradeEffect.ShowPostFailed -> view?.showPostFailed(effect.isHidingGrades)
+                is PostGradeEffect.WatchForProgress -> watchProgress(effect.progressId)
             }.exhaustive
         }
     }
@@ -45,20 +49,43 @@ class PostGradeEffectHandler : EffectHandler<PostGradeView, PostGradeEvent, Post
     }
 
     private suspend fun hideGrades(assignmentId: Long, sections: List<String>) {
-        if (sections.isEmpty()) {
-            PostPolicyManager.hideGradesAsync(assignmentId)
+        val progressId = if (sections.isEmpty()) {
+            PostPolicyManager.hideGradesAsync(assignmentId).hideAssignmentGrades?.progress?._id
         } else {
-            PostPolicyManager.hideGradesForSectionsAsync(assignmentId, sections)
+            PostPolicyManager.hideGradesForSectionsAsync(assignmentId, sections).hideAssignmentGradesForSections?.progress?._id
         }
-        consumer.accept(PostGradeEvent.GradesPosted)
+
+        consumer.accept(PostGradeEvent.PostStarted(progressId))
     }
 
     private suspend fun postGrades(assignmentId: Long, sections: List<String>, gradedOnly: Boolean) {
-        if (sections.isEmpty()) {
-            PostPolicyManager.postGradesAsync(assignmentId, gradedOnly)
+        val progressId = if (sections.isEmpty()) {
+            PostPolicyManager.postGradesAsync(assignmentId, gradedOnly).postAssignmentGrades?.progress?._id
         } else {
-            PostPolicyManager.postGradesForSectionsAsync(assignmentId, gradedOnly, sections)
+            PostPolicyManager.postGradesForSectionsAsync(assignmentId, gradedOnly, sections).postAssignmentGradesForSections?.progress?._id
         }
-        consumer.accept(PostGradeEvent.GradesPosted)
+
+        consumer.accept(PostGradeEvent.PostStarted(progressId))
+    }
+
+    private suspend fun watchProgress(progressId: String?) {
+        if (progressId == null) { // If we didn't get a progress ID back, then it failed to post
+            consumer.accept(PostGradeEvent.PostFailed)
+            return
+        }
+
+        lateinit var progress: Progress
+        do {
+            progress = ProgressManager.getProgressAsync(progressId).await().dataOrNull ?: run {
+                consumer.accept(PostGradeEvent.PostFailed)
+                return
+            }
+        } while (!progress.hasRun) // Keep checking status until it's finished running
+
+        if (progress.isCompleted) {
+            consumer.accept(PostGradeEvent.GradesPosted)
+        } else {
+            consumer.accept(PostGradeEvent.PostFailed)
+        }
     }
 }

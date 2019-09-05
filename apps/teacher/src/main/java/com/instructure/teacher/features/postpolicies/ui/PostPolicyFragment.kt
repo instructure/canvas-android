@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.teacher.features.postpolicies
+package com.instructure.teacher.features.postpolicies.ui
 
 import android.graphics.Color
 import android.os.Bundle
@@ -30,7 +30,6 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
-import com.instructure.teacher.features.postpolicies.ui.PostGradeFragment
 import com.instructure.teacher.utils.setupBackButtonAsBackPressedOnly
 import kotlinx.android.synthetic.main.fragment_post_policy_settings.*
 import kotlinx.android.synthetic.main.fragment_post_policy_settings.view.*

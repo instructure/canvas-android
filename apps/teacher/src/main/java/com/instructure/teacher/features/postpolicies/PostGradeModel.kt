@@ -22,8 +22,10 @@ import com.instructure.canvasapi2.models.Submission
 
 sealed class PostGradeEvent {
     object GradesPosted : PostGradeEvent()
+    object PostFailed : PostGradeEvent()
     object PostGradesClicked : PostGradeEvent()
     object SpecificSectionsToggled : PostGradeEvent()
+    data class PostStarted(val progressId: String?) : PostGradeEvent()
     data class GradedOnlySelected(val gradedOnly: Boolean) : PostGradeEvent()
     data class SectionToggled(val sectionId: Long) : PostGradeEvent()
     data class DataLoaded(val sections: List<Section>, val submissions: List<Submission>) : PostGradeEvent()
@@ -33,7 +35,9 @@ sealed class PostGradeEffect {
     data class LoadData(val assignment: Assignment) : PostGradeEffect()
     data class HideGrades(val assignmentId: Long, val sectionIds: List<String>) : PostGradeEffect()
     data class PostGrades(val assignmentId: Long, val sectionIds: List<String>, val gradedOnly: Boolean) : PostGradeEffect()
-    data class ShowGradesPosted(val isHidingGrades: Boolean) : PostGradeEffect()
+    data class WatchForProgress(val progressId: String?) : PostGradeEffect()
+    data class ShowGradesPosted(val isHidingGrades: Boolean, val assignmentId: Long) : PostGradeEffect()
+    data class ShowPostFailed(val isHidingGrades: Boolean) : PostGradeEffect()
 }
 
 data class PostGradeModel(

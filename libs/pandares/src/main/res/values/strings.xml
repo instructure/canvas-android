@@ -1049,6 +1049,8 @@
     <string name="postPolicyAllPostedMessage">All grades are currently posted.</string>
     <string name="postPolicyPostedToast">Grades Posted</string>
     <string name="postPolicyHiddenToast">Grades Hidden</string>
+    <string name="postPolicyPostFailedToast">Failed to post grades</string>
+    <string name="postPolicyHideFailedToast">Failed to hide grades</string>
     <string name="gradeBeforePosting">Grade before posting</string>
     <string name="gradeAfterPosting">Grade after posting</string>
     <string name="gradeOverride">Grade override</string>
