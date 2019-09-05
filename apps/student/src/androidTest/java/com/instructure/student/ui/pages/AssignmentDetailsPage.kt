@@ -58,8 +58,8 @@ open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
         // Scroll up to the top in case we are not there already.
         onView(allOf(isAssignableFrom(ScrollView::class.java), isDisplayed())).perform(ScrollToTop())
 
-        // Now swipe down
-        onView(allOf(withId(R.id.swipeRefreshLayout),  isDisplayed())).swipeDown()
+        // Now swipe down -- twice, just for good measure (may update twice)
+        onView(allOf(withId(R.id.swipeRefreshLayout),  isDisplayed())).swipeDown().swipeDown()
     }
 
     fun goToSubmissionDetails() {
