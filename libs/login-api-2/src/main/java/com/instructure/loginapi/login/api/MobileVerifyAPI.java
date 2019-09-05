@@ -57,7 +57,6 @@ public class MobileVerifyAPI {
                         }
                     }
                 })
-                .authenticator(new CanvasAuthenticator())
                 .build();
 
         return new Retrofit.Builder()
