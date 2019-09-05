@@ -29,6 +29,7 @@ abstract class CanvasTest : InstructureTest(BuildConfig.GLOBAL_DITTO_MODE) {
     protected fun enableAndConfigureAccessibilityChecks() {
         AccessibilityChecker.runChecks() // Enable accessibility checks
 
+        Log.v("overflowWidth", "enableAndConfigureAccessibilityChecks() called, validator=${AccessibilityChecker.accessibilityValidator != null}")
         // For now, suppress warnings about overflow menus with width < 48dp, so long as the height is >= 48dp
         AccessibilityChecker.accessibilityValidator
                 // Causes all views to be checked, instead of just the views with which the test interacts
@@ -42,7 +43,7 @@ abstract class CanvasTest : InstructureTest(BuildConfig.GLOBAL_DITTO_MODE) {
 
                             // Suppress, for now, errors about overflow menus being too narrow
                             Matchers.allOf(
-                                    AccessibilityCheckResultUtils.matchesViews(ViewMatchers.withContentDescription("More options")),
+                                    isOverflowMenu(),
                                     withOnlyWidthLessThan(48)
                             ),
 
@@ -81,16 +82,19 @@ abstract class CanvasTest : InstructureTest(BuildConfig.GLOBAL_DITTO_MODE) {
                         var upCount = 0
                         while(view != null && upCount < 5)
                         {
-                            try {
-                                var resourceName = view.context.resources.getResourceName(view.id)
-                                for(excludedName in excludes) {
-                                    if(resourceName.contains(excludedName)) {
-                                        //Log.v("AccessibilityExclude", "Caught $resourceName")
-                                        return true
+                            // Weeding out id == -1 will filter out a lot of lines from our logs
+                            if(view.id != -1) {
+                                try {
+                                    var resourceName = view.context.resources.getResourceName(view.id)
+                                    for (excludedName in excludes) {
+                                        if (resourceName.contains(excludedName)) {
+                                            //Log.v("AccessibilityExclude", "Caught $resourceName")
+                                            return true
+                                        }
                                     }
+                                } catch (e: Resources.NotFoundException) {
                                 }
                             }
-                            catch(e: Resources.NotFoundException) { }
 
                             var parent = view.parent
                             when(parent) {
@@ -127,6 +131,7 @@ abstract class CanvasTest : InstructureTest(BuildConfig.GLOBAL_DITTO_MODE) {
         val densityDpi = activity.resources.displayMetrics.densityDpi
         val dim_f = dimInDp * (densityDpi.toDouble() / DisplayMetrics.DENSITY_DEFAULT.toDouble())
         val dim = dim_f.toInt()
+        Log.v("overflowWidth", "dimInDp=$dimInDp,densityDpi=$densityDpi,dim_f=$dim_f,dim=$dim")
         return object : BaseMatcher<AccessibilityViewCheckResult>() {
             override fun describeTo(description: Description?) {
                 description?.appendText("checking whether width < $dim && height >= $dim")
@@ -135,9 +140,38 @@ abstract class CanvasTest : InstructureTest(BuildConfig.GLOBAL_DITTO_MODE) {
             override fun matches(item: Any): Boolean {
                 when(item) {
                     is AccessibilityViewCheckResult -> {
-                        return item.view.width < dim && item.view.height >= dim
+                        val result = item.view.width < dim && item.view.height >= dim
+                        //Log.v("overflowWidth", "view=${getResourceName(item.view)}, desc=${item.view.contentDescription}, w=${item.view.width}, h=${item.view.height}, res=$result")
+                        return result
                     }
-                    else -> return false
+                    else -> {
+                        //Log.v("overflowWidth", "rejecting, item = ${item::javaClass::name}")
+                        return false
+                    }
+                }
+            }
+
+        }
+    }
+
+    // Checks to see whether or no a view is an overflow menu.
+    fun isOverflowMenu() : BaseMatcher<AccessibilityViewCheckResult> {
+        return object : BaseMatcher<AccessibilityViewCheckResult>() {
+            override fun describeTo(description: Description?) {
+                description?.appendText("Checking whether view is the overflow menu")
+            }
+
+            override fun matches(item: Any?): Boolean {
+                when(item) {
+                    is AccessibilityViewCheckResult -> {
+                        var result = item.view?.contentDescription?.contains("More options", ignoreCase = true) ?: false
+                        //Log.v("overflowWidth", "isOverflowMenu: contentDescription=${item.view?.contentDescription ?: "unknown"}, result=$result ")
+                        return result
+                    }
+                    else -> {
+                        //Log.v("overflowWidth", "isOverflowMenu: rejected  item = ${item!!::class.java::getSimpleName}")
+                        return false
+                    }
                 }
             }
 
@@ -186,11 +220,15 @@ abstract class CanvasTest : InstructureTest(BuildConfig.GLOBAL_DITTO_MODE) {
     // Grab the resourceName for a view
     private fun getResourceName(view: View) : String {
         var resourceName = "<unknown>"
-        try {
-            resourceName = view.context.resources.getResourceName(view.id)
-        }
-        catch(nfe: Resources.NotFoundException) {
-            // Eat this exception
+        // Don't bother trying for view with an ID of -1, since that is the standard representation
+        // of "no resource name defined".  Pressing forward with id == -1 clutters our log with
+        // a lot of unnecessary messages.
+        if(view.id != -1) {
+            try {
+                resourceName = view.context.resources.getResourceName(view.id)
+            } catch (nfe: Resources.NotFoundException) {
+                // Eat this exception
+            }
         }
 
         return resourceName

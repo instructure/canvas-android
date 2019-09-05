@@ -17,9 +17,13 @@
 package com.instructure.student.ui.utils
 
 import android.app.Activity
+import androidx.test.espresso.Espresso
+import androidx.test.espresso.matcher.ViewMatchers
 import com.instructure.canvas.espresso.CanvasTest
 import com.instructure.espresso.InstructureActivityTestRule
+import com.instructure.espresso.swipeRight
 import com.instructure.student.BuildConfig
+import com.instructure.student.R
 import com.instructure.student.activity.LoginActivity
 import com.instructure.student.ui.pages.*
 
@@ -56,4 +60,9 @@ abstract class StudentTest : CanvasTest() {
     val syllabusPage = SyllabusPage()
     val fileListPage = FileListPage()
     val discussionListPage = DiscussionListPage()
+
+    // A no-op interaction to afford us an easy, harmless way to get a11y checking to trigger.
+    fun meaninglessSwipe() {
+        Espresso.onView(ViewMatchers.withId(R.id.action_bar_root)).swipeRight();
+    }
 }
