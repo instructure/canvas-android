@@ -26,7 +26,6 @@ import com.instructure.canvasapi2.utils.*
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
 import com.instructure.canvasapi2.utils.weave.awaitApiResponse
 import com.instructure.student.Submission
-import com.instructure.student.analytics.*
 import com.instructure.student.db.Db
 import com.instructure.student.db.getInstance
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
@@ -179,7 +178,7 @@ class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Lon
                 }
             } else null
 
-            Analytics.logEvent(getAnalyticsString(quizResult, assignmentResult))
+            logEvent(getAnalyticsString(quizResult, assignmentResult))
 
             consumer.accept(
                 AssignmentDetailsEvent.DataLoaded(

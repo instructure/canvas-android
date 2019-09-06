@@ -84,9 +84,9 @@ class SubmissionDetailsView(
 
     private fun logTabSelected(position: Int?) {
         when (position) {
-            0 -> Analytics.logEvent(AnalyticsEventConstants.SUBMISSION_COMMENTS_SELECTED)
-            1 -> Analytics.logEvent(AnalyticsEventConstants.SUBMISSION_FILES_SELECTED)
-            2 -> Analytics.logEvent(AnalyticsEventConstants.SUBMISSION_RUBRIC_SELECTED)
+            0 -> logEvent(AnalyticsEventConstants.SUBMISSION_COMMENTS_SELECTED)
+            1 -> logEvent(AnalyticsEventConstants.SUBMISSION_FILES_SELECTED)
+            2 -> logEvent(AnalyticsEventConstants.SUBMISSION_RUBRIC_SELECTED)
         }
     }
 
@@ -285,7 +285,7 @@ class SubmissionDetailsView(
                     putLong(AnalyticsParamConstants.ASSIGNMENT_ID, type.assignmentId)
                 }
 
-                Analytics.logEvent(AnalyticsEventConstants.UNSUPPORTED_SUBMISSION_CONTENT, bundle)
+                logEvent(AnalyticsEventConstants.UNSUPPORTED_SUBMISSION_CONTENT, bundle)
 
                 SubmissionMessageFragment.newInstance(
                     title = R.string.noOnlineSubmissions,
