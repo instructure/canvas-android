@@ -19,6 +19,7 @@ package com.instructure.teacher.presenters
 import com.instructure.canvasapi2.managers.AssignmentManager
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.EnrollmentManager
+import com.instructure.canvasapi2.managers.FeaturesManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.postmodels.AssignmentPostBody
 import com.instructure.canvasapi2.utils.intersectBy
@@ -54,6 +55,9 @@ class AssignmentSubmissionListPresenter(val mAssignment: Assignment, private var
 
     private var mSectionsSelected = ArrayList<CanvasContext>()
 
+    var newGradebookEnabled: Boolean = false
+        private set
+
     @Suppress("EXPERIMENTAL_FEATURE_WARNING")
     override fun loadData(forceNetwork: Boolean) {
         // Skip if API call are already in progress
@@ -74,6 +78,8 @@ class AssignmentSubmissionListPresenter(val mAssignment: Assignment, private var
                         { EnrollmentManager.getAllEnrollmentsForCourse(mAssignment.courseId, null, forceNetwork, it) },
                         { AssignmentManager.getAllSubmissionsForAssignment(mAssignment.courseId, mAssignment.id, forceNetwork, it) }
                 )
+                newGradebookEnabled = awaitApi<List<String>> { FeaturesManager.getEnabledFeaturesForCourse(mAssignment.courseId, forceNetwork, it) }.contains(FeaturesManager.NEW_GRADEBOOK)
+
                 val enrollmentMap = enrollments.associateBy { it.user?.id }
                 val students = gradeableStudents.distinctBy { it.id }.map {
                     // Students need the enrollment info

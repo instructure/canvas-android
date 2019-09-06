@@ -16,43 +16,28 @@
  */
 package com.instructure.student.ui.pages
 
+import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvas.espresso.scrollRecyclerView
-import com.instructure.dataseeding.model.ConversationApiModel
-import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.page.onView
 import com.instructure.student.R
+import org.hamcrest.Matchers.allOf
 
-class InboxPage : BasePage(R.id.inboxPage) {
-
-    private val toolbar by OnViewWithId(R.id.toolbar)
-    private val createMessageButton by OnViewWithId(R.id.addMessage)
-
-    fun assertConversationDisplayed(conversation: ConversationApiModel) {
-        assertConversationDisplayed(conversation.subject)
-    }
-
-    fun assertConversationDisplayed(subject: String) {
-        val matcher = withText(subject)
-        scrollRecyclerView(R.id.inboxRecyclerView, matcher)
+// Tests that files submitted for submissions, submission comments and discussions are
+// properly displayed.
+class FileListPage : BasePage(R.id.fileListPage) {
+    fun assertItemDisplayed(itemName: String) {
+        val matcher = allOf(withId(R.id.fileName), withText(itemName))
+        scrollRecyclerView(R.id.listView, matcher)
         onView(matcher).assertDisplayed()
     }
 
-    fun selectConversation(conversation: ConversationApiModel) {
-        val matcher = withText(conversation.subject)
-        scrollRecyclerView(R.id.inboxRecyclerView, matcher)
+    fun selectItem(itemName: String) {
+        val matcher = allOf(withId(R.id.fileName), withText(itemName))
+        scrollRecyclerView(R.id.listView, matcher)
         onView(matcher).click()
-    }
-
-    fun pressNewMessageButton() {
-        createMessageButton.click()
-    }
-
-    fun goToDashboard() {
-        onView(withId(R.id.bottomNavigationCourses)).click()
     }
 }

@@ -150,6 +150,16 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
 
     override fun onRefreshFinished() {
         swipeRefreshLayout.isRefreshing = false
+
+        assignmentSubmissionListToolbar.menu.findItem(R.id.menuPostPolicies)?.let {
+            it.isVisible = presenter.newGradebookEnabled
+        }
+        assignmentSubmissionListToolbar.menu.findItem(R.id.menuMuteGrades)?.let {
+            it.isVisible = !presenter.newGradebookEnabled
+        }
+
+        // Theme the toolbar again since visibilities may have changed
+        ViewStyler.themeToolbar(requireActivity(), assignmentSubmissionListToolbar, mCourseColor, Color.WHITE)
     }
 
     override fun checkIfEmpty() {
@@ -296,11 +306,7 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
     private fun updateStatuses() {
         val isMuted = presenter.mAssignment.muted
         assignmentSubmissionListToolbar.menu.findItem(R.id.menuMuteGrades)?.let {
-            it.isVisible = !FeatureFlags.postPolicies
             it.title = getString(if (isMuted) R.string.unmuteGrades else R.string.muteGrades)
-        }
-        assignmentSubmissionListToolbar.menu.findItem(R.id.menuPostPolicies)?.let {
-            it.isVisible = FeatureFlags.postPolicies
         }
 
         val statuses = mutableListOf<String>()

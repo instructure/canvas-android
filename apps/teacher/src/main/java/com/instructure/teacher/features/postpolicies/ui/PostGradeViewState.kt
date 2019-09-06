@@ -16,4 +16,40 @@
  */
 package com.instructure.teacher.features.postpolicies.ui
 
-sealed class PostGradeViewState
+import com.instructure.teacher.features.postpolicies.PostSection
+
+sealed class PostGradeViewState(val visibilities: PostGradeVisibilities) {
+    data class Loading(val courseColor: Int) : PostGradeViewState(PostGradeVisibilities(loading = true))
+
+    data class LoadedViewState(
+        val courseColor: Int,
+        val statusText: String,
+        val gradedOnlyText: String?,
+        val specificSectionsVisible: Boolean,
+        val postText: String?,
+        val postProcessing: Boolean,
+        val sections: List<PostSection>
+    ) : PostGradeViewState(
+        PostGradeVisibilities(
+            policyView = true,
+            postProcessing = postProcessing,
+            gradedOnlySelector = !gradedOnlyText.isNullOrEmpty(),
+            sectionRecycler = specificSectionsVisible
+        )
+    )
+
+    data class EmptyViewState(
+        val imageResId: Int,
+        val emptyTitle: String,
+        val emptyMessage: String
+    ) : PostGradeViewState(PostGradeVisibilities(emptyView = true))
+}
+
+data class PostGradeVisibilities(
+    val policyView: Boolean = false,
+    val postProcessing: Boolean = false,
+    val gradedOnlySelector: Boolean = false,
+    val sectionRecycler: Boolean = false,
+    val emptyView: Boolean = false,
+    val loading: Boolean = false
+)
