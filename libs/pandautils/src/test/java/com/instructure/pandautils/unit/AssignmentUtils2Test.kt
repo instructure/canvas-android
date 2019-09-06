@@ -108,7 +108,8 @@ class AssignmentUtils2Test : Assert() {
 
         val submission = Submission(
             attempt = 1,
-            grade = "A"
+            grade = "A",
+            postedAt = Date()
         )
         val assignment = Assignment(
             submission = submission,
@@ -150,7 +151,8 @@ class AssignmentUtils2Test : Assert() {
         val submission = Submission(
             attempt = 1,
             grade = "A",
-            late = true
+            late = true,
+            postedAt = Date()
         )
 
         val assignment = Assignment(
