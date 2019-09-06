@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.utils.APIHelper;
 import com.instructure.canvasapi2.utils.ApiPrefs;
 import com.instructure.canvasapi2.utils.Logger;
 import com.instructure.loginapi.login.model.DomainVerificationResult;
+import com.instructure.canvasapi2.utils.CanvasAuthenticator;
 
 import java.io.IOException;
 

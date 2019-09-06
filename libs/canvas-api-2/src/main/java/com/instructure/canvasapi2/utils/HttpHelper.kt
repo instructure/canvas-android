@@ -61,7 +61,7 @@ object HttpHelper {
             urlConnection.requestMethod = "GET"
 
             if (includeAuthentication) {
-                val token = ApiPrefs.token
+                val token = ApiPrefs.getValidToken()
                 if (token.isNotEmpty()) {
                     val headerValue = String.format("Bearer %s", token)
                     urlConnection.setRequestProperty("Authorization", headerValue)

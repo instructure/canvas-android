@@ -41,7 +41,7 @@ object PageViewUtils {
     @JvmStatic
     @Suppress("EXPERIMENTAL_FEATURE_WARNING", "MemberVisibilityCanBePrivate")
     fun startEvent(eventName: String, url: String): PageViewEvent? {
-        if (ApiPrefs.token.isBlank()) return null
+        if (ApiPrefs.getValidToken().isBlank()) return null
         val loginId = ApiPrefs.user?.id ?: return null
         val pandataInfo = ApiPrefs.pandataInfo ?: return null
         val (userId, realUserId) = if (ApiPrefs.isMasquerading) ApiPrefs.masqueradeId to loginId else loginId to null
