@@ -231,12 +231,14 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
                     return true
                 }
             }).onSuccess { attachment ->
+                Analytics.logEvent(AnalyticsEventConstants.SUBMIT_FILEUPLOAD_SUCCEEDED)
                 updateFileProgress(db, submission.id, 1.0f, index, attachments.size, completedAttachmentCount)
                 db.fileSubmissionQueries.setFileAttachmentIdAndError(attachment.id, false, null, pendingAttachment.id)
 
                 attachmentIds.add(attachment.id)
                 FileUploadUtils.deleteTempFile(pendingAttachment.fullPath)
             }.onFailure {
+                Analytics.logEvent(AnalyticsEventConstants.SUBMIT_FILEUPLOAD_FAILED)
                 handleFileError(db, submission, index, attachments, it?.message)
                 return null
             }

@@ -74,10 +74,6 @@ class SubmissionDetailsEmptyContentUpdate : UpdateInit<SubmissionDetailsEmptyCon
         is SubmissionDetailsEmptyContentEvent.OnVideoRecordingError -> {
             Next.dispatch(setOf(SubmissionDetailsEmptyContentEffect.ShowVideoRecordingError))
         }
-        is SubmissionDetailsEmptyContentEvent.SubmissionTypeClicked -> {
-            // If a user is trying to submit something to an assignment and the assignment is null, something is terribly wrong.
-            Next.dispatch(setOf(SubmissionDetailsEmptyContentEffect.ShowCreateSubmissionView(event.submissionType, model.course, model.assignment)))
-        }
         is SubmissionDetailsEmptyContentEvent.StoreVideoUri -> {
             Next.next(model.copy(videoFileUri = event.uri))
         }

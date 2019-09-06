@@ -234,6 +234,7 @@ dependencies {
     testImplementation Libs.MOCKK
     androidTestImplementation Libs.ANDROIDX_TEST_JUNIT
     testImplementation Libs.KOTLIN_COROUTINES_TEST
+    testImplementation Libs.FIREBASE_CORE
 
     /* Crashlytics */
     implementation(Libs.CRASHLYTICS) {

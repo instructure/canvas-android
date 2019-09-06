@@ -26,6 +26,8 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.activity.BaseRouterActivity

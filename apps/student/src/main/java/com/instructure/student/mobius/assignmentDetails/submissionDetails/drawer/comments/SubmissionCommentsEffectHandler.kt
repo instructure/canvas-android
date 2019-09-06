@@ -21,6 +21,7 @@ package com.instructure.student.mobius.assignmentDetails.submissionDetails.drawe
 import android.app.Activity
 import android.content.Context
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.pandautils.utils.PermissionUtils
 import com.instructure.pandautils.utils.requestPermissions
@@ -43,6 +44,7 @@ class SubmissionCommentsEffectHandler(val context: Context) : EffectHandler<Subm
                 launchVideo()
             }
             is SubmissionCommentsEffect.UploadMediaComment -> {
+                logEvent(AnalyticsEventConstants.SUBMISSION_COMMENTS_MEDIA_REPLY)
                 SubmissionService.startMediaCommentUpload(
                     context = context,
                     canvasContext = CanvasContext.emptyCourseContext(effect.courseId),
@@ -59,6 +61,7 @@ class SubmissionCommentsEffectHandler(val context: Context) : EffectHandler<Subm
                 view?.clearTextInput()
             }
             is SubmissionCommentsEffect.SendTextComment -> {
+                logEvent(AnalyticsEventConstants.SUBMISSION_COMMENTS_TEXT_REPLY)
                 SubmissionService.startCommentUpload(
                     context,
                     CanvasContext.emptyCourseContext(effect.courseId),
