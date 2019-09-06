@@ -4,6 +4,7 @@ import android.content.res.Resources
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
+import android.webkit.WebView
 import androidx.test.espresso.matcher.ViewMatchers
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityViewCheckResult
@@ -53,7 +54,15 @@ abstract class CanvasTest : InstructureTest(BuildConfig.GLOBAL_DITTO_MODE) {
                             // On very low-res devices, controls can be squished to the point that they are smaller
                             // than their specified minimum.  This seems unavoidable, so let's not log an
                             // accessibility error for this.
-                            underMinSizeOnLowRes()
+                            underMinSizeOnLowRes(),
+
+                            // Let's ignore size issues with WebViews, since they do not honor minHeight/minWidth
+                            // Note that TouchTargetSizeViewCheck is the *old* name of the check.  The new name would
+                            // be "TouchTargetSizeCheck".
+                            Matchers.allOf(
+                                    AccessibilityCheckResultUtils.matchesViews(ViewMatchers.isAssignableFrom(WebView::class.java)),
+                                    AccessibilityCheckResultUtils.matchesCheckNames(Matchers.`is`("TouchTargetSizeViewCheck"))
+                            )
                         )
 
                 )
