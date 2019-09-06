@@ -40,7 +40,7 @@ import com.instructure.teacher.events.AssignmentGradedEvent
 import com.instructure.teacher.events.SubmissionCommentsUpdated
 import com.instructure.teacher.events.SubmissionFilterChangedEvent
 import com.instructure.teacher.factory.AssignmentSubmissionListPresenterFactory
-import com.instructure.teacher.features.postpolicies.PostPolicyFragment
+import com.instructure.teacher.features.postpolicies.ui.PostPolicyFragment
 import com.instructure.teacher.holders.GradeableStudentSubmissionViewHolder
 import com.instructure.teacher.presenters.AssignmentSubmissionListPresenter
 import com.instructure.teacher.presenters.AssignmentSubmissionListPresenter.SubmissionListFilter

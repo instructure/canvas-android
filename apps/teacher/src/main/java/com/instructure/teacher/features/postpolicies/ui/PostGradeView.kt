@@ -31,6 +31,8 @@ import kotlinx.android.synthetic.main.fragment_post_grade.*
 import com.instructure.pandautils.utils.applyTheme
 import android.app.AlertDialog
 import android.view.*
+import com.instructure.teacher.events.AssignmentGradedEvent
+import com.instructure.teacher.events.post
 import kotlinx.android.synthetic.main.dialog_post_graded_everyone.*
 
 class PostGradeView(inflater: LayoutInflater, parent: ViewGroup) : MobiusView<PostGradeViewState, PostGradeEvent>(R.layout.fragment_post_grade, inflater, parent) {
@@ -135,8 +137,13 @@ class PostGradeView(inflater: LayoutInflater, parent: ViewGroup) : MobiusView<Po
         adapter?.data = state.sections
     }
 
-    fun showGradesPosted(isHidingGrades: Boolean) {
+    fun showGradesPosted(isHidingGrades: Boolean, assignmentId: Long) {
         Toast.makeText(context, if (isHidingGrades) R.string.postPolicyHiddenToast else R.string.postPolicyPostedToast, Toast.LENGTH_SHORT).show()
         (context as Activity).onBackPressed()
+        AssignmentGradedEvent(assignmentId).post() //post bus event
+    }
+
+    fun showPostFailed(isHidingGrades: Boolean) {
+        Toast.makeText(context, if (isHidingGrades) R.string.postPolicyHideFailedToast else R.string.postPolicyPostFailedToast, Toast.LENGTH_LONG).show()
     }
 }

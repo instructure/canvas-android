@@ -21,8 +21,10 @@ import com.instructure.canvasapi2.PostAssignmentGradesForSectionsMutation
 import com.instructure.canvasapi2.PostAssignmentGradesMutation
 import com.instructure.canvasapi2.managers.AssignmentManager
 import com.instructure.canvasapi2.managers.PostPolicyManager
+import com.instructure.canvasapi2.managers.ProgressManager
 import com.instructure.canvasapi2.managers.SectionManager
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Progress
 import com.instructure.canvasapi2.models.Section
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.DataResult
@@ -37,6 +39,7 @@ import io.mockk.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.asCoroutineDispatcher
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.setMain
 import org.junit.Assert
 import org.junit.Before
@@ -48,6 +51,8 @@ class PostGradeEffectHandlerTest : Assert() {
     private lateinit var effectHandler: PostGradeEffectHandler
     private lateinit var consumer: Consumer<PostGradeEvent>
     private lateinit var connection: Connection<PostGradeEffect>
+
+    private val progressId = "135"
 
     @ExperimentalCoroutinesApi
     @Before
@@ -118,7 +123,27 @@ class PostGradeEffectHandlerTest : Assert() {
     }
 
     @Test
-    fun `HideGrades calls the API to hide grades`() {
+    fun `HideGrades calls the API to hide grades with exception`() {
+        val assignmentId = 123L
+
+        val sections = emptyList<String>()
+
+        mockkObject(PostPolicyManager)
+        coEvery { PostPolicyManager.hideGradesAsync(assignmentId) } throws Exception()
+
+        connection.accept(PostGradeEffect.HideGrades(assignmentId, sections))
+
+        coVerify(timeout = 100) {
+            PostPolicyManager.hideGradesAsync(assignmentId)
+        }
+        verify(timeout = 100) {
+            consumer.accept(PostGradeEvent.PostFailed)
+        }
+        confirmVerified(PostPolicyManager, consumer)
+    }
+
+    @Test
+    fun `HideGrades calls the API to hide grades with null response`() {
         val assignmentId = 123L
 
         val sections = emptyList<String>()
@@ -132,7 +157,32 @@ class PostGradeEffectHandlerTest : Assert() {
             PostPolicyManager.hideGradesAsync(assignmentId)
         }
         verify(timeout = 100) {
-            consumer.accept(PostGradeEvent.GradesPosted)
+            consumer.accept(PostGradeEvent.PostStarted(null))
+        }
+        confirmVerified(PostPolicyManager, consumer)
+    }
+
+    @Test
+    fun `HideGrades calls the API to hide grades`() {
+        val assignmentId = 123L
+
+        val sections = emptyList<String>()
+
+        mockkObject(PostPolicyManager)
+        coEvery { PostPolicyManager.hideGradesAsync(assignmentId) } returns HideAssignmentGradesMutation.Data(
+            HideAssignmentGradesMutation.HideAssignmentGrades(
+                "",
+                HideAssignmentGradesMutation.Progress("", progressId)
+            )
+        )
+
+        connection.accept(PostGradeEffect.HideGrades(assignmentId, sections))
+
+        coVerify(timeout = 100) {
+            PostPolicyManager.hideGradesAsync(assignmentId)
+        }
+        verify(timeout = 100) {
+            consumer.accept(PostGradeEvent.PostStarted(progressId))
         }
         confirmVerified(PostPolicyManager, consumer)
     }
@@ -144,7 +194,14 @@ class PostGradeEffectHandlerTest : Assert() {
         val sections = listOf("1", "2", "3")
 
         mockkObject(PostPolicyManager)
-        coEvery { PostPolicyManager.hideGradesForSectionsAsync(assignmentId, sections) } returns HideAssignmentGradesForSectionsMutation.Data(null)
+        coEvery {
+            PostPolicyManager.hideGradesForSectionsAsync(assignmentId, sections)
+        } returns HideAssignmentGradesForSectionsMutation.Data(
+            HideAssignmentGradesForSectionsMutation.HideAssignmentGradesForSections(
+                "",
+                HideAssignmentGradesForSectionsMutation.Progress("", progressId)
+            )
+        )
 
         connection.accept(PostGradeEffect.HideGrades(assignmentId, sections))
 
@@ -152,7 +209,28 @@ class PostGradeEffectHandlerTest : Assert() {
             PostPolicyManager.hideGradesForSectionsAsync(assignmentId, sections)
         }
         verify(timeout = 100) {
-            consumer.accept(PostGradeEvent.GradesPosted)
+            consumer.accept(PostGradeEvent.PostStarted(progressId))
+        }
+        confirmVerified(PostPolicyManager, consumer)
+    }
+
+    @Test
+    fun `PostGrades calls the API to hide grades with exception`() {
+        val assignmentId = 123L
+        val gradedOnly = false
+
+        val sections = emptyList<String>()
+
+        mockkObject(PostPolicyManager)
+        coEvery { PostPolicyManager.postGradesAsync(assignmentId, gradedOnly) } throws Exception()
+
+        connection.accept(PostGradeEffect.PostGrades(assignmentId, sections, gradedOnly))
+
+        coVerify(timeout = 100) {
+            PostPolicyManager.postGradesAsync(assignmentId, gradedOnly)
+        }
+        verify(timeout = 100) {
+            consumer.accept(PostGradeEvent.PostFailed)
         }
         confirmVerified(PostPolicyManager, consumer)
     }
@@ -165,7 +243,12 @@ class PostGradeEffectHandlerTest : Assert() {
         val sections = emptyList<String>()
 
         mockkObject(PostPolicyManager)
-        coEvery { PostPolicyManager.postGradesAsync(assignmentId, gradedOnly) } returns PostAssignmentGradesMutation.Data(null)
+        coEvery { PostPolicyManager.postGradesAsync(assignmentId, gradedOnly) } returns PostAssignmentGradesMutation.Data(
+            PostAssignmentGradesMutation.PostAssignmentGrades(
+                "",
+                PostAssignmentGradesMutation.Progress("", progressId)
+            )
+        )
 
         connection.accept(PostGradeEffect.PostGrades(assignmentId, sections, gradedOnly))
 
@@ -173,7 +256,7 @@ class PostGradeEffectHandlerTest : Assert() {
             PostPolicyManager.postGradesAsync(assignmentId, gradedOnly)
         }
         verify(timeout = 100) {
-            consumer.accept(PostGradeEvent.GradesPosted)
+            consumer.accept(PostGradeEvent.PostStarted(progressId))
         }
         confirmVerified(PostPolicyManager, consumer)
     }
@@ -186,7 +269,11 @@ class PostGradeEffectHandlerTest : Assert() {
         val sections = listOf("1", "2", "3")
 
         mockkObject(PostPolicyManager)
-        coEvery { PostPolicyManager.postGradesForSectionsAsync(assignmentId, gradedOnly, sections) } returns PostAssignmentGradesForSectionsMutation.Data(null)
+        coEvery {
+            PostPolicyManager.postGradesForSectionsAsync(assignmentId, gradedOnly, sections)
+        } returns PostAssignmentGradesForSectionsMutation.Data(
+            PostAssignmentGradesForSectionsMutation.PostAssignmentGradesForSections("", PostAssignmentGradesForSectionsMutation.Progress("", progressId))
+        )
 
         connection.accept(PostGradeEffect.PostGrades(assignmentId, sections, gradedOnly))
 
@@ -194,20 +281,103 @@ class PostGradeEffectHandlerTest : Assert() {
             PostPolicyManager.postGradesForSectionsAsync(assignmentId, gradedOnly, sections)
         }
         verify(timeout = 100) {
-            consumer.accept(PostGradeEvent.GradesPosted)
+            consumer.accept(PostGradeEvent.PostStarted(progressId))
         }
         confirmVerified(PostPolicyManager, consumer)
     }
 
     @Test
     fun `ShowGradesPosted calls showGradesPosted on the view`() {
+        val assignmentId = 123L
         val isHidingGrades = true
 
-        connection.accept(PostGradeEffect.ShowGradesPosted(isHidingGrades))
+        connection.accept(PostGradeEffect.ShowGradesPosted(isHidingGrades, assignmentId))
 
         verify(timeout = 100) {
-            view.showGradesPosted(isHidingGrades)
+            view.showGradesPosted(isHidingGrades, assignmentId)
         }
         confirmVerified(view)
+    }
+
+    @Test
+    fun `ShowPostFailed calls showGradesPosted on the view`() {
+        val isHidingGrades = true
+
+        connection.accept(PostGradeEffect.ShowPostFailed(isHidingGrades))
+
+        verify(timeout = 100) {
+            view.showPostFailed(isHidingGrades)
+        }
+        confirmVerified(view)
+    }
+
+    @Test
+    fun `WatchForProgress calls the consumer with PostFailed when given null id`() {
+        val progressId: String? = null
+
+        connection.accept(PostGradeEffect.WatchForProgress(progressId))
+
+        verify(timeout = 100) {
+            consumer.accept(PostGradeEvent.PostFailed)
+        }
+        confirmVerified(consumer)
+    }
+
+    @Test
+    fun `WatchForProgress calls the consumer with PostFailed when progress API result fails`() {
+        mockkStatic("kotlinx.coroutines.DelayKt")
+        coEvery { delay(1000L) } returns Unit
+
+        mockkObject(ProgressManager)
+        coEvery {
+            ProgressManager.getProgressAsync(progressId).await()
+        } returns DataResult.Fail(null)
+
+        connection.accept(PostGradeEffect.WatchForProgress(progressId))
+
+        verify(timeout = 100) {
+            consumer.accept(PostGradeEvent.PostFailed)
+        }
+        confirmVerified(consumer)
+    }
+
+    @Test
+    fun `WatchForProgress calls the consumer with PostFailed when progress is failed`() {
+        mockkStatic("kotlinx.coroutines.DelayKt")
+        coEvery { delay(1000L) } returns Unit
+
+        mockkObject(ProgressManager)
+        coEvery {
+            ProgressManager.getProgressAsync(progressId).await()
+        } returns DataResult.Success(Progress(workflowState = "failed"))
+
+        connection.accept(PostGradeEffect.WatchForProgress(progressId))
+
+        verify(timeout = 100) {
+            consumer.accept(PostGradeEvent.PostFailed)
+        }
+        confirmVerified(consumer)
+    }
+
+    @Test
+    fun `WatchForProgress calls the consumer with GradesPosted`() {
+        mockkStatic("kotlinx.coroutines.DelayKt")
+        coEvery { delay(1000L) } returns Unit
+
+        mockkObject(ProgressManager)
+        coEvery {
+            ProgressManager.getProgressAsync(progressId).await()
+        } returnsMany listOf(
+            DataResult.Success(Progress(workflowState = "queued")),
+            DataResult.Success(Progress(workflowState = "running")),
+            DataResult.Success(Progress(workflowState = "completed"))
+        )
+
+        connection.accept(PostGradeEffect.WatchForProgress(progressId))
+
+        verify(timeout = 100) {
+            consumer.accept(PostGradeEvent.GradesPosted)
+        }
+        confirmVerified(consumer)
     }
 }

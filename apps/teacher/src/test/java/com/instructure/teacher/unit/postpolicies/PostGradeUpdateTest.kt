@@ -34,7 +34,7 @@ class PostGradeUpdateTest : Assert() {
     private val initSpec = InitSpec(PostGradeUpdate()::init)
     private val updateSpec = UpdateSpec(PostGradeUpdate()::update)
 
-    private val assignment = Assignment()
+    private val assignment = Assignment(id = 123L)
     private val initModel = PostGradeModel(assignment, false)
 
     @Test
@@ -276,7 +276,39 @@ class PostGradeUpdateTest : Assert() {
             .then(
                 assertThatNext<PostGradeModel, PostGradeEffect>(
                     hasNoModel(),
-                    hasEffects(PostGradeEffect.ShowGradesPosted(isHidingGrades))
+                    hasEffects(PostGradeEffect.ShowGradesPosted(isHidingGrades, assignment.id))
+                )
+            )
+    }
+
+    @Test
+    fun `PostFailed results in ShowPostFailed effect`() {
+        val isHidingGrades = true
+        val model = initModel.copy(isHidingGrades = isHidingGrades, isProcessing = true)
+        val expectedModel = model.copy(isProcessing = false)
+
+        updateSpec
+            .given(model)
+            .whenEvent(PostGradeEvent.PostFailed)
+            .then(
+                assertThatNext<PostGradeModel, PostGradeEffect>(
+                    hasModel(expectedModel),
+                    hasEffects(PostGradeEffect.ShowPostFailed(isHidingGrades))
+                )
+            )
+    }
+
+    @Test
+    fun `PostStarted results in WatchForProgress effect`() {
+        val progressId = "123"
+
+        updateSpec
+            .given(initModel)
+            .whenEvent(PostGradeEvent.PostStarted(progressId))
+            .then(
+                assertThatNext<PostGradeModel, PostGradeEffect>(
+                    hasNoModel(),
+                    hasEffects(PostGradeEffect.WatchForProgress(progressId))
                 )
             )
     }

@@ -27,7 +27,8 @@ class PostGradeUpdate : UpdateInit<PostGradeModel, PostGradeEvent, PostGradeEffe
 
     override fun update(model: PostGradeModel, event: PostGradeEvent): Next<PostGradeModel, PostGradeEffect> {
         return when (event) {
-            PostGradeEvent.GradesPosted -> Next.dispatch(setOf<PostGradeEffect>(PostGradeEffect.ShowGradesPosted(model.isHidingGrades)))
+            PostGradeEvent.GradesPosted -> Next.dispatch(setOf<PostGradeEffect>(PostGradeEffect.ShowGradesPosted(model.isHidingGrades, model.assignment.id)))
+            PostGradeEvent.PostFailed -> Next.next(model.copy(isProcessing = false), setOf<PostGradeEffect>(PostGradeEffect.ShowPostFailed(model.isHidingGrades)))
             PostGradeEvent.PostGradesClicked -> {
                 Next.next(
                     model.copy(isProcessing = true), setOf(
@@ -51,6 +52,7 @@ class PostGradeUpdate : UpdateInit<PostGradeModel, PostGradeEvent, PostGradeEffe
                     submissions = event.submissions
                 )
             )
+            is PostGradeEvent.PostStarted -> Next.dispatch(setOf<PostGradeEffect>(PostGradeEffect.WatchForProgress(event.progressId)))
         }
     }
 
