@@ -39,6 +39,7 @@ import io.mockk.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.asCoroutineDispatcher
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.setMain
 import org.junit.Assert
 import org.junit.Before
@@ -324,6 +325,9 @@ class PostGradeEffectHandlerTest : Assert() {
 
     @Test
     fun `WatchForProgress calls the consumer with PostFailed when progress API result fails`() {
+        mockkStatic("kotlinx.coroutines.DelayKt")
+        coEvery { delay(1000L) } returns Unit
+
         mockkObject(ProgressManager)
         coEvery {
             ProgressManager.getProgressAsync(progressId).await()
@@ -339,6 +343,9 @@ class PostGradeEffectHandlerTest : Assert() {
 
     @Test
     fun `WatchForProgress calls the consumer with PostFailed when progress is failed`() {
+        mockkStatic("kotlinx.coroutines.DelayKt")
+        coEvery { delay(1000L) } returns Unit
+
         mockkObject(ProgressManager)
         coEvery {
             ProgressManager.getProgressAsync(progressId).await()
@@ -354,6 +361,9 @@ class PostGradeEffectHandlerTest : Assert() {
 
     @Test
     fun `WatchForProgress calls the consumer with GradesPosted`() {
+        mockkStatic("kotlinx.coroutines.DelayKt")
+        coEvery { delay(1000L) } returns Unit
+
         mockkObject(ProgressManager)
         coEvery {
             ProgressManager.getProgressAsync(progressId).await()
