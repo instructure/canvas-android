@@ -1,16 +1,16 @@
 package com.instructure.student.ui.pages
 
-import androidx.recyclerview.widget.RecyclerView
-import androidx.test.espresso.Espresso
-import androidx.test.espresso.contrib.RecyclerViewActions
+import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import com.instructure.canvas.espresso.scrollRecyclerView
+import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.dataseeding.model.AssignmentApiModel
 import com.instructure.dataseeding.model.QuizApiModel
 import com.instructure.espresso.OnViewWithId
-import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
@@ -40,8 +40,10 @@ class CalendarPage: BasePage(R.id.calendarPage) {
         assertTextDisplayedInRecyclerView(quiz.title)
     }
 
+    // On low-res devices, the month text can get scrunched, and may not completely display.
+    // So we'll only ask that 50% of it be displayed.
     fun toggleCalendarVisibility() {
-        onView(withId(R.id.monthText)).click()
+        onView(withId(R.id.monthText)).perform(withCustomConstraints(click(), isDisplayingAtLeast(50)))
     }
 
     private fun assertTextDisplayedInRecyclerView(s: String) {
@@ -49,8 +51,7 @@ class CalendarPage: BasePage(R.id.calendarPage) {
         val matcher = ViewMatchers.withText(Matchers.containsString(s))
 
         // Scroll RecyclerView item into view, if necessary
-        onView(withId(R.id.calendarRecyclerView))
-                .perform(RecyclerViewActions.scrollTo<RecyclerView.ViewHolder>(ViewMatchers.hasDescendant(matcher)))
+        scrollRecyclerView(R.id.calendarRecyclerView, matcher)
 
         // Now make sure that it is displayed
         // Shouldn't be necessary given that the line above passed.  Also, this line can

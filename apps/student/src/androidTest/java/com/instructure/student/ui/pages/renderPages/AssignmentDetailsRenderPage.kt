@@ -16,7 +16,6 @@
  */
 package com.instructure.student.ui.pages.renderPages
 
-import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
@@ -25,14 +24,20 @@ import androidx.test.espresso.web.sugar.Web.onWebView
 import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
 import androidx.test.espresso.web.webdriver.DriverAtoms.getText
 import androidx.test.espresso.web.webdriver.Locator
-import androidx.test.platform.app.InstrumentationRegistry
-import com.instructure.espresso.*
-import com.instructure.espresso.page.onViewWithContentDescription
+import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.OnViewWithText
+import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.assertGone
+import com.instructure.espresso.assertHasContentDescription
+import com.instructure.espresso.assertHasText
+import com.instructure.espresso.assertVisible
+import com.instructure.espresso.click
 import com.instructure.espresso.page.onViewWithText
 import com.instructure.student.R
 import com.instructure.student.ui.pages.AssignmentDetailsPage
 import org.hamcrest.Matchers
 import org.hamcrest.Matchers.allOf
+import org.hamcrest.Matchers.containsString
 
 class AssignmentDetailsRenderPage : AssignmentDetailsPage() {
 
@@ -124,10 +129,13 @@ class AssignmentDetailsRenderPage : AssignmentDetailsPage() {
     }
 
     fun openOverflowMenu() {
+        // This wasn't working so well in some API versions
         //Espresso.openActionBarOverflowOrOptionsMenu(InstrumentationRegistry.getInstrumentation().targetContext)
 
-        // This worked better on a low-res device locally
-        onView(allOf(withContentDescription("More options"), isDisplayed())).click()
+        // Evidently, on later Android versions, the content description can contain extra control
+        // characters (??).  So it is not sufficient to do a straight match on "More options"; instead,
+        // you should see if the content description *contains* "More options".
+        onView(allOf(withContentDescription(containsString("More options")), isDisplayed())).click()
     }
 
     fun assertDisplaysDescription(text: String) {
@@ -186,4 +194,5 @@ class AssignmentDetailsRenderPage : AssignmentDetailsPage() {
         }
 
     }
+
 }

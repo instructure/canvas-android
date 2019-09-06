@@ -16,25 +16,20 @@
  */
 package com.instructure.student.ui.pages
 
-import androidx.recyclerview.widget.RecyclerView
-import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.contrib.RecyclerViewActions
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withText
+import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.dataseeding.model.ModuleApiModel
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.withAncestor
 import com.instructure.student.R
-import org.hamcrest.Matchers
 import org.hamcrest.Matchers.allOf
 
 class ModulesPage : BasePage(R.id.modulesPage) {
     fun assertModuleDisplayed(module: ModuleApiModel) {
-        Espresso.onView(Matchers.allOf(ViewMatchers.withId(R.id.listView), ViewMatchers.isDisplayed()))
-                .perform(RecyclerViewActions.scrollTo<RecyclerView.ViewHolder>(ViewMatchers.hasDescendant(ViewMatchers.withText(module.name))))
-
+        scrollRecyclerView(R.id.listView, withText(module.name))
     }
 
     fun assertEmptyView() {

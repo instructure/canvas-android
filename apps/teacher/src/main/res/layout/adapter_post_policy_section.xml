@@ -1,5 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?><!--
-  ~ Copyright (C) 2017 - present Instructure, Inc.
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2019 - present  Instructure, Inc.
   ~
   ~     This program is free software: you can redistribute it and/or modify
   ~     it under the terms of the GNU General Public License as published by
@@ -14,35 +15,31 @@
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="48dp"
-    android:background="?android:selectableItemBackground"
-    android:gravity="center_vertical"
-    android:orientation="horizontal"
-    android:paddingBottom="6dp"
-    android:paddingEnd="16dp"
-    android:paddingStart="16dp"
-    android:paddingTop="6dp">
+    android:orientation="horizontal">
 
     <TextView
-        android:id="@+id/groupName"
-        style="@style/TextFont.Medium"
+        android:id="@+id/postPolicySectionTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:ellipsize="end"
-        android:maxLines="2"
-        android:textColor="@color/defaultTextGray"
-        tools:text="&lt;Assignment Group Name&gt;" />
+        android:paddingStart="16dp"
+        android:paddingTop="18dp"
+        android:paddingBottom="18dp"
+        android:labelFor="@+id/postPolicySectionToggle"
+        android:text="@string/postPolicySections"
+        android:textColor="@color/defaultTextDark"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
-    <ImageView
-        android:id="@+id/collapseIcon"
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/postPolicySectionToggle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:importantForAccessibility="no"
-        app:srcCompat="@drawable/vd_expand" />
+        android:paddingEnd="16dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:layout_gravity="center_vertical"/>
 
 </LinearLayout>

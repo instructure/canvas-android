@@ -133,6 +133,11 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         onViewWithId(R.id.navigationDrawerItem_changeUser).scrollTo().click()
     }
 
+    fun gotoGlobalFiles() {
+        onView(hamburgerButtonMatcher).click()
+        onViewWithId(R.id.navigationDrawerItem_files).click()
+    }
+
     fun assertUserLoggedIn(user: CanvasUserApiModel) {
         onView(hamburgerButtonMatcher).click()
         onViewWithText(user.shortName).assertDisplayed()

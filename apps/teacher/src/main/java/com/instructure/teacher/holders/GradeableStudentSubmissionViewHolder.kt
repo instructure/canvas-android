@@ -52,11 +52,12 @@ class GradeableStudentSubmissionViewHolder(view: View) : RecyclerView.ViewHolder
     }
 
     fun bind(
-            context: Context,
-            gradeableStudentSubmission: GradeableStudentSubmission,
-            assignment: Assignment,
-            courseId: Long,
-            callback: (GradeableStudentSubmission) -> Unit
+        context: Context,
+        gradeableStudentSubmission: GradeableStudentSubmission,
+        assignment: Assignment,
+        courseId: Long,
+        newGradebookEnabled: Boolean,
+        callback: (GradeableStudentSubmission) -> Unit
     ) = with(itemView) {
         hiddenIcon.setGone()
         val assignee = gradeableStudentSubmission.assignee
@@ -89,14 +90,14 @@ class GradeableStudentSubmissionViewHolder(view: View) : RecyclerView.ViewHolder
         } else {
             when {
                 submission.excused -> {
-                    if (submission.postedAt == null) hiddenIcon.setVisible()
+                    if (newGradebookEnabled && submission.postedAt == null) hiddenIcon.setVisible()
                     submissionGrade.text = context.getString(R.string.submission_status_excused)
                     submissionGrade.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14.0f)
                     submissionGrade.background = null
                     submissionGrade.setTextColor(ContextCompat.getColor(context, R.color.defaultTextDark))
                 }
                 submission.isGraded -> {
-                    if (submission.postedAt == null) hiddenIcon.setVisible()
+                    if (newGradebookEnabled && submission.postedAt == null) hiddenIcon.setVisible()
                     // This is not ideal... the api returns us the string with lower case first letter.
                     // Hopefully the fact that we localize our strings will make this consistent...
                     when(submission.grade) {

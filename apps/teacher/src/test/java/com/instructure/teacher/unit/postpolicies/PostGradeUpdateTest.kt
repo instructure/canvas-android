@@ -52,12 +52,13 @@ class PostGradeUpdateTest : Assert() {
     @Test
     fun `PostGradesClicked results in HideGrades if isHidingGrades`() {
         val model = initModel.copy(isHidingGrades = true, sections = emptyList())
+        val expectedModel = model.copy(isProcessing = true)
         updateSpec
             .given(model)
             .whenEvent(PostGradeEvent.PostGradesClicked)
             .then(
                 assertThatNext<PostGradeModel, PostGradeEffect>(
-                    hasNoModel(),
+                    hasModel(expectedModel),
                     matchesEffects(PostGradeEffect.HideGrades(assignment.id, emptyList()))
                 )
             )
@@ -69,12 +70,13 @@ class PostGradeUpdateTest : Assert() {
             isHidingGrades = true,
             sections = listOf(PostSection(Section(id = 123), true), PostSection(Section(id = 321), false))
         )
+        val expectedModel = model.copy(isProcessing = true)
         updateSpec
             .given(model)
             .whenEvent(PostGradeEvent.PostGradesClicked)
             .then(
                 assertThatNext<PostGradeModel, PostGradeEffect>(
-                    hasNoModel(),
+                    hasModel(expectedModel),
                     matchesEffects(PostGradeEffect.HideGrades(assignment.id, listOf("123")))
                 )
             )
@@ -83,12 +85,13 @@ class PostGradeUpdateTest : Assert() {
     @Test
     fun `PostGradesClicked results in PostGrades if not isHidingGrades`() {
         val model = initModel.copy(postGradedOnly = false, isHidingGrades = false, sections = emptyList())
+        val expectedModel = model.copy(isProcessing = true)
         updateSpec
             .given(model)
             .whenEvent(PostGradeEvent.PostGradesClicked)
             .then(
                 assertThatNext<PostGradeModel, PostGradeEffect>(
-                    hasNoModel(),
+                    hasModel(expectedModel),
                     matchesEffects(PostGradeEffect.PostGrades(assignment.id, emptyList(), false))
                 )
             )
@@ -97,12 +100,13 @@ class PostGradeUpdateTest : Assert() {
     @Test
     fun `PostGradesClicked results in PostGrades with graded only if not isHidingGrades`() {
         val model = initModel.copy(postGradedOnly = true, isHidingGrades = false, sections = emptyList())
+        val expectedModel = model.copy(isProcessing = true)
         updateSpec
             .given(model)
             .whenEvent(PostGradeEvent.PostGradesClicked)
             .then(
                 assertThatNext<PostGradeModel, PostGradeEffect>(
-                    hasNoModel(),
+                    hasModel(expectedModel),
                     matchesEffects(PostGradeEffect.PostGrades(assignment.id, emptyList(), true))
                 )
             )
@@ -115,12 +119,13 @@ class PostGradeUpdateTest : Assert() {
             isHidingGrades = false,
             sections = listOf(PostSection(Section(id = 123), true), PostSection(Section(id = 321), false))
         )
+        val expectedModel = model.copy(isProcessing = true)
         updateSpec
             .given(model)
             .whenEvent(PostGradeEvent.PostGradesClicked)
             .then(
                 assertThatNext<PostGradeModel, PostGradeEffect>(
-                    hasNoModel(),
+                    hasModel(expectedModel),
                     matchesEffects(PostGradeEffect.PostGrades(assignment.id, listOf("123"), false))
                 )
             )
@@ -256,6 +261,22 @@ class PostGradeUpdateTest : Assert() {
                 assertThatNext<PostGradeModel, PostGradeEffect>(
                     hasModel(expectedModel),
                     hasNoEffects()
+                )
+            )
+    }
+
+    @Test
+    fun `GradesPosted results in ShowGradesPosted effect`() {
+        val isHidingGrades = true
+        val model = initModel.copy(isHidingGrades = isHidingGrades)
+
+        updateSpec
+            .given(model)
+            .whenEvent(PostGradeEvent.GradesPosted)
+            .then(
+                assertThatNext<PostGradeModel, PostGradeEffect>(
+                    hasNoModel(),
+                    hasEffects(PostGradeEffect.ShowGradesPosted(isHidingGrades))
                 )
             )
     }

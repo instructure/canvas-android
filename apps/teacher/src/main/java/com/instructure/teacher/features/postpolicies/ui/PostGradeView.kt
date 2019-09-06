@@ -16,22 +16,127 @@
  */
 package com.instructure.teacher.features.postpolicies.ui
 
-import android.view.LayoutInflater
-import android.view.ViewGroup
+import android.app.Activity
+import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.teacher.R
 import com.instructure.teacher.features.postpolicies.PostGradeEvent
 import com.instructure.teacher.mobius.common.ui.MobiusView
 import com.spotify.mobius.functions.Consumer
+import kotlinx.android.synthetic.main.adapter_post_policy_section.view.*
+import kotlinx.android.synthetic.main.fragment_post_grade.*
+import com.instructure.pandautils.utils.applyTheme
+import android.app.AlertDialog
+import android.view.*
+import kotlinx.android.synthetic.main.dialog_post_graded_everyone.*
 
-class PostGradeView(inflater: LayoutInflater, parent: ViewGroup) : MobiusView<PostGradeViewState, PostGradeEvent>(0, inflater, parent) {
-    override fun onConnect(output: Consumer<PostGradeEvent>) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+class PostGradeView(inflater: LayoutInflater, parent: ViewGroup) : MobiusView<PostGradeViewState, PostGradeEvent>(R.layout.fragment_post_grade, inflater, parent) {
+
+    private var adapter: PostGradeSectionRecyclerAdapter? = null
+
+    init {
+        postPolicyRecycler.layoutManager = LinearLayoutManager(context)
     }
 
-    override fun render(state: PostGradeViewState) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun onConnect(output: Consumer<PostGradeEvent>) {
+
+        postGradeButton.setOnClickListener {
+            output.accept(PostGradeEvent.PostGradesClicked)
+        }
+
+        postPolicyOnlyGradedRow.setOnClickListener {
+            showOnlyGradedDialog(it, output)
+        }
+        postPolicySectionToggleHolder.postPolicySectionToggle.setOnCheckedChangeListener { _, isChecked ->
+            output.accept(PostGradeEvent.SpecificSectionsToggled)
+        }
+        adapter = PostGradeSectionRecyclerAdapter(object : PostGradeSectionCallback {
+            override fun sectionToggled(sectionId: Long) {
+                output.accept(PostGradeEvent.SectionToggled(sectionId))
+            }
+        })
+        postPolicyRecycler.adapter = adapter
+    }
+
+    private fun showOnlyGradedDialog(view: View, output: Consumer<PostGradeEvent>) {
+        val builder = AlertDialog.Builder(context, R.style.RoundedContextDialog)
+        builder.setView(R.layout.dialog_post_graded_everyone)
+
+        val dialog = builder.create()
+        dialog.setOnShowListener {
+            dialog.postDialogEveryone.setOnClickListener {
+                output.accept(PostGradeEvent.GradedOnlySelected(false))
+                dialog.cancel()
+            }
+            dialog.postDialogGraded.setOnClickListener {
+                output.accept(PostGradeEvent.GradedOnlySelected(true))
+                dialog.cancel()
+            }
+        }
+        val wmlp = dialog.window?.attributes
+
+        wmlp?.gravity = Gravity.TOP or Gravity.END
+        wmlp?.x = (view.x).toInt()
+        wmlp?.y = (view.y + view.height * 2).toInt()
+
+        dialog.show()
     }
 
     override fun onDispose() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        adapter = null
+        postPolicyRecycler.adapter = null
+    }
+
+    override fun render(state: PostGradeViewState) {
+        renderVisibilities(state.visibilities)
+
+        when (state) {
+            is PostGradeViewState.Loading -> renderLoading(state)
+            is PostGradeViewState.EmptyViewState -> renderEmpty(state)
+            is PostGradeViewState.LoadedViewState -> renderData(state)
+        }
+    }
+
+    private fun renderVisibilities(visibilities: PostGradeVisibilities) {
+        postGradeLoading.setVisible(visibilities.loading)
+        postEmptyLayout.setVisible(visibilities.emptyView)
+        postPolicyLayout.setVisible(visibilities.policyView)
+        postPolicyOnlyGradedRow.setVisible(visibilities.gradedOnlySelector)
+        postPolicyRecycler.setVisible(visibilities.sectionRecycler)
+        postGradeButtonProcessing.setVisible(visibilities.postProcessing)
+    }
+
+    private fun renderLoading(state: PostGradeViewState.Loading) {
+        ViewStyler.themeProgressBar(postGradeLoading, state.courseColor)
+    }
+
+    private fun renderEmpty(state: PostGradeViewState.EmptyViewState) {
+        postEmptyPanda.setImageResource(state.imageResId)
+        postEmptyTitle.text = state.emptyTitle
+        postEmptyMessage.text = state.emptyMessage
+    }
+
+    private fun renderData(state: PostGradeViewState.LoadedViewState) {
+        postPolicyStatusCount.text = state.statusText
+        postPolicyOnlyGradedSelection.text = state.gradedOnlyText
+
+        postGradeButton.text = state.postText
+        postGradeButton.setTextColor(ThemePrefs.buttonTextColor)
+        postGradeButton.isEnabled = !state.postProcessing
+        postGradeButtonLayout.setBackgroundColor(ThemePrefs.buttonColor)
+
+        ViewStyler.themeProgressBar(postGradeButtonProcessing, ThemePrefs.buttonTextColor)
+
+        postPolicySectionToggleHolder.postPolicySectionToggle.applyTheme(state.courseColor)
+
+        adapter?.data = state.sections
+    }
+
+    fun showGradesPosted(isHidingGrades: Boolean) {
+        Toast.makeText(context, if (isHidingGrades) R.string.postPolicyHiddenToast else R.string.postPolicyPostedToast, Toast.LENGTH_SHORT).show()
+        (context as Activity).onBackPressed()
     }
 }
