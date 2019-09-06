@@ -20,12 +20,8 @@ import com.apollographql.apollo.ApolloCall
 import com.apollographql.apollo.api.Response
 import com.apollographql.apollo.exception.ApolloCanceledException
 import com.apollographql.apollo.exception.ApolloException
-import com.apollographql.apollo.exception.ApolloHttpException
-import com.instructure.canvasapi2.models.CanvasAuthError
 import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.Logger
-import org.greenrobot.eventbus.EventBus
-import java.io.IOException
 import java.util.*
 
 
@@ -82,11 +78,9 @@ abstract class QLCallback<DATA> : ApolloCall.Callback<DATA>() {
             Logger.d("QLCallback: callback was cancelled")
             return
         }
-        if (e is ApolloHttpException && e.code() == 401) {
-            try {
-                EventBus.getDefault().post(CanvasAuthError(e.message()))
-            } catch (ignored: IOException) { }
-        }
+
+        // Note: 401s are handled in CanvasAuthenticator
+
         Logger.e("QLCallback: Failure: ${e.message}")
         onFail(e)
     }
