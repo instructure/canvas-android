@@ -17,8 +17,6 @@
 
 package com.instructure.pandautils.utils;
 
-import org.jetbrains.annotations.Nullable;
-
 public class Const {
     public static final String PANDA_UTILS = "panda_utils";
     public static final String PANDA_UTILS_FILE_UPLOAD_UTILS_LOG = "file_upload_utils";
@@ -105,6 +103,7 @@ public class Const {
     public static final String IS_STARRED = "isStarred";
     public static final String IS_GROUP = "isGroup";
     public static final String IS_UNSUPPORTED_FEATURE ="isUnsupportedFeature";
+    public static final String ALLOW_UNSUPPORTED_ROUTING ="allowUnsupportedRouting";
     public static final String LAYOUT_ID = "layout_id";
     public static final String MASTERY_PATH = "mastery_path";
     public static final String MEDIA_UPLOAD_ALLOWED = "isMediaUploadAllowed";

@@ -46,7 +46,6 @@ import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.dialogs.FileExistsDialog
 import com.instructure.pandautils.dialogs.UploadFilesDialog
-import com.instructure.pandautils.dialogs.UploadFilesDialog.Companion.EVENT_ON_UPLOAD_BEGIN
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.FileFolderCallback
@@ -181,7 +180,19 @@ class FileListFragment : ParentFragment(), Bookmarkable {
                     RouteMatcher.route(requireContext(), FileListFragment.makeRoute(canvasContext, item))
                 } else {
                     recordFilePreviewEvent(item)
-                    openMedia(item.contentType, item.url, item.displayName, canvasContext)
+                    if (item.isHtmlFile) {
+                        /* An HTML file can reference other canvas files as resources (e.g. CSS files) and must be
+                        accessed as an authenticated preview to work correctly */
+                        RouteMatcher.route(requireContext(), InternalWebviewFragment.makeRoute(
+                            canvasContext = canvasContext,
+                            url = item.getFilePreviewUrl(ApiPrefs.fullDomain, canvasContext),
+                            authenticate = true,
+                            isUnsupportedFeature = false,
+                            allowUnsupportedRouting = false
+                        ))
+                    } else {
+                        openMedia(item.contentType, item.url, item.displayName, canvasContext)
+                    }
                 }
             }
 
