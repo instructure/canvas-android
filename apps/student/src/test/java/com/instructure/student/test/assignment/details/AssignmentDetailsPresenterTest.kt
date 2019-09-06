@@ -200,7 +200,7 @@ class AssignmentDetailsPresenterTest : Assert() {
 
     @Test
     fun `Uses correct label text for submitted status when submission is graded`() {
-        val submission = baseSubmission.copy(grade = "8")
+        val submission = baseSubmission.copy(grade = "8", postedAt = Date())
         val assignment = baseAssignment.copy(submission = submission)
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
@@ -904,7 +904,7 @@ class AssignmentDetailsPresenterTest : Assert() {
     @Test
     fun `Shows submission status when on paper submission type with Grade`() {
         val allTypes = listOf(Assignment.SubmissionType.ON_PAPER)
-        val submission = Submission(id = 1, grade = "A", score = 35.0, late = false, attempt = 1, missing = false)
+        val submission = Submission(id = 1, grade = "A", score = 35.0, late = false, attempt = 1, missing = false, postedAt = Date())
         val assignment = baseAssignment.copy(submissionTypesRaw = allTypes.map { it.apiString }, submission = submission)
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded

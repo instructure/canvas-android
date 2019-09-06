@@ -534,7 +534,7 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
                 name = "Assignment Name",
                 description = "This is a description",
                 pointsPossible = 35.0,
-                submission = Submission(id = 1, grade = "A", score = 35.0, late = false, attempt = 1, missing = false),
+                submission = Submission(id = 1, grade = "A", score = 35.0, late = false, attempt = 1, missing = false, postedAt = Date()),
                 submissionTypesRaw = allTypes.map { it.apiString }
         )
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
@@ -559,7 +559,7 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
                 name = "Assignment Name",
                 description = "This is a description",
                 pointsPossible = 35.0,
-                submission = Submission(id = 1, grade = "A", score = 35.0, late = false, attempt = 1, missing = false),
+                submission = Submission(id = 1, grade = "A", score = 35.0, late = false, attempt = 1, missing = false, postedAt = Date()),
                 submissionTypesRaw = allTypes.map { it.apiString }
         )
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
