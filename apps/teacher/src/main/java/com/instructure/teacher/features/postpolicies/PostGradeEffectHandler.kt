@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.managers.SectionManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Progress
 import com.instructure.canvasapi2.utils.exhaustive
+import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.features.postpolicies.ui.PostGradeView
 import com.instructure.teacher.mobius.common.ui.EffectHandler
 import kotlinx.coroutines.delay
@@ -85,7 +86,7 @@ class PostGradeEffectHandler : EffectHandler<PostGradeView, PostGradeEvent, Post
 
         lateinit var progress: Progress
         do {
-            delay(1000L) // Don't hit the API too hard while monitoring progress
+            delay(getProgressDelay()) // Don't hit the API too hard while monitoring progress
 
             progress = ProgressManager.getProgressAsync(progressId).await().dataOrNull ?: run {
                 consumer.accept(PostGradeEvent.PostFailed)
@@ -99,4 +100,7 @@ class PostGradeEffectHandler : EffectHandler<PostGradeView, PostGradeEvent, Post
             consumer.accept(PostGradeEvent.PostFailed)
         }
     }
+
+    // Don't inflate test times, only do a second delay if not testing
+    private fun getProgressDelay() = if (BuildConfig.IS_TESTING) 0L else 1000L
 }
