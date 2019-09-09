@@ -22,7 +22,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:background="@color/canvasBackgroundWhite">
+    android:background="@color/canvasBackgroundWhite"
+    android:id="@+id/quizPage">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"

@@ -30,6 +30,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertContainsText
 import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.assertHasText
 import com.instructure.espresso.click
 import com.instructure.espresso.closeSoftKeyboard
 import com.instructure.espresso.page.BasePage
@@ -64,6 +65,10 @@ open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
 
     fun goToSubmissionDetails() {
         onView(withId(R.id.submissionAndRubricLabel)).scrollTo().click()
+    }
+
+    fun assertSubmittedStatus() {
+        onView(withId(R.id.submissionStatus)).assertHasText(R.string.submitted)
     }
 }
 

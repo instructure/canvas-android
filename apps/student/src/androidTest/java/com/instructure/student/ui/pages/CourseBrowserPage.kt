@@ -77,6 +77,11 @@ class CourseBrowserPage : BasePage(R.id.courseBrowserPage) {
         selectSection(matcher)
     }
 
+    fun selectQuizzes() {
+        val matcher = withText("Quizzes")
+        selectSection(matcher)
+    }
+
     fun selectAnnouncements() {
         val matcher = withText("Announcements")
         selectSection(matcher)
