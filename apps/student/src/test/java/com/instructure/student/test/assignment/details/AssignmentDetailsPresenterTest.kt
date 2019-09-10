@@ -221,7 +221,7 @@ class AssignmentDetailsPresenterTest : Assert() {
         val calendar = Calendar.getInstance().apply { set(2000, 0, 31, 23, 59, 0) }
 
         val submission = baseSubmission.copy(attempt = 0, workflowState = "unsubmitted")
-        val assignment = baseAssignment.copy(submission = submission, dueAt = calendar.time.toApiString())
+        val assignment = baseAssignment.copy(submission = submission, dueAt = calendar.time.toApiString(), submissionTypesRaw = listOf(Assignment.SubmissionType.ONLINE_UPLOAD.apiString))
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
         assertEquals("Missing", state.submittedStateLabel)
@@ -231,7 +231,7 @@ class AssignmentDetailsPresenterTest : Assert() {
     fun `Uses correct label text for submitted status when submission is past due and null`() {
         val calendar = Calendar.getInstance().apply { set(2000, 0, 31, 23, 59, 0) }
 
-        val assignment = baseAssignment.copy(submission = null, dueAt = calendar.time.toApiString())
+        val assignment = baseAssignment.copy(submission = null, dueAt = calendar.time.toApiString(), submissionTypesRaw = listOf(Assignment.SubmissionType.ONLINE_UPLOAD.apiString))
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
         assertEquals("Missing", state.submittedStateLabel)

@@ -17,7 +17,6 @@
 
 package com.instructure.pandautils.utils
 
-import android.util.Log
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Submission
 import java.util.*
@@ -40,6 +39,12 @@ object AssignmentUtils2 {
         // Case - Error
         if (assignment == null) {
             return ASSIGNMENT_STATE_UNKNOWN
+        }
+
+        // Case - Assignment does not take submissions, but is not 'on paper' (not graded, etc) and it has not been graded
+        // Result - DUE
+        if (assignment.turnInType == Assignment.TurnInType.NONE && submission?.grade == null) {
+            return ASSIGNMENT_STATE_DUE
         }
 
         // Case - We have an assignment with no submission
