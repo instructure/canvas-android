@@ -20,8 +20,16 @@ import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.Stub
 import com.instructure.dataseeding.api.AssignmentsApi
+import com.instructure.dataseeding.api.DiscussionTopicsApi
+import com.instructure.dataseeding.api.FileUploadsApi
 import com.instructure.dataseeding.api.ModulesApi
+import com.instructure.dataseeding.api.PagesApi
 import com.instructure.dataseeding.api.QuizzesApi
+import com.instructure.dataseeding.model.ModuleItemTypes
+import com.instructure.dataseeding.model.SubmissionType
+import com.instructure.dataseeding.util.days
+import com.instructure.dataseeding.util.fromNow
+import com.instructure.dataseeding.util.iso8601
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
@@ -47,6 +55,43 @@ class ModulesE2ETest: StudentTest() {
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
 
+        // Create some assignments, quizzes, pages, etc...
+        val assignment1 = AssignmentsApi.createAssignment(AssignmentsApi.CreateAssignmentRequest(
+                courseId = course.id,
+                withDescription = true,
+                submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
+                teacherToken = teacher.token,
+                dueAt = 1.days.fromNow.iso8601
+        ))
+
+        val assignment2 = AssignmentsApi.createAssignment(AssignmentsApi.CreateAssignmentRequest(
+                courseId = course.id,
+                withDescription = true,
+                submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
+                teacherToken = teacher.token,
+                dueAt = 2.days.fromNow.iso8601
+        ))
+
+        val quiz1 = QuizzesApi.createQuiz(QuizzesApi.CreateQuizRequest(
+                courseId = course.id,
+                withDescription = true,
+                dueAt = 3.days.fromNow.iso8601,
+                token = teacher.token,
+                published = true
+        ))
+
+        val page1 = PagesApi.createCoursePage(
+                courseId = course.id,
+                published = true,
+                frontPage = false,
+                token = teacher.token
+        )
+
+        val discussionTopic1 = DiscussionTopicsApi.createDiscussion(
+                courseId = course.id,
+                token = teacher.token
+        )
+
         // Create a couple of modules.  They start out as unpublished.
         val module1 = ModulesApi.createModule(
                 courseId = course.id,
@@ -57,6 +102,54 @@ class ModulesE2ETest: StudentTest() {
                 courseId = course.id,
                 teacherToken = teacher.token,
                 unlockAt = null)
+
+        // Associate items with module 1
+        ModulesApi.createModuleItem(
+                courseId = course.id,
+                moduleId = module1.id,
+                teacherToken = teacher.token,
+                title = assignment1.name,
+                type = ModuleItemTypes.ASSIGNMENT.stringVal,
+                contentId = assignment1.id.toString()
+        )
+
+        ModulesApi.createModuleItem(
+                courseId = course.id,
+                moduleId = module1.id,
+                teacherToken = teacher.token,
+                title = quiz1.title,
+                type = ModuleItemTypes.QUIZ.stringVal,
+                contentId = quiz1.id.toString()
+        )
+
+        // Associated items with module 2
+        ModulesApi.createModuleItem(
+                courseId = course.id,
+                moduleId = module2.id,
+                teacherToken = teacher.token,
+                title = assignment2.name,
+                type = ModuleItemTypes.ASSIGNMENT.stringVal,
+                contentId = assignment2.id.toString()
+        )
+
+        ModulesApi.createModuleItem(
+                courseId = course.id,
+                moduleId = module2.id,
+                teacherToken = teacher.token,
+                title = page1.title,
+                type = ModuleItemTypes.PAGE.stringVal,
+                contentId = null, // Not necessary for Page item
+                pageUrl = page1.url // Only necessary for Page item
+        )
+
+        ModulesApi.createModuleItem(
+                courseId = course.id,
+                moduleId = module2.id,
+                teacherToken = teacher.token,
+                title = discussionTopic1.title,
+                type = ModuleItemTypes.DISCUSSION.stringVal,
+                contentId = discussionTopic1.id.toString()
+        )
 
         // Sign in and navigate to our course
         tokenLogin(student)
@@ -94,9 +187,13 @@ class ModulesE2ETest: StudentTest() {
         // Go to modules
         courseBrowserPage.selectModules()
 
-        // Verify that both modules are displayed
+        // Verify that both modules are displayed, along with their items
         modulesPage.assertModuleDisplayed(module1)
+        modulesPage.assertModuleItemDisplayed(module1, assignment1.name)
+        modulesPage.assertModuleItemDisplayed(module1, quiz1.title)
         modulesPage.assertModuleDisplayed(module2)
-
+        modulesPage.assertModuleItemDisplayed(module2, assignment2.name)
+        modulesPage.assertModuleItemDisplayed(module2, page1.title)
+        modulesPage.assertModuleItemDisplayed(module2, discussionTopic1.title)
     }
 }
