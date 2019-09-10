@@ -56,7 +56,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.net.URLEncoder
-import java.util.*
+import java.util.ArrayList
 
 class InboxComposeMessageFragment : ParentFragment() {
 
@@ -304,7 +304,8 @@ class InboxComposeMessageFragment : ParentFragment() {
         // Check to see if the user has made any changes
         if (editSubject.text.isNotBlank() || message.text.isNotBlank() || attachments.isNotEmpty()) {
             shouldAllowExit = false
-            UnsavedChangesExitDialog.show(requireActivity().supportFragmentManager) {
+            // Use childFragmentManager so that exiting the compose fragment also dismisses the dialog
+            UnsavedChangesExitDialog.show(childFragmentManager) {
                 shouldAllowExit = true
                 requireActivity().onBackPressed()
             }
