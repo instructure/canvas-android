@@ -101,10 +101,23 @@ class QuizzesE2ETest: StudentTest() {
         pressBack() // Back to quiz list page
         pressBack() // Back to course browser page
 
-        // Take a quiz (submitting the results), and check that everything is recorded OK.
+        // Start a quiz via the assignments tab
+        courseBrowserPage.selectAssignments()
+        assignmentListPage.clickQuiz(quizPublished)
+        assignmentDetailsPage.viewQuiz()
+        quizDetailsPage.takeQuiz(questions = quizQuestions, completionCount = 2) // Only answer two of the questions
+        // TODO: Write a function that presses the back button until you hit a specified page
+        pressBack() // Back to quiz details page
+        pressBack() // Back to assignment details page
+        pressBack() // Back to assignments tab/list
+        pressBack() // Back to course browser page
+
+        // Resume/complete the quiz via the quizzes tab, submit the answers,
+        // and check that everything is recorded OK.
         courseBrowserPage.selectQuizzes()
         quizListPage.selectQuiz(quizPublished)
-        quizDetailsPage.takeQuiz(quizQuestions)
+        quizDetailsPage.completeQuiz(questions = quizQuestions,startQuestion = 2)
+        quizDetailsPage.submitQuiz()
         quizDetailsPage.assertQuizDisplayed(quizPublished, true, quizQuestions)
         pressBack() // Back to quiz list page
         pressBack() // Back to course browser page
@@ -115,6 +128,7 @@ class QuizzesE2ETest: StudentTest() {
         assignmentListPage.assertQuizDisplayed(quizPublished, possiblePointTotal(quizQuestions).toString())
         assignmentListPage.assertQuizNotDisplayed(quizUnpublished)
         assignmentListPage.clickQuiz(quizPublished)
+        assignmentDetailsPage.refresh()
         assignmentDetailsPage.assertSubmittedStatus()
         pressBack() // Back to assignment list page
         pressBack() // Back to course browser page

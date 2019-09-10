@@ -38,6 +38,7 @@ import com.instructure.espresso.scrollTo
 import com.instructure.espresso.typeText
 import com.instructure.student.R
 import org.hamcrest.Matchers.allOf
+import java.lang.Integer.min
 
 class QuizDetailsPage: BasePage(R.id.quizDetailsPage) {
     private val quizTitle by OnViewWithId(R.id.quiz_title)
@@ -62,36 +63,62 @@ class QuizDetailsPage: BasePage(R.id.quizDetailsPage) {
         }
     }
 
-    fun takeQuiz(questions: List<QuizQuestion>) {
+    // May or may not answer all of the questions, depending on setting of completionCount
+    fun takeQuiz(questions: List<QuizQuestion>, completionCount: Int? = null) {
         nextButton.assertContainsText("START")
         nextButton.scrollTo().click() // Start the quiz
 
-        // Answer all of the questions
-        for(question in questions) {
-            when(question.questionType) {
-                "multiple_choice_question" -> {
-                    val matcher = allOf(
-                            withId(R.id.answer_checkbox),
-                            hasSibling(allOf(
-                                    withId(R.id.text_answer),
-                                    withText(question.answers[0].text)
-                            ))
-                    )
-                    scrollRecyclerView(R.id.recyclerView, matcher)
-                    onView(matcher).click()
-                }
+        // If completionCount is null, elementsToProcess will be "all of them".
+        // Othersize, elementsToProcess will be the minimum of "all of them" and completionCount.
+        val elementsToProcess = min(questions.size, completionCount ?: questions.size)
 
-                "essay_question" -> {
-                    // There is no way for me to tie an essay editText with the corresponding
-                    // essay question.  (The question text is in a WebView.) So there had better
-                    // only be one essay question.
-                    val matcher = withId(R.id.question_answer)
-                    scrollRecyclerView(R.id.recyclerView, matcher)
-                    onView(matcher).typeText("A long, thoughtful essay answer")
-                }
-            }
+        // Answer the desired number of questions
+        for(i in 0..elementsToProcess-1) {
+            val question = questions[i]
+            answerQuestion(question)
+        }
+    }
+
+    // Answers quiz questions from startQuestion onward.
+    fun completeQuiz(questions: List<QuizQuestion>, startQuestion: Int) {
+        nextButton.assertContainsText("RESUME")
+        nextButton.scrollTo().click() // Resume the quiz
+
+        for(i in startQuestion..questions.size-1) {
+            val question = questions[i]
+            answerQuestion(question)
         }
 
+    }
+
+    private fun answerQuestion(question: QuizQuestion) {
+        when(question.questionType) {
+            "multiple_choice_question" -> {
+                val matcher = allOf(
+                        withId(R.id.answer_checkbox),
+                        hasSibling(allOf(
+                                withId(R.id.text_answer),
+                                withText(question.answers[0].text)
+                        ))
+                )
+                scrollRecyclerView(R.id.recyclerView, matcher)
+                onView(matcher).click()
+            }
+
+            "essay_question" -> {
+                // There is no way for me to tie an essay editText with the corresponding
+                // essay question.  (The question text is in a WebView.) So there had better
+                // only be one essay question.
+                val matcher = withId(R.id.question_answer)
+                scrollRecyclerView(R.id.recyclerView, matcher)
+                onView(matcher).typeText("A long, thoughtful essay answer")
+            }
+        }
+    }
+
+
+    // Submit the quiz
+    fun submitQuiz() {
         Espresso.closeSoftKeyboard()
 
         // Submit the quiz

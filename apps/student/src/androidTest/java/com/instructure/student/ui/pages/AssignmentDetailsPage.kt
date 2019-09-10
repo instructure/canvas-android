@@ -70,6 +70,10 @@ open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
     fun assertSubmittedStatus() {
         onView(withId(R.id.submissionStatus)).assertHasText(R.string.submitted)
     }
+
+    fun viewQuiz() {
+        onView(withId(R.id.submitButton)).assertHasText(R.string.viewQuiz).click()
+    }
 }
 
 /**
