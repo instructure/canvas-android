@@ -170,17 +170,6 @@ class SubmissionCommentsRenderTest: StudentRenderTest() {
 
     @Test
     @TestMetaData(Priority.P2,FeatureCategory.ASSIGNMENTS,TestCategory.RENDER,secondaryFeature = FeatureCategory.COMMENTS)
-    fun testSingleFailedComment() {
-        db.setCommentError(true, pendingCommentItem.pendingComment.id)
-        val state = SubmissionCommentsViewState(
-            commentStates = listOf(pendingCommentItem)
-        )
-        loadPageWithViewState(state)
-        page.verifyPendingCommentPresent(pendingCommentItem, failed = true)
-    }
-
-    @Test
-    @TestMetaData(Priority.P2,FeatureCategory.ASSIGNMENTS,TestCategory.RENDER,secondaryFeature = FeatureCategory.COMMENTS)
     fun testFailedCommentDisplaysRetryAndDeleteOptions() {
         db.setCommentError(true, pendingCommentItem.pendingComment.id)
         val state = SubmissionCommentsViewState(
