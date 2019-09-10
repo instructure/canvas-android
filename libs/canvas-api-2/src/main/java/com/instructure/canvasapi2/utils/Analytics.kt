@@ -72,6 +72,10 @@ object AnalyticsEventConstants {
     const val SUBMIT_FILEUPLOAD_FAILED = "submit_fileupload_failed"
     const val SUBMIT_FILEUPLOAD_SUCCEEDED = "submit_fileupload_succeeded"
     const val UNSUPPORTED_SUBMISSION_CONTENT = "unsupported_submission_content"
+
+    /* Refresh Token Events */
+    const val REFRESH_TOKEN = "refresh_token"
+    const val FOREVER_TOKEN = "forever_token"
 }
 
 /**

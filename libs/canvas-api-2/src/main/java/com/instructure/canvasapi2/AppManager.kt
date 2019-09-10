@@ -19,11 +19,15 @@ package com.instructure.canvasapi2
 
 import android.annotation.SuppressLint
 import android.app.Application
+import android.os.Bundle
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.CanvasAuthError
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
+import com.instructure.canvasapi2.utils.AnalyticsParamConstants
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.jakewharton.threetenabp.AndroidThreeTen
 import io.paperdb.Paper
 import org.greenrobot.eventbus.EventBus
@@ -41,6 +45,7 @@ abstract class AppManager : Application() {
         // Permissions missing lint suppressed - we have the permissions in the app manifests
         Analytics.firebase = FirebaseAnalytics.getInstance(this)
         EventBus.getDefault().register(this)
+        logTokenAnalytics()
     }
 
     override fun onTerminate() {
@@ -52,6 +57,24 @@ abstract class AppManager : Application() {
     @Subscribe
     fun authErrorEvent(event: CanvasAuthError) {
         validateAuthentication()
+    }
+
+    private fun logTokenAnalytics() {
+        val analyticsString = if (ApiPrefs.refreshToken.isNotEmpty()) {
+            AnalyticsEventConstants.REFRESH_TOKEN
+        } else if (ApiPrefs.token.isNotEmpty()) {
+            AnalyticsEventConstants.FOREVER_TOKEN
+        } else {
+            // No token means new user, which means they'll also get a refresh token
+            AnalyticsEventConstants.REFRESH_TOKEN
+        }
+
+        // Ideally, tokens will be paired with user ids to determine unique events
+        val bundle = Bundle().apply {
+            putString(AnalyticsParamConstants.USER_CONTEXT_ID, ApiPrefs.user?.contextId)
+        }
+
+        Analytics.logEvent(analyticsString, bundle)
     }
 
     open fun validateAuthentication() {
