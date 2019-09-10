@@ -161,7 +161,6 @@ class SubmissionCommentsRenderTest: StudentRenderTest() {
     @Test
     @TestMetaData(Priority.P2,FeatureCategory.ASSIGNMENTS,TestCategory.RENDER,secondaryFeature = FeatureCategory.COMMENTS)
     fun testEmptyState() {
-        db.setCommentError(true, pendingCommentItem.pendingComment.id)
         val state = SubmissionCommentsViewState(
             commentStates = listOf(CommentItemState.Empty)
         )
