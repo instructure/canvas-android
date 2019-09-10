@@ -43,7 +43,7 @@ object AssignmentUtils2 {
 
         // Case - Assignment does not take submissions, but is not 'on paper' (not graded, etc) and it has not been graded
         // Result - DUE
-        if (!assignment.isOnlineSubmissionType && !assignment.getSubmissionTypes().contains(Assignment.SubmissionType.ON_PAPER) && submission?.grade == null) {
+        if (assignment.turnInType == Assignment.TurnInType.NONE && submission?.grade == null) {
             return ASSIGNMENT_STATE_DUE
         }
 
