@@ -293,6 +293,23 @@ class SubmissionCommentsEffectHandlerTest : Assert(){
         confirmVerified(SubmissionService)
     }
 
+    @Test
+    fun ` DeleteCommentEffect effect results in calling SubmissionService deletePendingComment`() {
+        val effect = SubmissionCommentsEffect.DeletePendingComment(123L)
+        mockkObject(SubmissionService.Companion)
+        every {
+            SubmissionService.deletePendingComment(any(), any())
+        } returns Unit
+
+        connection.accept(effect)
+
+        verify(timeout = 100) {
+            SubmissionService.deletePendingComment(context, 123L)
+        }
+
+        confirmVerified(SubmissionService)
+    }
+
     private fun mockPermissions(hasPermission: Boolean, permissionGranted: Boolean = false) {
         // Mock both so we can mockk the class and the extensions in the same file
         mockkStatic(PermissionUtils::class)

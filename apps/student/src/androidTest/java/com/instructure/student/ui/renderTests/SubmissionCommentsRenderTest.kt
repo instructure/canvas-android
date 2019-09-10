@@ -15,6 +15,7 @@
  */
 package com.instructure.student.ui.renderTests
 
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.Assignment
@@ -26,6 +27,8 @@ import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.PendingSubmissionComment
+import com.instructure.student.db.Db
+import com.instructure.student.db.getInstance
 import com.instructure.student.db.sqlColAdapters.Date
 import com.instructure.student.espresso.StudentRenderTest
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.CommentItemState
@@ -50,6 +53,7 @@ class SubmissionCommentsRenderTest: StudentRenderTest() {
     private lateinit var commentItemIsAudience: CommentItemState.CommentItem
     private lateinit var submissionItem: CommentItemState.SubmissionItem
     private lateinit var pendingCommentItem: CommentItemState.PendingCommentItem
+    private val db = Db.getInstance(ApplicationProvider.getApplicationContext()).pendingSubmissionCommentQueries
 
     val page = SubmissionCommentsRenderPage()
 
@@ -109,20 +113,15 @@ class SubmissionCommentsRenderTest: StudentRenderTest() {
                 authorName = user.shortName!!,
                 avatarUrl = user.avatarUrl!!,
                 sortDate = Date(119, 6, 4, 13, 20),
-                pendingComment = PendingSubmissionComment.Impl(
-                        id = 15L,
+                pendingComment = makePendingComment(
                         accountDomain = "myDomain.com",
                         assignmentId = 42,
                         assignmentName = "Special assignment",
                         canvasContext = CanvasContext.defaultCanvasContext(),
-                        currentFile = 12,
-                        errorFlag = false,
-                        fileCount = 0,
                         isGroupMessage = false,
                         lastActivityDate = Date.now(),
                         mediaPath = "/media/path",
-                        message = "Pending Message",
-                        progress = 0.45
+                        message = "Pending Message"
                 )
         )
     }
@@ -149,17 +148,37 @@ class SubmissionCommentsRenderTest: StudentRenderTest() {
         page.verifyCommentPresent(submissionItem)
     }
 
-    // I'm not going to attempt to test a pending comment right now.  The logic to display
-    // the pending comment is just too convoluted for a render test -- need to mock db, set up
-    // listeners, etc...
-//    @Test
-//    fun testSinglePendingComment() {
-//        val state = SubmissionCommentsViewState(
-//                commentStates = listOf(pendingCommentItem)
-//        )
-//        loadPageWithViewState(state)
-//        page.verifyCommentPresent(pendingCommentItem)
-//    }
+    @Test
+    @TestMetaData(Priority.P2,FeatureCategory.ASSIGNMENTS,TestCategory.RENDER,secondaryFeature = FeatureCategory.COMMENTS)
+    fun testSinglePendingComment() {
+        val state = SubmissionCommentsViewState(
+            commentStates = listOf(pendingCommentItem)
+        )
+        loadPageWithViewState(state)
+        page.verifyPendingCommentPresent(pendingCommentItem, failed = false)
+    }
+
+    @Test
+    @TestMetaData(Priority.P2,FeatureCategory.ASSIGNMENTS,TestCategory.RENDER,secondaryFeature = FeatureCategory.COMMENTS)
+    fun testEmptyState() {
+        val state = SubmissionCommentsViewState(
+            commentStates = listOf(CommentItemState.Empty)
+        )
+        loadPageWithViewState(state)
+        page.verifyDisplaysEmptyState()
+    }
+
+    @Test
+    @TestMetaData(Priority.P2,FeatureCategory.ASSIGNMENTS,TestCategory.RENDER,secondaryFeature = FeatureCategory.COMMENTS)
+    fun testFailedCommentDisplaysRetryAndDeleteOptions() {
+        db.setCommentError(true, pendingCommentItem.pendingComment.id)
+        val state = SubmissionCommentsViewState(
+            commentStates = listOf(pendingCommentItem)
+        )
+        loadPageWithViewState(state)
+        page.verifyPendingCommentPresent(pendingCommentItem, failed = true)
+        page.verifyDisplaysRetryOptions()
+    }
 
     @Test
     @TestMetaData(Priority.P2,FeatureCategory.ASSIGNMENTS,TestCategory.RENDER,secondaryFeature = FeatureCategory.COMMENTS)
@@ -206,6 +225,31 @@ class SubmissionCommentsRenderTest: StudentRenderTest() {
         }
         activityRule.activity.loadFragment(fragment)
         page.assertPageObjects()
+    }
+
+    @Suppress("SameParameterValue")
+    private fun makePendingComment(
+        accountDomain: String,
+        canvasContext: CanvasContext,
+        assignmentName: String,
+        assignmentId: Long,
+        lastActivityDate: Date,
+        isGroupMessage: Boolean,
+        message: String?,
+        mediaPath: String?
+    ) : PendingSubmissionComment {
+        db.insertComment(
+            accountDomain,
+            canvasContext,
+            assignmentName,
+            assignmentId,
+            lastActivityDate,
+            isGroupMessage,
+            message,
+            mediaPath
+        )
+        val id = db.getLastInsert().executeAsOne()
+        return db.getCommentById(id).executeAsOne()
     }
 
 }
