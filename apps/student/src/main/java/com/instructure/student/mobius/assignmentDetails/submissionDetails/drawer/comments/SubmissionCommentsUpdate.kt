@@ -98,6 +98,9 @@ class SubmissionCommentsUpdate :
             is SubmissionCommentsEvent.RetryCommentUploadClicked -> {
                 Next.dispatch(setOf(SubmissionCommentsEffect.RetryCommentUpload(event.commentId)))
             }
+            is SubmissionCommentsEvent.DeletePendingCommentClicked -> {
+                Next.dispatch(setOf(SubmissionCommentsEffect.DeletePendingComment(event.commentId)))
+            }
             is SubmissionCommentsEvent.SubmissionClicked -> {
                 Next.dispatch(setOf(SubmissionCommentsEffect.BroadcastSubmissionSelected(event.submission)))
             }

@@ -75,6 +75,9 @@ class SubmissionCommentsEffectHandler(val context: Context) : EffectHandler<Subm
             is SubmissionCommentsEffect.RetryCommentUpload -> {
                 SubmissionService.retryCommentUpload(context, effect.commentId)
             }
+            is SubmissionCommentsEffect.DeletePendingComment -> {
+                SubmissionService.deletePendingComment(context, effect.commentId)
+            }
             SubmissionCommentsEffect.ScrollToBottom -> view?.scrollToBottom()
             is SubmissionCommentsEffect.BroadcastSubmissionSelected -> {
                 ChannelSource.getChannel<SubmissionDetailsSharedEvent>().offer(

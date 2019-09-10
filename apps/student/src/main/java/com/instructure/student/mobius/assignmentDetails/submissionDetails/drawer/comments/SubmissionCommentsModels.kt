@@ -30,6 +30,7 @@ sealed class SubmissionCommentsEvent {
     data class SubmissionCommentAdded(val comment: SubmissionComment) : SubmissionCommentsEvent()
     data class PendingSubmissionsUpdated(val ids: List<Long>) : SubmissionCommentsEvent()
     data class RetryCommentUploadClicked(val commentId: Long) : SubmissionCommentsEvent()
+    data class DeletePendingCommentClicked(val commentId: Long) : SubmissionCommentsEvent()
     data class SubmissionClicked(val submission: Submission) : SubmissionCommentsEvent()
     data class SubmissionAttachmentClicked(
         val submission: Submission,
@@ -66,6 +67,8 @@ sealed class SubmissionCommentsEffect {
     ) : SubmissionCommentsEffect()
 
     data class RetryCommentUpload(val commentId: Long) : SubmissionCommentsEffect()
+
+    data class DeletePendingComment(val commentId: Long) : SubmissionCommentsEffect()
 
     data class BroadcastSubmissionSelected(val submission: Submission) : SubmissionCommentsEffect()
 

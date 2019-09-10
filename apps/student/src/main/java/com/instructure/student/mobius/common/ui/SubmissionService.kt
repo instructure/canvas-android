@@ -781,6 +781,12 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
             }
             startService(context, Action.COMMENT_ENTRY, bundle)
         }
+
+        fun deletePendingComment(context: Context, commentId: Long) {
+            val db = Db.getInstance(context)
+            db.pendingSubmissionCommentQueries.deleteCommentById(commentId)
+            db.submissionCommentFileQueries.deleteFilesForCommentId(commentId)
+        }
         // endregion
     }
 }
