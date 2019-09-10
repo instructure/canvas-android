@@ -21,7 +21,7 @@
     <item
         android:id="@+id/menuPostPolicies"
         android:title="@string/postPolicyTitle"
-        android:icon="@drawable/ic_eye_filled"
+        android:icon="@drawable/ic_eye"
         android:visible="false"
         app:showAsAction="ifRoom" />
 
