@@ -240,7 +240,7 @@ class NotificationListFragment : ParentFragment(), Bookmarkable {
                 }
                 COLLABORATION -> UnsupportedTabFragment.makeRoute(canvasContext, Tab.COLLABORATIONS_ID)
                 CONFERENCE -> ConferencesFragment.makeRoute(canvasContext)
-                else -> UnsupportedFeatureFragment.makeRoute(canvasContext, streamItem.type, streamItem.url)
+                else -> UnsupportedFeatureFragment.makeRoute(canvasContext, streamItem.type, streamItem.url ?: streamItem.htmlUrl)
             }
 
             if (route != null) RouteMatcher.route(context, route)
