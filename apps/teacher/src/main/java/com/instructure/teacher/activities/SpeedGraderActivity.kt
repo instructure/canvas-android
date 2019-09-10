@@ -44,6 +44,7 @@ import com.instructure.pandautils.utils.*
 import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.SubmissionContentAdapter
+import com.instructure.teacher.events.AssignmentGradedEvent
 import com.instructure.teacher.factory.SpeedGraderPresenterFactory
 import com.instructure.teacher.presenters.SpeedGraderPresenter
 import com.instructure.teacher.utils.TeacherPrefs
@@ -58,6 +59,7 @@ import kotlinx.android.synthetic.main.activity_speedgrader.*
 import kotlinx.coroutines.delay
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import java.util.*
 
 class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGraderView>(), SpeedGraderView {
@@ -75,6 +77,7 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
 
     // Used for keeping track of the page that is asking for media permissions from SubmissionContentView
     private var assigneeId: Long = -1L
+    private var needToForceNetwork: Boolean = false
 
     // Used in the SubmissionViewFragments in the ViewPager to handle issues with sliding panel
     var isCurrentlyAnnotating = false
@@ -111,8 +114,8 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
         setContentView(R.layout.activity_speedgrader)
     }
 
-    override fun onDataSet(assignment: Assignment, submissions: List<GradeableStudentSubmission>) {
-        adapter = SubmissionContentAdapter(assignment, presenter.course, submissions)
+    override fun onDataSet(assignment: Assignment, submissions: List<GradeableStudentSubmission>, newGradebookEnabled: Boolean) {
+        adapter = SubmissionContentAdapter(assignment, presenter.course, submissions, newGradebookEnabled)
         submissionContentPager.offscreenPageLimit = 1
         submissionContentPager.pageMargin = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1f, resources.displayMetrics))
         submissionContentPager.setPageMarginDrawable(R.color.dividerColor)
@@ -181,13 +184,13 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onStart() {
         EventBus.getDefault().register(this)
+        super.onStart()
     }
 
-    override fun onPause() {
-        super.onPause()
+    override fun onStop() {
+        super.onStop()
         EventBus.getDefault().unregister(this)
     }
 
@@ -200,6 +203,15 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
     @Subscribe
     fun onTabSelected(event: TabSelectedEvent) {
         adapter.initialTabIdx = event.selectedTabIdx
+    }
+
+    @Suppress("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    fun onAssignmentGraded(event: AssignmentGradedEvent) {
+        event.once(javaClass.simpleName) {
+            // Invalidate submission cache for post/hide grades (this covers submissions not currently visible in the pager)
+            if(assignmentId == it) adapter.invalidateSubmissionCache()
+        }
     }
 
     fun requestAudioPermissions(assigneeId: Long) {
