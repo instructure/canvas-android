@@ -1032,8 +1032,14 @@
     <string name="postPolicyTitle">Post Settings</string>
     <string name="postGradesTab">Post Grades</string>
     <string name="hideGradesTab">Hide Grades</string>
-    <string name="gradesPostedCount">%d grades currently posted</string>
-    <string name="gradesHiddenCount">%d grades currently hidden</string>
+    <plurals name="gradesPostedCount">
+        <item quantity="one">%d grade currently posted</item>
+        <item quantity="other">%d grades currently posted</item>
+    </plurals>
+    <plurals name="gradesHiddenCount">
+        <item quantity="one">%d grade currently hidden</item>
+        <item quantity="other">%d grades currently hidden</item>
+    </plurals>
     <string name="postPolicyPostTo">Post to…</string>
     <string name="postPolicySections">Specific Sections</string>
     <string name="postToEveryoneTitle">Everyone</string>
