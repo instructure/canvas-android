@@ -14,112 +14,110 @@
  *     limitations under the License.
  *
  */
-package com.instructure.loginapi.login.util;
+package com.instructure.loginapi.login.util
 
-import android.content.Context;
-import android.content.SharedPreferences;
+import android.content.Context
+import com.google.gson.Gson
+import com.instructure.canvasapi2.managers.OAuthManager
+import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.loginapi.login.model.SignedInUser
+import java.util.ArrayList
 
-import com.google.gson.Gson;
-import com.instructure.canvasapi2.managers.OAuthManager;
-import com.instructure.canvasapi2.models.User;
-import com.instructure.canvasapi2.utils.ApiPrefs;
-import com.instructure.loginapi.login.model.SignedInUser;
+object PreviousUsersUtils {
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Map;
-
-import androidx.annotation.Nullable;
-
-public class PreviousUsersUtils {
-
-    private final static String SIGNED_IN_USERS_PREF_NAME = "signedInUsersList";
+    private const val SIGNED_IN_USERS_PREF_NAME = "signedInUsersList"
 
     //Does the CURRENT user support Multiple Users.
-    public static ArrayList<SignedInUser> get(Context context) {
+    operator fun get(context: Context): ArrayList<SignedInUser> {
 
-        ArrayList<SignedInUser> signedInUsers = new ArrayList<>();
+        val signedInUsers = ArrayList<SignedInUser>()
 
-        SharedPreferences sharedPreferences = context.getSharedPreferences(SIGNED_IN_USERS_PREF_NAME, Context.MODE_PRIVATE);
-        Map<String, ?> keys = sharedPreferences.getAll();
-        for (Map.Entry<String, ?> entry : keys.entrySet()) {
-            SignedInUser signedInUser = null;
+        val sharedPreferences = context.getSharedPreferences(SIGNED_IN_USERS_PREF_NAME, Context.MODE_PRIVATE)
+        val keys = sharedPreferences.all
+        for ((_, value) in keys) {
+            var signedInUser: SignedInUser? = null
 
             try {
-                signedInUser = new Gson().fromJson(entry.getValue().toString(), SignedInUser.class);
-            } catch (Exception ignore) {
+                signedInUser = Gson().fromJson(value.toString(), SignedInUser::class.java)
+            } catch (ignore: Exception) {
                 //Do Nothing
             }
 
             if (signedInUser != null) {
-                signedInUsers.add(signedInUser);
+                signedInUsers.add(signedInUser)
             }
         }
 
         //Sort by last signed in date.
-        Collections.sort(signedInUsers);
-        return signedInUsers;
+        signedInUsers.sort()
+        return signedInUsers
     }
 
-    public static boolean removeByToken(Context context, String token) {
-        ArrayList<SignedInUser> signedInUsers = get(context);
-        boolean removedUser = false;
-        for(SignedInUser user : signedInUsers) {
-            if(user.getToken().equals(token)) {
-                remove(context, user);
-                removedUser = true;
+    /**
+     * Removes all instances of [SignedInUser] that match non-empty values of [token] or [refreshToken].
+     */
+    fun removeByToken(context: Context, token: String, refreshToken: String): Boolean {
+        val signedInUsers = get(context)
+        var removedUser = false
+        for (user in signedInUsers) {
+            if ((token.isNotBlank() && user.token == token)
+                || (refreshToken.isNotBlank() && user.refreshToken == refreshToken)
+            ) {
+                remove(context, user)
+                removedUser = true
             }
         }
-        return removedUser;
+        return removedUser
     }
 
-    public static boolean remove(Context context, SignedInUser signedInUser) {
+    fun remove(context: Context, signedInUser: SignedInUser): Boolean {
 
         // Delete Access Token. We don't care about the result.
-        OAuthManager.deleteToken();
+        OAuthManager.deleteToken()
 
         //Save Signed In User to sharedPreferences
-        SharedPreferences sharedPreferences = context.getSharedPreferences(SIGNED_IN_USERS_PREF_NAME, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.remove(getGlobalUserId(signedInUser.getDomain(), signedInUser.getUser()));
-        return editor.commit();
+        val sharedPreferences = context.getSharedPreferences(SIGNED_IN_USERS_PREF_NAME, Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.remove(getGlobalUserId(signedInUser.domain, signedInUser.user))
+        return editor.commit()
     }
 
-    public static boolean add(Context context, SignedInUser signedInUser) {
+    @JvmStatic
+    fun add(context: Context, signedInUser: SignedInUser): Boolean {
 
-        String signedInUserJSON = new Gson().toJson(signedInUser);
+        val signedInUserJSON = Gson().toJson(signedInUser)
 
         //Save Signed In User to sharedPreferences
-        SharedPreferences sharedPreferences = context.getSharedPreferences(SIGNED_IN_USERS_PREF_NAME, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(getGlobalUserId(ApiPrefs.getDomain(), ApiPrefs.getUser()), signedInUserJSON);
-        return editor.commit();
+        val sharedPreferences = context.getSharedPreferences(SIGNED_IN_USERS_PREF_NAME, Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putString(getGlobalUserId(ApiPrefs.domain, ApiPrefs.user), signedInUserJSON)
+        return editor.commit()
     }
 
-    @Nullable
-    public static SignedInUser getSignedInUser(Context context, String domain, long userId) {
-        SharedPreferences prefs = context.getSharedPreferences(SIGNED_IN_USERS_PREF_NAME, Context.MODE_PRIVATE);
-        String userJson = prefs.getString(getGlobalUserId(domain, userId), null);
-        try {
-            return new Gson().fromJson(userJson, SignedInUser.class);
-        } catch (Exception e) {
-            return null;
+    fun getSignedInUser(context: Context, domain: String, userId: Long): SignedInUser? {
+        val prefs = context.getSharedPreferences(SIGNED_IN_USERS_PREF_NAME, Context.MODE_PRIVATE)
+        val userJson = prefs.getString(getGlobalUserId(domain, userId), null)
+        return try {
+            Gson().fromJson(userJson, SignedInUser::class.java)
+        } catch (e: Exception) {
+            null
         }
+
     }
 
-    private static String getGlobalUserId(String domain, long userId) {
-        return domain + "-" + userId;
+    private fun getGlobalUserId(domain: String, userId: Long): String {
+        return "$domain-$userId"
     }
 
-    private static String getGlobalUserId(String domain, User user) {
-        if (user == null) return "";
-        return getGlobalUserId(domain, user.getId());
+    private fun getGlobalUserId(domain: String, user: User?): String {
+        return if (user == null) "" else getGlobalUserId(domain, user.id)
     }
 
-    public static void clear(Context context) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(SIGNED_IN_USERS_PREF_NAME, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.clear();
-        editor.apply();
+    fun clear(context: Context) {
+        val sharedPreferences = context.getSharedPreferences(SIGNED_IN_USERS_PREF_NAME, Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.clear()
+        editor.apply()
     }
 }
