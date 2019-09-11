@@ -160,6 +160,8 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
 
         // Theme the toolbar again since visibilities may have changed
         ViewStyler.themeToolbar(requireActivity(), assignmentSubmissionListToolbar, mCourseColor, Color.WHITE)
+
+        updateStatuses() // Muted is now also set by not being in the new gradebook
     }
 
     override fun checkIfEmpty() {
@@ -203,7 +205,6 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
         super.onResume()
         setupToolbar()
         setupListeners()
-        updateStatuses()
     }
 
     private fun updateFilterTitle() {
@@ -311,7 +312,7 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
 
         val statuses = mutableListOf<String>()
         if (presenter.mAssignment.anonymousGrading) statuses += getString(R.string.anonymousGradingLabel)
-        if (isMuted) statuses += getString(R.string.gradesMutedLabel)
+        if (isMuted && !presenter.newGradebookEnabled) statuses += getString(R.string.gradesMutedLabel)
         mutedStatusView.setVisible(statuses.isNotEmpty()).text = statuses.joinToString()
     }
 
