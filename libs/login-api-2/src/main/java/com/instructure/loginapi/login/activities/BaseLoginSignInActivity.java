@@ -53,6 +53,9 @@ import com.instructure.canvasapi2.managers.UserManager;
 import com.instructure.canvasapi2.models.AccountDomain;
 import com.instructure.canvasapi2.models.OAuthTokenResponse;
 import com.instructure.canvasapi2.models.User;
+import com.instructure.canvasapi2.utils.Analytics;
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants;
+import com.instructure.canvasapi2.utils.AnalyticsParamConstants;
 import com.instructure.canvasapi2.utils.ApiPrefs;
 import com.instructure.canvasapi2.utils.ApiType;
 import com.instructure.canvasapi2.utils.LinkHeaders;
@@ -536,6 +539,11 @@ public abstract class BaseLoginSignInActivity extends AppCompatActivity implemen
 
         @Override
         public void onFail(@Nullable Call<OAuthTokenResponse> call, @NonNull Throwable error, @Nullable Response<?> response) {
+            Bundle bundle = new Bundle();
+            bundle.putString(AnalyticsParamConstants.DOMAIN_PARAM, ApiPrefs.getDomain());
+
+            Analytics.logEvent(AnalyticsEventConstants.LOGIN_FAILURE, bundle);
+
             if (!mSpecialCase) {
                 Toast.makeText(BaseLoginSignInActivity.this, R.string.errorOccurred, Toast.LENGTH_SHORT).show();
             } else {

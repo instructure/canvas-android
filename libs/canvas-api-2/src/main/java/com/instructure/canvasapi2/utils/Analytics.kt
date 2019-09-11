@@ -76,6 +76,8 @@ object AnalyticsEventConstants {
     /* Refresh Token Events */
     const val REFRESH_TOKEN = "refresh_token"
     const val FOREVER_TOKEN = "forever_token"
+    const val LOGIN_FAILURE = "login_failure"
+    const val TOKEN_REFRESH_FAILURE = "token_refresh_failure"
 }
 
 /**

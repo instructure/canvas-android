@@ -72,6 +72,7 @@ abstract class AppManager : Application() {
         // Ideally, tokens will be paired with user ids to determine unique events
         val bundle = Bundle().apply {
             putString(AnalyticsParamConstants.USER_CONTEXT_ID, ApiPrefs.user?.contextId)
+            putString(AnalyticsParamConstants.DOMAIN_PARAM, ApiPrefs.domain)
         }
 
         Analytics.logEvent(analyticsString, bundle)
