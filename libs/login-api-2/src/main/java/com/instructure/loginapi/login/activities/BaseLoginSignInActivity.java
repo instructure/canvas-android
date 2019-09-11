@@ -501,6 +501,11 @@ public abstract class BaseLoginSignInActivity extends AppCompatActivity implemen
         public void onResponse(@NonNull Response<OAuthTokenResponse> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
             if (type.isCache()) return;
 
+            Bundle bundle = new Bundle();
+            bundle.putString(AnalyticsParamConstants.DOMAIN_PARAM, ApiPrefs.getDomain());
+
+            Analytics.logEvent(AnalyticsEventConstants.LOGIN_SUCCESS, bundle);
+
             final OAuthTokenResponse token = response.body();
             ApiPrefs.setRefreshToken(token.getRefreshToken());
             ApiPrefs.setAccessToken(token.getAccessToken());
