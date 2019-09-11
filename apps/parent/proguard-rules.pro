@@ -33,3 +33,6 @@
 
 # Kotlin
 -dontwarn kotlinx.atomicfu.AtomicBoolean
+
+# CameraKit
+-dontwarn com.google.android.gms.**
