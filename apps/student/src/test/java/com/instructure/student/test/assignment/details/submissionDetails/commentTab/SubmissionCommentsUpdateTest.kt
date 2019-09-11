@@ -249,6 +249,20 @@ class SubmissionCommentsUpdateTest : Assert() {
     }
 
     @Test
+    fun `DeletePendingCommentClicked results in DeletePendingComment effect`() {
+        val event = SubmissionCommentsEvent.DeletePendingCommentClicked(123L)
+        val effect = SubmissionCommentsEffect.DeletePendingComment(123L)
+        updateSpec
+            .given(initModel)
+            .whenEvent(event)
+            .then(
+                assertThatNext<SubmissionCommentsModel, SubmissionCommentsEffect>(
+                    matchesEffects(effect)
+                )
+            )
+    }
+
+    @Test
     fun `SubmissionClicked results in BroadcastSubmissionSelected effect`() {
         val submission = Submission(123L)
         val event = SubmissionCommentsEvent.SubmissionClicked(submission)

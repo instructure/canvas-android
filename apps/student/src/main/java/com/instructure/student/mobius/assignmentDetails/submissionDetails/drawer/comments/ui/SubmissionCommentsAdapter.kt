@@ -26,7 +26,8 @@ interface SubmissionCommentsAdapterCallback : BasicItemCallback {
     fun onCommentAttachmentClicked(attachment: Attachment)
     fun onSubmissionClicked(submission: Submission)
     fun onSubmissionAttachmentClicked(submission: Submission, attachment: Attachment)
-    fun onRetryComment(pendingCommentId: Long)
+    fun onRetryPendingComment(pendingCommentId: Long)
+    fun onDeletePendingComment(pendingCommentId: Long)
 }
 
 class SubmissionCommentsAdapter(callback: SubmissionCommentsAdapterCallback) :
