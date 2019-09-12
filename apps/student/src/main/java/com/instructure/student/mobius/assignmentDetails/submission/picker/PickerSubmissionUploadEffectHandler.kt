@@ -24,9 +24,17 @@ import android.net.Uri
 import androidx.core.content.FileProvider
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.exhaustive
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.FilePrefs
+import com.instructure.pandautils.utils.FileUploadUtils
+import com.instructure.pandautils.utils.OnActivityResults
+import com.instructure.pandautils.utils.PermissionUtils
+import com.instructure.pandautils.utils.remove
+import com.instructure.pandautils.utils.requestPermissions
 import com.instructure.student.R
-import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionMode.*
+import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionMode.CommentAttachment
+import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionMode.FileSubmission
+import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionMode.MediaSubmission
 import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerSubmissionUploadView
 import com.instructure.student.mobius.common.ui.EffectHandler
 import com.instructure.student.mobius.common.ui.SubmissionService
@@ -34,6 +42,7 @@ import com.spotify.mobius.Connection
 import com.spotify.mobius.functions.Consumer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import java.io.File
@@ -147,7 +156,9 @@ class PickerSubmissionUploadEffectHandler constructor(
 
     private fun loadFile(allowedExtensions: List<String>, uri: Uri, context: Context) {
         launch(Dispatchers.Main) {
-            val submitObject = FileUploadUtils.getFile(context, uri)
+            val submitObject = withContext(Dispatchers.IO) {
+                FileUploadUtils.getFile(context, uri)
+            }
 
             submitObject?.let {
                 var fileToSubmit: FileSubmitObject? = null

@@ -161,6 +161,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
                     }
                 } catch (e: Throwable) {
                     detachForegroundNotification()
+                    db.submissionQueries.setSubmissionError(true, submission.id)
                     showErrorNotification(this@SubmissionService, submission)
                     return@runBlocking
                 }
@@ -190,13 +191,13 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
         val attachmentIds = completed.mapNotNull { it.attachmentId } + uploadedAttachmentIds
         SubmissionManager.postSubmissionAttachmentsSynchronous(submission.canvasContext.id, submission.assignmentId, attachmentIds)?.let {
             // Clear out the db for the successful submission
-            db.fileSubmissionQueries.deleteFilesForSubmissionId(submission.id)
-            db.submissionQueries.deleteSubmissionById(submission.id)
+            deleteSubmissionsForAssignment(submission.assignmentId, db)
 
             detachForegroundNotification()
             showCompleteNotification(this, submission)
         } ?: run {
             detachForegroundNotification()
+            db.submissionQueries.setSubmissionError(true, submission.id)
             showErrorNotification(this, submission)
         }
     }
@@ -236,7 +237,6 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
                 db.fileSubmissionQueries.setFileAttachmentIdAndError(attachment.id, false, null, pendingAttachment.id)
 
                 attachmentIds.add(attachment.id)
-                FileUploadUtils.deleteTempFile(pendingAttachment.fullPath)
             }.onFailure {
                 Analytics.logEvent(AnalyticsEventConstants.SUBMIT_FILEUPLOAD_FAILED)
                 handleFileError(db, submission, index, attachments, it?.message)
@@ -571,7 +571,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
 
         private fun insertNewSubmission(assignmentId: Long, context: Context, files: List<FileSubmitObject> = emptyList(), insertBlock: (StudentDb) -> Unit): Long {
             val db = Db.getInstance(context)
-            deleteSubmissionsForAssignment(assignmentId, db)
+            deleteSubmissionsForAssignment(assignmentId, db, files)
             insertBlock(db)
             val dbSubmissionId = db.submissionQueries.getLastInsert().executeAsOne()
 
@@ -582,11 +582,15 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
             return dbSubmissionId
         }
 
-        private fun deleteSubmissionsForAssignment(id: Long, db: StudentDb) {
+        private fun deleteSubmissionsForAssignment(id: Long, db: StudentDb, files: List<FileSubmitObject> = emptyList()) {
             db.submissionQueries.getSubmissionsByAssignmentId(id, getUserId()).executeAsList().forEach { submission ->
                 db.fileSubmissionQueries.getFilesForSubmissionId(submission.id).executeAsList().forEach { file ->
-                    FileUploadUtils.deleteTempFile(file.fullPath)
+                    // Delete the file for the old submission unless a new file or another database file depends on it (duplicate file being uploaded)
+                    if (!files.any { it.fullPath == file.fullPath } && db.fileSubmissionQueries.getFilesForPath(file.id, file.fullPath).executeAsList().isEmpty()) {
+                        FileUploadUtils.deleteTempFile(file.fullPath)
+                    }
                 }
+                db.fileSubmissionQueries.deleteFilesForSubmissionId(submission.id)
             }
             db.submissionQueries.deleteSubmissionsForAssignmentId(id, getUserId())
         }
