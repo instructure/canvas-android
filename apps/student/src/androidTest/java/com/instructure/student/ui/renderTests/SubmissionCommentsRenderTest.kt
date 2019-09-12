@@ -15,6 +15,7 @@
  */
 package com.instructure.student.ui.renderTests
 
+import android.os.Build
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -151,6 +152,13 @@ class SubmissionCommentsRenderTest: StudentRenderTest() {
     @Test
     @TestMetaData(Priority.P2,FeatureCategory.ASSIGNMENTS,TestCategory.RENDER,secondaryFeature = FeatureCategory.COMMENTS)
     fun testSinglePendingComment() {
+
+        // We shouldn't run this test on API 23 or lower, because we won't deal well
+        // with the ProgressBar that comes up.
+        if(Build.VERSION.SDK_INT < 24) {
+            return
+        }
+
         val state = SubmissionCommentsViewState(
             commentStates = listOf(pendingCommentItem)
         )
