@@ -132,17 +132,31 @@ class PostGradePresenterTest : Assert() {
     }
 
     @Test
-    fun `Returns statusText for posting grades when loaded`() {
+    fun `Returns statusText for posting grades for single hidden when loaded`() {
         val model = postedModel()
         val actualState = PostGradePresenter.present(model, context) as PostGradeViewState.LoadedViewState
-        assertEquals("${hiddenSubmissionList().size} grades currently hidden", actualState.statusText)
+        assertEquals("${model.submissions.size} grade currently hidden", actualState.statusText)
     }
 
     @Test
-    fun `Returns statusText for hidden grades when loaded`() {
+    fun `Returns statusText for hidden grades for single posted when loaded`() {
         val model = hiddenModel()
         val actualState = PostGradePresenter.present(model, context) as PostGradeViewState.LoadedViewState
-        assertEquals("${postedSubmissionList().size} grades currently posted", actualState.statusText)
+        assertEquals("${model.submissions.size} grade currently posted", actualState.statusText)
+    }
+
+    @Test
+    fun `Returns statusText for posting grades for multiple when loaded`() {
+        val model = postedModel().copy(submissions = hiddenSubmissionList() + hiddenSubmissionList())
+        val actualState = PostGradePresenter.present(model, context) as PostGradeViewState.LoadedViewState
+        assertEquals("${model.submissions.size} grades currently hidden", actualState.statusText)
+    }
+
+    @Test
+    fun `Returns statusText for hidden grades when for multiple loaded`() {
+        val model = hiddenModel().copy(submissions = postedSubmissionList() + postedSubmissionList())
+        val actualState = PostGradePresenter.present(model, context) as PostGradeViewState.LoadedViewState
+        assertEquals("${model.submissions.size} grades currently posted", actualState.statusText)
     }
 
     @Test

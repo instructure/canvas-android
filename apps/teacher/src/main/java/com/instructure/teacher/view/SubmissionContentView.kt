@@ -66,7 +66,9 @@ import com.instructure.teacher.activities.SpeedGraderActivity
 import com.instructure.teacher.adapters.StudentContextFragment
 import com.instructure.teacher.dialog.NoInternetConnectionDialog
 import com.instructure.teacher.dialog.RadioButtonDialog
+import com.instructure.teacher.events.AssignmentGradedEvent
 import com.instructure.teacher.events.RationedBusEvent
+import com.instructure.teacher.features.postpolicies.ui.PostPolicyFragment
 import com.instructure.teacher.fragments.*
 import com.instructure.teacher.interfaces.SpeedGraderWebNavigator
 import com.instructure.teacher.router.RouteMatcher
@@ -93,7 +95,8 @@ class SubmissionContentView(
         private val mStudentSubmission: GradeableStudentSubmission,
         private val mAssignment: Assignment,
         private val mCourse: Course,
-        var initialTabIndex: Int = 0
+        var initialTabIndex: Int = 0,
+        private val newGradebookEnabled: Boolean = false
 ) : PdfSubmissionView(context), AnnotationManager.OnAnnotationCreationModeChangeListener, AnnotationManager.OnAnnotationEditingModeChangeListener {
 
     override val annotationToolbarLayout: ToolbarCoordinatorLayout
@@ -110,7 +113,6 @@ class SubmissionContentView(
         get() = R.color.login_teacherAppTheme
 
     private var mContainerId: Int = 0
-    private var newGradebookEnabled: Boolean = false
     private val mAssignee: Assignee get() = mStudentSubmission.assignee
     private val mRootSubmission: Submission? get() = mStudentSubmission.submission
     private val mBottomViewPager: ViewPagerNoSwipe
@@ -160,6 +162,9 @@ class SubmissionContentView(
 
         //if we can share the content with another app, show the share icon
         speedGraderToolbar.menu.findItem(R.id.menu_share)?.isVisible = fragment is ShareableFile || fragment is PdfFragment
+        speedGraderToolbar.menu.findItem(R.id.menuPostPolicies)?.isVisible = newGradebookEnabled
+
+        ViewStyler.colorToolbarIconsAndText(context as Activity, speedGraderToolbar, Color.BLACK)
     }
 
     //region view lifecycle
@@ -203,7 +208,6 @@ class SubmissionContentView(
                 mStudentSubmission.submission = awaitApi<Submission> { SubmissionManager.getSingleSubmission(mCourse.id, mAssignment.id, mStudentSubmission.assigneeId, it, true) }
                 mStudentSubmission.isCached = true
             }
-            newGradebookEnabled = awaitApi<List<String>> { FeaturesManager.getEnabledFeaturesForCourse(mCourse.id, true, it) }.contains(FeaturesManager.NEW_GRADEBOOK)
             setup()
         } catch {
             loadingView.setGone()
@@ -443,6 +447,9 @@ class SubmissionContentView(
                 if (pdfFragment != null) {
                     pdfFragment?.document?.documentSource?.fileUri?.viewExternally(context, "application/pdf")
                 }
+            }
+            R.id.menuPostPolicies -> {
+                RouteMatcher.route(context, PostPolicyFragment.makeRoute(mCourse, mAssignment))
             }
         }
     }

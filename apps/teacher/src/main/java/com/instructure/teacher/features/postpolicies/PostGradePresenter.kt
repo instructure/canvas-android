@@ -61,10 +61,10 @@ object PostGradePresenter : Presenter<PostGradeModel, PostGradeViewState> {
 
         return when {
             model.isHidingGrades -> {
-                if (posted.isEmpty()) null else context.getString(R.string.gradesPostedCount, posted.count())
+                if (posted.isEmpty()) null else context.resources.getQuantityString(R.plurals.gradesPostedCount, posted.count(), posted.count())
             }
             else -> {
-                if (hidden.isEmpty()) null else context.getString(R.string.gradesHiddenCount, hidden.count())
+                if (hidden.isEmpty()) null else context.resources.getQuantityString(R.plurals.gradesHiddenCount, hidden.count(), hidden.count())
             }
         }
     }

@@ -15,6 +15,7 @@
  */
 package com.instructure.teacher.fragments
 
+import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.fragments.BasePresenterFragment
@@ -22,6 +23,7 @@ import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
 import com.instructure.teacher.dialog.CustomizeGradeDialog
 import com.instructure.teacher.dialog.PassFailGradeDailog
+import com.instructure.teacher.events.AssignmentGradedEvent
 import com.instructure.teacher.factory.SpeedGraderGradePresenterFactory
 import com.instructure.teacher.presenters.SpeedGraderGradePresenter
 import com.instructure.teacher.utils.getColorCompat
@@ -29,6 +31,10 @@ import com.instructure.teacher.utils.getGradeText
 import com.instructure.teacher.view.QuizSubmissionGradedEvent
 import com.instructure.teacher.viewinterface.SpeedGraderGradeView
 import kotlinx.android.synthetic.main.fragment_speedgrader_grade.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -66,6 +72,28 @@ class SpeedGraderGradeFragment : BasePresenterFragment<SpeedGraderGradePresenter
             if (it.id == mSubmission?.id) {
                 presenter.submission = it
                 setupViews()
+            }
+        }
+    }
+
+    @Suppress("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    fun onAssignmentGraded(event: AssignmentGradedEvent) {
+        event.once(javaClass.simpleName + presenter.submission?.id) {
+            if(mAssignment.id == it) {
+                GlobalScope.launch {
+                    // Try to update our submission for post/hide grades
+                    presenter.submission = SubmissionManager.getSingleSubmissionAsync(
+                        presenter.course.id,
+                        presenter.assignment.id,
+                        presenter.submission?.userId ?: return@launch,
+                        true
+                    ).await().dataOrNull ?: return@launch
+
+                    withContext(Dispatchers.Main) {
+                        setupViews()
+                    }
+                }
             }
         }
     }

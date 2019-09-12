@@ -41,6 +41,7 @@ class SpeedGraderPresenter(
     private var mApiJob: Job? = null
 
     private var mHasAttemptedLoad = false
+    private var newGradebookEnabled = false
 
     lateinit var assignment: Assignment
     lateinit var course: Course
@@ -71,6 +72,10 @@ class SpeedGraderPresenter(
                         // Get assignment for the discussion
                         { AssignmentManager.getAssignment(discussion.assignmentId, course.id, false, it) }
                 )
+                newGradebookEnabled = awaitApi<List<String>> {
+                    FeaturesManager.getEnabledFeaturesForCourse(courseId, true, it)
+                }.contains(FeaturesManager.NEW_GRADEBOOK)
+
                 // Map raw submissions to user id Map<UserId, Submission>
                 val userSubmissionMap = rawSubmissions.associateBy { it.userId }
                 // Create list of GradeableStudentSubmissions from List<EnrollmentApiModel> (students)
@@ -81,7 +86,7 @@ class SpeedGraderPresenter(
 
                 assignment = discussionAssignment
                 submissions = discussionSubmissions
-                mView?.onDataSet(discussionAssignment, discussionSubmissions)
+                mView?.onDataSet(discussionAssignment, discussionSubmissions, newGradebookEnabled)
             } catch (ignore: Throwable) {
                 mView?.onErrorSettingData()
             }
@@ -90,12 +95,14 @@ class SpeedGraderPresenter(
 
     private fun setupAssignmentData() {
         mApiJob = tryWeave {
-            val data = awaitApis<Course, Assignment>(
+            val data = awaitApis<Course, Assignment, List<String>>(
                 { CourseManager.getCourse(courseId, it, false) },
-                { AssignmentManager.getAssignment(assignmentId, courseId, false, it) }
+                { AssignmentManager.getAssignment(assignmentId, courseId, false, it) },
+                { FeaturesManager.getEnabledFeaturesForCourse(courseId, true, it) }
             )
             course = data.first
             assignment = data.second
+            newGradebookEnabled = data.third.contains(FeaturesManager.NEW_GRADEBOOK)
 
             if (submissionId > 0 && submissions.isEmpty()) {
                 // We don't have all the data we need (we came from a push notification), get all the stuffs first
@@ -104,7 +111,7 @@ class SpeedGraderPresenter(
                 submissions = listOf(GradeableStudentSubmission(StudentAssignee(user), submission))
             }
 
-            mView?.onDataSet(assignment, submissions)
+            mView?.onDataSet(assignment, submissions, newGradebookEnabled)
         } catch {
             mView?.onErrorSettingData()
         }

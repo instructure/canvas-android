@@ -139,8 +139,8 @@ class PostGradeView(inflater: LayoutInflater, parent: ViewGroup) : MobiusView<Po
 
     fun showGradesPosted(isHidingGrades: Boolean, assignmentId: Long) {
         Toast.makeText(context, if (isHidingGrades) R.string.postPolicyHiddenToast else R.string.postPolicyPostedToast, Toast.LENGTH_SHORT).show()
-        (context as Activity).onBackPressed()
         AssignmentGradedEvent(assignmentId).post() //post bus event
+        (context as Activity).onBackPressed()
     }
 
     fun showPostFailed(isHidingGrades: Boolean) {

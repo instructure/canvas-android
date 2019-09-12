@@ -19,9 +19,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/menuPostPolicies"
+        android:title="@string/postPolicyTitle"
+        android:icon="@drawable/ic_eye"
+        android:visible="false"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/menu_share"
         android:title="@string/share"
-        android:visible="true"
+        android:visible="false"
         android:icon="@drawable/vd_share"
         app:showAsAction="always"/>
 
