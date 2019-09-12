@@ -307,11 +307,7 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
     private fun updateStatuses() {
         val isMuted = presenter.mAssignment.muted
         assignmentSubmissionListToolbar.menu.findItem(R.id.menuMuteGrades)?.let {
-            it.isVisible = !FeatureFlags.postPolicies
             it.title = getString(if (isMuted) R.string.unmuteGrades else R.string.muteGrades)
-        }
-        assignmentSubmissionListToolbar.menu.findItem(R.id.menuPostPolicies)?.let {
-            it.isVisible = FeatureFlags.postPolicies
         }
 
         val statuses = mutableListOf<String>()
