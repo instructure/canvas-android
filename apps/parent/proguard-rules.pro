@@ -1,3 +1,5 @@
+-keepattributes SourceFile,LineNumberTable # Needed to avoid mangled Route patterns
+
 # Instructure
 -keep public class com.instructure.** { *; }
 -keep public class instructure.** { *; }
