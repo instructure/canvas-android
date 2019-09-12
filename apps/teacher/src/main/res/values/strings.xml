@@ -785,7 +785,6 @@
     <string name="filterPeople">Filter People</string>
     <string name="loadMore">Load More</string>
     <string name="latestStudentActivityAtFormatted">Latest activity on %1$s at %2$s.</string>
-    <string name="sectionFormatted">Section: %s</string>
     <string name="errorLoadingStudentContextCard">Unable to load details for this user.</string>
     <string name="enrollmentTypeStudent">Student</string>
     <string name="enrollmentTypeTeacher">Teacher</string>

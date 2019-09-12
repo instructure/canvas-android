@@ -90,7 +90,7 @@ public class Utils {
     }
 
     public static Map<String, String> getRefererAndAuthentication(Context context) {
-        String token = ApiPrefs.getToken();
+        String token = ApiPrefs.getValidToken();
         String headerValue = null;
         if(token != null) {
             headerValue = String.format("Bearer %s", token);

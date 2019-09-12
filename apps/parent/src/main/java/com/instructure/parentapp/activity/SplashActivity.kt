@@ -66,7 +66,7 @@ class SplashActivity : AppCompatActivity() {
         }
 
         when {
-            ApiPrefs.token.isNotBlank() -> checkSignedIn() // They have a token
+            ApiPrefs.getValidToken().isNotBlank() -> checkSignedIn() // They have a token
             else -> navigateLoginLandingPage() // They have no token
         }
     }
@@ -75,7 +75,7 @@ class SplashActivity : AppCompatActivity() {
     private fun checkSignedIn() {
         checkSignedInJob = tryWeave {
             // Now get it from the new place. This will be the true token whether they signed into dev/retrofit or the old way.
-            val token = ApiPrefs.token
+            val token = ApiPrefs.getValidToken()
             ApiPrefs.protocol = "https"
 
             val user = awaitApi<User> { UserManager.getSelf(true, it) }
@@ -132,7 +132,7 @@ class SplashActivity : AppCompatActivity() {
                         super.onFail(call, error, response)
                         // The api call failed, if they're unauthorized log them out
                         // Their token may have changed - make them start over
-                        if (response?.code() == 401 && !TextUtils.isEmpty(ApiPrefs.token)) {
+                        if (response?.code() == 401 && !TextUtils.isEmpty(ApiPrefs.getValidToken())) {
                             ParentLogoutTask(LogoutTask.Type.LOGOUT).execute()
                         }
                     }

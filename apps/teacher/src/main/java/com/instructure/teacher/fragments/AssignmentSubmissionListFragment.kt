@@ -40,7 +40,7 @@ import com.instructure.teacher.events.AssignmentGradedEvent
 import com.instructure.teacher.events.SubmissionCommentsUpdated
 import com.instructure.teacher.events.SubmissionFilterChangedEvent
 import com.instructure.teacher.factory.AssignmentSubmissionListPresenterFactory
-import com.instructure.teacher.features.postpolicies.PostPolicyFragment
+import com.instructure.teacher.features.postpolicies.ui.PostPolicyFragment
 import com.instructure.teacher.holders.GradeableStudentSubmissionViewHolder
 import com.instructure.teacher.presenters.AssignmentSubmissionListPresenter
 import com.instructure.teacher.presenters.AssignmentSubmissionListPresenter.SubmissionListFilter
@@ -150,6 +150,18 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
 
     override fun onRefreshFinished() {
         swipeRefreshLayout.isRefreshing = false
+
+        assignmentSubmissionListToolbar.menu.findItem(R.id.menuPostPolicies)?.let {
+            it.isVisible = presenter.newGradebookEnabled
+        }
+        assignmentSubmissionListToolbar.menu.findItem(R.id.menuMuteGrades)?.let {
+            it.isVisible = !presenter.newGradebookEnabled
+        }
+
+        // Theme the toolbar again since visibilities may have changed
+        ViewStyler.themeToolbar(requireActivity(), assignmentSubmissionListToolbar, mCourseColor, Color.WHITE)
+
+        updateStatuses() // Muted is now also set by not being in the new gradebook
     }
 
     override fun checkIfEmpty() {
@@ -193,7 +205,6 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
         super.onResume()
         setupToolbar()
         setupListeners()
-        updateStatuses()
     }
 
     private fun updateFilterTitle() {
@@ -305,7 +316,7 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
 
         val statuses = mutableListOf<String>()
         if (presenter.mAssignment.anonymousGrading) statuses += getString(R.string.anonymousGradingLabel)
-        if (isMuted) statuses += getString(R.string.gradesMutedLabel)
+        if (isMuted && !presenter.newGradebookEnabled) statuses += getString(R.string.gradesMutedLabel)
         mutedStatusView.setVisible(statuses.isNotEmpty()).text = statuses.joinToString()
     }
 

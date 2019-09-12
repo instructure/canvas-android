@@ -47,12 +47,16 @@ class AssignmentBinder : BaseBinder() {
 
             val submission = assignment.submission
 
-            // Don't care about assignment.muted, the API should restrict our grade if we shouldn't see it
-            holder.points.visibility = View.VISIBLE
-            BaseBinder.setupGradeText(context, holder.points, assignment, submission, courseColor)
+            // Posted At now determines if an assignment is muted, even for old gradebook
+            if (assignment.submission?.postedAt == null) {
+                // Mute that score
+                holder.points.visibility = View.GONE
+            } else {
+                holder.points.visibility = View.VISIBLE
+                setupGradeText(context, holder.points, assignment, submission, courseColor)
+            }
 
-
-            val drawable = BaseBinder.getAssignmentIcon(assignment)
+            val drawable = getAssignmentIcon(assignment)
             holder.icon.setImageDrawable(ColorKeeper.getColoredDrawable(context, drawable, color))
 
             if (assignment.dueAt != null) {
@@ -66,15 +70,15 @@ class AssignmentBinder : BaseBinder() {
                 description = context.getString(R.string.excusedAssignment)
                 holder.description.setTypeface(null, Typeface.BOLD)
             } else {
-                description = BaseBinder.getHtmlAsText(assignment.description ?: "")
+                description = getHtmlAsText(assignment.description ?: "")
                 holder.description.setTypeface(null, Typeface.NORMAL)
             }
 
-            BaseBinder.setCleanText(holder.description, description)
+            setCleanText(holder.description, description)
             if (description.isNullOrBlank()) {
-                BaseBinder.setGone(holder.description)
+                setGone(holder.description)
             } else {
-                BaseBinder.setVisible(holder.description)
+                setVisible(holder.description)
             }
 
         }

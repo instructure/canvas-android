@@ -77,7 +77,7 @@ class SignInActivity : BaseLoginSignInActivity() {
                 }
                 index = url.indexOf(token)
                 if (index != -1) {
-                    ApiPrefs.token = url.substring(index + token.length)
+                    ApiPrefs.accessToken = url.substring(index + token.length)
                 }
                 handleLaunchApplicationMainActivityIntent()
                 return true

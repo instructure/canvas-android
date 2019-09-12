@@ -19,10 +19,13 @@
 package com.instructure.student.test.assignment.details.submissionDetails.commentTab
 
 import android.app.Activity
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.pandautils.utils.PermissionUtils
 import com.instructure.pandautils.utils.requestPermissions
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsSharedEvent
@@ -48,12 +51,14 @@ class SubmissionCommentsEffectHandlerTest : Assert(){
 
     private val mockView: SubmissionCommentsView = mockk(relaxed = true)
     private val context: Activity = mockk(relaxed = true)
+    private val firebase: FirebaseAnalytics = mockk(relaxed = true)
     private val effectHandler = SubmissionCommentsEffectHandler(context).apply { view = mockView }
     private val eventConsumer: Consumer<SubmissionCommentsEvent> = mockk(relaxed = true)
     private val connection = effectHandler.connect(eventConsumer)
 
     @Before
     fun setup() {
+        Analytics.firebase = firebase
         Dispatchers.setMain(Executors.newSingleThreadExecutor().asCoroutineDispatcher())
     }
 
@@ -95,6 +100,11 @@ class SubmissionCommentsEffectHandlerTest : Assert(){
             )
         }
 
+        verify {
+            firebase.logEvent(AnalyticsEventConstants.SUBMISSION_COMMENTS_MEDIA_REPLY, null)
+        }
+
+        confirmVerified(firebase)
         confirmVerified(SubmissionService)
     }
 
@@ -222,6 +232,11 @@ class SubmissionCommentsEffectHandlerTest : Assert(){
             )
         }
 
+        verify {
+            firebase.logEvent(AnalyticsEventConstants.SUBMISSION_COMMENTS_TEXT_REPLY, null)
+        }
+
+        confirmVerified(firebase)
         confirmVerified(SubmissionService)
     }
 
@@ -273,6 +288,23 @@ class SubmissionCommentsEffectHandlerTest : Assert(){
 
         verify(timeout = 100) {
             SubmissionService.retryCommentUpload(context, 123L)
+        }
+
+        confirmVerified(SubmissionService)
+    }
+
+    @Test
+    fun ` DeleteCommentEffect effect results in calling SubmissionService deletePendingComment`() {
+        val effect = SubmissionCommentsEffect.DeletePendingComment(123L)
+        mockkObject(SubmissionService.Companion)
+        every {
+            SubmissionService.deletePendingComment(any(), any())
+        } returns Unit
+
+        connection.accept(effect)
+
+        verify(timeout = 100) {
+            SubmissionService.deletePendingComment(context, 123L)
         }
 
         confirmVerified(SubmissionService)

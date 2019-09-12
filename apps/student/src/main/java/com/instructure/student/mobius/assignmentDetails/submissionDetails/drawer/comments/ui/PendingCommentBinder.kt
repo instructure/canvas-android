@@ -20,14 +20,18 @@ import android.content.Context
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.view.View
+import androidx.appcompat.widget.PopupMenu
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.instructure.pandautils.adapters.BasicItemBinder
 import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.student.PendingSubmissionComment
 import com.instructure.student.R
-import com.instructure.student.adapter.BasicItemBinder
 import com.instructure.student.db.Db
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.CommentItemState
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.ui.views.CommentDirection
@@ -43,7 +47,7 @@ class PendingCommentBinder : BasicItemBinder<CommentItemState.PendingCommentItem
     }
 
     override val bindBehavior = ItemWithHolder { holder, item, callback, _ ->
-        if (holder !is PendingCommentHolder) throw IllegalStateException("Invalid holder type for PendingCommentBinder")
+        check(holder is PendingCommentHolder) { "Invalid holder type for PendingCommentBinder" }
 
         commentHolder.direction = CommentDirection.OUTGOING
         commentHolder.usernameText = item.authorName
@@ -52,7 +56,7 @@ class PendingCommentBinder : BasicItemBinder<CommentItemState.PendingCommentItem
         holder.setListenerForItem(item.pendingComment.id) { comment ->
             commentHolder.commentText = comment.message
             if (comment.errorFlag) {
-                onClick { callback.onRetryComment(comment.id) }
+                onClick { displayRetryOptions(errorLayout, comment.id, callback) }
                 commentHolder.dateText = context.getString(R.string.error)
                 errorLayout.setVisible()
                 sendingLayout.setGone()
@@ -77,6 +81,25 @@ class PendingCommentBinder : BasicItemBinder<CommentItemState.PendingCommentItem
                 }
             }
         }
+    }
+
+    private fun displayRetryOptions(anchor: View, commentId: Long, callback: SubmissionCommentsAdapterCallback) {
+        val popup = PopupMenu(anchor.context, anchor)
+        popup.menu.add(0, 0, 0, R.string.retry)
+        popup.menu.add(0, 1, 0, R.string.delete).apply {
+            val color = ContextCompat.getColor(anchor.context, R.color.error)
+            val span = SpannableString(title)
+            span.setSpan(ForegroundColorSpan(color), 0, span.length, 0)
+            title = span
+        }
+        popup.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                0 -> callback.onRetryPendingComment(commentId)
+                1 -> callback.onDeletePendingComment(commentId)
+            }
+            true
+        }
+        popup.show()
     }
 
     override fun onRecycle(holder: RecyclerView.ViewHolder) {

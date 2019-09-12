@@ -28,9 +28,9 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
-import com.instructure.student.adapter.BasicItemBinder
-import com.instructure.student.adapter.BasicItemCallback
-import com.instructure.student.adapter.BasicRecyclerAdapter
+import com.instructure.pandautils.adapters.BasicItemBinder
+import com.instructure.pandautils.adapters.BasicItemCallback
+import com.instructure.pandautils.adapters.BasicRecyclerAdapter
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionMode
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadEvent
 import com.instructure.student.mobius.common.ui.MobiusView

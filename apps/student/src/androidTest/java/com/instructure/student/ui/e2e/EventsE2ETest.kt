@@ -1,5 +1,6 @@
 package com.instructure.student.ui.e2e
 
+import android.os.SystemClock.sleep
 import com.instructure.canvas.espresso.E2E
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.GroupsApi
@@ -76,6 +77,9 @@ class EventsE2ETest: StudentTest() {
 
         // Select the calendars for your courses/groups
         calendarPage.selectDesiredCalendarsAndDismiss(course.name, group.name)
+
+        // Hide the calendar itself.  This helps on low-res devices.
+        calendarPage.toggleCalendarVisibility()
 
         // Make sure that your assignment shows up on the calendar
         calendarPage.assertAssignmentDisplayed(seededAssignments.assignmentList[0])

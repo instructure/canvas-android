@@ -1,10 +1,30 @@
+/*
+ * Copyright (C) 2019 - present Instructure, Inc.
+ *
+ *     Licensed under the Apache License, Version 2.0 (the "License");
+ *     you may not use this file except in compliance with the License.
+ *     You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *     Unless required by applicable law or agreed to in writing, software
+ *     distributed under the License is distributed on an "AS IS" BASIS,
+ *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *     See the License for the specific language governing permissions and
+ *     limitations under the License.
+ *
+ */
 package com.instructure.canvas.espresso
 
 import android.content.res.Resources
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.View
+import android.webkit.WebView
 import androidx.test.espresso.matcher.ViewMatchers
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils
+import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils.matchesCheckNames
+import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils.matchesViews
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityViewCheckResult
 import com.instructure.espresso.AccessibilityChecker
 import com.instructure.espresso.BuildConfig
@@ -12,6 +32,9 @@ import com.instructure.espresso.page.InstructureTest
 import org.hamcrest.BaseMatcher
 import org.hamcrest.Description
 import org.hamcrest.Matchers
+import org.hamcrest.Matchers.`is`
+import org.hamcrest.Matchers.allOf
+import org.hamcrest.Matchers.anyOf
 import org.junit.Before
 
 // InstructureTest wrapper for Canvas code
@@ -28,6 +51,7 @@ abstract class CanvasTest : InstructureTest(BuildConfig.GLOBAL_DITTO_MODE) {
     protected fun enableAndConfigureAccessibilityChecks() {
         AccessibilityChecker.runChecks() // Enable accessibility checks
 
+        Log.v("overflowWidth", "enableAndConfigureAccessibilityChecks() called, validator=${AccessibilityChecker.accessibilityValidator != null}")
         // For now, suppress warnings about overflow menus with width < 48dp, so long as the height is >= 48dp
         AccessibilityChecker.accessibilityValidator
                 // Causes all views to be checked, instead of just the views with which the test interacts
@@ -36,13 +60,35 @@ abstract class CanvasTest : InstructureTest(BuildConfig.GLOBAL_DITTO_MODE) {
                 // Suppression (exclusion) rules
                 ?.setSuppressingResultMatcher(
                         Matchers.anyOf(
-                            // Suppress issues in PsPDFKit, date/time picker
-                            isExcludedNamedView( listOf("pspdf", "_picker_", "timePicker")),
+                            // Suppress issues in PsPDFKit, date/time picker, calendar grid
+                            isExcludedNamedView( listOf("pspdf", "_picker_", "timePicker", "calendar1")),
 
                             // Suppress, for now, errors about overflow menus being too narrow
                             Matchers.allOf(
-                                    AccessibilityCheckResultUtils.matchesViews(ViewMatchers.withContentDescription("More options")),
+                                    isOverflowMenu(),
                                     withOnlyWidthLessThan(48)
+                            ),
+
+                            // Short-term workaround as we try to return a11y-compliant colors for submit button
+                            allOf(
+                                    matchesCheckNames(`is`("TextContrastViewCheck")),
+                                    anyOf(
+                                            matchesViews(ViewMatchers.withResourceName("submitButton")),
+                                            matchesViews(ViewMatchers.withResourceName("submit_button"))
+                                    )
+                            ),
+
+                            // On very low-res devices, controls can be squished to the point that they are smaller
+                            // than their specified minimum.  This seems unavoidable, so let's not log an
+                            // accessibility error for this.
+                            underMinSizeOnLowRes(),
+
+                            // Let's ignore size issues with WebViews, since they do not honor minHeight/minWidth
+                            // Note that TouchTargetSizeViewCheck is the *old* name of the check.  The new name would
+                            // be "TouchTargetSizeCheck".
+                            Matchers.allOf(
+                                    matchesViews(ViewMatchers.isAssignableFrom(WebView::class.java)),
+                                    matchesCheckNames(Matchers.`is`("TouchTargetSizeViewCheck"))
                             )
                         )
 
@@ -72,16 +118,19 @@ abstract class CanvasTest : InstructureTest(BuildConfig.GLOBAL_DITTO_MODE) {
                         var upCount = 0
                         while(view != null && upCount < 5)
                         {
-                            try {
-                                var resourceName = view.context.resources.getResourceName(view.id)
-                                for(excludedName in excludes) {
-                                    if(resourceName.contains(excludedName)) {
-                                        //Log.v("AccessibilityExclude", "Caught $resourceName")
-                                        return true
+                            // Weeding out id == -1 will filter out a lot of lines from our logs
+                            if(view.id != -1) {
+                                try {
+                                    var resourceName = view.context.resources.getResourceName(view.id)
+                                    for (excludedName in excludes) {
+                                        if (resourceName.contains(excludedName)) {
+                                            //Log.v("AccessibilityExclude", "Caught $resourceName")
+                                            return true
+                                        }
                                     }
+                                } catch (e: Resources.NotFoundException) {
                                 }
                             }
-                            catch(e: Resources.NotFoundException) { }
 
                             var parent = view.parent
                             when(parent) {
@@ -118,6 +167,7 @@ abstract class CanvasTest : InstructureTest(BuildConfig.GLOBAL_DITTO_MODE) {
         val densityDpi = activity.resources.displayMetrics.densityDpi
         val dim_f = dimInDp * (densityDpi.toDouble() / DisplayMetrics.DENSITY_DEFAULT.toDouble())
         val dim = dim_f.toInt()
+        Log.v("overflowWidth", "dimInDp=$dimInDp,densityDpi=$densityDpi,dim_f=$dim_f,dim=$dim")
         return object : BaseMatcher<AccessibilityViewCheckResult>() {
             override fun describeTo(description: Description?) {
                 description?.appendText("checking whether width < $dim && height >= $dim")
@@ -126,12 +176,98 @@ abstract class CanvasTest : InstructureTest(BuildConfig.GLOBAL_DITTO_MODE) {
             override fun matches(item: Any): Boolean {
                 when(item) {
                     is AccessibilityViewCheckResult -> {
-                        return item.view.width < dim && item.view.height >= dim
+                        val result = item.view.width < dim && item.view.height >= dim
+                        //Log.v("overflowWidth", "view=${getResourceName(item.view)}, desc=${item.view.contentDescription}, w=${item.view.width}, h=${item.view.height}, res=$result")
+                        return result
                     }
-                    else -> return false
+                    else -> {
+                        //Log.v("overflowWidth", "rejecting, item = ${item::javaClass::name}")
+                        return false
+                    }
                 }
             }
 
         }
     }
+
+    // Checks to see whether or no a view is an overflow menu.
+    fun isOverflowMenu() : BaseMatcher<AccessibilityViewCheckResult> {
+        return object : BaseMatcher<AccessibilityViewCheckResult>() {
+            override fun describeTo(description: Description?) {
+                description?.appendText("Checking whether view is the overflow menu")
+            }
+
+            override fun matches(item: Any?): Boolean {
+                when(item) {
+                    is AccessibilityViewCheckResult -> {
+                        var result = item.view?.contentDescription?.contains("More options", ignoreCase = true) ?: false
+                        //Log.v("overflowWidth", "isOverflowMenu: contentDescription=${item.view?.contentDescription ?: "unknown"}, result=$result ")
+                        return result
+                    }
+                    else -> {
+                        //Log.v("overflowWidth", "isOverflowMenu: rejected  item = ${item!!::class.java::getSimpleName}")
+                        return false
+                    }
+                }
+            }
+
+        }
+    }
+
+    /**
+     * Returns a matcher that will match if:
+     *
+     * We are on a low-res device (density==1), and either dimension falls below the
+     * minimum size *and* falls below its specified minimum.
+     */
+    fun underMinSizeOnLowRes() : BaseMatcher<AccessibilityViewCheckResult> {
+        val activity = activityRule.activity
+        val density = activity.resources.displayMetrics.density
+        Log.v("underMinSizeOnLowRes", "density: $density")
+        return object : BaseMatcher<AccessibilityViewCheckResult>() {
+            override fun describeTo(description: Description?) {
+                description?.appendText("Checks to see if size < minimum on low-res device")
+            }
+
+            override fun matches(item: Any?): Boolean {
+                if(density > 1) return false
+                when(item) {
+                    is AccessibilityViewCheckResult -> {
+                        val v = item.view
+                        val toss =
+                                v.height > 0 // Require some dimension in order to be tossed
+                                && v.width > 0
+                                &&  ( (v.height < 48 && v.height < v.minimumHeight) ||
+                                      (v.width < 48 && v.width < v.minimumWidth) )
+
+                        if(toss) {
+                            var resourceName = getResourceName(v)
+                            Log.v("underMinSizeOnLowRes",
+                                    "Tossing $resourceName, w=${v.width}, h=${v.height}, mw=${v.minimumWidth}, mh=${v.minimumHeight}")
+                            return true
+                        }
+                    }
+                }
+                return false
+            }
+        }
+    }
+
+    // Grab the resourceName for a view
+    private fun getResourceName(view: View) : String {
+        var resourceName = "<unknown>"
+        // Don't bother trying for view with an ID of -1, since that is the standard representation
+        // of "no resource name defined".  Pressing forward with id == -1 clutters our log with
+        // a lot of unnecessary messages.
+        if(view.id != -1) {
+            try {
+                resourceName = view.context.resources.getResourceName(view.id)
+            } catch (nfe: Resources.NotFoundException) {
+                // Eat this exception
+            }
+        }
+
+        return resourceName
+    }
+
 }

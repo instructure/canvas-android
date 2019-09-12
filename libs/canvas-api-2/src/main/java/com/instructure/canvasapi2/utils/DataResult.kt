@@ -16,6 +16,8 @@
  */
 package com.instructure.canvasapi2.utils
 
+import retrofit2.Call
+
 sealed class DataResult<out A> {
 
     data class Success<A>(val data: A) : DataResult<A>()
@@ -74,4 +76,13 @@ sealed class Failure(open val message: String?) {
     data class Network(override val message: String? = null) : Failure(message) // Covers 404/500, no internet, etc. Generic case for failed request
     data class Authorization(override val message: String? = null) : Failure(message) // Covers 401, or permission errors.
     data class Exception(val exception: Throwable, override val message: String? = null) : Failure(message)
+}
+
+internal fun <T> Call<T>.dataResult(): DataResult<T> {
+    val response = execute()
+    return when {
+        response.isSuccessful && response.body() != null -> DataResult.Success(response.body()!!)
+        response.code() == 401 -> DataResult.Fail(Failure.Authorization(response.message()))
+        else -> DataResult.Fail(Failure.Network(response.message()))
+    }
 }

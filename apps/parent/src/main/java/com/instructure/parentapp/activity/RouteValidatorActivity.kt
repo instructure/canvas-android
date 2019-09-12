@@ -61,7 +61,7 @@ class RouteValidatorActivity : AppCompatActivity() {
             // Log data
             Logger.w(data.toString())
 
-            val token = ApiPrefs.token
+            val token = ApiPrefs.getValidToken()
             val signedIn = token.isNotEmpty()
             val domain = ApiPrefs.domain
 

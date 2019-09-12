@@ -37,7 +37,6 @@ import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.teacher.R
 import com.instructure.teacher.router.RouteMatcher
-import com.instructure.teacher.services.FileDownloadService
 import com.instructure.teacher.utils.setupCloseButton
 import com.instructure.teacher.utils.setupMenu
 import kotlinx.android.synthetic.main.fragment_internal_webview.*
@@ -51,7 +50,7 @@ open class InternalWebViewFragment : BaseFragment() {
     var html: String by StringArg()
     var title: String by StringArg()
     var darkToolbar: Boolean by BooleanArg()
-    private var shouldAuthenticate: Boolean by BooleanArg()
+    private var shouldAuthenticate: Boolean by BooleanArg(key = AUTHENTICATE)
 
     private var shouldRouteInternally = true
     private var shouldLoadUrl = true
@@ -197,8 +196,8 @@ open class InternalWebViewFragment : BaseFragment() {
                     } catch (e: StatusCallbackError) {
                     }
                 }
+                canvasWebView.loadUrl(url, getReferer())
             }
-            canvasWebView.loadUrl(url, getReferer())
         }
     }
 

@@ -151,6 +151,11 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
                         ApiPrefs.protocol = user.protocol
                         ApiPrefs.user = user.user
                         ApiPrefs.domain = user.domain
+                        user.accessToken?.let {
+                            ApiPrefs.refreshToken = user.refreshToken
+                            ApiPrefs.accessToken = user.accessToken
+                        }
+                        
                         ApiPrefs.token = user.token
 
                         val intent = launchApplicationMainActivityIntent()

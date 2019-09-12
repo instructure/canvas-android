@@ -45,6 +45,12 @@ query StudentContextCard($courseId: ID!, $studentId: ID!, $pageSize: Int!, $next
                   overrideScore
                   currentGrade
                   currentScore
+                  finalGrade
+                  finalScore
+                  unpostedCurrentGrade
+                  unpostedCurrentScore
+                  unpostedFinalGrade
+                  unpostedFinalScore
                 }
               }
               analytics: summaryAnalytics(courseId: $courseId) {
@@ -87,6 +93,8 @@ query StudentContextCard($courseId: ID!, $studentId: ID!, $pageSize: Int!, $next
             excused
             submissionStatus
             gradingStatus
+            posted
+            postedAt
             user {
               id: _id
             }

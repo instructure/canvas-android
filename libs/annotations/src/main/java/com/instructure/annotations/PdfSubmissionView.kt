@@ -130,6 +130,7 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
     abstract fun showAnnotationComments(commentList: ArrayList<CanvaDocAnnotation>, headAnnotationId: String, docSession: DocSession, apiValues: ApiValues)
     abstract fun showFileError()
 
+    open fun logOnAnnotationSelectedAnalytics() {}
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
@@ -481,7 +482,9 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
     }
 
     val annotationSelectedListener = object: AnnotationManager.OnAnnotationSelectedListener {
-        override fun onAnnotationSelected(annotation: Annotation, isCreated: Boolean) {}
+        override fun onAnnotationSelected(annotation: Annotation, isCreated: Boolean) {
+            logOnAnnotationSelectedAnalytics()
+        }
         override fun onPrepareAnnotationSelection(p0: AnnotationSelectionController, annotation: Annotation, isCreated: Boolean): Boolean {
             if (APIHelper.hasNetworkConnection()) {
                 if (annotation.type == AnnotationType.FREETEXT && annotation.contents.isNullOrEmpty()) {

@@ -37,4 +37,5 @@ object FeaturesManager {
         forceNetwork: Boolean
     ) = apiAsync<List<String>> { getEnabledFeaturesForCourse(courseId, forceNetwork, it) }
 
+    const val NEW_GRADEBOOK = "new_gradebook"
 }

@@ -78,6 +78,15 @@ class SubmissionDetailsView(
             if (slidingUpPanelLayout?.panelState == SlidingUpPanelLayout.PanelState.COLLAPSED) {
                 slidingUpPanelLayout?.panelState = SlidingUpPanelLayout.PanelState.ANCHORED
             }
+            logTabSelected(tab?.position)
+        }
+    }
+
+    private fun logTabSelected(position: Int?) {
+        when (position) {
+            0 -> logEvent(AnalyticsEventConstants.SUBMISSION_COMMENTS_SELECTED)
+            1 -> logEvent(AnalyticsEventConstants.SUBMISSION_FILES_SELECTED)
+            2 -> logEvent(AnalyticsEventConstants.SUBMISSION_RUBRIC_SELECTED)
         }
     }
 
@@ -276,7 +285,7 @@ class SubmissionDetailsView(
                     putLong(AnalyticsParamConstants.ASSIGNMENT_ID, type.assignmentId)
                 }
 
-                Analytics.logEvent(AnalyticsEventConstants.SUBMISSIONS, bundle)
+                logEvent(AnalyticsEventConstants.UNSUPPORTED_SUBMISSION_CONTENT, bundle)
 
                 SubmissionMessageFragment.newInstance(
                     title = R.string.noOnlineSubmissions,

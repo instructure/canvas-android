@@ -129,23 +129,28 @@ object QuizzesApi {
                 .body()!!
     }
 
-    fun createQuizQuestion(courseId: Long, quizId: Long, teacherToken: String): CreateQuizQuestionApiModel {
-        // Question that requires grading
-        val createQuestion = CreateQuizQuestion(
-                QuizQuestion(
-                        questionName = "question name",
-                        questionText = "question text",
-                        questionType = "essay_question",
-                        pointsPossible = 1,
-                        answers = listOf()
+    private val defaultQuizQuestion = QuizQuestion(
+                    questionName = "question name",
+                    questionText = "question text",
+                    questionType = "essay_question",
+                    pointsPossible = 1,
+                    answers = listOf()
 //                            answers = listOf(QuizAnswer(
 //                                    text = "text",
 //                                    comments = "comments",
 //                                    blankId = "",
 //                                    weight = 100,
 //                                    id = 1))
-                )
-        )
+
+    )
+
+    fun createQuizQuestion(
+            courseId: Long,
+            quizId: Long,
+            teacherToken: String,
+            quizQuestion: QuizQuestion = defaultQuizQuestion): CreateQuizQuestionApiModel {
+        // Question that requires grading
+        val createQuestion = CreateQuizQuestion(quizQuestion)
 
         return quizzesService(teacherToken)
                 .createQuizQuestion(courseId, quizId, createQuestion)

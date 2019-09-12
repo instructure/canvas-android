@@ -77,7 +77,7 @@ public abstract class BaseLoginInitActivity extends AppCompatActivity {
     private void checkLoginState() {
         final boolean isDebuggable = (0 != (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE));
         if (BuildConfig.IS_TESTING || isDebuggable) {
-            final String token = ApiPrefs.getToken();
+            final String token = ApiPrefs.getValidToken();
             if (token.isEmpty()) {
                 //Start Login Flow
                 startActivity(beginLoginFlowIntent());
@@ -99,7 +99,7 @@ public abstract class BaseLoginInitActivity extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            final String token = ApiPrefs.getToken();
+                            final String token = ApiPrefs.getValidToken();
                             if (token.isEmpty()) {
                                 //Start Login Flow
                                 startActivity(beginLoginFlowIntent());

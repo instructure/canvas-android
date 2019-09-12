@@ -30,6 +30,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertContainsText
 import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.assertHasText
 import com.instructure.espresso.click
 import com.instructure.espresso.closeSoftKeyboard
 import com.instructure.espresso.page.BasePage
@@ -58,12 +59,20 @@ open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
         // Scroll up to the top in case we are not there already.
         onView(allOf(isAssignableFrom(ScrollView::class.java), isDisplayed())).perform(ScrollToTop())
 
-        // Now swipe down
-        onView(allOf(withId(R.id.swipeRefreshLayout),  isDisplayed())).swipeDown()
+        // Now swipe down -- twice, just for good measure (may update twice)
+        onView(allOf(withId(R.id.swipeRefreshLayout),  isDisplayed())).swipeDown().swipeDown()
     }
 
     fun goToSubmissionDetails() {
         onView(withId(R.id.submissionAndRubricLabel)).scrollTo().click()
+    }
+
+    fun assertSubmittedStatus() {
+        onView(withId(R.id.submissionStatus)).assertHasText(R.string.submitted)
+    }
+
+    fun viewQuiz() {
+        onView(withId(R.id.submitButton)).assertHasText(R.string.viewQuiz).click()
     }
 }
 

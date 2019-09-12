@@ -232,11 +232,13 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
                     return true
                 }
             }).onSuccess { attachment ->
+                Analytics.logEvent(AnalyticsEventConstants.SUBMIT_FILEUPLOAD_SUCCEEDED)
                 updateFileProgress(db, submission.id, 1.0f, index, attachments.size, completedAttachmentCount)
                 db.fileSubmissionQueries.setFileAttachmentIdAndError(attachment.id, false, null, pendingAttachment.id)
 
                 attachmentIds.add(attachment.id)
             }.onFailure {
+                Analytics.logEvent(AnalyticsEventConstants.SUBMIT_FILEUPLOAD_FAILED)
                 handleFileError(db, submission, index, attachments, it?.message)
                 return null
             }
@@ -782,6 +784,12 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
                 putLong(Const.ID, commentId)
             }
             startService(context, Action.COMMENT_ENTRY, bundle)
+        }
+
+        fun deletePendingComment(context: Context, commentId: Long) {
+            val db = Db.getInstance(context)
+            db.pendingSubmissionCommentQueries.deleteCommentById(commentId)
+            db.submissionCommentFileQueries.deleteFilesForCommentId(commentId)
         }
         // endregion
     }

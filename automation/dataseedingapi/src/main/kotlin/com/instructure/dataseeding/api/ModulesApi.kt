@@ -1,7 +1,10 @@
 package com.instructure.dataseeding.api
 
+import com.instructure.dataseeding.model.CreateModuleItem
+import com.instructure.dataseeding.model.CreateModuleItemWrapper
 import com.instructure.dataseeding.model.CreateModuleWrapper
 import com.instructure.dataseeding.model.ModuleApiModel
+import com.instructure.dataseeding.model.ModuleItemApiModel
 import com.instructure.dataseeding.model.UpdateModule
 import com.instructure.dataseeding.model.UpdateModuleWrapper
 import com.instructure.dataseeding.util.CanvasRestAdapter
@@ -19,6 +22,13 @@ object ModulesApi {
 
         @PUT("courses/{courseId}/modules/{id}")
         fun updateModule(@Path("courseId") courseId: Long, @Path("id") id: Long, @Body updateModule: UpdateModuleWrapper): Call<ModuleApiModel>
+
+        @POST("courses/{courseId}/modules/{moduleId}/items")
+        fun createModuleItem(
+                @Path("courseId") courseId: Long,
+                @Path("moduleId") moduleId: Long,
+                @Body newItem: CreateModuleItemWrapper
+        ) : Call<ModuleItemApiModel>
     }
 
     private fun modulesService(token: String): ModulesService
@@ -34,5 +44,23 @@ object ModulesApi {
     fun updateModule(courseId: Long, id: Long, published: Boolean, teacherToken: String): ModuleApiModel {
         val update = UpdateModuleWrapper(UpdateModule(published))
         return modulesService(teacherToken).updateModule(courseId, id, update).execute().body()!!
+    }
+
+    fun createModuleItem(
+            courseId: Long,
+            moduleId: Long,
+            teacherToken: String,
+            title: String,
+            type: String,
+            contentId: String?,
+            pageUrl: String? = null
+    ): ModuleItemApiModel {
+        val newItem = CreateModuleItem(title, type, contentId, pageUrl)
+        val newItemWrapper = CreateModuleItemWrapper(moduleItem = newItem)
+        return modulesService(teacherToken).createModuleItem(
+                courseId = courseId,
+                moduleId = moduleId,
+                newItem = newItemWrapper
+        ).execute().body()!!
     }
 }

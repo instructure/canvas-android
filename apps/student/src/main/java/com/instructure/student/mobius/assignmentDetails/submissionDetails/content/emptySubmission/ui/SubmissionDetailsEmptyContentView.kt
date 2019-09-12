@@ -30,6 +30,8 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Quiz
+import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.RecordingMediaType
@@ -123,26 +125,32 @@ class SubmissionDetailsEmptyContentView(
     }
 
     fun showOnlineTextEntryView(assignmentId: Long, assignmentName: String?, submittedText: String? = null, isFailure: Boolean = false) {
+        logEventWithOrigin(AnalyticsEventConstants.SUBMIT_TEXTENTRY_SELECTED)
         RouteMatcher.route(context, TextSubmissionUploadFragment.makeRoute(canvasContext, assignmentId, assignmentName, submittedText, isFailure))
     }
 
     fun showOnlineUrlEntryView(assignmentId: Long, assignmentName: String?, canvasContext: CanvasContext, submittedUrl: String? = null) {
+        logEventWithOrigin(AnalyticsEventConstants.SUBMIT_ONLINEURL_SELECTED)
         RouteMatcher.route(context, UrlSubmissionUploadFragment.makeRoute(canvasContext, assignmentId, assignmentName, submittedUrl))
     }
 
     fun showLTIView(canvasContext: CanvasContext, url: String, title: String) {
+        logEventWithOrigin(AnalyticsEventConstants.ASSIGNMENT_LAUNCHLTI_SELECTED)
         RouteMatcher.route(context, LTIWebViewFragment.makeRoute(canvasContext, url, title, isAssignmentLTI = true))
     }
 
     fun showQuizStartView(canvasContext: CanvasContext, quiz: Quiz) {
+        logEventWithOrigin(AnalyticsEventConstants.ASSIGNMENT_DETAIL_QUIZLAUNCH)
         RouteMatcher.route(context, QuizStartFragment.makeRoute(canvasContext, quiz))
     }
 
     fun showDiscussionDetailView(canvasContext: CanvasContext, discussionTopicHeaderId: Long) {
+        logEventWithOrigin(AnalyticsEventConstants.ASSIGNMENT_DETAIL_DISCUSSIONLAUNCH)
         RouteMatcher.route(context, DiscussionDetailsFragment.makeRoute(canvasContext, discussionTopicHeaderId))
     }
 
     fun showMediaRecordingView() {
+        logEventWithOrigin(AnalyticsEventConstants.SUBMIT_MEDIARECORDING_SELECTED)
         val builder = AlertDialog.Builder(context)
         val dialog = builder.setView(R.layout.dialog_submission_picker_media).create()
 
@@ -162,6 +170,7 @@ class SubmissionDetailsEmptyContentView(
     }
 
     private fun showStudioUploadView(assignment: Assignment, ltiUrl: String, studioLtiToolName: String) {
+        logEventWithOrigin(AnalyticsEventConstants.SUBMIT_STUDIO_SELECTED)
         RouteMatcher.route(context, StudioWebViewFragment.makeRoute(canvasContext, ltiUrl, studioLtiToolName, true, assignment))
     }
 
@@ -191,6 +200,7 @@ class SubmissionDetailsEmptyContentView(
     }
 
     fun showFileUploadView(assignment: Assignment) {
+        logEventWithOrigin(AnalyticsEventConstants.SUBMIT_FILEUPLOAD_SELECTED)
         RouteMatcher.route(context, PickerSubmissionUploadFragment.makeRoute(canvasContext, assignment, PickerSubmissionMode.FileSubmission))
     }
 

@@ -29,6 +29,7 @@ import com.instructure.canvasapi2.utils.FileUtils
 import com.instructure.pandautils.utils.Const
 import com.instructure.student.db.Db
 import com.instructure.student.db.Schema
+import com.instructure.student.db.sqlColAdapters.Date
 import com.instructure.student.mobius.common.ui.SubmissionService
 import com.squareup.sqldelight.android.AndroidSqliteDriver
 import io.mockk.*
@@ -151,5 +152,41 @@ class SubmissionServiceTest : Assert() {
 
         assertEquals(SubmissionService.Action.STUDIO_ENTRY.name, intent.captured.action)
         assertTrue(intent.captured.hasExtra(Const.SUBMISSION_ID))
+    }
+
+    @Test
+    fun `Inserts and deletes pending submission comment`() {
+        val fileCount = 3
+        val commentDb = Db.instance.pendingSubmissionCommentQueries
+        val fileDb = Db.instance.submissionCommentFileQueries
+
+        // Insert comment
+        commentDb.insertComment(
+            accountDomain = "www.instructure.com",
+            canvasContext = canvasContext,
+            assignmentName = assignmentName,
+            assignmentId = assignmentId,
+            lastActivityDate = Date.now(),
+            isGroupMessage = false,
+            message = "Test!",
+            mediaPath = null
+        )
+
+        // Get inserted comment ID
+        val commentId = commentDb.getLastInsert().executeAsOne()
+
+        // Insert comment files
+        repeat(fileCount) { fileDb.insertFile(commentId, "", 0, "", "") }
+
+        // Assert insertions
+        assertNotNull(commentDb.getCommentById(commentId).executeAsOneOrNull())
+        assertEquals(fileCount, fileDb.getFilesForPendingComment(commentId).executeAsList().size)
+
+        // Delete comment
+        SubmissionService.deletePendingComment(context, commentId)
+
+        // Assert deleted
+        assertNull(commentDb.getCommentById(commentId).executeAsOneOrNull())
+        assertEquals(0, fileDb.getFilesForPendingComment(commentId).executeAsList().size)
     }
 }

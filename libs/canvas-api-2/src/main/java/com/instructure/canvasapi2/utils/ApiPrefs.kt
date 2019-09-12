@@ -41,15 +41,32 @@ object ApiPrefs : PrefManager(PREFERENCE_FILE_NAME) {
     const val DEVICE_LOCALE: String = "root"
 
     const val ACCOUNT_LOCALE: String = "account"
-
+    
+    @Deprecated("Deprecated in favor of accessToken")
     @JvmStatic
     var token by StringPref()
+
+    @JvmStatic
+    var accessToken by StringPref()
+
+    @JvmStatic
+    var refreshToken by StringPref()
+
+    // TODO - Remove in favor of just access token once refresh is 100%
+    @JvmStatic
+    fun getValidToken(): String = if (accessToken.isNotEmpty()) accessToken else token
 
     @JvmStatic
     var protocol by StringPref("https", "api_protocol")
 
     @JvmStatic
     var userAgent by StringPref("", "user_agent")
+
+    @JvmStatic
+    var clientId by StringPref("", "client_id")
+
+    @JvmStatic
+    var clientSecret by StringPref("", "client_secret")
 
     @JvmStatic
     var perPageCount = 100

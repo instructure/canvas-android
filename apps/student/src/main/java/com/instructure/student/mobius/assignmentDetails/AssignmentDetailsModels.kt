@@ -17,6 +17,7 @@
 package com.instructure.student.mobius.assignmentDetails
 
 import android.net.Uri
+import android.os.Bundle
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.student.Submission
@@ -38,7 +39,6 @@ sealed class AssignmentDetailsEvent {
     data class SendMediaFile(val uri: Uri) : AssignmentDetailsEvent()
     data class StoreVideoUri(val uri: Uri?) : AssignmentDetailsEvent()
     data class SendAudioRecordingClicked(val file: File?) : AssignmentDetailsEvent()
-    data class SubmissionTypeClicked(val submissionType: Assignment.SubmissionType) : AssignmentDetailsEvent()
     data class DataLoaded(
         val assignmentResult: DataResult<Assignment>?,
         val isStudioEnabled: Boolean,

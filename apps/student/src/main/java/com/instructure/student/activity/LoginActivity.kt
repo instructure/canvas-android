@@ -97,7 +97,7 @@ class LoginActivity : BaseLoginInitActivity() {
      * Skips the traditional login process by directly setting the domain, token, and user info.
      */
     fun loginWithToken(token: String, domain: String, user: User) {
-        ApiPrefs.token = token
+        ApiPrefs.accessToken = token
         ApiPrefs.domain = domain
         ApiPrefs.user = user
         ApiPrefs.userAgent = Utils.generateUserAgent(this, userAgent())

@@ -21,9 +21,7 @@ import android.content.Context
 import com.instructure.canvasapi2.managers.AssignmentManager
 import com.instructure.canvasapi2.managers.QuizManager
 import com.instructure.canvasapi2.managers.SubmissionManager
-import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.models.DiscussionTopic
-import com.instructure.canvasapi2.models.LTITool
+import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.*
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
 import com.instructure.canvasapi2.utils.weave.awaitApiResponse
@@ -180,6 +178,8 @@ class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Lon
                 }
             } else null
 
+            logEvent(getAnalyticsString(quizResult, assignmentResult))
+
             consumer.accept(
                 AssignmentDetailsEvent.DataLoaded(
                     assignmentResult,
@@ -196,6 +196,14 @@ class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Lon
     private fun launchMediaPicker() {
         chooseMediaIntent.let {
             (context as Activity).startActivityForResult(it, AssignmentDetailsFragment.CHOOSE_MEDIA_REQUEST_CODE)
+        }
+    }
+
+    private fun getAnalyticsString(quizResult: DataResult<Quiz>?, assignmentResult: DataResult<Assignment>): String {
+        return when {
+            quizResult != null -> AnalyticsEventConstants.ASSIGNMENT_DETAIL_QUIZ
+            assignmentResult.dataOrNull?.discussionTopicHeader != null -> AnalyticsEventConstants.ASSIGNMENT_DETAIL_DISCUSSION
+            else -> AnalyticsEventConstants.ASSIGNMENT_DETAIL_ASSIGNMENT
         }
     }
 }

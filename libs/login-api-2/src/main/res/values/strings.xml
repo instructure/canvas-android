@@ -68,7 +68,6 @@
     <string name="loginNearYou">Near You</string>
     <string name="loginCanvasNetwork">Canvas Network</string>
     <string name="loginRightBehindYou">Right behind you</string>
-    <string name="loginMiles">%1$s miles away</string>
     <string name="loginCanvasHelp">Don\'t see your school? Enter the school URL or tap here for help.</string>
     <string name="loginCanvasHelpWithUser">Enter the school URL or tap here for help.</string>
     <string name="loginHint">Find your school or district</string>

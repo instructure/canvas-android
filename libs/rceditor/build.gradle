@@ -92,5 +92,5 @@ dependencies {
     implementation Libs.ANDROIDX_FRAGMENT
     implementation Libs.ANDROIDX_VECTOR
 
-    implementation 'jp.wasabeef:richeditor-android:1.2.2'
+    api 'jp.wasabeef:richeditor-android:1.2.2'
 }

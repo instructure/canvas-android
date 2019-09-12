@@ -20,11 +20,11 @@
         android:id="@+id/menuPostPolicies"
         android:title="@string/postPolicyTitle"
         android:icon="@drawable/ic_eye_filled"
-        app:showAsAction="ifRoom"
-        />
+        android:visible="false"
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/submissionFilter"
-        android:icon="@drawable/vd_filter"
+        android:icon="@drawable/ic_filter_filled"
         android:title="@string/filter_submissions"
         app:showAsAction="always" >
         <menu>
@@ -41,5 +41,6 @@
     <item
         android:id="@+id/menuMuteGrades"
         android:title="@string/muteGrades"
+        android:visible="false"
         app:showAsAction="never"/>
 </menu>

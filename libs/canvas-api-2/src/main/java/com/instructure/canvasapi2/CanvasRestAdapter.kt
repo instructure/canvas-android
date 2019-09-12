@@ -21,6 +21,7 @@ import com.google.gson.GsonBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.CanvasAuthenticator
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.Logger
 import okhttp3.Cache
@@ -60,11 +61,12 @@ protected constructor(var statusCallback: StatusCallback<*>?, private val authUs
 
     private val okHttpClientForTest: OkHttpClient by lazy {
         OkHttpClient.Builder()
-                .addNetworkInterceptor(PactRequestInterceptor(authUser))
-                .addNetworkInterceptor(ResponseInterceptor())
-                .readTimeout(TIMEOUT_IN_SECONDS.toLong(), TimeUnit.SECONDS)
-                .dispatcher(mDispatcher)
-                .build()
+            .addNetworkInterceptor(PactRequestInterceptor(authUser))
+            .addNetworkInterceptor(ResponseInterceptor())
+            .readTimeout(TIMEOUT_IN_SECONDS.toLong(), TimeUnit.SECONDS)
+            .authenticator(CanvasAuthenticator())
+            .dispatcher(mDispatcher)
+            .build()
     }
 
     fun deleteCache() {
@@ -153,30 +155,23 @@ protected constructor(var statusCallback: StatusCallback<*>?, private val authUs
                 .build()
     }
 
-    fun buildPingAdapter(url: String): Retrofit {
-        return Retrofit.Builder()
-                .baseUrl(url)
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(OkHttpClient.Builder()
-                        .readTimeout(TIMEOUT_IN_SECONDS.toLong(), TimeUnit.SECONDS)
-                        .build())
-                .build()
-    }
-
     fun buildRollCallAdapter(url: String): Retrofit {
         val gson = GsonBuilder().setLenient().create()
         val loggingInterceptor = HttpLoggingInterceptor()
         loggingInterceptor.level = if (DEBUG) HttpLoggingInterceptor.Level.HEADERS else HttpLoggingInterceptor.Level.NONE
         return Retrofit.Builder()
-                .baseUrl(url)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .client(OkHttpClient.Builder()
-                        .addInterceptor(loggingInterceptor)
-                        .addInterceptor(RollCallInterceptor())
-                        .readTimeout(TIMEOUT_IN_SECONDS.toLong(), TimeUnit.SECONDS)
-                        .dispatcher(mDispatcher)
-                        .build())
-                .build()
+            .baseUrl(url)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .client(
+                OkHttpClient.Builder()
+                    .addInterceptor(loggingInterceptor)
+                    .addInterceptor(RollCallInterceptor())
+                    .authenticator(CanvasAuthenticator())
+                    .readTimeout(TIMEOUT_IN_SECONDS.toLong(), TimeUnit.SECONDS)
+                    .dispatcher(mDispatcher)
+                    .build()
+            )
+            .build()
     }
 
     fun buildAdapter(params: RestParams): Retrofit = buildAdapterHelper(
@@ -254,12 +249,12 @@ protected constructor(var statusCallback: StatusCallback<*>?, private val authUs
     protected fun finalBuildAdapter(params: RestParams, apiContext: String): Retrofit.Builder {
         //Sets the auth token, user agent, and handles masquerading.
         return Retrofit.Builder()
-                .baseUrl(params.domain + params.apiVersion + apiContext)
-                .addConverterFactory(GsonConverterFactory.create())
-                .callFactory { request ->
-                    // Tag this request with the rest params so we can access them later in RequestInterceptor
-                    okHttpClient.newCall(request.newBuilder().tag(params).build())
-                }
+            .baseUrl(params.domain + params.apiVersion + apiContext)
+            .addConverterFactory(GsonConverterFactory.create())
+            .callFactory { request ->
+                // Tag this request with the rest params so we can access them later in RequestInterceptor
+                okHttpClient.newCall(request.newBuilder().tag(params).build())
+            }
     }
 
     companion object {
@@ -301,13 +296,14 @@ protected constructor(var statusCallback: StatusCallback<*>?, private val authUs
                     loggingInterceptor.level = if (DEBUG) HttpLoggingInterceptor.Level.HEADERS else HttpLoggingInterceptor.Level.NONE
 
                     client = OkHttpClient.Builder()
-                            .cache(mCache)
-                            .addInterceptor(loggingInterceptor)
-                            .addInterceptor(RequestInterceptor())
-                            .addNetworkInterceptor(ResponseInterceptor())
-                            .readTimeout(TIMEOUT_IN_SECONDS.toLong(), TimeUnit.SECONDS)
-                            .dispatcher(mDispatcher)
-                            .build()
+                        .cache(mCache)
+                        .addInterceptor(loggingInterceptor)
+                        .addInterceptor(RequestInterceptor())
+                        .addNetworkInterceptor(ResponseInterceptor())
+                        .readTimeout(TIMEOUT_IN_SECONDS.toLong(), TimeUnit.SECONDS)
+                        .dispatcher(mDispatcher)
+                        .authenticator(CanvasAuthenticator())
+                        .build()
                 }
 
                 return client!!

@@ -41,6 +41,12 @@ object AssignmentUtils2 {
             return ASSIGNMENT_STATE_UNKNOWN
         }
 
+        // Case - Assignment does not take submissions, but is not 'on paper' (not graded, etc) and it has not been graded
+        // Result - DUE
+        if (assignment.turnInType == Assignment.TurnInType.NONE && submission?.grade == null) {
+            return ASSIGNMENT_STATE_DUE
+        }
+
         // Case - We have an assignment with no submission
         // Result - MISSING or DUE
         if (submission == null) {
@@ -76,9 +82,9 @@ object AssignmentUtils2 {
     // Check to see if an assignment either
     // 1. Has not been graded
     // 2. Is "Pending Review"
-    // 3. Is muted
+    // 3. Is not Posted - Muted is being deprecated, so we are only going to track postedAt.
     private fun hasNoGrade(assignment: Assignment, submission: Submission, isTeacher: Boolean): Boolean {
-        return !submission.isGraded || Const.PENDING_REVIEW == submission.workflowState || (!isTeacher && assignment.muted)
+        return !submission.isGraded || Const.PENDING_REVIEW == submission.workflowState || (!isTeacher && assignment.submission?.postedAt == null)
     }
 
     // Edge Case - Assignment is either due in the future or an unknown "paper" hand in

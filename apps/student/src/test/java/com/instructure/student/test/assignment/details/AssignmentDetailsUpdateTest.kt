@@ -519,28 +519,6 @@ class AssignmentDetailsUpdateTest : Assert() {
     }
 
     @Test
-    fun `SubmissionTypeClicked event results in ShowCreateSubmissionView effect`() {
-        val submissionType = Assignment.SubmissionType.ONLINE_UPLOAD
-        val submissionTypes = listOf("online_upload")
-        val assignmentCopy = assignment.copy(submissionTypesRaw = submissionTypes)
-        val givenModel = initModel.copy(assignmentResult = DataResult.Success(assignmentCopy))
-        updateSpec
-            .given(givenModel)
-            .whenEvent(AssignmentDetailsEvent.SubmissionTypeClicked(submissionType))
-            .then(
-                assertThatNext(
-                    matchesEffects<AssignmentDetailsModel, AssignmentDetailsEffect>(
-                        AssignmentDetailsEffect.ShowCreateSubmissionView(
-                            submissionType,
-                            course,
-                            assignmentCopy
-                        )
-                    )
-                )
-            )
-    }
-
-    @Test
     fun `InternalRouteRequested event results in RouteInternally effect`() {
         val url = "www.instructure.com"
         val model = initModel.copy(assignmentResult = DataResult.Success(assignment))

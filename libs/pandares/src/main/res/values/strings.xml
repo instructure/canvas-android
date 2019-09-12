@@ -600,6 +600,7 @@
     <string name="quizMatchingDefaultDisplay">[Choose]</string>
     <string name="choose_answer_below">Choose your answer below</string>
     <string name="choose_answers_below">Choose your answers below</string>
+    <string name="flag_the_question">Flag the question</string>
 
 
     <!-- Widget Strings -->
@@ -858,9 +859,6 @@
     <string name="like">like</string>
     <string name="likes">likes</string>
 
-    <string name="wear_reminder">Schedule Due Date Reminders</string>
-    <string name="wear_notifications">Turn on Wear Notifications</string>
-
     <string name="color_1">Red</string>
     <string name="color_2">Hot Pink</string>
     <string name="color_3">Lavender</string>
@@ -1035,8 +1033,14 @@
     <string name="postPolicyTitle">Post Settings</string>
     <string name="postGradesTab">Post Grades</string>
     <string name="hideGradesTab">Hide Grades</string>
-    <string name="gradesPostedCount">%d grades currently posted</string>
-    <string name="gradesHiddenCount">%d grades currently hidden</string>
+    <plurals name="gradesPostedCount">
+        <item quantity="one">%d grade currently posted</item>
+        <item quantity="other">%d grades currently posted</item>
+    </plurals>
+    <plurals name="gradesHiddenCount">
+        <item quantity="one">%d grade currently hidden</item>
+        <item quantity="other">%d grades currently hidden</item>
+    </plurals>
     <string name="postPolicyPostTo">Post to…</string>
     <string name="postPolicySections">Specific Sections</string>
     <string name="postToEveryoneTitle">Everyone</string>
@@ -1047,6 +1051,13 @@
     <string name="postPolicyAllHiddenMessage">All grades are currently hidden.</string>
     <string name="postPolicyAllPostedTitle">All Posted</string>
     <string name="postPolicyAllPostedMessage">All grades are currently posted.</string>
+    <string name="postPolicyPostedToast">Grades Posted</string>
+    <string name="postPolicyHiddenToast">Grades Hidden</string>
+    <string name="postPolicyPostFailedToast">Failed to post grades</string>
+    <string name="postPolicyHideFailedToast">Failed to hide grades</string>
+    <string name="gradeBeforePosting">Grade before posting</string>
+    <string name="gradeAfterPosting">Grade after posting</string>
+    <string name="gradeOverride">Grade override</string>
 
     <!-- Floating Recording View Strings -->
     <string name="recordingTimerDefault">00:00:00</string>
@@ -1084,5 +1095,4 @@
     <string name="a11y_letterGrade">%s.</string>
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
-
 </resources>

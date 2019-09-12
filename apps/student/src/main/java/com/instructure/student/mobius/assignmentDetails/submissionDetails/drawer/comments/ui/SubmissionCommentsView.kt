@@ -45,8 +45,12 @@ class SubmissionCommentsView(
 ) : MobiusView<SubmissionCommentsViewState, SubmissionCommentsEvent>(R.layout.fragment_submission_comments, inflater, parent) {
 
     private val adapter = SubmissionCommentsAdapter(object : SubmissionCommentsAdapterCallback {
-        override fun onRetryComment(pendingCommentId: Long) {
+        override fun onRetryPendingComment(pendingCommentId: Long) {
             consumer?.accept(SubmissionCommentsEvent.RetryCommentUploadClicked(pendingCommentId))
+        }
+
+        override fun onDeletePendingComment(pendingCommentId: Long) {
+            consumer?.accept(SubmissionCommentsEvent.DeletePendingCommentClicked(pendingCommentId))
         }
 
         override fun onSubmissionClicked(submission: Submission) {
