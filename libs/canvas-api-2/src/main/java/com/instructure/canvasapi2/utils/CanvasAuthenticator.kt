@@ -15,6 +15,7 @@
  */
 package com.instructure.canvasapi2.utils
 
+import android.os.Bundle
 import com.instructure.canvasapi2.apis.OAuthAPI
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.models.CanvasAuthError
@@ -28,6 +29,12 @@ class CanvasAuthenticator : Authenticator {
 
     override fun authenticate(route: Route?, response: Response): Request? {
         if (response.request().header(RETRY_HEADER) != null) {
+            val bundle = Bundle().apply {
+                putString(AnalyticsParamConstants.DOMAIN_PARAM, ApiPrefs.domain)
+                putString(AnalyticsParamConstants.USER_CONTEXT_ID, ApiPrefs.user?.contextId)
+            }
+            Analytics.logEvent(AnalyticsEventConstants.TOKEN_REFRESH_FAILURE, bundle)
+
             EventBus.getDefault().post(CanvasAuthError("Failed to authenticate"))
             return null // Give up, we've already failed to authenticate
         }
