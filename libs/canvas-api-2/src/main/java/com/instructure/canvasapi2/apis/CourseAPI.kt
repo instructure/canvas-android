@@ -58,7 +58,7 @@ object CourseAPI {
         @GET
         fun next(@Url nextURL: String): Call<List<Course>>
 
-        @GET("courses")
+        @GET("courses?state[]=completed&state[]=available")
         fun getCoursesByEnrollmentType(@Query("enrollment_type") type: String): Call<List<Course>>
 
         // TODO: Set up pagination when API is fixed and remove per_page query parameterø
