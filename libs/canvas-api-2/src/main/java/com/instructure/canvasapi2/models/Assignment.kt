@@ -22,7 +22,7 @@ import com.google.gson.annotations.SerializedName
 import com.instructure.canvasapi2.R
 import com.instructure.canvasapi2.utils.toDate
 import kotlinx.android.parcel.Parcelize
-import java.util.*
+import java.util.Date
 
 @Parcelize
 data class Assignment(
@@ -105,10 +105,10 @@ data class Assignment(
 
     /**
      * Whether or not the user has submitted this assignment. If the user has not submitted anything, Canvas generates
-     * an empty submission with an "unsubmitted" workflow state. For very old assignments, canvas might not
+     * an empty submission with a null value for "submittedAt". For very old assignments, canvas might not
      * return a submission at all.
      */
-    val isSubmitted: Boolean get() = submission != null && submission!!.workflowState != "unsubmitted"
+    val isSubmitted: Boolean get() = submission?.submittedAt != null
 
     val isAllowedToSubmit: Boolean
         get() {

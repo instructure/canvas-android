@@ -39,7 +39,10 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.threeten.bp.OffsetDateTime
-import java.util.*
+import java.util.Calendar
+import java.util.Date
+import java.util.GregorianCalendar
+import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 @RunWith(AndroidJUnit4::class)
@@ -73,6 +76,7 @@ class AssignmentDetailsPresenterTest : Assert() {
         )
         baseSubmission = Submission(
             attempt = 1,
+            submittedAt = Date(),
             workflowState = "submitted"
         )
         baseQuiz = Quiz(
@@ -200,7 +204,7 @@ class AssignmentDetailsPresenterTest : Assert() {
 
     @Test
     fun `Uses correct label text for submitted status when submission is graded`() {
-        val submission = baseSubmission.copy(grade = "8", postedAt = Date())
+        val submission = baseSubmission.copy(grade = "8", postedAt = Date(), workflowState = "graded")
         val assignment = baseAssignment.copy(submission = submission)
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
@@ -209,7 +213,7 @@ class AssignmentDetailsPresenterTest : Assert() {
 
     @Test
     fun `Uses correct label text for submitted status when submission is missing`() {
-        val submission = baseSubmission.copy(attempt = 0, missing = true, workflowState = "unsubmitted")
+        val submission = baseSubmission.copy(attempt = 0, missing = true, workflowState = "unsubmitted", submittedAt = null)
         val assignment = baseAssignment.copy(submission = submission)
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
@@ -220,7 +224,7 @@ class AssignmentDetailsPresenterTest : Assert() {
     fun `Uses correct label text for submitted status when submission is past due`() {
         val calendar = Calendar.getInstance().apply { set(2000, 0, 31, 23, 59, 0) }
 
-        val submission = baseSubmission.copy(attempt = 0, workflowState = "unsubmitted")
+        val submission = baseSubmission.copy(attempt = 0, workflowState = "unsubmitted", submittedAt = null)
         val assignment = baseAssignment.copy(submission = submission, dueAt = calendar.time.toApiString(), submissionTypesRaw = listOf(Assignment.SubmissionType.ONLINE_UPLOAD.apiString))
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
@@ -241,7 +245,7 @@ class AssignmentDetailsPresenterTest : Assert() {
     fun `Uses correct label text for submitted status when submission is past due for an LTI assignment`() {
         val calendar = Calendar.getInstance().apply { set(2000, 0, 31, 23, 59, 0) }
 
-        val submission = baseSubmission.copy(attempt = 0, workflowState = "unsubmitted")
+        val submission = baseSubmission.copy(attempt = 0, workflowState = "unsubmitted", submittedAt = null)
         val assignment = baseAssignment.copy(submission = submission, dueAt = calendar.time.toApiString(), submissionTypesRaw = listOf("basic_lti_launch"))
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
@@ -252,7 +256,7 @@ class AssignmentDetailsPresenterTest : Assert() {
     fun `Uses correct label text for submitted status when submission is past due for an external assignment`() {
         val calendar = Calendar.getInstance().apply { set(2000, 0, 31, 23, 59, 0) }
 
-        val submission = baseSubmission.copy(attempt = 0, workflowState = "unsubmitted")
+        val submission = baseSubmission.copy(attempt = 0, workflowState = "unsubmitted", submittedAt = null)
         val assignment = baseAssignment.copy(submission = submission, dueAt = calendar.time.toApiString(), submissionTypesRaw = listOf("external_tool"))
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
@@ -269,7 +273,16 @@ class AssignmentDetailsPresenterTest : Assert() {
 
     @Test
     fun `Uses correct label text for submitted status when submission is not submitted`() {
-        val submission = baseSubmission.copy(attempt = 0, workflowState = "unsubmitted")
+        val submission = baseSubmission.copy(attempt = 0, workflowState = "unsubmitted", submittedAt = null)
+        val assignment = baseAssignment.copy(submission = submission)
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
+        assertEquals("Not Submitted", state.submittedStateLabel)
+    }
+
+    @Test
+    fun `Uses correct label text for submitted status when submission is graded but not submitted`() {
+        val submission = baseSubmission.copy(attempt = 0, submittedAt = null, grade = "8", postedAt = Date(), workflowState = "graded")
         val assignment = baseAssignment.copy(submission = submission)
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
@@ -529,6 +542,7 @@ class AssignmentDetailsPresenterTest : Assert() {
     fun `Displays grade cell when grade is not empty`() {
         val assignment = baseAssignment.copy(
             submission = baseSubmission.copy(
+                workflowState = "graded",
                 enteredScore = 85.0,
                 enteredGrade = "85",
                 score = 85.0,
@@ -559,6 +573,7 @@ class AssignmentDetailsPresenterTest : Assert() {
         )
         val assignment = baseAssignment.copy(
             submission = baseSubmission.copy(
+                workflowState = "graded",
                 enteredScore = 85.0,
                 enteredGrade = "85",
                 score = 85.0,
@@ -617,7 +632,8 @@ class AssignmentDetailsPresenterTest : Assert() {
         )
         val assignment = baseAssignment.copy(
             submission = baseSubmission.copy(
-                workflowState = "unsubmitted"
+                workflowState = "unsubmitted",
+                submittedAt = null
             )
         )
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment), databaseSubmission = submission)
