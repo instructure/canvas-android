@@ -205,4 +205,20 @@ object APIHelper {
         return ApiPrefs.protocol + "://" + ApiPrefs.domain + "/courses/" + courseid + "/quizzes/" + quizId
     }
 
+    /**
+     * Parse an ID that references a shard, replaces "~" with the appropriate 0 padding
+     * i.e., converts a sharded ID '12345~4321' to 123450000000004321
+     *
+     * @param id the ID to convert into a long
+     */
+    fun expandTildeId(id: String): String {
+
+        return if (id.contains("~")) {
+            val parts = id.split("~".toRegex())
+            ((parts[0].toLong() * 10_000_000_000_000L) + parts[1].toLong()).toString()
+        } else {
+            id
+        }
+    }
+
 }
