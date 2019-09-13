@@ -224,7 +224,7 @@ data class Route(
                 .filter { it < paramValues.size }
                 .forEach {
                     params[paramNames[it]] = if (paramNames[it] in IDS_TO_EXPAND_TILDE) {
-                         APIHelper.expandTildeId(paramValues[it]).toString()
+                         APIHelper.expandTildeId(paramValues[it])
                     } else {
                         paramValues[it]
                     }

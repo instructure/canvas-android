@@ -211,13 +211,13 @@ object APIHelper {
      *
      * @param id the ID to convert into a long
      */
-    fun expandTildeId(id: String): Long {
+    fun expandTildeId(id: String): String {
 
         return if (!id.contains("~")) {
-            id.toLong()
+            id
         } else {
             val parts = id.split("~".toRegex())
-            (parts[0].toLong() * 10_000_000_000_000L) + parts[1].toLong()
+            ((parts[0].toLong() * 10_000_000_000_000L) + parts[1].toLong()).toString()
         }
     }
 

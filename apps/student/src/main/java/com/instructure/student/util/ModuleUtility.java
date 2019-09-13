@@ -213,9 +213,9 @@ public class ModuleUtility {
         long assignmentId;
         int endIndex = url.indexOf("/", index);
         if(endIndex != -1) {
-            assignmentId = APIHelper.INSTANCE.expandTildeId(url.substring(index, endIndex));
+            assignmentId = Long.parseLong(APIHelper.INSTANCE.expandTildeId(url.substring(index, endIndex)));
         } else {
-            assignmentId = APIHelper.INSTANCE.expandTildeId(url.substring(index));
+            assignmentId = Long.parseLong(APIHelper.INSTANCE.expandTildeId(url.substring(index)));
         }
         return assignmentId;
     }

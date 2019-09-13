@@ -268,7 +268,7 @@ data class StreamItem(
             }
             val assignmentId = htmlUrl.substring(start, end)
 
-            return APIHelper.expandTildeId(assignmentId)
+            return APIHelper.expandTildeId(assignmentId).toLong()
         }
         return 0
     }
@@ -285,7 +285,7 @@ data class StreamItem(
 
             val courseIdString = htmlUrl.substring(start, end)
 
-            return APIHelper.expandTildeId(courseIdString)
+            return APIHelper.expandTildeId(courseIdString).toLong()
         }
         return 0
     }
@@ -302,7 +302,7 @@ data class StreamItem(
 
             val groupIdString = htmlUrl.substring(start, end)
 
-            return APIHelper.expandTildeId(groupIdString)
+            return APIHelper.expandTildeId(groupIdString).toLong()
         }
         return 0
     }
