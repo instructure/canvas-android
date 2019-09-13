@@ -213,11 +213,11 @@ object APIHelper {
      */
     fun expandTildeId(id: String): String {
 
-        return if (!id.contains("~")) {
-            id
-        } else {
+        return if (id.contains("~")) {
             val parts = id.split("~".toRegex())
             ((parts[0].toLong() * 10_000_000_000_000L) + parts[1].toLong()).toString()
+        } else {
+            id
         }
     }
 

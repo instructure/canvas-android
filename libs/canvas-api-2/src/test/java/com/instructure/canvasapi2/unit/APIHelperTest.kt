@@ -182,7 +182,7 @@ class APIHelperTest {
 
     @Test
     fun expandTildeId() {
-        val expected = 123450000000001234L
+        val expected = "123450000000001234"
         val actual = "12345~1234"
 
         assertEquals(expected, APIHelper.expandTildeId(actual))
@@ -190,7 +190,7 @@ class APIHelperTest {
 
     @Test
     fun expandTildeIdLongerId() {
-        val expected = 107920000001139989L
+        val expected = "107920000001139989"
         val actual = "10792~1139989"
 
         assertEquals(expected, APIHelper.expandTildeId(actual))
@@ -198,7 +198,7 @@ class APIHelperTest {
 
     @Test
     fun expandTildeIdShortShard() {
-        val expected = 30000012771174L
+        val expected = "30000012771174"
         val actual = "3~12771174"
 
         assertEquals(expected, APIHelper.expandTildeId(actual))
