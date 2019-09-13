@@ -29,7 +29,7 @@ object ParentPrefs : PrefManager(Const.CANVAS_PARENT_SP) {
     @JvmStatic
     var currentColor = ContextCompat.getColor(ContextKeeper.appContext, R.color.parent_colorPrimary)
 
-    var selectedStudentIdx by IntPref()
+    var selectedStudentIndex by IntPref()
 
     var selectedTab by IntPref()
 
