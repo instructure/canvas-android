@@ -108,7 +108,7 @@ data class Assignment(
      * an empty submission with an "unsubmitted" workflow state. For very old assignments, canvas might not
      * return a submission at all.
      */
-    val isSubmitted: Boolean get() = submission != null && submission!!.workflowState != "unsubmitted"
+    val isSubmitted: Boolean get() = submission?.submittedAt != null
 
     val isAllowedToSubmit: Boolean
         get() {
