@@ -23,6 +23,7 @@ import android.os.Bundle;
 import com.instructure.canvasapi2.models.Course;
 import com.instructure.canvasapi2.models.ModuleItem;
 import com.instructure.canvasapi2.models.ModuleObject;
+import com.instructure.canvasapi2.utils.APIHelper;
 import com.instructure.interactions.router.Route;
 import com.instructure.student.fragment.DiscussionDetailsFragment;
 import com.instructure.student.fragment.FileDetailsFragment;
@@ -212,9 +213,9 @@ public class ModuleUtility {
         long assignmentId;
         int endIndex = url.indexOf("/", index);
         if(endIndex != -1) {
-            assignmentId = Long.parseLong(url.substring(index, endIndex));
+            assignmentId = APIHelper.INSTANCE.expandTildeId(url.substring(index, endIndex));
         } else {
-            assignmentId = Long.parseLong(url.substring(index));
+            assignmentId = APIHelper.INSTANCE.expandTildeId(url.substring(index));
         }
         return assignmentId;
     }

@@ -20,6 +20,7 @@ package com.instructure.canvasapi2.models
 import android.content.Context
 import com.google.gson.annotations.SerializedName
 import com.instructure.canvasapi2.R
+import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.toDate
 import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
@@ -267,7 +268,7 @@ data class StreamItem(
             }
             val assignmentId = htmlUrl.substring(start, end)
 
-            return assignmentId.toLong()
+            return APIHelper.expandTildeId(assignmentId)
         }
         return 0
     }
@@ -284,7 +285,7 @@ data class StreamItem(
 
             val courseIdString = htmlUrl.substring(start, end)
 
-            return courseIdString.toLong()
+            return APIHelper.expandTildeId(courseIdString)
         }
         return 0
     }
@@ -301,7 +302,7 @@ data class StreamItem(
 
             val groupIdString = htmlUrl.substring(start, end)
 
-            return groupIdString.toLong()
+            return APIHelper.expandTildeId(groupIdString)
         }
         return 0
     }

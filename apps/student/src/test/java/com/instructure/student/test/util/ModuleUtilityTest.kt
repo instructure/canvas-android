@@ -115,6 +115,46 @@ class ModuleUtilityTest : TestCase() {
     }
 
     @Test
+    fun testGetFragment_assignmentShardId() {
+        val url = "https://mobile.canvas.net/api/v1/courses/222/assignments/12345~6789"
+        val moduleItem = ModuleItem(
+                id = 4567,
+                type = "Assignment",
+                url = url
+        )
+
+        val course = Course()
+        val expectedBundle = Bundle()
+        expectedBundle.putParcelable(Const.CANVAS_CONTEXT, course)
+        expectedBundle.putLong(Const.ASSIGNMENT_ID, 123450000000006789)
+
+        val parentFragment = callGetFragment(moduleItem, course, null)
+        TestCase.assertNotNull(parentFragment)
+        TestCase.assertEquals(AssignmentDetailsFragment::class.java, parentFragment!!.javaClass)
+        TestCase.assertEquals(expectedBundle.toString(), parentFragment.arguments!!.toString())
+    }
+
+    @Test
+    fun testGetFragment_assignmentSubmissionShardId() {
+        val url = "https://mobile.canvas.net/api/v1/courses/222/assignments/12345~6789/submissions"
+        val moduleItem = ModuleItem(
+                id = 4567,
+                type = "Assignment",
+                url = url
+        )
+
+        val course = Course()
+        val expectedBundle = Bundle()
+        expectedBundle.putParcelable(Const.CANVAS_CONTEXT, course)
+        expectedBundle.putLong(Const.ASSIGNMENT_ID, 123450000000006789)
+
+        val parentFragment = callGetFragment(moduleItem, course, null)
+        TestCase.assertNotNull(parentFragment)
+        TestCase.assertEquals(AssignmentDetailsFragment::class.java, parentFragment!!.javaClass)
+        TestCase.assertEquals(expectedBundle.toString(), parentFragment.arguments!!.toString())
+    }
+
+    @Test
     fun testGetFragment_externalurl_externaltool() {
         val url = "https://instructure.com"
         val moduleItem = ModuleItem(
