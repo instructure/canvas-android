@@ -30,7 +30,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.annotation.ColorInt
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.AppCompatSpinner
@@ -160,7 +159,7 @@ class NavigationActivity : BaseParentActivity(), MasqueradingDialog.OnMasqueradi
         if (users.isNotEmpty()) {
             configureUserSpinner()
         } else {
-            setFragment(ParentPrefs.selectedStudentIdx)
+            setFragment(ParentPrefs.selectedStudentIndex)
         }
 
         setupNavDrawer()
@@ -296,7 +295,7 @@ class NavigationActivity : BaseParentActivity(), MasqueradingDialog.OnMasqueradi
                             updateBottomBarContentDescriptions(bottomBar.selectedItemId)
                             setFragment(page)
                             // Save the position so when the parent comes back to this page it will load the student they were on last
-                            ParentPrefs.selectedStudentIdx = position
+                            ParentPrefs.selectedStudentIndex = position
                         }
                     }
                 }
@@ -306,7 +305,7 @@ class NavigationActivity : BaseParentActivity(), MasqueradingDialog.OnMasqueradi
 
             post {
                 adapter = UserSpinnerAdapter(this@NavigationActivity, users)
-                setSelection(ParentPrefs.selectedStudentIdx)
+                setSelection(ParentPrefs.selectedStudentIndex)
             }
 
             // Give the spinner a minimum height of 48dp.
