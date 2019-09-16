@@ -36,6 +36,7 @@ import com.instructure.student.R
 import com.instructure.student.adapter.QuizListRecyclerAdapter
 import com.instructure.student.interfaces.AdapterToFragmentCallback
 import com.instructure.student.router.RouteMatcher
+import com.newrelic.agent.android.NewRelic
 import kotlinx.android.synthetic.main.panda_recycler_refresh_layout.*
 import kotlinx.android.synthetic.main.quiz_list_layout.*
 
@@ -57,6 +58,11 @@ class QuizListFragment : ParentFragment(), Bookmarkable {
                 setEmptyView(emptyView, R.drawable.vd_panda_quizzes_rocket, R.string.noQuizzes, R.string.noQuizzesSubtext)
             }
         }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        NewRelic.setInteractionName(this::class.java.simpleName)
+        super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? = layoutInflater.inflate(R.layout.quiz_list_layout, container, false)

@@ -16,6 +16,7 @@
  */
 package com.instructure.student.mobius.assignmentDetails.ui
 
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.instructure.canvasapi2.CanvasRestAdapter
@@ -30,6 +31,7 @@ import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.utils.*
 import com.instructure.student.mobius.assignmentDetails.*
 import com.instructure.student.mobius.common.ui.MobiusFragment
+import com.newrelic.agent.android.NewRelic
 
 @PageView(url = "{canvasContext}/assignments/{assignmentId}")
 class AssignmentDetailsFragment :
@@ -47,6 +49,11 @@ class AssignmentDetailsFragment :
         }
 
     val canvasContext by ParcelableArg<Course>(key = Const.CANVAS_CONTEXT)
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        NewRelic.setInteractionName(this::class.java.simpleName)
+        super.onCreate(savedInstanceState)
+    }
 
     @get:PageViewUrlParam(name = "assignmentId")
     val assignmentId by LongArg(key = Const.ASSIGNMENT_ID)

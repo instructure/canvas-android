@@ -49,6 +49,7 @@ import com.instructure.student.events.DiscussionTopicHeaderDeletedEvent
 import com.instructure.student.events.DiscussionTopicHeaderEvent
 import com.instructure.student.events.DiscussionUpdatedEvent
 import com.instructure.student.router.RouteMatcher
+import com.newrelic.agent.android.NewRelic
 import kotlinx.android.synthetic.main.course_discussion_topic.*
 import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.EventBus
@@ -73,6 +74,7 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
 
     //region Fragment Lifecycle Overrides
     override fun onCreate(savedInstanceState: Bundle?) {
+        NewRelic.setInteractionName(this::class.java.simpleName)
         super.onCreate(savedInstanceState)
         checkForPermission()
         retainInstance = true
