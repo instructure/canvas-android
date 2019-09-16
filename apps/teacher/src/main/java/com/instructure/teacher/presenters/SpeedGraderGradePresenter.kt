@@ -30,6 +30,7 @@ import kotlinx.coroutines.Job
 class SpeedGraderGradePresenter(var submission: Submission?, val assignment: Assignment, val course: Course, val assignee: Assignee) : FragmentPresenter<SpeedGraderGradeView>() {
 
     private var mPostGradeAPICall: Job? = null
+    private var refreshSubmissionApiCall: Job? = null
 
     @Suppress("EXPERIMENTAL_FEATURE_WARNING")
     fun updateGrade(grade: String, isExcused: Boolean) {
@@ -56,6 +57,31 @@ class SpeedGraderGradePresenter(var submission: Submission?, val assignment: Ass
                 viewCallback?.updateGradeError()
             }
         }
+    }
+
+    fun refreshSubmission() {
+        refreshSubmissionApiCall = weave {
+            try {
+                // Try to update our submission for post/hide grades
+                val newSubmission = SubmissionManager.getSingleSubmissionAsync(
+                    course.id,
+                    assignment.id,
+                    submission?.userId ?: return@weave,
+                    true
+                ).await().dataOrNull ?: return@weave
+
+                submission = newSubmission
+                viewCallback?.updateGradeText()
+            } catch (e: Throwable) {
+                viewCallback?.updateGradeError()
+            }
+        }
+    }
+
+    override fun onDestroyed() {
+        super.onDestroyed()
+        mPostGradeAPICall?.cancel()
+        refreshSubmissionApiCall?.cancel()
     }
 
     override fun loadData(forceNetwork: Boolean) { }

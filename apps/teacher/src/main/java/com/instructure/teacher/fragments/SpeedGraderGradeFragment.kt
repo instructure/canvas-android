@@ -79,21 +79,10 @@ class SpeedGraderGradeFragment : BasePresenterFragment<SpeedGraderGradePresenter
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onAssignmentGraded(event: AssignmentGradedEvent) {
-        event.once(javaClass.simpleName + presenter.submission?.id) {
+        val submissionId = presenter?.submission?.id ?: return
+        event.once(javaClass.simpleName + submissionId) {
             if(mAssignment.id == it) {
-                GlobalScope.launch {
-                    // Try to update our submission for post/hide grades
-                    presenter.submission = SubmissionManager.getSingleSubmissionAsync(
-                        presenter.course.id,
-                        presenter.assignment.id,
-                        presenter.submission?.userId ?: return@launch,
-                        true
-                    ).await().dataOrNull ?: return@launch
-
-                    withContext(Dispatchers.Main) {
-                        setupViews()
-                    }
-                }
+                presenter?.refreshSubmission()
             }
         }
     }
