@@ -27,6 +27,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.pageview.PageView
+import com.instructure.pandautils.fragments.RemoteConfigParamsFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.student.BuildConfig
 import com.instructure.student.R
@@ -87,6 +88,11 @@ class ApplicationSettingsFragment : ParentFragment() {
             featureFlags.setVisible()
             featureFlags.onClick {
                 addFragment(FeatureFlagsFragment())
+            }
+
+            remoteConfigParams.setVisible()
+            remoteConfigParams.onClick {
+                addFragment(RemoteConfigParamsFragment())
             }
         }
     }

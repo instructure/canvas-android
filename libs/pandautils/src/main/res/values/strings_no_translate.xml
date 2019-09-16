@@ -22,5 +22,5 @@
     <string name="utils_mobileSupportEmailAddress" translatable="false">mobilesupport@instructure.com</string>
     <string name="utils_supportEmailAddress" translatable="false">support@instructure.com</string>
     <string name="utils_dotWithSpaces" translatable="false">\u0020\u0020\u2022\u0020\u0020</string>
-
+    <string name="remoteConfigParamsTitle" translatable="false">Remote Config Params</string>
 </resources>
