@@ -25,7 +25,7 @@ import com.instructure.teacher.events.SubmissionUpdatedEvent
 import com.instructure.teacher.events.post
 import com.instructure.teacher.viewinterface.SpeedGraderGradeView
 import instructure.androidblueprint.FragmentPresenter
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.*
 
 class SpeedGraderGradePresenter(var submission: Submission?, val assignment: Assignment, val course: Course, val assignee: Assignee) : FragmentPresenter<SpeedGraderGradeView>() {
 
@@ -60,18 +60,21 @@ class SpeedGraderGradePresenter(var submission: Submission?, val assignment: Ass
     }
 
     fun refreshSubmission() {
-        refreshSubmissionApiCall = weave {
+        refreshSubmissionApiCall = GlobalScope.launch(Dispatchers.Main) {
             try {
+                viewCallback?.onRefreshStarted()
+
                 // Try to update our submission for post/hide grades
                 val newSubmission = SubmissionManager.getSingleSubmissionAsync(
                     course.id,
                     assignment.id,
-                    submission?.userId ?: return@weave,
+                    submission?.userId ?: return@launch,
                     true
-                ).await().dataOrNull ?: return@weave
+                ).await().dataOrNull ?: return@launch
 
                 submission = newSubmission
                 viewCallback?.updateGradeText()
+                viewCallback?.onRefreshFinished()
             } catch (e: Throwable) {
                 viewCallback?.updateGradeError()
             }

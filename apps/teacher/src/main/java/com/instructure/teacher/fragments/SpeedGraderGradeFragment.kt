@@ -231,6 +231,7 @@ class SpeedGraderGradeFragment : BasePresenterFragment<SpeedGraderGradePresenter
         addGradeIcon.setGone()
         gradeProgressSpinner.announceForAccessibility(getString(R.string.loading))
         gradeProgressSpinner.setVisible()
+        hiddenIcon.setGone()
     }
 
     val  hasUnsavedChanges: Boolean get() = rubricEditView?.hasUnsavedChanges ?: false
