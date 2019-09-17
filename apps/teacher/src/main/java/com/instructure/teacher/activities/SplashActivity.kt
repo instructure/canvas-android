@@ -43,9 +43,10 @@ import com.instructure.teacher.R
 import com.instructure.teacher.fragments.NotATeacherFragment
 import com.instructure.teacher.utils.TeacherPrefs
 import kotlinx.android.synthetic.main.activity_splash.*
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
-import kotlinx.coroutines.delay
 
 @Suppress("EXPERIMENTAL_FEATURE_WARNING")
 class SplashActivity : AppCompatActivity() {
@@ -79,11 +80,16 @@ class SplashActivity : AppCompatActivity() {
                 }
 
                 // Determine if user is a Teacher, Ta, or Designer
-                val enrollmentCheck = async {
-                    TeacherPrefs.isConfirmedTeacher =
-                        CourseManager.getCoursesWithEnrollmentType(true, "teacher").awaitOrThrow().isNotEmpty() ||
-                                CourseManager.getCoursesWithEnrollmentType(true, "ta").awaitOrThrow().isNotEmpty() ||
-                                CourseManager.getCoursesWithEnrollmentType(true, "designer").awaitOrThrow().isNotEmpty()
+                // Use GlobalScope since this can continue executing after SplashActivity is destroyed
+                val enrollmentCheck = GlobalScope.async(start = CoroutineStart.LAZY) {
+                    try {
+                        TeacherPrefs.isConfirmedTeacher =
+                            CourseManager.getCoursesWithEnrollmentType(true, "teacher").awaitOrThrow().isNotEmpty() ||
+                                    CourseManager.getCoursesWithEnrollmentType(true, "ta").awaitOrThrow().isNotEmpty() ||
+                                    CourseManager.getCoursesWithEnrollmentType(true, "designer").awaitOrThrow().isNotEmpty()
+                    } catch (e: Throwable) {
+                        Logger.e(e.message)
+                    }
                 }
                 if (!TeacherPrefs.isConfirmedTeacher) {
                     /*
@@ -97,6 +103,8 @@ class SplashActivity : AppCompatActivity() {
                      * next time the app starts.
                      */
                     enrollmentCheck.await()
+                } else {
+                    enrollmentCheck.start()
                 }
 
                 // Determine if user can masquerade
@@ -127,19 +135,29 @@ class SplashActivity : AppCompatActivity() {
                 }
 
                 // Grab colors
-                val colorFetch = async {
-                    val canvasColor = awaitApi<CanvasColor> { UserManager.getColors(it, true) }
-                    ColorKeeper.addToCache(canvasColor)
-                    ColorKeeper.hasPreviouslySynced = true
+                // Use GlobalScope since this can continue executing after SplashActivity is destroyed
+                val colorFetch = GlobalScope.async(start = CoroutineStart.LAZY) {
+                    try {
+                        val canvasColor = awaitApi<CanvasColor> { UserManager.getColors(it, true) }
+                        ColorKeeper.addToCache(canvasColor)
+                        ColorKeeper.hasPreviouslySynced = true
+                    } catch (e: Throwable) {
+                        Logger.e(e.message)
+                    }
                 }
-                if (!ColorKeeper.hasPreviouslySynced) colorFetch.await()
+                if (!ColorKeeper.hasPreviouslySynced) colorFetch.await() else colorFetch.start()
 
                 // Grab theme
-                val themeFetch = async {
-                    val theme = awaitApi<CanvasTheme> { ThemeManager.getTheme(it, true) }
-                    ThemePrefs.applyCanvasTheme(theme)
+                // Use GlobalScope since this can continue executing after SplashActivity is destroyed
+                val themeFetch = GlobalScope.async(start = CoroutineStart.LAZY) {
+                    try {
+                        val theme = awaitApi<CanvasTheme> { ThemeManager.getTheme(it, true) }
+                        ThemePrefs.applyCanvasTheme(theme)
+                    } catch (e: Throwable) {
+                        Logger.e(e.message)
+                    }
                 }
-                if (!ThemePrefs.isThemeApplied) themeFetch.await()
+                if (!ThemePrefs.isThemeApplied) themeFetch.await() else themeFetch.start()
             } catch (e: Throwable) {
                 Logger.e(e.message)
             }
