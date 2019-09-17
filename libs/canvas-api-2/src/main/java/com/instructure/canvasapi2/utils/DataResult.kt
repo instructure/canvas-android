@@ -42,8 +42,7 @@ sealed class DataResult<out A> {
         return this
     }
 
-    @Suppress("UNCHECKED_CAST")
-    inline fun <FAILURE : Failure> onFail(block: (failure: FAILURE) -> Unit) : DataResult<A> {
+    inline fun <reified FAILURE : Failure> onFail(block: (failure: FAILURE) -> Unit) : DataResult<A> {
         (this as? Fail)?.let { result -> (result.failure as? FAILURE)?.let { block(it) } }
         return this
     }
