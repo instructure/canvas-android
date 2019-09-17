@@ -26,6 +26,7 @@ import com.instructure.canvasapi2.models.User
 import com.instructure.pandautils.utils.ColorUtils
 import com.instructure.pandautils.utils.GlideApp
 import com.instructure.parentapp.R
+import com.instructure.parentapp.util.ParentPrefs
 import kotlinx.android.synthetic.main.spinner_user.view.*
 
 class UserSpinnerAdapter(context: Context, users: Array<User>) : ArrayAdapter<User>(context, 0, users) {
@@ -38,7 +39,12 @@ class UserSpinnerAdapter(context: Context, users: Array<User>) : ArrayAdapter<Us
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View =
             (convertView ?: inflater.inflate(R.layout.spinner_user, parent, false)).apply {
-                val user = getItem(position)
+                val user = if(position >= count) {
+                    ParentPrefs.selectedStudentIndex = 0
+                    getItem(0)
+                } else {
+                    getItem(position)
+                }
                 GlideApp.with(avatar).load(user?.avatarUrl).placeholder(placeholder).error(placeholder).into(avatar)
                 userName.text = user?.shortName ?: ""
             }

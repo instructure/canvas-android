@@ -36,8 +36,8 @@ android {
         applicationId "com.instructure.parentapp"
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 21
-        versionName = "2.0.4"
+        versionCode = 24
+        versionName = "2.0.5"
 
         multiDexEnabled = true
         testInstrumentationRunner 'com.instructure.canvas.espresso.CanvasRunner'
