@@ -23,14 +23,16 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.crashlytics.android.Crashlytics
-import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.ThemeManager
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.*
-import com.instructure.canvasapi2.utils.*
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.LocaleUtils
+import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
 import com.instructure.canvasapi2.utils.weave.awaitApi
+import com.instructure.canvasapi2.utils.weave.awaitOrThrow
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemePrefs
@@ -42,7 +44,8 @@ import com.instructure.teacher.fragments.NotATeacherFragment
 import com.instructure.teacher.utils.TeacherPrefs
 import kotlinx.android.synthetic.main.activity_splash.*
 import kotlinx.coroutines.Job
-import retrofit2.Response
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 
 @Suppress("EXPERIMENTAL_FEATURE_WARNING")
 class SplashActivity : AppCompatActivity() {
@@ -67,7 +70,6 @@ class SplashActivity : AppCompatActivity() {
         startUp = weave {
             // Grab user teacher status
             try {
-
                 val user = awaitApi<User> { UserManager.getSelf(true, it) }
                 val shouldRestartForLocaleChange = setupUser(user)
                 if (shouldRestartForLocaleChange) {
@@ -77,13 +79,24 @@ class SplashActivity : AppCompatActivity() {
                 }
 
                 // Determine if user is a Teacher, Ta, or Designer
-                if (!TeacherPrefs.isConfirmedTeacher) {
+                val enrollmentCheck = async {
                     TeacherPrefs.isConfirmedTeacher =
-                            awaitApi<List<Course>> { CourseManager.getCoursesWithEnrollmentType( true, it, "teacher") }.isNotEmpty() ||
-                            awaitApi<List<Course>> { CourseManager.getCoursesWithEnrollmentType( true, it, "ta") }.isNotEmpty() ||
-                            awaitApi<List<Course>> { CourseManager.getCoursesWithEnrollmentType( true, it, "designer") }.isNotEmpty()
-                } else {
-                    CourseManager.getCoursesWithEnrollmentType(true, mUserIsTeacherVerificationCallback, "teacher")
+                        CourseManager.getCoursesWithEnrollmentType(true, "teacher").awaitOrThrow().isNotEmpty() ||
+                                CourseManager.getCoursesWithEnrollmentType(true, "ta").awaitOrThrow().isNotEmpty() ||
+                                CourseManager.getCoursesWithEnrollmentType(true, "designer").awaitOrThrow().isNotEmpty()
+                }
+                if (!TeacherPrefs.isConfirmedTeacher) {
+                    /*
+                     * If the user is not confirmed to have a teacher enrollment, we suspend here and await the result
+                     * so that we know whether to show the Not-A-Teacher screen after the splash screen.
+                     *
+                     * If we have previously confirmed that the user has a teacher enrollment, we want to ensure that
+                     * is still the case but we don't want to block the splash screen unnecessarily, so we allow the
+                     * check to continue asynchronously. If the user is no longer a teacher, this operation will set
+                     * the 'isConfirmedTeacher' flag to false and the result will be checked again synchronously the
+                     * next time the app starts.
+                     */
+                    enrollmentCheck.await()
                 }
 
                 // Determine if user can masquerade
@@ -100,7 +113,6 @@ class SplashActivity : AppCompatActivity() {
                 }
 
                 if (!TeacherPrefs.isConfirmedTeacher && ApiPrefs.canBecomeUser != true) {
-                    CourseManager.getCoursesWithEnrollmentType(true, mUserIsTeacherVerificationCallback, "teacher")
                     // The user is not a teacher in any course and cannot masquerade; Show them the door
                     canvasLoadingView.setGone()
                     supportFragmentManager.beginTransaction()
@@ -115,19 +127,19 @@ class SplashActivity : AppCompatActivity() {
                 }
 
                 // Grab colors
-                if (ColorKeeper.hasPreviouslySynced) {
-                    UserManager.getColors(mUserColorsCallback, true)
-                } else {
-                    ColorKeeper.addToCache(awaitApi<CanvasColor> { UserManager.getColors(it, true) })
+                val colorFetch = async {
+                    val canvasColor = awaitApi<CanvasColor> { UserManager.getColors(it, true) }
+                    ColorKeeper.addToCache(canvasColor)
                     ColorKeeper.hasPreviouslySynced = true
                 }
+                if (!ColorKeeper.hasPreviouslySynced) colorFetch.await()
 
                 // Grab theme
-                if (ThemePrefs.isThemeApplied) {
-                    ThemeManager.getTheme(mThemeCallback, true)
-                } else {
-                    ThemePrefs.applyCanvasTheme(awaitApi { ThemeManager.getTheme(it, true) })
+                val themeFetch = async {
+                    val theme = awaitApi<CanvasTheme> { ThemeManager.getTheme(it, true) }
+                    ThemePrefs.applyCanvasTheme(theme)
                 }
+                if (!ThemePrefs.isThemeApplied) themeFetch.await()
             } catch (e: Throwable) {
                 Logger.e(e.message)
             }
@@ -159,39 +171,5 @@ class SplashActivity : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
         startUp?.cancel()
-    }
-
-    private val mThemeCallback = object : StatusCallback<CanvasTheme>() {
-        override fun onResponse(response: Response<CanvasTheme>, linkHeaders: LinkHeaders, type: ApiType) {
-            //store the theme
-            response.body()?.let {
-                ThemePrefs.applyCanvasTheme(it)
-            }
-        }
-    }
-
-    private val mUserColorsCallback = object : StatusCallback<CanvasColor>() {
-        override fun onResponse(response: Response<CanvasColor>, linkHeaders: LinkHeaders, type: ApiType) {
-            if (type == ApiType.API) {
-                ColorKeeper.addToCache(response.body())
-                ColorKeeper.hasPreviouslySynced = true
-            }
-        }
-    }
-
-    private val mUserIsTeacherVerificationCallback = object : StatusCallback<List<Course>>() {
-        override fun onResponse(response: Response<List<Course>>, linkHeaders: LinkHeaders, type: ApiType) {
-            if (response.body()?.isNotEmpty() == true) {
-                TeacherPrefs.isConfirmedTeacher = true
-            } else {
-                CourseManager.getCoursesWithEnrollmentType(true, mUserIsTAVerificationCallback, "ta")
-            }
-        }
-    }
-
-    private val mUserIsTAVerificationCallback = object : StatusCallback<List<Course>>() {
-        override fun onResponse(response: Response<List<Course>>, linkHeaders: LinkHeaders, type: ApiType) {
-                TeacherPrefs.isConfirmedTeacher = response.body()?.isNotEmpty() == true
-        }
     }
 }

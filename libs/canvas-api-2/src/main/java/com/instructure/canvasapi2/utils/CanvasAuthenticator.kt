@@ -29,25 +29,18 @@ class CanvasAuthenticator : Authenticator {
 
     override fun authenticate(route: Route?, response: Response): Request? {
         if (response.request().header(RETRY_HEADER) != null) {
-            val bundle = Bundle().apply {
-                putString(AnalyticsParamConstants.DOMAIN_PARAM, ApiPrefs.domain)
-                putString(AnalyticsParamConstants.USER_CONTEXT_ID, ApiPrefs.user?.contextId)
-            }
-            Analytics.logEvent(AnalyticsEventConstants.TOKEN_REFRESH_FAILURE, bundle)
-
+            logAuthAnalytics(AnalyticsEventConstants.TOKEN_REFRESH_FAILURE)
             EventBus.getDefault().post(CanvasAuthError("Failed to authenticate"))
             return null // Give up, we've already failed to authenticate
         }
 
         if (response.request().url().url().path.contains("accounts/self")) {
             // We are likely just checking if the user can masquerade or not, which happens on login - don't try to re-auth here
-            return response.request().newBuilder()
-                .header(AUTH_HEADER, OAuthAPI.authBearer(ApiPrefs.getValidToken()))
-                .header(RETRY_HEADER, RETRY_HEADER) // Mark retry to prevent infinite recursion
-                .build()
+            return null
         }
 
         if (ApiPrefs.clientId.isBlank() || ApiPrefs.clientSecret.isBlank()) {
+            logAuthAnalytics(AnalyticsEventConstants.TOKEN_REFRESH_FAILURE_NO_SECRET)
             // Can't refresh the users access token - log the user out
             EventBus.getDefault().post(CanvasAuthError("No client id or secret for refresh token"))
             return null // Indicate authentication was not successful
@@ -65,10 +58,20 @@ class CanvasAuthenticator : Authenticator {
         }
 
         refreshTokenResponse.onFail<Failure.Authorization> {
+            logAuthAnalytics(AnalyticsEventConstants.TOKEN_REFRESH_FAILURE_TOKEN_NOT_VALID)
             // We got a 401 trying to get a new access token (refresh token is no longer valid) - log user out
             EventBus.getDefault().post(CanvasAuthError("Refresh token expired - cannot get new access token"))
         }
 
+        logAuthAnalytics(AnalyticsEventConstants.TOKEN_REFRESH_FAILURE)
         return null // Indicate authentication was not successful
+    }
+
+    private fun logAuthAnalytics(eventString: String) {
+        val bundle = Bundle().apply {
+            putString(AnalyticsParamConstants.DOMAIN_PARAM, ApiPrefs.domain)
+            putString(AnalyticsParamConstants.USER_CONTEXT_ID, ApiPrefs.user?.contextId)
+        }
+        Analytics.logEvent(eventString, bundle)
     }
 }

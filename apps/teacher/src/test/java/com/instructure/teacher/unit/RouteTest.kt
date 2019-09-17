@@ -123,6 +123,38 @@ class RouteTest : Assert() {
         Assert.assertEquals("module_item_id=6723096", route.getQueryString())
     }
 
+    @Test
+    fun testRouteQueryParams_shardCourse() {
+        val expectedParams = HashMap<String, String>()
+        expectedParams["course_id"] = "123450000000004321"
+
+        val route = Route("/courses/:course_id")
+        Assert.assertTrue(route.apply("https://mobiledev.instructure.com/courses/12345~4321"))
+        Assert.assertEquals(expectedParams, route.paramsHash)
+    }
+
+    @Test
+    fun testRouteQueryParams_shardCourseAssignment() {
+        val expectedParams = HashMap<String, String>()
+        expectedParams["course_id"] = "123450000000004321"
+        expectedParams["assignment_id"] = "123450000000004321"
+
+        val route = Route("/courses/:course_id/assignments/:assignment_id")
+        Assert.assertTrue(route.apply("https://mobiledev.instructure.com/courses/12345~4321/assignments/12345~4321"))
+        Assert.assertEquals(expectedParams, route.paramsHash)
+    }
+
+    @Test
+    fun testRouteQueryParams_shardPageId() {
+        val expectedParams = HashMap<String, String>()
+        expectedParams["course_id"] = "1234"
+        expectedParams["page_id"] = "12345~4321"
+
+        val route = Route("/courses/:course_id/pages/:page_id")
+        Assert.assertTrue(route.apply("https://mobiledev.instructure.com/courses/1234/pages/12345~4321"))
+        Assert.assertEquals(expectedParams, route.paramsHash)
+    }
+
     //endregion
 
     /*

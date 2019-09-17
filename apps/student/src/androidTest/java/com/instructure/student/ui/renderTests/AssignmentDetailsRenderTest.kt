@@ -90,7 +90,7 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
     @Test
     @TestMetaData(Priority.P2, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER)
     fun displaysTitleDataSubmitted() {
-        val submission = Submission(workflowState = "submitted")
+        val submission = Submission(workflowState = "submitted", submittedAt = Date())
         val assignment = Assignment(
             name = "Test Assignment",
             pointsPossible = 35.0,

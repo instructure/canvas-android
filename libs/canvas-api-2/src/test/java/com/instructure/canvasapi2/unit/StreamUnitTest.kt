@@ -47,6 +47,22 @@ class StreamUnitTest : Assert() {
         Assert.assertTrue(streamItem.id > 0)
     }
 
+    @Test
+    fun testStreamItemCourseId() {
+        val streamItem: StreamItem = courseShardStreamItemJSON.parse()
+
+        Assert.assertNotNull(streamItem)
+        Assert.assertEquals(836350000000001123L, streamItem.courseId)
+    }
+
+    @Test
+    fun testStreamItemAssignmentId() {
+        val streamItem: StreamItem = courseShardStreamItemJSON.parse()
+
+        Assert.assertNotNull(streamItem)
+        Assert.assertEquals(983440000000001212L, streamItem.assignmentId)
+    }
+
     /**
      * personal stream
      * @GET("/users/self/activity_stream")
@@ -210,6 +226,21 @@ class StreamUnitTest : Assert() {
         "require_initial_post": null,
         "user_has_posted": null,
         "root_discussion_entries": []
+      }"""
+
+    @Language("JSON")
+    private var courseShardStreamItemJSON = """
+      {
+        "created_at": "2015-02-23T23:41:16Z",
+        "updated_at": "2015-02-23T23:41:16Z",
+        "id": 129486849,
+        "title": "Assignment Created",
+        "message": "hasjdf;lk alksjdfa;k sfal;jdflaksjdflas f;ljaslf kajsfl;ajsf",
+        "type": "Message",
+        "read_state": false,
+        "context_type": "Course",
+        "course_id": -1,
+        "html_url": "https://mobiledev.instructure.com/courses/83635~1123/assignments/98344~1212"
       }"""
 
 }

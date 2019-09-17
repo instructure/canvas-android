@@ -24,7 +24,7 @@
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/submissionFilter"
-        android:icon="@drawable/vd_filter"
+        android:icon="@drawable/ic_filter_filled"
         android:title="@string/filter_submissions"
         app:showAsAction="always" >
         <menu>

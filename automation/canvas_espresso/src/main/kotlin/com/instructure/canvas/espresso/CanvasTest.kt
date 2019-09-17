@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2019 - present Instructure, Inc.
+ *
+ *     Licensed under the Apache License, Version 2.0 (the "License");
+ *     you may not use this file except in compliance with the License.
+ *     You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *     Unless required by applicable law or agreed to in writing, software
+ *     distributed under the License is distributed on an "AS IS" BASIS,
+ *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *     See the License for the specific language governing permissions and
+ *     limitations under the License.
+ *
+ */
 package com.instructure.canvas.espresso
 
 import android.content.res.Resources
@@ -7,6 +23,8 @@ import android.view.View
 import android.webkit.WebView
 import androidx.test.espresso.matcher.ViewMatchers
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils
+import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils.matchesCheckNames
+import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils.matchesViews
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityViewCheckResult
 import com.instructure.espresso.AccessibilityChecker
 import com.instructure.espresso.BuildConfig
@@ -14,6 +32,9 @@ import com.instructure.espresso.page.InstructureTest
 import org.hamcrest.BaseMatcher
 import org.hamcrest.Description
 import org.hamcrest.Matchers
+import org.hamcrest.Matchers.`is`
+import org.hamcrest.Matchers.allOf
+import org.hamcrest.Matchers.anyOf
 import org.junit.Before
 
 // InstructureTest wrapper for Canvas code
@@ -49,7 +70,13 @@ abstract class CanvasTest : InstructureTest(BuildConfig.GLOBAL_DITTO_MODE) {
                             ),
 
                             // Short-term workaround as we try to return a11y-compliant colors for submit button
-                            AccessibilityCheckResultUtils.matchesViews(ViewMatchers.withResourceName("submitButton")),
+                            allOf(
+                                    matchesCheckNames(`is`("TextContrastViewCheck")),
+                                    anyOf(
+                                            matchesViews(ViewMatchers.withResourceName("submitButton")),
+                                            matchesViews(ViewMatchers.withResourceName("submit_button"))
+                                    )
+                            ),
 
                             // On very low-res devices, controls can be squished to the point that they are smaller
                             // than their specified minimum.  This seems unavoidable, so let's not log an
@@ -60,8 +87,8 @@ abstract class CanvasTest : InstructureTest(BuildConfig.GLOBAL_DITTO_MODE) {
                             // Note that TouchTargetSizeViewCheck is the *old* name of the check.  The new name would
                             // be "TouchTargetSizeCheck".
                             Matchers.allOf(
-                                    AccessibilityCheckResultUtils.matchesViews(ViewMatchers.isAssignableFrom(WebView::class.java)),
-                                    AccessibilityCheckResultUtils.matchesCheckNames(Matchers.`is`("TouchTargetSizeViewCheck"))
+                                    matchesViews(ViewMatchers.isAssignableFrom(WebView::class.java)),
+                                    matchesCheckNames(Matchers.`is`("TouchTargetSizeViewCheck"))
                             )
                         )
 

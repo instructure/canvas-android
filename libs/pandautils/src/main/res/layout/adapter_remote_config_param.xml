@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright (C) 2017 - present  Instructure, Inc.
+  ~ Copyright (C) 2019 - present Instructure, Inc.
   ~
   ~     This program is free software: you can redistribute it and/or modify
   ~     it under the terms of the GNU General Public License as published by
@@ -15,21 +15,22 @@
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
 
-    <item
-        android:id="@+id/menuPostPolicies"
-        android:title="@string/postPolicyTitle"
-        android:icon="@drawable/ic_eye"
-        android:visible="false"
-        app:showAsAction="ifRoom" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/param_name"/>
 
-    <item
-        android:id="@+id/menu_share"
-        android:title="@string/share"
-        android:visible="false"
-        android:icon="@drawable/vd_share"
-        app:showAsAction="always"/>
+    <EditText
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:id="@+id/param_value"/>
 
-</menu>
+</LinearLayout>

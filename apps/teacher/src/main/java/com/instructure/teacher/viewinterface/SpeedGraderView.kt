@@ -20,6 +20,6 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.GradeableStudentSubmission
 
 interface SpeedGraderView {
-    fun onDataSet(assignment: Assignment, submissions: List<GradeableStudentSubmission>)
+    fun onDataSet(assignment: Assignment, submissions: List<GradeableStudentSubmission>, newGradebookEnabled: Boolean)
     fun onErrorSettingData()
 }

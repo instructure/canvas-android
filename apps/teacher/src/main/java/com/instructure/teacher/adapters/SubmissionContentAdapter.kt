@@ -28,7 +28,8 @@ import java.util.*
 class SubmissionContentAdapter(
         private val mAssignment: Assignment,
         private val mCourse: Course,
-        private val mStudentSubmissions: List<GradeableStudentSubmission>
+        private val mStudentSubmissions: List<GradeableStudentSubmission>,
+        private val newGradebookEnabled: Boolean
 ) : PagerAdapter() {
 
     var initialTabIdx = 0
@@ -36,7 +37,14 @@ class SubmissionContentAdapter(
     private val mContentMap = WeakHashMap<Int, SubmissionContentView>()
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
-        return SubmissionContentView(container.context, mStudentSubmissions[position], mAssignment, mCourse, initialTabIdx).apply {
+        return SubmissionContentView(
+            context = container.context,
+            mStudentSubmission = mStudentSubmissions[position],
+            mAssignment = mAssignment,
+            mCourse = mCourse,
+            initialTabIndex = initialTabIdx,
+            newGradebookEnabled = newGradebookEnabled
+        ).apply {
             container.addView(this)
             mContentMap += position to this
         }
@@ -55,4 +63,7 @@ class SubmissionContentAdapter(
 
     fun hasUnsavedChanges(position: Int) = mContentMap[position]?.hasUnsavedChanges ?: false
 
+    fun invalidateSubmissionCache() {
+        mStudentSubmissions.onEach { it.isCached = false }
+    }
 }

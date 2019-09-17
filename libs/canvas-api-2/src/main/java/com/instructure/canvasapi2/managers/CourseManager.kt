@@ -24,7 +24,8 @@ import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ExhaustiveListCallback
 import com.instructure.canvasapi2.utils.weave.apiAsync
 import java.io.IOException
-import java.util.*
+import java.util.ArrayList
+import java.util.HashMap
 
 object CourseManager {
 
@@ -190,6 +191,13 @@ object CourseManager {
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
 
         CourseAPI.getCoursesByEnrollmentType(adapter, callback, params, type)
+    }
+
+    fun getCoursesWithEnrollmentType(
+        forceNetwork: Boolean,
+        type: String
+    ) = apiAsync<List<Course>> {
+        getCoursesWithEnrollmentType(forceNetwork, it, type)
     }
 
     @JvmStatic

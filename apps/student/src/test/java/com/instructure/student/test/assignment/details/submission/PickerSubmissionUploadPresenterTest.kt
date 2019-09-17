@@ -71,9 +71,9 @@ class PickerSubmissionUploadPresenterTest : Assert() {
     }
 
     @Test
-    fun `returns Empty state with loading when files are empty`() {
+    fun `returns Loading state with loading when files are empty`() {
         val model = baseModel.copy(isLoadingFile = true)
-        val expectedState = PickerSubmissionUploadViewState.Empty(baseVisibilities.copy(loading = true))
+        val expectedState = PickerSubmissionUploadViewState.FileList(baseVisibilities.copy(loading = true), emptyList())
         val actualState = PickerSubmissionUploadPresenter.present(model, context)
         assertEquals(expectedState, actualState)
     }

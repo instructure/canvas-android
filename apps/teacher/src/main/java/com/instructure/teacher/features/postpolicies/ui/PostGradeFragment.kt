@@ -18,19 +18,11 @@ package com.instructure.teacher.features.postpolicies.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.fragment.app.Fragment
 import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.models.Course
 import com.instructure.pandautils.utils.*
-import com.instructure.teacher.R
 import com.instructure.teacher.features.postpolicies.*
-import com.instructure.teacher.mobius.common.ui.EffectHandler
 import com.instructure.teacher.mobius.common.ui.MobiusFragment
-import com.instructure.teacher.mobius.common.ui.Presenter
-import com.instructure.teacher.mobius.common.ui.UpdateInit
 
 class PostGradeFragment : MobiusFragment<PostGradeModel, PostGradeEvent, PostGradeEffect, PostGradeView, PostGradeViewState>() {
     private var assignment: Assignment by ParcelableArg(Assignment(), Const.ASSIGNMENT)
