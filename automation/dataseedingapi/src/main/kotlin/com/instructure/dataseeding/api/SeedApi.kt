@@ -34,7 +34,8 @@ object SeedApi {
             val favoriteCourses: Int = 0,
             val gradingPeriods: Boolean = false,
             val discussions: Int = 0,
-            val announcements: Int = 0
+            val announcements: Int = 0,
+            val publishCourses: Boolean = true
     )
 
     // Seed data object/model, made to look very much like the old proto-generated SeededData class
@@ -92,7 +93,7 @@ object SeedApi {
         with(seededData) {
             for (c in 0 until maxOf(request.courses + request.pastCourses, request.favoriteCourses)) {
                 // Seed course
-                addCourses(createCourse(request.gradingPeriods))
+                addCourses(createCourse(request.gradingPeriods, request.publishCourses))
 
                 // Seed users
                 for (t in 0 until request.teachers) {
@@ -195,12 +196,12 @@ object SeedApi {
     }
 
     // Private course-creation method that does some special handling for grading periods
-    private fun createCourse(gradingPeriods: Boolean = false) : CourseApiModel {
+    private fun createCourse(gradingPeriods: Boolean = false, publishCourses: Boolean = true) : CourseApiModel {
         return if(gradingPeriods) {
             val enrollmentTerm = EnrollmentTermsApi.createEnrollmentTerm()
             val gradingPeriodSetWrapper = GradingPeriodsApi.createGradingPeriodSet(enrollmentTerm.id)
             val gradingPeriodSet = GradingPeriodsApi.createGradingPeriod(gradingPeriodSetWrapper.gradingPeriodSet.id)
-            val courseWithTerm = CoursesApi.createCourse(enrollmentTerm.id)
+            val courseWithTerm = CoursesApi.createCourse(enrollmentTerm.id, publishCourses)
             courseWithTerm
         }
         else {
