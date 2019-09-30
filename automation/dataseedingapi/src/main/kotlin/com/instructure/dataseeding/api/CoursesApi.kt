@@ -49,19 +49,20 @@ object CoursesApi {
     private fun coursesService(token: String): CoursesService
             = CanvasRestAdapter.retrofitWithToken(token).create(CoursesService::class.java)
 
-    fun createCourse(enrollmentTermId: Long? = null): CourseApiModel {
+    fun createCourse(enrollmentTermId: Long? = null, publish: Boolean = true): CourseApiModel {
         val randomCourseName = Randomizer.randomCourseName()
         val course = CreateCourseWrapper(
-                CreateCourse(
-                        name = randomCourseName,
-                        courseCode = randomCourseName.substring(0, 2),
-                        enrollmentTermId = enrollmentTermId
-                )
+            offer = publish,
+            course = CreateCourse(
+                name = randomCourseName,
+                courseCode = randomCourseName.substring(0, 2),
+                enrollmentTermId = enrollmentTermId
+            )
         )
         return adminCoursesService
-                .createCourse(course)
-                .execute()
-                .body()!!
+            .createCourse(course)
+            .execute()
+            .body()!!
     }
 
     fun concludeCourse(courseId: Long) {

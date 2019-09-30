@@ -52,4 +52,14 @@ class CoursesListPageTest : TeacherTest() {
 
         coursesListPage.assertHasCourses(data.favoriteCourses)
     }
+
+    @Test
+    @Ditto
+    fun displaysCourseListWithOnlyUnpublishedCourses() {
+        val data = seedData(teachers = 1, courses = 1, publishCourses = false)
+        val teacher = data.teachersList[0]
+        tokenLogin(teacher)
+
+        coursesListPage.assertHasCourses(data.coursesList)
+    }
 }
