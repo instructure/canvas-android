@@ -356,4 +356,72 @@ class SubmissionRubricPresenterTest : Assert() {
         val actualState = SubmissionRubricPresenter.present(model, context)
         assertEquals(expectedState, actualState)
     }
+
+    @Test
+    fun `Returns custom score for ranged rubric`() {
+        val model = modelTemplate.copy(
+            assignment = assignmentTemplate.copy(
+                rubric = listOf(assignmentTemplate.rubric!![0].copy(criterionUseRange = true))
+            ),
+            submission = submissionTemplate.copy(
+                rubricAssessment = hashMapOf(
+                    "123" to RubricCriterionAssessment("_id3", 11.5, "Comment")
+                )
+            )
+        )
+        val expectedState = SubmissionRubricViewState(
+            listOf(
+                gradeTemplate,
+                criterionTemplate.copy(
+                    ratingTitle = "Rating 3 Title",
+                    ratingDescription = "Rating 3 Description",
+                    comment = "Comment",
+                    ratings = listOf(
+                        RatingData("_id1", "5.5", isSelected = false, isAssessed = false),
+                        RatingData("_id2", "10", isSelected = false, isAssessed = false),
+                        RatingData(
+                            SubmissionRubricPresenter.customRatingId,
+                            "11.5",
+                            isSelected = true,
+                            isAssessed = true
+                        ),
+                        RatingData("_id3", "15", isSelected = false, isAssessed = false)
+                    )
+                )
+            )
+        )
+        val actualState = SubmissionRubricPresenter.present(model, context)
+        assertEquals(expectedState, actualState)
+    }
+
+    @Test
+    fun `Does not returns custom score for ranged rubric if score matches range value`() {
+        val model = modelTemplate.copy(
+            assignment = assignmentTemplate.copy(
+                rubric = listOf(assignmentTemplate.rubric!![0].copy(criterionUseRange = true))
+            ),
+            submission = submissionTemplate.copy(
+                rubricAssessment = hashMapOf(
+                    "123" to RubricCriterionAssessment("_id3", 15.0, "Comment")
+                )
+            )
+        )
+        val expectedState = SubmissionRubricViewState(
+            listOf(
+                gradeTemplate,
+                criterionTemplate.copy(
+                    ratingTitle = "Rating 3 Title",
+                    ratingDescription = "Rating 3 Description",
+                    comment = "Comment",
+                    ratings = listOf(
+                        RatingData("_id1", "5.5", isSelected = false, isAssessed = false),
+                        RatingData("_id2", "10", isSelected = false, isAssessed = false),
+                        RatingData("_id3", "15", isSelected = true, isAssessed = true)
+                    )
+                )
+            )
+        )
+        val actualState = SubmissionRubricPresenter.present(model, context)
+        assertEquals(expectedState, actualState)
+    }
 }
