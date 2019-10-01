@@ -48,6 +48,7 @@ import com.instructure.student.util.Analytics
 import com.instructure.student.util.CanvasCalendarUtils
 import com.instructure.student.util.StudentPrefs
 import com.instructure.student.view.ViewUtils
+import com.newrelic.agent.android.NewRelic
 import com.roomorama.caldroid.CaldroidListener
 import hirondelle.date4j.DateTime
 import kotlinx.android.extensions.CacheImplementation
@@ -110,6 +111,7 @@ class CalendarListViewFragment : ParentFragment() {
     override fun title() = getString(R.string.calendar)
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        NewRelic.setInteractionName(this::class.java.simpleName)
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
         // Most of this will never get called since we are using
