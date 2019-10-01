@@ -17,16 +17,10 @@ package com.instructure.teacher.adapters
 
 import android.graphics.Color
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewConfiguration
-import android.view.ViewGroup
-import android.view.ViewTreeObserver
+import android.view.*
+import android.widget.LinearLayout.LayoutParams
 import android.widget.TextView
-import com.instructure.canvasapi2.StudentContextCardQuery.Analytics
-import com.instructure.canvasapi2.StudentContextCardQuery.AsCourse
-import com.instructure.canvasapi2.StudentContextCardQuery.Submission
-import com.instructure.canvasapi2.StudentContextCardQuery.User
+import com.instructure.canvasapi2.StudentContextCardQuery.*
 import com.instructure.canvasapi2.models.BasicUser
 import com.instructure.canvasapi2.models.GradeableStudentSubmission
 import com.instructure.canvasapi2.models.StudentAssignee
@@ -36,19 +30,7 @@ import com.instructure.canvasapi2.utils.isValid
 import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouteContext
-import com.instructure.pandautils.utils.BooleanArg
-import com.instructure.pandautils.utils.ColorKeeper
-import com.instructure.pandautils.utils.LongArg
-import com.instructure.pandautils.utils.ProfileUtils
-import com.instructure.pandautils.utils.ThemePrefs
-import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.asStateList
-import com.instructure.pandautils.utils.children
-import com.instructure.pandautils.utils.nonNullArgs
-import com.instructure.pandautils.utils.onClick
-import com.instructure.pandautils.utils.setGone
-import com.instructure.pandautils.utils.setVisible
-import com.instructure.pandautils.utils.toast
+import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.SpeedGraderActivity
 import com.instructure.teacher.events.AssignmentGradedEvent
@@ -190,22 +172,38 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
             val enrollmentGrades = student.enrollments.find { it.type == EnrollmentType.STUDENTENROLLMENT }?.grades
 
             // Grade before posting
-            gradeBeforePosting.text = enrollmentGrades?.let { it.currentGrade ?: it.currentScore?.toString() } ?: "--"
+            val gradeBeforePostingText = enrollmentGrades?.let { it.currentGrade ?: it.currentScore?.toString() } ?: "--"
 
             // Grade after posting
-            gradeAfterPosting.text = enrollmentGrades?.let { it.unpostedCurrentGrade ?: it.unpostedCurrentScore?.toString() } ?: "--"
+            val gradeAfterPostingText = enrollmentGrades?.let { it.unpostedCurrentGrade ?: it.unpostedCurrentScore?.toString() } ?: "--"
+
+            if (gradeBeforePostingText == gradeAfterPostingText) {
+                gradeBeforePosting.text = gradeBeforePostingText
+                gradeBeforePostingLabel.setText(R.string.currentGrade)
+                gradeAfterPostingContainer.setGone()
+            } else {
+                gradeBeforePosting.text = gradeBeforePostingText
+                gradeAfterPosting.text = gradeAfterPostingText
+            }
 
             // Override Grade
             val overrideText = enrollmentGrades?.let { it.overrideGrade ?: it.overrideScore?.toString() }
             if (overrideText.isValid()) {
                 gradeOverride.text = overrideText
-                gradeOverrideContainer.apply {
-                    backgroundTintList = courseColor.asStateList()
-                    children<TextView>().onEach { it.setTextColor(Color.WHITE) }
-                }
             } else {
                 gradeOverrideContainer.setGone()
-                gradeAfterPostingContainer.apply {
+            }
+
+            val visibleGradeItems = gradeItems.children.filter { it.isVisible }
+            if (visibleGradeItems.size == 1) {
+                // If there is only one grade item, add a second empty child so the first doesn't stretch to the full parent width
+                gradeItems.addView(
+                    View(context),
+                    LayoutParams(0, LayoutParams.MATCH_PARENT, 1.0f)
+                )
+            } else {
+                // Set color of last grade item
+                visibleGradeItems.lastOrNull()?.apply {
                     backgroundTintList = courseColor.asStateList()
                     children<TextView>().onEach { it.setTextColor(Color.WHITE) }
                 }

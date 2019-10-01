@@ -171,6 +171,7 @@
                     android:textSize="14sp" />
 
                 <LinearLayout
+                    android:id="@+id/gradeItems"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
@@ -189,6 +190,7 @@
                             tools:text="98%" />
 
                         <TextView
+                            android:id="@+id/gradeBeforePostingLabel"
                             style="@style/StudentContextInfoCellSubtitle"
                             android:text="@string/gradeBeforePosting" />
 
