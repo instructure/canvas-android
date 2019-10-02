@@ -73,7 +73,6 @@ object Libs {
     /* Play Services */
     const val PLAY_SERVICES = "com.google.android.gms:play-services-gcm:16.1.0"
     const val PLAY_SERVICES_ANALYTICS = "com.google.android.gms:play-services-analytics:16.0.7"
-    const val PLAY_SERVICES_OSS_LICENSES = "com.google.android.gms:play-services-oss-licenses:16.0.2"
     const val PLAY_SERVICES_WEARABLE = "com.google.android.gms:play-services-wearable:16.0.1"
     const val PLAY_SERVICES_AUTH = "com.google.android.gms:play-services-auth:16.0.1"
     const val FIREBASE_CORE = "com.google.firebase:firebase-core:${Versions.FIREBASE_CORE}"
@@ -106,7 +105,6 @@ object Plugins {
     const val ANDROID_GRADLE_TOOLS = "com.android.tools.build:gradle:${Versions.ANDROID_GRADLE_TOOLS}"
     const val APOLLO = "com.apollographql.apollo:apollo-gradle-plugin:${Versions.APOLLO}"
     const val KOTLIN = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.KOTLIN}"
-    const val OSS_LICENSES = "com.google.android.gms:oss-licenses-plugin:0.9.4"
     const val GOOGLE_SERVICES = "com.google.gms:google-services:${Versions.GOOGLE_SERVICES}"
     const val OKREPLAY = "com.airbnb.okreplay:gradle-plugin:${Versions.OKREPLAY}"
     const val BUILD_SCAN = "com.gradle:build-scan-plugin:${Versions.BUILD_SCAN}"

@@ -17,17 +17,15 @@
 package com.instructure.parentapp.dialogs
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatDialogFragment
-import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.TermsOfService
-import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
@@ -95,7 +93,8 @@ class LegalDialog : AppCompatDialogFragment() {
         }
 
         openSource.setOnClickListener {
-            startActivity(Intent(context, OssLicensesMenuActivity::class.java))
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/instructure/canvas-android"))
+            requireActivity().startActivity(intent)
             dialog.dismiss()
         }
     }

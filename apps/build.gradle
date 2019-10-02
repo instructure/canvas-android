@@ -33,7 +33,6 @@ buildscript {
         classpath Plugins.ANDROID_GRADLE_TOOLS
         classpath Plugins.APOLLO
         classpath Plugins.GOOGLE_SERVICES
-        classpath Plugins.OSS_LICENSES
         classpath Plugins.KOTLIN
         classpath Plugins.FABRIC
         classpath Plugins.OKREPLAY

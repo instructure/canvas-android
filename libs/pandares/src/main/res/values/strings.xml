@@ -590,7 +590,7 @@
     <string name="EULA">EULA</string>
     <string name="privacyPolicy">Privacy Policy</string>
     <string name="termsOfUse">Terms of Use</string>
-    <string name="openSource">Open Source</string>
+    <string name="canvasOnGithub">Canvas on GitHub</string>
 
     <!-- Quiz Strings -->
     <string name="assignmentQuizzes">Assignment Quizzes</string>
