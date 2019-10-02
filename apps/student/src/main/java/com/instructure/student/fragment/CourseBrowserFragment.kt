@@ -48,6 +48,7 @@ import com.instructure.student.util.Const
 import com.instructure.student.util.DisableableAppBarLayoutBehavior
 import com.instructure.student.util.StudentPrefs
 import com.instructure.student.util.TabHelper
+import com.newrelic.agent.android.NewRelic
 import kotlinx.android.synthetic.main.fragment_course_browser.*
 import kotlinx.android.synthetic.main.view_course_browser_header.*
 import kotlinx.coroutines.Job
@@ -63,6 +64,11 @@ class CourseBrowserFragment : Fragment(), FragmentInteractions, AppBarLayout.OnO
 
     override val navigation: Navigation?
         get() = if (activity is Navigation) activity as Navigation else null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        NewRelic.setInteractionName(this::class.java.simpleName)
+        super.onCreate(savedInstanceState)
+    }
 
     //region Fragment Lifecycle Overrides
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =

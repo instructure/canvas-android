@@ -50,6 +50,7 @@ import com.instructure.student.events.CourseColorOverlayToggledEvent
 import com.instructure.student.events.ShowGradesToggledEvent
 import com.instructure.student.interfaces.CourseAdapterToFragmentCallback
 import com.instructure.student.router.RouteMatcher
+import com.newrelic.agent.android.NewRelic
 import kotlinx.android.synthetic.main.fragment_course_grid.*
 import kotlinx.android.synthetic.main.panda_recycler_refresh_layout.*
 import org.greenrobot.eventbus.EventBus
@@ -74,8 +75,14 @@ class DashboardFragment : ParentFragment() {
 
     override fun title(): String = if (isAdded) getString(R.string.dashboard) else ""
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        NewRelic.setInteractionName(this::class.java.simpleName)
+        super.onCreate(savedInstanceState)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-            layoutInflater.inflate(R.layout.fragment_course_grid, container, false)
+        layoutInflater.inflate(R.layout.fragment_course_grid, container, false)
+
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

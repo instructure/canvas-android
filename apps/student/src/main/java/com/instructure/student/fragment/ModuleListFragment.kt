@@ -40,6 +40,7 @@ import com.instructure.student.interfaces.ModuleAdapterToFragmentCallback
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.ModuleProgressionUtility
 import com.instructure.student.util.ModuleUtility
+import com.newrelic.agent.android.NewRelic
 import kotlinx.android.synthetic.main.fragment_module_list.*
 import kotlinx.android.synthetic.main.panda_recycler_refresh_layout.*
 import org.greenrobot.eventbus.EventBus
@@ -69,6 +70,7 @@ class ModuleListFragment : ParentFragment(), Bookmarkable {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        NewRelic.setInteractionName(this::class.java.simpleName)
         super.onCreate(savedInstanceState)
         retainInstance = true
     }

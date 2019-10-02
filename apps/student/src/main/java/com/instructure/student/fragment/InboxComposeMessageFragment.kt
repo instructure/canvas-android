@@ -51,6 +51,7 @@ import com.instructure.student.events.ConversationUpdatedEvent
 import com.instructure.student.events.MessageAddedEvent
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.view.AttachmentView
+import com.newrelic.agent.android.NewRelic
 import kotlinx.android.synthetic.main.fragment_inbox_compose_message.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -129,6 +130,7 @@ class InboxComposeMessageFragment : ParentFragment() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        NewRelic.setInteractionName(this::class.java.simpleName)
         super.onCreate(savedInstanceState)
         selectedContext = nonNullArgs.getParcelable(Const.CANVAS_CONTEXT)
     }
