@@ -27,7 +27,7 @@ import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.student.R
 import com.instructure.student.mobius.assignmentDetails.ui.gradeCell.GradeCellViewState
 import com.instructure.student.mobius.common.ui.Presenter
-import java.util.*
+import java.util.HashMap
 
 object SubmissionRubricPresenter : Presenter<SubmissionRubricModel, SubmissionRubricViewState> {
 
@@ -66,19 +66,34 @@ object SubmissionRubricPresenter : Presenter<SubmissionRubricModel, SubmissionRu
         var ratings = criterion.ratings.toList()
 
         /*
-         * If this is a custom assessment (i.e. there is no associated rating ID) then we assign it a custom
-         * rating ID and add a matching rating to the ratings list. We then sort that list by point value
+         * If this is a custom assessment (i.e. there is no associated rating ID) or if it uses ranges, we assign it a
+         * custom rating ID and add a matching rating to the ratings list. We then sort that list by point value
          * to ensure the new rating appears in the correct position.
          */
-        if (assessment != null && assessment.ratingId == null) {
-            assessment = assessment.copy(ratingId = customRatingId)
-            ratings = ratings.plus(
-                RubricCriterionRating(
-                    id = customRatingId,
-                    description = context.getString(R.string.rubricCustomScore),
-                    points = assessment.points ?: 0.0
+        if (assessment != null) {
+            if (assessment.ratingId == null) {
+                assessment = assessment.copy(ratingId = customRatingId)
+                ratings = ratings.plus(
+                    RubricCriterionRating(
+                        id = customRatingId,
+                        description = context.getString(R.string.rubricCustomScore),
+                        points = assessment.points ?: 0.0
+                    )
                 )
-            )
+            } else if (criterion.criterionUseRange) {
+                val assessedRating = ratings.first { it.id == assessment!!.ratingId }
+                if (assessment.points != assessedRating.points) {
+                    assessment = assessment.copy(ratingId = customRatingId)
+                    ratings = ratings.plus(
+                        RubricCriterionRating(
+                            id = customRatingId,
+                            description = assessedRating.description,
+                            longDescription = assessedRating.longDescription,
+                            points = assessment.points ?: assessedRating.points
+                        )
+                    )
+                }
+            }
         }
         ratings = ratings.sortedBy { it.points }
 
