@@ -71,9 +71,6 @@ android {
 
         /* Add private data */
         PrivateData.merge(project, "teacher")
-        addManifestPlaceholders([
-                fabricApiKey:"$fabricApiKey"
-        ])
 
         buildConfigField "String", "PSPDFKIT_LICENSE_KEY", "\"$pspdfkitLicenseKey\""
         buildConfigField "String", "PUSH_SERVICE_PROJECT_ID", "\"$pushServiceProjectId\""
