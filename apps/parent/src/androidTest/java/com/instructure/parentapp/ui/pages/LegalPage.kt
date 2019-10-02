@@ -53,7 +53,7 @@ class LegalPage : BasePage(R.id.legalPage) {
     fun assertDisplaysTermsOfUse() = assertContainsWebString("TERMS OF USE")
 
     fun assertDisplaysOpenSource() {
-        waitForViewWithText("Open source licenses").assertDisplayed()
+        waitForViewWithText(R.string.canvasOnGithub).assertDisplayed()
     }
 
     private fun assertContainsWebString(contents: String) {
