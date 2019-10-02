@@ -1058,6 +1058,7 @@
     <string name="gradeBeforePosting">Grade before posting</string>
     <string name="gradeAfterPosting">Grade after posting</string>
     <string name="gradeOverride">Grade override</string>
+    <string name="currentGrade">Current grade</string>
 
     <!-- Floating Recording View Strings -->
     <string name="recordingTimerDefault">00:00:00</string>
