@@ -57,9 +57,6 @@ android {
         PrivateData.merge(project, "parent")
         buildConfigField "String", "LOGIN_CLIENT_ID", "\"$loginClientId\""
         buildConfigField "String", "LOGIN_CLIENT_SECRET", "\"$loginClientSecret\""
-        addManifestPlaceholders([
-                fabricApiKey:"$fabricApiKey"
-        ])
     }
 
     flavorDimensions 'default'
@@ -101,6 +98,7 @@ android {
             minifyEnabled false
             shrinkResources false
             pseudoLocalesEnabled true
+            ext.enableCrashlytics = false
         }
 
         release {
