@@ -39,7 +39,7 @@ class LegalPage : BasePage(R.id.legalPage) {
         super.assertPageObjects()
         privacyPolicy.assertHasChild(withText(R.string.privacyPolicy))
         termsOfUse.assertHasChild(withText(R.string.termsOfUse))
-        openSource.assertHasChild(withText(R.string.open_source))
+        openSource.assertHasChild(withText(R.string.canvasOnGithub))
     }
 
     fun clickPrivacyPolicy() = privacyPolicy.click()
