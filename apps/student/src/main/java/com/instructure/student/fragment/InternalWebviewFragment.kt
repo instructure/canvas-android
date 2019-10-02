@@ -93,6 +93,7 @@ open class InternalWebviewFragment : ParentFragment() {
 
         with(rootView) {
             canvasWebView.settings.loadWithOverviewMode = true
+            canvasWebView.settings.userAgentString = ApiPrefs.userAgent
             canvasWebView.setInitialScale(100)
 
             canvasWebView.canvasWebChromeClientCallback = CanvasWebView.CanvasWebChromeClientCallback { _, newProgress ->
