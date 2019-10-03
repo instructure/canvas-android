@@ -38,6 +38,11 @@ class AssignmentDetailsFragment :
     MobiusFragment<AssignmentDetailsModel, AssignmentDetailsEvent, AssignmentDetailsEffect, AssignmentDetailsView, AssignmentDetailsViewState>(),
     Bookmarkable {
 
+    val canvasContext by ParcelableArg<Course>(key = Const.CANVAS_CONTEXT)
+    @get:PageViewUrlParam(name = "assignmentId")
+    val assignmentId by LongArg(key = Const.ASSIGNMENT_ID)
+    val submissionId by StringArg(key = Const.SUBMISSION_ID, default = "")
+
     override val bookmark: Bookmarker
         get() {
             val assignment = controller.model.assignmentResult?.dataOrNull
@@ -48,15 +53,10 @@ class AssignmentDetailsFragment :
                 )
         }
 
-    val canvasContext by ParcelableArg<Course>(key = Const.CANVAS_CONTEXT)
-
     override fun onCreate(savedInstanceState: Bundle?) {
         NewRelic.setInteractionName(this::class.java.simpleName)
         super.onCreate(savedInstanceState)
     }
-
-    @get:PageViewUrlParam(name = "assignmentId")
-    val assignmentId by LongArg(key = Const.ASSIGNMENT_ID)
 
     override fun makeEffectHandler() = AssignmentDetailsEffectHandler(requireContext(), assignmentId)
 
@@ -67,12 +67,11 @@ class AssignmentDetailsFragment :
 
     override fun makePresenter() = AssignmentDetailsPresenter
 
-    override fun makeInitModel() = AssignmentDetailsModel(assignmentId, canvasContext)
+    override fun makeInitModel() = AssignmentDetailsModel(assignmentId, canvasContext, shouldRouteToSubmissionDetails = submissionId.isNotBlank())
 
     override fun getExternalEventSources() = listOf(AssignmentDetailsEventBusSource())
 
     companion object {
-
         const val VIDEO_REQUEST_CODE = 45519
         const val CHOOSE_MEDIA_REQUEST_CODE = 45520
 
@@ -101,13 +100,17 @@ class AssignmentDetailsFragment :
                 CanvasRestAdapter.clearCacheUrls("assignments/$assignmentId")
             }
 
+            if (route.paramsHash.containsKey(RouterParams.SUBMISSION_ID)) {
+                // Indicate that we want to route to the Submission Details page - this will give us a small backstack, allowing the user to hit back and go to Assignment Details instead
+                // of closing the app (in the case of when the app isn't running and the user hits a push notification that takes them to Submission Details)
+                route.arguments.putString(Const.SUBMISSION_ID, route.paramsHash[RouterParams.SUBMISSION_ID])
+            }
+
             return AssignmentDetailsFragment().withArgs(route.arguments)
         }
 
         fun isFileRequest(requestCode: Int): Boolean {
             return requestCode in listOf(VIDEO_REQUEST_CODE, CHOOSE_MEDIA_REQUEST_CODE)
         }
-
     }
-
 }

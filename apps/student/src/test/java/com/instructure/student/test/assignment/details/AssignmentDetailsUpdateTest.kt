@@ -489,6 +489,39 @@ class AssignmentDetailsUpdateTest : Assert() {
     }
 
     @Test
+    fun `DataLoaded event with shouldRouteToSubmissionDetails = true, updates model and sends ShowSubmissionView effect`() {
+        val assignment = Assignment(id = assignmentId)
+        val submission = mockkSubmission()
+        val startModel = initModel.copy(shouldRouteToSubmissionDetails = true)
+        val expectedModel = initModel.copy(
+            isLoading = false,
+            assignmentResult = DataResult.Success(assignment),
+            isStudioEnabled = true,
+            ltiTool = DataResult.Fail(null),
+            databaseSubmission = submission,
+            shouldRouteToSubmissionDetails = false
+        )
+        updateSpec
+            .given(startModel)
+            .whenEvent(
+                AssignmentDetailsEvent.DataLoaded(
+                    assignmentResult = expectedModel.assignmentResult,
+                    isStudioEnabled = true,
+                    studioLTIToolResult = null,
+                    ltiToolResult = expectedModel.ltiTool,
+                    submission = submission,
+                    quizResult = null
+                )
+            )
+            .then(
+                assertThatNext(
+                    NextMatchers.hasModel(expectedModel),
+                    matchesEffects<AssignmentDetailsModel, AssignmentDetailsEffect>(AssignmentDetailsEffect.ShowSubmissionView(expectedModel.assignmentId, expectedModel.course))
+                )
+            )
+    }
+
+    @Test
     fun `SubmissionStatusUpdated event updates the model`() {
         val submission = mockkSubmission()
         val startModel = initModel
