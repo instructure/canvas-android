@@ -16,6 +16,7 @@
 package com.instructure.student.ui.renderTests
 
 import android.content.pm.ActivityInfo
+import android.os.SystemClock.sleep
 import androidx.test.espresso.action.GeneralLocation
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.Assignment
@@ -239,6 +240,10 @@ class SubmissionDetailsRenderTest : StudentRenderTest() {
         )
         submissionDetailsRenderPage.swipeDrawerTo(GeneralLocation.CENTER)
         activityRule.activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        // Speculative fix for intermittent failures.  The orientation-changing operation above
+        // seems to be asynchronous in nature, so it may be at any stage of completion before the
+        // next line is executed.  Add a delay to ensure that the orientation-change completed.
+        sleep(3000)
         submissionDetailsRenderPage.assertDisplaysDrawerContent()
     }
 
@@ -255,6 +260,7 @@ class SubmissionDetailsRenderTest : StudentRenderTest() {
         )
         submissionDetailsRenderPage.swipeDrawerTo(GeneralLocation.CENTER)
         activityRule.activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        sleep(3000) // See explanation in Landscape version of this test
         submissionDetailsRenderPage.assertDisplaysDrawerContent()
     }
 
