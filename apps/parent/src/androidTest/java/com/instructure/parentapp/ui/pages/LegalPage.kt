@@ -15,16 +15,24 @@
  */
 package com.instructure.parentapp.ui.pages
 
+import android.app.Instrumentation
+import android.content.Intent
+import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.matcher.IntentMatchers.hasAction
+import androidx.test.espresso.intent.matcher.IntentMatchers.hasData
 import androidx.test.espresso.web.assertion.WebViewAssertions
 import androidx.test.espresso.web.sugar.Web
 import androidx.test.espresso.web.webdriver.DriverAtoms
 import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.espresso.WaitForViewWithId
-import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.assertHasChild
 import com.instructure.espresso.click
-import com.instructure.espresso.page.*
+import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.waitForViewWithId
+import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withText
 import com.instructure.parentapp.R
+import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.Matchers
 
 class LegalPage : BasePage(R.id.legalPage) {
@@ -46,14 +54,17 @@ class LegalPage : BasePage(R.id.legalPage) {
 
     fun clickTermsOfUse() = termsOfUse.click()
 
-    fun clickOpenSource() = openSource.click()
-
     fun assertDisplaysPrivacyPolicy() = assertContainsWebString("Privacy Policy")
 
     fun assertDisplaysTermsOfUse() = assertContainsWebString("TERMS OF USE")
 
     fun assertDisplaysOpenSource() {
-        waitForViewWithText(R.string.canvasOnGithub).assertDisplayed()
+        Intents.init()
+        val expectedIntent = allOf(hasAction(Intent.ACTION_VIEW), hasData("https://github.com/instructure/canvas-android"))
+        Intents.intending(expectedIntent).respondWith(Instrumentation.ActivityResult(0, null))
+        openSource.click()
+        Intents.intended(expectedIntent)
+        Intents.release()
     }
 
     private fun assertContainsWebString(contents: String) {

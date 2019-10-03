@@ -52,7 +52,6 @@ class LegalPageTest : ParentTest() {
     @Ditto
     fun assertDisplaysOpenSource() {
         goToLegalPage()
-        legalPage.clickOpenSource()
         legalPage.assertDisplaysOpenSource()
     }
 
