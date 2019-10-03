@@ -21,6 +21,7 @@ import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.action.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withSpinnerText
 import com.instructure.espresso.*
 import com.instructure.espresso.page.*
@@ -63,8 +64,8 @@ class SubmissionDetailsRenderPage : SubmissionDetailsPage() {
         loadingView.assertGone()
         mainContent.assertGone()
         errorView.assertVisible()
-        onViewWithText(R.string.submissionDetailsErrorTitle).assertDisplayed()
-        onViewWithText(R.string.error_loading_submission).assertDisplayed()
+        onViewWithText(R.string.submissionDetailsErrorTitle).scrollTo().assertDisplayed()
+        onViewWithText(R.string.error_loading_submission).scrollTo().assertDisplayed()
         onViewWithId(R.id.retryButton).scrollTo().assertDisplayed()
     }
 
@@ -108,5 +109,9 @@ class SubmissionDetailsRenderPage : SubmissionDetailsPage() {
 
     fun assertSpinnerDropdownItemHasText(position: Int, text: String) {
         onData(anything()).atPosition(position).check(matches(ViewMatchers.withText(text)))
+    }
+
+    fun waitForDrawerRender() {
+        onView(withId(R.id.drawerTabLayout)).waitForCheck(matches(isDisplayed()))
     }
 }

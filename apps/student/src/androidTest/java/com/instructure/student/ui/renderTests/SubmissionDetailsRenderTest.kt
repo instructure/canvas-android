@@ -239,7 +239,9 @@ class SubmissionDetailsRenderTest : StudentRenderTest() {
             )
         )
         submissionDetailsRenderPage.swipeDrawerTo(GeneralLocation.CENTER)
-        activityRule.activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        submissionDetailsRenderPage.assertDisplaysDrawerContent()
+        // SENSOR_LANDSCAPE guarantees that your screen won't flip if you were already in landscape
+        activityRule.activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
         // Speculative fix for intermittent failures.  The orientation-changing operation above
         // seems to be asynchronous in nature, so it may be at any stage of completion before the
         // next line is executed.  Add a delay to ensure that the orientation-change completed.
@@ -258,8 +260,10 @@ class SubmissionDetailsRenderTest : StudentRenderTest() {
                 )
             )
         )
-        submissionDetailsRenderPage.swipeDrawerTo(GeneralLocation.CENTER)
-        activityRule.activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        submissionDetailsRenderPage.swipeDrawerTo(GeneralLocation.TOP_CENTER)
+        submissionDetailsRenderPage.assertDisplaysDrawerContent()
+        // SENSOR_PORTRAIT guarantees that your screen won't flip if you were already in portrait
+        activityRule.activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
         sleep(3000) // See explanation in Landscape version of this test
         submissionDetailsRenderPage.assertDisplaysDrawerContent()
     }
@@ -275,6 +279,10 @@ class SubmissionDetailsRenderTest : StudentRenderTest() {
             loopMod = { it.effectRunner { emptyEffectRunner } }
         }
         activityRule.activity.loadFragment(fragment)
+
+        if( (model.assignmentResult?.isSuccess ?: false) && (model.rootSubmissionResult?.isSuccess ?: false) ) {
+            submissionDetailsRenderPage.waitForDrawerRender()
+        }
     }
 
 }
