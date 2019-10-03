@@ -159,7 +159,8 @@ object RouteMatcher : BaseRouteMatcher() {
         // Submissions
         // :sliding_tab_type can be /rubric or /submissions (used to navigate to the nested fragment)
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}/:${RouterParams.SLIDING_TAB_TYPE}"), AssignmentDetailsFragment::class.java, SubmissionDetailsFragment::class.java))
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}/:${RouterParams.SLIDING_TAB_TYPE}/:${RouterParams.SUBMISSION_ID}"), AssignmentDetailsFragment::class.java, SubmissionDetailsFragment::class.java))
+        // Route to Assignment Details first - no submission/on paper assignments won't have grades on the Submission Details page, but we also need to account for routing to submission comments (Assignment Details will check for that)
+        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}/:${RouterParams.SLIDING_TAB_TYPE}/:${RouterParams.SUBMISSION_ID}"), AssignmentDetailsFragment::class.java))
 
         // Settings
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/settings"), CourseSettingsFragment::class.java))

@@ -91,5 +91,6 @@ data class AssignmentDetailsModel(
     val quizResult: DataResult<Quiz>? = null,
     val ltiTool: DataResult<LTITool>? = null,
     val databaseSubmission: Submission? = null,
-    val videoFileUri: Uri? = null
+    val videoFileUri: Uri? = null,
+    var shouldRouteToSubmissionDetails: Boolean = false
 )

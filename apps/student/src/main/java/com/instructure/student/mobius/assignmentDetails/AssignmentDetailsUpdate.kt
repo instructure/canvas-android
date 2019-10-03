@@ -17,8 +17,9 @@
 package com.instructure.student.mobius.assignmentDetails
 
 import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.models.Quiz
-import com.instructure.canvasapi2.utils.*
+import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.canvasapi2.utils.mapToAttachment
+import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.student.Submission
 import com.instructure.student.mobius.common.ui.UpdateInit
 import com.spotify.mobius.First
@@ -109,17 +110,23 @@ class AssignmentDetailsUpdate : UpdateInit<AssignmentDetailsModel, AssignmentDet
         }
         is AssignmentDetailsEvent.DataLoaded -> {
             val dbSubmission = dbSubmissionIfNewest(event.submission, event.assignmentResult?.dataOrNull?.submission)
-            Next.next<AssignmentDetailsModel, AssignmentDetailsEffect>(
-                model.copy(
-                    isLoading = false,
-                    assignmentResult = event.assignmentResult,
-                    isStudioEnabled = event.isStudioEnabled,
-                    studioLTIToolResult = event.studioLTIToolResult,
-                    ltiTool = event.ltiToolResult,
-                    quizResult = event.quizResult,
-                    databaseSubmission = dbSubmission
-                )
+            val newModel = model.copy(
+                isLoading = false,
+                assignmentResult = event.assignmentResult,
+                isStudioEnabled = event.isStudioEnabled,
+                studioLTIToolResult = event.studioLTIToolResult,
+                ltiTool = event.ltiToolResult,
+                quizResult = event.quizResult,
+                databaseSubmission = dbSubmission
             )
+
+            if (newModel.shouldRouteToSubmissionDetails) {
+                Next.next<AssignmentDetailsModel, AssignmentDetailsEffect>(
+                    newModel.copy(shouldRouteToSubmissionDetails = false), setOf(AssignmentDetailsEffect.ShowSubmissionView(model.assignmentId, model.course))
+                )
+            } else {
+                Next.next<AssignmentDetailsModel, AssignmentDetailsEffect>(newModel)
+            }
         }
         is AssignmentDetailsEvent.InternalRouteRequested -> {
             val effect = AssignmentDetailsEffect.RouteInternally(
