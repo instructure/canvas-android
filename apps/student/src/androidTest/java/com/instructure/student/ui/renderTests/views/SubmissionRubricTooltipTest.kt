@@ -16,6 +16,7 @@
 package com.instructure.student.ui.renderTests.views
 
 import android.view.View
+import androidx.test.espresso.Espresso
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.matcher.RootMatchers.hasWindowLayoutParams
@@ -98,7 +99,7 @@ class SubmissionRubricTooltipTest : StudentRenderTest() {
     @Test
     fun hidesTooltipAfterDuration() {
         val container = setupTestLayout()
-        val duration = 500L
+        val duration = 1500L
         SubmissionRubricTooltipHandler.setTooltipText(container.buttonCenter, testText, duration)
         page.buttonCenter.click()
         page.tooltipText.assertCompletelyDisplayed()
