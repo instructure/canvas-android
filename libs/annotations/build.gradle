@@ -29,6 +29,10 @@ static String isTesting() {
 }
 
 android {
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
     compileSdkVersion Versions.COMPILE_SDK
     buildToolsVersion Versions.BUILD_TOOLS
 
@@ -71,6 +75,11 @@ android {
 
     testOptions {
         unitTests.returnDefaultValues = true
+    }
+
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
     }
 }
 

@@ -64,7 +64,7 @@ class CanvasPdfMenuGrouping(context: Context) : PresetMenuItemGroupingRule(conte
                 com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_highlight -> {
                     highlight = item
                 }
-                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_ink -> {
+                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_ink_pen -> {
                     ink = item
                 }
                 com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_square -> {

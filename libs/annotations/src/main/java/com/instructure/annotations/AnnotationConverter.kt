@@ -16,6 +16,7 @@
 package com.instructure.annotations
 
 import android.content.Context
+import android.graphics.Color
 import android.graphics.PointF
 import android.graphics.RectF
 import androidx.core.content.ContextCompat
@@ -124,10 +125,10 @@ private fun convertFreeTextType(canvaDocAnnotation: CanvaDocAnnotation, context:
             userId = canvaDocAnnotation.userId
     ), contents = canvaDocAnnotation.contents ?: "")
 
-    freeTextAnnotation.color = canvaDocAnnotation.getColorInt(ContextCompat.getColor(context, (R.color.black)))
+    freeTextAnnotation.color = canvaDocAnnotation.getColorInt(ContextCompat.getColor(context, (R.color.darkGrayAnnotation)))
     freeTextAnnotation.name = canvaDocAnnotation.annotationId
     freeTextAnnotation.textSize = getTextSizeFromFont(canvaDocAnnotation.font)
-    freeTextAnnotation.fillColor = ContextCompat.getColor(context, (R.color.white))
+    freeTextAnnotation.fillColor = Color.TRANSPARENT
 
     return freeTextAnnotation
 }

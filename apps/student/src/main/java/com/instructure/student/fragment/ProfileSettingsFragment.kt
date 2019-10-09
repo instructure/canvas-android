@@ -49,7 +49,6 @@ import com.instructure.student.activity.PandaAvatarActivity
 import com.instructure.student.dialog.EditTextDialog
 import com.instructure.student.events.UserUpdatedEvent
 import com.instructure.student.util.StudentPrefs
-import com.pspdfkit.framework.it
 import kotlinx.android.synthetic.main.dialog_photo_source.*
 import kotlinx.android.synthetic.main.fragment_profile_settings.*
 import org.greenrobot.eventbus.EventBus

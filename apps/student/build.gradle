@@ -18,7 +18,6 @@ import com.instructure.android.buildtools.transform.ProjectTransformer
 import com.instructure.android.buildtools.transform.MasqueradeUITransformer
 import com.instructure.android.buildtools.transform.PageViewTransformer
 import com.instructure.android.buildtools.transform.LocaleTransformer
-import com.instructure.android.buildtools.transform.PDFKitCrashFixTransformer
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
@@ -185,8 +184,7 @@ android {
                     android,
                     new MasqueradeUITransformer('com.instructure.student.activity.NavigationActivity.class'),
                     new PageViewTransformer(),
-                    new LocaleTransformer(),
-                    new PDFKitCrashFixTransformer()
+                    new LocaleTransformer()
             )
     )
 
