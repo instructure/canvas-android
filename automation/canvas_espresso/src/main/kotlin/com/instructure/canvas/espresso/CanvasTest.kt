@@ -41,7 +41,7 @@ import org.junit.Before
 abstract class CanvasTest : InstructureTest(BuildConfig.GLOBAL_DITTO_MODE) {
     @Before
     override fun preLaunchSetup() {
-
+        // Useless comment
         // Enable accessibility testing for all apps
         enableAndConfigureAccessibilityChecks()
         super.preLaunchSetup()
