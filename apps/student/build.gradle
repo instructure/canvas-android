@@ -50,7 +50,6 @@ androidExtensions {
     experimental = true
 }
 
-def buildType
 android {
     compileSdkVersion Versions.COMPILE_SDK
     buildToolsVersion Versions.BUILD_TOOLS
@@ -366,9 +365,10 @@ class TimingsListener implements TaskExecutionListener, BuildListener {
         def bitriseWorkflow = System.getenv("BITRISE_TRIGGERED_WORKFLOW_ID")
         def bitriseApp = System.getenv("BITRISE_APP_TITLE")
         def bitriseBranch = System.getenv("BITRISE_GIT_BRANCH")
+        def bitriseBuildNumber = System.getenv("BITRISE_BUILD_NUMBER")
         def fileSizeInMB = file.length() == 0 ? 0 : (file.length() / (1024.0 * 1024.0)).round(3)
 
-        // Instruct the builder
+        // Instruct the builder as to how to build our payload
         def payloadBuilder = new groovy.json.JsonBuilder()
         payloadBuilder event: "buildComplete",
             buildTime: cumulativeTime,
@@ -378,6 +378,7 @@ class TimingsListener implements TaskExecutionListener, BuildListener {
             bitriseWorkflow: bitriseWorkflow,
             bitriseApp: bitriseApp,
             bitriseBranch: bitriseBranch,
+            bitriseBuildNumber: bitriseBuildNumber,
             topTasks: top10
 
         // Create the event payload.  Change key/value in top 10 tasks to task/ms.
