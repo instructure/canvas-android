@@ -203,9 +203,6 @@ object SubmissionsApi {
                             }
                             .lastOrNull() ?: submission // Last one (if it exists) will have all the comments loaded up on it
 
-                    // Add file uploads as Attachments to the submission object so we have their data
-                    submission.submissionAttachments = seed.attachmentsList
-
                     // Add submission to our collection
                     submissionsList.add(submission)
                 }
