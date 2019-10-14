@@ -65,7 +65,7 @@ sealed class GradeCellViewState {
             }
 
             // Return the Submitted state if the submission has not been graded
-            if (submission.workflowState == "submitted" && !submission.isGraded) return Submitted
+            if (submission.submittedAt != null && !submission.isGraded) return Submitted
 
             /* The accent color, which determines the graph color and color of the late penalty text, should match
              * the course color. The only exception to this is when the submission for a Complete/Incomplete assignment
