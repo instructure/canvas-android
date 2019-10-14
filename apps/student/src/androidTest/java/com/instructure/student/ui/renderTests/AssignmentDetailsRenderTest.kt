@@ -18,17 +18,10 @@ package com.instructure.student.ui.renderTests
 
 import android.graphics.Color
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.DiscussionParticipant
-import com.instructure.canvasapi2.models.DiscussionTopicHeader
-import com.instructure.canvasapi2.models.Quiz
-import com.instructure.canvasapi2.models.RemoteFile
-import com.instructure.canvasapi2.models.Submission
-import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.espresso.assertGone
 import com.instructure.panda_annotations.FeatureCategory
@@ -44,7 +37,9 @@ import com.spotify.mobius.runners.WorkRunner
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.util.*
+import java.util.Calendar
+import java.util.Date
+import java.util.GregorianCalendar
 
 @RunWith(AndroidJUnit4::class)
 class AssignmentDetailsRenderTest : StudentRenderTest() {
@@ -438,7 +433,11 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
     fun displaysSubmitted() {
         val assignment = Assignment(
             name = "Test Assignment",
-            submission = Submission(attempt = 1L, workflowState = "submitted")
+            submission = Submission(
+                attempt = 1L,
+                workflowState = "submitted",
+                submittedAt = DateHelper.makeDate(2017, 6, 27, 18, 47, 0)
+            )
         )
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         loadPageWithModel(model)
