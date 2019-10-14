@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Failure
+import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.*
 import com.instructure.student.test.util.matchesEffects
 import com.instructure.student.test.util.matchesFirstEffects
@@ -41,6 +42,8 @@ import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import java.io.File
+import java.util.*
+import java.util.concurrent.TimeUnit
 
 class SubmissionDetailsUpdateTest : Assert() {
 
@@ -288,6 +291,18 @@ class SubmissionDetailsUpdateTest : Assert() {
             assignment.copy(submissionTypesRaw = listOf(Assignment.SubmissionType.EXTERNAL_TOOL.apiString)),
             submission,
             SubmissionDetailsContentType.ExternalToolContent(course, ltiTool.url!!),
+            ltiTool
+        )
+    }
+
+    @Test
+    fun `EXTERNAL_TOOL with locked assignment results in SubmissionDetailsContentType of LockedContent`() {
+        verifyGetSubmissionContentType(
+            assignment.copy(
+                submissionTypesRaw = listOf(Assignment.SubmissionType.EXTERNAL_TOOL.apiString),
+                lockedForUser = true),
+            submission,
+            SubmissionDetailsContentType.LockedContent,
             ltiTool
         )
     }
