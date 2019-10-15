@@ -281,4 +281,8 @@ dependencies {
     implementation Libs.NEW_RELIC
 }
 
+
+// Comment out this line if the reporting logic starts going wonky.
+gradle.addListener new TimingsListener(project)
+
 apply plugin: 'com.google.gms.google-services'

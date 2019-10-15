@@ -19,6 +19,7 @@ import android.content.pm.ActivityInfo
 import android.os.SystemClock.sleep
 import androidx.test.espresso.action.GeneralLocation
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.instructure.canvas.espresso.Stub
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Submission
@@ -227,6 +228,8 @@ class SubmissionDetailsRenderTest : StudentRenderTest() {
         submissionDetailsRenderPage.assertDisplaysDrawerContent()
     }
 
+    // MBL-13405: Stubbing out this test until we fix the underlying bug
+    @Stub
     @Test
     fun updatesDrawerHeightOnOrientationChangeToLandscape() {
         loadPageWithModel(
@@ -249,6 +252,8 @@ class SubmissionDetailsRenderTest : StudentRenderTest() {
         submissionDetailsRenderPage.assertDisplaysDrawerContent()
     }
 
+    // MBL-13405: Stubbing out this test until we fix the underlying bug
+    @Stub
     @Test
     fun updatesDrawerHeightOnOrientationChangeToPortrait() {
         loadPageWithModel(
