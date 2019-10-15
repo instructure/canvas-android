@@ -40,6 +40,7 @@ import com.instructure.student.R
 import com.instructure.student.events.CalendarEventDestroyed
 import com.instructure.student.events.post
 import com.instructure.student.router.RouteMatcher
+import com.newrelic.agent.android.NewRelic
 import kotlinx.android.synthetic.main.calendar_event_layout.*
 import kotlinx.android.synthetic.main.fragment_calendar_event.*
 import org.greenrobot.eventbus.EventBus
@@ -59,6 +60,11 @@ class CalendarEventFragment : ParentFragment() {
     private lateinit var deleteItemCallback: StatusCallback<ScheduleItem>
 
     //region Fragment Lifecycle Overrides
+    override fun onCreate(savedInstanceState: Bundle?) {
+        NewRelic.setInteractionName(this::class.java.simpleName)
+        super.onCreate(savedInstanceState)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
             inflater?.inflate(R.layout.fragment_calendar_event, container, false)
 

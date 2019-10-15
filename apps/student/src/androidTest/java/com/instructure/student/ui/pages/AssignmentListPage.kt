@@ -17,21 +17,26 @@
 package com.instructure.student.ui.pages
 
 import android.view.View
-import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.contrib.RecyclerViewActions
-import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withChild
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withParent
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.dataseeding.model.AssignmentApiModel
-import com.instructure.student.R
-import com.instructure.espresso.*
+import com.instructure.dataseeding.model.QuizApiModel
+import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.WaitForViewWithId
+import com.instructure.espresso.WaitForViewWithText
+import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.waitForViewWithText
+import com.instructure.espresso.swipeDown
+import com.instructure.student.R
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.containsString
@@ -55,6 +60,10 @@ class AssignmentListPage : BasePage(pageResId = R.id.assignmentListPage) {
 
     fun clickAssignment(assignment: Assignment) {
         waitForViewWithText(assignment.name!!).click()
+    }
+
+    fun clickQuiz(quiz: QuizApiModel) {
+        waitForViewWithText(quiz.title).click()
     }
 
     fun assertDisplaysNoAssignmentsView() {
@@ -91,14 +100,29 @@ class AssignmentListPage : BasePage(pageResId = R.id.assignmentListPage) {
         }
     }
 
+    fun assertQuizDisplayed(quiz: QuizApiModel, gradePortion: String? = null) {
+        scrollToAndAssertDisplayed(withText(quiz.title))
+        if(gradePortion != null) {
+            val matcher = allOf(
+                    withText(containsString(gradePortion)), // grade might be "13", total string "13/15"
+                    withId(R.id.points),
+                    withParent(withParent(withChild(withText(quiz.title))))
+            )
+            scrollToAndAssertDisplayed(matcher)
+        }
+    }
+
+    fun assertQuizNotDisplayed(quiz: QuizApiModel) {
+        onView(withText(quiz.title)).check(doesNotExist())
+    }
+
     fun refresh() {
         onView(allOf(withId(R.id.swipeRefreshLayout), isDisplayed())).swipeDown()
     }
 
     private fun scrollToAndAssertDisplayed(matcher: Matcher<View>) {
-        onView(allOf(withId(R.id.listView), ViewMatchers.isDisplayed()))
-                .perform(RecyclerViewActions.scrollTo<RecyclerView.ViewHolder>(ViewMatchers.hasDescendant(matcher)))
-                .assertDisplayed()
+        scrollRecyclerView(R.id.listView, matcher)
+        onView(matcher).assertDisplayed()
     }
 
     fun assertHasGradingPeriods() {

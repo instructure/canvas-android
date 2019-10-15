@@ -60,7 +60,7 @@ abstract class PageViewUploadService : JobService() {
     override fun onStartJob(params: JobParameters?): Boolean {
         Logger.d("PageViewUploadService: Service Started")
         // Skip if logged out and pandata token is invalid (i.e. no way to upload data)
-        if (!ApiPrefs.token.isValid() && ApiPrefs.pandataInfo?.isValid != true) return false
+        if (!ApiPrefs.getValidToken().isValid() && ApiPrefs.pandataInfo?.isValid != true) return false
 
         uploadJob = tryWeave {
             val book = PageViewUtils.book

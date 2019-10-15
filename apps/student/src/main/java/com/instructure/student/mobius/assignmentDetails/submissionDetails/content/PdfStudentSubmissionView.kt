@@ -30,6 +30,8 @@ import com.instructure.canvasapi2.managers.CanvaDocsManager
 import com.instructure.canvasapi2.models.ApiValues
 import com.instructure.canvasapi2.models.DocSession
 import com.instructure.canvasapi2.models.canvadocs.CanvaDocAnnotation
+import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.weave.awaitApi
@@ -108,7 +110,9 @@ class PdfStudentSubmissionView(
         }
     }
 
-
+    override fun logOnAnnotationSelectedAnalytics() {
+        Analytics.logEvent(AnalyticsEventConstants.SUBMISSION_ANNOTATION_SELECTED)
+    }
 
     override fun showNoInternetDialog() {
         NoInternetConnectionDialog.show(supportFragmentManager)

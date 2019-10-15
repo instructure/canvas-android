@@ -21,25 +21,33 @@ import android.media.MediaPlayer
 import android.media.MediaRecorder
 import android.os.Handler
 import android.util.AttributeSet
+import android.view.InflateException
+import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.cardview.widget.CardView
+import com.crashlytics.android.Crashlytics
+import com.instructure.pandautils.BuildConfig
 import com.instructure.pandautils.R
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.DP
+import com.instructure.pandautils.utils.onClick
+import com.instructure.pandautils.utils.onClickWithRequireNetwork
+import com.instructure.pandautils.utils.requestAccessibilityFocus
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
 import com.wonderkiln.camerakit.CameraKitEventCallback
 import com.wonderkiln.camerakit.CameraKitVideo
 import kotlinx.android.synthetic.main.view_floating_media_recorder.view.*
 import kotlinx.android.synthetic.main.view_floating_media_recorder_audio.view.*
 import kotlinx.android.synthetic.main.view_floating_media_recorder_video.view.*
 import java.io.File
-import java.util.*
+import java.util.UUID
 
 
 class FloatingRecordingView @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-
 ) : CardView(context, attrs, defStyleAttr) {
 
     private val timerHandler = Handler()
@@ -56,6 +64,14 @@ class FloatingRecordingView @JvmOverloads constructor(
 
     lateinit var cameraKitVideoCapturedCallback : CameraKitEventCallback<CameraKitVideo>
 
+    /** The View used to record video. This must be inflated separately from the main layout in
+     * order to capture exceptions during inflation and disable the video functionality */
+    private var videoView: View? = null
+
+    /** Whether there was an error when initializing the video view. If this is true then
+     * all video functionality should be considered disabled. */
+    private var hasVideoError = false
+
     // Audio related
     var mediaRecorder: MediaRecorder? = null
     var mediaPlayer: MediaPlayer? = null
@@ -67,6 +83,18 @@ class FloatingRecordingView @JvmOverloads constructor(
 
     init {
         recordingView = View.inflate(context, R.layout.view_floating_media_recorder, this) as ViewGroup
+
+        /* CameraView will throw an exception during inflation on some devices. We capture
+           that exception here and show an error view instead when we try to record video. */
+        try {
+            videoView = LayoutInflater.from(context)
+                .inflate(R.layout.view_floating_media_recorder_video, recordingView.dragView, false)
+            recordingView.dragView.addView(videoView)
+        } catch (e: InflateException) {
+            hasVideoError = true
+            if (BuildConfig.DEBUG) e.printStackTrace() else Crashlytics.logException(e)
+        }
+
         setupFloatingAction()
 
         this.elevation = context.DP(8.0f)
@@ -84,6 +112,7 @@ class FloatingRecordingView @JvmOverloads constructor(
 
     fun startVideoView() {
         recordingView.setVisible()
+        if (hasVideoError) return
         resetVideoViews()
         recordingView.camera.start()
     }
@@ -100,14 +129,21 @@ class FloatingRecordingView @JvmOverloads constructor(
         stoppedCallback()
     }
 
-    fun setContentType(type: RecordingMediaType) = when (type) {
-        is RecordingMediaType.Video -> {
-            mediaType = RecordingMediaType.Video
-            setupVideo()
+    fun setContentType(type: RecordingMediaType) {
+        val actualType = when (type) {
+            is RecordingMediaType.Video -> {
+                if (hasVideoError) RecordingMediaType.Error else RecordingMediaType.Video
+            }
+            else  -> type
         }
-        is RecordingMediaType.Audio -> {
-            mediaType = RecordingMediaType.Audio
-            setupAudio()
+        setupContentType(actualType)
+    }
+
+    private fun setupContentType(type: RecordingMediaType) {
+        when (type) {
+            RecordingMediaType.Video -> setupVideo()
+            RecordingMediaType.Audio -> setupAudio()
+            RecordingMediaType.Error -> setupError()
         }
     }
 
@@ -200,11 +236,22 @@ class FloatingRecordingView @JvmOverloads constructor(
         }
     }
 
-
+    private fun setupError() {
+        videoView?.setGone()
+        recordingView.audio.setGone()
+        recordingView.errorView.setVisible()
+        recordingView.deleteButton.setGone()
+        recordingView.toolbarTitle.text = ""
+        recordingView.closeButton.onClick {
+            recordingView.setGone()
+        }
+        return
+    }
 
     private fun setupVideo() {
-        recordingView.video.setVisible()
+        videoView?.setVisible()
         recordingView.audio.setGone()
+        recordingView.errorView.setGone()
         recordingView.startRecordingButton.requestAccessibilityFocus()
 
         videoFile = File(context.cacheDir, "temp.mp4")
@@ -398,7 +445,8 @@ class FloatingRecordingView @JvmOverloads constructor(
         recordingView.toolbarTitle.setText(R.string.recordingTimerDefault)
         setA11yStringForTitle()
         recordingView.recordAudioButton.setVisible()
-        recordingView.video.setGone()
+        videoView?.setGone()
+        recordingView.errorView.setGone()
         recordingView.deleteButton.setGone()
         recordingView.stopButton.setGone()
         recordingView.replayAudioButton.setGone()
@@ -452,6 +500,7 @@ class FloatingRecordingView @JvmOverloads constructor(
 sealed class RecordingMediaType {
     object Video : RecordingMediaType()
     object Audio : RecordingMediaType()
+    object Error : RecordingMediaType()
 }
 
 

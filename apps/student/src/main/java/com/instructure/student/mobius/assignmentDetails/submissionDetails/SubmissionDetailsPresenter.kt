@@ -27,10 +27,10 @@ import com.instructure.student.mobius.common.ui.Presenter
 object SubmissionDetailsPresenter : Presenter<SubmissionDetailsModel, SubmissionDetailsViewState> {
     override fun present(model: SubmissionDetailsModel, context: Context): SubmissionDetailsViewState {
         if (model.isLoading) return SubmissionDetailsViewState.Loading
-        if (model.assignment?.isSuccess != true || model.rootSubmission?.isSuccess != true) return SubmissionDetailsViewState.Error
+        if (model.assignmentResult?.isSuccess != true || model.rootSubmissionResult?.isSuccess != true) return SubmissionDetailsViewState.Error
 
-        val rootSubmission = model.rootSubmission.dataOrThrow
-        val assignment = model.assignment.dataOrThrow
+        val rootSubmission = model.rootSubmissionResult.dataOrThrow
+        val assignment = model.assignmentResult.dataOrThrow
 
         val atSeparator = context.getString(R.string.at)
 

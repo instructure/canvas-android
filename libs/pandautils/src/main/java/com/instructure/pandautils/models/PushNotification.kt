@@ -16,7 +16,6 @@
 
 package com.instructure.pandautils.models
 
-import android.content.Context
 import android.text.TextUtils
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken

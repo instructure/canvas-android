@@ -107,7 +107,8 @@ fun TeacherTest.seedData(
         announcements: Int = 0,
         discussions: Int = 0,
         gradingPeriods: Boolean = false,
-        pastCourses: Int = 0): SeedApi.SeededDataApiModel {
+        pastCourses: Int = 0,
+        publishCourses: Boolean = true): SeedApi.SeededDataApiModel {
 
     val request = SeedApi.SeedDataRequest(
             teachers = teachers,

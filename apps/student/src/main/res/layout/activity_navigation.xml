@@ -18,47 +18,50 @@
 
 <androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/canvasBackgroundWhite">
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/fullscreenWrapper"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipChildren="false"
         android:clipToPadding="false"
-        android:animateLayoutChanges="true">
+        android:orientation="vertical">
 
         <FrameLayout
-            android:id="@+id/fullscreen"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/bottomBarDivider" />
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <FrameLayout
+                android:id="@+id/fullscreen"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+            <include layout="@layout/loading_canvas_view"/>
+
+        </FrameLayout>
 
         <View
             android:id="@+id/bottomBarDivider"
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:layout_above="@+id/bottomBar"
             android:background="@color/bottomBarNavigationColor"
-            android:importantForAccessibility="no" />
+            android:importantForAccessibility="no"/>
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottomBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
             android:background="@color/white"
             app:elevation="0dp"
-            app:menu="@menu/bottom_bar_menu" />
+            app:menu="@menu/bottom_bar_menu"/>
 
-        <include layout="@layout/loading_canvas_view"/>
+    </LinearLayout>
 
-    </RelativeLayout>
-
-    <include layout="@layout/navigation_drawer" />
+    <include layout="@layout/navigation_drawer"/>
 
 </androidx.drawerlayout.widget.DrawerLayout>

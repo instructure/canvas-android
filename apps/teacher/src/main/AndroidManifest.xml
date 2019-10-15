@@ -24,8 +24,8 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" /> <!-- For Studio -->
 
-    <uses-feature android:name="android.hardware.camera" android:required="false"/>
-    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false"/>
+    <uses-feature android:name="android.hardware.camera" android:required="false" tools:replace="required"/>
+    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" tools:replace="required"/>
 
     <supports-screens
         android:anyDensity="true"
@@ -177,10 +177,6 @@
             android:name="com.instructure.teacher.activities.ViewMediaActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/Theme.AppCompat.NoActionBar"/>
-
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="${fabricApiKey}" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

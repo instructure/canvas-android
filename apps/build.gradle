@@ -22,7 +22,7 @@ buildscript {
     repositories {
         google()
         mavenCentral()
-        maven { url "https://jitpack.io" }
+        maven { url "https://www.jitpack.io" }
         maven { url 'https://maven.fabric.io/public' }
         jcenter()
         maven { url "https://plugins.gradle.org/m2/" }
@@ -33,13 +33,13 @@ buildscript {
         classpath Plugins.ANDROID_GRADLE_TOOLS
         classpath Plugins.APOLLO
         classpath Plugins.GOOGLE_SERVICES
-        classpath Plugins.OSS_LICENSES
         classpath Plugins.KOTLIN
         classpath Plugins.FABRIC
         classpath Plugins.OKREPLAY
         classpath Plugins.BUILD_SCAN
         if (project.coverageEnabled) { classpath Plugins.JACOCO_ANDROID }
         classpath Plugins.SQLDELIGHT
+        classpath Plugins.NEW_RELIC
     }
 }
 
@@ -47,7 +47,7 @@ allprojects {
     repositories {
         google()
         mavenCentral()
-        maven { url "https://jitpack.io" }
+        maven { url "https://www.jitpack.io" }
         maven {
             credentials {
                 username pspdfMavenUser

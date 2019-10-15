@@ -461,7 +461,7 @@ public class CanvasWebView extends WebView implements NestedScrollingChild {
         @Override
         public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
             String url = request.getUrl().toString();
-            if (isArcDownload(url) && mMediaDownloadCallback != null) {
+            if (isStudioDownload(url) && mMediaDownloadCallback != null) {
                 String extensionSegment = request.getUrl().getLastPathSegment();
                 String extension = "";
                 int index = extensionSegment.lastIndexOf(".");
@@ -473,7 +473,7 @@ public class CanvasWebView extends WebView implements NestedScrollingChild {
                 view.post(new Runnable() {
                     @Override
                     public void run() {
-                        CanvasWebView.this.stopLoading(); // Hack to stop loading the file in the webview, since returning an empty response breaks what's being shown
+                        CanvasWebView.this.stopLoading(); // Hack to stop loading the file in the WebView, since returning an empty response breaks what's being shown
                     }
                 });
             }
@@ -495,7 +495,7 @@ public class CanvasWebView extends WebView implements NestedScrollingChild {
         }
 
         private boolean handleShouldOverrideUrlLoading(WebView view, String url) {
-            //check to see if we need to do anything with the link that was clicked
+            // Check to see if we need to do anything with the link that was clicked
 
             // Default headers
             Map<String, String> extraHeaders = Utils.getReferer(getContext());
@@ -656,7 +656,7 @@ public class CanvasWebView extends WebView implements NestedScrollingChild {
     }
 
 
-    public static boolean isArcDownload(String url) {
+    public static boolean isStudioDownload(String url) {
         return url.contains("instructuremedia.com/fetch/") && url.contains("disposition=download");
     }
 

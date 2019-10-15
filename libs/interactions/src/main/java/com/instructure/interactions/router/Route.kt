@@ -21,6 +21,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import androidx.fragment.app.Fragment
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.utils.APIHelper
 import kotlinx.android.parcel.Parceler
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.parcel.WriteWith
@@ -221,7 +222,13 @@ data class Route(
         }
         paramNames.indices
                 .filter { it < paramValues.size }
-                .forEach { params[paramNames[it]] = paramValues[it] }
+                .forEach {
+                    params[paramNames[it]] = if (paramNames[it] in IDS_TO_EXPAND_TILDE) {
+                         APIHelper.expandTildeId(paramValues[it])
+                    } else {
+                        paramValues[it]
+                    }
+                }
 
         return params
     }
@@ -280,6 +287,19 @@ data class Route(
 
     companion object {
         const val ROUTE = "route2.0"
+        val IDS_TO_EXPAND_TILDE = listOf(
+            RouterParams.ASSIGNMENT_ID,
+            RouterParams.COURSE_ID,
+            RouterParams.CONVERSATION_ID,
+            RouterParams.MODULE_ITEM_ID,
+            RouterParams.MODULE_ID,
+            RouterParams.QUIZ_ID,
+            RouterParams.MESSAGE_ID,
+            RouterParams.FILE_ID,
+            RouterParams.USER_ID,
+            RouterParams.EVENT_ID,
+            RouterParams.SUBMISSION_ID
+        )
 
         @JvmStatic
         fun extractCourseId(route: Route?): Long {

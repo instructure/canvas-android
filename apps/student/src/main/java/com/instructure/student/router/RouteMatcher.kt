@@ -159,7 +159,8 @@ object RouteMatcher : BaseRouteMatcher() {
         // Submissions
         // :sliding_tab_type can be /rubric or /submissions (used to navigate to the nested fragment)
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}/:${RouterParams.SLIDING_TAB_TYPE}"), AssignmentDetailsFragment::class.java, SubmissionDetailsFragment::class.java))
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}/:${RouterParams.SLIDING_TAB_TYPE}/:${RouterParams.SUBMISSION_ID}"), AssignmentDetailsFragment::class.java, SubmissionDetailsFragment::class.java))
+        // Route to Assignment Details first - no submission/on paper assignments won't have grades on the Submission Details page, but we also need to account for routing to submission comments (Assignment Details will check for that)
+        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}/:${RouterParams.SLIDING_TAB_TYPE}/:${RouterParams.SUBMISSION_ID}"), AssignmentDetailsFragment::class.java))
 
         // Settings
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/settings"), CourseSettingsFragment::class.java))
@@ -398,11 +399,22 @@ object RouteMatcher : BaseRouteMatcher() {
      * Returns true if url can be routed to a fragment, false otherwise
      * @param url
      * @param routeIfPossible
+     * @param allowUnsupported If true (default), this function will return true for unsupported urls - i.e. urls that
+     *                         match the provided domain but do not match any existing routes. If [routeIfPossible] is
+     *                         also true, the user will be routed to UnsupportedFeatureFragment for such urls.
      * @return
      */
     @JvmStatic
-    fun canRouteInternally(context: Context, url: String, domain: String, routeIfPossible: Boolean): Boolean {
-        val canRoute = getInternalRoute(url, domain) != null
+    @JvmOverloads
+    fun canRouteInternally(
+        context: Context,
+        url: String,
+        domain: String,
+        routeIfPossible: Boolean,
+        allowUnsupported: Boolean = true
+    ): Boolean {
+        val route = getInternalRoute(url, domain)
+        val canRoute = route != null && (allowUnsupported || route.primaryClass != UnsupportedFeatureFragment::class.java)
         if (canRoute && routeIfPossible) routeUrl(context, url)
         return canRoute
     }

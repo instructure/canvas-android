@@ -137,7 +137,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:gravity="center_vertical"
-                android:text="@string/open_source"
+                android:text="@string/canvasOnGithub"
                 android:textColor="@color/defaultPrimary"
                 android:textSize="16sp"/>
 

@@ -23,11 +23,6 @@ import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Favorite
 import com.instructure.canvasapi2.models.Group
-import com.instructure.canvasapi2.utils.Logger
-
-import java.io.IOException
-import java.util.ArrayList
-
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.DELETE
@@ -36,6 +31,7 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
 import retrofit2.http.Url
+import java.io.IOException
 
 object GroupAPI {
 
@@ -44,7 +40,7 @@ object GroupAPI {
         @GET("users/self/favorites/groups")
         fun getFirstPageFavoriteGroups(): Call<List<Group>>
 
-        @GET("users/self/groups?include[]=favorites")
+        @GET("users/self/groups?include[]=favorites&include[]=can_access")
         fun getFirstPageGroups(): Call<List<Group>>
 
         @GET

@@ -86,9 +86,9 @@ abstract class LogoutTask(val type: Type) {
 
     private fun removeUser() {
         // Remove SignedInUser
-        PreviousUsersUtils.removeByToken(ContextKeeper.appContext, ApiPrefs.token)
+        PreviousUsersUtils.removeByToken(ContextKeeper.appContext, ApiPrefs.token, ApiPrefs.refreshToken)
         // Delete token from server. Fire and forget.
-        if (!ApiPrefs.token.isEmpty()) OAuthManager.deleteToken()
+        if (ApiPrefs.getValidToken().isNotEmpty()) OAuthManager.deleteToken()
     }
 
     private fun updateUser() {

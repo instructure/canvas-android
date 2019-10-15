@@ -951,7 +951,6 @@
     <string name="select">Valitse</string>
     <string name="choice_position">Valitse %d</string>
     <string name="updating_module_info">Päivitetään moduulin&#8230; tietoja</string>
-    <string name="arc">Kaari</string>
     <string name="pending_review">Odottaa tarkastelua</string>
     <string name="totalPoints">%s pistettä</string>
     <string name="totalPointsText">Pisteitä yhteensä</string>

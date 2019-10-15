@@ -23,15 +23,17 @@ import android.content.Intent
 import android.content.res.ColorStateList
 import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import android.widget.Toast
 import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.exhaustive
+import com.instructure.interactions.Navigation
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.pandautils.views.RecordingMediaType
@@ -69,10 +71,11 @@ class AssignmentDetailsView(
         toolbar.setupAsBackButton { (context as? Activity)?.onBackPressed() }
         toolbar.title = context.getString(R.string.assignmentDetails)
         toolbar.subtitle = canvasContext.name
+        toolbar.setMenu(R.menu.bookmark_menu) { consumer?.accept(AssignmentDetailsEvent.AddBookmarkClicked) }
         submissionStatusFailedSubtitle.setTextColor(ThemePrefs.buttonColor)
         submissionStatusUploadingSubtitle.setTextColor(ThemePrefs.buttonColor)
         submissionAndRubricLabel.setTextColor(ThemePrefs.buttonColor)
-        submitButton.backgroundTintList = ColorStateList.valueOf(ThemePrefs.buttonColor)
+        submitButton.setBackgroundColor(ThemePrefs.buttonColor)
         submitButton.setTextColor(ThemePrefs.buttonTextColor)
     }
 
@@ -85,7 +88,10 @@ class AssignmentDetailsView(
         submissionStatusUploading.onClick { output.accept(AssignmentDetailsEvent.ViewUploadStatusClicked) }
         submissionRubricButton.onClick { output.accept(AssignmentDetailsEvent.ViewSubmissionClicked) }
         gradeContainer.onClick { output.accept(AssignmentDetailsEvent.ViewSubmissionClicked) }
-        submitButton.onClick { output.accept(AssignmentDetailsEvent.SubmitAssignmentClicked) }
+        submitButton.onClick {
+            logEvent(AnalyticsEventConstants.ASSIGNMENT_SUBMIT_SELECTED)
+            output.accept(AssignmentDetailsEvent.SubmitAssignmentClicked)
+        }
         attachmentIcon.onClick { output.accept(AssignmentDetailsEvent.DiscussionAttachmentClicked) }
         swipeRefreshLayout.setOnRefreshListener { output.accept(AssignmentDetailsEvent.PullToRefresh) }
         setupDescriptionView()
@@ -122,6 +128,8 @@ class AssignmentDetailsView(
             swipeRefreshLayout.isRefreshing = visibilities.loading
             errorContainer.setVisible(visibilities.errorMessage)
             titleContainer.setVisible(visibilities.title)
+            submissionStatusIcon.setVisible(visibilities.submissionStatus)
+            submissionStatus.setVisible(visibilities.submissionStatus)
             dueDateContainer.setVisible(visibilities.dueDate)
             submissionTypesContainer.setVisible(visibilities.submissionTypes)
             fileTypesContainer.setVisible(visibilities.fileTypes)
@@ -210,7 +218,7 @@ class AssignmentDetailsView(
             }
             setupDialogRow(dialog, dialog.submissionEntryStudio, visibilities.studioUpload) {
                 // The LTI info shouldn't be null if we are showing the Studio upload option
-                showStudioUploadView(assignment, courseId, ltiToolUrl!!, ltiToolName!!)
+                showStudioUploadView(assignment, ltiToolUrl!!, ltiToolName!!)
             }
         }
         dialog.show()
@@ -232,6 +240,7 @@ class AssignmentDetailsView(
     }
 
     fun showSubmissionView(assignmentId: Long, course: Course) {
+        logEvent(AnalyticsEventConstants.SUBMISSION_CELL_SELECTED)
         RouteMatcher.route(context, SubmissionDetailsFragment.makeRoute(course, assignmentId))
     }
 
@@ -240,22 +249,31 @@ class AssignmentDetailsView(
     }
 
     fun showOnlineTextEntryView(assignmentId: Long, assignmentName: String?, submittedText: String? = null, isFailure: Boolean = false) {
+        logEvent(AnalyticsEventConstants.SUBMIT_TEXTENTRY_SELECTED)
         RouteMatcher.route(context, TextSubmissionUploadFragment.makeRoute(canvasContext, assignmentId, assignmentName, submittedText, isFailure))
     }
 
     fun showOnlineUrlEntryView(assignmentId: Long, assignmentName: String?, canvasContext: CanvasContext, submittedUrl: String? = null, isFailure: Boolean = false) {
+        logEvent(AnalyticsEventConstants.SUBMIT_ONLINEURL_SELECTED)
         RouteMatcher.route(context, UrlSubmissionUploadFragment.makeRoute(canvasContext, assignmentId, assignmentName, submittedUrl, isFailure))
     }
 
     fun showLTIView(canvasContext: CanvasContext, url: String, title: String) {
+        logEvent(AnalyticsEventConstants.ASSIGNMENT_LAUNCHLTI_SELECTED)
         RouteMatcher.route(context, LTIWebViewFragment.makeRoute(canvasContext, url, title, isAssignmentLTI = true))
     }
 
     fun showQuizStartView(canvasContext: CanvasContext, quiz: Quiz) {
-        RouteMatcher.route(context, QuizStartFragment.makeRoute(canvasContext, quiz))
+        logEvent(AnalyticsEventConstants.ASSIGNMENT_DETAIL_QUIZLAUNCH)
+        if (QuizListFragment.isNativeQuiz(canvasContext, quiz)) {
+            RouteMatcher.route(context, QuizStartFragment.makeRoute(canvasContext, quiz))
+        } else {
+            RouteMatcher.route(context, BasicQuizViewFragment.makeRoute(canvasContext, quiz, quiz.url!!))
+        }
     }
 
     fun showDiscussionDetailView(canvasContext: CanvasContext, discussionTopicHeaderId: Long) {
+        logEvent(AnalyticsEventConstants.ASSIGNMENT_DETAIL_DISCUSSIONLAUNCH)
         RouteMatcher.route(context, DiscussionDetailsFragment.makeRoute(canvasContext, discussionTopicHeaderId))
     }
 
@@ -264,6 +282,7 @@ class AssignmentDetailsView(
     }
 
     fun showMediaRecordingView(assignment: Assignment) {
+        logEvent(AnalyticsEventConstants.SUBMIT_MEDIARECORDING_SELECTED)
         val builder = AlertDialog.Builder(context)
         val dialog = builder.setView(R.layout.dialog_submission_picker_media).create()
 
@@ -291,19 +310,6 @@ class AssignmentDetailsView(
         floatingRecordingView.stoppedCallback = {}
     }
 
-    fun getVideoIntent(fileUri: Uri): Intent {
-        return Intent(MediaStore.ACTION_VIDEO_CAPTURE).apply {
-            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            putExtra(MediaStore.EXTRA_OUTPUT, fileUri)
-        }
-    }
-
-    fun getChooseMediaIntent() = Intent(Intent.ACTION_GET_CONTENT).apply {
-        flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
-        type = "video/*, audio/*"
-        addCategory(Intent.CATEGORY_OPENABLE)
-    }
-
     fun showPermissionDeniedToast() {
         Toast.makeText(context, com.instructure.pandautils.R.string.permissionDenied, Toast.LENGTH_LONG).show()
     }
@@ -321,13 +327,15 @@ class AssignmentDetailsView(
     }
 
     fun showFileUploadView(assignment: Assignment) {
+        logEvent(AnalyticsEventConstants.SUBMIT_FILEUPLOAD_SELECTED)
         RouteMatcher.route(
             context,
             PickerSubmissionUploadFragment.makeRoute(canvasContext, assignment, PickerSubmissionMode.FileSubmission)
         )
     }
 
-    fun showStudioUploadView(assignment: Assignment, courseId: Long, ltiUrl: String, studioLtiToolName: String) {
+    private fun showStudioUploadView(assignment: Assignment, ltiUrl: String, studioLtiToolName: String) {
+        logEvent(AnalyticsEventConstants.SUBMIT_STUDIO_SELECTED)
         RouteMatcher.route(context, StudioWebViewFragment.makeRoute(canvasContext, ltiUrl, studioLtiToolName, true, assignment))
     }
 
@@ -341,4 +349,6 @@ class AssignmentDetailsView(
     fun launchFilePickerView(uri: Uri, course: Course, assignment: Assignment) {
         RouteMatcher.route(context, PickerSubmissionUploadFragment.makeRoute(course, assignment, uri))
     }
+
+    fun showBookmarkDialog() = (context as? Navigation)?.addBookmark()
 }

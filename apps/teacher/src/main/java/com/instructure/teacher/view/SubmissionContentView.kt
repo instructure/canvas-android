@@ -41,6 +41,7 @@ import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import com.instructure.annotations.PdfSubmissionView
 import com.instructure.canvasapi2.managers.CanvaDocsManager
+import com.instructure.canvasapi2.managers.FeaturesManager
 import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.canvadocs.CanvaDocAnnotation
@@ -65,7 +66,9 @@ import com.instructure.teacher.activities.SpeedGraderActivity
 import com.instructure.teacher.adapters.StudentContextFragment
 import com.instructure.teacher.dialog.NoInternetConnectionDialog
 import com.instructure.teacher.dialog.RadioButtonDialog
+import com.instructure.teacher.events.AssignmentGradedEvent
 import com.instructure.teacher.events.RationedBusEvent
+import com.instructure.teacher.features.postpolicies.ui.PostPolicyFragment
 import com.instructure.teacher.fragments.*
 import com.instructure.teacher.interfaces.SpeedGraderWebNavigator
 import com.instructure.teacher.router.RouteMatcher
@@ -92,7 +95,8 @@ class SubmissionContentView(
         private val mStudentSubmission: GradeableStudentSubmission,
         private val mAssignment: Assignment,
         private val mCourse: Course,
-        var initialTabIndex: Int = 0
+        var initialTabIndex: Int = 0,
+        private val newGradebookEnabled: Boolean = false
 ) : PdfSubmissionView(context), AnnotationManager.OnAnnotationCreationModeChangeListener, AnnotationManager.OnAnnotationEditingModeChangeListener {
 
     override val annotationToolbarLayout: ToolbarCoordinatorLayout
@@ -118,7 +122,7 @@ class SubmissionContentView(
 
     private var mIsCleanedUp = false
     private val activity: SpeedGraderActivity get() = context as SpeedGraderActivity
-    private val mGradeFragment by lazy { SpeedGraderGradeFragment.newInstance(mRootSubmission, mAssignment, mCourse, mAssignee) }
+    private val mGradeFragment by lazy { SpeedGraderGradeFragment.newInstance(mRootSubmission, mAssignment, mCourse, mAssignee, newGradebookEnabled) }
 
     val hasUnsavedChanges: Boolean
         get() = mGradeFragment.hasUnsavedChanges
@@ -158,6 +162,9 @@ class SubmissionContentView(
 
         //if we can share the content with another app, show the share icon
         speedGraderToolbar.menu.findItem(R.id.menu_share)?.isVisible = fragment is ShareableFile || fragment is PdfFragment
+        speedGraderToolbar.menu.findItem(R.id.menuPostPolicies)?.isVisible = newGradebookEnabled
+
+        ViewStyler.colorToolbarIconsAndText(context as Activity, speedGraderToolbar, Color.BLACK)
     }
 
     //region view lifecycle
@@ -440,6 +447,9 @@ class SubmissionContentView(
                 if (pdfFragment != null) {
                     pdfFragment?.document?.documentSource?.fileUri?.viewExternally(context, "application/pdf")
                 }
+            }
+            R.id.menuPostPolicies -> {
+                RouteMatcher.route(context, PostPolicyFragment.makeRoute(mCourse, mAssignment))
             }
         }
     }

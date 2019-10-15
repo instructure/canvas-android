@@ -20,7 +20,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import com.instructure.canvasapi2.utils.ProgressEvent
 import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.pandautils.utils.Const
 import com.instructure.student.FileSubmission
@@ -33,66 +32,9 @@ import com.spotify.mobius.Connection
 import com.spotify.mobius.functions.Consumer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
 
 class UploadStatusSubmissionEffectHandler(val context: Context, val submissionId: Long) :
     EffectHandler<UploadStatusSubmissionView, UploadStatusSubmissionEvent, UploadStatusSubmissionEffect>() {
-
-    internal var receiver: BroadcastReceiver? = null
-
-    private fun setupReceiver() {
-        receiver = object : BroadcastReceiver() {
-            override fun onReceive(context: Context?, intent: Intent?) {
-                if (context == null || intent?.hasExtra(Const.SUBMISSION) == false) {
-                    return // stop early if we don't have a context or if there's no submission id
-                }
-
-                val submissionId = intent!!.extras!!.getLong(Const.SUBMISSION)
-
-                if (submissionId != this@UploadStatusSubmissionEffectHandler.submissionId) {
-                    return // Since there could be multiple submissions at the same time, we only care about events for our submission id
-                }
-                launch {
-                    val (_, error, files) = loadPersistedData(submissionId, context)
-                    consumer.accept(
-                        UploadStatusSubmissionEvent.OnFilesRefreshed(error, submissionId, files)
-                    )
-                }
-            }
-        }
-    }
-
-    @Suppress("unused", "UNUSED_PARAMETER")
-    @Subscribe
-    fun onUploadProgress(event: ProgressEvent) {
-        if (event.submissionId != submissionId) {
-            return // Since there could be multiple submissions at the same time, we only care about events for our submission id
-        }
-        consumer.accept(
-            UploadStatusSubmissionEvent.OnUploadProgressChanged(
-                event.fileIndex,
-                event.submissionId,
-                event.uploaded
-            )
-        )
-    }
-
-    override fun connect(output: Consumer<UploadStatusSubmissionEvent>): Connection<UploadStatusSubmissionEffect> {
-        setupReceiver()
-        EventBus.getDefault().register(this)
-        context.registerReceiver(receiver, IntentFilter(SubmissionService.FILE_SUBMISSION_FINISHED))
-        return super.connect(output)
-    }
-
-    override fun dispose() {
-        EventBus.getDefault().unregister(this)
-        if (receiver != null) {
-            context.unregisterReceiver(receiver)
-            receiver = null
-        }
-        super.dispose()
-    }
 
     override fun accept(effect: UploadStatusSubmissionEffect) {
         when (effect) {
@@ -104,11 +46,11 @@ class UploadStatusSubmissionEffectHandler(val context: Context, val submissionId
                     )
                 }
             }
+            is UploadStatusSubmissionEffect.ShowCancelDialog -> {
+                launch(Dispatchers.Main) { view?.showCancelSubmissionDialog() }
+            }
             is UploadStatusSubmissionEffect.OnDeleteSubmission -> {
                 launch { deleteSubmission(effect.submissionId) }
-            }
-            is UploadStatusSubmissionEffect.OnCancelAllSubmissions -> {
-                launch { clearAllSubmissions() }
             }
             is UploadStatusSubmissionEffect.RetrySubmission -> {
                 launch(Dispatchers.Main) { retrySubmission(effect.submissionId) }
@@ -149,26 +91,12 @@ class UploadStatusSubmissionEffectHandler(val context: Context, val submissionId
     }
 
     /**
-     * TODO: Support this better
-     * This has to clear all submissions to stop any that are in progress. Once the file/submission
-     * services have been merged together, we can add support to cancel a submission for a specific
-     * assignment.
-     */
-    private fun clearAllSubmissions() {
-        // Cancel Submission/FileUpload services, this will also mark the submissions as errors
-        view?.getServiceIntents()?.forEach { context.stopService(it) }
-    }
-
-    /**
-     * TODO: Add support for retry
      * This doesn't work currently. The problem is that the FileUploadService will delete the temp
      * directory where the files are accessible when onDestroy is called. Any retry after the service
      * has "finished" will fail as it can no longer find the file on the device.
      */
     private fun retrySubmission(submissionId: Long) {
-        val canvasContext =
-            Db.getInstance(context).submissionQueries.getSubmissionById(submissionId).executeAsOne().canvasContext!!
-        SubmissionService.retryFileSubmission(context, canvasContext, submissionId)
+        SubmissionService.retryFileSubmission(context, submissionId)
 
         view?.submissionRetrying()
     }

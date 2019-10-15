@@ -35,7 +35,7 @@ class SubmissionDetailsEmptyContentRenderTest : StudentRenderTest() {
 
     private lateinit var baseModel: SubmissionDetailsEmptyContentModel
     private lateinit var baseAssignment: Assignment
-    private var isArcEnabled = false
+    private var isStudioEnabled = false
 
     @Before
     fun setup() {
@@ -48,7 +48,7 @@ class SubmissionDetailsEmptyContentRenderTest : StudentRenderTest() {
         baseModel = SubmissionDetailsEmptyContentModel(
             assignment = baseAssignment,
             course = Course(),
-            isArcEnabled = isArcEnabled
+            isStudioEnabled = isStudioEnabled
         )
     }
 
@@ -62,7 +62,7 @@ class SubmissionDetailsEmptyContentRenderTest : StudentRenderTest() {
     @Test
     fun submitButtonIsHiddenWhenUserCannotSubmit() {
         loadPageWithModel(baseModel.copy(
-            assignment = Assignment(lockedForUser = true)
+            assignment = baseAssignment.copy(lockedForUser = true)
         ))
 
         submissionDetailsEmptyContentRenderPage.assertSubmitButtonHidden()
@@ -192,7 +192,7 @@ class SubmissionDetailsEmptyContentRenderTest : StudentRenderTest() {
             override fun dispose() = Unit
             override fun post(runnable: Runnable) = Unit
         }
-        val fragment = SubmissionDetailsEmptyContentFragment.newInstance(model.course, model.assignment, model.isArcEnabled).apply {
+        val fragment = SubmissionDetailsEmptyContentFragment.newInstance(model.course, model.assignment, model.isStudioEnabled).apply {
             overrideInitModel = model
             loopMod = { it.effectRunner { emptyEffectRunner } }
         }

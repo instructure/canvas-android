@@ -19,12 +19,12 @@ package com.instructure.teacher.dialog
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatDialogFragment
 import android.view.LayoutInflater
 import android.widget.ImageView
-import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatDialogFragment
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.TermsOfService
 import com.instructure.canvasapi2.utils.weave.awaitApi
@@ -89,7 +89,8 @@ class LegalDialog : AppCompatDialogFragment() {
         }
 
         view.openSource.setOnClickListener {
-            startActivity(Intent(requireContext(), OssLicensesMenuActivity::class.java))
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/instructure/canvas-android"))
+            requireActivity().startActivity(intent)
             dialog.dismiss()
         }
 

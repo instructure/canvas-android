@@ -73,7 +73,7 @@ class InterwebsToApplication : AppCompatActivity() {
             // Do some logging
             LoggingUtility.Log(this@InterwebsToApplication, Log.WARN, data.toString())
 
-            val token = ApiPrefs.token
+            val token = ApiPrefs.getValidToken()
 
             val signedIn = token.isNotEmpty()
             val domain = ApiPrefs.domain

@@ -15,6 +15,7 @@
  */
 package com.instructure.student.ui.renderTests
 
+import android.os.Build
 import com.instructure.student.espresso.StudentRenderTest
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.TextSubmissionViewFragment
 import com.instructure.student.ui.pages.renderPages.TextSubmissionViewRenderPage
@@ -26,6 +27,11 @@ class TextSubmissionViewRenderTest : StudentRenderTest() {
 
     @Test
     fun displaysProgressBarPriorToLoading() {
+        // Testing progress bars doesn't work very well in API-23 and below.
+        if(Build.VERSION.SDK_INT < 24) {
+            return;
+        }
+
         loadPageWithHtml("Sample Text")
         page.assertDisplaysProgressBar()
     }

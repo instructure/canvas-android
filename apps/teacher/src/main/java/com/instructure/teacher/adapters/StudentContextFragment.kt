@@ -18,6 +18,8 @@ package com.instructure.teacher.adapters
 import android.graphics.Color
 import android.os.Bundle
 import android.view.*
+import android.widget.LinearLayout.LayoutParams
+import android.widget.TextView
 import com.instructure.canvasapi2.StudentContextCardQuery.*
 import com.instructure.canvasapi2.models.BasicUser
 import com.instructure.canvasapi2.models.GradeableStudentSubmission
@@ -151,42 +153,75 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
         // Course and section names
         courseNameView.text = course.name
         sectionNameView.text = if (isStudent) {
-            getString(R.string.sectionFormatted, student.enrollments.joinToString { it.section?.name ?: "" })
+            student.enrollments.joinToString(" | ") { it.section?.name ?: "" }
         } else {
-            val enrollmentsString = student.enrollments.joinToString { "${it.section?.name} (${it.type.displayText})" }
-            getString(R.string.sectionFormatted, enrollmentsString)
+            student.enrollments
+                .map { "${it.section?.name} (${it.type.displayText})" }
+                .distinct()
+                .joinToString(" | ")
         }
 
         // Latest activity
-        student.enrollments
-            .filter { it.lastActivityAt != null }
-            .sortedBy { it.lastActivityAt }
-            .firstOrNull()?.lastActivityAt
-            ?.let {
-                val dateString = DateHelper.getFormattedDate(requireContext(), it)
-                val timeString = DateHelper.getFormattedTime(requireContext(), it)
-                lastActivityView.text = getString(R.string.latestStudentActivityAtFormatted, dateString, timeString)
-            } ?: lastActivityView.setGone()
+        student.enrollments.mapNotNull { it.lastActivityAt }.max()?.let {
+            val dateString = DateHelper.getFormattedDate(requireContext(), it)
+            val timeString = DateHelper.getFormattedTime(requireContext(), it)
+            lastActivityView.text = getString(R.string.latestStudentActivityAtFormatted, dateString, timeString)
+        } ?: lastActivityView.setGone()
 
         if (isStudent) {
             val enrollmentGrades = student.enrollments.find { it.type == EnrollmentType.STUDENTENROLLMENT }?.grades
 
-            // Grade
-            gradeView.text = enrollmentGrades?.let { it.currentGrade ?: it.currentScore?.toString() } ?: "-"
+            // Grade before posting
+            val gradeBeforePostingText = enrollmentGrades?.let { it.currentGrade ?: it.currentScore?.toString() } ?: "--"
+
+            // Grade after posting
+            val gradeAfterPostingText = enrollmentGrades?.let { it.unpostedCurrentGrade ?: it.unpostedCurrentScore?.toString() } ?: "--"
+
+            if (gradeBeforePostingText == gradeAfterPostingText) {
+                gradeBeforePosting.text = gradeBeforePostingText
+                gradeBeforePostingLabel.setText(R.string.currentGrade)
+                gradeAfterPostingContainer.setGone()
+            } else {
+                gradeBeforePosting.text = gradeBeforePostingText
+                gradeAfterPosting.text = gradeAfterPostingText
+            }
 
             // Override Grade
             val overrideText = enrollmentGrades?.let { it.overrideGrade ?: it.overrideScore?.toString() }
             if (overrideText.isValid()) {
-                overrideGradeView.text = overrideText
+                gradeOverride.text = overrideText
             } else {
-                overrideGradeContainer.setGone()
+                gradeOverrideContainer.setGone()
             }
 
+            val visibleGradeItems = gradeItems.children.filter { it.isVisible }
+            if (visibleGradeItems.size == 1) {
+                // If there is only one grade item, add a second empty child so the first doesn't stretch to the full parent width
+                gradeItems.addView(
+                    View(context),
+                    LayoutParams(0, LayoutParams.MATCH_PARENT, 1.0f)
+                )
+            } else {
+                // Set color of last grade item
+                visibleGradeItems.lastOrNull()?.apply {
+                    backgroundTintList = courseColor.asStateList()
+                    children<TextView>().onEach { it.setTextColor(Color.WHITE) }
+                }
+            }
+
+            val onTime = summary?.tardinessBreakdown?.onTime?.toInt() ?: 0
+            val late = summary?.tardinessBreakdown?.late?.toInt() ?: 0
+            val missing = summary?.tardinessBreakdown?.missing?.toInt() ?: 0
+            val submitted = onTime + late
+
+            // Submitted
+            submittedCount.text = if (submitted <= 0) "--" else submitted.toString()
+
             // Missing
-            missingCountView.text = summary?.tardinessBreakdown?.missing?.toInt()?.toString() ?: "-"
+            missingCount.text = if (missing <= 0) "--" else missing.toString()
 
             // Late
-            lateCountView.text = summary?.tardinessBreakdown?.late?.toInt()?.toString() ?: "-"
+            lateCount.text = if (late <= 0) "--" else late.toString()
         } else {
             messageButton.setGone()
             val lastIdx = scrollContent.indexOfChild(additionalInfoContainer)

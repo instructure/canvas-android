@@ -51,7 +51,7 @@ class RouteValidatorActivity : FragmentActivity() {
 
         val host = data.host.orEmpty() // "mobiledev.instructure.com"
 
-        val isSignedIn = ApiPrefs.token.isNotEmpty()
+        val isSignedIn = ApiPrefs.getValidToken().isNotEmpty()
         val domain = ApiPrefs.domain
 
         if (!isSignedIn) {

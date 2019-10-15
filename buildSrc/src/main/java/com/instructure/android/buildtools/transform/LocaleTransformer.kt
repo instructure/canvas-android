@@ -28,12 +28,13 @@ import javassist.CtNewMethod
 import javassist.expr.ExprEditor
 import javassist.expr.MethodCall
 import java.io.File
+import kotlin.system.exitProcess
 
 class LocaleTransformer : ClassTransformer() {
 
     override val transformName = "LocaleTransformer"
 
-    private val localeUtilsClassName = "com.instructure.pandautils.utils.LocaleUtils"
+    private val localeUtilsClassName = "com.instructure.canvasapi2.utils.LocaleUtils"
 
     private lateinit var activityClass: CtClass
 
@@ -90,8 +91,19 @@ class LocaleTransformer : ClassTransformer() {
      * Scans for available translations and adds supported language tags to LocaleUtils
      */
     private fun CtClass.transformLocaleUtils() {
-        val root = File("..").canonicalFile
-        val translationsJson = File(root, "translations/projects.json").readText()
+        val configLocations = listOf(
+            File("translations/projects.json").canonicalFile,
+            File("../translations/projects.json").canonicalFile
+        )
+        val translationsFile = configLocations.find { it.exists() }
+        if (translationsFile == null) {
+            println("\nUnable to find translation project config file (translations/projects.json)")
+            println("Exiting...")
+            Thread.sleep(1000) // Allow time to print message
+            exitProcess(1)
+        }
+        val root = translationsFile.parentFile.parentFile
+        val translationsJson = translationsFile.readText()
         val type = object : TypeToken<List<TranslationProject>>() {}.type
         val projects = Gson().fromJson<List<TranslationProject>>(translationsJson, type)
         val resDirs = projects.map { it.resourceDir }

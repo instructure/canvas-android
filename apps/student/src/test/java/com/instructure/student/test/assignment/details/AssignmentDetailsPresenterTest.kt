@@ -39,7 +39,10 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.threeten.bp.OffsetDateTime
-import java.util.*
+import java.util.Calendar
+import java.util.Date
+import java.util.GregorianCalendar
+import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 @RunWith(AndroidJUnit4::class)
@@ -67,24 +70,26 @@ class AssignmentDetailsPresenterTest : Assert() {
             title = true,
             dueDate = true,
             submissionTypes = true,
+            submissionStatus = true,
             description = true,
             submissionAndRubricButton = true
         )
         baseSubmission = Submission(
             attempt = 1,
+            submittedAt = Date(),
             workflowState = "submitted"
         )
         baseQuiz = Quiz(
             id = 123L
         )
         baseDiscussion = DiscussionTopicHeader(
-                id = 123L,
-                message = "discussion message",
-                author = DiscussionParticipant(
-                        displayName = "Hodor",
-                        avatarImageUrl = "pretty-hodor.com"
-                ),
-                postedDate = Date()
+            id = 123L,
+            message = "discussion message",
+            author = DiscussionParticipant(
+                displayName = "Hodor",
+                avatarImageUrl = "pretty-hodor.com"
+            ),
+            postedDate = Date()
         )
     }
 
@@ -176,7 +181,7 @@ class AssignmentDetailsPresenterTest : Assert() {
             allowedExtensions = listOf("pdf", "JPG", "PNG", "zip")
         )
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
-        val expected = baseVisibilities.copy(fileTypes = false, submissionTypes = false)
+        val expected = baseVisibilities.copy(fileTypes = false, submissionTypes = false, submissionStatus = false)
         val actual = AssignmentDetailsPresenter.present(model, context).visibilities
         assertEquals(expected, actual)
     }
@@ -199,7 +204,7 @@ class AssignmentDetailsPresenterTest : Assert() {
 
     @Test
     fun `Uses correct label text for submitted status when submission is graded`() {
-        val submission = baseSubmission.copy(grade = "8")
+        val submission = baseSubmission.copy(grade = "8", postedAt = Date(), workflowState = "graded")
         val assignment = baseAssignment.copy(submission = submission)
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
@@ -208,7 +213,7 @@ class AssignmentDetailsPresenterTest : Assert() {
 
     @Test
     fun `Uses correct label text for submitted status when submission is missing`() {
-        val submission = baseSubmission.copy(attempt = 0, missing = true, workflowState = "unsubmitted")
+        val submission = baseSubmission.copy(attempt = 0, missing = true, workflowState = "unsubmitted", submittedAt = null)
         val assignment = baseAssignment.copy(submission = submission)
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
@@ -219,8 +224,8 @@ class AssignmentDetailsPresenterTest : Assert() {
     fun `Uses correct label text for submitted status when submission is past due`() {
         val calendar = Calendar.getInstance().apply { set(2000, 0, 31, 23, 59, 0) }
 
-        val submission = baseSubmission.copy(attempt = 0, workflowState = "unsubmitted")
-        val assignment = baseAssignment.copy(submission = submission, dueAt = calendar.time.toApiString())
+        val submission = baseSubmission.copy(attempt = 0, workflowState = "unsubmitted", submittedAt = null)
+        val assignment = baseAssignment.copy(submission = submission, dueAt = calendar.time.toApiString(), submissionTypesRaw = listOf(Assignment.SubmissionType.ONLINE_UPLOAD.apiString))
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
         assertEquals("Missing", state.submittedStateLabel)
@@ -230,7 +235,7 @@ class AssignmentDetailsPresenterTest : Assert() {
     fun `Uses correct label text for submitted status when submission is past due and null`() {
         val calendar = Calendar.getInstance().apply { set(2000, 0, 31, 23, 59, 0) }
 
-        val assignment = baseAssignment.copy(submission = null, dueAt = calendar.time.toApiString())
+        val assignment = baseAssignment.copy(submission = null, dueAt = calendar.time.toApiString(), submissionTypesRaw = listOf(Assignment.SubmissionType.ONLINE_UPLOAD.apiString))
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
         assertEquals("Missing", state.submittedStateLabel)
@@ -240,7 +245,7 @@ class AssignmentDetailsPresenterTest : Assert() {
     fun `Uses correct label text for submitted status when submission is past due for an LTI assignment`() {
         val calendar = Calendar.getInstance().apply { set(2000, 0, 31, 23, 59, 0) }
 
-        val submission = baseSubmission.copy(attempt = 0, workflowState = "unsubmitted")
+        val submission = baseSubmission.copy(attempt = 0, workflowState = "unsubmitted", submittedAt = null)
         val assignment = baseAssignment.copy(submission = submission, dueAt = calendar.time.toApiString(), submissionTypesRaw = listOf("basic_lti_launch"))
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
@@ -251,7 +256,7 @@ class AssignmentDetailsPresenterTest : Assert() {
     fun `Uses correct label text for submitted status when submission is past due for an external assignment`() {
         val calendar = Calendar.getInstance().apply { set(2000, 0, 31, 23, 59, 0) }
 
-        val submission = baseSubmission.copy(attempt = 0, workflowState = "unsubmitted")
+        val submission = baseSubmission.copy(attempt = 0, workflowState = "unsubmitted", submittedAt = null)
         val assignment = baseAssignment.copy(submission = submission, dueAt = calendar.time.toApiString(), submissionTypesRaw = listOf("external_tool"))
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
@@ -268,7 +273,16 @@ class AssignmentDetailsPresenterTest : Assert() {
 
     @Test
     fun `Uses correct label text for submitted status when submission is not submitted`() {
-        val submission = baseSubmission.copy(attempt = 0, workflowState = "unsubmitted")
+        val submission = baseSubmission.copy(attempt = 0, workflowState = "unsubmitted", submittedAt = null)
+        val assignment = baseAssignment.copy(submission = submission)
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
+        assertEquals("Not Submitted", state.submittedStateLabel)
+    }
+
+    @Test
+    fun `Uses correct label text for submitted status when submission is graded but not submitted`() {
+        val submission = baseSubmission.copy(attempt = 0, submittedAt = null, grade = "8", postedAt = Date(), workflowState = "graded")
         val assignment = baseAssignment.copy(submission = submission)
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
@@ -528,6 +542,7 @@ class AssignmentDetailsPresenterTest : Assert() {
     fun `Displays grade cell when grade is not empty`() {
         val assignment = baseAssignment.copy(
             submission = baseSubmission.copy(
+                workflowState = "graded",
                 enteredScore = 85.0,
                 enteredGrade = "85",
                 score = 85.0,
@@ -558,6 +573,7 @@ class AssignmentDetailsPresenterTest : Assert() {
         )
         val assignment = baseAssignment.copy(
             submission = baseSubmission.copy(
+                workflowState = "graded",
                 enteredScore = 85.0,
                 enteredGrade = "85",
                 score = 85.0,
@@ -616,7 +632,8 @@ class AssignmentDetailsPresenterTest : Assert() {
         )
         val assignment = baseAssignment.copy(
             submission = baseSubmission.copy(
-                workflowState = "unsubmitted"
+                workflowState = "unsubmitted",
+                submittedAt = null
             )
         )
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment), databaseSubmission = submission)
@@ -890,6 +907,102 @@ class AssignmentDetailsPresenterTest : Assert() {
 
         unmockkObject(CanvasRestAdapter.Companion)
     }
+
+    @Test
+    fun `Hides submission status when on paper submission type`() {
+        val allTypes = listOf(Assignment.SubmissionType.ON_PAPER)
+        val assignment = baseAssignment.copy(submissionTypesRaw = allTypes.map { it.apiString })
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
+        assertFalse(state.visibilities.submissionStatus)
+    }
+
+    @Test
+    fun `Shows submission status when on paper submission type with Grade`() {
+        val allTypes = listOf(Assignment.SubmissionType.ON_PAPER)
+        val submission = Submission(id = 1, grade = "A", score = 35.0, late = false, attempt = 1, missing = false, postedAt = Date())
+        val assignment = baseAssignment.copy(submissionTypesRaw = allTypes.map { it.apiString }, submission = submission)
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
+        assertTrue(state.visibilities.submissionStatus)
+    }
+
+    @Test
+    fun `Hides submission status when no submission type`() {
+        val allTypes = listOf(Assignment.SubmissionType.NONE)
+        val assignment = baseAssignment.copy(submissionTypesRaw = allTypes.map { it.apiString })
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
+        assertFalse(state.visibilities.submissionStatus)
+    }
+
+    @Test
+    fun `Shows submission status when online submission type`() {
+        val allTypes = listOf(
+            Assignment.SubmissionType.ONLINE_UPLOAD,
+            Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
+            Assignment.SubmissionType.ONLINE_URL,
+            Assignment.SubmissionType.BASIC_LTI_LAUNCH,
+            Assignment.SubmissionType.EXTERNAL_TOOL,
+            Assignment.SubmissionType.ATTENDANCE,
+            Assignment.SubmissionType.MEDIA_RECORDING
+        )
+
+        val assignment = baseAssignment.copy(
+                submissionTypesRaw = allTypes.map { it.apiString }
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
+        assertTrue(state.visibilities.submissionStatus)
+    }
+
+    @Test
+    fun `Shows submission status when online submission type with Grade`() {
+        val allTypes = listOf(
+            Assignment.SubmissionType.ONLINE_UPLOAD,
+            Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
+            Assignment.SubmissionType.ONLINE_URL,
+            Assignment.SubmissionType.BASIC_LTI_LAUNCH,
+            Assignment.SubmissionType.EXTERNAL_TOOL,
+            Assignment.SubmissionType.ATTENDANCE,
+            Assignment.SubmissionType.MEDIA_RECORDING
+        )
+
+        val submission = Submission(id = 1, grade = "A", score = 35.0, late = false, attempt = 1, missing = false)
+        val assignment = baseAssignment.copy(
+            submissionTypesRaw = allTypes.map { it.apiString },
+            submission = submission
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
+        assertTrue(state.visibilities.submissionStatus)
+    }
+
+    @Test
+    fun `Shows submission status when discussion submission type`() {
+        val allTypes = listOf(Assignment.SubmissionType.DISCUSSION_TOPIC)
+        val assignment = baseAssignment.copy(
+            submissionTypesRaw = allTypes.map { it.apiString },
+            discussionTopicHeader = baseDiscussion
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
+        assertTrue(state.visibilities.submissionStatus)
+    }
+
+    @Test
+    fun `Shows submission status when quiz submission type`() {
+        val allTypes = listOf(Assignment.SubmissionType.ONLINE_QUIZ)
+        val assignment = baseAssignment.copy(
+            submissionTypesRaw = allTypes.map { it.apiString },
+            quizId = baseQuiz.id
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment), quizResult = DataResult.Success(baseQuiz))
+        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
+        assertTrue(state.visibilities.submissionStatus)
+    }
+
+
 
     private val discussionHtml = "<!DOCTYPE html>\n" +
             "<html>\n" +

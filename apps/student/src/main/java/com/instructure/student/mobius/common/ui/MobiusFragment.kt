@@ -23,6 +23,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.crashlytics.android.Crashlytics
+import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.interactions.FragmentInteractions
 import com.instructure.interactions.Navigation
 import com.instructure.student.BuildConfig
@@ -190,6 +191,18 @@ abstract class MobiusView<VIEW_STATE, EVENT>(layoutId: Int, inflater: LayoutInfl
         }
         return connection!!
     }
+
+    fun logEvent(eventName: String) {
+        Analytics.logEvent(eventName)
+    }
+
+    fun logEvent(eventName: String, bundle: Bundle) {
+        Analytics.logEvent(eventName, bundle)
+    }
+
+    fun logEventWithOrigin(eventName: String) {
+        Analytics.logEvent(eventName, Analytics.createOriginBundle(this::class.java.simpleName))
+    }
 }
 
 interface Presenter<MODEL, VIEW_STATE> {
@@ -219,7 +232,7 @@ abstract class EffectHandler<VIEW, EVENT, EFFECT> : CoroutineConnection<EFFECT>(
     }
 
     fun logEvent(eventName: String) {
-        // TODO
+        Analytics.logEvent(eventName)
     }
 
     /**

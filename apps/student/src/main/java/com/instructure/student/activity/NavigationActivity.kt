@@ -75,6 +75,7 @@ import com.instructure.student.events.ShowGradesToggledEvent
 import com.instructure.student.events.UserUpdatedEvent
 import com.instructure.student.fragment.*
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadEffectHandler
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyContentFragment
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.router.RouteResolver
@@ -100,7 +101,14 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     private var mDrawerToggle: ActionBarDrawerToggle? = null
     private var colorOverlayJob: Job? = null
 
-    //endregion
+    /** 'Root' fragments that should include the bottom nav bar */
+    private val bottomNavBarFragments = listOf(
+        DashboardFragment::class.java,
+        CalendarListViewFragment::class.java,
+        ToDoListFragment::class.java,
+        NotificationListFragment::class.java,
+        InboxFragment::class.java
+    )
 
     override fun contentResId(): Int = R.layout.activity_navigation
 
@@ -151,6 +159,13 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             // Sends a broadcast event to notify the backstack has changed and which fragment class is on top.
             OnBackStackChangedEvent(it::class.java).post()
             applyCurrentFragmentTheme()
+
+            /* Update nav bar visibility to show for specific 'root' fragments. Also show the nav bar when there is
+             only one fragment on the backstack, which commonly occurs with non-root fragments when routing
+             from external sources. */
+            val visible = it::class.java in bottomNavBarFragments || supportFragmentManager.backStackEntryCount <= 1
+            bottomBar.setVisible(visible)
+            bottomBarDivider.setVisible(visible)
         }
     }
 
@@ -226,7 +241,9 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             requestCode == UploadFilesDialog.PICK_FILE_FROM_DEVICE ||
             requestCode == UploadFilesDialog.PICK_IMAGE_GALLERY ||
             PickerSubmissionUploadEffectHandler.isPickerRequest(requestCode) ||
-            AssignmentDetailsFragment.isFileRequest(requestCode)) {
+            AssignmentDetailsFragment.isFileRequest(requestCode) ||
+            SubmissionDetailsEmptyContentFragment.isFileRequest(requestCode)
+        ) {
             // UploadFilesFragment will not be notified of onActivityResult(), alert manually
             OnActivityResults(ActivityResult(requestCode, resultCode, data), null).postSticky()
         }

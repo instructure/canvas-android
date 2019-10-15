@@ -78,6 +78,15 @@ class SubmissionDetailsView(
             if (slidingUpPanelLayout?.panelState == SlidingUpPanelLayout.PanelState.COLLAPSED) {
                 slidingUpPanelLayout?.panelState = SlidingUpPanelLayout.PanelState.ANCHORED
             }
+            logTabSelected(tab?.position)
+        }
+    }
+
+    private fun logTabSelected(position: Int?) {
+        when (position) {
+            0 -> logEvent(AnalyticsEventConstants.SUBMISSION_COMMENTS_SELECTED)
+            1 -> logEvent(AnalyticsEventConstants.SUBMISSION_FILES_SELECTED)
+            2 -> logEvent(AnalyticsEventConstants.SUBMISSION_RUBRIC_SELECTED)
         }
     }
 
@@ -249,7 +258,7 @@ class SubmissionDetailsView(
 
     private fun getFragmentForContent(type: SubmissionDetailsContentType): Fragment {
         return when (type) {
-            is SubmissionDetailsContentType.NoSubmissionContent -> SubmissionDetailsEmptyContentFragment.newInstance(type.canvasContext as Course, type.assignment, type.isArcEnabled)
+            is SubmissionDetailsContentType.NoSubmissionContent -> SubmissionDetailsEmptyContentFragment.newInstance(type.canvasContext as Course, type.assignment, type.isStudioEnabled, type.quiz, type.studioLTITool)
             is SubmissionDetailsContentType.UrlContent -> UrlSubmissionViewFragment.newInstance(type.url, type.previewUrl)
             is SubmissionDetailsContentType.QuizContent -> QuizSubmissionViewFragment.newInstance(type.url)
             is SubmissionDetailsContentType.TextContent -> TextSubmissionViewFragment.newInstance(type.text)
@@ -276,7 +285,7 @@ class SubmissionDetailsView(
                     putLong(AnalyticsParamConstants.ASSIGNMENT_ID, type.assignmentId)
                 }
 
-                Analytics.logEvent(AnalyticsEventConstants.SUBMISSIONS, bundle)
+                logEvent(AnalyticsEventConstants.UNSUPPORTED_SUBMISSION_CONTENT, bundle)
 
                 SubmissionMessageFragment.newInstance(
                     title = R.string.noOnlineSubmissions,

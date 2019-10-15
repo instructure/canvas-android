@@ -42,14 +42,12 @@ import com.instructure.interactions.router.RouteContext
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.activities.BaseViewMediaActivity
 import com.instructure.pandautils.loaders.OpenMediaAsyncTaskLoader
-import com.instructure.pandautils.utils.Const
-import com.instructure.pandautils.utils.LoaderUtils
-import com.instructure.pandautils.utils.RouteUtils
-import com.instructure.pandautils.utils.nonNullArgs
+import com.instructure.pandautils.utils.*
 import com.instructure.teacher.PSPDFKit.AnnotationComments.AnnotationCommentListFragment
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.*
 import com.instructure.teacher.adapters.StudentContextFragment
+import com.instructure.teacher.features.postpolicies.ui.PostPolicyFragment
 import com.instructure.teacher.fragments.*
 import com.instructure.teacher.fragments.FileListFragment
 import instructure.rceditor.RCEFragment
@@ -332,6 +330,7 @@ object RouteMatcher : BaseRouteMatcher() {
             AssignmentDetailsFragment::class.java.isAssignableFrom(cls) -> fragment = getAssignmentDetailsFragment(canvasContext, route)
             DueDatesFragment::class.java.isAssignableFrom(cls) -> fragment = DueDatesFragment.getInstance((canvasContext as Course?)!!, route.arguments)
             AssignmentSubmissionListFragment::class.java.isAssignableFrom(cls) -> fragment = AssignmentSubmissionListFragment.newInstance((canvasContext as Course?)!!, route.arguments)
+            PostPolicyFragment::class.java.isAssignableFrom(cls) -> fragment = PostPolicyFragment.newInstance(route.argsWithContext)
             EditAssignmentDetailsFragment::class.java.isAssignableFrom(cls) -> fragment = EditAssignmentDetailsFragment.newInstance((canvasContext as Course?)!!, route.arguments)
             AssigneeListFragment::class.java.isAssignableFrom(cls) -> fragment = AssigneeListFragment.newInstance(route.arguments)
             EditFavoritesFragment::class.java.isAssignableFrom(cls) -> fragment = EditFavoritesFragment.newInstance(route.arguments)
@@ -473,7 +472,7 @@ object RouteMatcher : BaseRouteMatcher() {
                                 Toast.makeText(activity, activity.resources.getString(loadedMedia.errorMessage), Toast.LENGTH_LONG).show()
                             }
                         } else if (loadedMedia.isHtmlFile) {
-                            val args = ViewHtmlFragment.newInstance(loadedMedia.bundle.getString(Const.INTERNAL_URL)!!, loadedMedia.bundle.getString(Const.ACTION_BAR_TITLE)!!).nonNullArgs
+                            val args = ViewHtmlFragment.makeDownloadBundle(loadedMedia.bundle.getString(Const.INTERNAL_URL)!!, loadedMedia.bundle.getString(Const.ACTION_BAR_TITLE)!!)
                             RouteMatcher.route(activity, Route(ViewHtmlFragment::class.java, null, args))
                         } else if (loadedMedia.intent != null) {
                             if (loadedMedia.intent.type!!.contains("pdf") && !loadedMedia.isUseOutsideApps) {

@@ -16,8 +16,17 @@
  */
 package com.instructure.student.ui.renderTests
 
+import android.graphics.Color
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.DiscussionParticipant
+import com.instructure.canvasapi2.models.DiscussionTopicHeader
+import com.instructure.canvasapi2.models.Quiz
+import com.instructure.canvasapi2.models.RemoteFile
+import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.toApiString
@@ -26,6 +35,7 @@ import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
+import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.student.R
 import com.instructure.student.espresso.StudentRenderTest
 import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsModel
@@ -43,6 +53,8 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
 
     @Before
     fun setup() {
+        // Set a dark button color, otherwise the a11y checker might fail due to contrast ratio on small devices
+        ThemePrefs.buttonColor = Color.BLACK
         ApiPrefs.user = User()
         baseModel = AssignmentDetailsModel(
             assignmentId = 0,
@@ -78,7 +90,7 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
     @Test
     @TestMetaData(Priority.P2, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER)
     fun displaysTitleDataSubmitted() {
-        val submission = Submission(workflowState = "submitted")
+        val submission = Submission(workflowState = "submitted", submittedAt = Date())
         val assignment = Assignment(
             name = "Test Assignment",
             pointsPossible = 35.0,
@@ -460,6 +472,24 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
 
     @Test
     @TestMetaData(Priority.P2, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER)
+    fun displaysBookmarkMenuItem() {
+        val course = baseModel.course.copy(id = 123)
+        val assignment = Assignment(
+            name = "Test Assignment",
+            id = 456,
+            htmlUrl = "https://www.instructure.com/courses/123/assignments/456"
+        )
+        val model = baseModel.copy(
+            course = course,
+            assignmentResult = DataResult.Success(assignment)
+        )
+        loadPageWithModel(model)
+        assignmentDetailsRenderPage.openOverflowMenu()
+        assignmentDetailsRenderPage.assertDisplaysAddBookmarkButton()
+    }
+
+    @Test
+    @TestMetaData(Priority.P2, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER)
     fun setsPointsContentDescription() {
         val assignment = Assignment(
             name = "Test Assignment",
@@ -469,6 +499,155 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
         loadPageWithModel(model)
         assignmentDetailsRenderPage.assertDisplaysPoints("35 pts")
         assignmentDetailsRenderPage.assertPointsContentDescription("35 points")
+    }
+
+    @Test
+    @TestMetaData(Priority.P2, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER, false, FeatureCategory.SUBMISSIONS)
+    fun hideSubmissionStatusSubmissionTypeNone() {
+        val allTypes = listOf(Assignment.SubmissionType.NONE)
+        val assignment = Assignment(
+            id = 123,
+            name = "Assignment Name",
+            description = "This is a description",
+            pointsPossible = 35.0,
+            submissionTypesRaw = allTypes.map { it.apiString }
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        loadPageWithModel(model)
+        assignmentDetailsRenderPage.assertSubmissionStatusVisibility(false)
+    }
+
+    @Test
+    @TestMetaData(Priority.P2, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER, false, FeatureCategory.SUBMISSIONS)
+    fun hideSubmissionStatusSubmissionTypeOnPaper() {
+        val allTypes = listOf(Assignment.SubmissionType.ON_PAPER)
+        val assignment = Assignment(
+                id = 123,
+                name = "Assignment Name",
+                description = "This is a description",
+                pointsPossible = 35.0,
+                submissionTypesRaw = allTypes.map { it.apiString }
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        loadPageWithModel(model)
+        assignmentDetailsRenderPage.assertSubmissionStatusVisibility(false)
+    }
+
+    @Test
+    @TestMetaData(Priority.P2, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER, false, FeatureCategory.SUBMISSIONS)
+    fun showsSubmissionStatusSubmissionTypeOnPaperWithGrade() {
+        val allTypes = listOf(Assignment.SubmissionType.ON_PAPER)
+        val assignment = Assignment(
+                id = 123,
+                name = "Assignment Name",
+                description = "This is a description",
+                pointsPossible = 35.0,
+                submission = Submission(id = 1, grade = "A", score = 35.0, late = false, attempt = 1, missing = false, postedAt = Date()),
+                submissionTypesRaw = allTypes.map { it.apiString }
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        loadPageWithModel(model)
+        assignmentDetailsRenderPage.assertSubmissionStatusVisibility(true)
+    }
+
+    @Test
+    @TestMetaData(Priority.P2, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER, false, FeatureCategory.SUBMISSIONS)
+    fun showSubmissionStatusSubmissionTypeOnline() {
+        val allTypes = listOf(
+                Assignment.SubmissionType.ONLINE_UPLOAD,
+                Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
+                Assignment.SubmissionType.ONLINE_URL,
+                Assignment.SubmissionType.BASIC_LTI_LAUNCH,
+                Assignment.SubmissionType.EXTERNAL_TOOL,
+                Assignment.SubmissionType.ATTENDANCE,
+                Assignment.SubmissionType.MEDIA_RECORDING
+        )
+        val assignment = Assignment(
+                id = 123,
+                name = "Assignment Name",
+                description = "This is a description",
+                pointsPossible = 35.0,
+                submission = Submission(id = 1, grade = "A", score = 35.0, late = false, attempt = 1, missing = false, postedAt = Date()),
+                submissionTypesRaw = allTypes.map { it.apiString }
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        loadPageWithModel(model)
+        assignmentDetailsRenderPage.assertSubmissionStatusVisibility(true)
+    }
+
+    @Test
+    @TestMetaData(Priority.P2, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER, false, FeatureCategory.SUBMISSIONS)
+    fun showSubmissionStatusSubmissionTypeOnlineWithGrade() {
+        val allTypes = listOf(
+                Assignment.SubmissionType.ONLINE_UPLOAD,
+                Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
+                Assignment.SubmissionType.ONLINE_URL,
+                Assignment.SubmissionType.BASIC_LTI_LAUNCH,
+                Assignment.SubmissionType.EXTERNAL_TOOL,
+                Assignment.SubmissionType.ATTENDANCE,
+                Assignment.SubmissionType.MEDIA_RECORDING
+        )
+        val assignment = Assignment(
+                id = 123,
+                name = "Assignment Name",
+                description = "This is a description",
+                pointsPossible = 35.0,
+
+                submissionTypesRaw = allTypes.map { it.apiString }
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        loadPageWithModel(model)
+        assignmentDetailsRenderPage.assertSubmissionStatusVisibility(true)
+    }
+
+    @Test
+    @TestMetaData(Priority.P2, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER, false, FeatureCategory.SUBMISSIONS)
+    fun showSubmissionStatusSubmissionTypeQuiz() {
+        val allTypes = listOf(
+                Assignment.SubmissionType.ONLINE_QUIZ
+        )
+        val quiz = Quiz(
+                id = 123L
+        )
+        val assignment = Assignment(
+                id = 123,
+                name = "Assignment Name",
+                description = "This is a description",
+                pointsPossible = 35.0,
+                submissionTypesRaw = allTypes.map { it.apiString },
+                quizId = quiz.id
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment), quizResult = DataResult.Success(quiz))
+        loadPageWithModel(model)
+        assignmentDetailsRenderPage.assertSubmissionStatusVisibility(true)
+    }
+
+    @Test
+    @TestMetaData(Priority.P2, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER, false, FeatureCategory.SUBMISSIONS)
+    fun showSubmissionStatusSubmissionTypeDiscussion() {
+        val allTypes = listOf(
+                Assignment.SubmissionType.DISCUSSION_TOPIC
+        )
+        val discussion = DiscussionTopicHeader(
+                id = 123L,
+                message = "discussion message",
+                author = DiscussionParticipant(
+                        displayName = "Hodor",
+                        avatarImageUrl = "pretty-hodor.com"
+                ),
+                postedDate = Date()
+        )
+        val assignment = Assignment(
+                id = 123,
+                name = "Assignment Name",
+                description = "This is a description",
+                pointsPossible = 35.0,
+                submissionTypesRaw = allTypes.map { it.apiString },
+                discussionTopicHeader = discussion
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        loadPageWithModel(model)
+        assignmentDetailsRenderPage.assertSubmissionStatusVisibility(true)
     }
 
     private fun mockkSubmission(failed: Boolean = false) = com.instructure.student.Submission.Impl(
@@ -498,6 +677,8 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
             loopMod = { it.effectRunner { emptyEffectRunner } }
         }
         activityRule.activity.loadFragment(fragment)
+
+        meaninglessSwipe() // Do-nothing swipe that triggers a11y checks
     }
 
 }

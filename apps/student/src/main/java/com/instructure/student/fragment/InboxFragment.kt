@@ -40,6 +40,7 @@ import com.instructure.student.dialog.CanvasContextListDialog
 import com.instructure.student.events.ConversationUpdatedEvent
 import com.instructure.student.interfaces.AdapterToFragmentCallback
 import com.instructure.student.router.RouteMatcher
+import com.newrelic.agent.android.NewRelic
 import kotlinx.android.synthetic.main.fragment_inbox.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -102,6 +103,12 @@ class InboxFragment : ParentFragment() {
         }
 
     }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        NewRelic.setInteractionName(this::class.java.simpleName)
+        super.onCreate(savedInstanceState)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = layoutInflater.inflate(R.layout.fragment_inbox, container, false)
         adapter = InboxAdapter(requireContext(), adapterToFragmentCallback)

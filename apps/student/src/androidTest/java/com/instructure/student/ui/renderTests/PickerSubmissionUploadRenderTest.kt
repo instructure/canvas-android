@@ -21,7 +21,10 @@ import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
-import com.instructure.espresso.*
+import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.assertHasText
+import com.instructure.espresso.assertNotDisplayed
+import com.instructure.espresso.assertVisible
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
@@ -42,18 +45,18 @@ import org.junit.runner.RunWith
 class PickerSubmissionUploadRenderTest : StudentRenderTest() {
 
     private val page = PickerSubmissionUploadRenderPage()
-    private val baseVisibilities = PickerVisibilities(fab = true)
+    private val baseVisibilities = PickerVisibilities(sources = true)
 
     @Test
     @TestMetaData(Priority.P3, FeatureCategory.SUBMISSIONS, TestCategory.RENDER)
     fun displaysEmptyState() {
         loadPageWithViewState(PickerSubmissionUploadViewState.Empty(baseVisibilities))
         page.emptyView.assertVisible()
-        page.fabPick.assertVisible()
+        page.sourcesContainer.assertVisible()
 
         page.recycler.assertNotDisplayed()
         page.submitButton.check(doesNotExist())
-        assertExtraFabsNotDisplayed()
+        assertSourceButtonsNotDisplayed()
     }
 
     @Test
@@ -67,12 +70,12 @@ class PickerSubmissionUploadRenderTest : StudentRenderTest() {
 
         loadPageWithViewState(PickerSubmissionUploadViewState.Empty(baseVisibilities.copy(loading = true)))
         page.emptyView.assertVisible()
-        page.fabPick.assertVisible()
+        page.sourcesContainer.assertVisible()
         page.loading.assertVisible()
 
         page.recycler.assertNotDisplayed()
         page.submitButton.check(doesNotExist())
-        assertExtraFabsNotDisplayed()
+        assertSourceButtonsNotDisplayed()
     }
 
     @Test
@@ -88,11 +91,11 @@ class PickerSubmissionUploadRenderTest : StudentRenderTest() {
             )
         )
         page.recycler.assertVisible()
-        page.fabPick.assertVisible()
+        page.sourcesContainer.assertVisible()
         page.submitButton.assertVisible()
 
         page.emptyView.assertNotDisplayed()
-        assertExtraFabsNotDisplayed()
+        assertSourceButtonsNotDisplayed()
     }
 
     @Test
@@ -114,122 +117,95 @@ class PickerSubmissionUploadRenderTest : StudentRenderTest() {
             )
         )
         page.recycler.assertVisible()
-        page.fabPick.assertVisible()
+        page.sourcesContainer.assertVisible()
         page.submitButton.assertVisible()
         page.loading.assertVisible()
 
         page.emptyView.assertNotDisplayed()
-        assertExtraFabsNotDisplayed()
+        assertSourceButtonsNotDisplayed()
     }
 
     @Test
     @TestMetaData(Priority.P3, FeatureCategory.SUBMISSIONS, TestCategory.RENDER)
-    fun displaysFabsAndHandlesClicks() {
+    fun displaysSourceButtons() {
         loadPageWithViewState(
             PickerSubmissionUploadViewState.Empty(
                 baseVisibilities.copy(
-                    fabCamera = true,
-                    fabGallery = true,
-                    fabFile = true
+                    sourceCamera = true,
+                    sourceGallery = true,
+                    sourceFile = true
                 )
             )
         )
-        page.fabPick.assertVisible()
-        assertExtraFabsNotDisplayed()
-
-        // Perform click and assert displayed
-        page.fabPick.click()
-        assertExtraFabsDisplayed()
-
-        // Test file click closes fab
-        page.fabFile.click()
-        assertExtraFabsNotDisplayed()
-
-        // Perform click and assert displayed
-        page.fabPick.click()
-        assertExtraFabsDisplayed()
-
-        // Test gallery click closes fab
-        page.fabGallery.click()
-        assertExtraFabsNotDisplayed()
-
-        // Perform click and assert displayed
-        page.fabPick.click()
-        assertExtraFabsDisplayed()
-
-        // Test camera click closes fab
-        page.fabCamera.click()
-        assertExtraFabsNotDisplayed()
+        page.sourcesContainer.assertVisible()
+        page.sourcesDivider.assertDisplayed()
+        page.cameraButton.assertDisplayed()
+        page.deviceButton.assertDisplayed()
+        page.galleryButton.assertDisplayed()
     }
 
     @Test
     @TestMetaData(Priority.P3, FeatureCategory.SUBMISSIONS, TestCategory.RENDER)
-    fun showsOnlyFabCamera() {
+    fun showsOnlyCameraSource() {
         loadPageWithViewState(
             PickerSubmissionUploadViewState.Empty(
                 baseVisibilities.copy(
-                    fabCamera = true,
-                    fabGallery = false,
-                    fabFile = false
+                    sourceCamera = true,
+                    sourceGallery = false,
+                    sourceFile = false
                 )
             )
         )
-        page.fabPick.assertVisible()
-        assertExtraFabsNotDisplayed()
+        page.sourcesContainer.assertVisible()
 
-        // Perform click and assert displayed
-        page.fabPick.click()
-        page.fabCamera.assertDisplayed()
+        // Assert displayed
+        page.cameraButton.assertDisplayed()
 
-        page.fabFile.assertNotDisplayed()
-        page.fabGallery.assertNotDisplayed()
+        page.deviceButton.assertNotDisplayed()
+        page.galleryButton.assertNotDisplayed()
     }
 
     @Test
     @TestMetaData(Priority.P3, FeatureCategory.SUBMISSIONS, TestCategory.RENDER)
-    fun showsOnlyFabGallery() {
+    fun showsOnlyGallerySource() {
         loadPageWithViewState(
             PickerSubmissionUploadViewState.Empty(
                 baseVisibilities.copy(
-                    fabCamera = false,
-                    fabGallery = true,
-                    fabFile = false
+                    sourceCamera = false,
+                    sourceGallery = true,
+                    sourceFile = false
                 )
             )
         )
-        page.fabPick.assertVisible()
-        assertExtraFabsNotDisplayed()
+        page.sourcesContainer.assertVisible()
 
-        // Perform click and assert displayed
-        page.fabPick.click()
-        page.fabGallery.assertDisplayed()
+        // PAssert displayed
+        page.galleryButton.assertDisplayed()
 
-        page.fabFile.assertNotDisplayed()
-        page.fabCamera.assertNotDisplayed()
+        page.deviceButton.assertNotDisplayed()
+        page.cameraButton.assertNotDisplayed()
 
     }
 
     @Test
     @TestMetaData(Priority.P3, FeatureCategory.SUBMISSIONS, TestCategory.RENDER)
-    fun showsOnlyFabFile() {
+    fun showsOnlyFileSource() {
         loadPageWithViewState(
             PickerSubmissionUploadViewState.Empty(
                 baseVisibilities.copy(
-                    fabCamera = false,
-                    fabGallery = false,
-                    fabFile = true
+                    sourceCamera = false,
+                    sourceGallery = false,
+                    sourceFile = true
                 )
             )
         )
-        page.fabPick.assertVisible()
-        assertExtraFabsNotDisplayed()
+        page.sourcesContainer.assertVisible()
 
-        // Perform click and assert displayed
-        page.fabPick.click()
-        page.fabFile.assertDisplayed()
+        // Assert displayed
+        page.deviceButton.assertDisplayed()
 
-        page.fabCamera.assertNotDisplayed()
-        page.fabGallery.assertNotDisplayed()
+        page.cameraButton.assertNotDisplayed()
+        page.galleryButton.assertNotDisplayed()
     }
 
     @Test
@@ -253,16 +229,25 @@ class PickerSubmissionUploadRenderTest : StudentRenderTest() {
         page.emptyMessage.assertHasText(R.string.chooseFileForCommentSubtext)
     }
 
-    private fun assertExtraFabsDisplayed() {
-        page.fabFile.assertDisplayed()
-        page.fabCamera.assertDisplayed()
-        page.fabGallery.assertDisplayed()
+    @Test
+    @TestMetaData(Priority.P3, FeatureCategory.SUBMISSIONS, TestCategory.RENDER)
+    fun hidesSourceButtons() {
+        loadPageWithViewState(
+            PickerSubmissionUploadViewState.Empty(
+                baseVisibilities.copy(sources = false)
+            )
+        )
+        page.sourcesContainer.assertNotDisplayed()
+        page.sourcesDivider.assertNotDisplayed()
+        page.cameraButton.assertNotDisplayed()
+        page.deviceButton.assertNotDisplayed()
+        page.galleryButton.assertNotDisplayed()
     }
 
-    private fun assertExtraFabsNotDisplayed() {
-        page.fabFile.assertNotDisplayed()
-        page.fabCamera.assertNotDisplayed()
-        page.fabGallery.assertNotDisplayed()
+    private fun assertSourceButtonsNotDisplayed() {
+        page.deviceButton.assertNotDisplayed()
+        page.cameraButton.assertNotDisplayed()
+        page.galleryButton.assertNotDisplayed()
     }
 
     private fun loadPageWithViewState(

@@ -50,10 +50,8 @@ abstract class StatusCallback<DATA> : Callback<DATA> {
             )
             else -> {
                 onFail(data, Throwable("StatusCallback: " + response.code() + " Error"), response)
-                if (response.code() == 401) tryOrNull {
-                    val event = CanvasAuthError(response.errorBody()?.string().orEmpty())
-                    EventBus.getDefault().post(event)
-                }
+                // Note: 401 errors are handled in the CanvasAuthenticator
+
                 // No response or no data
                 onCallbackFinished(ApiType.API)
             }

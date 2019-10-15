@@ -30,10 +30,7 @@ data class SubmissionApiModel (
         @SerializedName("submission_comments")
         val submissionComments: List<SubmissionCommentApiModel>,
         var grade: String?,
-        // This field is not passed back from the API and is not meant to be
-        // serialized.  It is only populated in certain test situations and it
-        // is OK for it to be null.
-        @Transient
+        @SerializedName("attachments")
         var submissionAttachments: List<AttachmentApiModel>? = null
 )
 

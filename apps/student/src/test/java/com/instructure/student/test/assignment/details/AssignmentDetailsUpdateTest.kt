@@ -339,8 +339,8 @@ class AssignmentDetailsUpdateTest : Assert() {
                 AssignmentDetailsEvent.DataLoaded(
                     assignmentResult = expectedModel.assignmentResult,
                     isStudioEnabled = true,
-                    studioLTITool = null,
-                    ltiTool = expectedModel.ltiTool,
+                    studioLTIToolResult = null,
+                    ltiToolResult = expectedModel.ltiTool,
                     submission = submission,
                     quizResult = null
                 )
@@ -364,8 +364,8 @@ class AssignmentDetailsUpdateTest : Assert() {
                 AssignmentDetailsEvent.DataLoaded(
                     assignmentResult = expectedModel.assignmentResult,
                     isStudioEnabled = false,
-                    studioLTITool = null,
-                    ltiTool = expectedModel.ltiTool,
+                    studioLTIToolResult = null,
+                    ltiToolResult = expectedModel.ltiTool,
                     submission = submission,
                     quizResult = null
                 )
@@ -388,8 +388,8 @@ class AssignmentDetailsUpdateTest : Assert() {
                 AssignmentDetailsEvent.DataLoaded(
                     assignmentResult = expectedModel.assignmentResult,
                     isStudioEnabled = false,
-                    studioLTITool = null,
-                    ltiTool = expectedModel.ltiTool,
+                    studioLTIToolResult = null,
+                    ltiToolResult = expectedModel.ltiTool,
                     submission = null,
                     quizResult = null
                 )
@@ -418,8 +418,8 @@ class AssignmentDetailsUpdateTest : Assert() {
                 AssignmentDetailsEvent.DataLoaded(
                     assignmentResult = expectedModel.assignmentResult,
                     isStudioEnabled = true,
-                    studioLTITool = null,
-                    ltiTool = expectedModel.ltiTool,
+                    studioLTIToolResult = null,
+                    ltiToolResult = expectedModel.ltiTool,
                     submission = submission,
                     quizResult = null
                 )
@@ -448,10 +448,10 @@ class AssignmentDetailsUpdateTest : Assert() {
                 AssignmentDetailsEvent.DataLoaded(
                     assignmentResult = expectedModel.assignmentResult,
                     isStudioEnabled = false,
-                    ltiTool = expectedModel.ltiTool,
+                    ltiToolResult = expectedModel.ltiTool,
                     submission = submission,
                     quizResult = DataResult.Success(quiz),
-                    studioLTITool = DataResult.Fail(null)
+                    studioLTIToolResult = DataResult.Fail(null)
                 )
             )
             .then(assertThatNext(NextMatchers.hasModel(expectedModel)))
@@ -479,13 +479,46 @@ class AssignmentDetailsUpdateTest : Assert() {
                 AssignmentDetailsEvent.DataLoaded(
                     assignmentResult = expectedModel.assignmentResult,
                     isStudioEnabled = true,
-                    ltiTool = expectedModel.ltiTool,
+                    ltiToolResult = expectedModel.ltiTool,
                     submission = submission,
                     quizResult = DataResult.Fail(null),
-                    studioLTITool = DataResult.Fail(null)
+                    studioLTIToolResult = DataResult.Fail(null)
                 )
             )
             .then(assertThatNext(NextMatchers.hasModel(expectedModel)))
+    }
+
+    @Test
+    fun `DataLoaded event with shouldRouteToSubmissionDetails = true, updates model and sends ShowSubmissionView effect`() {
+        val assignment = Assignment(id = assignmentId)
+        val submission = mockkSubmission()
+        val startModel = initModel.copy(shouldRouteToSubmissionDetails = true)
+        val expectedModel = initModel.copy(
+            isLoading = false,
+            assignmentResult = DataResult.Success(assignment),
+            isStudioEnabled = true,
+            ltiTool = DataResult.Fail(null),
+            databaseSubmission = submission,
+            shouldRouteToSubmissionDetails = false
+        )
+        updateSpec
+            .given(startModel)
+            .whenEvent(
+                AssignmentDetailsEvent.DataLoaded(
+                    assignmentResult = expectedModel.assignmentResult,
+                    isStudioEnabled = true,
+                    studioLTIToolResult = null,
+                    ltiToolResult = expectedModel.ltiTool,
+                    submission = submission,
+                    quizResult = null
+                )
+            )
+            .then(
+                assertThatNext(
+                    NextMatchers.hasModel(expectedModel),
+                    matchesEffects<AssignmentDetailsModel, AssignmentDetailsEffect>(AssignmentDetailsEffect.ShowSubmissionView(expectedModel.assignmentId, expectedModel.course))
+                )
+            )
     }
 
     @Test
@@ -516,28 +549,6 @@ class AssignmentDetailsUpdateTest : Assert() {
                 NextMatchers.hasModel(expectedModel),
                 matchesEffects<AssignmentDetailsModel, AssignmentDetailsEffect>(AssignmentDetailsEffect.LoadData(startModel.assignmentId, startModel.course.id, true))
             ))
-    }
-
-    @Test
-    fun `SubmissionTypeClicked event results in ShowCreateSubmissionView effect`() {
-        val submissionType = Assignment.SubmissionType.ONLINE_UPLOAD
-        val submissionTypes = listOf("online_upload")
-        val assignmentCopy = assignment.copy(submissionTypesRaw = submissionTypes)
-        val givenModel = initModel.copy(assignmentResult = DataResult.Success(assignmentCopy))
-        updateSpec
-            .given(givenModel)
-            .whenEvent(AssignmentDetailsEvent.SubmissionTypeClicked(submissionType))
-            .then(
-                assertThatNext(
-                    matchesEffects<AssignmentDetailsModel, AssignmentDetailsEffect>(
-                        AssignmentDetailsEffect.ShowCreateSubmissionView(
-                            submissionType,
-                            course,
-                            assignmentCopy
-                        )
-                    )
-                )
-            )
     }
 
     @Test
@@ -699,6 +710,18 @@ class AssignmentDetailsUpdateTest : Assert() {
             .then(
                 assertThatNext(
                         matchesEffects<AssignmentDetailsModel, AssignmentDetailsEffect>(AssignmentDetailsEffect.UploadMediaFileSubmission(uri, course, assignment))
+                )
+            )
+    }
+
+    @Test
+    fun `AddBookmarkClicked results in ShowBookmarkDialog effect`() {
+        updateSpec
+            .given(initModel)
+            .whenEvent(AssignmentDetailsEvent.AddBookmarkClicked)
+            .then(
+                assertThatNext<AssignmentDetailsModel, AssignmentDetailsEffect>(
+                    matchesEffects(AssignmentDetailsEffect.ShowBookmarkDialog)
                 )
             )
     }

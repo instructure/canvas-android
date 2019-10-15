@@ -23,12 +23,18 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.core.content.FileProvider
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
-import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.exhaustive
-import com.instructure.pandautils.services.NotoriousUploadService
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.FilePrefs
+import com.instructure.pandautils.utils.FileUploadUtils
+import com.instructure.pandautils.utils.OnActivityResults
+import com.instructure.pandautils.utils.PermissionUtils
+import com.instructure.pandautils.utils.remove
+import com.instructure.pandautils.utils.requestPermissions
 import com.instructure.student.R
-import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionMode.*
+import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionMode.CommentAttachment
+import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionMode.FileSubmission
+import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionMode.MediaSubmission
 import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerSubmissionUploadView
 import com.instructure.student.mobius.common.ui.EffectHandler
 import com.instructure.student.mobius.common.ui.SubmissionService
@@ -36,6 +42,7 @@ import com.spotify.mobius.Connection
 import com.spotify.mobius.functions.Consumer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import java.io.File
@@ -63,6 +70,8 @@ class PickerSubmissionUploadEffectHandler constructor(
         event.once(subId) {
             if (it.resultCode == Activity.RESULT_OK) {
                 if (it.requestCode == REQUEST_CAMERA_PIC) {
+                    event.remove() //Remove the event so it doesn't show up again somewhere else
+
                     // Attempt to restore URI in case were were booted from memory
                     val cameraImageUri = Uri.parse(FilePrefs.tempCaptureUri)
 
@@ -74,6 +83,8 @@ class PickerSubmissionUploadEffectHandler constructor(
 
                     consumer.accept(PickerSubmissionUploadEvent.OnFileSelected(cameraImageUri))
                 } else if (it.requestCode in listOf(REQUEST_PICK_IMAGE_GALLERY, REQUEST_PICK_FILE_FROM_DEVICE)) {
+                    event.remove() //Remove the event so it doesn't show up again somewhere else
+
                     if (it.data != null && it.data?.data != null) {
                         consumer.accept(PickerSubmissionUploadEvent.OnFileSelected(it.data!!.data!!))
                     } else {
@@ -113,8 +124,7 @@ class PickerSubmissionUploadEffectHandler constructor(
                     assignmentId = model.assignmentId,
                     assignmentName = model.assignmentName,
                     assignmentGroupCategoryId = model.assignmentGroupCategoryId,
-                    mediaFilePath = model.files.first().fullPath,
-                    notoriousAction = NotoriousUploadService.ACTION.ASSIGNMENT_SUBMISSION // TODO: Make this more dynamic when everything else is wired up
+                    mediaFilePath = model.files.first().fullPath
                 )
             }
             FileSubmission -> {
@@ -146,7 +156,9 @@ class PickerSubmissionUploadEffectHandler constructor(
 
     private fun loadFile(allowedExtensions: List<String>, uri: Uri, context: Context) {
         launch(Dispatchers.Main) {
-            val submitObject = FileUploadUtils.getFile(context, uri)
+            val submitObject = withContext(Dispatchers.IO) {
+                FileUploadUtils.getFile(context, uri)
+            }
 
             submitObject?.let {
                 var fileToSubmit: FileSubmitObject? = null

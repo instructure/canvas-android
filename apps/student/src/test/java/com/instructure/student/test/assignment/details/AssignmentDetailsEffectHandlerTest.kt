@@ -16,20 +16,17 @@
 package com.instructure.student.test.assignment.details
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.core.content.FileProvider
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.instructure.canvasapi2.managers.ExternalToolManager
 import com.instructure.canvasapi2.managers.QuizManager
 import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.*
-import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.DataResult
-import com.instructure.canvasapi2.utils.Failure
+import com.instructure.canvasapi2.utils.*
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
 import com.instructure.canvasapi2.utils.weave.awaitApiResponse
-import com.instructure.pandautils.services.NotoriousUploadService
 import com.instructure.pandautils.utils.FilePrefs
 import com.instructure.pandautils.utils.FileUploadUtils
 import com.instructure.pandautils.utils.PermissionUtils
@@ -38,9 +35,7 @@ import com.instructure.student.Submission
 import com.instructure.student.db.Db
 import com.instructure.student.db.StudentDb
 import com.instructure.student.db.getInstance
-import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsEffect
-import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsEffectHandler
-import com.instructure.student.mobius.assignmentDetails.AssignmentDetailsEvent
+import com.instructure.student.mobius.assignmentDetails.*
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsView
 import com.instructure.student.mobius.assignmentDetails.ui.SubmissionTypesVisibilities
@@ -69,6 +64,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     private val assignmentId = 2468L
     private val view: AssignmentDetailsView = mockk(relaxed = true)
     private val context: Activity = mockk(relaxed = true)
+    private val firebase: FirebaseAnalytics = mockk(relaxed = true)
     private var effectHandler =
         AssignmentDetailsEffectHandler(context, assignmentId).apply { view = this@AssignmentDetailsEffectHandlerTest.view }
     private val eventConsumer: Consumer<AssignmentDetailsEvent> = mockk(relaxed = true)
@@ -105,6 +101,8 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
 
         // Connect after mocks, so database is setup properly
         connection = effectHandler.connect(eventConsumer)
+
+        Analytics.firebase = firebase
     }
 
     private fun mockkDatabase(data: List<Submission> = emptyList()) {
@@ -219,6 +217,48 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
             eventConsumer.accept(expectedEvent)
         }
 
+        verify {
+            firebase.logEvent(AnalyticsEventConstants.ASSIGNMENT_DETAIL_ASSIGNMENT, null)
+        }
+
+        confirmVerified(firebase)
+        confirmVerified(eventConsumer)
+    }
+
+    @Test
+    fun `Successful LoadData with discussion results in DataLoaded`() {
+        val courseId = 1L
+        val discussionTopicId = 1234L
+        val submission = mockkSubmission(9876L)
+        assignment = assignment.copy(
+                submissionTypesRaw = listOf(Assignment.SubmissionType.DISCUSSION_TOPIC.apiString),
+                discussionTopicHeader = DiscussionTopicHeader(id = discussionTopicId)
+        )
+        val expectedEvent = AssignmentDetailsEvent.DataLoaded(
+                DataResult.Success(assignment),
+                false,
+                DataResult.Fail(null),
+                DataResult.Fail(null),
+                submission,
+                null
+        )
+
+        mockkStatic("com.instructure.canvasapi2.utils.weave.AwaitApiKt")
+        coEvery { awaitApiResponse<Assignment>(any()) } returns Response.success(assignment)
+
+        mockkDatabase(listOf(submission))
+
+        connection.accept(AssignmentDetailsEffect.LoadData(assignment.id, courseId, false))
+
+        verify(timeout = 100) {
+            eventConsumer.accept(expectedEvent)
+        }
+
+        verify {
+            firebase.logEvent(AnalyticsEventConstants.ASSIGNMENT_DETAIL_DISCUSSION, null)
+        }
+
+        confirmVerified(firebase)
         confirmVerified(eventConsumer)
     }
 
@@ -458,6 +498,11 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
             eventConsumer.accept(expectedEvent)
         }
 
+        verify {
+            firebase.logEvent(AnalyticsEventConstants.ASSIGNMENT_DETAIL_QUIZ, null)
+        }
+
+        confirmVerified(firebase)
         confirmVerified(eventConsumer)
     }
 
@@ -585,7 +630,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
         connection.accept(AssignmentDetailsEffect.ShowUploadStatusView(submission))
 
         verify(timeout = 100) {
-            view.showOnlineTextEntryView(submission.assignmentId!!, submission.assignmentName, submission.submissionEntry)
+            view.showOnlineTextEntryView(submission.assignmentId, submission.assignmentName, submission.submissionEntry)
         }
 
         confirmVerified(view)
@@ -597,7 +642,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
         connection.accept(AssignmentDetailsEffect.ShowUploadStatusView(submission))
 
         verify(timeout = 100) {
-            view.showOnlineUrlEntryView(submission.assignmentId!!, submission.assignmentName, course, submission.submissionEntry)
+            view.showOnlineUrlEntryView(submission.assignmentId, submission.assignmentName, course, submission.submissionEntry)
         }
 
         confirmVerified(view)
@@ -608,7 +653,6 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
         val submission = mockkSubmission(9876L)
 
         mockkDatabase(listOf(submission))
-
         effectHandler.queryResultsChanged()
 
         verify(timeout = 100) {
@@ -904,6 +948,17 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     }
 
     @Test
+    fun `ShowBookmarkDialog results in view calling showBookmarkDialog`() {
+        connection.accept(AssignmentDetailsEffect.ShowBookmarkDialog)
+
+        verify(timeout = 100) {
+            view.showBookmarkDialog()
+        }
+
+        confirmVerified(view)
+    }
+
+    @Test
     fun `ShowVideoRecordingError results in view calling showAudioRecordingError`() {
         connection.accept(AssignmentDetailsEffect.ShowVideoRecordingError)
 
@@ -927,8 +982,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
                 assignment.id,
                 assignment.name,
                 assignment.groupCategoryId,
-                "Path",
-                NotoriousUploadService.ACTION.ASSIGNMENT_SUBMISSION
+                "Path"
             )
         } returns Unit
 
@@ -941,8 +995,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
                 assignment.id,
                 assignment.name,
                 assignment.groupCategoryId,
-                "Path",
-                NotoriousUploadService.ACTION.ASSIGNMENT_SUBMISSION
+                "Path"
             )
         }
 
@@ -993,7 +1046,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     }
 
     @Test
-    fun `ShowCreateSubmissionView with type basic lti launchcalls showLTIView`() {
+    fun `ShowCreateSubmissionView with type basic lti launch calls showLTIView`() {
         val ltiUrl = "https://www.instructure.com"
         val assignmentName = "hodor"
         val assignmentCopy = assignment.copy(name = assignmentName)
@@ -1063,7 +1116,6 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     }
 
     private fun testVideo() {
-
         val uri = mockk<Uri>()
         val intent = mockk<Intent>()
         every { intent.action } returns ""
@@ -1076,9 +1128,11 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
         every { FileProvider.getUriForFile(any(), any(), any()) } returns uri
 
         mockkStatic(FilePrefs::class)
-        every { FilePrefs.tempCaptureUri = any() } answers { "" }
+        every { FilePrefs.tempCaptureUri = any() }
 
-        every { view.getVideoIntent(uri) } returns intent
+        mockkStatic("com.instructure.student.mobius.assignmentDetails.SubmissionUtilsKt")
+        every { any<Uri>().getVideoIntent() } returns intent
+
 
         excludeRecords {
             context.packageName
@@ -1096,13 +1150,12 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     }
 
     private fun testMediaPicker() {
-
-        val uri = mockk<Uri>()
         val intent = mockk<Intent>()
         every { intent.action } returns ""
         every { context.packageManager.queryIntentActivities(any(), any()).size } returns 1
 
-        every { view.getChooseMediaIntent() } returns intent
+        mockkStatic("com.instructure.student.mobius.assignmentDetails.SubmissionUtilsKt")
+        every { chooseMediaIntent } returns intent
 
         excludeRecords {
             context.packageName

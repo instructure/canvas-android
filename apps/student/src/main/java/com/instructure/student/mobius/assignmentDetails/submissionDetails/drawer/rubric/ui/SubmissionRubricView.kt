@@ -20,8 +20,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.instructure.student.R
-import com.instructure.student.adapter.BasicItemCallback
-import com.instructure.student.adapter.BasicRecyclerAdapter
+import com.instructure.pandautils.adapters.BasicItemCallback
+import com.instructure.pandautils.adapters.BasicRecyclerAdapter
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.RubricListData
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.SubmissionRubricEvent
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.SubmissionRubricViewState

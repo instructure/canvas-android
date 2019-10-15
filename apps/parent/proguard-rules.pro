@@ -1,3 +1,5 @@
+-keepattributes SourceFile,LineNumberTable # Needed to avoid mangled Route patterns
+
 # Instructure
 -keep public class com.instructure.** { *; }
 -keep public class instructure.** { *; }
@@ -33,3 +35,6 @@
 
 # Kotlin
 -dontwarn kotlinx.atomicfu.AtomicBoolean
+
+# CameraKit
+-dontwarn com.google.android.gms.**

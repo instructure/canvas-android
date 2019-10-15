@@ -199,6 +199,10 @@ object AssignmentManager {
         )
     }
 
+    fun getAllSubmissionsForAssignmentAsync(courseId: Long, assignmentId: Long, forceNetwork: Boolean) = apiAsync<List<Submission>> {
+        getAllSubmissionsForAssignment(courseId, assignmentId, forceNetwork, it)
+    }
+
     @JvmStatic
     fun getAllAssignments(courseId: Long, forceNetwork: Boolean, callback: StatusCallback<List<Assignment>>) {
         val adapter = RestBuilder(callback)

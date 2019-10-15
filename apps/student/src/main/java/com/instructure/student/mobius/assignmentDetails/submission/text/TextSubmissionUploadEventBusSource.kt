@@ -19,10 +19,7 @@ package com.instructure.student.mobius.assignmentDetails.submission.text
 import android.app.Activity
 import android.net.Uri
 import com.instructure.canvasapi2.utils.Logger
-import com.instructure.pandautils.utils.FilePrefs
-import com.instructure.pandautils.utils.MediaUploadUtils
-import com.instructure.pandautils.utils.OnActivityResults
-import com.instructure.pandautils.utils.RequestCodes
+import com.instructure.pandautils.utils.*
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.mobius.common.EventBusSource
 import org.greenrobot.eventbus.Subscribe
@@ -36,12 +33,16 @@ class TextSubmissionUploadEventBusSource : EventBusSource<TextSubmissionUploadEv
         event.once(subId) {
             if (it.resultCode == Activity.RESULT_OK) {
                 when (it.requestCode) {
-                    RequestCodes.PICK_IMAGE_GALLERY -> it.data?.data?.let { uri ->
-                        sendEvent(
-                            TextSubmissionUploadEvent.ImageAdded(uri)
-                        )
-                    } ?: sendEvent(TextSubmissionUploadEvent.ImageFailed)
-                    RequestCodes.CAMERA_PIC_REQUEST -> sendEvent(TextSubmissionUploadEvent.CameraImageTaken)
+                    RequestCodes.PICK_IMAGE_GALLERY -> {
+                        event.remove() //Remove the event so it doesn't show up again somewhere else
+                        it.data?.data?.let { uri ->
+                            sendEvent(TextSubmissionUploadEvent.ImageAdded(uri))
+                        } ?: sendEvent(TextSubmissionUploadEvent.ImageFailed)
+                    }
+                    RequestCodes.CAMERA_PIC_REQUEST -> {
+                        event.remove() //Remove the event so it doesn't show up again somewhere else
+                        sendEvent(TextSubmissionUploadEvent.CameraImageTaken)
+                    }
                 }
             }
         }

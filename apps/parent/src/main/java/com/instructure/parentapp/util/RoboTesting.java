@@ -16,7 +16,7 @@ class RoboTesting {
         prefs.save(com.instructure.pandautils.utils.Const.NAME, BuildConfig.ROBO_TEST_USERNAME);
 
         //save token
-        ApiPrefs.setToken(BuildConfig.ROBO_TEST_API_KEY);
+        ApiPrefs.setAccessToken(BuildConfig.ROBO_TEST_API_KEY);
 
         //Set domain to gamma
         ApiPrefs.setAirwolfDomain(BuildConfig.GAMMA_DOMAIN);

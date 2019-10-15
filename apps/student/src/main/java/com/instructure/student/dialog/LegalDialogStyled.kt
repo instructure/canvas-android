@@ -21,11 +21,11 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatDialogFragment
-import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.TermsOfService
 import com.instructure.canvasapi2.utils.weave.awaitApi
@@ -88,7 +88,8 @@ class LegalDialogStyled : AppCompatDialogFragment() {
         }
 
         view.openSource.onClick {
-            startActivity(Intent(context, OssLicensesMenuActivity::class.java))
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/instructure/canvas-android"))
+            requireContext().startActivity(intent)
             dialog.dismiss()
         }
 

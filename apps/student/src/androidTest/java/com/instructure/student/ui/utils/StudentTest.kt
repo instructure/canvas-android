@@ -17,11 +17,20 @@
 package com.instructure.student.ui.utils
 
 import android.app.Activity
+import androidx.test.espresso.Espresso
+import android.view.View
+import androidx.test.espresso.UiController
+import androidx.test.espresso.ViewAction
+import androidx.test.espresso.matcher.ViewMatchers
 import com.instructure.canvas.espresso.CanvasTest
 import com.instructure.espresso.InstructureActivityTestRule
+import com.instructure.espresso.swipeRight
 import com.instructure.student.BuildConfig
+import com.instructure.student.R
 import com.instructure.student.activity.LoginActivity
 import com.instructure.student.ui.pages.*
+import instructure.rceditor.RCETextEditor
+import org.hamcrest.Matcher
 
 abstract class StudentTest : CanvasTest() {
 
@@ -52,4 +61,38 @@ abstract class StudentTest : CanvasTest() {
     val submissionDetailsPage = SubmissionDetailsPage()
     val peopleListPage = PeopleListPage()
     val personDetailsPage = PersonDetailsPage()
+    val modulesPage = ModulesPage()
+    val syllabusPage = SyllabusPage()
+    val fileListPage = FileListPage()
+    val discussionListPage = DiscussionListPage()
+    val discussionDetailsPage = DiscussionDetailsPage()
+    val pageListPage = PageListPage()
+    val quizListPage = QuizListPage()
+    val quizDetailsPage = QuizDetailsPage()
+
+    // A no-op interaction to afford us an easy, harmless way to get a11y checking to trigger.
+    fun meaninglessSwipe() {
+        Espresso.onView(ViewMatchers.withId(R.id.action_bar_root)).swipeRight();
+    }
+}
+
+/*
+ * Custom action to enter text into an RCETextEditor
+ * This had to go here, instead of CustomActions, because CustomActions is not aware of RCETExtEditor.
+ */
+class TypeInRCETextEditor(val text: String) : ViewAction {
+    override fun getDescription(): String {
+        return "Enters text into an RCETextEditor"
+    }
+
+    override fun getConstraints(): Matcher<View> {
+        return ViewMatchers.isAssignableFrom(RCETextEditor::class.java)
+    }
+
+    override fun perform(uiController: UiController?, view: View?) {
+        when(view) {
+            is RCETextEditor -> view.applyHtml(text)
+        }
+    }
+
 }

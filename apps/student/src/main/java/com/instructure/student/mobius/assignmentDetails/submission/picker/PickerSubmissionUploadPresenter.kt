@@ -17,9 +17,7 @@
 package com.instructure.student.mobius.assignmentDetails.submission.picker
 
 import android.content.Context
-import androidx.annotation.IntegerRes
 import com.instructure.canvasapi2.utils.NumberHelper
-import com.instructure.student.R
 import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerListItemViewState
 import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerSubmissionUploadViewState
 import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerVisibilities
@@ -31,7 +29,7 @@ object PickerSubmissionUploadPresenter : Presenter<PickerSubmissionUploadModel, 
         model: PickerSubmissionUploadModel,
         context: Context
     ): PickerSubmissionUploadViewState {
-        return if (model.files.isEmpty()) {
+        return if (model.files.isEmpty() && !model.isLoadingFile) {
             presentEmptyState(model)
         } else {
             presentListState(model, context)
@@ -60,11 +58,11 @@ object PickerSubmissionUploadPresenter : Presenter<PickerSubmissionUploadModel, 
 
     private fun getVisibilities(model: PickerSubmissionUploadModel) = PickerVisibilities(
         loading = model.isLoadingFile,
-        fab = !model.mode.isMediaSubmission,
+        sources = !model.mode.isMediaSubmission,
         submit = model.files.isNotEmpty(),
-        fabFile = !model.mode.isMediaSubmission,
-        fabCamera = !model.mode.isMediaSubmission && allowsCameraImages(model.allowedExtensions),
-        fabGallery = !model.mode.isMediaSubmission && allowsGalleryImages(model.allowedExtensions)
+        sourceFile = !model.mode.isMediaSubmission,
+        sourceCamera = !model.mode.isMediaSubmission && allowsCameraImages(model.allowedExtensions),
+        sourceGallery = !model.mode.isMediaSubmission && allowsGalleryImages(model.allowedExtensions)
     )
 
     private fun allowsCameraImages(allowedExtensions: List<String>): Boolean {

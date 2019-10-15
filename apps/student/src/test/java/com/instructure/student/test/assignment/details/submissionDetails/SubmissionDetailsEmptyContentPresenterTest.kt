@@ -18,10 +18,7 @@ package com.instructure.student.test.assignment.details.submissionDetails
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.LockInfo
-import com.instructure.canvasapi2.models.LockedModule
+import com.instructure.canvasapi2.models.*
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.SubmissionDetailsEmptyContentModel
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.SubmissionDetailsEmptyContentPresenter
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyContentViewState.Loaded
@@ -31,6 +28,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.threeten.bp.OffsetDateTime
 import org.threeten.bp.format.DateTimeFormatter
+import java.util.*
 
 @RunWith(AndroidJUnit4::class)
 class SubmissionDetailsEmptyContentPresenterTest : Assert() {
@@ -38,33 +36,51 @@ class SubmissionDetailsEmptyContentPresenterTest : Assert() {
     private lateinit var baseModel: SubmissionDetailsEmptyContentModel
     private lateinit var baseAssignment: Assignment
     private lateinit var baseCourse: Course
+    private lateinit var baseQuiz: Quiz
+    private lateinit var baseDiscussion: DiscussionTopicHeader
     private lateinit var context: Context
-    private var isArcEnabled = false
+    private var isStudioEnabled = false
+
+    private val defaultLoadedState = Loaded(submitButtonText = "Submit Assignment")
 
     @Before
     fun setup() {
         context = ApplicationProvider.getApplicationContext()
         baseCourse = Course()
-        baseAssignment =   Assignment(
-                dueAt = OffsetDateTime.now().withHour(23).withMinute(59).format(DateTimeFormatter.ISO_DATE_TIME),
-                submissionTypesRaw = listOf("online_upload"),
-                lockedForUser = false
+        baseAssignment = Assignment(
+            dueAt = OffsetDateTime.now().withHour(23).withMinute(59).format(DateTimeFormatter.ISO_DATE_TIME),
+            submissionTypesRaw = listOf("online_upload"),
+            lockedForUser = false
+        )
+        baseQuiz = Quiz(
+            id = 123L
+        )
+        baseDiscussion = DiscussionTopicHeader(
+            id = 123L,
+            message = "discussion message",
+            author = DiscussionParticipant(
+                displayName = "Hodor",
+                avatarImageUrl = "pretty-hodor.com"
+            ),
+            postedDate = Date()
         )
 
-        baseModel = SubmissionDetailsEmptyContentModel(baseAssignment, baseCourse, isArcEnabled)
+        baseModel = SubmissionDetailsEmptyContentModel(baseAssignment, baseCourse, isStudioEnabled)
     }
 
     @Test
     fun `Sets Assignment due tomorrow text`() {
         baseAssignment = baseAssignment.copy(
-                dueAt = OffsetDateTime.now().plusDays(1L).withHour(13).withMinute(59).format(DateTimeFormatter.ISO_DATE_TIME)
+            dueAt = OffsetDateTime.now().plusDays(1L).withHour(13).withMinute(59).format(
+                DateTimeFormatter.ISO_DATE_TIME
+            )
         )
 
         baseModel = baseModel.copy(assignment = baseAssignment)
 
-        val expectedState = Loaded(
-                isAllowedToSubmit = true,
-                dueDateText = "Due tomorrow at 1:59 pm"
+        val expectedState = defaultLoadedState.copy(
+            isAllowedToSubmit = true,
+            dueDateText = "Due tomorrow at 1:59 pm"
         )
 
         val actualState = SubmissionDetailsEmptyContentPresenter.present(baseModel, context)
@@ -75,14 +91,14 @@ class SubmissionDetailsEmptyContentPresenterTest : Assert() {
     @Test
     fun `Sets Assignment due today`() {
         baseAssignment = baseAssignment.copy(
-                dueAt = OffsetDateTime.now().withHour(13).withMinute(59).format(DateTimeFormatter.ISO_DATE_TIME)
+            dueAt = OffsetDateTime.now().withHour(13).withMinute(59).format(DateTimeFormatter.ISO_DATE_TIME)
         )
 
         baseModel = baseModel.copy(assignment = baseAssignment)
 
-        val expectedState = Loaded(
-                isAllowedToSubmit = true,
-                dueDateText = "Due today at 1:59 pm"
+        val expectedState = defaultLoadedState.copy(
+            isAllowedToSubmit = true,
+            dueDateText = "Due today at 1:59 pm"
         )
 
         val actualState = SubmissionDetailsEmptyContentPresenter.present(baseModel, context)
@@ -93,14 +109,16 @@ class SubmissionDetailsEmptyContentPresenterTest : Assert() {
     @Test
     fun `Sets Assignment due yesterday`() {
         baseAssignment = baseAssignment.copy(
-                dueAt = OffsetDateTime.now().minusDays(1L).withHour(13).withMinute(59).format(DateTimeFormatter.ISO_DATE_TIME)
+            dueAt = OffsetDateTime.now().minusDays(1L).withHour(13).withMinute(59).format(
+                DateTimeFormatter.ISO_DATE_TIME
+            )
         )
 
         baseModel = baseModel.copy(assignment = baseAssignment)
 
-        val expectedState = Loaded(
-                isAllowedToSubmit = true,
-                dueDateText = "Due yesterday at 1:59 pm"
+        val expectedState = defaultLoadedState.copy(
+            isAllowedToSubmit = true,
+            dueDateText = "Due yesterday at 1:59 pm"
         )
 
         val actualState = SubmissionDetailsEmptyContentPresenter.present(baseModel, context)
@@ -109,16 +127,18 @@ class SubmissionDetailsEmptyContentPresenterTest : Assert() {
     }
 
     @Test
-    fun `Sets Assignment due on future date`(){
+    fun `Sets Assignment due on future date`() {
         baseAssignment = baseAssignment.copy(
-                dueAt = OffsetDateTime.now().withMonth(4).withDayOfMonth(2).withHour(13).withMinute(59).format(DateTimeFormatter.ISO_DATE_TIME)
+            dueAt = OffsetDateTime.now().withMonth(4).withDayOfMonth(2).withHour(13).withMinute(59).format(
+                DateTimeFormatter.ISO_DATE_TIME
+            )
         )
 
         baseModel = baseModel.copy(assignment = baseAssignment)
 
-        val expectedState = Loaded(
-                isAllowedToSubmit = true,
-                dueDateText = "Due Apr 2 at 1:59 pm"
+        val expectedState = defaultLoadedState.copy(
+            isAllowedToSubmit = true,
+            dueDateText = "Due Apr 2 at 1:59 pm"
         )
 
         val actualState = SubmissionDetailsEmptyContentPresenter.present(baseModel, context)
@@ -130,13 +150,13 @@ class SubmissionDetailsEmptyContentPresenterTest : Assert() {
     @Test
     fun `Sets Assignment has no due date`() {
         baseAssignment = baseAssignment.copy(
-                dueAt = null
+            dueAt = null
         )
         baseModel = baseModel.copy(assignment = baseAssignment)
 
-        val expectedState = Loaded(
-                isAllowedToSubmit = true,
-                dueDateText = "Your assignment has no due date"
+        val expectedState = defaultLoadedState.copy(
+            isAllowedToSubmit = true,
+            dueDateText = "Your assignment has no due date"
         )
 
         val actualState = SubmissionDetailsEmptyContentPresenter.present(baseModel, context)
@@ -147,14 +167,16 @@ class SubmissionDetailsEmptyContentPresenterTest : Assert() {
     @Test
     fun `Sets Assignment locked`() {
         baseAssignment = baseAssignment.copy(
-                lockedForUser = true,
-                lockAt = OffsetDateTime.now().withYear(2016).withMonth(4).withDayOfMonth(2).withHour(13).withMinute(59).format(DateTimeFormatter.ISO_DATE_TIME)
+            lockedForUser = true,
+            lockAt = OffsetDateTime.now().withYear(2016).withMonth(4).withDayOfMonth(2).withHour(13).withMinute(
+                59
+            ).format(DateTimeFormatter.ISO_DATE_TIME)
         )
         baseModel = baseModel.copy(assignment = baseAssignment)
 
-        val expectedState = Loaded(
-                isAllowedToSubmit = false,
-                dueDateText = "Your assignment was locked on Apr 2, 2016 at 1:59 pm"
+        val expectedState = defaultLoadedState.copy(
+            isAllowedToSubmit = false,
+            dueDateText = "Your assignment was locked on Apr 2, 2016 at 1:59 pm"
         )
 
         val actualState = SubmissionDetailsEmptyContentPresenter.present(baseModel, context)
@@ -165,13 +187,16 @@ class SubmissionDetailsEmptyContentPresenterTest : Assert() {
     @Test
     fun `Sets Assignment will unlock`() {
         baseAssignment = baseAssignment.copy(
-                lockedForUser = true,
-                unlockAt = OffsetDateTime.now().withYear(2067).withMonth(4).withDayOfMonth(2).withHour(13).withMinute(59).format(DateTimeFormatter.ISO_DATE_TIME))
+            lockedForUser = true,
+            unlockAt = OffsetDateTime.now().withYear(2067).withMonth(4).withDayOfMonth(2).withHour(
+                13
+            ).withMinute(59).format(DateTimeFormatter.ISO_DATE_TIME)
+        )
         baseModel = baseModel.copy(assignment = baseAssignment)
 
-        val expectedState = Loaded(
-                isAllowedToSubmit = false,
-                dueDateText = "Your assignment will unlock on Apr 2, 2067 at 1:59 pm"
+        val expectedState = defaultLoadedState.copy(
+            isAllowedToSubmit = false,
+            dueDateText = "Your assignment will unlock on Apr 2, 2067 at 1:59 pm"
         )
 
         val actualState = SubmissionDetailsEmptyContentPresenter.present(baseModel, context)
@@ -182,18 +207,18 @@ class SubmissionDetailsEmptyContentPresenterTest : Assert() {
     @Test
     fun `Sets Assignment locked by module`() {
         baseAssignment = baseAssignment.copy(
-                lockedForUser = true,
-                lockInfo = LockInfo(
-                        contextModule = LockedModule(
-                                name = "Test Module"
-                        )
+            lockedForUser = true,
+            lockInfo = LockInfo(
+                contextModule = LockedModule(
+                    name = "Test Module"
                 )
+            )
         )
         baseModel = baseModel.copy(assignment = baseAssignment)
 
-        val expectedState = Loaded(
-                isAllowedToSubmit = false,
-                dueDateText = "Your assignment is locked by module \"Test Module\""
+        val expectedState = defaultLoadedState.copy(
+            isAllowedToSubmit = false,
+            dueDateText = "Your assignment is locked by module \"Test Module\""
         )
 
         val actualState = SubmissionDetailsEmptyContentPresenter.present(baseModel, context)
@@ -204,16 +229,16 @@ class SubmissionDetailsEmptyContentPresenterTest : Assert() {
     @Test
     fun `Sets Assignment locked by module prereq`() {
         baseAssignment = baseAssignment.copy(
-                lockedForUser = true,
-                lockInfo = LockInfo(
-                       modulePrerequisiteNames = arrayListOf("must_view")
-                )
+            lockedForUser = true,
+            lockInfo = LockInfo(
+                modulePrerequisiteNames = arrayListOf("must_view")
+            )
         )
         baseModel = baseModel.copy(assignment = baseAssignment)
 
-        val expectedState = Loaded(
-                isAllowedToSubmit = false,
-                dueDateText = "Your assignment is locked by a module requirement"
+        val expectedState = defaultLoadedState.copy(
+            isAllowedToSubmit = false,
+            dueDateText = "Your assignment is locked by a module requirement"
         )
 
         val actualState = SubmissionDetailsEmptyContentPresenter.present(baseModel, context)
@@ -224,20 +249,25 @@ class SubmissionDetailsEmptyContentPresenterTest : Assert() {
     @Test
     fun `Adds year to due date when not this year`() {
         baseAssignment = baseAssignment.copy(
-                dueAt = OffsetDateTime.now().withYear(2018).withMonth(4).withDayOfMonth(2).withHour(13).withMinute(59).format(DateTimeFormatter.ISO_DATE_TIME)
+            dueAt = OffsetDateTime.now()
+                .withYear(2018)
+                .withMonth(4)
+                .withDayOfMonth(2)
+                .withHour(13)
+                .withMinute(59)
+                .format(DateTimeFormatter.ISO_DATE_TIME)
         )
 
         baseModel = baseModel.copy(assignment = baseAssignment)
 
-        val expectedState = Loaded(
-                isAllowedToSubmit = true,
-                dueDateText = "Due Apr 2, 2018 at 1:59 pm"
+        val expectedState = defaultLoadedState.copy(
+            isAllowedToSubmit = true,
+            dueDateText = "Due Apr 2, 2018 at 1:59 pm"
         )
 
         val actualState = SubmissionDetailsEmptyContentPresenter.present(baseModel, context)
 
         assertEquals(expectedState, actualState)
-
     }
 
     @Test
@@ -248,10 +278,69 @@ class SubmissionDetailsEmptyContentPresenterTest : Assert() {
     }
 
     @Test
-    fun `Sets enable button visible state when Assignment is locked`() {
-        baseModel = baseModel.copy(Assignment(lockedForUser = true))
+    fun `Submit button disabled if not allowed to submit when assignment is online upload`() {
+        baseModel = baseModel.copy(Assignment(lockedForUser = true, submissionTypesRaw = listOf("online_upload")))
         val actualState = SubmissionDetailsEmptyContentPresenter.present(baseModel, context)
 
         assertFalse((actualState as Loaded).isAllowedToSubmit)
+    }
+
+    @Test
+    fun `Submit button disabled if not allowed to submit when assignment is external tool`() {
+        baseModel = baseModel.copy(Assignment(lockedForUser = true, submissionTypesRaw = listOf("external_tool")))
+        val actualState = SubmissionDetailsEmptyContentPresenter.present(baseModel, context)
+
+        assertFalse((actualState as Loaded).isAllowedToSubmit)
+    }
+
+    @Test
+    fun `Submit button enabled if assignment is allowed to submit`() {
+        baseAssignment = baseAssignment.copy(
+            dueAt = OffsetDateTime.now().withHour(13).withMinute(59).format(DateTimeFormatter.ISO_DATE_TIME)
+        )
+
+        baseModel = baseModel.copy(assignment = baseAssignment)
+
+        val expectedState = defaultLoadedState.copy(
+            isAllowedToSubmit = true,
+            dueDateText = "Due today at 1:59 pm",
+            submitButtonText = "Submit Assignment"
+        )
+
+        val actualState = SubmissionDetailsEmptyContentPresenter.present(baseModel, context)
+
+        assertEquals(expectedState, actualState)
+    }
+
+    @Test
+    fun `Submit button reads "View Quiz" if its a quiz`() {
+        val assignment = baseAssignment.copy(
+            submissionTypesRaw = listOf("online_quiz"),
+            quizId = baseQuiz.id
+        )
+        val model = baseModel.copy(assignment = assignment, quiz = baseQuiz)
+        val state = SubmissionDetailsEmptyContentPresenter.present(model, context) as Loaded
+        assertEquals("View Quiz", state.submitButtonText)
+    }
+
+    @Test
+    fun `Submit button reads "View Discussion" if its a discussion`() {
+        val assignment = baseAssignment.copy(
+            submissionTypesRaw = listOf("discussion_topic"),
+            discussionTopicHeader = baseDiscussion
+        )
+        val model = baseModel.copy(assignment = assignment)
+        val state = SubmissionDetailsEmptyContentPresenter.present(model, context) as Loaded
+        assertEquals("View Discussion", state.submitButtonText)
+    }
+
+    @Test
+    fun `Submit button reads "Launch External Tool" if submission type is external tool`() {
+        val assignment = baseAssignment.copy(
+            submissionTypesRaw = listOf(Assignment.SubmissionType.EXTERNAL_TOOL.apiString)
+        )
+        val model = baseModel.copy(assignment = assignment)
+        val state = SubmissionDetailsEmptyContentPresenter.present(model, context) as Loaded
+        assertEquals("Launch External Tool", state.submitButtonText)
     }
 }

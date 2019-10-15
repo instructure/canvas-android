@@ -17,22 +17,21 @@
 package com.instructure.student.mobius.assignmentDetails.submission.file.ui
 
 import android.app.Activity
-import android.content.Intent
+import android.app.AlertDialog
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.instructure.pandautils.services.FileUploadService
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
-import com.instructure.student.adapter.BasicItemBinder
-import com.instructure.student.adapter.BasicItemCallback
-import com.instructure.student.adapter.BasicRecyclerAdapter
+import com.instructure.pandautils.adapters.BasicItemBinder
+import com.instructure.pandautils.adapters.BasicItemCallback
+import com.instructure.pandautils.adapters.BasicRecyclerAdapter
 import com.instructure.student.mobius.assignmentDetails.submission.file.UploadStatusSubmissionEvent
 import com.instructure.student.mobius.common.ui.MobiusView
-import com.instructure.student.mobius.common.ui.SubmissionService
 import com.spotify.mobius.functions.Consumer
 import kotlinx.android.synthetic.main.fragment_upload_status_submission.*
 import kotlinx.android.synthetic.main.fragment_upload_status_submission.toolbar
@@ -44,6 +43,8 @@ class UploadStatusSubmissionView(inflater: LayoutInflater, parent: ViewGroup) :
         inflater,
         parent
     ) {
+
+    private var dialog: AlertDialog? = null
 
     private val adapter = UploadRecyclerAdapter(object : UploadListCallback {
         override fun deleteClicked(position: Int) {
@@ -69,8 +70,7 @@ class UploadStatusSubmissionView(inflater: LayoutInflater, parent: ViewGroup) :
         uploadStatusRecycler.adapter = adapter
 
         uploadStatusStateDone.setOnClickListener { backPress() }
-        uploadStatusStateCancel.setOnClickListener { output.accept(UploadStatusSubmissionEvent.OnCancelClicked) }
-        uploadStatusStateCancelAll.setOnClickListener { output.accept(UploadStatusSubmissionEvent.OnCancelAllClicked) }
+        uploadStatusStateCancel.setOnClickListener { output.accept(UploadStatusSubmissionEvent.OnRequestCancelClicked) }
         uploadStatusStateRetry.setOnClickListener { output.accept(UploadStatusSubmissionEvent.OnRetryClicked) }
     }
 
@@ -94,7 +94,7 @@ class UploadStatusSubmissionView(inflater: LayoutInflater, parent: ViewGroup) :
         uploadStatusLoading.setVisible(visibilities.loading)
 
         // Set button visibilities
-//        uploadStatusStateRetry.setVisible(visibilities.failed) // TODO: Enable when retry is supported in the FileUploadService
+        uploadStatusStateRetry.setVisible(visibilities.failed)
         uploadStatusStateDone.setVisible(visibilities.succeeded)
         uploadStatusStateCancel.setVisible(visibilities.cancelable)
     }
@@ -102,6 +102,9 @@ class UploadStatusSubmissionView(inflater: LayoutInflater, parent: ViewGroup) :
     private fun renderSucceeded(state: UploadStatusSubmissionViewState.Succeeded) {
         uploadStatusStateTitle.text = state.title
         uploadStatusStateMessage.text = state.message
+
+        dialog?.cancel()
+        dialog = null
     }
 
     private fun renderInProgress(state: UploadStatusSubmissionViewState.InProgress) {
@@ -126,7 +129,7 @@ class UploadStatusSubmissionView(inflater: LayoutInflater, parent: ViewGroup) :
 
     // Effect functions
     fun submissionDeleted() {
-        Toast.makeText(context, R.string.deleted, Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, R.string.submissionDeleted, Toast.LENGTH_SHORT).show()
         backPress()
     }
 
@@ -135,13 +138,24 @@ class UploadStatusSubmissionView(inflater: LayoutInflater, parent: ViewGroup) :
         backPress()
     }
 
-    /**
-     * Define intents here so we don't leak android resources into unit tests
-     */
-    fun getServiceIntents() = listOf(
-        Intent(context, FileUploadService::class.java),
-        Intent(context, SubmissionService::class.java)
-    )
+    fun showCancelSubmissionDialog() {
+        dialog = AlertDialog.Builder(context)
+            .setTitle(R.string.submissionDeleteTitle)
+            .setMessage(R.string.submissionDeleteMessage)
+            .setPositiveButton(R.string.yes) { _, _ ->
+                consumer?.accept(UploadStatusSubmissionEvent.OnCancelClicked)
+            }
+            .setNegativeButton(R.string.no, null)
+            .create()
+        dialog?.setOnShowListener {
+            dialog?.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(ContextCompat.getColor(context, R.color.destructive))
+            dialog?.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(ContextCompat.getColor(context, R.color.gray))
+        }
+        dialog?.setOnCancelListener {
+            dialog = null
+        }
+        dialog?.show()
+    }
 }
 
 interface UploadListCallback : BasicItemCallback {
@@ -168,13 +182,11 @@ class UploadListBinder : BasicItemBinder<UploadListItemViewState, UploadListCall
 //            fileError.setVisible().text = state.errorMessage
 //        }
 
-        // TODO: Not functionally useful right now since retry isn't enabled (no need to delete items yet)
-        deleteButton.setGone() // TODO: Remove this line
-//        if (state.canDelete) {
-//            deleteButton.setVisible().setOnClickListener { pickerListCallback.deleteClicked(state.position) }
-//        } else {
-//            deleteButton.setGone().setOnClickListener(null)
-//        }
+        if (state.canDelete) {
+            deleteButton.setVisible().setOnClickListener { pickerListCallback.deleteClicked(state.position) }
+        } else {
+            deleteButton.setGone().setOnClickListener(null)
+        }
     }
 }
 

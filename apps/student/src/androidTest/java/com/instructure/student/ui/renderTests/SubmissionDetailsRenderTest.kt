@@ -16,6 +16,7 @@
 package com.instructure.student.ui.renderTests
 
 import android.content.pm.ActivityInfo
+import android.os.SystemClock.sleep
 import androidx.test.espresso.action.GeneralLocation
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.Assignment
@@ -38,7 +39,7 @@ import org.junit.runner.RunWith
 class SubmissionDetailsRenderTest : StudentRenderTest() {
 
     private lateinit var baseModel: SubmissionDetailsModel
-    private var isArcEnabled = false
+    private var isStudioEnabled = false
 
     @Before
     fun setup() {
@@ -46,9 +47,9 @@ class SubmissionDetailsRenderTest : StudentRenderTest() {
             assignmentId = 0,
             isLoading = false,
             canvasContext = Course(name = "Test Course"),
-            assignment = DataResult.Fail(),
-            rootSubmission = DataResult.Fail(),
-            isArcEnabled = isArcEnabled
+            assignmentResult = DataResult.Fail(),
+            rootSubmissionResult = DataResult.Fail(),
+            isStudioEnabled = isStudioEnabled
         )
     }
 
@@ -75,8 +76,8 @@ class SubmissionDetailsRenderTest : StudentRenderTest() {
         loadPageWithModel(
             baseModel.copy(
                 selectedSubmissionAttempt = 1,
-                assignment = DataResult.Success(Assignment()),
-                rootSubmission = DataResult.Success(
+                assignmentResult = DataResult.Success(Assignment()),
+                rootSubmissionResult = DataResult.Success(
                     Submission(submissionHistory = listOf(Submission(attempt = 1)))
                 )
             )
@@ -89,8 +90,8 @@ class SubmissionDetailsRenderTest : StudentRenderTest() {
         loadPageWithModel(
             baseModel.copy(
                 selectedSubmissionAttempt = 1,
-                assignment = DataResult.Success(Assignment()),
-                rootSubmission = DataResult.Success(
+                assignmentResult = DataResult.Success(Assignment()),
+                rootSubmissionResult = DataResult.Success(
                     Submission(submissionHistory = listOf(Submission(attempt = 1)))
                 )
             )
@@ -105,8 +106,8 @@ class SubmissionDetailsRenderTest : StudentRenderTest() {
         loadPageWithModel(
             baseModel.copy(
                 selectedSubmissionAttempt = 1,
-                assignment = DataResult.Success(Assignment()),
-                rootSubmission = DataResult.Success(
+                assignmentResult = DataResult.Success(Assignment()),
+                rootSubmissionResult = DataResult.Success(
                     Submission(submissionHistory = listOf(firstSubmission, secondSubmission))
                 )
             )
@@ -127,8 +128,8 @@ class SubmissionDetailsRenderTest : StudentRenderTest() {
         loadPageWithModel(
             baseModel.copy(
                 selectedSubmissionAttempt = 2,
-                assignment = DataResult.Success(Assignment()),
-                rootSubmission = DataResult.Success(
+                assignmentResult = DataResult.Success(Assignment()),
+                rootSubmissionResult = DataResult.Success(
                     Submission(submissionHistory = listOf(firstSubmission, secondSubmission))
                 )
             )
@@ -149,8 +150,8 @@ class SubmissionDetailsRenderTest : StudentRenderTest() {
         loadPageWithModel(
             baseModel.copy(
                 selectedSubmissionAttempt = 2,
-                assignment = DataResult.Success(Assignment()),
-                rootSubmission = DataResult.Success(
+                assignmentResult = DataResult.Success(Assignment()),
+                rootSubmissionResult = DataResult.Success(
                     Submission(submissionHistory = listOf(firstSubmission, secondSubmission))
                 )
             )
@@ -165,8 +166,8 @@ class SubmissionDetailsRenderTest : StudentRenderTest() {
         loadPageWithModel(
             baseModel.copy(
                 selectedSubmissionAttempt = 1,
-                assignment = DataResult.Success(Assignment()),
-                rootSubmission = DataResult.Success(
+                assignmentResult = DataResult.Success(Assignment()),
+                rootSubmissionResult = DataResult.Success(
                     Submission(submissionHistory = listOf(Submission(attempt = 1)))
                 )
             )
@@ -180,8 +181,8 @@ class SubmissionDetailsRenderTest : StudentRenderTest() {
         loadPageWithModel(
             baseModel.copy(
                 selectedSubmissionAttempt = 1,
-                assignment = DataResult.Success(Assignment()),
-                rootSubmission = DataResult.Success(
+                assignmentResult = DataResult.Success(Assignment()),
+                rootSubmissionResult = DataResult.Success(
                     Submission(submissionHistory = listOf(Submission(attempt = 1)))
                 )
             )
@@ -195,8 +196,8 @@ class SubmissionDetailsRenderTest : StudentRenderTest() {
         loadPageWithModel(
             baseModel.copy(
                 selectedSubmissionAttempt = 1,
-                assignment = DataResult.Success(Assignment()),
-                rootSubmission = DataResult.Success(
+                assignmentResult = DataResult.Success(Assignment()),
+                rootSubmissionResult = DataResult.Success(
                     Submission(submissionHistory = listOf(Submission(attempt = 1)))
                 )
             )
@@ -210,8 +211,8 @@ class SubmissionDetailsRenderTest : StudentRenderTest() {
         loadPageWithModel(
             baseModel.copy(
                 selectedSubmissionAttempt = 1,
-                assignment = DataResult.Success(Assignment()),
-                rootSubmission = DataResult.Success(
+                assignmentResult = DataResult.Success(Assignment()),
+                rootSubmissionResult = DataResult.Success(
                     Submission(submissionHistory = listOf(Submission(attempt = 1)))
                 )
             )
@@ -231,14 +232,20 @@ class SubmissionDetailsRenderTest : StudentRenderTest() {
         loadPageWithModel(
             baseModel.copy(
                 selectedSubmissionAttempt = 1,
-                assignment = DataResult.Success(Assignment()),
-                rootSubmission = DataResult.Success(
+                assignmentResult = DataResult.Success(Assignment()),
+                rootSubmissionResult = DataResult.Success(
                     Submission(submissionHistory = listOf(Submission(attempt = 1)))
                 )
             )
         )
         submissionDetailsRenderPage.swipeDrawerTo(GeneralLocation.CENTER)
-        activityRule.activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        submissionDetailsRenderPage.assertDisplaysDrawerContent()
+        // SENSOR_LANDSCAPE guarantees that your screen won't flip if you were already in landscape
+        activityRule.activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+        // Speculative fix for intermittent failures.  The orientation-changing operation above
+        // seems to be asynchronous in nature, so it may be at any stage of completion before the
+        // next line is executed.  Add a delay to ensure that the orientation-change completed.
+        sleep(3000)
         submissionDetailsRenderPage.assertDisplaysDrawerContent()
     }
 
@@ -247,14 +254,17 @@ class SubmissionDetailsRenderTest : StudentRenderTest() {
         loadPageWithModel(
             baseModel.copy(
                 selectedSubmissionAttempt = 1,
-                assignment = DataResult.Success(Assignment()),
-                rootSubmission = DataResult.Success(
+                assignmentResult = DataResult.Success(Assignment()),
+                rootSubmissionResult = DataResult.Success(
                     Submission(submissionHistory = listOf(Submission(attempt = 1)))
                 )
             )
         )
-        submissionDetailsRenderPage.swipeDrawerTo(GeneralLocation.CENTER)
-        activityRule.activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        submissionDetailsRenderPage.swipeDrawerTo(GeneralLocation.TOP_CENTER)
+        submissionDetailsRenderPage.assertDisplaysDrawerContent()
+        // SENSOR_PORTRAIT guarantees that your screen won't flip if you were already in portrait
+        activityRule.activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
+        sleep(3000) // See explanation in Landscape version of this test
         submissionDetailsRenderPage.assertDisplaysDrawerContent()
     }
 
@@ -269,6 +279,10 @@ class SubmissionDetailsRenderTest : StudentRenderTest() {
             loopMod = { it.effectRunner { emptyEffectRunner } }
         }
         activityRule.activity.loadFragment(fragment)
+
+        if( (model.assignmentResult?.isSuccess ?: false) && (model.rootSubmissionResult?.isSuccess ?: false) ) {
+            submissionDetailsRenderPage.waitForDrawerRender()
+        }
     }
 
 }

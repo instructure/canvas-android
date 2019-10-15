@@ -41,6 +41,7 @@ object Versions {
     const val ANDROID_SVG = "1.3"
     const val MOBIUS = "1.2.1"
     const val SQLDELIGHT = "1.1.3"
+    const val NEW_RELIC = "5.21.3"
 }
 
 object Libs {
@@ -72,7 +73,6 @@ object Libs {
     /* Play Services */
     const val PLAY_SERVICES = "com.google.android.gms:play-services-gcm:16.1.0"
     const val PLAY_SERVICES_ANALYTICS = "com.google.android.gms:play-services-analytics:16.0.7"
-    const val PLAY_SERVICES_OSS_LICENSES = "com.google.android.gms:play-services-oss-licenses:16.0.2"
     const val PLAY_SERVICES_WEARABLE = "com.google.android.gms:play-services-wearable:16.0.1"
     const val PLAY_SERVICES_AUTH = "com.google.android.gms:play-services-auth:16.0.1"
     const val FIREBASE_CORE = "com.google.firebase:firebase-core:${Versions.FIREBASE_CORE}"
@@ -97,6 +97,7 @@ object Libs {
     const val EXOPLAYER = "com.google.android.exoplayer:exoplayer:${Versions.EXOPLAYER}"
     const val PHOTO_VIEW = "com.github.chrisbanes:PhotoView:${Versions.PHOTO_VIEW}"
     const val ANDROID_SVG = "com.caverock:androidsvg:${Versions.ANDROID_SVG}"
+    const val NEW_RELIC = "com.newrelic.agent.android:android-agent:${Versions.NEW_RELIC}"
 }
 
 object Plugins {
@@ -104,12 +105,12 @@ object Plugins {
     const val ANDROID_GRADLE_TOOLS = "com.android.tools.build:gradle:${Versions.ANDROID_GRADLE_TOOLS}"
     const val APOLLO = "com.apollographql.apollo:apollo-gradle-plugin:${Versions.APOLLO}"
     const val KOTLIN = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.KOTLIN}"
-    const val OSS_LICENSES = "com.google.android.gms:oss-licenses-plugin:0.9.4"
     const val GOOGLE_SERVICES = "com.google.gms:google-services:${Versions.GOOGLE_SERVICES}"
     const val OKREPLAY = "com.airbnb.okreplay:gradle-plugin:${Versions.OKREPLAY}"
     const val BUILD_SCAN = "com.gradle:build-scan-plugin:${Versions.BUILD_SCAN}"
     const val JACOCO_ANDROID = "com.dicedmelon.gradle:jacoco-android:${Versions.JACOCO_ANDROID}"
     const val SQLDELIGHT = "com.squareup.sqldelight:gradle-plugin:${Versions.SQLDELIGHT}"
+    const val NEW_RELIC = "com.newrelic.agent.android:agent-gradle-plugin:${Versions.NEW_RELIC}"
 }
 
 object BuildScan {

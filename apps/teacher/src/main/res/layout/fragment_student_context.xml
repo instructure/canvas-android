@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2017 - present  Instructure, Inc.
   ~
   ~     This program is free software: you can redistribute it and/or modify
@@ -15,9 +14,9 @@
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/studentContextPage"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/studentContextPage"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -28,7 +27,7 @@
         android:layout_centerInParent="true"
         app:pclv_indeterminate="true"
         app:pclv_override_color="@color/login_teacherAppTheme"
-        tools:visibility="gone"/>
+        tools:visibility="gone" />
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -38,9 +37,9 @@
         android:visibility="gone"
         app:popupTheme="@style/ToolBarPopupStyle"
         app:theme="@style/ToolBarStyle"
-        tools:background="#004565"
+        tools:background="@color/colorAquaMarine"
         tools:ignore="UnusedAttribute"
-        tools:visibility="visible"/>
+        tools:visibility="visible" />
 
     <ScrollView
         android:id="@+id/contentContainer"
@@ -57,201 +56,237 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingStart="16dp"
+                android:paddingTop="32dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="24dp">
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/avatarView"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
-                    android:layout_margin="16dp"
-                    tools:src="@color/defaultTextGray"/>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBottom="@id/avatarView"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignTop="@+id/avatarView"
-                    android:layout_marginEnd="16dp"
-                    android:layout_toEndOf="@id/avatarView"
-                    android:gravity="center_vertical"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/studentNameView"
-                        style="@style/TextFont.Medium"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/defaultTextDark"
-                        android:textSize="20sp"
-                        tools:text="Tommy Hinsman"/>
-
-                    <TextView
-                        android:id="@+id/studentEmailView"
-                        style="@style/TextFont.Regular"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/defaultTextGray"
-                        android:textSize="16sp"
-                        tools:text="thinsman@instructure.com"/>
-
-                </LinearLayout>
-
-            </RelativeLayout>
-
-            <LinearLayout
-                android:id="@+id/additionalInfoContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingEnd="16dp"
-                android:paddingStart="16dp">
+                    android:layout_marginBottom="12dp"
+                    tools:src="@color/defaultTextGray" />
 
                 <TextView
-                    android:id="@+id/courseNameView"
-                    style="@style/TextFont.Medium"
+                    android:id="@+id/studentNameView"
+                    style="@style/TextFont.Bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/defaultTextDark"
                     android:textSize="20sp"
-                    tools:text="Biology 101"/>
+                    tools:text="Tommy Hinsman" />
 
                 <TextView
-                    android:id="@+id/sectionNameView"
+                    android:id="@+id/studentEmailView"
                     style="@style/TextFont.Regular"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
                     android:textColor="@color/defaultTextDark"
-                    tools:text="Section: 1"/>
+                    tools:text="thinsman@instructure.com" />
 
                 <TextView
                     android:id="@+id/lastActivityView"
-                    style="@style/TextFont.Regular"
+                    style="@style/TextFont.Medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
                     android:textColor="@color/defaultTextGray"
-                    tools:text="Latest activity on January 29 at 4:56 PM"/>
+                    android:textSize="12sp"
+                    tools:text="Latest activity on January 29 at 4:56 PM" />
 
             </LinearLayout>
 
-            <View
+            <FrameLayout
+                android:id="@+id/additionalInfoContainer"
                 android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:layout_marginBottom="16dp"
-                android:layout_marginTop="16dp"
-                android:background="@color/divider"/>
+                android:layout_height="wrap_content">
 
-            <TextView
-                style="@style/TextFont.Medium"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:text="@string/submissions"
-                android:textColor="@color/defaultTextDark"
-                android:textSize="20sp"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_gravity="center_vertical"
+                    android:background="@color/defaultTextGray" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:background="@drawable/bg_student_context_course_info"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingStart="16dp"
+                    android:paddingTop="8dp"
+                    android:paddingEnd="16dp"
+                    android:paddingBottom="8dp">
+
+                    <TextView
+                        android:id="@+id/courseNameView"
+                        style="@style/TextFont.Bold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textColor="@color/defaultTextDark"
+                        android:textSize="16sp"
+                        tools:text="Biology 101" />
+
+                    <TextView
+                        android:id="@+id/sectionNameView"
+                        style="@style/TextFont.Medium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:gravity="center"
+                        android:textColor="@color/defaultTextDark"
+                        android:textSize="12sp"
+                        tools:text="Section 1 | Section 2 | Section 3" />
+
+                </LinearLayout>
+
+            </FrameLayout>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:minWidth="360dp">
+                android:orientation="vertical"
+                android:paddingStart="16dp"
+                android:paddingTop="16dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="8dp">
+
+                <TextView
+                    style="@style/TextFont.Medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/grades"
+                    android:textColor="@color/defaultTextGray"
+                    android:textSize="14sp" />
 
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:id="@+id/gradeItems"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:layout_marginTop="12dp"
+                    android:divider="@drawable/divider_horizontal_transparent_16dp"
+                    android:dividerPadding="16dp"
+                    android:orientation="horizontal"
+                    android:showDividers="middle">
 
-                    <TextView
-                        android:id="@+id/gradeView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="sans-serif-black"
-                        android:textColor="@color/defaultTextDark"
-                        android:textSize="32sp"
-                        tools:text="B+"/>
+                    <LinearLayout
+                        android:id="@+id/gradeBeforePostingContainer"
+                        style="@style/StudentContextInfoCell">
 
-                    <TextView
-                        style="@style/TextFont.Regular"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/grade"
-                        android:textColor="@color/defaultTextDark"/>
+                        <TextView
+                            android:id="@+id/gradeBeforePosting"
+                            style="@style/StudentContextInfoCellTitle"
+                            tools:text="98%" />
+
+                        <TextView
+                            android:id="@+id/gradeBeforePostingLabel"
+                            style="@style/StudentContextInfoCellSubtitle"
+                            android:text="@string/gradeBeforePosting" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/gradeAfterPostingContainer"
+                        style="@style/StudentContextInfoCell">
+
+                        <TextView
+                            android:id="@+id/gradeAfterPosting"
+                            style="@style/StudentContextInfoCellTitle"
+                            tools:text="94.5%" />
+
+                        <TextView
+                            style="@style/StudentContextInfoCellSubtitle"
+                            android:text="@string/gradeAfterPosting" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/gradeOverrideContainer"
+                        style="@style/StudentContextInfoCell"
+                        tools:backgroundTint="@color/colorAquaMarine">
+
+                        <TextView
+                            android:id="@+id/gradeOverride"
+                            style="@style/StudentContextInfoCellTitle"
+                            tools:text="96.25%"
+                            tools:textColor="@color/white" />
+
+                        <TextView
+                            style="@style/StudentContextInfoCellSubtitle"
+                            android:text="@string/gradeOverride"
+                            tools:textColor="@color/white" />
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/overrideGradeContainer"
-                    android:layout_width="0dp"
+                <TextView
+                    style="@style/TextFont.Medium"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/overrideGradeView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="sans-serif-black"
-                        android:textColor="@color/defaultTextDark"
-                        android:textSize="32sp"
-                        tools:text="A-"/>
-
-                    <TextView
-                        style="@style/TextFont.Regular"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/override"
-                        android:textColor="@color/defaultTextDark"/>
-
-                </LinearLayout>
+                    android:layout_marginTop="24dp"
+                    android:text="@string/submissions"
+                    android:textColor="@color/defaultTextGray"
+                    android:textSize="14sp" />
 
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:layout_marginTop="12dp"
+                    android:divider="@drawable/divider_horizontal_transparent_16dp"
+                    android:dividerPadding="16dp"
+                    android:orientation="horizontal"
+                    android:showDividers="middle">
 
-                    <TextView
-                        android:id="@+id/lateCountView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="sans-serif-black"
-                        android:textColor="@color/defaultTextDark"
-                        android:textSize="32sp"
-                        tools:text="7"/>
+                    <LinearLayout style="@style/StudentContextInfoCell">
 
-                    <TextView
-                        style="@style/TextFont.Regular"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/submission_status_late"
-                        android:textColor="@color/defaultTextDark"/>
+                        <TextView
+                            android:id="@+id/submittedCount"
+                            style="@style/StudentContextInfoCellTitle"
+                            tools:text="27" />
 
-                </LinearLayout>
+                        <TextView
+                            style="@style/StudentContextInfoCellSubtitle"
+                            android:text="@string/submission_status_submitted" />
 
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+                    </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/missingCountView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="sans-serif-black"
-                        android:textColor="@color/defaultTextDark"
-                        android:textSize="32sp"
-                        tools:text="2"/>
+                    <LinearLayout style="@style/StudentContextInfoCell">
 
-                    <TextView
-                        style="@style/TextFont.Regular"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/submission_status_missing"
-                        android:textColor="@color/defaultTextDark"/>
+                        <TextView
+                            android:id="@+id/lateCount"
+                            style="@style/StudentContextInfoCellTitle"
+                            tools:text="3" />
+
+                        <TextView
+                            style="@style/StudentContextInfoCellSubtitle"
+                            android:text="@string/submission_status_late" />
+
+                    </LinearLayout>
+
+                    <LinearLayout style="@style/StudentContextInfoCell">
+
+                        <TextView
+                            android:id="@+id/missingCount"
+                            style="@style/StudentContextInfoCellTitle"
+                            tools:text="1" />
+
+                        <TextView
+                            style="@style/StudentContextInfoCellSubtitle"
+                            android:text="@string/submission_status_missing" />
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
@@ -261,9 +296,9 @@
                 android:id="@+id/submissionListContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:layout_marginBottom="16dp"
-                android:layout_marginTop="32dp"
-                android:orientation="vertical"/>
+                android:orientation="vertical" />
 
             <FrameLayout
                 android:id="@+id/loadMoreContainer"
@@ -277,7 +312,7 @@
                     android:layout_height="16dp"
                     android:layout_gravity="center"
                     android:visibility="gone"
-                    tools:visibility="visible"/>
+                    tools:visibility="visible" />
 
             </FrameLayout>
 
@@ -289,13 +324,14 @@
         android:id="@+id/messageButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
         android:layout_margin="16dp"
         android:contentDescription="@string/sendMessage"
+        android:tint="@color/white"
         android:visibility="gone"
         app:elevation="4dp"
-        app:srcCompat="@drawable/vd_mail"
-        tools:visibility="visible"/>
+        app:srcCompat="@drawable/vd_mail_solid"
+        tools:visibility="visible" />
 
 </RelativeLayout>

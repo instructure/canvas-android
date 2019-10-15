@@ -21,7 +21,6 @@ import com.instructure.android.buildtools.transform.LocaleTransformer
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 apply from: 'jacoco.gradle' // ./gradlew testDevDebugUnitTestCoverage
-apply plugin: 'com.google.android.gms.oss-licenses-plugin'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
@@ -36,8 +35,8 @@ android {
         applicationId "com.instructure.parentapp"
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 21
-        versionName = "2.0.4"
+        versionCode = 24
+        versionName = "2.0.5"
 
         multiDexEnabled = true
         testInstrumentationRunner 'com.instructure.canvas.espresso.CanvasRunner'
@@ -57,9 +56,6 @@ android {
         PrivateData.merge(project, "parent")
         buildConfigField "String", "LOGIN_CLIENT_ID", "\"$loginClientId\""
         buildConfigField "String", "LOGIN_CLIENT_SECRET", "\"$loginClientSecret\""
-        addManifestPlaceholders([
-                fabricApiKey:"$fabricApiKey"
-        ])
     }
 
     flavorDimensions 'default'
@@ -101,6 +97,7 @@ android {
             minifyEnabled false
             shrinkResources false
             pseudoLocalesEnabled true
+            ext.enableCrashlytics = false
         }
 
         release {
@@ -166,9 +163,6 @@ dependencies {
 
     /* Modules */
     implementation project(path: ':login-api-2')
-
-    /* Open Source Licensing Dependency */
-    implementation Libs.PLAY_SERVICES_OSS_LICENSES
 
     /* Android Test Dependencies */
     androidTestImplementation Libs.JUNIT

@@ -136,7 +136,7 @@ class ProfileEditFragment : BasePresenterFragment<
     }
 
     override fun readyToLoadUI(user: User?) {
-        profileCameraIconWrapper.setVisible(user?.canUpdateAvatar())
+        profileCameraIconWrapper.setVisible(user?.canUpdateAvatar() == true)
         profileCameraIconWrapper.onClickWithRequireNetwork {
             MediaUploadUtils.showPickImageDialog(this)
         }

@@ -17,6 +17,7 @@
 package com.instructure.student.mobius.assignmentDetails
 
 import android.net.Uri
+import android.os.Bundle
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.student.Submission
@@ -32,17 +33,17 @@ sealed class AssignmentDetailsEvent {
     object OnVideoRecordingError : AssignmentDetailsEvent()
     object OnMediaPickingError : AssignmentDetailsEvent()
     object DiscussionAttachmentClicked : AssignmentDetailsEvent()
+    object AddBookmarkClicked : AssignmentDetailsEvent()
     object PullToRefresh : AssignmentDetailsEvent()
     object SendVideoRecording : AssignmentDetailsEvent()
     data class SendMediaFile(val uri: Uri) : AssignmentDetailsEvent()
     data class StoreVideoUri(val uri: Uri?) : AssignmentDetailsEvent()
     data class SendAudioRecordingClicked(val file: File?) : AssignmentDetailsEvent()
-    data class SubmissionTypeClicked(val submissionType: Assignment.SubmissionType) : AssignmentDetailsEvent()
     data class DataLoaded(
         val assignmentResult: DataResult<Assignment>?,
         val isStudioEnabled: Boolean,
-        val studioLTITool: DataResult<LTITool>?,
-        val ltiTool: DataResult<LTITool>?,
+        val studioLTIToolResult: DataResult<LTITool>?,
+        val ltiToolResult: DataResult<LTITool>?,
         val submission: Submission?,
         val quizResult: DataResult<Quiz>?
     ) : AssignmentDetailsEvent()
@@ -50,6 +51,10 @@ sealed class AssignmentDetailsEvent {
     data class InternalRouteRequested(val url: String) : AssignmentDetailsEvent()
 }
 
+/**
+ * NOTE: If you make any submission changes here, make sure to make the same changes
+ * in the empty submission details page as well, which also has a submit button.
+ */
 sealed class AssignmentDetailsEffect {
     object ShowAudioRecordingView : AssignmentDetailsEffect()
     object ShowVideoRecordingView : AssignmentDetailsEffect()
@@ -57,6 +62,7 @@ sealed class AssignmentDetailsEffect {
     object ShowAudioRecordingError : AssignmentDetailsEffect()
     object ShowVideoRecordingError : AssignmentDetailsEffect()
     object ShowMediaPickingError : AssignmentDetailsEffect()
+    object ShowBookmarkDialog : AssignmentDetailsEffect()
     data class UploadVideoSubmission(val uri: Uri, val course: Course, val assignment: Assignment) : AssignmentDetailsEffect()
     data class UploadAudioSubmission(val file: File, val course: Course, val assignment: Assignment) : AssignmentDetailsEffect()
     data class UploadMediaFileSubmission(val uri: Uri, val course: Course, val assignment: Assignment) : AssignmentDetailsEffect()
@@ -85,5 +91,6 @@ data class AssignmentDetailsModel(
     val quizResult: DataResult<Quiz>? = null,
     val ltiTool: DataResult<LTITool>? = null,
     val databaseSubmission: Submission? = null,
-    val videoFileUri: Uri? = null
+    val videoFileUri: Uri? = null,
+    var shouldRouteToSubmissionDetails: Boolean = false
 )

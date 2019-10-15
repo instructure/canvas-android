@@ -246,21 +246,7 @@ open class ModuleListRecyclerAdapter(
                         )
 
                         // Sort the mastery paths by position
-                        val assignmentSets = ArrayList<AssignmentSet?>()
-                        assignmentSets.addAll(Arrays.asList(*item.masteryPaths!!.assignmentSets!!))
-                        Collections.sort(assignmentSets, Comparator { lh, rh ->
-                            if (lh != null && rh != null) {
-                                if (lh.position < rh.position) {
-                                    return@Comparator -1
-                                } else if (lh.position > rh.position) {
-                                    return@Comparator 1
-                                }
-                            }
-                            0
-                        })
-                        val set = arrayOfNulls<AssignmentSet?>(assignmentSets.size)
-                        assignmentSets.toTypedArray()
-                        item.masteryPaths!!.assignmentSets = set
+                        item.masteryPaths!!.assignmentSets!!.sortBy { it?.position }
                         masteryPathsSelect.masteryPathsItemId = item.id
                         masteryPathsSelect.masteryPaths = item.masteryPaths
                         addOrUpdateItem(this.moduleObject, masteryPathsSelect)

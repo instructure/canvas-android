@@ -28,7 +28,13 @@ import com.instructure.canvasapi2.models.GroupAssignee
 import com.instructure.canvasapi2.models.StudentAssignee
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.interactions.router.Route
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.ProfileUtils
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.onClick
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.setupAvatarA11y
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.StudentContextFragment
 import com.instructure.teacher.router.RouteMatcher
@@ -37,7 +43,7 @@ import com.instructure.teacher.utils.getResForSubmission
 import com.instructure.teacher.utils.iconRes
 import com.instructure.teacher.utils.setAnonymousAvatar
 import kotlinx.android.synthetic.main.adapter_gradeable_student_submission.view.*
-import java.util.*
+import java.util.Locale
 
 class GradeableStudentSubmissionViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
@@ -46,13 +52,14 @@ class GradeableStudentSubmissionViewHolder(view: View) : RecyclerView.ViewHolder
     }
 
     fun bind(
-            context: Context,
-            gradeableStudentSubmission: GradeableStudentSubmission,
-            assignment: Assignment,
-            courseId: Long,
-            callback: (GradeableStudentSubmission) -> Unit
+        context: Context,
+        gradeableStudentSubmission: GradeableStudentSubmission,
+        assignment: Assignment,
+        courseId: Long,
+        newGradebookEnabled: Boolean,
+        callback: (GradeableStudentSubmission) -> Unit
     ) = with(itemView) {
-
+        hiddenIcon.setGone()
         val assignee = gradeableStudentSubmission.assignee
         when {
             assignment.anonymousGrading -> {
@@ -83,12 +90,14 @@ class GradeableStudentSubmissionViewHolder(view: View) : RecyclerView.ViewHolder
         } else {
             when {
                 submission.excused -> {
+                    if (newGradebookEnabled && submission.postedAt == null) hiddenIcon.setVisible()
                     submissionGrade.text = context.getString(R.string.submission_status_excused)
                     submissionGrade.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14.0f)
                     submissionGrade.background = null
                     submissionGrade.setTextColor(ContextCompat.getColor(context, R.color.defaultTextDark))
                 }
                 submission.isGraded -> {
+                    if (newGradebookEnabled && submission.postedAt == null) hiddenIcon.setVisible()
                     // This is not ideal... the api returns us the string with lower case first letter.
                     // Hopefully the fact that we localize our strings will make this consistent...
                     when(submission.grade) {

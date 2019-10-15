@@ -51,12 +51,13 @@ import com.instructure.student.events.ConversationUpdatedEvent
 import com.instructure.student.events.MessageAddedEvent
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.view.AttachmentView
+import com.newrelic.agent.android.NewRelic
 import kotlinx.android.synthetic.main.fragment_inbox_compose_message.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.net.URLEncoder
-import java.util.*
+import java.util.ArrayList
 
 class InboxComposeMessageFragment : ParentFragment() {
 
@@ -129,6 +130,7 @@ class InboxComposeMessageFragment : ParentFragment() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        NewRelic.setInteractionName(this::class.java.simpleName)
         super.onCreate(savedInstanceState)
         selectedContext = nonNullArgs.getParcelable(Const.CANVAS_CONTEXT)
     }
@@ -304,7 +306,8 @@ class InboxComposeMessageFragment : ParentFragment() {
         // Check to see if the user has made any changes
         if (editSubject.text.isNotBlank() || message.text.isNotBlank() || attachments.isNotEmpty()) {
             shouldAllowExit = false
-            UnsavedChangesExitDialog.show(requireActivity().supportFragmentManager) {
+            // Use childFragmentManager so that exiting the compose fragment also dismisses the dialog
+            UnsavedChangesExitDialog.show(childFragmentManager) {
                 shouldAllowExit = true
                 requireActivity().onBackPressed()
             }

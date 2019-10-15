@@ -35,7 +35,7 @@ class AssignmentUtils2Test : Assert() {
 
         val testValue = AssignmentUtils2.getAssignmentState(assignment, submission)
 
-        Assert.assertEquals("", testValue.toLong(), AssignmentUtils2.ASSIGNMENT_STATE_UNKNOWN.toLong())
+        assertEquals("", testValue.toLong(), AssignmentUtils2.ASSIGNMENT_STATE_UNKNOWN.toLong())
     }
 
     @Test
@@ -50,7 +50,7 @@ class AssignmentUtils2Test : Assert() {
 
         val testValue = AssignmentUtils2.getAssignmentState(assignment, submission)
 
-        Assert.assertEquals("", testValue.toLong(), AssignmentUtils2.ASSIGNMENT_STATE_DUE.toLong())
+        assertEquals("", testValue.toLong(), AssignmentUtils2.ASSIGNMENT_STATE_DUE.toLong())
     }
 
     @Test
@@ -68,18 +68,18 @@ class AssignmentUtils2Test : Assert() {
 
         val testValue = AssignmentUtils2.getAssignmentState(assignment, submission)
 
-        Assert.assertEquals("", testValue.toLong(), AssignmentUtils2.ASSIGNMENT_STATE_IN_CLASS.toLong())
+        assertEquals("", testValue.toLong(), AssignmentUtils2.ASSIGNMENT_STATE_IN_CLASS.toLong())
     }
 
     @Test
     @Throws(Exception::class)
     fun getAssignmentState_stateMissingNullDueDate() {
         val submission: Submission? = null
-        val assignment = Assignment(submission = submission)
+        val assignment = Assignment(submission = submission, submissionTypesRaw = listOf(Assignment.SubmissionType.ONLINE_UPLOAD.apiString))
 
         val testValue = AssignmentUtils2.getAssignmentState(assignment, submission)
 
-        Assert.assertEquals("", testValue.toLong(), AssignmentUtils2.ASSIGNMENT_STATE_MISSING.toLong())
+        assertEquals("", testValue.toLong(), AssignmentUtils2.ASSIGNMENT_STATE_MISSING.toLong())
     }
 
     @Test
@@ -92,12 +92,13 @@ class AssignmentUtils2Test : Assert() {
 
         val assignment = Assignment(
             submission = submission,
-            dueAt = date.toApiString()
+            dueAt = date.toApiString(),
+            submissionTypesRaw = listOf(Assignment.SubmissionType.ONLINE_UPLOAD.apiString)
         )
 
         val testValue = AssignmentUtils2.getAssignmentState(assignment, submission)
 
-        Assert.assertEquals("", testValue.toLong(), AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED.toLong())
+        assertEquals("", testValue.toLong(), AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED.toLong())
     }
 
     @Test
@@ -108,7 +109,8 @@ class AssignmentUtils2Test : Assert() {
 
         val submission = Submission(
             attempt = 1,
-            grade = "A"
+            grade = "A",
+            postedAt = Date()
         )
         val assignment = Assignment(
             submission = submission,
@@ -117,7 +119,7 @@ class AssignmentUtils2Test : Assert() {
 
         val testValue = AssignmentUtils2.getAssignmentState(assignment, submission)
 
-        Assert.assertEquals("", testValue.toLong(), AssignmentUtils2.ASSIGNMENT_STATE_GRADED.toLong())
+        assertEquals("", testValue.toLong(), AssignmentUtils2.ASSIGNMENT_STATE_GRADED.toLong())
     }
 
     @Test
@@ -133,12 +135,13 @@ class AssignmentUtils2Test : Assert() {
 
         val assignment = Assignment(
             submission = submission,
-            dueAt = date.toApiString()
+            dueAt = date.toApiString(),
+            submissionTypesRaw = listOf(Assignment.SubmissionType.ONLINE_UPLOAD.apiString)
         )
 
         val testValue = AssignmentUtils2.getAssignmentState(assignment, submission)
 
-        Assert.assertEquals("", testValue.toLong(), AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED_LATE.toLong())
+        assertEquals("", testValue.toLong(), AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED_LATE.toLong())
     }
 
     @Test
@@ -150,7 +153,8 @@ class AssignmentUtils2Test : Assert() {
         val submission = Submission(
             attempt = 1,
             grade = "A",
-            late = true
+            late = true,
+            postedAt = Date()
         )
 
         val assignment = Assignment(
@@ -160,18 +164,18 @@ class AssignmentUtils2Test : Assert() {
 
         val testValue = AssignmentUtils2.getAssignmentState(assignment, submission)
 
-        Assert.assertEquals("", testValue.toLong(), AssignmentUtils2.ASSIGNMENT_STATE_GRADED_LATE.toLong())
+        assertEquals("", testValue.toLong(), AssignmentUtils2.ASSIGNMENT_STATE_GRADED_LATE.toLong())
     }
 
     @Test
     @Throws(Exception::class)
     fun getAssignmentState_stateExcused() {
         val submission = Submission(excused = true)
-        val assignment = Assignment(submission = submission)
+        val assignment = Assignment(submission = submission, submissionTypesRaw = listOf(Assignment.SubmissionType.ONLINE_UPLOAD.apiString))
 
         val testValue = AssignmentUtils2.getAssignmentState(assignment, submission)
 
-        Assert.assertEquals("", testValue.toLong(), AssignmentUtils2.ASSIGNMENT_STATE_EXCUSED.toLong())
+        assertEquals("", testValue.toLong(), AssignmentUtils2.ASSIGNMENT_STATE_EXCUSED.toLong())
     }
 
     @Test
@@ -192,7 +196,7 @@ class AssignmentUtils2Test : Assert() {
 
         val testValue = AssignmentUtils2.getAssignmentState(assignment, submission, true)
 
-        Assert.assertEquals("", testValue.toLong(), AssignmentUtils2.ASSIGNMENT_STATE_GRADED.toLong())
+        assertEquals("", testValue.toLong(), AssignmentUtils2.ASSIGNMENT_STATE_GRADED.toLong())
     }
 
     @Test
@@ -213,7 +217,7 @@ class AssignmentUtils2Test : Assert() {
 
         val testValue = AssignmentUtils2.getAssignmentState(assignment, submission)
 
-        Assert.assertEquals("", testValue.toLong(), AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED.toLong())
+        assertEquals("", testValue.toLong(), AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED.toLong())
     }
 
 }

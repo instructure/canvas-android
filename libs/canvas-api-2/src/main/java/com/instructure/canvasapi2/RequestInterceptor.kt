@@ -34,7 +34,7 @@ class RequestInterceptor : Interceptor {
         var request = chain.request()
         val builder = request.newBuilder()
 
-        val token = ApiPrefs.token
+        val token = ApiPrefs.getValidToken()
         val userAgent = ApiPrefs.userAgent
         val domain = ApiPrefs.fullDomain
 

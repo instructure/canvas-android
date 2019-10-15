@@ -17,10 +17,8 @@
 package com.instructure.student.mobius.assignmentDetails
 
 import android.app.Activity
-import android.net.Uri
-import com.instructure.canvasapi2.utils.Logger
-import com.instructure.pandautils.utils.FilePrefs
 import com.instructure.pandautils.utils.OnActivityResults
+import com.instructure.pandautils.utils.remove
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.mobius.common.EventBusSource
 import org.greenrobot.eventbus.Subscribe
@@ -34,6 +32,7 @@ class AssignmentDetailsEventBusSource : EventBusSource<AssignmentDetailsEvent>()
         event.once(subId) {
             when(it.requestCode) {
                 AssignmentDetailsFragment.VIDEO_REQUEST_CODE -> {
+                    event.remove()
                     if (it.resultCode == Activity.RESULT_OK) {
                         sendEvent(AssignmentDetailsEvent.SendVideoRecording)
                     } else {
@@ -41,6 +40,7 @@ class AssignmentDetailsEventBusSource : EventBusSource<AssignmentDetailsEvent>()
                     }
                 }
                 AssignmentDetailsFragment.CHOOSE_MEDIA_REQUEST_CODE -> {
+                    event.remove()
                     if (it.resultCode == Activity.RESULT_OK && it.data != null && it.data?.data != null) {
                         sendEvent(AssignmentDetailsEvent.SendMediaFile(it.data!!.data!!))
                     } else {
@@ -50,5 +50,4 @@ class AssignmentDetailsEventBusSource : EventBusSource<AssignmentDetailsEvent>()
             }
         }
     }
-
 }

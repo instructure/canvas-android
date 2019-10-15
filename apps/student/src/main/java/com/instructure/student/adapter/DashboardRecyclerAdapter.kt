@@ -25,15 +25,29 @@ import com.instructure.canvasapi2.managers.AccountNotificationManager
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.EnrollmentManager
 import com.instructure.canvasapi2.managers.GroupManager
-import com.instructure.canvasapi2.models.*
-import com.instructure.canvasapi2.utils.isInvited
+import com.instructure.canvasapi2.models.AccountNotification
+import com.instructure.canvasapi2.models.CanvasComparable
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.DashboardCard
+import com.instructure.canvasapi2.models.Enrollment
+import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.utils.isValidTerm
-import com.instructure.canvasapi2.utils.weave.*
+import com.instructure.canvasapi2.utils.weave.WeaveJob
+import com.instructure.canvasapi2.utils.weave.awaitApi
+import com.instructure.canvasapi2.utils.weave.awaitApis
+import com.instructure.canvasapi2.utils.weave.catch
+import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.pandarecycler.util.GroupSortedList
 import com.instructure.pandautils.utils.ColorApiHelper
-import com.instructure.student.holders.*
+import com.instructure.student.holders.AnnouncementViewHolder
+import com.instructure.student.holders.BlankViewHolder
+import com.instructure.student.holders.CourseHeaderViewHolder
+import com.instructure.student.holders.CourseInvitationViewHolder
+import com.instructure.student.holders.CourseViewHolder
+import com.instructure.student.holders.GroupHeaderViewHolder
+import com.instructure.student.holders.GroupViewHolder
 import com.instructure.student.interfaces.CourseAdapterToFragmentCallback
-import java.util.*
+import java.util.Date
 
 
 class DashboardRecyclerAdapter(
@@ -161,6 +175,7 @@ class DashboardRecyclerAdapter(
 
             // Add groups
             val rawGroups = groups.filter { group ->
+                if (group.canAccess == false) return@filter false
                 val groupCourse = mCourseMap[group.courseId] ?: return@filter true // Account groups don't have a course
                 with(groupCourse) { isValidTerm() && !accessRestrictedByDate && endDate?.before(Date()) != true } && !group.concluded
             }
@@ -181,7 +196,7 @@ class DashboardRecyclerAdapter(
                 mCourseMap[it.courseId]?.let { course ->
                     course.isValidTerm() && !course.accessRestrictedByDate && !course.restrictEnrollmentsToCourseDate} ?: false
             }
-            
+
             addOrUpdateAllItems(ItemType.INVITATION_HEADER, validInvites)
 
             notifyDataSetChanged()

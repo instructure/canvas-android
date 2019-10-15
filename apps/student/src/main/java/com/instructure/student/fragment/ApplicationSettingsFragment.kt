@@ -27,6 +27,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.pageview.PageView
+import com.instructure.pandautils.fragments.RemoteConfigParamsFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.student.BuildConfig
 import com.instructure.student.R
@@ -35,6 +36,7 @@ import com.instructure.student.activity.SettingsActivity
 import com.instructure.student.dialog.HelpDialogStyled
 import com.instructure.student.dialog.LegalDialogStyled
 import com.instructure.student.util.Analytics
+import com.newrelic.agent.android.NewRelic
 import kotlinx.android.synthetic.main.dialog_about.*
 import kotlinx.android.synthetic.main.fragment_application_settings.*
 
@@ -42,6 +44,11 @@ import kotlinx.android.synthetic.main.fragment_application_settings.*
 class ApplicationSettingsFragment : ParentFragment() {
 
     override fun title(): String = getString(R.string.settings)
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        NewRelic.setInteractionName(this::class.java.simpleName)
+        super.onCreate(savedInstanceState)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
             inflater.inflate(R.layout.fragment_application_settings, container, false)
@@ -87,6 +94,11 @@ class ApplicationSettingsFragment : ParentFragment() {
             featureFlags.setVisible()
             featureFlags.onClick {
                 addFragment(FeatureFlagsFragment())
+            }
+
+            remoteConfigParams.setVisible()
+            remoteConfigParams.onClick {
+                addFragment(RemoteConfigParamsFragment())
             }
         }
     }

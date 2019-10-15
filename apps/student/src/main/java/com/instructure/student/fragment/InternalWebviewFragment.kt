@@ -64,6 +64,13 @@ open class InternalWebviewFragment : ParentFragment() {
     var title: String? by NullableStringArg(key = Const.ACTION_BAR_TITLE)
     var url: String? by NullableStringArg(key = Const.INTERNAL_URL)
 
+    /*
+     * Our router has some catch-all routes which open the UnsupportedFeatureFragment for urls that match the user's
+     * domain but don't match any other internal routes. In some cases, such as viewing an HTML file preview, we need to
+     * disable this behavior to ensure that content loads in the WebView instead of the app.
+     */
+    val allowUnsupportedRouting by BooleanArg(key = Const.ALLOW_UNSUPPORTED_ROUTING, default = true)
+
     var downloadUrl: String? = null
     var downloadFilename: String? = null
 
@@ -86,6 +93,8 @@ open class InternalWebviewFragment : ParentFragment() {
 
         with(rootView) {
             canvasWebView.settings.loadWithOverviewMode = true
+            canvasWebView.settings.userAgentString = ApiPrefs.userAgent
+            canvasWebView.setInitialScale(100)
 
             canvasWebView.canvasWebChromeClientCallback = CanvasWebView.CanvasWebChromeClientCallback { _, newProgress ->
                 if (newProgress == 100) {
@@ -110,12 +119,12 @@ open class InternalWebviewFragment : ParentFragment() {
 
                 override fun canRouteInternallyDelegate(url: String): Boolean {
                     if (activity == null) return false
-                    return shouldRouteInternally && !isUnsupportedFeature && RouteMatcher.canRouteInternally(requireActivity(), url, ApiPrefs.domain, false)
+                    return shouldRouteInternally && !isUnsupportedFeature && RouteMatcher.canRouteInternally(requireActivity(), url, ApiPrefs.domain, false, allowUnsupportedRouting)
                 }
 
                 override fun routeInternallyCallback(url: String) {
                     if (activity == null) return
-                    RouteMatcher.canRouteInternally(requireActivity(), url, ApiPrefs.domain, true)
+                    RouteMatcher.canRouteInternally(requireActivity(), url, ApiPrefs.domain, true, allowUnsupportedRouting)
                 }
             }
             canvasWebView.setMediaDownloadCallback { _, url, filename ->
@@ -410,13 +419,21 @@ open class InternalWebviewFragment : ParentFragment() {
                             putBoolean(Const.AUTHENTICATE, authenticate)
                         })
 
-        fun makeRoute(canvasContext: CanvasContext, url: String, authenticate: Boolean, isUnsupportedFeature: Boolean, shouldRouteInternally: Boolean = true): Route =
+        fun makeRoute(
+            canvasContext: CanvasContext,
+            url: String,
+            authenticate: Boolean,
+            isUnsupportedFeature: Boolean,
+            shouldRouteInternally: Boolean = true,
+            allowUnsupportedRouting: Boolean = true
+        ): Route =
                 Route(InternalWebviewFragment::class.java, canvasContext,
                         canvasContext.makeBundle().apply {
                             putString(Const.INTERNAL_URL, url)
                             putBoolean(Const.AUTHENTICATE, authenticate)
                             putBoolean(Const.IS_UNSUPPORTED_FEATURE, isUnsupportedFeature)
                             putBoolean(SHOULD_ROUTE_INTERNALLY, shouldRouteInternally)
+                            putBoolean(Const.ALLOW_UNSUPPORTED_ROUTING, allowUnsupportedRouting)
                         })
 
         fun makeRoute(bundle: Bundle) = Route(InternalWebviewFragment::class.java, null, bundle)

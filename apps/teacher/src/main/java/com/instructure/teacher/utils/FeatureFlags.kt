@@ -17,6 +17,4 @@ package com.instructure.teacher.utils
 
 import com.instructure.canvasapi2.utils.PrefManager
 
-object FeatureFlags : PrefManager("feature_flags") {
-
-}
+object FeatureFlags : PrefManager("feature_flags")

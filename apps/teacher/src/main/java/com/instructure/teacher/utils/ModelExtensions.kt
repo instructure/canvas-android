@@ -91,7 +91,7 @@ fun viewMedia(context: Context, filename: String, contentType: String, url: Stri
         }
     // HTML
         contentType == "text/html" || extension == "htm" || extension == "html" -> {
-            val bundle = ViewHtmlFragment.newInstance(url ?: "", filename, toolbarColor, editableFile).nonNullArgs
+            val bundle = ViewHtmlFragment.makeDownloadBundle(url ?: "", filename, toolbarColor, editableFile)
             RouteMatcher.route(context, Route(null, ViewHtmlFragment::class.java, null, bundle))
         }
     // Multipart (Unknown)
