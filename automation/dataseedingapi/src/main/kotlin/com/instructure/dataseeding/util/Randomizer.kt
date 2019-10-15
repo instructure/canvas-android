@@ -19,7 +19,8 @@ package com.instructure.dataseeding.util
 
 import com.github.javafaker.Faker
 import com.instructure.dataseeding.model.*
-import java.util.*
+import java.util.Date
+import java.util.UUID
 
 object Randomizer {
     private val faker = Faker()
@@ -112,7 +113,9 @@ object Randomizer {
                     fileIds = if (fileIds.isNotEmpty()) fileIds else null
             )
 
-    fun randomTextFileName(dir: String) = faker.file().fileName(dir, null, "txt", null)
+    fun randomTextFileName(dir: String) =
+        faker.file().fileName(dir, faker.letterify("${faker.lorem().word()}-????????"), "txt", null)
+
     fun randomTextFileContents() = faker.lorem().paragraph(20)
 
     /** Creates a random page title with a UUID to avoid Canvas URL collisions */
