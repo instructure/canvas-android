@@ -22,6 +22,14 @@
     android:layout_margin="20dp"
     android:gravity="center_horizontal">
 
+    <!-- provide speakable text for EditText below -->
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        android:text="@string/enterWhatIfScore"
+        android:labelFor="@id/currentScore" />
+
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/currentScore"
         android:layout_width="wrap_content"

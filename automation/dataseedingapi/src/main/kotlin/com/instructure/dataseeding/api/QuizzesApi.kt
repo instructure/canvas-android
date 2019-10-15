@@ -205,7 +205,34 @@ object QuizzesApi {
 
         return submission
     }
-}
+
+    // Convenience method to create and publish a quiz with questions
+    fun createAndPublishQuiz(courseId: Long, teacherToken: String, questions: List<QuizQuestion>) : QuizApiModel {
+        val result = QuizzesApi.createQuiz(QuizzesApi.CreateQuizRequest(
+                courseId = courseId,
+                withDescription = true,
+                published = false, // Will publish in just a bit, after we add questions
+                token = teacherToken
+        ))
+
+        for(question in questions) {
+            QuizzesApi.createQuizQuestion(
+                    courseId = courseId,
+                    quizId = result.id,
+                    teacherToken = teacherToken,
+                    quizQuestion = question
+            )
+        }
+
+        QuizzesApi.publishQuiz(
+                courseId = courseId,
+                quizId = result.id,
+                teacherToken = teacherToken,
+                published = true
+        )
+
+        return result
+    }}
 
 data class CreateQuiz(
         val quiz: com.instructure.dataseeding.model.CreateQuiz

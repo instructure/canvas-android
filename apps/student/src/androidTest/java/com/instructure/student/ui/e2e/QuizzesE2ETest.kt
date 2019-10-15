@@ -19,6 +19,7 @@ package com.instructure.student.ui.e2e
 import androidx.test.espresso.Espresso.pressBack
 import com.instructure.canvas.espresso.E2E
 import com.instructure.dataseeding.api.QuizzesApi
+import com.instructure.dataseeding.api.QuizzesApi.createAndPublishQuiz
 import com.instructure.dataseeding.model.QuizAnswer
 import com.instructure.dataseeding.model.QuizApiModel
 import com.instructure.dataseeding.model.QuizQuestion
@@ -140,30 +141,4 @@ class QuizzesE2ETest: StudentTest() {
         return result
     }
 
-    private fun createAndPublishQuiz(courseId: Long, teacherToken: String, questions: List<QuizQuestion>) : QuizApiModel {
-        val result = QuizzesApi.createQuiz(QuizzesApi.CreateQuizRequest(
-                courseId = courseId,
-                withDescription = true,
-                published = false, // Will publish in just a bit, after we add questions
-                token = teacherToken
-        ))
-
-        for(question in questions) {
-            QuizzesApi.createQuizQuestion(
-                    courseId = courseId,
-                    quizId = result.id,
-                    teacherToken = teacherToken,
-                    quizQuestion = question
-            )
-        }
-
-        QuizzesApi.publishQuiz(
-                courseId = courseId,
-                quizId = result.id,
-                teacherToken = teacherToken,
-                published = true
-        )
-
-        return result
-    }
 }
