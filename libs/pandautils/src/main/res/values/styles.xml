@@ -37,6 +37,10 @@
         <item name="android:windowExitAnimation">@anim/none</item>
     </style>
 
+    <style name="CustomViewAlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:windowBackground">@color/transparent</item>
+    </style>
+
     <!--Text Styles-->
     <style name="TextStyle" parent="CanvasMaterialTheme_Default">
         <item name="android:ellipsize">end</item>
