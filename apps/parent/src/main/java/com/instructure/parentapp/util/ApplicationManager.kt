@@ -20,6 +20,7 @@ import android.content.Context
 import android.util.Log
 import android.webkit.WebView
 import com.crashlytics.android.Crashlytics
+import com.google.android.play.core.missingsplits.MissingSplitsManagerFactory
 import com.instructure.canvasapi2.AppManager
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.utils.Const
@@ -34,6 +35,10 @@ class ApplicationManager : AppManager() {
     override fun onCreate() {
         // Set preferences to create a pre-logged-in state. This should only be used for the 'robo' app flavor.
         if (BuildConfig.IS_ROBO_TEST) RoboTesting.setAppStatePrefs(this)
+        if (MissingSplitsManagerFactory.create(this).disableAppIfMissingRequiredSplits()) {
+            // Skip app initialization.
+            return
+        }
 
         super.onCreate()
 
