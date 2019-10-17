@@ -41,13 +41,18 @@ object AssignmentEndpoint : Endpoint(
     Segment("submissions") to SubmissionIndexEndpoint,
     response = {
         GET {
-            val assignment = data.assignmentGroups[pathVars.courseId]?.forEach { group ->
-                group.assignments.first { assignment ->
-                    assignment.id == pathVars.assignmentId
+            var assignment: Assignment? = null
+
+            for (group in data.assignmentGroups[pathVars.courseId]!!) {
+                for(tempAssignment in group.assignments) {
+                    if(tempAssignment.id == pathVars.assignmentId) {
+                        assignment = tempAssignment
+                    }
                 }
             }
+
             if (assignment != null) {
-                request.successResponse(assignment)
+                request.successResponse(assignment!!)
             } else {
                 request.unauthorizedResponse()
             }

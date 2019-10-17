@@ -15,7 +15,22 @@
  */
 package com.instructure.student.ui.pages
 
+import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.WaitForViewWithId
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.click
+import com.instructure.espresso.replaceText
 import com.instructure.student.R
+import java.lang.Thread.sleep
 
-open class UrlSubmissionUploadPage : BasePage(R.id.urlSubmissionUpload)
+open class UrlSubmissionUploadPage : BasePage(R.id.urlSubmissionUpload) {
+
+    private val editUrlView by OnViewWithId(R.id.editUrl)
+    private val submitButton by WaitForViewWithId(R.id.menuSubmit)
+
+    fun submitText(text: String) {
+        editUrlView.replaceText(text)
+        sleep(5000)
+        submitButton.click()
+    }
+}

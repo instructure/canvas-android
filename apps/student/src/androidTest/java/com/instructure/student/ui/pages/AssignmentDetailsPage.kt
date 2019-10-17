@@ -34,6 +34,7 @@ import com.instructure.espresso.assertHasText
 import com.instructure.espresso.click
 import com.instructure.espresso.closeSoftKeyboard
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.waitForView
 import com.instructure.espresso.scrollTo
 import com.instructure.espresso.swipeDown
 import com.instructure.espresso.typeText
@@ -68,11 +69,15 @@ open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
     }
 
     fun assertSubmittedStatus() {
-        onView(withId(R.id.submissionStatus)).assertHasText(R.string.submitted)
+        waitForView(withId(R.id.submissionStatus)).assertHasText(R.string.submitted)
     }
 
     fun viewQuiz() {
         onView(withId(R.id.submitButton)).assertHasText(R.string.viewQuiz).click()
+    }
+
+    fun clickSubmit() {
+        onView(withId(R.id.submitButton)).click()
     }
 }
 

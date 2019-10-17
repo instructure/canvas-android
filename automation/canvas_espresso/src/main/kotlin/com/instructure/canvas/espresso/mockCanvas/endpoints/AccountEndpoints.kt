@@ -53,13 +53,14 @@ object AccountEndpoint : Endpoint(
     Segment("lti_apps") to endpoint(
         Segment("launch_definitions") to LaunchDefinitionsEndpoint
     ),
-    Segment("permissions") to AccountPermissionsEndpoint,
+//    Segment("permissions") to AccountPermissionsEndpoint,
     response = {
         // NOTE: Only supporting one account for now and we'll assume no users are admins, so return a 401
         GET { request.unauthorizedResponse() }
     }
 )
 
+/*
 object AccountPermissionsEndpoint : Endpoint(
     response = {
         GET {
@@ -67,6 +68,8 @@ object AccountPermissionsEndpoint : Endpoint(
         }
     }
 )
+
+ */
 
 /**
  * Endpoint that can return a list of [LaunchDefinition]s
