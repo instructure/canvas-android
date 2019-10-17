@@ -30,7 +30,7 @@ open class UrlSubmissionUploadPage : BasePage(R.id.urlSubmissionUpload) {
 
     fun submitText(text: String) {
         editUrlView.replaceText(text)
-        sleep(5000)
+        sleep(500)
         submitButton.click()
     }
 }
