@@ -682,6 +682,17 @@ public class CanvasWebView extends WebView implements NestedScrollingChild {
         return false;
     }
 
+    public static boolean containsEmbeddedVideo(@NonNull String html, String encoding) {
+        // BaseURL is set as Referer. Referer needed for some videos to play
+        // Studio needs the protocol attached to the referrer, so use that if we're using Studio
+        try {
+            //sanitize the html
+            String sanitized = html.replaceAll("%(?![0-9a-fA-F]{2})", "%25");
+            if (URLDecoder.decode(sanitized, encoding).contains("media_objects_iframe")) return true;
+        } catch (UnsupportedEncodingException e) { /* do nothing */ }
+        return false;
+    }
+
     public String loadHtml(String html, String contentDescription) {
         String result = formatHtml(html);
         this.loadDataWithBaseURL(CanvasWebView.getReferrer(true), result, "text/html", encoding, getHtmlAsUrl(result, encoding));

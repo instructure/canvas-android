@@ -106,7 +106,7 @@ class DiscussionEntryHtmlConverter {
             "display: none;"
         }
 
-        //Sets up indentation based on the indent param
+        // Sets up indentation based on the indent param
         // Hide details_wrapper
         // Hide the message content just in case
         when (indent) {

@@ -58,7 +58,9 @@ import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.Const
 import com.newrelic.agent.android.NewRelic
 import kotlinx.android.synthetic.main.fragment_discussions_details.*
+import kotlinx.android.synthetic.main.fragment_discussions_details.toolbar
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -489,18 +491,30 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
      */
     private fun getAuthenticatedURL(html: String, loadHtml: (newUrl: String, originalUrl: String?) -> Unit) {
         if (authenticatedSessionURL.isNullOrBlank()) {
-            //get the url
+            // Get the url
             sessionAuthJob = tryWeave {
-                //get the url from html
-                val matcher = Pattern.compile("src=\"([^\"]+)\"").matcher(discussionTopicHeader.message)
-                matcher.find()
-                val url = matcher.group(1)
+                // Get the url from html
+                val discussionTopicHeaderMatcher = Pattern.compile("src=\"([^\"]+)\"").matcher(discussionTopicHeader.message)
+                val messagesMatcher = Pattern.compile("<iframe*.+src=\"(.+?media_objects_iframe[^\"]+)\"").matcher(html) // Looks for embedded video content
 
-                // Get an authenticated session so the user doesn't have to log in
-                authenticatedSessionURL = awaitApi<AuthenticatedSession> { OAuthManager.getAuthenticatedSession(url, it) }.sessionUrl
-                loadHtml(DiscussionUtils.getNewHTML(html, authenticatedSessionURL), url)
+                val discussionTopicHeaderMatch = discussionTopicHeaderMatcher.find()
+                val messagesMatch = messagesMatcher.find()
+
+                if (discussionTopicHeaderMatch) {
+                    val url = discussionTopicHeaderMatcher.group(1)
+
+                    // Get an authenticated session so the user doesn't have to log in
+                    authenticatedSessionURL = awaitApi<AuthenticatedSession> { OAuthManager.getAuthenticatedSession(url, it) }.sessionUrl
+                    loadHtml(DiscussionUtils.getNewHTML(html, authenticatedSessionURL), url)
+                }
+
+                if (messagesMatch) {
+                    messagesMatcher.group(0) // Will throw if no matches are found
+                    loadHtml(DiscussionUtils.authenticateAllEmbeddedVideoUrls(html), null)
+                }
+
             } catch {
-                //couldn't get the authenticated session, try to load it without it
+                // Couldn't get the authenticated session, try to load it without it
                 loadHtml(html, null)
             }
 
@@ -666,17 +680,23 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
         }
     }
 
-    private fun loadDiscussionTopicViews(html: String) {
-        discussionRepliesWebView.setVisible()
+    private suspend fun loadDiscussionTopicViews(html: String) {
         discussionProgressBar.setGone()
-        // We are only handling Studio because there is not a predictable way for use to determine if a URL is an LTI launch
-        if (CanvasWebView.containsStudioLTI(html, "UTF-8")) getAuthenticatedURL(html) { authenticatedHtml, _ -> loadHTMLReplies(authenticatedHtml) }
+        // For LTIs, we are only handling Studio because there is not a predictable way for use to determine if a URL is an LTI launch
+        // We also handle embedded videos from RCE
+        if (CanvasWebView.containsStudioLTI(html, "UTF-8") || CanvasWebView.containsEmbeddedVideo(html, "UTF-8"))
+            getAuthenticatedURL(html) { authenticatedHtml, _ -> loadHTMLReplies(authenticatedHtml) }
         else discussionRepliesWebView.loadDataWithBaseURL(CanvasWebView.getReferrer(), html, "text/html", "UTF-8", null)
+
         swipeRefreshLayout.isRefreshing = false
         discussionTopicRepliesTitle.setVisible(discussionTopicHeader.shouldShowReplies)
         postBeforeViewingRepliesTextView.setGone()
 
         setupRepliesWebView()
+
+        // The delay helps embedded videos load in their iframe correctly
+        delay(300)
+        discussionRepliesWebView.setVisible()
     }
     //endregion Loading
 

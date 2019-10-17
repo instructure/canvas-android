@@ -176,7 +176,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
         }
 
         // Publish status if discussion
-        if(!mIsAnnouncements) {
+        if (!mIsAnnouncements) {
             if (discussionTopicHeader.published) {
                 publishStatusIconView.setImageResource(R.drawable.vd_published)
                 publishStatusIconView.setColorFilter(requireContext().getColorCompat(R.color.publishedGreen))
@@ -214,7 +214,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
             }
         }
 
-        if(presenter.discussionTopic.views.isEmpty()) {
+        if (presenter.discussionTopic.views.isEmpty()) {
             // Loading data will eventually call, upon success, populateDiscussionTopic()
             presenter.loadData(true)
         } else {
@@ -229,7 +229,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
 
             swipeRefreshLayout.isRefreshing = false
 
-            if(discussionTopic.views.isEmpty() && DiscussionCaching(discussionTopicHeader.id).isEmpty()) {
+            if (discussionTopic.views.isEmpty() && DiscussionCaching(discussionTopicHeader.id).isEmpty()) {
                 // Nothing to display
                 discussionRepliesHeaderWrapper.setGone()
                 return@tryWeave
@@ -237,7 +237,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
 
             discussionRepliesHeaderWrapper.setVisible()
 
-            val html = inBackground {
+            var html = inBackground {
                 DiscussionUtils.createDiscussionTopicHtml(
                         requireActivity(),
                         isTablet,
@@ -248,14 +248,18 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
             }
 
             discussionRepliesWebView.setInvisible()
-            if(CanvasWebView.containsLTI(html, "UTF-8")) {
+            if (CanvasWebView.containsEmbeddedVideo(html, "UTF-8")) {
+                html = DiscussionUtils.authenticateAllEmbeddedVideoUrls(html)
+            }
+
+            if (CanvasWebView.containsLTI(html, "UTF-8")) {
                 discussionTopicHeaderWebView.addJavascriptInterface(JsExternalToolInterface {
                     val args = LTIWebViewFragment.makeLTIBundle(URLDecoder.decode(it, "utf-8"), this@DiscussionsDetailsFragment.getString(R.string.utils_externalToolTitle), true)
                     RouteMatcher.route(this@DiscussionsDetailsFragment.requireContext(), Route(LTIWebViewFragment::class.java, canvasContext, args))
                 }, "accessor")
                 repliesLoadHtmlJob = discussionRepliesWebView.loadHtmlWithLTIs(this@DiscussionsDetailsFragment.requireContext(), isTablet, html, ::loadHTMLReplies)
             } else {
-                discussionRepliesWebView.loadDataWithBaseURL(CanvasWebView.getReferrer(), html, "text/html", "utf-8", null)
+                discussionRepliesWebView.loadDataWithBaseURL(CanvasWebView.getReferrer(true), html, "text/html", "utf-8", null)
             }
 
             delay(300)
@@ -413,6 +417,11 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
             discussionTopicHeaderWebView.loadHtml(discussionTopicHeader.message, discussionTopicHeader.title)
         }
         discussionRepliesWebView.loadHtml("", "")
+    }
+
+    private fun authEmbeddedVideos() {
+
+
     }
 
     private fun loadHTMLTopic(html: String) {

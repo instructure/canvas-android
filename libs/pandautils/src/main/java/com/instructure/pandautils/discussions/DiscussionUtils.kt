@@ -27,14 +27,13 @@ import android.widget.ScrollView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.text.TextUtilsCompat
-import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.DiscussionEntry
-import com.instructure.canvasapi2.models.DiscussionTopicHeader
+import com.instructure.canvasapi2.managers.OAuthManager
+import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.toDate
 import com.instructure.canvasapi2.utils.tryOrNull
+import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
@@ -379,6 +378,23 @@ object DiscussionUtils {
             }
         }
         return newHTML
+    }
+
+    /**
+     * Swaps the src value for embedded video iframes with an authenticated url
+     */
+    suspend fun authenticateAllEmbeddedVideoUrls(html: String): String {
+        // Looks for embedded video content
+        val matcher = Pattern.compile("<iframe*.+src=\"(.+media_objects_iframe[^\"]+)").matcher(html)
+        var newHtml: String = html
+        // Now we need to swap out part of the old url for this new authenticated url
+        while(matcher.find()) {
+                // Need to update each embedded video url
+                val embeddedVideoUrl = matcher.group(1) // "group" 0 is the entire regex matching string, group 1 is the group specified in the regex
+                val authenticatedSessionURL = awaitApi<AuthenticatedSession> { OAuthManager.getAuthenticatedSession(embeddedVideoUrl, it) }.sessionUrl ?: continue
+                newHtml = newHtml.replace(embeddedVideoUrl.orEmpty(), authenticatedSessionURL)
+        }
+        return newHtml
     }
 
     /**
