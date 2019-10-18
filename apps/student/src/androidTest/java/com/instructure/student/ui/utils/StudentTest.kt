@@ -70,6 +70,7 @@ abstract class StudentTest : CanvasTest() {
     val quizListPage = QuizListPage()
     val quizDetailsPage = QuizDetailsPage()
     val urlSubmissionUploadPage = UrlSubmissionUploadPage()
+    val courseGradesPage = CourseGradesPage()
 
     // A no-op interaction to afford us an easy, harmless way to get a11y checking to trigger.
     fun meaninglessSwipe() {
