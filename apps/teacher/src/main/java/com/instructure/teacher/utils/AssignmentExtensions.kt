@@ -38,10 +38,13 @@ import com.instructure.pandautils.utils.AssignmentUtils2.ASSIGNMENT_STATE_MISSIN
 import com.instructure.pandautils.utils.AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED
 import com.instructure.pandautils.utils.AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED_LATE
 import com.instructure.pandautils.utils.AssignmentUtils2.getAssignmentState
+import com.instructure.pandautils.utils.DisplayGrade
+import com.instructure.pandautils.utils.getContentDescriptionForMinusGradeString
 import com.instructure.teacher.R
 import com.instructure.teacher.models.CoreDates
 import com.instructure.teacher.models.DueDateGroup
-import java.util.*
+import java.util.ArrayList
+import java.util.Calendar
 
 fun Assignment.getAssignmentIcon() = when {
     Assignment.SubmissionType.ONLINE_QUIZ.apiString in submissionTypesRaw -> R.drawable.vd_quiz
@@ -148,18 +151,23 @@ fun AssignmentPostBody.setGroupedDueDates(dates: EditDateGroups) {
 }
 //endregion
 
-fun Assignment.getGradeText(submission: Submission?, context: Context, includePointsPossible: Boolean = true, includeLatePenalty: Boolean = false): String {
+fun Assignment.getDisplayGrade(
+    submission: Submission?,
+    context: Context,
+    includePointsPossible: Boolean = true,
+    includeLatePenalty: Boolean = false
+): DisplayGrade {
     // If the submission doesn't exist, so we return an empty string
-    if(submission == null) return ""
+    if(submission == null) return DisplayGrade()
 
     // Cover the first edge case: excused assignment
     if(submission.excused) {
-        return context.getString(R.string.excused)
+        return DisplayGrade(context.getString(R.string.excused))
     }
 
     // Cover the second edge case: NOT_GRADED type and no grade
     if(Assignment.getGradingTypeFromAPIString(this.gradingType ?: "") == Assignment.GradingType.NOT_GRADED) {
-        return context.getString(R.string.not_graded)
+        return DisplayGrade(context.getString(R.string.not_graded))
     }
 
     // First lets see if the assignment is graded
@@ -167,13 +175,12 @@ fun Assignment.getGradeText(submission: Submission?, context: Context, includePo
         return when(Assignment.getGradingTypeFromAPIString(this.gradingType ?: "")) {
             Assignment.GradingType.POINTS ->
                 if(includeLatePenalty) {
-                    getPointsPossibleWithNoParenthesis(submission.enteredScore, this.pointsPossible)
+                    getPointsFraction(context, submission.enteredScore, this.pointsPossible)
                 } else {
-                    getPointsPossibleWithNoParenthesis(submission.score, this.pointsPossible)
+                    getPointsFraction(context, submission.score, this.pointsPossible)
                 }
             //edge case, NOT_GRADED type with grade, it COULD happen
-            Assignment.GradingType.NOT_GRADED ->
-                context.getString(R.string.not_graded)
+            Assignment.GradingType.NOT_GRADED -> DisplayGrade(context.getString(R.string.not_graded))
             else ->{
                 var grade = submission.grade
                 if (this.gradingType == Assignment.PERCENT_TYPE) {
@@ -190,23 +197,23 @@ fun Assignment.getGradeText(submission: Submission?, context: Context, includePo
                 }
                 if (includePointsPossible) {
                     if(includeLatePenalty) {
-                        context.getString(R.string.grade_value_format, grade, getPointsPossibleWithParenthesis(submission.enteredScore, this.pointsPossible))
+                        getPointsFractionWithGrade(context, submission.enteredScore, this.pointsPossible, grade)
                     } else {
-                        context.getString(R.string.grade_value_format, grade, getPointsPossibleWithParenthesis(submission.score, this.pointsPossible))
+                        getPointsFractionWithGrade(context, submission.score, this.pointsPossible, grade)
                     }
                 } else {
-                    grade.orEmpty()
+                    DisplayGrade(grade.orEmpty())
                 }
             }
 
         }
     } else {
         //return empty string for "empty" state
-        return ""
+        return DisplayGrade()
     }
 }
 
-fun getGradeText(
+fun getDisplayGrade(
     context: Context,
     gradingStatus: String?,
     gradingType: String,
@@ -217,16 +224,16 @@ fun getGradeText(
     pointsPossible: Double,
     includePointsPossible: Boolean = true,
     includeLatePenalty: Boolean = false
-): String {
-    if (gradingStatus == null) return ""
+): DisplayGrade {
+    if (gradingStatus == null) return DisplayGrade()
 
     // Cover the first edge case: excused assignment
-    if (gradingStatus == "excused") return context.getString(R.string.excused)
+    if (gradingStatus == "excused") return DisplayGrade(context.getString(R.string.excused))
 
 
     // Cover the second edge case: NOT_GRADED type and no grade
     if (Assignment.getGradingTypeFromAPIString(gradingType) == Assignment.GradingType.NOT_GRADED) {
-        return context.getString(R.string.not_graded)
+        return DisplayGrade(context.getString(R.string.not_graded))
     }
 
     // First let's see if the assignment is graded
@@ -234,14 +241,14 @@ fun getGradeText(
         return when (Assignment.getGradingTypeFromAPIString(gradingType)) {
             Assignment.GradingType.POINTS ->
                 if (includeLatePenalty) {
-                    getPointsPossibleWithNoParenthesis(enteredScore, pointsPossible)
+                    getPointsFraction(context, enteredScore, pointsPossible)
                 } else {
-                    getPointsPossibleWithNoParenthesis(score, pointsPossible)
+                    getPointsFraction(context, score, pointsPossible)
                 }
         // Edge case, NOT_GRADED type with grade, it COULD happen
-            Assignment.GradingType.NOT_GRADED -> context.getString(R.string.not_graded)
+            Assignment.GradingType.NOT_GRADED -> DisplayGrade(context.getString(R.string.not_graded))
             else -> {
-                var formattedGrade = grade
+                var formattedGrade = grade.orEmpty()
                 if (gradingType == Assignment.PERCENT_TYPE) {
                     try {
                         val value: Double = if (includeLatePenalty) {
@@ -260,36 +267,44 @@ fun getGradeText(
                 }
                 if (includePointsPossible) {
                     if (includeLatePenalty) {
-                        context.getString(
-                            R.string.grade_value_format,
-                            formattedGrade,
-                            getPointsPossibleWithParenthesis(enteredScore, pointsPossible)
-                        )
+                        getPointsFractionWithGrade(context, enteredScore, pointsPossible, formattedGrade)
                     } else {
-                        context.getString(
-                            R.string.grade_value_format,
-                            formattedGrade,
-                            getPointsPossibleWithParenthesis(score, pointsPossible)
-                        )
+                        getPointsFractionWithGrade(context, score, pointsPossible, formattedGrade)
                     }
                 } else {
-                    grade.orEmpty()
+                    DisplayGrade(
+                        formattedGrade,
+                        getContentDescriptionForMinusGradeString(formattedGrade, context)
+                    )
                 }
             }
 
         }
     } else {
         // Return empty string for "empty" state
-        return ""
+        return DisplayGrade()
     }
 }
 
-private fun getPointsPossibleWithNoParenthesis(points: Double, pointsPossible: Double): String {
-    return NumberHelper.formatDecimal(points, 2, true) + "/" + NumberHelper.formatDecimal(pointsPossible, 2, true)
+private fun getPointsFraction(context: Context, points: Double, pointsPossible: Double): DisplayGrade {
+    val pointsText = NumberHelper.formatDecimal(points, 2, true)
+    val possibleText = NumberHelper.formatDecimal(pointsPossible, 2, true)
+    val text = context.getString(R.string.gradeFormatScoreOutOfPointsPossible, pointsText, possibleText)
+    val contentDescription = context.getString(R.string.contentDescriptionScoreOutOfPointsPossible, pointsText, possibleText)
+    return  DisplayGrade(text, contentDescription)
 }
 
-fun getPointsPossibleWithParenthesis(points: Double, pointsPossible: Double): String {
-    return "(" + NumberHelper.formatDecimal(points, 2, true) + "/" + NumberHelper.formatDecimal(pointsPossible, 2, true) + ")"
+fun getPointsFractionWithGrade(context: Context, points: Double, pointsPossible: Double, grade: String?): DisplayGrade {
+    val pointsText = NumberHelper.formatDecimal(points, 2, true)
+    val possibleText = NumberHelper.formatDecimal(pointsPossible, 2, true)
+    val text = context.getString(R.string.formattedScoreWithPointsPossibleAndGrade, pointsText, possibleText, grade)
+    val contentDescription = context.getString(
+        R.string.contentDescriptionScoreWithPointsPossibleAndGrade,
+        pointsText,
+        possibleText,
+        getContentDescriptionForMinusGradeString(grade.orEmpty(), context)
+    )
+    return DisplayGrade(text, contentDescription)
 }
 
 fun Assignment?.getState(submission: Submission?, isTeacher: Boolean = false) = AssignmentUtils2.getAssignmentState(this, submission, isTeacher)
