@@ -262,7 +262,6 @@ dependencies {
     implementation Libs.ANDROIDX_ANNOTATION
     implementation Libs.ANDROIDX_FRAGMENT
     implementation Libs.ANDROIDX_VECTOR
-    implementation Libs.PLAY_SERVICES
     implementation Libs.PLAY_CORE
     implementation Libs.FIREBASE_MESSAGING
 
