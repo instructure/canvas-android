@@ -101,6 +101,7 @@
     <string name="finalGradeFormatted">Final Grade: %s</string>
     <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
     <string name="contentDescriptionScoreOutOfPointsPossible">%1$s out of %2$s points</string>
+    <string name="enterWhatIfScore">Enter what-if score</string>
 
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Custom score</string>

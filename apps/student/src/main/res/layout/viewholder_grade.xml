@@ -56,10 +56,10 @@
     <ImageView
         android:id="@+id/edit"
         style="@style/AdapterItemIcon"
-        android:layout_width="42dp"
-        android:layout_height="42dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:contentDescription="@string/edit"
-        android:padding="8dp"
+        android:padding="11dp"
         app:srcCompat="@drawable/vd_edit"
         android:tint="@color/canvasTextDark"
         android:scaleType="fitCenter"
