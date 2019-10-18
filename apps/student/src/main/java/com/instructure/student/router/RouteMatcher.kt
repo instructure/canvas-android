@@ -21,6 +21,7 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.os.Bundle
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.loader.app.LoaderManager
@@ -37,10 +38,7 @@ import com.instructure.canvasapi2.utils.Logger
 import com.instructure.interactions.router.*
 import com.instructure.pandautils.activities.BaseViewMediaActivity
 import com.instructure.pandautils.loaders.OpenMediaAsyncTaskLoader
-import com.instructure.pandautils.utils.Const
-import com.instructure.pandautils.utils.LoaderUtils
-import com.instructure.pandautils.utils.RouteUtils
-import com.instructure.pandautils.utils.nonNullArgs
+import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.activity.*
 import com.instructure.student.fragment.*
@@ -297,12 +295,23 @@ object RouteMatcher : BaseRouteMatcher() {
 
     private fun getLoaderCallbacks(activity: Activity): LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia>? {
         if (openMediaCallbacks == null) {
+
             openMediaCallbacks = object : LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia> {
+                var dialog: AlertDialog? = null
+
                 override fun onCreateLoader(id: Int, args: Bundle?): Loader<OpenMediaAsyncTaskLoader.LoadedMedia> {
+                    dialog = AlertDialog.Builder(activity,  com.instructure.pandautils.R.style.CustomViewAlertDialog)
+                        .setView(com.instructure.pandautils.R.layout.dialog_loading_view)
+                        .create()
+                    dialog!!.show()
                     return OpenMediaAsyncTaskLoader(activity, args)
                 }
 
                 override fun onLoadFinished(loader: Loader<OpenMediaAsyncTaskLoader.LoadedMedia>, loadedMedia: OpenMediaAsyncTaskLoader.LoadedMedia) {
+                    if (dialog == null || dialog?.isShowing == false) {
+                        return // The user doesn't actually want to load the thing
+                    }
+                    dialog?.dismiss()
                     try {
                         if (loadedMedia.isError) {
                             if (loadedMedia.errorType == OpenMediaAsyncTaskLoader.ERROR_TYPE.NO_APPS) {
@@ -338,7 +347,9 @@ object RouteMatcher : BaseRouteMatcher() {
                     openMediaBundle = null
                 }
 
-                override fun onLoaderReset(loader: Loader<OpenMediaAsyncTaskLoader.LoadedMedia>) {}
+                override fun onLoaderReset(loader: Loader<OpenMediaAsyncTaskLoader.LoadedMedia>) {
+                    dialog?.dismiss()
+                }
             }
         }
         return openMediaCallbacks

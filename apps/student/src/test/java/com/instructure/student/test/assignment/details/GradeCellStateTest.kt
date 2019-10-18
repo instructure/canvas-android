@@ -174,6 +174,20 @@ class GradeCellStateTest : Assert() {
     }
 
     @Test
+    fun `Returns correct state for 'Complete-Incomplete' grading type if not graded`() {
+        val assignment = baseAssignment.copy(
+            gradingType = Assignment.PASS_FAIL_TYPE
+        )
+        val submission = baseSubmission.copy(
+            grade = null,
+            score = 0.0
+        )
+        val expected = GradeCellViewState.Submitted
+        val actual = GradeCellViewState.fromSubmission(context, assignment, submission)
+        assertEquals(expected, actual)
+    }
+
+    @Test
     fun `Returns correct state for 'Points' grading type`() {
         val expected = baseGradedState.copy(
             graphPercent = 0.85f,

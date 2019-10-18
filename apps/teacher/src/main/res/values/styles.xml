@@ -373,6 +373,7 @@
         <item name="android:paddingTop">12dp</item>
         <item name="android:paddingEnd">8dp</item>
         <item name="android:paddingBottom">12dp</item>
+        <item name="android:focusable">true</item> <!-- For a11y -->
     </style>
 
     <style name="StudentContextInfoCellTitle" parent="TextFont.Bold">

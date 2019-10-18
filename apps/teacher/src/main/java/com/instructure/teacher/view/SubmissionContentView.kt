@@ -41,9 +41,9 @@ import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import com.instructure.annotations.PdfSubmissionView
 import com.instructure.canvasapi2.managers.CanvaDocsManager
-import com.instructure.canvasapi2.managers.FeaturesManager
 import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.Assignment.SubmissionType
 import com.instructure.canvasapi2.models.canvadocs.CanvaDocAnnotation
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.Logger
@@ -66,7 +66,6 @@ import com.instructure.teacher.activities.SpeedGraderActivity
 import com.instructure.teacher.adapters.StudentContextFragment
 import com.instructure.teacher.dialog.NoInternetConnectionDialog
 import com.instructure.teacher.dialog.RadioButtonDialog
-import com.instructure.teacher.events.AssignmentGradedEvent
 import com.instructure.teacher.events.RationedBusEvent
 import com.instructure.teacher.features.postpolicies.ui.PostPolicyFragment
 import com.instructure.teacher.fragments.*
@@ -87,7 +86,8 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.io.File
-import java.util.*
+import java.util.ArrayList
+import java.util.Locale
 
 @SuppressLint("ViewConstructor")
 class SubmissionContentView(
@@ -220,6 +220,7 @@ class SubmissionContentView(
     }
 
     fun setup() {
+        if (SubmissionType.ONLINE_QUIZ in mAssignment.getSubmissionTypes()) mRootSubmission?.transformForQuizGrading()
         setupToolbar(mAssignee)
         setupSubmissionVersions(mRootSubmission?.submissionHistory?.filterNotNull()?.filter { it.attempt > 0 })
         setSubmission(mRootSubmission)

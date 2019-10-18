@@ -24,6 +24,7 @@ import com.crashlytics.android.core.CrashlyticsCore
 import com.google.android.gms.analytics.GoogleAnalytics
 import com.google.android.gms.analytics.HitBuilders
 import com.google.android.gms.analytics.Tracker
+import com.google.android.play.core.missingsplits.MissingSplitsManagerFactory
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.canvasapi2.utils.pageview.PageViewUploadService
@@ -47,6 +48,10 @@ class AppManager : com.instructure.canvasapi2.AppManager(), AnalyticsEventHandli
     }
 
     override fun onCreate() {
+        if (MissingSplitsManagerFactory.create(this).disableAppIfMissingRequiredSplits()) {
+            // Skip app initialization.
+            return
+        }
         RemoteConfigUtils.initialize()
         super.onCreate()
         initPSPDFKit()
