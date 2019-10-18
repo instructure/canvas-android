@@ -78,6 +78,7 @@ object Libs {
     const val FIREBASE_CORE = "com.google.firebase:firebase-core:${Versions.FIREBASE_CORE}"
     const val FIREBASE_JOB_DISPATCHER = "com.firebase:firebase-jobdispatcher:${Versions.FIREBASE_JOB_DISPATCHER}"
     const val FIREBASE_CONFIG = "com.google.firebase:firebase-config:${Versions.FIREBASE_CONFIG}"
+    const val PLAY_CORE = "com.google.android.play:core:1.6.3"
 
     /* Mobius */
     const val MOBIUS_CORE = "com.spotify.mobius:mobius-core:${Versions.MOBIUS}"

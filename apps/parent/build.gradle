@@ -58,6 +58,14 @@ android {
         buildConfigField "String", "LOGIN_CLIENT_SECRET", "\"$loginClientSecret\""
     }
 
+    bundle {
+        language {
+            // Specifies that the app bundle should not support configuration APKs for language resources. These
+            // resources are instead packaged with each base and dynamic feature APK.
+            enableSplit = false
+        }
+    }
+
     flavorDimensions 'default'
     productFlavors {
         dev {
@@ -182,6 +190,7 @@ dependencies {
     implementation Libs.ANDROIDX_DESIGN
     implementation Libs.ANDROIDX_PERCENT
     implementation Libs.ANDROIDX_CARDVIEW
+    implementation Libs.PLAY_CORE
 }
 
 apply plugin: 'com.google.gms.google-services'

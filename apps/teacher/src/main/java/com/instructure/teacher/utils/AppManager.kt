@@ -20,6 +20,7 @@ import android.content.IntentFilter
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.crashlytics.android.Crashlytics
 import com.crashlytics.android.core.CrashlyticsCore
+import com.google.android.play.core.missingsplits.MissingSplitsManagerFactory
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.loginapi.login.tasks.LogoutTask
@@ -38,6 +39,10 @@ class AppManager : com.instructure.canvasapi2.AppManager() {
     override fun onCreate() {
         // Set preferences to create a pre-logged-in state. This should only be used for the 'robo' app flavor.
         if (BuildConfig.IS_ROBO_TESTING) RoboTesting.setAppStatePrefs()
+        if (MissingSplitsManagerFactory.create(this).disableAppIfMissingRequiredSplits()) {
+            // Skip app initialization.
+            return
+        }
         super.onCreate()
 
         if (!ApiPrefs.domain.endsWith(com.instructure.loginapi.login.BuildConfig.ANONYMOUS_SCHOOL_DOMAIN)) {

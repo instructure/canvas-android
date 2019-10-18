@@ -75,6 +75,14 @@ android {
         buildConfigField "String", "PUSH_SERVICE_PROJECT_ID", "\"$pushServiceProjectId\""
     }
 
+    bundle {
+        language {
+            // Specifies that the app bundle should not support configuration APKs for language resources. These
+            // resources are instead packaged with each base and dynamic feature APK.
+            enableSplit = false
+        }
+    }
+
     flavorDimensions "icecream"
     productFlavors {
 
@@ -256,6 +264,7 @@ dependencies {
     implementation Libs.ANDROIDX_FRAGMENT
     implementation Libs.ANDROIDX_VECTOR
     implementation Libs.PLAY_SERVICES
+    implementation Libs.PLAY_CORE
 
     /* Job Scheduler */
     implementation Libs.FIREBASE_JOB_DISPATCHER

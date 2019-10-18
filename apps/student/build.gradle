@@ -56,7 +56,7 @@ android {
         applicationId "com.instructure.candroid"
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 202
+        versionCode = 203
         versionName = '6.6.3'
 
         vectorDrawables.useSupportLibrary = true
@@ -75,6 +75,14 @@ android {
         buildConfigField "String", "NEWRELIC_APP_TOKEN", "\"$newRelicAppToken\""
 
         testBuildType = "debug"
+    }
+
+    bundle {
+        language {
+            // Specifies that the app bundle should not support configuration APKs for language resources. These
+            // resources are instead packaged with each base and dynamic feature APK.
+            enableSplit = false
+        }
     }
 
     packagingOptions {
@@ -270,6 +278,7 @@ dependencies {
     implementation Libs.PLAY_SERVICES_ANALYTICS
     implementation Libs.PLAY_SERVICES
     implementation Libs.ANDROIDX_PALETTE
+    implementation Libs.PLAY_CORE
 
     /* Job Scheduler */
     implementation Libs.FIREBASE_JOB_DISPATCHER
@@ -280,5 +289,9 @@ dependencies {
     /* New Relic */
     implementation Libs.NEW_RELIC
 }
+
+
+// Comment out this line if the reporting logic starts going wonky.
+gradle.addListener new TimingsListener(project)
 
 apply plugin: 'com.google.gms.google-services'
