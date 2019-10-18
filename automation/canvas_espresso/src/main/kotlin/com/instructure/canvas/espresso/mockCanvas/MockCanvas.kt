@@ -88,8 +88,10 @@ class MockCanvas {
     /** Map of course ID to assignment groups */
     val assignmentGroups = mutableMapOf<Long, List<AssignmentGroup>>()
 
-    /* Map of course ID to a list of submissions */
+    /** Map of course ID to a list of submissions */
     val submissions = mutableMapOf<Long, List<Submission>>()
+
+    var ltiTool: LTITool? = null
 
     //region Convenience functionality
 
@@ -285,7 +287,8 @@ fun MockCanvas.addAssignments(course: Course, assignmentCountPerGroup: Int = 1):
 fun MockCanvas.addAssignment(
         courseId: Long,
         groupType: AssignmentGroupType,
-        submissionType: Assignment.SubmissionType) : Assignment {
+        submissionType: Assignment.SubmissionType,
+        isQuizzesNext: Boolean = false) : Assignment {
     val assignmentId = 123L
     val assignmentGroupId = 123L
     var assignment = Assignment(
@@ -298,6 +301,12 @@ fun MockCanvas.addAssignment(
 
     val futureDueDate = OffsetDateTime.now().plusWeeks(1).toApiString()
     val pastDueDate = OffsetDateTime.now().minusWeeks(1).toApiString()
+
+    if(isQuizzesNext) {
+        assignment = assignment.copy(
+            url = "https://mobiledev.instructure.com/api/v1/courses/1567973/external_tools/sessionless_launch?assignment_id=24378681&launch_type=assessment"
+        )
+    }
 
     when(groupType) {
         AssignmentGroupType.OVERDUE -> {
@@ -341,6 +350,14 @@ fun MockCanvas.addAssignment(
  * */
 fun MockCanvas.addSubmission(courseId: Long, submission: Submission, assignmentId: Long?) {
     submissions[courseId] = if (assignmentId != null) listOf(submission.copy(assignmentId = assignmentId)) else listOf(submission)
+}
+
+fun MockCanvas.addLTITool(name: String, url: String): LTITool {
+    val ltiTool = LTITool(id = 123L, name = name, url = url)
+
+    this.ltiTool = ltiTool
+
+    return ltiTool
 }
 
 enum class AssignmentGroupType {

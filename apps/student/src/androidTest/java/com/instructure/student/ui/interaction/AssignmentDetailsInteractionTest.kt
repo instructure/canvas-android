@@ -15,6 +15,11 @@
  */
 package com.instructure.student.ui.interaction
 
+import android.view.View
+import androidx.test.espresso.UiController
+import androidx.test.espresso.ViewAction
+import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.mockCanvas.*
 import com.instructure.canvasapi2.models.Assignment
@@ -26,8 +31,10 @@ import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.routeTo
 import com.instructure.student.ui.utils.tokenLogin
+import org.hamcrest.Matcher
 import org.junit.Test
 import java.util.*
+import java.util.EnumSet.allOf
 
 class AssignmentDetailsInteractionTest : StudentTest() {
     override fun displaysPageObjects() = Unit // Not used for interaction tests
@@ -85,15 +92,33 @@ class AssignmentDetailsInteractionTest : StudentTest() {
     @Stub
     @Test
     @TestMetaData(Priority.P0, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, true, FeatureCategory.QUIZZES)
-    fun testGauge_launchQuizzesNextAssignment() {
+    fun testQuizzesNext_launchQuizzesNextAssignment() {
         // Launch into Quizzes.Next assignment
-    }
+    /* First attempt based on hardcoded verifier response
+        val data = MockCanvas.init(
+                studentCount = 1,
+                courseCount = 1
+        )
 
-    @Stub
-    @Test
-    @TestMetaData(Priority.P0, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, true)
-    fun testAssignments_previewAttachment() {
-        // Student can preview an assignment attachment
+        val course = data.courses.values.first()
+        val student = data.students[0]
+        val token = data.tokenFor(student)!!
+        val assignment = data.addAssignment(courseId = course.id, groupType = AssignmentGroupType.UPCOMING, submissionType = Assignment.SubmissionType.EXTERNAL_TOOL, isQuizzesNext = true)
+        val submission = Submission(
+                id = 123L,
+                submittedAt = Date(),
+                attempt = 1L,
+                late = false
+        )
+        data.addSubmission(course.id, submission, assignment.id)
+        data.addLTITool("Quizzes 2", "https://mobiledev.instructure.com/courses/1567973/external_tools/sessionless_launch?verifier=f85d3d69189890cde2f427a8efdc0e64850d8583bf8f2e0e0fa3704782d48b5378df5d52a35a4497ec18d3b0e201b3b2cab95e1347e7c5e286ac6636bf295c6b")
+        tokenLogin(data.domain, token, student)
+        routeTo("courses/${course.id}/assignments", data.domain)
+
+        assignmentListPage.clickAssignment(assignment)
+        assignmentDetailsPage.clickSubmit()
+        //https://mobiledev.instructure.com/api/v1/courses/1567973/external_tools/sessionless_launch?assignment_id=24378681&launch_type=assessment
+    */
     }
 
     @Stub

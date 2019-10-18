@@ -43,6 +43,14 @@ class SubmissionDetailsInteractionTest : StudentTest() {
 
     @Stub
     @Test
+    @TestMetaData(Priority.P0, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, true)
+    fun testAssignments_previewAttachment() {
+        // Student can preview an assignment attachment
+
+    }
+
+    @Stub
+    @Test
     @TestMetaData(Priority.P1, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, true)
     fun testComments_addVideoCommentToSubmission() {
         // Should be able to add a video comment on a submission
