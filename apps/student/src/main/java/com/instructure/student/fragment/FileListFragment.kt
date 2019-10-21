@@ -259,7 +259,7 @@ class FileListFragment : ParentFragment(), Bookmarkable {
         themeToolbar()
 
         // Only show FAB for user files
-        if (isUserFiles && folder?.forSubmissions == false) {
+        if ((isUserFiles || folder?.canUpload == true) && folder?.forSubmissions == false) {
             addFab.setVisible()
             addFab.onClickWithRequireNetwork { animateFabs() }
             addFileFab.onClickWithRequireNetwork {
