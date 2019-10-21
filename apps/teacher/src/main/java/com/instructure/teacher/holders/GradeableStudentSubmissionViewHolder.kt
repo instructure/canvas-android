@@ -28,13 +28,7 @@ import com.instructure.canvasapi2.models.GroupAssignee
 import com.instructure.canvasapi2.models.StudentAssignee
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.interactions.router.Route
-import com.instructure.pandautils.utils.ProfileUtils
-import com.instructure.pandautils.utils.ThemePrefs
-import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.onClick
-import com.instructure.pandautils.utils.setGone
-import com.instructure.pandautils.utils.setVisible
-import com.instructure.pandautils.utils.setupAvatarA11y
+import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.StudentContextFragment
 import com.instructure.teacher.router.RouteMatcher
@@ -118,6 +112,8 @@ class GradeableStudentSubmissionViewHolder(view: View) : RecyclerView.ViewHolder
                             } catch(e: NumberFormatException) {
                                 // Grade is a letter or text grade
                                 submissionGrade.text = submission.grade
+                                submissionGrade.contentDescription =
+                                    getContentDescriptionForMinusGradeString(submission.grade.orEmpty(), context)
                             }
                         }
                     }

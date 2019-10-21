@@ -179,17 +179,25 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
 
             if (gradeBeforePostingText == gradeAfterPostingText) {
                 gradeBeforePosting.text = gradeBeforePostingText
+                gradeBeforePosting.contentDescription =
+                    getContentDescriptionForMinusGradeString(gradeBeforePostingText, requireContext())
                 gradeBeforePostingLabel.setText(R.string.currentGrade)
                 gradeAfterPostingContainer.setGone()
             } else {
                 gradeBeforePosting.text = gradeBeforePostingText
+                gradeBeforePosting.contentDescription =
+                    getContentDescriptionForMinusGradeString(gradeBeforePostingText, requireContext())
                 gradeAfterPosting.text = gradeAfterPostingText
+                gradeAfterPosting.contentDescription =
+                    getContentDescriptionForMinusGradeString(gradeAfterPostingText, requireContext())
             }
 
             // Override Grade
             val overrideText = enrollmentGrades?.let { it.overrideGrade ?: it.overrideScore?.toString() }
             if (overrideText.isValid()) {
                 gradeOverride.text = overrideText
+                gradeOverride.contentDescription =
+                    getContentDescriptionForMinusGradeString(overrideText, requireContext())
             } else {
                 gradeOverrideContainer.setGone()
             }

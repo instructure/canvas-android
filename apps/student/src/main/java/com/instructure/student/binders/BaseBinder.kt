@@ -31,6 +31,7 @@ import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.validOrNull
 import com.instructure.pandautils.utils.ColorUtils
+import com.instructure.pandautils.utils.DisplayGrade
 import com.instructure.pandautils.utils.getContentDescriptionForMinusGradeString
 import com.instructure.student.R
 import com.instructure.student.util.StringUtilities
@@ -75,37 +76,43 @@ open class BaseBinder {
             return NumberHelper.formatDecimal(points_possible, 2, true)
         }
 
-        fun getGrade(assignment: Assignment, submission: Submission?, context: Context): Pair<String?, String?> {
+        fun getGrade(assignment: Assignment, submission: Submission?, context: Context): DisplayGrade {
             val possiblePoints = assignment.pointsPossible
             val pointsPossibleText = getPointsPossible(possiblePoints)
 
             // No submission
             if (submission == null) {
                 return if (possiblePoints > 0) {
-                    context.getString(
-                        R.string.gradeFormatScoreOutOfPointsPossible,
-                        NO_GRADE_INDICATOR,
-                        pointsPossibleText
-                    ) to context.getString(R.string.outOfPointsFormatted, pointsPossibleText)
+                    DisplayGrade(
+                        context.getString(
+                            R.string.gradeFormatScoreOutOfPointsPossible,
+                            NO_GRADE_INDICATOR,
+                            pointsPossibleText
+                        ),
+                        context.getString(R.string.outOfPointsFormatted, pointsPossibleText)
+                    )
                 } else {
-                    NO_GRADE_INDICATOR to ""
+                    DisplayGrade(NO_GRADE_INDICATOR, "")
                 }
             }
 
             // Excused
             if (submission.excused) {
-                return context.getString(
-                    R.string.gradeFormatScoreOutOfPointsPossible,
-                    context.getString(R.string.excused),
-                    pointsPossibleText
-                ) to context.getString(
-                    R.string.contentDescriptionScoreOutOfPointsPossible,
-                    context.getString(R.string.gradeExcused),
-                    pointsPossibleText
+                return DisplayGrade(
+                    context.getString(
+                        R.string.gradeFormatScoreOutOfPointsPossible,
+                        context.getString(R.string.excused),
+                        pointsPossibleText
+                    ),
+                    context.getString(
+                        R.string.contentDescriptionScoreOutOfPointsPossible,
+                        context.getString(R.string.gradeExcused),
+                        pointsPossibleText
+                    )
                 )
             }
 
-            val grade = submission.grade ?: return null to null
+            val grade = submission.grade ?: return DisplayGrade()
             val gradeContentDescription = getContentDescriptionForMinusGradeString(grade, context).validOrNull() ?: grade
 
             val gradingType = Assignment.getGradingTypeFromAPIString(assignment.gradingType.orEmpty())
@@ -117,16 +124,19 @@ open class BaseBinder {
             if (gradingType == Assignment.GradingType.LETTER_GRADE || gradingType == Assignment.GradingType.GPA_SCALE) {
                 val scoreText = NumberHelper.formatDecimal(submission.score, 2, true)
                 val possiblePointsText = NumberHelper.formatDecimal(possiblePoints, 2, true)
-                return context.getString(
-                    R.string.formattedScoreWithPointsPossibleAndGrade,
-                    scoreText,
-                    possiblePointsText,
-                    grade
-                ) to context.getString(
-                    R.string.contentDescriptionScoreWithPointsPossibleAndGrade,
-                    scoreText,
-                    possiblePointsText,
-                    gradeContentDescription
+                return DisplayGrade(
+                    context.getString(
+                        R.string.formattedScoreWithPointsPossibleAndGrade,
+                        scoreText,
+                        possiblePointsText,
+                        grade
+                    ),
+                    context.getString(
+                        R.string.contentDescriptionScoreWithPointsPossibleAndGrade,
+                        scoreText,
+                        possiblePointsText,
+                        gradeContentDescription
+                    )
                 )
             }
 
@@ -138,22 +148,25 @@ open class BaseBinder {
                     '.' in grade -> grade.take(grade.lastIndexOf('.') + 3)
                     else -> grade
                 }
-                return context.getString(
-                    R.string.gradeFormatScoreOutOfPointsPossible,
-                    formattedGrade,
-                    pointsPossibleText
-                ) to context.getString(
-                    R.string.contentDescriptionScoreOutOfPointsPossible,
-                    formattedGrade,
-                    pointsPossibleText
+                return DisplayGrade(
+                    context.getString(
+                        R.string.gradeFormatScoreOutOfPointsPossible,
+                        formattedGrade,
+                        pointsPossibleText
+                    ),
+                    context.getString(
+                        R.string.contentDescriptionScoreOutOfPointsPossible,
+                        formattedGrade,
+                        pointsPossibleText
+                    )
                 )
             }
 
             // Complete/incomplete
             return when(grade) {
-                "complete" -> return context.getString(R.string.gradeComplete) to null
-                "incomplete" -> return context.getString(R.string.gradeIncomplete) to null
-                else -> grade to gradeContentDescription
+                "complete" -> return DisplayGrade(context.getString(R.string.gradeComplete))
+                "incomplete" -> return DisplayGrade(context.getString(R.string.gradeIncomplete))
+                else -> DisplayGrade(grade, gradeContentDescription)
             }
         }
 
@@ -166,7 +179,7 @@ open class BaseBinder {
             val (grade, contentDescription) = getGrade(assignment, submission, context)
             if (hasGrade) {
                 textView.text = grade
-                textView.contentDescription = contentDescription ?: grade
+                textView.contentDescription = contentDescription
                 textView.setTextAppearance(context, R.style.TextStyle_Grade)
                 textView.setBackgroundDrawable(createGradeIndicatorBackground(context, color))
             } else {
