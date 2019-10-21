@@ -123,7 +123,6 @@ public class Const {
     public static final String PARENT_FOLDER_ID = "parentFolderID";
     public static final String PASSED_URI = "passedURI";
     public static final String PENDING_REVIEW = "pending_review";
-    public static final String PROJECT_ID = "project_id";
     public static final String QUIZ = "quiz";
     public static final String RECIPIENT = "recipient";
     public static final String RECIPIENTS = "recipients";

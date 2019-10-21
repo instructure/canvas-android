@@ -51,7 +51,7 @@ class LoginActivity : BaseLoginInitActivity() {
         }
 
         fun createLaunchApplicationMainActivityIntent(context: Context, extras: Bundle?): Intent {
-            PushNotificationRegistrationService.scheduleJob(context, ApiPrefs.isMasquerading, BuildConfig.PUSH_SERVICE_PROJECT_ID)
+            PushNotificationRegistrationService.scheduleJob(context, ApiPrefs.isMasquerading)
 
             return SplashActivity.createIntent(context, extras)
         }

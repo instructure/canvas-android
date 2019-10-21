@@ -31,7 +31,7 @@ import com.instructure.teacher.R
 class LoginLandingPageActivity : BaseLoginLandingPageActivity() {
 
     override fun launchApplicationMainActivityIntent(): Intent {
-        PushNotificationRegistrationService.scheduleJob(this, ApiPrefs.isMasquerading, BuildConfig.PUSH_SERVICE_PROJECT_ID)
+        PushNotificationRegistrationService.scheduleJob(this, ApiPrefs.isMasquerading)
         return SplashActivity.createIntent(this, null)
     }
 

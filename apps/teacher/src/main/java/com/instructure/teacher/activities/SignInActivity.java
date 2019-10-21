@@ -32,7 +32,7 @@ public class SignInActivity extends BaseLoginSignInActivity {
 
     @Override
     protected Intent launchApplicationMainActivityIntent() {
-        PushNotificationRegistrationService.Companion.scheduleJob(this, ApiPrefs.isMasquerading(), BuildConfig.PUSH_SERVICE_PROJECT_ID);
+        PushNotificationRegistrationService.Companion.scheduleJob(this, ApiPrefs.isMasquerading());
 
         CookieManager.getInstance().flush();
         return SplashActivity.Companion.createIntent(this, null);

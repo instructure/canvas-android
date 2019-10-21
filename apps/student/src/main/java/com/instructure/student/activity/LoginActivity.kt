@@ -40,7 +40,7 @@ import com.newrelic.agent.android.NewRelic
 class LoginActivity : BaseLoginInitActivity() {
 
     override fun launchApplicationMainActivityIntent(): Intent {
-        PushNotificationRegistrationService.scheduleJob(this, ApiPrefs.isMasquerading, BuildConfig.PUSH_SERVICE_PROJECT_ID)
+        PushNotificationRegistrationService.scheduleJob(this, ApiPrefs.isMasquerading)
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             CookieManager.getInstance().flush()
