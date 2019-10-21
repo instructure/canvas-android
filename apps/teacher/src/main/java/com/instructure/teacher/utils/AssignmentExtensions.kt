@@ -182,7 +182,7 @@ fun Assignment.getDisplayGrade(
             //edge case, NOT_GRADED type with grade, it COULD happen
             Assignment.GradingType.NOT_GRADED -> DisplayGrade(context.getString(R.string.not_graded))
             else ->{
-                var grade = submission.grade
+                var grade = submission.grade.takeUnless { it == "null" }.orEmpty()
                 if (this.gradingType == Assignment.PERCENT_TYPE) {
                     try {
                         val value: Double = if(includeLatePenalty) submission.enteredGrade?.removeSuffix("%")?.toDouble() as Double else submission.grade?.removeSuffix("%")?.toDouble() as Double
@@ -202,7 +202,7 @@ fun Assignment.getDisplayGrade(
                         getPointsFractionWithGrade(context, submission.score, this.pointsPossible, grade)
                     }
                 } else {
-                    DisplayGrade(grade.orEmpty())
+                    DisplayGrade(grade)
                 }
             }
 
@@ -248,7 +248,7 @@ fun getDisplayGrade(
         // Edge case, NOT_GRADED type with grade, it COULD happen
             Assignment.GradingType.NOT_GRADED -> DisplayGrade(context.getString(R.string.not_graded))
             else -> {
-                var formattedGrade = grade.orEmpty()
+                var formattedGrade = grade.takeUnless { it == "null" }.orEmpty()
                 if (gradingType == Assignment.PERCENT_TYPE) {
                     try {
                         val value: Double = if (includeLatePenalty) {
