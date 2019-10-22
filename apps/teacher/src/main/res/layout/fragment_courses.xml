@@ -98,6 +98,7 @@
     </com.instructure.pandautils.views.SwipeRefreshLayoutAppBar>
 
     <com.instructure.teacher.view.EmptyCoursesView
+        android:layout_below="@id/toolbar"
         android:id="@+id/emptyCoursesView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
