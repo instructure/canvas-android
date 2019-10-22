@@ -31,7 +31,7 @@ import com.instructure.pandautils.services.PushNotificationRegistrationService
 class SignInActivity : BaseLoginSignInActivity() {
 
     override fun launchApplicationMainActivityIntent(): Intent {
-        PushNotificationRegistrationService.scheduleJob(this, ApiPrefs.isMasquerading, BuildConfig.PUSH_SERVICE_PROJECT_ID)
+        PushNotificationRegistrationService.scheduleJob(this, ApiPrefs.isMasquerading)
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             CookieManager.getInstance().flush()

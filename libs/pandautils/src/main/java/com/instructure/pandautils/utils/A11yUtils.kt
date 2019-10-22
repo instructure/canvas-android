@@ -46,7 +46,7 @@ fun getContentDescriptionForMinusGradeString(grade: String, context: Context): S
         context.getString(
                 R.string.a11y_gradeLetterMinusContentDescription,
                 grade.substringBefore("-"))
-    } else ""
+    } else grade
 }
 
 

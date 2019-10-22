@@ -188,7 +188,6 @@
                 android:resource="@xml/provider_paths"/>
         </provider>
 
-        <service android:name=".services.FileUploadService" />
         <service android:name=".services.FileDownloadService" />
         <service android:name="com.instructure.pandautils.services.NotoriousUploadService"/>
 
@@ -203,27 +202,11 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name="com.google.android.gms.gcm.GcmReceiver"
-            android:exported="true"
-            android:permission="com.google.android.c2dm.permission.SEND">
-            <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
-                <category android:name="com.instructure.candroid"/>
-            </intent-filter>
-        </receiver>
-
         <service
             android:name=".receivers.TeacherPushExternalReceiver"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-            </intent-filter>
-        </service>
-
-        <service android:name=".services.PushInstanceIdService"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.google.android.gms.iid.InstanceID"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
     </application>

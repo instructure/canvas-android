@@ -129,7 +129,7 @@ dependencies {
     implementation Libs.ANDROIDX_CARDVIEW
     implementation Libs.ANDROIDX_DESIGN
     implementation Libs.ANDROIDX_EXIF
-    implementation Libs.PLAY_SERVICES
+    implementation Libs.FIREBASE_MESSAGING
 
     /* Job Scheduler */
     implementation Libs.FIREBASE_JOB_DISPATCHER

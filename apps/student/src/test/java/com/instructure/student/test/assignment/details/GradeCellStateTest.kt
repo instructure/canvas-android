@@ -129,6 +129,7 @@ class GradeCellStateTest : Assert() {
             score = "85",
             showPointsLabel = true,
             grade = "85%",
+            gradeContentDescription = "85%",
             gradeCellContentDescription = "85 Out of 100 points, 85%"
         )
         val actual = GradeCellViewState.fromSubmission(context, assignment, submission)
@@ -211,7 +212,31 @@ class GradeCellStateTest : Assert() {
             score = "85",
             showPointsLabel = true,
             grade = "B+",
+            gradeContentDescription = "B+",
             gradeCellContentDescription = "85 Out of 100 points, B+"
+        )
+        val actual = GradeCellViewState.fromSubmission(context, assignment, submission)
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `Returns correct state for 'Letter Grade' grading type with minus`() {
+        val assignment = baseAssignment.copy(
+            gradingType = Assignment.LETTER_GRADE_TYPE
+        )
+        val submission = baseSubmission.copy(
+            grade = "A-",
+            enteredGrade = "A-",
+            enteredScore = 91.0,
+            score = 91.0
+        )
+        val expected = baseGradedState.copy(
+            graphPercent = 0.91f,
+            score = "91",
+            showPointsLabel = true,
+            grade = "A-",
+            gradeContentDescription = "A. minus",
+            gradeCellContentDescription = "91 Out of 100 points, A. minus"
         )
         val actual = GradeCellViewState.fromSubmission(context, assignment, submission)
         assertEquals(expected, actual)
@@ -230,6 +255,7 @@ class GradeCellStateTest : Assert() {
             score = "85",
             showPointsLabel = true,
             grade = "3.8 GPA",
+            gradeContentDescription = "3.8 GPA",
             gradeCellContentDescription = "85 Out of 100 points, 3.8 GPA"
         )
         val actual = GradeCellViewState.fromSubmission(context, assignment, submission)
@@ -300,7 +326,7 @@ class GradeCellStateTest : Assert() {
                 score = "88",
                 showPointsLabel = true,
                 grade = "B",
-                gradeContentDescription = "", // We don't need one for regular letter grades
+                gradeContentDescription = "B",
                 gradeCellContentDescription = "88 Out of 100 points, B"
         )
         val actual = GradeCellViewState.fromSubmission(context, assignment, submission)

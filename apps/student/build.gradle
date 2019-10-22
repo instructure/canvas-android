@@ -68,7 +68,6 @@ android {
         /* Add private data */
         PrivateData.merge(project, "student")
         buildConfigField "String", "PSPDFKIT_LICENSE_KEY", "\"$pspdfkitLicenseKey\""
-        buildConfigField "String", "PUSH_SERVICE_PROJECT_ID", "\"$pushServiceProjectId\""
         addManifestPlaceholders([
                 crashlyticsApiKey: "$crashlyticsApiKey"
         ])
@@ -276,7 +275,7 @@ dependencies {
     implementation Libs.ANDROIDX_DESIGN
     implementation Libs.ANDROIDX_RECYCLERVIEW
     implementation Libs.PLAY_SERVICES_ANALYTICS
-    implementation Libs.PLAY_SERVICES
+    implementation Libs.FIREBASE_MESSAGING
     implementation Libs.ANDROIDX_PALETTE
     implementation Libs.PLAY_CORE
 
