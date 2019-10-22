@@ -92,6 +92,11 @@ class CourseBrowserPage : BasePage(R.id.courseBrowserPage) {
         selectSection(matcher)
     }
 
+    fun selectFiles() {
+        val matcher = allOf(withText("Files"), withId(R.id.label))
+        selectSection(matcher)
+    }
+
     fun selectHome() {
         onView(allOf(withId(R.id.homeLabel), isDisplayed())).click()
     }
@@ -103,7 +108,9 @@ class CourseBrowserPage : BasePage(R.id.courseBrowserPage) {
     }
 
     fun assertTitleCorrect(course: Course) {
-        initialBrowserTitle.assertHasText(course.originalName!!)
+        // You might have multiple of these if you navigate from one course to another.
+        // In that event, we'll have to choose the one that is displayed.
+        onView(allOf(withId(R.id.courseBrowserTitle), isDisplayed())).assertHasText(course.originalName!!)
     }
 
     fun assertTitleCorrect(course: CourseApiModel) {
@@ -176,3 +183,4 @@ private class ScrollRefreshLayoutToTop : ViewAction {
     }
 
 }
+

@@ -17,6 +17,7 @@
 package com.instructure.student.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.webkit.WebView
@@ -128,7 +129,14 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
 
     private fun getPageDetails() {
         if(page.id != 0L) {
-            if(page.body != null) loadPage(page)
+            if(page.body != null) {
+                if(pageName == null) {
+                    // If we don't set page name, we have problems when trying to set up the bookmark.
+                    // pageName is null when we call the bookmark property below.
+                    pageName = page.title
+                }
+                loadPage(page)
+            }
             else if(!page.title.isNullOrBlank()) {
                 pageName = page.title
                 fetchPageDetails()
@@ -324,7 +332,6 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
         fun newInstance(route: Route) : PageDetailsFragment? {
             return if (validRoute(route)) PageDetailsFragment().apply {
                 arguments = route.arguments
-
                 with(nonNullArgs) {
                     if (containsKey(PAGE_NAME)) pageName = getString(PAGE_NAME)
                     if (route.paramsHash.containsKey(RouterParams.PAGE_ID)) pageName = route.paramsHash[RouterParams.PAGE_ID]

@@ -41,3 +41,16 @@ object CanvasAuthModel : AuthModel {
         return request.user != null
     }
 }
+
+/**
+ * A "don't care" AuthModel.  Initially used for downloading files.
+ */
+object DontCareAuthModel : AuthModel {
+    override fun getAuth(request: Request) : String? {
+        return null
+    }
+
+    override fun isAuthorized(request: Request) : Boolean {
+        return true
+    }
+}

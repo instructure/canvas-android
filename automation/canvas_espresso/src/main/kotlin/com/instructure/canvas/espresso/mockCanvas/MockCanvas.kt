@@ -18,6 +18,7 @@
 
 package com.instructure.canvas.espresso.mockCanvas
 
+import android.util.Log
 import com.instructure.canvas.espresso.mockCanvas.utils.Randomizer
 import com.instructure.canvasapi2.apis.DiscussionAPI
 import com.instructure.canvasapi2.models.*
@@ -83,7 +84,30 @@ class MockCanvas {
     val groups = mutableMapOf<Long, Group>()
 
     /** Map of course ID to tabs for the course */
-    val courseTabs = mutableMapOf<Long, List<Tab>>()
+    val courseTabs = mutableMapOf<Long, MutableList<Tab>>()
+
+    /** Map of course ID to pages for the course */
+    val coursePages = mutableMapOf<Long, MutableList<Page>>()
+
+    /** Map of course ID to root folders */
+    val courseRootFolders = mutableMapOf<Long, FileFolder>()
+
+    /** Map of folder IDs to folders */
+    val fileFolders = mutableMapOf<Long, FileFolder>()
+
+    /** folderId -> list of subfolders */
+    val folderSubFolders = mutableMapOf<Long, MutableList<FileFolder>>()
+
+    /** folderId -> list of files */
+    val folderFiles = mutableMapOf<Long, MutableList<FileFolder>>()
+
+    var nextFileOrFolderId = 1L
+    fun newFileOrFolderId() : Long {
+        return nextFileOrFolderId++
+    }
+
+    /** Map of file contents, fileId -> String.  Just supporting string contents for now. */
+    val fileContents = mutableMapOf<Long,String>()
 
     //region Convenience functionality
 
@@ -208,7 +232,7 @@ fun MockCanvas.addCourse(isFavorite: Boolean = false, concluded: Boolean = false
     // For now, give all courses tabs for assignments and quizzes
     val assignmentsTab = Tab(position = 0,label = "Assignments",visibility = "public")
     val quizzesTab = Tab(position = 1,label = "Quizzes",visibility = "public")
-    courseTabs += course.id to listOf(assignmentsTab,quizzesTab)
+    courseTabs += course.id to mutableListOf(assignmentsTab,quizzesTab)
 
     return course
 }
@@ -279,5 +303,83 @@ fun MockCanvas.addUser(): User {
     tokens += UUID.randomUUID().toString() to user.id
     userSettings += user.id to UserSettings()
     return user
+}
+
+/** Creates a new page for a given course, and adds it to MockCanvas */
+fun MockCanvas.addPageToCourse(
+        courseId: Long,
+        pageId: Long = 0,
+        url: String? = null,
+        title: String = Randomizer.randomPageTitle(),
+        body: String = Randomizer.randomPageBody(),
+        published: Boolean = false
+) : Page {
+
+    val page = Page(
+            id = pageId,
+            url = url,
+            title = title,
+            body = body,
+            published = published
+    )
+
+    var list = coursePages[courseId]
+    if(list == null)
+    {
+        list = mutableListOf<Page>()
+        coursePages.put(courseId,list)
+    }
+    list.add(page)
+
+    return page
+}
+
+/** Creates a new file for the specified course, and records it properly in MockCanvas */
+fun MockCanvas.addFileToCourse(
+        courseId: Long,
+        displayName: String,
+        fileContent: String = Randomizer.randomPageBody(),
+        contentType: String = "text/plain"): Long {
+    var courseRootFolder = courseRootFolders[courseId]
+    if(courseRootFolder == null) {
+        val folderId = newFileOrFolderId()
+        courseRootFolder = FileFolder(
+                id = folderId,
+                contextType = "Course",
+                contextId = courseId,
+                name = "course files",
+                fullName = "course files",
+                filesUrl = "https://mock-data.instructure.com/api/v1/folders/$folderId/files",
+                foldersUrl = "https://mock-data.instructure.com/api/v1/folders/$folderId/folders"
+        )
+        courseRootFolders[courseId] = courseRootFolder
+        fileFolders[courseRootFolder.id] = courseRootFolder
+    }
+
+    // Now create our file metadata
+    val fileId = newFileOrFolderId()
+    val fileMetadataItem = FileFolder(
+            id=fileId,
+            folderId=courseRootFolder.id,
+            size=fileContent.length.toLong(),
+            displayName=displayName,
+            contentType=contentType,
+            url="https://mock-data.instructure.com/files/$fileId/preview" // Unused, I think
+    )
+
+    // And record it for the folder
+    var fileList = folderFiles[courseRootFolder.id]
+    if(fileList == null) {
+        fileList = mutableListOf<FileFolder>()
+        folderFiles[courseRootFolder.id] = fileList
+    }
+    //  TODO: Update courseRootFolder.filesCount
+    fileList.add(fileMetadataItem)
+
+    // Now record our file contents (just text for now)
+    fileContents[fileId] = fileContent
+    //Log.d("<--", "file($fileId) contents = \"$fileContent\"")
+
+    return fileId
 }
 
