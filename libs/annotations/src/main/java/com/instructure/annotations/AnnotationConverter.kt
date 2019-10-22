@@ -247,7 +247,7 @@ fun StampAnnotation.convertToCanvaDoc(canvaDocId: String): CanvaDocAnnotation {
             annotationType = CanvaDocAnnotation.AnnotationType.TEXT,
             rect = listOfRectsToListOfListOfFloats(listOf(this.boundingBox)),
             icon = "Comment",
-            color = getColorHexFromStampSubject(this.subject),
+            color = getColorHexFromStampSubject(this.title),
             contents = this.contents,
             iconColor= this.colorToHexString(),
             isEditable = true
