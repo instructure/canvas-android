@@ -412,7 +412,7 @@ class FileListFragment : ParentFragment(), Bookmarkable {
 
     private fun uploadFile() {
         folder?.let {
-            val bundle = UploadFilesDialog.createFilesBundle(null, it.id)
+            val bundle = UploadFilesDialog.createContextBundle(null, canvasContext, it.id)
             UploadFilesDialog.show(fragmentManager, bundle) { _ -> }
         }
     }
