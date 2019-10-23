@@ -37,7 +37,7 @@ import org.junit.Test
 class CourseInteractionTest : StudentTest() {
     override fun displaysPageObjects() = Unit // Not used for interaction tests
 
-    var mainCourse : Course? = null
+    var mainCourse: Course? = null
 
     @Test
     @TestMetaData(Priority.P1, FeatureCategory.COURSE, TestCategory.INTERACTION, false)
@@ -92,8 +92,8 @@ class CourseInteractionTest : StudentTest() {
         val fileId = data.addFileToCourse(
                 courseId = course.id,
                 displayName = displayName,
-                fileContent="<!DOCTYPE html><html><h1>Famous Quote</h1><body>Ask not what your country can do for you, ask what you can do for your country -- JFK</body></html>",
-                contentType="text/html")
+                fileContent = "<!DOCTYPE html><html><h1>Famous Quote</h1><body>Ask not what your country can do for you, ask what you can do for your country -- JFK</body></html>",
+                contentType = "text/html")
 
         courseBrowserPage.selectFiles()
 
@@ -112,8 +112,8 @@ class CourseInteractionTest : StudentTest() {
                 favoriteCourseCount = favoriteCourseCount)
 
         val course1 = data.courses.values.first()
-        val pagesTab = Tab(position = 2,label = "Pages",visibility = "public",tabId = Tab.PAGES_ID)
-        val filesTab = Tab(position = 3,label = "Files",visibility = "public",tabId = Tab.FILES_ID)
+        val pagesTab = Tab(position = 2, label = "Pages", visibility = "public", tabId = Tab.PAGES_ID)
+        val filesTab = Tab(position = 3, label = "Files", visibility = "public", tabId = Tab.FILES_ID)
         data.courseTabs[course1.id]!! += pagesTab
         data.courseTabs[course1.id]!! += filesTab
 

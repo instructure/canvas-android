@@ -48,17 +48,16 @@ object FolderListEndpoint : Endpoint(
  * - `files` -> [FolderFileListEndpoint]
  * - `folders` -> [FolderSubfoldersEndpoint]
  */
-object FolderEndpoint : Endpoint (
+object FolderEndpoint : Endpoint(
         Segment("files") to FolderFileListEndpoint,
         Segment("folders") to FolderSubfoldersEndpoint,
         response = {
             GET {
                 val folderId = pathVars.folderId
                 val folder = data.fileFolders[folderId]
-                if(folder != null) {
+                if (folder != null) {
                     request.successResponse(folder)
-                }
-                else {
+                } else {
                     request.unauthorizedResponse()
                 }
             }
@@ -68,7 +67,7 @@ object FolderEndpoint : Endpoint (
 /**
  * Endpoint to return all files associated with a folder
  */
-object FolderFileListEndpoint : Endpoint (
+object FolderFileListEndpoint : Endpoint(
         response = {
             GET {
                 val folderId = pathVars.folderId
@@ -82,7 +81,7 @@ object FolderFileListEndpoint : Endpoint (
 /**
  * Endpoint to return all subfolders associated with a folder
  */
-object FolderSubfoldersEndpoint : Endpoint (
+object FolderSubfoldersEndpoint : Endpoint(
         response = {
             GET {
                 val folderId = pathVars.folderId
