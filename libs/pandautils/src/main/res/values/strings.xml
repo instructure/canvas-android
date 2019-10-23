@@ -379,6 +379,7 @@
     <string name="utils_uploadToCanvas">Upload To Canvas</string>
     <string name="utils_uploadMyFiles">My Files</string>
     <string name="utils_uploadCourseFiles">Course Files</string>
+    <string name="utils_uploadGroupFiles">Group Files</string>
     <string name="utils_uploadToSubmissionComment">Upload to Submission Comment</string>
     <string name="utils_attachFile">Attach a file</string>
     <string name="utils_with">with</string>

@@ -80,6 +80,8 @@ data class FileFolder(
         var usageRights: UsageRights? = null,
         @SerializedName("for_submissions")
         var forSubmissions: Boolean = false, // Only for folders
+        @SerializedName("can_upload")
+        val canUpload: Boolean = false,
         var avatar: Avatar? = null // Used to get a file token to update avatars with vanity URLs
 ) : CanvasModel<FileFolder>() {
     val isRoot: Boolean get() = parentFolderId == 0L

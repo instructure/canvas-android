@@ -117,8 +117,9 @@ data class FileUploadConfig(
 
         fun forGroup(
             fso: FileSubmitObject,
-            groupId: Long
-        ) = fromSubmitObject(fso, "groups/$groupId")
+            groupId: Long,
+            parentFolderId: Long? = null
+        ) = fromSubmitObject(fso, "groups/$groupId", parentFolderId)
 
         fun fromSubmitObject(
             fso: FileSubmitObject,
