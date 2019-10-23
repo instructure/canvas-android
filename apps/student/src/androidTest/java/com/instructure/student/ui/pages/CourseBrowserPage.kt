@@ -87,6 +87,11 @@ class CourseBrowserPage : BasePage(R.id.courseBrowserPage) {
         selectSection(matcher)
     }
 
+    fun selectGrades() {
+        val matcher = withText("Grades")
+        selectSection(matcher)
+    }
+
     fun selectHome() {
         onView(allOf(withId(R.id.homeLabel), isDisplayed())).click()
     }

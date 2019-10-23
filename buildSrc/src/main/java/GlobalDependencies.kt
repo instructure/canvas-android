@@ -28,7 +28,6 @@ object Versions {
     /* Google, Play Services */
     const val GOOGLE_SERVICES = "4.0.1"
     const val ANDROIDX = "1.0.0"
-    const val FIREBASE_CORE = "16.0.7"
     const val FIREBASE_JOB_DISPATCHER = "0.8.6"
     const val FIREBASE_CONFIG = "18.0.0"
 
@@ -71,11 +70,11 @@ object Libs {
     const val ANDROIDX_VECTOR = "androidx.vectordrawable:vectordrawable:${Versions.ANDROIDX}"
 
     /* Play Services */
-    const val PLAY_SERVICES = "com.google.android.gms:play-services-gcm:16.1.0"
-    const val PLAY_SERVICES_ANALYTICS = "com.google.android.gms:play-services-analytics:16.0.7"
+    const val FIREBASE_MESSAGING = "com.google.firebase:firebase-messaging:19.0.0"
+    const val PLAY_SERVICES_ANALYTICS = "com.google.android.gms:play-services-analytics:17.0.0"
     const val PLAY_SERVICES_WEARABLE = "com.google.android.gms:play-services-wearable:16.0.1"
     const val PLAY_SERVICES_AUTH = "com.google.android.gms:play-services-auth:16.0.1"
-    const val FIREBASE_CORE = "com.google.firebase:firebase-core:${Versions.FIREBASE_CORE}"
+    const val FIREBASE_CORE = "com.google.firebase:firebase-core:17.2.0"
     const val FIREBASE_JOB_DISPATCHER = "com.firebase:firebase-jobdispatcher:${Versions.FIREBASE_JOB_DISPATCHER}"
     const val FIREBASE_CONFIG = "com.google.firebase:firebase-config:${Versions.FIREBASE_CONFIG}"
     const val PLAY_CORE = "com.google.android.play:core:1.6.3"

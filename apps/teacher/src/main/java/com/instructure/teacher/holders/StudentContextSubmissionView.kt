@@ -29,7 +29,7 @@ import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
 import com.instructure.teacher.utils.getAssignmentIcon
 import com.instructure.teacher.utils.getColorCompat
-import com.instructure.teacher.utils.getGradeText
+import com.instructure.teacher.utils.getDisplayGrade
 import com.instructure.teacher.utils.getResForSubmission
 import kotlinx.android.synthetic.main.adapter_student_context_submission.view.*
 
@@ -59,7 +59,7 @@ class StudentContextSubmissionView(context: Context, submission: StudentContextC
         // Submission grade
         if (submission.gradingStatus == "excused" || submission.gradingStatus == "graded") {
             val pointsPossible = submission.assignment?.pointsPossible ?: 0.0
-            val grade = getGradeText(
+            val displayGrade = getDisplayGrade(
                 context = context,
                 gradingStatus = submission.gradingStatus,
                 gradingType = submission.assignment?.gradingType?.name?.toLowerCase().orEmpty(),
@@ -71,7 +71,8 @@ class StudentContextSubmissionView(context: Context, submission: StudentContextC
                 includePointsPossible = false,
                 includeLatePenalty = false
             )
-            submissionGradeView.text = grade.takeUnless { it == "null" } ?: ""
+            submissionGradeView.text = displayGrade.text
+            submissionGradeView.contentDescription = displayGrade.contentDescription
             scoreBar.progress = ((submission.score ?: 0.0) / pointsPossible).toFloat()
         } else {
             submissionGradeContainer.setGone()

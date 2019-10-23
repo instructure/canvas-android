@@ -20,60 +20,68 @@ import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.os.Bundle
 import androidx.annotation.ColorRes
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
-import com.google.android.gms.gcm.GcmListenerService
+import com.google.firebase.messaging.FirebaseMessagingService
+import com.google.firebase.messaging.RemoteMessage
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.pandautils.R
 import com.instructure.pandautils.models.PushNotification
+import com.instructure.pandautils.services.PushNotificationRegistrationService
 import java.net.MalformedURLException
 import java.net.URL
 
-abstract class PushExternalReceiver : GcmListenerService() {
-
+abstract class PushExternalReceiver : FirebaseMessagingService() {
+    abstract fun getAppColor(): Int
     abstract fun getAppName(context: Context): String
     abstract fun getStartingActivityClass(): Class<out Activity>
 
-    abstract fun getAppColor(): Int
+    override fun onNewToken(token: String?) {
+        if (token == null) return
 
-    override fun onMessageReceived(sender: String?, msg: Bundle?) {
+        PushNotificationRegistrationService.scheduleJob(applicationContext, ApiPrefs.isMasquerading)
+    }
+
+    override fun onMessageReceived(message: RemoteMessage?) {
         Logger.d("PushExternalReceiver onReceive()")
-        if (msg != null) {
-            val htmlUrl = msg.getString(PushNotification.HTML_URL, "")
-            val from = msg.getString(PushNotification.FROM, "")
-            val alert = msg.getString(PushNotification.ALERT, "")
-            val collapseKey = msg.getString(PushNotification.COLLAPSE_KEY, "")
-            val userId = msg.getString(PushNotification.USER_ID, "")
+        val data = message?.data ?: return
 
-            val push = PushNotification(htmlUrl, from, alert, collapseKey, userId)
-            if (PushNotification.store(push)) {
-                postNotification(this, msg, getAppName(this), getStartingActivityClass(), getAppColor())
-            }
+        val from = message.from ?: ""
+        val alert = getMessage(data)
+        val userId = getUserId(data)
+        val htmlUrl = getHtmlUrl(data)
+        val collapseKey = getCollapseKey(data)
+
+        val push = PushNotification(htmlUrl, from, alert, collapseKey, userId)
+        if (PushNotification.store(push)) {
+            postNotification(this, data, getAppName(this), getStartingActivityClass(), getAppColor())
+        } else {
+            Logger.e("PushExternalReceiver failed to create push notification")
         }
     }
 
     companion object {
 
         const val NEW_PUSH_NOTIFICATION = "newPushNotification"
+        private const val CHANNEL_PUSH_GENERAL = "generalNotifications"
 
-        fun postNotification(context: Context, extras: Bundle?, appName: String, startingActivity: Class<out Activity>, @ColorRes appColor: Int) {
+        fun postNotification(context: Context, data: Map<String, String>?, appName: String, startingActivity: Class<out Activity>, @ColorRes appColor: Int) {
 
             val user = ApiPrefs.user
             val userDomain = ApiPrefs.domain
-            val url = getHtmlUrl(extras)
-            val notificationUserId = PushNotification.getUserIdFromPush(getUserId(extras))
+            val url = getHtmlUrl(data)
+            val notificationUserId = PushNotification.getUserIdFromPush(getUserId(data))
 
             var incomingDomain = ""
 
             try {
                 incomingDomain = URL(url).host
             } catch (e: MalformedURLException) {
-                Logger.e("HTML URL MALFORMED")
+                Logger.w("PushExternalReceiver: HTML URL MALFORMED")
             } catch (e: NullPointerException) {
-                Logger.e("HTML URL IS NULL")
+                Logger.w("PushExternalReceiver: HTML URL IS NULL")
             }
 
             if (user != null && notificationUserId.isNotBlank()) {
@@ -83,7 +91,7 @@ abstract class PushExternalReceiver : GcmListenerService() {
                     return
                 }
             } else {
-                Logger.e("USER WAS NULL OR USER_ID WAS NULL")
+                Logger.e("PushExternalReceiver: USER WAS NULL OR USER_ID WAS NULL")
                 return
             }
 
@@ -94,23 +102,22 @@ abstract class PushExternalReceiver : GcmListenerService() {
             }
 
             if (incomingDomain.isBlank() || userDomain.isBlank() || !incomingDomain.equals(userDomain, ignoreCase = true)) {
-                Logger.e("DOMAINS DID NOT MATCH")
+                Logger.e("PushExternalReceiver: DOMAINS DID NOT MATCH")
                 return
             }
 
             // Only the first few lines get shown in the notification, and taking all could result in a crash (given an EXTREMELY large amount)
             val pushes = PushNotification.getStoredPushes().takeLast(10)
 
-            if (pushes.isEmpty() && extras == null) {
+            if (pushes.isEmpty() && data == null) {
                 // Nothing to post, situation would occur from the BootReceiver
+                Logger.e("PushExternalReceiver: No notifications to show")
                 return
             }
 
             val contentIntent = Intent(context, startingActivity)
             contentIntent.putExtra(NEW_PUSH_NOTIFICATION, true)
-            if (extras != null) {
-                contentIntent.putExtras(extras)
-            }
+            data?.forEach { contentIntent.putExtra(it.key, it.value) }
 
             val deleteIntent = Intent(context, PushDeleteReceiver::class.java)
 
@@ -119,26 +126,24 @@ abstract class PushExternalReceiver : GcmListenerService() {
 
             val nm = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-            val channelId = "generalNotifications"
-
             val inboxStyle = NotificationCompat.InboxStyle()
             inboxStyle.setBigContentTitle(context.getString(R.string.notificationPrimaryInboxTitle))
             for (push in pushes) {
                 inboxStyle.addLine(push.alert)
             }
 
-            val notification = NotificationCompat.Builder(context, channelId)
-                    .setSmallIcon(R.drawable.ic_notification_canvas_logo)
-                    .setColor(ContextCompat.getColor(context, appColor))
-                    .setContentTitle(appName)
-                    .setContentText(getMessage(extras))
-                    .setContentIntent(contentPendingIntent)
-                    .setDeleteIntent(deletePendingIntent)
-                    .setAutoCancel(true)
-                    .setStyle(inboxStyle)
-                    .build()
+            val notification = NotificationCompat.Builder(context, CHANNEL_PUSH_GENERAL)
+                .setSmallIcon(R.drawable.ic_notification_canvas_logo)
+                .setColor(ContextCompat.getColor(context, appColor))
+                .setContentTitle(appName)
+                .setContentText(getMessage(data))
+                .setContentIntent(contentPendingIntent)
+                .setDeleteIntent(deletePendingIntent)
+                .setAutoCancel(true)
+                .setStyle(inboxStyle)
+                .build()
 
-            createNotificationChannel(context, channelId, loginId, nm)
+            createNotificationChannel(context, CHANNEL_PUSH_GENERAL, loginId, nm)
 
             nm.notify(555443, notification)
         }
@@ -172,11 +177,13 @@ abstract class PushExternalReceiver : GcmListenerService() {
             nm.createNotificationChannel(channel)
         }
 
-        private fun getMessage(extras: Bundle?): String = extras?.getString(PushNotification.ALERT, "") ?: ""
+        private fun getMessage(data: Map<String, String>?) = data?.get(PushNotification.ALERT) ?: ""
 
-        private fun getUserId(extras: Bundle?): String = extras?.getString(PushNotification.USER_ID, "") ?: ""
+        private fun getUserId(data: Map<String, String>?) = data?.get(PushNotification.USER_ID) ?: ""
 
-        private fun getHtmlUrl(extras: Bundle?): String = extras?.getString(PushNotification.HTML_URL, "") ?: ""
+        private fun getHtmlUrl(data: Map<String, String>?) = data?.get(PushNotification.HTML_URL) ?: ""
+
+        private fun getCollapseKey(data: Map<String, String>?) = data?.get(PushNotification.COLLAPSE_KEY) ?: ""
 
         fun postStoredNotifications(context: Context, appName: String, startingActivity: Class<out Activity>, @ColorRes appColor: Int) {
             postNotification(context, null, appName, startingActivity, appColor)

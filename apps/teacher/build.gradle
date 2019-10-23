@@ -72,7 +72,6 @@ android {
         PrivateData.merge(project, "teacher")
 
         buildConfigField "String", "PSPDFKIT_LICENSE_KEY", "\"$pspdfkitLicenseKey\""
-        buildConfigField "String", "PUSH_SERVICE_PROJECT_ID", "\"$pushServiceProjectId\""
     }
 
     bundle {
@@ -263,8 +262,8 @@ dependencies {
     implementation Libs.ANDROIDX_ANNOTATION
     implementation Libs.ANDROIDX_FRAGMENT
     implementation Libs.ANDROIDX_VECTOR
-    implementation Libs.PLAY_SERVICES
     implementation Libs.PLAY_CORE
+    implementation Libs.FIREBASE_MESSAGING
 
     /* Job Scheduler */
     implementation Libs.FIREBASE_JOB_DISPATCHER

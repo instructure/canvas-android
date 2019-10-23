@@ -37,11 +37,6 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
-    <permission android:name="com.instructure.candroid.permission.C2D_MESSAGE" android:protectionLevel="signature"/>
-    <uses-permission android:name="com.instructure.candroid.permission.C2D_MESSAGE"/>
-    <uses-permission android:name="com.google.android.c2dm.permission.REGISTER" />
-    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
-
     <instrumentation
         android:name="com.google.android.apps.common.testing.testrunner.GoogleInstrumentationTestRunner"
         android:targetPackage="com.instructure.candroid"/>
@@ -214,12 +209,6 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.google.android.gms.oss.licenses.OssLicensesMenuActivity"
-            android:theme="@style/OssTheme"/>
-
-        <activity android:name="com.google.android.gms.oss.licenses.OssLicensesActivity"
-            android:theme="@style/OssTheme"/>
-
         <service android:name=".mobius.common.ui.SubmissionService"
             android:exported="false" />
 
@@ -267,26 +256,10 @@
 
         <!--Push Notifications-->
 
-        <receiver android:name="com.google.android.gms.gcm.GcmReceiver"
-            android:exported="true"
-            android:permission="com.google.android.c2dm.permission.SEND">
-            <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
-                <category android:name="com.instructure.candroid"/>
-            </intent-filter>
-        </receiver>
-
         <service android:name=".receivers.StudentPushExternalReceiver"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
-            </intent-filter>
-        </service>
-
-        <service android:name=".service.PushInstanceIdService"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.google.android.gms.iid.InstanceID"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
