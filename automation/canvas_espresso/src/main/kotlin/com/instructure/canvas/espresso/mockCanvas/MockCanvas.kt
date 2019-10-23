@@ -20,9 +20,12 @@ package com.instructure.canvas.espresso.mockCanvas
 
 import android.util.Log
 import com.instructure.canvas.espresso.mockCanvas.utils.Randomizer
-import com.instructure.canvasapi2.apis.DiscussionAPI
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.toApiString
+import okhttp3.mockwebserver.Dispatcher
+import okhttp3.mockwebserver.MockResponse
+import okhttp3.mockwebserver.MockWebServer
+import okhttp3.mockwebserver.RecordedRequest
 import org.threeten.bp.OffsetDateTime
 import java.util.*
 
@@ -145,6 +148,38 @@ class MockCanvas {
 
     //endregion
 
+    // Webview support -- goes through a mock server
+    val webViewServer = MockWebServer()
+    // The dispatcher contains all of our matching/capture logic for webview requests
+    val webViewServerDispatcher = object : Dispatcher() {
+        override fun dispatch(request: RecordedRequest): MockResponse {
+            Log.d("WebView", "dispatch() request: $request")
+            var path = request.path
+            if(path.startsWith("//")) path = path.substring(1)
+
+            // Test as to whether this is a /courses/{courseId}/files/{fileId}/preview request,
+            // and if it is then service it.
+            val courseFilePreviewRegex = """/courses/(\d+)/files/(\d+)/(preview|download)""".toRegex()
+            courseFilePreviewRegex.matchEntire(path)?.run {
+                // groupValues[0] is the entire string, I think
+                Log.d("WebView", "Matched courseFilePreviewRegex: course=${groupValues[1]}, file=${groupValues[2]}")
+                val fileId = groupValues[2].toLong()
+                val contents = fileContents[fileId]
+                return@dispatch MockResponse().setResponseCode(200).setBody(contents)
+            }
+
+            // Handle some known constant-path requests
+            when(path) {
+                "/favicon.ico" -> {return MockResponse()} // defaults to status 200, empty response
+            }
+
+            // If you get to here, you will crash due to an unhandled request
+            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        }
+    }
+
+
+
     companion object {
         /** Whether the mock Canvas data has been initialized for the current test run */
         val isInitialized: Boolean get() = ::data.isInitialized
@@ -210,6 +245,10 @@ fun MockCanvas.Companion.init(
     }
 
     repeat(accountNotificationCount) { data.addAccountNotification() }
+
+    // Perform the finishing operational touches for our web server
+    data.webViewServer.dispatcher = data.webViewServerDispatcher
+    data.webViewServer.start()
 
     return data
 }

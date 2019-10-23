@@ -1,5 +1,6 @@
 package com.instructure.canvas.espresso.mockCanvas.endpoints
 
+import android.util.Log
 import com.instructure.canvas.espresso.mockCanvas.Endpoint
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.endpoint
@@ -9,6 +10,7 @@ import com.instructure.canvas.espresso.mockCanvas.utils.successResponse
 import com.instructure.canvasapi2.models.AuthenticatedSession
 import okhttp3.Request
 import okhttp3.Response
+import java.net.URL
 
 /**
  * The root endpoint of [MockCanvas]. It does not return anything itself, but prepends the request path with an
@@ -29,11 +31,21 @@ object RootEndpoint : Endpoint(
         Segment("login") to endpoint(
                 Segment("session_token") to endpoint {
                     GET {
-                        // Just echo the request's "return_to" parameter back to the caller.
-                        // It won't contain all of the information that a normal /login/session_token
-                        // response would have, but that information is unnecessary for mocked API calls.
-                        val sessionUrl = request.url().queryParameter("return_to")
-                        request.successResponse(AuthenticatedSession(sessionUrl = sessionUrl!!))
+                        // We primarily hit this endpoint for webviews wishing to establish a
+                        // valid session for their content.  Instead of just echoing back the
+                        // "return_to" url to the sender, this is where we swap out our
+                        // "mock-data.instructure.com" domain, and swap in the domain from our
+                        // special webserver.  This will cause the Webview's ensuing request
+                        // to hit our special webserver.
+                        //
+                        // The response here won't contain all of the information that a normal
+                        // /login/session_token response would have (e.g., actual tokens), but that
+                        // information is unnecessary for mocked API calls.
+                        val sessionUrlString = request.url().queryParameter("return_to")
+                        val originalSessionUrl = URL(sessionUrlString)
+                        val sessionUrl = "${data.webViewServer.url(originalSessionUrl.path)}"
+                        Log.d("WebView", "original url=$sessionUrlString, new url=$sessionUrl")
+                        request.successResponse(AuthenticatedSession(sessionUrl = sessionUrl))
                     }
                 }
         )

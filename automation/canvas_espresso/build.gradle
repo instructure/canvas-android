@@ -77,4 +77,8 @@ dependencies {
     api('com.github.instructure:espresso:1.0.2') {
         exclude module: 'kotlin-stdlib'
     }
+    /* Mock web server */
+    //implementation("com.squareup.okhttp3:mockwebserver:4.2.1") // Later version causes build conflicts
+    implementation("com.squareup.okhttp3:mockwebserver:3.13.1")
+
 }
