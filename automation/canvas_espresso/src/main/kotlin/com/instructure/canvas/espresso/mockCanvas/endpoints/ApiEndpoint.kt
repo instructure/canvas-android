@@ -40,5 +40,6 @@ object ApiEndpoint : Endpoint(
     Segment("conversations") to ConversationListEndpoint,
     Segment("dashboard") to endpoint(
         Segment("dashboard_cards") to DashboardCardsEndpoint
-    )
+    ),
+    Segment("folders") to FolderListEndpoint
 )

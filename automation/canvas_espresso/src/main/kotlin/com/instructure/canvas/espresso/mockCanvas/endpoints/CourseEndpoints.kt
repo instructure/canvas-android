@@ -18,6 +18,7 @@ package com.instructure.canvas.espresso.mockCanvas.endpoints
 
 import com.instructure.canvas.espresso.mockCanvas.Endpoint
 import com.instructure.canvas.espresso.mockCanvas.utils.*
+import com.instructure.canvasapi2.models.StreamItem
 
 /**
  * Endpoint that can return a list of courses in which the request user is enrolled.
@@ -26,17 +27,17 @@ import com.instructure.canvas.espresso.mockCanvas.utils.*
  * - `{courseId}` -> [CourseEndpoint]
  */
 object CourseListEndpoint : Endpoint(
-    LongId(PathVars::courseId) to CourseEndpoint,
-    response = {
-        GET {
-            val user = request.user!!
-            val courses = data.enrollments
-                .values
-                .filter { it.userId == user.id }
-                .map { data.courses[it.courseId]!! }
-            request.successPaginatedResponse(courses)
+        LongId(PathVars::courseId) to CourseEndpoint,
+        response = {
+            GET {
+                val user = request.user!!
+                val courses = data.enrollments
+                        .values
+                        .filter { it.userId == user.id }
+                        .map { data.courses[it.courseId]!! }
+                request.successPaginatedResponse(courses)
+            }
         }
-    }
 )
 
 /**
@@ -48,10 +49,12 @@ object CourseListEndpoint : Endpoint(
  */
 object CourseEndpoint : Endpoint(
         Segment("tabs") to CourseTabsEndpoint,
+        Segment("pages") to CoursePagesEndpoint,
+        Segment("folders") to CourseFoldersEndpoint,
         response = {
             GET {
                 val course = data.courses[pathVars.courseId]!!
-                val userId = pathVars.userId
+                val userId = request.user!!.id
                 if (data.enrollments.values.any { it.courseId == course.id && it.userId == userId }) {
                     request.successResponse(course)
                 } else {
@@ -64,9 +67,57 @@ object CourseEndpoint : Endpoint(
 /**
  * Endpoint that returns the tabs for a course
  */
-object CourseTabsEndpoint : Endpoint( response = {
+object CourseTabsEndpoint : Endpoint(response = {
     GET {
         val course = data.courses[pathVars.courseId]!!
         request.successResponse(data.courseTabs[course.id]!!) // returns a list of tabs
+    }
+})
+
+/**
+ * Endpoint that returns the pages for a course
+ */
+object CoursePagesEndpoint : Endpoint(
+        LongId(PathVars::pageId) to CoursePageEndpoint,
+        response = {
+            GET {
+                val pages = data.coursePages[pathVars.courseId]
+                if (pages == null || pages.isEmpty()) {
+                    request.unauthorizedResponse()
+                } else {
+                    request.successResponse(pages)
+                }
+            }
+        })
+
+/**
+ * Endpoint that returns a specific page from a course
+ */
+object CoursePageEndpoint : Endpoint(response = {
+    GET {
+        val pages = data.coursePages[pathVars.courseId]
+        val page = pages?.firstOrNull { it -> it.id == pathVars.pageId }
+        if (page == null) {
+            request.unauthorizedResponse()
+        } else {
+            request.successResponse(page)
+        }
+    }
+})
+
+/** Course folder support.  Right now we only support grabbing the root folder. */
+object CourseFoldersEndpoint : Endpoint(
+        Segment("root") to CourseRootFolderEndpoint
+)
+
+/** Course root folder support. */
+object CourseRootFolderEndpoint : Endpoint(response = {
+    GET {
+        val folder = data.courseRootFolders[pathVars.courseId]
+        if (folder != null) {
+            request.successResponse(folder)
+        } else {
+            request.unauthorizedResponse()
+        }
     }
 })
