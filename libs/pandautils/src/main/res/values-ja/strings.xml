@@ -165,6 +165,7 @@
     <string name="noAssignmentsSubtext">このスペースには課題が作成されていないようです。外に出て探検する時間。</string>
     <string name="noAssignmentsTeacher">まだ課題が公開されていないようです。</string>
     <string name="noFiles">ファイルがありません</string>
+    <string name="noFilesForAssignment">この提出物に関するファイルはありません。</string>
     <string name="noFilesSubtext">あなたのアカウントに関連付けられているファイルはありません。</string>
     <string name="notSupported">サポートなし</string>
     <string name="noEvents">今日は、イベントはありません！</string>
@@ -175,7 +176,6 @@
     <string name="noDueDate">この課題には期限がありません。</string>
     <string name="locked">ロックされています</string>
     <string name="lockedSubtext">この課題は%1$sまで%2$sでロックされます。</string>
-    <string name="lockedModule">この割り当てはモジュールの一部であり、\"%1$s\"ロックがまだ解除されていません。 </string>
     <string name="chooseFile">ファイルの選択</string>
     <string name="chooseFileSubtext">下のオプションをタップして、提出物にファイルを添付してください。</string>
     <string name="noNotifications">通知なし</string>

@@ -54,6 +54,13 @@
     <string name="launchExternalTool">启动外部工具</string>
 
     <string name="preview">预览</string>
+    <string name="submissionUploadFailedMessage">一份或多份文件上传失败。请检查您的网络连接，并重试提交。</string>
+    <string name="submissionUploadByteProgress">%1$s/%2$s</string>
+    <string name="submissionSuccessTitle">提交成功！</string>
+    <string name="submissionSuccessMessage">您的作业已成功提交。享受您的一天！</string>
+    <string name="cancelAllSubmissions">取消所有作业提交项</string>
+    <string name="missingSubmissionLabel">缺失</string>
+    <string name="gradedSubmissionLabel">已评分</string>
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">使用“http://”的 URL 无可用预览</string>
     <string name="submissionUrlNotAUrlError">请输入有效的 URL</string>
@@ -61,8 +68,11 @@
     <string name="addFileFabContentDesc">显示添加文件选项</string>
     <string name="recordAudio">录制音频</string>
 
+    <string name="recordVideo">录制视频</string>
+
     <!-- Student Submission -->
     <string name="submissionWrite">写入&#8230;</string>
+    <string name="textSubmissionFailureMessage">上传提交项时出错。请重新提交。</string>
     <!-- Student Submission Details -->
     <string name="submission">提交</string>
     <string name="submissionVersions">提交版本</string>
@@ -78,15 +88,38 @@
     <string name="submissionDetailsAssignmentLocked">作业已锁定</string>
     <string name="webPreview">输入的 URL 预览</string>
     <string name="websiteUrl">网站 URL</string>
+    <string name="noneContentMessage">此作业不允许在线提交</string>
+    <string name="onPaperContentMessage">此作业不允许在线提交</string>
+    <string name="noOnlineSubmissions">无在线提交项</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">满分 %s</string>
     <string name="outOfPointsAbbreviatedFormatted">满分 %s</string>
     <string name="gradeExcused">已请假</string>
     <string name="finalGradeFormatted">最终评分：%s</string>
+    <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
+    <string name="contentDescriptionScoreOutOfPointsPossible">得分 %1$s，总分 %2$s</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">自定义评分</string>
     <string name="rubricEmptyMessage">此作业没有评估表格</string>
     <string name="rubricViewLongDescription">查看长说明</string>
+    <!-- Student Submission Comments -->
+    <string name="assignmentSubmissionUploadingFile">正在上传%2$d的文件%1$d</string>
+    <string name="assignmentSubmissionCommentUpload">正在上传关于%s的评论</string>
+    <string name="assignmentSubmissionCommentUploadingMedia">正在上传媒体文件</string>
+    <string name="assignmentSubmissionCommentError">有关%s的评论上传失败</string>
+    <string name="chooseFileForCommentSubtext">可以点击下方的选项来给您的评论附加文件</string>
+    <string name="emptySubmissionCommentsSubtext">对您的作业有疑问？\n给讲师发送消息。</string>
+    <string name="submissionCommentErrorMessage">无法发送消息。单击以重试。</string>
+    <string name="mediaUploadAudio">媒体上传——音频</string>
+    <string name="mediaUploadVideo">媒体上传——视频</string>
+    <string name="commentSubmissionTypeText">文体提交</string>
+    <string name="commentSubmissionTypeExternalTool">外部工具提交</string>
+    <string name="commentSubmissionTypeDiscussion">提交讨论</string>
+    <string name="commentSubmissionTypeQuiz">测验提交</string>
+    <string name="commentSubmissionTypeQuizAttempt">尝试次数%d</string>
+    <string name="commentSubmissionTypeMediaFile">媒体文件</string>
+    <string name="commentSubmissionTypeAudio">音频</string>
+    <string name="commentSubmissionTypeVideo">视频</string>
     <!-- Profile Fragment Strings -->
     <string name="canvasVersionNum">版本：</string>
 
@@ -103,7 +136,6 @@
     <string name="options">选项</string>
 
     <string name="discussionAttachment">附加文件</string>
-    <string name="discussionUpload">上传视频或音频</string>
     <string name="discussionPostEditing">编辑</string>
 
     <!--Multiple User Sign in -->
@@ -139,36 +171,16 @@
     <string name="lowercaseAM">上午</string>
     <string name="lowercasePM">下午</string>
     <!-- Assignments -->
-    <string name="assignmentDue">截止</string>
-    <string name="assignmentDueColon">到期：</string>
-    <string name="assignmentLastSubmission">最后的提交</string>
-    <string name="assignmentNoSubmission">无</string>
-    <string name="assignmentTabDetails">详情</string>
-    <string name="assignmentTabSubmission">提交项</string>
-    <string name="assignmentTabGrade">评分</string>
     <string name="assignmentLocked">已锁定</string>
     <string name="assignments">作业</string>
-    <string name="freeFormRubricPoints" formatted="false">%s / %s</string>
-    <string name="noRubric">此作业没有评分细则。</string>
     <string name="noDescription">没有此作业的说明</string>
     <string name="noAssignmentsInGroup">在此小组中没有作业</string>
     <string name="excusedAssignment">此作业已免除，因此不会计入总分计算中。</string>
-    <string name="droppedAssignment">此作业已丢弃，因此不会计入总分计算中。</string>
     <string name="excused">前任</string>
-    <string name="mutedText">评分不可用，因为讲师正在对其进行操作。</string>
-    <string name="rubricRangePointsText" formatted="false">&#160;至&gt; %s分</string>
-    <string name="contentDescriptionRubricRangePointsText" formatted="false">%s &#160;至&gt; %s分</string>
-
     <!-- Assignment editing -->
     <string name="points">得分</string>
-    <string name="assignmentGroup">作业组：</string>
-    <string name="gradingType">评分类型：</string>
-    <string name="submissionType">提交项类型：</string>
-    <string name="editAssignment">编辑作业</string>
     <string name="save">保存</string>
     <string name="cancel">取消</string>
-    <string name="sendNotification">通知用户此内容已更改</string>
-
     <!-- Discussions -->
     <string name="forbidden">回复只对至少发布了一条回复的人可见。</string>
 
@@ -188,6 +200,10 @@
     <string name="checkBoxFinalGradeOption">取决于评分作业</string>
     <string name="checkBoxWhatIfGradeOption">显示假设的分数</string>
     <string name="whatIfDialogText">假设的分数</string>
+    <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
+    <string name="contentDescriptionScoreWithPointsPossibleAndGrade">得分 %1$s，总分 %2$s，%3$s</string>
+
+
     <string name="inbox">收件箱</string>
     <string name="unread">未读</string>
     <string name="archived">已归档</string>
@@ -229,7 +245,6 @@
     <plurals name="to_do_needs_grading">
         <item quantity="other">%d需要评分</item>
     </plurals>
-    <string name="myFiles">文件</string>
     <string name="createAFolder">创建文件夹</string>
     <string name="createFolder">创建文件夹</string>
     <string name="createAFile">选择文件</string>
@@ -269,7 +284,6 @@
     <string name="deleteEvent">删除事件</string>
     <string name="selected">已选择</string>
     <string name="errorSendingMessage">尝试发送消息时出错。请重试。</string>
-    <string name="errorPostingComment">发布您的提交项评论时出错。请重试。</string>
     <string name="deletedConversation">会话已被删除。</string>
     <string name="uploadAvatarFailMsg">新的头像图片上传失败</string>
     <string name="editPhoto">编辑图片</string>
@@ -302,8 +316,6 @@
     <string name="openAlternate">打开替代应用程序</string>
     <string name="opening">正在打开文件&#8230;</string>
     <string name="download">下载</string>
-    <string name="hideExtras">隐藏额外的</string>
-    <string name="showExtras">显示额外的</string>
     <string name="messageAttachments">消息附件</string>
     <string name="discussionAttachmentLabel">附件</string>
     <string name="attachmentIcon">附件图标</string>
@@ -360,6 +372,7 @@
     <string name="select_item_to_display">从列表中选择</string>
 
     <string name="syllabus">教学大纲</string>
+    <string name="summary">摘要</string>
     <string name="coursePeople">人员</string>
     <string name="teachersTas">教师 &amp; 助教</string>
     <string name="students">学生</string>
@@ -393,12 +406,6 @@
 
     <!-- Notifications -->
     <string name="deleted">已删除</string>
-    <string name="gradedDiscussion">评分讨论</string>
-    <string name="pointsPossible">可能的分值</string>
-    <string name="pointsPossibleNoPeriod">可能得分</string>
-
-    <string name="deletedEntryNoChildren">该删除的讨论条目没有回复。</string>
-    <string name="sideCommentEntry">在该类型的讨论中，您不能评论该级别的任何条目。</string>
     <string name="contentDescriptionFiles">文件图标</string>
 
     <string name="loadingCanvas">正在加载Canvas内容&#8230;</string>
@@ -422,11 +429,6 @@
     <string name="emptyId">该ID不能为空白</string>
 
     <string name="goToQuiz">转到测验</string>
-    <string name="goToExternalTool">转到外部工具</string>
-
-    <string name="pastDueDate">截止日期已过</string>
-
-    <string name="goToDiscussion">转到讨论</string>
     <string name="quizzes">测验</string>
 
     <string name="lastDiscussionPost">上一次发布</string>
@@ -480,7 +482,6 @@
     <string name="lockedFileDesc">该文件是单元%s的一部分，并且尚未锁定。</string>
     <string name="lockedQuizDesc">该测验是单元%s的一部分，并且尚未锁定。</string>
     <string name="lockedDiscussionDesc">该讨论是单元%s的一部分，并且尚未锁定。</string>
-    <string name="lockedAssignmentDescLine2">访问课程单元页面关于如何解锁此内容的信息。</string>
     <string name="mustComplete">您必须首先完成：</string>
     <string name="unlockedAt">将被解锁于：</string>
     <string name="goToModules">转到单元</string>
@@ -502,22 +503,12 @@
     <!-- New Submission Strings -->
     <string name="textEntry">文本输入</string>
     <string name="onlineURL">在线 URL</string>
-    <string name="enterTextEntry">输入文本条目</string>
-    <string name="fileUpload">文件上传</string>
     <string name="oneFileOnly">此提交项只接受上传一份文件</string>
 
 
     <string name="websiteEntry">添加网站条目</string>
     <string name="mediaRecordingEntry">媒体录音</string>
     <string name="submit">提交</string>
-    <string name="blankSubmission">提交不能为空白。</string>
-    <string name="errorPostingSubmission">发布提交时出现错误。</string>
-    <string name="successPostingSubmission">成功发布提交。</string>
-
-    <string name="exampleSubmissionURL">http://www.example.com</string>
-
-
-
     <!-- DataLoss Fragment Strings -->
     <string name="unsavedProgress">未保存的进度</string>
     <string name="informationLost">未保存的信息将会丢失。是否要继续？</string>
@@ -531,22 +522,8 @@
 
     <!-- Submission Details Strings -->
     <string name="next">下一步</string>
-    <string name="addSubmission">上交</string>
-    <string name="addAnotherSubmission">再次打开</string>
     <string name="turnedIn">已上交：&#160;</string>
     <string name="addComment">添加评论&#8230;</string>
-    <string name="addCommentNoEllipsis">添加评论</string>
-    <string name="subTypeOnlineText">在线文本输入</string>
-    <string name="subTypeFileUpload">在线电子文件上传</string>
-    <string name="subTypeOnlineURL">网站 URL</string>
-    <string name="subTypeOnlineQuiz">在线测验</string>
-    <string name="subTypeMediaRecording">媒体录制</string>
-    <string name="sub_type_lti_launch">LTI 启动</string>
-    <string name="subTypeDiscussionTopic">讨论</string>
-    <string name="turnInByHand">您必须手动打开此作业</string>
-    <string name="noSubRequired">无需提交</string>
-    <string name="noTurnInOnMobile">手机提交不受支持</string>
-
     <string name="home">首页</string>
     <string name="Notifications">通知</string>
 
@@ -576,9 +553,6 @@
     <string name="clickToViewSubmission">当您打开该网站时，它就会拍摄快照。点击并按住下面的图片，打开或下载完整的图像。</string>
     <string name="urlSubmissionNoPreview">此提交是指向外部页面的一个 URL。请记住，此页面自最初进行提交后可能已更改。</string>
     <string name="contentDescriptionPreviewImage">提交URL的预览</string>
-    <string name="itemStillProcessing">此项目仍然在服务器上进行处理。请重试。</string>
-
-
     <string name="isNotSupportedFeature">%1$s不受支持。</string>
     <string name="isNotSupported">链接不受支持。</string>
     <string name="openInBrowser">在浏览器里打开</string>
@@ -595,8 +569,6 @@
     <string name="panda_fact_string">熊猫资料：&#160;</string>
     <string name="remove">移除</string>
     <string name="founders">创始人</string>
-    <string name="image">图片</string>
-
     <string name="EULA">最终用户许可协议</string>
     <string name="privacyPolicy">隐私政策</string>
     <string name="termsOfUse">使用条款</string>
@@ -624,8 +596,6 @@
     <string name="widgetMinimumStyle">隐藏部件的详细信息</string>
     <string name="light">浅色的、轻的</string>
     <string name="dark">深色的、黑的</string>
-
-    <string name="invalidExternal">此外部工具已过期或配置不正确。</string>
 
     <!-- Help dialog strings -->
     <string name="askInstructor">向您的讲师提问</string>
@@ -947,7 +917,6 @@
     <string name="totalPoints">%s 分</string>
     <string name="totalPointsText">总得分</string>
     <string name="contentDescriptionPoints">%s 分</string>
-    <string name="contentDescriptionRubricRangeGrade">得分 %1$s，总分 %2$s</string>
     <string name="score">评分</string>
     <string name="rangedRubricTotal" formatted="false">%s / %s 分</string>
     <string name="seeAll">查看全部</string>
@@ -975,8 +944,6 @@
     <string name="launch_link_in_external_browser">在外部浏览器中打开链接</string>
     <string name="ltiLaunchFailure">此时不能加载此 LTI 工具。</string>
     <string name="urlSubmission">URL 提交</string>
-
-    <string name="assignmentDeletedError">此作业不再可用。</string>
 
     <string name="homePageIdForNotifications">最近活动</string>
     <string name="homePageIdForModules">单元</string>
@@ -1018,8 +985,6 @@
     <string name="unableToViewInBrowser">我们找不到查看此 LTI 工具的外部应用。</string>
 
     <string name="commentUpload">评论上传</string>
-    <string name="unableToUploadMediaComment">要发送媒体评论，请发送或删除未发送的文字评论。</string>
-
     <string name="frontPage">首页</string>
     <string name="editPage">编辑页面</string>
     <string name="description">说明</string>
@@ -1059,4 +1024,22 @@
     <string name="addVideoComment">添加视频评论</string>
     <string name="addAudioComment">添加音频评论</string>
 
+    <string name="audioRecordingError">尝试录制音频时发生意外错误。</string>
+    <string name="videoRecordingError">尝试录制视频时发生意外错误。</string>
+
+    <string name="quizQuestionLabel">问题：</string>
+    <string name="timeLimitLabel">时间限制：</string>
+    <string name="allowedAttemptsLabel">允许的尝试次数：</string>
+    <string name="instructions">说明</string>
+    <string name="quizNoTimeLimit">无</string>
+    <string name="viewQuiz">查看测验</string>
+    <string name="viewDiscussion">查看讨论</string>
+    <string name="lockedModule">此作业被模块 \"%1$s\" 锁定。</string>
+    <string name="chooseMediaFile">选择媒体文件</string>
+    <string name="discussions_unknown_author">未知作者</string>
+    <string name="discussions_unknown_date">未知日期</string>
+    <string name="a11y_gradeLetterMinusContentDescription">%s。减去</string>
+    <string name="a11y_letterGrade">%s。</string>
+    <string name="a11y_gradeCellContentDescription">%s %s</string>
+    <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s，%s</string>
 </resources>

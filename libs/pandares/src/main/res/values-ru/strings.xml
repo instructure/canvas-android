@@ -57,6 +57,13 @@
     <string name="launchExternalTool">Запуск внешнего инструмента</string>
 
     <string name="preview">Предпросмотр</string>
+    <string name="submissionUploadFailedMessage">Не удалось загрузить один или несколько файлов. Проверьте подключение к Интернету и повторите отправку.</string>
+    <string name="submissionUploadByteProgress">%1$s из %2$s</string>
+    <string name="submissionSuccessTitle">Отправлено успешно!</string>
+    <string name="submissionSuccessMessage">Ваше задание было успешно отправлено. Хорошего дня!</string>
+    <string name="cancelAllSubmissions">Отменить все отправки заданий</string>
+    <string name="missingSubmissionLabel">Отсутствует</string>
+    <string name="gradedSubmissionLabel">С оценкой</string>
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">Предпросмотр для URL-адресов с использованием \'http://\' недоступен</string>
     <string name="submissionUrlNotAUrlError">Введите действительный URL-адрес</string>
@@ -64,8 +71,11 @@
     <string name="addFileFabContentDesc">Показать параметры добавления файла</string>
     <string name="recordAudio">Записать аудио</string>
 
+    <string name="recordVideo">Записать видео</string>
+
     <!-- Student Submission -->
     <string name="submissionWrite">Запись&#8230;</string>
+    <string name="textSubmissionFailureMessage">Произошла ошибка при загрузке предоставляемых данных. Отправьте еще раз.</string>
     <!-- Student Submission Details -->
     <string name="submission">Отправка</string>
     <string name="submissionVersions">Версии отправки</string>
@@ -81,15 +91,38 @@
     <string name="submissionDetailsAssignmentLocked">Задание заблокировано</string>
     <string name="webPreview">Предпросмотр введенного URL-адреса</string>
     <string name="websiteUrl">Адрес веб-сайта</string>
+    <string name="noneContentMessage">Это задание не допускает отправку данных онлайн</string>
+    <string name="onPaperContentMessage">Это задание не допускает отправку данных онлайн</string>
+    <string name="noOnlineSubmissions">Отправка данных онлайн невозможна</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Из %s баллов</string>
     <string name="outOfPointsAbbreviatedFormatted">Из %s баллов</string>
     <string name="gradeExcused">По уважительной причине</string>
     <string name="finalGradeFormatted">Итоговая оценка: %s</string>
+    <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
+    <string name="contentDescriptionScoreOutOfPointsPossible">%1$s из %2$s баллов</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Персонализированная оценка</string>
     <string name="rubricEmptyMessage">Нет раздела для этого задания</string>
     <string name="rubricViewLongDescription">Просмотреть длинное описание</string>
+    <!-- Student Submission Comments -->
+    <string name="assignmentSubmissionUploadingFile">Загрузка файла %1$d из %2$d</string>
+    <string name="assignmentSubmissionCommentUpload">Загрузка комментария для %s</string>
+    <string name="assignmentSubmissionCommentUploadingMedia">Загрузка медиа-файла</string>
+    <string name="assignmentSubmissionCommentError">Не удалось загрузить комментарий для %s</string>
+    <string name="chooseFileForCommentSubtext">Прикрепите файлы к своему комментарию, щелкнув по расположенной ниже кнопке</string>
+    <string name="emptySubmissionCommentsSubtext">Возникли вопросы по поводу вашего задания?\nОтправить сообщение своему преподавателю.</string>
+    <string name="submissionCommentErrorMessage">Данное сообщение нельзя отправить. Щелкните, чтобы повторить попытку.</string>
+    <string name="mediaUploadAudio">Отправка мультимедиа - аудио</string>
+    <string name="mediaUploadVideo">Отправка мультимедиа - видео</string>
+    <string name="commentSubmissionTypeText">Текстовая отправка</string>
+    <string name="commentSubmissionTypeExternalTool">Отправка внешнего инструмента</string>
+    <string name="commentSubmissionTypeDiscussion">Отправка обсуждения</string>
+    <string name="commentSubmissionTypeQuiz">Отправка теста</string>
+    <string name="commentSubmissionTypeQuizAttempt">Попытка %d</string>
+    <string name="commentSubmissionTypeMediaFile">Медиафайл</string>
+    <string name="commentSubmissionTypeAudio">Аудио</string>
+    <string name="commentSubmissionTypeVideo">Видео</string>
     <!-- Profile Fragment Strings -->
     <string name="canvasVersionNum">Версия:</string>
 
@@ -106,7 +139,6 @@
     <string name="options">Опции</string>
 
     <string name="discussionAttachment">Прикрепить файл</string>
-    <string name="discussionUpload">Загрузить видео или аудио</string>
     <string name="discussionPostEditing">Редактировать</string>
 
     <!--Multiple User Sign in -->
@@ -142,36 +174,16 @@
     <string name="lowercaseAM">до обеда</string>
     <string name="lowercasePM">после обеда</string>
     <!-- Assignments -->
-    <string name="assignmentDue">Срок</string>
-    <string name="assignmentDueColon">Срок: </string>
-    <string name="assignmentLastSubmission">Последняя отправка</string>
-    <string name="assignmentNoSubmission">Нет</string>
-    <string name="assignmentTabDetails">Подробные сведения</string>
-    <string name="assignmentTabSubmission">Отправки</string>
-    <string name="assignmentTabGrade">Оценка</string>
     <string name="assignmentLocked">Заблокировано</string>
     <string name="assignments">Задания</string>
-    <string name="freeFormRubricPoints" formatted="false">%s / %s </string>
-    <string name="noRubric">Нет раздела для этого задания.</string>
     <string name="noDescription">Нет описания для этого задания.</string>
     <string name="noAssignmentsInGroup">Нет Заданий в этой группе</string>
     <string name="excusedAssignment">Данное задание не обязательно и не будет учитываться в общем подсчете</string>
-    <string name="droppedAssignment">Данное задание изъято и не будет учитываться в общем подсчете</string>
     <string name="excused">EX</string>
-    <string name="mutedText">Оценки успеваемости недоступны, потому что над ними работает преподаватель.</string>
-    <string name="rubricRangePointsText" formatted="false">&#160;до &gt; %s баллов</string>
-    <string name="contentDescriptionRubricRangePointsText" formatted="false">%s &#160;до &gt; %s баллов</string>
-
     <!-- Assignment editing -->
     <string name="points">Баллы </string>
-    <string name="assignmentGroup">Группа заданий: </string>
-    <string name="gradingType">Тип оценки успеваемости: </string>
-    <string name="submissionType">Тип отправки: </string>
-    <string name="editAssignment">Редактировать задание</string>
     <string name="save">Сохранить</string>
     <string name="cancel">Отменить</string>
-    <string name="sendNotification">Уведомить пользователей об изменении данного контента</string>
-
     <!-- Discussions -->
     <string name="forbidden">Ответы видны только тем, кто опубликовал не менее одного ответа.</string>
 
@@ -191,6 +203,10 @@
     <string name="checkBoxFinalGradeOption">На основе оцениваемых заданий</string>
     <string name="checkBoxWhatIfGradeOption">Показать возможную оценку</string>
     <string name="whatIfDialogText">Возможная оценка</string>
+    <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
+    <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s из %2$s баллов, %3$s</string>
+
+
     <string name="inbox">Входящие</string>
     <string name="unread">Не прочитано</string>
     <string name="archived">Архивировано</string>
@@ -235,7 +251,6 @@
         <item quantity="many">%d требуют оценки</item>
         <item quantity="other">%d требуют оценки</item>
     </plurals>
-    <string name="myFiles">Файлы</string>
     <string name="createAFolder">Создать папку</string>
     <string name="createFolder">Создать папку</string>
     <string name="createAFile">Создать файл</string>
@@ -281,7 +296,6 @@
     <string name="deleteEvent">Удалить мероприятие</string>
     <string name="selected">Выбрано</string>
     <string name="errorSendingMessage">Произошла ошибка при попытке отправки вашего сообщения. Попробуйте еще раз.</string>
-    <string name="errorPostingComment">Произошла ошибка при попытке разместить ваш комментарий к отправке. Попробуйте еще раз.</string>
     <string name="deletedConversation">Этот разговор был удален.</string>
     <string name="uploadAvatarFailMsg">Не удалось загрузить изображение нового аватара</string>
     <string name="editPhoto">Редактировать фотографию</string>
@@ -314,8 +328,6 @@
     <string name="openAlternate">Открыть с помощью альтернативного приложения</string>
     <string name="opening">Открытие файла&#8230;</string>
     <string name="download">Загрузить</string>
-    <string name="hideExtras">Скрыть дополнительное</string>
-    <string name="showExtras">Показать дополнительное</string>
     <string name="messageAttachments">Вложения сообщения</string>
     <string name="discussionAttachmentLabel">Вложение</string>
     <string name="attachmentIcon">Значок вложения</string>
@@ -378,6 +390,7 @@
     <string name="select_item_to_display">Выбрать из списка</string>
 
     <string name="syllabus">Содержание курса</string>
+    <string name="summary">Сводные данные</string>
     <string name="coursePeople">Люди</string>
     <string name="teachersTas">Учители и ассистенты</string>
     <string name="students">Студенты</string>
@@ -411,12 +424,6 @@
 
     <!-- Notifications -->
     <string name="deleted">Удалено</string>
-    <string name="gradedDiscussion">Оцениваемое обсуждение.</string>
-    <string name="pointsPossible">Возможные баллы.</string>
-    <string name="pointsPossibleNoPeriod">Возможное количество баллов</string>
-
-    <string name="deletedEntryNoChildren">У этой удаленной записи обсуждения нет ответов.</string>
-    <string name="sideCommentEntry">В дискуссиях данного типа не допускается комментировать записи этого уровня.</string>
     <string name="contentDescriptionFiles">Иконка файла</string>
 
     <string name="loadingCanvas">Загрузка контента Canvas&#8230;</string>
@@ -440,11 +447,6 @@
     <string name="emptyId">ID не может быть пустым</string>
 
     <string name="goToQuiz">Перейти к тестовому заданию</string>
-    <string name="goToExternalTool">Перейти к Внешнему инструменту</string>
-
-    <string name="pastDueDate">Просроченный срок выполнения</string>
-
-    <string name="goToDiscussion">Перейти к обсуждению</string>
     <string name="quizzes">Тесты</string>
 
     <string name="lastDiscussionPost">Последний пост</string>
@@ -498,7 +500,6 @@
     <string name="lockedFileDesc">Данный файл является частью модуля %s и еще не был разблокирован.</string>
     <string name="lockedQuizDesc">Данный тест является частью модуля %s и еще не был разблокирован.</string>
     <string name="lockedDiscussionDesc">Данное обсуждение является частью модуля %s и еще не было разблокировано.</string>
-    <string name="lockedAssignmentDescLine2">Посетите страницу модулей курса для получения информации о том, как разблокировать этот контент.</string>
     <string name="mustComplete">Вы должны сначала завершить:</string>
     <string name="unlockedAt">Будет разблокировано в:</string>
     <string name="goToModules">Перейти к Модулям</string>
@@ -520,22 +521,12 @@
     <!-- New Submission Strings -->
     <string name="textEntry">Ввод текста</string>
     <string name="onlineURL">URL-адрес в Интернете</string>
-    <string name="enterTextEntry">Введите текст</string>
-    <string name="fileUpload"> Отправка файла</string>
     <string name="oneFileOnly">В данном случае допускается отправка только одного файла</string>
 
 
     <string name="websiteEntry">Добавить элемент веб-сайта</string>
     <string name="mediaRecordingEntry">Записи мультимедийных данных</string>
     <string name="submit">Отправить</string>
-    <string name="blankSubmission">Отправка не может быть пустой.</string>
-    <string name="errorPostingSubmission">Возникла ошибка при публикации отправки.</string>
-    <string name="successPostingSubmission">Отправка успешно опубликована.</string>
-
-    <string name="exampleSubmissionURL">http://www.example.com</string>
-
-
-
     <!-- DataLoss Fragment Strings -->
     <string name="unsavedProgress">Несохраненный прогресс</string>
     <string name="informationLost">Несохраненные данные будут утеряны. Продолжить?</string>
@@ -549,22 +540,8 @@
 
     <!-- Submission Details Strings -->
     <string name="next">Далее</string>
-    <string name="addSubmission">Включить</string>
-    <string name="addAnotherSubmission">Включить еще раз</string>
     <string name="turnedIn">Включено:&#160;</string>
     <string name="addComment">Добавить комментарий&#8230;</string>
-    <string name="addCommentNoEllipsis">Добавить комментарий</string>
-    <string name="subTypeOnlineText">Онлайновый ввод текста</string>
-    <string name="subTypeFileUpload">Онлайн загрузка eFile</string>
-    <string name="subTypeOnlineURL">Адрес веб-сайта</string>
-    <string name="subTypeOnlineQuiz">Онлайн тест</string>
-    <string name="subTypeMediaRecording">Запись на носитель</string>
-    <string name="sub_type_lti_launch">Пуск LTI</string>
-    <string name="subTypeDiscussionTopic">Обсуждение</string>
-    <string name="turnInByHand">Вы должны вернуть это задание лично</string>
-    <string name="noSubRequired">Отправка выполненной работы не требуется</string>
-    <string name="noTurnInOnMobile">Мобильная отправка выполненной работы не поддерживается</string>
-
     <string name="home">Начальная страница</string>
     <string name="Notifications">Уведомления</string>
 
@@ -594,9 +571,6 @@
     <string name="clickToViewSubmission">Образ экрана веб-сайта был сделан при его включении. Нажмите и удерживайте изображение ниже, чтобы открыть или загрузить полное изображение.</string>
     <string name="urlSubmissionNoPreview">Эта отправка была URL-адресом на внешнюю страницу. Имейте в виду, что после первоначальной отправки эта страница могла измениться.</string>
     <string name="contentDescriptionPreviewImage">Предварительный обзор представленного URL</string>
-    <string name="itemStillProcessing">Данный объект все еще обрабатывается на сервере. Попробуйте еще раз.</string>
-
-
     <string name="isNotSupportedFeature">%1$s не поддерживаются.</string>
     <string name="isNotSupported">Ссылка не поддерживается.</string>
     <string name="openInBrowser">Открыть в браузере</string>
@@ -613,8 +587,6 @@
     <string name="panda_fact_string">Факты о Панде:&#160;</string>
     <string name="remove">Удалить</string>
     <string name="founders">Создатели</string>
-    <string name="image">Изображение</string>
-
     <string name="EULA">Лицензионный договор</string>
     <string name="privacyPolicy">Политика конфиденциальности</string>
     <string name="termsOfUse">Условия использования</string>
@@ -642,8 +614,6 @@
     <string name="widgetMinimumStyle">Скрыть подробную информацию о виджете</string>
     <string name="light">Светлый</string>
     <string name="dark">Темный</string>
-
-    <string name="invalidExternal">Срок действия этого внешнего инструмента либо истек или он настроен неправильно.</string>
 
     <!-- Help dialog strings -->
     <string name="askInstructor">Задать вопрос своему преподавателю</string>
@@ -973,7 +943,6 @@
     <string name="totalPoints">%s баллов</string>
     <string name="totalPointsText">Общее число баллов</string>
     <string name="contentDescriptionPoints">%s баллов</string>
-    <string name="contentDescriptionRubricRangeGrade">%1$s из %2$s баллов</string>
     <string name="score">Оценка</string>
     <string name="rangedRubricTotal" formatted="false">%s / %s баллов</string>
     <string name="seeAll">Смотреть все</string>
@@ -1001,8 +970,6 @@
     <string name="launch_link_in_external_browser">Перейдите по ссылке во внешнем браузере</string>
     <string name="ltiLaunchFailure">В данный момент загрузка этого LTI невозможна.</string>
     <string name="urlSubmission">Отправка на URL</string>
-
-    <string name="assignmentDeletedError">Это задание более недоступно.</string>
 
     <string name="homePageIdForNotifications">Недавно выполненные действия</string>
     <string name="homePageIdForModules">Модули</string>
@@ -1050,8 +1017,6 @@
     <string name="unableToViewInBrowser">Не удалось найти внешнее приложение для открытия этого инструмента LTI.</string>
 
     <string name="commentUpload">Загрузка комментария</string>
-    <string name="unableToUploadMediaComment">Для отправки мультимедийного комментария отправьте или удалите свой неотправленный текстовый комментарий.</string>
-
     <string name="frontPage">Первая страница</string>
     <string name="editPage">Редактировать страницу</string>
     <string name="description">Описание</string>
@@ -1091,4 +1056,22 @@
     <string name="addVideoComment">Добавить видеокомментарий</string>
     <string name="addAudioComment">Добавить аудиокомментарий</string>
 
+    <string name="audioRecordingError">Произошла непредвиденная ошибка при попытке записи аудио.</string>
+    <string name="videoRecordingError">Произошла непредвиденная ошибка при попытке записи видео.</string>
+
+    <string name="quizQuestionLabel">Вопросы:</string>
+    <string name="timeLimitLabel">Ограничение по времени:</string>
+    <string name="allowedAttemptsLabel">Разрешенные попытки:</string>
+    <string name="instructions">Инструкции</string>
+    <string name="quizNoTimeLimit">Нет</string>
+    <string name="viewQuiz">Просмотреть тест</string>
+    <string name="viewDiscussion">Посмотреть Обсуждение</string>
+    <string name="lockedModule">Это задание заблокировано модулем \"%1$s\".</string>
+    <string name="chooseMediaFile">Выберите медиа-файл</string>
+    <string name="discussions_unknown_author">Неизвестный автор</string>
+    <string name="discussions_unknown_date">Неизвестная дата</string>
+    <string name="a11y_gradeLetterMinusContentDescription">%s. минус</string>
+    <string name="a11y_letterGrade">%s.</string>
+    <string name="a11y_gradeCellContentDescription">%s %s</string>
+    <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
 </resources>

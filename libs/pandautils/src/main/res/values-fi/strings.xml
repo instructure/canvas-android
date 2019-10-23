@@ -164,6 +164,7 @@
     <string name="noAssignmentsSubtext">Näyttää siltä kuin tehtäviä ei olisi luotu tässä tilassa. Aika lähteä ulos tutustumaan.</string>
     <string name="noAssignmentsTeacher">Näyttäisi siltä, että tehtäviä ei ole vielä julkaistu.</string>
     <string name="noFiles">Ei tiedostoja</string>
+    <string name="noFilesForAssignment">Tälle tehtävälle ei ole tiedostoja</string>
     <string name="noFilesSubtext">Tähän tiliin ei ole liitetty tiedostoja</string>
     <string name="notSupported">Ei tuettu</string>
     <string name="noEvents">Ei tapahtumia tänään!</string>
@@ -174,7 +175,6 @@
     <string name="noDueDate">Tehtävällä ei ole määräpäivää.</string>
     <string name="locked">Lukittu</string>
     <string name="lockedSubtext">Tehtävä on lukittu %1$s asti kohdassa %2$s.</string>
-    <string name="lockedModule">Tämä tehtävä on osa moduulia \"%1$s\" eikä sen lukitusta ole vielä poistettu.</string>
     <string name="chooseFile">Valitse tiedosto</string>
     <string name="chooseFileSubtext">Liitä tiedosto lähetyksesi napauttamalla alla olevaa asetusta.</string>
     <string name="noNotifications">Ei ilmoituksia</string>

@@ -165,6 +165,7 @@
     <string name="noAssignmentsSubtext">Il semblerait qu’il n’y ait pas de tâche créée dans cet espace. C’est le temps d’y aller et d\'explorer.</string>
     <string name="noAssignmentsTeacher">Il semblerait qu\'aucune tâche n\'ait encore été publiée.</string>
     <string name="noFiles">Aucun fichier</string>
+    <string name="noFilesForAssignment">Il n\'y a aucun fichier pour cet envoi</string>
     <string name="noFilesSubtext">Il n\'y a aucun fichier associé à ce compte.</string>
     <string name="notSupported">Non pris en charge</string>
     <string name="noEvents">Aucun événement d\'aujourd\'hui!</string>
@@ -175,7 +176,6 @@
     <string name="noDueDate">Cette tâche ne comporte pas de date d’échéance.</string>
     <string name="locked">Verrouillé</string>
     <string name="lockedSubtext">Cette tâche est verrouillée jusqu’au %1$s à %2$s.</string>
-    <string name="lockedModule">Cette tâche fait partie du module \"%1$s\" et n\'a pas encore été déverrouillée.</string>
     <string name="chooseFile">Choisir un fichier</string>
     <string name="chooseFileSubtext">Joindre un fichier à votre envoi en tapotant sur l\'une des options ci-dessous.</string>
     <string name="noNotifications">Aucune notification</string>

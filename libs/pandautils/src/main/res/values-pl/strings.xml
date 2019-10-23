@@ -165,6 +165,7 @@
     <string name="noAssignmentsSubtext">Wygląda na to, że w tej przestrzeni nie utworzono zadań. Pora wyjść na zewnątrz i zbadać teren.</string>
     <string name="noAssignmentsTeacher">Wygląda na to, że nie opublikowano jeszcze stron zadań.</string>
     <string name="noFiles">Brak plików</string>
+    <string name="noFilesForAssignment">Nie ma plików do tej przesyłki</string>
     <string name="noFilesSubtext">Brak plików powiązanych z tym kontem.</string>
     <string name="notSupported">Nieobsługiwane</string>
     <string name="noEvents">Brak wydarzeń na dziś!</string>
@@ -175,7 +176,6 @@
     <string name="noDueDate">To zadanie nie ma ustalonego terminu.</string>
     <string name="locked">Zablokowany</string>
     <string name="lockedSubtext">To zadanie zostało zablokowane do %1$s, godz. %2$s.</string>
-    <string name="lockedModule">To zadanie jest częścią modułu \"%1$s\" i nie zostało jeszcze odblokowane.</string>
     <string name="chooseFile">Wybierz plik</string>
     <string name="chooseFileSubtext">Załącz plik do przesyłanych materiałów, stukając poniższą opcję.</string>
     <string name="noNotifications">Brak powiadomień</string>

@@ -899,6 +899,7 @@
     <string name="allSections">Ngā Wāhanga katoa</string>
 
     <string name="gauge">Rahi</string>
+    <string name="arc">Arc</string>
     <string name="ltiLaunchFailure">Kaore i taea te uta tēnei LTI taonga i tēnei wā.</string>
     <string name="downloading">Tikiake ana ...</string>
 

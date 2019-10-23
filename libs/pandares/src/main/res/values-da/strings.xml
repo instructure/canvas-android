@@ -55,6 +55,13 @@
     <string name="launchExternalTool">Start eksternt værktøj</string>
 
     <string name="preview">Eksempel</string>
+    <string name="submissionUploadFailedMessage">En eller flere filer kunne ikke uploades. Kontroller din internetforbindelse, og prøv igen for at aflevere.</string>
+    <string name="submissionUploadByteProgress">%1$s af %2$s</string>
+    <string name="submissionSuccessTitle">Aflevering lykkedes!</string>
+    <string name="submissionSuccessMessage">Din opgave blev afleveret. Hav en god dag!</string>
+    <string name="cancelAllSubmissions">Annuller alle opgaveafleveringer</string>
+    <string name="missingSubmissionLabel">Mangler</string>
+    <string name="gradedSubmissionLabel">Bedømt</string>
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">Der findes ingen forhåndsvisning for URL’er, der bruger \'http://\'</string>
     <string name="submissionUrlNotAUrlError">Indtast venligst en gyldig URL</string>
@@ -62,8 +69,11 @@
     <string name="addFileFabContentDesc">Vis indstillinger for Tilføj fil</string>
     <string name="recordAudio">Optage audio</string>
 
+    <string name="recordVideo">Optag video</string>
+
     <!-- Student Submission -->
     <string name="submissionWrite">Skriv&#8230;</string>
+    <string name="textSubmissionFailureMessage">Der gik noget galt ved upload af afleveringen. Aflever igen.</string>
     <!-- Student Submission Details -->
     <string name="submission">Aflevering</string>
     <string name="submissionVersions">Afleveringsversioner</string>
@@ -79,15 +89,38 @@
     <string name="submissionDetailsAssignmentLocked">Opgave låst</string>
     <string name="webPreview">Forhåndsvisning af den indtastede URL</string>
     <string name="websiteUrl">Webside URL</string>
+    <string name="noneContentMessage">Denne opgave tillader ikke online indsendelser</string>
+    <string name="onPaperContentMessage">Denne opgave tillader ikke online indsendelser</string>
+    <string name="noOnlineSubmissions">Ingen online indsendelser</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Ud af %s point</string>
     <string name="outOfPointsAbbreviatedFormatted">Ud af %s point</string>
     <string name="gradeExcused">Undskyldt</string>
     <string name="finalGradeFormatted">Endelig karakter: %s</string>
+    <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
+    <string name="contentDescriptionScoreOutOfPointsPossible">%1$s ud af %2$s point</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Brugerdefineret resultat</string>
     <string name="rubricEmptyMessage">Der er ingen rubrik til denne opgave</string>
     <string name="rubricViewLongDescription">Se lang beskrivelse</string>
+    <!-- Student Submission Comments -->
+    <string name="assignmentSubmissionUploadingFile">Uploader fil %1$d af %2$d</string>
+    <string name="assignmentSubmissionCommentUpload">Uploader kommentar til %s</string>
+    <string name="assignmentSubmissionCommentUploadingMedia">Uploader mediefil</string>
+    <string name="assignmentSubmissionCommentError">Upload af kommentar mislykkedes for %s</string>
+    <string name="chooseFileForCommentSubtext">Vedhæft filer til din kommentar ved at trykke på en mulighed nedenfor</string>
+    <string name="emptySubmissionCommentsSubtext">Har du spørgsmål om din opgave?\nSend en besked til din instruktør.</string>
+    <string name="submissionCommentErrorMessage">Denne besked kunne ikke sendes. Tryk for at prøve igen.</string>
+    <string name="mediaUploadAudio">Medieoverførsel - lyd</string>
+    <string name="mediaUploadVideo">Medieoverførsel - video</string>
+    <string name="commentSubmissionTypeText">Aflevering af tekst</string>
+    <string name="commentSubmissionTypeExternalTool">Aflevering af eksternt værktøj</string>
+    <string name="commentSubmissionTypeDiscussion">Indsendelse af diskussion</string>
+    <string name="commentSubmissionTypeQuiz">Indsendelse af test</string>
+    <string name="commentSubmissionTypeQuizAttempt">Forsøg %d</string>
+    <string name="commentSubmissionTypeMediaFile">Mediefil</string>
+    <string name="commentSubmissionTypeAudio">Lyd</string>
+    <string name="commentSubmissionTypeVideo">Video</string>
     <!-- Profile Fragment Strings -->
     <string name="canvasVersionNum">Version:</string>
 
@@ -104,7 +137,6 @@
     <string name="options">Muligheder</string>
 
     <string name="discussionAttachment">Vedhæft en fil</string>
-    <string name="discussionUpload">Upload video eller audio</string>
     <string name="discussionPostEditing">Redigér</string>
 
     <!--Multiple User Sign in -->
@@ -140,36 +172,16 @@
     <string name="lowercaseAM">am</string>
     <string name="lowercasePM">pm</string>
     <!-- Assignments -->
-    <string name="assignmentDue">Forfalder</string>
-    <string name="assignmentDueColon">Forfalder: </string>
-    <string name="assignmentLastSubmission">Sidste indsendelse</string>
-    <string name="assignmentNoSubmission">Ingen</string>
-    <string name="assignmentTabDetails">Nærmere oplysninger</string>
-    <string name="assignmentTabSubmission">Afleveringer</string>
-    <string name="assignmentTabGrade">Karakter</string>
     <string name="assignmentLocked">Låst</string>
     <string name="assignments">Opgaver</string>
-    <string name="freeFormRubricPoints" formatted="false">%s / %s </string>
-    <string name="noRubric">Der er intet vurderingskriterie for denne opgave.</string>
     <string name="noDescription">Der er ingen beskrivelse for denne opgave</string>
     <string name="noAssignmentsInGroup">Ingen opgaver i denne gruppe</string>
     <string name="excusedAssignment">Opgaven blev udeladt og tages ikke i betragtning i den samlede beregning</string>
-    <string name="droppedAssignment">Opgaven blev droppet og tages ikke i betragtning i den samlede beregning</string>
     <string name="excused">EX</string>
-    <string name="mutedText">Karakterer er ikke tilgængelige, fordi instruktøren arbejder på dem.</string>
-    <string name="rubricRangePointsText" formatted="false">&#160;til &gt; %s point</string>
-    <string name="contentDescriptionRubricRangePointsText" formatted="false">%s &#160;til &gt; %s point</string>
-
     <!-- Assignment editing -->
     <string name="points">Point </string>
-    <string name="assignmentGroup">Opgavegruppe: </string>
-    <string name="gradingType">Karaktertype: </string>
-    <string name="submissionType">Afleveringstype: </string>
-    <string name="editAssignment">Rediger opgave</string>
     <string name="save">Gem</string>
     <string name="cancel">Annullér</string>
-    <string name="sendNotification">Informer brugere om, at dette indhold er blevet ændret</string>
-
     <!-- Discussions -->
     <string name="forbidden">Svar er kun synlige for dem, der har lagt mindst ét svar ud.</string>
 
@@ -189,6 +201,10 @@
     <string name="checkBoxFinalGradeOption">Baseret på bedømmte opgaver</string>
     <string name="checkBoxWhatIfGradeOption">Vis Hvad-du-hvis score</string>
     <string name="whatIfDialogText">Hvad-nu-hvis score</string>
+    <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
+    <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s ud af %2$s point, %3$s</string>
+
+
     <string name="inbox">Indbakke</string>
     <string name="unread">Ulæst</string>
     <string name="archived">Arkiveret</string>
@@ -231,7 +247,6 @@
         <item quantity="one">%d mangler karakter</item>
         <item quantity="other">%d mangler karakter</item>
     </plurals>
-    <string name="myFiles">Filer</string>
     <string name="createAFolder">Opret en mappe</string>
     <string name="createFolder">Opret mappe</string>
     <string name="createAFile">Opret en fil</string>
@@ -273,7 +288,6 @@
     <string name="deleteEvent">Slet begivenhed</string>
     <string name="selected">Valgt</string>
     <string name="errorSendingMessage">En uventet fejl opstod ved afsendelse af beskeden. Prøv igen.</string>
-    <string name="errorPostingComment">Der opstod en fejl under forsøget på at indsende din afleveringskommentar. Prøv igen.</string>
     <string name="deletedConversation">Den konversation er blevet slettet.</string>
     <string name="uploadAvatarFailMsg">Nyt avatar billede upload mislykkedes</string>
     <string name="editPhoto">Rediger billede</string>
@@ -306,8 +320,6 @@
     <string name="openAlternate">Åbn med alternativ app</string>
     <string name="opening">Åbning af fil&#8230;</string>
     <string name="download">Download</string>
-    <string name="hideExtras">Skjul ekstra</string>
-    <string name="showExtras">Vis ekstra</string>
     <string name="messageAttachments">Beskedens vedhæftede filer</string>
     <string name="discussionAttachmentLabel">Vedhæftet fil</string>
     <string name="attachmentIcon">Ikonet for vedhæftet fil</string>
@@ -366,6 +378,7 @@
     <string name="select_item_to_display">Vælg fra listen</string>
 
     <string name="syllabus">Læseplan</string>
+    <string name="summary">Sammendrag</string>
     <string name="coursePeople">Deltagere</string>
     <string name="teachersTas">Lærerer &amp; TAs</string>
     <string name="students">Studerende</string>
@@ -399,12 +412,6 @@
 
     <!-- Notifications -->
     <string name="deleted">Slettet</string>
-    <string name="gradedDiscussion">Bedømt diskussion.</string>
-    <string name="pointsPossible">Mulige points.</string>
-    <string name="pointsPossibleNoPeriod">Mulige point</string>
-
-    <string name="deletedEntryNoChildren">Denne slettede diskussionspost har intet svar.</string>
-    <string name="sideCommentEntry">I denne type diskussion kan du ikke kommentere på nogen poster på dette niveau.</string>
     <string name="contentDescriptionFiles">Filikon</string>
 
     <string name="loadingCanvas">Indlæser Canvas-indhold&#8230;</string>
@@ -428,11 +435,6 @@
     <string name="emptyId">ID kan ikke være tomt</string>
 
     <string name="goToQuiz">Gå til Quiz</string>
-    <string name="goToExternalTool">Gå til eksternt værktøj</string>
-
-    <string name="pastDueDate">Passeret forfaldsdato</string>
-
-    <string name="goToDiscussion">Gå til diskussion</string>
     <string name="quizzes">Test</string>
 
     <string name="lastDiscussionPost">Sidste indlæg</string>
@@ -486,7 +488,6 @@
     <string name="lockedFileDesc">Denne fil er en del af modulet %s og er endnu ikke blevet låst op.</string>
     <string name="lockedQuizDesc">Denne test er en del af modulet %s og er endnu ikke blevet låst op.</string>
     <string name="lockedDiscussionDesc">Denne diskussion er en del af modulet %s og er endnu ikke blevet låst op.</string>
-    <string name="lockedAssignmentDescLine2">Besøg kursusmodul-siden for information om hvordan indholdet kan låses op.</string>
     <string name="mustComplete">Du skal først fuldføre:</string>
     <string name="unlockedAt">Det vil blive låst op den:</string>
     <string name="goToModules">Gå til moduler</string>
@@ -508,22 +509,12 @@
     <!-- New Submission Strings -->
     <string name="textEntry">Tekstindlæg</string>
     <string name="onlineURL">Online URL</string>
-    <string name="enterTextEntry">Indtast tekstpostering</string>
-    <string name="fileUpload"> Filoverførsel</string>
     <string name="oneFileOnly">Denne indseldelse accepterer kun én filoverførsel</string>
 
 
     <string name="websiteEntry">Tilføj indtastning på websted</string>
     <string name="mediaRecordingEntry">Medieoptagelser</string>
     <string name="submit">Aflever</string>
-    <string name="blankSubmission">Indsendelsen kan ikke være tom.</string>
-    <string name="errorPostingSubmission">Der var en fejl under postering af indsendelsen.</string>
-    <string name="successPostingSubmission">Postering af indsendelse succesfuld.</string>
-
-    <string name="exampleSubmissionURL">http://www.example.com</string>
-
-
-
     <!-- DataLoss Fragment Strings -->
     <string name="unsavedProgress">Ikke gemt fremgang</string>
     <string name="informationLost">Ikke-gemte oplysninger vil gå tabt. Vil du fortsætte?</string>
@@ -537,22 +528,8 @@
 
     <!-- Submission Details Strings -->
     <string name="next">Næste</string>
-    <string name="addSubmission">Indsend</string>
-    <string name="addAnotherSubmission">Indsend igen</string>
     <string name="turnedIn">Indsendt:&#160;</string>
     <string name="addComment">Tilføj en kommentar&#8230;</string>
-    <string name="addCommentNoEllipsis">Tilføj en kommentar</string>
-    <string name="subTypeOnlineText">Online tekstindtastning</string>
-    <string name="subTypeFileUpload">Online eFil Upload</string>
-    <string name="subTypeOnlineURL">Webside URL</string>
-    <string name="subTypeOnlineQuiz">Online Quiz</string>
-    <string name="subTypeMediaRecording">Medieoptagelse</string>
-    <string name="sub_type_lti_launch">LTI-lancering</string>
-    <string name="subTypeDiscussionTopic">Diskussion</string>
-    <string name="turnInByHand">Du skal personligt aflevere denne opgave</string>
-    <string name="noSubRequired">Ingen indsendelse nødvendig</string>
-    <string name="noTurnInOnMobile">Mobil indsendelse er ikke understøttet</string>
-
     <string name="home">Startside</string>
     <string name="Notifications">Notifikationer</string>
 
@@ -582,9 +559,6 @@
     <string name="clickToViewSubmission">Et snapshot af websiden blev taget mens du indsendte den. Tryk og hold billedet nedenfor for at åbne eller download hele billedet.</string>
     <string name="urlSubmissionNoPreview">Afleveringen var en URL til en ekstern side. Husk på, at denne side eventuelt er blevet ændret, siden den oprindelige aflevering fandt sted.</string>
     <string name="contentDescriptionPreviewImage">Forhåndvisning af indsendt url</string>
-    <string name="itemStillProcessing">Dette element behandles stadig på serveren. Prøv igen.</string>
-
-
     <string name="isNotSupportedFeature">%1$s understøttes ikke.</string>
     <string name="isNotSupported">Dette link er ikke understøttet.</string>
     <string name="openInBrowser">Åbn i browser</string>
@@ -601,8 +575,6 @@
     <string name="panda_fact_string">Fakta om Panda:&#160;</string>
     <string name="remove">Fjern</string>
     <string name="founders">Grundlæggere</string>
-    <string name="image">Billede</string>
-
     <string name="EULA">EULA</string>
     <string name="privacyPolicy">Datapolitik</string>
     <string name="termsOfUse">Betingelser for brug</string>
@@ -630,8 +602,6 @@
     <string name="widgetMinimumStyle">Skjul detiljer for widget</string>
     <string name="light">Lys</string>
     <string name="dark">Mørk</string>
-
-    <string name="invalidExternal">Dette eksterne værktøj er enten udløbet eller konfigureret forkert.</string>
 
     <!-- Help dialog strings -->
     <string name="askInstructor">Stil din instruktør et spørgsmål</string>
@@ -956,7 +926,6 @@
     <string name="totalPoints">%s point</string>
     <string name="totalPointsText">Samlede point</string>
     <string name="contentDescriptionPoints">%s point</string>
-    <string name="contentDescriptionRubricRangeGrade">%1$s ud af %2$s point</string>
     <string name="score">Resultat</string>
     <string name="rangedRubricTotal" formatted="false">%s / %s point</string>
     <string name="seeAll">Se alle</string>
@@ -984,8 +953,6 @@
     <string name="launch_link_in_external_browser">Åbn link i ekstern browser</string>
     <string name="ltiLaunchFailure">LTI-værktøjet kunne ikke indlæses på dette tidspunkt.</string>
     <string name="urlSubmission">URL aflevering</string>
-
-    <string name="assignmentDeletedError">Denne opgave er ikke længere tilgængelig.</string>
 
     <string name="homePageIdForNotifications">Seneste aktivitet</string>
     <string name="homePageIdForModules">Moduler</string>
@@ -1029,8 +996,6 @@
     <string name="unableToViewInBrowser">Vi kan ikke finde en ekstern app til at se dette LTI-værktøj.</string>
 
     <string name="commentUpload">Kommentar-upload</string>
-    <string name="unableToUploadMediaComment">For at sende en mediekommentar skal du sende eller slette din usendte tekstkommentar.</string>
-
     <string name="frontPage">Forside</string>
     <string name="editPage">Rediger side</string>
     <string name="description">Beskrivelse</string>
@@ -1070,4 +1035,22 @@
     <string name="addVideoComment">Tilføj en videokommentar</string>
     <string name="addAudioComment">Tilføj en lydkommentar</string>
 
+    <string name="audioRecordingError">Der opstod en uventet fejl under forsøg på at optage lyd.</string>
+    <string name="videoRecordingError">Der opstod en uventet fejl under forsøg på at optage video.</string>
+
+    <string name="quizQuestionLabel">Spørgsmål:</string>
+    <string name="timeLimitLabel">Frist:</string>
+    <string name="allowedAttemptsLabel">Tilladte forsøg:</string>
+    <string name="instructions">Instruktioner</string>
+    <string name="quizNoTimeLimit">Ingen</string>
+    <string name="viewQuiz">Se Quiz</string>
+    <string name="viewDiscussion">Se diskussion</string>
+    <string name="lockedModule">Denne tildeling er låst af modulet \"%1$s\".</string>
+    <string name="chooseMediaFile">Vælg mediefil</string>
+    <string name="discussions_unknown_author">Ukendt forfatter</string>
+    <string name="discussions_unknown_date">Ukendt dato</string>
+    <string name="a11y_gradeLetterMinusContentDescription">%s. minus</string>
+    <string name="a11y_letterGrade">%s.</string>
+    <string name="a11y_gradeCellContentDescription">%s %s</string>
+    <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
 </resources>

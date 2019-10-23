@@ -165,6 +165,7 @@
     <string name="noAssignmentsSubtext">Il semblerait qu\'aucun travail n\'ait été créé dans cet espace. Il est temps de sortir et d\'explorer.</string>
     <string name="noAssignmentsTeacher">Il semble qu\'aucun travail n\'ait encore été publié.</string>
     <string name="noFiles">Aucun fichier</string>
+    <string name="noFilesForAssignment">Aucun fichier pour cette soumission</string>
     <string name="noFilesSubtext">Il n\'y a aucun fichier associé à ce compte.</string>
     <string name="notSupported">Non pris en charge</string>
     <string name="noEvents">Aucun événement aujourd\'hui !</string>
@@ -175,7 +176,6 @@
     <string name="noDueDate">Ce travail n\'a pas de date d\'échéance.</string>
     <string name="locked">Verrouillé</string>
     <string name="lockedSubtext">Ce travail est bloqué jusqu\'au %1$s à %2$s.</string>
-    <string name="lockedModule">Ce travail fait parti du module \"%1$s\" et n\'a pas encore été déverrouillée.</string>
     <string name="chooseFile">Choisir un fichier</string>
     <string name="chooseFileSubtext">Joignez un fichier à votre soumission en appuyant sur l\'une des options ci-dessous.</string>
     <string name="noNotifications">Aucune notification</string>

@@ -41,8 +41,7 @@
     <string name="canvasAPI_discussion">Diskussion</string>
     <string name="canvasAPI_quiz">Test</string>
     <string name="canvasAPI_externalTool">Eksternt værktøj</string>
-    <string name="canvasAPI_none">Ingen</string>
-
+    <string name="canvasAPI_none">Ingen aflevering</string>
     <string name="canvasAPI_passFail">Bestået mislykket</string>
     <string name="canvasAPI_percent">Procent</string>
     <string name="canvasAPI_letterGrade">Bogstavkarakterer</string>
@@ -50,11 +49,11 @@
     <string name="canvasAPI_gpaScale">GPA-scala</string>
     <string name="canvasAPI_notGraded">Ikke bedømt</string>
 
-    <string name="canvasAPI_onlineQuiz">Online Quiz</string>
+    <string name="canvasAPI_onlineQuiz">Test</string>
     <string name="canvasAPI_discussionTopic">Diskussionsemne</string>
-    <string name="canvasAPI_onlineUpload">Online upload</string>
-    <string name="canvasAPI_onlineTextEntry">Online tekstindtastning</string>
-    <string name="canvasAPI_onlineURL">Online URL</string>
+    <string name="canvasAPI_onlineUpload">Filoverførsel</string>
+    <string name="canvasAPI_onlineTextEntry">Tekstindlæg</string>
+    <string name="canvasAPI_onlineURL">Webside URL</string>
     <string name="canvasAPI_mediaRecording">Medieoptagelse</string>
     <string name="canvasAPI_attendance">Tilstedeværelse</string>
     <string name="quiz_scoring_policy_highest">Højeste</string>

@@ -165,6 +165,7 @@
     <string name="noAssignmentsSubtext">Al parecer no se han creado tareas en este espacio. Hora de salir y explorar</string>
     <string name="noAssignmentsTeacher">Al parecer no se han publicado tareas aún.</string>
     <string name="noFiles">No hay archivos</string>
+    <string name="noFilesForAssignment">No hay archivos para esta presentación</string>
     <string name="noFilesSubtext">No hay archivos asociados con esta cuenta.</string>
     <string name="notSupported">No compatible</string>
     <string name="noEvents">¡No hay ningún evento hoy!</string>
@@ -175,7 +176,6 @@
     <string name="noDueDate">Esta tarea no tiene fecha límite.</string>
     <string name="locked">Bloqueado</string>
     <string name="lockedSubtext">Esta tarea está bloqueada hasta el %1$s a las %2$s.</string>
-    <string name="lockedModule">Esta tarea es parte del módulo \"%1$s\" y aún no ha sido desbloqueada.</string>
     <string name="chooseFile">Elegir un archivo</string>
     <string name="chooseFileSubtext">Adjunte un archivo a su presentación tocando una opción a continuación.</string>
     <string name="noNotifications">Sin notificaciones</string>

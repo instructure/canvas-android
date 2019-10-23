@@ -959,6 +959,7 @@
     <string name="allSections">كل الأقسام</string>
 
     <string name="gauge">Gauge</string>
+    <string name="arc">Arc</string>
     <string name="ltiLaunchFailure">تعذر تحميل أداة LTI في الوقت الحالي.</string>
     <string name="downloading">جارٍ التنزيل...</string>
 

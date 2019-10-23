@@ -165,6 +165,7 @@
     <string name="noAssignmentsSubtext">Mae’n edrych yn debyg nad oes unrhyw aseiniadau wedi’u creu yn y gofod hwn. Amser i fynd allan a chrwydro.</string>
     <string name="noAssignmentsTeacher">Mae’n edrych yn debyg nad oes aseiniadau wedi cael eu cyhoeddi eto.</string>
     <string name="noFiles">Dim Ffeiliau</string>
+    <string name="noFilesForAssignment">Does dim ffeiliau ar gyfer y cyflwyniad hwn</string>
     <string name="noFilesSubtext">Does dim ffeiliau wedi’u cysylltu â’r cyfrif hwn.</string>
     <string name="notSupported">Does dim modd delio â</string>
     <string name="noEvents">Dim Digwyddiadau Heddiw!</string>
@@ -175,7 +176,6 @@
     <string name="noDueDate">Does gan yr aseiniad hwn ddim dyddiad erbyn.</string>
     <string name="locked">Wedi Cloi</string>
     <string name="lockedSubtext">Mae’r aseiniad hwn wedi’i gloi tan %1$s am %2$s.</string>
-    <string name="lockedModule">Mae’r aseiniad hwn yn rhan o’r modiwl \"%1$s\" ac nid yw wedi’i ddatgloi eto.</string>
     <string name="chooseFile">Dewiswch Ffeil</string>
     <string name="chooseFileSubtext">Atodwch ffeil i’ch trafodaeth trwy dapio opsiwn isod.</string>
     <string name="noNotifications">Dim Hysbysiadau</string>

@@ -165,6 +165,7 @@
     <string name="noAssignmentsSubtext">Det ser ut som ingen oppgaver er laget i dette området. På tide å gå ut og utforske.</string>
     <string name="noAssignmentsTeacher">Det ser ut til at ingen oppgaver er publisert ennå.</string>
     <string name="noFiles">Ingen filer</string>
+    <string name="noFilesForAssignment">Det er ingen filer for denne innleveringen</string>
     <string name="noFilesSubtext">Det er ingen filer tilsluttet denne kontoen.</string>
     <string name="notSupported">Ikke støttet</string>
     <string name="noEvents">Ingen arrangementer i dag!</string>
@@ -175,7 +176,6 @@
     <string name="noDueDate">Dette oppdraget har ingen tidsfrist.</string>
     <string name="locked">Låst</string>
     <string name="lockedSubtext">Dette oppdraget er låst frem til %1$s på %2$s.</string>
-    <string name="lockedModule">Dette oppdraget er en del av modulen \"%1$s\" og er ikke åpnet ennå.</string>
     <string name="chooseFile">Velg en fil</string>
     <string name="chooseFileSubtext">Legg ved en fil til din innlevering ved å trykke et valg under.</string>
     <string name="noNotifications">Ingen anmerkninger</string>

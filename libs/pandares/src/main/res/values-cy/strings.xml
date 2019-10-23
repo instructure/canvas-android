@@ -55,6 +55,13 @@
     <string name="launchExternalTool">Lansio Adnodd Allanol</string>
 
     <string name="preview">Rhagolwg</string>
+    <string name="submissionUploadFailedMessage">Wedi methu llwytho un neu ragor o ffeiliau. Gwiriwch eich cysylltiad rhyngrwyd a rhoi cynnig arall ar gyflwyno.</string>
+    <string name="submissionUploadByteProgress">%1$s o %2$s</string>
+    <string name="submissionSuccessTitle">Wedi Llwyddo i Gyflwyno!</string>
+    <string name="submissionSuccessMessage">Cafodd eich aseiniad ei gyflwyno\'n llwyddiannus. Mwynhewch eich diwrnod!</string>
+    <string name="cancelAllSubmissions">Canslo Pob Cyflwyniad Aseiniad</string>
+    <string name="missingSubmissionLabel">Ar goll</string>
+    <string name="gradedSubmissionLabel">Wedi graddio</string>
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">Does dim rhagolwg ar gael ar gyfer URL sy\'n defnyddio \'http://\'</string>
     <string name="submissionUrlNotAUrlError">Rhowch URL dilys</string>
@@ -62,8 +69,11 @@
     <string name="addFileFabContentDesc">Dangos Ychwanegu Opsiynau Ffeiliau</string>
     <string name="recordAudio">Recordio Sain</string>
 
+    <string name="recordVideo">Recordio Fideo</string>
+
     <!-- Student Submission -->
     <string name="submissionWrite">Ysgrifennwch&#8230;</string>
+    <string name="textSubmissionFailureMessage">Aeth rhywbeth o’i le wrth lwytho\'r cyflwyniad i fyny. Cyflwyno eto.</string>
     <!-- Student Submission Details -->
     <string name="submission">Cyflwyniad</string>
     <string name="submissionVersions">Fersiynau o’r Cyflwyniad</string>
@@ -79,15 +89,38 @@
     <string name="submissionDetailsAssignmentLocked">Aseiniad wedi’i gloi</string>
     <string name="webPreview">Rhagolwg o’r URL a roddwyd</string>
     <string name="websiteUrl">URL Gwefan</string>
+    <string name="noneContentMessage">Dydy’r aseiniad hwn ddim yn caniatáu cyflwyniadau ar-lein.</string>
+    <string name="onPaperContentMessage">Dydy’r aseiniad hwn ddim yn caniatáu cyflwyniadau ar-lein.</string>
+    <string name="noOnlineSubmissions">Dim Cyflwyniadau Ar-lein</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Allan o %s pwynt</string>
     <string name="outOfPointsAbbreviatedFormatted">Allan o %s pwynt</string>
     <string name="gradeExcused">Wedi esgusodi</string>
     <string name="finalGradeFormatted">Gradd Derfynol: %s</string>
+    <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
+    <string name="contentDescriptionScoreOutOfPointsPossible">%1$s allan o %2$s pwynt</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Sgôr personol</string>
     <string name="rubricEmptyMessage">Does dim cyfarwyddyd sgorio ar gyfer yr aseiniad hwn</string>
     <string name="rubricViewLongDescription">Gweld disgrifiad hir</string>
+    <!-- Student Submission Comments -->
+    <string name="assignmentSubmissionUploadingFile">Wrthi\'n llwytho ffeil %1$d o %2$d i fyny</string>
+    <string name="assignmentSubmissionCommentUpload">Wrthi\'n llwytho sylw i fyny ar gyfer %s</string>
+    <string name="assignmentSubmissionCommentUploadingMedia">Wrthi\'n llwytho ffeil cyfryngau i fyny</string>
+    <string name="assignmentSubmissionCommentError">Wedi methu llwytho sylw i fyny ar gyfer %s</string>
+    <string name="chooseFileForCommentSubtext">Atodwch ffeiliau i\'ch sylw trwy dapio opsiwn isod</string>
+    <string name="emptySubmissionCommentsSubtext">Oes gennych chi gwestiwn am eich aseiniad?\nAnfonwch neges at eich addysgwr.</string>
+    <string name="submissionCommentErrorMessage">Doedd dim modd anfon y neges hon. Tapiwch i roi cynnig arall arni.</string>
+    <string name="mediaUploadAudio">Llwytho cyfryngau i fyny - Sain</string>
+    <string name="mediaUploadVideo">Llwytho cyfryngau i fyny - Fideo</string>
+    <string name="commentSubmissionTypeText">Cyflwyniad Testun</string>
+    <string name="commentSubmissionTypeExternalTool">Cyflwyno Adnodd Allanol</string>
+    <string name="commentSubmissionTypeDiscussion">Cyflwyniad Trafodaeth</string>
+    <string name="commentSubmissionTypeQuiz">Cyflwyniad Cwis</string>
+    <string name="commentSubmissionTypeQuizAttempt">Ymgais %d</string>
+    <string name="commentSubmissionTypeMediaFile">Ffeil Gyfryngau</string>
+    <string name="commentSubmissionTypeAudio">Sain</string>
+    <string name="commentSubmissionTypeVideo">Fideo</string>
     <!-- Profile Fragment Strings -->
     <string name="canvasVersionNum">Fersiwn:</string>
 
@@ -104,7 +137,6 @@
     <string name="options">Opsiynau</string>
 
     <string name="discussionAttachment">Atodi ffeil</string>
-    <string name="discussionUpload">Llwytho fideo neu sain i fyny</string>
     <string name="discussionPostEditing">Golygu</string>
 
     <!--Multiple User Sign in -->
@@ -140,36 +172,16 @@
     <string name="lowercaseAM">am</string>
     <string name="lowercasePM">pm</string>
     <!-- Assignments -->
-    <string name="assignmentDue">Erbyn</string>
-    <string name="assignmentDueColon">Erbyn: </string>
-    <string name="assignmentLastSubmission">Cyflwyniad Diwethaf</string>
-    <string name="assignmentNoSubmission">Dim</string>
-    <string name="assignmentTabDetails">Manylion</string>
-    <string name="assignmentTabSubmission">Cyflwyniadau</string>
-    <string name="assignmentTabGrade">Gradd</string>
     <string name="assignmentLocked">Wedi Cloi</string>
     <string name="assignments">Aseiniadau</string>
-    <string name="freeFormRubricPoints" formatted="false">%s / %s </string>
-    <string name="noRubric">Does dim cyfarwyddyd sgorio ar gyfer yr aseiniad hwn.</string>
     <string name="noDescription">Does dim disgrifiad ar gyfer yr aseiniad hwn.</string>
     <string name="noAssignmentsInGroup">Dim Aseiniadau yn y grŵp hwn</string>
     <string name="excusedAssignment">Mae’r aseiniad hwn wedi’i esgusodi ac ni fydd yn cael ei ystyried yn y cyfanswm</string>
-    <string name="droppedAssignment">Mae’r aseiniad hwn wedi’i ollwng ac ni fydd yn cael ei ystyried yn y cyfanswm</string>
     <string name="excused">EX</string>
-    <string name="mutedText">Dydy’r graddau ddim ar gael oherwydd bod yr addysgwr yn gweithio arnyn nhw.</string>
-    <string name="rubricRangePointsText" formatted="false">&#160;i &gt; %s pwynt</string>
-    <string name="contentDescriptionRubricRangePointsText" formatted="false">%s &#160;i &gt; %s pwynt</string>
-
     <!-- Assignment editing -->
     <string name="points">Pwynt </string>
-    <string name="assignmentGroup">Grŵp Aseiniadau: </string>
-    <string name="gradingType">Math o radd: </string>
-    <string name="submissionType">Math o gyflwyniad: </string>
-    <string name="editAssignment">Golygu Aseiniad</string>
     <string name="save">Cadw</string>
     <string name="cancel">Canslo</string>
-    <string name="sendNotification">Rhoi gwybod i ddefnyddwyr bod y cynnwys hwn wedi newid</string>
-
     <!-- Discussions -->
     <string name="forbidden">Dim ond y rheini sydd wedi cyflwyno o leiaf un ateb sy’n gallu gweld yr atebion.</string>
 
@@ -189,6 +201,10 @@
     <string name="checkBoxFinalGradeOption">Yn seiliedig ar aseiniadau wedi’u graddio</string>
     <string name="checkBoxWhatIfGradeOption">Dangos Sgôr "Beth-os"</string>
     <string name="whatIfDialogText">Sgôr "Beth-os"</string>
+    <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
+    <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s allan o %2$s pwynt, %3$s</string>
+
+
     <string name="inbox">Blwch Derbyn</string>
     <string name="unread">Heb ddarllen</string>
     <string name="archived">Archifwyd</string>
@@ -231,7 +247,6 @@
         <item quantity="one">%d angen ei raddio</item>
         <item quantity="other">%d angen eu graddio</item>
     </plurals>
-    <string name="myFiles">Ffeiliau</string>
     <string name="createAFolder">Creu Ffolder</string>
     <string name="createFolder">Creu Ffolder</string>
     <string name="createAFile">Creu Ffeil</string>
@@ -273,7 +288,6 @@
     <string name="deleteEvent">Dileu Digwyddiad</string>
     <string name="selected">Wedi dewis</string>
     <string name="errorSendingMessage">Gwall wrth anfon eich neges. Rhowch gynnig arall arni.</string>
-    <string name="errorPostingComment">Gwall wrth bostio eich sylw ar y cyflwyniad. Rhowch gynnig arall arni.</string>
     <string name="deletedConversation">Mae’r sgwrs honno wedi’i dileu</string>
     <string name="uploadAvatarFailMsg">Wedi methu llwytho llun avatar newydd i fyny</string>
     <string name="editPhoto">Golygu Llun</string>
@@ -306,8 +320,6 @@
     <string name="openAlternate">Agor gydag ap arall</string>
     <string name="opening">Agor Ffeil&#8230;</string>
     <string name="download">Llwytho i lawr</string>
-    <string name="hideExtras">Cuddio Nodweddion Ychwanegol</string>
-    <string name="showExtras">Dangos Nodweddion Ychwanegol</string>
     <string name="messageAttachments">Atodiadau Neges</string>
     <string name="discussionAttachmentLabel">Atodiad</string>
     <string name="attachmentIcon">Eicon Atodiad</string>
@@ -366,6 +378,7 @@
     <string name="select_item_to_display">Dewis o’r rhestr</string>
 
     <string name="syllabus">Maes Llafur</string>
+    <string name="summary">Crynodeb</string>
     <string name="coursePeople">Pobl</string>
     <string name="teachersTas">Athrawon a Chynorthwywyr Dysgu</string>
     <string name="students">Myfyrwyr</string>
@@ -399,12 +412,6 @@
 
     <!-- Notifications -->
     <string name="deleted">Wedi dileu</string>
-    <string name="gradedDiscussion">Trafodaeth wedi’i Graddio.</string>
-    <string name="pointsPossible">Pwynt yn bosib.</string>
-    <string name="pointsPossibleNoPeriod">Pwynt yn bosib</string>
-
-    <string name="deletedEntryNoChildren">Does gan y cofnod trafodaeth sydd wedi’i ddileu ddim atebion.</string>
-    <string name="sideCommentEntry">Mawn trafodaeth o’r math hwn, does dim modd rhoi sylw ar unrhyw gofnod ar y lefel hon.</string>
     <string name="contentDescriptionFiles">Eicon ffeil</string>
 
     <string name="loadingCanvas">Llwytho Cynnwys Canvas&#8230;</string>
@@ -428,11 +435,6 @@
     <string name="emptyId">Does dim modd i’r ID fod yn wag</string>
 
     <string name="goToQuiz">Mynd i’r Cwis</string>
-    <string name="goToExternalTool">Mynd i’r Adnodd Allanol</string>
-
-    <string name="pastDueDate">Wedi Pasio Dyddiad Erbyn</string>
-
-    <string name="goToDiscussion">Mynd i’r Drafodaeth</string>
     <string name="quizzes">Cwisiau</string>
 
     <string name="lastDiscussionPost">Post diwethaf</string>
@@ -486,7 +488,6 @@
     <string name="lockedFileDesc">Mae’r ffeil hon yn rhan o’r modiwl %s ac nid yw wedi cael ei datgloi eto.</string>
     <string name="lockedQuizDesc">Mae’r cwis hwn yn rhan o’r modiwl %s ac nid yw wedi cael ei ddatgloi eto.</string>
     <string name="lockedDiscussionDesc">Mae’r drafodaeth hon yn rhan o’r modiwl %s ac nid yw wedi cael ei datgloi eto.</string>
-    <string name="lockedAssignmentDescLine2">Ewch i dudalen modiwlau’r cwrs i gael gwybodaeth ynghylch sut mae datgloi’r cynnwys hwn.</string>
     <string name="mustComplete">Bydd yn rhaid i chi gwblhau’r canlynol yn gyntaf:</string>
     <string name="unlockedAt">Bydd yn cael ei ddatgloi:</string>
     <string name="goToModules">Mynd i’r Modiwlau</string>
@@ -508,22 +509,12 @@
     <!-- New Submission Strings -->
     <string name="textEntry">Cofnod Testun</string>
     <string name="onlineURL">URL Ar-lein</string>
-    <string name="enterTextEntry">Rhowch Gofnod Testun</string>
-    <string name="fileUpload"> Llwytho Ffeil i Fyny</string>
     <string name="oneFileOnly">Dydy’r cyflwyniad hwn ond yn derbyn llwytho un ffeil i fyny</string>
 
 
     <string name="websiteEntry">Ychwanegu Cofnod Gwefan</string>
     <string name="mediaRecordingEntry">Recordiadau ar Gyfryngau</string>
     <string name="submit">Cyflwyno</string>
-    <string name="blankSubmission">Does dim modd i’r cyflwyniad fod yn wag.</string>
-    <string name="errorPostingSubmission">Gwall wrth bostio’r cyflwyniad.</string>
-    <string name="successPostingSubmission">Wedi llwyddo i bostio\'r cyflwyniad.</string>
-
-    <string name="exampleSubmissionURL">http://www.example.com</string>
-
-
-
     <!-- DataLoss Fragment Strings -->
     <string name="unsavedProgress">Cynnydd heb ei gadw</string>
     <string name="informationLost">Bydd gwybodaeth sydd heb ei chadw yn cael ei cholli. Ydych chi am barhau?</string>
@@ -537,22 +528,8 @@
 
     <!-- Submission Details Strings -->
     <string name="next">Nesaf</string>
-    <string name="addSubmission">Cyflwyno</string>
-    <string name="addAnotherSubmission">Cyflwyno eto</string>
     <string name="turnedIn">Wedi’i gyflwyno:&#160;</string>
     <string name="addComment">Ychwanegu sylw&#8230;</string>
-    <string name="addCommentNoEllipsis">Ychwanegu sylw</string>
-    <string name="subTypeOnlineText">Cofnod Testun Ar-lein</string>
-    <string name="subTypeFileUpload">Llwytho eFfeil i Fyny Ar-lein</string>
-    <string name="subTypeOnlineURL">URL Gwefan</string>
-    <string name="subTypeOnlineQuiz">Cwis Ar-lein</string>
-    <string name="subTypeMediaRecording">Recordio Cyfryngau</string>
-    <string name="sub_type_lti_launch">Lansiad LTI</string>
-    <string name="subTypeDiscussionTopic">Trafodaeth</string>
-    <string name="turnInByHand">Rhaid i chi gyflwyno’r aseiniad hwn eich hun</string>
-    <string name="noSubRequired">Dim angen cyflwyno</string>
-    <string name="noTurnInOnMobile">Does dim modd gwneud cyflwyniad symudol</string>
-
     <string name="home">Hafan</string>
     <string name="Notifications">Hysbysiadau</string>
 
@@ -582,9 +559,6 @@
     <string name="clickToViewSubmission">Cymerwyd ciplun o’r wefan wrth i chi ei chyflwyno. Tapiwch a dal y ddelwedd isod i agor neu lwytho’r ddelwedd lawn i lawr.</string>
     <string name="urlSubmissionNoPreview">Roedd y cyflwyniad hwn yn URL i dudalen allanol. Cofiwch efallai bod y dudalen hon wedi newid ers y cyflwyniad gwreiddiol.</string>
     <string name="contentDescriptionPreviewImage">Rhagolwg o’r URL a gyflwynwyd</string>
-    <string name="itemStillProcessing">Mae’r eitem hon yn dal yn prosesu ar y gweinydd. Rhowch gynnig arall arni.</string>
-
-
     <string name="isNotSupportedFeature">Does dim modd delio â %1$s.</string>
     <string name="isNotSupported">Does dim modd delio â’r ddolen.</string>
     <string name="openInBrowser">Agor mewn Porwr</string>
@@ -601,8 +575,6 @@
     <string name="panda_fact_string">Ffaith Panda:&#160;</string>
     <string name="remove">Tynnu</string>
     <string name="founders">Sylfaenwyr</string>
-    <string name="image">Delwedd</string>
-
     <string name="EULA">EULA</string>
     <string name="privacyPolicy">Polisi Preifatrwydd</string>
     <string name="termsOfUse">Telerau Defnyddio</string>
@@ -630,8 +602,6 @@
     <string name="widgetMinimumStyle">Cuddio manylion y teclyn</string>
     <string name="light">Golau</string>
     <string name="dark">Tywyll</string>
-
-    <string name="invalidExternal">Mae’r adnodd allanol hon wedi dod i ben neu mae wedi’i ffurfweddu’n anghywir.</string>
 
     <!-- Help dialog strings -->
     <string name="askInstructor">Gofyn cwestiwn i’ch addysgwr</string>
@@ -956,7 +926,6 @@
     <string name="totalPoints">%s pwynt</string>
     <string name="totalPointsText">Cyfanswm Pwyntiau</string>
     <string name="contentDescriptionPoints">%s pwynt</string>
-    <string name="contentDescriptionRubricRangeGrade">%1$s allan o %2$s pwynt</string>
     <string name="score">Sgôr</string>
     <string name="rangedRubricTotal" formatted="false">%s / %s pwynt</string>
     <string name="seeAll">Gweld y cyfan</string>
@@ -971,7 +940,7 @@
     <string name="noFilesSubtextCourse">Does dim ffeiliau\'n gysylltiedig â’r cwrs hwn.</string>
     <string name="noFilesSubtextGroup">Does dim ffeiliau’n gysylltiedig â’r grŵp hwn.</string>
     <string name="fileTypeNotSupported">Mathau o Ffeil Anghydnaws</string>
-    <string name="fileTypeNotSupportedBody">Dydy\'r aseiniad hwn ddim ond yn caniatáu mathau penodol o ffeil: %s</string>
+    <string name="fileTypeNotSupportedBody">Dydy&apos;r aseiniad hwn ddim ond yn caniatáu mathau penodol o ffeil: %s</string>
 
     <array name="file_size_units">
         <item>B</item>
@@ -984,8 +953,6 @@
     <string name="launch_link_in_external_browser">Lansio dolen mewn porwr allanol</string>
     <string name="ltiLaunchFailure">Doedd dim modd llwytho’r adnodd LTI hwn y tro hwn.</string>
     <string name="urlSubmission">Cyflwyniad URL</string>
-
-    <string name="assignmentDeletedError">Dydy’r aseiniad hwn ddim ar gael mwyach.</string>
 
     <string name="homePageIdForNotifications">Gweithgarwch diweddar</string>
     <string name="homePageIdForModules">Modiwlau</string>
@@ -1029,8 +996,6 @@
     <string name="unableToViewInBrowser">Does dim modd dod o hyd i ap allanol i weld yr adnodd LTI hwn.</string>
 
     <string name="commentUpload">Llwytho sylw i fyny</string>
-    <string name="unableToUploadMediaComment">I anfon sylw ar gyfryngau, anfonwch eich sylw ysgrifenedig sydd heb ei anfon neu ei ddileu</string>
-
     <string name="frontPage">Tudalen Flaen</string>
     <string name="editPage">Golygu Tudalen</string>
     <string name="description">Disgrifiad</string>
@@ -1070,4 +1035,22 @@
     <string name="addVideoComment">Ychwanegu sylw fideo</string>
     <string name="addAudioComment">Ychwanegu sylw sain</string>
 
+    <string name="audioRecordingError">Gwall annisgwyl wrth geisio recordio sain.</string>
+    <string name="videoRecordingError">Gwall annisgwyl wrth geisio recordio fideo.</string>
+
+    <string name="quizQuestionLabel">\'Cwestiynau:</string>
+    <string name="timeLimitLabel">Terfyn Amser:</string>
+    <string name="allowedAttemptsLabel">Ymgeisiau a Ganiateir:</string>
+    <string name="instructions">Cyfarwyddiadau</string>
+    <string name="quizNoTimeLimit">Dim</string>
+    <string name="viewQuiz">Gweld Cwis</string>
+    <string name="viewDiscussion">Gweld Trafodaeth</string>
+    <string name="lockedModule">Mae\'r aseiniad hwn wedi\'i gloi gan fodiwl \"%1$s\".</string>
+    <string name="chooseMediaFile">Dewiswch Ffeil Cyfryngau</string>
+    <string name="discussions_unknown_author">Awdur Dieithr</string>
+    <string name="discussions_unknown_date">Dyddiad Anhysbys</string>
+    <string name="a11y_gradeLetterMinusContentDescription">%s. minws</string>
+    <string name="a11y_letterGrade">%s.</string>
+    <string name="a11y_gradeCellContentDescription">%s %s</string>
+    <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
 </resources>

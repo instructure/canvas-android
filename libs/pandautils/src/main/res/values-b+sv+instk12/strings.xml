@@ -164,6 +164,7 @@
     <string name="noAssignmentsSubtext">Det verkar inte som om inga uppdrag har skapats i det här området. Dags att börja utforska.</string>
     <string name="noAssignmentsTeacher">Det verkar inte som att några uppgifter har publicerats än.</string>
     <string name="noFiles">Inga filer</string>
+    <string name="noFilesForAssignment">Det finns inga filer för den här inlämningen</string>
     <string name="noFilesSubtext">Det finns inga filer kopplade till det här kontot.</string>
     <string name="notSupported">Stöds inte</string>
     <string name="noEvents">Inga händelser idag!</string>
@@ -174,7 +175,6 @@
     <string name="noDueDate">Den här uppgiften saknar inlämningsdatum.</string>
     <string name="locked">Låst</string>
     <string name="lockedSubtext">Den här uppgiften är låst till och med %1$s kl. %2$s.</string>
-    <string name="lockedModule">Den här uppgiften är en del av modulen \"%1$s\" och har ännu inte låsts upp.</string>
     <string name="chooseFile">Välj en fil</string>
     <string name="chooseFileSubtext">Välj en fil till din inlämning genom att trycka på alternativet nedan.</string>
     <string name="noNotifications">Inga aviseringar</string>
