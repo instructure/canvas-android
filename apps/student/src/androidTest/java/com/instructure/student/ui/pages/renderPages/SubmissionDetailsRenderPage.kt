@@ -20,6 +20,7 @@ import android.view.View
 import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.action.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.BoundedMatcher
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withSpinnerText
@@ -27,7 +28,9 @@ import com.instructure.espresso.*
 import com.instructure.espresso.page.*
 import com.instructure.student.R
 import com.instructure.student.ui.pages.SubmissionDetailsPage
+import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import org.hamcrest.CoreMatchers.*
+import org.hamcrest.Description
 
 class SubmissionDetailsRenderPage : SubmissionDetailsPage() {
 
@@ -93,6 +96,7 @@ class SubmissionDetailsRenderPage : SubmissionDetailsPage() {
 
     fun assertDisplaysDrawerContent() {
         drawerContent.assertDisplayed()
+        slidingPanel.waitForCheck(matches(SlidingUpPanelOpenMatcher()))
     }
 
     fun clickTab(name: String) {
@@ -113,5 +117,20 @@ class SubmissionDetailsRenderPage : SubmissionDetailsPage() {
 
     fun waitForDrawerRender() {
         onView(withId(R.id.drawerTabLayout)).waitForCheck(matches(isDisplayed()))
+    }
+}
+
+// Using a ViewAction to do loopMainThreadUntilIdle doesn't seem to work here, likely from SlidingUpPanelLayout not
+// using animators correctly. Instead we have to break the black box and check the panel's state to see when it updates
+// from PanelState.DRAGGING to either ANCHORED or EXPANDED. This will tell us when the view has finished handling drags
+// and the rest of the test can proceed.
+class SlidingUpPanelOpenMatcher : BoundedMatcher<View, SlidingUpPanelLayout>(SlidingUpPanelLayout::class.java) {
+    override fun describeTo(description: Description?) {
+        description?.appendText("panel that is open (anchored or expanded)")
+    }
+
+    override fun matchesSafely(item: SlidingUpPanelLayout?): Boolean {
+        return item?.panelState?.let { it == SlidingUpPanelLayout.PanelState.ANCHORED || it == SlidingUpPanelLayout.PanelState.EXPANDED }
+            ?: false
     }
 }
