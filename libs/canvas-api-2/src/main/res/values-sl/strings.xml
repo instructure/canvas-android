@@ -41,8 +41,7 @@
     <string name="canvasAPI_discussion">Razprava</string>
     <string name="canvasAPI_quiz">Kviz</string>
     <string name="canvasAPI_externalTool">Zunanje orodje</string>
-    <string name="canvasAPI_none">Brez</string>
-
+    <string name="canvasAPI_none">Ni oddaje.</string>
     <string name="canvasAPI_passFail">Opravljeno Neopravljeno</string>
     <string name="canvasAPI_percent">Odstotek</string>
     <string name="canvasAPI_letterGrade">Črkovna ocena</string>
@@ -50,11 +49,11 @@
     <string name="canvasAPI_gpaScale">Lestvica GPA</string>
     <string name="canvasAPI_notGraded">Ni ocenjeno.</string>
 
-    <string name="canvasAPI_onlineQuiz">Spletni kviz</string>
+    <string name="canvasAPI_onlineQuiz">Kviz</string>
     <string name="canvasAPI_discussionTopic">Tema razprave</string>
-    <string name="canvasAPI_onlineUpload">Nalaganje prek spleta</string>
-    <string name="canvasAPI_onlineTextEntry">Vnos besedila prek spleta</string>
-    <string name="canvasAPI_onlineURL">Spletni naslov URL</string>
+    <string name="canvasAPI_onlineUpload">Nalaganje datotek</string>
+    <string name="canvasAPI_onlineTextEntry">Vnos besedila</string>
+    <string name="canvasAPI_onlineURL">URL spletnega mesta</string>
     <string name="canvasAPI_mediaRecording">Medijski posnetek</string>
     <string name="canvasAPI_attendance">Prisotnost</string>
     <string name="quiz_scoring_policy_highest">Najvišje</string>

@@ -500,8 +500,8 @@
         <item quantity="other">%d pessoas</item>
     </plurals>
     <plurals name="group_count">
-        <item quantity="one">%d grupo</item>
-        <item quantity="other">%d grupos</item>
+        <item quantity="one">%d Grupo</item>
+        <item quantity="other">%d Grupos</item>
     </plurals>
     <string name="cmp_closed">Fechado</string>
     <string name="favorited_content_description" formatted="false">%s %s</string>
@@ -899,6 +899,7 @@
     <string name="allSections">Todas as seções</string>
 
     <string name="gauge">Gauge</string>
+    <string name="arc">Arc</string>
     <string name="ltiLaunchFailure">Não foi possível carregar esta ferramenta LTI neste momento.</string>
     <string name="downloading">Baixando...</string>
 

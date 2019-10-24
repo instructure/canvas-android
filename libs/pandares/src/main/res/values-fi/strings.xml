@@ -54,6 +54,13 @@
     <string name="launchExternalTool">Käynnistä ulkoinen työkalu</string>
 
     <string name="preview">Esikatsele</string>
+    <string name="submissionUploadFailedMessage">Yksi tai useampi tiedosto ei latautunut. Tarkista Internet-yhteytesi ja yritä lähettää uudelleen.</string>
+    <string name="submissionUploadByteProgress">%1$s/%2$s</string>
+    <string name="submissionSuccessTitle">Lähetys onnistui!</string>
+    <string name="submissionSuccessMessage">Tehtäväsi lähetys onnistui. Nauti päivästäsi!</string>
+    <string name="cancelAllSubmissions">Peruuta Kaikkien tehtävien lähetykset</string>
+    <string name="missingSubmissionLabel">Puuttuu</string>
+    <string name="gradedSubmissionLabel">Arvosteltu</string>
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">Ei saatavissa esikatselua URL-linkeille, jotka käyttävät \'http://\'</string>
     <string name="submissionUrlNotAUrlError">Syötä voimassa oleva URL</string>
@@ -61,8 +68,11 @@
     <string name="addFileFabContentDesc">Näytä Lisää tiedosto -asetukset</string>
     <string name="recordAudio">Nauhoita ääni</string>
 
+    <string name="recordVideo">Nauhoita video</string>
+
     <!-- Student Submission -->
     <string name="submissionWrite">Kirjoita&#8230;</string>
+    <string name="textSubmissionFailureMessage">Jotakin meni pieleen lähetyksen päivityksessä. Lähetä uudelleen.</string>
     <!-- Student Submission Details -->
     <string name="submission">Lähetys</string>
     <string name="submissionVersions">Lähetyksen versiot</string>
@@ -78,15 +88,38 @@
     <string name="submissionDetailsAssignmentLocked">Tehtävä lukittu</string>
     <string name="webPreview">Syötetyn URL-linkin esikatselu</string>
     <string name="websiteUrl">Verkkosivuston URL</string>
+    <string name="noneContentMessage">Tämä tehtävä ei salli verkkolähetyksiä.</string>
+    <string name="onPaperContentMessage">Tämä tehtävä ei salli verkkolähetyksiä.</string>
+    <string name="noOnlineSubmissions">Ei verkkolähetyksiä</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">/%s pisteestä</string>
     <string name="outOfPointsAbbreviatedFormatted">/%s pistettä</string>
     <string name="gradeExcused">Annettu anteeksi</string>
     <string name="finalGradeFormatted">Lopullinen arvosana: %s</string>
+    <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
+    <string name="contentDescriptionScoreOutOfPointsPossible">%1$s/%2$s pistettä</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Mukautettu pistemäärä </string>
     <string name="rubricEmptyMessage">Tälle tehtävälle ei ole rubriikkia</string>
     <string name="rubricViewLongDescription">Näytä pitkä kuvaus</string>
+    <!-- Student Submission Comments -->
+    <string name="assignmentSubmissionUploadingFile">Ladataan tiedostoa %1$d/%2$d</string>
+    <string name="assignmentSubmissionCommentUpload">Ladataan kommenttia kohteelle %s</string>
+    <string name="assignmentSubmissionCommentUploadingMedia">Ladataan mediatiedostoa</string>
+    <string name="assignmentSubmissionCommentError">Kommentin lataus epäonnistui kohteelle %s</string>
+    <string name="chooseFileForCommentSubtext">Liitä tiedostoja kommenttiisi napauttamalla alla olevaa vaihtoehtoa</string>
+    <string name="emptySubmissionCommentsSubtext">Onko sinulla kysyttävää tehtävästäsi?\nLähetä viesti ohjaajallesi.</string>
+    <string name="submissionCommentErrorMessage">Tämän viestin lähettäminen epäonnistui. Yritä uudelleen napauttamalla.</string>
+    <string name="mediaUploadAudio">Median lataus - ääni</string>
+    <string name="mediaUploadVideo">Median lataus - video</string>
+    <string name="commentSubmissionTypeText">Tekstin lähetys</string>
+    <string name="commentSubmissionTypeExternalTool">Ulkoinen työkalu lähetykseen</string>
+    <string name="commentSubmissionTypeDiscussion">Keskustelun lähetys</string>
+    <string name="commentSubmissionTypeQuiz">Tietovisan lähetys</string>
+    <string name="commentSubmissionTypeQuizAttempt">Yritys %d</string>
+    <string name="commentSubmissionTypeMediaFile">Mediatiedosto</string>
+    <string name="commentSubmissionTypeAudio">Ääni</string>
+    <string name="commentSubmissionTypeVideo">Video</string>
     <!-- Profile Fragment Strings -->
     <string name="canvasVersionNum">Versio:</string>
 
@@ -103,7 +136,6 @@
     <string name="options">Asetukset</string>
 
     <string name="discussionAttachment">Liitä tiedosto</string>
-    <string name="discussionUpload">Lataa video tai audio</string>
     <string name="discussionPostEditing">Muokkaa</string>
 
     <!--Multiple User Sign in -->
@@ -139,36 +171,16 @@
     <string name="lowercaseAM">a.m.</string>
     <string name="lowercasePM">p.m.</string>
     <!-- Assignments -->
-    <string name="assignmentDue">Määräpäivä</string>
-    <string name="assignmentDueColon">Määräpäivä: </string>
-    <string name="assignmentLastSubmission">Edellinen lähetys</string>
-    <string name="assignmentNoSubmission">Ei mitään</string>
-    <string name="assignmentTabDetails">Lisätiedot</string>
-    <string name="assignmentTabSubmission">Lähetykset</string>
-    <string name="assignmentTabGrade">Arvosana</string>
     <string name="assignmentLocked">Lukittu</string>
     <string name="assignments">Tehtävät</string>
-    <string name="freeFormRubricPoints" formatted="false">%s/%s </string>
-    <string name="noRubric">Tälle tehtävälle ei ole ohjeita.</string>
     <string name="noDescription">Tälle tehtävälle ei ole kuvausta.</string>
     <string name="noAssignmentsInGroup">Tässä ryhmässä ei ole tehtäviä</string>
     <string name="excusedAssignment">Tämän tehtävän annetaan mennä eikä sitä oteta huomioon koko laskelmassa</string>
-    <string name="droppedAssignment">Tämä tehtävä pudotetaan eikä sitä oteta huomioon koko laskelmassa</string>
     <string name="excused">EX</string>
-    <string name="mutedText">Arvosanat eivät ole saatavilla, koska ohjaaja tekee töitä niiden parissa.</string>
-    <string name="rubricRangePointsText" formatted="false">&#160; - &gt; %s pistettä</string>
-    <string name="contentDescriptionRubricRangePointsText" formatted="false">%s &#160;-&gt; %s pistettä</string>
-
     <!-- Assignment editing -->
     <string name="points">Pisteitä </string>
-    <string name="assignmentGroup">Tehtäväryhmä: </string>
-    <string name="gradingType">Arvosanojen antotyyppi: </string>
-    <string name="submissionType">Lähetystyyppi: </string>
-    <string name="editAssignment">Muokkaa tehtävää</string>
     <string name="save">Tallenna</string>
     <string name="cancel">Peruuta</string>
-    <string name="sendNotification">Ilmoita käyttäjille, että tämä sisältö on muuttunut</string>
-
     <!-- Discussions -->
     <string name="forbidden">Vastaukset ovat näkyvissä vai niille, jotka ovat lähettäneet vähintään yhden vastauksen.</string>
 
@@ -188,6 +200,10 @@
     <string name="checkBoxFinalGradeOption">Pohja arvostelluissa tehtävissä</string>
     <string name="checkBoxWhatIfGradeOption">Näytä Mitä jos -pistemäärä</string>
     <string name="whatIfDialogText">Mitä jos -pistemäärä</string>
+    <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
+    <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s / %2$s pistettä, %3$s</string>
+
+
     <string name="inbox">Tulevien laatikko</string>
     <string name="unread">Lukematon</string>
     <string name="archived">Arkistoitu</string>
@@ -230,7 +246,6 @@
         <item quantity="one">%d täytyy arvostella</item>
         <item quantity="other">%d täytyy arvostella</item>
     </plurals>
-    <string name="myFiles">Tiedostoa</string>
     <string name="createAFolder">Kansion luominen</string>
     <string name="createFolder">Kansion luonti</string>
     <string name="createAFile">Luo tiedosto</string>
@@ -272,7 +287,6 @@
     <string name="deleteEvent">Poista tapahtuma</string>
     <string name="selected">Valittu</string>
     <string name="errorSendingMessage">Viestin lähettämisen yhteydessä ilmeni virhe. Yritä uudelleen.</string>
-    <string name="errorPostingComment">Ilmeni virhe, kun yritettiin lähettää lähetyksen kommenttia Yritä uudelleen.</string>
     <string name="deletedConversation">Tuo keskustelu poistettiin.</string>
     <string name="uploadAvatarFailMsg">Uuden avatar-kuvan lataus ei onnistunut</string>
     <string name="editPhoto">Muokkaa valokuvaa</string>
@@ -305,8 +319,6 @@
     <string name="openAlternate">Avaa vaihtoehtoiselle sovelluksella</string>
     <string name="opening">Tiedoston avaaminen&#8230;</string>
     <string name="download">Lataa</string>
-    <string name="hideExtras">Piilota ylimääräiset</string>
-    <string name="showExtras">Näytä ylimääräiset</string>
     <string name="messageAttachments">Viestin liitteet</string>
     <string name="discussionAttachmentLabel">Liite</string>
     <string name="attachmentIcon">Liitteen kuvake</string>
@@ -365,6 +377,7 @@
     <string name="select_item_to_display">Valitse luettelosta.</string>
 
     <string name="syllabus">Opinto-ohjelma</string>
+    <string name="summary">Yhteenveto</string>
     <string name="coursePeople">Henkilöt</string>
     <string name="teachersTas">Opettajat &amp; Apuopettajat</string>
     <string name="students">Opiskelijat</string>
@@ -398,12 +411,6 @@
 
     <!-- Notifications -->
     <string name="deleted">Poistettu</string>
-    <string name="gradedDiscussion">Arvosteltu keskustelu.</string>
-    <string name="pointsPossible">Pisteet mahdollisia.</string>
-    <string name="pointsPossibleNoPeriod">Mahdolliset pisteet</string>
-
-    <string name="deletedEntryNoChildren">Tälle poistetulle keskustelumerkinnälle ei ole vastauksia.</string>
-    <string name="sideCommentEntry">Tämän tyyppisessä keskustelussa et voi kommentoida mitään merkintää tällä tasolla.</string>
     <string name="contentDescriptionFiles">Tiedostokuvake</string>
 
     <string name="loadingCanvas">Ladataan Canvas-sisältöä&#8230;</string>
@@ -427,11 +434,6 @@
     <string name="emptyId">Tunnus ei voi olla tyhjä.</string>
 
     <string name="goToQuiz">Siirry tietovisaan</string>
-    <string name="goToExternalTool">Siirry ulkoiseen työkaluun</string>
-
-    <string name="pastDueDate">Määräpäivä ohi</string>
-
-    <string name="goToDiscussion">Siirry keskusteluun</string>
     <string name="quizzes">Tietovisat</string>
 
     <string name="lastDiscussionPost">Viimeinen lähetys</string>
@@ -485,7 +487,6 @@
     <string name="lockedFileDesc">Tämä tiedosto on osa moduulia %s eikä sen lukitusta ole vielä poistettu.</string>
     <string name="lockedQuizDesc">Tämä tietovisa on osa moduulia %s eikä sen lukitusta ole vielä poistettu.</string>
     <string name="lockedDiscussionDesc">Tämä keskustelu on osa moduulia %s eikä sen lukitusta ole vielä poistettu.</string>
-    <string name="lockedAssignmentDescLine2">Lue kurssin moduulit -sivulta tietoja siitä, kuinka poistaa tämän sisällön lukitus.</string>
     <string name="mustComplete">Sinun täytyy suorittaa ensin seuraavat:</string>
     <string name="unlockedAt">Sen lukitus avataan kohteessa:</string>
     <string name="goToModules">Siirry Moduuleihin</string>
@@ -507,22 +508,12 @@
     <!-- New Submission Strings -->
     <string name="textEntry">Tekstin syöttäminen</string>
     <string name="onlineURL">Verkko-url</string>
-    <string name="enterTextEntry">Syötä tekstiä</string>
-    <string name="fileUpload"> Tiedoston lataus</string>
     <string name="oneFileOnly">Lähetys hyväksyy vain yhden tiedoston latauksen</string>
 
 
     <string name="websiteEntry">Lisää verkkosivuston merkintä</string>
     <string name="mediaRecordingEntry">Median nauhoitukset</string>
     <string name="submit">Lähetä</string>
-    <string name="blankSubmission">Lähetys ei voi olla tyhjä.</string>
-    <string name="errorPostingSubmission">Lähetyksen suorittamisessa tapahtui virhe.</string>
-    <string name="successPostingSubmission">Lähetyksen lähettäminen onnistui.</string>
-
-    <string name="exampleSubmissionURL">http://www.example.com</string>
-
-
-
     <!-- DataLoss Fragment Strings -->
     <string name="unsavedProgress">Tallentamaton edistyminen</string>
     <string name="informationLost">Tallentamattomat muutokset menetetään. Haluatko jatkaa?</string>
@@ -536,22 +527,8 @@
 
     <!-- Submission Details Strings -->
     <string name="next">Seuraava</string>
-    <string name="addSubmission">Luovuttaminen</string>
-    <string name="addAnotherSubmission">Luovuta uudelleen</string>
     <string name="turnedIn">Luovutettu:&#160;</string>
     <string name="addComment">Lisää kommentti&#8230;</string>
-    <string name="addCommentNoEllipsis">Lisää kommentti</string>
-    <string name="subTypeOnlineText">Verkon tekstimerkintä</string>
-    <string name="subTypeFileUpload">eFile-verkkolataus</string>
-    <string name="subTypeOnlineURL">Verkkosivuston URL</string>
-    <string name="subTypeOnlineQuiz">Verkkotietovisa</string>
-    <string name="subTypeMediaRecording">Median nauhoitus</string>
-    <string name="sub_type_lti_launch">LTI-käynnistys</string>
-    <string name="subTypeDiscussionTopic">Keskustelu</string>
-    <string name="turnInByHand">Sinun täytyy luovuttaa tämä tehtävä käsin</string>
-    <string name="noSubRequired">Lähetystä ei vaadita</string>
-    <string name="noTurnInOnMobile">Mobiililähetystä ei tueta</string>
-
     <string name="home">Aloitussivu</string>
     <string name="Notifications">Ilmoitukset</string>
 
@@ -581,9 +558,6 @@
     <string name="clickToViewSubmission">Verkkosivuston tilannekuva otettiin, kun luovutit tehtävän. Napauta ja pidä kuvaa alla avataksesi tai ladataksesi koko kuvan.</string>
     <string name="urlSubmissionNoPreview">Tämä lähetys oli URL ulkoiselle sivulle. Muista, että tämä sivu on ehkä muuttunut siitä, kun lähetys alunperin tapahtui.</string>
     <string name="contentDescriptionPreviewImage">Lähetetyn url-linkin esikatselu</string>
-    <string name="itemStillProcessing">Tämä kohde on yhä käsiteltävänä palvelimella. Yritä uudelleen.</string>
-
-
     <string name="isNotSupportedFeature">%1$s ei tueta.</string>
     <string name="isNotSupported">Linkkiä ei tueta.</string>
     <string name="openInBrowser">Avaa selaimessa</string>
@@ -600,8 +574,6 @@
     <string name="panda_fact_string">Pandaa koskeva tieto:&#160;</string>
     <string name="remove">Poista</string>
     <string name="founders">Perustajat</string>
-    <string name="image">Kuva</string>
-
     <string name="EULA">Käyttöoikeussopimus</string>
     <string name="privacyPolicy">Tietosuojakäytäntö</string>
     <string name="termsOfUse">Käyttöehdot</string>
@@ -629,8 +601,6 @@
     <string name="widgetMinimumStyle">Piilota tiedot pienoisohjelmassa</string>
     <string name="light">Valo</string>
     <string name="dark">Tumma</string>
-
-    <string name="invalidExternal">Tämä ulkoinen työkalu on joko vanhentunut tai määritetty virheellisesti.</string>
 
     <!-- Help dialog strings -->
     <string name="askInstructor">Kysy ohjaajaltasi kysymys</string>
@@ -955,7 +925,6 @@
     <string name="totalPoints">%s pistettä</string>
     <string name="totalPointsText">Pisteitä yhteensä</string>
     <string name="contentDescriptionPoints">%s pistettä</string>
-    <string name="contentDescriptionRubricRangeGrade">%1$s/%2$s pistettä</string>
     <string name="score">Pistemäärä</string>
     <string name="rangedRubricTotal" formatted="false">%s/%s pistettä</string>
     <string name="seeAll">Katso kaikki</string>
@@ -983,8 +952,6 @@
     <string name="launch_link_in_external_browser">Lanseeraa linkki ulkoisessa selaimessa</string>
     <string name="ltiLaunchFailure">Tämän LTI-työkalun lataaminen ei onnistu juuri nyt.</string>
     <string name="urlSubmission">URL-lähetys</string>
-
-    <string name="assignmentDeletedError">Tämä tehtävä ei enää ole käytettävissä.</string>
 
     <string name="homePageIdForNotifications">Viimeaikainen aktiviteetti</string>
     <string name="homePageIdForModules">Moduulit</string>
@@ -1028,8 +995,6 @@
     <string name="unableToViewInBrowser">Emme pystyneet löytämään ulkoista sovellusta tämän LTI-työkalun tarkasteluun.</string>
 
     <string name="commentUpload">Kommentin lataus</string>
-    <string name="unableToUploadMediaComment">Mediaa koskevan kommentin lähettäminen tai lähettämättömän tekstikommentin lähettäminen tai poistaminen.</string>
-
     <string name="frontPage">Etusivu</string>
     <string name="editPage">Muokkaa sivua</string>
     <string name="description">Kuvaus</string>
@@ -1069,4 +1034,22 @@
     <string name="addVideoComment">Lisää videon kommentti</string>
     <string name="addAudioComment">Lisää videon kommentti</string>
 
+    <string name="audioRecordingError">Ilmeni odottamaton virhe, kun ääntä yritettiin nauhoittaa.</string>
+    <string name="videoRecordingError">Ilmeni odottamaton virhe, kun videota yritettiin nauhoittaa.</string>
+
+    <string name="quizQuestionLabel">Kysymyksiä:</string>
+    <string name="timeLimitLabel">Aikaraja:</string>
+    <string name="allowedAttemptsLabel">Sallittuja yrityksiä:</string>
+    <string name="instructions">Rubriikki</string>
+    <string name="quizNoTimeLimit">Ei mitään</string>
+    <string name="viewQuiz">Näytä kysely</string>
+    <string name="viewDiscussion">Näytä keskustelu</string>
+    <string name="lockedModule">Tehtävä on lukittu moduulilla \"%1$s\".</string>
+    <string name="chooseMediaFile">Lähetä mediatiedosto</string>
+    <string name="discussions_unknown_author">Tuntematon tekijä</string>
+    <string name="discussions_unknown_date">Tutnematon päivämäärä</string>
+    <string name="a11y_gradeLetterMinusContentDescription">%s. minus</string>
+    <string name="a11y_letterGrade">%s.</string>
+    <string name="a11y_gradeCellContentDescription">%s %s</string>
+    <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
 </resources>

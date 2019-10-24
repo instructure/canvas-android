@@ -19,8 +19,8 @@
 <resources>
 
     <string name="chooseMedia">Välj media</string>
-    <string name="takeVideo">Spela in Video</string>
-    <string name="noCameraOnDevice">Ingen Kamera</string>
+    <string name="takeVideo">Spela in video</string>
+    <string name="noCameraOnDevice">Ingen kamera</string>
     <string name="takePhoto">Ta ett foto</string>
     <string name="choosePhotoFromGallery">Välj en bild från galleriet</string>
 
@@ -30,19 +30,20 @@
     <string name="notificationTitle">Laddar upp till Canvas</string>
     <string name="preparingUpload">Förbereder uppladdning</string>
     <string name="loadingFilesIndeterminate">Laddar filer&#8230;</string>
-    <string name="fileUploadSuccess">Uppladdningen lyckades</string>
-    <string name="noNetwork">Nätverket är inte tillgängligt - försök igen senare.</string>
-    <string name="uploadMessage">"Uppladdning pågår. Kontrollera meddelanden om uppladdningstillstånd.</string>
-    <string name="mediaUpload">Mediauppladdning</string>
+    <string name="fileUploadSuccess">Uppladdningen är klar</string>
+    <string name="noNetwork">Nätverket är inte tillgängligt – försök igen senare.</string>
+    <string name="uploadMessage">"Uppladdning pågår. Kontrollera aviseringar om uppladdningsstatus.</string>
     <string name="uploadingFile">Laddar upp fil&#8230;</string>
-    <string name="errorUploadingFile">Ett fel uppstod när din fil skulle laddas upp. Försök igen.</string>
-    <string name="fileSubmission">Skicka Fil(er)</string>
-    <string name="uploadFiles">Ladda upp Fil(er)</string>
+    <string name="errorUploadingFile">Ett fel uppstod vid uppladdning av filen. Försök igen.</string>
+    <string name="fileSubmission">Skicka fil/filer</string>
+    <string name="uploadFiles">Ladda upp fil/filer</string>
     <string name="upload">Ladda upp</string>
-    <string name="errorSendingMessage">Ett fel uppstod när du skickade ditt meddelande. Försök igen.</string>
+    <string name="errorSendingMessage">Ett fel uppstod när ditt meddelande skulle skickas. Försök igen.</string>
 
-    <string name="notificationChannelNameFileUploadsName">Ladda upp meddelanden</string>
-    <string name="notificationChannelNameFileUploadsDescription">Canvas-meddelanden för pågående uppladdningar.</string>
+    <string name="notificationChannelNameFileUploadsName">Ladda upp aviseringar</string>
+    <string name="notificationChannelNameFileUploadsDescription">Canvas-aviseringar för pågående uppladdningar.</string>
+
+
     <!-- Turn in Files -->
     <string name="chooseFileSource">Väj fil från&#8230;</string>
     <string name="addFile">Lägg till fil</string>
@@ -57,7 +58,6 @@
     <string name="file">Fil</string>
     <string name="fileTalkBack">Fil %s</string>
     <string name="folderTalkBack">Mapp %s</string>
-
     <string name="addItem">Lägg till objekt</string>
     <string name="assignment">Uppgift</string>
     <string name="attachedFiles">Bifogade filer</string>
@@ -67,48 +67,48 @@
 
     <!--rating dialog-->
     <string name="star1">En stjärna i betyg</string>
-    <string name="star2">Två Stjärnor i betyg</string>
-    <string name="star3">Tre Stjärnor i betyg</string>
+    <string name="star2">Två stjärnor i betyg</string>
+    <string name="star3">Tre stjärnor i betyg</string>
     <string name="star4">Fyra stjärnor i betyg</string>
     <string name="star5">Fem stjärnor i betyg</string>
 
     <!-- Submitting files -->
     <string name="fileQuotaExceeded">Du har överskridit din fillagringskvot.</string>
-    <string name="errorSubmittingFiles">Ett fel inträffade vid inlämning av dina filer. Försök igen.</string>
-    <string name="errorLoadingFiles">Ett fel inträffade när du läste in filen. Kontrollera din internetanslutning och försök igen.</string>
+    <string name="errorSubmittingFiles">Ett fel inträffade vid inlämningen av dina filer. Försök igen.</string>
+    <string name="errorLoadingFiles">Ett fel inträffade vid inläsning av filen. Kontrollera din internetanslutning och försök igen.</string>
     <string name="filesUploadedSuccessfully">Filerna har laddats upp.</string>
     <string name="filesSubmittedSuccessfully">Filerna har skickats in.</string>
-    <string name="messageSentSuccessfully">Meddelandet skickades.</string>
+    <string name="messageSentSuccessfully">Meddelandet har skickats.</string>
     <string name="shareWithCanvas">Andra appar kan dela filer med Canvas! Leta efter ikonen nedan i appar, och tryck på Canvas.</string>
-    <string name="shareWithCanvas2">Det öppnar den här appen. Välj sedan vilken kurs och uppgift som du vill skicka in för filen.</string>
+    <string name="shareWithCanvas2">Det öppnar den här appen. Välj sedan vilken kurs och vilken uppgift som du vill skicka in filen för.</string>
     <string name="contentDescriptionSocialShare">Dela ikon</string>
-    <string name="submitAssignment">Lämna in uppgift</string>
+    <string name="submitAssignment">Skickain uppgift</string>
     <string name="assignmentHeader">Uppgift:</string>
     <string name="submittingAssignment">Skickar in uppgift&#8230;</string>
     <string name="conversations">Konversationer </string>
-    <string name="inbox">Inkorgen </string>
+    <string name="inbox">Inkorg </string>
     <string name="divider">Avdelare</string>
     <string name="legal">Juridik</string>
     <string name="completeHomework">GÖR FÄRDIGT dina hemuppgifter</string>
     <string name="takeExam">Gör ett prov</string>
-    <string name="fileIcon">Fil-Ikon</string>
-    <string name="uploadingFileNum" formatted="false">Uppladdning %d av %d</string>
+    <string name="fileIcon">Filikon</string>
+    <string name="uploadingFileNum" formatted="false">Laddar upp %d av %d</string>
     <string name="fileLocked" formatted="false">%s har låsts.</string>
-    <string name="filePermissionGranted">Filerna är nu redo att laddas ned, försök igen.</string>
-    <string name="filePermissionDenied">Filerna kan inte laddas ned utan tillstånd.</string>
-    <string name="pleaseTryAgain">Kräver tillstånd, vänligen försök igen.</string>
+    <string name="filePermissionGranted">Filerna är nu redo att ladda ned. Försök igen.</string>
+    <string name="filePermissionDenied">Filen kan inte laddas ned utan att ge behörighet.</string>
+    <string name="pleaseTryAgain">Behörighet beviljades. Försök igen..</string>
     <string name="pickVideo">Välj en video</string>
-
-    <string name="assignmentSubmissionUpload">Laddar upp inlämningar för %s</string>
+    <string name="assignmentSubmissionUpload">Laddar upp inlämning för %s</string>
     <string name="assignmentSubmissionError">Inlämning kunde inte genomföras för %s</string>
-    <string name="assignmentSubmissionComplete">Inlämning genomförd %s</string>
+    <string name="assignmentSubmissionComplete">%s har nu lämnats in</string>
+
     <!--Errors-->
     <string name="errorOccurred">Ett oväntat fel uppstod.</string>
     <string name="serverError">Ett serverfel uppstod.</string>
-    <string name="unauthorized">Du är obehörig att komma åt detta. Antingen har du inte behörigheter eller så har du inte tillgång ännu (eftersom din kurs inte har startat ännu)</string>
-    <string name="fileNoLongerExists">Filen existerar inte längre</string>
-    <string name="invalidAccessToken">Din session har gått ut. Vänligen logga in för att starta en ny session.</string>
-    <string name="uploadingFromSourceFailed">Uppladdning av fil från den här källan kunde inte slutföras.</string>
+    <string name="unauthorized">Du är obehörig att komma åt detta. Antingen har du inte behörigheter eller har du inte åtkomst ännu (till exempel om din kurs inte har startat ännu)</string>
+    <string name="fileNoLongerExists">Den filen finns inte längre</string>
+    <string name="invalidAccessToken">Din session har gått ut. Logga in för att starta en ny session.</string>
+    <string name="uploadingFromSourceFailed">Det gick inte att ladda upp någon fil från den här källan.</string>
     <string name="errorGettingPhoto">Ett fel uppstod när fotot skulle hämtas. Försök igen.</string>
     <string name="errorTextMissing">Lägg till lite text för att skicka ett meddelande</string>
 
@@ -116,7 +116,7 @@
     <string name="noCourseSelected">Välj en kurs</string>
     <string name="selectCourse">Välj en kurs</string>
     <string name="selectAssignment">Välj en uppgift</string>
-    <string name="loadingAssignments">Laddar uppgifter...</string>
+    <string name="loadingAssignments">Laddar uppgifter ...</string>
     <string name="noAssignmentSelected">Välj en uppgift</string>
     <string name="noAssignmentsWithFileUpload">Den här kursen har inga uppgifter som tillåter filuppladdningar.</string>
     <string name="teacherNotAllowedFileSubmission">Som lärare i kursen kan du inte skicka in filer</string>
@@ -124,20 +124,20 @@
     <string name="oneOrMoreExtensionNotAllowed">En eller flera filer har ett filtillägg som inte är tillåtet</string>
     <string name="extensionNotAllowed">Den valda filtypen är inte tillåten.</string>
     <string name="allowedExtensions">Tillåtna tillägg:&#160;</string>
-
     <string name="quizNetworkErrorTitle">Fel på quiz</string>
-    <string name="quizNetworkErrorMessage">Det verkar som om internanslutningen ligger nere.</string>
+    <string name="quizNetworkErrorMessage">Det verkar som om internanslutningen är frånkopplad.</string>
+
     <!-- Media Task Loader -->
     <string name="noDataConnection"> Kontrollera din dataanslutning och försök igen. </string>
     <string name="noApps">Din enhet har inte några program installerade som kan hantera den här filen.</string>
     <string name="noAppsShort">Kan inte öppnas</string>
-    <string name="unexpectedErrorOpeningFile">Ett oväntat fel inträffade när den här filen öppnades.</string>
-    <string name="unexpectedErrorDownloadingFile">Ett oväntat fel inträffade när filen laddades ner.</string>
+    <string name="unexpectedErrorOpeningFile">Ett oväntat fel inträffade när den här filen skulle öppnas.</string>
+    <string name="unexpectedErrorDownloadingFile">Ett oväntat fel inträffade när filen skulle laddas ner.</string>
 
-    <string name="done">Färdig</string>
+    <string name="done">Klar</string>
 
     <!--Permissions-->
-    <string name="permissionDenied">Du måste först få tillstånd innan du kan använda den här funktionen.</string>
+    <string name="permissionDenied">Behörighet måste beviljas för att använda den här funktionen.</string>
     <string name="noConnection">Ingen anslutning</string>
 
     <!--Empty Screens-->
@@ -146,10 +146,10 @@
     <string name="noDiscussions">Inga diskussioner</string>
     <string name="noDiscussionsSubtext">Starta en konversation med andra.</string>
     <string name="noDiscussionsTeacher">Starta en konversation med dina studenter.</string>
-    <string name="nothingUnread">Inbox Zero!</string>
+    <string name="nothingUnread">Inkorg noll!</string>
     <string name="nothingUnreadSubtext">Du har kommit ikapp!</string>
     <string name="nothingStarred">Inga stjärnmärkta meddelanden</string>
-    <string name="nothingStarredSubtext">Behåll viktiga meddelanden i den här avdelningen genom att trycka på stjärnan i varje meddelanden.</string>
+    <string name="nothingStarredSubtext">Behåll viktiga meddelanden i den här avdelningen genom att trycka på stjärnan i varje meddelande.</string>
     <string name="nothingSent">Inget har skickats</string>
     <string name="nothingSentSubtext">Du har inte skickat några meddelanden.</string>
     <string name="nothingArchived">Inget har arkiverats</string>
@@ -157,60 +157,58 @@
     <string name="noQuizzes">Inga quiz</string>
     <string name="noQuizzesSubtext">Tyvärr, det finns inga quiz än.</string>
     <string name="noQuizzesTeacher">Det finns inga publicerade quiz att visa.</string>
-    <string name="noAnnouncements">Inga meddelanden</string>
-    <string name="noAnnouncementsSubtext">Inget har meddelats än.</string>
+    <string name="noAnnouncements">Inga kursmeddelanden</string>
+    <string name="noAnnouncementsSubtext">Inga kursmeddelande har publicerats än.</string>
     <string name="noCourses">Inga kurser</string>
     <string name="noCoursesSubtext">Det verkar som om det inte finns några kurser kopplade till det här kontot. Besök webben för att skapa en kurs idag.</string>
     <string name="noAssignments">Inga uppgifter</string>
-    <string name="noAssignmentsSubtext">Det verkar inte som om inga uppdrag har skapats i det här området. Dags att börja utforska.</string>
-    <string name="noAssignmentsTeacher">Det verkar inte som att några uppgifter har publicerats än.</string>
+    <string name="noAssignmentsSubtext">Det verkar inte som om några uppgifter har skapats i det här området. Dags att börja utforska.</string>
+    <string name="noAssignmentsTeacher">Det verkar inte som om några uppgifter har publicerats än.</string>
     <string name="noFiles">Inga filer</string>
+    <string name="noFilesForAssignment">Det finns inga filer för den här inlämningen</string>
     <string name="noFilesSubtext">Det finns inga filer kopplade till det här kontot.</string>
     <string name="notSupported">Stöds inte</string>
     <string name="noEvents">Inga händelser idag!</string>
     <string name="noEventsSubtext">Det ser ut att bli en dag för vila och avkoppling.</string>
     <string name="noSubmission">Ingen inlämning</string>
-    <string name="noSubmissionSubtext">Skicka in din uppgift senast %1$s kl. %2$s.</string>
     <string name="noSubmissionTeacher">Den här studenten saknar fortfarande inlämning.</string>
-    <string name="noDueDate">Den här uppgiften saknar inlämningsdatum.</string>
     <string name="locked">Låst</string>
     <string name="lockedSubtext">Den här uppgiften är låst till och med %1$s kl. %2$s.</string>
-    <string name="lockedModule">Den här uppgiften är en del av modulen \"%1$s\" och har inte låsts upp än.</string>
     <string name="chooseFile">Välj en fil</string>
     <string name="chooseFileSubtext">Välj en fil till din inlämning genom att trycka på alternativet nedan.</string>
     <string name="noNotifications">Inga aviseringar</string>
-    <string name="noNotificationsSubtext">Det finns inget att avisera än.</string>
+    <string name="noNotificationsSubtext">Det finns inget att bli aviserad om än.</string>
     <string name="noTodos">Bra jobbat!</string>
-    <string name="noTodosSubtext">Din att göra-lista är tom. Dags att ladda om.</string>
+    <string name="noTodosSubtext">Din att göra-lista är tom. Dags att ladda batterierna.</string>
     <string name="noSyllabus">Ingen kursöversikt</string>
     <string name="noSyllabusSubtext">Ingen kursöversikt har skapats än.</string>
     <string name="noBookmarks">Inga bokmärken</string>
     <string name="noBookmarksSubtext">Bokmärken är genvägar för skärmar i appen. Lägg till dem på skärmen du vill bokmärka.</string>
     <string name="noModules">Inga moduler</string>
-    <string name="noModulesSubtext">Det verkar inte finnas några skapade moduler än.</string>
+    <string name="noModulesSubtext">Det verkar inte som om några moduler har skapats än.</string>
     <string name="noPages">Inga sidor</string>
-    <string name="noPagesSubtext">Det verkar inte finnas några skapade sidor än.</string>
+    <string name="noPagesSubtext">Det verkar inte som om några sidor har skapats än.</string>
 
     <!--General-->
     <string name="yes">Ja</string>
     <string name="no">Nej</string>
 
-    <string name="inbox_all">Inkorgen</string>
+    <string name="inbox_all">Inkorg</string>
     <string name="inbox_unread">Oläst</string>
     <string name="inbox_starred">Stjärnmärkt</string>
     <string name="inbox_sent">Skickat</string>
-    <string name="inbox_archived">Arkiverad</string>
+    <string name="inbox_archived">Arkiverat</string>
 
     <string name="forbidden">Svar är endast synliga för de som har publicerat minst ett svar.</string>
 
-    <string name="like">Gilla</string>
+    <string name="like">Gilla-markering</string>
     <string name="likes">Gilla-markeringar</string>
     <string name="lockedAssignmentNotModule">Den här uppgiften är låst.</string>
     <string name="deletedEntryNoChildren">Det här borttagna diskussionsinlägget har inga svar.</string>
     <string name="deleted">Raderad</string>
     <string name="deleted_by">[Raderad av %1$s]</string>
     <string name="lockedDiscussionDesc">Den här diskussionen är en del av modulen %s och har inte låsts upp än.</string>
-    <string name="gradedDiscussion">Betygsatt diskussion</string>
+    <string name="gradedDiscussion">Bedömd diskussion</string>
     <string name="pointsPossible">Möjliga poäng</string>
     <string name="sideCommentEntry">I den här typen av diskussion kan du inte kommentera några inlägg på den här nivån.</string>
 
@@ -218,27 +216,27 @@
 
     <string name="discussion_response">Kommentar</string>
     <string name="discussion_responses">Kommentarer</string>
-    <string name="discussion_unread">Oläst</string>
+    <string name="discussion_unread">Markera som oläst</string>
     <string name="discussion_reply">Svara</string>
     <string name="close">Stäng</string>
 
-    <string name="noInternetConnectionTitle">Ingen internet-anslutning</string>
-    <string name="noInternetConnectionMessage">Den här åtgärden kräver en internet-anslutningen.</string>
-    <string name="content_description_avatar">Profilbild</string>
-    <string name="formattedAvatarAction">Visa användaruppgifter för%s.</string>
+    <string name="noInternetConnectionTitle">Ingen internetanslutning</string>
+    <string name="noInternetConnectionMessage">Den här åtgärden kräver internetanslutning.</string>
+    <string name="content_description_avatar">Avatar</string>
+    <string name="formattedAvatarAction">Visa användaruppgifter för %s.</string>
 
     <!-- App Names -->
     <string name="utils_canvas">Canvas</string>
-    <string name="utils_canvasTeacher">Canvas lärare</string>
+    <string name="utils_canvasTeacher">Canvas-lärare</string>
     <string name="utils_canvasParent">Canvas Parent</string>
-    <string name="utils_polls">Canvas omröstningar</string>
+    <string name="utils_polls">Canvas-omröstningar</string>
     <string name="utils_speedgrader">Speedgrader</string>
 
     <!-- Rating Dialog -->
-    <string name="utils_howAreWeDoing">Hur går det?</string>
+    <string name="utils_howAreWeDoing">Hur går det för oss?</string>
     <string name="utils_rateUs">Vilket betyg skulle du ge oss?</string>
     <string name="utils_doBetter">Vad kan vi förbättra?</string>
-    <string name="utils_sendFeedback">Skicka återkoppling</string>
+    <string name="utils_sendFeedback">Skicka feedback</string>
     <string name="utils_suggestions">Förslag för Android</string>
     <string name="utils_domain">Domän</string>
     <string name="utils_versionNum">Version:</string>
@@ -248,49 +246,49 @@
     <string name="utils_installDate">Installationsdatum:</string>
     <string name="utils_device">Enhet</string>
     <string name="utils_osVersion">Operativsystemets version</string>
-    <string name="loading">Laddar</string>
+    <string name="loading">Läser in</string>
     <string name="save">Spara</string>
     <string name="cropInstructions">Tryck och dra för att justera bilden.</string>
 
     <!--Discussions-->
     <plurals name="utils_discussionsReplies">
-        <item quantity="one">%s Svar</item>
-        <item quantity="other">%s Svar</item>
+        <item quantity="one">%s svar</item>
+        <item quantity="other">%s svar</item>
     </plurals>
 
     <string name="utils_discussionsDeleted" formatted="false">Detta svar har tagits bort %s</string>
     <string name="utils_discussionsUnknownAuthor">Okänd författare</string>
     <string name="utils_discussionsReply">Svara</string>
     <string name="utils_discussionsEdit">Redigera</string>
-    <string name="utils_discussionsDeleteWarning">Är du säker på att du vill ta bort det här svaret?</string>
+    <string name="utils_discussionsDeleteWarning">Vill du bort det här svaret?</string>
     <string name="utils_availableToLabel">Tillgänglig till och med:</string>
     <string name="utils_availableFromLabel">Tillgänglig från och med:</string>
-    <string name="utils_dueDateHeaderLabel">Ska vara klar</string>
+    <string name="utils_dueDateHeaderLabel">Förfallodatum</string>
     <string name="utils_dueLabel">Förfallodatum:</string>
-    <string name="utils_delete">Ta bort</string>
+    <string name="utils_delete">Radera</string>
     <string name="utils_dueDateAtTime" formatted="false">Ska vara klar %1s klockan %2s</string>
     <string name="utils_noDateFiller">--</string>
     <string name="utils_availabilityLabel">Tillgänglighet:</string>
-    <string name="utils_pinnedIcon">Ikon för uppsatt diskussion</string>
-    <string name="utils_pinDiscussion">Sätt upp diskussion</string>
-    <string name="utils_unpinDiscussion">Ta ner diskussion</string>
-    <string name="utils_discussionPinned">Diskussionen är uppsatt</string>
-    <string name="utils_pinnedDiscussions">Uppsatt</string>
+    <string name="utils_pinnedIcon">Ikon för fäst diskussion</string>
+    <string name="utils_pinDiscussion">Fäst diskussion</string>
+    <string name="utils_unpinDiscussion">Plocka bort diskussion</string>
+    <string name="utils_discussionPinned">Diskussionen har fästs</string>
+    <string name="utils_pinnedDiscussions">Fäst</string>
     <string name="utils_discussionUnpinned">Diskussioner</string>
     <string name="utils_emptyDiscussions">Det finns inga diskussioner att visa i den här sektionen.</string>
     <string name="utils_description">Beskrivning</string>
-    <string name="utils_allowThreadedReplies">Tillåt svar i trådar</string>
-    <string name="utils_usersMustPost">Studenter måste göra ett inlägg innan svar visas för dem</string>
+    <string name="utils_allowThreadedReplies">Tillåt trådade svar</string>
+    <string name="utils_usersMustPost">Studenter måste publicera inlägg innan de kan se svar</string>
     <string name="utils_discussionsClosed">Stängt för kommentarer</string>
     <string name="utils_discussionsOpen">Öppet för kommentarer</string>
-    <string name="utils_discussionsPin">Sätt upp</string>
-    <string name="utils_discussionsUnpin">Ta ner</string>
+    <string name="utils_discussionsPin">Fäst</string>
+    <string name="utils_discussionsUnpin">Plocka bort</string>
     <string name="utils_discussionsOptions">Alternativ</string>
     <string name="utils_discussionsDeleteTitle">Ta bort diskussion?</string>
     <string name="utils_discussionsDelete">Ta bort diskussion</string>
     <string name="utils_discussionsDeleteMessage">Genom denna åtgärd tas hela diskussionen och tråden bort.</string>
-    <string name="utils_discussionSentSuccess">Diskussionssvaret var framgångsrikt.</string>
-    <string name="utils_discussionUpdateSuccess">Diskussionsredigeringen var framgångsrik.</string>
+    <string name="utils_discussionSentSuccess">Diskussionssvaret är klart.</string>
+    <string name="utils_discussionUpdateSuccess">Diskussionsredigeringen är klar.</string>
     <string name="utils_discussionSentEmpty">Diskussionssvaret kan inte vara tomt.</string>
     <string name="utils_discussionSentFailure">Diskussionssvaret kunde inte skickas just nu.</string>
     <string name="utils_createDiscussion">Ny diskussion</string>
@@ -307,17 +305,17 @@
     <string name="utils_lastPost" formatted="false">Senaste inlägg %s</string>
     <string name="utils_postedOnDate">Publicerat den %s</string>
     <string name="utils_discussionPostBeforeRepliesEmptyText">Svar är endast synliga för de som har publicerat minst ett svar.</string>
-    <string name="utils_createAnnouncementDelayPosting">Fördröj inlägg</string>
-    <string name="utils_postAt">Inlägg kl.</string>
-    <string name="utils_postDate">Inläggsdatum</string>
-    <string name="utils_postTime">Inläggstid</string>
-    <string name="utils_editAnnouncementTitle">Redigera meddelande</string>
-    <string name="utils_createAnnouncementTitle">Nytt meddelande</string>
-    <string name="utils_announcementDetails">Meddelandedetaljer</string>
+    <string name="utils_createAnnouncementDelayPosting">Fördröj publicering</string>
+    <string name="utils_postAt">Publicera kl.</string>
+    <string name="utils_postDate">Publiceringsdatum</string>
+    <string name="utils_postTime">Publiceringstid</string>
+    <string name="utils_editAnnouncementTitle">Redigera kursmeddelande</string>
+    <string name="utils_createAnnouncementTitle">Nytt kursmeddelande</string>
+    <string name="utils_announcementDetails">Kursmeddelandedetaljer</string>
     <string name="utils_createAnnouncementNoDescription">En beskrivning krävs</string>
-    <string name="utils_errorSavingAnnouncement">Ett fel uppstod när detta meddelande skulle sparas. Försök igen.</string>
-    <string name="utils_announcementSuccessfullyUpdated">Meddelandet har uppdaterats.</string>
-    <string name="utils_announcementSuccessfullyCreated">Meddelandet har skapats.</string>
+    <string name="utils_errorSavingAnnouncement">Ett fel uppstod när detta kursmeddelande skulle sparas. Försök igen.</string>
+    <string name="utils_announcementSuccessfullyUpdated">Kursmeddelandeeddelandet har uppdaterats.</string>
+    <string name="utils_announcementSuccessfullyCreated">Kursmeddelandeeddelandet har skapats.</string>
 
     <plurals name="utils_discussionsUnread">
         <item quantity="one">%s Oläst</item>
@@ -332,10 +330,10 @@
 
     <!-- Assignment Override !-->
     <string name="utils_unlockAfterDueDateError">Upplåsningsdatumet kan inte vara efter sista inlämningsdatumet</string>
-    <string name="utils_lockBeforeDueDateError">Lås-datumet kan inte vara före inlämningsdatumet</string>
-    <string name="utils_lockAfterUnlockError">Lås-datumet kan inte vara före upplåsningsdatumet</string>
-    <string name="utils_assigneeBlankError">Tilldelad person måste anges</string>
-    <string name="utils_assignTo">Tilldela till</string>
+    <string name="utils_lockBeforeDueDateError">Låsdatumet kan inte vara före inlämningsdatumet</string>
+    <string name="utils_lockAfterUnlockError">Låsdatumet kan inte vara före upplåsningsdatumet</string>
+    <string name="utils_assigneeBlankError">Uppdragsinnehavare måste anges</string>
+    <string name="utils_assignTo">Ge i uppdrag till</string>
     <string name="utils_availableFrom">Tillgänglig från och med</string>
     <string name="utils_availableTo">Tillgänglig till och med</string>
     <string name="utils_availableFromDate">Tillgänglig från datum</string>
@@ -352,10 +350,10 @@
 
     <!--Unsaved Changes-->
     <string name="utils_continueWithoutSavingTitle">Fortsätta utan att spara?</string>
-    <string name="utils_continueWithoutSavingMessage">Är du säker på att du vill fortsätta utan att spara?</string>
+    <string name="utils_continueWithoutSavingMessage">Vill du fortsätta utan att spara?</string>
     <string name="utils_continueUnsaved">Fortsätt</string>
     <string name="utils_exitWithoutSavingTitle">Avsluta utan att spara?</string>
-    <string name="utils_exitWithoutSavingMessage">Är du säker på att du vill avsluta utan att spara?</string>
+    <string name="utils_exitWithoutSavingMessage">Vill du avsluta utan att spara?</string>
     <string name="utils_exitUnsaved">Avsluta</string>
     <string name="utils_cancel">Avbryt</string>
 
@@ -372,7 +370,7 @@
     <string name="utils_uploadingFile">Laddar upp fil&#8230;</string>
     <string name="utils_noApps">Det finns inga program installerade på din enhet som kan hantera den här filen.</string>
     <string name="utils_errorGettingPhoto">Ett fel uppstod när fotot skulle hämtas. Försök igen.</string>
-    <string name="utils_oneOrMoreExtensionNotAllowed">En eller flera filer har ett filnamnstillägg som inte är tillåtet</string>
+    <string name="utils_oneOrMoreExtensionNotAllowed">En eller flera filer har ett filtillägg som inte är tillåtet</string>
     <string name="utils_fileUploadNotSupported">Du kan inte ladda upp filer till den uppgift som valts.</string>
     <string name="utils_noFilesUploaded">Du har inte valt några filer.</string>
     <string name="utils_attachments">Bilagor</string>
@@ -383,47 +381,48 @@
     <string name="utils_uploadToSubmissionComment">Ladda upp till inlämningskommentar</string>
     <string name="utils_attachFile">Bifoga en fil</string>
     <string name="utils_with">med</string>
-    <string name="notificationPrimaryInboxTitle">Canvas meddelande</string>
-    <string name="notificationChannelNamePrimary">Allmänna Canvas meddelanden</string>
-    <string name="notificationChannelDescriptionPrimary">Ytterligare konfiguration av meddelanden kan göras inom Canvas meddelande preferenssektion.</string>
+
+    <string name="notificationPrimaryInboxTitle">Canvas-avisering</string>
+    <string name="notificationChannelNamePrimary">Allmänna Canvas-aviseringar</string>
+    <string name="notificationChannelDescriptionPrimary">Ytterligare konfiguration av aviseringar kan göras i sektionen för inställningar för Canvas-aviseringar.</string>
 
     <string name="copyLinkAddress">Kopiera länkadress</string>
     <string name="copyLink">Kopiera länk</string>
     <string name="linkCopied">Länken har kopierats</string>
     <string name="link">Länk</string>
     <string name="fileExists">Filen finns</string>
-    <string name="replace">Ersätt</string>
+    <string name="replace">Byt ut</string>
     <string name="shareLink">Dela länk</string>
 
     <string name="utils_launchExternalTool">Starta externt verktyg</string>
     <string name="utils_externalToolTitle">Externt verktyg</string>
     <string name="utils_placeholderTitle">Externt verktyg</string>
     <string name="utils_placeholderDescription">Besök ditt Canvas-webbkonto för att redigera det här externa verktyget.</string>
-    <string name="utils_unableToViewInBrowser">Vi kunde inte hitta en extern app för visning av det här LTI-verktyget.</string>
+    <string name="utils_unableToViewInBrowser">Vi kunde inte hitta någon extern app för visning av det här LTI-verktyget.</string>
 
-    <string name="utils_unsupportedFileMessage">Den här filen kan inte visas. Använd knappen nedan för att öppna filen med en annan app på din enhet.</string>
-    <string name="utils_openWithAnotherApp">Öppna med...</string>
-    <string name="utils_couldNotPlayFormat">Detta media format stöds inte</string>
+    <string name="utils_unsupportedFileMessage">Den här filen kunde inte visas. Använd knappen nedan för att öppna filen med en annan app på din enhet.</string>
+    <string name="utils_openWithAnotherApp">Öppna med ...</string>
+    <string name="utils_couldNotPlayFormat">Detta mediaformat stöds inte</string>
     <string name="utils_fullscreen">fullskärm</string>
 
     <string name="utils_dataUsageWarningTitle">Varning om dataanvändning</string>
-    <string name="utils_dataUsageWarningMessage">Den här åtgärden kan konsumera en stor mängd data, eventuellt med överbelastningsavgifter. Vill du fortsätta?</string>
+    <string name="utils_dataUsageWarningMessage">Den här åtgärden kan använda en stor mängd data, vilket eventuellt skulle kunna leda till överförbrukningsavgifter. Vill du fortsätta?</string>
     <string name="utils_doNotShowMessageAgain">Visa inte det här meddelandet igen</string>
 
     <string name="utils_no_data_connection">Kontrollera din dataanslutning och försök igen.</string>
-    <string name="utils_playMedia">Spela media</string>
+    <string name="utils_playMedia">Spela upp media</string>
     <string name="utils_tryAgain">Försök igen</string>
-    <string name="image_uploading">Bilden laddas upp...</string>
+    <string name="image_uploading">Bilden laddas upp ...</string>
     <string name="image_upload_error">Fel vid uppladdning av bilden</string>
     <string name="retry">Försök igen</string>
-
     <string name="search">Sök</string>
     <string name="searchAssignmentsHint">Sök i uppgifter</string>
-    <string name="searchAnnouncementsHint">Sök i meddelanden</string>
+    <string name="searchAnnouncementsHint">Sök i kursmeddelanden</string>
     <string name="searchDiscussionsHint">Sök i diskussioner</string>
     <string name="searchPagesHint">Sök på sidor</string>
     <string name="searchQuizzesHint">Sök i quiz</string>
     <string name="noItemsMatchingQuery">Inga objekt matchar \"%s\"</string>
+
     <string name="selected">Vald</string>
 
 </resources>

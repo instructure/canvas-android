@@ -58,6 +58,13 @@
     <string name="launchExternalTool">تشغيل الأداة الخارجية</string>
 
     <string name="preview">معاينة</string>
+    <string name="submissionUploadFailedMessage">تعذر تحميل ملف أو أكثر. تحقق من اتصالك بالإنترنت وأعد محاولة الإرسال.</string>
+    <string name="submissionUploadByteProgress">%1$s من %2$s</string>
+    <string name="submissionSuccessTitle">نجح الإرسال!</string>
+    <string name="submissionSuccessMessage">تم إرسال مهمتك بنجاح. طاب يومك!</string>
+    <string name="cancelAllSubmissions">إلغاء جميع إرسالات المهام</string>
+    <string name="missingSubmissionLabel">مفقود</string>
+    <string name="gradedSubmissionLabel">تم تقييم الدرجة</string>
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">لا توجد معاينة متوفرة لعناوين URL باستخدام \'http://\'</string>
     <string name="submissionUrlNotAUrlError">يُرجى إدخال عنوان URL صالح</string>
@@ -65,8 +72,11 @@
     <string name="addFileFabContentDesc">إظهار خيارات إضافة الملف</string>
     <string name="recordAudio">تسجيل الصوت</string>
 
+    <string name="recordVideo">تسجيل الفيديو</string>
+
     <!-- Student Submission -->
     <string name="submissionWrite">كتابة&#8230;</string>
+    <string name="textSubmissionFailureMessage">حدث مشكلة أثناء تحميل الإرسال. أعد الإرسال.</string>
     <!-- Student Submission Details -->
     <string name="submission">إرسال</string>
     <string name="submissionVersions">إصدارات الإرسال</string>
@@ -82,15 +92,38 @@
     <string name="submissionDetailsAssignmentLocked">تم تأمين المهمة</string>
     <string name="webPreview">معاينة URL المدخل</string>
     <string name="websiteUrl">عنوان URL لموقع ويب</string>
+    <string name="noneContentMessage">لا تسمح هذه المهمة بإرسالات عبر الإنترنت.</string>
+    <string name="onPaperContentMessage">لا تسمح هذه المهمة بإرسالات عبر الإنترنت.</string>
+    <string name="noOnlineSubmissions">لا توجد إرسالات عبر الإنترنت</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">من إجمالي %s من النقاط</string>
     <string name="outOfPointsAbbreviatedFormatted">من إجمالي %s من النقاط</string>
     <string name="gradeExcused">معفى</string>
     <string name="finalGradeFormatted">الدرجة النهائية: %s</string>
+    <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
+    <string name="contentDescriptionScoreOutOfPointsPossible">%1$s من إجمالي %2$s نقاط</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">نتيجة مخصصة</string>
     <string name="rubricEmptyMessage">لا يوجد أي مقياس تقييم لهذه المهمة</string>
     <string name="rubricViewLongDescription">عرض وصف طويل</string>
+    <!-- Student Submission Comments -->
+    <string name="assignmentSubmissionUploadingFile">جارٍ تحميل الملف %1$d لـ %2$d</string>
+    <string name="assignmentSubmissionCommentUpload">جار تحميل تعليق لـ %s</string>
+    <string name="assignmentSubmissionCommentUploadingMedia">جار تحميل ملف وسائط</string>
+    <string name="assignmentSubmissionCommentError">تعذر تحميل تعليق لـ %s</string>
+    <string name="chooseFileForCommentSubtext">قم بإرفاق ملفات لتعليقك بالضغط على إحدى الخيارات أدناه</string>
+    <string name="emptySubmissionCommentsSubtext">لديك أسئلة بشأن مهمتك؟\nراسل معلمك.</string>
+    <string name="submissionCommentErrorMessage">تعذر إرسال هذه الرسالة. اضغط لإعادة المحاولة.</string>
+    <string name="mediaUploadAudio">تحميل وسائط - صوت</string>
+    <string name="mediaUploadVideo">تحميل وسائط - فيديو</string>
+    <string name="commentSubmissionTypeText">إرسال النص</string>
+    <string name="commentSubmissionTypeExternalTool">إرسال الأداة الخارجية</string>
+    <string name="commentSubmissionTypeDiscussion">إرسال النقاش</string>
+    <string name="commentSubmissionTypeQuiz">إرسال الاختبار الموجز</string>
+    <string name="commentSubmissionTypeQuizAttempt">محاولة %d</string>
+    <string name="commentSubmissionTypeMediaFile">ملفات الوسائط</string>
+    <string name="commentSubmissionTypeAudio">صوت</string>
+    <string name="commentSubmissionTypeVideo">فيديو</string>
     <!-- Profile Fragment Strings -->
     <string name="canvasVersionNum">الإصدار:</string>
 
@@ -107,7 +140,6 @@
     <string name="options">خيارات</string>
 
     <string name="discussionAttachment">إرفاق ملف</string>
-    <string name="discussionUpload">تحميل مقطع فيديو أو صوت</string>
     <string name="discussionPostEditing">تحرير</string>
 
     <!--Multiple User Sign in -->
@@ -143,36 +175,16 @@
     <string name="lowercaseAM">ص</string>
     <string name="lowercasePM">م</string>
     <!-- Assignments -->
-    <string name="assignmentDue">الاستحقاق</string>
-    <string name="assignmentDueColon">تاريخ الاستحقاق: </string>
-    <string name="assignmentLastSubmission">آخر إرسال</string>
-    <string name="assignmentNoSubmission">بلا</string>
-    <string name="assignmentTabDetails">التفاصيل</string>
-    <string name="assignmentTabSubmission">الإرسالات</string>
-    <string name="assignmentTabGrade">الدرجة</string>
     <string name="assignmentLocked">مؤمّن</string>
     <string name="assignments">المهام</string>
-    <string name="freeFormRubricPoints" formatted="false">%s / %s </string>
-    <string name="noRubric">لا يوجد أي مقياس تقييم لهذه المهمة.</string>
     <string name="noDescription">لا يوجد أي وصف لهذه المهمة</string>
     <string name="noAssignmentsInGroup">لا توجد مهام في هذه المجموعة</string>
     <string name="excusedAssignment">تم الإعفاء عن هذه المهمة ولن يتم اعتبارها في الحساب الإجمالي</string>
-    <string name="droppedAssignment">تم حذف هذه المهمة ولن تؤخذ في الاعتبار أثناء الحساب الإجمالي</string>
     <string name="excused">EX</string>
-    <string name="mutedText">الدرجات غير متوفرة لأن المعلم لا يزال يعمل عليها.</string>
-    <string name="rubricRangePointsText" formatted="false">&#160;إلى &gt; %s من النقاط</string>
-    <string name="contentDescriptionRubricRangePointsText" formatted="false">%s &#160;إلى &gt; %s من النقاط</string>
-
     <!-- Assignment editing -->
     <string name="points">نقاط </string>
-    <string name="assignmentGroup">مجموعة المهام: </string>
-    <string name="gradingType">نوع التقييم: </string>
-    <string name="submissionType">نوع المهمة المرسلة: </string>
-    <string name="editAssignment">تحرير المهمة</string>
     <string name="save">حفظ</string>
     <string name="cancel">إلغاء</string>
-    <string name="sendNotification">إعلام المستخدمين بأنه تم تغيير هذا المحتوى</string>
-
     <!-- Discussions -->
     <string name="forbidden">تظهر الردود فقط للأشخاص الذين أرسلوا ردًا واحدًا على الأقل.</string>
 
@@ -192,6 +204,10 @@
     <string name="checkBoxFinalGradeOption">على أساس المهام التي تم تقييمها</string>
     <string name="checkBoxWhatIfGradeOption">عرض النتيجة المفترضة</string>
     <string name="whatIfDialogText">النتيجة المفترضة</string>
+    <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
+    <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s من إجمالي %2$s نقاط، %3$s</string>
+
+
     <string name="inbox">علبة الوارد</string>
     <string name="unread">غير مقروء</string>
     <string name="archived">مؤرشف</string>
@@ -238,7 +254,6 @@
         <item quantity="many">%d بحاجة إلى تقييم</item>
         <item quantity="other">%d بحاجة إلى تقييم</item>
     </plurals>
-    <string name="myFiles">الملفات</string>
     <string name="createAFolder">إنشاء مجلد</string>
     <string name="createFolder">إنشاء مجلد</string>
     <string name="createAFile">إنشاء ملف</string>
@@ -288,7 +303,6 @@
     <string name="deleteEvent">حذف الحدث</string>
     <string name="selected">تم التحديد</string>
     <string name="errorSendingMessage">حدث خطأ أثناء محاولة إرسال رسالتك. يرجى إعادة المحاولة.</string>
-    <string name="errorPostingComment">حدث خطأ أثناء محاولة نشر تعليق الإرسال الخاص بك. يرجى إعادة المحاولة.</string>
     <string name="deletedConversation">تم حذف هذه المحادثة.</string>
     <string name="uploadAvatarFailMsg">تعذر تحميل صورة أفاتار الجديدة</string>
     <string name="editPhoto">تحرير الصورة</string>
@@ -321,8 +335,6 @@
     <string name="openAlternate">الفتح بواسطة تطبيق بديل</string>
     <string name="opening">جارٍ فتح الملف&#8230;</string>
     <string name="download">تنزيل</string>
-    <string name="hideExtras">حجب العناصر الإضافية</string>
-    <string name="showExtras">عرض العناصر الإضافية</string>
     <string name="messageAttachments">مرفقات الرسالة</string>
     <string name="discussionAttachmentLabel">المرفق</string>
     <string name="attachmentIcon">أيقونة المرفق</string>
@@ -389,6 +401,7 @@
     <string name="select_item_to_display">الاختيار من القائمة</string>
 
     <string name="syllabus">المناهج</string>
+    <string name="summary">ملخص</string>
     <string name="coursePeople">أشخاص</string>
     <string name="teachersTas">المعلمين ومساعديهم</string>
     <string name="students">الطلاب</string>
@@ -422,12 +435,6 @@
 
     <!-- Notifications -->
     <string name="deleted">تم الحذف</string>
-    <string name="gradedDiscussion">مناقشة تم تقييمها.</string>
-    <string name="pointsPossible">النقاط الممكنة.</string>
-    <string name="pointsPossibleNoPeriod">النقاط الممكنة</string>
-
-    <string name="deletedEntryNoChildren">لا يحتوي إدخال المناقشة المحذوف هذا على أية ردود.</string>
-    <string name="sideCommentEntry">في هذا النوع من المناقشة، لا يمكنك التعليق على أي إدخال على هذا المستوى.</string>
     <string name="contentDescriptionFiles">أيقونة الملف</string>
 
     <string name="loadingCanvas">جارٍ تحميل محتوى Canvas&#8230;</string>
@@ -451,11 +458,6 @@
     <string name="emptyId">لا يمكن ترك المعرف فارغًا</string>
 
     <string name="goToQuiz">الانتقال إلى الاختبار</string>
-    <string name="goToExternalTool">الانتقال إلى أداة خارجية</string>
-
-    <string name="pastDueDate">تاريخ استحقاق سابق</string>
-
-    <string name="goToDiscussion">الانتقال إلى المناقشة</string>
     <string name="quizzes">اختبارات موجزة</string>
 
     <string name="lastDiscussionPost">آخر نشر</string>
@@ -509,7 +511,6 @@
     <string name="lockedFileDesc">هذا الملف جزء من الوحدة النمطية %s ولم يتم فتحه بعد.</string>
     <string name="lockedQuizDesc">هذا الاختبار جزء من الوحدة النمطية %s ولم يتم فتحه بعد.</string>
     <string name="lockedDiscussionDesc">هذه المناقشة جزء من الوحدة النمطية %s ولم يتم فتحها بعد.</string>
-    <string name="lockedAssignmentDescLine2">قم بزيارة صفحة وحدات المساق للحصول على معلومات حول كيفية إلغاء تأمين المحتوى.</string>
     <string name="mustComplete">يجب أن تكمل أولاً:</string>
     <string name="unlockedAt">سيتم إلغاء التأمين في:</string>
     <string name="goToModules">الانتقال إلى الوحدات</string>
@@ -531,22 +532,12 @@
     <!-- New Submission Strings -->
     <string name="textEntry">إدخال النص</string>
     <string name="onlineURL">عنوان URL عبر الإنترنت</string>
-    <string name="enterTextEntry">الدخول إلى إدخال النص</string>
-    <string name="fileUpload"> تحميل ملف</string>
     <string name="oneFileOnly">يقبل هذا الإرسال تحميل ملف واحد</string>
 
 
     <string name="websiteEntry">إضافة إدخال موقع ويب</string>
     <string name="mediaRecordingEntry">تسجيلات الوسائط</string>
     <string name="submit">إرسال</string>
-    <string name="blankSubmission">لا يمكن ترك الإرسال فارغًا.</string>
-    <string name="errorPostingSubmission">حدث خطأ أثناء نشر الإرسال.</string>
-    <string name="successPostingSubmission">تم نشر الإرسال بنجاح.</string>
-
-    <string name="exampleSubmissionURL">http://www.example.com</string>
-
-
-
     <!-- DataLoss Fragment Strings -->
     <string name="unsavedProgress">لم يتم حفظ التقدم</string>
     <string name="informationLost">سيتم فقد المعلومات غير المحفوظة. هل تريد المواصلة؟</string>
@@ -560,22 +551,8 @@
 
     <!-- Submission Details Strings -->
     <string name="next">التالي</string>
-    <string name="addSubmission">التسليم</string>
-    <string name="addAnotherSubmission">التسليم من جديد</string>
     <string name="turnedIn">تم التسليم:&#160;</string>
     <string name="addComment">إضافة تعليق&#8230;</string>
-    <string name="addCommentNoEllipsis">إضافة تعليق</string>
-    <string name="subTypeOnlineText">إدخال نصي عبر الإنترنت</string>
-    <string name="subTypeFileUpload">تحميل ملف eFile على الإنترنت</string>
-    <string name="subTypeOnlineURL">عنوان URL لموقع ويب</string>
-    <string name="subTypeOnlineQuiz">اختبار على الإنترنت</string>
-    <string name="subTypeMediaRecording">تسجيل الوسائط</string>
-    <string name="sub_type_lti_launch">تشغيل LTI</string>
-    <string name="subTypeDiscussionTopic">النقاش</string>
-    <string name="turnInByHand">عليك بتسليم هذه المهمة يدويًا</string>
-    <string name="noSubRequired">ليست هناك حاجة لأي إرسال</string>
-    <string name="noTurnInOnMobile">الإرسال عبر الأجهزة المحمولة غير مدعوم</string>
-
     <string name="home">الصفحة الرئيسية</string>
     <string name="Notifications">الإعلامات</string>
 
@@ -605,9 +582,6 @@
     <string name="clickToViewSubmission">تم تصوير لقطة لموقع الويب أثناء قيامك بالتسليم. اضغط باستمرار على الصورة أدناه لفتح أو تنزيل الصورة الكاملة.</string>
     <string name="urlSubmissionNoPreview">كان هذا الإرسال هو عنوان URL المؤدي إلى صفحة خارجية. ضع في اعتبارك أن هذه الصفحة ربما قد تغيرت منذ حدوث الإرسال الأصلي.</string>
     <string name="contentDescriptionPreviewImage">معاينة عنوان URL الذي تم إرساله</string>
-    <string name="itemStillProcessing">لا يزال هذا العنصر قيد المعالجة على الخادم. يرجى إعادة المحاولة.</string>
-
-
     <string name="isNotSupportedFeature">%1$s غير مدعوم.</string>
     <string name="isNotSupported">الارتباط غير مدعوم.</string>
     <string name="openInBrowser">الفتح في المستعرض</string>
@@ -624,8 +598,6 @@
     <string name="panda_fact_string">واقع باندا:&#160;</string>
     <string name="remove">إزالة</string>
     <string name="founders">المؤسسون</string>
-    <string name="image">صورة</string>
-
     <string name="EULA">اتفاقية ترخيص المستخدم النهائي</string>
     <string name="privacyPolicy">سياسة الخصوصية</string>
     <string name="termsOfUse">شروط الاستخدام</string>
@@ -653,8 +625,6 @@
     <string name="widgetMinimumStyle">إخفاء التفاصيل على عنصر واجهة المستخدم</string>
     <string name="light">فاتح</string>
     <string name="dark">داكن</string>
-
-    <string name="invalidExternal">إما أن هذه الأداة الخارجية قد انتهت صلاحيتها أو تم تكوينها بشكل غير صحيح.</string>
 
     <!-- Help dialog strings -->
     <string name="askInstructor">اطرح سؤالاً على معلمك</string>
@@ -991,7 +961,6 @@
     <string name="totalPoints">%s نقاط</string>
     <string name="totalPointsText">إجمالي النقاط</string>
     <string name="contentDescriptionPoints">%s نقاط</string>
-    <string name="contentDescriptionRubricRangeGrade">%1$s من إجمالي %2$s نقطة</string>
     <string name="score">الدرجة</string>
     <string name="rangedRubricTotal" formatted="false">%s / %s نقاط</string>
     <string name="seeAll">عرض الكل</string>
@@ -1019,8 +988,6 @@
     <string name="launch_link_in_external_browser">رابط تشغيل في مستعرض خارجي</string>
     <string name="ltiLaunchFailure">تعذر تحميل أداة LTI في الوقت الحالي.</string>
     <string name="urlSubmission">إرسال عنوان URL</string>
-
-    <string name="assignmentDeletedError">هذه المهمة لم تعد متوفرة.</string>
 
     <string name="homePageIdForNotifications">النشاط الأخير</string>
     <string name="homePageIdForModules">الوحدات النمطية</string>
@@ -1072,8 +1039,6 @@
     <string name="unableToViewInBrowser">لا يمكننا العثور على تطبيق خارجي لعرض أداة LTI (تبادلية أدوات التعلم) هذه.</string>
 
     <string name="commentUpload">تحميل التعليق</string>
-    <string name="unableToUploadMediaComment">لإرسال تعليق وسائط، قم بإرسال أو حذف تعليقك النصي غير المرسل.</string>
-
     <string name="frontPage">الصفحة الأمامية</string>
     <string name="editPage">تحرير صفحة</string>
     <string name="description">الوصف</string>
@@ -1113,4 +1078,22 @@
     <string name="addVideoComment">إضافة تعليق فيديو</string>
     <string name="addAudioComment">إضافة تعليق صوتي</string>
 
+    <string name="audioRecordingError">حدث خطأ غير متوقع أثناء محاولة تسجيل صوت.</string>
+    <string name="videoRecordingError">حدث خطأ غير متوقع أثناء محاولة تسجيل فيديو.</string>
+
+    <string name="quizQuestionLabel">الأسئلة:</string>
+    <string name="timeLimitLabel">الحد الزمني:</string>
+    <string name="allowedAttemptsLabel">المحاولات المسموح بها:</string>
+    <string name="instructions">الإرشادات</string>
+    <string name="quizNoTimeLimit">بلا</string>
+    <string name="viewQuiz">عرض الاختبار الموجز</string>
+    <string name="viewDiscussion">عرض النقاش</string>
+    <string name="lockedModule">هذه المهمة مؤمّنة بسبب \"%1$s\" الوحدة المنطقية.</string>
+    <string name="chooseMediaFile">اختر ملف الوسائط</string>
+    <string name="discussions_unknown_author">مؤلف غير معروف</string>
+    <string name="discussions_unknown_date">تاريخ غير معروف</string>
+    <string name="a11y_gradeLetterMinusContentDescription">%s. سالب</string>
+    <string name="a11y_letterGrade">%s.</string>
+    <string name="a11y_gradeCellContentDescription">%s %s</string>
+    <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s، %s</string>
 </resources>

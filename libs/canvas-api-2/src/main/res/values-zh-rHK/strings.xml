@@ -41,8 +41,7 @@
     <string name="canvasAPI_discussion">討論</string>
     <string name="canvasAPI_quiz">測驗</string>
     <string name="canvasAPI_externalTool">外部工具</string>
-    <string name="canvasAPI_none">無</string>
-
+    <string name="canvasAPI_none">無提交項目</string>
     <string name="canvasAPI_passFail">未能通過</string>
     <string name="canvasAPI_percent">百分比</string>
     <string name="canvasAPI_letterGrade">成績等級</string>
@@ -50,11 +49,11 @@
     <string name="canvasAPI_gpaScale">GPA 量表系統</string>
     <string name="canvasAPI_notGraded">未評分</string>
 
-    <string name="canvasAPI_onlineQuiz">線上測驗</string>
+    <string name="canvasAPI_onlineQuiz">測驗</string>
     <string name="canvasAPI_discussionTopic">討論主題</string>
-    <string name="canvasAPI_onlineUpload">線上上傳</string>
-    <string name="canvasAPI_onlineTextEntry">線上文字條目</string>
-    <string name="canvasAPI_onlineURL">線上 URL</string>
+    <string name="canvasAPI_onlineUpload">檔案上傳</string>
+    <string name="canvasAPI_onlineTextEntry">文字條目</string>
+    <string name="canvasAPI_onlineURL">網站 URL</string>
     <string name="canvasAPI_mediaRecording">媒體記錄</string>
     <string name="canvasAPI_attendance">考勤</string>
     <string name="quiz_scoring_policy_highest">最高</string>

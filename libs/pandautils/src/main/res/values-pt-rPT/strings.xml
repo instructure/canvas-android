@@ -165,6 +165,7 @@
     <string name="noAssignmentsSubtext">Parece que as tarefas não foram criadas neste espaço. Hora de sair e explorar.</string>
     <string name="noAssignmentsTeacher">Parece que nenhuma tarefa foi publicada ainda.</string>
     <string name="noFiles">Nenhum ficheiro</string>
+    <string name="noFilesForAssignment">Não existem ficheiros para este envio</string>
     <string name="noFilesSubtext">Não há ficheiros associados a essa conta.</string>
     <string name="notSupported">Não suportado</string>
     <string name="noEvents">Nenhum evento hoje!</string>
@@ -175,7 +176,6 @@
     <string name="noDueDate">Esta atribuição não tem data de vencimento.</string>
     <string name="locked">Bloqueado</string>
     <string name="lockedSubtext">Esta tarefa está bloqueada até %1$s às %2$s.</string>
-    <string name="lockedModule">Esta atribuição faz parte do módulo \"%1$s\" e ainda não foi desbloqueada.</string>
     <string name="chooseFile">Escolher um ficheiro</string>
     <string name="chooseFileSubtext">Anexe um ficheiro ao seu envio ao tocar em uma opção abaixo.</string>
     <string name="noNotifications">Nenhuma notificação</string>

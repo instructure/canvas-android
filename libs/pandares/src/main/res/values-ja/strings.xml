@@ -54,6 +54,13 @@
     <string name="launchExternalTool">外部ツールを起動する</string>
 
     <string name="preview">プレビュー</string>
+    <string name="submissionUploadFailedMessage">1つ以上のファイルのアップロードに失敗しました。インターネット接続をチェックしてから、提出を再試行してください。</string>
+    <string name="submissionUploadByteProgress">%1$s / %2$s</string>
+    <string name="submissionSuccessTitle">正常に提出されました!</string>
+    <string name="submissionSuccessMessage">課題は正常に提出されました。よい一日を！</string>
+    <string name="cancelAllSubmissions">すべての課題提出を取り消す</string>
+    <string name="missingSubmissionLabel">欠如</string>
+    <string name="gradedSubmissionLabel">採点済み</string>
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">URL を \'http://\' でプレビューすることはできません</string>
     <string name="submissionUrlNotAUrlError">有効なURLを入力してください</string>
@@ -61,8 +68,11 @@
     <string name="addFileFabContentDesc">追加ファイルオプションを表示する</string>
     <string name="recordAudio">オーディオを録音する</string>
 
+    <string name="recordVideo">動画を録画する</string>
+
     <!-- Student Submission -->
     <string name="submissionWrite">&#8230; を書く</string>
+    <string name="textSubmissionFailureMessage">提出物のアップロードで不具合が発生しました。もう一度提出します。</string>
     <!-- Student Submission Details -->
     <string name="submission">提出</string>
     <string name="submissionVersions">提出バージョン</string>
@@ -78,15 +88,38 @@
     <string name="submissionDetailsAssignmentLocked">課題ロック</string>
     <string name="webPreview">入力した URL のプレビュー</string>
     <string name="websiteUrl">ウェブサイト URL</string>
+    <string name="noneContentMessage">この課題はオンライン提出ができません</string>
+    <string name="onPaperContentMessage">この課題はオンライン提出ができません</string>
+    <string name="noOnlineSubmissions">オンライン提出がありません</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">/%s 点</string>
     <string name="outOfPointsAbbreviatedFormatted">/%s 点</string>
     <string name="gradeExcused">免除</string>
     <string name="finalGradeFormatted">最終的な成績：%s</string>
+    <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
+    <string name="contentDescriptionScoreOutOfPointsPossible">%1$s 点/ %2$s 点</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">カスタムスコア</string>
     <string name="rubricEmptyMessage">この課題に説明はありません</string>
     <string name="rubricViewLongDescription">長い説明を表示</string>
+    <!-- Student Submission Comments -->
+    <string name="assignmentSubmissionUploadingFile">%1$d / %2$d のアップロード</string>
+    <string name="assignmentSubmissionCommentUpload">%s へのコメントのアップロード</string>
+    <string name="assignmentSubmissionCommentUploadingMedia">メディアファイルのアプロード</string>
+    <string name="assignmentSubmissionCommentError">%s のコメントのアップロードに失敗しました</string>
+    <string name="chooseFileForCommentSubtext">下のオプションをタップして、ファイルをコメントに貼付してください</string>
+    <string name="emptySubmissionCommentsSubtext">課題について質問はありますか？\n講師からのメッセージ。</string>
+    <string name="submissionCommentErrorMessage">このメッセージを送信できませんでした。タップして再試行してください。</string>
+    <string name="mediaUploadAudio">メディアアップロード - 音声</string>
+    <string name="mediaUploadVideo">メディアアップロード - 動画</string>
+    <string name="commentSubmissionTypeText">テキストの提出</string>
+    <string name="commentSubmissionTypeExternalTool">外部ツール提出</string>
+    <string name="commentSubmissionTypeDiscussion">ディスカッションへの提出</string>
+    <string name="commentSubmissionTypeQuiz">クイズへの提出物</string>
+    <string name="commentSubmissionTypeQuizAttempt">%d 試行</string>
+    <string name="commentSubmissionTypeMediaFile">メディアファイル</string>
+    <string name="commentSubmissionTypeAudio">オーディオ</string>
+    <string name="commentSubmissionTypeVideo">ビデオ</string>
     <!-- Profile Fragment Strings -->
     <string name="canvasVersionNum">バージョン:</string>
 
@@ -103,7 +136,6 @@
     <string name="options">オプション</string>
 
     <string name="discussionAttachment">ファイルを添付する</string>
-    <string name="discussionUpload">動画、またはオーディオをアップロードする</string>
     <string name="discussionPostEditing">編集</string>
 
     <!--Multiple User Sign in -->
@@ -139,36 +171,16 @@
     <string name="lowercaseAM">am</string>
     <string name="lowercasePM">pm</string>
     <!-- Assignments -->
-    <string name="assignmentDue">締切日</string>
-    <string name="assignmentDueColon">期限：</string>
-    <string name="assignmentLastSubmission">最後の提出物</string>
-    <string name="assignmentNoSubmission">なし</string>
-    <string name="assignmentTabDetails">詳細</string>
-    <string name="assignmentTabSubmission">提出物</string>
-    <string name="assignmentTabGrade">成績</string>
     <string name="assignmentLocked">ロックされています</string>
     <string name="assignments">課題</string>
-    <string name="freeFormRubricPoints" formatted="false">%s / %s</string>
-    <string name="noRubric">この課題への見出しはありません。</string>
     <string name="noDescription">この課題の説明はありません</string>
     <string name="noAssignmentsInGroup">このグループには課題はありません</string>
     <string name="excusedAssignment">この課題は免除され、合計計算では考慮されません</string>
-    <string name="droppedAssignment">この課題は削除され、合計計算では考慮されません</string>
     <string name="excused">EX</string>
-    <string name="mutedText">講師が作業中であるため、成績が入手できません。</string>
-    <string name="rubricRangePointsText" formatted="false">&#160;～&gt; %s 点まで</string>
-    <string name="contentDescriptionRubricRangePointsText" formatted="false">%s &#160;～ &gt; %s 点まで</string>
-
     <!-- Assignment editing -->
     <string name="points">ポイント</string>
-    <string name="assignmentGroup">課題グループ：</string>
-    <string name="gradingType">採点タイプ：</string>
-    <string name="submissionType">提出タイプ：</string>
-    <string name="editAssignment">課題を編集する</string>
     <string name="save">保存</string>
     <string name="cancel">キャンセル</string>
-    <string name="sendNotification">このコンテンツが変更されたことをユーザーに通知する</string>
-
     <!-- Discussions -->
     <string name="forbidden">回答は、少なくとも一つの回答を掲載している人にのみ表示されます。</string>
 
@@ -188,6 +200,10 @@
     <string name="checkBoxFinalGradeOption">採点された課題ベース</string>
     <string name="checkBoxWhatIfGradeOption">仮定のスコアを表示</string>
     <string name="whatIfDialogText">仮定のスコア</string>
+    <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
+    <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s / %2$s 点、%3$s</string>
+
+
     <string name="inbox">受信トレイ</string>
     <string name="unread">未読</string>
     <string name="archived">アーカイブ済み</string>
@@ -229,7 +245,6 @@
     <plurals name="to_do_needs_grading">
         <item quantity="other">%d が採点が必要です</item>
     </plurals>
-    <string name="myFiles">ファイル</string>
     <string name="createAFolder">フォルダを作成する</string>
     <string name="createFolder">フォルダを作成する</string>
     <string name="createAFile">ファイルを作成する</string>
@@ -269,7 +284,6 @@
     <string name="deleteEvent">イベントを消去する</string>
     <string name="selected">選択されました</string>
     <string name="errorSendingMessage">あなたのメッセージを送信しようとしてエラーが発生しました。再度試してください。</string>
-    <string name="errorPostingComment">あなたが提出したコメントを掲示しようとしてエラーが発生しました。再度試してください。</string>
     <string name="deletedConversation">その会話は消去されています。</string>
     <string name="uploadAvatarFailMsg">新しいアバターの画像はアップロードに失敗しました</string>
     <string name="editPhoto">写真を編集</string>
@@ -302,8 +316,6 @@
     <string name="openAlternate">代替アプリで開く</string>
     <string name="opening">ファイル&#8230;を開く</string>
     <string name="download">ダウンロード</string>
-    <string name="hideExtras">追加を非表示にする</string>
-    <string name="showExtras">追加を表示</string>
     <string name="messageAttachments">メッセージ添付ファイル</string>
     <string name="discussionAttachmentLabel">添付ファイル</string>
     <string name="attachmentIcon">添付アイコン</string>
@@ -360,6 +372,7 @@
     <string name="select_item_to_display">リストから選択</string>
 
     <string name="syllabus">シラバス</string>
+    <string name="summary">概要</string>
     <string name="coursePeople">メンバー</string>
     <string name="teachersTas">講師&amp; TAs</string>
     <string name="students">受講生</string>
@@ -393,12 +406,6 @@
 
     <!-- Notifications -->
     <string name="deleted">削除されました</string>
-    <string name="gradedDiscussion">採点ディスカッション。</string>
-    <string name="pointsPossible">可能な得点。</string>
-    <string name="pointsPossibleNoPeriod">可能なポイント</string>
-
-    <string name="deletedEntryNoChildren">この消去されたディスカッションエントリに返信はありません。</string>
-    <string name="sideCommentEntry">このタイプのディスカッションでは、あなたはこのレベルのどのエントリにもコメントできません。</string>
     <string name="contentDescriptionFiles">ファイルアイコン</string>
 
     <string name="loadingCanvas">Canvas コンテンツ&#8230;を読み込み中</string>
@@ -422,11 +429,6 @@
     <string name="emptyId">IDは空欄にはできません</string>
 
     <string name="goToQuiz">クイズへ移動</string>
-    <string name="goToExternalTool">外部ツールへ移動</string>
-
-    <string name="pastDueDate">期限日を過ぎています</string>
-
-    <string name="goToDiscussion">ディスカッションへ移動</string>
     <string name="quizzes">クイズ</string>
 
     <string name="lastDiscussionPost">最後のポスト</string>
@@ -480,7 +482,6 @@
     <string name="lockedFileDesc">このファイルは、%sモジュールの一部であり、まだアンロックされていません。</string>
     <string name="lockedQuizDesc">このクイズは、%sモジュールの一部であり、まだアンロックされていません。</string>
     <string name="lockedDiscussionDesc">このディスカッションは、%sモジュールの一部であり、まだアンロックされていません。</string>
-    <string name="lockedAssignmentDescLine2">このコンテントをどのように解除するかについての詳細は、コースモジュールページを参照してください。</string>
     <string name="mustComplete">まずは終了してください:</string>
     <string name="unlockedAt">次においてロック解除されます:</string>
     <string name="goToModules">モジュールに移動</string>
@@ -502,22 +503,12 @@
     <!-- New Submission Strings -->
     <string name="textEntry">テキストエントリ</string>
     <string name="onlineURL">オンラインURL</string>
-    <string name="enterTextEntry">テキストエントリを入力</string>
-    <string name="fileUpload">ファイルのアップロード</string>
     <string name="oneFileOnly">この提出は、1個のファイルのアップロードしか受け付けません</string>
 
 
     <string name="websiteEntry">ウェブサイトエントリの追加</string>
     <string name="mediaRecordingEntry">メディアの記録</string>
     <string name="submit">提出</string>
-    <string name="blankSubmission">提出は空白にできません。</string>
-    <string name="errorPostingSubmission">提出物をポスト中にエラーが発生しました。</string>
-    <string name="successPostingSubmission">提出物をポストしました。</string>
-
-    <string name="exampleSubmissionURL">http://www.example.com</string>
-
-
-
     <!-- DataLoss Fragment Strings -->
     <string name="unsavedProgress">保存されていない進展</string>
     <string name="informationLost">保存されていない情報は失われます。続けますか?</string>
@@ -531,22 +522,8 @@
 
     <!-- Submission Details Strings -->
     <string name="next">次</string>
-    <string name="addSubmission">提出する</string>
-    <string name="addAnotherSubmission">再度提出する</string>
     <string name="turnedIn">&#160;に提出</string>
     <string name="addComment">コメント&#8230;を追加</string>
-    <string name="addCommentNoEllipsis">コメントを追加</string>
-    <string name="subTypeOnlineText">オンラインテキスト入力</string>
-    <string name="subTypeFileUpload">オンライン eファイルのアップロード</string>
-    <string name="subTypeOnlineURL">ウェブサイト URL</string>
-    <string name="subTypeOnlineQuiz">オンラインクイズ</string>
-    <string name="subTypeMediaRecording">メディアレコーディング</string>
-    <string name="sub_type_lti_launch">LTI の開始</string>
-    <string name="subTypeDiscussionTopic">ディスカッション</string>
-    <string name="turnInByHand">この課題は、手渡しで提出する必要があります</string>
-    <string name="noSubRequired">提出は必要ありません</string>
-    <string name="noTurnInOnMobile">モバイル提出はサポートされていません</string>
-
     <string name="home">ホーム</string>
     <string name="Notifications">通知</string>
 
@@ -576,9 +553,6 @@
     <string name="clickToViewSubmission">それを提出した際に、ウェブサイトのスナップショットは撮られます。下の画像をタップ、ホールドして開く、またはフル画像をダウンロードしてください。</string>
     <string name="urlSubmissionNoPreview">この提出物は、外部ページへの URL でした。このページは、最初に提出されたときから、変更されている可能性がありますので注意してください。</string>
     <string name="contentDescriptionPreviewImage">提出されたURIをプレビューする</string>
-    <string name="itemStillProcessing">このアイテムはまだサーバー上で処理中でます。再度試してください。</string>
-
-
     <string name="isNotSupportedFeature">%1$s はサポートされていません。</string>
     <string name="isNotSupported">そのリンクはサポートされていません。</string>
     <string name="openInBrowser">ブラウザで開く</string>
@@ -595,8 +569,6 @@
     <string name="panda_fact_string">Panda ファクト：&#160;</string>
     <string name="remove">削除</string>
     <string name="founders">創立者</string>
-    <string name="image">画像</string>
-
     <string name="EULA">EULA</string>
     <string name="privacyPolicy">プライバシーポリシー</string>
     <string name="termsOfUse">利用規約</string>
@@ -624,8 +596,6 @@
     <string name="widgetMinimumStyle">ウィジェットの詳細を非表示にする</string>
     <string name="light">明るい</string>
     <string name="dark">暗い</string>
-
-    <string name="invalidExternal">この外部ツールは、期限切れ、または正しく構成されていないかのいずれかです。</string>
 
     <!-- Help dialog strings -->
     <string name="askInstructor">講師に質問する</string>
@@ -947,7 +917,6 @@
     <string name="totalPoints">%s 点</string>
     <string name="totalPointsText">合計点</string>
     <string name="contentDescriptionPoints">%s 点</string>
-    <string name="contentDescriptionRubricRangeGrade">%1$s 点/ %2$s 点</string>
     <string name="score">スコア</string>
     <string name="rangedRubricTotal" formatted="false">%s / %s 点</string>
     <string name="seeAll">すべてを見る</string>
@@ -975,8 +944,6 @@
     <string name="launch_link_in_external_browser">外部ブラウザでリンクを起動する</string>
     <string name="ltiLaunchFailure">今回 LTI ツールを読み込めませんでした。</string>
     <string name="urlSubmission">URL 提出</string>
-
-    <string name="assignmentDeletedError">この機能はもう利用できません。</string>
 
     <string name="homePageIdForNotifications">最近のアクティビティ</string>
     <string name="homePageIdForModules">モジュール</string>
@@ -1018,8 +985,6 @@
     <string name="unableToViewInBrowser">このLTIツールを表示する外部アプリを見つけられません。</string>
 
     <string name="commentUpload">コメントをアップロード</string>
-    <string name="unableToUploadMediaComment">メディアコメントを送信するには、未送信のテキストコメントを送信または削除します。</string>
-
     <string name="frontPage">フロントページ</string>
     <string name="editPage">ページを編集</string>
     <string name="description">説明</string>
@@ -1059,4 +1024,22 @@
     <string name="addVideoComment">動画コメントを追加</string>
     <string name="addAudioComment">音声コメントを追加</string>
 
+    <string name="audioRecordingError">オーディオの記録中に不測のエラーが発生しました。</string>
+    <string name="videoRecordingError">映像の録画中に不測のエラーが発生しました。</string>
+
+    <string name="quizQuestionLabel">質問:</string>
+    <string name="timeLimitLabel">制限時間：</string>
+    <string name="allowedAttemptsLabel">許可回数:</string>
+    <string name="instructions">指示</string>
+    <string name="quizNoTimeLimit">なし</string>
+    <string name="viewQuiz">クイズを表示</string>
+    <string name="viewDiscussion">ディスカッションを表示</string>
+    <string name="lockedModule">この課題はモジュール \"%1$s\"にロックされています。</string>
+    <string name="chooseMediaFile">メディアファイルを選択する</string>
+    <string name="discussions_unknown_author">不明な作成者</string>
+    <string name="discussions_unknown_date">不明な日付</string>
+    <string name="a11y_gradeLetterMinusContentDescription">%s、マイナス</string>
+    <string name="a11y_letterGrade">%s.</string>
+    <string name="a11y_gradeCellContentDescription">%s %s</string>
+    <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
 </resources>

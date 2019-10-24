@@ -17,25 +17,24 @@
   -->
 
 <resources>
-
     <string name="rce_contentDescription_undo">Ångra</string>
     <string name="rce_contentDescription_redo">Göra om</string>
-    <string name="rce_contentDescription_bold">Formatera fet</string>
+    <string name="rce_contentDescription_bold">Formatera fetstil</string>
     <string name="rce_contentDescription_italic">Formatera kursiv</string>
-    <string name="rce_contentDescription_strikethrough">Struken igenom</string>
-    <string name="rce_contentDescription_underline">Understruken</string>
+    <string name="rce_contentDescription_strikethrough">Genomstryka</string>
+    <string name="rce_contentDescription_underline">Stryka under</string>
     <string name="rce_contentDescription_format_text_color">Formatera textfärg</string>
-    <string name="rce_contentDescription_border_color">Formatera Textgränsfärg</string>
-    <string name="rce_contentDescription_indent_increase">Ökning av indrag</string>
-    <string name="rce_contentDescription_indent_decrease">Minskning av indrag</string>
-    <string name="rce_contentDescription_align_left">Justera vänster</string>
-    <string name="rce_contentDescription_align_right">Justera höger</string>
-    <string name="rce_contentDescription_align_center">Justera center</string>
+    <string name="rce_contentDescription_border_color">Formatera kantlinjefärg</string>
+    <string name="rce_contentDescription_indent_increase">Öka indrag</string>
+    <string name="rce_contentDescription_indent_decrease">Minska indrag</string>
+    <string name="rce_contentDescription_align_left">Vänsterjustera</string>
+    <string name="rce_contentDescription_align_right">Högerjustera</string>
+    <string name="rce_contentDescription_align_center">Centrera</string>
     <string name="rce_contentDescription_insert_bullets">Infoga punktlista</string>
     <string name="rce_contentDescription_insert_numbers">Infoga numrerad lista</string>
     <string name="rce_contentDescription_insert_photo">Infoga foto</string>
     <string name="rce_contentDescription_upload_photo">Ladda upp foto från enhet</string>
-    <string name="rce_contentDescription_insert_link">Skriv in länk</string>
+    <string name="rce_contentDescription_insert_link">Infoga länk</string>
     <string name="rce_contentDescription_block_quote">Blockera citat</string>
 
     <string name="rce_contentDescription_color_none">Ingen färg</string>
@@ -45,26 +44,26 @@
     <string name="rce_contentDescription_color_red">Röd färg</string>
     <string name="rce_contentDescription_color_green">Grön färg</string>
     <string name="rce_contentDescription_color_gray">Grå färg</string>
-    <string name="rce_contentDescription_color_magenta">Magenta färg</string>
-    <string name="rce_contentDescription_color_cyan">Grön/blå färg</string>
+    <string name="rce_contentDescription_color_magenta">Magentafärg</string>
+    <string name="rce_contentDescription_color_cyan">Cyanfärg</string>
     <string name="rce_contentDescription_color_orange">Orange färg</string>
     <string name="rce_contentDescription_color_yellow">Gul färg</string>
     <string name="rce_contentDescription_color_purple">Lila färg</string>
 
     <string name="rce_editTextUrlHint">Länk</string>
     <string name="rce_editTextALTHint">Text</string>
-    <string name="rce_dialogDone">Färdig</string>
+    <string name="rce_dialogDone">Klar</string>
     <string name="rce_dialogCancel">Avbryt</string>
-    <string name="rce_insertLink">Skriv in länk</string>
-    <string name="rce_insertImage">För in bild</string>
-
+    <string name="rce_insertLink">Infoga länk</string>
+    <string name="rce_insertImage">Infoga bild</string>
     <string name="rce_uploadImage">Ladda upp bild</string>
-    <string name="rce_done">Färdig</string>
+
+    <string name="rce_done">Klar</string>
     <string name="rce_cancel">Avbryt</string>
-    <string name="rce_exit">Gå ur</string>
-    <string name="rce_dialog_exit_title">Avsluta uppdragsredigering?</string>
-    <string name="rce_dialog_exit_message">Är du säger på att du vill avsluta?Icke sparad data kommer att förloras.</string>
+    <string name="rce_exit">Avsluta</string>
+    <string name="rce_dialog_exit_title">Avsluta uppgiftsredigering?</string>
+    <string name="rce_dialog_exit_message">Vill du avsluta? Du kommer att förlora data som inte har sparats.</string>
     <string name="rce_empty_message">Meddelande</string>
     <string name="rce_empty_description">Lägg till beskrivning</string>
-    <string name="rce_scrollInstructions">Skrolla för alla redigeringsverktyg</string>
+    <string name="rce_scrollInstructions">Rulla för alla redigeringsverktyg</string>
 </resources>

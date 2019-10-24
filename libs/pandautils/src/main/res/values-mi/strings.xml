@@ -164,6 +164,7 @@
     <string name="noAssignmentsSubtext">Ko te āhua nei kaore ngā whakataunga i hāngaia i roto i tēnei wāhi. Te wā ki te haere ki te tirotiro.</string>
     <string name="noAssignmentsTeacher">Anō nei kaore he whakataunga i pānuitia.</string>
     <string name="noFiles">Kāore ngā kōnae</string>
+    <string name="noFilesForAssignment">Kaore ngā kōnae mo tēnei whakataunga</string>
     <string name="noFilesSubtext">Kaore ngā kōnae e whakapā ana ki tēnei pūkete.</string>
     <string name="notSupported">Kaore i te tautokotia</string>
     <string name="noEvents">Kaore he tauwhāinga i tēnei rā!</string>
@@ -174,7 +175,6 @@
     <string name="noDueDate">Kaore he rā tika mo tēnei whakataunga.</string>
     <string name="locked">Kua rakaina</string>
     <string name="lockedSubtext">Kua rakaina tēnei whakataunga kī %1$s mā %2$s.</string>
-    <string name="lockedModule">Ko tēnei whakataunga he wāhi o te kōwae \"%1$s\" me kua kore kua whakawātea ano.</string>
     <string name="chooseFile">Kōwhiria he Kōnae</string>
     <string name="chooseFileSubtext">Tapiritia he kōnae ki tō tāpaetanga ma te patopato kōwhiringa i raro.</string>
     <string name="noNotifications">Kaore he whakamōhiotanga</string>

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version='1.0' encoding='UTF-8'?>
 <!--
   ~ Copyright (C) 2017 - present Instructure, Inc.
   ~
@@ -41,8 +41,7 @@
     <string name="canvasAPI_discussion">Keskustelu</string>
     <string name="canvasAPI_quiz">Tietovisa</string>
     <string name="canvasAPI_externalTool">Ulkoinen työkalu</string>
-    <string name="canvasAPI_none">Ei mitään</string>
-
+    <string name="canvasAPI_none">Ei lähetystä</string>
     <string name="canvasAPI_passFail">Läpäissyt/ei läpäissyt</string>
     <string name="canvasAPI_percent">Prosentti</string>
     <string name="canvasAPI_letterGrade">Kirjeen arvosana</string>
@@ -50,11 +49,11 @@
     <string name="canvasAPI_gpaScale">GPA-asteikko</string>
     <string name="canvasAPI_notGraded">Ei arvosteltu</string>
 
-    <string name="canvasAPI_onlineQuiz">Verkkokysely</string>
+    <string name="canvasAPI_onlineQuiz">Tietovisa</string>
     <string name="canvasAPI_discussionTopic">Keskustelun aihe</string>
-    <string name="canvasAPI_onlineUpload">Verkkolataus</string>
-    <string name="canvasAPI_onlineTextEntry">Verkon tekstimerkintä</string>
-    <string name="canvasAPI_onlineURL">Verkko-url</string>
+    <string name="canvasAPI_onlineUpload">Tiedoston lataus</string>
+    <string name="canvasAPI_onlineTextEntry">Tekstin syöttäminen</string>
+    <string name="canvasAPI_onlineURL">Verkkosivuston URL</string>
     <string name="canvasAPI_mediaRecording">Median nauhoitus</string>
     <string name="canvasAPI_attendance">Osallistuminen</string>
     <string name="quiz_scoring_policy_highest">Korkein</string>

@@ -165,6 +165,7 @@
     <string name="noAssignmentsSubtext">Zdi se, da v tem prostoru naloge še niso ustvarjene. Čas je, da odidete ven in raziskujete.</string>
     <string name="noAssignmentsTeacher">Zdi se, da ni objavljenih še nobenih nalog.</string>
     <string name="noFiles">Ni datotek.</string>
+    <string name="noFilesForAssignment">Za to oddajo ni datotek</string>
     <string name="noFilesSubtext">S tem računom ni povezana nobena datoteka.</string>
     <string name="notSupported">Ni podprto.</string>
     <string name="noEvents">Danes ni dogodkov.</string>
@@ -175,7 +176,6 @@
     <string name="noDueDate">Ta naloga še nima roka.</string>
     <string name="locked">Zaklenjeno</string>
     <string name="lockedSubtext">Ta naloga je zaklenjena do %1$s ob %2$s.</string>
-    <string name="lockedModule">Ta naloga je del modula »%1$s« in še ni odklenjena.</string>
     <string name="chooseFile">Izberi datoteko</string>
     <string name="chooseFileSubtext">Tapnite spodnjo možnost, da oddaji dodate datoteko.</string>
     <string name="noNotifications">Ni sporočil.</string>
