@@ -18,30 +18,16 @@ package com.instructure.student.ui.pages
 
 import android.view.View
 import android.widget.ScrollView
-import android.widget.TextView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
-import androidx.test.espresso.ViewAssertion
-import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.espresso.matcher.ViewMatchers.*
 import com.instructure.espresso.*
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
-import com.instructure.espresso.page.onViewWithId
-import com.instructure.espresso.page.waitForView
 import com.instructure.student.R
-import kotlinx.android.synthetic.main.fragment_edit_page.view.*
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
-import org.hamcrest.Matchers.containsString
-import java.lang.Thread.sleep
 
 open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
     fun verifyAssignmentSubmitted() {

@@ -226,7 +226,7 @@ fun MockCanvas.addCourse(isFavorite: Boolean = false, concluded: Boolean = false
  * and adds it to MockCanvas
  *
  */
-fun MockCanvas.addAssignments(course: Course, assignmentCountPerGroup: Int = 1): List<AssignmentGroup> {
+fun MockCanvas.addAssignmentsToGroups(course: Course, assignmentCountPerGroup: Int = 1): List<AssignmentGroup> {
     val overdueAssignments = ArrayList<Assignment>()
     val upcomingAssignments = ArrayList<Assignment>()
     val undatedAssignments = ArrayList<Assignment>()
@@ -282,7 +282,7 @@ fun MockCanvas.addAssignments(course: Course, assignmentCountPerGroup: Int = 1):
 
 /**
  * Adds a single assignment to the course assignment group map. This function does not currently take into
- * account existing assignments. Use either addAssignment or addAssignments.
+ * account existing assignments. Use either addAssignment or addAssignmentsToGroups.
  */
 fun MockCanvas.addAssignment(
         courseId: Long,

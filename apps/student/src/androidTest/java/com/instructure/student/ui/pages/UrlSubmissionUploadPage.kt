@@ -41,9 +41,12 @@ open class UrlSubmissionUploadPage : BasePage(R.id.urlSubmissionUpload) {
     }
 }
 
+/**
+ * This ViewAction will wait until a view is enabled to click on it
+ */
 class ClickAfterEnabledAction: ViewAction {
     override fun getDescription(): String {
-        return ""
+        return "Loops main thread until view is enabled, then clicks"
     }
 
     override fun getConstraints(): Matcher<View> {

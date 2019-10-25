@@ -34,23 +34,18 @@ object SubmissionIndexEndpoint : Endpoint(
         LongId(PathVars::userId) to SubmissionUserEndpoint,
     response = {
         POST {
-            var submission: Submission? = null
-            for(tempSubmission in data.submissions[pathVars.courseId]!!) {
-                if(tempSubmission.assignmentId == pathVars.assignmentId) {
-                    submission = tempSubmission
-                    // Now we need to modify the assignment in the data value so it reflects this
-                    for (group in data.assignmentGroups[pathVars.courseId]!!) {
-                        for(assignment in group.assignments) {
-                            if(assignment.id == pathVars.assignmentId) {
-                                assignment.submission = tempSubmission
-                            }
-                        }
-                    }
-                }
-            }
+            val submission: Submission? = data.submissions[pathVars.courseId]!!
+                    .find { it.assignmentId == pathVars.assignmentId }
+
+            // Now we need to modify the assignment in the data value so it reflects this
+            val assignment = data.assignmentGroups[pathVars.courseId]!!
+                    .flatMap { it.assignments }
+                    .find { it.id == pathVars.assignmentId }
+
+            assignment?.submission = submission
 
             if(submission != null) {
-                request.successResponse(submission!!)
+                request.successResponse(submission)
             } else {
                 request.unauthorizedResponse()
             }

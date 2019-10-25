@@ -15,11 +15,6 @@
  */
 package com.instructure.student.ui.interaction
 
-import android.view.View
-import androidx.test.espresso.UiController
-import androidx.test.espresso.ViewAction
-import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.mockCanvas.*
 import com.instructure.canvasapi2.models.Assignment
@@ -31,10 +26,8 @@ import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.routeTo
 import com.instructure.student.ui.utils.tokenLogin
-import org.hamcrest.Matcher
 import org.junit.Test
 import java.util.*
-import java.util.EnumSet.allOf
 
 class AssignmentDetailsInteractionTest : StudentTest() {
     override fun displaysPageObjects() = Unit // Not used for interaction tests
@@ -138,7 +131,7 @@ class AssignmentDetailsInteractionTest : StudentTest() {
         val course = data.courses.values.first()
         val student = data.students[0]
         val token = data.tokenFor(student)!!
-        val assignmentGroups = data.addAssignments(course)
+        val assignmentGroups = data.addAssignmentsToGroups(course)
         tokenLogin(data.domain, token, student)
         routeTo("courses/${course.id}/assignments", data.domain)
 
