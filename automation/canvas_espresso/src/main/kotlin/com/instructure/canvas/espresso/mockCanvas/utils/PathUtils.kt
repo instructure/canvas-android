@@ -30,6 +30,9 @@ class PathVars {
     var courseId: Long by map
     var assignmentId: Long by map
     var accountNotificationId: Long by map
+    var pageId: Long by map
+    var folderId: Long by map
+    var fileId: Long by map
 }
 
 /**

@@ -165,6 +165,7 @@
     <string name="noAssignmentsSubtext">يبدو أنه لم يتم إنشاء مهام في هذه المساحة. حان وقت الانطلاق والاستكشاف.</string>
     <string name="noAssignmentsTeacher">يبدو أنه لم تنشر أي مهام حتى الآن.</string>
     <string name="noFiles">لا توجد ملفات</string>
+    <string name="noFilesForAssignment">لا توجد أي ملفات لهذا الإرسال</string>
     <string name="noFilesSubtext">لا توجد ملفات مقترنة بهذا الحساب.</string>
     <string name="notSupported">غير مدعوم</string>
     <string name="noEvents">لا توجد أحداث اليوم!</string>
@@ -175,7 +176,6 @@
     <string name="noDueDate">لا تحتوي هذه المهمة على تاريخ استحقاق.</string>
     <string name="locked">مؤمّن</string>
     <string name="lockedSubtext">تم تأمين هذه المهمة حتى %1$s في %2$s.</string>
-    <string name="lockedModule">هذه المهمة جزء من الوحدة النمطية \"%1$s\" ولم يتم فتحها بعد.</string>
     <string name="chooseFile">اختيار ملف</string>
     <string name="chooseFileSubtext">قم بإرفاق ملف لإرسالك بالضغط على إحدى الخيارات أدناه.</string>
     <string name="noNotifications">لا توجد إخطارات</string>

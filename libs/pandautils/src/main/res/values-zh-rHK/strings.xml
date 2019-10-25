@@ -165,6 +165,7 @@
     <string name="noAssignmentsSubtext">看來這裡並未建立任何作業。是時候出外探索。</string>
     <string name="noAssignmentsTeacher">看來尚未發佈任何作業。</string>
     <string name="noFiles">無檔案</string>
+    <string name="noFilesForAssignment">沒有針對此提交項目的檔案</string>
     <string name="noFilesSubtext">沒有與您帳戶關聯的檔案。</string>
     <string name="notSupported">不支援</string>
     <string name="noEvents">今天並無活動！</string>
@@ -175,7 +176,6 @@
     <string name="noDueDate">此作業沒有截止日期。</string>
     <string name="locked">已鎖定</string>
     <string name="lockedSubtext">此作業已被鎖定，直至 %1$s 的 %2$s。</string>
-    <string name="lockedModule">此作業是單元 \"%1$s\" 的一部分，尚未解除鎖定。</string>
     <string name="chooseFile">選擇檔案</string>
     <string name="chooseFileSubtext">點選下列的一個選項，以加入附件檔案至提交項目。</string>
     <string name="noNotifications">無通知</string>

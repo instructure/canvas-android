@@ -55,6 +55,13 @@
     <string name="launchExternalTool">Lançar Ferramenta Externa</string>
 
     <string name="preview">Visualização</string>
+    <string name="submissionUploadFailedMessage">Um ou mais arquivos não foram carregados. Verifique sua conexão com a Internet e tente enviar novamente.</string>
+    <string name="submissionUploadByteProgress">%1$s de %2$s</string>
+    <string name="submissionSuccessTitle">Sucesso de envio!</string>
+    <string name="submissionSuccessMessage">Sua tarefa foi enviada com sucesso. Desfrute seu dia!</string>
+    <string name="cancelAllSubmissions">Cancelar todos os envios de tarefa</string>
+    <string name="missingSubmissionLabel">Em falta</string>
+    <string name="gradedSubmissionLabel">Classificado</string>
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">Nenhuma visualização disponível para URLs usando \'http://\'</string>
     <string name="submissionUrlNotAUrlError">Por favor, insira um URL válido</string>
@@ -62,8 +69,11 @@
     <string name="addFileFabContentDesc">Mostrar opções de adicionar ficheiro</string>
     <string name="recordAudio">Gravar Áudio</string>
 
+    <string name="recordVideo">Gravar Vídeo</string>
+
     <!-- Student Submission -->
     <string name="submissionWrite">Escrever&#8230;</string>
+    <string name="textSubmissionFailureMessage">Algo deu errado no carregamento do envio. Envie novamente.</string>
     <!-- Student Submission Details -->
     <string name="submission">Submissão</string>
     <string name="submissionVersions">Versões de envio</string>
@@ -79,15 +89,38 @@
     <string name="submissionDetailsAssignmentLocked">Tarefa bloqueada</string>
     <string name="webPreview">Visualização do URL inserido</string>
     <string name="websiteUrl">URL do Website</string>
+    <string name="noneContentMessage">Esta tarefa não permite envios online</string>
+    <string name="onPaperContentMessage">Esta tarefa não permite envios online</string>
+    <string name="noOnlineSubmissions">Nenhum envio online</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Fora de %s pontos</string>
     <string name="outOfPointsAbbreviatedFormatted">Fora de %s pts</string>
     <string name="gradeExcused">Desculpado</string>
     <string name="finalGradeFormatted">Nota final: %s</string>
+    <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
+    <string name="contentDescriptionScoreOutOfPointsPossible">%1$s de %2$s pontos</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Personalizar pontuação</string>
     <string name="rubricEmptyMessage">Não existe rubrica para esta atribuição</string>
     <string name="rubricViewLongDescription">Ver descrição longa</string>
+    <!-- Student Submission Comments -->
+    <string name="assignmentSubmissionUploadingFile">A carregar ficheiro %1$d de %2$d</string>
+    <string name="assignmentSubmissionCommentUpload">A carregar comentário para %s</string>
+    <string name="assignmentSubmissionCommentUploadingMedia">A carregar ficheiro de mídia</string>
+    <string name="assignmentSubmissionCommentError">Falha no carregar comentários para %s</string>
+    <string name="chooseFileForCommentSubtext">Anexe ficheiros ao seu comentário ao carregar em uma opção abaixo</string>
+    <string name="emptySubmissionCommentsSubtext">Tem dúvidas sobre a sua tarefa?\nEnvie mensagem ao seu instrutor.</string>
+    <string name="submissionCommentErrorMessage">Esta mensagem não pôde ser enviada. Toque para tentar novamente.</string>
+    <string name="mediaUploadAudio">Envio de mídia - Áudio</string>
+    <string name="mediaUploadVideo">Envio de mídia - Vídeo</string>
+    <string name="commentSubmissionTypeText">Entrega de Texto</string>
+    <string name="commentSubmissionTypeExternalTool">Envio de ferramenta externa</string>
+    <string name="commentSubmissionTypeDiscussion">Envio de discussão</string>
+    <string name="commentSubmissionTypeQuiz">Envio de teste</string>
+    <string name="commentSubmissionTypeQuizAttempt">Tentativa %d</string>
+    <string name="commentSubmissionTypeMediaFile">Ficheiro de mídia</string>
+    <string name="commentSubmissionTypeAudio">Áudio</string>
+    <string name="commentSubmissionTypeVideo">Vídeo</string>
     <!-- Profile Fragment Strings -->
     <string name="canvasVersionNum">Versão:</string>
 
@@ -104,7 +137,6 @@
     <string name="options">Opções</string>
 
     <string name="discussionAttachment">Anexar um ficheiro</string>
-    <string name="discussionUpload">Carregar vídeo ou audio</string>
     <string name="discussionPostEditing">Editar</string>
 
     <!--Multiple User Sign in -->
@@ -140,36 +172,16 @@
     <string name="lowercaseAM">am</string>
     <string name="lowercasePM">pm</string>
     <!-- Assignments -->
-    <string name="assignmentDue">Vencimento</string>
-    <string name="assignmentDueColon">Devido: </string>
-    <string name="assignmentLastSubmission">Última Entrega</string>
-    <string name="assignmentNoSubmission">Nenhum</string>
-    <string name="assignmentTabDetails">Detalhes</string>
-    <string name="assignmentTabSubmission">Submissões</string>
-    <string name="assignmentTabGrade">Nota</string>
     <string name="assignmentLocked">Bloqueado</string>
     <string name="assignments">Tarefas</string>
-    <string name="freeFormRubricPoints" formatted="false">%s / %s </string>
-    <string name="noRubric">Não existe rubrica para esta tarefa.</string>
     <string name="noDescription">Não existe descrição para esta tarefa</string>
     <string name="noAssignmentsInGroup">Não existem Tarefas neste grupo</string>
     <string name="excusedAssignment">Esta atribuição está esquecida e não será considerada no cálculo total</string>
-    <string name="droppedAssignment">Esta tarefa é descartada e não será considerada no cálculo total</string>
     <string name="excused">EX</string>
-    <string name="mutedText">Classificações não disponíveis porque o instrutor está a trabalhar nelas.</string>
-    <string name="rubricRangePointsText" formatted="false">&#160;para &gt; %s pts</string>
-    <string name="contentDescriptionRubricRangePointsText" formatted="false">%s &#160;para &gt; %s pontos</string>
-
     <!-- Assignment editing -->
     <string name="points">Pontos </string>
-    <string name="assignmentGroup">Grupo de tarefa: </string>
-    <string name="gradingType">Tipo de classificação: </string>
-    <string name="submissionType">Tipo de envio: </string>
-    <string name="editAssignment">Editar atribuição</string>
     <string name="save">Guardar</string>
     <string name="cancel">Cancelar</string>
-    <string name="sendNotification">Notificar utilizadores que este conteúdo mudou</string>
-
     <!-- Discussions -->
     <string name="forbidden">As respostas apenas estão visíveis para aqueles que publicaram pelo menos uma resposta.</string>
 
@@ -189,6 +201,10 @@
     <string name="checkBoxFinalGradeOption">Com base em tarefas classificadas</string>
     <string name="checkBoxWhatIfGradeOption">Apresentar Pontuação Potencial</string>
     <string name="whatIfDialogText">Pontuação Potencial</string>
+    <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
+    <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s de %2$s pontos, %3$s</string>
+
+
     <string name="inbox">Caixa de entrada</string>
     <string name="unread">Não lida</string>
     <string name="archived">Arquivada</string>
@@ -231,7 +247,6 @@
         <item quantity="one">%d precisa de classificação</item>
         <item quantity="other">%d precisa de classificação</item>
     </plurals>
-    <string name="myFiles">Ficheiros</string>
     <string name="createAFolder">Criar uma pasta</string>
     <string name="createFolder">Criar Pasta</string>
     <string name="createAFile">Criar um ficheiro</string>
@@ -273,7 +288,6 @@
     <string name="deleteEvent">Apagar Evento</string>
     <string name="selected">Selecionado</string>
     <string name="errorSendingMessage">Ocorreu um erro ao tentar enviar sua mensagem. É favor tentar novamente.</string>
-    <string name="errorPostingComment">Ocorreu um erro ao tentar publicar seu comentário de envio. É favor tentar novamente.</string>
     <string name="deletedConversation">Essa conversa foi apagada.</string>
     <string name="uploadAvatarFailMsg">Falhou carregar a imagem do novo avatar</string>
     <string name="editPhoto">Editar foto</string>
@@ -306,8 +320,6 @@
     <string name="openAlternate">Abrir com alternancia de app</string>
     <string name="opening">Abrir Ficheiro&#8230;</string>
     <string name="download">Descarregar</string>
-    <string name="hideExtras">Esconder Extras</string>
-    <string name="showExtras">Mostras Extras</string>
     <string name="messageAttachments">Anexos da Mensagem</string>
     <string name="discussionAttachmentLabel">Anexo</string>
     <string name="attachmentIcon">Ícone de Anexo</string>
@@ -366,6 +378,7 @@
     <string name="select_item_to_display">Selecione da lista</string>
 
     <string name="syllabus">Programa</string>
+    <string name="summary">Sumário</string>
     <string name="coursePeople">Pessoas</string>
     <string name="teachersTas">Professores &amp; TAs</string>
     <string name="students">Alunos</string>
@@ -399,12 +412,6 @@
 
     <!-- Notifications -->
     <string name="deleted">Eliminado</string>
-    <string name="gradedDiscussion">Discussão Classificada.</string>
-    <string name="pointsPossible">Pontos Possíveis.</string>
-    <string name="pointsPossibleNoPeriod">Pontos possíveis</string>
-
-    <string name="deletedEntryNoChildren">Esta entrada de discussão eliminada não tem qualquer resposta.</string>
-    <string name="sideCommentEntry">Neste tipo de discussão, não pode comentar em qualquer entrada neste nível.</string>
     <string name="contentDescriptionFiles">Ícone de Ficheiro</string>
 
     <string name="loadingCanvas">A carregar o conteúdo da tela&#8230;</string>
@@ -428,11 +435,6 @@
     <string name="emptyId">A ID não pode estar vazia</string>
 
     <string name="goToQuiz">Ir Para Questionário</string>
-    <string name="goToExternalTool">Ir Para Ferramenta Externa</string>
-
-    <string name="pastDueDate">Depois da Data Final</string>
-
-    <string name="goToDiscussion">Ir Para Discussão</string>
     <string name="quizzes">Testes</string>
 
     <string name="lastDiscussionPost">Última Publicação</string>
@@ -486,7 +488,6 @@
     <string name="lockedFileDesc">Este ficheiro faz parte do módulo %s e ainda não foi desbloqueado.</string>
     <string name="lockedQuizDesc">Este teste faz parte do módulo %s e ainda não foi desbloqueado.</string>
     <string name="lockedDiscussionDesc">Esta discussão faz parte do módulo %s e ainda não foi desbloqueada.</string>
-    <string name="lockedAssignmentDescLine2">Visitar a página de módulos da disciplina para informações em como desbloquear este conteúdo.</string>
     <string name="mustComplete">Primeiro tem de concluir:</string>
     <string name="unlockedAt">Vai ser desbloqueado a:</string>
     <string name="goToModules">Ir Para Módulos</string>
@@ -508,22 +509,12 @@
     <!-- New Submission Strings -->
     <string name="textEntry">Entrada de texto</string>
     <string name="onlineURL">URL On-line</string>
-    <string name="enterTextEntry">Insira na Entrada de Texto</string>
-    <string name="fileUpload"> Carregar de arquivos</string>
     <string name="oneFileOnly">Este envio apenas aceita o carregamento de um ficheiro</string>
 
 
     <string name="websiteEntry">Adicionar entrada de site</string>
     <string name="mediaRecordingEntry">Gravações de multimédia</string>
     <string name="submit">Submeter</string>
-    <string name="blankSubmission">A entrega não pode estar vazia.</string>
-    <string name="errorPostingSubmission">Ocorreu um erro ao publicar esta entrega.</string>
-    <string name="successPostingSubmission">Publicou a entrega com sucesso.</string>
-
-    <string name="exampleSubmissionURL">http://www.example.com</string>
-
-
-
     <!-- DataLoss Fragment Strings -->
     <string name="unsavedProgress">Progresso não guardado</string>
     <string name="informationLost">As informações não guardadas serão perdidas. Deseja continuar?</string>
@@ -537,22 +528,8 @@
 
     <!-- Submission Details Strings -->
     <string name="next">Próximo</string>
-    <string name="addSubmission">Ligar</string>
-    <string name="addAnotherSubmission">Ligar de novo</string>
     <string name="turnedIn">Ligado:&#160;</string>
     <string name="addComment">Adicionar um comentário&#8230;</string>
-    <string name="addCommentNoEllipsis">Adicionar um comentário</string>
-    <string name="subTypeOnlineText">Entrada de texto on-line</string>
-    <string name="subTypeFileUpload">Carregar eFicheiro Online</string>
-    <string name="subTypeOnlineURL">URL do Website</string>
-    <string name="subTypeOnlineQuiz">Questionário Online</string>
-    <string name="subTypeMediaRecording">Gravação de mídia</string>
-    <string name="sub_type_lti_launch">Lançamento LTI</string>
-    <string name="subTypeDiscussionTopic">Discussão</string>
-    <string name="turnInByHand">Tem de entregar esta tarefa em mão</string>
-    <string name="noSubRequired">Não é necessária entrega</string>
-    <string name="noTurnInOnMobile">A entrega móvel não é suportada</string>
-
     <string name="home">Início</string>
     <string name="Notifications">Notificações</string>
 
@@ -582,9 +559,6 @@
     <string name="clickToViewSubmission">Foi tirada uma imagem deste site quando fez a entrega. Insira e mantenha a imagem abaixo para abrir ou descarregar a imagem completa.</string>
     <string name="urlSubmissionNoPreview">Este envio era um URL de uma página externa. Tenha em mente que esta página pode ter sido alterada desde o envio original.</string>
     <string name="contentDescriptionPreviewImage">Uma previsualização do url entregue</string>
-    <string name="itemStillProcessing">Este item ainda está a ser processado no servidor. É favor tentar novamente.</string>
-
-
     <string name="isNotSupportedFeature">%1$s não são suportados.</string>
     <string name="isNotSupported">A ligação não é suportada.</string>
     <string name="openInBrowser">Abrir no Navegador</string>
@@ -601,8 +575,6 @@
     <string name="panda_fact_string">Fat. Panda:&#160;</string>
     <string name="remove">Eliminar</string>
     <string name="founders">Fundadores</string>
-    <string name="image">Imagem</string>
-
     <string name="EULA">EULA</string>
     <string name="privacyPolicy">Política de Privacidade</string>
     <string name="termsOfUse">Termos de uso</string>
@@ -630,8 +602,6 @@
     <string name="widgetMinimumStyle">Esconder detalhes no widget</string>
     <string name="light">Claro</string>
     <string name="dark">Escuro</string>
-
-    <string name="invalidExternal">Esta ferramenta externa ou está expirada ou configurada de forma incorreta.</string>
 
     <!-- Help dialog strings -->
     <string name="askInstructor">Pergunte ao seu instrutor a pergunta</string>
@@ -956,7 +926,6 @@
     <string name="totalPoints">%s pts</string>
     <string name="totalPointsText">Total de pontos</string>
     <string name="contentDescriptionPoints">%s pontos</string>
-    <string name="contentDescriptionRubricRangeGrade">%1$s de %2$s pontos</string>
     <string name="score">Pontuação</string>
     <string name="rangedRubricTotal" formatted="false">%s / %s pts</string>
     <string name="seeAll">Ver tudo</string>
@@ -984,8 +953,6 @@
     <string name="launch_link_in_external_browser">Iniciar a ligação no navegador externo</string>
     <string name="ltiLaunchFailure">Esta ferramenta LTI não pôde ser carregada neste momento.</string>
     <string name="urlSubmission">Submissão de URL</string>
-
-    <string name="assignmentDeletedError">Esta atribuição não está mais disponível.</string>
 
     <string name="homePageIdForNotifications">Atividade recente</string>
     <string name="homePageIdForModules">Módulos</string>
@@ -1029,8 +996,6 @@
     <string name="unableToViewInBrowser">Não conseguimos encontrar uma aplicação externa para visualizar essa ferramenta LTI.</string>
 
     <string name="commentUpload">Carregamento de comentários</string>
-    <string name="unableToUploadMediaComment">Para enviar um comentário de multimédia, envie ou exclua seu comentário de texto não enviado.</string>
-
     <string name="frontPage">Primeira página</string>
     <string name="editPage">Editar Página</string>
     <string name="description">Descrição</string>
@@ -1070,4 +1035,22 @@
     <string name="addVideoComment">Adicionar comentário de vídeo</string>
     <string name="addAudioComment">Adicionar comentário de vídeo</string>
 
+    <string name="audioRecordingError">Ocorreu um erro inesperado ao tentar gravar áudio.</string>
+    <string name="videoRecordingError">Ocorreu um erro inesperado ao tentar gravar vídeo.</string>
+
+    <string name="quizQuestionLabel">Perguntas:</string>
+    <string name="timeLimitLabel">Limite de tempo:</string>
+    <string name="allowedAttemptsLabel">Tentativas permitidas:</string>
+    <string name="instructions">Instruções</string>
+    <string name="quizNoTimeLimit">Nenhum</string>
+    <string name="viewQuiz">Ver teste</string>
+    <string name="viewDiscussion">Ver discussão</string>
+    <string name="lockedModule">Esta atribuição é bloqueada pelo módulo \"%1$s\".</string>
+    <string name="chooseMediaFile">Escolha o ficheiro de mídia</string>
+    <string name="discussions_unknown_author">Autor desconhecido</string>
+    <string name="discussions_unknown_date">Data Desconhecida</string>
+    <string name="a11y_gradeLetterMinusContentDescription">%s. menos</string>
+    <string name="a11y_letterGrade">%s.</string>
+    <string name="a11y_gradeCellContentDescription">%s %s</string>
+    <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
 </resources>

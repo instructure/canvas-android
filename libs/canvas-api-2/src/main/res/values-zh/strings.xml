@@ -41,8 +41,7 @@
     <string name="canvasAPI_discussion">讨论</string>
     <string name="canvasAPI_quiz">测验</string>
     <string name="canvasAPI_externalTool">外部工具</string>
-    <string name="canvasAPI_none">无</string>
-
+    <string name="canvasAPI_none">无提交项</string>
     <string name="canvasAPI_passFail">合格不合格</string>
     <string name="canvasAPI_percent">百分比</string>
     <string name="canvasAPI_letterGrade">字母评分</string>
@@ -50,11 +49,11 @@
     <string name="canvasAPI_gpaScale">GPA 分数</string>
     <string name="canvasAPI_notGraded">未评分</string>
 
-    <string name="canvasAPI_onlineQuiz">在线测验</string>
+    <string name="canvasAPI_onlineQuiz">测验</string>
     <string name="canvasAPI_discussionTopic">讨论主题</string>
-    <string name="canvasAPI_onlineUpload">在线上传</string>
-    <string name="canvasAPI_onlineTextEntry">在线文本输入</string>
-    <string name="canvasAPI_onlineURL">在线 URL</string>
+    <string name="canvasAPI_onlineUpload">文件上传</string>
+    <string name="canvasAPI_onlineTextEntry">文本输入</string>
+    <string name="canvasAPI_onlineURL">网站 URL</string>
     <string name="canvasAPI_mediaRecording">媒体录制</string>
     <string name="canvasAPI_attendance">出勤</string>
     <string name="quiz_scoring_policy_highest">最高</string>

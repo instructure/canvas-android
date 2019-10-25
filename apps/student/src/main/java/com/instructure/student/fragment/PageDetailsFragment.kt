@@ -120,23 +120,30 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId) {
-            R.id.menu_edit -> { openEditPage(page)}
+        when (item.itemId) {
+            R.id.menu_edit -> {
+                openEditPage(page)
+            }
         }
         return super.onOptionsItemSelected(item)
     }
 
     private fun getPageDetails() {
-        if(page.id != 0L) {
-            if(page.body != null) loadPage(page)
-            else if(!page.title.isNullOrBlank()) {
+        if (page.id != 0L) {
+            if (page.body != null) {
+                if (pageName == null) {
+                    // If we don't set page name, we have problems when trying to set up the bookmark.
+                    // pageName is null when we call the bookmark property below.
+                    pageName = page.title
+                }
+                loadPage(page)
+            } else if (!page.title.isNullOrBlank()) {
                 pageName = page.title
                 fetchPageDetails()
             } else {
                 loadFailedPageInfo(null)
             }
-        }
-        else if (pageName == null || pageName == Page.FRONT_PAGE_NAME) fetchFontPage()
+        } else if (pageName == null || pageName == Page.FRONT_PAGE_NAME) fetchFontPage()
         else fetchPageDetails()
     }
 
@@ -147,7 +154,7 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
                 nonNullArgs.putParcelable(PAGE, it)
                 loadPage(it)
             }
-            if(response.body() == null) loadFailedPageInfo(response)
+            if (response.body() == null) loadFailedPageInfo(response)
         } catch {
             Logger.e("Page Fetch Error ${it.message}")
             loadFailedPageInfo()
@@ -162,7 +169,7 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
                 nonNullArgs.putParcelable(PAGE, it)
                 loadPage(it)
             }
-            if(response.body() == null) loadFailedPageInfo(response)
+            if (response.body() == null) loadFailedPageInfo(response)
         } catch {
             Logger.e("Page Fetch Error ${it.message}")
             loadFailedPageInfo()
@@ -233,7 +240,7 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
             // Confirm the id
             if (matcher.find()) {
                 val srcMatcher = Pattern.compile("src=\"([^\"]+)\"").matcher(iframe)
-                if(srcMatcher.find()) {
+                if (srcMatcher.find()) {
                     sourceUrl = srcMatcher.group(1)
                     val authenticatedUrl = awaitApi<AuthenticatedSession> { OAuthManager.getAuthenticatedSession(sourceUrl, it) }.sessionUrl
                     val newIframe = iframe.replace(sourceUrl, authenticatedUrl)
@@ -280,7 +287,7 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
     }
 
     override val bookmark: Bookmarker
-        get() = Bookmarker(true, canvasContext).withParam(RouterParams.PAGE_ID, if(Page.FRONT_PAGE_NAME == pageName) Page.FRONT_PAGE_NAME else pageName!!)
+        get() = Bookmarker(true, canvasContext).withParam(RouterParams.PAGE_ID, if (Page.FRONT_PAGE_NAME == pageName) Page.FRONT_PAGE_NAME else pageName!!)
 
     private fun openEditPage(page: Page) {
         if (APIHelper.hasNetworkConnection()) {
@@ -321,10 +328,9 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
         const val PAGE = "pageDetails"
 
         @JvmStatic
-        fun newInstance(route: Route) : PageDetailsFragment? {
+        fun newInstance(route: Route): PageDetailsFragment? {
             return if (validRoute(route)) PageDetailsFragment().apply {
                 arguments = route.arguments
-
                 with(nonNullArgs) {
                     if (containsKey(PAGE_NAME)) pageName = getString(PAGE_NAME)
                     if (route.paramsHash.containsKey(RouterParams.PAGE_ID)) pageName = route.paramsHash[RouterParams.PAGE_ID]
@@ -336,13 +342,13 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
         private fun validRoute(route: Route): Boolean {
             return route.canvasContext != null &&
                     (route.arguments.containsKey(PAGE) ||
-                     route.arguments.containsKey(PAGE_NAME) ||
-                     route.paramsHash.containsKey(RouterParams.PAGE_ID))
+                            route.arguments.containsKey(PAGE_NAME) ||
+                            route.paramsHash.containsKey(RouterParams.PAGE_ID))
         }
 
         @JvmStatic
         fun makeRoute(canvasContext: CanvasContext, pageName: String?): Route {
-            return Route(null, PageDetailsFragment::class.java, canvasContext, canvasContext.makeBundle(Bundle().apply { if(pageName != null) putString(PAGE_NAME, pageName) }))
+            return Route(null, PageDetailsFragment::class.java, canvasContext, canvasContext.makeBundle(Bundle().apply { if (pageName != null) putString(PAGE_NAME, pageName) }))
         }
 
         @JvmStatic

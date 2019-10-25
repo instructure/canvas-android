@@ -552,7 +552,7 @@
     <string name="successfullyUpdatedQuiz">Evaluación actualizada con éxito.</string>
     <string name="quizType">Tipo de evaluación</string>
 
-    <string name="practiceQuiz">Evaluación de las prácticas</string>
+    <string name="practiceQuiz">Evaluación de práctica</string>
     <string name="gradedQuiz">Evaluación calificada</string>
     <string name="gradedSurvey">Encuesta calificada</string>
     <string name="ungradedSurvey">Encuesta no calificada</string>
@@ -595,7 +595,7 @@
     <string name="speedgrader_group_no_submissions">Este grupo no tiene ninguna presentación para esta tarea.</string>
     <string name="speedgrader_unsupported_type">Tipo de presentación no compatible</string>
     <string name="unlimited">Ilimitado</string>
-    <string name="practice_quiz">Evaluación de las prácticas</string>
+    <string name="practice_quiz">Evaluación de práctica</string>
     <string name="graded_quiz">Evaluación calificada</string>
     <string name="graded_survey">Encuesta calificada</string>
     <string name="ungraded_survey">Encuesta no calificada</string>
@@ -899,6 +899,7 @@
     <string name="allSections">Todas las secciones</string>
 
     <string name="gauge">Gauge</string>
+    <string name="arc">Arc</string>
     <string name="ltiLaunchFailure">No se pudo cargar esta herramienta de LTI.</string>
     <string name="downloading">Descargando...</string>
 

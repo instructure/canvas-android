@@ -41,8 +41,7 @@
     <string name="canvasAPI_discussion">Trafodaeth</string>
     <string name="canvasAPI_quiz">Cwis</string>
     <string name="canvasAPI_externalTool">Adnodd Allanol</string>
-    <string name="canvasAPI_none">Dim</string>
-
+    <string name="canvasAPI_none">Dim Cyflwyniad</string>
     <string name="canvasAPI_passFail">Pasio Methu</string>
     <string name="canvasAPI_percent">Canran</string>
     <string name="canvasAPI_letterGrade">Gradd Llythyren</string>
@@ -50,11 +49,11 @@
     <string name="canvasAPI_gpaScale">Graddfa GPA</string>
     <string name="canvasAPI_notGraded">Heb eu graddio</string>
 
-    <string name="canvasAPI_onlineQuiz">Cwis Ar-lein</string>
+    <string name="canvasAPI_onlineQuiz">Cwis</string>
     <string name="canvasAPI_discussionTopic">Pwnc Trafod</string>
-    <string name="canvasAPI_onlineUpload">Llwytho i Fyny Ar-lein</string>
-    <string name="canvasAPI_onlineTextEntry">Cofnod Testun Ar-lein</string>
-    <string name="canvasAPI_onlineURL">URL Ar-lein</string>
+    <string name="canvasAPI_onlineUpload">Llwytho Ffeil i Fyny</string>
+    <string name="canvasAPI_onlineTextEntry">Cofnod Testun</string>
+    <string name="canvasAPI_onlineURL">URL Gwefan</string>
     <string name="canvasAPI_mediaRecording">Recordio Cyfryngau</string>
     <string name="canvasAPI_attendance">Presenoldeb</string>
     <string name="quiz_scoring_policy_highest">Uchaf</string>

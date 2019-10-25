@@ -165,6 +165,7 @@
     <string name="noAssignmentsSubtext">Wie es aussieht, wurden in diesem Raum keine Aufgaben erstellt. Zeit zum Erkunden</string>
     <string name="noAssignmentsTeacher">Es wurden scheinbar noch keine Aufgaben veröffentlicht.</string>
     <string name="noFiles">Keine Dateien</string>
+    <string name="noFilesForAssignment">Für diese Abgabe gibt es keine Dateien.</string>
     <string name="noFilesSubtext">Mit diesem Konto sind keine Dateien verknüpft.</string>
     <string name="notSupported">Nicht unterstützt</string>
     <string name="noEvents">Heute keine Ereignisse!</string>
@@ -175,7 +176,6 @@
     <string name="noDueDate">Diese Aufgabe hat kein Fälligkeitsdatum.</string>
     <string name="locked">Gesperrt</string>
     <string name="lockedSubtext">Diese Aufgabe wird gesperrt bis %1$s um %2$s.</string>
-    <string name="lockedModule">Diese Aufgabe ist Teil des Moduls \"%1$s\" und wurde noch nicht entsperrt.</string>
     <string name="chooseFile">Eine Datei auswählen</string>
     <string name="chooseFileSubtext">Hängen Sie eine Datei an Ihre Abgabe an, indem Sie unten auf eine der Optionen tippen.</string>
     <string name="noNotifications">Keine Benachrichtigungen</string>

@@ -164,6 +164,7 @@
     <string name="noAssignmentsSubtext">Det ser ud til, at opgaver ikke er blevet oprettet i dette rum. Tid til at gå ud og udforske.</string>
     <string name="noAssignmentsTeacher">Det ser ud til, at der ikke er offentliggjort nogen opgaver endnu.</string>
     <string name="noFiles">Inge filer</string>
+    <string name="noFilesForAssignment">Der er ingen filer til denne aflevering.</string>
     <string name="noFilesSubtext">Der er ingen filer associeret med denne konto.</string>
     <string name="notSupported">Ikke understøttet</string>
     <string name="noEvents">Ingen begivenheder i dag!</string>
@@ -174,7 +175,6 @@
     <string name="noDueDate">Denne opgave har ikke nogen afleveringsdato.</string>
     <string name="locked">Låst</string>
     <string name="lockedSubtext">Denne opgave er låst indtil d. %1$s kl. %2$s.</string>
-    <string name="lockedModule">Opgaven er en del af forløbet \"%1$s\" og er endnu ikke blevet låst op.</string>
     <string name="chooseFile">Vælg en fil</string>
     <string name="chooseFileSubtext">Vedhæft en fil til din aflevering ved at trykke på en mulighed nedenfor.</string>
     <string name="noNotifications">Ingen notifikationer</string>

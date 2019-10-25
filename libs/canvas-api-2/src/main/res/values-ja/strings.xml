@@ -41,8 +41,7 @@
     <string name="canvasAPI_discussion">ディスカッション</string>
     <string name="canvasAPI_quiz">クイズ</string>
     <string name="canvasAPI_externalTool">外部ツール</string>
-    <string name="canvasAPI_none">なし</string>
-
+    <string name="canvasAPI_none">提出なし</string>
     <string name="canvasAPI_passFail">合格不合格</string>
     <string name="canvasAPI_percent">パーセント</string>
     <string name="canvasAPI_letterGrade">ABC&#8230;評価</string>
@@ -50,11 +49,11 @@
     <string name="canvasAPI_gpaScale">GPAスケール</string>
     <string name="canvasAPI_notGraded">採点されていません</string>
 
-    <string name="canvasAPI_onlineQuiz">オンラインクイズ</string>
+    <string name="canvasAPI_onlineQuiz">クイズ</string>
     <string name="canvasAPI_discussionTopic">ディスカッションのトピック</string>
-    <string name="canvasAPI_onlineUpload">オンラインアップロード</string>
-    <string name="canvasAPI_onlineTextEntry">オンラインテキスト入力</string>
-    <string name="canvasAPI_onlineURL">オンラインURL</string>
+    <string name="canvasAPI_onlineUpload">ファイルのアップロード</string>
+    <string name="canvasAPI_onlineTextEntry">テキストエントリ</string>
+    <string name="canvasAPI_onlineURL">ウェブサイト URL</string>
     <string name="canvasAPI_mediaRecording">メディアレコーディング</string>
     <string name="canvasAPI_attendance">出席状況</string>
     <string name="quiz_scoring_policy_highest">最高</string>

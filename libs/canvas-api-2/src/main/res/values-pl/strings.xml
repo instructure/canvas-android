@@ -41,8 +41,7 @@
     <string name="canvasAPI_discussion">Dyskusja</string>
     <string name="canvasAPI_quiz">Quiz</string>
     <string name="canvasAPI_externalTool">Narzędzie zewnętrzne</string>
-    <string name="canvasAPI_none">Brak</string>
-
+    <string name="canvasAPI_none">Brak przesłanych zadań</string>
     <string name="canvasAPI_passFail">Zdany Nie zdany</string>
     <string name="canvasAPI_percent">Odsetek</string>
     <string name="canvasAPI_letterGrade">Ocena literowa</string>
@@ -50,11 +49,11 @@
     <string name="canvasAPI_gpaScale">Skala GPA</string>
     <string name="canvasAPI_notGraded">Nie oceniono</string>
 
-    <string name="canvasAPI_onlineQuiz">Test Internetowy</string>
+    <string name="canvasAPI_onlineQuiz">Quiz</string>
     <string name="canvasAPI_discussionTopic">Temat dyskusji</string>
-    <string name="canvasAPI_onlineUpload">Przesyłka online</string>
-    <string name="canvasAPI_onlineTextEntry">Zapis tekstu online</string>
-    <string name="canvasAPI_onlineURL">Adres URL online</string>
+    <string name="canvasAPI_onlineUpload">Prześlij plik</string>
+    <string name="canvasAPI_onlineTextEntry">Zapis tekstu</string>
+    <string name="canvasAPI_onlineURL">Adres URL witryny</string>
     <string name="canvasAPI_mediaRecording">Nagranie multimedialne</string>
     <string name="canvasAPI_attendance">Uczestnictwo</string>
     <string name="quiz_scoring_policy_highest">Najwyższe</string>

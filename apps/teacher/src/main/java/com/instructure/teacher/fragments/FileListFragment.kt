@@ -25,10 +25,7 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
-import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.FileFolder
-import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.interactions.router.Route
@@ -229,11 +226,7 @@ class FileListFragment : BaseSyncFragment<
         addFileFab.setOnClickListener {
             animateFabs()
             handleClick(requireFragmentManager()) {
-                val bundle = if (mCanvasContext.isCourse)
-                    UploadFilesDialog.createCourseBundle(null, mCanvasContext as Course, presenter.currentFolder.id)
-                else
-                    UploadFilesDialog.createUserBundle(null, mCanvasContext as User, presenter.currentFolder.id)
-
+                val bundle = UploadFilesDialog.createContextBundle(null, mCanvasContext, presenter.currentFolder.id)
                 UploadFilesDialog.show(fragmentManager, bundle) { _ -> }
             }
         }

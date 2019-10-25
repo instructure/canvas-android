@@ -41,8 +41,7 @@
     <string name="canvasAPI_discussion">Kōrerorero</string>
     <string name="canvasAPI_quiz">Quiz</string>
     <string name="canvasAPI_externalTool">Taputapu waho</string>
-    <string name="canvasAPI_none">Kaore</string>
-
+    <string name="canvasAPI_none">Kāore he Tāpaetanga</string>
     <string name="canvasAPI_passFail">Haere Rahu</string>
     <string name="canvasAPI_percent">ōrau</string>
     <string name="canvasAPI_letterGrade">Kōeke Reta</string>
@@ -50,11 +49,11 @@
     <string name="canvasAPI_gpaScale">GPA Tauine</string>
     <string name="canvasAPI_notGraded">Kāore i kōekehia</string>
 
-    <string name="canvasAPI_onlineQuiz">Quiz Ipurangi</string>
+    <string name="canvasAPI_onlineQuiz">Quiz</string>
     <string name="canvasAPI_discussionTopic">Aparauraa Kaupapa</string>
-    <string name="canvasAPI_onlineUpload">Tukuatu ipurangi</string>
-    <string name="canvasAPI_onlineTextEntry">Whakauru Kuputuhi ipurangi</string>
-    <string name="canvasAPI_onlineURL">URL ipurangi</string>
+    <string name="canvasAPI_onlineUpload">Kōnae Tukuake</string>
+    <string name="canvasAPI_onlineTextEntry">Whakauru kuputuhi</string>
+    <string name="canvasAPI_onlineURL">paetukutuku URL</string>
     <string name="canvasAPI_mediaRecording">Hopu pāpāho</string>
     <string name="canvasAPI_attendance">Taenga mai</string>
     <string name="quiz_scoring_policy_highest">teitei</string>

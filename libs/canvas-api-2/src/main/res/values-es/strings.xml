@@ -41,8 +41,7 @@
     <string name="canvasAPI_discussion">Foro</string>
     <string name="canvasAPI_quiz">Evaluación</string>
     <string name="canvasAPI_externalTool">Herramienta externa</string>
-    <string name="canvasAPI_none">Ninguno</string>
-
+    <string name="canvasAPI_none">Sin presentaciones</string>
     <string name="canvasAPI_passFail">Pasar Reprobar</string>
     <string name="canvasAPI_percent">Porcentaje</string>
     <string name="canvasAPI_letterGrade">Calificación por letras</string>
@@ -50,11 +49,11 @@
     <string name="canvasAPI_gpaScale">Escala GPA</string>
     <string name="canvasAPI_notGraded">No calificado</string>
 
-    <string name="canvasAPI_onlineQuiz">Evaluación en línea</string>
+    <string name="canvasAPI_onlineQuiz">Evaluación</string>
     <string name="canvasAPI_discussionTopic">Tema del foro</string>
-    <string name="canvasAPI_onlineUpload">Carga en línea</string>
-    <string name="canvasAPI_onlineTextEntry">Entrada de texto en línea</string>
-    <string name="canvasAPI_onlineURL">URL en línea</string>
+    <string name="canvasAPI_onlineUpload">Carga del archivo</string>
+    <string name="canvasAPI_onlineTextEntry">Entrada de texto</string>
+    <string name="canvasAPI_onlineURL">URL de la página web</string>
     <string name="canvasAPI_mediaRecording">Grabación de medios</string>
     <string name="canvasAPI_attendance">Asistencia</string>
     <string name="quiz_scoring_policy_highest">Más alta</string>
@@ -63,7 +62,7 @@
     <string name="no">No</string>
     <string name="always">Siempre</string>
     <string name="graded_quiz">Evaluación calificada</string>
-    <string name="practice_quiz">Evaluación de las prácticas</string>
+    <string name="practice_quiz">Evaluación de práctica</string>
     <string name="graded_survey">Encuesta calificada</string>
     <string name="ungraded_survey">Encuesta no calificada</string>
     <string name="andMore"> y %d más</string>

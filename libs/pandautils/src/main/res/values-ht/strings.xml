@@ -165,6 +165,7 @@
     <string name="noAssignmentsSubtext">Ta sanble pa gen sesyon ki te kreye nan espas sa a. Li fè lè pou soti pou dekouvri.</string>
     <string name="noAssignmentsTeacher">Ta sanble poko gen sesyon ki pibliye.</string>
     <string name="noFiles">Okenn Fichye</string>
+    <string name="noFilesForAssignment">Pa gen fichye pou soumisyon sa a.</string>
     <string name="noFilesSubtext">Pa gen fichye ki asosye a kont sa a.</string>
     <string name="notSupported">Pa Sipòte</string>
     <string name="noEvents">Pa gen Aktivite Jodi a!</string>
@@ -175,7 +176,6 @@
     <string name="noDueDate">Sesyon sa a pa gen delè.</string>
     <string name="locked">Bloke</string>
     <string name="lockedSubtext">Sesyon sa a bloke jiska %1$s a %2$s.</string>
-    <string name="lockedModule">Sesyon sa a fè pati modil \"%1$s\" e li poko debloke.</string>
     <string name="chooseFile">Chwazi yon Fichye</string>
     <string name="chooseFileSubtext">Tape opsyon ki pi ba a pou ajoute yon fichye nan soumisyon ou an. </string>
     <string name="noNotifications">Okenn Notifikasyon</string>

@@ -117,6 +117,7 @@ class FileUploadService @JvmOverloads constructor(name: String = FileUploadServi
                         }
                     }
                     ACTION_COURSE_FILE -> FileUploadConfig.forCourse(fso, courseId, parentFolderId)
+                    ACTION_GROUP_FILE -> FileUploadConfig.forGroup(fso, courseId, parentFolderId)
                     ACTION_USER_FILE -> FileUploadConfig.forUser(fso, parentFolderId)
                     ACTION_MESSAGE_ATTACHMENTS -> FileUploadConfig.forUser(fso, parentFolderPath = MESSAGE_ATTACHMENT_PATH)
                     ACTION_QUIZ_FILE -> FileUploadConfig.forQuiz(fso, courseId, quizId)
@@ -318,6 +319,7 @@ class FileUploadService @JvmOverloads constructor(name: String = FileUploadServi
         const val ACTION_ASSIGNMENT_SUBMISSION = "ACTION_ASSIGNMENT_SUBMISSION"
         const val ACTION_MESSAGE_ATTACHMENTS = "ACTION_MESSAGE_ATTACHMENTS"
         const val ACTION_COURSE_FILE = "ACTION_COURSE_FILE"
+        const val ACTION_GROUP_FILE = "ACTION_GROUP_FILE"
         const val ACTION_USER_FILE = "ACTION_USER_FILE"
         const val ACTION_QUIZ_FILE = "ACTION_QUIZ_FILE"
         const val ACTION_DISCUSSION_ATTACHMENT = "ACTION_DISCUSSION_ATTACHMENT"

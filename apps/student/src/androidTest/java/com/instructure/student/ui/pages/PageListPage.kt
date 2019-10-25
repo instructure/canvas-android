@@ -23,6 +23,7 @@ import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvas.espresso.scrollRecyclerView
+import com.instructure.canvasapi2.models.Page
 import com.instructure.dataseeding.model.PageApiModel
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
@@ -67,6 +68,15 @@ class PageListPage : BasePage(R.id.pageListPage) {
     }
 
     fun selectRegularPage(page: PageApiModel) {
+        val matcher = allOf(
+                withId(R.id.title),
+                withText(page.title)
+        )
+        scrollRecyclerView(R.id.listView, matcher)
+        onView(matcher).click()
+    }
+
+    fun selectRegularPage(page: Page) {
         val matcher = allOf(
                 withId(R.id.title),
                 withText(page.title)
