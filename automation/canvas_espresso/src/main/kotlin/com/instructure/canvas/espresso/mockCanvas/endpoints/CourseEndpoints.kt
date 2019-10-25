@@ -49,6 +49,9 @@ object CourseListEndpoint : Endpoint(
  */
 object CourseEndpoint : Endpoint(
         Segment("tabs") to CourseTabsEndpoint,
+        Segment("assignments") to AssignmentIndexEndpoint,
+        Segment("assignment_groups") to AssignmentGroupListEndpoint,
+        Segment("external_tools") to ExternalToolsEndpoint,
         Segment("pages") to CoursePagesEndpoint,
         Segment("folders") to CourseFoldersEndpoint,
         response = {

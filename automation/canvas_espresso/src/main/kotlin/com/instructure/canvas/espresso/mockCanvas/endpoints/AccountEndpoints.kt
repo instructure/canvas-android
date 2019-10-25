@@ -19,9 +19,7 @@ package com.instructure.canvas.espresso.mockCanvas.endpoints
 import com.instructure.canvas.espresso.mockCanvas.Endpoint
 import com.instructure.canvas.espresso.mockCanvas.endpoint
 import com.instructure.canvas.espresso.mockCanvas.utils.*
-import com.instructure.canvasapi2.models.Account
-import com.instructure.canvasapi2.models.AccountNotification
-import com.instructure.canvasapi2.models.LaunchDefinition
+import com.instructure.canvasapi2.models.*
 
 /**
  * Endpoint that can return a list of [Account]s. We currently assume that only one account is supported at a time and that
@@ -55,9 +53,18 @@ object AccountEndpoint : Endpoint(
     Segment("lti_apps") to endpoint(
         Segment("launch_definitions") to LaunchDefinitionsEndpoint
     ),
+    Segment("permissions") to AccountPermissionsEndpoint,
     response = {
         // NOTE: Only supporting one account for now and we'll assume no users are admins, so return a 401
         GET { request.unauthorizedResponse() }
+    }
+)
+
+object AccountPermissionsEndpoint : Endpoint(
+    response = {
+        GET {
+            request.successResponse(BecomeUserPermission(false))
+        }
     }
 )
 

@@ -18,30 +18,16 @@ package com.instructure.student.ui.pages
 
 import android.view.View
 import android.widget.ScrollView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.matcher.ViewMatchers.withText
-import com.instructure.espresso.OnViewWithId
-import com.instructure.espresso.assertContainsText
-import com.instructure.espresso.assertDisplayed
-import com.instructure.espresso.assertHasText
-import com.instructure.espresso.click
-import com.instructure.espresso.closeSoftKeyboard
+import androidx.test.espresso.matcher.ViewMatchers.*
+import com.instructure.espresso.*
 import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.scrollTo
-import com.instructure.espresso.swipeDown
-import com.instructure.espresso.typeText
+import com.instructure.espresso.page.onView
 import com.instructure.student.R
-import kotlinx.android.synthetic.main.fragment_edit_page.view.*
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
-import org.hamcrest.Matchers.containsString
 
 open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
     fun verifyAssignmentSubmitted() {
@@ -68,11 +54,15 @@ open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
     }
 
     fun assertSubmittedStatus() {
-        onView(withId(R.id.submissionStatus)).assertHasText(R.string.submitted)
+        onView(withId(R.id.submissionStatus)).waitForCheck(matches(withText(R.string.submitted)))
     }
 
     fun viewQuiz() {
         onView(withId(R.id.submitButton)).assertHasText(R.string.viewQuiz).click()
+    }
+
+    fun clickSubmit() {
+        onView(withId(R.id.submitButton)).click()
     }
 }
 
