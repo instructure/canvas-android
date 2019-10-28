@@ -15,11 +15,12 @@
  */
 package com.instructure.student.ui.interaction
 
+import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
 import androidx.test.espresso.web.sugar.Web.onWebView
 import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
+import androidx.test.espresso.web.webdriver.DriverAtoms.getText
 import androidx.test.espresso.web.webdriver.DriverAtoms.webClick
 import androidx.test.espresso.web.webdriver.Locator
-import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addFileToCourse
 import com.instructure.canvas.espresso.mockCanvas.addPageToCourse
@@ -32,6 +33,7 @@ import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLogin
+import org.hamcrest.CoreMatchers.containsString
 import org.junit.Test
 
 class CourseInteractionTest : StudentTest() {
@@ -39,10 +41,10 @@ class CourseInteractionTest : StudentTest() {
 
     var mainCourse: Course? = null
 
+    // Link from a course page to another public course should open in the app
     @Test
     @TestMetaData(Priority.P1, FeatureCategory.COURSE, TestCategory.INTERACTION, false)
     fun testCourse_linkFromCoursePageToPublicCoursePage() {
-        // Link from a course page to another public course should open in the app
 
         val data = getToCourse(courseCount = 2, favoriteCourseCount = 2)
         val course1 = data.courses.values.first()
@@ -70,17 +72,14 @@ class CourseInteractionTest : StudentTest() {
                 .withElement(findElement(Locator.ID, course2LinkElementId))
                 .perform(webClick())
 
+        // Make sure that you have navigated to course2
         courseBrowserPage.assertTitleCorrect(course2)
     }
 
-    // Leaving this as stubbed for now, because we do not yet have the ability to open
-    // mocked URLs in a webview.  MBL-13451.
-    @Stub
+    // user should be able to open/preview course file
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.COURSE, TestCategory.INTERACTION, true, FeatureCategory.FILES)
+    @TestMetaData(Priority.P0, FeatureCategory.COURSE, TestCategory.INTERACTION, false, FeatureCategory.FILES)
     fun testCourse_openFile() {
-        // user should be able to open/preview course file
-
         val data = getToCourse(
                 courseCount = 1,
                 favoriteCourseCount = 1
@@ -92,14 +91,29 @@ class CourseInteractionTest : StudentTest() {
         val fileId = data.addFileToCourse(
                 courseId = course.id,
                 displayName = displayName,
-                fileContent = "<!DOCTYPE html><html><h1>Famous Quote</h1><body>Ask not what your country can do for you, ask what you can do for your country -- JFK</body></html>",
+                fileContent = """
+                    <!DOCTYPE html>
+                    <html>
+                    <h1 id="header1">Famous Quote</h1>
+                    <body>
+                       <p id="p1">Ask not what your country can do for you, ask what you can do for your country -- JFK</p>
+                    </body>
+                    </html>
+                    """,
                 contentType = "text/html")
 
         courseBrowserPage.selectFiles()
 
-        // This is as far as we go for now.  Actually opening the file for preview/download
-        // won't work because the associated url is mocked.
-        //fileListPage.selectItem(displayName)
+        // Open our file for preview
+        fileListPage.selectItem(displayName)
+
+        // Verify that the webview displays as expected
+        onWebView()
+                .withElement(findElement(Locator.ID, "header1"))
+                .check(webMatches(getText(), containsString("Famous Quote")))
+        onWebView()
+                .withElement(findElement(Locator.ID, "p1"))
+                .check(webMatches(getText(), containsString("Ask not")))
     }
 
     /** Utility method to create mocked data, sign student 0 in, and navigate to course 0. */
