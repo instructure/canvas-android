@@ -39,6 +39,19 @@ fun Request.successResponse(body: Any): Response {
 }
 
 /**
+ * Creates a "204 No Content" response for this [Request], with no body.
+ */
+fun Request.noContentResponse(): Response {
+    return Response.Builder()
+            .request(this)
+            .body(ResponseBody.create(MediaType.parse("text/plain"), ""))
+            .message("No Content")
+            .protocol(Protocol.HTTP_1_1)
+            .code(204)
+            .build()
+}
+
+/**
  * Creates a successful response for this [Request] with a response code of 200 and the response [body] list serialized
  * to json. This will eventually support pagination by parsing the request's pagination query parameters, trimming
  * the response [body] list to the correct sublist, and adding the appropriate pagination response headers.

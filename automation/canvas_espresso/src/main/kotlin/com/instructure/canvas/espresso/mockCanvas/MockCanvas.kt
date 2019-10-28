@@ -19,6 +19,7 @@
 package com.instructure.canvas.espresso.mockCanvas
 
 import android.util.Log
+import com.github.javafaker.Faker
 import com.instructure.canvas.espresso.mockCanvas.utils.Randomizer
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.toApiString
@@ -119,6 +120,18 @@ class MockCanvas {
     val submissions = mutableMapOf<Long, List<Submission>>()
 
     var ltiTool: LTITool? = null
+
+    /** Map of course ids to discussion topic headers */
+    val courseDiscussionTopicHeaders = mutableMapOf<Long, MutableList<DiscussionTopicHeader>>()
+
+    /** Map of topic ids to DiscussionTopics */
+    val discussionTopics = mutableMapOf<Long, DiscussionTopic>()
+
+    // A few discussion-related permissions that we need to be able to tweak.
+    var discussionRepliesEnabled: Boolean = true
+    var discussionAttachmentsEnabled: Boolean = true
+    var discussionRatingsEnabled: Boolean = true
+    var discussionEntryDefaultLikes: Int = 5
 
     //region Convenience functionality
 
@@ -262,7 +275,9 @@ fun MockCanvas.Companion.init(
 }
 
 /** Creates a new Course and adds it to MockCanvas */
-fun MockCanvas.addCourse(isFavorite: Boolean = false, concluded: Boolean = false): Course {
+fun MockCanvas.addCourse(
+        isFavorite: Boolean = false,
+        concluded: Boolean = false): Course {
     val randomCourseName = Randomizer.randomCourseName()
     val endAt = if (concluded) OffsetDateTime.now().minusWeeks(1).toApiString() else null
     val course = Course(
@@ -570,5 +585,85 @@ fun MockCanvas.addFileToCourse(
     //Log.d("<--", "file($fileId) contents = \"$fileContent\"")
 
     return fileId
+}
+
+/** Creates a new discussion topic header and adds it to a specified course.
+ *
+ *  Since this might be created via the endpoint handler, we'll allow for the
+ *  passing in of a pre-created and partially populated DiscussionTopicHeader
+ *  in [prePopulatedTopicHeader]
+ */
+fun MockCanvas.addDiscussionTopicToCourse(
+        course: Course,
+        user: User,
+        prePopulatedTopicHeader: DiscussionTopicHeader? = null,
+        topicTitle: String = Randomizer.randomConversationSubject(),
+        topicDescription: String = Randomizer.randomPageTitle(),
+        allowRating: Boolean = true,
+        allowReplies: Boolean = true,
+        allowAttachments: Boolean = true
+) : DiscussionTopicHeader {
+
+    var topicHeader = prePopulatedTopicHeader
+    if(topicHeader == null) {
+        topicHeader = DiscussionTopicHeader(
+                title = topicTitle,
+                //id = newFileOrFolderId(),
+                //published = true,
+                discussionType = "side_comment",
+                message = topicDescription
+                //allowRating = allowRating,
+                //author = DiscussionParticipant(id = user.id, displayName = user.name),
+                //permissions = DiscussionTopicPermission(attach = allowAttachments, reply = allowReplies)
+        )
+    }
+
+    topicHeader.author = DiscussionParticipant(id = user.id, displayName = user.name)
+    topicHeader.published = true
+    topicHeader.allowRating = allowRating
+    topicHeader.permissions = DiscussionTopicPermission(attach = allowAttachments, reply = allowReplies)
+    topicHeader.id = newFileOrFolderId()
+    topicHeader.postedDate = Calendar.getInstance().time
+
+    var courseTopicHeaderList = courseDiscussionTopicHeaders[course.id]
+    if(courseTopicHeaderList == null) {
+        courseTopicHeaderList = mutableListOf<DiscussionTopicHeader>()
+        courseDiscussionTopicHeaders[course.id] = courseTopicHeaderList
+    }
+    courseTopicHeaderList.add(topicHeader)
+
+    val topic = DiscussionTopic(
+            isForbidden = false,
+            participants = mutableListOf<DiscussionParticipant>(
+                    DiscussionParticipant(id = user.id, displayName = user.name)
+            )
+    )
+    discussionTopics[topicHeader.id] = topic
+
+    return topicHeader
+}
+
+/** Adds a reply to a discussion. */
+fun MockCanvas.addReplyToDiscussion(
+        topicHeader: DiscussionTopicHeader,
+        user: User,
+        replyMessage: String = Faker.instance().chuckNorris().fact()
+) : DiscussionEntry {
+    val topic = discussionTopics[topicHeader.id]
+    val entry = DiscussionEntry(
+            id = newFileOrFolderId(),
+            message = replyMessage,
+            unread = true,
+            userName = user.name,
+            author = DiscussionParticipant(
+                    id = user.id,
+                    displayName = user.name
+            ),
+            createdAt = Calendar.getInstance().time.toString()
+    )
+    topic!!.views.add(entry)
+    topic.unreadEntries.add(entry.id)
+    topicHeader.unreadCount += 1
+    return entry
 }
 
