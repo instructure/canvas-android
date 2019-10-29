@@ -77,7 +77,7 @@ runReport() {
     fi
 }
 
-if ! [ -d .git ]; then printf "\nError: not in root of repo"; show_help; fi
+#if ! [ -d .git ]; then printf "\nError: not in root of repo"; show_help; fi
 
 case $1 in
     --help)
