@@ -1,0 +1,21 @@
+{
+  "@@last_modified": "2019-10-30T13:15:17.774455",
+  "alertsLabel": "التنبيهات",
+  "@alertsLabel": {
+    "description": "The label for the Alerts tab",
+    "type": "text",
+    "placeholders": {}
+  },
+  "calendarLabel": "التقويم",
+  "@calendarLabel": {
+    "description": "The label for the Calendar tab",
+    "type": "text",
+    "placeholders": {}
+  },
+  "coursesLabel": "المساقات",
+  "@coursesLabel": {
+    "description": "The label for the Courses tab",
+    "type": "text",
+    "placeholders": {}
+  }
+}
