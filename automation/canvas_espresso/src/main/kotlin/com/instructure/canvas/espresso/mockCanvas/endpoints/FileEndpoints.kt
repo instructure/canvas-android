@@ -25,6 +25,7 @@ import com.instructure.canvas.espresso.mockCanvas.utils.LongId
 import com.instructure.canvas.espresso.mockCanvas.utils.PathVars
 import com.instructure.canvas.espresso.mockCanvas.utils.Segment
 import com.instructure.canvas.espresso.mockCanvas.utils.successResponse
+import com.instructure.canvas.espresso.mockCanvas.utils.successResponseRaw
 import com.instructure.canvas.espresso.mockCanvas.utils.unauthorizedResponse
 
 /**
@@ -49,7 +50,7 @@ object FileDownloadEndpoint : Endpoint (
                 val content = data.fileContents[fileId]
                 //Log.d("<--", "FileDownloadEndpoint fileId=$fileId, content=\"$content\"")
                 if (content != null) {
-                    request.successResponse(content)
+                    request.successResponseRaw(content)
                 } else {
                     //Log.d("<--", "FileDownloadEndpoint REJECTED")
                     request.unauthorizedResponse()

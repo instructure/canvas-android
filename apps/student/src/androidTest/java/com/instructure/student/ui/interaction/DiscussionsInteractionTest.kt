@@ -19,19 +19,24 @@ package com.instructure.student.ui.interaction
 import android.os.SystemClock
 import android.os.SystemClock.sleep
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addDiscussionTopicToCourse
+import com.instructure.canvas.espresso.mockCanvas.addFileToCourse
 import com.instructure.canvas.espresso.mockCanvas.addReplyToDiscussion
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.StudentContextCardQuery
 import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.models.DiscussionEntry
+import com.instructure.canvasapi2.models.RemoteFile
 import com.instructure.canvasapi2.models.Tab
+import com.instructure.canvasapi2.utils.FileUtils
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
+import com.instructure.student.ui.pages.WebViewTextCheck
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLogin
 import org.junit.Assert.assertNotNull
@@ -41,9 +46,8 @@ class DiscussionsInteractionTest : StudentTest() {
     override fun displaysPageObjects() = Unit // Not used for interaction tests
 
     // Verify that a discussion header shows up properly after discussion creation
-    @Stub
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P0, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, false)
     fun testDiscussionCreate_base() {
         val data = getToCourse(studentCount = 1, courseCount = 1, enableDiscussionTopicCreation = true)
 
@@ -58,17 +62,70 @@ class DiscussionsInteractionTest : StudentTest() {
         discussionDetailsPage.assertDescriptionText(topicDescription)
     }
 
-    //    @Stub
-//    @Test
-//    @TestMetaData(Priority.P0, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, true)
-//    fun testDiscussionCreate_withAttachment() {
-//
-//    }
-//
-    // Test that you can't create a discussion when discussion creation is disabled
-    @Stub
+    // Tests the creation of a discussion with an attachment.
+    // It's actually impossible to attach anything to a discussion topic with our app,
+    // so the attachment is done behind the scenes, after the fact.
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P0, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, false)
+    fun testDiscussionCreate_withAttachment() {
+        val data = getToCourse(studentCount = 1, courseCount = 1, enableDiscussionTopicCreation = true)
+        val course = data.courses.values.first()
+
+        val topicName = "Discussion created with attachment"
+        val topicDescription = "created discussion topic"
+        courseBrowserPage.selectDiscussions()
+        discussionListPage.createDiscussionTopic(name = topicName, description = topicDescription)
+
+        // Let's attach an html attachment after the fact
+        val attachmentHtml =
+                """
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        </head>
+
+        <body>
+        <h1 id="header1">Famous Quote</h1>
+        <p id="p1">Wait -- I just drank what? -- Socrates</p>
+        </body>
+        </html> """
+
+        val fileId = data.addFileToCourse(
+                courseId = course.id,
+                displayName = "page.html",
+                contentType = "text/html",
+                fileContent = attachmentHtml
+        )
+
+        val attachment = RemoteFile(
+                id = fileId,
+                displayName = "page.html",
+                fileName = "page.html",
+                contentType = "text/html",
+                url = "https://mock-data.instructure.com/files/$fileId/preview",
+                size = attachmentHtml.length.toLong()
+        )
+
+        val topicHeader = data.courseDiscussionTopicHeaders[course.id]?.first()
+        topicHeader?.attachments?.add(attachment)
+
+        discussionListPage.pullToUpdate()
+        discussionListPage.assertTopicDisplayed(topicName)
+        discussionListPage.selectTopic(topicName)
+        discussionDetailsPage.assertTitleText(topicName)
+        discussionDetailsPage.assertDescriptionText(topicDescription)
+        discussionDetailsPage.assertMainAttachmentDisplayed()
+        discussionDetailsPage.previewMainAttachment(
+                WebViewTextCheck(Locator.ID, "header1", "Famous Quote"),
+                WebViewTextCheck(Locator.ID, "p1", "-- Socrates")
+        )
+
+    }
+
+    // Test that you can't create a discussion when discussion creation is disabled
+    @Test
+    @TestMetaData(Priority.P0, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, false)
     fun testDiscussionCreate_disabledWhenNotPermitted() {
         val data = getToCourse(studentCount = 1, courseCount = 1, enableDiscussionTopicCreation = false)
 
@@ -78,9 +135,8 @@ class DiscussionsInteractionTest : StudentTest() {
 
 
     // Tests that links to other Canvas content routes properly
-    @Stub
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P1, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, false)
     fun testDiscussion_linksRouteInApp() {
         val data = getToCourse(studentCount = 2, courseCount = 2, enableDiscussionTopicCreation = true)
         val course1 = data.courses.values.first()
@@ -107,9 +163,8 @@ class DiscussionsInteractionTest : StudentTest() {
     }
 
     // Replies automatically get marked as read as the user scrolls through the list
-    @Stub
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P1, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, false)
     fun testDiscussion_postsGetMarkedAsRead() {
         val data = getToCourse(studentCount = 1, courseCount = 1, enableDiscussionTopicCreation = true)
         val course = data.courses.values.first()
@@ -138,7 +193,7 @@ class DiscussionsInteractionTest : StudentTest() {
         //discussionDetailsPage.swipeUpReplyButton()
         discussionDetailsPage.swipeReplyInfoView(discussionEntry)
         // From what I can tell, our self-generated HTML has a 2500 ms wait before it
-        // send the "read" call for the unread messages on the page.  So we'll wait for
+        // sends the "read" call for the unread messages on the page.  So we'll wait for
         // 3 seconds.
         sleep(3000)
         Espresso.pressBack() // Back to discussionListPage
@@ -146,18 +201,68 @@ class DiscussionsInteractionTest : StudentTest() {
         discussionListPage.assertUnreadCount(topicHeader.title!!, 0)
     }
 
-//    @Stub
-//    @Test
-//    @TestMetaData(Priority.P0, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, true)
-//    fun testDiscussion_previewAttachment() {
-//
-//    }
-//
+    // Tests that users can preview a discussion attachment.
+    // Attachment is html, so that we can keep the viewing of it "in-house"
+    // NOTE: Very similar to testDiscussionCreate_withAttachment
+    @Test
+    @TestMetaData(Priority.P0, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, false)
+    fun testDiscussion_previewAttachment() {
+
+        val data = getToCourse(studentCount = 1, courseCount = 1, enableDiscussionTopicCreation = true)
+        val course = data.courses.values.first()
+
+        val attachmentHtml =
+        """
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        </head>
+
+        <body>
+        <h1 id="header1">Famous Quote</h1>
+        <p id="p1">No matter where you go, there you are -- Buckaroo Banzai</p>
+        </body>
+        </html> """
+
+        val fileId = data.addFileToCourse(
+                courseId = course.id,
+                displayName = "page.html",
+                contentType = "text/html",
+                fileContent = attachmentHtml
+        )
+
+        val attachment = RemoteFile(
+                id = fileId,
+                displayName = "page.html",
+                fileName = "page.html",
+                contentType = "text/html",
+                url = "https://mock-data.instructure.com/files/$fileId/preview",
+                size = attachmentHtml.length.toLong()
+        )
+
+        val topicHeader = data.addDiscussionTopicToCourse(
+                course = course,
+                user = data.users.values.first(),
+                topicTitle = "Awesome topic",
+                topicDescription = "With an attachment!",
+                attachment = attachment
+        )
+
+        courseBrowserPage.selectDiscussions()
+        discussionListPage.selectTopic(topicHeader.title!!)
+        discussionDetailsPage.assertTopicInfoShowing(topicHeader)
+        discussionDetailsPage.assertMainAttachmentDisplayed()
+        discussionDetailsPage.previewMainAttachment(
+                WebViewTextCheck(Locator.ID, "header1", "Famous Quote"),
+                WebViewTextCheck(Locator.ID, "p1", "No matter where you go")
+        )
+    }
+
 
     // Tests that users can like entries and the correct like count is displayed, if the liking is enabled
-    @Stub
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P0, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, false)
     fun testDiscussionLikePost_base() {
 
         val data = getToCourse(studentCount = 1, courseCount = 1, enableDiscussionTopicCreation = true)
@@ -189,17 +294,16 @@ class DiscussionsInteractionTest : StudentTest() {
         discussionDetailsPage.assertFavoritingEnabled(discussionEntry)
         discussionDetailsPage.assertLikeCount(discussionEntry, 0)
         discussionDetailsPage.clickLikeOnEntry(discussionEntry)
-        sleep(1000) // TODO: Something else
+        sleep(1000) // Small wait to allow "like" to propagate
         discussionDetailsPage.assertLikeCount(discussionEntry, 1)
         discussionDetailsPage.clickLikeOnEntry(discussionEntry)
-        sleep(1000)
+        sleep(1000) // Small wait to allow "unlike" to propagate
         discussionDetailsPage.assertLikeCount(discussionEntry, 0)
     }
 
     // Tests that discussion entry liking is not available when disabled
-    @Stub
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P1, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, false)
     fun testDiscussionLikePost_disabledWhenNotPermitted() {
         val data = getToCourse(studentCount = 1, courseCount = 1, enableDiscussionTopicCreation = true)
         data.discussionRatingsEnabled = false
@@ -227,9 +331,8 @@ class DiscussionsInteractionTest : StudentTest() {
     }
 
     // Test basic discussion view
-    @Stub
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P0, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, false)
     fun testDiscussionView_base() {
         val data = getToCourse(studentCount = 1, courseCount = 1, enableDiscussionTopicCreation = true)
         val course1 = data.courses.values.first()
@@ -247,60 +350,10 @@ class DiscussionsInteractionTest : StudentTest() {
         discussionDetailsPage.assertTopicInfoShowing(topicHeader)
     }
 
-    // Test that you can reply to a discussion
-    @Stub
+    // Test that you can reply to a discussion (if enabled)
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P0, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, false)
     fun testDiscussionView_replies() {
-        val data = getToCourse(studentCount = 1, courseCount = 1, enableDiscussionTopicCreation = true)
-        val course1 = data.courses.values.first()
-        val user1 = data.users.values.first()
-        val topicHeader = data.addDiscussionTopicToCourse(
-                course = course1,
-                user = user1,
-                topicTitle = "Discussion with replies enabled",
-                topicDescription = "Replies enabled"
-        )
-        courseBrowserPage.selectDiscussions()
-        discussionListPage.pullToUpdate()
-        discussionListPage.selectTopic(topicHeader.title!!)
-        discussionDetailsPage.assertTopicInfoShowing(topicHeader)
-        discussionDetailsPage.assertRepliesEnabled()
-
-        // Let's reply via the app
-        val replyText = "I'm a reply"
-        discussionDetailsPage.sendReply(replyText)
-        val discussionEntry = findDiscussionEntry(data, topicHeader.title!!, replyText)
-        discussionDetailsPage.assertReplyDisplayed(discussionEntry)
-    }
-
-    // Test that replies are not possible when they are not allowed
-    @Stub
-    @Test
-    @TestMetaData(Priority.P0, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, true)
-    fun testDiscussionView_repliesHiddenWhenNotPermitted() {
-        val data = getToCourse(studentCount = 1, courseCount = 1, enableDiscussionTopicCreation = true)
-        val course1 = data.courses.values.first()
-        val user1 = data.users.values.first()
-        data.discussionRepliesEnabled = false // Do we still need these?
-        val topicHeader = data.addDiscussionTopicToCourse(
-                course = course1,
-                user = user1,
-                topicTitle = "Discussion with replies disabled",
-                topicDescription = "Replies disabled",
-                allowReplies = false
-        )
-        courseBrowserPage.selectDiscussions()
-        discussionListPage.pullToUpdate()
-        discussionListPage.selectTopic(topicHeader.title!!)
-        discussionDetailsPage.assertRepliesDisabled()
-    }
-
-    // Test that a reply is displayed properly
-    @Stub
-    @Test
-    @TestMetaData(Priority.P0, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, true)
-    fun testDiscussionReply_base() {
         val data = getToCourse(studentCount = 1, courseCount = 1, enableDiscussionTopicCreation = true)
         val course1 = data.courses.values.first()
         val user1 = data.users.values.first()
@@ -324,26 +377,198 @@ class DiscussionsInteractionTest : StudentTest() {
         discussionDetailsPage.assertReplyDisplayed(discussionEntry)
     }
 
-//    @Stub
-//    @Test
-//    @TestMetaData(Priority.P0, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, true)
-//    fun testDiscussionReply_withAttachment() {
-//
-//    }
-//
-//    @Stub
-//    @Test
-//    @TestMetaData(Priority.P0, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, true)
-//    fun testDiscussionReply_threaded() {
-//
-//    }
-//
-//    @Stub
-//    @Test
-//    @TestMetaData(Priority.P0, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, true)
-//    fun testDiscussionReply_threadedWithAttachment() {
-//
-//    }
+    // Test that replies are not possible when they are not enabled
+    @Test
+    @TestMetaData(Priority.P0, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, false)
+    fun testDiscussionView_repliesHiddenWhenNotPermitted() {
+        val data = getToCourse(studentCount = 1, courseCount = 1, enableDiscussionTopicCreation = true)
+        val course1 = data.courses.values.first()
+        val user1 = data.users.values.first()
+        data.discussionRepliesEnabled = false // Do we still need these?
+        val topicHeader = data.addDiscussionTopicToCourse(
+                course = course1,
+                user = user1,
+                topicTitle = "Discussion with replies disabled",
+                topicDescription = "Replies disabled",
+                allowReplies = false
+        )
+        courseBrowserPage.selectDiscussions()
+        discussionListPage.pullToUpdate()
+        discussionListPage.selectTopic(topicHeader.title!!)
+        discussionDetailsPage.assertRepliesDisabled()
+    }
+
+    // Test that a reply is displayed properly
+    @Test
+    @TestMetaData(Priority.P0, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, false)
+    fun testDiscussionReply_base() {
+        val data = getToCourse(studentCount = 1, courseCount = 1, enableDiscussionTopicCreation = true)
+        val course1 = data.courses.values.first()
+        val user1 = data.users.values.first()
+        val topicHeader = data.addDiscussionTopicToCourse(
+                course = course1,
+                user = user1,
+                topicTitle = "Discussion with replies enabled",
+                topicDescription = "Replies enabled"
+        )
+        courseBrowserPage.selectDiscussions()
+        discussionListPage.pullToUpdate()
+        discussionListPage.selectTopic(topicHeader.title!!)
+        discussionDetailsPage.assertTopicInfoShowing(topicHeader)
+        discussionDetailsPage.assertRepliesEnabled()
+
+        // Let's reply via the app
+        val replyText = "I'm a reply"
+        discussionDetailsPage.sendReply(replyText)
+        val discussionEntry = findDiscussionEntry(data, topicHeader.title!!, replyText)
+        discussionDetailsPage.assertReplyDisplayed(discussionEntry)
+    }
+
+    // Tests replying with an attachment.
+    // It is a whole other gear to manually specify an attachment the same way that a user would,
+    // so we add the attachments programmatically.
+    @Test
+    @TestMetaData(Priority.P0, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, false)
+    fun testDiscussionReply_withAttachment() {
+        val data = getToCourse(studentCount = 1, courseCount = 1, enableDiscussionTopicCreation = true)
+        val course1 = data.courses.values.first()
+        val user = data.users.values.first()
+
+        val topicHeader = data.addDiscussionTopicToCourse(
+                course = course1,
+                user = user,
+                topicTitle = "Hey!  A Discussion!",
+                topicDescription = "Awesome!"
+        )
+
+        courseBrowserPage.selectDiscussions()
+        discussionListPage.selectTopic(topicHeader.title!!)
+
+        // Let's reply via the app
+        val replyText = "I'm a reply"
+        discussionDetailsPage.sendReply(replyText)
+
+        // Now let's append the attachment after-the-fact, since it is very hard
+        // to manually attach anything via Espresso, since it would require manipulating
+        // system UIs.
+        val attachmentHtml =
+                """
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        </head>
+
+        <body>
+        <h1 id="header1">Famous Quote</h1>
+        <p id="p1">That's one small step for man, one giant leap for mankind -- Neil Armstrong</p>
+        </body>
+        </html> """
+
+        val discussionEntry = findDiscussionEntry(data, topicHeader.title!!, replyText)
+        attachHtmlToReply(data, attachmentHtml, discussionEntry)
+
+        discussionDetailsPage.refresh() // To pick up updated reply
+        discussionDetailsPage.assertReplyDisplayed(discussionEntry)
+        discussionDetailsPage.assertReplyAttachment(discussionEntry)
+        discussionDetailsPage.openAndCheckReplyAttachment(discussionEntry,
+                WebViewTextCheck(Locator.ID,"header1", "Famous Quote"),
+                WebViewTextCheck(Locator.ID, "p1", "That's one small step"))
+    }
+
+    // Tests that we can make a threaded reply to a reply
+    @Test
+    @TestMetaData(Priority.P0, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, false)
+    fun testDiscussionReply_threaded() {
+        val data = getToCourse(studentCount = 1, courseCount = 1, enableDiscussionTopicCreation = true)
+        val course1 = data.courses.values.first()
+        val user = data.users.values.first()
+
+        val topicHeader = data.addDiscussionTopicToCourse(
+                course = course1,
+                user = user,
+                topicTitle = "Wow!  A Discussion!",
+                topicDescription = "Cool!"
+        )
+
+        courseBrowserPage.selectDiscussions()
+        discussionListPage.selectTopic(topicHeader.title!!)
+
+        // Let's reply via the app
+        val replyText = "I'm a reply"
+        discussionDetailsPage.sendReply(replyText)
+
+        // Now let's reply to the reply (i.e., threaded reply)
+        val replyReplyText = "Threaded Reply"
+        val replyEntry = findDiscussionEntry(data, topicHeader.title!!, replyText)
+        discussionDetailsPage.replyToReply(replyEntry,replyReplyText)
+
+        // And verify that our reply-to-reply is showing
+        val replyReplyEntry = findDiscussionEntry(data, topicHeader.title!!, replyReplyText)
+        discussionDetailsPage.assertReplyDisplayed(replyReplyEntry)
+    }
+
+    // Tests that we can make a threaded reply with an attachment
+    // It is a whole other gear to manually specify an attachment the same way that a user would,
+    // so we add the attachments programmatically.
+    @Test
+    @TestMetaData(Priority.P0, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, false)
+    fun testDiscussionReply_threadedWithAttachment() {
+        val data = getToCourse(studentCount = 1, courseCount = 1, enableDiscussionTopicCreation = true)
+        val course1 = data.courses.values.first()
+        val user = data.users.values.first()
+
+        val topicHeader = data.addDiscussionTopicToCourse(
+                course = course1,
+                user = user,
+                topicTitle = "Discussion threaded reply attachment",
+                topicDescription = "Cool!"
+        )
+
+        courseBrowserPage.selectDiscussions()
+        discussionListPage.selectTopic(topicHeader.title!!)
+
+        // Let's reply via the app
+        val replyText = "I'm a reply"
+        discussionDetailsPage.sendReply(replyText)
+
+        // Now let's reply to the reply (i.e., threaded reply)
+        val replyReplyText = "Threaded Reply"
+        val replyEntry = findDiscussionEntry(data, topicHeader.title!!, replyText)
+        discussionDetailsPage.replyToReply(replyEntry,replyReplyText)
+
+        // And verify that our reply-to-reply is showing
+        val replyReplyEntry = findDiscussionEntry(data, topicHeader.title!!, replyReplyText)
+
+        // Lets attach an html attachment behind the scenes
+        val attachmentHtml =
+                """
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        </head>
+
+        <body>
+        <h1 id="header1">Famous Quote</h1>
+        <p id="p1">The only thing we have to fear is fear itself -- FDR</p>
+        </body>
+        </html> """
+
+        attachHtmlToReply(data, attachmentHtml, replyReplyEntry)
+
+        discussionDetailsPage.refresh() // To pick up updated discussion reply
+        discussionDetailsPage.assertReplyDisplayed(replyReplyEntry)
+        discussionDetailsPage.assertReplyAttachment(replyReplyEntry)
+        discussionDetailsPage.openAndCheckReplyAttachment(replyReplyEntry,
+                WebViewTextCheck(Locator.ID,"header1", "Famous Quote"),
+                WebViewTextCheck(Locator.ID, "p1", "The only thing we have to fear"))
+
+    }
+
+    //
+    // Utilities
+    //
 
     // Needed to grab the discussion entry associated with a manual discussion reply
     private fun findDiscussionEntry(data: MockCanvas, topicName: String, replyMessage: String) : DiscussionEntry {
@@ -353,12 +578,45 @@ class DiscussionsInteractionTest : StudentTest() {
         assertNotNull("Can't find topic header", topicHeader)
         val topic = data.discussionTopics[topicHeader!!.id]
         assertNotNull("Can't find topic", topic)
-        val discussionEntry = topic!!.views.find { it.message.equals(replyMessage) }
+        var discussionEntry = topic!!.views.find { it.message.equals(replyMessage) }
+        if(discussionEntry == null) {
+            // It might be a threaded reply
+            topic.views.forEach { view ->
+                view.replies?.forEach { reply ->
+                    if(reply.message.equals(replyMessage)) {
+                        return reply
+                    }
+                }
+            }
+        }
         assertNotNull("Can't find discussionEntry", discussionEntry)
 
         return discussionEntry!!
     }
 
+    // Attach an HTML string/file to a reply
+    // Assumes that you want to use first course
+    private fun attachHtmlToReply(data: MockCanvas, html: String, reply: DiscussionEntry) {
+        val course1 = data.courses.values.first()
+        val fileId = data.addFileToCourse(
+                courseId = course1.id,
+                displayName = "page.html",
+                contentType = "text/html",
+                fileContent = html
+        )
+
+        val attachment = RemoteFile(
+                id = fileId,
+                displayName = "page.html",
+                fileName = "page.html",
+                contentType = "text/html",
+                url = "https://mock-data.instructure.com/files/$fileId/preview",
+                size = html.length.toLong()
+        )
+        reply.attachments = mutableListOf(attachment)
+    }
+
+    // Mock a specified number of students and courses, and navigate to the first course
     private fun getToCourse(
             studentCount: Int = 1,
             courseCount: Int = 1,

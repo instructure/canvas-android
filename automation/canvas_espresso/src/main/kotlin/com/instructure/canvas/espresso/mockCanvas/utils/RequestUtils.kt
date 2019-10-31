@@ -39,6 +39,23 @@ fun Request.successResponse(body: Any): Response {
 }
 
 /**
+ * Creates a successful response for this [Request] with a response code of 200 and a plain text response [body]
+ */
+fun Request.successResponseRaw(body: String): Response {
+    val responseBody = ResponseBody.create(
+            MediaType.parse("text/plain"),
+            body
+    )
+    return Response.Builder()
+            .request(this)
+            .body(responseBody)
+            .message("Success")
+            .protocol(Protocol.HTTP_1_1)
+            .code(200)
+            .build()
+}
+
+/**
  * Creates a "204 No Content" response for this [Request], with no body.
  */
 fun Request.noContentResponse(): Response {

@@ -105,9 +105,9 @@ class MockCanvas {
     /** folderId -> list of files */
     val folderFiles = mutableMapOf<Long, MutableList<FileFolder>>()
 
-    var nextFileOrFolderId = 1L
-    fun newFileOrFolderId(): Long {
-        return nextFileOrFolderId++
+    var nextItemId = 1L
+    fun newItemId(): Long {
+        return nextItemId++
     }
 
     /** Map of file contents, fileId -> String.  Just supporting string contents for now. */
@@ -546,7 +546,7 @@ fun MockCanvas.addFileToCourse(
         contentType: String = "text/plain"): Long {
     var courseRootFolder = courseRootFolders[courseId]
     if (courseRootFolder == null) {
-        val folderId = newFileOrFolderId()
+        val folderId = newItemId()
         courseRootFolder = FileFolder(
                 id = folderId,
                 contextType = "Course",
@@ -561,7 +561,7 @@ fun MockCanvas.addFileToCourse(
     }
 
     // Now create our file metadata
-    val fileId = newFileOrFolderId()
+    val fileId = newItemId()
     val fileMetadataItem = FileFolder(
             id = fileId,
             folderId = courseRootFolder.id,
@@ -601,14 +601,15 @@ fun MockCanvas.addDiscussionTopicToCourse(
         topicDescription: String = Randomizer.randomPageTitle(),
         allowRating: Boolean = true,
         allowReplies: Boolean = true,
-        allowAttachments: Boolean = true
+        allowAttachments: Boolean = true,
+        attachment: RemoteFile? = null
 ) : DiscussionTopicHeader {
 
     var topicHeader = prePopulatedTopicHeader
     if(topicHeader == null) {
         topicHeader = DiscussionTopicHeader(
                 title = topicTitle,
-                //id = newFileOrFolderId(),
+                //id = newItemId(),
                 //published = true,
                 discussionType = "side_comment",
                 message = topicDescription
@@ -622,8 +623,11 @@ fun MockCanvas.addDiscussionTopicToCourse(
     topicHeader.published = true
     topicHeader.allowRating = allowRating
     topicHeader.permissions = DiscussionTopicPermission(attach = allowAttachments, reply = allowReplies)
-    topicHeader.id = newFileOrFolderId()
+    topicHeader.id = newItemId()
     topicHeader.postedDate = Calendar.getInstance().time
+    if(attachment != null) {
+        topicHeader.attachments = mutableListOf<RemoteFile>(attachment)
+    }
 
     var courseTopicHeaderList = courseDiscussionTopicHeaders[course.id]
     if(courseTopicHeaderList == null) {
@@ -647,11 +651,12 @@ fun MockCanvas.addDiscussionTopicToCourse(
 fun MockCanvas.addReplyToDiscussion(
         topicHeader: DiscussionTopicHeader,
         user: User,
-        replyMessage: String = Faker.instance().chuckNorris().fact()
+        replyMessage: String = Faker.instance().chuckNorris().fact(),
+        attachment: RemoteFile? = null
 ) : DiscussionEntry {
     val topic = discussionTopics[topicHeader.id]
     val entry = DiscussionEntry(
-            id = newFileOrFolderId(),
+            id = newItemId(),
             message = replyMessage,
             unread = true,
             userName = user.name,
@@ -661,6 +666,9 @@ fun MockCanvas.addReplyToDiscussion(
             ),
             createdAt = Calendar.getInstance().time.toString()
     )
+    if(attachment != null) {
+        entry.attachments = mutableListOf(attachment)
+    }
     topic!!.views.add(entry)
     topic.unreadEntries.add(entry.id)
     topicHeader.unreadCount += 1

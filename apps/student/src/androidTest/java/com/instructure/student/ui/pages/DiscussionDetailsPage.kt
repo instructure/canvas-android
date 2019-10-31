@@ -16,11 +16,16 @@
  */
 package com.instructure.student.ui.pages
 
+import android.app.UiAutomation
 import android.view.View
+import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
+import androidx.test.espresso.action.ViewActions.swipeDown
+import androidx.test.espresso.action.ViewActions.swipeUp
 import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.web.assertion.WebViewAssertions
 import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
@@ -30,7 +35,9 @@ import androidx.test.espresso.web.webdriver.DriverAtoms.getText
 import androidx.test.espresso.web.webdriver.DriverAtoms.webClick
 import androidx.test.espresso.web.webdriver.DriverAtoms.webScrollIntoView
 import androidx.test.espresso.web.webdriver.Locator
+import androidx.test.platform.app.InstrumentationRegistry
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
+import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.canvasapi2.models.DiscussionEntry
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.espresso.OnViewWithId
@@ -47,8 +54,10 @@ import com.instructure.student.R
 import com.instructure.student.ui.utils.TypeInRCETextEditor
 import instructure.rceditor.RCETextEditor
 import org.hamcrest.Matcher
+import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.containsString
 import org.junit.Assert.assertTrue
+
 
 class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
     private val discussionTopicTitle by OnViewWithId(R.id.discussionTopicTitle)
@@ -73,6 +82,11 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
         onWebView(withId(R.id.discussionTopicHeaderWebView))
                 .withElement(findElement(Locator.ID,linkElementId))
                 .perform(webClick())
+    }
+
+    fun refresh() {
+        onView(allOf(withId(R.id.swipeRefreshLayout), isDisplayingAtLeast(10)))
+                .perform(withCustomConstraints(swipeDown(), isDisplayingAtLeast(10)))
     }
 
     fun clickReply() {
@@ -150,9 +164,32 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
         }
     }
 
+    fun assertReplyAttachment(reply: DiscussionEntry) {
+        try {
+            onWebView(withId(R.id.discussionRepliesWebView))
+                    .withElement(findElement(Locator.CLASS_NAME, "attachments_${reply.id}"))
+        }
+        catch(t: Throwable) {
+            assertTrue("Discussion entry did not have an attachment", false)
+        }
+    }
+
+    fun openAndCheckReplyAttachment(reply: DiscussionEntry, vararg checks : WebViewTextCheck) {
+        onWebView(withId(R.id.discussionRepliesWebView))
+                .withElement(findElement(Locator.CLASS_NAME, "attachments_${reply.id}"))
+                .perform(webClick())
+        for(check in checks) {
+            onWebView(withId(R.id.canvasWebView))
+                    .withElement(findElement(check.locatorType, check.locatorValue))
+                    .check(webMatches(getText(), containsString(check.textValue)))
+        }
+        Espresso.pressBack()
+
+    }
+
     fun replyToReply(reply: DiscussionEntry, replyMessage: String) {
         onWebView(withId(R.id.discussionRepliesWebView))
-                .withElement(findElement(Locator.ID, "reply_button_wrapper_${reply.id}"))
+                .withElement(findElement(Locator.ID, "reply_${reply.id}"))
                 .perform(webClick())
         onView(withId(R.id.rce_webView)).perform(TypeInRCETextEditor(replyMessage))
         onView(withId(R.id.menu_send)).click()
@@ -165,8 +202,29 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
                 .perform(webScrollIntoView())
     }
 
-    fun swipeUpReplyButton() {
-        replyButton.swipeUp()
+    fun assertMainAttachmentDisplayed() {
+        onView(withId(R.id.attachmentIcon)).assertDisplayed()
+    }
+
+    /**
+     * Assumes that the attachment is html
+     */
+    fun previewMainAttachment(vararg checks: WebViewTextCheck) {
+        onView(withId(R.id.attachmentIcon)).click()
+        for(check in checks) {
+            onWebView(withId(R.id.canvasWebView))
+                    .withElement(findElement(check.locatorType, check.locatorValue))
+                    .check(webMatches(getText(), containsString(check.textValue)))
+        }
+        Espresso.pressBack()
     }
 }
+
+/** data class that encapsulates info for a webview text check */
+// TODO: We should probably move this to a more centralized location
+data class WebViewTextCheck(
+        val locatorType: Locator,
+        val locatorValue: String,
+        val textValue: String
+)
 

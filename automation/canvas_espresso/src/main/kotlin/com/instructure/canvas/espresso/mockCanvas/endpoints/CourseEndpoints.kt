@@ -305,6 +305,39 @@ object CourseDiscussionEntryEndpoint : Endpoint(
                 }
             }
 
+        },
+        Segment("replies") to endpoint {
+            POST {
+                val jsonObject = grabJsonFromMultiPartBody(request.body()!!)
+                Log.d("<--", "topic entry replies post body: $jsonObject")
+                val newEntry = DiscussionEntry (
+                        message = jsonObject.get("message").asString, // This is all that comes with the POST object
+                        createdAt = Calendar.getInstance().time.toString(),
+                        author = DiscussionParticipant(id = request.user!!.id, displayName = request.user!!.name)
+                )
+                val topic = data.discussionTopics[pathVars.topicId]
+                val entry = topic?.views?.find { it.id == pathVars.entryId }
+                if(entry != null && newEntry != null) {
+                    entry.addReply(newEntry)
+                    request.successResponse(newEntry)
+                }
+                else {
+                    request.unauthorizedResponse()
+                }
+            }
+
+            GET {
+                val topic = data.discussionTopics[pathVars.topicId]
+                val entry = topic?.views?.find { it.id == pathVars.entryId }
+
+                if(entry != null) {
+                    request.successResponse(entry.replies ?: mutableListOf<DiscussionEntry>())
+                }
+                else {
+                    request.unauthorizedResponse()
+                }
+
+            }
         }
 )
 
