@@ -16,27 +16,17 @@
  */
 package com.instructure.student.ui.pages
 
-import android.app.UiAutomation
-import android.view.View
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.UiController
-import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions.swipeDown
-import androidx.test.espresso.action.ViewActions.swipeUp
-import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
 import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.web.assertion.WebViewAssertions
 import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
 import androidx.test.espresso.web.sugar.Web.onWebView
 import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
 import androidx.test.espresso.web.webdriver.DriverAtoms.getText
 import androidx.test.espresso.web.webdriver.DriverAtoms.webClick
-import androidx.test.espresso.web.webdriver.DriverAtoms.webScrollIntoView
 import androidx.test.espresso.web.webdriver.Locator
-import androidx.test.platform.app.InstrumentationRegistry
-import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.canvasapi2.models.DiscussionEntry
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
@@ -48,12 +38,8 @@ import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.scrollTo
-import com.instructure.espresso.swipeUp
-import com.instructure.espresso.typeText
 import com.instructure.student.R
 import com.instructure.student.ui.utils.TypeInRCETextEditor
-import instructure.rceditor.RCETextEditor
-import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.containsString
 import org.junit.Assert.assertTrue
@@ -89,7 +75,7 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
                 .perform(withCustomConstraints(swipeDown(), isDisplayingAtLeast(10)))
     }
 
-    fun clickReply() {
+    private fun clickReply() {
         replyButton.click()
     }
 
@@ -174,7 +160,7 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
         }
     }
 
-    fun openAndCheckReplyAttachment(reply: DiscussionEntry, vararg checks : WebViewTextCheck) {
+    fun previewAndCheckReplyAttachment(reply: DiscussionEntry, vararg checks : WebViewTextCheck) {
         onWebView(withId(R.id.discussionRepliesWebView))
                 .withElement(findElement(Locator.CLASS_NAME, "attachments_${reply.id}"))
                 .perform(webClick())
@@ -195,13 +181,6 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
         onView(withId(R.id.menu_send)).click()
     }
 
-
-    fun swipeReplyInfoView(reply: DiscussionEntry) {
-        onWebView(withId(R.id.discussionRepliesWebView))
-                .withElement(findElement(Locator.ID, "message_content_${reply.id}"))
-                .perform(webScrollIntoView())
-    }
-
     fun assertMainAttachmentDisplayed() {
         onView(withId(R.id.attachmentIcon)).assertDisplayed()
     }
@@ -209,7 +188,7 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
     /**
      * Assumes that the attachment is html
      */
-    fun previewMainAttachment(vararg checks: WebViewTextCheck) {
+    fun previewAndCheckMainAttachment(vararg checks: WebViewTextCheck) {
         onView(withId(R.id.attachmentIcon)).click()
         for(check in checks) {
             onWebView(withId(R.id.canvasWebView))

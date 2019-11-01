@@ -16,10 +16,13 @@
  */
 package com.instructure.canvas.espresso.mockCanvas.utils
 
+import android.util.Log
 import com.google.gson.Gson
+import com.google.gson.JsonObject
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvasapi2.models.User
 import okhttp3.*
+import okio.Buffer
 
 /**
  * Creates a successful response for this [Request] with a response code of 200 and response [body] serialized to json
@@ -114,3 +117,94 @@ val Request.user: User?
             MockCanvas.data.users[userId]
         }
     }
+
+// Arrggh... There has to be an easier way or standard call for doing this, but a few hours of
+// Googling did not yield such a beast.  We need a way to parse the incoming JSON body of a
+// POST request.  The body might look something like this:
+//    --39f93652-2013-49f1-85c5-c9373052de66
+//    Content-Disposition: form-data; name="title"
+//    Content-Transfer-Encoding: binary
+//    Content-Type: multipart/form-data; charset=utf-8
+//    Content-Length: 21
+//
+//    Discussion Topic Name
+//    --39f93652-2013-49f1-85c5-c9373052de66
+//    Content-Disposition: form-data; name="message"
+//    Content-Transfer-Encoding: binary
+//    Content-Type: multipart/form-data; charset=utf-8
+//    Content-Length: 8
+//
+//    Awesome!
+//    --39f93652-2013-49f1-85c5-c9373052de66
+fun grabJsonFromMultiPartBody(body: RequestBody) : JsonObject {
+    val buffer = Buffer()
+    body.writeTo(buffer)
+
+    val result = JsonObject()
+
+    // Read in the initial marker line
+    val firstLine = buffer.readUtf8Line()
+    if(firstLine == null || !firstLine.startsWith("--")) {
+        return result
+    }
+
+    while(grabJsonFieldFromBuffer(buffer,result)) { }
+    return result
+}
+
+private fun grabJsonFieldFromBuffer(buffer: Buffer, jsonObject: JsonObject): Boolean {
+    // Read a number of header lines followed by a blank line
+    // We should be able to grab the json field name from the header lines.
+    var fieldName: String? = null
+    var line = buffer.readUtf8Line()
+    while(line != null && line.length > 0) {
+        val nameRegex = """name=\"(\w+)\"""".toRegex()
+        val match = nameRegex.find(line!!)
+        if(match != null) {
+            fieldName = match.groupValues[1]
+            Log.d("<--","Found fieldName=$fieldName in line=$line")
+        }
+        line = buffer.readUtf8Line()
+    }
+
+    if(line == null) return false // Otherwise, it was blank
+
+    // Now read the contents, which will end with a marker line
+    val contentBuilder = StringBuilder()
+    line = buffer.readUtf8Line()
+
+    // NOTE: Multi-line content supported, but not yet really tested.
+    while(line != null && !line.startsWith("--")) {
+        contentBuilder.append(line)
+        line = buffer.readUtf8Line()
+    }
+
+    if(line == null) return false // Otherwise, we just read in our content
+
+    // Grab the field content.  It could be multiple lines
+    var fieldStringValue = contentBuilder.toString()
+    if(fieldStringValue == null || fieldStringValue.length == 0) return false
+
+    // Let's attempt to add our field and value to jsonObject, correctly typed
+    var fieldValue: Any? = null
+    if(fieldStringValue.equals("true", ignoreCase = true) || fieldStringValue.equals("false", ignoreCase = true))
+    {
+        jsonObject.addProperty(fieldName,fieldStringValue.toBoolean())
+    }
+    else {
+        fieldValue = fieldStringValue.toIntOrNull()
+        if(fieldValue != null) {
+            jsonObject.addProperty(fieldName, fieldValue as Int)
+        }
+        else{
+            fieldValue = fieldStringValue.toDoubleOrNull()
+            if(fieldValue != null) {
+                jsonObject.addProperty(fieldName, fieldValue as Double)
+            }
+            else {
+                jsonObject.addProperty(fieldName, fieldStringValue)
+            }
+        }
+    }
+    return true
+}

@@ -163,7 +163,6 @@ object CourseDiscussionTopicListEndpoint : Endpoint(
 
             POST {
                 val jsonObject = grabJsonFromMultiPartBody(request.body()!!)
-                //val json = jsonObject.toString()
                 var newHeader = Gson().fromJson(jsonObject, DiscussionTopicHeader::class.java)
                 var course = data.courses.values.find {it.id == pathVars.courseId}
                 var user = request.user!!
@@ -341,77 +340,3 @@ object CourseDiscussionEntryEndpoint : Endpoint(
         }
 )
 
-// The body might look something like this:
-//    --39f93652-2013-49f1-85c5-c9373052de66
-//    Content-Disposition: form-data; name="title"
-//    Content-Transfer-Encoding: binary
-//    Content-Type: multipart/form-data; charset=utf-8
-//    Content-Length: 21
-//
-//    Discussion Topic Name
-//    --39f93652-2013-49f1-85c5-c9373052de66
-//    Content-Disposition: form-data; name="message"
-//    Content-Transfer-Encoding: binary
-//    Content-Type: multipart/form-data; charset=utf-8
-//    Content-Length: 8
-//
-//    Awesome!
-private fun grabJsonFromMultiPartBody(body: RequestBody) : JsonObject {
-    val buffer = Buffer()
-    body.writeTo(buffer)
-
-    val result = JsonObject()
-
-    while(grabJsonFieldFromBuffer(buffer,result)) { }
-    return result
-}
-
-private fun grabJsonFieldFromBuffer(buffer: Buffer, jsonObject: JsonObject): Boolean {
-    var line = buffer.readUtf8Line()
-    if(line == null) return false
-    if(!line.startsWith("--")) {
-        return false
-    }
-
-    // Read a number of header lines followed by a blank line
-    var fieldName: String? = null
-    line = buffer.readUtf8Line()
-    while(line != null && line.length > 0) {
-        val nameRegex = """name=\"(\w+)\"""".toRegex()
-        val match = nameRegex.find(line!!)
-        if(match != null) {
-            fieldName = match.groupValues[1]
-            Log.d("<--","Found fieldName=$fieldName in line=$line")
-        }
-        line = buffer.readUtf8Line()
-    }
-
-    if(line == null) return false // Otherwise, it was blank
-
-    // Grab the field content.  Assume for now that it is a single line.
-    var fieldStringValue = buffer.readUtf8Line()
-    if(fieldStringValue == null) return false
-
-    // Let's attempt to add our field and value to jsonObject, correctly typed
-    var fieldValue: Any? = null
-    if(fieldStringValue.equals("true", ignoreCase = true) || fieldStringValue.equals("false", ignoreCase = true))
-    {
-        jsonObject.addProperty(fieldName,fieldStringValue.toBoolean())
-    }
-    else {
-        fieldValue = fieldStringValue.toIntOrNull()
-        if(fieldValue != null) {
-            jsonObject.addProperty(fieldName, fieldValue as Int)
-        }
-        else{
-            fieldValue = fieldStringValue.toDoubleOrNull()
-            if(fieldValue != null) {
-                jsonObject.addProperty(fieldName, fieldValue as Double)
-            }
-            else {
-                jsonObject.addProperty(fieldName, fieldStringValue)
-            }
-        }
-    }
-    return true
-}

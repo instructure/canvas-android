@@ -16,22 +16,18 @@
  */
 package com.instructure.student.ui.interaction
 
-import android.os.SystemClock
 import android.os.SystemClock.sleep
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.web.webdriver.Locator
-import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addDiscussionTopicToCourse
 import com.instructure.canvas.espresso.mockCanvas.addFileToCourse
 import com.instructure.canvas.espresso.mockCanvas.addReplyToDiscussion
 import com.instructure.canvas.espresso.mockCanvas.init
-import com.instructure.canvasapi2.StudentContextCardQuery
 import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.models.DiscussionEntry
 import com.instructure.canvasapi2.models.RemoteFile
 import com.instructure.canvasapi2.models.Tab
-import com.instructure.canvasapi2.utils.FileUtils
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
@@ -42,6 +38,7 @@ import com.instructure.student.ui.utils.tokenLogin
 import org.junit.Assert.assertNotNull
 import org.junit.Test
 
+// Note: Tests course discussions, not group discussions.
 class DiscussionsInteractionTest : StudentTest() {
     override fun displaysPageObjects() = Unit // Not used for interaction tests
 
@@ -91,24 +88,9 @@ class DiscussionsInteractionTest : StudentTest() {
         </body>
         </html> """
 
-        val fileId = data.addFileToCourse(
-                courseId = course.id,
-                displayName = "page.html",
-                contentType = "text/html",
-                fileContent = attachmentHtml
-        )
-
-        val attachment = RemoteFile(
-                id = fileId,
-                displayName = "page.html",
-                fileName = "page.html",
-                contentType = "text/html",
-                url = "https://mock-data.instructure.com/files/$fileId/preview",
-                size = attachmentHtml.length.toLong()
-        )
-
         val topicHeader = data.courseDiscussionTopicHeaders[course.id]?.first()
-        topicHeader?.attachments?.add(attachment)
+        val attachment = createHtmlAttachment(data, attachmentHtml)
+        topicHeader!!.attachments = mutableListOf(attachment)
 
         discussionListPage.pullToUpdate()
         discussionListPage.assertTopicDisplayed(topicName)
@@ -116,7 +98,7 @@ class DiscussionsInteractionTest : StudentTest() {
         discussionDetailsPage.assertTitleText(topicName)
         discussionDetailsPage.assertDescriptionText(topicDescription)
         discussionDetailsPage.assertMainAttachmentDisplayed()
-        discussionDetailsPage.previewMainAttachment(
+        discussionDetailsPage.previewAndCheckMainAttachment(
                 WebViewTextCheck(Locator.ID, "header1", "Famous Quote"),
                 WebViewTextCheck(Locator.ID, "p1", "-- Socrates")
         )
@@ -179,6 +161,7 @@ class DiscussionsInteractionTest : StudentTest() {
                 topicTitle = topicName,
                 topicDescription = topicDescription
         )
+
         val discussionEntry = data.addReplyToDiscussion(
                 topicHeader = topicHeader,
                 user = user,
@@ -190,8 +173,6 @@ class DiscussionsInteractionTest : StudentTest() {
         discussionListPage.pullToUpdate()
         discussionListPage.assertUnreadCount(topicHeader.title!!, 1)
         discussionListPage.selectTopic(topicHeader.title!!)
-        //discussionDetailsPage.swipeUpReplyButton()
-        discussionDetailsPage.swipeReplyInfoView(discussionEntry)
         // From what I can tell, our self-generated HTML has a 2500 ms wait before it
         // sends the "read" call for the unread messages on the page.  So we'll wait for
         // 3 seconds.
@@ -225,35 +206,20 @@ class DiscussionsInteractionTest : StudentTest() {
         </body>
         </html> """
 
-        val fileId = data.addFileToCourse(
-                courseId = course.id,
-                displayName = "page.html",
-                contentType = "text/html",
-                fileContent = attachmentHtml
-        )
-
-        val attachment = RemoteFile(
-                id = fileId,
-                displayName = "page.html",
-                fileName = "page.html",
-                contentType = "text/html",
-                url = "https://mock-data.instructure.com/files/$fileId/preview",
-                size = attachmentHtml.length.toLong()
-        )
-
         val topicHeader = data.addDiscussionTopicToCourse(
                 course = course,
                 user = data.users.values.first(),
                 topicTitle = "Awesome topic",
-                topicDescription = "With an attachment!",
-                attachment = attachment
+                topicDescription = "With an attachment!"
         )
+        val attachment = createHtmlAttachment(data,attachmentHtml)
+        topicHeader.attachments = mutableListOf(attachment)
 
         courseBrowserPage.selectDiscussions()
         discussionListPage.selectTopic(topicHeader.title!!)
         discussionDetailsPage.assertTopicInfoShowing(topicHeader)
         discussionDetailsPage.assertMainAttachmentDisplayed()
-        discussionDetailsPage.previewMainAttachment(
+        discussionDetailsPage.previewAndCheckMainAttachment(
                 WebViewTextCheck(Locator.ID, "header1", "Famous Quote"),
                 WebViewTextCheck(Locator.ID, "p1", "No matter where you go")
         )
@@ -466,12 +432,13 @@ class DiscussionsInteractionTest : StudentTest() {
         </html> """
 
         val discussionEntry = findDiscussionEntry(data, topicHeader.title!!, replyText)
-        attachHtmlToReply(data, attachmentHtml, discussionEntry)
+        val attachment = createHtmlAttachment(data, attachmentHtml)
+        discussionEntry.attachments = mutableListOf(attachment)
 
         discussionDetailsPage.refresh() // To pick up updated reply
         discussionDetailsPage.assertReplyDisplayed(discussionEntry)
         discussionDetailsPage.assertReplyAttachment(discussionEntry)
-        discussionDetailsPage.openAndCheckReplyAttachment(discussionEntry,
+        discussionDetailsPage.previewAndCheckReplyAttachment(discussionEntry,
                 WebViewTextCheck(Locator.ID,"header1", "Famous Quote"),
                 WebViewTextCheck(Locator.ID, "p1", "That's one small step"))
     }
@@ -555,12 +522,13 @@ class DiscussionsInteractionTest : StudentTest() {
         </body>
         </html> """
 
-        attachHtmlToReply(data, attachmentHtml, replyReplyEntry)
+        val attachment = createHtmlAttachment(data,attachmentHtml)
+        replyReplyEntry.attachments = mutableListOf(attachment)
 
         discussionDetailsPage.refresh() // To pick up updated discussion reply
         discussionDetailsPage.assertReplyDisplayed(replyReplyEntry)
         discussionDetailsPage.assertReplyAttachment(replyReplyEntry)
-        discussionDetailsPage.openAndCheckReplyAttachment(replyReplyEntry,
+        discussionDetailsPage.previewAndCheckReplyAttachment(replyReplyEntry,
                 WebViewTextCheck(Locator.ID,"header1", "Famous Quote"),
                 WebViewTextCheck(Locator.ID, "p1", "The only thing we have to fear"))
 
@@ -594,9 +562,8 @@ class DiscussionsInteractionTest : StudentTest() {
         return discussionEntry!!
     }
 
-    // Attach an HTML string/file to a reply
-    // Assumes that you want to use first course
-    private fun attachHtmlToReply(data: MockCanvas, html: String, reply: DiscussionEntry) {
+    // Creates an HTML attachment/file which can then be attached to a topic header or reply.
+    private fun createHtmlAttachment(data: MockCanvas, html: String): RemoteFile {
         val course1 = data.courses.values.first()
         val fileId = data.addFileToCourse(
                 courseId = course1.id,
@@ -613,7 +580,8 @@ class DiscussionsInteractionTest : StudentTest() {
                 url = "https://mock-data.instructure.com/files/$fileId/preview",
                 size = html.length.toLong()
         )
-        reply.attachments = mutableListOf(attachment)
+
+        return attachment
     }
 
     // Mock a specified number of students and courses, and navigate to the first course

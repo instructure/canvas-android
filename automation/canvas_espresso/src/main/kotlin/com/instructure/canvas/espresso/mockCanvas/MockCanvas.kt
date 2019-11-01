@@ -128,10 +128,12 @@ class MockCanvas {
     val discussionTopics = mutableMapOf<Long, DiscussionTopic>()
 
     // A few discussion-related permissions that we need to be able to tweak.
+    // These are analogous to the allowReplies, allowAttachments and allowRating
+    // parameters in addDiscussionTopicToCourse() below, except that these are
+    // used when creating attachments via the UI and mocked network calls.
     var discussionRepliesEnabled: Boolean = true
     var discussionAttachmentsEnabled: Boolean = true
     var discussionRatingsEnabled: Boolean = true
-    var discussionEntryDefaultLikes: Int = 5
 
     //region Convenience functionality
 
