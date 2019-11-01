@@ -15,6 +15,7 @@
  */
 package com.instructure.student.ui.interaction
 
+import android.os.Build
 import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
 import androidx.test.espresso.web.sugar.Web.onWebView
 import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
@@ -80,6 +81,14 @@ class CourseInteractionTest : StudentTest() {
     @Test
     @TestMetaData(Priority.P0, FeatureCategory.COURSE, TestCategory.INTERACTION, false, FeatureCategory.FILES)
     fun testCourse_openFile() {
+
+        // MBL-13499: Don't run this test on API 28 and above until we add HTTPS support
+        // to the MockWebServer that we use to intercept/handle the webview calls to our
+        // mock endpoints.
+        if(Build.VERSION.SDK_INT > 27) {
+            return
+        }
+
         val data = getToCourse(
                 courseCount = 1,
                 favoriteCourseCount = 1
