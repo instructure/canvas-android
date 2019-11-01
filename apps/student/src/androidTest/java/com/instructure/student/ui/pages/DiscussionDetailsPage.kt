@@ -121,6 +121,7 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
         try {
             onWebView(withId(R.id.discussionRepliesWebView))
                     .withElement(findElement(Locator.CLASS_NAME, "likes_icon_wrapper_${reply.id}"))
+            // We shouldn't reach this point if the favoriting icon is disabled -- we should throw
             assertTrue("Favoriting icon is enabled", false)
         }
         catch(t: Throwable) {
