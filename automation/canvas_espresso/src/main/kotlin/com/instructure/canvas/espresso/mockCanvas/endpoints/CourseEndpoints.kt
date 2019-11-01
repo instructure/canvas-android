@@ -261,6 +261,7 @@ object CourseDiscussionEntryListEndpoint : Endpoint(
  * ROUTES:
  * - `read` -> anonymous endpoint to mark the discussion entry as read
  * - `rating` -> anonymous endpoint to make the endpoint as favorited or unfavorited by the user
+ * - `replies` -> anonymous endpoint for threaded replies (POST for a new reply, GET for a list of replies)
  */
 object CourseDiscussionEntryEndpoint : Endpoint(
         Segment("read") to endpoint {
