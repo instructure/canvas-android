@@ -72,7 +72,8 @@
             android:clearTaskOnLaunch="true"
             android:launchMode="singleTop"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:theme="@style/LoginFlowTheme.Splash_Student">
+            android:theme="@style/LoginFlowTheme.Splash_Student"
+            android:usesCleartextTraffic="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
