@@ -12,11 +12,20 @@
 /// You should have received a copy of the GNU General Public License
 /// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import 'package:flutter/material.dart';
-import 'package:flutter_parent/parent_app.dart';
-import 'package:flutter_parent/utils/service_locator.dart';
+import 'package:flutter/foundation.dart';
 
-void main() async {
-  setupLocator();
-  runApp(ParentApp());
+class SnickerDoodle {
+  const SnickerDoodle({
+    @required this.title,
+    @required this.subtitle,
+    @required this.username,
+    @required this.password,
+    @required this.domain,
+  });
+
+  final String title;
+  final String subtitle;
+  final String username;
+  final String password;
+  final String domain;
 }

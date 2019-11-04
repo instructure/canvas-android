@@ -12,11 +12,11 @@
 /// You should have received a copy of the GNU General Public License
 /// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import 'package:flutter/material.dart';
-import 'package:flutter_parent/parent_app.dart';
-import 'package:flutter_parent/utils/service_locator.dart';
+import 'package:flutter_parent/screens/domain_search/domain_search_interactor.dart';
+import 'package:get_it/get_it.dart';
 
-void main() async {
-  setupLocator();
-  runApp(ParentApp());
+GetIt locator = GetIt.instance;
+
+void setupLocator() {
+  locator.registerFactory<DomainSearchInteractor>(() => DomainSearchInteractor());
 }
