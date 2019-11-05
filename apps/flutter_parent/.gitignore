@@ -1,3 +1,7 @@
+# Private data
+fabric.properties
+google-services.json
+
 # Miscellaneous
 *.class
 *.log

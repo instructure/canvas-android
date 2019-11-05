@@ -16,9 +16,25 @@
  */
 package com.instructure.canvas.espresso.mockCanvas.endpoints
 
+import android.util.Log
+import com.google.gson.Gson
+import com.google.gson.JsonObject
 import com.instructure.canvas.espresso.mockCanvas.Endpoint
+import com.instructure.canvas.espresso.mockCanvas.addDiscussionTopicToCourse
+import com.instructure.canvas.espresso.mockCanvas.addReplyToDiscussion
+import com.instructure.canvas.espresso.mockCanvas.endpoint
 import com.instructure.canvas.espresso.mockCanvas.utils.*
-import com.instructure.canvasapi2.models.StreamItem
+import com.instructure.canvasapi2.models.DiscussionEntry
+import com.instructure.canvasapi2.models.DiscussionParticipant
+import com.instructure.canvasapi2.models.DiscussionTopic
+import com.instructure.canvasapi2.models.DiscussionTopicHeader
+import com.instructure.canvasapi2.models.DiscussionTopicPermission
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okio.Buffer
+import retrofit2.http.Multipart
+import java.time.Instant
+import java.util.*
 
 /**
  * Endpoint that can return a list of courses in which the request user is enrolled.
@@ -54,6 +70,7 @@ object CourseEndpoint : Endpoint(
         Segment("external_tools") to ExternalToolsEndpoint,
         Segment("pages") to CoursePagesEndpoint,
         Segment("folders") to CourseFoldersEndpoint,
+        Segment("discussion_topics") to CourseDiscussionTopicListEndpoint,
         response = {
             GET {
                 val course = data.courses[pathVars.courseId]!!
@@ -124,3 +141,203 @@ object CourseRootFolderEndpoint : Endpoint(response = {
         }
     }
 })
+
+/**
+ * Endpoint that can return a list of discussion topic headers for a course
+ *
+ * GET to retrieve a list of DiscussionTopicHeaders for a course
+ * POST to create a DiscussionTopicHeader for a course
+ *
+ * ROUTES:
+ * - `{topicId}` -> [CourseDiscussionTopicEndpoint]
+ */
+object CourseDiscussionTopicListEndpoint : Endpoint(
+        LongId(PathVars::topicId) to CourseDiscussionTopicEndpoint,
+        response = {
+            GET {
+                Log.d("<--", "discussion_topics request: ${request}")
+                val currentDiscussionTopics = data.courseDiscussionTopicHeaders[pathVars.courseId]
+                        ?: listOf<DiscussionTopicHeader>()
+                request.successResponse(currentDiscussionTopics)
+            }
+
+            POST {
+                val jsonObject = grabJsonFromMultiPartBody(request.body()!!)
+                var newHeader = Gson().fromJson(jsonObject, DiscussionTopicHeader::class.java)
+                var course = data.courses.values.find {it.id == pathVars.courseId}
+                var user = request.user!!
+                // Let's route through our manual discussion topic creation logic to minimize
+                // code duplication.
+                newHeader = data.addDiscussionTopicToCourse(
+                        course = course!!,
+                        user = user,
+                        prePopulatedTopicHeader = newHeader,
+                        topicTitle = newHeader.title!!, // or else it will be defaulted to something random
+                        topicDescription = newHeader.message!!, // or else it will be defaulted to something random
+                        allowRating = data.discussionRatingsEnabled,
+                        allowReplies = data.discussionRepliesEnabled,
+                        allowAttachments = data.discussionAttachmentsEnabled
+                )
+                Log.d("<--", "new discussion topic request body: $jsonObject")
+                Log.d("<--", "new header: $newHeader")
+
+                request.successResponse(newHeader)
+            }
+
+        }
+)
+
+/**
+ * Endpoint that can return a specific discussion topic header for a specified course
+ *
+ * ROUTES:
+ * - `view` -> anonymous endpoint to return a DiscussionTopic associated with the endpoint
+ * - 'entries -> to [CourseDiscussionEntryListEndpoint]
+ */
+object CourseDiscussionTopicEndpoint : Endpoint (
+        Segment("view") to endpoint {
+            GET {
+                Log.d("<--", "Discussion topic view get request: $request")
+                val result = data.discussionTopics[pathVars.topicId]
+                if(result != null) {
+                    request.successResponse(result)
+                }
+                else {
+                    request.unauthorizedResponse()
+                }
+            }
+        },
+        Segment("entries") to CourseDiscussionEntryListEndpoint,
+        response = {
+            GET {
+                val topic = data.courseDiscussionTopicHeaders[pathVars.courseId]?.firstOrNull { item ->
+                    item.id == pathVars.topicId
+                }
+                if(topic != null) {
+                    request.successResponse(topic)
+                }
+                else {
+                    request.unauthorizedResponse()
+                }
+            }
+        }
+)
+
+/**
+ * Endpoint that can add a discussion entry for a specified discussion.
+ *
+ * ROUTES:
+ * - `{entryId}` -> [CourseDiscussionEntryEndpoint]
+ */
+object CourseDiscussionEntryListEndpoint : Endpoint(
+        LongId(PathVars::entryId) to CourseDiscussionEntryEndpoint,
+        response = {
+            POST {
+                val jsonObject = grabJsonFromMultiPartBody(request.body()!!)
+                Log.d("<--", "Discussion topic entries post request: $request")
+                Log.d("<--", "post body: $jsonObject")
+                val discussionTopicHeader =
+                        data.courseDiscussionTopicHeaders[pathVars.courseId]?.find { it.id == pathVars.topicId}
+                if(discussionTopicHeader != null) {
+                    // Let's route through our manual discussion reply creation logic to avoid
+                    // code duplication.
+                    var entry = data.addReplyToDiscussion(
+                            topicHeader = discussionTopicHeader,
+                            user = request.user!!,
+                            replyMessage = jsonObject.get("message").asString )
+                    request.successResponse(entry)
+                }
+                else {
+                    request.unauthorizedResponse()
+                }
+            }
+
+        }
+)
+
+/**
+ * Endpoint that corresponds to a specific discussion entry.
+ *
+ * ROUTES:
+ * - `read` -> anonymous endpoint to mark the discussion entry as read
+ * - `rating` -> anonymous endpoint to make the endpoint as favorited or unfavorited by the user
+ * - `replies` -> anonymous endpoint for threaded replies (POST for a new reply, GET for a list of replies)
+ */
+object CourseDiscussionEntryEndpoint : Endpoint(
+        Segment("read") to endpoint {
+            PUT {
+                val topic = data.discussionTopics[pathVars.topicId]
+                val topicHeader =
+                        data.courseDiscussionTopicHeaders[pathVars.courseId]?.find {it.id == pathVars.topicId}
+                val entry = topic?.views?.find { it.id == pathVars.entryId }
+
+                if(topic == null || entry == null || topicHeader == null) {
+                    request.unauthorizedResponse()
+                }
+                else {
+                    entry.unread = false
+                    topicHeader.unreadCount -= 1
+                    topic.unreadEntries.remove(entry.id)
+                    request.noContentResponse()
+                }
+
+            }
+        },
+        Segment("rating") to endpoint {
+            POST {
+                var ratingVal = request.url().queryParameter("rating")?.toInt()
+                val topic = data.discussionTopics[pathVars.topicId]
+                val entry = topic?.views?.find { it.id == pathVars.entryId }
+                if (ratingVal == null || topic == null || entry == null) {
+                    request.unauthorizedResponse()
+                }
+                else {
+                    val currentCount = topic.entryRatings[entry.id]
+                    if(ratingVal == 0) {
+                        entry._hasRated = false
+                        topic.entryRatings[entry.id] = (currentCount ?: 1) - 1
+                    }
+                    else {
+                        entry._hasRated = true
+                        topic.entryRatings[entry.id] = (currentCount ?: 0) + 1
+                    }
+                    request.noContentResponse()
+                }
+            }
+
+        },
+        Segment("replies") to endpoint {
+            POST {
+                val jsonObject = grabJsonFromMultiPartBody(request.body()!!)
+                Log.d("<--", "topic entry replies post body: $jsonObject")
+                val newEntry = DiscussionEntry (
+                        message = jsonObject.get("message").asString, // This is all that comes with the POST object
+                        createdAt = Calendar.getInstance().time.toString(),
+                        author = DiscussionParticipant(id = request.user!!.id, displayName = request.user!!.name)
+                )
+                val topic = data.discussionTopics[pathVars.topicId]
+                val entry = topic?.views?.find { it.id == pathVars.entryId }
+                if(entry != null && newEntry != null) {
+                    entry.addReply(newEntry)
+                    request.successResponse(newEntry)
+                }
+                else {
+                    request.unauthorizedResponse()
+                }
+            }
+
+            GET {
+                val topic = data.discussionTopics[pathVars.topicId]
+                val entry = topic?.views?.find { it.id == pathVars.entryId }
+
+                if(entry != null) {
+                    request.successResponse(entry.replies ?: mutableListOf<DiscussionEntry>())
+                }
+                else {
+                    request.unauthorizedResponse()
+                }
+
+            }
+        }
+)
+

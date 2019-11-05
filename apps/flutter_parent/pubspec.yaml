@@ -35,6 +35,8 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
+  firebase_analytics: ^5.0.2
+  firebase_core: ^0.4.0+9
   intl: ^0.15.8
   get_it: ^3.0.1
 
