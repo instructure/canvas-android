@@ -1,5 +1,19 @@
+# Copyright (C) 2019 - present Instructure, Inc.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, version 3 of the License.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 name: flutter_parent
-description: A new Flutter project.
+description: Canvas Parent
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -24,10 +38,17 @@ dependencies:
   firebase_analytics: ^5.0.2
   firebase_core: ^0.4.0+9
   intl: ^0.15.8
+  get_it: ^3.0.1
 
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^0.1.2
+  # Image handling
+  flutter_svg: 0.14.3
+
+  # Networking / Serialization
+  dio: 3.0.3
+  dio_http_cache: 0.2.1
+  built_value: '>=5.5.5 <7.0.0'
+
+  url_launcher: 5.2.5
 
 dev_dependencies:
   flutter_driver:
@@ -36,6 +57,10 @@ dev_dependencies:
     sdk: flutter
   test: any
   intl_translation: ^0.17.7
+  mockito: 4.1.1
+
+  build_runner: ^1.0.0
+  built_value_generator: '>=5.5.5 <7.0.0'
 
 
 # For information on the generic Dart part of this file, see the
@@ -49,10 +74,8 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
-  # To add assets to your application, add an assets section, like this:
-  # assets:
-  #  - images/a_dot_burr.jpeg
-  #  - images/a_dot_ham.jpeg
+  assets:
+    - assets/svg/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

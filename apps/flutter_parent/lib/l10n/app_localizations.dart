@@ -145,4 +145,62 @@ class AppLocalizations {
   String get coursesLabel {
     return Intl.message('Courses', name: 'coursesLabel', desc: 'The label for the Courses tab');
   }
+
+  /// Login landing screen
+
+  String get canvasLogoLabel {
+    return Intl.message('Canvas logo', name: 'canvaslogoLabel', desc: 'The semantics label for the Canvas logo');
+  }
+
+  String get findSchoolOrDistrict => Intl.message(
+        'Find School or District',
+        name: 'findSchoolOrDistrict',
+        desc: 'Text for the find-my-school button',
+      );
+
+  /// Domain search screen
+
+  String get domainSearchInputHint => Intl.message(
+        'Enter school name or district...',
+        name: 'domainSearchInputHint',
+        desc: "Input hint for the text box on the domain search screen",
+      );
+
+  String noDomainResults(String query) => Intl.message(
+        "Unable to find schools matching '$query'",
+        name: 'noDomainResults',
+        args: [query],
+        desc: 'Message shown to users when the domain search query did not return any results',
+      );
+
+  String get domainSearchHelpLabel => Intl.message(
+        "How do I find my school or district?",
+        name: 'domainSearchHelpLabel',
+        desc: 'Label for the help button on the domain search screen',
+      );
+
+  String get canvasGuides => Intl.message(
+        'Canvas Guides',
+        name: 'canvasGuides',
+        desc:
+            "Proper name for the Canvas Guides. This will be used in the domainSearchHelpBody text and will be highlighted and clickable",
+      );
+
+  String get canvasSupport => Intl.message(
+        'Canvas Support',
+        name: 'canvasSupport',
+        desc:
+            "Proper name for Canvas Support. This will be used in the domainSearchHelpBody text and will be highlighted and clickable",
+      );
+
+  String domainSearchHelpBody(String canvasGuides, String canvasSupport) => Intl.message(
+      """Try searching for the name of the school or district you’re attempting to access, like “Smith Private School” or “Smith County Schools.” You can also enter a Canvas domain directly, like “smith.instructure.com.”\n\nFor more information on finding your institution’s Canvas account, you can visit the $canvasGuides, reach out to $canvasSupport, or contact your school for assistance.""",
+      name: 'domainSearchHelpBody',
+      desc: 'The body text shown in the help dialog on the domain search screen',
+      args: [canvasGuides, canvasSupport]);
+
+  /// Miscellaneous
+
+  String get next => Intl.message('Next', name: 'next');
+  String get ok => Intl.message('OK', name: 'ok');
 }

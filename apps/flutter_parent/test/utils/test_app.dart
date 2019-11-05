@@ -18,14 +18,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
-import 'package:flutter_parent/screens/login_landing_screen.dart';
 
-class ParentApp extends StatefulWidget {
+class TestApp extends StatefulWidget {
+  TestApp(this.home);
+
+  final Widget home;
+
   @override
-  _ParentAppState createState() => _ParentAppState();
+  _TestAppState createState() => _TestAppState();
 }
 
-class _ParentAppState extends State<ParentApp> {
+class _TestAppState extends State<TestApp> {
   Locale _locale;
 
   rebuild(locale) {
@@ -55,7 +58,7 @@ class _ParentAppState extends State<ParentApp> {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: LoginLandingScreen(),
+      home: widget.home,
     );
   }
 

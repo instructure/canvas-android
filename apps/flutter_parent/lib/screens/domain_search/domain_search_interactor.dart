@@ -12,11 +12,20 @@
 /// You should have received a copy of the GNU General Public License
 /// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import 'package:flutter/material.dart';
-import 'package:flutter_parent/parent_app.dart';
-import 'package:flutter_parent/utils/service_locator.dart';
+import 'package:flutter_parent/api/accounts_api.dart';
+import 'package:flutter_parent/models/school_domain.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-void main() async {
-  setupLocator();
-  runApp(ParentApp());
+class DomainSearchInteractor {
+  Future<List<SchoolDomain>> performSearch(String query) {
+    return AccountsApi.searchDomains(query);
+  }
+
+  openCanvasGuides() {
+    launch("https://community.canvaslms.com/docs/DOC-9902-canvas-parent-android-guide-table-of-contents");
+  }
+
+  openCanvasSupport() {
+    launch("https://community.canvaslms.com/docs/DOC-17624-how-to-contact-canvas-support");
+  }
 }

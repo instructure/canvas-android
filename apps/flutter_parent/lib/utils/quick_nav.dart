@@ -13,10 +13,10 @@
 /// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:flutter/material.dart';
-import 'package:flutter_parent/parent_app.dart';
-import 'package:flutter_parent/utils/service_locator.dart';
+import 'package:flutter/widgets.dart';
 
-void main() async {
-  setupLocator();
-  runApp(ParentApp());
+class QuickNav {
+  static Future<T> push<T extends Object>(BuildContext context, Widget widget) {
+    return Navigator.of(context).push(MaterialPageRoute(builder: (context) => widget));
+  }
 }
