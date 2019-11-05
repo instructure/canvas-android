@@ -111,6 +111,7 @@ class AssignmentDetailsInteractionTest : StudentTest() {
     */
     }
 
+    @Stub
     @Test
     @TestMetaData(Priority.P2, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, true, FeatureCategory.BOOKMARKS)
     fun testAssignments_createBookmark() {

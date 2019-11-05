@@ -59,11 +59,14 @@ import org.junit.Test
 class ModuleInteractionTest : StudentTest() {
     override fun displaysPageObjects() = Unit // Not used for interaction tests
 
+    // A collection of things that we create during initialization and remember for use during
+    // various tests.
     private var topicHeader: DiscussionTopicHeader? = null
     private var assignment: Assignment? = null
     private var page: Page? = null
     private val fileName = "ModuleFile.html"
     private var fileCheck: WebViewTextCheck? = null
+    private val externalUrl = "https://www.google.com"
 
     @Stub
     @Test
@@ -116,6 +119,17 @@ class ModuleInteractionTest : StudentTest() {
     @TestMetaData(Priority.P0, FeatureCategory.MODULES, TestCategory.INTERACTION, true)
     fun testModules_launchesIntoExternalURL() {
         // Tapping an ExternalURL module item should navigate to that item's detail page
+
+        // Basic mock setup
+        val data = getToCourse(studentCount = 1, courseCount = 1)
+        val course1 = data.courses.values.first()
+        val module = data.courseModules[course1.id]!!.first()
+
+        // Go to the modules page, click the external module
+        courseBrowserPage.selectModules()
+        modulesPage.clickModuleItem(module,externalUrl)
+        // Not much we can test here, as it is an external URL, but testModules_navigateToNextAndPreviousModuleItems
+        // will test that the module name and module item name are displayed correctly.
     }
 
     @Stub
@@ -422,6 +436,12 @@ class ModuleInteractionTest : StudentTest() {
                 item = fileFolder!!
         )
 
+        // Create an external URL and add it as a module item
+        data.addItemToModule(
+                course = course1,
+                moduleId = module.id,
+                item = externalUrl
+        )
 
 
         // Sign in

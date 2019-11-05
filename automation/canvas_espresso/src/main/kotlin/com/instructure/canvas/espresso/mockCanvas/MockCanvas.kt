@@ -758,13 +758,15 @@ fun MockCanvas.addItemToModule(
         is String -> {
             itemType = ModuleItem.Type.ExternalUrl
             itemTitle = item
+            itemUrl = item
         }
         else -> {
             throw Exception("Unknown item type: ${item::class.java.simpleName}")
         }
     }
 
-    // Retrieve our module
+    // Retrieve the current incarnation of our module from the module id
+    // (Modules get altered and replaced by this operation.)
     val module = courseModules[course.id]?.find {it.id == moduleId}!!
 
     val result = ModuleItem(
@@ -774,7 +776,10 @@ fun MockCanvas.addItemToModule(
             type = itemType.toString(),
             position = module.itemCount,
             published = published,
-            url = itemUrl
+            // I don't really know if these two should be the same, but I needed
+            // htmlUrl populated in order to get external url module items to work.
+            url = itemUrl,
+            htmlUrl = itemUrl
     )
 
     // Copy/update/replace the module
