@@ -135,6 +135,9 @@ class MockCanvas {
     var discussionAttachmentsEnabled: Boolean = true
     var discussionRatingsEnabled: Boolean = true
 
+    /** Map of course id to module list */
+    val courseModules = mutableMapOf<Long, MutableList<ModuleObject>>()
+
     //region Convenience functionality
 
     /** A list of users with at least one Student enrollment */
@@ -368,7 +371,8 @@ fun MockCanvas.addAssignment(
         courseId: Long,
         groupType: AssignmentGroupType,
         submissionType: Assignment.SubmissionType,
-        isQuizzesNext: Boolean = false) : Assignment {
+        isQuizzesNext: Boolean = false,
+        lockInfo : LockInfo? = null) : Assignment {
     val assignmentId = 123L
     val assignmentGroupId = 123L
     var assignment = Assignment(
@@ -376,7 +380,9 @@ fun MockCanvas.addAssignment(
         assignmentGroupId = assignmentGroupId,
         courseId = courseId,
         name = Randomizer.randomAssignmentName(),
-        submissionTypesRaw = listOf(submissionType.apiString)
+        submissionTypesRaw = listOf(submissionType.apiString),
+        lockInfo = lockInfo,
+        lockedForUser = lockInfo != null
     )
 
     val futureDueDate = OffsetDateTime.now().plusWeeks(1).toApiString()
@@ -675,5 +681,114 @@ fun MockCanvas.addReplyToDiscussion(
     topic.unreadEntries.add(entry.id)
     topicHeader.unreadCount += 1
     return entry
+}
+
+/** Adds a module to a course, initially unpopulated. */
+fun MockCanvas.addModuleToCourse(
+        course: Course,
+        moduleName: String,
+        sequential: Boolean = false,
+        published: Boolean = true,
+        unlockAt: String? = null,
+        prerequisiteIds: LongArray? = null,
+        state: String? = null
+) : ModuleObject {
+
+    val newModulePosition = courseModules[course.id]?.count() ?: 0
+    // Create a new module
+    val result = ModuleObject(
+            id = newItemId(),
+            position = newModulePosition,
+            name = moduleName,
+            sequentialProgress = sequential,
+            published = published,
+            unlockAt = unlockAt,
+            prerequisiteIds = prerequisiteIds,
+            state = state
+    )
+
+    // Record in modules for course
+    var courseModuleList = courseModules[course.id]
+    if(courseModuleList == null) {
+        courseModuleList = mutableListOf<ModuleObject>()
+        courseModules[course.id] = courseModuleList
+    }
+    courseModuleList.add(result)
+
+    return result
+}
+
+/** Adds an item to a module */
+fun MockCanvas.addItemToModule(
+        course: Course,
+        moduleId: Long,
+        item: Any,
+        published: Boolean = true
+) : ModuleItem {
+
+    // Placeholders for itemType and itemTitle values that we will compute below
+    var itemType: ModuleItem.Type? = null
+    var itemTitle: String? = null
+    var itemUrl: String? = null
+    when(item) {
+        is Assignment -> {
+            itemType = ModuleItem.Type.Assignment
+            itemTitle = item.name
+            itemUrl = "https://mock-data.instructure.com/api/v1/courses/${course.id}/assignments/${item.id}"
+        }
+        is DiscussionTopicHeader -> {
+            itemType = ModuleItem.Type.Discussion
+            itemTitle = item.title
+            itemUrl = "https://mock-data.instructure.com/api/v1/courses/${course.id}/discussion_topics/${item.id}"
+        }
+        is Quiz -> {
+            itemType = ModuleItem.Type.Quiz
+            itemTitle = item.title
+        }
+        is FileFolder -> {
+            itemType = ModuleItem.Type.File
+            itemTitle = item.displayName
+            itemUrl = "https://mock-data.instructure.com/api/v1/courses/${course.id}/files/${item.id}"
+        }
+        is Page -> {
+            itemType = ModuleItem.Type.Page
+            itemTitle = item.title
+            itemUrl = "https://mock-data.instructure.com/api/v1/courses/${course.id}/pages/${item.id}"
+        }
+        is String -> {
+            itemType = ModuleItem.Type.ExternalUrl
+            itemTitle = item
+        }
+        else -> {
+            throw Exception("Unknown item type: ${item::class.java.simpleName}")
+        }
+    }
+
+    // Retrieve our module
+    val module = courseModules[course.id]?.find {it.id == moduleId}!!
+
+    val result = ModuleItem(
+            id = newItemId(),
+            moduleId = module.id,
+            title = itemTitle,
+            type = itemType.toString(),
+            position = module.itemCount,
+            published = published,
+            url = itemUrl
+    )
+
+    // Copy/update/replace the module
+    var newItemList = module.items.toMutableList()
+    newItemList.add(result)
+    val changedModule = module.copy(
+            items = newItemList
+    )
+
+    val courseModuleList = courseModules[course.id]!!
+    courseModuleList.remove(module)
+    courseModuleList.add(changedModule)
+
+    // Return our ModuleItem
+    return result
 }
 

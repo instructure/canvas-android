@@ -29,6 +29,7 @@ import com.instructure.canvasapi2.models.DiscussionParticipant
 import com.instructure.canvasapi2.models.DiscussionTopic
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.DiscussionTopicPermission
+import com.instructure.canvasapi2.models.ModuleObject
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okio.Buffer
@@ -70,7 +71,9 @@ object CourseEndpoint : Endpoint(
         Segment("external_tools") to ExternalToolsEndpoint,
         Segment("pages") to CoursePagesEndpoint,
         Segment("folders") to CourseFoldersEndpoint,
+        Segment("files") to CourseFilesEndpoint,
         Segment("discussion_topics") to CourseDiscussionTopicListEndpoint,
+        Segment("modules") to CourseModuleListEndpoint,
         response = {
             GET {
                 val course = data.courses[pathVars.courseId]!!
@@ -130,6 +133,30 @@ object CourseFoldersEndpoint : Endpoint(
         Segment("root") to CourseRootFolderEndpoint
 )
 
+/**
+ * Endpoint that can return a list of files for a course
+ *
+ * Right now, only supports grabbing a specific file
+ *
+ * ROUTES:
+ * - `{fileId}` -> anonymous endpoint to retrieve a file
+ */
+object CourseFilesEndpoint : Endpoint (
+        LongId(PathVars::fileId) to endpoint {
+            GET {
+                val courseRootFolder = data.courseRootFolders[pathVars.courseId]
+                val targetFileFolder = data.folderFiles[courseRootFolder?.id]?.find{it.id == pathVars.fileId}
+                if(targetFileFolder != null) {
+                    request.successResponse(targetFileFolder)
+                }
+                else {
+                    request.unauthorizedResponse()
+                }
+
+            }
+        }
+)
+
 /** Course root folder support. */
 object CourseRootFolderEndpoint : Endpoint(response = {
     GET {
@@ -164,7 +191,7 @@ object CourseDiscussionTopicListEndpoint : Endpoint(
             POST {
                 val jsonObject = grabJsonFromMultiPartBody(request.body()!!)
                 var newHeader = Gson().fromJson(jsonObject, DiscussionTopicHeader::class.java)
-                var course = data.courses.values.find {it.id == pathVars.courseId}
+                var course = data.courses.values.find { it.id == pathVars.courseId }
                 var user = request.user!!
                 // Let's route through our manual discussion topic creation logic to minimize
                 // code duplication.
@@ -194,15 +221,14 @@ object CourseDiscussionTopicListEndpoint : Endpoint(
  * - `view` -> anonymous endpoint to return a DiscussionTopic associated with the endpoint
  * - 'entries -> to [CourseDiscussionEntryListEndpoint]
  */
-object CourseDiscussionTopicEndpoint : Endpoint (
+object CourseDiscussionTopicEndpoint : Endpoint(
         Segment("view") to endpoint {
             GET {
                 Log.d("<--", "Discussion topic view get request: $request")
                 val result = data.discussionTopics[pathVars.topicId]
-                if(result != null) {
+                if (result != null) {
                     request.successResponse(result)
-                }
-                else {
+                } else {
                     request.unauthorizedResponse()
                 }
             }
@@ -213,10 +239,9 @@ object CourseDiscussionTopicEndpoint : Endpoint (
                 val topic = data.courseDiscussionTopicHeaders[pathVars.courseId]?.firstOrNull { item ->
                     item.id == pathVars.topicId
                 }
-                if(topic != null) {
+                if (topic != null) {
                     request.successResponse(topic)
-                }
-                else {
+                } else {
                     request.unauthorizedResponse()
                 }
             }
@@ -237,17 +262,16 @@ object CourseDiscussionEntryListEndpoint : Endpoint(
                 Log.d("<--", "Discussion topic entries post request: $request")
                 Log.d("<--", "post body: $jsonObject")
                 val discussionTopicHeader =
-                        data.courseDiscussionTopicHeaders[pathVars.courseId]?.find { it.id == pathVars.topicId}
-                if(discussionTopicHeader != null) {
+                        data.courseDiscussionTopicHeaders[pathVars.courseId]?.find { it.id == pathVars.topicId }
+                if (discussionTopicHeader != null) {
                     // Let's route through our manual discussion reply creation logic to avoid
                     // code duplication.
                     var entry = data.addReplyToDiscussion(
                             topicHeader = discussionTopicHeader,
                             user = request.user!!,
-                            replyMessage = jsonObject.get("message").asString )
+                            replyMessage = jsonObject.get("message").asString)
                     request.successResponse(entry)
-                }
-                else {
+                } else {
                     request.unauthorizedResponse()
                 }
             }
@@ -268,13 +292,12 @@ object CourseDiscussionEntryEndpoint : Endpoint(
             PUT {
                 val topic = data.discussionTopics[pathVars.topicId]
                 val topicHeader =
-                        data.courseDiscussionTopicHeaders[pathVars.courseId]?.find {it.id == pathVars.topicId}
+                        data.courseDiscussionTopicHeaders[pathVars.courseId]?.find { it.id == pathVars.topicId }
                 val entry = topic?.views?.find { it.id == pathVars.entryId }
 
-                if(topic == null || entry == null || topicHeader == null) {
+                if (topic == null || entry == null || topicHeader == null) {
                     request.unauthorizedResponse()
-                }
-                else {
+                } else {
                     entry.unread = false
                     topicHeader.unreadCount -= 1
                     topic.unreadEntries.remove(entry.id)
@@ -290,14 +313,12 @@ object CourseDiscussionEntryEndpoint : Endpoint(
                 val entry = topic?.views?.find { it.id == pathVars.entryId }
                 if (ratingVal == null || topic == null || entry == null) {
                     request.unauthorizedResponse()
-                }
-                else {
+                } else {
                     val currentCount = topic.entryRatings[entry.id]
-                    if(ratingVal == 0) {
+                    if (ratingVal == 0) {
                         entry._hasRated = false
                         topic.entryRatings[entry.id] = (currentCount ?: 1) - 1
-                    }
-                    else {
+                    } else {
                         entry._hasRated = true
                         topic.entryRatings[entry.id] = (currentCount ?: 0) + 1
                     }
@@ -310,18 +331,17 @@ object CourseDiscussionEntryEndpoint : Endpoint(
             POST {
                 val jsonObject = grabJsonFromMultiPartBody(request.body()!!)
                 Log.d("<--", "topic entry replies post body: $jsonObject")
-                val newEntry = DiscussionEntry (
+                val newEntry = DiscussionEntry(
                         message = jsonObject.get("message").asString, // This is all that comes with the POST object
                         createdAt = Calendar.getInstance().time.toString(),
                         author = DiscussionParticipant(id = request.user!!.id, displayName = request.user!!.name)
                 )
                 val topic = data.discussionTopics[pathVars.topicId]
                 val entry = topic?.views?.find { it.id == pathVars.entryId }
-                if(entry != null && newEntry != null) {
+                if (entry != null && newEntry != null) {
                     entry.addReply(newEntry)
                     request.successResponse(newEntry)
-                }
-                else {
+                } else {
                     request.unauthorizedResponse()
                 }
             }
@@ -330,10 +350,9 @@ object CourseDiscussionEntryEndpoint : Endpoint(
                 val topic = data.discussionTopics[pathVars.topicId]
                 val entry = topic?.views?.find { it.id == pathVars.entryId }
 
-                if(entry != null) {
+                if (entry != null) {
                     request.successResponse(entry.replies ?: mutableListOf<DiscussionEntry>())
-                }
-                else {
+                } else {
                     request.unauthorizedResponse()
                 }
 
@@ -341,3 +360,88 @@ object CourseDiscussionEntryEndpoint : Endpoint(
         }
 )
 
+/**
+ * Endpoint that can return a list of modules for a course
+ *
+ * GET to retrieve a list of modules for a course
+ *
+ * ROUTES:
+ * - `{moduleId}` -> [CourseModuleEndpoint]
+ */
+object CourseModuleListEndpoint : Endpoint(
+        LongId(PathVars::moduleId) to CourseModuleEndpoint,
+        response = {
+            GET {
+                val moduleList = data.courseModules[pathVars.courseId]
+                if (moduleList != null) {
+                    request.successResponse(moduleList)
+                } else {
+                    request.unauthorizedResponse()
+                }
+            }
+        }
+)
+
+/**
+ * Endpoint that can return a specific module for a course
+ *
+ * GET to retrieve specific module for a course
+ *
+ * ROUTES:
+ * - `items` -> [CourseModuleItemsListEndpoint]
+ */
+object CourseModuleEndpoint : Endpoint(
+        Segment("items") to CourseModuleItemsListEndpoint,
+        response = {
+            GET {
+                val moduleList = data.courseModules[pathVars.courseId]
+                val moduleObject = moduleList?.find { it.id == pathVars.moduleId }
+                if (moduleObject != null) {
+                    request.successResponse(moduleObject)
+                } else {
+                    request.unauthorizedResponse()
+                }
+            }
+        }
+)
+
+
+/**
+ * Endpoint that can return a list of items for a module in a course
+ *
+ * GET to retrieve the list of items for a module in a course
+ *
+ * ROUTES:
+ * - `{moduleItemId` -> anonymous endpoint to return a specific module item (for a module in a course)
+ */
+object CourseModuleItemsListEndpoint : Endpoint(
+        LongId(PathVars::moduleItemId) to endpoint {
+            GET {
+                val moduleList = data.courseModules[pathVars.courseId]
+                val moduleObject = moduleList?.find { it.id == pathVars.moduleId }
+                val itemList = moduleObject?.items
+                val moduleItem = itemList?.find {it.id == pathVars.moduleItemId}
+
+                if(moduleItem != null) {
+                    request.successResponse(moduleItem)
+                }
+                else {
+                    request.unauthorizedResponse()
+                }
+
+            }
+        },
+        response = {
+            GET {
+                val moduleList = data.courseModules[pathVars.courseId]
+                val moduleObject = moduleList?.find { it.id == pathVars.moduleId }
+                val itemList = moduleObject?.items
+
+                if (itemList != null) {
+                    request.successResponse(itemList)
+                } else {
+                    request.unauthorizedResponse()
+                }
+
+            }
+        })
