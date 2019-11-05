@@ -163,7 +163,7 @@ class AppLocalizations {
   String get domainSearchInputHint => Intl.message(
         'Enter school name or district...',
         name: 'domainSearchInputHint',
-        desc: "Input hint for the text box on the deomain search screen",
+        desc: "Input hint for the text box on the domain search screen",
       );
 
   String noDomainResults(String query) => Intl.message(

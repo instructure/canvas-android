@@ -17,11 +17,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/school_domain.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import 'domain_search_interactor.dart';
 
 class DomainSearchScreen extends StatefulWidget {
+  @visibleForTesting
+  static final GlobalKey helpDialogBodyKey = GlobalKey();
+
   @override
   _DomainSearchScreenState createState() => _DomainSearchScreenState();
 }
@@ -44,7 +46,7 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
   bool _error = false;
 
   /// The current query, tracked to help prevent race conditions when a previous search completes after a more recent search
-  String currentQuery;
+  String _currentQuery;
 
   final TextEditingController _inputController = TextEditingController();
 
@@ -54,9 +56,9 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
 
     if (thisQuery.length < _MIN_SEARCH_LENGTH) thisQuery = "";
 
-    if (thisQuery == currentQuery) return; // Do nothing if the search query has not effectively changed
+    if (thisQuery == _currentQuery) return; // Do nothing if the search query has not effectively changed
 
-    currentQuery = thisQuery;
+    _currentQuery = thisQuery;
 
     if (thisQuery.isEmpty) {
       setState(() {
@@ -70,14 +72,14 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
         _error = false;
       });
       await _interactor.performSearch(thisQuery).then((domains) {
-        if (currentQuery != thisQuery) return;
+        if (_currentQuery != thisQuery) return;
         setState(() {
           _loading = false;
           _error = false;
           _schoolDomains = domains;
         });
       }).catchError((error) {
-        if (currentQuery != thisQuery) return;
+        if (_currentQuery != thisQuery) return;
         setState(() {
           _loading = false;
           _error = true;
@@ -122,7 +124,7 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
             style: TextStyle(fontSize: 18),
             keyboardType: TextInputType.url,
             textInputAction: TextInputAction.go,
-            onSubmitted: (_) => _next(context),
+            onSubmitted: (_) => _query.isNotEmpty ? _next(context) : null,
             decoration: InputDecoration(
               contentPadding: EdgeInsets.all(16),
               border: InputBorder.none,
@@ -187,6 +189,7 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
           ),
           Center(
             child: FlatButton(
+              key: Key("help-button"),
               child: Text(AppLocalizations.of(context).domainSearchHelpLabel),
               textTheme: ButtonTextTheme.accent,
               onPressed: () {
@@ -216,19 +219,16 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
                   TextSpan(
                     text: canvasGuidesText,
                     style: TextStyle(color: Theme.of(context).accentColor),
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = () => launch(
-                          "https://community.canvaslms.com/docs/DOC-9902-canvas-parent-android-guide-table-of-contents"),
+                    recognizer: TapGestureRecognizer()..onTap = _interactor.openCanvasGuides,
                   ),
                   TextSpan(
                     text: canvasSupportText,
                     style: TextStyle(color: Theme.of(context).accentColor),
-                    recognizer: TapGestureRecognizer()
-                      ..onTap =
-                          () => launch("https://community.canvaslms.com/docs/DOC-17624-how-to-contact-canvas-support"),
+                    recognizer: TapGestureRecognizer()..onTap = _interactor.openCanvasSupport,
                   ),
                 ],
               ),
+              key: DomainSearchScreen.helpDialogBodyKey,
             ),
             actions: <Widget>[
               FlatButton(

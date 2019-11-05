@@ -14,9 +14,18 @@
 
 import 'package:flutter_parent/api/accounts_api.dart';
 import 'package:flutter_parent/models/school_domain.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DomainSearchInteractor {
   Future<List<SchoolDomain>> performSearch(String query) {
     return AccountsApi.searchDomains(query);
+  }
+
+  openCanvasGuides() {
+    launch("https://community.canvaslms.com/docs/DOC-9902-canvas-parent-android-guide-table-of-contents");
+  }
+
+  openCanvasSupport() {
+    launch("https://community.canvaslms.com/docs/DOC-17624-how-to-contact-canvas-support");
   }
 }

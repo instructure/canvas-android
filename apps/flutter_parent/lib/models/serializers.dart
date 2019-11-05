@@ -25,10 +25,10 @@ part 'serializers.g.dart';
 @SerializersFor([
   SchoolDomain,
 ])
-final Serializers serializers = _$serializers;
+final Serializers _serializers = _$serializers;
 
-Serializers jsonSerializers = (serializers.toBuilder()..addPlugin(StandardJsonPlugin())).build();
+Serializers jsonSerializers = (_serializers.toBuilder()..addPlugin(StandardJsonPlugin())).build();
 
-T deserialize<T>(dynamic value) => jsonSerializers.deserializeWith<T>(serializers.serializerForType(T), value);
+T deserialize<T>(dynamic value) => jsonSerializers.deserializeWith<T>(jsonSerializers.serializerForType(T), value);
 
 List<T> deserializeList<T>(dynamic value) => List.from(value.map((value) => deserialize<T>(value)).toList());
