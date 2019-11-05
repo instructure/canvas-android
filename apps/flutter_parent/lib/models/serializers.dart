@@ -25,7 +25,7 @@ part 'serializers.g.dart';
 @SerializersFor([
   SchoolDomain,
 ])
-final Serializers _serializers = _$serializers;
+final Serializers _serializers = _$_serializers;
 
 Serializers jsonSerializers = (_serializers.toBuilder()..addPlugin(StandardJsonPlugin())).build();
 
