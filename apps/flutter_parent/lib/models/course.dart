@@ -76,8 +76,6 @@ abstract class Course implements Built<Course, CourseBuilder> {
   @BuiltValueField(wireName: 'is_public')
   bool get isPublic;
 
-  // License license = License.PRIVATE_COPYRIGHTED;
-  // Term term;
   BuiltList<Enrollment> get enrollments;
 
   @BuiltValueField(wireName: 'needs_grading_count')
@@ -101,9 +99,6 @@ abstract class Course implements Built<Course, CourseBuilder> {
   @BuiltValueField(wireName: 'has_grading_periods')
   bool get hasGradingPeriods;
 
-  // List<Section> sections;
-  // @SerializedName("default_view")
-  // HomePage homePage;
   @BuiltValueField(wireName: 'restrict_enrollments_to_course_dates')
   bool get restrictEnrollmentsToCourseDates;
 
@@ -119,7 +114,7 @@ abstract class Course implements Built<Course, CourseBuilder> {
       ..hideFinalGrades = false
       ..isPublic = false
       ..applyAssignmentGroupWeights = false
-      .._isFavorite = false
+      ..isFavorite = false
       ..accessRestrictedByDate = false
       ..hasWeightedGradingPeriods = false
       ..restrictEnrollmentsToCourseDates = false;

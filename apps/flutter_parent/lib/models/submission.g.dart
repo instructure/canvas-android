@@ -45,7 +45,7 @@ class _$SubmissionSerializer implements StructuredSerializer<Submission> {
           specifiedType: const FullType(int)),
       'assignment',
       serializers.serialize(object.assignment,
-          specifiedType: const FullType(CourseAssignment)),
+          specifiedType: const FullType(Assignment)),
       'user_id',
       serializers.serialize(object.userId, specifiedType: const FullType(int)),
       'grader_id',
@@ -252,8 +252,7 @@ class _$SubmissionSerializer implements StructuredSerializer<Submission> {
           break;
         case 'assignment':
           result.assignment.replace(serializers.deserialize(value,
-                  specifiedType: const FullType(CourseAssignment))
-              as CourseAssignment);
+              specifiedType: const FullType(Assignment)) as Assignment);
           break;
         case 'user_id':
           result.userId = serializers.deserialize(value,
@@ -328,7 +327,7 @@ class _$Submission extends Submission {
   @override
   final int assignmentId;
   @override
-  final CourseAssignment assignment;
+  final Assignment assignment;
   @override
   final int userId;
   @override
@@ -627,10 +626,10 @@ class SubmissionBuilder implements Builder<Submission, SubmissionBuilder> {
   int get assignmentId => _$this._assignmentId;
   set assignmentId(int assignmentId) => _$this._assignmentId = assignmentId;
 
-  CourseAssignmentBuilder _assignment;
-  CourseAssignmentBuilder get assignment =>
-      _$this._assignment ??= new CourseAssignmentBuilder();
-  set assignment(CourseAssignmentBuilder assignment) =>
+  AssignmentBuilder _assignment;
+  AssignmentBuilder get assignment =>
+      _$this._assignment ??= new AssignmentBuilder();
+  set assignment(AssignmentBuilder assignment) =>
       _$this._assignment = assignment;
 
   int _userId;

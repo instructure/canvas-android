@@ -16,8 +16,8 @@ library serializers;
 
 import 'package:built_value/serializer.dart';
 import 'package:built_value/standard_json_plugin.dart';
+import 'package:flutter_parent/models/assignment.dart';
 import 'package:flutter_parent/models/course.dart';
-import 'package:flutter_parent/models/course_assignment.dart';
 import 'package:flutter_parent/models/enrollment.dart';
 import 'package:flutter_parent/models/grade.dart';
 import 'package:flutter_parent/models/school_domain.dart';
@@ -32,7 +32,7 @@ part 'serializers.g.dart';
 @SerializersFor([
   SchoolDomain,
   Course,
-  CourseAssignment,
+  Assignment,
   Enrollment,
   Grade,
   Submission,

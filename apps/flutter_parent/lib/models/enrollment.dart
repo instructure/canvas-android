@@ -13,7 +13,9 @@
 /// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 library enrollment;
 
-import 'package:built_value/built_value.dart';
+
+import'package:built_value/built_value.dart';
+
 import 'package:built_value/serializer.dart';
 
 import 'grade.dart';
@@ -26,6 +28,7 @@ abstract class Enrollment implements Built<Enrollment, EnrollmentBuilder> {
   static Serializer<Enrollment> get serializer => _$enrollmentSerializer;
 
   Enrollment._();
+
   factory Enrollment([void Function(EnrollmentBuilder) updates]) = _$Enrollment;
 
 

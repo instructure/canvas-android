@@ -1,10 +1,23 @@
+/// Copyright (C) 2019 - present Instructure, Inc.
+///
+/// This program is free software: you can redistribute it and/or modify
+/// it under the terms of the GNU General Public License as published by
+/// the Free Software Foundation, version 3 of the License.
+///
+/// This program is distributed in the hope that it will be useful,
+/// but WITHOUT ANY WARRANTY; without even the implied warranty of
+/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+/// GNU General Public License for more details.
+///
+/// You should have received a copy of the GNU General Public License
+/// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 library submission;
 
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 
-import 'course_assignment.dart';
+import 'assignment.dart';
 import 'user.dart';
 
 part 'submission.g.dart';
@@ -14,12 +27,14 @@ abstract class Submission implements Built<Submission, SubmissionBuilder> {
   static Serializer<Submission> get serializer => _$submissionSerializer;
 
   Submission._();
+
   factory Submission([updates(SubmissionBuilder b)]) = _$Submission;
 
   int get id;
 
   @nullable
   String get grade;
+
 
   double get score;
 
@@ -44,12 +59,9 @@ abstract class Submission implements Built<Submission, SubmissionBuilder> {
   @BuiltValueField(wireName: 'submission_history')
   BuiltList<Submission> get submissionHistory;
 
-  //  val attachments: ArrayList<Attachment> = arrayListOf(),
   @nullable
   String get body;
 
-  //  @JsonKey(name: "rubric_assessment")
-  //  var rubricAssessment: HashMap<String, RubricCriterionAssessment> = hashMapOf(),
   @BuiltValueField(wireName: 'grade_matches_current_submission')
   bool get isGradeMatchesCurrentSubmission;
 
@@ -74,13 +86,11 @@ abstract class Submission implements Built<Submission, SubmissionBuilder> {
 
   bool get missing;
 
-  //  @JsonKey(name: "media_comment")
-  //  val mediaComment: MediaComment? = null,
   // Conversation Stuff
   @BuiltValueField(wireName: "assignment_id")
   int get assignmentId;
 
-  CourseAssignment get assignment;
+  Assignment get assignment;
 
   @BuiltValueField(wireName: "user_id")
   int get userId;
@@ -91,12 +101,6 @@ abstract class Submission implements Built<Submission, SubmissionBuilder> {
   @nullable
   User get user;
 
-  // This value could be null. Currently will only be returned when getting the submission for
-  // a user when the submission_type is discussion_topic
-//  @JsonKey(name: "discussion_entries")
-//  val discussionEntries: ArrayList<DiscussionEntry> = arrayListOf(),
-  // Group Info only available when including groups in the Submissions#index endpoint
-//  val group: Group? = null,
   @nullable
   @BuiltValueField(wireName: "points_deducted")
   double get pointsDeducted;

@@ -5,14 +5,15 @@ import 'package:built_value/serializer.dart';
 
 import 'submission.dart';
 
-part 'course_assignment.g.dart';
+part 'assignment.g.dart';
 
-abstract class CourseAssignment implements Built<CourseAssignment, CourseAssignmentBuilder> {
+abstract class Assignment implements Built<Assignment, AssignmentBuilder> {
   @BuiltValueSerializer(serializeNulls: true)
-  static Serializer<CourseAssignment> get serializer => _$courseAssignmentSerializer;
+  static Serializer<Assignment> get serializer => _$assignmentSerializer;
 
-  CourseAssignment._();
-  factory CourseAssignment([void Function(CourseAssignmentBuilder) updates]) =_$CourseAssignment;
+  Assignment._();
+
+  factory Assignment([void Function(AssignmentBuilder) updates]) =_$Assignment;
 
 
   int get id;
@@ -22,9 +23,6 @@ abstract class CourseAssignment implements Built<CourseAssignment, CourseAssignm
 
   @nullable
   String get description;
-
-  //  @JsonKey(name: "submission_types")
-  // List<String> submissionTypesRaw = [];
 
   @nullable
   @BuiltValueField(wireName: 'due_at')
@@ -36,15 +34,9 @@ abstract class CourseAssignment implements Built<CourseAssignment, CourseAssignm
   @BuiltValueField(wireName: 'course_id')
   int get courseId;
 
-  //  @JsonKey(name: "grade_group_students_individually")
-  //  bool isGradeGroupsIndividually = false;
-
   @nullable
   @BuiltValueField(wireName: "grading_type")
   String get gradingType;
-
-  //  @JsonKey(name: "needs_grading_count")
-  //  int needsGradingCount;
 
   @nullable
   @BuiltValueField(wireName: "html_url")
@@ -56,14 +48,9 @@ abstract class CourseAssignment implements Built<CourseAssignment, CourseAssignm
   @BuiltValueField(wireName: "quiz_id")
   int get quizId; // (Optional) id of the associated quiz (applies only when submission_types is ["online_quiz"])
 
-//  List<RubricCriterion> rubric = [];
-
   @BuiltValueField(wireName: "use_rubric_for_grading")
   bool get useRubricForGrading;
-//  @JsonKey(name: "rubric_settings")
-//  RubricSettings rubricSettings;
-//  @SerializedName("allowed_extensions")
-//  List<String> allowedExtensions = [];
+
   Submission get submission;
 
   @BuiltValueField(wireName: "assignment_group_id")
@@ -71,10 +58,6 @@ abstract class CourseAssignment implements Built<CourseAssignment, CourseAssignm
 
   int get position;
 
-//  @JsonKey(name: "peer_reviews")
-//  bool isPeerReviews = false;
-//  @JsonKey(name: "lock_info") // Module lock info
-//  LockInfo lockInfo;
   @BuiltValueField(wireName: "locked_for_user")
   bool get lockedForUser;
 
@@ -90,10 +73,6 @@ abstract class CourseAssignment implements Built<CourseAssignment, CourseAssignm
   @BuiltValueField(wireName: "lock_explanation")
   String get lockExplanation;
 
-//  @JsonKey(name: "discussion_topic")
-//  DiscussionTopicHeader discussionTopicHeader;
-//  @JsonKey(name: "needs_grading_count_by_section")
-//  List<NeedsGradingCount> needsGradingCountBySection = [];
   @BuiltValueField(wireName: "free_form_criterion_comments")
   bool get freeFormCriterionComments;
 
@@ -104,13 +83,9 @@ abstract class CourseAssignment implements Built<CourseAssignment, CourseAssignm
   @BuiltValueField(wireName: "group_category_id")
   int get groupCategoryId;
 
-//  @JsonKey(name: "all_dates")
-//  List<AssignmentDueDate> allDates = [];
   @BuiltValueField(wireName: "user_submitted")
   bool get userSubmitted;
 
-//  bool unpublishable = false;
-//  List<AssignmentOverride> overrides = [];
   @BuiltValueField(wireName: "only_visible_to_overrides")
   bool get onlyVisibleToOverrides;
 
@@ -126,7 +101,7 @@ abstract class CourseAssignment implements Built<CourseAssignment, CourseAssignm
   bool get isArcEnabled;
 
 
-  static void _initializeBuilder(CourseAssignmentBuilder b) => b
+  static void _initializeBuilder(AssignmentBuilder b) => b
     ..pointsPossible = 0.0
     ..useRubricForGrading = false
     ..lockedForUser = false
