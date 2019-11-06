@@ -30,11 +30,11 @@ part 'serializers.g.dart';
 /// If changes are made, run `flutter pub run build_runner build` from the project root. Alternatively, you can
 /// have it watch for changes and automatically build if you run `flutter pub run build_runner watch`.
 @SerializersFor([
-  SchoolDomain,
-  Course,
   Assignment,
+  Course,
   Enrollment,
   Grade,
+  SchoolDomain,
   Submission,
   User
 ])
