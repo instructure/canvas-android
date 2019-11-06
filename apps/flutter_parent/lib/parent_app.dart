@@ -17,6 +17,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_parent/api/utils/api_prefs.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/screens/login_landing_screen.dart';
 
@@ -35,8 +36,7 @@ class _ParentAppState extends State<ParentApp> {
   @override
   void initState() {
     super.initState();
-    // TODO: Set locale from stored user
-//    _locale = AuthService.effectiveLocale();
+    _locale = ApiPrefs.effectiveLocale();
   }
 
   @override

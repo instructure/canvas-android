@@ -17,6 +17,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_parent/api/utils/api_prefs.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 
 class TestApp extends StatefulWidget {
@@ -38,8 +39,13 @@ class _TestAppState extends State<TestApp> {
   @override
   void initState() {
     super.initState();
-    // TODO: Set locale from stored user
-//    _locale = AuthService.effectiveLocale();
+
+    // Probably don't want to do an async set state here, but it's better than calling ApiPrefs.init in _every_ test
+    ApiPrefs.init().then((_) {
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        setState(() => _locale = ApiPrefs.effectiveLocale());
+      });
+    });
   }
 
   @override
