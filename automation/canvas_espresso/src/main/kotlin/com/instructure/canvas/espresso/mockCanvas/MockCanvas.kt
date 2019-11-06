@@ -138,6 +138,12 @@ class MockCanvas {
     /** Map of course id to module list */
     val courseModules = mutableMapOf<Long, MutableList<ModuleObject>>()
 
+    /** Map of course id to quiz list */
+    val courseQuizzes = mutableMapOf<Long, MutableList<Quiz>>()
+
+    /** Map of quiz id to question list */
+    val quizQuestions = mutableMapOf<Long, MutableList<QuizQuestion>>()
+
     //region Convenience functionality
 
     /** A list of users with at least one Student enrollment */
@@ -744,6 +750,7 @@ fun MockCanvas.addItemToModule(
         is Quiz -> {
             itemType = ModuleItem.Type.Quiz
             itemTitle = item.title
+            itemUrl = "https://mock-data.instructure.com/api/v1/courses/${course.id}/quizzes/${item.id}"
         }
         is FileFolder -> {
             itemType = ModuleItem.Type.File
@@ -797,3 +804,85 @@ fun MockCanvas.addItemToModule(
     return result
 }
 
+// Create a Quiz and add it to the specified course
+fun MockCanvas.addQuizToCourse(
+        course: Course,
+        title: String = Faker.instance().hitchhikersGuideToTheGalaxy().character(),
+        description: String = Faker.instance().hitchhikersGuideToTheGalaxy().marvinQuote(),
+        quizType: String = Quiz.TYPE_PRACTICE
+) : Quiz {
+    val quizId = newItemId()
+    val quizUrl = "https://mock-data.instructure.com/api/v1/courses/${course.id}/quizzes/$quizId"
+    val result = Quiz(
+            id = quizId,
+            title = title,
+            description = description,
+            quizType = quizType,
+            mobileUrl = quizUrl,
+            htmlUrl = quizUrl
+    )
+
+    var quizList = courseQuizzes[course.id]
+    if(quizList == null) {
+        quizList = mutableListOf<Quiz>()
+        courseQuizzes[course.id] = quizList
+    }
+
+    // Add to the quiz list for the course
+    quizList.add(result)
+
+    // Return our created quiz
+    return result
+}
+
+// Add question to quiz
+fun MockCanvas.addQuestionToQuiz(
+        course: Course,
+        quizId: Long,
+        questionName: String?,
+        questionText: String,
+        questionType: String = QuizQuestion.QuestionType.MUTIPLE_CHOICE.toString(),
+        pointsPossible: Int = 5,
+        answers: Array<QuizAnswer>? = null
+) : QuizQuestion {
+
+    val quiz = courseQuizzes[course.id]!!.find {it.id == quizId}!!
+    val result = QuizQuestion(
+            id = newItemId(),
+            quizId = quizId,
+            position = quiz.questionCount,
+            questionName = questionName,
+            questionTypeString = questionType,
+            questionText = questionText,
+            pointsPossible = pointsPossible,
+            answers = answers
+    )
+
+    // Make the necessary changes to the stored Quiz object by copy/changing/replacing it
+    val newPointsPossible = ((quiz.pointsPossible?.toInt() ?: 0) + pointsPossible).toString()
+    val newQuestionCount = quiz.questionCount + 1
+    val newQuestionTypes = mutableListOf<String>()
+    if(quiz.questionTypes != null) {
+        newQuestionTypes.addAll(quiz.questionTypes)
+    }
+    newQuestionTypes.add(questionType)
+    val newQuiz = quiz.copy(
+            pointsPossible = newPointsPossible,
+            questionCount = newQuestionCount,
+            questionTypes = newQuestionTypes
+    )
+    val quizList = courseQuizzes[course.id]!!
+    quizList.remove(quiz)
+    quizList.add(newQuiz)
+
+    // Add the newly created question to the question list for the quiz
+    var questionList = quizQuestions[quizId]
+    if(questionList == null) {
+        questionList = mutableListOf<QuizQuestion>()
+        quizQuestions[quizId] = questionList
+    }
+    questionList.add(result)
+
+    // return the quiz question
+    return result
+}

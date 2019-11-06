@@ -15,14 +15,8 @@
  */
 package com.instructure.student.ui.interaction
 
-import android.util.Log
+import android.text.Html
 import androidx.test.espresso.Espresso
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
-import androidx.test.espresso.web.sugar.Web.onWebView
-import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
-import androidx.test.espresso.web.webdriver.DriverAtoms.getText
 import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.mockCanvas.AssignmentGroupType
@@ -33,6 +27,8 @@ import com.instructure.canvas.espresso.mockCanvas.addFileToCourse
 import com.instructure.canvas.espresso.mockCanvas.addItemToModule
 import com.instructure.canvas.espresso.mockCanvas.addModuleToCourse
 import com.instructure.canvas.espresso.mockCanvas.addPageToCourse
+import com.instructure.canvas.espresso.mockCanvas.addQuestionToQuiz
+import com.instructure.canvas.espresso.mockCanvas.addQuizToCourse
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
@@ -40,6 +36,9 @@ import com.instructure.canvasapi2.models.LockInfo
 import com.instructure.canvasapi2.models.LockedModule
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.models.Page
+import com.instructure.canvasapi2.models.Quiz
+import com.instructure.canvasapi2.models.QuizAnswer
+import com.instructure.canvasapi2.models.QuizQuestion
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
@@ -48,12 +47,9 @@ import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
-import com.instructure.student.R
 import com.instructure.student.ui.pages.WebViewTextCheck
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLogin
-import org.hamcrest.CoreMatchers.containsString
-import org.hamcrest.core.AllOf.allOf
 import org.junit.Test
 
 class ModuleInteractionTest : StudentTest() {
@@ -67,20 +63,18 @@ class ModuleInteractionTest : StudentTest() {
     private val fileName = "ModuleFile.html"
     private var fileCheck: WebViewTextCheck? = null
     private val externalUrl = "https://www.google.com"
+    private var quiz: Quiz? = null
 
-    @Stub
+    // Tapping an Assignment module item should navigate to that item's detail page
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.MODULES, TestCategory.INTERACTION, true, FeatureCategory.ASSIGNMENTS)
+    @TestMetaData(Priority.P0, FeatureCategory.MODULES, TestCategory.INTERACTION, false, FeatureCategory.ASSIGNMENTS)
     fun testModules_launchesIntoAssignment() {
-        // Tapping an Assignment module item should navigate to that item's detail page
-
         // Basic mock setup
-        val data = getToCourse(studentCount = 1, courseCount = 1)
+        val data = getToCourseModules(studentCount = 1, courseCount = 1)
         val course1 = data.courses.values.first()
         val module = data.courseModules[course1.id]!!.first()
 
-        // Go to the modules page, and run the test
-        courseBrowserPage.selectModules()
+        // Verify that we can launch into the assignment from an assignment module item
         modulesPage.assertModuleDisplayed(module)
         modulesPage.assertModuleItemDisplayed(module, assignment!!.name!!)
         modulesPage.clickModuleItem(module, assignment!!.name!!)
@@ -88,25 +82,23 @@ class ModuleInteractionTest : StudentTest() {
 
     }
 
-    @Stub
+    // Tapping a Discussion module item should navigate to that item's detail page
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.MODULES, TestCategory.INTERACTION, true, FeatureCategory.DISCUSSIONS)
+    @TestMetaData(Priority.P0, FeatureCategory.MODULES, TestCategory.INTERACTION, false, FeatureCategory.DISCUSSIONS)
     fun testModules_launchesIntoDiscussion() {
-        // Tapping a Discussion module item should navigate to that item's detail page
-
         // Basic mock setup
-        val data = getToCourse(studentCount = 1, courseCount = 1)
+        val data = getToCourseModules(studentCount = 1, courseCount = 1)
         val course1 = data.courses.values.first()
         val module = data.courseModules[course1.id]!!.first()
 
-        // Go to the modules page, and run the test
-        courseBrowserPage.selectModules()
+        // Verify that we can launch into a discussion from a discussion module item
         modulesPage.assertModuleDisplayed(module)
         modulesPage.assertModuleItemDisplayed(module, topicHeader!!.title!!)
         modulesPage.clickModuleItem(module, topicHeader!!.title!!)
         discussionDetailsPage.assertTopicInfoShowing(topicHeader!!)
     }
 
+    // I'm punting on LTI testing for now.  But MBL-13517 captures this work.
     @Stub
     @Test
     @TestMetaData(Priority.P0, FeatureCategory.MODULES, TestCategory.INTERACTION, true)
@@ -114,90 +106,96 @@ class ModuleInteractionTest : StudentTest() {
         // Tapping an ExternalTool module item should navigate to that item's detail page
     }
 
-    @Stub
+    // Tapping an ExternalURL module item should navigate to that item's detail page
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.MODULES, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P0, FeatureCategory.MODULES, TestCategory.INTERACTION, false)
     fun testModules_launchesIntoExternalURL() {
-        // Tapping an ExternalURL module item should navigate to that item's detail page
-
         // Basic mock setup
-        val data = getToCourse(studentCount = 1, courseCount = 1)
+        val data = getToCourseModules(studentCount = 1, courseCount = 1)
         val course1 = data.courses.values.first()
         val module = data.courseModules[course1.id]!!.first()
 
-        // Go to the modules page, click the external module
-        courseBrowserPage.selectModules()
+        // click the external url module item
         modulesPage.clickModuleItem(module,externalUrl)
         // Not much we can test here, as it is an external URL, but testModules_navigateToNextAndPreviousModuleItems
         // will test that the module name and module item name are displayed correctly.
     }
 
-    @Stub
+    // Tapping a File module item should navigate to that item's detail page
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.MODULES, TestCategory.INTERACTION, true, FeatureCategory.FILES)
+    @TestMetaData(Priority.P0, FeatureCategory.MODULES, TestCategory.INTERACTION, false, FeatureCategory.FILES)
     fun testModules_launchesIntoFile() {
-        // Tapping a File module item should navigate to that item's detail page
-
         // Basic mock setup
-        val data = getToCourse(studentCount = 1, courseCount = 1)
+        val data = getToCourseModules(studentCount = 1, courseCount = 1)
         val course1 = data.courses.values.first()
         val module = data.courseModules[course1.id]!!.first()
 
-        // Go to the modules page, click the file module, and verify that the file appears
-        courseBrowserPage.selectModules()
+        // Click the file module and verify that the file appears
         modulesPage.clickModuleItem(module,fileName,true)
-        // TODO: Move this check to a more centralized place, like webViewPage?
-        onWebView(allOf(withId(R.id.canvasWebView), isDisplayed())) // There could be multiple other webviews in the stack, not being shown.
-                .withElement(findElement(fileCheck!!.locatorType, fileCheck!!.locatorValue))
-                .check(webMatches(getText(), containsString(fileCheck!!.textValue)))
-
+        canvasWebViewPage.runTextChecks(fileCheck!!)
     }
 
-    @Stub
+    // Tapping a Page module item should navigate to that item's detail page
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.MODULES, TestCategory.INTERACTION, true, FeatureCategory.PAGES)
+    @TestMetaData(Priority.P0, FeatureCategory.MODULES, TestCategory.INTERACTION, false, FeatureCategory.PAGES)
     fun testModules_launchesIntoPage() {
-        // Tapping a Page module item should navigate to that item's detail page
-
         // Basic mock setup
-        val data = getToCourse(studentCount = 1, courseCount = 1)
+        val data = getToCourseModules(studentCount = 1, courseCount = 1)
         val course1 = data.courses.values.first()
         val module = data.courseModules[course1.id]!!.first()
 
-        // Go to the modules page, and run the test
-        courseBrowserPage.selectModules()
+        // Verify that we can launch into a page from a page module item
         modulesPage.assertModuleDisplayed(module)
         modulesPage.assertModuleItemDisplayed(module, page!!.title!!)
         modulesPage.clickModuleItem(module, page!!.title!!)
-        //discussionDetailsPage.assertTopicInfoShowing(topicHeader!!)
 
-        Log.d("launchesIntoPage", "Here") // TODO: Add a content check for displayed page
+        // Check that the page showed up.
+        // Strip out any html before comparing
+        // Also, just use the first 10 chars because you risk encountering multiple-newlines
+        // (which show as single newlines in webview, or even no-newlines if at the end
+        // of the string) if you go much longer
+        var expectedBody = Html.fromHtml(page!!.body!!).toString().substring(0,10)
+        canvasWebViewPage.runTextChecks(
+                WebViewTextCheck(Locator.ID, "content", expectedBody)
+        )
 
     }
 
-    @Stub
+    // Tapping a Quiz module item should navigate to that item's detail page
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.MODULES, TestCategory.INTERACTION, true, FeatureCategory.QUIZZES)
+    @TestMetaData(Priority.P0, FeatureCategory.MODULES, TestCategory.INTERACTION, false, FeatureCategory.QUIZZES)
     fun testModules_launchesIntoQuiz() {
-        // Tapping a Quiz module item should navigate to that item's detail page
+        // Basic mock setup
+        val data = getToCourseModules(studentCount = 1, courseCount = 1)
+        val course1 = data.courses.values.first()
+        val module = data.courseModules[course1.id]!!.first()
+
+        // Verify that we can launch into a quiz from a quiz module item
+        modulesPage.assertModuleDisplayed(module)
+        modulesPage.assertModuleItemDisplayed(module, quiz!!.title!!)
+        modulesPage.clickModuleItem(module, quiz!!.title!!)
+        moduleProgressionPage.assertModuleItemTitleDisplayed(quiz!!.title!!)
+        // This really only gets to the preliminary page that has the "Go to quiz" button.
+        // We'll do some heavier quiz testing in QuizInteractionTest
+
     }
 
-    @Stub
+    // Tapping a module should collapse and hide all of that module's items in the module list
+    // Tapping a collapsed module should expand it
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.MODULES, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P1, FeatureCategory.MODULES, TestCategory.INTERACTION, false)
     fun testModules_modulesExpandAndCollapse() {
-        // Tapping a module should collapse and hide all of that module's items in the module list
-        // Tapping a collapsed module should expand it
-
         // Basic mock setup
-        val data = getToCourse(studentCount = 1, courseCount = 1)
+        val data = getToCourseModules(studentCount = 1, courseCount = 1)
         val course1 = data.courses.values.first()
         val module = data.courseModules[course1.id]!!.first()
         val firstModuleItem = module.items[0]
 
-        // Go to the modules page, and run the test
-        // We're going on the assumption that the lone module is initially expanded
-        courseBrowserPage.selectModules()
+        // Verify that expanding a module shows the module items and collapsing a module
+        // hides/nukes that module's items.
+        // We're going on the assumption that the lone module is initially expanded.  Although
+        // the initial assertModuleItemDisplayed() would expand the module if it was not expanded
+        // already.
         modulesPage.assertModuleDisplayed(module)
         modulesPage.assertModuleItemDisplayed(module,firstModuleItem.title!!)
         modulesPage.clickModule(module)
@@ -207,19 +205,15 @@ class ModuleInteractionTest : StudentTest() {
 
     }
 
-    @Stub
+    // After entering the detail page for a module item, pressing the back button or back arrow should navigate back
+    // to the module list. This should also work if the detail page is accessed via deep link
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.MODULES, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P0, FeatureCategory.MODULES, TestCategory.INTERACTION, false)
     fun testModules_navigateBackToModuleListFromModuleItem() {
-        // After entering the detail page for a module item, pressing the back button or back arrow should navigate back
-        // to the module list. This should also work if the detail page is accessed via deep link
-
         // Basic mock setup
-        val data = getToCourse(studentCount = 1, courseCount = 1)
+        val data = getToCourseModules(studentCount = 1, courseCount = 1)
         val course1 = data.courses.values.first()
         val module = data.courseModules[course1.id]!!.first()
-
-        courseBrowserPage.selectModules()
 
         // For each module item, go into the module detail page, click the back button,
         // and verify that we've returned to the module list page.
@@ -231,20 +225,17 @@ class ModuleInteractionTest : StudentTest() {
 
     }
 
-    @Stub
+    // When viewing the detail page for an item in a module with multiple items, the detail page should have
+    // 'next' and 'previous' navigation buttons. Clicking these should navigate to the next/previous module items.
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.MODULES, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P0, FeatureCategory.MODULES, TestCategory.INTERACTION, false)
     fun testModules_navigateToNextAndPreviousModuleItems() {
-        // When viewing the detail page for an item in a module with multiple items, the detail page should have
-        // 'next' and 'previous' navigation buttons. Clicking these should navigate to the next/previous module items.
-
         // Basic mock setup
-        val data = getToCourse(studentCount = 1, courseCount = 1)
+        val data = getToCourseModules(studentCount = 1, courseCount = 1)
         val course1 = data.courses.values.first()
         val module = data.courseModules[course1.id]!!.first()
 
-        // Go to the modules page, and iterate through the module items
-        courseBrowserPage.selectModules()
+        // Iterate through the module items, starting at the first
         val moduleItemList = module.items
         modulesPage.clickModuleItem(module,moduleItemList[0].title!!)
 
@@ -289,14 +280,12 @@ class ModuleInteractionTest : StudentTest() {
         }
     }
 
-    @Stub
+    // Module can't be accessed unless all prerequisites have been fulfilled
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.MODULES, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P1, FeatureCategory.MODULES, TestCategory.INTERACTION, false)
     fun testModules_moduleLockedWithUnfulfilledPrerequisite() {
-        // Module can't be accessed unless all prerequisites have been fulfilled
-
         // Basic mock setup
-        val data = getToCourse(studentCount = 1, courseCount = 1)
+        val data = getToCourseModules(studentCount = 1, courseCount = 1)
         val course1 = data.courses.values.first()
         val module = data.courseModules[course1.id]!!.first()
 
@@ -326,21 +315,19 @@ class ModuleInteractionTest : StudentTest() {
         )
 
 
-        // Navigate to the modules page, select module2, and assert that unavailableAssignment is locked
-        courseBrowserPage.selectModules()
+        // Refresh to get module list update, select module2, and assert that unavailableAssignment is locked
+        modulesPage.refresh()
         modulesPage.clickModule(module2)
         modulesPage.clickModuleItem(module2,unavailableAssignment.name!!)
         assignmentDetailsPage.verifyAssignmentLocked()
     }
 
-    @Stub
+    // Module can't be accessed until the availability date has passed
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.MODULES, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P1, FeatureCategory.MODULES, TestCategory.INTERACTION, false)
     fun testModules_moduleLockedUntilAvailabilityDate() {
-        // Module can't be accessed until the availability date has passed
-
         // Basic mock setup
-        val data = getToCourse(studentCount = 1, courseCount = 1)
+        val data = getToCourseModules(studentCount = 1, courseCount = 1)
         val course1 = data.courses.values.first()
         val module = data.courseModules[course1.id]!!.first()
 
@@ -351,15 +338,15 @@ class ModuleInteractionTest : StudentTest() {
                 unlockAt = 2.days.fromNow.iso8601
         )
 
-        // Navigate to the modules page and assert that module2 is locked
-        courseBrowserPage.selectModules()
+        // Refresh to get module list update, then assert that module2 is locked
+        modulesPage.refresh()
         modulesPage.clickModule(module2)
         modulesPage.assertAnyModuleLocked()
     }
 
     // Mock a specified number of students and courses, add some assorted assignments, discussions, etc...
-    // in the form of modules, and navigate to the course
-    private fun getToCourse(
+    // in the form of module items, and navigate to the modules page of the course
+    private fun getToCourseModules(
             studentCount: Int = 1,
             courseCount: Int = 1): MockCanvas {
 
@@ -443,6 +430,46 @@ class ModuleInteractionTest : StudentTest() {
                 item = externalUrl
         )
 
+        // Create a quiz and add it as a module item
+        quiz = data.addQuizToCourse(
+                course = course1
+        )
+
+        data.addQuestionToQuiz(
+                course = course1,
+                quizId = quiz!!.id,
+                questionName = "Math 1",
+                questionText = "What is 2 + 5?",
+                questionType = QuizQuestion.QuestionType.MUTIPLE_CHOICE.toString(),
+                answers = arrayOf(
+                        QuizAnswer(answerText = "7"),
+                        QuizAnswer(answerText = "25"),
+                        QuizAnswer(answerText = "-7")
+                )
+        )
+
+        data.addQuestionToQuiz(
+                course = course1,
+                quizId = quiz!!.id,
+                questionName = "Math 2",
+                questionText = "Pi is greater than the square root of 2",
+                questionType = QuizQuestion.QuestionType.TRUE_FALSE.toString()
+        )
+
+        data.addQuestionToQuiz(
+                course = course1,
+                quizId = quiz!!.id,
+                questionName = "Math 3",
+                questionText = "Write an essay on why math is so awesome",
+                questionType = QuizQuestion.QuestionType.ESSAY.toString()
+        )
+
+        data.addItemToModule(
+                course = course1,
+                moduleId = module.id,
+                item = quiz!!
+        )
+
 
         // Sign in
         val student = data.students[0]
@@ -452,6 +479,8 @@ class ModuleInteractionTest : StudentTest() {
 
         // Navigate to the (first) course
         dashboardPage.selectCourse(course1)
+        // Navigate to the modules page for the course
+        courseBrowserPage.selectModules()
 
         return data
     }

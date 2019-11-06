@@ -74,6 +74,61 @@ object CourseEndpoint : Endpoint(
         Segment("files") to CourseFilesEndpoint,
         Segment("discussion_topics") to CourseDiscussionTopicListEndpoint,
         Segment("modules") to CourseModuleListEndpoint,
+        Segment("quizzes") to endpoint(
+                LongId(PathVars::quizId) to endpoint(
+                        Segment("questions") to endpoint(
+                                LongId(PathVars::questionId) to endpoint(
+                                        configure = {
+                                            GET {
+                                                val question = data.quizQuestions[pathVars.quizId]?.find { it.id == pathVars.questionId }
+                                                if (question != null) {
+                                                    request.successResponse(question)
+                                                } else {
+                                                    request.unauthorizedResponse()
+                                                }
+
+                                            }
+                                        }
+                                ), // end specific-question endpoint
+
+                                configure = {
+                                    GET { // Get quiz question list for our quiz
+                                        val quizzesForCourse = data.courseQuizzes[pathVars.courseId]
+                                        if (quizzesForCourse != null) {
+                                            request.successResponse(quizzesForCourse)
+                                        } else {
+                                            request.unauthorizedResponse()
+                                        }
+                                    }
+                                }
+
+                        ), // End question list endpoint
+                        configure = {
+                            GET {
+                                // Get single quiz
+                                val quiz = data.courseQuizzes[pathVars.courseId]?.find {it.id == pathVars.quizId }
+                                if(quiz != null) {
+                                    request.successResponse(quiz)
+                                }
+                                else {
+                                    request.unauthorizedResponse()
+                                }
+                            }
+                        }
+                ), // End single-quiz endpoint
+
+                configure = {
+                    GET { // Get list of quizzes for course
+                        val quizzesForCourse = data.courseQuizzes[pathVars.courseId]
+                        if (quizzesForCourse != null) {
+                            request.successResponse(quizzesForCourse)
+                        } else {
+                            request.unauthorizedResponse()
+                        }
+                    }
+                }
+        ),
+
         response = {
             GET {
                 val course = data.courses[pathVars.courseId]!!
@@ -141,15 +196,14 @@ object CourseFoldersEndpoint : Endpoint(
  * ROUTES:
  * - `{fileId}` -> anonymous endpoint to retrieve a file
  */
-object CourseFilesEndpoint : Endpoint (
+object CourseFilesEndpoint : Endpoint(
         LongId(PathVars::fileId) to endpoint {
             GET {
                 val courseRootFolder = data.courseRootFolders[pathVars.courseId]
-                val targetFileFolder = data.folderFiles[courseRootFolder?.id]?.find{it.id == pathVars.fileId}
-                if(targetFileFolder != null) {
+                val targetFileFolder = data.folderFiles[courseRootFolder?.id]?.find { it.id == pathVars.fileId }
+                if (targetFileFolder != null) {
                     request.successResponse(targetFileFolder)
-                }
-                else {
+                } else {
                     request.unauthorizedResponse()
                 }
 
@@ -420,12 +474,11 @@ object CourseModuleItemsListEndpoint : Endpoint(
                 val moduleList = data.courseModules[pathVars.courseId]
                 val moduleObject = moduleList?.find { it.id == pathVars.moduleId }
                 val itemList = moduleObject?.items
-                val moduleItem = itemList?.find {it.id == pathVars.moduleItemId}
+                val moduleItem = itemList?.find { it.id == pathVars.moduleItemId }
 
-                if(moduleItem != null) {
+                if (moduleItem != null) {
                     request.successResponse(moduleItem)
-                }
-                else {
+                } else {
                     request.unauthorizedResponse()
                 }
 
@@ -444,4 +497,5 @@ object CourseModuleItemsListEndpoint : Endpoint(
                 }
 
             }
-        })
+        }
+)

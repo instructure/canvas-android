@@ -200,11 +200,5 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
     }
 }
 
-/** data class that encapsulates info for a webview text check */
-// TODO: We should probably move this to a more centralized location
-data class WebViewTextCheck(
-        val locatorType: Locator,
-        val locatorValue: String,
-        val textValue: String
-)
+
 
