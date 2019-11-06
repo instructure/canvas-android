@@ -98,7 +98,7 @@ abstract class Assignment implements Built<Assignment, AssignmentBuilder> {
   @BuiltValueField(wireName: "anonymous_grading")
   bool get anonymousGrading;
 
-  bool get isArcEnabled;
+  bool get isStudioEnabled;
 
 
   static void _initializeBuilder(AssignmentBuilder b) => b

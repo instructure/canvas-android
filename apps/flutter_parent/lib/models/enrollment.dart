@@ -146,6 +146,6 @@ static void _initializeBuilder(EnrollmentBuilder b) => b
     ..totalsForAllGradingPeriodsOption = false
     ..currentGradingPeriodId = 0
     ..associatedUserId = 0
-    .. limitPrivilegesToCourseSection = false
+    .. limitPrivilegesToCourseSection = false;
 
 }

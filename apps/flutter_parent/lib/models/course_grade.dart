@@ -38,23 +38,23 @@ class CourseGrade {
           _enrollment.currentGradingPeriodId != 0;
 
   double _getCurrentScore() =>
-      _enrollment.grade?.currentScore ?? _enrollment.computedCurrentScore;
+      _enrollment.grades?.currentScore ?? _enrollment.computedCurrentScore;
 
 //  double _getFinalScore() =>
 //      _enrollment.grade?.finalScore ?? _enrollment.computedFinalScore;
 
   String _getCurrentGrade() =>
-      _enrollment.grade?.currentGrade ?? _enrollment.computedCurrentGrade;
+      _enrollment.grades?.currentGrade ?? _enrollment.computedCurrentGrade;
 
 //  String _getFinalGrade() =>
 //      _enrollment.grade?.finalGrade ?? _enrollment.computedFinalGrade;
 
   double _getCurrentPeriodComputedCurrentScore() =>
-      _enrollment.grade?.currentScore ??
+      _enrollment.grades?.currentScore ??
           _enrollment.currentPeriodComputedCurrentScore;
 
   String _getCurrentPeriodComputedCurrentGrade() =>
-      _enrollment.grade?.currentGrade ??
+      _enrollment.grades?.currentGrade ??
           _enrollment.currentPeriodComputedCurrentGrade;
 
 //  double _getCurrentPeriodComputedFinalScore() =>
