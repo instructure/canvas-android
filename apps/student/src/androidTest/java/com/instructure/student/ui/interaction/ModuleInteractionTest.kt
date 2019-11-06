@@ -47,6 +47,7 @@ import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
+import com.instructure.student.R
 import com.instructure.student.ui.pages.WebViewTextCheck
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLogin
@@ -131,7 +132,7 @@ class ModuleInteractionTest : StudentTest() {
         val module = data.courseModules[course1.id]!!.first()
 
         // Click the file module and verify that the file appears
-        modulesPage.clickModuleItem(module,fileName,true)
+        modulesPage.clickModuleItem(module,fileName, R.id.openButton)
         canvasWebViewPage.runTextChecks(fileCheck!!)
     }
 
@@ -173,11 +174,11 @@ class ModuleInteractionTest : StudentTest() {
         // Verify that we can launch into a quiz from a quiz module item
         modulesPage.assertModuleDisplayed(module)
         modulesPage.assertModuleItemDisplayed(module, quiz!!.title!!)
-        modulesPage.clickModuleItem(module, quiz!!.title!!)
+        modulesPage.clickModuleItem(module, quiz!!.title!!, R.id.goToQuiz/*, R.id.next*/)
+        val quizQuestions = data.quizQuestions[quiz!!.id]?.toList()
+        quizDetailsPage.assertQuizDisplayed(quiz!!, false, quizQuestions!!)
+        Espresso.pressBack()
         moduleProgressionPage.assertModuleItemTitleDisplayed(quiz!!.title!!)
-        // This really only gets to the preliminary page that has the "Go to quiz" button.
-        // We'll do some heavier quiz testing in QuizInteractionTest
-
     }
 
     // Tapping a module should collapse and hide all of that module's items in the module list
@@ -440,7 +441,7 @@ class ModuleInteractionTest : StudentTest() {
                 quizId = quiz!!.id,
                 questionName = "Math 1",
                 questionText = "What is 2 + 5?",
-                questionType = QuizQuestion.QuestionType.MUTIPLE_CHOICE.toString(),
+                questionType = "multiple_choice_question",
                 answers = arrayOf(
                         QuizAnswer(answerText = "7"),
                         QuizAnswer(answerText = "25"),
@@ -453,7 +454,7 @@ class ModuleInteractionTest : StudentTest() {
                 quizId = quiz!!.id,
                 questionName = "Math 2",
                 questionText = "Pi is greater than the square root of 2",
-                questionType = QuizQuestion.QuestionType.TRUE_FALSE.toString()
+                questionType = "true_false_question"
         )
 
         data.addQuestionToQuiz(
@@ -461,7 +462,7 @@ class ModuleInteractionTest : StudentTest() {
                 quizId = quiz!!.id,
                 questionName = "Math 3",
                 questionText = "Write an essay on why math is so awesome",
-                questionType = QuizQuestion.QuestionType.ESSAY.toString()
+                questionType = "essay_question"
         )
 
         data.addItemToModule(

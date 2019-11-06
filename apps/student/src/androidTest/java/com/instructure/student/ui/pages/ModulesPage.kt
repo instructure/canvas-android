@@ -71,13 +71,13 @@ class ModulesPage : BasePage(R.id.modulesPage) {
     }
 
     /**
-     * Opening file modules requires the extra step of clicking the "Open" button,
-     * thus the [clickOpenButton] parameter.
+     * It is occasionally the case that we need to click a few extra buttons to get "fully" into
+     * the item.  Thus the [extraClickIds] vararg param.
      */
-    fun clickModuleItem(module: ModuleObject, itemTitle: String, clickOpenButton: Boolean = false) {
+    fun clickModuleItem(module: ModuleObject, itemTitle: String, vararg extraClickIds: Int) {
         assertAndClickModuleItem(module.name!!, itemTitle, true)
-        if(clickOpenButton) {
-            onView(withId(R.id.openButton)).click()
+        for(extraClickId in extraClickIds) {
+            onView(allOf(withId(extraClickId), isDisplayed())).click()
         }
     }
 

@@ -30,6 +30,8 @@ import com.instructure.canvasapi2.models.DiscussionTopic
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.DiscussionTopicPermission
 import com.instructure.canvasapi2.models.ModuleObject
+import com.instructure.canvasapi2.models.QuizSubmission
+import com.instructure.canvasapi2.models.QuizSubmissionResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okio.Buffer
@@ -76,6 +78,15 @@ object CourseEndpoint : Endpoint(
         Segment("modules") to CourseModuleListEndpoint,
         Segment("quizzes") to endpoint(
                 LongId(PathVars::quizId) to endpoint(
+                        Segment("submissions") to endpoint (
+                                configure = {
+                                    GET { // Return submission list for quiz
+                                        val submissionList = data.quizSubmissions[pathVars.quizId] ?: mutableListOf<QuizSubmission>()
+                                        val response = QuizSubmissionResponse(quizSubmissions = submissionList)
+                                        request.successResponse(response)
+                                    }
+                                }
+                        ),
                         Segment("questions") to endpoint(
                                 LongId(PathVars::questionId) to endpoint(
                                         configure = {

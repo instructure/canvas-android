@@ -144,6 +144,9 @@ class MockCanvas {
     /** Map of quiz id to question list */
     val quizQuestions = mutableMapOf<Long, MutableList<QuizQuestion>>()
 
+    /** Map of quiz id to quiz submission list */
+    val quizSubmissions = mutableMapOf<Long, MutableList<QuizSubmission>>()
+
     //region Convenience functionality
 
     /** A list of users with at least one Student enrollment */
@@ -841,7 +844,7 @@ fun MockCanvas.addQuestionToQuiz(
         quizId: Long,
         questionName: String?,
         questionText: String,
-        questionType: String = QuizQuestion.QuestionType.MUTIPLE_CHOICE.toString(),
+        questionType: String = "multiple_choice_question",
         pointsPossible: Int = 5,
         answers: Array<QuizAnswer>? = null
 ) : QuizQuestion {
