@@ -27,9 +27,7 @@ abstract class User implements Built<User, UserBuilder> {
 
   factory User([updates(UserBuilder b)]) = _$User;
 
-  @BuiltValueField()
   int get id;
-  @BuiltValueField()
   String get name;
   @BuiltValueField(wireName: 'sortable_name')
   String get sortableName;
@@ -37,7 +35,6 @@ abstract class User implements Built<User, UserBuilder> {
   String get avatarUrl;
   @BuiltValueField(wireName: 'primary_email')
   String get primaryEmail;
-  @BuiltValueField(wireName: 'locale')
   String get locale;
   @BuiltValueField(wireName: 'effective_locale')
   String get effectiveLocale;

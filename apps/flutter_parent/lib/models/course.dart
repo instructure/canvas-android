@@ -40,9 +40,7 @@ abstract class Course implements Built<Course, CourseBuilder> {
 
   factory Course([updates(CourseBuilder b)]) = _$Course;
 
-  @BuiltValueField()
   int get id;
-  @BuiltValueField()
   String get name;
   @BuiltValueField(wireName: 'original_name')
   String get originalName;
@@ -61,7 +59,6 @@ abstract class Course implements Built<Course, CourseBuilder> {
 
   // License license = License.PRIVATE_COPYRIGHTED;
   // Term term;
-  @BuiltValueField()
   BuiltList<Enrollment> get enrollments;
   @BuiltValueField(wireName: 'needs_grading_count')
   int get needsGradingCount;
