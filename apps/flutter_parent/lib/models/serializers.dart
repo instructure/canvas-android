@@ -16,6 +16,8 @@ library serializers;
 
 import 'package:built_value/serializer.dart';
 import 'package:built_value/standard_json_plugin.dart';
+// ignore: unused_import
+import 'package:built_collection/built_collection.dart'; // Needed for collections in the generated file
 import 'package:flutter_parent/models/assignment.dart';
 import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/models/enrollment.dart';
