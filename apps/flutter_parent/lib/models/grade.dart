@@ -13,38 +13,30 @@
 /// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 library grade;
 
-import 'dart:convert';
-
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
-
-import 'serializers.dart';
 
 part 'grade.g.dart';
 
 abstract class Grade implements Built<Grade, GradeBuilder> {
-  Grade._();
+  @BuiltValueSerializer(serializeNulls: true)
+  static Serializer<Grade> get serializer => _$gradeSerializer;
 
-  factory Grade([updates(GradeBuilder b)]) = _$Grade;
+  Grade._();
+  factory Grade([void Function(GradeBuilder b) updates]) = _$Grade;
 
   @BuiltValueField(wireName: 'html_url')
   String get htmlUrl;
+
   @BuiltValueField(wireName: 'current_score')
   double get currentScore;
+
   @BuiltValueField(wireName: 'final_score')
   double get finalScore;
+
   @BuiltValueField(wireName: 'current_grade')
   String get currentGrade;
+
   @BuiltValueField(wireName: 'final_grade')
   String get finalGrade;
-  String toJson() {
-    return json.encode(jsonSerializers.serializeWith(Grade.serializer, this));
-  }
-
-  static Grade fromJson(String jsonString) {
-    return jsonSerializers.deserializeWith(
-        Grade.serializer, json.decode(jsonString));
-  }
-
-  static Serializer<Grade> get serializer => _$gradeSerializer;
 }

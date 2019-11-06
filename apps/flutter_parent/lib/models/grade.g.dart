@@ -48,6 +48,7 @@ class _$GradeSerializer implements StructuredSerializer<Grade> {
       final key = iterator.current as String;
       iterator.moveNext();
       final dynamic value = iterator.current;
+      if (value == null) continue;
       switch (key) {
         case 'html_url':
           result.htmlUrl = serializers.deserialize(value,

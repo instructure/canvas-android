@@ -13,40 +13,42 @@
 /// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 library user;
 
-import 'dart:convert';
-
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
-
-import 'serializers.dart';
 
 part 'user.g.dart';
 
 abstract class User implements Built<User, UserBuilder> {
-  User._();
+  @BuiltValueSerializer(serializeNulls: true)
+  static Serializer<User> get serializer => _$userSerializer;
 
-  factory User([updates(UserBuilder b)]) = _$User;
+  User._();
+  factory User([void Function(UserBuilder) updates]) = _$User;
 
   int get id;
+
   String get name;
+
+  @nullable
   @BuiltValueField(wireName: 'sortable_name')
   String get sortableName;
+
+  @nullable
   @BuiltValueField(wireName: 'avatar_url')
   String get avatarUrl;
+
+  @nullable
   @BuiltValueField(wireName: 'primary_email')
   String get primaryEmail;
+
+  @nullable
   String get locale;
+
+  @nullable
   @BuiltValueField(wireName: 'effective_locale')
   String get effectiveLocale;
 
-  String toJson() {
-    return json.encode(jsonSerializers.serializeWith(User.serializer, this));
-  }
-
-  static User fromJson(String jsonString) {
-    return jsonSerializers.deserializeWith(
-        User.serializer, json.decode(jsonString));
-  }
-
-  static Serializer<User> get serializer => _$userSerializer;
+  static void _initializeBuilder(UserBuilder b) => b
+      ..id = 0
+      ..name = '';
 }

@@ -16,7 +16,14 @@ library serializers;
 
 import 'package:built_value/serializer.dart';
 import 'package:built_value/standard_json_plugin.dart';
+import 'package:flutter_parent/models/course.dart';
+import 'package:flutter_parent/models/course_assignment.dart';
+import 'package:flutter_parent/models/enrollment.dart';
+import 'package:flutter_parent/models/grade.dart';
 import 'package:flutter_parent/models/school_domain.dart';
+import 'package:flutter_parent/models/submission.dart';
+import 'package:flutter_parent/models/user.dart';
+
 
 part 'serializers.g.dart';
 
@@ -24,6 +31,12 @@ part 'serializers.g.dart';
 /// have it watch for changes and automatically build if you run `flutter pub run build_runner watch`.
 @SerializersFor([
   SchoolDomain,
+  Course,
+  CourseAssignment,
+  Enrollment,
+  Grade,
+  Submission,
+  User
 ])
 final Serializers _serializers = _$_serializers;
 

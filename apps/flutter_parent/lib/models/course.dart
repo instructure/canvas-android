@@ -13,65 +13,91 @@
 /// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 library course;
 
-import 'dart:convert';
-
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 
 import 'course_grade.dart';
 import 'enrollment.dart';
-import 'serializers.dart';
 
 part 'course.g.dart';
 
 abstract class Course implements Built<Course, CourseBuilder> {
+  @BuiltValueSerializer(serializeNulls: true)
+  static Serializer<Course> get serializer => _$courseSerializer;
+
   Course._();
+  factory Course([void Function(CourseBuilder) updates]) = _$Course;
+
 
   // Helper variables
+  @nullable
   @BuiltValueField(serialize: false)
   double get currentScore;
+
+  @nullable
   @BuiltValueField(serialize: false)
   double get finalScore;
+
+  @nullable
   @BuiltValueField(serialize: false)
   String get currentGrade;
+
+  @nullable
   @BuiltValueField(serialize: false)
   String get finalGrade;
 
-  factory Course([updates(CourseBuilder b)]) = _$Course;
-
   int get id;
   String get name;
+
+  @nullable
   @BuiltValueField(wireName: 'original_name')
   String get originalName;
+
+  @nullable
   @BuiltValueField(wireName: 'course_code')
   String get courseCode;
+
+  @nullable
   @BuiltValueField(wireName: 'start_at')
   String get startAt;
+
+  @nullable
   @BuiltValueField(wireName: 'end_at')
   String get endAt;
+
+  @nullable
   @BuiltValueField(wireName: 'syllabus_body')
   String get syllabusBody;
+
   @BuiltValueField(wireName: 'hide_final_grades')
   bool get hideFinalGrades;
+
   @BuiltValueField(wireName: 'is_public')
   bool get isPublic;
 
   // License license = License.PRIVATE_COPYRIGHTED;
   // Term term;
   BuiltList<Enrollment> get enrollments;
+
   @BuiltValueField(wireName: 'needs_grading_count')
   int get needsGradingCount;
+
   @BuiltValueField(wireName: 'apply_assignment_group_weights')
   bool get applyAssignmentGroupWeights;
+
   @BuiltValueField(wireName: 'is_favorite')
   bool get isFavorite;
+
   @BuiltValueField(wireName: 'access_restricted_by_date')
   bool get accessRestrictedByDate;
+
   @BuiltValueField(wireName: 'image_download_url')
   String get imageDownloadUrl;
+
   @BuiltValueField(wireName: 'has_weighted_grading_periods')
   bool get hasWeightedGradingPeriods;
+
   @BuiltValueField(wireName: 'has_grading_periods')
   bool get hasGradingPeriods;
 
@@ -80,19 +106,23 @@ abstract class Course implements Built<Course, CourseBuilder> {
   // HomePage homePage;
   @BuiltValueField(wireName: 'restrict_enrollments_to_course_dates')
   bool get restrictEnrollmentsToCourseDates;
+
+  @nullable
   @BuiltValueField(wireName: 'workflow_state')
   String get workflowState;
 
-  String toJson() {
-    return json.encode(jsonSerializers.serializeWith(Course.serializer, this));
-  }
 
-  static Course fromJson(String jsonString) {
-    return jsonSerializers.deserializeWith(
-        Course.serializer, json.decode(jsonString));
-  }
-
-  static Serializer<Course> get serializer => _$courseSerializer;
+  static void _initializeBuilder(CourseBuilder b) => b
+      ..enrollments = ListBuilder<Enrollment>()
+      ..name = ''
+      ..needsGradingCount = 0
+      ..hideFinalGrades = false
+      ..isPublic = false
+      ..applyAssignmentGroupWeights = false
+      .._isFavorite = false
+      ..accessRestrictedByDate = false
+      ..hasWeightedGradingPeriods = false
+      ..restrictEnrollmentsToCourseDates = false;
 
   CourseGrade getCourseGrade(int studentId) => CourseGrade(
       enrollments.firstWhere((enrollment) => enrollment.userId == studentId));

@@ -22,23 +22,42 @@ class _$UserSerializer implements StructuredSerializer<User> {
       serializers.serialize(object.id, specifiedType: const FullType(int)),
       'name',
       serializers.serialize(object.name, specifiedType: const FullType(String)),
-      'sortable_name',
-      serializers.serialize(object.sortableName,
-          specifiedType: const FullType(String)),
-      'avatar_url',
-      serializers.serialize(object.avatarUrl,
-          specifiedType: const FullType(String)),
-      'primary_email',
-      serializers.serialize(object.primaryEmail,
-          specifiedType: const FullType(String)),
-      'locale',
-      serializers.serialize(object.locale,
-          specifiedType: const FullType(String)),
-      'effective_locale',
-      serializers.serialize(object.effectiveLocale,
-          specifiedType: const FullType(String)),
     ];
-
+    result.add('sortable_name');
+    if (object.sortableName == null) {
+      result.add(null);
+    } else {
+      result.add(serializers.serialize(object.sortableName,
+          specifiedType: const FullType(String)));
+    }
+    result.add('avatar_url');
+    if (object.avatarUrl == null) {
+      result.add(null);
+    } else {
+      result.add(serializers.serialize(object.avatarUrl,
+          specifiedType: const FullType(String)));
+    }
+    result.add('primary_email');
+    if (object.primaryEmail == null) {
+      result.add(null);
+    } else {
+      result.add(serializers.serialize(object.primaryEmail,
+          specifiedType: const FullType(String)));
+    }
+    result.add('locale');
+    if (object.locale == null) {
+      result.add(null);
+    } else {
+      result.add(serializers.serialize(object.locale,
+          specifiedType: const FullType(String)));
+    }
+    result.add('effective_locale');
+    if (object.effectiveLocale == null) {
+      result.add(null);
+    } else {
+      result.add(serializers.serialize(object.effectiveLocale,
+          specifiedType: const FullType(String)));
+    }
     return result;
   }
 
@@ -52,6 +71,7 @@ class _$UserSerializer implements StructuredSerializer<User> {
       final key = iterator.current as String;
       iterator.moveNext();
       final dynamic value = iterator.current;
+      if (value == null) continue;
       switch (key) {
         case 'id':
           result.id = serializers.deserialize(value,
@@ -122,21 +142,6 @@ class _$User extends User {
     if (name == null) {
       throw new BuiltValueNullFieldError('User', 'name');
     }
-    if (sortableName == null) {
-      throw new BuiltValueNullFieldError('User', 'sortableName');
-    }
-    if (avatarUrl == null) {
-      throw new BuiltValueNullFieldError('User', 'avatarUrl');
-    }
-    if (primaryEmail == null) {
-      throw new BuiltValueNullFieldError('User', 'primaryEmail');
-    }
-    if (locale == null) {
-      throw new BuiltValueNullFieldError('User', 'locale');
-    }
-    if (effectiveLocale == null) {
-      throw new BuiltValueNullFieldError('User', 'effectiveLocale');
-    }
   }
 
   @override
@@ -172,6 +177,19 @@ class _$User extends User {
             locale.hashCode),
         effectiveLocale.hashCode));
   }
+
+  @override
+  String toString() {
+    return (newBuiltValueToStringHelper('User')
+          ..add('id', id)
+          ..add('name', name)
+          ..add('sortableName', sortableName)
+          ..add('avatarUrl', avatarUrl)
+          ..add('primaryEmail', primaryEmail)
+          ..add('locale', locale)
+          ..add('effectiveLocale', effectiveLocale))
+        .toString();
+  }
 }
 
 class UserBuilder implements Builder<User, UserBuilder> {
@@ -206,7 +224,9 @@ class UserBuilder implements Builder<User, UserBuilder> {
   set effectiveLocale(String effectiveLocale) =>
       _$this._effectiveLocale = effectiveLocale;
 
-  UserBuilder();
+  UserBuilder() {
+    User._initializeBuilder(this);
+  }
 
   UserBuilder get _$this {
     if (_$v != null) {

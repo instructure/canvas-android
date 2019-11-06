@@ -22,21 +22,6 @@ class _$CourseSerializer implements StructuredSerializer<Course> {
       serializers.serialize(object.id, specifiedType: const FullType(int)),
       'name',
       serializers.serialize(object.name, specifiedType: const FullType(String)),
-      'original_name',
-      serializers.serialize(object.originalName,
-          specifiedType: const FullType(String)),
-      'course_code',
-      serializers.serialize(object.courseCode,
-          specifiedType: const FullType(String)),
-      'start_at',
-      serializers.serialize(object.startAt,
-          specifiedType: const FullType(String)),
-      'end_at',
-      serializers.serialize(object.endAt,
-          specifiedType: const FullType(String)),
-      'syllabus_body',
-      serializers.serialize(object.syllabusBody,
-          specifiedType: const FullType(String)),
       'hide_final_grades',
       serializers.serialize(object.hideFinalGrades,
           specifiedType: const FullType(bool)),
@@ -71,11 +56,49 @@ class _$CourseSerializer implements StructuredSerializer<Course> {
       'restrict_enrollments_to_course_dates',
       serializers.serialize(object.restrictEnrollmentsToCourseDates,
           specifiedType: const FullType(bool)),
-      'workflow_state',
-      serializers.serialize(object.workflowState,
-          specifiedType: const FullType(String)),
     ];
-
+    result.add('original_name');
+    if (object.originalName == null) {
+      result.add(null);
+    } else {
+      result.add(serializers.serialize(object.originalName,
+          specifiedType: const FullType(String)));
+    }
+    result.add('course_code');
+    if (object.courseCode == null) {
+      result.add(null);
+    } else {
+      result.add(serializers.serialize(object.courseCode,
+          specifiedType: const FullType(String)));
+    }
+    result.add('start_at');
+    if (object.startAt == null) {
+      result.add(null);
+    } else {
+      result.add(serializers.serialize(object.startAt,
+          specifiedType: const FullType(String)));
+    }
+    result.add('end_at');
+    if (object.endAt == null) {
+      result.add(null);
+    } else {
+      result.add(serializers.serialize(object.endAt,
+          specifiedType: const FullType(String)));
+    }
+    result.add('syllabus_body');
+    if (object.syllabusBody == null) {
+      result.add(null);
+    } else {
+      result.add(serializers.serialize(object.syllabusBody,
+          specifiedType: const FullType(String)));
+    }
+    result.add('workflow_state');
+    if (object.workflowState == null) {
+      result.add(null);
+    } else {
+      result.add(serializers.serialize(object.workflowState,
+          specifiedType: const FullType(String)));
+    }
     return result;
   }
 
@@ -89,6 +112,7 @@ class _$CourseSerializer implements StructuredSerializer<Course> {
       final key = iterator.current as String;
       iterator.moveNext();
       final dynamic value = iterator.current;
+      if (value == null) continue;
       switch (key) {
         case 'id':
           result.id = serializers.deserialize(value,
@@ -251,38 +275,11 @@ class _$Course extends Course {
       this.restrictEnrollmentsToCourseDates,
       this.workflowState})
       : super._() {
-    if (currentScore == null) {
-      throw new BuiltValueNullFieldError('Course', 'currentScore');
-    }
-    if (finalScore == null) {
-      throw new BuiltValueNullFieldError('Course', 'finalScore');
-    }
-    if (currentGrade == null) {
-      throw new BuiltValueNullFieldError('Course', 'currentGrade');
-    }
-    if (finalGrade == null) {
-      throw new BuiltValueNullFieldError('Course', 'finalGrade');
-    }
     if (id == null) {
       throw new BuiltValueNullFieldError('Course', 'id');
     }
     if (name == null) {
       throw new BuiltValueNullFieldError('Course', 'name');
-    }
-    if (originalName == null) {
-      throw new BuiltValueNullFieldError('Course', 'originalName');
-    }
-    if (courseCode == null) {
-      throw new BuiltValueNullFieldError('Course', 'courseCode');
-    }
-    if (startAt == null) {
-      throw new BuiltValueNullFieldError('Course', 'startAt');
-    }
-    if (endAt == null) {
-      throw new BuiltValueNullFieldError('Course', 'endAt');
-    }
-    if (syllabusBody == null) {
-      throw new BuiltValueNullFieldError('Course', 'syllabusBody');
     }
     if (hideFinalGrades == null) {
       throw new BuiltValueNullFieldError('Course', 'hideFinalGrades');
@@ -318,9 +315,6 @@ class _$Course extends Course {
     if (restrictEnrollmentsToCourseDates == null) {
       throw new BuiltValueNullFieldError(
           'Course', 'restrictEnrollmentsToCourseDates');
-    }
-    if (workflowState == null) {
-      throw new BuiltValueNullFieldError('Course', 'workflowState');
     }
   }
 
@@ -542,7 +536,9 @@ class CourseBuilder implements Builder<Course, CourseBuilder> {
   set workflowState(String workflowState) =>
       _$this._workflowState = workflowState;
 
-  CourseBuilder();
+  CourseBuilder() {
+    Course._initializeBuilder(this);
+  }
 
   CourseBuilder get _$this {
     if (_$v != null) {
