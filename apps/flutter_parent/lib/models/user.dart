@@ -49,13 +49,4 @@ abstract class User implements Built<User, UserBuilder> {
   }
 
   static Serializer<User> get serializer => _$userSerializer;
-
-  @override
-  String toString() => name;
-
-//  @override
-//  int get hashCode => id;
-//
-//  @override
-//  bool operator ==(other) => this.id == other.id;
 }
