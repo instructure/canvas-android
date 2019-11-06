@@ -126,6 +126,6 @@ abstract class Assignment implements Built<Assignment, AssignmentBuilder> {
     ..anonymousPeerReviews = false
     ..moderatedGrading = false
     ..anonymousGrading = false
-    ..isArcEnabled = false;
+    ..isStudioEnabled = false;
 
 }
