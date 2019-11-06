@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of course_assignment;
+part of assignment;
 
 // **************************************************************************
 // BuiltValueGenerator
@@ -69,8 +69,8 @@ class _$AssignmentSerializer implements StructuredSerializer<Assignment> {
       'anonymous_grading',
       serializers.serialize(object.anonymousGrading,
           specifiedType: const FullType(bool)),
-      'isArcEnabled',
-      serializers.serialize(object.isArcEnabled,
+      'isStudioEnabled',
+      serializers.serialize(object.isStudioEnabled,
           specifiedType: const FullType(bool)),
     ];
     result.add('name');
@@ -259,8 +259,8 @@ class _$AssignmentSerializer implements StructuredSerializer<Assignment> {
           result.anonymousGrading = serializers.deserialize(value,
               specifiedType: const FullType(bool)) as bool;
           break;
-        case 'isArcEnabled':
-          result.isArcEnabled = serializers.deserialize(value,
+        case 'isStudioEnabled':
+          result.isStudioEnabled = serializers.deserialize(value,
               specifiedType: const FullType(bool)) as bool;
           break;
       }
@@ -326,7 +326,7 @@ class _$Assignment extends Assignment {
   @override
   final bool anonymousGrading;
   @override
-  final bool isArcEnabled;
+  final bool isStudioEnabled;
 
   factory _$Assignment([void Function(AssignmentBuilder) updates]) =>
       (new AssignmentBuilder()..update(updates)).build();
@@ -359,7 +359,7 @@ class _$Assignment extends Assignment {
       this.anonymousPeerReviews,
       this.moderatedGrading,
       this.anonymousGrading,
-      this.isArcEnabled})
+      this.isStudioEnabled})
       : super._() {
     if (id == null) {
       throw new BuiltValueNullFieldError('Assignment', 'id');
@@ -417,8 +417,8 @@ class _$Assignment extends Assignment {
     if (anonymousGrading == null) {
       throw new BuiltValueNullFieldError('Assignment', 'anonymousGrading');
     }
-    if (isArcEnabled == null) {
-      throw new BuiltValueNullFieldError('Assignment', 'isArcEnabled');
+    if (isStudioEnabled == null) {
+      throw new BuiltValueNullFieldError('Assignment', 'isStudioEnabled');
     }
   }
 
@@ -460,7 +460,7 @@ class _$Assignment extends Assignment {
         anonymousPeerReviews == other.anonymousPeerReviews &&
         moderatedGrading == other.moderatedGrading &&
         anonymousGrading == other.anonymousGrading &&
-        isArcEnabled == other.isArcEnabled;
+        isStudioEnabled == other.isStudioEnabled;
   }
 
   @override
@@ -502,7 +502,7 @@ class _$Assignment extends Assignment {
                     anonymousPeerReviews.hashCode),
                 moderatedGrading.hashCode),
             anonymousGrading.hashCode),
-        isArcEnabled.hashCode));
+        isStudioEnabled.hashCode));
   }
 
   @override
@@ -535,7 +535,7 @@ class _$Assignment extends Assignment {
           ..add('anonymousPeerReviews', anonymousPeerReviews)
           ..add('moderatedGrading', moderatedGrading)
           ..add('anonymousGrading', anonymousGrading)
-          ..add('isArcEnabled', isArcEnabled))
+          ..add('isStudioEnabled', isStudioEnabled))
         .toString();
   }
 }
@@ -665,9 +665,10 @@ class AssignmentBuilder implements Builder<Assignment, AssignmentBuilder> {
   set anonymousGrading(bool anonymousGrading) =>
       _$this._anonymousGrading = anonymousGrading;
 
-  bool _isArcEnabled;
-  bool get isArcEnabled => _$this._isArcEnabled;
-  set isArcEnabled(bool isArcEnabled) => _$this._isArcEnabled = isArcEnabled;
+  bool _isStudioEnabled;
+  bool get isStudioEnabled => _$this._isStudioEnabled;
+  set isStudioEnabled(bool isStudioEnabled) =>
+      _$this._isStudioEnabled = isStudioEnabled;
 
   AssignmentBuilder() {
     Assignment._initializeBuilder(this);
@@ -702,7 +703,7 @@ class AssignmentBuilder implements Builder<Assignment, AssignmentBuilder> {
       _anonymousPeerReviews = _$v.anonymousPeerReviews;
       _moderatedGrading = _$v.moderatedGrading;
       _anonymousGrading = _$v.anonymousGrading;
-      _isArcEnabled = _$v.isArcEnabled;
+      _isStudioEnabled = _$v.isStudioEnabled;
       _$v = null;
     }
     return this;
@@ -754,7 +755,7 @@ class AssignmentBuilder implements Builder<Assignment, AssignmentBuilder> {
               anonymousPeerReviews: anonymousPeerReviews,
               moderatedGrading: moderatedGrading,
               anonymousGrading: anonymousGrading,
-              isArcEnabled: isArcEnabled);
+              isStudioEnabled: isStudioEnabled);
     } catch (_) {
       String _$failedField;
       try {
