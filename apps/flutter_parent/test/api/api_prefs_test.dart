@@ -26,7 +26,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test/test.dart';
 
 void main() {
-
   tearDown(() {
     ApiPrefs.clean();
   });
@@ -293,5 +292,3 @@ abstract class _Rebuildable {
 }
 
 class _MockApp extends Mock implements _Rebuildable {}
-
-
