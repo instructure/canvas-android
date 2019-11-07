@@ -43,9 +43,6 @@ class _$SubmissionSerializer implements StructuredSerializer<Submission> {
       'assignment_id',
       serializers.serialize(object.assignmentId,
           specifiedType: const FullType(int)),
-      'assignment',
-      serializers.serialize(object.assignment,
-          specifiedType: const FullType(Assignment)),
       'user_id',
       serializers.serialize(object.userId, specifiedType: const FullType(int)),
       'grader_id',
@@ -131,6 +128,13 @@ class _$SubmissionSerializer implements StructuredSerializer<Submission> {
     } else {
       result.add(serializers.serialize(object.url,
           specifiedType: const FullType(String)));
+    }
+    result.add('assignment');
+    if (object.assignment == null) {
+      result.add(null);
+    } else {
+      result.add(serializers.serialize(object.assignment,
+          specifiedType: const FullType(Assignment)));
     }
     result.add('user');
     if (object.user == null) {
@@ -400,9 +404,6 @@ class _$Submission extends Submission {
     }
     if (assignmentId == null) {
       throw new BuiltValueNullFieldError('Submission', 'assignmentId');
-    }
-    if (assignment == null) {
-      throw new BuiltValueNullFieldError('Submission', 'assignment');
     }
     if (userId == null) {
       throw new BuiltValueNullFieldError('Submission', 'userId');
@@ -734,7 +735,7 @@ class SubmissionBuilder implements Builder<Submission, SubmissionBuilder> {
               excused: excused,
               missing: missing,
               assignmentId: assignmentId,
-              assignment: assignment.build(),
+              assignment: _assignment?.build(),
               userId: userId,
               graderId: graderId,
               user: _user?.build(),
@@ -748,7 +749,7 @@ class SubmissionBuilder implements Builder<Submission, SubmissionBuilder> {
         submissionHistory.build();
 
         _$failedField = 'assignment';
-        assignment.build();
+        _assignment?.build();
 
         _$failedField = 'user';
         _user?.build();
