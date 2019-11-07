@@ -109,10 +109,16 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/fromDateTextInput"
             style="@style/OverrideViewTextInputLayoutDate"
-            android:labelFor="@+id/fromDate"
-            android:contentDescription="@string/utils_availableFromDate"
             android:textColorHint="@color/defaultTextGray"
             app:hintTextAppearance="@style/TextInputLabel">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:visibility="gone"
+                android:labelFor="@+id/fromDate"
+                android:text="@string/utils_availableFromDate">
+            </TextView>
 
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/fromDate"
@@ -125,10 +131,16 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/fromTimeTextInput"
             style="@style/OverrideViewTextInputLayoutTime"
-            android:labelFor="@+id/fromTime"
-            android:contentDescription="@string/utils_availableFromTime"
             android:textColorHint="@color/defaultTextGray"
             app:hintTextAppearance="@style/TextInputLabel">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:visibility="gone"
+                android:labelFor="@+id/fromTime"
+                android:text="@string/utils_availableFromTime">
+            </TextView>
 
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/fromTime"
@@ -149,11 +161,17 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/toDateTextInput"
             style="@style/OverrideViewTextInputLayoutDate"
-            android:labelFor="@+id/toDate"
-            android:contentDescription="@string/utils_availableToDate"
             android:hint="@string/utils_availableTo"
             android:textColorHint="@color/defaultTextGray"
             app:hintTextAppearance="@style/TextInputLabel">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:visibility="gone"
+                android:labelFor="@+id/toDate"
+                android:text="@string/utils_availableToDate">
+            </TextView>
 
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/toDate"
@@ -166,10 +184,16 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/toTimeTextInput"
             style="@style/OverrideViewTextInputLayoutTime"
-            android:labelFor="@+id/toTime"
-            android:contentDescription="@string/utils_availableToTime"
             android:textColorHint="@color/defaultTextGray"
             app:hintTextAppearance="@style/TextInputLabel">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:visibility="gone"
+                android:labelFor="@+id/toTime"
+                android:text="@string/utils_availableToTime">
+            </TextView>
 
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/toTime"
