@@ -14,18 +14,18 @@
 
 library serializers;
 
+import 'package:built_collection/built_collection.dart';
+import 'package:built_value/iso_8601_date_time_serializer.dart';
 import 'package:built_value/serializer.dart';
 import 'package:built_value/standard_json_plugin.dart';
-// ignore: unused_import
-import 'package:built_collection/built_collection.dart'; // Needed for collections in the generated file
 import 'package:flutter_parent/models/assignment.dart';
 import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/models/enrollment.dart';
 import 'package:flutter_parent/models/grade.dart';
+import 'package:flutter_parent/models/mobile_verify_result.dart';
 import 'package:flutter_parent/models/school_domain.dart';
 import 'package:flutter_parent/models/submission.dart';
 import 'package:flutter_parent/models/user.dart';
-
 
 part 'serializers.g.dart';
 
@@ -36,14 +36,20 @@ part 'serializers.g.dart';
   Course,
   Enrollment,
   Grade,
+  MobileVerifyResult,
   SchoolDomain,
   Submission,
   User
 ])
 final Serializers _serializers = _$_serializers;
 
-Serializers jsonSerializers = (_serializers.toBuilder()..addPlugin(StandardJsonPlugin())).build();
+Serializers jsonSerializers = (_serializers.toBuilder()
+      ..addPlugin(StandardJsonPlugin())
+      ..add(Iso8601DateTimeSerializer()))
+    .build();
 
 T deserialize<T>(dynamic value) => jsonSerializers.deserializeWith<T>(jsonSerializers.serializerForType(T), value);
 
-List<T> deserializeList<T>(dynamic value) => List.from(value.map((value) => deserialize<T>(value)).toList());
+dynamic serialize<T>(T value) => jsonSerializers.serializeWith(jsonSerializers.serializerForType(T), value);
+
+List<T> deserializeList<T>(dynamic value) => List.from(value?.map((value) => deserialize<T>(value))?.toList() ?? []);

@@ -28,13 +28,12 @@ abstract class Submission implements Built<Submission, SubmissionBuilder> {
 
   Submission._();
 
-  factory Submission([updates(SubmissionBuilder b)]) = _$Submission;
+  factory Submission([void Function(SubmissionBuilder) updates]) = _$Submission;
 
   int get id;
 
   @nullable
   String get grade;
-
 
   double get score;
 
@@ -90,6 +89,7 @@ abstract class Submission implements Built<Submission, SubmissionBuilder> {
   @BuiltValueField(wireName: "assignment_id")
   int get assignmentId;
 
+  @nullable
   Assignment get assignment;
 
   @BuiltValueField(wireName: "user_id")

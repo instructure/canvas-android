@@ -26,14 +26,9 @@ class _$AssignmentSerializer implements StructuredSerializer<Assignment> {
       'course_id',
       serializers.serialize(object.courseId,
           specifiedType: const FullType(int)),
-      'quiz_id',
-      serializers.serialize(object.quizId, specifiedType: const FullType(int)),
       'use_rubric_for_grading',
       serializers.serialize(object.useRubricForGrading,
           specifiedType: const FullType(bool)),
-      'submission',
-      serializers.serialize(object.submission,
-          specifiedType: const FullType(Submission)),
       'assignment_group_id',
       serializers.serialize(object.assignmentGroupId,
           specifiedType: const FullType(int)),
@@ -51,9 +46,6 @@ class _$AssignmentSerializer implements StructuredSerializer<Assignment> {
           specifiedType: const FullType(bool)),
       'muted',
       serializers.serialize(object.muted, specifiedType: const FullType(bool)),
-      'group_category_id',
-      serializers.serialize(object.groupCategoryId,
-          specifiedType: const FullType(int)),
       'user_submitted',
       serializers.serialize(object.userSubmitted,
           specifiedType: const FullType(bool)),
@@ -115,6 +107,20 @@ class _$AssignmentSerializer implements StructuredSerializer<Assignment> {
       result.add(serializers.serialize(object.url,
           specifiedType: const FullType(String)));
     }
+    result.add('quiz_id');
+    if (object.quizId == null) {
+      result.add(null);
+    } else {
+      result.add(serializers.serialize(object.quizId,
+          specifiedType: const FullType(int)));
+    }
+    result.add('submission');
+    if (object.submission == null) {
+      result.add(null);
+    } else {
+      result.add(serializers.serialize(object.submission,
+          specifiedType: const FullType(Submission)));
+    }
     result.add('lock_at');
     if (object.lockAt == null) {
       result.add(null);
@@ -135,6 +141,13 @@ class _$AssignmentSerializer implements StructuredSerializer<Assignment> {
     } else {
       result.add(serializers.serialize(object.lockExplanation,
           specifiedType: const FullType(String)));
+    }
+    result.add('group_category_id');
+    if (object.groupCategoryId == null) {
+      result.add(null);
+    } else {
+      result.add(serializers.serialize(object.groupCategoryId,
+          specifiedType: const FullType(int)));
     }
     return result;
   }
@@ -370,14 +383,8 @@ class _$Assignment extends Assignment {
     if (courseId == null) {
       throw new BuiltValueNullFieldError('Assignment', 'courseId');
     }
-    if (quizId == null) {
-      throw new BuiltValueNullFieldError('Assignment', 'quizId');
-    }
     if (useRubricForGrading == null) {
       throw new BuiltValueNullFieldError('Assignment', 'useRubricForGrading');
-    }
-    if (submission == null) {
-      throw new BuiltValueNullFieldError('Assignment', 'submission');
     }
     if (assignmentGroupId == null) {
       throw new BuiltValueNullFieldError('Assignment', 'assignmentGroupId');
@@ -397,9 +404,6 @@ class _$Assignment extends Assignment {
     }
     if (muted == null) {
       throw new BuiltValueNullFieldError('Assignment', 'muted');
-    }
-    if (groupCategoryId == null) {
-      throw new BuiltValueNullFieldError('Assignment', 'groupCategoryId');
     }
     if (userSubmitted == null) {
       throw new BuiltValueNullFieldError('Assignment', 'userSubmitted');
@@ -739,7 +743,7 @@ class AssignmentBuilder implements Builder<Assignment, AssignmentBuilder> {
               url: url,
               quizId: quizId,
               useRubricForGrading: useRubricForGrading,
-              submission: submission.build(),
+              submission: _submission?.build(),
               assignmentGroupId: assignmentGroupId,
               position: position,
               lockedForUser: lockedForUser,
@@ -760,7 +764,7 @@ class AssignmentBuilder implements Builder<Assignment, AssignmentBuilder> {
       String _$failedField;
       try {
         _$failedField = 'submission';
-        submission.build();
+        _submission?.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
             'Assignment', _$failedField, e.toString());

@@ -26,8 +26,7 @@ abstract class Assignment implements Built<Assignment, AssignmentBuilder> {
 
   Assignment._();
 
-  factory Assignment([void Function(AssignmentBuilder) updates]) =_$Assignment;
-
+  factory Assignment([void Function(AssignmentBuilder) updates]) = _$Assignment;
 
   int get id;
 
@@ -58,12 +57,14 @@ abstract class Assignment implements Built<Assignment, AssignmentBuilder> {
   @nullable
   String get url;
 
+  @nullable
   @BuiltValueField(wireName: "quiz_id")
   int get quizId; // (Optional) id of the associated quiz (applies only when submission_types is ["online_quiz"])
 
   @BuiltValueField(wireName: "use_rubric_for_grading")
   bool get useRubricForGrading;
 
+  @nullable
   Submission get submission;
 
   @BuiltValueField(wireName: "assignment_group_id")
@@ -93,6 +94,7 @@ abstract class Assignment implements Built<Assignment, AssignmentBuilder> {
 
   bool get muted;
 
+  @nullable
   @BuiltValueField(wireName: "group_category_id")
   int get groupCategoryId;
 
@@ -113,7 +115,6 @@ abstract class Assignment implements Built<Assignment, AssignmentBuilder> {
 
   bool get isStudioEnabled;
 
-
   static void _initializeBuilder(AssignmentBuilder b) => b
     ..pointsPossible = 0.0
     ..useRubricForGrading = false
@@ -127,5 +128,4 @@ abstract class Assignment implements Built<Assignment, AssignmentBuilder> {
     ..moderatedGrading = false
     ..anonymousGrading = false
     ..isStudioEnabled = false;
-
 }
