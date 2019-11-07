@@ -39,8 +39,8 @@ dependencies:
   firebase_core: ^0.4.0+9
   get_it: ^3.0.1
   intl: ^0.15.8
-  shared_preferences: 0.5.3+4
   package_info: 0.4.0+10
+  shared_preferences: 0.5.3+4
 
   # Image handling
   flutter_svg: 0.14.3
