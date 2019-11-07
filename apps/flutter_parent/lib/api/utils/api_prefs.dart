@@ -21,6 +21,7 @@ import 'package:flutter_parent/models/mobile_verify_result.dart';
 import 'package:flutter_parent/models/serializers.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
+import 'package:package_info/package_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiPrefs {
@@ -29,17 +30,21 @@ class ApiPrefs {
   static const String KEY_USER = 'user';
 
   static SharedPreferences _prefs;
+  static PackageInfo _packageInfo;
 
   static Future<void> init() async {
     if (_prefs == null) _prefs = await SharedPreferences.getInstance();
+    _packageInfo = await PackageInfo.fromPlatform();
   }
 
   static void clean() {
     _prefs = null;
+    _packageInfo = null;
   }
 
   static void _checkInit() {
     if (_prefs == null) throw StateError("ApiPrefs has not been initialized");
+    if (_packageInfo == null) throw StateError('PackageInfo has not been initialized');
   }
 
   // Login
@@ -103,7 +108,7 @@ class ApiPrefs {
     return _prefs.containsKey(KEY_USER) ? deserialize<User>(jsonDecode(_prefs.getString(KEY_USER))) : null;
   }
 
-  static String getUserAgent() => "androidParent/2.0.4 (21)";
+  static String getUserAgent() => 'androidParent/${_packageInfo.version} (${_packageInfo.buildNumber})';
 
   static String getApiUrl() => "${getDomain()}/api/v1/";
 
