@@ -14,18 +14,39 @@
 
 import 'dart:ui';
 
+import 'package:flutter/services.dart';
 import 'package:flutter_parent/api/auth_api.dart';
 import 'package:flutter_parent/api/utils/api_prefs.dart';
 import 'package:flutter_parent/models/mobile_verify_result.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:mockito/mockito.dart';
+import 'package:package_info/package_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test/test.dart';
 
 void main() {
   tearDown(() {
     ApiPrefs.clean();
+  });
+
+  setUpAll(() {
+    // Setup for package_info
+    const MethodChannel channel = MethodChannel('plugins.flutter.io/package_info');
+    channel.setMockMethodCallHandler((MethodCall methodCall) async {
+      switch (methodCall.method) {
+        case 'getAll':
+          return <String, dynamic>{
+            'appName': 'android_parent',
+            'buildNumber': '10',
+            'packageName': 'com.instructure.parentapp',
+            'version': '2.0.0',
+          };
+        default:
+          assert(false);
+          return null;
+      }
+    });
   });
 
   test('is logged in throws error if not initiailzed', () {
@@ -214,12 +235,13 @@ void main() {
     expect(ApiPrefs.getHeaderMap(token: 'other token')['Authorization'], 'Bearer other token');
   });
 
-  test('getHeaderMap returns a map with the token passed in', () async {
-    SharedPreferences.setMockInitialValues({
-      _debugKey(ApiPrefs.KEY_TOKEN): 'token',
-    });
+  test('getHeaderMap returns a map with the correct user-agent from prefs', () async {
+    var info = await PackageInfo.fromPlatform();
+    var userAgent = 'androidParent/${info.version} (${info.buildNumber})';
 
     await ApiPrefs.init();
+
+    expect(ApiPrefs.getUserAgent(), userAgent);
     expect(ApiPrefs.getHeaderMap()['User-Agent'], ApiPrefs.getUserAgent());
   });
 
