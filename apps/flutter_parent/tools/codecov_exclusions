@@ -1,0 +1,20 @@
+# Generated files
+**/*.g.*
+**/generated/*
+
+# Interactors
+**/*_interactor.dart
+
+# APIs
+lib/api/*
+
+# Models
+lib/models/*
+
+# Localizations
+lib/l10n/app_localizations.dart
+
+# Static declarations, since coverage doesn't seem to be recognized at the moment
+lib/utils/snickers.dart
+lib/utils/design/student_color_set.dart
+lib/utils/design/canvas_icons*.dart
