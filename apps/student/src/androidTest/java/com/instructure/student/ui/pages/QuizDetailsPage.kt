@@ -26,6 +26,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.scrollRecyclerView
+import com.instructure.canvasapi2.models.Quiz
 import com.instructure.dataseeding.model.QuizApiModel
 import com.instructure.dataseeding.model.QuizQuestion
 import com.instructure.espresso.OnViewWithId
@@ -50,6 +51,21 @@ class QuizDetailsPage: BasePage(R.id.quizDetailsPage) {
 
     fun assertQuizDisplayed(quiz: QuizApiModel, submitted: Boolean, questions: List<QuizQuestion>) {
         quizTitle.assertHasText(quiz.title)
+        quizQuestionsValue.assertHasText(""+questions.size)
+        var totalPoints = 0
+        for(question in questions) totalPoints += question.pointsPossible
+        quizPointsValue.assertHasText(""+totalPoints)
+
+        if(submitted) {
+            nextButton.assertContainsText("VIEW QUESTIONS")
+        }
+        else {
+            nextButton.assertContainsText("START")
+        }
+    }
+
+    fun assertQuizDisplayed(quiz: Quiz, submitted: Boolean, questions: List<com.instructure.canvasapi2.models.QuizQuestion>) {
+        quizTitle.assertHasText(quiz.title!!)
         quizQuestionsValue.assertHasText(""+questions.size)
         var totalPoints = 0
         for(question in questions) totalPoints += question.pointsPossible

@@ -22,6 +22,8 @@ import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
+import com.instructure.canvas.espresso.containsTextCaseInsensitive
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.espresso.*
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
@@ -30,6 +32,12 @@ import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
 
 open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
+    fun verifyAssignmentDetails(assignment: Assignment) {
+        onView(withId(R.id.assignmentName)).assertHasText(assignment.name!!)
+        onView(allOf(withId(R.id.points), isDisplayed()))
+                .check(matches(containsTextCaseInsensitive(assignment.pointsPossible.toInt().toString())))
+    }
+
     fun verifyAssignmentSubmitted() {
         onView(withText(R.string.submissionStatusSuccessTitle)).scrollTo().assertDisplayed()
         onView(allOf(withId(R.id.submissionStatus), withText(R.string.submitted))).scrollTo().assertDisplayed()
@@ -39,6 +47,11 @@ open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
         onView(withId(R.id.gradeContainer)).scrollTo().assertDisplayed()
         onView(withId(R.id.score)).scrollTo().assertContainsText(score)
         onView(allOf(withId(R.id.submissionStatus), withText(R.string.gradedSubmissionLabel))).scrollTo().assertDisplayed()
+    }
+
+    fun verifyAssignmentLocked() {
+        onView(withId(R.id.lockMessageTextView)).assertDisplayed()
+        onView(withId(R.id.lockMessageTextView)).check(matches(containsTextCaseInsensitive("this assignment is locked")))
     }
 
     fun refresh() {

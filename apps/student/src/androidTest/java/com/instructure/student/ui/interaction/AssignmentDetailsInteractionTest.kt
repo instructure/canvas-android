@@ -32,7 +32,6 @@ import java.util.*
 class AssignmentDetailsInteractionTest : StudentTest() {
     override fun displaysPageObjects() = Unit // Not used for interaction tests
 
-    @Stub
     @Test
     @TestMetaData(Priority.P0, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, false, FeatureCategory.SUBMISSIONS)
     fun testSubmission_submitAssignment() {
@@ -63,7 +62,6 @@ class AssignmentDetailsInteractionTest : StudentTest() {
         assignmentDetailsPage.assertSubmittedStatus()
     }
 
-    @Stub
     @Test
     @TestMetaData(Priority.P1, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, false, FeatureCategory.SUBMISSIONS)
     fun testNavigating_viewSubmissionDetails() {
@@ -73,7 +71,6 @@ class AssignmentDetailsInteractionTest : StudentTest() {
         submissionDetailsPage.assertPageObjects()
     }
 
-    @Stub
     @Test
     @TestMetaData(Priority.P0, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, false)
     fun testNavigating_viewAssignmentDetails() {

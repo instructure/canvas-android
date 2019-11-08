@@ -18,10 +18,8 @@ package com.instructure.student.ui.e2e
 
 import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
-import com.instructure.canvas.espresso.Stub
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.DiscussionTopicsApi
-import com.instructure.dataseeding.api.FileUploadsApi
 import com.instructure.dataseeding.api.ModulesApi
 import com.instructure.dataseeding.api.PagesApi
 import com.instructure.dataseeding.api.QuizzesApi

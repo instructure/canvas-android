@@ -135,6 +135,18 @@ class MockCanvas {
     var discussionAttachmentsEnabled: Boolean = true
     var discussionRatingsEnabled: Boolean = true
 
+    /** Map of course id to module list */
+    val courseModules = mutableMapOf<Long, MutableList<ModuleObject>>()
+
+    /** Map of course id to quiz list */
+    val courseQuizzes = mutableMapOf<Long, MutableList<Quiz>>()
+
+    /** Map of quiz id to question list */
+    val quizQuestions = mutableMapOf<Long, MutableList<QuizQuestion>>()
+
+    /** Map of quiz id to quiz submission list */
+    val quizSubmissions = mutableMapOf<Long, MutableList<QuizSubmission>>()
+
     //region Convenience functionality
 
     /** A list of users with at least one Student enrollment */
@@ -368,7 +380,8 @@ fun MockCanvas.addAssignment(
         courseId: Long,
         groupType: AssignmentGroupType,
         submissionType: Assignment.SubmissionType,
-        isQuizzesNext: Boolean = false) : Assignment {
+        isQuizzesNext: Boolean = false,
+        lockInfo : LockInfo? = null) : Assignment {
     val assignmentId = 123L
     val assignmentGroupId = 123L
     var assignment = Assignment(
@@ -376,7 +389,9 @@ fun MockCanvas.addAssignment(
         assignmentGroupId = assignmentGroupId,
         courseId = courseId,
         name = Randomizer.randomAssignmentName(),
-        submissionTypesRaw = listOf(submissionType.apiString)
+        submissionTypesRaw = listOf(submissionType.apiString),
+        lockInfo = lockInfo,
+        lockedForUser = lockInfo != null
     )
 
     val futureDueDate = OffsetDateTime.now().plusWeeks(1).toApiString()
@@ -677,3 +692,200 @@ fun MockCanvas.addReplyToDiscussion(
     return entry
 }
 
+/** Adds a module to a course, initially unpopulated. */
+fun MockCanvas.addModuleToCourse(
+        course: Course,
+        moduleName: String,
+        sequential: Boolean = false,
+        published: Boolean = true,
+        unlockAt: String? = null,
+        prerequisiteIds: LongArray? = null,
+        state: String? = null
+) : ModuleObject {
+
+    val newModulePosition = courseModules[course.id]?.count() ?: 0
+    // Create a new module
+    val result = ModuleObject(
+            id = newItemId(),
+            position = newModulePosition,
+            name = moduleName,
+            sequentialProgress = sequential,
+            published = published,
+            unlockAt = unlockAt,
+            prerequisiteIds = prerequisiteIds,
+            state = state
+    )
+
+    // Record in modules for course
+    var courseModuleList = courseModules[course.id]
+    if(courseModuleList == null) {
+        courseModuleList = mutableListOf<ModuleObject>()
+        courseModules[course.id] = courseModuleList
+    }
+    courseModuleList.add(result)
+
+    return result
+}
+
+/** Adds an item to a module */
+fun MockCanvas.addItemToModule(
+        course: Course,
+        moduleId: Long,
+        item: Any,
+        published: Boolean = true
+) : ModuleItem {
+
+    // Placeholders for itemType and itemTitle values that we will compute below
+    var itemType: ModuleItem.Type? = null
+    var itemTitle: String? = null
+    var itemUrl: String? = null
+    when(item) {
+        is Assignment -> {
+            itemType = ModuleItem.Type.Assignment
+            itemTitle = item.name
+            itemUrl = "https://mock-data.instructure.com/api/v1/courses/${course.id}/assignments/${item.id}"
+        }
+        is DiscussionTopicHeader -> {
+            itemType = ModuleItem.Type.Discussion
+            itemTitle = item.title
+            itemUrl = "https://mock-data.instructure.com/api/v1/courses/${course.id}/discussion_topics/${item.id}"
+        }
+        is Quiz -> {
+            itemType = ModuleItem.Type.Quiz
+            itemTitle = item.title
+            itemUrl = "https://mock-data.instructure.com/api/v1/courses/${course.id}/quizzes/${item.id}"
+        }
+        is FileFolder -> {
+            itemType = ModuleItem.Type.File
+            itemTitle = item.displayName
+            itemUrl = "https://mock-data.instructure.com/api/v1/courses/${course.id}/files/${item.id}"
+        }
+        is Page -> {
+            itemType = ModuleItem.Type.Page
+            itemTitle = item.title
+            itemUrl = "https://mock-data.instructure.com/api/v1/courses/${course.id}/pages/${item.id}"
+        }
+        is String -> {
+            itemType = ModuleItem.Type.ExternalUrl
+            itemTitle = item
+            itemUrl = item
+        }
+        else -> {
+            throw Exception("Unknown item type: ${item::class.java.simpleName}")
+        }
+    }
+
+    // Retrieve the current incarnation of our module from the module id
+    // (Modules get altered and replaced by this operation.)
+    val module = courseModules[course.id]?.find {it.id == moduleId}!!
+
+    val result = ModuleItem(
+            id = newItemId(),
+            moduleId = module.id,
+            title = itemTitle,
+            type = itemType.toString(),
+            position = module.itemCount,
+            published = published,
+            // I don't really know if these two should be the same, but I needed
+            // htmlUrl populated in order to get external url module items to work.
+            url = itemUrl,
+            htmlUrl = itemUrl
+    )
+
+    // Copy/update/replace the module
+    var newItemList = module.items.toMutableList()
+    newItemList.add(result)
+    val changedModule = module.copy(
+            items = newItemList
+    )
+
+    val courseModuleList = courseModules[course.id]!!
+    courseModuleList.remove(module)
+    courseModuleList.add(changedModule)
+
+    // Return our ModuleItem
+    return result
+}
+
+// Create a Quiz and add it to the specified course
+fun MockCanvas.addQuizToCourse(
+        course: Course,
+        title: String = Faker.instance().hitchhikersGuideToTheGalaxy().character(),
+        description: String = Faker.instance().hitchhikersGuideToTheGalaxy().marvinQuote(),
+        quizType: String = Quiz.TYPE_PRACTICE
+) : Quiz {
+    val quizId = newItemId()
+    val quizUrl = "https://mock-data.instructure.com/api/v1/courses/${course.id}/quizzes/$quizId"
+    val result = Quiz(
+            id = quizId,
+            title = title,
+            description = description,
+            quizType = quizType,
+            mobileUrl = quizUrl,
+            htmlUrl = quizUrl
+    )
+
+    var quizList = courseQuizzes[course.id]
+    if(quizList == null) {
+        quizList = mutableListOf<Quiz>()
+        courseQuizzes[course.id] = quizList
+    }
+
+    // Add to the quiz list for the course
+    quizList.add(result)
+
+    // Return our created quiz
+    return result
+}
+
+// Add question to quiz
+fun MockCanvas.addQuestionToQuiz(
+        course: Course,
+        quizId: Long,
+        questionName: String?,
+        questionText: String,
+        questionType: String = "multiple_choice_question",
+        pointsPossible: Int = 5,
+        answers: Array<QuizAnswer>? = null
+) : QuizQuestion {
+
+    val quiz = courseQuizzes[course.id]!!.find {it.id == quizId}!!
+    val result = QuizQuestion(
+            id = newItemId(),
+            quizId = quizId,
+            position = quiz.questionCount,
+            questionName = questionName,
+            questionTypeString = questionType,
+            questionText = questionText,
+            pointsPossible = pointsPossible,
+            answers = answers
+    )
+
+    // Make the necessary changes to the stored Quiz object by copy/changing/replacing it
+    val newPointsPossible = ((quiz.pointsPossible?.toInt() ?: 0) + pointsPossible).toString()
+    val newQuestionCount = quiz.questionCount + 1
+    val newQuestionTypes = mutableListOf<String>()
+    if(quiz.questionTypes != null) {
+        newQuestionTypes.addAll(quiz.questionTypes)
+    }
+    newQuestionTypes.add(questionType)
+    val newQuiz = quiz.copy(
+            pointsPossible = newPointsPossible,
+            questionCount = newQuestionCount,
+            questionTypes = newQuestionTypes
+    )
+    val quizList = courseQuizzes[course.id]!!
+    quizList.remove(quiz)
+    quizList.add(newQuiz)
+
+    // Add the newly created question to the question list for the quiz
+    var questionList = quizQuestions[quizId]
+    if(questionList == null) {
+        questionList = mutableListOf<QuizQuestion>()
+        quizQuestions[quizId] = questionList
+    }
+    questionList.add(result)
+
+    // return the quiz question
+    return result
+}

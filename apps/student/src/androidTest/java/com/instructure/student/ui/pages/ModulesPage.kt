@@ -19,9 +19,15 @@ package com.instructure.student.ui.pages
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.PerformException
+import androidx.test.espresso.action.ViewActions.swipeDown
+import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvas.espresso.scrollRecyclerView
+import com.instructure.canvas.espresso.withCustomConstraints
+import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.dataseeding.model.ModuleApiModel
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
@@ -35,18 +41,65 @@ class ModulesPage : BasePage(R.id.modulesPage) {
         scrollRecyclerView(R.id.listView, withText(module.name))
     }
 
+    fun assertModuleDisplayed(module: ModuleObject) {
+        scrollRecyclerView(R.id.listView, withText(module.name))
+    }
+
+    fun clickModule(module: ModuleObject) {
+        val matcher = withText(module.name)
+        scrollRecyclerView(R.id.listView, matcher)
+        onView(matcher).click()
+    }
+
+    /** Asserts that *any* module is locked.  It is exceedingly hard to check that the
+     * "locked" icon is present, so this is the consolation prize. */
+    fun assertAnyModuleLocked() {
+        val matcher = allOf(withId(R.id.titleText), withText("Locked"))
+        scrollRecyclerView(R.id.listView, matcher)
+    }
+
     fun assertModuleItemDisplayed(module: ModuleApiModel, itemTitle: String) {
+        assertAndClickModuleItem(module.name, itemTitle)
+    }
+
+    fun assertModuleItemDisplayed(module: ModuleObject, itemTitle: String) {
+        assertAndClickModuleItem(module.name!!, itemTitle)
+    }
+
+    fun assertModuleItemNotDisplayed(itemTitle: String) {
+        onView(withText(itemTitle)).check(doesNotExist())
+    }
+
+    /**
+     * It is occasionally the case that we need to click a few extra buttons to get "fully" into
+     * the item.  Thus the [extraClickIds] vararg param.
+     */
+    fun clickModuleItem(module: ModuleObject, itemTitle: String, vararg extraClickIds: Int) {
+        assertAndClickModuleItem(module.name!!, itemTitle, true)
+        for(extraClickId in extraClickIds) {
+            onView(allOf(withId(extraClickId), isDisplayed())).click()
+        }
+    }
+
+    // Assert that a module item is displayed and, optionally, click it
+    private fun assertAndClickModuleItem(moduleName: String, itemTitle: String, clickItem: Boolean = false) {
         try {
             scrollRecyclerView(R.id.listView, withText(itemTitle))
+            if(clickItem) {
+                onView(withText(itemTitle)).click()
+            }
         }
         catch(ex: Exception) {
             when(ex) {
                 is NoMatchingViewException, is PerformException -> {
                     // Maybe our module hasn't been expanded.  Click the module and try again.
-                    val moduleMatcher = withText(module.name)
+                    val moduleMatcher = withText(moduleName)
                     scrollRecyclerView(R.id.listView, moduleMatcher)
                     onView(moduleMatcher).click()
                     scrollRecyclerView(R.id.listView, withText(itemTitle))
+                    if(clickItem) {
+                        onView(withText(itemTitle)).click()
+                    }
                 }
                 else -> throw ex // Some other exception
             }
@@ -55,5 +108,9 @@ class ModulesPage : BasePage(R.id.modulesPage) {
 
     fun assertEmptyView() {
         onView(allOf(withId(R.id.emptyView), withAncestor(R.id.modulesPage))).assertDisplayed()
+    }
+
+    fun refresh() {
+        onView(allOf(withId(R.id.swipeRefreshLayout),isDisplayed())).perform(withCustomConstraints(swipeDown(), isDisplayingAtLeast(5)))
     }
 }
