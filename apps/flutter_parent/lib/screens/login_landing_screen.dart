@@ -14,6 +14,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
+import 'package:flutter_parent/screens/theme_viewer_screen.dart';
+import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/snickers.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -24,56 +26,64 @@ import 'domain_search/domain_search_screen.dart';
 class LoginLandingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      endDrawer: Drawer(
-        child: SafeArea(
-          child: Center(
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: SNICKERS.length,
-              itemBuilder: (context, index) {
-                var snicker = SNICKERS[index];
-                return ListTile(
-                  title: Text(snicker.title),
-                  subtitle: Text(snicker.subtitle),
-                  onTap: () {
-                    // TODO: Wire up to WebLoginPage once implemented
-                    /*QuickNav.push(
-                      context,
-                      WebLoginPage(snicker.domain, user: snicker.username, pass: snicker.password),
-                    );*/
-                  },
-                );
-              },
+    return DefaultParentTheme(
+      builder: (context) => Scaffold(
+        endDrawer: Drawer(
+          child: SafeArea(
+            child: Center(
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: SNICKERS.length,
+                itemBuilder: (context, index) {
+                  var snicker = SNICKERS[index];
+                  return ListTile(
+                    title: Text(snicker.title),
+                    subtitle: Text(snicker.subtitle),
+                    onTap: () {
+                      // TODO: Wire up to WebLoginPage once implemented
+                      /*QuickNav.push(
+                        context,
+                        WebLoginPage(snicker.domain, user: snicker.username, pass: snicker.password),
+                      );*/
+                    },
+                  );
+                },
+              ),
             ),
           ),
         ),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            SvgPicture.asset(
-              "assets/svg/canvas-parent-login-logo.svg",
-              semanticsLabel: AppLocalizations.of(context).canvasLogoLabel,
-            ),
-            SizedBox(height: 64),
-            RaisedButton(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  AppLocalizations.of(context).findSchoolOrDistrict,
-                  style: TextStyle(fontSize: 16),
-                ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              SvgPicture.asset(
+                "assets/svg/canvas-parent-login-logo.svg",
+                semanticsLabel: AppLocalizations.of(context).canvasLogoLabel,
               ),
-              color: Theme.of(context).accentColor,
-              textColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
-              onPressed: () {
-                onFindSchoolPressed(context);
-              },
-            ),
-          ],
+              SizedBox(height: 64),
+              RaisedButton(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(
+                    AppLocalizations.of(context).findSchoolOrDistrict,
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ),
+                color: Theme.of(context).accentColor,
+                textColor: Colors.white,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
+                onPressed: () {
+                  onFindSchoolPressed(context);
+                },
+              ),
+            ],
+          ),
+        ),
+        bottomNavigationBar: FlatButton(
+          child: Text("Theme Viewer"),
+          onPressed: () {
+            QuickNav.push(context, ThemeViewerScreen());
+          },
         ),
       ),
     );
