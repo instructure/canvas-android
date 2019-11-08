@@ -17,13 +17,13 @@ import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/design/canvas_icons_solid.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/design/student_color_set.dart';
-import 'package:flutter_parent/utils/quick_nav.dart';
-
-import 'domain_search/domain_search_screen.dart';
 
 /// A screen for viewing and configuring the app theme. This will not be a user-facing screen so
 /// the Strings used here will not be translated.
 class ThemeViewerScreen extends StatefulWidget {
+  static final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  static final Key studentColorKey = Key("student-color");
+
   @override
   _ThemeViewerScreenState createState() => _ThemeViewerScreenState();
 }
@@ -56,6 +56,7 @@ class _ThemeViewerScreenState extends State<ThemeViewerScreen> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
+        key: ThemeViewerScreen.scaffoldKey,
         drawer: Drawer(
           child: Container(
             color: Theme.of(context).scaffoldBackgroundColor,
@@ -67,6 +68,12 @@ class _ThemeViewerScreenState extends State<ThemeViewerScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
+                        Container(
+                          key: ThemeViewerScreen.studentColorKey,
+                          width: 48,
+                          height: 48,
+                          color: Theme.of(context).accentColor,
+                        ),
                         Text("Theme configuration", style: Theme.of(context).textTheme.title),
                         Text("Play around with some values", style: Theme.of(context).textTheme.caption),
                       ],
@@ -172,7 +179,7 @@ class _ThemeViewerScreenState extends State<ThemeViewerScreen> {
                         color: ParentTheme.of(context).getColorVariantForCurrentState(it.value),
                       ),
                       SizedBox(width: 8),
-                      Text("Student Color ${it.key + 1}"),
+                      Flexible(child: Text("Student Color ${it.key + 1}")),
                     ],
                   ),
                 ),
@@ -408,9 +415,5 @@ class _ThemeViewerScreenState extends State<ThemeViewerScreen> {
         ),
       ),
     );
-  }
-
-  onFindSchoolPressed(BuildContext context) {
-    QuickNav.push(context, DomainSearchScreen());
   }
 }
