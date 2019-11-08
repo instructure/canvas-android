@@ -15,6 +15,8 @@
  */
 package com.instructure.student.ui.interaction
 
+import android.os.SystemClock.sleep
+import android.util.Log
 import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
@@ -32,14 +34,15 @@ import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLogin
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class QuizInteractionTest : StudentTest() {
     override fun displaysPageObjects() = Unit // Not used for interaction tests
 
     // Some fields that are populated during initialization
-    var quiz: Quiz? = null
-    var course: Course? = null
+    lateinit var quiz: Quiz
+    lateinit var course: Course
 
     @Stub
     @Test
@@ -49,17 +52,17 @@ class QuizInteractionTest : StudentTest() {
 
         val data = getToCourse()
         val question = data.addQuestionToQuiz(
-                course = course!!,
-                quizId = quiz!!.id,
+                course = course,
+                quizId = quiz.id,
                 questionName = "Essay question",
                 questionText = "Describe yourself in 100 words",
                 questionType = QuizQuestion.QuestionType.ESSAY.stringVal
         )
 
         courseBrowserPage.selectQuizzes()
-        quizListPage.assertQuizDisplayed(quiz!!)
-        quizListPage.selectQuiz(quiz!!)
-        quizDetailsPage.assertQuizDisplayed(quiz = quiz!!, submitted = false, questions = listOf(question))
+        quizListPage.assertQuizDisplayed(quiz)
+        quizListPage.selectQuiz(quiz)
+        quizDetailsPage.assertQuizDisplayed(quiz = quiz, submitted = false, questions = listOf(question))
 
     }
 
@@ -71,17 +74,17 @@ class QuizInteractionTest : StudentTest() {
 
         val data = getToCourse()
         val question = data.addQuestionToQuiz(
-                course = course!!,
-                quizId = quiz!!.id,
+                course = course,
+                quizId = quiz.id,
                 questionName = "File upload question",
                 questionText = "Upload your resume",
                 questionType = QuizQuestion.QuestionType.FILE_UPLOAD.stringVal
         )
 
         courseBrowserPage.selectQuizzes()
-        quizListPage.assertQuizDisplayed(quiz!!)
-        quizListPage.selectQuiz(quiz!!)
-        quizDetailsPage.assertQuizDisplayed(quiz = quiz!!, submitted = false, questions = listOf(question))
+        quizListPage.assertQuizDisplayed(quiz)
+        quizListPage.selectQuiz(quiz)
+        quizDetailsPage.assertQuizDisplayed(quiz = quiz, submitted = false, questions = listOf(question))
 
     }
 
@@ -93,8 +96,8 @@ class QuizInteractionTest : StudentTest() {
 
         val data = getToCourse()
         val question = data.addQuestionToQuiz(
-                course = course!!,
-                quizId = quiz!!.id,
+                course = course,
+                quizId = quiz.id,
                 questionName = "Fill-in-the-blank question",
                 questionText = "2 + 2 = ?",
                 questionType = "fill_in_the_blank_question",
@@ -102,9 +105,9 @@ class QuizInteractionTest : StudentTest() {
         )
 
         courseBrowserPage.selectQuizzes()
-        quizListPage.assertQuizDisplayed(quiz!!)
-        quizListPage.selectQuiz(quiz!!)
-        quizDetailsPage.assertQuizDisplayed(quiz = quiz!!, submitted = false, questions = listOf(question))
+        quizListPage.assertQuizDisplayed(quiz)
+        quizListPage.selectQuiz(quiz)
+        quizDetailsPage.assertQuizDisplayed(quiz = quiz, submitted = false, questions = listOf(question))
 
     }
 
@@ -116,8 +119,8 @@ class QuizInteractionTest : StudentTest() {
 
         val data = getToCourse()
         val question = data.addQuestionToQuiz(
-                course = course!!,
-                quizId = quiz!!.id,
+                course = course,
+                quizId = quiz.id,
                 questionName = "Matching question",
                 questionText = "Match these teams with their leagues",
                 questionType = QuizQuestion.QuestionType.MATCHING.stringVal,
@@ -130,9 +133,9 @@ class QuizInteractionTest : StudentTest() {
         )
 
         courseBrowserPage.selectQuizzes()
-        quizListPage.assertQuizDisplayed(quiz!!)
-        quizListPage.selectQuiz(quiz!!)
-        quizDetailsPage.assertQuizDisplayed(quiz = quiz!!, submitted = false, questions = listOf(question))
+        quizListPage.assertQuizDisplayed(quiz)
+        quizListPage.selectQuiz(quiz)
+        quizDetailsPage.assertQuizDisplayed(quiz = quiz, submitted = false, questions = listOf(question))
 
     }
 
@@ -144,8 +147,8 @@ class QuizInteractionTest : StudentTest() {
 
         val data = getToCourse()
         val question = data.addQuestionToQuiz(
-                course = course!!,
-                quizId = quiz!!.id,
+                course = course,
+                quizId = quiz.id,
                 questionName = "Multiple answer question",
                 questionText = "Which of these teams are in the NFL?",
                 questionType = QuizQuestion.QuestionType.MULTIPLE_ANSWERS.stringVal,
@@ -158,9 +161,9 @@ class QuizInteractionTest : StudentTest() {
         )
 
         courseBrowserPage.selectQuizzes()
-        quizListPage.assertQuizDisplayed(quiz!!)
-        quizListPage.selectQuiz(quiz!!)
-        quizDetailsPage.assertQuizDisplayed(quiz = quiz!!, submitted = false, questions = listOf(question))
+        quizListPage.assertQuizDisplayed(quiz)
+        quizListPage.selectQuiz(quiz)
+        quizDetailsPage.assertQuizDisplayed(quiz = quiz, submitted = false, questions = listOf(question))
     }
 
     @Stub
@@ -171,8 +174,8 @@ class QuizInteractionTest : StudentTest() {
 
         val data = getToCourse()
         val question = data.addQuestionToQuiz(
-                course = course!!,
-                quizId = quiz!!.id,
+                course = course,
+                quizId = quiz.id,
                 questionName = "Multiple choice question",
                 questionText = "Which of these teams are in the NFL?",
                 questionType = QuizQuestion.QuestionType.MUTIPLE_CHOICE.stringVal,
@@ -185,9 +188,9 @@ class QuizInteractionTest : StudentTest() {
         )
 
         courseBrowserPage.selectQuizzes()
-        quizListPage.assertQuizDisplayed(quiz!!)
-        quizListPage.selectQuiz(quiz!!)
-        quizDetailsPage.assertQuizDisplayed(quiz = quiz!!, submitted = false, questions = listOf(question))
+        quizListPage.assertQuizDisplayed(quiz)
+        quizListPage.selectQuiz(quiz)
+        quizDetailsPage.assertQuizDisplayed(quiz = quiz, submitted = false, questions = listOf(question))
 
     }
 
@@ -199,8 +202,8 @@ class QuizInteractionTest : StudentTest() {
 
         val data = getToCourse()
         val question = data.addQuestionToQuiz(
-                course = course!!,
-                quizId = quiz!!.id,
+                course = course,
+                quizId = quiz.id,
                 questionName = "Multiple dropdown question",
                 questionText = "My favorite colors are [1] and [2]",
                 questionType = QuizQuestion.QuestionType.MULTIPLE_DROPDOWNS.stringVal,
@@ -213,9 +216,9 @@ class QuizInteractionTest : StudentTest() {
         )
 
         courseBrowserPage.selectQuizzes()
-        quizListPage.assertQuizDisplayed(quiz!!)
-        quizListPage.selectQuiz(quiz!!)
-        quizDetailsPage.assertQuizDisplayed(quiz = quiz!!, submitted = false, questions = listOf(question))
+        quizListPage.assertQuizDisplayed(quiz)
+        quizListPage.selectQuiz(quiz)
+        quizDetailsPage.assertQuizDisplayed(quiz = quiz, submitted = false, questions = listOf(question))
 
     }
 
@@ -227,8 +230,8 @@ class QuizInteractionTest : StudentTest() {
 
         val data = getToCourse()
         val question = data.addQuestionToQuiz(
-                course = course!!,
-                quizId = quiz!!.id,
+                course = course,
+                quizId = quiz.id,
                 questionName = "Numerical answer question",
                 questionText = "What is 6x7?",
                 questionType = QuizQuestion.QuestionType.NUMERICAL.stringVal,
@@ -238,9 +241,9 @@ class QuizInteractionTest : StudentTest() {
         )
 
         courseBrowserPage.selectQuizzes()
-        quizListPage.assertQuizDisplayed(quiz!!)
-        quizListPage.selectQuiz(quiz!!)
-        quizDetailsPage.assertQuizDisplayed(quiz = quiz!!, submitted = false, questions = listOf(question))
+        quizListPage.assertQuizDisplayed(quiz)
+        quizListPage.selectQuiz(quiz)
+        quizDetailsPage.assertQuizDisplayed(quiz = quiz, submitted = false, questions = listOf(question))
 
     }
 
@@ -252,8 +255,8 @@ class QuizInteractionTest : StudentTest() {
 
         val data = getToCourse()
         val question = data.addQuestionToQuiz(
-                course = course!!,
-                quizId = quiz!!.id,
+                course = course,
+                quizId = quiz.id,
                 questionName = "Text question",
                 questionText = "What is 6x7?",
                 questionType = QuizQuestion.QuestionType.TEXT_ONLY.stringVal,
@@ -263,9 +266,9 @@ class QuizInteractionTest : StudentTest() {
         )
 
         courseBrowserPage.selectQuizzes()
-        quizListPage.assertQuizDisplayed(quiz!!)
-        quizListPage.selectQuiz(quiz!!)
-        quizDetailsPage.assertQuizDisplayed(quiz = quiz!!, submitted = false, questions = listOf(question))
+        quizListPage.assertQuizDisplayed(quiz)
+        quizListPage.selectQuiz(quiz)
+        quizDetailsPage.assertQuizDisplayed(quiz = quiz, submitted = false, questions = listOf(question))
 
     }
 
@@ -277,8 +280,8 @@ class QuizInteractionTest : StudentTest() {
 
         val data = getToCourse()
         val question = data.addQuestionToQuiz(
-                course = course!!,
-                quizId = quiz!!.id,
+                course = course,
+                quizId = quiz.id,
                 questionName = "True/false question",
                 questionText = "6x7=42",
                 questionType = QuizQuestion.QuestionType.TRUE_FALSE.stringVal,
@@ -289,9 +292,9 @@ class QuizInteractionTest : StudentTest() {
         )
 
         courseBrowserPage.selectQuizzes()
-        quizListPage.assertQuizDisplayed(quiz!!)
-        quizListPage.selectQuiz(quiz!!)
-        quizDetailsPage.assertQuizDisplayed(quiz = quiz!!, submitted = false, questions = listOf(question))
+        quizListPage.assertQuizDisplayed(quiz)
+        quizListPage.selectQuiz(quiz)
+        quizDetailsPage.assertQuizDisplayed(quiz = quiz, submitted = false, questions = listOf(question))
 
     }
 
@@ -303,8 +306,8 @@ class QuizInteractionTest : StudentTest() {
 
         val data = getToCourse()
         val question = data.addQuestionToQuiz(
-                course = course!!,
-                quizId = quiz!!.id,
+                course = course,
+                quizId = quiz.id,
                 questionName = "Multiple-choice question",
                 questionText = "Which is the one true programming language?",
                 questionType = QuizQuestion.QuestionType.MUTIPLE_CHOICE.stringVal,
@@ -317,9 +320,9 @@ class QuizInteractionTest : StudentTest() {
         )
 
         courseBrowserPage.selectQuizzes()
-        quizListPage.assertQuizDisplayed(quiz!!)
-        quizListPage.selectQuiz(quiz!!)
-        quizDetailsPage.assertQuizDisplayed(quiz = quiz!!, submitted = false, questions = listOf(question))
+        quizListPage.assertQuizDisplayed(quiz)
+        quizListPage.selectQuiz(quiz)
+        quizDetailsPage.assertQuizDisplayed(quiz = quiz, submitted = false, questions = listOf(question))
         quizDetailsPage.takeQuiz2(questions = listOf(question))
 
 
@@ -333,8 +336,8 @@ class QuizInteractionTest : StudentTest() {
 
         val data = getToCourse()
         val question1 = data.addQuestionToQuiz(
-                course = course!!,
-                quizId = quiz!!.id,
+                course = course,
+                quizId = quiz.id,
                 questionName = "Multiple-choice question",
                 questionText = "What's your favorite color?",
                 questionType = QuizQuestion.QuestionType.MUTIPLE_CHOICE.stringVal,
@@ -346,8 +349,8 @@ class QuizInteractionTest : StudentTest() {
                 )
         )
         val question2 = data.addQuestionToQuiz(
-                course = course!!,
-                quizId = quiz!!.id,
+                course = course,
+                quizId = quiz.id,
                 questionName = "Multiple-choice question",
                 questionText = "Best movie franchise?",
                 questionType = QuizQuestion.QuestionType.MUTIPLE_CHOICE.stringVal,
@@ -362,17 +365,17 @@ class QuizInteractionTest : StudentTest() {
         val questionList = listOf(question1, question2)
 
         courseBrowserPage.selectQuizzes()
-        quizListPage.assertQuizDisplayed(quiz!!)
-        quizListPage.selectQuiz(quiz!!)
-        quizDetailsPage.assertQuizDisplayed(quiz = quiz!!, submitted = false, questions = questionList)
+        quizListPage.assertQuizDisplayed(quiz)
+        quizListPage.selectQuiz(quiz)
+        quizDetailsPage.assertQuizDisplayed(quiz = quiz, submitted = false, questions = questionList)
         quizDetailsPage.takeQuiz2(questions = questionList, completionCount = 1)
         Espresso.pressBack() // Back to quiz details page
         Espresso.pressBack() // Back to quiz list page
         quizListPage.refresh()
-        quizListPage.selectQuiz(quiz!!)
+        quizListPage.selectQuiz(quiz)
         quizDetailsPage.completeQuiz2(questions = questionList, startQuestion = 1)
         quizDetailsPage.submitQuiz()
-        quizDetailsPage.assertQuizDisplayed(quiz = quiz!!, submitted = true, questions = questionList)
+        quizDetailsPage.assertQuizDisplayed(quiz = quiz, submitted = true, questions = questionList)
 
     }
 
@@ -384,8 +387,8 @@ class QuizInteractionTest : StudentTest() {
 
         val data = getToCourse()
         val question = data.addQuestionToQuiz(
-                course = course!!,
-                quizId = quiz!!.id,
+                course = course,
+                quizId = quiz.id,
                 questionName = "Multiple-choice question",
                 questionText = "Generic question",
                 questionType = QuizQuestion.QuestionType.MUTIPLE_CHOICE.stringVal,
@@ -398,12 +401,12 @@ class QuizInteractionTest : StudentTest() {
         )
 
         courseBrowserPage.selectQuizzes()
-        quizListPage.assertQuizDisplayed(quiz!!)
-        quizListPage.selectQuiz(quiz!!)
-        quizDetailsPage.assertQuizDisplayed(quiz = quiz!!, submitted = false, questions = listOf(question))
+        quizListPage.assertQuizDisplayed(quiz)
+        quizListPage.selectQuiz(quiz)
+        quizDetailsPage.assertQuizDisplayed(quiz = quiz, submitted = false, questions = listOf(question))
         quizDetailsPage.takeQuiz2(questions = listOf(question))
         quizDetailsPage.submitQuiz()
-        quizDetailsPage.assertQuizDisplayed(quiz = quiz!!, submitted = true, questions = listOf(question))
+        quizDetailsPage.assertQuizDisplayed(quiz = quiz, submitted = true, questions = listOf(question))
     }
 
     @Stub
@@ -411,6 +414,61 @@ class QuizInteractionTest : StudentTest() {
     @TestMetaData(Priority.P1, FeatureCategory.QUIZZES, TestCategory.INTERACTION, true)
     fun testQuiz_resumingTimedQuizShowsCorrectTime() {
         // User should be able to resume a timed quiz with the correct time displayed
+
+        // See QuizQuestionsFragment.timeLimitCountDown() -- our code artificially subtracts 5
+        // seconds from the quiz time limit.  So this is really a 55-second limit.
+        val data = getToCourse(quizTimeLimitSecs = 60)
+        val question = data.addQuestionToQuiz(
+                course = course,
+                quizId = quiz.id,
+                questionName = "Multiple-choice question",
+                questionText = "Best 60s band?",
+                questionType = QuizQuestion.QuestionType.MUTIPLE_CHOICE.stringVal,
+                answers = arrayOf(
+                        QuizAnswer(answerText = "The Who", answerWeight = 0),
+                        QuizAnswer(answerText = "Cream", answerWeight = 1),
+                        QuizAnswer(answerText = "The Beatles", answerWeight = 0),
+                        QuizAnswer(answerText = "The Rolling Stones", answerWeight = 0)
+                )
+        )
+        val questionList = listOf(question)
+
+        courseBrowserPage.selectQuizzes()
+        quizListPage.assertQuizDisplayed(quiz)
+        quizListPage.selectQuiz(quiz)
+        quizDetailsPage.assertQuizDisplayed(quiz = quiz, submitted = false, questions = questionList)
+        quizDetailsPage.takeQuiz2(questions = questionList, completionCount = 0)
+        val secsLeft1 = quizDetailsPage.readTimerSeconds()
+        val timestamp1 = System.currentTimeMillis()
+
+        // Let's get out of our quiz for a moment
+        Espresso.pressBack() // Back to quiz details page
+        Espresso.pressBack() // Back to quiz list page
+
+        val sleepSeconds = 5
+        sleep(sleepSeconds * 1000L) // Let's sleep for a few seconds
+
+        // Let's get back into our quiz
+        quizListPage.refresh()
+        quizListPage.selectQuiz(quiz)
+        quizDetailsPage.completeQuiz2(questions = questionList, startQuestion = 0)
+        val secsLeft2 = quizDetailsPage.readTimerSeconds()
+        val timestamp2 = System.currentTimeMillis()
+
+        val realMsElapsed = timestamp2 - timestamp1
+        val realSecsElapsed = realMsElapsed / 1000
+        val displaySecsElapsed = secsLeft1 - secsLeft2 // we're counting down with this timer
+
+        Log.d("elapsedTime", "secsLeft1=$secsLeft1, secsLeft2=$secsLeft2")
+        assertTrue("Expected to see at least ${realSecsElapsed - 1} seconds elapsed", displaySecsElapsed >= realSecsElapsed - 1)
+        assertTrue("Expected to see at most ${realSecsElapsed + 1} seconds elapsed", displaySecsElapsed <= realSecsElapsed + 1)
+
+        // Make sure that we've been booted back to the quiz details page
+        // I think that technically the quiz *does* get submitted when the time runs out,
+        // but the quiz card won't show that update yet.  So we'll run the check assuming its not
+        // showing submission yet.
+        //quizDetailsPage.assertQuizDisplayed(quiz = quiz, submitted = false, questions = questionList)
+
     }
 
     @Stub
@@ -418,13 +476,46 @@ class QuizInteractionTest : StudentTest() {
     @TestMetaData(Priority.P1, FeatureCategory.QUIZZES, TestCategory.INTERACTION, true)
     fun testQuiz_quizTimerCountsDownAndEndsSessionIfQuizNotCompleted() {
         // Timer counts down and ends the session if quiz has not been completed
+
+        // See QuizQuestionsFragment.timeLimitCountDown() -- our code artificially subtracts 5
+        // seconds from the quiz time limit.  So this is really a 3-second limit.
+        val data = getToCourse(quizTimeLimitSecs = 8)
+        val question = data.addQuestionToQuiz(
+                course = course,
+                quizId = quiz.id,
+                questionName = "Multiple-choice question",
+                questionText = "Best Beatle?",
+                questionType = QuizQuestion.QuestionType.MUTIPLE_CHOICE.stringVal,
+                answers = arrayOf(
+                        QuizAnswer(answerText = "John", answerWeight = 0),
+                        QuizAnswer(answerText = "George", answerWeight = 0),
+                        QuizAnswer(answerText = "Paul", answerWeight = 1),
+                        QuizAnswer(answerText = "Ringo", answerWeight = 0)
+                )
+        )
+        val questionList = listOf(question)
+
+        courseBrowserPage.selectQuizzes()
+        quizListPage.assertQuizDisplayed(quiz)
+        quizListPage.selectQuiz(quiz)
+        quizDetailsPage.assertQuizDisplayed(quiz = quiz, submitted = false, questions = questionList)
+        quizDetailsPage.takeQuiz2(questions = questionList, completionCount = 0)
+        sleep(5000) // Let the clock run out
+
+        // Make sure that we've been booted back to the quiz details page
+        // I think that technically the quiz *does* get submitted when the time runs out,
+        // but the quiz card won't show that update yet.  So we'll run the check assuming its not
+        // showing submission yet.
+        quizDetailsPage.assertQuizDisplayed(quiz = quiz, submitted = false, questions = questionList)
+
     }
 
     // Mock a specified number of students and courses, sign in, then navigate to course browser page for
     // first course.
     private fun getToCourse(
             studentCount: Int = 1,
-            courseCount: Int = 1): MockCanvas {
+            courseCount: Int = 1,
+            quizTimeLimitSecs: Int = 0): MockCanvas {
 
         // Basic info
         val data = MockCanvas.init(
@@ -433,7 +524,8 @@ class QuizInteractionTest : StudentTest() {
                 favoriteCourseCount = courseCount)
         course = data.courses.values.first()
         quiz = data.addQuizToCourse(
-                course = course!!
+                course = course,
+                timeLimitSecs = quizTimeLimitSecs
         )
 
         // Sign in
@@ -443,7 +535,7 @@ class QuizInteractionTest : StudentTest() {
         dashboardPage.waitForRender()
 
         // Navigate to the (first) course
-        dashboardPage.selectCourse(course!!)
+        dashboardPage.selectCourse(course)
 
         return data
     }

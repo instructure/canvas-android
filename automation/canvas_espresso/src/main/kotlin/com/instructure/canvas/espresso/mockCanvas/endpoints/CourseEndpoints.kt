@@ -291,8 +291,11 @@ object CourseQuizListEndpoint : Endpoint(
                                                     val diffMs = currentTime.time - startTime.time
                                                     val diffSecs = diffMs / 1000
                                                     val timeLeft = quiz.timeLimit - diffSecs
+                                                    val endAtMs = startTime.time + timeLeft * 1000
+                                                    val endAt = Date(endAtMs).toApiString()
 
-                                                    val response = QuizSubmissionTime(endAt = quiz.dueAt, timeLeft = timeLeft.toInt())
+                                                    val response = QuizSubmissionTime(endAt = endAt, timeLeft = timeLeft.toInt())
+                                                    Log.d("<--", "/time response: $response")
                                                     request.successResponse(response)
 
                                                 }
@@ -331,6 +334,8 @@ object CourseQuizListEndpoint : Endpoint(
                                     data.quizSubmissions[pathVars.quizId] = submissionList!!
                                 }
                                 submissionList!!.add(submission)
+
+                                Log.d("<--", "New submission: $submission")
 
                                 // It seems like we will need to populate a list of QuizSubmissionQuestions
                                 // for this submission, to match the QuizQuestions for the quiz.  We'll do that

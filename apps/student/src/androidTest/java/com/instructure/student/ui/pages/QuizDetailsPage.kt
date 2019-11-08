@@ -16,9 +16,14 @@
  */
 package com.instructure.student.ui.pages
 
+import android.util.Log
+import android.view.View
 import android.widget.Button
+import android.widget.TextView
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.UiController
+import androidx.test.espresso.ViewAction
 import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import androidx.test.espresso.matcher.ViewMatchers.withChild
@@ -38,6 +43,7 @@ import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.scrollTo
 import com.instructure.espresso.typeText
 import com.instructure.student.R
+import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
 import java.lang.Integer.min
 
@@ -132,7 +138,7 @@ class QuizDetailsPage: BasePage(R.id.quizDetailsPage) {
     }
 
     // Answers quiz questions from startQuestion onward.
-    fun completeQuizCommon(questions: List<QuizQuestionWrapper>, startQuestion: Int) {
+    private fun completeQuizCommon(questions: List<QuizQuestionWrapper>, startQuestion: Int) {
         nextButton.assertContainsText("RESUME")
         nextButton.scrollTo().click() // Resume the quiz
 
@@ -185,9 +191,37 @@ class QuizDetailsPage: BasePage(R.id.quizDetailsPage) {
                 isAssignableFrom(Button::class.java))
         ).click()
     }
+
+    fun readTimerSeconds() : Int {
+        val stringHolder = mutableListOf<String>()
+
+        onView(withId(R.id.timer)).perform( object : ViewAction {
+            override fun getConstraints(): Matcher<View> {
+                return withId(R.id.timer)
+            }
+
+            override fun getDescription(): String {
+                return "Reading value of countdown timer"
+            }
+
+            override fun perform(uiController: UiController?, view: View?) {
+                val tv = view as TextView
+                val reading = tv.text.toString()
+                stringHolder.add(reading)
+                Log.d("elapsedTime", "element reading = $reading")
+            }
+
+        })
+
+        val timerString = stringHolder[0]
+        val hms = timerString.split(":")
+        // Assume for now that we're under 60 seconds
+        val secs = hms.last().toInt()
+        return secs
+    }
 }
 
-class QuizQuestionWrapper {
+private class QuizQuestionWrapper {
     var questionName: String?
     var questionType: String?
     var questionText: String?
@@ -216,7 +250,7 @@ class QuizQuestionWrapper {
     }
 }
 
-class QuizAnswerWrapper {
+private class QuizAnswerWrapper {
     var answerText: String?
     var answerWeight: Int?
     constructor(answer: com.instructure.dataseeding.model.QuizAnswer) {
@@ -229,3 +263,4 @@ class QuizAnswerWrapper {
         answerWeight = answer.answerWeight
     }
 }
+
