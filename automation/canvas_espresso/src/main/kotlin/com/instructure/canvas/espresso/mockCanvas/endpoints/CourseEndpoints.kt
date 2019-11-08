@@ -314,11 +314,15 @@ object CourseQuizListEndpoint : Endpoint(
                             POST { // new submission
                                 val jsonObject = grabJsonFromMultiPartBody(request.body()!!)
                                 Log.d("submissions", "new submission jsonObject = $jsonObject")
+                                val quiz = data.courseQuizzes[pathVars.courseId]!!.find {it.id == pathVars.quizId}!!
+                                val now = Calendar.getInstance().time.time // ms
                                 val submission = QuizSubmission(
                                         id = data.newItemId(),
                                         quizId = pathVars.quizId,
                                         userId = request.user!!.id,
-                                        startedAt = Calendar.getInstance().time.toApiString(),
+                                        startedAt = Date(now).toApiString(),
+                                        endAt = Date(now + quiz.timeLimit * 1000).toApiString(),
+                                        workflowState = "untaken",
                                         validationToken = "abcd" // just so it's not null??
                                 )
                                 var submissionList = data.quizSubmissions[pathVars.quizId]

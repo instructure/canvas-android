@@ -64,7 +64,7 @@ object ApiEndpoint : Endpoint(
                                         request.successResponse(response)
                                     }
                                     POST {
-                                        // More or less punting on this for now.  The unauthorized response doesn't see
+                                        // More or less punting on this for now.  The unauthorized response doesn't seem
                                         // to hurt us.
                                         val buffer = Buffer()
                                         request.body()!!.writeTo(buffer)

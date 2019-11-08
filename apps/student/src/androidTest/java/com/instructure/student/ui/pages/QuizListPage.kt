@@ -18,11 +18,15 @@ package com.instructure.student.ui.pages
 
 import android.view.View
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions.swipeDown
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.matcher.ViewMatchers.hasSibling
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvas.espresso.scrollRecyclerView
+import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.dataseeding.model.QuizApiModel
 import com.instructure.espresso.assertDisplayed
@@ -61,5 +65,10 @@ class QuizListPage : BasePage(R.id.quizListPage) {
 
     fun assertQuizNotDisplayed(quiz: QuizApiModel) {
         onView(withText(quiz.title)).check(doesNotExist())
+    }
+
+    fun refresh() {
+        onView(allOf(withId(R.id.swipeRefreshLayout), isDisplayed()))
+                .perform(withCustomConstraints(swipeDown(), isDisplayingAtLeast(10)))
     }
 }

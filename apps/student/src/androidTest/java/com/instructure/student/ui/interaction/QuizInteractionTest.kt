@@ -15,6 +15,7 @@
  */
 package com.instructure.student.ui.interaction
 
+import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addQuestionToQuiz
@@ -329,6 +330,50 @@ class QuizInteractionTest : StudentTest() {
     @TestMetaData(Priority.P0, FeatureCategory.QUIZZES, TestCategory.INTERACTION, true)
     fun testQuiz_canResumeQuiz() {
         // User should be able to resume a valid quiz
+
+        val data = getToCourse()
+        val question1 = data.addQuestionToQuiz(
+                course = course!!,
+                quizId = quiz!!.id,
+                questionName = "Multiple-choice question",
+                questionText = "What's your favorite color?",
+                questionType = QuizQuestion.QuestionType.MUTIPLE_CHOICE.stringVal,
+                answers = arrayOf(
+                        QuizAnswer(answerText = "Red", answerWeight = 0),
+                        QuizAnswer(answerText = "Blue", answerWeight = 0),
+                        QuizAnswer(answerText = "Green", answerWeight = 1),
+                        QuizAnswer(answerText = "Yellow", answerWeight = 0)
+                )
+        )
+        val question2 = data.addQuestionToQuiz(
+                course = course!!,
+                quizId = quiz!!.id,
+                questionName = "Multiple-choice question",
+                questionText = "Best movie franchise?",
+                questionType = QuizQuestion.QuestionType.MUTIPLE_CHOICE.stringVal,
+                answers = arrayOf(
+                        QuizAnswer(answerText = "Marvel", answerWeight = 0),
+                        QuizAnswer(answerText = "Star Wars", answerWeight = 0),
+                        QuizAnswer(answerText = "Lord of the Rings", answerWeight = 1),
+                        QuizAnswer(answerText = "Harry Potter", answerWeight = 0)
+                )
+        )
+
+        val questionList = listOf(question1, question2)
+
+        courseBrowserPage.selectQuizzes()
+        quizListPage.assertQuizDisplayed(quiz!!)
+        quizListPage.selectQuiz(quiz!!)
+        quizDetailsPage.assertQuizDisplayed(quiz = quiz!!, submitted = false, questions = questionList)
+        quizDetailsPage.takeQuiz2(questions = questionList, completionCount = 1)
+        Espresso.pressBack() // Back to quiz details page
+        Espresso.pressBack() // Back to quiz list page
+        quizListPage.refresh()
+        quizListPage.selectQuiz(quiz!!)
+        quizDetailsPage.completeQuiz2(questions = questionList, startQuestion = 1)
+        quizDetailsPage.submitQuiz()
+        quizDetailsPage.assertQuizDisplayed(quiz = quiz!!, submitted = true, questions = questionList)
+
     }
 
     @Stub

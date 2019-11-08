@@ -123,7 +123,7 @@ class QuizDetailsPage: BasePage(R.id.quizDetailsPage) {
     }
 
     // Answers quiz questions from startQuestion onward.
-    fun completeQuiz2(questions: List<QuizQuestion>, startQuestion: Int) {
+    fun completeQuiz2(questions: List<com.instructure.canvasapi2.models.QuizQuestion>, startQuestion: Int) {
         val wrappedQuestions = mutableListOf<QuizQuestionWrapper>()
         for(question in questions) {
             wrappedQuestions.add(QuizQuestionWrapper(question))
