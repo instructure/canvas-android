@@ -76,69 +76,7 @@ object CourseEndpoint : Endpoint(
         Segment("files") to CourseFilesEndpoint,
         Segment("discussion_topics") to CourseDiscussionTopicListEndpoint,
         Segment("modules") to CourseModuleListEndpoint,
-        Segment("quizzes") to endpoint(
-                LongId(PathVars::quizId) to endpoint(
-                        Segment("submissions") to endpoint (
-                                configure = {
-                                    GET { // Return submission list for quiz
-                                        val submissionList = data.quizSubmissions[pathVars.quizId] ?: mutableListOf<QuizSubmission>()
-                                        val response = QuizSubmissionResponse(quizSubmissions = submissionList)
-                                        request.successResponse(response)
-                                    }
-                                }
-                        ),
-                        Segment("questions") to endpoint(
-                                LongId(PathVars::questionId) to endpoint(
-                                        configure = {
-                                            GET {
-                                                val question = data.quizQuestions[pathVars.quizId]?.find { it.id == pathVars.questionId }
-                                                if (question != null) {
-                                                    request.successResponse(question)
-                                                } else {
-                                                    request.unauthorizedResponse()
-                                                }
-
-                                            }
-                                        }
-                                ), // end specific-question endpoint
-
-                                configure = {
-                                    GET { // Get quiz question list for our quiz
-                                        val quizzesForCourse = data.courseQuizzes[pathVars.courseId]
-                                        if (quizzesForCourse != null) {
-                                            request.successResponse(quizzesForCourse)
-                                        } else {
-                                            request.unauthorizedResponse()
-                                        }
-                                    }
-                                }
-
-                        ), // End question list endpoint
-                        configure = {
-                            GET {
-                                // Get single quiz
-                                val quiz = data.courseQuizzes[pathVars.courseId]?.find {it.id == pathVars.quizId }
-                                if(quiz != null) {
-                                    request.successResponse(quiz)
-                                }
-                                else {
-                                    request.unauthorizedResponse()
-                                }
-                            }
-                        }
-                ), // End single-quiz endpoint
-
-                configure = {
-                    GET { // Get list of quizzes for course
-                        val quizzesForCourse = data.courseQuizzes[pathVars.courseId]
-                        if (quizzesForCourse != null) {
-                            request.successResponse(quizzesForCourse)
-                        } else {
-                            request.unauthorizedResponse()
-                        }
-                    }
-                }
-        ),
+        Segment("quizzes") to CourseQuizListEndpoint,
 
         response = {
             GET {
@@ -277,6 +215,83 @@ object CourseDiscussionTopicListEndpoint : Endpoint(
             }
 
         }
+)
+
+/**
+ * Endpoint that handles all course quiz related calls
+ *
+ * GET to retrieve a list of DiscussionTopicHeaders for a course
+ * POST to create a DiscussionTopicHeader for a course
+ *
+ * ROUTES:
+ * - `{quizId}` -> get info for specific quiz
+ *                  `submissions` -> get quiz submission list
+ *                  `questions` -> get quiz question list
+ *                      `{questionId} -> get specific quiz question
+ */
+object CourseQuizListEndpoint : Endpoint(
+        LongId(PathVars::quizId) to endpoint(
+                Segment("submissions") to endpoint (
+                        configure = {
+                            GET { // Return submission list for quiz
+                                val submissionList = data.quizSubmissions[pathVars.quizId] ?: mutableListOf<QuizSubmission>()
+                                val response = QuizSubmissionResponse(quizSubmissions = submissionList)
+                                request.successResponse(response)
+                            }
+                        }
+                ),
+                Segment("questions") to endpoint(
+                        LongId(PathVars::questionId) to endpoint(
+                                configure = {
+                                    GET {
+                                        val question = data.quizQuestions[pathVars.quizId]?.find { it.id == pathVars.questionId }
+                                        if (question != null) {
+                                            request.successResponse(question)
+                                        } else {
+                                            request.unauthorizedResponse()
+                                        }
+
+                                    }
+                                }
+                        ), // end specific-question endpoint
+
+                        configure = {
+                            GET { // Get quiz question list for our quiz
+                                val quizzesForCourse = data.courseQuizzes[pathVars.courseId]
+                                if (quizzesForCourse != null) {
+                                    request.successResponse(quizzesForCourse)
+                                } else {
+                                    request.unauthorizedResponse()
+                                }
+                            }
+                        }
+
+                ), // End question list endpoint
+                configure = {
+                    GET {
+                        // Get single quiz
+                        val quiz = data.courseQuizzes[pathVars.courseId]?.find {it.id == pathVars.quizId }
+                        if(quiz != null) {
+                            request.successResponse(quiz)
+                        }
+                        else {
+                            request.unauthorizedResponse()
+                        }
+                    }
+                }
+        ), // End single-quiz endpoint
+
+        response = {
+            GET { // Get list of quizzes for course
+                val quizzesForCourse = data.courseQuizzes[pathVars.courseId]
+                if (quizzesForCourse != null) {
+                    request.successResponse(quizzesForCourse)
+                } else {
+                    request.unauthorizedResponse()
+                }
+            }
+        }
+
 )
 
 /**
