@@ -14,6 +14,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
+import 'package:flutter_parent/screens/web_login/web_login_screen.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/snickers.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -37,11 +38,11 @@ class LoginLandingScreen extends StatelessWidget {
                   title: Text(snicker.title),
                   subtitle: Text(snicker.subtitle),
                   onTap: () {
-                    // TODO: Wire up to WebLoginPage once implemented
-                    /*QuickNav.push(
+                    // TODO: needs test
+                    QuickNav.push(
                       context,
-                      WebLoginPage(snicker.domain, user: snicker.username, pass: snicker.password),
-                    );*/
+                      WebLoginScreen(snicker.domain, user: snicker.username, pass: snicker.password),
+                    );
                   },
                 );
               },

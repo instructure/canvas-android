@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2019-10-30T13:15:17.774455",
+  "@@last_modified": "2019-11-08T16:05:00.369028",
   "alertsLabel": "Alerts",
   "@alertsLabel": {
     "description": "The label for the Alerts tab",
@@ -15,6 +15,92 @@
   "coursesLabel": "Courses",
   "@coursesLabel": {
     "description": "The label for the Courses tab",
+    "type": "text",
+    "placeholders": {}
+  },
+  "findSchoolOrDistrict": "Find School or District",
+  "@findSchoolOrDistrict": {
+    "description": "Text for the find-my-school button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "domainSearchInputHint": "Enter school name or district...",
+  "@domainSearchInputHint": {
+    "description": "Input hint for the text box on the domain search screen",
+    "type": "text",
+    "placeholders": {}
+  },
+  "noDomainResults": "Unable to find schools matching '{query}'",
+  "@noDomainResults": {
+    "description": "Message shown to users when the domain search query did not return any results",
+    "type": "text",
+    "placeholders": {
+      "query": {}
+    }
+  },
+  "domainSearchHelpLabel": "How do I find my school or district?",
+  "@domainSearchHelpLabel": {
+    "description": "Label for the help button on the domain search screen",
+    "type": "text",
+    "placeholders": {}
+  },
+  "canvasGuides": "Canvas Guides",
+  "@canvasGuides": {
+    "description": "Proper name for the Canvas Guides. This will be used in the domainSearchHelpBody text and will be highlighted and clickable",
+    "type": "text",
+    "placeholders": {}
+  },
+  "canvasSupport": "Canvas Support",
+  "@canvasSupport": {
+    "description": "Proper name for Canvas Support. This will be used in the domainSearchHelpBody text and will be highlighted and clickable",
+    "type": "text",
+    "placeholders": {}
+  },
+  "domainSearchHelpBody": "Try searching for the name of the school or district you’re attempting to access, like “Smith Private School” or “Smith County Schools.” You can also enter a Canvas domain directly, like “smith.instructure.com.”\n\nFor more information on finding your institution’s Canvas account, you can visit the {canvasGuides}, reach out to {canvasSupport}, or contact your school for assistance.",
+  "@domainSearchHelpBody": {
+    "description": "The body text shown in the help dialog on the domain search screen",
+    "type": "text",
+    "placeholders": {
+      "canvasGuides": {},
+      "canvasSupport": {}
+    }
+  },
+  "This app is not authorized for use.": "This app is not authorized for use.",
+  "@This app is not authorized for use.": {
+    "description": "The error shown when the app being used is not verified by Canvas",
+    "type": "text",
+    "placeholders": {}
+  },
+  "The server you entered is not authorized for this app.": "The server you entered is not authorized for this app.",
+  "@The server you entered is not authorized for this app.": {
+    "description": "The error shown when the desired login domain is not verified by Canvas",
+    "type": "text",
+    "placeholders": {}
+  },
+  "The user agent for this app is not authorized.": "The user agent for this app is not authorized.",
+  "@The user agent for this app is not authorized.": {
+    "description": "The error shown when the user agent during verification is not verified by Canvas",
+    "type": "text",
+    "placeholders": {}
+  },
+  "We were unable to verify the server for use with this app.": "We were unable to verify the server for use with this app.",
+  "@We were unable to verify the server for use with this app.": {
+    "description": "The generic error shown when we are unable to verify with Canvas",
+    "type": "text",
+    "placeholders": {}
+  },
+  "next": "Next",
+  "@next": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "ok": "OK",
+  "@ok": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "An unexpected error occurred": "An unexpected error occurred",
+  "@An unexpected error occurred": {
     "type": "text",
     "placeholders": {}
   }

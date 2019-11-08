@@ -199,8 +199,33 @@ class AppLocalizations {
       desc: 'The body text shown in the help dialog on the domain search screen',
       args: [canvasGuides, canvasSupport]);
 
+  /// Web Login Screen
+
+  String get domainVerificationErrorGeneral => Intl.message(
+        'This app is not authorized for use.',
+        desc: 'The error shown when the app being used is not verified by Canvas',
+      );
+
+  String get domainVerificationErrorDomain => Intl.message(
+        'The server you entered is not authorized for this app.',
+        desc: 'The error shown when the desired login domain is not verified by Canvas',
+      );
+
+  String get domainVerificationErrorUserAgent => Intl.message(
+        'The user agent for this app is not authorized.',
+        desc: 'The error shown when the user agent during verification is not verified by Canvas',
+      );
+
+  String get domainVerificationErrorUnknown => Intl.message(
+        'We were unable to verify the server for use with this app.',
+        desc: 'The generic error shown when we are unable to verify with Canvas',
+      );
+
   /// Miscellaneous
 
   String get next => Intl.message('Next', name: 'next');
+
   String get ok => Intl.message('OK', name: 'ok');
+
+  String get unexpectedError => Intl.message('An unexpected error occurred');
 }

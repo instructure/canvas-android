@@ -8,6 +8,7 @@ part of serializers;
 
 Serializers _$_serializers = (new Serializers().toBuilder()
       ..add(Assignment.serializer)
+      ..add(CanvasToken.serializer)
       ..add(Course.serializer)
       ..add(Enrollment.serializer)
       ..add(Grade.serializer)
