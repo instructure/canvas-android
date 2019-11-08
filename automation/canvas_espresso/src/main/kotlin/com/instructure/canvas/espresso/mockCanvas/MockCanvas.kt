@@ -147,6 +147,9 @@ class MockCanvas {
     /** Map of quiz id to quiz submission list */
     val quizSubmissions = mutableMapOf<Long, MutableList<QuizSubmission>>()
 
+    /** Map of quiz submission id to quiz submission questions */
+    val quizSubmissionQuestions = mutableMapOf<Long, MutableList<QuizSubmissionQuestion>>()
+
     //region Convenience functionality
 
     /** A list of users with at least one Student enrollment */
@@ -306,8 +309,8 @@ fun MockCanvas.addCourse(
     courses += course.id to course
 
     // For now, give all courses tabs for assignments and quizzes
-    val assignmentsTab = Tab(position = 0, label = "Assignments", visibility = "public")
-    val quizzesTab = Tab(position = 1, label = "Quizzes", visibility = "public")
+    val assignmentsTab = Tab(position = 0, label = "Assignments", visibility = "public", tabId = Tab.ASSIGNMENTS_ID)
+    val quizzesTab = Tab(position = 1, label = "Quizzes", visibility = "public", tabId = Tab.QUIZZES_ID)
     courseTabs += course.id to mutableListOf(assignmentsTab, quizzesTab)
 
     return course

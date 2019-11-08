@@ -30,12 +30,20 @@ import com.instructure.canvasapi2.models.DiscussionTopic
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.DiscussionTopicPermission
 import com.instructure.canvasapi2.models.ModuleObject
+import com.instructure.canvasapi2.models.QuizQuestion
 import com.instructure.canvasapi2.models.QuizSubmission
+import com.instructure.canvasapi2.models.QuizSubmissionAnswer
+import com.instructure.canvasapi2.models.QuizSubmissionQuestion
 import com.instructure.canvasapi2.models.QuizSubmissionResponse
+import com.instructure.canvasapi2.models.QuizSubmissionTime
+import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.utils.toApiString
+import com.instructure.canvasapi2.utils.toDate
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okio.Buffer
 import retrofit2.http.Multipart
+import java.time.Duration
 import java.time.Instant
 import java.util.*
 
@@ -220,26 +228,140 @@ object CourseDiscussionTopicListEndpoint : Endpoint(
 /**
  * Endpoint that handles all course quiz related calls
  *
- * GET to retrieve a list of DiscussionTopicHeaders for a course
- * POST to create a DiscussionTopicHeader for a course
+ * GET to retrieve a list of quizzes for a course
  *
  * ROUTES:
  * - `{quizId}` -> get info for specific quiz
- *                  `submissions` -> get quiz submission list
+ *                  `submissions` -> get quiz submission list, post new submission
+ *                      `{submissionId}` -> get specific submission
+ *                          `events` -> post submission events
+ *                          `complete` -> record (post) submission completion
+ *                          `time` -> get the running time of the submission
  *                  `questions` -> get quiz question list
  *                      `{questionId} -> get specific quiz question
  */
 object CourseQuizListEndpoint : Endpoint(
         LongId(PathVars::quizId) to endpoint(
                 Segment("submissions") to endpoint (
+                        LongId(PathVars::submissionId) to endpoint (
+                                Segment("events") to endpoint (
+                                        configure = {
+                                            POST {
+                                                val jsonObject = grabJsonFromMultiPartBody(request.body()!!)
+                                                Log.d("submissions", "new event jsonObject = $jsonObject")
+                                                request.noContentResponse()
+                                            }
+                                        }
+                                ),
+                                Segment("complete") to endpoint (
+                                        configure = {
+                                            POST {
+                                                val quizId = pathVars.quizId
+                                                val submissionId = pathVars.submissionId
+                                                val submission = data.quizSubmissions[quizId]?.find {it.id == submissionId}
+
+                                                if(submission != null) {
+                                                    val updatedSubmission = submission.copy(
+                                                            finishedAt = Calendar.getInstance().time.toApiString(),
+                                                            workflowState = "complete"
+                                                    )
+                                                    // Swap out submission for updated submission
+                                                    data.quizSubmissions[quizId]!!.remove(submission)
+                                                    data.quizSubmissions[quizId]!!.add(updatedSubmission)
+                                                    val response = QuizSubmissionResponse(quizSubmissions = listOf(updatedSubmission))
+                                                    request.successResponse(response)
+                                                }
+                                                else {
+                                                    request.unauthorizedResponse()
+                                                }
+                                            }
+                                        }
+                                ),
+                                Segment("time") to endpoint(
+                                        configure = {
+                                            GET { // return running time stats for the submission
+                                                // Do our best to fill in "endAt" and "timeLeft"
+                                                val quiz = data.courseQuizzes[pathVars.courseId]?.find {it.id == pathVars.quizId}
+                                                val quizId = pathVars.quizId
+                                                val submissionId = pathVars.submissionId
+                                                val submission = data.quizSubmissions[quizId]?.find {it.id == submissionId}
+                                                if(quiz != null && submission != null && submission.startedDate != null) {
+                                                    val startTime = submission.startedDate!!
+                                                    val currentTime = Calendar.getInstance().time
+                                                    val diffMs = currentTime.time - startTime.time
+                                                    val diffSecs = diffMs / 1000
+                                                    val timeLeft = quiz.timeLimit - diffSecs
+
+                                                    val response = QuizSubmissionTime(endAt = quiz.dueAt, timeLeft = timeLeft.toInt())
+                                                    request.successResponse(response)
+
+                                                }
+                                                else {
+                                                    request.unauthorizedResponse()
+                                                }
+
+                                            }
+                                        }
+                                )
+                        ),
                         configure = {
                             GET { // Return submission list for quiz
                                 val submissionList = data.quizSubmissions[pathVars.quizId] ?: mutableListOf<QuizSubmission>()
                                 val response = QuizSubmissionResponse(quizSubmissions = submissionList)
                                 request.successResponse(response)
                             }
+
+                            POST { // new submission
+                                val jsonObject = grabJsonFromMultiPartBody(request.body()!!)
+                                Log.d("submissions", "new submission jsonObject = $jsonObject")
+                                val submission = QuizSubmission(
+                                        id = data.newItemId(),
+                                        quizId = pathVars.quizId,
+                                        userId = request.user!!.id,
+                                        startedAt = Calendar.getInstance().time.toApiString(),
+                                        validationToken = "abcd" // just so it's not null??
+                                )
+                                var submissionList = data.quizSubmissions[pathVars.quizId]
+                                if(submissionList == null) {
+                                    submissionList = mutableListOf<QuizSubmission>()
+                                    data.quizSubmissions[pathVars.quizId] = submissionList!!
+                                }
+                                submissionList!!.add(submission)
+
+                                // It seems like we will need to populate a list of QuizSubmissionQuestions
+                                // for this submission, to match the QuizQuestions for the quiz.  We'll do that
+                                // right now.
+                                val submissionQuestionList = mutableListOf<QuizSubmissionQuestion>()
+                                val questionList = data.quizQuestions[pathVars.quizId] ?: listOf<QuizQuestion>()
+                                for(q in questionList) {
+                                    val submissionAnswers = mutableListOf<QuizSubmissionAnswer>()
+                                    if(q.answers != null) {
+                                        for (a in q.answers!!) {
+                                            submissionAnswers.add(QuizSubmissionAnswer(
+                                                    text = a.answerText,
+                                                    weight = a.answerWeight
+                                            ))
+                                        }
+                                    }
+                                    val sq = QuizSubmissionQuestion(
+                                            id = q.id,
+                                            quizId = pathVars.quizId,
+                                            questionName = q.questionName,
+                                            questionType = q.questionTypeString,
+                                            questionText = q.questionText,
+                                            answers = submissionAnswers.toTypedArray()
+                                    )
+                                    submissionQuestionList.add(sq)
+                                }
+                                data.quizSubmissionQuestions[submission.id] = submissionQuestionList
+
+                                val response = QuizSubmissionResponse(quizSubmissions = submissionList!!)
+                                request.successResponse(response)
+
+                            }
                         }
                 ),
+
                 Segment("questions") to endpoint(
                         LongId(PathVars::questionId) to endpoint(
                                 configure = {
@@ -282,7 +404,7 @@ object CourseQuizListEndpoint : Endpoint(
         ), // End single-quiz endpoint
 
         response = {
-            GET { // Get list of quizzes for course
+            GET { // Get the list of quizzes for course
                 val quizzesForCourse = data.courseQuizzes[pathVars.courseId]
                 if (quizzesForCourse != null) {
                     request.successResponse(quizzesForCourse)

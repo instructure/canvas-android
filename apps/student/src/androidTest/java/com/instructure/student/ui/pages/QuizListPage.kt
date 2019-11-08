@@ -16,38 +16,47 @@
  */
 package com.instructure.student.ui.pages
 
+import android.view.View
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvas.espresso.scrollRecyclerView
+import com.instructure.canvasapi2.models.Quiz
 import com.instructure.dataseeding.model.QuizApiModel
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.student.R
+import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
 
 class QuizListPage : BasePage(R.id.quizListPage) {
     fun assertQuizDisplayed(quiz: QuizApiModel) {
-        val matcher = allOf(
-                withId(R.id.title),
-                withText(quiz.title)
-        )
+        assertMatcherDisplayed(allOf(withId(R.id.title), withText(quiz.title)))
+    }
 
-        scrollRecyclerView(R.id.listView, matcher)
-        onView(matcher).assertDisplayed()
+    fun assertQuizDisplayed(quiz: Quiz) {
+        assertMatcherDisplayed(allOf(withId(R.id.title), withText(quiz.title)))
     }
 
     fun selectQuiz(quiz: QuizApiModel) {
-        val matcher = allOf(
-                withId(R.id.title),
-                withText(quiz.title)
-        )
+        clickMatcher(allOf(withId(R.id.title), withText(quiz.title)))
+    }
 
+    fun selectQuiz(quiz: Quiz) {
+        clickMatcher(allOf(withId(R.id.title), withText(quiz.title)))
+    }
+
+    private fun clickMatcher(matcher: Matcher<View>) {
         scrollRecyclerView(R.id.listView, matcher)
         onView(matcher).click()
+    }
+
+    private fun assertMatcherDisplayed(matcher: Matcher<View>) {
+        scrollRecyclerView(R.id.listView, matcher)
+        onView(matcher).assertDisplayed()
     }
 
     fun assertQuizNotDisplayed(quiz: QuizApiModel) {

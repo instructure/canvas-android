@@ -81,11 +81,28 @@ class QuizDetailsPage: BasePage(R.id.quizDetailsPage) {
 
     // May or may not answer all of the questions, depending on setting of completionCount
     fun takeQuiz(questions: List<QuizQuestion>, completionCount: Int? = null) {
+        val wrappedQuestions = mutableListOf<QuizQuestionWrapper>()
+        for(question in questions) {
+            wrappedQuestions.add(QuizQuestionWrapper(question))
+        }
+        takeQuizCommon(wrappedQuestions, completionCount)
+    }
+
+    // May or may not answer all of the questions, depending on setting of completionCount
+    fun takeQuiz2(questions: List<com.instructure.canvasapi2.models.QuizQuestion>, completionCount: Int? = null) {
+        val wrappedQuestions = mutableListOf<QuizQuestionWrapper>()
+        for(question in questions) {
+            wrappedQuestions.add(QuizQuestionWrapper(question))
+        }
+        takeQuizCommon(wrappedQuestions, completionCount)
+    }
+
+    private fun takeQuizCommon(questions: List<QuizQuestionWrapper>, completionCount: Int? = null) {
         nextButton.assertContainsText("START")
         nextButton.scrollTo().click() // Start the quiz
 
         // If completionCount is null, elementsToProcess will be "all of them".
-        // Othersize, elementsToProcess will be the minimum of "all of them" and completionCount.
+        // Otherwise, elementsToProcess will be the minimum of "all of them" and completionCount.
         val elementsToProcess = min(questions.size, completionCount ?: questions.size)
 
         // Answer the desired number of questions
@@ -93,10 +110,29 @@ class QuizDetailsPage: BasePage(R.id.quizDetailsPage) {
             val question = questions[i]
             answerQuestion(question)
         }
+
     }
 
     // Answers quiz questions from startQuestion onward.
     fun completeQuiz(questions: List<QuizQuestion>, startQuestion: Int) {
+        val wrappedQuestions = mutableListOf<QuizQuestionWrapper>()
+        for(question in questions) {
+            wrappedQuestions.add(QuizQuestionWrapper(question))
+        }
+        completeQuizCommon(wrappedQuestions, startQuestion)
+    }
+
+    // Answers quiz questions from startQuestion onward.
+    fun completeQuiz2(questions: List<QuizQuestion>, startQuestion: Int) {
+        val wrappedQuestions = mutableListOf<QuizQuestionWrapper>()
+        for(question in questions) {
+            wrappedQuestions.add(QuizQuestionWrapper(question))
+        }
+        completeQuizCommon(wrappedQuestions, startQuestion)
+    }
+
+    // Answers quiz questions from startQuestion onward.
+    fun completeQuizCommon(questions: List<QuizQuestionWrapper>, startQuestion: Int) {
         nextButton.assertContainsText("RESUME")
         nextButton.scrollTo().click() // Resume the quiz
 
@@ -107,14 +143,14 @@ class QuizDetailsPage: BasePage(R.id.quizDetailsPage) {
 
     }
 
-    private fun answerQuestion(question: QuizQuestion) {
+    private fun answerQuestion(question: QuizQuestionWrapper) {
         when(question.questionType) {
             "multiple_choice_question" -> {
                 val matcher = allOf(
                         withId(R.id.answer_checkbox),
                         hasSibling(allOf(
                                 withId(R.id.text_answer),
-                                withText(question.answers[0].text)
+                                withText(question.answers!![0].answerText)
                         ))
                 )
                 scrollRecyclerView(R.id.recyclerView, matcher)
@@ -148,5 +184,48 @@ class QuizDetailsPage: BasePage(R.id.quizDetailsPage) {
                 containsTextCaseInsensitive("ok"),
                 isAssignableFrom(Button::class.java))
         ).click()
+    }
+}
+
+class QuizQuestionWrapper {
+    var questionName: String?
+    var questionType: String?
+    var questionText: String?
+    var answers: MutableList<QuizAnswerWrapper>?
+
+    constructor(question: com.instructure.dataseeding.model.QuizQuestion) {
+        questionName = question.questionName
+        questionType = question.questionType
+        questionText = question.questionText
+        answers = mutableListOf<QuizAnswerWrapper>()
+        for(answer in question.answers) {
+            answers!!.add(QuizAnswerWrapper(answer))
+        }
+    }
+
+    constructor(question: com.instructure.canvasapi2.models.QuizQuestion) {
+        questionName = question.questionName
+        questionType = question.questionTypeString
+        questionText = question.questionText
+        answers = mutableListOf<QuizAnswerWrapper>()
+        if(question.answers != null) {
+            for (answer in question.answers!!) {
+                answers!!.add(QuizAnswerWrapper(answer))
+            }
+        }
+    }
+}
+
+class QuizAnswerWrapper {
+    var answerText: String?
+    var answerWeight: Int?
+    constructor(answer: com.instructure.dataseeding.model.QuizAnswer) {
+        answerText = answer.text
+        answerWeight = answer.weight
+    }
+
+    constructor(answer: com.instructure.canvasapi2.models.QuizAnswer) {
+        answerText = answer.answerText
+        answerWeight = answer.answerWeight
     }
 }
