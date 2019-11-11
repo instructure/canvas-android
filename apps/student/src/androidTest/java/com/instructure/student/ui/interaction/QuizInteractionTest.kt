@@ -44,9 +44,8 @@ class QuizInteractionTest : StudentTest() {
     lateinit var quiz: Quiz
     lateinit var course: Course
 
-    @Stub
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.QUIZZES, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P1, FeatureCategory.QUIZZES, TestCategory.INTERACTION, false)
     fun testOpensNativeView_essayQuiz() {
         // Quizzes with just Essay questions should open in a native view and not a WebView
 
@@ -66,9 +65,8 @@ class QuizInteractionTest : StudentTest() {
 
     }
 
-    @Stub
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.QUIZZES, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P1, FeatureCategory.QUIZZES, TestCategory.INTERACTION, false)
     fun testOpensNativeView_fileUploadQuiz() {
         // Quizzes with just File Upload questions should open in a native view and not a WebView
 
@@ -88,32 +86,40 @@ class QuizInteractionTest : StudentTest() {
 
     }
 
+    // Leaving this test as "stubbed" and unimplemented because apparently neither fill-in-the-blank nor
+    // fill-in-multiple-blanks questions can be represented in a native view.
     @Stub
     @Test
     @TestMetaData(Priority.P1, FeatureCategory.QUIZZES, TestCategory.INTERACTION, true)
-    fun testOpensNativeView_fillInTheBlankQuiz() {
-        // Quizzes with just Fill In The Blank questions should open in a native view and not a WebView
+    fun testOpensNativeView_fillInMultipleBlanksQuiz() {
+        // Quizzes with just Fill In Multiple Blanks questions should open in a native view and not a WebView
 
-        val data = getToCourse()
-        val question = data.addQuestionToQuiz(
-                course = course,
-                quizId = quiz.id,
-                questionName = "Fill-in-the-blank question",
-                questionText = "2 + 2 = ?",
-                questionType = "fill_in_the_blank_question",
-                answers = arrayOf(QuizAnswer(answerText = "4"))
-        )
-
-        courseBrowserPage.selectQuizzes()
-        quizListPage.assertQuizDisplayed(quiz)
-        quizListPage.selectQuiz(quiz)
-        quizDetailsPage.assertQuizDisplayed(quiz = quiz, submitted = false, questions = listOf(question))
+//        val data = getToCourse()
+//        // I'm not sure if this is exactly how you would really set up a multiple blanks question.
+//        // (Should I provided some wrong answers? Am I using blankId correctly?)  But I am confident
+//        // that the purpose of this test will be achieved -- we will be able to verify that a quiz
+//        // with only FILL_IN_MULTIPLE_BLANKS questions is launched in a native view.
+//        val question = data.addQuestionToQuiz(
+//                course = course,
+//                quizId = quiz.id,
+//                questionName = "Fill-in-multiple-blanks question",
+//                questionText = "Roses are [1], violets are [2]",
+//                questionType = QuizQuestion.QuestionType.FILL_IN_MULTIPLE_BLANKS.stringVal,
+//                answers = arrayOf(
+//                        QuizAnswer(answerText = "Red", answerWeight = 1, blankId=1),
+//                        QuizAnswer(answerText = "Blue", answerWeight = 1, blankId=2)
+//                )
+//        )
+//
+//        courseBrowserPage.selectQuizzes()
+//        quizListPage.assertQuizDisplayed(quiz)
+//        quizListPage.selectQuiz(quiz)
+//        quizDetailsPage.assertQuizDisplayed(quiz = quiz, submitted = false, questions = listOf(question))
 
     }
 
-    @Stub
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.QUIZZES, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P1, FeatureCategory.QUIZZES, TestCategory.INTERACTION, false)
     fun testOpensNativeView_matchingQuiz() {
         // Quizzes with just Matching questions should open in a native view and not a WebView
 
@@ -139,9 +145,8 @@ class QuizInteractionTest : StudentTest() {
 
     }
 
-    @Stub
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.QUIZZES, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P1, FeatureCategory.QUIZZES, TestCategory.INTERACTION, false)
     fun testOpensNativeView_multipleAnswerQuiz() {
         // Quizzes with just Multiple Answer questions should open in a native view and not a WebView
 
@@ -166,9 +171,8 @@ class QuizInteractionTest : StudentTest() {
         quizDetailsPage.assertQuizDisplayed(quiz = quiz, submitted = false, questions = listOf(question))
     }
 
-    @Stub
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.QUIZZES, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P1, FeatureCategory.QUIZZES, TestCategory.INTERACTION, false)
     fun testOpensNativeView_multipleChoiceQuiz() {
         // Quizzes with just Multiple Choice questions should open in a native view and not a WebView
 
@@ -194,9 +198,8 @@ class QuizInteractionTest : StudentTest() {
 
     }
 
-    @Stub
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.QUIZZES, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P1, FeatureCategory.QUIZZES, TestCategory.INTERACTION, false)
     fun testOpensNativeView_multipleDropdownQuiz() {
         // Quizzes with just Multiple Dropdown questions should open in a native view and not a WebView
 
@@ -222,9 +225,8 @@ class QuizInteractionTest : StudentTest() {
 
     }
 
-    @Stub
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.QUIZZES, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P1, FeatureCategory.QUIZZES, TestCategory.INTERACTION, false)
     fun testOpensNativeView_numericalAnswerQuiz() {
         // Quizzes with just Numerical Answer questions should open in a native view and not a WebView
 
@@ -247,9 +249,8 @@ class QuizInteractionTest : StudentTest() {
 
     }
 
-    @Stub
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.QUIZZES, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P1, FeatureCategory.QUIZZES, TestCategory.INTERACTION, false)
     fun testOpensNativeView_textQuiz() {
         // Quizzes with just Text questions should open in a native view and not a WebView
 
@@ -272,9 +273,8 @@ class QuizInteractionTest : StudentTest() {
 
     }
 
-    @Stub
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.QUIZZES, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P1, FeatureCategory.QUIZZES, TestCategory.INTERACTION, false)
     fun testOpensNativeView_trueFalseQuiz() {
         // Quizzes with just True-False questions should open in a native view and not a WebView
 
@@ -298,9 +298,8 @@ class QuizInteractionTest : StudentTest() {
 
     }
 
-    @Stub
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.QUIZZES, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P0, FeatureCategory.QUIZZES, TestCategory.INTERACTION, false)
     fun testQuiz_canTakeQuiz() {
         // User should be able to take a valid quiz
 
@@ -328,9 +327,8 @@ class QuizInteractionTest : StudentTest() {
 
     }
 
-    @Stub
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.QUIZZES, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P0, FeatureCategory.QUIZZES, TestCategory.INTERACTION, false)
     fun testQuiz_canResumeQuiz() {
         // User should be able to resume a valid quiz
 
@@ -379,9 +377,8 @@ class QuizInteractionTest : StudentTest() {
 
     }
 
-    @Stub
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.QUIZZES, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P0, FeatureCategory.QUIZZES, TestCategory.INTERACTION, false)
     fun testQuiz_canSubmitQuiz() {
         // User should be able to submit a valid quiz
 
@@ -409,9 +406,8 @@ class QuizInteractionTest : StudentTest() {
         quizDetailsPage.assertQuizDisplayed(quiz = quiz, submitted = true, questions = listOf(question))
     }
 
-    @Stub
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.QUIZZES, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P1, FeatureCategory.QUIZZES, TestCategory.INTERACTION, false)
     fun testQuiz_resumingTimedQuizShowsCorrectTime() {
         // User should be able to resume a timed quiz with the correct time displayed
 
@@ -438,28 +434,31 @@ class QuizInteractionTest : StudentTest() {
         quizListPage.selectQuiz(quiz)
         quizDetailsPage.assertQuizDisplayed(quiz = quiz, submitted = false, questions = questionList)
         quizDetailsPage.takeQuiz2(questions = questionList, completionCount = 0)
-        val secsLeft1 = quizDetailsPage.readTimerSeconds()
+        val displaySecs1 = quizDetailsPage.readTimerSeconds()
         val timestamp1 = System.currentTimeMillis()
 
         // Let's get out of our quiz for a moment
         Espresso.pressBack() // Back to quiz details page
         Espresso.pressBack() // Back to quiz list page
 
-        val sleepSeconds = 5
-        sleep(sleepSeconds * 1000L) // Let's sleep for a few seconds
+        // Let's sleep for a few seconds
+        sleep(5000L)
 
         // Let's get back into our quiz
         quizListPage.refresh()
         quizListPage.selectQuiz(quiz)
         quizDetailsPage.completeQuiz2(questions = questionList, startQuestion = 0)
-        val secsLeft2 = quizDetailsPage.readTimerSeconds()
+
+        // Let's calculate/compare timer time elapsed vs real time elapsed
+        val displaySecs2 = quizDetailsPage.readTimerSeconds()
         val timestamp2 = System.currentTimeMillis()
 
         val realMsElapsed = timestamp2 - timestamp1
         val realSecsElapsed = realMsElapsed / 1000
-        val displaySecsElapsed = secsLeft1 - secsLeft2 // we're counting down with this timer
+        val displaySecsElapsed = displaySecs1 - displaySecs2 // we're counting down with this timer
 
-        Log.d("elapsedTime", "secsLeft1=$secsLeft1, secsLeft2=$secsLeft2")
+        // Assert that (realSecsElapsed - 1) <= displaySecsElapsed <= (realSecsElapsed + 1)
+        Log.d("elapsedTime", "displaySecs1=$displaySecs1, displaySecs2=$displaySecs2, realSecsElapsed=$realSecsElapsed")
         assertTrue("Expected to see at least ${realSecsElapsed - 1} seconds elapsed", displaySecsElapsed >= realSecsElapsed - 1)
         assertTrue("Expected to see at most ${realSecsElapsed + 1} seconds elapsed", displaySecsElapsed <= realSecsElapsed + 1)
 
@@ -471,9 +470,8 @@ class QuizInteractionTest : StudentTest() {
 
     }
 
-    @Stub
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.QUIZZES, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P1, FeatureCategory.QUIZZES, TestCategory.INTERACTION, false)
     fun testQuiz_quizTimerCountsDownAndEndsSessionIfQuizNotCompleted() {
         // Timer counts down and ends the session if quiz has not been completed
 
@@ -500,7 +498,7 @@ class QuizInteractionTest : StudentTest() {
         quizListPage.selectQuiz(quiz)
         quizDetailsPage.assertQuizDisplayed(quiz = quiz, submitted = false, questions = questionList)
         quizDetailsPage.takeQuiz2(questions = questionList, completionCount = 0)
-        sleep(5000) // Let the clock run out
+        sleep(5000) // Let the clock run out.  We should be booted out of the quiz, back to the quiz detail page
 
         // Make sure that we've been booted back to the quiz details page
         // I think that technically the quiz *does* get submitted when the time runs out,

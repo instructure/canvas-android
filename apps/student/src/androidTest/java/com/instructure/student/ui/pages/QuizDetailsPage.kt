@@ -94,6 +94,8 @@ class QuizDetailsPage: BasePage(R.id.quizDetailsPage) {
         takeQuizCommon(wrappedQuestions, completionCount)
     }
 
+    // Arrggghh... sorry about the "2" in the name.  Because of JVM type-erasure, the signatures of
+    // these methods clashed if I didn't tack the "2" on the end.
     // May or may not answer all of the questions, depending on setting of completionCount
     fun takeQuiz2(questions: List<com.instructure.canvasapi2.models.QuizQuestion>, completionCount: Int? = null) {
         val wrappedQuestions = mutableListOf<QuizQuestionWrapper>()
@@ -192,6 +194,9 @@ class QuizDetailsPage: BasePage(R.id.quizDetailsPage) {
         ).click()
     }
 
+    /** Read the countdown timer value.
+     * Assumes that we are inside a quiz; would not work (or make sense) from the quiz details page.
+     */
     fun readTimerSeconds() : Int {
         val stringHolder = mutableListOf<String>()
 
@@ -215,12 +220,13 @@ class QuizDetailsPage: BasePage(R.id.quizDetailsPage) {
 
         val timerString = stringHolder[0]
         val hms = timerString.split(":")
-        // Assume for now that we're under 60 seconds
+        // Assume for now that we're under 60 seconds.  Don't count minutes/hours.
         val secs = hms.last().toInt()
         return secs
     }
 }
 
+// A wrapper that can be used to represent a dataseeding QuizQuestion or a canvasapi2 QuizQuestion
 private class QuizQuestionWrapper {
     var questionName: String?
     var questionType: String?
@@ -250,6 +256,8 @@ private class QuizQuestionWrapper {
     }
 }
 
+// A wrapper class that can be used to represent a dataseeding QuizAnswer or
+// a canvasapi2 QuizAnswer.
 private class QuizAnswerWrapper {
     var answerText: String?
     var answerWeight: Int?
