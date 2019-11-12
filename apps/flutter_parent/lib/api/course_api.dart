@@ -20,7 +20,7 @@ import 'package:flutter_parent/models/serializers.dart';
 import 'utils/paged_list.dart';
 
 class CourseApi {
-  Future<List<Course>> getObserveeCourses() async {
+  static Future<List<Course>> getObserveeCourses() async {
     print('getting observee courses depaginated');
     var coursesResponse = await Dio().get('${ApiPrefs.getApiUrl()}courses}', queryParameters: {
       'include': [
@@ -51,7 +51,7 @@ class CourseApi {
     }
   }
 
-  Future<List<Course>> _getObserveeCoursesDepaginated(PagedList<Course> prevResponse) async {
+  static Future<List<Course>> _getObserveeCoursesDepaginated(PagedList<Course> prevResponse) async {
     print('getting assignments depaginated _recursive_ (${prevResponse.nextUrl}');
     // Query params already specified in url
     var coursesResponse =
@@ -69,7 +69,7 @@ class CourseApi {
     }
   }
 
-  Future<Course> getCourse(int courseId) async {
+  static Future<Course> getCourse(int courseId) async {
     var response = await Dio().get('${ApiPrefs.getApiUrl()}courses/${courseId}', queryParameters: {
       'include': [
         'syllabus_body',

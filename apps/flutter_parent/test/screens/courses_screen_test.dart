@@ -22,7 +22,6 @@ import 'package:flutter_parent/screens/courses/courses_interactor.dart';
 import 'package:flutter_parent/screens/courses/courses_screen.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
-import 'package:mockito/mockito.dart';
 
 import '../utils/accessibility_utils.dart';
 import '../utils/test_app.dart';

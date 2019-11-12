@@ -14,6 +14,7 @@
 
 import 'package:flutter_parent/api/auth_api.dart';
 import 'package:flutter_parent/api/course_api.dart';
+import 'package:flutter_parent/screens/courses/courses_interactor.dart';
 import 'package:flutter_parent/screens/domain_search/domain_search_interactor.dart';
 import 'package:get_it/get_it.dart';
 
@@ -24,4 +25,5 @@ void setupLocator() {
   locator.registerLazySingleton<CourseApi>(() => CourseApi());
 
   locator.registerFactory<DomainSearchInteractor>(() => DomainSearchInteractor());
+  locator.registerFactory<CoursesInteractor>(() => CoursesInteractor());
 }
