@@ -163,5 +163,3 @@ User _mockStudent(int userId) => User((b) => b
   ..name = "UserName"
   ..sortableName = "Sortable Name"
   ..build());
-
-class MockNavigatorObserver extends Mock implements NavigatorObserver {}
