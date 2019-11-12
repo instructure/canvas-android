@@ -117,6 +117,7 @@ abstract class Course implements Built<Course, CourseBuilder> {
       ..isFavorite = false
       ..accessRestrictedByDate = false
       ..hasWeightedGradingPeriods = false
+      ..hasGradingPeriods = false
       ..restrictEnrollmentsToCourseDates = false;
 
   CourseGrade getCourseGrade(int studentId) => CourseGrade(
