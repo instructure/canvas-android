@@ -97,8 +97,8 @@ class WebLoginScreen extends StatelessWidget {
       var url = request.url;
       String oAuthRequest = url.substring(url.indexOf(successUrl) + successUrl.length);
       locator<WebLoginInteractor>().performLogin(result, oAuthRequest).then((_) {
-        // TODO: Wire up DashboardPage once implemented
-//        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => DashboardPage()));
+        // TODO: Wire up DashboardScreen once implemented
+//        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Dashboardscreen()));
       });
       return NavigationDecision.prevent;
     } else if (request.url.contains(errorUrl)) {
@@ -109,8 +109,8 @@ class WebLoginScreen extends StatelessWidget {
   }
 
   String _buildAuthUrl(MobileVerifyResult verifyResult) {
-    String baseUrl = verifyResult.baseUrl;
-    if (baseUrl.length == 0) {
+    String baseUrl = verifyResult?.baseUrl;
+    if ((baseUrl?.length ?? 0) == 0) {
       baseUrl = domain;
     }
     if (baseUrl.endsWith("/")) {
@@ -121,7 +121,7 @@ class WebLoginScreen extends StatelessWidget {
     }
 
     var purpose = Uri.encodeQueryComponent("canvasParent"); // PackageInfo.fromPlatform().then((info) => info.appName);
-    var clientId = Uri.encodeQueryComponent(verifyResult.clientId);
+    var clientId = verifyResult != null ? Uri.encodeQueryComponent(verifyResult?.clientId) : '';
     var redirect = Uri.encodeQueryComponent("https://canvas.instructure.com/login/oauth2/auth");
 
     // TODO: Support skipping mobile verify
