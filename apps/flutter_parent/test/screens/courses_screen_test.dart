@@ -14,6 +14,7 @@
 
 import 'package:built_collection/built_collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/models/enrollment.dart';
 import 'package:flutter_parent/models/user.dart';
@@ -80,7 +81,7 @@ void main() {
     await tester.pumpWidget(_testableMaterialWidget(CoursesScreen(student)));
     await tester.pumpAndSettle();
 
-    final gradeWidget = find.text('No Grade');
+    final gradeWidget = find.text(AppLocalizations().noGrade);
     expect(gradeWidget, findsNWidgets(courses.length));
   });
 
