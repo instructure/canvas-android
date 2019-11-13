@@ -20,6 +20,7 @@ import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.instructure.canvas.espresso.mockCanvas.Endpoint
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addDiscussionTopicToCourse
 import com.instructure.canvas.espresso.mockCanvas.addReplyToDiscussion
 import com.instructure.canvas.espresso.mockCanvas.endpoint
@@ -30,6 +31,7 @@ import com.instructure.canvasapi2.models.DiscussionTopic
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.DiscussionTopicPermission
 import com.instructure.canvasapi2.models.ModuleObject
+import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.models.QuizQuestion
 import com.instructure.canvasapi2.models.QuizSubmission
 import com.instructure.canvasapi2.models.QuizSubmissionAnswer
@@ -261,15 +263,9 @@ object CourseQuizListEndpoint : Endpoint(
                                                 val submission = data.quizSubmissions[quizId]?.find {it.id == submissionId}
 
                                                 if(submission != null) {
-                                                    val updatedSubmission = submission.copy(
-                                                            finishedAt = Calendar.getInstance().time.toApiString(),
-                                                            workflowState = "complete"
+                                                    request.successResponse(
+                                                            getQuizSubmissionCompleteResponse(data, submission, quizId)
                                                     )
-                                                    // Swap out submission for updated submission
-                                                    data.quizSubmissions[quizId]!!.remove(submission)
-                                                    data.quizSubmissions[quizId]!!.add(updatedSubmission)
-                                                    val response = QuizSubmissionResponse(quizSubmissions = listOf(updatedSubmission))
-                                                    request.successResponse(response)
                                                 }
                                                 else {
                                                     request.unauthorizedResponse()
@@ -286,18 +282,9 @@ object CourseQuizListEndpoint : Endpoint(
                                                 val submissionId = pathVars.submissionId
                                                 val submission = data.quizSubmissions[quizId]?.find {it.id == submissionId}
                                                 if(quiz != null && submission != null && submission.startedDate != null) {
-                                                    val startTime = submission.startedDate!!
-                                                    val currentTime = Calendar.getInstance().time
-                                                    val diffMs = currentTime.time - startTime.time
-                                                    val diffSecs = diffMs / 1000
-                                                    val timeLeft = quiz.timeLimit - diffSecs
-                                                    val endAtMs = startTime.time + timeLeft * 1000
-                                                    val endAt = Date(endAtMs).toApiString()
-
-                                                    val response = QuizSubmissionTime(endAt = endAt, timeLeft = timeLeft.toInt())
-                                                    Log.d("<--", "/time response: $response")
-                                                    request.successResponse(response)
-
+                                                    request.successResponse(
+                                                            getQuizSubmissionTimeResponse(submission, quiz)
+                                                    )
                                                 }
                                                 else {
                                                     request.unauthorizedResponse()
@@ -317,54 +304,11 @@ object CourseQuizListEndpoint : Endpoint(
                             POST { // new submission
                                 val jsonObject = grabJsonFromMultiPartBody(request.body()!!)
                                 Log.d("submissions", "new submission jsonObject = $jsonObject")
-                                val quiz = data.courseQuizzes[pathVars.courseId]!!.find {it.id == pathVars.quizId}!!
-                                val now = Calendar.getInstance().time.time // ms
-                                val submission = QuizSubmission(
-                                        id = data.newItemId(),
+                                val response = getQuizSubmissionResponse(
+                                        data = data,
+                                        courseId = pathVars.courseId,
                                         quizId = pathVars.quizId,
-                                        userId = request.user!!.id,
-                                        startedAt = Date(now).toApiString(),
-                                        endAt = Date(now + quiz.timeLimit * 1000).toApiString(),
-                                        workflowState = "untaken",
-                                        validationToken = "abcd" // just so it's not null??
-                                )
-                                var submissionList = data.quizSubmissions[pathVars.quizId]
-                                if(submissionList == null) {
-                                    submissionList = mutableListOf<QuizSubmission>()
-                                    data.quizSubmissions[pathVars.quizId] = submissionList!!
-                                }
-                                submissionList!!.add(submission)
-
-                                Log.d("<--", "New submission: $submission")
-
-                                // It seems like we will need to populate a list of QuizSubmissionQuestions
-                                // for this submission, to match the QuizQuestions for the quiz.  We'll do that
-                                // right now.
-                                val submissionQuestionList = mutableListOf<QuizSubmissionQuestion>()
-                                val questionList = data.quizQuestions[pathVars.quizId] ?: listOf<QuizQuestion>()
-                                for(q in questionList) {
-                                    val submissionAnswers = mutableListOf<QuizSubmissionAnswer>()
-                                    if(q.answers != null) {
-                                        for (a in q.answers!!) {
-                                            submissionAnswers.add(QuizSubmissionAnswer(
-                                                    text = a.answerText,
-                                                    weight = a.answerWeight
-                                            ))
-                                        }
-                                    }
-                                    val sq = QuizSubmissionQuestion(
-                                            id = q.id,
-                                            quizId = pathVars.quizId,
-                                            questionName = q.questionName,
-                                            questionType = q.questionTypeString,
-                                            questionText = q.questionText,
-                                            answers = submissionAnswers.toTypedArray()
-                                    )
-                                    submissionQuestionList.add(sq)
-                                }
-                                data.quizSubmissionQuestions[submission.id] = submissionQuestionList
-
-                                val response = QuizSubmissionResponse(quizSubmissions = submissionList!!)
+                                        userId = request.user!!.id)
                                 request.successResponse(response)
 
                             }
@@ -424,6 +368,102 @@ object CourseQuizListEndpoint : Endpoint(
         }
 
 )
+
+// Utility method to construct a response to a quiz-submission-complete request
+// POST /course/{courseId}/quizzes/{quizId}/submissions/{submissionId}/complete
+private fun getQuizSubmissionCompleteResponse(
+        data: MockCanvas,
+        submission: QuizSubmission,
+        quizId: Long
+) : QuizSubmissionResponse {
+    val updatedSubmission = submission.copy(
+            finishedAt = Calendar.getInstance().time.toApiString(),
+            workflowState = "complete"
+    )
+    // Swap out submission for updated submission
+    data.quizSubmissions[quizId]!!.remove(submission)
+    data.quizSubmissions[quizId]!!.add(updatedSubmission)
+    val response = QuizSubmissionResponse(quizSubmissions = listOf(updatedSubmission))
+
+    return response
+}
+
+// Utility method to construct a response to a quiz-submission-time request
+// GET /course/{courseId}/quizzes/{quizId}/submissions/{submissionId}/time
+private fun getQuizSubmissionTimeResponse(
+        submission: QuizSubmission,
+        quiz: Quiz
+) : QuizSubmissionTime {
+    val startTime = submission.startedDate!!
+    val currentTime = Calendar.getInstance().time
+    val diffMs = currentTime.time - startTime.time
+    val diffSecs = diffMs / 1000
+    val timeLeft = quiz.timeLimit - diffSecs
+    val endAtMs = startTime.time + timeLeft * 1000
+    val endAt = Date(endAtMs).toApiString()
+
+    val response = QuizSubmissionTime(endAt = endAt, timeLeft = timeLeft.toInt())
+    return response
+}
+
+// Utility method to construct a response to a new-quiz-submission request
+// POST /course/{courseId}/quizzes/{quizId}/submissions
+private fun getQuizSubmissionResponse(
+        data: MockCanvas,
+        courseId: Long,
+        quizId: Long,
+        userId: Long
+) : QuizSubmissionResponse {
+    val quiz = data.courseQuizzes[courseId]!!.find {it.id == quizId}!!
+    val now = Calendar.getInstance().time.time // ms
+    val submission = QuizSubmission(
+            id = data.newItemId(),
+            quizId = quizId,
+            userId = userId,
+            startedAt = Date(now).toApiString(),
+            endAt = Date(now + quiz.timeLimit * 1000).toApiString(),
+            workflowState = "untaken",
+            validationToken = "abcd" // just so it's not null??
+    )
+    var submissionList = data.quizSubmissions[quizId]
+    if(submissionList == null) {
+        submissionList = mutableListOf<QuizSubmission>()
+        data.quizSubmissions[quizId] = submissionList!!
+    }
+    submissionList!!.add(submission)
+
+    Log.d("<--", "New submission: $submission")
+
+    // It seems like we will need to populate a list of QuizSubmissionQuestions
+    // for this submission, to match the QuizQuestions for the quiz.  We'll do that
+    // right now.
+    val submissionQuestionList = mutableListOf<QuizSubmissionQuestion>()
+    val questionList = data.quizQuestions[quizId] ?: listOf<QuizQuestion>()
+    for(q in questionList) {
+        val submissionAnswers = mutableListOf<QuizSubmissionAnswer>()
+        if(q.answers != null) {
+            for (a in q.answers!!) {
+                submissionAnswers.add(QuizSubmissionAnswer(
+                        text = a.answerText,
+                        weight = a.answerWeight
+                ))
+            }
+        }
+        val sq = QuizSubmissionQuestion(
+                id = q.id,
+                quizId = quizId,
+                questionName = q.questionName,
+                questionType = q.questionTypeString,
+                questionText = q.questionText,
+                answers = submissionAnswers.toTypedArray()
+        )
+        submissionQuestionList.add(sq)
+    }
+    data.quizSubmissionQuestions[submission.id] = submissionQuestionList
+
+    val response = QuizSubmissionResponse(quizSubmissions = submissionList!!)
+    return response
+}
 
 /**
  * Endpoint that can return a specific discussion topic header for a specified course
