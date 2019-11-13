@@ -21,6 +21,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.crashlytics.android.Crashlytics
 import com.instructure.canvasapi2.managers.CourseManager
@@ -41,12 +42,14 @@ import com.instructure.pandautils.utils.toast
 import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
 import com.instructure.teacher.fragments.NotATeacherFragment
+import com.instructure.teacher.utils.LoggingUtility
 import com.instructure.teacher.utils.TeacherPrefs
 import kotlinx.android.synthetic.main.activity_splash.*
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
+import java.net.UnknownHostException
 
 @Suppress("EXPERIMENTAL_FEATURE_WARNING")
 class SplashActivity : AppCompatActivity() {
@@ -67,32 +70,44 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         window.setBackgroundDrawable(ColorDrawable(Color.WHITE))
         setContentView(R.layout.activity_splash)
+        LoggingUtility.log(this.javaClass.simpleName + " --> On Create")
 
-        startUp = weave {
-            // Grab user teacher status
-            try {
-                val user = awaitApi<User> { UserManager.getSelf(true, it) }
-                val shouldRestartForLocaleChange = setupUser(user)
-                if (shouldRestartForLocaleChange) {
-                    if (BuildConfig.DEBUG) toast(R.string.localeRestartMessage)
-                    LocaleUtils.restartApp(this@SplashActivity, LoginActivity::class.java)
-                    return@weave
-                }
-
-                // Determine if user is a Teacher, Ta, or Designer
-                // Use GlobalScope since this can continue executing after SplashActivity is destroyed
-                val enrollmentCheck = GlobalScope.async(start = CoroutineStart.LAZY) {
-                    try {
-                        TeacherPrefs.isConfirmedTeacher =
-                            CourseManager.getCoursesWithEnrollmentType(true, "teacher").awaitOrThrow().isNotEmpty() ||
-                                    CourseManager.getCoursesWithEnrollmentType(true, "ta").awaitOrThrow().isNotEmpty() ||
-                                    CourseManager.getCoursesWithEnrollmentType(true, "designer").awaitOrThrow().isNotEmpty()
-                    } catch (e: Throwable) {
-                        Logger.e(e.message)
+        try {
+            startUp = weave {
+                // Grab user teacher status
+                try {
+                    val user = awaitApi<User> { UserManager.getSelf(true, it) }
+                    val shouldRestartForLocaleChange = setupUser(user)
+                    if (shouldRestartForLocaleChange) {
+                        if (BuildConfig.DEBUG) toast(R.string.localeRestartMessage)
+                        LocaleUtils.restartApp(this@SplashActivity, LoginActivity::class.java)
+                        return@weave
                     }
-                }
-                if (!TeacherPrefs.isConfirmedTeacher) {
-                    /*
+
+                    // Determine if user is a Teacher, Ta, or Designer
+                    // Use GlobalScope since this can continue executing after SplashActivity is destroyed
+                    val enrollmentCheck = GlobalScope.async(start = CoroutineStart.LAZY) {
+                        try {
+                            TeacherPrefs.isConfirmedTeacher =
+                                CourseManager.getCoursesWithEnrollmentType(
+                                    true,
+                                    "teacher"
+                                ).awaitOrThrow().isNotEmpty() ||
+                                    CourseManager.getCoursesWithEnrollmentType(
+                                        true,
+                                        "ta"
+                                    ).awaitOrThrow().isNotEmpty() ||
+                                    CourseManager.getCoursesWithEnrollmentType(
+                                        true,
+                                        "designer"
+                                    ).awaitOrThrow().isNotEmpty()
+                        } catch (e: Throwable) {
+                            LoggingUtility.log("${SplashActivity::class.java.simpleName} - Failed to load enrollmentCheck")
+                            Logger.e(e.message)
+                        }
+                    }
+                    if (!TeacherPrefs.isConfirmedTeacher) {
+                        /*
                      * If the user is not confirmed to have a teacher enrollment, we suspend here and await the result
                      * so that we know whether to show the Not-A-Teacher screen after the splash screen.
                      *
@@ -102,80 +117,98 @@ class SplashActivity : AppCompatActivity() {
                      * the 'isConfirmedTeacher' flag to false and the result will be checked again synchronously the
                      * next time the app starts.
                      */
-                    enrollmentCheck.await()
+                        enrollmentCheck.await()
+                    } else {
+                        enrollmentCheck.start()
+                    }
+
+                    // Determine if user can masquerade
+                    if (ApiPrefs.canBecomeUser == null) {
+                        if (ApiPrefs.domain.startsWith("siteadmin", true)) {
+                            ApiPrefs.canBecomeUser = true
+                        } else try {
+                            val account = awaitApi<Account> { UserManager.getSelfAccount(true, it) }
+                            val permission = awaitApi<BecomeUserPermission> {
+                                UserManager.getBecomeUserPermission(
+                                    true,
+                                    account.id,
+                                    it
+                                )
+                            }
+                            ApiPrefs.canBecomeUser = permission.becomeUser
+                        } catch (e: StatusCallbackError) {
+                            if (e.response?.code() == 401) ApiPrefs.canBecomeUser = false
+                        }
+                    }
+
+                    if (!TeacherPrefs.isConfirmedTeacher && ApiPrefs.canBecomeUser != true) {
+                        // The user is not a teacher in any course and cannot masquerade; Show them the door
+                        canvasLoadingView.setGone()
+                        supportFragmentManager.beginTransaction()
+                            .add(
+                                R.id.splashActivityRootView,
+                                NotATeacherFragment(),
+                                NotATeacherFragment::class.java.simpleName
+                            )
+                            .commit()
+                        return@weave
+                    }
+
+                    // Get course color overlay setting
+                    UserManager.getSelfSettings(false).await().onSuccess {
+                        TeacherPrefs.hideCourseColorOverlay = it.hideDashCardColorOverlays
+                    }
+
+                    // Grab colors
+                    // Use GlobalScope since this can continue executing after SplashActivity is destroyed
+                    val colorFetch = GlobalScope.async(start = CoroutineStart.LAZY) {
+                        try {
+                            val canvasColor = awaitApi<CanvasColor> { UserManager.getColors(it, true) }
+                            ColorKeeper.addToCache(canvasColor)
+                            ColorKeeper.hasPreviouslySynced = true
+                        } catch (e: Throwable) {
+                            LoggingUtility.log("${SplashActivity::class.java.simpleName} - Failed to load colorFetch")
+                            Logger.e(e.message)
+                        }
+                    }
+                    if (!ColorKeeper.hasPreviouslySynced) colorFetch.await() else colorFetch.start()
+
+                    // Grab theme
+                    // Use GlobalScope since this can continue executing after SplashActivity is destroyed
+                    val themeFetch = GlobalScope.async(start = CoroutineStart.LAZY) {
+                        try {
+                            val theme = awaitApi<CanvasTheme> { ThemeManager.getTheme(it, true) }
+                            ThemePrefs.applyCanvasTheme(theme)
+                        } catch (e: Throwable) {
+                            LoggingUtility.log("${SplashActivity::class.java.simpleName} - Failed to load themeFetch")
+                            Logger.e(e.message)
+                        }
+                    }
+                    if (!ThemePrefs.isThemeApplied) themeFetch.await() else themeFetch.start()
+                } catch (e: Throwable) {
+                    LoggingUtility.log("${SplashActivity::class.java.simpleName} - Failed to load data inside weave")
+                    Logger.e(e.message)
+                }
+
+                // Set logged user details
+                if (Logger.canLogUserDetails()) {
+                    Logger.d("User detail logging allowed. Setting values.")
+                    Crashlytics.setUserIdentifier(ApiPrefs.user?.id.toString())
+                    Crashlytics.setString("domain", ApiPrefs.domain)
                 } else {
-                    enrollmentCheck.start()
+                    Logger.d("User detail logging disallowed. Clearing values.")
+                    Crashlytics.setUserIdentifier(null)
+                    Crashlytics.setString("domain", null)
                 }
 
-                // Determine if user can masquerade
-                if (ApiPrefs.canBecomeUser == null) {
-                    if (ApiPrefs.domain.startsWith("siteadmin", true)) {
-                        ApiPrefs.canBecomeUser = true
-                    } else try {
-                        val account = awaitApi<Account> { UserManager.getSelfAccount(true, it) }
-                        val permission = awaitApi<BecomeUserPermission> { UserManager.getBecomeUserPermission(true, account.id, it) }
-                        ApiPrefs.canBecomeUser = permission.becomeUser
-                    } catch (e: StatusCallbackError) {
-                        if (e.response?.code() == 401) ApiPrefs.canBecomeUser = false
-                    }
-                }
-
-                if (!TeacherPrefs.isConfirmedTeacher && ApiPrefs.canBecomeUser != true) {
-                    // The user is not a teacher in any course and cannot masquerade; Show them the door
-                    canvasLoadingView.setGone()
-                    supportFragmentManager.beginTransaction()
-                        .add(R.id.splashActivityRootView, NotATeacherFragment(), NotATeacherFragment::class.java.simpleName)
-                        .commit()
-                    return@weave
-                }
-
-                // Get course color overlay setting
-                UserManager.getSelfSettings(false).await().onSuccess {
-                    TeacherPrefs.hideCourseColorOverlay = it.hideDashCardColorOverlays
-                }
-
-                // Grab colors
-                // Use GlobalScope since this can continue executing after SplashActivity is destroyed
-                val colorFetch = GlobalScope.async(start = CoroutineStart.LAZY) {
-                    try {
-                        val canvasColor = awaitApi<CanvasColor> { UserManager.getColors(it, true) }
-                        ColorKeeper.addToCache(canvasColor)
-                        ColorKeeper.hasPreviouslySynced = true
-                    } catch (e: Throwable) {
-                        Logger.e(e.message)
-                    }
-                }
-                if (!ColorKeeper.hasPreviouslySynced) colorFetch.await() else colorFetch.start()
-
-                // Grab theme
-                // Use GlobalScope since this can continue executing after SplashActivity is destroyed
-                val themeFetch = GlobalScope.async(start = CoroutineStart.LAZY) {
-                    try {
-                        val theme = awaitApi<CanvasTheme> { ThemeManager.getTheme(it, true) }
-                        ThemePrefs.applyCanvasTheme(theme)
-                    } catch (e: Throwable) {
-                        Logger.e(e.message)
-                    }
-                }
-                if (!ThemePrefs.isThemeApplied) themeFetch.await() else themeFetch.start()
-            } catch (e: Throwable) {
-                Logger.e(e.message)
+                startActivity(InitActivity.createIntent(this@SplashActivity, intent?.extras))
+                canvasLoadingView.announceForAccessibility(getString(R.string.loading))
+                finish()
             }
-
-            // Set logged user details
-            if (Logger.canLogUserDetails()) {
-                Logger.d("User detail logging allowed. Setting values.")
-                Crashlytics.setUserIdentifier(ApiPrefs.user?.id.toString())
-                Crashlytics.setString("domain", ApiPrefs.domain)
-            } else {
-                Logger.d("User detail logging disallowed. Clearing values.")
-                Crashlytics.setUserIdentifier(null)
-                Crashlytics.setString("domain", null)
-            }
-
-            startActivity(InitActivity.createIntent(this@SplashActivity, intent?.extras))
-            canvasLoadingView.announceForAccessibility(getString(R.string.loading))
-            finish()
+        } catch (e: Throwable) {
+            // TODO: MBL-13563 Watch this catch in crashlytics for any more info on why we get an unknown host exception with du11hjcvx0uqb.cloudfront.net
+            LoggingUtility.log("${SplashActivity::class.java.simpleName} - Failed to load data outside weave")
+            Logger.e(e.message)
         }
     }
 
@@ -188,6 +221,7 @@ class SplashActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
+        LoggingUtility.log(this.javaClass.simpleName + " --> On Stop")
         startUp?.cancel()
     }
 }

@@ -55,6 +55,7 @@ import com.instructure.pandautils.dialogs.RatingDialog
 import com.instructure.pandautils.models.PushNotification
 import com.instructure.pandautils.receivers.PushExternalReceiver
 import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.toast
 import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
 import com.instructure.teacher.dialog.ColorPickerDialog
@@ -67,10 +68,8 @@ import com.instructure.teacher.presenters.InitActivityPresenter
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.router.RouteResolver
 import com.instructure.teacher.tasks.TeacherLogoutTask
+import com.instructure.teacher.utils.*
 import com.instructure.teacher.utils.AppType
-import com.instructure.teacher.utils.TeacherPrefs
-import com.instructure.teacher.utils.getColorCompat
-import com.instructure.teacher.utils.isTablet
 import com.instructure.teacher.viewinterface.InitActivityView
 import kotlinx.android.synthetic.main.activity_init.*
 import kotlinx.android.synthetic.main.navigation_drawer.*
@@ -138,11 +137,14 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
 
     override fun onStop() {
         super.onStop()
+        LoggingUtility.log(this.javaClass.simpleName + " --> On Stop")
         EventBus.getDefault().unregister(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        LoggingUtility.log(this.javaClass.simpleName + " --> On Create")
+
         setContentView(R.layout.activity_init)
         selectedTab = savedInstanceState?.getInt(SELECTED_TAB) ?: 0
 
