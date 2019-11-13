@@ -20,13 +20,13 @@ class StudentColorSet {
   static const electric = StudentColorSet(Color(0xFF008EE2), Color(0xFF0770A3), Color(0xFF008EE2), Color(0xFF00A0FF));
 
   /// Purple student color set
-  static const barney = StudentColorSet(Color(0xFF5F4DCE), Color(0xFF523ECC), Color(0xFF5F4DCE), Color(0xFF9584FF));
+  static const jeffGoldplum = StudentColorSet(Color(0xFF5F4DCE), Color(0xFF523ECC), Color(0xFF5F4DCE), Color(0xFF9584FF));
 
   /// Pink student color set
-  static const fuchsia = StudentColorSet(Color(0xFFBF32A4), Color(0xFFA30785), Color(0xFFBF32A4), Color(0xFFFF43DB));
+  static const barney = StudentColorSet(Color(0xFFBF32A4), Color(0xFFA30785), Color(0xFFBF32A4), Color(0xFFFF43DB));
 
   /// Red student color set
-  static const crimson = StudentColorSet(Color(0xFFEC3349), Color(0xFFAC182A), Color(0xFFEC3349), Color(0xFFFF6073));
+  static const raspberry = StudentColorSet(Color(0xFFEC3349), Color(0xFFAC182A), Color(0xFFEC3349), Color(0xFFFF6073));
 
   /// Orange student color set
   static const fire = StudentColorSet(Color(0xFFFC5E13), Color(0xFF9F3300), Color(0xFFFC5E13), Color(0xFFFF6319));
@@ -35,7 +35,7 @@ class StudentColorSet {
   static const shamrock = StudentColorSet(Color(0xFF00AC18), Color(0xFF006809), Color(0xFF00AC18), Color(0xFF00B119));
 
   /// List of all student color sets
-  static const List<StudentColorSet> all = [electric, barney, fuchsia, crimson, fire, shamrock];
+  static const List<StudentColorSet> all = [electric, jeffGoldplum, barney, raspberry, fire, shamrock];
 
   const StudentColorSet(this.light, this.lightHC, this.dark, this.darkHC);
 
