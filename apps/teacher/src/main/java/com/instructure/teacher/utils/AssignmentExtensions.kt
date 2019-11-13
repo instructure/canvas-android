@@ -25,6 +25,7 @@ import com.instructure.canvasapi2.models.AssignmentOverride
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.postmodels.AssignmentPostBody
 import com.instructure.canvasapi2.models.postmodels.OverrideBody
+import com.instructure.canvasapi2.type.SubmissionGradingStatus
 import com.instructure.canvasapi2.type.SubmissionType
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.canvasapi2.utils.toApiString
@@ -215,7 +216,7 @@ fun Assignment.getDisplayGrade(
 
 fun getDisplayGrade(
     context: Context,
-    gradingStatus: String?,
+    gradingStatus: SubmissionGradingStatus?,
     gradingType: String,
     grade: String?,
     enteredGrade: String?,
@@ -228,7 +229,7 @@ fun getDisplayGrade(
     if (gradingStatus == null) return DisplayGrade()
 
     // Cover the first edge case: excused assignment
-    if (gradingStatus == "excused") return DisplayGrade(context.getString(R.string.excused))
+    if (gradingStatus == SubmissionGradingStatus.EXCUSED) return DisplayGrade(context.getString(R.string.excused))
 
 
     // Cover the second edge case: NOT_GRADED type and no grade
@@ -237,7 +238,7 @@ fun getDisplayGrade(
     }
 
     // First let's see if the assignment is graded
-    if (gradingStatus == "graded" && score != null && enteredScore != null) {
+    if (gradingStatus == SubmissionGradingStatus.GRADED && score != null && enteredScore != null) {
         return when (Assignment.getGradingTypeFromAPIString(gradingType)) {
             Assignment.GradingType.POINTS ->
                 if (includeLatePenalty) {
