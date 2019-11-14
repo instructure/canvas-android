@@ -19,6 +19,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_parent/api/utils/api_prefs.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
+import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TestApp extends StatefulWidget {
@@ -56,21 +57,21 @@ class _TestAppState extends State<TestApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Canvas Parent',
-      locale: _locale,
-      localizationsDelegates: const [
-        AppLocalizations.delegate,
-        // Material components use these delegate to provide default localization
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-      ],
-      supportedLocales: AppLocalizations.delegate.supportedLocales,
-      localeResolutionCallback: _localeCallback(),
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return ParentTheme(
+      builder: (context, themeData) => MaterialApp(
+        title: 'Canvas Parent',
+        locale: _locale,
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          // Material components use these delegate to provide default localization
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        supportedLocales: AppLocalizations.delegate.supportedLocales,
+        localeResolutionCallback: _localeCallback(),
+        theme: themeData,
+        home: widget.home,
       ),
-      home: widget.home,
     );
   }
 
