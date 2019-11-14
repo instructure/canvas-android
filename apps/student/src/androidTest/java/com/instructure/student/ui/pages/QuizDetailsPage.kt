@@ -45,7 +45,6 @@ import com.instructure.espresso.typeText
 import com.instructure.student.R
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
-import java.lang.Integer.min
 
 class QuizDetailsPage: BasePage(R.id.quizDetailsPage) {
     private val quizTitle by OnViewWithId(R.id.quiz_title)
@@ -111,7 +110,7 @@ class QuizDetailsPage: BasePage(R.id.quizDetailsPage) {
 
         // If completionCount is null, elementsToProcess will be "all of them".
         // Otherwise, elementsToProcess will be the minimum of "all of them" and completionCount.
-        val elementsToProcess = min(questions.size, completionCount ?: questions.size)
+        val elementsToProcess = Math.min(questions.size, completionCount ?: questions.size)
 
         // Answer the desired number of questions
         for(i in 0..elementsToProcess-1) {
