@@ -35,6 +35,7 @@ import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.waitForViewWithText
+import com.instructure.espresso.scrollTo
 import com.instructure.espresso.swipeDown
 import com.instructure.student.R
 import org.hamcrest.Matcher
@@ -59,6 +60,7 @@ class AssignmentListPage : BasePage(pageResId = R.id.assignmentListPage) {
     }
 
     fun clickAssignment(assignment: Assignment) {
+        scrollRecyclerView(R.id.listView, withText(assignment.name!!))
         waitForViewWithText(assignment.name!!).click()
     }
 

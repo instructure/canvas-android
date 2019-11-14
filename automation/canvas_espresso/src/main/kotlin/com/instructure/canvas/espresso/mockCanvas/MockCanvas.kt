@@ -147,6 +147,9 @@ class MockCanvas {
     /** Map of quiz id to quiz submission list */
     val quizSubmissions = mutableMapOf<Long, MutableList<QuizSubmission>>()
 
+    /** Map of quiz submission id to quiz submission questions */
+    val quizSubmissionQuestions = mutableMapOf<Long, MutableList<QuizSubmissionQuestion>>()
+
     //region Convenience functionality
 
     /** A list of users with at least one Student enrollment */
@@ -306,8 +309,8 @@ fun MockCanvas.addCourse(
     courses += course.id to course
 
     // For now, give all courses tabs for assignments and quizzes
-    val assignmentsTab = Tab(position = 0, label = "Assignments", visibility = "public")
-    val quizzesTab = Tab(position = 1, label = "Quizzes", visibility = "public")
+    val assignmentsTab = Tab(position = 0, label = "Assignments", visibility = "public", tabId = Tab.ASSIGNMENTS_ID)
+    val quizzesTab = Tab(position = 1, label = "Quizzes", visibility = "public", tabId = Tab.QUIZZES_ID)
     courseTabs += course.id to mutableListOf(assignmentsTab, quizzesTab)
 
     return course
@@ -812,7 +815,8 @@ fun MockCanvas.addQuizToCourse(
         course: Course,
         title: String = Faker.instance().hitchhikersGuideToTheGalaxy().character(),
         description: String = Faker.instance().hitchhikersGuideToTheGalaxy().marvinQuote(),
-        quizType: String = Quiz.TYPE_PRACTICE
+        quizType: String = Quiz.TYPE_PRACTICE,
+        timeLimitSecs: Int = 300
 ) : Quiz {
     val quizId = newItemId()
     val quizUrl = "https://mock-data.instructure.com/api/v1/courses/${course.id}/quizzes/$quizId"
@@ -822,7 +826,8 @@ fun MockCanvas.addQuizToCourse(
             description = description,
             quizType = quizType,
             mobileUrl = quizUrl,
-            htmlUrl = quizUrl
+            htmlUrl = quizUrl,
+            timeLimit = timeLimitSecs
     )
 
     var quizList = courseQuizzes[course.id]

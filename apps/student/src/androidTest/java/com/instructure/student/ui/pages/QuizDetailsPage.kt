@@ -16,9 +16,14 @@
  */
 package com.instructure.student.ui.pages
 
+import android.util.Log
+import android.view.View
 import android.widget.Button
+import android.widget.TextView
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.UiController
+import androidx.test.espresso.ViewAction
 import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import androidx.test.espresso.matcher.ViewMatchers.withChild
@@ -38,6 +43,7 @@ import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.scrollTo
 import com.instructure.espresso.typeText
 import com.instructure.student.R
+import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
 import java.lang.Integer.min
 
@@ -81,11 +87,30 @@ class QuizDetailsPage: BasePage(R.id.quizDetailsPage) {
 
     // May or may not answer all of the questions, depending on setting of completionCount
     fun takeQuiz(questions: List<QuizQuestion>, completionCount: Int? = null) {
+        val wrappedQuestions = mutableListOf<QuizQuestionWrapper>()
+        for(question in questions) {
+            wrappedQuestions.add(QuizQuestionWrapper(question))
+        }
+        takeQuizCommon(wrappedQuestions, completionCount)
+    }
+
+    // Arrggghh... sorry about the "2" in the name.  Because of JVM type-erasure, the signatures of
+    // these methods clashed if I didn't tack the "2" on the end.
+    // May or may not answer all of the questions, depending on setting of completionCount
+    fun takeQuiz2(questions: List<com.instructure.canvasapi2.models.QuizQuestion>, completionCount: Int? = null) {
+        val wrappedQuestions = mutableListOf<QuizQuestionWrapper>()
+        for(question in questions) {
+            wrappedQuestions.add(QuizQuestionWrapper(question))
+        }
+        takeQuizCommon(wrappedQuestions, completionCount)
+    }
+
+    private fun takeQuizCommon(questions: List<QuizQuestionWrapper>, completionCount: Int? = null) {
         nextButton.assertContainsText("START")
         nextButton.scrollTo().click() // Start the quiz
 
         // If completionCount is null, elementsToProcess will be "all of them".
-        // Othersize, elementsToProcess will be the minimum of "all of them" and completionCount.
+        // Otherwise, elementsToProcess will be the minimum of "all of them" and completionCount.
         val elementsToProcess = min(questions.size, completionCount ?: questions.size)
 
         // Answer the desired number of questions
@@ -93,10 +118,29 @@ class QuizDetailsPage: BasePage(R.id.quizDetailsPage) {
             val question = questions[i]
             answerQuestion(question)
         }
+
     }
 
     // Answers quiz questions from startQuestion onward.
     fun completeQuiz(questions: List<QuizQuestion>, startQuestion: Int) {
+        val wrappedQuestions = mutableListOf<QuizQuestionWrapper>()
+        for(question in questions) {
+            wrappedQuestions.add(QuizQuestionWrapper(question))
+        }
+        completeQuizCommon(wrappedQuestions, startQuestion)
+    }
+
+    // Answers quiz questions from startQuestion onward.
+    fun completeQuiz2(questions: List<com.instructure.canvasapi2.models.QuizQuestion>, startQuestion: Int) {
+        val wrappedQuestions = mutableListOf<QuizQuestionWrapper>()
+        for(question in questions) {
+            wrappedQuestions.add(QuizQuestionWrapper(question))
+        }
+        completeQuizCommon(wrappedQuestions, startQuestion)
+    }
+
+    // Answers quiz questions from startQuestion onward.
+    private fun completeQuizCommon(questions: List<QuizQuestionWrapper>, startQuestion: Int) {
         nextButton.assertContainsText("RESUME")
         nextButton.scrollTo().click() // Resume the quiz
 
@@ -107,14 +151,14 @@ class QuizDetailsPage: BasePage(R.id.quizDetailsPage) {
 
     }
 
-    private fun answerQuestion(question: QuizQuestion) {
+    private fun answerQuestion(question: QuizQuestionWrapper) {
         when(question.questionType) {
             "multiple_choice_question" -> {
                 val matcher = allOf(
                         withId(R.id.answer_checkbox),
                         hasSibling(allOf(
                                 withId(R.id.text_answer),
-                                withText(question.answers[0].text)
+                                withText(question.answers!![0].answerText)
                         ))
                 )
                 scrollRecyclerView(R.id.recyclerView, matcher)
@@ -149,4 +193,82 @@ class QuizDetailsPage: BasePage(R.id.quizDetailsPage) {
                 isAssignableFrom(Button::class.java))
         ).click()
     }
+
+    /** Read the countdown timer value.
+     * Assumes that we are inside a quiz; would not work (or make sense) from the quiz details page.
+     */
+    fun readTimerSeconds() : Int {
+        val stringHolder = mutableListOf<String>()
+
+        onView(withId(R.id.timer)).perform( object : ViewAction {
+            override fun getConstraints(): Matcher<View> {
+                return withId(R.id.timer)
+            }
+
+            override fun getDescription(): String {
+                return "Reading value of countdown timer"
+            }
+
+            override fun perform(uiController: UiController?, view: View?) {
+                val tv = view as TextView
+                val reading = tv.text.toString()
+                stringHolder.add(reading)
+                Log.d("elapsedTime", "element reading = $reading")
+            }
+
+        })
+
+        val timerString = stringHolder[0]
+        val hms = timerString.split(":")
+        // Assume for now that we're under 60 seconds.  Don't count minutes/hours.
+        val secs = hms.last().toInt()
+        return secs
+    }
 }
+
+// A wrapper that can be used to represent a dataseeding QuizQuestion or a canvasapi2 QuizQuestion
+private class QuizQuestionWrapper {
+    var questionName: String?
+    var questionType: String?
+    var questionText: String?
+    var answers: MutableList<QuizAnswerWrapper>?
+
+    constructor(question: com.instructure.dataseeding.model.QuizQuestion) {
+        questionName = question.questionName
+        questionType = question.questionType
+        questionText = question.questionText
+        answers = mutableListOf<QuizAnswerWrapper>()
+        for(answer in question.answers) {
+            answers!!.add(QuizAnswerWrapper(answer))
+        }
+    }
+
+    constructor(question: com.instructure.canvasapi2.models.QuizQuestion) {
+        questionName = question.questionName
+        questionType = question.questionTypeString
+        questionText = question.questionText
+        answers = mutableListOf<QuizAnswerWrapper>()
+        if(question.answers != null) {
+            for (answer in question.answers!!) {
+                answers!!.add(QuizAnswerWrapper(answer))
+            }
+        }
+    }
+}
+
+// A wrapper class that can be used to represent a dataseeding QuizAnswer or
+// a canvasapi2 QuizAnswer.
+private class QuizAnswerWrapper {
+    var answerText: String?
+    var answerWeight: Int?
+    constructor(answer: com.instructure.dataseeding.model.QuizAnswer) {
+        answerText = answer.text
+        answerWeight = answer.weight
+    }
+
+    constructor(answer: com.instructure.canvasapi2.models.QuizAnswer) {
+        answerText = answer.answerText
+        answerWeight = answer.answerWeight
+    }
+}
+
