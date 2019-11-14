@@ -58,14 +58,25 @@ class StudentContextPresenter(
         viewCallback?.onRefreshStarted()
 
         apiJob = tryWeave {
-            awaitQLPaginated<StudentContextCardQuery.Data> {
+            awaitQLPaginated<Data> {
                 onRequest {
                     viewCallback?.showLoadMoreIndicator(true)
                     StudentContextManager.getStudentContext(courseId, studentId, SUBMISSION_PAGE_SIZE, forceNetwork, it)
                 }
 
                 onResponse { data ->
-                    course = data.course as StudentContextCardQuery.AsCourse
+                    // It's possible they routed here via a group, which we don't support in Teacher app yet
+                    if (data.course == null) {
+                        viewCallback?.onErrorLoading(false)
+                        return@onResponse null
+                    }
+                    course = data.course as AsCourse
+
+                    // If the user was removed from the course, we won't be able to view their information
+                    if (course.users!!.edges!!.isEmpty()) {
+                        viewCallback?.onErrorLoading(false)
+                        return@onResponse null
+                    }
                     if (!isBaseDataLoaded) {
                         student = course.users!!.edges!!.first().user!!
                         studentSummary = student.analytics

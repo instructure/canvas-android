@@ -148,7 +148,10 @@ class InboxFragment : BaseSyncFragment<Conversation, InboxPresenter, InboxView, 
 
         //phone specific event for deletion
         EventBus.getDefault().getStickyEvent(ConversationDeletedEvent::class.java)?.once(javaClass.simpleName + ".onResume()") {
-            presenter.data.removeItemAt(it)
+            // The presenter's data could be cleared on a refresh, then a race condition here will remove an item from an empty list
+            if (presenter.data.size() > it) {
+                presenter.data.removeItemAt(it)
+            }
         }
 
     }
