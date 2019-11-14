@@ -19,6 +19,7 @@ import 'package:built_value/iso_8601_date_time_serializer.dart';
 import 'package:built_value/serializer.dart';
 import 'package:built_value/standard_json_plugin.dart';
 import 'package:flutter_parent/models/assignment.dart';
+import 'package:flutter_parent/models/canvas_token.dart';
 import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/models/enrollment.dart';
 import 'package:flutter_parent/models/grade.dart';
@@ -33,19 +34,21 @@ part 'serializers.g.dart';
 /// have it watch for changes and automatically build if you run `flutter pub run build_runner watch`.
 @SerializersFor([
   Assignment,
+  CanvasToken,
   Course,
   Enrollment,
   Grade,
   MobileVerifyResult,
   SchoolDomain,
   Submission,
-  User
+  User,
 ])
 final Serializers _serializers = _$_serializers;
 
 Serializers jsonSerializers = (_serializers.toBuilder()
       ..addPlugin(StandardJsonPlugin())
-      ..add(Iso8601DateTimeSerializer()))
+      ..add(Iso8601DateTimeSerializer())
+      ..add(ResultEnumSerializer()))
     .build();
 
 T deserialize<T>(dynamic value) => jsonSerializers.deserializeWith<T>(jsonSerializers.serializerForType(T), value);

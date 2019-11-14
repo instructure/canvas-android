@@ -46,13 +46,8 @@ class _TestAppState extends State<TestApp> {
     // So that widget tests don't fail when a screen uses shared preferences. Provide values in the constructor
     SharedPreferences.setMockInitialValues(widget.mockPrefs);
 
-    // Probably don't want to do an async set state here, but it's better than calling ApiPrefs.init in _every_ test
-    ApiPrefs.init().then((_) {
-      SchedulerBinding.instance.addPostFrameCallback((_) {
-        // If we're not mounted, can't set state
-        if (mounted) setState(() => _locale = ApiPrefs.effectiveLocale());
-      });
-    });
+    // Init api prefs here so that each test doesn't have to
+    ApiPrefs.init();
   }
 
   @override

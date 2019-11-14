@@ -12,14 +12,13 @@
 /// You should have received a copy of the GNU General Public License
 /// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import 'package:flutter_parent/api/auth_api.dart';
 import 'package:flutter_parent/screens/domain_search/domain_search_interactor.dart';
+import 'package:flutter_parent/screens/web_login/web_login_interactor.dart';
 import 'package:get_it/get_it.dart';
 
 GetIt locator = GetIt.instance;
 
 void setupLocator() {
-  locator.registerLazySingleton<AuthApi>(() => AuthApi());
-
   locator.registerFactory<DomainSearchInteractor>(() => DomainSearchInteractor());
+  locator.registerFactory<WebLoginInteractor>(() => WebLoginInteractor());
 }

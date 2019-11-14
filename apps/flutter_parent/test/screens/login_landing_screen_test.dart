@@ -1,26 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/screens/domain_search/domain_search_screen.dart';
 import 'package:flutter_parent/screens/login_landing_screen.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../utils/accessibility_utils.dart';
 import '../utils/test_app.dart';
 
 void main() {
   setupLocator();
 
-  testWidgets("Opens domain search screen", (tester) async {
+  testWidgetsWithAccessibilityChecks("Opens domain search screen", (tester) async {
     await tester.pumpWidget(TestApp(LoginLandingScreen()));
     await tester.pumpAndSettle();
 
-    expect(find.text("Find School or District"), findsOneWidget);
-    await tester.tap(find.text("Find School or District"));
+    expect(find.text(AppLocalizations().findSchoolOrDistrict), findsOneWidget);
+    await tester.tap(find.text(AppLocalizations().findSchoolOrDistrict));
     await tester.pumpAndSettle();
 
     expect(find.byType(DomainSearchScreen), findsOneWidget);
+
+    // TODO: Remove this back press once DomainSearchScreen is passing accessibility checks
+    await tester.pageBack();
   });
 
-  testWidgets("Displays Snicker Doodles drawer", (tester) async {
+  testWidgetsWithAccessibilityChecks("Displays Snicker Doodles drawer", (tester) async {
     await tester.pumpWidget(TestApp(LoginLandingScreen()));
     await tester.pumpAndSettle();
 

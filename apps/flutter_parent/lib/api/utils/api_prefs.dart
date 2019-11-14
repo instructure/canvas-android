@@ -16,18 +16,22 @@ import 'dart:convert';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
-import 'package:flutter_parent/api/auth_api.dart';
+import 'package:flutter_parent/models/canvas_token.dart';
 import 'package:flutter_parent/models/mobile_verify_result.dart';
 import 'package:flutter_parent/models/serializers.dart';
 import 'package:flutter_parent/models/user.dart';
-import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:package_info/package_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiPrefs {
-  static const String KEY_TOKEN = 'token';
-  static const String KEY_DOMAIN = 'domain';
   static const String KEY_USER = 'user';
+  static const String KEY_DOMAIN = 'domain';
+
+  static const String KEY_ACCESS_TOKEN = 'access_token';
+  static const String KEY_REFRESH_TOKEN = 'refresh_token';
+
+  static const String KEY_CLIENT_ID = 'client_id';
+  static const String KEY_CLIENT_SECRET = 'client_secret';
 
   static SharedPreferences _prefs;
   static PackageInfo _packageInfo;
@@ -54,18 +58,26 @@ class ApiPrefs {
     return getAuthToken() != null && getDomain() != null;
   }
 
-  static Future<void> performLogin(MobileVerifyResult verifyResult, String code) async {
+  static Future<void> updateLoginInfo(CanvasToken tokens, MobileVerifyResult verifyResult) async {
     await init();
-    String token = await locator<AuthApi>().getToken(verifyResult, code);
-    _prefs.setString(KEY_TOKEN, token);
+    _prefs.setString(KEY_ACCESS_TOKEN, tokens.accessToken);
+    _prefs.setString(KEY_REFRESH_TOKEN, tokens.refreshToken);
     _prefs.setString(KEY_DOMAIN, verifyResult.baseUrl);
+    _prefs.setString(KEY_CLIENT_ID, verifyResult.clientId);
+    _prefs.setString(KEY_CLIENT_SECRET, verifyResult.clientSecret);
+
+    if (tokens.user != null) {
+      setUser(tokens.user);
+    }
   }
 
   static Future<void> performLogout() async {
     await init();
     return await new Future<void>.sync(() {
-      _prefs.remove(KEY_TOKEN);
+      _prefs.remove(KEY_ACCESS_TOKEN);
+      _prefs.remove(KEY_REFRESH_TOKEN);
       _prefs.remove(KEY_DOMAIN);
+      _prefs.remove(KEY_USER);
     });
   }
 
@@ -85,7 +97,7 @@ class ApiPrefs {
   static Locale effectiveLocale() {
     _checkInit();
     User user = _prefs.containsKey(KEY_USER) ? deserialize<User>(json.decode(_prefs.getString(KEY_USER))) : null;
-    List<String> userLocale = (user?.effectiveLocale ?? user?.locale ?? ui.window.locale.toLanguageTag()).split("-x-"); 
+    List<String> userLocale = (user?.effectiveLocale ?? user?.locale ?? ui.window.locale.toLanguageTag()).split("-x-");
 
     if (userLocale[0].isEmpty) {
       return null;
@@ -95,14 +107,14 @@ class ApiPrefs {
     if (userLocale.length == 1) {
       return Locale(localeParts.first, localeParts.last);
     } else {
-        return Locale.fromSubtags(
+      return Locale.fromSubtags(
         languageCode: localeParts.first,
         scriptCode: userLocale[1],
         countryCode: localeParts.last,
       );
     }
   }
-  
+
   static User getUser() {
     _checkInit();
     return _prefs.containsKey(KEY_USER) ? deserialize<User>(jsonDecode(_prefs.getString(KEY_USER))) : null;
@@ -112,14 +124,19 @@ class ApiPrefs {
 
   static String getApiUrl() => "${getDomain()}/api/v1/";
 
-  static String getDomain() {
-    _checkInit();
-    return _prefs.getString(KEY_DOMAIN);
-  }
+  static String getDomain() => _getPrefString(KEY_DOMAIN);
 
-  static String getAuthToken() {
+  static String getAuthToken() => _getPrefString(KEY_ACCESS_TOKEN);
+
+  static String getRefreshToken() => _getPrefString(KEY_REFRESH_TOKEN);
+
+  static String getClientId() => _getPrefString(KEY_CLIENT_ID);
+
+  static String getClientSecret() => _getPrefString(KEY_CLIENT_SECRET);
+
+  static String _getPrefString(String key) {
     _checkInit();
-    return _prefs.getString(KEY_TOKEN);
+    return _prefs.getString(key);
   }
 
   static Map<String, String> getHeaderMap({

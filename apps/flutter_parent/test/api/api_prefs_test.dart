@@ -15,11 +15,10 @@
 import 'dart:ui';
 
 import 'package:flutter/services.dart';
-import 'package:flutter_parent/api/auth_api.dart';
 import 'package:flutter_parent/api/utils/api_prefs.dart';
+import 'package:flutter_parent/models/canvas_token.dart';
 import 'package:flutter_parent/models/mobile_verify_result.dart';
 import 'package:flutter_parent/models/user.dart';
-import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:mockito/mockito.dart';
 import 'package:package_info/package_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -61,7 +60,7 @@ void main() {
   });
 
   test('is logged in returns false with no domain', () async {
-    SharedPreferences.setMockInitialValues({_debugKey(ApiPrefs.KEY_TOKEN): 'token'});
+    SharedPreferences.setMockInitialValues({_debugKey(ApiPrefs.KEY_ACCESS_TOKEN): 'token'});
 
     await ApiPrefs.init();
     expect(ApiPrefs.isLoggedIn(), false);
@@ -69,7 +68,7 @@ void main() {
 
   test('is logged in returns true with a token and domain', () async {
     SharedPreferences.setMockInitialValues({
-      _debugKey(ApiPrefs.KEY_TOKEN): 'token',
+      _debugKey(ApiPrefs.KEY_ACCESS_TOKEN): 'token',
       _debugKey(ApiPrefs.KEY_DOMAIN): 'domain',
     });
 
@@ -84,33 +83,43 @@ void main() {
     expect(ApiPrefs.getApiUrl(), 'domain/api/v1/');
   });
 
-  test('perform login updates token and domain', () async {
+  test('perform login updates information', () async {
     SharedPreferences.setMockInitialValues({});
 
-    final result = _mockVerifyResult('domain');
+    final verifyResult = _mockVerifyResult('domain');
+    final tokens = CanvasToken((b) => b
+      ..user = _mockUser().toBuilder()
+      ..accessToken = 'token'
+      ..refreshToken = 'refresh');
 
-    locator.registerLazySingleton<AuthApi>(() => _MockAuthApi());
-    await ApiPrefs.performLogin(result, 'code');
+    await ApiPrefs.updateLoginInfo(tokens, verifyResult);
 
-    expect(ApiPrefs.getAuthToken(), 'token');
-    expect(ApiPrefs.getDomain(), 'domain');
+    expect(ApiPrefs.getAuthToken(), tokens.accessToken);
+    expect(ApiPrefs.getRefreshToken(), tokens.refreshToken);
+    expect(ApiPrefs.getDomain(), verifyResult.baseUrl);
+    expect(ApiPrefs.getClientId(), verifyResult.clientId);
+    expect(ApiPrefs.getClientSecret(), verifyResult.clientSecret);
+    expect(ApiPrefs.getUser(), tokens.user);
   });
 
   test('perform logout clears out token and domain', () async {
     SharedPreferences.setMockInitialValues({
       _debugKey(ApiPrefs.KEY_DOMAIN): 'domain',
-      _debugKey(ApiPrefs.KEY_TOKEN): 'token',
+      _debugKey(ApiPrefs.KEY_ACCESS_TOKEN): 'token',
+      _debugKey(ApiPrefs.KEY_REFRESH_TOKEN): 'refresh',
     });
 
     await ApiPrefs.init();
 
     expect(ApiPrefs.getDomain(), 'domain');
     expect(ApiPrefs.getAuthToken(), 'token');
+    expect(ApiPrefs.getRefreshToken(), 'refresh');
 
     await ApiPrefs.performLogout();
 
     expect(ApiPrefs.getDomain(), null);
     expect(ApiPrefs.getAuthToken(), null);
+    expect(ApiPrefs.getRefreshToken(), null);
   });
 
   test('setting user updates stored user', () async {
@@ -219,7 +228,7 @@ void main() {
 
   test('getHeaderMap returns a map with the token from prefs', () async {
     SharedPreferences.setMockInitialValues({
-      _debugKey(ApiPrefs.KEY_TOKEN): 'token',
+      _debugKey(ApiPrefs.KEY_ACCESS_TOKEN): 'token',
     });
 
     await ApiPrefs.init();
@@ -228,7 +237,7 @@ void main() {
 
   test('getHeaderMap returns a map with the token passed in', () async {
     SharedPreferences.setMockInitialValues({
-      _debugKey(ApiPrefs.KEY_TOKEN): 'token',
+      _debugKey(ApiPrefs.KEY_ACCESS_TOKEN): 'token',
     });
 
     await ApiPrefs.init();
@@ -263,7 +272,7 @@ MobileVerifyResult _mockVerifyResult(String domain) => MobileVerifyResult((b) {
       return b
         ..baseUrl = domain
         ..authorized = true
-        ..result = 200
+        ..result = VerifyResultEnum.success
         ..clientId = 'clientId'
         ..clientSecret = 'clientSecret'
         ..apiKey = 'key'
@@ -281,11 +290,6 @@ User _mockUser() => User((b) {
         ..effectiveLocale = 'jp'
         ..build();
     });
-
-class _MockAuthApi extends Mock implements AuthApi {
-  @override
-  Future<String> getToken(MobileVerifyResult verifyResult, String requestCode) async => 'token';
-}
 
 abstract class _Rebuildable {
   void rebuild(Locale locale);
