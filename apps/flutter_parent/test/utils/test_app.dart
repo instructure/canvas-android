@@ -19,6 +19,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_parent/api/utils/api_prefs.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
+import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TestApp extends StatefulWidget {
@@ -45,32 +46,27 @@ class _TestAppState extends State<TestApp> {
     // So that widget tests don't fail when a screen uses shared preferences. Provide values in the constructor
     SharedPreferences.setMockInitialValues(widget.mockPrefs);
 
-    // Probably don't want to do an async set state here, but it's better than calling ApiPrefs.init in _every_ test
-    ApiPrefs.init().then((_) {
-      SchedulerBinding.instance.addPostFrameCallback((_) {
-        // If we're not mounted, can't set state
-        if (mounted) setState(() => _locale = ApiPrefs.effectiveLocale());
-      });
-    });
+    // Init api prefs here so that each test doesn't have to
+    ApiPrefs.init();
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Canvas Parent',
-      locale: _locale,
-      localizationsDelegates: const [
-        AppLocalizations.delegate,
-        // Material components use these delegate to provide default localization
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-      ],
-      supportedLocales: AppLocalizations.delegate.supportedLocales,
-      localeResolutionCallback: _localeCallback(),
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return ParentTheme(
+      builder: (context, themeData) => MaterialApp(
+        title: 'Canvas Parent',
+        locale: _locale,
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          // Material components use these delegate to provide default localization
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        supportedLocales: AppLocalizations.delegate.supportedLocales,
+        localeResolutionCallback: _localeCallback(),
+        theme: themeData,
+        home: widget.home,
       ),
-      home: widget.home,
     );
   }
 

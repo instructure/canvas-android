@@ -82,7 +82,7 @@ object Randomizer {
     fun randomCourseGroupCategoryName(): String = faker.harryPotter().character()
 
     /** Creates random name for an assignment */
-    fun randomAssignmentName(): String = "${faker.starTrek().character()} Assignment"
+    fun randomAssignmentName(): String = "${faker.starTrek().character()} ${UUID.randomUUID()}"
 
 }
 

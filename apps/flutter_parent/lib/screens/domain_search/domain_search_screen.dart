@@ -17,6 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/school_domain.dart';
 import 'package:flutter_parent/screens/web_login/web_login_screen.dart';
+import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
@@ -93,111 +94,103 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        textTheme: Theme.of(context).primaryTextTheme.apply(bodyColor: Colors.black),
-        iconTheme: Theme.of(context).primaryIconTheme.copyWith(color: Colors.black),
-        title: Text(
-          AppLocalizations.of(context).findSchoolOrDistrict,
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+    return DefaultParentTheme(
+      builder: (context) => Scaffold(
+        appBar: AppBar(
+          textTheme: Theme.of(context).textTheme,
+          iconTheme: Theme.of(context).iconTheme,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          title: Text(
+            AppLocalizations.of(context).findSchoolOrDistrict,
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+          ),
+          elevation: 0,
+          actions: <Widget>[
+            FlatButton(
+              child: Text(AppLocalizations.of(context).next.toUpperCase()),
+              textColor: Theme.of(context).accentColor,
+              onPressed: _query.isEmpty ? null : () => _next(context),
+            ),
+          ],
         ),
-        elevation: 0,
-        backgroundColor: Colors.white,
-        actions: <Widget>[
-          FlatButton(
-            child: Text(AppLocalizations.of(context).next.toUpperCase()),
-            textColor: Colors.blue,
-            onPressed: _query.isEmpty ? null : () => _next(context),
-          ),
-        ],
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Divider(
-            height: 0,
-            color: Colors.grey,
-          ),
-          TextField(
-            maxLines: 1,
-            autofocus: true,
-            controller: _inputController,
-            style: TextStyle(fontSize: 18),
-            keyboardType: TextInputType.url,
-            textInputAction: TextInputAction.go,
-            onSubmitted: (_) => _query.isNotEmpty ? _next(context) : null,
-            decoration: InputDecoration(
-              contentPadding: EdgeInsets.all(16),
-              border: InputBorder.none,
-              hintText: AppLocalizations.of(context).domainSearchInputHint,
-              suffixIcon: _query.isEmpty
-                  ? null
-                  : IconButton(
-                      key: Key("clear-query"),
-                      icon: Icon(Icons.clear),
-                      onPressed: () {
-                        // Need to perform this post-frame due to bug while widget testing
-                        // See https://github.com/flutter/flutter/issues/17647
-                        WidgetsBinding.instance.addPostFrameCallback((_) {
-                          _inputController.text = "";
-                          _searchDomains("");
-                        });
-                      },
-                    ),
-            ),
-            onChanged: (query) => _searchDomains(query),
-          ),
-          SizedBox(
-            height: 2,
-            child: LinearProgressIndicator(
-              value: _loading ? null : 0,
-              backgroundColor: Colors.transparent,
-            ),
-          ),
-          Divider(
-            height: 0,
-            color: Colors.grey,
-          ),
-          Flexible(
-            flex: 10000,
-            child: ListView.separated(
-              shrinkWrap: true,
-              separatorBuilder: (context, index) => Divider(
-                height: 0,
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Divider(height: 1),
+            TextField(
+              maxLines: 1,
+              autofocus: true,
+              controller: _inputController,
+              style: TextStyle(fontSize: 18),
+              keyboardType: TextInputType.url,
+              textInputAction: TextInputAction.go,
+              onSubmitted: (_) => _query.isNotEmpty ? _next(context) : null,
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.all(16),
+                border: InputBorder.none,
+                hintText: AppLocalizations.of(context).domainSearchInputHint,
+                suffixIcon: _query.isEmpty
+                    ? null
+                    : IconButton(
+                        key: Key("clear-query"),
+                        icon: Icon(Icons.clear),
+                        onPressed: () {
+                          // Need to perform this post-frame due to bug while widget testing
+                          // See https://github.com/flutter/flutter/issues/17647
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            _inputController.text = "";
+                            _searchDomains("");
+                          });
+                        },
+                      ),
               ),
-              itemCount: _schoolDomains.length + (_error ? 1 : 0),
-              itemBuilder: (context, index) {
-                if (_error)
-                  return Center(
-                      child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Text(AppLocalizations.of(context).noDomainResults(_query)),
-                  ));
-                var item = _schoolDomains[index];
-                return ListTile(
-                  title: Text(item.name),
-                  onTap: () => QuickNav.push(
-                      context, WebLoginScreen(item.domain, authenticationProvider: item.authenticationProvider)),
-                );
-              },
+              onChanged: (query) => _searchDomains(query),
             ),
-          ),
-          Divider(
-            height: 0,
-            color: Colors.grey,
-          ),
-          Center(
-            child: FlatButton(
-              key: Key("help-button"),
-              child: Text(AppLocalizations.of(context).domainSearchHelpLabel),
-              textTheme: ButtonTextTheme.accent,
-              onPressed: () {
-                _showHelpDialog(context);
-              },
+            SizedBox(
+              height: 2,
+              child: LinearProgressIndicator(
+                value: _loading ? null : 0,
+                backgroundColor: Colors.transparent,
+              ),
             ),
-          ),
-        ],
+            Divider(height: 1),
+            Flexible(
+              flex: 10000,
+              child: ListView.separated(
+                shrinkWrap: true,
+                separatorBuilder: (context, index) => Divider(
+                  height: 0,
+                ),
+                itemCount: _schoolDomains.length + (_error ? 1 : 0),
+                itemBuilder: (context, index) {
+                  if (_error)
+                    return Center(
+                        child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Text(AppLocalizations.of(context).noDomainResults(_query)),
+                    ));
+                  var item = _schoolDomains[index];
+                  return ListTile(
+                    title: Text(item.name),
+                    onTap: () => QuickNav.push(
+                        context, WebLoginScreen(item.domain, authenticationProvider: item.authenticationProvider)),
+                  );
+                },
+              ),
+            ),
+            Divider(height: 1),
+            Center(
+              child: FlatButton(
+                key: Key("help-button"),
+                child: Text(AppLocalizations.of(context).domainSearchHelpLabel),
+                textTheme: ButtonTextTheme.accent,
+                onPressed: () {
+                  _showHelpDialog(context);
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

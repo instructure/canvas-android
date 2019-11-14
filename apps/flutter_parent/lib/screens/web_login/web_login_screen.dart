@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/mobile_verify_result.dart';
 import 'package:flutter_parent/screens/web_login/web_login_interactor.dart';
+import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -23,16 +24,18 @@ class WebLoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        textTheme: Theme.of(context).primaryTextTheme.apply(bodyColor: Colors.black),
-        iconTheme: Theme.of(context).primaryIconTheme.copyWith(color: Colors.black),
-        title: Text(domain),
-        elevation: 0,
-        backgroundColor: Colors.white,
+    return DefaultParentTheme(
+      builder: (context) => Scaffold(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        appBar: AppBar(
+          textTheme: Theme.of(context).textTheme,
+          iconTheme: Theme.of(context).iconTheme,
+          title: Text(domain),
+          elevation: 0,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        ),
+        body: _webLoginBody(),
       ),
-      body: _webLoginBody(),
     );
   }
 
@@ -98,7 +101,7 @@ class WebLoginScreen extends StatelessWidget {
       String oAuthRequest = url.substring(url.indexOf(successUrl) + successUrl.length);
       locator<WebLoginInteractor>().performLogin(result, oAuthRequest).then((_) {
         // TODO: Wire up DashboardScreen once implemented
-//        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Dashboardscreen()));
+//        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => DashboardScreen()));
       });
       return NavigationDecision.prevent;
     } else if (request.url.contains(errorUrl)) {

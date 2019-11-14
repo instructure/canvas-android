@@ -71,6 +71,24 @@ flutter pub run intl_translation:generate_from_arb --output-dir=lib/l10n/generat
 
 ---
 
+### Viewing Code Coverage
+To view code coverage, first install the `lcov` tool (`brew install lcov` for macOS).
+Then, run this command from the root of the flutter project directory:
+```
+flutter pub run tools/code_coverage
+```
+This will run the project's unit tests with coverage enabled, remove 
+excluded files from the resulting coverage info, generate an HTML report 
+from that info, and open the report in the browser. You may skip opening 
+the report in the browser with the `--dont-open` flag.
+  
+Exclusions can be configured by editing `tools/codecov_exclusions`. Note 
+that this script is meant to be used locally by devs, but will hopefully 
+serve as a starting point when we eventually wire up proper code coverage 
+reporting via CI.
+
+---
+
 #### Unless otherwise noted, all parts of this application are licensed under the GPLv3 License.
 
 ```
