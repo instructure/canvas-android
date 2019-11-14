@@ -15,12 +15,20 @@
  */
 package com.instructure.canvas.espresso.mockCanvas.endpoints
 
+import android.util.Log
 import com.instructure.canvas.espresso.mockCanvas.Endpoint
 import com.instructure.canvas.espresso.mockCanvas.utils.LongId
 import com.instructure.canvas.espresso.mockCanvas.utils.PathVars
+import com.instructure.canvas.espresso.mockCanvas.utils.grabJsonFromMultiPartBody
+import com.instructure.canvas.espresso.mockCanvas.utils.noContentResponse
 import com.instructure.canvas.espresso.mockCanvas.utils.successResponse
 import com.instructure.canvas.espresso.mockCanvas.utils.unauthorizedResponse
+import com.instructure.canvas.espresso.mockCanvas.utils.user
+import com.instructure.canvasapi2.models.Author
 import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.models.SubmissionComment
+import com.instructure.canvasapi2.type.SubmissionType
+import java.util.*
 
 /**
  * Submission index for a specific course/assignment
@@ -34,15 +42,47 @@ object SubmissionIndexEndpoint : Endpoint(
         LongId(PathVars::userId) to SubmissionUserEndpoint,
     response = {
         POST {
-            val submission: Submission? = data.submissions[pathVars.courseId]!!
-                    .find { it.assignmentId == pathVars.assignmentId }
+            val sub = request.url().queryParameter("submission")
+            val type = request.url().queryParameter("submission[submission_type]")
+            Log.d("<--", "SubmissionIndex submission parameter: $sub")
+            Log.d("<--", "SubmissionIndex submission_type parameter: $type")
 
-            // Now we need to modify the assignment in the data value so it reflects this
+            // Grab the assignment
             val assignment = data.assignmentGroups[pathVars.courseId]!!
                     .flatMap { it.assignments }
-                    .find { it.id == pathVars.assignmentId }
+                    .find { it.id == pathVars.assignmentId }!!
 
-            assignment?.submission = submission
+            val submissionUrl = request.url().queryParameter("submission[url]")
+            val submissionType = request.url().queryParameter("submission[submission_type]")
+            val submissionBody = request.url().queryParameter("submission[body]")
+            val submission = Submission(
+                    id = data.newItemId(),
+                    submittedAt = Calendar.getInstance().time,
+                    body = submissionBody,
+                    assignmentId = pathVars.assignmentId,
+                    //assignment = assignment,
+                    submissionType = submissionType,
+                    previewUrl = submissionUrl,
+                    url = submissionUrl,
+                    workflowState = "submitted", // Is this the right setting
+                    userId = request.user!!.id
+
+            )
+
+            Log.d("<--", "submissionType=$submissionType, submission = $submission")
+
+            var submissionList = data.submissions[pathVars.assignmentId]
+            if(submissionList == null) {
+                submissionList = mutableListOf<Submission>()
+                data.submissions[pathVars.assignmentId] = submissionList!!
+            }
+            submissionList!!.add(submission)
+//            val submission: Submission? = data.submissions[pathVars.courseId]!!
+//                    .find { it.assignmentId == pathVars.assignmentId }
+
+
+            // Now we need to modify the assignment in the data value so it reflects this
+            assignment.submission = submission
 
             if(submission != null) {
                 request.successResponse(submission)
@@ -56,12 +96,52 @@ object SubmissionIndexEndpoint : Endpoint(
 /**
  * GET - Endpoint for a specific submission for a student from a specific assignment from a specific
  * course
- *
+ * PUT - Add a submission comment or a grade
  */
 object SubmissionUserEndpoint : Endpoint(
     response = {
         GET {
-            request.successResponse(Submission())
+            // We may need to tweak this later.
+            val submission = data.submissions[pathVars.assignmentId]?.find {it.userId == request.user!!.id}
+            if(submission != null) {
+                Log.d("<--", "get-submission-user comments: ${submission.submissionComments.joinToString()}")
+                request.successResponse(submission)
+            }
+            else {
+                request.unauthorizedResponse()
+            }
+        }
+
+        PUT { // add a comment or grade the submission
+            val submission = data.submissions[pathVars.assignmentId]?.find {it.userId == request.user!!.id}
+            if(submission != null) {
+                val comment = request.url().queryParameter("comment[text_comment]")
+                val user = request.user!!
+                if(comment != null && comment.length > 0) {
+                    val newCommentList = mutableListOf<SubmissionComment>().apply {addAll(submission.submissionComments)}
+                    newCommentList.add(SubmissionComment(
+                            id = data.newItemId(),
+                            authorId = user.id,
+                            authorName = user.name,
+                            comment = comment,
+                            createdAt = Calendar.getInstance().time,
+                            author = Author(
+                                    id = user.id,
+                                    displayName = user.shortName
+                            )
+                    ))
+                    submission.submissionComments = newCommentList
+                    Log.d("<--", "put-submission-user comments: ${submission.submissionComments.joinToString()}")
+                    request.successResponse(submission)
+                }
+                else {
+                    // grade?
+                    throw Exception("Unhandled submission-user-put")
+                }
+            }
+            else {
+                request.unauthorizedResponse()
+            }
         }
     }
 )

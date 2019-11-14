@@ -16,16 +16,26 @@
  */
 package com.instructure.student.ui.interaction
 
+import android.os.SystemClock.sleep
 import com.instructure.canvas.espresso.Stub
+import com.instructure.canvas.espresso.mockCanvas.AssignmentGroupType
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.addAssignment
+import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Course
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.tokenLogin
 import org.junit.Test
 
 class SubmissionDetailsInteractionTest : StudentTest() {
     override fun displaysPageObjects() = Unit // Not used for interaction tests
+
+    private lateinit var course: Course
 
     @Stub
     @Test
@@ -39,6 +49,25 @@ class SubmissionDetailsInteractionTest : StudentTest() {
     @TestMetaData(Priority.P0, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, true)
     fun testComments_addCommentToSubmission() {
         // Should be able to add a comment on a submission
+
+        val data = getToCourse()
+        val assignment = data.addAssignment(
+                courseId =  course.id,
+                groupType = AssignmentGroupType.UPCOMING,
+                submissionType = Assignment.SubmissionType.ONLINE_URL,
+                userSubmitted = true
+        )
+
+        courseBrowserPage.selectAssignments()
+        assignmentListPage.clickAssignment(assignment)
+        assignmentDetailsPage.clickSubmit()
+        urlSubmissionUploadPage.submitText("https://google.com")
+        sleep(1000)
+        assignmentDetailsPage.verifyAssignmentSubmitted() // flaky.  Sleep above?
+        assignmentDetailsPage.goToSubmissionDetails()
+        submissionDetailsPage.openComments()
+        submissionDetailsPage.addAndSendComment("Hey!")
+        submissionDetailsPage.assertCommentDisplayed("Hey!", data.users.values.first())
     }
 
     @Stub
@@ -49,13 +78,16 @@ class SubmissionDetailsInteractionTest : StudentTest() {
 
     }
 
+    // Video comment testing is in AssignmentsE2ETest.testMediaCommentsE2E
     @Stub
     @Test
     @TestMetaData(Priority.P1, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, true)
     fun testComments_addVideoCommentToSubmission() {
         // Should be able to add a video comment on a submission
+
     }
 
+    // Audio comment testing is in AssignmentsE2ETest.testMediaCommentsE2E
     @Stub
     @Test
     @TestMetaData(Priority.P1, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, true)
@@ -75,5 +107,30 @@ class SubmissionDetailsInteractionTest : StudentTest() {
     @TestMetaData(Priority.P2, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, true)
     fun testComments_audioCommentPlayback() {
         // After recording an audio comment, user should be able to hear an audio playback
+    }
+
+    // Mock a specified number of students and courses, sign in, then navigate to course browser page for
+    // first course.
+    private fun getToCourse(
+            studentCount: Int = 1,
+            courseCount: Int = 1): MockCanvas {
+
+        // Basic info
+        val data = MockCanvas.init(
+                studentCount = studentCount,
+                courseCount = courseCount,
+                favoriteCourseCount = courseCount)
+        course = data.courses.values.first()
+
+        // Sign in
+        val student = data.students[0]
+        val token = data.tokenFor(student)!!
+        tokenLogin(data.domain, token, student)
+        dashboardPage.waitForRender()
+
+        // Navigate to the (first) course
+        dashboardPage.selectCourse(course)
+
+        return data
     }
 }

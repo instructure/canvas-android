@@ -116,8 +116,8 @@ class MockCanvas {
     /** Map of course ID to assignment groups */
     val assignmentGroups = mutableMapOf<Long, List<AssignmentGroup>>()
 
-    /** Map of course ID to a list of submissions */
-    val submissions = mutableMapOf<Long, List<Submission>>()
+    /** Map of assignment ID to a list of submissions */
+    val submissions = mutableMapOf<Long, MutableList<Submission>>()
 
     var ltiTool: LTITool? = null
 
@@ -332,7 +332,7 @@ fun MockCanvas.addAssignmentsToGroups(course: Course, assignmentCountPerGroup: I
 
     for (i in 0 until assignmentCountPerGroup) {
         overdueAssignments.add(Assignment(
-            id = i.toLong(),
+            id = newItemId(),
             name = Randomizer.randomAssignmentName(),
             courseId = course.id,
             submission = Submission(grade = null, submissionType = Assignment.SubmissionType.ONLINE_UPLOAD.apiString),
@@ -340,21 +340,21 @@ fun MockCanvas.addAssignmentsToGroups(course: Course, assignmentCountPerGroup: I
             dueAt = pastDueDate
         ))
         upcomingAssignments.add(Assignment(
-            id = (assignmentCountPerGroup * 2) + i.toLong(),
+            id = newItemId(),
             name = Randomizer.randomAssignmentName(),
             courseId = course.id,
             submission = Submission(),
             dueAt = futureDueDate
         ))
         undatedAssignments.add(Assignment(
-            id = (assignmentCountPerGroup * 3) + i.toLong(),
+            id = newItemId(),
             name = Randomizer.randomAssignmentName(),
             courseId = course.id,
             submission = Submission(),
             dueAt = null
         ))
         pastAssignments.add(Assignment(
-            id = (assignmentCountPerGroup * 4) + i.toLong(),
+            id = newItemId(),
             name = Randomizer.randomAssignmentName(),
             courseId = course.id,
             submission = Submission(grade = "A", submissionType = Assignment.SubmissionType.ONLINE_UPLOAD.apiString),
@@ -384,9 +384,10 @@ fun MockCanvas.addAssignment(
         groupType: AssignmentGroupType,
         submissionType: Assignment.SubmissionType,
         isQuizzesNext: Boolean = false,
-        lockInfo : LockInfo? = null) : Assignment {
-    val assignmentId = 123L
-    val assignmentGroupId = 123L
+        lockInfo : LockInfo? = null,
+        userSubmitted: Boolean = false) : Assignment {
+    val assignmentId = newItemId()
+    val assignmentGroupId = newItemId()
     var assignment = Assignment(
         id = assignmentId,
         assignmentGroupId = assignmentGroupId,
@@ -394,7 +395,8 @@ fun MockCanvas.addAssignment(
         name = Randomizer.randomAssignmentName(),
         submissionTypesRaw = listOf(submissionType.apiString),
         lockInfo = lockInfo,
-        lockedForUser = lockInfo != null
+        lockedForUser = lockInfo != null,
+        userSubmitted = userSubmitted
     )
 
     val futureDueDate = OffsetDateTime.now().plusWeeks(1).toApiString()
@@ -446,8 +448,8 @@ fun MockCanvas.addAssignment(
  *
  * NOTE - This function does not add the submission to the assignment groups map, that happens in the POST end point for submissions.
  * */
-fun MockCanvas.addSubmission(courseId: Long, submission: Submission, assignmentId: Long?) {
-    submissions[courseId] = if (assignmentId != null) listOf(submission.copy(assignmentId = assignmentId)) else listOf(submission)
+fun MockCanvas.addSubmission(courseId: Long, submission: Submission, assignmentId: Long) {
+    submissions[assignmentId] = mutableListOf(submission.copy(assignmentId = assignmentId))
 }
 
 fun MockCanvas.addLTITool(name: String, url: String): LTITool {

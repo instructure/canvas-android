@@ -23,6 +23,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.scrollRecyclerView
+import com.instructure.canvasapi2.models.User
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.espresso.OnViewWithStringTextIgnoreCase
 import com.instructure.espresso.assertDisplayed
@@ -53,10 +54,42 @@ open class SubmissionDetailsPage : BasePage(R.id.submissionDetails) {
      * [user] is the author of the comment
      */
     fun assertCommentDisplayed(description: String, user: CanvasUserApiModel) {
+        assertCommentDisplayedCommon(description, user.shortName)
+    }
+
+    /**
+     * Assert that a comment is displayed
+     * [description] contains some text that is in the comment
+     * [user] is the author of the comment
+     */
+    fun assertCommentDisplayed(description: String, user: User) {
+        assertCommentDisplayedCommon(description, user.shortName!!)
+    }
+
+    private fun assertCommentDisplayedCommon(description: String, shortUserName: String) {
         val commentMatcher = allOf(
                 withId(R.id.commentHolder),
-                hasDescendant(allOf(withText(user.shortName), withId(R.id.userNameTextView))),
+                hasDescendant(allOf(withText(shortUserName), withId(R.id.userNameTextView))),
                 hasDescendant(allOf(withText(containsString(description)), anyOf(withId(R.id.titleTextView), withId(R.id.commentTextView))))
+        )
+
+        submissionCommentsRenderPage.scrollAndAssertDisplayed(commentMatcher)
+
+    }
+
+    fun assertVideoCommentDisplayed() {
+        val commentMatcher = allOf(
+                withId(R.id.commentHolder),
+                hasDescendant(allOf(containsTextCaseInsensitive("video"), withId(R.id.attachmentNameTextView)))
+        )
+
+        submissionCommentsRenderPage.scrollAndAssertDisplayed(commentMatcher)
+    }
+
+    fun assertAudioCommentDisplayed() {
+        val commentMatcher = allOf(
+                withId(R.id.commentHolder),
+                hasDescendant(allOf(containsTextCaseInsensitive("audio"), withId(R.id.attachmentNameTextView)))
         )
 
         submissionCommentsRenderPage.scrollAndAssertDisplayed(commentMatcher)
@@ -86,6 +119,14 @@ open class SubmissionDetailsPage : BasePage(R.id.submissionDetails) {
 
     fun addAndSendComment(comment: String) {
         submissionCommentsRenderPage.addAndSendComment(comment)
+    }
+
+    fun addAndSendVideoComment() {
+        submissionCommentsRenderPage.addAndSendVideoComment()
+    }
+
+    fun addAndSendAudioComment() {
+        submissionCommentsRenderPage.addAndSendAudioComment()
     }
 
 }
