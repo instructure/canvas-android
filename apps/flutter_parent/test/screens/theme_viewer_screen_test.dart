@@ -107,13 +107,13 @@ void main() {
     ThemeViewerScreen.scaffoldKey.currentState.openDrawer();
     await tester.pumpAndSettle();
 
-    // Switch student color to crimson
+    // Switch student color to 'raspberry'
     await tester.tap(find.text("Student Color 1"));
     await tester.pump();
     await tester.tap(find.text("Student Color 4").last);
     await tester.pumpAndSettle();
 
-    StudentColorSet expected = StudentColorSet.crimson;
+    StudentColorSet expected = StudentColorSet.raspberry;
     Color actualColor() => (tester.widget<Container>(studentColor()).decoration as BoxDecoration).color;
 
     // Light mode, normal contrast.
