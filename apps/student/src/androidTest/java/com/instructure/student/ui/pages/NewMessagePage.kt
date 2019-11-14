@@ -25,6 +25,8 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.User
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.dataseeding.model.GroupApiModel
@@ -51,7 +53,13 @@ class NewMessagePage : BasePage() {
     fun selectCourse(course: CourseApiModel) {
         coursesSpinner.assertDisplayed()
         coursesSpinner.click()
-        onView(ViewMatchers.withText(course.name)).click()
+        onView(withText(course.name)).click()
+    }
+
+    fun selectCourse(course: Course) {
+        coursesSpinner.assertDisplayed()
+        coursesSpinner.click()
+        onView(withText(course.name)).click()
     }
 
     fun selectGroup(group: GroupApiModel) {
@@ -68,6 +76,22 @@ class NewMessagePage : BasePage() {
         addContactsButton.click()
         if(!isGroupRecipient) onView(withText("Students")).click()
         onView(withText(user.shortName)).click()
+        onView(withText(R.string.done)).click()
+    }
+
+    fun setRecipient(user: User, userType: String, isGroupRecipient: Boolean = false) {
+        addContactsButton.click()
+        if(!isGroupRecipient) onView(withText(userType)).click()
+        onView(withText(user.shortName)).click()
+        onView(withText(R.string.done)).click()
+    }
+
+    fun setRecipients(userList: List<User>, userType: String, isGroupRecipient: Boolean = false) {
+        addContactsButton.click()
+        if(!isGroupRecipient) onView(withText(userType)).click()
+        userList.forEach {
+            onView(withText(it.shortName)).click()
+        }
         onView(withText(R.string.done)).click()
     }
 

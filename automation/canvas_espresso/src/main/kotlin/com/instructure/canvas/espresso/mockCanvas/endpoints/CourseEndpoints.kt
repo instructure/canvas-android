@@ -18,25 +18,12 @@ package com.instructure.canvas.espresso.mockCanvas.endpoints
 
 import android.util.Log
 import com.google.gson.Gson
-import com.google.gson.JsonObject
 import com.instructure.canvas.espresso.mockCanvas.Endpoint
 import com.instructure.canvas.espresso.mockCanvas.addDiscussionTopicToCourse
 import com.instructure.canvas.espresso.mockCanvas.addReplyToDiscussion
 import com.instructure.canvas.espresso.mockCanvas.endpoint
 import com.instructure.canvas.espresso.mockCanvas.utils.*
-import com.instructure.canvasapi2.models.DiscussionEntry
-import com.instructure.canvasapi2.models.DiscussionParticipant
-import com.instructure.canvasapi2.models.DiscussionTopic
-import com.instructure.canvasapi2.models.DiscussionTopicHeader
-import com.instructure.canvasapi2.models.DiscussionTopicPermission
-import com.instructure.canvasapi2.models.ModuleObject
-import com.instructure.canvasapi2.models.QuizSubmission
-import com.instructure.canvasapi2.models.QuizSubmissionResponse
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
-import okio.Buffer
-import retrofit2.http.Multipart
-import java.time.Instant
+import com.instructure.canvasapi2.models.*
 import java.util.*
 
 /**
@@ -77,6 +64,7 @@ object CourseEndpoint : Endpoint(
         Segment("discussion_topics") to CourseDiscussionTopicListEndpoint,
         Segment("modules") to CourseModuleListEndpoint,
         Segment("quizzes") to CourseQuizListEndpoint,
+        Segment("permissions") to CoursePermissionsEndpoint,
 
         response = {
             GET {

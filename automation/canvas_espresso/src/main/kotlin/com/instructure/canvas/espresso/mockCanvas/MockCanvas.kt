@@ -68,6 +68,9 @@ class MockCanvas {
     /** Map of course id to course object */
     val courses = mutableMapOf<Long, Course>()
 
+    /** Map of course permissions to course ids **/
+    val coursePermissions = mutableMapOf<Long, CanvasContextPermission>()
+
     /** Map of enrollment id to enrollment object */
     val enrollments = mutableMapOf<Long, Enrollment>()
 
@@ -311,6 +314,10 @@ fun MockCanvas.addCourse(
     courseTabs += course.id to mutableListOf(assignmentsTab, quizzesTab)
 
     return course
+}
+
+fun MockCanvas.addCoursePermissions(courseId: Long, permissions: CanvasContextPermission) {
+    coursePermissions[courseId] = permissions
 }
 
 /**

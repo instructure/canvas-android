@@ -15,12 +15,17 @@
  */
 package com.instructure.student.ui.interaction
 
+import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.Stub
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.tokenLogin
 import org.junit.Test
 
 class InboxInteractionTest : StudentTest() {
@@ -31,6 +36,17 @@ class InboxInteractionTest : StudentTest() {
     @TestMetaData(Priority.P0, FeatureCategory.INBOX, TestCategory.INTERACTION, true)
     fun testInbox_createAndSendMessageToIndividual() {
         // Should be able to create and send a message to an individual recipient
+        val data = goToInbox()
+        val subject = "Hodor"
+        inboxPage.pressNewMessageButton()
+        newMessagePage.selectCourse(data.courses.values.first())
+        newMessagePage.setRecipient(data.teachers.first(), userType = "Teachers")
+        newMessagePage.setSubject(subject)
+        newMessagePage.setMessage("Hodor, Hodor? Hodor!")
+        newMessagePage.hitSend()
+        Espresso.pressBack()
+        inboxPage.selectInboxFilter(InboxApi.Scope.SENT)
+        inboxPage.assertConversationDisplayed(subject)
     }
 
     @Stub
@@ -38,6 +54,17 @@ class InboxInteractionTest : StudentTest() {
     @TestMetaData(Priority.P0, FeatureCategory.INBOX, TestCategory.INTERACTION, true)
     fun testInbox_createAndSendMessageToMultiple() {
         // Should be able to create and send a message to multiple recipients
+        val data = goToInbox(teacherCount = 3)
+        val subject = "Hodor"
+        inboxPage.pressNewMessageButton()
+        newMessagePage.selectCourse(data.courses.values.first())
+        newMessagePage.setRecipients(data.teachers, "Teachers")
+        newMessagePage.setSubject(subject)
+        newMessagePage.setMessage("Hodor, Hodor? Hodor!")
+        newMessagePage.hitSend()
+        Espresso.pressBack()
+        inboxPage.selectInboxFilter(InboxApi.Scope.SENT)
+        inboxPage.assertConversationDisplayed(subject)
     }
 
     @Stub
@@ -136,5 +163,26 @@ class InboxInteractionTest : StudentTest() {
     @TestMetaData(Priority.P1, FeatureCategory.INBOX, TestCategory.INTERACTION, true)
     fun testInbox_canNotComposeAndSendToIndividualCourseMembersIfPermissionDisabled() {
         // Can NOT compose and send messages to individual course members if "Send messages to individual course members" is disabled
+    }
+
+    private fun goToInbox(
+        studentCount: Int = 1,
+        teacherCount: Int = 1,
+        courseCount: Int = 1
+    ): MockCanvas {
+        val data = MockCanvas.init(
+            studentCount = studentCount,
+            courseCount = courseCount,
+            teacherCount = teacherCount,
+            favoriteCourseCount = courseCount
+        )
+
+        val student = data.students[0]
+        val token = data.tokenFor(student)!!
+        tokenLogin(data.domain, token, student)
+        dashboardPage.waitForRender()
+        dashboardPage.clickInboxTab()
+
+        return data
     }
 }
