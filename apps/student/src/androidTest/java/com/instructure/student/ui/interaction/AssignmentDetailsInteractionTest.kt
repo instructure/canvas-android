@@ -26,6 +26,7 @@ import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.routeTo
 import com.instructure.student.ui.utils.tokenLogin
+import org.junit.Assert.assertNotNull
 import org.junit.Test
 import java.util.*
 
@@ -45,7 +46,7 @@ class AssignmentDetailsInteractionTest : StudentTest() {
         val course = data.courses.values.first()
         val student = data.students[0]
         val token = data.tokenFor(student)!!
-        val assignment = data.addAssignment(courseId = course.id, groupType = AssignmentGroupType.UPCOMING, submissionType = Assignment.SubmissionType.ONLINE_URL)
+        val assignment = data.addAssignment(courseId = course.id, submissionType = Assignment.SubmissionType.ONLINE_URL)
         val submission = data.addSubmissionForAssignment(
                 assignmentId = assignment.id,
                 userId = data.users.values.first().id,
@@ -129,7 +130,11 @@ class AssignmentDetailsInteractionTest : StudentTest() {
         tokenLogin(data.domain, token, student)
         routeTo("courses/${course.id}/assignments", data.domain)
 
-        assignmentListPage.clickAssignment(assignmentGroups.first().assignments.first())
+        // Let's find and click an assignment with a submission, so that we get meaningful
+        // data in the submission details.
+        val assignmentWithSubmission = assignmentGroups.flatMap { it.assignments }.find {it.submission != null}
+        assertNotNull("Expected at least one assignment with a submission", assignmentWithSubmission)
+        assignmentListPage.clickAssignment(assignmentWithSubmission!!)
     }
 
 }

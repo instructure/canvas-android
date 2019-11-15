@@ -328,44 +328,44 @@ fun MockCanvas.addAssignmentsToGroups(course: Course, assignmentCountPerGroup: I
     val futureDueDate = OffsetDateTime.now().plusWeeks(1).toApiString()
     val pastDueDate = OffsetDateTime.now().minusWeeks(1).toApiString()
 
+    // Set up our assignment groups, then add to them dynamically via addAssignment()
+    val overdueAssignmentGroup = AssignmentGroup(id = 1, name = "overdue")
+    val upcomingAssignmentGroup = AssignmentGroup(id = 2, name = "upcoming")
+    val undatedAssignmentGroup = AssignmentGroup(id = 3, name = "undated")
+    val pastAssignmentGroup = AssignmentGroup(id = 4, name = "past")
+    assignmentGroups[course.id] = mutableListOf(overdueAssignmentGroup,upcomingAssignmentGroup,undatedAssignmentGroup,pastAssignmentGroup)
+
     for (i in 0 until assignmentCountPerGroup) {
 
         val overdueAssignment = addAssignment(
                 courseId = course.id,
-                groupType = AssignmentGroupType.OVERDUE,
                 submissionType = Assignment.SubmissionType.ONLINE_URL,
                 name = Randomizer.randomAssignmentName(),
-                dueAt = pastDueDate
+                dueAt = pastDueDate,
+                assignmentGroupId = overdueAssignmentGroup.id
         )
-        val overdueSubmission = addSubmissionForAssignment(
-                assignmentId = overdueAssignment.id,
-                userId = users.values.first().id,
-                type = Assignment.SubmissionType.ONLINE_URL.apiString,
-                url = "https://google.com"
-        )
-
         val upcomingAssignment = addAssignment(
                 courseId = course.id,
-                groupType = AssignmentGroupType.UPCOMING,
                 submissionType = Assignment.SubmissionType.ONLINE_URL,
                 name = Randomizer.randomAssignmentName(),
-                dueAt = futureDueDate
+                dueAt = futureDueDate,
+                assignmentGroupId = upcomingAssignmentGroup.id
         )
 
         val undatedAssignment = addAssignment(
                 courseId = course.id,
-                groupType = AssignmentGroupType.UNDATED,
                 submissionType = Assignment.SubmissionType.ONLINE_URL,
                 name = Randomizer.randomAssignmentName(),
-                dueAt = null
+                dueAt = null,
+                assignmentGroupId = undatedAssignmentGroup.id
         )
 
         val pastAssignment = addAssignment(
                 courseId = course.id,
-                groupType = AssignmentGroupType.PAST,
                 submissionType = Assignment.SubmissionType.ONLINE_URL,
                 name = Randomizer.randomAssignmentName(),
-                dueAt = pastDueDate
+                dueAt = pastDueDate,
+                assignmentGroupId = pastAssignmentGroup.id
         )
         val pastSubmission = addSubmissionForAssignment(
                 assignmentId = pastAssignment.id,
@@ -384,8 +384,8 @@ fun MockCanvas.addAssignmentsToGroups(course: Course, assignmentCountPerGroup: I
  */
 fun MockCanvas.addAssignment(
         courseId: Long,
-        groupType: AssignmentGroupType,
         submissionType: Assignment.SubmissionType,
+        assignmentGroupId: Long = newItemId(),
         isQuizzesNext: Boolean = false,
         lockInfo : LockInfo? = null,
         userSubmitted: Boolean = false,
@@ -393,7 +393,6 @@ fun MockCanvas.addAssignment(
         name: String = Randomizer.randomCourseName()
 ) : Assignment {
     val assignmentId = newItemId()
-    val assignmentGroupId = newItemId()
     var assignment = Assignment(
         id = assignmentId,
         assignmentGroupId = assignmentGroupId,

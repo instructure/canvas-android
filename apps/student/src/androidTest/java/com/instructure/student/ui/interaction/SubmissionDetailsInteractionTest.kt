@@ -65,7 +65,6 @@ class SubmissionDetailsInteractionTest : StudentTest() {
         val data = getToCourse()
         val assignment = data.addAssignment(
                 courseId =  course.id,
-                groupType = AssignmentGroupType.UPCOMING,
                 submissionType = Assignment.SubmissionType.ONLINE_URL,
                 userSubmitted = true
         )
@@ -92,7 +91,6 @@ class SubmissionDetailsInteractionTest : StudentTest() {
         val user = data.users.values.first()
         val assignment = data.addAssignment(
                 courseId = course.id,
-                groupType = AssignmentGroupType.UNDATED,
                 submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY
         )
 
