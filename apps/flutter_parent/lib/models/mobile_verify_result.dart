@@ -14,6 +14,7 @@
 
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
+import 'package:built_collection/built_collection.dart';
 
 part 'mobile_verify_result.g.dart';
 
@@ -23,23 +24,57 @@ abstract class MobileVerifyResult implements Built<MobileVerifyResult, MobileVer
   @BuiltValueSerializer(serializeNulls: true) // Add this line to get nulls to serialize when we convert to JSON
   static Serializer<MobileVerifyResult> get serializer => _$mobileVerifyResultSerializer;
 
+  MobileVerifyResult._();
+
+  factory MobileVerifyResult([void Function(MobileVerifyResultBuilder) updates]) = _$MobileVerifyResult;
+
   bool get authorized;
 
-  int get result;
+  VerifyResultEnum get result;
 
   @BuiltValueField(wireName: 'client_id')
   String get clientId;
 
-  @BuiltValueField(wireName: 'api_key')
-  String get apiKey;
-
   @BuiltValueField(wireName: 'client_secret')
   String get clientSecret;
+
+  @BuiltValueField(wireName: 'api_key')
+  String get apiKey;
 
   @BuiltValueField(wireName: 'base_url')
   String get baseUrl;
 
-  MobileVerifyResult._();
+  static void _initializeBuilder(MobileVerifyResultBuilder b) => b
+    ..authorized = true
+    ..result = VerifyResultEnum.success
+    ..clientId = ''
+    ..clientSecret = ''
+    ..apiKey = ''
+    ..baseUrl = '';
+}
 
-  factory MobileVerifyResult([void Function(MobileVerifyResultBuilder) updates]) = _$MobileVerifyResult;
+enum VerifyResultEnum {
+  success,
+  generalError,
+  domainNotAuthorized,
+  unknownUserAgent,
+  unknownError,
+}
+
+class ResultEnumSerializer extends PrimitiveSerializer<VerifyResultEnum> {
+  @override
+  final Iterable<Type> types = BuiltList<Type>([VerifyResultEnum]);
+
+  @override
+  final String wireName = 'int';
+
+  @override
+  Object serialize(Serializers serializers, VerifyResultEnum integer, {FullType specifiedType = FullType.unspecified}) {
+    return integer.index;
+  }
+
+  @override
+  VerifyResultEnum deserialize(Serializers serializers, Object serialized, {FullType specifiedType = FullType.unspecified}) {
+    return VerifyResultEnum.values[serialized];
+  }
 }

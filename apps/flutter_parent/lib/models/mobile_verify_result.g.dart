@@ -24,15 +24,16 @@ class _$MobileVerifyResultSerializer
       serializers.serialize(object.authorized,
           specifiedType: const FullType(bool)),
       'result',
-      serializers.serialize(object.result, specifiedType: const FullType(int)),
+      serializers.serialize(object.result,
+          specifiedType: const FullType(VerifyResultEnum)),
       'client_id',
       serializers.serialize(object.clientId,
           specifiedType: const FullType(String)),
-      'api_key',
-      serializers.serialize(object.apiKey,
-          specifiedType: const FullType(String)),
       'client_secret',
       serializers.serialize(object.clientSecret,
+          specifiedType: const FullType(String)),
+      'api_key',
+      serializers.serialize(object.apiKey,
           specifiedType: const FullType(String)),
       'base_url',
       serializers.serialize(object.baseUrl,
@@ -61,18 +62,19 @@ class _$MobileVerifyResultSerializer
           break;
         case 'result':
           result.result = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
+                  specifiedType: const FullType(VerifyResultEnum))
+              as VerifyResultEnum;
           break;
         case 'client_id':
           result.clientId = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
           break;
-        case 'api_key':
-          result.apiKey = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
-          break;
         case 'client_secret':
           result.clientSecret = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
+          break;
+        case 'api_key':
+          result.apiKey = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
           break;
         case 'base_url':
@@ -90,13 +92,13 @@ class _$MobileVerifyResult extends MobileVerifyResult {
   @override
   final bool authorized;
   @override
-  final int result;
+  final VerifyResultEnum result;
   @override
   final String clientId;
   @override
-  final String apiKey;
-  @override
   final String clientSecret;
+  @override
+  final String apiKey;
   @override
   final String baseUrl;
 
@@ -108,8 +110,8 @@ class _$MobileVerifyResult extends MobileVerifyResult {
       {this.authorized,
       this.result,
       this.clientId,
-      this.apiKey,
       this.clientSecret,
+      this.apiKey,
       this.baseUrl})
       : super._() {
     if (authorized == null) {
@@ -121,11 +123,11 @@ class _$MobileVerifyResult extends MobileVerifyResult {
     if (clientId == null) {
       throw new BuiltValueNullFieldError('MobileVerifyResult', 'clientId');
     }
-    if (apiKey == null) {
-      throw new BuiltValueNullFieldError('MobileVerifyResult', 'apiKey');
-    }
     if (clientSecret == null) {
       throw new BuiltValueNullFieldError('MobileVerifyResult', 'clientSecret');
+    }
+    if (apiKey == null) {
+      throw new BuiltValueNullFieldError('MobileVerifyResult', 'apiKey');
     }
     if (baseUrl == null) {
       throw new BuiltValueNullFieldError('MobileVerifyResult', 'baseUrl');
@@ -148,8 +150,8 @@ class _$MobileVerifyResult extends MobileVerifyResult {
         authorized == other.authorized &&
         result == other.result &&
         clientId == other.clientId &&
-        apiKey == other.apiKey &&
         clientSecret == other.clientSecret &&
+        apiKey == other.apiKey &&
         baseUrl == other.baseUrl;
   }
 
@@ -160,8 +162,8 @@ class _$MobileVerifyResult extends MobileVerifyResult {
             $jc(
                 $jc($jc($jc(0, authorized.hashCode), result.hashCode),
                     clientId.hashCode),
-                apiKey.hashCode),
-            clientSecret.hashCode),
+                clientSecret.hashCode),
+            apiKey.hashCode),
         baseUrl.hashCode));
   }
 
@@ -171,8 +173,8 @@ class _$MobileVerifyResult extends MobileVerifyResult {
           ..add('authorized', authorized)
           ..add('result', result)
           ..add('clientId', clientId)
-          ..add('apiKey', apiKey)
           ..add('clientSecret', clientSecret)
+          ..add('apiKey', apiKey)
           ..add('baseUrl', baseUrl))
         .toString();
   }
@@ -186,35 +188,37 @@ class MobileVerifyResultBuilder
   bool get authorized => _$this._authorized;
   set authorized(bool authorized) => _$this._authorized = authorized;
 
-  int _result;
-  int get result => _$this._result;
-  set result(int result) => _$this._result = result;
+  VerifyResultEnum _result;
+  VerifyResultEnum get result => _$this._result;
+  set result(VerifyResultEnum result) => _$this._result = result;
 
   String _clientId;
   String get clientId => _$this._clientId;
   set clientId(String clientId) => _$this._clientId = clientId;
 
-  String _apiKey;
-  String get apiKey => _$this._apiKey;
-  set apiKey(String apiKey) => _$this._apiKey = apiKey;
-
   String _clientSecret;
   String get clientSecret => _$this._clientSecret;
   set clientSecret(String clientSecret) => _$this._clientSecret = clientSecret;
+
+  String _apiKey;
+  String get apiKey => _$this._apiKey;
+  set apiKey(String apiKey) => _$this._apiKey = apiKey;
 
   String _baseUrl;
   String get baseUrl => _$this._baseUrl;
   set baseUrl(String baseUrl) => _$this._baseUrl = baseUrl;
 
-  MobileVerifyResultBuilder();
+  MobileVerifyResultBuilder() {
+    MobileVerifyResult._initializeBuilder(this);
+  }
 
   MobileVerifyResultBuilder get _$this {
     if (_$v != null) {
       _authorized = _$v.authorized;
       _result = _$v.result;
       _clientId = _$v.clientId;
-      _apiKey = _$v.apiKey;
       _clientSecret = _$v.clientSecret;
+      _apiKey = _$v.apiKey;
       _baseUrl = _$v.baseUrl;
       _$v = null;
     }
@@ -241,8 +245,8 @@ class MobileVerifyResultBuilder
             authorized: authorized,
             result: result,
             clientId: clientId,
-            apiKey: apiKey,
             clientSecret: clientSecret,
+            apiKey: apiKey,
             baseUrl: baseUrl);
     replace(_$result);
     return _$result;

@@ -119,10 +119,16 @@ class ViewUnsupportedFileFragment : Fragment() {
         ViewStyler.themeButton(openExternallyButton)
 
         openExternallyButton.onClick {
-            openExternallyButton.isEnabled = false
-            openExternallyButton.text = getString(R.string.downloading)
 
             downloadFileJob = tryWeave {
+                if (mUri.scheme == "content") {
+                    mUri.viewExternally(requireContext(), mContentType)
+                    return@tryWeave
+                }
+
+                openExternallyButton.isEnabled = false
+                openExternallyButton.text = getString(R.string.downloading)
+
                 // Download the file first
                 val tempFile = FileCache.awaitFileDownload(mUri.toString())
 
