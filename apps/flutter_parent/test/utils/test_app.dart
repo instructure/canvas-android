@@ -16,6 +16,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_parent/api/utils/api_prefs.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
@@ -45,6 +46,8 @@ class _TestAppState extends State<TestApp> {
 
     // So that widget tests don't fail when a screen uses shared preferences. Provide values in the constructor
     SharedPreferences.setMockInitialValues(widget.mockPrefs);
+
+    setupPackageInfoMockValues();
 
     // Init api prefs here so that each test doesn't have to
     ApiPrefs.init();
@@ -85,4 +88,18 @@ class _TestAppState extends State<TestApp> {
 
         return resolvedLocale;
       };
+
+  void setupPackageInfoMockValues() {
+    const MethodChannel('plugins.flutter.io/package_info').setMockMethodCallHandler((MethodCall methodCall) async {
+      if (methodCall.method == 'getAll') {
+        return <String, dynamic>{
+      'appName': 'Canvas',
+      'packageName': 'com.instructure',
+      'version': '1.0.0',
+      'buildNumber': '3'
+      };
+    }
+      return null;
+    });
+  }
 }

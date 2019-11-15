@@ -199,6 +199,14 @@ class AppLocalizations {
       desc: 'The body text shown in the help dialog on the domain search screen',
       args: [canvasGuides, canvasSupport]);
 
+  /// Courses Screen
+
+  String get noGrade => Intl.message(
+    'No Grade',
+    desc: 'Message shown when there is currently no grade available for a course'
+  );
+
+
   /// Web Login Screen
 
   String get domainVerificationErrorGeneral => Intl.message(
