@@ -46,13 +46,10 @@ class AssignmentDetailsInteractionTest : StudentTest() {
         val student = data.students[0]
         val token = data.tokenFor(student)!!
         val assignment = data.addAssignment(courseId = course.id, groupType = AssignmentGroupType.UPCOMING, submissionType = Assignment.SubmissionType.ONLINE_URL)
-        val submission = Submission(
-            id = 123L,
-            submittedAt = Date(),
-            attempt = 1L,
-            late = false
-        )
-        data.addSubmission(course.id, submission, assignment.id)
+        val submission = data.addSubmissionForAssignment(
+                assignmentId = assignment.id,
+                userId = data.users.values.first().id,
+                type = Assignment.SubmissionType.ONLINE_URL.apiString)
         tokenLogin(data.domain, token, student)
         routeTo("courses/${course.id}/assignments", data.domain)
 

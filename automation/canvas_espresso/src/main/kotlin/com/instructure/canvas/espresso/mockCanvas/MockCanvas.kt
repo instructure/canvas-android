@@ -114,7 +114,10 @@ class MockCanvas {
     val fileContents = mutableMapOf<Long, String>()
 
     /** Map of course ID to assignment groups */
-    val assignmentGroups = mutableMapOf<Long, List<AssignmentGroup>>()
+    val assignmentGroups = mutableMapOf<Long, MutableList<AssignmentGroup>>()
+
+    /** Map of assignment ID to assignment */
+    val assignments = mutableMapOf<Long,Assignment>()
 
     /** Map of assignment ID to a list of submissions */
     val submissions = mutableMapOf<Long, MutableList<Submission>>()
@@ -322,57 +325,57 @@ fun MockCanvas.addCourse(
  *
  */
 fun MockCanvas.addAssignmentsToGroups(course: Course, assignmentCountPerGroup: Int = 1): List<AssignmentGroup> {
-    val overdueAssignments = ArrayList<Assignment>()
-    val upcomingAssignments = ArrayList<Assignment>()
-    val undatedAssignments = ArrayList<Assignment>()
-    val pastAssignments = ArrayList<Assignment>()
-
     val futureDueDate = OffsetDateTime.now().plusWeeks(1).toApiString()
     val pastDueDate = OffsetDateTime.now().minusWeeks(1).toApiString()
 
     for (i in 0 until assignmentCountPerGroup) {
-        overdueAssignments.add(Assignment(
-            id = newItemId(),
-            name = Randomizer.randomAssignmentName(),
-            courseId = course.id,
-            submission = Submission(grade = null, submissionType = Assignment.SubmissionType.ONLINE_UPLOAD.apiString),
-            submissionTypesRaw = listOf(Assignment.SubmissionType.ONLINE_UPLOAD.apiString),
-            dueAt = pastDueDate
-        ))
-        upcomingAssignments.add(Assignment(
-            id = newItemId(),
-            name = Randomizer.randomAssignmentName(),
-            courseId = course.id,
-            submission = Submission(),
-            dueAt = futureDueDate
-        ))
-        undatedAssignments.add(Assignment(
-            id = newItemId(),
-            name = Randomizer.randomAssignmentName(),
-            courseId = course.id,
-            submission = Submission(),
-            dueAt = null
-        ))
-        pastAssignments.add(Assignment(
-            id = newItemId(),
-            name = Randomizer.randomAssignmentName(),
-            courseId = course.id,
-            submission = Submission(grade = "A", submissionType = Assignment.SubmissionType.ONLINE_UPLOAD.apiString),
-            submissionTypesRaw = listOf(),
-            dueAt = pastDueDate
-        ))
+
+        val overdueAssignment = addAssignment(
+                courseId = course.id,
+                groupType = AssignmentGroupType.OVERDUE,
+                submissionType = Assignment.SubmissionType.ONLINE_URL,
+                name = Randomizer.randomAssignmentName(),
+                dueAt = pastDueDate
+        )
+        val overdueSubmission = addSubmissionForAssignment(
+                assignmentId = overdueAssignment.id,
+                userId = users.values.first().id,
+                type = Assignment.SubmissionType.ONLINE_URL.apiString,
+                url = "https://google.com"
+        )
+
+        val upcomingAssignment = addAssignment(
+                courseId = course.id,
+                groupType = AssignmentGroupType.UPCOMING,
+                submissionType = Assignment.SubmissionType.ONLINE_URL,
+                name = Randomizer.randomAssignmentName(),
+                dueAt = futureDueDate
+        )
+
+        val undatedAssignment = addAssignment(
+                courseId = course.id,
+                groupType = AssignmentGroupType.UNDATED,
+                submissionType = Assignment.SubmissionType.ONLINE_URL,
+                name = Randomizer.randomAssignmentName(),
+                dueAt = null
+        )
+
+        val pastAssignment = addAssignment(
+                courseId = course.id,
+                groupType = AssignmentGroupType.PAST,
+                submissionType = Assignment.SubmissionType.ONLINE_URL,
+                name = Randomizer.randomAssignmentName(),
+                dueAt = pastDueDate
+        )
+        val pastSubmission = addSubmissionForAssignment(
+                assignmentId = pastAssignment.id,
+                userId = users.values.first().id,
+                type = Assignment.SubmissionType.ONLINE_URL.apiString,
+                url = "https://google.com"
+        )
     }
 
-    val overdueAssignmentGroup = AssignmentGroup(id = 1, name = "overdue", assignments = overdueAssignments)
-    val upcomingAssignmentGroup = AssignmentGroup(id = 2, name = "upcoming", assignments = upcomingAssignments)
-    val undatedAssignmentGroup = AssignmentGroup(id = 3, name = "undated", assignments = undatedAssignments)
-    val pastAssignmentGroup = AssignmentGroup(id = 4, name = "past", assignments = pastAssignments)
-
-    val assignmentGroupList = listOf(overdueAssignmentGroup, upcomingAssignmentGroup, undatedAssignmentGroup, pastAssignmentGroup)
-
-    assignmentGroups[course.id] = assignmentGroupList
-
-    return assignmentGroupList
+    return assignmentGroups[course.id]!!.toList()
 }
 
 /**
@@ -385,22 +388,23 @@ fun MockCanvas.addAssignment(
         submissionType: Assignment.SubmissionType,
         isQuizzesNext: Boolean = false,
         lockInfo : LockInfo? = null,
-        userSubmitted: Boolean = false) : Assignment {
+        userSubmitted: Boolean = false,
+        dueAt: String? = null,
+        name: String = Randomizer.randomCourseName()
+) : Assignment {
     val assignmentId = newItemId()
     val assignmentGroupId = newItemId()
     var assignment = Assignment(
         id = assignmentId,
         assignmentGroupId = assignmentGroupId,
         courseId = courseId,
-        name = Randomizer.randomAssignmentName(),
+        name = name,
         submissionTypesRaw = listOf(submissionType.apiString),
         lockInfo = lockInfo,
         lockedForUser = lockInfo != null,
-        userSubmitted = userSubmitted
+        userSubmitted = userSubmitted,
+        dueAt = dueAt
     )
-
-    val futureDueDate = OffsetDateTime.now().plusWeeks(1).toApiString()
-    val pastDueDate = OffsetDateTime.now().minusWeeks(1).toApiString()
 
     if(isQuizzesNext) {
         assignment = assignment.copy(
@@ -408,48 +412,73 @@ fun MockCanvas.addAssignment(
         )
     }
 
-    when(groupType) {
-        AssignmentGroupType.OVERDUE -> {
-            assignment = assignment.copy(
-                submission = Submission(grade = null, submissionType = submissionType.apiString),
-                dueAt = pastDueDate
-            )
-        }
-        AssignmentGroupType.UPCOMING -> {
-            assignment = assignment.copy(
-                submission = Submission(),
-                dueAt = futureDueDate
-            )
-        }
-        AssignmentGroupType.UNDATED -> {
-            assignment = assignment.copy(
-                submission = Submission(),
-                dueAt = null
-            )
-        }
-        AssignmentGroupType.PAST -> {
-            assignment = assignment.copy(
-                courseId = courseId,
-                submission = Submission(grade = "A", submissionType = submissionType.apiString),
-                submissionTypesRaw = listOf(submissionType.apiString),
-                dueAt = pastDueDate
-            )
-        }
+    // Figure out which assignment group in which to track the assignment
+    var assignmentGroupList = assignmentGroups[courseId]
+    if(assignmentGroupList == null) {
+        assignmentGroupList = mutableListOf<AssignmentGroup>()
+        assignmentGroups[courseId]= assignmentGroupList
     }
 
-    val assignmentGroup = AssignmentGroup(id = assignmentGroupId, assignments = listOf(assignment))
+    var group = assignmentGroupList.find {it.id == assignmentGroupId}
+    if(group == null) {
+        assignmentGroupList.add(AssignmentGroup(id = assignmentGroupId, assignments = listOf(assignment)))
+    }
+    else {
+        val newList = group.assignments.toMutableList()
+        newList.add(assignment)
+        val newGroup = group.copy(
+                assignments = newList
+        )
+        assignmentGroupList.remove(group)
+        assignmentGroupList.add(newGroup)
+    }
 
-    assignmentGroups[courseId] = listOf(assignmentGroup)
+    // Track assignment.id -> assignment
+    assignments[assignment.id] = assignment
 
+    // return the new assignment
     return assignment
 }
+
 /**
- * Adds a submission to the course submission map.
- *
- * NOTE - This function does not add the submission to the assignment groups map, that happens in the POST end point for submissions.
- * */
-fun MockCanvas.addSubmission(courseId: Long, submission: Submission, assignmentId: Long) {
-    submissions[assignmentId] = mutableListOf(submission.copy(assignmentId = assignmentId))
+ * Adds a submission to the assignment submission map.
+ */
+fun MockCanvas.addSubmissionForAssignment(
+        assignmentId: Long,
+        userId: Long,
+        type: String,
+        body: String? = null,
+        url: String? = null,
+        attachment: Attachment? = null,
+        comment: SubmissionComment? = null
+) : Submission {
+    val submission = Submission(
+            id = newItemId(),
+            submittedAt = Date(),
+            attempt = 1,
+            body = body,
+            url = url,
+            previewUrl = url,
+            workflowState = "submitted",
+            submissionType = type,
+            assignmentId = assignmentId,
+            userId = userId,
+            late = false,
+            attachments = if(attachment != null) arrayListOf(attachment) else arrayListOf<Attachment>(),
+            submissionComments = if(comment != null) listOf(comment) else listOf<SubmissionComment>()
+    )
+
+    var submissionList = submissions[assignmentId]
+    if(submissionList == null) {
+        submissionList = mutableListOf<Submission>()
+        submissions[assignmentId] = submissionList
+    }
+    submissionList.add(submission)
+
+    val assignment = assignments[assignmentId]
+    assignment?.submission = submission
+
+    return submission
 }
 
 fun MockCanvas.addLTITool(name: String, url: String): LTITool {

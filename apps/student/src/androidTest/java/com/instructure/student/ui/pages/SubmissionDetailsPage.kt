@@ -17,12 +17,15 @@
 package com.instructure.student.ui.pages
 
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.matcher.ViewMatchers.hasDescendant
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.scrollRecyclerView
+import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.canvasapi2.models.User
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.espresso.OnViewWithStringTextIgnoreCase
@@ -77,6 +80,9 @@ open class SubmissionDetailsPage : BasePage(R.id.submissionDetails) {
 
     }
 
+    /**
+     * Assert that the comment stream contains a video comment
+     */
     fun assertVideoCommentDisplayed() {
         val commentMatcher = allOf(
                 withId(R.id.commentHolder),
@@ -86,6 +92,9 @@ open class SubmissionDetailsPage : BasePage(R.id.submissionDetails) {
         submissionCommentsRenderPage.scrollAndAssertDisplayed(commentMatcher)
     }
 
+    /**
+     * Assert that the comment stream contains an audio comment
+     */
     fun assertAudioCommentDisplayed() {
         val commentMatcher = allOf(
                 withId(R.id.commentHolder),
@@ -101,13 +110,42 @@ open class SubmissionDetailsPage : BasePage(R.id.submissionDetails) {
      * [user] is the author of the comment
      */
     fun assertCommentAttachmentDisplayed(fileName: String, user: CanvasUserApiModel) {
+        assertCommentAttachmentDisplayedCommon(fileName, user.shortName, false)
+    }
+
+    /**
+     * Assert that a comment is displayed
+     * [fileName] is the name of the attached file
+     * [user] is the author of the comment
+     */
+    fun assertCommentAttachmentDisplayed(fileName: String, user: User) {
+        assertCommentAttachmentDisplayedCommon(fileName, user.shortName!!, false)
+    }
+
+    /**
+     * Open a comment attachment
+     */
+    fun openCommentAttachment(fileName: String, user: User) {
+        assertCommentAttachmentDisplayedCommon(fileName, user.shortName!!, true)
+    }
+
+    /**
+     * Utility method to scroll to (and optionally click) a comment attachment
+     */
+    private fun assertCommentAttachmentDisplayedCommon(fileName: String, displayName: String, click:Boolean = false) {
         val commentMatcher = allOf(
                 withId(R.id.commentHolder),
-                hasDescendant(allOf(withText(user.shortName), withId(R.id.userNameTextView))),
+                hasDescendant(allOf(withText(displayName), withId(R.id.userNameTextView))),
                 hasDescendant(allOf(withText(fileName), withId(R.id.attachmentNameTextView)))
         )
 
         submissionCommentsRenderPage.scrollAndAssertDisplayed(commentMatcher)
+        if(click) {
+            //onView(commentMatcher).click()
+            onView(allOf(withId(R.id.attachmentNameTextView), withText(fileName)))
+                    .perform(withCustomConstraints(click(), isDisplayingAtLeast(5)))
+        }
+
     }
 
     fun assertFileDisplayed(fileName: String) {

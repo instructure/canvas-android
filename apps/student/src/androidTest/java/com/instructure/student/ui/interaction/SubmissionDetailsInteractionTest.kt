@@ -17,20 +17,32 @@
 package com.instructure.student.ui.interaction
 
 import android.os.SystemClock.sleep
+import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.mockCanvas.AssignmentGroupType
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addAssignment
+import com.instructure.canvas.espresso.mockCanvas.addFileToCourse
+import com.instructure.canvas.espresso.mockCanvas.addSubmissionForAssignment
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Attachment
+import com.instructure.canvasapi2.models.Author
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.RemoteFile
+import com.instructure.canvasapi2.models.SubmissionComment
+import com.instructure.dataseeding.api.AssignmentsApi
+import com.instructure.dataseeding.api.FileUploadsApi
+import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
+import com.instructure.student.ui.pages.WebViewTextCheck
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLogin
 import org.junit.Test
+import java.util.*
 
 class SubmissionDetailsInteractionTest : StudentTest() {
     override fun displaysPageObjects() = Unit // Not used for interaction tests
@@ -62,8 +74,8 @@ class SubmissionDetailsInteractionTest : StudentTest() {
         assignmentListPage.clickAssignment(assignment)
         assignmentDetailsPage.clickSubmit()
         urlSubmissionUploadPage.submitText("https://google.com")
-        sleep(1000)
-        assignmentDetailsPage.verifyAssignmentSubmitted() // flaky.  Sleep above?
+        sleep(1000) // Allow some time for the submission to propagate
+        assignmentDetailsPage.verifyAssignmentSubmitted()
         assignmentDetailsPage.goToSubmissionDetails()
         submissionDetailsPage.openComments()
         submissionDetailsPage.addAndSendComment("Hey!")
@@ -73,9 +85,68 @@ class SubmissionDetailsInteractionTest : StudentTest() {
     @Stub
     @Test
     @TestMetaData(Priority.P0, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, true)
-    fun testAssignments_previewAttachment() {
-        // Student can preview an assignment attachment
+    fun testComments_previewAttachment() {
+        // Student can preview an assignment comment attachment
 
+        val data = getToCourse()
+        val user = data.users.values.first()
+        val assignment = data.addAssignment(
+                courseId = course.id,
+                groupType = AssignmentGroupType.UNDATED,
+                submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY
+        )
+
+        // Some html for an attachment
+        val html = """
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        </head>
+
+        <body>
+        <h1 id="header1">Famous Quote</h1>
+        <p id="p1">Who knew? -- Seinfeld</p>
+        </body>
+        </html>
+        """.trimIndent()
+
+        // Create an attachment
+        val attachment = this.createHtmlAttachment(data, html)
+
+        // The accompanying comment text
+        val commentText = "Here's an attachment"
+
+        // Create a submission comment containing our attachment
+        val submissionComment = SubmissionComment(
+                id =  data.newItemId(),
+                authorId = user.id,
+                authorName = user.name,
+                comment = commentText,
+                createdAt = Date(),
+                attachments = arrayListOf(attachment),
+                author = Author(id = user.id, displayName=user.shortName)
+        )
+
+        // Create/add a submission for our assignment containing our submissionComment
+        val submission = data.addSubmissionForAssignment(
+                assignmentId = assignment.id,
+                userId = data.users.values.first().id,
+                type = Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString,
+                body = "Some Text!",
+                comment = submissionComment
+        )
+
+        courseBrowserPage.selectAssignments()
+        assignmentListPage.clickAssignment(assignment)
+        assignmentDetailsPage.goToSubmissionDetails()
+        submissionDetailsPage.openComments()
+        submissionDetailsPage.assertCommentDisplayed(commentText, user)
+        submissionDetailsPage.assertCommentAttachmentDisplayed(attachment.filename!!, user)
+        submissionDetailsPage.openCommentAttachment(attachment.filename!!, user)
+        canvasWebViewPage.runTextChecks(
+                WebViewTextCheck(Locator.ID, "p1", "Who knew?")
+        )
     }
 
     // Video comment testing is in AssignmentsE2ETest.testMediaCommentsE2E
@@ -107,6 +178,32 @@ class SubmissionDetailsInteractionTest : StudentTest() {
     @TestMetaData(Priority.P2, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, true)
     fun testComments_audioCommentPlayback() {
         // After recording an audio comment, user should be able to hear an audio playback
+    }
+
+
+    // Creates an HTML attachment/file which can then be attached to a comment.
+    private fun createHtmlAttachment(data: MockCanvas, html: String, name: String = "CommentAttachment.html"): Attachment {
+        val course1 = data.courses.values.first()
+        val fileId = data.addFileToCourse(
+                courseId = course1.id,
+                displayName = name,
+                contentType = "text/html",
+                fileContent = html
+        )
+
+        val mockUrl = "https://mock-data.instructure.com/files/$fileId/preview"
+        val attachment = Attachment(
+                id = data.newItemId(),
+                contentType = "text/html",
+                displayName = name,
+                filename = name,
+                url = mockUrl,
+                previewUrl = mockUrl,
+                createdAt = Date(),
+                size = html.length.toLong()
+        )
+
+        return attachment
     }
 
     // Mock a specified number of students and courses, sign in, then navigate to course browser page for

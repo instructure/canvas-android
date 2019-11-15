@@ -17,6 +17,7 @@ package com.instructure.canvas.espresso.mockCanvas.endpoints
 
 import android.util.Log
 import com.instructure.canvas.espresso.mockCanvas.Endpoint
+import com.instructure.canvas.espresso.mockCanvas.addSubmissionForAssignment
 import com.instructure.canvas.espresso.mockCanvas.utils.LongId
 import com.instructure.canvas.espresso.mockCanvas.utils.PathVars
 import com.instructure.canvas.espresso.mockCanvas.utils.grabJsonFromMultiPartBody
@@ -42,11 +43,6 @@ object SubmissionIndexEndpoint : Endpoint(
         LongId(PathVars::userId) to SubmissionUserEndpoint,
     response = {
         POST {
-            val sub = request.url().queryParameter("submission")
-            val type = request.url().queryParameter("submission[submission_type]")
-            Log.d("<--", "SubmissionIndex submission parameter: $sub")
-            Log.d("<--", "SubmissionIndex submission_type parameter: $type")
-
             // Grab the assignment
             val assignment = data.assignmentGroups[pathVars.courseId]!!
                     .flatMap { it.assignments }
@@ -55,33 +51,15 @@ object SubmissionIndexEndpoint : Endpoint(
             val submissionUrl = request.url().queryParameter("submission[url]")
             val submissionType = request.url().queryParameter("submission[submission_type]")
             val submissionBody = request.url().queryParameter("submission[body]")
-            val submission = Submission(
-                    id = data.newItemId(),
-                    submittedAt = Calendar.getInstance().time,
-                    body = submissionBody,
+            val submission = data.addSubmissionForAssignment(
                     assignmentId = pathVars.assignmentId,
-                    //assignment = assignment,
-                    submissionType = submissionType,
-                    previewUrl = submissionUrl,
-                    url = submissionUrl,
-                    workflowState = "submitted", // Is this the right setting
-                    userId = request.user!!.id
-
+                    userId = request.user!!.id,
+                    type = submissionType!!,
+                    body = submissionBody,
+                    url = submissionUrl
             )
 
             Log.d("<--", "submissionType=$submissionType, submission = $submission")
-
-            var submissionList = data.submissions[pathVars.assignmentId]
-            if(submissionList == null) {
-                submissionList = mutableListOf<Submission>()
-                data.submissions[pathVars.assignmentId] = submissionList!!
-            }
-            submissionList!!.add(submission)
-//            val submission: Submission? = data.submissions[pathVars.courseId]!!
-//                    .find { it.assignmentId == pathVars.assignmentId }
-
-
-            // Now we need to modify the assignment in the data value so it reflects this
             assignment.submission = submission
 
             if(submission != null) {
