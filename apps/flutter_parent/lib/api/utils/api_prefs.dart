@@ -122,7 +122,7 @@ class ApiPrefs {
 
   static String getUserAgent() => 'androidParent/${_packageInfo.version} (${_packageInfo.buildNumber})';
 
-  static String getApiUrl() => "${getDomain()}/api/v1/";
+  static String getApiUrl({String path = ''}) => "${getDomain()}/api/v1/$path";
 
   static String getDomain() => _getPrefString(KEY_DOMAIN);
 
