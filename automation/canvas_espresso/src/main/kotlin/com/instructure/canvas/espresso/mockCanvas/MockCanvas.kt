@@ -390,7 +390,8 @@ fun MockCanvas.addAssignment(
         lockInfo : LockInfo? = null,
         userSubmitted: Boolean = false,
         dueAt: String? = null,
-        name: String = Randomizer.randomCourseName()
+        name: String = Randomizer.randomCourseName(),
+        pointsPossible: Int = 10
 ) : Assignment {
     val assignmentId = newItemId()
     var assignment = Assignment(
@@ -402,7 +403,8 @@ fun MockCanvas.addAssignment(
         lockInfo = lockInfo,
         lockedForUser = lockInfo != null,
         userSubmitted = userSubmitted,
-        dueAt = dueAt
+        dueAt = dueAt,
+            pointsPossible = pointsPossible.toDouble()
     )
 
     if(isQuizzesNext) {
@@ -923,4 +925,34 @@ fun MockCanvas.addQuestionToQuiz(
 
     // return the quiz question
     return result
+}
+
+// Add rubric criteria to an assignment
+fun MockCanvas.addRubricToAssignment(assignmentId: Long, criteria : List<RubricCriterion>) {
+    // Find the assignment
+    val assignment = assignments[assignmentId]!!
+    val courseId = assignment.courseId
+
+    // Create a modified assignment with rubric info
+    val newAssignment = assignment.copy(rubric = criteria, isUseRubricForGrading = true)
+
+    // Replace the old assignment with the modified assignment in assignments hash
+    assignments[assignmentId] = newAssignment
+
+    // Replace the old assignment with the modified assignment in the assignment group hash
+    val groupList = assignmentGroups[courseId]
+    if(groupList != null) {
+        groupList.forEach { group ->
+            if (group.assignments.contains(assignment)) {
+                val newList = group.assignments.toMutableList()
+                newList.remove(assignment)
+                newList.add(newAssignment)
+                val newGroup = group.copy(assignments = newList)
+                groupList.remove(group)
+                groupList.add(newGroup)
+
+                // A "break" here would be wonderful, but is apparently not allowed in a forEach
+            }
+        }
+    }
 }

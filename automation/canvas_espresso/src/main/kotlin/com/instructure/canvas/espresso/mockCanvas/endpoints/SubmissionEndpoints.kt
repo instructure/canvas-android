@@ -86,7 +86,14 @@ object SubmissionUserEndpoint : Endpoint(
                 request.successResponse(submission)
             }
             else {
-                request.unauthorizedResponse()
+                // Sigh... Unauthorized result blocks access to submission details screen.
+                // Return empty submission?
+                //request.unauthorizedResponse()
+                request.successResponse(Submission(
+                        id = data.newItemId(),
+                        userId = request.user!!.id,
+                        assignmentId = pathVars.assignmentId
+                ))
             }
         }
 
