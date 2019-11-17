@@ -44,6 +44,7 @@ import com.instructure.canvasapi2.models.Assignment.Companion.PERCENT_TYPE
 import com.instructure.canvasapi2.models.Assignment.Companion.POINTS_TYPE
 import com.instructure.canvasapi2.models.postmodels.AssignmentPostBody
 import com.instructure.canvasapi2.utils.NumberHelper
+import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.interactions.router.Route
@@ -70,8 +71,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.text.DecimalFormat
 import java.text.ParseException
-import java.util.*
-import kotlin.collections.ArrayList
+import java.util.Date
 
 class EditAssignmentDetailsFragment : BaseFragment() {
 
@@ -334,14 +334,16 @@ class EditAssignmentDetailsFragment : BaseFragment() {
         overrideContainer.removeAllViews()
         // Load in overrides
         mEditDateGroups.forEachIndexed { index, dueDateGroup ->
-            val assignees = ArrayList<String>()
+            val assignees = ArrayList<CharSequence>()
             val v = AssignmentOverrideView(requireActivity())
             if (dueDateGroup.isEveryone) {
                 assignees += getString(if (mEditDateGroups.any { it.hasOverrideAssignees }) R.string.everyone_else else R.string.everyone)
             }
             dueDateGroup.groupIds.forEach { assignees.add(groupsMapped[it]?.name!!) }
             dueDateGroup.sectionIds.forEach { assignees.add(sectionsMapped[it]?.name!!) }
-            dueDateGroup.studentIds.forEach { assignees.add(studentsMapped[it]?.name!!) }
+            dueDateGroup.studentIds.forEach {
+                assignees.add(studentsMapped[it]!!.let { user -> Pronouns.span(user.name, user.pronouns) })
+            }
 
             v.setupOverride(index, dueDateGroup, mEditDateGroups.size > 1, assignees, datePickerOnClick, timePickerOnClick, removeOverrideClick) {
                 val args = AssigneeListFragment.makeBundle(

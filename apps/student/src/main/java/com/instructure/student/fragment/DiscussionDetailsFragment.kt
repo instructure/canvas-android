@@ -64,7 +64,8 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import retrofit2.Response
 import java.net.URLDecoder
-import java.util.*
+import java.util.ArrayList
+import java.util.Date
 import java.util.regex.Pattern
 
 @PageView(url = "{canvasContext}/discussion_topics/{topicId}")
@@ -641,7 +642,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
         val displayName = discussionTopicHeader.author?.displayName
         ProfileUtils.loadAvatarForUser(authorAvatar, displayName, discussionTopicHeader.author?.avatarImageUrl)
         authorAvatar.setupAvatarA11y(discussionTopicHeader.author?.displayName)
-        authorName?.text = displayName
+        authorName?.text = Pronouns.span(displayName, discussionTopicHeader.author?.pronouns)
         authoredDate?.text = DateHelper.getMonthDayAtTime(this@DiscussionDetailsFragment.context, discussionTopicHeader.postedDate, getString(R.string.at))
         discussionTopicTitle?.text = discussionTopicHeader.title
 

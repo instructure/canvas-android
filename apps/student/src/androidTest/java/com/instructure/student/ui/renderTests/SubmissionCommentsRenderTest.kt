@@ -79,6 +79,7 @@ class SubmissionCommentsRenderTest: StudentRenderTest() {
 
         commentItemNotAudience = CommentItemState.CommentItem(
                 authorName = user.shortName!!,
+                authorPronouns = null,
                 id = 1,
                 avatarUrl = user.avatarUrl!!,
                 sortDate = Date(119,6,4,16,25),
@@ -90,6 +91,7 @@ class SubmissionCommentsRenderTest: StudentRenderTest() {
 
         commentItemIsAudience = CommentItemState.CommentItem(
                 authorName = teacher.shortName!!,
+                authorPronouns = null,
                 id = 2,
                 avatarUrl = teacher.avatarUrl!!,
                 sortDate = Date(119,6,4,17,25),
@@ -101,6 +103,7 @@ class SubmissionCommentsRenderTest: StudentRenderTest() {
 
         submissionItem = CommentItemState.SubmissionItem(
                 authorName = user.shortName!!,
+                authorPronouns = null,
                 avatarUrl = user.avatarUrl!!,
                 sortDate = Date(119,6,4,16,50),
                 dateText = "Date 3",
@@ -112,6 +115,7 @@ class SubmissionCommentsRenderTest: StudentRenderTest() {
         // This is dependent on a generated PendingSubmissionComment interface.
         pendingCommentItem = CommentItemState.PendingCommentItem(
                 authorName = user.shortName!!,
+                authorPronouns = user.pronouns,
                 avatarUrl = user.avatarUrl!!,
                 sortDate = Date(119, 6, 4, 13, 20),
                 pendingComment = makePendingComment(

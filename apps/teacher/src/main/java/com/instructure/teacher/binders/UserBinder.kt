@@ -18,6 +18,7 @@ package com.instructure.teacher.binders
 
 import com.instructure.canvasapi2.models.BasicUser
 import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.pandautils.utils.ProfileUtils
 import com.instructure.teacher.holders.UserViewHolder
 import com.instructure.teacher.interfaces.AdapterToFragmentCallback
@@ -30,11 +31,12 @@ object UserBinder {
         // Set student avatar
         val basicUser = BasicUser()
         basicUser.name = user.name
+        basicUser.pronouns = user.pronouns
         basicUser.avatarUrl = user.avatarUrl
         ProfileUtils.loadAvatarForUser(holder.itemView.studentAvatar, basicUser)
 
         // Set student name
-        holder.itemView.userName.text = user.name
+        holder.itemView.userName.text = Pronouns.span(user.name, user.pronouns)
 
         holder.itemView.setOnClickListener { adapterToFragmentCallback.onRowClicked(user, position) }
 

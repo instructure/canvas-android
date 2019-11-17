@@ -37,6 +37,7 @@ import com.instructure.canvasapi2.utils.CanvasApiExtensionsKt;
 import com.instructure.canvasapi2.utils.DateHelper;
 import com.instructure.canvasapi2.utils.LinkHeaders;
 import com.instructure.canvasapi2.utils.ModelExtensionsKt;
+import com.instructure.canvasapi2.utils.Pronouns;
 import com.instructure.pandarecycler.util.GroupSortedList;
 import com.instructure.pandarecycler.util.Types;
 import com.instructure.pandautils.utils.ColorKeeper;
@@ -97,7 +98,7 @@ public class CalendarListRecyclerAdapter extends ExpandableRecyclerAdapter<Date,
     //endregion
 
     //region Models
-    private HashMap<String, String> mContextNamesMap = new LinkedHashMap<>(); // id -> name
+    private HashMap<String, CharSequence> mContextNamesMap = new LinkedHashMap<>(); // id -> name
     private ArrayList<String> mContextCourseCodes = new ArrayList<>(); // id -> course name, used for Calendar list names
     private ArrayList<CanvasContext> mCanvasContextItems = new ArrayList<>();
     private ArrayList<String> mFavoriteContextIds = new ArrayList<>();
@@ -687,7 +688,7 @@ public class CalendarListRecyclerAdapter extends ExpandableRecyclerAdapter<Date,
         User mUser = ApiPrefs.getUser();
         mCanvasContextItems.add(0, mUser);
         mContextCourseCodes.add(0, ""); // Blank holder - The user isn't a course.
-        mContextNamesMap.put(mUser.getContextId(), mUser.getName());
+        mContextNamesMap.put(mUser.getContextId(), Pronouns.span(mUser.getName(), mUser.getPronouns()));
     }
 
     /**
@@ -842,7 +843,7 @@ public class CalendarListRecyclerAdapter extends ExpandableRecyclerAdapter<Date,
     }
 
 
-    public HashMap<String, String> getContextNames(){
+    public HashMap<String, CharSequence> getContextNames(){
         return mContextNamesMap;
     }
 

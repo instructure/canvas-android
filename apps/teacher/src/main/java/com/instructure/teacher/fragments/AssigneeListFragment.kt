@@ -18,14 +18,13 @@ package com.instructure.teacher.fragments
 
 import android.graphics.Color
 import android.os.Bundle
-import androidx.core.content.ContextCompat
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import androidx.recyclerview.widget.RecyclerView
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.instructure.canvasapi2.models.CanvasComparable
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.models.Section
@@ -43,7 +42,7 @@ import com.instructure.teacher.utils.*
 import com.instructure.teacher.view.EmptyPandaView
 import com.instructure.teacher.viewinterface.AssigneeListView
 import kotlinx.android.synthetic.main.fragment_assignee_list.*
-import java.util.*
+import java.util.ArrayList
 
 class AssigneeListFragment : BaseExpandableSyncFragment<
         AssigneeCategory,
@@ -83,7 +82,7 @@ class AssigneeListFragment : BaseExpandableSyncFragment<
         setSpan(ForegroundColorSpan(color), start, length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
     }
 
-    override fun updateSelectedAssignees(assigneeNames: ArrayList<String>, displayEveryone: Boolean, displayAsEveryoneElse: Boolean) {
+    override fun updateSelectedAssignees(assigneeNames: ArrayList<CharSequence>, displayEveryone: Boolean, displayAsEveryoneElse: Boolean) {
         if (displayEveryone) assigneeNames.add(0, getString(if (displayAsEveryoneElse) R.string.everyone_else else R.string.everyone))
         val span = SpannableStringBuilder()
         val nameColor = requireContext().getColorCompat(R.color.defaultActionColor)

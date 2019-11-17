@@ -18,14 +18,14 @@ package com.instructure.teacher.view
 
 import android.content.Context
 import android.graphics.Color
-import androidx.annotation.ColorInt
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
+import androidx.annotation.ColorInt
+import com.instructure.pandautils.utils.ProfileUtils
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
-import com.instructure.pandautils.utils.ProfileUtils
 import kotlinx.android.synthetic.main.view_comment.view.*
 
 
@@ -60,8 +60,8 @@ class CommentView @JvmOverloads constructor(
             if (value.isNullOrBlank()) commentTextView.setGone() else commentTextView.setVisible().text = value
         }
 
-    var usernameText: String?
-        get() = userNameTextView.text.toString()
+    var usernameText: CharSequence?
+        get() = userNameTextView.text
         set(value) {
             if (value == null) userNameTextView.setGone() else userNameTextView.setVisible().text = value
         }

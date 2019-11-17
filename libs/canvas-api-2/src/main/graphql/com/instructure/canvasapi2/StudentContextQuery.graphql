@@ -32,6 +32,7 @@ query StudentContextCard($courseId: ID!, $studentId: ID!, $pageSize: Int!, $next
             id: _id
               name
               shortName
+              pronouns
               avatarUrl
               email
               enrollments(courseId: $courseId) {

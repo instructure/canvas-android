@@ -19,7 +19,7 @@ package com.instructure.canvasapi2.models
 
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
-import java.util.*
+import java.util.ArrayList
 
 @Parcelize
 data class User(
@@ -44,7 +44,8 @@ data class User(
         private val lastLogin: String? = null,
         val locale: String? = null,
         @SerializedName("effective_locale")
-        val effective_locale: String? = null
+        val effective_locale: String? = null,
+        val pronouns: String? = null
 ) : CanvasContext() {
     override val comparisonString get() = name
     override val type get() = CanvasContext.Type.USER

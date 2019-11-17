@@ -25,6 +25,7 @@ data class GradeableStudent(
         override val id: Long = 0,
         @SerializedName("display_name")
         val displayName: String = "",
+        val pronouns: String? = null,
         @SerializedName("avatar_image_url")
         val avatarImageUrl: String? = null,
         @SerializedName("html_url")

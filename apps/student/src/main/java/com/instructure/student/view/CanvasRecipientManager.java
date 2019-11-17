@@ -23,7 +23,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Handler;
-import androidx.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -50,6 +49,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import androidx.annotation.NonNull;
 import retrofit2.Response;
 
 /**
@@ -181,7 +181,7 @@ public class CanvasRecipientManager implements RecipientManager {
             public void onResponse(@NonNull Response<List<Recipient>> response, @NonNull LinkHeaders linkHeaders, @NonNull ApiType type) {
                 for(Recipient recipient : response.body()){
                     // TODO : modify the recipient entry to display canvas course info. Currently displaying recipient course id instead of an "address"
-                    RecipientEntry entry = new RecipientEntry(recipient.getIdAsLong(), recipient.getName(), recipient.getStringId(), "", recipient.getAvatarURL(), recipient.getUserCount(), recipient.getItemCount(), true,
+                    RecipientEntry entry = new RecipientEntry(recipient.getIdAsLong(), recipient.getName(), recipient.getPronouns(), recipient.getStringId(), "", recipient.getAvatarURL(), recipient.getUserCount(), recipient.getItemCount(), true,
                             recipient.getCommonCourses() != null ? recipient.getCommonCourses().keySet() : null,
                             recipient.getCommonGroups() != null ?  recipient.getCommonGroups().keySet() : null);
                     if(!allRecipients.contains(entry)){

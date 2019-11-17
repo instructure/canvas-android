@@ -29,9 +29,9 @@ import android.view.ViewGroup
 import android.webkit.WebView
 import android.widget.Toast
 import com.instructure.canvasapi2.models.*
-import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.interactions.Navigation
 import com.instructure.pandautils.utils.*
@@ -187,7 +187,10 @@ class AssignmentDetailsView(
         if(discussionHeaderViewState is DiscussionHeaderViewState.Loaded) {
             ProfileUtils.loadAvatarForUser(authorAvatar, discussionHeaderViewState.authorName, discussionHeaderViewState.authorAvatarUrl)
             authorAvatar.setupAvatarA11y(discussionHeaderViewState.authorName)
-            authorName.text = discussionHeaderViewState.authorName
+            authorName.text = Pronouns.span(
+                discussionHeaderViewState.authorName,
+                discussionHeaderViewState.authorPronouns
+            )
             authoredDate.text = discussionHeaderViewState.authoredDate
             attachmentIcon.setVisible(discussionHeaderViewState.attachmentIconVisibility)
         } else {

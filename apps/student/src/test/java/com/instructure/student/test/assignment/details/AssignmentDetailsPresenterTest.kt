@@ -745,7 +745,7 @@ class AssignmentDetailsPresenterTest : Assert() {
 
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
-        val expectedState = DiscussionHeaderViewState.Loaded(authorAvatarUrl, authorName, authoredDate, attachmentIconVisibility)
+        val expectedState = DiscussionHeaderViewState.Loaded(authorAvatarUrl, authorName, null, authoredDate, attachmentIconVisibility)
 
         assertEquals(expectedState, state.discussionHeaderViewState)
     }
@@ -762,7 +762,7 @@ class AssignmentDetailsPresenterTest : Assert() {
 
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
-        val expectedState = DiscussionHeaderViewState.Loaded(authorAvatarUrl, authorName, authoredDate, attachmentIconVisibility)
+        val expectedState = DiscussionHeaderViewState.Loaded(authorAvatarUrl, authorName, null, authoredDate, attachmentIconVisibility)
 
         assertEquals(expectedState, state.discussionHeaderViewState)
     }
@@ -798,7 +798,7 @@ class AssignmentDetailsPresenterTest : Assert() {
 
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
-        val expectedState = DiscussionHeaderViewState.Loaded(authorAvatarUrl, authorName, authoredDate, attachmentIconVisibility)
+        val expectedState = DiscussionHeaderViewState.Loaded(authorAvatarUrl, authorName, null, authoredDate, attachmentIconVisibility)
 
         assertEquals(expectedState, state.discussionHeaderViewState)
     }

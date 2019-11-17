@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.models.Section
 import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.pandautils.utils.ProfileUtils
 import com.instructure.pandautils.utils.TextDrawable
 import com.instructure.pandautils.utils.setGone
@@ -85,7 +86,7 @@ class AssigneeItemViewHolder(view: View) : AssigneeViewHolder(view) {
                 } else {
                     ProfileUtils.loadAvatarForUser(assigneeAvatarImageView, item.name, item.avatarUrl)
                 }
-                assigneeTitleView.text = item.name
+                assigneeTitleView.text = Pronouns.span(item.name, item.pronouns)
                 assigneeSubtitleView.text = item.primaryEmail ?: item.email
                 setOnClickListener { presenter.toggleStudent(item.id, adapterPosition) }
             }

@@ -17,14 +17,12 @@
 
 package com.instructure.student.binders
 
-import android.content.Context
-import android.view.View
-
-import com.instructure.student.holders.PeopleViewHolder
-import com.instructure.student.interfaces.AdapterToFragmentCallback
 import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.canvasapi2.utils.displayType
 import com.instructure.pandautils.utils.ProfileUtils
+import com.instructure.student.holders.PeopleViewHolder
+import com.instructure.student.interfaces.AdapterToFragmentCallback
 
 class PeopleBinder : BaseBinder() {
     companion object {
@@ -42,7 +40,7 @@ class PeopleBinder : BaseBinder() {
             holder.itemView.setOnClickListener { adapterToFragmentCallback.onRowClicked(item, holder.adapterPosition, true) }
 
             holder.icon.borderColor = courseColor
-            holder.title.text = item.name
+            holder.title.text = Pronouns.span(item.name, item.pronouns)
 
 
             val enrollmentIndex = item.enrollmentIndex

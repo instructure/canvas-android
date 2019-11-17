@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.postmodels.PendingSubmissionComment
+import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.pandautils.fragments.BaseListFragment
 import com.instructure.pandautils.services.NotoriousUploadService
 import com.instructure.pandautils.utils.*
@@ -104,7 +105,12 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
                 intArrayOf(-android.R.attr.state_enabled) to requireContext().getColorCompat(R.color.defaultTextGray),
                 intArrayOf() to ThemePrefs.buttonColor
         )
-        if (!mGradeAnonymously) commentEditText.hint = getString(R.string.sendMessageToHint, mAssignee.name)
+        if (!mGradeAnonymously) commentEditText.hint = Pronouns.resource(
+            requireContext(),
+            R.string.sendMessageToHint,
+            mAssignee.pronouns,
+            Pronouns.span(mAssignee.name, mAssignee.pronouns)
+        )
         sendCommentButton.isEnabled = false
         sendCommentButton.setGone()
         commentEditText.onTextChanged {

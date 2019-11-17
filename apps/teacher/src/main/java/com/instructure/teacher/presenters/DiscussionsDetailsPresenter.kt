@@ -32,7 +32,8 @@ import com.instructure.teacher.viewinterface.DiscussionsDetailsView
 import instructure.androidblueprint.FragmentPresenter
 import kotlinx.coroutines.Job
 import retrofit2.Response
-import java.util.*
+import java.util.ArrayList
+import java.util.Date
 
 class DiscussionsDetailsPresenter(
         var canvasContext: CanvasContext,
@@ -189,10 +190,13 @@ class DiscussionsDetailsPresenter(
     private fun setAuthorAsSelf(discussionEntry: DiscussionEntry) {
         val user = ApiPrefs.user
         if(user != null) {
-            val dp = DiscussionParticipant(user.id)
-            dp.avatarImageUrl = user.avatarUrl
-            dp.displayName = user.name
-            dp.htmlUrl = ""
+            val dp = DiscussionParticipant(
+                id = user.id,
+                avatarImageUrl = user.avatarUrl,
+                displayName = user.name,
+                pronouns = user.pronouns,
+                htmlUrl = ""
+            )
             discussionEntry.author = dp
         }
     }

@@ -21,6 +21,7 @@ import android.graphics.drawable.ColorDrawable
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.Recipient
+import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import kotlinx.android.synthetic.main.viewholder_recipient.view.*
@@ -61,7 +62,7 @@ class RecipientViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         checkBox.setOnCheckedChangeListener(null)
 
         // Set recipient name
-        title.text = recipient.name
+        title.text = Pronouns.span(recipient.name, recipient.pronouns)
 
         when (recipient.recipientType) {
         // Show user count if group, load avatars

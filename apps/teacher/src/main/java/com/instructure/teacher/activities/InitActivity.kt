@@ -41,6 +41,7 @@ import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.LocaleUtils
 import com.instructure.canvasapi2.utils.MasqueradeHelper
+import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
@@ -79,7 +80,7 @@ import kotlinx.coroutines.delay
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import java.util.*
+import java.util.Locale
 
 class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityView>(), InitActivityView,
     CoursesFragment.CourseListCallback, AllCoursesFragment.CourseBrowserCallback, InitActivityInteractions,
@@ -324,7 +325,7 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
 
     private fun setupUserDetails(user: User?) {
         if (user != null) {
-            navigationDrawerUserName.text = user.shortName
+            navigationDrawerUserName.text = Pronouns.span(user.shortName, user.pronouns)
             navigationDrawerUserEmail.text = user.primaryEmail
 
             if (ProfileUtils.shouldLoadAltAvatarImage(user.avatarUrl)) {

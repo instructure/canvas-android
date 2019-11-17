@@ -20,7 +20,7 @@ import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.MediaComment
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.student.PendingSubmissionComment
-import java.util.*
+import java.util.Date
 
 data class SubmissionCommentsViewState(
     val enableFilesButton: Boolean = true,
@@ -33,6 +33,7 @@ sealed class CommentItemState {
     data class CommentItem(
         val id: Long,
         val authorName: String,
+        val authorPronouns: String?,
         val avatarUrl: String,
         val sortDate: Date,
         val dateText: String,
@@ -45,6 +46,7 @@ sealed class CommentItemState {
 
     data class PendingCommentItem(
         val authorName: String,
+        val authorPronouns: String?,
         val avatarUrl: String,
         val sortDate: Date,
         val pendingComment: PendingSubmissionComment
@@ -52,6 +54,7 @@ sealed class CommentItemState {
 
     data class SubmissionItem(
         val authorName: String,
+        val authorPronouns: String?,
         val avatarUrl: String,
         val sortDate: Date,
         val dateText: String,

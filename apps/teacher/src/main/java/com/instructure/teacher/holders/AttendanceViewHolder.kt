@@ -20,6 +20,7 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.Attendance
 import com.instructure.canvasapi2.models.BasicUser
+import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.pandautils.utils.ProfileUtils
 import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.onClickWithRequireNetwork
@@ -33,11 +34,12 @@ class AttendanceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         // Set student avatar
         val basicUser = BasicUser()
         basicUser.name = attendance.student?.name
+        basicUser.pronouns = attendance.student?.pronouns
         basicUser.avatarUrl = attendance.student?.avatarUrl
         ProfileUtils.loadAvatarForUser(studentAvatar, basicUser)
 
         // Set student name
-        userName.text = attendance.student?.name
+        userName.text = attendance.student?.let { Pronouns.span(it.name, it.pronouns) }
 
         itemView.onClickWithRequireNetwork { callback.onRowClicked(attendance, position) }
         studentAvatar.onClick { callback.onAvatarClicked(attendance, position) }

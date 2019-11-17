@@ -36,6 +36,7 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.models.postmodels.AssignmentPostBody
 import com.instructure.canvasapi2.models.postmodels.QuizPostBody
+import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.interactions.Identity
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.dialogs.DatePickerDialogFragment
@@ -60,7 +61,8 @@ import kotlinx.android.synthetic.main.view_assignment_override.view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import java.util.*
+import java.util.ArrayList
+import java.util.Date
 
 class EditQuizDetailsFragment : BasePresenterFragment<
         EditQuizDetailsPresenter,
@@ -362,7 +364,7 @@ class EditQuizDetailsFragment : BasePresenterFragment<
         // Load in overrides
         with(presenter) {
             mEditDateGroups.forEachIndexed { index, dueDateGroup ->
-                val assignees = ArrayList<String>()
+                val assignees = ArrayList<CharSequence>()
                 val v = AssignmentOverrideView(requireActivity())
                 if (dueDateGroup.isEveryone) {
                     // && (dueDateGroup.coreDates.dueDate != null || dueDateGroup.coreDates.lockDate != null || dueDateGroup.coreDates.unlockDate != null)
@@ -370,7 +372,9 @@ class EditQuizDetailsFragment : BasePresenterFragment<
                 }
                 dueDateGroup.groupIds.forEach { assignees.add(groupsMapped[it]?.name ?: "") }
                 dueDateGroup.sectionIds.forEach { assignees.add(sectionsMapped[it]?.name ?: "") }
-                dueDateGroup.studentIds.forEach { (assignees.add(studentsMapped[it]?.name ?: "")) }
+                dueDateGroup.studentIds.forEach {
+                    assignees.add(studentsMapped[it]!!.let { user -> Pronouns.span(user.name, user.pronouns) })
+                }
 
                 v.setupOverride(index, dueDateGroup, mEditDateGroups.size > 1, assignees, datePickerOnClick, timePickerOnClick, removeOverrideClick) {
                     val args = AssigneeListFragment.makeBundle(

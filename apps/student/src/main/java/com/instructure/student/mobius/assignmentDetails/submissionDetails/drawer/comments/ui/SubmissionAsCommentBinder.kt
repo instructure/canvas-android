@@ -16,8 +16,9 @@
  */
 package com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.ui
 
-import com.instructure.student.R
+import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.pandautils.adapters.BasicItemBinder
+import com.instructure.student.R
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.CommentItemState
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.ui.views.CommentDirection
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.ui.views.CommentSubmissionView
@@ -28,7 +29,7 @@ class SubmissionAsCommentBinder :
     override val layoutResId = R.layout.adapter_submission_comment
     override val bindBehavior = Item { comment, callback, _ ->
         commentHolder.direction = CommentDirection.OUTGOING
-        commentHolder.usernameText = comment.authorName
+        commentHolder.usernameText = Pronouns.span(comment.authorName, comment.authorPronouns)
         commentHolder.dateText = comment.dateText
         commentHolder.commentText = null
         commentHolder.setAvatar(comment.avatarUrl, comment.authorName)

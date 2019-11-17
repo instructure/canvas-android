@@ -21,17 +21,19 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class BasicUser(
+data class BasicUser constructor(
         override var id: Long = 0,
         var name: String? = null,
         @SerializedName("avatar_url")
-        var avatarUrl: String? = null
+        var avatarUrl: String? = null,
+        var pronouns: String? = null
 ) : CanvasModel<BasicUser>() {
     companion object {
         fun userToBasicUser(user: User): BasicUser {
             val basicUser = BasicUser()
             basicUser.id = user.id
             basicUser.name = user.name
+            basicUser.pronouns = user.pronouns
             basicUser.avatarUrl = user.avatarUrl
             return basicUser
         }

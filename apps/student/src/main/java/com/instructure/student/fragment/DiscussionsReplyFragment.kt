@@ -25,6 +25,7 @@ import com.instructure.canvasapi2.managers.DiscussionManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionEntry
 import com.instructure.canvasapi2.models.DiscussionParticipant
+import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
@@ -35,7 +36,6 @@ import com.instructure.interactions.router.Route
 import com.instructure.loginapi.login.dialog.NoInternetConnectionDialog
 import com.instructure.pandautils.dialogs.UploadFilesDialog
 import com.instructure.pandautils.discussions.DiscussionCaching
-import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.AttachmentView
 import com.instructure.student.R
@@ -195,11 +195,12 @@ class DiscussionsReplyFragment : ParentFragment() {
 
             ApiPrefs.user?.let {
                 // The author does not come back in the response, we add the current user so things will display from cache properly
-                discussionEntry!!.author = DiscussionParticipant().apply {
-                    id = it.id
-                    displayName = it.shortName
+                discussionEntry!!.author = DiscussionParticipant(
+                    id = it.id,
+                    displayName = it.shortName,
+                    pronouns = it.pronouns,
                     avatarImageUrl = it.avatarUrl
-                }
+                )
             }
 
             // Post successful

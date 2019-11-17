@@ -316,7 +316,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
     private fun setupUserDetails(user: User?) {
         if (user != null) {
-            navigationDrawerUserName.text = user.shortName
+            navigationDrawerUserName.text = Pronouns.span(user.shortName, user.pronouns)
             navigationDrawerUserEmail.text = user.primaryEmail
 
             if(ProfileUtils.shouldLoadAltAvatarImage(user.avatarUrl)) {

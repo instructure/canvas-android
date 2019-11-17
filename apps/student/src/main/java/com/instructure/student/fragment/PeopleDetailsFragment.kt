@@ -27,6 +27,7 @@ import com.instructure.canvasapi2.models.BasicUser
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.canvasapi2.utils.displayType
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.pageview.PageView
@@ -43,7 +44,7 @@ import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.router.RouteMatcher
 import kotlinx.android.synthetic.main.fragment_people_details.*
-import java.util.*
+import java.util.ArrayList
 
 @PageView(url = "{canvasContext}/users/{userId}")
 class PeopleDetailsFragment : ParentFragment(), Bookmarkable {
@@ -112,7 +113,7 @@ class PeopleDetailsFragment : ParentFragment(), Bookmarkable {
     private fun setupUserViews() {
         user?.let { u ->
             ProfileUtils.loadAvatarForUser(avatar, u)
-            userName.text = u.name
+            userName.text = Pronouns.span(u.name, u.pronouns)
             userRole.text = u.enrollments.distinctBy { it.displayType }.joinToString { it.displayType }
             userBackground.setBackgroundColor(ColorKeeper.getOrGenerateColor(canvasContext))
             bioText.setVisible(u.bio.isValid() && u.bio != null).text = u.bio

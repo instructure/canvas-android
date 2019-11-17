@@ -123,6 +123,7 @@ class InboxComposeMessageFragment : ParentFragment() {
         Recipient(
             stringId = it.destination,
             name = it.name,
+            pronouns = it.pronouns,
             userCount = it.userCount,
             itemCount = it.itemCount,
             avatarURL = it.avatarUrl
@@ -432,7 +433,7 @@ class InboxComposeMessageFragment : ParentFragment() {
                 .filter { participant -> selectedRecipients.none { it.destination == participant.id.toString() } }
                 // Add new recipients
                 .forEach {
-                    val recipientEntry = RecipientEntry(it.id, it.name, it.id.toString(), "", it.avatarUrl, 0, 0, true, null, null)
+                    val recipientEntry = RecipientEntry(it.id, it.name, it.pronouns, it.id.toString(), "", it.avatarUrl, 0, 0, true, null, null)
                     this.recipientsView.appendRecipientEntry(recipientEntry)
                 }
     }
@@ -451,6 +452,7 @@ class InboxComposeMessageFragment : ParentFragment() {
                 val recipientEntry = RecipientEntry(
                     it.idAsLong,
                     it.name,
+                    it.pronouns,
                     it.stringId,
                     "",
                     it.avatarURL,

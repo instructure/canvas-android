@@ -14,21 +14,23 @@
  *     limitations under the License.
  */
 @file:JvmName("MasqueradeUI")
+
 package com.instructure.loginapi.login.util
 
 import android.app.Activity
 import android.os.Build
-import androidx.fragment.app.DialogFragment
-import androidx.core.content.ContextCompat
-import androidx.appcompat.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.FrameLayout
 import android.widget.LinearLayout
+import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.DialogFragment
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.MasqueradeHelper
+import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.loginapi.login.R
 import com.instructure.pandautils.utils.lastAncestorOrNull
 import com.instructure.pandautils.utils.onClick
@@ -78,7 +80,12 @@ private fun Window.showMasqueradeNotification(startingClass: Class<Activity>? = 
         // Add notification view
         rootView.findViewById<View>(android.R.id.content).lastAncestorOrNull<LinearLayout>()?.let {
             val view = LayoutInflater.from(context).inflate(R.layout.layout_masquerade_notification, it, false)
-            view.masqueradeLabel.text = context.getString(R.string.masqueradingAs, ApiPrefs.user?.name)
+            view.masqueradeLabel.text = Pronouns.resource(
+                context,
+                R.string.masqueradingAs,
+                ApiPrefs.user?.pronouns,
+                Pronouns.span(ApiPrefs.user?.name, ApiPrefs.user?.pronouns)
+            )
             view.cancelMasqueradeButton.onClick {
                 AlertDialog.Builder(context)
                     .setTitle(R.string.stopActingAsTitle)

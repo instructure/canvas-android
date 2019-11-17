@@ -20,6 +20,7 @@ import com.instructure.canvasapi2.models.CanvasComparable
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.models.Section
 import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.teacher.events.AssigneesUpdatedEvent
 import com.instructure.teacher.models.AssigneeCategory
 import com.instructure.teacher.models.EveryoneAssignee
@@ -27,7 +28,7 @@ import com.instructure.teacher.utils.EditDateGroups
 import com.instructure.teacher.viewinterface.AssigneeListView
 import instructure.androidblueprint.SyncExpandablePresenter
 import org.greenrobot.eventbus.EventBus
-import java.util.*
+import java.util.ArrayList
 
 class AssigneeListPresenter(
         val mAllDateGroups: EditDateGroups,
@@ -76,10 +77,10 @@ class AssigneeListPresenter(
             || selectedGroups.isNotEmpty()
 
     private fun updateSelectedAssignees() {
-        val assigneeNames = arrayListOf<String>()
+        val assigneeNames = arrayListOf<CharSequence>()
         assigneeNames += selectedSections.map { mSectionMap[it]!!.name }
         assigneeNames += selectedGroups.map { mGroupMap[it]?.name ?: "" }
-        assigneeNames += selectedStudents.map { mStudentMap[it]!!.name }
+        assigneeNames += selectedStudents.map { Pronouns.span(mStudentMap[it]?.name, mStudentMap[it]?.pronouns) }
         viewCallback?.updateSelectedAssignees(assigneeNames, isEveryone, showAsEveryoneElse())
     }
 
