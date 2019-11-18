@@ -52,6 +52,9 @@ class ParentTheme extends StatefulWidget {
   /// A general 'success' color
   static const success = Color(0xFF00AC18);
 
+  /// A general 'failure' color, crimson
+  static const failure = Color(0xFFEE0612);
+
   /// Generates a [MaterialColor] swatch for a given color. For best results the source color should have a medium brightness.
   static MaterialColor makeSwatch(Color color) {
     var src = HSLColor.fromColor(color);
