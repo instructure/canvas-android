@@ -25,7 +25,6 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.utils.*
 import com.instructure.student.mobius.common.ui.MobiusFragment
 import com.instructure.student.mobius.syllabus.*
-import com.newrelic.agent.android.NewRelic
 
 @PageView(url = "{canvasContext}/assignments/syllabus")
 class SyllabusFragment : MobiusFragment<SyllabusModel, SyllabusEvent, SyllabusEffect, SyllabusView, SyllabusViewState>() {
@@ -33,7 +32,7 @@ class SyllabusFragment : MobiusFragment<SyllabusModel, SyllabusEvent, SyllabusEf
     val canvasContext by ParcelableArg<Course>(key = Const.CANVAS_CONTEXT)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        NewRelic.setInteractionName(this::class.java.simpleName)
+        TelemetryUtils.setInteractionName(this::class.java.simpleName)
         super.onCreate(savedInstanceState)
     }
 

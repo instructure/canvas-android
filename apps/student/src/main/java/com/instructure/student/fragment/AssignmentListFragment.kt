@@ -39,7 +39,6 @@ import com.instructure.student.adapter.TermSpinnerAdapter
 import com.instructure.student.interfaces.AdapterToAssignmentsCallback
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.router.RouteMatcher
-import com.newrelic.agent.android.NewRelic
 import kotlinx.android.synthetic.main.assignment_list_layout.*
 
 @PageView(url = "{canvasContext}/assignments")
@@ -86,7 +85,7 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
     override fun getSelectedParamName() = RouterParams.ASSIGNMENT_ID
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        NewRelic.setInteractionName(this::class.java.simpleName)
+        TelemetryUtils.setInteractionName(this::class.java.simpleName)
         super.onCreate(savedInstanceState)
     }
 

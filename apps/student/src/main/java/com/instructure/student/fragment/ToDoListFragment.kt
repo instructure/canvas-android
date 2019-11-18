@@ -37,7 +37,6 @@ import com.instructure.student.adapter.TodoListRecyclerAdapter
 import com.instructure.student.interfaces.NotificationAdapterToFragmentCallback
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.router.RouteMatcher
-import com.newrelic.agent.android.NewRelic
 import kotlinx.android.synthetic.main.fragment_list_todo.*
 import kotlinx.android.synthetic.main.fragment_list_todo.view.*
 import kotlinx.android.synthetic.main.panda_recycler_refresh_layout.*
@@ -74,7 +73,7 @@ class ToDoListFragment : ParentFragment() {
     override fun title(): String = getString(R.string.Todo)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        NewRelic.setInteractionName(this::class.java.simpleName)
+        TelemetryUtils.setInteractionName(this::class.java.simpleName)
         super.onCreate(savedInstanceState)
     }
 

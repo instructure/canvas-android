@@ -31,7 +31,6 @@ import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.utils.*
 import com.instructure.student.mobius.assignmentDetails.*
 import com.instructure.student.mobius.common.ui.MobiusFragment
-import com.newrelic.agent.android.NewRelic
 
 @PageView(url = "{canvasContext}/assignments/{assignmentId}")
 class AssignmentDetailsFragment :
@@ -54,7 +53,7 @@ class AssignmentDetailsFragment :
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        NewRelic.setInteractionName(this::class.java.simpleName)
+        TelemetryUtils.setInteractionName(this::class.java.simpleName)
         super.onCreate(savedInstanceState)
     }
 

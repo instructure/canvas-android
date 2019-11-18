@@ -32,9 +32,8 @@ import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.interactions.router.Route
 import com.instructure.loginapi.login.activities.BaseLoginInitActivity
 import com.instructure.pandautils.services.PushNotificationRegistrationService
+import com.instructure.pandautils.utils.TelemetryUtils
 import com.instructure.pandautils.utils.Utils
-import com.newrelic.agent.android.FeatureFlag
-import com.newrelic.agent.android.NewRelic
 
 
 class LoginActivity : BaseLoginInitActivity() {
@@ -81,13 +80,7 @@ class LoginActivity : BaseLoginInitActivity() {
         Log.v("LoginActivity","startNewRelic=$startNewRelic")
 
         if(startNewRelic) {
-            NewRelic.enableFeature(FeatureFlag.NetworkRequests)
-            NewRelic.enableFeature(FeatureFlag.NetworkErrorRequests)
-            NewRelic.withApplicationToken(BuildConfig.NEWRELIC_APP_TOKEN)
-                    .withCrashReportingEnabled(false) // might interfere with Crashlytics
-                    .withInteractionTracing(true)
-                    .withLoggingEnabled(false)
-                    .start(this.applicationContext)
+            TelemetryUtils.initialize(this.applicationContext, BuildConfig.NEWRELIC_APP_TOKEN)
         }
         super.onCreate(savedInstanceState)
     }
