@@ -196,9 +196,33 @@ object CourseDiscussionTopicListEndpoint : Endpoint(
         response = {
             GET {
                 Log.d("<--", "discussion_topics request: ${request}")
-                val currentDiscussionTopics = data.courseDiscussionTopicHeaders[pathVars.courseId]
-                        ?: listOf<DiscussionTopicHeader>()
-                request.successResponse(currentDiscussionTopics)
+                var announcementsOnly = request.url().queryParameter("only_announcements")?.equals("1")
+                var sectionsOnly = request.url().queryParameterValues("include[]").contains("sections")
+
+                // Base course discussion topic list
+                var courseDiscussionTopics = data.courseDiscussionTopicHeaders[pathVars.courseId]
+
+                // If specified, filter down to discussions that are announcements
+                if(courseDiscussionTopics != null && announcementsOnly != null && announcementsOnly == true)  {
+                    courseDiscussionTopics = courseDiscussionTopics?.filter {it.announcement}?.toMutableList()
+                }
+
+                // If specified, filter down to discussions with course sections enrolled in by the user
+                if(courseDiscussionTopics != null && sectionsOnly != null && sectionsOnly == true) {
+
+                    val userId = request.user!!.id
+                    val courseId = pathVars.courseId
+                    val userCourseEnrollment = data.enrollments.values.first {it.userId == userId && it.courseId == courseId}
+                    courseDiscussionTopics =
+                            courseDiscussionTopics!!.filter {
+                                it.sections == null
+                                        || it.sections!!.count() == 0
+                                        || it.sections!!.find {it.id == userCourseEnrollment.courseSectionId} != null
+                            }.toMutableList()
+                }
+
+                // Now return the final list
+                request.successResponse(courseDiscussionTopics ?: listOf<DiscussionTopicHeader>())
             }
 
             POST {
