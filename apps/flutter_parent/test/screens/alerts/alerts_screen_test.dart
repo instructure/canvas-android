@@ -26,8 +26,8 @@ import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:mockito/mockito.dart';
 
-import '../utils/accessibility_utils.dart';
-import '../utils/test_app.dart';
+import '../../utils/accessibility_utils.dart';
+import '../../utils/test_app.dart';
 
 void main() {
   _setupLocator({AlertsInteractor interactor}) {
@@ -245,12 +245,11 @@ User _mockUser({int id = 0}) {
 
 List<Alert> _mockData({int size = 1, AlertType type}) {
   return List.generate(
-    size,
-    (index) => Alert((b) => b
-      ..id = index
-      ..title = 'Alert $index'
-      ..alertType = type ?? AlertType.institutionAnnouncement)
-  );
+      size,
+      (index) => Alert((b) => b
+        ..id = index
+        ..title = 'Alert $index'
+        ..alertType = type ?? AlertType.institutionAnnouncement));
 }
 
 class _MockAlertsInteractor extends Mock implements AlertsInteractor {}

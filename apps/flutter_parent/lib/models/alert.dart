@@ -75,21 +75,21 @@ abstract class Alert implements Built<Alert, AlertBuilder> {
   // Utility functions
 
   bool isAlertInfo() {
-    return [
+    return const [
       AlertType.courseAnnouncement,
       AlertType.institutionAnnouncement,
     ].contains(alertType);
   }
 
   bool isAlertPositive() {
-    return [
+    return const [
       AlertType.assignmentGradeHigh,
       AlertType.courseGradeHigh,
     ].contains(alertType);
   }
 
   bool isAlertNegative() {
-    return [
+    return const [
       AlertType.assignmentMissing,
       AlertType.assignmentGradeLow,
       AlertType.courseGradeLow,

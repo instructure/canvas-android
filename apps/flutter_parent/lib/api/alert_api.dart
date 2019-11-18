@@ -20,7 +20,7 @@ import 'package:flutter_parent/models/serializers.dart';
 
 class AlertsApi {
   /// Alerts were depaginated in the original parent app, then sorted by date. Depaginating here to follow suite.
-  static Future<List<Alert>> getAlertsDepaginated(int studentId) async {
+  Future<List<Alert>> getAlertsDepaginated(int studentId) async {
     var response = await Dio().get(ApiPrefs.getApiUrl(path: 'users/self/observer_alerts/$studentId'),
         options: Options(headers: ApiPrefs.getHeaderMap()));
 
@@ -32,7 +32,7 @@ class AlertsApi {
     }
   }
 
-  static Future<List<Alert>> _getAlertsDepaginated(PagedList<Alert> prevList) async {
+  Future<List<Alert>> _getAlertsDepaginated(PagedList<Alert> prevList) async {
     var response = await Dio().get(prevList.nextUrl, options: Options(headers: ApiPrefs.getHeaderMap()));
 
     if (response.statusCode == 200 || response.statusCode == 201) {
@@ -43,7 +43,7 @@ class AlertsApi {
     }
   }
 
-  static Future<Alert> updateAlertWorkflow(int alertId, String workflowState) async {
+  Future<Alert> updateAlertWorkflow(int alertId, String workflowState) async {
     var response = await Dio().put(
       ApiPrefs.getApiUrl(path: "users/self/observer_alerts/$alertId/$workflowState"),
       options: Options(headers: ApiPrefs.getHeaderMap()),
