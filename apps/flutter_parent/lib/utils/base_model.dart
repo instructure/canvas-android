@@ -35,6 +35,7 @@ class BaseModel extends ChangeNotifier {
       if (loadBlock != null) await loadBlock();
       setState(viewState: ViewState.Idle);
     } catch (e) {
+      print("error while doing work: $e");
       setState(viewState: ViewState.Error);
     }
   }

@@ -12,7 +12,7 @@
 /// You should have received a copy of the GNU General Public License
 /// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import 'package:flutter_parent/models/assignment.dart';
+import 'package:flutter_parent/models/assignment_group.dart';
 import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_interactor.dart';
 import 'package:flutter_parent/utils/base_model.dart';
@@ -22,25 +22,25 @@ class CourseDetailsModel extends BaseModel {
   int studentId;
   int courseId; // Could be routed to without a full course, only the id may be known
   Course course;
-  List<Assignment> assignments;
+  List<AssignmentGroup> assignmentGroups;
 
-  CourseDetailsModel(this.studentId, this.courseId, {this.assignments});
+  CourseDetailsModel(this.studentId, this.courseId, {this.assignmentGroups});
 
   // A convenience constructor when we already have the course data
-  CourseDetailsModel.withCourse(this.studentId, this.course, {this.assignments}) : this.courseId = course.id;
+  CourseDetailsModel.withCourse(this.studentId, this.course, {this.assignmentGroups}) : this.courseId = course.id;
 
   Future<void> loadData({bool refreshCourse = false, bool refreshAssignments = false}) {
     return work(() async {
       // Declare the futures so we can let both run asynchronously
       final courseFuture =
           (refreshCourse || course == null) ? _interactor().loadCourse(courseId) : Future.value(course);
-      final assignmentsFuture = (refreshAssignments || assignments == null)
-          ? _interactor().loadAssignments(courseId, studentId)
-          : Future.value(assignments);
+      final assignmentsFuture = (refreshAssignments || assignmentGroups == null)
+          ? _interactor().loadAssignmentGroups(courseId, studentId)
+          : Future.value(assignmentGroups);
 
       // Await the results
       course = await courseFuture;
-      assignments = await assignmentsFuture;
+      assignmentGroups = await assignmentsFuture;
     });
   }
 

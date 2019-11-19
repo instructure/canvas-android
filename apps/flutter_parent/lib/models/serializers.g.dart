@@ -11,6 +11,7 @@ Serializers _$_serializers = (new Serializers().toBuilder()
       ..add(AlertType.serializer)
       ..add(AlertWorkflowState.serializer)
       ..add(Assignment.serializer)
+      ..add(AssignmentGroup.serializer)
       ..add(CanvasToken.serializer)
       ..add(Course.serializer)
       ..add(Enrollment.serializer)
@@ -19,6 +20,9 @@ Serializers _$_serializers = (new Serializers().toBuilder()
       ..add(SchoolDomain.serializer)
       ..add(Submission.serializer)
       ..add(User.serializer)
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(Assignment)]),
+          () => new ListBuilder<Assignment>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(Enrollment)]),
           () => new ListBuilder<Enrollment>())

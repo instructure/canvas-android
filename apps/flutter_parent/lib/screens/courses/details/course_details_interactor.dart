@@ -14,7 +14,7 @@
 
 import 'package:flutter_parent/api/assignment_api.dart';
 import 'package:flutter_parent/api/course_api.dart';
-import 'package:flutter_parent/models/assignment.dart';
+import 'package:flutter_parent/models/assignment_group.dart';
 import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
@@ -23,7 +23,7 @@ class CourseDetailsInteractor {
     return locator<CourseApi>().getCourse(courseId);
   }
   
-  Future<List<Assignment>> loadAssignments(int courseId, int studentId) {
-    return locator<AssignmentApi>().getAssignmentsWithSubmissionsDepaginated(courseId, studentId);
+  Future<List<AssignmentGroup>> loadAssignmentGroups(int courseId, int studentId) {
+    return locator<AssignmentApi>().getAssignmentGroupsWithSubmissionsDepaginated(courseId, studentId);
   }
 }

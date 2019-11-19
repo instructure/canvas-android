@@ -16,6 +16,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_parent/api/utils/api_prefs.dart';
 import 'package:flutter_parent/models/assignment.dart';
 import 'package:flutter_parent/api/utils/paged_list.dart';
+import 'package:flutter_parent/models/assignment_group.dart';
 import 'package:flutter_parent/models/serializers.dart';
 
 class AssignmentApi {
@@ -46,6 +47,36 @@ class AssignmentApi {
     if (assignmentResponse.statusCode == 200 || assignmentResponse.statusCode == 201) {
       prevResponse.updateWithResponse(assignmentResponse);
       return (prevResponse.nextUrl == null) ? prevResponse.data : _getAssignmentsWithSubmissionsDepaginated(prevResponse);
+    } else {
+      return Future.error(assignmentResponse.statusMessage);
+    }
+  }
+
+  Future<List<AssignmentGroup>> getAssignmentGroupsWithSubmissionsDepaginated(int courseId, int studentId) async {
+    var assignmentResponse = await Dio().get(ApiPrefs.getApiUrl(path: 'courses/$courseId/assignment_groups'),
+        queryParameters: {
+          'as_user_id': studentId,
+          'include': ['assignments', 'discussion_topic', 'submission', 'all_dates', 'overrides'], // rubric_assessment?
+          'override_assignment_dates': 'true',
+          'order_by': 'due_at', // No order_by?
+        },
+        options: Options(headers: ApiPrefs.getHeaderMap()));
+
+    if (assignmentResponse.statusCode == 200 || assignmentResponse.statusCode == 201) {
+      final response = PagedList<AssignmentGroup>(assignmentResponse);
+      return (response.nextUrl == null) ? response.data : _getAssignmentGroupsWithSubmissionsDepaginated(response);
+    } else {
+      return Future.error(assignmentResponse.statusMessage);
+    }
+  }
+
+  Future<List<AssignmentGroup>> _getAssignmentGroupsWithSubmissionsDepaginated(PagedList<AssignmentGroup> prevResponse) async {
+    // Query params already specified in url
+    var assignmentResponse = await Dio().get(prevResponse.nextUrl, options: Options(headers: ApiPrefs.getHeaderMap()));
+
+    if (assignmentResponse.statusCode == 200 || assignmentResponse.statusCode == 201) {
+      prevResponse.updateWithResponse(assignmentResponse);
+      return (prevResponse.nextUrl == null) ? prevResponse.data : _getAssignmentGroupsWithSubmissionsDepaginated(prevResponse);
     } else {
       return Future.error(assignmentResponse.statusMessage);
     }

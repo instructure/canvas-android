@@ -44,9 +44,9 @@ void main() {
     final assignmentApi = _MockAssignmentApi();
     _setupLocator(assignmentApi: assignmentApi);
 
-    CourseDetailsInteractor().loadAssignments(courseId, studentId);
+    CourseDetailsInteractor().loadAssignmentGroups(courseId, studentId);
 
-    verify(assignmentApi.getAssignmentsWithSubmissionsDepaginated(courseId, studentId)).called(1);
+    verify(assignmentApi.getAssignmentGroupsWithSubmissionsDepaginated(courseId, studentId)).called(1);
   });
 }
 

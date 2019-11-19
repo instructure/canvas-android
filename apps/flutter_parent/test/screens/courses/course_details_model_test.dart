@@ -12,7 +12,7 @@
 /// You should have received a copy of the GNU General Public License
 /// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import 'package:flutter_parent/models/assignment.dart';
+import 'package:flutter_parent/models/assignment_group.dart';
 import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_interactor.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_model.dart';
@@ -77,44 +77,44 @@ void main() {
     });
 
     test('does not refresh assignments if it has data', () async {
-      final assignments = List<Assignment>();
+      final assignments = List<AssignmentGroup>();
       final interactor = _MockCourseDetailsInteractor();
       _setupLocator(interactor: interactor);
       final model = CourseDetailsModel.withCourse(studentId, course);
-      model.assignments = assignments;
+      model.assignmentGroups = assignments;
 
       await model.loadData();
 
-      verifyNever(interactor.loadAssignments(courseId, studentId));
-      expect(model.assignments, assignments);
+      verifyNever(interactor.loadAssignmentGroups(courseId, studentId));
+      expect(model.assignmentGroups, assignments);
     });
 
     test('refreshes assignments if assignment refresh forced', () async {
       final expected = null;
       final interactor = _MockCourseDetailsInteractor();
-      when(interactor.loadAssignments(courseId, studentId)).thenAnswer((_) => Future.value(expected));
+      when(interactor.loadAssignmentGroups(courseId, studentId)).thenAnswer((_) => Future.value(expected));
       _setupLocator(interactor: interactor);
       final model = CourseDetailsModel.withCourse(studentId, course);
-      model.assignments = List();
+      model.assignmentGroups = List();
 
       await model.loadData(refreshAssignments: true);
 
-      verify(interactor.loadAssignments(courseId, studentId)).called(1);
-      expect(model.assignments, expected);
+      verify(interactor.loadAssignmentGroups(courseId, studentId)).called(1);
+      expect(model.assignmentGroups, expected);
     });
 
     test('refreshes assignments if assignments is null', () async {
-      final expected = List<Assignment>();
+      final expected = List<AssignmentGroup>();
       final interactor = _MockCourseDetailsInteractor();
-      when(interactor.loadAssignments(courseId, studentId)).thenAnswer((_) => Future.value(expected));
+      when(interactor.loadAssignmentGroups(courseId, studentId)).thenAnswer((_) => Future.value(expected));
       _setupLocator(interactor: interactor);
       final model = CourseDetailsModel.withCourse(studentId, course);
 
-      expect(model.assignments, null);
+      expect(model.assignmentGroups, null);
       await model.loadData();
 
-      verify(interactor.loadAssignments(courseId, studentId)).called(1);
-      expect(model.assignments, expected);
+      verify(interactor.loadAssignmentGroups(courseId, studentId)).called(1);
+      expect(model.assignmentGroups, expected);
     });
   });
 }
