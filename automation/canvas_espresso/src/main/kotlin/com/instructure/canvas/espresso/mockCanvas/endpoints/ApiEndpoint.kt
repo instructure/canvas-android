@@ -41,5 +41,6 @@ object ApiEndpoint : Endpoint(
     Segment("dashboard") to endpoint(
         Segment("dashboard_cards") to DashboardCardsEndpoint
     ),
-    Segment("folders") to FolderListEndpoint
+    Segment("folders") to FolderListEndpoint,
+    Segment("search") to SearchEndpoint
 )

@@ -21,7 +21,11 @@ package com.instructure.canvas.espresso.mockCanvas
 import android.util.Log
 import com.github.javafaker.Faker
 import com.instructure.canvas.espresso.mockCanvas.utils.Randomizer
+import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.type.EnrollmentType
+import com.instructure.canvasapi2.utils.APIHelper
+import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.toApiString
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
@@ -83,9 +87,6 @@ class MockCanvas {
 
     /** Map of account notification id to object */
     val accountNotifications = mutableMapOf<Long, AccountNotification>()
-
-    /** Map of conversation id to conversation object */
-    val conversations = mutableMapOf<Long, Conversation>()
 
     /** Map of group id to group object */
     val groups = mutableMapOf<Long, Group>()
@@ -149,6 +150,20 @@ class MockCanvas {
 
     /** Map of quiz id to quiz submission list */
     val quizSubmissions = mutableMapOf<Long, MutableList<QuizSubmission>>()
+
+    val studentRecipients = mutableMapOf<Long, List<Recipient>>()
+    val teacherRecipients = mutableMapOf<Long, List<Recipient>>()
+    val recipientGroups = mutableMapOf<Long, List<Recipient>>()
+
+    var sentConversation: Conversation? = null
+    val sentConversations = mutableMapOf<Long, Conversation>()
+    val starredConversations = mutableMapOf<Long, Conversation>()
+    val archivedConversations = mutableMapOf<Long, Conversation>()
+    val unreadConversations = mutableMapOf<Long, Conversation>()
+    val conversationCourseMap = mutableMapOf<Long, List<Conversation>>()
+
+    /** Map of conversation id to conversation object */
+    val conversations = mutableMapOf<Long, Conversation>()
 
     //region Convenience functionality
 
@@ -319,6 +334,124 @@ fun MockCanvas.addCourse(
 fun MockCanvas.addCoursePermissions(courseId: Long, permissions: CanvasContextPermission) {
     coursePermissions[courseId] = permissions
 }
+
+fun MockCanvas.addRecipientsToCourse(course: Course, students: List<User>, teachers: List<User>) {
+    studentRecipients[course.id] = students.map {
+        Recipient(
+                stringId = it.id.toString(),
+                name = it.shortName,
+                avatarURL = it.avatarUrl,
+                commonCourses = hashMapOf(Pair(course.id.toString(), arrayOf(EnrollmentType.STUDENTENROLLMENT.rawValue())))
+        )
+    }
+
+    teacherRecipients[course.id] = teachers.map {
+        Recipient(
+                stringId = it.id.toString(),
+                name = it.shortName,
+                avatarURL = it.avatarUrl,
+                commonCourses = hashMapOf(Pair(course.id.toString(), arrayOf(EnrollmentType.TEACHERENROLLMENT.rawValue())))
+        )
+    }
+
+    recipientGroups[course.id] = listOf(
+        Recipient(
+            avatarURL = Randomizer.randomAvatarUrl(),
+            stringId = "${course.contextId}_teachers",
+            name = "Teachers",
+            userCount = teacherRecipients.values.size
+        ),
+        Recipient(
+            avatarURL = Randomizer.randomAvatarUrl(),
+            stringId = "${course.contextId}_students",
+            name = "Students",
+            userCount = studentRecipients.values.size
+        )
+    )
+}
+
+fun MockCanvas.addSentConversation(subject: String) {
+    sentConversation = Conversation(
+        id = 12345L,
+        subject = subject,
+        workflowState = Conversation.WorkflowState.UNREAD,
+        lastMessage = Randomizer.randomConversationBody(),
+        lastAuthoredMessageAt = APIHelper.dateToString(GregorianCalendar()),
+        messageCount = 1,
+        avatarUrl = Randomizer.randomAvatarUrl()
+    )
+}
+
+fun MockCanvas.addConversations(conversationCount: Int = 1) {
+    val message = Message(
+        id = 12345L,
+        createdAt = APIHelper.dateToString(GregorianCalendar()),
+        body = Randomizer.randomConversationBody(),
+        authorId = 123L,
+        participatingUserIds = listOf(123L, 12345L)
+    )
+
+    val basicUser = BasicUser(
+        id = 123L,
+        name = Randomizer.randomName().fullName,
+        avatarUrl = Randomizer.randomAvatarUrl()
+    )
+
+    val conversation = Conversation(
+        id = 12345L,
+        subject = Randomizer.randomConversationSubject(),
+        workflowState = Conversation.WorkflowState.READ,
+        lastMessage = Randomizer.randomConversationBody(),
+        lastAuthoredMessageAt = APIHelper.dateToString(GregorianCalendar()),
+        messageCount = 1,
+        messages = listOf(message),
+        avatarUrl = Randomizer.randomAvatarUrl(),
+        participants = mutableListOf(basicUser)
+    )
+    for (i in 0 until conversationCount) {
+        sentConversations[conversationCount + i.toLong()] = conversation.copy(id = i.toLong())
+        starredConversations[conversationCount * 2 + i.toLong()] = conversation.copy(id = conversationCount * 2 + i.toLong(), isStarred = true)
+        archivedConversations[conversationCount * 3 + i.toLong()] = conversation.copy(id = conversationCount * 3 + i.toLong(), workflowState = Conversation.WorkflowState.ARCHIVED)
+        unreadConversations[conversationCount * 4 + i.toLong()] = conversation.copy(id = conversationCount * 4 + i.toLong(), workflowState = Conversation.WorkflowState.UNREAD)
+        conversations[conversationCount * 5 + i.toLong()] = (conversation.copy(id = conversationCount * 5 + i.toLong()))
+    }
+}
+
+fun MockCanvas.addConversationsToCourseMap(courseList: List<Course>, conversationCount: Int = 1) {
+    val message = Message(
+            id = 12345L,
+            createdAt = APIHelper.dateToString(GregorianCalendar()),
+            body = Randomizer.randomConversationBody(),
+            authorId = 123L,
+            participatingUserIds = listOf(123L, 12345L)
+    )
+
+    val basicUser = BasicUser(
+            id = 123L,
+            name = Randomizer.randomName().fullName,
+            avatarUrl = Randomizer.randomAvatarUrl()
+    )
+
+    val conversation = Conversation(
+            id = 12345L,
+            subject = Randomizer.randomConversationSubject(),
+            workflowState = Conversation.WorkflowState.READ,
+            lastMessage = Randomizer.randomConversationBody(),
+            lastAuthoredMessageAt = APIHelper.dateToString(GregorianCalendar()),
+            messageCount = 1,
+            messages = listOf(message),
+            avatarUrl = Randomizer.randomAvatarUrl(),
+            participants = mutableListOf(basicUser)
+    )
+    courseList.forEach {
+        val conversations= mutableListOf<Conversation>()
+        for(i in 0 until conversationCount) {
+            conversations.add(conversation.copy(id = it.id + i.toLong(), contextCode = it.contextId, contextName = it.name))
+        }
+        conversationCourseMap[it.id] = conversations
+    }
+}
+
 
 /**
  * Creates assignments for the standard groups (overdue, upcoming, undated, and past) for a course

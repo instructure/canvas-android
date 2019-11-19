@@ -21,11 +21,13 @@ import com.instructure.canvas.espresso.mockCanvas.utils.unauthorizedResponse
 
 object CoursePermissionsEndpoint : Endpoint(
     response = {
-        val coursePermissions = data.coursePermissions[pathVars.courseId]
-        if(coursePermissions != null) {
-            request.successResponse(coursePermissions)
-        } else {
-            request.unauthorizedResponse()
+        GET {
+            val coursePermissions = data.coursePermissions[pathVars.courseId]
+            if(coursePermissions != null) {
+                request.successResponse(coursePermissions)
+            } else {
+                request.unauthorizedResponse()
+            }
         }
     }
 )

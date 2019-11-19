@@ -20,6 +20,7 @@ import com.instructure.canvas.espresso.mockCanvas.Endpoint
 import com.instructure.canvas.espresso.mockCanvas.endpoint
 import com.instructure.canvas.espresso.mockCanvas.utils.*
 import com.instructure.canvasapi2.models.Favorite
+import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.utils.pageview.PandataInfo
 import okhttp3.ResponseBody
 
@@ -71,7 +72,16 @@ object UserCommunicationChannelsEndpoint : Endpoint(
  * - `courses` -> [UserFavoriteCourseListEndpoint]
  */
 object UserFavoritesEndpoint : Endpoint (
-        Segment("courses") to UserFavoriteCourseListEndpoint
+    Segment("courses") to UserFavoriteCourseListEndpoint,
+    Segment("groups") to UserFavoriteGroupListEndpoint
+)
+
+object UserFavoriteGroupListEndpoint : Endpoint(
+    response = {
+        GET {
+            request.successResponse(listOf<Group>())
+        }
+    }
 )
 
 /**

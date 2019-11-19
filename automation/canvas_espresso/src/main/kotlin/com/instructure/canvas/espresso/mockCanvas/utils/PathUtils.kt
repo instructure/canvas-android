@@ -39,6 +39,7 @@ class PathVars {
     var moduleItemId: Long by map
     var quizId: Long by map
     var questionId: Long by map
+    var conversationId: Long by map
 }
 
 /**

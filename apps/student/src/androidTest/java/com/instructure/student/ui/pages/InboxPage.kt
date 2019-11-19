@@ -16,24 +16,25 @@
  */
 package com.instructure.student.ui.pages
 
-import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvasapi2.apis.InboxApi
+import com.instructure.canvasapi2.models.Conversation
+import com.instructure.canvasapi2.models.Course
 import com.instructure.dataseeding.model.ConversationApiModel
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.click
-import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.page.onView
-import com.instructure.espresso.page.onViewWithId
+import com.instructure.espresso.page.*
 import com.instructure.student.R
 
 class InboxPage : BasePage(R.id.inboxPage) {
 
     private val toolbar by OnViewWithId(R.id.toolbar)
     private val createMessageButton by OnViewWithId(R.id.addMessage)
-    private val filterButton by OnViewWithId(R.id.filterButton)
+    private val scopeButton by OnViewWithId(R.id.filterButton)
+    private val filterButton by OnViewWithId(R.id.inboxFilter)
 
     fun assertConversationDisplayed(conversation: ConversationApiModel) {
         assertConversationDisplayed(conversation.subject)
@@ -41,7 +42,7 @@ class InboxPage : BasePage(R.id.inboxPage) {
 
     fun assertConversationDisplayed(subject: String) {
         val matcher = withText(subject)
-        scrollRecyclerView(R.id.inboxRecyclerView, matcher)
+//        scrollRecyclerView(R.id.inboxRecyclerView, matcher)
         onView(matcher).assertDisplayed()
     }
 
@@ -51,15 +52,26 @@ class InboxPage : BasePage(R.id.inboxPage) {
         onView(matcher).click()
     }
 
-    fun selectInboxFilter(scope: InboxApi.Scope) {
-        filterButton.click()
+    fun selectConversation(conversation: Conversation) {
+        val matcher = withText(conversation.subject)
+        scrollRecyclerView(R.id.inboxRecyclerView, matcher)
+        onView(matcher).click()
+    }
+
+    fun selectInboxScope(scope: InboxApi.Scope) {
+        scopeButton.click()
         when (scope) {
-            InboxApi.Scope.ALL -> onViewWithId(R.id.inbox_all).click()
-            InboxApi.Scope.UNREAD -> onViewWithId(R.id.inbox_unread).click()
-            InboxApi.Scope.ARCHIVED -> onViewWithId(R.id.inbox_starred).click()
-            InboxApi.Scope.STARRED -> onViewWithId(R.id.inbox_sent).click()
-            InboxApi.Scope.SENT -> onViewWithId(R.id.inbox_archived).click()
+            InboxApi.Scope.ALL -> onViewWithText("All").click()
+            InboxApi.Scope.UNREAD -> onViewWithText("Unread").click()
+            InboxApi.Scope.ARCHIVED -> onViewWithText("Archived").click()
+            InboxApi.Scope.STARRED -> onViewWithText("Starred").click()
+            InboxApi.Scope.SENT -> onViewWithText("Sent").click()
         }
+    }
+
+    fun selectInboxFilter(course: Course) {
+        filterButton.click()
+        waitForViewWithText(course.name).click()
     }
 
     fun pressNewMessageButton() {
