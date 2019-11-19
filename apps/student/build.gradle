@@ -284,9 +284,6 @@ dependencies {
 
     /* Database */
     implementation "com.squareup.sqldelight:android-driver:1.1.3"
-
-    /* New Relic */
-    implementation Libs.NEW_RELIC
 }
 
 

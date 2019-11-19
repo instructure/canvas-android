@@ -202,10 +202,9 @@ class AppLocalizations {
   /// Courses Screen
 
   String get noGrade => Intl.message(
-    'No Grade',
-    desc: 'Message shown when there is currently no grade available for a course'
-  );
-
+        'No Grade',
+        desc: 'Message shown when there is currently no grade available for a course',
+      );
 
   /// Web Login Screen
 
@@ -229,6 +228,13 @@ class AppLocalizations {
         desc: 'The generic error shown when we are unable to verify with Canvas',
       );
 
+  /// Alerts Screen
+
+  String get noAlertsMessage => Intl.message(
+        'This student has no alerts to view.',
+        desc: 'The empty message to show to users when there are no alerts for the student.',
+      );
+
   /// Miscellaneous
 
   String get next => Intl.message('Next', name: 'next');
@@ -236,4 +242,10 @@ class AppLocalizations {
   String get ok => Intl.message('OK', name: 'ok');
 
   String get unexpectedError => Intl.message('An unexpected error occurred');
+
+  String get dateTimeFormat => Intl.message(
+        "MMM d 'at' h:mma",
+        desc:
+            "The string to format dates, only the 'at' needs to be translated. MMM will show the month abbreviated as 'Oct', d shows the day, h:mma will show the time as '10:33PM'.",
+      );
 }
