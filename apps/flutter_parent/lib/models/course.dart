@@ -90,6 +90,7 @@ abstract class Course implements Built<Course, CourseBuilder> {
   @BuiltValueField(wireName: 'access_restricted_by_date')
   bool get accessRestrictedByDate;
 
+  @nullable
   @BuiltValueField(wireName: 'image_download_url')
   String get imageDownloadUrl;
 

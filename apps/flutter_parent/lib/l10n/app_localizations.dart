@@ -206,6 +206,28 @@ class AppLocalizations {
         desc: 'Message shown when there is currently no grade available for a course',
       );
 
+  /// Course Details Screen
+
+  String get courseGradesLabel => Intl.message(
+        'Grades',
+        desc: 'Label for the "Grades" tab in course details',
+      );
+
+  String get courseSyllabusLabel => Intl.message(
+        'Syllabus',
+        desc: 'Label for the "Syllabus" tab in course details',
+      );
+
+  String get courseSummaryLabel => Intl.message(
+        'Summary',
+        desc: 'Label for the "Summary" tab in course details',
+      );
+
+  String get courseMessageHint => Intl.message(
+        'Send a message about this course',
+        desc: 'Accessibility hint for the course messaage floating action button',
+      );
+
   /// Web Login Screen
 
   String get domainVerificationErrorGeneral => Intl.message(

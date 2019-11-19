@@ -20,7 +20,7 @@ import 'package:flutter_parent/models/serializers.dart';
 
 class AssignmentApi {
 
-  static Future<List<Assignment>> getAssignmentsWithSubmissionsDepaginated(int courseId, int studentId) async {
+  Future<List<Assignment>> getAssignmentsWithSubmissionsDepaginated(int courseId, int studentId) async {
     var assignmentResponse = await Dio().get(ApiPrefs.getApiUrl() + 'courses/$courseId/assignments',
         queryParameters: {
           'as_user_id': studentId,
@@ -39,7 +39,7 @@ class AssignmentApi {
     }
   }
 
-  static Future<List<Assignment>> _getAssignmentsWithSubmissionsDepaginated(PagedList<Assignment> prevResponse) async {
+  Future<List<Assignment>> _getAssignmentsWithSubmissionsDepaginated(PagedList<Assignment> prevResponse) async {
     // Query params already specified in url
     var assignmentResponse = await Dio().get(prevResponse.nextUrl, options: Options(headers: ApiPrefs.getHeaderMap()));
 
@@ -51,7 +51,7 @@ class AssignmentApi {
     }
   }
 
-  static Future<PagedList<Assignment>> getAssignmentsWithSubmissionsPaged(int courseId, int studentId) async {
+  Future<PagedList<Assignment>> getAssignmentsWithSubmissionsPaged(int courseId, int studentId) async {
     var assignmentResponse = await Dio().get(ApiPrefs.getApiUrl() + 'courses/$courseId/assignments',
         queryParameters: {
           'as_user_id': studentId,
@@ -69,7 +69,7 @@ class AssignmentApi {
     }
   }
 
-  static Future<PagedList<Assignment>> getAssignmentsWithSubmissionsPagedNext(String nextUrl) async {
+  Future<PagedList<Assignment>> getAssignmentsWithSubmissionsPagedNext(String nextUrl) async {
     // Query params already specified in url
     var assignmentResponse = await Dio().get(nextUrl, options: Options(headers: ApiPrefs.getHeaderMap()));
 
@@ -80,7 +80,7 @@ class AssignmentApi {
     }
   }
 
-  static Future<Assignment> getAssignment(int courseId, int assignmentId) async {
+  Future<Assignment> getAssignment(int courseId, int assignmentId) async {
     var assignmentResponse = await Dio().get(ApiPrefs.getApiUrl() + 'courses/$courseId/assignments/$assignmentId',
         queryParameters: {
           'include': ['overrides', 'rubric_assessment', 'submission'],
