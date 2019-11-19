@@ -212,12 +212,17 @@ object CourseDiscussionTopicListEndpoint : Endpoint(
 
                     val userId = request.user!!.id
                     val courseId = pathVars.courseId
-                    val userCourseEnrollment = data.enrollments.values.first {it.userId == userId && it.courseId == courseId}
+                    // While we will probably encounter at most one enrollment for this user in this course,
+                    // we'll allow for the user to be enrolled in multiple sections.
+                    val enrollmentSectionIds =
+                            data.enrollments.values
+                                    .filter {it.userId == userId && it.courseId == courseId}
+                                    .map {it -> it.courseSectionId}
                     courseDiscussionTopics =
                             courseDiscussionTopics!!.filter {
                                 it.sections == null
                                         || it.sections!!.count() == 0
-                                        || it.sections!!.find {it.id == userCourseEnrollment.courseSectionId} != null
+                                        || it.sections!!.find {enrollmentSectionIds.contains(it.id)} != null
                             }.toMutableList()
                 }
 

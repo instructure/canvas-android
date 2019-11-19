@@ -271,9 +271,10 @@ fun MockCanvas.Companion.init(
         val courseId = data.newItemId()
         var section: Section? = null
         if(createSections) {
+            val sectionId = data.newItemId()
             section = Section(
-                    id = data.newItemId(),
-                    name = "Section " + data.newItemId(),
+                    id = sectionId,
+                    name = "Section " + sectionId,
                     courseId = courseId,
                     students = studentUsers,
                     totalStudents = studentUsers.count()
