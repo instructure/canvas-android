@@ -19,6 +19,7 @@ package com.instructure.student.ui.pages
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withParent
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.espresso.OnViewWithId
@@ -41,6 +42,10 @@ class DiscussionListPage : BasePage(R.id.discussionListPage) {
         val matcher = allOf(withText(topicTitle), withId(R.id.discussionTitle))
         scrollRecyclerView(R.id.discussionRecyclerView, matcher)
         onView(matcher).assertDisplayed()
+    }
+
+    fun assertEmpty() {
+        onView(allOf(withId(R.id.emptyView), withParent(withId(R.id.discussionListPage)))).assertDisplayed()
     }
 
     fun selectTopic(topicTitle: String) {

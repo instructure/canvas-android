@@ -253,21 +253,36 @@ fun MockCanvas.Companion.init(
         studentCount: Int = 0,
         teacherCount: Int = 0,
         parentCount: Int = 0,
-        accountNotificationCount: Int = 0
+        accountNotificationCount: Int = 0,
+        createSections: Boolean = false
 ): MockCanvas {
     data = MockCanvas()
 
     // Add a default term
     data.addTerm("Default Term")
 
-    // Add courseCount
-    repeat(courseCount) { data.addCourse(isFavorite = it < favoriteCourseCount) }
-    repeat(pastCourseCount) { data.addCourse(concluded = true) }
-
     // Add users
     val studentUsers = List(studentCount) { data.addUser() }
     val teacherUsers = List(teacherCount) { data.addUser() }
     val parentUsers = List(parentCount) { data.addUser() }
+
+    // Add courseCount
+    repeat(courseCount) {
+        val courseId = data.newItemId()
+        var section: Section? = null
+        if(createSections) {
+            val sectionId = data.newItemId()
+            section = Section(
+                    id = sectionId,
+                    name = "Section " + sectionId,
+                    courseId = courseId,
+                    students = studentUsers,
+                    totalStudents = studentUsers.count()
+            )
+        }
+        val course = data.addCourse(isFavorite = it < favoriteCourseCount, id = courseId, section = section)
+    }
+    repeat(pastCourseCount) { data.addCourse(concluded = true) }
 
     // Add enrollments
     data.courses.values.forEach { course ->
@@ -275,7 +290,14 @@ fun MockCanvas.Companion.init(
         teacherUsers.forEach { data.addEnrollment(it, course, Enrollment.EnrollmentType.Teacher) }
 
         // Enroll students
-        studentUsers.forEach { data.addEnrollment(it, course, Enrollment.EnrollmentType.Student) }
+        studentUsers.forEach {
+            data.addEnrollment(
+                    user = it,
+                    course = course,
+                    type = Enrollment.EnrollmentType.Student,
+                    courseSectionId = if(course.sections.count() > 0) course.sections.get(0).id else 0
+            )
+        }
 
         // Enroll parents
         parentUsers.forEach { parent ->
@@ -297,17 +319,21 @@ fun MockCanvas.Companion.init(
 /** Creates a new Course and adds it to MockCanvas */
 fun MockCanvas.addCourse(
         isFavorite: Boolean = false,
-        concluded: Boolean = false): Course {
+        concluded: Boolean = false,
+        id: Long = newItemId(),
+        section: Section? = null
+): Course {
     val randomCourseName = Randomizer.randomCourseName()
     val endAt = if (concluded) OffsetDateTime.now().minusWeeks(1).toApiString() else null
     val course = Course(
-            id = courses.size + 1L,
+            id = id,
             name = randomCourseName,
             originalName = randomCourseName,
             courseCode = randomCourseName.substring(0, 2),
             term = terms.values.first(),
             endAt = endAt,
-            isFavorite = isFavorite
+            isFavorite = isFavorite,
+            sections = if(section != null) listOf(section) else listOf<Section>()
     )
     courses += course.id to course
 
@@ -509,7 +535,8 @@ fun MockCanvas.addEnrollment(
         user: User,
         course: Course,
         type: Enrollment.EnrollmentType,
-        observedUser: User? = null
+        observedUser: User? = null,
+        courseSectionId: Long = 0
 ): Enrollment {
     val enrollment = Enrollment(
             id = enrollments.size + 1L,
@@ -519,7 +546,8 @@ fun MockCanvas.addEnrollment(
             enrollmentState = "active",
             userId = user.id,
             observedUser = observedUser,
-            grades = Grades(currentScore = 88.1, currentGrade = "B+")
+            grades = Grades(currentScore = 88.1, currentGrade = "B+"),
+            courseSectionId = courseSectionId
     )
     enrollments += enrollment.id to enrollment
     course.enrollments?.add(enrollment) // You won't see grades in the dashboard unless the course has enrollments
@@ -654,7 +682,9 @@ fun MockCanvas.addDiscussionTopicToCourse(
         allowRating: Boolean = true,
         allowReplies: Boolean = true,
         allowAttachments: Boolean = true,
-        attachment: RemoteFile? = null
+        attachment: RemoteFile? = null,
+        isAnnouncement: Boolean = false,
+        sections: List<Section> = listOf()
 ) : DiscussionTopicHeader {
 
     var topicHeader = prePopulatedTopicHeader
@@ -680,6 +710,8 @@ fun MockCanvas.addDiscussionTopicToCourse(
     if(attachment != null) {
         topicHeader.attachments = mutableListOf<RemoteFile>(attachment)
     }
+    topicHeader.announcement = isAnnouncement
+    topicHeader.sections = sections
 
     var courseTopicHeaderList = courseDiscussionTopicHeaders[course.id]
     if(courseTopicHeaderList == null) {
