@@ -349,7 +349,6 @@ fun MockCanvas.addCoursePermissions(courseId: Long, permissions: CanvasContextPe
 /**
  * Adds the provided list of users (converted to basic users) to the provided course as recipients.
  * This results in the role specific recipient maps being populated as well as the recipient groups.
- *
  */
 fun MockCanvas.addRecipientsToCourse(course: Course, students: List<User>, teachers: List<User>) {
     studentRecipients[course.id] = students.map {
@@ -387,99 +386,26 @@ fun MockCanvas.addRecipientsToCourse(course: Course, students: List<User>, teach
 }
 
 fun MockCanvas.addSentConversation(subject: String) {
-    val message = Message(
-            id = 12345L,
-            createdAt = APIHelper.dateToString(GregorianCalendar()),
-            body = Randomizer.randomConversationBody(),
-            authorId = 123L,
-            participatingUserIds = listOf(123L, 12345L)
-    )
-
-    val basicUser = BasicUser(
-            id = 123L,
-            name = Randomizer.randomName().fullName,
-            avatarUrl = Randomizer.randomAvatarUrl()
-    )
-    sentConversation = Conversation(
-        id = 12345L,
-        subject = subject,
-        workflowState = Conversation.WorkflowState.UNREAD,
-        lastMessage = Randomizer.randomConversationBody(),
-        lastAuthoredMessageAt = APIHelper.dateToString(GregorianCalendar()),
-        messageCount = 1,
-        messages = listOf(message),
-        avatarUrl = Randomizer.randomAvatarUrl(),
-        participants = mutableListOf(basicUser)
-    )
+    sentConversation = basicConversation.copy(subject = subject)
 }
 
 /** Adds the provided number of conversations to the conversation maps. */
 fun MockCanvas.addConversations(conversationCount: Int = 1) {
-    val message = Message(
-        id = 12345L,
-        createdAt = APIHelper.dateToString(GregorianCalendar()),
-        body = Randomizer.randomConversationBody(),
-        authorId = 123L,
-        participatingUserIds = listOf(123L, 12345L)
-    )
-
-    val basicUser = BasicUser(
-        id = 123L,
-        name = Randomizer.randomName().fullName,
-        avatarUrl = Randomizer.randomAvatarUrl()
-    )
-
-    val conversation = Conversation(
-        id = 12345L,
-        subject = Randomizer.randomConversationSubject(),
-        workflowState = Conversation.WorkflowState.READ,
-        lastMessage = Randomizer.randomConversationBody(),
-        lastAuthoredMessageAt = APIHelper.dateToString(GregorianCalendar()),
-        messageCount = 1,
-        messages = listOf(message),
-        avatarUrl = Randomizer.randomAvatarUrl(),
-        participants = mutableListOf(basicUser)
-    )
     for (i in 0 until conversationCount) {
-        sentConversations[conversationCount + i.toLong()] = conversation.copy(id = i.toLong())
-        starredConversations[conversationCount * 2 + i.toLong()] = conversation.copy(id = conversationCount * 2 + i.toLong(), isStarred = true)
-        archivedConversations[conversationCount * 3 + i.toLong()] = conversation.copy(id = conversationCount * 3 + i.toLong(), workflowState = Conversation.WorkflowState.ARCHIVED)
-        unreadConversations[conversationCount * 4 + i.toLong()] = conversation.copy(id = conversationCount * 4 + i.toLong(), workflowState = Conversation.WorkflowState.UNREAD)
-        conversations[conversationCount * 5 + i.toLong()] = (conversation.copy(id = conversationCount * 5 + i.toLong()))
+        sentConversations[conversationCount + i.toLong()] = basicConversation.copy(id = i.toLong())
+        starredConversations[conversationCount * 2 + i.toLong()] = basicConversation.copy(id = conversationCount * 2 + i.toLong(), isStarred = true)
+        archivedConversations[conversationCount * 3 + i.toLong()] = basicConversation.copy(id = conversationCount * 3 + i.toLong(), workflowState = Conversation.WorkflowState.ARCHIVED)
+        unreadConversations[conversationCount * 4 + i.toLong()] = basicConversation.copy(id = conversationCount * 4 + i.toLong(), workflowState = Conversation.WorkflowState.UNREAD)
+        conversations[conversationCount * 5 + i.toLong()] = (basicConversation.copy(id = conversationCount * 5 + i.toLong()))
     }
 }
 
 /** Adds the provided number of conversations to the course conversation map. */
 fun MockCanvas.addConversationsToCourseMap(courseList: List<Course>, conversationCount: Int = 1) {
-    val message = Message(
-            id = 12345L,
-            createdAt = APIHelper.dateToString(GregorianCalendar()),
-            body = Randomizer.randomConversationBody(),
-            authorId = 123L,
-            participatingUserIds = listOf(123L, 12345L)
-    )
-
-    val basicUser = BasicUser(
-            id = 123L,
-            name = Randomizer.randomName().fullName,
-            avatarUrl = Randomizer.randomAvatarUrl()
-    )
-
-    val conversation = Conversation(
-            id = 12345L,
-            subject = Randomizer.randomConversationSubject(),
-            workflowState = Conversation.WorkflowState.READ,
-            lastMessage = Randomizer.randomConversationBody(),
-            lastAuthoredMessageAt = APIHelper.dateToString(GregorianCalendar()),
-            messageCount = 1,
-            messages = listOf(message),
-            avatarUrl = Randomizer.randomAvatarUrl(),
-            participants = mutableListOf(basicUser)
-    )
     courseList.forEach {
         val conversations= mutableListOf<Conversation>()
         for(i in 0 until conversationCount) {
-            conversations.add(conversation.copy(id = it.id + i.toLong(), contextCode = it.contextId, contextName = it.name))
+            conversations.add(basicConversation.copy(id = it.id + i.toLong(), contextCode = it.contextId, contextName = it.name))
         }
         conversationCourseMap[it.id] = conversations
     }
@@ -1123,3 +1049,31 @@ fun MockCanvas.addRubricToAssignment(assignmentId: Long, criteria : List<RubricC
         }
     }
 }
+
+//region Helper inbox values
+private val basicUser = BasicUser(
+        id = 123L,
+        name = Randomizer.randomName().fullName,
+        avatarUrl = Randomizer.randomAvatarUrl()
+)
+
+private val basicMessage = Message(
+        id = 12345L,
+        createdAt = APIHelper.dateToString(GregorianCalendar()),
+        body = Randomizer.randomConversationBody(),
+        authorId = 123L,
+        participatingUserIds = listOf(123L, 12345L)
+)
+
+private val basicConversation = Conversation(
+        id = 12345L,
+        subject = Randomizer.randomConversationSubject(),
+        workflowState = Conversation.WorkflowState.UNREAD,
+        lastMessage = Randomizer.randomConversationBody(),
+        lastAuthoredMessageAt = APIHelper.dateToString(GregorianCalendar()),
+        messageCount = 1,
+        messages = listOf(basicMessage),
+        avatarUrl = Randomizer.randomAvatarUrl(),
+        participants = mutableListOf(basicUser)
+)
+//endregion

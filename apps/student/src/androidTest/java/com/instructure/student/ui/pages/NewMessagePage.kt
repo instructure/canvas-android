@@ -32,6 +32,7 @@ import com.instructure.dataseeding.model.GroupApiModel
 import com.instructure.espresso.*
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.onViewWithId
 import com.instructure.student.R
 import junit.framework.Assert.assertTrue
 import org.hamcrest.Matchers.*
@@ -120,6 +121,12 @@ class NewMessagePage : BasePage() {
                 withId(R.id.checkBox)
         )
         onView(itemMatcher).assertNotDisplayed()
+    }
+
+    fun assertRecipientGroupContains(userType: String, userCount: Int = 1) {
+        addContactsButton.click()
+        onView(withText(userType)).click()
+        onViewWithId(R.id.recipientRecyclerView).check(RecyclerViewItemCountAssertion(userCount))
     }
 
     fun setSubject(subject: String) {

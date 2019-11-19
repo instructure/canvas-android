@@ -153,7 +153,7 @@
     <dimen name="unread_message_marker_size">8dp</dimen>
     <dimen name="attachment_view_width">150dp</dimen>
     <dimen name="attachment_view_height">90dp</dimen>
-    <dimen name="message_avatar_dimen">32dp</dimen>
+    <dimen name="message_avatar_dimen">48dp</dimen>
     <dimen name="widgetListPreferredHeight">48dp</dimen>
 
 

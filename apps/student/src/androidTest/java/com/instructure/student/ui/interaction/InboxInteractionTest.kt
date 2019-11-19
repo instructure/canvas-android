@@ -321,7 +321,11 @@ class InboxInteractionTest : StudentTest() {
         // Can NOT compose and send messages to individual course members if "Send messages to individual course members" is disabled
         // This test is controlled by the api, so while we are utilizing a mocked CanvasContextPermission value, the only
         // thing making this test pass or fail is what's implemented in the MockCanvas endpoints.
-
+        val data = goToInbox(sendMessages = false, studentCount = 10)
+        dashboardPage.clickInboxTab()
+        inboxPage.pressNewMessageButton()
+        newMessagePage.selectCourse(data.courses.values.first())
+        newMessagePage.assertRecipientGroupContains("Students", 1)
     }
 
     /*

@@ -39,7 +39,12 @@ object SearchEndpoint : Endpoint(
                 if (contexts.contains("students")) {
                     courseId = courseId.substringBefore("_students")
                     if(data.studentRecipients.containsKey(courseId.toLong())) {
-                        request.successResponse(data.studentRecipients[courseId.toLong()]!!)
+                        if(data.coursePermissions[courseId.toLong()]!!.send_messages) {
+                            request.successResponse(data.studentRecipients[courseId.toLong()]!!)
+                        } else {
+                            // To emulate the recipient end point returning just the author, we'll return the first element
+                            request.successResponse(listOf(data.studentRecipients[courseId.toLong()]!!.first()))
+                        }
                     } else {
                         request.unauthorizedResponse()
                     }
