@@ -15,6 +15,7 @@
  */
 package com.instructure.student.ui.pages.renderPages
 
+import android.os.SystemClock.sleep
 import android.view.View
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.UiController
@@ -34,6 +35,7 @@ class SubmissionCommentsRenderPage: BasePage(R.id.submissionCommentsPage) {
 
     val recyclerView by OnViewWithId(R.id.recyclerView)
     val commentInput by OnViewWithId(R.id.commentInput)
+    val commentAttach by OnViewWithId(R.id.addFileButton)
     val addFileButton by OnViewWithId(R.id.addFileButton)
 
     fun verifyDisplaysEmptyState() {
@@ -117,6 +119,25 @@ class SubmissionCommentsRenderPage: BasePage(R.id.submissionCommentsPage) {
         commentInput.closeSoftKeyboard()
         onView(withId(R.id.sendCommentButton)).click()
     }
+
+    fun addAndSendVideoComment() {
+        addFileButton.click()
+        onView(withId(R.id.videoComment)).click()
+        onView(allOf(withId(R.id.startRecordingButton), isDisplayed())).click()
+        sleep(3000)
+        onView(allOf(withId(R.id.endRecordingButton), isDisplayed())).click()
+        onView(allOf(withId(R.id.sendButton), isDisplayed())).click()
+    }
+
+    fun addAndSendAudioComment() {
+        addFileButton.click()
+        onView(withId(R.id.audioComment)).click()
+        onView(allOf(withId(R.id.recordAudioButton), isDisplayed())).click()
+        sleep(3000)
+        onView(allOf(withId(R.id.stopButton), isDisplayed())).click()
+        onView(allOf(withId(R.id.sendAudioButton), isDisplayed())).click()
+    }
+
 }
 
 // Custom action to get the left offset of a view and deposit it in the
