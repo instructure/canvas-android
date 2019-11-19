@@ -58,7 +58,6 @@ class AssignmentApi {
           'as_user_id': studentId,
           'include': ['assignments', 'discussion_topic', 'submission', 'all_dates', 'overrides'], // rubric_assessment?
           'override_assignment_dates': 'true',
-          'order_by': 'due_at', // No order_by?
         },
         options: Options(headers: ApiPrefs.getHeaderMap()));
 
