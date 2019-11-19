@@ -199,8 +199,53 @@ class AppLocalizations {
       desc: 'The body text shown in the help dialog on the domain search screen',
       args: [canvasGuides, canvasSupport]);
 
+  /// Courses Screen
+
+  String get noGrade => Intl.message(
+        'No Grade',
+        desc: 'Message shown when there is currently no grade available for a course',
+      );
+
+  /// Web Login Screen
+
+  String get domainVerificationErrorGeneral => Intl.message(
+        'This app is not authorized for use.',
+        desc: 'The error shown when the app being used is not verified by Canvas',
+      );
+
+  String get domainVerificationErrorDomain => Intl.message(
+        'The server you entered is not authorized for this app.',
+        desc: 'The error shown when the desired login domain is not verified by Canvas',
+      );
+
+  String get domainVerificationErrorUserAgent => Intl.message(
+        'The user agent for this app is not authorized.',
+        desc: 'The error shown when the user agent during verification is not verified by Canvas',
+      );
+
+  String get domainVerificationErrorUnknown => Intl.message(
+        'We were unable to verify the server for use with this app.',
+        desc: 'The generic error shown when we are unable to verify with Canvas',
+      );
+
+  /// Alerts Screen
+
+  String get noAlertsMessage => Intl.message(
+        'This student has no alerts to view.',
+        desc: 'The empty message to show to users when there are no alerts for the student.',
+      );
+
   /// Miscellaneous
 
   String get next => Intl.message('Next', name: 'next');
+
   String get ok => Intl.message('OK', name: 'ok');
+
+  String get unexpectedError => Intl.message('An unexpected error occurred');
+
+  String get dateTimeFormat => Intl.message(
+        "MMM d 'at' h:mma",
+        desc:
+            "The string to format dates, only the 'at' needs to be translated. MMM will show the month abbreviated as 'Oct', d shows the day, h:mma will show the time as '10:33PM'.",
+      );
 }

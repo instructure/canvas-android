@@ -301,7 +301,6 @@ class ModuleInteractionTest : StudentTest() {
         // And let's add an assignment to the new module
         var unavailableAssignment = data.addAssignment(
                 courseId = course1.id,
-                groupType = AssignmentGroupType.UPCOMING,
                 submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
                 // Man, this is a bit hokey, but it's what I had to do to get the assignment to show
                 // up as unavailable in the assignment details page
@@ -385,7 +384,6 @@ class ModuleInteractionTest : StudentTest() {
         // Create an assignment and add it as a module item
         assignment = data.addAssignment(
                 courseId = course1.id,
-                groupType = AssignmentGroupType.UPCOMING,
                 submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY
         )
         data.addItemToModule(

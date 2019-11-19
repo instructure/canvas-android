@@ -21,7 +21,6 @@ import 'package:flutter_parent/models/serializers.dart';
 class AssignmentApi {
 
   static Future<List<Assignment>> getAssignmentsWithSubmissionsDepaginated(int courseId, int studentId) async {
-    print("getting assignments depaginated");
     var assignmentResponse = await Dio().get(ApiPrefs.getApiUrl() + 'courses/$courseId/assignments',
         queryParameters: {
           'as_user_id': studentId,
@@ -34,25 +33,20 @@ class AssignmentApi {
 
     if (assignmentResponse.statusCode == 200 || assignmentResponse.statusCode == 201) {
       final response = PagedList<Assignment>(assignmentResponse);
-      print("finished success: ${response.nextUrl}");
       return (response.nextUrl == null) ? response.data : _getAssignmentsWithSubmissionsDepaginated(response);
     } else {
-      print("finished error");
       return Future.error(assignmentResponse.statusMessage);
     }
   }
 
   static Future<List<Assignment>> _getAssignmentsWithSubmissionsDepaginated(PagedList<Assignment> prevResponse) async {
-    print("getting assignments depaginated _recursive_ (${prevResponse.nextUrl}");
     // Query params already specified in url
     var assignmentResponse = await Dio().get(prevResponse.nextUrl, options: Options(headers: ApiPrefs.getHeaderMap()));
 
     if (assignmentResponse.statusCode == 200 || assignmentResponse.statusCode == 201) {
       prevResponse.updateWithResponse(assignmentResponse);
-      print("finished success _recursive_: ${prevResponse.nextUrl}");
       return (prevResponse.nextUrl == null) ? prevResponse.data : _getAssignmentsWithSubmissionsDepaginated(prevResponse);
     } else {
-      print("finished error _recursive_");
       return Future.error(assignmentResponse.statusMessage);
     }
   }

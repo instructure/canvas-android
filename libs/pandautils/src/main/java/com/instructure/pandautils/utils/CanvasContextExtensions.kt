@@ -30,7 +30,8 @@ val CanvasContext.isNotUser: Boolean get() = this.type != CanvasContext.Type.USE
 val CanvasContext.isCourseContext: Boolean get() = this.type != CanvasContext.Type.USER
 val CanvasContext.isUser: Boolean get() = this.type  == CanvasContext.Type.USER
 
-fun CanvasContext.isDesigner(): Boolean = this.isCourseContext && (this as Course).isDesigner
+// It's possible they routed via a group context, which isn't supported in the Teacher app yet
+fun CanvasContext.isDesigner(): Boolean = this.isCourseContext && (this as? Course)?.isDesigner == true
 
 fun CanvasContext.makeBundle(bundle: Bundle = Bundle(), block: Bundle.() -> Unit = {}): Bundle =
     bundle.apply {

@@ -7,7 +7,11 @@ part of serializers;
 // **************************************************************************
 
 Serializers _$_serializers = (new Serializers().toBuilder()
+      ..add(Alert.serializer)
+      ..add(AlertType.serializer)
+      ..add(AlertWorkflowState.serializer)
       ..add(Assignment.serializer)
+      ..add(CanvasToken.serializer)
       ..add(Course.serializer)
       ..add(Enrollment.serializer)
       ..add(Grade.serializer)

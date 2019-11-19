@@ -16,10 +16,21 @@
  */
 package com.instructure.canvas.espresso.mockCanvas.endpoints
 
+import android.util.Log
 import com.instructure.canvas.espresso.mockCanvas.Endpoint
 import com.instructure.canvas.espresso.mockCanvas.endpoint
+import com.instructure.canvas.espresso.mockCanvas.utils.LongId
+import com.instructure.canvas.espresso.mockCanvas.utils.PathVars
 import com.instructure.canvas.espresso.mockCanvas.utils.Segment
+import com.instructure.canvas.espresso.mockCanvas.utils.grabJsonFromMultiPartBody
 import com.instructure.canvas.espresso.mockCanvas.utils.successResponse
+import com.instructure.canvas.espresso.mockCanvas.utils.unauthorizedResponse
+import com.instructure.canvasapi2.models.Quiz
+import com.instructure.canvasapi2.models.QuizSubmission
+import com.instructure.canvasapi2.models.QuizSubmissionAnswer
+import com.instructure.canvasapi2.models.QuizSubmissionQuestion
+import com.instructure.canvasapi2.models.QuizSubmissionQuestionResponse
+import okio.Buffer
 
 /**
  * Base endpoint for the Canvas API
@@ -42,5 +53,30 @@ object ApiEndpoint : Endpoint(
         Segment("dashboard_cards") to DashboardCardsEndpoint
     ),
     Segment("folders") to FolderListEndpoint,
-    Segment("search") to SearchEndpoint
+    Segment("search") to SearchEndpoint,
+    Segment("quiz_submissions") to endpoint(
+            LongId(PathVars::submissionId) to endpoint (
+                    Segment("questions") to endpoint (
+                            configure = {
+                                GET {
+                                    val submissionQuestions = data.quizSubmissionQuestions[pathVars.submissionId]
+                                            ?: listOf<QuizSubmissionQuestion>()
+                                    val response = QuizSubmissionQuestionResponse(quizSubmissionQuestions = submissionQuestions)
+                                    request.successResponse(response)
+                                }
+                                POST {
+                                    // More or less punting on this for now.  The unauthorized response doesn't seem
+                                    // to hurt us.
+                                    val buffer = Buffer()
+                                    request.body()!!.writeTo(buffer)
+                                    val body = buffer.readUtf8()
+                                    Log.d("submissionQuestions", "submission question post body: $body")
+                                    //val jsonObject = grabJsonFromMultiPartBody(request.body()!!)
+                                    //Log.d("submissionQuestions", "submission question post body: $jsonObject")
+                                    request.unauthorizedResponse()
+                                }
+                            }
+                    )
+            )
+    )
 )

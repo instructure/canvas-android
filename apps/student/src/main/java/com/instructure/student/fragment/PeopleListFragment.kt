@@ -32,7 +32,6 @@ import com.instructure.student.R
 import com.instructure.student.adapter.PeopleListRecyclerAdapter
 import com.instructure.student.interfaces.AdapterToFragmentCallback
 import com.instructure.student.router.RouteMatcher
-import com.newrelic.agent.android.NewRelic
 import kotlinx.android.synthetic.main.fragment_people_list.*
 
 @PageView(url = "{canvasContext}/users")
@@ -59,7 +58,7 @@ class PeopleListFragment : ParentFragment(), Bookmarkable {
     override fun title(): String = getString(R.string.coursePeople)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        NewRelic.setInteractionName(this::class.java.simpleName)
+        TelemetryUtils.setInteractionName(this::class.java.simpleName)
         super.onCreate(savedInstanceState)
     }
 

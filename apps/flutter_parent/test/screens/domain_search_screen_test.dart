@@ -16,9 +16,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_parent/models/mobile_verify_result.dart';
 import 'package:flutter_parent/models/school_domain.dart';
 import 'package:flutter_parent/screens/domain_search/domain_search_interactor.dart';
 import 'package:flutter_parent/screens/domain_search/domain_search_screen.dart';
+import 'package:flutter_parent/screens/web_login/web_login_interactor.dart';
+import 'package:flutter_parent/screens/web_login/web_login_screen.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mockito/mockito.dart';
@@ -26,10 +29,11 @@ import 'package:mockito/mockito.dart';
 import '../utils/test_app.dart';
 
 void main() {
-  _setupLocator(MockInteractor interactor) {
+  _setupLocator(MockInteractor interactor, {WebLoginInteractor webInteractor}) {
     final _locator = GetIt.instance;
     _locator.reset();
     _locator.registerFactory<DomainSearchInteractor>(() => interactor);
+    _locator.registerFactory<WebLoginInteractor>(() => webInteractor ?? _MockWebLoginInteractor());
   }
 
   testWidgets("default state", (tester) async {
@@ -296,7 +300,9 @@ void main() {
             ..domain = "mobileqa.instructure.com"
             ..name = "Result")
         ]));
-    _setupLocator(interactor);
+    final webInteractor = _MockWebLoginInteractor();
+    when (webInteractor.mobileVerify(any)).thenAnswer((_) => Future.value(MobileVerifyResult()));
+    _setupLocator(interactor, webInteractor: webInteractor);
     await tester.pumpWidget(TestApp(DomainSearchScreen()));
     await tester.pumpAndSettle();
 
@@ -307,11 +313,20 @@ void main() {
     await tester.tap(find.text("Result"));
     await tester.pumpAndSettle();
 
-    // TODO: Enable once WebLoginPage is implemented
-    //expect(find.byType(WebLoginPage), findsOneWidget);
+    expect(find.byType(WebLoginScreen), findsOneWidget);
   });
 
   testWidgets("Navigates to Login page from 'Next' button", (WidgetTester tester) async {
+    var interactor = MockInteractor();
+    when(interactor.performSearch(any)).thenAnswer((_) => Future.value([
+      SchoolDomain((sd) => sd
+        ..domain = "mobileqa.instructure.com"
+        ..name = "Result")
+    ]));
+    final webInteractor = _MockWebLoginInteractor();
+    when (webInteractor.mobileVerify(any)).thenAnswer((_) => Future.value(MobileVerifyResult()));
+    _setupLocator(interactor, webInteractor: webInteractor);
+
     await tester.pumpWidget(TestApp(DomainSearchScreen()));
     await tester.pumpAndSettle();
 
@@ -321,11 +336,20 @@ void main() {
     await tester.tap(find.text("NEXT"));
     await tester.pumpAndSettle();
 
-    // TODO: Enable once WebLoginPage is implemented
-    //expect(find.byType(WebLoginPage), findsOneWidget);
+    expect(find.byType(WebLoginScreen), findsOneWidget);
   });
 
   testWidgets("Navigates to Login page from keyboard submit button", (WidgetTester tester) async {
+    final interactor = MockInteractor();
+    when(interactor.performSearch(any)).thenAnswer((_) => Future.value([
+          SchoolDomain((sd) => sd
+            ..domain = "mobileqa.instructure.com"
+            ..name = "Result")
+        ]));
+    final webInteractor = _MockWebLoginInteractor();
+    when (webInteractor.mobileVerify(any)).thenAnswer((_) => Future.value(MobileVerifyResult()));
+    _setupLocator(interactor, webInteractor: webInteractor);
+
     await tester.pumpWidget(TestApp(DomainSearchScreen()));
     await tester.pumpAndSettle();
 
@@ -333,10 +357,11 @@ void main() {
     await tester.pumpAndSettle();
 
     await tester.testTextInput.receiveAction(TextInputAction.done);
+    await tester.pumpAndSettle();
 
-    // TODO: Enable once WebLoginPage is implemented
-    //expect(find.byType(WebLoginPage), findsOneWidget);
+    expect(find.byType(WebLoginScreen), findsOneWidget);
   });
 }
 
 class MockInteractor extends Mock implements DomainSearchInteractor {}
+class _MockWebLoginInteractor extends Mock implements WebLoginInteractor {}

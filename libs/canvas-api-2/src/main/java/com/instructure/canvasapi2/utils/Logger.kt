@@ -30,7 +30,7 @@ object Logger {
     // Pact tests need to be able to disable Android logging
     var IS_LOGGING = true
 
-    private const val LOG_TAG = "canvasLog"
+    const val LOG_TAG = "canvasLog"
 
     /**
      * List of ISO 3166-1 alpha-2 codes of countries whose laws restrict us from logging user details
