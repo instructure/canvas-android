@@ -25,15 +25,12 @@ import com.instructure.canvasapi2.models.UnreadConversationCount
 import com.instructure.canvasapi2.utils.APIHelper
 import java.util.*
 
-
-// https://mock-data.instructure.com/api/v1/conversations?interleave_submissions=1&include[]=participant_avatars&scope=&per_page=100, tags={class retrofit2.Invocation=com.instructure.canvasapi2.apis.InboxApi$InboxInterface.getConversations() [], class java.lang.Object=RestParams(canvasContext=null, domain=https://mock-data.instructure.com, apiVersion=/api/v1/, usePerPageQueryParam=true, shouldIgnoreToken=false, isForceReadFromCache=false, isForceReadFromNetwork=false, acceptLanguageOverride=null)}}
-// https://mock-data.instructure.com/api/v1/conversations/?interleave_submissions=1&include[]=participant_avatars&scope=&filter=course_1&per_page=100
-
 /**
  * Endpoint that can return a list of [Conversation]s
  *
  * ROUTES:
  * - `unread_count` -> [ConversationUnreadCountEndpoint]
+ * - `conversation_id` -> [ConversationEndpoint]
  */
 object ConversationListEndpoint : Endpoint(
     Segment("unread_count") to ConversationUnreadCountEndpoint,
@@ -79,7 +76,12 @@ object ConversationUnreadCountEndpoint : Endpoint(response = {
     }
 })
 
-// https://mock-data.instructure.com/api/v1/conversations/5/add_message?group_conversation=true&recipients%5B%5D=123&body=What+is+this%2C+hodor%3F&included_messages%5B%5D=12345 (2ms)
+/**
+ * Endpoint that can return a [Conversation] based on pathVar.conversationId
+ *
+ * ROUTES:
+ * - `add_message`
+ * */
 object ConversationEndpoint : Endpoint(
     Segment("add_message") to endpoint(
         configure = {
@@ -103,10 +105,16 @@ object ConversationEndpoint : Endpoint(
     ),
     response = {
         GET {
-            if(data.conversations.containsKey(pathVars.conversationId)) {
-                request.successResponse(data.conversations[pathVars.conversationId]!!)
-            } else {
-                request.unauthorizedResponse()
+            when {
+                data.conversations.containsKey(pathVars.conversationId) -> {
+                    request.successResponse(data.conversations[pathVars.conversationId]!!)
+                }
+                data.sentConversations.containsKey(pathVars.conversationId) -> {
+                    request.successResponse(data.sentConversations[pathVars.conversationId]!!)
+                }
+                else -> {
+                    request.unauthorizedResponse()
+                }
             }
         }
     }

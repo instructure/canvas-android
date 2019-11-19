@@ -24,7 +24,6 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.dataseeding.model.ConversationApiModel
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisplayed
-import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.*
 import com.instructure.student.R
@@ -42,7 +41,7 @@ class InboxPage : BasePage(R.id.inboxPage) {
 
     fun assertConversationDisplayed(subject: String) {
         val matcher = withText(subject)
-//        scrollRecyclerView(R.id.inboxRecyclerView, matcher)
+        scrollRecyclerView(R.id.inboxRecyclerView, matcher)
         onView(matcher).assertDisplayed()
     }
 

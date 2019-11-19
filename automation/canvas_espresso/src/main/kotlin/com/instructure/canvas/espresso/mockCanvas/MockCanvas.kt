@@ -21,11 +21,9 @@ package com.instructure.canvas.espresso.mockCanvas
 import android.util.Log
 import com.github.javafaker.Faker
 import com.instructure.canvas.espresso.mockCanvas.utils.Randomizer
-import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.type.EnrollmentType
 import com.instructure.canvasapi2.utils.APIHelper
-import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.toApiString
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
@@ -154,15 +152,21 @@ class MockCanvas {
     /** Map of quiz id to quiz submission list */
     val quizSubmissions = mutableMapOf<Long, MutableList<QuizSubmission>>()
 
+    /** Maps of course id to recipient list */
     val studentRecipients = mutableMapOf<Long, List<Recipient>>()
     val teacherRecipients = mutableMapOf<Long, List<Recipient>>()
     val recipientGroups = mutableMapOf<Long, List<Recipient>>()
 
+    /** One off conversation for handling creating sent conversations */
     var sentConversation: Conversation? = null
+
+    /** Maps of conversation ids to conversations */
     val sentConversations = mutableMapOf<Long, Conversation>()
     val starredConversations = mutableMapOf<Long, Conversation>()
     val archivedConversations = mutableMapOf<Long, Conversation>()
     val unreadConversations = mutableMapOf<Long, Conversation>()
+
+    /** Map of course id to list of conversation for inbox filters */
     val conversationCourseMap = mutableMapOf<Long, List<Conversation>>()
 
     /** Map of conversation id to conversation object */
@@ -337,10 +341,16 @@ fun MockCanvas.addCourse(
     return course
 }
 
+/** Adds the provided permissions to the course */
 fun MockCanvas.addCoursePermissions(courseId: Long, permissions: CanvasContextPermission) {
     coursePermissions[courseId] = permissions
 }
 
+/**
+ * Adds the provided list of users (converted to basic users) to the provided course as recipients.
+ * This results in the role specific recipient maps being populated as well as the recipient groups.
+ *
+ */
 fun MockCanvas.addRecipientsToCourse(course: Course, students: List<User>, teachers: List<User>) {
     studentRecipients[course.id] = students.map {
         Recipient(
@@ -377,6 +387,19 @@ fun MockCanvas.addRecipientsToCourse(course: Course, students: List<User>, teach
 }
 
 fun MockCanvas.addSentConversation(subject: String) {
+    val message = Message(
+            id = 12345L,
+            createdAt = APIHelper.dateToString(GregorianCalendar()),
+            body = Randomizer.randomConversationBody(),
+            authorId = 123L,
+            participatingUserIds = listOf(123L, 12345L)
+    )
+
+    val basicUser = BasicUser(
+            id = 123L,
+            name = Randomizer.randomName().fullName,
+            avatarUrl = Randomizer.randomAvatarUrl()
+    )
     sentConversation = Conversation(
         id = 12345L,
         subject = subject,
@@ -384,10 +407,13 @@ fun MockCanvas.addSentConversation(subject: String) {
         lastMessage = Randomizer.randomConversationBody(),
         lastAuthoredMessageAt = APIHelper.dateToString(GregorianCalendar()),
         messageCount = 1,
-        avatarUrl = Randomizer.randomAvatarUrl()
+        messages = listOf(message),
+        avatarUrl = Randomizer.randomAvatarUrl(),
+        participants = mutableListOf(basicUser)
     )
 }
 
+/** Adds the provided number of conversations to the conversation maps. */
 fun MockCanvas.addConversations(conversationCount: Int = 1) {
     val message = Message(
         id = 12345L,
@@ -423,6 +449,7 @@ fun MockCanvas.addConversations(conversationCount: Int = 1) {
     }
 }
 
+/** Adds the provided number of conversations to the course conversation map. */
 fun MockCanvas.addConversationsToCourseMap(courseList: List<Course>, conversationCount: Int = 1) {
     val message = Message(
             id = 12345L,

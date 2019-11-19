@@ -26,13 +26,6 @@ import com.instructure.canvas.espresso.mockCanvas.endpoint
 import com.instructure.canvas.espresso.mockCanvas.utils.*
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.toApiString
-import com.instructure.canvasapi2.utils.toDate
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
-import okio.Buffer
-import retrofit2.http.Multipart
-import java.time.Duration
-import java.time.Instant
 import java.util.*
 
 /**

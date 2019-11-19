@@ -22,12 +22,8 @@ import com.instructure.canvas.espresso.mockCanvas.endpoint
 import com.instructure.canvas.espresso.mockCanvas.utils.LongId
 import com.instructure.canvas.espresso.mockCanvas.utils.PathVars
 import com.instructure.canvas.espresso.mockCanvas.utils.Segment
-import com.instructure.canvas.espresso.mockCanvas.utils.grabJsonFromMultiPartBody
 import com.instructure.canvas.espresso.mockCanvas.utils.successResponse
 import com.instructure.canvas.espresso.mockCanvas.utils.unauthorizedResponse
-import com.instructure.canvasapi2.models.Quiz
-import com.instructure.canvasapi2.models.QuizSubmission
-import com.instructure.canvasapi2.models.QuizSubmissionAnswer
 import com.instructure.canvasapi2.models.QuizSubmissionQuestion
 import com.instructure.canvasapi2.models.QuizSubmissionQuestionResponse
 import okio.Buffer
@@ -42,6 +38,7 @@ import okio.Buffer
  * - `brand_variables` -> Returns account branding information
  * - `conversations` -> [ConversationListEndpoint]
  * - `dashboard/dashboard_cards` -> [DashboardCardsEndpoint]
+ * - `search` -> [SearchEndpoint]
  */
 object ApiEndpoint : Endpoint(
     Segment("courses") to CourseListEndpoint,

@@ -15,10 +15,11 @@
  */
 package com.instructure.student.ui.interaction
 
-import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.mockCanvas.*
 import com.instructure.canvasapi2.apis.InboxApi
+import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.CanvasContextPermission
+import com.instructure.canvasapi2.models.Conversation
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
@@ -86,25 +87,79 @@ class InboxInteractionTest : StudentTest() {
         inboxPage.assertConversationDisplayed(subject)
     }
 
-    @Stub
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.INBOX, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P0, FeatureCategory.INBOX, TestCategory.INTERACTION)
     fun testInbox_createAndSendMessageToIndividualWithAttachment() {
         // Should be able to create and send a message, with an attachment, to an individual recipient
+        val data = goToInbox()
+        dashboardPage.clickInboxTab()
+        val subject = "Hodor"
+        val message = "What is this, hodor?"
+        data.addSentConversation(subject)
+        inboxPage.pressNewMessageButton()
+        newMessagePage.selectCourse(data.courses.values.first())
+        newMessagePage.setRecipient(data.teachers.first(), userType = "Teachers")
+        newMessagePage.setSubject(subject)
+        newMessagePage.setMessage(message)
+        newMessagePage.hitSend()
+        // Now let's append the attachment after-the-fact, since it is very hard
+        // to manually attach anything via Espresso, since it would require manipulating
+        // system UIs.
+        val attachmentName = "attachment.html"
+        addAttachmentToConversation(attachmentName, data.sentConversations.values.first(), data)
+        inboxPage.selectInboxScope(InboxApi.Scope.SENT)
+        inboxPage.selectConversation(data.sentConversation!!)
+        inboxConversationPage.assertAttachmentDisplayed(attachmentName)
     }
 
-    @Stub
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.INBOX, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P0, FeatureCategory.INBOX, TestCategory.INTERACTION)
     fun testInbox_createAndSendMessageToMultipleWithAttachment() {
         // Should be able to create and send a message, with an attachment, to multiple recipients
+        val data = goToInbox()
+        dashboardPage.clickInboxTab()
+        val subject = "Hodor"
+        val message = "What is this, hodor?"
+        data.addSentConversation(subject)
+        inboxPage.pressNewMessageButton()
+        newMessagePage.selectCourse(data.courses.values.first())
+        newMessagePage.setRecipients(data.teachers, userType = "Teachers")
+        newMessagePage.setSubject(subject)
+        newMessagePage.setMessage("Hodor, Hodor? Hodor!")
+        newMessagePage.hitSend()
+        // Now let's append the attachment after-the-fact, since it is very hard
+        // to manually attach anything via Espresso, since it would require manipulating
+        // system UIs.
+        val attachmentName = "attachment.html"
+        addAttachmentToConversation(attachmentName, data.sentConversations.values.first(), data)
+        inboxPage.selectInboxScope(InboxApi.Scope.SENT)
+        inboxPage.selectConversation(data.sentConversation!!)
+        inboxConversationPage.assertAttachmentDisplayed(attachmentName)
     }
 
-    @Stub
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.INBOX, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P0, FeatureCategory.INBOX, TestCategory.INTERACTION)
     fun testInbox_createAndSendMessageToAllUsersWithAttachment() {
         // Should be able to create and send a message, with an attachment, to all users in a course
+        val data = goToInbox()
+        dashboardPage.clickInboxTab()
+        val subject = "Hodor"
+        val message = "What is this, hodor?"
+        data.addSentConversation(subject)
+        inboxPage.pressNewMessageButton()
+        newMessagePage.selectCourse(data.courses.values.first())
+        newMessagePage.selectAllRecipients(listOf("Teachers", "Students"))
+        newMessagePage.setSubject(subject)
+        newMessagePage.setMessage("Hodor, Hodor? Hodor!")
+        newMessagePage.hitSend()
+        // Now let's append the attachment after-the-fact, since it is very hard
+        // to manually attach anything via Espresso, since it would require manipulating
+        // system UIs.
+        val attachmentName = "attachment.html"
+        addAttachmentToConversation(attachmentName, data.sentConversations.values.first(), data)
+        inboxPage.selectInboxScope(InboxApi.Scope.SENT)
+        inboxPage.selectConversation(data.sentConversation!!)
+        inboxConversationPage.assertAttachmentDisplayed(attachmentName)
     }
 
     @Test
@@ -120,15 +175,28 @@ class InboxInteractionTest : StudentTest() {
         inboxConversationPage.assertMessageDisplayed(message)
     }
 
-    @Stub
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.INBOX, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P0, FeatureCategory.INBOX, TestCategory.INTERACTION)
     fun testInbox_replyToMessageWithAttachment() {
         // Should be able to reply (with attachment) to a message
+        val data = goToInbox()
+        data.addConversations()
+        dashboardPage.clickInboxTab()
+        inboxPage.selectConversation(data.conversations.values.first())
+        val message = "What is this, hodor?"
+        inboxConversationPage.replyToMessage(message)
+
+        // Now let's append the attachment after-the-fact, since it is very hard
+        // to manually attach anything via Espresso, since it would require manipulating
+        // system UIs.
+        val attachmentName = "attachment.html"
+        addAttachmentToMessage(attachmentName, data.conversations.values.first().id, message, data)
+        inboxConversationPage.refresh()
+        inboxConversationPage.assertAttachmentDisplayed(attachmentName)
     }
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.INBOX, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P1, FeatureCategory.INBOX, TestCategory.INTERACTION)
     fun testInbox_filterMessagesByTypeAll() {
         // Should be able to filter messages by All
         val data = goToInbox()
@@ -139,7 +207,7 @@ class InboxInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.INBOX, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P1, FeatureCategory.INBOX, TestCategory.INTERACTION)
     fun testInbox_filterMessagesByTypeUnread() {
         // Should be able to filter messages by Unread
         val data = goToInbox()
@@ -151,7 +219,7 @@ class InboxInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.INBOX, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P1, FeatureCategory.INBOX, TestCategory.INTERACTION)
     fun testInbox_filterMessagesByTypeStarred() {
         // Should be able to filter messages by Starred
         val data = goToInbox()
@@ -163,7 +231,7 @@ class InboxInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.INBOX, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P1, FeatureCategory.INBOX, TestCategory.INTERACTION)
     fun testInbox_filterMessagesByTypeSend() {
         // Should be able to filter messages by Send
         val data = goToInbox()
@@ -175,7 +243,7 @@ class InboxInteractionTest : StudentTest() {
     }
 
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.INBOX, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P1, FeatureCategory.INBOX, TestCategory.INTERACTION)
     fun testInbox_filterMessagesByTypeArchived() {
         // Should be able to filter messages by Archived
         val data = goToInbox()
@@ -186,9 +254,8 @@ class InboxInteractionTest : StudentTest() {
         inboxPage.assertConversationDisplayed(conversation.subject!!)
     }
 
-    @Stub
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.INBOX, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P1, FeatureCategory.INBOX, TestCategory.INTERACTION)
     fun testInbox_filterMessagesByContext() {
         // Should be able to filter messages by course or group
         val data = goToInbox(courseCount = 2)
@@ -200,9 +267,8 @@ class InboxInteractionTest : StudentTest() {
         inboxPage.assertConversationDisplayed(conversation.subject!!)
     }
 
-    @Stub
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.INBOX, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P1, FeatureCategory.INBOX, TestCategory.INTERACTION)
     fun testInbox_canComposeAndSendToRoleGroupsIfPermissionEnabled() {
         // Can compose and send messages to one or more role groups if "Send messages to the entire class is enabled"
         val data = goToInbox(teacherCount = 3)
@@ -219,9 +285,8 @@ class InboxInteractionTest : StudentTest() {
         inboxPage.assertConversationDisplayed(subject)
     }
 
-    @Stub
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.INBOX, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P1, FeatureCategory.INBOX, TestCategory.INTERACTION)
     fun testInbox_canNotComposeAndSendToRoleGroupsIfPermissionDisabled() {
         // Can NOT compose and send messages to one or more role groups if "Send messages to the entire class is disabled"
         val data = goToInbox(sendMessagesAll = false)
@@ -231,9 +296,8 @@ class InboxInteractionTest : StudentTest() {
         newMessagePage.assertRecipientGroupsNotDisplayed(userType = "Teachers")
     }
 
-    @Stub
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.INBOX, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P1, FeatureCategory.INBOX, TestCategory.INTERACTION)
     fun testInbox_canComposeAndSendToIndividualCourseMembersIfPermissionEnabled() {
         // Can compose and send messages to individual course members if "Send messages to individual course members" is enabled
         // This test is identical to testInbox_createAndSendMessageToIndividual, not sure if its worth having both
@@ -251,9 +315,8 @@ class InboxInteractionTest : StudentTest() {
         inboxPage.assertConversationDisplayed(subject)
     }
 
-    @Stub
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.INBOX, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P1, FeatureCategory.INBOX, TestCategory.INTERACTION)
     fun testInbox_canNotComposeAndSendToIndividualCourseMembersIfPermissionDisabled() {
         // Can NOT compose and send messages to individual course members if "Send messages to individual course members" is disabled
         // This test is controlled by the api, so while we are utilizing a mocked CanvasContextPermission value, the only
@@ -278,6 +341,44 @@ class InboxInteractionTest : StudentTest() {
         // Can NOT compose and send messages to entire class if "Send messages to the entire class" is disabled
     }
     */
+
+    private fun createHtmlAttachment(displayName: String): Attachment {
+        val attachmentHtml =
+                """
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        </head>
+
+        <body>
+        <h1 id="header1">Famous Quote</h1>
+        <p id="p1">That's one small step for man, one giant leap for mankind -- Neil Armstrong</p>
+        </body>
+        </html> """
+
+        return Attachment(
+                id = 123L,
+                contentType = "html",
+                filename = "mockhtmlfile.html",
+                displayName = displayName,
+                size = attachmentHtml.length.toLong()
+        )
+    }
+
+    private fun addAttachmentToMessage(attachmentName: String, conversationId: Long, message: String, mockCanvas: MockCanvas) {
+        val attachment = createHtmlAttachment(attachmentName)
+        val conversation = mockCanvas.conversations[conversationId]!!
+        val newMessage = conversation.messages.find { it.body == message }
+        val newMessageList = listOf(conversation.messages.first(), newMessage!!.copy(attachments = listOf(attachment)))
+        mockCanvas.conversations[conversationId] = conversation.copy(messages = newMessageList)
+    }
+
+    private fun addAttachmentToConversation(attachmentName: String, conversation: Conversation, mockCanvas: MockCanvas) {
+        val attachment = createHtmlAttachment(attachmentName)
+        val newMessageList = listOf(conversation.messages.first().copy(attachments = listOf(attachment)))
+        mockCanvas.sentConversations[conversation.id] = conversation.copy(messages = newMessageList)
+    }
 
     private fun goToInbox(
         studentCount: Int = 1,

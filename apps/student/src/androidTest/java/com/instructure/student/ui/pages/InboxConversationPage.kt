@@ -16,13 +16,17 @@
  */
 package com.instructure.student.ui.pages
 
+import androidx.test.espresso.Espresso
+import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.matcher.ViewMatchers
+import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.*
 import com.instructure.espresso.replaceText
 import com.instructure.student.R
 import org.hamcrest.CoreMatchers
+import org.hamcrest.Matchers
 
 class InboxConversationPage : BasePage(R.id.inboxConversationPage) {
 
@@ -40,6 +44,15 @@ class InboxConversationPage : BasePage(R.id.inboxConversationPage) {
                 withText(message)
         )
         waitForView(itemMatcher).assertDisplayed()
+    }
+
+    fun assertAttachmentDisplayed(displayName: String) {
+        onViewWithText(displayName).assertDisplayed()
+    }
+
+    fun refresh() {
+        Espresso.onView(Matchers.allOf(ViewMatchers.withId(R.id.swipeRefreshLayout), ViewMatchers.isDisplayingAtLeast(10)))
+                .perform(withCustomConstraints(ViewActions.swipeDown(), ViewMatchers.isDisplayingAtLeast(10)))
     }
 
 }

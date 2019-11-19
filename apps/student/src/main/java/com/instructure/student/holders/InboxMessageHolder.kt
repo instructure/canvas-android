@@ -50,11 +50,8 @@ class InboxMessageHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         if (author != null) {
             authorName.text = getAuthorTitle(author.id, conversation, message)
             ProfileUtils.loadAvatarForUser(authorAvatar, author)
-            authorAvatar.setupAvatarA11y(author.name)
-            authorAvatar.onClick { callback.onAvatarClicked(author) }
         } else {
             authorName.text = ""
-            authorAvatar.clearAvatarA11y()
             authorAvatar.setImageDrawable(null)
             authorAvatar.setOnClickListener(null)
         }

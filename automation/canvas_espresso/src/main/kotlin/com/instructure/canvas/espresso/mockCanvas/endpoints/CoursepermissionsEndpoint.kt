@@ -19,6 +19,9 @@ import com.instructure.canvas.espresso.mockCanvas.Endpoint
 import com.instructure.canvas.espresso.mockCanvas.utils.successResponse
 import com.instructure.canvas.espresso.mockCanvas.utils.unauthorizedResponse
 
+/**
+ * Endpoint that can return a CanvasContextPermission value based on the course id
+ */
 object CoursePermissionsEndpoint : Endpoint(
     response = {
         GET {

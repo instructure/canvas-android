@@ -21,8 +21,12 @@ import com.instructure.canvas.espresso.mockCanvas.utils.Segment
 import com.instructure.canvas.espresso.mockCanvas.utils.successResponse
 import com.instructure.canvas.espresso.mockCanvas.utils.unauthorizedResponse
 
-//https://mock-data.instructure.com/api/v1/search/recipients?synthetic_contexts=1&context=course_1&per_page=100
-//https://mobiledev.instructure.com/api/v1/search/recipients?synthetic_contexts=1&context=course_1567973_students&per_page=100
+/**
+ * Base endpoint for searches
+ *
+ * ROUTES:
+ * - `recipients` -> list of recipients or recipient groups by context query param
+ */
 object SearchEndpoint : Endpoint(
     Segment("recipients") to endpoint(
         configure = {
