@@ -25,11 +25,13 @@ import com.instructure.canvas.espresso.mockCanvas.utils.Segment
 import com.instructure.canvas.espresso.mockCanvas.utils.grabJsonFromMultiPartBody
 import com.instructure.canvas.espresso.mockCanvas.utils.successResponse
 import com.instructure.canvas.espresso.mockCanvas.utils.unauthorizedResponse
+import com.instructure.canvasapi2.models.Page
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.models.QuizSubmission
 import com.instructure.canvasapi2.models.QuizSubmissionAnswer
 import com.instructure.canvasapi2.models.QuizSubmissionQuestion
 import com.instructure.canvasapi2.models.QuizSubmissionQuestionResponse
+import com.instructure.canvasapi2.models.Tab
 import okio.Buffer
 
 /**
@@ -53,29 +55,121 @@ object ApiEndpoint : Endpoint(
         Segment("dashboard_cards") to DashboardCardsEndpoint
     ),
     Segment("folders") to FolderListEndpoint,
-        Segment("quiz_submissions") to endpoint(
-                LongId(PathVars::submissionId) to endpoint (
-                        Segment("questions") to endpoint (
-                                configure = {
-                                    GET {
-                                        val submissionQuestions = data.quizSubmissionQuestions[pathVars.submissionId]
-                                                ?: listOf<QuizSubmissionQuestion>()
-                                        val response = QuizSubmissionQuestionResponse(quizSubmissionQuestions = submissionQuestions)
-                                        request.successResponse(response)
+    Segment("quiz_submissions") to endpoint(
+            LongId(PathVars::submissionId) to endpoint (
+                    Segment("questions") to endpoint (
+                            configure = {
+                                GET {
+                                    val submissionQuestions = data.quizSubmissionQuestions[pathVars.submissionId]
+                                            ?: listOf<QuizSubmissionQuestion>()
+                                    val response = QuizSubmissionQuestionResponse(quizSubmissionQuestions = submissionQuestions)
+                                    request.successResponse(response)
+                                }
+                                POST {
+                                    // More or less punting on this for now.  The unauthorized response doesn't seem
+                                    // to hurt us.
+                                    val buffer = Buffer()
+                                    request.body()!!.writeTo(buffer)
+                                    val body = buffer.readUtf8()
+                                    Log.d("submissionQuestions", "submission question post body: $body")
+                                    //val jsonObject = grabJsonFromMultiPartBody(request.body()!!)
+                                    //Log.d("submissionQuestions", "submission question post body: $jsonObject")
+                                    request.unauthorizedResponse()
+                                }
+                            }
+                    )
+            )
+    ),
+    Segment("groups") to endpoint (
+            LongId(PathVars::groupId) to endpoint (
+                    Segment("tabs") to endpoint (
+                           configure = {
+                               GET {
+                                   request.successResponse(data.groupTabs[pathVars.groupId] ?: listOf<Tab>())
+                               }
+                           }
+                    ),
+
+                    Segment("discussion_topics") to endpoint (
+                            configure = {
+                                GET {
+                                    // TODO: Merge this logic with course discussion_topics logic
+                                    val announcementsOnly = request.url().queryParameter("only_announcements")?.equals("1") ?: false
+                                    var topics = data.groupDiscussionTopicHeaders[pathVars.groupId]
+                                    if(topics != null) {
+                                        if(announcementsOnly) {
+                                            // return only announcements
+                                            topics = topics!!.filter {it.announcement}.toMutableList()
+                                        }
+                                        else {
+                                            // return only non-announcement discussions
+                                            topics = topics!!.filter {!it.announcement}.toMutableList()
+                                        }
+                                        request.successResponse(topics!!)
                                     }
-                                    POST {
-                                        // More or less punting on this for now.  The unauthorized response doesn't seem
-                                        // to hurt us.
-                                        val buffer = Buffer()
-                                        request.body()!!.writeTo(buffer)
-                                        val body = buffer.readUtf8()
-                                        Log.d("submissionQuestions", "submission question post body: $body")
-                                        //val jsonObject = grabJsonFromMultiPartBody(request.body()!!)
-                                        //Log.d("submissionQuestions", "submission question post body: $jsonObject")
+                                    else {
                                         request.unauthorizedResponse()
                                     }
                                 }
-                        )
-                )
-        )
+                            }
+                    ),
+
+                    Segment("pages") to endpoint (
+                            LongId(PathVars::pageId) to endpoint (
+                                    configure = {
+                                        GET {
+                                            val page = data.groupPages[pathVars.groupId]?.find {it.id == pathVars.pageId}
+                                            if(page != null) {
+                                                request.successResponse(page)
+                                            }
+                                            else {
+                                                request.unauthorizedResponse()
+                                            }
+                                        }
+                                    }
+                            ),
+
+                            configure = {
+                                GET {
+                                    val pages = data.groupPages[pathVars.groupId]
+                                    if(pages != null) {
+                                        request.successResponse(pages)
+                                    }
+                                    else {
+                                        request.unauthorizedResponse()
+                                    }
+                                }
+                            }
+                    ),
+
+                    Segment("folders") to endpoint(
+                            Segment("root") to endpoint (
+                                    configure = {
+                                        GET {
+                                            val rootFolder = data.groupRootFolders[pathVars.groupId]
+                                            if(rootFolder != null) {
+                                                request.successResponse(rootFolder)
+                                            }
+                                            else {
+                                                request.unauthorizedResponse()
+                                            }
+                                        }
+                                    }
+                            )
+
+                    ),
+
+                    configure = {
+                        GET { // Get group info for a specific group
+                            val group = data.groups[pathVars.groupId]
+                            if(group != null) {
+                                request.successResponse(group)
+                            }
+                            else {
+                                request.unauthorizedResponse()
+                            }
+                        }
+                    }
+            )
+    )
 )

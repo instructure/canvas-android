@@ -90,11 +90,20 @@ class MockCanvas {
     /** Map of course ID to tabs for the course */
     val courseTabs = mutableMapOf<Long, MutableList<Tab>>()
 
+    /** Map of group ID to tabs for the group */
+    val groupTabs = mutableMapOf<Long, MutableList<Tab>>()
+
     /** Map of course ID to pages for the course */
     val coursePages = mutableMapOf<Long, MutableList<Page>>()
 
+    /** Map of group ID to pages for the group */
+    val groupPages = mutableMapOf<Long, MutableList<Page>>()
+
     /** Map of course ID to root folders */
     val courseRootFolders = mutableMapOf<Long, FileFolder>()
+
+    /** Map of group ID to root folders */
+    val groupRootFolders = mutableMapOf<Long, FileFolder>()
 
     /** Map of folder IDs to folders */
     val fileFolders = mutableMapOf<Long, FileFolder>()
@@ -126,6 +135,9 @@ class MockCanvas {
 
     /** Map of course ids to discussion topic headers */
     val courseDiscussionTopicHeaders = mutableMapOf<Long, MutableList<DiscussionTopicHeader>>()
+
+    /** Map of group ids to discussion topic headers */
+    val groupDiscussionTopicHeaders = mutableMapOf<Long, MutableList<DiscussionTopicHeader>>()
 
     /** Map of topic ids to DiscussionTopics */
     val discussionTopics = mutableMapOf<Long, DiscussionTopic>()
@@ -590,14 +602,18 @@ fun MockCanvas.addUser(): User {
     return user
 }
 
-/** Creates a new page for a given course, and adds it to MockCanvas */
+/** Creates a new page for a given course, and adds it to MockCanvas.
+ * If [groupId] is non-null, then the page will be added to the group
+ * page list, as opposed to the course page list.
+ */
 fun MockCanvas.addPageToCourse(
         courseId: Long,
         pageId: Long = 0,
         url: String? = null,
         title: String = Randomizer.randomPageTitle(),
         body: String = Randomizer.randomPageBody(),
-        published: Boolean = false
+        published: Boolean = false,
+        groupId: Long? = null
 ): Page {
 
     val page = Page(
@@ -608,10 +624,20 @@ fun MockCanvas.addPageToCourse(
             published = published
     )
 
-    var list = coursePages[courseId]
-    if (list == null) {
-        list = mutableListOf<Page>()
-        coursePages.put(courseId, list)
+    var list : MutableList<Page>? = null
+    if(groupId != null) {
+        list = groupPages[groupId]
+        if(list == null) {
+            list = mutableListOf<Page>()
+            groupPages[groupId] = list
+        }
+    }
+    else {
+        list = coursePages[courseId]
+        if (list == null) {
+            list = mutableListOf<Page>()
+            coursePages.put(courseId, list)
+        }
     }
     list.add(page)
 
@@ -623,28 +649,50 @@ fun MockCanvas.addFileToCourse(
         courseId: Long,
         displayName: String,
         fileContent: String = Randomizer.randomPageBody(),
-        contentType: String = "text/plain"): Long {
-    var courseRootFolder = courseRootFolders[courseId]
-    if (courseRootFolder == null) {
-        val folderId = newItemId()
-        courseRootFolder = FileFolder(
-                id = folderId,
-                contextType = "Course",
-                contextId = courseId,
-                name = "course files",
-                fullName = "course files",
-                filesUrl = "https://mock-data.instructure.com/api/v1/folders/$folderId/files",
-                foldersUrl = "https://mock-data.instructure.com/api/v1/folders/$folderId/folders"
-        )
-        courseRootFolders[courseId] = courseRootFolder
-        fileFolders[courseRootFolder.id] = courseRootFolder
+        contentType: String = "text/plain",
+        groupId: Long? = null
+): Long {
+    var rootFolder: FileFolder? = null
+    if(groupId != null) {
+        rootFolder = groupRootFolders[groupId]
+        if(rootFolder == null) {
+            val folderId = newItemId()
+            rootFolder = FileFolder(
+                    id = folderId,
+                    contextType = "Course",
+                    contextId = courseId,
+                    name = "course group files",
+                    fullName = "course group files",
+                    filesUrl = "https://mock-data.instructure.com/api/v1/folders/$folderId/files",
+                    foldersUrl = "https://mock-data.instructure.com/api/v1/folders/$folderId/folders"
+            )
+            groupRootFolders[groupId] = rootFolder
+            fileFolders[rootFolder.id] = rootFolder
+        }
+    }
+    else {
+        var rootFolder = courseRootFolders[courseId]
+        if (rootFolder == null) {
+            val folderId = newItemId()
+            rootFolder = FileFolder(
+                    id = folderId,
+                    contextType = "Course",
+                    contextId = courseId,
+                    name = "course files",
+                    fullName = "course files",
+                    filesUrl = "https://mock-data.instructure.com/api/v1/folders/$folderId/files",
+                    foldersUrl = "https://mock-data.instructure.com/api/v1/folders/$folderId/folders"
+            )
+            courseRootFolders[courseId] = rootFolder
+            fileFolders[rootFolder.id] = rootFolder
+        }
     }
 
     // Now create our file metadata
     val fileId = newItemId()
     val fileMetadataItem = FileFolder(
             id = fileId,
-            folderId = courseRootFolder.id,
+            folderId = rootFolder!!.id,
             size = fileContent.length.toLong(),
             displayName = displayName,
             contentType = contentType,
@@ -652,10 +700,10 @@ fun MockCanvas.addFileToCourse(
     )
 
     // And record it for the folder
-    var fileList = folderFiles[courseRootFolder.id]
+    var fileList = folderFiles[rootFolder.id]
     if (fileList == null) {
         fileList = mutableListOf<FileFolder>()
-        folderFiles[courseRootFolder.id] = fileList
+        folderFiles[rootFolder.id] = fileList
     }
     //  TODO: Update courseRootFolder.filesCount
     fileList.add(fileMetadataItem)
@@ -684,7 +732,8 @@ fun MockCanvas.addDiscussionTopicToCourse(
         allowAttachments: Boolean = true,
         attachment: RemoteFile? = null,
         isAnnouncement: Boolean = false,
-        sections: List<Section> = listOf()
+        sections: List<Section> = listOf(),
+        groupId: Long? = null
 ) : DiscussionTopicHeader {
 
     var topicHeader = prePopulatedTopicHeader
@@ -713,12 +762,18 @@ fun MockCanvas.addDiscussionTopicToCourse(
     topicHeader.announcement = isAnnouncement
     topicHeader.sections = sections
 
-    var courseTopicHeaderList = courseDiscussionTopicHeaders[course.id]
-    if(courseTopicHeaderList == null) {
-        courseTopicHeaderList = mutableListOf<DiscussionTopicHeader>()
-        courseDiscussionTopicHeaders[course.id] = courseTopicHeaderList
+    var topicHeaderList = if(groupId != null) groupDiscussionTopicHeaders[groupId] else courseDiscussionTopicHeaders[course.id]
+    if(topicHeaderList == null) {
+        topicHeaderList = mutableListOf<DiscussionTopicHeader>()
+        if(groupId != null) {
+            groupDiscussionTopicHeaders[groupId] = topicHeaderList
+        }
+        else {
+            courseDiscussionTopicHeaders[course.id] = topicHeaderList
+        }
     }
-    courseTopicHeaderList.add(topicHeader)
+
+    topicHeaderList.add(topicHeader)
 
     val topic = DiscussionTopic(
             isForbidden = false,
@@ -973,7 +1028,7 @@ fun MockCanvas.addRubricToAssignment(assignmentId: Long, criteria : List<RubricC
 
     // Replace the old assignment with the modified assignment in the assignment group hash
     val groupList = assignmentGroups[courseId]
-    if(groupList != null) {
+    if (groupList != null) {
         groupList.forEach { group ->
             if (group.assignments.contains(assignment)) {
                 val newList = group.assignments.toMutableList()
@@ -987,4 +1042,27 @@ fun MockCanvas.addRubricToAssignment(assignmentId: Long, criteria : List<RubricC
             }
         }
     }
+}
+
+/** Add a group, associated with a course. */
+fun MockCanvas.addGroupToCourse(
+        course: Course,
+        name: String = Faker.instance().country().capital(),
+        description: String = Faker.instance().lordOfTheRings().character(),
+        members: List<User> = listOf()
+) : Group {
+    var result = Group(
+            id = newItemId(),
+            name = name,
+            description = description,
+            isPublic = true,
+            users = members,
+            contextType = Group.GroupContext.Course,
+            courseId = course.id
+    )
+
+    groups[result.id] = result
+
+    return result
+
 }

@@ -36,6 +36,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvasapi2.models.AccountNotification
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Group
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.dataseeding.model.GroupApiModel
@@ -101,6 +102,13 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     }
 
     fun assertDisplaysGroup(group: GroupApiModel, course: CourseApiModel) {
+        val groupNameMatcher = allOf(withText(group.name), withId(R.id.groupNameView))
+        scrollAndAssertDisplayed(groupNameMatcher)
+        val groupDescriptionMatcher = allOf(withText(course.name), withId(R.id.groupCourseView))
+        scrollAndAssertDisplayed(groupDescriptionMatcher)
+    }
+
+    fun assertDisplaysGroup(group: Group, course: Course) {
         val groupNameMatcher = allOf(withText(group.name), withId(R.id.groupNameView))
         scrollAndAssertDisplayed(groupNameMatcher)
         val groupDescriptionMatcher = allOf(withText(course.name), withId(R.id.groupCourseView))
@@ -201,6 +209,10 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     fun selectCourse(course: Course) {
         assertDisplaysCourse(course)
         onView(withText(course.originalName)).click()
+    }
+
+    fun selectGroup(group: Group) {
+        onView(withText(group.name)).click()
     }
 
     fun launchSettingsPage() {

@@ -37,8 +37,14 @@ object PagesApi {
     private fun pagesService(token: String): PagesService
             = CanvasRestAdapter.retrofitWithToken(token).create(PagesService::class.java)
 
-    fun createCoursePage(courseId: Long, published: Boolean, frontPage: Boolean, token: String): PageApiModel {
-        val page = CreatePageWrapper(CreatePage(Randomizer.randomPageTitle(), Randomizer.randomPageBody(), published, frontPage))
+    fun createCoursePage(
+            courseId: Long,
+            published: Boolean,
+            frontPage: Boolean,
+            token: String,
+            body: String = Randomizer.randomPageBody()
+    ): PageApiModel {
+        val page = CreatePageWrapper(CreatePage(Randomizer.randomPageTitle(), body, published, frontPage))
 
         return pagesService(token)
                 .createCoursePage(courseId, page)
