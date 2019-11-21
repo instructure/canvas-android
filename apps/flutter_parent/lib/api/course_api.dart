@@ -22,7 +22,7 @@ import 'utils/paged_list.dart';
 class CourseApi {
   static Future<List<Course>> getObserveeCourses() async {
     print('getting observee courses depaginated');
-    var coursesResponse = await Dio().get('${ApiPrefs.getApiUrl()}courses}', queryParameters: {
+    var coursesResponse = await Dio().get('${ApiPrefs.getApiUrl(path: 'courses')}', queryParameters: {
       'include': [
         'term',
         'syllabus_body',
@@ -38,7 +38,8 @@ class CourseApi {
         'observed_users'
       ],
       'state': ['completed', 'available']
-    });
+    }, options: Options(headers: ApiPrefs.getHeaderMap()));
+
 
     if (coursesResponse.statusCode == 200 || coursesResponse.statusCode == 201) {
       final coursesPaged = PagedList<Course>(coursesResponse);

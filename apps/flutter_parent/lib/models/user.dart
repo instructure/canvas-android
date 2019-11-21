@@ -18,6 +18,8 @@ import 'package:built_value/serializer.dart';
 
 part 'user.g.dart';
 
+/// To have this built_value be generated, run this command from the project root:
+/// flutter packages pub run build_runner build --delete-conflicting-outputs
 abstract class User implements Built<User, UserBuilder> {
   @BuiltValueSerializer(serializeNulls: true)
   static Serializer<User> get serializer => _$userSerializer;
@@ -32,6 +34,9 @@ abstract class User implements Built<User, UserBuilder> {
   @nullable
   @BuiltValueField(wireName: 'sortable_name')
   String get sortableName;
+
+  @nullable
+  String get pronouns;
 
   @nullable
   @BuiltValueField(wireName: 'avatar_url')

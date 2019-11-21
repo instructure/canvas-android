@@ -30,6 +30,13 @@ class _$UserSerializer implements StructuredSerializer<User> {
       result.add(serializers.serialize(object.sortableName,
           specifiedType: const FullType(String)));
     }
+    result.add('pronouns');
+    if (object.pronouns == null) {
+      result.add(null);
+    } else {
+      result.add(serializers.serialize(object.pronouns,
+          specifiedType: const FullType(String)));
+    }
     result.add('avatar_url');
     if (object.avatarUrl == null) {
       result.add(null);
@@ -85,6 +92,10 @@ class _$UserSerializer implements StructuredSerializer<User> {
           result.sortableName = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
           break;
+        case 'pronouns':
+          result.pronouns = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
+          break;
         case 'avatar_url':
           result.avatarUrl = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
@@ -116,6 +127,8 @@ class _$User extends User {
   @override
   final String sortableName;
   @override
+  final String pronouns;
+  @override
   final String avatarUrl;
   @override
   final String primaryEmail;
@@ -131,6 +144,7 @@ class _$User extends User {
       {this.id,
       this.name,
       this.sortableName,
+      this.pronouns,
       this.avatarUrl,
       this.primaryEmail,
       this.locale,
@@ -158,6 +172,7 @@ class _$User extends User {
         id == other.id &&
         name == other.name &&
         sortableName == other.sortableName &&
+        pronouns == other.pronouns &&
         avatarUrl == other.avatarUrl &&
         primaryEmail == other.primaryEmail &&
         locale == other.locale &&
@@ -170,8 +185,10 @@ class _$User extends User {
         $jc(
             $jc(
                 $jc(
-                    $jc($jc($jc(0, id.hashCode), name.hashCode),
-                        sortableName.hashCode),
+                    $jc(
+                        $jc($jc($jc(0, id.hashCode), name.hashCode),
+                            sortableName.hashCode),
+                        pronouns.hashCode),
                     avatarUrl.hashCode),
                 primaryEmail.hashCode),
             locale.hashCode),
@@ -184,6 +201,7 @@ class _$User extends User {
           ..add('id', id)
           ..add('name', name)
           ..add('sortableName', sortableName)
+          ..add('pronouns', pronouns)
           ..add('avatarUrl', avatarUrl)
           ..add('primaryEmail', primaryEmail)
           ..add('locale', locale)
@@ -206,6 +224,10 @@ class UserBuilder implements Builder<User, UserBuilder> {
   String _sortableName;
   String get sortableName => _$this._sortableName;
   set sortableName(String sortableName) => _$this._sortableName = sortableName;
+
+  String _pronouns;
+  String get pronouns => _$this._pronouns;
+  set pronouns(String pronouns) => _$this._pronouns = pronouns;
 
   String _avatarUrl;
   String get avatarUrl => _$this._avatarUrl;
@@ -233,6 +255,7 @@ class UserBuilder implements Builder<User, UserBuilder> {
       _id = _$v.id;
       _name = _$v.name;
       _sortableName = _$v.sortableName;
+      _pronouns = _$v.pronouns;
       _avatarUrl = _$v.avatarUrl;
       _primaryEmail = _$v.primaryEmail;
       _locale = _$v.locale;
@@ -262,6 +285,7 @@ class UserBuilder implements Builder<User, UserBuilder> {
             id: id,
             name: name,
             sortableName: sortableName,
+            pronouns: pronouns,
             avatarUrl: avatarUrl,
             primaryEmail: primaryEmail,
             locale: locale,

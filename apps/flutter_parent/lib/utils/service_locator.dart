@@ -17,6 +17,7 @@ import 'package:flutter_parent/api/auth_api.dart';
 import 'package:flutter_parent/api/course_api.dart';
 import 'package:flutter_parent/screens/alerts/alerts_interactor.dart';
 import 'package:flutter_parent/screens/courses/courses_interactor.dart';
+import 'package:flutter_parent/screens/dashboard/dashboard_interactor.dart';
 import 'package:flutter_parent/screens/domain_search/domain_search_interactor.dart';
 import 'package:flutter_parent/screens/web_login/web_login_interactor.dart';
 import 'package:get_it/get_it.dart';
@@ -32,4 +33,5 @@ void setupLocator() {
   locator.registerFactory<CoursesInteractor>(() => CoursesInteractor());
   locator.registerFactory<DomainSearchInteractor>(() => DomainSearchInteractor());
   locator.registerFactory<WebLoginInteractor>(() => WebLoginInteractor());
+  locator.registerFactory<DashboardInteractor>(() => DashboardInteractor());
 }

@@ -142,6 +142,8 @@ abstract class Enrollment implements Built<Enrollment, EnrollmentBuilder> {
 static void _initializeBuilder(EnrollmentBuilder b) => b
     ..id = 0
     ..userId = 0
+    ..courseId = 0
+    ..courseSectionId = 0
     ..multipleGradingPeriodsEnabled = false
     ..totalsForAllGradingPeriodsOption = false
     ..currentGradingPeriodId = 0
