@@ -13,12 +13,11 @@
 /// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'dart:math';
-import 'package:flutter_parent/api/enrollments_api.dart';
+
 import 'package:flutter_parent/models/enrollment.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/screens/dashboard/dashboard_interactor.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:get_it/get_it.dart';
 
 void main() {
   test('interactor should sort users in descending order', () {

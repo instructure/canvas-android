@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 /// Copyright (C) 2019 - present Instructure, Inc.
 ///
 /// This program is free software: you can redistribute it and/or modify

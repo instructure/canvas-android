@@ -16,15 +16,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_parent/models/user.dart';
 
 class UserName extends StatelessWidget {
-  String userName;
-  String pronouns;
-  TextStyle style;
+  final String userName;
+  final String pronouns;
+  final TextStyle style;
 
   UserName(this.userName, this.pronouns, {this.style});
-  UserName.fromUser(User user, {this.style}) {
-    this.userName = user.name;
-    this.pronouns = user.pronouns;
-  }
+
+  UserName.fromUser(User user, {TextStyle style = null})
+      : userName = user.name,
+        pronouns = user.pronouns,
+        style = style;
+
 
   @override
   Widget build(BuildContext context) {

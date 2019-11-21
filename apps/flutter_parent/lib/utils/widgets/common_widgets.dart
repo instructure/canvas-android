@@ -13,7 +13,6 @@
 /// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:flutter/material.dart';
-import 'package:flutter_parent/models/user.dart';
 
 class CommonWidgets {
   static progressIndicator() => Center(child: CircularProgressIndicator());

@@ -22,7 +22,6 @@ import 'package:flutter_parent/screens/dashboard/inbox_notifier.dart';
 import 'package:flutter_parent/screens/login_landing_screen.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/design/canvas_icons_solid.dart';
-import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:flutter_parent/utils/widgets/common_widgets.dart';
 import 'package:flutter_parent/utils/widgets/default_avatar.dart';

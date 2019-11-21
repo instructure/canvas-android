@@ -25,7 +25,6 @@ import 'package:flutter_parent/screens/courses/courses_interactor.dart';
 import 'package:flutter_parent/screens/courses/courses_screen.dart';
 import 'package:flutter_parent/screens/dashboard/dashboard_interactor.dart';
 import 'package:flutter_parent/screens/dashboard/dashboard_screen.dart';
-import 'package:flutter_parent/screens/login_landing_screen.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 
