@@ -44,6 +44,9 @@ import okio.Buffer
  * - `brand_variables` -> Returns account branding information
  * - `conversations` -> [ConversationListEndpoint]
  * - `dashboard/dashboard_cards` -> [DashboardCardsEndpoint]
+ * - `folders` -> [FolderListEndpoint]
+ * - `quiz_submissions/:submission_id/questions` -> anonymous endpoint for quiz questions
+ * - `groups` -> [GroupsEndpoint]
  */
 object ApiEndpoint : Endpoint(
     Segment("courses") to CourseListEndpoint,
@@ -80,96 +83,102 @@ object ApiEndpoint : Endpoint(
                     )
             )
     ),
-    Segment("groups") to endpoint (
-            LongId(PathVars::groupId) to endpoint (
-                    Segment("tabs") to endpoint (
-                           configure = {
-                               GET {
-                                   request.successResponse(data.groupTabs[pathVars.groupId] ?: listOf<Tab>())
-                               }
-                           }
-                    ),
+    Segment("groups") to GroupsEndpoint
+)
 
-                    Segment("discussion_topics") to endpoint (
-                            configure = {
-                                GET {
-                                    // TODO: Merge this logic with course discussion_topics logic
-                                    val announcementsOnly = request.url().queryParameter("only_announcements")?.equals("1") ?: false
-                                    var topics = data.groupDiscussionTopicHeaders[pathVars.groupId]
-                                    if(topics != null) {
-                                        if(announcementsOnly) {
-                                            // return only announcements
-                                            topics = topics!!.filter {it.announcement}.toMutableList()
-                                        }
-                                        else {
-                                            // return only non-announcement discussions
-                                            topics = topics!!.filter {!it.announcement}.toMutableList()
-                                        }
-                                        request.successResponse(topics!!)
-                                    }
-                                    else {
-                                        request.unauthorizedResponse()
-                                    }
-                                }
-                            }
-                    ),
-
-                    Segment("pages") to endpoint (
-                            LongId(PathVars::pageId) to endpoint (
-                                    configure = {
-                                        GET {
-                                            val page = data.groupPages[pathVars.groupId]?.find {it.id == pathVars.pageId}
-                                            if(page != null) {
-                                                request.successResponse(page)
-                                            }
-                                            else {
-                                                request.unauthorizedResponse()
-                                            }
-                                        }
-                                    }
-                            ),
-
-                            configure = {
-                                GET {
-                                    val pages = data.groupPages[pathVars.groupId]
-                                    if(pages != null) {
-                                        request.successResponse(pages)
-                                    }
-                                    else {
-                                        request.unauthorizedResponse()
-                                    }
-                                }
-                            }
-                    ),
-
-                    Segment("folders") to endpoint(
-                            Segment("root") to endpoint (
-                                    configure = {
-                                        GET {
-                                            val rootFolder = data.groupRootFolders[pathVars.groupId]
-                                            if(rootFolder != null) {
-                                                request.successResponse(rootFolder)
-                                            }
-                                            else {
-                                                request.unauthorizedResponse()
-                                            }
-                                        }
-                                    }
-                            )
-
-                    ),
-
-                    configure = {
-                        GET { // Get group info for a specific group
-                            val group = data.groups[pathVars.groupId]
-                            if(group != null) {
-                                request.successResponse(group)
-                            }
-                            else {
-                                request.unauthorizedResponse()
+// Logic for /api/v1/groups.
+// Does not, for now, handle listing of groups, but rather access to a specific group
+// (via the groupId pathvar).
+object GroupsEndpoint : Endpoint (
+        LongId(PathVars::groupId) to endpoint (
+                Segment("tabs") to endpoint ( // group tabs
+                        configure = {
+                            GET {
+                                request.successResponse(data.groupTabs[pathVars.groupId] ?: listOf<Tab>())
                             }
                         }
+                ),
+
+                Segment("discussion_topics") to endpoint ( // group discussion topics
+                        configure = {
+                            GET {
+                                // TODO: Merge this logic with course discussion_topics logic
+                                val announcementsOnly = request.url().queryParameter("only_announcements")?.equals("1") ?: false
+                                var topics = data.groupDiscussionTopicHeaders[pathVars.groupId]
+                                if(topics != null) {
+                                    if(announcementsOnly) {
+                                        // return only announcements
+                                        topics = topics!!.filter {it.announcement}.toMutableList()
+                                    }
+                                    else {
+                                        // return only non-announcement discussions
+                                        topics = topics!!.filter {!it.announcement}.toMutableList()
+                                    }
+                                    request.successResponse(topics!!)
+                                }
+                                else {
+                                    request.unauthorizedResponse()
+                                }
+                            }
+                        }
+                ),
+
+                Segment("pages") to endpoint (// group pages
+                        LongId(PathVars::pageId) to endpoint (
+                                configure = {
+                                    GET {
+                                        val page = data.groupPages[pathVars.groupId]?.find {it.id == pathVars.pageId}
+                                        if(page != null) {
+                                            request.successResponse(page)
+                                        }
+                                        else {
+                                            request.unauthorizedResponse()
+                                        }
+                                    }
+                                }
+                        ),
+
+                        configure = {
+                            GET {
+                                val pages = data.groupPages[pathVars.groupId]
+                                if(pages != null) {
+                                    request.successResponse(pages)
+                                }
+                                else {
+                                    request.unauthorizedResponse()
+                                }
+                            }
+                        }
+                ),
+
+                Segment("folders") to endpoint(// groups folders
+                        Segment("root") to endpoint (
+                                configure = {
+                                    GET {
+                                        val rootFolder = data.groupRootFolders[pathVars.groupId]
+                                        if(rootFolder != null) {
+                                            request.successResponse(rootFolder)
+                                        }
+                                        else {
+                                            request.unauthorizedResponse()
+                                        }
+                                    }
+                                }
+                        )
+
+                ),
+
+                configure = {
+                    GET { // Get general group info for a specific group
+                        val group = data.groups[pathVars.groupId]
+                        if(group != null) {
+                            request.successResponse(group)
+                        }
+                        else {
+                            request.unauthorizedResponse()
+                        }
                     }
-            )
-    )
+                }
+        )
+
 )

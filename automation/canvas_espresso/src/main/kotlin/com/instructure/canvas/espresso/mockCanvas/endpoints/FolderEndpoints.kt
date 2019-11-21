@@ -16,7 +16,10 @@
  */
 package com.instructure.canvas.espresso.mockCanvas.endpoints
 
+import android.util.Log
 import com.instructure.canvas.espresso.mockCanvas.Endpoint
+import com.instructure.canvas.espresso.mockCanvas.utils.AuthModel
+import com.instructure.canvas.espresso.mockCanvas.utils.DontCareAuthModel
 import com.instructure.canvas.espresso.mockCanvas.utils.LongId
 import com.instructure.canvas.espresso.mockCanvas.utils.PathVars
 import com.instructure.canvas.espresso.mockCanvas.utils.Segment
@@ -55,6 +58,7 @@ object FolderEndpoint : Endpoint(
             GET {
                 val folderId = pathVars.folderId
                 val folder = data.fileFolders[folderId]
+                //Log.d("Folders", "endpoint: folderId=$folderId, folder=$folder")
                 if (folder != null) {
                     request.successResponse(folder)
                 } else {
@@ -62,7 +66,11 @@ object FolderEndpoint : Endpoint(
                 }
             }
         }
-)
+) {
+    // Disable auth-check for folder endpoint
+    override val authModel: AuthModel
+        get() = DontCareAuthModel
+}
 
 /**
  * Endpoint to return all files associated with a folder

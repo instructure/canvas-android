@@ -21,6 +21,8 @@ import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addDiscussionTopicToCourse
 import com.instructure.canvas.espresso.mockCanvas.addFileToCourse
+import com.instructure.canvas.espresso.mockCanvas.addFileToFolder
+import com.instructure.canvas.espresso.mockCanvas.addFolderToCourse
 import com.instructure.canvas.espresso.mockCanvas.addGroupToCourse
 import com.instructure.canvas.espresso.mockCanvas.addPageToCourse
 import com.instructure.canvas.espresso.mockCanvas.addQuizToCourse
@@ -51,6 +53,7 @@ class GroupLinksInteractionTest : StudentTest() {
     private var fileId: Long = -1
     private val fileBody = "<h1 id=\"header1\">File body</h1>"
     private var fileDisplayName = "GroupFile.html"
+    private var groupFolderDisplayName = "Group Folder"
 
     @Stub
     @Test
@@ -79,6 +82,7 @@ class GroupLinksInteractionTest : StudentTest() {
         setUpGroupAndSignIn()
         dashboardPage.selectGroup(group)
         courseBrowserPage.selectFiles()
+        fileListPage.selectItem(groupFolderDisplayName)
         fileListPage.selectItem(fileDisplayName)
         canvasWebViewPage.runTextChecks(
                 WebViewTextCheck(Locator.ID, "header1", "File body")
@@ -140,7 +144,7 @@ class GroupLinksInteractionTest : StudentTest() {
         setUpGroupAndSignIn()
         dashboardPage.selectGroup(group)
         courseBrowserPage.selectFiles()
-        fileListPage.assertItemDisplayed(fileDisplayName)
+        fileListPage.assertItemDisplayed(groupFolderDisplayName)
     }
 
     @Stub
@@ -148,6 +152,12 @@ class GroupLinksInteractionTest : StudentTest() {
     @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, true, FeatureCategory.FILES)
     fun testGroupLink_fileFolder() {
         // Link to group files folder opens folder - eg: "/groups/:id/files/folder/:id/"
+        setUpGroupAndSignIn()
+        dashboardPage.selectGroup(group)
+        courseBrowserPage.selectFiles()
+        fileListPage.assertItemDisplayed(groupFolderDisplayName)
+        fileListPage.selectItem(groupFolderDisplayName)
+        fileListPage.assertItemDisplayed(fileDisplayName)
     }
 
     @Stub
@@ -191,18 +201,18 @@ class GroupLinksInteractionTest : StudentTest() {
 
     // Mock a specified number of students and courses, sign in, then navigate to course browser page for
     // first course.
-    private fun setUpGroupAndSignIn(
-            studentCount: Int = 1,
-            courseCount: Int = 1
-    ): MockCanvas {
+    private fun setUpGroupAndSignIn(): MockCanvas {
 
         // Basic info
         val data = MockCanvas.init(
-                studentCount = studentCount,
-                courseCount = courseCount,
-                favoriteCourseCount = courseCount)
+                studentCount = 1,
+                courseCount = 1,
+                favoriteCourseCount = 1)
+
         course = data.courses.values.first()
         val user = data.users.values.first()
+
+        // Add a group
         group = data.addGroupToCourse(
                 course = course,
                 members = listOf(user)
@@ -232,13 +242,19 @@ class GroupLinksInteractionTest : StudentTest() {
                 body = pageBody
         )
 
-        // Add a file
-        fileId = data.addFileToCourse(
+        // Add a folder
+        val folderId = data.addFolderToCourse(
                 courseId = course.id,
+                displayName = groupFolderDisplayName,
+                groupId = group.id
+        )
+
+        // Add a file to the folder
+        val fileId = data.addFileToFolder(
+                folderId = folderId,
                 displayName = fileDisplayName,
                 fileContent = fileBody,
-                contentType = "text/html",
-                groupId = group.id
+                contentType = "text.html"
         )
 
         // Make sure that we have group tabs
