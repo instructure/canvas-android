@@ -44,9 +44,6 @@ class _$CourseSerializer implements StructuredSerializer<Course> {
       'access_restricted_by_date',
       serializers.serialize(object.accessRestrictedByDate,
           specifiedType: const FullType(bool)),
-      'image_download_url',
-      serializers.serialize(object.imageDownloadUrl,
-          specifiedType: const FullType(String)),
       'has_weighted_grading_periods',
       serializers.serialize(object.hasWeightedGradingPeriods,
           specifiedType: const FullType(bool)),
@@ -90,6 +87,13 @@ class _$CourseSerializer implements StructuredSerializer<Course> {
       result.add(null);
     } else {
       result.add(serializers.serialize(object.syllabusBody,
+          specifiedType: const FullType(String)));
+    }
+    result.add('image_download_url');
+    if (object.imageDownloadUrl == null) {
+      result.add(null);
+    } else {
+      result.add(serializers.serialize(object.imageDownloadUrl,
           specifiedType: const FullType(String)));
     }
     result.add('workflow_state');
@@ -302,9 +306,6 @@ class _$Course extends Course {
     }
     if (accessRestrictedByDate == null) {
       throw new BuiltValueNullFieldError('Course', 'accessRestrictedByDate');
-    }
-    if (imageDownloadUrl == null) {
-      throw new BuiltValueNullFieldError('Course', 'imageDownloadUrl');
     }
     if (hasWeightedGradingPeriods == null) {
       throw new BuiltValueNullFieldError('Course', 'hasWeightedGradingPeriods');

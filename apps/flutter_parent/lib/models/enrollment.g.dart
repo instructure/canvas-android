@@ -20,12 +20,6 @@ class _$EnrollmentSerializer implements StructuredSerializer<Enrollment> {
     final result = <Object>[
       'id',
       serializers.serialize(object.id, specifiedType: const FullType(int)),
-      'course_id',
-      serializers.serialize(object.courseId,
-          specifiedType: const FullType(int)),
-      'course_section_id',
-      serializers.serialize(object.courseSectionId,
-          specifiedType: const FullType(int)),
       'enrollment_state',
       serializers.serialize(object.enrollmentState,
           specifiedType: const FullType(String)),
@@ -60,6 +54,20 @@ class _$EnrollmentSerializer implements StructuredSerializer<Enrollment> {
     } else {
       result.add(serializers.serialize(object.type,
           specifiedType: const FullType(String)));
+    }
+    result.add('course_id');
+    if (object.courseId == null) {
+      result.add(null);
+    } else {
+      result.add(serializers.serialize(object.courseId,
+          specifiedType: const FullType(int)));
+    }
+    result.add('course_section_id');
+    if (object.courseSectionId == null) {
+      result.add(null);
+    } else {
+      result.add(serializers.serialize(object.courseSectionId,
+          specifiedType: const FullType(int)));
     }
     result.add('grades');
     if (object.grades == null) {
@@ -362,12 +370,6 @@ class _$Enrollment extends Enrollment {
       : super._() {
     if (id == null) {
       throw new BuiltValueNullFieldError('Enrollment', 'id');
-    }
-    if (courseId == null) {
-      throw new BuiltValueNullFieldError('Enrollment', 'courseId');
-    }
-    if (courseSectionId == null) {
-      throw new BuiltValueNullFieldError('Enrollment', 'courseSectionId');
     }
     if (enrollmentState == null) {
       throw new BuiltValueNullFieldError('Enrollment', 'enrollmentState');

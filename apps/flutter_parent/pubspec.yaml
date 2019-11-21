@@ -43,6 +43,7 @@ dependencies:
   get_it: ^3.0.1
   intl: ^0.15.8
   package_info: 0.4.0+10
+  provider: ^3.1.0+1
   shared_preferences: 0.5.3+4
   webview_flutter: 0.3.15+1
 
