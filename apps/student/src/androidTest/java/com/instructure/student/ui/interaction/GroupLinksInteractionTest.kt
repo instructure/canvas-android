@@ -50,7 +50,6 @@ class GroupLinksInteractionTest : StudentTest() {
     private lateinit var announcement : DiscussionTopicHeader
     private lateinit var page: Page
     private val pageBody = "<h1 id=\"header1\">Page body</h1>"
-    private var fileId: Long = -1
     private val fileBody = "<h1 id=\"header1\">File body</h1>"
     private var fileDisplayName = "GroupFile.html"
     private var groupFolderDisplayName = "Group Folder"

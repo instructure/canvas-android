@@ -134,6 +134,7 @@ class NewMessagePage : BasePage() {
     }
 
     fun setMessage(messageText: String) {
+        Espresso.closeSoftKeyboard()
         onView(allOf(withId(R.id.message), isDisplayed())).typeText(messageText)
         //messageEditText.typeText(messageText)
     }
