@@ -55,7 +55,7 @@ void main() {
     expect(model.state, ViewState.Error);
   });
 
-  test('Calling work ends with a state of Idle if the block null', () async {
+  test('Calling work ends with a state of Idle if the block is null', () async {
     final model = BaseModel();
     await model.work(null);
     expect(model.state, ViewState.Idle);

@@ -33,10 +33,10 @@ abstract class AssignmentGroup implements Built<AssignmentGroup, AssignmentGroup
 
   String get name;
 
-  int get position; // the position of the Assignment Group
+  int get position;
 
   @BuiltValueField(wireName: 'group_weight')
-  double get groupWeight; // the weight of the Assignment Group
+  double get groupWeight;
 
   BuiltList<Assignment> get assignments;
 }

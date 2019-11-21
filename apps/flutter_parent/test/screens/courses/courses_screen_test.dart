@@ -120,7 +120,7 @@ void main() {
     expect(gradeWidget, findsNWidgets(courses.length));
   });
 
-  testWidgetsWithAccessibilityChecks('launces course detail screen when tapping on a course', (tester) async {
+  testWidgetsWithAccessibilityChecks('launches course detail screen when tapping on a course', (tester) async {
     var student = _mockStudent(1);
     var courses = List.generate(
       1, (idx) =>
