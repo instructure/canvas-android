@@ -168,7 +168,7 @@ class InboxInteractionTest : StudentTest() {
             sentConversation,
             data
         )
-        inboxPage.selectInboxScope(InboxApi.Scope.SENT)j
+        inboxPage.selectInboxScope(InboxApi.Scope.SENT)
         inboxPage.selectConversation(sentConversation)
         inboxConversationPage.assertAttachmentDisplayed(attachmentName)
     }

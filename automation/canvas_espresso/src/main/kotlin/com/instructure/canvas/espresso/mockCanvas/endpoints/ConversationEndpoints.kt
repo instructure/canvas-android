@@ -113,9 +113,10 @@ object ConversationEndpoint : Endpoint(
                     val messageBody = request.url().queryParameter("body")
                     val message = Message(
                         id = data.newItemId(),
+                        authorId = request.user!!.id,
                         createdAt = APIHelper.dateToString(GregorianCalendar()),
                         body = messageBody,
-                        participatingUserIds = listOf(data.newItemId(), data.newItemId())
+                        participatingUserIds = conversation.messages.first().participatingUserIds
                     )
                     data.conversations[pathVars.conversationId] = conversation.copy(messages = conversation.messages.plus(message))
                     request.successResponse(data.conversations[pathVars.conversationId]!!)
