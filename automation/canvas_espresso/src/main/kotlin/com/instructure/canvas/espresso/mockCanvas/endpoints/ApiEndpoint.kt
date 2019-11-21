@@ -22,13 +22,8 @@ import com.instructure.canvas.espresso.mockCanvas.endpoint
 import com.instructure.canvas.espresso.mockCanvas.utils.LongId
 import com.instructure.canvas.espresso.mockCanvas.utils.PathVars
 import com.instructure.canvas.espresso.mockCanvas.utils.Segment
-import com.instructure.canvas.espresso.mockCanvas.utils.grabJsonFromMultiPartBody
 import com.instructure.canvas.espresso.mockCanvas.utils.successResponse
 import com.instructure.canvas.espresso.mockCanvas.utils.unauthorizedResponse
-import com.instructure.canvasapi2.models.Page
-import com.instructure.canvasapi2.models.Quiz
-import com.instructure.canvasapi2.models.QuizSubmission
-import com.instructure.canvasapi2.models.QuizSubmissionAnswer
 import com.instructure.canvasapi2.models.QuizSubmissionQuestion
 import com.instructure.canvasapi2.models.QuizSubmissionQuestionResponse
 import com.instructure.canvasapi2.models.Tab
@@ -47,6 +42,7 @@ import okio.Buffer
  * - `folders` -> [FolderListEndpoint]
  * - `quiz_submissions/:submission_id/questions` -> anonymous endpoint for quiz questions
  * - `groups` -> [GroupsEndpoint]
+ * - `search` -> [SearchEndpoint]
  */
 object ApiEndpoint : Endpoint(
     Segment("courses") to CourseListEndpoint,
@@ -58,6 +54,7 @@ object ApiEndpoint : Endpoint(
         Segment("dashboard_cards") to DashboardCardsEndpoint
     ),
     Segment("folders") to FolderListEndpoint,
+    Segment("search") to SearchEndpoint,
     Segment("quiz_submissions") to endpoint(
             LongId(PathVars::submissionId) to endpoint (
                     Segment("questions") to endpoint (

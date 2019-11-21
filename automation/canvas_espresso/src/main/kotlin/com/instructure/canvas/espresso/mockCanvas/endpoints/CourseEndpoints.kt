@@ -18,36 +18,14 @@ package com.instructure.canvas.espresso.mockCanvas.endpoints
 
 import android.util.Log
 import com.google.gson.Gson
-import com.google.gson.JsonObject
 import com.instructure.canvas.espresso.mockCanvas.Endpoint
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addDiscussionTopicToCourse
 import com.instructure.canvas.espresso.mockCanvas.addReplyToDiscussion
 import com.instructure.canvas.espresso.mockCanvas.endpoint
 import com.instructure.canvas.espresso.mockCanvas.utils.*
-import com.instructure.canvasapi2.models.DiscussionEntry
-import com.instructure.canvasapi2.models.DiscussionParticipant
-import com.instructure.canvasapi2.models.DiscussionTopic
-import com.instructure.canvasapi2.models.DiscussionTopicHeader
-import com.instructure.canvasapi2.models.DiscussionTopicPermission
-import com.instructure.canvasapi2.models.ModuleObject
-import com.instructure.canvasapi2.models.Quiz
-import com.instructure.canvasapi2.models.QuizQuestion
-import com.instructure.canvasapi2.models.QuizSubmission
-import com.instructure.canvasapi2.models.QuizSubmissionAnswer
-import com.instructure.canvasapi2.models.QuizSubmissionQuestion
-import com.instructure.canvasapi2.models.QuizSubmissionResponse
-import com.instructure.canvasapi2.models.QuizSubmissionTime
-import com.instructure.canvasapi2.models.Submission
-import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.toApiString
-import com.instructure.canvasapi2.utils.toDate
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
-import okio.Buffer
-import retrofit2.http.Multipart
-import java.time.Duration
-import java.time.Instant
 import java.util.*
 
 /**
@@ -108,6 +86,7 @@ object CourseEndpoint : Endpoint(
                     }
                 }
         ),
+        Segment("permissions") to CoursePermissionsEndpoint,
 
         response = {
             GET {

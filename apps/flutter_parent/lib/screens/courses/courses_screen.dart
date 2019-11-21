@@ -17,11 +17,12 @@ import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/models/course_grade.dart';
 import 'package:flutter_parent/models/user.dart';
+import 'package:flutter_parent/screens/courses/details/course_details_screen.dart';
+import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:intl/intl.dart';
 
 import 'courses_interactor.dart';
-
 
 class CoursesScreen extends StatefulWidget {
   final User _student;
@@ -146,10 +147,6 @@ class _CoursesScreenState extends State<CoursesScreen> {
   }
 
   void _courseTapped(context, Course course) {
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-      // TODO: Route to course page
-//      return CoursePage(widget._student, course);
-        return null;
-    }));
+    QuickNav.push(context, CourseDetailsScreen.withCourse(widget._student.id, course));
   }
 }

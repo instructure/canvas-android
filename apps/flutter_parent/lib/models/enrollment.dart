@@ -42,9 +42,11 @@ abstract class Enrollment implements Built<Enrollment, EnrollmentBuilder> {
   int get id;
 
   // Only included when we get enrollments using the user's url: /users/self/enrollments
+  @nullable
   @BuiltValueField(wireName: 'course_id')
   int get courseId;
 
+  @nullable
   @BuiltValueField(wireName: 'course_section_id')
   int get courseSectionId;
 

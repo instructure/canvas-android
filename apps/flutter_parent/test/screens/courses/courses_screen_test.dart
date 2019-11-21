@@ -20,11 +20,12 @@ import 'package:flutter_parent/models/enrollment.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/screens/courses/courses_interactor.dart';
 import 'package:flutter_parent/screens/courses/courses_screen.dart';
+import 'package:flutter_parent/screens/courses/details/course_details_screen.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 
-import '../utils/accessibility_utils.dart';
-import '../utils/test_app.dart';
+import '../../utils/accessibility_utils.dart';
+import '../../utils/test_app.dart';
 
 void main() {
   _setupLocator(_MockCoursesInteractor mockInteractor) {
@@ -117,6 +118,29 @@ void main() {
 
     final gradeWidget = find.text('90%');
     expect(gradeWidget, findsNWidgets(courses.length));
+  });
+
+  testWidgetsWithAccessibilityChecks('launches course detail screen when tapping on a course', (tester) async {
+    var student = _mockStudent(1);
+    var courses = List.generate(
+      1, (idx) =>
+        _mockCourse(
+          idx,
+          enrollments: ListBuilder<Enrollment>([_mockEnrollment(idx, userId: student.id, computedCurrentScore: 90)]),
+        ),
+    );
+
+    _setupLocator(_MockCoursesInteractor(courses: courses));
+
+    await tester.pumpWidget(_testableMaterialWidget(CoursesScreen(student)));
+    await tester.pumpAndSettle();
+
+    final matchedWidget = find.text(courses.first.name);
+    expect(matchedWidget, findsOneWidget);
+    await tester.tap(matchedWidget);
+    await tester.pumpAndSettle();
+
+    expect(find.byType(CourseDetailsScreen), findsOneWidget);
   });
 }
 

@@ -49,7 +49,7 @@ object InboxApi {
         @GET("conversations?interleave_submissions=1&include[]=participant_avatars")
         fun getConversations(@Query("scope") scope: String): Call<List<Conversation>>
 
-        @GET("conversations/?interleave_submissions=1&include[]=participant_avatars")
+        @GET("conversations?interleave_submissions=1&include[]=participant_avatars")
         fun getConversationsFiltered(@Query("scope") scope: String, @Query("filter") canvasContextFilter: String): Call<List<Conversation>>
 
         @GET
