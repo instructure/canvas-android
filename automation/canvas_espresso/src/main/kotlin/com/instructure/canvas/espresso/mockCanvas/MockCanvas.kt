@@ -157,14 +157,8 @@ class MockCanvas {
     val teacherRecipients = mutableMapOf<Long, List<Recipient>>()
     val recipientGroups = mutableMapOf<Long, List<Recipient>>()
 
-    /** One off conversation for handling creating sent conversations */
+    /** One off conversation for handling creating new conversations, see ConversationEndpoint POST */
     var sentConversation: Conversation? = null
-
-    /** Maps of conversation ids to conversations */
-    val sentConversations = mutableMapOf<Long, Conversation>()
-    val starredConversations = mutableMapOf<Long, Conversation>()
-    val archivedConversations = mutableMapOf<Long, Conversation>()
-    val unreadConversations = mutableMapOf<Long, Conversation>()
 
     /** Map of course id to list of conversation for inbox filters */
     val conversationCourseMap = mutableMapOf<Long, List<Conversation>>()
@@ -240,8 +234,6 @@ class MockCanvas {
             TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
         }
     }
-
-
 
     companion object {
         /** Whether the mock Canvas data has been initialized for the current test run */
@@ -385,27 +377,100 @@ fun MockCanvas.addRecipientsToCourse(course: Course, students: List<User>, teach
     )
 }
 
-fun MockCanvas.addSentConversation(subject: String) {
-    sentConversation = basicConversation.copy(subject = subject)
+/**
+ * Creates a conversation with a single message using the userId provided as a non-author participant and creating a
+ * new BasicUser as the author.
+ *
+ * [isUserAuthor] -> Will set the user as the author, and create a new BasicUser as the other participant
+ */
+fun MockCanvas.createBasicConversation(
+        userId: Long,
+        isUserAuthor: Boolean = false,
+        isStarred: Boolean = false,
+        workflowState: Conversation.WorkflowState = Conversation.WorkflowState.UNREAD,
+        contextCode: String? = null,
+        contextName: String? = null
+): Conversation {
+    val basicUser = BasicUser(
+            id = if(isUserAuthor) newItemId() else userId,
+            name = Randomizer.randomName().fullName,
+            avatarUrl = Randomizer.randomAvatarUrl()
+    )
+
+    val basicAuthorUser = BasicUser(
+            id = if(isUserAuthor) userId else newItemId(),
+            name = Randomizer.randomName().fullName,
+            avatarUrl = Randomizer.randomAvatarUrl()
+    )
+
+    val basicMessage = Message(
+            id = newItemId(),
+            createdAt = APIHelper.dateToString(GregorianCalendar()),
+            body = Randomizer.randomConversationBody(),
+            authorId = basicAuthorUser.id,
+            participatingUserIds = listOf(basicUser.id, basicAuthorUser.id)
+    )
+
+    return Conversation(
+        id = newItemId(),
+        subject = Randomizer.randomConversationSubject(),
+        workflowState = workflowState,
+        lastMessage = Randomizer.randomConversationBody(),
+        lastAuthoredMessageAt = APIHelper.dateToString(GregorianCalendar()),
+        messageCount = 1,
+        messages = listOf(basicMessage),
+        avatarUrl = Randomizer.randomAvatarUrl(),
+        isStarred = isStarred,
+        contextName = contextName,
+        contextCode = contextCode,
+        participants = mutableListOf(basicUser, basicAuthorUser)
+    )
 }
 
-/** Adds the provided number of conversations to the conversation maps. */
-fun MockCanvas.addConversations(conversationCount: Int = 1) {
+/**
+ * This function adds a correctly constructed "sent conversation" with the included userId as the author of the
+ * conversation. It will be added to the MockCanvas sentConversation field to be used along with a POST request to
+ * create a conversation.
+ *
+ */
+fun MockCanvas.addSentConversation(subject: String, userId: Long) {
+    val conversation = createBasicConversation(userId = userId, isUserAuthor = true)
+    sentConversation = conversation.copy(subject = subject)
+}
+
+/**
+ *  Adds [conversationCount] of each conversation type (sent/archived/starred/unread) to the MockCanvas conversations map.
+ *
+ *  Each conversation will be properly configured to match to those filters, however the sent conversation will not be
+ *  placed into the sentConversation field. Use addSentConversation for conversation POSTs to create new conversations.
+ *
+ *  [userId] -> The user you are performing these requests with. Will be used as the author for sent, and a participant
+ *  for all other conversations.
+ *  */
+
+fun MockCanvas.addConversations(conversationCount: Int = 1, userId: Long) {
     for (i in 0 until conversationCount) {
-        sentConversations[conversationCount + i.toLong()] = basicConversation.copy(id = i.toLong())
-        starredConversations[conversationCount * 2 + i.toLong()] = basicConversation.copy(id = conversationCount * 2 + i.toLong(), isStarred = true)
-        archivedConversations[conversationCount * 3 + i.toLong()] = basicConversation.copy(id = conversationCount * 3 + i.toLong(), workflowState = Conversation.WorkflowState.ARCHIVED)
-        unreadConversations[conversationCount * 4 + i.toLong()] = basicConversation.copy(id = conversationCount * 4 + i.toLong(), workflowState = Conversation.WorkflowState.UNREAD)
-        conversations[conversationCount * 5 + i.toLong()] = (basicConversation.copy(id = conversationCount * 5 + i.toLong()))
+        val sentConversation = createBasicConversation(userId = userId, isUserAuthor = true)
+        val archivedConversation = createBasicConversation(userId, workflowState = Conversation.WorkflowState.ARCHIVED)
+        val starredConversation = createBasicConversation(userId, isStarred = true)
+        val unreadConversation = createBasicConversation(userId, workflowState = Conversation.WorkflowState.UNREAD)
+        conversations[sentConversation.id] = sentConversation
+        conversations[archivedConversation.id] = archivedConversation
+        conversations[starredConversation.id] = starredConversation
+        conversations[unreadConversation.id] = unreadConversation
     }
 }
 
-/** Adds the provided number of conversations to the course conversation map. */
-fun MockCanvas.addConversationsToCourseMap(courseList: List<Course>, conversationCount: Int = 1) {
+/**
+ *  Adds [conversationCount] of conversations to the MockCanvas conversationCourseMap.
+ *
+ *  Currently all of these messages are default conversations with the appropriate user name and context codes/names.
+ *  */
+fun MockCanvas.addConversationsToCourseMap(userId: Long, courseList: List<Course>, conversationCount: Int = 1) {
     courseList.forEach {
         val conversations= mutableListOf<Conversation>()
         for(i in 0 until conversationCount) {
-            conversations.add(basicConversation.copy(id = it.id + i.toLong(), contextCode = it.contextId, contextName = it.name))
+            conversations.add(createBasicConversation(userId = userId, contextCode = it.contextId, contextName = it.name))
         }
         conversationCourseMap[it.id] = conversations
     }
@@ -1049,31 +1114,3 @@ fun MockCanvas.addRubricToAssignment(assignmentId: Long, criteria : List<RubricC
         }
     }
 }
-
-//region Helper inbox values
-private val basicUser = BasicUser(
-        id = 123L,
-        name = Randomizer.randomName().fullName,
-        avatarUrl = Randomizer.randomAvatarUrl()
-)
-
-private val basicMessage = Message(
-        id = 12345L,
-        createdAt = APIHelper.dateToString(GregorianCalendar()),
-        body = Randomizer.randomConversationBody(),
-        authorId = 123L,
-        participatingUserIds = listOf(123L, 12345L)
-)
-
-private val basicConversation = Conversation(
-        id = 12345L,
-        subject = Randomizer.randomConversationSubject(),
-        workflowState = Conversation.WorkflowState.UNREAD,
-        lastMessage = Randomizer.randomConversationBody(),
-        lastAuthoredMessageAt = APIHelper.dateToString(GregorianCalendar()),
-        messageCount = 1,
-        messages = listOf(basicMessage),
-        avatarUrl = Randomizer.randomAvatarUrl(),
-        participants = mutableListOf(basicUser)
-)
-//endregion

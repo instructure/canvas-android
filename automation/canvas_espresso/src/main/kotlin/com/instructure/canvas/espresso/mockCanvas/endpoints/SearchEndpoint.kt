@@ -32,35 +32,37 @@ object SearchEndpoint : Endpoint(
         configure = {
             GET {
                 val contexts = request.url().queryParameter("context")
-                if(contexts == null) request.unauthorizedResponse()
-                var courseId = contexts!!.substringAfter("course_")
+                if(contexts != null) {
+                    var courseId = contexts!!.substringAfter("course_")
 
-
-                if (contexts.contains("students")) {
-                    courseId = courseId.substringBefore("_students")
-                    if(data.studentRecipients.containsKey(courseId.toLong())) {
-                        if(data.coursePermissions[courseId.toLong()]!!.send_messages) {
-                            request.successResponse(data.studentRecipients[courseId.toLong()]!!)
+                    if (contexts.contains("students")) {
+                        courseId = courseId.substringBefore("_students")
+                        if(data.studentRecipients.containsKey(courseId.toLong())) {
+                            if(data.coursePermissions[courseId.toLong()]!!.send_messages) {
+                                request.successResponse(data.studentRecipients[courseId.toLong()]!!)
+                            } else {
+                                // To emulate the recipient end point returning just the author, we'll return the first element
+                                request.successResponse(listOf(data.studentRecipients[courseId.toLong()]!!.first()))
+                            }
                         } else {
-                            // To emulate the recipient end point returning just the author, we'll return the first element
-                            request.successResponse(listOf(data.studentRecipients[courseId.toLong()]!!.first()))
+                            request.unauthorizedResponse()
+                        }
+                    } else if (contexts.contains("teachers")) {
+                        courseId = courseId.substringBefore("_teachers")
+                        if(data.teacherRecipients.containsKey(courseId.toLong())) {
+                            request.successResponse(data.teacherRecipients[courseId.toLong()]!!)
+                        } else {
+                            request.unauthorizedResponse()
                         }
                     } else {
-                        request.unauthorizedResponse()
-                    }
-                } else if (contexts.contains("teachers")) {
-                    courseId = courseId.substringBefore("_teachers")
-                    if(data.teacherRecipients.containsKey(courseId.toLong())) {
-                        request.successResponse(data.teacherRecipients[courseId.toLong()]!!)
-                    } else {
-                        request.unauthorizedResponse()
+                        if(data.recipientGroups.containsKey(courseId.toLong())) {
+                            request.successResponse(data.recipientGroups[courseId.toLong()]!!)
+                        } else {
+                            request.unauthorizedResponse()
+                        }
                     }
                 } else {
-                    if(data.recipientGroups.containsKey(courseId.toLong())) {
-                        request.successResponse(data.recipientGroups[courseId.toLong()]!!)
-                    } else {
-                        request.unauthorizedResponse()
-                    }
+                    request.unauthorizedResponse()
                 }
             }
         }

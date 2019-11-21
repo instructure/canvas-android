@@ -47,11 +47,31 @@ object ConversationListEndpoint : Endpoint(
                 }
             } else {
                 when(request.url().queryParameter("scope")) {
-                    "unread" -> request.successResponse(data.unreadConversations.values.toList())
-                    "starred" -> request.successResponse(data.starredConversations.values.toList())
-                    "archived" -> request.successResponse(data.archivedConversations.values.toList())
-                    "sent" -> request.successResponse(data.sentConversations.values.toList())
-                    else -> request.successResponse(data.conversations.values.toList())
+                    "unread" -> {
+                        request.successResponse(data.conversations.values.toList().filter {
+                            it.workflowState == Conversation.WorkflowState.UNREAD
+                        })
+                    }
+                    "starred" -> {
+                        request.successResponse(data.conversations.values.toList().filter {
+                            it.isStarred
+                        })
+                    }
+                    "archived" -> {
+                        request.successResponse(data.conversations.values.toList().filter {
+                            it.workflowState == Conversation.WorkflowState.ARCHIVED
+                        })
+                    }
+                    "sent" -> {
+                        request.successResponse(data.conversations.values.toList().filter {
+                            it.messages.first().authorId == request.user!!.id
+                        })
+                    }
+                    else -> { // We need to filter out "sent" messages for "ALL"
+                        request.successResponse(data.conversations.values.toList().filter {
+                            it.messages.first().authorId != request.user!!.id
+                        })
+                    }
                 }
             }
         }
@@ -59,7 +79,7 @@ object ConversationListEndpoint : Endpoint(
             if(data.sentConversation == null) {
                 request.unauthorizedResponse()
             } else {
-                data.sentConversations[data.sentConversation!!.id] = data.sentConversation!!
+                data.conversations[data.sentConversation!!.id] = data.sentConversation!!
                 request.successResponse(listOf(data.sentConversation!!))
             }
         }
@@ -108,9 +128,6 @@ object ConversationEndpoint : Endpoint(
             when {
                 data.conversations.containsKey(pathVars.conversationId) -> {
                     request.successResponse(data.conversations[pathVars.conversationId]!!)
-                }
-                data.sentConversations.containsKey(pathVars.conversationId) -> {
-                    request.successResponse(data.sentConversations[pathVars.conversationId]!!)
                 }
                 else -> {
                     request.unauthorizedResponse()

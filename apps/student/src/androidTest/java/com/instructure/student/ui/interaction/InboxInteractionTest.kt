@@ -17,9 +17,7 @@ package com.instructure.student.ui.interaction
 
 import com.instructure.canvas.espresso.mockCanvas.*
 import com.instructure.canvasapi2.apis.InboxApi
-import com.instructure.canvasapi2.models.Attachment
-import com.instructure.canvasapi2.models.CanvasContextPermission
-import com.instructure.canvasapi2.models.Conversation
+import com.instructure.canvasapi2.models.*
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
@@ -38,9 +36,9 @@ class InboxInteractionTest : StudentTest() {
         val data = goToInbox()
         dashboardPage.clickInboxTab()
         val subject = "Hodor"
-        data.addSentConversation(subject)
+        data.addSentConversation(subject, student1.id)
         inboxPage.pressNewMessageButton()
-        newMessagePage.selectCourse(data.courses.values.first())
+        newMessagePage.selectCourse(course1)
         newMessagePage.setRecipient(data.teachers.first(), userType = "Teachers")
         newMessagePage.setSubject(subject)
         newMessagePage.setMessage("Hodor, Hodor? Hodor!")
@@ -56,9 +54,9 @@ class InboxInteractionTest : StudentTest() {
         val data = goToInbox(teacherCount = 3)
         dashboardPage.clickInboxTab()
         val subject = "Hodor"
-        data.addSentConversation(subject)
+        data.addSentConversation(subject, student1.id)
         inboxPage.pressNewMessageButton()
-        newMessagePage.selectCourse(data.courses.values.first())
+        newMessagePage.selectCourse(course1)
         newMessagePage.setRecipients(data.teachers, userType = "Teachers")
         newMessagePage.setSubject(subject)
         newMessagePage.setMessage("Hodor, Hodor? Hodor!")
@@ -76,9 +74,9 @@ class InboxInteractionTest : StudentTest() {
         val data = goToInbox()
         dashboardPage.clickInboxTab()
         val subject = "Hodor"
-        data.addSentConversation(subject)
+        data.addSentConversation(subject, student1.id)
         inboxPage.pressNewMessageButton()
-        newMessagePage.selectCourse(data.courses.values.first())
+        newMessagePage.selectCourse(course1)
         newMessagePage.selectAllRecipients(listOf("Teachers", "Students"))
         newMessagePage.setSubject(subject)
         newMessagePage.setMessage("Hodor, Hodor? Hodor!")
@@ -95,10 +93,10 @@ class InboxInteractionTest : StudentTest() {
         dashboardPage.clickInboxTab()
         val subject = "Hodor"
         val message = "What is this, hodor?"
-        data.addSentConversation(subject)
+        data.addSentConversation(subject, student1.id)
         inboxPage.pressNewMessageButton()
-        newMessagePage.selectCourse(data.courses.values.first())
-        newMessagePage.setRecipient(data.teachers.first(), userType = "Teachers")
+        newMessagePage.selectCourse(course1)
+        newMessagePage.setRecipient(teacher1, userType = "Teachers")
         newMessagePage.setSubject(subject)
         newMessagePage.setMessage(message)
         newMessagePage.hitSend()
@@ -106,7 +104,12 @@ class InboxInteractionTest : StudentTest() {
         // to manually attach anything via Espresso, since it would require manipulating
         // system UIs.
         val attachmentName = "attachment.html"
-        addAttachmentToConversation(attachmentName, data.sentConversations.values.first(), data)
+        addAttachmentToConversation(
+            attachmentName,
+            data.conversations.values.toList().first {
+                it.messages.first().authorId == student1.id
+            }, data
+        )
         inboxPage.selectInboxScope(InboxApi.Scope.SENT)
         inboxPage.selectConversation(data.sentConversation!!)
         inboxConversationPage.assertAttachmentDisplayed(attachmentName)
@@ -119,10 +122,9 @@ class InboxInteractionTest : StudentTest() {
         val data = goToInbox()
         dashboardPage.clickInboxTab()
         val subject = "Hodor"
-        val message = "What is this, hodor?"
-        data.addSentConversation(subject)
+        data.addSentConversation(subject, student1.id)
         inboxPage.pressNewMessageButton()
-        newMessagePage.selectCourse(data.courses.values.first())
+        newMessagePage.selectCourse(course1)
         newMessagePage.setRecipients(data.teachers, userType = "Teachers")
         newMessagePage.setSubject(subject)
         newMessagePage.setMessage("Hodor, Hodor? Hodor!")
@@ -131,7 +133,12 @@ class InboxInteractionTest : StudentTest() {
         // to manually attach anything via Espresso, since it would require manipulating
         // system UIs.
         val attachmentName = "attachment.html"
-        addAttachmentToConversation(attachmentName, data.sentConversations.values.first(), data)
+        addAttachmentToConversation(
+                attachmentName,
+                data.conversations.values.toList().first {
+                    it.messages.first().authorId == student1.id
+                }, data
+        )
         inboxPage.selectInboxScope(InboxApi.Scope.SENT)
         inboxPage.selectConversation(data.sentConversation!!)
         inboxConversationPage.assertAttachmentDisplayed(attachmentName)
@@ -144,10 +151,9 @@ class InboxInteractionTest : StudentTest() {
         val data = goToInbox()
         dashboardPage.clickInboxTab()
         val subject = "Hodor"
-        val message = "What is this, hodor?"
-        data.addSentConversation(subject)
+        data.addSentConversation(subject, student1.id)
         inboxPage.pressNewMessageButton()
-        newMessagePage.selectCourse(data.courses.values.first())
+        newMessagePage.selectCourse(course1)
         newMessagePage.selectAllRecipients(listOf("Teachers", "Students"))
         newMessagePage.setSubject(subject)
         newMessagePage.setMessage("Hodor, Hodor? Hodor!")
@@ -156,7 +162,12 @@ class InboxInteractionTest : StudentTest() {
         // to manually attach anything via Espresso, since it would require manipulating
         // system UIs.
         val attachmentName = "attachment.html"
-        addAttachmentToConversation(attachmentName, data.sentConversations.values.first(), data)
+        addAttachmentToConversation(
+                attachmentName,
+                data.conversations.values.toList().first {
+                    it.messages.first().authorId == student1.id
+                }, data
+        )
         inboxPage.selectInboxScope(InboxApi.Scope.SENT)
         inboxPage.selectConversation(data.sentConversation!!)
         inboxConversationPage.assertAttachmentDisplayed(attachmentName)
@@ -167,9 +178,11 @@ class InboxInteractionTest : StudentTest() {
     fun testInbox_replyToMessage() {
         // Should be able to reply to a message
         val data = goToInbox()
-        data.addConversations()
+        data.addConversations(userId = student1.id)
         dashboardPage.clickInboxTab()
-        inboxPage.selectConversation(data.conversations.values.first())
+        inboxPage.selectConversation(data.conversations.values.first{
+            it.messages.first().authorId != student1.id
+        })
         val message = "What is this, hodor?"
         inboxConversationPage.replyToMessage(message)
         inboxConversationPage.assertMessageDisplayed(message)
@@ -180,9 +193,12 @@ class InboxInteractionTest : StudentTest() {
     fun testInbox_replyToMessageWithAttachment() {
         // Should be able to reply (with attachment) to a message
         val data = goToInbox()
-        data.addConversations()
+        data.addConversations(userId = student1.id)
         dashboardPage.clickInboxTab()
-        inboxPage.selectConversation(data.conversations.values.first())
+        val conversation = data.conversations.values.first{
+            it.messages.first().authorId != student1.id
+        }
+        inboxPage.selectConversation(conversation)
         val message = "What is this, hodor?"
         inboxConversationPage.replyToMessage(message)
 
@@ -190,7 +206,7 @@ class InboxInteractionTest : StudentTest() {
         // to manually attach anything via Espresso, since it would require manipulating
         // system UIs.
         val attachmentName = "attachment.html"
-        addAttachmentToMessage(attachmentName, data.conversations.values.first().id, message, data)
+        addAttachmentToMessage(attachmentName, conversation.id, message, data)
         inboxConversationPage.refresh()
         inboxConversationPage.assertAttachmentDisplayed(attachmentName)
     }
@@ -200,8 +216,10 @@ class InboxInteractionTest : StudentTest() {
     fun testInbox_filterMessagesByTypeAll() {
         // Should be able to filter messages by All
         val data = goToInbox()
-        data.addConversations()
-        val conversation = data.conversations.values.first()
+        data.addConversations(userId = student1.id)
+        val conversation = data.conversations.values.first{
+            it.messages.first().authorId != student1.id
+        }
         dashboardPage.clickInboxTab()
         inboxPage.assertConversationDisplayed(conversation.subject!!)
     }
@@ -211,9 +229,11 @@ class InboxInteractionTest : StudentTest() {
     fun testInbox_filterMessagesByTypeUnread() {
         // Should be able to filter messages by Unread
         val data = goToInbox()
-        data.addConversations()
+        data.addConversations(userId = student1.id)
         dashboardPage.clickInboxTab()
-        val conversation = data.unreadConversations.values.first()
+        val conversation = data.conversations.values.first {
+            it.workflowState == Conversation.WorkflowState.UNREAD
+        }
         inboxPage.selectInboxScope(InboxApi.Scope.UNREAD)
         inboxPage.assertConversationDisplayed(conversation.subject!!)
     }
@@ -223,9 +243,11 @@ class InboxInteractionTest : StudentTest() {
     fun testInbox_filterMessagesByTypeStarred() {
         // Should be able to filter messages by Starred
         val data = goToInbox()
-        data.addConversations()
+        data.addConversations(userId = student1.id)
         dashboardPage.clickInboxTab()
-        val conversation = data.starredConversations.values.first()
+        val conversation = data.conversations.values.first {
+            it.isStarred
+        }
         inboxPage.selectInboxScope(InboxApi.Scope.STARRED)
         inboxPage.assertConversationDisplayed(conversation.subject!!)
     }
@@ -235,9 +257,11 @@ class InboxInteractionTest : StudentTest() {
     fun testInbox_filterMessagesByTypeSend() {
         // Should be able to filter messages by Send
         val data = goToInbox()
-        data.addConversations()
+        data.addConversations(userId = student1.id)
         dashboardPage.clickInboxTab()
-        val conversation = data.sentConversations.values.first()
+        val conversation = data.conversations.values.first {
+            it.workflowState == Conversation.WorkflowState.UNREAD
+        }
         inboxPage.selectInboxScope(InboxApi.Scope.SENT)
         inboxPage.assertConversationDisplayed(conversation.subject!!)
     }
@@ -247,9 +271,11 @@ class InboxInteractionTest : StudentTest() {
     fun testInbox_filterMessagesByTypeArchived() {
         // Should be able to filter messages by Archived
         val data = goToInbox()
-        data.addConversations()
+        data.addConversations(userId = student1.id)
         dashboardPage.clickInboxTab()
-        val conversation = data.archivedConversations.values.first()
+        val conversation = data.conversations.values.first {
+            it.workflowState == Conversation.WorkflowState.ARCHIVED
+        }
         inboxPage.selectInboxScope(InboxApi.Scope.ARCHIVED)
         inboxPage.assertConversationDisplayed(conversation.subject!!)
     }
@@ -259,11 +285,10 @@ class InboxInteractionTest : StudentTest() {
     fun testInbox_filterMessagesByContext() {
         // Should be able to filter messages by course or group
         val data = goToInbox(courseCount = 2)
-        data.addConversationsToCourseMap(data.courses.values.toList())
-        val course = data.courses.values.first()
-        val conversation = data.conversationCourseMap[course.id]!!.first()
+        data.addConversationsToCourseMap(student1.id, data.courses.values.toList())
+        val conversation = data.conversationCourseMap[course1.id]!!.first()
         dashboardPage.clickInboxTab()
-        inboxPage.selectInboxFilter(course)
+        inboxPage.selectInboxFilter(course1)
         inboxPage.assertConversationDisplayed(conversation.subject!!)
     }
 
@@ -274,9 +299,9 @@ class InboxInteractionTest : StudentTest() {
         val data = goToInbox(teacherCount = 3)
         dashboardPage.clickInboxTab()
         val subject = "Hodor"
-        data.addSentConversation(subject)
+        data.addSentConversation(subject, student1.id)
         inboxPage.pressNewMessageButton()
-        newMessagePage.selectCourse(data.courses.values.first())
+        newMessagePage.selectCourse(course1)
         newMessagePage.setRecipientGroup(userType = "Teachers")
         newMessagePage.setSubject(subject)
         newMessagePage.setMessage("Hodor, Hodor? Hodor!")
@@ -292,7 +317,7 @@ class InboxInteractionTest : StudentTest() {
         val data = goToInbox(sendMessagesAll = false)
         dashboardPage.clickInboxTab()
         inboxPage.pressNewMessageButton()
-        newMessagePage.selectCourse(data.courses.values.first())
+        newMessagePage.selectCourse(course1)
         newMessagePage.assertRecipientGroupsNotDisplayed(userType = "Teachers")
     }
 
@@ -304,10 +329,10 @@ class InboxInteractionTest : StudentTest() {
         val data = goToInbox()
         dashboardPage.clickInboxTab()
         val subject = "Hodor"
-        data.addSentConversation(subject)
+        data.addSentConversation(subject, student1.id)
         inboxPage.pressNewMessageButton()
-        newMessagePage.selectCourse(data.courses.values.first())
-        newMessagePage.setRecipient(data.teachers.first(), userType = "Teachers")
+        newMessagePage.selectCourse(course1)
+        newMessagePage.setRecipient(teacher1, userType = "Teachers")
         newMessagePage.setSubject(subject)
         newMessagePage.setMessage("Hodor, Hodor? Hodor!")
         newMessagePage.hitSend()
@@ -324,7 +349,7 @@ class InboxInteractionTest : StudentTest() {
         val data = goToInbox(sendMessages = false, studentCount = 10)
         dashboardPage.clickInboxTab()
         inboxPage.pressNewMessageButton()
-        newMessagePage.selectCourse(data.courses.values.first())
+        newMessagePage.selectCourse(course1)
         newMessagePage.assertRecipientGroupContains("Students", 1)
     }
 
@@ -381,8 +406,12 @@ class InboxInteractionTest : StudentTest() {
     private fun addAttachmentToConversation(attachmentName: String, conversation: Conversation, mockCanvas: MockCanvas) {
         val attachment = createHtmlAttachment(attachmentName)
         val newMessageList = listOf(conversation.messages.first().copy(attachments = listOf(attachment)))
-        mockCanvas.sentConversations[conversation.id] = conversation.copy(messages = newMessageList)
+        mockCanvas.conversations[conversation.id] = conversation.copy(messages = newMessageList)
     }
+
+    var course1 = Course()
+    var student1 = User()
+    var teacher1 = User()
 
     private fun goToInbox(
         studentCount: Int = 1,
@@ -398,20 +427,23 @@ class InboxInteractionTest : StudentTest() {
             favoriteCourseCount = courseCount
         )
 
+        student1 = data.students[0]
+        teacher1 = data.teachers[0]
+        course1 = data.courses.values.first()
+
         data.addCoursePermissions(
-            data.courses.values.first().id,
+            course1.id,
             CanvasContextPermission(send_messages_all = sendMessagesAll, send_messages = sendMessages)
         )
 
         data.addRecipientsToCourse(
-            course = data.courses.values.first(),
+            course = course1,
             students = data.students,
             teachers = data.teachers
         )
 
-        val student = data.students[0]
-        val token = data.tokenFor(student)!!
-        tokenLogin(data.domain, token, student)
+        val token = data.tokenFor(student1)!!
+        tokenLogin(data.domain, token, student1)
         dashboardPage.waitForRender()
 
         return data
