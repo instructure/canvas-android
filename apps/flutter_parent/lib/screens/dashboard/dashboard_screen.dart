@@ -47,7 +47,10 @@ class DashboardState extends State<DashboardScreen> {
   bool _studentsLoading = false;
   bool _selfLoading = false;
 
+  // These two will likely be used when we have specs for error screens
+  // ignore: unused_field
   bool _selfError = false;
+  // ignore: unused_field
   bool _studentsError = false;
 
   User _selectedStudent;
