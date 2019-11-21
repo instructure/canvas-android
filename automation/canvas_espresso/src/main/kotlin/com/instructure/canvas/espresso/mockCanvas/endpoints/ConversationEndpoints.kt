@@ -79,8 +79,10 @@ object ConversationListEndpoint : Endpoint(
             if(data.sentConversation == null) {
                 request.unauthorizedResponse()
             } else {
-                data.conversations[data.sentConversation!!.id] = data.sentConversation!!
-                request.successResponse(listOf(data.sentConversation!!))
+                val sentConversation = data.sentConversation
+                data.conversations[sentConversation!!.id] = sentConversation
+                data.sentConversation = null
+                request.successResponse(listOf(sentConversation))
             }
         }
     }
@@ -110,10 +112,10 @@ object ConversationEndpoint : Endpoint(
                     val conversation = data.conversations[pathVars.conversationId]!!
                     val messageBody = request.url().queryParameter("body")
                     val message = Message(
-                        id = 123L,
+                        id = data.newItemId(),
                         createdAt = APIHelper.dateToString(GregorianCalendar()),
                         body = messageBody,
-                        participatingUserIds = listOf(123L, 1234L)
+                        participatingUserIds = listOf(data.newItemId(), data.newItemId())
                     )
                     data.conversations[pathVars.conversationId] = conversation.copy(messages = conversation.messages.plus(message))
                     request.successResponse(data.conversations[pathVars.conversationId]!!)

@@ -104,14 +104,14 @@ class InboxInteractionTest : StudentTest() {
         // to manually attach anything via Espresso, since it would require manipulating
         // system UIs.
         val attachmentName = "attachment.html"
+        val sentConversation = getFirstConversation(data, true)
         addAttachmentToConversation(
             attachmentName,
-            data.conversations.values.toList().first {
-                it.messages.first().authorId == student1.id
-            }, data
+            sentConversation,
+            data
         )
         inboxPage.selectInboxScope(InboxApi.Scope.SENT)
-        inboxPage.selectConversation(data.sentConversation!!)
+        inboxPage.selectConversation(sentConversation)
         inboxConversationPage.assertAttachmentDisplayed(attachmentName)
     }
 
@@ -133,14 +133,14 @@ class InboxInteractionTest : StudentTest() {
         // to manually attach anything via Espresso, since it would require manipulating
         // system UIs.
         val attachmentName = "attachment.html"
+        val sentConversation = getFirstConversation(data, true)
         addAttachmentToConversation(
-                attachmentName,
-                data.conversations.values.toList().first {
-                    it.messages.first().authorId == student1.id
-                }, data
+            attachmentName,
+            sentConversation,
+            data
         )
         inboxPage.selectInboxScope(InboxApi.Scope.SENT)
-        inboxPage.selectConversation(data.sentConversation!!)
+        inboxPage.selectConversation(sentConversation)
         inboxConversationPage.assertAttachmentDisplayed(attachmentName)
     }
 
@@ -162,14 +162,14 @@ class InboxInteractionTest : StudentTest() {
         // to manually attach anything via Espresso, since it would require manipulating
         // system UIs.
         val attachmentName = "attachment.html"
+        val sentConversation = getFirstConversation(data, true)
         addAttachmentToConversation(
-                attachmentName,
-                data.conversations.values.toList().first {
-                    it.messages.first().authorId == student1.id
-                }, data
+            attachmentName,
+            sentConversation,
+            data
         )
-        inboxPage.selectInboxScope(InboxApi.Scope.SENT)
-        inboxPage.selectConversation(data.sentConversation!!)
+        inboxPage.selectInboxScope(InboxApi.Scope.SENT)j
+        inboxPage.selectConversation(sentConversation)
         inboxConversationPage.assertAttachmentDisplayed(attachmentName)
     }
 
@@ -180,9 +180,7 @@ class InboxInteractionTest : StudentTest() {
         val data = goToInbox()
         data.addConversations(userId = student1.id)
         dashboardPage.clickInboxTab()
-        inboxPage.selectConversation(data.conversations.values.first{
-            it.messages.first().authorId != student1.id
-        })
+        inboxPage.selectConversation(getFirstConversation(data))
         val message = "What is this, hodor?"
         inboxConversationPage.replyToMessage(message)
         inboxConversationPage.assertMessageDisplayed(message)
@@ -195,9 +193,7 @@ class InboxInteractionTest : StudentTest() {
         val data = goToInbox()
         data.addConversations(userId = student1.id)
         dashboardPage.clickInboxTab()
-        val conversation = data.conversations.values.first{
-            it.messages.first().authorId != student1.id
-        }
+        val conversation = getFirstConversation(data)
         inboxPage.selectConversation(conversation)
         val message = "What is this, hodor?"
         inboxConversationPage.replyToMessage(message)
@@ -217,9 +213,7 @@ class InboxInteractionTest : StudentTest() {
         // Should be able to filter messages by All
         val data = goToInbox()
         data.addConversations(userId = student1.id)
-        val conversation = data.conversations.values.first{
-            it.messages.first().authorId != student1.id
-        }
+        val conversation = getFirstConversation(data)
         dashboardPage.clickInboxTab()
         inboxPage.assertConversationDisplayed(conversation.subject!!)
     }
@@ -371,7 +365,13 @@ class InboxInteractionTest : StudentTest() {
     }
     */
 
-    private fun createHtmlAttachment(displayName: String): Attachment {
+    private fun getFirstConversation(data: MockCanvas, includeIsAuthor: Boolean = false): Conversation {
+        return data.conversations.values.toList().first {
+            if(includeIsAuthor) it.messages.first().authorId == student1.id else it.messages.first().authorId != student1.id
+        }
+    }
+
+    private fun createHtmlAttachment(displayName: String, mockCanvas: MockCanvas): Attachment {
         val attachmentHtml =
                 """
         <!DOCTYPE html>
@@ -387,7 +387,7 @@ class InboxInteractionTest : StudentTest() {
         </html> """
 
         return Attachment(
-                id = 123L,
+                id = mockCanvas.newItemId(),
                 contentType = "html",
                 filename = "mockhtmlfile.html",
                 displayName = displayName,
@@ -396,7 +396,7 @@ class InboxInteractionTest : StudentTest() {
     }
 
     private fun addAttachmentToMessage(attachmentName: String, conversationId: Long, message: String, mockCanvas: MockCanvas) {
-        val attachment = createHtmlAttachment(attachmentName)
+        val attachment = createHtmlAttachment(attachmentName, mockCanvas)
         val conversation = mockCanvas.conversations[conversationId]!!
         val newMessage = conversation.messages.find { it.body == message }
         val newMessageList = listOf(conversation.messages.first(), newMessage!!.copy(attachments = listOf(attachment)))
@@ -404,14 +404,14 @@ class InboxInteractionTest : StudentTest() {
     }
 
     private fun addAttachmentToConversation(attachmentName: String, conversation: Conversation, mockCanvas: MockCanvas) {
-        val attachment = createHtmlAttachment(attachmentName)
+        val attachment = createHtmlAttachment(attachmentName, mockCanvas)
         val newMessageList = listOf(conversation.messages.first().copy(attachments = listOf(attachment)))
         mockCanvas.conversations[conversation.id] = conversation.copy(messages = newMessageList)
     }
 
-    var course1 = Course()
-    var student1 = User()
-    var teacher1 = User()
+    private lateinit var course1 : Course
+    private lateinit var student1 : User
+    private lateinit var teacher1 : User
 
     private fun goToInbox(
         studentCount: Int = 1,

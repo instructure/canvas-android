@@ -33,7 +33,7 @@ object SearchEndpoint : Endpoint(
             GET {
                 val contexts = request.url().queryParameter("context")
                 if(contexts != null) {
-                    var courseId = contexts!!.substringAfter("course_")
+                    var courseId = contexts.substringAfter("course_")
 
                     if (contexts.contains("students")) {
                         courseId = courseId.substringBefore("_students")
@@ -62,6 +62,7 @@ object SearchEndpoint : Endpoint(
                         }
                     }
                 } else {
+                    // No context provided
                     request.unauthorizedResponse()
                 }
             }

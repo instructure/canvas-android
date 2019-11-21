@@ -385,6 +385,7 @@ fun MockCanvas.addRecipientsToCourse(course: Course, students: List<User>, teach
  */
 fun MockCanvas.createBasicConversation(
         userId: Long,
+        subject: String = Randomizer.randomConversationSubject(),
         isUserAuthor: Boolean = false,
         isStarred: Boolean = false,
         workflowState: Conversation.WorkflowState = Conversation.WorkflowState.UNREAD,
@@ -413,7 +414,7 @@ fun MockCanvas.createBasicConversation(
 
     return Conversation(
         id = newItemId(),
-        subject = Randomizer.randomConversationSubject(),
+        subject = subject,
         workflowState = workflowState,
         lastMessage = Randomizer.randomConversationBody(),
         lastAuthoredMessageAt = APIHelper.dateToString(GregorianCalendar()),
@@ -433,9 +434,8 @@ fun MockCanvas.createBasicConversation(
  * create a conversation.
  *
  */
-fun MockCanvas.addSentConversation(subject: String, userId: Long) {
-    val conversation = createBasicConversation(userId = userId, isUserAuthor = true)
-    sentConversation = conversation.copy(subject = subject)
+fun MockCanvas.addSentConversation(subject: String, userId: Long){
+    sentConversation = createBasicConversation(userId = userId, subject = subject, isUserAuthor = true)
 }
 
 /**
