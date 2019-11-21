@@ -39,6 +39,7 @@ import com.instructure.canvasapi2.models.QuizSubmissionQuestion
 import com.instructure.canvasapi2.models.QuizSubmissionResponse
 import com.instructure.canvasapi2.models.QuizSubmissionTime
 import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.canvasapi2.utils.toDate
 import okhttp3.MultipartBody
@@ -87,6 +88,26 @@ object CourseEndpoint : Endpoint(
         Segment("discussion_topics") to CourseDiscussionTopicListEndpoint,
         Segment("modules") to CourseModuleListEndpoint,
         Segment("quizzes") to CourseQuizListEndpoint,
+        Segment("users") to endpoint(
+                configure = {
+                    GET {
+                        val onlyTeachers = request.url().queryParameter("enrollment_type")?.equals("teacher") ?: false
+                        val onlyTas = request.url().queryParameter("enrollment_type")?.equals("ta") ?: false
+                        val courseId = pathVars.courseId
+                        var courseEnrollments = data.enrollments.values.filter {it.courseId == courseId}
+                        if(onlyTeachers) {
+                            courseEnrollments = courseEnrollments.filter {it.isTeacher}
+                        }
+                        else if(onlyTas) {
+                            courseEnrollments = courseEnrollments.filter {it.isTA}
+                        }
+                        val users = courseEnrollments.map{data.users[it.userId]}
+                        //Log.d("CourseUsers", "request url = ${request.url()}")
+                        //Log.d("CourseUsers", "result = $users")
+                        request.successResponse(users)
+                    }
+                }
+        ),
 
         response = {
             GET {

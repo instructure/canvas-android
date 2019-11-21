@@ -168,6 +168,20 @@ object GroupsEndpoint : Endpoint (
 
                 ),
 
+                Segment("users") to endpoint ( // group's users
+                    configure = {
+                        GET {
+                            val groupId = pathVars.groupId
+                            val group = data.groups[groupId]
+                            if (group != null && group.users.count() > 0) {
+                                request.successResponse(group.users)
+                            } else {
+                                request.unauthorizedResponse()
+                            }
+                        }
+                    }
+                ),
+
                 configure = {
                     GET { // Get general group info for a specific group
                         val group = data.groups[pathVars.groupId]

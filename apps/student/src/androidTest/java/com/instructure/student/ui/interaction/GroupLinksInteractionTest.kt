@@ -55,30 +55,27 @@ class GroupLinksInteractionTest : StudentTest() {
     private var fileDisplayName = "GroupFile.html"
     private var groupFolderDisplayName = "Group Folder"
 
-    @Stub
+    // Link to group opens group browser - eg: "/groups/:id"
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, false)
     fun testGroupLink_base() {
-        // Link to group opens group browser - eg: "/groups/:id"
         setUpGroupAndSignIn()
         dashboardPage.selectGroup(group)
         courseBrowserPage.assertTitleCorrect(group)
     }
 
-    @Stub
+    // Link to groups opens dashboard - eg: "/groups"
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, true, FeatureCategory.DASHBOARD)
+    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, FeatureCategory.DASHBOARD)
     fun testGroupLink_dashboard() {
-        // Link to groups opens dashboard - eg: "/groups"
         setUpGroupAndSignIn()
         dashboardPage.assertDisplaysGroup(group, course)
     }
 
-    @Stub
+    // Link to file preview opens file - eg: "/groups/:id/files/folder/:id?preview=:id"
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, true, FeatureCategory.FILES)
+    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, FeatureCategory.FILES)
     fun testGroupLink_filePreview() {
-        // Link to file preview opens file - eg: "/groups/:id/files/folder/:id?preview=:id"
         setUpGroupAndSignIn()
         dashboardPage.selectGroup(group)
         courseBrowserPage.selectFiles()
@@ -89,11 +86,10 @@ class GroupLinksInteractionTest : StudentTest() {
         )
     }
 
-    @Stub
+    // Link to group announcement opens announcement - eg: "/groups/:id/discussion_topics/:id"
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, true, FeatureCategory.ANNOUNCEMENTS)
+    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, FeatureCategory.ANNOUNCEMENTS)
     fun testGroupLink_announcement() {
-        // Link to group announcement opens announcement - eg: "/groups/:id/discussion_topics/:id"
         setUpGroupAndSignIn()
         dashboardPage.selectGroup(group)
         courseBrowserPage.selectAnnouncements()
@@ -102,22 +98,20 @@ class GroupLinksInteractionTest : StudentTest() {
 
     }
 
-    @Stub
+    // Link to group announcements list opens announcements - eg: "/groups/:id/announcements"
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, true, FeatureCategory.ANNOUNCEMENTS)
+    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, FeatureCategory.ANNOUNCEMENTS)
     fun testGroupLink_announcementList() {
-        // Link to group announcements list opens announcements - eg: "/groups/:id/announcements"
         setUpGroupAndSignIn()
         dashboardPage.selectGroup(group)
         courseBrowserPage.selectAnnouncements()
         discussionListPage.assertTopicDisplayed(announcement.title!!)
     }
 
-    @Stub
+    // Link to group discussion opens discussion - eg: "/groups/:id/discussion_topics/:id"
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, true, FeatureCategory.DISCUSSIONS)
+    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, FeatureCategory.DISCUSSIONS)
     fun testGroupLink_discussion() {
-        // Link to group discussion opens discussion - eg: "/groups/:id/discussion_topics/:id"
         setUpGroupAndSignIn()
         dashboardPage.selectGroup(group)
         courseBrowserPage.selectDiscussions()
@@ -125,33 +119,30 @@ class GroupLinksInteractionTest : StudentTest() {
         discussionDetailsPage.assertTopicInfoShowing(discussion)
     }
 
-    @Stub
+    // Link to group discussion list opens list - eg: "/groups/:id/discussion_topics"
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, true, FeatureCategory.DISCUSSIONS)
+    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, FeatureCategory.DISCUSSIONS)
     fun testGroupLink_discussionList() {
-        // Link to group discussion list opens list - eg: "/groups/:id/discussion_topics"
         setUpGroupAndSignIn()
         dashboardPage.selectGroup(group)
         courseBrowserPage.selectDiscussions()
         discussionListPage.assertTopicDisplayed(discussion.title!!)
     }
 
-    @Stub
+    // Link to group files list opens group files list - eg: "/groups/:id/files"
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, true, FeatureCategory.FILES)
+    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, FeatureCategory.FILES)
     fun testGroupLink_files() {
-        // Link to group files list opens group files list - eg: "/groups/:id/files"
         setUpGroupAndSignIn()
         dashboardPage.selectGroup(group)
         courseBrowserPage.selectFiles()
         fileListPage.assertItemDisplayed(groupFolderDisplayName)
     }
 
-    @Stub
+    // Link to group files folder opens folder - eg: "/groups/:id/files/folder/:id/"
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, true, FeatureCategory.FILES)
+    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, FeatureCategory.FILES)
     fun testGroupLink_fileFolder() {
-        // Link to group files folder opens folder - eg: "/groups/:id/files/folder/:id/"
         setUpGroupAndSignIn()
         dashboardPage.selectGroup(group)
         courseBrowserPage.selectFiles()
@@ -160,22 +151,20 @@ class GroupLinksInteractionTest : StudentTest() {
         fileListPage.assertItemDisplayed(fileDisplayName)
     }
 
-    @Stub
+    // Link to group page list opens pages - eg: "/groups/:id/pages"
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, true, FeatureCategory.PAGES)
+    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, FeatureCategory.PAGES)
     fun testGroupLink_pagesList() {
-        // Link to group page list opens pages - eg: "/groups/:id/pages"
         setUpGroupAndSignIn()
         dashboardPage.selectGroup(group)
         courseBrowserPage.selectPages()
         pageListPage.assertRegularPageDisplayed(page)
     }
 
-    @Stub
+    // Link to group page opens page - eg: "/groups/:id/pages/:id"
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, true, FeatureCategory.PAGES)
+    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, FeatureCategory.PAGES)
     fun testGroupLink_Page() {
-        // Link to group page opens page - eg: "/groups/:id/pages/:id"
         setUpGroupAndSignIn()
         dashboardPage.selectGroup(group)
         courseBrowserPage.selectPages()
@@ -185,11 +174,10 @@ class GroupLinksInteractionTest : StudentTest() {
         )
     }
 
-    @Stub
+    // Link to group people list opens list - eg: "/groups/:id/users"
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, true, FeatureCategory.PEOPLE)
+    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, FeatureCategory.PEOPLE)
     fun testGroupLink_people() {
-        // Link to group people list opens list - eg: "/groups/:id/users"
         setUpGroupAndSignIn()
         dashboardPage.selectGroup(group)
         courseBrowserPage.selectPeople() // Why does this call https://mock-data.instructure.com/api/v1/courses/1/users?include[]=enrollments&include[]=avatar_url&include[]=user_id&include[]=email&include[]=bio&enrollment_type=teacher&per_page=100
@@ -199,8 +187,8 @@ class GroupLinksInteractionTest : StudentTest() {
         }
     }
 
-    // Mock a specified number of students and courses, sign in, then navigate to course browser page for
-    // first course.
+    // Mock a single student and course, mock a group and a number of items associated with the group,
+    // sign in, then navigate to course browser page for the course.
     private fun setUpGroupAndSignIn(): MockCanvas {
 
         // Basic info
