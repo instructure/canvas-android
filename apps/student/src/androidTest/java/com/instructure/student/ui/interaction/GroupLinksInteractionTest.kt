@@ -188,7 +188,7 @@ class GroupLinksInteractionTest : StudentTest() {
     }
 
     // Mock a single student and course, mock a group and a number of items associated with the group,
-    // sign in, then navigate to course browser page for the course.
+    // sign in, then navigate to the dashboard.
     private fun setUpGroupAndSignIn(): MockCanvas {
 
         // Basic info
