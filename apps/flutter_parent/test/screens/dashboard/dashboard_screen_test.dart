@@ -1,3 +1,4 @@
+import 'dart:io';
 /// Copyright (C) 2019 - present Instructure, Inc.
 ///
 /// This program is free software: you can redistribute it and/or modify
@@ -15,7 +16,9 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_parent/api/alert_api.dart';
+import 'package:flutter_parent/api/utils/api_prefs.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/models/user.dart';
@@ -25,8 +28,10 @@ import 'package:flutter_parent/screens/courses/courses_interactor.dart';
 import 'package:flutter_parent/screens/courses/courses_screen.dart';
 import 'package:flutter_parent/screens/dashboard/dashboard_interactor.dart';
 import 'package:flutter_parent/screens/dashboard/dashboard_screen.dart';
+import 'package:flutter_parent/screens/login_landing_screen.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../utils/accessibility_utils.dart';
 import '../../utils/test_app.dart';
@@ -252,27 +257,38 @@ void main() {
 //    // TODO: Test that Manage Students screen was loaded
 //  });
 
-//  testWidgetsWithAccessibilityChecks(
-//      'Clicking Sign Out from nav drawer signs user out and returns to the Login Landing screen',
-//      (tester) async {
-//    _setupLocator(MockInteractor());
-//
-//    await tester.pumpWidget(_testableMaterialWidget());
-//    await tester.pumpAndSettle();
-//
-//    // Open the nave drawer
-//    DashboardScreen.scaffoldKey.currentState.openDrawer();
-//    await tester.pumpAndSettle();
-//
-//    // Click on Sign Out
-//    await tester.tap(find.text(AppLocalizations().signOut));
-//    await tester.pumpAndSettle();
-//
-//    // Test if we ended up on the Login Landing page
-//    expect(find.byType(LoginLandingScreen), findsOneWidget);
-//
-//    // TODO: Test if we called ApiPrefs#performLogout()
-//  });
+  // Not using the accessibility tester due to an issue where the
+  // Login Landing screen fails a contrast ratio test after logging out
+  // (the tests for that screen all pass accessibility checks, however)
+  testWidgets(
+      'Clicking Sign Out from nav drawer signs user out and returns to the Login Landing screen',
+      (tester) async {
+    _setupLocator(MockInteractor());
+
+    // Setup prefs and test that we are logged in
+    SharedPreferences.setMockInitialValues({
+      'flutter.${ApiPrefs.KEY_ACCESS_TOKEN}': 'token',
+      'flutter.${ApiPrefs.KEY_DOMAIN}': 'domain',
+    });
+
+    await ApiPrefs.init();
+    expect(ApiPrefs.isLoggedIn(), true);
+
+    await tester.pumpWidget(_testableMaterialWidget());
+    await tester.pumpAndSettle();
+
+    // Open the nave drawer
+    DashboardScreen.scaffoldKey.currentState.openDrawer();
+    await tester.pumpAndSettle();
+
+    // Click on Sign Out
+    await tester.tap(find.text(AppLocalizations().signOut));
+    await tester.pumpAndSettle();
+
+    // Test if we ended up on the Login Landing page and if we are logged out
+    expect(find.byType(LoginLandingScreen), findsOneWidget);
+    expect(ApiPrefs.isLoggedIn(), false);
+  });
 
 //  testWidgetsWithAccessibilityChecks('Updating the inbox notifier value updates in the nav drawer', (tester) async {
 //    _setupLocator(MockInteractor());
@@ -287,6 +303,25 @@ void main() {
 //    // Change inbox notifier value
 //    // TODO: Implement when we get the Inbox api up and going
 //  });
+
+  setUpAll(() {
+    // Setup for package_info
+    const MethodChannel channel = MethodChannel('plugins.flutter.io/package_info');
+    channel.setMockMethodCallHandler((MethodCall methodCall) async {
+      switch (methodCall.method) {
+        case 'getAll':
+          return <String, dynamic>{
+            'appName': 'android_parent',
+            'buildNumber': '10',
+            'packageName': 'com.instructure.parentapp',
+            'version': '2.0.0',
+          };
+        default:
+          assert(false);
+          return null;
+      }
+    });
+  });
 }
 
 class MockAlertsInteractor extends AlertsInteractor {}

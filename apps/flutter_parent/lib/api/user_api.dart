@@ -22,9 +22,6 @@ class UserApi {
     var selfResponse = await Dio().get(ApiPrefs.getApiUrl() + 'users/self/profile',
         options: Options(headers: ApiPrefs.getHeaderMap()));
 
-    print(selfResponse.statusCode);
-    print(selfResponse.data);
-
     if (selfResponse.statusCode == 200 || selfResponse.statusCode == 201) {
       return deserialize<User>(selfResponse.data);
     } else {

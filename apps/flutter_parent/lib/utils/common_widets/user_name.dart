@@ -13,21 +13,29 @@
 /// along with this program.  If not, see <http://www.gnu.org/licenses/>. 
 
 import 'package:flutter/material.dart';
+import 'package:flutter_parent/models/user.dart';
 
-//final InboxCountNotifier inboxCountNotifier = new InboxCountNotifier._private();
+class UserName extends StatelessWidget {
+  final String userName;
+  final String pronouns;
+  final TextStyle style;
 
-class InboxCountNotifier extends ValueNotifier<int> {
-  static final _instance = InboxCountNotifier._private();
+  UserName(this.userName, this.pronouns, {this.style});
 
-  static InboxCountNotifier get() => _instance;
+  UserName.fromUser(User user, {this.style = null})
+      : userName = user.name,
+        pronouns = user.pronouns;
 
-  InboxCountNotifier._private() : super(0);
-  update() {
-    value = 10;
-    // TODO: InboxApi
-//    InboxApi.getUnreadCount().then((count) {
-//      value = count;
-//      notifyListeners();
-//    });
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Text.rich(
+      TextSpan(children: [
+        TextSpan(text: userName),
+        if (pronouns != null) TextSpan(text: ' (${pronouns})', style: TextStyle(fontStyle: FontStyle.italic))
+      ]),
+      style: style,
+    );
   }
 }

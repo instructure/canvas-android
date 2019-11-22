@@ -20,7 +20,7 @@ import 'package:flutter_parent/screens/dashboard/dashboard_interactor.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test('interactor should sort users in descending order', () {
+  test('Sort users in descending order', () {
     // Create lists
     var startingList = [_mockStudent('Zed'), _mockStudent('Alex'), _mockStudent('Billy')];
     var expectedSortedList = [_mockStudent('Alex'), _mockStudent('Billy'), _mockStudent('Zed')];
@@ -32,7 +32,7 @@ void main() {
     expect(startingList, expectedSortedList);
   });
 
-  test('interactor should filter out enrollments with no observee', () {
+  test('Filter out enrollments with no observee', () {
     // Create the lists
     var startingList = [_mockEnrollment(null), _mockEnrollment(_mockStudent('Alex').toBuilder()), _mockEnrollment(null)];
     var expectedSortedList = [_mockStudent('Alex')];
@@ -42,7 +42,19 @@ void main() {
     var result = interactor.filterObservees(startingList);
 
     expect(result, expectedSortedList);
+  });
 
+  test('Filter out duplicate enrollments', () {
+    var enrollment = _mockEnrollment(_mockStudent('Alex').toBuilder());
+    // Create the lists
+    var startingList = [enrollment, enrollment, enrollment, enrollment];
+    var expectedSortedList = [_mockStudent('Alex')];
+
+    // Run the logic
+    var interactor = DashboardInteractor();
+    var result = interactor.filterObservees(startingList);
+
+    expect(result, expectedSortedList);
   });
 }
 

@@ -36,6 +36,10 @@ abstract class User implements Built<User, UserBuilder> {
   String get sortableName;
 
   @nullable
+  @BuiltValueField(wireName: 'short_name')
+  String get shortName;
+
+  @nullable
   String get pronouns;
 
   @nullable

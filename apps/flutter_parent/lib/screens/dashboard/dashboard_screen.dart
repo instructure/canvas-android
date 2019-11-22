@@ -20,12 +20,12 @@ import 'package:flutter_parent/screens/alerts/alerts_screen.dart';
 import 'package:flutter_parent/screens/courses/courses_screen.dart';
 import 'package:flutter_parent/screens/dashboard/inbox_notifier.dart';
 import 'package:flutter_parent/screens/login_landing_screen.dart';
+import 'package:flutter_parent/utils/common_widets/common_widgets.dart';
+import 'package:flutter_parent/utils/common_widets/user_avatar.dart';
+import 'package:flutter_parent/utils/common_widets/user_name.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/design/canvas_icons_solid.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
-import 'package:flutter_parent/utils/widgets/common_widgets.dart';
-import 'package:flutter_parent/utils/widgets/default_avatar.dart';
-import 'package:flutter_parent/utils/widgets/user_name.dart';
 import 'package:package_info/package_info.dart';
 
 import 'dashboard_interactor.dart';
@@ -62,7 +62,7 @@ class DashboardState extends State<DashboardScreen> {
     _loadStudents();
     super.initState();
 
-    inboxCountNotifier.update();
+    InboxCountNotifier.get().update();
   }
 
   void _loadSelf() {
@@ -140,15 +140,22 @@ class DashboardState extends State<DashboardScreen> {
   }
 
   Widget _appBarStudents(List<User> students) {
-    if (students.isEmpty) if (_studentsLoading) // Still loading, don't show anything
-      return Text('');
-    else
-      return Text(AppLocalizations.of(context).noStudents, style: Theme.of(context).primaryTextTheme.title,); // Done loading: no students returned
+    if (students.isEmpty) {
+      // No students yet, we are either still loading, or there was an error
+      if (_studentsLoading) {
+        // Still loading, don't show anything
+        return Text('');
+      } else
+        // Done loading: no students returned
+        return Text(
+          AppLocalizations.of(context).noStudents,
+          style: Theme.of(context).primaryTextTheme.title,);
+    }
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        userAvatar(_selectedStudent),
+        UserAvatar(_selectedStudent),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -182,6 +189,7 @@ class DashboardState extends State<DashboardScreen> {
         return Center(child: CircularProgressIndicator());
       } else {
         // Either we loaded a null user, or we got an error
+        // TODO: Add in error screen when we get specs
         return Text('Error');
       }
     }
@@ -234,7 +242,7 @@ class DashboardState extends State<DashboardScreen> {
   _navigateToManageStudents(context) {
     // Close the drawer, then push the Manage Children screen in
     Navigator.of(context).pop();
-//      QuickNav.push(context, ManageChildrenScren());
+//      QuickNav.push(context, ManageChildrenScreen());
   }
 
   _navigateToHelp(context) {
@@ -255,7 +263,7 @@ class DashboardState extends State<DashboardScreen> {
         children: <Widget>[
           Padding(
               padding: const EdgeInsets.fromLTRB(16, 16, 0, 12),
-              child: userAvatar(user)),
+              child: UserAvatar(user)),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: UserName.fromUser(user, style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
@@ -277,7 +285,7 @@ class DashboardState extends State<DashboardScreen> {
             title: Text(AppLocalizations.of(context).inbox),
             onTap: () => _navigateToInbox(context),
             trailing: ValueListenableBuilder(
-              valueListenable: inboxCountNotifier,
+              valueListenable: InboxCountNotifier.get(),
               builder: (context, count, _) {
                 return Visibility(
                   visible: count > 0,

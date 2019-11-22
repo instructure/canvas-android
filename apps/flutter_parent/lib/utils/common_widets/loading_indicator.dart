@@ -12,30 +12,10 @@
 /// You should have received a copy of the GNU General Public License
 /// along with this program.  If not, see <http://www.gnu.org/licenses/>. 
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_parent/models/user.dart';
 
-class UserName extends StatelessWidget {
-  final String userName;
-  final String pronouns;
-  final TextStyle style;
-
-  UserName(this.userName, this.pronouns, {this.style});
-
-  UserName.fromUser(User user, {TextStyle style = null})
-      : userName = user.name,
-        pronouns = user.pronouns,
-        style = style;
-
-
+class LoadingIndicator extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
-    return Text.rich(
-      TextSpan(children: [
-        TextSpan(text: userName),
-        if (pronouns != null) TextSpan(text: ' (${pronouns})', style: TextStyle(fontStyle: FontStyle.italic))
-      ]),
-      style: style,
-    );
-  }
+  Widget build(BuildContext context) => Center(child: CircularProgressIndicator());
 }
