@@ -14,7 +14,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_model.dart';
-import 'package:flutter_parent/utils/widgets/full_screen_scroll_container.dart';
+import 'package:flutter_parent/utils/common_widets/full_screen_scroll_container.dart';
 import 'package:provider/provider.dart';
 
 class CourseGradesScreen extends StatelessWidget {

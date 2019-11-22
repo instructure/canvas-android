@@ -16,7 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_parent/models/user.dart';
 
 class UserAvatar extends StatelessWidget {
-  User _user;
+  final User _user;
 
   UserAvatar(this._user, {Key key}) : super(key: key);
 
@@ -34,7 +34,7 @@ class UserAvatar extends StatelessWidget {
       );
     } else {
       return CircleAvatar(child: Text(getUserInitials(_user)));
-    };
+    }
   }
 
   static String getUserInitials(User _user) {
