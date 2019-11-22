@@ -70,20 +70,22 @@ class CourseApi {
     }
   }
 
-  static Future<Course> getCourse(int courseId) async {
-    var response = await Dio().get('${ApiPrefs.getApiUrl()}courses/${courseId}', queryParameters: {
-      'include': [
-        'syllabus_body',
-        'term',
-        'permissions',
-        'license',
-        'is_public',
-        'needs_grading_count',
-        'total_scores',
-        'current_grading_period_scores',
-        'course_image'
-      ]
-    });
+  Future<Course> getCourse(int courseId) async {
+    var response = await Dio().get('${ApiPrefs.getApiUrl()}courses/${courseId}',
+        options: Options(headers: ApiPrefs.getHeaderMap()),
+        queryParameters: {
+          'include': [
+            'syllabus_body',
+            'term',
+            'permissions',
+            'license',
+            'is_public',
+            'needs_grading_count',
+            'total_scores',
+            'current_grading_period_scores',
+            'course_image',
+          ],
+        });
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       return deserialize<Course>(response.data);

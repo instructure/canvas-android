@@ -22,6 +22,8 @@ import android.util.Log
 import com.github.javafaker.Faker
 import com.instructure.canvas.espresso.mockCanvas.utils.Randomizer
 import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.type.EnrollmentType
+import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.toApiString
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
@@ -68,6 +70,9 @@ class MockCanvas {
     /** Map of course id to course object */
     val courses = mutableMapOf<Long, Course>()
 
+    /** Map of course permissions to course ids **/
+    val coursePermissions = mutableMapOf<Long, CanvasContextPermission>()
+
     /** Map of enrollment id to enrollment object */
     val enrollments = mutableMapOf<Long, Enrollment>()
 
@@ -80,9 +85,6 @@ class MockCanvas {
 
     /** Map of account notification id to object */
     val accountNotifications = mutableMapOf<Long, AccountNotification>()
-
-    /** Map of conversation id to conversation object */
-    val conversations = mutableMapOf<Long, Conversation>()
 
     /** Map of group id to group object */
     val groups = mutableMapOf<Long, Group>()
@@ -149,6 +151,20 @@ class MockCanvas {
 
     /** Map of quiz id to quiz submission list */
     val quizSubmissions = mutableMapOf<Long, MutableList<QuizSubmission>>()
+
+    /** Maps of course id to recipient list */
+    val studentRecipients = mutableMapOf<Long, List<Recipient>>()
+    val teacherRecipients = mutableMapOf<Long, List<Recipient>>()
+    val recipientGroups = mutableMapOf<Long, List<Recipient>>()
+
+    /** One off conversation for handling creating new conversations, see ConversationEndpoint POST */
+    var sentConversation: Conversation? = null
+
+    /** Map of course id to list of conversation for inbox filters */
+    val conversationCourseMap = mutableMapOf<Long, List<Conversation>>()
+
+    /** Map of conversation id to conversation object */
+    val conversations = mutableMapOf<Long, Conversation>()
 
     /** Map of quiz submission id to quiz submission questions */
     val quizSubmissionQuestions = mutableMapOf<Long, MutableList<QuizSubmissionQuestion>>()
@@ -218,8 +234,6 @@ class MockCanvas {
             TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
         }
     }
-
-
 
     companion object {
         /** Whether the mock Canvas data has been initialized for the current test run */
@@ -344,6 +358,150 @@ fun MockCanvas.addCourse(
 
     return course
 }
+
+/** Adds the provided permissions to the course */
+fun MockCanvas.addCoursePermissions(courseId: Long, permissions: CanvasContextPermission) {
+    coursePermissions[courseId] = permissions
+}
+
+/**
+ * Adds the provided list of users (converted to basic users) to the provided course as recipients.
+ * This results in the role specific recipient maps being populated as well as the recipient groups.
+ */
+fun MockCanvas.addRecipientsToCourse(course: Course, students: List<User>, teachers: List<User>) {
+    studentRecipients[course.id] = students.map {
+        Recipient(
+                stringId = it.id.toString(),
+                name = it.shortName,
+                avatarURL = it.avatarUrl,
+                commonCourses = hashMapOf(Pair(course.id.toString(), arrayOf(EnrollmentType.STUDENTENROLLMENT.rawValue())))
+        )
+    }
+
+    teacherRecipients[course.id] = teachers.map {
+        Recipient(
+                stringId = it.id.toString(),
+                name = it.shortName,
+                avatarURL = it.avatarUrl,
+                commonCourses = hashMapOf(Pair(course.id.toString(), arrayOf(EnrollmentType.TEACHERENROLLMENT.rawValue())))
+        )
+    }
+
+    recipientGroups[course.id] = listOf(
+        Recipient(
+            avatarURL = Randomizer.randomAvatarUrl(),
+            stringId = "${course.contextId}_teachers",
+            name = "Teachers",
+            userCount = teacherRecipients.values.size
+        ),
+        Recipient(
+            avatarURL = Randomizer.randomAvatarUrl(),
+            stringId = "${course.contextId}_students",
+            name = "Students",
+            userCount = studentRecipients.values.size
+        )
+    )
+}
+
+/**
+ * Creates a conversation with a single message using the userId provided as a non-author participant and creating a
+ * new BasicUser as the author.
+ *
+ * [isUserAuthor] -> Will set the user as the author, and create a new BasicUser as the other participant
+ */
+fun MockCanvas.createBasicConversation(
+        userId: Long,
+        subject: String = Randomizer.randomConversationSubject(),
+        isUserAuthor: Boolean = false,
+        isStarred: Boolean = false,
+        workflowState: Conversation.WorkflowState = Conversation.WorkflowState.UNREAD,
+        contextCode: String? = null,
+        contextName: String? = null
+): Conversation {
+    val basicUser = BasicUser(
+            id = if(isUserAuthor) newItemId() else userId,
+            name = Randomizer.randomName().fullName,
+            avatarUrl = Randomizer.randomAvatarUrl()
+    )
+
+    val basicAuthorUser = BasicUser(
+            id = if(isUserAuthor) userId else newItemId(),
+            name = Randomizer.randomName().fullName,
+            avatarUrl = Randomizer.randomAvatarUrl()
+    )
+
+    val basicMessage = Message(
+            id = newItemId(),
+            createdAt = APIHelper.dateToString(GregorianCalendar()),
+            body = Randomizer.randomConversationBody(),
+            authorId = basicAuthorUser.id,
+            participatingUserIds = listOf(basicUser.id, basicAuthorUser.id)
+    )
+
+    return Conversation(
+        id = newItemId(),
+        subject = subject,
+        workflowState = workflowState,
+        lastMessage = Randomizer.randomConversationBody(),
+        lastAuthoredMessageAt = APIHelper.dateToString(GregorianCalendar()),
+        messageCount = 1,
+        messages = listOf(basicMessage),
+        avatarUrl = Randomizer.randomAvatarUrl(),
+        isStarred = isStarred,
+        contextName = contextName,
+        contextCode = contextCode,
+        participants = mutableListOf(basicUser, basicAuthorUser)
+    )
+}
+
+/**
+ * This function adds a correctly constructed "sent conversation" with the included userId as the author of the
+ * conversation. It will be added to the MockCanvas sentConversation field to be used along with a POST request to
+ * create a conversation.
+ *
+ */
+fun MockCanvas.addSentConversation(subject: String, userId: Long){
+    sentConversation = createBasicConversation(userId = userId, subject = subject, isUserAuthor = true)
+}
+
+/**
+ *  Adds [conversationCount] of each conversation type (sent/archived/starred/unread) to the MockCanvas conversations map.
+ *
+ *  Each conversation will be properly configured to match to those filters, however the sent conversation will not be
+ *  placed into the sentConversation field. Use addSentConversation for conversation POSTs to create new conversations.
+ *
+ *  [userId] -> The user you are performing these requests with. Will be used as the author for sent, and a participant
+ *  for all other conversations.
+ *  */
+
+fun MockCanvas.addConversations(conversationCount: Int = 1, userId: Long) {
+    for (i in 0 until conversationCount) {
+        val sentConversation = createBasicConversation(userId = userId, isUserAuthor = true)
+        val archivedConversation = createBasicConversation(userId, workflowState = Conversation.WorkflowState.ARCHIVED)
+        val starredConversation = createBasicConversation(userId, isStarred = true)
+        val unreadConversation = createBasicConversation(userId, workflowState = Conversation.WorkflowState.UNREAD)
+        conversations[sentConversation.id] = sentConversation
+        conversations[archivedConversation.id] = archivedConversation
+        conversations[starredConversation.id] = starredConversation
+        conversations[unreadConversation.id] = unreadConversation
+    }
+}
+
+/**
+ *  Adds [conversationCount] of conversations to the MockCanvas conversationCourseMap.
+ *
+ *  Currently all of these messages are default conversations with the appropriate user name and context codes/names.
+ *  */
+fun MockCanvas.addConversationsToCourseMap(userId: Long, courseList: List<Course>, conversationCount: Int = 1) {
+    courseList.forEach {
+        val conversations= mutableListOf<Conversation>()
+        for(i in 0 until conversationCount) {
+            conversations.add(createBasicConversation(userId = userId, contextCode = it.contextId, contextName = it.name))
+        }
+        conversationCourseMap[it.id] = conversations
+    }
+}
+
 
 /**
  * Creates assignments for the standard groups (overdue, upcoming, undated, and past) for a course
