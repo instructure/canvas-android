@@ -16,6 +16,7 @@
  */
 package com.instructure.student.ui.pages
 
+import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvasapi2.apis.InboxApi
@@ -26,6 +27,7 @@ import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.*
+import com.instructure.espresso.scrollTo
 import com.instructure.student.R
 
 class InboxPage : BasePage(R.id.inboxPage) {
@@ -60,11 +62,11 @@ class InboxPage : BasePage(R.id.inboxPage) {
     fun selectInboxScope(scope: InboxApi.Scope) {
         scopeButton.click()
         when (scope) {
-            InboxApi.Scope.ALL -> onViewWithText("All").click()
-            InboxApi.Scope.UNREAD -> onViewWithText("Unread").click()
-            InboxApi.Scope.ARCHIVED -> onViewWithText("Archived").click()
-            InboxApi.Scope.STARRED -> onViewWithText("Starred").click()
-            InboxApi.Scope.SENT -> onViewWithText("Sent").click()
+            InboxApi.Scope.ALL -> onViewWithText("All").scrollTo().click()
+            InboxApi.Scope.UNREAD -> onViewWithText("Unread").scrollTo().click()
+            InboxApi.Scope.ARCHIVED -> onViewWithText("Archived").scrollTo().click()
+            InboxApi.Scope.STARRED -> onViewWithText("Starred").scrollTo().click()
+            InboxApi.Scope.SENT -> onViewWithText("Sent").scrollTo().click()
         }
     }
 

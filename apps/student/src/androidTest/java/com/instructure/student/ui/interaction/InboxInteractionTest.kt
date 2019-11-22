@@ -36,7 +36,7 @@ class InboxInteractionTest : StudentTest() {
         val data = goToInbox()
         dashboardPage.clickInboxTab()
         val subject = "Hodor"
-        data.addSentConversation(subject, student1.id)
+        data.addSentConversation(subject, student1.id, messageBody = "Short body")
         inboxPage.pressNewMessageButton()
         newMessagePage.selectCourse(course1)
         newMessagePage.setRecipient(data.teachers.first(), userType = "Teachers")
@@ -54,7 +54,7 @@ class InboxInteractionTest : StudentTest() {
         val data = goToInbox(teacherCount = 3)
         dashboardPage.clickInboxTab()
         val subject = "Hodor"
-        data.addSentConversation(subject, student1.id)
+        data.addSentConversation(subject, student1.id, messageBody = "Short body")
         inboxPage.pressNewMessageButton()
         newMessagePage.selectCourse(course1)
         newMessagePage.setRecipients(data.teachers, userType = "Teachers")
@@ -74,7 +74,7 @@ class InboxInteractionTest : StudentTest() {
         val data = goToInbox()
         dashboardPage.clickInboxTab()
         val subject = "Hodor"
-        data.addSentConversation(subject, student1.id)
+        data.addSentConversation(subject, student1.id, messageBody = "Short body")
         inboxPage.pressNewMessageButton()
         newMessagePage.selectCourse(course1)
         newMessagePage.selectAllRecipients(listOf("Teachers", "Students"))
@@ -93,7 +93,7 @@ class InboxInteractionTest : StudentTest() {
         dashboardPage.clickInboxTab()
         val subject = "Hodor"
         val message = "What is this, hodor?"
-        data.addSentConversation(subject, student1.id)
+        data.addSentConversation(subject, student1.id, messageBody = "Short body")
         inboxPage.pressNewMessageButton()
         newMessagePage.selectCourse(course1)
         newMessagePage.setRecipient(teacher1, userType = "Teachers")
@@ -122,7 +122,7 @@ class InboxInteractionTest : StudentTest() {
         val data = goToInbox()
         dashboardPage.clickInboxTab()
         val subject = "Hodor"
-        data.addSentConversation(subject, student1.id)
+        data.addSentConversation(subject, student1.id, messageBody = "Short body")
         inboxPage.pressNewMessageButton()
         newMessagePage.selectCourse(course1)
         newMessagePage.setRecipients(data.teachers, userType = "Teachers")
@@ -151,7 +151,7 @@ class InboxInteractionTest : StudentTest() {
         val data = goToInbox()
         dashboardPage.clickInboxTab()
         val subject = "Hodor"
-        data.addSentConversation(subject, student1.id)
+        data.addSentConversation(subject, student1.id, messageBody = "Short body")
         inboxPage.pressNewMessageButton()
         newMessagePage.selectCourse(course1)
         newMessagePage.selectAllRecipients(listOf("Teachers", "Students"))
@@ -178,7 +178,7 @@ class InboxInteractionTest : StudentTest() {
     fun testInbox_replyToMessage() {
         // Should be able to reply to a message
         val data = goToInbox()
-        data.addConversations(userId = student1.id)
+        data.addConversations(userId = student1.id, messageBody = "Short body")
         dashboardPage.clickInboxTab()
         inboxPage.selectConversation(getFirstConversation(data))
         val message = "What is this, hodor?"
@@ -191,7 +191,7 @@ class InboxInteractionTest : StudentTest() {
     fun testInbox_replyToMessageWithAttachment() {
         // Should be able to reply (with attachment) to a message
         val data = goToInbox()
-        data.addConversations(userId = student1.id)
+        data.addConversations(userId = student1.id, messageBody = "Short body")
         dashboardPage.clickInboxTab()
         val conversation = getFirstConversation(data)
         inboxPage.selectConversation(conversation)
@@ -212,7 +212,7 @@ class InboxInteractionTest : StudentTest() {
     fun testInbox_filterMessagesByTypeAll() {
         // Should be able to filter messages by All
         val data = goToInbox()
-        data.addConversations(userId = student1.id)
+        data.addConversations(userId = student1.id, messageBody = "Short body")
         val conversation = getFirstConversation(data)
         dashboardPage.clickInboxTab()
         inboxPage.assertConversationDisplayed(conversation.subject!!)
@@ -223,7 +223,7 @@ class InboxInteractionTest : StudentTest() {
     fun testInbox_filterMessagesByTypeUnread() {
         // Should be able to filter messages by Unread
         val data = goToInbox()
-        data.addConversations(userId = student1.id)
+        data.addConversations(userId = student1.id, messageBody = "Short body")
         dashboardPage.clickInboxTab()
         val conversation = data.conversations.values.first {
             it.workflowState == Conversation.WorkflowState.UNREAD
@@ -237,7 +237,7 @@ class InboxInteractionTest : StudentTest() {
     fun testInbox_filterMessagesByTypeStarred() {
         // Should be able to filter messages by Starred
         val data = goToInbox()
-        data.addConversations(userId = student1.id)
+        data.addConversations(userId = student1.id, messageBody = "Short body")
         dashboardPage.clickInboxTab()
         val conversation = data.conversations.values.first {
             it.isStarred
@@ -251,7 +251,7 @@ class InboxInteractionTest : StudentTest() {
     fun testInbox_filterMessagesByTypeSend() {
         // Should be able to filter messages by Send
         val data = goToInbox()
-        data.addConversations(userId = student1.id)
+        data.addConversations(userId = student1.id, messageBody = "Short body")
         dashboardPage.clickInboxTab()
         val conversation = data.conversations.values.first {
             it.workflowState == Conversation.WorkflowState.UNREAD
@@ -265,7 +265,7 @@ class InboxInteractionTest : StudentTest() {
     fun testInbox_filterMessagesByTypeArchived() {
         // Should be able to filter messages by Archived
         val data = goToInbox()
-        data.addConversations(userId = student1.id)
+        data.addConversations(userId = student1.id, messageBody = "Short body")
         dashboardPage.clickInboxTab()
         val conversation = data.conversations.values.first {
             it.workflowState == Conversation.WorkflowState.ARCHIVED
@@ -279,7 +279,7 @@ class InboxInteractionTest : StudentTest() {
     fun testInbox_filterMessagesByContext() {
         // Should be able to filter messages by course or group
         val data = goToInbox(courseCount = 2)
-        data.addConversationsToCourseMap(student1.id, data.courses.values.toList())
+        data.addConversationsToCourseMap(student1.id, data.courses.values.toList(), messageBody = "Short body")
         val conversation = data.conversationCourseMap[course1.id]!!.first()
         dashboardPage.clickInboxTab()
         inboxPage.selectInboxFilter(course1)
@@ -293,7 +293,7 @@ class InboxInteractionTest : StudentTest() {
         val data = goToInbox(teacherCount = 3)
         dashboardPage.clickInboxTab()
         val subject = "Hodor"
-        data.addSentConversation(subject, student1.id)
+        data.addSentConversation(subject, student1.id, messageBody = "Short body")
         inboxPage.pressNewMessageButton()
         newMessagePage.selectCourse(course1)
         newMessagePage.setRecipientGroup(userType = "Teachers")
@@ -323,7 +323,7 @@ class InboxInteractionTest : StudentTest() {
         val data = goToInbox()
         dashboardPage.clickInboxTab()
         val subject = "Hodor"
-        data.addSentConversation(subject, student1.id)
+        data.addSentConversation(subject, student1.id, messageBody = "Short body")
         inboxPage.pressNewMessageButton()
         newMessagePage.selectCourse(course1)
         newMessagePage.setRecipient(teacher1, userType = "Teachers")
