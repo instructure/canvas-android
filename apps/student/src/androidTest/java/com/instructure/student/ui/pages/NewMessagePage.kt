@@ -22,8 +22,10 @@ import androidx.test.espresso.Espresso
 import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.ViewAssertion
 import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
+import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.User
 import com.instructure.dataseeding.model.CanvasUserApiModel
@@ -134,11 +136,14 @@ class NewMessagePage : BasePage() {
     }
 
     fun setMessage(messageText: String) {
-        onView(allOf(withId(R.id.message), isDisplayed())).typeText(messageText)
-        //messageEditText.typeText(messageText)
+        Espresso.closeSoftKeyboard()
+        onView(allOf(withId(R.id.message), hasSibling(withId(R.id.sendIndividualDivider))))
+                .scrollTo()
+                .typeText(messageText)
     }
 
     fun hitSend() {
+        Espresso.closeSoftKeyboard()
         sendButton.click()
     }
 
