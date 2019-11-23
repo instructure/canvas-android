@@ -20,7 +20,7 @@ import 'package:flutter_parent/screens/alerts/alerts_screen.dart';
 import 'package:flutter_parent/screens/courses/courses_screen.dart';
 import 'package:flutter_parent/screens/dashboard/inbox_notifier.dart';
 import 'package:flutter_parent/screens/login_landing_screen.dart';
-import 'package:flutter_parent/utils/common_widets/common_widgets.dart';
+import 'package:flutter_parent/utils/common_widets/loading_indicator.dart';
 import 'package:flutter_parent/utils/common_widets/user_avatar.dart';
 import 'package:flutter_parent/utils/common_widets/user_name.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
@@ -194,14 +194,12 @@ class DashboardState extends State<DashboardScreen> {
       }
     }
 
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+    return Column(children: [
       // Header
       _navDrawerHeader(user),
 
       // Tiles (Inbox, Manage Students, Sign Out, etc)
-      _navDrawerTiles(),
-
-      Spacer(),
+      Expanded(child: _navDrawerItemsList(),),
 
       // App version
       _navDrawerAppVersion(),
@@ -217,10 +215,8 @@ class DashboardState extends State<DashboardScreen> {
   Widget _currentPage() {
     if (_studentsLoading) {
       // We're still loading students, just show a loading indicator for now
-      return CommonWidgets.progressIndicator();
+      return LoadingIndicator();
     }
-
-    print('Selected student: $_selectedStudent');
 
     switch (_currentIndex) {
       case 1:
@@ -279,46 +275,66 @@ class DashboardState extends State<DashboardScreen> {
         ],
       );
 
-  _navDrawerTiles() => Column(
-        children: <Widget>[
-          ListTile(
-            title: Text(AppLocalizations.of(context).inbox),
-            onTap: () => _navigateToInbox(context),
-            trailing: ValueListenableBuilder(
-              valueListenable: InboxCountNotifier.get(),
-              builder: (context, count, _) {
-                return Visibility(
-                  visible: count > 0,
-                  child: Container(
-                    decoration: BoxDecoration(color: Colors.blue, shape: BoxShape.circle),
-                    child: Padding(
-                      padding: const EdgeInsets.all(6.0),
-                      child: Text(
-                        '$count',
-                        style: TextStyle(
-                            fontSize: 12, color: Colors.white, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-          Divider(height: 0, indent: 16),
-          ListTile(
-              title: Text(AppLocalizations.of(context).manageStudents),
-              onTap: () => _navigateToManageStudents(context)),
-          Divider(height: 0, indent: 16),
-          ListTile(
-              title: Text(AppLocalizations.of(context).help),
-              onTap: () => _navigateToHelp(context)),
-          Divider(height: 0, indent: 16),
-          ListTile(
-              title: Text(AppLocalizations.of(context).signOut),
-              onTap: () => _performSignOut(context)),
-          Divider(height: 0, indent: 16),
-        ],
+  _navDrawerItemsList() =>
+      ListView.separated(
+          itemBuilder: (context, idx) {
+            return (idx == 0) ? _navDrawerInbox() :
+            (idx == 1) ? _navDrawerManageStudents() :
+            (idx == 2) ? _navDrawerHelp() :
+            (idx == 3) ? _navDrawerSignOut() :
+            null;
+          },
+          separatorBuilder: (_, c) => Divider(height: 0, indent: 16,),
+          itemCount: 5 // One extra item to get the divider on the bottom
       );
+
+  _navDrawerInbox() =>
+      ListTile(
+        title: Text(AppLocalizations
+            .of(context)
+            .inbox),
+        onTap: () => _navigateToInbox(context),
+        trailing: ValueListenableBuilder(
+          valueListenable: InboxCountNotifier.get(),
+          builder: (context, count, _) {
+            return Visibility(
+              visible: count > 0,
+              child: Container(
+                decoration: BoxDecoration(color: Colors.blue, shape: BoxShape.circle),
+                child: Padding(
+                  padding: const EdgeInsets.all(6.0),
+                  child: Text(
+                    '$count',
+                    style: TextStyle(
+                        fontSize: 12, color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+      );
+
+  _navDrawerManageStudents() =>
+      ListTile(
+          title: Text(AppLocalizations
+              .of(context)
+              .manageStudents),
+          onTap: () => _navigateToManageStudents(context));
+
+  _navDrawerHelp() =>
+      ListTile(
+          title: Text(AppLocalizations
+              .of(context)
+              .help),
+          onTap: () => _navigateToHelp(context));
+
+  _navDrawerSignOut() =>
+      ListTile(
+          title: Text(AppLocalizations
+              .of(context)
+              .signOut),
+          onTap: () => _performSignOut(context));
 
   _navDrawerAppVersion() => Column(
         children: <Widget>[
@@ -330,8 +346,11 @@ class DashboardState extends State<DashboardScreen> {
                 future: PackageInfo.fromPlatform(),
                 builder: (BuildContext context, AsyncSnapshot<PackageInfo> snapshot) {
                   return Text(
-                    'v. ${snapshot.data?.version}',
-                    style: TextStyle(color: Colors.grey[500], fontSize: 12),
+                    AppLocalizations.of(context).appVersion(snapshot.data?.version),
+                    style: Theme
+                        .of(context)
+                        .textTheme
+                        .subtitle,
                   );
                 },
               ),

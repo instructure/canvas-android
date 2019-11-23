@@ -149,34 +149,34 @@ class AppLocalizations {
   /// Dashboard
   String get noStudents => Intl.message(
     'No Students',
-    name: 'noStudents',
     desc: 'Text for when an observer has no students they are observing'
   );
 
   /// Navigation Drawer
   String get inbox => Intl.message(
       'Inbox',
-      name: 'inbox',
       desc: 'Label text for the Inbox nav drawer button'
   );
 
   String get manageStudents => Intl.message(
       'Manage Students',
-      name: 'manageStudents',
       desc: 'Label text for the Manage Students nav drawer button'
   );
 
   String get help => Intl.message(
       'Help',
-      name: 'help',
       desc: 'Label text for the help nav drawer button'
   );
 
-
   String get signOut => Intl.message(
       'Sign Out',
-      name: 'signOut',
       desc: 'Label text for the Sign Out nav drawer button'
+  );
+
+  String appVersion(String version) => Intl.message(
+    'v. $version',
+    args: [version],
+    desc: 'App version shown in the navigation drawer'
   );
 
 
