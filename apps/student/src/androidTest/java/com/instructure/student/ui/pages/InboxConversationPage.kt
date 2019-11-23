@@ -18,12 +18,16 @@ package com.instructure.student.ui.pages
 
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
+import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.*
 import com.instructure.espresso.replaceText
+import com.instructure.espresso.scrollTo
 import com.instructure.student.R
 import org.hamcrest.CoreMatchers
 import org.hamcrest.Matchers
@@ -47,7 +51,8 @@ class InboxConversationPage : BasePage(R.id.inboxConversationPage) {
     }
 
     fun assertAttachmentDisplayed(displayName: String) {
-        onViewWithText(displayName).assertDisplayed()
+        scrollRecyclerView(R.id.listView,withText(displayName))
+        onViewWithText(displayName).check(matches(isDisplayingAtLeast(5)))
     }
 
     fun refresh() {

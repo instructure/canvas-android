@@ -439,7 +439,8 @@ fun MockCanvas.createBasicConversation(
         isStarred: Boolean = false,
         workflowState: Conversation.WorkflowState = Conversation.WorkflowState.UNREAD,
         contextCode: String? = null,
-        contextName: String? = null
+        contextName: String? = null,
+        messageBody: String = Randomizer.randomConversationBody()
 ): Conversation {
     val basicUser = BasicUser(
             id = if(isUserAuthor) newItemId() else userId,
@@ -456,7 +457,7 @@ fun MockCanvas.createBasicConversation(
     val basicMessage = Message(
             id = newItemId(),
             createdAt = APIHelper.dateToString(GregorianCalendar()),
-            body = Randomizer.randomConversationBody(),
+            body = messageBody,
             authorId = basicAuthorUser.id,
             participatingUserIds = listOf(basicUser.id, basicAuthorUser.id)
     )
@@ -483,8 +484,8 @@ fun MockCanvas.createBasicConversation(
  * create a conversation.
  *
  */
-fun MockCanvas.addSentConversation(subject: String, userId: Long){
-    sentConversation = createBasicConversation(userId = userId, subject = subject, isUserAuthor = true)
+fun MockCanvas.addSentConversation(subject: String, userId: Long, messageBody : String = Randomizer.randomConversationBody()){
+    sentConversation = createBasicConversation(userId = userId, subject = subject, isUserAuthor = true, messageBody = messageBody)
 }
 
 /**
@@ -497,12 +498,12 @@ fun MockCanvas.addSentConversation(subject: String, userId: Long){
  *  for all other conversations.
  *  */
 
-fun MockCanvas.addConversations(conversationCount: Int = 1, userId: Long) {
+fun MockCanvas.addConversations(conversationCount: Int = 1, userId: Long, messageBody : String = Randomizer.randomConversationBody()) {
     for (i in 0 until conversationCount) {
-        val sentConversation = createBasicConversation(userId = userId, isUserAuthor = true)
-        val archivedConversation = createBasicConversation(userId, workflowState = Conversation.WorkflowState.ARCHIVED)
-        val starredConversation = createBasicConversation(userId, isStarred = true)
-        val unreadConversation = createBasicConversation(userId, workflowState = Conversation.WorkflowState.UNREAD)
+        val sentConversation = createBasicConversation(userId = userId, isUserAuthor = true, messageBody = messageBody)
+        val archivedConversation = createBasicConversation(userId, workflowState = Conversation.WorkflowState.ARCHIVED, messageBody = messageBody)
+        val starredConversation = createBasicConversation(userId, isStarred = true, messageBody = messageBody)
+        val unreadConversation = createBasicConversation(userId, workflowState = Conversation.WorkflowState.UNREAD, messageBody = messageBody)
         conversations[sentConversation.id] = sentConversation
         conversations[archivedConversation.id] = archivedConversation
         conversations[starredConversation.id] = starredConversation
@@ -515,11 +516,16 @@ fun MockCanvas.addConversations(conversationCount: Int = 1, userId: Long) {
  *
  *  Currently all of these messages are default conversations with the appropriate user name and context codes/names.
  *  */
-fun MockCanvas.addConversationsToCourseMap(userId: Long, courseList: List<Course>, conversationCount: Int = 1) {
+fun MockCanvas.addConversationsToCourseMap(
+        userId: Long,
+        courseList: List<Course>,
+        conversationCount: Int = 1,
+        messageBody : String = Randomizer.randomConversationBody()
+) {
     courseList.forEach {
         val conversations= mutableListOf<Conversation>()
         for(i in 0 until conversationCount) {
-            conversations.add(createBasicConversation(userId = userId, contextCode = it.contextId, contextName = it.name))
+            conversations.add(createBasicConversation(userId = userId, contextCode = it.contextId, contextName = it.name, messageBody = messageBody))
         }
         conversationCourseMap[it.id] = conversations
     }
