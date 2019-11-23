@@ -194,7 +194,9 @@ class DashboardState extends State<DashboardScreen> {
       }
     }
 
-    return Column(children: [
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
       // Header
       _navDrawerHeader(user),
 
