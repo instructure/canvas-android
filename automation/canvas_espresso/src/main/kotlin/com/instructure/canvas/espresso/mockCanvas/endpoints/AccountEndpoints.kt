@@ -54,6 +54,7 @@ object AccountEndpoint : Endpoint(
         Segment("launch_definitions") to LaunchDefinitionsEndpoint
     ),
     Segment("permissions") to AccountPermissionsEndpoint,
+    Segment("help_links") to HelpLinksEndpoint,
     response = {
         // NOTE: Only supporting one account for now and we'll assume no users are admins, so return a 401
         GET { request.unauthorizedResponse() }
@@ -97,5 +98,117 @@ object AccountNotificationEndpoint : Endpoint(response = {
         val notification = data.accountNotifications[pathVars.accountNotificationId]!!
         data.accountNotifications.remove(pathVars.accountNotificationId)
         request.successResponse(notification)
+    }
+})
+
+/**
+ * Endpoint that returns help links.
+ * I populated the links based on the result of a "real" help-links call.
+ */
+object HelpLinksEndpoint : Endpoint( response = {
+    GET {
+        val result = HelpLinks(
+                customHelpLinks = listOf(
+                        HelpLink(
+                                id = "instructor_question",
+                                type = "default",
+                                availableTo = listOf("student"),
+                                url = "#teacher_feedback",
+                                text = "Ask Your Instructor a Question",
+                                subtext = "Questions are submitted to your instructor"
+                        ),
+                        HelpLink(
+                                id="search_the_canvas_guides",
+                                type="default",
+                                availableTo=listOf("user", "student", "teacher", "admin", "observer", "unenrolled"),
+                                url="https://community.canvaslms.com/community/answers/guides/",
+                                text="Search the Canvas Guides",
+                                subtext="Find answers to common questions"
+                        ),
+                        HelpLink (
+                                id="report_a_problem",
+                                type="default",
+                                availableTo=listOf("user", "student", "teacher", "admin", "observer", "unenrolled"),
+                                url="#create_ticket",
+                                text="Report a Problem",
+                                subtext="If Canvas misbehaves, tell us about it"
+                        ),
+                        HelpLink(
+                                id="training_services_portal",
+                                type="default",
+                                availableTo=listOf("teacher", "admin", "unenrolled"),
+                                url="https://training-portal-prod-pdx.insproserv.net?canvas_domain=jhoag.instructure.com&sf_id=",
+                                text="Training Services Portal",
+                                subtext="Access Canvas training videos and courses"
+                        ),
+                        HelpLink(
+                                id="ask_community",
+                                type="default",
+                                availableTo=listOf("teacher", "admin"),
+                                url="https://community.canvaslms.com/community/answers",
+                                text="Ask the Community",
+                                subtext="Get help from a Canvas expert"
+                        ),
+                        HelpLink(
+                                id="submit_feature_idea",
+                                type="default",
+                                availableTo=listOf("user", "student", "teacher", "admin"),
+                                url="https://community.canvaslms.com/community/ideas/feature-ideas",
+                                text="Submit a Feature Idea", subtext="Have an idea to improve Canvas?"
+                        )
+                ),
+                defaultHelpLinks = listOf(
+                        HelpLink(
+                                id="instructor_question",
+                                type="default",
+                                availableTo=listOf("student"),
+                                url="#teacher_feedback",
+                                text="Ask Your Instructor a Question",
+                                subtext="Questions are submitted to your instructor"
+                        ),
+                        HelpLink(
+                                id="search_the_canvas_guides",
+                                type="default",
+                                availableTo=listOf("user", "student", "teacher", "admin", "observer", "unenrolled"),
+                                url="https://community.canvaslms.com/community/answers/guides/",
+                                text="Search the Canvas Guides",
+                                subtext="Find answers to common questions"
+                        ),
+                        HelpLink(
+                                id="report_a_problem",
+                                type="default",
+                                availableTo=listOf("user", "student", "teacher", "admin", "observer", "unenrolled"),
+                                url="#create_ticket",
+                                text="Report a Problem",
+                                subtext="If Canvas misbehaves, tell us about it"
+                        ),
+                        HelpLink(
+                                id="training_services_portal",
+                                type="default",
+                                availableTo=listOf("teacher", "admin", "unenrolled"),
+                                url="https://training-portal-prod-pdx.insproserv.net?canvas_domain=jhoag.instructure.com&sf_id=",
+                                text="Training Services Portal",
+                                subtext="Access Canvas training videos and courses"
+                        ),
+                        HelpLink(
+                                id="ask_community",
+                                type="default",
+                                availableTo=listOf("teacher", "admin"),
+                                url="https://community.canvaslms.com/community/answers",
+                                text="Ask the Community",
+                                subtext="Get help from a Canvas expert"
+                        ),
+                        HelpLink(
+                                id="submit_feature_idea",
+                                type="default",
+                                availableTo=listOf("user", "student", "teacher", "admin"),
+                                url="https://community.canvaslms.com/community/ideas/feature-ideas",
+                                text="Submit a Feature Idea",
+                                subtext="Have an idea to improve Canvas?"
+                        )
+                )
+        )
+
+        request.successResponse(result)
     }
 })

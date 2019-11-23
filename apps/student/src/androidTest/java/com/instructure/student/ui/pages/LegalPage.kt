@@ -16,13 +16,36 @@
  */
 package com.instructure.student.ui.pages
 
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withParent
+import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.student.R
+import org.hamcrest.Matchers.allOf
 
 class LegalPage : BasePage(R.id.legalPage) {
     private val privacyPolicyLabel by OnViewWithId(R.id.privacyPolicyLabel)
     private val termsOfUseLabel by OnViewWithId(R.id.termsOfUseLabel)
     private val openSourceLabel by OnViewWithId(R.id.openSourceLabel)
+
+    fun openPrivacyPolicy() {
+        privacyPolicyLabel.click()
+    }
+
+    fun openTermsOfUse() {
+        termsOfUseLabel.click()
+    }
+
+    fun assertTermsOfUseDisplayed() {
+        onView(allOf(withParent(withId(R.id.toolbar)), containsTextCaseInsensitive("Terms of Use"))).assertDisplayed()
+    }
+
+    fun openCanvasOnGithub() {
+        openSourceLabel.click()
+    }
 
 }
