@@ -40,7 +40,7 @@ class HelpPage : BasePage(R.id.helpDialog) {
     private val submitFeatureLabel by OnViewWithStringTextIgnoreCase("Submit a Feature Idea")
     private val shareLoveLabel by OnViewWithText(R.string.shareYourLove)
 
-    fun askAQuestion(course: Course, question: String) {
+    fun verifyAskAQuestion(course: Course, question: String) {
         askInstructorLabel.click()
         onView(withText(course.name)).assertDisplayed() // Verify that our course is selected in the spinner
         onView(withId(R.id.message)).typeText(question)
@@ -53,7 +53,7 @@ class HelpPage : BasePage(R.id.helpDialog) {
         searchGuidesLabel.click()
     }
 
-    fun reportAProblem(subject: String, description: String) {
+    fun verifyReportAProblem(subject: String, description: String) {
         reportProblemLabel.click()
         onView(withId(R.id.subjectEditText)).typeText(subject)
         Espresso.closeSoftKeyboard()

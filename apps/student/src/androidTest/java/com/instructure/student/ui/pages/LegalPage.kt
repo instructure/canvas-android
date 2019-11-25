@@ -41,6 +41,7 @@ class LegalPage : BasePage(R.id.legalPage) {
     }
 
     fun assertTermsOfUseDisplayed() {
+        // This is the safest thing to assert on.  The content of the page could be dicey.
         onView(allOf(withParent(withId(R.id.toolbar)), containsTextCaseInsensitive("Terms of Use"))).assertDisplayed()
     }
 

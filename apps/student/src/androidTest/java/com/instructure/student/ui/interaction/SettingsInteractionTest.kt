@@ -15,12 +15,13 @@
  */
 package com.instructure.student.ui.interaction
 
+import android.app.Activity
 import android.app.Instrumentation
 import android.content.Intent
+import android.util.Log
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.web.webdriver.Locator
-import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.Course
@@ -32,88 +33,137 @@ import com.instructure.student.ui.pages.WebViewTextCheck
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLogin
 import org.hamcrest.CoreMatchers
+import org.junit.Before
 import org.junit.Test
 
 class SettingsInteractionTest : StudentTest() {
     override fun displaysPageObjects() = Unit // Not used for interaction tests
 
     private lateinit var course: Course
+    private lateinit var activity: Activity
 
-    @Stub
+    @Before
+    fun setUp() {
+        // If we try to read this later, it may be null, possibly because we will have navigated
+        // away from our initial activity.
+        activity = activityRule.activity
+    }
+
+    // Should open a dialog and send a question for the selected course
+    // (Checks to see that we can fill out the question and the SEND button exists.)
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.SETTINGS, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P0, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
     fun testHelp_askQuestion() {
-        // Should open a dialog and send a question for the selected course
         setUpAndSignIn()
 
         dashboardPage.launchSettingsPage()
         settingsPage.launchHelpPage()
-        helpPage.askAQuestion(course, "Here's a question")
+        helpPage.verifyAskAQuestion(course, "Here's a question")
     }
 
-    @Stub
+    // Should open the Canvas guides in a WebView
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.SETTINGS, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P0, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
     fun testHelp_searchCanvasGuides() {
-        // Should open the Canvas guides in a WebView
         setUpAndSignIn()
 
         dashboardPage.launchSettingsPage()
         settingsPage.launchHelpPage()
         helpPage.launchGuides()
         canvasWebViewPage.runTextChecks(
+                // Potentially brittle -- the web content could be changed by another team
                 WebViewTextCheck(Locator.ID, "links", "Community Guidelines")
         )
     }
 
-    @Stub
+    // Should send an error report
+    // (Checks to see that we can fill out an error report and that the SEND button is displayed.)
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.SETTINGS, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P0, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
     fun testHelp_reportAProblem() {
-        // Should send an error report
         setUpAndSignIn()
 
         dashboardPage.launchSettingsPage()
         settingsPage.launchHelpPage()
-        helpPage.reportAProblem("Problem", "It's a problem!")
+        helpPage.verifyReportAProblem("Problem", "It's a problem!")
     }
 
-//    @Stub
-//    @Test
-//    @TestMetaData(Priority.P0, FeatureCategory.SETTINGS, TestCategory.INTERACTION, true)
-//    fun testHelp_submitFeatureIdea() {
-//        // Should send a pre-filled email intent. Should be addressed to mobilesupport@instructure.com.
-//        setUpAndSignIn()
-//
-//        dashboardPage.launchSettingsPage()
-//        settingsPage.launchHelpPage()
-//
-//        Intents.init()
-//        try {
-//            val pickerIntent = IntentMatchers.hasAction(Intent.ACTION_CHOOSER)
-//            val expectedIntent = CoreMatchers.allOf(
-//                    IntentMatchers.hasAction(Intent.ACTION_SEND),
-//                    IntentMatchers.hasType("message/rfc822")
-////                    CoreMatchers.anyOf(
-////                            IntentMatchers.hasExtra(Intent.EXTRA_EMAIL, arrayOf("support@instructure.com")),
-////                            IntentMatchers.hasExtra(Intent.EXTRA_EMAIL, arrayOf("mobilesupport@instructure.com"))
-////                    )
-//            )
-//            Intents.intending(pickerIntent).respondWith(Instrumentation.ActivityResult(0, null))
-//            Intents.intending(expectedIntent).respondWith(Instrumentation.ActivityResult(0, null))
-//            helpPage.submitFeature()
-//            Intents.intended(expectedIntent)
-//        }
-//        finally {
-//            Intents.release()
-//        }
-//    }
-
-    @Stub
+    // Should send a pre-filled email intent. Should be addressed to mobilesupport@instructure.com.
+    //
+    // There is a LOT of aspirational code here, in that we would like to be able to handle
+    // an intent for a specific email app if one is present.  However, our app always launches
+    // an email app chooser, even if there is only one option.
+    //
+    // So this is a watered-down test that just checks whether an email app chooser gets displayed.
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.SETTINGS, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P0, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
+    fun testHelp_submitFeatureIdea() {
+        setUpAndSignIn()
+
+        dashboardPage.launchSettingsPage()
+        settingsPage.launchHelpPage()
+
+        // Figure out which email apps we have installed on the device
+        var pkgMgr = activity.packageManager
+        var intent = Intent(Intent.ACTION_SEND)
+        intent.type = "message/rfc822"
+        val activities = pkgMgr.queryIntentActivities(intent, 0)
+        val matchedChooserActivities = activities.count()
+        for (activity in activities) {
+            Log.d("submitFeatureIdea","Resolved activity = $activity")
+        }
+
+        Intents.init()
+        try {
+            // Try to formulate what an email app chooser intent would look like, and how we might resolve it
+            val chooserIntentMatcher = IntentMatchers.hasAction(Intent.ACTION_CHOOSER)
+            val expectedChooserIntent = Intent(Intent.ACTION_SEND)
+            expectedChooserIntent.type = "message/rfc822"
+            expectedChooserIntent.`package` = "com.google.android.gm"
+
+            // Formulate what an actual email intent (NOT a chooser intent) would look like
+            val emailIntentMatcher = CoreMatchers.allOf(
+                    IntentMatchers.hasAction(Intent.ACTION_SEND),
+                    IntentMatchers.hasType("message/rfc822"),
+                    CoreMatchers.anyOf(
+                            IntentMatchers.hasExtra(Intent.EXTRA_EMAIL, arrayOf("support@instructure.com")),
+                            IntentMatchers.hasExtra(Intent.EXTRA_EMAIL, arrayOf("mobilesupport@instructure.com"))
+                    )
+            )
+
+            // Set up our intent catchers
+            Intents.intending(chooserIntentMatcher).respondWith(Instrumentation.ActivityResult(0, expectedChooserIntent))
+            Intents.intending(emailIntentMatcher).respondWith(Instrumentation.ActivityResult(0, null))
+
+            // Press the "Submit Feature" button
+            helpPage.submitFeature()
+
+//            // Depending on how many activities matched our email intent...
+//            if(matchedChooserActivities > 1) {
+//                // If multiple, just check that the chooser appeared.
+//                Intents.intended(chooserIntentMatcher)
+//            }
+//            else if(matchedChooserActivities == 1){
+//                // If single, check that our email intent was dispatched
+//                Intents.intended(emailIntentMatcher)
+//            }
+//            else {
+//                // If none, there is nothing much to do here
+//                Log.d("submitFeatureIdea","Not matched activities for SEND on device!")
+//            }
+
+            // :-( Our production code creates a chooser every time, even if there is only one email app option...
+            Intents.intended(chooserIntentMatcher)
+        }
+        finally {
+            Intents.release()
+        }
+    }
+
+    // Should send an intent to open the listing for Student App in the Play Store
+    @Test
+    @TestMetaData(Priority.P0, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
     fun testHelp_shareYourLove() {
-        // Should send an intent to open the listing for Student App in the Play Store
         setUpAndSignIn()
 
         dashboardPage.launchSettingsPage()
@@ -123,6 +173,7 @@ class SettingsInteractionTest : StudentTest() {
             val expectedIntent = CoreMatchers.allOf(
                     IntentMatchers.hasAction(Intent.ACTION_VIEW),
                     CoreMatchers.anyOf(
+                            // Could be either of these, depending on whether the play store app is installed
                             IntentMatchers.hasData("market://details?id=com.instructure.candroid"),
                             IntentMatchers.hasData("https://play.google.com/store/apps/details?id=com.instructure.candroid")
                     )
@@ -136,11 +187,10 @@ class SettingsInteractionTest : StudentTest() {
         }
     }
 
-    @Stub
+    // Should launch an intent to go to our canvas-android github page
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.SETTINGS, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P0, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
     fun testLegal_showCanvasOnGithub() {
-        // Should display a list of open source dependencies used in the app, along with their licenses
         setUpAndSignIn()
 
         dashboardPage.launchSettingsPage()
@@ -158,11 +208,10 @@ class SettingsInteractionTest : StudentTest() {
         }
     }
 
-    @Stub
+    // Should display terms of use in a WebView
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.SETTINGS, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P0, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
     fun testLegal_showTermsOfUse() {
-        // Should display terms of use in a WebView
         setUpAndSignIn()
 
         dashboardPage.launchSettingsPage()
@@ -171,17 +220,17 @@ class SettingsInteractionTest : StudentTest() {
         legalPage.assertTermsOfUseDisplayed()
     }
 
-    @Stub
+    // Should display the privacy policy in a WebView
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.SETTINGS, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P0, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
     fun testLegal_showPrivacyPolicy() {
-        // Should display the privacy policy in a WebView
         setUpAndSignIn()
 
         dashboardPage.launchSettingsPage()
         settingsPage.launchLegalPage()
         legalPage.openPrivacyPolicy()
         canvasWebViewPage.runTextChecks(
+                // Potentially brittle, as this content could be changed by another team.
                 WebViewTextCheck(Locator.CLASS_NAME, "subnav-wrapper", "POLICIES HOME")
         )
     }
