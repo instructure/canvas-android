@@ -28,7 +28,20 @@ class PathVars {
     var userId: Long by map
     var accountId: Long by map
     var courseId: Long by map
+    var assignmentId: Long by map
     var accountNotificationId: Long by map
+    var pageId: Long by map
+    var folderId: Long by map
+    var fileId: Long by map
+    var topicId: Long by map
+    var entryId: Long by map
+    var moduleId: Long by map
+    var moduleItemId: Long by map
+    var quizId: Long by map
+    var questionId: Long by map
+    var conversationId: Long by map
+    var submissionId: Long by map
+    var groupId: Long by map
 }
 
 /**

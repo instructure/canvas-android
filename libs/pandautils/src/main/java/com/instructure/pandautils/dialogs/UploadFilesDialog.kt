@@ -34,10 +34,7 @@ import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.core.content.FileProvider
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
-import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.Logger
@@ -63,7 +60,7 @@ class UploadFilesDialog : AppCompatDialogFragment() {
     }
 
     enum class FileUploadType {
-        ASSIGNMENT, COURSE, USER, MESSAGE, DISCUSSION, QUIZ, SUBMISSION_COMMENT
+        ASSIGNMENT, COURSE, USER, MESSAGE, DISCUSSION, QUIZ, SUBMISSION_COMMENT, GROUP
     }
 
     private var getUriContentsJob: Job? = null
@@ -185,6 +182,10 @@ class UploadFilesDialog : AppCompatDialogFragment() {
             }
             FileUploadType.COURSE -> {
                 title = getString(R.string.utils_uploadTo) + " " + getString(R.string.utils_uploadCourseFiles)
+                positiveText = getString(R.string.upload)
+            }
+            FileUploadType.GROUP -> {
+                title = getString(R.string.utils_uploadTo) + " " + getString(R.string.utils_uploadGroupFiles)
                 positiveText = getString(R.string.upload)
             }
             FileUploadType.MESSAGE -> {
@@ -430,6 +431,10 @@ class UploadFilesDialog : AppCompatDialogFragment() {
                     bundle = FileUploadService.getCourseFilesBundle(fileList, canvasContext.id, parentFolderIdentifier)
                     intent.action = FileUploadService.ACTION_COURSE_FILE
                 }
+                FileUploadType.GROUP -> {
+                    bundle = FileUploadService.getCourseFilesBundle(fileList, canvasContext.id, parentFolderIdentifier)
+                    intent.action = FileUploadService.ACTION_GROUP_FILE
+                }
                 FileUploadType.MESSAGE -> {
                     bundle = FileUploadService.getUserFilesBundle(fileList, null)
                     intent.action = FileUploadService.ACTION_MESSAGE_ATTACHMENTS
@@ -651,14 +656,30 @@ class UploadFilesDialog : AppCompatDialogFragment() {
         }
 
         @JvmStatic
-        fun createCourseBundle(submitURI: Uri?, course: Course, parentFolderId: Long?): Bundle {
+        fun createContextBundle(submitURI: Uri?, context: CanvasContext, parentFolderId: Long?): Bundle {
+            return when {
+                context.isCourse -> createCourseBundle(submitURI, context as Course, parentFolderId)
+                context.isGroup -> createGroupBundle(submitURI, context as Group, parentFolderId)
+                else -> createUserBundle(submitURI, context as User, parentFolderId)
+            }
+        }
+
+        @JvmStatic
+        private fun createCourseBundle(submitURI: Uri?, course: Course, parentFolderId: Long?): Bundle {
             val bundle = createBundle(submitURI, FileUploadType.COURSE, parentFolderId)
             bundle.putParcelable(Const.CANVAS_CONTEXT, course)
             return bundle
         }
 
         @JvmStatic
-        fun createUserBundle(submitURI: Uri?, user: User, parentFolderId: Long?): Bundle {
+        private fun createGroupBundle(submitURI: Uri?, group: Group, parentFolderId: Long?): Bundle {
+            val bundle = createBundle(submitURI, FileUploadType.GROUP, parentFolderId)
+            bundle.putParcelable(Const.CANVAS_CONTEXT, group)
+            return bundle
+        }
+
+        @JvmStatic
+        private fun createUserBundle(submitURI: Uri?, user: User, parentFolderId: Long?): Bundle {
             val bundle = createBundle(submitURI, FileUploadType.USER, parentFolderId)
             bundle.putParcelable(Const.CANVAS_CONTEXT, user)
             return bundle

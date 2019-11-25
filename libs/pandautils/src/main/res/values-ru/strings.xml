@@ -165,6 +165,7 @@
     <string name="noAssignmentsSubtext">Похоже, что в этом разделе не было создано ни одного задания. Время выйти и выяснить причину.</string>
     <string name="noAssignmentsTeacher">Похоже, что пока что не было размещено ни одного задания.</string>
     <string name="noFiles">Нет файлов</string>
+    <string name="noFilesForAssignment">Нет файлов для данной отправки</string>
     <string name="noFilesSubtext">Отсутствуют файлы, связанные с этой учетной записью.</string>
     <string name="notSupported">Не поддерживается</string>
     <string name="noEvents">На сегодня события отсутствуют!</string>
@@ -175,7 +176,6 @@
     <string name="noDueDate">У этого задания нет срока выполнения.</string>
     <string name="locked">Заблокировано</string>
     <string name="lockedSubtext">Это задание заблокировано до %1$s в %2$s.</string>
-    <string name="lockedModule">Это задание является частью модуля \"%1$s\" и еще не было разблокировано.</string>
     <string name="chooseFile">Выбрать файл</string>
     <string name="chooseFileSubtext">Прикрепите файл к своей отправке, щелкнув по расположенной ниже кнопке.</string>
     <string name="noNotifications">Уведомления отсутствуют</string>

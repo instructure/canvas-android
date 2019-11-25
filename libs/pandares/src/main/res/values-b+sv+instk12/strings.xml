@@ -55,6 +55,13 @@
     <string name="launchExternalTool">Starta externt verktyg</string>
 
     <string name="preview">Förhandsvisa</string>
+    <string name="submissionUploadFailedMessage">En eller fler filer laddades inte upp. Kontrollera din internetanslutning och försök lämna in igen.</string>
+    <string name="submissionUploadByteProgress">%1$s av %2$s</string>
+    <string name="submissionSuccessTitle">Inlämningen slutfördes!</string>
+    <string name="submissionSuccessMessage">Din uppgift har lämnats in. Ha en bra dag!</string>
+    <string name="cancelAllSubmissions">Avbryt alla uppgiftsinlämningar</string>
+    <string name="missingSubmissionLabel">Saknas</string>
+    <string name="gradedSubmissionLabel">Bedömning har getts</string>
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">Ingen förhandsgranskning är tillgänglig för URL:er som använder \'http://\'</string>
     <string name="submissionUrlNotAUrlError">Vänligen ange en giltig URL</string>
@@ -62,8 +69,11 @@
     <string name="addFileFabContentDesc">Visa alternativ för Lägg till fil</string>
     <string name="recordAudio">Spela in ljud</string>
 
+    <string name="recordVideo">Spela in video</string>
+
     <!-- Student Submission -->
     <string name="submissionWrite">Skriv&#8230;</string>
+    <string name="textSubmissionFailureMessage">Något gick fel vid uppladdning av inlämningen. Lämna in igen.</string>
     <!-- Student Submission Details -->
     <string name="submission">Inlämning</string>
     <string name="submissionVersions">Inlämnade versioner</string>
@@ -79,15 +89,38 @@
     <string name="submissionDetailsAssignmentLocked">Uppgift låst</string>
     <string name="webPreview">Förhandsgranskning av angiven URL</string>
     <string name="websiteUrl">Hemsida URL</string>
+    <string name="noneContentMessage">Den här uppgiften tillåter inte onlineinlämningar</string>
+    <string name="onPaperContentMessage">Den här uppgiften tillåter inte onlineinlämningar</string>
+    <string name="noOnlineSubmissions">Inga onlineinlämningar</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Av %s poäng</string>
     <string name="outOfPointsAbbreviatedFormatted">Av %s poäng</string>
     <string name="gradeExcused">Slipper göra</string>
     <string name="finalGradeFormatted">Total bedömning: %s</string>
+    <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
+    <string name="contentDescriptionScoreOutOfPointsPossible">%1$s av %2$s poäng</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Anpassad resultat</string>
     <string name="rubricEmptyMessage">Det finns ingen matris för den här uppgiften</string>
     <string name="rubricViewLongDescription">Visa lång beskrivning</string>
+    <!-- Student Submission Comments -->
+    <string name="assignmentSubmissionUploadingFile">Laddar upp filen %1$d av %2$d</string>
+    <string name="assignmentSubmissionCommentUpload">Laddar upp kommentarer för %s</string>
+    <string name="assignmentSubmissionCommentUploadingMedia">Laddar upp mediefil</string>
+    <string name="assignmentSubmissionCommentError">Uppladdningen av kommentaren misslyckades för %s</string>
+    <string name="chooseFileForCommentSubtext">Bifoga filer till dina kommentarer genom att välja ett alternativ nedan</string>
+    <string name="emptySubmissionCommentsSubtext">Har du frågor om din uppgift?\nSkicka ett meddelande till din instruktör.</string>
+    <string name="submissionCommentErrorMessage">Detta meddelande kunde inte skickas. Tryck för att försöka igen.</string>
+    <string name="mediaUploadAudio">Media uppladdning - Ljud</string>
+    <string name="mediaUploadVideo">Media uppladdning - Video</string>
+    <string name="commentSubmissionTypeText">Textinlämning</string>
+    <string name="commentSubmissionTypeExternalTool">Externt inlämningsverktyg</string>
+    <string name="commentSubmissionTypeDiscussion">Diskussionsinlämning</string>
+    <string name="commentSubmissionTypeQuiz">Quiz-inlämning</string>
+    <string name="commentSubmissionTypeQuizAttempt">Försök %d</string>
+    <string name="commentSubmissionTypeMediaFile">Media fil</string>
+    <string name="commentSubmissionTypeAudio">Ljud</string>
+    <string name="commentSubmissionTypeVideo">Video</string>
     <!-- Profile Fragment Strings -->
     <string name="canvasVersionNum">Version:</string>
 
@@ -104,7 +137,6 @@
     <string name="options">Alternativ</string>
 
     <string name="discussionAttachment">Bifoga en fil</string>
-    <string name="discussionUpload">Ladda upp video eller ljud</string>
     <string name="discussionPostEditing">Redigera</string>
 
     <!--Multiple User Sign in -->
@@ -140,36 +172,16 @@
     <string name="lowercaseAM">am</string>
     <string name="lowercasePM">pm</string>
     <!-- Assignments -->
-    <string name="assignmentDue">Förfallodatum</string>
-    <string name="assignmentDueColon">Förfallodatum: </string>
-    <string name="assignmentLastSubmission">Senaste inlämning</string>
-    <string name="assignmentNoSubmission">Ingen</string>
-    <string name="assignmentTabDetails">Detaljer</string>
-    <string name="assignmentTabSubmission">Inlämningar</string>
-    <string name="assignmentTabGrade">Bedömning</string>
     <string name="assignmentLocked">Låst</string>
     <string name="assignments">Uppgifter</string>
-    <string name="freeFormRubricPoints" formatted="false">%s / %s </string>
-    <string name="noRubric">Det finns ingen värderingsmodell för den här uppgiften</string>
     <string name="noDescription">Det finns ingen beskrivning av den här uppgiften</string>
     <string name="noAssignmentsInGroup">Inga Uppgifter i den här gruppen</string>
     <string name="excusedAssignment">Den här uppgiften slipper göras och kommer inte räknas in i den totala uträkningen</string>
-    <string name="droppedAssignment">Den här uppgiften har släppts och kommer inte räknas in i den total uträkningen.</string>
     <string name="excused">EX</string>
-    <string name="mutedText">Bedömning är inte tillgänglig eftersom läraren arbetar med dem.</string>
-    <string name="rubricRangePointsText" formatted="false">&#160;till &gt; %s poäng</string>
-    <string name="contentDescriptionRubricRangePointsText" formatted="false">%s &#160;till &gt; %s poäng</string>
-
     <!-- Assignment editing -->
     <string name="points">Poäng </string>
-    <string name="assignmentGroup">Uppgiftsgrupp: </string>
-    <string name="gradingType">Bedömningstyp: </string>
-    <string name="submissionType">Inlämningstyp: </string>
-    <string name="editAssignment">Redigera uppgift</string>
     <string name="save">Spara</string>
     <string name="cancel">Avbryt</string>
-    <string name="sendNotification">Meddela användare att innehållet har ändrats</string>
-
     <!-- Discussions -->
     <string name="forbidden">Svar är endast synliga för de som har publicerat minst ett svar.</string>
 
@@ -189,6 +201,10 @@
     <string name="checkBoxFinalGradeOption">Baserat på bedömda uppgifter</string>
     <string name="checkBoxWhatIfGradeOption">Visa simulerat resultat</string>
     <string name="whatIfDialogText">Simulerat resultat</string>
+    <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
+    <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s av %2$s poäng, %3$s</string>
+
+
     <string name="inbox">Inkorgen</string>
     <string name="unread">Oläst</string>
     <string name="archived">Arkiverad</string>
@@ -231,7 +247,6 @@
         <item quantity="one">%d behöver bedömning</item>
         <item quantity="other">%d behöver bedömas</item>
     </plurals>
-    <string name="myFiles">Filer</string>
     <string name="createAFolder">Skapa en mapp</string>
     <string name="createFolder">Skapa mapp</string>
     <string name="createAFile">Skapa en fil</string>
@@ -273,7 +288,6 @@
     <string name="deleteEvent">Ta bort händelse</string>
     <string name="selected">Vald</string>
     <string name="errorSendingMessage">Ett fel uppstod när du försökte skicka ditt meddelande. Försök igen.</string>
-    <string name="errorPostingComment">Ett fel uppstod när du försökte skicka in din inlämingskommentar. Försök igen.</string>
     <string name="deletedConversation">Den konversationen har tagits bort.</string>
     <string name="uploadAvatarFailMsg">Uppladdning av ny avatar misslyckades</string>
     <string name="editPhoto">Redigera foto</string>
@@ -306,8 +320,6 @@
     <string name="openAlternate">Öppna med en alternativ app</string>
     <string name="opening">Öpnnar fil&#8230;</string>
     <string name="download">Ladda ner</string>
-    <string name="hideExtras">Dölj extramaterial</string>
-    <string name="showExtras">Visa extramaterial</string>
     <string name="messageAttachments">Meddelandebilagor</string>
     <string name="discussionAttachmentLabel">Bilaga</string>
     <string name="attachmentIcon">Bilaga-ikon</string>
@@ -366,6 +378,7 @@
     <string name="select_item_to_display">Välj från listan</string>
 
     <string name="syllabus">Kursöversikt</string>
+    <string name="summary">Sammanfattning</string>
     <string name="coursePeople">Personer</string>
     <string name="teachersTas">Lärare &amp; lärarassistenter</string>
     <string name="students">Elever</string>
@@ -399,12 +412,6 @@
 
     <!-- Notifications -->
     <string name="deleted">Raderad</string>
-    <string name="gradedDiscussion">Bedömd diskussion.</string>
-    <string name="pointsPossible">Möjliga poäng.</string>
-    <string name="pointsPossibleNoPeriod">Möjliga poäng</string>
-
-    <string name="deletedEntryNoChildren">Det här borttagna diskussionsinlägget har inga svar.</string>
-    <string name="sideCommentEntry">I denna typ av diskussion kan du inte kommentera någon post på denna nivå.</string>
     <string name="contentDescriptionFiles">Filikon</string>
 
     <string name="loadingCanvas">Läser in Canvas Content&#8230;</string>
@@ -428,11 +435,6 @@
     <string name="emptyId">ID kan inte lämnas tomt</string>
 
     <string name="goToQuiz">Gå till test</string>
-    <string name="goToExternalTool">Gå till externt verktyg</string>
-
-    <string name="pastDueDate">Sista datum är förbi</string>
-
-    <string name="goToDiscussion">Gå till diskussion</string>
     <string name="quizzes">Frågor/frågesporter</string>
 
     <string name="lastDiscussionPost">Senaste inlägg</string>
@@ -486,7 +488,6 @@
     <string name="lockedFileDesc">Denna uppgift är en del av modulen %s, och har inte låsts upp än.</string>
     <string name="lockedQuizDesc">Denna uppgift är en del av modulen %s, och har inte låsts upp än.</string>
     <string name="lockedDiscussionDesc">Denna uppgift är en del av modulen %s, och har inte låsts upp än.</string>
-    <string name="lockedAssignmentDescLine2">Gå till kursmodulens sida för information om hur du kan låsa upp innehållet.</string>
     <string name="mustComplete">Du måste först fullgöra uppgift:</string>
     <string name="unlockedAt">Den kommer att låsas upp:</string>
     <string name="goToModules">Gå till moduler</string>
@@ -508,22 +509,12 @@
     <!-- New Submission Strings -->
     <string name="textEntry">Textinlägg</string>
     <string name="onlineURL">Online URL</string>
-    <string name="enterTextEntry">Gör textinlägg</string>
-    <string name="fileUpload"> Filuppladdning</string>
     <string name="oneFileOnly">Denna inlämning accepterar endast en filuppladdning</string>
 
 
     <string name="websiteEntry">Lägg till webbplatsinlägg</string>
     <string name="mediaRecordingEntry">Mediainspelningar</string>
     <string name="submit">Lämna in</string>
-    <string name="blankSubmission">Inlämningen kan inte lämnas tom.</string>
-    <string name="errorPostingSubmission">Ett fel uppstod när inlämningen skickades in.</string>
-    <string name="successPostingSubmission">Inlämningen lyckades.</string>
-
-    <string name="exampleSubmissionURL">http://www.example.com</string>
-
-
-
     <!-- DataLoss Fragment Strings -->
     <string name="unsavedProgress">Framsteg som inte sparats</string>
     <string name="informationLost">Ej sparad information kommer att förloras. Vill du fortsätta?</string>
@@ -537,22 +528,8 @@
 
     <!-- Submission Details Strings -->
     <string name="next">Nästa</string>
-    <string name="addSubmission">Lämna in</string>
-    <string name="addAnotherSubmission">Lämna in igen</string>
     <string name="turnedIn">Inlämnad:&#160;</string>
     <string name="addComment">Lägg till en kommentar&#8230;</string>
-    <string name="addCommentNoEllipsis">Lägg till en kommentar</string>
-    <string name="subTypeOnlineText">Text inlägg online</string>
-    <string name="subTypeFileUpload">Onlineuppladdning av eFil</string>
-    <string name="subTypeOnlineURL">Hemsida URL</string>
-    <string name="subTypeOnlineQuiz">Online-test</string>
-    <string name="subTypeMediaRecording">Mediainspelning</string>
-    <string name="sub_type_lti_launch">LTI Lansering</string>
-    <string name="subTypeDiscussionTopic">Diskussion</string>
-    <string name="turnInByHand">Du måste lämna in den här uppgiften för hand</string>
-    <string name="noSubRequired">Ingen inlämning krävs</string>
-    <string name="noTurnInOnMobile">Mobilinlämning stöds inte</string>
-
     <string name="home">Hem</string>
     <string name="Notifications">Meddelanden</string>
 
@@ -582,9 +559,6 @@
     <string name="clickToViewSubmission">Ett snapshot av webbsidan togs när du lämnade in det. Peka och håll på bilden nedan för att öppna den eller ladda ner hela bilden.</string>
     <string name="urlSubmissionNoPreview">Den här inlämningen var en URL till en extern sida. Kom ihåg att den här sidan kan ha ändrats sedan inlämningen först dök upp.</string>
     <string name="contentDescriptionPreviewImage">Förhandsvisning av skickad URL</string>
-    <string name="itemStillProcessing">Det här föremålet bearbetas fortfarande på servern. Försök igen.</string>
-
-
     <string name="isNotSupportedFeature">%1$s stöds inte.</string>
     <string name="isNotSupported">Länken stöds inte.</string>
     <string name="openInBrowser">Öppna i webbläsare</string>
@@ -601,8 +575,6 @@
     <string name="panda_fact_string">Panda-fakta:&#160;</string>
     <string name="remove">Ta bort</string>
     <string name="founders">Skapare</string>
-    <string name="image">Bild</string>
-
     <string name="EULA">EULA</string>
     <string name="privacyPolicy">Integritetspolicy</string>
     <string name="termsOfUse">Användarvillkor</string>
@@ -630,8 +602,6 @@
     <string name="widgetMinimumStyle">Dölj detaljer i widget</string>
     <string name="light">Ljus</string>
     <string name="dark">Mörk</string>
-
-    <string name="invalidExternal">Det här externa verktyget är utgånget eller felaktigt konfigurerat.</string>
 
     <!-- Help dialog strings -->
     <string name="askInstructor">Ställ en fråga till din lärare</string>
@@ -956,7 +926,6 @@
     <string name="totalPoints">%s poäng</string>
     <string name="totalPointsText">Totala poäng</string>
     <string name="contentDescriptionPoints">%s poäng</string>
-    <string name="contentDescriptionRubricRangeGrade">%1$s av %2$s poäng</string>
     <string name="score">Resultat</string>
     <string name="rangedRubricTotal" formatted="false">%s / %s poäng</string>
     <string name="seeAll">Se alla</string>
@@ -984,8 +953,6 @@
     <string name="launch_link_in_external_browser">Starta länken i en extern webbläsare</string>
     <string name="ltiLaunchFailure">Det här LTI-verktyget kunde inte laddas just nu.</string>
     <string name="urlSubmission">URL-inlämning</string>
-
-    <string name="assignmentDeletedError">Denna uppgift är inte längre tillgänglig.</string>
 
     <string name="homePageIdForNotifications">Senaste aktivitet</string>
     <string name="homePageIdForModules">Moduler</string>
@@ -1029,8 +996,6 @@
     <string name="unableToViewInBrowser">Vi kunde inte hitta en extern app för visning av det här LTI-verktyget.</string>
 
     <string name="commentUpload">Ladda upp kommentar</string>
-    <string name="unableToUploadMediaComment">Om du vill skicka en mediekommentar skickar du eller tar du bort din textkommentar som inte skickats.</string>
-
     <string name="frontPage">Förstasidan</string>
     <string name="editPage">Redigera sida</string>
     <string name="description">Beskrivning</string>
@@ -1070,4 +1035,22 @@
     <string name="addVideoComment">Lägg till video-kommentar</string>
     <string name="addAudioComment">Lägg till ljud-kommentar</string>
 
+    <string name="audioRecordingError">Ett oväntat fel inträffade under ljudinspelningen.</string>
+    <string name="videoRecordingError">Ett oväntat fel inträffade under videoinspelningen.</string>
+
+    <string name="quizQuestionLabel">Frågor:</string>
+    <string name="timeLimitLabel">Tidsbegränsning</string>
+    <string name="allowedAttemptsLabel">Tillåtna försök:</string>
+    <string name="instructions">Instruktioner</string>
+    <string name="quizNoTimeLimit">Ingen</string>
+    <string name="viewQuiz">Se Quiz</string>
+    <string name="viewDiscussion">Visa diskussion</string>
+    <string name="lockedModule">Den här uppgiften har låsts av modulen \"%1$s\"</string>
+    <string name="chooseMediaFile">Välj mediefil</string>
+    <string name="discussions_unknown_author">Okänd författare</string>
+    <string name="discussions_unknown_date">Okänt datum</string>
+    <string name="a11y_gradeLetterMinusContentDescription">%s. minus</string>
+    <string name="a11y_letterGrade">%s.</string>
+    <string name="a11y_gradeCellContentDescription">%s %s</string>
+    <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
 </resources>

@@ -20,7 +20,9 @@ import com.instructure.canvas.espresso.mockCanvas.Endpoint
 import com.instructure.canvas.espresso.mockCanvas.endpoint
 import com.instructure.canvas.espresso.mockCanvas.utils.*
 import com.instructure.canvasapi2.models.Favorite
+import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.utils.pageview.PandataInfo
+import okhttp3.ResponseBody
 
 /**
  * ROUTES:
@@ -48,7 +50,19 @@ object UserEndpoint : Endpoint(
     Segment("settings") to UserSettingsEndpoint,
     Segment("groups") to UserGroupListEndpoint,
     Segment("enrollments") to UserEnrollmentEndpoint,
-        Segment("favorites") to UserFavoritesEndpoint
+    Segment("favorites") to UserFavoritesEndpoint,
+    Segment("communication_channels") to UserCommunicationChannelsEndpoint
+)
+
+/**
+ * Endpoint for setting push notif channels, we only check for a non-null body and a 200.
+ */
+object UserCommunicationChannelsEndpoint : Endpoint(
+    response = {
+        POST {
+            request.successResponse("hodor")
+        }
+    }
 )
 
 /**
@@ -58,7 +72,16 @@ object UserEndpoint : Endpoint(
  * - `courses` -> [UserFavoriteCourseListEndpoint]
  */
 object UserFavoritesEndpoint : Endpoint (
-        Segment("courses") to UserFavoriteCourseListEndpoint
+    Segment("courses") to UserFavoriteCourseListEndpoint,
+    Segment("groups") to UserFavoriteGroupListEndpoint
+)
+
+object UserFavoriteGroupListEndpoint : Endpoint(
+    response = {
+        GET {
+            request.successResponse(listOf<Group>())
+        }
+    }
 )
 
 /**

@@ -19,10 +19,12 @@ package com.instructure.student.ui.pages
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withParent
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.swipeDown
@@ -40,6 +42,10 @@ class DiscussionListPage : BasePage(R.id.discussionListPage) {
         val matcher = allOf(withText(topicTitle), withId(R.id.discussionTitle))
         scrollRecyclerView(R.id.discussionRecyclerView, matcher)
         onView(matcher).assertDisplayed()
+    }
+
+    fun assertEmpty() {
+        onView(allOf(withId(R.id.emptyView), withParent(withId(R.id.discussionListPage)))).assertDisplayed()
     }
 
     fun selectTopic(topicTitle: String) {
@@ -61,6 +67,20 @@ class DiscussionListPage : BasePage(R.id.discussionListPage) {
         onView(matcher).assertDisplayed() // probably redundant
     }
 
+    fun assertUnreadCount(topicTitle: String, count: Int) {
+        val matcher = allOf(
+                withId(R.id.readUnreadCounts),
+                withText(containsString("$count Unr")), // "Unread"
+                hasSibling(allOf(
+                        withId(R.id.discussionTitle),
+                        withText(topicTitle)
+                )))
+
+        scrollRecyclerView(R.id.discussionRecyclerView, matcher)
+        onView(matcher).assertDisplayed() // probably redundant
+
+    }
+
     fun createDiscussionTopic(name: String, description: String) {
         createNewDiscussion.click()
         onView(withId(R.id.editDiscussionName)).typeText(name)
@@ -72,6 +92,10 @@ class DiscussionListPage : BasePage(R.id.discussionListPage) {
         // I don't think that we need to worry about scrolling to the top first,
         // but we may at some point.
         onView(withId(R.id.discussionRecyclerView)).swipeDown()
+    }
+
+    fun assertDiscussionCreationDisabled() {
+        onView(withId(R.id.createNewDiscussion)).assertNotDisplayed()
     }
 
 }

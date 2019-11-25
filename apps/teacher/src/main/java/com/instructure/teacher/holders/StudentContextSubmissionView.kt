@@ -23,6 +23,7 @@ import android.view.View
 import android.widget.FrameLayout
 import androidx.core.content.ContextCompat
 import com.instructure.canvasapi2.StudentContextCardQuery
+import com.instructure.canvasapi2.type.SubmissionGradingStatus
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
@@ -57,7 +58,7 @@ class StudentContextSubmissionView(context: Context, submission: StudentContextC
         }
 
         // Submission grade
-        if (submission.gradingStatus == "excused" || submission.gradingStatus == "graded") {
+        if (submission.gradingStatus == SubmissionGradingStatus.EXCUSED || submission.gradingStatus == SubmissionGradingStatus.GRADED) {
             val pointsPossible = submission.assignment?.pointsPossible ?: 0.0
             val displayGrade = getDisplayGrade(
                 context = context,
@@ -76,7 +77,7 @@ class StudentContextSubmissionView(context: Context, submission: StudentContextC
             scoreBar.progress = ((submission.score ?: 0.0) / pointsPossible).toFloat()
         } else {
             submissionGradeContainer.setGone()
-            if (submission.gradingStatus != "unsubmitted") {
+            if (submission.gradingStatus == SubmissionGradingStatus.NEEDS_GRADING) {
                 val submissionGradeDrawable = ContextCompat.getDrawable(context, R.drawable.bg_generic_pill)
                 val strokeWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1f, context.resources.displayMetrics)
                 (submissionGradeDrawable as GradientDrawable).setStroke(strokeWidth.toInt(), ThemePrefs.brandColor)

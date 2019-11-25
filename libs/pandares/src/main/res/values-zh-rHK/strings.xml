@@ -54,6 +54,13 @@
     <string name="launchExternalTool">啟動外部工具</string>
 
     <string name="preview">預覽</string>
+    <string name="submissionUploadFailedMessage">上傳一個或多個檔案失敗。檢查您的網際網路連線並重試提交。</string>
+    <string name="submissionUploadByteProgress">%1$s / %2$s</string>
+    <string name="submissionSuccessTitle">提交項目成功！</string>
+    <string name="submissionSuccessMessage">成功提交您的作業。祝您愉快！</string>
+    <string name="cancelAllSubmissions">取消所有作業提交項目</string>
+    <string name="missingSubmissionLabel">缺少</string>
+    <string name="gradedSubmissionLabel">已評分</string>
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">沒有使用 \'http://\' 的 URL 的可用預覽</string>
     <string name="submissionUrlNotAUrlError">請輸入有效的 URL</string>
@@ -61,8 +68,11 @@
     <string name="addFileFabContentDesc">顯示添加檔案選項</string>
     <string name="recordAudio">錄製音訊</string>
 
+    <string name="recordVideo">錄製視訊</string>
+
     <!-- Student Submission -->
     <string name="submissionWrite">寫入&#8230;</string>
+    <string name="textSubmissionFailureMessage">上傳提交項目時出現問題。重新提交。</string>
     <!-- Student Submission Details -->
     <string name="submission">提交項目</string>
     <string name="submissionVersions">提交項目版本</string>
@@ -78,15 +88,38 @@
     <string name="submissionDetailsAssignmentLocked">作業已鎖定</string>
     <string name="webPreview">預覽輸入的 URL</string>
     <string name="websiteUrl">網站 URL</string>
+    <string name="noneContentMessage">此作業不允許線上提交項目</string>
+    <string name="onPaperContentMessage">此作業不允許線上提交項目</string>
+    <string name="noOnlineSubmissions">沒有線上提交項目</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">滿分為 %s 分</string>
     <string name="outOfPointsAbbreviatedFormatted">滿分為 %s 分</string>
     <string name="gradeExcused">已免除</string>
     <string name="finalGradeFormatted">最終評分：%s</string>
+    <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
+    <string name="contentDescriptionScoreOutOfPointsPossible">得分為 %1$s，滿分為 %2$s</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">自訂分數</string>
     <string name="rubricEmptyMessage">此作業沒有評分標準</string>
     <string name="rubricViewLongDescription">檢視完整說明</string>
+    <!-- Student Submission Comments -->
+    <string name="assignmentSubmissionUploadingFile">正在上傳 %1$d / %2$d 檔案</string>
+    <string name="assignmentSubmissionCommentUpload">正在上傳 %s 的評論</string>
+    <string name="assignmentSubmissionCommentUploadingMedia">正在上傳媒體檔案</string>
+    <string name="assignmentSubmissionCommentError">上傳 %s 的評論失敗</string>
+    <string name="chooseFileForCommentSubtext">輕點以下的一個選項，將檔案附加到您的評論中</string>
+    <string name="emptySubmissionCommentsSubtext">有與您的作業有關的問題嗎？\n傳送訊息給您的導師。</string>
+    <string name="submissionCommentErrorMessage">無法傳送訊息。輕點以重試。</string>
+    <string name="mediaUploadAudio">媒體上傳 — 音訊</string>
+    <string name="mediaUploadVideo">媒體上傳 — 視訊</string>
+    <string name="commentSubmissionTypeText">文字提交項目</string>
+    <string name="commentSubmissionTypeExternalTool">外部工具提交項目</string>
+    <string name="commentSubmissionTypeDiscussion">討論提交項目</string>
+    <string name="commentSubmissionTypeQuiz">測驗提交項目</string>
+    <string name="commentSubmissionTypeQuizAttempt">嘗試 %d</string>
+    <string name="commentSubmissionTypeMediaFile">媒體檔案</string>
+    <string name="commentSubmissionTypeAudio">音訊</string>
+    <string name="commentSubmissionTypeVideo">視訊</string>
     <!-- Profile Fragment Strings -->
     <string name="canvasVersionNum">版本：</string>
 
@@ -103,7 +136,6 @@
     <string name="options">選項</string>
 
     <string name="discussionAttachment">附加檔案</string>
-    <string name="discussionUpload">上載視頻或音頻</string>
     <string name="discussionPostEditing">編輯</string>
 
     <!--Multiple User Sign in -->
@@ -139,36 +171,16 @@
     <string name="lowercaseAM">上午</string>
     <string name="lowercasePM">下午</string>
     <!-- Assignments -->
-    <string name="assignmentDue">截止日期</string>
-    <string name="assignmentDueColon">截止日期：</string>
-    <string name="assignmentLastSubmission">最後一次提交</string>
-    <string name="assignmentNoSubmission">無</string>
-    <string name="assignmentTabDetails">詳細資料</string>
-    <string name="assignmentTabSubmission">提交項目</string>
-    <string name="assignmentTabGrade">評分</string>
     <string name="assignmentLocked">已鎖定</string>
     <string name="assignments">作業列表</string>
-    <string name="freeFormRubricPoints" formatted="false">%s / %s</string>
-    <string name="noRubric">該作業沒有評分標準。</string>
     <string name="noDescription">該作業沒有描述說明</string>
     <string name="noAssignmentsInGroup">在本群組中沒有作業</string>
     <string name="excusedAssignment">該作業已被免除，不予計入總評分</string>
-    <string name="droppedAssignment">該作業已被取消，不予計入總評分。</string>
     <string name="excused">EX</string>
-    <string name="mutedText">成績不可用，因為導師正在對其進行處理操作。</string>
-    <string name="rubricRangePointsText" formatted="false">&#160;至 &gt; %s 分</string>
-    <string name="contentDescriptionRubricRangePointsText" formatted="false">%s &#160;至 &gt; %s 分</string>
-
     <!-- Assignment editing -->
     <string name="points">分數</string>
-    <string name="assignmentGroup">作業群組：</string>
-    <string name="gradingType">等級評分類別：</string>
-    <string name="submissionType">提交類型：</string>
-    <string name="editAssignment">編輯作業</string>
     <string name="save">儲存</string>
     <string name="cancel">取消</string>
-    <string name="sendNotification">通知使用者該內容已變更</string>
-
     <!-- Discussions -->
     <string name="forbidden">只有曾發送一個或以上回覆的才能查閱回覆。</string>
 
@@ -188,6 +200,10 @@
     <string name="checkBoxFinalGradeOption">基於已評分的作業</string>
     <string name="checkBoxWhatIfGradeOption">顯示可能得分</string>
     <string name="whatIfDialogText">可能得分</string>
+    <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
+    <string name="contentDescriptionScoreWithPointsPossibleAndGrade">得分為 %1$s，滿分為 %2$s，%3$s</string>
+
+
     <string name="inbox">收件匣</string>
     <string name="unread">未讀</string>
     <string name="archived">已存檔</string>
@@ -229,7 +245,6 @@
     <plurals name="to_do_needs_grading">
         <item quantity="other">%d 需要等級評分</item>
     </plurals>
-    <string name="myFiles">檔案</string>
     <string name="createAFolder">創建資料夾</string>
     <string name="createFolder">創建資料夾</string>
     <string name="createAFile">創建檔案</string>
@@ -269,7 +284,6 @@
     <string name="deleteEvent">刪除活動</string>
     <string name="selected">已選擇</string>
     <string name="errorSendingMessage">嘗試發送您的訊息時發生錯誤。請重試。</string>
-    <string name="errorPostingComment">嘗試發布您提交的評論時發生錯誤。請重試。</string>
     <string name="deletedConversation">該交談已被刪除。</string>
     <string name="uploadAvatarFailMsg">新的縮略圖圖片上載失敗</string>
     <string name="editPhoto">編輯照片</string>
@@ -302,8 +316,6 @@
     <string name="openAlternate">使用其他應用程式打開</string>
     <string name="opening">檔案打開中&#8230;</string>
     <string name="download">下載</string>
-    <string name="hideExtras">隱藏附加信息</string>
-    <string name="showExtras">顯示附加信息</string>
     <string name="messageAttachments">訊息附件</string>
     <string name="discussionAttachmentLabel">附件</string>
     <string name="attachmentIcon">附件圖示</string>
@@ -360,6 +372,7 @@
     <string name="select_item_to_display">從列表中選擇</string>
 
     <string name="syllabus">課程大綱</string>
+    <string name="summary">摘要</string>
     <string name="coursePeople">成員</string>
     <string name="teachersTas">教師 &amp; 助教</string>
     <string name="students">學生</string>
@@ -393,12 +406,6 @@
 
     <!-- Notifications -->
     <string name="deleted">已刪除</string>
-    <string name="gradedDiscussion">已評分的討論。</string>
-    <string name="pointsPossible">可能的分數。</string>
-    <string name="pointsPossibleNoPeriod">可能的分數</string>
-
-    <string name="deletedEntryNoChildren">該已刪除的討論條目尚未回复。</string>
-    <string name="sideCommentEntry">在該類型的討論中，您不能在此等級評論任何條目。</string>
     <string name="contentDescriptionFiles">檔案圖示</string>
 
     <string name="loadingCanvas">載入 Canvas 內容&#8230;</string>
@@ -422,11 +429,6 @@
     <string name="emptyId">ID 不可為空白</string>
 
     <string name="goToQuiz">前往測驗</string>
-    <string name="goToExternalTool">前往外部工具</string>
-
-    <string name="pastDueDate">錯過截止日期</string>
-
-    <string name="goToDiscussion">前往討論區</string>
     <string name="quizzes">測驗</string>
 
     <string name="lastDiscussionPost">最後發布</string>
@@ -480,7 +482,6 @@
     <string name="lockedFileDesc">此檔案是單元 %s 的一部分，尚未解除鎖定。</string>
     <string name="lockedQuizDesc">此測驗是單元 %s 的一部分，尚未解除鎖定。</string>
     <string name="lockedDiscussionDesc">此討論是單元 %s 的一部分，尚未解除鎖定。</string>
-    <string name="lockedAssignmentDescLine2">訪問課程單元頁面，了解如何解鎖內容。</string>
     <string name="mustComplete">您必須首先完成：</string>
     <string name="unlockedAt">解鎖日期是：</string>
     <string name="goToModules">前往單元</string>
@@ -502,22 +503,12 @@
     <!-- New Submission Strings -->
     <string name="textEntry">文字條目</string>
     <string name="onlineURL">線上 URL</string>
-    <string name="enterTextEntry">輸入文字條目</string>
-    <string name="fileUpload">檔案上載</string>
     <string name="oneFileOnly">此提交項目只接受上載一個檔案</string>
 
 
     <string name="websiteEntry">添加網站條目</string>
     <string name="mediaRecordingEntry">媒體錄製</string>
     <string name="submit">提交</string>
-    <string name="blankSubmission">提交項目不可為空白。</string>
-    <string name="errorPostingSubmission">在發布提交項目時出現錯誤。</string>
-    <string name="successPostingSubmission">提交項目已成功發布。</string>
-
-    <string name="exampleSubmissionURL">http://www.example.com</string>
-
-
-
     <!-- DataLoss Fragment Strings -->
     <string name="unsavedProgress">進度未儲存</string>
     <string name="informationLost">未儲存的資料將丟失。您確定要繼續嗎？</string>
@@ -531,22 +522,8 @@
 
     <!-- Submission Details Strings -->
     <string name="next">下一個</string>
-    <string name="addSubmission">提交</string>
-    <string name="addAnotherSubmission">再次提交</string>
     <string name="turnedIn">提交於：&#160;</string>
     <string name="addComment">添加評論&#8230;</string>
-    <string name="addCommentNoEllipsis">添加評論</string>
-    <string name="subTypeOnlineText">線上文字條目</string>
-    <string name="subTypeFileUpload">在線電子檔案上載</string>
-    <string name="subTypeOnlineURL">網站 URL</string>
-    <string name="subTypeOnlineQuiz">線上測驗</string>
-    <string name="subTypeMediaRecording">媒體錄製</string>
-    <string name="sub_type_lti_launch">啟動 LTI</string>
-    <string name="subTypeDiscussionTopic">討論</string>
-    <string name="turnInByHand">您必須手動提交該作業</string>
-    <string name="noSubRequired">不要求提交</string>
-    <string name="noTurnInOnMobile">移動設備提交不受支援</string>
-
     <string name="home">首頁</string>
     <string name="Notifications">通知</string>
 
@@ -576,9 +553,6 @@
     <string name="clickToViewSubmission">您提交時的網站截圖已儲存。點選並抓取下方圖片，或下載完整圖片。</string>
     <string name="urlSubmissionNoPreview">此提交項目是連結至外部頁面的 URL。請謹記，自從最初提交之後，此頁面可能已變更。</string>
     <string name="contentDescriptionPreviewImage">預覽已提交的 url</string>
-    <string name="itemStillProcessing">該項目仍然在伺服器處理中。請重試。</string>
-
-
     <string name="isNotSupportedFeature">不支援 %1$s。</string>
     <string name="isNotSupported">不支援連結。</string>
     <string name="openInBrowser">在瀏覽器中打開</string>
@@ -595,8 +569,6 @@
     <string name="panda_fact_string">關於熊貓的事實：&#160;</string>
     <string name="remove">移除</string>
     <string name="founders">創始人</string>
-    <string name="image">圖像</string>
-
     <string name="EULA">EULA</string>
     <string name="privacyPolicy">隱私政策</string>
     <string name="termsOfUse">使用條款</string>
@@ -624,8 +596,6 @@
     <string name="widgetMinimumStyle">隱藏小部件細節</string>
     <string name="light">亮色</string>
     <string name="dark">暗色</string>
-
-    <string name="invalidExternal">此外部工具可能過期，或配置不正確。</string>
 
     <!-- Help dialog strings -->
     <string name="askInstructor">向您的導師問一個問題</string>
@@ -947,7 +917,6 @@
     <string name="totalPoints">%s 分</string>
     <string name="totalPointsText">總分</string>
     <string name="contentDescriptionPoints">%s 分</string>
-    <string name="contentDescriptionRubricRangeGrade">得分為 %1$s，滿分為 %2$s</string>
     <string name="score">分數</string>
     <string name="rangedRubricTotal" formatted="false">%s/%s 分</string>
     <string name="seeAll">檢視所有</string>
@@ -975,8 +944,6 @@
     <string name="launch_link_in_external_browser">於外部瀏覽器啟動連結</string>
     <string name="ltiLaunchFailure">現時無法載入此 LTI 工具。</string>
     <string name="urlSubmission">URL 提交項目</string>
-
-    <string name="assignmentDeletedError">此作業不再可用。</string>
 
     <string name="homePageIdForNotifications">最近的活動</string>
     <string name="homePageIdForModules">單元</string>
@@ -1018,8 +985,6 @@
     <string name="unableToViewInBrowser">我們未能找到外部應用程式以檢視此 LTI 工具。</string>
 
     <string name="commentUpload">上載評論</string>
-    <string name="unableToUploadMediaComment">要發送媒體評論，請發送或刪除您尚未發送的文字評論。</string>
-
     <string name="frontPage">標題頁</string>
     <string name="editPage">編輯內容頁</string>
     <string name="description">說明</string>
@@ -1059,4 +1024,22 @@
     <string name="addVideoComment">添加視訊評論</string>
     <string name="addAudioComment">添加音訊評論</string>
 
+    <string name="audioRecordingError">在嘗試錄製音訊時發生意外錯誤。</string>
+    <string name="videoRecordingError">在嘗試錄製視訊時發生意外錯誤。</string>
+
+    <string name="quizQuestionLabel">問題：</string>
+    <string name="timeLimitLabel">時間限制：</string>
+    <string name="allowedAttemptsLabel">允許的嘗試：</string>
+    <string name="instructions">教學</string>
+    <string name="quizNoTimeLimit">無</string>
+    <string name="viewQuiz">檢視測驗</string>
+    <string name="viewDiscussion">檢視討論</string>
+    <string name="lockedModule">此作業由單元 \"%1$s\" 鎖定。</string>
+    <string name="chooseMediaFile">選擇媒體檔案</string>
+    <string name="discussions_unknown_author">未知作者</string>
+    <string name="discussions_unknown_date">未知日期</string>
+    <string name="a11y_gradeLetterMinusContentDescription">%s 減</string>
+    <string name="a11y_letterGrade">%s。</string>
+    <string name="a11y_gradeCellContentDescription">%s %s</string>
+    <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
 </resources>

@@ -60,29 +60,26 @@ data class QuizQuestion(
     val questionType: QuestionType
         get() = parseQuestionType(this.questionTypeString!!)
 
-    enum class QuestionType {
-        CALCULATED, ESSAY, FILE_UPLOAD, FILL_IN_MULTIPLE_BLANKS, MATCHING, MULTIPLE_ANSWERS, MUTIPLE_CHOICE, MULTIPLE_DROPDOWNS, NUMERICAL, SHORT_ANSWER, TEXT_ONLY, TRUE_FALSE, UNKNOWN
+    enum class QuestionType(val stringVal: String) {
+        CALCULATED("calculated_question"),
+        ESSAY("essay_question"),
+        FILE_UPLOAD("file_upload_question"),
+        FILL_IN_MULTIPLE_BLANKS("fill_in_multiple_blanks_question"),
+        MATCHING("matching_question"),
+        MULTIPLE_ANSWERS("multiple_answers_question"),
+        MUTIPLE_CHOICE("multiple_choice_question"),
+        MULTIPLE_DROPDOWNS("multiple_dropdowns_question"),
+        NUMERICAL("numerical_question"),
+        SHORT_ANSWER("short_answer_question"),
+        TEXT_ONLY("text_only_question"),
+        TRUE_FALSE("true_false_question"),
+        UNKNOWN("unknown")
     }
 
 
     companion object {
         fun parseQuestionType(questionType: String): QuestionType {
-
-            when (questionType) {
-                "calculated_question" -> return QuestionType.CALCULATED
-                "essay_question" -> return QuestionType.ESSAY
-                "file_upload_question" -> return QuestionType.FILE_UPLOAD
-                "fill_in_multiple_blanks_question" -> return QuestionType.FILL_IN_MULTIPLE_BLANKS
-                "matching_question" -> return QuestionType.MATCHING
-                "multiple_answers_question" -> return QuestionType.MULTIPLE_ANSWERS
-                "multiple_choice_question" -> return QuestionType.MUTIPLE_CHOICE
-                "multiple_dropdowns_question" -> return QuestionType.MULTIPLE_DROPDOWNS
-                "numerical_question" -> return QuestionType.NUMERICAL
-                "short_answer_question" -> return QuestionType.SHORT_ANSWER
-                "text_only_question" -> return QuestionType.TEXT_ONLY
-                "true_false_question" -> return QuestionType.TRUE_FALSE
-            }
-            return QuestionType.UNKNOWN
+            return QuestionType.values().find {it.stringVal.equals(questionType)} ?: QuestionType.UNKNOWN
         }
     }
 }

@@ -55,6 +55,13 @@
     <string name="launchExternalTool">Lanse Zouti Eksteryè</string>
 
     <string name="preview">Apèsi</string>
+    <string name="submissionUploadFailedMessage">Gen yonn oswa plizyè fichye pa rive transfere. Verifye koneksyon entènèt ou a epi eseye re voye yo ankò</string>
+    <string name="submissionUploadByteProgress">%1$s de %2$s</string>
+    <string name="submissionSuccessTitle">Soumisyon reyisi!</string>
+    <string name="submissionSuccessMessage">Soumisyon w lan soumèt ak siksè. Pwofite jounen an!</string>
+    <string name="cancelAllSubmissions">Anile Tout Soumisyon Devwa</string>
+    <string name="missingSubmissionLabel">Manke</string>
+    <string name="gradedSubmissionLabel">Klase</string>
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">Okenn apèsi disponib pou URL ki itilize \'http://\'</string>
     <string name="submissionUrlNotAUrlError">Tanpri antre yon URL ki valid</string>
@@ -62,8 +69,11 @@
     <string name="addFileFabContentDesc">Afiche Opsyon Ajoute Fichye</string>
     <string name="recordAudio">Anrejistre Son</string>
 
+    <string name="recordVideo">Anrejistre Videyo</string>
+
     <!-- Student Submission -->
     <string name="submissionWrite">Ekri&#8230;</string>
+    <string name="textSubmissionFailureMessage">Gen yon bagay ki pase mal pandan soumisyon ap transfere. Soumèt ankò.</string>
     <!-- Student Submission Details -->
     <string name="submission">Soumisyon</string>
     <string name="submissionVersions">Vèsyon soumisyon</string>
@@ -79,15 +89,38 @@
     <string name="submissionDetailsAssignmentLocked">Sesyon Bloke</string>
     <string name="webPreview">Apèsi URL ki antre a</string>
     <string name="websiteUrl">URL sit Web</string>
+    <string name="noneContentMessage">Devwa sa a pa otorize soumisyon an liy.</string>
+    <string name="onPaperContentMessage">Devwa sa a pa otorize soumisyon an liy.</string>
+    <string name="noOnlineSubmissions">Pa Gen Soumisyon an Liy</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Sou %s pwen</string>
     <string name="outOfPointsAbbreviatedFormatted">Sou %s pts</string>
     <string name="gradeExcused">Egzante</string>
     <string name="finalGradeFormatted">Nòt Final: %s</string>
+    <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
+    <string name="contentDescriptionScoreOutOfPointsPossible">%1$s sou %2$s pwen</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Nòt pèsonalize</string>
     <string name="rubricEmptyMessage">Pa gen ribrik pou devwa sa a</string>
     <string name="rubricViewLongDescription">Afiche tout deskripsyon</string>
+    <!-- Student Submission Comments -->
+    <string name="assignmentSubmissionUploadingFile">Transfè fichye %1$d de %2$d</string>
+    <string name="assignmentSubmissionCommentUpload">Transfè Kòmantè pou %s</string>
+    <string name="assignmentSubmissionCommentUploadingMedia">Transfè fichye miltimedya</string>
+    <string name="assignmentSubmissionCommentError">Tranfè kòmantè pou %s echwe</string>
+    <string name="chooseFileForCommentSubtext">Klike sou yonn nan opsyon pi ba yo pou ka atache fichye nan kòmantè w</string>
+    <string name="emptySubmissionCommentsSubtext">Ou gen kesyon ki gen rapò a devwa ou a?\nEkri enstriktè w la.</string>
+    <string name="submissionCommentErrorMessage">Mesaj sa a pa t ka ale. Tape pou eseye ankò.</string>
+    <string name="mediaUploadAudio">Transfè Medya - Odyo</string>
+    <string name="mediaUploadVideo">Transfè Medya - Videyo</string>
+    <string name="commentSubmissionTypeText">Soumisyon Tèks</string>
+    <string name="commentSubmissionTypeExternalTool">Soumisyon Zouti Ekstèn</string>
+    <string name="commentSubmissionTypeDiscussion">Soumisyon Diskisyon</string>
+    <string name="commentSubmissionTypeQuiz">Soumisyon Quiz</string>
+    <string name="commentSubmissionTypeQuizAttempt">Tantativ: %d</string>
+    <string name="commentSubmissionTypeMediaFile">Fichye Miltimedya</string>
+    <string name="commentSubmissionTypeAudio">Odyo</string>
+    <string name="commentSubmissionTypeVideo">Videyo</string>
     <!-- Profile Fragment Strings -->
     <string name="canvasVersionNum">Vèsyon:</string>
 
@@ -104,7 +137,6 @@
     <string name="options">Opsyon</string>
 
     <string name="discussionAttachment">Ajoute yon fichye</string>
-    <string name="discussionUpload">Transfere odyo oswa videyo</string>
     <string name="discussionPostEditing">Modifye</string>
 
     <!--Multiple User Sign in -->
@@ -140,36 +172,16 @@
     <string name="lowercaseAM">am</string>
     <string name="lowercasePM">pm</string>
     <!-- Assignments -->
-    <string name="assignmentDue">Delè</string>
-    <string name="assignmentDueColon">Delè: </string>
-    <string name="assignmentLastSubmission">Dènye Soumisyon</string>
-    <string name="assignmentNoSubmission">Okenn</string>
-    <string name="assignmentTabDetails">Detay</string>
-    <string name="assignmentTabSubmission">Soumisyon</string>
-    <string name="assignmentTabGrade">Klas</string>
     <string name="assignmentLocked">Bloke</string>
     <string name="assignments">Sesyon</string>
-    <string name="freeFormRubricPoints" formatted="false">%s / %s </string>
-    <string name="noRubric">Pa gen ribrik pou sesyon sa a.</string>
     <string name="noDescription">Pa gen deskripsyon pou sesyon sa a</string>
     <string name="noAssignmentsInGroup">Pa gen Sesyon nan gwoup sa a</string>
     <string name="excusedAssignment">Yo egzante sesyon sa a ni yo pa p konsidere li nan kalkil total la.</string>
-    <string name="droppedAssignment">Yo abandone sesyon sa a ni yo pa p konsidere li nan kalkil total la.</string>
     <string name="excused">EX</string>
-    <string name="mutedText">Nòt yo pa disponib paske pwofesè a ap travay ladan yo.</string>
-    <string name="rubricRangePointsText" formatted="false">&#160;a &gt; %s pwen</string>
-    <string name="contentDescriptionRubricRangePointsText" formatted="false">%s &#160;a &gt; %s pwen</string>
-
     <!-- Assignment editing -->
     <string name="points">Pwen </string>
-    <string name="assignmentGroup">Gwoup Sesyon: </string>
-    <string name="gradingType">Trip Gradasyon: </string>
-    <string name="submissionType">Tip Soumisyon: </string>
-    <string name="editAssignment">Modifye Sesyon</string>
     <string name="save">Anrejistre</string>
     <string name="cancel">Anile</string>
-    <string name="sendNotification">Avèti itilizatè yo ke kontni sa a chanje</string>
-
     <!-- Discussions -->
     <string name="forbidden">Sèlman moun ki poste yon repons pou pi piti k ap ka wè repons yo.</string>
 
@@ -189,6 +201,10 @@
     <string name="checkBoxFinalGradeOption">Daprè sesyon klase yo</string>
     <string name="checkBoxWhatIfGradeOption">Montre Kisa-Si Nòt</string>
     <string name="whatIfDialogText">Kisa-Si Nòt</string>
+    <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
+    <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s sou %2$s pwen, %3$s</string>
+
+
     <string name="inbox">Bwat resepsyon</string>
     <string name="unread">Poko li</string>
     <string name="archived">Achive</string>
@@ -231,7 +247,6 @@
         <item quantity="one">%d bezwen klasman</item>
         <item quantity="other">%d bezwen klasman</item>
     </plurals>
-    <string name="myFiles">Fichye</string>
     <string name="createAFolder">Kreye yon Dosye</string>
     <string name="createFolder">Kreye Dosye</string>
     <string name="createAFile">Kreye yon Fichye</string>
@@ -273,7 +288,6 @@
     <string name="deleteEvent">Efase Aktivite</string>
     <string name="selected">Chwazi</string>
     <string name="errorSendingMessage">Yon erè fèt pandan w ap voye mesaj ou a. Tanpri eseye ankò.</string>
-    <string name="errorPostingComment">Yon erè fèt pandan w ap poste kòmantè soumisyon ou a. Tanpri eseye ankò.</string>
     <string name="deletedConversation">Konvèsasyon sa a te efase.</string>
     <string name="uploadAvatarFailMsg">Transfè nouvo foto avata echwe</string>
     <string name="editPhoto">Modifye Foto</string>
@@ -306,8 +320,6 @@
     <string name="openAlternate">Ouvri avèk yon lòt app</string>
     <string name="opening">Ouvèti Fichye&#8230;</string>
     <string name="download">Telechaje</string>
-    <string name="hideExtras">Kache Extra</string>
-    <string name="showExtras">Afiche Extra</string>
     <string name="messageAttachments">Atachman Mesaj</string>
     <string name="discussionAttachmentLabel">Atachman</string>
     <string name="attachmentIcon">Ikòn Atachman</string>
@@ -366,6 +378,7 @@
     <string name="select_item_to_display">Chwazi nan lis la</string>
 
     <string name="syllabus">Pwogram</string>
+    <string name="summary">Rezime</string>
     <string name="coursePeople">Moun</string>
     <string name="teachersTas">Pwofesè &amp; TAs</string>
     <string name="students">Elèv</string>
@@ -399,12 +412,6 @@
 
     <!-- Notifications -->
     <string name="deleted">Efase</string>
-    <string name="gradedDiscussion">Diskisyon Klase.</string>
-    <string name="pointsPossible">Pwen Posib.</string>
-    <string name="pointsPossibleNoPeriod">Pwen Posib</string>
-
-    <string name="deletedEntryNoChildren">Tèks diskisyon efase sa a pa gen repons.</string>
-    <string name="sideCommentEntry">Nan tip diskisyon sa a, ou paka fè kòmantè nan okenn tèks nan nivo sa a.</string>
     <string name="contentDescriptionFiles">Ikòn fichye</string>
 
     <string name="loadingCanvas">Chajman Kontni Canvas&#8230;</string>
@@ -428,11 +435,6 @@
     <string name="emptyId">ID a pa kapab vid</string>
 
     <string name="goToQuiz">Ale nan Quiz</string>
-    <string name="goToExternalTool">Ale nan Zouti Ekstèn</string>
-
-    <string name="pastDueDate">Delè Pase</string>
-
-    <string name="goToDiscussion">Ale nan Diskisyon</string>
     <string name="quizzes">Quiz</string>
 
     <string name="lastDiscussionPost">Dènye piblikasyon</string>
@@ -486,7 +488,6 @@
     <string name="lockedFileDesc">Fichye sa a fè pati modil %s e li poko debloke.</string>
     <string name="lockedQuizDesc">Quiz sa a fè pati modil %s e li poko debloke.</string>
     <string name="lockedDiscussionDesc">Diskisyon sa a fè pati modil %s e li poko debloke.</string>
-    <string name="lockedAssignmentDescLine2">Al gade paj modil kou yo pou jwenn enfòmasyon sou kijan pou debloke kontni sa a.</string>
     <string name="mustComplete">Ou dwe toudabò ranpli:</string>
     <string name="unlockedAt">L ap debloke a:</string>
     <string name="goToModules">Ale nan Modil</string>
@@ -508,22 +509,12 @@
     <!-- New Submission Strings -->
     <string name="textEntry">Antre Tèks</string>
     <string name="onlineURL">URL an liy</string>
-    <string name="enterTextEntry">Antre Antre Tèks</string>
-    <string name="fileUpload"> Transfè Fichye</string>
     <string name="oneFileOnly">Soumisyon sa a aksepte transfè yon fichye sèlman</string>
 
 
     <string name="websiteEntry">Ajoute Antre Sit</string>
     <string name="mediaRecordingEntry">Anrejistreman Medya</string>
     <string name="submit">Soumèt</string>
-    <string name="blankSubmission">Soumisyon an pa kapab vid.</string>
-    <string name="errorPostingSubmission">Gen yon erè ki fèt nan poste soumisyon an.</string>
-    <string name="successPostingSubmission">Soumisyon poste kòrèkteman.</string>
-
-    <string name="exampleSubmissionURL">http://www.example.com</string>
-
-
-
     <!-- DataLoss Fragment Strings -->
     <string name="unsavedProgress">Pwogrè non Anrejistre</string>
     <string name="informationLost">Enfòmasyon ki pa sovgade ap pèdi. Èske w vle kontinye?</string>
@@ -537,22 +528,8 @@
 
     <!-- Submission Details Strings -->
     <string name="next">Pwochen</string>
-    <string name="addSubmission">Aktive</string>
-    <string name="addAnotherSubmission">Soumèt ankò</string>
     <string name="turnedIn">Aktive:&#160;</string>
     <string name="addComment">Ajoute yon kòmantè&#8230;</string>
-    <string name="addCommentNoEllipsis">Ajoute yon kòmantè...</string>
-    <string name="subTypeOnlineText">Antre Tèks an Liy</string>
-    <string name="subTypeFileUpload">Transfè eFichye an Liy</string>
-    <string name="subTypeOnlineURL">URL sit Web</string>
-    <string name="subTypeOnlineQuiz">Quiz an Liy</string>
-    <string name="subTypeMediaRecording">Anrejistreman Medya</string>
-    <string name="sub_type_lti_launch">Lansman LTI</string>
-    <string name="subTypeDiscussionTopic">Diskisyon</string>
-    <string name="turnInByHand">Ou dwe aktive sesyon sa a a la men</string>
-    <string name="noSubRequired">Soumisyon pa obligatwa</string>
-    <string name="noTurnInOnMobile">Soumisyon pòtab pa sipòte</string>
-
     <string name="home">Akèy</string>
     <string name="Notifications">Notifikasyon</string>
 
@@ -582,9 +559,6 @@
     <string name="clickToViewSubmission">Yo te pran yon apèsi sit entènèt la lè w aktive li a. Tape epi kenbe imaj pi ba a pou ouvri oswa telechaje imaj la an antye.</string>
     <string name="urlSubmissionNoPreview">Soumisyon sa a se te yon URL a yon paj ekstèn. Sonje ke sa ka rive ke paj sa a chanje aprè soumisyon orijinal la.</string>
     <string name="contentDescriptionPreviewImage">Yon apèsi url ki te soumèt la</string>
-    <string name="itemStillProcessing">Eleman sa a an pwosesis toujou sou sèvè a. Tanpri eseye ankò.</string>
-
-
     <string name="isNotSupportedFeature">%1$s pa sipòte.</string>
     <string name="isNotSupported">Lyen an pa sipòte.</string>
     <string name="openInBrowser">Ouvri nan Navigatè</string>
@@ -601,8 +575,6 @@
     <string name="panda_fact_string">Panda Fact:&#160;</string>
     <string name="remove">Elimine</string>
     <string name="founders">Fondatè</string>
-    <string name="image">Imaj</string>
-
     <string name="EULA">EULA</string>
     <string name="privacyPolicy">Politik Konfidansyalite</string>
     <string name="termsOfUse">Kondisyon Itilizasyon</string>
@@ -630,8 +602,6 @@
     <string name="widgetMinimumStyle">Kache detay nan widget</string>
     <string name="light">Limyè</string>
     <string name="dark">Nwa</string>
-
-    <string name="invalidExternal">Zouti ekstèn sa a ekspit¡re oswa li mal konfigire.</string>
 
     <!-- Help dialog strings -->
     <string name="askInstructor">Poze Enstriktè ou a yon Kesyon</string>
@@ -956,7 +926,6 @@
     <string name="totalPoints">%s pwen</string>
     <string name="totalPointsText">Total Pwen</string>
     <string name="contentDescriptionPoints">%s pwen</string>
-    <string name="contentDescriptionRubricRangeGrade">%1$s sou %2$s pwen</string>
     <string name="score">Nòt</string>
     <string name="rangedRubricTotal" formatted="false">%s / %s pwen</string>
     <string name="seeAll">Gade Tout</string>
@@ -984,8 +953,6 @@
     <string name="launch_link_in_external_browser">Lanse lyen nan navigatè ekstèn</string>
     <string name="ltiLaunchFailure">Zouti LTI sa a paka chaje pou kounye a.</string>
     <string name="urlSubmission">Soumisyon URL</string>
-
-    <string name="assignmentDeletedError">Travay sa pa diponib ankò.</string>
 
     <string name="homePageIdForNotifications">Aktivite Resan</string>
     <string name="homePageIdForModules">Modil</string>
@@ -1029,8 +996,6 @@
     <string name="unableToViewInBrowser">Nou pa an mezi pou nou jwenn yon app ekstèn pou afiche zouti LTI sa a.</string>
 
     <string name="commentUpload">Kòmantè Soumèt</string>
-    <string name="unableToUploadMediaComment">Pou voye yon kòmantè miltimedya, voye oswa efase yon kòmantè ki pa t ale.</string>
-
     <string name="frontPage">Premye Paj</string>
     <string name="editPage">Modifye Paj</string>
     <string name="description">Deskripsyon</string>
@@ -1070,4 +1035,22 @@
     <string name="addVideoComment">Ajoute yon kòmantè videyo</string>
     <string name="addAudioComment">Ajoute yon kòmantè odyo</string>
 
+    <string name="audioRecordingError">Gen yon erè ki fèt sanzatann pandan y ap eseye anrejistre yon odyo.</string>
+    <string name="videoRecordingError">Gen yon erè ki fèt sanzatann pandan y ap eseye anrejistre yon videyo.</string>
+
+    <string name="quizQuestionLabel">Kesyon:</string>
+    <string name="timeLimitLabel">Limit Tan:</string>
+    <string name="allowedAttemptsLabel">Tantativ Otorize:</string>
+    <string name="instructions">Enstriksyon</string>
+    <string name="quizNoTimeLimit">Okenn</string>
+    <string name="viewQuiz">Afiche Quiz.</string>
+    <string name="viewDiscussion">Afiche Diskisyon</string>
+    <string name="lockedModule">Modil \"%1$s\"la bloke devwa sa a.</string>
+    <string name="chooseMediaFile">Chwazi Fichye Medya</string>
+    <string name="discussions_unknown_author">Otè Enkoni</string>
+    <string name="discussions_unknown_date">Dat Enkoni</string>
+    <string name="a11y_gradeLetterMinusContentDescription">%s. mwens</string>
+    <string name="a11y_letterGrade">%s.</string>
+    <string name="a11y_gradeCellContentDescription">%s %s</string>
+    <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
 </resources>

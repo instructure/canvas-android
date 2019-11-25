@@ -36,7 +36,6 @@ import com.instructure.student.activity.SettingsActivity
 import com.instructure.student.dialog.HelpDialogStyled
 import com.instructure.student.dialog.LegalDialogStyled
 import com.instructure.student.util.Analytics
-import com.newrelic.agent.android.NewRelic
 import kotlinx.android.synthetic.main.dialog_about.*
 import kotlinx.android.synthetic.main.fragment_application_settings.*
 
@@ -46,7 +45,7 @@ class ApplicationSettingsFragment : ParentFragment() {
     override fun title(): String = getString(R.string.settings)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        NewRelic.setInteractionName(this::class.java.simpleName)
+        TelemetryUtils.setInteractionName(this::class.java.simpleName)
         super.onCreate(savedInstanceState)
     }
 

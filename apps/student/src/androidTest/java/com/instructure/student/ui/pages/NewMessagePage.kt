@@ -21,22 +21,23 @@ import android.widget.TextView
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.ViewAssertion
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.espresso.matcher.ViewMatchers.*
+import com.instructure.canvas.espresso.withCustomConstraints
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.User
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.dataseeding.model.GroupApiModel
-import com.instructure.espresso.OnViewWithId
-import com.instructure.espresso.assertDisplayed
-import com.instructure.espresso.click
+import com.instructure.espresso.*
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
-import com.instructure.espresso.typeText
+import com.instructure.espresso.page.onViewWithId
 import com.instructure.student.R
 import junit.framework.Assert.assertTrue
-import org.hamcrest.Matchers.allOf
+import org.hamcrest.Matchers.*
 
 class NewMessagePage : BasePage() {
 
@@ -51,7 +52,13 @@ class NewMessagePage : BasePage() {
     fun selectCourse(course: CourseApiModel) {
         coursesSpinner.assertDisplayed()
         coursesSpinner.click()
-        onView(ViewMatchers.withText(course.name)).click()
+        onView(withText(course.name)).click()
+    }
+
+    fun selectCourse(course: Course) {
+        coursesSpinner.assertDisplayed()
+        coursesSpinner.click()
+        onView(withText(course.name)).click()
     }
 
     fun selectGroup(group: GroupApiModel) {
@@ -71,16 +78,72 @@ class NewMessagePage : BasePage() {
         onView(withText(R.string.done)).click()
     }
 
+    fun setRecipient(user: User, userType: String, isGroupRecipient: Boolean = false) {
+        addContactsButton.click()
+        if(!isGroupRecipient) onView(withText(userType)).click()
+        onView(withText(user.shortName)).click()
+        onView(withText(R.string.done)).click()
+    }
+
+    fun setRecipients(users: List<User>, userType: String, isGroupRecipient: Boolean = false) {
+        addContactsButton.click()
+        if(!isGroupRecipient) onView(withText(userType)).click()
+        users.forEach {
+            onView(withText(it.shortName)).click()
+        }
+        onView(withText(R.string.done)).click()
+    }
+
+    fun setRecipientGroup(userType: String) {
+        addContactsButton.click()
+        val itemMatcher = allOf(
+                hasSibling(withChild(withText(userType))),
+                withId(R.id.checkBox)
+        )
+        onView(itemMatcher).perform(click())
+        onView(withText(R.string.done)).click()
+    }
+
+    fun selectAllRecipients(userTypes: List<String>) {
+        addContactsButton.click()
+        userTypes.forEach {
+            val itemMatcher = allOf(
+                    hasSibling(withChild(withText(it))),
+                    withId(R.id.checkBox)
+            )
+            onView(itemMatcher).click()
+        }
+        onView(withText(R.string.done)).click()
+    }
+
+    fun assertRecipientGroupsNotDisplayed(userType: String) {
+        addContactsButton.click()
+        val itemMatcher = allOf(
+                hasSibling(withChild(withText(userType))),
+                withId(R.id.checkBox)
+        )
+        onView(itemMatcher).assertNotDisplayed()
+    }
+
+    fun assertRecipientGroupContains(userType: String, userCount: Int = 1) {
+        addContactsButton.click()
+        onView(withText(userType)).click()
+        onViewWithId(R.id.recipientRecyclerView).check(RecyclerViewItemCountAssertion(userCount))
+    }
+
     fun setSubject(subject: String) {
         editSubjectEditText.typeText(subject)
     }
 
     fun setMessage(messageText: String) {
-        onView(allOf(withId(R.id.message), isDisplayed())).typeText(messageText)
-        //messageEditText.typeText(messageText)
+        Espresso.closeSoftKeyboard()
+        onView(allOf(withId(R.id.message), hasSibling(withId(R.id.sendIndividualDivider))))
+                .scrollTo()
+                .typeText(messageText)
     }
 
     fun hitSend() {
+        Espresso.closeSoftKeyboard()
         sendButton.click()
     }
 

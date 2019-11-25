@@ -17,22 +17,74 @@
 package com.instructure.canvas.espresso.mockCanvas.endpoints
 
 import com.instructure.canvas.espresso.mockCanvas.Endpoint
-import com.instructure.canvas.espresso.mockCanvas.utils.Segment
-import com.instructure.canvas.espresso.mockCanvas.utils.successPaginatedResponse
-import com.instructure.canvas.espresso.mockCanvas.utils.successResponse
+import com.instructure.canvas.espresso.mockCanvas.endpoint
+import com.instructure.canvas.espresso.mockCanvas.utils.*
 import com.instructure.canvasapi2.models.Conversation
+import com.instructure.canvasapi2.models.Message
 import com.instructure.canvasapi2.models.UnreadConversationCount
+import com.instructure.canvasapi2.utils.APIHelper
+import java.util.*
 
 /**
  * Endpoint that can return a list of [Conversation]s
  *
  * ROUTES:
  * - `unread_count` -> [ConversationUnreadCountEndpoint]
+ * - `conversation_id` -> [ConversationEndpoint]
  */
 object ConversationListEndpoint : Endpoint(
     Segment("unread_count") to ConversationUnreadCountEndpoint,
+    LongId(PathVars::conversationId) to ConversationEndpoint,
     response = {
-        GET { request.successPaginatedResponse(data.conversations.values.toList()) }
+        GET {
+            val filter = request.url().queryParameter("filter")
+            if(filter != null) {
+                val conversationList = data.conversationCourseMap[filter.substringAfter("course_").toLong()]
+                if(conversationList.isNullOrEmpty()) {
+                    request.unauthorizedResponse()
+                } else {
+                    request.successResponse(conversationList)
+                }
+            } else {
+                when(request.url().queryParameter("scope")) {
+                    "unread" -> {
+                        request.successResponse(data.conversations.values.toList().filter {
+                            it.workflowState == Conversation.WorkflowState.UNREAD
+                        })
+                    }
+                    "starred" -> {
+                        request.successResponse(data.conversations.values.toList().filter {
+                            it.isStarred
+                        })
+                    }
+                    "archived" -> {
+                        request.successResponse(data.conversations.values.toList().filter {
+                            it.workflowState == Conversation.WorkflowState.ARCHIVED
+                        })
+                    }
+                    "sent" -> {
+                        request.successResponse(data.conversations.values.toList().filter {
+                            it.messages.first().authorId == request.user!!.id
+                        })
+                    }
+                    else -> { // We need to filter out "sent" messages for "ALL"
+                        request.successResponse(data.conversations.values.toList().filter {
+                            it.messages.first().authorId != request.user!!.id
+                        })
+                    }
+                }
+            }
+        }
+        POST {
+            if(data.sentConversation == null) {
+                request.unauthorizedResponse()
+            } else {
+                val sentConversation = data.sentConversation
+                data.conversations[sentConversation!!.id] = sentConversation
+                data.sentConversation = null
+                request.successResponse(listOf(sentConversation))
+            }
+        }
     }
 )
 
@@ -45,3 +97,45 @@ object ConversationUnreadCountEndpoint : Endpoint(response = {
         request.successResponse(UnreadConversationCount(count.toString()))
     }
 })
+
+/**
+ * Endpoint that can return a [Conversation] based on pathVar.conversationId
+ *
+ * ROUTES:
+ * - `add_message`
+ * */
+object ConversationEndpoint : Endpoint(
+    Segment("add_message") to endpoint(
+        configure = {
+            POST {
+                if (data.conversations.containsKey(pathVars.conversationId)) {
+                    val conversation = data.conversations[pathVars.conversationId]!!
+                    val messageBody = request.url().queryParameter("body")
+                    val message = Message(
+                        id = data.newItemId(),
+                        authorId = request.user!!.id,
+                        createdAt = APIHelper.dateToString(GregorianCalendar()),
+                        body = messageBody,
+                        participatingUserIds = conversation.messages.first().participatingUserIds
+                    )
+                    data.conversations[pathVars.conversationId] = conversation.copy(messages = conversation.messages.plus(message))
+                    request.successResponse(data.conversations[pathVars.conversationId]!!)
+                } else {
+                    request.unauthorizedResponse()
+                }
+            }
+        }
+    ),
+    response = {
+        GET {
+            when {
+                data.conversations.containsKey(pathVars.conversationId) -> {
+                    request.successResponse(data.conversations[pathVars.conversationId]!!)
+                }
+                else -> {
+                    request.unauthorizedResponse()
+                }
+            }
+        }
+    }
+)

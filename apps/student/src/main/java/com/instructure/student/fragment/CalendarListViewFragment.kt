@@ -35,6 +35,7 @@ import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.TelemetryUtils
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.student.R
@@ -48,7 +49,6 @@ import com.instructure.student.util.Analytics
 import com.instructure.student.util.CanvasCalendarUtils
 import com.instructure.student.util.StudentPrefs
 import com.instructure.student.view.ViewUtils
-import com.newrelic.agent.android.NewRelic
 import com.roomorama.caldroid.CaldroidListener
 import hirondelle.date4j.DateTime
 import kotlinx.android.extensions.CacheImplementation
@@ -111,7 +111,7 @@ class CalendarListViewFragment : ParentFragment() {
     override fun title() = getString(R.string.calendar)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        NewRelic.setInteractionName(this::class.java.simpleName)
+        TelemetryUtils.setInteractionName(this::class.java.simpleName)
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
         // Most of this will never get called since we are using

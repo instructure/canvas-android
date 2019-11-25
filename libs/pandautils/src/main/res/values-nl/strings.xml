@@ -165,6 +165,7 @@
     <string name="noAssignmentsSubtext">Het lijkt erop dat er in deze ruimte geen opdrachten zijn gemaakt. Dus kijk wat er zoal te vinden is.</string>
     <string name="noAssignmentsTeacher">Het lijkt erop dat er nog geen opdrachten zijn gepubliceerd.</string>
     <string name="noFiles">Geen bestanden</string>
+    <string name="noFilesForAssignment">Er zijn geen bestanden voor deze inlevering</string>
     <string name="noFilesSubtext">Er zijn geen bestanden gekoppeld aan dit account.</string>
     <string name="notSupported">Niet ondersteund</string>
     <string name="noEvents">Vandaag geen gebeurtenissen!</string>
@@ -175,7 +176,6 @@
     <string name="noDueDate">Deze opdracht heeft geen inleverdatum.</string>
     <string name="locked">Vergrendeld</string>
     <string name="lockedSubtext">Deze opdracht is vergrendeld tot %1$s om %2$s.</string>
-    <string name="lockedModule">Deze opdracht is onderdeel van de module \"%1$s\" en is nog niet ontgrendeld.</string>
     <string name="chooseFile">Een bestand kiezen</string>
     <string name="chooseFileSubtext">Koppel een bestand aan je inlevering door op een optie hieronder te tikken.</string>
     <string name="noNotifications">Geen meldingen</string>

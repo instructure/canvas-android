@@ -140,7 +140,7 @@ public class RecyclerViewUtils {
     public static void checkIfEmpty(EmptyInterface emptyPandaView,
                                     BaseListRecyclerAdapter adapter,
                                     RecyclerView recyclerView, boolean isRefresh, boolean isEmpty) {
-        if (emptyPandaView != null && adapter != null) {
+        if (emptyPandaView != null && adapter != null && recyclerView != null) {
             if (adapter.size() == 0 && !isRefresh) {
                 recyclerView.setVisibility(View.GONE);
                 emptyPandaView.setVisibility(View.VISIBLE);
@@ -161,7 +161,7 @@ public class RecyclerViewUtils {
                                     SwipeRefreshLayout swipeRefreshLayout,
                                     SyncRecyclerAdapter adapter,
                                     boolean isEmpty) {
-        if (emptyPandaView != null && adapter != null) {
+        if (emptyPandaView != null && adapter != null && recyclerView != null) {
             if (adapter.size() == 0 && !swipeRefreshLayout.isRefreshing()) {
                 recyclerView.setVisibility(View.GONE);
                 emptyPandaView.setVisibility(View.VISIBLE);
@@ -182,7 +182,7 @@ public class RecyclerViewUtils {
                                     SwipeRefreshLayout swipeRefreshLayout,
                                     ListRecyclerAdapter adapter,
                                     boolean isEmpty) {
-        if (emptyPandaView != null && adapter != null) {
+        if (emptyPandaView != null && adapter != null && recyclerView != null) {
             if (adapter.size() == 0 && !swipeRefreshLayout.isRefreshing()) {
                 recyclerView.setVisibility(View.GONE);
                 emptyPandaView.setVisibility(View.VISIBLE);
@@ -203,7 +203,7 @@ public class RecyclerViewUtils {
                                     SwipeRefreshLayout swipeRefreshLayout,
                                     SyncExpandableRecyclerAdapter adapter,
                                     boolean isEmpty) {
-        if (emptyPandaView != null && adapter != null) {
+        if (emptyPandaView != null && adapter != null && recyclerView != null) {
             if (adapter.size() == 0 && !swipeRefreshLayout.isRefreshing()) {
                 recyclerView.setVisibility(View.GONE);
                 emptyPandaView.setVisibility(View.VISIBLE);

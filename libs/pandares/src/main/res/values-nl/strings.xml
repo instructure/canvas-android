@@ -55,6 +55,13 @@
     <string name="launchExternalTool">Extern hulpmiddel lanceren</string>
 
     <string name="preview">Voorbeeld</string>
+    <string name="submissionUploadFailedMessage">Er kunnen een of meer bestanden niet worden geüpload. Controleer je internetverbinding en probeer opnieuw in te leveren.</string>
+    <string name="submissionUploadByteProgress">%1$s van %2$s</string>
+    <string name="submissionSuccessTitle">Inlevering is gelukt!</string>
+    <string name="submissionSuccessMessage">Je opdracht is ingeleverd. Een fijne dag gewenst!</string>
+    <string name="cancelAllSubmissions">Alle opdrachtinleveringen annuleren</string>
+    <string name="missingSubmissionLabel">Ontbrekend</string>
+    <string name="gradedSubmissionLabel">Beoordeeld</string>
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">Geen voorbeeld beschikbaar voor URL\'s die \'http://\' gebruiken</string>
     <string name="submissionUrlNotAUrlError">Voer een geldige URL in</string>
@@ -62,8 +69,11 @@
     <string name="addFileFabContentDesc">Opties weergeven voor bestand toevoegen</string>
     <string name="recordAudio">Audio opnemen</string>
 
+    <string name="recordVideo">Video opnemen</string>
+
     <!-- Student Submission -->
     <string name="submissionWrite">Schrijven&#8230;</string>
+    <string name="textSubmissionFailureMessage">Er is iets mis gegaan bij het uploaden van de opdracht. Opnieuw inleveren.</string>
     <!-- Student Submission Details -->
     <string name="submission">Inzending</string>
     <string name="submissionVersions">Inzendingsversies</string>
@@ -79,15 +89,38 @@
     <string name="submissionDetailsAssignmentLocked">Opdracht vergrendeld</string>
     <string name="webPreview">Voorbeeld van de ingevoerde URL</string>
     <string name="websiteUrl">Website-URL</string>
+    <string name="noneContentMessage">Voor deze opdracht zijn geen online-inleveringen toegestaan.</string>
+    <string name="onPaperContentMessage">Voor deze opdracht zijn geen online-inleveringen toegestaan.</string>
+    <string name="noOnlineSubmissions">Geen online-inleveringen</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Zonder %s punten</string>
     <string name="outOfPointsAbbreviatedFormatted">Zonder %s punten</string>
     <string name="gradeExcused">Vrijgesteld</string>
     <string name="finalGradeFormatted">Eindcijfer: %s</string>
+    <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
+    <string name="contentDescriptionScoreOutOfPointsPossible">%1$s van de %2$s punten</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Aangepaste score</string>
     <string name="rubricEmptyMessage">Er is geen rubriek voor deze opdracht</string>
     <string name="rubricViewLongDescription">Uitgebreide beschrijving bekijken</string>
+    <!-- Student Submission Comments -->
+    <string name="assignmentSubmissionUploadingFile">Bestand %1$d van %2$d wordt geüpload</string>
+    <string name="assignmentSubmissionCommentUpload">Opmerking uploaden voor %s</string>
+    <string name="assignmentSubmissionCommentUploadingMedia">Mediabestand uploaden</string>
+    <string name="assignmentSubmissionCommentError">Uploaden van opmerking voor %s is mislukt</string>
+    <string name="chooseFileForCommentSubtext">Koppel bestanden aan je opmerking door op een optie hieronder te tikken</string>
+    <string name="emptySubmissionCommentsSubtext">Vragen over je opdracht?\nStuur een bericht naar je cursusleider.</string>
+    <string name="submissionCommentErrorMessage">Dit bericht kan niet worden verzonden. Tik om het nogmaals te proberen.</string>
+    <string name="mediaUploadAudio">Media-upload - audio</string>
+    <string name="mediaUploadVideo">Media-upload - video</string>
+    <string name="commentSubmissionTypeText">Tekstinzending</string>
+    <string name="commentSubmissionTypeExternalTool">Inzending per externe tool</string>
+    <string name="commentSubmissionTypeDiscussion">Discussie-inzending</string>
+    <string name="commentSubmissionTypeQuiz">Toetsinzending</string>
+    <string name="commentSubmissionTypeQuizAttempt">Poging %d</string>
+    <string name="commentSubmissionTypeMediaFile">Mediabestand</string>
+    <string name="commentSubmissionTypeAudio">Audio</string>
+    <string name="commentSubmissionTypeVideo">Video</string>
     <!-- Profile Fragment Strings -->
     <string name="canvasVersionNum">Versie:</string>
 
@@ -104,7 +137,6 @@
     <string name="options">Opties</string>
 
     <string name="discussionAttachment">Bestand bijvoegen</string>
-    <string name="discussionUpload">Video of audio uploaden</string>
     <string name="discussionPostEditing">Bewerken</string>
 
     <!--Multiple User Sign in -->
@@ -140,36 +172,16 @@
     <string name="lowercaseAM">s ochtends</string>
     <string name="lowercasePM">s middags</string>
     <!-- Assignments -->
-    <string name="assignmentDue">Inleverdatum</string>
-    <string name="assignmentDueColon">Inleverdatum: </string>
-    <string name="assignmentLastSubmission">Laatste indiening</string>
-    <string name="assignmentNoSubmission">Geen</string>
-    <string name="assignmentTabDetails">Details</string>
-    <string name="assignmentTabSubmission">Inleveringen</string>
-    <string name="assignmentTabGrade">Cijfer</string>
     <string name="assignmentLocked">Vergrendeld</string>
     <string name="assignments">Opdrachten</string>
-    <string name="freeFormRubricPoints" formatted="false">%s / %s </string>
-    <string name="noRubric">Er is geen rubriek voor deze opdracht.</string>
     <string name="noDescription">Er is geen beschrijving voor deze opdracht</string>
     <string name="noAssignmentsInGroup">Geen opdrachten in deze groep</string>
     <string name="excusedAssignment">Deze opdracht is verwijderd en wordt niet in overweging genomen voor de totale berekening</string>
-    <string name="droppedAssignment">Deze opdracht is vervallen en wordt niet in overweging genomen voor de totale berekening</string>
     <string name="excused">EX</string>
-    <string name="mutedText">Cijfers zijn niet beschikbaar omdat de cursusleider ermee bezig is.</string>
-    <string name="rubricRangePointsText" formatted="false">&#160;tot &gt; %s ptn</string>
-    <string name="contentDescriptionRubricRangePointsText" formatted="false">%s &#160;tot &gt; %s punten</string>
-
     <!-- Assignment editing -->
     <string name="points">Punten </string>
-    <string name="assignmentGroup">Opdrachtgroep: </string>
-    <string name="gradingType">Cijfertype: </string>
-    <string name="submissionType">Type inzending: </string>
-    <string name="editAssignment">Opdracht bewerken</string>
     <string name="save">Opslaan</string>
     <string name="cancel">Annuleren</string>
-    <string name="sendNotification">Gebruikers op de hoogte stellen dat deze inhoud gewijzigd is</string>
-
     <!-- Discussions -->
     <string name="forbidden">Antwoorden zijn alleen zichtbaar voor degenen die minimaal één antwoord hebben geplaatst.</string>
 
@@ -189,6 +201,10 @@
     <string name="checkBoxFinalGradeOption">Op basis van beoordeelde opdrachten</string>
     <string name="checkBoxWhatIfGradeOption">Toon What-If score</string>
     <string name="whatIfDialogText">What-If score</string>
+    <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
+    <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s van de %2$s punten, %3$s</string>
+
+
     <string name="inbox">Inbox</string>
     <string name="unread">Ongelezen</string>
     <string name="archived">Gearchiveerd</string>
@@ -231,7 +247,6 @@
         <item quantity="one">%d moet worden beoordeeld</item>
         <item quantity="other">%d nog te beoordelen</item>
     </plurals>
-    <string name="myFiles">Bestanden</string>
     <string name="createAFolder">Map aanmaken</string>
     <string name="createFolder">Map aanmaken</string>
     <string name="createAFile">Bestand aanmaken</string>
@@ -273,7 +288,6 @@
     <string name="deleteEvent">Evenement verwijderen</string>
     <string name="selected">Geselecteerd</string>
     <string name="errorSendingMessage">Er is een fout opgetreden bij het verzenden van je bericht. Probeer het opnieuw.</string>
-    <string name="errorPostingComment">Er heeft zich een fout voorgedaan bij het publiceren van je commentaar bij de inzending. Probeer het opnieuw.</string>
     <string name="deletedConversation">Die conversatie is verwijderd.</string>
     <string name="uploadAvatarFailMsg">Nieuwe avatar foto kon niet uploaden</string>
     <string name="editPhoto">Foto bewerken</string>
@@ -306,8 +320,6 @@
     <string name="openAlternate">Open met vervangende app</string>
     <string name="opening">Bestand aan het openen&#8230;</string>
     <string name="download">Downloaden</string>
-    <string name="hideExtras">Extra\'s verbergen</string>
-    <string name="showExtras">Extra\'s tonen</string>
     <string name="messageAttachments">Bijlagen bij bericht</string>
     <string name="discussionAttachmentLabel">Bijlage</string>
     <string name="attachmentIcon">Pictogram voor Bijlage</string>
@@ -366,6 +378,7 @@
     <string name="select_item_to_display">Geselecteerd van de lijst</string>
 
     <string name="syllabus">Syllabus</string>
+    <string name="summary">Samenvatting</string>
     <string name="coursePeople">Personen</string>
     <string name="teachersTas">Leraars  en assistenten</string>
     <string name="students">Cursisten</string>
@@ -399,12 +412,6 @@
 
     <!-- Notifications -->
     <string name="deleted">Verwijderd</string>
-    <string name="gradedDiscussion">Beoordeelde discussie.</string>
-    <string name="pointsPossible">Punten mogelijk.</string>
-    <string name="pointsPossibleNoPeriod">Aantal punten mogelijk</string>
-
-    <string name="deletedEntryNoChildren">Dit verwijderde discussieonderwerp heeft geen reacties.</string>
-    <string name="sideCommentEntry">In dit soort discussie kun je geen opmerkingen maken bij geen enkel onderwerp op dit niveau.</string>
     <string name="contentDescriptionFiles">Bestand icoon</string>
 
     <string name="loadingCanvas">Canvas Content aan het uploaden&#8230;</string>
@@ -428,11 +435,6 @@
     <string name="emptyId">Het ID mag niet leeg zijn</string>
 
     <string name="goToQuiz">Ga naar toets</string>
-    <string name="goToExternalTool">Ga naar externe tool</string>
-
-    <string name="pastDueDate">Voorbij de vervaldatum</string>
-
-    <string name="goToDiscussion">Ga naar discussie</string>
     <string name="quizzes">Toetsen</string>
 
     <string name="lastDiscussionPost">Laatste bericht</string>
@@ -486,7 +488,6 @@
     <string name="lockedFileDesc">Dit bestand is onderdeel van de module %s en is nog niet ontgrendeld.</string>
     <string name="lockedQuizDesc">Deze toets is onderdeel van de module %s en is nog niet ontgrendeld.</string>
     <string name="lockedDiscussionDesc">Deze discussie is onderdeel van de module %s en is nog niet ontgrendeld.</string>
-    <string name="lockedAssignmentDescLine2">Ga naar de pagina cursusmodulen voor informatie over hoe deze content te ontgrendelen.</string>
     <string name="mustComplete">Je moet eerst voltooien:</string>
     <string name="unlockedAt">Het wordt ontgrendeld op:</string>
     <string name="goToModules">Ga naar modulen</string>
@@ -508,22 +509,12 @@
     <!-- New Submission Strings -->
     <string name="textEntry">Tekstinvoer</string>
     <string name="onlineURL">Online URL</string>
-    <string name="enterTextEntry">Tekstonderwerp invoeren</string>
-    <string name="fileUpload"> Bestand uploaden</string>
     <string name="oneFileOnly">Je kunt niet meer dan één bestand uploaden</string>
 
 
     <string name="websiteEntry">Ingang voor website toevoegen</string>
     <string name="mediaRecordingEntry">Media opnames</string>
     <string name="submit">Inleveren</string>
-    <string name="blankSubmission">De indiening mag niet leeg zijn.</string>
-    <string name="errorPostingSubmission">Er heeft zich een fout voorgedaan bij het publiceren van de indiening.</string>
-    <string name="successPostingSubmission">De indiening is succesvol gepubliceerd.</string>
-
-    <string name="exampleSubmissionURL">http://www.example.com</string>
-
-
-
     <!-- DataLoss Fragment Strings -->
     <string name="unsavedProgress">Onbeveiligde voortgang</string>
     <string name="informationLost">Niet-opgeslagen informatie gaat verloren. Wil je doorgaan?</string>
@@ -537,22 +528,8 @@
 
     <!-- Submission Details Strings -->
     <string name="next">Volgende</string>
-    <string name="addSubmission">Inleveren</string>
-    <string name="addAnotherSubmission">Opnieuw inleveren</string>
     <string name="turnedIn">Ingeleverd:&#160;</string>
     <string name="addComment">Een opmerking toevoegen&#8230;</string>
-    <string name="addCommentNoEllipsis">Een opmerking toevoegen</string>
-    <string name="subTypeOnlineText">Online tekstinvoer</string>
-    <string name="subTypeFileUpload">Online eFile Upload</string>
-    <string name="subTypeOnlineURL">Website-URL</string>
-    <string name="subTypeOnlineQuiz">Online toets</string>
-    <string name="subTypeMediaRecording">Media opnames</string>
-    <string name="sub_type_lti_launch">LTI starten</string>
-    <string name="subTypeDiscussionTopic">Discussie</string>
-    <string name="turnInByHand">Je moet deze opdracht handmatig inleveren</string>
-    <string name="noSubRequired">Geen indiening vereist</string>
-    <string name="noTurnInOnMobile">Mobiele indiening niet ondersteund</string>
-
     <string name="home">Startpagina</string>
     <string name="Notifications">Meldingen</string>
 
@@ -582,9 +559,6 @@
     <string name="clickToViewSubmission">Er is een snapshot van de website gemaakt toen je het inleverde. Tik en houd het onderstaande beeld vast om het volledige beeld te openen of downloaden.</string>
     <string name="urlSubmissionNoPreview">Deze inzending was een URL naar een externe pagina. Houd in gedachten dat deze pagina gewijzigd kan zijn na de oorspronkelijke inzending.</string>
     <string name="contentDescriptionPreviewImage">Een voorbeeld van de ingediende url</string>
-    <string name="itemStillProcessing">Dit item wordt nog op de server bewerkt. Probeer het opnieuw.</string>
-
-
     <string name="isNotSupportedFeature">%1$s worden niet ondersteund.</string>
     <string name="isNotSupported">De link wordt niet ondersteund.</string>
     <string name="openInBrowser">Openen in browser</string>
@@ -601,8 +575,6 @@
     <string name="panda_fact_string">Panda feit:&#160;</string>
     <string name="remove">Verwijderen</string>
     <string name="founders">Stichters</string>
-    <string name="image">Afbeelding</string>
-
     <string name="EULA">EULA</string>
     <string name="privacyPolicy">Privacybeleid</string>
     <string name="termsOfUse">Gebruiksvoorwaarden</string>
@@ -630,8 +602,6 @@
     <string name="widgetMinimumStyle">Details op widget verbergen</string>
     <string name="light">Licht</string>
     <string name="dark">Donker</string>
-
-    <string name="invalidExternal">Deze externe tool is of verlopen of onjuist geconfigureerd.</string>
 
     <!-- Help dialog strings -->
     <string name="askInstructor">Je cursusleider een vraag stellen</string>
@@ -956,7 +926,6 @@
     <string name="totalPoints">%s punten</string>
     <string name="totalPointsText">Totaal aantal punten</string>
     <string name="contentDescriptionPoints">%s punten</string>
-    <string name="contentDescriptionRubricRangeGrade">%1$s van %2$s punten</string>
     <string name="score">Score</string>
     <string name="rangedRubricTotal" formatted="false">%s / %s punten</string>
     <string name="seeAll">Alles weergeven</string>
@@ -984,8 +953,6 @@
     <string name="launch_link_in_external_browser">Link starten in externe browser</string>
     <string name="ltiLaunchFailure">Deze LTI-tool kan op dit moment niet worden geladen.</string>
     <string name="urlSubmission">URL-inzending</string>
-
-    <string name="assignmentDeletedError">Deze opdracht is niet meer beschikbaar.</string>
 
     <string name="homePageIdForNotifications">Recente activiteit</string>
     <string name="homePageIdForModules">Modules</string>
@@ -1029,8 +996,6 @@
     <string name="unableToViewInBrowser">We kunnen geen externe app vinden om deze LTI-tool weer te geven.</string>
 
     <string name="commentUpload">Opmerking uploaden</string>
-    <string name="unableToUploadMediaComment">Als je een mediaopmerking wilt verzenden, verzend of verwijder je je niet-verzonden tekstopmerking.</string>
-
     <string name="frontPage">Voorpagina</string>
     <string name="editPage">Pagina bewerken</string>
     <string name="description">Beschrijving</string>
@@ -1070,4 +1035,22 @@
     <string name="addVideoComment">Videocommentaar toevoegen</string>
     <string name="addAudioComment">Audiocommentaar toevoegen</string>
 
+    <string name="audioRecordingError">Er heeft zich een onverwachte fout voorgedaan bij het opnemen van audio.</string>
+    <string name="videoRecordingError">Er heeft zich een onverwachte fout voorgedaan bij het opnemen van video.</string>
+
+    <string name="quizQuestionLabel">Vragen:</string>
+    <string name="timeLimitLabel">Tijdslimiet:</string>
+    <string name="allowedAttemptsLabel">Toegestaan aantal pogingen:</string>
+    <string name="instructions">Instructies</string>
+    <string name="quizNoTimeLimit">Geen</string>
+    <string name="viewQuiz">Toets bekijken</string>
+    <string name="viewDiscussion">Discussie bekijken</string>
+    <string name="lockedModule">Deze opdracht is vergrendeld door de module \"%1$s\".</string>
+    <string name="chooseMediaFile">Kies mediabestand</string>
+    <string name="discussions_unknown_author">Onbekende auteur</string>
+    <string name="discussions_unknown_date">Onbekende datum</string>
+    <string name="a11y_gradeLetterMinusContentDescription">%s. min</string>
+    <string name="a11y_letterGrade">%s.</string>
+    <string name="a11y_gradeCellContentDescription">%s %s</string>
+    <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
 </resources>

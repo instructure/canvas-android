@@ -56,7 +56,6 @@ import com.instructure.student.events.ModuleUpdatedEvent
 import com.instructure.student.events.post
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.Const
-import com.newrelic.agent.android.NewRelic
 import kotlinx.android.synthetic.main.fragment_discussions_details.*
 import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.EventBus
@@ -99,7 +98,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
 
     //region Fragment Lifecycle Overrides
     override fun onCreate(savedInstanceState: Bundle?) {
-        NewRelic.setInteractionName(this::class.java.simpleName)
+        TelemetryUtils.setInteractionName(this::class.java.simpleName)
         super.onCreate(savedInstanceState)
     }
 

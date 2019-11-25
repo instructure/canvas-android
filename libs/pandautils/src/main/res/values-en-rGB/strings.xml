@@ -165,6 +165,7 @@
     <string name="noAssignmentsSubtext">It looks like assignments haven\'t been created in this space. Time to go out and explore.</string>
     <string name="noAssignmentsTeacher">It looks like no assignments have been published yet.</string>
     <string name="noFiles">No files</string>
+    <string name="noFilesForAssignment">There are no files for this submission</string>
     <string name="noFilesSubtext">There are no files associated with this account.</string>
     <string name="notSupported">Not supported</string>
     <string name="noEvents">No events today!</string>
@@ -175,7 +176,6 @@
     <string name="noDueDate">This assignment doesn\'t have a due date.</string>
     <string name="locked">Locked</string>
     <string name="lockedSubtext">This assignment is locked until %1$s at %2$s.</string>
-    <string name="lockedModule">This assignment is part of the module \"%1$s\" and hasn\'t been unlocked yet.</string>
     <string name="chooseFile">Choose a file</string>
     <string name="chooseFileSubtext">Attach a file to your submission by tapping an option below.</string>
     <string name="noNotifications">No notifications</string>

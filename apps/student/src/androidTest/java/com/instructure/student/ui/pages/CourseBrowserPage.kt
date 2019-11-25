@@ -31,6 +31,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.espresso.WaitForViewWithId
@@ -92,6 +93,11 @@ class CourseBrowserPage : BasePage(R.id.courseBrowserPage) {
         selectSection(matcher)
     }
 
+    fun selectFiles() {
+        val matcher = allOf(withText("Files"), withId(R.id.label))
+        selectSection(matcher)
+    }
+
     fun selectHome() {
         onView(allOf(withId(R.id.homeLabel), isDisplayed())).click()
     }
@@ -103,7 +109,13 @@ class CourseBrowserPage : BasePage(R.id.courseBrowserPage) {
     }
 
     fun assertTitleCorrect(course: Course) {
-        initialBrowserTitle.assertHasText(course.originalName!!)
+        // You might have multiple of these if you navigate from one course to another.
+        // In that event, we'll have to choose the one that is displayed.
+        onView(allOf(withId(R.id.courseBrowserTitle), isDisplayed())).assertHasText(course.originalName!!)
+    }
+
+    fun assertTitleCorrect(group: Group) {
+        onView(allOf(withId(R.id.courseBrowserTitle), isDisplayed())).assertHasText(group.name!!)
     }
 
     fun assertTitleCorrect(course: CourseApiModel) {
@@ -176,3 +188,4 @@ private class ScrollRefreshLayoutToTop : ViewAction {
     }
 
 }
+

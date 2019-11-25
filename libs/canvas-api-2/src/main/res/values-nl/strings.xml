@@ -41,8 +41,7 @@
     <string name="canvasAPI_discussion">Discussie</string>
     <string name="canvasAPI_quiz">Toets</string>
     <string name="canvasAPI_externalTool">Externe tool</string>
-    <string name="canvasAPI_none">Geen</string>
-
+    <string name="canvasAPI_none">Geen inlevering</string>
     <string name="canvasAPI_passFail">Slagen Zakken</string>
     <string name="canvasAPI_percent">Percentage</string>
     <string name="canvasAPI_letterGrade">Beoordeling in lettervorm</string>
@@ -50,11 +49,11 @@
     <string name="canvasAPI_gpaScale">Gemiddeld eindcijfer</string>
     <string name="canvasAPI_notGraded">Niet beoordeeld</string>
 
-    <string name="canvasAPI_onlineQuiz">Online toets</string>
+    <string name="canvasAPI_onlineQuiz">Toets</string>
     <string name="canvasAPI_discussionTopic">Discussieonderwerp</string>
-    <string name="canvasAPI_onlineUpload">Online upload</string>
-    <string name="canvasAPI_onlineTextEntry">Online tekstinvoer</string>
-    <string name="canvasAPI_onlineURL">Online URL</string>
+    <string name="canvasAPI_onlineUpload">Bestand uploaden</string>
+    <string name="canvasAPI_onlineTextEntry">Tekstinvoer</string>
+    <string name="canvasAPI_onlineURL">Website-URL</string>
     <string name="canvasAPI_mediaRecording">Media opnames</string>
     <string name="canvasAPI_attendance">Aanwezigheid</string>
     <string name="quiz_scoring_policy_highest">Hoogste</string>

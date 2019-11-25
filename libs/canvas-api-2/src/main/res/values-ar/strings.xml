@@ -41,8 +41,7 @@
     <string name="canvasAPI_discussion">النقاش</string>
     <string name="canvasAPI_quiz">الاختبار الموجز</string>
     <string name="canvasAPI_externalTool">أداة خارجية</string>
-    <string name="canvasAPI_none">بلا</string>
-
+    <string name="canvasAPI_none">لا يوجد إرسال</string>
     <string name="canvasAPI_passFail">تجاوز إخفاق</string>
     <string name="canvasAPI_percent">النسبة المئوية</string>
     <string name="canvasAPI_letterGrade">الدرجة بالأحرف</string>
@@ -50,11 +49,11 @@
     <string name="canvasAPI_gpaScale">مقياس المعدل التراكمي (GPA)</string>
     <string name="canvasAPI_notGraded">لم يتم التقييم</string>
 
-    <string name="canvasAPI_onlineQuiz">اختبار على الإنترنت</string>
+    <string name="canvasAPI_onlineQuiz">الاختبار الموجز</string>
     <string name="canvasAPI_discussionTopic">موضوع المناقشة</string>
-    <string name="canvasAPI_onlineUpload">تحميل عبر الإنترنت</string>
-    <string name="canvasAPI_onlineTextEntry">إدخال نصي عبر الإنترنت</string>
-    <string name="canvasAPI_onlineURL">عنوان URL عبر الإنترنت</string>
+    <string name="canvasAPI_onlineUpload">تحميل ملف</string>
+    <string name="canvasAPI_onlineTextEntry">إدخال النص</string>
+    <string name="canvasAPI_onlineURL">عنوان URL لموقع ويب</string>
     <string name="canvasAPI_mediaRecording">تسجيل الوسائط</string>
     <string name="canvasAPI_attendance">الحضور</string>
     <string name="quiz_scoring_policy_highest">الأعلى</string>

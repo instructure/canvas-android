@@ -36,7 +36,6 @@ import com.instructure.student.R
 import com.instructure.student.adapter.QuizListRecyclerAdapter
 import com.instructure.student.interfaces.AdapterToFragmentCallback
 import com.instructure.student.router.RouteMatcher
-import com.newrelic.agent.android.NewRelic
 import kotlinx.android.synthetic.main.panda_recycler_refresh_layout.*
 import kotlinx.android.synthetic.main.quiz_list_layout.*
 
@@ -61,7 +60,7 @@ class QuizListFragment : ParentFragment(), Bookmarkable {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        NewRelic.setInteractionName(this::class.java.simpleName)
+        TelemetryUtils.setInteractionName(this::class.java.simpleName)
         super.onCreate(savedInstanceState)
     }
 

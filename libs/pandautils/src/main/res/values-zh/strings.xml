@@ -165,6 +165,7 @@
     <string name="noAssignmentsSubtext">该区域似乎没有创建作业。是时候走出户外进行探索了。</string>
     <string name="noAssignmentsTeacher">似乎尚未发布任何作业。</string>
     <string name="noFiles">无文件</string>
+    <string name="noFilesForAssignment">此提交项没有文件</string>
     <string name="noFilesSubtext">没有与此帐户关联的文件。</string>
     <string name="notSupported">不支持</string>
     <string name="noEvents">今天没有事件！</string>
@@ -175,7 +176,6 @@
     <string name="noDueDate">此作业没有截止日期。</string>
     <string name="locked">已锁定</string>
     <string name="lockedSubtext">此作业已锁定至%1$s%2$s。</string>
-    <string name="lockedModule">该作业是单元\"%1$s\"的组成部分，并且尚未锁定。</string>
     <string name="chooseFile">选择文件</string>
     <string name="chooseFileSubtext">点击下方的选项可以在您的提交项中附加文件。</string>
     <string name="noNotifications">无通知</string>

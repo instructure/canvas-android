@@ -290,12 +290,12 @@
 
                         <ImageView
                             android:id="@+id/attachmentIcon"
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
                             android:layout_gravity="center_vertical"
                             android:background="?android:selectableItemBackground"
                             android:contentDescription="@string/attachment"
-                            android:padding="6dp"
+                            android:padding="14dp"
                             android:scaleType="centerInside"
                             android:visibility="gone"
                             app:srcCompat="@drawable/vd_attachment" />

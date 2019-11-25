@@ -16,21 +16,26 @@
  */
 package com.instructure.student.ui.pages
 
-import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvas.espresso.scrollRecyclerView
+import com.instructure.canvasapi2.apis.InboxApi
+import com.instructure.canvasapi2.models.Conversation
+import com.instructure.canvasapi2.models.Course
 import com.instructure.dataseeding.model.ConversationApiModel
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
-import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.*
+import com.instructure.espresso.scrollTo
 import com.instructure.student.R
 
 class InboxPage : BasePage(R.id.inboxPage) {
 
     private val toolbar by OnViewWithId(R.id.toolbar)
     private val createMessageButton by OnViewWithId(R.id.addMessage)
+    private val scopeButton by OnViewWithId(R.id.filterButton)
+    private val filterButton by OnViewWithId(R.id.inboxFilter)
 
     fun assertConversationDisplayed(conversation: ConversationApiModel) {
         assertConversationDisplayed(conversation.subject)
@@ -46,6 +51,28 @@ class InboxPage : BasePage(R.id.inboxPage) {
         val matcher = withText(conversation.subject)
         scrollRecyclerView(R.id.inboxRecyclerView, matcher)
         onView(matcher).click()
+    }
+
+    fun selectConversation(conversation: Conversation) {
+        val matcher = withText(conversation.subject)
+        scrollRecyclerView(R.id.inboxRecyclerView, matcher)
+        onView(matcher).click()
+    }
+
+    fun selectInboxScope(scope: InboxApi.Scope) {
+        scopeButton.click()
+        when (scope) {
+            InboxApi.Scope.ALL -> onViewWithText("All").scrollTo().click()
+            InboxApi.Scope.UNREAD -> onViewWithText("Unread").scrollTo().click()
+            InboxApi.Scope.ARCHIVED -> onViewWithText("Archived").scrollTo().click()
+            InboxApi.Scope.STARRED -> onViewWithText("Starred").scrollTo().click()
+            InboxApi.Scope.SENT -> onViewWithText("Sent").scrollTo().click()
+        }
+    }
+
+    fun selectInboxFilter(course: Course) {
+        filterButton.click()
+        waitForViewWithText(course.name).click()
     }
 
     fun pressNewMessageButton() {

@@ -16,98 +16,250 @@
  */
 package com.instructure.student.ui.interaction
 
+import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.canvas.espresso.Stub
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.addDiscussionTopicToCourse
+import com.instructure.canvas.espresso.mockCanvas.addFileToCourse
+import com.instructure.canvas.espresso.mockCanvas.addFileToFolder
+import com.instructure.canvas.espresso.mockCanvas.addFolderToCourse
+import com.instructure.canvas.espresso.mockCanvas.addGroupToCourse
+import com.instructure.canvas.espresso.mockCanvas.addPageToCourse
+import com.instructure.canvas.espresso.mockCanvas.addQuizToCourse
+import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.DiscussionTopicHeader
+import com.instructure.canvasapi2.models.Group
+import com.instructure.canvasapi2.models.Page
+import com.instructure.canvasapi2.models.Tab
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
+import com.instructure.student.ui.pages.WebViewTextCheck
 import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.tokenLogin
 import org.junit.Test
 
 class GroupLinksInteractionTest : StudentTest() {
     override fun displaysPageObjects() = Unit // Not used for interaction tests
 
-    @Stub
+    private lateinit var group : Group
+    private lateinit var course : Course
+    private lateinit var discussion : DiscussionTopicHeader
+    private lateinit var announcement : DiscussionTopicHeader
+    private lateinit var page: Page
+    private val pageBody = "<h1 id=\"header1\">Page body</h1>"
+    private val fileBody = "<h1 id=\"header1\">File body</h1>"
+    private var fileDisplayName = "GroupFile.html"
+    private var groupFolderDisplayName = "Group Folder"
+
+    // Link to group opens group browser - eg: "/groups/:id"
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, false)
     fun testGroupLink_base() {
-        // Link to group opens group browser - eg: "/groups/:id"
+        setUpGroupAndSignIn()
+        dashboardPage.selectGroup(group)
+        courseBrowserPage.assertTitleCorrect(group)
     }
 
-    @Stub
+    // Link to groups opens dashboard - eg: "/groups"
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, true, FeatureCategory.DASHBOARD)
+    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, FeatureCategory.DASHBOARD)
     fun testGroupLink_dashboard() {
-        // Link to groups opens dashboard - eg: "/groups"
+        setUpGroupAndSignIn()
+        dashboardPage.assertDisplaysGroup(group, course)
     }
 
-    @Stub
+    // Link to file preview opens file - eg: "/groups/:id/files/folder/:id?preview=:id"
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, true, FeatureCategory.FILES)
+    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, FeatureCategory.FILES)
     fun testGroupLink_filePreview() {
-        // Link to file preview opens file - eg: "/groups/:id/files/folder/:id?preview=:id"
+        setUpGroupAndSignIn()
+        dashboardPage.selectGroup(group)
+        courseBrowserPage.selectFiles()
+        fileListPage.selectItem(groupFolderDisplayName)
+        fileListPage.selectItem(fileDisplayName)
+        canvasWebViewPage.runTextChecks(
+                WebViewTextCheck(Locator.ID, "header1", "File body")
+        )
     }
 
-    @Stub
+    // Link to group announcement opens announcement - eg: "/groups/:id/discussion_topics/:id"
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, true, FeatureCategory.DISCUSSIONS)
+    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, FeatureCategory.ANNOUNCEMENTS)
     fun testGroupLink_announcement() {
-        // Link to group announcement opens announcement - eg: "/groups/:id/discussion_topics/:id"
+        setUpGroupAndSignIn()
+        dashboardPage.selectGroup(group)
+        courseBrowserPage.selectAnnouncements()
+        discussionListPage.selectTopic(announcement.title!!)
+        discussionDetailsPage.assertTopicInfoShowing(announcement)
+
     }
 
-    @Stub
+    // Link to group announcements list opens announcements - eg: "/groups/:id/announcements"
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, true, FeatureCategory.DISCUSSIONS)
+    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, FeatureCategory.ANNOUNCEMENTS)
     fun testGroupLink_announcementList() {
-        // Link to group announcements list opens announcements - eg: "/groups/:id/announcements"
+        setUpGroupAndSignIn()
+        dashboardPage.selectGroup(group)
+        courseBrowserPage.selectAnnouncements()
+        discussionListPage.assertTopicDisplayed(announcement.title!!)
     }
 
-    @Stub
+    // Link to group discussion opens discussion - eg: "/groups/:id/discussion_topics/:id"
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, true, FeatureCategory.DISCUSSIONS)
+    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, FeatureCategory.DISCUSSIONS)
     fun testGroupLink_discussion() {
-        // Link to group discussion opens discussion - eg: "/groups/:id/discussion_topics/:id"
+        setUpGroupAndSignIn()
+        dashboardPage.selectGroup(group)
+        courseBrowserPage.selectDiscussions()
+        discussionListPage.selectTopic(discussion.title!!)
+        discussionDetailsPage.assertTopicInfoShowing(discussion)
     }
 
-    @Stub
+    // Link to group discussion list opens list - eg: "/groups/:id/discussion_topics"
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, true, FeatureCategory.DISCUSSIONS)
+    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, FeatureCategory.DISCUSSIONS)
     fun testGroupLink_discussionList() {
-        // Link to group discussion list opens list - eg: "/groups/:id/discussion_topics"
+        setUpGroupAndSignIn()
+        dashboardPage.selectGroup(group)
+        courseBrowserPage.selectDiscussions()
+        discussionListPage.assertTopicDisplayed(discussion.title!!)
     }
 
-    @Stub
+    // Link to group files list opens group files list - eg: "/groups/:id/files"
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, true, FeatureCategory.FILES)
+    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, FeatureCategory.FILES)
     fun testGroupLink_files() {
-        // Link to group files list opens group files list - eg: "/groups/:id/files"
+        setUpGroupAndSignIn()
+        dashboardPage.selectGroup(group)
+        courseBrowserPage.selectFiles()
+        fileListPage.assertItemDisplayed(groupFolderDisplayName)
     }
 
-    @Stub
+    // Link to group files folder opens folder - eg: "/groups/:id/files/folder/:id/"
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, true, FeatureCategory.FILES)
+    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, FeatureCategory.FILES)
     fun testGroupLink_fileFolder() {
-        // Link to group files folder opens folder - eg: "/groups/:id/files/folder/:id/"
+        setUpGroupAndSignIn()
+        dashboardPage.selectGroup(group)
+        courseBrowserPage.selectFiles()
+        fileListPage.assertItemDisplayed(groupFolderDisplayName)
+        fileListPage.selectItem(groupFolderDisplayName)
+        fileListPage.assertItemDisplayed(fileDisplayName)
     }
 
-    @Stub
+    // Link to group page list opens pages - eg: "/groups/:id/pages"
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, true, FeatureCategory.PAGES)
+    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, FeatureCategory.PAGES)
     fun testGroupLink_pagesList() {
-        // Link to group page list opens pages - eg: "/groups/:id/pages"
+        setUpGroupAndSignIn()
+        dashboardPage.selectGroup(group)
+        courseBrowserPage.selectPages()
+        pageListPage.assertRegularPageDisplayed(page)
     }
 
-    @Stub
+    // Link to group page opens page - eg: "/groups/:id/pages/:id"
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, true, FeatureCategory.PAGES)
+    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, FeatureCategory.PAGES)
     fun testGroupLink_Page() {
-        // Link to group page opens page - eg: "/groups/:id/pages/:id"
+        setUpGroupAndSignIn()
+        dashboardPage.selectGroup(group)
+        courseBrowserPage.selectPages()
+        pageListPage.selectRegularPage(page)
+        canvasWebViewPage.runTextChecks(
+                WebViewTextCheck(Locator.ID, "header1", "Page body")
+        )
     }
 
-    @Stub
+    // Link to group people list opens list - eg: "/groups/:id/users"
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, true, FeatureCategory.PEOPLE)
+    @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, FeatureCategory.PEOPLE)
     fun testGroupLink_people() {
-        // Link to group people list opens list - eg: "/groups/:id/users"
+        setUpGroupAndSignIn()
+        dashboardPage.selectGroup(group)
+        courseBrowserPage.selectPeople() // Why does this call https://mock-data.instructure.com/api/v1/courses/1/users?include[]=enrollments&include[]=avatar_url&include[]=user_id&include[]=email&include[]=bio&enrollment_type=teacher&per_page=100
+
+        for(user in group.users) {
+            peopleListPage.assertPersonListed(user)
+        }
+    }
+
+    // Mock a single student and course, mock a group and a number of items associated with the group,
+    // sign in, then navigate to the dashboard.
+    private fun setUpGroupAndSignIn(): MockCanvas {
+
+        // Basic info
+        val data = MockCanvas.init(
+                studentCount = 1,
+                courseCount = 1,
+                favoriteCourseCount = 1)
+
+        course = data.courses.values.first()
+        val user = data.users.values.first()
+
+        // Add a group
+        group = data.addGroupToCourse(
+                course = course,
+                members = listOf(user)
+        )
+
+        // Add a discussion
+        discussion = data.addDiscussionTopicToCourse(
+                course = course,
+                user = user,
+                groupId = group.id
+        )
+
+        // Add an announcement
+        announcement = data.addDiscussionTopicToCourse(
+                course = course,
+                user = user,
+                groupId = group.id,
+                isAnnouncement = true
+        )
+
+        // Add a page
+        page = data.addPageToCourse(
+                pageId = data.newItemId(),
+                courseId = course.id,
+                published = true,
+                groupId = group.id,
+                body = pageBody
+        )
+
+        // Add a folder
+        val folderId = data.addFolderToCourse(
+                courseId = course.id,
+                displayName = groupFolderDisplayName,
+                groupId = group.id
+        )
+
+        // Add a file to the folder
+        val fileId = data.addFileToFolder(
+                folderId = folderId,
+                displayName = fileDisplayName,
+                fileContent = fileBody,
+                contentType = "text.html"
+        )
+
+        // Make sure that we have group tabs
+        data.groupTabs[group.id] = mutableListOf(
+                Tab(position = 0, label = "Discussions", tabId = Tab.DISCUSSIONS_ID, visibility = "public"),
+                Tab(position = 1, label = "Announcements", tabId = Tab.ANNOUNCEMENTS_ID, visibility = "public"),
+                Tab(position = 2, label = "People", tabId = Tab.PEOPLE_ID, visibility = "public"),
+                Tab(position = 3, label = "Pages", tabId = Tab.PAGES_ID, visibility = "public"),
+                Tab(position = 4, label = "Files", tabId = Tab.FILES_ID, visibility = "public")
+        )
+
+
+        // Sign in
+        val student = data.students[0]
+        val token = data.tokenFor(student)!!
+        tokenLogin(data.domain, token, student)
+        dashboardPage.waitForRender()
+
+        return data
     }
 }

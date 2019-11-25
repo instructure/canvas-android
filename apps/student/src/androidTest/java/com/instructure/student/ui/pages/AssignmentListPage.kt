@@ -24,6 +24,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withChild
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withParent
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.dataseeding.model.AssignmentApiModel
 import com.instructure.dataseeding.model.QuizApiModel
@@ -34,6 +35,7 @@ import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.waitForViewWithText
+import com.instructure.espresso.scrollTo
 import com.instructure.espresso.swipeDown
 import com.instructure.student.R
 import org.hamcrest.Matcher
@@ -55,6 +57,11 @@ class AssignmentListPage : BasePage(pageResId = R.id.assignmentListPage) {
 
     fun clickAssignment(assignment: AssignmentApiModel) {
         waitForViewWithText(assignment.name).click()
+    }
+
+    fun clickAssignment(assignment: Assignment) {
+        scrollRecyclerView(R.id.listView, withText(assignment.name!!))
+        waitForViewWithText(assignment.name!!).click()
     }
 
     fun clickQuiz(quiz: QuizApiModel) {

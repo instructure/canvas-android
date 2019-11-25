@@ -41,8 +41,7 @@
     <string name="canvasAPI_discussion">Обсуждение</string>
     <string name="canvasAPI_quiz">Тест</string>
     <string name="canvasAPI_externalTool">Внешний инструмент</string>
-    <string name="canvasAPI_none">Нет</string>
-
+    <string name="canvasAPI_none">Нет отправки</string>
     <string name="canvasAPI_passFail">Сдал Не сдал</string>
     <string name="canvasAPI_percent">Процент</string>
     <string name="canvasAPI_letterGrade">Успеваемость</string>
@@ -50,11 +49,11 @@
     <string name="canvasAPI_gpaScale">Шкала GPA</string>
     <string name="canvasAPI_notGraded">Оценка не выставлена</string>
 
-    <string name="canvasAPI_onlineQuiz">Онлайн тест</string>
+    <string name="canvasAPI_onlineQuiz">Тест</string>
     <string name="canvasAPI_discussionTopic">Тема обсуждения</string>
-    <string name="canvasAPI_onlineUpload">Онлайновая отправка</string>
-    <string name="canvasAPI_onlineTextEntry">Онлайновый ввод текста</string>
-    <string name="canvasAPI_onlineURL">URL-адрес в Интернете</string>
+    <string name="canvasAPI_onlineUpload">Отправка файла</string>
+    <string name="canvasAPI_onlineTextEntry">Ввод текста</string>
+    <string name="canvasAPI_onlineURL">Адрес веб-сайта</string>
     <string name="canvasAPI_mediaRecording">Запись на носитель</string>
     <string name="canvasAPI_attendance">Посещаемость</string>
     <string name="quiz_scoring_policy_highest">Самая высокая</string>

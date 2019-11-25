@@ -55,6 +55,13 @@
     <string name="launchExternalTool">Zaženi zunanje orodje</string>
 
     <string name="preview">Predogled</string>
+    <string name="submissionUploadFailedMessage">Nalaganje ene ali več datotek ni uspelo. Preverite internetno povezavo in poskusite poslati znova.</string>
+    <string name="submissionUploadByteProgress">%1$s od %2$s</string>
+    <string name="submissionSuccessTitle">Oddaja je bila uspešna!</string>
+    <string name="submissionSuccessMessage">Vaša naloga je uspešno poslana. Lep dan vam želimo.</string>
+    <string name="cancelAllSubmissions">Prekliči vse oddaje nalog</string>
+    <string name="missingSubmissionLabel">Manjkajoče</string>
+    <string name="gradedSubmissionLabel">Ocenjeno</string>
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">Za naslove URL, ki uporabljajo »http://«, predogled ni na voljo.</string>
     <string name="submissionUrlNotAUrlError">Vnesite veljaven naslov URL.</string>
@@ -62,8 +69,11 @@
     <string name="addFileFabContentDesc">Prikaži možnosti za Dodaj datoteko</string>
     <string name="recordAudio">Posnemi zvok</string>
 
+    <string name="recordVideo">Posnemi videoposnetek</string>
+
     <!-- Student Submission -->
     <string name="submissionWrite">Zapis&#8230;</string>
+    <string name="textSubmissionFailureMessage">Prišlo je do težav pri nalaganju oddaje. Ponovno pošlji.</string>
     <!-- Student Submission Details -->
     <string name="submission">Oddaja</string>
     <string name="submissionVersions">Različice oddaj</string>
@@ -79,15 +89,38 @@
     <string name="submissionDetailsAssignmentLocked">Naloga je zaklenjena</string>
     <string name="webPreview">Predogled vnesenega naslova URL</string>
     <string name="websiteUrl">URL spletnega mesta</string>
+    <string name="noneContentMessage">Pri tej nalogi spletne oddaje niso dovoljene.</string>
+    <string name="onPaperContentMessage">Pri tej nalogi spletne oddaje niso dovoljene.</string>
+    <string name="noOnlineSubmissions">Ni spletnih oddaj</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Od %s točk</string>
     <string name="outOfPointsAbbreviatedFormatted">Od %s točk</string>
     <string name="gradeExcused">Opravičeno</string>
     <string name="finalGradeFormatted">Končna ocena: %s</string>
+    <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
+    <string name="contentDescriptionScoreOutOfPointsPossible">%1$s od %2$s točk</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Po meri prilagojen rezultat</string>
     <string name="rubricEmptyMessage">Za to nalogo ni ocenjevalnega vodnika</string>
     <string name="rubricViewLongDescription">Ogled dolgega opisa</string>
+    <!-- Student Submission Comments -->
+    <string name="assignmentSubmissionUploadingFile">Nalagam datoteko %1$d od %2$d</string>
+    <string name="assignmentSubmissionCommentUpload">Nalagam komentar za %s</string>
+    <string name="assignmentSubmissionCommentUploadingMedia">Nalagam medijsko datoteko</string>
+    <string name="assignmentSubmissionCommentError">Nalaganje komentarja za %s ni uspelo</string>
+    <string name="chooseFileForCommentSubtext">Komentarju priložite datoteke, tako da se dotaknete možnosti spodaj</string>
+    <string name="emptySubmissionCommentsSubtext">Ali imate vprašanja o vaši nalogi?\nPošljite sporočilo izvajalcu.</string>
+    <string name="submissionCommentErrorMessage">Tega sporočila ni bilo mogoče poslati. Tapnite, da poskusite znova.</string>
+    <string name="mediaUploadAudio">Nalaganje medija – zvočni posnetek</string>
+    <string name="mediaUploadVideo">Nalaganje medija – videoposnetek</string>
+    <string name="commentSubmissionTypeText">Oddaja besedila</string>
+    <string name="commentSubmissionTypeExternalTool">Oddaja z zunanjim orodjem</string>
+    <string name="commentSubmissionTypeDiscussion">Oddaja pri razpravi</string>
+    <string name="commentSubmissionTypeQuiz">Oddaja kviza</string>
+    <string name="commentSubmissionTypeQuizAttempt">Poskus %d</string>
+    <string name="commentSubmissionTypeMediaFile">Medijska datoteka</string>
+    <string name="commentSubmissionTypeAudio">Zvok</string>
+    <string name="commentSubmissionTypeVideo">Videoposnetek</string>
     <!-- Profile Fragment Strings -->
     <string name="canvasVersionNum">Različica:</string>
 
@@ -104,7 +137,6 @@
     <string name="options">Možnosti</string>
 
     <string name="discussionAttachment">Dodaj datoteko</string>
-    <string name="discussionUpload">Naloži videoposnetek ali zvočni posnetek</string>
     <string name="discussionPostEditing">Uredi</string>
 
     <!--Multiple User Sign in -->
@@ -140,36 +172,16 @@
     <string name="lowercaseAM">dop.</string>
     <string name="lowercasePM">pop.</string>
     <!-- Assignments -->
-    <string name="assignmentDue">Rok</string>
-    <string name="assignmentDueColon">Rok: </string>
-    <string name="assignmentLastSubmission">Zadnja oddaja:</string>
-    <string name="assignmentNoSubmission">Brez</string>
-    <string name="assignmentTabDetails">Podrobnosti</string>
-    <string name="assignmentTabSubmission">Oddaje</string>
-    <string name="assignmentTabGrade">Ocena</string>
     <string name="assignmentLocked">Zaklenjeno</string>
     <string name="assignments">Naloge:</string>
-    <string name="freeFormRubricPoints" formatted="false">%s/%s </string>
-    <string name="noRubric">Za to nalogo ni ocenjevalnega vodnika.</string>
     <string name="noDescription">Za to nalogo ni opisa.</string>
     <string name="noAssignmentsInGroup">V tej skupini ni nalog.</string>
     <string name="excusedAssignment">Ta naloga je opravičena in ne bo upoštevana v končnem izračunu.</string>
-    <string name="droppedAssignment">Ta naloga je izpuščena in ne bo upoštevana v končnem izračunu.</string>
     <string name="excused">Opravičeno</string>
-    <string name="mutedText">Ocene niso na voljo, ker se z njimi ukvarja učitelj.</string>
-    <string name="rubricRangePointsText" formatted="false">&#160;do &gt; %s točk</string>
-    <string name="contentDescriptionRubricRangePointsText" formatted="false">%s &#160;do &gt; %s točk</string>
-
     <!-- Assignment editing -->
     <string name="points">Točke </string>
-    <string name="assignmentGroup">Skupina nalog: </string>
-    <string name="gradingType">Vrsta ocenjevanja: </string>
-    <string name="submissionType">Vrsta oddaje: </string>
-    <string name="editAssignment">Uredi nalogo</string>
     <string name="save">Shrani</string>
     <string name="cancel">Prekliči</string>
-    <string name="sendNotification">Obvestite uporabnike, da se je ta vsebina spremenila.</string>
-
     <!-- Discussions -->
     <string name="forbidden">Odgovori so vidni samo tistim, ki so objavili vsaj en odgovor.</string>
 
@@ -189,6 +201,10 @@
     <string name="checkBoxFinalGradeOption">Na podlagi ocenjenih nalog</string>
     <string name="checkBoxWhatIfGradeOption">Prikaži simulacijo rezultatov</string>
     <string name="whatIfDialogText">Simulacija rezultatov</string>
+    <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
+    <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s od %2$s točk, %3$s</string>
+
+
     <string name="inbox">Pošta</string>
     <string name="unread">Neprebrano</string>
     <string name="archived">Arhivirano</string>
@@ -231,7 +247,6 @@
         <item quantity="one">%d je treba oceniti.</item>
         <item quantity="other">%d je treba oceniti.</item>
     </plurals>
-    <string name="myFiles">Datoteke</string>
     <string name="createAFolder">Ustvari mapo</string>
     <string name="createFolder">Ustvari mapo</string>
     <string name="createAFile">Ustvari datoteko</string>
@@ -273,7 +288,6 @@
     <string name="deleteEvent">Odstrani dogodek</string>
     <string name="selected">Izbrano</string>
     <string name="errorSendingMessage">Pri pošiljanju sporočila je prišlo do napake. Poskusite znova.</string>
-    <string name="errorPostingComment">Pri poskusu objave komentarja k oddaji je prišlo do napake. Poskusite znova.</string>
     <string name="deletedConversation">Ta pogovor je izbrisan.</string>
     <string name="uploadAvatarFailMsg">Nalaganje nove slike avatarja ni uspelo.</string>
     <string name="editPhoto">Uredi fotografijo</string>
@@ -306,8 +320,6 @@
     <string name="openAlternate">Odpri z drugo aplikacijo</string>
     <string name="opening">Odpiranje datoteke&#8230;</string>
     <string name="download">Prenesi</string>
-    <string name="hideExtras">Skrij dodatke</string>
-    <string name="showExtras">Prikaži dodatke</string>
     <string name="messageAttachments">Priloge sporočilom</string>
     <string name="discussionAttachmentLabel">Priloga</string>
     <string name="attachmentIcon">Ikona priloge</string>
@@ -366,6 +378,7 @@
     <string name="select_item_to_display">Izberi s seznama</string>
 
     <string name="syllabus">Učni načrt</string>
+    <string name="summary">Povzetek</string>
     <string name="coursePeople">Sodelujoči</string>
     <string name="teachersTas">Izvajalci in demonstratorji</string>
     <string name="students">Študenti</string>
@@ -399,12 +412,6 @@
 
     <!-- Notifications -->
     <string name="deleted">Odstranjeno</string>
-    <string name="gradedDiscussion">Ocenjena razprava</string>
-    <string name="pointsPossible">Mogoče točke</string>
-    <string name="pointsPossibleNoPeriod">Mogoče točke</string>
-
-    <string name="deletedEntryNoChildren">Pri tem izbrisanem vnosu razprave ni odgovorov.</string>
-    <string name="sideCommentEntry">Pri tej vrsti razprave na tej ravni ne morete komentirati nobenega vnosa.</string>
     <string name="contentDescriptionFiles">Ikona datoteke</string>
 
     <string name="loadingCanvas">Nalaganje vsebine sistema Canvas&#8230;</string>
@@ -428,11 +435,6 @@
     <string name="emptyId">ID ne sme biti prazen.</string>
 
     <string name="goToQuiz">Pojdi na kviz</string>
-    <string name="goToExternalTool">Pojdi na zunanje orodje</string>
-
-    <string name="pastDueDate">Po roku</string>
-
-    <string name="goToDiscussion">Pojdi na razpravo</string>
     <string name="quizzes">Kvizi</string>
 
     <string name="lastDiscussionPost">Zadnja objava</string>
@@ -486,7 +488,6 @@
     <string name="lockedFileDesc">Ta datoteka je del modula %s in še ni odklenjena.</string>
     <string name="lockedQuizDesc">Ta kviz je del modula %s in še ni odklenjen.</string>
     <string name="lockedDiscussionDesc">Ta razprava je del modula %s in še ni odklenjena.</string>
-    <string name="lockedAssignmentDescLine2">Za informacije o tem, kako odkleniti to vsebino, obiščite strani modulov predmetov.</string>
     <string name="mustComplete">Najprej morate zaključiti:</string>
     <string name="unlockedAt">Odklenjeno bo ob:</string>
     <string name="goToModules">Pojdi v module</string>
@@ -508,22 +509,12 @@
     <!-- New Submission Strings -->
     <string name="textEntry">Vnos besedila</string>
     <string name="onlineURL">Spletni naslov URL</string>
-    <string name="enterTextEntry">Vnos besedila</string>
-    <string name="fileUpload"> Nalaganje datotek</string>
     <string name="oneFileOnly">Pri tej oddaji je sprejemljivo le nalaganje ene datoteke.</string>
 
 
     <string name="websiteEntry">Dodaj vnos spletnega mesta</string>
     <string name="mediaRecordingEntry">Medijski posnetki</string>
     <string name="submit">Pošlji</string>
-    <string name="blankSubmission">Oddaja ne sme biti prazna.</string>
-    <string name="errorPostingSubmission">Pri objavi oddaje je prišlo do napake.</string>
-    <string name="successPostingSubmission">Uspešno objavljena oddaja</string>
-
-    <string name="exampleSubmissionURL">http://www.example.com</string>
-
-
-
     <!-- DataLoss Fragment Strings -->
     <string name="unsavedProgress">Neshranjeni napredek</string>
     <string name="informationLost">Neshranjene informacije bodo izgubljene. Ali želite nadaljevati?</string>
@@ -537,22 +528,8 @@
 
     <!-- Submission Details Strings -->
     <string name="next">Naprej</string>
-    <string name="addSubmission">Oddaj</string>
-    <string name="addAnotherSubmission">Znova oddaj</string>
     <string name="turnedIn">Oddano:&#160;</string>
     <string name="addComment">Dodaj komentar&#8230;</string>
-    <string name="addCommentNoEllipsis">Dodaj komentar</string>
-    <string name="subTypeOnlineText">Vnos besedila prek spleta</string>
-    <string name="subTypeFileUpload">Nalaganje datoteke prek spleta</string>
-    <string name="subTypeOnlineURL">URL spletnega mesta</string>
-    <string name="subTypeOnlineQuiz">Spletni kviz</string>
-    <string name="subTypeMediaRecording">Medijski posnetek</string>
-    <string name="sub_type_lti_launch">Zagon orodja LTI</string>
-    <string name="subTypeDiscussionTopic">Razprava</string>
-    <string name="turnInByHand">To nalogo morate oddati osebno.</string>
-    <string name="noSubRequired">Oddaja ni zahtevana.</string>
-    <string name="noTurnInOnMobile">Nepodprta mobilna oddaja</string>
-
     <string name="home">Glavna stran</string>
     <string name="Notifications">Obvestila</string>
 
@@ -582,9 +559,6 @@
     <string name="clickToViewSubmission">Ob oddaji je bilo spletno mesto posneto. Tapnite in držite spodnjo sliko, da odprete ali prenesete polno sliko.</string>
     <string name="urlSubmissionNoPreview">Ta oddaja je bila v obliki naslova URL za zunanjo stran. Ne pozabite, da se je ta stran morda spremenila, od kar se je oddaja prvič pojavila.</string>
     <string name="contentDescriptionPreviewImage">Predogled poslanega naslova URL</string>
-    <string name="itemStillProcessing">Ta element je v strežniku še vedno v obdelavi. Poskusite znova.</string>
-
-
     <string name="isNotSupportedFeature">%1$s niso podprti.</string>
     <string name="isNotSupported">Povezava ni podprta.</string>
     <string name="openInBrowser">Odpri v brskalniku</string>
@@ -601,8 +575,6 @@
     <string name="panda_fact_string">Dejstvo o pandi:&#160;</string>
     <string name="remove">Odstrani</string>
     <string name="founders">Ustanovitelji</string>
-    <string name="image">Slika</string>
-
     <string name="EULA">Licenčni pogoji za končnega uporabnika</string>
     <string name="privacyPolicy">Pravilnik o zasebnosti</string>
     <string name="termsOfUse">Pogoji uporabe</string>
@@ -630,8 +602,6 @@
     <string name="widgetMinimumStyle">Skrij podrobnosti o pripomočku</string>
     <string name="light">Svetlo</string>
     <string name="dark">Temno</string>
-
-    <string name="invalidExternal">Temu zunanjemu orodju se je iztekel čas ali pa je nepravilno konfigurirano.</string>
 
     <!-- Help dialog strings -->
     <string name="askInstructor">Zastavite vprašanje učitelju.</string>
@@ -956,7 +926,6 @@
     <string name="totalPoints">%s točk</string>
     <string name="totalPointsText">Vsota točk:</string>
     <string name="contentDescriptionPoints">%s točk</string>
-    <string name="contentDescriptionRubricRangeGrade">%1$s od %2$s točk</string>
     <string name="score">Rezultat</string>
     <string name="rangedRubricTotal" formatted="false">%s/%s točk</string>
     <string name="seeAll">Ogled vsega</string>
@@ -984,8 +953,6 @@
     <string name="launch_link_in_external_browser">Zaženi povezavo v zunanjem brskalniku</string>
     <string name="ltiLaunchFailure">Tega orodja LTI ni mogoče naložiti.</string>
     <string name="urlSubmission">Oddaja naslova URL</string>
-
-    <string name="assignmentDeletedError">Ta naloga ni več na voljo.</string>
 
     <string name="homePageIdForNotifications">Nedavna aktivnost</string>
     <string name="homePageIdForModules">Moduli</string>
@@ -1029,8 +996,6 @@
     <string name="unableToViewInBrowser">Zunanje aplikacije za ogled tega orodja LTI ni bilo mogoče najti.</string>
 
     <string name="commentUpload">Nalaganje komentarjev</string>
-    <string name="unableToUploadMediaComment">Za pošiljanje komentarjev v obliki medijev pošljite ali izbrišite svoj neposlan komentar v obliki besedila.</string>
-
     <string name="frontPage">Prva stran</string>
     <string name="editPage">Uredi stran</string>
     <string name="description">Opis</string>
@@ -1070,4 +1035,22 @@
     <string name="addVideoComment">Dodaj komentar v obliki videoposnetka</string>
     <string name="addAudioComment">Dodaj komentar v obliki zvočnega posnetka</string>
 
+    <string name="audioRecordingError">Pri poskusu snemanja zvoka je prišlo do nepričakovane napake.</string>
+    <string name="videoRecordingError">Pri poskusu snemanja videoposnetka je prišlo do nepričakovane napake.</string>
+
+    <string name="quizQuestionLabel">Vprašanja:</string>
+    <string name="timeLimitLabel">Časovna omejitev:</string>
+    <string name="allowedAttemptsLabel">Dovoljeni poskusi:</string>
+    <string name="instructions">Navodila</string>
+    <string name="quizNoTimeLimit">Brez</string>
+    <string name="viewQuiz">Ogled kviza</string>
+    <string name="viewDiscussion">Ogled razprave</string>
+    <string name="lockedModule">To nalogo je zaklenil modul \"%1$s\".</string>
+    <string name="chooseMediaFile">Izberi medijsko datoteko</string>
+    <string name="discussions_unknown_author">Neznani avtor</string>
+    <string name="discussions_unknown_date">Neznani datum</string>
+    <string name="a11y_gradeLetterMinusContentDescription">%s. minus</string>
+    <string name="a11y_letterGrade">%s.</string>
+    <string name="a11y_gradeCellContentDescription">%s %s</string>
+    <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
 </resources>
