@@ -464,7 +464,8 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
                 deleteAnnotation(annotation)
             }
         }
-        // This is needed for 6.0+ override fun onAnnotationZOrderChanged(p0: Int, p1: MutableList<Annotation>, p2: MutableList<Annotation>) {}
+
+        override fun onAnnotationZOrderChanged(p0: Int, p1: MutableList<Annotation>, p2: MutableList<Annotation>) {}
     }
 
     private fun annotationNetworkCheck(annotation: Annotation): Boolean {
