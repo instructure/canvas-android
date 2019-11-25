@@ -58,13 +58,22 @@ class PageListPage : BasePage(R.id.pageListPage) {
     }
 
     fun assertRegularPageDisplayed(page: PageApiModel) {
+        assertRegularPageDisplayedCommon(page.title)
+    }
+
+    fun assertRegularPageDisplayed(page: Page) {
+        assertRegularPageDisplayedCommon(page.title!!)
+    }
+
+    private fun assertRegularPageDisplayedCommon(pageTitle: String) {
         val matcher = allOf(
                 withId(R.id.title),
-                withText(page.title)
+                withText(pageTitle)
         )
 
         scrollRecyclerView(R.id.listView, matcher)
         onView(matcher).assertDisplayed()
+
     }
 
     fun selectRegularPage(page: PageApiModel) {
