@@ -915,8 +915,6 @@ fun MockCanvas.addFolderToCourse(
     fileList.add(folderMetadataItem)
     fileFolders[newFolderId] = folderMetadataItem
 
-    //Log.d("Folders", "Added folder id $newFolderId: $folderMetadataItem")
-
     return newFolderId
 }
 
@@ -959,7 +957,6 @@ fun MockCanvas.addFileToFolder(
 
     // Now record our file contents (just text for now)
     fileContents[fileId] = fileContent
-    //Log.d("<--", "file($fileId) contents = \"$fileContent\"")
 
     return fileId
 

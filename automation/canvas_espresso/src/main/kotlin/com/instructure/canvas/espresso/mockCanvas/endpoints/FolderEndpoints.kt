@@ -58,7 +58,6 @@ object FolderEndpoint : Endpoint(
             GET {
                 val folderId = pathVars.folderId
                 val folder = data.fileFolders[folderId]
-                //Log.d("Folders", "endpoint: folderId=$folderId, folder=$folder")
                 if (folder != null) {
                     request.successResponse(folder)
                 } else {

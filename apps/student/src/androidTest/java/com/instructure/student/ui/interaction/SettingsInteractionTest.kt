@@ -52,6 +52,7 @@ class SettingsInteractionTest : StudentTest() {
     @TestMetaData(Priority.P0, FeatureCategory.SETTINGS, TestCategory.INTERACTION, true)
     fun testHelp_submitFeatureIdea() {
         // Should send a pre-filled email intent. Should be addressed to mobilesupport@instructure.com.
+
     }
 
     @Stub

@@ -34,6 +34,7 @@ import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvasapi2.models.AccountNotification
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Group
@@ -94,7 +95,8 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
 
     fun assertDisplaysCourse(course: Course) {
         val matcher = withText(containsString(course.originalName!!)) + withId(R.id.titleTextView) + isDisplayed()
-        scrollAndAssertDisplayed(matcher)
+        scrollRecyclerView(R.id.listView, matcher)
+        onView(matcher).assertDisplayed()
     }
 
     fun assertCourseNotShown(course: Course) {
@@ -102,17 +104,21 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     }
 
     fun assertDisplaysGroup(group: GroupApiModel, course: CourseApiModel) {
-        val groupNameMatcher = allOf(withText(group.name), withId(R.id.groupNameView))
-        scrollAndAssertDisplayed(groupNameMatcher)
-        val groupDescriptionMatcher = allOf(withText(course.name), withId(R.id.groupCourseView))
-        scrollAndAssertDisplayed(groupDescriptionMatcher)
+        assertDisplaysGroupCommon(group.name, course.name)
     }
 
     fun assertDisplaysGroup(group: Group, course: Course) {
-        val groupNameMatcher = allOf(withText(group.name), withId(R.id.groupNameView))
-        scrollAndAssertDisplayed(groupNameMatcher)
-        val groupDescriptionMatcher = allOf(withText(course.name), withId(R.id.groupCourseView))
-        scrollAndAssertDisplayed(groupDescriptionMatcher)
+        assertDisplaysGroupCommon(group.name!!, course.name)
+    }
+
+    private fun assertDisplaysGroupCommon(groupName: String, courseName: String) {
+        val groupNameMatcher = allOf(withText(groupName), withId(R.id.groupNameView))
+        scrollRecyclerView(R.id.listView, groupNameMatcher)
+        onView(groupNameMatcher).assertDisplayed()
+        val groupDescriptionMatcher = allOf(withText(courseName), withId(R.id.groupCourseView))
+        scrollRecyclerView(R.id.listView, groupDescriptionMatcher)
+        onView(groupDescriptionMatcher).assertDisplayed()
+
     }
 
     fun assertDisplaysAddCourseMessage() {
@@ -212,6 +218,8 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     }
 
     fun selectGroup(group: Group) {
+        val groupNameMatcher = allOf(withText(group.name), withId(R.id.groupNameView))
+        scrollRecyclerView(R.id.listView, groupNameMatcher)
         onView(withText(group.name)).click()
     }
 
