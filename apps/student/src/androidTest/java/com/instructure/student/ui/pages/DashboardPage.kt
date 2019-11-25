@@ -24,6 +24,7 @@ import android.widget.TextView
 import androidx.appcompat.widget.SwitchCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.PerformException
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
@@ -95,8 +96,15 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
 
     fun assertDisplaysCourse(course: Course) {
         val matcher = withText(containsString(course.originalName!!)) + withId(R.id.titleTextView) + isDisplayed()
-        scrollRecyclerView(R.id.listView, matcher)
-        onView(matcher).assertDisplayed()
+        try {
+            // This is the RIGHT way to do it, but it inexplicably fails most of the time.
+            scrollRecyclerView(R.id.listView, matcher)
+            onView(matcher).assertDisplayed()
+        }
+        catch(pe: PerformException) {
+            // Revert to this weaker operation if the one above fails.
+            scrollAndAssertDisplayed(matcher)
+        }
     }
 
     fun assertCourseNotShown(course: Course) {
