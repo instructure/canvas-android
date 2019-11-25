@@ -6,8 +6,42 @@ part of 'conversation.dart';
 // BuiltValueGenerator
 // **************************************************************************
 
+const ConversationWorkflowState _$conversationWorkflowStateRead =
+    const ConversationWorkflowState._('read');
+const ConversationWorkflowState _$conversationWorkflowStateUnread =
+    const ConversationWorkflowState._('unread');
+const ConversationWorkflowState _$conversationWorkflowStateArchived =
+    const ConversationWorkflowState._('archived');
+const ConversationWorkflowState _$conversationWorkflowStateUnknown =
+    const ConversationWorkflowState._('unknown');
+
+ConversationWorkflowState _$conversationWorkflowStateValueOf(String name) {
+  switch (name) {
+    case 'read':
+      return _$conversationWorkflowStateRead;
+    case 'unread':
+      return _$conversationWorkflowStateUnread;
+    case 'archived':
+      return _$conversationWorkflowStateArchived;
+    case 'unknown':
+      return _$conversationWorkflowStateUnknown;
+    default:
+      return _$conversationWorkflowStateUnknown;
+  }
+}
+
+final BuiltSet<ConversationWorkflowState> _$conversationWorkflowStateValues =
+    new BuiltSet<ConversationWorkflowState>(const <ConversationWorkflowState>[
+  _$conversationWorkflowStateRead,
+  _$conversationWorkflowStateUnread,
+  _$conversationWorkflowStateArchived,
+  _$conversationWorkflowStateUnknown,
+]);
+
 Serializer<Conversation> _$conversationSerializer =
     new _$ConversationSerializer();
+Serializer<ConversationWorkflowState> _$conversationWorkflowStateSerializer =
+    new _$ConversationWorkflowStateSerializer();
 
 class _$ConversationSerializer implements StructuredSerializer<Conversation> {
   @override
@@ -24,6 +58,9 @@ class _$ConversationSerializer implements StructuredSerializer<Conversation> {
       'subject',
       serializers.serialize(object.subject,
           specifiedType: const FullType(String)),
+      'workflow_state',
+      serializers.serialize(object.workflowState,
+          specifiedType: const FullType(ConversationWorkflowState)),
       'message_count',
       serializers.serialize(object.messageCount,
           specifiedType: const FullType(int)),
@@ -37,12 +74,6 @@ class _$ConversationSerializer implements StructuredSerializer<Conversation> {
       serializers.serialize(object.isVisible,
           specifiedType: const FullType(bool)),
     ];
-    if (object.workflowState != null) {
-      result
-        ..add('workflow_state')
-        ..add(serializers.serialize(object.workflowState,
-            specifiedType: const FullType(String)));
-    }
     if (object.lastMessage != null) {
       result
         ..add('last_message')
@@ -130,7 +161,8 @@ class _$ConversationSerializer implements StructuredSerializer<Conversation> {
           break;
         case 'workflow_state':
           result.workflowState = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+                  specifiedType: const FullType(ConversationWorkflowState))
+              as ConversationWorkflowState;
           break;
         case 'last_message':
           result.lastMessage = serializers.deserialize(value,
@@ -201,13 +233,32 @@ class _$ConversationSerializer implements StructuredSerializer<Conversation> {
   }
 }
 
+class _$ConversationWorkflowStateSerializer
+    implements PrimitiveSerializer<ConversationWorkflowState> {
+  @override
+  final Iterable<Type> types = const <Type>[ConversationWorkflowState];
+  @override
+  final String wireName = 'workflow_state';
+
+  @override
+  Object serialize(Serializers serializers, ConversationWorkflowState object,
+          {FullType specifiedType = FullType.unspecified}) =>
+      object.name;
+
+  @override
+  ConversationWorkflowState deserialize(
+          Serializers serializers, Object serialized,
+          {FullType specifiedType = FullType.unspecified}) =>
+      ConversationWorkflowState.valueOf(serialized as String);
+}
+
 class _$Conversation extends Conversation {
   @override
   final int id;
   @override
   final String subject;
   @override
-  final String workflowState;
+  final ConversationWorkflowState workflowState;
   @override
   final String lastMessage;
   @override
@@ -264,6 +315,9 @@ class _$Conversation extends Conversation {
     }
     if (subject == null) {
       throw new BuiltValueNullFieldError('Conversation', 'subject');
+    }
+    if (workflowState == null) {
+      throw new BuiltValueNullFieldError('Conversation', 'workflowState');
     }
     if (messageCount == null) {
       throw new BuiltValueNullFieldError('Conversation', 'messageCount');
@@ -389,9 +443,9 @@ class ConversationBuilder
   String get subject => _$this._subject;
   set subject(String subject) => _$this._subject = subject;
 
-  String _workflowState;
-  String get workflowState => _$this._workflowState;
-  set workflowState(String workflowState) =>
+  ConversationWorkflowState _workflowState;
+  ConversationWorkflowState get workflowState => _$this._workflowState;
+  set workflowState(ConversationWorkflowState workflowState) =>
       _$this._workflowState = workflowState;
 
   String _lastMessage;

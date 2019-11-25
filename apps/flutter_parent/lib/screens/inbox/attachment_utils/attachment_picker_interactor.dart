@@ -17,6 +17,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:image_picker/image_picker.dart';
 
+/// Note: Currently excluded from code coverage. That may need to change if this file is updated with testable code.
 class AttachmentPickerInteractor {
   Future<File> getImageFromCamera() {
     return ImagePicker.pickImage(source: ImageSource.camera);

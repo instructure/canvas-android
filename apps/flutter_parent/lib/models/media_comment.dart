@@ -1,3 +1,5 @@
+import 'package:built_collection/built_collection.dart';
+
 /// Copyright (C) 2019 - present Instructure, Inc.
 ///
 /// This program is free software: you can redistribute it and/or modify
@@ -38,8 +40,7 @@ abstract class MediaComment implements Built<MediaComment, MediaCommentBuilder> 
 
   /// Can be either 'audio' or 'video'
   @BuiltValueField(wireName: "media_type")
-  @nullable
-  String get mediaType;
+  MediaType get mediaType;
 
   @BuiltValueField(wireName: "content-type")
   @nullable
@@ -47,4 +48,22 @@ abstract class MediaComment implements Built<MediaComment, MediaCommentBuilder> 
 
   MediaComment._();
   factory MediaComment([void Function(MediaCommentBuilder) updates]) = _$MediaComment;
+}
+
+@BuiltValueEnum(wireName: 'media_type')
+class MediaType extends EnumClass {
+  const MediaType._(String name) : super(name);
+
+  static BuiltSet<MediaType> get values => _$mediaTypeValues;
+
+  static MediaType valueOf(String name) => _$mediaTypeValueOf(name);
+
+  static Serializer<MediaType> get serializer => _$mediaTypeSerializer;
+
+  static const MediaType audio = _$mediaTypeAudio;
+
+  static const MediaType video = _$mediaTypeVideo;
+
+  @BuiltValueEnumConst(fallback: true)
+  static const MediaType unknown = _$mediaTypeUnknown;
 }

@@ -35,8 +35,7 @@ abstract class Conversation implements Built<Conversation, ConversationBuilder> 
 
   /// The workflowState of the conversation (unread, read, archived)
   @BuiltValueField(wireName: "workflow_state")
-  @nullable
-  String get workflowState;
+  ConversationWorkflowState get workflowState;
 
   /// 100 character preview of the last message
   @BuiltValueField(wireName: "last_message")
@@ -98,7 +97,7 @@ abstract class Conversation implements Built<Conversation, ConversationBuilder> 
   @nullable
   String get contextCode;
 
-  bool isUnread() => workflowState == 'unread';
+  bool isUnread() => workflowState == ConversationWorkflowState.unread;
 
   Conversation._();
   factory Conversation([void Function(ConversationBuilder) updates]) = _$Conversation;
@@ -108,6 +107,27 @@ abstract class Conversation implements Built<Conversation, ConversationBuilder> 
     ..subject = ''
     ..messageCount = 0
     ..isSubscribed = false
+    ..workflowState = ConversationWorkflowState.unread
     ..isStarred = false
     ..isVisible = false;
+}
+
+@BuiltValueEnum(wireName: 'workflow_state')
+class ConversationWorkflowState extends EnumClass {
+  const ConversationWorkflowState._(String name) : super(name);
+
+  static BuiltSet<ConversationWorkflowState> get values => _$conversationWorkflowStateValues;
+
+  static ConversationWorkflowState valueOf(String name) => _$conversationWorkflowStateValueOf(name);
+
+  static Serializer<ConversationWorkflowState> get serializer => _$conversationWorkflowStateSerializer;
+
+  static const ConversationWorkflowState read = _$conversationWorkflowStateRead;
+
+  static const ConversationWorkflowState unread = _$conversationWorkflowStateUnread;
+
+  static const ConversationWorkflowState archived = _$conversationWorkflowStateArchived;
+
+  @BuiltValueEnumConst(fallback: true)
+  static const ConversationWorkflowState unknown = _$conversationWorkflowStateUnknown;
 }

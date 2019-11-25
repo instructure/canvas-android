@@ -700,12 +700,8 @@ class _MockInteractor extends CreateConversationInteractor {
 class _MockAttachmentHandler extends AttachmentHandler {
   _MockAttachmentHandler() : super(null);
 
-  Function() mockPerformUpload = () {};
-
   @override
-  performUpload() {
-    mockPerformUpload();
-  }
+  Future<void> performUpload() => Future.value();
 }
 
 Course _mockCourse(int courseId) {

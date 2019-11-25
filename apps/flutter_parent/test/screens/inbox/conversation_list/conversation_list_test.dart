@@ -286,9 +286,10 @@ void main() {
     var read = Conversation((b) => b
       ..contextName = ''
       ..lastMessage = ''
+      ..workflowState = ConversationWorkflowState.read
       ..lastMessageAt = messageDate);
 
-    var unread = read.rebuild((b) => b..workflowState = 'unread');
+    var unread = read.rebuild((b) => b..workflowState = ConversationWorkflowState.unread);
 
     when(interactor.getConversations()).thenAnswer((_) => Future.value([read, unread, unread]));
     await tester.pumpWidget(TestApp(ConversationListScreen()));

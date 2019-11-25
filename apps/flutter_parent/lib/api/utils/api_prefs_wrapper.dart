@@ -57,5 +57,5 @@ class ApiPrefsWrapper {
     String token = null,
     Map<String, String> extraHeaders = null,
   }) =>
-      getHeaderMap(forceDeviceLanguage: forceDeviceLanguage, token: token, extraHeaders: extraHeaders);
+      ApiPrefs.getHeaderMap(forceDeviceLanguage: forceDeviceLanguage, token: token, extraHeaders: extraHeaders);
 }

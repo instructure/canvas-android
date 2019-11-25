@@ -19,14 +19,14 @@ import 'package:transparent_image/transparent_image.dart';
 class Avatar extends StatelessWidget {
   final Color backgroundColor;
   final String url;
-  final double size;
+  final double radius;
   final Widget overlay;
 
   const Avatar(
     this.url, {
     Key key,
     this.backgroundColor,
-    this.size = 20,
+    this.radius = 20,
     this.overlay,
   }) : super(key: key);
 
@@ -35,25 +35,25 @@ class Avatar extends StatelessWidget {
     return Semantics(
       excludeSemantics: true,
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(size),
+        borderRadius: BorderRadius.circular(radius),
         child: Container(
           color: backgroundColor ?? ParentTheme.of(context).nearSurfaceColor,
-          width: size * 2,
-          height: size * 2,
+          width: radius * 2,
+          height: radius * 2,
           child: Stack(
             children: <Widget>[
               FadeInImage.memoryNetwork(
                 fadeInDuration: const Duration(milliseconds: 300),
                 fit: BoxFit.cover,
-                width: size * 2,
-                height: size * 2,
+                width: radius * 2,
+                height: radius * 2,
                 image: url ?? '',
                 placeholder: kTransparentImage,
               ),
               if (overlay != null)
                 SizedBox(
-                  width: size * 2,
-                  height: size * 2,
+                  width: radius * 2,
+                  height: radius * 2,
                   child: overlay,
                 ),
             ],

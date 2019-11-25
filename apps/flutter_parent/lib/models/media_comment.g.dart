@@ -6,8 +6,33 @@ part of 'media_comment.dart';
 // BuiltValueGenerator
 // **************************************************************************
 
+const MediaType _$mediaTypeAudio = const MediaType._('audio');
+const MediaType _$mediaTypeVideo = const MediaType._('video');
+const MediaType _$mediaTypeUnknown = const MediaType._('unknown');
+
+MediaType _$mediaTypeValueOf(String name) {
+  switch (name) {
+    case 'audio':
+      return _$mediaTypeAudio;
+    case 'video':
+      return _$mediaTypeVideo;
+    case 'unknown':
+      return _$mediaTypeUnknown;
+    default:
+      return _$mediaTypeUnknown;
+  }
+}
+
+final BuiltSet<MediaType> _$mediaTypeValues =
+    new BuiltSet<MediaType>(const <MediaType>[
+  _$mediaTypeAudio,
+  _$mediaTypeVideo,
+  _$mediaTypeUnknown,
+]);
+
 Serializer<MediaComment> _$mediaCommentSerializer =
     new _$MediaCommentSerializer();
+Serializer<MediaType> _$mediaTypeSerializer = new _$MediaTypeSerializer();
 
 class _$MediaCommentSerializer implements StructuredSerializer<MediaComment> {
   @override
@@ -21,6 +46,9 @@ class _$MediaCommentSerializer implements StructuredSerializer<MediaComment> {
     final result = <Object>[
       'id',
       serializers.serialize(object.id, specifiedType: const FullType(int)),
+      'media_type',
+      serializers.serialize(object.mediaType,
+          specifiedType: const FullType(MediaType)),
     ];
     result.add('media_id');
     if (object.mediaId == null) {
@@ -41,13 +69,6 @@ class _$MediaCommentSerializer implements StructuredSerializer<MediaComment> {
       result.add(null);
     } else {
       result.add(serializers.serialize(object.url,
-          specifiedType: const FullType(String)));
-    }
-    result.add('media_type');
-    if (object.mediaType == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.mediaType,
           specifiedType: const FullType(String)));
     }
     result.add('content-type');
@@ -90,7 +111,7 @@ class _$MediaCommentSerializer implements StructuredSerializer<MediaComment> {
           break;
         case 'media_type':
           result.mediaType = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(MediaType)) as MediaType;
           break;
         case 'content-type':
           result.contentType = serializers.deserialize(value,
@@ -103,6 +124,23 @@ class _$MediaCommentSerializer implements StructuredSerializer<MediaComment> {
   }
 }
 
+class _$MediaTypeSerializer implements PrimitiveSerializer<MediaType> {
+  @override
+  final Iterable<Type> types = const <Type>[MediaType];
+  @override
+  final String wireName = 'media_type';
+
+  @override
+  Object serialize(Serializers serializers, MediaType object,
+          {FullType specifiedType = FullType.unspecified}) =>
+      object.name;
+
+  @override
+  MediaType deserialize(Serializers serializers, Object serialized,
+          {FullType specifiedType = FullType.unspecified}) =>
+      MediaType.valueOf(serialized as String);
+}
+
 class _$MediaComment extends MediaComment {
   @override
   final int id;
@@ -113,7 +151,7 @@ class _$MediaComment extends MediaComment {
   @override
   final String url;
   @override
-  final String mediaType;
+  final MediaType mediaType;
   @override
   final String contentType;
 
@@ -130,6 +168,9 @@ class _$MediaComment extends MediaComment {
       : super._() {
     if (id == null) {
       throw new BuiltValueNullFieldError('MediaComment', 'id');
+    }
+    if (mediaType == null) {
+      throw new BuiltValueNullFieldError('MediaComment', 'mediaType');
     }
   }
 
@@ -197,9 +238,9 @@ class MediaCommentBuilder
   String get url => _$this._url;
   set url(String url) => _$this._url = url;
 
-  String _mediaType;
-  String get mediaType => _$this._mediaType;
-  set mediaType(String mediaType) => _$this._mediaType = mediaType;
+  MediaType _mediaType;
+  MediaType get mediaType => _$this._mediaType;
+  set mediaType(MediaType mediaType) => _$this._mediaType = mediaType;
 
   String _contentType;
   String get contentType => _$this._contentType;

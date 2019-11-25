@@ -19,7 +19,7 @@ import 'package:flutter_parent/api/utils/api_prefs.dart';
 Dio canvasDio({
   bool forceRefresh: false,
   bool forceDeviceLanguage: false,
-  String token: null,
+  String overrideToken: null,
   Map<String, String> extraHeaders: null,
   bool usePerPageParam: false,
   int perPageSize: 100,
@@ -29,7 +29,7 @@ Dio canvasDio({
     baseUrl: ApiPrefs.getApiUrl(),
     headers: ApiPrefs.getHeaderMap(
       forceDeviceLanguage: forceDeviceLanguage,
-      token: token,
+      token: overrideToken,
       extraHeaders: extraHeaders,
     ),
   );

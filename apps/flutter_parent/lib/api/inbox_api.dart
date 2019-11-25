@@ -29,14 +29,14 @@ class InboxApi {
     return fetchList(dio.get('conversations', queryParameters: params), depaginateWith: dio);
   }
 
-  Future<Conversation> getConversation(int id) => fetch(canvasDio().get("conversations/$id"));
+  Future<Conversation> getConversation(int id) => fetch(canvasDio().get('conversations/$id'));
 
   Future<UnreadCount> getUnreadCount() => fetch(canvasDio().get('conversations/unread_count'));
 
   Future<Conversation> addMessage(int conversationId, String message) {
     var dio = canvasDio();
     dio.options.queryParameters.addAll({'body': message});
-    return fetch(dio.post("conversations/$conversationId/add_message"));
+    return fetch(dio.post('conversations/$conversationId/add_message'));
   }
 
   Future<List<Recipient>> getRecipients(Course course, {bool forceRefresh: false}) {
@@ -44,7 +44,7 @@ class InboxApi {
     var params = {
       'permissions': ['send_messages_all'],
       'messageable_only': true,
-      'context': "course_${course.id}",
+      'context': 'course_${course.id}',
     };
     return fetchList(dio.get('search/recipients', queryParameters: params), depaginateWith: dio);
   }

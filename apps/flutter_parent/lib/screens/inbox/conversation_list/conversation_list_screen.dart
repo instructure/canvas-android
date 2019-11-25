@@ -254,14 +254,14 @@ class ConversationListState extends State<ConversationListScreen> {
         height: 40,
         child: Stack(
           children: <Widget>[
-            Avatar(users[0].avatarUrl, size: 12),
+            Avatar(users[0].avatarUrl, radius: 12),
             Positioned(
               bottom: 0,
               right: 0,
               child: CircleAvatar(
                 radius: 14,
                 backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                child: Avatar(users[1].avatarUrl, size: 12),
+                child: Avatar(users[1].avatarUrl, radius: 12),
               ),
             )
           ],

@@ -360,7 +360,7 @@ class AppLocalizations {
       desc: 'Label for the action item that lets the user select a photo from their device gallery');
 
   String get attachmentPreparing =>
-      Intl.message('Preparing...', desc: 'Message shown while a file is being prepared to attach to a message');
+      Intl.message('Preparing…', desc: 'Message shown while a file is being prepared to attach to a message');
 
   /// Miscellaneous
 
