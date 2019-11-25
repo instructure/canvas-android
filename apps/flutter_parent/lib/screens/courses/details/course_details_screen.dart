@@ -20,8 +20,8 @@ import 'package:flutter_parent/screens/courses/details/course_grades_screen.dart
 import 'package:flutter_parent/screens/courses/details/course_summary_screen.dart';
 import 'package:flutter_parent/screens/courses/details/course_syllabus_screen.dart';
 import 'package:flutter_parent/utils/base_model.dart';
+import 'package:flutter_parent/utils/common_widets/full_screen_scroll_container.dart';
 import 'package:flutter_parent/utils/design/canvas_icons_solid.dart';
-import 'package:flutter_parent/utils/widgets/full_screen_scroll_container.dart';
 import 'package:provider/provider.dart';
 
 class CourseDetailsScreen extends StatefulWidget {

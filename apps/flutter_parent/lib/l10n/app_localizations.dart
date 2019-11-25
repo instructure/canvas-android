@@ -146,6 +146,41 @@ class AppLocalizations {
     return Intl.message('Courses', name: 'coursesLabel', desc: 'The label for the Courses tab');
   }
 
+  /// Dashboard
+  String get noStudents => Intl.message(
+    'No Students',
+    desc: 'Text for when an observer has no students they are observing'
+  );
+
+  /// Navigation Drawer
+  String get inbox => Intl.message(
+      'Inbox',
+      desc: 'Label text for the Inbox nav drawer button'
+  );
+
+  String get manageStudents => Intl.message(
+      'Manage Students',
+      desc: 'Label text for the Manage Students nav drawer button'
+  );
+
+  String get help => Intl.message(
+      'Help',
+      desc: 'Label text for the help nav drawer button'
+  );
+
+  String get signOut => Intl.message(
+      'Sign Out',
+      desc: 'Label text for the Sign Out nav drawer button'
+  );
+
+  String appVersion(String version) => Intl.message(
+    'v. $version',
+    name: 'appVersion',
+    args: [version],
+    desc: 'App version shown in the navigation drawer'
+  );
+
+
   /// Login landing screen
 
   String get canvasLogoLabel {

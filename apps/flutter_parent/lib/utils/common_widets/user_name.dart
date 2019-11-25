@@ -10,23 +10,32 @@
 /// GNU General Public License for more details.
 ///
 /// You should have received a copy of the GNU General Public License
-/// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+/// along with this program.  If not, see <http://www.gnu.org/licenses/>. 
 
 import 'package:flutter/material.dart';
-import 'package:flutter_parent/screens/courses/details/course_details_model.dart';
-import 'package:flutter_parent/utils/common_widets/full_screen_scroll_container.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_parent/models/user.dart';
 
-class CourseGradesScreen extends StatelessWidget {
+class UserName extends StatelessWidget {
+  final String userName;
+  final String pronouns;
+  final TextStyle style;
+
+  UserName(this.userName, this.pronouns, {this.style});
+
+  UserName.fromUser(User user, {this.style = null})
+      : userName = user.name,
+        pronouns = user.pronouns;
+
+
+
   @override
   Widget build(BuildContext context) {
-    return Consumer<CourseDetailsModel>(
-      builder: (context, model, _) => RefreshIndicator(
-        onRefresh: () => model.loadData(refreshCourse: true, refreshAssignments: true),
-        child: FullScreenScrollContainer(
-          children: [Text("Course Grades")],
-        ),
-      ),
+    return Text.rich(
+      TextSpan(children: [
+        TextSpan(text: userName),
+        if (pronouns != null) TextSpan(text: ' (${pronouns})', style: TextStyle(fontStyle: FontStyle.italic))
+      ]),
+      style: style,
     );
   }
 }
