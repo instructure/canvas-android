@@ -19,12 +19,14 @@ import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/screens/alerts/alerts_screen.dart';
 import 'package:flutter_parent/screens/courses/courses_screen.dart';
 import 'package:flutter_parent/screens/dashboard/inbox_notifier.dart';
+import 'package:flutter_parent/screens/inbox/conversation_list/conversation_list_screen.dart';
 import 'package:flutter_parent/screens/login_landing_screen.dart';
 import 'package:flutter_parent/utils/common_widets/loading_indicator.dart';
 import 'package:flutter_parent/utils/common_widets/user_avatar.dart';
 import 'package:flutter_parent/utils/common_widets/user_name.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/design/canvas_icons_solid.dart';
+import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:package_info/package_info.dart';
 
@@ -149,7 +151,8 @@ class DashboardState extends State<DashboardScreen> {
         // Done loading: no students returned
         return Text(
           AppLocalizations.of(context).noStudents,
-          style: Theme.of(context).primaryTextTheme.title,);
+          style: Theme.of(context).primaryTextTheme.title,
+        );
     }
 
     return Column(
@@ -162,7 +165,11 @@ class DashboardState extends State<DashboardScreen> {
             UserName.fromUser(_selectedStudent, style: Theme.of(context).primaryTextTheme.title),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Icon(CanvasIconsSolid.arrow_open_down, size: 12.0, color: Theme.of(context).primaryIconTheme.color,),
+              child: Icon(
+                CanvasIconsSolid.arrow_open_down,
+                size: 12.0,
+                color: Theme.of(context).primaryIconTheme.color,
+              ),
             )
           ],
         )
@@ -172,13 +179,10 @@ class DashboardState extends State<DashboardScreen> {
 
   List<BottomNavigationBarItem> _bottomNavigationBarItems() {
     return [
+      BottomNavigationBarItem(icon: Icon(CanvasIcons.courses), title: Text(AppLocalizations.of(context).coursesLabel)),
       BottomNavigationBarItem(
-          icon: Icon(CanvasIcons.courses), title: Text(AppLocalizations.of(context).coursesLabel)),
-      BottomNavigationBarItem(
-          icon: Icon(CanvasIcons.calendar_month),
-          title: Text(AppLocalizations.of(context).calendarLabel)),
-      BottomNavigationBarItem(
-          icon: Icon(CanvasIcons.alerts), title: Text(AppLocalizations.of(context).alertsLabel)),
+          icon: Icon(CanvasIcons.calendar_month), title: Text(AppLocalizations.of(context).calendarLabel)),
+      BottomNavigationBarItem(icon: Icon(CanvasIcons.alerts), title: Text(AppLocalizations.of(context).alertsLabel)),
     ];
   }
 
@@ -194,14 +198,14 @@ class DashboardState extends State<DashboardScreen> {
       }
     }
 
-    return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       // Header
       _navDrawerHeader(user),
 
       // Tiles (Inbox, Manage Students, Sign Out, etc)
-      Expanded(child: _navDrawerItemsList(),),
+      Expanded(
+        child: _navDrawerItemsList(),
+      ),
 
       // App version
       _navDrawerAppVersion(),
@@ -234,7 +238,7 @@ class DashboardState extends State<DashboardScreen> {
   _navigateToInbox(context) {
     // Close the drawer, then push the inbox in
     Navigator.of(context).pop();
-//      QuickNav.push(context, InboxScreen())
+    locator<QuickNav>().push(context, ConversationListScreen());
   }
 
   _navigateToManageStudents(context) {
@@ -259,9 +263,7 @@ class DashboardState extends State<DashboardScreen> {
   _navDrawerHeader(User user) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Padding(
-              padding: const EdgeInsets.fromLTRB(16, 16, 0, 12),
-              child: UserAvatar(user)),
+          Padding(padding: const EdgeInsets.fromLTRB(16, 16, 0, 12), child: UserAvatar(user)),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: UserName.fromUser(user, style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
@@ -277,24 +279,23 @@ class DashboardState extends State<DashboardScreen> {
         ],
       );
 
-  _navDrawerItemsList() =>
-      ListView.separated(
-          itemBuilder: (context, idx) {
-            return (idx == 0) ? _navDrawerInbox() :
-            (idx == 1) ? _navDrawerManageStudents() :
-            (idx == 2) ? _navDrawerHelp() :
-            (idx == 3) ? _navDrawerSignOut() :
-            null;
-          },
-          separatorBuilder: (_, c) => Divider(height: 0, indent: 16,),
-          itemCount: 5 // One extra item to get the divider on the bottom
+  _navDrawerItemsList() => ListView.separated(
+      itemBuilder: (context, idx) {
+        return (idx == 0)
+            ? _navDrawerInbox()
+            : (idx == 1)
+                ? _navDrawerManageStudents()
+                : (idx == 2) ? _navDrawerHelp() : (idx == 3) ? _navDrawerSignOut() : null;
+      },
+      separatorBuilder: (_, c) => Divider(
+            height: 0,
+            indent: 16,
+          ),
+      itemCount: 5 // One extra item to get the divider on the bottom
       );
 
-  _navDrawerInbox() =>
-      ListTile(
-        title: Text(AppLocalizations
-            .of(context)
-            .inbox),
+  _navDrawerInbox() => ListTile(
+        title: Text(AppLocalizations.of(context).inbox),
         onTap: () => _navigateToInbox(context),
         trailing: ValueListenableBuilder(
           valueListenable: InboxCountNotifier.get(),
@@ -307,8 +308,7 @@ class DashboardState extends State<DashboardScreen> {
                   padding: const EdgeInsets.all(6.0),
                   child: Text(
                     '$count',
-                    style: TextStyle(
-                        fontSize: 12, color: Colors.white, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 12, color: Colors.white, fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
@@ -317,26 +317,13 @@ class DashboardState extends State<DashboardScreen> {
         ),
       );
 
-  _navDrawerManageStudents() =>
-      ListTile(
-          title: Text(AppLocalizations
-              .of(context)
-              .manageStudents),
-          onTap: () => _navigateToManageStudents(context));
+  _navDrawerManageStudents() => ListTile(
+      title: Text(AppLocalizations.of(context).manageStudents), onTap: () => _navigateToManageStudents(context));
 
-  _navDrawerHelp() =>
-      ListTile(
-          title: Text(AppLocalizations
-              .of(context)
-              .help),
-          onTap: () => _navigateToHelp(context));
+  _navDrawerHelp() => ListTile(title: Text(AppLocalizations.of(context).help), onTap: () => _navigateToHelp(context));
 
   _navDrawerSignOut() =>
-      ListTile(
-          title: Text(AppLocalizations
-              .of(context)
-              .signOut),
-          onTap: () => _performSignOut(context));
+      ListTile(title: Text(AppLocalizations.of(context).signOut), onTap: () => _performSignOut(context));
 
   _navDrawerAppVersion() => Column(
         children: <Widget>[
@@ -349,10 +336,7 @@ class DashboardState extends State<DashboardScreen> {
                 builder: (BuildContext context, AsyncSnapshot<PackageInfo> snapshot) {
                   return Text(
                     AppLocalizations.of(context).appVersion(snapshot.data?.version),
-                    style: Theme
-                        .of(context)
-                        .textTheme
-                        .subtitle,
+                    style: Theme.of(context).textTheme.subtitle,
                   );
                 },
               ),

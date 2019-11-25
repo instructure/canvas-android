@@ -18,6 +18,7 @@ import 'package:flutter_parent/screens/theme_viewer_screen.dart';
 import 'package:flutter_parent/screens/web_login/web_login_screen.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
+import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:flutter_parent/utils/snickers.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
@@ -42,8 +43,8 @@ class LoginLandingScreen extends StatelessWidget {
                     subtitle: Text(snicker.subtitle),
                     onTap: () {
                       // TODO: needs test
-                      QuickNav.push(
-                        context,  
+                      locator<QuickNav>().push(
+                        context,
                         WebLoginScreen(snicker.domain, user: snicker.username, pass: snicker.password),
                       );
                     },
@@ -83,7 +84,7 @@ class LoginLandingScreen extends StatelessWidget {
         bottomNavigationBar: FlatButton(
           child: Text("Theme Viewer"),
           onPressed: () {
-            QuickNav.push(context, ThemeViewerScreen());
+            locator<QuickNav>().push(context, ThemeViewerScreen());
           },
         ),
       ),
@@ -91,6 +92,6 @@ class LoginLandingScreen extends StatelessWidget {
   }
 
   onFindSchoolPressed(BuildContext context) {
-    QuickNav.push(context, DomainSearchScreen());
+    locator<QuickNav>().push(context, DomainSearchScreen());
   }
 }

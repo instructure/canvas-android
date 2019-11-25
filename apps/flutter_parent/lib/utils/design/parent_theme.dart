@@ -27,10 +27,10 @@ import 'student_color_set.dart';
 ///
 ///   Design name:    Flutter name:  Size:  Weight:
 ///   ---------------------------------------------------
-///   caption    ->   subtitle       12     Medium (500)
-///   subhead    ->   overline       12     Bold (700)
+///   caption    ->   subtitle       12     Medium (500) - faded
+///   subhead    ->   overline       12     Bold (700) - faded
 ///   body       ->   body1          14     Regular (400)
-///   subtitle   ->   caption        14     Medium (500)
+///   subtitle   ->   caption        14     Medium (500) - faded
 ///   title      ->   subhead        16     Medium (500)
 ///   heading    ->   headline       18     Medium (500)
 ///   display    ->   display1       24     Medium (500)
@@ -38,13 +38,25 @@ import 'student_color_set.dart';
 class ParentTheme extends StatefulWidget {
   final Widget Function(BuildContext context, ThemeData themeData) builder;
 
-  const ParentTheme({Key key, this.builder}) : super(key: key);
+  const ParentTheme({
+    Key key,
+    this.builder,
+    this.initWithDarkMode = false,
+    this.initWithHCMode = false,
+  }) : super(key: key);
+
+  final bool initWithDarkMode;
+
+  final bool initWithHCMode;
 
   /// The core 'dark' color used for text, icons, etc on light backgrounds
   static const licorice = Color(0xFF2D3B45);
 
   /// The core 'light' color, used for text, icons, etc on dark backgrounds
   static const tiara = Color(0xFFC7CDD1);
+
+  /// A very light color
+  static const porcelain = Color(0xFFF5F5F5);
 
   /// The core 'faded' color, used for subtitles, inactive icons, etc on either light or dark backgrounds
   static const ash = Color(0xFF8B969E);
@@ -93,7 +105,7 @@ class ParentTheme extends StatefulWidget {
   }
 
   @override
-  _ParentThemeState createState() => _ParentThemeState();
+  _ParentThemeState createState() => _ParentThemeState(initWithDarkMode, initWithHCMode);
 
   static _ParentThemeState of(BuildContext context) {
     return context.ancestorStateOfType(const TypeMatcher<_ParentThemeState>());
@@ -104,11 +116,16 @@ class ParentTheme extends StatefulWidget {
 /// student color. To obtain an instance of this state, call 'ParentTheme.of(context)' with any context that
 /// descends from a ParentTheme widget.
 class _ParentThemeState extends State<ParentTheme> {
+  _ParentThemeState(bool initWithDarkMode, bool initWithHCMode) {
+    _isDarkMode = initWithDarkMode;
+    _isHC = initWithHCMode;
+  }
+
   int _studentIndex = 0;
 
-  bool _isDarkMode = false;
+  bool _isDarkMode;
 
-  bool _isHC = false;
+  bool _isHC;
 
   /// The index of the currently selected student color set
   int get studentIndex => _studentIndex;
@@ -175,8 +192,15 @@ class _ParentThemeState extends State<ParentTheme> {
     return widget.builder(context, studentTheme);
   }
 
+  /// Color for text, icons, etc that contrasts sharply with the scaffold (i.e. surface) color
+  Color get onSurfaceColor => isDarkMode ? ParentTheme.tiara : ParentTheme.licorice;
+
+  /// Color similar to the surface color but is slightly darker in light mode and slightly lighter in dark mode.
+  /// This should be used elements that should be visually distinguishable from the surface color but must also contrast
+  /// sharply with the [onSurfaceColor]. Examples are chip backgrounds, progressbar backgrounds, avatar backgrounds, etc.
+  Color get nearSurfaceColor => isDarkMode ? Colors.grey[850] : ParentTheme.porcelain;
+
   ThemeData _buildTheme(Color themeColor) {
-    var onSurfaceColor = isDarkMode ? ParentTheme.tiara : ParentTheme.licorice;
     var textTheme = _buildTextTheme(onSurfaceColor);
 
     // Use single text color for all styles in high-contrast mode
@@ -184,22 +208,22 @@ class _ParentThemeState extends State<ParentTheme> {
 
     var swatch = ParentTheme.makeSwatch(themeColor);
     return ThemeData(
-      brightness: isDarkMode ? Brightness.dark : Brightness.light,
-      primarySwatch: swatch,
-      primaryColor: isDarkMode ? Colors.black : null,
-      accentColor: swatch[500],
-      toggleableActiveColor: swatch[500],
-      textSelectionHandleColor: swatch[300],
-      scaffoldBackgroundColor: isDarkMode ? Colors.black : Colors.white,
-      accentColorBrightness: isDarkMode ? Brightness.light : Brightness.dark,
-      textTheme: textTheme,
-      primaryTextTheme: isDarkMode ? textTheme : _buildTextTheme(Colors.white, fadeColor: Colors.white70),
-      accentTextTheme: isDarkMode ? textTheme : _buildTextTheme(Colors.white, fadeColor: Colors.white70),
-      iconTheme: IconThemeData(color: onSurfaceColor),
-      primaryIconTheme: IconThemeData(color: isDarkMode ? ParentTheme.tiara : Colors.white),
-      accentIconTheme: IconThemeData(color: isDarkMode ? Colors.black : Colors.white),
-      dividerColor: isHC ? onSurfaceColor : isDarkMode ? Colors.grey[600] : null,
-    );
+        brightness: isDarkMode ? Brightness.dark : Brightness.light,
+        primarySwatch: swatch,
+        primaryColor: isDarkMode ? Colors.black : null,
+        accentColor: swatch[500],
+        toggleableActiveColor: swatch[500],
+        textSelectionHandleColor: swatch[300],
+        scaffoldBackgroundColor: isDarkMode ? Colors.black : Colors.white,
+        accentColorBrightness: isDarkMode ? Brightness.light : Brightness.dark,
+        textTheme: textTheme,
+        primaryTextTheme: isDarkMode ? textTheme : _buildTextTheme(Colors.white, fadeColor: Colors.white70),
+        accentTextTheme: isDarkMode ? textTheme : _buildTextTheme(Colors.white, fadeColor: Colors.white70),
+        iconTheme: IconThemeData(color: onSurfaceColor),
+        primaryIconTheme: IconThemeData(color: isDarkMode ? ParentTheme.tiara : Colors.white),
+        accentIconTheme: IconThemeData(color: isDarkMode ? Colors.black : Colors.white),
+        dividerColor: isHC ? onSurfaceColor : isDarkMode ? nearSurfaceColor : ParentTheme.tiara,
+        buttonTheme: ButtonThemeData(height: 48, minWidth: 120));
   }
 
   TextTheme _buildTextTheme(Color color, {Color fadeColor = ParentTheme.ash}) {

@@ -16,7 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class QuickNav {
-  static Future<T> push<T extends Object>(BuildContext context, Widget widget) {
+  Future<T> push<T extends Object>(BuildContext context, Widget widget) {
     return Navigator.of(context).push(MaterialPageRoute(builder: (context) => widget));
   }
 }

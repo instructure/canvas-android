@@ -21,14 +21,23 @@ import 'package:built_value/standard_json_plugin.dart';
 import 'package:flutter_parent/models/alert.dart';
 import 'package:flutter_parent/models/assignment.dart';
 import 'package:flutter_parent/models/assignment_group.dart';
+import 'package:flutter_parent/models/attachment.dart';
+import 'package:flutter_parent/models/basic_user.dart';
 import 'package:flutter_parent/models/canvas_token.dart';
+import 'package:flutter_parent/models/conversation.dart';
 import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/models/enrollment.dart';
 import 'package:flutter_parent/models/grade.dart';
+import 'package:flutter_parent/models/media_comment.dart';
+import 'package:flutter_parent/models/message.dart';
 import 'package:flutter_parent/models/mobile_verify_result.dart';
+import 'package:flutter_parent/models/recipient.dart';
 import 'package:flutter_parent/models/school_domain.dart';
 import 'package:flutter_parent/models/submission.dart';
+import 'package:flutter_parent/models/unread_count.dart';
 import 'package:flutter_parent/models/user.dart';
+
+import 'file_upload_config.dart';
 
 part 'serializers.g.dart';
 
@@ -38,13 +47,21 @@ part 'serializers.g.dart';
   Alert,
   Assignment,
   AssignmentGroup,
+  Attachment,
+  BasicUser,
   CanvasToken,
+  Conversation,
   Course,
   Enrollment,
+  FileUploadConfig,
   Grade,
+  MediaComment,
+  Message,
   MobileVerifyResult,
+  Recipient,
   SchoolDomain,
   Submission,
+  UnreadCount,
   User,
 ])
 final Serializers _serializers = _$_serializers;
@@ -52,7 +69,15 @@ final Serializers _serializers = _$_serializers;
 Serializers jsonSerializers = (_serializers.toBuilder()
       ..addPlugin(StandardJsonPlugin())
       ..add(Iso8601DateTimeSerializer())
-      ..add(ResultEnumSerializer()))
+      ..add(ResultEnumSerializer())
+      ..addBuilderFactory(FullType(BuiltList, [FullType(String)]), () => ListBuilder<String>())
+      ..addBuilderFactory(
+          FullType(BuiltMap, [
+            FullType(String),
+            FullType(BuiltList, [FullType(String)])
+          ]),
+          () => MapBuilder<String, BuiltList<String>>())
+      ..addBuilderFactory(FullType(BuiltMap, [FullType(String), FullType(String)]), () => MapBuilder<String, String>()))
     .build();
 
 T deserialize<T>(dynamic value) => jsonSerializers.deserializeWith<T>(jsonSerializers.serializerForType(T), value);

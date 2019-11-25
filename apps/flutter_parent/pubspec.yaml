@@ -49,11 +49,15 @@ dependencies:
 
   # Image handling
   flutter_svg: 0.14.3
+  image_picker: 0.6.1+4
+  file_picker: 1.4.2
+  transparent_image: 1.0.0
 
   # Networking / Serialization
-  dio: 3.0.3
+  dio: 3.0.5
   dio_http_cache: 0.2.1
   built_value: '>=5.5.5 <7.0.0'
+  built_collection: 4.2.2
 
   url_launcher: 5.2.5
 

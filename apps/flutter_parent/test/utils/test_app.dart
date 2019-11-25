@@ -21,13 +21,23 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_parent/api/utils/api_prefs.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
+import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TestApp extends StatefulWidget {
-  TestApp(this.home, {Map<String, dynamic> mockPrefs = const {}}) : this.mockPrefs = mockPrefs;
+  TestApp(
+    this.home, {
+    Map<String, dynamic> mockPrefs = const {},
+    this.navigatorObservers = const [],
+    this.darkMode = false,
+    this.highContrast = false,
+  }) : this.mockPrefs = mockPrefs;
 
   final Widget home;
   final Map<String, dynamic> mockPrefs;
+  final List<NavigatorObserver> navigatorObservers;
+  final bool darkMode;
+  final bool highContrast;
 
   @override
   _TestAppState createState() => _TestAppState();
@@ -56,9 +66,12 @@ class _TestAppState extends State<TestApp> {
   @override
   Widget build(BuildContext context) {
     return ParentTheme(
+      initWithDarkMode: widget.darkMode,
+      initWithHCMode: widget.highContrast,
       builder: (context, themeData) => MaterialApp(
         title: 'Canvas Parent',
         locale: _locale,
+        navigatorObservers: widget.navigatorObservers,
         localizationsDelegates: const [
           AppLocalizations.delegate,
           // Material components use these delegate to provide default localization
@@ -68,7 +81,7 @@ class _TestAppState extends State<TestApp> {
         supportedLocales: AppLocalizations.delegate.supportedLocales,
         localeResolutionCallback: _localeCallback(),
         theme: themeData,
-        home: widget.home,
+        home: Material(child: widget.home),
       ),
     );
   }
@@ -93,13 +106,19 @@ class _TestAppState extends State<TestApp> {
     const MethodChannel('plugins.flutter.io/package_info').setMockMethodCallHandler((MethodCall methodCall) async {
       if (methodCall.method == 'getAll') {
         return <String, dynamic>{
-      'appName': 'Canvas',
-      'packageName': 'com.instructure',
-      'version': '1.0.0',
-      'buildNumber': '3'
-      };
-    }
+          'appName': 'Canvas',
+          'packageName': 'com.instructure',
+          'version': '1.0.0',
+          'buildNumber': '3'
+        };
+      }
       return null;
     });
   }
+}
+
+void setupTestLocator(config(GetIt locator)) {
+  final locator = GetIt.instance;
+  locator.reset();
+  config(locator);
 }

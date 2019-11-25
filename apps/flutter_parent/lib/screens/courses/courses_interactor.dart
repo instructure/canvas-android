@@ -14,10 +14,11 @@
 
 import 'package:flutter_parent/api/course_api.dart';
 import 'package:flutter_parent/models/course.dart';
+import 'package:flutter_parent/utils/service_locator.dart';
 
 class CoursesInteractor {
   Future<List<Course>> getCourses() async {
-    var courses = await CourseApi.getObserveeCourses();
+    var courses = await locator<CourseApi>().getObserveeCourses();
     return courses;
   }
 }
