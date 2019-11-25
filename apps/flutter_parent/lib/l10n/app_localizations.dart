@@ -175,6 +175,7 @@ class AppLocalizations {
 
   String appVersion(String version) => Intl.message(
     'v. $version',
+    name: 'appVersion',
     args: [version],
     desc: 'App version shown in the navigation drawer'
   );
