@@ -20,7 +20,7 @@ import 'package:flutter_parent/screens/alerts/alerts_interactor.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
-import 'package:flutter_parent/utils/widgets/full_screen_scroll_container.dart';
+import 'package:flutter_parent/utils/common_widets/full_screen_scroll_container.dart';
 import 'package:intl/intl.dart';
 
 class AlertsScreen extends StatefulWidget {

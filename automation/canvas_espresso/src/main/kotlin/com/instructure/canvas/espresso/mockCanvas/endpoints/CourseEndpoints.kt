@@ -66,6 +66,7 @@ object CourseEndpoint : Endpoint(
         Segment("discussion_topics") to CourseDiscussionTopicListEndpoint,
         Segment("modules") to CourseModuleListEndpoint,
         Segment("quizzes") to CourseQuizListEndpoint,
+        Segment("users") to CourseUsersEndpoint,
         Segment("permissions") to CoursePermissionsEndpoint,
 
         response = {
@@ -705,3 +706,24 @@ object CourseModuleItemsListEndpoint : Endpoint(
             }
         }
 )
+
+/**
+ * Endpoint that returns list of users in a course
+ */
+object CourseUsersEndpoint : Endpoint (response = {
+    GET {
+        // We may need to add more "onlyXxx" vars in the future
+        val onlyTeachers = request.url().queryParameter("enrollment_type")?.equals("teacher")
+                ?: false
+        val onlyTas = request.url().queryParameter("enrollment_type")?.equals("ta") ?: false
+        val courseId = pathVars.courseId
+        var courseEnrollments = data.enrollments.values.filter { it.courseId == courseId }
+        if (onlyTeachers) {
+            courseEnrollments = courseEnrollments.filter { it.isTeacher }
+        } else if (onlyTas) {
+            courseEnrollments = courseEnrollments.filter { it.isTA }
+        }
+        val users = courseEnrollments.map { data.users[it.userId] }
+        request.successResponse(users)
+    }
+})

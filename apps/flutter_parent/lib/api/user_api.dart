@@ -12,21 +12,20 @@
 /// You should have received a copy of the GNU General Public License
 /// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import 'package:flutter/material.dart';
-import 'package:flutter_parent/screens/courses/details/course_details_model.dart';
-import 'package:flutter_parent/utils/common_widets/full_screen_scroll_container.dart';
-import 'package:provider/provider.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter_parent/api/utils/api_prefs.dart';
+import 'package:flutter_parent/models/serializers.dart';
+import 'package:flutter_parent/models/user.dart';
 
-class CourseGradesScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Consumer<CourseDetailsModel>(
-      builder: (context, model, _) => RefreshIndicator(
-        onRefresh: () => model.loadData(refreshCourse: true, refreshAssignments: true),
-        child: FullScreenScrollContainer(
-          children: [Text("Course Grades")],
-        ),
-      ),
-    );
+class UserApi {
+  static Future<User> getSelf() async {
+    var selfResponse = await Dio().get(ApiPrefs.getApiUrl() + 'users/self/profile',
+        options: Options(headers: ApiPrefs.getHeaderMap()));
+
+    if (selfResponse.statusCode == 200 || selfResponse.statusCode == 201) {
+      return deserialize<User>(selfResponse.data);
+    } else {
+      return Future.error(selfResponse.statusMessage);
+    }
   }
 }

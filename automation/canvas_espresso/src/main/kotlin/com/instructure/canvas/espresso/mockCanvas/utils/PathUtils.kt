@@ -41,6 +41,7 @@ class PathVars {
     var questionId: Long by map
     var conversationId: Long by map
     var submissionId: Long by map
+    var groupId: Long by map
 }
 
 /**

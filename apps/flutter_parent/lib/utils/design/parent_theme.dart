@@ -206,6 +206,7 @@ class _ParentThemeState extends State<ParentTheme> {
     return TextTheme(
       /// Design-provided styles
 
+      // Comments for each text style represent the nomenclature of the designs we have
       // Caption
       subtitle: TextStyle(color: fadeColor, fontSize: 12, fontWeight: FontWeight.w500),
 

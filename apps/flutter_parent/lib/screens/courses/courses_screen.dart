@@ -89,7 +89,7 @@ class _CoursesScreenState extends State<CoursesScreen> {
               children: <Widget>[
                 SizedBox(height: 12),
                 Text(
-                  course.name ?? "",
+                  course.name ?? '',
                   style: TextStyle(
                     fontSize: 19,
                     fontWeight: FontWeight.w500,
@@ -97,7 +97,7 @@ class _CoursesScreenState extends State<CoursesScreen> {
                 ),
                 SizedBox(height: 2),
                 Text(
-                  course.courseCode ?? "",
+                  course.courseCode ?? '',
                   style: TextStyle(
                     color: Colors.grey,
                     fontSize: 14,
@@ -127,7 +127,7 @@ class _CoursesScreenState extends State<CoursesScreen> {
         ? AppLocalizations.of(context).noGrade
         : (grade.currentGrade()?.isNotEmpty == true
         ? grade.currentGrade()
-        : format.format(grade.currentScore()) + "%");
+        : format.format(grade.currentScore()) + '%');
 
     return Text(
       text,
