@@ -111,7 +111,14 @@ class ToDoPresenter : SyncPresenter<ToDo, ToDoView>(ToDo::class.java) {
             }
 
             // filter the submissions to just the ones that need grading
-            val filteredSubmissions = unfilteredSubmissions.filter { it.submission?.let { assignment.getState(it) == AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED ||  assignment.getState(it) == AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED_LATE || !it.isGradeMatchesCurrentSubmission } ?: false }
+            val filteredSubmissions = unfilteredSubmissions.filter {
+                it.submission?.let { submission ->
+                    assignment.getState(submission, true) in listOf(
+                        AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED,
+                        AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED_LATE
+                    ) || !submission.isGradeMatchesCurrentSubmission
+                } ?: false
+            }
 
             viewCallback?.onRefreshFinished()
             viewCallback?.onRouteSuccessfully(course, assignment, filteredSubmissions)
