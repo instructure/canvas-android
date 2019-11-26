@@ -19,6 +19,7 @@ package com.instructure.student.ui.pages
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.hasDescendant
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
@@ -41,6 +42,7 @@ import com.instructure.espresso.OnViewWithStringTextIgnoreCase
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.swipeUp
 import com.instructure.student.R
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.ui.CriterionRatingButton
 import com.instructure.student.ui.pages.renderPages.SubmissionCommentsRenderPage
@@ -190,16 +192,16 @@ open class SubmissionDetailsPage : BasePage(R.id.submissionDetails) {
             val matcher = allOf(withParent(withId(R.id.ratingLayout)), withText(rating.points.toInt().toString()))
             scrollRecyclerView(R.id.recyclerView, matcher)
             onView(matcher).assertDisplayed()
-            onView(matcher).click() // Click on the rating
+            onView(matcher).perform(withCustomConstraints(click(), isDisplayingAtLeast(10))) // click on rating
 
             val descriptionMatcher = allOf(withId(R.id.ratingTitle), withText(rating.description))
             scrollRecyclerView(R.id.recyclerView, descriptionMatcher)
-            onView(descriptionMatcher).assertDisplayed()
+            onView(descriptionMatcher).check(matches(isDisplayingAtLeast(10)))
 
             if(rating.longDescription != null) {
                 val longDescriptionMatcher = allOf(withId(R.id.ratingDescription), withText(rating.longDescription))
                 scrollRecyclerView(R.id.recyclerView, longDescriptionMatcher)
-                onView(longDescriptionMatcher).assertDisplayed()
+                onView(longDescriptionMatcher).check(matches(isDisplayingAtLeast(10)))
             }
         }
     }
