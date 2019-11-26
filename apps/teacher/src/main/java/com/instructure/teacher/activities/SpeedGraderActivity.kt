@@ -31,6 +31,7 @@ import androidx.viewpager.widget.ViewPager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.GradeableStudentSubmission
+import com.instructure.canvasapi2.models.StudentAssignee
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.coerceAtLeast
 import com.instructure.canvasapi2.utils.rangeWithin
@@ -298,7 +299,10 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
                     }
                 }
 
-                putParcelableArrayList(Const.SUBMISSION, ArrayList(compactSubmissions))
+                // We need to sort the submissions so they appear in the same order as the submissions list
+                putParcelableArrayList(Const.SUBMISSION, ArrayList(compactSubmissions.sortedBy {
+                    (it.assignee as StudentAssignee).student.sortableName?.toLowerCase()
+                }))
                 putInt(Const.SELECTED_ITEM, selectedIdx)
             }
         }
