@@ -16,6 +16,7 @@
  */
 package com.instructure.student.ui.pages
 
+import android.os.SystemClock.sleep
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.swipeDown
@@ -99,6 +100,7 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
         clickReply()
         onView(withId(R.id.rce_webView)).perform(TypeInRCETextEditor(replyMessage))
         onView(withId(R.id.menu_send)).click()
+        sleep(2000) // Allow time for the reply to propagate to webview
     }
 
     fun assertReplyDisplayed(reply: DiscussionEntry) {
@@ -180,6 +182,7 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
                 .perform(webClick())
         onView(withId(R.id.rce_webView)).perform(TypeInRCETextEditor(replyMessage))
         onView(withId(R.id.menu_send)).click()
+        sleep(2000) // Allow time for reply to propagate to webview
     }
 
     fun assertMainAttachmentDisplayed() {
