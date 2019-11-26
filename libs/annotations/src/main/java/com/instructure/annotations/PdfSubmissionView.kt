@@ -55,7 +55,6 @@ import com.pspdfkit.annotations.AnnotationProvider
 import com.pspdfkit.annotations.AnnotationType
 import com.pspdfkit.annotations.appearance.AssetAppearanceStreamGenerator
 import com.pspdfkit.annotations.configuration.*
-import com.pspdfkit.annotations.configuration.AnnotationProperty
 import com.pspdfkit.annotations.stamps.CustomStampAppearanceStreamGenerator
 import com.pspdfkit.annotations.stamps.StampPickerItem
 import com.pspdfkit.configuration.PdfConfiguration
@@ -693,7 +692,7 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
                         .setCustomColorPickerEnabled(false)
                         .setSupportedProperties(EnumSet.of(AnnotationProperty.COLOR))
                         .setDefaultColor(ContextCompat.getColor(context, R.color.blueAnnotation))
-                        .setDefaultThickness(10f)
+                        .setDefaultThickness(2f)
                         .setForceDefaults(true)
                         .build()
 
@@ -721,9 +720,9 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
         pdfFragment?.annotationConfiguration?.put(
                 AnnotationType.STRIKEOUT,
                 MarkupAnnotationConfiguration.builder(context, AnnotationTool.STRIKEOUT)
-                        .setAvailableColors(context.resources.getIntArray(R.array.highlightAnnotationColors).toMutableList())
+                        .setAvailableColors(context.resources.getIntArray(R.array.standardAnnotationColors).toMutableList())
                         .setSupportedProperties(EnumSet.of(AnnotationProperty.COLOR))
-                        .setDefaultColor(ContextCompat.getColor(context, R.color.redHighlightAnnotation))
+                        .setDefaultColor(ContextCompat.getColor(context, R.color.redAnnotation))
                         .setForceDefaults(true)
                         .build()
         )
