@@ -275,6 +275,13 @@ class AppLocalizations {
 
   String get recipients => Intl.message('Recipients', desc: 'Label for message recipients');
 
+  String plusRecipientCount(int count) => Intl.message(
+        '+$count',
+        desc: "Shows the number of recipients that are selected but not displayed on screen.",
+        args: [count],
+        examples: const {'count': 5},
+      );
+
   String get attachmentFailed => Intl.message('Failed. Tap for options.',
       desc: 'Short message shown on a message attachment when uploading has failed');
 

@@ -14,7 +14,6 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_parent/api/inbox_api.dart';
-import 'package:flutter_parent/api/utils/api_prefs_wrapper.dart';
 import 'package:flutter_parent/models/conversation.dart';
 import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/models/recipient.dart';
@@ -25,10 +24,7 @@ import '../attachment_utils/attachment_picker.dart';
 
 class CreateConversationInteractor {
   Future<List<Recipient>> getAllRecipients(Course course) async {
-    var selfId = locator<ApiPrefsWrapper>().getUser().id;
-    var recipients = await locator<InboxApi>().getRecipients(course);
-    recipients.retainWhere((it) => it.id != selfId);
-    return recipients;
+    return locator<InboxApi>().getRecipients(course);
   }
 
   Future<Conversation> createConversation(

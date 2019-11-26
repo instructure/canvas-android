@@ -394,7 +394,7 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
         ),
         if (_selectedRecipients.length > 1)
           Text(
-            "+${_selectedRecipients.length - 1}",
+            L10n(context).plusRecipientCount(_selectedRecipients.length - 1),
             style: TextStyle(fontWeight: FontWeight.w500),
           )
       ];

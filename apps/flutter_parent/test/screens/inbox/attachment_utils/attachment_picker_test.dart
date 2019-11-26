@@ -148,6 +148,9 @@ void main() {
     // Should no longer show 'preparing' UI
     expect(find.text(l10n.attachmentPreparing), findsNothing);
     expect(find.byType(LinearProgressIndicator), findsNothing);
+
+    // Should show picker options
+    expect(find.text(l10n.useCamera), findsOneWidget);
   });
 
   testWidgetsWithAccessibilityChecks('Canceling gallery option returns to picker ui', (tester) async {
@@ -175,6 +178,9 @@ void main() {
     // Should no longer show 'preparing' UI
     expect(find.text(l10n.attachmentPreparing), findsNothing);
     expect(find.byType(LinearProgressIndicator), findsNothing);
+
+    // Should show picker options
+    expect(find.text(l10n.chooseFromGallery), findsOneWidget);
   });
 
   testWidgetsWithAccessibilityChecks('Canceling file option returns to picker ui', (tester) async {
@@ -202,6 +208,9 @@ void main() {
     // Should no longer show 'preparing' UI
     expect(find.text(l10n.attachmentPreparing), findsNothing);
     expect(find.byType(LinearProgressIndicator), findsNothing);
+
+    // Should show picker options
+    expect(find.text(l10n.uploadFile), findsOneWidget);
   });
 
   testWidgets('Returns non-null result when successful', (tester) async {
