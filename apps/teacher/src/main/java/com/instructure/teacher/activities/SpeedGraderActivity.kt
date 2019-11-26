@@ -299,10 +299,16 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
                     }
                 }
 
-                // We need to sort the submissions so they appear in the same order as the submissions list
-                putParcelableArrayList(Const.SUBMISSION, ArrayList(compactSubmissions.sortedBy {
-                    (it.assignee as StudentAssignee).student.sortableName?.toLowerCase()
-                }))
+                // Only sort when anon grading is off
+                if(submissions.firstOrNull()?.submission?.assignment?.anonymousGrading != true) {
+                    // We need to sort the submissions so they appear in the same order as the submissions list
+                    putParcelableArrayList(Const.SUBMISSION, ArrayList(compactSubmissions.sortedBy {
+                        (it.assignee as? StudentAssignee)?.student?.sortableName?.toLowerCase()
+                    }))
+                } else {
+                    putParcelableArrayList(Const.SUBMISSION, ArrayList(compactSubmissions))
+                }
+
                 putInt(Const.SELECTED_ITEM, selectedIdx)
             }
         }
