@@ -21,6 +21,7 @@ import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/screens/courses/courses_interactor.dart';
 import 'package:flutter_parent/screens/courses/courses_screen.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_screen.dart';
+import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 
@@ -32,13 +33,12 @@ void main() {
     final _locator = GetIt.instance;
     _locator.reset();
     _locator.registerFactory<CoursesInteractor>(() => mockInteractor);
+    _locator.registerFactory<QuickNav>(() => QuickNav());
   }
 
-  Widget _testableMaterialWidget([Widget widget]) =>
-      TestApp(Scaffold(body: widget ?? CoursesScreen(_mockStudent(0))));
+  Widget _testableMaterialWidget([Widget widget]) => TestApp(Scaffold(body: widget ?? CoursesScreen(_mockStudent(0))));
 
-  testWidgetsWithAccessibilityChecks('shows loading indicator when retrieving courses',
-      (tester) async {
+  testWidgetsWithAccessibilityChecks('shows loading indicator when retrieving courses', (tester) async {
     _setupLocator(_MockCoursesInteractor());
 
     await tester.pumpWidget(TestApp(CoursesScreen(_mockStudent(0))));
@@ -48,8 +48,7 @@ void main() {
     expect(loadingWidget, findsOneWidget);
   });
 
-  testWidgetsWithAccessibilityChecks('does not show loading when courses are loaded',
-      (tester) async {
+  testWidgetsWithAccessibilityChecks('does not show loading when courses are loaded', (tester) async {
     _setupLocator(_MockCoursesInteractor());
     await tester.pumpWidget(_testableMaterialWidget());
     await tester.pump();
@@ -89,10 +88,9 @@ void main() {
     var student = _mockStudent(1);
     var courses = List.generate(
         1,
-            (idx) => _mockCourse(idx,
-            enrollments: ListBuilder<Enrollment>([
-              _mockEnrollment(idx, userId: student.id, computedCurrentGrade: "A")])));
-
+        (idx) => _mockCourse(idx,
+            enrollments:
+                ListBuilder<Enrollment>([_mockEnrollment(idx, userId: student.id, computedCurrentGrade: "A")])));
 
     _setupLocator(_MockCoursesInteractor(courses: courses));
 
@@ -107,9 +105,9 @@ void main() {
     var student = _mockStudent(1);
     var courses = List.generate(
         1,
-            (idx) => _mockCourse(idx,
-            enrollments: ListBuilder<Enrollment>([
-              _mockEnrollment(idx, userId: student.id, computedCurrentScore: 90)])));
+        (idx) => _mockCourse(idx,
+            enrollments:
+                ListBuilder<Enrollment>([_mockEnrollment(idx, userId: student.id, computedCurrentScore: 90)])));
 
     _setupLocator(_MockCoursesInteractor(courses: courses));
 
@@ -123,11 +121,11 @@ void main() {
   testWidgetsWithAccessibilityChecks('launches course detail screen when tapping on a course', (tester) async {
     var student = _mockStudent(1);
     var courses = List.generate(
-      1, (idx) =>
-        _mockCourse(
-          idx,
-          enrollments: ListBuilder<Enrollment>([_mockEnrollment(idx, userId: student.id, computedCurrentScore: 90)]),
-        ),
+      1,
+      (idx) => _mockCourse(
+        idx,
+        enrollments: ListBuilder<Enrollment>([_mockEnrollment(idx, userId: student.id, computedCurrentScore: 90)]),
+      ),
     );
 
     _setupLocator(_MockCoursesInteractor(courses: courses));
@@ -150,36 +148,36 @@ class _MockCoursesInteractor extends CoursesInteractor {
   _MockCoursesInteractor({this.courses});
 
   @override
-  Future<List<Course>> getCourses() async =>
-      courses ?? ListBuilder<Course>([_mockCourse(1)]).build().toList();
+  Future<List<Course>> getCourses() async => courses ?? ListBuilder<Course>([_mockCourse(1)]).build().toList();
 }
 
 List<Course> generateCoursesForStudent([int userId]) {
   var student = _mockStudent(userId ?? 1);
   return List.generate(
-      3,
-          (idx) => _mockCourse(idx,
-          enrollments: ListBuilder<Enrollment>([_mockEnrollment(idx, userId: student.id)])));
+      3, (idx) => _mockCourse(idx, enrollments: ListBuilder<Enrollment>([_mockEnrollment(idx, userId: student.id)])));
 }
 
-Enrollment _mockEnrollment(int courseId, {int userId = 0, String computedCurrentGrade, double computedCurrentScore}) => Enrollment((b) => b
-  ..courseId = courseId
-  ..userId = userId
-  ..courseSectionId = 0
-  ..enrollmentState = ''
-  ..computedCurrentGrade = computedCurrentGrade
-  ..computedCurrentScore = computedCurrentScore
-  ..build());
+Enrollment _mockEnrollment(int courseId, {int userId = 0, String computedCurrentGrade, double computedCurrentScore}) =>
+    Enrollment((b) => b
+      ..courseId = courseId
+      ..userId = userId
+      ..courseSectionId = 0
+      ..enrollmentState = ''
+      ..computedCurrentGrade = computedCurrentGrade
+      ..computedCurrentScore = computedCurrentScore
+      ..build());
 
-Course _mockCourse(int courseId, {ListBuilder<Enrollment> enrollments, bool hasActiveGradingPeriod, double currentScore, String currentGrade}) => Course((b) => b
-  ..id = courseId
-  ..name = "CourseName"
-  ..imageDownloadUrl = ''
-  ..enrollments = enrollments ?? ListBuilder<Enrollment>([_mockEnrollment(0)])
-  ..hasGradingPeriods = hasActiveGradingPeriod ?? false
-  ..currentScore = currentScore
-  ..currentGrade = currentGrade
-  ..build());
+Course _mockCourse(int courseId,
+        {ListBuilder<Enrollment> enrollments, bool hasActiveGradingPeriod, double currentScore, String currentGrade}) =>
+    Course((b) => b
+      ..id = courseId
+      ..name = "CourseName"
+      ..imageDownloadUrl = ''
+      ..enrollments = enrollments ?? ListBuilder<Enrollment>([_mockEnrollment(0)])
+      ..hasGradingPeriods = hasActiveGradingPeriod ?? false
+      ..currentScore = currentScore
+      ..currentGrade = currentGrade
+      ..build());
 
 User _mockStudent(int userId) => User((b) => b
   ..id = userId

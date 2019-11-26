@@ -29,7 +29,6 @@ abstract class Course implements Built<Course, CourseBuilder> {
   Course._();
   factory Course([void Function(CourseBuilder) updates]) = _$Course;
 
-
   // Helper variables
   @nullable
   @BuiltValueField(serialize: false)
@@ -92,6 +91,7 @@ abstract class Course implements Built<Course, CourseBuilder> {
 
   @nullable
   @BuiltValueField(wireName: 'image_download_url')
+  @nullable
   String get imageDownloadUrl;
 
   @BuiltValueField(wireName: 'has_weighted_grading_periods')
@@ -107,20 +107,20 @@ abstract class Course implements Built<Course, CourseBuilder> {
   @BuiltValueField(wireName: 'workflow_state')
   String get workflowState;
 
-
   static void _initializeBuilder(CourseBuilder b) => b
-      ..enrollments = ListBuilder<Enrollment>()
-      ..name = ''
-      ..needsGradingCount = 0
-      ..hideFinalGrades = false
-      ..isPublic = false
-      ..applyAssignmentGroupWeights = false
-      ..isFavorite = false
-      ..accessRestrictedByDate = false
-      ..hasWeightedGradingPeriods = false
-      ..hasGradingPeriods = false
-      ..restrictEnrollmentsToCourseDates = false;
+    ..id = 0
+    ..enrollments = ListBuilder<Enrollment>()
+    ..name = ''
+    ..needsGradingCount = 0
+    ..hideFinalGrades = false
+    ..isPublic = false
+    ..applyAssignmentGroupWeights = false
+    ..isFavorite = false
+    ..accessRestrictedByDate = false
+    ..hasWeightedGradingPeriods = false
+    ..hasGradingPeriods = false
+    ..restrictEnrollmentsToCourseDates = false;
 
-  CourseGrade getCourseGrade(int studentId) => CourseGrade(
-      enrollments.firstWhere((enrollment) => enrollment.userId == studentId));
+  CourseGrade getCourseGrade(int studentId) =>
+      CourseGrade(enrollments.firstWhere((enrollment) => enrollment.userId == studentId));
 }

@@ -22,6 +22,7 @@ import 'package:flutter_parent/screens/domain_search/domain_search_interactor.da
 import 'package:flutter_parent/screens/domain_search/domain_search_screen.dart';
 import 'package:flutter_parent/screens/web_login/web_login_interactor.dart';
 import 'package:flutter_parent/screens/web_login/web_login_screen.dart';
+import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mockito/mockito.dart';
@@ -32,6 +33,7 @@ void main() {
   _setupLocator(MockInteractor interactor, {WebLoginInteractor webInteractor}) {
     final _locator = GetIt.instance;
     _locator.reset();
+    _locator.registerLazySingleton(() => QuickNav());
     _locator.registerFactory<DomainSearchInteractor>(() => interactor);
     _locator.registerFactory<WebLoginInteractor>(() => webInteractor ?? _MockWebLoginInteractor());
   }
@@ -301,7 +303,7 @@ void main() {
             ..name = "Result")
         ]));
     final webInteractor = _MockWebLoginInteractor();
-    when (webInteractor.mobileVerify(any)).thenAnswer((_) => Future.value(MobileVerifyResult()));
+    when(webInteractor.mobileVerify(any)).thenAnswer((_) => Future.value(MobileVerifyResult()));
     _setupLocator(interactor, webInteractor: webInteractor);
     await tester.pumpWidget(TestApp(DomainSearchScreen()));
     await tester.pumpAndSettle();
@@ -319,12 +321,12 @@ void main() {
   testWidgets("Navigates to Login page from 'Next' button", (WidgetTester tester) async {
     var interactor = MockInteractor();
     when(interactor.performSearch(any)).thenAnswer((_) => Future.value([
-      SchoolDomain((sd) => sd
-        ..domain = "mobileqa.instructure.com"
-        ..name = "Result")
-    ]));
+          SchoolDomain((sd) => sd
+            ..domain = "mobileqa.instructure.com"
+            ..name = "Result")
+        ]));
     final webInteractor = _MockWebLoginInteractor();
-    when (webInteractor.mobileVerify(any)).thenAnswer((_) => Future.value(MobileVerifyResult()));
+    when(webInteractor.mobileVerify(any)).thenAnswer((_) => Future.value(MobileVerifyResult()));
     _setupLocator(interactor, webInteractor: webInteractor);
 
     await tester.pumpWidget(TestApp(DomainSearchScreen()));
@@ -347,7 +349,7 @@ void main() {
             ..name = "Result")
         ]));
     final webInteractor = _MockWebLoginInteractor();
-    when (webInteractor.mobileVerify(any)).thenAnswer((_) => Future.value(MobileVerifyResult()));
+    when(webInteractor.mobileVerify(any)).thenAnswer((_) => Future.value(MobileVerifyResult()));
     _setupLocator(interactor, webInteractor: webInteractor);
 
     await tester.pumpWidget(TestApp(DomainSearchScreen()));
@@ -364,4 +366,5 @@ void main() {
 }
 
 class MockInteractor extends Mock implements DomainSearchInteractor {}
+
 class _MockWebLoginInteractor extends Mock implements WebLoginInteractor {}

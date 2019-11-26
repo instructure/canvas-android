@@ -54,7 +54,6 @@ class _CoursesScreenState extends State<CoursesScreen> {
     });
 
     _interactor.getCourses().then((courses) {
-      print(courses);
       _courses = courses;
       setState(() {
         _loading = false;
@@ -75,8 +74,6 @@ class _CoursesScreenState extends State<CoursesScreen> {
     if (_error) return Text("Error!"); // TODO: Show an error screen
 
     if (_loading) return Center(child: CircularProgressIndicator());
-
-    _courses.forEach((it) => print(it));
 
     return ListView(
         scrollDirection: Axis.vertical,
@@ -114,8 +111,6 @@ class _CoursesScreenState extends State<CoursesScreen> {
   }
 
   Widget _courseGrade(context, Course course) {
-    course.enrollments.forEach((it) => print(it.userId));
-
     CourseGrade grade = course.getCourseGrade(widget._student?.id);
     var format = NumberFormat();
     format.maximumFractionDigits = 2;
@@ -125,9 +120,7 @@ class _CoursesScreenState extends State<CoursesScreen> {
     // or a score
     var text = grade.noCurrentGrade()
         ? AppLocalizations.of(context).noGrade
-        : (grade.currentGrade()?.isNotEmpty == true
-        ? grade.currentGrade()
-        : format.format(grade.currentScore()) + '%');
+        : (grade.currentGrade()?.isNotEmpty == true ? grade.currentGrade() : format.format(grade.currentScore()) + '%');
 
     return Text(
       text,
@@ -141,12 +134,10 @@ class _CoursesScreenState extends State<CoursesScreen> {
 
   /// Filters enrollments by those associated with the currently selected user
   bool _enrollmentFilter(Course course) {
-    return course.enrollments
-        ?.any((enrollment) => enrollment.userId == widget._student?.id) ??
-        false;
+    return course.enrollments?.any((enrollment) => enrollment.userId == widget._student?.id) ?? false;
   }
 
   void _courseTapped(context, Course course) {
-    QuickNav.push(context, CourseDetailsScreen.withCourse(widget._student.id, course));
+    locator<QuickNav>().push(context, CourseDetailsScreen.withCourse(widget._student.id, course));
   }
 }

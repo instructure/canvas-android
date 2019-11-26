@@ -111,6 +111,8 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
   }
 }
 
+AppLocalizations L10n(BuildContext context) => AppLocalizations.of(context);
+
 ///
 /// App Localization class.
 ///
@@ -147,39 +149,19 @@ class AppLocalizations {
   }
 
   /// Dashboard
-  String get noStudents => Intl.message(
-    'No Students',
-    desc: 'Text for when an observer has no students they are observing'
-  );
+  String get noStudents =>
+      Intl.message('No Students', desc: 'Text for when an observer has no students they are observing');
 
   /// Navigation Drawer
-  String get inbox => Intl.message(
-      'Inbox',
-      desc: 'Label text for the Inbox nav drawer button'
-  );
+  String get manageStudents =>
+      Intl.message('Manage Students', desc: 'Label text for the Manage Students nav drawer button');
 
-  String get manageStudents => Intl.message(
-      'Manage Students',
-      desc: 'Label text for the Manage Students nav drawer button'
-  );
+  String get help => Intl.message('Help', desc: 'Label text for the help nav drawer button');
 
-  String get help => Intl.message(
-      'Help',
-      desc: 'Label text for the help nav drawer button'
-  );
+  String get signOut => Intl.message('Sign Out', desc: 'Label text for the Sign Out nav drawer button');
 
-  String get signOut => Intl.message(
-      'Sign Out',
-      desc: 'Label text for the Sign Out nav drawer button'
-  );
-
-  String appVersion(String version) => Intl.message(
-    'v. $version',
-    name: 'appVersion',
-    args: [version],
-    desc: 'App version shown in the navigation drawer'
-  );
-
+  String appVersion(String version) => Intl.message('v. $version',
+      name: 'appVersion', args: [version], desc: 'App version shown in the navigation drawer');
 
   /// Login landing screen
 
@@ -233,6 +215,75 @@ class AppLocalizations {
       name: 'domainSearchHelpBody',
       desc: 'The body text shown in the help dialog on the domain search screen',
       args: [canvasGuides, canvasSupport]);
+
+  /// Inbox
+
+  String get inbox => Intl.message('Inbox', desc: 'Title for the Inbox screen');
+
+  String get errorLoadingMessages => Intl.message('There was an error loading your inbox messages',
+      desc: 'Message shown when an error occured while loading inbox messages');
+
+  String get noSubject => Intl.message('No Subject', desc: 'Title used for inbox messages that have no subject');
+
+  String get errorFetchingCourses =>
+      Intl.message("Unable to fetch courses. Please check your connection and try again.",
+          desc: "Message shown when an error occured while loading courses");
+
+  String get messageChooseCourse => Intl.message('Choose a course to message',
+      desc: 'Header in the course list shown when the user is choosing which course to associate with a new message');
+
+  String get emptyInboxTitle =>
+      Intl.message('Inbox Zero', desc: 'Title of the message shown when there are no inbox messages');
+
+  String get emptyInboxSubtitle =>
+      Intl.message('You’re all caught up!', desc: 'Subtitle of the message shown when there are no inbox messages');
+
+  /// Create Conversation
+
+  String get errorLoadingRecipients => Intl.message('There was an error loading recipients for this course',
+      desc: 'Message shown when attempting to create a new message but the recipients list failed to load');
+
+  String get errorSendingMessage => Intl.message('Unable to send message. Check your connection and try again.',
+      desc: 'Message show when there was an error creating or sending a new message');
+
+  String get unsavedChangesDialogTitle => Intl.message('Unsaved changes',
+      desc: 'Title of the dialog shown when the user tries to leave with unsaved changes');
+
+  String get unsavedChangesDialogBody =>
+      Intl.message('Are you sure you wish to close this page? Your unsent message will be lost.',
+          desc: 'Body text of the dialog shown when the user tries leave with unsaved changes');
+
+  String get newMessageTitle => Intl.message('New message', desc: "Title of the new-message screen");
+
+  String get addAttachment =>
+      Intl.message("Add attachment", desc: 'Tooltip for the add-attachment button in the new-message screen');
+
+  String get sendMessage =>
+      Intl.message('Send message', desc: 'Tooltip for the send-message button in the new-message screen');
+
+  String get selectRecipients =>
+      Intl.message('Select recipients', desc: 'Tooltip for the button that allows users to select message recipients');
+
+  String get noRecipientsSelected => Intl.message('No recipients selected',
+      desc: 'Hint displayed when the user has not selected any message recipients');
+
+  String get messageSubjectInputHint =>
+      Intl.message('Message subject', desc: 'Hint text displayed in the input field for the message subject');
+
+  String get messageBodyInputHint =>
+      Intl.message('Message', desc: 'Hint text displayed in the input field for the message body');
+
+  String get recipients => Intl.message('Recipients', desc: 'Label for message recipients');
+
+  String plusRecipientCount(int count) => Intl.message(
+        '+$count',
+        desc: "Shows the number of recipients that are selected but not displayed on screen.",
+        args: [count],
+        examples: const {'count': 5},
+      );
+
+  String get attachmentFailed => Intl.message('Failed. Tap for options.',
+      desc: 'Short message shown on a message attachment when uploading has failed');
 
   /// Courses Screen
 
@@ -292,11 +343,47 @@ class AppLocalizations {
         desc: 'The empty message to show to users when there are no alerts for the student.',
       );
 
+  /// Enrollment types
+
+  String get enrollmentTypeTeacher => Intl.message('Teacher', desc: 'Label for the Teacher enrollment type');
+
+  String get enrollmentTypeStudent => Intl.message('Student', desc: 'Label for the Student enrollment type');
+
+  String get enrollmentTypeTA => Intl.message('TA',
+      desc:
+          "Label for the Teaching Assistant enrollment type (also known as Teacher's Aid or Education Assistant), reduced to a short acronym/initialism if appropriate.");
+
+  String get enrollmentTypeObserver => Intl.message('Observer', desc: 'Label for the Observer enrollment type');
+
+  // Attachment picker
+
+  String get useCamera => Intl.message('Use Camera',
+      desc: 'Label for the action item that lets the user capture a photo using the device camera');
+
+  String get uploadFile =>
+      Intl.message('Upload File', desc: 'Label for the action item that lets the user upload a file from their device');
+
+  String get chooseFromGallery => Intl.message('Choose from Gallery',
+      desc: 'Label for the action item that lets the user select a photo from their device gallery');
+
+  String get attachmentPreparing =>
+      Intl.message('Preparing…', desc: 'Message shown while a file is being prepared to attach to a message');
+
   /// Miscellaneous
 
   String get next => Intl.message('Next', name: 'next');
 
   String get ok => Intl.message('OK', name: 'ok');
+
+  String get yes => Intl.message('Yes');
+
+  String get no => Intl.message('No');
+
+  String get retry => Intl.message("Retry");
+
+  String get delete => Intl.message("Delete", desc: 'Label used for general delete/remove actions');
+
+  String get done => Intl.message('Done', desc: 'Label for general done/finished actions');
 
   String get unexpectedError => Intl.message('An unexpected error occurred');
 

@@ -12,17 +12,14 @@
 /// You should have received a copy of the GNU General Public License
 /// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import 'package:dio/dio.dart';
-import 'package:flutter_parent/api/utils/api_prefs.dart';
+import 'package:flutter_parent/api/utils/dio_config.dart';
+import 'package:flutter_parent/api/utils/fetch.dart';
 import 'package:flutter_parent/models/course.dart';
-import 'package:flutter_parent/models/serializers.dart';
-
-import 'utils/paged_list.dart';
 
 class CourseApi {
-  static Future<List<Course>> getObserveeCourses() async {
-    print('getting observee courses depaginated');
-    var coursesResponse = await Dio().get('${ApiPrefs.getApiUrl(path: 'courses')}', queryParameters: {
+  Future<List<Course>> getObserveeCourses({bool forceRefresh: false}) async {
+    final dio = canvasDio(forceRefresh: forceRefresh, usePerPageParam: true);
+    final params = {
       'include': [
         'term',
         'syllabus_body',
@@ -38,59 +35,24 @@ class CourseApi {
         'observed_users'
       ],
       'state': ['completed', 'available']
-    }, options: Options(headers: ApiPrefs.getHeaderMap()));
-
-
-    if (coursesResponse.statusCode == 200 || coursesResponse.statusCode == 201) {
-      final coursesPaged = PagedList<Course>(coursesResponse);
-      print('finished success: ${coursesPaged.nextUrl}');
-      return (coursesPaged.nextUrl == null)
-          ? coursesPaged.data
-          : _getObserveeCoursesDepaginated(coursesPaged);
-    } else {
-      return Future.error(coursesResponse.statusCode);
-    }
-  }
-
-  static Future<List<Course>> _getObserveeCoursesDepaginated(PagedList<Course> prevResponse) async {
-    print('getting assignments depaginated _recursive_ (${prevResponse.nextUrl}');
-    // Query params already specified in url
-    var coursesResponse =
-        await Dio().get(prevResponse.nextUrl, options: Options(headers: ApiPrefs.getHeaderMap()));
-
-    if (coursesResponse.statusCode == 200 || coursesResponse.statusCode == 201) {
-      prevResponse.updateWithResponse(coursesResponse);
-      print("finished success _recursive_: ${prevResponse.nextUrl}");
-      return (prevResponse.nextUrl == null)
-          ? prevResponse.data
-          : _getObserveeCoursesDepaginated(prevResponse);
-    } else {
-      print("finished error _recursive_");
-      return Future.error(coursesResponse.statusMessage);
-    }
+    };
+    return fetchList(dio.get('courses', queryParameters: params), depaginateWith: dio);
   }
 
   Future<Course> getCourse(int courseId) async {
-    var response = await Dio().get('${ApiPrefs.getApiUrl()}courses/${courseId}',
-        options: Options(headers: ApiPrefs.getHeaderMap()),
-        queryParameters: {
-          'include': [
-            'syllabus_body',
-            'term',
-            'permissions',
-            'license',
-            'is_public',
-            'needs_grading_count',
-            'total_scores',
-            'current_grading_period_scores',
-            'course_image',
-          ],
-        });
-
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      return deserialize<Course>(response.data);
-    } else {
-      return null;
-    }
+    final params = {
+      'include': [
+        'syllabus_body',
+        'term',
+        'permissions',
+        'license',
+        'is_public',
+        'needs_grading_count',
+        'total_scores',
+        'current_grading_period_scores',
+        'course_image'
+      ]
+    };
+    return fetch(canvasDio().get('courses/${courseId}', queryParameters: params));
   }
 }
