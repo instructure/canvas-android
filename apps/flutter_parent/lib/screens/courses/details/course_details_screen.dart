@@ -59,7 +59,6 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
               appBar: AppBar(
                 title: Text(model.course?.name ?? ''),
                 bottom: TabBar(
-                  labelStyle: Theme.of(context).primaryTextTheme.subtitle,
                   tabs: [
                     Tab(text: AppLocalizations.of(context).courseGradesLabel.toUpperCase()),
                     Tab(text: AppLocalizations.of(context).courseSyllabusLabel.toUpperCase()),
@@ -96,7 +95,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
       return RefreshIndicator(
         child: FullScreenScrollContainer(children: [Text(AppLocalizations.of(context).unexpectedError)]),
         onRefresh: () async {
-          return model.loadData(refreshCourse: true, refreshAssignments: true);
+          return model.loadData(refreshCourse: true);
         },
       );
     } else {

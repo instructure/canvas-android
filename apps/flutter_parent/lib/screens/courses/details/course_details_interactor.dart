@@ -16,14 +16,25 @@ import 'package:flutter_parent/api/assignment_api.dart';
 import 'package:flutter_parent/api/course_api.dart';
 import 'package:flutter_parent/models/assignment_group.dart';
 import 'package:flutter_parent/models/course.dart';
+import 'package:flutter_parent/models/submission.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class CourseDetailsInteractor {
   Future<Course> loadCourse(int courseId) {
     return locator<CourseApi>().getCourse(courseId);
   }
-  
+
   Future<List<AssignmentGroup>> loadAssignmentGroups(int courseId, int studentId) {
     return locator<AssignmentApi>().getAssignmentGroupsWithSubmissionsDepaginated(courseId, studentId);
+  }
+
+  // TODO: Remove once LA-274 is implemented, and submissions are given with assignment groups (for observers)
+  Future<List<Submission>> loadSubmissions(
+    int courseId,
+    int studentId,
+    List<int> assignmentIds, {
+    bool forceRefresh = false,
+  }) {
+    return locator<AssignmentApi>().getSubmissions(courseId, studentId, assignmentIds, forceRefresh: forceRefresh);
   }
 }

@@ -22,7 +22,7 @@ class CourseSyllabusScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<CourseDetailsModel>(
       builder: (context, model, _) => RefreshIndicator(
-        onRefresh: () => model.loadData(refreshAssignments: true),
+        onRefresh: () => model.loadData(refreshCourse: true),
         child: FullScreenScrollContainer(
           children: [Text("Course Syllabus")],
         ),
