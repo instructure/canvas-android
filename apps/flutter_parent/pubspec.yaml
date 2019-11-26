@@ -55,7 +55,7 @@ dependencies:
 
   # Networking / Serialization
   dio: 3.0.5
-  dio_http_cache: 0.2.1
+  dio_http_cache: 0.2.5
   built_value: '>=5.5.5 <7.0.0'
   built_collection: 4.2.2
 

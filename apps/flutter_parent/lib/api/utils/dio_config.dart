@@ -43,6 +43,11 @@ Dio canvasDio({
 
   // Create Dio instance and add interceptors
   var dio = Dio(options);
+
+  // Cache manager
+  dio.interceptors.add(DioCacheManager(CacheConfig(baseUrl: ApiPrefs.getDomain())).interceptor);
+
+  // Log interceptor
   dio.interceptors.add(LogInterceptor(
     request: false,
     requestHeader: false,
@@ -50,9 +55,6 @@ Dio canvasDio({
     responseHeader: false,
     responseBody: false,
   ));
-
-  // TODO: Re-enable cache interceptor once response header issue is fixed
-  //dio.interceptors.add(DioCacheManager(CacheConfig(baseUrl: ApiPrefs.getDomain())).interceptor);
 
   return dio;
 }

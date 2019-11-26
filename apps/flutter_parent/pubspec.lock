@@ -168,7 +168,7 @@ packages:
       name: dio_http_cache
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.1"
+    version: "0.2.5"
   file:
     dependency: transitive
     description:
