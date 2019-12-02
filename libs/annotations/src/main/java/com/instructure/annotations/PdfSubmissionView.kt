@@ -740,6 +740,8 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
                         .setDefaultTextSize(10f)
                         .setDefaultFillColor(Color.TRANSPARENT)
                         .setCustomColorPickerEnabled(false)
+                        .setHorizontalResizingEnabled(false)
+                        .setVerticalResizingEnabled(false)
                         .setForceDefaults(true)
                         .build()
         )
