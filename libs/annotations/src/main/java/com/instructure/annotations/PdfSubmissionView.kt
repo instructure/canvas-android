@@ -68,6 +68,7 @@ import com.pspdfkit.ui.inspector.annotation.AnnotationCreationInspectorControlle
 import com.pspdfkit.ui.inspector.annotation.AnnotationEditingInspectorController
 import com.pspdfkit.ui.inspector.annotation.DefaultAnnotationCreationInspectorController
 import com.pspdfkit.ui.inspector.annotation.DefaultAnnotationEditingInspectorController
+import com.pspdfkit.ui.inspector.views.BorderStylePreset
 import com.pspdfkit.ui.special_mode.controller.AnnotationCreationController
 import com.pspdfkit.ui.special_mode.controller.AnnotationEditingController
 import com.pspdfkit.ui.special_mode.controller.AnnotationSelectionController
@@ -464,6 +465,7 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
             }
         }
 
+        //TODO: This is for version 6.0+
         override fun onAnnotationZOrderChanged(p0: Int, p1: MutableList<Annotation>, p2: MutableList<Annotation>) {}
     }
 
@@ -705,6 +707,9 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
                         .setSupportedProperties(EnumSet.of(AnnotationProperty.COLOR))
                         .setDefaultColor(ContextCompat.getColor(context, R.color.blueAnnotation))
                         .setDefaultThickness(2f)
+                        .setDefaultAlpha(100f)
+                        .setDefaultFillColor(ContextCompat.getColor(context, R.color.transparent))
+                        .setDefaultBorderStylePreset(BorderStylePreset.SOLID)
                         .setForceDefaults(true)
                         .build()
         )
