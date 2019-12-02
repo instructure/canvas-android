@@ -40,7 +40,7 @@ class InboxConversationPage : BasePage(R.id.inboxConversationPage) {
         waitForViewWithText(R.string.reply).click()
         waitForViewWithHint(R.string.message).replaceText(message)
         onViewWithContentDescription("Send").perform(explicitClick())
-        // Wait for reply to propagate
+        // Wait for reply to propagate, and for us to return to the email thread page
         for(i in 1..10) {
             try {
                 onView(withId(R.id.starred)).assertDisplayed()
@@ -50,6 +50,8 @@ class InboxConversationPage : BasePage(R.id.inboxConversationPage) {
                 sleep(1000)
             }
         }
+        // If we get through the loop above, try one more time to generate the proper failure
+        onView(withId(R.id.starred)).assertDisplayed()
     }
 
     fun assertMessageDisplayed(message: String) {
