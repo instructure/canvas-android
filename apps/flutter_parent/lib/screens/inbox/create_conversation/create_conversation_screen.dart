@@ -21,7 +21,7 @@ import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/design/canvas_icons_solid.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
-import 'package:flutter_parent/utils/widgets/avatar.dart';
+import 'package:flutter_parent/utils/common_widgets/avatar.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:transparent_image/transparent_image.dart';
@@ -371,7 +371,7 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
                     style: TextStyle(fontWeight: FontWeight.w500),
                   ),
                 ),
-                avatar: Avatar(user.avatarUrl),
+                avatar: Avatar(user.avatarUrl, name: user.name),
                 backgroundColor: ParentTheme.of(context).nearSurfaceColor,
               ))
           .toList();
@@ -389,7 +389,7 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
               ),
             ),
           ),
-          avatar: Avatar(_selectedRecipients[0].avatarUrl),
+          avatar: Avatar(_selectedRecipients[0].avatarUrl, name: _selectedRecipients[0].name),
           backgroundColor: ParentTheme.of(context).nearSurfaceColor,
         ),
         if (_selectedRecipients.length > 1)

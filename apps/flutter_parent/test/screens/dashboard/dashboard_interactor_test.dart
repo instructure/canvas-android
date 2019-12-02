@@ -39,7 +39,7 @@ void main() {
 
     // Run the logic
     var interactor = DashboardInteractor();
-    var result = interactor.filterObservees(startingList);
+    var result = interactor.filterStudents(startingList);
 
     expect(result, expectedSortedList);
   });
@@ -52,7 +52,7 @@ void main() {
 
     // Run the logic
     var interactor = DashboardInteractor();
-    var result = interactor.filterObservees(startingList);
+    var result = interactor.filterStudents(startingList);
 
     expect(result, expectedSortedList);
   });

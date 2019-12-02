@@ -24,7 +24,7 @@ import 'package:flutter_parent/screens/inbox/conversation_list/conversation_list
 import 'package:flutter_parent/screens/inbox/conversation_list/conversation_list_screen.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
-import 'package:flutter_parent/utils/widgets/avatar.dart';
+import 'package:flutter_parent/utils/common_widgets/avatar.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';

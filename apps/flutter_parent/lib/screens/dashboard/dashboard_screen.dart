@@ -1,16 +1,16 @@
-/// Copyright (C) 2019 - present Instructure, Inc.
-///
-/// This program is free software: you can redistribute it and/or modify
-/// it under the terms of the GNU General Public License as published by
-/// the Free Software Foundation, version 3 of the License.
-///
-/// This program is distributed in the hope that it will be useful,
-/// but WITHOUT ANY WARRANTY; without even the implied warranty of
-/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-/// GNU General Public License for more details.
-///
-/// You should have received a copy of the GNU General Public License
-/// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// Copyright (C) 2019 - present Instructure, Inc.
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, version 3 of the License.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/api/utils/api_prefs.dart';
@@ -21,9 +21,9 @@ import 'package:flutter_parent/screens/courses/courses_screen.dart';
 import 'package:flutter_parent/screens/dashboard/inbox_notifier.dart';
 import 'package:flutter_parent/screens/inbox/conversation_list/conversation_list_screen.dart';
 import 'package:flutter_parent/screens/login_landing_screen.dart';
-import 'package:flutter_parent/utils/common_widets/loading_indicator.dart';
-import 'package:flutter_parent/utils/common_widets/user_avatar.dart';
-import 'package:flutter_parent/utils/common_widets/user_name.dart';
+import 'package:flutter_parent/utils/common_widgets/avatar.dart';
+import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
+import 'package:flutter_parent/utils/common_widgets/user_name.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/design/canvas_icons_solid.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
@@ -94,7 +94,7 @@ class DashboardState extends State<DashboardScreen> {
       _studentsError = false;
     });
 
-    _interactor.getObservees().then((users) {
+    _interactor.getStudents().then((users) {
       print(users);
       _students = users;
 
@@ -158,7 +158,7 @@ class DashboardState extends State<DashboardScreen> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        UserAvatar(_selectedStudent),
+        Avatar(_selectedStudent.avatarUrl, name: _selectedStudent.shortName),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -229,9 +229,11 @@ class DashboardState extends State<DashboardScreen> {
 //        return CalendarPage();
       case 2:
         return AlertsScreen(_selectedStudent);
+        break;
       case 0:
       default:
         return CoursesScreen(_selectedStudent);
+        break;
     }
   }
 
@@ -263,7 +265,8 @@ class DashboardState extends State<DashboardScreen> {
   _navDrawerHeader(User user) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Padding(padding: const EdgeInsets.fromLTRB(16, 16, 0, 12), child: UserAvatar(user)),
+          Padding(
+              padding: const EdgeInsets.fromLTRB(16, 16, 0, 12), child: Avatar(user.avatarUrl, name: user.shortName)),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: UserName.fromUser(user, style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
