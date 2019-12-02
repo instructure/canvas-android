@@ -13,23 +13,22 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.student.ui
+package com.instructure.student.ui.interaction
 
-import com.instructure.dataseeding.api.SubmissionsApi
-import com.instructure.dataseeding.model.AssignmentListApiModel
-import com.instructure.dataseeding.model.SubmissionType
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.addAssignment
+import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.student.ui.utils.*
-import com.instructure.espresso.ditto.Ditto
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
 import org.junit.Test
 
-class AssignmentListPageTest : StudentTest() {
+class AssignmentListInteractionTest : StudentTest() {
 
     @Test
-    @Ditto
     @TestMetaData(Priority.P1, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
     override fun displaysPageObjects() {
         getToAssignmentsPage(0)
@@ -37,7 +36,6 @@ class AssignmentListPageTest : StudentTest() {
     }
 
     @Test
-    @Ditto
     @TestMetaData(Priority.P1, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
     fun displaysNoAssignmentsView() {
         getToAssignmentsPage(0)
@@ -45,41 +43,39 @@ class AssignmentListPageTest : StudentTest() {
     }
 
     @Test
-    @Ditto
     @TestMetaData(Priority.P1, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
     fun displaysAssignment() {
-        val assignment = getToAssignmentsPage().assignmentList[0]
+        val assignment = getToAssignmentsPage()[0]
         assignmentListPage.assertHasAssignment(assignment)
     }
 
-    private fun getToAssignmentsPage(assignmentCount: Int = 1): AssignmentListApiModel {
-        val data = seedData(teachers = 1, students = 1, favoriteCourses = 1)
-        val teacher = data.teachersList[0]
-        val student = data.studentsList[0]
-        val course = data.coursesList[0]
-        val assignments = seedAssignments(
-            courseId = course.id,
-            assignments = assignmentCount,
-            teacherToken = teacher.token,
-            submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY)
+    private fun getToAssignmentsPage(assignmentCount: Int = 1): List<Assignment> {
+        val data = MockCanvas.init(
+                courseCount = 1,
+                favoriteCourseCount = 1,
+                studentCount = 1,
+                teacherCount = 1
         )
 
-        if (assignmentCount > 0) {
-            val submissions = listOf(
-                    SubmissionsApi.SubmissionSeedInfo(amount = 1, submissionType = SubmissionType.ONLINE_TEXT_ENTRY)
-            )
+        val course = data.courses.values.first()
+        val student = data.students.first()
 
-            seedAssignmentSubmission(
-                submissionSeeds = submissions,
-                assignmentId = assignments.assignmentList[0].id,
-                courseId = course.id,
-                studentToken = if (data.studentsList.isEmpty()) "" else data.studentsList[0].token
+        val assignmentList = mutableListOf<Assignment>()
+        repeat(assignmentCount) {
+            val assignment = data.addAssignment(
+                    courseId = course.id,
+                    submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY
             )
+            assignmentList.add(assignment)
         }
 
-        tokenLogin(student)
-        routeTo("courses/${course.id}/assignments")
-        return assignments
+        val token = data.tokenFor(student)!!
+        tokenLogin(data.domain, token, student)
+        dashboardPage.waitForRender()
+
+        dashboardPage.selectCourse(course)
+        courseBrowserPage.selectAssignments()
+        return assignmentList
     }
 
 }
