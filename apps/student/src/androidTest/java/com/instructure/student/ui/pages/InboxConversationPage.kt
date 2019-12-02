@@ -16,11 +16,13 @@
  */
 package com.instructure.student.ui.pages
 
+import android.os.SystemClock.sleep
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
+import com.instructure.canvas.espresso.explicitClick
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.espresso.assertDisplayed
@@ -37,7 +39,17 @@ class InboxConversationPage : BasePage(R.id.inboxConversationPage) {
     fun replyToMessage(message: String) {
         waitForViewWithText(R.string.reply).click()
         waitForViewWithHint(R.string.message).replaceText(message)
-        onViewWithContentDescription("Send").click()
+        onViewWithContentDescription("Send").perform(explicitClick())
+        // Wait for reply to propagate
+        for(i in 1..10) {
+            try {
+                onView(withId(R.id.starred)).assertDisplayed()
+                break
+            }
+            catch(t: Throwable) {
+                sleep(1000)
+            }
+        }
     }
 
     fun assertMessageDisplayed(message: String) {

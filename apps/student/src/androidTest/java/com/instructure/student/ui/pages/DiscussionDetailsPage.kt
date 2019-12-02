@@ -44,6 +44,8 @@ import com.instructure.student.ui.utils.TypeInRCETextEditor
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.containsString
 import org.junit.Assert.assertTrue
+import java.lang.RuntimeException
+import java.util.concurrent.TimeUnit
 
 
 class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
@@ -100,13 +102,30 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
         clickReply()
         onView(withId(R.id.rce_webView)).perform(TypeInRCETextEditor(replyMessage))
         onView(withId(R.id.menu_send)).click()
-        sleep(2000) // Allow time for the reply to propagate to webview
     }
 
     fun assertReplyDisplayed(reply: DiscussionEntry) {
+        // It can take a *long* time for the reply to get rendered to the webview on
+        // tablets (in FTL, anyway).  And .withTimeout() doesn't seem to have any effect.
+        // So we'll add our own repeat/timeout logic to compensate for this.
+        // TODO: Find a way to abstract/generalize/centralize this logic
+        for(i in 0..20) {
+            try {
+                onWebView(withId(R.id.discussionRepliesWebView))
+                        .withElement(findElement(Locator.ID, "message_content_${reply.id}"))
+                        .check(webMatches(getText(),containsString(reply.message)))
+                break
+            }
+            catch(re: RuntimeException) {
+                sleep(1000)
+            }
+        }
+
+        // If we make it through that loop, try one more time to produce the proper failure
         onWebView(withId(R.id.discussionRepliesWebView))
                 .withElement(findElement(Locator.ID, "message_content_${reply.id}"))
                 .check(webMatches(getText(),containsString(reply.message)))
+
     }
 
     fun assertFavoritingEnabled(reply: DiscussionEntry) {
@@ -182,7 +201,6 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
                 .perform(webClick())
         onView(withId(R.id.rce_webView)).perform(TypeInRCETextEditor(replyMessage))
         onView(withId(R.id.menu_send)).click()
-        sleep(2000) // Allow time for reply to propagate to webview
     }
 
     fun assertMainAttachmentDisplayed() {

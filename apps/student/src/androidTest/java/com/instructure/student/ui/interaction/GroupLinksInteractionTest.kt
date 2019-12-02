@@ -16,6 +16,7 @@
  */
 package com.instructure.student.ui.interaction
 
+import android.os.Build
 import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
@@ -75,6 +76,13 @@ class GroupLinksInteractionTest : StudentTest() {
     @Test
     @TestMetaData(Priority.P0, FeatureCategory.GROUPS, TestCategory.INTERACTION, false, FeatureCategory.FILES)
     fun testGroupLink_filePreview() {
+
+        // MBL-13499: This will cause an http request to our mock web server, and http requests from webviews are illegal
+        // in SDK 28 and above.  So skip for SDK 28 and above.
+        if(Build.VERSION.SDK_INT > 27) {
+            return
+        }
+
         setUpGroupAndSignIn()
         dashboardPage.selectGroup(group)
         courseBrowserPage.selectFiles()
