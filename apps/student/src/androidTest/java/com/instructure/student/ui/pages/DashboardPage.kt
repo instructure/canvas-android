@@ -27,15 +27,18 @@ import androidx.test.espresso.Espresso
 import androidx.test.espresso.PerformException
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
+import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
 import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvas.espresso.scrollRecyclerView
+import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.canvasapi2.models.AccountNotification
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Group
@@ -222,7 +225,7 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
 
     fun selectCourse(course: Course) {
         assertDisplaysCourse(course)
-        onView(withText(course.originalName)).click()
+        onView(withText(course.originalName)).perform(withCustomConstraints(click(), isDisplayingAtLeast(10)))
     }
 
     fun selectGroup(group: Group) {

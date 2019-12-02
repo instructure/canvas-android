@@ -17,10 +17,12 @@ package com.instructure.student.ui.pages.renderPages
 
 import android.os.SystemClock.sleep
 import android.view.View
+import android.widget.EditText
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.matcher.ViewMatchers.*
+import com.instructure.canvas.espresso.DirectlyPopulateEditText
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.espresso.*
 import com.instructure.espresso.page.BasePage
@@ -114,9 +116,10 @@ class SubmissionCommentsRenderPage: BasePage(R.id.submissionCommentsPage) {
     }
 
     fun addAndSendComment(comment: String) {
-        clickInCommentBox()
-        commentInput.typeText(comment)
-        commentInput.closeSoftKeyboard()
+        // When we're in landscape mode (or any short-screen mode, I suppose), clicking on
+        // commentInput will bring up a system dialog for text entry (??), and the test is hosed
+        // at that point.  So we'll bypass espresso and populate the text directly.
+        commentInput.perform(DirectlyPopulateEditText(comment))
         onView(withId(R.id.sendCommentButton)).click()
     }
 
@@ -155,3 +158,4 @@ class GetViewLeftOffset(val output: Array<Int>) : ViewAction {
         output[0] = view!!.left
     }
 }
+
