@@ -55,7 +55,7 @@ void main() {
     // Get the first user
     var interactor = GetIt.instance.get<DashboardInteractor>();
     User first;
-    interactor.getObservees().then((students) {
+    interactor.getStudents().then((students) {
       first = students.first;
     });
 
@@ -72,7 +72,7 @@ void main() {
     // Get the first user
     var interactor = GetIt.instance.get<DashboardInteractor>();
     User first;
-    interactor.getObservees().then((students) {
+    interactor.getStudents().then((students) {
       first = students.first;
     });
 
@@ -336,7 +336,7 @@ class MockInteractor extends DashboardInteractor {
       {this.includePronouns = false, this.generateStudents = true, this.generateSelf = true});
 
   @override
-  Future<List<User>> getObservees() async => generateStudents
+  Future<List<User>> getStudents() async => generateStudents
       ? [
           _mockUser('Billy', pronouns: includePronouns ? 'he/him' : null),
           _mockUser('Sally', pronouns: includePronouns ? 'she/her' : null),
