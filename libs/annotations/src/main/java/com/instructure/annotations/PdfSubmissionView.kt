@@ -465,7 +465,6 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
             }
         }
 
-        //TODO: This is for version 6.0+
         override fun onAnnotationZOrderChanged(p0: Int, p1: MutableList<Annotation>, p2: MutableList<Annotation>) {}
     }
 
