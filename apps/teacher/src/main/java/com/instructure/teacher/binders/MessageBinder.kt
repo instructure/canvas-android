@@ -123,16 +123,13 @@ object MessageBinder : BaseBinder() {
             users.add(0, author)
         }
 
-        return if (users.isEmpty()) {
-            ""
-        } else {
-            when (users.size) {
-                in 0..2 -> users.joinTo(SpannableStringBuilder()) { Pronouns.span(it.name, it.pronouns) }
-                else -> TextUtils.concat(
-                    Pronouns.span(users[0].name, users[0].pronouns),
-                    ", +${message.participatingUserIds.size - 1}"
-                )
-            }
+        return when (users.size) {
+            0 -> ""
+            1, 2 -> users.joinTo(SpannableStringBuilder()) { Pronouns.span(it.name, it.pronouns) }
+            else -> TextUtils.concat(
+                Pronouns.span(users[0].name, users[0].pronouns),
+                ", +${message.participatingUserIds.size - 1}"
+            )
         }
     }
 }

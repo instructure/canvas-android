@@ -805,6 +805,26 @@ class AssignmentDetailsPresenterTest : Assert() {
     //val remoteFiles = mutableListOf(RemoteFile(id = attachmentId))
 
     @Test
+    fun `Description contains author pronouns when assignment is discussion`() {
+        val authorAvatarUrl = "pretty-hodor.com"
+        val authorName = "hodor"
+        val authorPronouns = "Pro/Noun"
+        val authoredDate = "Jul 23 at 9:59 AM"
+        val attachmentIconVisibility = false
+        val discussionMessage = "yo yo yo"
+        val calendar = GregorianCalendar.getInstance()
+        calendar.set(2019, 6, 23, 9, 59)
+        val discussionTopicHeader = baseDiscussion.copy(message = discussionMessage, author = DiscussionParticipant(displayName = authorName, pronouns = authorPronouns, avatarImageUrl = authorAvatarUrl), postedDate = calendar.time)
+        val assignment = baseAssignment.copy(submissionTypesRaw = listOf("discussion_topic"), discussionTopicHeader = discussionTopicHeader)
+
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
+        val expectedState = DiscussionHeaderViewState.Loaded(authorAvatarUrl, authorName, authorPronouns, authoredDate, attachmentIconVisibility)
+
+        assertEquals(expectedState, state.discussionHeaderViewState)
+    }
+
+    @Test
     fun `Description contains discussion topic header message when assignment is discussion`() {
         val assignment = baseAssignment.copy(submissionTypesRaw = listOf("discussion_topic"), discussionTopicHeader = baseDiscussion)
 

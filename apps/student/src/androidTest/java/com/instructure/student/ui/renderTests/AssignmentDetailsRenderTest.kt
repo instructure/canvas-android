@@ -263,6 +263,42 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
     }
 
     @Test
+    @TestMetaData(
+        Priority.P2,
+        FeatureCategory.ASSIGNMENTS,
+        TestCategory.RENDER,
+        secondaryFeature = FeatureCategory.DISCUSSIONS
+    )
+    fun displaysDiscussionTopicHeaderWithAuthorPronouns() {
+        val authorAvatarUrl = "pretty-hodor.com"
+        val authorName = "hodor"
+        val authorPronouns = "Pro/Noun"
+        val authoredDate = "Jul 23 at 9:59 AM"
+        val attachmentIconVisibility = false
+        val discussionMessage = "yo yo yo"
+        val calendar = GregorianCalendar.getInstance()
+        calendar.set(2019, 6, 23, 9, 59)
+        val discussionTopicHeader = DiscussionTopicHeader(
+            id = 123L,
+            message = discussionMessage,
+            author = DiscussionParticipant(
+                displayName = authorName,
+                pronouns = authorPronouns,
+                avatarImageUrl = authorAvatarUrl
+            ),
+            postedDate = calendar.time
+        )
+        val assignment = Assignment(
+            name = "Test Assignment",
+            submissionTypesRaw = listOf("discussion_topic"),
+            discussionTopicHeader = discussionTopicHeader
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        loadPageWithModel(model)
+        assignmentDetailsRenderPage.assertDiscussionHeader("hodor (Pro/Noun)", authoredDate, attachmentIconVisibility)
+    }
+
+    @Test
     @TestMetaData(Priority.P2, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER, secondaryFeature = FeatureCategory.DISCUSSIONS)
     fun displaysDiscussionTopicHeaderWithAttachments() {
         val authorAvatarUrl = "pretty-hodor.com"

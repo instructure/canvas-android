@@ -115,7 +115,7 @@ class SubmissionCommentsRenderTest: StudentRenderTest() {
         // This is dependent on a generated PendingSubmissionComment interface.
         pendingCommentItem = CommentItemState.PendingCommentItem(
                 authorName = user.shortName!!,
-                authorPronouns = user.pronouns,
+                authorPronouns = null,
                 avatarUrl = user.avatarUrl!!,
                 sortDate = Date(119, 6, 4, 13, 20),
                 pendingComment = makePendingComment(
@@ -168,6 +168,37 @@ class SubmissionCommentsRenderTest: StudentRenderTest() {
         )
         loadPageWithViewState(state)
         page.verifyPendingCommentPresent(pendingCommentItem, failed = false)
+    }
+
+    @Test
+    @TestMetaData(Priority.P2,FeatureCategory.ASSIGNMENTS,TestCategory.RENDER,secondaryFeature = FeatureCategory.COMMENTS)
+    fun testSingleCommentDisplaysAuthorPronoun() {
+        val commentItem = commentItemIsAudience.copy(authorPronouns = "Pro/Noun")
+        val state = SubmissionCommentsViewState(commentStates = listOf(commentItem))
+        loadPageWithViewState(state)
+        page.verifyDisplaysPronoun(commentItem)
+    }
+
+    @Test
+    @TestMetaData(Priority.P2,FeatureCategory.ASSIGNMENTS,TestCategory.RENDER,secondaryFeature = FeatureCategory.COMMENTS)
+    fun testSingleSubmissionDisplaysAuthorPronoun() {
+        val commentItem = submissionItem.copy(authorPronouns = "Pro/Noun")
+        val state = SubmissionCommentsViewState(commentStates = listOf(commentItem))
+        loadPageWithViewState(state)
+        page.verifyDisplaysPronoun(commentItem)
+    }
+
+    @Test
+    @TestMetaData(Priority.P2,FeatureCategory.ASSIGNMENTS,TestCategory.RENDER,secondaryFeature = FeatureCategory.COMMENTS)
+    fun testSinglePendingCommentDisplaysAuthorPronoun() {
+        // We shouldn't run this test on API 23 or lower, because we won't deal well
+        // with the ProgressBar that comes up.
+        if(Build.VERSION.SDK_INT < 24) return
+
+        val commentItem = pendingCommentItem.copy(authorPronouns = "Pro/Noun")
+        val state = SubmissionCommentsViewState(commentStates = listOf(commentItem))
+        loadPageWithViewState(state)
+        page.verifyDisplaysPronoun(commentItem)
     }
 
     @Test

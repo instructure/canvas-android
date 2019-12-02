@@ -21,6 +21,7 @@ import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.matcher.ViewMatchers.*
 import com.instructure.canvas.espresso.scrollRecyclerView
+import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.espresso.*
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onViewWithId
@@ -69,6 +70,13 @@ class SubmissionCommentsRenderPage: BasePage(R.id.submissionCommentsPage) {
         }
     }
 
+    fun verifyDisplaysPronoun(commentState: CommentItemState) {
+        // Make sure that the author name and pronoun are on the screen
+        val nameWithPronoun = getAuthorNameAndPronoun(commentState)
+        val nameMatcher = allOf(withText(nameWithPronoun.toString()), withId(R.id.userNameTextView))
+        scrollAndAssertDisplayed(nameMatcher)
+    }
+
     fun verifyDisplaysRetryOptions() {
         onViewWithId(R.id.errorLayout).click()
         onViewWithText(R.string.retry).assertVisible()
@@ -91,6 +99,16 @@ class SubmissionCommentsRenderPage: BasePage(R.id.submissionCommentsPage) {
             is CommentItemState.PendingCommentItem -> commentState.sortDate.toLocaleString() // Probably wrong.  Fix this when we actually test pending comments.
             else -> throw IllegalStateException("Unknown comment item state type ${commentState::class.java.simpleName}")
         }
+    }
+
+    private fun getAuthorNameAndPronoun(commentState: CommentItemState) : CharSequence {
+        val (name, pronoun) = when(commentState) {
+            is CommentItemState.CommentItem -> commentState.authorName to commentState.authorPronouns
+            is CommentItemState.PendingCommentItem -> commentState.authorName to commentState.authorPronouns
+            is CommentItemState.SubmissionItem -> commentState.authorName to commentState.authorPronouns
+            else -> throw IllegalStateException("Unknown comment item state type ${commentState::class.java.simpleName}")
+        }
+        return Pronouns.span(name, pronoun)
     }
 
     fun scrollAndAssertDisplayed(matcher: Matcher<View>) {

@@ -33,7 +33,7 @@ object Pronouns {
      */
     @JvmStatic
     fun span(name: String?, pronouns: String?) : Spanned {
-        val span = SpannableStringBuilder(name)
+        val span = SpannableStringBuilder(name.orEmpty())
         if (pronouns.isValid()) {
             span.append(" ($pronouns)", StyleSpan(Typeface.ITALIC), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
