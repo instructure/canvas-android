@@ -76,6 +76,10 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
                 .perform(withCustomConstraints(swipeDown(), isDisplayingAtLeast(10)))
     }
 
+    fun scrollToRepliesWebview() {
+        onView(withId(R.id.discussionRepliesWebView)).scrollTo()
+    }
+
     private fun clickReply() {
         replyButton.click()
     }

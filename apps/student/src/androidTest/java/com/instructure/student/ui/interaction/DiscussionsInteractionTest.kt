@@ -173,6 +173,8 @@ class DiscussionsInteractionTest : StudentTest() {
         discussionListPage.pullToUpdate()
         discussionListPage.assertUnreadCount(topicHeader.title!!, 1)
         discussionListPage.selectTopic(topicHeader.title!!)
+        sleep(500) // let's allow time for the webview to become populated/visible before we scroll to it
+        discussionDetailsPage.scrollToRepliesWebview() // may be necessary on shorter screens / landscape
         // From what I can tell, our self-generated HTML has a 2500 ms wait before it
         // sends the "read" call for the unread messages on the page.  So we'll wait for
         // 3 seconds.

@@ -17,12 +17,16 @@
 package com.instructure.canvas.espresso
 
 import android.view.View
+import android.widget.EditText
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
+import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers
+import com.instructure.espresso.swipeUp
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers
 
@@ -61,7 +65,53 @@ fun scrollRecyclerView(recyclerViewId: Int, target: String) {
  * Scroll a recycler view to the given matcher target
  */
 fun scrollRecyclerView(recyclerViewId: Int, target: Matcher<View>) {
-    Espresso.onView(Matchers.allOf(ViewMatchers.withId(recyclerViewId), ViewMatchers.isDisplayed()))
+    val recyclerViewMatcher = Matchers.allOf(ViewMatchers.withId(recyclerViewId), ViewMatchers.isDisplayed())
+    onView(recyclerViewMatcher)
             .perform(RecyclerViewActions.scrollTo<RecyclerView.ViewHolder>(ViewMatchers.hasDescendant(target)))
 
+    // If you have long recycler view elements and a short screen, it's possible that portions of
+    // a recycler view element will still be off-screen when the logic above completes.  Let's
+    // make an attempt to scroll up until "target" is displayed at least 10 percent.
+    var swipesRemaining = 3
+    while(!isDisplayedAtLeast(target, 10) && swipesRemaining > 0) {
+        onView(recyclerViewMatcher).swipeUp()
+        swipesRemaining -= 1
+    }
+
+}
+
+
+// Custom action to directly populate an EditText, bypassing the normal espresso actions
+// of clicking on the EditText, typing into it, and then dismissing the soft keyboard.
+class DirectlyPopulateEditText(val text: String) : ViewAction {
+    override fun getDescription(): String {
+        return "Populate EditText with $text"
+    }
+
+    override fun getConstraints(): Matcher<View> {
+        return ViewMatchers.isAssignableFrom(EditText::class.java)
+    }
+
+    override fun perform(uiController: UiController?, view: View?) {
+        when(view) {
+            is EditText -> {
+                view.text.clear()
+                view.text.append(text)
+            }
+        }
+    }
+
+}
+
+/**
+ * Convenience method to see whether (and by how much) a view is displayed on the screen.
+ */
+private fun isDisplayedAtLeast(target: Matcher<View>, displayPercentage: Int) : Boolean {
+    try {
+        onView(target).check(matches(ViewMatchers.isDisplayingAtLeast(displayPercentage)))
+        return true
+    }
+    catch(t: Throwable) {
+        return false
+    }
 }
