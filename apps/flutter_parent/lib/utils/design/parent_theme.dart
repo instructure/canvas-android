@@ -208,22 +208,23 @@ class _ParentThemeState extends State<ParentTheme> {
 
     var swatch = ParentTheme.makeSwatch(themeColor);
     return ThemeData(
-        brightness: isDarkMode ? Brightness.dark : Brightness.light,
-        primarySwatch: swatch,
-        primaryColor: isDarkMode ? Colors.black : null,
-        accentColor: swatch[500],
-        toggleableActiveColor: swatch[500],
-        textSelectionHandleColor: swatch[300],
-        scaffoldBackgroundColor: isDarkMode ? Colors.black : Colors.white,
-        accentColorBrightness: isDarkMode ? Brightness.light : Brightness.dark,
-        textTheme: textTheme,
-        primaryTextTheme: isDarkMode ? textTheme : _buildTextTheme(Colors.white, fadeColor: Colors.white70),
-        accentTextTheme: isDarkMode ? textTheme : _buildTextTheme(Colors.white, fadeColor: Colors.white70),
-        iconTheme: IconThemeData(color: onSurfaceColor),
-        primaryIconTheme: IconThemeData(color: isDarkMode ? ParentTheme.tiara : Colors.white),
-        accentIconTheme: IconThemeData(color: isDarkMode ? Colors.black : Colors.white),
-        dividerColor: isHC ? onSurfaceColor : isDarkMode ? nearSurfaceColor : ParentTheme.tiara,
-        buttonTheme: ButtonThemeData(height: 48, minWidth: 120));
+      brightness: isDarkMode ? Brightness.dark : Brightness.light,
+      primarySwatch: swatch,
+      primaryColor: isDarkMode ? Colors.black : null,
+      accentColor: swatch[500],
+      toggleableActiveColor: swatch[500],
+      textSelectionHandleColor: swatch[300],
+      scaffoldBackgroundColor: isDarkMode ? Colors.black : Colors.white,
+      accentColorBrightness: isDarkMode ? Brightness.light : Brightness.dark,
+      textTheme: textTheme,
+      primaryTextTheme: isDarkMode ? textTheme : _buildTextTheme(Colors.white, fadeColor: Colors.white70),
+      accentTextTheme: isDarkMode ? textTheme : _buildTextTheme(Colors.white, fadeColor: Colors.white70),
+      iconTheme: IconThemeData(color: onSurfaceColor),
+      primaryIconTheme: IconThemeData(color: isDarkMode ? ParentTheme.tiara : Colors.white),
+      accentIconTheme: IconThemeData(color: isDarkMode ? Colors.black : Colors.white),
+      dividerColor: isHC ? onSurfaceColor : isDarkMode ? nearSurfaceColor : ParentTheme.tiara,
+      buttonTheme: ButtonThemeData(height: 48, minWidth: 120),
+    );
   }
 
   TextTheme _buildTextTheme(Color color, {Color fadeColor = ParentTheme.ash}) {

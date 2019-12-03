@@ -32,7 +32,7 @@ class CourseApi {
         'current_grading_period_scores',
         'course_image',
         'sections',
-        'observed_users'
+        'observed_users',
       ],
       'state': ['completed', 'available']
     };
@@ -50,7 +50,8 @@ class CourseApi {
         'needs_grading_count',
         'total_scores',
         'current_grading_period_scores',
-        'course_image'
+        'course_image',
+        'observed_users',
       ]
     };
     return fetch(canvasDio().get('courses/${courseId}', queryParameters: params));

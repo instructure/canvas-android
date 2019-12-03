@@ -39,6 +39,7 @@ void main() {
   }
 
   testWidgetsWithAccessibilityChecks('Shows loading', (tester) async {
+    _setupLocator();
     await tester.pumpWidget(TestApp(CourseDetailsScreen(studentId, courseId)));
     await tester.pump();
 
@@ -88,7 +89,7 @@ void main() {
     when(interactor.loadCourse(courseId)).thenAnswer((_) => Future.value(course));
     _setupLocator(interactor: interactor);
 
-    await tester.pumpWidget(TestApp(CourseDetailsScreen(studentId, courseId)));
+    await tester.pumpWidget(TestApp(CourseDetailsScreen(studentId, courseId), highContrast: true));
     await tester.pump(); // Widget creation
     await tester.pump(); // Future resolved
 
@@ -98,7 +99,7 @@ void main() {
   testWidgetsWithAccessibilityChecks('Shows course tabs', (tester) async {
     _setupLocator();
 
-    await tester.pumpWidget(TestApp(CourseDetailsScreen(studentId, courseId)));
+    await tester.pumpWidget(TestApp(CourseDetailsScreen(studentId, courseId), highContrast: true));
     await tester.pump(); // Widget creation
     await tester.pump(); // Future resolved
 
@@ -110,7 +111,7 @@ void main() {
   testWidgetsWithAccessibilityChecks('Clicking grades tab shows the grades screen', (tester) async {
     _setupLocator();
 
-    await tester.pumpWidget(TestApp(CourseDetailsScreen(studentId, courseId)));
+    await tester.pumpWidget(TestApp(CourseDetailsScreen(studentId, courseId), highContrast: true));
     await tester.pump(); // Widget creation
     await tester.pump(); // Future resolved
 
@@ -149,7 +150,7 @@ void main() {
   testWidgetsWithAccessibilityChecks('Tapping message button shows message screen', (tester) async {
     _setupLocator();
 
-    await tester.pumpWidget(TestApp(CourseDetailsScreen(studentId, courseId)));
+    await tester.pumpWidget(TestApp(CourseDetailsScreen(studentId, courseId), highContrast: true));
     await tester.pump(); // Widget creation
     await tester.pump(); // Future resolved
 

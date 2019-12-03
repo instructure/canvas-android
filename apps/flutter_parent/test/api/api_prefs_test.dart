@@ -212,7 +212,7 @@ void main() {
     await ApiPrefs.init();
     await ApiPrefs.setUser(user);
 
-    expect(ApiPrefs.getHeaderMap()['accept-language'], 'en-US');
+    expect(ApiPrefs.getHeaderMap()['accept-language'], 'en,US');
   });
 
   test('getHeaderMap returns a map with the accept-language from device', () async {
@@ -223,7 +223,7 @@ void main() {
     await ApiPrefs.init();
     await ApiPrefs.setUser(user);
 
-    expect(ApiPrefs.getHeaderMap(forceDeviceLanguage: true)['accept-language'], deviceLocale.toLanguageTag());
+    expect(ApiPrefs.getHeaderMap(forceDeviceLanguage: true)['accept-language'], deviceLocale.toLanguageTag().replaceAll("-", ","));
   });
 
   test('getHeaderMap returns a map with the token from prefs', () async {

@@ -19,8 +19,8 @@ import 'package:flutter_parent/models/user.dart';
 
 class UserApi {
   static Future<User> getSelf() async {
-    var selfResponse = await Dio()
-        .get(ApiPrefs.getApiUrl() + 'users/self/profile', options: Options(headers: ApiPrefs.getHeaderMap()));
+    var selfResponse = await Dio().get(ApiPrefs.getApiUrl() + 'users/self/profile',
+        options: Options(headers: ApiPrefs.getHeaderMap(forceDeviceLanguage: true)));
 
     if (selfResponse.statusCode == 200 || selfResponse.statusCode == 201) {
       return deserialize<User>(selfResponse.data);

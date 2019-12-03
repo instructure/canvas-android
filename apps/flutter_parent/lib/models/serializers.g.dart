@@ -28,6 +28,7 @@ Serializers _$_serializers = (new Serializers().toBuilder()
       ..add(Recipient.serializer)
       ..add(SchoolDomain.serializer)
       ..add(Submission.serializer)
+      ..add(SubmissionTypes.serializer)
       ..add(UnreadCount.serializer)
       ..add(User.serializer)
       ..addBuilderFactory(
@@ -48,6 +49,9 @@ Serializers _$_serializers = (new Serializers().toBuilder()
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(Submission)]),
           () => new ListBuilder<Submission>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(SubmissionTypes)]),
+          () => new ListBuilder<SubmissionTypes>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(int)]),
           () => new ListBuilder<int>())

@@ -20,6 +20,7 @@ import 'package:flutter_parent/models/canvas_token.dart';
 import 'package:flutter_parent/models/mobile_verify_result.dart';
 import 'package:flutter_parent/models/serializers.dart';
 import 'package:flutter_parent/models/user.dart';
+import 'package:intl/intl.dart';
 import 'package:package_info/package_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -89,6 +90,7 @@ class ApiPrefs {
       _prefs.setString(KEY_USER, json.encode(serialize(user)));
       var newLocale = effectiveLocale();
       if (oldLocale != effectiveLocale()) {
+        Intl.defaultLocale = effectiveLocale().toLanguageTag();
         app?.rebuild(newLocale);
       }
     });
@@ -150,7 +152,8 @@ class ApiPrefs {
 
     var headers = {
       'Authorization': 'Bearer $token',
-      'accept-language': forceDeviceLanguage ? ui.window.locale.toLanguageTag() : effectiveLocale()?.toLanguageTag(),
+      'accept-language': (forceDeviceLanguage ? ui.window.locale.toLanguageTag() : effectiveLocale()?.toLanguageTag())
+          .replaceAll("-", ","),
       'User-Agent': getUserAgent(),
     };
 

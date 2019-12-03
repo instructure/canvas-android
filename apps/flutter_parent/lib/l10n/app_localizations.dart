@@ -314,6 +314,65 @@ class AppLocalizations {
         desc: 'Accessibility hint for the course messaage floating action button',
       );
 
+  String get courseTotalGradeLabel => Intl.message(
+        'Total Grade',
+        desc: 'Label for the total grade in the course',
+      );
+
+  String get assignmentSubmittedLabel => Intl.message(
+        'Submitted',
+        desc: 'Label for assignments that have been submitted',
+      );
+
+  String get assignmentNotSubmittedLabel => Intl.message(
+        'Not Submitted',
+        desc: 'Label for assignments that have not been submitted',
+      );
+
+  String get assignmentLateSubmittedLabel => Intl.message(
+        'Late',
+        desc: 'Label for assignments that have been marked late or submitted late',
+      );
+
+  String get assignmentMissingSubmittedLabel => Intl.message(
+        'Missing',
+        desc: 'Label for assignments that have been marked missing or are not submitted and past the due date',
+      );
+
+  String get assignmentNoScore => Intl.message(
+        '-',
+        desc: 'Value representing no score for student submission',
+      );
+
+  String get allGradingPeriods => Intl.message(
+        'All Grading Periods',
+        desc: 'Label for selecting all grading periods',
+      );
+
+  String get noAssignmentsTitle => Intl.message(
+        'No Assignments',
+        desc: 'Title for the no assignments message',
+      );
+
+  String get noAssignmentsMessage => Intl.message(
+        "It looks like assignments haven't been created in this space yet.",
+        desc: 'Message for no assignments',
+      );
+
+  String gradeFormatScoreOutOfPointsPossible(String score, String pointsPossible) => Intl.message(
+        '${score} / ${pointsPossible}',
+        desc: "Formatted string for a student's score out of the points possible",
+        name: 'gradeFormatScoreOutOfPointsPossible',
+        args: [score, pointsPossible],
+      );
+
+  String contentDescriptionScoreOutOfPointsPossible(String score, String pointsPossible) => Intl.message(
+        '${score} out of ${pointsPossible} points',
+        desc: "Formatted string for a student's score out of the points possible",
+        name: 'contentDescriptionScoreOutOfPointsPossible',
+        args: [score, pointsPossible],
+      );
+
   /// Web Login Screen
 
   String get domainVerificationErrorGeneral => Intl.message(
@@ -390,6 +449,22 @@ class AppLocalizations {
   String get dateTimeFormat => Intl.message(
         "MMM d 'at' h:mma",
         desc:
-            "The string to format dates, only the 'at' needs to be translated. MMM will show the month abbreviated as 'Oct', d shows the day, h:mma will show the time as '10:33PM'.",
+            "The string to format dates, only the 'at' needs to be translated, as well as arranging the date/time components. MMM will show the month abbreviated as 'Oct', d shows the day, h:mma will show the time as '10:33PM'. Use a captial H for 24 hour times, in which case the 'a' can be omitted to remove the am/pm from the string.",
+      );
+
+  String get dueDateTimeFormat => Intl.message(
+        "'Due' MMM d 'at' h:mma",
+        desc:
+            "The string to format dates, only the 'Due' and 'at' needs to be translated (not including apostrophes), as well as arranging the date/time components. MMM will show the month abbreviated as 'Oct', d shows the day, h:mma will show the time as '10:33PM'. Use a captial H for 24 hour times, in which case the 'a' can be omitted to remove the am/pm from the string.",
+      );
+
+  String get noDueDate => Intl.message(
+        'No Due Date',
+        desc: 'Label for assignments that do not have a due date',
+      );
+
+  String get filter => Intl.message(
+        'Filter',
+        desc: 'Label for buttons to filter what items are visible',
       );
 }

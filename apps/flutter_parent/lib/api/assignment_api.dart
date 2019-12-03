@@ -14,16 +14,18 @@
 
 import 'package:dio/dio.dart';
 import 'package:flutter_parent/api/utils/api_prefs.dart';
+import 'package:flutter_parent/api/utils/dio_config.dart';
+import 'package:flutter_parent/api/utils/fetch.dart';
 import 'package:flutter_parent/api/utils/paged_list.dart';
 import 'package:flutter_parent/models/assignment.dart';
 import 'package:flutter_parent/models/assignment_group.dart';
 import 'package:flutter_parent/models/serializers.dart';
+import 'package:flutter_parent/models/submission.dart';
 
 class AssignmentApi {
   Future<List<Assignment>> getAssignmentsWithSubmissionsDepaginated(int courseId, int studentId) async {
     var assignmentResponse = await Dio().get(ApiPrefs.getApiUrl() + 'courses/$courseId/assignments',
         queryParameters: {
-          'as_user_id': studentId,
           'include': ['all_dates', 'overrides', 'rubric_assessment', 'submission'],
           'order_by': 'due_at',
           'override_assignment_dates': 'true',
@@ -56,8 +58,14 @@ class AssignmentApi {
   Future<List<AssignmentGroup>> getAssignmentGroupsWithSubmissionsDepaginated(int courseId, int studentId) async {
     var assignmentResponse = await Dio().get(ApiPrefs.getApiUrl(path: 'courses/$courseId/assignment_groups'),
         queryParameters: {
-          'as_user_id': studentId,
-          'include': ['assignments', 'discussion_topic', 'submission', 'all_dates', 'overrides'], // rubric_assessment?
+          'include': [
+            'assignments',
+            'discussion_topic',
+            'submission',
+            'all_dates',
+            'overrides',
+            'observed_users',
+          ],
           'override_assignment_dates': 'true',
         },
         options: Options(headers: ApiPrefs.getHeaderMap()));
@@ -88,7 +96,6 @@ class AssignmentApi {
   Future<PagedList<Assignment>> getAssignmentsWithSubmissionsPaged(int courseId, int studentId) async {
     var assignmentResponse = await Dio().get(ApiPrefs.getApiUrl() + 'courses/$courseId/assignments',
         queryParameters: {
-          'as_user_id': studentId,
           'include': ['all_dates', 'overrides', 'rubric_assessment', 'submission'],
           'order_by': 'due_at',
           'override_assignment_dates': 'true',
@@ -129,5 +136,15 @@ class AssignmentApi {
     } else {
       return Future.error(assignmentResponse.statusMessage);
     }
+  }
+
+  // TODO: Remove once LA-274 is implemented, and submissions are given with assignment groups (for observers)
+  Future<List<Submission>> getSubmissions(int courseId, int studentId, List<int> assignmentIds, {bool forceRefresh}) {
+    final dio = canvasDio(forceRefresh: forceRefresh);
+    final params = {
+      'student_ids': [studentId],
+      'assignment_ids': assignmentIds,
+    };
+    return fetchList(dio.get('courses/$courseId/students/submissions', queryParameters: params), depaginateWith: dio);
   }
 }
