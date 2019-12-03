@@ -740,7 +740,7 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
                 .setSupportedProperties(EnumSet.of(AnnotationProperty.COLOR))
                 .setAvailableColors(context.resources.getIntArray(R.array.standardAnnotationColors).toMutableList())
                 .setDefaultColor(ContextCompat.getColor(context, R.color.darkGrayAnnotation))
-                .setDefaultTextSize(10f)
+                .setDefaultTextSize(smallFont)
                 .setDefaultFillColor(Color.TRANSPARENT)
                 .setCustomColorPickerEnabled(false)
                 .setHorizontalResizingEnabled(false)

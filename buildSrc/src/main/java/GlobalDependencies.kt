@@ -40,7 +40,7 @@ object Versions {
     const val ANDROID_SVG = "1.3"
     const val MOBIUS = "1.2.1"
     const val SQLDELIGHT = "1.1.3"
-    const val NEW_RELIC = "5.24.1"
+    const val NEW_RELIC = "5.21.3"
 }
 
 object Libs {

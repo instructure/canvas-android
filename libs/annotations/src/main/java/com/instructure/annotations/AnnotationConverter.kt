@@ -136,10 +136,10 @@ private fun convertFreeTextType(canvaDocAnnotation: CanvaDocAnnotation, context:
 private fun getTextSizeFromFont(font: String?): Float{
     // 14pt, 22pt, 38pt are the supported font sizes on web, but these don't match up well to PSPDFkit's font
     return when {
-        font?.contains("14pt") == true -> 10f
-        font?.contains("22pt") == true -> 18f
-        font?.contains("38pt") == true -> 32f
-        else -> 10f
+        font?.contains("14pt") == true -> smallFont
+        font?.contains("22pt") == true -> mediumFont
+        font?.contains("38pt") == true -> largeFont
+        else -> smallFont
     }
 }
 
@@ -431,3 +431,7 @@ const val purpleStampHex = "#741865"
 const val redStampHex = "#EE0612"
 const val yellowStampHex = "#FCB900"
 
+// Free Text Annotation Font sizes
+const val smallFont = 10f
+const val mediumFont = 18f
+const val largeFont = 32f
