@@ -42,6 +42,7 @@ import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.canvasapi2.models.AccountNotification
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Group
+import com.instructure.canvasapi2.models.User
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.dataseeding.model.GroupApiModel
@@ -166,6 +167,12 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     fun assertUserLoggedIn(user: CanvasUserApiModel) {
         onView(hamburgerButtonMatcher).click()
         onViewWithText(user.shortName).assertDisplayed()
+        Espresso.pressBack()
+    }
+
+    fun assertUserLoggedIn(user: User) {
+        onView(hamburgerButtonMatcher).click()
+        onViewWithText(user.shortName!!).assertDisplayed()
         Espresso.pressBack()
     }
 

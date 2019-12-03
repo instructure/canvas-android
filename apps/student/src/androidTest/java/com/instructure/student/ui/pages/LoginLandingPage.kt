@@ -16,6 +16,7 @@
  */
 package com.instructure.student.ui.pages
 
+import com.instructure.canvasapi2.models.User
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisplayed
@@ -58,6 +59,10 @@ class LoginLandingPage : BasePage() {
     }
 
     fun loginWithPreviousUser(previousUser: CanvasUserApiModel) {
+        onViewWithText(previousUser.name).click()
+    }
+
+    fun loginWithPreviousUser(previousUser: User) {
         onViewWithText(previousUser.name).click()
     }
 }

@@ -73,22 +73,29 @@ class AssignmentListPage : BasePage(pageResId = R.id.assignmentListPage) {
     }
 
     fun assertHasAssignment(assignment: AssignmentApiModel, expectedGrade: String? = null) {
+        assertHasAssignmentCommon(assignment.name, assignment.dueAt, expectedGrade)
+    }
 
-        waitForViewWithText(assignment.name).assertDisplayed()
+    fun assertHasAssignment(assignment: Assignment, expectedGrade: String? = null) {
+        assertHasAssignmentCommon(assignment.name!!, assignment.dueAt, expectedGrade)
+    }
+
+    private fun assertHasAssignmentCommon(assignmentName: String, assignmentDueAt: String?, expectedGrade: String? = null) {
+        waitForViewWithText(assignmentName).assertDisplayed()
 
         // Check that either the assignment due date is present, or "No Due Date" is displayed
-        if(assignment.dueAt != null) {
+        if(assignmentDueAt != null) {
             val matcher = allOf(
                     withText(containsString("Due: ")),
                     withId(R.id.date),
-                    withParent(withParent(withChild(withText(assignment.name)))))
+                    withParent(withParent(withChild(withText(assignmentName)))))
             scrollToAndAssertDisplayed(matcher)
         }
         else {
             val matcher = allOf(
                     withText(R.string.toDoNoDueDate),
                     withId(R.id.date),
-                    withParent(withParent(withChild(withText(assignment.name)))))
+                    withParent(withParent(withChild(withText(assignmentName)))))
             scrollToAndAssertDisplayed(matcher)
         }
 
@@ -97,9 +104,10 @@ class AssignmentListPage : BasePage(pageResId = R.id.assignmentListPage) {
             val matcher =  allOf(
                     withText(containsString(expectedGrade)), // grade might be "13", total string "13/15"
                     withId(R.id.points),
-                    withParent(withParent(withChild(withText(assignment.name)))))
+                    withParent(withParent(withChild(withText(assignmentName)))))
             scrollToAndAssertDisplayed(matcher)
         }
+
     }
 
     fun assertQuizDisplayed(quiz: QuizApiModel, gradePortion: String? = null) {
