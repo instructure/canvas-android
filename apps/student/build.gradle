@@ -27,8 +27,7 @@ apply plugin: 'io.fabric'
 apply plugin: 'okreplay'
 apply from: '../../gradle/coverage.gradle'
 apply plugin: 'com.squareup.sqldelight'
-// TODO: this is waiting for a fix from new relic
-// apply plugin: 'newrelic'
+apply plugin: 'newrelic'
 
 sqldelight {
     StudentDb {
