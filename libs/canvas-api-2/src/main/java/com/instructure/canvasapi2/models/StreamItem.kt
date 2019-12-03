@@ -170,7 +170,7 @@ data class StreamItem(
         }
     }
 
-    fun getTitle(context: Context): CharSequence? {
+    fun getTitle(context: Context): String? {
         if (title == null && getStreamItemType() == Type.CONVERSATION) {
             title = context.getString(R.string.Message)
         }
