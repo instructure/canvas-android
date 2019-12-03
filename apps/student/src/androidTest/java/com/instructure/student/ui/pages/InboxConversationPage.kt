@@ -16,7 +16,6 @@
  */
 package com.instructure.student.ui.pages
 
-import android.os.SystemClock.sleep
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions.matches
@@ -27,9 +26,15 @@ import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
-import com.instructure.espresso.page.*
+import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onViewWithContentDescription
+import com.instructure.espresso.page.onViewWithText
+import com.instructure.espresso.page.waitForView
+import com.instructure.espresso.page.waitForViewWithHint
+import com.instructure.espresso.page.waitForViewWithText
+import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withText
 import com.instructure.espresso.replaceText
-import com.instructure.espresso.scrollTo
 import com.instructure.student.R
 import org.hamcrest.CoreMatchers
 import org.hamcrest.Matchers
@@ -41,17 +46,7 @@ class InboxConversationPage : BasePage(R.id.inboxConversationPage) {
         waitForViewWithHint(R.string.message).replaceText(message)
         onViewWithContentDescription("Send").perform(explicitClick())
         // Wait for reply to propagate, and for us to return to the email thread page
-        for(i in 1..10) {
-            try {
-                onView(withId(R.id.starred)).assertDisplayed()
-                break
-            }
-            catch(t: Throwable) {
-                sleep(1000)
-            }
-        }
-        // If we get through the loop above, try one more time to generate the proper failure
-        onView(withId(R.id.starred)).assertDisplayed()
+        waitForView(withId(R.id.starred)).assertDisplayed()
     }
 
     fun assertMessageDisplayed(message: String) {

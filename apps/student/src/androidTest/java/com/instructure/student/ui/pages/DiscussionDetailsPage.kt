@@ -16,7 +16,6 @@
  */
 package com.instructure.student.ui.pages
 
-import android.os.SystemClock.sleep
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.swipeDown
@@ -29,6 +28,7 @@ import androidx.test.espresso.web.webdriver.DriverAtoms.getText
 import androidx.test.espresso.web.webdriver.DriverAtoms.webClick
 import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.canvas.espresso.withCustomConstraints
+import com.instructure.canvas.espresso.withElementRepeat
 import com.instructure.canvasapi2.models.DiscussionEntry
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.espresso.OnViewWithId
@@ -44,8 +44,6 @@ import com.instructure.student.ui.utils.TypeInRCETextEditor
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.containsString
 import org.junit.Assert.assertTrue
-import java.lang.RuntimeException
-import java.util.concurrent.TimeUnit
 
 
 class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
@@ -110,26 +108,10 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
 
     fun assertReplyDisplayed(reply: DiscussionEntry) {
         // It can take a *long* time for the reply to get rendered to the webview on
-        // tablets (in FTL, anyway).  And .withTimeout() doesn't seem to have any effect.
-        // So we'll add our own repeat/timeout logic to compensate for this.
-        // TODO: Find a way to abstract/generalize/centralize this logic
-        for(i in 0..20) {
-            try {
-                onWebView(withId(R.id.discussionRepliesWebView))
-                        .withElement(findElement(Locator.ID, "message_content_${reply.id}"))
-                        .check(webMatches(getText(),containsString(reply.message)))
-                break
-            }
-            catch(re: RuntimeException) {
-                sleep(1000)
-            }
-        }
-
-        // If we make it through that loop, try one more time to produce the proper failure
+        // tablets (in FTL, anyway).  We'll compensate by giving it up to 20 seconds to render.
         onWebView(withId(R.id.discussionRepliesWebView))
-                .withElement(findElement(Locator.ID, "message_content_${reply.id}"))
+                .withElementRepeat(findElement(Locator.ID, "message_content_${reply.id}"), 20)
                 .check(webMatches(getText(),containsString(reply.message)))
-
     }
 
     fun assertFavoritingEnabled(reply: DiscussionEntry) {
@@ -224,6 +206,7 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
         Espresso.pressBack()
     }
 }
+
 
 
 
