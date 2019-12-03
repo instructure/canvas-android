@@ -1,16 +1,16 @@
-/// Copyright (C) 2019 - present Instructure, Inc.
-///
-/// This program is free software: you can redistribute it and/or modify
-/// it under the terms of the GNU General Public License as published by
-/// the Free Software Foundation, version 3 of the License.
-///
-/// This program is distributed in the hope that it will be useful,
-/// but WITHOUT ANY WARRANTY; without even the implied warranty of
-/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-/// GNU General Public License for more details.
-///
-/// You should have received a copy of the GNU General Public License
-/// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// Copyright (C) 2019 - present Instructure, Inc.
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, version 3 of the License.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // Accessibility-related utilities for our widget tests.
 
@@ -19,10 +19,8 @@ import 'dart:async';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-// For testWidgetsWithAccessibilityChecks call, timeout parameter
-import 'package:test_api/test_api.dart' as test_package;
 import 'package:meta/meta.dart';
+import 'package:test_api/test_api.dart' as test_package;
 
 // A testWidgets() wrapper that runs accessibility checks
 @isTest
@@ -116,7 +114,7 @@ void _initPlatformWebView() {
 
   // Intercept when a web view is getting created so we can set up the platform channel
   SystemChannels.platform_views.setMockMethodCallHandler((call) {
-    switch(call.method) {
+    switch (call.method) {
       case 'create':
         final id = call.arguments['id'];
         MethodChannel('plugins.flutter.io/webview_$id', const StandardMethodCodec())
