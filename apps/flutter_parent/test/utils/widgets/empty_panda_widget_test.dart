@@ -13,7 +13,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:flutter/material.dart';
-import 'package:flutter_parent/utils/common_widets/empty_panda_widget.dart';
+import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test/flutter_test.dart';
 

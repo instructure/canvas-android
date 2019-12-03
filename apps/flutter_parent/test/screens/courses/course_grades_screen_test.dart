@@ -24,7 +24,7 @@ import 'package:flutter_parent/models/submission.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_interactor.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_model.dart';
 import 'package:flutter_parent/screens/courses/details/course_grades_screen.dart';
-import 'package:flutter_parent/utils/common_widets/loading_indicator.dart';
+import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mockito/mockito.dart';
