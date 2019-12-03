@@ -29,6 +29,7 @@ import androidx.annotation.ColorRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import com.instructure.annotations.AnnotationDialogs.AnnotationCommentDialog
 import com.instructure.annotations.AnnotationDialogs.AnnotationErrorDialog
 import com.instructure.annotations.AnnotationDialogs.FreeTextDialog
@@ -53,14 +54,13 @@ import com.pspdfkit.annotations.AnnotationFlags
 import com.pspdfkit.annotations.AnnotationProvider
 import com.pspdfkit.annotations.AnnotationType
 import com.pspdfkit.annotations.appearance.AssetAppearanceStreamGenerator
-import com.pspdfkit.annotations.defaults.*
+import com.pspdfkit.annotations.configuration.*
 import com.pspdfkit.annotations.stamps.CustomStampAppearanceStreamGenerator
 import com.pspdfkit.annotations.stamps.StampPickerItem
 import com.pspdfkit.configuration.PdfConfiguration
 import com.pspdfkit.configuration.page.PageLayoutMode
 import com.pspdfkit.configuration.page.PageScrollDirection
 import com.pspdfkit.document.PdfDocument
-import com.pspdfkit.events.Commands
 import com.pspdfkit.listeners.DocumentListener
 import com.pspdfkit.ui.PdfFragment
 import com.pspdfkit.ui.inspector.PropertyInspectorCoordinatorLayout
@@ -68,6 +68,7 @@ import com.pspdfkit.ui.inspector.annotation.AnnotationCreationInspectorControlle
 import com.pspdfkit.ui.inspector.annotation.AnnotationEditingInspectorController
 import com.pspdfkit.ui.inspector.annotation.DefaultAnnotationCreationInspectorController
 import com.pspdfkit.ui.inspector.annotation.DefaultAnnotationEditingInspectorController
+import com.pspdfkit.ui.inspector.views.BorderStylePreset
 import com.pspdfkit.ui.special_mode.controller.AnnotationCreationController
 import com.pspdfkit.ui.special_mode.controller.AnnotationEditingController
 import com.pspdfkit.ui.special_mode.controller.AnnotationSelectionController
@@ -83,36 +84,36 @@ import java.util.*
 @SuppressLint("ViewConstructor")
 abstract class PdfSubmissionView(context: Context) : FrameLayout(context), AnnotationManager.OnAnnotationCreationModeChangeListener, AnnotationManager.OnAnnotationEditingModeChangeListener {
 
-    protected val pdfConfiguration: PdfConfiguration = PdfConfiguration.Builder()
+    protected lateinit var docSession: DocSession
+    protected lateinit var apiValues: ApiValues
+    protected val commentRepliesHashMap: HashMap<String, ArrayList<CanvaDocAnnotation>> = HashMap()
+    protected var pdfFragment: PdfFragment? = null
+    protected val supportFragmentManager: FragmentManager = (context as AppCompatActivity).supportFragmentManager
+
+    private val pdfConfiguration: PdfConfiguration = PdfConfiguration.Builder()
             .scrollDirection(PageScrollDirection.VERTICAL)
             .enabledAnnotationTools(setupAnnotationCreationList())
             .editableAnnotationTypes(setupAnnotationEditList())
             .setAnnotationInspectorEnabled(true)
-            .textSharingEnabled(false)
             .layoutMode(PageLayoutMode.SINGLE)
             .textSelectionEnabled(false)
             .disableCopyPaste()
             .build()
-    protected val annotationCreationToolbar = AnnotationCreationToolbar(context)
-    protected val annotationEditingToolbar = AnnotationEditingToolbar(context)
-    protected var annotationEditingInspectorController: AnnotationEditingInspectorController? = null
-    protected var annotationCreationInspectorController: AnnotationCreationInspectorController? = null
-    protected var pdfFragment: PdfFragment? = null
-    protected var fileJob: Job? = null
-    protected var createAnnotationJob: Job? = null
-    protected var updateAnnotationJob: Job? = null
-    protected var deleteAnnotationJob: Job? = null
-    protected var pdfContentJob: Job? = null
-    protected var annotationsJob: Job? = null
-    protected var sendCommentJob: Job? = null
-    protected lateinit var docSession: DocSession
-    protected lateinit var apiValues: ApiValues
-    protected val commentRepliesHashMap: HashMap<String, ArrayList<CanvaDocAnnotation>> = HashMap()
-    protected var currentAnnotationModeTool: AnnotationTool? = null
-    protected var currentAnnotationModeType: AnnotationType? = null
 
-    protected var isUpdatingWithNoNetwork = false
-    protected val supportFragmentManager = (context as AppCompatActivity).supportFragmentManager
+    private val annotationCreationToolbar = AnnotationCreationToolbar(context)
+    private val annotationEditingToolbar = AnnotationEditingToolbar(context)
+    private var annotationEditingInspectorController: AnnotationEditingInspectorController? = null
+    private var annotationCreationInspectorController: AnnotationCreationInspectorController? = null
+    private var fileJob: Job? = null
+    private var createAnnotationJob: Job? = null
+    private var updateAnnotationJob: Job? = null
+    private var deleteAnnotationJob: Job? = null
+    private var pdfContentJob: Job? = null
+    private var annotationsJob: Job? = null
+    private var sendCommentJob: Job? = null
+    private var currentAnnotationModeTool: AnnotationTool? = null
+    private var currentAnnotationModeType: AnnotationType? = null
+    private var isUpdatingWithNoNetwork = false
 
     @get:ColorRes
     abstract val progressColor: Int
@@ -164,7 +165,7 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
         annotationEditingInspectorController = DefaultAnnotationEditingInspectorController(context, inspectorCoordinatorLayout)
         annotationCreationInspectorController = DefaultAnnotationCreationInspectorController(context, inspectorCoordinatorLayout)
 
-        annotationToolbarLayout.setOnContextualToolbarLifecycleListener(object : ToolbarCoordinatorLayout.OnContextualToolbarLifecycleListener{
+        annotationToolbarLayout.setOnContextualToolbarLifecycleListener(object : ToolbarCoordinatorLayout.OnContextualToolbarLifecycleListener {
             override fun onDisplayContextualToolbar(p0: ContextualToolbar<*>) {}
             override fun onRemoveContextualToolbar(p0: ContextualToolbar<*>) {}
 
@@ -191,7 +192,8 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
             if (contextualToolbarMenuItem.title == context.getString(com.pspdfkit.R.string.pspdf__edit) &&
                     currentAnnotationModeType == AnnotationType.FREETEXT) {
 
-                val dialog = FreeTextDialog.getInstance(supportFragmentManager, true, pdfFragment?.selectedAnnotations?.get(0)?.contents ?: "", freeTextDialogCallback)
+                val dialog = FreeTextDialog.getInstance(supportFragmentManager, true, pdfFragment?.selectedAnnotations?.get(0)?.contents
+                        ?: "", freeTextDialogCallback)
                 dialog.show(supportFragmentManager, FreeTextDialog::class.java.simpleName)
 
                 return@setOnMenuItemClickListener true
@@ -200,7 +202,7 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
             if (contextualToolbarMenuItem.title == context.getString(com.pspdfkit.R.string.pspdf__delete)) {
                 val annotation = pdfFragment?.selectedAnnotations?.get(0)
                 // Remove the annotation
-                if(annotation != null) {
+                if (annotation != null) {
                     pdfFragment?.document?.annotationProvider?.removeAnnotationFromPage(annotation)
                     pdfFragment?.notifyAnnotationHasChanged(annotation)
                     pdfFragment?.clearSelectedAnnotations()
@@ -222,7 +224,7 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
         val actionBarDp = typedArray.getDimensionPixelSize(0, -1)
         typedArray.recycle()
 
-        val marginDp = TypedValue.applyDimension( TypedValue.COMPLEX_UNIT_DIP, 12f, context.resources.displayMetrics)
+        val marginDp = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 12f, context.resources.displayMetrics)
         val layoutParams = commentsButton.layoutParams as LayoutParams
         commentsButton.drawable.setTint(Color.WHITE)
         layoutParams.gravity = Gravity.END or Gravity.TOP
@@ -239,21 +241,21 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
         val currentPdfAnnotation = pdfFragment?.selectedAnnotations?.get(0)
         val currentAnnotation = currentPdfAnnotation?.convertPDFAnnotationToCanvaDoc(docSession.documentId)
         // Assuming neither is null, continue
-        if(currentPdfAnnotation != null && currentAnnotation != null) {
+        if (currentPdfAnnotation != null && currentAnnotation != null) {
             // If the contents of the current annotation are empty we want to prompt them to add a comment
-            if(commentRepliesHashMap[currentAnnotation.annotationId] == null || commentRepliesHashMap[currentAnnotation.annotationId]?.isEmpty() == true) {
+            if (commentRepliesHashMap[currentAnnotation.annotationId] == null || commentRepliesHashMap[currentAnnotation.annotationId]?.isEmpty() == true) {
                 // No comments for this annotation, show a dialog for the user to add some if they want
                 AnnotationCommentDialog.getInstance(supportFragmentManager, "", context.getString(R.string.addAnnotationComment)) { _, text ->
                     setIsCurrentlyAnnotating(true) //don't want the sliding panel getting in the way
                     // Create new comment reply for this annotation.
-                    if(text.isValid()) {
+                    if (text.isValid()) {
                         createCommentAnnotation(currentAnnotation.annotationId, currentAnnotation.page, text)
                     }
                 }.show(supportFragmentManager, AnnotationCommentDialog::class.java.simpleName)
             } else {
                 // Otherwise, show the comment list fragment
                 commentRepliesHashMap[currentAnnotation.annotationId]?.let {
-                    if(!it.isEmpty()) {
+                    if (it.isNotEmpty()) {
                         showAnnotationComments(it, currentAnnotation.annotationId, docSession, apiValues)
                     }
                 }
@@ -268,19 +270,18 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
         pdfFragment?.addOnAnnotationCreationModeChangeListener(this)
         pdfFragment?.addOnAnnotationEditingModeChangeListener(this)
 
-        if(docSession.annotationMetadata?.canWrite() == true) {
+        if (docSession.annotationMetadata?.canWrite() == true) {
             // push the pdf viewing screen under the toolbar
             pdfFragment?.setInsets(0, TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 60f, context.resources.displayMetrics).toInt(), 0, 0)
         }
 
         attachDocListener()
-        setupPdfAnnotationDefaults()
     }
 
     @Suppress("EXPERIMENTAL_FEATURE_WARNING")
     protected fun handlePdfContent(url: String) {
         pdfContentJob = tryWeave {
-            if(url.contains("canvadoc")) {
+            if (url.contains("canvadoc")) {
                 val redirectUrl = getCanvaDocsRedirect(url)
                 //extract the domain for API use
                 if (redirectUrl.isNotEmpty()) {
@@ -314,7 +315,9 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
     @Suppress("EXPERIMENTAL_FEATURE_WARNING")
     private val documentListener = object : DocumentListener by DocumentListenerSimpleDelegate() {
         override fun onDocumentLoaded(pdfDocument: PdfDocument) {
+            setupPdfAnnotationDefaults()
             loadCustomAppearenceGenerators()
+
             docSession.rotations?.let { rotations ->
                 pdfFragment?.document?.let {
                     handlePageRotation(it, rotations)
@@ -429,12 +432,12 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
         }
     }
 
-    val mAnnotationUpdateListener = object: AnnotationProvider.OnAnnotationUpdatedListener {
+    val mAnnotationUpdateListener = object : AnnotationProvider.OnAnnotationUpdatedListener {
         override fun onAnnotationCreated(annotation: Annotation) {
-            if(!annotation.isAttached || annotationNetworkCheck(annotation)) return
+            if (!annotation.isAttached || annotationNetworkCheck(annotation)) return
 
             // If it's a freetext and it's empty that means that they haven't had a chance to fill it out
-            if((annotation.type == AnnotationType.FREETEXT) && annotation.contents.isNullOrEmpty()){
+            if ((annotation.type == AnnotationType.FREETEXT) && annotation.contents.isNullOrEmpty()) {
                 return
             }
 
@@ -445,7 +448,7 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
         }
 
         override fun onAnnotationUpdated(annotation: Annotation) {
-            if(!annotation.isAttached || annotationNetworkCheck(annotation)) return
+            if (!annotation.isAttached || annotationNetworkCheck(annotation)) return
 
             if (!annotation.flags.contains(AnnotationFlags.LOCKED) && annotation.isModified && annotation.name.isValid()) {
                 //we only want to update the annotation if it isn't Locked and IS modified
@@ -454,24 +457,26 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
         }
 
         override fun onAnnotationRemoved(annotation: Annotation) {
-            if(annotationNetworkCheck(annotation)) return
+            if (annotationNetworkCheck(annotation)) return
 
             //removed annotation
-            if(annotation.name.isValid()) {
+            if (annotation.name.isValid()) {
                 deleteAnnotation(annotation)
             }
         }
+
+        override fun onAnnotationZOrderChanged(p0: Int, p1: MutableList<Annotation>, p2: MutableList<Annotation>) {}
     }
 
     private fun annotationNetworkCheck(annotation: Annotation): Boolean {
-        if(!APIHelper.hasNetworkConnection()) {
-            if(isUpdatingWithNoNetwork) {
+        if (!APIHelper.hasNetworkConnection()) {
+            if (isUpdatingWithNoNetwork) {
                 isUpdatingWithNoNetwork = false
                 return true
             } else {
                 isUpdatingWithNoNetwork = true
-                if(annotation.isAttached) {
-                    pdfFragment?.eventBus?.post(Commands.ClearSelectedAnnotations())
+                if (annotation.isAttached) {
+                    pdfFragment?.clearSelectedAnnotations()
                     pdfFragment?.document?.annotationProvider?.removeAnnotationFromPage(annotation)
                     pdfFragment?.notifyAnnotationHasChanged(annotation)
                 }
@@ -481,23 +486,24 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
         return false
     }
 
-    val annotationSelectedListener = object: AnnotationManager.OnAnnotationSelectedListener {
+    val annotationSelectedListener = object : AnnotationManager.OnAnnotationSelectedListener {
         override fun onAnnotationSelected(annotation: Annotation, isCreated: Boolean) {
             logOnAnnotationSelectedAnalytics()
         }
+
         override fun onPrepareAnnotationSelection(p0: AnnotationSelectionController, annotation: Annotation, isCreated: Boolean): Boolean {
             if (APIHelper.hasNetworkConnection()) {
                 if (annotation.type == AnnotationType.FREETEXT && annotation.contents.isNullOrEmpty()) {
                     //this is a new free text annotation, and needs to be selected to be created
                     if (supportFragmentManager.findFragmentByTag(FreeTextDialog::class.java.simpleName) == null) {
-                        val dialog = FreeTextDialog.getInstance(supportFragmentManager, false,"", freeTextDialogCallback)
+                        val dialog = FreeTextDialog.getInstance(supportFragmentManager, false, "", freeTextDialogCallback)
                         dialog.show(supportFragmentManager, FreeTextDialog::class.java.simpleName)
                     }
                 } else if (annotation.type == AnnotationType.FREETEXT) {
                     setIsCurrentlyAnnotating(true)
                 }
 
-                if(annotation.type != AnnotationType.FREETEXT && annotation.name.isValid()) {
+                if (annotation.type != AnnotationType.FREETEXT && annotation.name.isValid()) {
                     // if the annotation is an existing annotation (has an ID) and is NOT freetext
                     // we want to display the button to view/make comments
                     commentsButton.setVisible()
@@ -507,7 +513,7 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
         }
     }
 
-    val mAnnotationDeselectedListener = AnnotationManager.OnAnnotationDeselectedListener { _, _->
+    val mAnnotationDeselectedListener = AnnotationManager.OnAnnotationDeselectedListener { _, _ ->
         commentsButton.setGone()
     }
 
@@ -550,12 +556,12 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
                 awaitApi<CanvaDocAnnotation> { CanvaDocsManager.putAnnotation(apiValues.sessionId, annotation.name!!, canvaDocAnnotation, apiValues.canvaDocsDomain, it) }
             }
         } catch {
-            if(it is StatusCallbackError) {
+            if (it is StatusCallbackError) {
                 if (it.response?.raw()?.code() == 404) {
                     // Not found; Annotation has been deleted and no longer exists.
                     val dialog = AnnotationErrorDialog.getInstance(supportFragmentManager) {
                         // Delete annotation after user clicks OK on dialog
-                        pdfFragment?.eventBus?.post(Commands.ClearSelectedAnnotations())
+                        pdfFragment?.clearSelectedAnnotations()
                         pdfFragment?.document?.annotationProvider?.removeAnnotationFromPage(annotation)
                         pdfFragment?.notifyAnnotationHasChanged(annotation)
                     }
@@ -591,7 +597,8 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
 
         sendCommentJob = tryWeave {
             val newCommentReply = awaitApi<CanvaDocAnnotation> {
-                CanvaDocsManager.putAnnotation(apiValues.sessionId, generateAnnotationId(), createCommentReplyAnnotation(comment ?: "", inReplyToId, apiValues.documentId, ApiPrefs.user?.id.toString(), page), apiValues.canvaDocsDomain, it)
+                CanvaDocsManager.putAnnotation(apiValues.sessionId, generateAnnotationId(), createCommentReplyAnnotation(comment
+                        ?: "", inReplyToId, apiValues.documentId, ApiPrefs.user?.id.toString(), page), apiValues.canvaDocsDomain, it)
             }
 
             // The put request doesn't return this property, so we need to set it to true
@@ -617,9 +624,9 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
     //region annotation listeners
     override fun onEnterAnnotationCreationMode(controller: AnnotationCreationController) {
         // We never want to show annotation toolbars if the user doesn't have permission to write
-        if(docSession.annotationMetadata?.canWrite() != true) return
+        if (docSession.annotationMetadata?.canWrite() != true) return
         //we only want to disable the viewpager if they are actively annotating
-        if(controller.activeAnnotationTool != AnnotationTool.NONE) disableViewPager()
+        if (controller.activeAnnotationTool != AnnotationTool.NONE) disableViewPager()
         annotationCreationInspectorController?.bindAnnotationCreationController(controller)
         annotationCreationToolbar.bindController(controller)
         annotationToolbarLayout.displayContextualToolbar(annotationCreationToolbar, true)
@@ -638,10 +645,10 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
 
     override fun onEnterAnnotationEditingMode(controller: AnnotationEditingController) {
         // We never want to show annotation toolbars if the user doesn't have permission to write
-        if(docSession.annotationMetadata?.canWrite() == false) return
+        if (docSession.annotationMetadata?.canWrite() == false) return
         currentAnnotationModeType = controller.currentlySelectedAnnotation?.type
         //we only want to disable the viewpager if they are actively annotating
-        if(controller.currentlySelectedAnnotation != null) disableViewPager()
+        if (controller.currentlySelectedAnnotation != null) disableViewPager()
         annotationEditingToolbar.bindController(controller)
         annotationEditingInspectorController?.bindAnnotationEditingController(controller)
         annotationToolbarLayout.displayContextualToolbar(annotationEditingToolbar, true)
@@ -663,13 +670,13 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
         currentAnnotationModeType = controller.currentlySelectedAnnotation?.type
 
         //we only want to disable the viewpager if they are actively annotating
-        if(controller.currentlySelectedAnnotation != null) disableViewPager()
+        if (controller.currentlySelectedAnnotation != null) disableViewPager()
         else enableViewPager()
     }
 
     override fun onChangeAnnotationCreationMode(controller: AnnotationCreationController) {
         //we only want to disable the viewpager if they are actively annotating
-        if(controller.activeAnnotationTool != AnnotationTool.NONE) disableViewPager()
+        if (controller.activeAnnotationTool != AnnotationTool.NONE) disableViewPager()
         else enableViewPager()
 
         //we want to make sure that the keyboard doesn't mess up the view if they are using these annotations
@@ -679,43 +686,86 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
     }
 
     private fun setupPdfAnnotationDefaults() {
-        pdfFragment?.setAnnotationDefaultsProvider(AnnotationType.INK, object: InkAnnotationDefaultsProvider(context) {
-            override fun getAvailableColors(): IntArray = context.resources.getIntArray(R.array.standardAnnotationColors)
-            override fun getDefaultColor(): Int = ContextCompat.getColor(context, R.color.blueAnnotation)
-            override fun getSupportedProperties(): EnumSet<AnnotationProperty> = EnumSet.of(AnnotationProperty.COLOR)
-            override fun getDefaultThickness(): Float = 2f
-        })
-        pdfFragment?.setAnnotationDefaultsProvider(AnnotationType.FREETEXT, object: FreeTextAnnotationDefaultsProvider(context) {
-            override fun getAvailableColors(): IntArray = context.resources.getIntArray(R.array.standardAnnotationColors)
-            override fun getDefaultColor(): Int = ContextCompat.getColor(context, R.color.darkGrayAnnotation)
-            override fun getSupportedProperties(): EnumSet<AnnotationProperty> = EnumSet.of(AnnotationProperty.COLOR)
-            override fun getDefaultTextSize(): Float = 12f
-            override fun getDefaultFillColor(): Int = ContextCompat.getColor(context, R.color.white)
-        })
-        pdfFragment?.setAnnotationDefaultsProvider(AnnotationType.SQUARE, object: ShapeAnnotationDefaultsProvider(context, AnnotationType.SQUARE) {
-            override fun getAvailableColors(): IntArray = context.resources.getIntArray(R.array.standardAnnotationColors)
-            override fun getDefaultColor(): Int = ContextCompat.getColor(context, R.color.blueAnnotation)
-            override fun getSupportedProperties(): EnumSet<AnnotationProperty> = EnumSet.of(AnnotationProperty.COLOR)
-            override fun getDefaultThickness(): Float = 2f
-        })
-        pdfFragment?.setAnnotationDefaultsProvider(AnnotationType.STRIKEOUT, object: MarkupAnnotationDefaultsProvider(context, AnnotationType.STRIKEOUT) {
-            override fun getAvailableColors(): IntArray = context.resources.getIntArray(R.array.standardAnnotationColors)
-            override fun getDefaultColor(): Int = ContextCompat.getColor(context, R.color.redAnnotation)
-        })
-        pdfFragment?.setAnnotationDefaultsProvider(AnnotationType.HIGHLIGHT, object: MarkupAnnotationDefaultsProvider(context, AnnotationType.HIGHLIGHT) {
-            override fun getAvailableColors(): IntArray = context.resources.getIntArray(R.array.highlightAnnotationColors)
-            override fun getDefaultColor(): Int = ContextCompat.getColor(context, R.color.yellowHighlightAnnotation)
-        })
-        pdfFragment?.setAnnotationDefaultsProvider(AnnotationType.STAMP, object: StampAnnotationDefaultsProvider(context) {
-            override fun getStampsForPicker() = getAppearenceStreams()
-            override fun getSupportedProperties() = EnumSet.noneOf(AnnotationProperty::class.java)
-        })
-        pdfFragment?.annotationDefaults?.setAnnotationDefaultsProvider(AnnotationTool.ERASER, object: EraserDefaultsProvider() {
-            override fun getDefaultThickness(): Float {
-                return 5f
-            }
-        })
+        pdfFragment?.annotationConfiguration?.put(
+            AnnotationType.INK,
+            InkAnnotationConfiguration.builder(context)
+                .setAvailableColors(context.resources.getIntArray(R.array.standardAnnotationColors).toMutableList())
+                .setCustomColorPickerEnabled(false)
+                .setSupportedProperties(EnumSet.of(AnnotationProperty.COLOR))
+                .setDefaultColor(ContextCompat.getColor(context, R.color.blueAnnotation))
+                .setDefaultThickness(2f)
+                .setForceDefaults(true)
+                .setZIndexEditingEnabled(false)
+                .build()
+
+        )
+        pdfFragment?.annotationConfiguration?.put(
+            AnnotationType.SQUARE,
+            ShapeAnnotationConfiguration.builder(context, AnnotationTool.SQUARE)
+                .setAvailableColors(context.resources.getIntArray(R.array.standardAnnotationColors).toMutableList())
+                .setCustomColorPickerEnabled(false)
+                .setSupportedProperties(EnumSet.of(AnnotationProperty.COLOR))
+                .setDefaultColor(ContextCompat.getColor(context, R.color.blueAnnotation))
+                .setDefaultThickness(2f)
+                .setDefaultAlpha(100f)
+                .setDefaultFillColor(ContextCompat.getColor(context, R.color.transparent))
+                .setDefaultBorderStylePreset(BorderStylePreset.SOLID)
+                .setZIndexEditingEnabled(false)
+                .setForceDefaults(true)
+                .build()
+        )
+        pdfFragment?.annotationConfiguration?.put(
+            AnnotationType.HIGHLIGHT,
+            MarkupAnnotationConfiguration.builder(context, AnnotationTool.HIGHLIGHT)
+                .setAvailableColors(context.resources.getIntArray(R.array.highlightAnnotationColors).toMutableList())
+                .disableProperty(AnnotationProperty.ANNOTATION_ALPHA)
+                .setDefaultColor(ContextCompat.getColor(context, R.color.yellowHighlightAnnotation))
+                .setZIndexEditingEnabled(false)
+                .setForceDefaults(true)
+                .build()
+        )
+        pdfFragment?.annotationConfiguration?.put(
+            AnnotationType.STRIKEOUT,
+            MarkupAnnotationConfiguration.builder(context, AnnotationTool.STRIKEOUT)
+                .setAvailableColors(context.resources.getIntArray(R.array.standardAnnotationColors).toMutableList())
+                .setSupportedProperties(EnumSet.of(AnnotationProperty.COLOR))
+                .setDefaultColor(ContextCompat.getColor(context, R.color.redAnnotation))
+                .setForceDefaults(true)
+                .setZIndexEditingEnabled(false)
+                .build()
+        )
+        pdfFragment?.annotationConfiguration?.put(
+            AnnotationType.FREETEXT,
+            FreeTextAnnotationConfiguration.builder(context)
+                .setSupportedProperties(EnumSet.of(AnnotationProperty.COLOR))
+                .setAvailableColors(context.resources.getIntArray(R.array.standardAnnotationColors).toMutableList())
+                .setDefaultColor(ContextCompat.getColor(context, R.color.darkGrayAnnotation))
+                .setDefaultTextSize(smallFont)
+                .setDefaultFillColor(Color.TRANSPARENT)
+                .setCustomColorPickerEnabled(false)
+                .setHorizontalResizingEnabled(false)
+                .setVerticalResizingEnabled(false)
+                .setZIndexEditingEnabled(false)
+                .setForceDefaults(true)
+                .build()
+        )
+        pdfFragment?.annotationConfiguration?.put(
+            AnnotationType.STAMP,
+            StampAnnotationConfiguration.builder(context)
+                .setAvailableStampPickerItems(getAppearenceStreams())
+                .setSupportedProperties(EnumSet.noneOf(AnnotationProperty::class.java))
+                .setZIndexEditingEnabled(false)
+                .build()
+        )
+        pdfFragment?.annotationConfiguration?.put(
+            AnnotationTool.ERASER,
+            EraserToolConfiguration.builder()
+                .setDefaultThickness(5f)
+                .setForceDefaults(true)
+                .build()
+        )
     }
+
 
     // region Stamp Appearance Streams
     private fun getAppearenceStreams(): MutableList<StampPickerItem> {
@@ -734,52 +784,52 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
         val yellow = AssetAppearanceStreamGenerator(yellowStampFile)
 
         // Create picker items with custom subject and custom appearance stream generator set.
-        stamps.add(StampPickerItem.fromSubject(context, blackStampSubject)
+        stamps.add(StampPickerItem.fromTitle(context, blackStampSubject)
                 .withSize(18.66f, 26.66f)
                 .withAppearanceStreamGenerator(black)
                 .build())
 
-        stamps.add(StampPickerItem.fromSubject(context, blueStampSubject)
+        stamps.add(StampPickerItem.fromTitle(context, blueStampSubject)
                 .withSize(18.66f, 26.66f)
                 .withAppearanceStreamGenerator(blue)
                 .build())
 
-        stamps.add(StampPickerItem.fromSubject(context, brownStampSubject)
+        stamps.add(StampPickerItem.fromTitle(context, brownStampSubject)
                 .withSize(18.66f, 26.66f)
                 .withAppearanceStreamGenerator(brown)
                 .build())
 
-        stamps.add(StampPickerItem.fromSubject(context, greenStampSubject)
+        stamps.add(StampPickerItem.fromTitle(context, greenStampSubject)
                 .withSize(18.66f, 26.66f)
                 .withAppearanceStreamGenerator(green)
                 .build())
 
-        stamps.add(StampPickerItem.fromSubject(context, navyStampSubject)
+        stamps.add(StampPickerItem.fromTitle(context, navyStampSubject)
                 .withSize(18.66f, 26.66f)
                 .withAppearanceStreamGenerator(navy)
                 .build())
 
-        stamps.add(StampPickerItem.fromSubject(context, orangeStampSubject)
+        stamps.add(StampPickerItem.fromTitle(context, orangeStampSubject)
                 .withSize(18.66f, 26.66f)
                 .withAppearanceStreamGenerator(orange)
                 .build())
 
-        stamps.add(StampPickerItem.fromSubject(context, pinkStampSubject)
+        stamps.add(StampPickerItem.fromTitle(context, pinkStampSubject)
                 .withSize(18.66f, 26.66f)
                 .withAppearanceStreamGenerator(pink)
                 .build())
 
-        stamps.add(StampPickerItem.fromSubject(context, purpleStampSubject)
+        stamps.add(StampPickerItem.fromTitle(context, purpleStampSubject)
                 .withSize(18.66f, 26.66f)
                 .withAppearanceStreamGenerator(purple)
                 .build())
 
-        stamps.add(StampPickerItem.fromSubject(context, redStampSubject)
+        stamps.add(StampPickerItem.fromTitle(context, redStampSubject)
                 .withSize(18.66f, 26.66f)
                 .withAppearanceStreamGenerator(red)
                 .build())
 
-        stamps.add(StampPickerItem.fromSubject(context, yellowStampSubject)
+        stamps.add(StampPickerItem.fromTitle(context, yellowStampSubject)
                 .withSize(18.66f, 26.66f)
                 .withAppearanceStreamGenerator(yellow)
                 .build())
@@ -833,36 +883,36 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
         var eraser: ContextualToolbarMenuItem? = null
 
         for (item in toolbarMenuItems) {
-            when (item.title) {
-                context.getString(com.pspdfkit.R.string.pspdf__annotation_type_freetext) -> {
+            when (item.id) {
+                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_freetext -> {
                     freeText = item
                 }
-                context.getString(com.pspdfkit.R.string.pspdf__annotation_type_stamp) -> {
+                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_stamp -> {
                     stamp = item
                 }
-                context.getString(com.pspdfkit.R.string.pspdf__annotation_type_strikeout) -> {
+                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_strikeout -> {
                     strikeOut = item
                 }
-                context.getString(com.pspdfkit.R.string.pspdf__annotation_type_highlight) -> {
+                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_highlight -> {
                     highlight = item
                 }
-                context.getString(com.pspdfkit.R.string.pspdf__annotation_type_ink) -> {
+                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_ink_pen -> {
                     ink = item
                 }
-                context.getString(com.pspdfkit.R.string.pspdf__annotation_type_square) -> {
+                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_square -> {
                     rectangle = item
                 }
-                context.getString(com.pspdfkit.R.string.pspdf__edit_menu_color) -> {
+                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_picker -> {
                     color = item
                 }
-                context.getString(com.pspdfkit.R.string.pspdf__undo) -> {
+                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_undo -> {
                     // There are two menu items called undo, we want the first one.
                     if (undo == null) undo = item
                 }
-                context.getString(com.pspdfkit.R.string.pspdf__redo) -> {
+                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_redo -> {
                     redo = item
                 }
-                context.getString(com.pspdfkit.R.string.pspdf__annotation_type_eraser) -> {
+                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_eraser -> {
                     eraser = item
                 }
             }
@@ -876,7 +926,7 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
                     val inkGroup = ContextualToolbarMenuItem.createGroupItem(View.generateViewId(), ink.position, true, mutableListOf(ink, rectangle), ink)
                     return mutableListOf(stamp, highlight, freeText, strikeOut, inkGroup, eraser, color, undo, redo)
                 }
-                capacity == 7 || capacity == 6  -> {
+                capacity == 7 || capacity == 6 -> {
                     val inkGroup = ContextualToolbarMenuItem.createGroupItem(View.generateViewId(), ink.position, true, mutableListOf(ink, rectangle), ink)
                     val highlightGroup = ContextualToolbarMenuItem.createGroupItem(View.generateViewId(), highlight.position, true, mutableListOf(highlight, strikeOut), highlight)
                     return mutableListOf(stamp, freeText, highlightGroup, inkGroup, eraser, color, undo, redo)
@@ -959,9 +1009,10 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
 
     val freeTextDialogCallback = object : (Boolean, Boolean, String) -> Unit {
         override fun invoke(cancelled: Boolean, isEditing: Boolean, text: String) {
-            if(isEditing && cancelled) return
+            if (isEditing && cancelled) return
 
-            val annotation = if (pdfFragment?.selectedAnnotations?.size ?: 0 > 0) pdfFragment?.selectedAnnotations?.get(0) ?: return else return
+            val annotation = if (pdfFragment?.selectedAnnotations?.size ?: 0 > 0) pdfFragment?.selectedAnnotations?.get(0)
+                    ?: return else return
             if (cancelled && annotation.contents.isNullOrEmpty()) {
                 // Remove the annotation
                 pdfFragment?.document?.annotationProvider?.removeAnnotationFromPage(annotation)

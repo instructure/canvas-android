@@ -18,7 +18,6 @@ import com.instructure.android.buildtools.transform.ProjectTransformer
 import com.instructure.android.buildtools.transform.MasqueradeUITransformer
 import com.instructure.android.buildtools.transform.PageViewTransformer
 import com.instructure.android.buildtools.transform.LocaleTransformer
-import com.instructure.android.buildtools.transform.PDFKitCrashFixTransformer
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
@@ -28,7 +27,8 @@ apply plugin: 'io.fabric'
 apply plugin: 'okreplay'
 apply from: '../../gradle/coverage.gradle'
 apply plugin: 'com.squareup.sqldelight'
-apply plugin: 'newrelic'
+// TODO: this is waiting for a fix from new relic
+// apply plugin: 'newrelic'
 
 sqldelight {
     StudentDb {
@@ -192,8 +192,7 @@ android {
                     android,
                     new MasqueradeUITransformer('com.instructure.student.activity.NavigationActivity.class'),
                     new PageViewTransformer(),
-                    new LocaleTransformer(),
-                    new PDFKitCrashFixTransformer()
+                    new LocaleTransformer()
             )
     )
 

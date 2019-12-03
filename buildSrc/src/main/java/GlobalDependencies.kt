@@ -7,7 +7,7 @@ object Versions {
     const val TARGET_SDK = 28
 
     /* Build/tooling */
-    const val ANDROID_GRADLE_TOOLS = "3.4.0"
+    const val ANDROID_GRADLE_TOOLS = "3.5.1"
     const val BUILD_TOOLS = "28.0.3"
     const val BUILD_SCAN = "1.16"
 
@@ -34,7 +34,7 @@ object Versions {
     /* Others */
     const val APOLLO = "1.0.0-alpha5"
     const val CRASHLYTICS = "2.6.8@aar"
-    const val PSPDFKIT = "4.8.1"
+    const val PSPDFKIT = "6.0.3"
     const val EXOPLAYER = "2.9.6"
     const val PHOTO_VIEW = "2.3.0"
     const val ANDROID_SVG = "1.3"

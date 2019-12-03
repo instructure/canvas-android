@@ -16,6 +16,7 @@
 package com.instructure.annotations
 
 import android.content.Context
+import android.graphics.Color
 import android.graphics.PointF
 import android.graphics.RectF
 import androidx.core.content.ContextCompat
@@ -124,10 +125,10 @@ private fun convertFreeTextType(canvaDocAnnotation: CanvaDocAnnotation, context:
             userId = canvaDocAnnotation.userId
     ), contents = canvaDocAnnotation.contents ?: "")
 
-    freeTextAnnotation.color = canvaDocAnnotation.getColorInt(ContextCompat.getColor(context, (R.color.black)))
+    freeTextAnnotation.color = canvaDocAnnotation.getColorInt(ContextCompat.getColor(context, (R.color.darkGrayAnnotation)))
     freeTextAnnotation.name = canvaDocAnnotation.annotationId
     freeTextAnnotation.textSize = getTextSizeFromFont(canvaDocAnnotation.font)
-    freeTextAnnotation.fillColor = ContextCompat.getColor(context, (R.color.white))
+    freeTextAnnotation.fillColor = Color.TRANSPARENT
 
     return freeTextAnnotation
 }
@@ -135,10 +136,10 @@ private fun convertFreeTextType(canvaDocAnnotation: CanvaDocAnnotation, context:
 private fun getTextSizeFromFont(font: String?): Float{
     // 14pt, 22pt, 38pt are the supported font sizes on web, but these don't match up well to PSPDFkit's font
     return when {
-        font?.contains("14pt") == true -> 10f
-        font?.contains("22pt") == true -> 18f
-        font?.contains("38pt") == true -> 32f
-        else -> 10f
+        font?.contains("14pt") == true -> smallFont
+        font?.contains("22pt") == true -> mediumFont
+        font?.contains("38pt") == true -> largeFont
+        else -> smallFont
     }
 }
 
@@ -246,7 +247,7 @@ fun StampAnnotation.convertToCanvaDoc(canvaDocId: String): CanvaDocAnnotation {
             annotationType = CanvaDocAnnotation.AnnotationType.TEXT,
             rect = listOfRectsToListOfListOfFloats(listOf(this.boundingBox)),
             icon = "Comment",
-            color = getColorHexFromStampSubject(this.subject),
+            color = getColorHexFromStampSubject(this.title),
             contents = this.contents,
             iconColor= this.colorToHexString(),
             isEditable = true
@@ -430,3 +431,7 @@ const val purpleStampHex = "#741865"
 const val redStampHex = "#EE0612"
 const val yellowStampHex = "#FCB900"
 
+// Free Text Annotation Font sizes
+const val smallFont = 10f
+const val mediumFont = 18f
+const val largeFont = 32f

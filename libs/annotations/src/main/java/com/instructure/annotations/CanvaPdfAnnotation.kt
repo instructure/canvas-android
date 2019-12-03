@@ -17,12 +17,13 @@ package com.instructure.annotations
 
 import android.graphics.RectF
 import com.pspdfkit.annotations.*
+import com.pspdfkit.annotations.stamps.StampType
 
 class CanvaInkAnnotation(info: CanvaPdfAnnotation) : InkAnnotation(info.page), PSCanvaInterface by info
 
 class CanvaHighlightAnnotation(info: CanvaPdfAnnotation) : HighlightAnnotation(info.page, info.rectList ?: emptyList()), PSCanvaInterface by info
 
-class CanvaStrikeOutAnnotation(info: CanvaPdfAnnotation) : StrikeOutAnnotation(info.page, info.rectList), PSCanvaInterface by info
+class CanvaStrikeOutAnnotation(info: CanvaPdfAnnotation) : StrikeOutAnnotation(info.page, info.rectList ?: emptyList()), PSCanvaInterface by info
 
 class CanvaSquareAnnotation(info: CanvaPdfAnnotation) : SquareAnnotation(info.page, info.rect ?: RectF()), PSCanvaInterface by info
 
