@@ -16,6 +16,7 @@
  */
 package com.instructure.canvas.espresso
 
+import android.content.res.Configuration
 import android.content.res.Resources
 import android.util.DisplayMetrics
 import android.util.Log
@@ -268,6 +269,12 @@ abstract class CanvasTest : InstructureTest(BuildConfig.GLOBAL_DITTO_MODE) {
         }
 
         return resourceName
+    }
+
+    // Allow tests to know whether they are in landscape mode
+    fun inLandscape() : Boolean {
+        var activity = activityRule.activity
+        return activity.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
     }
 
 }

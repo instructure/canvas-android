@@ -19,6 +19,7 @@ package com.instructure.student.ui.pages
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.scrollTo
 import com.instructure.student.R
 
 class SettingsPage : BasePage(R.id.settingsFragment) {
@@ -35,11 +36,11 @@ class SettingsPage : BasePage(R.id.settingsFragment) {
     }
 
     fun launchLegalPage() {
-        legalLabel.click()
+        legalLabel.scrollTo().click()
     }
 
     fun launchHelpPage() {
-        helpLabel.click()
+        helpLabel.scrollTo().click()
     }
 
 
