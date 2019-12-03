@@ -21,6 +21,7 @@ import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withParent
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import com.instructure.canvas.espresso.DirectlyPopulateEditText
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisplayed
@@ -83,7 +84,9 @@ class DiscussionListPage : BasePage(R.id.discussionListPage) {
 
     fun createDiscussionTopic(name: String, description: String) {
         createNewDiscussion.click()
-        onView(withId(R.id.editDiscussionName)).typeText(name)
+        // Directly populate the EditView, otherwise it might pop up a system dialog when
+        // short-screen/landscape conditions are present.
+        onView(withId(R.id.editDiscussionName)).perform(DirectlyPopulateEditText(name))
         onView(withId(R.id.rce_webView)).perform(TypeInRCETextEditor(description))
         onView(withId(R.id.menuSaveDiscussion)).click()
     }

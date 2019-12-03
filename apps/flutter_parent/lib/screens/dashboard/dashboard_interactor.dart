@@ -19,9 +19,9 @@ import 'package:flutter_parent/models/enrollment.dart';
 import 'package:flutter_parent/models/user.dart';
 
 class DashboardInteractor {
-  Future<List<User>> getObservees() async =>
+  Future<List<User>> getStudents() async =>
     EnrollmentsApi.getObserveeEnrollments().then<List<User>>((enrollments) {
-      List<User> users = filterObservees(enrollments);
+      List<User> users = filterStudents(enrollments);
       sortUsers(users);
       return users;
   });
@@ -32,7 +32,7 @@ class DashboardInteractor {
       return user;
   });
 
-  List<User> filterObservees(List<Enrollment> enrollments) =>
+  List<User> filterStudents(List<Enrollment> enrollments) =>
       enrollments.map((enrollment) => enrollment.observedUser).where((student) => student != null).toSet().toList();
 
   void sortUsers(List<User> users) =>

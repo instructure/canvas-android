@@ -13,7 +13,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:flutter/material.dart';
-import 'package:flutter_parent/utils/common_widets/full_screen_scroll_container.dart';
+import 'package:flutter_parent/utils/common_widgets/full_screen_scroll_container.dart';
 import 'package:flutter_svg/svg.dart';
 
 /// A simple empty widget that shows a centered SVG above a title/subtitle. All components are optionally, though
