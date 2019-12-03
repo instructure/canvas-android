@@ -1,16 +1,16 @@
-/// Copyright (C) 2019 - present Instructure, Inc.
-///
-/// This program is free software: you can redistribute it and/or modify
-/// it under the terms of the GNU General Public License as published by
-/// the Free Software Foundation, version 3 of the License.
-///
-/// This program is distributed in the hope that it will be useful,
-/// but WITHOUT ANY WARRANTY; without even the implied warranty of
-/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-/// GNU General Public License for more details.
-///
-/// You should have received a copy of the GNU General Public License
-/// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// Copyright (C) 2019 - present Instructure, Inc.
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, version 3 of the License.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'dart:math';
 
@@ -45,11 +45,9 @@ void main() {
     _locator.registerLazySingleton<AlertsApi>(() => AlertsApiMock());
   }
 
-  Widget _testableMaterialWidget([Widget widget]) =>
-      TestApp(Scaffold(body: widget ?? DashboardScreen()));
+  Widget _testableMaterialWidget([Widget widget]) => TestApp(Scaffold(body: widget ?? DashboardScreen()));
 
-  testWidgetsWithAccessibilityChecks('Displays name with pronouns when pronouns are not null',
-      (tester) async {
+  testWidgetsWithAccessibilityChecks('Displays name with pronouns when pronouns are not null', (tester) async {
     _setupLocator(MockInteractor(includePronouns: true));
 
     // Get the first user
@@ -65,8 +63,7 @@ void main() {
     expect(find.text('${first.name} (${first.pronouns})'), findsOneWidget);
   });
 
-  testWidgetsWithAccessibilityChecks('Displays name without pronouns when pronouns are null',
-      (tester) async {
+  testWidgetsWithAccessibilityChecks('Displays name without pronouns when pronouns are null', (tester) async {
     _setupLocator(MockInteractor());
 
     // Get the first user
@@ -82,8 +79,7 @@ void main() {
     expect(find.text('${first.name}'), findsOneWidget);
   });
 
-  testWidgetsWithAccessibilityChecks('Displays No Students when there are no observees',
-      (tester) async {
+  testWidgetsWithAccessibilityChecks('Displays No Students when there are no observees', (tester) async {
     _setupLocator(MockInteractor(generateStudents: false));
 
     await tester.pumpWidget(_testableMaterialWidget());
@@ -98,8 +94,8 @@ void main() {
 //
 //  });
 
-  testWidgetsWithAccessibilityChecks(
-      'Nav drawer displays observer name (w/pronouns), and email address', (tester) async {
+  testWidgetsWithAccessibilityChecks('Nav drawer displays observer name (w/pronouns), and email address',
+      (tester) async {
     _setupLocator(MockInteractor(includePronouns: true));
 
     // Get the first user
@@ -120,8 +116,8 @@ void main() {
     expect(find.text('${observer.primaryEmail}'), findsOneWidget);
   });
 
-  testWidgetsWithAccessibilityChecks(
-      'Nav drawer displays observer name without pronouns, and email address', (tester) async {
+  testWidgetsWithAccessibilityChecks('Nav drawer displays observer name without pronouns, and email address',
+      (tester) async {
     _setupLocator(MockInteractor());
 
     // Get the first user
@@ -156,8 +152,7 @@ void main() {
     expect(find.byType(CoursesScreen), findsOneWidget);
   });
 
-  testWidgetsWithAccessibilityChecks('Clicking courses in the bottom nav shows courses screen',
-      (tester) async {
+  testWidgetsWithAccessibilityChecks('Clicking courses in the bottom nav shows courses screen', (tester) async {
     _setupLocator(MockInteractor());
 
     await tester.pumpWidget(_testableMaterialWidget());
@@ -193,8 +188,7 @@ void main() {
 //    expect(find.byType(CalendarScreen), findsOneWidget);
 //  });
 
-  testWidgetsWithAccessibilityChecks('Clicking alerts sets correct current page index',
-      (tester) async {
+  testWidgetsWithAccessibilityChecks('Clicking alerts sets correct current page index', (tester) async {
     _setupLocator(MockInteractor());
 
     await tester.pumpWidget(_testableMaterialWidget());
@@ -259,8 +253,7 @@ void main() {
   // Not using the accessibility tester due to an issue where the
   // Login Landing screen fails a contrast ratio test after logging out
   // (the tests for that screen all pass accessibility checks, however)
-  testWidgets(
-      'Clicking Sign Out from nav drawer signs user out and returns to the Login Landing screen',
+  testWidgets('Clicking Sign Out from nav drawer signs user out and returns to the Login Landing screen',
       (tester) async {
     _setupLocator(MockInteractor());
 
@@ -332,8 +325,7 @@ class MockInteractor extends DashboardInteractor {
   bool generateStudents;
   bool generateSelf;
 
-  MockInteractor(
-      {this.includePronouns = false, this.generateStudents = true, this.generateSelf = true});
+  MockInteractor({this.includePronouns = false, this.generateStudents = true, this.generateSelf = true});
 
   @override
   Future<List<User>> getStudents() async => generateStudents
@@ -346,8 +338,7 @@ class MockInteractor extends DashboardInteractor {
 
   @override
   Future<User> getSelf({app}) async => generateSelf
-      ? _mockUser('Marlene',
-          pronouns: includePronouns ? 'she/her' : null, primaryEmail: 'marlene@instructure.com')
+      ? _mockUser('Marlene', pronouns: includePronouns ? 'she/her' : null, primaryEmail: 'marlene@instructure.com')
       : null;
 }
 

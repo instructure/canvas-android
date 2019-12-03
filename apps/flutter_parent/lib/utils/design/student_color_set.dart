@@ -1,16 +1,16 @@
-/// Copyright (C) 2019 - present Instructure, Inc.
-///
-/// This program is free software: you can redistribute it and/or modify
-/// it under the terms of the GNU General Public License as published by
-/// the Free Software Foundation, version 3 of the License.
-///
-/// This program is distributed in the hope that it will be useful,
-/// but WITHOUT ANY WARRANTY; without even the implied warranty of
-/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-/// GNU General Public License for more details.
-///
-/// You should have received a copy of the GNU General Public License
-/// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// Copyright (C) 2019 - present Instructure, Inc.
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, version 3 of the License.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'dart:ui';
 
@@ -20,7 +20,8 @@ class StudentColorSet {
   static const electric = StudentColorSet(Color(0xFF008EE2), Color(0xFF0770A3), Color(0xFF008EE2), Color(0xFF00A0FF));
 
   /// Purple student color set
-  static const jeffGoldplum = StudentColorSet(Color(0xFF5F4DCE), Color(0xFF523ECC), Color(0xFF5F4DCE), Color(0xFF9584FF));
+  static const jeffGoldplum =
+      StudentColorSet(Color(0xFF5F4DCE), Color(0xFF523ECC), Color(0xFF5F4DCE), Color(0xFF9584FF));
 
   /// Pink student color set
   static const barney = StudentColorSet(Color(0xFFBF32A4), Color(0xFFA30785), Color(0xFFBF32A4), Color(0xFFFF43DB));
