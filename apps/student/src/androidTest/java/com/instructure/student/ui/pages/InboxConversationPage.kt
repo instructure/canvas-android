@@ -21,13 +21,20 @@ import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
+import com.instructure.canvas.espresso.explicitClick
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
-import com.instructure.espresso.page.*
+import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onViewWithContentDescription
+import com.instructure.espresso.page.onViewWithText
+import com.instructure.espresso.page.waitForView
+import com.instructure.espresso.page.waitForViewWithHint
+import com.instructure.espresso.page.waitForViewWithText
+import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withText
 import com.instructure.espresso.replaceText
-import com.instructure.espresso.scrollTo
 import com.instructure.student.R
 import org.hamcrest.CoreMatchers
 import org.hamcrest.Matchers
@@ -37,7 +44,9 @@ class InboxConversationPage : BasePage(R.id.inboxConversationPage) {
     fun replyToMessage(message: String) {
         waitForViewWithText(R.string.reply).click()
         waitForViewWithHint(R.string.message).replaceText(message)
-        onViewWithContentDescription("Send").click()
+        onViewWithContentDescription("Send").perform(explicitClick())
+        // Wait for reply to propagate, and for us to return to the email thread page
+        waitForView(withId(R.id.starred)).assertDisplayed()
     }
 
     fun assertMessageDisplayed(message: String) {

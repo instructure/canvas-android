@@ -16,7 +16,6 @@
  */
 package com.instructure.student.ui.pages
 
-import android.os.SystemClock.sleep
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.swipeDown
@@ -29,6 +28,7 @@ import androidx.test.espresso.web.webdriver.DriverAtoms.getText
 import androidx.test.espresso.web.webdriver.DriverAtoms.webClick
 import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.canvas.espresso.withCustomConstraints
+import com.instructure.canvas.espresso.withElementRepeat
 import com.instructure.canvasapi2.models.DiscussionEntry
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.espresso.OnViewWithId
@@ -104,12 +104,13 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
         clickReply()
         onView(withId(R.id.rce_webView)).perform(TypeInRCETextEditor(replyMessage))
         onView(withId(R.id.menu_send)).click()
-        sleep(2000) // Allow time for the reply to propagate to webview
     }
 
     fun assertReplyDisplayed(reply: DiscussionEntry) {
+        // It can take a *long* time for the reply to get rendered to the webview on
+        // tablets (in FTL, anyway).  We'll compensate by giving it up to 20 seconds to render.
         onWebView(withId(R.id.discussionRepliesWebView))
-                .withElement(findElement(Locator.ID, "message_content_${reply.id}"))
+                .withElementRepeat(findElement(Locator.ID, "message_content_${reply.id}"), 20)
                 .check(webMatches(getText(),containsString(reply.message)))
     }
 
@@ -186,7 +187,6 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
                 .perform(webClick())
         onView(withId(R.id.rce_webView)).perform(TypeInRCETextEditor(replyMessage))
         onView(withId(R.id.menu_send)).click()
-        sleep(2000) // Allow time for reply to propagate to webview
     }
 
     fun assertMainAttachmentDisplayed() {
@@ -206,6 +206,7 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
         Espresso.pressBack()
     }
 }
+
 
 
 

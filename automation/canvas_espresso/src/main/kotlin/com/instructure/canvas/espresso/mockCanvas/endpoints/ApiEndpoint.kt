@@ -97,6 +97,24 @@ object GroupsEndpoint : Endpoint (
                 ),
 
                 Segment("discussion_topics") to endpoint ( // group discussion topics
+                        LongId(PathVars::topicId) to endpoint(
+                                Segment("view") to endpoint (
+                                        configure = {
+                                            GET {
+                                                val topic = data
+                                                        .groupDiscussionTopicHeaders[pathVars.groupId]
+                                                        ?.find {it.id == pathVars.topicId}
+
+                                                if(topic != null) {
+                                                    request.successResponse(topic)
+                                                }
+                                                else {
+                                                    request.unauthorizedResponse()
+                                                }
+                                            }
+                                        }
+                                )
+                        ),
                         configure = {
                             GET {
                                 // TODO: Merge this logic with course discussion_topics logic

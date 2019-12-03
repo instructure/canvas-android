@@ -115,3 +115,24 @@ private fun isDisplayedAtLeast(target: Matcher<View>, displayPercentage: Int) : 
         return false
     }
 }
+
+/**
+ * Send an explicit performClick() to a view, instead of using Espresso's click(), which
+ * can sometimes be interpreted as a long-click.
+ */
+fun explicitClick() : ViewAction {
+    return object : ViewAction {
+        override fun getDescription(): String {
+            return "Explicitly click on something"
+        }
+
+        override fun getConstraints(): Matcher<View> {
+            return  ViewMatchers.isAssignableFrom(View::class.java)
+        }
+
+        override fun perform(uiController: UiController?, view: View?) {
+            view?.performClick()
+        }
+
+    }
+}

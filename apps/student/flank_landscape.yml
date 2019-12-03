@@ -20,6 +20,6 @@ gcloud:
     orientation: landscape
 
 flank:
-  testShards: 5
+  testShards: 10
   testRuns: 1
 
