@@ -99,11 +99,11 @@ class _CourseGradesScreenState extends State<CourseGradesScreen> {
               setState(() => expanding ? _collapsedGroupIds.remove(group.id) : _collapsedGroupIds.add(group.id));
             },
             title: Padding(
-              padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
+              padding: const EdgeInsetsDirectional.only(top: 16, start: 16, end: 16),
               child: Text(group.name, style: Theme.of(context).textTheme.overline),
             ),
             trailing: Padding(
-              padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
+              padding: const EdgeInsetsDirectional.only(top: 16, start: 16, end: 16),
               child: Icon(
                 isCollapsed ? CanvasIcons.mini_arrow_down : CanvasIcons.mini_arrow_up,
                 color: Theme.of(context).textTheme.overline.color,
@@ -151,7 +151,7 @@ class _CourseGradeHeader extends StatelessWidget {
 
     return Padding(
       // Only left padding, lets the filter button go past the margin for the ripple
-      padding: const EdgeInsets.only(left: 16),
+      padding: const EdgeInsetsDirectional.only(start: 16),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.baseline,
@@ -161,7 +161,7 @@ class _CourseGradeHeader extends StatelessWidget {
           Text(L10n(context).allGradingPeriods, style: Theme.of(context).textTheme.display1),
           InkWell(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
               child: Text(
                 L10n(context).filter,
                 style: Theme.of(context).textTheme.caption.copyWith(color: studentColor),
@@ -193,7 +193,7 @@ class _CourseGradeHeader extends StatelessWidget {
   }
 
   String _courseGrade(BuildContext context, CourseGrade grade) {
-    final format = NumberFormat();
+    final format = NumberFormat.percentPattern();
     format.maximumFractionDigits = 2;
 
     if (grade.noCurrentGrade()) {
@@ -201,7 +201,7 @@ class _CourseGradeHeader extends StatelessWidget {
     } else {
       return grade.currentGrade()?.isNotEmpty == true
           ? grade.currentGrade()
-          : '${format.format(grade.currentScore())}%';
+          : format.format(grade.currentScore() / 100); // format multiplies by 100 for percentages
     }
   }
 }

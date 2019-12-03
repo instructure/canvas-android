@@ -48,7 +48,6 @@ class CourseDetailsModel extends BaseModel {
   // observed_users doesn't work right now on the groups endpoint, so we have to pull submissions manually
   // TODO: Remove everything except the loadAssignmentGroups call (and removing unpublished) once LA-274 is implemented
   Future<List<AssignmentGroup>> _loadAssignments({bool forceRefresh = false}) {
-//    if (true) return Future.error("fail plz");
     final groupFuture = _interactor().loadAssignmentGroups(courseId, studentId);
     return groupFuture?.then((groups) async {
       if (groups == null || groups.isEmpty) return groups;

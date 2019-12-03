@@ -224,8 +224,6 @@ class _ParentThemeState extends State<ParentTheme> {
       accentIconTheme: IconThemeData(color: isDarkMode ? Colors.black : Colors.white),
       dividerColor: isHC ? onSurfaceColor : isDarkMode ? nearSurfaceColor : ParentTheme.tiara,
       buttonTheme: ButtonThemeData(height: 48, minWidth: 120),
-      splashColor: studentColor.withOpacity(.12),
-      highlightColor: studentColor.withOpacity(.16),
     );
   }
 

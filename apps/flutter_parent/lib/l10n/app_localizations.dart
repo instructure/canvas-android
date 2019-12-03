@@ -449,13 +449,13 @@ class AppLocalizations {
   String get dateTimeFormat => Intl.message(
         "MMM d 'at' h:mma",
         desc:
-            "The string to format dates, only the 'at' needs to be translated. MMM will show the month abbreviated as 'Oct', d shows the day, h:mma will show the time as '10:33PM'.",
+            "The string to format dates, only the 'at' needs to be translated, as well as arranging the date/time components. MMM will show the month abbreviated as 'Oct', d shows the day, h:mma will show the time as '10:33PM'. Use a captial H for 24 hour times, in which case the 'a' can be omitted to remove the am/pm from the string.",
       );
 
   String get dueDateTimeFormat => Intl.message(
         "'Due' MMM d 'at' h:mma",
         desc:
-            "The string to format dates, only the 'Due' and 'at' needs to be translated (not including apostrophes). MMM will show the month abbreviated as 'Oct', d shows the day, h:mma will show the time as '10:33PM'.",
+            "The string to format dates, only the 'Due' and 'at' needs to be translated (not including apostrophes), as well as arranging the date/time components. MMM will show the month abbreviated as 'Oct', d shows the day, h:mma will show the time as '10:33PM'. Use a captial H for 24 hour times, in which case the 'a' can be omitted to remove the am/pm from the string.",
       );
 
   String get noDueDate => Intl.message(

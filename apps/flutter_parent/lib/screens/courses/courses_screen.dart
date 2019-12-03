@@ -112,7 +112,7 @@ class _CoursesScreenState extends State<CoursesScreen> {
 
   Widget _courseGrade(context, Course course) {
     CourseGrade grade = course.getCourseGrade(widget._student?.id);
-    var format = NumberFormat();
+    var format = NumberFormat.percentPattern();
     format.maximumFractionDigits = 2;
 
     // If there is no current grade, return 'No grade'
@@ -120,7 +120,7 @@ class _CoursesScreenState extends State<CoursesScreen> {
     // or a score
     var text = grade.noCurrentGrade()
         ? AppLocalizations.of(context).noGrade
-        : (grade.currentGrade()?.isNotEmpty == true ? grade.currentGrade() : format.format(grade.currentScore()) + '%');
+        : grade.currentGrade()?.isNotEmpty == true ? grade.currentGrade() : format.format(grade.currentScore() / 100);
 
     return Text(
       text,

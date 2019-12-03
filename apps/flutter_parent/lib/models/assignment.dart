@@ -152,8 +152,8 @@ abstract class Assignment implements Built<Assignment, AssignmentBuilder> {
   bool _isMissingSubmission() {
       if (submission?.missing == true) return true;
 
-    final isPassDue = dueAt?.isBefore(DateTime.now()) == true;
-    return isPassDue && (submission == null || (submission.attempt == 0 && submission.grade == null));
+    final isPastDue = dueAt?.isBefore(DateTime.now()) == true;
+    return isPastDue && (submission == null || (submission.attempt == 0 && submission.grade == null));
   }
 }
 

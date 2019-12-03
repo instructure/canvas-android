@@ -27,24 +27,27 @@ class EmptyPandaWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FullScreenScrollContainer(
-      children: <Widget>[
-        if (svgPath != null) SvgPicture.asset(svgPath, excludeFromSemantics: true),
-        if (svgPath != null && (title != null || subtitle != null)) SizedBox(height: 64),
-        if (title != null)
-          Text(
-            title,
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.title.copyWith(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-        if (title != null && subtitle != null) SizedBox(height: 8),
-        if (subtitle != null)
-          Text(
-            subtitle,
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.caption.copyWith(fontSize: 16),
-          ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.all(32),
+      child: FullScreenScrollContainer(
+        children: <Widget>[
+          if (svgPath != null) SvgPicture.asset(svgPath, excludeFromSemantics: true),
+          if (svgPath != null && (title != null || subtitle != null)) SizedBox(height: 64),
+          if (title != null)
+            Text(
+              title,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.title.copyWith(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+          if (title != null && subtitle != null) SizedBox(height: 8),
+          if (subtitle != null)
+            Text(
+              subtitle,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.caption.copyWith(fontSize: 16),
+            ),
+        ],
+      ),
     );
   }
 }
