@@ -19,4 +19,9 @@ class QuickNav {
   Future<T> push<T extends Object>(BuildContext context, Widget widget) {
     return Navigator.of(context).push(MaterialPageRoute(builder: (context) => widget));
   }
+
+  /// Clears the back stack of any routes currently in the navigation and adds the new widget
+  Future<T> pushAndRemoveAll<T extends Object>(BuildContext context, Widget widget) {
+    return Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => widget), (_) => false);
+  }
 }

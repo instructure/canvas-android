@@ -98,7 +98,7 @@ class WebLoginScreen extends StatelessWidget {
         controller.clearCache();
 
         controller.loadUrl(_buildAuthUrl(verifyResult));
-        _controllerCompleter.complete(controller);
+        if (!_controllerCompleter.isCompleted) _controllerCompleter.complete(controller);
       },
     );
   }
@@ -116,7 +116,7 @@ class WebLoginScreen extends StatelessWidget {
       var url = request.url;
       String oAuthRequest = url.substring(url.indexOf(successUrl) + successUrl.length);
       locator<WebLoginInteractor>().performLogin(result, oAuthRequest).then((_) {
-        locator<QuickNav>().push(context, DashboardScreen());
+        locator<QuickNav>().pushAndRemoveAll(context, DashboardScreen());
       });
       return NavigationDecision.prevent;
     } else if (request.url.contains(errorUrl)) {
