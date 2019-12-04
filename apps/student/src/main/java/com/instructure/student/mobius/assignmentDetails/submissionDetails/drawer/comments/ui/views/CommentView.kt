@@ -70,8 +70,8 @@ class CommentView @JvmOverloads constructor(
             if (value.isNullOrBlank()) commentTextView.setGone() else commentTextView.setVisible().text = value
         }
 
-    var usernameText: String?
-        get() = userNameTextView.text.toString()
+    var usernameText: CharSequence?
+        get() = userNameTextView.text
         set(value) {
             if (value == null) userNameTextView.setGone() else userNameTextView.setVisible().text = value
         }

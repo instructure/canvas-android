@@ -18,16 +18,14 @@ package com.instructure.teacher.holders
 
 import android.content.Context
 import android.content.res.ColorStateList
+import android.text.SpannableStringBuilder
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.BasicUser
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.DateHelper
-import com.instructure.canvasapi2.utils.toDate
-import com.instructure.canvasapi2.utils.validOrNull
+import com.instructure.canvasapi2.utils.*
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.utils.ProfileUtils
 import com.instructure.pandautils.utils.ThemePrefs
@@ -81,7 +79,7 @@ class InboxViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         return DateHelper.dateToDayMonthYearString(context, date)
     }
 
-    private fun getConversationTitle(context: Context, myUserId: Long, conversation: Conversation): String {
+    private fun getConversationTitle(context: Context, myUserId: Long, conversation: Conversation): CharSequence {
         if (conversation.isMonologue(myUserId)) {
             return context.getString(R.string.monologue)
         }
@@ -89,13 +87,17 @@ class InboxViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val users = conversation.participants
         return when (users.size) {
             0 -> ""
-            1 -> users[0].name.orEmpty()
-            2 -> users[0].name + ", " + users[1].name
-            else -> String.format(
-                context.getString(R.string.conversation_message_title),
-                users[0].name,
-                Integer.toString(users.size - 1)
-            )
+            1, 2 -> users.joinTo(SpannableStringBuilder()) { Pronouns.span(it.name, it.pronouns) }
+            else -> {
+                val user = users[0]
+                Pronouns.resource(
+                    context,
+                    R.string.conversation_message_title,
+                    user.pronouns,
+                    Pronouns.span(user.name, user.pronouns),
+                    (users.size - 1).toString()
+                )
+            }
         }
     }
 

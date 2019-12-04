@@ -19,6 +19,7 @@ package com.instructure.pandautils.discussions
 import android.content.Context
 import com.instructure.canvasapi2.models.DiscussionEntry
 import com.instructure.canvasapi2.utils.DateHelper
+import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.canvasapi2.utils.localized
 import com.instructure.canvasapi2.utils.toDate
 import com.instructure.pandautils.BuildConfig
@@ -158,10 +159,8 @@ class DiscussionEntryHtmlConverter {
 
         // Populate Author Information
         if(discussionEntry.author != null) {
-            authorName = discussionEntry.author?.displayName ?: ""
-            if(BuildConfig.DEBUG) {
-                authorName = discussionEntry.author?.displayName + " " + discussionEntry.id
-            }
+            authorName = Pronouns.html(discussionEntry.author?.displayName, discussionEntry.author?.pronouns)
+            if(BuildConfig.DEBUG) authorName = "$authorName ${discussionEntry.id}"
         } else {
             authorName = context.getString(R.string.utils_discussionsUnknownAuthor)
         }

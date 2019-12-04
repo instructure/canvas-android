@@ -17,6 +17,7 @@
 package com.instructure.teacher.view
 
 import android.content.Context
+import android.text.SpannableStringBuilder
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.LinearLayout
@@ -29,7 +30,8 @@ import com.instructure.teacher.R
 import com.instructure.teacher.models.DueDateGroup
 import com.instructure.teacher.utils.formatOrDoubleDash
 import kotlinx.android.synthetic.main.view_assignment_override.view.*
-import java.util.*
+import java.util.Calendar
+import java.util.Date
 import kotlin.properties.Delegates
 import kotlinx.android.synthetic.main.view_assignment_override.view.dueDate as dueDateText
 
@@ -77,7 +79,7 @@ class AssignmentOverrideView @JvmOverloads constructor(
             index: Int,
             dueDateGroup: DueDateGroup,
             showRemove: Boolean,
-            assigneesList: List<String>,
+            assigneesList: List<CharSequence>,
             datePickerClickListener: (date: Date?, (Int, Int, Int) -> Unit) -> Unit,
             timePickerClickListener: (date: Date?, (Int, Int) -> Unit) -> Unit,
             removeOverrideClickListener: (DueDateGroup) -> Unit,
@@ -88,7 +90,7 @@ class AssignmentOverrideView @JvmOverloads constructor(
         mShowRemove = showRemove
 
         // Setup views
-        assignTo.setText(if (assigneesList.isNotEmpty()) assigneesList.joinToString() else " ")
+        assignTo.setText(if (assigneesList.isNotEmpty()) assigneesList.joinTo(SpannableStringBuilder()) else " ")
 
         dueDateGroup.let {
             with(it.coreDates) {

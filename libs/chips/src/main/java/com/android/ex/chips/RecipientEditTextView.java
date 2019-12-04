@@ -46,7 +46,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.os.Parcelable;
-import androidx.appcompat.widget.AppCompatMultiAutoCompleteTextView;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.Layout;
@@ -54,6 +53,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -86,9 +86,12 @@ import android.widget.ListPopupWindow;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
 import com.android.ex.chips.recipientchip.DrawableRecipientChip;
 import com.android.ex.chips.recipientchip.ReplacementDrawableSpan;
 import com.android.ex.chips.recipientchip.VisibleRecipientChip;
+import com.instructure.canvasapi2.utils.Pronouns;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -96,6 +99,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import androidx.appcompat.widget.AppCompatMultiAutoCompleteTextView;
 
 /**
  * RecipientEditTextView is an auto complete text view for use with applications
@@ -612,7 +617,7 @@ public class RecipientEditTextView extends AppCompatMultiAutoCompleteTextView im
         paint.getTextWidths(" ", widths);
 
         final float maxWidth         = calculateAvailableWidth() - iconWidth - widths[0] - backgroundPadding.left - backgroundPadding.right;
-        final String chipDisplayText = createChipDisplayText(contact);
+        final CharSequence chipDisplayText = createChipDisplayText(contact);
         CharSequence ellipsizedText  = ellipsizeText(chipDisplayText, paint, maxWidth);
 
         int textWidth = (int) paint.measureText(ellipsizedText, 0, ellipsizedText.length());
@@ -645,8 +650,13 @@ public class RecipientEditTextView extends AppCompatMultiAutoCompleteTextView im
         int textX = shouldPositionAvatarOnRight() ?
                 mChipTextEndPadding + backgroundPadding.left :
                 width - backgroundPadding.right - mChipTextEndPadding - textWidth;
-        canvas.drawText(ellipsizedText, 0, ellipsizedText.length(),
-                textX, getTextYOffset(height), paint);
+
+        // Use StaticLayout instead of Canvas.drawText() so that span data is preserved
+        StaticLayout layout = new StaticLayout(ellipsizedText, paint, width, Layout.Alignment.ALIGN_NORMAL, 1, 0, true);
+        canvas.save();
+        canvas.translate(textX, (height - layout.getHeight()) / 2);
+        layout.draw(canvas);
+        canvas.restore();
 
         // Set the variables that are needed to draw the icon bitmap once it's loaded
         int iconX     = shouldPositionAvatarOnRight() ? width - backgroundPadding.right - iconWidth :
@@ -1651,8 +1661,8 @@ public class RecipientEditTextView extends AppCompatMultiAutoCompleteTextView im
 
     // Visible for testing.
     // Use this method to generate text to display in a chip.
-    /*package*/ String createChipDisplayText(RecipientEntry entry) {
-        String display = entry.getName();
+    /*package*/ CharSequence createChipDisplayText(RecipientEntry entry) {
+        CharSequence display = Pronouns.span(entry.getName(), entry.getPronouns());
         String address = entry.getDestination();
         if (TextUtils.isEmpty(display) || TextUtils.equals(display, address)) {
             display = null;
@@ -1662,7 +1672,7 @@ public class RecipientEditTextView extends AppCompatMultiAutoCompleteTextView im
         } else if (!TextUtils.isEmpty(address)){
             return address;
         } else {
-            return new Rfc822Token(display, address, null).toString();
+            return new Rfc822Token(display != null ? display.toString() : null, address, null).toString();
         }
     }
 

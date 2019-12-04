@@ -16,6 +16,8 @@
 
 package com.instructure.teacher.binders
 
+import android.text.SpannableStringBuilder
+import android.text.TextUtils
 import android.text.format.DateFormat
 import android.view.Gravity
 import android.widget.TextView
@@ -25,6 +27,7 @@ import com.instructure.canvasapi2.models.BasicUser
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Message
 import com.instructure.canvasapi2.utils.ContextKeeper
+import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.canvasapi2.utils.asAttachment
 import com.instructure.canvasapi2.utils.toDate
 import com.instructure.pandautils.utils.ProfileUtils
@@ -36,7 +39,7 @@ import com.instructure.teacher.interfaces.MessageAdapterCallback
 import com.instructure.teacher.utils.linkifyTextView
 import kotlinx.android.synthetic.main.adapter_message.view.*
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
 
 
 object MessageBinder : BaseBinder() {
@@ -107,7 +110,7 @@ object MessageBinder : BaseBinder() {
     private var dateFormat = SimpleDateFormat(if (DateFormat.is24HourFormat(ContextKeeper.appContext)) "MMM d, yyyy, HH:mm" else "MMM d, yyyy, h:mm a",
             Locale.getDefault())
 
-    private fun getAuthorTitle(myUserId: Long, conversation: Conversation, message: Message): String {
+    private fun getAuthorTitle(myUserId: Long, conversation: Conversation, message: Message): CharSequence {
 
         // We don't want to filter by the messages participating user ids because they don't always contain the correct information
         val users = conversation.participants
@@ -120,13 +123,13 @@ object MessageBinder : BaseBinder() {
             users.add(0, author)
         }
 
-        return if (users.isEmpty()) {
-            ""
-        } else {
-            when (users.size) {
-                in 0..2 -> users.joinToString { it.name ?: "" }
-                else -> "${users[0].name}, +${message.participatingUserIds.size - 1}"
-            }
+        return when (users.size) {
+            0 -> ""
+            1, 2 -> users.joinTo(SpannableStringBuilder()) { Pronouns.span(it.name, it.pronouns) }
+            else -> TextUtils.concat(
+                Pronouns.span(users[0].name, users[0].pronouns),
+                ", +${message.participatingUserIds.size - 1}"
+            )
         }
     }
 }

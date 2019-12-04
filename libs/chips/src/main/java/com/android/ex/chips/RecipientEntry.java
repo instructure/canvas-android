@@ -33,6 +33,7 @@ public class RecipientEntry implements Serializable{
     private long id;
     private String destination; // Holds id string value returned by api
     private final String name;
+    private final String pronouns;
     private final String info;
 
     private final String avatarUrl;
@@ -50,9 +51,10 @@ public class RecipientEntry implements Serializable{
      */
     private transient byte[] mPhotoBytes;
 
-    public RecipientEntry(long id, String name, String destination, String info, String avatarUrl, int userCount, int itemCount, boolean isValid, Set<String> courses, Set<String> groups) {
+    public RecipientEntry(long id, String name, String pronouns, String destination, String info, String avatarUrl, int userCount, int itemCount, boolean isValid, Set<String> courses, Set<String> groups) {
         this.id          = id;
         this.name        = name;
+        this.pronouns    = pronouns;
         this.destination = destination;
         this.avatarUrl   = avatarUrl;
         this.userCount   = userCount;
@@ -72,13 +74,13 @@ public class RecipientEntry implements Serializable{
         final Rfc822Token[] tokens = Rfc822Tokenizer.tokenize(address);
         final String tokenizedAddress = tokens.length > 0 ? tokens[0].getAddress() : address;
 
-        return new RecipientEntry(INVALID_CONTACT, address, tokenizedAddress,
+        return new RecipientEntry(INVALID_CONTACT, address, null, tokenizedAddress,
                  "", null, 0, 0, isValid, null, null);
     }
 
     public static RecipientEntry constructFakeEntry(final String name, final String address, boolean isValid) {
 
-        return new RecipientEntry(GENERATED_CONTACT,name, address,"", null, 0, 0, isValid, null, null);
+        return new RecipientEntry(GENERATED_CONTACT, name, null, address,"", null, 0, 0, isValid, null, null);
     }
 
     public boolean isValid() {
@@ -95,6 +97,10 @@ public class RecipientEntry implements Serializable{
 
     public String getName() {
         return this.name;
+    }
+
+    public String getPronouns() {
+        return this.pronouns;
     }
 
     public String getAvatarUrl() {

@@ -24,9 +24,9 @@ import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatDialog
 import androidx.appcompat.app.AppCompatDialogFragment
-import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.FragmentManager
+import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
 import com.instructure.teacher.utils.getColorCompat
@@ -40,6 +40,7 @@ class EditRubricCommentDialog : AppCompatDialogFragment() {
     var mCriterionId by StringArg()
     var mStudentId by LongArg(-1L)
     var mAssigneeName by StringArg()
+    var mAssigneePronouns by NullableStringArg()
     var mDefaultString by StringArg()
     var mGradeAnonymously by BooleanArg()
 
@@ -54,6 +55,7 @@ class EditRubricCommentDialog : AppCompatDialogFragment() {
                 criterionId: String,
                 studentId: Long,
                 assigneeName: String,
+                assigneePronouns: String?,
                 gradeAnonymously: Boolean,
                 defaultString: String = ""
         ) = EditRubricCommentDialog().apply {
@@ -61,6 +63,7 @@ class EditRubricCommentDialog : AppCompatDialogFragment() {
             mCriterionId = criterionId
             mStudentId = studentId
             mAssigneeName = assigneeName
+            mAssigneePronouns = assigneePronouns
             mDefaultString = defaultString
             mGradeAnonymously = gradeAnonymously
             show(manager, javaClass.simpleName)
@@ -82,7 +85,12 @@ class EditRubricCommentDialog : AppCompatDialogFragment() {
         dismissEditCommentButton.onClick { dismiss() }
 
         // Set up EditText
-        if (!mGradeAnonymously) commentEditText.hint = getString(R.string.sendMessageToHint, mAssigneeName)
+        if (!mGradeAnonymously) commentEditText.hint = Pronouns.resource(
+            context,
+            R.string.sendMessageToHint,
+            mAssigneePronouns,
+            Pronouns.span(mAssigneeName, mAssigneePronouns)
+        )
         commentEditText.highlightColor = ThemePrefs.increaseAlpha(ThemePrefs.brandColor)
         commentEditText.setText(mDefaultString)
 

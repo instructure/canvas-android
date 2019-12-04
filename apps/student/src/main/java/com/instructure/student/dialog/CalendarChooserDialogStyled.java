@@ -23,12 +23,6 @@ import android.content.DialogInterface;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.AppCompatCheckBox;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,19 +35,26 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.instructure.student.R;
 import com.instructure.canvasapi2.models.User;
 import com.instructure.canvasapi2.utils.ApiPrefs;
 import com.instructure.pandautils.utils.ColorKeeper;
 import com.instructure.pandautils.utils.Const;
 import com.instructure.pandautils.utils.ThemePrefs;
 import com.instructure.pandautils.utils.ViewStyler;
+import com.instructure.student.R;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.AppCompatCheckBox;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 public class CalendarChooserDialogStyled extends DialogFragment {
 
@@ -83,7 +84,7 @@ public class CalendarChooserDialogStyled extends DialogFragment {
     public static void show (
             FragmentActivity activity,
             ArrayList<String> cachedContextList,
-            @NonNull HashMap<String, String> contextIDs,
+            @NonNull HashMap<String, CharSequence> contextIDs,
             @NonNull ArrayList<String> contextCourseCodeIDs,
             boolean firstShow,
             CalendarChooserCallback callback)  {
@@ -330,7 +331,7 @@ public class CalendarChooserDialogStyled extends DialogFragment {
             }
 
             // Get the name for a calendar
-            final String courseName = getItem(position);
+            final CharSequence courseName = getItem(position);
             final String courseCode = mAllContextCourseCodes.get(position);
 
             // The name for the calendar

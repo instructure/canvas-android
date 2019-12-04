@@ -21,6 +21,7 @@ import android.graphics.drawable.ColorDrawable
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.Recipient
+import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
 import com.instructure.teacher.interfaces.RecipientAdapterCallback
@@ -53,7 +54,7 @@ class RecipientViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         checkBox.setOnCheckedChangeListener(null)
 
         // Set recipient name
-        title.text = recipient.name
+        title.text = Pronouns.span(recipient.name, recipient.pronouns)
 
         // Show user count if group, load avatars
         if (recipient.recipientType == Recipient.Type.Group) {
@@ -63,7 +64,7 @@ class RecipientViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             } else {
                 ProfileUtils.loadAvatarForUser(avatar, recipient.name, recipient.avatarURL)
             }
-            
+
             userCount.setVisible()
             userCount.text = context.resources.getQuantityString(R.plurals.people_count, recipient.userCount, recipient.userCount)
         } else if (recipient.recipientType == Recipient.Type.Metagroup) {

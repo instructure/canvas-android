@@ -17,17 +17,20 @@
 package com.instructure.student.holders
 
 import android.content.Context
+import android.text.SpannableStringBuilder
+import android.text.TextUtils
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.utils.DateHelper
+import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.canvasapi2.utils.localized
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.interfaces.AdapterToFragmentCallback
 import kotlinx.android.synthetic.main.viewholder_inbox.view.*
-import java.util.*
+import java.util.Date
 
 class InboxViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -79,16 +82,18 @@ class InboxViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         return date?.let { DateHelper.dateToDayMonthYearString(context, it) } ?: ""
     }
 
-    private fun getConversationTitle(context: Context, myUserId: Long, conversation: Conversation): String {
+    private fun getConversationTitle(context: Context, myUserId: Long, conversation: Conversation): CharSequence {
         if (conversation.isMonologue(myUserId)) return context.getString(R.string.monologue)
 
         val users = conversation.participants
 
         return when (users.size) {
             0 -> ""
-            1 -> users[0].name!!
-            2 -> users[0].name + ", " + users[1].name
-            else -> "${users[0].name}, +${(users.size - 1).localized}"
+            1, 2 -> users.joinTo(SpannableStringBuilder()) { Pronouns.span(it.name, it.pronouns) }
+            else -> TextUtils.concat(
+                Pronouns.span(users[0].name, users[0].pronouns),
+                ", +${(users.size - 1).localized}"
+            )
         }
     }
 

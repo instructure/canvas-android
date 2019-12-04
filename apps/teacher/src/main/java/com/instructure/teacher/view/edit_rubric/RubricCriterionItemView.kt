@@ -40,7 +40,8 @@ class RubricCriterionItemView @JvmOverloads constructor(
     /** Criterion ID*/
     private var mCriterionId = ""
     private var mStudentId = -1L
-    private var mAssigneeName = ""
+    private var mAssigneeName: String = ""
+    private var mAssigneePronouns: String? = null
     private var mIsFreeForm = false
 
     var gradeAnonymously = false
@@ -59,10 +60,18 @@ class RubricCriterionItemView @JvmOverloads constructor(
     }
 
     /** Populates the view with data from the given [RubricCriterion] */
-    fun setCriterion(criterion: RubricCriterion, studentId: Long, assigneeName: String, criterionIdx: Int, isFreeForm: Boolean) {
+    fun setCriterion(
+        criterion: RubricCriterion,
+        studentId: Long,
+        assigneeName: String,
+        assigneePronouns: String?,
+        criterionIdx: Int,
+        isFreeForm: Boolean
+    ) {
         mCriterionId = criterion.id ?: ""
         mStudentId = studentId
         mAssigneeName = assigneeName
+        mAssigneePronouns = assigneePronouns
         mIsFreeForm = isFreeForm
         criterionDescriptionTextView.text = criterion.description
 
@@ -93,7 +102,15 @@ class RubricCriterionItemView @JvmOverloads constructor(
     private fun editComment(default: String = "") {
         (context as? AppCompatActivity)?.supportFragmentManager?.let {
             // Show dialog
-            EditRubricCommentDialog.show(it, mCriterionId, mStudentId, mAssigneeName, gradeAnonymously, default)
+            EditRubricCommentDialog.show(
+                it,
+                mCriterionId,
+                mStudentId,
+                mAssigneeName,
+                mAssigneePronouns,
+                gradeAnonymously,
+                default
+            )
 
             // Attempt to scroll to the criterion description
             firstAncestorOrNull<ScrollView>()?.let {

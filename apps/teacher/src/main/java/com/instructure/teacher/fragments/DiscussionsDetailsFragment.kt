@@ -61,8 +61,8 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.net.URLDecoder
-import java.util.*
-import kotlin.collections.ArrayList
+import java.util.Date
+import java.util.UUID
 
 class DiscussionsDetailsFragment : BasePresenterFragment<
         DiscussionsDetailsPresenter,
@@ -392,7 +392,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
             val bundle = StudentContextFragment.makeBundle(discussionTopicHeader.author?.id ?: 0, mCanvasContext.id)
             RouteMatcher.route(requireContext(), Route(StudentContextFragment::class.java, null, bundle))
         }
-        authorName?.text = displayName
+        authorName?.text = discussionTopicHeader.author?.let { Pronouns.span(it.displayName, it.pronouns) }
         authoredDate?.text = DateHelper.getMonthDayAtTime(requireContext(), discussionTopicHeader.postedDate, getString(R.string.at))
         discussionTopicTitle?.text = discussionTopicHeader.title
 

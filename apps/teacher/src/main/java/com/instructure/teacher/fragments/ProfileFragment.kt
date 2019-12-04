@@ -25,6 +25,7 @@ import android.view.View
 import com.bumptech.glide.Glide
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.fragments.BaseFragment
 import com.instructure.pandautils.utils.*
@@ -86,7 +87,7 @@ class ProfileFragment : BaseFragment() {
             Glide.with(requireContext()).load(user?.avatarUrl).into(usersAvatar)
         }
 
-        usersName.text = user?.shortName
+        usersName.text = Pronouns.span(user?.shortName, user?.pronouns)
         usersEmail.text = user?.primaryEmail
         usersBio.text = user?.bio
     }

@@ -27,7 +27,8 @@ data class Author(
         @SerializedName("avatar_image_url")
         var avatarImageUrl: String? = null,
         @SerializedName("html_url")
-        var htmlUrl: String? = null
+        var htmlUrl: String? = null,
+        val pronouns: String? = null
 ) : CanvasModel<Author>() {
     override val comparisonString get() = displayName
 }

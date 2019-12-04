@@ -18,12 +18,16 @@
 package com.instructure.canvasapi2.models
 
 import android.content.Context
+import android.text.SpannableStringBuilder
+import android.text.TextUtils
 import com.google.gson.annotations.SerializedName
 import com.instructure.canvasapi2.R
+import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.canvasapi2.utils.toDate
 import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 @Parcelize
 data class Conversation(
@@ -150,41 +154,25 @@ data class Conversation(
         return false
     }
 
-    fun getMessageTitle(context: Context, myUserID: Long, monologue: String): String {
+    fun getMessageTitle(context: Context, myUserID: Long, monologue: String): CharSequence {
         return determineMessageTitle(context, myUserID, monologue)
     }
 
-    private fun determineMessageTitle(context: Context, myUserID: Long, monologueDefault: String): String {
+    private fun determineMessageTitle(context: Context, myUserID: Long, monologueDefault: String): CharSequence {
+        if (isDeleted) return deletedString
+        if (isMonologue(myUserID)) return monologueDefault
 
-        if (isDeleted) {
-            return deletedString
-        } else if (isMonologue(myUserID)) {
-            return monologueDefault
-        }
-
-        val normalized = ArrayList<BasicUser>()
-
-        // Normalize the message!
-        for (i in 0 until participants.size) {
-            if (participants[i].id == myUserID) {
-                continue
-            } else {
-                normalized.add(participants[i])
-            }
-        }
+        val normalized = participants
+            .filter { it.id != myUserID }
+            .map { Pronouns.span(it.name, it.pronouns) }
 
         return if (normalized.size > 2) {
-            normalized[0].name!! + String.format(Locale.getDefault(), context.getString(R.string.andMore), normalized.size - 1)
+            TextUtils.concat(
+                normalized[0],
+                String.format(Locale.getDefault(), context.getString(R.string.andMore), normalized.size - 1)
+            )
         } else {
-            var participants = ""
-            for (i in normalized.indices) {
-                if (participants != "") {
-                    participants += ", "
-                }
-
-                participants += normalized[i].name
-            }
-            participants
+            normalized.joinTo(SpannableStringBuilder())
         }
     }
 

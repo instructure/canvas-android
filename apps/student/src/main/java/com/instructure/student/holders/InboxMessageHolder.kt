@@ -15,6 +15,8 @@
  */
 package com.instructure.student.holders
 
+import android.text.SpannableStringBuilder
+import android.text.TextUtils
 import android.text.format.DateFormat
 import android.view.Gravity
 import android.view.View
@@ -25,6 +27,7 @@ import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.BasicUser
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Message
+import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.canvasapi2.utils.asAttachment
 import com.instructure.canvasapi2.utils.localized
 import com.instructure.canvasapi2.utils.toDate
@@ -34,7 +37,7 @@ import com.instructure.student.interfaces.MessageAdapterCallback
 import com.instructure.student.view.ViewUtils
 import kotlinx.android.synthetic.main.viewholder_message.view.*
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
 
 class InboxMessageHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -104,7 +107,7 @@ class InboxMessageHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         Locale.getDefault()
     )
 
-    private fun getAuthorTitle(myUserId: Long, conversation: Conversation, message: Message): String {
+    private fun getAuthorTitle(myUserId: Long, conversation: Conversation, message: Message): CharSequence {
         // We don't want to filter by the messages participating user ids because they don't always contain the correct information
         val users = conversation.participants
 
@@ -113,11 +116,13 @@ class InboxMessageHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             users.remove(it)
             users.add(0, it)
         }
-
         return when (users.size) {
             0 -> ""
-            1, 2 -> users.joinToString { it.name!! }
-            else -> "${users[0].name}, +${(message.participatingUserIds.size - 1).localized}"
+            1, 2 -> users.joinTo(SpannableStringBuilder()) { Pronouns.span(it.name, it.pronouns) }
+            else -> TextUtils.concat(
+                Pronouns.span(users[0].name, users[0].pronouns),
+                ", +${(message.participatingUserIds.size - 1).localized}"
+            )
         }
     }
 

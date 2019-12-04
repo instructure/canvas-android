@@ -16,19 +16,20 @@
  */
 package com.instructure.loginapi.login.adapter;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.instructure.canvasapi2.utils.Pronouns;
 import com.instructure.loginapi.login.R;
 import com.instructure.loginapi.login.model.SignedInUser;
 import com.instructure.pandautils.utils.ProfileUtils;
 
 import java.util.ArrayList;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class PreviousUsersAdapter extends RecyclerView.Adapter<PreviousUsersAdapter.ViewHolder> {
@@ -56,7 +57,7 @@ public class PreviousUsersAdapter extends RecyclerView.Adapter<PreviousUsersAdap
     public void onBindViewHolder(final ViewHolder holder, int position) {
         SignedInUser user = mPreviousUsers.get(position);
         ProfileUtils.loadAvatarForUser(holder.userAvatar, user.getUser().getName(), user.getUser().getAvatarUrl());
-        holder.userName.setText(user.getUser().getName());
+        holder.userName.setText(Pronouns.span(user.getUser().getName(), user.getUser().getPronouns()));
         holder.schoolDomain.setText(user.getDomain());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {

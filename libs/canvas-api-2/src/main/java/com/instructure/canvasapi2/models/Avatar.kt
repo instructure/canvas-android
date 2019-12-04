@@ -25,7 +25,8 @@ data class Avatar(
         var url: String? = null,
         var token: String? = null,
         @SerializedName("display_name")
-        var displayName: String? = null
+        var displayName: String? = null,
+        val pronouns: String? = null
 ) : CanvasComparable<Avatar>() {
     override val comparisonString get() = displayName
 }

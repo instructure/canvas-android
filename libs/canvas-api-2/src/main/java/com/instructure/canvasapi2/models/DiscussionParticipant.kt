@@ -25,6 +25,7 @@ data class DiscussionParticipant(
         override var id: Long = 0,
         @SerializedName("display_name")
         var displayName: String? = null,
+        val pronouns: String? = null,
         @SerializedName("avatar_image_url")
         var avatarImageUrl: String? = null,
         @SerializedName("html_url")

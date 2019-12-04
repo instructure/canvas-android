@@ -94,6 +94,7 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
                 Recipient(
                     stringId = it.destination,
                     name = it.name,
+                    pronouns = it.pronouns,
                     userCount = it.userCount,
                     itemCount = it.itemCount,
                     avatarURL = it.avatarUrl
@@ -443,7 +444,13 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
             }
 
             // Create RecipientEntry from Recipient and add to list
-            val recipientEntry = RecipientEntry(recipientUser.id, recipientUser.name, recipientUser.id.toString(), "", recipientUser.avatarUrl, 0, 0, true, null, null)
+            val recipientEntry = RecipientEntry(
+                recipientUser.id,
+                recipientUser.name,
+                recipientUser.pronouns,
+                recipientUser.id.toString(),
+                "", recipientUser.avatarUrl, 0, 0, true, null, null
+            )
             recipient.appendRecipientEntry(recipientEntry)
 
         }
@@ -469,6 +476,7 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
                 val recipientEntry = RecipientEntry(
                     it.idAsLong,
                     it.name,
+                    it.pronouns,
                     it.stringId,
                     "",
                     it.avatarURL,
