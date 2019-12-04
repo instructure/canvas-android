@@ -287,6 +287,10 @@ class AppLocalizations {
 
   /// Courses Screen
 
+  String get noCoursesTitle => Intl.message('No Courses', desc: 'Title for having no courses');
+
+  String get noCoursesMessage => Intl.message("Your child’s courses might not be published yet.", desc: 'Message for having no courses');
+
   String get noGrade => Intl.message(
         'No Grade',
         desc: 'Message shown when there is currently no grade available for a course',

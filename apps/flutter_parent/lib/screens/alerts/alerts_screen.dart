@@ -17,6 +17,7 @@ import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/alert.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/screens/alerts/alerts_interactor.dart';
+import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/full_screen_scroll_container.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
@@ -80,8 +81,9 @@ class _AlertsScreenState extends State<AlertsScreen> {
     return FullScreenScrollContainer(children: [Text(AppLocalizations.of(context).unexpectedError)]);
   }
 
+  // TODO: This needs a design (image, title, subtitle)
   Widget _empty(BuildContext context) {
-    return FullScreenScrollContainer(children: [Text(AppLocalizations.of(context).noAlertsMessage)]);
+    return EmptyPandaWidget(subtitle: L10n(context).noAlertsMessage);
   }
 }
 

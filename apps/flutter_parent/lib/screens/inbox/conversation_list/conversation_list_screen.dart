@@ -18,12 +18,12 @@ import 'package:flutter_parent/models/conversation.dart';
 import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/avatar.dart';
+import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/design/canvas_icons_solid.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 
 import 'conversation_list_interactor.dart';
@@ -197,35 +197,11 @@ class ConversationListState extends State<ConversationListScreen> {
     );
   }
 
-  LayoutBuilder _emptyState(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return SingleChildScrollView(
-          physics: AlwaysScrollableScrollPhysics(),
-          child: Container(
-            height: constraints.maxHeight,
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  SvgPicture.asset('assets/svg/panda-inbox-zero.svg'),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 64, bottom: 8),
-                    child: Text(
-                      L10n(context).emptyInboxTitle,
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  Text(
-                    L10n(context).emptyInboxSubtitle,
-                    style: Theme.of(context).textTheme.caption.copyWith(fontSize: 16),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
+  Widget _emptyState(BuildContext context) {
+    return EmptyPandaWidget(
+      svgPath: 'assets/svg/panda-inbox-zero.svg',
+      title: L10n(context).emptyInboxTitle,
+      subtitle: L10n(context).emptyInboxSubtitle,
     );
   }
 
