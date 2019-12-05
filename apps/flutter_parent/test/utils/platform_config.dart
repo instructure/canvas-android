@@ -12,19 +12,26 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import 'package:flutter_parent/api/auth_api.dart';
-import 'package:flutter_parent/api/utils/api_prefs.dart';
-import 'package:flutter_parent/models/mobile_verify_result.dart';
-import 'package:flutter_parent/utils/service_locator.dart';
+import 'dart:core';
 
-class WebLoginInteractor {
-  Future<MobileVerifyResult> mobileVerify(String domain) {
-    return locator<AuthApi>().mobileVerify(domain);
-  }
+class PlatformConfig {
+  final bool initPackageInfo;
+  final bool initWebview;
 
-  Future performLogin(MobileVerifyResult result, String oAuthRequest) async {
-    final tokens = await locator<AuthApi>().getTokens(result, oAuthRequest);
+  final Map<String, dynamic> mockPrefs;
 
-    await ApiPrefs.updateLoginInfo(tokens, result);
+  final _testPrefix = 'flutter.';
+
+  const PlatformConfig({
+    this.initPackageInfo = true,
+    this.initWebview = false,
+    this.mockPrefs = const {},
+  });
+
+  /// SharedPreferences requires that test configurations use 'flutter.' at the beginning of keys in the map
+  Map<String, dynamic> get safeMockPrefs => mockPrefs.map((k, v) => MapEntry(_testKey(k), v));
+
+  String _testKey(String key) {
+    return key.startsWith(_testPrefix) ? key : '$_testPrefix$key';
   }
 }

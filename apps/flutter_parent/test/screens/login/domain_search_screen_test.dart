@@ -27,7 +27,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mockito/mockito.dart';
 
-import '../utils/test_app.dart';
+import '../../utils/test_app.dart';
 
 void main() {
   _setupLocator(MockInteractor interactor, {WebLoginInteractor webInteractor}) {
