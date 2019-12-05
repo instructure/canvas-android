@@ -153,7 +153,6 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (context != null) throw 'tralala';
     return DefaultParentTheme(
       builder: (context) => WillPopScope(
         onWillPop: _onWillPop,
