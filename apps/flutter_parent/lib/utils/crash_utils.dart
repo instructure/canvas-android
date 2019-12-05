@@ -12,16 +12,18 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import 'package:flutter/material.dart';
-import 'package:flutter_parent/api/utils/api_prefs.dart';
-import 'package:flutter_parent/parent_app.dart';
-import 'package:flutter_parent/utils/crash_utils.dart';
-import 'package:flutter_parent/utils/service_locator.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_parent/screens/crash_screen.dart';
 
-void main() async {
-  CrashUtils.init(); // Sets up crash screen widget and crash report behavior
-  setupLocator();
-  await ApiPrefs.init();
+class CrashUtils {
+  static init() {
+    // Set up custom crash screen
+    ErrorWidget.builder = (error) => CrashScreen(error);
 
-  runApp(ParentApp());
+    // Set up error handling
+    FlutterError.onError = (error) {
+      // TODO: Report error to firebase/crashlytics
+      FlutterError.dumpErrorToConsole(error);
+    };
+  }
 }

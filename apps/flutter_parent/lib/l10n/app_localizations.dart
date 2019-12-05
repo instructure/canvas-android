@@ -216,6 +216,36 @@ class AppLocalizations {
       desc: 'The body text shown in the help dialog on the domain search screen',
       args: [canvasGuides, canvasSupport]);
 
+  /// Crash screen
+
+  String get crashScreenTitle =>
+      Intl.message('Uh oh!', desc: 'Title of the screen that shows when a crash has occurred');
+
+  String get crashScreenMessage =>
+      Intl.message('We’re not sure what happened, but it wasn’t good. Contact us if this keeps happening.',
+          desc: 'Message shown when a crash has occurred');
+
+  String get crashScreenContact => Intl.message('Contact Support',
+      desc: 'Label for the button that allows users to contact support after a crash has occurred');
+
+  String get crashScreenViewDetails =>
+      Intl.message('View error details', desc: 'Label for the button that allowed users to view crash details');
+
+  String get crashScreenRestart =>
+      Intl.message('Restart app', desc: 'Label for the button that will restart the entire application');
+
+  String get crashDetailsAppVersion =>
+      Intl.message('Application version', desc: 'Label for the application version displayed in the crash details');
+
+  String get crashDetailsDeviceModel =>
+      Intl.message('Device model', desc: 'Label for the device model displayed in the crash details');
+
+  String get crashDetailsAndroidVersion => Intl.message('Android OS version',
+      desc: 'Label for the Android operating system version displayed in the crash details');
+
+  String get crashDetailsFullMessage =>
+      Intl.message('Full error message', desc: 'Label for the full error message displayed in the crash details');
+
   /// Inbox
 
   String get inbox => Intl.message('Inbox', desc: 'Title for the Inbox screen');
