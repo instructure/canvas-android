@@ -20,6 +20,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_parent/api/utils/api_prefs.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
+import 'package:flutter_parent/utils/common_widgets/respawn.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -58,6 +59,7 @@ class _TestAppState extends State<TestApp> {
     SharedPreferences.setMockInitialValues(widget.mockPrefs);
 
     setupPackageInfoMockValues();
+    setupDeviceInfoMockValues();
 
     // Init api prefs here so that each test doesn't have to
     ApiPrefs.init();
@@ -65,23 +67,25 @@ class _TestAppState extends State<TestApp> {
 
   @override
   Widget build(BuildContext context) {
-    return ParentTheme(
-      initWithDarkMode: widget.darkMode,
-      initWithHCMode: widget.highContrast,
-      builder: (context, themeData) => MaterialApp(
-        title: 'Canvas Parent',
-        locale: _locale,
-        navigatorObservers: widget.navigatorObservers,
-        localizationsDelegates: const [
-          AppLocalizations.delegate,
-          // Material components use these delegate to provide default localization
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-        ],
-        supportedLocales: AppLocalizations.delegate.supportedLocales,
-        localeResolutionCallback: _localeCallback(),
-        theme: themeData,
-        home: Material(child: widget.home),
+    return Respawn(
+      child: ParentTheme(
+        initWithDarkMode: widget.darkMode,
+        initWithHCMode: widget.highContrast,
+        builder: (context, themeData) => MaterialApp(
+          title: 'Canvas Parent',
+          locale: _locale,
+          navigatorObservers: widget.navigatorObservers,
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            // Material components use these delegate to provide default localization
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+          ],
+          supportedLocales: AppLocalizations.delegate.supportedLocales,
+          localeResolutionCallback: _localeCallback(),
+          theme: themeData,
+          home: Material(child: widget.home),
+        ),
       ),
     );
   }
@@ -110,6 +114,44 @@ class _TestAppState extends State<TestApp> {
           'packageName': 'com.instructure',
           'version': '1.0.0',
           'buildNumber': '3'
+        };
+      }
+      return null;
+    });
+  }
+
+  void setupDeviceInfoMockValues() {
+    const MethodChannel('plugins.flutter.io/device_info').setMockMethodCallHandler((MethodCall methodCall) async {
+      if (methodCall.method == 'getAndroidDeviceInfo') {
+        return <String, dynamic>{
+          'version': <String, dynamic>{
+            'baseOS': 'fake-baseOD',
+            'codename': 'fake-codename',
+            'incremental': 'fake-incremental',
+            'previewSdkInt': 9001,
+            'release': 'FakeOS 9000',
+            'sdkInt': 9000,
+            'securityPatch': 'fake-securityPatch',
+          },
+          'board': 'fake-board',
+          'bootloader': 'fake-bootloader',
+          'brand': 'Canvas',
+          'device': 'fake-device',
+          'display': 'fake-display',
+          'fingerprint': 'fake-fingerprint',
+          'hardware': 'fake-hardware',
+          'host': 'fake-host',
+          'id': 'fake-id',
+          'manufacturer': 'Instructure',
+          'model': 'Canvas Phone',
+          'product': 'fake-product',
+          'supported32BitAbis': [],
+          'supported64BitAbis': [],
+          'supportedAbis': [],
+          'tags': 'fake-tags',
+          'type': 'take-types',
+          'isPhysicalDevice': false,
+          'androidId': 'fake-androidId',
         };
       }
       return null;
