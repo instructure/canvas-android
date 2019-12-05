@@ -16,7 +16,6 @@ import 'dart:core';
 
 class PlatformConfig {
   final bool initPackageInfo;
-  final bool initPrefs;
   final bool initWebview;
 
   final Map<String, dynamic> mockPrefs;
@@ -25,7 +24,6 @@ class PlatformConfig {
 
   const PlatformConfig({
     this.initPackageInfo = true,
-    this.initPrefs = true,
     this.initWebview = false,
     this.mockPrefs = const {},
   });

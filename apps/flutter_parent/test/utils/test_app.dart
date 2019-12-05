@@ -105,8 +105,8 @@ void setupTestLocator(config(GetIt locator)) {
   config(locator);
 }
 
-/// Set up the platform channels used by the app. Every section is configurable, with webviews being the only thing to 
-/// default to false.
+/// Set up the platform channels used by the app.
+///
 /// Returned is a future that completes when all async tasks spawned by this method call have completed. Waiting isn't
 /// required, though is probably good practice and results in more stable tests.
 Future<void> setupPlatformChannels({PlatformConfig config = const PlatformConfig()}) {
@@ -125,7 +125,7 @@ Future<void> setupPlatformChannels({PlatformConfig config = const PlatformConfig
   }
 
   Future<void> apiPrefsInitFuture;
-  if (config.initPrefs) {
+  if (config.mockPrefs != null) {
     SharedPreferences.setMockInitialValues(config.safeMockPrefs);
     apiPrefsInitFuture = ApiPrefs.init();
   }
