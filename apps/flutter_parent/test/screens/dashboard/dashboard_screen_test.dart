@@ -33,6 +33,7 @@ import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../utils/accessibility_utils.dart';
+import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
 
 void main() {
@@ -258,12 +259,13 @@ void main() {
     _setupLocator(MockInteractor());
 
     // Setup prefs and test that we are logged in
-    SharedPreferences.setMockInitialValues({
-      'flutter.${ApiPrefs.KEY_ACCESS_TOKEN}': 'token',
-      'flutter.${ApiPrefs.KEY_DOMAIN}': 'domain',
-    });
+    await setupPlatformChannels(
+      config: PlatformConfig(mockPrefs: {
+        ApiPrefs.KEY_ACCESS_TOKEN: 'token',
+        ApiPrefs.KEY_DOMAIN: 'domain',
+      }),
+    );
 
-    await ApiPrefs.init();
     expect(ApiPrefs.isLoggedIn(), true);
 
     await tester.pumpWidget(_testableMaterialWidget());
@@ -295,25 +297,6 @@ void main() {
 //    // Change inbox notifier value
 //    // TODO: Implement when we get the Inbox api up and going
 //  });
-
-  setUpAll(() {
-    // Setup for package_info
-    const MethodChannel channel = MethodChannel('plugins.flutter.io/package_info');
-    channel.setMockMethodCallHandler((MethodCall methodCall) async {
-      switch (methodCall.method) {
-        case 'getAll':
-          return <String, dynamic>{
-            'appName': 'android_parent',
-            'buildNumber': '10',
-            'packageName': 'com.instructure.parentapp',
-            'version': '2.0.0',
-          };
-        default:
-          assert(false);
-          return null;
-      }
-    });
-  });
 }
 
 class MockAlertsInteractor extends AlertsInteractor {}
