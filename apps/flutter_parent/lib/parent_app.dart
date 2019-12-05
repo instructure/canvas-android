@@ -19,6 +19,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_parent/api/utils/api_prefs.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
+import 'package:flutter_parent/screens/dashboard/dashboard_screen.dart';
 import 'package:flutter_parent/screens/login_landing_screen.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 
@@ -55,7 +56,7 @@ class _ParentAppState extends State<ParentApp> {
         supportedLocales: AppLocalizations.delegate.supportedLocales,
         localeResolutionCallback: _localeCallback(),
         theme: themeData,
-        home: LoginLandingScreen(),
+        home: ApiPrefs.isLoggedIn() ? DashboardScreen() : LoginLandingScreen(),
       ),
     );
   }

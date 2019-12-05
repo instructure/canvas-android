@@ -57,7 +57,7 @@ void main() {
 
     when(interactor.getConversations()).thenAnswer((_) => Future.value([]));
 
-    await tester.pumpWidget(TestApp(ConversationListScreen(), highContrast: true));
+    await tester.pumpWidget(TestApp(ConversationListScreen()));
     await tester.pumpAndSettle();
 
     expect(find.byType(SvgPicture), findsOneWidget);
