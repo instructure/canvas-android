@@ -12,7 +12,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/widgets.dart';
 
 /// Widget that can be respawned with a clean state. To perform respawn, call Respawn.of(context).kill()
 class Respawn extends StatefulWidget {
@@ -31,7 +31,7 @@ class Respawn extends StatefulWidget {
 class _RespawnState extends State<Respawn> {
   Key _key = GlobalKey();
 
-  kill() => setState(() => _key = UniqueKey());
+  restart() => setState(() => _key = UniqueKey());
 
   @override
   Widget build(BuildContext context) {

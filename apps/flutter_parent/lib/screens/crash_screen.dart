@@ -13,7 +13,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:device_info/device_info.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
@@ -30,11 +29,13 @@ class CrashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        iconTheme: Theme.of(context).iconTheme,
-      ),
+      appBar: ModalRoute.of(context)?.canPop ?? false
+          ? AppBar(
+              elevation: 0,
+              backgroundColor: Colors.transparent,
+              iconTheme: Theme.of(context).iconTheme,
+            )
+          : null,
       body: _body(context),
       bottomNavigationBar: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -110,7 +111,7 @@ class CrashScreen extends StatelessWidget {
 
   FlatButton _restartButton(BuildContext context) {
     return FlatButton(
-      onPressed: () => Respawn.of(context).kill(),
+      onPressed: () => Respawn.of(context).restart(),
       child: Text(
         L10n(context).crashScreenRestart,
         style: Theme.of(context).textTheme.subtitle,
@@ -132,10 +133,11 @@ class CrashScreen extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        contentPadding: EdgeInsets.all(8),
+        contentPadding: EdgeInsets.all(0),
         content: Container(
           width: double.maxFinite,
           child: ListView(
+            padding: EdgeInsets.all(8),
             shrinkWrap: true,
             children: <Widget>[
               ListTile(

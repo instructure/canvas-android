@@ -12,7 +12,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/utils/common_widgets/respawn.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -81,7 +80,7 @@ class _RespawnTestWidgetState extends State<_RespawnTestWidget> {
             key: _RespawnTestWidget.respawnKey,
             child: Text('Tap to Respawn'),
             onPressed: () {
-              Respawn.of(context).kill();
+              Respawn.of(context).restart();
             },
           ),
         ],
