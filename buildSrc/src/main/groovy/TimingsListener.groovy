@@ -33,8 +33,8 @@ class TimingsListener implements TaskExecutionListener, BuildListener {
     @Override
     void buildFinished(BuildResult result) {
 
-        // Grab the Sumologic endpoint from Bitrise
-        def sumologicEndpoint = System.getenv("SUMOLOGIC_BUILD_ENDPOINT")
+        // Grab the Splunk-mobile token from Bitrise
+        def splunkToken = System.getenv("SPLUNK_MOBILE_TOKEN")
 
         // Let's abort early if (1) the build failed, or (2) we're not on bitrise
         if(result.failure != null) {
@@ -42,7 +42,7 @@ class TimingsListener implements TaskExecutionListener, BuildListener {
             return
         }
 
-        if(sumologicEndpoint == null || sumologicEndpoint.isEmpty()) {
+        if(splunkToken == null || splunkToken.isEmpty()) {
             println("Build report logic aborting because we're not on bitrise")
             return
         }
@@ -90,8 +90,7 @@ class TimingsListener implements TaskExecutionListener, BuildListener {
 
         // Instruct the builder as to how to build our payload
         def payloadBuilder = new groovy.json.JsonBuilder()
-        payloadBuilder event: "buildComplete",
-            buildTime: cumulativeTime,
+        payloadBuilder buildTime: cumulativeTime,
             gradleTasks: startTaskNames,
             apkFilePath: file.path,
             apkSize: fileSizeInMB,
@@ -109,7 +108,8 @@ class TimingsListener implements TaskExecutionListener, BuildListener {
         // Let's issue our curl command to emit our data
         refProject.exec {
             executable "curl"
-            args "-X", "POST", "-H", "Content-Type: application/json", "-d", payload, sumologicEndpoint
+            args "-k", "https://http-inputs-inst.splunkcloud.com:443/services/collector", "-H", "Authorization: Splunk $splunkToken",
+                    "-d", "{\"sourcetype\" : \"mobile-android-build\", \"event\" : $payload}"
         }
 
     }
