@@ -108,7 +108,7 @@ class TimingsListener implements TaskExecutionListener, BuildListener {
         // Let's issue our curl command to emit our data
         refProject.exec {
             executable "curl"
-            args "-k", "https://http-inputs-inst.splunkcloud.com:443/services/collector", "-h", "Authorization: Splunk $splunkToken",
+            args "-k", "https://http-inputs-inst.splunkcloud.com:443/services/collector", "-H", "Authorization: Splunk $splunkToken",
                     "-d", "{\"sourcetype\" : \"mobile-android-build\", \"event\" : $payload}"
         }
 
