@@ -54,7 +54,7 @@ class _ThemeViewerScreenState extends State<ThemeViewerScreen> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2,
+      length: 3,
       child: Scaffold(
         key: ThemeViewerScreen.scaffoldKey,
         drawer: Drawer(
@@ -103,6 +103,7 @@ class _ThemeViewerScreenState extends State<ThemeViewerScreen> {
             tabs: [
               Tab(text: "Widgets"),
               Tab(text: "Text Styles"),
+              Tab(text: 'Icons'),
             ],
           ),
         ),
@@ -111,6 +112,7 @@ class _ThemeViewerScreenState extends State<ThemeViewerScreen> {
             children: [
               _content(context),
               _textStyles(context),
+              _icons(context),
             ],
           ),
         ),
@@ -415,5 +417,17 @@ class _ThemeViewerScreenState extends State<ThemeViewerScreen> {
         ),
       ),
     );
+  }
+
+  Widget _icons(BuildContext context) {
+    return GridView.count(crossAxisCount: 3,
+      children: List.generate(CanvasIcons.allIcons.length, (idx) {
+        return Column(
+          children: <Widget>[
+            Icon(CanvasIcons.allIcons[idx][1]),
+            Text(CanvasIcons.allIcons[idx][0])
+          ],
+        );
+      }));
   }
 }

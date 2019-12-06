@@ -154,7 +154,8 @@ class AppLocalizations {
 
   /// Navigation Drawer
   String get manageStudents =>
-      Intl.message('Manage Students', desc: 'Label text for the Manage Students nav drawer button');
+      Intl.message('Manage Students',
+          desc: 'Label text for the Manage Students nav drawer button as well as the title for the Manage Students screen');
 
   String get help => Intl.message('Help', desc: 'Label text for the help nav drawer button');
 
@@ -428,6 +429,29 @@ class AppLocalizations {
   String get attachmentPreparing =>
       Intl.message('Preparing…', desc: 'Message shown while a file is being prepared to attach to a message');
 
+  /// Manage Students
+  String get addStudentWith => Intl.message('Add student with...');
+
+  String get addStudent => Intl.message('Add Student');
+
+  String get errorLoadingStudents => Intl.message('There was an error loading your students.');
+
+  String get pairingCode => Intl.message('Pairing Code');
+
+  String get pairingCodeEntryExplanation =>
+      Intl.message(
+          'Enter the student pairing code provided to you. If the pairing code doesn\'t work, it may have expired');
+
+  String get pairingFailed =>
+      Intl.message('Pairing Failed. Make sure your pairing code is correct and within the time limit of use.');
+
+  String get qrCode => Intl.message('QR Code');
+
+  String get addNewStudent =>
+      Intl.message('Add new student', desc: 'Semantics label for the FAB on the Manage Students Screen');
+
+
+
   /// Miscellaneous
 
   String get next => Intl.message('Next', name: 'next');
@@ -437,6 +461,8 @@ class AppLocalizations {
   String get yes => Intl.message('Yes');
 
   String get no => Intl.message('No');
+
+  String get cancel => Intl.message('Cancel');
 
   String get retry => Intl.message("Retry");
 

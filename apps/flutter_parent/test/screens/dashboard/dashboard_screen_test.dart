@@ -28,24 +28,30 @@ import 'package:flutter_parent/screens/courses/courses_screen.dart';
 import 'package:flutter_parent/screens/dashboard/dashboard_interactor.dart';
 import 'package:flutter_parent/screens/dashboard/dashboard_screen.dart';
 import 'package:flutter_parent/screens/login_landing_screen.dart';
+import 'package:flutter_parent/screens/manage_students/manage_students_interactor.dart';
+import 'package:flutter_parent/screens/manage_students/manage_students_screen.dart';
+import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../utils/accessibility_utils.dart';
+import '../../utils/network_image_response.dart';
 import '../../utils/test_app.dart';
 
 void main() {
-  _setupLocator(MockInteractor interactor) {
+  _setupLocator([MockInteractor interactor]) {
     final _locator = GetIt.instance;
     _locator.reset();
-    _locator.registerFactory<DashboardInteractor>(() => interactor);
+    _locator.registerFactory<DashboardInteractor>(() => interactor ?? MockInteractor());
     _locator.registerFactory<CoursesInteractor>(() => MockCoursesInteractor());
     _locator.registerFactory<AlertsInteractor>(() => MockAlertsInteractor());
+    _locator.registerFactory<ManageStudentsInteractor>(() => MockManageStudentsInteractor());
     _locator.registerLazySingleton<AlertsApi>(() => AlertsApiMock());
+    _locator.registerLazySingleton<QuickNav>(() => QuickNav());
   }
 
-  Widget _testableMaterialWidget([Widget widget]) => TestApp(Scaffold(body: widget ?? DashboardScreen()));
+  Widget _testableMaterialWidget([Widget widget]) => TestApp(Scaffold(body: widget ?? DashboardScreen()),);
 
   testWidgetsWithAccessibilityChecks('Displays name with pronouns when pronouns are not null', (tester) async {
     _setupLocator(MockInteractor(includePronouns: true));
@@ -64,7 +70,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Displays name without pronouns when pronouns are null', (tester) async {
-    _setupLocator(MockInteractor());
+    _setupLocator();
 
     // Get the first user
     var interactor = GetIt.instance.get<DashboardInteractor>();
@@ -118,7 +124,7 @@ void main() {
 
   testWidgetsWithAccessibilityChecks('Nav drawer displays observer name without pronouns, and email address',
       (tester) async {
-    _setupLocator(MockInteractor());
+    _setupLocator();
 
     // Get the first user
     var interactor = GetIt.instance.get<DashboardInteractor>();
@@ -144,7 +150,7 @@ void main() {
 //  });
 
   testWidgetsWithAccessibilityChecks('Courses is the default content screen', (tester) async {
-    _setupLocator(MockInteractor());
+    _setupLocator();
 
     await tester.pumpWidget(_testableMaterialWidget());
     await tester.pumpAndSettle();
@@ -153,7 +159,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Clicking courses in the bottom nav shows courses screen', (tester) async {
-    _setupLocator(MockInteractor());
+    _setupLocator();
 
     await tester.pumpWidget(_testableMaterialWidget());
     await tester.pumpAndSettle();
@@ -189,7 +195,7 @@ void main() {
 //  });
 
   testWidgetsWithAccessibilityChecks('Clicking alerts sets correct current page index', (tester) async {
-    _setupLocator(MockInteractor());
+    _setupLocator();
 
     await tester.pumpWidget(_testableMaterialWidget());
     await tester.pumpAndSettle();
@@ -207,7 +213,7 @@ void main() {
 //    await tester.pumpWidget(_testableMaterialWidget());
 //    await tester.pumpAndSettle();
 //
-//    // Open the nave drawer
+//    // Open the nav drawer
 //    DashboardScreen.scaffoldKey.currentState.openDrawer();
 //    await tester.pumpAndSettle();
 //
@@ -218,21 +224,25 @@ void main() {
 //
 //  });
 
-//  testWidgetsWithAccessibilityChecks('Clicking Manage Students from nav drawer opens manage students page', (tester) async {
-//    _setupLocator(MockInteractor());
-//
-//    await tester.pumpWidget(_testableMaterialWidget());
-//    await tester.pumpAndSettle();
-//
-//    // Open the nave drawer
-//    DashboardScreen.scaffoldKey.currentState.openDrawer();
-//    await tester.pumpAndSettle();
-//
-//    // Click on Manage Students
-//    await tester.tap(find.text(AppLocalizations().manageStudents));
-//
-//    // TODO: Test that Manage Students screen was loaded
-//  });
+  testWidgetsWithAccessibilityChecks(
+      'Clicking Manage Students from nav drawer opens manage students page', (tester) async {
+    _setupLocator();
+    mockNetworkImageResponse();
+
+    await tester.pumpWidget(_testableMaterialWidget());
+    await tester.pumpAndSettle();
+
+    // Open the nav drawer
+    DashboardScreen.scaffoldKey.currentState.openDrawer();
+    await tester.pumpAndSettle();
+
+    // Click on Manage Students
+    await tester.tap(find.text(AppLocalizations().manageStudents));
+    await tester.pumpAndSettle(Duration(seconds: 3));
+
+    // Test that Manage Students screen was loaded
+    expect(find.byType(ManageStudentsScreen), findsOneWidget);
+  });
 
 //  testWidgetsWithAccessibilityChecks('Clicking Help from nav drawer signs user out', (tester) async {
 //    _setupLocator(MockInteractor());
@@ -240,14 +250,14 @@ void main() {
 //    await tester.pumpWidget(_testableMaterialWidget());
 //    await tester.pumpAndSettle();
 //
-//    // Open the nave drawer
+//    // Open the nav drawer
 //    DashboardScreen.scaffoldKey.currentState.openDrawer();
 //    await tester.pumpAndSettle();
 //
 //    // Click on Help
 //    await tester.tap(find.text(AppLocalizations().help));
 //
-//    // TODO: Test that Manage Students screen was loaded
+//    // TODO: Test that Help screen was loaded
 //  });
 
   // Not using the accessibility tester due to an issue where the
@@ -255,7 +265,7 @@ void main() {
   // (the tests for that screen all pass accessibility checks, however)
   testWidgets('Clicking Sign Out from nav drawer signs user out and returns to the Login Landing screen',
       (tester) async {
-    _setupLocator(MockInteractor());
+    _setupLocator();
 
     // Setup prefs and test that we are logged in
     SharedPreferences.setMockInitialValues({
@@ -283,7 +293,7 @@ void main() {
   });
 
 //  testWidgetsWithAccessibilityChecks('Updating the inbox notifier value updates in the nav drawer', (tester) async {
-//    _setupLocator(MockInteractor());
+//    _setupLocator();
 //
 //    await tester.pumpWidget(_testableMaterialWidget());
 //    await tester.pumpAndSettle();
@@ -348,6 +358,11 @@ class MockCoursesInteractor extends CoursesInteractor {
     var courses = await [];
     return courses;
   }
+}
+
+class MockManageStudentsInteractor extends ManageStudentsInteractor {
+  @override
+  Future<List<User>> getStudents() async => Future.value([]);
 }
 
 User _mockUser(String name, {String pronouns, String primaryEmail}) => User((b) => b

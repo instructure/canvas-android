@@ -10,17 +10,16 @@
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// along with this program.  If not, see <http://www.gnu.org/licenses/>. 
 
-import 'package:flutter/material.dart';
-import 'package:flutter_parent/api/utils/api_prefs.dart';
-import 'package:flutter_parent/parent_app.dart';
-import 'package:flutter_parent/screens/manage_students/manage_students_screen.dart';
-import 'package:flutter_parent/utils/service_locator.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_parent/l10n/app_localizations.dart';
+import 'package:flutter_parent/utils/common_widgets/full_screen_scroll_container.dart';
 
-void main() async {
-  setupLocator();
-  await ApiPrefs.init();
+class ManageStudentsErrorScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return FullScreenScrollContainer(children: [Text(AppLocalizations.of(context).unexpectedError)]);
+  }
 
-  runApp(ParentApp());
 }

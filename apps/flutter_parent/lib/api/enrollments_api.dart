@@ -21,7 +21,7 @@ class EnrollmentsApi {
   static Future<List<Enrollment>> getObserveeEnrollments() async {
     var observeesResponse = await Dio().get(ApiPrefs.getApiUrl() + 'users/self/enrollments',
         queryParameters: {
-          'include': ['observed_users', 'avatar_url'],
+          'include': ['observed_users', 'avatar_url', 'primary_email'],
           'state': ['creation_pending', 'invited', 'active']
         },
         options: Options(headers: ApiPrefs.getHeaderMap()));
@@ -45,4 +45,15 @@ class EnrollmentsApi {
       return Future.error(enrollmentResponse.statusMessage);
     }
   }
+
+  Future<bool> pairWithStudent(String pairingCode) async {
+    var pairingResponse = await Dio().get(ApiPrefs.getApiUrl(path: 'users/${ApiPrefs.getUser().id}/observees'),
+      queryParameters: {
+      'pairing_code': pairingCode
+      },
+      options: Options(headers: ApiPrefs.getHeaderMap()));
+
+     return (pairingResponse.statusCode == 200 || pairingResponse.statusCode == 201);
+  }
+
 }
