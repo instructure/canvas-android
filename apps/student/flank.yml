@@ -12,7 +12,8 @@ gcloud:
   record-video: true
   timeout: 60m
   test-targets:
-  - notAnnotation com.instructure.canvas.espresso.E2E, com.instructure.canvas.espresso.Stub
+#  - notAnnotation com.instructure.canvas.espresso.E2E, com.instructure.canvas.espresso.Stub
+  - class com.instructure.student.ui.interaction.UserFilesInteractionTest
   device:
   - model: NexusLowRes
     version: 25
@@ -20,6 +21,6 @@ gcloud:
     orientation: portrait
 
 flank:
-  testShards: 10
+  testShards: 1
   testRuns: 1
 
