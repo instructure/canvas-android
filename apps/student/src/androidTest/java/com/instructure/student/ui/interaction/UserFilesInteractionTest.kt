@@ -21,7 +21,6 @@ import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.ui.utils.StudentTest
-import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class UserFilesInteractionTest : StudentTest() {
@@ -32,7 +31,6 @@ class UserFilesInteractionTest : StudentTest() {
     @TestMetaData(Priority.P1, FeatureCategory.FILES, TestCategory.INTERACTION, true)
     fun testUpload_deviceFile() {
         // Should be able to upload a file from the user's device
-        assertTrue("Intentional Fail", false)
     }
 
     @Stub
