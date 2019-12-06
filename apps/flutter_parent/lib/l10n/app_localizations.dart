@@ -100,13 +100,10 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
       return fallback ?? supported.first;
     }
 
-    final languageLocale = Locale(locale.languageCode, "");
     if (supported.contains(locale)) {
       return locale;
-    } else if (supported.contains(languageLocale)) {
-      return languageLocale;
     } else {
-      return fallback ?? supported.first;
+      return Locale(locale.languageCode, "");
     }
   }
 }
