@@ -18,8 +18,6 @@ import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 
-import 'full_screen_scroll_container.dart';
-
 /// Displays the error page used throughout the app
 /// Contains a warning icon, an error message, and a retry button.
 ///

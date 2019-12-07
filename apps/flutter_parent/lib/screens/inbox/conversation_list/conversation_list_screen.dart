@@ -99,10 +99,9 @@ class ConversationListState extends State<ConversationListScreen> {
   }
 
   Widget _errorState(BuildContext context) {
-    return ErrorPandaWidget(loadTarget: L10n(context).errorLoadingMessages,
-        callback: () {
-          _refreshIndicatorKey.currentState.show();
-        });
+    return ErrorPandaWidget(L10n(context).errorLoadingMessages, () {
+      _refreshIndicatorKey.currentState.show();
+    });
   }
 
   Widget _loadingState(BuildContext context) => Center(child: CircularProgressIndicator());

@@ -14,14 +14,12 @@
 
 import 'dart:ui';
 
-import 'package:flutter/services.dart';
 import 'package:flutter_parent/api/utils/api_prefs.dart';
 import 'package:flutter_parent/models/canvas_token.dart';
 import 'package:flutter_parent/models/mobile_verify_result.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:mockito/mockito.dart';
 import 'package:package_info/package_info.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test/test.dart';
 
 import '../utils/platform_config.dart';

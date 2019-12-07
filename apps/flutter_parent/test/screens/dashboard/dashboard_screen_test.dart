@@ -15,7 +15,6 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_parent/api/alert_api.dart';
 import 'package:flutter_parent/api/utils/api_prefs.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
@@ -30,7 +29,6 @@ import 'package:flutter_parent/screens/dashboard/dashboard_screen.dart';
 import 'package:flutter_parent/screens/login_landing_screen.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../utils/accessibility_utils.dart';
 import '../../utils/platform_config.dart';
