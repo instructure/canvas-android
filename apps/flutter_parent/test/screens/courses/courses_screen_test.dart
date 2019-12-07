@@ -71,6 +71,18 @@ void main() {
     expect(listTileWidget, findsNWidgets(courses.length));
   });
 
+  testWidgetsWithAccessibilityChecks('shows empty message after load', (tester) async {
+    var student = _mockStudent(1);
+
+    _setupLocator(_MockCoursesInteractor(courses: []));
+
+    await tester.pumpWidget(_testableMaterialWidget(CoursesScreen(student)));
+    await tester.pumpAndSettle();
+
+    expect(find.text(AppLocalizations().noCoursesTitle), findsOneWidget);
+    expect(find.text(AppLocalizations().noCoursesMessage), findsOneWidget);
+  });
+
   testWidgetsWithAccessibilityChecks('shows no grade if there is no current grade', (tester) async {
     var student = _mockStudent(1);
     var courses = generateCoursesForStudent(student.id);

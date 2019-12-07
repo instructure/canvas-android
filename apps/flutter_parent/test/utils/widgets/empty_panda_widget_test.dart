@@ -18,6 +18,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../accessibility_utils.dart';
+import '../test_app.dart';
 
 void main() {
   final svgPath = 'assets/svg/panda-space-no-assignments.svg';
@@ -93,9 +94,5 @@ void main() {
 }
 
 Widget _testableWidget(EmptyPandaWidget child) {
-  return MaterialApp(
-    home: Scaffold(
-      body: child,
-    ),
-  );
+  return TestApp(Scaffold(body: child));
 }

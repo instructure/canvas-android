@@ -51,7 +51,7 @@ void main() {
     _setupLocator(interactor: interactor);
 
     // Pump the widget
-    await tester.pumpWidget(_testableWidget(model, highContrastMode: true));
+    await tester.pumpWidget(_testableWidget(model));
     await tester.pump();
 
     // Should have the refresh indicator
@@ -95,7 +95,7 @@ void main() {
     final model = CourseDetailsModel(studentId, courseId);
     model.assignmentGroupFuture = Future.value([_mockAssignmentGroup()]); // Create an empty assignment group
 
-    await tester.pumpWidget(_testableWidget(model, highContrastMode: true));
+    await tester.pumpWidget(_testableWidget(model));
     await tester.pump(); // Build the widget
     await tester.pump(); // Let the future finish
 

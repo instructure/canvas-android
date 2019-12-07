@@ -18,6 +18,7 @@ import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/models/course_grade.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_screen.dart';
+import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:intl/intl.dart';
@@ -75,10 +76,19 @@ class _CoursesScreenState extends State<CoursesScreen> {
 
     if (_loading) return Center(child: CircularProgressIndicator());
 
+    final studentCourses = _courses.where(_enrollmentFilter);
+
+    if (studentCourses.isEmpty)
+      return EmptyPandaWidget(
+        svgPath: 'assets/svg/panda-book.svg',
+        title: L10n(context).noCoursesTitle,
+        subtitle: L10n(context).noCoursesMessage,
+      );
+
     return ListView(
         scrollDirection: Axis.vertical,
         physics: const AlwaysScrollableScrollPhysics(),
-        children: _courses.where(_enrollmentFilter).map((course) {
+        children: studentCourses.map((course) {
           return ListTile(
             onTap: () => _courseTapped(context, course),
             title: Column(

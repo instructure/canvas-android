@@ -19,8 +19,8 @@ import 'package:flutter_parent/screens/login_landing_screen.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../utils/accessibility_utils.dart';
-import '../utils/test_app.dart';
+import '../../utils/accessibility_utils.dart';
+import '../../utils/test_app.dart';
 
 void main() {
   setupLocator();

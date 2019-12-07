@@ -31,11 +31,8 @@ void testWidgetsWithAccessibilityChecks(
   test_package.Timeout timeout,
   Duration initialTimeout,
   bool semanticsEnabled = true,
-  bool initWebViewPlugin = false,
 }) {
   testWidgets(description, (tester) async {
-    _initPlatformForTests(initWebViewPlugin);
-
     final handle = tester.ensureSemantics();
     await callback(tester);
 
@@ -79,49 +76,4 @@ class NoHintsGuideline extends AccessibilityGuideline {
 
     return traverse(root); // Start traversing at the root.
   }
-}
-
-/// A helper method for doing any kind of shared platform setup
-void _initPlatformForTests(bool initWebViewPlugin) {
-  // Setup for package_info
-  const MethodChannel('plugins.flutter.io/package_info').setMockMethodCallHandler((MethodCall methodCall) async {
-    switch (methodCall.method) {
-      case 'getAll':
-        return <String, dynamic>{
-          'appName': 'android_parent',
-          'buildNumber': '10',
-          'packageName': 'com.instructure.parentapp',
-          'version': '2.0.0',
-        };
-      default:
-        assert(false);
-        return null;
-    }
-  });
-
-  if (initWebViewPlugin) _initPlatformWebView();
-}
-
-/// WebView helpers. These are needed as web views tie into platform views. These are special though as the channel
-/// name depends on the platform view's ID. This makes mocking these generically difficult as each id has a different
-/// platform channel to register.
-///
-/// Inspired solution is a slimmed down version of the WebView test:
-/// https://github.com/flutter/plugins/blob/3b71d6e9a4456505f0b079074fcbc9ba9f8e0e15/packages/webview_flutter/test/webview_flutter_test.dart
-void _initPlatformWebView() {
-  const MethodChannel('plugins.flutter.io/cookie_manager', const StandardMethodCodec())
-      .setMockMethodCallHandler((_) => Future<bool>.sync(() => null));
-
-  // Intercept when a web view is getting created so we can set up the platform channel
-  SystemChannels.platform_views.setMockMethodCallHandler((call) {
-    switch (call.method) {
-      case 'create':
-        final id = call.arguments['id'];
-        MethodChannel('plugins.flutter.io/webview_$id', const StandardMethodCodec())
-            .setMockMethodCallHandler((_) => Future<void>.sync(() {}));
-        return Future<int>.sync(() => 1);
-      default:
-        return Future<void>.sync(() {});
-    }
-  });
 }

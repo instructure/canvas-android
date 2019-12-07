@@ -34,9 +34,12 @@ class FullScreenScrollContainer extends StatelessWidget {
             minHeight: viewportConstraints.maxHeight,
             minWidth: viewportConstraints.maxWidth,
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: children,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 32),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: children,
+            ),
           ),
         ),
       ),

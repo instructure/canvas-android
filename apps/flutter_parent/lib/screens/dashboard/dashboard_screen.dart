@@ -75,7 +75,6 @@ class DashboardState extends State<DashboardScreen> {
     });
 
     _interactor.getSelf().then((user) {
-      print(user);
       _self = user;
       setState(() {
         _selfLoading = false;
@@ -96,7 +95,6 @@ class DashboardState extends State<DashboardScreen> {
     });
 
     _interactor.getStudents().then((users) {
-      print(users);
       _students = users;
 
       if (_selectedStudent == null && _students.isNotEmpty) {
@@ -112,7 +110,7 @@ class DashboardState extends State<DashboardScreen> {
       setState(() {
         _studentsLoading = false;
         _studentsError = true;
-        print(error);
+        print('Error loading students: $error');
       });
     });
   }

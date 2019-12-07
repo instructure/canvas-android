@@ -19,7 +19,6 @@ import 'package:flutter_parent/api/course_api.dart';
 import 'package:flutter_parent/api/enrollments_api.dart';
 import 'package:flutter_parent/api/file_upload_api.dart';
 import 'package:flutter_parent/api/inbox_api.dart';
-import 'package:flutter_parent/api/utils/api_prefs_wrapper.dart';
 import 'package:flutter_parent/screens/alerts/alerts_interactor.dart';
 import 'package:flutter_parent/screens/courses/courses_interactor.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_interactor.dart';
@@ -40,7 +39,6 @@ void setupLocator() {
 
   // APIs
   locator.registerLazySingleton<AlertsApi>(() => AlertsApi());
-  locator.registerLazySingleton<ApiPrefsWrapper>(() => ApiPrefsWrapper());
   locator.registerLazySingleton<AssignmentApi>(() => AssignmentApi());
   locator.registerLazySingleton<AuthApi>(() => AuthApi());
   locator.registerLazySingleton<CourseApi>(() => CourseApi());
