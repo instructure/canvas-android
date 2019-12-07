@@ -250,8 +250,9 @@ class AppLocalizations {
 
   String get inbox => Intl.message('Inbox', desc: 'Title for the Inbox screen');
 
-  String get errorLoadingMessages => Intl.message('There was an error loading your inbox messages',
-      desc: 'Message shown when an error occured while loading inbox messages');
+  String get errorLoadingMessages =>
+      Intl.message('inbox messages',
+          desc: 'Used at the end of a generic error message indicating that the user\'s inbox messages failed to load');
 
   String get noSubject => Intl.message('No Subject', desc: 'Title used for inbox messages that have no subject');
 
@@ -501,4 +502,14 @@ class AppLocalizations {
         'Filter',
         desc: 'Label for buttons to filter what items are visible',
       );
+
+  String genericLoadingErrorMessage(String loadTarget) =>
+      Intl.message(
+        'There was an error loading your $loadTarget.',
+        desc: 'Generic formatted string for the error message that is displayed when something fails to laod',
+        name: 'genericLoadingErrorMessage',
+        args: [loadTarget],
+      );
+
+
 }

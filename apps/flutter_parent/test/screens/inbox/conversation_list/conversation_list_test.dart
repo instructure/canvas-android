@@ -77,7 +77,7 @@ void main() {
     // Expect error state
     var errorIcon = await tester.widget<Icon>(find.byType(Icon).first).icon;
     expect(errorIcon, equals(CanvasIcons.warning));
-    expect(find.text(l10n.errorLoadingMessages), findsOneWidget);
+    expect(find.text(l10n.genericLoadingErrorMessage(l10n.errorLoadingMessages)), findsOneWidget);
     expect(find.widgetWithText(FlatButton, l10n.retry), findsOneWidget);
 
     // Retry with success
@@ -88,7 +88,7 @@ void main() {
     print(count);
 
     // Should no longer show error state
-    expect(find.text(l10n.errorLoadingMessages), findsNothing);
+    expect(find.text(l10n.genericLoadingErrorMessage(l10n.errorLoadingMessages)), findsNothing);
     expect(find.widgetWithText(FlatButton, l10n.retry), findsNothing);
   });
 
