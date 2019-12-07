@@ -35,7 +35,7 @@ class ErrorPandaWidget extends StatelessWidget {
   final Function callback;
   final String loadTarget;
 
-  ErrorPandaWidget({this.loadTarget, this.callback});
+  ErrorPandaWidget(this.loadTarget, this.callback);
 
   @override
   Widget build(BuildContext context) {
