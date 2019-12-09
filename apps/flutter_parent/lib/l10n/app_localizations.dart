@@ -250,9 +250,7 @@ class AppLocalizations {
 
   String get inbox => Intl.message('Inbox', desc: 'Title for the Inbox screen');
 
-  String get errorLoadingMessages =>
-      Intl.message('inbox messages',
-          desc: 'Used at the end of a generic error message indicating that the user\'s inbox messages failed to load');
+  String get errorLoadingMessages => Intl.message('There was an error loading your inbox messages.');
 
   String get noSubject => Intl.message('No Subject', desc: 'Title used for inbox messages that have no subject');
 
@@ -320,7 +318,8 @@ class AppLocalizations {
 
   String get noCoursesTitle => Intl.message('No Courses', desc: 'Title for having no courses');
 
-  String get noCoursesMessage => Intl.message("Your child’s courses might not be published yet.", desc: 'Message for having no courses');
+  String get noCoursesMessage =>
+      Intl.message("Your child’s courses might not be published yet.", desc: 'Message for having no courses');
 
   String get noGrade => Intl.message(
         'No Grade',

@@ -16,13 +16,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
 
 import '../accessibility_utils.dart';
 import '../test_app.dart';
 
 void main() {
-  var errorString = 'There was an error loading your inbox messages.';
+  var errorString = AppLocalizations().errorLoadingMessages;
   var callback = null;
 
   testWidgetsWithAccessibilityChecks('Shows warning icon', (tester) async {
@@ -42,7 +41,7 @@ void main() {
     ));
     await tester.pumpAndSettle();
 
-    expect(find.text('There was an error loading your inbox messages.'), findsOneWidget);
+    expect(find.text(AppLocalizations().errorLoadingMessages), findsOneWidget);
   });
 
   testWidgetsWithAccessibilityChecks('Shows a retry button', (tester) async {
@@ -60,7 +59,9 @@ void main() {
     var called = false;
 
     await tester.pumpWidget(TestApp(
-      ErrorPandaWidget(errorString, () { called = true; }),
+      ErrorPandaWidget(errorString, () {
+        called = true;
+      }),
       highContrast: true,
     ));
     await tester.pumpAndSettle();
