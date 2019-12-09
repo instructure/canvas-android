@@ -853,7 +853,7 @@ private fun MockCanvas.getRootFolder(courseId: Long? = null, groupId: Long? = nu
     if(folderId != null) {
         rootFolder = fileFolders[folderId]
         if(rootFolder == null) {
-            // Might be a user root folder, which is tracker separately
+            // Might be a user root folder, which is tracked separately
             rootFolder = userRootFolders[folderId]
         }
     }
