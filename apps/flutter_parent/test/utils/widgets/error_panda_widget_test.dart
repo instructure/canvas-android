@@ -22,12 +22,12 @@ import '../accessibility_utils.dart';
 import '../test_app.dart';
 
 void main() {
-  var loadTarget = 'inbox messages';
+  var errorString = 'There was an error loading your inbox messages.';
   var callback = null;
 
   testWidgetsWithAccessibilityChecks('Shows warning icon', (tester) async {
     await tester.pumpWidget(TestApp(
-      ErrorPandaWidget(loadTarget, callback),
+      ErrorPandaWidget(errorString, callback),
       highContrast: true,
     ));
     await tester.pumpAndSettle();
@@ -37,17 +37,17 @@ void main() {
 
   testWidgetsWithAccessibilityChecks('Shows error message with load target', (tester) async {
     await tester.pumpWidget(TestApp(
-      ErrorPandaWidget(loadTarget, callback),
+      ErrorPandaWidget(errorString, callback),
       highContrast: true,
     ));
     await tester.pumpAndSettle();
 
-    expect(find.text(AppLocalizations().genericLoadingErrorMessage(loadTarget)), findsOneWidget);
+    expect(find.text('There was an error loading your inbox messages.'), findsOneWidget);
   });
 
   testWidgetsWithAccessibilityChecks('Shows a retry button', (tester) async {
     await tester.pumpWidget(TestApp(
-      ErrorPandaWidget(loadTarget, callback),
+      ErrorPandaWidget(errorString, callback),
       highContrast: true,
     ));
     await tester.pumpAndSettle();
@@ -57,13 +57,10 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Retry click calls callback', (tester) async {
-    var test = MockClass();
-    var callback = () {
-      test.test();
-    };
+    var called = false;
 
     await tester.pumpWidget(TestApp(
-      ErrorPandaWidget(loadTarget, callback),
+      ErrorPandaWidget(errorString, () { called = true; }),
       highContrast: true,
     ));
     await tester.pumpAndSettle();
@@ -73,14 +70,6 @@ void main() {
     await tester.pumpAndSettle();
 
     // Verify the callback was called
-    verify(test.test());
+    expect(called, true);
   });
 }
-
-class TestClass {
-  void test() {
-    print('Canvas');
-  }
-}
-
-class MockClass extends Mock implements TestClass { }

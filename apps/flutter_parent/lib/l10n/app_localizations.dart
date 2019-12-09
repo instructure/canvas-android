@@ -503,13 +503,5 @@ class AppLocalizations {
         desc: 'Label for buttons to filter what items are visible',
       );
 
-  String genericLoadingErrorMessage(String loadTarget) =>
-      Intl.message(
-        'There was an error loading your $loadTarget.',
-        desc: 'Generic formatted string for the error message that is displayed when something fails to laod',
-        name: 'genericLoadingErrorMessage',
-        args: [loadTarget],
-      );
-
-
+  String get errorLoadingStudents => Intl.message('There was an error loading your students.');
 }
