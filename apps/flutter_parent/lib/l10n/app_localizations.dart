@@ -247,8 +247,7 @@ class AppLocalizations {
 
   String get inbox => Intl.message('Inbox', desc: 'Title for the Inbox screen');
 
-  String get errorLoadingMessages => Intl.message('There was an error loading your inbox messages',
-      desc: 'Message shown when an error occured while loading inbox messages');
+  String get errorLoadingMessages => Intl.message('There was an error loading your inbox messages.');
 
   String get noSubject => Intl.message('No Subject', desc: 'Title used for inbox messages that have no subject');
 
@@ -533,4 +532,6 @@ class AppLocalizations {
         'Filter',
         desc: 'Label for buttons to filter what items are visible',
       );
+
+  String get errorLoadingStudents => Intl.message('There was an error loading your students.');
 }
