@@ -17,6 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/utils/common_widgets/respawn.dart';
+import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:package_info/package_info.dart';
@@ -79,7 +80,7 @@ class CrashScreen extends StatelessWidget {
                     ),
                     shape: RoundedRectangleBorder(
                       borderRadius: new BorderRadius.circular(4),
-                      side: BorderSide(color: ParentTheme.tiara),
+                      side: BorderSide(color: ParentColors.tiara),
                     ),
                   ),
                 ],
