@@ -181,6 +181,9 @@ class MockCanvas {
     /** Map of quiz submission id to quiz submission questions */
     val quizSubmissionQuestions = mutableMapOf<Long, MutableList<QuizSubmissionQuestion>>()
 
+    /** Map of user ids to user root folders */
+    val userRootFolders = mutableMapOf<Long, FileFolder>()
+
     //region Convenience functionality
 
     /** A list of users with at least one Student enrollment */
@@ -774,6 +777,24 @@ fun MockCanvas.addUser(): User {
     users += user.id to user
     tokens += UUID.randomUUID().toString() to user.id
     userSettings += user.id to UserSettings()
+
+    // Let's add an empty root file folder for the user
+    // Now create our folder metadata
+    val newFolderId = newItemId()
+    val folderMetadataItem = FileFolder(
+            contextType = "user",
+            contextId = user.id,
+            filesUrl = "https://mock-data.instructure.com/api/v1/folders/$newFolderId/files",
+            foldersUrl = "https://mock-data.instructure.com/api/v1/folders/$newFolderId/folders",
+            id = newFolderId,
+            //folderId = rootFolder.id,
+            displayName = "Files",
+            url = "https://mock-data.instructure.com/api/v1/folders/$newFolderId",
+            name = "Files",
+            fullName = "Files"
+    )
+    userRootFolders[user.id] = folderMetadataItem
+
     return user
 }
 
@@ -831,6 +852,10 @@ private fun MockCanvas.getRootFolder(courseId: Long? = null, groupId: Long? = nu
 
     if(folderId != null) {
         rootFolder = fileFolders[folderId]
+        if(rootFolder == null) {
+            // Might be a user root folder, which is tracker separately
+            rootFolder = userRootFolders[folderId]
+        }
     }
     else if(groupId != null) {
         if(courseId == null) {

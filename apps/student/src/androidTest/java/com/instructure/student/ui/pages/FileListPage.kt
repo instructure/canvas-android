@@ -17,9 +17,13 @@
 package com.instructure.student.ui.pages
 
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions.swipeDown
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvas.espresso.scrollRecyclerView
+import com.instructure.canvas.espresso.withCustomConstraints
+import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
@@ -29,6 +33,11 @@ import org.hamcrest.Matchers.allOf
 // Tests that files submitted for submissions, submission comments and discussions are
 // properly displayed.
 class FileListPage : BasePage(R.id.fileListPage) {
+
+    private val addButton by OnViewWithId(R.id.addFab)
+    private val uploadFileButton by OnViewWithId(R.id.addFileFab, autoAssert = false)
+    private val newFolderButton by OnViewWithId(R.id.addFolderFab, autoAssert = false)
+
     fun assertItemDisplayed(itemName: String) {
         val matcher = allOf(withId(R.id.fileName), withText(itemName))
         scrollRecyclerView(R.id.listView, matcher)
@@ -39,5 +48,19 @@ class FileListPage : BasePage(R.id.fileListPage) {
         val matcher = allOf(withId(R.id.fileName), withText(itemName))
         scrollRecyclerView(R.id.listView, matcher)
         onView(matcher).click()
+    }
+
+    fun clickAddButton() {
+        addButton.click()
+    }
+
+    fun clickUploadFileButton() {
+        uploadFileButton.click()
+    }
+
+    // Doesn't worry about having scrolling to the top of the page first...
+    fun refresh() {
+        onView(allOf(withId(R.id.swipeRefreshLayout), isDisplayingAtLeast(50)))
+                .perform(withCustomConstraints(swipeDown(), isDisplayingAtLeast(10)))
     }
 }
