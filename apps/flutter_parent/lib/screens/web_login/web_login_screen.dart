@@ -17,7 +17,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/mobile_verify_result.dart';
-import 'package:flutter_parent/screens/dashboard/dashboard_screen.dart';
+import 'package:flutter_parent/screens/splash/splash_screen.dart';
 import 'package:flutter_parent/screens/web_login/web_login_interactor.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
@@ -116,7 +116,7 @@ class WebLoginScreen extends StatelessWidget {
       var url = request.url;
       String oAuthRequest = url.substring(url.indexOf(successUrl) + successUrl.length);
       locator<WebLoginInteractor>().performLogin(result, oAuthRequest).then((_) {
-        locator<QuickNav>().pushAndRemoveAll(context, DashboardScreen());
+        locator<QuickNav>().pushAndRemoveAll(context, SplashScreen());
       });
       return NavigationDecision.prevent;
     } else if (request.url.contains(errorUrl)) {

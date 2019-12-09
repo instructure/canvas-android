@@ -50,7 +50,7 @@ void setupLocator() {
   locator.registerFactory<CourseDetailsInteractor>(() => CourseDetailsInteractor());
   locator.registerFactory<CoursesInteractor>(() => CoursesInteractor());
   locator.registerFactory<CreateConversationInteractor>(() => CreateConversationInteractor());
+  locator.registerFactory<DashboardInteractor>(() => DashboardInteractor());
   locator.registerFactory<DomainSearchInteractor>(() => DomainSearchInteractor());
   locator.registerFactory<WebLoginInteractor>(() => WebLoginInteractor());
-  locator.registerFactory<DashboardInteractor>(() => DashboardInteractor());
 }

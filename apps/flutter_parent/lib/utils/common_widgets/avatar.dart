@@ -12,10 +12,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
-import 'package:transparent_image/transparent_image.dart';
 
 class Avatar extends StatelessWidget {
   final Color backgroundColor;
@@ -24,7 +24,8 @@ class Avatar extends StatelessWidget {
   final Widget overlay;
   final String name; // Generally should be the shortname of the user
 
-  const Avatar(this.url, {
+  const Avatar(
+    this.url, {
     Key key,
     this.backgroundColor,
     this.radius = 20,
@@ -34,28 +35,34 @@ class Avatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Color bgColor = backgroundColor ?? ParentTheme.of(context).nearSurfaceColor;
+
+    // We avoid using CachedNetworkImage in tests due to the complexity of mocking its dependencies.
+    // We determine if we're in a test by checking the runtime type of WidgetsBinding. In prod it's an instance of
+    // WidgetsFlutterBinding and in tests it's an instance of AutomatedTestWidgetsFlutterBinding.
+    var isTest = WidgetsBinding.instance.runtimeType != WidgetsFlutterBinding;
+
     return Semantics(
       excludeSemantics: true,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(radius),
         child: Container(
-          color: backgroundColor ?? ParentTheme.of(context).nearSurfaceColor,
+          color: bgColor,
           width: radius * 2,
           height: radius * 2,
           child: Stack(
             children: <Widget>[
-              url != null ?
-              FadeInImage.memoryNetwork(
-                fadeInDuration: const Duration(milliseconds: 300),
-                fit: BoxFit.cover,
-                width: radius * 2,
-                height: radius * 2,
-                image: url ?? '',
-                placeholder: kTransparentImage,
-              ) : CircleAvatar(
-                child: Text(getUserInitials(name)),
-                radius: radius,
-              ),
+              url != null && !isTest // Don't use CachedNetworkImage if we're running in a test
+                  ? CachedNetworkImage(
+                      fadeInDuration: const Duration(milliseconds: 300),
+                      fit: BoxFit.cover,
+                      width: radius * 2,
+                      height: radius * 2,
+                      imageUrl: url ?? '',
+                      placeholder: (context, _) => _initialsWidget(context, bgColor),
+                      errorWidget: (context, _, __) => _initialsWidget(context, bgColor),
+                    )
+                  : _initialsWidget(context, bgColor),
               if (overlay != null)
                 SizedBox(
                   width: radius * 2,
@@ -66,6 +73,17 @@ class Avatar extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  CircleAvatar _initialsWidget(BuildContext context, Color bgColor) {
+    return CircleAvatar(
+      child: Text(
+        getUserInitials(name),
+        style: TextStyle(fontSize: radius * 0.8, fontWeight: FontWeight.bold),
+      ),
+      backgroundColor: bgColor,
+      radius: radius,
     );
   }
 

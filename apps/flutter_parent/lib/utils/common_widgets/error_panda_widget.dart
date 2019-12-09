@@ -17,7 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/utils/common_widgets/full_screen_scroll_container.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
-import 'package:flutter_parent/utils/design/parent_theme.dart';
+import 'package:flutter_parent/utils/design/parent_colors.dart';
 
 /// Displays the error page used throughout the app
 /// Contains a warning icon, an error message, and a retry button.
@@ -34,7 +34,7 @@ class ErrorPandaWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return FullScreenScrollContainer(
       children: <Widget>[
-        Icon(CanvasIcons.warning, size: 40, color: ParentTheme.failure),
+        Icon(CanvasIcons.warning, size: 40, color: ParentColors.failure),
         Padding(
           padding: const EdgeInsets.fromLTRB(48, 28, 48, 32),
           child: Text(
@@ -50,7 +50,7 @@ class ErrorPandaWidget extends StatelessWidget {
           child: Text(L10n(context).retry, style: Theme.of(context).textTheme.caption.copyWith(fontSize: 16)),
           shape: RoundedRectangleBorder(
             borderRadius: new BorderRadius.circular(4.0),
-            side: BorderSide(color: ParentTheme.tiara),
+            side: BorderSide(color: ParentColors.tiara),
           ),
         )
       ],
