@@ -21,20 +21,35 @@ class _$GradeSerializer implements StructuredSerializer<Grade> {
       'html_url',
       serializers.serialize(object.htmlUrl,
           specifiedType: const FullType(String)),
-      'current_score',
-      serializers.serialize(object.currentScore,
-          specifiedType: const FullType(double)),
-      'final_score',
-      serializers.serialize(object.finalScore,
-          specifiedType: const FullType(double)),
-      'current_grade',
-      serializers.serialize(object.currentGrade,
-          specifiedType: const FullType(String)),
-      'final_grade',
-      serializers.serialize(object.finalGrade,
-          specifiedType: const FullType(String)),
     ];
-
+    result.add('current_score');
+    if (object.currentScore == null) {
+      result.add(null);
+    } else {
+      result.add(serializers.serialize(object.currentScore,
+          specifiedType: const FullType(double)));
+    }
+    result.add('final_score');
+    if (object.finalScore == null) {
+      result.add(null);
+    } else {
+      result.add(serializers.serialize(object.finalScore,
+          specifiedType: const FullType(double)));
+    }
+    result.add('current_grade');
+    if (object.currentGrade == null) {
+      result.add(null);
+    } else {
+      result.add(serializers.serialize(object.currentGrade,
+          specifiedType: const FullType(String)));
+    }
+    result.add('final_grade');
+    if (object.finalGrade == null) {
+      result.add(null);
+    } else {
+      result.add(serializers.serialize(object.finalGrade,
+          specifiedType: const FullType(String)));
+    }
     return result;
   }
 
@@ -101,18 +116,6 @@ class _$Grade extends Grade {
       : super._() {
     if (htmlUrl == null) {
       throw new BuiltValueNullFieldError('Grade', 'htmlUrl');
-    }
-    if (currentScore == null) {
-      throw new BuiltValueNullFieldError('Grade', 'currentScore');
-    }
-    if (finalScore == null) {
-      throw new BuiltValueNullFieldError('Grade', 'finalScore');
-    }
-    if (currentGrade == null) {
-      throw new BuiltValueNullFieldError('Grade', 'currentGrade');
-    }
-    if (finalGrade == null) {
-      throw new BuiltValueNullFieldError('Grade', 'finalGrade');
     }
   }
 

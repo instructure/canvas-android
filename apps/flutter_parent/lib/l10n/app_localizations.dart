@@ -100,13 +100,10 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
       return fallback ?? supported.first;
     }
 
-    final languageLocale = Locale(locale.languageCode, "");
     if (supported.contains(locale)) {
       return locale;
-    } else if (supported.contains(languageLocale)) {
-      return languageLocale;
     } else {
-      return fallback ?? supported.first;
+      return Locale(locale.languageCode, "");
     }
   }
 }
@@ -153,9 +150,8 @@ class AppLocalizations {
       Intl.message('No Students', desc: 'Text for when an observer has no students they are observing');
 
   /// Navigation Drawer
-  String get manageStudents =>
-      Intl.message('Manage Students',
-          desc: 'Label text for the Manage Students nav drawer button as well as the title for the Manage Students screen');
+  String get manageStudents => Intl.message('Manage Students',
+      desc: 'Label text for the Manage Students nav drawer button as well as the title for the Manage Students screen');
 
   String get help => Intl.message('Help', desc: 'Label text for the help nav drawer button');
 
@@ -251,8 +247,7 @@ class AppLocalizations {
 
   String get inbox => Intl.message('Inbox', desc: 'Title for the Inbox screen');
 
-  String get errorLoadingMessages => Intl.message('There was an error loading your inbox messages',
-      desc: 'Message shown when an error occured while loading inbox messages');
+  String get errorLoadingMessages => Intl.message('There was an error loading your inbox messages.');
 
   String get noSubject => Intl.message('No Subject', desc: 'Title used for inbox messages that have no subject');
 
@@ -320,7 +315,8 @@ class AppLocalizations {
 
   String get noCoursesTitle => Intl.message('No Courses', desc: 'Title for having no courses');
 
-  String get noCoursesMessage => Intl.message("Your child’s courses might not be published yet.", desc: 'Message for having no courses');
+  String get noCoursesMessage =>
+      Intl.message("Your students’s courses might not be published yet.", desc: 'Message for having no courses');
 
   String get noGrade => Intl.message(
         'No Grade',
@@ -430,6 +426,40 @@ class AppLocalizations {
         desc: 'The generic error shown when we are unable to verify with Canvas',
       );
 
+  /// Not-A-Parent screen
+
+  String get notAParentTitle => Intl.message('Not a parent?',
+      desc: 'Title for the screen that shows when the user is not observing any students');
+
+  String get notAParentSubtitle => Intl.message("We couldn't find any students associated with this account",
+      desc: 'Subtitle for the screen that shows when the user is not observing any students');
+
+  String get studentOrTeacherTitle => Intl.message('Are you a student or teacher?',
+      desc: 'Label for button that will show users the option to view other Canvas apps in the Play Store');
+
+  String get studentOrTeacherSubtitle =>
+      Intl.message('One of our other apps might be a better fit. Tap one to visit the Play Store.',
+          desc: 'Description of options to view other Canvas apps in the Play Store');
+
+  String get returnToLogin =>
+      Intl.message('Return to Login', desc: 'Label for the button that returns the user to the login screen');
+
+  String get studentApp => Intl.message('STUDENT',
+      desc:
+          "The 'student' portion of the 'Canvas Student' app name, in all caps. 'Canvas' is excluded in this context as it will be displayed to the user as a wordmark image");
+
+  String get teacherApp => Intl.message('TEACHER',
+      desc:
+          "The 'teacher' portion of the 'Canvas Teacher' app name, in all caps. 'Canvas' is excluded in this context as it will be displayed to the user as a wordmark image");
+
+  String get canvasStudentApp => Intl.message('Canvas Student',
+      desc:
+          "The name of the Canvas Student app. Only 'Student' should be translated as 'Canvas' is a brand name in this context and should not be translated.");
+
+  String get canvasTeacherApp => Intl.message('Canvas Teacher',
+      desc:
+          "The name of the Canvas Teacher app. Only 'Teacher' should be translated as 'Canvas' is a brand name in this context and should not be translated.");
+
   /// Alerts Screen
 
   String get noAlertsMessage => Intl.message(
@@ -472,9 +502,8 @@ class AppLocalizations {
 
   String get pairingCode => Intl.message('Pairing Code');
 
-  String get pairingCodeEntryExplanation =>
-      Intl.message(
-          'Enter the student pairing code provided to you. If the pairing code doesn\'t work, it may have expired');
+  String get pairingCodeEntryExplanation => Intl.message(
+      'Enter the student pairing code provided to you. If the pairing code doesn\'t work, it may have expired');
 
   String get pairingFailed =>
       Intl.message('Pairing Failed. Make sure your pairing code is correct and within the time limit of use.');
@@ -483,8 +512,6 @@ class AppLocalizations {
 
   String get addNewStudent =>
       Intl.message('Add new student', desc: 'Semantics label for the FAB on the Manage Students Screen');
-
-
 
   /// Miscellaneous
 

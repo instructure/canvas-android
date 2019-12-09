@@ -24,4 +24,9 @@ class QuickNav {
   Future<T> pushAndRemoveAll<T extends Object>(BuildContext context, Widget widget) {
     return Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => widget), (_) => false);
   }
+
+  /// Replace the current route of the navigator with the provided route
+  Future<T> replaceRoute<T extends Object>(BuildContext context, Route<T> newRoute) {
+    return Navigator.pushReplacement(context, newRoute);
+  }
 }

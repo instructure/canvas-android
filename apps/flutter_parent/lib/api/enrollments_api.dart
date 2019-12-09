@@ -12,48 +12,25 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import 'package:dio/dio.dart';
 import 'package:flutter_parent/api/utils/api_prefs.dart';
-import 'package:flutter_parent/api/utils/paged_list.dart';
+import 'package:flutter_parent/api/utils/dio_config.dart';
+import 'package:flutter_parent/api/utils/fetch.dart';
 import 'package:flutter_parent/models/enrollment.dart';
 
 class EnrollmentsApi {
-  static Future<List<Enrollment>> getObserveeEnrollments() async {
-    var observeesResponse = await Dio().get(ApiPrefs.getApiUrl() + 'users/self/enrollments',
-        queryParameters: {
-          'include': ['observed_users', 'avatar_url', 'primary_email'],
-          'state': ['creation_pending', 'invited', 'active']
-        },
-        options: Options(headers: ApiPrefs.getHeaderMap()));
-
-    if (observeesResponse.statusCode == 200 || observeesResponse.statusCode == 201) {
-      final response = PagedList<Enrollment>(observeesResponse);
-      return (response.nextUrl == null) ? response.data : _getObserveesDepaginated(response);
-    } else {
-      return Future.error(observeesResponse.statusMessage);
-    }
-  }
-
-  static Future<List<Enrollment>> _getObserveesDepaginated(PagedList<Enrollment> prevResponse) async {
-    // Query params already specified in url
-    var enrollmentResponse = await Dio().get(prevResponse.nextUrl, options: Options(headers: ApiPrefs.getHeaderMap()));
-
-    if (enrollmentResponse.statusCode == 200 || enrollmentResponse.statusCode == 201) {
-      prevResponse.updateWithResponse(enrollmentResponse);
-      return (prevResponse.nextUrl == null) ? prevResponse.data : _getObserveesDepaginated(prevResponse);
-    } else {
-      return Future.error(enrollmentResponse.statusMessage);
-    }
+  static Future<List<Enrollment>> getObserveeEnrollments({bool forceRefresh = false}) async {
+    var dio = canvasDio(usePerPageParam: true, forceRefresh: forceRefresh);
+    var params = {
+      'include': ['observed_users', 'avatar_url'],
+      'state': ['creation_pending', 'invited', 'active']
+    };
+    return fetchList(dio.get('users/self/enrollments', queryParameters: params), depaginateWith: dio);
   }
 
   Future<bool> pairWithStudent(String pairingCode) async {
-    var pairingResponse = await Dio().get(ApiPrefs.getApiUrl(path: 'users/${ApiPrefs.getUser().id}/observees'),
-      queryParameters: {
-      'pairing_code': pairingCode
-      },
-      options: Options(headers: ApiPrefs.getHeaderMap()));
+    var pairingResponse = await canvasDio().get(ApiPrefs.getApiUrl(path: 'users/${ApiPrefs.getUser().id}/observees'),
+        queryParameters: {'pairing_code': pairingCode});
 
-     return (pairingResponse.statusCode == 200 || pairingResponse.statusCode == 201);
+    return (pairingResponse.statusCode == 200 || pairingResponse.statusCode == 201);
   }
-
 }

@@ -50,7 +50,10 @@ void main() {
     _locator.registerLazySingleton<QuickNav>(() => QuickNav());
   }
 
-  Widget _testableMaterialWidget([Widget widget]) => TestApp(Scaffold(body: widget ?? DashboardScreen()),);
+  Widget _testableMaterialWidget([Widget widget]) => TestApp(
+        Scaffold(body: widget ?? DashboardScreen()),
+        highContrast: true,
+      );
 
   testWidgetsWithAccessibilityChecks('Displays name with pronouns when pronouns are not null', (tester) async {
     _setupLocator(MockInteractor(includePronouns: true));
@@ -223,8 +226,8 @@ void main() {
 //
 //  });
 
-  testWidgetsWithAccessibilityChecks(
-      'Clicking Manage Students from nav drawer opens manage students page', (tester) async {
+  testWidgetsWithAccessibilityChecks('Clicking Manage Students from nav drawer opens manage students page',
+      (tester) async {
     _setupLocator();
     mockNetworkImageResponse();
 
@@ -319,7 +322,7 @@ class MockInteractor extends DashboardInteractor {
   MockInteractor({this.includePronouns = false, this.generateStudents = true, this.generateSelf = true});
 
   @override
-  Future<List<User>> getStudents() async => generateStudents
+  Future<List<User>> getStudents({bool forceRefresh = false}) async => generateStudents
       ? [
           _mockUser('Billy', pronouns: includePronouns ? 'he/him' : null),
           _mockUser('Sally', pronouns: includePronouns ? 'she/her' : null),

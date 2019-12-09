@@ -15,6 +15,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/design/canvas_icons_solid.dart';
+import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/design/student_color_set.dart';
 
@@ -204,7 +205,7 @@ class _ThemeViewerScreenState extends State<ThemeViewerScreen> {
   }
 
   Widget _content(BuildContext context) {
-    var swatch = ParentTheme.makeSwatch(ParentTheme.of(context).studentColor);
+    var swatch = ParentColors.makeSwatch(ParentTheme.of(context).studentColor);
     return ListView(
       children: <Widget>[
         AppBar(
@@ -264,9 +265,9 @@ class _ThemeViewerScreenState extends State<ThemeViewerScreen> {
                   Text("100 pts", style: Theme.of(context).textTheme.caption),
                   Padding(
                     padding: const EdgeInsets.only(left: 12, right: 4),
-                    child: Icon(Icons.check_circle, size: 20, color: ParentTheme.success),
+                    child: Icon(Icons.check_circle, size: 20, color: ParentColors.success),
                   ),
-                  Text("Submitted", style: Theme.of(context).textTheme.caption.apply(color: ParentTheme.success)),
+                  Text("Submitted", style: Theme.of(context).textTheme.caption.apply(color: ParentColors.success)),
                 ],
               ),
             ],

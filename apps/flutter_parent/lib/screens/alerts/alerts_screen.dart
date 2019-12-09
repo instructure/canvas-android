@@ -20,6 +20,7 @@ import 'package:flutter_parent/screens/alerts/alerts_interactor.dart';
 import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/full_screen_scroll_container.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
+import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:intl/intl.dart';
@@ -134,11 +135,11 @@ class __AlertsListState extends State<_AlertsList> {
   }
 
   Color _alertColor(BuildContext context, Alert alert) {
-    if (alert.isAlertInfo()) return ParentTheme.ash;
+    if (alert.isAlertInfo()) return ParentColors.ash;
     if (alert.isAlertPositive()) return ParentTheme.of(context).defaultTheme.accentColor;
-    if (alert.isAlertNegative()) return ParentTheme.failure;
+    if (alert.isAlertNegative()) return ParentColors.failure;
 
-    return ParentTheme.failure;
+    return ParentColors.failure;
   }
 
   String _formatDate(BuildContext context, DateTime date) {

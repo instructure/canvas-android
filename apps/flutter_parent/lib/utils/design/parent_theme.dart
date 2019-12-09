@@ -12,10 +12,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import 'dart:math';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_parent/utils/design/parent_colors.dart';
+import 'package:provider/provider.dart';
 
 import 'student_color_set.dart';
 
@@ -49,61 +49,6 @@ class ParentTheme extends StatefulWidget {
 
   final bool initWithHCMode;
 
-  /// The core 'dark' color used for text, icons, etc on light backgrounds
-  static const licorice = Color(0xFF2D3B45);
-
-  /// The core 'light' color, used for text, icons, etc on dark backgrounds
-  static const tiara = Color(0xFFC7CDD1);
-
-  /// A very light color
-  static const porcelain = Color(0xFFF5F5F5);
-
-  /// The core 'faded' color, used for subtitles, inactive icons, etc on either light or dark backgrounds
-  static const ash = Color(0xFF8B969E);
-
-  /// A general 'success' color
-  static const success = Color(0xFF00AC18);
-
-  /// A general 'failure' color, crimson
-  static const failure = Color(0xFFEE0612);
-
-  /// Generates a [MaterialColor] swatch for a given color. For best results the source color should have a medium brightness.
-  static MaterialColor makeSwatch(Color color) {
-    var src = HSLColor.fromColor(color);
-
-    var shades = <int, Color>{500: color};
-
-    // Upper (darker) colors. Max saturation is 100, min lightness is 63% of source lightness
-    var saturationIncrement = (1.0 - src.saturation) / 4;
-    var valueIncrement = ((src.lightness * 0.63) - src.lightness) / 4;
-    var saturation = src.saturation;
-    var value = src.lightness;
-    for (int shade = 600; shade <= 900; shade += 100) {
-      saturation += saturationIncrement;
-      value += valueIncrement;
-      shades[shade] = HSLColor.fromAHSL(1.0, src.hue, min(saturation, 1.0), min(value, 1.0)).toColor();
-    }
-
-    // Lower (lighter) colors. Min saturation is 10, max lightness is 99
-    saturationIncrement = (src.saturation - 0.10) / 5;
-    valueIncrement = (0.99 - src.lightness) / 5;
-    saturation = src.saturation;
-    value = src.lightness;
-    for (int shade = 400; shade >= 0; shade -= 100) {
-      saturation += saturationIncrement;
-      value += valueIncrement;
-      var color = HSLColor.fromAHSL(1.0, src.hue, min(1.0, saturation), min(1.0, value)).toColor();
-      if (shade == 0) {
-        // A shade of 0 would be completely white, so 50 is the lightest color shade
-        shades[50] = color;
-      } else {
-        shades[shade] = color;
-      }
-    }
-
-    return MaterialColor(color.value, shades);
-  }
-
   @override
   _ParentThemeState createState() => _ParentThemeState(initWithDarkMode, initWithHCMode);
 
@@ -120,6 +65,8 @@ class _ParentThemeState extends State<ParentTheme> {
     _isDarkMode = initWithDarkMode;
     _isHC = initWithHCMode;
   }
+
+  ParentThemeStateChangeNotifier _notifier = ParentThemeStateChangeNotifier();
 
   int _studentIndex = 0;
 
@@ -188,17 +135,26 @@ class _ParentThemeState extends State<ParentTheme> {
   ThemeData get studentTheme => _buildTheme(studentColor);
 
   @override
+  void setState(fn) {
+    super.setState(fn);
+    _notifier.notify();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return widget.builder(context, studentTheme);
+    return ChangeNotifierProvider<ParentThemeStateChangeNotifier>.value(
+      value: _notifier,
+      child: widget.builder(context, studentTheme),
+    );
   }
 
   /// Color for text, icons, etc that contrasts sharply with the scaffold (i.e. surface) color
-  Color get onSurfaceColor => isDarkMode ? ParentTheme.tiara : ParentTheme.licorice;
+  Color get onSurfaceColor => isDarkMode ? ParentColors.tiara : ParentColors.licorice;
 
   /// Color similar to the surface color but is slightly darker in light mode and slightly lighter in dark mode.
   /// This should be used elements that should be visually distinguishable from the surface color but must also contrast
   /// sharply with the [onSurfaceColor]. Examples are chip backgrounds, progressbar backgrounds, avatar backgrounds, etc.
-  Color get nearSurfaceColor => isDarkMode ? Colors.grey[850] : ParentTheme.porcelain;
+  Color get nearSurfaceColor => isDarkMode ? Colors.grey[850] : ParentColors.porcelain;
 
   ThemeData _buildTheme(Color themeColor) {
     var textTheme = _buildTextTheme(onSurfaceColor);
@@ -206,7 +162,7 @@ class _ParentThemeState extends State<ParentTheme> {
     // Use single text color for all styles in high-contrast mode
     if (isHC) textTheme = textTheme.apply(displayColor: onSurfaceColor, bodyColor: onSurfaceColor);
 
-    var swatch = ParentTheme.makeSwatch(themeColor);
+    var swatch = ParentColors.makeSwatch(themeColor);
     return ThemeData(
       brightness: isDarkMode ? Brightness.dark : Brightness.light,
       primarySwatch: swatch,
@@ -220,14 +176,14 @@ class _ParentThemeState extends State<ParentTheme> {
       primaryTextTheme: isDarkMode ? textTheme : _buildTextTheme(Colors.white, fadeColor: Colors.white70),
       accentTextTheme: isDarkMode ? textTheme : _buildTextTheme(Colors.white, fadeColor: Colors.white70),
       iconTheme: IconThemeData(color: onSurfaceColor),
-      primaryIconTheme: IconThemeData(color: isDarkMode ? ParentTheme.tiara : Colors.white),
+      primaryIconTheme: IconThemeData(color: isDarkMode ? ParentColors.tiara : Colors.white),
       accentIconTheme: IconThemeData(color: isDarkMode ? Colors.black : Colors.white),
-      dividerColor: isHC ? onSurfaceColor : isDarkMode ? nearSurfaceColor : ParentTheme.tiara,
+      dividerColor: isHC ? onSurfaceColor : isDarkMode ? nearSurfaceColor : ParentColors.tiara,
       buttonTheme: ButtonThemeData(height: 48, minWidth: 120),
     );
   }
 
-  TextTheme _buildTextTheme(Color color, {Color fadeColor = ParentTheme.ash}) {
+  TextTheme _buildTextTheme(Color color, {Color fadeColor = ParentColors.ash}) {
     return TextTheme(
       /// Design-provided styles
 
@@ -270,6 +226,13 @@ class _ParentThemeState extends State<ParentTheme> {
   }
 }
 
+/// A [ChangeNotifier] used to notify consumers when the ParentTheme state changes. Ideally the state itself would
+/// be a [ChangeNotifier] so we wouldn't need this extra class, but there is currently a mixin-related limitation
+/// that prevents the state's dispose method from being called: https://github.com/flutter/flutter/issues/24293
+class ParentThemeStateChangeNotifier with ChangeNotifier {
+  notify() => notifyListeners(); // notifyListeners is protected, so we expose it through another method
+}
+
 /// Applies a 'default' Parent App theme to descendant widgets. This theme is identical to the one provided by
 /// ParentTheme with the exception of the primary and accent colors, which are fixed and do not respond to changes
 /// to the selected student color.
@@ -280,9 +243,11 @@ class DefaultParentTheme extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Theme(
-      data: ParentTheme.of(context).defaultTheme,
-      child: Builder(builder: builder),
+    return Consumer<ParentThemeStateChangeNotifier>(
+      builder: (context, state, _) => Theme(
+        data: ParentTheme.of(context).defaultTheme,
+        child: builder(context),
+      ),
     );
   }
 }
