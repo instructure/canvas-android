@@ -22,10 +22,10 @@ import 'package:flutter_parent/screens/dashboard/inbox_notifier.dart';
 import 'package:flutter_parent/screens/inbox/conversation_list/conversation_list_screen.dart';
 import 'package:flutter_parent/screens/login_landing_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/avatar.dart';
+import 'package:flutter_parent/utils/common_widgets/dropdown_arrow.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/common_widgets/user_name.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
-import 'package:flutter_parent/utils/design/canvas_icons_solid.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:package_info/package_info.dart';
@@ -34,6 +34,10 @@ import 'dashboard_interactor.dart';
 
 class DashboardScreen extends StatefulWidget {
   static final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
+  DashboardScreen({Key key, this.students}) : super(key: key);
+
+  final List<User> students;
 
   @override
   State<StatefulWidget> createState() => DashboardState();
@@ -61,7 +65,12 @@ class DashboardState extends State<DashboardScreen> {
   @override
   void initState() {
     _loadSelf();
-    _loadStudents();
+    if (widget.students?.isNotEmpty == true) {
+      _students = widget.students;
+      _selectedStudent = _students.first;
+    } else {
+      _loadStudents();
+    }
     super.initState();
 
     InboxCountNotifier.get().update();
@@ -153,25 +162,27 @@ class DashboardState extends State<DashboardScreen> {
         );
     }
 
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Avatar(_selectedStudent.avatarUrl, name: _selectedStudent.shortName),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            UserName.fromUser(_selectedStudent, style: Theme.of(context).primaryTextTheme.title),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Icon(
-                CanvasIconsSolid.arrow_open_down,
-                size: 12.0,
-                color: Theme.of(context).primaryIconTheme.color,
-              ),
-            )
-          ],
-        )
-      ],
+    return SafeArea(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Avatar(
+            _selectedStudent.avatarUrl,
+            name: _selectedStudent.shortName,
+            radius: 24,
+          ),
+          SizedBox(height: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              UserName.fromUser(_selectedStudent, style: Theme.of(context).primaryTextTheme.subhead),
+              SizedBox(width: 6),
+              DropdownArrow(),
+            ],
+          )
+        ],
+      ),
     );
   }
 

@@ -19,7 +19,8 @@ import 'package:flutter_parent/models/enrollment.dart';
 import 'package:flutter_parent/models/user.dart';
 
 class DashboardInteractor {
-  Future<List<User>> getStudents() async => EnrollmentsApi.getObserveeEnrollments().then<List<User>>((enrollments) {
+  Future<List<User>> getStudents({bool forceRefresh = false}) async =>
+      EnrollmentsApi.getObserveeEnrollments(forceRefresh: forceRefresh).then<List<User>>((enrollments) {
         List<User> users = filterStudents(enrollments);
         sortUsers(users);
         return users;

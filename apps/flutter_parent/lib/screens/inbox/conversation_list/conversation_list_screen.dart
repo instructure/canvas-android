@@ -21,6 +21,7 @@ import 'package:flutter_parent/utils/common_widgets/avatar.dart';
 import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/design/canvas_icons_solid.dart';
+import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
@@ -109,7 +110,7 @@ class ConversationListState extends State<ConversationListScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Icon(CanvasIcons.warning, size: 40, color: ParentTheme.failure),
+                  Icon(CanvasIcons.warning, size: 40, color: ParentColors.failure),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(48, 28, 48, 32),
                     child: Text(
@@ -128,7 +129,7 @@ class ConversationListState extends State<ConversationListScreen> {
                     ),
                     shape: RoundedRectangleBorder(
                       borderRadius: new BorderRadius.circular(24.0),
-                      side: BorderSide(color: ParentTheme.tiara),
+                      side: BorderSide(color: ParentColors.tiara),
                     ),
                   )
                 ],
@@ -298,7 +299,7 @@ class ConversationListState extends State<ConversationListScreen> {
                   children: <Widget>[
                     Icon(
                       CanvasIcons.warning,
-                      color: ParentTheme.failure,
+                      color: ParentColors.failure,
                     ),
                     SizedBox(width: 12),
                     Expanded(

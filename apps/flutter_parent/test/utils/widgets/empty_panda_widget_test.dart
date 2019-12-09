@@ -24,6 +24,7 @@ void main() {
   final svgPath = 'assets/svg/panda-space-no-assignments.svg';
   final title = 'title';
   final subtitle = 'subtitle';
+  final buttonText = 'Click me';
 
   testWidgetsWithAccessibilityChecks('shows an svg', (tester) async {
     await tester.pumpWidget(_testableWidget(EmptyPandaWidget(svgPath: svgPath)));
@@ -49,6 +50,25 @@ void main() {
     expect(find.byType(SvgPicture), findsNothing);
     expect(find.byType(Text), findsOneWidget);
     expect(find.text(subtitle), findsOneWidget);
+  });
+
+  testWidgetsWithAccessibilityChecks('shows a button', (tester) async {
+    await tester.pumpWidget(_testableWidget(EmptyPandaWidget(buttonText: buttonText)));
+    await tester.pumpAndSettle();
+
+    expect(find.widgetWithText(FlatButton, buttonText), findsOneWidget);
+  });
+
+  testWidgetsWithAccessibilityChecks('tapping button invokes callback', (tester) async {
+    var called = false;
+    await tester.pumpWidget(
+      _testableWidget(EmptyPandaWidget(buttonText: buttonText, onButtonTap: () => called = true)),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.widgetWithText(FlatButton, buttonText), findsOneWidget);
+    await tester.tap(find.text(buttonText));
+    expect(called, isTrue);
   });
 
   testWidgetsWithAccessibilityChecks('shows an svg and a title', (tester) async {
@@ -91,8 +111,25 @@ void main() {
     expect(find.text(title), findsOneWidget);
     expect(find.text(subtitle), findsOneWidget);
   });
+
+  testWidgetsWithAccessibilityChecks('shows an svg, title, subtitle, and button', (tester) async {
+    await tester.pumpWidget(_testableWidget(EmptyPandaWidget(
+      svgPath: svgPath,
+      title: title,
+      subtitle: subtitle,
+      buttonText: buttonText,
+    )));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(SvgPicture), findsOneWidget);
+    expect(find.byType(SizedBox), findsNWidgets(2)); // Between the svg and title, as well as title and subtitle
+    expect(find.byType(Text), findsNWidgets(3));
+    expect(find.text(title), findsOneWidget);
+    expect(find.text(subtitle), findsOneWidget);
+    expect(find.widgetWithText(FlatButton, buttonText), findsOneWidget);
+  });
 }
 
 Widget _testableWidget(EmptyPandaWidget child) {
-  return TestApp(Scaffold(body: child));
+  return TestApp(Scaffold(body: child), highContrast: true);
 }

@@ -15,7 +15,6 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_parent/api/alert_api.dart';
 import 'package:flutter_parent/api/utils/api_prefs.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
@@ -30,7 +29,6 @@ import 'package:flutter_parent/screens/dashboard/dashboard_screen.dart';
 import 'package:flutter_parent/screens/login_landing_screen.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../utils/accessibility_utils.dart';
 import '../../utils/platform_config.dart';
@@ -46,7 +44,10 @@ void main() {
     _locator.registerLazySingleton<AlertsApi>(() => AlertsApiMock());
   }
 
-  Widget _testableMaterialWidget([Widget widget]) => TestApp(Scaffold(body: widget ?? DashboardScreen()));
+  Widget _testableMaterialWidget([Widget widget]) => TestApp(
+        Scaffold(body: widget ?? DashboardScreen()),
+        highContrast: true,
+      );
 
   testWidgetsWithAccessibilityChecks('Displays name with pronouns when pronouns are not null', (tester) async {
     _setupLocator(MockInteractor(includePronouns: true));
@@ -311,7 +312,7 @@ class MockInteractor extends DashboardInteractor {
   MockInteractor({this.includePronouns = false, this.generateStudents = true, this.generateSelf = true});
 
   @override
-  Future<List<User>> getStudents() async => generateStudents
+  Future<List<User>> getStudents({bool forceRefresh = false}) async => generateStudents
       ? [
           _mockUser('Billy', pronouns: includePronouns ? 'he/him' : null),
           _mockUser('Sally', pronouns: includePronouns ? 'she/her' : null),

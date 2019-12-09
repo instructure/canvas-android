@@ -319,7 +319,8 @@ class AppLocalizations {
 
   String get noCoursesTitle => Intl.message('No Courses', desc: 'Title for having no courses');
 
-  String get noCoursesMessage => Intl.message("Your child’s courses might not be published yet.", desc: 'Message for having no courses');
+  String get noCoursesMessage =>
+      Intl.message("Your child’s courses might not be published yet.", desc: 'Message for having no courses');
 
   String get noGrade => Intl.message(
         'No Grade',
@@ -428,6 +429,40 @@ class AppLocalizations {
         'We were unable to verify the server for use with this app.',
         desc: 'The generic error shown when we are unable to verify with Canvas',
       );
+
+  /// Not-A-Parent screen
+
+  String get notAParentTitle => Intl.message('Not a parent?',
+      desc: 'Title for the screen that shows when the user is not observing any students');
+
+  String get notAParentSubtitle => Intl.message("We couldn't find any students associated with this account",
+      desc: 'Subtitle for the screen that shows when the user is not observing any students');
+
+  String get studentOrTeacherTitle => Intl.message('Are you a student or teacher?',
+      desc: 'Label for button that will show users the option to view other Canvas apps in the Play Store');
+
+  String get studentOrTeacherSubtitle =>
+      Intl.message('One of our other apps might be a better fit. Tap one to visit the Play Store.',
+          desc: 'Description of options to view other Canvas apps in the Play Store');
+
+  String get returnToLogin =>
+      Intl.message('Return to Login', desc: 'Label for the button that returns the user to the login screen');
+
+  String get studentApp => Intl.message('STUDENT',
+      desc:
+          "The 'student' portion of the 'Canvas Student' app name, in all caps. 'Canvas' is excluded in this context as it will be displayed to the user as a wordmark image");
+
+  String get teacherApp => Intl.message('TEACHER',
+      desc:
+          "The 'teacher' portion of the 'Canvas Teacher' app name, in all caps. 'Canvas' is excluded in this context as it will be displayed to the user as a wordmark image");
+
+  String get canvasStudentApp => Intl.message('Canvas Student',
+      desc:
+          "The name of the Canvas Student app. Only 'Student' should be translated as 'Canvas' is a brand name in this context and should not be translated.");
+
+  String get canvasTeacherApp => Intl.message('Canvas Teacher',
+      desc:
+          "The name of the Canvas Teacher app. Only 'Teacher' should be translated as 'Canvas' is a brand name in this context and should not be translated.");
 
   /// Alerts Screen
 
