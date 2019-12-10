@@ -50,6 +50,8 @@ class DiscussionEntryHtmlConverter {
             deletedText: String): String {
 
         val repliesButtonText = context.resources.getQuantityString(R.plurals.utils_discussionsReplies, discussionEntry.totalChildren, discussionEntry.totalChildren.localized)
+        val likeCountLabel = if (discussionEntry.ratingSum == 0) "" else context.resources.getQuantityString(R.plurals.likeCountLabel, discussionEntry.ratingSum, discussionEntry.ratingSum.localized)
+        val likeEntryLabel = context.resources.getString(R.string.likeEntryLabel)
 
         val htmlListener = getItemClickListener(discussionEntry.id.toString())
         val replyListener = getReplyListener(discussionEntry.id.toString())
@@ -179,6 +181,9 @@ class DiscussionEntryHtmlConverter {
                 .replace("__GROUP__", "display: block;")
                 .replace("__LIKE_ICON__", likingIcon)
                 .replace("__LIKE_COUNT__", likingSum)
+                .replace("__LIKE_ARIA__", likeEntryLabel)
+                .replace("__LIKE_CHECKED_ARIA__", discussionEntry._hasRated.toString())
+                .replace("__LIKE_COUNT_ARIA__", likeCountLabel)
                 .replace("__LIKE_ALLOWED__", liking)
                 .replace("__LIKE_COLOR__", colorToHex(likingColor))
                 .replace("__BRAND_COLOR__", colorToHex(brandColor))

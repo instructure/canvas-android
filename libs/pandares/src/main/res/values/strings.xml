@@ -858,7 +858,12 @@
     <string name="start">Start</string>
     <string name="newPushNotifications">%1$s New Notifications</string>
     <string name="like">like</string>
+    <string name="likeEntryLabel">Like Entry</string>
     <string name="likes">likes</string>
+    <plurals name="likeCountLabel">
+        <item quantity="one">%s like</item>
+        <item quantity="other">%s likes</item>
+    </plurals>
 
     <string name="color_1">Red</string>
     <string name="color_2">Hot Pink</string>
