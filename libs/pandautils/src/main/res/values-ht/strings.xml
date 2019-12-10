@@ -33,7 +33,6 @@
     <string name="fileUploadSuccess">Transfè Reyisi</string>
     <string name="noNetwork">Rezo pa disponib - tanpri eseye pita.</string>
     <string name="uploadMessage">Transfè an pwosesis. Verifye avètisman an pou estati transfè a.</string>
-    <string name="mediaUpload">Transfè Mesya</string>
     <string name="uploadingFile">Chajman fichye&#8230;</string>
     <string name="errorUploadingFile">Yon erè fèt pandan chajman fichye ou a. Tanpri eseye ankò.</string>
     <string name="fileSubmission">Soumèt Fichye (yo)</string>
@@ -171,13 +170,12 @@
     <string name="noEvents">Pa gen Aktivite Jodi a!</string>
     <string name="noEventsSubtext">Sanble se yon bèl jounen pou repoze epi pran detant.</string>
     <string name="noSubmission">Pa gen Soumisyon</string>
-    <string name="noSubmissionSubtext">Soumèt sesyon ou nan dat %1$s a %2$s.</string>
     <string name="noSubmissionTeacher">Elèv sa a poko fè okenn soumisyon.</string>
-    <string name="noDueDate">Sesyon sa a pa gen delè.</string>
     <string name="locked">Bloke</string>
     <string name="lockedSubtext">Sesyon sa a bloke jiska %1$s a %2$s.</string>
     <string name="chooseFile">Chwazi yon Fichye</string>
     <string name="chooseFileSubtext">Tape opsyon ki pi ba a pou ajoute yon fichye nan soumisyon ou an. </string>
+    <string name="chooseFileForUploadSubtext">Tape yon opsyon pi ba a pou ka seleksyone yon fichye pou transfere</string>
     <string name="noNotifications">Okenn Notifikasyon</string>
     <string name="noNotificationsSubtext">Poko gen anyen ki mande pou yo voye notifiksyon pou ou.</string>
     <string name="noTodos">Byen Fèt!</string>
@@ -380,6 +378,7 @@
     <string name="utils_uploadToCanvas">Transfere nan Canvas</string>
     <string name="utils_uploadMyFiles">Fichye Mwen</string>
     <string name="utils_uploadCourseFiles">Fichye Kou</string>
+    <string name="utils_uploadGroupFiles">Gwoup Fichye</string>
     <string name="utils_uploadToSubmissionComment">Soumèt nan Kòmantè Soumisyon</string>
     <string name="utils_attachFile">Ajoute yon fichye</string>
     <string name="utils_with">avèk</string>

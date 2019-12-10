@@ -62,7 +62,9 @@
     <string name="submissionUploadByteProgress">%1$s من %2$s</string>
     <string name="submissionSuccessTitle">نجح الإرسال!</string>
     <string name="submissionSuccessMessage">تم إرسال مهمتك بنجاح. طاب يومك!</string>
-    <string name="cancelAllSubmissions">إلغاء جميع إرسالات المهام</string>
+    <string name="submissionDeleteTitle">إلغاء الإرسال</string>
+    <string name="submissionDeleteMessage">سيؤدي هذا إلى إلغاء وحذف إرسالك.</string>
+    <string name="submissionDeleted">تم حذف الإرسال</string>
     <string name="missingSubmissionLabel">مفقود</string>
     <string name="gradedSubmissionLabel">تم تقييم الدرجة</string>
     <!-- Student Submission -->
@@ -102,6 +104,7 @@
     <string name="finalGradeFormatted">الدرجة النهائية: %s</string>
     <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
     <string name="contentDescriptionScoreOutOfPointsPossible">%1$s من إجمالي %2$s نقاط</string>
+    <string name="enterWhatIfScore">إدخال درجة مفترضة</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">نتيجة مخصصة</string>
     <string name="rubricEmptyMessage">لا يوجد أي مقياس تقييم لهذه المهمة</string>
@@ -601,8 +604,7 @@
     <string name="EULA">اتفاقية ترخيص المستخدم النهائي</string>
     <string name="privacyPolicy">سياسة الخصوصية</string>
     <string name="termsOfUse">شروط الاستخدام</string>
-    <string name="openSource">مصدر مفتوح</string>
-
+    <string name="canvasOnGithub">Canvas على GitHub</string>
     <!-- Quiz Strings -->
     <string name="assignmentQuizzes">اختبارات المهمة</string>
     <string name="practiceQuizzes">التدريب على اختبارات موجزة</string>
@@ -613,6 +615,7 @@
     <string name="choose_answers_below">اختر إجاباتك أدناه</string>
 
 
+    <string name="flag_the_question">وضع علامة على السؤال</string>
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">قائمة مهام</string>
     <string name="gradesWidgetTitle">الدرجات</string>
@@ -881,9 +884,6 @@
     <string name="like">إعجاب</string>
     <string name="likes">إعجابات</string>
 
-    <string name="wear_reminder">جدولة تذكيرات مواعيد الاستحقاق</string>
-    <string name="wear_notifications">تشغيل إعلامات الأجهزة القابلة للارتداء</string>
-
     <string name="color_1">أحمر</string>
     <string name="color_2">وردي ناصع</string>
     <string name="color_3">أرجواني شاحب</string>
@@ -1059,6 +1059,45 @@
     <string name="addChildErrorMessage">تعذر الإقران. تأكد من أن رمز الإقران صحيح وفي إطار الحد الزمني للاستخدام.</string>
     <string name="gradeComplete">مكتمل</string>
     <string name="gradeIncomplete">غير مكتمل</string>
+    <!--Teacher Strings-->
+    <string name="postPolicyTitle">نشر الإعدادات</string>
+    <string name="postGradesTab">نشر التقادير</string>
+    <string name="hideGradesTab">إخفاء التقادير</string>
+    <plurals name="gradesPostedCount">
+        <item quantity="zero">%d تقديرات منشورة في الوقت الحالي</item>
+        <item quantity="one">%d تقدير منشور في الوقت الحالي</item>
+        <item quantity="two">%d تقديرات منشورة في الوقت الحالي</item>
+        <item quantity="few">%d تقديرات منشورة في الوقت الحالي</item>
+        <item quantity="many">%d تقديرات منشورة في الوقت الحالي</item>
+        <item quantity="other">%d تقديرات منشورة في الوقت الحالي</item>
+    </plurals>
+    <plurals name="gradesHiddenCount">
+        <item quantity="zero">%d تقديرات مخفية في الوقت الحالي</item>
+        <item quantity="one">%d تقدير مخفي في الوقت الحالي</item>
+        <item quantity="two">%d تقديرات مخفية في الوقت الحالي</item>
+        <item quantity="few">%d تقديرات مخفية في الوقت الحالي</item>
+        <item quantity="many">%d تقديرات مخفية في الوقت الحالي</item>
+        <item quantity="other">%d تقديرات مخفية في الوقت الحالي</item>
+    </plurals>
+    <string name="postPolicyPostTo">نشر على...</string>
+    <string name="postPolicySections">أقسام محددة</string>
+    <string name="postToEveryoneTitle">الجميع</string>
+    <string name="postToEveryoneMessage">سيتم عرض التقادير لجميع الطلاب</string>
+    <string name="postToGradedTitle">تم تقييم الدرجة</string>
+    <string name="postToGradedMessage">سيتم عرض التقادير للطلاب أصحاب الإرسالات التي تم وضع تقدير لها</string>
+    <string name="postPolicyAllHiddenTitle">جميعها مخفية</string>
+    <string name="postPolicyAllHiddenMessage">جميع التقادير مخفية حالياً.</string>
+    <string name="postPolicyAllPostedTitle">جميعها منشورة</string>
+    <string name="postPolicyAllPostedMessage">جميع التقادير منشورة حالياً.</string>
+    <string name="postPolicyPostedToast">التقادير المنشورة</string>
+    <string name="postPolicyHiddenToast">تم إخفاء جميع التقادير</string>
+    <string name="postPolicyPostFailedToast">فشل نشر التقادير</string>
+    <string name="postPolicyHideFailedToast">فشل إخفاء التقادير</string>
+    <string name="gradeBeforePosting">التقدير قبل النشر</string>
+    <string name="gradeAfterPosting">التقدير بعد النشر</string>
+    <string name="gradeOverride">تجاوز التقدير</string>
+    <string name="currentGrade">التقدير الحالي</string>
+
     <!-- Floating Recording View Strings -->
     <string name="recordingTimerDefault">00:00:00</string>
     <string name="recordingTimerContentDescription">%1$d من الساعات و%2$d من الدقائق و%3$d من الثواني</string>

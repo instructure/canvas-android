@@ -30,15 +30,15 @@
     <string name="confirm">Confirmar</string>
     <string name="cancel">Cancelar</string>
     <string name="help">Ajuda</string>
-    <string name="enterURL">Insira o seu URL de Canvas:</string>
+    <string name="enterURL">Insira o seu URL do Canvas:</string>
     <string name="signIntoCanvasNetwork">Tentando entrar na Canvas Network?</string>
     <string name="remove">Remover</string>
     <string name="exampleURLSimple">myschool.instructure.com</string>
     <string name="userId">ID de Usuário</string>
     <string name="domain">Domínio</string>
-
     <string name="actAsUser">Agir como Usuário</string>
     <string name="stopActAsUser">Parar de Agir como Usuário</string>
+
     <!--Multiple User Sign in -->
     <string name="removeUser">Remover este usuário?</string>
     <string name="removedForever">Você terá que entrar neste usuário novamente para acessar seu conteúdo.</string>
@@ -54,16 +54,17 @@
     <string name="password">Senha</string>
     <string name="authenticationRequired">Autenticação Necessária</string>
     <string name="invalidEmailPassword">E-mail ou senha invalido</string>
-    <string name="login">Entrar</string>
+    <string name="login">Login</string>
     <string name="logout">Sair</string>
-
     <string name="matchingSchools">Escolas correspondentes</string>
+
     <!--Logout Warning Dialog-->
     <string name="logout_warning">Tem certeza de que deseja sair?</string>
     <string name="logout_yes">Sim</string>
     <string name="logout_no">Não</string>
 
     <!--Smart Login-->
+
     <string name="loginNearYou">Perto de você</string>
     <string name="loginCanvasNetwork">Canvas Network</string>
     <string name="loginRightBehindYou">Apoiando o seu aprendizado</string>
@@ -85,9 +86,11 @@
     <string name="errorSeveritySomethingsBroken">Alguma coisa não está funcionando, mas eu posso trabalhar em torno dela para conseguir fazer o que precisa ser feito.</string>
     <string name="errorSeverityCantGetThingsDone">Eu não consigo fazer as tarefas até ter o seu retorno.</string>
     <string name="errorSeverityExtremelyCritical">EMERGÊNCIA CRÍTICA EXTREMA!!</string>
+
     <string name="errorReportEmailAddress">Endereço de e-mail</string>
-    <string name="errorReportEnterEmail">Insira o seu endereço de email&#8230;</string>
+    <string name="errorReportEnterEmail">Insira o seu endereço de e-mail&#8230;</string>
     <string name="errorReportUnknown">Desconhecido</string>
+
     <!-- Distance Strings -->
     <string name="lessThanOne">&lt; 1 milha (1,6 km)</string>
     <string name="oneMile">1 milha (1,6 km)</string>
@@ -98,9 +101,8 @@
     <string name="device">Dispositivo</string>
     <string name="osVersion">Versão OS</string>
 
-    <string name="previousLoginTitle">Logins prévios</string>
+    <string name="previousLoginTitle">Logins anteriores</string>
     <string name="findMySchool">Encontrar minha escola</string>
-    <string name="canvasLowerCase">canvas</string>
     <string name="whatsYourSchoolName">Qual é o nome da sua escola?</string>
     <string name="next">Próximo</string>
     <string name="schoolInstructureCom">school.instructure.com</string>
@@ -114,14 +116,13 @@
     <string name="versionNum">Número da versão</string>
     <string name="scrollInstructions">Rolar para ver todos os detalhes</string>
 
-    <string name="masqueradeErrorUserId">Você deve digitar uma id de usuário.</string>
+    <string name="masqueradeErrorUserId">Você deve digitar uma ID de usuário.</string>
     <string name="masqueradeErrorDomain">Você deve inserir um domínio válido.</string>
-    <string name="masqueradeError">Erro ao tentar se mascarar.</string>
+    <string name="masqueradeError">Erro ao tentar agir como.</string>
     <string name="masqueradeInfo">\"Agir como\" é essencialmente fazer logon como este usuário sem uma senha. Você poderá realizar qualquer ação como se você fosse esse usuário, e será como se esse usuário estivesse agindo para os outros usuários. Contudo, logs de auditoria registram o fato de que você era a pessoa que realizou as ações em nome desse usuário.</string>
     <string name="masqueradingAs">Você está agindo como %s</string>
     <string name="stopActingAsTitle">Parar de agir como...</string>
     <string name="stopActingAsMessage">Você parará de agir como %s e voltará à sua conta.</string>
-
     <string name="weMadeChanges">Fizemos algumas mudanças.</string>
     <string name="whatsNewText">Ver as novidades</string>
 </resources>

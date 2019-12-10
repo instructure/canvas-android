@@ -33,7 +33,6 @@
     <string name="fileUploadSuccess">Upload vellykket.</string>
     <string name="noNetwork">Netværk ikke tilgængeligt - prøv igen senere.</string>
     <string name="uploadMessage">Upload i gang. Tjek meddelelser for uploadstatus.</string>
-    <string name="mediaUpload">Medie upload</string>
     <string name="uploadingFile">Uploader fil &#8230;</string>
     <string name="errorUploadingFile">En uventet fejl opstod ved overførsel af filen. Prøv igen.</string>
     <string name="fileSubmission">Indsend fil(-er)</string>
@@ -171,13 +170,12 @@
     <string name="noEvents">Ingen begivenheder i dag!</string>
     <string name="noEventsSubtext">Det ser ud til, at det er en god dag til at hvile sig og slappe af.</string>
     <string name="noSubmission">Ingen aflevering</string>
-    <string name="noSubmissionSubtext">Indsend din opgave inden d. %1$s kl. %2$s.</string>
     <string name="noSubmissionTeacher">Denne studerende har ikke nogen aflevering endnu.</string>
-    <string name="noDueDate">Denne opgave har ikke nogen afleveringsdato.</string>
     <string name="locked">Låst</string>
     <string name="lockedSubtext">Denne opgave er låst indtil d. %1$s kl. %2$s.</string>
     <string name="chooseFile">Vælg en fil</string>
     <string name="chooseFileSubtext">Vedhæft en fil til din aflevering ved at trykke på en mulighed nedenfor.</string>
+    <string name="chooseFileForUploadSubtext">Vedhæft en fil at uploade ved at trykke på en mulighed nedenfor</string>
     <string name="noNotifications">Ingen notifikationer</string>
     <string name="noNotificationsSubtext">Der er intet at blive underrettet om endnu.</string>
     <string name="noTodos">Godt klaret!</string>
@@ -380,6 +378,7 @@
     <string name="utils_uploadToCanvas">Overfør til Canvas</string>
     <string name="utils_uploadMyFiles">Mine filer</string>
     <string name="utils_uploadCourseFiles">Fagets filer</string>
+    <string name="utils_uploadGroupFiles">Gruppefiler</string>
     <string name="utils_uploadToSubmissionComment">Upload til afleveringskommentar</string>
     <string name="utils_attachFile">Vedhæft en fil</string>
     <string name="utils_with">med</string>

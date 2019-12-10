@@ -59,7 +59,9 @@
     <string name="submissionUploadByteProgress">%1$s van %2$s</string>
     <string name="submissionSuccessTitle">Inlevering is gelukt!</string>
     <string name="submissionSuccessMessage">Je opdracht is ingeleverd. Een fijne dag gewenst!</string>
-    <string name="cancelAllSubmissions">Alle opdrachtinleveringen annuleren</string>
+    <string name="submissionDeleteTitle">Inlevering annuleren</string>
+    <string name="submissionDeleteMessage">Hiermee wordt je inlevering geannuleerd en verwijderd.</string>
+    <string name="submissionDeleted">Inlevering verwijderd</string>
     <string name="missingSubmissionLabel">Ontbrekend</string>
     <string name="gradedSubmissionLabel">Beoordeeld</string>
     <!-- Student Submission -->
@@ -99,6 +101,7 @@
     <string name="finalGradeFormatted">Eindcijfer: %s</string>
     <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
     <string name="contentDescriptionScoreOutOfPointsPossible">%1$s van de %2$s punten</string>
+    <string name="enterWhatIfScore">Wat-als-score invoeren</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Aangepaste score</string>
     <string name="rubricEmptyMessage">Er is geen rubriek voor deze opdracht</string>
@@ -578,8 +581,7 @@
     <string name="EULA">EULA</string>
     <string name="privacyPolicy">Privacybeleid</string>
     <string name="termsOfUse">Gebruiksvoorwaarden</string>
-    <string name="openSource">Open bron</string>
-
+    <string name="canvasOnGithub">Canvas op GitHub</string>
     <!-- Quiz Strings -->
     <string name="assignmentQuizzes">Toetsen met opdrachten</string>
     <string name="practiceQuizzes">Practicumtoetsen</string>
@@ -590,6 +592,7 @@
     <string name="choose_answers_below">Kies je antwoorden hieronder</string>
 
 
+    <string name="flag_the_question">Markeer de vraag</string>
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">To-do lijst</string>
     <string name="gradesWidgetTitle">Cijfers</string>
@@ -846,9 +849,6 @@
     <string name="like">like</string>
     <string name="likes">likes</string>
 
-    <string name="wear_reminder">Schema inleverdatum herinneringen</string>
-    <string name="wear_notifications">Berichtgevingen inschakelen</string>
-
     <string name="color_1">Rood</string>
     <string name="color_2">Felroze</string>
     <string name="color_3">Lavendel</string>
@@ -1016,6 +1016,37 @@
     <string name="addChildErrorMessage">Koppelen mislukt. Zorg ervoor dat je koppelingscode juist is en dat deze binnen de ingestelde tijdslimiet valt.</string>
     <string name="gradeComplete">Voltooid</string>
     <string name="gradeIncomplete">Incompleet</string>
+    <!--Teacher Strings-->
+    <string name="postPolicyTitle">Instellingen voor posten</string>
+    <string name="postGradesTab">Cijfers posten</string>
+    <string name="hideGradesTab">Cijfers verbergen</string>
+    <plurals name="gradesPostedCount">
+        <item quantity="one">%d cijfer momenteel gepost</item>
+        <item quantity="other">%d cijfers momenteel gepost</item>
+    </plurals>
+    <plurals name="gradesHiddenCount">
+        <item quantity="one">%d cijfer momenteel verborgen</item>
+        <item quantity="other">%d cijfers momenteel verborgen</item>
+    </plurals>
+    <string name="postPolicyPostTo">Posten in...</string>
+    <string name="postPolicySections">Specifieke secties</string>
+    <string name="postToEveryoneTitle">Iedereen</string>
+    <string name="postToEveryoneMessage">Cijfers worden zichtbaar gemaakt voor alle cursisten</string>
+    <string name="postToGradedTitle">Beoordeeld</string>
+    <string name="postToGradedMessage">Cijfers worden zichtbaar gemaakt voor cursisten met beoordeelde inleveringen</string>
+    <string name="postPolicyAllHiddenTitle">Alle verborgen cijfers</string>
+    <string name="postPolicyAllHiddenMessage">Alle cijfers zijn momenteel verborgen.</string>
+    <string name="postPolicyAllPostedTitle">Alle geposte cijfers</string>
+    <string name="postPolicyAllPostedMessage">Alle cijfers zijn momenteel gepost.</string>
+    <string name="postPolicyPostedToast">Geposte cijfers</string>
+    <string name="postPolicyHiddenToast">Verborgen cijfers</string>
+    <string name="postPolicyPostFailedToast">Posten van cijfers mislukt</string>
+    <string name="postPolicyHideFailedToast">Verbergen van cijfers mislukt</string>
+    <string name="gradeBeforePosting">Beoordelen vóór posten</string>
+    <string name="gradeAfterPosting">Beoordelen na posten</string>
+    <string name="gradeOverride">Cijferoverschrijving</string>
+    <string name="currentGrade">Huidig cijfer </string>
+
     <!-- Floating Recording View Strings -->
     <string name="recordingTimerDefault">00:00:00</string>
     <string name="recordingTimerContentDescription">%1$d uur, %2$d minuten en %3$d seconden</string>

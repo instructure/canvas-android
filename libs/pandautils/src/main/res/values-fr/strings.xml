@@ -33,7 +33,6 @@
     <string name="fileUploadSuccess">Téléchargement réussi</string>
     <string name="noNetwork">Réseau indisponible – Veuillez réessayer plus tard.</string>
     <string name="uploadMessage">*Envoi en cours. Vérifiez vos notifications pour connaître l’état de l’envoi.</string>
-    <string name="mediaUpload">Téléchargement de média</string>
     <string name="uploadingFile">Téléchargement du fichier&#8230;</string>
     <string name="errorUploadingFile">Une erreur est survenue lors de l’envoi de votre fichier. Veuillez réessayer.</string>
     <string name="fileSubmission">Soumettre un ou des fichier(s)</string>
@@ -171,13 +170,12 @@
     <string name="noEvents">Aucun événement aujourd\'hui !</string>
     <string name="noEventsSubtext">C\'est une belle journée pour se reposer et se détendre.</string>
     <string name="noSubmission">Aucune soumission</string>
-    <string name="noSubmissionSubtext">Soumettez votre travail par %1$s à %2$s.</string>
     <string name="noSubmissionTeacher">Cet étudiant n\'a pas encore de soumission.</string>
-    <string name="noDueDate">Ce travail n\'a pas de date d\'échéance.</string>
     <string name="locked">Verrouillé</string>
     <string name="lockedSubtext">Ce travail est bloqué jusqu\'au %1$s à %2$s.</string>
     <string name="chooseFile">Choisir un fichier</string>
     <string name="chooseFileSubtext">Joignez un fichier à votre soumission en appuyant sur l\'une des options ci-dessous.</string>
+    <string name="chooseFileForUploadSubtext">Sélectionnez un fichier à votre téléchargement en appuyant sur l\'une des options ci-dessous.</string>
     <string name="noNotifications">Aucune notification</string>
     <string name="noNotificationsSubtext">Il n\'y a encore rien à signaler.</string>
     <string name="noTodos">Bravo !</string>
@@ -380,6 +378,7 @@
     <string name="utils_uploadToCanvas">Télécharger sur Canvas</string>
     <string name="utils_uploadMyFiles">Mes fichiers</string>
     <string name="utils_uploadCourseFiles">Fichiers du cours</string>
+    <string name="utils_uploadGroupFiles">Fichiers de groupe</string>
     <string name="utils_uploadToSubmissionComment">Télécharger vers le commentaire de soumission</string>
     <string name="utils_attachFile">Joindre un fichier</string>
     <string name="utils_with">avec</string>

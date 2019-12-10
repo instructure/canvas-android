@@ -59,7 +59,9 @@
     <string name="submissionUploadByteProgress">%1$s of %2$s</string>
     <string name="submissionSuccessTitle">Submission Success!</string>
     <string name="submissionSuccessMessage">Your assignment was successfully submitted. Enjoy your day!</string>
-    <string name="cancelAllSubmissions">Cancel All Assignment Submissions</string>
+    <string name="submissionDeleteTitle">Cancel Submission</string>
+    <string name="submissionDeleteMessage">This will cancel and delete your submission.</string>
+    <string name="submissionDeleted">Submission Deleted</string>
     <string name="missingSubmissionLabel">Missing</string>
     <string name="gradedSubmissionLabel">Graded</string>
     <!-- Student Submission -->
@@ -99,6 +101,7 @@
     <string name="finalGradeFormatted">Final Grade: %s</string>
     <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
     <string name="contentDescriptionScoreOutOfPointsPossible">%1$s out of %2$s points</string>
+    <string name="enterWhatIfScore">Enter what-if score</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Custom score</string>
     <string name="rubricEmptyMessage">There is no rubric for this assignment</string>
@@ -578,8 +581,7 @@
     <string name="EULA">EULA</string>
     <string name="privacyPolicy">Privacy Policy</string>
     <string name="termsOfUse">Terms of Use</string>
-    <string name="openSource">Open Source</string>
-
+    <string name="canvasOnGithub">Canvas on GitHub</string>
     <!-- Quiz Strings -->
     <string name="assignmentQuizzes">Assignment Quizzes</string>
     <string name="practiceQuizzes">Practice Quizzes</string>
@@ -590,6 +592,7 @@
     <string name="choose_answers_below">Choose your answers below</string>
 
 
+    <string name="flag_the_question">Flag the question</string>
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">To Do</string>
     <string name="gradesWidgetTitle">Grades</string>
@@ -846,9 +849,6 @@
     <string name="like">like</string>
     <string name="likes">likes</string>
 
-    <string name="wear_reminder">Schedule Due Date Reminders</string>
-    <string name="wear_notifications">Turn on Wear Notifications</string>
-
     <string name="color_1">Red</string>
     <string name="color_2">Hot Pink</string>
     <string name="color_3">Lavender</string>
@@ -1016,6 +1016,37 @@
     <string name="addChildErrorMessage">Pairing Failed. Make sure your pairing code is correct and within the time limit of use.</string>
     <string name="gradeComplete">Complete</string>
     <string name="gradeIncomplete">Incomplete</string>
+    <!--Teacher Strings-->
+    <string name="postPolicyTitle">Post Settings</string>
+    <string name="postGradesTab">Post Grades</string>
+    <string name="hideGradesTab">Hide Grades</string>
+    <plurals name="gradesPostedCount">
+        <item quantity="one">%d grade currently posted</item>
+        <item quantity="other">%d grades currently posted</item>
+    </plurals>
+    <plurals name="gradesHiddenCount">
+        <item quantity="one">%d grade currently hidden</item>
+        <item quantity="other">%d grades currently hidden</item>
+    </plurals>
+    <string name="postPolicyPostTo">Post to&#8230;</string>
+    <string name="postPolicySections">Specific Sections</string>
+    <string name="postToEveryoneTitle">Everyone</string>
+    <string name="postToEveryoneMessage">Grades will be made visible to all students</string>
+    <string name="postToGradedTitle">Graded</string>
+    <string name="postToGradedMessage">Grades will be made visible to students with graded submissions</string>
+    <string name="postPolicyAllHiddenTitle">All Hidden</string>
+    <string name="postPolicyAllHiddenMessage">All grades are currently hidden.</string>
+    <string name="postPolicyAllPostedTitle">All Posted</string>
+    <string name="postPolicyAllPostedMessage">All grades are currently posted.</string>
+    <string name="postPolicyPostedToast">Grades Posted</string>
+    <string name="postPolicyHiddenToast">Grades Hidden</string>
+    <string name="postPolicyPostFailedToast">Failed to post grades</string>
+    <string name="postPolicyHideFailedToast">Failed to hide grades</string>
+    <string name="gradeBeforePosting">Grade before posting</string>
+    <string name="gradeAfterPosting">Grade after posting</string>
+    <string name="gradeOverride">Grade override</string>
+    <string name="currentGrade">Current grade</string>
+
     <!-- Floating Recording View Strings -->
     <string name="recordingTimerDefault">00:00:00</string>
     <string name="recordingTimerContentDescription">%1$d hours, %2$d minutes, and %3$d seconds</string>

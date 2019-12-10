@@ -33,7 +33,6 @@
     <string name="fileUploadSuccess">Ładowanie zakończyło się pomyślnie</string>
     <string name="noNetwork">Sieć niedostępna – spróbuj ponownie później.</string>
     <string name="uploadMessage">Przesyłanie w toku. Sprawdź stan przesłania w powiadomieniach.</string>
-    <string name="mediaUpload">Ładowanie mediów</string>
     <string name="uploadingFile">Przesyłanie pliku&#8230;</string>
     <string name="errorUploadingFile">Podczas wysyłania pliku wystąpił błąd. Spróbuj ponownie.</string>
     <string name="fileSubmission">Prześlij plik(i)</string>
@@ -171,13 +170,12 @@
     <string name="noEvents">Brak wydarzeń na dziś!</string>
     <string name="noEventsSubtext">Wygląda to na świetny dzień do odpoczynku i relaksu.</string>
     <string name="noSubmission">Brak przesłanych zadań</string>
-    <string name="noSubmissionSubtext">Prześlij swoje zadanie do %1$s, godz. %2$s.</string>
     <string name="noSubmissionTeacher">Ten uczestnik jeszcze niczego nie przesłał.</string>
-    <string name="noDueDate">To zadanie nie ma ustalonego terminu.</string>
     <string name="locked">Zablokowany</string>
     <string name="lockedSubtext">To zadanie zostało zablokowane do %1$s, godz. %2$s.</string>
     <string name="chooseFile">Wybierz plik</string>
     <string name="chooseFileSubtext">Załącz plik do przesyłanych materiałów, stukając poniższą opcję.</string>
+    <string name="chooseFileForUploadSubtext">Wybierz plik do przesłania, stukając poniższą opcję.</string>
     <string name="noNotifications">Brak powiadomień</string>
     <string name="noNotificationsSubtext">Brak informacji do przekazania.</string>
     <string name="noTodos">Dobra robota!</string>
@@ -386,6 +384,7 @@
     <string name="utils_uploadToCanvas">Prześlij do systemu Canvas</string>
     <string name="utils_uploadMyFiles">Moje pliki</string>
     <string name="utils_uploadCourseFiles">Pliki kursu</string>
+    <string name="utils_uploadGroupFiles">Pliki grupy</string>
     <string name="utils_uploadToSubmissionComment">Prześlij do komentarzy</string>
     <string name="utils_attachFile">Dołącz plik</string>
     <string name="utils_with">z</string>
