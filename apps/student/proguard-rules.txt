@@ -204,6 +204,9 @@
 -dontwarn com.pspdfkit.ui.dialog.DocumentSharingDialogConfiguration
 -keepnames class io.reactivex.android.schedulers.AndroidSchedulers
 -keepnames class io.reactivex.Observable
+-dontwarn com.pspdfkit.**
+-dontwarn android.view.WindowInsets
+-dontwarn android.graphics.Insets
 
 # Keep third party lib class names. PSPDFKit relies on those class names to be present.
 -keepnames class rx.android.schedulers.AndroidSchedulers

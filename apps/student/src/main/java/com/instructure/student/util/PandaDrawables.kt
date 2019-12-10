@@ -16,8 +16,10 @@
  */
 package com.instructure.student.util
 
+import androidx.annotation.Keep
 import com.instructure.student.R
 
+@Keep
 object PandaDrawables {
     val bodies: List<Pair<Int, Int>> = listOf(
         R.drawable.pandify_body_1 to R.string.content_description_panda_body_1 ,
