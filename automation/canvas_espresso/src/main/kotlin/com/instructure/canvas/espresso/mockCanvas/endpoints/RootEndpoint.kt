@@ -28,6 +28,15 @@ object RootEndpoint : Endpoint(
                 Segment("v1") to ApiEndpoint
         ),
         Segment("files") to FileListEndpoint,
+        Segment("1") to endpoint(
+            Segment("sessions") to CanvadocApiEndpoint
+        ),
+        Segment("2018-04-06") to endpoint(
+            Segment("sessions") to CanvadocApiEndpoint
+        ),
+        Segment("2018-03-07") to endpoint(
+                Segment("sessions") to CanvadocApiEndpoint
+        ),
         Segment("login") to endpoint(
                 Segment("session_token") to endpoint {
                     GET {

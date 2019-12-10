@@ -41,6 +41,21 @@ fun Request.successResponse(body: Any): Response {
         .build()
 }
 
+fun Request.successRedirectWithHeader(header: String, headerValue: String): Response {
+    val responseBody = ResponseBody.create(
+            MediaType.parse("text/plain"),
+            "hodor"
+    )
+    return Response.Builder()
+            .request(this)
+            .header(header, headerValue)
+            .body(responseBody)
+            .message("Success")
+            .protocol(Protocol.HTTP_1_1)
+            .code(308)
+            .build()
+}
+
 /**
  * Creates a successful response for this [Request] with a response code of 200 and a plain text response [body]
  */

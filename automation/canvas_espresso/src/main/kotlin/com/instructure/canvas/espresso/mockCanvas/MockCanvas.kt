@@ -22,6 +22,9 @@ import android.util.Log
 import com.github.javafaker.Faker
 import com.instructure.canvas.espresso.mockCanvas.utils.Randomizer
 import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.canvadocs.CanvaDocAnnotation
+import com.instructure.canvasapi2.models.canvadocs.CanvaDocCoordinate
+import com.instructure.canvasapi2.models.canvadocs.CanvaDocInkList
 import com.instructure.canvasapi2.type.EnrollmentType
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.toApiString
@@ -180,6 +183,15 @@ class MockCanvas {
 
     /** Map of quiz submission id to quiz submission questions */
     val quizSubmissionQuestions = mutableMapOf<Long, MutableList<QuizSubmissionQuestion>>()
+
+    /** Map of doc session id to DocSession */
+    val docSessions = mutableMapOf<String, DocSession>()
+
+    /** Map of doc session id to Annotation lists */
+    val annotations = mutableMapOf<String, List<CanvaDocAnnotation>>()
+
+    // TODO: can we make this better?
+    lateinit var canvadocRedirectUrl: String
 
     //region Convenience functionality
 
@@ -1327,4 +1339,50 @@ fun MockCanvas.addGroupToCourse(
     groups[result.id] = result
 
     return result
+}
+
+fun createFullCoverageAnnotation(author: User, docId: String, data: MockCanvas): CanvaDocAnnotation {
+    return CanvaDocAnnotation(
+        createdAt = APIHelper.dateToString(GregorianCalendar()),
+        rect = arrayListOf(arrayListOf(45.285324f, 80.672485f), arrayListOf(565.24457f,745.6419f)),
+        page = 0,
+        userId = author.id.toString(),
+        userName = author.name,
+        context = "default",
+        width = 2f,
+        documentId = docId,
+        isEditable = false,
+        annotationId = data.newItemId().toString(),
+        color = "#008EE2",
+        inklist = CanvaDocInkList(
+            arrayListOf(arrayListOf(CanvaDocCoordinate(45.285324f, 741.0337f), CanvaDocCoordinate(565.24457f, 107.246704f)))
+        )
+    )
+}
+
+fun MockCanvas.addAnnotations(user: User, author: User, annotationCount: Int = 1): DocSession {
+    val docSessionId = newItemId().toString()
+    val docId = newItemId().toString()
+    val pdfDownloadUrl = """/1/sessions/$docSessionId/file/file.pdf""""""
+    val docSession = DocSession(
+        documentId = newItemId().toString(),
+        annotationUrls = AnnotationUrls(
+            pdfDownload = pdfDownloadUrl,
+            annotatedPdfDownload = pdfDownloadUrl
+        ),
+        annotationMetadata = AnnotationMetadata(
+            enabled = true,
+            userName = user.name,
+            userId = user.id.toString(),
+            permissions = "read" // TODO - beef up permissions
+        )
+    )
+
+    annotations[docSessionId] = listOf(createFullCoverageAnnotation(author, docId, this))
+    docSessions[docSessionId] = docSession
+    canvadocRedirectUrl = "https://mock-data.instructure.com/1/sessions/$docSessionId"
+
+    // TODO createAnnotation(true)
+
+    return docSession
 }

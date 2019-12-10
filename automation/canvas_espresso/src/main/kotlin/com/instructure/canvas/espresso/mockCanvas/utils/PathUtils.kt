@@ -42,6 +42,8 @@ class PathVars {
     var conversationId: Long by map
     var submissionId: Long by map
     var groupId: Long by map
+    var sessionId: Long by map
+    var annotationId: Long by map
 }
 
 /**
