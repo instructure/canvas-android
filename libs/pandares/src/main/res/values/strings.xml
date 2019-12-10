@@ -1061,6 +1061,42 @@
     <string name="gradeOverride">Grade override</string>
     <string name="currentGrade">Current grade</string>
 
+    <!-- Panda Avatar Content Descriptions -->
+
+    <string name="content_description_chosen_head">Chosen head: %s</string>
+    <string name="content_description_chosen_body">Chosen body: %s</string>
+    <string name="content_description_chosen_feet">Chosen feet: %s</string>
+    <string name="content_description_panda_body_1">Purple heart dress with pink trim</string>
+    <string name="content_description_panda_body_2">Green star dress with blue trim</string>
+    <string name="content_description_panda_body_3">Red star dress with orange trim</string>
+    <string name="content_description_panda_body_4">Blue blazer, red bow-tie, and grey pants</string>
+    <string name="content_description_panda_body_5">Orange button-up and jeans</string>
+    <string name="content_description_panda_body_6">Red button-up and brown pants</string>
+    <string name="content_description_panda_body_7">Yellow sun graphic t-shirt and grey pants</string>
+    <string name="content_description_panda_body_8">Teal basketball graphic t-shirt and purple pants</string>
+    <string name="content_description_panda_body_9">Blue android graphic t-shirt and green pants</string>
+    <string name="content_description_panda_body_10">White instructure graphic t-shirt and blue pants</string>
+    <string name="content_description_panda_body_11">Dark grey three-star t-shirt and teal pants</string>
+    <string name="content_description_panda_body_12">Burgundy wizard uniform with magic wand and black pants</string>
+    <string name="content_description_panda_body_13">Bare panda torso</string>
+    <string name="content_description_panda_head_2">Teardrop aviator sunglasses and lipstick</string>
+    <string name="content_description_panda_head_3">Makeup and purple hair bow</string>
+    <string name="content_description_panda_head_4">Fancy moustache</string>
+    <string name="content_description_panda_head_5">Green party glasses</string>
+    <string name="content_description_panda_head_6">Brown spectacles</string>
+    <string name="content_description_panda_head_7">Golden masquerade mask and lipstick</string>
+    <string name="content_description_panda_head_8">Teardrop aviator sunglasses</string>
+    <string name="content_description_panda_head_9">Freckled cheeks</string>
+    <string name="content_description_panda_head_10">Bespectacled, forehead-scarred wizard</string>
+    <string name="content_description_panda_feet_1">Bare feet</string>
+    <string name="content_description_panda_feet_2">Pink shoes with purple bows</string>
+    <string name="content_description_panda_feet_3">Blue shoes with green bows</string>
+    <string name="content_description_panda_feet_4">Red shoes with orange bows</string>
+    <string name="content_description_panda_feet_5">Red shoes</string>
+    <string name="content_description_choose_head">Choose head</string>
+    <string name="content_description_choose_body">Choose body</string>
+    <string name="content_description_choose_feet">Choose feet</string>
+
     <!-- Floating Recording View Strings -->
     <string name="recordingTimerDefault">00:00:00</string>
     <string name="recordingTimerContentDescription">%1$d hours, %2$d minutes, and %3$d seconds</string>
