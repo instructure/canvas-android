@@ -33,7 +33,6 @@
     <string name="fileUploadSuccess">Upload successful</string>
     <string name="noNetwork">Network not available - please try again later.</string>
     <string name="uploadMessage">Upload in progress. Check notifications for upload status.</string>
-    <string name="mediaUpload">Media upload</string>
     <string name="uploadingFile">Uploading file&#8230;</string>
     <string name="errorUploadingFile">An error occurred uploading your file. Please try again.</string>
     <string name="fileSubmission">Submit file(s)</string>
@@ -171,13 +170,12 @@
     <string name="noEvents">No events today!</string>
     <string name="noEventsSubtext">It looks like a great day to rest and relax.</string>
     <string name="noSubmission">No submission</string>
-    <string name="noSubmissionSubtext">Submit your assignment by %1$s at %2$s.</string>
     <string name="noSubmissionTeacher">This student doesn\'t have a submission yet.</string>
-    <string name="noDueDate">This assignment doesn\'t have a due date.</string>
     <string name="locked">Locked</string>
     <string name="lockedSubtext">This assignment is locked until %1$s at %2$s.</string>
     <string name="chooseFile">Choose a file</string>
     <string name="chooseFileSubtext">Attach a file to your submission by tapping an option below.</string>
+    <string name="chooseFileForUploadSubtext">Select a file to upload by tapping an option below</string>
     <string name="noNotifications">No notifications</string>
     <string name="noNotificationsSubtext">There\'s nothing to be notified of yet.</string>
     <string name="noTodos">Well done!</string>
@@ -380,6 +378,7 @@
     <string name="utils_uploadToCanvas">Upload to Canvas</string>
     <string name="utils_uploadMyFiles">My files</string>
     <string name="utils_uploadCourseFiles">Course files</string>
+    <string name="utils_uploadGroupFiles">Group Files</string>
     <string name="utils_uploadToSubmissionComment">Upload to submission comment</string>
     <string name="utils_attachFile">Attach a file</string>
     <string name="utils_with">with</string>

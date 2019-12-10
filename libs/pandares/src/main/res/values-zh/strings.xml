@@ -58,7 +58,9 @@
     <string name="submissionUploadByteProgress">%1$s/%2$s</string>
     <string name="submissionSuccessTitle">提交成功！</string>
     <string name="submissionSuccessMessage">您的作业已成功提交。享受您的一天！</string>
-    <string name="cancelAllSubmissions">取消所有作业提交项</string>
+    <string name="submissionDeleteTitle">取消提交</string>
+    <string name="submissionDeleteMessage">此操作将取消并删除您的提交项。</string>
+    <string name="submissionDeleted">提交项已删除</string>
     <string name="missingSubmissionLabel">缺失</string>
     <string name="gradedSubmissionLabel">已评分</string>
     <!-- Student Submission -->
@@ -98,6 +100,7 @@
     <string name="finalGradeFormatted">最终评分：%s</string>
     <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
     <string name="contentDescriptionScoreOutOfPointsPossible">得分 %1$s，总分 %2$s</string>
+    <string name="enterWhatIfScore">输入假设分数</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">自定义评分</string>
     <string name="rubricEmptyMessage">此作业没有评估表格</string>
@@ -572,8 +575,7 @@
     <string name="EULA">最终用户许可协议</string>
     <string name="privacyPolicy">隐私政策</string>
     <string name="termsOfUse">使用条款</string>
-    <string name="openSource">开放源</string>
-
+    <string name="canvasOnGithub">GitHub上的Canvas</string>
     <!-- Quiz Strings -->
     <string name="assignmentQuizzes">作业测验</string>
     <string name="practiceQuizzes">练习测验</string>
@@ -584,6 +586,7 @@
     <string name="choose_answers_below">在下方选择您的答案</string>
 
 
+    <string name="flag_the_question">标记此问题</string>
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">待办事项</string>
     <string name="gradesWidgetTitle">评分</string>
@@ -837,9 +840,6 @@
     <string name="like">喜欢</string>
     <string name="likes">喜欢</string>
 
-    <string name="wear_reminder">计划截止日期的提示</string>
-    <string name="wear_notifications">开启穿戴通知</string>
-
     <string name="color_1">红色</string>
     <string name="color_2">亮粉色</string>
     <string name="color_3">薰衣草</string>
@@ -1005,6 +1005,35 @@
     <string name="addChildErrorMessage">配对失败。确保配对码正确，且未超过使用时间限制。</string>
     <string name="gradeComplete">完成</string>
     <string name="gradeIncomplete">未完成</string>
+    <!--Teacher Strings-->
+    <string name="postPolicyTitle">发布设置</string>
+    <string name="postGradesTab">发布评分</string>
+    <string name="hideGradesTab">隐藏评分</string>
+    <plurals name="gradesPostedCount">
+        <item quantity="other">%d评分现已发布</item>
+    </plurals>
+    <plurals name="gradesHiddenCount">
+        <item quantity="other">%d评分现已隐藏</item>
+    </plurals>
+    <string name="postPolicyPostTo">发布到&#8230;&#8230;</string>
+    <string name="postPolicySections">特定分组</string>
+    <string name="postToEveryoneTitle">所有人</string>
+    <string name="postToEveryoneMessage">评分将对所有学生显示</string>
+    <string name="postToGradedTitle">已评分</string>
+    <string name="postToGradedMessage">评分将对所有具备评分提交项的学生显示</string>
+    <string name="postPolicyAllHiddenTitle">全部隐藏</string>
+    <string name="postPolicyAllHiddenMessage">已隐藏所有评分。</string>
+    <string name="postPolicyAllPostedTitle">全部发布</string>
+    <string name="postPolicyAllPostedMessage">已发布所有评分。</string>
+    <string name="postPolicyPostedToast">已发布评分</string>
+    <string name="postPolicyHiddenToast">评分已隐藏</string>
+    <string name="postPolicyPostFailedToast">发布评分失败</string>
+    <string name="postPolicyHideFailedToast">隐藏评分失败</string>
+    <string name="gradeBeforePosting">发布前的评分</string>
+    <string name="gradeAfterPosting">发布后的评分</string>
+    <string name="gradeOverride">覆盖评分</string>
+    <string name="currentGrade">当前评分</string>
+
     <!-- Floating Recording View Strings -->
     <string name="recordingTimerDefault">00:00:00</string>
     <string name="recordingTimerContentDescription">%1$d小时，%2$d分钟，%3$d秒</string>

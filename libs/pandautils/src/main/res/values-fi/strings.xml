@@ -33,7 +33,6 @@
     <string name="fileUploadSuccess">Lataus onnistui</string>
     <string name="noNetwork">Verkko ei ole saatavilla - yritä uudelleen myöhemmin.</string>
     <string name="uploadMessage">”Lataus käynnissä. Tarkista latauksen tila ilmoituksista.</string>
-    <string name="mediaUpload">Mediatiedoston lataus</string>
     <string name="uploadingFile">Ladataan tiedostoa&#8230;</string>
     <string name="errorUploadingFile">Ilmeni virhe tiedostoa ladatessa. Yritä uudelleen.</string>
     <string name="fileSubmission">Lähetä tiedosto</string>
@@ -170,13 +169,12 @@
     <string name="noEvents">Ei tapahtumia tänään!</string>
     <string name="noEventsSubtext">Näyttää olevan hyvä päivä levätä ja rentoutua.</string>
     <string name="noSubmission">Ei lähetystä</string>
-    <string name="noSubmissionSubtext">Lähetä tehtäväsi %1$s mennessä kohteessa %2$s.</string>
     <string name="noSubmissionTeacher">Opiskelijalla ei ole vielä lähetystä.</string>
-    <string name="noDueDate">Tehtävällä ei ole määräpäivää.</string>
     <string name="locked">Lukittu</string>
     <string name="lockedSubtext">Tehtävä on lukittu %1$s asti kohdassa %2$s.</string>
     <string name="chooseFile">Valitse tiedosto</string>
     <string name="chooseFileSubtext">Liitä tiedosto lähetyksesi napauttamalla alla olevaa asetusta.</string>
+    <string name="chooseFileForUploadSubtext">Valitse ladattava tiedosto napauttamalla alla olevaa asetusta</string>
     <string name="noNotifications">Ei ilmoituksia</string>
     <string name="noNotificationsSubtext">Ei ole vielä mitään ilmoitettavaa.</string>
     <string name="noTodos">Hyvin tehty!</string>
@@ -379,6 +377,7 @@
     <string name="utils_uploadToCanvas">Lataa Canvas-sovellukseen</string>
     <string name="utils_uploadMyFiles">Omat tiedostot</string>
     <string name="utils_uploadCourseFiles">Kurssitiedostot</string>
+    <string name="utils_uploadGroupFiles">Ryhmän tiedostot</string>
     <string name="utils_uploadToSubmissionComment">Lataa lähetyksen kommenttiin</string>
     <string name="utils_attachFile">Liitä tiedosto</string>
     <string name="utils_with">jossa</string>

@@ -33,7 +33,6 @@
     <string name="fileUploadSuccess">上傳成功</string>
     <string name="noNetwork">網絡不可用 - 請稍後再嘗試。</string>
     <string name="uploadMessage">"上傳進行中。在通知中查看上傳狀態。</string>
-    <string name="mediaUpload">媒體上傳</string>
     <string name="uploadingFile">正在上傳檔案&#8230;</string>
     <string name="errorUploadingFile">上傳檔案時發生錯誤。請重試。</string>
     <string name="fileSubmission">提交檔案</string>
@@ -171,13 +170,12 @@
     <string name="noEvents">今天並無活動！</string>
     <string name="noEventsSubtext">看來是適合休息放鬆的一天。</string>
     <string name="noSubmission">無提交項目</string>
-    <string name="noSubmissionSubtext">於%1$s的%2$s前提交您的作業。</string>
     <string name="noSubmissionTeacher">此學生尚未提交任何項目。</string>
-    <string name="noDueDate">此作業沒有截止日期。</string>
     <string name="locked">已鎖定</string>
     <string name="lockedSubtext">此作業已被鎖定，直至 %1$s 的 %2$s。</string>
     <string name="chooseFile">選擇檔案</string>
     <string name="chooseFileSubtext">點選下列的一個選項，以加入附件檔案至提交項目。</string>
+    <string name="chooseFileForUploadSubtext">點選下面一個選項，以選取檔案進行上傳</string>
     <string name="noNotifications">無通知</string>
     <string name="noNotificationsSubtext">尚未有任何通知。</string>
     <string name="noTodos">做得好！</string>
@@ -377,6 +375,7 @@
     <string name="utils_uploadToCanvas">上傳至 Canvas</string>
     <string name="utils_uploadMyFiles">我的檔案</string>
     <string name="utils_uploadCourseFiles">課程檔案</string>
+    <string name="utils_uploadGroupFiles">群組檔案</string>
     <string name="utils_uploadToSubmissionComment">上傳到提交項目評論</string>
     <string name="utils_attachFile">附加檔案</string>
     <string name="utils_with">與</string>

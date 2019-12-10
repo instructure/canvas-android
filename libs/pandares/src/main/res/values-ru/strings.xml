@@ -61,7 +61,9 @@
     <string name="submissionUploadByteProgress">%1$s из %2$s</string>
     <string name="submissionSuccessTitle">Отправлено успешно!</string>
     <string name="submissionSuccessMessage">Ваше задание было успешно отправлено. Хорошего дня!</string>
-    <string name="cancelAllSubmissions">Отменить все отправки заданий</string>
+    <string name="submissionDeleteTitle">Отменить отправку</string>
+    <string name="submissionDeleteMessage">Данное действие отменит отправку данных и удалит отравляемые данные.</string>
+    <string name="submissionDeleted">Отправка удалена</string>
     <string name="missingSubmissionLabel">Отсутствует</string>
     <string name="gradedSubmissionLabel">С оценкой</string>
     <!-- Student Submission -->
@@ -101,6 +103,7 @@
     <string name="finalGradeFormatted">Итоговая оценка: %s</string>
     <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
     <string name="contentDescriptionScoreOutOfPointsPossible">%1$s из %2$s баллов</string>
+    <string name="enterWhatIfScore">Ввести оценку «что, если»</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Персонализированная оценка</string>
     <string name="rubricEmptyMessage">Нет раздела для этого задания</string>
@@ -590,8 +593,7 @@
     <string name="EULA">Лицензионный договор</string>
     <string name="privacyPolicy">Политика конфиденциальности</string>
     <string name="termsOfUse">Условия использования</string>
-    <string name="openSource">Открытый исходный код</string>
-
+    <string name="canvasOnGithub">Canvas на GitHub</string>
     <!-- Quiz Strings -->
     <string name="assignmentQuizzes">Тесты задания</string>
     <string name="practiceQuizzes">Практические тесты</string>
@@ -602,6 +604,7 @@
     <string name="choose_answers_below">Выберите несколько из представленных ниже вариантов ответов</string>
 
 
+    <string name="flag_the_question">Пометить вопрос</string>
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">Задачи</string>
     <string name="gradesWidgetTitle">Оценки</string>
@@ -863,9 +866,6 @@
     <string name="like">нравятся</string>
     <string name="likes">нравится</string>
 
-    <string name="wear_reminder">Запланировать напоминания о наступлении срока</string>
-    <string name="wear_notifications">Включите уведомления об износе</string>
-
     <string name="color_1">Красный</string>
     <string name="color_2">Ярко-розовый</string>
     <string name="color_3">Лавандовый</string>
@@ -1037,6 +1037,41 @@
     <string name="addChildErrorMessage">Не удалось выполнить привязку. Убедитесь в том, что код привязки верен и срок его действия не истек.</string>
     <string name="gradeComplete">Завершить</string>
     <string name="gradeIncomplete">Не завершено</string>
+    <!--Teacher Strings-->
+    <string name="postPolicyTitle">Опубликовать настройки</string>
+    <string name="postGradesTab">Опубликовать оценки</string>
+    <string name="hideGradesTab">Скрыть Оценки</string>
+    <plurals name="gradesPostedCount">
+        <item quantity="one">%d оценка в настоящее время опубликована</item>
+        <item quantity="few">%d оценок в настоящее время опубликованы</item>
+        <item quantity="many">%d оценок в настоящее время опубликованы</item>
+        <item quantity="other">%d оценок в настоящее время опубликованы</item>
+    </plurals>
+    <plurals name="gradesHiddenCount">
+        <item quantity="one">%d оценка в настоящее время скрыта</item>
+        <item quantity="few">%d оценок в настоящее время скрыты</item>
+        <item quantity="many">%d оценок в настоящее время скрыты</item>
+        <item quantity="other">%d оценок в настоящее время скрыты</item>
+    </plurals>
+    <string name="postPolicyPostTo">Опубликовать в&#8230;</string>
+    <string name="postPolicySections">Специальные разделы</string>
+    <string name="postToEveryoneTitle">Все</string>
+    <string name="postToEveryoneMessage">Оценки будут видны для всех учащихся</string>
+    <string name="postToGradedTitle">С оценкой</string>
+    <string name="postToGradedMessage">Оценки будут видны для учащихся с отправками, по которым выставлены оценки</string>
+    <string name="postPolicyAllHiddenTitle">Все скрытые</string>
+    <string name="postPolicyAllHiddenMessage">Все скрытые в настоящее время оценки.</string>
+    <string name="postPolicyAllPostedTitle">Все размещенные</string>
+    <string name="postPolicyAllPostedMessage">Все опубликованные в настоящее время оценки.</string>
+    <string name="postPolicyPostedToast">Опубликованные оценки</string>
+    <string name="postPolicyHiddenToast">Скрытые оценки</string>
+    <string name="postPolicyPostFailedToast">Не удалось опубликовать оценки</string>
+    <string name="postPolicyHideFailedToast">Не удалось скрыть оценки</string>
+    <string name="gradeBeforePosting">Оценка до публикации</string>
+    <string name="gradeAfterPosting">Оценка после публикации</string>
+    <string name="gradeOverride">Игнорировать оценку</string>
+    <string name="currentGrade">Текущая оценка</string>
+
     <!-- Floating Recording View Strings -->
     <string name="recordingTimerDefault">00:00:00</string>
     <string name="recordingTimerContentDescription">%1$d часов, %2$d минут и %3$d секунд</string>

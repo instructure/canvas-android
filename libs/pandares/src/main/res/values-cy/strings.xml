@@ -59,7 +59,9 @@
     <string name="submissionUploadByteProgress">%1$s o %2$s</string>
     <string name="submissionSuccessTitle">Wedi Llwyddo i Gyflwyno!</string>
     <string name="submissionSuccessMessage">Cafodd eich aseiniad ei gyflwyno\'n llwyddiannus. Mwynhewch eich diwrnod!</string>
-    <string name="cancelAllSubmissions">Canslo Pob Cyflwyniad Aseiniad</string>
+    <string name="submissionDeleteTitle">Canslo Cyflwyniad</string>
+    <string name="submissionDeleteMessage">Bydd hyn yn canslo ac yn dileu eich cyflwyniad.</string>
+    <string name="submissionDeleted">Wedi Dileu Cyflwyniad</string>
     <string name="missingSubmissionLabel">Ar goll</string>
     <string name="gradedSubmissionLabel">Wedi graddio</string>
     <!-- Student Submission -->
@@ -99,6 +101,7 @@
     <string name="finalGradeFormatted">Gradd Derfynol: %s</string>
     <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
     <string name="contentDescriptionScoreOutOfPointsPossible">%1$s allan o %2$s pwynt</string>
+    <string name="enterWhatIfScore">Rhoi sgôr beth-os</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Sgôr personol</string>
     <string name="rubricEmptyMessage">Does dim cyfarwyddyd sgorio ar gyfer yr aseiniad hwn</string>
@@ -578,8 +581,7 @@
     <string name="EULA">EULA</string>
     <string name="privacyPolicy">Polisi Preifatrwydd</string>
     <string name="termsOfUse">Telerau Defnyddio</string>
-    <string name="openSource">Ffynhonnell Agored</string>
-
+    <string name="canvasOnGithub">Canvas ar GitHub</string>
     <!-- Quiz Strings -->
     <string name="assignmentQuizzes">Cwisiau Aseiniad</string>
     <string name="practiceQuizzes">Cwisiau Ymarfer</string>
@@ -590,6 +592,7 @@
     <string name="choose_answers_below">Dewiswch eich atebion isod</string>
 
 
+    <string name="flag_the_question">Fflagio’r cwestiwn</string>
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">Tasgau i’w Gwneud</string>
     <string name="gradesWidgetTitle">Graddau</string>
@@ -846,9 +849,6 @@
     <string name="like">yn hoffi</string>
     <string name="likes">yn hoffi</string>
 
-    <string name="wear_reminder">Trefnu nodiadau atgoffa am y dyddiad erbyn</string>
-    <string name="wear_notifications">Dechrau Hysbysiadau Gwisgo</string>
-
     <string name="color_1">Coch</string>
     <string name="color_2">Pinc Llachar</string>
     <string name="color_3">Lafant</string>
@@ -940,7 +940,7 @@
     <string name="noFilesSubtextCourse">Does dim ffeiliau\'n gysylltiedig â’r cwrs hwn.</string>
     <string name="noFilesSubtextGroup">Does dim ffeiliau’n gysylltiedig â’r grŵp hwn.</string>
     <string name="fileTypeNotSupported">Mathau o Ffeil Anghydnaws</string>
-    <string name="fileTypeNotSupportedBody">Dydy\'r aseiniad hwn ddim ond yn caniatáu mathau penodol o ffeil: %s</string>
+    <string name="fileTypeNotSupportedBody">Dydy&apos;r aseiniad hwn ddim ond yn caniatáu mathau penodol o ffeil: %s</string>
 
     <array name="file_size_units">
         <item>B</item>
@@ -1016,6 +1016,37 @@
     <string name="addChildErrorMessage">Wedi methu paru. Gwnewch yn siŵr bod eich cod paru yn gywir ac o fewn terfyn amser ar gyfer ei ddefnyddio.</string>
     <string name="gradeComplete">Cwblhau</string>
     <string name="gradeIncomplete">Heb Gwblhau</string>
+    <!--Teacher Strings-->
+    <string name="postPolicyTitle">Postio Gosodiadau</string>
+    <string name="postGradesTab">Postio Graddau</string>
+    <string name="hideGradesTab">Cuddio Graddau</string>
+    <plurals name="gradesPostedCount">
+        <item quantity="one">%d gradd wedi’i phostio ar hyn o bryd</item>
+        <item quantity="other">%d gradd wedi’i phostio ar hyn o bryd</item>
+    </plurals>
+    <plurals name="gradesHiddenCount">
+        <item quantity="one">%d gradd wedi’i chuddio ar hyn o bryd</item>
+        <item quantity="other">%d gradd wedi’i chuddio ar hyn o bryd</item>
+    </plurals>
+    <string name="postPolicyPostTo">Postio i...</string>
+    <string name="postPolicySections">Adrannau Penodol</string>
+    <string name="postToEveryoneTitle">Pawb</string>
+    <string name="postToEveryoneMessage">Bydd yr holl fyfyrwyr yn gallu gweld y graddau</string>
+    <string name="postToGradedTitle">Wedi graddio</string>
+    <string name="postToGradedMessage">Bydd myfyrwyr â gwaith wedi’i raddio yn gallu gweld y graddau</string>
+    <string name="postPolicyAllHiddenTitle">Pob un wedi\'i Guddio</string>
+    <string name="postPolicyAllHiddenMessage">Pob gradd wedi\'i chuddio ar hyn o bryd.</string>
+    <string name="postPolicyAllPostedTitle">Pob un wedi\'i Bostio</string>
+    <string name="postPolicyAllPostedMessage">Pob gradd wedi\'i phostio ar hyn o bryd.</string>
+    <string name="postPolicyPostedToast">Graddau - wedi\'u postio</string>
+    <string name="postPolicyHiddenToast">Graddau - wedi\'u cuddio</string>
+    <string name="postPolicyPostFailedToast">Wedi methu postio’r graddau</string>
+    <string name="postPolicyHideFailedToast">Wedi methu cuddio’r graddau</string>
+    <string name="gradeBeforePosting">Gradd cyn postio</string>
+    <string name="gradeAfterPosting">Gradd ar ôl postio</string>
+    <string name="gradeOverride">Disodli gradd</string>
+    <string name="currentGrade">Gradd bresennol </string>
+
     <!-- Floating Recording View Strings -->
     <string name="recordingTimerDefault">00:00:00</string>
     <string name="recordingTimerContentDescription">%1$d awr, %2$d munud, a %3$d eiliad</string>
