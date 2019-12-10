@@ -205,6 +205,8 @@
 -keepnames class io.reactivex.android.schedulers.AndroidSchedulers
 -keepnames class io.reactivex.Observable
 -dontwarn com.pspdfkit.**
+-keep class android.view.WindowInsets
+-keep class android.graphics.Insets
 -dontwarn android.view.WindowInsets
 -dontwarn android.graphics.Insets
 
