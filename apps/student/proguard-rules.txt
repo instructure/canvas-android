@@ -194,14 +194,7 @@
 #PSPDFKit
 -keep class com.pspdfkit.** { *; }
 -dontwarn sun.misc.**
--dontwarn com.pspdfkit.ui.PdfYouTubeActivity
--dontwarn com.pspdfkit.media.MediaGalleryView*
 -dontwarn edu.umd.cs.findbugs.annotations.SuppressWarnings
--dontwarn com.pspdfkit.configuration.PdfConfiguration
--dontwarn com.pspdfkit.configuration.activity.PdfActivityConfiguration
--dontwarn com.pspdfkit.configuration.search.SearchConfiguration
--dontwarn com.pspdfkit.signatures.Signature
--dontwarn com.pspdfkit.ui.dialog.DocumentSharingDialogConfiguration
 -keepnames class io.reactivex.android.schedulers.AndroidSchedulers
 -keepnames class io.reactivex.Observable
 -dontwarn com.pspdfkit.**
