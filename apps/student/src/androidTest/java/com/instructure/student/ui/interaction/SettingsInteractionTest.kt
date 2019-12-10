@@ -55,13 +55,6 @@ class SettingsInteractionTest : StudentTest() {
     @TestMetaData(Priority.P0, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
     fun testHelp_askQuestion() {
 
-        // MBL-13640: The "Instructor Question" dialog is not scrollable, and its EditText for
-        // entering the actual question is off-screen and inaccessible in landscape mode.  So skip
-        // this test in landscape mode for now.
-        if(inLandscape()) {
-            return
-        }
-
         setUpAndSignIn()
 
         dashboardPage.launchSettingsPage()
@@ -89,12 +82,6 @@ class SettingsInteractionTest : StudentTest() {
     @Test
     @TestMetaData(Priority.P0, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
     fun testHelp_reportAProblem() {
-
-        // MBL-13640: The "Report a Problem" dialog does not show Send or Cancel buttons in
-        // landscape mode, so this test will fail.  For now, skip this test in landscape mode.
-        if(inLandscape()) {
-            return
-        }
 
         setUpAndSignIn()
 
