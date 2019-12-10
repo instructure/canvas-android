@@ -25,8 +25,6 @@ import android.graphics.drawable.BitmapDrawable
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
-import androidx.core.content.ContextCompat
-import androidx.core.content.FileProvider
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -34,16 +32,20 @@ import android.view.animation.*
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
-import com.instructure.student.R
-import com.instructure.student.util.PandaDrawables
+import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import com.instructure.canvasapi2.utils.APIHelper
+import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.PrefManager
 import com.instructure.pandautils.utils.*
+import com.instructure.student.R
+import com.instructure.student.util.PandaDrawables
 import kotlinx.android.synthetic.main.panda_image.*
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
-import java.util.*
+import java.util.Date
 import kotlinx.android.synthetic.main.toolbar_layout.toolbar as mToolbar
 
 
@@ -57,6 +59,7 @@ class PandaAvatarActivity : ParentActivity() {
         super.onCreate(savedInstanceState)
         setupViews()
         setupListeners()
+        Analytics.logEvent(AnalyticsEventConstants.PANDA_AVATAR_EDITOR_OPENED)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -78,13 +81,20 @@ class PandaAvatarActivity : ParentActivity() {
             when (item.itemId) {
                 R.id.menu_item_save_image -> {
                     if (PermissionUtils.hasPermissions(this, PermissionUtils.WRITE_EXTERNAL_STORAGE)) {
+                        Analytics.logEvent(AnalyticsEventConstants.PANDA_AVATAR_SAVED)
                         saveImageAsPNG(true, Color.TRANSPARENT, true)
                     } else {
                         requestSavePermissions()
                     }
                 }
-                R.id.menu_item_set_avatar -> setAsAvatar()
-                R.id.menu_item_share -> saveImageAsPNG(false, Color.TRANSPARENT, false)?.let { startActivity(getShareIntent(it)) }
+                R.id.menu_item_set_avatar -> {
+                    Analytics.logEvent(AnalyticsEventConstants.PANDA_AVATAR_SET_AS_AVATAR)
+                    setAsAvatar()
+                }
+                R.id.menu_item_share -> {
+                    Analytics.logEvent(AnalyticsEventConstants.PANDA_AVATAR_SHARED)
+                    saveImageAsPNG(false, Color.TRANSPARENT, false)?.let { startActivity(getShareIntent(it)) }
+                }
             }
         } else {
             toast(R.string.notAvailableOffline)
@@ -127,9 +137,17 @@ class PandaAvatarActivity : ParentActivity() {
     }
 
     private fun loadBodyParts() {
-        imageHead.setImageResource(PandaDrawables.getHeads()[loadPart(BodyPart.HEAD)])
-        imageBody.setImageResource(PandaDrawables.getBodies()[loadPart(BodyPart.BODY)])
-        imageLegs.setImageResource(PandaDrawables.getLegs()[loadPart(BodyPart.LEGS)])
+        val head = PandaDrawables.heads[loadPart(BodyPart.HEAD)]
+        imageHead.setImageResource(head.first)
+        imageHead.contentDescription = getString(R.string.content_description_chosen_head, getString(head.second))
+
+        val body = PandaDrawables.bodies[loadPart(BodyPart.BODY)]
+        imageBody.setImageResource(body.first)
+        imageBody.contentDescription = getString(R.string.content_description_chosen_body, getString(body.second))
+
+        val legs = PandaDrawables.legs[loadPart(BodyPart.LEGS)]
+        imageLegs.setImageResource(legs.first)
+        imageLegs.contentDescription = getString(R.string.content_description_chosen_feet, getString(legs.second))
     }
 
     private fun setupListeners() {
@@ -227,7 +245,12 @@ class PandaAvatarActivity : ParentActivity() {
         partsOptions.startAnimation(slide)
         slide.setAnimationListener(object : Animation.AnimationListener {
             override fun onAnimationStart(animation: Animation) {
-                if (up) partsOptions.visibility = View.VISIBLE
+                if (up) {
+                    partsOptions.setVisible()
+                } else {
+                    editOptions.setVisible()
+                    changeHead.requestAccessibilityFocus()
+                }
             }
 
             override fun onAnimationRepeat(animation: Animation) = Unit
@@ -238,29 +261,36 @@ class PandaAvatarActivity : ParentActivity() {
                 if (up) lp.setMargins(0, partsOptions.width, 0, 0)
                 lp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM)
                 partsOptions.layoutParams = lp
-                if (!up) partsOptions.visibility = View.INVISIBLE
+                if (up) {
+                    editOptions.setGone()
+                } else {
+                    partsOptions.visibility = View.GONE
+                }
             }
         })
     }
 
     private fun addParts(part: BodyPart) {
-        val (parts, destView) = when (part) {
-            PandaAvatarActivity.BodyPart.HEAD -> PandaDrawables.getHeads() to imageHead
-            PandaAvatarActivity.BodyPart.BODY -> PandaDrawables.getBodies() to imageBody
-            PandaAvatarActivity.BodyPart.LEGS -> PandaDrawables.getLegs() to imageLegs
+        val (parts, destView, contentDescriptionFormat) = when (part) {
+            BodyPart.HEAD -> Triple(PandaDrawables.heads, imageHead, R.string.content_description_chosen_head)
+            BodyPart.BODY -> Triple(PandaDrawables.bodies, imageBody, R.string.content_description_chosen_body)
+            BodyPart.LEGS -> Triple(PandaDrawables.legs, imageLegs, R.string.content_description_chosen_feet)
         }
-        parts.forEachIndexed { index, _ ->
+        parts.forEachIndexed { index, it ->
             val imageView = ImageView(this)
-            imageView.setImageResource(parts[index])
-            imageView.onClick {
-                imageViewAnimatedChange(destView, parts[index])
+            imageView.setImageResource(it.first)
+            imageView.contentDescription = context.getString(it.second)
+            imageView.onClick { _ ->
+                imageViewAnimatedChange(destView, it.first)
+                destView.contentDescription = getString(contentDescriptionFormat, getString(it.second))
+                destView.announceForAccessibility(destView.contentDescription)
                 savePart(part, index)
             }
             val layoutParams = LinearLayout.LayoutParams(resources.getDimension(R.dimen.scrollview_image_size).toInt(), resources.getDimension(R.dimen.scrollview_image_size).toInt())
             layoutParams.setMargins(resources.getDimension(R.dimen.scrollview_image_margin).toInt(), 0, resources.getDimension(R.dimen.scrollview_image_margin).toInt(), 0)
             imageView.layoutParams = layoutParams
             partsContainer.addView(imageView)
-
+            if (index == 0) imageView.requestAccessibilityFocus()
         }
     }
 
@@ -293,9 +323,9 @@ class PandaAvatarActivity : ParentActivity() {
 
     private fun loadPart(part: BodyPart): Int {
         val maxIndex = when(part) {
-            BodyPart.HEAD -> PandaDrawables.getHeads().lastIndex
-            BodyPart.BODY -> PandaDrawables.getBodies().lastIndex
-            BodyPart.LEGS -> PandaDrawables.getLegs().lastIndex
+            BodyPart.HEAD -> PandaDrawables.heads.lastIndex
+            BodyPart.BODY -> PandaDrawables.bodies.lastIndex
+            BodyPart.LEGS -> PandaDrawables.legs.lastIndex
         }
         return PandaAvatarPrefs.getInt(part.toString()).coerceIn(0, maxIndex)
     }
