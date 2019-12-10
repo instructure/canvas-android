@@ -85,17 +85,20 @@
 
     function setLiked(id) {
         document.getElementsByClassName("likes_icon_" + id)[0].src = accessor.getLikedImage()
+        document.getElementsByClassName("likes_icon_wrapper_" + id)[0].setAttribute("aria-checked", "true")
     }
 
     function setUnliked(id) {
         document.getElementsByClassName("likes_icon_" + id)[0].src = "file:///android_asset/discussion_unliked.png"
+        document.getElementsByClassName("likes_icon_wrapper_" + id)[0].setAttribute("aria-checked", "false")
     }
 
-    function updateLikedCount(id, text, color) {
+    function updateLikedCount(id, text, color, allyText) {
         var element = document.getElementsByClassName("likes_count_" + id)[0];
         element.removeAttribute('style', 'color');
         element.innerHTML = text;
         element.style.color = color;
+        element.setAttribute("aria-label", allyText)
     }
 
     function appendHTML(html) {

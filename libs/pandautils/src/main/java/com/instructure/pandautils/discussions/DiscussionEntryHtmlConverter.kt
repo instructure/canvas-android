@@ -50,7 +50,7 @@ class DiscussionEntryHtmlConverter {
             deletedText: String): String {
 
         val repliesButtonText = context.resources.getQuantityString(R.plurals.utils_discussionsReplies, discussionEntry.totalChildren, discussionEntry.totalChildren.localized)
-        val likeCountLabel = if (discussionEntry.ratingSum == 0) "" else context.resources.getQuantityString(R.plurals.likeCountLabel, discussionEntry.ratingSum, discussionEntry.ratingSum.localized)
+        val likeCountLabel = getLikeCountAllyText(context, discussionEntry)
         val likeEntryLabel = context.resources.getString(R.string.likeEntryLabel)
 
         val htmlListener = getItemClickListener(discussionEntry.id.toString())
@@ -291,5 +291,15 @@ class DiscussionEntryHtmlConverter {
             return String.format("<div class=\"delete_vertical_divider\">%s</div>", "|")
         }
         return ""
+    }
+
+    companion object {
+        fun getLikeCountAllyText(context: Context, discussionEntry: DiscussionEntry): String {
+            return if (discussionEntry.ratingSum == 0) "" else context.resources.getQuantityString(
+                R.plurals.likeCountLabel,
+                discussionEntry.ratingSum,
+                discussionEntry.ratingSum.localized
+            )
+        }
     }
 }
