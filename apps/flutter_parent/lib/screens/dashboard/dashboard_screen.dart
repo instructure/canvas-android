@@ -157,7 +157,7 @@ class DashboardState extends State<DashboardScreen> {
       } else
         // Done loading: no students returned
         return Text(
-          AppLocalizations.of(context).noStudents,
+          L10n(context).noStudents,
           style: Theme.of(context).primaryTextTheme.title,
         );
     }
@@ -188,10 +188,9 @@ class DashboardState extends State<DashboardScreen> {
 
   List<BottomNavigationBarItem> _bottomNavigationBarItems() {
     return [
-      BottomNavigationBarItem(icon: Icon(CanvasIcons.courses), title: Text(AppLocalizations.of(context).coursesLabel)),
-      BottomNavigationBarItem(
-          icon: Icon(CanvasIcons.calendar_month), title: Text(AppLocalizations.of(context).calendarLabel)),
-      BottomNavigationBarItem(icon: Icon(CanvasIcons.alerts), title: Text(AppLocalizations.of(context).alertsLabel)),
+      BottomNavigationBarItem(icon: Icon(CanvasIcons.courses), title: Text(L10n(context).coursesLabel)),
+      BottomNavigationBarItem(icon: Icon(CanvasIcons.calendar_month), title: Text(L10n(context).calendarLabel)),
+      BottomNavigationBarItem(icon: Icon(CanvasIcons.alerts), title: Text(L10n(context).alertsLabel)),
     ];
   }
 
@@ -307,7 +306,7 @@ class DashboardState extends State<DashboardScreen> {
       );
 
   _navDrawerInbox() => ListTile(
-        title: Text(AppLocalizations.of(context).inbox),
+        title: Text(L10n(context).inbox),
         onTap: () => _navigateToInbox(context),
         trailing: ValueListenableBuilder(
           valueListenable: InboxCountNotifier.get(),
@@ -329,13 +328,12 @@ class DashboardState extends State<DashboardScreen> {
         ),
       );
 
-  _navDrawerManageStudents() => ListTile(
-      title: Text(AppLocalizations.of(context).manageStudents), onTap: () => _navigateToManageStudents(context));
+  _navDrawerManageStudents() =>
+      ListTile(title: Text(L10n(context).manageStudents), onTap: () => _navigateToManageStudents(context));
 
-  _navDrawerHelp() => ListTile(title: Text(AppLocalizations.of(context).help), onTap: () => _navigateToHelp(context));
+  _navDrawerHelp() => ListTile(title: Text(L10n(context).help), onTap: () => _navigateToHelp(context));
 
-  _navDrawerSignOut() =>
-      ListTile(title: Text(AppLocalizations.of(context).signOut), onTap: () => _performSignOut(context));
+  _navDrawerSignOut() => ListTile(title: Text(L10n(context).signOut), onTap: () => _performSignOut(context));
 
   _navDrawerAppVersion() => Column(
         children: <Widget>[
@@ -347,7 +345,7 @@ class DashboardState extends State<DashboardScreen> {
                 future: PackageInfo.fromPlatform(),
                 builder: (BuildContext context, AsyncSnapshot<PackageInfo> snapshot) {
                   return Text(
-                    AppLocalizations.of(context).appVersion(snapshot.data?.version),
+                    L10n(context).appVersion(snapshot.data?.version),
                     style: Theme.of(context).textTheme.subtitle,
                   );
                 },

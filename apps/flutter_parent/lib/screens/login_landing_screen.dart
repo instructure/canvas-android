@@ -60,14 +60,14 @@ class LoginLandingScreen extends StatelessWidget {
             children: <Widget>[
               SvgPicture.asset(
                 "assets/svg/canvas-parent-login-logo.svg",
-                semanticsLabel: AppLocalizations.of(context).canvasLogoLabel,
+                semanticsLabel: L10n(context).canvasLogoLabel,
               ),
               SizedBox(height: 64),
               RaisedButton(
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Text(
-                    AppLocalizations.of(context).findSchoolOrDistrict,
+                    L10n(context).findSchoolOrDistrict,
                     style: TextStyle(fontSize: 16),
                   ),
                 ),
