@@ -52,6 +52,7 @@ fun StudentTest.slowLogIn(enrollmentType: String = EnrollmentTypes.STUDENT_ENROL
 
 fun StudentTest.seedData(
     teachers: Int = 0,
+    tas: Int = 0,
     pastCourses: Int = 0,
     courses: Int = 0,
     students: Int = 0,
@@ -62,6 +63,7 @@ fun StudentTest.seedData(
 
     val request = SeedApi.SeedDataRequest (
             teachers = teachers,
+            TAs = tas,
             students = students,
             pastCourses = pastCourses,
             courses = courses,
