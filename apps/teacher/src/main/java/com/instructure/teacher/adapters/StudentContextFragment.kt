@@ -18,7 +18,6 @@ package com.instructure.teacher.adapters
 import android.graphics.Color
 import android.os.Bundle
 import android.view.*
-import android.widget.LinearLayout.LayoutParams
 import android.widget.TextView
 import com.instructure.canvasapi2.StudentContextCardQuery.*
 import com.instructure.canvasapi2.models.BasicUser
@@ -207,10 +206,7 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
             val visibleGradeItems = gradeItems.children.filter { it.isVisible }
             if (visibleGradeItems.size == 1) {
                 // If there is only one grade item, add a second empty child so the first doesn't stretch to the full parent width
-                gradeItems.addView(
-                    View(context),
-                    LayoutParams(0, LayoutParams.MATCH_PARENT, 1.0f)
-                )
+                emptyGradeItemSpace.setVisible()
             } else {
                 // Set color of last grade item
                 visibleGradeItems.lastOrNull()?.apply {
