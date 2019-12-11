@@ -16,13 +16,15 @@ import 'package:flutter_parent/api/enrollments_api.dart';
 import 'package:flutter_parent/models/enrollment.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
+import 'package:qrscan/qrscan.dart' as scanner;
 
 class ManageStudentsInteractor {
-  Future<List<User>> getStudents() async => EnrollmentsApi.getObserveeEnrollments().then<List<User>>((enrollments) {
+  Future<List<User>> getStudents({bool forceRefresh = false}) async {
+    var enrollments = await EnrollmentsApi.getObserveeEnrollments(forceRefresh: forceRefresh);
     List<User> users = filterStudents(enrollments);
     sortUsers(users);
     return users;
-  });
+  }
 
   List<User> filterStudents(List<Enrollment> enrollments) =>
       enrollments.map((enrollment) => enrollment.observedUser).where((student) => student != null).toSet().toList();
@@ -32,4 +34,6 @@ class ManageStudentsInteractor {
   Future<bool> pairWithStudent(String pairingCode) => _enrollmentsApi().pairWithStudent(pairingCode);
 
   EnrollmentsApi _enrollmentsApi() => locator<EnrollmentsApi>();
+
+  Future<String> getQrReading() async => await scanner.scan();
 }

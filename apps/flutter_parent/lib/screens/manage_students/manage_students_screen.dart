@@ -12,22 +12,24 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/user.dart';
+import 'package:flutter_parent/utils/common_widgets/avatar.dart';
+import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/full_screen_scroll_container.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
-import 'package:flutter_parent/utils/design/canvas_icons.dart';
-import 'package:flutter_parent/utils/design/parent_theme.dart';
+import 'package:flutter_parent/utils/common_widgets/user_name.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
-import 'package:qrscan/qrscan.dart' as scanner;
 
+import 'add_student_dialog.dart';
 import 'manage_students_interactor.dart';
 
 /// It is assumed that this page will not be deep linked, so
 /// the list of students that it needs should be passed in.
 ///
-/// Pull to refresh and updating when a pairing code is used will be handled, however.
+/// Pull to refresh and updating when a pairing code is used are handled, however.
 class ManageStudentsScreen extends StatefulWidget {
   final _interactor = locator<ManageStudentsInteractor>();
   final List<User> _students;
@@ -35,18 +37,17 @@ class ManageStudentsScreen extends StatefulWidget {
   ManageStudentsScreen(this._students, {Key key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => ManageStudentsState();
+  State<StatefulWidget> createState() => _ManageStudentsState();
 }
 
-class ManageStudentsState extends State<ManageStudentsScreen> {
+class _ManageStudentsState extends State<ManageStudentsScreen> {
   Future<List<User>> _studentsFuture;
-
-  Future<List<User>> _loadStudents() => widget._interactor.getStudents();
+  Future<List<User>> _loadStudents() => widget._interactor.getStudents(forceRefresh: true);
 
   @override
   void initState() {
-    _studentsFuture = Future.value(widget._students);
     super.initState();
+    _studentsFuture = Future.value(widget._students);
   }
 
   @override
@@ -58,6 +59,7 @@ class ManageStudentsState extends State<ManageStudentsScreen> {
       body: FutureBuilder(
           future: _studentsFuture,
           builder: (context, AsyncSnapshot<List<User>> snapshot) {
+            // Handle waiting state
             if (snapshot.connectionState == ConnectionState.waiting) return LoadingIndicator();
 
             // Get the view based on the state of the snapshot
@@ -71,72 +73,14 @@ class ManageStudentsState extends State<ManageStudentsScreen> {
             }
 
             return RefreshIndicator(
-                onRefresh: () {
-                  _studentsFuture = _loadStudents();
-
-                  // Force widget to reload with the new future
-                  setState(() {});
-
-                  return _studentsFuture;
-                },
-                child: view);
+              onRefresh: () {
+                _refresh();
+                return _studentsFuture;
+              },
+              child: view,
+            );
           }),
       floatingActionButton: _createFloatingActionButton(context),
-    );
-  }
-
-  Widget _error(BuildContext context) {
-    return FullScreenScrollContainer(children: [
-      Center(
-          child: Column(
-        children: <Widget>[
-          Icon(
-            CanvasIcons.warning,
-            color: Colors.red,
-            size: 40.0,
-          ),
-          SizedBox(
-            height: 28,
-          ),
-          Text(AppLocalizations.of(context).errorLoadingStudents),
-          SizedBox(height: 32),
-          GestureDetector(
-            child: Material(
-              child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      width: 1,
-                      color: Color(0xFFC7CDD1),
-                    ),
-                    borderRadius: BorderRadius.all(Radius.circular(4)),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                    child: Text(AppLocalizations.of(context).retry,
-                        style: Theme.of(context).textTheme.subhead.copyWith(color: ParentTheme.ash)),
-                  )),
-            ),
-            onTap: () {
-              _studentsFuture = _loadStudents();
-              setState(() {});
-            },
-          ),
-        ],
-      ))
-    ]);
-  }
-
-  Widget _empty(BuildContext context) {
-    return FullScreenScrollContainer(
-      children: [
-        Text(AppLocalizations.of(context).unexpectedError),
-        RaisedButton(
-            onPressed: () {
-              _studentsFuture = _loadStudents();
-              setState(() {});
-            },
-            child: Text(AppLocalizations.of(context).retry))
-      ],
     );
   }
 
@@ -148,22 +92,17 @@ class ManageStudentsState extends State<ManageStudentsScreen> {
         child: ListTile(
           leading: Hero(
             tag: 'studentAvatar${students[index].id}',
-            child: CircleAvatar(
-              radius: 20.0,
-              backgroundImage: NetworkImage(students[index].avatarUrl ?? ''),
-            ),
+            child: Avatar(students[index].avatarUrl, name: students[index].shortName),
           ),
           title: Hero(
             tag: 'studentText${students[index].id}',
             child: GestureDetector(
-                child: Material(
-                  child: Text(
-                    students[index].name,
-                    style: Theme.of(context).textTheme.subhead,
-                  ),
+                child: UserName.fromUser(
+                  students[index],
+                  style: Theme.of(context).textTheme.subhead,
                 ),
-                // TODO: Tapping on a user
                 onTap: () {
+                  // TODO: Tapping on a user
 //                  locator.get<QuickNav>().push(context, StudentSettingsScreen(students[index]));
                 }),
           ),
@@ -172,53 +111,33 @@ class ManageStudentsState extends State<ManageStudentsScreen> {
     );
   }
 
-  Future<String> _addChildDialog(BuildContext context) async {
-    String _pairingCode = '';
+  Widget _error(BuildContext context) {
+    return ErrorPandaWidget(L10n(context).errorLoadingStudents, () {
+      _refresh();
+    });
+  }
 
-    return showDialog<String>(
+  Widget _empty(BuildContext context) {
+    return FullScreenScrollContainer(
+      children: [
+        Text(AppLocalizations.of(context).emptyStudentList),
+        RaisedButton(
+            onPressed: () {
+              _refresh();
+            },
+            child: Text(AppLocalizations.of(context).retry))
+      ],
+    );
+  }
+
+  /// Dialog for pairing with a new student
+  /// Optional [pairingCode] for QR reader results
+  Future<bool> _addStudentDialog(BuildContext context, {String pairingCode}) async {
+    return showDialog<bool>(
         context: context,
         barrierDismissible: true,
         builder: (BuildContext context) {
-          return AlertDialog(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-            title: Text(AppLocalizations.of(context).addStudent),
-            content:
-                Column(mainAxisAlignment: MainAxisAlignment.center, mainAxisSize: MainAxisSize.min, children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(bottom: 20.0),
-                child: Text(
-                  AppLocalizations.of(context).pairingCodeEntryExplanation,
-                  style: Theme.of(context).textTheme.body1.copyWith(fontSize: 12.0),
-                ),
-              ),
-              TextField(
-                autofocus: true,
-                autocorrect: false,
-                onChanged: (value) {
-                  _pairingCode = value;
-                },
-                decoration: InputDecoration(
-                  hintText: AppLocalizations.of(context).pairingCode,
-                  hintStyle: TextStyle(color: Colors.grey),
-                  contentPadding: EdgeInsets.only(bottom: 2),
-                ),
-              ),
-            ]),
-            actions: <Widget>[
-              FlatButton(
-                onPressed: () {
-                  Navigator.of(context).pop('');
-                },
-                child: Text(AppLocalizations.of(context).cancel.toUpperCase()),
-              ),
-              FlatButton(
-                onPressed: () {
-                  Navigator.of(context).pop(_pairingCode);
-                },
-                child: Text(AppLocalizations.of(context).ok),
-              ),
-            ],
-          );
+          return AddStudentDialog(pairingCode);
         });
   }
 
@@ -238,72 +157,20 @@ class ManageStudentsState extends State<ManageStudentsScreen> {
                 children: <Widget>[
                   Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.fromLTRB(16.0, 20.0, 16.0, 24.0),
+                      padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 10.0),
                       child: Wrap(
                         direction: Axis.vertical,
                         children: <Widget>[
-                          Text(AppLocalizations.of(context).addStudentWith,
-                              style: Theme.of(context).textTheme.caption.copyWith(color: ParentTheme.ash)),
-                          SizedBox(height: 27),
                           Container(
-                            child: GestureDetector(
-                              onTap: () async {
-                                Navigator.of(context).pop();
-                                String cameraScanResult = await scanner.scan();
-                                if (cameraScanResult.isNotEmpty) {
-                                  bool success = await widget._interactor.pairWithStudent(cameraScanResult);
-                                  if (success) {
-                                    _studentsFuture = _loadStudents();
-                                    setState(() {});
-                                  } else {
-                                    Scaffold.of(context).showSnackBar(SnackBar(
-                                      content: Text(AppLocalizations.of(context).pairingFailed),
-                                      action: SnackBarAction(
-                                        label: AppLocalizations.of(context).ok,
-                                        textColor: Colors.blue,
-                                        onPressed: () {
-                                          Scaffold.of(context).hideCurrentSnackBar();
-                                        },
-                                      ),
-                                    ));
-                                  }
-                                }
-                              },
-                              child: Text(
-                                AppLocalizations.of(context).qrCode,
-                                style: Theme.of(context).textTheme.body1.copyWith(fontSize: 16),
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 29),
-                          GestureDetector(
-                            onTap: () async {
-                              Navigator.of(context).pop();
-                              var pairingCode = await _addChildDialog(context);
-                              if (pairingCode.isNotEmpty) {
-                                bool success = await widget._interactor.pairWithStudent(pairingCode);
-                                if (success) {
-                                  _studentsFuture = _loadStudents();
-                                  setState(() {});
-                                } else {
-                                  Scaffold.of(context).showSnackBar(SnackBar(
-                                    content: Text(AppLocalizations.of(context).pairingFailed),
-                                    action: SnackBarAction(
-                                      label: AppLocalizations.of(context).ok,
-                                      textColor: Colors.blue,
-                                      onPressed: () {
-                                        Scaffold.of(context).hideCurrentSnackBar();
-                                      },
-                                    ),
-                                  ));
-                                }
-                              }
-                            },
+                            height: 40,
+                            alignment: Alignment.centerLeft,
                             child: Text(
-                              AppLocalizations.of(context).pairingCode,
-                              style: Theme.of(context).textTheme.body1.copyWith(fontSize: 16),
+                              AppLocalizations.of(context).addStudentWith,
+                              style: Theme.of(context).textTheme.caption,
                             ),
                           ),
+                          _qrCode(),
+                          _pairingCode(),
                         ],
                       ),
                     ),
@@ -313,7 +180,60 @@ class ManageStudentsState extends State<ManageStudentsScreen> {
             });
       },
     );
+  }
 
-//    Widget _bottomSheetPairingCodeOptions() {}
+  Widget _qrCode() {
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      child: Container(
+        width: 10000,
+        height: 48,
+        alignment: Alignment.centerLeft,
+        child: Text(
+          AppLocalizations.of(context).qrCode,
+          style: Theme.of(context).textTheme.body1.copyWith(fontSize: 16),
+        ),
+      ),
+      onTap: () async {
+        Navigator.of(context).pop();
+        String cameraScanResult = await widget._interactor.getQrReading();
+        if (cameraScanResult != null && cameraScanResult.isNotEmpty) {
+          bool studentPaired = await _addStudentDialog(context, pairingCode: cameraScanResult);
+          if (studentPaired) {
+            _refresh();
+          }
+        }
+      },
+    );
+  }
+
+  Widget _pairingCode() {
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      child: InkWell(
+        child: Container(
+          width: 10000,
+          height: 48,
+          alignment: Alignment.centerLeft,
+          child: Text(
+            AppLocalizations.of(context).pairingCode,
+            style: Theme.of(context).textTheme.body1.copyWith(fontSize: 16),
+          ),
+        ),
+      ),
+      onTap: () async {
+        Navigator.of(context).pop();
+        bool studentPaired = await _addStudentDialog(context);
+        if (studentPaired) {
+          _refresh();
+        }
+      },
+    );
+  }
+
+  /// Force widget to reload with a refreshed future
+  void _refresh() {
+    _studentsFuture = _loadStudents();
+//    setState(() {});
   }
 }

@@ -498,6 +498,8 @@ class AppLocalizations {
 
   String get addStudent => Intl.message('Add Student');
 
+  String get emptyStudentList => Intl.message('You are not observing any students.');
+
   String get errorLoadingStudents => Intl.message('There was an error loading your students.');
 
   String get pairingCode => Intl.message('Pairing Code');
@@ -505,8 +507,7 @@ class AppLocalizations {
   String get pairingCodeEntryExplanation => Intl.message(
       'Enter the student pairing code provided to you. If the pairing code doesn\'t work, it may have expired');
 
-  String get pairingFailed =>
-      Intl.message('Pairing Failed. Make sure your pairing code is correct and within the time limit of use.');
+  String get errorPairingFailed => Intl.message('Your code is incorrect or expired.');
 
   String get qrCode => Intl.message('QR Code');
 
@@ -515,6 +516,8 @@ class AppLocalizations {
 
   /// Miscellaneous
 
+  String get cancel => Intl.message('Cancel');
+
   String get next => Intl.message('Next', name: 'next');
 
   String get ok => Intl.message('OK', name: 'ok');
@@ -522,8 +525,6 @@ class AppLocalizations {
   String get yes => Intl.message('Yes');
 
   String get no => Intl.message('No');
-
-  String get cancel => Intl.message('Cancel');
 
   String get retry => Intl.message("Retry");
 
