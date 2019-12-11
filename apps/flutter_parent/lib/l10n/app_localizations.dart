@@ -108,7 +108,7 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
   }
 }
 
-AppLocalizations L10n(BuildContext context) => AppLocalizations.of(context);
+AppLocalizations L10n(BuildContext context) => Localizations.of<AppLocalizations>(context, AppLocalizations);
 
 ///
 /// App Localization class.
@@ -125,10 +125,6 @@ class AppLocalizations {
       Intl.defaultLocale = localeName;
       return new AppLocalizations();
     });
-  }
-
-  static AppLocalizations of(BuildContext context) {
-    return Localizations.of<AppLocalizations>(context, AppLocalizations);
   }
 
   static const _AppLocalizationsDelegate delegate = _AppLocalizationsDelegate();

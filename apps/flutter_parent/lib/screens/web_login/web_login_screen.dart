@@ -163,11 +163,11 @@ class WebLoginScreen extends StatelessWidget {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text(AppLocalizations.of(context).unexpectedError),
+          title: Text(L10n(context).unexpectedError),
           content: Text(_getErrorMessage(context, snapshot)),
           actions: <Widget>[
             FlatButton(
-              child: Text(AppLocalizations.of(context).ok),
+              child: Text(L10n(context).ok),
               onPressed: () => Navigator.of(context).pop(),
             ),
           ],
@@ -175,7 +175,7 @@ class WebLoginScreen extends StatelessWidget {
       });
 
   String _getErrorMessage(BuildContext context, AsyncSnapshot<MobileVerifyResult> snapshot) {
-    final localizations = AppLocalizations.of(context);
+    final localizations = L10n(context);
 
     // No data means the request failed for some other reason that we don't know
     if (!snapshot.hasData) {

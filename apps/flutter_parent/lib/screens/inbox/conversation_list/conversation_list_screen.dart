@@ -57,7 +57,7 @@ class ConversationListState extends State<ConversationListScreen> {
           textTheme: Theme.of(context).textTheme,
           iconTheme: Theme.of(context).iconTheme,
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          title: Text(AppLocalizations.of(context).inbox),
+          title: Text(L10n(context).inbox),
           elevation: 1,
         ),
         body: FutureBuilder(
