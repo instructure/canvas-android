@@ -16,7 +16,6 @@
  */
 package com.instructure.student.util
 
-import androidx.annotation.Keep
 import com.instructure.student.R
 
 object PandaDrawables {
