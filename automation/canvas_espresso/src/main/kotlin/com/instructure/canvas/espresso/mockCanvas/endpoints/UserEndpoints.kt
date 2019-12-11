@@ -19,12 +19,18 @@ package com.instructure.canvas.espresso.mockCanvas.endpoints
 import com.instructure.canvas.espresso.mockCanvas.Endpoint
 import com.instructure.canvas.espresso.mockCanvas.addFileToFolder
 import com.instructure.canvas.espresso.mockCanvas.endpoint
-import com.instructure.canvas.espresso.mockCanvas.utils.*
+import com.instructure.canvas.espresso.mockCanvas.utils.LongId
+import com.instructure.canvas.espresso.mockCanvas.utils.PathVars
+import com.instructure.canvas.espresso.mockCanvas.utils.Segment
+import com.instructure.canvas.espresso.mockCanvas.utils.UserId
+import com.instructure.canvas.espresso.mockCanvas.utils.successPaginatedResponse
+import com.instructure.canvas.espresso.mockCanvas.utils.successResponse
+import com.instructure.canvas.espresso.mockCanvas.utils.unauthorizedResponse
+import com.instructure.canvas.espresso.mockCanvas.utils.user
 import com.instructure.canvasapi2.models.Favorite
 import com.instructure.canvasapi2.models.FileUploadParams
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.utils.pageview.PandataInfo
-import okhttp3.ResponseBody
 import okio.Buffer
 import java.nio.charset.Charset
 
@@ -93,7 +99,7 @@ object UserFoldersEndpoint : Endpoint(
                 configure = {
                     GET {
                         val userId = pathVars.userId
-                        val folder = data.userRootFolders[userId]
+                        val folder = data.fileFolders.values.find { it.contextType.equals("user") && it.contextId == userId }
                         if(folder != null) {
                             request.successResponse(folder)
                         }

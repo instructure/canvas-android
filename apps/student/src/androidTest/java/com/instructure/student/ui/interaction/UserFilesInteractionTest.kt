@@ -236,6 +236,13 @@ class UserFilesInteractionTest : StudentTest() {
     @Stub
     @Test
     @TestMetaData(Priority.P2, FeatureCategory.FILES, TestCategory.INTERACTION, true)
+    fun testView_createDirectory() {
+        // Should be able to create a directory and upload a file to that directory
+    }
+
+    @Stub
+    @Test
+    @TestMetaData(Priority.P2, FeatureCategory.FILES, TestCategory.INTERACTION, true)
     fun testView_previewImage() {
         // Should be able to preview an image file
     }

@@ -181,9 +181,6 @@ class MockCanvas {
     /** Map of quiz submission id to quiz submission questions */
     val quizSubmissionQuestions = mutableMapOf<Long, MutableList<QuizSubmissionQuestion>>()
 
-    /** Map of user ids to user root folders */
-    val userRootFolders = mutableMapOf<Long, FileFolder>()
-
     //region Convenience functionality
 
     /** A list of users with at least one Student enrollment */
@@ -793,8 +790,7 @@ fun MockCanvas.addUser(): User {
             name = "Files",
             fullName = "Files"
     )
-    userRootFolders[user.id] = folderMetadataItem
-
+    fileFolders[newFolderId] = folderMetadataItem
     return user
 }
 
@@ -852,10 +848,6 @@ private fun MockCanvas.getRootFolder(courseId: Long? = null, groupId: Long? = nu
 
     if(folderId != null) {
         rootFolder = fileFolders[folderId]
-        if(rootFolder == null) {
-            // Might be a user root folder, which is tracked separately
-            rootFolder = userRootFolders[folderId]
-        }
     }
     else if(groupId != null) {
         if(courseId == null) {
