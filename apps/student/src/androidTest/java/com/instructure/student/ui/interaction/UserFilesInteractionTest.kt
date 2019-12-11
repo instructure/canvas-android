@@ -139,14 +139,7 @@ class UserFilesInteractionTest : StudentTest() {
         fileListPage.refresh()
         fileListPage.assertItemDisplayed("sample.jpg")
     }
-
-    @Stub
-    @Test
-    @TestMetaData(Priority.P2, FeatureCategory.FILES, TestCategory.INTERACTION, true)
-    fun testUpload_audioFile() {
-        // Should be able to upload an audio file
-    }
-
+    
     // Should be able to upload a file from the camera
     // Mocks the result from the expected intent, then uploads it.
     @Test
