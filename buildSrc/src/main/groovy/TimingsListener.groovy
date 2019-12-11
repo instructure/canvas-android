@@ -75,20 +75,37 @@ class TimingsListener implements TaskExecutionListener, BuildListener {
             buildFlavor = "prod"
         }
 
-        // Locate the apk
-        println("projectName = ${refProject.name}")
-        def buildDir = refProject.buildDir
-        def file = new File("$buildDir/outputs/apk/$buildFlavor/$buildType/${refProject.name}-$buildFlavor-${buildType}.apk")
-        println("file name=${file.path} length=${file.length()}")
-
-        // Construct the JSON payload for our "buildComplete" event
+        // Grab some data from the environment
         def bitriseWorkflow = System.getenv("BITRISE_TRIGGERED_WORKFLOW_ID")
         def bitriseApp = System.getenv("BITRISE_APP_TITLE")
         def bitriseBranch = System.getenv("BITRISE_GIT_BRANCH")
         def bitriseBuildNumber = System.getenv("BITRISE_BUILD_NUMBER")
-        def fileSizeInMB = file.length() == 0 ? 0 : (file.length() / (1024.0 * 1024.0)).round(3)
 
-        // Instruct the builder as to how to build our payload
+        // Determine our project name.
+        // It's not as simple as looking at refProject.name; since we add this listener via the
+        // student project, refProject.name will always be "student".  Glean our actual project name
+        // via the bitrise app name.
+        def projectName = ""
+        if(bitriseApp.contains("Student")) {
+            projectName = "student"
+        }
+        else if(bitriseApp.contains("Teacher")) {
+            projectName = "teacher"
+        }
+        else {
+            projectName = "unknown" // Punt for now; we'll figure out flutter-parent later
+        }
+        println("projectName = $projectName")
+
+        // Locate the apk
+        // We don't necessarily want refProject.buildDir, since it will always be the student buildDir
+        def buildDir = refProject.buildDir.toString().replace("student",projectName)
+        def file = new File("$buildDir/outputs/apk/$buildFlavor/$buildType/$projectName-$buildFlavor-${buildType}.apk")
+        def fileSizeInMB = file.length() == 0 ? 0 : (file.length() / (1024.0 * 1024.0)).round(3)
+        println("file name=${file.path} length=${file.length()}")
+
+
+        // Construct the JSON payload for our "buildComplete" event
         def payloadBuilder = new groovy.json.JsonBuilder()
         payloadBuilder buildTime: cumulativeTime,
             gradleTasks: startTaskNames,
