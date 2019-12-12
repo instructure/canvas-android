@@ -40,8 +40,18 @@ class ManageStudentsScreen extends StatefulWidget {
 }
 
 class _ManageStudentsState extends State<ManageStudentsScreen> {
+  bool _hasFailed = false;
   Future<List<User>> _studentsFuture;
-  Future<List<User>> _loadStudents() => locator<ManageStudentsInteractor>().getStudents(forceRefresh: true);
+  Future<List<User>> _loadStudents() {
+    final interactor = locator<ManageStudentsInteractor>();
+    return interactor.getStudents(forceRefresh: true);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _studentsFuture = Future.value(widget._students);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,30 +60,30 @@ class _ManageStudentsState extends State<ManageStudentsScreen> {
         title: Text(AppLocalizations.of(context).manageStudents),
       ),
       body: FutureBuilder(
-          initialData: widget._students,
-          future: _studentsFuture,
-          builder: (context, AsyncSnapshot<List<User>> snapshot) {
-            // No wait view - users should be passed in on init, and the refresh indicator should handle the pull to refresh
+        initialData: widget._students,
+        future: _studentsFuture,
+        builder: (context, AsyncSnapshot<List<User>> snapshot) {
+          // No wait view - users should be passed in on init, and the refresh indicator should handle the pull to refresh
 
-            // Get the view based on the state of the snapshot
-            Widget view;
-            if (snapshot.hasError) {
-              view = _error(context);
-            } else if (snapshot.data == null || snapshot.data.isEmpty) {
-              view = _empty(context);
-            } else {
-              view = _StudentsList(snapshot.data);
-            }
+          // Get the view based on the state of the snapshot
+          Widget view;
+          if (_hasFailed) {
+            view = _error(context);
+          } else if (snapshot.data == null || snapshot.data.isEmpty) {
+            view = _empty(context);
+          } else {
+            view = _StudentsList(snapshot.data);
+          }
 
-            return RefreshIndicator(
-              onRefresh: () {
-                _studentsFuture = _loadStudents();
-                setState(() {});
-                return _studentsFuture;
-              },
-              child: view,
-            );
-          }),
+          return RefreshIndicator(
+            onRefresh: () {
+              _refresh();
+              return _studentsFuture;
+            },
+            child: view,
+          );
+        },
+      ),
       floatingActionButton: _createFloatingActionButton(context),
     );
   }
@@ -227,7 +237,9 @@ class _ManageStudentsState extends State<ManageStudentsScreen> {
 
   /// Force widget to reload with a refreshed future
   void _refresh() {
-    _studentsFuture = _loadStudents();
-    setState(() {});
+    setState(() {
+      _hasFailed = false;
+      _studentsFuture = _loadStudents().catchError((_) => setState(() => _hasFailed = true));
+    });
   }
 }
