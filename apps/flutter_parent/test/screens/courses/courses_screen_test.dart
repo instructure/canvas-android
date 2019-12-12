@@ -20,6 +20,7 @@ import 'package:flutter_parent/models/enrollment.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/screens/courses/courses_interactor.dart';
 import 'package:flutter_parent/screens/courses/courses_screen.dart';
+import 'package:flutter_parent/screens/courses/details/course_details_interactor.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_screen.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -33,6 +34,7 @@ void main() {
     final _locator = GetIt.instance;
     _locator.reset();
     _locator.registerFactory<CoursesInteractor>(() => mockInteractor);
+    _locator.registerFactory<CourseDetailsInteractor>(() => _MockCourseDetailsInteractor());
     _locator.registerFactory<QuickNav>(() => QuickNav());
   }
 
@@ -162,6 +164,8 @@ class _MockCoursesInteractor extends CoursesInteractor {
   @override
   Future<List<Course>> getCourses() async => courses ?? ListBuilder<Course>([_mockCourse(1)]).build().toList();
 }
+
+class _MockCourseDetailsInteractor extends CourseDetailsInteractor {}
 
 List<Course> generateCoursesForStudent([int userId]) {
   var student = _mockStudent(userId ?? 1);

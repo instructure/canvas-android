@@ -21,6 +21,7 @@ import '../utils/platform_config.dart';
 import '../utils/test_app.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
 
   setUpAll(() async => await setupPlatformChannels());
 
