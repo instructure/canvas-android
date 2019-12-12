@@ -19,7 +19,6 @@ import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/utils/common_widgets/avatar.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/full_screen_scroll_container.dart';
-import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/common_widgets/user_name.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
@@ -42,13 +41,7 @@ class ManageStudentsScreen extends StatefulWidget {
 
 class _ManageStudentsState extends State<ManageStudentsScreen> {
   Future<List<User>> _studentsFuture;
-  Future<List<User>> _loadStudents() => widget._interactor.getStudents(forceRefresh: true);
-
-  @override
-  void initState() {
-    super.initState();
-    _studentsFuture = Future.value(widget._students);
-  }
+  Future<List<User>> _loadStudents() => locator<ManageStudentsInteractor>().getStudents(forceRefresh: true);
 
   @override
   Widget build(BuildContext context) {
@@ -57,11 +50,11 @@ class _ManageStudentsState extends State<ManageStudentsScreen> {
         title: Text(AppLocalizations.of(context).manageStudents),
       ),
       body: FutureBuilder(
+          initialData: widget._students,
           future: _studentsFuture,
           builder: (context, AsyncSnapshot<List<User>> snapshot) {
-            // Handle waiting state
-            if (snapshot.connectionState == ConnectionState.waiting) return LoadingIndicator();
-
+            // No wait view - users should be passed in on init, and the refresh indicator should handle the pull to refresh
+            print('Snapshot: $snapshot');
             // Get the view based on the state of the snapshot
             Widget view;
             if (snapshot.hasError) {
@@ -74,7 +67,9 @@ class _ManageStudentsState extends State<ManageStudentsScreen> {
 
             return RefreshIndicator(
               onRefresh: () {
-                _refresh();
+                _studentsFuture = _loadStudents();
+//                _studentsFuture = Future.error('');
+                setState(() {});
                 return _studentsFuture;
               },
               child: view,
@@ -234,6 +229,6 @@ class _ManageStudentsState extends State<ManageStudentsScreen> {
   /// Force widget to reload with a refreshed future
   void _refresh() {
     _studentsFuture = _loadStudents();
-//    setState(() {});
+    setState(() {});
   }
 }

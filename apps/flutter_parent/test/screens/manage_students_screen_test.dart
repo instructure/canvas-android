@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math';
+import 'dart:ui';
 
 /// Copyright (C) 2019 - present Instructure, Inc.
 ///
@@ -50,30 +51,6 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  group('Loading Indicator', () {
-    testWidgetsWithAccessibilityChecks('Shows while loading', (tester) async {
-      _setupLocator();
-
-      await tester.pumpWidget(TestApp(ManageStudentsScreen([])));
-      await tester.pump(); // One pump to show loading
-
-      expect(find.byType(CircularProgressIndicator), findsOneWidget);
-    });
-
-    testWidgetsWithAccessibilityChecks('Gone when loading is done', (tester) async {
-      _setupLocator();
-
-      await tester.pumpWidget(TestApp(
-        ManageStudentsScreen([_mockUser('Billy')]),
-        darkMode: true,
-        highContrast: true,
-      ));
-      await tester.pumpAndSettle();
-
-      expect(find.byType(CircularProgressIndicator), findsNothing);
-    });
-  });
-
   group('Refresh', () {
     testWidgetsWithAccessibilityChecks('Pulling gets list of students', (tester) async {
       var preRefreshStudent = [_mockUser('Billy')];
@@ -81,27 +58,17 @@ void main() {
 
       // Mock the behavior of the interactor to return a student
       final interactor = _MockManageStudentsInteractor();
-      when(interactor.getStudents()).thenAnswer((_) => Future.value(postRefreshStudent));
+      when(interactor.getStudents(forceRefresh: anyNamed('forceRefresh')))
+          .thenAnswer((_) => Future.value(postRefreshStudent));
       _setupLocator(interactor);
 
       // Start the page with a single student
       await tester.pumpWidget(TestApp(ManageStudentsScreen(preRefreshStudent)));
       await tester.pumpAndSettle();
 
-      // Pull to refresh
-//      await tester.drag(find.byType(RefreshIndicator), const Offset(0, 200));
-//      await tester.pump();
-
-//      expect(find.byType(CircularProgressIndicator), findsOneWidget);
-
+      // Pull to refresh\
       final matchedWidget = find.byType(RefreshIndicator);
-      expect(matchedWidget, findsOneWidget);
-
       await tester.drag(matchedWidget, const Offset(0, 200));
-      await tester.pump();
-
-//      expect(find.byType(CircularProgressIndicator), findsOneWidget);
-
       await tester.pumpAndSettle();
 
       // See if we got our new student
@@ -109,13 +76,20 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('Error on pull to refresh', (tester) async {
-      final interactor = _MockManageStudentsInteractor();
-      when(interactor.getStudents()).thenAnswer((_) => Future.error('error').catchError(() {}));
+      // Mock the behavior of the interactor so it returns a Future error
+      var interactor = _MockManageStudentsInteractor();
+      Completer completer = Completer<List<User>>();
+//      when(interactor.getStudents(forceRefresh: anyNamed('forceRefresh')))
+//          .thenAnswer((_) => completer.future.catchError((_) {
+//                completer.completeError('');
+//              }));
+
+      when(interactor.getStudents(forceRefresh: anyNamed('forceRefresh')))
+          .thenAnswer((_) => Future<List<User>>.error('error'));
 
       _setupLocator(interactor);
 
-      // Need at least one user - empty screen doesn't have a RefreshIndicator
-      var observedStudents = [_mockUser('Billy')];
+      List<User> observedStudents = [];
 
       // Start the screen with one user
       await tester.pumpWidget(TestApp(ManageStudentsScreen(observedStudents)));
@@ -123,34 +97,30 @@ void main() {
 
       // Pull to refresh
       await tester.drag(find.byType(RefreshIndicator), const Offset(0, 200));
-      // DO NOT PUMP HERE - it causes issues with the Future from getStudents()
       await tester.pump();
-      await tester.pump();
+      await tester.pump(Duration(seconds: 3));
+      await tester.pumpAndSettle();
+      print('After completer error');
 
       // Check if we show the error message
       expect(find.text(AppLocalizations().errorLoadingStudents), findsOneWidget);
+//      expect(find.text('Retry'), findsOneWidget);
     });
 
     testWidgetsWithAccessibilityChecks('Retry button on error page loads students', (tester) async {
       var observedStudents = [_mockUser('Billy')];
 
       // Mock the behavior of the interactor so it returns a Future error
-      var interactor = _MockManageStudentsInteractor();
-      Completer completer = Completer<List<User>>();
-      when(interactor.getStudents()).thenAnswer((_) => completer.future); //Future.error('error').catchError(() {}));
+      final interactor = _MockManageStudentsInteractor();
+      when(interactor.getStudents(forceRefresh: anyNamed('forceRefresh'))).thenAnswer((_) => Future.error('error'));
       _setupLocator(interactor);
 
       // Start the page with a single student
       await tester.pumpWidget(TestApp(ManageStudentsScreen(observedStudents)));
       await tester.pumpAndSettle();
 
-      // Pull to refresh, causing an error which will show the error screen with the
-      // retry button
+      // Pull to refresh, causing an error which will show the error screen with the retry button
       await tester.drag(find.byType(RefreshIndicator), const Offset(0, 200));
-      await tester.pump();
-      await tester.pump(Duration(milliseconds: 500));
-      completer.completeError('error');
-      // DO NOT PUMP HERE - it will cause issues with the Future
       await tester.pumpAndSettle();
 
       // Tap retry button to refresh list
@@ -158,10 +128,11 @@ void main() {
       await tester.pumpAndSettle();
 
       // Change the interactor to return a student instead of an error
-      when(interactor.getStudents()).thenAnswer((_) => Future.value(observedStudents));
+      when(interactor.getStudents(forceRefresh: anyNamed('forceRefresh')))
+          .thenAnswer((_) => Future.value(observedStudents));
 
       await tester.drag(find.byType(RefreshIndicator), const Offset(0, 200));
-      // DO NOT PUMP HERE - it will cause issues with the Future
+      await tester.pumpAndSettle();
 
       // See if we got the student back from the retry
       expect(find.text('Billy'), findsOneWidget);
@@ -186,7 +157,7 @@ void main() {
       expect(find.byType(ListTile), findsNWidgets(3));
     });
 
-    testWidgetsWithAccessibilityChecks('Displays username when pronouns is null', (tester) async {
+    testWidgetsWithAccessibilityChecks('Displays username', (tester) async {
       _setupLocator();
 
       var observedStudents = [
@@ -240,7 +211,7 @@ void main() {
       expect(find.text(AppLocalizations().emptyStudentList), findsOneWidget);
     });
     // TODO: Uncomment when Thresholds is implemented
-//  testWidgetsWithAccessibilityChecks('Click goes to the Threshold Screen', (tester) async {
+//  testWidgetsWithAccessibilityChecks('Tap goes to the Threshold Screen', (tester) async {
 //    _setupLocator();
 //
 //    var observedStudents = [
@@ -258,11 +229,7 @@ void main() {
   });
 
   group('Add Student', () {
-    testWidgetsWithAccessibilityChecks('Refresh student list on success', (tester) async {
-      _setupLocator();
-    });
-
-    testWidgetsWithAccessibilityChecks('Clicking FAB opens bottom sheet', (tester) async {
+    testWidgetsWithAccessibilityChecks('Tapping FAB opens bottom sheet', (tester) async {
       _setupLocator();
 
       var observedStudents = [
@@ -316,32 +283,77 @@ void main() {
       // Check for the dialog
       expect(find.byType(Dialog), findsOneWidget);
     });
-  });
 
-  testWidgetsWithAccessibilityChecks('Error on server code', (tester) async {
-    _setupLocator();
+    testWidgetsWithAccessibilityChecks('Refresh list on success', (tester) async {
+      var observedStudent = [_mockUser('Billy')];
 
-    var observedStudents = [_mockUser('Billy')];
+      // Mock return value for success when pairing a student
+      final interactor = _MockManageStudentsInteractor();
+      when(interactor.pairWithStudent(any)).thenAnswer((_) => Future.value(true));
 
-    // Set the interactor to return false  when trying to pair with a student
-    final interactor = _MockManageStudentsInteractor();
-    when(interactor.pairWithStudent(any)).thenAnswer((_) => Future.value(false));
+      // Mock retrieving students, also add an extra student to the list
+      when(interactor.getStudents(forceRefresh: anyNamed('forceRefresh'))).thenAnswer((_) {
+        observedStudent.add(_mockUser('Trevor'));
+        return Future.value(observedStudent);
+      });
 
-    await tester.pumpWidget(TestApp(ManageStudentsScreen(observedStudents)));
-    await tester.pumpAndSettle();
+      _setupLocator(interactor);
 
-    await _clickFAB(tester);
+      // Setup page
+      await tester.pumpWidget(TestApp(ManageStudentsScreen(observedStudent), highContrast: true));
+      await tester.pumpAndSettle();
 
-    // Click on the pairing code dialog
-    await tester.tap(find.text(AppLocalizations().pairingCode));
-    await tester.pumpAndSettle();
+      // Click FAB
+      await _clickFAB(tester);
 
-    // Click OK
-    await tester.tap(find.text(AppLocalizations().ok));
-    await tester.pumpAndSettle();
+      // Click pairing code option
+      await tester.tap(find.text(AppLocalizations().pairingCode));
+      await tester.pumpAndSettle();
 
-    // Check for error message
-    expect(find.text(AppLocalizations().errorPairingFailed), findsOneWidget);
+      // Enter code
+      await tester.enterText(find.byType(TextFormField), 'canvas');
+      await tester.pumpAndSettle();
+
+      // Tap 'OK'
+      await tester.tap(find.text('OK'));
+      await tester.pumpAndSettle();
+
+      // Make sure the dialog is gone
+      expect(find.byType(AlertDialog), findsNothing);
+
+      // Make sure we have the new students
+      expect(find.text('Trevor'), findsOneWidget);
+    });
+
+    testWidgetsWithAccessibilityChecks('Show error on fail', (tester) async {
+      var observedStudents = [_mockUser('Billy')];
+
+      // Set the interactor to return false when trying to pair with a student
+      final interactor = _MockManageStudentsInteractor();
+      when(interactor.pairWithStudent(any)).thenAnswer((_) => Future.value(false));
+      _setupLocator(interactor);
+
+      // Setup the main widget
+      await tester.pumpWidget(TestApp(
+        ManageStudentsScreen(observedStudents),
+        highContrast: true,
+      ));
+      await tester.pumpAndSettle();
+
+      // Click FAB
+      await _clickFAB(tester);
+
+      // Click on the pairing code option in bottom sheet
+      await tester.tap(find.text(AppLocalizations().pairingCode));
+      await tester.pumpAndSettle();
+
+      // Click OK in Add Student Dialog
+      await tester.tap(find.text(AppLocalizations().ok));
+      await tester.pumpAndSettle();
+
+      // Check for error message
+      expect(find.text(AppLocalizations().errorPairingFailed), findsOneWidget);
+    });
   });
 }
 
