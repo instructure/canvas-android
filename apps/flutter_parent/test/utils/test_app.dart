@@ -22,6 +22,7 @@ import 'package:flutter_parent/api/utils/api_prefs.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/utils/common_widgets/respawn.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -113,6 +114,8 @@ void setupTestLocator(config(GetIt locator)) {
 /// Returned is a future that completes when all async tasks spawned by this method call have completed. Waiting isn't
 /// required, though is probably good practice and results in more stable tests.
 Future<void> setupPlatformChannels({PlatformConfig config = const PlatformConfig()}) {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   if (config.initPackageInfo) {
     const MethodChannel('plugins.flutter.io/package_info').setMockMethodCallHandler((MethodCall methodCall) async {
       if (methodCall.method == 'getAll') {
