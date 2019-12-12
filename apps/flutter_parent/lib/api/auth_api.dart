@@ -19,7 +19,7 @@ import 'package:flutter_parent/models/mobile_verify_result.dart';
 import 'package:flutter_parent/models/serializers.dart';
 
 class AuthApi {
-  static Future<CanvasToken> refreshToken() async {
+  Future<CanvasToken> refreshToken() async {
     var response = await Dio().post(
       "${ApiPrefs.getDomain()}/login/oauth2/token",
       queryParameters: {
@@ -38,7 +38,7 @@ class AuthApi {
     }
   }
 
-  static Future<CanvasToken> getTokens(MobileVerifyResult verifyResult, String requestCode) async {
+  Future<CanvasToken> getTokens(MobileVerifyResult verifyResult, String requestCode) async {
     var response = await Dio().post(
       "${verifyResult.baseUrl}/login/oauth2/token",
       queryParameters: {
@@ -56,7 +56,7 @@ class AuthApi {
     }
   }
 
-  static Future<MobileVerifyResult> mobileVerify(String domain) async {
+  Future<MobileVerifyResult> mobileVerify(String domain) async {
     var userAgent = ApiPrefs.getUserAgent();
     var encodedAgent = Uri.encodeQueryComponent(userAgent);
     var encodedDomain = Uri.encodeQueryComponent(domain);

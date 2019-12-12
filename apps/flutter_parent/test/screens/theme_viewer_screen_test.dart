@@ -14,6 +14,7 @@
 ///
 import 'package:flutter/widgets.dart';
 import 'package:flutter_parent/screens/theme_viewer_screen.dart';
+import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/design/student_color_set.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -36,32 +37,32 @@ void main() {
     await tester.pumpAndSettle();
 
     // Light mode, normal contrast. Title should be dark, subtitle should be gray.
-    expect(tester.widget<Text>(title()).style.color, ParentTheme.licorice);
-    expect(tester.widget<Text>(subtitle()).style.color, ParentTheme.ash);
+    expect(tester.widget<Text>(title()).style.color, ParentColors.licorice);
+    expect(tester.widget<Text>(subtitle()).style.color, ParentColors.ash);
 
     // Enable dark mode
     await tester.tap(darkToggle());
     await tester.pumpAndSettle();
 
     // Dark mode, normal contrast. Title should be light, subtitle should be gray.
-    expect(tester.widget<Text>(title()).style.color, ParentTheme.tiara);
-    expect(tester.widget<Text>(subtitle()).style.color, ParentTheme.ash);
+    expect(tester.widget<Text>(title()).style.color, ParentColors.tiara);
+    expect(tester.widget<Text>(subtitle()).style.color, ParentColors.ash);
 
     // Enable High-Contrast mode
     await tester.tap(hcToggle());
     await tester.pumpAndSettle();
 
     // Dark mode, high contrast. Both title and subtitle should be light
-    expect(tester.widget<Text>(title()).style.color, ParentTheme.tiara);
-    expect(tester.widget<Text>(subtitle()).style.color, ParentTheme.tiara);
+    expect(tester.widget<Text>(title()).style.color, ParentColors.tiara);
+    expect(tester.widget<Text>(subtitle()).style.color, ParentColors.tiara);
 
     // Disable dark mode
     await tester.tap(darkToggle());
     await tester.pumpAndSettle();
 
     // Light mode, high contrast. Both title and subtitle should be dark
-    expect(tester.widget<Text>(title()).style.color, ParentTheme.licorice);
-    expect(tester.widget<Text>(subtitle()).style.color, ParentTheme.licorice);
+    expect(tester.widget<Text>(title()).style.color, ParentColors.licorice);
+    expect(tester.widget<Text>(subtitle()).style.color, ParentColors.licorice);
   });
 
   testWidgets("Set and returns correct values for dark and high-contrast modes", (tester) async {

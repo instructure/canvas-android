@@ -16,7 +16,6 @@
   -->
 
 <resources>
-
     <string name="inputText">Texto de entrada</string>
     <string name="cancel">Cancelar</string>
     <string name="comment">Comentário</string>
@@ -36,7 +35,6 @@
     <string name="deleteHeadCommentConfirmation">Excluir este comentário excluirá todos os comentários associados a esta anotação. Tem certeza de que deseja fazer isso?</string>
     <string name="sendingSimple">Enviando</string>
     <string name="pspdf__annotation_type_stamp">Cor da anotação</string>
-
-    <string name="removedComment">Removeu %1$s por %2$s</string>
+    <string name="removedComment">Removido %1$s por %2$s</string>
 
 </resources>

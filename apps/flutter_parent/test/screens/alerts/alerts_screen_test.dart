@@ -19,7 +19,7 @@ import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/screens/alerts/alerts_interactor.dart';
 import 'package:flutter_parent/screens/alerts/alerts_screen.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
-import 'package:flutter_parent/utils/design/parent_theme.dart';
+import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/student_color_set.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
@@ -148,7 +148,7 @@ void main() {
       expect(find.text(DateFormat(AppLocalizations().dateTimeFormat).format(alerts.first.actionDate.toLocal())),
           findsOneWidget);
       expect(find.byIcon(CanvasIcons.info), findsOneWidget);
-      expect((tester.widget(find.byIcon(CanvasIcons.info)) as Icon).color, ParentTheme.ash);
+      expect((tester.widget(find.byIcon(CanvasIcons.info)) as Icon).color, ParentColors.ash);
     });
 
     testWidgetsWithAccessibilityChecks('Shows alert positive', (tester) async {
@@ -182,7 +182,7 @@ void main() {
       expect(find.text(DateFormat(AppLocalizations().dateTimeFormat).format(alerts.first.actionDate.toLocal())),
           findsOneWidget);
       expect(find.byIcon(CanvasIcons.warning), findsOneWidget);
-      expect((tester.widget(find.byIcon(CanvasIcons.warning)) as Icon).color, ParentTheme.failure);
+      expect((tester.widget(find.byIcon(CanvasIcons.warning)) as Icon).color, ParentColors.failure);
     });
 
     testWidgetsWithAccessibilityChecks('Can tap alert to mark as read', (tester) async {

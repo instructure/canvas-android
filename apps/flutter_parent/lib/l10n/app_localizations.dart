@@ -100,18 +100,15 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
       return fallback ?? supported.first;
     }
 
-    final languageLocale = Locale(locale.languageCode, "");
     if (supported.contains(locale)) {
       return locale;
-    } else if (supported.contains(languageLocale)) {
-      return languageLocale;
     } else {
-      return fallback ?? supported.first;
+      return Locale(locale.languageCode, "");
     }
   }
 }
 
-AppLocalizations L10n(BuildContext context) => AppLocalizations.of(context);
+AppLocalizations L10n(BuildContext context) => Localizations.of<AppLocalizations>(context, AppLocalizations);
 
 ///
 /// App Localization class.
@@ -128,10 +125,6 @@ class AppLocalizations {
       Intl.defaultLocale = localeName;
       return new AppLocalizations();
     });
-  }
-
-  static AppLocalizations of(BuildContext context) {
-    return Localizations.of<AppLocalizations>(context, AppLocalizations);
   }
 
   static const _AppLocalizationsDelegate delegate = _AppLocalizationsDelegate();
@@ -216,12 +209,41 @@ class AppLocalizations {
       desc: 'The body text shown in the help dialog on the domain search screen',
       args: [canvasGuides, canvasSupport]);
 
+  /// Crash screen
+
+  String get crashScreenTitle =>
+      Intl.message('Uh oh!', desc: 'Title of the screen that shows when a crash has occurred');
+
+  String get crashScreenMessage =>
+      Intl.message('We’re not sure what happened, but it wasn’t good. Contact us if this keeps happening.',
+          desc: 'Message shown when a crash has occurred');
+
+  String get crashScreenContact => Intl.message('Contact Support',
+      desc: 'Label for the button that allows users to contact support after a crash has occurred');
+
+  String get crashScreenViewDetails =>
+      Intl.message('View error details', desc: 'Label for the button that allowed users to view crash details');
+
+  String get crashScreenRestart =>
+      Intl.message('Restart app', desc: 'Label for the button that will restart the entire application');
+
+  String get crashDetailsAppVersion =>
+      Intl.message('Application version', desc: 'Label for the application version displayed in the crash details');
+
+  String get crashDetailsDeviceModel =>
+      Intl.message('Device model', desc: 'Label for the device model displayed in the crash details');
+
+  String get crashDetailsAndroidVersion => Intl.message('Android OS version',
+      desc: 'Label for the Android operating system version displayed in the crash details');
+
+  String get crashDetailsFullMessage =>
+      Intl.message('Full error message', desc: 'Label for the full error message displayed in the crash details');
+
   /// Inbox
 
   String get inbox => Intl.message('Inbox', desc: 'Title for the Inbox screen');
 
-  String get errorLoadingMessages => Intl.message('There was an error loading your inbox messages',
-      desc: 'Message shown when an error occured while loading inbox messages');
+  String get errorLoadingMessages => Intl.message('There was an error loading your inbox messages.');
 
   String get noSubject => Intl.message('No Subject', desc: 'Title used for inbox messages that have no subject');
 
@@ -289,7 +311,8 @@ class AppLocalizations {
 
   String get noCoursesTitle => Intl.message('No Courses', desc: 'Title for having no courses');
 
-  String get noCoursesMessage => Intl.message("Your child’s courses might not be published yet.", desc: 'Message for having no courses');
+  String get noCoursesMessage =>
+      Intl.message("Your students’s courses might not be published yet.", desc: 'Message for having no courses');
 
   String get noGrade => Intl.message(
         'No Grade',
@@ -399,6 +422,40 @@ class AppLocalizations {
         desc: 'The generic error shown when we are unable to verify with Canvas',
       );
 
+  /// Not-A-Parent screen
+
+  String get notAParentTitle => Intl.message('Not a parent?',
+      desc: 'Title for the screen that shows when the user is not observing any students');
+
+  String get notAParentSubtitle => Intl.message("We couldn't find any students associated with this account",
+      desc: 'Subtitle for the screen that shows when the user is not observing any students');
+
+  String get studentOrTeacherTitle => Intl.message('Are you a student or teacher?',
+      desc: 'Label for button that will show users the option to view other Canvas apps in the Play Store');
+
+  String get studentOrTeacherSubtitle =>
+      Intl.message('One of our other apps might be a better fit. Tap one to visit the Play Store.',
+          desc: 'Description of options to view other Canvas apps in the Play Store');
+
+  String get returnToLogin =>
+      Intl.message('Return to Login', desc: 'Label for the button that returns the user to the login screen');
+
+  String get studentApp => Intl.message('STUDENT',
+      desc:
+          "The 'student' portion of the 'Canvas Student' app name, in all caps. 'Canvas' is excluded in this context as it will be displayed to the user as a wordmark image");
+
+  String get teacherApp => Intl.message('TEACHER',
+      desc:
+          "The 'teacher' portion of the 'Canvas Teacher' app name, in all caps. 'Canvas' is excluded in this context as it will be displayed to the user as a wordmark image");
+
+  String get canvasStudentApp => Intl.message('Canvas Student',
+      desc:
+          "The name of the Canvas Student app. Only 'Student' should be translated as 'Canvas' is a brand name in this context and should not be translated.");
+
+  String get canvasTeacherApp => Intl.message('Canvas Teacher',
+      desc:
+          "The name of the Canvas Teacher app. Only 'Teacher' should be translated as 'Canvas' is a brand name in this context and should not be translated.");
+
   /// Alerts Screen
 
   String get noAlertsMessage => Intl.message(
@@ -471,4 +528,6 @@ class AppLocalizations {
         'Filter',
         desc: 'Label for buttons to filter what items are visible',
       );
+
+  String get errorLoadingStudents => Intl.message('There was an error loading your students.');
 }

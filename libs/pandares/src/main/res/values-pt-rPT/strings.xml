@@ -59,7 +59,9 @@
     <string name="submissionUploadByteProgress">%1$s de %2$s</string>
     <string name="submissionSuccessTitle">Sucesso de envio!</string>
     <string name="submissionSuccessMessage">Sua tarefa foi enviada com sucesso. Desfrute seu dia!</string>
-    <string name="cancelAllSubmissions">Cancelar todos os envios de tarefa</string>
+    <string name="submissionDeleteTitle">Cancelar subscrição</string>
+    <string name="submissionDeleteMessage">Isto irá cancelar e eliminar a sua submissão.</string>
+    <string name="submissionDeleted">Submissão eliminada</string>
     <string name="missingSubmissionLabel">Em falta</string>
     <string name="gradedSubmissionLabel">Classificado</string>
     <!-- Student Submission -->
@@ -99,6 +101,7 @@
     <string name="finalGradeFormatted">Nota final: %s</string>
     <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
     <string name="contentDescriptionScoreOutOfPointsPossible">%1$s de %2$s pontos</string>
+    <string name="enterWhatIfScore">Inserir pontuação de variações hipotéticas</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Personalizar pontuação</string>
     <string name="rubricEmptyMessage">Não existe rubrica para esta atribuição</string>
@@ -578,8 +581,7 @@
     <string name="EULA">EULA</string>
     <string name="privacyPolicy">Política de Privacidade</string>
     <string name="termsOfUse">Termos de uso</string>
-    <string name="openSource">Código Aberto</string>
-
+    <string name="canvasOnGithub">Canvas no GitHub</string>
     <!-- Quiz Strings -->
     <string name="assignmentQuizzes">Testes da tarefa</string>
     <string name="practiceQuizzes">Testes práticos</string>
@@ -590,6 +592,7 @@
     <string name="choose_answers_below">Escolha suas respostas abaixo</string>
 
 
+    <string name="flag_the_question">Marcar a pergunta</string>
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">A Fazer</string>
     <string name="gradesWidgetTitle">Classificações</string>
@@ -846,9 +849,6 @@
     <string name="like">gostar</string>
     <string name="likes">gostos</string>
 
-    <string name="wear_reminder">Programar Alertas da Data Final</string>
-    <string name="wear_notifications">Ligar Notificações de Utilização</string>
-
     <string name="color_1">Encarnado</string>
     <string name="color_2">Rosa</string>
     <string name="color_3">Lavanda</string>
@@ -1016,6 +1016,37 @@
     <string name="addChildErrorMessage">O emparelhamento falhou. Certifique-se de que seu código de pareamento esteja correto e dentro do limite de tempo de uso.</string>
     <string name="gradeComplete">Completo</string>
     <string name="gradeIncomplete">Incompleto</string>
+    <!--Teacher Strings-->
+    <string name="postPolicyTitle">Publicar definições</string>
+    <string name="postGradesTab">Publicar Classificações</string>
+    <string name="hideGradesTab">Esconder Classificações</string>
+    <plurals name="gradesPostedCount">
+        <item quantity="one">%d classificação publicada atualmente</item>
+        <item quantity="other">%d classificações publicadas atualmente</item>
+    </plurals>
+    <plurals name="gradesHiddenCount">
+        <item quantity="one">%d classificação escondida atualmente</item>
+        <item quantity="other">%d classificações escondidas atualmente</item>
+    </plurals>
+    <string name="postPolicyPostTo">Publicar para...</string>
+    <string name="postPolicySections">Seções Específicas</string>
+    <string name="postToEveryoneTitle">Todos</string>
+    <string name="postToEveryoneMessage">As classificações serão tornadas visíveis a todos os alunos</string>
+    <string name="postToGradedTitle">Classificado</string>
+    <string name="postToGradedMessage">As classificações serão tornadas visíveis para os alunos com submissões graduadas</string>
+    <string name="postPolicyAllHiddenTitle">Tudo oculto</string>
+    <string name="postPolicyAllHiddenMessage">Todas as classificações estão atualmente ocultas.</string>
+    <string name="postPolicyAllPostedTitle">Tudo publicado</string>
+    <string name="postPolicyAllPostedMessage">Todas as classificações estão postadas no momento.</string>
+    <string name="postPolicyPostedToast">Classificações Postadas</string>
+    <string name="postPolicyHiddenToast">Classificações ocultas</string>
+    <string name="postPolicyPostFailedToast">Falha ao publicar classificações</string>
+    <string name="postPolicyHideFailedToast">Falha ao esconder classificações</string>
+    <string name="gradeBeforePosting">Classificação antes da publicação</string>
+    <string name="gradeAfterPosting">Classificação após publicação</string>
+    <string name="gradeOverride">Substituir classificação </string>
+    <string name="currentGrade">Classificação Atual</string>
+
     <!-- Floating Recording View Strings -->
     <string name="recordingTimerDefault">00:00:00</string>
     <string name="recordingTimerContentDescription">%1$d horas, %2$d minutos e %3$d segundos</string>

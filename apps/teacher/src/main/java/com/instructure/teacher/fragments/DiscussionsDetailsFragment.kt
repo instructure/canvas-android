@@ -36,6 +36,7 @@ import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.dialogs.AttachmentPickerDialog
 import com.instructure.pandautils.discussions.DiscussionCaching
+import com.instructure.pandautils.discussions.DiscussionEntryHtmlConverter
 import com.instructure.pandautils.discussions.DiscussionUtils
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.utils.*
@@ -617,10 +618,11 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
 
     private fun updateDiscussionLikedState(discussionEntry: DiscussionEntry, methodName: String) {
         val likingSum = if(discussionEntry.ratingSum == 0) "" else "(" + discussionEntry.ratingSum + ")"
+        val likingSumAllyText = DiscussionEntryHtmlConverter.getLikeCountAllyText(requireContext(), discussionEntry)
         val likingColor = DiscussionUtils.getHexColorString(if (discussionEntry._hasRated) ThemePrefs.brandColor else ContextCompat.getColor(requireContext(), R.color.discussionLiking))
         requireActivity().runOnUiThread {
-            discussionRepliesWebView.loadUrl("javascript:" + methodName + "('" + discussionEntry.id.toString() + "')")
-            discussionRepliesWebView.loadUrl("javascript:updateLikedCount('" + discussionEntry.id.toString() + "','" + likingSum + "','" + likingColor + "')")
+            discussionRepliesWebView.loadUrl("javascript:$methodName('${discussionEntry.id}')")
+            discussionRepliesWebView.loadUrl("javascript:updateLikedCount('${discussionEntry.id}','$likingSum','$likingColor','$likingSumAllyText')")
         }
     }
 

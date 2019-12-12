@@ -14,6 +14,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/utils/common_widgets/full_screen_scroll_container.dart';
+import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_svg/svg.dart';
 
 /// A simple empty widget that shows a centered SVG above a title/subtitle. All components are optionally, though
@@ -22,8 +23,17 @@ class EmptyPandaWidget extends StatelessWidget {
   final String svgPath;
   final String title;
   final String subtitle;
+  final String buttonText;
+  final GestureTapCallback onButtonTap;
 
-  const EmptyPandaWidget({Key key, this.svgPath, this.title, this.subtitle}) : super(key: key);
+  const EmptyPandaWidget({
+    Key key,
+    this.svgPath,
+    this.title,
+    this.subtitle,
+    this.buttonText,
+    this.onButtonTap,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +53,21 @@ class EmptyPandaWidget extends StatelessWidget {
             subtitle,
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.subhead.copyWith(fontWeight: FontWeight.normal),
+          ),
+        if (buttonText != null)
+          Padding(
+            padding: const EdgeInsets.only(top: 48),
+            child: FlatButton(
+              onPressed: onButtonTap,
+              child: Text(
+                buttonText,
+                style: Theme.of(context).textTheme.caption.copyWith(fontSize: 16),
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: new BorderRadius.circular(4),
+                side: BorderSide(color: ParentColors.tiara),
+              ),
+            ),
           ),
       ],
     );

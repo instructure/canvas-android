@@ -1,4 +1,4 @@
-﻿<?xml version='1.0' encoding='UTF-8'?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!--
   ~ Copyright (C) 2017 - present Instructure, Inc.
   ~
@@ -21,7 +21,7 @@
     <!--Modules-->
     <string name="mustComplete">Você deve completar primeiro:</string>
     <string name="unlockedAt">Será desbloqueado às:</string>
-    <string name="goToModules">Ir Para Mòdulos</string>
+    <string name="goToModules">Ir Para Módulos</string>
 
     <!--Events-->
     <string name="Starts">Começa</string>
@@ -38,19 +38,20 @@
     <!-- Assignment Module -->
     <string name="canvasAPI_online">Online</string>
     <string name="canvasAPI_onPaper">Em Papel</string>
-    <string name="canvasAPI_discussion">Discussão</string>
-    <string name="canvasAPI_quiz">Questionário</string>
+    <string name="canvasAPI_discussion">Fórum</string>
+    <string name="canvasAPI_quiz">Teste</string>
     <string name="canvasAPI_externalTool">Ferramenta externa</string>
     <string name="canvasAPI_none">Sem envio</string>
+
     <string name="canvasAPI_passFail">Passar Reprovar</string>
-    <string name="canvasAPI_percent">Por cento</string>
-    <string name="canvasAPI_letterGrade">Nota em letra</string>
+    <string name="canvasAPI_percent">Porcentual</string>
+    <string name="canvasAPI_letterGrade">Nota por conceito</string>
     <string name="canvasAPI_points">Pontos</string>
     <string name="canvasAPI_gpaScale">Escala GPA</string>
     <string name="canvasAPI_notGraded">Sem nota</string>
 
-    <string name="canvasAPI_onlineQuiz">Questionário</string>
-    <string name="canvasAPI_discussionTopic">Tópico de discussão</string>
+    <string name="canvasAPI_onlineQuiz">Teste</string>
+    <string name="canvasAPI_discussionTopic">Assunto do fórum</string>
     <string name="canvasAPI_onlineUpload">Carregamento de arquivo</string>
     <string name="canvasAPI_onlineTextEntry">Entrada de texto</string>
     <string name="canvasAPI_onlineURL">URL do site</string>
@@ -61,8 +62,8 @@
     <string name="quiz_scoring_policy_latest">Mais recente</string>
     <string name="no">Não</string>
     <string name="always">Sempre</string>
-    <string name="graded_quiz">Questionário avaliado</string>
-    <string name="practice_quiz">Questionário de prática</string>
+    <string name="graded_quiz">Teste avaliado</string>
+    <string name="practice_quiz">Teste de prática</string>
     <string name="graded_survey">Pesquisa avaliada</string>
     <string name="ungraded_survey">Pesquisa sem avaliação</string>
     <string name="andMore"> e %d mais</string>

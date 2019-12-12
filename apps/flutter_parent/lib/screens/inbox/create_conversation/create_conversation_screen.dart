@@ -20,6 +20,7 @@ import 'package:flutter_parent/screens/inbox/attachment_utils/attachment_handler
 import 'package:flutter_parent/utils/common_widgets/avatar.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/design/canvas_icons_solid.dart';
+import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:intl/intl.dart';
@@ -283,7 +284,7 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Icon(CanvasIcons.warning, size: 40, color: ParentTheme.failure),
+                  Icon(CanvasIcons.warning, size: 40, color: ParentColors.failure),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(48, 28, 48, 32),
                     child: Text(
@@ -300,7 +301,7 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
                     ),
                     shape: RoundedRectangleBorder(
                       borderRadius: new BorderRadius.circular(24.0),
-                      side: BorderSide(color: ParentTheme.tiara),
+                      side: BorderSide(color: ParentColors.tiara),
                     ),
                   )
                 ],
@@ -554,7 +555,7 @@ class AttachmentWidget extends StatelessWidget {
         children: [
           Container(
             decoration: BoxDecoration(
-              border: Border.all(color: ParentTheme.tiara, width: 0.5),
+              border: Border.all(color: ParentColors.tiara, width: 0.5),
               borderRadius: BorderRadius.all(Radius.circular(4)),
             ),
           ),

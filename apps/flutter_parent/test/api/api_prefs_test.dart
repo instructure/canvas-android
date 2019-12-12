@@ -14,38 +14,20 @@
 
 import 'dart:ui';
 
-import 'package:flutter/services.dart';
 import 'package:flutter_parent/api/utils/api_prefs.dart';
 import 'package:flutter_parent/models/canvas_token.dart';
 import 'package:flutter_parent/models/mobile_verify_result.dart';
 import 'package:flutter_parent/models/user.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:package_info/package_info.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:test/test.dart';
+
+import '../utils/platform_config.dart';
+import '../utils/test_app.dart';
 
 void main() {
   tearDown(() {
     ApiPrefs.clean();
-  });
-
-  setUpAll(() {
-    // Setup for package_info
-    const MethodChannel channel = MethodChannel('plugins.flutter.io/package_info');
-    channel.setMockMethodCallHandler((MethodCall methodCall) async {
-      switch (methodCall.method) {
-        case 'getAll':
-          return <String, dynamic>{
-            'appName': 'android_parent',
-            'buildNumber': '10',
-            'packageName': 'com.instructure.parentapp',
-            'version': '2.0.0',
-          };
-        default:
-          assert(false);
-          return null;
-      }
-    });
   });
 
   test('is logged in throws error if not initiailzed', () {
@@ -53,38 +35,33 @@ void main() {
   });
 
   test('is logged in returns false', () async {
-    SharedPreferences.setMockInitialValues({});
-
-    await ApiPrefs.init();
+    await setupPlatformChannels();
     expect(ApiPrefs.isLoggedIn(), false);
   });
 
   test('is logged in returns false with no domain', () async {
-    SharedPreferences.setMockInitialValues({_debugKey(ApiPrefs.KEY_ACCESS_TOKEN): 'token'});
-
-    await ApiPrefs.init();
+    await setupPlatformChannels(config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_ACCESS_TOKEN: 'token'}));
     expect(ApiPrefs.isLoggedIn(), false);
   });
 
   test('is logged in returns true with a token and domain', () async {
-    SharedPreferences.setMockInitialValues({
-      _debugKey(ApiPrefs.KEY_ACCESS_TOKEN): 'token',
-      _debugKey(ApiPrefs.KEY_DOMAIN): 'domain',
-    });
+    await setupPlatformChannels(
+      config: PlatformConfig(mockPrefs: {
+        ApiPrefs.KEY_ACCESS_TOKEN: 'token',
+        ApiPrefs.KEY_DOMAIN: 'domain',
+      }),
+    );
 
-    await ApiPrefs.init();
     expect(ApiPrefs.isLoggedIn(), true);
   });
 
   test('getApiUrl returns the domain with the api path added', () async {
-    SharedPreferences.setMockInitialValues({_debugKey(ApiPrefs.KEY_DOMAIN): 'domain'});
-
-    await ApiPrefs.init();
+    await setupPlatformChannels(config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_DOMAIN: 'domain'}));
     expect(ApiPrefs.getApiUrl(), 'domain/api/v1/');
   });
 
   test('perform login updates information', () async {
-    SharedPreferences.setMockInitialValues({});
+    await setupPlatformChannels();
 
     final verifyResult = _mockVerifyResult('domain');
     final tokens = CanvasToken((b) => b
@@ -103,13 +80,13 @@ void main() {
   });
 
   test('perform logout clears out token and domain', () async {
-    SharedPreferences.setMockInitialValues({
-      _debugKey(ApiPrefs.KEY_DOMAIN): 'domain',
-      _debugKey(ApiPrefs.KEY_ACCESS_TOKEN): 'token',
-      _debugKey(ApiPrefs.KEY_REFRESH_TOKEN): 'refresh',
-    });
-
-    await ApiPrefs.init();
+    await setupPlatformChannels(
+      config: PlatformConfig(mockPrefs: {
+        ApiPrefs.KEY_DOMAIN: 'domain',
+        ApiPrefs.KEY_ACCESS_TOKEN: 'token',
+        ApiPrefs.KEY_REFRESH_TOKEN: 'refresh',
+      }),
+    );
 
     expect(ApiPrefs.getDomain(), 'domain');
     expect(ApiPrefs.getAuthToken(), 'token');
@@ -123,19 +100,17 @@ void main() {
   });
 
   test('setting user updates stored user', () async {
-    SharedPreferences.setMockInitialValues({});
+    await setupPlatformChannels();
 
     final user = _mockUser();
-    await ApiPrefs.init();
     await ApiPrefs.setUser(user);
 
     expect(ApiPrefs.getUser(), user);
   });
 
   test('setting user updates with new locale rebuilds the app', () async {
-    SharedPreferences.setMockInitialValues({});
+    await setupPlatformChannels();
 
-    await ApiPrefs.init();
     expect(ApiPrefs.getUser(), null);
 
     final user = _mockUser();
@@ -146,44 +121,40 @@ void main() {
   });
 
   test('effectiveLocale returns the devices locale', () async {
-    SharedPreferences.setMockInitialValues({});
+    await setupPlatformChannels();
 
     final deviceLocale = window.locale.toLanguageTag();
-    await ApiPrefs.init();
 
     final localeParts = deviceLocale.split("-");
     expect(ApiPrefs.effectiveLocale(), Locale(localeParts.first, localeParts.last));
   });
 
   test('effectiveLocale returns the users effective locale', () async {
-    SharedPreferences.setMockInitialValues({});
+    await setupPlatformChannels();
 
     final user = _mockUser();
-    await ApiPrefs.init();
     await ApiPrefs.setUser(user);
 
     expect(ApiPrefs.effectiveLocale(), Locale(user.effectiveLocale, user.effectiveLocale));
   });
 
   test('effectiveLocale returns the users locale if effective locale is null', () async {
-    SharedPreferences.setMockInitialValues({});
+    await setupPlatformChannels();
 
     final user = _mockUser().rebuild((b) => b
       ..effectiveLocale = null
       ..locale = 'jp');
 
-    await ApiPrefs.init();
     await ApiPrefs.setUser(user);
 
     expect(ApiPrefs.effectiveLocale(), Locale(user.locale, user.locale));
   });
 
   test('effectiveLocale returns the users locale if effective locale is null', () async {
-    SharedPreferences.setMockInitialValues({});
+    await setupPlatformChannels();
 
     final user = _mockUser().rebuild((b) => b..effectiveLocale = 'en-AU-x-unimelb');
 
-    await ApiPrefs.init();
     await ApiPrefs.setUser(user);
 
     expect(
@@ -195,9 +166,7 @@ void main() {
   });
 
   test('getUser returns null', () async {
-    SharedPreferences.setMockInitialValues({});
-    await ApiPrefs.init();
-
+    await setupPlatformChannels();
     expect(ApiPrefs.getUser(), null);
   });
 
@@ -206,66 +175,51 @@ void main() {
   });
 
   test('getHeaderMap returns a map with the accept-language from prefs', () async {
-    SharedPreferences.setMockInitialValues({});
+    await setupPlatformChannels();
 
     final user = _mockUser().rebuild((b) => b..effectiveLocale = 'en-US');
-    await ApiPrefs.init();
     await ApiPrefs.setUser(user);
 
     expect(ApiPrefs.getHeaderMap()['accept-language'], 'en,US');
   });
 
   test('getHeaderMap returns a map with the accept-language from device', () async {
-    SharedPreferences.setMockInitialValues({});
+    await setupPlatformChannels();
 
     final deviceLocale = window.locale;
     final user = _mockUser().rebuild((b) => b..effectiveLocale = 'ar');
-    await ApiPrefs.init();
     await ApiPrefs.setUser(user);
 
-    expect(ApiPrefs.getHeaderMap(forceDeviceLanguage: true)['accept-language'], deviceLocale.toLanguageTag().replaceAll("-", ","));
+    expect(ApiPrefs.getHeaderMap(forceDeviceLanguage: true)['accept-language'],
+        deviceLocale.toLanguageTag().replaceAll("-", ","));
   });
 
   test('getHeaderMap returns a map with the token from prefs', () async {
-    SharedPreferences.setMockInitialValues({
-      _debugKey(ApiPrefs.KEY_ACCESS_TOKEN): 'token',
-    });
-
-    await ApiPrefs.init();
+    await setupPlatformChannels(config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_ACCESS_TOKEN: 'token'}));
     expect(ApiPrefs.getHeaderMap()['Authorization'], 'Bearer token');
   });
 
   test('getHeaderMap returns a map with the token passed in', () async {
-    SharedPreferences.setMockInitialValues({
-      _debugKey(ApiPrefs.KEY_ACCESS_TOKEN): 'token',
-    });
-
-    await ApiPrefs.init();
+    await setupPlatformChannels(config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_ACCESS_TOKEN: 'token'}));
     expect(ApiPrefs.getHeaderMap(token: 'other token')['Authorization'], 'Bearer other token');
   });
 
   test('getHeaderMap returns a map with the correct user-agent from prefs', () async {
+    await setupPlatformChannels();
     var info = await PackageInfo.fromPlatform();
     var userAgent = 'androidParent/${info.version} (${info.buildNumber})';
-
-    await ApiPrefs.init();
 
     expect(ApiPrefs.getUserAgent(), userAgent);
     expect(ApiPrefs.getHeaderMap()['User-Agent'], ApiPrefs.getUserAgent());
   });
 
   test('getHeaderMap returns a map with the extra headers passed in', () async {
-    SharedPreferences.setMockInitialValues({});
+    await setupPlatformChannels();
 
     final map = {'key': 'value'};
 
-    await ApiPrefs.init();
     expect(ApiPrefs.getHeaderMap(extraHeaders: map)['key'], 'value');
   });
-}
-
-String _debugKey(String key) {
-  return "flutter.$key";
 }
 
 MobileVerifyResult _mockVerifyResult(String domain) => MobileVerifyResult((b) {

@@ -786,6 +786,23 @@ fun MockCanvas.addUser(): User {
     users += user.id to user
     tokens += UUID.randomUUID().toString() to user.id
     userSettings += user.id to UserSettings()
+
+    // Let's add an empty root file folder for the user
+    // Now create our folder metadata
+    val newFolderId = newItemId()
+    val folderMetadataItem = FileFolder(
+            contextType = "user",
+            contextId = user.id,
+            filesUrl = "https://mock-data.instructure.com/api/v1/folders/$newFolderId/files",
+            foldersUrl = "https://mock-data.instructure.com/api/v1/folders/$newFolderId/folders",
+            id = newFolderId,
+            //folderId = rootFolder.id,
+            displayName = "Files",
+            url = "https://mock-data.instructure.com/api/v1/folders/$newFolderId",
+            name = "Files",
+            fullName = "Files"
+    )
+    fileFolders[newFolderId] = folderMetadataItem
     return user
 }
 

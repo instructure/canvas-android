@@ -129,7 +129,7 @@ class _CoursesScreenState extends State<CoursesScreen> {
     // Otherwise, we have a grade, so check if we have the actual grade string
     // or a score
     var text = grade.noCurrentGrade()
-        ? AppLocalizations.of(context).noGrade
+        ? L10n(context).noGrade
         : grade.currentGrade()?.isNotEmpty == true ? grade.currentGrade() : format.format(grade.currentScore() / 100);
 
     return Text(

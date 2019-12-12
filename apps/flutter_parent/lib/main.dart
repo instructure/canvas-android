@@ -15,9 +15,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/api/utils/api_prefs.dart';
 import 'package:flutter_parent/parent_app.dart';
+import 'package:flutter_parent/utils/crash_utils.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 void main() async {
+  CrashUtils.init(); // Sets up crash screen widget and crash report behavior
   setupLocator();
   await ApiPrefs.init();
 

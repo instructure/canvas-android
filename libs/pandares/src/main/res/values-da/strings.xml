@@ -59,7 +59,9 @@
     <string name="submissionUploadByteProgress">%1$s af %2$s</string>
     <string name="submissionSuccessTitle">Aflevering lykkedes!</string>
     <string name="submissionSuccessMessage">Din opgave blev afleveret. Hav en god dag!</string>
-    <string name="cancelAllSubmissions">Annuller alle opgaveafleveringer</string>
+    <string name="submissionDeleteTitle">Annuller aflevering</string>
+    <string name="submissionDeleteMessage">Dette annullerer og sletter din aflevering.</string>
+    <string name="submissionDeleted">Aflevering er slettet</string>
     <string name="missingSubmissionLabel">Mangler</string>
     <string name="gradedSubmissionLabel">Bedømt</string>
     <!-- Student Submission -->
@@ -99,6 +101,7 @@
     <string name="finalGradeFormatted">Endelig karakter: %s</string>
     <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
     <string name="contentDescriptionScoreOutOfPointsPossible">%1$s ud af %2$s point</string>
+    <string name="enterWhatIfScore">Indtast Hvad-nu-hvis-resultat.</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Brugerdefineret resultat</string>
     <string name="rubricEmptyMessage">Der er ingen rubrik til denne opgave</string>
@@ -578,8 +581,7 @@
     <string name="EULA">EULA</string>
     <string name="privacyPolicy">Datapolitik</string>
     <string name="termsOfUse">Betingelser for brug</string>
-    <string name="openSource">Open Source</string>
-
+    <string name="canvasOnGithub">Canvas på GitHub</string>
     <!-- Quiz Strings -->
     <string name="assignmentQuizzes">Opgavetest</string>
     <string name="practiceQuizzes">Øvelsestest</string>
@@ -590,6 +592,7 @@
     <string name="choose_answers_below">Vælg dine svar nedenfor</string>
 
 
+    <string name="flag_the_question">Indsæt flag på dette spørgsmål</string>
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">Opgaveliste</string>
     <string name="gradesWidgetTitle">Karakterer</string>
@@ -846,9 +849,6 @@
     <string name="like">lide</string>
     <string name="likes">likes</string>
 
-    <string name="wear_reminder">Planlæg forfaldsdato-påmindelser</string>
-    <string name="wear_notifications">Aktiver Wear notifikationer</string>
-
     <string name="color_1">Rød</string>
     <string name="color_2">Hot pink</string>
     <string name="color_3">Lyselilla</string>
@@ -1016,6 +1016,37 @@
     <string name="addChildErrorMessage">Parring mislykkedes. Sørg for, at din parringskode er korrekt og ikke udløbet.</string>
     <string name="gradeComplete">Fuldført</string>
     <string name="gradeIncomplete">Ufuldstændig</string>
+    <!--Teacher Strings-->
+    <string name="postPolicyTitle">Slå karakterer op - indstillinger</string>
+    <string name="postGradesTab">Slå karakterer op</string>
+    <string name="hideGradesTab">Skjul karakterer</string>
+    <plurals name="gradesPostedCount">
+        <item quantity="one">%d karakter, der i øjeblikket er slået op</item>
+        <item quantity="other">%d karakterer, der i øjeblikket er slået op</item>
+    </plurals>
+    <plurals name="gradesHiddenCount">
+        <item quantity="one">%d karakter, der i øjeblikket er skjult</item>
+        <item quantity="other">%d karakterer, der i øjeblikket er skjult</item>
+    </plurals>
+    <string name="postPolicyPostTo">Slå op på ...</string>
+    <string name="postPolicySections">Specifikke afsnit</string>
+    <string name="postToEveryoneTitle">Alle</string>
+    <string name="postToEveryoneMessage">Karakterer vil blive gjort synlige for alle studerende</string>
+    <string name="postToGradedTitle">Bedømt</string>
+    <string name="postToGradedMessage">Karakterer vil blive gjort synlige for studerende med afleveringer med karakter</string>
+    <string name="postPolicyAllHiddenTitle">Alle skjulte</string>
+    <string name="postPolicyAllHiddenMessage">Alle karakterer er i øjeblikket skjult.</string>
+    <string name="postPolicyAllPostedTitle">Alle slået op</string>
+    <string name="postPolicyAllPostedMessage">Alle karakterer er i øjeblikket slået op.</string>
+    <string name="postPolicyPostedToast">Karakterer opført</string>
+    <string name="postPolicyHiddenToast">Karakterer skjult</string>
+    <string name="postPolicyPostFailedToast">Kunne ikke slå karakterer op</string>
+    <string name="postPolicyHideFailedToast">Kunne ikke skjule karakterer</string>
+    <string name="gradeBeforePosting">Karakter inden opslag</string>
+    <string name="gradeAfterPosting">Karakter efter opslag</string>
+    <string name="gradeOverride">Tilsidesættelse af karakter </string>
+    <string name="currentGrade">Nuværende karakter </string>
+
     <!-- Floating Recording View Strings -->
     <string name="recordingTimerDefault">00:00:00</string>
     <string name="recordingTimerContentDescription">%1$d timer, %2$d minutter og %3$d sekunder</string>

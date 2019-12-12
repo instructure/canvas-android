@@ -58,7 +58,9 @@
     <string name="submissionUploadByteProgress">%1$s av %2$s</string>
     <string name="submissionSuccessTitle">Inlämningen slutfördes!</string>
     <string name="submissionSuccessMessage">Din uppgift har lämnats in. Ha en bra dag!</string>
-    <string name="cancelAllSubmissions">Avbryt alla uppgiftsinlämningar</string>
+    <string name="submissionDeleteTitle">Avbryt inlämningen</string>
+    <string name="submissionDeleteMessage">Detta avbryter och tar bort din inlämning.</string>
+    <string name="submissionDeleted">Inlämningen borttagen</string>
     <string name="missingSubmissionLabel">Saknas</string>
     <string name="gradedSubmissionLabel">Har bedömts</string>
     <!-- Student Submission -->
@@ -75,13 +77,13 @@
 
     <string name="textSubmissionFailureMessage">Något gick fel vid uppladdning av inlämningen. Lämna in igen.</string>
     <!-- Student Submission Details -->
-    <string name="submission">Inlämning</string>
-    <string name="submissionVersions">Inlämningsversioner</string>
+    <string name="submission">Inskickning</string>
+    <string name="submissionVersions">Inskickningsversioner</string>
     <string name="submissionDetailsFileTabName">Filer (%d)</string>
     <string name="rubric">Matris</string>
-    <string name="submissionDetailsErrorTitle">Fel vid inlämning</string>
-    <string name="urlSubmissionDisclaimer">Den här inlämningen var en URL till en extern sida. Vi har inkluderat en ögonblicksbild över hur sidan såg ut när den lämnades in.</string>
-    <string name="submissionDetailsNoSubmissionYet">Ingen inlämning än</string>
+    <string name="submissionDetailsErrorTitle">Fel vid inskickning</string>
+    <string name="urlSubmissionDisclaimer">Den här inskickningen var en URL till en extern sida. Vi har inkluderat en ögonblicksbild över hur sidan såg ut när den skickades in.</string>
+    <string name="submissionDetailsNoSubmissionYet">Ingen inskickning än</string>
     <string name="submissionDetailsAssignmentWasLockedOn">Din uppgift låstes den %1$s kl. %2$s</string>
     <string name="submissionDetailsAssignmentWillUnlockOn">Din uppgift kommer att låsas upp den %1$s kl. %2$s</string>
     <string name="submissionDetailsAssignmentLockedByModuleName">Din uppgift har låsts av modulen \"%1$s\"</string>
@@ -96,11 +98,12 @@
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Av %s poäng</string>
     <string name="outOfPointsAbbreviatedFormatted">Av %s poäng</string>
-    <string name="gradeExcused">Slipper göra</string>
+    <string name="gradeExcused">Ursäktad</string>
     <string name="finalGradeFormatted">Slutbedömning: %s</string>
 
     <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
     <string name="contentDescriptionScoreOutOfPointsPossible">%1$s av %2$s poäng</string>
+    <string name="enterWhatIfScore">Ange Vad om-poäng</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Anpassad poäng</string>
     <string name="rubricEmptyMessage">Det finns ingen matris för den här uppgiften</string>
@@ -180,7 +183,7 @@
     <string name="assignments">Uppgifter</string>
     <string name="noDescription">Det finns ingen beskrivning för den här uppgiften</string>
     <string name="noAssignmentsInGroup">Inga uppgifter i den här gruppen</string>
-    <string name="excusedAssignment">Den här uppgiften slipper göras och kommer inte räknas in i den totala uträkningen</string>
+    <string name="excusedAssignment">Den här uppgiften ursäktad och kommer inte räknas in i den totala uträkningen</string>
     <string name="excused">EX</string>
     <!-- Assignment editing -->
     <string name="points">Poäng </string>
@@ -211,7 +214,7 @@
     <string name="unread">Olästa</string>
     <string name="archived">Arkiverade</string>
     <string name="sent">Skickade</string>
-    <string name="grade">Bedömning</string>
+    <string name="grade">Omdöme</string>
     <string name="clearFilter">Rensa filter</string>
     <string name="addMessage">Lägg till meddelande</string>
     <string name="monologue">Monolog</string>
@@ -239,7 +242,7 @@
     <string name="locationIconDescription">Platsikon</string>
     <string name="noteIconDescription">Anteckningsikon</string>
     <string name="toDoTurnIn">Lämna in</string>
-    <string name="toDoNoDueDate">Inget inlämningsdatum</string>
+    <string name="toDoNoDueDate">Inget inskickningsdatum</string>
 
     <string name="dueAt">Ska lämnas in</string>
     <string name="dueAtTime">Ska lämnas in %s</string>
@@ -389,25 +392,25 @@
     <string name="syllabusEventsError">Ett fel uppstod vid inläsningen av dina moduler.</string>
 
     <string name="canvas">Canvas</string>
-    <string name="chooseRecipient">Välj mottagare</string>
+    <string name="chooseRecipient">Välj mottagare ()</string>
     <string name="messageHasNoRecipients">Det här meddelandet har för närvarande inga mottagare.</string>
     <string name="sendMessage">Skicka meddelande</string>
     <string name="userAvatar">Användarens avatar</string>
 
     <string name="calendarIcon">Kalenderikon</string>
     <string name="assignmentIcon">Uppgiftsikon</string>
-    <string name="announcementIcon">Kursmeddelandeikon</string>
+    <string name="announcementIcon">Anslagsikon</string>
     <string name="conversationIcon">Konversationsikon</string>
     <string name="defaultIcon">Standardikon</string>
     <string name="discussionIcon">Diskussionsikon</string>
-    <string name="gradesIcon">Bedömningsikon</string>
-    <string name="grades">Bedömningar</string>
+    <string name="gradesIcon">Omdömesikon</string>
+    <string name="grades">Omdömen</string>
     <string name="allGradingPeriods">Alla bedömningsperioder</string>
     <string name="calendar">Kalender</string>
     <string name="bookmarks">Bokmärken</string>
-    <string name="showGrades">Visa bedömningar</string>
+    <string name="showGrades">Visa omdömen</string>
     <string name="colorOverlay">Färgöverlägg</string>
-    <string name="gradesAreHidden">Bedömningar är inte synliga för den här kursen.</string>
+    <string name="gradesAreHidden">Omdömen är inte synliga för den här kursen.</string>
 
     <string name="entireGroupSelected">Hela den här gruppen har redan valts.</string>
     <string name="noUsersInGroup">Det finns inga användare i den här gruppen</string>
@@ -441,20 +444,20 @@
 
     <string name="lastDiscussionPost">Senaste inlägg</string>
 
-    <string name="newAnnouncement">Nytt kursmeddelande</string>
+    <string name="newAnnouncement">Nytt anslag</string>
     <string name="newDiscussion">Ny diskussion</string>
     <string name="composeDiscussion">Skapa diskussion</string>
-    <string name="composeAnnouncement">Skapa kursmeddelande</string>
+    <string name="composeAnnouncement">Skapa anslag</string>
 
-    <string name="postAnnouncement">Publicera kursmeddelande</string>
+    <string name="postAnnouncement">Publicera anslag</string>
     <string name="postDiscussion">Publicera diskussion</string>
 
-    <string name="postAnnouncementSuccess">Kursmeddelandet har publicerats.</string>
+    <string name="postAnnouncementSuccess">Anslaget har publicerats.</string>
     <string name="postDiscussionSuccess">Diskussionen har publicerats.</string>
     <string name="updateDiscussionSuccess">Diskussionen har uppdaterats.</string>
     <string name="draftDiscussionSuccess">Diskussionsutkastet har skapats.</string>
 
-    <string name="errorPostingAnnouncement">Ett fel uppstod vid publiceringen av kursmeddelandet.</string>
+    <string name="errorPostingAnnouncement">Ett fel uppstod vid publiceringen av anslaget.</string>
     <string name="errorPostingDiscussion">Ett fel uppstod vid publiceringen av diskussionen.</string>
     <string name="allowThreading">Tillåt trådade svar</string>
     <string name="usersMustPost">Användare måste publicera inlägg innan de kan se svar</string>
@@ -465,10 +468,10 @@
 
     <string name="messageBlank">Meddelandet kan inte lämnas tomt.</string>
 
-    <string name="notAuthorizedAnnouncement">Vi beklagar. Du är inte behörig att publicera kursmeddelanden i den här kursen.</string>
+    <string name="notAuthorizedAnnouncement">Vi beklagar. Du är inte behörig att publicera anslag i den här kursen.</string>
     <string name="notAuthorizedDiscussion">Vi beklagar. Du är inte behörig att publicera diskussioner i den här kursen.</string>
 
-    <string name="announcements">Kursmeddelanden</string>
+    <string name="announcements">Anslag</string>
 
     <string name="titleBlank">Titeln kan inte lämnas tom.</string>
 
@@ -511,7 +514,7 @@
     <!-- New Submission Strings -->
     <string name="textEntry">Textinmatning</string>
     <string name="onlineURL">Online-URL</string>
-    <string name="oneFileOnly">Denna inlämning accepterar endast en filuppladdning</string>
+    <string name="oneFileOnly">Denna inskickning accepterar endast en filuppladdning</string>
     <string name="websiteEntry">Lägg till webbplatsinlägg</string>
     <string name="mediaRecordingEntry">Mediainspelningar</string>
 
@@ -559,7 +562,7 @@
     <!-- Submission View Strings -->
     <string name="visitPage">Besök sidan:</string>
     <string name="clickToViewSubmission">En ögonblicksbild av webbplatsen togs när du lämnade in den. Tryck och håll på bilden nedan för att öppna eller ladda ner hela bilden.</string>
-    <string name="urlSubmissionNoPreview">Den här inlämningen var en URL till en extern sida. Kom ihåg att den här sidan kan ha ändrats sedan inlämningen ursprungligen gjordes.</string>
+    <string name="urlSubmissionNoPreview">Den här inskickningen var en URL till en extern sida. Kom ihåg att den här sidan kan ha ändrats sedan inlämningen ursprungligen gjordes.</string>
     <string name="contentDescriptionPreviewImage">Förhandsvisning av den skickade URL:en</string>
     <string name="isNotSupportedFeature">%1$s stöds inte.</string>
     <string name="isNotSupported">Länken stöds inte.</string>
@@ -580,8 +583,7 @@
     <string name="EULA">EULA</string>
     <string name="privacyPolicy">Integritetspolicy</string>
     <string name="termsOfUse">Användningsvillkor</string>
-    <string name="openSource">Öppna källa</string>
-
+    <string name="canvasOnGithub">Canvas på GitHub</string>
     <!-- Quiz Strings -->
     <string name="assignmentQuizzes">Uppgiftsquiz</string>
     <string name="practiceQuizzes">Övningsquiz</string>
@@ -592,12 +594,13 @@
     <string name="choose_answers_below">Välj dina svar nedan</string>
 
 
+    <string name="flag_the_question">Flagga frågan</string>
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">Att göra</string>
-    <string name="gradesWidgetTitle">Bedömningar</string>
+    <string name="gradesWidgetTitle">Omdömen</string>
     <string name="notificationWidgetTitle">Aviseringar</string>
     <string name="todoWidgetTitleLong">Canvas - Att göra</string>
-    <string name="gradesWidgetTitleLong">Canvas - Bedömningar</string>
+    <string name="gradesWidgetTitleLong">Canvas - Omdömen</string>
     <string name="notificationWidgetTitleLong">Canvas - Aviseringar</string>
     <string name="notLoggedIn">Du är inte inloggad</string>
     <string name="widgetStyle">Välj din widget-stil</string>
@@ -642,7 +645,7 @@
 
     <string name="search_todo">att göra att göra lista</string>
     <string name="search_course">kurs kurser klass klasser</string>
-    <string name="search_grades">bedömning bedömningar</string>
+    <string name="search_grades">omdöme omdömen</string>
 
     <!-- ShareFileOptions Dialog -->
     <string name="uploadTo">Ladda upp till </string>
@@ -662,7 +665,7 @@
 
     <string name="no_courses">Tryck för att lägga till en kurs</string>
     <string name="no_courses_available">Inga kurser här, ta ledigt idag!</string>
-    <string name="no_courses_grades">Delta i en kurs för att se dina bedömningar</string>
+    <string name="no_courses_grades">Delta i en kurs för att se dina omdömen</string>
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">Öppna navigeringslåda</string>
     <string name="navigation_drawer_close">Stäng navigeringslåda</string>
@@ -698,7 +701,7 @@
     <string name="setAsAvatar">Välj som avatar</string>
     <string name="avatarSuccessfullySaved">Panda-avataren sparades</string>
     <string name="regularAvatarSuccessfullySaved">Avataren sparades.</string>
-    <string name="errorSavingAvatar">Ett fel inträffade när pandaavataren skulle sparas</string>
+    <string name="errorSavingAvatar">Ett fel inträffade när panda-avataren skulle sparas</string>
     <string name="pandaAvatar">Panda-avatar</string>
     <string name="pandaHead">Panda-avatarens huvud</string>
     <string name="pandaBody">Panda-avatarens kropp</string>
@@ -718,7 +721,7 @@
     <string name="calendarDialogNoneWarning">Välj minst en kalender</string>
     <string name="enableFunMode">Stäng av pandorna</string>
 
-    <string name="accountNotifications">Kursmeddelanden</string>
+    <string name="accountNotifications">Anslag</string>
     <string name="addAccount">Lägg till konto</string>
 
     <string name="changeUser">Ändra användare</string>
@@ -739,12 +742,12 @@
     <string name="notification_cat_conferences">Konferenser</string>
 
     <string name="notification_pref_due_date">Inlämningsdatum</string>
-    <string name="notification_pref_grading_policies">Bedömningspolicyer</string>
+    <string name="notification_pref_grading_policies">Bedömningsregler</string>
     <string name="notification_pref_course_content">Kursinnehåll</string>
     <string name="notification_pref_files">Filer</string>
-    <string name="notification_pref_announcement">Kursmeddelande</string>
-    <string name="notification_pref_announcement_created_by_you">Kursmeddelande som skapats av dig</string>
-    <string name="notification_pref_grading">Bedömning</string>
+    <string name="notification_pref_announcement">Anslag</string>
+    <string name="notification_pref_announcement_created_by_you">Anslag som du skapat</string>
+    <string name="notification_pref_grading">Omdöme</string>
     <string name="notification_pref_invitation">Inbjudan</string>
     <string name="notification_pref_all_submissions">Alla inlämningar</string>
     <string name="notification_pref_late_grading">Försenad bedömning</string>
@@ -776,28 +779,28 @@
     <string name="notification_pref_toast_success">Aviseringar har aktiverats.</string>
 
     <string name="notification_desc_due_date">Få aviseringar när ett inlämningsdatum ändras.</string>
-    <string name="notification_desc_grading_policies">Få aviseringar när policyer för kursbedömningar ändras.</string>
+    <string name="notification_desc_grading_policies">Få aviseringar när regler för kursbedömningar ändras.</string>
     <string name="notification_desc_course_content">Få aviseringar när kursinnehåll ändras på WikiPages, Quiz och Uppgifter.</string>
     <string name="notification_desc_files">Få aviseringar när en ny fil läggs till i din kurs.</string>
-    <string name="notification_desc_announcement">Få aviseringar när det finns ett nytt kursmeddelande i din kurs.</string>
-    <string name="notification_desc_announcement_created_by_you">Få aviseringar när du skapar ett kursmeddelande, och när någon svarar på ditt kursmeddelande.</string>
-    <string name="notification_desc_grading">Få aviseringar när en uppgift/inlämning har bedömts/ändrats, och när en bedömningsvikt ändrats.</string>
-    <string name="notification_desc_invitation">Få aviseringar om inbjudningar till webbkonferenser, grupper, samarbeten, kamratbedömningar och påminnelser.</string>
-    <string name="notification_desc_all_submissions">Endast lärare och administratör. Få aviseringar när en uppgift skickas in eller skickas in igen.</string>
-    <string name="notification_desc_late_grading">Endast lärare och administratör. Få aviseringar när en sen uppgift skickas in.</string>
+    <string name="notification_desc_announcement">Få aviseringar när det finns ett nytt anslag i din kurs.</string>
+    <string name="notification_desc_announcement_created_by_you">Få aviseringar när du skapar ett anslag, och när någon svarar på ditt anslag.</string>
+    <string name="notification_desc_grading">Få aviseringar när en uppgift/inlämning har bedömts/ändrats, och när en omdömesvikt ändrats.</string>
+    <string name="notification_desc_invitation">Få aviseringar om inbjudningar till webbkonferenser, grupper, samarbeten, kamratresponsuppgifter och påminnelser.</string>
+    <string name="notification_desc_all_submissions">Endast lärare och admin. Få aviseringar när en uppgift lämnas in för första gången eller lämnas in på nytt.</string>
+    <string name="notification_desc_late_grading">Endast lärare och admin. Få aviseringar när en sen uppgift skickas in.</string>
     <string name="notification_desc_submission_comment">Få aviseringar när en kommentar görs om din inlämning.</string>
     <string name="notification_desc_discussion">Få aviseringar när det finns ett nytt diskussionsämne i din kurs.</string>
     <string name="notification_desc_discussion_post">Få aviseringar när det finns ett nytt inlägg i en diskussion som du prenumererar på.</string>
     <string name="notification_desc_add_to_conversation">Få aviseringar när du läggs till i en konversation.</string>
     <string name="notification_desc_conversation_message">Få aviseringar när du har ett nytt meddelande i din inkorg.</string>
     <string name="notification_desc_conversations_created_by_you">Få aviseringar när du skapar en ny konversation.</string>
-    <string name="notification_desc_student_appointment_signups">Endast lärare och administratör. Få aviseringar när det finns en mötesregistrering.</string>
+    <string name="notification_desc_student_appointment_signups">Endast lärare och admin. Få aviseringar när det finns en mötesregistrering.</string>
     <string name="notification_desc_appointment_signups">Få aviseringar när det finns en ny registrering på din kalender.</string>
     <string name="notification_desc_appointment_cancelations">Få aviseringar vid avbeställning av tid.</string>
     <string name="notification_desc_appointment_availability">Få aviseringar när en möteslucka blir tillgänglig.</string>
     <string name="notification_desc_calendar">Få aviseringar om nya och uppdaterade kalenderobjekt.</string>
-    <string name="notification_desc_membership_update">Endast administratör, väntande registrering aktiverad. Få aviseringar när en gruppregistrering accepteras eller avvisas.</string>
-    <string name="notification_desc_admin">Endast lärare och administratör. Få aviseringar om kursregistreringar, genererade rapporter, exporterat innehåll, migrationsrapporter, nya kontoanvändare, och nya studentgrupper.</string>
+    <string name="notification_desc_membership_update">Endast admin, väntande registrering aktiverad. Få aviseringar när en gruppregistrering accepteras eller avvisas.</string>
+    <string name="notification_desc_admin">Endast lärare och admin. Få aviseringar om kursregistreringar, genererade rapporter, exporterat innehåll, migrationsrapporter, nya kontoanvändare, och nya studentgrupper.</string>
     <string name="notification_desc_recording_ready">Få aviseringar när en konferensinspelning är klar.</string>
 
     <string name="enterAnswer">Ange svar</string>
@@ -827,17 +830,17 @@
     </plurals>
     <string name="flagged">Flaggade</string>
 
-    <string name="areYouSure">Vill du lämna in detta quiz?</string>
-    <string name="submitQuiz">Lämna in quiz?</string>
+    <string name="areYouSure">Vill du skicka in detta quiz?</string>
+    <string name="submitQuiz">Skicka in quiz?</string>
     <plurals name="unanswered_quiz_questions">
-        <item quantity="one">Du har %d obesvarad fråga.\nVill du lämna in detta quiz?</item>
-        <item quantity="other">Du har %d obesvarade frågor.\nVill du lämna in detta quiz?</item>
+        <item quantity="one">Du har %d obesvarad fråga.\nVill du skicka in detta quiz?</item>
+        <item quantity="other">Du har %d obesvarade frågor.\nVill du skicka in detta quiz?</item>
     </plurals>
     <string name="takeQuizAgain">Gör quiz igen</string>
-    <string name="autoSubmitting">Automatisk inlämning av quiz&#8230;</string>
-    <string name="submitReasonTimedQuiz">Quizzet lämnades in på grund av att tiden var slut.</string>
-    <string name="submitReasonLockAt">Quizzet lämnades in på grund av att sista datumet nåddes.</string>
-    <string name="quizSubmittedSuccessfully">Quizzet har lämnats in.</string>
+    <string name="autoSubmitting">Automatisk inskickning av quiz&#8230;</string>
+    <string name="submitReasonTimedQuiz">Quizzet skickades in på grund av att tiden var slut.</string>
+    <string name="submitReasonLockAt">Quizzet skickades in på grund av att sista datumet nåddes.</string>
+    <string name="quizSubmittedSuccessfully">Quizzet har skickats in.</string>
     <string name="quizSubmittedFailure">Quizzet kunde inte skickas in just nu.</string>
     <string name="almostDue">Ska snart vara klar!</string>
     <string name="almostDueMsg">Inlämningsdatumet är nästan här. Skicka in nu för att förhindra att ditt quiz märks som sent inlämnad?</string>
@@ -847,9 +850,6 @@
     <string name="newPushNotifications">%1$s Nya aviseringar</string>
     <string name="like">gilla-markering</string>
     <string name="likes">gilla-markeringar</string>
-
-    <string name="wear_reminder">Schemalägg påminnelser för inlämningsdatum</string>
-    <string name="wear_notifications">Turn on Wear Notifications</string>
 
     <string name="color_1">Röd</string>
     <string name="color_2">Klarrosa</string>
@@ -929,12 +929,12 @@
     <string name="totalPoints">%s poäng</string>
     <string name="totalPointsText">Totalt antal poäng</string>
     <string name="contentDescriptionPoints">%s poäng</string>
-    <string name="score">Poäng</string>
+    <string name="score">Resultat</string>
     <string name="rangedRubricTotal" formatted="false">%s/%s poäng</string>
     <string name="seeAll">Se alla</string>
     <string name="welcome">Välkommen!</string>
     <string name="dismiss">Avvisa</string>
-    <string name="tapToViewAnnouncement">Tryck för att visa kursmeddelande</string>
+    <string name="tapToViewAnnouncement">Tryck för att visa anslag</string>
     <string name="acceptCourseInvitation">Acceptera</string>
     <string name="declineCourseInvitation">Avböj</string>
     <string name="outOf">av</string>
@@ -969,7 +969,7 @@
     <string name="inviteAccepted">Inbjudan accepterades!</string>
     <string name="inviteDeclined">Inbjudan avböjd.</string>
     <string name="latePenalty">Förseningsbestraffning (-%s)</string>
-    <string name="finalGrade">Total bedömning</string>
+    <string name="finalGrade">Totalt omdöme</string>
 
     <string name="moreThan99">99+</string>
     <string name="max_count">99+</string>
@@ -982,7 +982,7 @@
     <string name="downloadSuccessful">Nedladdningen lyckades</string>
 
     <string name="full_due_date_details">Fullständiga detaljer för inlämningsdatum</string>
-    <string name="submissions">Inlämningar</string>
+    <string name="submissions">Inskickningar</string>
     <string name="attachment">Bilaga</string>
     <string name="contentDescription_back">Gå tillbaka</string>
 
@@ -1020,6 +1020,36 @@
     <string name="gradeComplete">Färdiga</string>
     <string name="gradeIncomplete">Ej fullständiga</string>
 
+    <!--Teacher Strings-->
+    <string name="postPolicyTitle">Publiceringsinställningar</string>
+    <string name="postGradesTab">Publicera omdömen</string>
+    <string name="hideGradesTab">Dölj omdömen</string>
+    <plurals name="gradesPostedCount">
+        <item quantity="one">%d omdöme publicerat för närvarande</item>
+        <item quantity="other">%d omdömen publicerade för närvarande</item>
+    </plurals>
+    <plurals name="gradesHiddenCount">
+        <item quantity="one">%d omdöme dolt för närvarande</item>
+        <item quantity="other">%d omdömen dolda för närvarande</item>
+    </plurals>
+    <string name="postPolicyPostTo">Publicera till &#8230;</string>
+    <string name="postPolicySections">Specifika sektioner</string>
+    <string name="postToEveryoneTitle">Alla</string>
+    <string name="postToEveryoneMessage">Omdömen kan ses av alla studenter</string>
+    <string name="postToGradedTitle">Har bedömts</string>
+    <string name="postToGradedMessage">Omdömen kan ses av alla studenter med bedömda inlämningar</string>
+    <string name="postPolicyAllHiddenTitle">Alla dolda</string>
+    <string name="postPolicyAllHiddenMessage">Alla omdömen döljs för tillfället.</string>
+    <string name="postPolicyAllPostedTitle">Alla publicerade</string>
+    <string name="postPolicyAllPostedMessage">Alla omdömen har publicerats.</string>
+    <string name="postPolicyPostedToast">Publicerade omdömen</string>
+    <string name="postPolicyHiddenToast">Dolda omdömen</string>
+    <string name="postPolicyPostFailedToast">Det gick inte att publicera omdömen</string>
+    <string name="postPolicyHideFailedToast">Det gick inte att dölja omdömen</string>
+    <string name="gradeBeforePosting">Bedöm före publicering</string>
+    <string name="gradeAfterPosting">Bedöm efter publicering</string>
+    <string name="gradeOverride">Åsidosättning av omdöme</string>
+    <string name="currentGrade">Aktuell omdöme</string>
     <!-- Floating Recording View Strings -->
     <string name="recordingTimerDefault">00:00:00</string>
     <string name="recordingTimerContentDescription">%1$d timmar, %2$d minuter och %3$d sekunder</string>
@@ -1051,7 +1081,7 @@
     <string name="viewDiscussion">Visa diskussion</string>
     <string name="lockedModule">Den här uppgiften har låsts av modulen \"%1$s\"</string>
     <string name="chooseMediaFile">Välj mediefil</string>
-    <string name="discussions_unknown_author">Okänd skapare</string>
+    <string name="discussions_unknown_author">Okänd författare</string>
     <string name="discussions_unknown_date">Okänt datum</string>
     <string name="a11y_gradeLetterMinusContentDescription">%s. minus</string>
     <string name="a11y_letterGrade">%s.</string>

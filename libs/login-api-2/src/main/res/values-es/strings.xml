@@ -34,21 +34,21 @@
     <string name="signIntoCanvasNetwork">¿Está intentando acceder a Canvas Network?</string>
     <string name="remove">Eliminar</string>
     <string name="exampleURLSimple">myschool.instructure.com</string>
-    <string name="userId">ID de usuario</string>
+    <string name="userId">Identificación de usuario</string>
     <string name="domain">Dominio</string>
-
     <string name="actAsUser">Actuar en nombre de Usuario</string>
     <string name="stopActAsUser">Dejar de actuar en nombre de Usuario</string>
+
     <!--Multiple User Sign in -->
-    <string name="removeUser">¿Remover este usuario?</string>
+    <string name="removeUser">¿Eliminar este usuario?</string>
     <string name="removedForever">Tendrá que iniciar sesión en este usuario de nuevo para acceder a su contenido.</string>
 
     <!--Content Descriptions-->
     <string name="canvasLogo">Logotipo de Canvas</string>
 
-    <string name="canvasLoginOn">Canvas_Login: ENCENDIDO</string>
-    <string name="canvasLoginOff">Canvas_Login: APAGADO</string>
-    <string name="siteAdminLogin">Inicio de sesión del administrador del sitio: ENCENDIDO</string>
+    <string name="canvasLoginOn">Canvas_Login: ACTIVADO</string>
+    <string name="canvasLoginOff">Canvas_Login: DESACTIVADO</string>
+    <string name="siteAdminLogin">Inicio de sesión del administrador del sitio: ACTIVADO</string>
 
     <string name="username">Nombre de usuario</string>
     <string name="password">Contraseña</string>
@@ -56,8 +56,8 @@
     <string name="invalidEmailPassword">Correo electrónico o contraseña no válidos</string>
     <string name="login">Iniciar sesión</string>
     <string name="logout">Cerrar sesión</string>
-
     <string name="matchingSchools">Escuelas que coinciden con sus criterios.</string>
+
     <!--Logout Warning Dialog-->
     <string name="logout_warning">¿Está seguro de que quiere cerrar sesión?</string>
     <string name="logout_yes">Sí</string>
@@ -68,13 +68,13 @@
     <string name="loginCanvasNetwork">Canvas Network</string>
     <string name="loginRightBehindYou">Apoyando su aprendizaje</string>
     <string name="loginMiles">%1$s millas de distancia</string>
-    <string name="loginCanvasHelp">¿No ve su escuela? Introduzca la URL de la escuela o pulse aquí para obtener ayuda.</string>
-    <string name="loginCanvasHelpWithUser">Introduzca la URL de la escuela o pulse aquí para obtener ayuda.</string>
+    <string name="loginCanvasHelp">¿No ve su escuela? Ingrese la URL de la escuela o pulse aquí para obtener ayuda.</string>
+    <string name="loginCanvasHelpWithUser">Ingrese la URL de la escuela o pulse aquí para obtener ayuda.</string>
     <string name="loginHint">Encuentre su escuela o distrito</string>
 
     <!-- Error Report Dialog -->
-    <string name="errorReportAProblem">Informar un problema</string>
-    <string name="errorReportSubject">Asunto</string>
+    <string name="errorReportAProblem">Reportar un problema</string>
+    <string name="errorReportSubject">Tema</string>
     <string name="errorReportDescription">Descripción</string>
     <string name="errorReportWriteSomething">Escriba algo...</string>
     <string name="errorReportSend">Enviar</string>
@@ -85,22 +85,23 @@
     <string name="errorSeveritySomethingsBroken">Algo no está funcionando, pero puedo solucionarlo para hacer lo que necesito.</string>
     <string name="errorSeverityCantGetThingsDone">No puedo terminar las cosas hasta que reciba su respuesta.</string>
     <string name="errorSeverityExtremelyCritical">EMERGENCIA CRÍTICA</string>
+
     <string name="errorReportEmailAddress">Dirección de correo electrónico</string>
     <string name="errorReportEnterEmail">Ingrese su dirección de correo electrónico...</string>
     <string name="errorReportUnknown">Desconocido</string>
+
     <!-- Distance Strings -->
-    <string name="lessThanOne">&lt; 1 milla (1.6 km)</string>
-    <string name="oneMile">1 milla (1.6 km)</string>
+    <string name="lessThanOne">&lt; 1 milla (1,6 km)</string>
+    <string name="oneMile">1 milla (1,6 km)</string>
     <string name="miles">millas</string>
     <string name="kilometers">km</string>
 
     <!-- String for submitting tickets -->
     <string name="device">Dispositivo</string>
-    <string name="osVersion">Versión OS</string>
+    <string name="osVersion">Versión del SO</string>
 
     <string name="previousLoginTitle">Inicios de sesión anteriores</string>
     <string name="findMySchool">Encontrar mi escuela</string>
-    <string name="canvasLowerCase">canvas</string>
     <string name="whatsYourSchoolName">¿Cuál es el nombre de su escuela?</string>
     <string name="next">Siguiente</string>
     <string name="schoolInstructureCom">school.instructure.com</string>
@@ -116,12 +117,11 @@
 
     <string name="masqueradeErrorUserId">Debe ingresar una identificación de usuario.</string>
     <string name="masqueradeErrorDomain">Debe ingresar un dominio válido.</string>
-    <string name="masqueradeError">Error al intentar hacerse pasar por alguien.</string>
+    <string name="masqueradeError">Error al intentar actuar como.</string>
     <string name="masqueradeInfo">\"Actuar en nombre de\" consiste básicamente en iniciar sesión en nombre de este usuario sin ingresar una contraseña. Podrá realizar la acción que desee como si fuera este usuario y, desde el punto de vista de los demás usuarios, será como si ese usuario las hubiera realizado. Sin embargo, los registros de auditoría indican que usted es quien realizó las acciones en representación de este usuario.</string>
     <string name="masqueradingAs">Está actuando en nombre de %s</string>
     <string name="stopActingAsTitle">Dejar de actuar en nombre de...</string>
-    <string name="stopActingAsMessage">Dejará de actuar en nombre de %s y volverá a su cuenta.</string>
-
+    <string name="stopActingAsMessage">Usted dejará de actuar en nombre de %s y volverá a su cuenta.</string>
     <string name="weMadeChanges">Hemos realizado algunos cambios.</string>
     <string name="whatsNewText">Ver las novedades</string>
 </resources>

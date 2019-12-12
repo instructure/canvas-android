@@ -17,7 +17,6 @@
   -->
 
 <resources>
-
     <string name="rce_contentDescription_undo">Desfazer</string>
     <string name="rce_contentDescription_redo">Refazer</string>
     <string name="rce_contentDescription_bold">Formatar negrito</string>
@@ -57,8 +56,8 @@
     <string name="rce_dialogCancel">Cancelar</string>
     <string name="rce_insertLink">Inserir link</string>
     <string name="rce_insertImage">Inserir imagem</string>
-
     <string name="rce_uploadImage">Carregar imagem</string>
+
     <string name="rce_done">Feito</string>
     <string name="rce_cancel">Cancelar</string>
     <string name="rce_exit">Sair</string>

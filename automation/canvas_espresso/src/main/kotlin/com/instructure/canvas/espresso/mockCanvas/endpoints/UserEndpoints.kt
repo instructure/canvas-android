@@ -17,12 +17,22 @@
 package com.instructure.canvas.espresso.mockCanvas.endpoints
 
 import com.instructure.canvas.espresso.mockCanvas.Endpoint
+import com.instructure.canvas.espresso.mockCanvas.addFileToFolder
 import com.instructure.canvas.espresso.mockCanvas.endpoint
-import com.instructure.canvas.espresso.mockCanvas.utils.*
+import com.instructure.canvas.espresso.mockCanvas.utils.LongId
+import com.instructure.canvas.espresso.mockCanvas.utils.PathVars
+import com.instructure.canvas.espresso.mockCanvas.utils.Segment
+import com.instructure.canvas.espresso.mockCanvas.utils.UserId
+import com.instructure.canvas.espresso.mockCanvas.utils.successPaginatedResponse
+import com.instructure.canvas.espresso.mockCanvas.utils.successResponse
+import com.instructure.canvas.espresso.mockCanvas.utils.unauthorizedResponse
+import com.instructure.canvas.espresso.mockCanvas.utils.user
 import com.instructure.canvasapi2.models.Favorite
+import com.instructure.canvasapi2.models.FileUploadParams
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.utils.pageview.PandataInfo
-import okhttp3.ResponseBody
+import okio.Buffer
+import java.nio.charset.Charset
 
 /**
  * ROUTES:
@@ -51,7 +61,54 @@ object UserEndpoint : Endpoint(
     Segment("groups") to UserGroupListEndpoint,
     Segment("enrollments") to UserEnrollmentEndpoint,
     Segment("favorites") to UserFavoritesEndpoint,
-    Segment("communication_channels") to UserCommunicationChannelsEndpoint
+    Segment("communication_channels") to UserCommunicationChannelsEndpoint,
+    Segment("folders") to UserFoldersEndpoint,
+    Segment("files") to UserFilesEndpoint
+)
+
+/**
+ * Endpoint for user file upload
+ */
+object UserFilesEndpoint : Endpoint(
+        response = {
+            POST {
+                val fileName = request.url().queryParameter("name")!!
+                val fileType = request.url().queryParameter("content_type")!!
+                val fileParentFolder = request.url().queryParameter("parent_folder_id")?.toLong()!!
+
+                // Assumes a binary payload... May not always be valid.
+                // We only hit this logic when uploading files from the global file list page,
+                // not when uploading course assignments.
+                val buffer = Buffer()
+                request.body()?.writeTo(buffer)
+                // This is a little weak, and possibly wrong for image files.  But since
+                // we do not actually check the content of image files, we should be OK.
+                val content = buffer.readByteArray().toString(Charset.defaultCharset()) // Should be utf-8
+
+                data.addFileToFolder(folderId = fileParentFolder, displayName = fileName, fileContent = content, contentType = fileType )
+                request.successResponse(FileUploadParams())
+            }
+        }
+)
+
+/**
+ * Endpoint for user folders/files
+ */
+object UserFoldersEndpoint : Endpoint(
+        Segment("root") to endpoint(
+                configure = {
+                    GET {
+                        val userId = pathVars.userId
+                        val folder = data.fileFolders.values.find { it.contextType.equals("user") && it.contextId == userId }
+                        if(folder != null) {
+                            request.successResponse(folder)
+                        }
+                        else {
+                            request.unauthorizedResponse()
+                        }
+                    }
+                }
+        )
 )
 
 /**

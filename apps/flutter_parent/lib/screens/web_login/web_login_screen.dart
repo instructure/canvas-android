@@ -17,7 +17,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/mobile_verify_result.dart';
-import 'package:flutter_parent/screens/dashboard/dashboard_screen.dart';
+import 'package:flutter_parent/screens/splash/splash_screen.dart';
 import 'package:flutter_parent/screens/web_login/web_login_interactor.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
@@ -116,7 +116,7 @@ class WebLoginScreen extends StatelessWidget {
       var url = request.url;
       String oAuthRequest = url.substring(url.indexOf(successUrl) + successUrl.length);
       locator<WebLoginInteractor>().performLogin(result, oAuthRequest).then((_) {
-        locator<QuickNav>().pushAndRemoveAll(context, DashboardScreen());
+        locator<QuickNav>().pushAndRemoveAll(context, SplashScreen());
       });
       return NavigationDecision.prevent;
     } else if (request.url.contains(errorUrl)) {
@@ -163,11 +163,11 @@ class WebLoginScreen extends StatelessWidget {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text(AppLocalizations.of(context).unexpectedError),
+          title: Text(L10n(context).unexpectedError),
           content: Text(_getErrorMessage(context, snapshot)),
           actions: <Widget>[
             FlatButton(
-              child: Text(AppLocalizations.of(context).ok),
+              child: Text(L10n(context).ok),
               onPressed: () => Navigator.of(context).pop(),
             ),
           ],
@@ -175,7 +175,7 @@ class WebLoginScreen extends StatelessWidget {
       });
 
   String _getErrorMessage(BuildContext context, AsyncSnapshot<MobileVerifyResult> snapshot) {
-    final localizations = AppLocalizations.of(context);
+    final localizations = L10n(context);
 
     // No data means the request failed for some other reason that we don't know
     if (!snapshot.hasData) {

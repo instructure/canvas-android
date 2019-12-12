@@ -22,6 +22,7 @@ import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/full_screen_scroll_container.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
+import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/design/student_color_set.dart';
 import 'package:intl/intl.dart';
@@ -257,7 +258,7 @@ class _AssignmentRow extends StatelessWidget {
       case SubmissionStatus.MISSING:
         return Text(
           localizations.assignmentMissingSubmittedLabel,
-          style: textTheme.caption.copyWith(color: ParentTheme.failure),
+          style: textTheme.caption.copyWith(color: ParentColors.failure),
         );
       case SubmissionStatus.SUBMITTED:
         return Text(localizations.assignmentSubmittedLabel, style: textTheme.caption);

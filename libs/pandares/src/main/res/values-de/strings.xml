@@ -59,7 +59,9 @@
     <string name="submissionUploadByteProgress">%1$s von insgesamt %2$s</string>
     <string name="submissionSuccessTitle">Abgabe erfolgreich!</string>
     <string name="submissionSuccessMessage">Ihre Aufgabe wurde erfolgreich abgegeben. Genießen Sie Ihren Tag!</string>
-    <string name="cancelAllSubmissions">Alle Abgaben stornieren</string>
+    <string name="submissionDeleteTitle">Abgabe abbrechen</string>
+    <string name="submissionDeleteMessage">Dadurch wird Ihre Abgabe storniert und gelöscht.</string>
+    <string name="submissionDeleted">Abgabe gelöscht</string>
     <string name="missingSubmissionLabel">Fehlt</string>
     <string name="gradedSubmissionLabel">Benotet</string>
     <!-- Student Submission -->
@@ -99,6 +101,7 @@
     <string name="finalGradeFormatted">Gesamtnote: %s</string>
     <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
     <string name="contentDescriptionScoreOutOfPointsPossible">%1$s von %2$s Punkten</string>
+    <string name="enterWhatIfScore">Hypothetische Punktzahl eingeben</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Benutzerdefinierte Punktzahl</string>
     <string name="rubricEmptyMessage">Für diese Aufgabe gibt es kein Bewertungsschema</string>
@@ -578,8 +581,7 @@
     <string name="EULA">EULA</string>
     <string name="privacyPolicy">Datenschutzrichtlinien</string>
     <string name="termsOfUse">Nutzungsbedingungen</string>
-    <string name="openSource">Open Source</string>
-
+    <string name="canvasOnGithub">Canvas bei GitHub</string>
     <!-- Quiz Strings -->
     <string name="assignmentQuizzes">Aufgabenquizze</string>
     <string name="practiceQuizzes">Übungsquizze</string>
@@ -590,6 +592,7 @@
     <string name="choose_answers_below">Wählen Sie Ihre Antworten unten</string>
 
 
+    <string name="flag_the_question">Diese Frage markieren</string>
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">Zu erledigen</string>
     <string name="gradesWidgetTitle">Noten</string>
@@ -846,9 +849,6 @@
     <string name="like">Like</string>
     <string name="likes">Likes</string>
 
-    <string name="wear_reminder">Erinnerung an Fälligkeitsdatum terminieren</string>
-    <string name="wear_notifications">Abnutzungsbenachrichtigungen einschalten</string>
-
     <string name="color_1">Rot</string>
     <string name="color_2">Pink</string>
     <string name="color_3">Lila</string>
@@ -1016,6 +1016,37 @@
     <string name="addChildErrorMessage">Pairing fehlgeschlagen. Stellen Sie sicher, dass ihr Pairing-Code korrekt und noch gültig ist.</string>
     <string name="gradeComplete">Fertigstellen</string>
     <string name="gradeIncomplete">Unvollständig</string>
+    <!--Teacher Strings-->
+    <string name="postPolicyTitle">Post-Einstellungen</string>
+    <string name="postGradesTab">Noten mitteilen</string>
+    <string name="hideGradesTab">Noten ausblenden</string>
+    <plurals name="gradesPostedCount">
+        <item quantity="one">%d Kürzlich veröffentlichte Note</item>
+        <item quantity="other">%d Kürzlich veröffentlichte Noten</item>
+    </plurals>
+    <plurals name="gradesHiddenCount">
+        <item quantity="one">%d Kürzlich ausgeblendete Note</item>
+        <item quantity="other">%d Kürzlich ausgeblendete Noten</item>
+    </plurals>
+    <string name="postPolicyPostTo">Veröffentlichen auf ...</string>
+    <string name="postPolicySections">Bestimmte Abschnitte</string>
+    <string name="postToEveryoneTitle">Jeder</string>
+    <string name="postToEveryoneMessage">Noten werden für alle Studenten sichtbar gemacht</string>
+    <string name="postToGradedTitle">Benotet</string>
+    <string name="postToGradedMessage">Noten werden nur für Studenten mit benotete Abgaben sichtbar gemacht</string>
+    <string name="postPolicyAllHiddenTitle">Alle Ausgeblendeten</string>
+    <string name="postPolicyAllHiddenMessage">Alle Noten sind derzeit ausgeblendet.</string>
+    <string name="postPolicyAllPostedTitle">Alle Geposteten</string>
+    <string name="postPolicyAllPostedMessage">Alle Noten sind derzeit gepostet.</string>
+    <string name="postPolicyPostedToast">Gepostete Noten</string>
+    <string name="postPolicyHiddenToast">Ausgeblendete Noten</string>
+    <string name="postPolicyPostFailedToast">Noten posten fehlgeschlagen</string>
+    <string name="postPolicyHideFailedToast">Noten ausblenden fehlgeschlagen</string>
+    <string name="gradeBeforePosting">Note vor Posting</string>
+    <string name="gradeAfterPosting">Note nach Posting</string>
+    <string name="gradeOverride">Note außer Kraft setzen</string>
+    <string name="currentGrade">Aktuelle Note</string>
+
     <!-- Floating Recording View Strings -->
     <string name="recordingTimerDefault">00:00:00</string>
     <string name="recordingTimerContentDescription">%1$D Stunden, %2$d Minuten und %3$d Sekunden</string>

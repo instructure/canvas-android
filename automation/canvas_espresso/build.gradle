@@ -74,7 +74,7 @@ android {
 dependencies {
     implementation project(':canvas-api-2')
     implementation 'com.github.javafaker:javafaker:0.18'
-    api('com.github.instructure:espresso:1.0.2') {
+    api('com.github.instructure:espresso:1.0.3') {
         exclude module: 'kotlin-stdlib'
     }
     /* Mock web server */

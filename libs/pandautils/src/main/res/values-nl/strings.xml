@@ -33,7 +33,6 @@
     <string name="fileUploadSuccess">Uploaden gelukt</string>
     <string name="noNetwork">Netwerk niet beschikbaar - probeer het later nogmaals.</string>
     <string name="uploadMessage">"Bezig met uploaden Bekijk meldingen voor uploadstatus.</string>
-    <string name="mediaUpload">Media Upload</string>
     <string name="uploadingFile">Bestand aan het uploaden&#8230;</string>
     <string name="errorUploadingFile">Er is een fout opgetreden bij het uploaden van je bestand. Probeer het opnieuw.</string>
     <string name="fileSubmission">Bestand(en) inleveren</string>
@@ -171,13 +170,12 @@
     <string name="noEvents">Vandaag geen gebeurtenissen!</string>
     <string name="noEventsSubtext">Dat lijkt een prima dag om lekker te niksen.</string>
     <string name="noSubmission">Geen inzending</string>
-    <string name="noSubmissionSubtext">Lever je opdracht in op %1$s om %2$s.</string>
     <string name="noSubmissionTeacher">Er is nog geen inlevering voor deze cursist.</string>
-    <string name="noDueDate">Deze opdracht heeft geen inleverdatum.</string>
     <string name="locked">Vergrendeld</string>
     <string name="lockedSubtext">Deze opdracht is vergrendeld tot %1$s om %2$s.</string>
     <string name="chooseFile">Een bestand kiezen</string>
     <string name="chooseFileSubtext">Koppel een bestand aan je inlevering door op een optie hieronder te tikken.</string>
+    <string name="chooseFileForUploadSubtext">Selecteer een bestand door op een optie hieronder te tikken</string>
     <string name="noNotifications">Geen meldingen</string>
     <string name="noNotificationsSubtext">Er is nog niets te melden.</string>
     <string name="noTodos">Goed gedaan!</string>
@@ -380,6 +378,7 @@
     <string name="utils_uploadToCanvas">Uploaden naar Canvas</string>
     <string name="utils_uploadMyFiles">Al mijn bestanden</string>
     <string name="utils_uploadCourseFiles">Cursusbestanden</string>
+    <string name="utils_uploadGroupFiles">Groepsbestanden</string>
     <string name="utils_uploadToSubmissionComment">Uploaden naar Opmerking bij inlevering</string>
     <string name="utils_attachFile">Bestand bijvoegen</string>
     <string name="utils_with">met</string>

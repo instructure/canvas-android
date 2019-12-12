@@ -59,7 +59,9 @@
     <string name="submissionUploadByteProgress">%1$s sur %2$s</string>
     <string name="submissionSuccessTitle">Succès de l’envoi!</string>
     <string name="submissionSuccessMessage">Votre tâche a été envoyée avec succès. Profitez de votre journée!</string>
-    <string name="cancelAllSubmissions">Annuler tous les envois de tâches</string>
+    <string name="submissionDeleteTitle">Annuler l\'envoi</string>
+    <string name="submissionDeleteMessage">Cela annulera et supprimera votre envoi.</string>
+    <string name="submissionDeleted">Envoi supprimé</string>
     <string name="missingSubmissionLabel">Manquant</string>
     <string name="gradedSubmissionLabel">Noté</string>
     <!-- Student Submission -->
@@ -99,6 +101,7 @@
     <string name="finalGradeFormatted">Note finale : %s</string>
     <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
     <string name="contentDescriptionScoreOutOfPointsPossible">%1$s de %2$s points</string>
+    <string name="enterWhatIfScore">Saisir le score de simulation What-If</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Score personnalisé</string>
     <string name="rubricEmptyMessage">Il n\'y a aucune rubrique pour cette tâche.</string>
@@ -578,8 +581,7 @@
     <string name="EULA">CLUF</string>
     <string name="privacyPolicy">Politique de confidentialité</string>
     <string name="termsOfUse">Conditions d\'utilisation</string>
-    <string name="openSource">Logiciel libre</string>
-
+    <string name="canvasOnGithub">Canvas sur GitHub</string>
     <!-- Quiz Strings -->
     <string name="assignmentQuizzes">Questionnaires de la tâche</string>
     <string name="practiceQuizzes">Questionnaires d\'entraînement</string>
@@ -590,6 +592,7 @@
     <string name="choose_answers_below">Choisissez vos réponses ci-dessous</string>
 
 
+    <string name="flag_the_question">Marquer la question</string>
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">À faire</string>
     <string name="gradesWidgetTitle">Notes</string>
@@ -846,9 +849,6 @@
     <string name="like">mention « J\'aime »</string>
     <string name="likes">mentions « J\'aime »</string>
 
-    <string name="wear_reminder">Planifier des rappels au sujet de l\'échéance</string>
-    <string name="wear_notifications">Activer les notifications d\'usage</string>
-
     <string name="color_1">Rouge</string>
     <string name="color_2">Rose vif</string>
     <string name="color_3">Lavande</string>
@@ -1016,6 +1016,37 @@
     <string name="addChildErrorMessage">Le jumelage a échoué. Assurez-vous que votre code de jumelage est adéquat et dans les délais d\'utilisation.</string>
     <string name="gradeComplete">Terminé</string>
     <string name="gradeIncomplete">Incomplet</string>
+    <!--Teacher Strings-->
+    <string name="postPolicyTitle">Définitions de publication</string>
+    <string name="postGradesTab">Publier les notes</string>
+    <string name="hideGradesTab">Masquer les notes</string>
+    <plurals name="gradesPostedCount">
+        <item quantity="one">%d note actuellement publiée</item>
+        <item quantity="other">%d notes actuellement publiées</item>
+    </plurals>
+    <plurals name="gradesHiddenCount">
+        <item quantity="one">%d note actuellement masquée</item>
+        <item quantity="other">%d notes actuellement masquées</item>
+    </plurals>
+    <string name="postPolicyPostTo">Publier vers...</string>
+    <string name="postPolicySections">Sections spécifiques</string>
+    <string name="postToEveryoneTitle">Tous</string>
+    <string name="postToEveryoneMessage">Les notes seront rendues visibles à tous les étudiants</string>
+    <string name="postToGradedTitle">Noté</string>
+    <string name="postToGradedMessage">Les notes seront rendues visibles par les étudiants avec des envois notés</string>
+    <string name="postPolicyAllHiddenTitle">Tous masqués</string>
+    <string name="postPolicyAllHiddenMessage">Toutes les notes sont actuellement masquées.</string>
+    <string name="postPolicyAllPostedTitle">Tous publiés</string>
+    <string name="postPolicyAllPostedMessage">Toutes les notes sont actuellement publiées.</string>
+    <string name="postPolicyPostedToast">Notes publiées</string>
+    <string name="postPolicyHiddenToast">Notes cachées</string>
+    <string name="postPolicyPostFailedToast">Échec lors de la publication des notes</string>
+    <string name="postPolicyHideFailedToast">Échec lors du masquage des notes</string>
+    <string name="gradeBeforePosting">Notation avant publication</string>
+    <string name="gradeAfterPosting">Notation après publication</string>
+    <string name="gradeOverride">Surclasser la notation</string>
+    <string name="currentGrade">Note actuelle</string>
+
     <!-- Floating Recording View Strings -->
     <string name="recordingTimerDefault">00:00:00</string>
     <string name="recordingTimerContentDescription">%1$d heures, %2$d minutes et %3$d secondes</string>

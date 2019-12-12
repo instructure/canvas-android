@@ -19,8 +19,10 @@ import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/avatar.dart';
 import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
+import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/design/canvas_icons_solid.dart';
+import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
@@ -55,7 +57,7 @@ class ConversationListState extends State<ConversationListScreen> {
           textTheme: Theme.of(context).textTheme,
           iconTheme: Theme.of(context).iconTheme,
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          title: Text(AppLocalizations.of(context).inbox),
+          title: Text(L10n(context).inbox),
           elevation: 1,
         ),
         body: FutureBuilder(
@@ -98,46 +100,9 @@ class ConversationListState extends State<ConversationListScreen> {
   }
 
   Widget _errorState(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return SingleChildScrollView(
-          physics: AlwaysScrollableScrollPhysics(),
-          child: Container(
-            height: constraints.maxHeight,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Icon(CanvasIcons.warning, size: 40, color: ParentTheme.failure),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(48, 28, 48, 32),
-                    child: Text(
-                      L10n(context).errorLoadingMessages,
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.caption.copyWith(fontSize: 16),
-                    ),
-                  ),
-                  FlatButton(
-                    onPressed: () {
-                      _refreshIndicatorKey.currentState.show();
-                    },
-                    child: Text(
-                      L10n(context).retry,
-                      style: Theme.of(context).textTheme.caption.copyWith(fontSize: 16),
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: new BorderRadius.circular(24.0),
-                      side: BorderSide(color: ParentTheme.tiara),
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
+    return ErrorPandaWidget(L10n(context).errorLoadingMessages, () {
+      _refreshIndicatorKey.currentState.show();
+    });
   }
 
   Widget _loadingState(BuildContext context) => Center(child: CircularProgressIndicator());
@@ -298,7 +263,7 @@ class ConversationListState extends State<ConversationListScreen> {
                   children: <Widget>[
                     Icon(
                       CanvasIcons.warning,
-                      color: ParentTheme.failure,
+                      color: ParentColors.failure,
                     ),
                     SizedBox(width: 12),
                     Expanded(
