@@ -54,7 +54,7 @@ class _ManageStudentsState extends State<ManageStudentsScreen> {
           future: _studentsFuture,
           builder: (context, AsyncSnapshot<List<User>> snapshot) {
             // No wait view - users should be passed in on init, and the refresh indicator should handle the pull to refresh
-            print('Snapshot: $snapshot');
+
             // Get the view based on the state of the snapshot
             Widget view;
             if (snapshot.hasError) {
@@ -68,7 +68,6 @@ class _ManageStudentsState extends State<ManageStudentsScreen> {
             return RefreshIndicator(
               onRefresh: () {
                 _studentsFuture = _loadStudents();
-//                _studentsFuture = Future.error('');
                 setState(() {});
                 return _studentsFuture;
               },
