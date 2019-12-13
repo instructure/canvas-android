@@ -144,38 +144,38 @@
 
             </FrameLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end|center_vertical"
+                android:padding="-6dp">
+
+                <Button
+                    android:id="@+id/cancelButton"
+                    style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/cancel"/>
+
+                <Button
+                    android:id="@+id/sendButton"
+                    style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/errorReportSend"/>
+
+                <ProgressBar
+                    android:layout_marginEnd="16dp"
+                    android:id="@+id/progressBar"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:visibility="gone"
+                    tools:visibility="visible"/>
+
+            </LinearLayout>
+
         </LinearLayout>
 
     </ScrollView>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="end|center_vertical"
-        android:padding="10dp">
-
-        <Button
-            android:id="@+id/cancelButton"
-            style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/cancel"/>
-
-        <Button
-            android:id="@+id/sendButton"
-            style="@style/Base.Widget.AppCompat.Button.ButtonBar.AlertDialog"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/errorReportSend"/>
-
-        <ProgressBar
-            android:layout_marginEnd="16dp"
-            android:id="@+id/progressBar"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:visibility="gone"
-            tools:visibility="visible"/>
-
-    </LinearLayout>
 
 </LinearLayout>
