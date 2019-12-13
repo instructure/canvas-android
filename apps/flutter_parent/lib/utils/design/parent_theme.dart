@@ -236,18 +236,34 @@ class ParentThemeStateChangeNotifier with ChangeNotifier {
 /// Applies a 'default' Parent App theme to descendant widgets. This theme is identical to the one provided by
 /// ParentTheme with the exception of the primary and accent colors, which are fixed and do not respond to changes
 /// to the selected student color.
+/// Additionally, the app bar can be specified to the non primary app bar when emphasizing that there is no student
+/// context. This makes the app bar use the scaffold background color, altering the text and icon themes so that they
+/// still show properly as well.
 class DefaultParentTheme extends StatelessWidget {
   final WidgetBuilder builder;
+  final bool useNonPrimaryAppBar;
 
-  const DefaultParentTheme({Key key, @required this.builder}) : super(key: key);
+  const DefaultParentTheme({Key key, @required this.builder, this.useNonPrimaryAppBar = true}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    var theme = ParentTheme.of(context).defaultTheme;
+    if (useNonPrimaryAppBar) theme = theme.copyWith(appBarTheme: _scaffoldColoredAppBarTheme(context));
+
     return Consumer<ParentThemeStateChangeNotifier>(
       builder: (context, state, _) => Theme(
-        data: ParentTheme.of(context).defaultTheme,
         child: builder(context),
+        data: theme,
       ),
+    );
+  }
+
+  AppBarTheme _scaffoldColoredAppBarTheme(BuildContext context) {
+    final theme = Theme.of(context);
+    return AppBarTheme(
+      color: theme.scaffoldBackgroundColor,
+      textTheme: theme.textTheme,
+      iconTheme: theme.iconTheme,
     );
   }
 }

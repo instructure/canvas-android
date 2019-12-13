@@ -54,9 +54,6 @@ class ConversationListState extends State<ConversationListScreen> {
     return DefaultParentTheme(
       builder: (context) => Scaffold(
         appBar: AppBar(
-          textTheme: Theme.of(context).textTheme,
-          iconTheme: Theme.of(context).iconTheme,
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           title: Text(L10n(context).inbox),
           elevation: 1,
         ),

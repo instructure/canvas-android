@@ -42,13 +42,9 @@ class WebLoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return DefaultParentTheme(
       builder: (context) => Scaffold(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(
-          textTheme: Theme.of(context).textTheme,
-          iconTheme: Theme.of(context).iconTheme,
           title: Text(domain),
           elevation: 0,
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         ),
         body: _webLoginBody(),
       ),
