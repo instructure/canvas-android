@@ -20,7 +20,7 @@ class AlertsApi {
   /// Alerts were depaginated in the original parent app, then sorted by date. Depaginating here to follow suite.
   Future<List<Alert>> getAlertsDepaginated(int studentId) async {
     var dio = canvasDio();
-    return fetchList(canvasDio().get('users/self/observer_alerts/$studentId'), depaginateWith: dio);
+    return fetchList(dio.get('users/self/observer_alerts/$studentId'), depaginateWith: dio);
   }
 
   Future<Alert> updateAlertWorkflow(int alertId, String workflowState) async {

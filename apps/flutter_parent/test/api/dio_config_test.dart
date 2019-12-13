@@ -27,11 +27,11 @@ void main() {
     expect(canvasDio(), isA<Dio>());
   });
 
-  test('DioDOnfig.canvas returns a config object', () async {
+  test('DioConfig.canvas returns a config object', () async {
     expect(DioConfig.canvas(), isA<DioConfig>());
   });
 
-  test('DioDOnfig.core returns a config object', () async {
+  test('DioConfig.core returns a config object', () async {
     expect(DioConfig.core(), isA<DioConfig>());
   });
 
