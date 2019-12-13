@@ -3,12 +3,14 @@ import 'package:flutter_driver/flutter_driver.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('Counter App', () {
-    // First, define the Finders and use them to locate widgets from the
-    // test suite. Note: the Strings provided to the `byValueKey` method must
-    // be the same as the Strings we used for the Keys in step 1.
-    final counterTextFinder = find.byValueKey('counter');
-    final buttonFinder = find.byValueKey('increment');
+
+  group('Login Landing Screen', () {
+
+    // Set up our finders
+    final findSchoolFinder = find.text("Find School or District");
+    final themeViewerFinder = find.text("Theme Viewer");
+    final domainSearchScreenFinder = find.byType("DomainSearchScreen");
+    final themeViewerScreenFinder = find.byType("ThemeViewerScreen");
 
     FlutterDriver driver;
 
@@ -24,17 +26,26 @@ void main() {
       }
     });
 
-    test('starts at 0', () async {
-      // Use the `driver.getText` method to verify the counter starts at 0.
-      expect(await driver.getText(counterTextFinder), "0");
+    test('shows find school button', () async {
+      await driver.waitFor(findSchoolFinder);
     });
 
-    test('increments the counter', () async {
-      // First, tap the button.
-      await driver.tap(buttonFinder);
+    test('shows theme viewer button', () async {
+      await driver.waitFor(themeViewerFinder);
+    });
 
-      // Then, verify the counter text is incremented by 1.
-      expect(await driver.getText(counterTextFinder), "1");
+    test('opens domain search screen', () async {
+      await driver.tap(findSchoolFinder);
+      await driver.waitFor(domainSearchScreenFinder);
+      await driver.tap(find.byTooltip('Back'));
+    });
+
+    test('opens theme viewer screen', () async {
+      await driver.tap(themeViewerFinder);
+      await driver.waitFor(themeViewerScreenFinder);
+      // I have not found a way to exit the theme viewer via the driver,
+      // nor a way to press the system back-button.  So make sure that this
+      // is the last test in the group!
     });
   });
 }
