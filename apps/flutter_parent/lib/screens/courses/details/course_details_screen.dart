@@ -50,7 +50,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<CourseDetailsModel>(
-      builder: (context) => widget._model,
+      create: (context) => widget._model,
       child: Consumer<CourseDetailsModel>(
         builder: (context, model, _) {
           return DefaultTabController(

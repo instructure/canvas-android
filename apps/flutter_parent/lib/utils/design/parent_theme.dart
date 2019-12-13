@@ -53,7 +53,7 @@ class ParentTheme extends StatefulWidget {
   _ParentThemeState createState() => _ParentThemeState(initWithDarkMode, initWithHCMode);
 
   static _ParentThemeState of(BuildContext context) {
-    return context.ancestorStateOfType(const TypeMatcher<_ParentThemeState>());
+    return context.findAncestorStateOfType<_ParentThemeState>();
   }
 }
 

@@ -19,7 +19,7 @@ import 'dart:async';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:meta/meta.dart';
-import 'package:test_api/test_api.dart' as test_package;
+import 'package:test/test.dart' as test_package;
 
 // A testWidgets() wrapper that runs accessibility checks
 @isTest
