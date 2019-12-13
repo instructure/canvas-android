@@ -29,7 +29,7 @@ import com.instructure.student.mobius.syllabus.ui.EventsViewState
 import com.instructure.student.mobius.syllabus.ui.ScheduleItemViewState
 import com.instructure.student.mobius.syllabus.ui.SyllabusViewState
 import com.instructure.student.util.toDueAtString
-import java.util.*
+import java.util.Date
 
 object SyllabusPresenter : Presenter<SyllabusModel, SyllabusViewState> {
     override fun present(model: SyllabusModel, context: Context): SyllabusViewState {
@@ -69,8 +69,10 @@ object SyllabusPresenter : Presenter<SyllabusModel, SyllabusViewState> {
     private fun getDateString(event: ScheduleItem, context: Context): String {
         return if (event.startAt == null) {
             context.getString(R.string.toDoNoDueDate)
-        } else {
+        } else if (event.itemType == ScheduleItem.Type.TYPE_ASSIGNMENT){
             event.startAt!!.toDueAtString(context)
+        } else {
+            event.startDate?.let { DateHelper.getMonthDayAtTime(context, it, R.string.at) } ?: ""
         }
     }
 

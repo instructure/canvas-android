@@ -79,7 +79,7 @@ class _AlertsScreenState extends State<AlertsScreen> {
   }
 
   Widget _error(BuildContext context) {
-    return FullScreenScrollContainer(children: [Text(AppLocalizations.of(context).unexpectedError)]);
+    return FullScreenScrollContainer(children: [Text(L10n(context).unexpectedError)]);
   }
 
   // TODO: This needs a design (image, title, subtitle)
@@ -143,7 +143,7 @@ class __AlertsListState extends State<_AlertsList> {
   }
 
   String _formatDate(BuildContext context, DateTime date) {
-    return DateFormat(AppLocalizations.of(context).dateTimeFormat).format(date.toLocal());
+    return DateFormat(L10n(context).dateTimeFormat).format(date.toLocal());
   }
 
   void _routeAlert(Alert alert, int index) async {

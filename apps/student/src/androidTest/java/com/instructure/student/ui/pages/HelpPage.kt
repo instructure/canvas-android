@@ -48,7 +48,7 @@ class HelpPage : BasePage(R.id.helpDialog) {
     fun verifyAskAQuestion(course: Course, question: String) {
         askInstructorLabel.scrollTo().click()
         waitForView(withText(course.name)).assertDisplayed() // Verify that our course is selected in the spinner
-        onView(withId(R.id.message)).perform(withCustomConstraints(typeText(question), isDisplayingAtLeast(1)))
+        onView(withId(R.id.message)).scrollTo().perform(withCustomConstraints(typeText(question), isDisplayingAtLeast(1)))
         Espresso.closeSoftKeyboard()
         // Let's just make sure that the "Send" button is displayed, rather than actually pressing it
         onView(containsTextCaseInsensitive("Send")).assertDisplayed()
@@ -65,7 +65,7 @@ class HelpPage : BasePage(R.id.helpDialog) {
         onView(withId(R.id.descriptionEditText)).typeText(description)
         Espresso.closeSoftKeyboard()
         // Let's just make sure that the "Send" button is displayed, rather than actually pressing it
-        onView(containsTextCaseInsensitive("Send")).assertDisplayed()
+        onView(containsTextCaseInsensitive("Send")).scrollTo().assertDisplayed()
     }
 
     fun shareYourLove() {

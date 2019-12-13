@@ -59,7 +59,9 @@
     <string name="submissionUploadByteProgress">%1$s de %2$s</string>
     <string name="submissionSuccessTitle">Soumisyon reyisi!</string>
     <string name="submissionSuccessMessage">Soumisyon w lan soumèt ak siksè. Pwofite jounen an!</string>
-    <string name="cancelAllSubmissions">Anile Tout Soumisyon Devwa</string>
+    <string name="submissionDeleteTitle">Anile Soumisyon</string>
+    <string name="submissionDeleteMessage">Aksyon sa a ap anile epi efase soumisyon w lan.</string>
+    <string name="submissionDeleted">Soumisyon Efase</string>
     <string name="missingSubmissionLabel">Manke</string>
     <string name="gradedSubmissionLabel">Klase</string>
     <!-- Student Submission -->
@@ -99,6 +101,7 @@
     <string name="finalGradeFormatted">Nòt Final: %s</string>
     <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
     <string name="contentDescriptionScoreOutOfPointsPossible">%1$s sou %2$s pwen</string>
+    <string name="enterWhatIfScore">Antre yon Nòt sizoka</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Nòt pèsonalize</string>
     <string name="rubricEmptyMessage">Pa gen ribrik pou devwa sa a</string>
@@ -578,8 +581,7 @@
     <string name="EULA">EULA</string>
     <string name="privacyPolicy">Politik Konfidansyalite</string>
     <string name="termsOfUse">Kondisyon Itilizasyon</string>
-    <string name="openSource">Open Source</string>
-
+    <string name="canvasOnGithub">Canvas sou GitHub</string>
     <!-- Quiz Strings -->
     <string name="assignmentQuizzes">Sesyon Quiz</string>
     <string name="practiceQuizzes">Quiz Pratik</string>
@@ -590,6 +592,7 @@
     <string name="choose_answers_below">Chwazi repons ou yo pi ba a</string>
 
 
+    <string name="flag_the_question">Siyale yon kesyon</string>
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">Pou Fè</string>
     <string name="gradesWidgetTitle">Nòt</string>
@@ -846,9 +849,6 @@
     <string name="like">jèm</string>
     <string name="likes">jèm</string>
 
-    <string name="wear_reminder">Orè Delè Rapèl</string>
-    <string name="wear_notifications">Aktive Notifikasyon Dizaj</string>
-
     <string name="color_1">Wouj</string>
     <string name="color_2">Woz</string>
     <string name="color_3">Lavand</string>
@@ -1016,6 +1016,37 @@
     <string name="addChildErrorMessage">Asosyasyon Echwe... asire w ke kòd kouplaj ou a kòrèke li pa depase limit itilizasyon an.</string>
     <string name="gradeComplete">Fini</string>
     <string name="gradeIncomplete">Enkonplè</string>
+    <!--Teacher Strings-->
+    <string name="postPolicyTitle">Paramèt Piblikasyon</string>
+    <string name="postGradesTab">Piblikasyon Nòt</string>
+    <string name="hideGradesTab">Kache Klas</string>
+    <plurals name="gradesPostedCount">
+        <item quantity="one">%d nòt pibliye pou kounye a</item>
+        <item quantity="other">%d nòt pibliye pou kounye a</item>
+    </plurals>
+    <plurals name="gradesHiddenCount">
+        <item quantity="one">%d nòt kache pou kounye a</item>
+        <item quantity="other">%d nòt poste pou kounye a</item>
+    </plurals>
+    <string name="postPolicyPostTo">Pibliye nan...</string>
+    <string name="postPolicySections">Seksyon Espesyal</string>
+    <string name="postToEveryoneTitle">Tout Moun</string>
+    <string name="postToEveryoneMessage">Nòt yo ap vizib pou tout elèv</string>
+    <string name="postToGradedTitle">Klase</string>
+    <string name="postToGradedMessage">Nòt yo ap vizib pou elèv ki gen soumisyon ki evalye.</string>
+    <string name="postPolicyAllHiddenTitle">Tout Kache</string>
+    <string name="postPolicyAllHiddenMessage">Tout nòt yo kache kounye a.</string>
+    <string name="postPolicyAllPostedTitle">Tout Pibliye</string>
+    <string name="postPolicyAllPostedMessage">Tout nòt yo pibliye kounye a.</string>
+    <string name="postPolicyPostedToast">Nòt Poste</string>
+    <string name="postPolicyHiddenToast">Nòt Kache</string>
+    <string name="postPolicyPostFailedToast">Echèk piblikasyon nòt</string>
+    <string name="postPolicyHideFailedToast">Echèk pou kache nòt</string>
+    <string name="gradeBeforePosting">Nòt anvan piblikasyon</string>
+    <string name="gradeAfterPosting">Nòt aprè piblikasyon</string>
+    <string name="gradeOverride">Ranplasman nòt</string>
+    <string name="currentGrade">Nòt aktyèl</string>
+
     <!-- Floating Recording View Strings -->
     <string name="recordingTimerDefault">00:00:00</string>
     <string name="recordingTimerContentDescription">%1$d èdtan, %2$d minit, e %3$d segond</string>

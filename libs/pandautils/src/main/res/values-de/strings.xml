@@ -33,7 +33,6 @@
     <string name="fileUploadSuccess">Hochladen erfolgreich</string>
     <string name="noNetwork">Das Netzwerk ist nicht verfügbar. Bitte versuchen Sie es später erneut.</string>
     <string name="uploadMessage">Upload läuft. Benachrichtigungen für den Upload-Status aktivieren.</string>
-    <string name="mediaUpload">Media-Upload</string>
     <string name="uploadingFile">Datei wird hochgeladen &#8230;</string>
     <string name="errorUploadingFile">Fehler beim Hochladen der Nachricht. Bitte versuchen Sie es noch einmal.</string>
     <string name="fileSubmission">Datei(en) abschicken</string>
@@ -171,13 +170,12 @@
     <string name="noEvents">Heute keine Ereignisse!</string>
     <string name="noEventsSubtext">Scheinbar ein großartiger Tag für Ruhe und Entspannung.</string>
     <string name="noSubmission">Keine Abgabe</string>
-    <string name="noSubmissionSubtext">Senden Sie Ihre Aufgabe am %1$s um %2$s.</string>
     <string name="noSubmissionTeacher">Dieser Teilnehmer hat noch nichts abgegeben.</string>
-    <string name="noDueDate">Diese Aufgabe hat kein Fälligkeitsdatum.</string>
     <string name="locked">Gesperrt</string>
     <string name="lockedSubtext">Diese Aufgabe wird gesperrt bis %1$s um %2$s.</string>
     <string name="chooseFile">Eine Datei auswählen</string>
     <string name="chooseFileSubtext">Hängen Sie eine Datei an Ihre Abgabe an, indem Sie unten auf eine der Optionen tippen.</string>
+    <string name="chooseFileForUploadSubtext">Wählen Sie eine Datei aus, indem Sie auf eine der Optionen unten tippen</string>
     <string name="noNotifications">Keine Benachrichtigungen</string>
     <string name="noNotificationsSubtext">Es gibt noch nichts zur Kenntnis zu geben.</string>
     <string name="noTodos">Gut gemacht!</string>
@@ -380,6 +378,7 @@
     <string name="utils_uploadToCanvas">Nach Canvas hochladen</string>
     <string name="utils_uploadMyFiles">Meine Dateien</string>
     <string name="utils_uploadCourseFiles">Kursdateien</string>
+    <string name="utils_uploadGroupFiles">Gruppendateien</string>
     <string name="utils_uploadToSubmissionComment">Hochladen zum Sendekommentar</string>
     <string name="utils_attachFile">Eine Datei anhängen</string>
     <string name="utils_with">mit</string>

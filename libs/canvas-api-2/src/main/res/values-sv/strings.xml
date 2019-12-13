@@ -44,7 +44,7 @@
     <string name="canvasAPI_none">Ingen inlämning</string>
     <string name="canvasAPI_passFail">Godkänt/underkänt</string>
     <string name="canvasAPI_percent">Procent</string>
-    <string name="canvasAPI_letterGrade">Bokstavsbetyg</string>
+    <string name="canvasAPI_letterGrade">Bokstavsomdöme</string>
     <string name="canvasAPI_points">Poäng</string>
     <string name="canvasAPI_gpaScale">GPA-skala</string>
     <string name="canvasAPI_notGraded">Ej bedömd</string>
@@ -53,7 +53,7 @@
     <string name="canvasAPI_discussionTopic">Diskussionsämne</string>
     <string name="canvasAPI_onlineUpload">Filuppladdning</string>
     <string name="canvasAPI_onlineTextEntry">Textinmatning</string>
-    <string name="canvasAPI_onlineURL">Webbplatsens URL</string>
+    <string name="canvasAPI_onlineURL">Webbplatslänk</string>
     <string name="canvasAPI_mediaRecording">Mediainspelning</string>
     <string name="canvasAPI_attendance">Närvaro</string>
     <string name="quiz_scoring_policy_highest">Högsta</string>

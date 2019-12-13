@@ -48,7 +48,7 @@
 
     <string name="canvasLoginOn">Canvas_Login: PÅ</string>
     <string name="canvasLoginOff">Canvas_Login: AV</string>
-    <string name="siteAdminLogin">Inloggning för webbplatsadministratören: PÅ</string>
+    <string name="siteAdminLogin">Inloggning för webbplatsadmin: PÅ</string>
 
     <string name="username">Användarnamn</string>
     <string name="password">Lösenord</string>
@@ -68,7 +68,7 @@
     <string name="loginNearYou">Nära dig</string>
     <string name="loginCanvasNetwork">Canvas-nätverk</string>
     <string name="loginRightBehindYou">Precis bakom dig</string>
-    <string name="loginMiles">%1$s miles away</string>
+    <string name="loginMiles">%1$s engelska mil bort</string>
     <string name="loginCanvasHelp">Ser du inte din skola? Fyll i skolans URL eller tryck här för att få hjälp.</string>
     <string name="loginCanvasHelpWithUser">Fyll i skolans URL eller tryck här för att få hjälp.</string>
     <string name="loginHint">Hitta din skola eller ditt distrikt</string>

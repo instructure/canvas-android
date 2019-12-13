@@ -59,7 +59,9 @@
     <string name="submissionUploadByteProgress">%1$s od %2$s</string>
     <string name="submissionSuccessTitle">Oddaja je bila uspešna!</string>
     <string name="submissionSuccessMessage">Vaša naloga je uspešno poslana. Lep dan vam želimo.</string>
-    <string name="cancelAllSubmissions">Prekliči vse oddaje nalog</string>
+    <string name="submissionDeleteTitle">Prekliči oddajo</string>
+    <string name="submissionDeleteMessage">S tem boste preklicali in izbrisali oddajo.</string>
+    <string name="submissionDeleted">Oddaja je izbrisana</string>
     <string name="missingSubmissionLabel">Manjkajoče</string>
     <string name="gradedSubmissionLabel">Ocenjeno</string>
     <!-- Student Submission -->
@@ -99,6 +101,7 @@
     <string name="finalGradeFormatted">Končna ocena: %s</string>
     <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
     <string name="contentDescriptionScoreOutOfPointsPossible">%1$s od %2$s točk</string>
+    <string name="enterWhatIfScore">Vnesite simulacijo rezultatov</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Po meri prilagojen rezultat</string>
     <string name="rubricEmptyMessage">Za to nalogo ni ocenjevalnega vodnika</string>
@@ -578,8 +581,7 @@
     <string name="EULA">Licenčni pogoji za končnega uporabnika</string>
     <string name="privacyPolicy">Pravilnik o zasebnosti</string>
     <string name="termsOfUse">Pogoji uporabe</string>
-    <string name="openSource">Odprti vir</string>
-
+    <string name="canvasOnGithub">Canvas na GitHub</string>
     <!-- Quiz Strings -->
     <string name="assignmentQuizzes">Kvizi pri nalogah</string>
     <string name="practiceQuizzes">Kvizi za vajo</string>
@@ -590,6 +592,7 @@
     <string name="choose_answers_below">Spodaj izberite svoje odgovore.</string>
 
 
+    <string name="flag_the_question">Označi vprašanje</string>
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">Seznam opravil</string>
     <string name="gradesWidgetTitle">Ocene</string>
@@ -846,9 +849,6 @@
     <string name="like">všeček</string>
     <string name="likes">všečki</string>
 
-    <string name="wear_reminder">Razporedi opomnike rokov</string>
-    <string name="wear_notifications">Vklopi obvestila aplikacije Wear</string>
-
     <string name="color_1">Rdeče</string>
     <string name="color_2">Živo rožnato</string>
     <string name="color_3">Sivka</string>
@@ -1016,6 +1016,37 @@
     <string name="addChildErrorMessage">Vzpostavljanje povezave ni bilo uspešno. Prepričajte se, da je vaša koda za vzpostavljanje povezave pravilna in veljavna glede na časovno omejitev uporabe.</string>
     <string name="gradeComplete">Zaključeno</string>
     <string name="gradeIncomplete">Nezaključeno</string>
+    <!--Teacher Strings-->
+    <string name="postPolicyTitle">Nastavitve objavljanja</string>
+    <string name="postGradesTab">Pošlji ocene v SIS</string>
+    <string name="hideGradesTab">Skrij ocene</string>
+    <plurals name="gradesPostedCount">
+        <item quantity="one">Trenutno je objavljena %d ocena</item>
+        <item quantity="other">Trenutno je objavljenih %d ocen</item>
+    </plurals>
+    <plurals name="gradesHiddenCount">
+        <item quantity="one">Trenutno je skrita %d ocena</item>
+        <item quantity="other">Trenutno je skritih %d ocen</item>
+    </plurals>
+    <string name="postPolicyPostTo">Objavi v ...</string>
+    <string name="postPolicySections">Določene sekcije</string>
+    <string name="postToEveryoneTitle">Vsi</string>
+    <string name="postToEveryoneMessage">Ocene bodo vidne vsem študentom</string>
+    <string name="postToGradedTitle">Ocenjeno</string>
+    <string name="postToGradedMessage">Ocene bodo vidne študentom z ocenjenimi oddajami</string>
+    <string name="postPolicyAllHiddenTitle">Vse skrite</string>
+    <string name="postPolicyAllHiddenMessage">Trenutno so vse ocene skrite.</string>
+    <string name="postPolicyAllPostedTitle">Vse objavljene</string>
+    <string name="postPolicyAllPostedMessage">Trenutno so vse ocene objavljene.</string>
+    <string name="postPolicyPostedToast">Objavljene ocene</string>
+    <string name="postPolicyHiddenToast">Skrite ocene</string>
+    <string name="postPolicyPostFailedToast">Objava ocen ni uspela</string>
+    <string name="postPolicyHideFailedToast">Skrivanje ocen ni uspelo</string>
+    <string name="gradeBeforePosting">Ocena pred objavo</string>
+    <string name="gradeAfterPosting">Ocena po objavi</string>
+    <string name="gradeOverride">Preglasitev ocene</string>
+    <string name="currentGrade">Trenutna ocena</string>
+
     <!-- Floating Recording View Strings -->
     <string name="recordingTimerDefault">00:00:00</string>
     <string name="recordingTimerContentDescription">%1$d ur, %2$d minut in %3$d sekund</string>

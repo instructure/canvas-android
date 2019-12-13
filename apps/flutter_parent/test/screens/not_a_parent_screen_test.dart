@@ -17,6 +17,7 @@ import 'package:flutter_parent/screens/not_a_parent_screen.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 import 'package:url_launcher_platform_interface/url_launcher_platform_interface.dart';
 
 import '../utils/accessibility_utils.dart';
@@ -52,7 +53,6 @@ void main() {
 
   testWidgetsWithAccessibilityChecks('Launches intent to open student app in play store', (tester) async {
     var mockLauncher = _MockUrlLauncherPlatform();
-    when(mockLauncher.isMock).thenReturn(true);
     UrlLauncherPlatform.instance = mockLauncher;
 
     await tester.pumpWidget(TestApp(NotAParentScreen(), highContrast: true));
@@ -82,7 +82,6 @@ void main() {
 
   testWidgetsWithAccessibilityChecks('Launches intent to open teacher app in play store', (tester) async {
     var mockLauncher = _MockUrlLauncherPlatform();
-    when(mockLauncher.isMock).thenReturn(true);
     UrlLauncherPlatform.instance = mockLauncher;
 
     await tester.pumpWidget(TestApp(NotAParentScreen(), highContrast: true));
@@ -111,4 +110,4 @@ void main() {
   });
 }
 
-class _MockUrlLauncherPlatform extends Mock implements UrlLauncherPlatform {}
+class _MockUrlLauncherPlatform extends Mock with MockPlatformInterfaceMixin implements UrlLauncherPlatform {}

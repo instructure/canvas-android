@@ -35,9 +35,12 @@ import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.threeten.bp.DateTimeUtils
 import org.threeten.bp.OffsetDateTime
+import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
-import java.util.*
+import java.util.Calendar
+import java.util.Date
 
 @RunWith(AndroidJUnit4::class)
 class SyllabusPresenterTest : Assert() {
@@ -53,7 +56,7 @@ class SyllabusPresenterTest : Assert() {
             itemId = "0",
             title = null,
             assignment = null,
-            startAt = baseDate.format(DateTimeFormatter.ISO_DATE_TIME),
+            startAt = DateTimeUtils.toDate(baseDate.atZoneSimilarLocal(ZoneId.systemDefault()).toInstant()).toApiString(),
             itemType = ScheduleItem.Type.TYPE_CALENDAR
         ),
         ScheduleItem(
@@ -89,7 +92,7 @@ class SyllabusPresenterTest : Assert() {
             ScheduleItemViewState(
                 id = "0",
                 title = "",
-                date = "Due Apr 2 at 1:59 pm",
+                date = "Apr 2 at 1:59 PM",
                 iconRes = R.drawable.vd_calendar,
                 color = baseCourse.color
             ),

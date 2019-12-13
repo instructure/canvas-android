@@ -30,7 +30,7 @@
     <string name="requestLoginHelp">Solicitar ajuda com login</string>
     <string name="loginHelpSubject">Estou tendo problemas em fazer login</string>
     <string name="errorReportInvalidEmail">Insira um endereço de e-mail válido</string>
-    <string name="announcementSections">Seções: %s</string>
+    <string name="announcementSections">Turmas: %s</string>
     <string name="selectedListItem">Selecionado: %s</string>
 
     <!-- Student Strings -->
@@ -39,7 +39,7 @@
     <string name="submission_types">Tipos de envio</string>
     <string name="noAssignmentDescriptionStudent">Sem conteúdo</string>
     <string name="dueLabel">Vencimento</string>
-    <string name="submissionStatusSuccessTitle">Enviado com êxito!</string>
+    <string name="submissionStatusSuccessTitle">Enviado com sucesso!</string>
     <string name="submissionStatusSuccessSubtitle">Seu envio agora está esperando avaliação</string>
     <string name="submissionStatusUploadingTitle">Envio carregando...</string>
     <string name="submissionStatusUploadingSubtitle">Toque para visualizar o progresso</string>
@@ -50,30 +50,31 @@
     <string name="submitted">Enviado</string>
     <string name="notSubmitted">Não Enviado</string>
     <string name="allowedFileTypes">Tipos de arquivos permitidos</string>
-    <string name="resubmitAssignment">Reenviar Tarefa</string>
-
+    <string name="resubmitAssignment">Re-enviar Tarefa</string>
     <string name="launchExternalTool">Executar ferramenta externa</string>
-
     <string name="preview">Pré-visualização</string>
     <string name="submissionUploadFailedMessage">Falha no carregamento de um ou mais arquivos. Verifique sua conexão à Internet e tente enviar novamente.</string>
     <string name="submissionUploadByteProgress">%1$s de %2$s</string>
     <string name="submissionSuccessTitle">Sucesso do envio!</string>
     <string name="submissionSuccessMessage">Sua tarefa foi enviada com sucesso. Aproveite o seu dia!</string>
-    <string name="cancelAllSubmissions">Cancelar todos os envios de tarefas</string>
-    <string name="missingSubmissionLabel">Faltando</string>
+    <string name="submissionDeleteTitle">Cancelar envio</string>
+    <string name="submissionDeleteMessage">Isso cancelará e excluirá seu envio.</string>
+    <string name="submissionDeleted">Envio excluído</string>
+    <string name="missingSubmissionLabel">Faltante</string>
     <string name="gradedSubmissionLabel">Avaliado</string>
+
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">Nenhuma pré-visualização disponível para URLs usando \'http://\'</string>
     <string name="submissionUrlNotAUrlError">Por favor, insira uma URL válida</string>
     <string name="enterAUrlHereForYourSubmission">Insira uma URL para o seu envio</string>
     <string name="addFileFabContentDesc">Exibir Adicionar opções de arquivo</string>
     <string name="recordAudio">Gravar Áudio</string>
-
     <string name="recordVideo">Gravar Vídeo</string>
 
     <!-- Student Submission -->
     <string name="submissionWrite">Gravar&#8230;</string>
     <string name="textSubmissionFailureMessage">Algo deu errado com o carregamento do envio. Envie novamente.</string>
+
     <!-- Student Submission Details -->
     <string name="submission">Envio</string>
     <string name="submissionVersions">Versões de envio</string>
@@ -92,6 +93,7 @@
     <string name="noneContentMessage">Esta tarefa não permite envios on-line</string>
     <string name="onPaperContentMessage">Esta tarefa não permite envios on-line</string>
     <string name="noOnlineSubmissions">Nenhum envio on-line</string>
+
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">De %s pontos</string>
     <string name="outOfPointsAbbreviatedFormatted">De %s pts</string>
@@ -99,10 +101,13 @@
     <string name="finalGradeFormatted">Nota final: %s</string>
     <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
     <string name="contentDescriptionScoreOutOfPointsPossible">%1$s de %2$s pontos</string>
+
+    <string name="enterWhatIfScore">Inserir pontuação E-Se</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Pontuação personalizada</string>
     <string name="rubricEmptyMessage">Não há nenhuma rubrica para essa tarefa</string>
-    <string name="rubricViewLongDescription">Exibir descrição longa</string>
+    <string name="rubricViewLongDescription">Visualizar descrição longa</string>
+
     <!-- Student Submission Comments -->
     <string name="assignmentSubmissionUploadingFile">Carregando arquivo %1$d de %2$d</string>
     <string name="assignmentSubmissionCommentUpload">Carregando comentário para %s</string>
@@ -115,18 +120,19 @@
     <string name="mediaUploadVideo">Carregamento de mídia - Vídeo</string>
     <string name="commentSubmissionTypeText">Envio de Texto</string>
     <string name="commentSubmissionTypeExternalTool">Envio de ferramenta externa</string>
-    <string name="commentSubmissionTypeDiscussion">Envio de Discussão</string>
-    <string name="commentSubmissionTypeQuiz">Envio de Questionário</string>
+    <string name="commentSubmissionTypeDiscussion">Envio de Fórum</string>
+    <string name="commentSubmissionTypeQuiz">Envio de Teste</string>
     <string name="commentSubmissionTypeQuizAttempt">Tentativa %d</string>
     <string name="commentSubmissionTypeMediaFile">Arquivo de mídia</string>
     <string name="commentSubmissionTypeAudio">Áudio</string>
     <string name="commentSubmissionTypeVideo">Vídeo</string>
+
     <!-- Profile Fragment Strings -->
     <string name="canvasVersionNum">Versão:</string>
 
     <!-- Content Descriptions -->
     <string name="canvasLogo">Logotipo do Canvas</string>
-    <string name="enterURL">Insira o seu URL de Canvas:</string>
+    <string name="enterURL">Insira o seu URL do Canvas:</string>
     <string name="exampleURLSimple">myschool.instructure.com</string>
     <string name="signIntoCanvasNetwork">Tentando entrar na Canvas Network?</string>
     <string name="mobileVerifyGeneral">Este aplicativo não está autorizado para uso</string>
@@ -146,15 +152,15 @@
     <string name="bookmarksTitle">Favoritos</string>
     <string name="addBookmark">Adicionar Favorito</string>
     <string name="bookmarkName">Rótulo</string>
-    <string name="bookmarkTitleRequired">Um Rótulo é Necessário</string>
+    <string name="bookmarkTitleRequired">Um rótulo é necessário</string>
     <string name="bookmarkAddedSuccess">Favorito Criado</string>
-    <string name="bookmarkAddedFailure">Não foi possivel criar favorito</string>
+    <string name="bookmarkAddedFailure">Não foi possível criar favorito</string>
     <string name="bookmarkShortcut">Selecionar um Favorito</string>
     <string name="bookmarkDeleted">Favorito Removido</string>
     <string name="bookmarkDelete">Remover Favorito?</string>
     <string name="bookmarkEdit">Editar Favorito</string>
     <string name="bookmarkUpdated">Favorito Atualizado</string>
-    <string name="no_bookmarks">Criar um favorito, aí vê-lo aqui!</string>
+    <string name="no_bookmarks">Crie um favorito, aí veja ele aqui!</string>
 
     <!-- Date strings -->
     <string name="today">Hoje</string>
@@ -163,27 +169,30 @@
     <string name="future">Futuro</string>
     <string name="next7Days">Próximos 7 Dias</string>
     <string name="days">Dias</string>
-
     <string name="submissionDetailsDueTodayAt">Vence hoje às %s</string>
     <string name="submissionDetailsDueTomorrowAt">Vence amanhã às %s</string>
     <string name="submissionDetailsDueYesterdayAt">Venceu ontem às %s</string>
-    <string name="submissionDetailsHasNoDueDate">Sua tarefa não tem prazo</string>
+    <string name="submissionDetailsHasNoDueDate">Sua tarefa não tem prazo de entrega</string>
     <string name="submissionDetailsDueAt">Para ser entregue em %1$s às %2$s</string> <!--Ex: Due April 2 at 11:59pm-->
     <string name="lowercaseAM">manhã</string>
     <string name="lowercasePM">h</string>
+
+
     <!-- Assignments -->
     <string name="assignmentLocked">Bloqueado(a)</string>
     <string name="assignments">Tarefas</string>
     <string name="noDescription">Não há nenhuma descrição para esta tarefa</string>
-    <string name="noAssignmentsInGroup">Sem Tarefas neste grupo</string>
+    <string name="noAssignmentsInGroup">Sem tarefas neste grupo</string>
     <string name="excusedAssignment">Esta tarefa está dispensada e não fará parte do cálculo total</string>
     <string name="excused">EX</string>
+
     <!-- Assignment editing -->
     <string name="points">Pontos </string>
     <string name="save">Salvar</string>
     <string name="cancel">Cancelar</string>
+
     <!-- Discussions -->
-    <string name="forbidden">As respostas são visíveis apenas àqueles que publicaram pelo menos uma resposta.</string>
+    <string name="forbidden">As respostas são visíveis apenas àqueles que postaram pelo menos uma resposta.</string>
 
     <!-- Events -->
     <string name="Starts">Começa</string>
@@ -193,18 +202,16 @@
     <string name="PersonalCalendar">Calendário Pessoal</string>
     <string name="noLocation">Nenhum Local Especificado</string>
 
-    <string name="discussion">Discussions</string>
+    <string name="discussion">Fóruns</string>
     <string name="closed_discussion">Fechado para comentários</string>
-    <string name="discussionUploadDialog">Upload de Discussão</string>
+    <string name="discussionUploadDialog">Upload de Fórum</string>
     <string name="totalScore">Total:</string>
     <string name="noGradeText">N/A</string>
-    <string name="checkBoxFinalGradeOption">Baseie em tarefas classificadas</string>
-    <string name="checkBoxWhatIfGradeOption">Mostrar Pontuação de E-Se-For</string>
-    <string name="whatIfDialogText">Pontuação de E-Se-For</string>
+    <string name="checkBoxFinalGradeOption">Baseie em tarefas avaliadas</string>
+    <string name="checkBoxWhatIfGradeOption">Mostrar Pontuação de “E Se”</string>
+    <string name="whatIfDialogText">Pontuação de “E Se”</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s de %2$s pontos, %3$s</string>
-
-
     <string name="inbox">Caixa de entrada</string>
     <string name="unread">Não lido</string>
     <string name="archived">Arquivada</string>
@@ -226,7 +233,7 @@
     <string name="favoritedCoursesLabel">Cursos Favoritos</string>
     <string name="Event">Evento</string>
     <string name="eventSuccessfulCreation">Evento foi criado com sucesso</string>
-    <string name="eventSuccessfulDeletion">Evento foi excluido com sucesso</string>
+    <string name="eventSuccessfulDeletion">Evento foi excluído com sucesso</string>
     <string name="newEvent">Novo Evento</string>
     <string name="enterTitle">Insira Título</string>
     <string name="enterLocation">Insira Local</string>
@@ -237,15 +244,15 @@
     <string name="locationIconDescription">Ícone de Local</string>
     <string name="noteIconDescription">Ícone de Anotação</string>
     <string name="toDoTurnIn">Entregar</string>
-    <string name="toDoNoDueDate">Sem Prazo</string>
+    <string name="toDoNoDueDate">Sem prazo de entrega</string>
 
     <string name="dueAt">Para ser entregue às</string>
     <string name="dueAtTime">Com vencimento às %s</string>
     <string name="toDoDue">Vencimento</string>
     <string name="due">Vencimento em %1$s</string>
     <plurals name="to_do_needs_grading">
-        <item quantity="one">%d precisa de classificação</item>
-        <item quantity="other">%d precisam de classificação</item>
+        <item quantity="one">%d precisa de avaliação</item>
+        <item quantity="other">%d precisam de avaliação</item>
     </plurals>
     <string name="createAFolder">Criar uma pasta</string>
     <string name="createFolder">Criar Pasta</string>
@@ -288,7 +295,7 @@
     <string name="deleteEvent">Excluir Evento</string>
     <string name="selected">Selecionado</string>
     <string name="errorSendingMessage">Ocorreu um erro ao tentar enviar a sua mensagem. Por favor, tente novamente.</string>
-    <string name="deletedConversation">Aquela conversação tem sido excluido</string>
+    <string name="deletedConversation">Aquela conversa foi excluída</string>
     <string name="uploadAvatarFailMsg">O upload da nova foto de avatar falhou.</string>
     <string name="editPhoto">Editar foto</string>
     <string name="invalidUsername">Esse nome de usuário é inválido.</string>
@@ -325,8 +332,8 @@
     <string name="attachmentIcon">Ícone de anexo</string>
     <string name="ok">OK</string>
     <string name="with">com</string>
-    <string name="starConversation">Colocar Estrela na Conversação</string>
-    <string name="deleteConversation">Excluir Conversação</string>
+    <string name="starConversation">Estrelar a conversa</string>
+    <string name="deleteConversation">Excluir conversa</string>
     <string name="sharedWith">Compartilhado com  </string>
     <string name="sharedWithYou">Compartilhado com você</string>
     <string name="inboxEmptyMessage">Toque em \"+\" para criar uma nova conversa.</string>
@@ -360,7 +367,7 @@
 
     <plurals name="group_count">
         <item quantity="one">%d grupo</item>
-        <item quantity="other">%d Grupos</item>
+        <item quantity="other">%d grupos</item>
     </plurals>
 
     <string name="exitWithoutSavingTitle">Sair sem salvar?</string>
@@ -377,30 +384,30 @@
     <string name="loading">Carregando&#8230;</string>
     <string name="select_item_to_display">Selecionar da lista</string>
 
-    <string name="syllabus">Programa de estudos</string>
+    <string name="syllabus">Programa</string>
     <string name="summary">Resumo</string>
     <string name="coursePeople">Pessoas</string>
     <string name="teachersTas">Professores &amp; Assistentes do Professor</string>
     <string name="students">Alunos</string>
     <string name="observers">Observadores</string>
-    <string name="syllabusMissing">Um programa de estudo não foi adicionado.</string>
-
+    <string name="syllabusMissing">Um programa não foi adicionado.</string>
     <string name="syllabusEventsError">Houve um erro ao carregar os seus módulos.</string>
-    <string name="canvas">Fundamentos do</string>
+
+    <string name="canvas">Canvas</string>
     <string name="chooseRecipient">Escolher Destinatário(s)</string>
     <string name="messageHasNoRecipients">Esta mensagem atualmente não tem destinatários.</string>
     <string name="sendMessage">Enviar mensagem</string>
     <string name="userAvatar">Avatar de Usuário</string>
 
     <string name="calendarIcon">Ícone de Calendário</string>
-    <string name="assignmentIcon">Ícone de Tarefa</string>
-    <string name="announcementIcon">Ícone de Anúncio</string>
-    <string name="conversationIcon">Ícone de Conversação</string>
+    <string name="assignmentIcon">Ícone de tarefa</string>
+    <string name="announcementIcon">Ícone de Aviso</string>
+    <string name="conversationIcon">Ícone de conversa</string>
     <string name="defaultIcon">Ícone Padrão</string>
-    <string name="discussionIcon">Ícone de Discussão</string>
+    <string name="discussionIcon">Ícone de Fórum</string>
     <string name="gradesIcon">Ícone de Notas</string>
     <string name="grades">Notas</string>
-    <string name="allGradingPeriods">Todos os períodos de classificação</string>
+    <string name="allGradingPeriods">Todos os períodos de avaliação</string>
     <string name="calendar">Calendário</string>
     <string name="bookmarks">Favoritos</string>
     <string name="showGrades">Mostrar Notas</string>
@@ -412,6 +419,7 @@
 
     <!-- Notifications -->
     <string name="deleted">Excluído</string>
+
     <string name="contentDescriptionFiles">Ícone de Arquivo</string>
 
     <string name="loadingCanvas">Carregando conteúdo do Canvas&#8230;</string>
@@ -421,41 +429,42 @@
     <string name="differentDomainFromLink">O link selecionado é para um domínio diferente do domínio no qual você está.</string>
 
     <string name="pages">Páginas</string>
-    <string name="noPageFound">Não há informação da página disponivel.</string>
-    <string name="noPagesInContext">Não há nenhuma página disponivel para isso</string>
+    <string name="noPageFound">Não há informação da página disponível.</string>
+    <string name="noPagesInContext">Não há nenhuma página disponível para isso</string>
     <string name="modified">Modificado por Último:</string>
     <string name="lastModified">Modificado por Último: %1$s</string>
 
-    <string name="masqueradeUserId">Mascarar ID de Usuário</string>
+    <string name="masqueradeUserId">Agir como ID de Usuário</string>
     <string name="startMasquerading">Começar a Mascarar</string>
     <string name="stopMasquerading">Parar mascaramento</string>
     <string name="userId">ID de Usuário</string>
-    <string name="masqueradeFail">Não houve nenhum erro ao tentar mascarar</string>
+    <string name="masqueradeFail">Não houve nenhum erro ao tentar agir como</string>
 
     <string name="emptyId">O ID não pode ser branco</string>
 
-    <string name="goToQuiz">Ir Para Quiz</string>
-    <string name="quizzes">Questionários</string>
+    <string name="goToQuiz">Ir para teste</string>
+
+    <string name="quizzes">Testes</string>
 
     <string name="lastDiscussionPost">Último post</string>
 
-    <string name="newAnnouncement">Novo Anúncio</string>
-    <string name="newDiscussion">Nova discussão</string>
-    <string name="composeDiscussion">Criar Discussão</string>
-    <string name="composeAnnouncement">Criar Anúncio</string>
+    <string name="newAnnouncement">Novo Aviso</string>
+    <string name="newDiscussion">Nova fórum</string>
+    <string name="composeDiscussion">Criar Fórum</string>
+    <string name="composeAnnouncement">Criar Aviso</string>
 
-    <string name="postAnnouncement">Postar Anúncio</string>
-    <string name="postDiscussion">Postar Discussão</string>
+    <string name="postAnnouncement">Postar aviso</string>
+    <string name="postDiscussion">Postar fórum</string>
 
-    <string name="postAnnouncementSuccess">O anúncio foi postado com sucesso.</string>
-    <string name="postDiscussionSuccess">A discussão foi postada com sucesso.</string>
-    <string name="updateDiscussionSuccess">A discussão foi criada com sucesso.</string>
-    <string name="draftDiscussionSuccess">Rascunho de discussão criada com sucesso.</string>
+    <string name="postAnnouncementSuccess">O aviso foi postado com sucesso.</string>
+    <string name="postDiscussionSuccess">A fórum foi postada com sucesso.</string>
+    <string name="updateDiscussionSuccess">A fórum foi criada com sucesso.</string>
+    <string name="draftDiscussionSuccess">Rascunho de fórum criada com sucesso.</string>
 
-    <string name="errorPostingAnnouncement">Houve um erro ao postar o anúncio.</string>
-    <string name="errorPostingDiscussion">Houve um erro ao postar a discussão.</string>
+    <string name="errorPostingAnnouncement">Houve um erro ao postar o aviso.</string>
+    <string name="errorPostingDiscussion">Houve um erro ao postar a fórum.</string>
     <string name="allowThreading">Permitir Respostas Vinculadas</string>
-    <string name="usersMustPost">Os usuários devem publicar antes de ver as respostas</string>
+    <string name="usersMustPost">Os usuários devem postar antes de ver as respostas</string>
     <string name="allowUserComments">Permitir que os usuários comentem</string>
     <string name="message">Mensagem</string>
     <string name="title">Título</string>
@@ -463,8 +472,8 @@
 
     <string name="messageBlank">A mensagem não pode ser branca.</string>
 
-    <string name="notAuthorizedAnnouncement">Desculpe-nos. Você não está autorizado a postar anúncios neste curso.</string>
-    <string name="notAuthorizedDiscussion">Desculpe-nos. Você não está autorizado a postar discussões neste curso.</string>
+    <string name="notAuthorizedAnnouncement">Desculpe-nos. Você não está autorizado a postar avisos neste curso.</string>
+    <string name="notAuthorizedDiscussion">Desculpe-nos. Você não está autorizado a postar fóruns neste curso.</string>
 
     <string name="announcements">Avisos</string>
 
@@ -472,7 +481,7 @@
 
     <!-- Modules -->
     <string name="modules">Módulos</string>
-    <string name="moduleItemMustView">Ver este item</string>
+    <string name="moduleItemMustView">Visualizar este item</string>
     <string name="moduleItemViewed">Você visualizou este item</string>
     <string name="moduleItemSubmit">Deve enviar tarefa</string>
     <string name="moduleItemSubmitted">Tarefa enviada</string>
@@ -486,15 +495,15 @@
     <string name="lockedAssignmentDesc">Esta tarefa faz parte do módulo %s e ainda não foi desbloqueada.</string>
     <string name="lockedPageDesc">Esta página faz parte do módulo %s e ainda não foi desbloqueada.</string>
     <string name="lockedFileDesc">Este arquivo faz parte do módulo %s e ainda não foi desbloqueado.</string>
-    <string name="lockedQuizDesc">Este questionário faz parte do módulo %s e ainda não foi desbloqueado.</string>
-    <string name="lockedDiscussionDesc">Esta discussão faz parte do módulo %s e ainda não foi desbloqueada.</string>
+    <string name="lockedQuizDesc">Este teste faz parte do módulo %s e ainda não foi desbloqueado.</string>
+    <string name="lockedDiscussionDesc">Este fórum faz parte do módulo %s e ainda não foi desbloqueado.</string>
     <string name="mustComplete">Você deve completar primeiro:</string>
     <string name="unlockedAt">Será desbloqueado às:</string>
-    <string name="goToModules">Ir Para Mòdulos</string>
+    <string name="goToModules">Ir Para Módulos</string>
     <string name="markDone">Marcar como concluído</string>
     <string name="moduleItemNotFound">Item do módulo não encontrado</string>
-
     <string name="errorLoadingModules">Houve um erro ao carregar os seus módulos.</string>
+
     <string name="help">Ajuda</string>
     <string name="instructor_question">Pergunta de Instrutor</string>
     <string name="link">Link</string>
@@ -510,11 +519,11 @@
     <string name="textEntry">Entrada de texto</string>
     <string name="onlineURL">URL online</string>
     <string name="oneFileOnly">Este envio aceita apenas o carregamento de um arquivo</string>
-
-
     <string name="websiteEntry">Adicionar entrada do site</string>
     <string name="mediaRecordingEntry">Gravações de mídia</string>
     <string name="submit">Enviar</string>
+
+
     <!-- DataLoss Fragment Strings -->
     <string name="unsavedProgress">Progresso Não Salvo</string>
     <string name="informationLost">Informações não salvas serão perdidas. Deseja continuar?</string>
@@ -530,17 +539,18 @@
     <string name="next">Próximo</string>
     <string name="turnedIn">Entregue:&#160;</string>
     <string name="addComment">Adicionar um comentário&#8230;</string>
+
     <string name="home">Página inicial</string>
     <string name="Notifications">Notificações</string>
 
     <string name="icon">Ícone</string>
     <string name="rootUser">Pasta Raiz de Usuário</string>
     <string name="rootCourse">Pasta Raiz de Curso</string>
-    <string name="rootGroup">Pasta Raiz de Grup</string>
+    <string name="rootGroup">Pasta Raiz de Grupo</string>
 
     <!-- Course Settings -->
-    <string name="privatelyAvailable">Disponivel em privado</string>
-    <string name="publiclyAvailable">Disponivel em público</string>
+    <string name="privatelyAvailable">Disponível em privado</string>
+    <string name="publiclyAvailable">Disponível em público</string>
     <string name="starts">Inicia:  </string>
     <string name="courseCode">Código do curso:  </string>
     <string name="ends">Termina:  </string>
@@ -549,8 +559,8 @@
 
 
     <!-- Navigation String -->
-    <string name="collaborations">Collaborations (Colaborações)</string>
-    <string name="conferences">Conferences</string>
+    <string name="collaborations">Colaborações</string>
+    <string name="conferences">Conferências</string>
     <string name="chat">Chat</string>
     <string name="outcomes">Resultados</string>
 
@@ -558,7 +568,9 @@
     <string name="visitPage">Visitar Página:</string>
     <string name="clickToViewSubmission">Uma captura instantânea do site foi feita quando você o entregou. Toque e segure a imagem abaixo para abrir ou baixar a imagem completa.</string>
     <string name="urlSubmissionNoPreview">Este envio era uma URL para uma página externa. Tenha em mente que esta página pode ter sido alterada desde o envio original.</string>
-    <string name="contentDescriptionPreviewImage">Uma visualização do url enviado</string>
+    <string name="contentDescriptionPreviewImage">Uma pré-visualização do url enviado</string>
+
+
     <string name="isNotSupportedFeature">%1$s não são suportados.</string>
     <string name="isNotSupported">O link não é suportado.</string>
     <string name="openInBrowser">Abrir em Navegador</string>
@@ -575,21 +587,22 @@
     <string name="panda_fact_string">Fato de panda:&#160;</string>
     <string name="remove">Remover</string>
     <string name="founders">Fundadores</string>
+
     <string name="EULA">EULA</string>
     <string name="privacyPolicy">Política de privacidade</string>
     <string name="termsOfUse">Termos de Uso</string>
-    <string name="openSource">Código aberto</string>
-
+    <string name="canvasOnGithub">Canvas no GitHub</string>
     <!-- Quiz Strings -->
-    <string name="assignmentQuizzes">Questionários da tarefa</string>
-    <string name="practiceQuizzes">Questionários de prática</string>
-    <string name="gradedSurveys">Pesquisas Classificadas</string>
+    <string name="assignmentQuizzes">Testes da tarefa</string>
+    <string name="practiceQuizzes">Testes de prática</string>
+    <string name="gradedSurveys">Pesquisas avaliadas</string>
     <string name="surveys">Pesquisas</string>
     <string name="quizMatchingDefaultDisplay">[Escolher]</string>
     <string name="choose_answer_below">Escolha a sua resposta abaixo</string>
     <string name="choose_answers_below">Escolha as suas respostas abaixo</string>
 
 
+    <string name="flag_the_question">Sinalizar a pergunta</string>
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">Lista de Tarefas</string>
     <string name="gradesWidgetTitle">Notas</string>
@@ -622,7 +635,7 @@
 
     <!-- Ask Instructor -->
     <string name="whichCourse">Esta pergunta é sobre qual curso?</string>
-    <string name="allTeachers">Esta mensagem será enviada para todos os Profesores e Assistentes de Professor no curso</string>
+    <string name="allTeachers">Esta mensagem será enviada para todos os Professores e Assistentes de Professor no curso</string>
     <string name="sending">Enviando&#8230;</string>
     <string name="error">Erro</string>
 
@@ -631,7 +644,7 @@
     <string name="toDoList">Lista de tarefas</string>
     <string name="notifications">Notificações</string>
     <string name="pushNotifications">Notificações Push</string>
-    <string name="pushNotificationsError">Notificações push não foram registradas para esse dispositivo.</string>
+    <string name="pushNotificationsError">Notificações push não foram inscritas para esse dispositivo.</string>
     <string name="profileSettings">Configurações do perfil</string>
     <string name="accountPreferences">Preferências da conta</string>
     <string name="pinAndFingerprint">PIN e Impressão digital</string>
@@ -639,7 +652,7 @@
     <string name="launchSpeedgrader">Abrir Speedgrader</string>
 
     <string name="search_todo">afazer a fazer afazeres lista de afazeres</string>
-    <string name="search_course">curso cursos classe classes</string>
+    <string name="search_course">curso cursos turma turmas</string>
     <string name="search_grades">nota notas</string>
 
     <!-- ShareFileOptions Dialog -->
@@ -660,14 +673,14 @@
 
     <string name="no_courses">Toque para adicionar um curso</string>
     <string name="no_courses_available">Não há cursos aqui, tome o dia de folga!</string>
-    <string name="no_courses_grades">Por favor inscrever-se num curso para ver as suas notas</string>
+    <string name="no_courses_grades">Por favor, matricule-se num curso para ver as suas notas</string>
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">Abrir gaveta de navegação</string>
     <string name="navigation_drawer_close">Fechar gaveta de navegação</string>
 
     <string name="preferred_land_page">Página de Destino</string>
-    <string name="could_not_route_course">Não foi possível encontrar a matricula do curso.</string>
-    <string name="could_not_route_group">Não foi possivel encontrar a matriculação do grupo.</string>
+    <string name="could_not_route_course">Não foi possível encontrar a matrícula do curso.</string>
+    <string name="could_not_route_group">Não foi possível encontrar a matrícula do grupo.</string>
     <string name="could_not_route_unknown">Ocorreu um erro inesperado.</string>
     <string name="could_not_route_locked">Esta página está escondida ou bloqueada e não pode ser acessada.</string>
 
@@ -724,40 +737,40 @@
     <string name="no_data_connection">Por favor, verifique sua conexão de dados e tente novamente.</string>
 
     <!-- Notification Preferences -->
-    <string name="notification_primary_inbox_title">Canvas Notification</string>
+    <string name="notification_primary_inbox_title">Notificação do Canvas</string>
     <string name="notification_channel_name_primary">Notificações gerais do Canvas</string>
     <string name="notification_channel_description_primary">Uma maior configuração de notificações pode ser feita dentro da seção de Preferências de Notificação do Canvas.</string>
 
     <string name="notification_cat_course_activities">Atividades do curso</string>
-    <string name="notification_cat_discussions">Discussions</string>
-    <string name="notification_cat_conversations">Conversas</string>
+    <string name="notification_cat_discussions">Fóruns</string>
+    <string name="notification_cat_conversations">Caixa de Entrada</string>
     <string name="notification_cat_scheduling">Cronograma</string>
     <string name="notification_cat_groups">Grupos</string>
     <string name="notification_cat_alerts">Alertas</string>
-    <string name="notification_cat_conferences">Conferences</string>
+    <string name="notification_cat_conferences">Conferências</string>
 
-    <string name="notification_pref_due_date">Data de vencimento</string>
+    <string name="notification_pref_due_date">Prazo de entrega</string>
     <string name="notification_pref_grading_policies">Políticas de avaliação</string>
     <string name="notification_pref_course_content">Conteúdo do curso</string>
     <string name="notification_pref_files">Arquivos</string>
-    <string name="notification_pref_announcement">Anúncio</string>
-    <string name="notification_pref_announcement_created_by_you">Anúncio criado por você</string>
-    <string name="notification_pref_grading">Classificação</string>
+    <string name="notification_pref_announcement">Aviso</string>
+    <string name="notification_pref_announcement_created_by_you">Aviso criado por você</string>
+    <string name="notification_pref_grading">Avaliação</string>
     <string name="notification_pref_invitation">Convite</string>
     <string name="notification_pref_all_submissions">Todos os envios</string>
-    <string name="notification_pref_late_grading">Classificação atrasada</string>
+    <string name="notification_pref_late_grading">Avaliação atrasada</string>
     <string name="notification_pref_submission_comment">Comentário do envio</string>
 
-    <string name="notification_pref_discussion">Discussão</string>
-    <string name="notification_pref_discussion_post">Postagem da discussão</string>
+    <string name="notification_pref_discussion">Fórum</string>
+    <string name="notification_pref_discussion_post">Postagem do fórum</string>
 
-    <string name="notification_pref_add_to_conversation">Adicionar a Conversação</string>
+    <string name="notification_pref_add_to_conversation">Adicionar a conversa</string>
     <string name="notification_pref_conversation_message">Mensagem da conversa</string>
-    <string name="notification_pref_conversations_created_by_you">Conversações Criados Por Você</string>
+    <string name="notification_pref_conversations_created_by_you">Caixa de Entrada Criada Por Você</string>
 
-    <string name="notification_pref_student_appointment_signups">Inscrições em compromissos do aluno</string>
-    <string name="notification_pref_appointment_signups">Inscrições em compromissos</string>
-    <string name="notification_pref_appointment_cancelations">Cancelamentos de Compromissos</string>
+    <string name="notification_pref_student_appointment_signups">Registros em compromissos do aluno</string>
+    <string name="notification_pref_appointment_signups">Registros em compromissos</string>
+    <string name="notification_pref_appointment_cancelations">Cancelamentos de compromissos</string>
     <string name="notification_pref_appointment_availability">Disponibilidade do compromisso</string>
     <string name="notification_pref_calendar">Calendário</string>
 
@@ -773,42 +786,42 @@
     <string name="notification_pref_dialog_message">Gostaria de ativar notificações do dispositivo? Essas configurações podem ser alteradas em Configurações &gt; Notificações &gt; Para todos os dispositivos</string>
     <string name="notification_pref_toast_success">Notificações foram ativadas.</string>
 
-    <string name="notification_desc_due_date">Ser notificado quando a data de vencimento de uma tarefa mudar.</string>
-    <string name="notification_desc_grading_policies">Ser notificado quando as políticas de classificação do curso mudarem.</string>
-    <string name="notification_desc_course_content">Ser notificado quando o conteúdo do curso mudar no WikiPages, Questionários e Tarefas.</string>
+    <string name="notification_desc_due_date">Ser notificado quando o prazo de entrega de uma tarefa mudar.</string>
+    <string name="notification_desc_grading_policies">Ser notificado quando as políticas de avaliação do curso mudarem.</string>
+    <string name="notification_desc_course_content">Ser notificado quando o conteúdo do curso mudar no WikiPages, Testes e Tarefas.</string>
     <string name="notification_desc_files">Ser notificado quando um novo arquivo for adicionado ao seu curso.</string>
-    <string name="notification_desc_announcement">Ser notificado quando houver um novo anúncio no seu curso.</string>
-    <string name="notification_desc_announcement_created_by_you">Ser notificado quando você criar um anúncio e quando alguém responder o seu anúncio.</string>
+    <string name="notification_desc_announcement">Ser notificado quando houver um novo aviso no seu curso.</string>
+    <string name="notification_desc_announcement_created_by_you">Ser notificado quando você criar um aviso e quando alguém responder o seu aviso.</string>
     <string name="notification_desc_grading">Ser notificado quando uma tarefa/envio foi avaliada/alterada e quando um peso da nota for alterado.</string>
     <string name="notification_desc_invitation">Ser notificado para convites para conferências web, grupos, colaborações, revisões por pares e lembretes.</string>
-    <string name="notification_desc_all_submissions">Apenas Instrutor e Admin. Ser notificado quando uma tarefa for enviada ou reenviada.</string>
+    <string name="notification_desc_all_submissions">Apenas Instrutor e Admin. Ser notificado quando uma tarefa for enviada ou re-enviada.</string>
     <string name="notification_desc_late_grading">Apenas Instrutor e Admin. Ser notificado quando uma tarefa atrasada for enviada.</string>
     <string name="notification_desc_submission_comment">Ser notificado quando um comentário for feito no seu envio.</string>
-    <string name="notification_desc_discussion">Ser notificado quando houver um novo tópico de discussão no seu curso.</string>
-    <string name="notification_desc_discussion_post">Ser notificado quando houver uma nova postagem em uma discussão em que você está inscrito.</string>
+    <string name="notification_desc_discussion">Ser notificado quando houver um novo assunto do fórum no seu curso.</string>
+    <string name="notification_desc_discussion_post">Ser notificado quando houver uma nova postagem em um fórum em que você está inscrito.</string>
     <string name="notification_desc_add_to_conversation">Ser notificado quando você for adicionado a uma conversa.</string>
     <string name="notification_desc_conversation_message">Ser notificado quando você tiver uma nova mensagem na caixa de entrada.</string>
     <string name="notification_desc_conversations_created_by_you">Ser notificado quando você criar uma nova conversa.</string>
     <string name="notification_desc_student_appointment_signups">Apenas Instrutor e Admin. Ser notificado quando houver um registro para compromissos.</string>
     <string name="notification_desc_appointment_signups">Ser notificado quando houver um novo registro no seu calendário.</string>
     <string name="notification_desc_appointment_cancelations">Ser notificado quando houver um cancelamento de compromisso.</string>
-    <string name="notification_desc_appointment_availability">Ser notificado quando vaga em um compromisso se tornar disponível.</string>
+    <string name="notification_desc_appointment_availability">Ser notificado quando o horário de um compromisso se tornar disponível.</string>
     <string name="notification_desc_calendar">Ser notificado sobre itens de calendário novos e atualizados.</string>
     <string name="notification_desc_membership_update">Apenas Administrador, matrícula pendente ativada. Ser notificado quando uma matrícula de grupo for aceita ou rejeitada.</string>
     <string name="notification_desc_admin">Apenas Instrutor e Admin. Ser notificado sobre matrículas de cursos, relatórios gerados, conteúdo exportado, relatórios de migração, novos usuários de contas e novos grupos de alunos.</string>
     <string name="notification_desc_recording_ready">Ser notificado quando uma gravação de conferência estiver pronta.</string>
 
     <string name="enterAnswer">Inserir resposta</string>
-    <string name="resumeQuiz">Retomar o questionário</string>
+    <string name="resumeQuiz">Retomar o teste</string>
     <string name="allowed_attempts">Tentativas permitidas</string>
-    <string name="viewQuestions">Ver Perguntas</string>
+    <string name="viewQuestions">Visualizar Perguntas</string>
     <string name="unlimited">Sem limite</string>
-    <string name="viewResults">Exibir resultados</string>
+    <string name="viewResults">Visualizar resultados</string>
 
     <string name="toggleTimer">Alternar Contador</string>
     <string name="thirtySecondWarning">30 segundos restantes</string>
-    <string name="timeSpentFormat" formatted="false">Dinheiro gasto: %d minutos</string>
-    <string name="lockedIPAddress">Este questionário está bloqueado Somente está disponivel em certos locais.</string>
+    <string name="timeSpentFormat" formatted="false">Tempo gasto: %d minutos</string>
+    <string name="lockedIPAddress">Este teste está bloqueado Somente está disponível em certos locais.</string>
     <string name="lockedInvalidAccessCode">Código de acesso inválido</string>
 
     <string name="showFlaggedQuestions">Mostrar perguntas sinalizadas/não respondidas</string>
@@ -825,29 +838,26 @@
     </plurals>
     <string name="flagged">Sinalizado</string>
 
-    <string name="areYouSure">Tem certeza de que deseja enviar este quiz?</string>
-    <string name="submitQuiz">Enviar Quiz?</string>
+    <string name="areYouSure">Tem certeza de que deseja enviar este teste?</string>
+    <string name="submitQuiz">Enviar teste?</string>
     <plurals name="unanswered_quiz_questions">
-        <item quantity="one">Você tem %d pergunta não respondida.\nTem certeza de que deseja enviar este questionário?</item>
-        <item quantity="other">Você tem %d perguntas não respondidas.\nTem certeza de que deseja enviar este questionário?</item>
+        <item quantity="one">Você tem %d pergunta não respondida.\nTem certeza de que deseja enviar este teste?</item>
+        <item quantity="other">Você tem %d perguntas não respondidas.\nTem certeza de que deseja enviar este teste?</item>
     </plurals>
-    <string name="takeQuizAgain">Tomar Quiz Novamente</string>
-    <string name="autoSubmitting">Enviando questionário automaticamente&#8230;</string>
-    <string name="submitReasonTimedQuiz">O quiz foi enviado porque o tempo acabou.</string>
-    <string name="submitReasonLockAt">O quiz foi enviado porque a data de bloquear foi alcançada.</string>
-    <string name="quizSubmittedSuccessfully">Quiz enviado com sucesso.</string>
-    <string name="quizSubmittedFailure">Não foi possível enviar o questionário neste momento.</string>
+    <string name="takeQuizAgain">Fazer teste novamente</string>
+    <string name="autoSubmitting">Enviando teste automaticamente&#8230;</string>
+    <string name="submitReasonTimedQuiz">O teste foi enviado porque o tempo acabou.</string>
+    <string name="submitReasonLockAt">O teste foi enviado porque a data de bloquear foi alcançada.</string>
+    <string name="quizSubmittedSuccessfully">Teste enviado com sucesso.</string>
+    <string name="quizSubmittedFailure">Não foi possível enviar o teste neste momento.</string>
     <string name="almostDue">Prazo Quase Chegando!</string>
-    <string name="almostDueMsg">O prazo está quase chegando. Enviar agora para evitar que o seu questionário seja marcado como atrasado?</string>
+    <string name="almostDueMsg">O prazo de entrega está quase chegando. Enviar agora para evitar que o seu teste seja marcado como atrasado?</string>
     <string name="timeLimit">Limite de tempo</string>
-    <string name="cantStartQuiz">Não é possivel iniciar o quiz.</string>
+    <string name="cantStartQuiz">Não é possível iniciar o teste.</string>
     <string name="start">Iniciar</string>
     <string name="newPushNotifications">%1$s Novas notificações</string>
     <string name="like">curtir</string>
     <string name="likes">curte</string>
-
-    <string name="wear_reminder">Agendar Lembretes de Prazos</string>
-    <string name="wear_notifications">Ativar Notificações de Wear</string>
 
     <string name="color_1">Vermelho</string>
     <string name="color_2">Rosa quente</string>
@@ -895,7 +905,7 @@
     <string name="accountGroup">Grupo da conta</string>
 
     <!-- Recents -->
-    <string name="recents_empty">A partir da tela de personalização do curso adicionar um curso ou grupo para visualizá-los aqui.</string>
+    <string name="recents_empty">A partir da tela de personalização do curso, adicione um curso ou grupo para visualizá-lo aqui.</string>
 
     <string name="toolbar_close">Barra de ferramentas perto</string>
     <string name="favoriteDescription">Mostrar em \"Meus cursos\"</string>
@@ -907,6 +917,7 @@
     <string name="editDashboard">Editar painel</string>
     <string name="editDashboardDescriptor">Selecione quais cursos você gostaria de ver no Painel</string>
     <string name="a11y_editYourCourseList">Editar sua lista de cursos</string>
+
     <string name="dashboard">Painel</string>
     <string name="previous">Anterior</string>
     <string name="pageNum" formatted="false">Página %d de %d</string>
@@ -915,7 +926,7 @@
     <string name="restartingCanvas">Reiniciando o Canvas</string>
     <string name="languageDialogText">Alterar o idioma exigirá que o aplicativo seja reiniciado, tem certeza?</string>
     <string name="defaultLanguageWarning">O idioma padrão do seu sistema não é garantido que seja suportado e exigirá um reinicio, tem certeza?</string>
-    <string name="locked_mastery_paths">Bloqueado até que \"%s\" seja classificado</string>
+    <string name="locked_mastery_paths">Bloqueado até que \"%s\" seja avaliado</string>
     <string name="locked_icon">Ícone bloqueado</string>
     <string name="choose_assignment_group">Escolher grupo de tarefas</string>
     <string name="chooseAssignmentPath">Escolher caminho da tarefa</string>
@@ -931,11 +942,11 @@
     <string name="seeAll">Ver Todos</string>
     <string name="welcome">Bem-vindo(a)!</string>
     <string name="dismiss">Descartar</string>
-    <string name="tapToViewAnnouncement">Toque para visualizar o anúncio</string>
+    <string name="tapToViewAnnouncement">Toque para visualizar o aviso</string>
     <string name="acceptCourseInvitation">Aceitar</string>
     <string name="declineCourseInvitation">Recusar</string>
-
     <string name="outOf">de</string>
+
     <!-- File Strings -->
     <string name="noFilesSubtextCourse">Não há nenhum arquivo associado a este curso.</string>
     <string name="noFilesSubtextGroup">Não há nenhum arquivo associado a este grupo.</string>
@@ -957,7 +968,7 @@
     <string name="homePageIdForNotifications">Atividade recente</string>
     <string name="homePageIdForModules">Módulos</string>
     <string name="homePageIdForAssignments">Tarefas</string>
-    <string name="homePageIdForSyllabus">Programa de estudos</string>
+    <string name="homePageIdForSyllabus">Programa</string>
 
     <string name="contentDescriptionWidgetRefresh">Atualizar widget</string>
 
@@ -978,7 +989,7 @@
     <string name="downloadFailed">Falha do download</string>
     <string name="downloadSuccessful">Download bem-sucedido</string>
 
-    <string name="full_due_date_details">Detalhes completos da data de vencimento</string>
+    <string name="full_due_date_details">Detalhes completos do prazo de entrega</string>
     <string name="submissions">Envios</string>
     <string name="attachment">Anexo</string>
     <string name="contentDescription_back">Voltar</string>
@@ -993,9 +1004,10 @@
     </plurals>
     <string name="capitalTo">Para</string>
 
-    <string name="unableToViewInBrowser">Não conseguimos encontrar um app externo para visualizar esta ferramenta LTI.</string>
+    <string name="unableToViewInBrowser">Não conseguimos encontrar um aplicativo externo para visualizar esta ferramenta LTI.</string>
 
     <string name="commentUpload">Carregamento de comentários</string>
+
     <string name="frontPage">Primeira página</string>
     <string name="editPage">Editar página</string>
     <string name="description">Descrição</string>
@@ -1016,6 +1028,38 @@
     <string name="addChildErrorMessage">Emparelhamento falhou. Certifique-se de que o seu código de emparelhamento esteja correto e dentro do limite de tempo do uso.</string>
     <string name="gradeComplete">Concluído</string>
     <string name="gradeIncomplete">Incompleto</string>
+
+    <!--Teacher Strings-->
+    <string name="postPolicyTitle">Configurações de postagem</string>
+    <string name="postGradesTab">Postar notas</string>
+    <string name="hideGradesTab">Ocultar Notas</string>
+    <plurals name="gradesPostedCount">
+        <item quantity="one">%d nota atualmente postada</item>
+        <item quantity="other">%d notas atualmente postadas</item>
+    </plurals>
+    <plurals name="gradesHiddenCount">
+        <item quantity="one">%d nota atualmente oculta</item>
+        <item quantity="other">%d notas atualmente ocultas</item>
+    </plurals>
+    <string name="postPolicyPostTo">Postar em...</string>
+    <string name="postPolicySections">Seções específicas</string>
+    <string name="postToEveryoneTitle">Todo mundo</string>
+    <string name="postToEveryoneMessage">Notas estarão visíveis para todos os alunos</string>
+    <string name="postToGradedTitle">Avaliado</string>
+    <string name="postToGradedMessage">Notas estarão visíveis para alunos com envios avaliados</string>
+    <string name="postPolicyAllHiddenTitle">Todas as ocultas</string>
+    <string name="postPolicyAllHiddenMessage">Todas as notas estão atualmente ocultas.</string>
+    <string name="postPolicyAllPostedTitle">Todas as postadas</string>
+    <string name="postPolicyAllPostedMessage">Todas as notas estão atualmente postadas.</string>
+    <string name="postPolicyPostedToast">Notas postadas</string>
+    <string name="postPolicyHiddenToast">Notas ocultas</string>
+    <string name="postPolicyPostFailedToast">Falha em postar notas</string>
+    <string name="postPolicyHideFailedToast">Falha em ocultar notas</string>
+    <string name="gradeBeforePosting">Nota antes de postar</string>
+    <string name="gradeAfterPosting">Nota após postar</string>
+    <string name="gradeOverride">Substituição da nota</string>
+    <string name="currentGrade">Nota atual </string>
+
     <!-- Floating Recording View Strings -->
     <string name="recordingTimerDefault">00:00:00</string>
     <string name="recordingTimerContentDescription">%1$d horas, %2$d minutos e %3$d segundos</string>
@@ -1034,7 +1078,6 @@
 
     <string name="addVideoComment">Adicionar um comentário de vídeo</string>
     <string name="addAudioComment">Adicionar um comentário de áudio</string>
-
     <string name="audioRecordingError">Ocorreu um erro inesperado ao tentar gravar o áudio.</string>
     <string name="videoRecordingError">Ocorreu um erro inesperado ao tentar gravar o vídeo.</string>
 
@@ -1043,8 +1086,8 @@
     <string name="allowedAttemptsLabel">Tentativas permitidas:</string>
     <string name="instructions">Instruções</string>
     <string name="quizNoTimeLimit">Nenhum</string>
-    <string name="viewQuiz">Visualizar questionário</string>
-    <string name="viewDiscussion">Ver Discussão</string>
+    <string name="viewQuiz">Visualizar teste</string>
+    <string name="viewDiscussion">Visualizar Fórum</string>
     <string name="lockedModule">Esta tarefa está bloqueada pelo módulo \"%1$s\".</string>
     <string name="chooseMediaFile">Escolher arquivo de mídia</string>
     <string name="discussions_unknown_author">Autor desconhecido</string>
@@ -1053,4 +1096,5 @@
     <string name="a11y_letterGrade">%s.</string>
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
+
 </resources>

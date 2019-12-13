@@ -33,7 +33,6 @@
     <string name="fileUploadSuccess">アップロードできました</string>
     <string name="noNetwork">ネットワークが利用できません - 後で試してください。</string>
     <string name="uploadMessage">"アップロード進行中アップロードステータスの通知をチェックしてください。</string>
-    <string name="mediaUpload">メディアをアップロード</string>
     <string name="uploadingFile">ファイル&#8230;をアップロード中</string>
     <string name="errorUploadingFile">あなたのファイルをアップロードする際にエラーが発生しました。再度試してください。</string>
     <string name="fileSubmission">ファイル(複数可)を送信</string>
@@ -171,13 +170,12 @@
     <string name="noEvents">今日は、イベントはありません！</string>
     <string name="noEventsSubtext">少し休んでリラックスする、素晴らしい日のようです。</string>
     <string name="noSubmission">提出なし</string>
-    <string name="noSubmissionSubtext">あなたの課題を%1$sまでに%2$sに提出してください。</string>
     <string name="noSubmissionTeacher">この受講生にはまだ提出物がありません。</string>
-    <string name="noDueDate">この課題には期限がありません。</string>
     <string name="locked">ロックされています</string>
     <string name="lockedSubtext">この課題は%1$sまで%2$sでロックされます。</string>
     <string name="chooseFile">ファイルの選択</string>
     <string name="chooseFileSubtext">下のオプションをタップして、提出物にファイルを添付してください。</string>
+    <string name="chooseFileForUploadSubtext">下のオプションをタップして、アップロードするファイルを選択してください</string>
     <string name="noNotifications">通知なし</string>
     <string name="noNotificationsSubtext">まだ通知される事項がありません。</string>
     <string name="noTodos">よくできました！</string>
@@ -377,6 +375,7 @@
     <string name="utils_uploadToCanvas">Canvasにアップロードする</string>
     <string name="utils_uploadMyFiles">マイファイル</string>
     <string name="utils_uploadCourseFiles">コースファイル</string>
+    <string name="utils_uploadGroupFiles">グループファイル</string>
     <string name="utils_uploadToSubmissionComment">コメント送信をアップロード</string>
     <string name="utils_attachFile">ファイルを添付する</string>
     <string name="utils_with">と</string>

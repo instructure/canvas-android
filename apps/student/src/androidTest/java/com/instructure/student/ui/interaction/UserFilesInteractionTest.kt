@@ -15,50 +15,201 @@
  */
 package com.instructure.student.ui.interaction
 
+import android.app.Activity
+import android.app.Instrumentation
+import android.content.Intent
+import android.net.Uri
+import android.os.Bundle
+import android.os.Environment
+import android.os.Parcelable
 import com.instructure.canvas.espresso.Stub
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
+import com.instructure.pandautils.utils.FileUploadUtils
 import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.tokenLogin
+import org.junit.Before
 import org.junit.Test
+import java.io.File
+import android.os.Environment.getExternalStorageDirectory
+import android.provider.MediaStore
+import androidx.test.espresso.Espresso
+import androidx.test.espresso.intent.ActivityResultFunction
+import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.Intents.intending
+import androidx.test.espresso.intent.matcher.IntentMatchers.hasAction
+import androidx.test.espresso.intent.matcher.IntentMatchers.hasFlag
+import androidx.test.espresso.intent.matcher.IntentMatchers.hasType
+//import androidx.test.InstrumentationRegistry
+import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.rule.GrantPermissionRule
+import com.instructure.canvasapi2.utils.FileUtils
+import org.hamcrest.core.AllOf.allOf
+import org.junit.Rule
+import java.io.FileOutputStream
+import java.io.InputStream
+import java.io.OutputStream
+
 
 class UserFilesInteractionTest : StudentTest() {
     override fun displaysPageObjects() = Unit // Not used for interaction tests
 
-    @Stub
+    private lateinit var activity : Activity
+    private lateinit var activityResult: Instrumentation.ActivityResult
+
+    // This will give our test(s) permission to take a picture with the device camera
+    @Rule
+    @JvmField
+    val grantPermissionRule: GrantPermissionRule = GrantPermissionRule.grant(
+            android.Manifest.permission.RECORD_AUDIO,
+            android.Manifest.permission.CAMERA
+    )
+
+    @Before
+    fun setUp() {
+        // Read this at set-up, because it may become nulled out soon thereafter
+        activity = activityRule.activity
+
+        // Copy our sample.jpg file from the asserts area to the external cache dir
+        var inputStream : InputStream? = null
+        var outputStream : OutputStream? = null
+
+        try {
+            inputStream = InstrumentationRegistry.getInstrumentation().context.resources.assets.open("sample.jpg")
+            val dir = activity.externalCacheDir
+            val file = File(dir?.path, "sample.jpg")
+            outputStream = FileOutputStream(file)
+            inputStream.copyTo(outputStream)
+        }
+        finally {
+            if(inputStream != null) inputStream.close()
+            if(outputStream != null) {
+                outputStream.flush()
+                outputStream.close()
+            }
+        }
+
+        // Now create an ActivityResult that points to the sample.jpg in the external cache dir
+        val resultData = Intent()
+        val dir = activity.externalCacheDir
+        val file = File(dir?.path, "sample.jpg")
+        val uri = Uri.fromFile(file)
+        resultData.data = uri
+        activityResult = Instrumentation.ActivityResult(Activity.RESULT_OK, resultData)
+    }
+
+    // For the fileFromCamera test, the app code creates a path/name for the file containing
+    // the new photo.  We'll copy our sample.jpg picture to that location.
+    private fun copySampleTo(newFilePath: String) {
+        val fileFrom = File(activity.externalCacheDir, "sample.jpg")
+        val fileTo = File(activity.externalCacheDir, newFilePath)
+        fileFrom.copyTo(target = fileTo, overwrite = true)
+    }
+
+    // Should be able to upload a file from the user's device
+    // Mocks the result from the expected intent, then uploads it.
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.FILES, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P1, FeatureCategory.FILES, TestCategory.INTERACTION, false)
     fun testUpload_deviceFile() {
-        // Should be able to upload a file from the user's device
-    }
+        goToFilePicker()
 
-    @Stub
-    @Test
-    @TestMetaData(Priority.P1, FeatureCategory.FILES, TestCategory.INTERACTION, true)
-    fun testUpload_audioFile() {
-        // Should be able to upload an audio file
-    }
+        Intents.init()
+        try {
+            // Set up the "from device" mock result, then press "from device"
+            intending(
+                    allOf(
+                            hasAction(Intent.ACTION_GET_CONTENT),
+                            hasType("*/*"),
+                            hasFlag(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                    )
+            ).respondWith(activityResult)
+            fileUploadPage.chooseDevice()
+        }
+        finally {
+            Intents.release()
+        }
 
-    @Stub
-    @Test
-    @TestMetaData(Priority.P1, FeatureCategory.FILES, TestCategory.INTERACTION, true)
-    fun testUpload_file() {
-        // Should be able to upload a file
+        // Now press the "Upload" button and verify that the file shows up in our list
+        fileUploadPage.clickUpload()
+        // Should be on file list page now
+        fileListPage.refresh()
+        fileListPage.assertItemDisplayed("sample.jpg")
     }
-
-    @Stub
+    
+    // Should be able to upload a file from the camera
+    // Mocks the result from the expected intent, then uploads it.
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.FILES, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P1, FeatureCategory.FILES, TestCategory.INTERACTION, false)
     fun testUpload_fileFromCamera() {
-        // Should be able to upload a file from the camera
+
+        goToFilePicker()
+
+        var fileName : String? = null // Will be set from the intent
+
+        Intents.init()
+        try {
+            // Set up our mock result for the image capture, then choose "from camera"
+            // This is a little different than the others -- we have to make sure that the
+            // file/path specified in the intent is created and populated.  That means
+            // that we have to use "respondWithFunction", so that we can read the incoming intent.
+            intending(hasAction(MediaStore.ACTION_IMAGE_CAPTURE)).respondWithFunction(object : ActivityResultFunction {
+                override fun apply(intent: Intent?): Instrumentation.ActivityResult {
+                    val uri = intent?.extras?.get(MediaStore.EXTRA_OUTPUT)
+                    fileName = (uri as Uri).pathSegments.takeLast(1).first()
+                    val newFilePath = (uri as Uri).pathSegments.takeLast(2).joinToString(separator="/")
+                    copySampleTo(newFilePath)
+
+                    var resultData = Intent()
+                    resultData.data = uri
+                    return Instrumentation.ActivityResult(Activity.RESULT_OK, resultData)
+                }
+            })
+            fileUploadPage.chooseCamera()
+        }
+        finally {
+            Intents.release()
+        }
+
+        // Now upload our new image and verify that it now shows up in the file list.
+        fileUploadPage.clickUpload()
+        // Should be on fileListPage by now
+        fileListPage.refresh()
+        fileListPage.assertItemDisplayed(fileName!!)
     }
 
-    @Stub
+    // Should be able to upload a file from the user's photo gallery
+    // Mocks the result from the expected intent, then uploads it.
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.FILES, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P1, FeatureCategory.FILES, TestCategory.INTERACTION, false)
     fun testUpload_gallery() {
-        // Should be able to upload a file from the user's photo gallery
+        goToFilePicker()
+
+        Intents.init()
+
+        try {
+            // Set up the "from gallery" mock result, then press "from gallery"
+            intending(
+                    allOf(
+                            hasAction(Intent.ACTION_PICK),
+                            hasFlag(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                    )
+            ).respondWith(activityResult)
+            fileUploadPage.chooseGallery()
+        }
+        finally {
+            Intents.release()
+        }
+
+        // Now upload our file and verify that it shows up in the file list
+        fileUploadPage.clickUpload()
+        // Should be on file list page now
+        fileListPage.refresh()
+        fileListPage.assertItemDisplayed("sample.jpg")
+
     }
 
     @Stub
@@ -78,10 +229,39 @@ class UserFilesInteractionTest : StudentTest() {
     @Stub
     @Test
     @TestMetaData(Priority.P2, FeatureCategory.FILES, TestCategory.INTERACTION, true)
+    fun testView_createDirectory() {
+        // Should be able to create a directory and upload a file to that directory
+    }
+
+    @Stub
+    @Test
+    @TestMetaData(Priority.P2, FeatureCategory.FILES, TestCategory.INTERACTION, true)
     fun testView_previewImage() {
         // Should be able to preview an image file
     }
 
     // TODO - Add all interaction tests for supported file view/previews
 
+    // Set up some rudimentary mock data, navigate to the file list page, then
+    // initiate a file upload
+    private fun goToFilePicker() : MockCanvas {
+        val data = MockCanvas.init(
+                courseCount = 1,
+                favoriteCourseCount = 1,
+                studentCount = 1,
+                teacherCount = 1
+        )
+
+        val student = data.students.first()
+
+        val token = data.tokenFor(student)!!
+        tokenLogin(data.domain, token, student)
+        dashboardPage.waitForRender()
+
+        dashboardPage.gotoGlobalFiles()
+        fileListPage.clickAddButton()
+        fileListPage.clickUploadFileButton()
+
+        return data
+    }
 }

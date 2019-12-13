@@ -33,7 +33,6 @@
     <string name="fileUploadSuccess">Carregamento Bem sucedido</string>
     <string name="noNetwork">Rede não disponível - tente novamente mais tarde.</string>
     <string name="uploadMessage">"Carregamento em progresso. Verifique notificações para o status de carregamento.</string>
-    <string name="mediaUpload">Carregar Multimédia</string>
     <string name="uploadingFile">A carregar ficheiro&#8230;</string>
     <string name="errorUploadingFile">Ocorreu um erro ao carregar seu ficheiro. É favor tentar novamente.</string>
     <string name="fileSubmission">Submeter Ficheiro(s)</string>
@@ -171,13 +170,12 @@
     <string name="noEvents">Nenhum evento hoje!</string>
     <string name="noEventsSubtext">Parece um ótimo dia para descansar e relaxar.</string>
     <string name="noSubmission">Nenhuma submissão</string>
-    <string name="noSubmissionSubtext">Envie sua tarefa até %1$s às %2$s.</string>
     <string name="noSubmissionTeacher">Este aluno ainda não tem uma submissão.</string>
-    <string name="noDueDate">Esta atribuição não tem data de vencimento.</string>
     <string name="locked">Bloqueado</string>
     <string name="lockedSubtext">Esta tarefa está bloqueada até %1$s às %2$s.</string>
     <string name="chooseFile">Escolher um ficheiro</string>
     <string name="chooseFileSubtext">Anexe um ficheiro ao seu envio ao tocar em uma opção abaixo.</string>
+    <string name="chooseFileForUploadSubtext">Selecione um ficheiro para carregar ao tocar em uma opção abaixo.</string>
     <string name="noNotifications">Nenhuma notificação</string>
     <string name="noNotificationsSubtext">Não há nada para ser notificado ainda.</string>
     <string name="noTodos">Bem feito!</string>
@@ -380,6 +378,7 @@
     <string name="utils_uploadToCanvas">Carregar Para Canvas</string>
     <string name="utils_uploadMyFiles">Meus ficheiros</string>
     <string name="utils_uploadCourseFiles">Ficheiros de disciplinas</string>
+    <string name="utils_uploadGroupFiles">Arquivos de grupo</string>
     <string name="utils_uploadToSubmissionComment">Carregar para comentário de envio</string>
     <string name="utils_attachFile">Anexar um ficheiro</string>
     <string name="utils_with">com</string>

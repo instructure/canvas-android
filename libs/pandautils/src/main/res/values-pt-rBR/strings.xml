@@ -33,7 +33,6 @@
     <string name="fileUploadSuccess">Carregamento bem-sucedido</string>
     <string name="noNetwork">Rede indisponível - tente novamente mais tarde</string>
     <string name="uploadMessage">"Carregamento em andamento. Confira notificações para status do carregamento.</string>
-    <string name="mediaUpload">Upload de Mídia</string>
     <string name="uploadingFile">Carregando arquivo&#8230;</string>
     <string name="errorUploadingFile">Ocorreu um erro ao carregar seu arquivo. Por favor, tente novamente.</string>
     <string name="fileSubmission">Enviar Arquivo(s)</string>
@@ -43,6 +42,8 @@
 
     <string name="notificationChannelNameFileUploadsName">Notificações de carregamento</string>
     <string name="notificationChannelNameFileUploadsDescription">Notificações do Canvas para carregamentos em andamento.</string>
+
+
     <!-- Turn in Files -->
     <string name="chooseFileSource">Escolher Arquivo a Partir de &#8230;</string>
     <string name="addFile">Adicionar arquivo</string>
@@ -57,7 +58,6 @@
     <string name="file">Arquivo</string>
     <string name="fileTalkBack">Arquivo %s</string>
     <string name="folderTalkBack">Pasta %s</string>
-
     <string name="addItem">Adicionar item</string>
     <string name="assignment">Tarefa</string>
     <string name="attachedFiles">Arquivos Anexos</string>
@@ -79,13 +79,13 @@
     <string name="filesUploadedSuccessfully">Arquivos carregados com sucesso.</string>
     <string name="filesSubmittedSuccessfully">Arquivos enviados com sucesso</string>
     <string name="messageSentSuccessfully">Mensagem enviada com sucesso.</string>
-    <string name="shareWithCanvas">Outros apps podem compartilhar arquivos com o Canvas! Busque o ícone abaixo nos apps e toque no Canvas.</string>
-    <string name="shareWithCanvas2">Isso abrirá esse app. Em seguida, basta selecionar em qual curso e tarefa você deseja entregar o arquivo.</string>
+    <string name="shareWithCanvas">Outros aplicativos podem compartilhar arquivos com o Canvas! Busque o ícone abaixo nos aplicativos e toque no Canvas.</string>
+    <string name="shareWithCanvas2">Isso abrirá esse aplicativo. Em seguida, basta selecionar em qual curso e tarefa você deseja entregar o arquivo.</string>
     <string name="contentDescriptionSocialShare">Ícone de Compartilhar</string>
     <string name="submitAssignment">Enviar tarefa</string>
     <string name="assignmentHeader">Tarefa :</string>
     <string name="submittingAssignment">Enviando tarefa&#8230;</string>
-    <string name="conversations">Conversas </string>
+    <string name="conversations">Caixa de Entrada </string>
     <string name="inbox">Caixa de entrada </string>
     <string name="divider">Divisor</string>
     <string name="legal">Legal</string>
@@ -98,10 +98,10 @@
     <string name="filePermissionDenied">Arquivo não pode ser baixado sem conceder permissão.</string>
     <string name="pleaseTryAgain">Permissão concedida, tente novamente.</string>
     <string name="pickVideo">Selecionar um vídeo</string>
-
     <string name="assignmentSubmissionUpload">Carregando envio para %s</string>
     <string name="assignmentSubmissionError">Falha do envio para %s</string>
-    <string name="assignmentSubmissionComplete">Enviado com êxito %s</string>
+    <string name="assignmentSubmissionComplete">Enviado com sucesso %s</string>
+
     <!--Errors-->
     <string name="errorOccurred">Ocorreu um erro inesperado.</string>
     <string name="serverError">Ocorreu um erro no servidor.</string>
@@ -116,17 +116,17 @@
     <string name="noCourseSelected">Selecione um curso</string>
     <string name="selectCourse">Selecionar um curso</string>
     <string name="selectAssignment">Selecionar uma tarefa</string>
-    <string name="loadingAssignments">Carregando Tarefas..</string>
-    <string name="noAssignmentSelected">Por favor selecionar uma tarefa</string>
+    <string name="loadingAssignments">Carregando tarefas...</string>
+    <string name="noAssignmentSelected">Por favor, selecione uma tarefa</string>
     <string name="noAssignmentsWithFileUpload">Este curso não tem nenhuma tarefa que permite upload de arquivos.</string>
     <string name="teacherNotAllowedFileSubmission">Como professor neste curso, você não pode enviar arquivos</string>
     <string name="noFilesUploaded">Você ainda não selecionou nenhum arquivo.</string>
     <string name="oneOrMoreExtensionNotAllowed">Um ou mais arquivos tem uma extensão de arquivo que não é permitida</string>
     <string name="extensionNotAllowed">O tipo de arquivo selecionado não é permitido.</string>
     <string name="allowedExtensions">Extensões permitidas:&#160;</string>
-
-    <string name="quizNetworkErrorTitle">Erro de Questionário</string>
+    <string name="quizNetworkErrorTitle">Erro de Teste</string>
     <string name="quizNetworkErrorMessage">A conexão à Internet parece estar off-line.</string>
+
     <!-- Media Task Loader -->
     <string name="noDataConnection"> Por favor, verifique sua conexão de dados e tente novamente. </string>
     <string name="noApps">O seu dispositivo não tem nenhum aplicativo instalado que pode lidar com esse arquivo.</string>
@@ -137,27 +137,27 @@
     <string name="done">Feito</string>
 
     <!--Permissions-->
-    <string name="permissionDenied">Para utilizar esta característica, permissão precisa ser concedida preimeiro.</string>
+    <string name="permissionDenied">Para utilizar esta funcionalidade, a permissão precisa ser concedida primeiro.</string>
     <string name="noConnection">Sem conexão</string>
 
     <!--Empty Screens-->
     <string name="emptyCourseListMessage">Seus cursos e grupos favoritos aparecem aqui.</string>
     <string name="addCoursesGroups">Adicionar cursos/grupos</string>
-    <string name="noDiscussions">Sem discussões</string>
+    <string name="noDiscussions">Sem fóruns</string>
     <string name="noDiscussionsSubtext">Inicie uma conversa com outras pessoas.</string>
     <string name="noDiscussionsTeacher">Inicie uma conversa com os seus alunos.</string>
     <string name="nothingUnread">Caixa de Entrada Zero!</string>
     <string name="nothingUnreadSubtext">Você está em dia!</string>
-    <string name="nothingStarred">Sem mensagens marcadas como favoritas</string>
-    <string name="nothingStarredSubtext">Mantenha mensagens importantes nessa seção ao tocar na estrela em cada mensagem.</string>
+    <string name="nothingStarred">Sem mensagens estreladas</string>
+    <string name="nothingStarredSubtext">Mantenha mensagens importantes nessa turma ao tocar na estrela em cada mensagem.</string>
     <string name="nothingSent">Nada enviado</string>
     <string name="nothingSentSubtext">Você não enviou quaisquer mensagens.</string>
     <string name="nothingArchived">Nada arquivado</string>
     <string name="nothingArchivedSubtext">Você não arquivou quaisquer mensagens.</string>
-    <string name="noQuizzes">Sem questionários</string>
-    <string name="noQuizzesSubtext">Lamentamos, nenhum questionário existente.</string>
-    <string name="noQuizzesTeacher">Não há questionários publicados para mostrar.</string>
-    <string name="noAnnouncements">Sem anúncios</string>
+    <string name="noQuizzes">Sem testes</string>
+    <string name="noQuizzesSubtext">Lamentamos, nenhum teste existente.</string>
+    <string name="noQuizzesTeacher">Não há testes publicados para mostrar.</string>
+    <string name="noAnnouncements">Sem avisos</string>
     <string name="noAnnouncementsSubtext">Nada foi anunciado ainda.</string>
     <string name="noCourses">Sem Cursos</string>
     <string name="noCoursesSubtext">Parece que não há quaisquer cursos associados a essa conta. Visite a web para criar um curso hoje.</string>
@@ -171,21 +171,20 @@
     <string name="noEvents">Nenhum evento hoje!</string>
     <string name="noEventsSubtext">Parece um bom dia para descansar e relaxar.</string>
     <string name="noSubmission">Sem envio</string>
-    <string name="noSubmissionSubtext">Envie sua tarefa até %1$s às %2$s.</string>
     <string name="noSubmissionTeacher">Este aluno ainda não tem um envio.</string>
-    <string name="noDueDate">Esta tarefa não tem uma data de vencimento.</string>
     <string name="locked">Bloqueado(a)</string>
     <string name="lockedSubtext">Esta tarefa está bloqueada até %1$s às %2$s.</string>
     <string name="chooseFile">Escolher um arquivo</string>
     <string name="chooseFileSubtext">Anexe um arquivo ao seu envio ao tocar em uma opção abaixo.</string>
+    <string name="chooseFileForUploadSubtext">Selecione um arquivo para carregar ao tocar em uma opção abaixo</string>
     <string name="noNotifications">Sem notificações</string>
     <string name="noNotificationsSubtext">Ainda não há nada para ser notificado.</string>
     <string name="noTodos">Muito bem!</string>
     <string name="noTodosSubtext">A sua lista de tarefas está vazia. Hora de recarregar.</string>
-    <string name="noSyllabus">Sem programa de estudos</string>
-    <string name="noSyllabusSubtext">Um programa de estudos ainda não foi criado.</string>
+    <string name="noSyllabus">Sem programa</string>
+    <string name="noSyllabusSubtext">Um programa ainda não foi criado.</string>
     <string name="noBookmarks">Sem favoritos</string>
-    <string name="noBookmarksSubtext">Favoritos são atalhos para qualquer tela no app. Adicione-os na tela que você gostaria de marcar como favorita.</string>
+    <string name="noBookmarksSubtext">Favoritos são atalhos para qualquer tela no aplicativo. Adicione-os na tela que você gostaria de marcar como favorita.</string>
     <string name="noModules">Sem módulos</string>
     <string name="noModulesSubtext">Parece que ainda não há quaisquer módulos criados.</string>
     <string name="noPages">Sem páginas</string>
@@ -197,22 +196,22 @@
 
     <string name="inbox_all">Caixa de entrada</string>
     <string name="inbox_unread">Não lido</string>
-    <string name="inbox_starred">Marcada como favorita</string>
+    <string name="inbox_starred">Estrelado</string>
     <string name="inbox_sent">Enviado</string>
     <string name="inbox_archived">Arquivada</string>
 
-    <string name="forbidden">As respostas são visíveis apenas àqueles que publicaram pelo menos uma resposta.</string>
+    <string name="forbidden">As respostas são visíveis apenas àqueles que postaram pelo menos uma resposta.</string>
 
     <string name="like">Curtida</string>
     <string name="likes">Curtidas</string>
     <string name="lockedAssignmentNotModule">Esta tarefa está bloqueada.</string>
-    <string name="deletedEntryNoChildren">Esta entrada de discussão excluída não tem nenhuma resposta.</string>
+    <string name="deletedEntryNoChildren">Esta entrada de fórum excluída não tem nenhuma resposta.</string>
     <string name="deleted">Excluído</string>
     <string name="deleted_by">[Excluída por %1$s]</string>
-    <string name="lockedDiscussionDesc">Esta discussão faz parte do módulo %s e ainda não foi desbloqueada.</string>
-    <string name="gradedDiscussion">Discussão Avaliada</string>
+    <string name="lockedDiscussionDesc">Este fórum faz parte do módulo %s e ainda não foi desbloqueado.</string>
+    <string name="gradedDiscussion">Fórum Avaliado</string>
     <string name="pointsPossible">Pontos possíveis</string>
-    <string name="sideCommentEntry">Neste tipo de discussão, você não pode comentar em qualquer entrada neste nível.</string>
+    <string name="sideCommentEntry">Neste tipo de fórum, você não pode comentar em qualquer entrada neste nível.</string>
 
     <string name="accessibility_overflow">Excesso</string>
 
@@ -228,7 +227,7 @@
     <string name="formattedAvatarAction">Visualizar detalhes do usuário para %s.</string>
 
     <!-- App Names -->
-    <string name="utils_canvas">Fundamentos do</string>
+    <string name="utils_canvas">Canvas</string>
     <string name="utils_canvasTeacher">Canvas Teacher</string>
     <string name="utils_canvasParent">Canvas Parent</string>
     <string name="utils_polls">Canvas Polls</string>
@@ -271,53 +270,53 @@
     <string name="utils_dueDateAtTime" formatted="false">Para ser entregue em %1s às %2s</string>
     <string name="utils_noDateFiller">--</string>
     <string name="utils_availabilityLabel">Disponibilidade:</string>
-    <string name="utils_pinnedIcon">ícone para discussão anexada</string>
-    <string name="utils_pinDiscussion">Anexar Discussão</string>
-    <string name="utils_unpinDiscussion">Desanexar Discussão</string>
-    <string name="utils_discussionPinned">Discussão Anexada</string>
+    <string name="utils_pinnedIcon">Ícone para fórum fixado</string>
+    <string name="utils_pinDiscussion">Fixar Fórum</string>
+    <string name="utils_unpinDiscussion">Desafixar Fórum</string>
+    <string name="utils_discussionPinned">Fórum fixado</string>
     <string name="utils_pinnedDiscussions">Fixado</string>
-    <string name="utils_discussionUnpinned">Discussions (Discussões)</string>
-    <string name="utils_emptyDiscussions">Não há discussões para mostrar nesta seção.</string>
+    <string name="utils_discussionUnpinned">Fóruns</string>
+    <string name="utils_emptyDiscussions">Não há fóruns para mostrar nesta turma.</string>
     <string name="utils_description">Descrição</string>
     <string name="utils_allowThreadedReplies">Permitir respostas de tópicos</string>
-    <string name="utils_usersMustPost">Os alunos devem publicar antes de ver as respostas</string>
+    <string name="utils_usersMustPost">Os alunos devem postar antes de ver as respostas</string>
     <string name="utils_discussionsClosed">Fechado para comentários</string>
     <string name="utils_discussionsOpen">Reabrir para comentários</string>
     <string name="utils_discussionsPin">Fixar</string>
     <string name="utils_discussionsUnpin">Desafixar</string>
     <string name="utils_discussionsOptions">Opções</string>
-    <string name="utils_discussionsDeleteTitle">Excluir discussão?</string>
-    <string name="utils_discussionsDelete">Excluir discussão</string>
-    <string name="utils_discussionsDeleteMessage">Isso excluirá a discussão inteira e o tópico.</string>
-    <string name="utils_discussionSentSuccess">A resposta da discussão foi bem-sucedida.</string>
-    <string name="utils_discussionUpdateSuccess">A edição da discussão foi bem-sucedida.</string>
-    <string name="utils_discussionSentEmpty">A resposta da discussão não pode estar em branco.</string>
-    <string name="utils_discussionSentFailure">Não foi possível enviar a resposta da discussão nesse momento.</string>
-    <string name="utils_createDiscussion">Nova discussão</string>
-    <string name="utils_editDiscussion">Editar discussão</string>
-    <string name="utils_discussionDetails">Detalhes da discussão</string>
-    <string name="utils_discussionSuccessfullyUpdated">Discussão atualizada com sucesso.</string>
+    <string name="utils_discussionsDeleteTitle">Excluir fórum?</string>
+    <string name="utils_discussionsDelete">Excluir fórum</string>
+    <string name="utils_discussionsDeleteMessage">Isso excluirá a fórum inteira e o tópico.</string>
+    <string name="utils_discussionSentSuccess">A resposta do fórum foi bem-sucedida.</string>
+    <string name="utils_discussionUpdateSuccess">A edição do fórum foi bem-sucedida.</string>
+    <string name="utils_discussionSentEmpty">A resposta do fórum não pode estar em branco.</string>
+    <string name="utils_discussionSentFailure">Não foi possível enviar a resposta do fórum nesse momento.</string>
+    <string name="utils_createDiscussion">Nova fórum</string>
+    <string name="utils_editDiscussion">Editar fórum</string>
+    <string name="utils_discussionDetails">Detalhes do fórum</string>
+    <string name="utils_discussionSuccessfullyUpdated">Fórum atualizada com sucesso.</string>
     <string name="utils_saving">Salvando</string>
-    <string name="utils_discussionSuccessfullyCreated">Discussão criada com sucesso.</string>
-    <string name="utils_discussionSuccessfulAttachmentNot">Não foi possível adicionar o anexo a esta discussão. Verifique a sua cota de arquivos e tente novamente.</string>
+    <string name="utils_discussionSuccessfullyCreated">Fórum criada com sucesso.</string>
+    <string name="utils_discussionSuccessfulAttachmentNot">Não foi possível adicionar o anexo a este fórum. Verifique a sua cota de arquivos e tente novamente.</string>
     <string name="utils_noTitle">Sem título</string>
     <string name="utils_discussionsReplies_Title">Respostas</string>
     <string name="utils_contentDescriptionDiscussionsOverflow">Mais opções</string>
     <string name="utils_discussionsUnreadRepliesBlank" formatted="false">%s %s %s</string>
     <string name="utils_lastPost" formatted="false">Última postagem %s</string>
     <string name="utils_postedOnDate">Postado em %s</string>
-    <string name="utils_discussionPostBeforeRepliesEmptyText">As respostas são visíveis apenas àqueles que publicaram pelo menos uma resposta.</string>
-    <string name="utils_createAnnouncementDelayPosting">Atraso ao publicar</string>
-    <string name="utils_postAt">Publicar em</string>
+    <string name="utils_discussionPostBeforeRepliesEmptyText">As respostas são visíveis apenas àqueles que postaram pelo menos uma resposta.</string>
+    <string name="utils_createAnnouncementDelayPosting">Atraso ao postar</string>
+    <string name="utils_postAt">Postar em</string>
     <string name="utils_postDate">Data de postagem</string>
     <string name="utils_postTime">Hora de postagem</string>
-    <string name="utils_editAnnouncementTitle">Editar anúncio</string>
-    <string name="utils_createAnnouncementTitle">Novo Anúncio</string>
-    <string name="utils_announcementDetails">Detalhes do anúncio</string>
+    <string name="utils_editAnnouncementTitle">Editar aviso</string>
+    <string name="utils_createAnnouncementTitle">Novo Aviso</string>
+    <string name="utils_announcementDetails">Detalhes do aviso</string>
     <string name="utils_createAnnouncementNoDescription">Uma descrição é necessária</string>
-    <string name="utils_errorSavingAnnouncement">Ocorreu um erro ao tentar salvar este anúncio. Tente novamente.</string>
-    <string name="utils_announcementSuccessfullyUpdated">Anúncio atualizado com sucesso.</string>
-    <string name="utils_announcementSuccessfullyCreated">Anúncio criado com sucesso.</string>
+    <string name="utils_errorSavingAnnouncement">Ocorreu um erro ao tentar salvar este aviso. Tente novamente.</string>
+    <string name="utils_announcementSuccessfullyUpdated">Aviso atualizado com sucesso.</string>
+    <string name="utils_announcementSuccessfullyCreated">Aviso criado com sucesso.</string>
 
     <plurals name="utils_discussionsUnread">
         <item quantity="one">%s Não lido(s)</item>
@@ -331,8 +330,8 @@
     </plurals>
 
     <!-- Assignment Override !-->
-    <string name="utils_unlockAfterDueDateError">A data de desbloqueio não pode ser posterior à data de entrega</string>
-    <string name="utils_lockBeforeDueDateError">A data de bloqueio não pode ser anterior à data de entrega</string>
+    <string name="utils_unlockAfterDueDateError">A data de desbloqueio não pode ser posterior ao prazo de entrega</string>
+    <string name="utils_lockBeforeDueDateError">A data de bloqueio não pode ser anterior ao prazo de entrega</string>
     <string name="utils_lockAfterUnlockError">A data de bloqueio não pode ser anterior à data de desbloqueio</string>
     <string name="utils_assigneeBlankError">Cessionário não pode estar em branco</string>
     <string name="utils_assignTo">Atribuir a</string>
@@ -342,7 +341,7 @@
     <string name="utils_availableFromTime">Disponível a partir da hora</string>
     <string name="utils_availableToDate">Disponível para a data</string>
     <string name="utils_availableToTime">Disponível para a hora</string>
-    <string name="utils_dueDate">Data de vencimento</string>
+    <string name="utils_dueDate">Prazo de entrega</string>
     <string name="utils_dueTime">Vencimento</string>
     <string name="utils_addNew">Adicionar novo</string>
 
@@ -380,12 +379,14 @@
     <string name="utils_uploadToCanvas">Fazer Upload Para Canvas</string>
     <string name="utils_uploadMyFiles">Meus arquivos</string>
     <string name="utils_uploadCourseFiles">Arquivos do Curso</string>
+    <string name="utils_uploadGroupFiles">Arquivos do grupo</string>
     <string name="utils_uploadToSubmissionComment">Carregar em comentário de envio</string>
     <string name="utils_attachFile">Anexar um arquivo</string>
     <string name="utils_with">com</string>
-    <string name="notificationPrimaryInboxTitle">Canvas Notification</string>
+
+    <string name="notificationPrimaryInboxTitle">Notificação do Canvas</string>
     <string name="notificationChannelNamePrimary">Notificações gerais do Canvas</string>
-    <string name="notificationChannelDescriptionPrimary">Uma maior configuração de notificações pode ser feita dentro da seção de Preferências de Notificação do Canvas.</string>
+    <string name="notificationChannelDescriptionPrimary">Uma maior configuração de notificações pode ser feita dentro da turma de Preferências de Notificação do Canvas.</string>
 
     <string name="copyLinkAddress">Copiar endereço do link</string>
     <string name="copyLink">Copiar Link</string>
@@ -395,13 +396,13 @@
     <string name="replace">Substituir</string>
     <string name="shareLink">Compartilhar link</string>
 
-    <string name="utils_launchExternalTool">Lançar Ferramenta Externa</string>
+    <string name="utils_launchExternalTool">Executar ferramenta externa</string>
     <string name="utils_externalToolTitle">Ferramenta externa</string>
     <string name="utils_placeholderTitle">Ferramenta externa</string>
     <string name="utils_placeholderDescription">Visite sua conta web do Canvas para editar esta ferramenta externa.</string>
-    <string name="utils_unableToViewInBrowser">Não conseguimos encontrar um app externo para visualizar esta ferramenta LTI.</string>
+    <string name="utils_unableToViewInBrowser">Não conseguimos encontrar um aplicativo externo para visualizar esta ferramenta LTI.</string>
 
-    <string name="utils_unsupportedFileMessage">Não foi possível exibir este arquivo. Use o botão abaixo para abrir o arquivo com outro app no seu dispositivo.</string>
+    <string name="utils_unsupportedFileMessage">Não foi possível exibir este arquivo. Use o botão abaixo para abrir o arquivo com outro aplicativo no seu dispositivo.</string>
     <string name="utils_openWithAnotherApp">Abrir com...</string>
     <string name="utils_couldNotPlayFormat">Este formato de mídia não é suportado</string>
     <string name="utils_fullscreen">tela cheia</string>
@@ -416,14 +417,14 @@
     <string name="image_uploading">Imagem carregando...</string>
     <string name="image_upload_error">Erro de carregamento da imagem</string>
     <string name="retry">Tentar novamente</string>
-
     <string name="search">Pesquisar</string>
-    <string name="searchAssignmentsHint">Buscar Tarefas</string>
-    <string name="searchAnnouncementsHint">Pesquisar anúncios</string>
-    <string name="searchDiscussionsHint">Pesquisar discussões</string>
+    <string name="searchAssignmentsHint">Buscar tarefas</string>
+    <string name="searchAnnouncementsHint">Pesquisar avisos</string>
+    <string name="searchDiscussionsHint">Pesquisar fóruns</string>
     <string name="searchPagesHint">Pesquisar páginas</string>
-    <string name="searchQuizzesHint">Pesquisar questionários</string>
+    <string name="searchQuizzesHint">Pesquisar testes</string>
     <string name="noItemsMatchingQuery">Nenhum item corresponde \"%s\"</string>
+
     <string name="selected">Selecionado</string>
 
 </resources>

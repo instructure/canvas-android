@@ -33,7 +33,6 @@
     <string name="fileUploadSuccess">Wedi llwyddo i lwytho i fyny</string>
     <string name="noNetwork">Rhwydwaith ddim ar gael - rhowch gynnig arall arni rywbryd eto.</string>
     <string name="uploadMessage">"Proses lwytho i fyny ar waith. Gwirio hysbysiadau am statws llwytho i fyny.</string>
-    <string name="mediaUpload">Llwytho cyfryngau i fyny</string>
     <string name="uploadingFile">Llwytho ffeil i fyny&#8230;</string>
     <string name="errorUploadingFile">Gwall wrth lwytho eich ffeil i fyny. Rhowch gynnig arall arni.</string>
     <string name="fileSubmission">Cyflwyno Ffeil(iau)</string>
@@ -171,13 +170,12 @@
     <string name="noEvents">Dim Digwyddiadau Heddiw!</string>
     <string name="noEventsSubtext">Mae’n edrych fel diwrnod gwych i ymlacio.</string>
     <string name="noSubmission">Dim cyflwyniad</string>
-    <string name="noSubmissionSubtext">Cyflwynwch eich aseiniad gyda %1$s am %2$s.</string>
     <string name="noSubmissionTeacher">Does gan y myfyriwr hwn ddim cyflwyniad eto.</string>
-    <string name="noDueDate">Does gan yr aseiniad hwn ddim dyddiad erbyn.</string>
     <string name="locked">Wedi Cloi</string>
     <string name="lockedSubtext">Mae’r aseiniad hwn wedi’i gloi tan %1$s am %2$s.</string>
     <string name="chooseFile">Dewiswch Ffeil</string>
     <string name="chooseFileSubtext">Atodwch ffeil i’ch trafodaeth trwy dapio opsiwn isod.</string>
+    <string name="chooseFileForUploadSubtext">Dewiswch ffeil i’w llwytho i lawr trwy dapio opsiwn isod</string>
     <string name="noNotifications">Dim Hysbysiadau</string>
     <string name="noNotificationsSubtext">Does dim byd i’w hysbysu eto.</string>
     <string name="noTodos">Da Iawn!</string>
@@ -380,6 +378,7 @@
     <string name="utils_uploadToCanvas">Llwytho i fyny i Canvas</string>
     <string name="utils_uploadMyFiles">Fy Ffeiliau</string>
     <string name="utils_uploadCourseFiles">Ffeiliau Cwrs</string>
+    <string name="utils_uploadGroupFiles">Ffeiliau Grŵp</string>
     <string name="utils_uploadToSubmissionComment">Llwytho i fyny i Sylw ar y cyflwyniad</string>
     <string name="utils_attachFile">Atodi ffeil</string>
     <string name="utils_with">gyda</string>

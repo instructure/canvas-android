@@ -33,7 +33,6 @@
     <string name="fileUploadSuccess">i angitu te tukuake</string>
     <string name="noNetwork">Kaore i te wātea te whatunga – tēnā koa ngana anō i muri mai.</string>
     <string name="uploadMessage">"Kei te mahi te Tukuake ake. Āta titiro ngā whakamōhiotanga mo te tūnga tukuake.</string>
-    <string name="mediaUpload">Tukuake pāpāho</string>
     <string name="uploadingFile">tukuake kōnae &#8230;</string>
     <string name="errorUploadingFile">He hapa i puta i te wā e tukuake ana i tō kōnae Tēnā koa ngana anō.</string>
     <string name="fileSubmission">Tuku Kōnae (s)</string>
@@ -170,13 +169,12 @@
     <string name="noEvents">Kaore he tauwhāinga i tēnei rā!</string>
     <string name="noEventsSubtext">Ko te āhua nei he rā pai ki te whakatā me te whakātea.</string>
     <string name="noSubmission">Kāore he Tukunga</string>
-    <string name="noSubmissionSubtext">Tukunga to whakataunga mā %1$s ī %2$s.</string>
     <string name="noSubmissionTeacher">Kaore he tukunga mo tēnei ākonga</string>
-    <string name="noDueDate">Kaore he rā tika mo tēnei whakataunga.</string>
     <string name="locked">Kua rakaina</string>
     <string name="lockedSubtext">Kua rakaina tēnei whakataunga kī %1$s mā %2$s.</string>
     <string name="chooseFile">Kōwhiria he Kōnae</string>
     <string name="chooseFileSubtext">Tapiritia he kōnae ki tō tāpaetanga ma te patopato kōwhiringa i raro.</string>
+    <string name="chooseFileForUploadSubtext">Tīpakohia he kōnae ki tō tukuake ma te patopato kōwhiringa i raro.</string>
     <string name="noNotifications">Kaore he whakamōhiotanga</string>
     <string name="noNotificationsSubtext">Kaore he mea hei whakamōhio i tēnei wā.</string>
     <string name="noTodos">Tino Pai!</string>
@@ -379,6 +377,7 @@
     <string name="utils_uploadToCanvas">tukuake ki Canvas</string>
     <string name="utils_uploadMyFiles">Ngā kōnae toku</string>
     <string name="utils_uploadCourseFiles">Ngā kōnae akoranga</string>
+    <string name="utils_uploadGroupFiles">Ngā kōnae rōpū</string>
     <string name="utils_uploadToSubmissionComment">Tukuake kī Tapaetanga Kōrero</string>
     <string name="utils_attachFile">Tāpiri he kōnae</string>
     <string name="utils_with">ki</string>

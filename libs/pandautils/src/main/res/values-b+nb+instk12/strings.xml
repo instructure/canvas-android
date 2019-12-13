@@ -33,7 +33,6 @@
     <string name="fileUploadSuccess">Opplastingen var vellykket</string>
     <string name="noNetwork">Nettverk ikke tilgjengelig - prøv igjen senere.</string>
     <string name="uploadMessage">"Opplasting pågår Sjekk varsler for opplastingsstatus.</string>
-    <string name="mediaUpload">Mediaopplasting</string>
     <string name="uploadingFile">Laster opp fil&#8230;</string>
     <string name="errorUploadingFile">Avvik ved opplasting av filen. Vennligst prøv igjen.</string>
     <string name="fileSubmission">Send inn filer</string>
@@ -170,13 +169,12 @@
     <string name="noEvents">Ingen arrangementer i dag!</string>
     <string name="noEventsSubtext">Det ser ut som dette er en flott dag til å slappe av.</string>
     <string name="noSubmission">Ingen innlevering</string>
-    <string name="noSubmissionSubtext">Sen dine oppdrag innen %1$s på %2$s.</string>
     <string name="noSubmissionTeacher">Denne eleven har ingen innlevering ennå.</string>
-    <string name="noDueDate">Dette oppdraget har ingen tidsfrist.</string>
     <string name="locked">Låst</string>
     <string name="lockedSubtext">Dette oppdraget er låst frem til %1$s på %2$s.</string>
     <string name="chooseFile">Velg en fil</string>
     <string name="chooseFileSubtext">Legg ved en fil til din innlevering ved å trykke et valg under.</string>
+    <string name="chooseFileForUploadSubtext">Velg en fil til opplasting ved å trykke på et av valgene nedenfor</string>
     <string name="noNotifications">Ingen anmerkninger</string>
     <string name="noNotificationsSubtext">Det er ingen bemerkninger ennå.</string>
     <string name="noTodos">Bra gjort!</string>
@@ -379,6 +377,7 @@
     <string name="utils_uploadToCanvas">Last opp til Canvas</string>
     <string name="utils_uploadMyFiles">Mine filer</string>
     <string name="utils_uploadCourseFiles">Filer for fag</string>
+    <string name="utils_uploadGroupFiles">Gruppefiler</string>
     <string name="utils_uploadToSubmissionComment">Last opp til sendt inn kommentar</string>
     <string name="utils_attachFile">Legg ved en fil</string>
     <string name="utils_with">med</string>

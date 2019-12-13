@@ -24,7 +24,7 @@ class Respawn extends StatefulWidget {
   _RespawnState createState() => _RespawnState();
 
   static _RespawnState of(BuildContext context) {
-    return context.ancestorStateOfType(const TypeMatcher<_RespawnState>());
+    return context.findAncestorStateOfType<_RespawnState>();
   }
 }
 

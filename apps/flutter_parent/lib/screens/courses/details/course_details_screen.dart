@@ -60,9 +60,9 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                 title: Text(model.course?.name ?? ''),
                 bottom: TabBar(
                   tabs: [
-                    Tab(text: AppLocalizations.of(context).courseGradesLabel.toUpperCase()),
-                    Tab(text: AppLocalizations.of(context).courseSyllabusLabel.toUpperCase()),
-                    Tab(text: AppLocalizations.of(context).courseSummaryLabel.toUpperCase()),
+                    Tab(text: L10n(context).courseGradesLabel.toUpperCase()),
+                    Tab(text: L10n(context).courseSyllabusLabel.toUpperCase()),
+                    Tab(text: L10n(context).courseSummaryLabel.toUpperCase()),
                   ],
                 ),
               ),
@@ -70,7 +70,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
               floatingActionButton: FloatingActionButton(
                 onPressed: () => _sendMessage(),
                 child: Semantics(
-                  label: AppLocalizations.of(context).courseMessageHint,
+                  label: L10n(context).courseMessageHint,
                   child: Padding(
                     padding: const EdgeInsets.only(left: 4, top: 4),
                     child: Icon(CanvasIconsSolid.comment),
@@ -93,7 +93,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
     // Get the child widget to show in the refresh indicator
     if (model.state == ViewState.Error) {
       return RefreshIndicator(
-        child: FullScreenScrollContainer(children: [Text(AppLocalizations.of(context).unexpectedError)]),
+        child: FullScreenScrollContainer(children: [Text(L10n(context).unexpectedError)]),
         onRefresh: () async {
           return model.loadData(refreshCourse: true);
         },

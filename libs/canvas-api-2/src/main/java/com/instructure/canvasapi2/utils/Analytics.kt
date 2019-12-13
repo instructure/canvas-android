@@ -19,6 +19,11 @@ package com.instructure.canvasapi2.utils
 
 import android.os.Bundle
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.instructure.canvasapi2.utils.AnalyticsParamConstants.ASSIGNMENT_ID
+import com.instructure.canvasapi2.utils.AnalyticsParamConstants.CANVAS_CONTEXT_ID
+import com.instructure.canvasapi2.utils.AnalyticsParamConstants.DOMAIN_PARAM
+import com.instructure.canvasapi2.utils.AnalyticsParamConstants.SCREEN_OF_ORIGIN
+import com.instructure.canvasapi2.utils.AnalyticsParamConstants.USER_CONTEXT_ID
 
 object Analytics {
 
@@ -72,6 +77,12 @@ object AnalyticsEventConstants {
     const val SUBMIT_FILEUPLOAD_FAILED = "submit_fileupload_failed"
     const val SUBMIT_FILEUPLOAD_SUCCEEDED = "submit_fileupload_succeeded"
     const val UNSUPPORTED_SUBMISSION_CONTENT = "unsupported_submission_content"
+
+    /* Panda Avatar */
+    const val PANDA_AVATAR_EDITOR_OPENED = "panda_avatar_editor_opened"
+    const val PANDA_AVATAR_SAVED = "panda_avatar_saved"
+    const val PANDA_AVATAR_SET_AS_AVATAR = "panda_avatar_set_as_avatar"
+    const val PANDA_AVATAR_SHARED = "panda_avatar_shared"
 
     /* Refresh Token Events */
     const val REFRESH_TOKEN = "refresh_token"
