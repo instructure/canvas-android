@@ -19,6 +19,8 @@ import 'package:flutter_parent/utils/crash_utils.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   CrashUtils.init(); // Sets up crash screen widget and crash report behavior
   setupLocator();
   await ApiPrefs.init();
