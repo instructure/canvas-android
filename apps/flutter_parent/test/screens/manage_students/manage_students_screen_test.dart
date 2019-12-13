@@ -1,3 +1,17 @@
+// Copyright (C) 2019 - present Instructure, Inc.
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, version 3 of the License.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 import 'dart:async';
 import 'dart:math';
 import 'dart:ui';
@@ -25,9 +39,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mockito/mockito.dart';
 
-import '../utils/accessibility_utils.dart';
-import '../utils/network_image_response.dart';
-import '../utils/test_app.dart';
+import '../../utils/accessibility_utils.dart';
+import '../../utils/network_image_response.dart';
+import '../../utils/test_app.dart';
 
 void main() {
   mockNetworkImageResponse();
@@ -40,13 +54,11 @@ void main() {
   }
 
   void _clickFAB(WidgetTester tester) async {
-    // Click FAB
     await tester.tap(find.byType(FloatingActionButton));
     await tester.pumpAndSettle();
   }
 
   void _clickQR(WidgetTester tester) async {
-    // Click QR code
     await tester.tap(find.text(AppLocalizations().qrCode));
     await tester.pumpAndSettle();
   }
@@ -75,71 +87,69 @@ void main() {
       expect(find.text('Sally'), findsOneWidget);
     });
 
-    // TODO: The following two tests require updating the error in the snapshot that the FutureBuilder gets in the main ManageStudentScreen widget.
-    //  There doesn't appear to be a way to change that error state in tests.
+    testWidgetsWithAccessibilityChecks('Error on pull to refresh', (tester) async {
+      var interactor = _MockManageStudentsInteractor();
+      Completer completer = Completer<List<User>>();
+      when(interactor.getStudents(forceRefresh: anyNamed('forceRefresh'))).thenAnswer((_) => completer.future);
+      _setupLocator(interactor);
 
-//    testWidgetsWithAccessibilityChecks('Error on pull to refresh', (tester) async {
-//      // Mock the behavior of the interactor so it returns a Future error
-//      var interactor = _MockManageStudentsInteractor();
-//      Completer completer = Completer<List<User>>();
-////      when(interactor.getStudents(forceRefresh: anyNamed('forceRefresh')))
-////          .thenAnswer((_) => completer.future.catchError((_) {
-////                completer.completeError('');
-////              }));
-//
-//      when(interactor.getStudents(forceRefresh: anyNamed('forceRefresh')))
-//          .thenAnswer((_) => Future<List<User>>.error('error'));
-//
-//      _setupLocator(interactor);
-//
-//      List<User> observedStudents = [];
-//
-//      // Start the screen with one user
-//      await tester.pumpWidget(TestApp(ManageStudentsScreen(observedStudents)));
-//      await tester.pumpAndSettle();
-//
-//      // Pull to refresh
-//      await tester.drag(find.byType(RefreshIndicator), const Offset(0, 200));
-//      await tester.pump();
-//      await tester.pump(Duration(seconds: 3));
-//      await tester.pumpAndSettle();
-//      print('After completer error');
-//
-//      // Check if we show the error message
-//      expect(find.text(AppLocalizations().errorLoadingStudents), findsOneWidget);
-////      expect(find.text('Retry'), findsOneWidget);
-//    });
+      // Start the screen with no users
+      await tester.pumpWidget(TestApp(ManageStudentsScreen([]), highContrast: true));
+      await tester.pumpAndSettle();
 
-//    testWidgetsWithAccessibilityChecks('Retry button on error page loads students', (tester) async {
-//      var observedStudents = [_mockUser('Billy')];
-//
-//      // Mock the behavior of the interactor so it returns a Future error
-//      final interactor = _MockManageStudentsInteractor();
-//      when(interactor.getStudents(forceRefresh: anyNamed('forceRefresh'))).thenAnswer((_) => Future.error('error'));
-//      _setupLocator(interactor);
-//
-//      // Start the page with a single student
-//      await tester.pumpWidget(TestApp(ManageStudentsScreen(observedStudents)));
-//      await tester.pumpAndSettle();
-//
-//      // Pull to refresh, causing an error which will show the error screen with the retry button
-//      await tester.drag(find.byType(RefreshIndicator), const Offset(0, 200));
-//      await tester.pumpAndSettle();
-//
-//      // Tap retry button to refresh list
-//      await tester.tap(find.text(AppLocalizations().retry));
-//      await tester.pumpAndSettle();
-//
-//      // Change the interactor to return a student instead of an error
-//      when(interactor.getStudents(forceRefresh: anyNamed('forceRefresh')))
-//          .thenAnswer((_) => Future.value(observedStudents));
-//
-//      await tester.drag(find.byType(RefreshIndicator), const Offset(0, 200));
-//      await tester.pumpAndSettle();
-//
-//      // See if we got the student back from the retry
-//      expect(find.text('Billy'), findsOneWidget);
-//    });
+      // Pull to refresh
+      await tester.drag(find.byType(RefreshIndicator), const Offset(0, 250));
+      await tester.pump();
+      await tester.pump(Duration(milliseconds: 300));
+
+      // Make sure we called into the interactor to get the student list
+      verify(interactor.getStudents(forceRefresh: true)).called(1);
+
+      completer.completeError('Fake Error');
+      await tester.pumpAndSettle();
+
+      // Check if we show the error message
+      expect(find.text(AppLocalizations().errorLoadingStudents), findsOneWidget);
+    });
+
+    testWidgetsWithAccessibilityChecks('Retry button on error page loads students', (tester) async {
+      var observedStudents = [_mockUser('Billy')];
+
+      // Mock interactor to return an error when retrieving student list
+      var interactor = _MockManageStudentsInteractor();
+      Completer completer = Completer<List<User>>();
+      when(interactor.getStudents(forceRefresh: anyNamed('forceRefresh'))).thenAnswer((_) => completer.future);
+      _setupLocator(interactor);
+
+      // Start the page with a single student
+      await tester.pumpWidget(TestApp(ManageStudentsScreen(observedStudents)));
+      await tester.pumpAndSettle();
+
+      // Pull to refresh, causing an error which will show the error screen with the retry button
+      await tester.drag(find.byType(RefreshIndicator), const Offset(0, 250));
+      await tester.pump();
+      await tester.pump(Duration(milliseconds: 300));
+
+      // Make sure we called into the interactor to get the student list
+      verify(interactor.getStudents(forceRefresh: true)).called(1);
+
+      completer.completeError('Fake Error');
+      await tester.pumpAndSettle();
+
+      // Tap retry button to refresh list
+      await tester.tap(find.text(AppLocalizations().retry));
+      await tester.pumpAndSettle();
+
+      // Change the interactor to return a student instead of an error
+      when(interactor.getStudents(forceRefresh: anyNamed('forceRefresh')))
+          .thenAnswer((_) => Future.value(observedStudents));
+
+      await tester.drag(find.byType(RefreshIndicator), const Offset(0, 200));
+      await tester.pumpAndSettle();
+
+      // See if we got the student back from the retry
+      expect(find.text('Billy'), findsOneWidget);
+    });
   });
 
   group('Student List', () {
@@ -194,7 +204,10 @@ void main() {
       _setupLocator();
 
       // Start the page with a 'null' list of students
-      await tester.pumpWidget(TestApp(ManageStudentsScreen(null)));
+      await tester.pumpWidget(TestApp(
+        ManageStudentsScreen(null),
+        highContrast: true,
+      ));
       await tester.pumpAndSettle();
 
       // See if we are showing the empty message
@@ -207,7 +220,10 @@ void main() {
       List<User> observedStudents = [];
 
       // Start the page with an empty list of students
-      await tester.pumpWidget(TestApp(ManageStudentsScreen(observedStudents)));
+      await tester.pumpWidget(TestApp(
+        ManageStudentsScreen(observedStudents),
+        highContrast: true,
+      ));
       await tester.pumpAndSettle();
 
       // See if we are showing the empty message

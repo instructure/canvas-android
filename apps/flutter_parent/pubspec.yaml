@@ -64,8 +64,6 @@ dependencies:
 
   url_launcher: 5.2.5
 
-  qrscan: ^0.2.17
-
 dev_dependencies:
   flutter_driver:
     sdk: flutter

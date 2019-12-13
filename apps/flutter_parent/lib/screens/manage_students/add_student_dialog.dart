@@ -22,7 +22,7 @@ import 'manage_students_interactor.dart';
 class AddStudentDialog extends StatefulWidget {
   final _interactor = locator<ManageStudentsInteractor>();
 
-  String _pairingCode = '';
+  final String _pairingCode;
 
   AddStudentDialog(this._pairingCode, {Key key});
 
@@ -43,7 +43,7 @@ class AddStudentDialogState extends State<AddStudentDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-      title: Text(AppLocalizations.of(context).addStudent),
+      title: Text(L10n(context).addStudent),
       content: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
@@ -51,7 +51,7 @@ class AddStudentDialogState extends State<AddStudentDialog> {
           Padding(
             padding: const EdgeInsets.only(bottom: 20.0),
             child: Text(
-              AppLocalizations.of(context).pairingCodeEntryExplanation,
+              L10n(context).pairingCodeEntryExplanation,
               style: Theme.of(context).textTheme.body1.copyWith(fontSize: 12.0),
             ),
           ),
@@ -95,10 +95,10 @@ class AddStudentDialogState extends State<AddStudentDialog> {
               _formKey.currentState.save();
             },
             decoration: InputDecoration(
-              hintText: AppLocalizations.of(context).pairingCode,
-              hintStyle: TextStyle(color: Colors.grey),
+              hintText: L10n(context).pairingCode,
+              hintStyle: TextStyle(color: ParentColors.ash),
               contentPadding: EdgeInsets.only(bottom: 2),
-              errorText: _pairingCodeError ? AppLocalizations.of(context).errorPairingFailed : null,
+              errorText: _pairingCodeError ? L10n(context).errorPairingFailed : null,
             ),
           ),
         ],
@@ -106,7 +106,7 @@ class AddStudentDialogState extends State<AddStudentDialog> {
       actions: <Widget>[
         FlatButton(
           disabledTextColor: ParentColors.parentApp.withAlpha(100),
-          child: Text(AppLocalizations.of(context).cancel.toUpperCase()),
+          child: Text(L10n(context).cancel.toUpperCase()),
           onPressed: _makingApiCall
               ? null
               : () {
@@ -116,7 +116,7 @@ class AddStudentDialogState extends State<AddStudentDialog> {
         ),
         FlatButton(
           disabledTextColor: ParentColors.parentApp.withAlpha(100),
-          child: Text(AppLocalizations.of(context).ok),
+          child: Text(L10n(context).ok),
           onPressed: _makingApiCall
               ? null
               : () async {
@@ -129,9 +129,10 @@ class AddStudentDialogState extends State<AddStudentDialog> {
   }
 
   void _showParingCodeError(bool show) {
-    _pairingCodeError = show;
     _formKey.currentState.validate();
     // Update the UI with the error state
-    setState(() {});
+    setState(() {
+      _pairingCodeError = show;
+    });
   }
 }

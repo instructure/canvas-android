@@ -654,6 +654,6 @@ class CanvasIcons {
     ['x', x],
     ['zipped', zipped],
     ['zoom_in', zoom_in],
-    ['zoom_ou', zoom_out],
+    ['zoom_out', zoom_out],
   ];
 }

@@ -17,8 +17,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/utils/common_widgets/avatar.dart';
+import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
-import 'package:flutter_parent/utils/common_widgets/full_screen_scroll_container.dart';
 import 'package:flutter_parent/utils/common_widgets/user_name.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
@@ -47,7 +47,7 @@ class _ManageStudentsState extends State<ManageStudentsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context).manageStudents),
+        title: Text(L10n(context).manageStudents),
       ),
       body: FutureBuilder(
           initialData: widget._students,
@@ -66,11 +66,7 @@ class _ManageStudentsState extends State<ManageStudentsScreen> {
             }
 
             return RefreshIndicator(
-              onRefresh: () {
-                _studentsFuture = _loadStudents();
-                setState(() {});
-                return _studentsFuture;
-              },
+              onRefresh: _refresh,
               child: view,
             );
           }),
@@ -112,21 +108,18 @@ class _ManageStudentsState extends State<ManageStudentsScreen> {
   }
 
   Widget _empty(BuildContext context) {
-    return FullScreenScrollContainer(
-      children: [
-        Text(AppLocalizations.of(context).emptyStudentList),
-        RaisedButton(
-            onPressed: () {
-              _refresh();
-            },
-            child: Text(AppLocalizations.of(context).retry))
-      ],
+    return EmptyPandaWidget(
+      // TODO: Waiting for SVG here
+//      svgPath: ,
+      subtitle: L10n(context).emptyStudentList,
+      buttonText: L10n(context).retry,
+      onButtonTap: () => _refresh(),
     );
   }
 
   /// Dialog for pairing with a new student
   /// Optional [pairingCode] for QR reader results
-  Future<bool> _addStudentDialog(BuildContext context, {String pairingCode}) async {
+  Future<bool> _addStudentDialog(BuildContext context, {String pairingCode = ''}) async {
     return showDialog<bool>(
         context: context,
         barrierDismissible: true,
@@ -139,7 +132,7 @@ class _ManageStudentsState extends State<ManageStudentsScreen> {
     return FloatingActionButton(
       child: Icon(
         Icons.add,
-        semanticLabel: AppLocalizations.of(context).addNewStudent,
+        semanticLabel: L10n(context).addNewStudent,
       ),
       onPressed: () async {
         showModalBottomSheet(
@@ -151,16 +144,19 @@ class _ManageStudentsState extends State<ManageStudentsScreen> {
                 children: <Widget>[
                   Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 10.0),
+                      padding: const EdgeInsets.fromLTRB(0, 8.0, 0, 10.0),
                       child: Wrap(
                         direction: Axis.vertical,
                         children: <Widget>[
                           Container(
                             height: 40,
                             alignment: Alignment.centerLeft,
-                            child: Text(
-                              AppLocalizations.of(context).addStudentWith,
-                              style: Theme.of(context).textTheme.caption,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                              child: Text(
+                                L10n(context).addStudentWith,
+                                style: Theme.of(context).textTheme.caption,
+                              ),
                             ),
                           ),
                           _qrCode(),
@@ -177,57 +173,61 @@ class _ManageStudentsState extends State<ManageStudentsScreen> {
   }
 
   Widget _qrCode() {
-    return GestureDetector(
-      behavior: HitTestBehavior.translucent,
-      child: Container(
-        width: 10000,
-        height: 48,
-        alignment: Alignment.centerLeft,
-        child: Text(
-          AppLocalizations.of(context).qrCode,
-          style: Theme.of(context).textTheme.body1.copyWith(fontSize: 16),
-        ),
-      ),
-      onTap: () async {
-        Navigator.of(context).pop();
-        String cameraScanResult = await widget._interactor.getQrReading();
-        if (cameraScanResult != null && cameraScanResult.isNotEmpty) {
-          bool studentPaired = await _addStudentDialog(context, pairingCode: cameraScanResult);
-          if (studentPaired) {
-            _refresh();
-          }
-        }
-      },
-    );
-  }
-
-  Widget _pairingCode() {
-    return GestureDetector(
-      behavior: HitTestBehavior.translucent,
-      child: InkWell(
+    return InkWell(
         child: Container(
           width: 10000,
           height: 48,
           alignment: Alignment.centerLeft,
-          child: Text(
-            AppLocalizations.of(context).pairingCode,
-            style: Theme.of(context).textTheme.body1.copyWith(fontSize: 16),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Text(
+              L10n(context).qrCode,
+              style: Theme.of(context).textTheme.body1.copyWith(fontSize: 16),
+            ),
           ),
         ),
-      ),
-      onTap: () async {
-        Navigator.of(context).pop();
-        bool studentPaired = await _addStudentDialog(context);
-        if (studentPaired) {
-          _refresh();
-        }
-      },
-    );
+        onTap: () async {
+          Navigator.of(context).pop();
+          String cameraScanResult = await widget._interactor.getQrReading();
+//          print('Camera results: $cameraScanResult');
+//          if (cameraScanResult != null && cameraScanResult.isNotEmpty && cameraScanResult != '-1') {
+//            bool studentPaired = await _addStudentDialog(context, pairingCode: cameraScanResult);
+//            if (studentPaired) {
+//              _refresh();
+//            }
+//          }
+        });
+  }
+
+//  padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 10.0),
+  Widget _pairingCode() {
+    return InkWell(
+        child: Container(
+          width: 10000,
+          height: 48,
+          alignment: Alignment.centerLeft,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Text(
+              L10n(context).pairingCode,
+              style: Theme.of(context).textTheme.body1.copyWith(fontSize: 16),
+            ),
+          ),
+        ),
+        onTap: () async {
+          Navigator.of(context).pop();
+          bool studentPaired = await _addStudentDialog(context);
+          if (studentPaired) {
+            _refresh();
+          }
+        });
   }
 
   /// Force widget to reload with a refreshed future
-  void _refresh() {
-    _studentsFuture = _loadStudents();
-    setState(() {});
+  Future<void> _refresh() {
+    setState(() {
+      _studentsFuture = _loadStudents();
+    });
+    return _studentsFuture.catchError((_) {});
   }
 }

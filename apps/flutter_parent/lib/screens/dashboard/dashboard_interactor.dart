@@ -17,10 +17,11 @@ import 'package:flutter_parent/api/user_api.dart';
 import 'package:flutter_parent/api/utils/api_prefs.dart';
 import 'package:flutter_parent/models/enrollment.dart';
 import 'package:flutter_parent/models/user.dart';
+import 'package:flutter_parent/utils/service_locator.dart';
 
 class DashboardInteractor {
   Future<List<User>> getStudents({bool forceRefresh = false}) async =>
-      EnrollmentsApi.getObserveeEnrollments(forceRefresh: forceRefresh).then<List<User>>((enrollments) {
+      locator<EnrollmentsApi>().getObserveeEnrollments(forceRefresh: forceRefresh).then<List<User>>((enrollments) {
         List<User> users = filterStudents(enrollments);
         sortUsers(users);
         return users;

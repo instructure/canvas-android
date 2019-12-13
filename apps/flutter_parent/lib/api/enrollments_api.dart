@@ -19,7 +19,7 @@ import 'package:flutter_parent/api/utils/fetch.dart';
 import 'package:flutter_parent/models/enrollment.dart';
 
 class EnrollmentsApi {
-  static Future<List<Enrollment>> getObserveeEnrollments({bool forceRefresh = false}) async {
+  Future<List<Enrollment>> getObserveeEnrollments({bool forceRefresh = false}) async {
     var dio = canvasDio(usePerPageParam: true, forceRefresh: forceRefresh);
     var params = {
       'include': ['observed_users', 'avatar_url'],
