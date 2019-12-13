@@ -35,13 +35,19 @@ void testWidgetsWithAccessibilityChecks(
     final handle = tester.ensureSemantics();
     await callback(tester);
 
-    //await expectLater(tester, meetsGuideline(NoHintsGuideline()));
-    await expectLater(tester, meetsGuideline(textContrastGuideline));
-    await expectLater(tester, meetsGuideline(labeledTapTargetGuideline));
-    await expectLater(tester, meetsGuideline(androidTapTargetGuideline));
+    // Run our accessibility test suite at the end of the test.
+    await runAccessibilityTests(tester);
 
     handle.dispose();
   }, skip: skip, timeout: timeout, initialTimeout: initialTimeout, semanticsEnabled: semanticsEnabled);
+}
+
+// Break this out into its own method, so that it can be used mid-test.
+Future<void> runAccessibilityTests(WidgetTester tester) async {
+  //await expectLater(tester, meetsGuideline(NoHintsGuideline()));
+  await expectLater(tester, meetsGuideline(textContrastGuideline));
+  await expectLater(tester, meetsGuideline(labeledTapTargetGuideline));
+  await expectLater(tester, meetsGuideline(androidTapTargetGuideline));
 }
 
 // Here's an example of a custom guideline.  We can conceivably write
