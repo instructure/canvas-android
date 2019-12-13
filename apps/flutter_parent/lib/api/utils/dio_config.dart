@@ -16,45 +16,148 @@ import 'package:dio/dio.dart';
 import 'package:dio_http_cache/dio_http_cache.dart';
 import 'package:flutter_parent/api/utils/api_prefs.dart';
 
+/// Class that helps to create and configure [Dio] instances for common use cases
+class DioConfig {
+  final String baseUrl;
+  final Map<String, String> baseHeaders;
+  final Duration cacheMaxAge;
+  final bool forceRefresh;
+  final PageSize pageSize;
+
+  DioConfig({
+    this.baseUrl = '',
+    baseHeaders = null,
+    this.cacheMaxAge = Duration.zero,
+    this.forceRefresh = false,
+    this.pageSize = PageSize.none,
+  })  : this.baseHeaders = baseHeaders ?? {},
+        assert(baseUrl != null),
+        assert(cacheMaxAge != null),
+        assert(forceRefresh != null),
+        assert(pageSize != null);
+
+  /// Creates a copy of this configuration with the given fields replaced with the new values
+  DioConfig copyWith({
+    String baseUrl,
+    Map<String, String> baseHeaders,
+    Duration cacheMaxAge,
+    bool forceRefresh,
+    PageSize pageSize,
+  }) {
+    return DioConfig(
+      baseUrl: baseUrl ?? this.baseUrl,
+      baseHeaders: baseHeaders ?? this.baseHeaders,
+      cacheMaxAge: cacheMaxAge ?? this.cacheMaxAge,
+      forceRefresh: forceRefresh ?? this.forceRefresh,
+      pageSize: pageSize ?? this.pageSize,
+    );
+  }
+
+  /// Creates a [Dio] instance using this configuration
+  Dio get dio {
+    // Configure base options
+    var options = BaseOptions(baseUrl: baseUrl, headers: baseHeaders);
+
+    // Add per_page query param if requested
+    if (pageSize.size > 0) options.queryParameters = {'per_page': pageSize.size};
+
+    // Add cache configuration to base options
+    if (cacheMaxAge != Duration.zero) {
+      var extras = buildCacheOptions(cacheMaxAge, forceRefresh: forceRefresh).extra;
+      options.extra.addAll(extras);
+    }
+
+    // Create Dio instance and add interceptors
+    final dio = Dio(options);
+
+    // Cache manager
+    if (cacheMaxAge != Duration.zero) {
+      dio.interceptors.add(DioCacheManager(CacheConfig(baseUrl: baseUrl)).interceptor);
+    }
+
+    // Log interceptor
+    dio.interceptors.add(LogInterceptor(
+      request: false,
+      requestHeader: false,
+      requestBody: false,
+      responseHeader: false,
+      responseBody: false,
+    ));
+
+    return dio;
+  }
+
+  /// Creates a [DioConfig] targeted at typical Canvas API usage
+  static DioConfig canvas({
+    bool includeApiPath: true,
+    bool forceRefresh: false,
+    bool forceDeviceLanguage: false,
+    String overrideToken: null,
+    Map<String, String> extraHeaders: null,
+    PageSize pageSize: PageSize.none,
+  }) {
+    return DioConfig(
+        baseUrl: includeApiPath ? ApiPrefs.getApiUrl() : ApiPrefs.getDomain(),
+        baseHeaders: ApiPrefs.getHeaderMap(
+          forceDeviceLanguage: forceDeviceLanguage,
+          token: overrideToken,
+          extraHeaders: extraHeaders,
+        ),
+        cacheMaxAge: const Duration(hours: 1),
+        forceRefresh: forceRefresh,
+        pageSize: pageSize);
+  }
+
+  /// Creates a [DioConfig] targeted at core/free-for-teacher API usage (i.e. canvas.instructure.com)
+  static DioConfig core({
+    bool includeApiPath: true,
+    Map<String, String> headers: null,
+    Duration cacheMaxAge: Duration.zero,
+    bool forceRefresh: false,
+    PageSize pageSize: PageSize.none,
+  }) {
+    var baseUrl = 'https://canvas.instructure.com/';
+    if (includeApiPath) baseUrl += 'api/v1/';
+
+    return DioConfig(
+        baseUrl: baseUrl,
+        baseHeaders: headers,
+        cacheMaxAge: cacheMaxAge,
+        forceRefresh: forceRefresh,
+        pageSize: pageSize);
+  }
+}
+
+/// Class for configuring paging parameters
+class PageSize {
+  final int size;
+
+  const PageSize(this.size);
+
+  static const PageSize none = const PageSize(0);
+
+  static const PageSize canvasDefault = const PageSize(10);
+
+  static const PageSize canvasMax = const PageSize(10);
+
+  @override
+  bool operator ==(Object other) => identical(this, other) || other is PageSize && this.size == other.size;
+}
+
+/// Convenience method that returns a [Dio] instance configured by calling through to [DioConfig.canvas]
 Dio canvasDio({
+  bool includeApiPath: true,
   bool forceRefresh: false,
   bool forceDeviceLanguage: false,
   String overrideToken: null,
   Map<String, String> extraHeaders: null,
-  bool usePerPageParam: false,
-  int perPageSize: 100,
+  PageSize pageSize: PageSize.none,
 }) {
-  // Configure base options
-  var options = BaseOptions(
-    baseUrl: ApiPrefs.getApiUrl(),
-    headers: ApiPrefs.getHeaderMap(
-      forceDeviceLanguage: forceDeviceLanguage,
-      token: overrideToken,
-      extraHeaders: extraHeaders,
-    ),
-  );
-
-  // Add per_page query param if requested
-  if (usePerPageParam) options.queryParameters = {'per_page': perPageSize};
-
-  // Add cache configuration to base options
-  var extras = buildCacheOptions(Duration(hours: 1), forceRefresh: forceRefresh).extra;
-  options.extra.addAll(extras);
-
-  // Create Dio instance and add interceptors
-  var dio = Dio(options);
-
-  // Cache manager
-  dio.interceptors.add(DioCacheManager(CacheConfig(baseUrl: ApiPrefs.getDomain())).interceptor);
-
-  // Log interceptor
-  dio.interceptors.add(LogInterceptor(
-    request: false,
-    requestHeader: false,
-    requestBody: false,
-    responseHeader: false,
-    responseBody: false,
-  ));
-
-  return dio;
+  return DioConfig.canvas(
+    forceRefresh: forceRefresh,
+    forceDeviceLanguage: forceDeviceLanguage,
+    overrideToken: overrideToken,
+    extraHeaders: extraHeaders,
+    pageSize: pageSize,
+  ).dio;
 }

@@ -13,6 +13,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:dio/dio.dart';
+import 'package:flutter_parent/api/utils/dio_config.dart';
 import 'package:flutter_parent/api/utils/paged_list.dart';
 import 'package:flutter_parent/models/serializers.dart';
 
@@ -21,6 +22,27 @@ Future<T> fetch<T>(Future<Response<dynamic>> request) async {
   try {
     final response = await request;
     return deserialize<T>(response.data);
+  } catch (e) {
+    print(e);
+    return Future.error(e);
+  }
+}
+
+Future<PagedList<T>> fetchFirstPage<T>(Future<Response<dynamic>> request) async {
+  try {
+    final response = await request;
+    return PagedList<T>(response);
+  } catch (e) {
+    print(e);
+    return Future.error(e);
+  }
+}
+
+Future<PagedList<T>> fetchNextPage<T>(String nextUrl) async {
+  try {
+    var dio = DioConfig.canvas().copyWith(baseUrl: nextUrl).dio;
+    var response = await dio.get('');
+    return PagedList<T>(response);
   } catch (e) {
     print(e);
     return Future.error(e);
@@ -38,6 +60,7 @@ Future<List<T>> fetchList<T>(
     var response = await request;
     if (depaginateWith == null) return deserializeList(response.data);
     depaginateWith.options.baseUrl = null;
+    depaginateWith.options.queryParameters?.remove('per_page');
     var pagedList = PagedList<T>(response);
     while (pagedList.nextUrl != null) {
       response = await depaginateWith.get(pagedList.nextUrl);

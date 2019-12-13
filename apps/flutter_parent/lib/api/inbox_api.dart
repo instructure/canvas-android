@@ -21,7 +21,7 @@ import 'package:flutter_parent/models/unread_count.dart';
 
 class InboxApi {
   Future<List<Conversation>> getConversations({String scope: null, bool forceRefresh: false}) async {
-    final dio = canvasDio(forceRefresh: forceRefresh, usePerPageParam: true);
+    final dio = canvasDio(forceRefresh: forceRefresh, pageSize: PageSize.canvasMax);
     final params = {
       'scope': scope,
       'include': ['participant_avatars'],
@@ -40,7 +40,7 @@ class InboxApi {
   }
 
   Future<List<Recipient>> getRecipients(Course course, {bool forceRefresh: false}) {
-    var dio = canvasDio(forceRefresh: forceRefresh, usePerPageParam: true);
+    var dio = canvasDio(forceRefresh: forceRefresh, pageSize: PageSize.canvasMax);
     var params = {
       'permissions': ['send_messages_all'],
       'messageable_only': true,

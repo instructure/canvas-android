@@ -27,7 +27,15 @@ void main() {
     expect(canvasDio(), isA<Dio>());
   });
 
-  group('options', () {
+  test('DioDOnfig.canvas returns a config object', () async {
+    expect(DioConfig.canvas(), isA<DioConfig>());
+  });
+
+  test('DioDOnfig.core returns a config object', () async {
+    expect(DioConfig.core(), isA<DioConfig>());
+  });
+
+  group('canvas options', () {
     test('initializes with a base url', () async {
       final domain = 'test_domain';
       await setupPlatformChannels(config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_DOMAIN: domain}));
@@ -54,7 +62,7 @@ void main() {
 
     test('sets per page param', () async {
       final perPageSize = 1;
-      final options = canvasDio(usePerPageParam: true, perPageSize: perPageSize).options;
+      final options = canvasDio(pageSize: PageSize(perPageSize)).options;
 
       expect(options.queryParameters, {'per_page': perPageSize});
     });
@@ -68,6 +76,47 @@ void main() {
     });
   });
 
+  group('core options', () {
+    test('initializes with a base url', () async {
+      final options = DioConfig.core().dio.options;
+      expect(options.baseUrl, 'https://canvas.instructure.com/api/v1/');
+    });
+
+    test('initializes with a base url without api path', () async {
+      final options = DioConfig.core(includeApiPath: false).dio.options;
+      expect(options.baseUrl, 'https://canvas.instructure.com/');
+    });
+
+    test('sets up headers', () async {
+      final headers = {'123': '123'};
+      final options = DioConfig.core(headers: headers).dio.options;
+      expect(options.headers, headers);
+    });
+
+    test('sets per page param', () async {
+      final perPageSize = 13;
+      final options = DioConfig.core(pageSize: PageSize(perPageSize)).dio.options;
+      expect(options.queryParameters, {'per_page': perPageSize});
+    });
+
+    test('sets up cache maxAge', () async {
+      final age = Duration(minutes: 123);
+      final options = DioConfig.core(cacheMaxAge: age).dio.options;
+      expect(options.extra['dio_cache_max_age'], age);
+    });
+
+    test('Does not set cache extras if max age is zero', () async {
+      final options = DioConfig.core(cacheMaxAge: Duration.zero).dio.options;
+      expect(options.extra['dio_cache_max_age'], isNull);
+      expect(options.extra['dio_cache_force_refresh'], isNull);
+    });
+
+    test('sets cache extras with force refrersh', () async {
+      final options = DioConfig.core(cacheMaxAge: Duration(minutes: 1), forceRefresh: true).dio.options;
+      expect(options.extra['dio_cache_force_refresh'], isTrue);
+    });
+  });
+
   group('interceptors', () {
     test('adds cache manager', () async {
       // The cache manager is an object that hooks in via an interceptor wrapper, so we can't check for the explicit type
@@ -76,6 +125,68 @@ void main() {
 
     test('adds log interceptor', () async {
       expect(canvasDio().interceptors, contains(isA<LogInterceptor>()));
+    });
+  });
+
+  group('copy', () {
+    test('Empty copy produces identical config', () {
+      final original = DioConfig(
+        baseUrl: 'fakeUrl',
+        baseHeaders: {'fakeHeader': 'fakeValue'},
+        cacheMaxAge: Duration(minutes: 13),
+        forceRefresh: true,
+        pageSize: PageSize(13),
+      );
+
+      final copy = original.copyWith();
+
+      expect(copy.baseUrl, original.baseUrl);
+      expect(copy.baseHeaders, original.baseHeaders);
+      expect(copy.cacheMaxAge, original.cacheMaxAge);
+      expect(copy.forceRefresh, original.forceRefresh);
+      expect(copy.pageSize, original.pageSize);
+    });
+
+    test('Copy with single value produces correct config', () {
+      final original = DioConfig(
+        baseUrl: 'fakeUrl',
+        baseHeaders: {'fakeHeader': 'fakeValue'},
+        cacheMaxAge: Duration(minutes: 13),
+        forceRefresh: true,
+        pageSize: PageSize(13),
+      );
+
+      final copy = original.copyWith(baseUrl: '');
+
+      expect(copy.baseUrl, '');
+      expect(copy.baseHeaders, original.baseHeaders);
+      expect(copy.cacheMaxAge, original.cacheMaxAge);
+      expect(copy.forceRefresh, original.forceRefresh);
+      expect(copy.pageSize, original.pageSize);
+    });
+
+    test('Copy with all values produces correct config', () {
+      final original = DioConfig(
+        baseUrl: 'fakeUrl',
+        baseHeaders: {'fakeHeader': 'fakeValue'},
+        cacheMaxAge: Duration(minutes: 13),
+        forceRefresh: true,
+        pageSize: PageSize(13),
+      );
+
+      final copy = original.copyWith(
+        baseUrl: '123',
+        baseHeaders: {'123': '123'},
+        cacheMaxAge: Duration(minutes: 123),
+        forceRefresh: false,
+        pageSize: PageSize(123),
+      );
+
+      expect(copy.baseUrl, '123');
+      expect(copy.baseHeaders, {'123': '123'});
+      expect(copy.cacheMaxAge, Duration(minutes: 123));
+      expect(copy.forceRefresh, false);
+      expect(copy.pageSize, PageSize(123));
     });
   });
 }

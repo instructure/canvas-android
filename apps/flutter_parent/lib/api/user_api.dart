@@ -12,20 +12,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import 'package:dio/dio.dart';
-import 'package:flutter_parent/api/utils/api_prefs.dart';
-import 'package:flutter_parent/models/serializers.dart';
+import 'package:flutter_parent/api/utils/dio_config.dart';
+import 'package:flutter_parent/api/utils/fetch.dart';
 import 'package:flutter_parent/models/user.dart';
 
 class UserApi {
-  static Future<User> getSelf() async {
-    var selfResponse = await Dio().get(ApiPrefs.getApiUrl() + 'users/self/profile',
-        options: Options(headers: ApiPrefs.getHeaderMap(forceDeviceLanguage: true)));
-
-    if (selfResponse.statusCode == 200 || selfResponse.statusCode == 201) {
-      return deserialize<User>(selfResponse.data);
-    } else {
-      return Future.error(selfResponse.statusMessage);
-    }
-  }
+  static Future<User> getSelf() => fetch(canvasDio(forceDeviceLanguage: true).get('users/self/profile'));
 }

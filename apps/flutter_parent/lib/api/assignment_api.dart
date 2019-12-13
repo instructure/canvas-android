@@ -12,130 +12,59 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import 'package:dio/dio.dart';
-import 'package:flutter_parent/api/utils/api_prefs.dart';
 import 'package:flutter_parent/api/utils/dio_config.dart';
 import 'package:flutter_parent/api/utils/fetch.dart';
 import 'package:flutter_parent/api/utils/paged_list.dart';
 import 'package:flutter_parent/models/assignment.dart';
 import 'package:flutter_parent/models/assignment_group.dart';
-import 'package:flutter_parent/models/serializers.dart';
 import 'package:flutter_parent/models/submission.dart';
 
 class AssignmentApi {
   Future<List<Assignment>> getAssignmentsWithSubmissionsDepaginated(int courseId, int studentId) async {
-    var assignmentResponse = await Dio().get(ApiPrefs.getApiUrl() + 'courses/$courseId/assignments',
-        queryParameters: {
-          'include': ['all_dates', 'overrides', 'rubric_assessment', 'submission'],
-          'order_by': 'due_at',
-          'override_assignment_dates': 'true',
-          'needs_grading_count_by_section': 'true',
-        },
-        options: Options(headers: ApiPrefs.getHeaderMap()));
-
-    if (assignmentResponse.statusCode == 200 || assignmentResponse.statusCode == 201) {
-      final response = PagedList<Assignment>(assignmentResponse);
-      return (response.nextUrl == null) ? response.data : _getAssignmentsWithSubmissionsDepaginated(response);
-    } else {
-      return Future.error(assignmentResponse.statusMessage);
-    }
-  }
-
-  Future<List<Assignment>> _getAssignmentsWithSubmissionsDepaginated(PagedList<Assignment> prevResponse) async {
-    // Query params already specified in url
-    var assignmentResponse = await Dio().get(prevResponse.nextUrl, options: Options(headers: ApiPrefs.getHeaderMap()));
-
-    if (assignmentResponse.statusCode == 200 || assignmentResponse.statusCode == 201) {
-      prevResponse.updateWithResponse(assignmentResponse);
-      return (prevResponse.nextUrl == null)
-          ? prevResponse.data
-          : _getAssignmentsWithSubmissionsDepaginated(prevResponse);
-    } else {
-      return Future.error(assignmentResponse.statusMessage);
-    }
+    var dio = canvasDio();
+    var params = {
+      'include': ['all_dates', 'overrides', 'rubric_assessment', 'submission'],
+      'order_by': 'due_at',
+      'override_assignment_dates': 'true',
+      'needs_grading_count_by_section': 'true',
+    };
+    return fetchList(dio.get('courses/$courseId/assignments', queryParameters: params), depaginateWith: dio);
   }
 
   Future<List<AssignmentGroup>> getAssignmentGroupsWithSubmissionsDepaginated(int courseId, int studentId) async {
-    var assignmentResponse = await Dio().get(ApiPrefs.getApiUrl(path: 'courses/$courseId/assignment_groups'),
-        queryParameters: {
-          'include': [
-            'assignments',
-            'discussion_topic',
-            'submission',
-            'all_dates',
-            'overrides',
-            'observed_users',
-          ],
-          'override_assignment_dates': 'true',
-        },
-        options: Options(headers: ApiPrefs.getHeaderMap()));
-
-    if (assignmentResponse.statusCode == 200 || assignmentResponse.statusCode == 201) {
-      final response = PagedList<AssignmentGroup>(assignmentResponse);
-      return (response.nextUrl == null) ? response.data : _getAssignmentGroupsWithSubmissionsDepaginated(response);
-    } else {
-      return Future.error(assignmentResponse.statusMessage);
-    }
-  }
-
-  Future<List<AssignmentGroup>> _getAssignmentGroupsWithSubmissionsDepaginated(
-      PagedList<AssignmentGroup> prevResponse) async {
-    // Query params already specified in url
-    var assignmentResponse = await Dio().get(prevResponse.nextUrl, options: Options(headers: ApiPrefs.getHeaderMap()));
-
-    if (assignmentResponse.statusCode == 200 || assignmentResponse.statusCode == 201) {
-      prevResponse.updateWithResponse(assignmentResponse);
-      return (prevResponse.nextUrl == null)
-          ? prevResponse.data
-          : _getAssignmentGroupsWithSubmissionsDepaginated(prevResponse);
-    } else {
-      return Future.error(assignmentResponse.statusMessage);
-    }
+    var dio = canvasDio();
+    var params = {
+      'include': [
+        'assignments',
+        'discussion_topic',
+        'submission',
+        'all_dates',
+        'overrides',
+        'observed_users',
+      ],
+      'override_assignment_dates': 'true',
+    };
+    return fetchList(dio.get('courses/$courseId/assignment_groups', queryParameters: params), depaginateWith: dio);
   }
 
   Future<PagedList<Assignment>> getAssignmentsWithSubmissionsPaged(int courseId, int studentId) async {
-    var assignmentResponse = await Dio().get(ApiPrefs.getApiUrl() + 'courses/$courseId/assignments',
-        queryParameters: {
-          'include': ['all_dates', 'overrides', 'rubric_assessment', 'submission'],
-          'order_by': 'due_at',
-          'override_assignment_dates': 'true',
-          'needs_grading_count_by_section': 'true',
-        },
-        options: Options(headers: ApiPrefs.getHeaderMap()));
-
-    if (assignmentResponse.statusCode == 200 || assignmentResponse.statusCode == 201) {
-      return PagedList<Assignment>(assignmentResponse);
-    } else {
-      return Future.error(assignmentResponse.statusMessage);
-    }
-  }
-
-  Future<PagedList<Assignment>> getAssignmentsWithSubmissionsPagedNext(String nextUrl) async {
-    // Query params already specified in url
-    var assignmentResponse = await Dio().get(nextUrl, options: Options(headers: ApiPrefs.getHeaderMap()));
-
-    if (assignmentResponse.statusCode == 200 || assignmentResponse.statusCode == 201) {
-      return PagedList<Assignment>(assignmentResponse);
-    } else {
-      return Future.error(assignmentResponse.statusMessage);
-    }
+    var params = {
+      'include': ['all_dates', 'overrides', 'rubric_assessment', 'submission'],
+      'order_by': 'due_at',
+      'override_assignment_dates': 'true',
+      'needs_grading_count_by_section': 'true',
+    };
+    return fetchFirstPage(canvasDio().get('courses/$courseId/assignments', queryParameters: params));
   }
 
   Future<Assignment> getAssignment(int courseId, int assignmentId) async {
-    var assignmentResponse = await Dio().get(ApiPrefs.getApiUrl() + 'courses/$courseId/assignments/$assignmentId',
-        queryParameters: {
-          'include': ['overrides', 'rubric_assessment', 'submission'],
-          'all_dates': 'true',
-          'override_assignment_dates': 'true',
-          'needs_grading_count_by_section': 'true',
-        },
-        options: Options(headers: ApiPrefs.getHeaderMap()));
-
-    if (assignmentResponse.statusCode == 200 || assignmentResponse.statusCode == 201) {
-      return deserialize<Assignment>(assignmentResponse.data);
-    } else {
-      return Future.error(assignmentResponse.statusMessage);
-    }
+    var params = {
+      'include': ['overrides', 'rubric_assessment', 'submission'],
+      'all_dates': 'true',
+      'override_assignment_dates': 'true',
+      'needs_grading_count_by_section': 'true',
+    };
+    return fetch(canvasDio().get('courses/$courseId/assignments/$assignmentId', queryParameters: params));
   }
 
   // TODO: Remove once LA-274 is implemented, and submissions are given with assignment groups (for observers)
