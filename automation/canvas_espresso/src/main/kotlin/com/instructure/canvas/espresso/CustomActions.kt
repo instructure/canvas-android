@@ -16,13 +16,18 @@
  */
 package com.instructure.canvas.espresso
 
+import android.view.InputDevice
+import android.view.MotionEvent
 import android.view.View
 import android.widget.EditText
 import androidx.recyclerview.widget.RecyclerView
-import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
+import androidx.test.espresso.action.CoordinatesProvider
+import androidx.test.espresso.action.GeneralClickAction
+import androidx.test.espresso.action.Press
+import androidx.test.espresso.action.Tap
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers
@@ -135,4 +140,30 @@ fun explicitClick() : ViewAction {
         }
 
     }
+}
+
+/**
+ * Helper method that clicks on the coordinates of a view based the x/y percentages given
+ */
+fun clickCoordinates(percentX: Float, percentY: Float) : ViewAction {
+    return GeneralClickAction(
+        Tap.SINGLE,
+        CoordinatesProvider { view ->
+            val screenPos = IntArray(2)
+            view.getLocationOnScreen(screenPos)
+            val w = view.width
+            val h = view.height
+
+            val x = w * percentX
+            val y = h * percentY
+
+            val screenX = screenPos[0] + x
+            val screenY = screenPos[1] + y
+
+            floatArrayOf(screenX, screenY)
+        },
+        Press.FINGER,
+        InputDevice.SOURCE_MOUSE,
+        MotionEvent.BUTTON_PRIMARY
+    )
 }

@@ -27,6 +27,7 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.espresso.*
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.waitForViewWithId
 import com.instructure.student.R
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
@@ -76,6 +77,10 @@ open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
 
     fun clickSubmit() {
         onView(withId(R.id.submitButton)).click()
+    }
+
+    fun scrollToAssignmentDescription() {
+        waitForViewWithId(R.id.descriptionWebView).scrollTo()
     }
 }
 

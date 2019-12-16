@@ -23,7 +23,7 @@
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/freeTextInput"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:layout_marginEnd="?dialogPreferredPadding"
         android:layout_marginStart="?dialogPreferredPadding" />
 

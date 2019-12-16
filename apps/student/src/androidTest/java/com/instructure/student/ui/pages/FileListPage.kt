@@ -27,6 +27,8 @@ import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onViewWithId
+import com.instructure.espresso.page.waitForViewWithId
 import com.instructure.student.R
 import org.hamcrest.Matchers.allOf
 
@@ -56,6 +58,10 @@ class FileListPage : BasePage(R.id.fileListPage) {
 
     fun clickUploadFileButton() {
         uploadFileButton.click()
+    }
+
+    fun assertPdfPreviewDisplayed() {
+        waitForViewWithId(R.id.pspdf__menu_option_edit_annotations).assertDisplayed()
     }
 
     // Doesn't worry about having scrolling to the top of the page first...
