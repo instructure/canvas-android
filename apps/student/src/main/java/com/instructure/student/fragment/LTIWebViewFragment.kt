@@ -247,18 +247,6 @@ class LTIWebViewFragment : InternalWebviewFragment() {
             inBackground {
                 result = getLTIUrlForTab(requireContext(), ltiTab)
             }
-            /*
-                var result: String? = null
-                inBackground {
-                    result = getLTIUrlForTab(requireContext(), ltiTab)
-                    val uri = Uri.parse(result)
-                    val returnTo = uri.getQueryParameter("return_to")
-                    if (returnTo != null) {
-                        val sessionUrl = awaitApi<AuthenticatedSession> { OAuthManager.getAuthenticatedSession(returnTo, it) }.sessionUrl
-                        result = sessionUrl
-                    }
-                }
-             */
 
             if (result != null) {
                 val uri = Uri.parse(result).buildUpon()

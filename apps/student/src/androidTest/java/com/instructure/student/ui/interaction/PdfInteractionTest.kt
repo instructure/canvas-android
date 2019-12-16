@@ -66,8 +66,10 @@ class PdfInteractionTest : StudentTest() {
     @TestMetaData(Priority.P1, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, false, FeatureCategory.ANNOTATIONS)
     fun testAnnotations_selectAndCommentOnAnnotationWithNoExistingComments() {
         val sentCommentContents = "what up dog"
+        // Configure the comment to be sent in mock Canvas
         goToAssignmentPdfSubmission(hasSentComment = true, sentCommentContents = sentCommentContents)
         submissionDetailsPage.clickSubmissionContentAtPosition(.5f, .5f)
+        // Send first comment through dialog
         submissionDetailsPage.addFirstAnnotationComment(sentCommentContents)
         submissionDetailsPage.openPdfComments()
         annotationCommentListPage.assertCommentDisplayed(sentCommentContents)
@@ -77,9 +79,11 @@ class PdfInteractionTest : StudentTest() {
     @TestMetaData(Priority.P1, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, false, FeatureCategory.ANNOTATIONS)
     fun testAnnotations_selectAndCommentOnAnnotationWithExistingComments() {
         val sentCommentContents = "what up dog"
+        // Configure the comment to be sent in mock Canvas and the existing comment
         goToAssignmentPdfSubmission(hasComment = true, hasSentComment = true, commentContents =  "hodor", sentCommentContents = sentCommentContents)
         submissionDetailsPage.clickSubmissionContentAtPosition(.5f, .5f)
         submissionDetailsPage.openPdfComments()
+        // Send new comment through AnnotationCommentList
         annotationCommentListPage.sendComment(sentCommentContents)
         annotationCommentListPage.assertCommentDisplayed(sentCommentContents)
     }
@@ -237,8 +241,9 @@ class PdfInteractionTest : StudentTest() {
 
         try {
             inputStream = InstrumentationRegistry.getInstrumentation().context.resources.assets.open(pdfFileName)
-            val dir = InstrumentationRegistry.getInstrumentation().getTargetContext().externalCacheDir
-            val file = File(dir?.path, fileName)
+            val dir = File(InstrumentationRegistry.getInstrumentation().getTargetContext().externalCacheDir, "attachments")
+            dir.mkdirs()
+            val file = File(dir, fileName)
             outputStream = FileOutputStream(file)
             inputStream.copyTo(outputStream)
         }

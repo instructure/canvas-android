@@ -986,7 +986,7 @@ fun MockCanvas.addFileToFolder(
         fileContent: String = Randomizer.randomPageBody(),
         contentType: String = "text/plain",
         url: String = "",
-        fileId: Long = 0L
+        fileId: Long = newItemId()
 ) : Long {
     if(courseId == null && folderId == null) {
         throw Exception("Either courseId or folderId must be non-null")
@@ -994,14 +994,13 @@ fun MockCanvas.addFileToFolder(
     var rootFolder = getRootFolder(courseId = courseId, folderId = folderId)
 
     // Now create our file metadata
-    val newFileId = if(fileId == 0L) newItemId() else fileId
     val fileMetadataItem = FileFolder(
-            id = newFileId,
+            id = fileId,
             folderId = rootFolder.id,
             size = fileContent.length.toLong(),
             displayName = displayName,
             contentType = contentType,
-            url = if(url.isEmpty()) "https://mock-data.instructure.com/files/$newFileId/preview" else url
+            url = if(url.isEmpty()) "https://mock-data.instructure.com/files/$fileId/preview" else url
     )
 
     // And record it for the folder
@@ -1014,9 +1013,9 @@ fun MockCanvas.addFileToFolder(
     fileList.add(fileMetadataItem)
 
     // Now record our file contents (just text for now)
-    fileContents[newFileId] = fileContent
+    fileContents[fileId] = fileContent
 
-    return newFileId
+    return fileId
 
 
 }

@@ -51,11 +51,7 @@ public class Utils {
     public static File getAttachmentsDirectory(Context context) {
         File file;
         if (context.getExternalCacheDir() != null) {
-            if(true) { // TODO - get the build config flags working and replace (IS_TESTING was always false)
-                file = context.getExternalCacheDir();
-            } else {
-                file = new File(context.getExternalCacheDir(), "attachments");
-            }
+            file = new File(context.getExternalCacheDir(), "attachments");
         } else {
             file = context.getFilesDir();
         }

@@ -43,6 +43,7 @@ class PathVars {
     var submissionId: Long by map
     var groupId: Long by map
     var sessionId: Long by map
+    var annotationid: String by map
 }
 
 /**
@@ -67,14 +68,17 @@ class Segment(val name: String) : SegmentQualifier<String>() {
 }
 
 /**
- * Created in order to match the string id of the annotation put endpoint, not sure if
- * it will have additional usage
+ * Created in order to match the string id of the annotation PUT endpoint:
+ *
+ * sessions/{sessionId}/annotations/{non-numeric, random StringId}
+ *
+ * See AnnotationsEndpoint for usage
  */
-class GenericStringId : SegmentQualifier<String>() {
+class AnnotationId : SegmentQualifier<String>() {
     override val printName = "generic string id"
     override fun matches(segmentName: String) = segmentName.isNotEmpty()
     override fun appendVars(segmentName: String, vars: PathVars, request: Request): String {
-        // Do not append to path vars
+        PathVars::annotationid.set(vars, segmentName)
         return segmentName
     }
 }
