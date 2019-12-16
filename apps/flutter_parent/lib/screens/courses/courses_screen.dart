@@ -19,6 +19,7 @@ import 'package:flutter_parent/models/course_grade.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
+import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:intl/intl.dart';
@@ -74,7 +75,7 @@ class _CoursesScreenState extends State<CoursesScreen> {
   Widget _content(BuildContext context) {
     if (_error) return Text("Error!"); // TODO: Show an error screen
 
-    if (_loading) return Center(child: CircularProgressIndicator());
+    if (_loading) return LoadingIndicator();
 
     final studentCourses = _courses.where(_enrollmentFilter);
 

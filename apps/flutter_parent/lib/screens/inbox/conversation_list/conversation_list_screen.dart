@@ -20,6 +20,7 @@ import 'package:flutter_parent/screens/inbox/create_conversation/create_conversa
 import 'package:flutter_parent/utils/common_widgets/avatar.dart';
 import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
+import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/design/canvas_icons_solid.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
@@ -102,7 +103,7 @@ class ConversationListState extends State<ConversationListScreen> {
     });
   }
 
-  Widget _loadingState(BuildContext context) => Center(child: CircularProgressIndicator());
+  Widget _loadingState(BuildContext context) => LoadingIndicator();
 
   Widget _successState(BuildContext context, List<Conversation> data) {
     return ListView.builder(
@@ -294,9 +295,7 @@ class ConversationListState extends State<ConversationListScreen> {
             } else {
               return Container(
                 height: 120,
-                child: Center(
-                  child: CircularProgressIndicator(),
-                ),
+                child: LoadingIndicator(),
               );
             }
           },
