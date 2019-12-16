@@ -19,6 +19,7 @@ import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/screens/alerts/alerts_interactor.dart';
 import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/full_screen_scroll_container.dart';
+import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
@@ -53,7 +54,7 @@ class _AlertsScreenState extends State<AlertsScreen> {
       builder: (context, AsyncSnapshot<List<Alert>> snapshot) {
         // Show loading if we're waiting for data, not inside the refresh indicator as it's unnecessary
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return LoadingIndicator();
         }
 
         // Get the child widget to show in the refresh indicator

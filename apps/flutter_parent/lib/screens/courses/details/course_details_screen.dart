@@ -21,6 +21,7 @@ import 'package:flutter_parent/screens/courses/details/course_summary_screen.dar
 import 'package:flutter_parent/screens/courses/details/course_syllabus_screen.dart';
 import 'package:flutter_parent/utils/base_model.dart';
 import 'package:flutter_parent/utils/common_widgets/full_screen_scroll_container.dart';
+import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/design/canvas_icons_solid.dart';
 import 'package:provider/provider.dart';
 
@@ -87,7 +88,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
   Widget _body(BuildContext context, CourseDetailsModel model) {
     // Show loading if we're waiting for data, not inside the refresh indicator as it's unnecessary
     if (model.state == ViewState.Busy) {
-      return Center(child: CircularProgressIndicator());
+      return LoadingIndicator();
     }
 
     // Get the child widget to show in the refresh indicator

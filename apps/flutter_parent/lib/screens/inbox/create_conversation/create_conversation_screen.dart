@@ -18,6 +18,7 @@ import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/models/recipient.dart';
 import 'package:flutter_parent/screens/inbox/attachment_utils/attachment_handler.dart';
 import 'package:flutter_parent/utils/common_widgets/avatar.dart';
+import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/design/canvas_icons_solid.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
@@ -228,7 +229,7 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
 
   Widget _content(BuildContext context) {
     if (_error) return _errorState(context);
-    if (_loading) return Center(child: CircularProgressIndicator());
+    if (_loading) return LoadingIndicator();
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

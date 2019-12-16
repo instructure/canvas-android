@@ -198,7 +198,7 @@ class DashboardState extends State<DashboardScreen> {
     if (user == null) {
       if (_selfLoading) {
         // Still loading...
-        return Center(child: CircularProgressIndicator());
+        return LoadingIndicator();
       } else {
         // Either we loaded a null user, or we got an error
         // TODO: Add in error screen when we get specs
