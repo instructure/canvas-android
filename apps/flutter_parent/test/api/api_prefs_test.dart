@@ -235,7 +235,7 @@ MobileVerifyResult _mockVerifyResult(String domain) => MobileVerifyResult((b) {
 
 User _mockUser() => User((b) {
       return b
-        ..id = 0
+        ..id = ''
         ..name = 'name'
         ..sortableName = 'sortable name'
         ..avatarUrl = 'url'

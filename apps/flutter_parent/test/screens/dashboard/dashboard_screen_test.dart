@@ -335,7 +335,7 @@ class MockCoursesInteractor extends CoursesInteractor {
 }
 
 User _mockUser(String name, {String pronouns, String primaryEmail}) => User((b) => b
-  ..id = Random(name.hashCode).nextInt(100000)
+  ..id = Random(name.hashCode).nextInt(100000).toString()
   ..sortableName = name
   ..name = name
   ..primaryEmail = primaryEmail ?? null

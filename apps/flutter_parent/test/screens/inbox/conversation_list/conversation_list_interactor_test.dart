@@ -50,22 +50,22 @@ void main() {
 
     var normalScopeItems = [
       Conversation((c) => c
-        ..id = 0
+        ..id = '0'
         ..lastMessageAt = DateTime.now()
         ..lastMessage = 'Message to user'),
       Conversation((c) => c
-        ..id = 1
+        ..id = '1'
         ..lastMessageAt = DateTime.now().subtract(Duration(days: 1))
         ..lastMessage = 'Message to user'),
     ];
 
     var sentScopeItems = [
       Conversation((c) => c
-        ..id = 1
+        ..id = '1'
         ..lastMessageAt = DateTime.now().subtract(Duration(days: 1, hours: 1))
         ..lastMessage = 'Message from User'),
       Conversation((c) => c
-        ..id = 2
+        ..id = '2'
         ..lastMessageAt = DateTime.now().subtract(Duration(days: 2))
         ..lastMessage = 'Message from User'),
     ];
@@ -96,23 +96,23 @@ void main() {
 
     var apiItems = [
       Conversation((c) => c
-        ..id = 0
+        ..id = '0'
         ..lastMessageAt = DateTime.now().subtract(Duration(days: 3))
         ..lastMessage = 'Message to user'),
       Conversation((c) => c
-        ..id = 1
+        ..id = '1'
         ..lastMessageAt = DateTime.now().subtract(Duration(days: 5))
         ..lastMessage = 'Message to user'),
       Conversation((c) => c
-        ..id = 2
+        ..id = '2'
         ..lastMessageAt = DateTime.now().subtract(Duration(days: 1))
         ..lastMessage = 'Message to user'),
       Conversation((c) => c
-        ..id = 3
+        ..id = '3'
         ..lastMessageAt = DateTime.now().subtract(Duration(days: 2))
         ..lastMessage = 'Message to user'),
       Conversation((c) => c
-        ..id = 4
+        ..id = '4'
         ..lastMessageAt = DateTime.now().subtract(Duration(days: 4))
         ..lastMessage = 'Message to user'),
     ];

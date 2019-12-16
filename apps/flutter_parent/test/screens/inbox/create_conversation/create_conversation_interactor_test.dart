@@ -29,10 +29,10 @@ void main() {
 
     var interactor = CreateConversationInteractor();
     final course = Course();
-    final recipients = [1, 2, 3];
+    final recipients = ['1', '2', '3'];
     final subject = "Message Subject";
     final body = "Message Body";
-    final attachments = [4, 5, 6];
+    final attachments = ['4', '5', '6'];
 
     interactor.createConversation(course, recipients, subject, body, attachments);
     verify(inboxApi.createConversation(course, recipients, subject, body, attachments)).called(1);

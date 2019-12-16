@@ -23,8 +23,8 @@ import 'package:get_it/get_it.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
-const studentId = 123;
-const courseId = 321;
+const studentId = '123';
+const courseId = '321';
 final course = Course((b) => b..id = courseId);
 
 void main() {
@@ -134,7 +134,7 @@ void main() {
 
     test('refreshes assignments and loads submissions', () async {
       // Setup the data
-      final assignmentId = 101;
+      final assignmentId = '101';
       final initial = _mockAssignmentGroups(assignmentId);
       final submissions = [Submission((b) => b.assignmentId = assignmentId)];
 
@@ -156,7 +156,7 @@ void main() {
 
     test('refreshes assignments and does not load submissions for unpublished assignments', () async {
       // Setup the data
-      final assignmentId = 101;
+      final assignmentId = '101';
       final initial = _mockAssignmentGroups(assignmentId, published: false);
 
       // Mock the data
@@ -176,10 +176,10 @@ void main() {
   });
 }
 
-List<AssignmentGroup> _mockAssignmentGroups(int assignmentId, {bool published = true}) {
+List<AssignmentGroup> _mockAssignmentGroups(String assignmentId, {bool published = true}) {
   return [
     AssignmentGroup((group) => group
-      ..id = 202
+      ..id = '202'
       ..name = 'assignments'
       ..groupWeight = 0
       ..position = 0

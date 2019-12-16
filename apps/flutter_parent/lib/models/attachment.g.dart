@@ -19,7 +19,7 @@ class _$AttachmentSerializer implements StructuredSerializer<Attachment> {
       {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
       'id',
-      serializers.serialize(object.id, specifiedType: const FullType(int)),
+      serializers.serialize(object.id, specifiedType: const FullType(String)),
       'size',
       serializers.serialize(object.size, specifiedType: const FullType(int)),
     ];
@@ -89,7 +89,7 @@ class _$AttachmentSerializer implements StructuredSerializer<Attachment> {
       switch (key) {
         case 'id':
           result.id = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
+              specifiedType: const FullType(String)) as String;
           break;
         case 'content-type':
           result.contentType = serializers.deserialize(value,
@@ -132,7 +132,7 @@ class _$AttachmentSerializer implements StructuredSerializer<Attachment> {
 
 class _$Attachment extends Attachment {
   @override
-  final int id;
+  final String id;
   @override
   final String contentType;
   @override
@@ -231,9 +231,9 @@ class _$Attachment extends Attachment {
 class AttachmentBuilder implements Builder<Attachment, AttachmentBuilder> {
   _$Attachment _$v;
 
-  int _id;
-  int get id => _$this._id;
-  set id(int id) => _$this._id = id;
+  String _id;
+  String get id => _$this._id;
+  set id(String id) => _$this._id = id;
 
   String _contentType;
   String get contentType => _$this._contentType;

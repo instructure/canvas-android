@@ -38,12 +38,13 @@ void main() {
     _locator.registerFactory<QuickNav>(() => QuickNav());
   }
 
-  Widget _testableMaterialWidget([Widget widget]) => TestApp(Scaffold(body: widget ?? CoursesScreen(_mockStudent(0))));
+  Widget _testableMaterialWidget([Widget widget]) =>
+      TestApp(Scaffold(body: widget ?? CoursesScreen(_mockStudent('0'))));
 
   testWidgetsWithAccessibilityChecks('shows loading indicator when retrieving courses', (tester) async {
     _setupLocator(_MockCoursesInteractor());
 
-    await tester.pumpWidget(TestApp(CoursesScreen(_mockStudent(0))));
+    await tester.pumpWidget(TestApp(CoursesScreen(_mockStudent('0'))));
     await tester.pump();
 
     final loadingWidget = find.byType(CircularProgressIndicator);
@@ -61,7 +62,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('shows courses after load', (tester) async {
-    var student = _mockStudent(1);
+    var student = _mockStudent('1');
     var courses = generateCoursesForStudent(student.id);
 
     _setupLocator(_MockCoursesInteractor(courses: courses));
@@ -74,7 +75,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('shows empty message after load', (tester) async {
-    var student = _mockStudent(1);
+    var student = _mockStudent('1');
 
     _setupLocator(_MockCoursesInteractor(courses: []));
 
@@ -86,7 +87,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('shows no grade if there is no current grade', (tester) async {
-    var student = _mockStudent(1);
+    var student = _mockStudent('1');
     var courses = generateCoursesForStudent(student.id);
 
     _setupLocator(_MockCoursesInteractor(courses: courses));
@@ -99,12 +100,16 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('shows grade if there is a current grade', (tester) async {
-    var student = _mockStudent(1);
+    var student = _mockStudent('1');
     var courses = List.generate(
-        1,
-        (idx) => _mockCourse(idx,
-            enrollments:
-                ListBuilder<Enrollment>([_mockEnrollment(idx, userId: student.id, computedCurrentGrade: "A")])));
+      1,
+      (idx) => _mockCourse(
+        idx.toString(),
+        enrollments: ListBuilder<Enrollment>(
+          [_mockEnrollment(idx.toString(), userId: student.id, computedCurrentGrade: "A")],
+        ),
+      ),
+    );
 
     _setupLocator(_MockCoursesInteractor(courses: courses));
 
@@ -116,12 +121,16 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('shows score if there is a grade but no grade string', (tester) async {
-    var student = _mockStudent(1);
+    var student = _mockStudent('1');
     var courses = List.generate(
-        1,
-        (idx) => _mockCourse(idx,
-            enrollments:
-                ListBuilder<Enrollment>([_mockEnrollment(idx, userId: student.id, computedCurrentScore: 90)])));
+      1,
+      (idx) => _mockCourse(
+        idx.toString(),
+        enrollments: ListBuilder<Enrollment>(
+          [_mockEnrollment(idx.toString(), userId: student.id, computedCurrentScore: 90)],
+        ),
+      ),
+    );
 
     _setupLocator(_MockCoursesInteractor(courses: courses));
 
@@ -133,12 +142,14 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('launches course detail screen when tapping on a course', (tester) async {
-    var student = _mockStudent(1);
+    var student = _mockStudent('1');
     var courses = List.generate(
       1,
       (idx) => _mockCourse(
-        idx,
-        enrollments: ListBuilder<Enrollment>([_mockEnrollment(idx, userId: student.id, computedCurrentScore: 90)]),
+        idx.toString(),
+        enrollments: ListBuilder<Enrollment>(
+          [_mockEnrollment(idx.toString(), userId: student.id, computedCurrentScore: 90)],
+        ),
       ),
     );
 
@@ -162,40 +173,50 @@ class _MockCoursesInteractor extends CoursesInteractor {
   _MockCoursesInteractor({this.courses});
 
   @override
-  Future<List<Course>> getCourses() async => courses ?? ListBuilder<Course>([_mockCourse(1)]).build().toList();
+  Future<List<Course>> getCourses() async => courses ?? ListBuilder<Course>([_mockCourse('1')]).build().toList();
 }
 
 class _MockCourseDetailsInteractor extends CourseDetailsInteractor {}
 
-List<Course> generateCoursesForStudent([int userId]) {
-  var student = _mockStudent(userId ?? 1);
+List<Course> generateCoursesForStudent([String userId]) {
+  var student = _mockStudent(userId ?? '1');
   return List.generate(
-      3, (idx) => _mockCourse(idx, enrollments: ListBuilder<Enrollment>([_mockEnrollment(idx, userId: student.id)])));
+    3,
+    (idx) => _mockCourse(
+      idx.toString(),
+      enrollments: ListBuilder<Enrollment>([_mockEnrollment(idx.toString(), userId: student.id)]),
+    ),
+  );
 }
 
-Enrollment _mockEnrollment(int courseId, {int userId = 0, String computedCurrentGrade, double computedCurrentScore}) =>
+Enrollment _mockEnrollment(
+  String courseId, {
+  String userId = '0',
+  String computedCurrentGrade,
+  double computedCurrentScore,
+}) =>
     Enrollment((b) => b
       ..courseId = courseId
       ..userId = userId
-      ..courseSectionId = 0
-      ..enrollmentState = ''
+      ..courseSectionId = '0'
+      ..enrollmentState = '0'
       ..computedCurrentGrade = computedCurrentGrade
       ..computedCurrentScore = computedCurrentScore
       ..build());
 
-Course _mockCourse(int courseId,
+Course _mockCourse(String courseId,
         {ListBuilder<Enrollment> enrollments, bool hasActiveGradingPeriod, double currentScore, String currentGrade}) =>
     Course((b) => b
       ..id = courseId
       ..name = "CourseName"
       ..imageDownloadUrl = ''
-      ..enrollments = enrollments ?? ListBuilder<Enrollment>([_mockEnrollment(0)])
+      ..enrollments = enrollments ?? ListBuilder<Enrollment>([_mockEnrollment('0')])
       ..hasGradingPeriods = hasActiveGradingPeriod ?? false
       ..currentScore = currentScore
       ..currentGrade = currentGrade
       ..build());
 
-User _mockStudent(int userId) => User((b) => b
+User _mockStudent(String userId) => User((b) => b
   ..id = userId
   ..name = "UserName"
   ..sortableName = "Sortable Name"

@@ -30,7 +30,7 @@ void main() {
     });
 
     test('returns LATE for a late submission', () {
-      final assignment = _mockAssignment(submission: _mockSubmission().toBuilder()..late = true);
+      final assignment = _mockAssignment(submission: _mockSubmission().toBuilder()..isLate = true);
       expect(assignment.getStatus(), SubmissionStatus.LATE);
     });
 
@@ -86,12 +86,12 @@ Assignment _mockAssignment({
   List<SubmissionTypes> types = const [SubmissionTypes.onlineTextEntry],
 }) =>
     Assignment((b) => b
-      ..id = 0
-      ..courseId = 0
-      ..assignmentGroupId = 0
+      ..id = ''
+      ..courseId = ''
+      ..assignmentGroupId = ''
       ..position = 0
       ..dueAt = dueAt
       ..submission = submission
       ..submissionTypes = BuiltList<SubmissionTypes>(types).toBuilder());
 
-Submission _mockSubmission() => Submission((b) => b..assignmentId = 0);
+Submission _mockSubmission() => Submission((b) => b..assignmentId = '');

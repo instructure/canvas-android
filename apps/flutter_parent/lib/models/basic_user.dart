@@ -23,7 +23,7 @@ abstract class BasicUser implements Built<BasicUser, BasicUserBuilder> {
   @BuiltValueSerializer(serializeNulls: true) // Add this line to get nulls to serialize when we convert to JSON
   static Serializer<BasicUser> get serializer => _$basicUserSerializer;
 
-  int get id;
+  String get id;
 
   @nullable
   String get name;

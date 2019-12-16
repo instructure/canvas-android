@@ -12,6 +12,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:dio_http_cache/dio_http_cache.dart';
 import 'package:flutter_parent/api/utils/api_prefs.dart';
@@ -55,6 +57,9 @@ class DioConfig {
 
   /// Creates a [Dio] instance using this configuration
   Dio get dio {
+    // Add canvas-string-ids header to ensure Canvas IDs are returned as Strings
+    baseHeaders[HttpHeaders.acceptHeader] = 'application/json+canvas-string-ids';
+
     // Configure base options
     var options = BaseOptions(baseUrl: baseUrl, headers: baseHeaders);
 

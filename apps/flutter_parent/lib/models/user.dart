@@ -27,7 +27,7 @@ abstract class User implements Built<User, UserBuilder> {
   User._();
   factory User([void Function(UserBuilder) updates]) = _$User;
 
-  int get id;
+  String get id;
 
   String get name;
 
@@ -58,6 +58,6 @@ abstract class User implements Built<User, UserBuilder> {
   String get effectiveLocale;
 
   static void _initializeBuilder(UserBuilder b) => b
-    ..id = 0
+    ..id = ''
     ..name = '';
 }

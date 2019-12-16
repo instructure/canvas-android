@@ -29,7 +29,7 @@ abstract class AssignmentGroup implements Built<AssignmentGroup, AssignmentGroup
 
   factory AssignmentGroup([void Function(AssignmentGroupBuilder) updates]) = _$AssignmentGroup;
 
-  int get id;
+  String get id;
 
   String get name;
 

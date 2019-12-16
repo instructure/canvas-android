@@ -19,7 +19,7 @@ class _$CourseSerializer implements StructuredSerializer<Course> {
       {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
       'id',
-      serializers.serialize(object.id, specifiedType: const FullType(int)),
+      serializers.serialize(object.id, specifiedType: const FullType(String)),
       'name',
       serializers.serialize(object.name, specifiedType: const FullType(String)),
       'hide_final_grades',
@@ -120,7 +120,7 @@ class _$CourseSerializer implements StructuredSerializer<Course> {
       switch (key) {
         case 'id':
           result.id = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
+              specifiedType: const FullType(String)) as String;
           break;
         case 'name':
           result.name = serializers.deserialize(value,
@@ -213,7 +213,7 @@ class _$Course extends Course {
   @override
   final String finalGrade;
   @override
-  final int id;
+  final String id;
   @override
   final String name;
   @override
@@ -448,9 +448,9 @@ class CourseBuilder implements Builder<Course, CourseBuilder> {
   String get finalGrade => _$this._finalGrade;
   set finalGrade(String finalGrade) => _$this._finalGrade = finalGrade;
 
-  int _id;
-  int get id => _$this._id;
-  set id(int id) => _$this._id = id;
+  String _id;
+  String get id => _$this._id;
+  set id(String id) => _$this._id = id;
 
   String _name;
   String get name => _$this._name;

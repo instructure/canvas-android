@@ -24,7 +24,7 @@ abstract class MediaComment implements Built<MediaComment, MediaCommentBuilder> 
   @BuiltValueSerializer(serializeNulls: true) // Add this line to get nulls to serialize when we convert to JSON
   static Serializer<MediaComment> get serializer => _$mediaCommentSerializer;
 
-  int get id;
+  String get id;
 
   @BuiltValueField(wireName: "media_id")
   @nullable

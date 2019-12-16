@@ -19,10 +19,10 @@ class _$MessageSerializer implements StructuredSerializer<Message> {
       {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
       'id',
-      serializers.serialize(object.id, specifiedType: const FullType(int)),
+      serializers.serialize(object.id, specifiedType: const FullType(String)),
       'author_id',
       serializers.serialize(object.authorId,
-          specifiedType: const FullType(int)),
+          specifiedType: const FullType(String)),
       'generated',
       serializers.serialize(object.isGenerated,
           specifiedType: const FullType(bool)),
@@ -89,7 +89,7 @@ class _$MessageSerializer implements StructuredSerializer<Message> {
       switch (key) {
         case 'id':
           result.id = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
+              specifiedType: const FullType(String)) as String;
           break;
         case 'created_at':
           result.createdAt = serializers.deserialize(value,
@@ -101,7 +101,7 @@ class _$MessageSerializer implements StructuredSerializer<Message> {
           break;
         case 'author_id':
           result.authorId = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
+              specifiedType: const FullType(String)) as String;
           break;
         case 'generated':
           result.isGenerated = serializers.deserialize(value,
@@ -138,13 +138,13 @@ class _$MessageSerializer implements StructuredSerializer<Message> {
 
 class _$Message extends Message {
   @override
-  final int id;
+  final String id;
   @override
   final DateTime createdAt;
   @override
   final String body;
   @override
-  final int authorId;
+  final String authorId;
   @override
   final bool isGenerated;
   @override
@@ -240,9 +240,9 @@ class _$Message extends Message {
 class MessageBuilder implements Builder<Message, MessageBuilder> {
   _$Message _$v;
 
-  int _id;
-  int get id => _$this._id;
-  set id(int id) => _$this._id = id;
+  String _id;
+  String get id => _$this._id;
+  set id(String id) => _$this._id = id;
 
   DateTime _createdAt;
   DateTime get createdAt => _$this._createdAt;
@@ -252,9 +252,9 @@ class MessageBuilder implements Builder<Message, MessageBuilder> {
   String get body => _$this._body;
   set body(String body) => _$this._body = body;
 
-  int _authorId;
-  int get authorId => _$this._authorId;
-  set authorId(int authorId) => _$this._authorId = authorId;
+  String _authorId;
+  String get authorId => _$this._authorId;
+  set authorId(String authorId) => _$this._authorId = authorId;
 
   bool _isGenerated;
   bool get isGenerated => _$this._isGenerated;

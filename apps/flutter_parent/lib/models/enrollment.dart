@@ -36,24 +36,24 @@ abstract class Enrollment implements Built<Enrollment, EnrollmentBuilder> {
   @nullable
   String get type;
 
-  int get id;
+  String get id;
 
   // Only included when we get enrollments using the user's url: /users/self/enrollments
   @nullable
   @BuiltValueField(wireName: 'course_id')
   @nullable
-  int get courseId;
+  String get courseId;
 
   @nullable
   @BuiltValueField(wireName: 'course_section_id')
   @nullable
-  int get courseSectionId;
+  String get courseSectionId;
 
   @BuiltValueField(wireName: 'enrollment_state')
   String get enrollmentState;
 
   @BuiltValueField(wireName: 'user_id')
-  int get userId;
+  String get userId;
 
   @nullable
   Grade get grades;
@@ -98,14 +98,14 @@ abstract class Enrollment implements Built<Enrollment, EnrollmentBuilder> {
   String get currentPeriodComputedFinalGrade;
 
   @BuiltValueField(wireName: 'current_grading_period_id')
-  int get currentGradingPeriodId;
+  String get currentGradingPeriodId;
 
   @nullable
   @BuiltValueField(wireName: 'current_grading_period_title')
   String get currentGradingPeriodTitle;
 
   @BuiltValueField(wireName: 'associated_user_id')
-  int get associatedUserId; // The unique id of the associated user. Will be null unless type is ObserverEnrollment.
+  String get associatedUserId; // The unique id of the associated user. Will be null unless type is ObserverEnrollment.
 
   @nullable
   @BuiltValueField(wireName: 'last_activity_at')
@@ -137,13 +137,13 @@ abstract class Enrollment implements Built<Enrollment, EnrollmentBuilder> {
 // NOTE: There is also a StudentViewEnrollment that allows Teachers to view the course as a student - we don't handle that right now, and we probably don't have to worry about it
 
   static void _initializeBuilder(EnrollmentBuilder b) => b
-    ..id = 0
-    ..userId = 0
-    ..courseId = 0
-    ..courseSectionId = 0
+    ..id = ''
+    ..userId = ''
+    ..courseId = ''
+    ..courseSectionId = ''
     ..multipleGradingPeriodsEnabled = false
     ..totalsForAllGradingPeriodsOption = false
-    ..currentGradingPeriodId = 0
-    ..associatedUserId = 0
+    ..currentGradingPeriodId = ''
+    ..associatedUserId = ''
     ..limitPrivilegesToCourseSection = false;
 }

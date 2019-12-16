@@ -23,7 +23,7 @@ abstract class Attachment implements Built<Attachment, AttachmentBuilder> {
   @BuiltValueSerializer(serializeNulls: true) // Add this line to get nulls to serialize when we convert to JSON
   static Serializer<Attachment> get serializer => _$attachmentSerializer;
 
-  int get id;
+  String get id;
 
   @BuiltValueField(wireName: "content-type")
   @nullable
@@ -57,6 +57,6 @@ abstract class Attachment implements Built<Attachment, AttachmentBuilder> {
   factory Attachment([void Function(AttachmentBuilder) updates]) = _$Attachment;
 
   static void _initializeBuilder(AttachmentBuilder b) => b
-    ..id = 0
+    ..id = ''
     ..size = 0;
 }

@@ -17,7 +17,7 @@ import 'package:flutter_parent/models/alert.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class AlertsInteractor {
-  Future<List<Alert>> getAlertsForStudent(int studentId) async {
+  Future<List<Alert>> getAlertsForStudent(String studentId) async {
     final data = await _alertsApi().getAlertsDepaginated(studentId);
     return data
       ..sort((a, b) {
@@ -28,7 +28,7 @@ class AlertsInteractor {
       });
   }
 
-  Future<Alert> markAlertRead(int alertId) {
+  Future<Alert> markAlertRead(String alertId) {
     return _alertsApi().updateAlertWorkflow(alertId, AlertWorkflowState.read.name);
   }
 

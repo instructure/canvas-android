@@ -27,7 +27,7 @@ abstract class Message implements Built<Message, MessageBuilder> {
   @BuiltValueSerializer(serializeNulls: true) // Add this line to get nulls to serialize when we convert to JSON
   static Serializer<Message> get serializer => _$messageSerializer;
 
-  int get id;
+  String get id;
 
   @BuiltValueField(wireName: "created_at")
   @nullable
@@ -37,7 +37,7 @@ abstract class Message implements Built<Message, MessageBuilder> {
   String get body;
 
   @BuiltValueField(wireName: "author_id")
-  int get authorId;
+  String get authorId;
 
   @BuiltValueField(wireName: "generated")
   bool get isGenerated;

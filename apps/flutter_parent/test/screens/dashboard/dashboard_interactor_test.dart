@@ -63,7 +63,7 @@ void main() {
 }
 
 User _mockStudent(String name) => User((b) => b
-  ..id = Random(name.hashCode).nextInt(100000)
+  ..id = Random(name.hashCode).nextInt(100000).toString()
   ..sortableName = name
   ..build());
 
