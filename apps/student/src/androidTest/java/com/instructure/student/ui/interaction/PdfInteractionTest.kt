@@ -16,89 +16,166 @@
  */
 package com.instructure.student.ui.interaction
 
+import androidx.test.espresso.web.sugar.Web
+import androidx.test.espresso.web.webdriver.DriverAtoms
+import androidx.test.espresso.web.webdriver.Locator
 import androidx.test.platform.app.InstrumentationRegistry
-import androidx.test.platform.app.InstrumentationRegistry.getArguments
-import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
-import com.instructure.annotations.BuildConfig
 import com.instructure.annotations.FileCaching.FileCache
-import com.instructure.annotations.FileCaching.SimpleDiskCache
-import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.mockCanvas.*
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Attachment
-import com.instructure.canvasapi2.utils.ContextKeeper
+import com.instructure.canvasapi2.models.Tab
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
+import com.instructure.pandautils.loaders.OpenMediaAsyncTaskLoader
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.routeTo
 import com.instructure.student.ui.utils.tokenLogin
-import org.junit.Assert
 import org.junit.Test
+import java.io.File
+import java.io.FileOutputStream
+import java.io.InputStream
+import java.io.OutputStream
 import java.util.*
 
 class PdfInteractionTest : StudentTest() {
     override fun displaysPageObjects() = Unit // Not used for interaction tests
 
-    @Stub
-    @Test
-    @TestMetaData(Priority.P0, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, true, FeatureCategory.ANNOTATIONS)
-    fun testAnnotations_viewPdfSubmission() {
-        // Attachment content type must be pdf
-        // attachment.contentType == "application/pdf
-        // preview url must be valid "url" to assets/samplepdf.pdf
-        goToAssignmentPdfSubmission()
-        // TODO: Make this file show up in the files list or find another way to confirm the pdf is open
-//        submissionDetailsPage.assertFileDisplayed(pdfFileName)
-    }
-
-    @Stub
-    @Test
-    @TestMetaData(Priority.P1, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, true, FeatureCategory.ANNOTATIONS)
-    fun testAnnotations_viewAndSelectAnnotationsInSubmission() {
-
-    }
-
-    @Stub
-    @Test
-    @TestMetaData(Priority.P1, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, true, FeatureCategory.ANNOTATIONS)
-    fun testAnnotations_selectAndCommentOnAnnotationWithNoExistingComments() {
-
-    }
-
-    @Stub
-    @Test
-    @TestMetaData(Priority.P1, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, true, FeatureCategory.ANNOTATIONS)
-    fun testAnnotations_selectAndCommentOnAnnotationWithExistingComments() {
-
-    }
-
-    @Stub
-    @Test
-    @TestMetaData(Priority.P1, FeatureCategory.FILES, TestCategory.INTERACTION, true, FeatureCategory.ANNOTATIONS)
-    fun testAnnotations_openPdfFilesInPSPDFKit() {
-        // Annotation toolbar icon needs to be present
-    }
-
-    @Stub
-    @Test
-    @TestMetaData(Priority.P1, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, true, FeatureCategory.ANNOTATIONS)
-    fun testAnnotations_openPdfsInPSPDFKitFromLinksInAssignment() {
-        // Annotation toolbar icon needs to be present, this link is specific to assignment details, as that was the advertised use case
-    }
-
-//    val pdfUrl = "https://mock-data.instructure.com/canvadoc?=samplepdf.pdf"
-//    val pdfDownloadUrl = """https://mock-data.instructure.com/api/v1/sessions/eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJjIjoxNTc1ODU5MDE0Njc1LCJkIjoidFZkZDJCZ2sxb3d4c3I1cGJXajJMQlpkbWk5Wm5mIiwiZSI6MTU3NTg5NTAxNCwiciI6InBkZmpzIiwibCI6ImVuIiwiZyI6InVzLWVhc3QtMSIsImgiOnt9LCJhIjp7ImMiOiJkZWZhdWx0IiwicCI6InJlYWR3cml0ZSIsImwiOiJibWNBTSIsInUiOiIxMDAwMDAwNTgzNDgxNyIsIm4iOiJIb2RvciAoaGUvaGltL2hpcykiLCJyIjoic3R1ZGVudCJ9LCJpYXQiOjE1NzU4NTkwMTQsImV4cCI6MTU3NTg5NTAxM30.9fGuDynCPJzOKSdC-w3GVUa3dl9SA-plWjD0Du47L3DZGg4wb3W2RQq_KIrJ0Wfjcgx2irrHyg5I-5daeG_Qeg/file/file.pdf"""
-//    val sessionPdfDownloadUrl = """https://mock-data.instructure.com/1/sessions/eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJjIjoxNTc1ODU5MDE0Njc1LCJkIjoidFZkZDJCZ2sxb3d4c3I1cGJXajJMQlpkbWk5Wm5mIiwiZSI6MTU3NTg5NTAxNCwiciI6InBkZmpzIiwibCI6ImVuIiwiZyI6InVzLWVhc3QtMSIsImgiOnt9LCJhIjp7ImMiOiJkZWZhdWx0IiwicCI6InJlYWR3cml0ZSIsImwiOiJibWNBTSIsInUiOiIxMDAwMDAwNTgzNDgxNyIsIm4iOiJIb2RvciAoaGUvaGltL2hpcykiLCJyIjoic3R1ZGVudCJ9LCJpYXQiOjE1NzU4NTkwMTQsImV4cCI6MTU3NTg5NTAxM30.9fGuDynCPJzOKSdC-w3GVUa3dl9SA-plWjD0Du47L3DZGg4wb3W2RQq_KIrJ0Wfjcgx2irrHyg5I-5daeG_Qeg/file/file.pdf"""
     val pdfFileName = "samplepdf.pdf"
     private lateinit var assignment: Assignment
     private lateinit var attachment: Attachment
 
-    private fun goToAssignmentPdfSubmission() {
+    @Test
+    @TestMetaData(Priority.P0, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, false, FeatureCategory.ANNOTATIONS)
+    fun testAnnotations_viewPdfSubmission() {
+        goToAssignmentPdfSubmission()
+        submissionDetailsPage.assertFileDisplayed(pdfFileName)
+    }
+
+    @Test
+    @TestMetaData(Priority.P1, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, false, FeatureCategory.ANNOTATIONS)
+    fun testAnnotations_viewAndSelectAnnotationsInSubmission() {
+        goToAssignmentPdfSubmission()
+        submissionDetailsPage.clickSubmissionContentAtPosition(.5f, .5f)
+        submissionDetailsPage.assertPdfAnnotationSelected()
+    }
+
+    @Test
+    @TestMetaData(Priority.P1, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, false, FeatureCategory.ANNOTATIONS)
+    fun testAnnotations_selectAndCommentOnAnnotationWithNoExistingComments() {
+        val sentCommentContents = "what up dog"
+        goToAssignmentPdfSubmission(hasSentComment = true, sentCommentContents = sentCommentContents)
+        submissionDetailsPage.clickSubmissionContentAtPosition(.5f, .5f)
+        submissionDetailsPage.addFirstAnnotationComment(sentCommentContents)
+        submissionDetailsPage.openPdfComments()
+        annotationCommentListPage.assertCommentDisplayed(sentCommentContents)
+    }
+
+    @Test
+    @TestMetaData(Priority.P1, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, false, FeatureCategory.ANNOTATIONS)
+    fun testAnnotations_selectAndCommentOnAnnotationWithExistingComments() {
+        val sentCommentContents = "what up dog"
+        goToAssignmentPdfSubmission(hasComment = true, hasSentComment = true, commentContents =  "hodor", sentCommentContents = sentCommentContents)
+        submissionDetailsPage.clickSubmissionContentAtPosition(.5f, .5f)
+        submissionDetailsPage.openPdfComments()
+        annotationCommentListPage.sendComment(sentCommentContents)
+        annotationCommentListPage.assertCommentDisplayed(sentCommentContents)
+    }
+
+
+    @Test
+    @TestMetaData(Priority.P1, FeatureCategory.FILES, TestCategory.INTERACTION, false, FeatureCategory.ANNOTATIONS)
+    fun testAnnotations_openPdfFilesInPSPDFKit() {
+        // Annotation toolbar icon needs to be present
+        val data = getToCourse()
+        val course = data.courses.values.first()
+
+        data.addFileToCourse(
+                courseId = course.id,
+                displayName = pdfFileName,
+                contentType = "application/pdf")
+
+        val uniqueFileName = OpenMediaAsyncTaskLoader.makeFilenameUnique(pdfFileName, data.folderFiles.values.first().first().url)
+
+        cacheFile(uniqueFileName)
+
+        courseBrowserPage.selectFiles()
+        fileListPage.selectItem(pdfFileName)
+        fileListPage.assertPdfPreviewDisplayed()
+    }
+
+    @Test
+    @TestMetaData(Priority.P1, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION, false, FeatureCategory.ANNOTATIONS)
+    fun testAnnotations_openPdfsInPSPDFKitFromLinksInAssignment() {
+        // Annotation toolbar icon needs to be present, this link is specific to assignment details, as that was the advertised use case
+        val data = MockCanvas.init(
+                studentCount = 1,
+                courseCount = 1
+        )
+
+        val course = data.courses.values.first()
+        val student = data.students[0]
+        val token = data.tokenFor(student)!!
+        data.addAssignmentsToGroups(course)
+        tokenLogin(data.domain, token, student)
+        routeTo("courses/${course.id}/assignments", data.domain)
+
+        val fileId = data.newItemId()
+        val url = """https://mock-data.instructure.com/courses/${course.id}/files/${fileId}/download?"""
+
+        data.addFileToCourse(
+            courseId = course.id,
+            displayName = pdfFileName,
+            contentType = "application/pdf",
+            fileId = fileId,
+            url = url
+        )
+
+        val uniqueFileName = OpenMediaAsyncTaskLoader.makeFilenameUnique(pdfFileName, url)
+
+        cacheFile(uniqueFileName)
+
+        val pdfUrlElementId = "testLinkElement"
+        val assignmentDescriptionHtml = """<a id="$pdfUrlElementId" href="$url">pdf baby!!!</a>"""
+
+        val assignment = data.addAssignment(courseId = course.id, submissionType = Assignment.SubmissionType.ONLINE_UPLOAD, description = assignmentDescriptionHtml)
+
+        assignmentListPage.clickAssignment(assignment)
+        assignmentDetailsPage.verifyAssignmentDetails(assignment)
+        Web.onWebView()
+                .withElement(DriverAtoms.findElement(Locator.ID, pdfUrlElementId))
+                .perform(DriverAtoms.webClick())
+        fileListPage.assertPdfPreviewDisplayed()
+    }
+
+    private fun getToCourse(): MockCanvas {
+        val data = MockCanvas.init(
+                studentCount = 1,
+                courseCount = 1,
+                favoriteCourseCount = 1)
+
+        val course1 = data.courses.values.first()
+        val pagesTab = Tab(position = 2, label = "Pages", visibility = "public", tabId = Tab.PAGES_ID)
+        val filesTab = Tab(position = 3, label = "Files", visibility = "public", tabId = Tab.FILES_ID)
+        data.courseTabs[course1.id]!! += pagesTab
+        data.courseTabs[course1.id]!! += filesTab
+
+        val student = data.students[0]
+        val token = data.tokenFor(student)!!
+        tokenLogin(data.domain, token, student)
+        dashboardPage.waitForRender()
+
+        dashboardPage.selectCourse(course1)
+        return data
+    }
+
+    private fun goToAssignmentPdfSubmission(hasComment: Boolean = false, hasSentComment: Boolean = false, commentContents: String? = null, sentCommentContents: String? = null) {
         // Test clicking on the Submission and Rubric button to load the Submission Details Page
         val data = MockCanvas.init(
                 studentCount = 1,
+                teacherCount = 1,
                 courseCount = 1
         )
 
@@ -107,7 +184,14 @@ class PdfInteractionTest : StudentTest() {
         val teacher = data.teachers[0]
         val token = data.tokenFor(student)!!
         data.addAssignmentsToGroups(course)
-        val docSession = data.addAnnotations(student, teacher)
+        val docSession = data.addAnnotation(
+            signedInUser = student,
+            annotationAuthor = teacher,
+            hasComment = hasComment,
+            hasSentComment = hasSentComment,
+            commentContents = commentContents,
+            sentCommentContents = sentCommentContents
+        )
         assignment = data.assignments.values.first()
 
         val previewUrl = """/api/v1/canvadoc_session?blob={"moderated_grading_whitelist":null,"enable_annotations":true,
@@ -124,7 +208,7 @@ class PdfInteractionTest : StudentTest() {
             createdAt = Date()
         )
 
-        val submission = data.addSubmissionForAssignment(
+        data.addSubmissionForAssignment(
             assignmentId = assignment.id,
             userId = student.id,
             type = Assignment.SubmissionType.ONLINE_UPLOAD.apiString,
@@ -136,9 +220,6 @@ class PdfInteractionTest : StudentTest() {
         tokenLogin(data.domain, token, student)
         routeTo("courses/${course.id}/assignments", data.domain)
 
-        // Let's find and click an assignment with a submission, so that we get meaningful
-        // data in the submission details.
-        Assert.assertNotNull("Expected at least one assignment with a submission", assignment)
         assignmentListPage.clickAssignment(assignment)
         assignmentDetailsPage.goToSubmissionDetails()
     }
@@ -146,6 +227,28 @@ class PdfInteractionTest : StudentTest() {
     private fun setupCache(pdfUrl: String) {
         val inputStream = InstrumentationRegistry.getInstrumentation().context.resources.assets.open(pdfFileName)
         FileCache.putInputStream("https://mock-data.instructure.com$pdfUrl", inputStream)
+    }
+
+    private fun cacheFile(fileName: String) {
+        // We need to copy the file from our assets directory to the cache dirctory, so OpenMediaAsyncTaskLoader
+        // will find it and assume it was downloaded previously
+        var inputStream : InputStream? = null
+        var outputStream : OutputStream? = null
+
+        try {
+            inputStream = InstrumentationRegistry.getInstrumentation().context.resources.assets.open(pdfFileName)
+            val dir = InstrumentationRegistry.getInstrumentation().getTargetContext().externalCacheDir
+            val file = File(dir?.path, fileName)
+            outputStream = FileOutputStream(file)
+            inputStream.copyTo(outputStream)
+        }
+        finally {
+            if(inputStream != null) inputStream.close()
+            if(outputStream != null) {
+                outputStream.flush()
+                outputStream.close()
+            }
+        }
     }
 
 }
