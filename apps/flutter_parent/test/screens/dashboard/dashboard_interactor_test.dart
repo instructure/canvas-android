@@ -17,7 +17,10 @@ import 'dart:math';
 import 'package:flutter_parent/models/enrollment.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/screens/dashboard/dashboard_interactor.dart';
+import 'package:flutter_parent/screens/dashboard/inbox_notifier.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import '../../utils/test_app.dart';
 
 void main() {
   test('Sort users in descending order', () {
@@ -59,6 +62,16 @@ void main() {
     var result = interactor.filterStudents(startingList);
 
     expect(result, expectedSortedList);
+  });
+
+  test('Returns InboxCountNotifier from locator', () {
+    var notifier = InboxCountNotifier();
+    setupTestLocator((locator) {
+      locator.registerLazySingleton<InboxCountNotifier>(() => notifier);
+    });
+
+    var interactor = DashboardInteractor();
+    expect(interactor.getInboxCountNotifier(), notifier);
   });
 }
 

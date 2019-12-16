@@ -17,6 +17,7 @@ import 'package:flutter_parent/api/user_api.dart';
 import 'package:flutter_parent/api/utils/api_prefs.dart';
 import 'package:flutter_parent/models/enrollment.dart';
 import 'package:flutter_parent/models/user.dart';
+import 'package:flutter_parent/screens/dashboard/inbox_notifier.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class DashboardInteractor {
@@ -36,4 +37,6 @@ class DashboardInteractor {
       enrollments.map((enrollment) => enrollment.observedUser).where((student) => student != null).toSet().toList();
 
   void sortUsers(List<User> users) => users.sort((user1, user2) => user1.sortableName.compareTo(user2.sortableName));
+
+  InboxCountNotifier getInboxCountNotifier() => locator<InboxCountNotifier>();
 }

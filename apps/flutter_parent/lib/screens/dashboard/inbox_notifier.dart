@@ -13,21 +13,18 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:flutter/material.dart';
-
-//final InboxCountNotifier inboxCountNotifier = new InboxCountNotifier._private();
+import 'package:flutter_parent/api/inbox_api.dart';
+import 'package:flutter_parent/utils/service_locator.dart';
 
 class InboxCountNotifier extends ValueNotifier<int> {
-  static final _instance = InboxCountNotifier._private();
+  InboxCountNotifier() : super(0);
 
-  static InboxCountNotifier get() => _instance;
-
-  InboxCountNotifier._private() : super(0);
-  update() {
-    value = 10;
-    // TODO: InboxApi
-//    InboxApi.getUnreadCount().then((count) {
-//      value = count;
-//      notifyListeners();
-//    });
+  update() async {
+    try {
+      var unreadCount = await locator<InboxApi>().getUnreadCount();
+      value = int.parse(unreadCount.count);
+    } catch (e) {
+      print(e);
+    }
   }
 }
