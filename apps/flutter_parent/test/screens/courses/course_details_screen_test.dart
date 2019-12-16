@@ -28,8 +28,8 @@ import '../../utils/accessibility_utils.dart';
 import '../../utils/test_app.dart';
 
 void main() {
-  final studentId = 123;
-  final courseId = 321;
+  final studentId = '123';
+  final courseId = '321';
 
   _setupLocator({CourseDetailsInteractor interactor}) {
     final _locator = GetIt.instance;

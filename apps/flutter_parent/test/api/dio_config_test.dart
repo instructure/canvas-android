@@ -46,7 +46,10 @@ void main() {
 
     test('sets up headers', () async {
       final options = canvasDio().options;
-      expect(options.headers, ApiPrefs.getHeaderMap()..putIfAbsent('content-type', () => null));
+      final expectedHeaders = ApiPrefs.getHeaderMap()
+        ..putIfAbsent('content-type', () => null)
+        ..putIfAbsent('accept', () => 'application/json+canvas-string-ids');
+      expect(options.headers, expectedHeaders);
     });
 
     test('sets up headers with overrides', () async {
@@ -55,7 +58,8 @@ void main() {
 
       final options = canvasDio(forceDeviceLanguage: true, overrideToken: overrideToken, extraHeaders: extras).options;
       final expected = ApiPrefs.getHeaderMap(forceDeviceLanguage: true, token: overrideToken, extraHeaders: extras)
-        ..putIfAbsent('content-type', () => null);
+        ..putIfAbsent('content-type', () => null)
+        ..putIfAbsent('accept', () => 'application/json+canvas-string-ids');
 
       expect(options.headers, expected);
     });

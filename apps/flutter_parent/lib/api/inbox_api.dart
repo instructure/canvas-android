@@ -51,10 +51,10 @@ class InboxApi {
 
   Future<Conversation> createConversation(
     Course course,
-    List<int> recipientIds,
+    List<String> recipientIds,
     String subject,
     String body,
-    List<int> attachmentIds,
+    List<String> attachmentIds,
   ) async {
     var dio = canvasDio();
     var params = {

@@ -109,16 +109,16 @@ class _$AlertSerializer implements StructuredSerializer<Alert> {
       {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
       'id',
-      serializers.serialize(object.id, specifiedType: const FullType(int)),
+      serializers.serialize(object.id, specifiedType: const FullType(String)),
       'observer_alert_threshold_id',
       serializers.serialize(object.observerAlertThresholdId,
-          specifiedType: const FullType(int)),
+          specifiedType: const FullType(String)),
       'context_type',
       serializers.serialize(object.contextType,
           specifiedType: const FullType(String)),
       'context_id',
       serializers.serialize(object.contextId,
-          specifiedType: const FullType(int)),
+          specifiedType: const FullType(String)),
       'alert_type',
       serializers.serialize(object.alertType,
           specifiedType: const FullType(AlertType)),
@@ -132,10 +132,11 @@ class _$AlertSerializer implements StructuredSerializer<Alert> {
       serializers.serialize(object.title,
           specifiedType: const FullType(String)),
       'user_id',
-      serializers.serialize(object.userId, specifiedType: const FullType(int)),
+      serializers.serialize(object.userId,
+          specifiedType: const FullType(String)),
       'observer_id',
       serializers.serialize(object.observerId,
-          specifiedType: const FullType(int)),
+          specifiedType: const FullType(String)),
       'html_url',
       serializers.serialize(object.htmlUrl,
           specifiedType: const FullType(String)),
@@ -158,11 +159,11 @@ class _$AlertSerializer implements StructuredSerializer<Alert> {
       switch (key) {
         case 'id':
           result.id = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
+              specifiedType: const FullType(String)) as String;
           break;
         case 'observer_alert_threshold_id':
           result.observerAlertThresholdId = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
+              specifiedType: const FullType(String)) as String;
           break;
         case 'context_type':
           result.contextType = serializers.deserialize(value,
@@ -170,7 +171,7 @@ class _$AlertSerializer implements StructuredSerializer<Alert> {
           break;
         case 'context_id':
           result.contextId = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
+              specifiedType: const FullType(String)) as String;
           break;
         case 'alert_type':
           result.alertType = serializers.deserialize(value,
@@ -191,11 +192,11 @@ class _$AlertSerializer implements StructuredSerializer<Alert> {
           break;
         case 'user_id':
           result.userId = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
+              specifiedType: const FullType(String)) as String;
           break;
         case 'observer_id':
           result.observerId = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
+              specifiedType: const FullType(String)) as String;
           break;
         case 'html_url':
           result.htmlUrl = serializers.deserialize(value,
@@ -264,13 +265,13 @@ class _$AlertWorkflowStateSerializer
 
 class _$Alert extends Alert {
   @override
-  final int id;
+  final String id;
   @override
-  final int observerAlertThresholdId;
+  final String observerAlertThresholdId;
   @override
   final String contextType;
   @override
-  final int contextId;
+  final String contextId;
   @override
   final AlertType alertType;
   @override
@@ -280,9 +281,9 @@ class _$Alert extends Alert {
   @override
   final String title;
   @override
-  final int userId;
+  final String userId;
   @override
-  final int observerId;
+  final String observerId;
   @override
   final String htmlUrl;
 
@@ -406,22 +407,22 @@ class _$Alert extends Alert {
 class AlertBuilder implements Builder<Alert, AlertBuilder> {
   _$Alert _$v;
 
-  int _id;
-  int get id => _$this._id;
-  set id(int id) => _$this._id = id;
+  String _id;
+  String get id => _$this._id;
+  set id(String id) => _$this._id = id;
 
-  int _observerAlertThresholdId;
-  int get observerAlertThresholdId => _$this._observerAlertThresholdId;
-  set observerAlertThresholdId(int observerAlertThresholdId) =>
+  String _observerAlertThresholdId;
+  String get observerAlertThresholdId => _$this._observerAlertThresholdId;
+  set observerAlertThresholdId(String observerAlertThresholdId) =>
       _$this._observerAlertThresholdId = observerAlertThresholdId;
 
   String _contextType;
   String get contextType => _$this._contextType;
   set contextType(String contextType) => _$this._contextType = contextType;
 
-  int _contextId;
-  int get contextId => _$this._contextId;
-  set contextId(int contextId) => _$this._contextId = contextId;
+  String _contextId;
+  String get contextId => _$this._contextId;
+  set contextId(String contextId) => _$this._contextId = contextId;
 
   AlertType _alertType;
   AlertType get alertType => _$this._alertType;
@@ -440,13 +441,13 @@ class AlertBuilder implements Builder<Alert, AlertBuilder> {
   String get title => _$this._title;
   set title(String title) => _$this._title = title;
 
-  int _userId;
-  int get userId => _$this._userId;
-  set userId(int userId) => _$this._userId = userId;
+  String _userId;
+  String get userId => _$this._userId;
+  set userId(String userId) => _$this._userId = userId;
 
-  int _observerId;
-  int get observerId => _$this._observerId;
-  set observerId(int observerId) => _$this._observerId = observerId;
+  String _observerId;
+  String get observerId => _$this._observerId;
+  set observerId(String observerId) => _$this._observerId = observerId;
 
   String _htmlUrl;
   String get htmlUrl => _$this._htmlUrl;

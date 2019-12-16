@@ -239,7 +239,7 @@ Widget _testableWidget({User student}) {
   return TestApp(Scaffold(body: AlertsScreen(student ?? _mockUser())));
 }
 
-User _mockUser({int id = 0}) {
+User _mockUser({String id = ''}) {
   return User((b) => b..id = id);
 }
 
@@ -247,7 +247,7 @@ List<Alert> _mockData({int size = 1, AlertType type}) {
   return List.generate(
       size,
       (index) => Alert((b) => b
-        ..id = index
+        ..id = index.toString()
         ..title = 'Alert $index'
         ..alertType = type ?? AlertType.institutionAnnouncement));
 }

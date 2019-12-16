@@ -19,7 +19,7 @@ class _$SubmissionSerializer implements StructuredSerializer<Submission> {
       {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
       'id',
-      serializers.serialize(object.id, specifiedType: const FullType(int)),
+      serializers.serialize(object.id, specifiedType: const FullType(String)),
       'score',
       serializers.serialize(object.score,
           specifiedType: const FullType(double)),
@@ -33,7 +33,7 @@ class _$SubmissionSerializer implements StructuredSerializer<Submission> {
       serializers.serialize(object.isGradeMatchesCurrentSubmission,
           specifiedType: const FullType(bool)),
       'late',
-      serializers.serialize(object.late, specifiedType: const FullType(bool)),
+      serializers.serialize(object.isLate, specifiedType: const FullType(bool)),
       'excused',
       serializers.serialize(object.excused,
           specifiedType: const FullType(bool)),
@@ -42,12 +42,13 @@ class _$SubmissionSerializer implements StructuredSerializer<Submission> {
           specifiedType: const FullType(bool)),
       'assignment_id',
       serializers.serialize(object.assignmentId,
-          specifiedType: const FullType(int)),
+          specifiedType: const FullType(String)),
       'user_id',
-      serializers.serialize(object.userId, specifiedType: const FullType(int)),
+      serializers.serialize(object.userId,
+          specifiedType: const FullType(String)),
       'grader_id',
       serializers.serialize(object.graderId,
-          specifiedType: const FullType(int)),
+          specifiedType: const FullType(String)),
       'entered_score',
       serializers.serialize(object.enteredScore,
           specifiedType: const FullType(double)),
@@ -174,7 +175,7 @@ class _$SubmissionSerializer implements StructuredSerializer<Submission> {
       switch (key) {
         case 'id':
           result.id = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
+              specifiedType: const FullType(String)) as String;
           break;
         case 'grade':
           result.grade = serializers.deserialize(value,
@@ -239,7 +240,7 @@ class _$SubmissionSerializer implements StructuredSerializer<Submission> {
               specifiedType: const FullType(String)) as String;
           break;
         case 'late':
-          result.late = serializers.deserialize(value,
+          result.isLate = serializers.deserialize(value,
               specifiedType: const FullType(bool)) as bool;
           break;
         case 'excused':
@@ -252,7 +253,7 @@ class _$SubmissionSerializer implements StructuredSerializer<Submission> {
           break;
         case 'assignment_id':
           result.assignmentId = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
+              specifiedType: const FullType(String)) as String;
           break;
         case 'assignment':
           result.assignment.replace(serializers.deserialize(value,
@@ -260,11 +261,11 @@ class _$SubmissionSerializer implements StructuredSerializer<Submission> {
           break;
         case 'user_id':
           result.userId = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
+              specifiedType: const FullType(String)) as String;
           break;
         case 'grader_id':
           result.graderId = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
+              specifiedType: const FullType(String)) as String;
           break;
         case 'user':
           result.user.replace(serializers.deserialize(value,
@@ -291,7 +292,7 @@ class _$SubmissionSerializer implements StructuredSerializer<Submission> {
 
 class _$Submission extends Submission {
   @override
-  final int id;
+  final String id;
   @override
   final String grade;
   @override
@@ -323,19 +324,19 @@ class _$Submission extends Submission {
   @override
   final String url;
   @override
-  final bool late;
+  final bool isLate;
   @override
   final bool excused;
   @override
   final bool missing;
   @override
-  final int assignmentId;
+  final String assignmentId;
   @override
   final Assignment assignment;
   @override
-  final int userId;
+  final String userId;
   @override
-  final int graderId;
+  final String graderId;
   @override
   final User user;
   @override
@@ -365,7 +366,7 @@ class _$Submission extends Submission {
       this.submissionType,
       this.previewUrl,
       this.url,
-      this.late,
+      this.isLate,
       this.excused,
       this.missing,
       this.assignmentId,
@@ -393,8 +394,8 @@ class _$Submission extends Submission {
       throw new BuiltValueNullFieldError(
           'Submission', 'isGradeMatchesCurrentSubmission');
     }
-    if (late == null) {
-      throw new BuiltValueNullFieldError('Submission', 'late');
+    if (isLate == null) {
+      throw new BuiltValueNullFieldError('Submission', 'isLate');
     }
     if (excused == null) {
       throw new BuiltValueNullFieldError('Submission', 'excused');
@@ -444,7 +445,7 @@ class _$Submission extends Submission {
         submissionType == other.submissionType &&
         previewUrl == other.previewUrl &&
         url == other.url &&
-        late == other.late &&
+        isLate == other.isLate &&
         excused == other.excused &&
         missing == other.missing &&
         assignmentId == other.assignmentId &&
@@ -486,7 +487,7 @@ class _$Submission extends Submission {
                                                             submissionType.hashCode),
                                                         previewUrl.hashCode),
                                                     url.hashCode),
-                                                late.hashCode),
+                                                isLate.hashCode),
                                             excused.hashCode),
                                         missing.hashCode),
                                     assignmentId.hashCode),
@@ -519,7 +520,7 @@ class _$Submission extends Submission {
           ..add('submissionType', submissionType)
           ..add('previewUrl', previewUrl)
           ..add('url', url)
-          ..add('late', late)
+          ..add('isLate', isLate)
           ..add('excused', excused)
           ..add('missing', missing)
           ..add('assignmentId', assignmentId)
@@ -537,9 +538,9 @@ class _$Submission extends Submission {
 class SubmissionBuilder implements Builder<Submission, SubmissionBuilder> {
   _$Submission _$v;
 
-  int _id;
-  int get id => _$this._id;
-  set id(int id) => _$this._id = id;
+  String _id;
+  String get id => _$this._id;
+  set id(String id) => _$this._id = id;
 
   String _grade;
   String get grade => _$this._grade;
@@ -611,9 +612,9 @@ class SubmissionBuilder implements Builder<Submission, SubmissionBuilder> {
   String get url => _$this._url;
   set url(String url) => _$this._url = url;
 
-  bool _late;
-  bool get late => _$this._late;
-  set late(bool late) => _$this._late = late;
+  bool _isLate;
+  bool get isLate => _$this._isLate;
+  set isLate(bool isLate) => _$this._isLate = isLate;
 
   bool _excused;
   bool get excused => _$this._excused;
@@ -623,9 +624,9 @@ class SubmissionBuilder implements Builder<Submission, SubmissionBuilder> {
   bool get missing => _$this._missing;
   set missing(bool missing) => _$this._missing = missing;
 
-  int _assignmentId;
-  int get assignmentId => _$this._assignmentId;
-  set assignmentId(int assignmentId) => _$this._assignmentId = assignmentId;
+  String _assignmentId;
+  String get assignmentId => _$this._assignmentId;
+  set assignmentId(String assignmentId) => _$this._assignmentId = assignmentId;
 
   AssignmentBuilder _assignment;
   AssignmentBuilder get assignment =>
@@ -633,13 +634,13 @@ class SubmissionBuilder implements Builder<Submission, SubmissionBuilder> {
   set assignment(AssignmentBuilder assignment) =>
       _$this._assignment = assignment;
 
-  int _userId;
-  int get userId => _$this._userId;
-  set userId(int userId) => _$this._userId = userId;
+  String _userId;
+  String get userId => _$this._userId;
+  set userId(String userId) => _$this._userId = userId;
 
-  int _graderId;
-  int get graderId => _$this._graderId;
-  set graderId(int graderId) => _$this._graderId = graderId;
+  String _graderId;
+  String get graderId => _$this._graderId;
+  set graderId(String graderId) => _$this._graderId = graderId;
 
   UserBuilder _user;
   UserBuilder get user => _$this._user ??= new UserBuilder();
@@ -680,7 +681,7 @@ class SubmissionBuilder implements Builder<Submission, SubmissionBuilder> {
       _submissionType = _$v.submissionType;
       _previewUrl = _$v.previewUrl;
       _url = _$v.url;
-      _late = _$v.late;
+      _isLate = _$v.isLate;
       _excused = _$v.excused;
       _missing = _$v.missing;
       _assignmentId = _$v.assignmentId;
@@ -731,7 +732,7 @@ class SubmissionBuilder implements Builder<Submission, SubmissionBuilder> {
               submissionType: submissionType,
               previewUrl: previewUrl,
               url: url,
-              late: late,
+              isLate: isLate,
               excused: excused,
               missing: missing,
               assignmentId: assignmentId,

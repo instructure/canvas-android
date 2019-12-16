@@ -31,7 +31,7 @@ class AssignmentApi {
     return fetchList(dio.get('courses/$courseId/assignments', queryParameters: params), depaginateWith: dio);
   }
 
-  Future<List<AssignmentGroup>> getAssignmentGroupsWithSubmissionsDepaginated(int courseId, int studentId) async {
+  Future<List<AssignmentGroup>> getAssignmentGroupsWithSubmissionsDepaginated(String courseId, String studentId) async {
     var dio = canvasDio();
     var params = {
       'include': [
@@ -47,7 +47,7 @@ class AssignmentApi {
     return fetchList(dio.get('courses/$courseId/assignment_groups', queryParameters: params), depaginateWith: dio);
   }
 
-  Future<PagedList<Assignment>> getAssignmentsWithSubmissionsPaged(int courseId, int studentId) async {
+  Future<PagedList<Assignment>> getAssignmentsWithSubmissionsPaged(String courseId, String studentId) async {
     var params = {
       'include': ['all_dates', 'overrides', 'rubric_assessment', 'submission'],
       'order_by': 'due_at',
@@ -68,7 +68,12 @@ class AssignmentApi {
   }
 
   // TODO: Remove once LA-274 is implemented, and submissions are given with assignment groups (for observers)
-  Future<List<Submission>> getSubmissions(int courseId, int studentId, List<int> assignmentIds, {bool forceRefresh}) {
+  Future<List<Submission>> getSubmissions(
+    String courseId,
+    String studentId,
+    List<String> assignmentIds, {
+    bool forceRefresh,
+  }) {
     final dio = canvasDio(forceRefresh: forceRefresh);
     final params = {
       'student_ids': [studentId],

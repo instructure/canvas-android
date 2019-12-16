@@ -22,8 +22,8 @@ import 'package:flutter_parent/utils/base_model.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class CourseDetailsModel extends BaseModel {
-  int studentId;
-  int courseId; // Could be routed to without a full course, only the id may be known
+  String studentId;
+  String courseId; // Could be routed to without a full course, only the id may be known
   Course course;
   Future<List<AssignmentGroup>> assignmentGroupFuture;
 
@@ -53,12 +53,12 @@ class CourseDetailsModel extends BaseModel {
       if (groups == null || groups.isEmpty) return groups;
 
       // Remove unpublished assignments to match web
-      groups = groups.map((group) => (group.toBuilder()..assignments.removeWhere((assignment) => !assignment.published)).build()).toList();
+      groups = groups
+          .map((group) => (group.toBuilder()..assignments.removeWhere((assignment) => !assignment.published)).build())
+          .toList();
 
       // The load submissions endpoint will fail for assignments that aren't published, so filter those out
-      final ids = groups
-          .expand((group) => group.assignments.map((assignment) => assignment.id))
-          .toList();
+      final ids = groups.expand((group) => group.assignments.map((assignment) => assignment.id)).toList();
 
       if (ids.isEmpty) return groups; // If there are no ids to load submissions for, just return
 

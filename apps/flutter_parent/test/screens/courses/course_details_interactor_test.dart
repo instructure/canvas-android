@@ -29,7 +29,7 @@ void main() {
   }
 
   test('load course calls the api', () async {
-    final courseId = 123;
+    final courseId = '123';
     final courseApi = _MockCourseApi();
     _setupLocator(courseApi: courseApi);
 
@@ -39,8 +39,8 @@ void main() {
   });
 
   test('load assignments calls the api', () async {
-    final courseId = 123;
-    final studentId = 321;
+    final courseId = '123';
+    final studentId = '321';
     final assignmentApi = _MockAssignmentApi();
     _setupLocator(assignmentApi: assignmentApi);
 
@@ -50,9 +50,9 @@ void main() {
   });
 
   test('load submissions calls the api', () async {
-    final courseId = 123;
-    final studentId = 321;
-    final assignmentIds = [1,2,3];
+    final courseId = '123';
+    final studentId = '321';
+    final assignmentIds = ['1', '2', '3'];
     final assignmentApi = _MockAssignmentApi();
     _setupLocator(assignmentApi: assignmentApi);
 
@@ -62,9 +62,9 @@ void main() {
   });
 
   test('load submissions calls the api with force refresh', () async {
-    final courseId = 123;
-    final studentId = 321;
-    final assignmentIds = [1,2,3];
+    final courseId = '123';
+    final studentId = '321';
+    final assignmentIds = ['1', '2', '3'];
     final assignmentApi = _MockAssignmentApi();
     _setupLocator(assignmentApi: assignmentApi);
 

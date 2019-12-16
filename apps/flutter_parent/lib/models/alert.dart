@@ -28,16 +28,16 @@ abstract class Alert implements Built<Alert, AlertBuilder> {
 
   factory Alert([void Function(AlertBuilder) updates]) = _$Alert;
 
-  int get id;
+  String get id;
 
   @BuiltValueField(wireName: "observer_alert_threshold_id")
-  int get observerAlertThresholdId;
+  String get observerAlertThresholdId;
 
   @BuiltValueField(wireName: "context_type")
   String get contextType;
 
   @BuiltValueField(wireName: "context_id")
-  int get contextId;
+  String get contextId;
 
   @BuiltValueField(wireName: "alert_type")
   AlertType get alertType;
@@ -51,25 +51,25 @@ abstract class Alert implements Built<Alert, AlertBuilder> {
   String get title;
 
   @BuiltValueField(wireName: "user_id")
-  int get userId;
+  String get userId;
 
   @BuiltValueField(wireName: "observer_id")
-  int get observerId;
+  String get observerId;
 
   @BuiltValueField(wireName: "html_url")
   String get htmlUrl;
 
   static void _initializeBuilder(AlertBuilder b) => b
-    ..id = 0
-    ..observerAlertThresholdId = 0
+    ..id = ''
+    ..observerAlertThresholdId = ''
     ..contextType = 'institution'
-    ..contextId = 0
+    ..contextId = ''
     ..alertType = AlertType.institutionAnnouncement
     ..workflowState = AlertWorkflowState.unread
     ..actionDate = DateTime.now()
     ..title = ''
-    ..userId = 0
-    ..observerId = 0
+    ..userId = ''
+    ..observerId = ''
     ..htmlUrl = '';
 
   // Utility functions

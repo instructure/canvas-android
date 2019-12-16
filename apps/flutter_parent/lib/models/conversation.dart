@@ -28,7 +28,7 @@ abstract class Conversation implements Built<Conversation, ConversationBuilder> 
   static Serializer<Conversation> get serializer => _$conversationSerializer;
 
   /// The unique id for the conversation
-  int get id;
+  String get id;
 
   /// Message Subject
   String get subject;
@@ -79,7 +79,7 @@ abstract class Conversation implements Built<Conversation, ConversationBuilder> 
 
   /// The IDs of all people in the conversation. EXCLUDING the current user unless it's a monologue
   @nullable
-  BuiltList<int> get audience;
+  BuiltList<String> get audience;
 
   /// The name and IDs of all participants in the conversation
   @nullable
@@ -103,7 +103,7 @@ abstract class Conversation implements Built<Conversation, ConversationBuilder> 
   factory Conversation([void Function(ConversationBuilder) updates]) = _$Conversation;
 
   static void _initializeBuilder(ConversationBuilder b) => b
-    ..id = 0
+    ..id = ''
     ..subject = ''
     ..messageCount = 0
     ..isSubscribed = false
