@@ -12,17 +12,29 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import 'package:dio/dio.dart';
+import 'package:flutter_parent/api/utils/api_prefs.dart';
 import 'package:flutter_parent/api/utils/dio_config.dart';
 import 'package:flutter_parent/api/utils/fetch.dart';
 import 'package:flutter_parent/models/enrollment.dart';
 
 class EnrollmentsApi {
-  static Future<List<Enrollment>> getObserveeEnrollments({bool forceRefresh = false}) async {
+  Future<List<Enrollment>> getObserveeEnrollments({bool forceRefresh = false}) async {
     var dio = canvasDio(pageSize: PageSize.canvasMax, forceRefresh: forceRefresh);
     var params = {
       'include': ['observed_users', 'avatar_url'],
       'state': ['creation_pending', 'invited', 'active']
     };
     return fetchList(dio.get('users/self/enrollments', queryParameters: params), depaginateWith: dio);
+  }
+
+  Future<bool> pairWithStudent(String pairingCode) async {
+    try {
+      var pairingResponse = await canvasDio().post(ApiPrefs.getApiUrl(path: 'users/${ApiPrefs.getUser().id}/observees'),
+          queryParameters: {'pairing_code': pairingCode});
+      return (pairingResponse.statusCode == 200 || pairingResponse.statusCode == 201);
+    } on DioError {
+      return false;
+    }
   }
 }
