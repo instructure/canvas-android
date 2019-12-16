@@ -43,6 +43,8 @@ class _ManageStudentsState extends State<ManageStudentsScreen> {
   Future<List<User>> _studentsFuture;
   Future<List<User>> _loadStudents() => locator<ManageStudentsInteractor>().getStudents(forceRefresh: true);
 
+  GlobalKey<RefreshIndicatorState> _refreshKey = GlobalKey<RefreshIndicatorState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,6 +68,7 @@ class _ManageStudentsState extends State<ManageStudentsScreen> {
             }
 
             return RefreshIndicator(
+              key: _refreshKey,
               onRefresh: _refresh,
               child: view,
             );
@@ -77,26 +80,23 @@ class _ManageStudentsState extends State<ManageStudentsScreen> {
   Widget _StudentsList(List<User> students) {
     return ListView.builder(
       itemCount: students.length,
-      itemBuilder: (context, index) => Padding(
-        padding: const EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 0),
-        child: ListTile(
-          leading: Hero(
-            tag: 'studentAvatar${students[index].id}',
-            child: Avatar(students[index].avatarUrl, name: students[index].shortName),
-          ),
-          title: Hero(
-            tag: 'studentText${students[index].id}',
-            child: GestureDetector(
-                child: UserName.fromUser(
-                  students[index],
-                  style: Theme.of(context).textTheme.subhead,
-                ),
-                onTap: () {
-                  // TODO: Tapping on a user
-//                  locator.get<QuickNav>().push(context, StudentSettingsScreen(students[index]));
-                }),
+      itemBuilder: (context, index) => ListTile(
+        contentPadding: const EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 0),
+        leading: Hero(
+          tag: 'studentAvatar${students[index].id}',
+          child: Avatar(students[index].avatarUrl, name: students[index].shortName),
+        ),
+        title: Hero(
+          tag: 'studentText${students[index].id}',
+          child: UserName.fromUser(
+            students[index],
+            style: Theme.of(context).textTheme.subhead,
           ),
         ),
+        onTap: () {
+          // TODO: Tapping on a user
+//                  locator.get<QuickNav>().push(context, StudentSettingsScreen(students[index]));
+        },
       ),
     );
   }
@@ -218,6 +218,7 @@ class _ManageStudentsState extends State<ManageStudentsScreen> {
           Navigator.of(context).pop();
           bool studentPaired = await _addStudentDialog(context);
           if (studentPaired) {
+            _refreshKey.currentState.show();
             _refresh();
           }
         });

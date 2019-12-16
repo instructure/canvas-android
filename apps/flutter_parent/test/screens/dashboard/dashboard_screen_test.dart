@@ -273,8 +273,8 @@ void main() {
 
     await setupPlatformChannels(
         config: PlatformConfig(mockPrefs: {
-      '${ApiPrefs.KEY_ACCESS_TOKEN}': 'token',
-      '${ApiPrefs.KEY_DOMAIN}': 'domain',
+      ApiPrefs.KEY_ACCESS_TOKEN: 'token',
+      ApiPrefs.KEY_DOMAIN: 'domain',
     }));
 
     expect(ApiPrefs.isLoggedIn(), true);

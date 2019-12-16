@@ -27,7 +27,7 @@ class AddStudentDialog extends StatefulWidget {
   AddStudentDialog(this._pairingCode, {Key key});
 
   @override
-  State<StatefulWidget> createState() => AddStudentDialogState(_pairingCode);
+  State<StatefulWidget> createState() => AddStudentDialogState();
 }
 
 class AddStudentDialogState extends State<AddStudentDialog> {
@@ -36,8 +36,6 @@ class AddStudentDialogState extends State<AddStudentDialog> {
   var _initialPairingCode = '';
 
   final GlobalKey<FormFieldState> _formKey = GlobalKey<FormFieldState>();
-
-  AddStudentDialogState(this._initialPairingCode);
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +58,7 @@ class AddStudentDialogState extends State<AddStudentDialog> {
             autofocus: true,
             autocorrect: false,
             autovalidate: false,
-            initialValue: _initialPairingCode,
+            initialValue: widget._pairingCode,
             onChanged: (value) {
               _showParingCodeError(false);
             },
