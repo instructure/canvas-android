@@ -18,7 +18,7 @@ import 'package:flutter_parent/models/course.dart';
 
 class CourseApi {
   Future<List<Course>> getObserveeCourses({bool forceRefresh: false}) async {
-    final dio = canvasDio(forceRefresh: forceRefresh, usePerPageParam: true);
+    final dio = canvasDio(forceRefresh: forceRefresh, pageSize: PageSize.canvasMax);
     final params = {
       'include': [
         'term',
