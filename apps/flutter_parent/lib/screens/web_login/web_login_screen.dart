@@ -19,6 +19,7 @@ import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/mobile_verify_result.dart';
 import 'package:flutter_parent/screens/splash/splash_screen.dart';
 import 'package:flutter_parent/screens/web_login/web_login_interactor.dart';
+import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
@@ -56,7 +57,7 @@ class WebLoginScreen extends StatelessWidget {
       future: _interactor.mobileVerify(domain),
       builder: (context, AsyncSnapshot<MobileVerifyResult> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return LoadingIndicator();
         } else {
           if (snapshot.hasError || (snapshot.hasData && snapshot.data.result != VerifyResultEnum.success)) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
