@@ -28,6 +28,9 @@ abstract class Recipient implements Built<Recipient, RecipientBuilder> {
 
   String get name;
 
+  @nullable
+  String get pronouns;
+
   @BuiltValueField(wireName: "avatar_url")
   @nullable
   String get avatarUrl;

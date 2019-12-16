@@ -555,6 +555,23 @@ void main() {
     verify(observer.didPop(any, any)).called(1);
   });
 
+  testWidgetsWithAccessibilityChecks('Displays pronouns for recipients', (tester) async {
+    _setupLocator(recipientCount: 2, pronouns: true); // One teacher, one student
+    final course = _mockCourse(0);
+
+    await tester.pumpWidget(_testableWidget(CreateConversationScreen(course)));
+    await tester.pumpAndSettle();
+
+    // Should show one teacher recipient (User 1)
+    var chip = find.byType(Chip);
+    expect(chip, findsOneWidget);
+    expect(find.descendant(of: chip, matching: find.text("User 1 (They/them)")), findsOneWidget);
+
+    var recipientsButton = find.byKey(CreateConversationScreen.recipientsAddKey);
+    await tester.tap(recipientsButton);
+    await tester.pumpAndSettle();
+  });
+
   testWidgetsWithAccessibilityChecks('Displays enrollment types', (tester) async {
     var interactor = _MockedInteractor();
     GetIt.instance.reset();
@@ -605,7 +622,7 @@ void main() {
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 
 Widget _testableWidget(Widget widget, {MockNavigatorObserver observer}) {
-  return TestApp(widget, navigatorObservers: [if (observer != null) observer]);
+  return TestApp(widget, navigatorObservers: [if (observer != null) observer], highContrast: true);
 }
 
 /// Load up a temp page with a button to navigate to our screen, that way the back button exists in the app bar
@@ -629,16 +646,16 @@ Future<void> _pumpTestableWidgetWithBackButton(tester, Widget widget, {MockNavig
   }
 }
 
-_setupLocator({
-  int recipientCount = 4,
-  _MockAttachmentHandler attachmentHandler,
-  int fetchFailCount: 0,
-  int sendFailCount: 0,
-}) {
+_setupLocator(
+    {int recipientCount = 4,
+    _MockAttachmentHandler attachmentHandler,
+    int fetchFailCount: 0,
+    int sendFailCount: 0,
+    bool pronouns: false}) {
   final _locator = GetIt.instance;
   _locator.reset();
   _locator.registerFactory<CreateConversationInteractor>(
-      () => _MockInteractor(recipientCount, attachmentHandler, fetchFailCount, sendFailCount));
+      () => _MockInteractor(recipientCount, attachmentHandler, fetchFailCount, sendFailCount, pronouns));
 }
 
 class _MockedInteractor extends Mock implements CreateConversationInteractor {}
@@ -652,7 +669,10 @@ class _MockInteractor extends CreateConversationInteractor {
 
   int _sendFailCount;
 
-  _MockInteractor(this._recipientCount, this.mockAttachmentHandler, this._fetchFailCount, this._sendFailCount);
+  bool _pronouns;
+
+  _MockInteractor(this._recipientCount, this.mockAttachmentHandler, this._fetchFailCount, this._sendFailCount,
+      [this._pronouns = false]);
 
   @override
   Future<List<Recipient>> getAllRecipients(Course course) async {
@@ -665,6 +685,7 @@ class _MockInteractor extends CreateConversationInteractor {
         (index) => Recipient((r) => r
           ..id = index
           ..name = "User $index"
+          ..pronouns = _pronouns ? "They/them" : null
           ..avatarUrl = ""
           ..commonCourses = _generateCourseMap(course.id, index)));
     return list;

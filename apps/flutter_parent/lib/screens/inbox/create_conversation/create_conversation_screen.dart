@@ -18,6 +18,7 @@ import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/models/recipient.dart';
 import 'package:flutter_parent/screens/inbox/attachment_utils/attachment_handler.dart';
 import 'package:flutter_parent/utils/common_widgets/avatar.dart';
+import 'package:flutter_parent/utils/common_widgets/user_name.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/design/canvas_icons_solid.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
@@ -367,8 +368,9 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
           .map((user) => Chip(
                 label: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: Text(
+                  child: UserName(
                     user.name,
+                    user.pronouns,
                     style: TextStyle(fontWeight: FontWeight.w500),
                   ),
                 ),
@@ -383,8 +385,9 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
             padding: const EdgeInsets.symmetric(vertical: 8),
             child: ConstrainedBox(
               constraints: BoxConstraints(maxWidth: 180),
-              child: Text(
+              child: UserName(
                 _selectedRecipients[0].name,
+                _selectedRecipients[0].pronouns,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(fontWeight: FontWeight.w500),
               ),
@@ -464,7 +467,7 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
                       final selected = _selectedRecipients.contains(user);
                       return ListTile(
                         selected: selected,
-                        title: Text(user.name),
+                        title: UserName.fromRecipient(user),
                         subtitle: Text(_enrollmentType(context, user)),
                         leading: Avatar(
                           user.avatarUrl,
