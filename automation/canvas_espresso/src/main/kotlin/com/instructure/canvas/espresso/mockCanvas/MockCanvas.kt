@@ -1031,7 +1031,7 @@ fun MockCanvas.addFileToCourse(
         contentType: String = "text/plain",
         groupId: Long? = null,
         url: String = "",
-        fileId: Long = 0L
+        fileId: Long = newItemId()
 ): Long {
     var rootFolder = getRootFolder(courseId = courseId, groupId = groupId)
     return addFileToFolder(

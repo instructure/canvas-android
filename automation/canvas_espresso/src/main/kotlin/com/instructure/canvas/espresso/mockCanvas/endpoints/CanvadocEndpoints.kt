@@ -50,7 +50,7 @@ object CanvadocApiEndpoint : Endpoint(
 /**
  * `sessions/sessionsId/annotations/stringId` -> [AnnotationsEndpoint] PUT for annotation creation/editing
  *
- * GenericStringId allows us to capture the stringId param at the end
+ * AnnotationId allows us to capture the stringId param at the end
  *
  */
 object AnnotationsEndpoint : Endpoint(
