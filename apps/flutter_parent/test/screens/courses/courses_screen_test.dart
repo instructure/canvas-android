@@ -199,7 +199,7 @@ Enrollment _mockEnrollment(
       ..courseId = courseId
       ..userId = userId
       ..courseSectionId = '0'
-      ..enrollmentState = '0'
+      ..enrollmentState = ''
       ..computedCurrentGrade = computedCurrentGrade
       ..computedCurrentScore = computedCurrentScore
       ..build());
