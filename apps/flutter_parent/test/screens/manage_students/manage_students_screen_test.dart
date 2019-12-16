@@ -308,6 +308,10 @@ void main() {
       await tester.pumpWidget(TestApp(ManageStudentsScreen(observedStudent), highContrast: true));
       await tester.pumpAndSettle();
 
+      // Make sure we only have one student
+      expect(find.byType(ListTile), findsNWidgets(1));
+      expect(find.text('Billy'), findsOneWidget);
+
       // Click FAB
       await _clickFAB(tester);
 
@@ -323,10 +327,15 @@ void main() {
       await tester.tap(find.text('OK'));
       await tester.pumpAndSettle();
 
+      // Make sure we made the call to get students
+      verify(interactor.getStudents(forceRefresh: true)).called(1);
+
       // Make sure the dialog is gone
       expect(find.byType(AlertDialog), findsNothing);
 
-      // Make sure we have the new students
+      // Check for two students in the list
+      expect(find.byType(ListTile), findsNWidgets(2));
+      expect(find.text('Billy'), findsOneWidget);
       expect(find.text('Trevor'), findsOneWidget);
     });
 

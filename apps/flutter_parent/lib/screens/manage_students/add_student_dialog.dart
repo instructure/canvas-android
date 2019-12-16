@@ -33,7 +33,6 @@ class AddStudentDialog extends StatefulWidget {
 class AddStudentDialogState extends State<AddStudentDialog> {
   var _pairingCodeError = false;
   var _makingApiCall = false;
-  var _initialPairingCode = '';
 
   final GlobalKey<FormFieldState> _formKey = GlobalKey<FormFieldState>();
 

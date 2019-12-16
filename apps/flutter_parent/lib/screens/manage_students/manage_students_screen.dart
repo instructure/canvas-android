@@ -81,7 +81,7 @@ class _ManageStudentsState extends State<ManageStudentsScreen> {
     return ListView.builder(
       itemCount: students.length,
       itemBuilder: (context, index) => ListTile(
-        contentPadding: const EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 0),
+        contentPadding: const EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 12.0),
         leading: Hero(
           tag: 'studentAvatar${students[index].id}',
           child: Avatar(students[index].avatarUrl, name: students[index].shortName),
@@ -219,7 +219,6 @@ class _ManageStudentsState extends State<ManageStudentsScreen> {
           bool studentPaired = await _addStudentDialog(context);
           if (studentPaired) {
             _refreshKey.currentState.show();
-            _refresh();
           }
         });
   }
