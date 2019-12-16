@@ -19,12 +19,13 @@ class _$EnrollmentSerializer implements StructuredSerializer<Enrollment> {
       {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
       'id',
-      serializers.serialize(object.id, specifiedType: const FullType(int)),
+      serializers.serialize(object.id, specifiedType: const FullType(String)),
       'enrollment_state',
       serializers.serialize(object.enrollmentState,
           specifiedType: const FullType(String)),
       'user_id',
-      serializers.serialize(object.userId, specifiedType: const FullType(int)),
+      serializers.serialize(object.userId,
+          specifiedType: const FullType(String)),
       'multiple_grading_periods_enabled',
       serializers.serialize(object.multipleGradingPeriodsEnabled,
           specifiedType: const FullType(bool)),
@@ -33,10 +34,10 @@ class _$EnrollmentSerializer implements StructuredSerializer<Enrollment> {
           specifiedType: const FullType(bool)),
       'current_grading_period_id',
       serializers.serialize(object.currentGradingPeriodId,
-          specifiedType: const FullType(int)),
+          specifiedType: const FullType(String)),
       'associated_user_id',
       serializers.serialize(object.associatedUserId,
-          specifiedType: const FullType(int)),
+          specifiedType: const FullType(String)),
       'limit_privileges_to_course_section',
       serializers.serialize(object.limitPrivilegesToCourseSection,
           specifiedType: const FullType(bool)),
@@ -60,14 +61,14 @@ class _$EnrollmentSerializer implements StructuredSerializer<Enrollment> {
       result.add(null);
     } else {
       result.add(serializers.serialize(object.courseId,
-          specifiedType: const FullType(int)));
+          specifiedType: const FullType(String)));
     }
     result.add('course_section_id');
     if (object.courseSectionId == null) {
       result.add(null);
     } else {
       result.add(serializers.serialize(object.courseSectionId,
-          specifiedType: const FullType(int)));
+          specifiedType: const FullType(String)));
     }
     result.add('grades');
     if (object.grades == null) {
@@ -185,15 +186,15 @@ class _$EnrollmentSerializer implements StructuredSerializer<Enrollment> {
           break;
         case 'id':
           result.id = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
+              specifiedType: const FullType(String)) as String;
           break;
         case 'course_id':
           result.courseId = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
+              specifiedType: const FullType(String)) as String;
           break;
         case 'course_section_id':
           result.courseSectionId = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
+              specifiedType: const FullType(String)) as String;
           break;
         case 'enrollment_state':
           result.enrollmentState = serializers.deserialize(value,
@@ -201,7 +202,7 @@ class _$EnrollmentSerializer implements StructuredSerializer<Enrollment> {
           break;
         case 'user_id':
           result.userId = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
+              specifiedType: const FullType(String)) as String;
           break;
         case 'grades':
           result.grades.replace(serializers.deserialize(value,
@@ -253,7 +254,7 @@ class _$EnrollmentSerializer implements StructuredSerializer<Enrollment> {
           break;
         case 'current_grading_period_id':
           result.currentGradingPeriodId = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
+              specifiedType: const FullType(String)) as String;
           break;
         case 'current_grading_period_title':
           result.currentGradingPeriodTitle = serializers.deserialize(value,
@@ -261,7 +262,7 @@ class _$EnrollmentSerializer implements StructuredSerializer<Enrollment> {
           break;
         case 'associated_user_id':
           result.associatedUserId = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
+              specifiedType: const FullType(String)) as String;
           break;
         case 'last_activity_at':
           result.lastActivityAt = serializers.deserialize(value,
@@ -292,15 +293,15 @@ class _$Enrollment extends Enrollment {
   @override
   final String type;
   @override
-  final int id;
+  final String id;
   @override
-  final int courseId;
+  final String courseId;
   @override
-  final int courseSectionId;
+  final String courseSectionId;
   @override
   final String enrollmentState;
   @override
-  final int userId;
+  final String userId;
   @override
   final Grade grades;
   @override
@@ -324,11 +325,11 @@ class _$Enrollment extends Enrollment {
   @override
   final String currentPeriodComputedFinalGrade;
   @override
-  final int currentGradingPeriodId;
+  final String currentGradingPeriodId;
   @override
   final String currentGradingPeriodTitle;
   @override
-  final int associatedUserId;
+  final String associatedUserId;
   @override
   final DateTime lastActivityAt;
   @override
@@ -533,17 +534,17 @@ class EnrollmentBuilder implements Builder<Enrollment, EnrollmentBuilder> {
   String get type => _$this._type;
   set type(String type) => _$this._type = type;
 
-  int _id;
-  int get id => _$this._id;
-  set id(int id) => _$this._id = id;
+  String _id;
+  String get id => _$this._id;
+  set id(String id) => _$this._id = id;
 
-  int _courseId;
-  int get courseId => _$this._courseId;
-  set courseId(int courseId) => _$this._courseId = courseId;
+  String _courseId;
+  String get courseId => _$this._courseId;
+  set courseId(String courseId) => _$this._courseId = courseId;
 
-  int _courseSectionId;
-  int get courseSectionId => _$this._courseSectionId;
-  set courseSectionId(int courseSectionId) =>
+  String _courseSectionId;
+  String get courseSectionId => _$this._courseSectionId;
+  set courseSectionId(String courseSectionId) =>
       _$this._courseSectionId = courseSectionId;
 
   String _enrollmentState;
@@ -551,9 +552,9 @@ class EnrollmentBuilder implements Builder<Enrollment, EnrollmentBuilder> {
   set enrollmentState(String enrollmentState) =>
       _$this._enrollmentState = enrollmentState;
 
-  int _userId;
-  int get userId => _$this._userId;
-  set userId(int userId) => _$this._userId = userId;
+  String _userId;
+  String get userId => _$this._userId;
+  set userId(String userId) => _$this._userId = userId;
 
   GradeBuilder _grades;
   GradeBuilder get grades => _$this._grades ??= new GradeBuilder();
@@ -620,9 +621,9 @@ class EnrollmentBuilder implements Builder<Enrollment, EnrollmentBuilder> {
   set currentPeriodComputedFinalGrade(String currentPeriodComputedFinalGrade) =>
       _$this._currentPeriodComputedFinalGrade = currentPeriodComputedFinalGrade;
 
-  int _currentGradingPeriodId;
-  int get currentGradingPeriodId => _$this._currentGradingPeriodId;
-  set currentGradingPeriodId(int currentGradingPeriodId) =>
+  String _currentGradingPeriodId;
+  String get currentGradingPeriodId => _$this._currentGradingPeriodId;
+  set currentGradingPeriodId(String currentGradingPeriodId) =>
       _$this._currentGradingPeriodId = currentGradingPeriodId;
 
   String _currentGradingPeriodTitle;
@@ -630,9 +631,9 @@ class EnrollmentBuilder implements Builder<Enrollment, EnrollmentBuilder> {
   set currentGradingPeriodTitle(String currentGradingPeriodTitle) =>
       _$this._currentGradingPeriodTitle = currentGradingPeriodTitle;
 
-  int _associatedUserId;
-  int get associatedUserId => _$this._associatedUserId;
-  set associatedUserId(int associatedUserId) =>
+  String _associatedUserId;
+  String get associatedUserId => _$this._associatedUserId;
+  set associatedUserId(String associatedUserId) =>
       _$this._associatedUserId = associatedUserId;
 
   DateTime _lastActivityAt;

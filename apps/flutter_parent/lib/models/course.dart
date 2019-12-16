@@ -46,7 +46,7 @@ abstract class Course implements Built<Course, CourseBuilder> {
   @BuiltValueField(serialize: false)
   String get finalGrade;
 
-  int get id;
+  String get id;
   String get name;
 
   @nullable
@@ -108,7 +108,7 @@ abstract class Course implements Built<Course, CourseBuilder> {
   String get workflowState;
 
   static void _initializeBuilder(CourseBuilder b) => b
-    ..id = 0
+    ..id = ''
     ..enrollments = ListBuilder<Enrollment>()
     ..name = ''
     ..needsGradingCount = 0
@@ -121,6 +121,6 @@ abstract class Course implements Built<Course, CourseBuilder> {
     ..hasGradingPeriods = false
     ..restrictEnrollmentsToCourseDates = false;
 
-  CourseGrade getCourseGrade(int studentId) =>
+  CourseGrade getCourseGrade(String studentId) =>
       CourseGrade(enrollments.firstWhere((enrollment) => enrollment.userId == studentId));
 }

@@ -24,7 +24,7 @@ abstract class Recipient implements Built<Recipient, RecipientBuilder> {
   @BuiltValueSerializer(serializeNulls: true) // Add this line to get nulls to serialize when we convert to JSON
   static Serializer<Recipient> get serializer => _$recipientSerializer;
 
-  int get id;
+  String get id;
 
   String get name;
 

@@ -30,6 +30,7 @@ import com.instructure.canvas.espresso.mockCanvas.utils.user
 import com.instructure.canvasapi2.models.Favorite
 import com.instructure.canvasapi2.models.FileUploadParams
 import com.instructure.canvasapi2.models.Group
+import com.instructure.canvasapi2.models.ToDo
 import com.instructure.canvasapi2.utils.pageview.PandataInfo
 import okio.Buffer
 import java.nio.charset.Charset
@@ -63,9 +64,46 @@ object UserEndpoint : Endpoint(
     Segment("favorites") to UserFavoritesEndpoint,
     Segment("communication_channels") to UserCommunicationChannelsEndpoint,
     Segment("folders") to UserFoldersEndpoint,
-    Segment("files") to UserFilesEndpoint
+    Segment("files") to UserFilesEndpoint,
+        Segment("todo") to UserTodoEndpoint
 )
 
+/**
+ * Endpoint for user todo download
+ */
+object UserTodoEndpoint : Endpoint (
+        response = {
+            GET {
+                val toDoList = mutableListOf<ToDo>()
+                val userid = pathVars.userId
+                val userCourseIds = data.enrollments.values.filter {it.userId == userid}.map {it -> it.courseId}
+
+                // Gather our assignments, assuming that all are "to-do"
+                data.assignments.values.filter {userCourseIds.contains(it.courseId)}.forEach {
+                    toDoList.add(ToDo(
+                            type = ToDo.Type.UPCOMING_ASSIGNMENT,
+                            courseId =  it.courseId,
+                            assignment = it
+                    ))
+                }
+
+                // Gather our quizzes, assuming that all are "to-do"
+                userCourseIds.forEach {courseId ->
+                    data.courseQuizzes[courseId]?.forEach { quiz ->
+                        toDoList.add(ToDo(
+                                type = ToDo.Type.UPCOMING_ASSIGNMENT,
+                                courseId = courseId,
+                                quiz = quiz
+                        ))
+                    }
+                }
+
+                // TODO: Be more picky about which assignments and quizzes are "to-do"
+
+                request.successResponse(toDoList)
+            }
+        }
+)
 /**
  * Endpoint for user file upload
  */

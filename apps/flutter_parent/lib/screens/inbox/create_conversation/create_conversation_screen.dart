@@ -169,9 +169,6 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
 
   Widget _appBar(BuildContext context) {
     return AppBar(
-      textTheme: Theme.of(context).textTheme,
-      iconTheme: Theme.of(context).iconTheme,
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       elevation: 0,
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

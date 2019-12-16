@@ -163,9 +163,9 @@ void main() {
       ..contextName = ''
       ..lastMessage = ''
       ..lastMessageAt = messageDate
-      ..audience = ListBuilder<int>([123])
+      ..audience = ListBuilder<String>(['123'])
       ..participants = ListBuilder<BasicUser>(
-        [BasicUser((b) => b..id = 123)],
+        [BasicUser((b) => b..id = '123')],
       ));
 
     when(interactor.getConversations()).thenAnswer((_) => Future.value([conversation]));
@@ -186,11 +186,11 @@ void main() {
       ..contextName = ''
       ..lastMessage = ''
       ..lastMessageAt = messageDate
-      ..audience = ListBuilder<int>([123, 456]) // Only two users in audience, UI should filter out third user
+      ..audience = ListBuilder<String>(['123', '456']) // Only two users in audience, UI should filter out third user
       ..participants = ListBuilder<BasicUser>([
-        BasicUser((b) => b..id = 123),
-        BasicUser((b) => b..id = 456),
-        BasicUser((b) => b..id = 789),
+        BasicUser((b) => b..id = '123'),
+        BasicUser((b) => b..id = '456'),
+        BasicUser((b) => b..id = '789'),
       ]));
 
     when(interactor.getConversations()).thenAnswer((_) => Future.value([conversation]));
@@ -211,11 +211,11 @@ void main() {
       ..contextName = ''
       ..lastMessage = ''
       ..lastMessageAt = messageDate
-      ..audience = ListBuilder<int>([123, 456, 789])
+      ..audience = ListBuilder<String>(['123', '456', '789'])
       ..participants = ListBuilder<BasicUser>([
-        BasicUser((b) => b..id = 123),
-        BasicUser((b) => b..id = 456),
-        BasicUser((b) => b..id = 789),
+        BasicUser((b) => b..id = '123'),
+        BasicUser((b) => b..id = '456'),
+        BasicUser((b) => b..id = '789'),
       ]));
 
     when(interactor.getConversations()).thenAnswer((_) => Future.value([conversation]));

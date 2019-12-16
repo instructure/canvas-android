@@ -34,7 +34,7 @@ class CourseGradesScreen extends StatefulWidget {
 }
 
 class _CourseGradesScreenState extends State<CourseGradesScreen> {
-  Set<int> _collapsedGroupIds;
+  Set<String> _collapsedGroupIds;
 
   @override
   void initState() {

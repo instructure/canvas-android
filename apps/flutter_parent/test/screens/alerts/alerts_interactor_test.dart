@@ -28,7 +28,7 @@ void main() {
   }
 
   test('mark alert read calls the api', () {
-    final alertId = 123;
+    final alertId = '123';
     final api = _MockAlertsApi();
     when(api.updateAlertWorkflow(alertId, 'read')).thenAnswer((_) => Future.value(null));
     _setupLocator(api: api);
@@ -40,11 +40,11 @@ void main() {
 
   test('get alerts for student returns date sorted list', () async {
     final date = DateTime.now();
-    final studentId = 123;
+    final studentId = '123';
     final data = List.generate(5, (index) {
       // Create a list of alerts with dates in ascending order (reversed)
       return Alert((b) => b
-        ..id = index
+        ..id = index.toString()
         ..actionDate = date.add(Duration(days: index)));
     });
 

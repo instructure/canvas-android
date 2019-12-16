@@ -19,11 +19,7 @@ package com.instructure.canvas.espresso.mockCanvas.endpoints
 import android.util.Log
 import com.instructure.canvas.espresso.mockCanvas.Endpoint
 import com.instructure.canvas.espresso.mockCanvas.endpoint
-import com.instructure.canvas.espresso.mockCanvas.utils.LongId
-import com.instructure.canvas.espresso.mockCanvas.utils.PathVars
-import com.instructure.canvas.espresso.mockCanvas.utils.Segment
-import com.instructure.canvas.espresso.mockCanvas.utils.successResponse
-import com.instructure.canvas.espresso.mockCanvas.utils.unauthorizedResponse
+import com.instructure.canvas.espresso.mockCanvas.utils.*
 import com.instructure.canvasapi2.models.QuizSubmissionQuestion
 import com.instructure.canvasapi2.models.QuizSubmissionQuestionResponse
 import com.instructure.canvasapi2.models.Tab
@@ -55,6 +51,8 @@ object ApiEndpoint : Endpoint(
     ),
     Segment("folders") to FolderListEndpoint,
     Segment("search") to SearchEndpoint,
+    Segment("canvadoc_session") to CanvadocRedirectEndpoint,
+    Segment("files") to FileUrlEndpoint,
     Segment("quiz_submissions") to endpoint(
             LongId(PathVars::submissionId) to endpoint (
                     Segment("questions") to endpoint (
@@ -81,6 +79,29 @@ object ApiEndpoint : Endpoint(
             )
     ),
     Segment("groups") to GroupsEndpoint
+)
+
+object FileUrlEndpoint : Endpoint(
+    LongId(PathVars::fileId) to endpoint(
+        configure = {
+            GET {
+                val file = data.folderFiles.values.flatten().find { it.id == pathVars.fileId }
+                if(file != null) {
+                    request.successResponse(file)
+                } else {
+                    request.unauthorizedResponse()
+                }
+            }
+        }
+    )
+)
+
+object CanvadocRedirectEndpoint : Endpoint(
+    response = {
+        GET { // Throws not initialized exception
+            request.successRedirectWithHeader("Location", data.canvadocRedirectUrl)
+        }
+    }
 )
 
 // Logic for /api/v1/groups.

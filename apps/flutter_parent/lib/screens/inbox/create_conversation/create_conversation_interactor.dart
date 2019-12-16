@@ -29,10 +29,10 @@ class CreateConversationInteractor {
 
   Future<Conversation> createConversation(
     Course course,
-    List<int> recipientIds,
+    List<String> recipientIds,
     String subject,
     String body,
-    List<int> attachmentIds,
+    List<String> attachmentIds,
   ) {
     return locator<InboxApi>().createConversation(course, recipientIds, subject, body, attachmentIds);
   }

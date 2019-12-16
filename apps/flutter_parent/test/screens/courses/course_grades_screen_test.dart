@@ -33,9 +33,9 @@ import 'package:provider/provider.dart';
 import '../../utils/accessibility_utils.dart';
 import '../../utils/test_app.dart';
 
-const studentId = 123;
-const courseId = 321;
-const assignmentGroupId = 101;
+const studentId = '123';
+const courseId = '321';
+const assignmentGroupId = '101';
 
 void main() {
   _setupLocator({CourseDetailsInteractor interactor}) {
@@ -108,7 +108,7 @@ void main() {
     final date = DateTime(2000);
     final group = _mockAssignmentGroup(assignments: [
       _mockAssignment(dueAt: date),
-      _mockAssignment(id: 1, pointsPossible: 2.2, submission: _mockSubmission(grade: grade))
+      _mockAssignment(id: '1', pointsPossible: 2.2, submission: _mockSubmission(grade: grade))
     ]);
     final model = CourseDetailsModel(studentId, courseId);
     model.assignmentGroupFuture = Future.value([group]);
@@ -134,7 +134,7 @@ void main() {
     final groups = [
       _mockAssignmentGroup(),
       _mockAssignmentGroup(
-          assignmentGroupId: assignmentGroupId + 1, assignments: [_mockAssignment(groupId: assignmentGroupId + 1)]),
+          assignmentGroupId: assignmentGroupId + '1', assignments: [_mockAssignment(groupId: assignmentGroupId + '1')]),
     ];
     final model = CourseDetailsModel(studentId, courseId);
     model.course = _mockCourse();
@@ -176,9 +176,10 @@ void main() {
     final date = DateTime(2000);
     final group = _mockAssignmentGroup(assignments: [
       _mockAssignment(dueAt: date), // Missing
-      _mockAssignment(id: 1, submission: _mockSubmission(isLate: true)), // Late
-      _mockAssignment(id: 2, submission: _mockSubmission(submittedAt: date)), // Submitted
-      _mockAssignment(id: 2, dueAt: DateTime.now().add(Duration(days: 1)), submission: _mockSubmission()), // Not submitted
+      _mockAssignment(id: '1', submission: _mockSubmission(isLate: true)), // Late
+      _mockAssignment(id: '2', submission: _mockSubmission(submittedAt: date)), // Submitted
+      _mockAssignment(
+          id: '2', dueAt: DateTime.now().add(Duration(days: 1)), submission: _mockSubmission()), // Not submitted
     ]);
     final model = CourseDetailsModel(studentId, courseId);
     model.assignmentGroupFuture = Future.value([group]);
@@ -251,36 +252,43 @@ GradeBuilder _mockGrade({double currentScore, double finalScore, String currentG
     ..finalGrade = finalGrade ?? '';
 }
 
-AssignmentGroup _mockAssignmentGroup(
-    {int assignmentGroupId = assignmentGroupId, List<Assignment> assignments = const []}) {
+AssignmentGroup _mockAssignmentGroup({
+  String assignmentGroupId = assignmentGroupId,
+  List<Assignment> assignments = const [],
+}) {
   return AssignmentGroup((b) => b
     ..id = assignmentGroupId
     ..name = 'Group $assignmentGroupId'
-    ..position = assignmentGroupId
+    ..position = int.parse(assignmentGroupId)
     ..groupWeight = 0
     ..assignments = BuiltList.of(assignments).toBuilder());
 }
 
-Assignment _mockAssignment(
-    {int id = 0, int groupId = assignmentGroupId, Submission submission, DateTime dueAt, double pointsPossible = 0}) {
+Assignment _mockAssignment({
+  String id = '0',
+  String groupId = assignmentGroupId,
+  Submission submission,
+  DateTime dueAt,
+  double pointsPossible = 0,
+}) {
   return Assignment((b) => b
     ..id = id
     ..name = 'Assignment $id'
     ..courseId = courseId
     ..assignmentGroupId = groupId
-    ..position = id
+    ..position = int.parse(id)
     ..dueAt = dueAt
     ..submission = submission?.toBuilder()
     ..pointsPossible = pointsPossible
     ..published = true);
 }
 
-Submission _mockSubmission({int assignmentId = 0, String grade, bool isLate, DateTime submittedAt}) {
+Submission _mockSubmission({String assignmentId = '', String grade, bool isLate, DateTime submittedAt}) {
   return Submission((b) => b
     ..assignmentId = assignmentId
     ..grade = grade
     ..submittedAt = submittedAt
-    ..late = isLate ?? false);
+    ..isLate = isLate ?? false);
 }
 
 Widget _testableWidget(CourseDetailsModel model, {bool highContrastMode = false}) {

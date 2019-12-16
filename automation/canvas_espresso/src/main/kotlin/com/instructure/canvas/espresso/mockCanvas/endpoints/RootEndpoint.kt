@@ -21,6 +21,7 @@ import java.net.URL
  * - `api/v1` -> [ApiEndpoint]
  * - 'files' -> [FileListEndpoint]
  * - 'login' -> inlined login endpoints
+ * - `2018-04-06`, `2018-03-07`, and `1` -> [CanvadocApiEndpoint] These are all various versions of the same API
  */
 object RootEndpoint : Endpoint(
         Segment("oauth") to OAuthEndpoint,
@@ -28,6 +29,15 @@ object RootEndpoint : Endpoint(
                 Segment("v1") to ApiEndpoint
         ),
         Segment("files") to FileListEndpoint,
+        Segment("1") to endpoint(
+            Segment("sessions") to CanvadocApiEndpoint
+        ),
+        Segment("2018-04-06") to endpoint(
+            Segment("sessions") to CanvadocApiEndpoint
+        ),
+        Segment("2018-03-07") to endpoint(
+                Segment("sessions") to CanvadocApiEndpoint
+        ),
         Segment("login") to endpoint(
                 Segment("session_token") to endpoint {
                     GET {

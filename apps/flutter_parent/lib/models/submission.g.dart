@@ -19,121 +19,144 @@ class _$SubmissionSerializer implements StructuredSerializer<Submission> {
       {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
       'id',
-      serializers.serialize(object.id, specifiedType: const FullType(int)),
+      serializers.serialize(object.id, specifiedType: const FullType(String)),
       'score',
-      serializers.serialize(object.score, specifiedType: const FullType(double)),
+      serializers.serialize(object.score,
+          specifiedType: const FullType(double)),
       'attempt',
       serializers.serialize(object.attempt, specifiedType: const FullType(int)),
       'submission_history',
       serializers.serialize(object.submissionHistory,
-          specifiedType: const FullType(BuiltList, const [const FullType(Submission)])),
+          specifiedType:
+              const FullType(BuiltList, const [const FullType(Submission)])),
       'grade_matches_current_submission',
-      serializers.serialize(object.isGradeMatchesCurrentSubmission, specifiedType: const FullType(bool)),
-      'excused',
-      serializers.serialize(object.excused, specifiedType: const FullType(bool)),
+      serializers.serialize(object.isGradeMatchesCurrentSubmission,
+          specifiedType: const FullType(bool)),
       'late',
-      serializers.serialize(object.late, specifiedType: const FullType(bool)),
+      serializers.serialize(object.isLate, specifiedType: const FullType(bool)),
+      'excused',
+      serializers.serialize(object.excused,
+          specifiedType: const FullType(bool)),
       'missing',
-      serializers.serialize(object.missing, specifiedType: const FullType(bool)),
+      serializers.serialize(object.missing,
+          specifiedType: const FullType(bool)),
       'assignment_id',
-      serializers.serialize(object.assignmentId, specifiedType: const FullType(int)),
+      serializers.serialize(object.assignmentId,
+          specifiedType: const FullType(String)),
       'user_id',
-      serializers.serialize(object.userId, specifiedType: const FullType(int)),
+      serializers.serialize(object.userId,
+          specifiedType: const FullType(String)),
       'grader_id',
-      serializers.serialize(object.graderId, specifiedType: const FullType(int)),
+      serializers.serialize(object.graderId,
+          specifiedType: const FullType(String)),
       'entered_score',
-      serializers.serialize(object.enteredScore, specifiedType: const FullType(double)),
+      serializers.serialize(object.enteredScore,
+          specifiedType: const FullType(double)),
     ];
     result.add('grade');
     if (object.grade == null) {
       result.add(null);
     } else {
-      result.add(serializers.serialize(object.grade, specifiedType: const FullType(String)));
+      result.add(serializers.serialize(object.grade,
+          specifiedType: const FullType(String)));
     }
     result.add('submitted_at');
     if (object.submittedAt == null) {
       result.add(null);
     } else {
-      result.add(serializers.serialize(object.submittedAt, specifiedType: const FullType(DateTime)));
+      result.add(serializers.serialize(object.submittedAt,
+          specifiedType: const FullType(DateTime)));
     }
     result.add('commentCreated');
     if (object.commentCreated == null) {
       result.add(null);
     } else {
-      result.add(serializers.serialize(object.commentCreated, specifiedType: const FullType(DateTime)));
+      result.add(serializers.serialize(object.commentCreated,
+          specifiedType: const FullType(DateTime)));
     }
     result.add('mediaContentType');
     if (object.mediaContentType == null) {
       result.add(null);
     } else {
-      result.add(serializers.serialize(object.mediaContentType, specifiedType: const FullType(String)));
+      result.add(serializers.serialize(object.mediaContentType,
+          specifiedType: const FullType(String)));
     }
     result.add('mediaCommentUrl');
     if (object.mediaCommentUrl == null) {
       result.add(null);
     } else {
-      result.add(serializers.serialize(object.mediaCommentUrl, specifiedType: const FullType(String)));
+      result.add(serializers.serialize(object.mediaCommentUrl,
+          specifiedType: const FullType(String)));
     }
     result.add('mediaCommentDisplay');
     if (object.mediaCommentDisplay == null) {
       result.add(null);
     } else {
-      result.add(serializers.serialize(object.mediaCommentDisplay, specifiedType: const FullType(String)));
+      result.add(serializers.serialize(object.mediaCommentDisplay,
+          specifiedType: const FullType(String)));
     }
     result.add('body');
     if (object.body == null) {
       result.add(null);
     } else {
-      result.add(serializers.serialize(object.body, specifiedType: const FullType(String)));
+      result.add(serializers.serialize(object.body,
+          specifiedType: const FullType(String)));
     }
     result.add('workflow_state');
     if (object.workflowState == null) {
       result.add(null);
     } else {
-      result.add(serializers.serialize(object.workflowState, specifiedType: const FullType(String)));
+      result.add(serializers.serialize(object.workflowState,
+          specifiedType: const FullType(String)));
     }
     result.add('submission_type');
     if (object.submissionType == null) {
       result.add(null);
     } else {
-      result.add(serializers.serialize(object.submissionType, specifiedType: const FullType(String)));
+      result.add(serializers.serialize(object.submissionType,
+          specifiedType: const FullType(String)));
     }
     result.add('preview_url');
     if (object.previewUrl == null) {
       result.add(null);
     } else {
-      result.add(serializers.serialize(object.previewUrl, specifiedType: const FullType(String)));
+      result.add(serializers.serialize(object.previewUrl,
+          specifiedType: const FullType(String)));
     }
     result.add('url');
     if (object.url == null) {
       result.add(null);
     } else {
-      result.add(serializers.serialize(object.url, specifiedType: const FullType(String)));
+      result.add(serializers.serialize(object.url,
+          specifiedType: const FullType(String)));
     }
-    result.add('late');
-    if (object.late) result.add('assignment');
+    result.add('assignment');
     if (object.assignment == null) {
       result.add(null);
     } else {
-      result.add(serializers.serialize(object.assignment, specifiedType: const FullType(Assignment)));
+      result.add(serializers.serialize(object.assignment,
+          specifiedType: const FullType(Assignment)));
     }
     result.add('user');
     if (object.user == null) {
       result.add(null);
     } else {
-      result.add(serializers.serialize(object.user, specifiedType: const FullType(User)));
+      result.add(serializers.serialize(object.user,
+          specifiedType: const FullType(User)));
     }
     result.add('points_deducted');
     if (object.pointsDeducted == null) {
       result.add(null);
     } else {
-      result.add(serializers.serialize(object.pointsDeducted, specifiedType: const FullType(double)));
+      result.add(serializers.serialize(object.pointsDeducted,
+          specifiedType: const FullType(double)));
     }
     result.add('entered_grade');
     if (object.enteredGrade == null) {
       result.add(null);
     } else {
-      result.add(serializers.serialize(object.enteredGrade, specifiedType: const FullType(String)));
+      result.add(serializers.serialize(object.enteredGrade,
+          specifiedType: const FullType(String)));
     }
     return result;
   }
@@ -151,88 +174,114 @@ class _$SubmissionSerializer implements StructuredSerializer<Submission> {
       if (value == null) continue;
       switch (key) {
         case 'id':
-          result.id = serializers.deserialize(value, specifiedType: const FullType(int)) as int;
+          result.id = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
           break;
         case 'grade':
-          result.grade = serializers.deserialize(value, specifiedType: const FullType(String)) as String;
+          result.grade = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
           break;
         case 'score':
-          result.score = serializers.deserialize(value, specifiedType: const FullType(double)) as double;
+          result.score = serializers.deserialize(value,
+              specifiedType: const FullType(double)) as double;
           break;
         case 'attempt':
-          result.attempt = serializers.deserialize(value, specifiedType: const FullType(int)) as int;
+          result.attempt = serializers.deserialize(value,
+              specifiedType: const FullType(int)) as int;
           break;
         case 'submitted_at':
-          result.submittedAt = serializers.deserialize(value, specifiedType: const FullType(DateTime)) as DateTime;
+          result.submittedAt = serializers.deserialize(value,
+              specifiedType: const FullType(DateTime)) as DateTime;
           break;
         case 'commentCreated':
-          result.commentCreated = serializers.deserialize(value, specifiedType: const FullType(DateTime)) as DateTime;
+          result.commentCreated = serializers.deserialize(value,
+              specifiedType: const FullType(DateTime)) as DateTime;
           break;
         case 'mediaContentType':
-          result.mediaContentType = serializers.deserialize(value, specifiedType: const FullType(String)) as String;
+          result.mediaContentType = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
           break;
         case 'mediaCommentUrl':
-          result.mediaCommentUrl = serializers.deserialize(value, specifiedType: const FullType(String)) as String;
+          result.mediaCommentUrl = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
           break;
         case 'mediaCommentDisplay':
-          result.mediaCommentDisplay = serializers.deserialize(value, specifiedType: const FullType(String)) as String;
+          result.mediaCommentDisplay = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
           break;
         case 'submission_history':
           result.submissionHistory.replace(serializers.deserialize(value,
-              specifiedType: const FullType(BuiltList, const [const FullType(Submission)])) as BuiltList<dynamic>);
+                  specifiedType: const FullType(
+                      BuiltList, const [const FullType(Submission)]))
+              as BuiltList<dynamic>);
           break;
         case 'body':
-          result.body = serializers.deserialize(value, specifiedType: const FullType(String)) as String;
+          result.body = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
           break;
         case 'grade_matches_current_submission':
-          result.isGradeMatchesCurrentSubmission =
-              serializers.deserialize(value, specifiedType: const FullType(bool)) as bool;
+          result.isGradeMatchesCurrentSubmission = serializers
+              .deserialize(value, specifiedType: const FullType(bool)) as bool;
           break;
         case 'workflow_state':
-          result.workflowState = serializers.deserialize(value, specifiedType: const FullType(String)) as String;
+          result.workflowState = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
           break;
         case 'submission_type':
-          result.submissionType = serializers.deserialize(value, specifiedType: const FullType(String)) as String;
+          result.submissionType = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
           break;
         case 'preview_url':
-          result.previewUrl = serializers.deserialize(value, specifiedType: const FullType(String)) as String;
+          result.previewUrl = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
           break;
         case 'url':
-          result.url = serializers.deserialize(value, specifiedType: const FullType(String)) as String;
-          break;
-        case 'excused':
-          result.excused = serializers.deserialize(value, specifiedType: const FullType(bool)) as bool;
+          result.url = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
           break;
         case 'late':
-          result.late = serializers.deserialize(value, specifiedType: const FullType(bool)) as bool;
+          result.isLate = serializers.deserialize(value,
+              specifiedType: const FullType(bool)) as bool;
+          break;
+        case 'excused':
+          result.excused = serializers.deserialize(value,
+              specifiedType: const FullType(bool)) as bool;
           break;
         case 'missing':
-          result.missing = serializers.deserialize(value, specifiedType: const FullType(bool)) as bool;
+          result.missing = serializers.deserialize(value,
+              specifiedType: const FullType(bool)) as bool;
           break;
         case 'assignment_id':
-          result.assignmentId = serializers.deserialize(value, specifiedType: const FullType(int)) as int;
+          result.assignmentId = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
           break;
         case 'assignment':
-          result.assignment
-              .replace(serializers.deserialize(value, specifiedType: const FullType(Assignment)) as Assignment);
+          result.assignment.replace(serializers.deserialize(value,
+              specifiedType: const FullType(Assignment)) as Assignment);
           break;
         case 'user_id':
-          result.userId = serializers.deserialize(value, specifiedType: const FullType(int)) as int;
+          result.userId = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
           break;
         case 'grader_id':
-          result.graderId = serializers.deserialize(value, specifiedType: const FullType(int)) as int;
+          result.graderId = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
           break;
         case 'user':
-          result.user.replace(serializers.deserialize(value, specifiedType: const FullType(User)) as User);
+          result.user.replace(serializers.deserialize(value,
+              specifiedType: const FullType(User)) as User);
           break;
         case 'points_deducted':
-          result.pointsDeducted = serializers.deserialize(value, specifiedType: const FullType(double)) as double;
+          result.pointsDeducted = serializers.deserialize(value,
+              specifiedType: const FullType(double)) as double;
           break;
         case 'entered_score':
-          result.enteredScore = serializers.deserialize(value, specifiedType: const FullType(double)) as double;
+          result.enteredScore = serializers.deserialize(value,
+              specifiedType: const FullType(double)) as double;
           break;
         case 'entered_grade':
-          result.enteredGrade = serializers.deserialize(value, specifiedType: const FullType(String)) as String;
+          result.enteredGrade = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
           break;
       }
     }
@@ -243,7 +292,7 @@ class _$SubmissionSerializer implements StructuredSerializer<Submission> {
 
 class _$Submission extends Submission {
   @override
-  final int id;
+  final String id;
   @override
   final String grade;
   @override
@@ -275,19 +324,19 @@ class _$Submission extends Submission {
   @override
   final String url;
   @override
-  final bool excused;
+  final bool isLate;
   @override
-  final bool late;
+  final bool excused;
   @override
   final bool missing;
   @override
-  final int assignmentId;
+  final String assignmentId;
   @override
   final Assignment assignment;
   @override
-  final int userId;
+  final String userId;
   @override
-  final int graderId;
+  final String graderId;
   @override
   final User user;
   @override
@@ -317,7 +366,7 @@ class _$Submission extends Submission {
       this.submissionType,
       this.previewUrl,
       this.url,
-      this.late,
+      this.isLate,
       this.excused,
       this.missing,
       this.assignmentId,
@@ -342,13 +391,14 @@ class _$Submission extends Submission {
       throw new BuiltValueNullFieldError('Submission', 'submissionHistory');
     }
     if (isGradeMatchesCurrentSubmission == null) {
-      throw new BuiltValueNullFieldError('Submission', 'isGradeMatchesCurrentSubmission');
+      throw new BuiltValueNullFieldError(
+          'Submission', 'isGradeMatchesCurrentSubmission');
+    }
+    if (isLate == null) {
+      throw new BuiltValueNullFieldError('Submission', 'isLate');
     }
     if (excused == null) {
       throw new BuiltValueNullFieldError('Submission', 'excused');
-    }
-    if (late == null) {
-      throw new BuiltValueNullFieldError('Submission', 'late');
     }
     if (missing == null) {
       throw new BuiltValueNullFieldError('Submission', 'missing');
@@ -368,7 +418,8 @@ class _$Submission extends Submission {
   }
 
   @override
-  Submission rebuild(void Function(SubmissionBuilder) updates) => (toBuilder()..update(updates)).build();
+  Submission rebuild(void Function(SubmissionBuilder) updates) =>
+      (toBuilder()..update(updates)).build();
 
   @override
   SubmissionBuilder toBuilder() => new SubmissionBuilder()..replace(this);
@@ -388,12 +439,13 @@ class _$Submission extends Submission {
         mediaCommentDisplay == other.mediaCommentDisplay &&
         submissionHistory == other.submissionHistory &&
         body == other.body &&
-        isGradeMatchesCurrentSubmission == other.isGradeMatchesCurrentSubmission &&
+        isGradeMatchesCurrentSubmission ==
+            other.isGradeMatchesCurrentSubmission &&
         workflowState == other.workflowState &&
         submissionType == other.submissionType &&
         previewUrl == other.previewUrl &&
         url == other.url &&
-        late == other.late &&
+        isLate == other.isLate &&
         excused == other.excused &&
         missing == other.missing &&
         assignmentId == other.assignmentId &&
@@ -426,30 +478,16 @@ class _$Submission extends Submission {
                                                                 $jc(
                                                                     $jc(
                                                                         $jc(
-                                                                            $jc(
-                                                                                $jc(
-                                                                                    $jc(
-                                                                                        $jc(
-                                                                                            $jc(
-                                                                                                $jc(
-                                                                                                    $jc(
-                                                                                                        $jc(0,
-                                                                                                            id.hashCode),
-                                                                                                        grade.hashCode),
-                                                                                                    score.hashCode),
-                                                                                                attempt.hashCode),
-                                                                                            submittedAt.hashCode),
-                                                                                        commentCreated.hashCode),
-                                                                                    mediaContentType.hashCode),
-                                                                                mediaCommentUrl.hashCode),
-                                                                            mediaCommentDisplay.hashCode),
-                                                                        submissionHistory.hashCode),
-                                                                    body.hashCode),
-                                                                isGradeMatchesCurrentSubmission.hashCode),
-                                                            workflowState.hashCode),
-                                                        submissionType.hashCode),
-                                                    previewUrl.hashCode),
-                                                url.hashCode),
+                                                                            $jc($jc($jc($jc($jc($jc($jc($jc($jc(0, id.hashCode), grade.hashCode), score.hashCode), attempt.hashCode), submittedAt.hashCode), commentCreated.hashCode), mediaContentType.hashCode), mediaCommentUrl.hashCode),
+                                                                                mediaCommentDisplay.hashCode),
+                                                                            submissionHistory.hashCode),
+                                                                        body.hashCode),
+                                                                    isGradeMatchesCurrentSubmission.hashCode),
+                                                                workflowState.hashCode),
+                                                            submissionType.hashCode),
+                                                        previewUrl.hashCode),
+                                                    url.hashCode),
+                                                isLate.hashCode),
                                             excused.hashCode),
                                         missing.hashCode),
                                     assignmentId.hashCode),
@@ -476,11 +514,13 @@ class _$Submission extends Submission {
           ..add('mediaCommentDisplay', mediaCommentDisplay)
           ..add('submissionHistory', submissionHistory)
           ..add('body', body)
-          ..add('isGradeMatchesCurrentSubmission', isGradeMatchesCurrentSubmission)
+          ..add('isGradeMatchesCurrentSubmission',
+              isGradeMatchesCurrentSubmission)
           ..add('workflowState', workflowState)
           ..add('submissionType', submissionType)
           ..add('previewUrl', previewUrl)
           ..add('url', url)
+          ..add('isLate', isLate)
           ..add('excused', excused)
           ..add('missing', missing)
           ..add('assignmentId', assignmentId)
@@ -498,9 +538,9 @@ class _$Submission extends Submission {
 class SubmissionBuilder implements Builder<Submission, SubmissionBuilder> {
   _$Submission _$v;
 
-  int _id;
-  int get id => _$this._id;
-  set id(int id) => _$this._id = id;
+  String _id;
+  String get id => _$this._id;
+  set id(String id) => _$this._id = id;
 
   String _grade;
   String get grade => _$this._grade;
@@ -520,40 +560,49 @@ class SubmissionBuilder implements Builder<Submission, SubmissionBuilder> {
 
   DateTime _commentCreated;
   DateTime get commentCreated => _$this._commentCreated;
-  set commentCreated(DateTime commentCreated) => _$this._commentCreated = commentCreated;
+  set commentCreated(DateTime commentCreated) =>
+      _$this._commentCreated = commentCreated;
 
   String _mediaContentType;
   String get mediaContentType => _$this._mediaContentType;
-  set mediaContentType(String mediaContentType) => _$this._mediaContentType = mediaContentType;
+  set mediaContentType(String mediaContentType) =>
+      _$this._mediaContentType = mediaContentType;
 
   String _mediaCommentUrl;
   String get mediaCommentUrl => _$this._mediaCommentUrl;
-  set mediaCommentUrl(String mediaCommentUrl) => _$this._mediaCommentUrl = mediaCommentUrl;
+  set mediaCommentUrl(String mediaCommentUrl) =>
+      _$this._mediaCommentUrl = mediaCommentUrl;
 
   String _mediaCommentDisplay;
   String get mediaCommentDisplay => _$this._mediaCommentDisplay;
-  set mediaCommentDisplay(String mediaCommentDisplay) => _$this._mediaCommentDisplay = mediaCommentDisplay;
+  set mediaCommentDisplay(String mediaCommentDisplay) =>
+      _$this._mediaCommentDisplay = mediaCommentDisplay;
 
   ListBuilder<Submission> _submissionHistory;
-  ListBuilder<Submission> get submissionHistory => _$this._submissionHistory ??= new ListBuilder<Submission>();
-  set submissionHistory(ListBuilder<Submission> submissionHistory) => _$this._submissionHistory = submissionHistory;
+  ListBuilder<Submission> get submissionHistory =>
+      _$this._submissionHistory ??= new ListBuilder<Submission>();
+  set submissionHistory(ListBuilder<Submission> submissionHistory) =>
+      _$this._submissionHistory = submissionHistory;
 
   String _body;
   String get body => _$this._body;
   set body(String body) => _$this._body = body;
 
   bool _isGradeMatchesCurrentSubmission;
-  bool get isGradeMatchesCurrentSubmission => _$this._isGradeMatchesCurrentSubmission;
+  bool get isGradeMatchesCurrentSubmission =>
+      _$this._isGradeMatchesCurrentSubmission;
   set isGradeMatchesCurrentSubmission(bool isGradeMatchesCurrentSubmission) =>
       _$this._isGradeMatchesCurrentSubmission = isGradeMatchesCurrentSubmission;
 
   String _workflowState;
   String get workflowState => _$this._workflowState;
-  set workflowState(String workflowState) => _$this._workflowState = workflowState;
+  set workflowState(String workflowState) =>
+      _$this._workflowState = workflowState;
 
   String _submissionType;
   String get submissionType => _$this._submissionType;
-  set submissionType(String submissionType) => _$this._submissionType = submissionType;
+  set submissionType(String submissionType) =>
+      _$this._submissionType = submissionType;
 
   String _previewUrl;
   String get previewUrl => _$this._previewUrl;
@@ -563,33 +612,35 @@ class SubmissionBuilder implements Builder<Submission, SubmissionBuilder> {
   String get url => _$this._url;
   set url(String url) => _$this._url = url;
 
+  bool _isLate;
+  bool get isLate => _$this._isLate;
+  set isLate(bool isLate) => _$this._isLate = isLate;
+
   bool _excused;
   bool get excused => _$this._excused;
   set excused(bool excused) => _$this._excused = excused;
-
-  bool _late;
-  bool get late => _$this._late;
-  set late(bool late) => _$this._late = late;
 
   bool _missing;
   bool get missing => _$this._missing;
   set missing(bool missing) => _$this._missing = missing;
 
-  int _assignmentId;
-  int get assignmentId => _$this._assignmentId;
-  set assignmentId(int assignmentId) => _$this._assignmentId = assignmentId;
+  String _assignmentId;
+  String get assignmentId => _$this._assignmentId;
+  set assignmentId(String assignmentId) => _$this._assignmentId = assignmentId;
 
   AssignmentBuilder _assignment;
-  AssignmentBuilder get assignment => _$this._assignment ??= new AssignmentBuilder();
-  set assignment(AssignmentBuilder assignment) => _$this._assignment = assignment;
+  AssignmentBuilder get assignment =>
+      _$this._assignment ??= new AssignmentBuilder();
+  set assignment(AssignmentBuilder assignment) =>
+      _$this._assignment = assignment;
 
-  int _userId;
-  int get userId => _$this._userId;
-  set userId(int userId) => _$this._userId = userId;
+  String _userId;
+  String get userId => _$this._userId;
+  set userId(String userId) => _$this._userId = userId;
 
-  int _graderId;
-  int get graderId => _$this._graderId;
-  set graderId(int graderId) => _$this._graderId = graderId;
+  String _graderId;
+  String get graderId => _$this._graderId;
+  set graderId(String graderId) => _$this._graderId = graderId;
 
   UserBuilder _user;
   UserBuilder get user => _$this._user ??= new UserBuilder();
@@ -597,7 +648,8 @@ class SubmissionBuilder implements Builder<Submission, SubmissionBuilder> {
 
   double _pointsDeducted;
   double get pointsDeducted => _$this._pointsDeducted;
-  set pointsDeducted(double pointsDeducted) => _$this._pointsDeducted = pointsDeducted;
+  set pointsDeducted(double pointsDeducted) =>
+      _$this._pointsDeducted = pointsDeducted;
 
   double _enteredScore;
   double get enteredScore => _$this._enteredScore;
@@ -629,7 +681,7 @@ class SubmissionBuilder implements Builder<Submission, SubmissionBuilder> {
       _submissionType = _$v.submissionType;
       _previewUrl = _$v.previewUrl;
       _url = _$v.url;
-      _late = _$v.late;
+      _isLate = _$v.isLate;
       _excused = _$v.excused;
       _missing = _$v.missing;
       _assignmentId = _$v.assignmentId;
@@ -680,7 +732,7 @@ class SubmissionBuilder implements Builder<Submission, SubmissionBuilder> {
               submissionType: submissionType,
               previewUrl: previewUrl,
               url: url,
-              late: late,
+              isLate: isLate,
               excused: excused,
               missing: missing,
               assignmentId: assignmentId,
@@ -703,7 +755,8 @@ class SubmissionBuilder implements Builder<Submission, SubmissionBuilder> {
         _$failedField = 'user';
         _user?.build();
       } catch (e) {
-        throw new BuiltValueNestedFieldError('Submission', _$failedField, e.toString());
+        throw new BuiltValueNestedFieldError(
+            'Submission', _$failedField, e.toString());
       }
       rethrow;
     }

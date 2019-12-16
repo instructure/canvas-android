@@ -54,7 +54,7 @@ class _$ConversationSerializer implements StructuredSerializer<Conversation> {
       {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
       'id',
-      serializers.serialize(object.id, specifiedType: const FullType(int)),
+      serializers.serialize(object.id, specifiedType: const FullType(String)),
       'subject',
       serializers.serialize(object.subject,
           specifiedType: const FullType(String)),
@@ -109,7 +109,7 @@ class _$ConversationSerializer implements StructuredSerializer<Conversation> {
         ..add('audience')
         ..add(serializers.serialize(object.audience,
             specifiedType:
-                const FullType(BuiltList, const [const FullType(int)])));
+                const FullType(BuiltList, const [const FullType(String)])));
     }
     if (object.participants != null) {
       result
@@ -153,7 +153,7 @@ class _$ConversationSerializer implements StructuredSerializer<Conversation> {
       switch (key) {
         case 'id':
           result.id = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
+              specifiedType: const FullType(String)) as String;
           break;
         case 'subject':
           result.subject = serializers.deserialize(value,
@@ -203,7 +203,7 @@ class _$ConversationSerializer implements StructuredSerializer<Conversation> {
         case 'audience':
           result.audience.replace(serializers.deserialize(value,
                   specifiedType:
-                      const FullType(BuiltList, const [const FullType(int)]))
+                      const FullType(BuiltList, const [const FullType(String)]))
               as BuiltList<dynamic>);
           break;
         case 'participants':
@@ -254,7 +254,7 @@ class _$ConversationWorkflowStateSerializer
 
 class _$Conversation extends Conversation {
   @override
-  final int id;
+  final String id;
   @override
   final String subject;
   @override
@@ -278,7 +278,7 @@ class _$Conversation extends Conversation {
   @override
   final bool isVisible;
   @override
-  final BuiltList<int> audience;
+  final BuiltList<String> audience;
   @override
   final BuiltList<BasicUser> participants;
   @override
@@ -435,9 +435,9 @@ class ConversationBuilder
     implements Builder<Conversation, ConversationBuilder> {
   _$Conversation _$v;
 
-  int _id;
-  int get id => _$this._id;
-  set id(int id) => _$this._id = id;
+  String _id;
+  String get id => _$this._id;
+  set id(String id) => _$this._id = id;
 
   String _subject;
   String get subject => _$this._subject;
@@ -487,9 +487,10 @@ class ConversationBuilder
   bool get isVisible => _$this._isVisible;
   set isVisible(bool isVisible) => _$this._isVisible = isVisible;
 
-  ListBuilder<int> _audience;
-  ListBuilder<int> get audience => _$this._audience ??= new ListBuilder<int>();
-  set audience(ListBuilder<int> audience) => _$this._audience = audience;
+  ListBuilder<String> _audience;
+  ListBuilder<String> get audience =>
+      _$this._audience ??= new ListBuilder<String>();
+  set audience(ListBuilder<String> audience) => _$this._audience = audience;
 
   ListBuilder<BasicUser> _participants;
   ListBuilder<BasicUser> get participants =>

@@ -146,8 +146,8 @@ class AppLocalizations {
       Intl.message('No Students', desc: 'Text for when an observer has no students they are observing');
 
   /// Navigation Drawer
-  String get manageStudents =>
-      Intl.message('Manage Students', desc: 'Label text for the Manage Students nav drawer button');
+  String get manageStudents => Intl.message('Manage Students',
+      desc: 'Label text for the Manage Students nav drawer button as well as the title for the Manage Students screen');
 
   String get help => Intl.message('Help', desc: 'Label text for the help nav drawer button');
 
@@ -489,7 +489,30 @@ class AppLocalizations {
   String get attachmentPreparing =>
       Intl.message('Preparing…', desc: 'Message shown while a file is being prepared to attach to a message');
 
+  /// Manage Students
+  String get addStudentWith => Intl.message('Add student with...');
+
+  String get addStudent => Intl.message('Add Student');
+
+  String get emptyStudentList => Intl.message('You are not observing any students.');
+
+  String get errorLoadingStudents => Intl.message('There was an error loading your students.');
+
+  String get pairingCode => Intl.message('Pairing Code');
+
+  String get pairingCodeEntryExplanation => Intl.message(
+      'Enter the student pairing code provided to you. If the pairing code doesn\'t work, it may have expired');
+
+  String get errorPairingFailed => Intl.message('Your code is incorrect or expired.');
+
+  String get qrCode => Intl.message('QR Code');
+
+  String get addNewStudent =>
+      Intl.message('Add new student', desc: 'Semantics label for the FAB on the Manage Students Screen');
+
   /// Miscellaneous
+
+  String get cancel => Intl.message('Cancel');
 
   String get next => Intl.message('Next', name: 'next');
 
@@ -528,6 +551,4 @@ class AppLocalizations {
         'Filter',
         desc: 'Label for buttons to filter what items are visible',
       );
-
-  String get errorLoadingStudents => Intl.message('There was an error loading your students.');
 }

@@ -24,17 +24,13 @@ import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.Build;
-import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.Toast;
 import com.instructure.canvasapi2.utils.ApiPrefs;
 import com.instructure.pandautils.R;
-
 import java.io.File;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 public class Utils {

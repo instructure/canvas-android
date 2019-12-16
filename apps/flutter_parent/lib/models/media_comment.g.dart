@@ -45,7 +45,7 @@ class _$MediaCommentSerializer implements StructuredSerializer<MediaComment> {
       {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
       'id',
-      serializers.serialize(object.id, specifiedType: const FullType(int)),
+      serializers.serialize(object.id, specifiedType: const FullType(String)),
       'media_type',
       serializers.serialize(object.mediaType,
           specifiedType: const FullType(MediaType)),
@@ -95,7 +95,7 @@ class _$MediaCommentSerializer implements StructuredSerializer<MediaComment> {
       switch (key) {
         case 'id':
           result.id = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
+              specifiedType: const FullType(String)) as String;
           break;
         case 'media_id':
           result.mediaId = serializers.deserialize(value,
@@ -143,7 +143,7 @@ class _$MediaTypeSerializer implements PrimitiveSerializer<MediaType> {
 
 class _$MediaComment extends MediaComment {
   @override
-  final int id;
+  final String id;
   @override
   final String mediaId;
   @override
@@ -222,9 +222,9 @@ class MediaCommentBuilder
     implements Builder<MediaComment, MediaCommentBuilder> {
   _$MediaComment _$v;
 
-  int _id;
-  int get id => _$this._id;
-  set id(int id) => _$this._id = id;
+  String _id;
+  String get id => _$this._id;
+  set id(String id) => _$this._id = id;
 
   String _mediaId;
   String get mediaId => _$this._mediaId;

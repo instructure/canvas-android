@@ -39,7 +39,7 @@ class CourseApi {
     return fetchList(dio.get('courses', queryParameters: params), depaginateWith: dio);
   }
 
-  Future<Course> getCourse(int courseId) async {
+  Future<Course> getCourse(String courseId) async {
     final params = {
       'include': [
         'syllabus_body',

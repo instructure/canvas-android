@@ -47,20 +47,20 @@ Serializers _$_serializers = (new Serializers().toBuilder()
           const FullType(BuiltList, const [const FullType(Enrollment)]),
           () => new ListBuilder<Enrollment>())
       ..addBuilderFactory(
-          const FullType(BuiltList, const [const FullType(Submission)]),
-          () => new ListBuilder<Submission>())
-      ..addBuilderFactory(
-          const FullType(BuiltList, const [const FullType(SubmissionTypes)]),
-          () => new ListBuilder<SubmissionTypes>())
-      ..addBuilderFactory(
-          const FullType(BuiltList, const [const FullType(int)]),
-          () => new ListBuilder<int>())
+          const FullType(BuiltList, const [const FullType(String)]),
+          () => new ListBuilder<String>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(BasicUser)]),
           () => new ListBuilder<BasicUser>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(Message)]),
           () => new ListBuilder<Message>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(Submission)]),
+          () => new ListBuilder<Submission>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(SubmissionTypes)]),
+          () => new ListBuilder<SubmissionTypes>())
       ..addBuilderFactory(
           const FullType(BuiltMap, const [
             const FullType(String),

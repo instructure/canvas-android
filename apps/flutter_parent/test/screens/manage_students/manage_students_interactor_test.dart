@@ -16,7 +16,7 @@ import 'dart:math';
 
 import 'package:flutter_parent/models/enrollment.dart';
 import 'package:flutter_parent/models/user.dart';
-import 'package:flutter_parent/screens/dashboard/dashboard_interactor.dart';
+import 'package:flutter_parent/screens/manage_students/manage_students_interactor.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -26,7 +26,7 @@ void main() {
     var expectedSortedList = [_mockStudent('Alex'), _mockStudent('Billy'), _mockStudent('Zed')];
 
     // Run the logic
-    var interactor = DashboardInteractor();
+    var interactor = ManageStudentsInteractor();
     interactor.sortUsers(startingList);
 
     expect(startingList, expectedSortedList);
@@ -42,7 +42,7 @@ void main() {
     var expectedSortedList = [_mockStudent('Alex')];
 
     // Run the logic
-    var interactor = DashboardInteractor();
+    var interactor = ManageStudentsInteractor();
     var result = interactor.filterStudents(startingList);
 
     expect(result, expectedSortedList);
@@ -55,7 +55,7 @@ void main() {
     var expectedSortedList = [_mockStudent('Alex')];
 
     // Run the logic
-    var interactor = DashboardInteractor();
+    var interactor = ManageStudentsInteractor();
     var result = interactor.filterStudents(startingList);
 
     expect(result, expectedSortedList);

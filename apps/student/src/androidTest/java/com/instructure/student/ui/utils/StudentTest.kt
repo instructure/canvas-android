@@ -75,6 +75,7 @@ abstract class StudentTest : CanvasTest() {
     val moduleProgressionPage = ModuleProgressionPage()
     val canvasWebViewPage = CanvasWebViewPage()
     val fileUploadPage = FileUploadPage()
+    val annotationCommentListPage = AnnotationCommentListPage()
 
     // A no-op interaction to afford us an easy, harmless way to get a11y checking to trigger.
     fun meaninglessSwipe() {

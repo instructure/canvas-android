@@ -27,12 +27,12 @@ import 'package:provider/provider.dart';
 class CourseDetailsScreen extends StatefulWidget {
   final CourseDetailsModel _model;
 
-  CourseDetailsScreen(int studentId, int courseId, {Key key})
+  CourseDetailsScreen(String studentId, String courseId, {Key key})
       : this._model = CourseDetailsModel(studentId, courseId),
         super(key: key);
 
   // A convenience constructor when we already have the course data, so we don't load something we already have
-  CourseDetailsScreen.withCourse(int studentId, Course course, {Key key})
+  CourseDetailsScreen.withCourse(String studentId, Course course, {Key key})
       : this._model = CourseDetailsModel.withCourse(studentId, course),
         super(key: key);
 

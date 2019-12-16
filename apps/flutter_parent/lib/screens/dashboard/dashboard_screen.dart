@@ -21,6 +21,7 @@ import 'package:flutter_parent/screens/courses/courses_screen.dart';
 import 'package:flutter_parent/screens/dashboard/inbox_notifier.dart';
 import 'package:flutter_parent/screens/inbox/conversation_list/conversation_list_screen.dart';
 import 'package:flutter_parent/screens/login_landing_screen.dart';
+import 'package:flutter_parent/screens/manage_students/manage_students_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/avatar.dart';
 import 'package:flutter_parent/utils/common_widgets/dropdown_arrow.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
@@ -254,13 +255,14 @@ class DashboardState extends State<DashboardScreen> {
   _navigateToManageStudents(context) {
     // Close the drawer, then push the Manage Children screen in
     Navigator.of(context).pop();
-//      QuickNav.push(context, ManageChildrenScreen());
+    locator<QuickNav>().push(context, ManageStudentsScreen(_students));
   }
 
   _navigateToHelp(context) {
     // Close the drawer, then push the Help screen in
     Navigator.of(context).pop();
-//      QuickNav.push(context, HelpScreen());
+    // TODO: Navigate to the help screen
+//    locator<QuickNav>().push(context, HelpScreen());
   }
 
   _performSignOut(context) {

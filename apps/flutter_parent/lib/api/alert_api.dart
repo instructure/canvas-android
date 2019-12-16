@@ -18,12 +18,12 @@ import 'package:flutter_parent/models/alert.dart';
 
 class AlertsApi {
   /// Alerts were depaginated in the original parent app, then sorted by date. Depaginating here to follow suite.
-  Future<List<Alert>> getAlertsDepaginated(int studentId) async {
+  Future<List<Alert>> getAlertsDepaginated(String studentId) async {
     var dio = canvasDio();
     return fetchList(dio.get('users/self/observer_alerts/$studentId'), depaginateWith: dio);
   }
 
-  Future<Alert> updateAlertWorkflow(int alertId, String workflowState) async {
+  Future<Alert> updateAlertWorkflow(String alertId, String workflowState) async {
     return fetch(canvasDio().put('users/self/observer_alerts/$alertId/$workflowState'));
   }
 }

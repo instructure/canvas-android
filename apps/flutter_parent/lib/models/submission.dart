@@ -30,7 +30,7 @@ abstract class Submission implements Built<Submission, SubmissionBuilder> {
 
   factory Submission([void Function(SubmissionBuilder) updates]) = _$Submission;
 
-  int get id;
+  String get id;
 
   @nullable
   String get grade;
@@ -79,7 +79,9 @@ abstract class Submission implements Built<Submission, SubmissionBuilder> {
   @nullable
   String get url;
 
-  bool get late;
+  // Not sure why, but build_runner fails when this field is named 'late'
+  @BuiltValueField(wireName: 'late')
+  bool get isLate;
 
   bool get excused;
 
@@ -87,16 +89,16 @@ abstract class Submission implements Built<Submission, SubmissionBuilder> {
 
   // Conversation Stuff
   @BuiltValueField(wireName: "assignment_id")
-  int get assignmentId;
+  String get assignmentId;
 
   @nullable
   Assignment get assignment;
 
   @BuiltValueField(wireName: "user_id")
-  int get userId;
+  String get userId;
 
   @BuiltValueField(wireName: "grader_id")
-  int get graderId;
+  String get graderId;
 
   @nullable
   User get user;
@@ -113,15 +115,15 @@ abstract class Submission implements Built<Submission, SubmissionBuilder> {
   String get enteredGrade;
 
   static void _initializeBuilder(SubmissionBuilder b) => b
-    ..id = 0
+    ..id = ''
     ..score = 0.0
     ..attempt = 0
     ..enteredScore = 0.0
-    ..graderId = 0
-    ..userId = 0
+    ..graderId = ''
+    ..userId = ''
     ..submissionHistory = ListBuilder<Submission>()
     ..isGradeMatchesCurrentSubmission = false
-    ..late = false
+    ..isLate = false
     ..excused = false
     ..missing = false;
 }

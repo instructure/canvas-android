@@ -23,7 +23,6 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.hasDescendant
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
-import androidx.test.espresso.matcher.ViewMatchers.withClassName
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withParent
 import androidx.test.espresso.matcher.ViewMatchers.withText
@@ -32,19 +31,19 @@ import androidx.test.espresso.web.sugar.Web.onWebView
 import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
 import androidx.test.espresso.web.webdriver.DriverAtoms.getText
 import androidx.test.espresso.web.webdriver.Locator
+import com.instructure.canvas.espresso.clickCoordinates
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.canvasapi2.models.RubricCriterion
 import com.instructure.canvasapi2.models.User
 import com.instructure.dataseeding.model.CanvasUserApiModel
-import com.instructure.espresso.OnViewWithStringTextIgnoreCase
-import com.instructure.espresso.assertDisplayed
-import com.instructure.espresso.click
+import com.instructure.espresso.*
 import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.swipeUp
+import com.instructure.espresso.page.onViewWithId
+import com.instructure.espresso.page.onViewWithText
+import com.instructure.espresso.page.waitForViewWithId
 import com.instructure.student.R
-import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.ui.CriterionRatingButton
 import com.instructure.student.ui.pages.renderPages.SubmissionCommentsRenderPage
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.anyOf
@@ -54,6 +53,24 @@ open class SubmissionDetailsPage : BasePage(R.id.submissionDetails) {
     private val commentsButton by OnViewWithStringTextIgnoreCase("comments")
 
     private val submissionCommentsRenderPage = SubmissionCommentsRenderPage()
+
+    fun assertPdfAnnotationSelected() {
+        waitForViewWithId(R.id.commentsButton).assertDisplayed()
+    }
+
+    fun clickSubmissionContentAtPosition(percentX: Float, percentY: Float) {
+        onViewWithId(R.id.submissionContent).perform(clickCoordinates(percentX, percentY))
+    }
+
+    fun openPdfComments() {
+        waitForViewWithId(R.id.commentsButton).click()
+    }
+
+    fun addFirstAnnotationComment(text: String) {
+        waitForViewWithId(R.id.commentsButton).click()
+        waitForViewWithId(R.id.freeTextInput).replaceText(text)
+        onViewWithText("OK").click()
+    }
 
     fun openComments() {
         commentsButton.click()

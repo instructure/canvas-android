@@ -29,7 +29,7 @@ abstract class Assignment implements Built<Assignment, AssignmentBuilder> {
 
   factory Assignment([void Function(AssignmentBuilder) updates]) = _$Assignment;
 
-  int get id;
+  String get id;
 
   @nullable
   String get name;
@@ -45,7 +45,7 @@ abstract class Assignment implements Built<Assignment, AssignmentBuilder> {
   double get pointsPossible;
 
   @BuiltValueField(wireName: 'course_id')
-  int get courseId;
+  String get courseId;
 
   @nullable
   @BuiltValueField(wireName: "grading_type")
@@ -60,7 +60,7 @@ abstract class Assignment implements Built<Assignment, AssignmentBuilder> {
 
   @nullable
   @BuiltValueField(wireName: "quiz_id")
-  int get quizId; // (Optional) id of the associated quiz (applies only when submission_types is ["online_quiz"])
+  String get quizId; // (Optional) id of the associated quiz (applies only when submission_types is ["online_quiz"])
 
   @BuiltValueField(wireName: "use_rubric_for_grading")
   bool get useRubricForGrading;
@@ -69,7 +69,7 @@ abstract class Assignment implements Built<Assignment, AssignmentBuilder> {
   Submission get submission;
 
   @BuiltValueField(wireName: "assignment_group_id")
-  int get assignmentGroupId;
+  String get assignmentGroupId;
 
   int get position;
 
@@ -97,7 +97,7 @@ abstract class Assignment implements Built<Assignment, AssignmentBuilder> {
 
   @nullable
   @BuiltValueField(wireName: "group_category_id")
-  int get groupCategoryId;
+  String get groupCategoryId;
 
   @BuiltValueField(wireName: "user_submitted")
   bool get userSubmitted;
@@ -137,7 +137,7 @@ abstract class Assignment implements Built<Assignment, AssignmentBuilder> {
   SubmissionStatus getStatus() {
     if (submissionTypes?.every((type) => type == SubmissionTypes.onPaper || type == SubmissionTypes.none) == true) {
       return SubmissionStatus.NONE;
-    } else if (submission?.late == true) {
+    } else if (submission?.isLate == true) {
       return SubmissionStatus.LATE;
     } else if (_isMissingSubmission()) {
       return SubmissionStatus.MISSING;
@@ -150,7 +150,7 @@ abstract class Assignment implements Built<Assignment, AssignmentBuilder> {
 
   // Returns true if the submission is marked as missing, or if it's pass due and either no submission or 'fake' submission
   bool _isMissingSubmission() {
-      if (submission?.missing == true) return true;
+    if (submission?.missing == true) return true;
 
     final isPastDue = dueAt?.isBefore(DateTime.now()) == true;
     return isPastDue && (submission == null || (submission.attempt == 0 && submission.grade == null));
