@@ -73,7 +73,7 @@ dev_dependencies:
   intl_translation: ^0.17.7
   mockito: 4.1.1
 
-  build_runner: ^1.0.0
+  build_runner: ^1.7.2
   built_value_generator: '>=5.5.5 <7.0.0'
 
 

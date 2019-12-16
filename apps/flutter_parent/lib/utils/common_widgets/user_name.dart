@@ -13,18 +13,24 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:flutter/material.dart';
+import 'package:flutter_parent/models/recipient.dart';
 import 'package:flutter_parent/models/user.dart';
 
 class UserName extends StatelessWidget {
   final String userName;
   final String pronouns;
   final TextStyle style;
+  final TextOverflow overflow;
 
-  UserName(this.userName, this.pronouns, {this.style});
+  UserName(this.userName, this.pronouns, {this.style, this.overflow});
 
-  UserName.fromUser(User user, {this.style = null})
+  UserName.fromUser(User user, {this.style = null, this.overflow = null})
       : userName = user.name,
         pronouns = user.pronouns;
+
+  UserName.fromRecipient(Recipient recipient, {this.style = null, this.overflow = null})
+      : userName = recipient.name,
+        pronouns = recipient.pronouns;
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +40,7 @@ class UserName extends StatelessWidget {
         if (pronouns != null) TextSpan(text: ' (${pronouns})', style: TextStyle(fontStyle: FontStyle.italic))
       ]),
       style: style,
+      overflow: overflow,
     );
   }
 }
