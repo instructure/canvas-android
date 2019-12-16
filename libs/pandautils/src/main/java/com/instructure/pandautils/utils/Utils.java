@@ -30,6 +30,7 @@ import android.util.TypedValue;
 import android.view.View;
 import android.widget.Toast;
 import com.instructure.canvasapi2.utils.ApiPrefs;
+import com.instructure.pandautils.BuildConfig;
 import com.instructure.pandautils.R;
 
 import java.io.File;
@@ -50,7 +51,11 @@ public class Utils {
     public static File getAttachmentsDirectory(Context context) {
         File file;
         if (context.getExternalCacheDir() != null) {
-            file = new File(context.getExternalCacheDir(), "attachments");
+            if(true) { // TODO - get the build config flags working and replace (IS_TESTING was always false)
+                file = context.getExternalCacheDir();
+            } else {
+                file = new File(context.getExternalCacheDir(), "attachments");
+            }
         } else {
             file = context.getFilesDir();
         }

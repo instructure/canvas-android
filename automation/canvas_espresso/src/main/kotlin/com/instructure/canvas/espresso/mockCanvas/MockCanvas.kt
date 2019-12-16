@@ -190,7 +190,10 @@ class MockCanvas {
     /** Map of doc session id to Annotation lists */
     val annotations = mutableMapOf<String, List<CanvaDocAnnotation>>()
 
-    // TODO: can we make this better?
+    /** One off conversation for handling creating new conversations, see ConversationEndpoint POST */
+    var sentAnnotationComment: CanvaDocAnnotation? = null
+
+    /** This is configured by addAnnotation and should not be modified directly */
     lateinit var canvadocRedirectUrl: String
 
     //region Convenience functionality
@@ -616,7 +619,8 @@ fun MockCanvas.addAssignment(
         userSubmitted: Boolean = false,
         dueAt: String? = null,
         name: String = Randomizer.randomCourseName(),
-        pointsPossible: Int = 10
+        pointsPossible: Int = 10,
+        description: String = ""
 ) : Assignment {
     val assignmentId = newItemId()
     var assignment = Assignment(
@@ -629,7 +633,8 @@ fun MockCanvas.addAssignment(
         lockedForUser = lockInfo != null,
         userSubmitted = userSubmitted,
         dueAt = dueAt,
-            pointsPossible = pointsPossible.toDouble()
+        pointsPossible = pointsPossible.toDouble(),
+        description = description
     )
 
     if(isQuizzesNext) {
@@ -694,17 +699,36 @@ fun MockCanvas.addSubmissionForAssignment(
             submissionComments = if(comment != null) listOf(comment) else listOf<SubmissionComment>()
     )
 
+    // Submission details looks to pull attachments from the first item in the submission history, so we need a "root"
+    // submission to hold it all together.
+    val rootSubmission = Submission(
+            id = newItemId(),
+            submittedAt = Date(),
+            attempt = 1,
+            body = body,
+            url = url,
+            previewUrl = url,
+            workflowState = "submitted",
+            submissionType = type,
+            assignmentId = assignmentId,
+            userId = userId,
+            late = false,
+            submissionHistory = listOf(submission),
+            attachments = if(attachment != null) arrayListOf(attachment) else arrayListOf<Attachment>(),
+            submissionComments = if(comment != null) listOf(comment) else listOf<SubmissionComment>()
+    )
+
     var submissionList = submissions[assignmentId]
     if(submissionList == null) {
         submissionList = mutableListOf<Submission>()
         submissions[assignmentId] = submissionList
     }
-    submissionList.add(submission)
+    submissionList.add(rootSubmission)
 
     val assignment = assignments[assignmentId]
-    assignment?.submission = submission
+    assignment?.submission = rootSubmission
 
-    return submission
+    return rootSubmission
 }
 
 fun MockCanvas.addLTITool(name: String, url: String): LTITool {
@@ -951,13 +975,18 @@ fun MockCanvas.addFolderToCourse(
  * Add a file to a folder.
  * If [folderId] is non-null, the file will be added to the folder associated with [folderId].
  * Otherwise, it will be added to the root folder associated with course [courseId].
+ *
+ * [url] -> Custom urls to be configured to bypass file download, be sure to cache the file first, see the
+ * PdfInteractionTest for an example.
  */
 fun MockCanvas.addFileToFolder(
         courseId: Long? = null,
         folderId: Long? = null,
         displayName: String,
         fileContent: String = Randomizer.randomPageBody(),
-        contentType: String = "text/plain"
+        contentType: String = "text/plain",
+        url: String = "",
+        fileId: Long = 0L
 ) : Long {
     if(courseId == null && folderId == null) {
         throw Exception("Either courseId or folderId must be non-null")
@@ -965,14 +994,14 @@ fun MockCanvas.addFileToFolder(
     var rootFolder = getRootFolder(courseId = courseId, folderId = folderId)
 
     // Now create our file metadata
-    val fileId = newItemId()
+    val newFileId = if(fileId == 0L) newItemId() else fileId
     val fileMetadataItem = FileFolder(
-            id = fileId,
+            id = newFileId,
             folderId = rootFolder.id,
             size = fileContent.length.toLong(),
             displayName = displayName,
             contentType = contentType,
-            url = "https://mock-data.instructure.com/files/$fileId/preview" // Unused, I think
+            url = if(url.isEmpty()) "https://mock-data.instructure.com/files/$newFileId/preview" else url
     )
 
     // And record it for the folder
@@ -985,9 +1014,9 @@ fun MockCanvas.addFileToFolder(
     fileList.add(fileMetadataItem)
 
     // Now record our file contents (just text for now)
-    fileContents[fileId] = fileContent
+    fileContents[newFileId] = fileContent
 
-    return fileId
+    return newFileId
 
 
 }
@@ -1001,14 +1030,18 @@ fun MockCanvas.addFileToCourse(
         displayName: String,
         fileContent: String = Randomizer.randomPageBody(),
         contentType: String = "text/plain",
-        groupId: Long? = null
+        groupId: Long? = null,
+        url: String = "",
+        fileId: Long = 0L
 ): Long {
     var rootFolder = getRootFolder(courseId = courseId, groupId = groupId)
     return addFileToFolder(
             folderId = rootFolder.id,
             displayName = displayName,
             fileContent = fileContent,
-            contentType = contentType
+            contentType = contentType,
+            url = url,
+            fileId = fileId
     )
 }
 
@@ -1358,29 +1391,99 @@ fun MockCanvas.addGroupToCourse(
     return result
 }
 
-fun createFullCoverageAnnotation(author: User, docId: String, data: MockCanvas): CanvaDocAnnotation {
-    return CanvaDocAnnotation(
+/**
+ * Creates a full screen pen annotation
+ *
+ * [hasComment] -> Will result in a second annotation "in reply to" the first full coverage pen annotation
+ * [author] -> Used for the original annotation, in the case of the student app, this would be the teacher
+ * [replyingAuthor] -> Used for the follow up reply annotation, in the case of the student app, this would be the student
+ */
+fun createFullCoverageAnnotation(
+        author: User,
+        replyingAuthor: User,
+        docId: String,
+        data: MockCanvas,
+        hasComment: Boolean = false,
+        commentContents: String? = null
+): List<CanvaDocAnnotation> {
+    val annotation = CanvaDocAnnotation(
         createdAt = APIHelper.dateToString(GregorianCalendar()),
         rect = arrayListOf(arrayListOf(45.285324f, 80.672485f), arrayListOf(565.24457f,745.6419f)),
         page = 0,
         userId = author.id.toString(),
         userName = author.name,
         context = "default",
-        width = 2f,
+        width = 10f,
         documentId = docId,
         isEditable = false,
         annotationId = data.newItemId().toString(),
         color = "#008EE2",
-        inklist = CanvaDocInkList(
-            arrayListOf(arrayListOf(CanvaDocCoordinate(45.285324f, 741.0337f), CanvaDocCoordinate(565.24457f, 107.246704f)))
+        annotationType = CanvaDocAnnotation.AnnotationType.INK,
+        inklist = canvaDocInk
+    )
+    if(hasComment) {
+        val commentAnnotation = CanvaDocAnnotation(
+            page = 0,
+            createdAt = APIHelper.dateToString(GregorianCalendar()),
+            contents = commentContents!!,
+            userId = replyingAuthor.id.toString(),
+            userName = replyingAuthor.name,
+            context = "default",
+            documentId = docId,
+            isEditable = false,
+            annotationId = data.newItemId().toString(),
+            annotationType = CanvaDocAnnotation.AnnotationType.COMMENT_REPLY,
+            inReplyTo = annotation.annotationId
         )
+
+        return listOf(annotation, commentAnnotation)
+    } else {
+        return listOf(annotation)
+    }
+}
+
+/**
+ * Similar to the sentConversation, this configures the "to be sent" annotation for the annotation comment list
+ *
+ * [author] -> The author of this annotation should be the signed in user
+ */
+fun MockCanvas.addSentAnnotation(targetAnnotationId: String, commentContents: String, author: User, docId: String) {
+    sentAnnotationComment = CanvaDocAnnotation(
+        page = 0,
+        createdAt = APIHelper.dateToString(GregorianCalendar()),
+        contents = commentContents,
+        userId = author.id.toString(),
+        userName = author.name,
+        context = "default",
+        documentId = docId,
+        isEditable = false,
+        annotationId = newItemId().toString(),
+        annotationType = CanvaDocAnnotation.AnnotationType.COMMENT_REPLY,
+        inReplyTo = targetAnnotationId
     )
 }
 
-fun MockCanvas.addAnnotations(user: User, author: User, annotationCount: Int = 1): DocSession {
+/**
+ * This function configures all necessary values for making requests to a submission's previewUrl to start a doc viewer
+ * session.
+ *
+ * This includes the docid, docSession, pdfDownloadUrl, canvadocRedirectUrl, and the annotation list for future
+ * requests.
+ *
+ * This also includes the optional params to set up a reply to comment annotation as well as a pending sent comment
+ * annotation.
+ */
+fun MockCanvas.addAnnotation(
+        signedInUser: User,
+        annotationAuthor: User,
+        hasComment: Boolean = false,
+        hasSentComment: Boolean = false,
+        commentContents: String? = null,
+        sentCommentContents: String? = null
+): DocSession {
     val docSessionId = newItemId().toString()
     val docId = newItemId().toString()
-    val pdfDownloadUrl = """/1/sessions/$docSessionId/file/file.pdf""""""
+    val pdfDownloadUrl = """/1/sessions/$docSessionId/file/file.pdf"""
     val docSession = DocSession(
         documentId = newItemId().toString(),
         annotationUrls = AnnotationUrls(
@@ -1389,17 +1492,73 @@ fun MockCanvas.addAnnotations(user: User, author: User, annotationCount: Int = 1
         ),
         annotationMetadata = AnnotationMetadata(
             enabled = true,
-            userName = user.name,
-            userId = user.id.toString(),
-            permissions = "read" // TODO - beef up permissions
+            userName = signedInUser.name,
+            userId = signedInUser.id.toString(),
+            permissions = "read"
         )
     )
-
-    annotations[docSessionId] = listOf(createFullCoverageAnnotation(author, docId, this))
+    val annotation = createFullCoverageAnnotation(annotationAuthor, signedInUser, docId, this, hasComment, commentContents)
+    if(hasSentComment) addSentAnnotation(annotation.first().annotationId, sentCommentContents!!, signedInUser, docId)
+    annotations[docSessionId] = annotation
     docSessions[docSessionId] = docSession
     canvadocRedirectUrl = "https://mock-data.instructure.com/1/sessions/$docSessionId"
 
-    // TODO createAnnotation(true)
-
     return docSession
 }
+
+private val canvaDocInk = CanvaDocInkList(
+    arrayListOf(arrayListOf(
+        CanvaDocCoordinate(46f, 740f),
+        CanvaDocCoordinate(80f, 740f),
+        CanvaDocCoordinate(120f, 740f),
+        CanvaDocCoordinate(160f, 740f),
+        CanvaDocCoordinate(200f, 740f),
+        CanvaDocCoordinate(240f, 740f),
+        CanvaDocCoordinate(280f, 740f),
+        CanvaDocCoordinate(320f, 740f),
+        CanvaDocCoordinate(360f, 740f),
+        CanvaDocCoordinate(400f, 740f),
+        CanvaDocCoordinate(440f, 740f),
+        CanvaDocCoordinate(480f, 740f),
+        CanvaDocCoordinate(550f, 740f),
+        CanvaDocCoordinate(46f, 540f),
+        CanvaDocCoordinate(80f, 540f),
+        CanvaDocCoordinate(120f, 540f),
+        CanvaDocCoordinate(160f, 540f),
+        CanvaDocCoordinate(200f, 540f),
+        CanvaDocCoordinate(240f, 540f),
+        CanvaDocCoordinate(280f, 540f),
+        CanvaDocCoordinate(320f, 540f),
+        CanvaDocCoordinate(360f, 540f),
+        CanvaDocCoordinate(400f, 540f),
+        CanvaDocCoordinate(440f, 540f),
+        CanvaDocCoordinate(480f, 540f),
+        CanvaDocCoordinate(550f, 540f),
+        CanvaDocCoordinate(46f, 320f),
+        CanvaDocCoordinate(80f, 320f),
+        CanvaDocCoordinate(120f, 320f),
+        CanvaDocCoordinate(160f, 320f),
+        CanvaDocCoordinate(200f, 320f),
+        CanvaDocCoordinate(240f, 320f),
+        CanvaDocCoordinate(280f, 320f),
+        CanvaDocCoordinate(320f, 320f),
+        CanvaDocCoordinate(360f, 320f),
+        CanvaDocCoordinate(400f, 320f),
+        CanvaDocCoordinate(440f, 320f),
+        CanvaDocCoordinate(480f, 320f),
+        CanvaDocCoordinate(550f, 320f),
+        CanvaDocCoordinate(46f, 100f),
+        CanvaDocCoordinate(80f, 100f),
+        CanvaDocCoordinate(120f, 100f),
+        CanvaDocCoordinate(160f, 100f),
+        CanvaDocCoordinate(200f, 100f),
+        CanvaDocCoordinate(240f, 100f),
+        CanvaDocCoordinate(280f, 100f),
+        CanvaDocCoordinate(320f, 100f),
+        CanvaDocCoordinate(360f, 100f),
+        CanvaDocCoordinate(400f, 100f),
+        CanvaDocCoordinate(440f, 100f),
+        CanvaDocCoordinate(480f, 100f),
+        CanvaDocCoordinate(550f, 100f)
+    ))
+)

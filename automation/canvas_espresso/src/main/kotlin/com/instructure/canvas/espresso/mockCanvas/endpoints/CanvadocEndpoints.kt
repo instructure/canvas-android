@@ -18,10 +18,23 @@ package com.instructure.canvas.espresso.mockCanvas.endpoints
 import com.instructure.canvas.espresso.mockCanvas.Endpoint
 import com.instructure.canvas.espresso.mockCanvas.endpoint
 import com.instructure.canvas.espresso.mockCanvas.utils.*
+import com.instructure.canvasapi2.models.canvadocs.CanvaDocAnnotationResponse
 
+/**
+ * Catch all that covers the 3 different api starts for canvadocs:
+ *
+ * `2018-04-06/sessions`
+ * `2018-03-07/sessions`
+ * `1/sessions`
+ *
+ * `sessionId` -> handles the fetch for the docSession
+ * `sessionsId/annotations` -> [AnnotationsEndpoint] session ID based index for annotations
+ * `sessionsId/annotations/stringId` -> [AnnotationsEndpoint] PUT for annotation creation/editing
+ *
+ */
 object CanvadocApiEndpoint : Endpoint(
-    Segment("annotations") to AnnotationsEndpoint,
     LongId(PathVars::sessionId) to endpoint(
+        Segment("annotations") to AnnotationsEndpoint,
         configure = {
             GET {
                 if(data.docSessions.containsKey(pathVars.sessionId.toString())) {
@@ -35,17 +48,26 @@ object CanvadocApiEndpoint : Endpoint(
 )
 
 object AnnotationsEndpoint : Endpoint(
-    LongId(PathVars::annotationId) to endpoint(
+    GenericStringId() to endpoint(
         configure = {
             PUT {
-                request.unauthorizedResponse()
+                // If the sent annotation or the list of annotations aren't present, return 401
+                if(data.sentAnnotationComment == null || !data.annotations.containsKey(pathVars.sessionId.toString())) {
+                    request.unauthorizedResponse()
+                } else {
+                    val sentAnnotation = data.sentAnnotationComment!!
+                    val annotationList = data.annotations[pathVars.sessionId.toString()]!!
+                    data.annotations[pathVars.sessionId.toString()] = annotationList.plus(sentAnnotation)
+                    data.sentConversation = null
+                    request.successResponse(sentAnnotation)
+                }
             }
         }
     ),
     response = {
         GET {
-            if(!data.annotations[pathVars.annotationId.toString()].isNullOrEmpty()) {
-                request.successResponse(data.annotations[pathVars.annotationId.toString()]!!)
+            if(!data.annotations[pathVars.sessionId.toString()].isNullOrEmpty()) {
+                request.successResponse(CanvaDocAnnotationResponse(data.annotations[pathVars.sessionId.toString()]!!))
             } else {
                 request.unauthorizedResponse()
             }
