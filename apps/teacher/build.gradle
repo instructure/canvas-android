@@ -43,7 +43,7 @@ android {
     defaultConfig {
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 25
+        versionCode = 26
         versionName = '1.9.1'
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -70,7 +70,9 @@ android {
 
         /* Add private data */
         PrivateData.merge(project, "teacher")
-
+        addManifestPlaceholders([
+                fabricApiKey:"$fabricApiKey"
+        ])
         buildConfigField "String", "PSPDFKIT_LICENSE_KEY", "\"$pspdfkitLicenseKey\""
     }
 
