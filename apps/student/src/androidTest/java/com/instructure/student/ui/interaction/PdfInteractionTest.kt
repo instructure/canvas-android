@@ -148,6 +148,11 @@ class PdfInteractionTest : StudentTest() {
 
         assignmentListPage.clickAssignment(assignment)
         assignmentDetailsPage.verifyAssignmentDetails(assignment)
+
+        // Scroll to the description, as it will likely be offscreen for landscape tests
+        assignmentDetailsPage.scrollToAssignmentDescription()
+
+        // Click the url in the description to load the pdf
         Web.onWebView()
                 .withElement(DriverAtoms.findElement(Locator.ID, pdfUrlElementId))
                 .perform(DriverAtoms.webClick())
