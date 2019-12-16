@@ -170,7 +170,7 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
 
     fun previewAndCheckReplyAttachment(reply: DiscussionEntry, vararg checks : WebViewTextCheck) {
         onWebView(withId(R.id.discussionRepliesWebView))
-                .withElement(findElement(Locator.CLASS_NAME, "attachments_${reply.id}"))
+                .withElementRepeat(findElement(Locator.CLASS_NAME, "attachments_${reply.id}"), 20)
                 .perform(webClick())
         for(check in checks) {
             onWebView(withId(R.id.canvasWebView))
@@ -183,7 +183,7 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
 
     fun replyToReply(reply: DiscussionEntry, replyMessage: String) {
         onWebView(withId(R.id.discussionRepliesWebView))
-                .withElement(findElement(Locator.ID, "reply_${reply.id}"))
+                .withElementRepeat(findElement(Locator.ID, "reply_${reply.id}"), 20)
                 .perform(webClick())
         onView(withId(R.id.rce_webView)).perform(TypeInRCETextEditor(replyMessage))
         onView(withId(R.id.menu_send)).click()

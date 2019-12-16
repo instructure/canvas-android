@@ -54,12 +54,14 @@ class InboxPage : BasePage(R.id.inboxPage) {
     }
 
     fun selectConversation(conversation: Conversation) {
+        waitForView(withId(R.id.inboxRecyclerView))
         val matcher = withText(conversation.subject)
         scrollRecyclerView(R.id.inboxRecyclerView, matcher)
         onView(matcher).click()
     }
 
     fun selectInboxScope(scope: InboxApi.Scope) {
+        waitForView(withId(R.id.filterText))
         scopeButton.click()
         when (scope) {
             InboxApi.Scope.ALL -> onViewWithText("All").scrollTo().click()
@@ -82,4 +84,5 @@ class InboxPage : BasePage(R.id.inboxPage) {
     fun goToDashboard() {
         onView(withId(R.id.bottomNavigationCourses)).click()
     }
+
 }
