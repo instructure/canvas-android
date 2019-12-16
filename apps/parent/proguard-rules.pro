@@ -10,10 +10,12 @@
 -keep public class com.caverock.androidsvg.** { *; }
 
 # Retrofit, OkHttp, Gson
+-keep class retrofit.** { *; }
 -keep class com.squareup.okhttp.** { *; }
 -keep interface com.squareup.okhttp.** { *; }
 -dontwarn com.squareup.okhttp.**
 -keep class sun.misc.Unsafe { *; }
+-dontwarn retrofit.**
 -dontwarn java.nio.file.*
 -dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
 -dontwarn okhttp3.**
