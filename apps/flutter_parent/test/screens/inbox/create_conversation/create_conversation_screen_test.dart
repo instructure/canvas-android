@@ -557,7 +557,7 @@ void main() {
 
   testWidgetsWithAccessibilityChecks('Displays pronouns for recipients', (tester) async {
     _setupLocator(recipientCount: 2, pronouns: true); // One teacher, one student
-    final course = _mockCourse(0);
+    final course = _mockCourse('0');
 
     await tester.pumpWidget(_testableWidget(CreateConversationScreen(course)));
     await tester.pumpAndSettle();
