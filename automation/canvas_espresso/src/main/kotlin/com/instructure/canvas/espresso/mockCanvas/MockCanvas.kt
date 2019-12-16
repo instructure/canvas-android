@@ -1215,7 +1215,8 @@ fun MockCanvas.addQuizToCourse(
         title: String = Faker.instance().hitchhikersGuideToTheGalaxy().character(),
         description: String = Faker.instance().hitchhikersGuideToTheGalaxy().marvinQuote(),
         quizType: String = Quiz.TYPE_PRACTICE,
-        timeLimitSecs: Int = 300
+        timeLimitSecs: Int = 300,
+        dueAt: String? = null
 ) : Quiz {
     val quizId = newItemId()
     val quizUrl = "https://mock-data.instructure.com/api/v1/courses/${course.id}/quizzes/$quizId"
@@ -1226,7 +1227,8 @@ fun MockCanvas.addQuizToCourse(
             quizType = quizType,
             mobileUrl = quizUrl,
             htmlUrl = quizUrl,
-            timeLimit = timeLimitSecs
+            timeLimit = timeLimitSecs,
+            dueAt = dueAt
     )
 
     var quizList = courseQuizzes[course.id]
