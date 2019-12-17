@@ -315,12 +315,16 @@ class DashboardState extends State<DashboardScreen> {
             if (count <= 0) return SizedBox();
             return Container(
               key: Key('inbox-count'),
-              decoration: BoxDecoration(color: Colors.blue, shape: BoxShape.circle),
+              decoration: BoxDecoration(color: Theme.of(context).accentColor, shape: BoxShape.circle),
               child: Padding(
                 padding: const EdgeInsets.all(6.0),
                 child: Text(
                   '$count',
-                  style: TextStyle(fontSize: 12, color: Colors.white, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Theme.of(context).accentIconTheme.color,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             );
