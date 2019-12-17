@@ -57,10 +57,8 @@ sealed class GradeCellViewState {
             assignment: Assignment,
             submission: Submission?
         ): GradeCellViewState {
-            // Return empty state for missing/null submission, unsubmitted workflow state, or "Not Graded" grading type
-            if (submission?.workflowState == null
-                || submission.workflowState == "unsubmitted"
-                || assignment.gradingType == Assignment.NOT_GRADED_TYPE) {
+            // Return empty state if unsubmitted and ungraded, or "Not Graded" grading type
+            if ((submission?.submittedAt == null && submission?.isGraded != true) || assignment.gradingType == Assignment.NOT_GRADED_TYPE) {
                 return Empty
             }
 
