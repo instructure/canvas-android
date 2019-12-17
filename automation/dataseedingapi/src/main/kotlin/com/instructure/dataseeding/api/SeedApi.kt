@@ -35,13 +35,15 @@ object SeedApi {
             val gradingPeriods: Boolean = false,
             val discussions: Int = 0,
             val announcements: Int = 0,
-            val publishCourses: Boolean = true
+            val publishCourses: Boolean = true,
+            val TAs: Int = 0
     )
 
     // Seed data object/model, made to look very much like the old proto-generated SeededData class
     class SeededDataApiModel {
         // lists of students, teachers, courses, etc...
         val teachersList = mutableListOf<CanvasUserApiModel>()
+        val taList = mutableListOf<CanvasUserApiModel>()
         val studentsList = mutableListOf<CanvasUserApiModel>()
         val coursesList = mutableListOf<CourseApiModel>()
         val enrollmentsList = mutableListOf<EnrollmentApiModel>()
@@ -52,6 +54,9 @@ object SeedApi {
         // Methods to add elements to lists
         fun addTeachers(teacher: CanvasUserApiModel) {
             teachersList.add(teacher)
+        }
+        fun addTAs(ta: CanvasUserApiModel) {
+            taList.add(ta)
         }
         fun addStudents(student: CanvasUserApiModel) {
             studentsList.add(student)
@@ -104,6 +109,11 @@ object SeedApi {
                 for (s in 0 until request.students) {
                     addStudents(UserApi.createCanvasUser())
                     addEnrollments(EnrollmentsApi.enrollUserAsStudent(coursesList[c].id, studentsList[s].id))
+                }
+
+                for (ta in 0 until request.TAs) {
+                    addTAs(UserApi.createCanvasUser())
+                    addEnrollments(EnrollmentsApi.enrollUserAsTA(coursesList[c].id, taList[ta].id))
                 }
             }
 

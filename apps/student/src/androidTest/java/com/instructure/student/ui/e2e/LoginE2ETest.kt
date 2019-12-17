@@ -1,7 +1,26 @@
+/*
+ * Copyright (C) 2019 - present Instructure, Inc.
+ *
+ *     Licensed under the Apache License, Version 2.0 (the "License");
+ *     you may not use this file except in compliance with the License.
+ *     You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *     Unless required by applicable law or agreed to in writing, software
+ *     distributed under the License is distributed on an "AS IS" BASIS,
+ *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *     See the License for the specific language governing permissions and
+ *     limitations under the License.
+ *
+ */
 package com.instructure.student.ui.e2e
 
+import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
+import com.instructure.dataseeding.api.SeedApi
 import com.instructure.dataseeding.model.CanvasUserApiModel
+import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.panda_annotations.*
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.seedData
@@ -61,6 +80,68 @@ class LoginE2ETest : StudentTest() {
 
         // Verify that the dashboard page looks good
         verifyDashboardPage(student2)
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.P0, FeatureCategory.LOGIN, TestCategory.E2E)
+    fun testUserRolesLoginE2E() {
+
+        // Seed student, teacher, TA and parent data
+        val data = seedData(students = 1, teachers = 1, tas = 1, courses = 1)
+        val parentData = SeedApi.seedParentData(
+                SeedApi.SeedParentDataRequest(
+                        courses=1, students=1, parents=1
+                )
+        )
+
+        // Test for student
+        validateUserAndRole(data.studentsList[0], data.coursesList[0], "Student")
+
+        // Test for teacher
+        validateUserAndRole(data.teachersList[0], data.coursesList[0], "Teacher")
+
+        // Test for TA
+        validateUserAndRole(data.taList[0], data.coursesList[0], "TA")
+
+        // Test for parent, which is different/abbreviated because parents don't show
+        // up in the "People" page so we can't verify their role.
+
+        // Sign in as a parent
+        val parent = parentData.parentsList[0]
+        loginLandingPage.clickFindMySchoolButton()
+        loginFindSchoolPage.enterDomain(parent.domain)
+        loginFindSchoolPage.clickToolbarNextMenuItem()
+        loginSignInPage.loginAs(parent)
+
+        // Verify that we are signed in as the parent
+        verifyDashboardPage(parent)
+
+        // Sign the parent out
+        dashboardPage.signOut()
+    }
+
+    // Repeated logic from the testUserRolesLoginE2E test.
+    // Assumes that you start at the login landing page, and logs you out before completing.
+    private fun validateUserAndRole(user: CanvasUserApiModel, course: CourseApiModel, role: String) {
+        loginLandingPage.clickFindMySchoolButton()
+        loginFindSchoolPage.enterDomain(user.domain)
+        loginFindSchoolPage.clickToolbarNextMenuItem()
+        loginSignInPage.loginAs(user)
+
+        // Verify that we are signed in as the user
+        verifyDashboardPage(user)
+
+        // Verify that our role is correct
+        dashboardPage.selectCourse(course)
+        courseBrowserPage.selectPeople()
+        peopleListPage.assertPersonListed(user, role)
+        Espresso.pressBack() // to course browser page
+        Espresso.pressBack() // to dashboard page
+
+        // Sign the user out
+        dashboardPage.signOut()
+
     }
 
     private fun verifyDashboardPage(user: CanvasUserApiModel)
