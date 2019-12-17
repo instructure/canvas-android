@@ -24,7 +24,7 @@ abstract class UnreadCount implements Built<UnreadCount, UnreadCountBuilder> {
   static Serializer<UnreadCount> get serializer => _$unreadCountSerializer;
 
   @BuiltValueField(wireName: 'unread_count')
-  int get count;
+  String get count;
 
   UnreadCount._();
   factory UnreadCount([void Function(UnreadCountBuilder) updates]) = _$UnreadCount;

@@ -26,6 +26,7 @@ import 'package:flutter_parent/screens/courses/courses_interactor.dart';
 import 'package:flutter_parent/screens/courses/courses_screen.dart';
 import 'package:flutter_parent/screens/dashboard/dashboard_interactor.dart';
 import 'package:flutter_parent/screens/dashboard/dashboard_screen.dart';
+import 'package:flutter_parent/screens/dashboard/inbox_notifier.dart';
 import 'package:flutter_parent/screens/login_landing_screen.dart';
 import 'package:flutter_parent/screens/manage_students/manage_students_interactor.dart';
 import 'package:flutter_parent/screens/manage_students/manage_students_screen.dart';
@@ -295,19 +296,67 @@ void main() {
     expect(ApiPrefs.isLoggedIn(), false);
   });
 
-//  testWidgetsWithAccessibilityChecks('Updating the inbox notifier value updates in the nav drawer', (tester) async {
-//    _setupLocator();
-//
-//    await tester.pumpWidget(_testableMaterialWidget());
-//    await tester.pumpAndSettle();
-//
-//    // Open the nave drawer
-//    DashboardScreen.scaffoldKey.currentState.openDrawer();
-//    await tester.pumpAndSettle();
-//
-//    // Change inbox notifier value
-//    // TODO: Implement when we get the Inbox api up and going
-//  });
+  testWidgetsWithAccessibilityChecks('Initiates call to update inbox count', (tester) async {
+    var interactor = MockInteractor();
+    _setupLocator(interactor);
+
+    await tester.pumpWidget(_testableMaterialWidget());
+    await tester.pumpAndSettle();
+
+    // Open the nav drawer
+    DashboardScreen.scaffoldKey.currentState.openDrawer();
+    await tester.pumpAndSettle();
+
+    expect(interactor.mockInboxNotifier.updateCount, 1);
+  });
+
+  testWidgetsWithAccessibilityChecks('Inbox count of zero hides badge', (tester) async {
+    var interactor = MockInteractor();
+    interactor.mockInboxNotifier.nextValue = 0;
+    _setupLocator(interactor);
+
+    await tester.pumpWidget(_testableMaterialWidget());
+    await tester.pumpAndSettle();
+
+    // Open the nav drawer
+    DashboardScreen.scaffoldKey.currentState.openDrawer();
+    await tester.pumpAndSettle();
+
+    expect(find.byKey(Key('inbox-count')), findsNothing);
+  });
+
+  testWidgetsWithAccessibilityChecks('Displays Inbox count', (tester) async {
+    var interactor = MockInteractor();
+    interactor.mockInboxNotifier.nextValue = 12321;
+    _setupLocator(interactor);
+
+    await tester.pumpWidget(_testableMaterialWidget());
+    await tester.pumpAndSettle();
+
+    // Open the nav drawer
+    DashboardScreen.scaffoldKey.currentState.openDrawer();
+    await tester.pumpAndSettle();
+
+    expect(find.text('12321'), findsOneWidget);
+  });
+
+  testWidgetsWithAccessibilityChecks('Updates Inbox count', (tester) async {
+    var interactor = MockInteractor();
+    interactor.mockInboxNotifier.nextValue = 12321;
+    _setupLocator(interactor);
+
+    await tester.pumpWidget(_testableMaterialWidget());
+    await tester.pumpAndSettle();
+
+    // Open the nav drawer
+    DashboardScreen.scaffoldKey.currentState.openDrawer();
+    await tester.pumpAndSettle();
+
+    interactor.mockInboxNotifier.value = 78987;
+    await tester.pumpAndSettle();
+
+    expect(find.text('78987'), findsOneWidget);
+  });
 }
 
 class MockAlertsInteractor extends AlertsInteractor {}
@@ -318,6 +367,7 @@ class MockInteractor extends DashboardInteractor {
   bool includePronouns;
   bool generateStudents;
   bool generateSelf;
+  _MockInboxCountNotifier mockInboxNotifier = _MockInboxCountNotifier();
 
   MockInteractor({this.includePronouns = false, this.generateStudents = true, this.generateSelf = true});
 
@@ -334,6 +384,20 @@ class MockInteractor extends DashboardInteractor {
   Future<User> getSelf({app}) async => generateSelf
       ? _mockUser('Marlene', pronouns: includePronouns ? 'she/her' : null, primaryEmail: 'marlene@instructure.com')
       : null;
+
+  @override
+  InboxCountNotifier getInboxCountNotifier() => mockInboxNotifier;
+}
+
+class _MockInboxCountNotifier extends InboxCountNotifier {
+  int nextValue = 0;
+  int updateCount = 0;
+
+  @override
+  update() {
+    updateCount++;
+    value = nextValue;
+  }
 }
 
 class MockCoursesInteractor extends CoursesInteractor {

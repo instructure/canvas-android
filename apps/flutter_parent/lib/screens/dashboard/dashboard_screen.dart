@@ -18,7 +18,6 @@ import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/screens/alerts/alerts_screen.dart';
 import 'package:flutter_parent/screens/courses/courses_screen.dart';
-import 'package:flutter_parent/screens/dashboard/inbox_notifier.dart';
 import 'package:flutter_parent/screens/inbox/conversation_list/conversation_list_screen.dart';
 import 'package:flutter_parent/screens/login_landing_screen.dart';
 import 'package:flutter_parent/screens/manage_students/manage_students_screen.dart';
@@ -74,7 +73,7 @@ class DashboardState extends State<DashboardScreen> {
     }
     super.initState();
 
-    InboxCountNotifier.get().update();
+    _interactor.getInboxCountNotifier().update();
   }
 
   void _loadSelf() {
@@ -311,17 +310,20 @@ class DashboardState extends State<DashboardScreen> {
         title: Text(L10n(context).inbox),
         onTap: () => _navigateToInbox(context),
         trailing: ValueListenableBuilder(
-          valueListenable: InboxCountNotifier.get(),
+          valueListenable: _interactor.getInboxCountNotifier(),
           builder: (context, count, _) {
-            return Visibility(
-              visible: count > 0,
-              child: Container(
-                decoration: BoxDecoration(color: Colors.blue, shape: BoxShape.circle),
-                child: Padding(
-                  padding: const EdgeInsets.all(6.0),
-                  child: Text(
-                    '$count',
-                    style: TextStyle(fontSize: 12, color: Colors.white, fontWeight: FontWeight.bold),
+            if (count <= 0) return SizedBox();
+            return Container(
+              key: Key('inbox-count'),
+              decoration: BoxDecoration(color: Theme.of(context).accentColor, shape: BoxShape.circle),
+              child: Padding(
+                padding: const EdgeInsets.all(6.0),
+                child: Text(
+                  '$count',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Theme.of(context).accentIconTheme.color,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),

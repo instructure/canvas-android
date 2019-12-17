@@ -23,6 +23,7 @@ import 'package:flutter_parent/screens/alerts/alerts_interactor.dart';
 import 'package:flutter_parent/screens/courses/courses_interactor.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_interactor.dart';
 import 'package:flutter_parent/screens/dashboard/dashboard_interactor.dart';
+import 'package:flutter_parent/screens/dashboard/inbox_notifier.dart';
 import 'package:flutter_parent/screens/domain_search/domain_search_interactor.dart';
 import 'package:flutter_parent/screens/inbox/attachment_utils/attachment_picker_interactor.dart';
 import 'package:flutter_parent/screens/inbox/conversation_list/conversation_list_interactor.dart';
@@ -35,8 +36,6 @@ import 'package:get_it/get_it.dart';
 GetIt locator = GetIt.instance;
 
 void setupLocator() {
-  locator.registerLazySingleton<QuickNav>(() => QuickNav());
-
   // APIs
   locator.registerLazySingleton<AlertsApi>(() => AlertsApi());
   locator.registerLazySingleton<AssignmentApi>(() => AssignmentApi());
@@ -57,4 +56,8 @@ void setupLocator() {
   locator.registerFactory<DomainSearchInteractor>(() => DomainSearchInteractor());
   locator.registerFactory<ManageStudentsInteractor>(() => ManageStudentsInteractor());
   locator.registerFactory<WebLoginInteractor>(() => WebLoginInteractor());
+
+  // Other
+  locator.registerLazySingleton<QuickNav>(() => QuickNav());
+  locator.registerLazySingleton<InboxCountNotifier>(() => InboxCountNotifier());
 }
