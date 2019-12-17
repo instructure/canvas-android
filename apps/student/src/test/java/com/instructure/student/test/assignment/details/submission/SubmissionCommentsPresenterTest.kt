@@ -74,6 +74,7 @@ class SubmissionCommentsPresenterTest : Assert() {
         // Set up our user(s)
         user = User(id=100,name="Bart Simpson",shortName="Bart",avatarUrl="BartAvatarUrl")
         ApiPrefs.user = user
+        println("Setup: ApiPrefs.user = ${ApiPrefs.user}")
         teacher = User(id=101,name="Edna Krabapple",shortName="Edna",avatarUrl="EdnaAvatarUrl")
 
         // Set up our base models

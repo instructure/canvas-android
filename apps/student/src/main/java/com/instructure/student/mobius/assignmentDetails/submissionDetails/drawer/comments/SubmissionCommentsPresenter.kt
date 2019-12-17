@@ -34,6 +34,7 @@ object SubmissionCommentsPresenter : Presenter<SubmissionCommentsModel, Submissi
     }
 
     override fun present(model: SubmissionCommentsModel, context: Context): SubmissionCommentsViewState {
+        println("present: ApiPrefs.user=${ApiPrefs.user}")
         val self = ApiPrefs.user ?: return SubmissionCommentsViewState(false, listOf(CommentItemState.Empty))
 
         val tint = ColorKeeper.colorFromCourseId(model.assignment.courseId)
