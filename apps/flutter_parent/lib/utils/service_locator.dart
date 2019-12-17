@@ -36,8 +36,6 @@ import 'package:get_it/get_it.dart';
 GetIt locator = GetIt.instance;
 
 void setupLocator() {
-  locator.registerLazySingleton<QuickNav>(() => QuickNav());
-
   // APIs
   locator.registerLazySingleton<AlertsApi>(() => AlertsApi());
   locator.registerLazySingleton<AssignmentApi>(() => AssignmentApi());
@@ -46,7 +44,6 @@ void setupLocator() {
   locator.registerLazySingleton<EnrollmentsApi>(() => EnrollmentsApi());
   locator.registerLazySingleton<FileUploadApi>(() => FileUploadApi());
   locator.registerLazySingleton<InboxApi>(() => InboxApi());
-  locator.registerLazySingleton<InboxCountNotifier>(() => InboxCountNotifier());
 
   // Interactors
   locator.registerFactory<AlertsInteractor>(() => AlertsInteractor());
@@ -59,4 +56,8 @@ void setupLocator() {
   locator.registerFactory<DomainSearchInteractor>(() => DomainSearchInteractor());
   locator.registerFactory<ManageStudentsInteractor>(() => ManageStudentsInteractor());
   locator.registerFactory<WebLoginInteractor>(() => WebLoginInteractor());
+
+  // Other
+  locator.registerLazySingleton<QuickNav>(() => QuickNav());
+  locator.registerLazySingleton<InboxCountNotifier>(() => InboxCountNotifier());
 }
