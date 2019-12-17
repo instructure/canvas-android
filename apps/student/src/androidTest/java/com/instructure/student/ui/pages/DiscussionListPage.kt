@@ -22,11 +22,13 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withParent
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvas.espresso.DirectlyPopulateEditText
+import com.instructure.canvas.espresso.explicitClick
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.click
+import com.instructure.espresso.matchers.WaitForViewMatcher.waitForView
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.swipeDown
 import com.instructure.espresso.typeText
@@ -39,6 +41,11 @@ class DiscussionListPage : BasePage(R.id.discussionListPage) {
 
     private val createNewDiscussion by OnViewWithId(R.id.createNewDiscussion)
 
+    fun waitForDiscussionTopicToDisplay(topicTitle: String) {
+        val matcher = allOf(withText(topicTitle), withId(R.id.discussionTitle))
+        waitForView(matcher)
+
+    }
     fun assertTopicDisplayed(topicTitle: String) {
         val matcher = allOf(withText(topicTitle), withId(R.id.discussionTitle))
         scrollRecyclerView(R.id.discussionRecyclerView, matcher)
@@ -88,7 +95,8 @@ class DiscussionListPage : BasePage(R.id.discussionListPage) {
         // short-screen/landscape conditions are present.
         onView(withId(R.id.editDiscussionName)).perform(DirectlyPopulateEditText(name))
         onView(withId(R.id.rce_webView)).perform(TypeInRCETextEditor(description))
-        onView(withId(R.id.menuSaveDiscussion)).click()
+        onView(withId(R.id.menuSaveDiscussion)).perform(explicitClick()) // Can be mis-interpreted as a long press
+        waitForDiscussionTopicToDisplay(name)
     }
 
     fun pullToUpdate() {

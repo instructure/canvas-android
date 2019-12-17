@@ -71,6 +71,7 @@ class SubmissionServiceTest : Assert() {
     @After
     fun cleanup() {
         Db.dbClear()
+        clearAllMocks()
     }
 
 

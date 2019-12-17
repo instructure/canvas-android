@@ -77,7 +77,7 @@ abstract class CanvasTest : InstructureTest(BuildConfig.GLOBAL_DITTO_MODE) {
                 eventObject.put("status", "retry")
                 eventObject.put("testName", testMethod)
                 eventObject.put("testClass", testClass)
-                eventObject.put("stackTrace", error.stackTrace.take(10).joinToString(", "))
+                eventObject.put("stackTrace", error.stackTrace.take(15).joinToString(", "))
                 eventObject.put("message", error.toString())
 
                 val payloadObject = JSONObject()

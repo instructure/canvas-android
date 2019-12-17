@@ -593,6 +593,7 @@ object CourseDiscussionEntryEndpoint : Endpoint(
                 val jsonObject = grabJsonFromMultiPartBody(request.body()!!)
                 Log.d("<--", "topic entry replies post body: $jsonObject")
                 val newEntry = DiscussionEntry(
+                        id = data.newItemId(),
                         message = jsonObject.get("message").asString, // This is all that comes with the POST object
                         createdAt = Calendar.getInstance().time.toString(),
                         author = DiscussionParticipant(id = request.user!!.id, displayName = request.user!!.name)
