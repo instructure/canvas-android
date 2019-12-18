@@ -12,18 +12,41 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_crashlytics/flutter_crashlytics.dart';
 import 'package:flutter_parent/screens/crash_screen.dart';
 
 class CrashUtils {
-  static init() {
+  static Future<void> init() async {
+    await FlutterCrashlytics().initialize();
+
     // Set up custom crash screen
-    ErrorWidget.builder = (error) => CrashScreen(error);
+    ErrorWidget.builder = (error) {
+      // Only need to dump errors in debug, release builds call onError
+      if (!kReleaseMode) FlutterError.dumpErrorToConsole(error);
+      return CrashScreen(error);
+    };
 
     // Set up error handling
     FlutterError.onError = (error) {
-      // TODO: Report error to firebase/crashlytics
-      FlutterError.dumpErrorToConsole(error);
+      if (kReleaseMode) {
+        reportCrash(error.exception, error.stack);
+      } else {
+        // Manually handle debug reporting here, as this console formatting is nicer than simple print(stacktrace)
+        FlutterError.dumpErrorToConsole(error);
+      }
     };
+  }
+
+  /// Report a crash to crashlytics in release mode, otherwise only a stack trace is printed
+  static reportCrash(dynamic exception, StackTrace stacktrace) async {
+    print('Caught exception: $exception');
+    debugPrintStack(stackTrace: stacktrace);
+
+    if (kReleaseMode) {
+      // Report to crashlytics
+      await FlutterCrashlytics().reportCrash(exception, stacktrace, forceCrash: false);
+    }
   }
 }
