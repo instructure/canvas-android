@@ -28,9 +28,7 @@ import androidx.core.content.ContextCompat
 import com.google.android.material.appbar.AppBarLayout
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.models.*
-import com.instructure.canvasapi2.utils.ApiType
-import com.instructure.canvasapi2.utils.LinkHeaders
-import com.instructure.canvasapi2.utils.NumberHelper
+import com.instructure.canvasapi2.utils.*
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.weave
@@ -175,6 +173,8 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
             if (!showWhatIfCheckBox.isChecked) {
                 recyclerAdapter.refresh()
             } else {
+                // Only log when what if grades is checked on
+                Analytics.logEvent(AnalyticsEventConstants.WHAT_IF_GRADES)
                 recyclerAdapter.notifyDataSetChanged()
             }
         }
