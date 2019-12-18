@@ -19,7 +19,7 @@ import 'package:flutter_parent/screens/crash_screen.dart';
 
 class CrashUtils {
   static Future<void> init() async {
-    await FlutterCrashlytics().initialize();
+    if (kReleaseMode) await FlutterCrashlytics().initialize();
 
     // Set up custom crash screen
     ErrorWidget.builder = (error) {
