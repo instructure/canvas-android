@@ -27,7 +27,7 @@
 
 -keepattributes *Annotation*,Signature,EnclosingMethod,ElementList,Root,Annotation,InnerClasses,SourceFile,LineNumberTable
 
-#Android
+# Android
 
 -keep public class * extends android.app.Activity
 -keep public class * extends android.app.Application
@@ -110,17 +110,17 @@
 -keep class com.google.api.** { *; }
 -keep class android.net.http.** { *; }
 
-#Google
+# Google
 
 -keep class com.google.appengine.** { *; }
 
-#Apache
+# Apache
 
 -dontwarn org.apache.**
 -keep class org.apache.http.** { *; }
 -keep class org.apache.james.mime4j.** { *; }
 
-#Amazon
+# Amazon
 
 -keep class com.amazonaws.services.sqs.QueueUrlHandler  { *; }
 -keep class com.amazonaws.javax.xml.transform.sax.*     { public *; }
@@ -166,9 +166,10 @@
 
 -keep class android.webkit.** { *; }
 
-#Retrofit
+# Retrofit
 
 -dontwarn retrofit2.**
+-dontwarn retrofit.**
 -dontwarn rx.**
 -dontwarn okio.**
 -dontwarn com.squareup.okhttp.*
@@ -191,25 +192,22 @@
 -dontwarn java.nio.file.*
 -dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
 -dontwarn okhttp3.**
+-keep class okhttp3.** { *; }
 
-#PSPDFKit
+# PSPDFKit
 -keep class com.pspdfkit.** { *; }
+-dontwarn com.pspdfkit.**
 -dontwarn sun.misc.**
--dontwarn com.pspdfkit.ui.PdfYouTubeActivity
--dontwarn com.pspdfkit.media.MediaGalleryView*
--dontwarn com.pspdfkit.configuration.PdfConfiguration
--dontwarn com.pspdfkit.configuration.activity.PdfActivityConfiguration
--dontwarn com.pspdfkit.configuration.search.SearchConfiguration
--dontwarn com.pspdfkit.signatures.Signature
--dontwarn com.pspdfkit.ui.dialog.DocumentSharingDialogConfiguration
+-dontwarn android.view.WindowInsets
+-dontwarn android.graphics.Insets
 -dontwarn edu.umd.cs.findbugs.annotations.SuppressWarnings
 -keepnames class io.reactivex.android.schedulers.AndroidSchedulers
 -keepnames class io.reactivex.Observable
 
-#RxJava
+# RxJava
 -keep class rx.internal.util.unsafe.** { *; }
 
-#SimpleFramework.xml
+# SimpleFramework.xml
 -dontwarn org.simpleframework.xml.stream.**
 -keep public class org.simpleframework.** { *; }
 -keep class org.simpleframework.xml.** { *; }
@@ -221,20 +219,20 @@
     @org.simpleframework.xml.* *;
 }
 
-#Instructure
+# Instructure
 
 -keep public class com.instructure.** { *; }
 -keep public class instructure.** { *; }
 
-#androidsvg
+# androidsvg
 
 -dontwarn com.caverock.androidsvg.**
 -keep public class com.caverock.androidsvg.** { *; }
 
-#greenrobot event bus
+# Greenrobot event bus
 -keep public class org.greenrobot.eventbus.** { *; }
 
-#glide
+# Glide
 -dontwarn com.bumptech.glide.load.resource.bitmap.VideoDecoder
 -keep public class * extends com.bumptech.glide.AppGlideModule
 -keep public class * implements com.bumptech.glide.module.GlideModule
@@ -255,3 +253,9 @@
 
 # Kotlin
 -dontwarn kotlinx.atomicfu.AtomicBoolean
+
+# NewRelic
+
+-keep class com.newrelic.** { *; }
+-dontwarn com.newrelic.**
+-keepattributes Exceptions, Signature, InnerClasses, LineNumberTable, SourceFile, EnclosingMethod
