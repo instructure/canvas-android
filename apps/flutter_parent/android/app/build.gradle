@@ -22,8 +22,17 @@ if (flutterVersionName == null) {
 }
 
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'io.fabric'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
+
+// Without the following setup, a native crash like SIGSEGV will appear as a blank stacktrace in Crashlytics
+crashlytics {
+    enableNdk true
+    androidNdkOut "../../debugSymbols"
+    androidNdkLibsOut "../../build/app/intermediates/transforms/stripDebugSymbol/release/0/lib"
+}
 
 android {
     compileSdkVersion Versions.COMPILE_SDK
@@ -47,6 +56,9 @@ android {
 
         //noinspection GroovyAccessibility
         PrivateData.merge(project, "parent")
+        addManifestPlaceholders([
+                fabricApiKey:"$fabricApiKey"
+        ])
     }
 
     buildTypes {

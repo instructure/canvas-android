@@ -12,18 +12,24 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/api/utils/api_prefs.dart';
 import 'package:flutter_parent/parent_app.dart';
 import 'package:flutter_parent/utils/crash_utils.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+void main() {
+  runZoned<Future<void>>(() async {
+    WidgetsFlutterBinding.ensureInitialized();
 
-  CrashUtils.init(); // Sets up crash screen widget and crash report behavior
-  setupLocator();
-  await ApiPrefs.init();
+    await Future.wait([
+      ApiPrefs.init(),
+      CrashUtils.init(),
+    ]);
+    setupLocator();
 
-  runApp(ParentApp());
+    runApp(ParentApp());
+  }, onError: (error, stacktrace) => CrashUtils.reportCrash(error, stacktrace));
 }

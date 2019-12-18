@@ -16,6 +16,11 @@
         android:name="io.flutter.app.FlutterApplication"
         android:label="Canvas Parent"
         android:icon="@mipmap/ic_launcher">
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="${fabricApiKey}" />
+
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
