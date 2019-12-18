@@ -135,13 +135,6 @@ open class GradesListRecyclerAdapter(
                    }
                }
 
-               // We want to disable what if grading if MGP weights are enabled
-               if (course.isWeightedGradingPeriods) {
-                   adapterToGradesCallback?.setIsWhatIfGrading(false)
-               } else {
-                   adapterToGradesCallback?.setIsWhatIfGrading(true)
-               }
-
                if (isAllGradingPeriodsSelected) {
                    isRefresh = true
                    updateCourseGrade()
@@ -297,7 +290,13 @@ open class GradesListRecyclerAdapter(
     private fun updateAssignmentGroups(aGroups: List<AssignmentGroup>) {
         // We still need to maintain local copies of the assignments/groups for what-if grades
         // so that we have the assignments Hash and assignments group list
+        var hasValidGroupRule = false
         for (group in aGroups) {
+            // Mark the flag as true if any group has a valid rule
+            if(group.rules?.hasValidRule() == true) {
+                hasValidGroupRule = true
+            }
+
             addOrUpdateAllItems(group, group.assignments)
             for (assignment in group.assignments) {
                 assignmentsHash[assignment.id] = assignment
@@ -307,6 +306,13 @@ open class GradesListRecyclerAdapter(
             }
         }
         isAllPagesLoaded = true
+
+        // We want to disable what if grading if MGP weights are enabled, or assignment groups are enabled
+        if((canvasContext as Course).isWeightedGradingPeriods || hasValidGroupRule) {
+            adapterToGradesCallback?.setIsWhatIfGrading(false)
+        } else {
+            adapterToGradesCallback?.setIsWhatIfGrading(true)
+        }
 
         adapterToFragmentCallback?.onRefreshFinished()
         this@GradesListRecyclerAdapter.onCallbackFinished(null)

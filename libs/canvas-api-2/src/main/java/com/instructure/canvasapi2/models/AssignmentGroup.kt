@@ -17,6 +17,7 @@
 
 package com.instructure.canvasapi2.models
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 import java.util.*
@@ -28,8 +29,23 @@ data class AssignmentGroup(
         val position: Int = 0,
         @SerializedName("group_weight")
         val groupWeight: Double = 0.0,
-        val assignments: List<Assignment> = ArrayList()
+        val assignments: List<Assignment> = ArrayList(),
+        val rules: GradingRule? = null
 ) : CanvasModel<AssignmentGroup>() {
     override val comparisonDate: Date? get() = null
     override val comparisonString: String? get() = position.toString()
+}
+
+@Parcelize
+data class GradingRule(
+    @SerializedName("drop_lowest")
+    val dropLowest: Int = 0,
+    @SerializedName("drop_highest")
+    val dropHighest: Int = 0,
+    @SerializedName("never_drop")
+    val neverDrop: List<Int> = ArrayList()
+) : Parcelable {
+    fun hasValidRule() : Boolean {
+        return dropLowest != 0 || dropHighest != 0 || neverDrop.isNotEmpty()
+    }
 }

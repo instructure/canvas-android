@@ -92,6 +92,8 @@ object AnalyticsEventConstants {
     const val TOKEN_REFRESH_FAILURE = "token_refresh_failure"
     const val TOKEN_REFRESH_FAILURE_TOKEN_NOT_VALID = "token_refresh_failure_token_not_valid"
     const val TOKEN_REFRESH_FAILURE_NO_SECRET = "token_refresh_failure_no_secret"
+
+    const val WHAT_IF_GRADES = "what_if_grades_used"
 }
 
 /**
