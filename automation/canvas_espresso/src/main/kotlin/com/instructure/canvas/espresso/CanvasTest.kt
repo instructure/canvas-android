@@ -18,6 +18,7 @@ package com.instructure.canvas.espresso
 
 import android.content.res.Configuration
 import android.content.res.Resources
+import android.os.Build
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
@@ -79,6 +80,7 @@ abstract class CanvasTest : InstructureTest(BuildConfig.GLOBAL_DITTO_MODE) {
                 eventObject.put("testClass", testClass)
                 eventObject.put("stackTrace", error.stackTrace.take(15).joinToString(", "))
                 eventObject.put("message", error.toString())
+                eventObject.put("osVersion", Build.VERSION.SDK_INT.toString())
 
                 val payloadObject = JSONObject()
                 payloadObject.put("sourcetype", "mobile-android-qa-testresult")
