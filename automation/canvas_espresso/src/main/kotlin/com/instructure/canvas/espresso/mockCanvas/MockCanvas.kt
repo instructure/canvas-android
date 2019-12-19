@@ -696,7 +696,8 @@ fun MockCanvas.addSubmissionForAssignment(
             userId = userId,
             late = false,
             attachments = if(attachment != null) arrayListOf(attachment) else arrayListOf<Attachment>(),
-            submissionComments = if(comment != null) listOf(comment) else listOf<SubmissionComment>()
+            submissionComments = if(comment != null) listOf(comment) else listOf<SubmissionComment>(),
+            mediaContentType = if(attachment != null) attachment.contentType else null
     )
 
     // Submission details looks to pull attachments from the first item in the submission history, so we need a "root"
@@ -715,7 +716,8 @@ fun MockCanvas.addSubmissionForAssignment(
             late = false,
             submissionHistory = listOf(submission),
             attachments = if(attachment != null) arrayListOf(attachment) else arrayListOf<Attachment>(),
-            submissionComments = if(comment != null) listOf(comment) else listOf<SubmissionComment>()
+            submissionComments = if(comment != null) listOf(comment) else listOf<SubmissionComment>(),
+            mediaContentType = if(attachment != null) attachment.contentType else null
     )
 
     var submissionList = submissions[assignmentId]

@@ -76,6 +76,7 @@ abstract class StudentTest : CanvasTest() {
     val canvasWebViewPage = CanvasWebViewPage()
     val fileUploadPage = FileUploadPage()
     val annotationCommentListPage = AnnotationCommentListPage()
+    val pickerSubmissionUploadPage = PickerSubmissionUploadPage()
 
     // A no-op interaction to afford us an easy, harmless way to get a11y checking to trigger.
     fun meaninglessSwipe() {

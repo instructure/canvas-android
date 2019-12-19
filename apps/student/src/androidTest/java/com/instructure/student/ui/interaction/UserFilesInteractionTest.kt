@@ -19,9 +19,14 @@ import android.app.Activity
 import android.app.Instrumentation
 import android.content.Intent
 import android.net.Uri
-import android.os.Bundle
-import android.os.Environment
-import android.os.Parcelable
+import android.provider.MediaStore
+import androidx.test.espresso.intent.ActivityResultFunction
+import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.Intents.intending
+import androidx.test.espresso.intent.matcher.IntentMatchers.hasAction
+import androidx.test.espresso.intent.matcher.IntentMatchers.hasFlag
+import androidx.test.espresso.intent.matcher.IntentMatchers.hasType
+import androidx.test.rule.GrantPermissionRule
 import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.init
@@ -29,30 +34,13 @@ import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
-import com.instructure.pandautils.utils.FileUploadUtils
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLogin
+import org.hamcrest.core.AllOf.allOf
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import java.io.File
-import android.os.Environment.getExternalStorageDirectory
-import android.provider.MediaStore
-import androidx.test.espresso.Espresso
-import androidx.test.espresso.intent.ActivityResultFunction
-import androidx.test.espresso.intent.Intents
-import androidx.test.espresso.intent.Intents.intending
-import androidx.test.espresso.intent.matcher.IntentMatchers.hasAction
-import androidx.test.espresso.intent.matcher.IntentMatchers.hasFlag
-import androidx.test.espresso.intent.matcher.IntentMatchers.hasType
-//import androidx.test.InstrumentationRegistry
-import androidx.test.platform.app.InstrumentationRegistry
-import androidx.test.rule.GrantPermissionRule
-import com.instructure.canvasapi2.utils.FileUtils
-import org.hamcrest.core.AllOf.allOf
-import org.junit.Rule
-import java.io.FileOutputStream
-import java.io.InputStream
-import java.io.OutputStream
 
 
 class UserFilesInteractionTest : StudentTest() {
@@ -74,24 +62,8 @@ class UserFilesInteractionTest : StudentTest() {
         // Read this at set-up, because it may become nulled out soon thereafter
         activity = activityRule.activity
 
-        // Copy our sample.jpg file from the asserts area to the external cache dir
-        var inputStream : InputStream? = null
-        var outputStream : OutputStream? = null
-
-        try {
-            inputStream = InstrumentationRegistry.getInstrumentation().context.resources.assets.open("sample.jpg")
-            val dir = activity.externalCacheDir
-            val file = File(dir?.path, "sample.jpg")
-            outputStream = FileOutputStream(file)
-            inputStream.copyTo(outputStream)
-        }
-        finally {
-            if(inputStream != null) inputStream.close()
-            if(outputStream != null) {
-                outputStream.flush()
-                outputStream.close()
-            }
-        }
+        // Copy our sample.jpg file from the assets area to the external cache dir
+        copyAssetFileToExternalCache(activity, "sample.jpg")
 
         // Now create an ActivityResult that points to the sample.jpg in the external cache dir
         val resultData = Intent()

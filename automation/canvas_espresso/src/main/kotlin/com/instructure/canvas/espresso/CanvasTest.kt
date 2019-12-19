@@ -16,6 +16,7 @@
  */
 package com.instructure.canvas.espresso
 
+import android.content.Context
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.util.DisplayMetrics
@@ -42,6 +43,8 @@ import org.json.JSONObject
 import org.junit.Before
 import java.io.BufferedOutputStream
 import java.io.BufferedReader
+import java.io.File
+import java.io.FileOutputStream
 import java.io.InputStream
 import java.io.OutputStream
 import java.net.HttpURLConnection
@@ -362,6 +365,28 @@ abstract class CanvasTest : InstructureTest(BuildConfig.GLOBAL_DITTO_MODE) {
     fun inLandscape() : Boolean {
         var activity = activityRule.activity
         return activity.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+    }
+
+    // Copy an asset file to the external cache, typically for use in uploading the asset
+    // file via mocked intents.
+    fun copyAssetFileToExternalCache(context: Context, fileName: String) {
+        var inputStream : InputStream? = null
+        var outputStream : OutputStream? = null
+
+        try {
+            inputStream = InstrumentationRegistry.getInstrumentation().context.resources.assets.open(fileName)
+            val dir = context.externalCacheDir
+            val file = File(dir?.path, fileName)
+            outputStream = FileOutputStream(file)
+            inputStream.copyTo(outputStream)
+        }
+        finally {
+            if(inputStream != null) inputStream.close()
+            if(outputStream != null) {
+                outputStream.flush()
+                outputStream.close()
+            }
+        }
     }
 
 }
