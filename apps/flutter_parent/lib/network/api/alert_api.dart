@@ -12,9 +12,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import 'package:flutter_parent/api/utils/dio_config.dart';
-import 'package:flutter_parent/api/utils/fetch.dart';
 import 'package:flutter_parent/models/alert.dart';
+import 'package:flutter_parent/network/utils/dio_config.dart';
+import 'package:flutter_parent/network/utils/fetch.dart';
 
 class AlertsApi {
   /// Alerts were depaginated in the original parent app, then sorted by date. Depaginating here to follow suite.

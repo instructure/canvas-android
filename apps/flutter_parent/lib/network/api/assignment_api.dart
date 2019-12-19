@@ -12,12 +12,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import 'package:flutter_parent/api/utils/dio_config.dart';
-import 'package:flutter_parent/api/utils/fetch.dart';
-import 'package:flutter_parent/api/utils/paged_list.dart';
 import 'package:flutter_parent/models/assignment.dart';
 import 'package:flutter_parent/models/assignment_group.dart';
 import 'package:flutter_parent/models/submission.dart';
+import 'package:flutter_parent/network/utils/dio_config.dart';
+import 'package:flutter_parent/network/utils/fetch.dart';
+import 'package:flutter_parent/network/utils/paged_list.dart';
 
 class AssignmentApi {
   Future<List<Assignment>> getAssignmentsWithSubmissionsDepaginated(int courseId, int studentId) async {

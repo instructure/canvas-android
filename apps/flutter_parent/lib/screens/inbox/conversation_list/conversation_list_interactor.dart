@@ -12,10 +12,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import 'package:flutter_parent/api/course_api.dart';
-import 'package:flutter_parent/api/inbox_api.dart';
 import 'package:flutter_parent/models/conversation.dart';
 import 'package:flutter_parent/models/course.dart';
+import 'package:flutter_parent/network/api/course_api.dart';
+import 'package:flutter_parent/network/api/inbox_api.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class ConversationListInteractor {

@@ -13,9 +13,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter_parent/api/course_api.dart';
-import 'package:flutter_parent/api/inbox_api.dart';
 import 'package:flutter_parent/models/conversation.dart';
+import 'package:flutter_parent/network/api/course_api.dart';
+import 'package:flutter_parent/network/api/inbox_api.dart';
 import 'package:flutter_parent/screens/inbox/conversation_list/conversation_list_interactor.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';

@@ -15,9 +15,9 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/serializer.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter_parent/api/utils/paged_list.dart';
 import 'package:flutter_parent/models/school_domain.dart';
 import 'package:flutter_parent/models/serializers.dart';
+import 'package:flutter_parent/network/utils/paged_list.dart';
 import 'package:test/test.dart';
 
 void main() {

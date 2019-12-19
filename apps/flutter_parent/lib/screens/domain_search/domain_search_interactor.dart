@@ -12,8 +12,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import 'package:flutter_parent/api/accounts_api.dart';
 import 'package:flutter_parent/models/school_domain.dart';
+import 'package:flutter_parent/network/api/accounts_api.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DomainSearchInteractor {

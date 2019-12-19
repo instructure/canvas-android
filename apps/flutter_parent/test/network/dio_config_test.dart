@@ -13,8 +13,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:dio/dio.dart';
-import 'package:flutter_parent/api/utils/api_prefs.dart';
-import 'package:flutter_parent/api/utils/dio_config.dart';
+import 'package:flutter_parent/network/utils/api_prefs.dart';
+import 'package:flutter_parent/network/utils/dio_config.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../utils/platform_config.dart';
@@ -25,6 +25,24 @@ void main() {
 
   test('returns a dio object', () async {
     expect(canvasDio(), isA<Dio>());
+  });
+
+  group('base constructor asserts', () {
+    test('throws an error if baseUrl is null', () async {
+      expect(() => DioConfig(baseUrl: null), throwsAssertionError);
+    });
+
+    test('throws an error if cacheMaxAge is null', () async {
+      expect(() => DioConfig(cacheMaxAge: null), throwsAssertionError);
+    });
+
+    test('throws an error if forceRefresh is null', () async {
+      expect(() => DioConfig(forceRefresh: null), throwsAssertionError);
+    });
+
+    test('throws an error if pageSize is null', () async {
+      expect(() => DioConfig(pageSize: null), throwsAssertionError);
+    });
   });
 
   test('DioConfig.canvas returns a config object', () async {
