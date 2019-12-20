@@ -83,4 +83,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
 
+// Comment out this line if the reporting logic starts going wonky.
+gradle.addListener new TimingsListener(project)
+
 apply plugin: 'com.google.gms.google-services'

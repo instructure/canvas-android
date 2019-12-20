@@ -92,8 +92,11 @@ class TimingsListener implements TaskExecutionListener, BuildListener {
         else if(bitriseApp.contains("Teacher")) {
             projectName = "teacher"
         }
+        else if(bitriseApp.toLowerCase().contains("parent")) {
+            projectName = "parent"
+        }
         else {
-            projectName = "unknown" // Punt for now; we'll figure out flutter-parent later
+            projectName = "unknown" // Punt
         }
         println("projectName = $projectName")
 
@@ -102,6 +105,14 @@ class TimingsListener implements TaskExecutionListener, BuildListener {
         def buildDir = refProject.buildDir.toString().replace("student",projectName)
         def file = new File("$buildDir/outputs/apk/$buildFlavor/$buildType/$projectName-$buildFlavor-${buildType}.apk")
         def fileSizeInMB = file.length() == 0 ? 0 : (file.length() / (1024.0 * 1024.0)).round(3)
+
+        // Different location logic for flutter parent apk file
+        if(projectName=="parent") {
+            buildDir = refProject.buildDir.toString()
+            file = new File("$buildDir/outputs/apk/$buildType/app-${buildType}.apk")
+            fileSizeInMB = file.length() == 0 ? 0 : (file.length() / (1024.0 * 1024.0))
+            fileSizeInMB = (fileSizeInMB * 1000.0).toInteger() / 1000.0 // Round to three decimal places
+        }
         println("file name=${file.path} length=${file.length()}")
 
 
