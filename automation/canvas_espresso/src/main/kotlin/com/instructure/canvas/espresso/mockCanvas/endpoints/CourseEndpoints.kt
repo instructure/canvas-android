@@ -163,7 +163,6 @@ object CourseFileEndpoint : Endpoint (
                 val fileSize = jsonObj["size"].asInt
                 val contentType = jsonObj["content_type"].asString
                 val contents = jsonObj["file"].asString
-                Log.v("QUERY", "course files post endpoint jsonObj = $jsonObj")
 
                 val fileId = pathVars.fileId
                 val url = "https://mock-data.instructure.com/api/v1/courses/$courseId/files/$fileId"

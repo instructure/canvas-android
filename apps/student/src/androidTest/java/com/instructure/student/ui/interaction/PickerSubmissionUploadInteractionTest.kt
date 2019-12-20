@@ -41,6 +41,7 @@ import java.io.File
 class PickerSubmissionUploadInteractionTest : StudentTest() {
     override fun displaysPageObjects() = Unit
 
+    private val mockedFileName = "sample.jpg" // A file in our assets area
     private lateinit var activity : Activity
     private lateinit var activityResult: Instrumentation.ActivityResult
 
@@ -49,13 +50,13 @@ class PickerSubmissionUploadInteractionTest : StudentTest() {
         // Read this at set-up, because it may become nulled out soon thereafter
         activity = activityRule.activity
 
-        // Copy our sample.jpg file from the assets area to the external cache dir
-        copyAssetFileToExternalCache(activity, "sample.jpg")
+        // Copy our sample file from the assets area to the external cache dir
+        copyAssetFileToExternalCache(activity, mockedFileName)
 
-        // Now create an ActivityResult that points to the sample.jpg in the external cache dir
+        // Now create an ActivityResult that points to the sample file in the external cache dir
         val resultData = Intent()
         val dir = activity.externalCacheDir
-        val file = File(dir?.path, "sample.jpg")
+        val file = File(dir?.path, mockedFileName)
         val uri = Uri.fromFile(file)
         resultData.data = uri
         activityResult = Instrumentation.ActivityResult(Activity.RESULT_OK, resultData)
@@ -117,10 +118,10 @@ class PickerSubmissionUploadInteractionTest : StudentTest() {
         // Should be back to assignment details page
         assignmentDetailsPage.goToSubmissionDetails()
         submissionDetailsPage.openFiles()
-        submissionDetailsPage.assertFileDisplayed("sample.jpg")
+        submissionDetailsPage.assertFileDisplayed(mockedFileName)
         // The submission details screen will show "This media format is not supported" because
         // we're not yet processing the binary jpg data correctly in our mocked server.
-        // But the file name ("sample.jpg") should still be displayed, so we're going to be
+        // But the file name should still be displayed, so we're going to be
         // happy with that.
     }
 

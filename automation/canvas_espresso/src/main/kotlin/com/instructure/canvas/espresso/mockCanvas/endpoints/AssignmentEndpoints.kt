@@ -44,8 +44,6 @@ object AssignmentEndpoint : Endpoint(
         GET {
             val assignment = data.assignments[pathVars.assignmentId]
 
-            Log.d("SUBMISSION", "assignment ${pathVars.assignmentId} retrieval: $assignment")
-
             if (assignment != null) {
                 request.successResponse(assignment)
             } else {
