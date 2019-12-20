@@ -12,8 +12,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import 'package:flutter_parent/api/assignment_api.dart';
-import 'package:flutter_parent/api/course_api.dart';
+import 'package:flutter_parent/network/api/assignment_api.dart';
+import 'package:flutter_parent/network/api/course_api.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_interactor.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mockito/mockito.dart';

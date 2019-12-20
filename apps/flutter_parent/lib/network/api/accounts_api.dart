@@ -12,10 +12,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import 'package:flutter_parent/api/utils/dio_config.dart';
-import 'package:flutter_parent/api/utils/fetch.dart';
-import 'package:flutter_parent/models/user.dart';
+import 'package:flutter_parent/models/school_domain.dart';
+import 'package:flutter_parent/network/utils/dio_config.dart';
+import 'package:flutter_parent/network/utils/fetch.dart';
 
-class UserApi {
-  static Future<User> getSelf() => fetch(canvasDio(forceDeviceLanguage: true).get('users/self/profile'));
+class AccountsApi {
+  static Future<List<SchoolDomain>> searchDomains(String query) async {
+    var dio = DioConfig.core(cacheMaxAge: Duration(minutes: 5)).dio;
+    return fetchList(dio.get('accounts/search', queryParameters: {'search_term': query}));
+  }
 }

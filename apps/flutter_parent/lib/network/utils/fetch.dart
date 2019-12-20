@@ -13,9 +13,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:dio/dio.dart';
-import 'package:flutter_parent/api/utils/dio_config.dart';
-import 'package:flutter_parent/api/utils/paged_list.dart';
 import 'package:flutter_parent/models/serializers.dart';
+import 'package:flutter_parent/network/utils/dio_config.dart';
+import 'package:flutter_parent/network/utils/paged_list.dart';
 
 /// Fetches and deserializes a response using the given [request].
 Future<T> fetch<T>(Future<Response<dynamic>> request) async {

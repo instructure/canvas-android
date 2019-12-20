@@ -13,10 +13,10 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:dio/dio.dart';
-import 'package:flutter_parent/api/utils/api_prefs.dart';
-import 'package:flutter_parent/api/utils/dio_config.dart';
-import 'package:flutter_parent/api/utils/fetch.dart';
 import 'package:flutter_parent/models/enrollment.dart';
+import 'package:flutter_parent/network/utils/api_prefs.dart';
+import 'package:flutter_parent/network/utils/dio_config.dart';
+import 'package:flutter_parent/network/utils/fetch.dart';
 
 class EnrollmentsApi {
   Future<List<Enrollment>> getObserveeEnrollments({bool forceRefresh = false}) async {

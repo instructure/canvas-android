@@ -3,7 +3,7 @@
 **/generated/*
 
 # APIs
-lib/api/*
+lib/network/api/*
 
 # AttachmentPickerInteractor - all code calls through to system functions
 lib/screens/inbox/attachment_utils/attachment_picker_interactor.dart

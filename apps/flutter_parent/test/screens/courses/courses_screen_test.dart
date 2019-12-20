@@ -18,6 +18,7 @@ import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/models/enrollment.dart';
 import 'package:flutter_parent/models/user.dart';
+import 'package:flutter_parent/network/api/assignment_api.dart';
 import 'package:flutter_parent/screens/courses/courses_interactor.dart';
 import 'package:flutter_parent/screens/courses/courses_screen.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_interactor.dart';
@@ -25,6 +26,7 @@ import 'package:flutter_parent/screens/courses/details/course_details_screen.dar
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
+import 'package:mockito/mockito.dart';
 
 import '../../utils/accessibility_utils.dart';
 import '../../utils/test_app.dart';
@@ -35,6 +37,7 @@ void main() {
     _locator.reset();
     _locator.registerFactory<CoursesInteractor>(() => mockInteractor);
     _locator.registerFactory<CourseDetailsInteractor>(() => _MockCourseDetailsInteractor());
+    _locator.registerFactory<AssignmentApi>(() => _MockAssignmentApi());
     _locator.registerFactory<QuickNav>(() => QuickNav());
   }
 
@@ -177,6 +180,8 @@ class _MockCoursesInteractor extends CoursesInteractor {
 }
 
 class _MockCourseDetailsInteractor extends CourseDetailsInteractor {}
+
+class _MockAssignmentApi extends Mock implements AssignmentApi {}
 
 List<Course> generateCoursesForStudent([String userId]) {
   var student = _mockStudent(userId ?? '1');
