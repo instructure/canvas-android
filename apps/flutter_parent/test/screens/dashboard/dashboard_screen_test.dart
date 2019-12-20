@@ -30,6 +30,8 @@ import 'package:flutter_parent/screens/dashboard/inbox_notifier.dart';
 import 'package:flutter_parent/screens/login_landing_screen.dart';
 import 'package:flutter_parent/screens/manage_students/manage_students_interactor.dart';
 import 'package:flutter_parent/screens/manage_students/manage_students_screen.dart';
+import 'package:flutter_parent/screens/settings/settings_interactor.dart';
+import 'package:flutter_parent/screens/settings/settings_screen.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
@@ -47,6 +49,7 @@ void main() {
     _locator.registerFactory<DashboardInteractor>(() => interactor ?? MockInteractor());
     _locator.registerFactory<CoursesInteractor>(() => MockCoursesInteractor());
     _locator.registerFactory<AlertsInteractor>(() => MockAlertsInteractor());
+    _locator.registerFactory<SettingsInteractor>(() => SettingsInteractor());
     _locator.registerFactory<ManageStudentsInteractor>(() => MockManageStudentsInteractor());
     _locator.registerLazySingleton<AlertsApi>(() => AlertsApiMock());
     _locator.registerLazySingleton<QuickNav>(() => QuickNav());
@@ -247,6 +250,24 @@ void main() {
 
     // Test that Manage Students screen was loaded
     expect(find.byType(ManageStudentsScreen), findsOneWidget);
+  });
+
+  testWidgetsWithAccessibilityChecks('Clicking Settings in nav drawer opens settings screen', (tester) async {
+    _setupLocator();
+
+    await tester.pumpWidget(_testableMaterialWidget());
+    await tester.pumpAndSettle();
+
+    // Open the nav drawer
+    DashboardScreen.scaffoldKey.currentState.openDrawer();
+    await tester.pumpAndSettle();
+
+    // Click on Settings
+    await tester.tap(find.text(AppLocalizations().settings));
+    await tester.pumpAndSettle();
+
+    // Test that settings screen was loaded
+    expect(find.byType(SettingsScreen), findsOneWidget);
   });
 
 //  testWidgetsWithAccessibilityChecks('Clicking Help from nav drawer signs user out', (tester) async {

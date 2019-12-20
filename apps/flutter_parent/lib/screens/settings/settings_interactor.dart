@@ -12,26 +12,26 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import 'dart:async';
-
-import 'package:flutter/material.dart';
-import 'package:flutter_parent/api/utils/api_prefs.dart';
-import 'package:flutter_parent/parent_app.dart';
-import 'package:flutter_parent/utils/crash_utils.dart';
-import 'package:flutter_parent/utils/design/theme_prefs.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_parent/utils/design/theme_transition/theme_transition_target.dart';
+import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
-void main() {
-  runZoned<Future<void>>(() async {
-    WidgetsFlutterBinding.ensureInitialized();
+import '../theme_viewer_screen.dart';
 
-    await Future.wait([
-      ApiPrefs.init(),
-      ThemePrefs.init(),
-      CrashUtils.init(),
-    ]);
-    setupLocator();
+class SettingsInteractor {
+  bool isDebugMode() => kDebugMode;
 
-    runApp(ParentApp());
-  }, onError: (error, stacktrace) => CrashUtils.reportCrash(error, stacktrace));
+  void routeToThemeViewer(BuildContext context) {
+    locator<QuickNav>().push(context, ThemeViewerScreen());
+  }
+
+  void toggleDarkMode(context, anchorKey) {
+    ThemeTransitionTarget.toggleDarkMode(context, anchorKey);
+  }
+
+  void toggleHCMode(context, anchorKey) {
+    ThemeTransitionTarget.toggleHCMode(context, anchorKey);
+  }
 }

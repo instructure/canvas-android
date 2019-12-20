@@ -14,7 +14,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
-import 'package:flutter_parent/screens/theme_viewer_screen.dart';
 import 'package:flutter_parent/screens/web_login/web_login_screen.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
@@ -80,12 +79,6 @@ class LoginLandingScreen extends StatelessWidget {
               ),
             ],
           ),
-        ),
-        bottomNavigationBar: FlatButton(
-          child: Text("Theme Viewer"),
-          onPressed: () {
-            locator<QuickNav>().push(context, ThemeViewerScreen());
-          },
         ),
       ),
     );

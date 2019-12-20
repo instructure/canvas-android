@@ -22,6 +22,7 @@ import 'package:flutter_parent/api/utils/api_prefs.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/utils/common_widgets/respawn.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
+import 'package:flutter_parent/utils/design/theme_prefs.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -65,8 +66,7 @@ class _TestAppState extends State<TestApp> {
   Widget build(BuildContext context) {
     return Respawn(
       child: ParentTheme(
-        initWithDarkMode: widget.darkMode,
-        initWithHCMode: widget.highContrast,
+        themePrefs: MockThemePrefs(widget.darkMode, widget.highContrast),
         builder: (context, themeData) => MaterialApp(
           title: 'Canvas Parent',
           locale: _locale,
@@ -107,6 +107,25 @@ void setupTestLocator(config(GetIt locator)) {
   final locator = GetIt.instance;
   locator.reset();
   config(locator);
+}
+
+class MockThemePrefs extends ThemePrefs {
+  MockThemePrefs(this._darkMode, this._hcMode);
+
+  bool _darkMode;
+  bool _hcMode;
+
+  @override
+  bool get darkMode => _darkMode;
+
+  @override
+  set darkMode(bool value) => _darkMode = value;
+
+  @override
+  bool get hcMode => _hcMode;
+
+  @override
+  set hcMode(bool value) => _hcMode = value;
 }
 
 /// Set up the platform channels used by the app.
