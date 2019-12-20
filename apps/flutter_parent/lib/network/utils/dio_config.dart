@@ -16,7 +16,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:dio_http_cache/dio_http_cache.dart';
-import 'package:flutter_parent/api/utils/api_prefs.dart';
+import 'package:flutter_parent/network/utils/api_prefs.dart';
 
 /// Class that helps to create and configure [Dio] instances for common use cases
 class DioConfig {

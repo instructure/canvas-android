@@ -15,7 +15,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_parent/api/utils/api_prefs.dart';
+import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/parent_app.dart';
 import 'package:flutter_parent/utils/crash_utils.dart';
 import 'package:flutter_parent/utils/design/theme_prefs.dart';

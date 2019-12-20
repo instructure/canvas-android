@@ -15,8 +15,8 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter_parent/api/file_upload_api.dart';
 import 'package:flutter_parent/models/attachment.dart';
+import 'package:flutter_parent/network/api/file_upload_api.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 enum AttachmentUploadStage { CREATED, UPLOADING, FAILED, FINISHED }

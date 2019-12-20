@@ -15,10 +15,10 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:flutter_parent/api/utils/dio_config.dart';
-import 'package:flutter_parent/api/utils/fetch.dart';
 import 'package:flutter_parent/models/attachment.dart';
 import 'package:flutter_parent/models/file_upload_config.dart';
+import 'package:flutter_parent/network/utils/dio_config.dart';
+import 'package:flutter_parent/network/utils/fetch.dart';
 import 'package:mime/mime.dart';
 import 'package:path/path.dart';
 

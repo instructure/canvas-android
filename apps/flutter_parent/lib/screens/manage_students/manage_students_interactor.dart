@@ -12,9 +12,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import 'package:flutter_parent/api/enrollments_api.dart';
 import 'package:flutter_parent/models/enrollment.dart';
 import 'package:flutter_parent/models/user.dart';
+import 'package:flutter_parent/network/api/enrollments_api.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class ManageStudentsInteractor {

@@ -12,12 +12,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import 'package:flutter_parent/api/utils/dio_config.dart';
-import 'package:flutter_parent/api/utils/fetch.dart';
 import 'package:flutter_parent/models/conversation.dart';
 import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/models/recipient.dart';
 import 'package:flutter_parent/models/unread_count.dart';
+import 'package:flutter_parent/network/utils/dio_config.dart';
+import 'package:flutter_parent/network/utils/fetch.dart';
 
 class InboxApi {
   Future<List<Conversation>> getConversations({String scope: null, bool forceRefresh: false}) async {

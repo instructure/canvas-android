@@ -12,11 +12,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import 'package:flutter_parent/api/auth_api.dart';
-import 'package:flutter_parent/api/utils/api_prefs.dart';
 import 'package:flutter_parent/models/canvas_token.dart';
 import 'package:flutter_parent/models/mobile_verify_result.dart';
 import 'package:flutter_parent/models/user.dart';
+import 'package:flutter_parent/network/api/auth_api.dart';
+import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/web_login/web_login_interactor.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
@@ -49,7 +49,9 @@ void main() {
     final accessToken = 'accessToken';
     final user = User((b) => b..name = 'interactor student name');
     final mobileVerify = MobileVerifyResult();
-    final tokens = CanvasToken((b) => b..accessToken = accessToken..user = user.toBuilder());
+    final tokens = CanvasToken((b) => b
+      ..accessToken = accessToken
+      ..user = user.toBuilder());
 
     final api = _MockAuthApi();
     when(api.getTokens(mobileVerify, request)).thenAnswer((_) async => tokens);

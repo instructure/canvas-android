@@ -15,11 +15,11 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_parent/api/alert_api.dart';
-import 'package:flutter_parent/api/utils/api_prefs.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/models/user.dart';
+import 'package:flutter_parent/network/api/alert_api.dart';
+import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/alerts/alerts_interactor.dart';
 import 'package:flutter_parent/screens/alerts/alerts_screen.dart';
 import 'package:flutter_parent/screens/courses/courses_interactor.dart';
@@ -35,6 +35,7 @@ import 'package:flutter_parent/screens/settings/settings_screen.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
+import 'package:mockito/mockito.dart';
 
 import '../../utils/accessibility_utils.dart';
 import '../../utils/network_image_response.dart';
@@ -382,7 +383,7 @@ void main() {
 
 class MockAlertsInteractor extends AlertsInteractor {}
 
-class AlertsApiMock extends AlertsApi {}
+class AlertsApiMock extends Mock implements AlertsApi {}
 
 class MockInteractor extends DashboardInteractor {
   bool includePronouns;
@@ -424,7 +425,7 @@ class _MockInboxCountNotifier extends InboxCountNotifier {
 class MockCoursesInteractor extends CoursesInteractor {
   @override
   Future<List<Course>> getCourses() async {
-    var courses = await [];
+    var courses = List<Course>();
     return courses;
   }
 }

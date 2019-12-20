@@ -13,7 +13,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:flutter/material.dart';
-import 'package:flutter_parent/api/inbox_api.dart';
+import 'package:flutter_parent/network/api/inbox_api.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class InboxCountNotifier extends ValueNotifier<int> {

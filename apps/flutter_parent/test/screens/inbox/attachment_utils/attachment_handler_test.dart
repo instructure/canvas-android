@@ -16,8 +16,8 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:flutter_parent/api/file_upload_api.dart';
 import 'package:flutter_parent/models/attachment.dart';
+import 'package:flutter_parent/network/api/file_upload_api.dart';
 import 'package:flutter_parent/screens/inbox/attachment_utils/attachment_handler.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
