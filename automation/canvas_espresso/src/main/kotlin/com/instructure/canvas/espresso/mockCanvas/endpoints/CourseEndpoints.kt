@@ -21,6 +21,7 @@ import com.google.gson.Gson
 import com.instructure.canvas.espresso.mockCanvas.Endpoint
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addDiscussionTopicToCourse
+import com.instructure.canvas.espresso.mockCanvas.addFileToCourse
 import com.instructure.canvas.espresso.mockCanvas.addReplyToDiscussion
 import com.instructure.canvas.espresso.mockCanvas.endpoint
 import com.instructure.canvas.espresso.mockCanvas.utils.*
@@ -137,7 +138,12 @@ object CourseFoldersEndpoint : Endpoint(
  * - `{fileId}` -> anonymous endpoint to retrieve a file
  */
 object CourseFilesEndpoint : Endpoint(
-        LongId(PathVars::fileId) to endpoint {
+        LongId(PathVars::fileId) to CourseFileEndpoint
+
+)
+
+object CourseFileEndpoint : Endpoint (
+        response = {
             GET {
                 val courseRootFolder = data.courseRootFolders[pathVars.courseId]
                 val targetFileFolder = data.folderFiles[courseRootFolder?.id]?.find { it.id == pathVars.fileId }
@@ -148,8 +154,46 @@ object CourseFilesEndpoint : Endpoint(
                 }
 
             }
+
+            // This is the endpoint that I created for the purpose of uploading assignment files.
+            POST {
+                val courseId = pathVars.courseId
+                val jsonObj = grabJsonFromMultiPartBody(request.body()!!)
+                val fileName = jsonObj["name"].asString
+                val fileSize = jsonObj["size"].asInt
+                val contentType = jsonObj["content_type"].asString
+                val contents = jsonObj["file"].asString
+
+                val fileId = pathVars.fileId
+                val url = "https://mock-data.instructure.com/api/v1/courses/$courseId/files/$fileId"
+                data.addFileToCourse(
+                        courseId = courseId,
+                        displayName = fileName,
+                        fileContent = contents,
+                        contentType = contentType,
+                        url = url,
+                        fileId = fileId
+                )
+
+                val response = Attachment(
+                        id = fileId,
+                        contentType = contentType,
+                        filename = fileName,
+                        displayName = fileName,
+                        url = url,
+                        previewUrl = url,
+                        size = fileSize.toLong()
+                )
+                request.successResponse(response)
+
+            }
         }
-)
+
+) {
+    // Disable auth-check for course files endpoint
+    override val authModel: AuthModel
+        get() = DontCareAuthModel
+}
 
 /** Course root folder support. */
 object CourseRootFolderEndpoint : Endpoint(response = {

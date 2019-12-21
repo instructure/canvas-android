@@ -124,6 +124,9 @@ object UserFilesEndpoint : Endpoint(
                 val content = buffer.readByteArray().toString(Charset.defaultCharset()) // Should be utf-8
 
                 data.addFileToFolder(folderId = fileParentFolder, displayName = fileName, fileContent = content, contentType = fileType )
+
+                // Really bogus.  Works for the current user-file-upload tests, but we may need to revisit
+                // this in the future to make it more like SubmissionUserEndpoint/Files/POST
                 request.successResponse(FileUploadParams())
             }
         }

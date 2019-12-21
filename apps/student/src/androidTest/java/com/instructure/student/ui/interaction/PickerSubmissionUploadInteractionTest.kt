@@ -16,16 +16,51 @@
  */
 package com.instructure.student.ui.interaction
 
+import android.app.Activity
+import android.app.Instrumentation
+import android.content.Intent
+import android.net.Uri
+import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.matcher.IntentMatchers
 import com.instructure.canvas.espresso.Stub
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.addAssignment
+import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.tokenLogin
+import org.hamcrest.core.AllOf
+import org.junit.Before
 import org.junit.Test
+import java.io.File
 
 class PickerSubmissionUploadInteractionTest : StudentTest() {
     override fun displaysPageObjects() = Unit
+
+    private val mockedFileName = "sample.jpg" // A file in our assets area
+    private lateinit var activity : Activity
+    private lateinit var activityResult: Instrumentation.ActivityResult
+
+    @Before
+    fun setUp() {
+        // Read this at set-up, because it may become nulled out soon thereafter
+        activity = activityRule.activity
+
+        // Copy our sample file from the assets area to the external cache dir
+        copyAssetFileToExternalCache(activity, mockedFileName)
+
+        // Now create an ActivityResult that points to the sample file in the external cache dir
+        val resultData = Intent()
+        val dir = activity.externalCacheDir
+        val file = File(dir?.path, mockedFileName)
+        val uri = Uri.fromFile(file)
+        resultData.data = uri
+        activityResult = Instrumentation.ActivityResult(Activity.RESULT_OK, resultData)
+    }
 
     @Stub
     @Test
@@ -55,10 +90,72 @@ class PickerSubmissionUploadInteractionTest : StudentTest() {
 
     }
 
-    @Stub
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P1, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, false)
     fun testSubmit() {
+        val data = goToSubmissionPicker()
 
+        // Let's mock grabbing a file from our device
+        Intents.init()
+        try {
+            // Set up the "from device" mock result, then press the "device" icon
+            Intents.intending(
+                    AllOf.allOf(
+                            IntentMatchers.hasAction(Intent.ACTION_GET_CONTENT),
+                            IntentMatchers.hasType("*/*"),
+                            IntentMatchers.hasFlag(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                    )
+            ).respondWith(activityResult)
+            pickerSubmissionUploadPage.chooseDevice()
+        }
+        finally {
+            Intents.release()
+        }
+
+        // Now submit the file
+        pickerSubmissionUploadPage.submit()
+
+        // Should be back to assignment details page
+        assignmentDetailsPage.goToSubmissionDetails()
+        submissionDetailsPage.openFiles()
+        submissionDetailsPage.assertFileDisplayed(mockedFileName)
+        // The submission details screen will show "This media format is not supported" because
+        // we're not yet processing the binary jpg data correctly in our mocked server.
+        // But the file name should still be displayed, so we're going to be
+        // happy with that.
+    }
+
+    // Seed course, user, assignment and navigate to submission picker for assignment
+    private fun goToSubmissionPicker() : MockCanvas {
+
+        // Basic mock setup
+        val data = MockCanvas.init(
+                courseCount = 1,
+                favoriteCourseCount = 1,
+                studentCount = 1,
+                teacherCount = 1
+        )
+
+        val student = data.students.first()
+        val course = data.courses.values.first()
+
+        // Let's set up an assignment that requires an online upload
+        val assignment = data.addAssignment(
+                courseId = course.id,
+                submissionType = Assignment.SubmissionType.ONLINE_UPLOAD
+        )
+
+        // Sign in
+        val token = data.tokenFor(student)!!
+        tokenLogin(data.domain, token, student)
+        dashboardPage.waitForRender()
+
+        // Navigate to submission picker page
+        dashboardPage.selectCourse(course)
+        courseBrowserPage.selectAssignments()
+        assignmentListPage.clickAssignment(assignment)
+        assignmentDetailsPage.clickSubmit()
+
+        return data
     }
 }

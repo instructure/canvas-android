@@ -79,8 +79,9 @@
 
     <ImageView
         android:id="@+id/deleteButton"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:padding="12dp"
         android:layout_marginEnd="16dp"
         android:background="?android:attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/delete"
