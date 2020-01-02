@@ -19,16 +19,16 @@
 <resources>
 
     <!--Modules-->
-    <string name="mustComplete">Primero debe completar:</string>
+    <string name="mustComplete">Primero debe completar lo siguiente:</string>
     <string name="unlockedAt">Será desbloqueado a las:</string>
     <string name="goToModules">Ir a módulos</string>
 
     <!--Events-->
-    <string name="Starts">Comienza</string>
+    <string name="Starts">Comienza en</string>
     <string name="Ends">Finaliza</string>
     <string name="allDayEvent">Evento de todo el día</string>
     <string name="at">en</string>
-    <string name="to">a</string>
+    <string name="to">para</string>
 
     <!--StreamItems-->
     <string name="Message">Mensaje</string>
@@ -38,37 +38,38 @@
     <!-- Assignment Module -->
     <string name="canvasAPI_online">En línea</string>
     <string name="canvasAPI_onPaper">En papel</string>
-    <string name="canvasAPI_discussion">Foro</string>
-    <string name="canvasAPI_quiz">Evaluación</string>
+    <string name="canvasAPI_discussion">Foro de discusión</string>
+    <string name="canvasAPI_quiz">Examen</string>
     <string name="canvasAPI_externalTool">Herramienta externa</string>
-    <string name="canvasAPI_none">Sin presentaciones</string>
+    <string name="canvasAPI_none">Sin entregas</string>
+
     <string name="canvasAPI_passFail">Pasar Reprobar</string>
     <string name="canvasAPI_percent">Porcentaje</string>
-    <string name="canvasAPI_letterGrade">Calificación por letras</string>
+    <string name="canvasAPI_letterGrade">Calificación por letra</string>
     <string name="canvasAPI_points">Puntos</string>
-    <string name="canvasAPI_gpaScale">Escala GPA</string>
+    <string name="canvasAPI_gpaScale">Escala de GPA</string>
     <string name="canvasAPI_notGraded">No calificado</string>
 
-    <string name="canvasAPI_onlineQuiz">Evaluación</string>
-    <string name="canvasAPI_discussionTopic">Tema del foro</string>
+    <string name="canvasAPI_onlineQuiz">Examen</string>
+    <string name="canvasAPI_discussionTopic">Tema del foro de discusión</string>
     <string name="canvasAPI_onlineUpload">Carga del archivo</string>
     <string name="canvasAPI_onlineTextEntry">Entrada de texto</string>
     <string name="canvasAPI_onlineURL">URL de la página web</string>
-    <string name="canvasAPI_mediaRecording">Grabación de medios</string>
+    <string name="canvasAPI_mediaRecording">Grabación de multimedia</string>
     <string name="canvasAPI_attendance">Asistencia</string>
     <string name="quiz_scoring_policy_highest">Más alta</string>
     <string name="quiz_scoring_policy_average">Promedio</string>
     <string name="quiz_scoring_policy_latest">Más reciente</string>
     <string name="no">No</string>
     <string name="always">Siempre</string>
-    <string name="graded_quiz">Evaluación calificada</string>
-    <string name="practice_quiz">Evaluación de práctica</string>
+    <string name="graded_quiz">Examen calificado</string>
+    <string name="practice_quiz">Examen de práctica</string>
     <string name="graded_survey">Encuesta calificada</string>
     <string name="ungraded_survey">Encuesta no calificada</string>
     <string name="andMore"> y %d más</string>
 
     <!-- Enrollment Types -->
-    <string name="enrollmentTypeStudent">Alumno</string>
+    <string name="enrollmentTypeStudent">Estudiante</string>
     <string name="enrollmentTypeTeacher">Profesor</string>
     <string name="enrollmentTypeObserver">Observador</string>
     <string name="enrollmentTypeTeachingAssistant">Profesor auxiliar</string>

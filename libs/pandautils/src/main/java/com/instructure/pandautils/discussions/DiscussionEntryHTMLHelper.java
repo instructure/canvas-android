@@ -24,6 +24,7 @@ import com.instructure.canvasapi2.models.DiscussionEntry;
 import com.instructure.canvasapi2.models.RemoteFile;
 import com.instructure.canvasapi2.utils.DateHelper;
 import com.instructure.canvasapi2.utils.FileUtils;
+import com.instructure.canvasapi2.utils.Pronouns;
 import com.instructure.pandautils.R;
 import com.instructure.pandautils.utils.Const;
 import com.instructure.pandautils.utils.ProfileUtils;
@@ -140,7 +141,11 @@ public class DiscussionEntryHTMLHelper {
         if (discussionEntry.getDeleted()) {
             avatarUrl = "background: " + colorString + " url(\"file:///android_res/drawable/ic_default_avatar.png\");";
             if(discussionEntry.getAuthor() != null && !TextUtils.isEmpty(discussionEntry.getAuthor().getDisplayName())) {
-                title = String.format(Locale.getDefault(), context.getString(R.string.deleted_by), discussionEntry.getAuthor().getDisplayName());
+                String name = Pronouns.html(
+                        discussionEntry.getAuthor().getDisplayName(),
+                        discussionEntry.getAuthor().getPronouns()
+                );
+                title = String.format(Locale.getDefault(), context.getString(R.string.deleted_by), name);
             } else {
                 title = deletedString;
             }
@@ -162,7 +167,10 @@ public class DiscussionEntryHTMLHelper {
             }
 
             if (discussionEntry.getAuthor() != null && discussionEntry.getAuthor().getDisplayName() != null) {
-                title = discussionEntry.getAuthor().getDisplayName();
+                title = Pronouns.html(
+                        discussionEntry.getAuthor().getDisplayName(),
+                        discussionEntry.getAuthor().getPronouns()
+                );
             } else if (discussionEntry.getDescription() != null) {    //Graded discussion.
                 title = discussionEntry.getDescription();
             }

@@ -22,7 +22,7 @@
     <string name="comment">Comentario</string>
     <string name="skip">Saltar</string>
     <string name="comments">Comentarios</string>
-    <string name="error_loading_submission">Hubo un problema al cargar esta presentación.</string>
+    <string name="error_loading_submission">Hubo un problema al cargar esta entrega.</string>
     <string name="retry">Reintentar</string>
     <string name="annotationErrorOccurred">Se produjo un error inesperado al cargar anotaciones.</string>
     <string name="annotationError">Error de anotación</string>
@@ -33,10 +33,9 @@
     <string name="deleteComment">Eliminar comentario</string>
     <string name="deleteAnnotation">Eliminar anotación</string>
     <string name="deleteCommentConfirmation">¿Está seguro de que desea eliminar este comentario?</string>
-    <string name="deleteHeadCommentConfirmation">Al borrar este comentario, se borrarán todos los comentarios asociados con esta anotación. ¿Está seguro de que desea hacerlo?</string>
+    <string name="deleteHeadCommentConfirmation">Al eliminar este comentario, se eliminarán todos los comentarios asociados con esta anotación. ¿Seguro de que desea hacerlo?</string>
     <string name="sendingSimple">Enviando</string>
     <string name="pspdf__annotation_type_stamp">Color de la nota</string>
-
-    <string name="removedComment">Eliminado %1$s por %2$s</string>
+    <string name="removedComment">Eliminado el %1$s por %2$s</string>
 
 </resources>

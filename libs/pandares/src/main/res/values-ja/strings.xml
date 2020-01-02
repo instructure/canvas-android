@@ -58,7 +58,9 @@
     <string name="submissionUploadByteProgress">%1$s / %2$s</string>
     <string name="submissionSuccessTitle">正常に提出されました!</string>
     <string name="submissionSuccessMessage">課題は正常に提出されました。よい一日を！</string>
-    <string name="cancelAllSubmissions">すべての課題提出を取り消す</string>
+    <string name="submissionDeleteTitle">提出をキャンセル</string>
+    <string name="submissionDeleteMessage">これにより、送信がキャンセルおよび削除されます。</string>
+    <string name="submissionDeleted">提出を削除しました</string>
     <string name="missingSubmissionLabel">欠如</string>
     <string name="gradedSubmissionLabel">採点済み</string>
     <!-- Student Submission -->
@@ -98,6 +100,7 @@
     <string name="finalGradeFormatted">最終的な成績：%s</string>
     <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
     <string name="contentDescriptionScoreOutOfPointsPossible">%1$s 点/ %2$s 点</string>
+    <string name="enterWhatIfScore">仮説スコアを入力する</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">カスタムスコア</string>
     <string name="rubricEmptyMessage">この課題に説明はありません</string>
@@ -572,8 +575,7 @@
     <string name="EULA">EULA</string>
     <string name="privacyPolicy">プライバシーポリシー</string>
     <string name="termsOfUse">利用規約</string>
-    <string name="openSource">ソースを開く</string>
-
+    <string name="canvasOnGithub">GitHubのキャンバス</string>
     <!-- Quiz Strings -->
     <string name="assignmentQuizzes">課題クイズ</string>
     <string name="practiceQuizzes">練習クイズ</string>
@@ -584,6 +586,7 @@
     <string name="choose_answers_below">下の回答を選択してください</string>
 
 
+    <string name="flag_the_question">質問にフラグを立てる</string>
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">タスク</string>
     <string name="gradesWidgetTitle">成績</string>
@@ -837,9 +840,6 @@
     <string name="like">いいね</string>
     <string name="likes">いいね</string>
 
-    <string name="wear_reminder">期限日リマインダーを設定する</string>
-    <string name="wear_notifications">ウェア通知をオンにする</string>
-
     <string name="color_1">レッド</string>
     <string name="color_2">ホットピンク</string>
     <string name="color_3">ラベンダー</string>
@@ -1005,6 +1005,35 @@
     <string name="addChildErrorMessage">ペアリングに失敗しました。ペアリングコードが正しいこと、使用期限内であることを確認してください。</string>
     <string name="gradeComplete">完了</string>
     <string name="gradeIncomplete">不完全</string>
+    <!--Teacher Strings-->
+    <string name="postPolicyTitle">掲示設定</string>
+    <string name="postGradesTab">成績表の掲示</string>
+    <string name="hideGradesTab">成績を非表示にする</string>
+    <plurals name="gradesPostedCount">
+        <item quantity="other">%d 現在掲示されている成績</item>
+    </plurals>
+    <plurals name="gradesHiddenCount">
+        <item quantity="other">%d 現在非表示の成績</item>
+    </plurals>
+    <string name="postPolicyPostTo">掲示先：</string>
+    <string name="postPolicySections">特定のセクション</string>
+    <string name="postToEveryoneTitle">全員</string>
+    <string name="postToEveryoneMessage">成績はすべての受講生に表示されます</string>
+    <string name="postToGradedTitle">採点済み</string>
+    <string name="postToGradedMessage">成績は、提出物が採点された受講生が閲覧できるよう表示されます。</string>
+    <string name="postPolicyAllHiddenTitle">すべて非表示</string>
+    <string name="postPolicyAllHiddenMessage">すべての成績は今、非表示になっています。</string>
+    <string name="postPolicyAllPostedTitle">すべて掲示済</string>
+    <string name="postPolicyAllPostedMessage">すべての成績は今、掲示されています。</string>
+    <string name="postPolicyPostedToast">成績掲示済み</string>
+    <string name="postPolicyHiddenToast">成績非表示</string>
+    <string name="postPolicyPostFailedToast">成績掲示に失敗</string>
+    <string name="postPolicyHideFailedToast">成績非表示に失敗</string>
+    <string name="gradeBeforePosting">投稿前の成績</string>
+    <string name="gradeAfterPosting">投稿後の成績</string>
+    <string name="gradeOverride">成績上書き</string>
+    <string name="currentGrade">現在の成績 </string>
+
     <!-- Floating Recording View Strings -->
     <string name="recordingTimerDefault">0:00:00</string>
     <string name="recordingTimerContentDescription">%1$d 時間、%2$d 分、および %3$d 秒</string>

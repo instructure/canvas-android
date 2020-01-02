@@ -18,7 +18,6 @@ import com.instructure.android.buildtools.transform.ProjectTransformer
 import com.instructure.android.buildtools.transform.MasqueradeUITransformer
 import com.instructure.android.buildtools.transform.PageViewTransformer
 import com.instructure.android.buildtools.transform.LocaleTransformer
-import com.instructure.android.buildtools.transform.PDFKitCrashFixTransformer
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
@@ -56,8 +55,8 @@ android {
         applicationId "com.instructure.candroid"
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 203
-        versionName = '6.6.3'
+        versionCode = 204
+        versionName = '6.6.4'
 
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled = true
@@ -192,8 +191,7 @@ android {
                     android,
                     new MasqueradeUITransformer('com.instructure.student.activity.NavigationActivity.class'),
                     new PageViewTransformer(),
-                    new LocaleTransformer(),
-                    new PDFKitCrashFixTransformer()
+                    new LocaleTransformer()
             )
     )
 
@@ -209,8 +207,7 @@ repositories {
 
 dependencies {
     implementation project(path: ':panda_annotations')
-    // TODO - Enable this when pspdfkit has been updated
-//    kaptAndroidTestQa project(path: ':panda_processor')
+    kaptAndroidTestQa project(path: ':panda_processor')
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 

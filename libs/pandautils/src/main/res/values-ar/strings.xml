@@ -33,7 +33,6 @@
     <string name="fileUploadSuccess">تم التحميل بنجاح</string>
     <string name="noNetwork">الشبكة غير متوفرة - يُرجى إعادة المحاولة لاحقًا.</string>
     <string name="uploadMessage">التحميل قيد التقدم. تحقق من إخطارات حالة التحميل.</string>
-    <string name="mediaUpload">تحميل الوسائط</string>
     <string name="uploadingFile">جارٍ تحميل الملف&#8230;</string>
     <string name="errorUploadingFile">حدث خطأ أثناء تحميل ملفك. يرجى إعادة المحاولة.</string>
     <string name="fileSubmission">إرسال الملف (الملفات)</string>
@@ -171,13 +170,12 @@
     <string name="noEvents">لا توجد أحداث اليوم!</string>
     <string name="noEventsSubtext">يبدو أنه يوم رائع للراحة والاسترخاء.</string>
     <string name="noSubmission">لا يوجد إرسال</string>
-    <string name="noSubmissionSubtext">أرسل مهمتك عن طريقة %1$s في %2$s.</string>
     <string name="noSubmissionTeacher">لا يمتلك هذا الطالب إرسالات حتى الآن.</string>
-    <string name="noDueDate">لا تحتوي هذه المهمة على تاريخ استحقاق.</string>
     <string name="locked">مؤمّن</string>
     <string name="lockedSubtext">تم تأمين هذه المهمة حتى %1$s في %2$s.</string>
     <string name="chooseFile">اختيار ملف</string>
     <string name="chooseFileSubtext">قم بإرفاق ملف لإرسالك بالضغط على إحدى الخيارات أدناه.</string>
+    <string name="chooseFileForUploadSubtext">حدد ملفًا للتحميل بالضغط على إحدى الخيارات أدناه</string>
     <string name="noNotifications">لا توجد إخطارات</string>
     <string name="noNotificationsSubtext">لا يوجد شيء للإخطار عنه حتى الآن.</string>
     <string name="noTodos">أحسنت!</string>
@@ -391,6 +389,7 @@
     <string name="utils_uploadToCanvas">التحميل إلى Canvas</string>
     <string name="utils_uploadMyFiles">ملفاتي</string>
     <string name="utils_uploadCourseFiles">ملفات المساق</string>
+    <string name="utils_uploadGroupFiles">ملفات المجموعة</string>
     <string name="utils_uploadToSubmissionComment">التحميل إلى تعليق الإرسال</string>
     <string name="utils_attachFile">إرفاق ملف</string>
     <string name="utils_with">مع</string>

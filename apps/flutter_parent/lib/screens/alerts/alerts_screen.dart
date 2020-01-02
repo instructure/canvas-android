@@ -1,26 +1,29 @@
-/// Copyright (C) 2019 - present Instructure, Inc.
-///
-/// This program is free software: you can redistribute it and/or modify
-/// it under the terms of the GNU General Public License as published by
-/// the Free Software Foundation, version 3 of the License.
-///
-/// This program is distributed in the hope that it will be useful,
-/// but WITHOUT ANY WARRANTY; without even the implied warranty of
-/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-/// GNU General Public License for more details.
-///
-/// You should have received a copy of the GNU General Public License
-/// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// Copyright (C) 2019 - present Instructure, Inc.
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, version 3 of the License.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/alert.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/screens/alerts/alerts_interactor.dart';
+import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
+import 'package:flutter_parent/utils/common_widgets/full_screen_scroll_container.dart';
+import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
+import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
-import 'package:flutter_parent/utils/widgets/full_screen_scroll_container.dart';
 import 'package:intl/intl.dart';
 
 class AlertsScreen extends StatefulWidget {
@@ -51,7 +54,7 @@ class _AlertsScreenState extends State<AlertsScreen> {
       builder: (context, AsyncSnapshot<List<Alert>> snapshot) {
         // Show loading if we're waiting for data, not inside the refresh indicator as it's unnecessary
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return LoadingIndicator();
         }
 
         // Get the child widget to show in the refresh indicator
@@ -77,11 +80,12 @@ class _AlertsScreenState extends State<AlertsScreen> {
   }
 
   Widget _error(BuildContext context) {
-    return FullScreenScrollContainer(children: [Text(AppLocalizations.of(context).unexpectedError)]);
+    return FullScreenScrollContainer(children: [Text(L10n(context).unexpectedError)]);
   }
 
+  // TODO: This needs a design (image, title, subtitle)
   Widget _empty(BuildContext context) {
-    return FullScreenScrollContainer(children: [Text(AppLocalizations.of(context).noAlertsMessage)]);
+    return EmptyPandaWidget(subtitle: L10n(context).noAlertsMessage);
   }
 }
 
@@ -132,15 +136,15 @@ class __AlertsListState extends State<_AlertsList> {
   }
 
   Color _alertColor(BuildContext context, Alert alert) {
-    if (alert.isAlertInfo()) return ParentTheme.ash;
+    if (alert.isAlertInfo()) return ParentColors.ash;
     if (alert.isAlertPositive()) return ParentTheme.of(context).defaultTheme.accentColor;
-    if (alert.isAlertNegative()) return ParentTheme.failure;
+    if (alert.isAlertNegative()) return ParentColors.failure;
 
-    return ParentTheme.failure;
+    return ParentColors.failure;
   }
 
   String _formatDate(BuildContext context, DateTime date) {
-    return DateFormat(AppLocalizations.of(context).dateTimeFormat).format(date.toLocal());
+    return DateFormat(L10n(context).dateTimeFormat).format(date.toLocal());
   }
 
   void _routeAlert(Alert alert, int index) async {

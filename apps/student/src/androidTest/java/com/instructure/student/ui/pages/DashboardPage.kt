@@ -24,18 +24,25 @@ import android.widget.TextView
 import androidx.appcompat.widget.SwitchCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.PerformException
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
+import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
 import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import com.instructure.canvas.espresso.scrollRecyclerView
+import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.canvasapi2.models.AccountNotification
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Group
+import com.instructure.canvasapi2.models.User
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.dataseeding.model.GroupApiModel
@@ -93,7 +100,15 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
 
     fun assertDisplaysCourse(course: Course) {
         val matcher = withText(containsString(course.originalName!!)) + withId(R.id.titleTextView) + isDisplayed()
-        scrollAndAssertDisplayed(matcher)
+        try {
+            // This is the RIGHT way to do it, but it inexplicably fails most of the time.
+            scrollRecyclerView(R.id.listView, matcher)
+            onView(matcher).assertDisplayed()
+        }
+        catch(pe: PerformException) {
+            // Revert to this weaker operation if the one above fails.
+            scrollAndAssertDisplayed(matcher)
+        }
     }
 
     fun assertCourseNotShown(course: Course) {
@@ -101,10 +116,21 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     }
 
     fun assertDisplaysGroup(group: GroupApiModel, course: CourseApiModel) {
-        val groupNameMatcher = allOf(withText(group.name), withId(R.id.groupNameView))
-        scrollAndAssertDisplayed(groupNameMatcher)
-        val groupDescriptionMatcher = allOf(withText(course.name), withId(R.id.groupCourseView))
-        scrollAndAssertDisplayed(groupDescriptionMatcher)
+        assertDisplaysGroupCommon(group.name, course.name)
+    }
+
+    fun assertDisplaysGroup(group: Group, course: Course) {
+        assertDisplaysGroupCommon(group.name!!, course.name)
+    }
+
+    private fun assertDisplaysGroupCommon(groupName: String, courseName: String) {
+        val groupNameMatcher = allOf(withText(groupName), withId(R.id.groupNameView))
+        scrollRecyclerView(R.id.listView, groupNameMatcher)
+        onView(groupNameMatcher).assertDisplayed()
+        val groupDescriptionMatcher = allOf(withText(courseName), withId(R.id.groupCourseView))
+        scrollRecyclerView(R.id.listView, groupDescriptionMatcher)
+        onView(groupDescriptionMatcher).assertDisplayed()
+
     }
 
     fun assertDisplaysAddCourseMessage() {
@@ -141,6 +167,12 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
     fun assertUserLoggedIn(user: CanvasUserApiModel) {
         onView(hamburgerButtonMatcher).click()
         onViewWithText(user.shortName).assertDisplayed()
+        Espresso.pressBack()
+    }
+
+    fun assertUserLoggedIn(user: User) {
+        onView(hamburgerButtonMatcher).click()
+        onViewWithText(user.shortName!!).assertDisplayed()
         Espresso.pressBack()
     }
 
@@ -200,7 +232,13 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
 
     fun selectCourse(course: Course) {
         assertDisplaysCourse(course)
-        onView(withText(course.originalName)).click()
+        onView(withText(course.originalName)).perform(withCustomConstraints(click(), isDisplayingAtLeast(10)))
+    }
+
+    fun selectGroup(group: Group) {
+        val groupNameMatcher = allOf(withText(group.name), withId(R.id.groupNameView))
+        scrollRecyclerView(R.id.listView, groupNameMatcher)
+        onView(withText(group.name)).click()
     }
 
     fun launchSettingsPage() {

@@ -82,7 +82,7 @@
     <string name="shareWithCanvas">Andra appar kan dela filer med Canvas! Leta efter ikonen nedan i appar, och tryck på Canvas.</string>
     <string name="shareWithCanvas2">Det öppnar den här appen. Välj sedan vilken kurs och vilken uppgift som du vill skicka in filen för.</string>
     <string name="contentDescriptionSocialShare">Dela ikon</string>
-    <string name="submitAssignment">Skickain uppgift</string>
+    <string name="submitAssignment">Skicka in uppgift</string>
     <string name="assignmentHeader">Uppgift:</string>
     <string name="submittingAssignment">Skickar in uppgift&#8230;</string>
     <string name="conversations">Konversationer </string>
@@ -100,7 +100,7 @@
     <string name="pickVideo">Välj en video</string>
     <string name="assignmentSubmissionUpload">Laddar upp inlämning för %s</string>
     <string name="assignmentSubmissionError">Inlämning kunde inte genomföras för %s</string>
-    <string name="assignmentSubmissionComplete">%s har nu lämnats in</string>
+    <string name="assignmentSubmissionComplete">%s har skickats in</string>
 
     <!--Errors-->
     <string name="errorOccurred">Ett oväntat fel uppstod.</string>
@@ -157,8 +157,8 @@
     <string name="noQuizzes">Inga quiz</string>
     <string name="noQuizzesSubtext">Tyvärr, det finns inga quiz än.</string>
     <string name="noQuizzesTeacher">Det finns inga publicerade quiz att visa.</string>
-    <string name="noAnnouncements">Inga kursmeddelanden</string>
-    <string name="noAnnouncementsSubtext">Inga kursmeddelande har publicerats än.</string>
+    <string name="noAnnouncements">Inga anslag</string>
+    <string name="noAnnouncementsSubtext">Inga anslag har publicerats än.</string>
     <string name="noCourses">Inga kurser</string>
     <string name="noCoursesSubtext">Det verkar som om det inte finns några kurser kopplade till det här kontot. Besök webben för att skapa en kurs idag.</string>
     <string name="noAssignments">Inga uppgifter</string>
@@ -176,6 +176,7 @@
     <string name="lockedSubtext">Den här uppgiften är låst till och med %1$s kl. %2$s.</string>
     <string name="chooseFile">Välj en fil</string>
     <string name="chooseFileSubtext">Välj en fil till din inlämning genom att trycka på alternativet nedan.</string>
+    <string name="chooseFileForUploadSubtext">Välj en fil att ladda upp genom att trycka på ett av alternativen nedan.</string>
     <string name="noNotifications">Inga aviseringar</string>
     <string name="noNotificationsSubtext">Det finns inget att bli aviserad om än.</string>
     <string name="noTodos">Bra jobbat!</string>
@@ -270,9 +271,9 @@
     <string name="utils_noDateFiller">--</string>
     <string name="utils_availabilityLabel">Tillgänglighet:</string>
     <string name="utils_pinnedIcon">Ikon för fäst diskussion</string>
-    <string name="utils_pinDiscussion">Fäst diskussion</string>
+    <string name="utils_pinDiscussion">Nåla fast diskussion</string>
     <string name="utils_unpinDiscussion">Plocka bort diskussion</string>
-    <string name="utils_discussionPinned">Diskussionen har fästs</string>
+    <string name="utils_discussionPinned">Diskussionen har nålats fast</string>
     <string name="utils_pinnedDiscussions">Fäst</string>
     <string name="utils_discussionUnpinned">Diskussioner</string>
     <string name="utils_emptyDiscussions">Det finns inga diskussioner att visa i den här sektionen.</string>
@@ -309,13 +310,13 @@
     <string name="utils_postAt">Publicera kl.</string>
     <string name="utils_postDate">Publiceringsdatum</string>
     <string name="utils_postTime">Publiceringstid</string>
-    <string name="utils_editAnnouncementTitle">Redigera kursmeddelande</string>
-    <string name="utils_createAnnouncementTitle">Nytt kursmeddelande</string>
-    <string name="utils_announcementDetails">Kursmeddelandedetaljer</string>
+    <string name="utils_editAnnouncementTitle">Redigera anslag</string>
+    <string name="utils_createAnnouncementTitle">Nytt anslag</string>
+    <string name="utils_announcementDetails">Anslagets detaljer</string>
     <string name="utils_createAnnouncementNoDescription">En beskrivning krävs</string>
-    <string name="utils_errorSavingAnnouncement">Ett fel uppstod när detta kursmeddelande skulle sparas. Försök igen.</string>
-    <string name="utils_announcementSuccessfullyUpdated">Kursmeddelandeeddelandet har uppdaterats.</string>
-    <string name="utils_announcementSuccessfullyCreated">Kursmeddelandeeddelandet har skapats.</string>
+    <string name="utils_errorSavingAnnouncement">Ett fel uppstod när detta anslag skulle sparas. Försök igen.</string>
+    <string name="utils_announcementSuccessfullyUpdated">Anslaget har uppdaterats.</string>
+    <string name="utils_announcementSuccessfullyCreated">Anslaget har skapats.</string>
 
     <plurals name="utils_discussionsUnread">
         <item quantity="one">%s Oläst</item>
@@ -378,6 +379,7 @@
     <string name="utils_uploadToCanvas">Ladda upp till Canvas</string>
     <string name="utils_uploadMyFiles">Mina filer</string>
     <string name="utils_uploadCourseFiles">Kursfiler</string>
+    <string name="utils_uploadGroupFiles">Gruppfiler</string>
     <string name="utils_uploadToSubmissionComment">Ladda upp till inlämningskommentar</string>
     <string name="utils_attachFile">Bifoga en fil</string>
     <string name="utils_with">med</string>
@@ -417,7 +419,7 @@
     <string name="retry">Försök igen</string>
     <string name="search">Sök</string>
     <string name="searchAssignmentsHint">Sök i uppgifter</string>
-    <string name="searchAnnouncementsHint">Sök i kursmeddelanden</string>
+    <string name="searchAnnouncementsHint">Sök i anslag</string>
     <string name="searchDiscussionsHint">Sök i diskussioner</string>
     <string name="searchPagesHint">Sök på sidor</string>
     <string name="searchQuizzesHint">Sök i quiz</string>

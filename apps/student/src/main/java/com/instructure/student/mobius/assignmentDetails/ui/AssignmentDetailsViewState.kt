@@ -88,6 +88,7 @@ sealed class DiscussionHeaderViewState {
     data class Loaded(
             val authorAvatarUrl: String? = null,
             val authorName: String,
+            val authorPronouns: String?,
             val authoredDate: String,
             val attachmentIconVisibility: Boolean
     ) : DiscussionHeaderViewState()

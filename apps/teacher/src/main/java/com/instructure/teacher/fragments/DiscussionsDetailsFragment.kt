@@ -36,6 +36,7 @@ import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.dialogs.AttachmentPickerDialog
 import com.instructure.pandautils.discussions.DiscussionCaching
+import com.instructure.pandautils.discussions.DiscussionEntryHtmlConverter
 import com.instructure.pandautils.discussions.DiscussionUtils
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.utils.*
@@ -61,8 +62,8 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.net.URLDecoder
-import java.util.*
-import kotlin.collections.ArrayList
+import java.util.Date
+import java.util.UUID
 
 class DiscussionsDetailsFragment : BasePresenterFragment<
         DiscussionsDetailsPresenter,
@@ -392,7 +393,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
             val bundle = StudentContextFragment.makeBundle(discussionTopicHeader.author?.id ?: 0, mCanvasContext.id)
             RouteMatcher.route(requireContext(), Route(StudentContextFragment::class.java, null, bundle))
         }
-        authorName?.text = displayName
+        authorName?.text = discussionTopicHeader.author?.let { Pronouns.span(it.displayName, it.pronouns) }
         authoredDate?.text = DateHelper.getMonthDayAtTime(requireContext(), discussionTopicHeader.postedDate, getString(R.string.at))
         discussionTopicTitle?.text = discussionTopicHeader.title
 
@@ -617,10 +618,11 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
 
     private fun updateDiscussionLikedState(discussionEntry: DiscussionEntry, methodName: String) {
         val likingSum = if(discussionEntry.ratingSum == 0) "" else "(" + discussionEntry.ratingSum + ")"
+        val likingSumAllyText = DiscussionEntryHtmlConverter.getLikeCountAllyText(requireContext(), discussionEntry)
         val likingColor = DiscussionUtils.getHexColorString(if (discussionEntry._hasRated) ThemePrefs.brandColor else ContextCompat.getColor(requireContext(), R.color.discussionLiking))
         requireActivity().runOnUiThread {
-            discussionRepliesWebView.loadUrl("javascript:" + methodName + "('" + discussionEntry.id.toString() + "')")
-            discussionRepliesWebView.loadUrl("javascript:updateLikedCount('" + discussionEntry.id.toString() + "','" + likingSum + "','" + likingColor + "')")
+            discussionRepliesWebView.loadUrl("javascript:$methodName('${discussionEntry.id}')")
+            discussionRepliesWebView.loadUrl("javascript:updateLikedCount('${discussionEntry.id}','$likingSum','$likingColor','$likingSumAllyText')")
         }
     }
 

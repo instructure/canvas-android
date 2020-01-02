@@ -68,7 +68,7 @@ class InboxRecipientsFragment : ParentFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupToolbar()
-        configureRecyclerView(view, requireContext(), adapter, R.id.swipeRefreshLayout, R.id.emptyView, R.id.listView)
+        configureRecyclerView(view, requireContext(), adapter, R.id.swipeRefreshLayout, R.id.emptyView, R.id.recipientRecyclerView)
     }
 
     private fun setupToolbar() {

@@ -33,7 +33,6 @@
     <string name="fileUploadSuccess">Nalaganje je uspelo.</string>
     <string name="noNetwork">Omrežje ni na voljo – poskusite znova pozneje.</string>
     <string name="uploadMessage">»Poteka nalaganje. Preverite sporočila za stanje nalaganja.</string>
-    <string name="mediaUpload">Nalaganje medija</string>
     <string name="uploadingFile">Nalaganje datoteke&#8230;</string>
     <string name="errorUploadingFile">Pri nalaganju datoteke je prišlo do napake. Poskusite znova.</string>
     <string name="fileSubmission">Pošlji datoteke</string>
@@ -171,13 +170,12 @@
     <string name="noEvents">Danes ni dogodkov.</string>
     <string name="noEventsSubtext">Videti je, da je to krasen dan za počitek in sprostitev.</string>
     <string name="noSubmission">Ni oddaj.</string>
-    <string name="noSubmissionSubtext">Pošljite svojo nalogo do %1$s ob %2$s.</string>
     <string name="noSubmissionTeacher">Ta študent še nima oddaje.</string>
-    <string name="noDueDate">Ta naloga še nima roka.</string>
     <string name="locked">Zaklenjeno</string>
     <string name="lockedSubtext">Ta naloga je zaklenjena do %1$s ob %2$s.</string>
     <string name="chooseFile">Izberi datoteko</string>
     <string name="chooseFileSubtext">Tapnite spodnjo možnost, da oddaji dodate datoteko.</string>
+    <string name="chooseFileForUploadSubtext">Izberite datoteko, ki jo želite naložiti, tako da tapnete spodnjo možnost</string>
     <string name="noNotifications">Ni sporočil.</string>
     <string name="noNotificationsSubtext">Ni ničesar, o čemer bi bilo treba sporočati.</string>
     <string name="noTodos">Dobro opravljeno.</string>
@@ -380,6 +378,7 @@
     <string name="utils_uploadToCanvas">Naloži v sistem Canvas</string>
     <string name="utils_uploadMyFiles">Moje datoteke</string>
     <string name="utils_uploadCourseFiles">Datoteke predmeta</string>
+    <string name="utils_uploadGroupFiles">Datoteke skupine</string>
     <string name="utils_uploadToSubmissionComment">Naloži v komentar oddaje</string>
     <string name="utils_attachFile">Dodaj datoteko</string>
     <string name="utils_with">s/z</string>

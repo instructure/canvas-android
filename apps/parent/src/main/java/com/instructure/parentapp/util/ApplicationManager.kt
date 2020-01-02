@@ -20,6 +20,7 @@ import android.content.Context
 import android.util.Log
 import android.webkit.WebView
 import com.crashlytics.android.Crashlytics
+import com.crashlytics.android.core.CrashlyticsCore
 import com.google.android.play.core.missingsplits.MissingSplitsManagerFactory
 import com.instructure.canvasapi2.AppManager
 import com.instructure.loginapi.login.tasks.LogoutTask
@@ -42,7 +43,10 @@ class ApplicationManager : AppManager() {
 
         super.onCreate()
 
-        Fabric.with(this, Crashlytics())
+        val crashlytics = Crashlytics.Builder()
+            .core(CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build())
+            .build()
+        Fabric.with(this, crashlytics)
 
         // there appears to be a bug when the user is installing/updating the android webview stuff.
         // http://code.google.com/p/android/issues/detail?id=175124

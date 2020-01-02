@@ -19,6 +19,7 @@ package com.instructure.pandautils.discussions
 import android.content.Context
 import com.instructure.canvasapi2.models.DiscussionEntry
 import com.instructure.canvasapi2.utils.DateHelper
+import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.canvasapi2.utils.localized
 import com.instructure.canvasapi2.utils.toDate
 import com.instructure.pandautils.BuildConfig
@@ -49,6 +50,8 @@ class DiscussionEntryHtmlConverter {
             deletedText: String): String {
 
         val repliesButtonText = context.resources.getQuantityString(R.plurals.utils_discussionsReplies, discussionEntry.totalChildren, discussionEntry.totalChildren.localized)
+        val likeCountLabel = getLikeCountAllyText(context, discussionEntry)
+        val likeEntryLabel = context.resources.getString(R.string.likeEntryLabel)
 
         val htmlListener = getItemClickListener(discussionEntry.id.toString())
         val replyListener = getReplyListener(discussionEntry.id.toString())
@@ -158,10 +161,8 @@ class DiscussionEntryHtmlConverter {
 
         // Populate Author Information
         if(discussionEntry.author != null) {
-            authorName = discussionEntry.author?.displayName ?: ""
-            if(BuildConfig.DEBUG) {
-                authorName = discussionEntry.author?.displayName + " " + discussionEntry.id
-            }
+            authorName = Pronouns.html(discussionEntry.author?.displayName, discussionEntry.author?.pronouns)
+            if(BuildConfig.DEBUG) authorName = "$authorName ${discussionEntry.id}"
         } else {
             authorName = context.getString(R.string.utils_discussionsUnknownAuthor)
         }
@@ -180,6 +181,9 @@ class DiscussionEntryHtmlConverter {
                 .replace("__GROUP__", "display: block;")
                 .replace("__LIKE_ICON__", likingIcon)
                 .replace("__LIKE_COUNT__", likingSum)
+                .replace("__LIKE_ARIA__", likeEntryLabel)
+                .replace("__LIKE_CHECKED_ARIA__", discussionEntry._hasRated.toString())
+                .replace("__LIKE_COUNT_ARIA__", likeCountLabel)
                 .replace("__LIKE_ALLOWED__", liking)
                 .replace("__LIKE_COLOR__", colorToHex(likingColor))
                 .replace("__BRAND_COLOR__", colorToHex(brandColor))
@@ -287,5 +291,15 @@ class DiscussionEntryHtmlConverter {
             return String.format("<div class=\"delete_vertical_divider\">%s</div>", "|")
         }
         return ""
+    }
+
+    companion object {
+        fun getLikeCountAllyText(context: Context, discussionEntry: DiscussionEntry): String {
+            return if (discussionEntry.ratingSum == 0) "" else context.resources.getQuantityString(
+                R.plurals.likeCountLabel,
+                discussionEntry.ratingSum,
+                discussionEntry.ratingSum.localized
+            )
+        }
     }
 }

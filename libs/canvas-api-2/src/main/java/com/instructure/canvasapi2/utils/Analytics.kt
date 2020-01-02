@@ -19,6 +19,11 @@ package com.instructure.canvasapi2.utils
 
 import android.os.Bundle
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.instructure.canvasapi2.utils.AnalyticsParamConstants.ASSIGNMENT_ID
+import com.instructure.canvasapi2.utils.AnalyticsParamConstants.CANVAS_CONTEXT_ID
+import com.instructure.canvasapi2.utils.AnalyticsParamConstants.DOMAIN_PARAM
+import com.instructure.canvasapi2.utils.AnalyticsParamConstants.SCREEN_OF_ORIGIN
+import com.instructure.canvasapi2.utils.AnalyticsParamConstants.USER_CONTEXT_ID
 
 object Analytics {
 
@@ -73,6 +78,12 @@ object AnalyticsEventConstants {
     const val SUBMIT_FILEUPLOAD_SUCCEEDED = "submit_fileupload_succeeded"
     const val UNSUPPORTED_SUBMISSION_CONTENT = "unsupported_submission_content"
 
+    /* Panda Avatar */
+    const val PANDA_AVATAR_EDITOR_OPENED = "panda_avatar_editor_opened"
+    const val PANDA_AVATAR_SAVED = "panda_avatar_saved"
+    const val PANDA_AVATAR_SET_AS_AVATAR = "panda_avatar_set_as_avatar"
+    const val PANDA_AVATAR_SHARED = "panda_avatar_shared"
+
     /* Refresh Token Events */
     const val REFRESH_TOKEN = "refresh_token"
     const val FOREVER_TOKEN = "forever_token"
@@ -81,6 +92,8 @@ object AnalyticsEventConstants {
     const val TOKEN_REFRESH_FAILURE = "token_refresh_failure"
     const val TOKEN_REFRESH_FAILURE_TOKEN_NOT_VALID = "token_refresh_failure_token_not_valid"
     const val TOKEN_REFRESH_FAILURE_NO_SECRET = "token_refresh_failure_no_secret"
+
+    const val WHAT_IF_GRADES = "what_if_grades_used"
 }
 
 /**

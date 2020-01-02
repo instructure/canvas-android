@@ -28,6 +28,7 @@ import androidx.test.espresso.web.webdriver.DriverAtoms.getText
 import androidx.test.espresso.web.webdriver.DriverAtoms.webClick
 import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.canvas.espresso.withCustomConstraints
+import com.instructure.canvas.espresso.withElementRepeat
 import com.instructure.canvasapi2.models.DiscussionEntry
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.espresso.OnViewWithId
@@ -75,6 +76,10 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
                 .perform(withCustomConstraints(swipeDown(), isDisplayingAtLeast(10)))
     }
 
+    fun scrollToRepliesWebview() {
+        onView(withId(R.id.discussionRepliesWebView)).scrollTo()
+    }
+
     private fun clickReply() {
         replyButton.click()
     }
@@ -102,8 +107,10 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
     }
 
     fun assertReplyDisplayed(reply: DiscussionEntry) {
+        // It can take a *long* time for the reply to get rendered to the webview on
+        // tablets (in FTL, anyway).  We'll compensate by giving it up to 20 seconds to render.
         onWebView(withId(R.id.discussionRepliesWebView))
-                .withElement(findElement(Locator.ID, "message_content_${reply.id}"))
+                .withElementRepeat(findElement(Locator.ID, "message_content_${reply.id}"), 20)
                 .check(webMatches(getText(),containsString(reply.message)))
     }
 
@@ -163,7 +170,7 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
 
     fun previewAndCheckReplyAttachment(reply: DiscussionEntry, vararg checks : WebViewTextCheck) {
         onWebView(withId(R.id.discussionRepliesWebView))
-                .withElement(findElement(Locator.CLASS_NAME, "attachments_${reply.id}"))
+                .withElementRepeat(findElement(Locator.CLASS_NAME, "attachments_${reply.id}"), 20)
                 .perform(webClick())
         for(check in checks) {
             onWebView(withId(R.id.canvasWebView))
@@ -176,7 +183,7 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
 
     fun replyToReply(reply: DiscussionEntry, replyMessage: String) {
         onWebView(withId(R.id.discussionRepliesWebView))
-                .withElement(findElement(Locator.ID, "reply_${reply.id}"))
+                .withElementRepeat(findElement(Locator.ID, "reply_${reply.id}"), 20)
                 .perform(webClick())
         onView(withId(R.id.rce_webView)).perform(TypeInRCETextEditor(replyMessage))
         onView(withId(R.id.menu_send)).click()
@@ -199,6 +206,7 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
         Espresso.pressBack()
     }
 }
+
 
 
 

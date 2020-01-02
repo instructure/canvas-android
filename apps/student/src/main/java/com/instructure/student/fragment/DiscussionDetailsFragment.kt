@@ -45,6 +45,7 @@ import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
 import com.instructure.loginapi.login.dialog.NoInternetConnectionDialog
 import com.instructure.pandautils.discussions.DiscussionCaching
+import com.instructure.pandautils.discussions.DiscussionEntryHtmlConverter
 import com.instructure.pandautils.discussions.DiscussionUtils
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
@@ -63,7 +64,8 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import retrofit2.Response
 import java.net.URLDecoder
-import java.util.*
+import java.util.ArrayList
+import java.util.Date
 import java.util.regex.Pattern
 
 @PageView(url = "{canvasContext}/discussion_topics/{topicId}")
@@ -328,10 +330,11 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
 
     private fun updateDiscussionLikedState(discussionEntry: DiscussionEntry, methodName: String) {
         val likingSum = if (discussionEntry.ratingSum == 0) "" else "(${discussionEntry.ratingSum})"
+        val likingSumAllyText = DiscussionEntryHtmlConverter.getLikeCountAllyText(requireContext(), discussionEntry)
         val likingColor = DiscussionUtils.getHexColorString(if (discussionEntry._hasRated) ThemePrefs.brandColor else ContextCompat.getColor(requireContext(), R.color.discussionLiking))
         activity?.runOnUiThread {
             discussionRepliesWebView.loadUrl("javascript:$methodName('${discussionEntry.id}')")
-            discussionRepliesWebView.loadUrl("javascript:updateLikedCount('${discussionEntry.id}','$likingSum','$likingColor')")
+            discussionRepliesWebView.loadUrl("javascript:updateLikedCount('${discussionEntry.id}','$likingSum','$likingColor','$likingSumAllyText')")
         }
     }
 
@@ -640,7 +643,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
         val displayName = discussionTopicHeader.author?.displayName
         ProfileUtils.loadAvatarForUser(authorAvatar, displayName, discussionTopicHeader.author?.avatarImageUrl)
         authorAvatar.setupAvatarA11y(discussionTopicHeader.author?.displayName)
-        authorName?.text = displayName
+        authorName?.text = Pronouns.span(displayName, discussionTopicHeader.author?.pronouns)
         authoredDate?.text = DateHelper.getMonthDayAtTime(this@DiscussionDetailsFragment.context, discussionTopicHeader.postedDate, getString(R.string.at))
         discussionTopicTitle?.text = discussionTopicHeader.title
 

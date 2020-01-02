@@ -24,7 +24,7 @@ import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.toDate
 import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
-import java.util.*
+import java.util.ArrayList
 
 @Parcelize
 data class StreamItem(
@@ -201,7 +201,7 @@ data class StreamItem(
 
     fun setConversation(context: Context, conversation: Conversation?, myUserId: Long, monologueDefault: String) {
         this.conversation = conversation ?: return
-        title = conversation.getMessageTitle(context, myUserId, monologueDefault)
+        title = conversation.getMessageTitle(context, myUserId, monologueDefault).toString()
         message = createMessage(context)
     }
 

@@ -20,8 +20,7 @@ package com.instructure.canvasapi2.models
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
-import java.util.*
-import kotlin.collections.ArrayList
+import java.util.Date
 
 @JvmSuppressWildcards
 @Parcelize
@@ -31,6 +30,8 @@ data class SubmissionComment(
         val authorId: Long = 0,
         @SerializedName("author_name")
         val authorName: String? = null,
+        @SerializedName("author_pronouns")
+        val authorPronouns: String? = null,
         var comment: String? = null,
         @SerializedName("created_at")
         val createdAt: Date? = null,

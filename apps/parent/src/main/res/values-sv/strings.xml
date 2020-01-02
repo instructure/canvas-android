@@ -53,22 +53,22 @@
     <string name="noCourses">Den här studenten har inga kurser tillgängliga.</string>
     <string name="noAvailableCourses">Inga kurser</string>
     <string name="coursesMayNotBePublished">Den här studentens kurser får ännu inte publiceras.</string>
-    <string name="noAlerts">Den här studenten har inga larm att visa.</string>
+    <string name="noAlerts">Den här studenten har inga notiser att visa.</string>
     <string name="noItemsToDisplayShort">Inga objekt</string>
     <string name="emailsSentTo">E-post skickades till:</string>
     <string name="logged_in_as">Inloggad som:</string>
     <string name="notifyWhen">Larma mig när</string>
-    <string name="gradeAbove">Kursbedömning över</string>
-    <string name="gradeBelow">Kursbedömning under</string>
+    <string name="gradeAbove">Kursomdöme över</string>
+    <string name="gradeBelow">Kursomdöme under</string>
     <string name="assignmentMissing">Uppgift saknas</string>
-    <string name="teacherAnnouncements">Kursmeddelanden</string>
-    <string name="institutionAnnouncements">Institutionsmeddelanden</string>
-    <string name="assignmentGradeAbove">Uppgiftsbedömning ovan</string>
-    <string name="assignmentGradeBelow">Uppgiftsbedömning nedan</string>
+    <string name="teacherAnnouncements">Anslag</string>
+    <string name="institutionAnnouncements">Institutionsanslag</string>
+    <string name="assignmentGradeAbove">Uppgiftsomdöme över</string>
+    <string name="assignmentGradeBelow">Uppgiftsomdöme under</string>
     <string name="never">Aldrig</string>
     <string name="save">Spara</string>
     <string name="enterThreshold">Ange procentsats</string>
-    <string name="setGradeValueMessage">Ställ in bedömningsvärdet som du vill bli meddelad om</string>
+    <string name="setGradeValueMessage">Ställ in omdömesvärdet som du vill bli meddelad om</string>
     <string name="removeStudent">Ta bort student</string>
     <string name="removingStudent">Tar bort student</string>
     <string name="studentRemoved">Studenten har tagits bort</string>
@@ -82,8 +82,8 @@
     <string name="syllabus">Kursöversikt</string>
     <string name="emptySyllabus">Den här kursen har ingen kursöversikt.</string>
     <string name="noLocation">Ingen plats specificerad</string>
-    <string name="previousAlerts">Tidigare larm</string>
-    <string name="currentAlerts">Nuvarande larm</string>
+    <string name="previousAlerts">Tidigare notiser</string>
+    <string name="currentAlerts">Nuvarande notiser</string>
     <string name="badDomainError">Ogiltig domän. Försök igen.</string>
     <string name="unauthorized">Du har inte behörighet att komma åt den här informationen.</string>
     <string name="revokedTokenErrorContent">Du är inte behörighet att komma åt informationen för %1$s. Du kan återauktorisera din student från inställningsmenyn.</string>
@@ -117,7 +117,7 @@
     <string name="alarmNotSet">Larmet kunde inte ställas in. Försök igen.</string>
     <string name="could_not_route_course">Det gick inte att hitta kursregistreringen.</string>
     <string name="could_not_route_assignment">Det gick inte att hitta uppgiften.</string>
-    <string name="could_not_route_announcement">Det gick inte att hitta kursmeddelandet.</string>
+    <string name="could_not_route_announcement">Det gick inte att hitta anslaget.</string>
     <string name="could_not_route_event">Det gick inte att hitta händelsen.</string>
     <string name="could_not_route_account_notifications">Det gick inte att hitta aviseringen.</string>
     <string name="email_already_exists">Det finns redan en användare med den e-postadressen.</string>
@@ -168,12 +168,12 @@
     <string name="miles">miles</string>
     <string name="kilometers">km</string>
 
-    <string name="grade">Bedömning:</string>
+    <string name="grade">Omdöme:</string>
     <string name="notGraded">Har inte bedömts ännu</string>
     <string name="missing">Saknas</string>
-    <string name="submitted">Inlämnad</string>
+    <string name="submitted">Inskickad</string>
     <string name="in_class">Närvarande</string>
-    <string name="excused">Slipper göra</string>
+    <string name="excused">Ursäktad</string>
     <string name="late">Sen</string>
     <string name="greaterThan9">9+</string>
 
@@ -208,7 +208,7 @@
 
     <string name="whatsYourStudentsSchoolName">Ange namnet på studentens skola</string>
     <string name="findYourStudentsSchoolHint">Hitta din students skola eller distrikt</string>
-    <string name="noGradeText">Ingen bedömning</string>
+    <string name="noGradeText">Ingen omdöme</string>
     <string name="locked">Låst</string>
     <string name="changeUser">Ändra användare</string>
     <string name="manageChildren">Hantera barn</string>
@@ -220,11 +220,11 @@
     <string name="not_a_parent_subtitle">Någon av våra andra appar kan vara bättre lämpade. Tryck på en för att besöka Play Store.</string>
     <string name="tryLoginAgain">Försök att logga in igen</string>
     <string name="legalDetails">Integritetspolicy, användarvillkor, öppen källkod</string>
-    <string name="assignmentGrade">Uppgiftsbedömning</string>
-    <string name="courseGrade">Kursbedömning</string>
-    <string name="courseAnnouncement">Kursmeddelande</string>
-    <string name="institutionAnnouncement">Institutionsmeddelande</string>
-    <string name="institutionAnnouncementUnavailable">Detta kursmeddelande har upphört att gälla.</string>
+    <string name="assignmentGrade">Uppgiftsomdöme</string>
+    <string name="courseGrade">Kursomdöme</string>
+    <string name="courseAnnouncement">Anslag</string>
+    <string name="institutionAnnouncement">Institutionsanslag</string>
+    <string name="institutionAnnouncementUnavailable">Detta anslag har upphört att gälla.</string>
     <string name="previousWeekBtn">knapp för föregående vecka</string>
     <string name="nextWeekBtn">knapp för nästa vecka</string>
     <string name="filesNotSupported">Filerna stöds inte för närvarande</string>

@@ -15,12 +15,16 @@
  */
 package com.instructure.student.ui.pages.renderPages
 
+import android.os.SystemClock.sleep
 import android.view.View
+import android.widget.EditText
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.matcher.ViewMatchers.*
+import com.instructure.canvas.espresso.DirectlyPopulateEditText
 import com.instructure.canvas.espresso.scrollRecyclerView
+import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.espresso.*
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onViewWithId
@@ -34,6 +38,7 @@ class SubmissionCommentsRenderPage: BasePage(R.id.submissionCommentsPage) {
 
     val recyclerView by OnViewWithId(R.id.recyclerView)
     val commentInput by OnViewWithId(R.id.commentInput)
+    val commentAttach by OnViewWithId(R.id.addFileButton)
     val addFileButton by OnViewWithId(R.id.addFileButton)
 
     fun verifyDisplaysEmptyState() {
@@ -69,6 +74,13 @@ class SubmissionCommentsRenderPage: BasePage(R.id.submissionCommentsPage) {
         }
     }
 
+    fun verifyDisplaysPronoun(commentState: CommentItemState) {
+        // Make sure that the author name and pronoun are on the screen
+        val nameWithPronoun = getAuthorNameAndPronoun(commentState)
+        val nameMatcher = allOf(withText(nameWithPronoun.toString()), withId(R.id.userNameTextView))
+        scrollAndAssertDisplayed(nameMatcher)
+    }
+
     fun verifyDisplaysRetryOptions() {
         onViewWithId(R.id.errorLayout).click()
         onViewWithText(R.string.retry).assertVisible()
@@ -93,6 +105,16 @@ class SubmissionCommentsRenderPage: BasePage(R.id.submissionCommentsPage) {
         }
     }
 
+    private fun getAuthorNameAndPronoun(commentState: CommentItemState) : CharSequence {
+        val (name, pronoun) = when(commentState) {
+            is CommentItemState.CommentItem -> commentState.authorName to commentState.authorPronouns
+            is CommentItemState.PendingCommentItem -> commentState.authorName to commentState.authorPronouns
+            is CommentItemState.SubmissionItem -> commentState.authorName to commentState.authorPronouns
+            else -> throw IllegalStateException("Unknown comment item state type ${commentState::class.java.simpleName}")
+        }
+        return Pronouns.span(name, pronoun)
+    }
+
     fun scrollAndAssertDisplayed(matcher: Matcher<View>) {
         scrollRecyclerView(R.id.recyclerView, matcher)
         onView(matcher).assertDisplayed()
@@ -112,11 +134,31 @@ class SubmissionCommentsRenderPage: BasePage(R.id.submissionCommentsPage) {
     }
 
     fun addAndSendComment(comment: String) {
-        clickInCommentBox()
-        commentInput.typeText(comment)
-        commentInput.closeSoftKeyboard()
+        // When we're in landscape mode (or any short-screen mode, I suppose), clicking on
+        // commentInput will bring up a system dialog for text entry (??), and the test is hosed
+        // at that point.  So we'll bypass espresso and populate the text directly.
+        commentInput.perform(DirectlyPopulateEditText(comment))
         onView(withId(R.id.sendCommentButton)).click()
     }
+
+    fun addAndSendVideoComment() {
+        addFileButton.click()
+        onView(withId(R.id.videoComment)).click()
+        onView(allOf(withId(R.id.startRecordingButton), isDisplayed())).click()
+        sleep(3000)
+        onView(allOf(withId(R.id.endRecordingButton), isDisplayed())).click()
+        onView(allOf(withId(R.id.sendButton), isDisplayed())).click()
+    }
+
+    fun addAndSendAudioComment() {
+        addFileButton.click()
+        onView(withId(R.id.audioComment)).click()
+        onView(allOf(withId(R.id.recordAudioButton), isDisplayed())).click()
+        sleep(3000)
+        onView(allOf(withId(R.id.stopButton), isDisplayed())).click()
+        onView(allOf(withId(R.id.sendAudioButton), isDisplayed())).click()
+    }
+
 }
 
 // Custom action to get the left offset of a view and deposit it in the
@@ -134,3 +176,4 @@ class GetViewLeftOffset(val output: Array<Int>) : ViewAction {
         output[0] = view!!.left
     }
 }
+

@@ -1,16 +1,16 @@
-/// Copyright (C) 2019 - present Instructure, Inc.
-///
-/// This program is free software: you can redistribute it and/or modify
-/// it under the terms of the GNU General Public License as published by
-/// the Free Software Foundation, version 3 of the License.
-///
-/// This program is distributed in the hope that it will be useful,
-/// but WITHOUT ANY WARRANTY; without even the implied warranty of
-/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-/// GNU General Public License for more details.
-///
-/// You should have received a copy of the GNU General Public License
-/// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// Copyright (C) 2019 - present Instructure, Inc.
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, version 3 of the License.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
@@ -19,7 +19,7 @@ import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/screens/alerts/alerts_interactor.dart';
 import 'package:flutter_parent/screens/alerts/alerts_screen.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
-import 'package:flutter_parent/utils/design/parent_theme.dart';
+import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/student_color_set.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
@@ -148,7 +148,7 @@ void main() {
       expect(find.text(DateFormat(AppLocalizations().dateTimeFormat).format(alerts.first.actionDate.toLocal())),
           findsOneWidget);
       expect(find.byIcon(CanvasIcons.info), findsOneWidget);
-      expect((tester.widget(find.byIcon(CanvasIcons.info)) as Icon).color, ParentTheme.ash);
+      expect((tester.widget(find.byIcon(CanvasIcons.info)) as Icon).color, ParentColors.ash);
     });
 
     testWidgetsWithAccessibilityChecks('Shows alert positive', (tester) async {
@@ -182,7 +182,7 @@ void main() {
       expect(find.text(DateFormat(AppLocalizations().dateTimeFormat).format(alerts.first.actionDate.toLocal())),
           findsOneWidget);
       expect(find.byIcon(CanvasIcons.warning), findsOneWidget);
-      expect((tester.widget(find.byIcon(CanvasIcons.warning)) as Icon).color, ParentTheme.failure);
+      expect((tester.widget(find.byIcon(CanvasIcons.warning)) as Icon).color, ParentColors.failure);
     });
 
     testWidgetsWithAccessibilityChecks('Can tap alert to mark as read', (tester) async {
@@ -239,7 +239,7 @@ Widget _testableWidget({User student}) {
   return TestApp(Scaffold(body: AlertsScreen(student ?? _mockUser())));
 }
 
-User _mockUser({int id = 0}) {
+User _mockUser({String id = ''}) {
   return User((b) => b..id = id);
 }
 
@@ -247,7 +247,7 @@ List<Alert> _mockData({int size = 1, AlertType type}) {
   return List.generate(
       size,
       (index) => Alert((b) => b
-        ..id = index
+        ..id = index.toString()
         ..title = 'Alert $index'
         ..alertType = type ?? AlertType.institutionAnnouncement));
 }

@@ -19,7 +19,7 @@ class _$UserSerializer implements StructuredSerializer<User> {
       {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
       'id',
-      serializers.serialize(object.id, specifiedType: const FullType(int)),
+      serializers.serialize(object.id, specifiedType: const FullType(String)),
       'name',
       serializers.serialize(object.name, specifiedType: const FullType(String)),
     ];
@@ -28,6 +28,20 @@ class _$UserSerializer implements StructuredSerializer<User> {
       result.add(null);
     } else {
       result.add(serializers.serialize(object.sortableName,
+          specifiedType: const FullType(String)));
+    }
+    result.add('short_name');
+    if (object.shortName == null) {
+      result.add(null);
+    } else {
+      result.add(serializers.serialize(object.shortName,
+          specifiedType: const FullType(String)));
+    }
+    result.add('pronouns');
+    if (object.pronouns == null) {
+      result.add(null);
+    } else {
+      result.add(serializers.serialize(object.pronouns,
           specifiedType: const FullType(String)));
     }
     result.add('avatar_url');
@@ -75,7 +89,7 @@ class _$UserSerializer implements StructuredSerializer<User> {
       switch (key) {
         case 'id':
           result.id = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
+              specifiedType: const FullType(String)) as String;
           break;
         case 'name':
           result.name = serializers.deserialize(value,
@@ -83,6 +97,14 @@ class _$UserSerializer implements StructuredSerializer<User> {
           break;
         case 'sortable_name':
           result.sortableName = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
+          break;
+        case 'short_name':
+          result.shortName = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
+          break;
+        case 'pronouns':
+          result.pronouns = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
           break;
         case 'avatar_url':
@@ -110,11 +132,15 @@ class _$UserSerializer implements StructuredSerializer<User> {
 
 class _$User extends User {
   @override
-  final int id;
+  final String id;
   @override
   final String name;
   @override
   final String sortableName;
+  @override
+  final String shortName;
+  @override
+  final String pronouns;
   @override
   final String avatarUrl;
   @override
@@ -131,6 +157,8 @@ class _$User extends User {
       {this.id,
       this.name,
       this.sortableName,
+      this.shortName,
+      this.pronouns,
       this.avatarUrl,
       this.primaryEmail,
       this.locale,
@@ -158,6 +186,8 @@ class _$User extends User {
         id == other.id &&
         name == other.name &&
         sortableName == other.sortableName &&
+        shortName == other.shortName &&
+        pronouns == other.pronouns &&
         avatarUrl == other.avatarUrl &&
         primaryEmail == other.primaryEmail &&
         locale == other.locale &&
@@ -170,8 +200,12 @@ class _$User extends User {
         $jc(
             $jc(
                 $jc(
-                    $jc($jc($jc(0, id.hashCode), name.hashCode),
-                        sortableName.hashCode),
+                    $jc(
+                        $jc(
+                            $jc($jc($jc(0, id.hashCode), name.hashCode),
+                                sortableName.hashCode),
+                            shortName.hashCode),
+                        pronouns.hashCode),
                     avatarUrl.hashCode),
                 primaryEmail.hashCode),
             locale.hashCode),
@@ -184,6 +218,8 @@ class _$User extends User {
           ..add('id', id)
           ..add('name', name)
           ..add('sortableName', sortableName)
+          ..add('shortName', shortName)
+          ..add('pronouns', pronouns)
           ..add('avatarUrl', avatarUrl)
           ..add('primaryEmail', primaryEmail)
           ..add('locale', locale)
@@ -195,9 +231,9 @@ class _$User extends User {
 class UserBuilder implements Builder<User, UserBuilder> {
   _$User _$v;
 
-  int _id;
-  int get id => _$this._id;
-  set id(int id) => _$this._id = id;
+  String _id;
+  String get id => _$this._id;
+  set id(String id) => _$this._id = id;
 
   String _name;
   String get name => _$this._name;
@@ -206,6 +242,14 @@ class UserBuilder implements Builder<User, UserBuilder> {
   String _sortableName;
   String get sortableName => _$this._sortableName;
   set sortableName(String sortableName) => _$this._sortableName = sortableName;
+
+  String _shortName;
+  String get shortName => _$this._shortName;
+  set shortName(String shortName) => _$this._shortName = shortName;
+
+  String _pronouns;
+  String get pronouns => _$this._pronouns;
+  set pronouns(String pronouns) => _$this._pronouns = pronouns;
 
   String _avatarUrl;
   String get avatarUrl => _$this._avatarUrl;
@@ -233,6 +277,8 @@ class UserBuilder implements Builder<User, UserBuilder> {
       _id = _$v.id;
       _name = _$v.name;
       _sortableName = _$v.sortableName;
+      _shortName = _$v.shortName;
+      _pronouns = _$v.pronouns;
       _avatarUrl = _$v.avatarUrl;
       _primaryEmail = _$v.primaryEmail;
       _locale = _$v.locale;
@@ -262,6 +308,8 @@ class UserBuilder implements Builder<User, UserBuilder> {
             id: id,
             name: name,
             sortableName: sortableName,
+            shortName: shortName,
+            pronouns: pronouns,
             avatarUrl: avatarUrl,
             primaryEmail: primaryEmail,
             locale: locale,

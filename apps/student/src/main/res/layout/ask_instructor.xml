@@ -16,43 +16,49 @@
   ~
   -->
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/askInstructorScrollView"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingStart="24dp"
-    android:paddingEnd="16dp"
-    android:paddingBottom="16dp"
-    android:paddingTop="16dp">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/selectCourse"
-        style="@style/TextStyle.Primary"
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/whichCourse" />
+        android:paddingStart="24dp"
+        android:paddingTop="16dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="16dp">
 
-    <TextView
-        android:id="@+id/allTeachers"
-        style="@style/TextStyle.Secondary"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/selectCourse"
-        android:layout_marginBottom="10dp"
-        android:text="@string/allTeachers" />
+        <TextView
+            android:id="@+id/selectCourse"
+            style="@style/TextStyle.Primary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/whichCourse" />
 
-    <Spinner
-        android:id="@+id/courseSpinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/allTeachers"
-        android:layout_marginBottom="10dp" />
+        <TextView
+            android:id="@+id/allTeachers"
+            style="@style/TextStyle.Secondary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="@string/allTeachers" />
 
-    <EditText
-        android:id="@+id/message"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/courseSpinner"
-        android:layout_marginBottom="10dp"
-        android:hint="@string/composeMessage" />
+        <Spinner
+            android:id="@+id/courseSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:minHeight="48dp" />
 
-</RelativeLayout>
+        <EditText
+            android:id="@+id/message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:hint="@string/composeMessage"
+            android:minHeight="48dp" />
+
+    </LinearLayout>
+</ScrollView>

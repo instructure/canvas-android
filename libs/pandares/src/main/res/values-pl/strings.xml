@@ -61,7 +61,9 @@
     <string name="submissionUploadByteProgress">%1$s z %2$s</string>
     <string name="submissionSuccessTitle">Przesłano pomyślnie</string>
     <string name="submissionSuccessMessage">Twoje zadanie zostało pomyślnie przesłane. Korzystaj z dnia!</string>
-    <string name="cancelAllSubmissions">Anuluj wszystkie przesyłki zadania</string>
+    <string name="submissionDeleteTitle">Anuluj przesyłkę</string>
+    <string name="submissionDeleteMessage">Spowoduje to anulowanie i usunięcie przesyłki.</string>
+    <string name="submissionDeleted">Usunięto przesyłkę</string>
     <string name="missingSubmissionLabel">Brak</string>
     <string name="gradedSubmissionLabel">Oceniono</string>
     <!-- Student Submission -->
@@ -101,6 +103,7 @@
     <string name="finalGradeFormatted">Ocena końcowa: %s</string>
     <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
     <string name="contentDescriptionScoreOutOfPointsPossible">%1$s z %2$s pkt</string>
+    <string name="enterWhatIfScore">Wprowadź wynik dla a-co-jeśli</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Niestandardowy wynik punktowy</string>
     <string name="rubricEmptyMessage">Nie ma rubryki dla tego zadania</string>
@@ -590,8 +593,7 @@
     <string name="EULA">EULA</string>
     <string name="privacyPolicy">Polityka prywatności</string>
     <string name="termsOfUse">Warunki korzystania</string>
-    <string name="openSource">Open source</string>
-
+    <string name="canvasOnGithub">Canvas na GitHub</string>
     <!-- Quiz Strings -->
     <string name="assignmentQuizzes">Przypisane testy</string>
     <string name="practiceQuizzes">Testy próbne</string>
@@ -602,6 +604,7 @@
     <string name="choose_answers_below">Wybierz odpowiedzi poniżej</string>
 
 
+    <string name="flag_the_question">Oflaguj pytanie</string>
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">Lista zadań</string>
     <string name="gradesWidgetTitle">Oceny</string>
@@ -864,9 +867,6 @@
     <string name="like">lubię to</string>
     <string name="likes">polubień</string>
 
-    <string name="wear_reminder">Ustaw przypomnienie o terminie oddania pracy</string>
-    <string name="wear_notifications">Włącz powiadomienia wear</string>
-
     <string name="color_1">Czerwony</string>
     <string name="color_2">Gorący róż</string>
     <string name="color_3">Lawenda</string>
@@ -1038,6 +1038,41 @@
     <string name="addChildErrorMessage">Niepowodzenie parowania. Upewnij się, że kod parowania jest poprawny i nie utracił ważności.</string>
     <string name="gradeComplete">Ukończony</string>
     <string name="gradeIncomplete">Nie ukończono</string>
+    <!--Teacher Strings-->
+    <string name="postPolicyTitle">Ustawienia publikowania</string>
+    <string name="postGradesTab">Opublikuj oceny</string>
+    <string name="hideGradesTab">Ukryj oceny</string>
+    <plurals name="gradesPostedCount">
+        <item quantity="one">%d ocena obecnie opublikowana</item>
+        <item quantity="few">%d oceny obecnie opublikowane</item>
+        <item quantity="many">%d oceny obecnie opublikowane</item>
+        <item quantity="other">%d oceny obecnie opublikowane</item>
+    </plurals>
+    <plurals name="gradesHiddenCount">
+        <item quantity="one">%d ocena obecnie ukryta</item>
+        <item quantity="few">%d oceny obecnie ukryte</item>
+        <item quantity="many">%d oceny obecnie ukryte</item>
+        <item quantity="other">%d oceny obecnie ukryte</item>
+    </plurals>
+    <string name="postPolicyPostTo">Opublikuj na...</string>
+    <string name="postPolicySections">Określone sekcje</string>
+    <string name="postToEveryoneTitle">Każdy</string>
+    <string name="postToEveryoneMessage">Oceny staną się widoczne dla wszystkich uczestników</string>
+    <string name="postToGradedTitle">Oceniono</string>
+    <string name="postToGradedMessage">Oceny staną się widoczne dla uczestników z ocenionymi przesyłkami</string>
+    <string name="postPolicyAllHiddenTitle">Wszystkie ukryte</string>
+    <string name="postPolicyAllHiddenMessage">Wszystkie oceny są obecnie ukryte.</string>
+    <string name="postPolicyAllPostedTitle">Wszystkie opublikowane</string>
+    <string name="postPolicyAllPostedMessage">Wszystkie oceny są obecnie opublikowane.</string>
+    <string name="postPolicyPostedToast">Oceny opublikowane</string>
+    <string name="postPolicyHiddenToast">Oceny ukryte</string>
+    <string name="postPolicyPostFailedToast">Nie udało się opublikować ocen</string>
+    <string name="postPolicyHideFailedToast">Nie udało się ukryć ocen</string>
+    <string name="gradeBeforePosting">Ocena przed opublikowaniem</string>
+    <string name="gradeAfterPosting">Ocena po opublikowaniu</string>
+    <string name="gradeOverride">Nadpisująca ocena</string>
+    <string name="currentGrade">Bieżąca ocena</string>
+
     <!-- Floating Recording View Strings -->
     <string name="recordingTimerDefault">00:00:00</string>
     <string name="recordingTimerContentDescription">%1$d h, %2$d min, %3$d s</string>

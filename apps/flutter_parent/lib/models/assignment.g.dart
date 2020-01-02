@@ -6,7 +6,65 @@ part of assignment;
 // BuiltValueGenerator
 // **************************************************************************
 
+const SubmissionTypes _$submissionTypesDiscussionTopic =
+    const SubmissionTypes._('discussionTopic');
+const SubmissionTypes _$submissionTypesOnlineQuiz =
+    const SubmissionTypes._('onlineQuiz');
+const SubmissionTypes _$submissionTypesOnPaper =
+    const SubmissionTypes._('onPaper');
+const SubmissionTypes _$submissionTypesNone = const SubmissionTypes._('none');
+const SubmissionTypes _$submissionTypesExternalTool =
+    const SubmissionTypes._('externalTool');
+const SubmissionTypes _$submissionTypesOnlineTextEntry =
+    const SubmissionTypes._('onlineTextEntry');
+const SubmissionTypes _$submissionTypesOnlineUrl =
+    const SubmissionTypes._('onlineUrl');
+const SubmissionTypes _$submissionTypesOnlineUpload =
+    const SubmissionTypes._('onlineUpload');
+const SubmissionTypes _$submissionTypesMediaRecording =
+    const SubmissionTypes._('mediaRecording');
+
+SubmissionTypes _$submissionTypesValueOf(String name) {
+  switch (name) {
+    case 'discussionTopic':
+      return _$submissionTypesDiscussionTopic;
+    case 'onlineQuiz':
+      return _$submissionTypesOnlineQuiz;
+    case 'onPaper':
+      return _$submissionTypesOnPaper;
+    case 'none':
+      return _$submissionTypesNone;
+    case 'externalTool':
+      return _$submissionTypesExternalTool;
+    case 'onlineTextEntry':
+      return _$submissionTypesOnlineTextEntry;
+    case 'onlineUrl':
+      return _$submissionTypesOnlineUrl;
+    case 'onlineUpload':
+      return _$submissionTypesOnlineUpload;
+    case 'mediaRecording':
+      return _$submissionTypesMediaRecording;
+    default:
+      return _$submissionTypesNone;
+  }
+}
+
+final BuiltSet<SubmissionTypes> _$submissionTypesValues =
+    new BuiltSet<SubmissionTypes>(const <SubmissionTypes>[
+  _$submissionTypesDiscussionTopic,
+  _$submissionTypesOnlineQuiz,
+  _$submissionTypesOnPaper,
+  _$submissionTypesNone,
+  _$submissionTypesExternalTool,
+  _$submissionTypesOnlineTextEntry,
+  _$submissionTypesOnlineUrl,
+  _$submissionTypesOnlineUpload,
+  _$submissionTypesMediaRecording,
+]);
+
 Serializer<Assignment> _$assignmentSerializer = new _$AssignmentSerializer();
+Serializer<SubmissionTypes> _$submissionTypesSerializer =
+    new _$SubmissionTypesSerializer();
 
 class _$AssignmentSerializer implements StructuredSerializer<Assignment> {
   @override
@@ -19,19 +77,19 @@ class _$AssignmentSerializer implements StructuredSerializer<Assignment> {
       {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
       'id',
-      serializers.serialize(object.id, specifiedType: const FullType(int)),
+      serializers.serialize(object.id, specifiedType: const FullType(String)),
       'points_possible',
       serializers.serialize(object.pointsPossible,
           specifiedType: const FullType(double)),
       'course_id',
       serializers.serialize(object.courseId,
-          specifiedType: const FullType(int)),
+          specifiedType: const FullType(String)),
       'use_rubric_for_grading',
       serializers.serialize(object.useRubricForGrading,
           specifiedType: const FullType(bool)),
       'assignment_group_id',
       serializers.serialize(object.assignmentGroupId,
-          specifiedType: const FullType(int)),
+          specifiedType: const FullType(String)),
       'position',
       serializers.serialize(object.position,
           specifiedType: const FullType(int)),
@@ -112,7 +170,7 @@ class _$AssignmentSerializer implements StructuredSerializer<Assignment> {
       result.add(null);
     } else {
       result.add(serializers.serialize(object.quizId,
-          specifiedType: const FullType(int)));
+          specifiedType: const FullType(String)));
     }
     result.add('submission');
     if (object.submission == null) {
@@ -147,7 +205,15 @@ class _$AssignmentSerializer implements StructuredSerializer<Assignment> {
       result.add(null);
     } else {
       result.add(serializers.serialize(object.groupCategoryId,
-          specifiedType: const FullType(int)));
+          specifiedType: const FullType(String)));
+    }
+    result.add('submission_types');
+    if (object.submissionTypes == null) {
+      result.add(null);
+    } else {
+      result.add(serializers.serialize(object.submissionTypes,
+          specifiedType: const FullType(
+              BuiltList, const [const FullType(SubmissionTypes)])));
     }
     return result;
   }
@@ -166,7 +232,7 @@ class _$AssignmentSerializer implements StructuredSerializer<Assignment> {
       switch (key) {
         case 'id':
           result.id = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
+              specifiedType: const FullType(String)) as String;
           break;
         case 'name':
           result.name = serializers.deserialize(value,
@@ -186,7 +252,7 @@ class _$AssignmentSerializer implements StructuredSerializer<Assignment> {
           break;
         case 'course_id':
           result.courseId = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
+              specifiedType: const FullType(String)) as String;
           break;
         case 'grading_type':
           result.gradingType = serializers.deserialize(value,
@@ -202,7 +268,7 @@ class _$AssignmentSerializer implements StructuredSerializer<Assignment> {
           break;
         case 'quiz_id':
           result.quizId = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
+              specifiedType: const FullType(String)) as String;
           break;
         case 'use_rubric_for_grading':
           result.useRubricForGrading = serializers.deserialize(value,
@@ -214,7 +280,7 @@ class _$AssignmentSerializer implements StructuredSerializer<Assignment> {
           break;
         case 'assignment_group_id':
           result.assignmentGroupId = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
+              specifiedType: const FullType(String)) as String;
           break;
         case 'position':
           result.position = serializers.deserialize(value,
@@ -250,7 +316,7 @@ class _$AssignmentSerializer implements StructuredSerializer<Assignment> {
           break;
         case 'group_category_id':
           result.groupCategoryId = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
+              specifiedType: const FullType(String)) as String;
           break;
         case 'user_submitted':
           result.userSubmitted = serializers.deserialize(value,
@@ -276,6 +342,12 @@ class _$AssignmentSerializer implements StructuredSerializer<Assignment> {
           result.isStudioEnabled = serializers.deserialize(value,
               specifiedType: const FullType(bool)) as bool;
           break;
+        case 'submission_types':
+          result.submissionTypes.replace(serializers.deserialize(value,
+                  specifiedType: const FullType(
+                      BuiltList, const [const FullType(SubmissionTypes)]))
+              as BuiltList<dynamic>);
+          break;
       }
     }
 
@@ -283,9 +355,48 @@ class _$AssignmentSerializer implements StructuredSerializer<Assignment> {
   }
 }
 
+class _$SubmissionTypesSerializer
+    implements PrimitiveSerializer<SubmissionTypes> {
+  static const Map<String, String> _toWire = const <String, String>{
+    'discussionTopic': 'discussion_topic',
+    'onlineQuiz': 'online_quiz',
+    'onPaper': 'on_paper',
+    'externalTool': 'external_tool',
+    'onlineTextEntry': 'online_text_entry',
+    'onlineUrl': 'online_url',
+    'onlineUpload': 'online_upload',
+    'mediaRecording': 'media_recording',
+  };
+  static const Map<String, String> _fromWire = const <String, String>{
+    'discussion_topic': 'discussionTopic',
+    'online_quiz': 'onlineQuiz',
+    'on_paper': 'onPaper',
+    'external_tool': 'externalTool',
+    'online_text_entry': 'onlineTextEntry',
+    'online_url': 'onlineUrl',
+    'online_upload': 'onlineUpload',
+    'media_recording': 'mediaRecording',
+  };
+
+  @override
+  final Iterable<Type> types = const <Type>[SubmissionTypes];
+  @override
+  final String wireName = 'submission_types';
+
+  @override
+  Object serialize(Serializers serializers, SubmissionTypes object,
+          {FullType specifiedType = FullType.unspecified}) =>
+      _toWire[object.name] ?? object.name;
+
+  @override
+  SubmissionTypes deserialize(Serializers serializers, Object serialized,
+          {FullType specifiedType = FullType.unspecified}) =>
+      SubmissionTypes.valueOf(_fromWire[serialized] ?? serialized as String);
+}
+
 class _$Assignment extends Assignment {
   @override
-  final int id;
+  final String id;
   @override
   final String name;
   @override
@@ -295,7 +406,7 @@ class _$Assignment extends Assignment {
   @override
   final double pointsPossible;
   @override
-  final int courseId;
+  final String courseId;
   @override
   final String gradingType;
   @override
@@ -303,13 +414,13 @@ class _$Assignment extends Assignment {
   @override
   final String url;
   @override
-  final int quizId;
+  final String quizId;
   @override
   final bool useRubricForGrading;
   @override
   final Submission submission;
   @override
-  final int assignmentGroupId;
+  final String assignmentGroupId;
   @override
   final int position;
   @override
@@ -327,7 +438,7 @@ class _$Assignment extends Assignment {
   @override
   final bool muted;
   @override
-  final int groupCategoryId;
+  final String groupCategoryId;
   @override
   final bool userSubmitted;
   @override
@@ -340,6 +451,8 @@ class _$Assignment extends Assignment {
   final bool anonymousGrading;
   @override
   final bool isStudioEnabled;
+  @override
+  final BuiltList<SubmissionTypes> submissionTypes;
 
   factory _$Assignment([void Function(AssignmentBuilder) updates]) =>
       (new AssignmentBuilder()..update(updates)).build();
@@ -372,7 +485,8 @@ class _$Assignment extends Assignment {
       this.anonymousPeerReviews,
       this.moderatedGrading,
       this.anonymousGrading,
-      this.isStudioEnabled})
+      this.isStudioEnabled,
+      this.submissionTypes})
       : super._() {
     if (id == null) {
       throw new BuiltValueNullFieldError('Assignment', 'id');
@@ -464,7 +578,8 @@ class _$Assignment extends Assignment {
         anonymousPeerReviews == other.anonymousPeerReviews &&
         moderatedGrading == other.moderatedGrading &&
         anonymousGrading == other.anonymousGrading &&
-        isStudioEnabled == other.isStudioEnabled;
+        isStudioEnabled == other.isStudioEnabled &&
+        submissionTypes == other.submissionTypes;
   }
 
   @override
@@ -487,26 +602,26 @@ class _$Assignment extends Assignment {
                                                                 $jc(
                                                                     $jc(
                                                                         $jc(
-                                                                            $jc($jc($jc($jc($jc($jc($jc($jc($jc($jc(0, id.hashCode), name.hashCode), description.hashCode), dueAt.hashCode), pointsPossible.hashCode), courseId.hashCode), gradingType.hashCode), htmlUrl.hashCode), url.hashCode),
-                                                                                quizId.hashCode),
-                                                                            useRubricForGrading.hashCode),
-                                                                        submission.hashCode),
-                                                                    assignmentGroupId.hashCode),
-                                                                position.hashCode),
-                                                            lockedForUser.hashCode),
-                                                        lockAt.hashCode),
-                                                    unlockAt.hashCode),
-                                                lockExplanation.hashCode),
-                                            freeFormCriterionComments.hashCode),
-                                        published.hashCode),
-                                    muted.hashCode),
-                                groupCategoryId.hashCode),
-                            userSubmitted.hashCode),
-                        onlyVisibleToOverrides.hashCode),
-                    anonymousPeerReviews.hashCode),
-                moderatedGrading.hashCode),
-            anonymousGrading.hashCode),
-        isStudioEnabled.hashCode));
+                                                                            $jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc(0, id.hashCode), name.hashCode), description.hashCode), dueAt.hashCode), pointsPossible.hashCode), courseId.hashCode), gradingType.hashCode), htmlUrl.hashCode), url.hashCode), quizId.hashCode),
+                                                                                useRubricForGrading.hashCode),
+                                                                            submission.hashCode),
+                                                                        assignmentGroupId.hashCode),
+                                                                    position.hashCode),
+                                                                lockedForUser.hashCode),
+                                                            lockAt.hashCode),
+                                                        unlockAt.hashCode),
+                                                    lockExplanation.hashCode),
+                                                freeFormCriterionComments.hashCode),
+                                            published.hashCode),
+                                        muted.hashCode),
+                                    groupCategoryId.hashCode),
+                                userSubmitted.hashCode),
+                            onlyVisibleToOverrides.hashCode),
+                        anonymousPeerReviews.hashCode),
+                    moderatedGrading.hashCode),
+                anonymousGrading.hashCode),
+            isStudioEnabled.hashCode),
+        submissionTypes.hashCode));
   }
 
   @override
@@ -539,7 +654,8 @@ class _$Assignment extends Assignment {
           ..add('anonymousPeerReviews', anonymousPeerReviews)
           ..add('moderatedGrading', moderatedGrading)
           ..add('anonymousGrading', anonymousGrading)
-          ..add('isStudioEnabled', isStudioEnabled))
+          ..add('isStudioEnabled', isStudioEnabled)
+          ..add('submissionTypes', submissionTypes))
         .toString();
   }
 }
@@ -547,9 +663,9 @@ class _$Assignment extends Assignment {
 class AssignmentBuilder implements Builder<Assignment, AssignmentBuilder> {
   _$Assignment _$v;
 
-  int _id;
-  int get id => _$this._id;
-  set id(int id) => _$this._id = id;
+  String _id;
+  String get id => _$this._id;
+  set id(String id) => _$this._id = id;
 
   String _name;
   String get name => _$this._name;
@@ -568,9 +684,9 @@ class AssignmentBuilder implements Builder<Assignment, AssignmentBuilder> {
   set pointsPossible(double pointsPossible) =>
       _$this._pointsPossible = pointsPossible;
 
-  int _courseId;
-  int get courseId => _$this._courseId;
-  set courseId(int courseId) => _$this._courseId = courseId;
+  String _courseId;
+  String get courseId => _$this._courseId;
+  set courseId(String courseId) => _$this._courseId = courseId;
 
   String _gradingType;
   String get gradingType => _$this._gradingType;
@@ -584,9 +700,9 @@ class AssignmentBuilder implements Builder<Assignment, AssignmentBuilder> {
   String get url => _$this._url;
   set url(String url) => _$this._url = url;
 
-  int _quizId;
-  int get quizId => _$this._quizId;
-  set quizId(int quizId) => _$this._quizId = quizId;
+  String _quizId;
+  String get quizId => _$this._quizId;
+  set quizId(String quizId) => _$this._quizId = quizId;
 
   bool _useRubricForGrading;
   bool get useRubricForGrading => _$this._useRubricForGrading;
@@ -599,9 +715,9 @@ class AssignmentBuilder implements Builder<Assignment, AssignmentBuilder> {
   set submission(SubmissionBuilder submission) =>
       _$this._submission = submission;
 
-  int _assignmentGroupId;
-  int get assignmentGroupId => _$this._assignmentGroupId;
-  set assignmentGroupId(int assignmentGroupId) =>
+  String _assignmentGroupId;
+  String get assignmentGroupId => _$this._assignmentGroupId;
+  set assignmentGroupId(String assignmentGroupId) =>
       _$this._assignmentGroupId = assignmentGroupId;
 
   int _position;
@@ -639,9 +755,9 @@ class AssignmentBuilder implements Builder<Assignment, AssignmentBuilder> {
   bool get muted => _$this._muted;
   set muted(bool muted) => _$this._muted = muted;
 
-  int _groupCategoryId;
-  int get groupCategoryId => _$this._groupCategoryId;
-  set groupCategoryId(int groupCategoryId) =>
+  String _groupCategoryId;
+  String get groupCategoryId => _$this._groupCategoryId;
+  set groupCategoryId(String groupCategoryId) =>
       _$this._groupCategoryId = groupCategoryId;
 
   bool _userSubmitted;
@@ -673,6 +789,12 @@ class AssignmentBuilder implements Builder<Assignment, AssignmentBuilder> {
   bool get isStudioEnabled => _$this._isStudioEnabled;
   set isStudioEnabled(bool isStudioEnabled) =>
       _$this._isStudioEnabled = isStudioEnabled;
+
+  ListBuilder<SubmissionTypes> _submissionTypes;
+  ListBuilder<SubmissionTypes> get submissionTypes =>
+      _$this._submissionTypes ??= new ListBuilder<SubmissionTypes>();
+  set submissionTypes(ListBuilder<SubmissionTypes> submissionTypes) =>
+      _$this._submissionTypes = submissionTypes;
 
   AssignmentBuilder() {
     Assignment._initializeBuilder(this);
@@ -708,6 +830,7 @@ class AssignmentBuilder implements Builder<Assignment, AssignmentBuilder> {
       _moderatedGrading = _$v.moderatedGrading;
       _anonymousGrading = _$v.anonymousGrading;
       _isStudioEnabled = _$v.isStudioEnabled;
+      _submissionTypes = _$v.submissionTypes?.toBuilder();
       _$v = null;
     }
     return this;
@@ -759,12 +882,16 @@ class AssignmentBuilder implements Builder<Assignment, AssignmentBuilder> {
               anonymousPeerReviews: anonymousPeerReviews,
               moderatedGrading: moderatedGrading,
               anonymousGrading: anonymousGrading,
-              isStudioEnabled: isStudioEnabled);
+              isStudioEnabled: isStudioEnabled,
+              submissionTypes: _submissionTypes?.build());
     } catch (_) {
       String _$failedField;
       try {
         _$failedField = 'submission';
         _submission?.build();
+
+        _$failedField = 'submissionTypes';
+        _submissionTypes?.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
             'Assignment', _$failedField, e.toString());

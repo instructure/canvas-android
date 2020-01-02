@@ -1,16 +1,16 @@
-/// Copyright (C) 2019 - present Instructure, Inc.
-///
-/// This program is free software: you can redistribute it and/or modify
-/// it under the terms of the GNU General Public License as published by
-/// the Free Software Foundation, version 3 of the License.
-///
-/// This program is distributed in the hope that it will be useful,
-/// but WITHOUT ANY WARRANTY; without even the implied warranty of
-/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-/// GNU General Public License for more details.
-///
-/// You should have received a copy of the GNU General Public License
-/// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// Copyright (C) 2019 - present Instructure, Inc.
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, version 3 of the License.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -97,17 +97,14 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
     return DefaultParentTheme(
       builder: (context) => Scaffold(
         appBar: AppBar(
-          textTheme: Theme.of(context).textTheme,
-          iconTheme: Theme.of(context).iconTheme,
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           title: Text(
-            AppLocalizations.of(context).findSchoolOrDistrict,
+            L10n(context).findSchoolOrDistrict,
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
           ),
           elevation: 0,
           actions: <Widget>[
             FlatButton(
-              child: Text(AppLocalizations.of(context).next.toUpperCase()),
+              child: Text(L10n(context).next.toUpperCase()),
               textColor: Theme.of(context).accentColor,
               onPressed: _query.isEmpty ? null : () => _next(context),
             ),
@@ -128,7 +125,7 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.all(16),
                 border: InputBorder.none,
-                hintText: AppLocalizations.of(context).domainSearchInputHint,
+                hintText: L10n(context).domainSearchInputHint,
                 suffixIcon: _query.isEmpty
                     ? null
                     : IconButton(
@@ -167,12 +164,12 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
                     return Center(
                         child: Padding(
                       padding: const EdgeInsets.all(16.0),
-                      child: Text(AppLocalizations.of(context).noDomainResults(_query)),
+                      child: Text(L10n(context).noDomainResults(_query)),
                     ));
                   var item = _schoolDomains[index];
                   return ListTile(
                     title: Text(item.name),
-                    onTap: () => QuickNav.push(
+                    onTap: () => locator<QuickNav>().push(
                         context, WebLoginScreen(item.domain, authenticationProvider: item.authenticationProvider)),
                   );
                 },
@@ -182,7 +179,7 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
             Center(
               child: FlatButton(
                 key: Key("help-button"),
-                child: Text(AppLocalizations.of(context).domainSearchHelpLabel),
+                child: Text(L10n(context).domainSearchHelpLabel),
                 textTheme: ButtonTextTheme.accent,
                 onPressed: () {
                   _showHelpDialog(context);
@@ -196,15 +193,15 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
   }
 
   _showHelpDialog(BuildContext context) {
-    var canvasGuidesText = AppLocalizations.of(context).canvasGuides;
-    var canvasSupportText = AppLocalizations.of(context).canvasSupport;
-    var body = AppLocalizations.of(context).domainSearchHelpBody(canvasGuidesText, canvasSupportText);
+    var canvasGuidesText = L10n(context).canvasGuides;
+    var canvasSupportText = L10n(context).canvasSupport;
+    var body = L10n(context).domainSearchHelpBody(canvasGuidesText, canvasSupportText);
 
     showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text(AppLocalizations.of(context).findSchoolOrDistrict),
+            title: Text(L10n(context).findSchoolOrDistrict),
             content: Text.rich(
               _helpBodySpan(
                 text: body,
@@ -225,7 +222,7 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
             ),
             actions: <Widget>[
               FlatButton(
-                child: Text(AppLocalizations.of(context).ok),
+                child: Text(L10n(context).ok),
                 onPressed: () => Navigator.of(context).pop(),
               ),
             ],
@@ -254,6 +251,6 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
     var domain = _query;
     if (domain.indexOf('.') == -1) domain += ".instructure.com";
 
-    QuickNav.push(context, WebLoginScreen(domain));
+    locator<QuickNav>().push(context, WebLoginScreen(domain));
   }
 }

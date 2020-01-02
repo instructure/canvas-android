@@ -1,16 +1,16 @@
-/// Copyright (C) 2019 - present Instructure, Inc.
-///
-/// This program is free software: you can redistribute it and/or modify
-/// it under the terms of the GNU General Public License as published by
-/// the Free Software Foundation, version 3 of the License.
-///
-/// This program is distributed in the hope that it will be useful,
-/// but WITHOUT ANY WARRANTY; without even the implied warranty of
-/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-/// GNU General Public License for more details.
-///
-/// You should have received a copy of the GNU General Public License
-/// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// Copyright (C) 2019 - present Instructure, Inc.
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, version 3 of the License.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 library submission;
 
 import 'package:built_collection/built_collection.dart';
@@ -30,7 +30,7 @@ abstract class Submission implements Built<Submission, SubmissionBuilder> {
 
   factory Submission([void Function(SubmissionBuilder) updates]) = _$Submission;
 
-  int get id;
+  String get id;
 
   @nullable
   String get grade;
@@ -79,7 +79,9 @@ abstract class Submission implements Built<Submission, SubmissionBuilder> {
   @nullable
   String get url;
 
-  bool get late;
+  // Not sure why, but build_runner fails when this field is named 'late'
+  @BuiltValueField(wireName: 'late')
+  bool get isLate;
 
   bool get excused;
 
@@ -87,16 +89,16 @@ abstract class Submission implements Built<Submission, SubmissionBuilder> {
 
   // Conversation Stuff
   @BuiltValueField(wireName: "assignment_id")
-  int get assignmentId;
+  String get assignmentId;
 
   @nullable
   Assignment get assignment;
 
   @BuiltValueField(wireName: "user_id")
-  int get userId;
+  String get userId;
 
   @BuiltValueField(wireName: "grader_id")
-  int get graderId;
+  String get graderId;
 
   @nullable
   User get user;
@@ -113,15 +115,15 @@ abstract class Submission implements Built<Submission, SubmissionBuilder> {
   String get enteredGrade;
 
   static void _initializeBuilder(SubmissionBuilder b) => b
-    ..id = 0
+    ..id = ''
     ..score = 0.0
     ..attempt = 0
     ..enteredScore = 0.0
-    ..graderId = 0
-    ..userId = 0
+    ..graderId = ''
+    ..userId = ''
     ..submissionHistory = ListBuilder<Submission>()
     ..isGradeMatchesCurrentSubmission = false
-    ..late = false
+    ..isLate = false
     ..excused = false
     ..missing = false;
 }

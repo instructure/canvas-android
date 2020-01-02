@@ -16,8 +16,9 @@
  */
 package com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.ui
 
-import com.instructure.student.R
+import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.pandautils.adapters.BasicItemBinder
+import com.instructure.student.R
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.CommentItemState
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.ui.views.CommentAttachmentsView
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.ui.views.CommentDirection
@@ -27,7 +28,7 @@ import kotlinx.android.synthetic.main.adapter_submission_comment.view.*
 class SubmissionCommentBinder : BasicItemBinder<CommentItemState.CommentItem, SubmissionCommentsAdapterCallback>() {
     override val layoutResId = R.layout.adapter_submission_comment
     override val bindBehavior = Item { comment, callback, _ ->
-        commentHolder.usernameText = comment.authorName
+        commentHolder.usernameText = Pronouns.span(comment.authorName, comment.authorPronouns)
         commentHolder.dateText = comment.dateText
         commentHolder.commentText = comment.message
         commentHolder.setAvatar(comment.avatarUrl, comment.authorName)

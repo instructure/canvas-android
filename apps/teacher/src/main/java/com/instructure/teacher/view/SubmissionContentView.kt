@@ -45,10 +45,7 @@ import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.Assignment.SubmissionType
 import com.instructure.canvasapi2.models.canvadocs.CanvaDocAnnotation
-import com.instructure.canvasapi2.utils.ContextKeeper
-import com.instructure.canvasapi2.utils.Logger
-import com.instructure.canvasapi2.utils.exhaustive
-import com.instructure.canvasapi2.utils.validOrNull
+import com.instructure.canvasapi2.utils.*
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
@@ -402,7 +399,11 @@ class SubmissionContentView(
             }
         }
 
-        val assigneeName = if (mAssignment.anonymousGrading) resources.getString(R.string.anonymousStudentLabel) else assignee.name
+        val assigneeName = if (mAssignment.anonymousGrading) {
+            resources.getString(R.string.anonymousStudentLabel)
+        } else {
+            Pronouns.span(assignee.name, assignee.pronouns)
+        }
         titleTextView.text = assigneeName
 
         if (mStudentSubmission.isCached) {
@@ -466,7 +467,7 @@ class SubmissionContentView(
                     val view = convertView
                             ?: LayoutInflater.from(context).inflate(R.layout.adapter_speed_grader_group_member, parent, false)
                     ProfileUtils.loadAvatarForUser(view.memberAvatarView, user.name, user.avatarUrl)
-                    view.memberNameView.text = user.name
+                    view.memberNameView.text = Pronouns.span(user?.name, user?.pronouns)
                     return view
                 }
             })

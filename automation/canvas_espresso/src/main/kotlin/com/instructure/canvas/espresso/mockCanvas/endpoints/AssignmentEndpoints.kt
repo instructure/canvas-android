@@ -15,6 +15,7 @@
  */
 package com.instructure.canvas.espresso.mockCanvas.endpoints
 
+import android.util.Log
 import com.instructure.canvas.espresso.mockCanvas.Endpoint
 import com.instructure.canvas.espresso.mockCanvas.utils.*
 import com.instructure.canvasapi2.models.Assignment
@@ -41,9 +42,7 @@ object AssignmentEndpoint : Endpoint(
     Segment("submissions") to SubmissionIndexEndpoint,
     response = {
         GET {
-            val assignment: Assignment? = data.assignmentGroups[pathVars.courseId]!!
-                .flatMap { it.assignments }
-                .find { it.id == pathVars.assignmentId }
+            val assignment = data.assignments[pathVars.assignmentId]
 
             if (assignment != null) {
                 request.successResponse(assignment)

@@ -18,7 +18,6 @@ package com.instructure.teacher.adapters
 import android.graphics.Color
 import android.os.Bundle
 import android.view.*
-import android.widget.LinearLayout.LayoutParams
 import android.widget.TextView
 import com.instructure.canvasapi2.StudentContextCardQuery.*
 import com.instructure.canvasapi2.models.BasicUser
@@ -26,6 +25,7 @@ import com.instructure.canvasapi2.models.GradeableStudentSubmission
 import com.instructure.canvasapi2.models.StudentAssignee
 import com.instructure.canvasapi2.type.EnrollmentType
 import com.instructure.canvasapi2.utils.DateHelper
+import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
@@ -127,7 +127,7 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
         } else {
             toolbar.setupBackButton(this)
         }
-        toolbar.title = student.shortName
+        toolbar.title = Pronouns.span(student.shortName, student.pronouns)
         toolbar.subtitle = course.name
         ViewStyler.themeToolbar(requireActivity(), toolbar, courseColor, Color.WHITE)
 
@@ -138,13 +138,14 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
             val basicUser = BasicUser().apply {
                 id = student.id.toLong()
                 name = student.name
+                pronouns = student.pronouns
                 avatarUrl = student.avatarUrl
             }
             val args = AddMessageFragment.createBundle(arrayListOf(basicUser), "", "course_${course.id}", true)
             RouteMatcher.route(requireContext(), Route(AddMessageFragment::class.java, null, args))
         }
 
-        studentNameView.text = student.shortName
+        studentNameView.text = Pronouns.span(student.shortName, student.pronouns)
         studentEmailView.setVisible(student.email.isValid()).text = student.email
 
         // Avatar
@@ -205,10 +206,7 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
             val visibleGradeItems = gradeItems.children.filter { it.isVisible }
             if (visibleGradeItems.size == 1) {
                 // If there is only one grade item, add a second empty child so the first doesn't stretch to the full parent width
-                gradeItems.addView(
-                    View(context),
-                    LayoutParams(0, LayoutParams.MATCH_PARENT, 1.0f)
-                )
+                emptyGradeItemSpace.setVisible()
             } else {
                 // Set color of last grade item
                 visibleGradeItems.lastOrNull()?.apply {
@@ -272,6 +270,7 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
                         id = student.id.toLongOrNull() ?: 0,
                         name = student.name ?: "",
                         shortName = student.shortName,
+                        pronouns = student.pronouns,
                         email = student.email
                 )
 

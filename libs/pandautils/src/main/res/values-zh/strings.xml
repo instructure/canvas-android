@@ -33,7 +33,6 @@
     <string name="fileUploadSuccess">成功上传</string>
     <string name="noNetwork">网络不可用 - 请稍后再试。</string>
     <string name="uploadMessage">“正在上传。检查上传状态通知。</string>
-    <string name="mediaUpload">媒体上传</string>
     <string name="uploadingFile">上传文件&#8230;</string>
     <string name="errorUploadingFile">上传文件时出错。请重试。</string>
     <string name="fileSubmission">提交文件(s)</string>
@@ -171,13 +170,12 @@
     <string name="noEvents">今天没有事件！</string>
     <string name="noEventsSubtext">今天似乎是休息放松的一天。</string>
     <string name="noSubmission">无提交项</string>
-    <string name="noSubmissionSubtext">截至%1$s%2$s之前提交您的作业。</string>
     <string name="noSubmissionTeacher">此学生尚无任何提交项。</string>
-    <string name="noDueDate">此作业没有截止日期。</string>
     <string name="locked">已锁定</string>
     <string name="lockedSubtext">此作业已锁定至%1$s%2$s。</string>
     <string name="chooseFile">选择文件</string>
     <string name="chooseFileSubtext">点击下方的选项可以在您的提交项中附加文件。</string>
+    <string name="chooseFileForUploadSubtext">点按下方的选项选择要上传的文件</string>
     <string name="noNotifications">无通知</string>
     <string name="noNotificationsSubtext">暂时没有通知。</string>
     <string name="noTodos">做得好！</string>
@@ -377,6 +375,7 @@
     <string name="utils_uploadToCanvas">上传到 Canvas</string>
     <string name="utils_uploadMyFiles">我的文件</string>
     <string name="utils_uploadCourseFiles">课程文件</string>
+    <string name="utils_uploadGroupFiles">小组文件</string>
     <string name="utils_uploadToSubmissionComment">上传到提交项评论</string>
     <string name="utils_attachFile">附加文件</string>
     <string name="utils_with">与</string>

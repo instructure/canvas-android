@@ -124,7 +124,14 @@ class RubricEditView @JvmOverloads constructor(
         criteriaItemsContainer.removeAllViews()
         for ((index, criterion) in assignment.rubric!!.withIndex()) {
             val critItem = RubricCriterionItemView(context)
-            critItem.setCriterion(criterion, mAssignee.id, mAssignee.name, index, assignment.rubricSettings?.freeFormCriterionComments ?: false)
+            critItem.setCriterion(
+                criterion,
+                mAssignee.id,
+                mAssignee.name,
+                mAssignee.pronouns,
+                index,
+                assignment.rubricSettings?.freeFormCriterionComments ?: false
+            )
             critItem.setAssessment(mAssessment[criterion.id] ?: RubricCriterionAssessment())
             critItem.gradeAnonymously = assignment.anonymousGrading
             criteriaItemsContainer.addView(critItem)

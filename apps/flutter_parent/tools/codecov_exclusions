@@ -2,11 +2,11 @@
 **/*.g.*
 **/generated/*
 
-# Interactors
-**/*_interactor.dart
-
 # APIs
-lib/api/*
+lib/network/api/*
+
+# AttachmentPickerInteractor - all code calls through to system functions
+lib/screens/inbox/attachment_utils/attachment_picker_interactor.dart
 
 # Static declarations, since coverage doesn't seem to be recognized at the moment
 lib/utils/snickers.dart

@@ -19,7 +19,7 @@ class _$CourseSerializer implements StructuredSerializer<Course> {
       {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
       'id',
-      serializers.serialize(object.id, specifiedType: const FullType(int)),
+      serializers.serialize(object.id, specifiedType: const FullType(String)),
       'name',
       serializers.serialize(object.name, specifiedType: const FullType(String)),
       'hide_final_grades',
@@ -44,9 +44,6 @@ class _$CourseSerializer implements StructuredSerializer<Course> {
       'access_restricted_by_date',
       serializers.serialize(object.accessRestrictedByDate,
           specifiedType: const FullType(bool)),
-      'image_download_url',
-      serializers.serialize(object.imageDownloadUrl,
-          specifiedType: const FullType(String)),
       'has_weighted_grading_periods',
       serializers.serialize(object.hasWeightedGradingPeriods,
           specifiedType: const FullType(bool)),
@@ -92,6 +89,13 @@ class _$CourseSerializer implements StructuredSerializer<Course> {
       result.add(serializers.serialize(object.syllabusBody,
           specifiedType: const FullType(String)));
     }
+    result.add('image_download_url');
+    if (object.imageDownloadUrl == null) {
+      result.add(null);
+    } else {
+      result.add(serializers.serialize(object.imageDownloadUrl,
+          specifiedType: const FullType(String)));
+    }
     result.add('workflow_state');
     if (object.workflowState == null) {
       result.add(null);
@@ -116,7 +120,7 @@ class _$CourseSerializer implements StructuredSerializer<Course> {
       switch (key) {
         case 'id':
           result.id = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
+              specifiedType: const FullType(String)) as String;
           break;
         case 'name':
           result.name = serializers.deserialize(value,
@@ -209,7 +213,7 @@ class _$Course extends Course {
   @override
   final String finalGrade;
   @override
-  final int id;
+  final String id;
   @override
   final String name;
   @override
@@ -302,9 +306,6 @@ class _$Course extends Course {
     }
     if (accessRestrictedByDate == null) {
       throw new BuiltValueNullFieldError('Course', 'accessRestrictedByDate');
-    }
-    if (imageDownloadUrl == null) {
-      throw new BuiltValueNullFieldError('Course', 'imageDownloadUrl');
     }
     if (hasWeightedGradingPeriods == null) {
       throw new BuiltValueNullFieldError('Course', 'hasWeightedGradingPeriods');
@@ -447,9 +448,9 @@ class CourseBuilder implements Builder<Course, CourseBuilder> {
   String get finalGrade => _$this._finalGrade;
   set finalGrade(String finalGrade) => _$this._finalGrade = finalGrade;
 
-  int _id;
-  int get id => _$this._id;
-  set id(int id) => _$this._id = id;
+  String _id;
+  String get id => _$this._id;
+  set id(String id) => _$this._id = id;
 
   String _name;
   String get name => _$this._name;

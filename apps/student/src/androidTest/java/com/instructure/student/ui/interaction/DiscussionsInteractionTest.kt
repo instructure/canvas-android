@@ -173,6 +173,8 @@ class DiscussionsInteractionTest : StudentTest() {
         discussionListPage.pullToUpdate()
         discussionListPage.assertUnreadCount(topicHeader.title!!, 1)
         discussionListPage.selectTopic(topicHeader.title!!)
+        sleep(500) // let's allow time for the webview to become populated/visible before we scroll to it
+        discussionDetailsPage.scrollToRepliesWebview() // may be necessary on shorter screens / landscape
         // From what I can tell, our self-generated HTML has a 2500 ms wait before it
         // sends the "read" call for the unread messages on the page.  So we'll wait for
         // 3 seconds.
@@ -562,28 +564,6 @@ class DiscussionsInteractionTest : StudentTest() {
         return discussionEntry!!
     }
 
-    // Creates an HTML attachment/file which can then be attached to a topic header or reply.
-    private fun createHtmlAttachment(data: MockCanvas, html: String): RemoteFile {
-        val course1 = data.courses.values.first()
-        val fileId = data.addFileToCourse(
-                courseId = course1.id,
-                displayName = "page.html",
-                contentType = "text/html",
-                fileContent = html
-        )
-
-        val attachment = RemoteFile(
-                id = fileId,
-                displayName = "page.html",
-                fileName = "page.html",
-                contentType = "text/html",
-                url = "https://mock-data.instructure.com/files/$fileId/preview",
-                size = html.length.toLong()
-        )
-
-        return attachment
-    }
-
     // Mock a specified number of students and courses, and navigate to the first course
     private fun getToCourse(
             studentCount: Int = 1,
@@ -611,6 +591,31 @@ class DiscussionsInteractionTest : StudentTest() {
         dashboardPage.selectCourse(course1)
 
         return data
+    }
+
+    companion object {
+        // Creates an HTML attachment/file which can then be attached to a topic header or reply.
+        fun createHtmlAttachment(data: MockCanvas, html: String): RemoteFile {
+            val course1 = data.courses.values.first()
+            val fileId = data.addFileToCourse(
+                    courseId = course1.id,
+                    displayName = "page.html",
+                    contentType = "text/html",
+                    fileContent = html
+            )
+
+            val attachment = RemoteFile(
+                    id = fileId,
+                    displayName = "page.html",
+                    fileName = "page.html",
+                    contentType = "text/html",
+                    url = "https://mock-data.instructure.com/files/$fileId/preview",
+                    size = html.length.toLong()
+            )
+
+            return attachment
+        }
+
     }
 
 }

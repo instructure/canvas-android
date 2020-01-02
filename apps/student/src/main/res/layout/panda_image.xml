@@ -78,20 +78,26 @@
                 android:id="@+id/changeHead"
                 android:layout_width="@dimen/scrollview_image_size"
                 android:layout_height="@dimen/scrollview_image_size"
+                android:layout_margin="10dp"
                 android:background="@drawable/pandify_head_02"
-                android:layout_margin="10dp"/>
+                android:contentDescription="@string/content_description_choose_head" />
+
             <Button
                 android:id="@+id/changeBody"
                 android:layout_width="@dimen/panda_body_width"
                 android:layout_height="@dimen/scrollview_image_size"
+                android:layout_margin="10dp"
                 android:background="@drawable/pandify_body_11"
-                android:layout_margin="10dp"/>
+                android:contentDescription="@string/content_description_choose_body" />
+
             <Button
                 android:id="@+id/changeLegs"
                 android:layout_width="@dimen/panda_feet_width_menu"
                 android:layout_height="@dimen/panda_feet_height_menu"
+                android:layout_margin="10dp"
                 android:background="@drawable/pandify_feet_1"
-                android:layout_margin="10dp"/>
+                android:contentDescription="@string/content_description_choose_feet" />
+
         </LinearLayout>
     </HorizontalScrollView>
     <RelativeLayout

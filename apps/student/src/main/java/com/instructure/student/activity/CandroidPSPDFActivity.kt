@@ -115,7 +115,7 @@ class CandroidPSPDFActivity : PdfActivity(), ToolbarCoordinatorLayout.OnContextu
         if (document != null) {
             DocumentSharingManager.shareDocument(
                     CandroidDocumentSharingController(this, submissionTarget),
-                    document,
+                    document!!,
                     SharingOptions(PdfProcessorTask.AnnotationProcessingMode.FLATTEN))
         }
     }

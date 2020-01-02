@@ -59,7 +59,9 @@
     <string name="submissionUploadByteProgress">%1$s ō %2$s</string>
     <string name="submissionSuccessTitle">Oti pai te tukunga!</string>
     <string name="submissionSuccessMessage">I oti pai te tuku i tō whakataunga. Kia pai tō rā!</string>
-    <string name="cancelAllSubmissions">Whakakore Katoa ngā Whakataunga Tukunga</string>
+    <string name="submissionDeleteTitle">Whakakore Tāpaetanga</string>
+    <string name="submissionDeleteMessage">Ka mukua me te whakakoretia to tāpaetanga</string>
+    <string name="submissionDeleted">Kua mukua te tāpaetanga</string>
     <string name="missingSubmissionLabel">Ngaro</string>
     <string name="gradedSubmissionLabel">kōekehia</string>
     <!-- Student Submission -->
@@ -99,6 +101,7 @@
     <string name="finalGradeFormatted">Kōeke whakamutunga: %s</string>
     <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
     <string name="contentDescriptionScoreOutOfPointsPossible">%1$s waho ō %2$s ngā koinga</string>
+    <string name="enterWhatIfScore">Whakauru he aha te kaute</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Kaute tikanga</string>
     <string name="rubricEmptyMessage">Kaore he rubric mo tēnei whakataunga</string>
@@ -578,8 +581,7 @@
     <string name="EULA">EULA</string>
     <string name="privacyPolicy">Kaupapahere Tūmataiti</string>
     <string name="termsOfUse">Ngā ritenga whakamahi</string>
-    <string name="openSource">tuwhera puna</string>
-
+    <string name="canvasOnGithub">Canvas i runga GitHub</string>
     <!-- Quiz Strings -->
     <string name="assignmentQuizzes">whakataunga Quizzes</string>
     <string name="practiceQuizzes">mahi quizzes</string>
@@ -590,6 +592,7 @@
     <string name="choose_answers_below">Whiriwhiri ō whakautu i raro</string>
 
 
+    <string name="flag_the_question">Kara te Pātai</string>
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">Hei mahi</string>
     <string name="gradesWidgetTitle">Ngā Kōeke</string>
@@ -846,9 +849,6 @@
     <string name="like">rite</string>
     <string name="likes">ngā rite</string>
 
-    <string name="wear_reminder">Apiti Whakamaumahara Rā e tika ana</string>
-    <string name="wear_notifications">Whakakā ngā whakamōhiotanga kākahu</string>
-
     <string name="color_1">whero</string>
     <string name="color_2">māwhero wera</string>
     <string name="color_3">āhua waiporoporo</string>
@@ -1016,6 +1016,37 @@
     <string name="addChildErrorMessage">I hapa te whakakotahi. Me mōhio kei te tika tō waehere whakakotahi me te wā roa o te whakamahinga.</string>
     <string name="gradeComplete">Oti</string>
     <string name="gradeIncomplete">Kaore i te oti</string>
+    <!--Teacher Strings-->
+    <string name="postPolicyTitle">Whakairi ngā tautuhinga</string>
+    <string name="postGradesTab">Whakairi ngā kōeke</string>
+    <string name="hideGradesTab">Huna ngā Kōeke</string>
+    <plurals name="gradesPostedCount">
+        <item quantity="one">%d kōeke whakairitia ināianei</item>
+        <item quantity="other">%d ngā kōeke whakairitia ināianei</item>
+    </plurals>
+    <plurals name="gradesHiddenCount">
+        <item quantity="one">%d kōeke hungaia ināianei</item>
+        <item quantity="other">%d kōeke hungaia ināianei</item>
+    </plurals>
+    <string name="postPolicyPostTo">Whakairi kī ...</string>
+    <string name="postPolicySections">Ngā Wāhanga Motuhake</string>
+    <string name="postToEveryoneTitle">Tāngata katoa</string>
+    <string name="postToEveryoneMessage">Ka kitea e ngā ākonga katoa ngā koeke</string>
+    <string name="postToGradedTitle">Kōekehia</string>
+    <string name="postToGradedMessage">Ka kitea e nga ākonga ngā koeke me ngā kōeke tukunga</string>
+    <string name="postPolicyAllHiddenTitle">Kua hungaia katoa</string>
+    <string name="postPolicyAllHiddenMessage">Kei te hungaia ngā kōeke katoa i tēnei wā</string>
+    <string name="postPolicyAllPostedTitle">Kua whakairihia katoa</string>
+    <string name="postPolicyAllPostedMessage">Kei te whakairihia ngā kōeke katoa i tēnei wā</string>
+    <string name="postPolicyPostedToast">Ngā Koeke kua whakairia</string>
+    <string name="postPolicyHiddenToast">Kua hungaia ngā kōeke</string>
+    <string name="postPolicyPostFailedToast">I rāhua te whakairi i ngā kōeke</string>
+    <string name="postPolicyHideFailedToast">I rāhua te whakairi i ngā kōeke</string>
+    <string name="gradeBeforePosting">Te kōeke i mua o te whakairi</string>
+    <string name="gradeAfterPosting">Te kōeke i muri o te whakairi</string>
+    <string name="gradeOverride">Whakakorenga kōeke</string>
+    <string name="currentGrade">Kōeke ō naian</string>
+
     <!-- Floating Recording View Strings -->
     <string name="recordingTimerDefault">00:00:00</string>
     <string name="recordingTimerContentDescription">%1$d ngā ha %2$d ngā miniti, me %3$d ngā hēkona</string>

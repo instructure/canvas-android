@@ -15,22 +15,81 @@
  */
 package com.instructure.student.ui.interaction
 
-import com.instructure.canvas.espresso.Stub
+import androidx.test.espresso.Espresso
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.addAssignment
+import com.instructure.canvas.espresso.mockCanvas.addQuizToCourse
+import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Quiz
+import com.instructure.canvasapi2.models.QuizQuestion
+import com.instructure.dataseeding.util.days
+import com.instructure.dataseeding.util.fromNow
+import com.instructure.dataseeding.util.iso8601
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.tokenLogin
 import org.junit.Test
 
 class TodoInteractionTest : StudentTest() {
     override fun displaysPageObjects() = Unit // Not used for interaction tests
 
-    @Stub
+    private lateinit var course: Course
+    private lateinit var assignment: Assignment
+    private lateinit var quiz: Quiz
+
+    // Todo items should be clickable
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.TODOS, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P0, FeatureCategory.TODOS, TestCategory.INTERACTION, false)
     fun testClick_todoItemClickable() {
-        // Todo items should be clickable
+
+        val data = goToTodos()
+
+        todoPage.assertAssignmentDisplayed(assignment)
+        todoPage.selectAssignment(assignment)
+        assignmentDetailsPage.verifyAssignmentDetails(assignment)
+        Espresso.pressBack() // Back to todo page
+
+        todoPage.assertQuizDisplayed(quiz)
+        todoPage.selectQuiz(quiz)
+        quizDetailsPage.assertQuizDisplayed(quiz,false,listOf<QuizQuestion>())
+
+    }
+
+    // Seeds ToDos (assignment + quiz) for tomorrow and then navigates to the ToDo page
+    fun goToTodos() : MockCanvas {
+        var data = MockCanvas.init(
+                studentCount = 1,
+                teacherCount = 1,
+                courseCount = 1,
+                favoriteCourseCount = 1
+        )
+
+        val student = data.students.first()
+        course = data.courses.values.first()
+        assignment = data.addAssignment(
+                courseId = course.id,
+                submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
+                dueAt = 1.days.fromNow.iso8601
+        )
+
+        quiz = data.addQuizToCourse(
+                course = course,
+                quizType = Quiz.TYPE_ASSIGNMENT,
+                dueAt = 1.days.fromNow.iso8601
+        )
+
+        val token = data.tokenFor(student)!!
+        tokenLogin(data.domain, token, student)
+
+        dashboardPage.waitForRender()
+        dashboardPage.clickTodoTab()
+
+        return data
     }
 
 }

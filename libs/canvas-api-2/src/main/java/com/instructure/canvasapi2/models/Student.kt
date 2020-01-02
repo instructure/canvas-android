@@ -31,7 +31,8 @@ data class Student(
         @SerializedName("student_domain")
         var studentDomain: String? = null,
         @SerializedName("avatar_url")
-        var avatarUrl: String? = null
+        var avatarUrl: String? = null,
+        val pronouns: String? = null
 ) : CanvasModel<Student>() {
     override val id get() = studentId!!.hashCode().toLong()
 }

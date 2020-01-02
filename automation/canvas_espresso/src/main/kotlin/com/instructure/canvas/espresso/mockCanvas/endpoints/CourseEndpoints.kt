@@ -18,35 +18,15 @@ package com.instructure.canvas.espresso.mockCanvas.endpoints
 
 import android.util.Log
 import com.google.gson.Gson
-import com.google.gson.JsonObject
 import com.instructure.canvas.espresso.mockCanvas.Endpoint
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addDiscussionTopicToCourse
+import com.instructure.canvas.espresso.mockCanvas.addFileToCourse
 import com.instructure.canvas.espresso.mockCanvas.addReplyToDiscussion
 import com.instructure.canvas.espresso.mockCanvas.endpoint
 import com.instructure.canvas.espresso.mockCanvas.utils.*
-import com.instructure.canvasapi2.models.DiscussionEntry
-import com.instructure.canvasapi2.models.DiscussionParticipant
-import com.instructure.canvasapi2.models.DiscussionTopic
-import com.instructure.canvasapi2.models.DiscussionTopicHeader
-import com.instructure.canvasapi2.models.DiscussionTopicPermission
-import com.instructure.canvasapi2.models.ModuleObject
-import com.instructure.canvasapi2.models.Quiz
-import com.instructure.canvasapi2.models.QuizQuestion
-import com.instructure.canvasapi2.models.QuizSubmission
-import com.instructure.canvasapi2.models.QuizSubmissionAnswer
-import com.instructure.canvasapi2.models.QuizSubmissionQuestion
-import com.instructure.canvasapi2.models.QuizSubmissionResponse
-import com.instructure.canvasapi2.models.QuizSubmissionTime
-import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.toApiString
-import com.instructure.canvasapi2.utils.toDate
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
-import okio.Buffer
-import retrofit2.http.Multipart
-import java.time.Duration
-import java.time.Instant
 import java.util.*
 
 /**
@@ -87,6 +67,8 @@ object CourseEndpoint : Endpoint(
         Segment("discussion_topics") to CourseDiscussionTopicListEndpoint,
         Segment("modules") to CourseModuleListEndpoint,
         Segment("quizzes") to CourseQuizListEndpoint,
+        Segment("users") to CourseUsersEndpoint,
+        Segment("permissions") to CoursePermissionsEndpoint,
 
         response = {
             GET {
@@ -156,7 +138,12 @@ object CourseFoldersEndpoint : Endpoint(
  * - `{fileId}` -> anonymous endpoint to retrieve a file
  */
 object CourseFilesEndpoint : Endpoint(
-        LongId(PathVars::fileId) to endpoint {
+        LongId(PathVars::fileId) to CourseFileEndpoint
+
+)
+
+object CourseFileEndpoint : Endpoint (
+        response = {
             GET {
                 val courseRootFolder = data.courseRootFolders[pathVars.courseId]
                 val targetFileFolder = data.folderFiles[courseRootFolder?.id]?.find { it.id == pathVars.fileId }
@@ -167,8 +154,46 @@ object CourseFilesEndpoint : Endpoint(
                 }
 
             }
+
+            // This is the endpoint that I created for the purpose of uploading assignment files.
+            POST {
+                val courseId = pathVars.courseId
+                val jsonObj = grabJsonFromMultiPartBody(request.body()!!)
+                val fileName = jsonObj["name"].asString
+                val fileSize = jsonObj["size"].asInt
+                val contentType = jsonObj["content_type"].asString
+                val contents = jsonObj["file"].asString
+
+                val fileId = pathVars.fileId
+                val url = "https://mock-data.instructure.com/api/v1/courses/$courseId/files/$fileId"
+                data.addFileToCourse(
+                        courseId = courseId,
+                        displayName = fileName,
+                        fileContent = contents,
+                        contentType = contentType,
+                        url = url,
+                        fileId = fileId
+                )
+
+                val response = Attachment(
+                        id = fileId,
+                        contentType = contentType,
+                        filename = fileName,
+                        displayName = fileName,
+                        url = url,
+                        previewUrl = url,
+                        size = fileSize.toLong()
+                )
+                request.successResponse(response)
+
+            }
         }
-)
+
+) {
+    // Disable auth-check for course files endpoint
+    override val authModel: AuthModel
+        get() = DontCareAuthModel
+}
 
 /** Course root folder support. */
 object CourseRootFolderEndpoint : Endpoint(response = {
@@ -196,9 +221,38 @@ object CourseDiscussionTopicListEndpoint : Endpoint(
         response = {
             GET {
                 Log.d("<--", "discussion_topics request: ${request}")
-                val currentDiscussionTopics = data.courseDiscussionTopicHeaders[pathVars.courseId]
-                        ?: listOf<DiscussionTopicHeader>()
-                request.successResponse(currentDiscussionTopics)
+                var announcementsOnly = request.url().queryParameter("only_announcements")?.equals("1")
+                var sectionsOnly = request.url().queryParameterValues("include[]").contains("sections")
+
+                // Base course discussion topic list
+                var courseDiscussionTopics = data.courseDiscussionTopicHeaders[pathVars.courseId]
+
+                // If specified, filter down to discussions that are announcements
+                if(courseDiscussionTopics != null && announcementsOnly != null && announcementsOnly == true)  {
+                    courseDiscussionTopics = courseDiscussionTopics?.filter {it.announcement}?.toMutableList()
+                }
+
+                // If specified, filter down to discussions with course sections enrolled in by the user
+                if(courseDiscussionTopics != null && sectionsOnly != null && sectionsOnly == true) {
+
+                    val userId = request.user!!.id
+                    val courseId = pathVars.courseId
+                    // While we will probably encounter at most one enrollment for this user in this course,
+                    // we'll allow for the user to be enrolled in multiple sections.
+                    val enrollmentSectionIds =
+                            data.enrollments.values
+                                    .filter {it.userId == userId && it.courseId == courseId}
+                                    .map {it -> it.courseSectionId}
+                    courseDiscussionTopics =
+                            courseDiscussionTopics!!.filter {
+                                it.sections == null
+                                        || it.sections!!.count() == 0
+                                        || it.sections!!.find {enrollmentSectionIds.contains(it.id)} != null
+                            }.toMutableList()
+                }
+
+                // Now return the final list
+                request.successResponse(courseDiscussionTopics ?: listOf<DiscussionTopicHeader>())
             }
 
             POST {
@@ -583,6 +637,7 @@ object CourseDiscussionEntryEndpoint : Endpoint(
                 val jsonObject = grabJsonFromMultiPartBody(request.body()!!)
                 Log.d("<--", "topic entry replies post body: $jsonObject")
                 val newEntry = DiscussionEntry(
+                        id = data.newItemId(),
                         message = jsonObject.get("message").asString, // This is all that comes with the POST object
                         createdAt = Calendar.getInstance().time.toString(),
                         author = DiscussionParticipant(id = request.user!!.id, displayName = request.user!!.name)
@@ -696,3 +751,24 @@ object CourseModuleItemsListEndpoint : Endpoint(
             }
         }
 )
+
+/**
+ * Endpoint that returns list of users in a course
+ */
+object CourseUsersEndpoint : Endpoint (response = {
+    GET {
+        // We may need to add more "onlyXxx" vars in the future
+        val onlyTeachers = request.url().queryParameter("enrollment_type")?.equals("teacher")
+                ?: false
+        val onlyTas = request.url().queryParameter("enrollment_type")?.equals("ta") ?: false
+        val courseId = pathVars.courseId
+        var courseEnrollments = data.enrollments.values.filter { it.courseId == courseId }
+        if (onlyTeachers) {
+            courseEnrollments = courseEnrollments.filter { it.isTeacher }
+        } else if (onlyTas) {
+            courseEnrollments = courseEnrollments.filter { it.isTA }
+        }
+        val users = courseEnrollments.map { data.users[it.userId] }
+        request.successResponse(users)
+    }
+})

@@ -1,16 +1,16 @@
-/// Copyright (C) 2019 - present Instructure, Inc.
-///
-/// This program is free software: you can redistribute it and/or modify
-/// it under the terms of the GNU General Public License as published by
-/// the Free Software Foundation, version 3 of the License.
-///
-/// This program is distributed in the hope that it will be useful,
-/// but WITHOUT ANY WARRANTY; without even the implied warranty of
-/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-/// GNU General Public License for more details.
-///
-/// You should have received a copy of the GNU General Public License
-/// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// Copyright (C) 2019 - present Instructure, Inc.
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, version 3 of the License.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 library course;
 
 import 'package:built_collection/built_collection.dart';
@@ -29,7 +29,6 @@ abstract class Course implements Built<Course, CourseBuilder> {
   Course._();
   factory Course([void Function(CourseBuilder) updates]) = _$Course;
 
-
   // Helper variables
   @nullable
   @BuiltValueField(serialize: false)
@@ -47,7 +46,7 @@ abstract class Course implements Built<Course, CourseBuilder> {
   @BuiltValueField(serialize: false)
   String get finalGrade;
 
-  int get id;
+  String get id;
   String get name;
 
   @nullable
@@ -90,7 +89,9 @@ abstract class Course implements Built<Course, CourseBuilder> {
   @BuiltValueField(wireName: 'access_restricted_by_date')
   bool get accessRestrictedByDate;
 
+  @nullable
   @BuiltValueField(wireName: 'image_download_url')
+  @nullable
   String get imageDownloadUrl;
 
   @BuiltValueField(wireName: 'has_weighted_grading_periods')
@@ -106,20 +107,20 @@ abstract class Course implements Built<Course, CourseBuilder> {
   @BuiltValueField(wireName: 'workflow_state')
   String get workflowState;
 
-
   static void _initializeBuilder(CourseBuilder b) => b
-      ..enrollments = ListBuilder<Enrollment>()
-      ..name = ''
-      ..needsGradingCount = 0
-      ..hideFinalGrades = false
-      ..isPublic = false
-      ..applyAssignmentGroupWeights = false
-      ..isFavorite = false
-      ..accessRestrictedByDate = false
-      ..hasWeightedGradingPeriods = false
-      ..hasGradingPeriods = false
-      ..restrictEnrollmentsToCourseDates = false;
+    ..id = ''
+    ..enrollments = ListBuilder<Enrollment>()
+    ..name = ''
+    ..needsGradingCount = 0
+    ..hideFinalGrades = false
+    ..isPublic = false
+    ..applyAssignmentGroupWeights = false
+    ..isFavorite = false
+    ..accessRestrictedByDate = false
+    ..hasWeightedGradingPeriods = false
+    ..hasGradingPeriods = false
+    ..restrictEnrollmentsToCourseDates = false;
 
-  CourseGrade getCourseGrade(int studentId) => CourseGrade(
-      enrollments.firstWhere((enrollment) => enrollment.userId == studentId));
+  CourseGrade getCourseGrade(String studentId) =>
+      CourseGrade(enrollments.firstWhere((enrollment) => enrollment.userId == studentId));
 }

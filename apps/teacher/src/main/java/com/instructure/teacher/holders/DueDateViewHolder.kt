@@ -17,16 +17,18 @@
 package com.instructure.teacher.holders
 
 import android.content.Context
+import android.text.SpannableStringBuilder
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.models.Section
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.DateHelper
+import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.teacher.R
 import com.instructure.teacher.models.DueDateGroup
 import kotlinx.android.synthetic.main.adapter_assignment_due_date.view.*
-import java.util.*
+import java.util.Date
 
 
 class DueDateViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -39,7 +41,7 @@ class DueDateViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val atSeparator = context.getString(R.string.at)
         val noDateFiller = context.getString(R.string.no_date_filler)
 
-        val assignees = arrayListOf<String>()
+        val assignees = arrayListOf<CharSequence>()
 
         if (date.isEveryone) {
             assignees += context.getString(
@@ -48,8 +50,11 @@ class DueDateViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         }
         assignees += date.sectionIds.map { sections[it]?.name!! }
         assignees += date.groupIds.map { groups[it]?.name!! }
-        assignees += date.studentIds.map { students[it]?.name ?: context.getString(R.string.unknown_student) }
-        dueForTextView.text = assignees.joinToString()
+        assignees += date.studentIds.map {
+            students[it]?.let { user -> Pronouns.span(user.name, user.pronouns) }
+                ?: context.getString(R.string.unknown_student)
+        }
+        dueForTextView.text = assignees.joinTo(SpannableStringBuilder())
 
         dueDateTextView.text = if (date.coreDates.dueDate == null) context.getString(R.string.no_due_date) else getFormattedDueDate(context, date.coreDates.dueDate)
         availableFromTextView.text = if (date.coreDates.unlockDate != null) DateHelper.getMonthDayAtTime(context, date.coreDates.unlockDate, atSeparator) else noDateFiller

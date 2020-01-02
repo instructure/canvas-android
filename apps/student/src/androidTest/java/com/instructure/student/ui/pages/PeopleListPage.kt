@@ -22,9 +22,11 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.hasDescendant
+import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import com.instructure.canvasapi2.models.User
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisplayed
@@ -38,7 +40,30 @@ import org.hamcrest.Matchers.allOf
 class PeopleListPage: BasePage(R.id.peopleListPage) {
     private val toolbar by OnViewWithId(R.id.toolbar)
 
-    fun assertPersonListed(person: CanvasUserApiModel)
+    fun assertPersonListed(person: CanvasUserApiModel, role: String? = null)
+    {
+        var matcher : Matcher<View>? = null
+        if(role == null) {
+            matcher = allOf(withText(person.name), withId(R.id.title))
+        }
+        else {
+            matcher = allOf(
+                    withText(person.name),
+                    withId(R.id.title),
+                    hasSibling(
+                            allOf(
+                                    withId(R.id.role),
+                                    withText(role)
+                            )
+
+                    )
+            )
+        }
+        scrollToMatch(matcher)
+        onView(matcher).assertDisplayed()
+    }
+
+    fun assertPersonListed(person: User)
     {
         val matcher = allOf(withText(person.name), withId(R.id.title))
         scrollToMatch(matcher)

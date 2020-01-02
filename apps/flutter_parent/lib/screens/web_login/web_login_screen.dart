@@ -1,10 +1,27 @@
+// Copyright (C) 2019 - present Instructure, Inc.
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, version 3 of the License.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/mobile_verify_result.dart';
+import 'package:flutter_parent/screens/splash/splash_screen.dart';
 import 'package:flutter_parent/screens/web_login/web_login_interactor.dart';
+import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
+import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -26,13 +43,9 @@ class WebLoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return DefaultParentTheme(
       builder: (context) => Scaffold(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(
-          textTheme: Theme.of(context).textTheme,
-          iconTheme: Theme.of(context).iconTheme,
           title: Text(domain),
           elevation: 0,
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         ),
         body: _webLoginBody(),
       ),
@@ -44,7 +57,7 @@ class WebLoginScreen extends StatelessWidget {
       future: _interactor.mobileVerify(domain),
       builder: (context, AsyncSnapshot<MobileVerifyResult> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return LoadingIndicator();
         } else {
           if (snapshot.hasError || (snapshot.hasData && snapshot.data.result != VerifyResultEnum.success)) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -82,7 +95,7 @@ class WebLoginScreen extends StatelessWidget {
         controller.clearCache();
 
         controller.loadUrl(_buildAuthUrl(verifyResult));
-        _controllerCompleter.complete(controller);
+        if (!_controllerCompleter.isCompleted) _controllerCompleter.complete(controller);
       },
     );
   }
@@ -100,8 +113,7 @@ class WebLoginScreen extends StatelessWidget {
       var url = request.url;
       String oAuthRequest = url.substring(url.indexOf(successUrl) + successUrl.length);
       locator<WebLoginInteractor>().performLogin(result, oAuthRequest).then((_) {
-        // TODO: Wire up DashboardScreen once implemented
-//        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => DashboardScreen()));
+        locator<QuickNav>().pushAndRemoveAll(context, SplashScreen());
       });
       return NavigationDecision.prevent;
     } else if (request.url.contains(errorUrl)) {
@@ -148,11 +160,11 @@ class WebLoginScreen extends StatelessWidget {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text(AppLocalizations.of(context).unexpectedError),
+          title: Text(L10n(context).unexpectedError),
           content: Text(_getErrorMessage(context, snapshot)),
           actions: <Widget>[
             FlatButton(
-              child: Text(AppLocalizations.of(context).ok),
+              child: Text(L10n(context).ok),
               onPressed: () => Navigator.of(context).pop(),
             ),
           ],
@@ -160,7 +172,7 @@ class WebLoginScreen extends StatelessWidget {
       });
 
   String _getErrorMessage(BuildContext context, AsyncSnapshot<MobileVerifyResult> snapshot) {
-    final localizations = AppLocalizations.of(context);
+    final localizations = L10n(context);
 
     // No data means the request failed for some other reason that we don't know
     if (!snapshot.hasData) {

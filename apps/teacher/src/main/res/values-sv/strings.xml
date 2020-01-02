@@ -21,13 +21,13 @@
     <string name="tab_inbox">Inkorg</string>
     <string name="tab_details">Information</string>
     <string name="tab_questions">Frågor</string>
-    <string name="tab_submissions">Inlämningar</string>
+    <string name="tab_submissions">Inskickningar</string>
     <string name="tab_assignments">Uppgifter</string>
     <string name="tab_profile">Profil</string>
     <string name="tab_people">Personer</string>
     <string name="tab_quizzes">Quiz</string>
     <string name="tab_discussions">Diskussioner</string>
-    <string name="tab_announcements">Kursmeddelanden</string>
+    <string name="tab_announcements">Anslag</string>
     <string name="tab_attendance">Närvaro</string>
     <string name="tab_pages">Sidor</string>
     <string name="tab_todo">Att göra</string>
@@ -45,7 +45,7 @@
     <string name="share_your_love">Dela din kärlek till appen</string>
     <string name="share_your_love_details">Berätta vad du tycker om mest med appen</string>
     <string name="masquerade">Agera</string>
-    <string name="issue_with_teacher_app">Problem med lärar-app [Android]</string>
+    <string name="issue_with_teacher_app">Problem med lärarapp [Android]</string>
     <string name="no_items_to_display_short">Inga objekt</string>
     <string name="rate_the_app">Bedöm appen</string>
     <string name="rate_the_app_icon">Ikon för att bedöma appen</string>
@@ -87,7 +87,7 @@
     <string name="common_edit">Redigera</string>
 
     <!-- Feature Request -->
-    <string name="feature_subject">Synpunkt för lärar-app [Android]</string>
+    <string name="feature_subject">Synpunkt för lärarapp [Android]</string>
     <string name="understand_request">Följande information kommer att hjälpa oss att förstå din idé bättre:</string>
     <string name="send_mail">Skicka e-postmeddelande&#8230;</string>
 
@@ -113,14 +113,14 @@
 
     <string name="create_announcement_topic_title_hint">Ämnestitel</string>
     <string name="post_date">Publiceringsdatum</string>
-    <string name="announcement">Kursmeddelande</string>
-    <string name="create_announcement_title">Nytt meddelande</string>
+    <string name="announcement">Anslag</string>
+    <string name="create_announcement_title">Nytt anslag</string>
     <string name="create_announcement_no_description">En beskrivning krävs</string>
-    <string name="announcementDetails">Kursmeddelandedetaljer</string>
+    <string name="announcementDetails">Anslagets detaljer</string>
 
     <string name="no_title">Ingen rubrik</string>
-    <string name="announcement_create_success">Kursmeddelande skapat!</string>
-    <string name="announcement_create_fail">Kunde inte skapa kursmeddelande. Kontrollera din anslutning och försök igen.</string>
+    <string name="announcement_create_success">Anslag skapat!</string>
+    <string name="announcement_create_fail">Kunde inte skapa anslag. Kontrollera din anslutning och försök igen.</string>
     <string name="create_announcement_delay_posting">Fördröj publicering</string>
 
     <string name="discussion">Diskussion</string>
@@ -146,7 +146,7 @@
     <string name="select_files_or_photos">Välj filer eller foton</string>
     <string name="uploading_files">Laddar upp filer&#8230;</string>
     <string name="no_attachment">(Ingen bilaga)</string>
-    <string name="creating_announcement">Skapar kursmeddelande&#8230;</string>
+    <string name="creating_announcement">Skapar anslag&#8230;</string>
 
     <string name="copy_email">Kopiera e-postadress</string>
     <string name="all_grading_periods">Alla bedömningsperioder</string>
@@ -159,8 +159,8 @@
     </plurals>
 
     <plurals name="assignees_without_grades">
-        <item quantity="one">Det finns en %d tilldelad person som saknar en bedömning.</item>
-        <item quantity="other">Det finns %d tilldelade personer som saknar bedömningar.</item>
+        <item quantity="one">Det finns en %d tilldelad person som saknar ett omdöme.</item>
+        <item quantity="other">Det finns %d tilldelade personer som saknar omdömen.</item>
     </plurals>
 
     <string name="inbox_empty_title">Inga meddelanden</string>
@@ -226,14 +226,14 @@
     <string name="message_these_students">Skicka meddelande till dessa studenter</string>
     <string name="submission_status_missing">Saknas</string>
     <string name="submission_status_late">Sena</string>
-    <string name="submission_status_submitted">Inlämnade</string>
-    <string name="submission_status_not_submitted">Inte inlämnad ännu</string>
-    <string name="submission_status_excused">Slipper göra</string>
+    <string name="submission_status_submitted">Inskickad</string>
+    <string name="submission_status_not_submitted">Inte inskickad ännu</string>
+    <string name="submission_status_excused">Ursäktad</string>
     <string name="last_login_format">Senaste inloggning: %s</string>
 
-    <string name="muteGrades">Stänga av bedömningar</string>
-    <string name="unmuteGrades">Aktivera bedömningar</string>
-    <string name="gradesMutedLabel">Bedömningar avstängda</string>
+    <string name="muteGrades">Tysta omdömen</string>
+    <string name="unmuteGrades">Av-tysta omdömen</string>
+    <string name="gradesMutedLabel">Omdömen tystade</string>
     <string name="turnOnAnonymousGrading">Sätt på anonym bedömning</string>
     <string name="turnOffAnonymousGrading">Stäng av anonym bedömning</string>
     <string name="anonymousGradingLabel">Anonym bedömning</string>
@@ -246,14 +246,14 @@
         <item>Alla inlämningar</item>
         <item>Sena inlämningar</item>
         <item>Inlämningar som saknas</item>
-        <item>Hög bedömning</item>
-        <item>Låg bedömning</item>
+        <item>Högt omdöme</item>
+        <item>Lågt omdöme</item>
     </string-array>
 
     <string-array name="people_filters">
         <item>Efter namn</item>
-        <item>Bedömning hög till låg</item>
-        <item>Bedömning låg till hög</item>
+        <item>Omdöme hög till låg</item>
+        <item>Omdöme låg till hög</item>
     </string-array>
 
     <string name="content_description_course_tab">Flik för kurs</string>
@@ -262,7 +262,7 @@
     <string name="close">Stäng</string>
     <string name="no_course_selected">Välj en kurs</string>
     <string name="discussion_reply_to_entry">Diskussionssvar</string>
-    <string name="announcement_reply_to_entry">Svar på kursmeddelande</string>
+    <string name="announcement_reply_to_entry">Svar på anslag</string>
     <string name="error_text_missing">Lägg till lite text för att skicka ett meddelande</string>
     <string name="error_sending_message">Detta meddelande kunde inte skickas. Tryck för att försöka igen.</string>
     <string name="message_sent_successfully">Meddelandet har skickats.</string>
@@ -312,7 +312,7 @@
     <string name="course_name">Kursnamn</string>
     <string name="set_home_to">Ställ in \’Startsida\’på &#8230;</string>
     <string name="course_activity_stream">Aktivitetsflöde för kurs</string>
-    <string name="pages_front_page">Sidornas framsida</string>
+    <string name="pages_front_page">Sidornas startsida</string>
     <string name="frontPage">Förstasidan</string>
     <string name="course_modules">Kursmoduler</string>
     <string name="assignments_list">Uppgiftslista</string>
@@ -341,7 +341,7 @@
     <string name="due_date_header_label">Inlämningsdatum</string>
     <string name="assignment_details">Uppgiftsdetaljer</string>
     <string name="no_content">Inget innehåll</string>
-    <string name="submissions">Inlämningar</string>
+    <string name="submissions">Inskickningar</string>
     <string name="no_assignment_description_filler">Hjälp dina studenter med denna uppgift genom att lägga till instruktioner.</string>
     <string name="no_quiz_description_filler">Hjälp dina studenter med detta quiz genom att lägga till instruktioner.</string>
     <string name="page_title_due_dates">Inlämningsdatum</string>
@@ -349,28 +349,28 @@
     <string name="edit_quiz">Redigera quiz</string>
     <string name="title">Titel</string>
     <string name="description">Beskrivning</string>
-    <string name="grade_total">Total bedömning</string>
-    <string name="grade">Bedömning</string>
-    <string name="enter_grade">Ange bedömning</string>
+    <string name="grade_total">Totalt omdöme</string>
+    <string name="grade">Omdöme</string>
+    <string name="enter_grade">Ange omdöme</string>
     <string name="override">Åsidosätt</string>
     <string name="calculated_by_rubric">Beräknad med bedömningsmatris</string>
-    <string name="customize_grade">Anpassa bedömning</string>
+    <string name="customize_grade">Anpassa omdöme</string>
     <string name="out_of_points">Av %1$s</string>
     <string name="gpa">Genomsnittsbetyg</string>
-    <string name="letter_grade">Bokstavsbetyg</string>
+    <string name="letter_grade">Bokstavsomdöme</string>
     <string name="excuse_student">Låt studenten slippa göra</string>
     <string name="excuseGroup">Låt gruppen slippa göra</string>
     <string name="complete_grade">Fullständig</string>
     <string name="incomplete_grade">Ofullständig</string>
     <string name="not_graded">Ej bedömd</string>
-    <string name="excused">Slipper göra</string>
+    <string name="excused">Ursäktad</string>
     <string formatted="false" name="grade_value_format">%s %s</string>
     <string name="grade_value_format_talk_back">%1$s av %2$s</string>
     <string name="publish">Publicera</string>
     <string name="error_saving_assignment">Ett fel uppstod vid försök att spara uppgiften. Försök igen.</string>
     <string name="error_saving_quiz">Ett fel uppstod vid försök att spara detta quiz. Försök igen.</string>
     <string name="assignment_name_must_be_set">Ett namn måste anges för uppgiften.</string>
-    <string name="announcement_name_must_be_set">En titel måste anges för kursmeddelandet.</string>
+    <string name="announcement_name_must_be_set">En titel måste anges för anslaget.</string>
     <string name="quiz_title_must_be_set">En quiztitel måste anges.</string>
     <string name="assignment_points_must_be_set">Poäng måste anges för uppgiften.</string>
     <string name="assignment_points_must_be_a_number">Möjliga poäng måste vara en siffra</string>
@@ -391,11 +391,11 @@
     <string name="full_submission_details">Fullständiga inlämningsdetaljer</string>
     <string name="graded">Har bedömts</string>
     <string name="needsGrading">Måste bedömas</string>
-    <string name="not_submitted">Inte inlämnade</string>
+    <string name="not_submitted">Inte inskickade</string>
     <string name="content_description_submission_donut_graded" formatted="false">Har bedömts, %s av %s</string>
     <string name="content_description_submission_donut_needs_grading" formatted="false">Måste bedömas, %s av %s</string>
-    <string name="content_description_submission_donut_unsubmitted" formatted="false">Inte inlämnade, %s av %s</string>
-    <string name="display_grade_as">Visa bedömning som&#8230;</string>
+    <string name="content_description_submission_donut_unsubmitted" formatted="false">Inte inskickade, %s av %s</string>
+    <string name="display_grade_as">Visa omdöme som&#8230;</string>
     <string name="percentage">Procent</string>
     <string name="complete_incomplete">Färdig/Ej fullständig</string>
     <string name="points">Poäng</string>
@@ -421,18 +421,18 @@
   <string name="not_a_teacher">Inte lärare?</string>
     <string name="not_a_teacher_tap_to_visit_play_store">Någon av våra andra appar kan vara bättre lämpade. Tryck på en för att besöka Play Store.</string>
 
-    <string name="sg_tab_grade">Bedömning</string>
+    <string name="sg_tab_grade">Omdöme</string>
     <string name="sg_tab_comments">Kommentarer</string>
     <string name="sg_tab_files">Filer</string>
     <string name="filter_submissions">Filtrera inlämningar</string>
     <string name="all_submissions">Alla inlämningar</string>
-    <string name="submitted_late">Sent inlämnad</string>
-    <string name="havent_submitted_yet">Har inte lämnats in ännu</string>
+    <string name="submitted_late">Sent inskickad</string>
+    <string name="havent_submitted_yet">Har inte skickats in ännu</string>
     <string name="havent_been_graded">Har inte blivit bedömd</string>
-    <string name="scored_less_than">Fick färre poäng än&#8230;</string>
-    <string name="scored_more_than">Fick fler poäng än&#8230;</string>
-    <string name="scored_less_than_value">Fick färre poäng än %s</string>
-    <string name="scored_more_than_value">Fick fler poäng än %s</string>
+    <string name="scored_less_than">Fick lägre poäng än&#8230;</string>
+    <string name="scored_more_than">Fick högre poäng än&#8230;</string>
+    <string name="scored_less_than_value">Fick lägre poäng än %s</string>
+    <string name="scored_more_than_value">Fick högre poäng än %s</string>
     <string name="add_comment">Lägg till kommentar</string>
     <string name="editComment">Redigera kommentar</string>
     <string name="deleteComment">Ta bort kommentar</string>
@@ -576,7 +576,7 @@
     <string name="quiz_settings_label_shuffle_answers">Blanda svar:</string>
     <string name="quiz_settings_label_multiple_attempts">Flera försök:</string>
     <string name="quiz_settings_label_time_limit">Tidsgräns:</string>
-    <string name="quiz_settings_label_score_to_keep">Poäng att behålla:</string>
+    <string name="quiz_settings_label_score_to_keep">Resultat att behålla:</string>
     <string name="quiz_settings_label_attempts">Försök:</string>
     <string name="quiz_settings_label_view_responses">Visa svar:</string>
     <string name="quiz_settings_label_show_correct_answers">Visa korrekta svar:</string>
@@ -590,7 +590,7 @@
     <string name="quizPreview">Förhandsvisning av quiz</string>
     <string name="preview_quiz">Visa quiz</string>
     <string name="quiz_details">Quizdetaljer</string>
-    <string name="submission_versions">Inlämningsversioner</string>
+    <string name="submission_versions">Inskickningsversioner</string>
     <string name="speedgrader_student_no_submissions">Den här studenten har inga inlämningar för denna uppgift.</string>
     <string name="speedgrader_group_no_submissions">Den här gruppen har inga inlämningar för denna uppgift.</string>
     <string name="speedgrader_unsupported_type">Inlämningstypen stöds inte</string>
@@ -649,8 +649,8 @@
     <string name="couldNotPlayFormat">Detta mediaformat stöds inte</string>
     <string name="openWithAnotherApp">Öppna med ...</string>
 
-    <string name="speedgraderCommentAddedSubmission">Uppgiften inlämnad. Tryck för att visa.</string>
-    <string name="speedgraderCommentSubmittedFiles">Inlämnade filer:</string>
+    <string name="speedgraderCommentAddedSubmission">Uppgiften inskickad. Tryck för att visa.</string>
+    <string name="speedgraderCommentSubmittedFiles">Inskickade filer:</string>
     <string name="no_submission_comments">Det finns inga inlämningskommentarer</string>
     <string name="mediaUploadAudio">Mediauppladdning – ljud</string>
     <string name="mediaUploadVideo">Mediauppladdning – video</string>
@@ -668,7 +668,7 @@
     <string name="speedGraderNoneMessage">Den här uppgiften tillåter inte inlämningar.</string>
     <string name="speedGraderExternalToolMessage">Den här uppgiften länkar till ett externt verktyg för inlämningar.</string>
     <string name="speedGraderOnPaperMessage">Den här uppgiften tillåter endast inlämningar på papper.</string>
-    <string name="speedGraderUrlSubmissionDisclaimer">Den här inlämningen var en URL till en extern sida. Kom ihåg att den här sidan kan ha ändrats sedan inlämningen ursprungligen gjordes.</string>
+    <string name="speedGraderUrlSubmissionDisclaimer">Den här inskickningen var en URL till en extern sida. Kom ihåg att den här sidan kan ha ändrats sedan inlämningen ursprungligen gjordes.</string>
     <string name="speedGraderOpenUrl">Öppna URL</string>
     <string name="annotationError">Noteringsfel</string>
     <string name="annotationDialogMessage">Noteringen har tagits bort från en annan källa.</string>
@@ -712,16 +712,16 @@
     <string name="editDiscussion">Redigera diskussion</string>
     <string name="discussionSuccessfullyUpdated">Diskussionen har uppdaterats.</string>
     <string name="input_text">Skriv in text</string>
-    <string name="announcementSuccessfullyCreated">Kursmeddelandet har skapats.</string>
-    <string name="errorSavingAnnouncement">Ett fel uppstod när detta kursmeddelande skulle sparas. Försök igen.</string>
-    <string name="editAnnouncementTitle">Redigera kursmeddelande</string>
-    <string name="announcementSuccessfullyUpdated">Kursmeddelandet har uppdaterats.</string>
-    <string name="announcementDeleted">Kursmeddelandet har tagits bort.</string>
+    <string name="announcementSuccessfullyCreated">Anslaget har skapats.</string>
+    <string name="errorSavingAnnouncement">Ett fel uppstod när detta anslag skulle sparas. Försök igen.</string>
+    <string name="editAnnouncementTitle">Redigera anslag</string>
+    <string name="announcementSuccessfullyUpdated">Anslaget har uppdaterats.</string>
+    <string name="announcementDeleted">Anslaget har tagits bort.</string>
     <string name="postAt">Publicera kl.</string>
-    <string name="errorDeletingAnnouncement">Ett fel uppstod vid försök att ta bort det här kursmeddelandet. Försök igen.</string>
-    <string name="deleteAnnouncementDialogTitle">Ta bort kursmeddelandet?</string>
-    <string name="deleteAnnouncementDialogMessage">Vill du ta bort det här kursmeddelandet?</string>
-    <string name="deleteAnnouncement">Ta bort kursmeddelandet</string>
+    <string name="errorDeletingAnnouncement">Ett fel uppstod vid försök att ta bort det här anslaget. Försök igen.</string>
+    <string name="deleteAnnouncementDialogTitle">Ta bort anslaget?</string>
+    <string name="deleteAnnouncementDialogMessage">Vill du ta bort det här anslaget?</string>
+    <string name="deleteAnnouncement">Ta bort anslaget</string>
     <string name="annotationErrorOccurred">Ett oväntat fel uppstod under inläsningen av noteringarna.</string>
 
     <string name="account">Konto</string>
@@ -842,7 +842,7 @@
     <string name="scheduleAvailability">Schemalägg studentens tillgänglighet</string>
     <string name="folderCreationError">Ett fel uppstod när mappen skapades.</string>
 
-    <string name="setAsFrontPage">Ställ in som framsida</string>
+    <string name="setAsFrontPage">Ställ in som startsida</string>
     <string name="canEdit">Kan redigera</string>
     <string name="pageDetails">Sidinformation</string>
     <string name="pageSuccessfullyUpdated">Sidan har uppdaterats.</string>
@@ -854,7 +854,7 @@
     <string name="pageDelete">Radera sida</string>
     <string name="pageDeleteMessage">Detta kommer att ta bort sidan. Den här åtgärden kan inte ångras.</string>
     <string name="errorSavingPage">Ett fel uppstod vid försök att spara den här sidan. Försök igen.</string>
-    <string name="frontPageUnpublishedError">En sida kan inte vara framsida och opublicerad.</string>
+    <string name="frontPageUnpublishedError">En sida kan inte vara startsida och opublicerad.</string>
 
     <string name="onlyTeachers">Endast lärare</string>
     <string name="teachersAndStudents">Lärare och studenter</string>
@@ -878,8 +878,8 @@
     <string name="filterBySection">Filtrera efter sektioner</string>
     <string name="filterSubmissionsLowercase">Filtrera inlämningar</string>
     <string name="latePenalty">Förseningsbestraffning</string>
-    <string name="finalGrade">Total bedömning</string>
-    <string name="moderatedGradingUnsupported">Modererad bedömning stöds inte för närvarande i mobilversionen av SpeedGrader.</string>
+    <string name="finalGrade">Totalt omdöme</string>
+    <string name="moderatedGradingUnsupported">Modererat omdöme stöds inte för närvarande i mobilversionen av SpeedGrader.</string>
     <plurals name="latePolicyPenalty">
         <item quantity="one">-%s poäng</item>
         <item quantity="other">-%s poäng</item>

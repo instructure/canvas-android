@@ -27,7 +27,8 @@ data class Parent(
         var firstName: String? = null,
         @SerializedName("last_name")
         var lastName: String? = null,
-        var password: String? = null
+        var password: String? = null,
+        val pronouns: String? = null
 ) : CanvasModel<Parent>() {
     override val id: Long get() = username?.hashCode()?.toLong() ?: 0
 }

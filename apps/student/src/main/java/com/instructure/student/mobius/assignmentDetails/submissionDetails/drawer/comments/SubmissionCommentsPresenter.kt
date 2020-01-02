@@ -24,7 +24,7 @@ import com.instructure.student.R
 import com.instructure.student.db.Db
 import com.instructure.student.db.getInstance
 import com.instructure.student.mobius.common.ui.Presenter
-import java.util.*
+import java.util.Date
 
 object SubmissionCommentsPresenter : Presenter<SubmissionCommentsModel, SubmissionCommentsViewState> {
 
@@ -43,6 +43,7 @@ object SubmissionCommentsPresenter : Presenter<SubmissionCommentsModel, Submissi
             CommentItemState.CommentItem(
                 id = comment.id,
                 authorName = comment.author?.displayName.orEmpty(),
+                authorPronouns = comment.author?.pronouns,
                 avatarUrl = comment.author?.avatarImageUrl.orEmpty(),
                 sortDate = date,
                 dateText = date.getSubmissionFormattedDate(context),
@@ -60,6 +61,7 @@ object SubmissionCommentsPresenter : Presenter<SubmissionCommentsModel, Submissi
                 val date = submission.submittedAt ?: Date(0)
                 CommentItemState.SubmissionItem(
                     authorName = self.shortName ?: self.name,
+                    authorPronouns = self.pronouns,
                     avatarUrl = self.avatarUrl.orEmpty(),
                     sortDate = date,
                     dateText = date.getSubmissionFormattedDate(context),
@@ -76,6 +78,7 @@ object SubmissionCommentsPresenter : Presenter<SubmissionCommentsModel, Submissi
                 val date = Date(pendingComment.lastActivityDate.toInstant().toEpochMilli())
                 CommentItemState.PendingCommentItem(
                     authorName = self.shortName ?: self.name,
+                    authorPronouns = self.pronouns,
                     avatarUrl = self.avatarUrl.orEmpty(),
                     sortDate = date,
                     pendingComment = pendingComment

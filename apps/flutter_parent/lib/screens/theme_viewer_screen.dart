@@ -1,20 +1,21 @@
-/// Copyright (C) 2019 - present Instructure, Inc.
-///
-/// This program is free software: you can redistribute it and/or modify
-/// it under the terms of the GNU General Public License as published by
-/// the Free Software Foundation, version 3 of the License.
-///
-/// This program is distributed in the hope that it will be useful,
-/// but WITHOUT ANY WARRANTY; without even the implied warranty of
-/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-/// GNU General Public License for more details.
-///
-/// You should have received a copy of the GNU General Public License
-/// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// Copyright (C) 2019 - present Instructure, Inc.
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, version 3 of the License.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/design/canvas_icons_solid.dart';
+import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/design/student_color_set.dart';
 
@@ -54,7 +55,7 @@ class _ThemeViewerScreenState extends State<ThemeViewerScreen> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2,
+      length: 3,
       child: Scaffold(
         key: ThemeViewerScreen.scaffoldKey,
         drawer: Drawer(
@@ -103,6 +104,7 @@ class _ThemeViewerScreenState extends State<ThemeViewerScreen> {
             tabs: [
               Tab(text: "Widgets"),
               Tab(text: "Text Styles"),
+              Tab(text: 'Icons'),
             ],
           ),
         ),
@@ -111,6 +113,7 @@ class _ThemeViewerScreenState extends State<ThemeViewerScreen> {
             children: [
               _content(context),
               _textStyles(context),
+              _icons(context),
             ],
           ),
         ),
@@ -202,7 +205,7 @@ class _ThemeViewerScreenState extends State<ThemeViewerScreen> {
   }
 
   Widget _content(BuildContext context) {
-    var swatch = ParentTheme.makeSwatch(ParentTheme.of(context).studentColor);
+    var swatch = ParentColors.makeSwatch(ParentTheme.of(context).studentColor);
     return ListView(
       children: <Widget>[
         AppBar(
@@ -262,9 +265,9 @@ class _ThemeViewerScreenState extends State<ThemeViewerScreen> {
                   Text("100 pts", style: Theme.of(context).textTheme.caption),
                   Padding(
                     padding: const EdgeInsets.only(left: 12, right: 4),
-                    child: Icon(Icons.check_circle, size: 20, color: ParentTheme.success),
+                    child: Icon(Icons.check_circle, size: 20, color: ParentColors.success),
                   ),
-                  Text("Submitted", style: Theme.of(context).textTheme.caption.apply(color: ParentTheme.success)),
+                  Text("Submitted", style: Theme.of(context).textTheme.caption.apply(color: ParentColors.success)),
                 ],
               ),
             ],
@@ -415,5 +418,17 @@ class _ThemeViewerScreenState extends State<ThemeViewerScreen> {
         ),
       ),
     );
+  }
+
+  Widget _icons(BuildContext context) {
+    return GridView.count(crossAxisCount: 3,
+      children: List.generate(CanvasIcons.allIcons.length, (idx) {
+        return Column(
+          children: <Widget>[
+            Icon(CanvasIcons.allIcons[idx][1]),
+            Text(CanvasIcons.allIcons[idx][0])
+          ],
+        );
+      }));
   }
 }

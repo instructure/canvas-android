@@ -27,6 +27,7 @@ import com.instructure.canvasapi2.models.GradeableStudentSubmission
 import com.instructure.canvasapi2.models.GroupAssignee
 import com.instructure.canvasapi2.models.StudentAssignee
 import com.instructure.canvasapi2.utils.NumberHelper
+import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
@@ -62,7 +63,7 @@ class GradeableStudentSubmissionViewHolder(view: View) : RecyclerView.ViewHolder
             }
             assignee is StudentAssignee -> {
                 ProfileUtils.loadAvatarForUser(studentAvatar, assignee.student.name, assignee.student.avatarUrl)
-                studentName.text = assignee.student.name
+                studentName.text = Pronouns.span(assignee.student.name, assignee.student.pronouns)
                 studentAvatar.setupAvatarA11y(assignee.name)
                 studentAvatar.onClick {
                     val bundle = StudentContextFragment.makeBundle(assignee.id, courseId)

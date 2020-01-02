@@ -16,18 +16,23 @@
  */
 package com.instructure.canvas.espresso
 
+import android.content.Context
+import android.content.res.Configuration
 import android.content.res.Resources
+import android.os.Build
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
 import android.webkit.WebView
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.platform.app.InstrumentationRegistry
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils.matchesCheckNames
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils.matchesViews
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityViewCheckResult
 import com.instructure.espresso.AccessibilityChecker
 import com.instructure.espresso.BuildConfig
+import com.instructure.espresso.ScreenshotTestRule
 import com.instructure.espresso.page.InstructureTest
 import org.hamcrest.BaseMatcher
 import org.hamcrest.Description
@@ -35,7 +40,16 @@ import org.hamcrest.Matchers
 import org.hamcrest.Matchers.`is`
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.anyOf
+import org.json.JSONObject
 import org.junit.Before
+import java.io.BufferedOutputStream
+import java.io.BufferedReader
+import java.io.File
+import java.io.FileOutputStream
+import java.io.InputStream
+import java.io.OutputStream
+import java.net.HttpURLConnection
+import java.net.URL
 
 // InstructureTest wrapper for Canvas code
 abstract class CanvasTest : InstructureTest(BuildConfig.GLOBAL_DITTO_MODE) {
@@ -45,6 +59,85 @@ abstract class CanvasTest : InstructureTest(BuildConfig.GLOBAL_DITTO_MODE) {
         // Enable accessibility testing for all apps
         enableAndConfigureAccessibilityChecks()
         super.preLaunchSetup()
+
+        // Let's set ourselves up to log information about our retries.
+        ScreenshotTestRule.registerRetryHandler( handler = { error, testMethod, testClass ->
+
+            // Grab the Splunk-mobile token from Bitrise
+            val splunkToken = InstrumentationRegistry.getArguments().getString("SPLUNK_MOBILE_TOKEN")
+
+            // Only continue if we're on Bitrise
+            // (More accurately, if we are on FTL launched from Bitrise.)
+            if(splunkToken != null && !splunkToken.isEmpty()) {
+                val bitriseWorkflow = InstrumentationRegistry.getArguments().getString("BITRISE_TRIGGERED_WORKFLOW_ID")
+                val bitriseApp = InstrumentationRegistry.getArguments().getString("BITRISE_APP_TITLE")
+                val bitriseBranch = InstrumentationRegistry.getArguments().getString("BITRISE_GIT_BRANCH")
+                val bitriseBuildNumber = InstrumentationRegistry.getArguments().getString("BITRISE_BUILD_NUMBER")
+
+                val eventObject = JSONObject()
+                eventObject.put("workflow", bitriseWorkflow)
+                eventObject.put("branch", bitriseBranch)
+                eventObject.put("bitriseApp", bitriseApp)
+                eventObject.put("status", "retry")
+                eventObject.put("testName", testMethod)
+                eventObject.put("testClass", testClass)
+                eventObject.put("stackTrace", error.stackTrace.take(15).joinToString(", "))
+                eventObject.put("message", error.toString())
+                eventObject.put("osVersion", Build.VERSION.SDK_INT.toString())
+
+                val payloadObject = JSONObject()
+                payloadObject.put("sourcetype", "mobile-android-qa-testresult")
+                payloadObject.put("event", eventObject)
+
+                val payload = payloadObject.toString()
+                Log.d("CanvasTest", "payload = $payload")
+
+                // Can't run a curl command from FTL, so let's do this the hard way
+                var os : OutputStream? = null
+                var inputStream : InputStream? = null
+                var conn : HttpURLConnection? = null
+
+                try {
+
+                    // Set up our url/connection
+                    val url = URL("https://http-inputs-inst.splunkcloud.com:443/services/collector")
+                    conn = url.openConnection() as HttpURLConnection
+                    conn.requestMethod = "POST"
+                    conn.setRequestProperty("Authorization", "Splunk $splunkToken")
+                    conn.setRequestProperty("Content-Type", "application/json; utf-8")
+                    conn.setRequestProperty("Accept", "application/json")
+                    conn.setDoInput(true)
+                    conn.setDoOutput(true)
+
+                    // Connect
+                    conn.connect()
+
+                    // Send out our post body
+                    os = BufferedOutputStream(conn.outputStream)
+                    os.write(payload.toByteArray())
+                    os.flush()
+
+                    // Report the result summary
+                    Log.d("CanvasTest", "Response code: ${conn.responseCode}, message: ${conn.responseMessage}")
+
+                    // Report the splunk result JSON
+                    inputStream = conn.inputStream
+                    val content = inputStream.bufferedReader().use(BufferedReader::readText)
+                    Log.d("CanvasTest", "Response: $content")
+                }
+                finally {
+                    // Clean up our mess
+                    if(os != null) os.close()
+                    if(inputStream != null) inputStream.close()
+                    if(conn != null) conn.disconnect()
+                }
+
+            }
+            else {
+                Log.d("CanvasTest", "Retry report logic aborting because we're not on Bitrise")
+            }
+        })
+
     }
 
     // Enable and configure accessibility checks
@@ -268,6 +361,34 @@ abstract class CanvasTest : InstructureTest(BuildConfig.GLOBAL_DITTO_MODE) {
         }
 
         return resourceName
+    }
+
+    // Allow tests to know whether they are in landscape mode
+    fun inLandscape() : Boolean {
+        var activity = activityRule.activity
+        return activity.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+    }
+
+    // Copy an asset file to the external cache, typically for use in uploading the asset
+    // file via mocked intents.
+    fun copyAssetFileToExternalCache(context: Context, fileName: String) {
+        var inputStream : InputStream? = null
+        var outputStream : OutputStream? = null
+
+        try {
+            inputStream = InstrumentationRegistry.getInstrumentation().context.resources.assets.open(fileName)
+            val dir = context.externalCacheDir
+            val file = File(dir?.path, fileName)
+            outputStream = FileOutputStream(file)
+            inputStream.copyTo(outputStream)
+        }
+        finally {
+            if(inputStream != null) inputStream.close()
+            if(outputStream != null) {
+                outputStream.flush()
+                outputStream.close()
+            }
+        }
     }
 
 }

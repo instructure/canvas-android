@@ -17,12 +17,14 @@
 package com.instructure.student.ui.e2e
 
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.canvas.espresso.E2E
 import com.instructure.dataseeding.api.PagesApi
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
+import com.instructure.student.ui.pages.WebViewTextCheck
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.seedData
 import com.instructure.student.ui.utils.tokenLogin
@@ -56,14 +58,16 @@ class PagesE2ETest: StudentTest() {
                 courseId = course.id,
                 published = true,
                 frontPage = false,
-                token = teacher.token
+                token = teacher.token,
+                body = "<h1 id=\"header1\">Regular Page Text</h1>"
         )
 
         val pagePublishedFront = PagesApi.createCoursePage(
                 courseId = course.id,
                 published = true,
                 frontPage = true,
-                token = teacher.token
+                token = teacher.token,
+                body = "<h1 id=\"header1\">Front Page Text</h1>"
         )
 
         // Sign in our student
@@ -79,12 +83,16 @@ class PagesE2ETest: StudentTest() {
         pageListPage.assertRegularPageDisplayed(pagePublished)
         pageListPage.assertPageNotDisplayed(pageUnpublished)
 
-        // TODO: Verify content of each page.  Holding off for now because the content is in a WebView.
-        // For now, just click into each page.
+        // Click into each page and verify the content of each
         pageListPage.selectFrontPage(pagePublishedFront)
+        canvasWebViewPage.runTextChecks(
+                WebViewTextCheck(Locator.ID, "header1", "Front Page Text")
+        )
         Espresso.pressBack()
         pageListPage.selectRegularPage(pagePublished)
-
+        canvasWebViewPage.runTextChecks(
+                WebViewTextCheck(Locator.ID, "header1", "Regular Page Text")
+        )
 
     }
 }

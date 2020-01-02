@@ -82,6 +82,32 @@ class GradeCellStateTest : Assert() {
     }
 
     @Test
+    fun `Returns Graded state if graded but not submitted`() {
+        val submission = baseSubmission.copy(submittedAt = null)
+        val expected = baseGradedState.copy(
+            graphPercent = 0.85f,
+            score = "85",
+            showPointsLabel = true
+        )
+        val actual = GradeCellViewState.fromSubmission(context, baseAssignment, submission)
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `Returns Empty state if graded, not submitted, and grade is hidden`() {
+        val submission = baseSubmission.copy(
+            submittedAt = null,
+            enteredGrade = null,
+            enteredScore = 0.0,
+            grade = null,
+            score = 0.0
+        )
+        val expected = GradeCellViewState.Empty
+        val actual = GradeCellViewState.fromSubmission(context, baseAssignment, submission)
+        assertEquals(expected, actual)
+    }
+
+    @Test
     fun `Returns Submitted state if submitted but not graded`() {
         val submission = Submission(
             attempt = 1L,

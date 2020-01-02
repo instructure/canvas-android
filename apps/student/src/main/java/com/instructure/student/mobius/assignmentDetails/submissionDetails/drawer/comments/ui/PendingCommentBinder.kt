@@ -26,6 +26,7 @@ import android.view.View
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.pandautils.adapters.BasicItemBinder
 import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.setGone
@@ -50,7 +51,7 @@ class PendingCommentBinder : BasicItemBinder<CommentItemState.PendingCommentItem
         check(holder is PendingCommentHolder) { "Invalid holder type for PendingCommentBinder" }
 
         commentHolder.direction = CommentDirection.OUTGOING
-        commentHolder.usernameText = item.authorName
+        commentHolder.usernameText = Pronouns.span(item.authorName, item.authorPronouns)
         commentHolder.setAvatar(item.avatarUrl, item.authorName)
 
         holder.setListenerForItem(item.pendingComment.id) { comment ->

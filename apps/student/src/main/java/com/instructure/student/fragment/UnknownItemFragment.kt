@@ -21,7 +21,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.instructure.student.R
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.StreamItem
 import com.instructure.canvasapi2.utils.DateHelper
@@ -29,6 +28,7 @@ import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.validOrNull
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.utils.*
+import com.instructure.student.R
 import kotlinx.android.synthetic.main.unknown_item.*
 
 class UnknownItemFragment : ParentFragment() {
@@ -39,7 +39,7 @@ class UnknownItemFragment : ParentFragment() {
     override fun title(): String = ""
 
     override fun applyTheme() {
-        toolbar.title = streamItem.getTitle(requireContext()).validOrNull() ?: getString(R.string.message)
+        toolbar.title = streamItem.getTitle(requireContext())?.toString().validOrNull() ?: getString(R.string.message)
         toolbar.setupAsBackButton(this)
         ViewStyler.themeToolbar(requireActivity(), toolbar, canvasContext)
     }

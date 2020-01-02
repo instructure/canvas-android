@@ -19,9 +19,9 @@ package com.instructure.teacher.viewinterface
 import com.instructure.canvasapi2.models.CanvasComparable
 import com.instructure.teacher.models.AssigneeCategory
 import instructure.androidblueprint.SyncExpandableManager
-import java.util.*
+import java.util.ArrayList
 
 interface AssigneeListView : SyncExpandableManager<AssigneeCategory, CanvasComparable<*>> {
     fun notifyItemChanged(position: Int)
-    fun updateSelectedAssignees(assigneeNames: ArrayList<String>, displayEveryone: Boolean, displayAsEveryoneElse: Boolean)
+    fun updateSelectedAssignees(assigneeNames: ArrayList<CharSequence>, displayEveryone: Boolean, displayAsEveryoneElse: Boolean)
 }

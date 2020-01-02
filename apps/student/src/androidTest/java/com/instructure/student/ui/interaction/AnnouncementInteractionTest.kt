@@ -15,35 +15,160 @@
  */
 package com.instructure.student.ui.interaction
 
+import androidx.test.espresso.Espresso
+import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.canvas.espresso.Stub
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.addDiscussionTopicToCourse
+import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvasapi2.models.CanvasContextPermission
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Tab
+import com.instructure.canvasapi2.models.User
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
+import com.instructure.student.ui.pages.WebViewTextCheck
 import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.tokenLogin
 import org.junit.Test
 
 class AnnouncementInteractionTest : StudentTest() {
     override fun displaysPageObjects() = Unit // Not used for interaction tests
 
-    @Stub
+    private lateinit var course: Course
+    private lateinit var user: User
+
+    // Student enrolled in intended section can see and reply to the announcement
+    // (This kind of seems like more of a test of the mocked endpoint, but we'll go with it.)
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P0, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION, false)
     fun testAnnouncement_replyToSectionSpecificAnnouncement() {
-        // Student enrolled in intended section can see and reply to the announcement
+
+        val data = getToCourse(createSections = true)
+        val announcement = data.addDiscussionTopicToCourse(
+                course = course,
+                user = user,
+                topicTitle = "Announcement Topic 1",
+                topicDescription = "It's an announcement for a single section",
+                isAnnouncement = true,
+                sections = listOf(course.sections.get(0))
+        )
+
+        courseBrowserPage.selectAnnouncements()
+        // Note that the announcement list page / announcement details page reuse
+        // the discussion list page / discussion details page
+        discussionListPage.assertTopicDisplayed(announcement.title!!)
+        discussionListPage.selectTopic(announcement.title!!)
+        discussionDetailsPage.assertTopicInfoShowing(announcement)
+        discussionDetailsPage.sendReply("Will do!")
+        //Find our DiscussionReply
+        val reply = data.discussionTopics[announcement.id]?.views?.find {it.message == "Will do!"} !!
+        discussionDetailsPage.assertReplyDisplayed(reply)
+
+        // Just for fun, let's change the user to be enrolled in a section of the course to which
+        // the announcement does not apply, and make sure that the user no longer sees the announcement.
+        val enrollment = data.enrollments.values.find  {it.courseId == course.id && it.userId == user.id}!!
+        val updatedEnrollment = enrollment.copy(courseSectionId = 1000000)
+        data.enrollments[updatedEnrollment.id] = updatedEnrollment
+
+        Espresso.pressBack() // Get to announcement list
+        discussionListPage.pullToUpdate()
+        discussionListPage.assertEmpty()
+
     }
 
-    @Stub
+    // User can preview an announcement attachment
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P0, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION, false)
     fun testAnnouncement_previewAttachment() {
-        // User can preview an announcement attachment
+
+        val data = getToCourse()
+        val announcement = data.addDiscussionTopicToCourse(
+                course = course,
+                user = user,
+                topicTitle = "Announcement Topic 2",
+                topicDescription = "It's an announcement, with an attachment",
+                isAnnouncement = true
+        )
+
+        // Lets attach an html attachment to the announcement
+        val attachmentHtml =
+                """
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        </head>
+
+        <body>
+        <h1 id="header1">Famous Quote</h1>
+        <p id="p1">Et tu, Brute? -- Julius Caesar</p>
+        </body>
+        </html> """
+
+        val attachment = DiscussionsInteractionTest.createHtmlAttachment(data, attachmentHtml)
+        announcement.attachments = mutableListOf(attachment)
+
+        // Now let's test
+        courseBrowserPage.selectAnnouncements()
+        discussionListPage.selectTopic(announcement.title!!)
+        discussionDetailsPage.assertMainAttachmentDisplayed()
+        discussionDetailsPage.previewAndCheckMainAttachment(
+                WebViewTextCheck(Locator.ID, "p1", "Et tu, Brute?")
+        )
+
     }
 
-    @Stub
+    // View/reply to an announcement
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P0, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION, false)
     fun testAnnouncement_reply() {
-        // View/reply to an announcement
+
+        val data = getToCourse()
+        val announcement = data.addDiscussionTopicToCourse(
+                course = course,
+                user = user,
+                topicTitle = "Announcement Topic 3",
+                topicDescription = "It's an announcement, not a discussion",
+                isAnnouncement = true
+        )
+
+        courseBrowserPage.selectAnnouncements()
+        discussionListPage.assertTopicDisplayed(announcement.title!!)
+        discussionListPage.selectTopic(announcement.title!!)
+        discussionDetailsPage.assertTopicInfoShowing(announcement)
+        discussionDetailsPage.sendReply("Roger!")
+        //Find our DiscussionReply
+        val reply = data.discussionTopics[announcement.id]?.views?.find {it.message == "Roger!"} !!
+        discussionDetailsPage.assertReplyDisplayed(reply)
+    }
+
+    // Mock a specified number of students and courses, and navigate to the first course
+    private fun getToCourse(
+            studentCount: Int = 1,
+            courseCount: Int = 1,
+            createSections: Boolean = false
+    ): MockCanvas {
+        val data = MockCanvas.init(
+                studentCount = studentCount,
+                courseCount = courseCount,
+                favoriteCourseCount = courseCount,
+                createSections = createSections)
+
+        course = data.courses.values.first()
+        user = data.students[0]
+
+        val announcementsTab = Tab(position = 2, label = "Announcements", visibility = "public", tabId = Tab.ANNOUNCEMENTS_ID)
+        data.courseTabs[course.id]!! += announcementsTab
+
+        val token = data.tokenFor(user)!!
+        tokenLogin(data.domain, token, user)
+        dashboardPage.waitForRender()
+
+        dashboardPage.selectCourse(course)
+
+        return data
     }
 }

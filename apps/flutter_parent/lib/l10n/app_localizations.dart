@@ -1,16 +1,16 @@
-/// Copyright (C) 2019 - present Instructure, Inc.
-///
-/// This program is free software: you can redistribute it and/or modify
-/// it under the terms of the GNU General Public License as published by
-/// the Free Software Foundation, version 3 of the License.
-///
-/// This program is distributed in the hope that it will be useful,
-/// but WITHOUT ANY WARRANTY; without even the implied warranty of
-/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-/// GNU General Public License for more details.
-///
-/// You should have received a copy of the GNU General Public License
-/// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// Copyright (C) 2019 - present Instructure, Inc.
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, version 3 of the License.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/generated/messages_all.dart';
@@ -100,16 +100,15 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
       return fallback ?? supported.first;
     }
 
-    final languageLocale = Locale(locale.languageCode, "");
     if (supported.contains(locale)) {
       return locale;
-    } else if (supported.contains(languageLocale)) {
-      return languageLocale;
     } else {
-      return fallback ?? supported.first;
+      return Locale(locale.languageCode, "");
     }
   }
 }
+
+AppLocalizations L10n(BuildContext context) => Localizations.of<AppLocalizations>(context, AppLocalizations);
 
 ///
 /// App Localization class.
@@ -128,10 +127,6 @@ class AppLocalizations {
     });
   }
 
-  static AppLocalizations of(BuildContext context) {
-    return Localizations.of<AppLocalizations>(context, AppLocalizations);
-  }
-
   static const _AppLocalizationsDelegate delegate = _AppLocalizationsDelegate();
 
   String get alertsLabel {
@@ -145,6 +140,21 @@ class AppLocalizations {
   String get coursesLabel {
     return Intl.message('Courses', name: 'coursesLabel', desc: 'The label for the Courses tab');
   }
+
+  /// Dashboard
+  String get noStudents =>
+      Intl.message('No Students', desc: 'Text for when an observer has no students they are observing');
+
+  /// Navigation Drawer
+  String get manageStudents => Intl.message('Manage Students',
+      desc: 'Label text for the Manage Students nav drawer button as well as the title for the Manage Students screen');
+
+  String get help => Intl.message('Help', desc: 'Label text for the help nav drawer button');
+
+  String get signOut => Intl.message('Sign Out', desc: 'Label text for the Sign Out nav drawer button');
+
+  String appVersion(String version) => Intl.message('v. $version',
+      name: 'appVersion', args: [version], desc: 'App version shown in the navigation drawer');
 
   /// Login landing screen
 
@@ -199,11 +209,195 @@ class AppLocalizations {
       desc: 'The body text shown in the help dialog on the domain search screen',
       args: [canvasGuides, canvasSupport]);
 
+  /// Crash screen
+
+  String get crashScreenTitle =>
+      Intl.message('Uh oh!', desc: 'Title of the screen that shows when a crash has occurred');
+
+  String get crashScreenMessage =>
+      Intl.message('We’re not sure what happened, but it wasn’t good. Contact us if this keeps happening.',
+          desc: 'Message shown when a crash has occurred');
+
+  String get crashScreenContact => Intl.message('Contact Support',
+      desc: 'Label for the button that allows users to contact support after a crash has occurred');
+
+  String get crashScreenViewDetails =>
+      Intl.message('View error details', desc: 'Label for the button that allowed users to view crash details');
+
+  String get crashScreenRestart =>
+      Intl.message('Restart app', desc: 'Label for the button that will restart the entire application');
+
+  String get crashDetailsAppVersion =>
+      Intl.message('Application version', desc: 'Label for the application version displayed in the crash details');
+
+  String get crashDetailsDeviceModel =>
+      Intl.message('Device model', desc: 'Label for the device model displayed in the crash details');
+
+  String get crashDetailsAndroidVersion => Intl.message('Android OS version',
+      desc: 'Label for the Android operating system version displayed in the crash details');
+
+  String get crashDetailsFullMessage =>
+      Intl.message('Full error message', desc: 'Label for the full error message displayed in the crash details');
+
+  /// Inbox
+
+  String get inbox => Intl.message('Inbox', desc: 'Title for the Inbox screen');
+
+  String get errorLoadingMessages => Intl.message('There was an error loading your inbox messages.');
+
+  String get noSubject => Intl.message('No Subject', desc: 'Title used for inbox messages that have no subject');
+
+  String get errorFetchingCourses =>
+      Intl.message("Unable to fetch courses. Please check your connection and try again.",
+          desc: "Message shown when an error occured while loading courses");
+
+  String get messageChooseCourse => Intl.message('Choose a course to message',
+      desc: 'Header in the course list shown when the user is choosing which course to associate with a new message');
+
+  String get emptyInboxTitle =>
+      Intl.message('Inbox Zero', desc: 'Title of the message shown when there are no inbox messages');
+
+  String get emptyInboxSubtitle =>
+      Intl.message('You’re all caught up!', desc: 'Subtitle of the message shown when there are no inbox messages');
+
+  /// Create Conversation
+
+  String get errorLoadingRecipients => Intl.message('There was an error loading recipients for this course',
+      desc: 'Message shown when attempting to create a new message but the recipients list failed to load');
+
+  String get errorSendingMessage => Intl.message('Unable to send message. Check your connection and try again.',
+      desc: 'Message show when there was an error creating or sending a new message');
+
+  String get unsavedChangesDialogTitle => Intl.message('Unsaved changes',
+      desc: 'Title of the dialog shown when the user tries to leave with unsaved changes');
+
+  String get unsavedChangesDialogBody =>
+      Intl.message('Are you sure you wish to close this page? Your unsent message will be lost.',
+          desc: 'Body text of the dialog shown when the user tries leave with unsaved changes');
+
+  String get newMessageTitle => Intl.message('New message', desc: "Title of the new-message screen");
+
+  String get addAttachment =>
+      Intl.message("Add attachment", desc: 'Tooltip for the add-attachment button in the new-message screen');
+
+  String get sendMessage =>
+      Intl.message('Send message', desc: 'Tooltip for the send-message button in the new-message screen');
+
+  String get selectRecipients =>
+      Intl.message('Select recipients', desc: 'Tooltip for the button that allows users to select message recipients');
+
+  String get noRecipientsSelected => Intl.message('No recipients selected',
+      desc: 'Hint displayed when the user has not selected any message recipients');
+
+  String get messageSubjectInputHint =>
+      Intl.message('Message subject', desc: 'Hint text displayed in the input field for the message subject');
+
+  String get messageBodyInputHint =>
+      Intl.message('Message', desc: 'Hint text displayed in the input field for the message body');
+
+  String get recipients => Intl.message('Recipients', desc: 'Label for message recipients');
+
+  String plusRecipientCount(int count) => Intl.message(
+        '+$count',
+        desc: "Shows the number of recipients that are selected but not displayed on screen.",
+        args: [count],
+        examples: const {'count': 5},
+      );
+
+  String get attachmentFailed => Intl.message('Failed. Tap for options.',
+      desc: 'Short message shown on a message attachment when uploading has failed');
+
   /// Courses Screen
+
+  String get noCoursesTitle => Intl.message('No Courses', desc: 'Title for having no courses');
+
+  String get noCoursesMessage =>
+      Intl.message("Your students’s courses might not be published yet.", desc: 'Message for having no courses');
 
   String get noGrade => Intl.message(
         'No Grade',
         desc: 'Message shown when there is currently no grade available for a course',
+      );
+
+  /// Course Details Screen
+
+  String get courseGradesLabel => Intl.message(
+        'Grades',
+        desc: 'Label for the "Grades" tab in course details',
+      );
+
+  String get courseSyllabusLabel => Intl.message(
+        'Syllabus',
+        desc: 'Label for the "Syllabus" tab in course details',
+      );
+
+  String get courseSummaryLabel => Intl.message(
+        'Summary',
+        desc: 'Label for the "Summary" tab in course details',
+      );
+
+  String get courseMessageHint => Intl.message(
+        'Send a message about this course',
+        desc: 'Accessibility hint for the course messaage floating action button',
+      );
+
+  String get courseTotalGradeLabel => Intl.message(
+        'Total Grade',
+        desc: 'Label for the total grade in the course',
+      );
+
+  String get assignmentSubmittedLabel => Intl.message(
+        'Submitted',
+        desc: 'Label for assignments that have been submitted',
+      );
+
+  String get assignmentNotSubmittedLabel => Intl.message(
+        'Not Submitted',
+        desc: 'Label for assignments that have not been submitted',
+      );
+
+  String get assignmentLateSubmittedLabel => Intl.message(
+        'Late',
+        desc: 'Label for assignments that have been marked late or submitted late',
+      );
+
+  String get assignmentMissingSubmittedLabel => Intl.message(
+        'Missing',
+        desc: 'Label for assignments that have been marked missing or are not submitted and past the due date',
+      );
+
+  String get assignmentNoScore => Intl.message(
+        '-',
+        desc: 'Value representing no score for student submission',
+      );
+
+  String get allGradingPeriods => Intl.message(
+        'All Grading Periods',
+        desc: 'Label for selecting all grading periods',
+      );
+
+  String get noAssignmentsTitle => Intl.message(
+        'No Assignments',
+        desc: 'Title for the no assignments message',
+      );
+
+  String get noAssignmentsMessage => Intl.message(
+        "It looks like assignments haven't been created in this space yet.",
+        desc: 'Message for no assignments',
+      );
+
+  String gradeFormatScoreOutOfPointsPossible(String score, String pointsPossible) => Intl.message(
+        '${score} / ${pointsPossible}',
+        desc: "Formatted string for a student's score out of the points possible",
+        name: 'gradeFormatScoreOutOfPointsPossible',
+        args: [score, pointsPossible],
+      );
+
+  String contentDescriptionScoreOutOfPointsPossible(String score, String pointsPossible) => Intl.message(
+        '${score} out of ${pointsPossible} points',
+        desc: "Formatted string for a student's score out of the points possible",
+        name: 'contentDescriptionScoreOutOfPointsPossible',
+        args: [score, pointsPossible],
       );
 
   /// Web Login Screen
@@ -228,6 +422,40 @@ class AppLocalizations {
         desc: 'The generic error shown when we are unable to verify with Canvas',
       );
 
+  /// Not-A-Parent screen
+
+  String get notAParentTitle => Intl.message('Not a parent?',
+      desc: 'Title for the screen that shows when the user is not observing any students');
+
+  String get notAParentSubtitle => Intl.message("We couldn't find any students associated with this account",
+      desc: 'Subtitle for the screen that shows when the user is not observing any students');
+
+  String get studentOrTeacherTitle => Intl.message('Are you a student or teacher?',
+      desc: 'Label for button that will show users the option to view other Canvas apps in the Play Store');
+
+  String get studentOrTeacherSubtitle =>
+      Intl.message('One of our other apps might be a better fit. Tap one to visit the Play Store.',
+          desc: 'Description of options to view other Canvas apps in the Play Store');
+
+  String get returnToLogin =>
+      Intl.message('Return to Login', desc: 'Label for the button that returns the user to the login screen');
+
+  String get studentApp => Intl.message('STUDENT',
+      desc:
+          "The 'student' portion of the 'Canvas Student' app name, in all caps. 'Canvas' is excluded in this context as it will be displayed to the user as a wordmark image");
+
+  String get teacherApp => Intl.message('TEACHER',
+      desc:
+          "The 'teacher' portion of the 'Canvas Teacher' app name, in all caps. 'Canvas' is excluded in this context as it will be displayed to the user as a wordmark image");
+
+  String get canvasStudentApp => Intl.message('Canvas Student',
+      desc:
+          "The name of the Canvas Student app. Only 'Student' should be translated as 'Canvas' is a brand name in this context and should not be translated.");
+
+  String get canvasTeacherApp => Intl.message('Canvas Teacher',
+      desc:
+          "The name of the Canvas Teacher app. Only 'Teacher' should be translated as 'Canvas' is a brand name in this context and should not be translated.");
+
   /// Alerts Screen
 
   String get noAlertsMessage => Intl.message(
@@ -235,17 +463,92 @@ class AppLocalizations {
         desc: 'The empty message to show to users when there are no alerts for the student.',
       );
 
+  /// Enrollment types
+
+  String get enrollmentTypeTeacher => Intl.message('Teacher', desc: 'Label for the Teacher enrollment type');
+
+  String get enrollmentTypeStudent => Intl.message('Student', desc: 'Label for the Student enrollment type');
+
+  String get enrollmentTypeTA => Intl.message('TA',
+      desc:
+          "Label for the Teaching Assistant enrollment type (also known as Teacher's Aid or Education Assistant), reduced to a short acronym/initialism if appropriate.");
+
+  String get enrollmentTypeObserver => Intl.message('Observer', desc: 'Label for the Observer enrollment type');
+
+  // Attachment picker
+
+  String get useCamera => Intl.message('Use Camera',
+      desc: 'Label for the action item that lets the user capture a photo using the device camera');
+
+  String get uploadFile =>
+      Intl.message('Upload File', desc: 'Label for the action item that lets the user upload a file from their device');
+
+  String get chooseFromGallery => Intl.message('Choose from Gallery',
+      desc: 'Label for the action item that lets the user select a photo from their device gallery');
+
+  String get attachmentPreparing =>
+      Intl.message('Preparing…', desc: 'Message shown while a file is being prepared to attach to a message');
+
+  /// Manage Students
+  String get addStudentWith => Intl.message('Add student with...');
+
+  String get addStudent => Intl.message('Add Student');
+
+  String get emptyStudentList => Intl.message('You are not observing any students.');
+
+  String get errorLoadingStudents => Intl.message('There was an error loading your students.');
+
+  String get pairingCode => Intl.message('Pairing Code');
+
+  String get pairingCodeEntryExplanation => Intl.message(
+      'Enter the student pairing code provided to you. If the pairing code doesn\'t work, it may have expired');
+
+  String get errorPairingFailed => Intl.message('Your code is incorrect or expired.');
+
+  String get qrCode => Intl.message('QR Code');
+
+  String get addNewStudent =>
+      Intl.message('Add new student', desc: 'Semantics label for the FAB on the Manage Students Screen');
+
   /// Miscellaneous
+
+  String get cancel => Intl.message('Cancel');
 
   String get next => Intl.message('Next', name: 'next');
 
   String get ok => Intl.message('OK', name: 'ok');
+
+  String get yes => Intl.message('Yes');
+
+  String get no => Intl.message('No');
+
+  String get retry => Intl.message("Retry");
+
+  String get delete => Intl.message("Delete", desc: 'Label used for general delete/remove actions');
+
+  String get done => Intl.message('Done', desc: 'Label for general done/finished actions');
 
   String get unexpectedError => Intl.message('An unexpected error occurred');
 
   String get dateTimeFormat => Intl.message(
         "MMM d 'at' h:mma",
         desc:
-            "The string to format dates, only the 'at' needs to be translated. MMM will show the month abbreviated as 'Oct', d shows the day, h:mma will show the time as '10:33PM'.",
+            "The string to format dates, only the 'at' needs to be translated, as well as arranging the date/time components. MMM will show the month abbreviated as 'Oct', d shows the day, h:mma will show the time as '10:33PM'. Use a captial H for 24 hour times, in which case the 'a' can be omitted to remove the am/pm from the string.",
+      );
+
+  String get dueDateTimeFormat => Intl.message(
+        "'Due' MMM d 'at' h:mma",
+        desc:
+            "The string to format dates, only the 'Due' and 'at' needs to be translated (not including apostrophes), as well as arranging the date/time components. MMM will show the month abbreviated as 'Oct', d shows the day, h:mma will show the time as '10:33PM'. Use a captial H for 24 hour times, in which case the 'a' can be omitted to remove the am/pm from the string.",
+      );
+
+  String get noDueDate => Intl.message(
+        'No Due Date',
+        desc: 'Label for assignments that do not have a due date',
+      );
+
+  String get filter => Intl.message(
+        'Filter',
+        desc: 'Label for buttons to filter what items are visible',
       );
 }

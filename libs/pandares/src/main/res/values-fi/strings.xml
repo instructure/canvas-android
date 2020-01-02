@@ -58,7 +58,9 @@
     <string name="submissionUploadByteProgress">%1$s/%2$s</string>
     <string name="submissionSuccessTitle">Lähetys onnistui!</string>
     <string name="submissionSuccessMessage">Tehtäväsi lähetys onnistui. Nauti päivästäsi!</string>
-    <string name="cancelAllSubmissions">Peruuta Kaikkien tehtävien lähetykset</string>
+    <string name="submissionDeleteTitle">Peruuta lähetys</string>
+    <string name="submissionDeleteMessage">Tämä peruuttaa ja poistaa lähetyksesi.</string>
+    <string name="submissionDeleted">Lähetys poistettu.</string>
     <string name="missingSubmissionLabel">Puuttuu</string>
     <string name="gradedSubmissionLabel">Arvosteltu</string>
     <!-- Student Submission -->
@@ -98,6 +100,7 @@
     <string name="finalGradeFormatted">Lopullinen arvosana: %s</string>
     <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
     <string name="contentDescriptionScoreOutOfPointsPossible">%1$s/%2$s pistettä</string>
+    <string name="enterWhatIfScore">Syötä Mitä jos -pistemäärä.</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Mukautettu pistemäärä </string>
     <string name="rubricEmptyMessage">Tälle tehtävälle ei ole rubriikkia</string>
@@ -577,8 +580,7 @@
     <string name="EULA">Käyttöoikeussopimus</string>
     <string name="privacyPolicy">Tietosuojakäytäntö</string>
     <string name="termsOfUse">Käyttöehdot</string>
-    <string name="openSource">Avoin lähde</string>
-
+    <string name="canvasOnGithub">Canvas GitHubissa</string>
     <!-- Quiz Strings -->
     <string name="assignmentQuizzes">Tehtävän tietovisat</string>
     <string name="practiceQuizzes">Harjoittelutietovisat</string>
@@ -589,6 +591,7 @@
     <string name="choose_answers_below">Valitse vastauksesi alla</string>
 
 
+    <string name="flag_the_question">Merkitse kysymys</string>
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">Tehtävä</string>
     <string name="gradesWidgetTitle">Arvosanat</string>
@@ -845,9 +848,6 @@
     <string name="like">tykkäys</string>
     <string name="likes">tykkäystä</string>
 
-    <string name="wear_reminder">Aikatauluta palautuspäivän muistutukset</string>
-    <string name="wear_notifications">Kytke käyttöilmoitukset päälle</string>
-
     <string name="color_1">Punainen</string>
     <string name="color_2">Kuuma vaaleanpunainen</string>
     <string name="color_3">Laventeli</string>
@@ -1015,6 +1015,37 @@
     <string name="addChildErrorMessage">Parinmuodostus epäonnistui. Varmista, että parinmuodostuskoodisi on oikein ja käyttöajan rajoissa.</string>
     <string name="gradeComplete">Valmis</string>
     <string name="gradeIncomplete">Keskeneräinen</string>
+    <!--Teacher Strings-->
+    <string name="postPolicyTitle">Lähetysasetukset</string>
+    <string name="postGradesTab">Lähetä arvosanoja</string>
+    <string name="hideGradesTab">Piilota arvosanat</string>
+    <plurals name="gradesPostedCount">
+        <item quantity="one">%d arvosana parhaillaan lähetetty</item>
+        <item quantity="other">%d arvosanaa parhaillaan lähetetty</item>
+    </plurals>
+    <plurals name="gradesHiddenCount">
+        <item quantity="one">%d arvosana parhaillaan kätketty</item>
+        <item quantity="other">%d arvosanaa parhaillaan kätketty</item>
+    </plurals>
+    <string name="postPolicyPostTo">Lähetä vastaanottajalle...</string>
+    <string name="postPolicySections">Määrätyt osat</string>
+    <string name="postToEveryoneTitle">Kaikki</string>
+    <string name="postToEveryoneMessage">Arvosanat tehdään näkyviksi kaikille opiskelijoille.</string>
+    <string name="postToGradedTitle">Arvosteltu</string>
+    <string name="postToGradedMessage">Arvosanat tehdään näkyviksi opiskelijoille, joilla on arvosteltuja lähetyksiä.</string>
+    <string name="postPolicyAllHiddenTitle">Kaikki piilotettu</string>
+    <string name="postPolicyAllHiddenMessage">Kaikki arvosanat on parhaillaan piilotettu.</string>
+    <string name="postPolicyAllPostedTitle">Kaikki lähetetty</string>
+    <string name="postPolicyAllPostedMessage">Kaikki arvosanat on parhaillaan lähetetty.</string>
+    <string name="postPolicyPostedToast">Arvosanaa lähetetty</string>
+    <string name="postPolicyHiddenToast">Arvosanat piilotettu</string>
+    <string name="postPolicyPostFailedToast">Arvosanojen lähetys epäonnistui</string>
+    <string name="postPolicyHideFailedToast">arvosanojen piilottaminen epäonnistui</string>
+    <string name="gradeBeforePosting">Arvosana ennen lähetystä</string>
+    <string name="gradeAfterPosting">Arvosana lähetyksen jälkeen</string>
+    <string name="gradeOverride">Korvaa arvosana</string>
+    <string name="currentGrade">Nykyinen arvosana </string>
+
     <!-- Floating Recording View Strings -->
     <string name="recordingTimerDefault">00:00:00</string>
     <string name="recordingTimerContentDescription">%1$d tuntia, %2$d minuuttia ja %3$d sekuntia</string>

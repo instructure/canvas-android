@@ -33,7 +33,6 @@
     <string name="fileUploadSuccess">Загрузка прошла успешно</string>
     <string name="noNetwork">Сеть не доступна - повторите попытку позже.</string>
     <string name="uploadMessage">"Выполняется отправка. Следите за уведомлениями о состоянии отправки.</string>
-    <string name="mediaUpload">Загрузка медиа</string>
     <string name="uploadingFile">Загрузка файла&#8230;</string>
     <string name="errorUploadingFile">Произошла ошибка при отправке вашего файла. Попробуйте еще раз.</string>
     <string name="fileSubmission">Отправить файл(ы)</string>
@@ -171,13 +170,12 @@
     <string name="noEvents">На сегодня события отсутствуют!</string>
     <string name="noEventsSubtext">Похоже, что сегодня можно отдохнуть и расслабиться.</string>
     <string name="noSubmission">Нет отправки</string>
-    <string name="noSubmissionSubtext">Отправьте свое задание через %1$s в %2$s.</string>
     <string name="noSubmissionTeacher">У этого студента пока что нет отправки.</string>
-    <string name="noDueDate">У этого задания нет срока выполнения.</string>
     <string name="locked">Заблокировано</string>
     <string name="lockedSubtext">Это задание заблокировано до %1$s в %2$s.</string>
     <string name="chooseFile">Выбрать файл</string>
     <string name="chooseFileSubtext">Прикрепите файл к своей отправке, щелкнув по расположенной ниже кнопке.</string>
+    <string name="chooseFileForUploadSubtext">Выберите файл для отправки ниже</string>
     <string name="noNotifications">Уведомления отсутствуют</string>
     <string name="noNotificationsSubtext">На данный момент оповещать не о чем.</string>
     <string name="noTodos">Так держать!</string>
@@ -386,6 +384,7 @@
     <string name="utils_uploadToCanvas">Загрузить на Canvas</string>
     <string name="utils_uploadMyFiles">Мои файлы</string>
     <string name="utils_uploadCourseFiles">Файлы курса</string>
+    <string name="utils_uploadGroupFiles">Файлы группы</string>
     <string name="utils_uploadToSubmissionComment">Загрузить в комментарий к отправке</string>
     <string name="utils_attachFile">Прикрепить файл</string>
     <string name="utils_with">с</string>

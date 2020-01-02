@@ -21,6 +21,7 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.postmodels.CommentSendStatus
+import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.setGone
@@ -88,7 +89,14 @@ class SpeedGraderCommentHolder(view: View) : RecyclerView.ViewHolder(view) {
                             RouteMatcher.route(context, Route(StudentContextFragment::class.java, null, bundle))
                         }
                     }
-                    Triple(comment.comment, comment.authorName ?: comment.author?.displayName ?: "", comment.author?.avatarImageUrl)
+                    Triple(
+                        comment.comment,
+                        Pronouns.span(
+                            comment.authorName ?: comment.author?.displayName,
+                            comment.authorPronouns ?: comment.author?.pronouns
+                        ),
+                        comment.author?.avatarImageUrl
+                    )
                 } else {
                     avatarView.setAnonymousAvatar()
                     Triple(comment.comment, context.getString(R.string.anonymousStudentLabel), null)
@@ -107,7 +115,11 @@ class SpeedGraderCommentHolder(view: View) : RecyclerView.ViewHolder(view) {
                     }
                     CommentSendStatus.DRAFT -> { /* Drafts should not display in the list, only in the EditText */ }
                 }
-                Triple(wrapper.pendingComment.comment, currentUser.name, currentUser.avatarUrl)
+                Triple(
+                    wrapper.pendingComment.comment,
+                    Pronouns.span(currentUser.name, currentUser.pronouns),
+                    currentUser.avatarUrl
+                )
             }
 
         // Submission Files
@@ -124,7 +136,7 @@ class SpeedGraderCommentHolder(view: View) : RecyclerView.ViewHolder(view) {
                             val bundle = StudentContextFragment.makeBundle(assignee.id, courseId)
                             RouteMatcher.route(context, Route(StudentContextFragment::class.java, null, bundle))
                         }
-                        Triple(null, assignee.name, assignee.student.avatarUrl)
+                        Triple(null, Pronouns.span(assignee.name, assignee.pronouns), assignee.student.avatarUrl)
                     }
                     is GroupAssignee -> {
                         avatarView.setImageResource(assignee.iconRes)
@@ -137,7 +149,7 @@ class SpeedGraderCommentHolder(view: View) : RecyclerView.ViewHolder(view) {
         usernameText = authorName
         dateText = wrapper.date.getSubmissionFormattedDate(context)
         commentText = text
-        if (avatarUrl != null) setAvatar(avatarUrl, authorName)
+        if (avatarUrl != null) setAvatar(avatarUrl, authorName.toString())
     }
 
     @Suppress("LiftReturnOrAssignment")

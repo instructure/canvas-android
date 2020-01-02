@@ -22,13 +22,15 @@ import kotlinx.android.parcel.Parcelize
 sealed class Assignee : Parcelable {
     abstract val id: Long
     abstract val name: String
+    abstract val pronouns: String?
 }
 
 @Parcelize
 data class StudentAssignee(
         val student: User, // TODO: handle id and name when not given a student?
         override val id: Long = student.id,
-        override val name: String = student.name ?: ""
+        override val name: String = student.name,
+        override val pronouns: String? = student.pronouns
 ) : Assignee()
 
 @JvmSuppressWildcards
@@ -37,5 +39,6 @@ data class GroupAssignee(
         val group: Group,
         val students: List<User>,
         override val id: Long = group.id,
-        override val name: String = group.name ?: ""
+        override val name: String = group.name ?: "",
+        override val pronouns: String? = null
 ) : Assignee()

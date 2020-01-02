@@ -4,10 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.StateListDrawable;
-
-import androidx.annotation.DrawableRes;
-import androidx.annotation.IdRes;
-import androidx.annotation.LayoutRes;
 import android.text.TextUtils;
 import android.text.util.Rfc822Tokenizer;
 import android.util.Log;
@@ -17,7 +13,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.instructure.canvasapi2.utils.Pronouns;
 import com.instructure.pandautils.utils.ProfileUtils;
+
+import androidx.annotation.DrawableRes;
+import androidx.annotation.IdRes;
+import androidx.annotation.LayoutRes;
 
 /**
  * A class that inflates and binds the views in the dropdown list from
@@ -75,7 +76,7 @@ public class DropdownChipLayouter {
     public View bindView(View convertView, ViewGroup parent, RecipientEntry entry, int position,
             AdapterType type, String constraint, StateListDrawable deleteDrawable) {
         // Default to show all the information
-        String displayName = entry.getName();
+        CharSequence displayName = Pronouns.span(entry.getName(), entry.getPronouns());
         String destination = entry.getDestination();
         boolean showImage = true;
 

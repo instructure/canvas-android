@@ -25,10 +25,6 @@ import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.annotation.NonNull;
-import androidx.fragment.app.DialogFragment;
-import androidx.appcompat.app.AlertDialog;
-import androidx.cardview.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -43,11 +39,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.instructure.student.R;
-import com.instructure.student.adapter.FileUploadAssignmentsAdapter;
-import com.instructure.student.adapter.FileUploadCoursesAdapter;
-import com.instructure.student.util.AnimationHelpers;
-import com.instructure.student.util.UploadCheckboxManager;
 import com.instructure.canvasapi2.StatusCallback;
 import com.instructure.canvasapi2.managers.AssignmentManager;
 import com.instructure.canvasapi2.models.Assignment;
@@ -56,13 +47,23 @@ import com.instructure.canvasapi2.models.User;
 import com.instructure.canvasapi2.utils.ApiPrefs;
 import com.instructure.canvasapi2.utils.ApiType;
 import com.instructure.canvasapi2.utils.LinkHeaders;
+import com.instructure.canvasapi2.utils.Pronouns;
 import com.instructure.pandautils.dialogs.UploadFilesDialog;
 import com.instructure.pandautils.utils.Const;
 import com.instructure.pandautils.utils.ThemePrefs;
+import com.instructure.student.R;
+import com.instructure.student.adapter.FileUploadAssignmentsAdapter;
+import com.instructure.student.adapter.FileUploadCoursesAdapter;
+import com.instructure.student.util.AnimationHelpers;
+import com.instructure.student.util.UploadCheckboxManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.cardview.widget.CardView;
+import androidx.fragment.app.DialogFragment;
 import retrofit2.Response;
 
 public class ShareFileDestinationDialog extends DialogFragment implements UploadCheckboxManager.OnOptionCheckedListener{
@@ -245,7 +246,7 @@ public class ShareFileDestinationDialog extends DialogFragment implements Upload
         title = rootView.findViewById(R.id.dialogTitle);
         avatar = rootView.findViewById(R.id.avatar);
         userName = rootView.findViewById(R.id.userName);
-        userName.setText(user.getName());
+        userName.setText(Pronouns.span(user.getName(), user.getPronouns()));
 
         initCheckBoxes(rootView);
         setRevealContentsListener();
