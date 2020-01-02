@@ -101,14 +101,17 @@ class TimingsListener implements TaskExecutionListener, BuildListener {
         println("projectName = $projectName")
 
         // Locate the apk
-        // We don't necessarily want refProject.buildDir, since it will always be the student buildDir
-        def buildDir = refProject.buildDir.toString().replace("student",projectName)
-        def file = new File("$buildDir/outputs/apk/$buildFlavor/$buildType/$projectName-$buildFlavor-${buildType}.apk")
-        def fileSizeInMB = file.length() == 0 ? 0 : (file.length() / (1024.0 * 1024.0)).round(3)
-
-        // Different location logic for flutter parent apk file
-        if(projectName=="parent") {
-            buildDir = refProject.buildDir.toString()
+        def file = null
+        def fileSizeInMB = 0.0
+        if(projectName!="parent") {
+            // We don't necessarily want refProject.buildDir, since it will always be the student buildDir
+            def buildDir = refProject.buildDir.toString().replace("student",projectName)
+            file = new File("$buildDir/outputs/apk/$buildFlavor/$buildType/$projectName-$buildFlavor-${buildType}.apk")
+            fileSizeInMB = file.length() == 0 ? 0 : (file.length() / (1024.0 * 1024.0)).round(3)
+        }
+        else {
+            // Different location logic for flutter parent apk file
+            def buildDir = refProject.buildDir.toString()
             file = new File("$buildDir/outputs/apk/$buildType/app-${buildType}.apk")
             fileSizeInMB = file.length() == 0 ? 0 : (file.length() / (1024.0 * 1024.0))
             fileSizeInMB = (fileSizeInMB * 1000.0).toInteger() / 1000.0 // Round to three decimal places
