@@ -18,6 +18,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_parent/models/attachment.dart';
 import 'package:flutter_parent/network/api/file_upload_api.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
+import 'package:path/path.dart';
 
 enum AttachmentUploadStage { CREATED, UPLOADING, FAILED, FINISHED }
 
@@ -36,6 +37,8 @@ class AttachmentHandler with ChangeNotifier {
     _stage = stage;
     if (onStageChange != null) onStageChange(_stage);
   }
+
+  String get displayName => attachment?.displayName ?? attachment?.filename ?? basename(_file?.path ?? '');
 
   Future<void> performUpload() async {
     // Do nothing if the upload is finished or in progress
