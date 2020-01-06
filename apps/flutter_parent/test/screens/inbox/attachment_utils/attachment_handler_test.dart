@@ -128,6 +128,32 @@ void main() {
     // Ensure the API was not called
     verifyNever(api.uploadConversationFile(any, any));
   });
+
+  test('displayName returns attachment display name', () {
+    var attachment = Attachment((b) => b
+      ..displayName = 'Attachment display name'
+      ..filename = 'file.txt');
+    var handler = AttachmentHandler(File('/path/to/file.txt'))..attachment = attachment;
+    expect(handler.displayName, attachment.displayName);
+  });
+
+  test('displayName falls back to attachment file name when attachment display name is null', () {
+    var attachment = Attachment((b) => b
+      ..displayName = null
+      ..filename = 'file.txt');
+    var handler = AttachmentHandler(File('/path/to/file.txt'))..attachment = attachment;
+    expect(handler.displayName, attachment.filename);
+  });
+
+  test('displayName falls back to file name when attachment is null', () {
+    var handler = AttachmentHandler(File('/path/to/file.txt'))..attachment = null;
+    expect(handler.displayName, 'file.txt');
+  });
+
+  test('displayName falls back to empty string when attachment is null and file is null', () {
+    var handler = AttachmentHandler(null)..attachment = null;
+    expect(handler.displayName, '');
+  });
 }
 
 class _MockFileUploadApi extends Mock implements FileUploadApi {}

@@ -13,6 +13,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'dart:async';
+import 'dart:io';
 
 import 'package:built_collection/built_collection.dart';
 import 'package:flutter/material.dart';
@@ -463,6 +464,76 @@ void main() {
     expect(attachmentWidget, findsNothing);
   });
 
+  testWidgetsWithAccessibilityChecks('displays attachment tooltip in upload state', (tester) async {
+    // Set up attachment handler in 'uploading' stage
+    var handler = AttachmentHandler(File('path/to/file.txt'))
+      ..stage = AttachmentUploadStage.UPLOADING
+      ..progress = 0.25;
+
+    _setupLocator(attachmentHandler: handler);
+
+    // Create page and add attachment
+    await tester.pumpWidget(_testableWidget(CreateConversationScreen(_mockCourse('0'))));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(CreateConversationScreen.attachmentKey));
+    await tester.pump();
+
+    // Assert attachment widget is displayed
+    var attachmentWidget = find.byType(AttachmentWidget);
+    expect(attachmentWidget, findsOneWidget);
+
+    await tester.longPress(attachmentWidget);
+    await tester.pump(Duration(milliseconds: 100));
+
+    expect(find.text('file.txt'), findsOneWidget);
+  });
+
+  testWidgetsWithAccessibilityChecks('displays attachment tooltip in failed state', (tester) async {
+    // Set up attachment handler in 'uploading' stage
+    var handler = AttachmentHandler(File('path/to/file.txt'))..stage = AttachmentUploadStage.FAILED;
+
+    _setupLocator(attachmentHandler: handler);
+
+    // Create page and add attachment
+    await tester.pumpWidget(_testableWidget(CreateConversationScreen(_mockCourse('0'))));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(CreateConversationScreen.attachmentKey));
+    await tester.pump();
+
+    // Assert attachment widget is displayed
+    var attachmentWidget = find.byType(AttachmentWidget);
+    expect(attachmentWidget, findsOneWidget);
+
+    await tester.longPress(attachmentWidget);
+    await tester.pump(Duration(milliseconds: 100));
+
+    expect(find.text('file.txt'), findsOneWidget);
+  });
+
+  testWidgetsWithAccessibilityChecks('displays attachment tooltip in finished state', (tester) async {
+    // Set up attachment handler in 'uploading' stage
+    var handler = AttachmentHandler(File('path/to/file.txt'))
+      ..attachment = Attachment((b) => b..displayName = 'upload.txt')
+      ..stage = AttachmentUploadStage.FINISHED;
+
+    _setupLocator(attachmentHandler: handler);
+
+    // Create page and add attachment
+    await tester.pumpWidget(_testableWidget(CreateConversationScreen(_mockCourse('0'))));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(CreateConversationScreen.attachmentKey));
+    await tester.pump();
+
+    // Assert attachment widget is displayed
+    var attachmentWidget = find.byType(AttachmentWidget);
+    expect(attachmentWidget, findsOneWidget);
+
+    await tester.longPress(attachmentWidget);
+    await tester.pump(Duration(milliseconds: 100));
+
+    expect(find.text('upload.txt'), findsNWidgets(2)); // 2 widgets: one is the tooltip and one is the regular label
+  });
+
   testWidgetsWithAccessibilityChecks('Expands and collapses recipient box', (tester) async {
     _setupLocator();
 
@@ -648,7 +719,7 @@ Future<void> _pumpTestableWidgetWithBackButton(tester, Widget widget, {MockNavig
 
 _setupLocator(
     {int recipientCount = 4,
-    _MockAttachmentHandler attachmentHandler,
+    AttachmentHandler attachmentHandler,
     int fetchFailCount: 0,
     int sendFailCount: 0,
     bool pronouns: false}) {
@@ -663,7 +734,7 @@ class _MockedInteractor extends Mock implements CreateConversationInteractor {}
 class _MockInteractor extends CreateConversationInteractor {
   final _recipientCount;
 
-  final _MockAttachmentHandler mockAttachmentHandler;
+  final AttachmentHandler mockAttachmentHandler;
 
   int _fetchFailCount;
 

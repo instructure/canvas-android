@@ -567,27 +567,31 @@ class AttachmentWidget extends StatelessWidget {
   }
 
   _uploadingWidget(BuildContext context, AttachmentHandler handler) {
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        SizedBox(
-          width: 48,
-          height: 48,
-          child: CircularProgressIndicator(
-            value: handler.progress,
-            backgroundColor: ParentTheme.of(context).nearSurfaceColor,
+    return Tooltip(
+      message: handler.displayName,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          SizedBox(
+            width: 48,
+            height: 48,
+            child: CircularProgressIndicator(
+              value: handler.progress,
+              backgroundColor: ParentTheme.of(context).nearSurfaceColor,
+            ),
           ),
-        ),
-        Text(
-          handler.progress == null ? "" : NumberFormat.percentPattern().format(handler.progress),
-          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-        )
-      ],
+          Text(
+            handler.progress == null ? "" : NumberFormat.percentPattern().format(handler.progress),
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+          )
+        ],
+      ),
     );
   }
 
   _failedWidget(BuildContext context, AttachmentHandler handler) {
     return PopupMenuButton<String>(
+      tooltip: handler.displayName,
       onSelected: (option) => _handleMenuOption(option, handler),
       itemBuilder: (context) => [
         PopupMenuItem<String>(
@@ -621,6 +625,7 @@ class AttachmentWidget extends StatelessWidget {
 
   _finishedWidget(BuildContext context, AttachmentHandler handler) {
     return PopupMenuButton<String>(
+      tooltip: handler.displayName,
       onSelected: (option) => _handleMenuOption(option, handler),
       itemBuilder: (context) => [
         PopupMenuItem<String>(
