@@ -107,6 +107,7 @@
     </ScrollView>
     <com.getbase.floatingactionbutton.FloatingActionButton
         android:id="@+id/compose"
+        android:visibility="gone"
         android:contentDescription="@string/composeMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

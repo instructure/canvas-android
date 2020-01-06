@@ -117,6 +117,7 @@ class PeopleDetailsFragment : ParentFragment(), Bookmarkable {
             userRole.text = u.enrollments.distinctBy { it.displayType }.joinToString { it.displayType }
             userBackground.setBackgroundColor(ColorKeeper.getOrGenerateColor(canvasContext))
             bioText.setVisible(u.bio.isValid() && u.bio != null).text = u.bio
+            compose.setVisible()
         }
     }
 
