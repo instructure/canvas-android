@@ -74,6 +74,11 @@ class ModuleListFragment : ParentFragment(), Bookmarkable {
         retainInstance = true
     }
 
+    override fun onDestroy() {
+        recyclerAdapter.cancel()
+        super.onDestroy()
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
             = layoutInflater.inflate(R.layout.fragment_module_list, container, false)
 
