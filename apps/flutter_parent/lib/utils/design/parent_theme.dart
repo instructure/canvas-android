@@ -12,9 +12,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
+import 'package:flutter_parent/utils/design/theme_prefs.dart';
 import 'package:provider/provider.dart';
 
 import 'student_color_set.dart';
@@ -41,16 +41,13 @@ class ParentTheme extends StatefulWidget {
   const ParentTheme({
     Key key,
     this.builder,
-    this.initWithDarkMode = false,
-    this.initWithHCMode = false,
+    this.themePrefs = const ThemePrefs(),
   }) : super(key: key);
 
-  final bool initWithDarkMode;
-
-  final bool initWithHCMode;
+  final ThemePrefs themePrefs;
 
   @override
-  _ParentThemeState createState() => _ParentThemeState(initWithDarkMode, initWithHCMode);
+  _ParentThemeState createState() => _ParentThemeState();
 
   static _ParentThemeState of(BuildContext context) {
     return context.findAncestorStateOfType<_ParentThemeState>();
@@ -61,18 +58,9 @@ class ParentTheme extends StatefulWidget {
 /// student color. To obtain an instance of this state, call 'ParentTheme.of(context)' with any context that
 /// descends from a ParentTheme widget.
 class _ParentThemeState extends State<ParentTheme> {
-  _ParentThemeState(bool initWithDarkMode, bool initWithHCMode) {
-    _isDarkMode = initWithDarkMode;
-    _isHC = initWithHCMode;
-  }
-
   ParentThemeStateChangeNotifier _notifier = ParentThemeStateChangeNotifier();
 
   int _studentIndex = 0;
-
-  bool _isDarkMode;
-
-  bool _isHC;
 
   /// The index of the currently selected student color set
   int get studentIndex => _studentIndex;
@@ -99,22 +87,30 @@ class _ParentThemeState extends State<ParentTheme> {
   Color get studentColor => getColorVariantForCurrentState(studentColorSet);
 
   /// Sets whether the current theme should use dark mode
-  set isDarkMode(bool isDark) => setState(() => _isDarkMode = isDark);
+  set isDarkMode(bool isDark) {
+    setState(() {
+      widget.themePrefs.darkMode = isDark;
+    });
+  }
 
   /// Toggles dark mode for the current theme
-  toggleDarkMode() => setState(() => _isDarkMode = !_isDarkMode);
+  toggleDarkMode() => isDarkMode = !isDarkMode;
 
   /// Sets whether the current theme should use high-contrast mode
-  set isHC(bool isHC) => setState(() => _isHC = isHC);
+  set isHC(bool isHC) {
+    setState(() {
+      widget.themePrefs.hcMode = isHC;
+    });
+  }
 
   /// Toggles high-contrast for the current theme
-  toggleHC() => setState(() => _isHC = !_isHC);
+  toggleHC() => isHC = !isHC;
 
   /// Returns true if dark mode is enabled for the current theme
-  bool get isDarkMode => _isDarkMode;
+  bool get isDarkMode => widget.themePrefs.darkMode;
 
   /// Returns true if high-contrast mode is enabled for the current theme
-  bool get isHC => _isHC;
+  bool get isHC => widget.themePrefs.hcMode;
 
   /// Returns true if both dark mode and high-contrast mode are disabled for the current theme
   bool get isLightNormal => !isDarkMode && !isHC;

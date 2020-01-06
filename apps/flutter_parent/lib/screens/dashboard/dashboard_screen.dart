@@ -21,6 +21,7 @@ import 'package:flutter_parent/screens/courses/courses_screen.dart';
 import 'package:flutter_parent/screens/inbox/conversation_list/conversation_list_screen.dart';
 import 'package:flutter_parent/screens/login_landing_screen.dart';
 import 'package:flutter_parent/screens/manage_students/manage_students_screen.dart';
+import 'package:flutter_parent/screens/settings/settings_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/avatar.dart';
 import 'package:flutter_parent/utils/common_widgets/dropdown_arrow.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
@@ -291,20 +292,21 @@ class DashboardState extends State<DashboardScreen> {
         ],
       );
 
-  _navDrawerItemsList() => ListView.separated(
-      itemBuilder: (context, idx) {
-        return (idx == 0)
-            ? _navDrawerInbox()
-            : (idx == 1)
-                ? _navDrawerManageStudents()
-                : (idx == 2) ? _navDrawerHelp() : (idx == 3) ? _navDrawerSignOut() : null;
-      },
-      separatorBuilder: (_, c) => Divider(
-            height: 0,
-            indent: 16,
-          ),
-      itemCount: 5 // One extra item to get the divider on the bottom
-      );
+  Widget _navDrawerItemsList() {
+    var items = [
+      _navDrawerInbox(),
+      _navDrawerManageStudents(),
+      _navDrawerSettings(),
+      _navDrawerHelp(),
+      _navDrawerSignOut(),
+      null // to get trailing divider
+    ];
+    return ListView.separated(
+      itemCount: items.length,
+      itemBuilder: (context, index) => items[index],
+      separatorBuilder: (context, index) => const Divider(height: 0, indent: 16),
+    );
+  }
 
   _navDrawerInbox() => ListTile(
         title: Text(L10n(context).inbox),
@@ -334,6 +336,11 @@ class DashboardState extends State<DashboardScreen> {
 
   _navDrawerManageStudents() =>
       ListTile(title: Text(L10n(context).manageStudents), onTap: () => _navigateToManageStudents(context));
+
+  _navDrawerSettings() => ListTile(
+        title: Text(L10n(context).settings),
+        onTap: () => locator<QuickNav>().push(context, SettingsScreen()),
+      );
 
   _navDrawerHelp() => ListTile(title: Text(L10n(context).help), onTap: () => _navigateToHelp(context));
 

@@ -29,6 +29,7 @@ import 'package:flutter_parent/screens/inbox/attachment_utils/attachment_picker_
 import 'package:flutter_parent/screens/inbox/conversation_list/conversation_list_interactor.dart';
 import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_interactor.dart';
 import 'package:flutter_parent/screens/manage_students/manage_students_interactor.dart';
+import 'package:flutter_parent/screens/settings/settings_interactor.dart';
 import 'package:flutter_parent/screens/web_login/web_login_interactor.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:get_it/get_it.dart';
@@ -55,6 +56,7 @@ void setupLocator() {
   locator.registerFactory<DashboardInteractor>(() => DashboardInteractor());
   locator.registerFactory<DomainSearchInteractor>(() => DomainSearchInteractor());
   locator.registerFactory<ManageStudentsInteractor>(() => ManageStudentsInteractor());
+  locator.registerFactory<SettingsInteractor>(() => SettingsInteractor());
   locator.registerFactory<WebLoginInteractor>(() => WebLoginInteractor());
 
   // Other

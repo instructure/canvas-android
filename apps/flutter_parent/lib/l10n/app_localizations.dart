@@ -463,6 +463,21 @@ class AppLocalizations {
         desc: 'The empty message to show to users when there are no alerts for the student.',
       );
 
+  /// Settings screen
+
+  String get settings => Intl.message('Settings', desc: 'Title for the settings screen');
+
+  String get theme => Intl.message('Theme', desc: 'Label for the light/dark theme section in the settings page');
+
+  String get darkModeLabel => Intl.message('Dark Mode', desc: 'Label for the button that enables dark mode');
+
+  String get lightModeLabel => Intl.message('Light Mode', desc: 'Label for the button that enables light mode');
+
+  String get highContrastLabel =>
+      Intl.message('High Contrast Mode', desc: 'Label for the switch that toggles high contrast mode');
+
+  String get appearance => Intl.message('Appearance', desc: 'Label for the appearance section in the settings page');
+
   /// Enrollment types
 
   String get enrollmentTypeTeacher => Intl.message('Teacher', desc: 'Label for the Teacher enrollment type');
