@@ -35,8 +35,8 @@ private fun LambdaDslObject.populateGradesObject() : LambdaDslObject {
 
 data class PactEnrollmentFieldInfo(
         val userId: Long? = null,
-        val includeGradesObject: Boolean = false,
-        val includeGradeFields: Boolean = false
+        val includeTotalScoresFields: Boolean = false,
+        val includeCurrentGradingPeriodScoresFields: Boolean = false
 )
 
 fun LambdaDslObject.populateEnrollmentFields(fieldInfo: PactEnrollmentFieldInfo = PactEnrollmentFieldInfo()) : LambdaDslObject {
@@ -50,24 +50,25 @@ fun LambdaDslObject.populateEnrollmentFields(fieldInfo: PactEnrollmentFieldInfo 
             .numberType("associated_user_id") // TODO: Can/should be null for non-observer?
             .timestamp("last_activity_at", PACT_TIMESTAMP_FORMAT)
             .booleanType("limit_privileges_to_course_section")
+            .`object`("grades") { gradesObject ->
+                gradesObject.populateGradesObject()
+            }
 
     // TODO: Punting on these for now
 //    @SerializedName("observed_user")
 //    val observedUser: User? = null,
 //    var user: User? = null
 
-    if(fieldInfo.includeGradesObject) {
-        this.`object`("grades") { gradesObject ->
-            gradesObject.populateGradesObject()
-        }
-    }
-
-    if(fieldInfo.includeGradeFields) {
+    if(fieldInfo.includeTotalScoresFields) {
         this
                 .numberType("computed_current_score")
                 .numberType("computed_final_score")
                 .stringType("computed_current_grade")
                 .stringType("computed_final_grade")
+    }
+
+    if(fieldInfo.includeCurrentGradingPeriodScoresFields) {
+        this
                 .booleanType("multiple_grading_periods_enabled")
                 .booleanType("totals_for_all_grading_periods_option")
                 .numberType("current_period_computed_current_score")
@@ -105,20 +106,14 @@ fun assertEnrollmentPopulated(
     assertNotNull("$description + lastActivityAt", enrollment.lastActivityAt)
     assertNotNull("$description + limitPrivilegesToCourseSection", enrollment.limitPrivilegesToCourseSection)
 
-    if(fieldInfo.includeGradesObject) {
-        assertNotNull("$description + grades", enrollment.grades)
-        assertNotNull("$description + grades.htmlUrl", enrollment.grades!!.htmlUrl)
-        assertNotNull("$description + grades.currentScore", enrollment.grades!!.currentScore)
-        assertNotNull("$description + grades.currentGrade", enrollment.grades!!.currentGrade)
-        assertNotNull("$description + grades.finalScore", enrollment.grades!!.finalScore)
-        assertNotNull("$description + grades.finalGrade", enrollment.grades!!.finalGrade)
-    }
-
-    if(fieldInfo.includeGradeFields) {
+    if(fieldInfo.includeTotalScoresFields) {
         assertNotNull("$description + computedCurrentScore", enrollment.computedCurrentScore)
         assertNotNull("$description + computedFinalScore", enrollment.computedFinalScore)
         assertNotNull("$description + computedCurrentGrade", enrollment.computedCurrentGrade)
         assertNotNull("$description + computedFinalGrade", enrollment.computedFinalGrade)
+    }
+
+    if(fieldInfo.includeCurrentGradingPeriodScoresFields) {
         assertNotNull("$description + multipleGradingPeriodsEnabled", enrollment.multipleGradingPeriodsEnabled)
         assertNotNull("$description + totalsForAllGradingPeriodsOption", enrollment.totalsForAllGradingPeriodsOption)
         assertNotNull("$description + currentPeriodComputedCurrentGrade", enrollment.currentPeriodComputedCurrentGrade)
