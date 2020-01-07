@@ -398,7 +398,9 @@ public abstract class BaseLoginSignInActivity extends AppCompatActivity implemen
                 builder.setMessage(errorId);
                 builder.setCancelable(true);
                 AlertDialog dialog = builder.create();
-                dialog.show();
+                if(!(BaseLoginSignInActivity.this).isFinishing()) {
+                    dialog.show();
+                }
             }
         }
     };
