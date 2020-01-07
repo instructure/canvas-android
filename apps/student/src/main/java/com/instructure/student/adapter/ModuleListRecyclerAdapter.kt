@@ -29,7 +29,10 @@ import android.widget.ProgressBar
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.managers.ModuleManager
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.ModuleItem
+import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.DateHelper
@@ -133,6 +136,11 @@ open class ModuleListRecyclerAdapter(
         mModuleItemCallbacks.clear()
         collapseAll()
         super.refresh()
+    }
+
+    override fun cancel() {
+        mModuleItemCallbacks.values.forEach { it.cancel() }
+        mModuleObjectCallback?.cancel()
     }
 
     override fun contextReady() {
