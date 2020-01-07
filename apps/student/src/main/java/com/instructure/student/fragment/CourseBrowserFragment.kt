@@ -227,46 +227,46 @@ class CourseBrowserFragment : Fragment(), FragmentInteractions, AppBarLayout.OnO
         val percentage = Math.abs(verticalOffset).div(appBarLayout?.totalScrollRange?.toFloat() ?: 1F)
 
         if (percentage <= 0.3F) {
-            val toolbarAnimation = ObjectAnimator.ofFloat(courseBrowserHeader, View.ALPHA, courseBrowserHeader.alpha, 0F)
-            val titleAnimation = ObjectAnimator.ofFloat(courseBrowserTitle, View.ALPHA, courseBrowserTitle.alpha, 1F)
-            val subtitleAnimation = ObjectAnimator.ofFloat(courseBrowserSubtitle, View.ALPHA, courseBrowserSubtitle.alpha, 0.8F)
+            val toolbarAnimation = if(courseBrowserHeader==null) null else ObjectAnimator.ofFloat(courseBrowserHeader, View.ALPHA, courseBrowserHeader.alpha, 0F)
+            val titleAnimation = if(courseBrowserTitle==null) null else ObjectAnimator.ofFloat(courseBrowserTitle, View.ALPHA, courseBrowserTitle.alpha, 1F)
+            val subtitleAnimation = if(courseBrowserSubtitle==null) null else ObjectAnimator.ofFloat(courseBrowserSubtitle, View.ALPHA, courseBrowserSubtitle.alpha, 0.8F)
 
-            toolbarAnimation.setAutoCancel(true)
-            titleAnimation.setAutoCancel(true)
-            subtitleAnimation.setAutoCancel(true)
+            toolbarAnimation?.setAutoCancel(true)
+            titleAnimation?.setAutoCancel(true)
+            subtitleAnimation?.setAutoCancel(true)
 
-            toolbarAnimation.target = courseBrowserHeader
-            titleAnimation.target = courseBrowserTitle
-            subtitleAnimation.target = courseBrowserSubtitle
+            toolbarAnimation?.target = courseBrowserHeader
+            titleAnimation?.target = courseBrowserTitle
+            subtitleAnimation?.target = courseBrowserSubtitle
 
-            toolbarAnimation.duration = 200
-            titleAnimation.duration = 320
-            subtitleAnimation.duration = 320
+            toolbarAnimation?.duration = 200
+            titleAnimation?.duration = 320
+            subtitleAnimation?.duration = 320
 
-            toolbarAnimation.start()
-            titleAnimation.start()
-            subtitleAnimation.start()
+            toolbarAnimation?.start()
+            titleAnimation?.start()
+            subtitleAnimation?.start()
 
         } else if (percentage > 0.7F) {
-            val toolbarAnimation = ObjectAnimator.ofFloat(courseBrowserHeader, View.ALPHA, courseBrowserHeader.alpha, 1F)
-            val titleAnimation = ObjectAnimator.ofFloat(courseBrowserTitle, View.ALPHA, courseBrowserTitle.alpha, 0F)
-            val subtitleAnimation = ObjectAnimator.ofFloat(courseBrowserSubtitle, View.ALPHA, courseBrowserSubtitle.alpha, 0F)
+            val toolbarAnimation = if(courseBrowserHeader==null) null else ObjectAnimator.ofFloat(courseBrowserHeader, View.ALPHA, courseBrowserHeader.alpha, 1F)
+            val titleAnimation = if(courseBrowserTitle==null) null else ObjectAnimator.ofFloat(courseBrowserTitle, View.ALPHA, courseBrowserTitle.alpha, 0F)
+            val subtitleAnimation = if(courseBrowserSubtitle==null) null else ObjectAnimator.ofFloat(courseBrowserSubtitle, View.ALPHA, courseBrowserSubtitle.alpha, 0F)
 
-            toolbarAnimation.setAutoCancel(true)
-            titleAnimation.setAutoCancel(true)
-            subtitleAnimation.setAutoCancel(true)
+            toolbarAnimation?.setAutoCancel(true)
+            titleAnimation?.setAutoCancel(true)
+            subtitleAnimation?.setAutoCancel(true)
 
-            toolbarAnimation.target = courseBrowserHeader
-            titleAnimation.target = courseBrowserTitle
-            subtitleAnimation.target = courseBrowserSubtitle
+            toolbarAnimation?.target = courseBrowserHeader
+            titleAnimation?.target = courseBrowserTitle
+            subtitleAnimation?.target = courseBrowserSubtitle
 
-            toolbarAnimation.duration = 200
-            titleAnimation.duration = 200
-            subtitleAnimation.duration = 200
+            toolbarAnimation?.duration = 200
+            titleAnimation?.duration = 200
+            subtitleAnimation?.duration = 200
 
-            toolbarAnimation.start()
-            titleAnimation.start()
-            subtitleAnimation.start()
+            toolbarAnimation?.start()
+            titleAnimation?.start()
+            subtitleAnimation?.start()
         }
     }
 
