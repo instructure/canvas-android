@@ -717,11 +717,12 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
                 // Get the current module item. we'll use the id of this down below
                 val current = moduleItemSequence.items!!.firstOrNull { it.current!!.id == moduleItemId.toLong() }?.current ?: moduleItemSequence.items!![0].current
                 val moduleItems = awaitApi<List<ModuleItem>> { ModuleManager.getAllModuleItems(canvasContext, current!!.moduleId, it, true) }
-                items = ArrayList<ArrayList<ModuleItem>>(1).apply { add(ArrayList(moduleItems)) }
+                val unfilteredItems = ArrayList<ArrayList<ModuleItem>>(1).apply { add(ArrayList(moduleItems)) }
                 modules = ArrayList<ModuleObject>(1).apply { moduleItemSequence.modules!!.firstOrNull { it.id == current?.moduleId }?.let { add(it) } }
-                val moduleHelper = ModuleProgressionUtility.prepareModulesForCourseProgression(requireContext(), current!!.id, modules, items)
+                val moduleHelper = ModuleProgressionUtility.prepareModulesForCourseProgression(requireContext(), current!!.id, modules, unfilteredItems)
                 groupPos = moduleHelper.newGroupPosition
                 childPos = moduleHelper.newChildPosition
+                items = moduleHelper.strippedModuleItems
             }
 
             setViewInfo(bundle)
