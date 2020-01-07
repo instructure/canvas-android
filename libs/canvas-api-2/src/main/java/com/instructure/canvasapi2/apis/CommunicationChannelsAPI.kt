@@ -25,10 +25,7 @@ import com.instructure.canvasapi2.models.CommunicationChannel
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
 
 object CommunicationChannelsAPI {
 
@@ -38,6 +35,9 @@ object CommunicationChannelsAPI {
 
         @POST("users/self/communication_channels?communication_channel[type]=push")
         fun addPushCommunicationChannel(@Query("communication_channel[token]") registrationId: String): Call<ResponseBody>
+
+        @DELETE("users/self/communication_channels/push")
+        fun deletePushCommunicationChannel(@Query("push_token") registrationId: String): Call<ResponseBody>
     }
 
     fun getCommunicationChannels(
@@ -55,6 +55,16 @@ object CommunicationChannelsAPI {
             null
         }
 
+    }
+
+    fun deletePushCommunicationChannelSynchronous(registrationId: String, adapter: RestBuilder, params: RestParams) {
+        try {
+            adapter.build(CommunicationChannelInterface::class.java, params)
+                .deletePushCommunicationChannel(registrationId)
+                .execute()
+        } catch (e: Exception) {
+            // Don't crash, just catch
+        }
     }
 
     fun addNewPushCommunicationChannel(

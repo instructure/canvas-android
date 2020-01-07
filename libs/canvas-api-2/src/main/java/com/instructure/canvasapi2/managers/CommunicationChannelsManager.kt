@@ -20,6 +20,7 @@ import com.instructure.canvasapi2.apis.CommunicationChannelsAPI
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.CommunicationChannel
+import com.instructure.canvasapi2.utils.weave.apiAsync
 import okhttp3.ResponseBody
 import retrofit2.Response
 
@@ -44,5 +45,11 @@ object CommunicationChannelsManager {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = true)
         return CommunicationChannelsAPI.addNewPushCommunicationChannelSynchronous(registrationId, adapter, params)
+    }
+
+    fun deletePushCommunicationChannelSynchronous(registrationId: String) {
+        val adapter = RestBuilder()
+        val params = RestParams()
+        return CommunicationChannelsAPI.deletePushCommunicationChannelSynchronous(registrationId, adapter, params)
     }
 }
