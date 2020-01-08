@@ -251,5 +251,54 @@ class CoursesApiPactTests : ApiPactTestBase() {
     }
     //endregion
 
-    // TODO: grab course 1 with syllabus?
+    // TODO: Grab course with syllabus?
+
+    //
+    //region grab dashboard cards
+    //
+
+    // Should just return the two favorite courses, right?
+    val dashboardCardResponseBody = LambdaDsl.newJsonArray { array ->
+        array.`object` { obj ->
+            obj.id("id", 1L)
+        }
+        array.`object` { obj ->
+            obj.id("id", 2L)
+        }
+    }.build()
+
+    @Pact(consumer = "mobile")
+    fun getDashboardCardsPact(builder: PactDslWithProvider) : RequestResponsePact {
+        return builder
+                .given("4 courses, 2 favorited")
+
+                .uponReceiving("A request for user's dashboard cards")
+                .path("/api/v1/dashboard/dashboard_cards")
+                .method("GET")
+                // TODO: Headers
+
+                .willRespondWith()
+                .status(200)
+                .body(dashboardCardResponseBody)
+                // TODO: Headers
+
+                .toPact()
+    }
+
+    @Test
+    @PactVerification(fragment = "getDashboardCardsPact")
+    fun `grab dashboard cards for user`() {
+        val service = createService()
+
+        val getDashboardsCall = service.dashboardCourses
+        val getDashboardsResult = getDashboardsCall.execute()
+
+        assertNotNull("Expected non-null response body", getDashboardsResult.body())
+        val dashboardCards = getDashboardsResult.body()!!
+        assertEquals("Dashboard card count", 2, dashboardCards.size)
+        assertEquals("Dashboard card 0 id", 1, dashboardCards[0].id)
+        assertEquals("Dashboard card 1 id", 2, dashboardCards[1].id)
+    }
+
+    //endregion
 }

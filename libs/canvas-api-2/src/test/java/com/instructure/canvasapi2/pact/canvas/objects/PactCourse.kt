@@ -67,7 +67,6 @@ fun LambdaDslObject.populateCourseFields(fieldInfo: PactCourseFieldInfo = PactCo
     this
             .stringType("name")
             .id("id", fieldInfo.courseId)
-            .stringType("original_name")
             .stringType("course_code")
             .booleanValue("is_favorite", fieldInfo.isFavorite)
             .timestamp("start_at", PACT_TIMESTAMP_FORMAT)
@@ -133,7 +132,6 @@ fun LambdaDslObject.populateCourseFields(fieldInfo: PactCourseFieldInfo = PactCo
 fun assertCoursePopulated(description: String, course: Course, fieldInfo: PactCourseFieldInfo = PactCourseFieldInfo(courseId = 1)) {
 
     assertNotNull("$description + name", course.name)
-    assertNotNull("$description + originalName", course.originalName)
     assertNotNull("$description + courseCode", course.courseCode)
     assertNotNull("$description + startAt", course.startAt)
     assertNotNull("$description + endAt", course.endAt)

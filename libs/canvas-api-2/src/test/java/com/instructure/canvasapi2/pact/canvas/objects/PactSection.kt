@@ -21,7 +21,11 @@ import io.pactfoundation.consumer.dsl.LambdaDslObject
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 
-fun LambdaDslObject.populateSectionFields() : LambdaDslObject {
+data class PactSectionFieldInfo(
+        val includeTotalStudents: Boolean = false
+)
+
+fun LambdaDslObject.populateSectionFields(fieldInfo: PactSectionFieldInfo = PactSectionFieldInfo()) : LambdaDslObject {
 
     this
             .id("id")
@@ -29,12 +33,20 @@ fun LambdaDslObject.populateSectionFields() : LambdaDslObject {
             .timestamp("start_at", PACT_TIMESTAMP_FORMAT)
             .timestamp("end_at", PACT_TIMESTAMP_FORMAT)
 
+    if(fieldInfo.includeTotalStudents) {
+        this.numberType("total_students")
+    }
+
     return this
 }
 
-fun assertSectionPopulated(description: String, section: Section) {
+fun assertSectionPopulated(description: String, section: Section, fieldInfo: PactSectionFieldInfo = PactSectionFieldInfo()) {
     assertNotNull("$description + id", section.id)
     assertNotNull("$description + name", section.name)
     assertNotNull("$description + startAt", section.startAt)
     assertNotNull("$description + endAt", section.endAt)
+
+    if(fieldInfo.includeTotalStudents) {
+        assertNotNull("$description + totalStudents", section.totalStudents)
+    }
 }
