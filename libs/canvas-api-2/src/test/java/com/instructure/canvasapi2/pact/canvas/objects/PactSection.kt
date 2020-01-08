@@ -21,52 +21,20 @@ import io.pactfoundation.consumer.dsl.LambdaDslObject
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 
-data class PactSectionFieldInfo (
-        val numStudents: Int = 1,
-        val courseId: Long? = null
-)
-
-fun LambdaDslObject.populateSectionFields(fieldInfo: PactSectionFieldInfo = PactSectionFieldInfo()) : LambdaDslObject {
+fun LambdaDslObject.populateSectionFields() : LambdaDslObject {
 
     this
             .id("id")
             .stringType("name")
-            .id("course_id")
             .timestamp("start_at", PACT_TIMESTAMP_FORMAT)
             .timestamp("end_at", PACT_TIMESTAMP_FORMAT)
-            .numberValue("total_students", fieldInfo.numStudents)
-
-    if(fieldInfo.numStudents > 0) {
-        this.array("students") { students ->
-            repeat(fieldInfo.numStudents) { index ->
-                students.`object`()  { student ->
-                    student.populateUserFields(PactUserFieldInfo(numEnrollments = 1))
-                }
-
-            }
-        }
-    }
-
-    if(fieldInfo.courseId != null) {
-        this.id("course_id", fieldInfo.courseId)
-    }
-    else {
-        this.id("course_id")
-    }
 
     return this
 }
 
-fun assertSectionPopulated(description: String, section: Section, fieldInfo: PactSectionFieldInfo) {
+fun assertSectionPopulated(description: String, section: Section) {
     assertNotNull("$description + id", section.id)
     assertNotNull("$description + name", section.name)
-    assertNotNull("$description + courseId", section.courseId)
     assertNotNull("$description + startAt", section.startAt)
     assertNotNull("$description + endAt", section.endAt)
-    assertNotNull("$description + totalStudents", section.totalStudents)
-
-    if(fieldInfo.numStudents > 0) {
-        assertNotNull("$description + students", section.students)
-        assertEquals("$description + students count", fieldInfo.numStudents, section.students!!.size)
-    }
 }

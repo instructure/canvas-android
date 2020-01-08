@@ -96,7 +96,8 @@ fun LambdaDslObject.populateCourseFields(fieldInfo: PactCourseFieldInfo = PactCo
     {
         val enrollmentFieldInfo = PactEnrollmentFieldInfo(
                 includeTotalScoresFields = fieldInfo.includeTotalScores,
-                includeCurrentGradingPeriodScoresFields = fieldInfo.includeCurrentGradingPeriodScores
+                includeCurrentGradingPeriodScoresFields = fieldInfo.includeCurrentGradingPeriodScores,
+                courseId = fieldInfo.courseId
                 //TODO: UserId
         )
         this.array("enrollments") { enrollment ->
@@ -121,7 +122,7 @@ fun LambdaDslObject.populateCourseFields(fieldInfo: PactCourseFieldInfo = PactCo
     if(fieldInfo.includeSections) { // Assume one section
         this.array("sections") { sections ->
             sections.`object`() { section ->
-                section.populateSectionFields(PactSectionFieldInfo(courseId = fieldInfo.courseId))
+                section.populateSectionFields()
             }
         }
     }
@@ -169,5 +170,6 @@ fun assertCoursePopulated(description: String, course: Course, fieldInfo: PactCo
     if(fieldInfo.includeSections) {
         assertNotNull("$description + sections", course.sections)
         assertEquals("$description + sections count", 1, course.sections.size)
+        assertSectionPopulated("$description + section",course.sections[0])
     }
 }

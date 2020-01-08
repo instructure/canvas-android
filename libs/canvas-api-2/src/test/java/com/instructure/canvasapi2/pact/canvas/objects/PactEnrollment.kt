@@ -35,6 +35,7 @@ private fun LambdaDslObject.populateGradesObject() : LambdaDslObject {
 
 data class PactEnrollmentFieldInfo(
         val userId: Long? = null,
+        val courseId: Long? = null,
         val includeTotalScoresFields: Boolean = false,
         val includeCurrentGradingPeriodScoresFields: Boolean = false
 )
@@ -44,7 +45,6 @@ fun LambdaDslObject.populateEnrollmentFields(fieldInfo: PactEnrollmentFieldInfo 
             .numberType("id", 0)
             .stringMatcher("type", enrollmentTypes, "StudentEnrollment")
             .stringMatcher("role", enrollmentTypes, "StudentEnrollment")
-            .numberType("course_id")
             .numberType("course_section_id")
             .stringType("enrollment_state")
             .numberType("associated_user_id") // TODO: Can/should be null for non-observer?
@@ -84,6 +84,13 @@ fun LambdaDslObject.populateEnrollmentFields(fieldInfo: PactEnrollmentFieldInfo 
     }
     else {
         this.id("user_id")
+    }
+
+    if(fieldInfo.courseId != null) {
+        this.id("course_id", fieldInfo.courseId)
+    }
+    else {
+        this.id("course_id")
     }
 
     return this
