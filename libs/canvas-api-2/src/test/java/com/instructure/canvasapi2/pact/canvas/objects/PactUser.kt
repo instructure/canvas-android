@@ -23,7 +23,9 @@ import org.junit.Assert.assertNotNull
 
 data class PactUserFieldInfo(
         val id: Long? = null,
-        val numEnrollments: Int = 0
+        val numEnrollments: Int = 0,
+        val populateFully: Boolean = false,
+        val isProfile: Boolean = false
 )
 
 fun LambdaDslObject.populateUserFields(fieldInfo: PactUserFieldInfo = PactUserFieldInfo()) : LambdaDslObject {
@@ -32,13 +34,7 @@ fun LambdaDslObject.populateUserFields(fieldInfo: PactUserFieldInfo = PactUserFi
             .stringType("name")
             .stringType("short_name")
             .stringType("login_id")
-            .stringType("avatar_url")
-            .stringType("primary_email")
-            .stringType("email")
             .stringType("sortable_name")
-            .stringType("bio")
-            .stringType("locale")
-            .stringType("effective_locale")
 
     //
     // Optional / configurable fields
@@ -61,6 +57,20 @@ fun LambdaDslObject.populateUserFields(fieldInfo: PactUserFieldInfo = PactUserFi
         }
     }
 
+    if(fieldInfo.populateFully) {
+        this
+                .stringType("locale")
+                .stringType("effective_locale")
+
+    }
+
+    if(fieldInfo.isProfile) {
+        this
+                .stringType("avatar_url")
+                .stringType("primary_email")
+                .stringType("bio")
+    }
+
     return this
 }
 
@@ -69,13 +79,7 @@ fun assertUserPopulated(description: String, user: User, fieldInfo: PactUserFiel
     assertNotNull("$description + name", user.name)
     assertNotNull("$description + shortName", user.shortName)
     assertNotNull("$description + loginId", user.loginId)
-    assertNotNull("$description + avatarUrl", user.avatarUrl)
-    assertNotNull("$description + primaryEmail", user.primaryEmail)
-    assertNotNull("$description + email", user.email)
     assertNotNull("$description + sortableName", user.sortableName)
-    assertNotNull("$description + bio", user.bio)
-    assertNotNull("$description + locale", user.locale)
-    assertNotNull("$description + effective_locale", user.effective_locale)
 
     if(fieldInfo.id != null) {
         assertEquals("$description + id", fieldInfo.id, user.id)
@@ -84,5 +88,16 @@ fun assertUserPopulated(description: String, user: User, fieldInfo: PactUserFiel
     if(fieldInfo.numEnrollments > 0) {
         assertNotNull("$description + enrollments", user.enrollments)
         assertEquals("$description + enrollment count", fieldInfo.numEnrollments, user.enrollments.size)
+    }
+
+    if(fieldInfo.populateFully) {
+        assertNotNull("$description + locale", user.locale)
+        assertNotNull("$description + effective_locale", user.effective_locale)
+    }
+
+    if(fieldInfo.isProfile) {
+        assertNotNull("$description + avatarUrl", user.avatarUrl)
+        assertNotNull("$description + primaryEmail", user.primaryEmail)
+        assertNotNull("$description + bio", user.bio)
     }
 }

@@ -17,6 +17,7 @@
 package com.instructure.canvasapi2.pact.canvas.objects
 
 import com.instructure.canvasapi2.models.Enrollment
+import com.instructure.canvasapi2.models.Grades
 import io.pactfoundation.consumer.dsl.LambdaDslObject
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
@@ -33,31 +34,31 @@ private fun LambdaDslObject.populateGradesObject() : LambdaDslObject {
     return this
 }
 
+private fun assertGradesPopulated(description: String, grades: Grades) {
+    assertNotNull("$description + html_url", grades.htmlUrl)
+    assertNotNull("$description + html_url", grades.currentScore)
+    assertNotNull("$description + html_url", grades.currentGrade)
+    assertNotNull("$description + html_url", grades.finalScore)
+    assertNotNull("$description + html_url", grades.finalGrade)
+}
+
 data class PactEnrollmentFieldInfo(
         val userId: Long? = null,
         val courseId: Long? = null,
         val includeTotalScoresFields: Boolean = false,
-        val includeCurrentGradingPeriodScoresFields: Boolean = false
+        val includeCurrentGradingPeriodScoresFields: Boolean = false,
+        val isObserver: Boolean = false,
+
+        // These are different between "full" enrollment data and enrollment data embedded in a Course
+        val populateFully: Boolean = false // Add a number of extra fields that only appear when an enrollment is not nested
 )
 
 fun LambdaDslObject.populateEnrollmentFields(fieldInfo: PactEnrollmentFieldInfo = PactEnrollmentFieldInfo()) : LambdaDslObject {
     this
-            .numberType("id", 0)
-            .stringMatcher("type", enrollmentTypes, "StudentEnrollment")
+            .stringMatcher("type", enrollmentTypes, "StudentEnrollment") // May not be the same as "role", despite API docs
             .stringMatcher("role", enrollmentTypes, "StudentEnrollment")
-            .numberType("course_section_id")
             .stringType("enrollment_state")
-            .numberType("associated_user_id") // TODO: Can/should be null for non-observer?
-            .timestamp("last_activity_at", PACT_TIMESTAMP_FORMAT)
             .booleanType("limit_privileges_to_course_section")
-            .`object`("grades") { gradesObject ->
-                gradesObject.populateGradesObject()
-            }
-
-    // TODO: Punting on these for now
-//    @SerializedName("observed_user")
-//    val observedUser: User? = null,
-//    var user: User? = null
 
     if(fieldInfo.includeTotalScoresFields) {
         this
@@ -86,13 +87,32 @@ fun LambdaDslObject.populateEnrollmentFields(fieldInfo: PactEnrollmentFieldInfo 
         this.id("user_id")
     }
 
-    if(fieldInfo.courseId != null) {
-        this.id("course_id", fieldInfo.courseId)
-    }
-    else {
-        this.id("course_id")
+    if(fieldInfo.isObserver) {
+        this.id("associated_user_id")
     }
 
+    if(fieldInfo.populateFully) {
+        this.id("id")
+        this.id("course_section_id")
+        if(fieldInfo.courseId != null) {
+            this.id("course_id", fieldInfo.courseId)
+        }
+        else {
+            this.id("course_id")
+        }
+        this.timestamp("last_activity_at", PACT_TIMESTAMP_FORMAT)
+        this.`object`("grades") { grades ->
+            grades.populateGradesObject()
+        }
+        this.`object`("user") {user ->
+            user.populateUserFields()
+        }
+        if(fieldInfo.isObserver) {
+            this.`object`("observed_user"){ user ->
+                user.populateUserFields()
+            }
+        }
+    }
     return this
 }
 
@@ -102,15 +122,10 @@ fun assertEnrollmentPopulated(
         fieldInfo: PactEnrollmentFieldInfo = PactEnrollmentFieldInfo()
 )
 {
-    assertNotNull("$description + id", enrollment.id)
     assertNotNull("$description + type", enrollment.type)
     assertNotNull("$description + role", enrollment.role)
-    assertNotNull("$description + courseId", enrollment.courseId)
-    assertNotNull("$description + courseSectionId", enrollment.courseSectionId)
     assertNotNull("$description + enrollmentState", enrollment.enrollmentState)
     assertNotNull("$description + userId", enrollment.userId)
-    assertNotNull("$description + associatedUserId", enrollment.associatedUserId)
-    assertNotNull("$description + lastActivityAt", enrollment.lastActivityAt)
     assertNotNull("$description + limitPrivilegesToCourseSection", enrollment.limitPrivilegesToCourseSection)
 
     if(fieldInfo.includeTotalScoresFields) {
@@ -131,7 +146,34 @@ fun assertEnrollmentPopulated(
         assertNotNull("$description + currentGradingPeriodTitle", enrollment.currentGradingPeriodTitle)
     }
 
+    if(fieldInfo.courseId != null) {
+        assertNotNull("$description + courseId", enrollment.courseId)
+        assertEquals("$description + courseId", fieldInfo.courseId, enrollment.courseId)
+    }
+
     if(fieldInfo.userId != null) {
         assertEquals("$description + userId", fieldInfo.userId, enrollment.userId)
+    }
+
+    if(fieldInfo.isObserver) {
+        assertNotNull("$description + associatedUserId", enrollment.associatedUserId)
+    }
+
+    if(fieldInfo.populateFully) {
+        assertNotNull("$description + id", enrollment.id)
+        assertNotNull("$description + courseSectionId", enrollment.courseSectionId)
+        assertNotNull("$description + courseId", enrollment.courseId)
+        if(fieldInfo.courseId != null) {
+            assertEquals("$description + courseId", fieldInfo.courseId, enrollment.courseId)
+        }
+        assertNotNull("$description + lastActivityAt", enrollment.lastActivityAt)
+        assertNotNull("$description + grades", enrollment.grades)
+        assertGradesPopulated("$description + grades", enrollment.grades!!)
+        assertNotNull("$description + user", enrollment.user)
+        assertUserPopulated("$description + user", enrollment.user!!)
+        if(fieldInfo.isObserver) {
+            assertNotNull("$description + observedUser", enrollment.observedUser)
+            assertUserPopulated("$description + observedUser", enrollment.observedUser!!)
+        }
     }
 }
