@@ -57,9 +57,9 @@ object CommunicationChannelsAPI {
 
     }
 
-    fun deletePushCommunicationChannelSynchronous(registrationId: String, adapter: RestBuilder, params: RestParams) {
+    fun deletePushCommunicationChannelSynchronous(registrationId: String) {
         try {
-            adapter.build(CommunicationChannelInterface::class.java, params)
+            RestBuilder().build(CommunicationChannelInterface::class.java, RestParams())
                 .deletePushCommunicationChannel(registrationId)
                 .execute()
         } catch (e: Exception) {

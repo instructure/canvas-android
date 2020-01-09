@@ -48,8 +48,6 @@ object CommunicationChannelsManager {
     }
 
     fun deletePushCommunicationChannelSynchronous(registrationId: String) {
-        val adapter = RestBuilder()
-        val params = RestParams()
-        return CommunicationChannelsAPI.deletePushCommunicationChannelSynchronous(registrationId, adapter, params)
+        return CommunicationChannelsAPI.deletePushCommunicationChannelSynchronous(registrationId)
     }
 }
