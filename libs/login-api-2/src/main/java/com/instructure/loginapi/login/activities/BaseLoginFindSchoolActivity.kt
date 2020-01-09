@@ -43,11 +43,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.managers.AccountDomainManager
 import com.instructure.canvasapi2.models.AccountDomain
+import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.LinkHeaders
 import com.instructure.loginapi.login.R
 import com.instructure.loginapi.login.adapter.DomainAdapter
 import com.instructure.loginapi.login.dialog.ErrorReportDialog
+import com.instructure.loginapi.login.dialog.NoInternetConnectionDialog
 import com.instructure.loginapi.login.util.Const
 import com.instructure.pandautils.utils.ColorUtils
 import com.instructure.pandautils.utils.ViewStyler
@@ -120,8 +122,13 @@ abstract class BaseLoginFindSchoolActivity : AppCompatActivity(), ErrorReportDia
             inflateMenu(R.menu.menu_next)
             setOnMenuItemClickListener(Toolbar.OnMenuItemClickListener { item ->
                 if (item.itemId == R.id.next) {
-                    validateDomain(AccountDomain(domainInput.text.toString()))
-                    return@OnMenuItemClickListener true
+                    if (APIHelper.hasNetworkConnection()) {
+                        validateDomain(AccountDomain(domainInput.text.toString()))
+                        return@OnMenuItemClickListener true
+                    } else {
+                        NoInternetConnectionDialog.show(supportFragmentManager)
+                        return@OnMenuItemClickListener true
+                    }
                 }
                 false
             })
