@@ -77,7 +77,7 @@ class DioConfig {
 
     // Cache manager
     if (cacheMaxAge != Duration.zero) {
-      dio.interceptors.add(DioCacheManager(CacheConfig(baseUrl: baseUrl)).interceptor);
+      dio.interceptors.add(_cacheInterceptor());
     }
 
     // Log interceptor
@@ -90,6 +90,15 @@ class DioConfig {
     ));
 
     return dio;
+  }
+
+  Interceptor _cacheInterceptor() {
+    Interceptor interceptor = DioCacheManager(CacheConfig(baseUrl: baseUrl)).interceptor;
+    return InterceptorsWrapper(
+      onRequest: (RequestOptions options) => options.method == 'GET' ? interceptor.onRequest(options) : options,
+      onResponse: (Response response) => response.request.method == 'GET' ? interceptor.onResponse(response) : response,
+      onError: (DioError e) => e.request.method == 'GET' ? interceptor.onError(e) : e,
+    );
   }
 
   /// Creates a [DioConfig] targeted at typical Canvas API usage
