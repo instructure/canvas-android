@@ -13,16 +13,16 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:flutter/material.dart';
-import 'package:flutter_parent/network/api/inbox_api.dart';
+import 'package:flutter_parent/network/api/alert_api.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
-class InboxCountNotifier extends ValueNotifier<int> {
-  InboxCountNotifier() : super(0);
+class AlertCountNotifier extends ValueNotifier<int> {
+  AlertCountNotifier() : super(0);
 
-  update() async {
+  update(String studentId) async {
     try {
-      var unreadCount = await locator<InboxApi>().getUnreadCount();
-      value = int.parse(unreadCount?.count?.asString);
+      final unreadCount = await locator<AlertsApi>().getUnreadCount(studentId);
+      value = unreadCount?.count?.asNum;
     } catch (e) {
       print(e);
     }

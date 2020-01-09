@@ -49,12 +49,12 @@ void main() {
     });
 
     final api = _MockAlertsApi();
-    when(api.getAlertsDepaginated(studentId)).thenAnswer((_) => Future.value(data.toList()));
+    when(api.getAlertsDepaginated(studentId, false)).thenAnswer((_) => Future.value(data.toList()));
     _setupLocator(api: api);
 
-    final actual = await AlertsInteractor().getAlertsForStudent(studentId);
+    final actual = await AlertsInteractor().getAlertsForStudent(studentId, false);
 
-    verify(api.getAlertsDepaginated(studentId)).called(1);
+    verify(api.getAlertsDepaginated(studentId, false)).called(1);
     expect(actual, data.reversed.toList()); // Verify that the actual list sorted correctly
   });
 }

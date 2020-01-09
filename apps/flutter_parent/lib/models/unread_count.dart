@@ -13,6 +13,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:built_value/built_value.dart';
+import 'package:built_value/json_object.dart';
 import 'package:built_value/serializer.dart';
 
 part 'unread_count.g.dart';
@@ -23,8 +24,10 @@ abstract class UnreadCount implements Built<UnreadCount, UnreadCountBuilder> {
   @BuiltValueSerializer(serializeNulls: true) // Add this line to get nulls to serialize when we convert to JSON
   static Serializer<UnreadCount> get serializer => _$unreadCountSerializer;
 
+  // Returned as a String from the conversation count
+  // Returned as a num from the alerts count
   @BuiltValueField(wireName: 'unread_count')
-  String get count;
+  JsonObject get count;
 
   UnreadCount._();
   factory UnreadCount([void Function(UnreadCountBuilder) updates]) = _$UnreadCount;

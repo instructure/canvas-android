@@ -566,4 +566,11 @@ class AppLocalizations {
         'Filter',
         desc: 'Label for buttons to filter what items are visible',
       );
+
+  String badgeNumberPlus(int count) => Intl.message(
+        '${count}+',
+        desc: "Formatted string for when too many items are being notified in a badge, generally something like '99+'",
+        name: 'badgeNumberPlus',
+        args: [count],
+      );
 }

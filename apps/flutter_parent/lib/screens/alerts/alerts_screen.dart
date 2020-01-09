@@ -17,6 +17,8 @@ import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/alert.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/screens/alerts/alerts_interactor.dart';
+import 'package:flutter_parent/screens/dashboard/alert_notifier.dart';
+import 'package:flutter_parent/utils/common_widgets/badges.dart';
 import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/full_screen_scroll_container.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
@@ -39,7 +41,8 @@ class AlertsScreen extends StatefulWidget {
 class _AlertsScreenState extends State<AlertsScreen> {
   Future<List<Alert>> _alertsFuture;
 
-  Future<List<Alert>> _loadAlerts() => widget._interactor.getAlertsForStudent(widget._student.id);
+  Future<List<Alert>> _loadAlerts({bool forceRefresh = false}) =>
+      widget._interactor.getAlertsForStudent(widget._student.id, forceRefresh);
 
   @override
   void initState() {
@@ -64,12 +67,12 @@ class _AlertsScreenState extends State<AlertsScreen> {
         } else if (snapshot.data == null || snapshot.data.isEmpty) {
           child = _empty(context);
         } else {
-          child = _AlertsList(snapshot.data);
+          child = _AlertsList(widget._student, snapshot.data);
         }
 
         return RefreshIndicator(
           onRefresh: () {
-            _alertsFuture = _loadAlerts();
+            _alertsFuture = _loadAlerts(forceRefresh: true);
             setState(() {});
             return _alertsFuture;
           },
@@ -93,8 +96,9 @@ class _AlertsScreenState extends State<AlertsScreen> {
 class _AlertsList extends StatefulWidget {
   final _interactor = locator<AlertsInteractor>();
   final List<Alert> _alerts;
+  final User _student;
 
-  _AlertsList(this._alerts, {Key key}) : super(key: key);
+  _AlertsList(this._student, this._alerts, {Key key}) : super(key: key);
 
   @override
   __AlertsListState createState() => __AlertsListState();
@@ -118,12 +122,17 @@ class __AlertsListState extends State<_AlertsList> {
   }
 
   Widget _alertTile(BuildContext context, Alert alert, int index) {
-    return ListTile(
+    Widget tile = ListTile(
       leading: Icon(_alertIcon(alert), color: _alertColor(context, alert), size: 20),
       title: Text(alert.title),
       subtitle: Text(_formatDate(context, alert.actionDate)),
       onTap: () => _routeAlert(alert, index),
     );
+
+    if (alert.workflowState == AlertWorkflowState.unread) {
+      tile = WidgetBadge(tile);
+    }
+    return tile;
   }
 
   /// Utilities
@@ -148,10 +157,13 @@ class __AlertsListState extends State<_AlertsList> {
   }
 
   void _routeAlert(Alert alert, int index) async {
+    // TODO: Show detail page for alert
+
+    // We're done if the alert was already read, otherwise mark it read
+    if (alert.workflowState == AlertWorkflowState.read) return;
+
     final readAlert = await widget._interactor.markAlertRead(alert.id);
     setState(() => _alerts.setRange(index, index + 1, [readAlert]));
-
-    // TODO: Show detail page for alert
-    // TODO: Update alerts badge count, when we implement that feature
+    locator<AlertCountNotifier>().update(widget._student.id);
   }
 }

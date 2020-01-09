@@ -17,8 +17,8 @@ import 'package:flutter_parent/network/api/alert_api.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class AlertsInteractor {
-  Future<List<Alert>> getAlertsForStudent(String studentId) async {
-    final data = await _alertsApi().getAlertsDepaginated(studentId);
+  Future<List<Alert>> getAlertsForStudent(String studentId, bool forceRefresh) async {
+    final data = await _alertsApi().getAlertsDepaginated(studentId, forceRefresh);
     return data
       ..sort((a, b) {
         if (a.actionDate == null && b.actionDate == null) return 0;

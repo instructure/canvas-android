@@ -22,6 +22,7 @@ import 'package:flutter_parent/network/api/inbox_api.dart';
 import 'package:flutter_parent/screens/alerts/alerts_interactor.dart';
 import 'package:flutter_parent/screens/courses/courses_interactor.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_interactor.dart';
+import 'package:flutter_parent/screens/dashboard/alert_notifier.dart';
 import 'package:flutter_parent/screens/dashboard/dashboard_interactor.dart';
 import 'package:flutter_parent/screens/dashboard/inbox_notifier.dart';
 import 'package:flutter_parent/screens/domain_search/domain_search_interactor.dart';
@@ -62,4 +63,5 @@ void setupLocator() {
   // Other
   locator.registerLazySingleton<QuickNav>(() => QuickNav());
   locator.registerLazySingleton<InboxCountNotifier>(() => InboxCountNotifier());
+  locator.registerLazySingleton<AlertCountNotifier>(() => AlertCountNotifier());
 }

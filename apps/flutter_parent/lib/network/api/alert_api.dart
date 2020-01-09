@@ -13,17 +13,22 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:flutter_parent/models/alert.dart';
+import 'package:flutter_parent/models/unread_count.dart';
 import 'package:flutter_parent/network/utils/dio_config.dart';
 import 'package:flutter_parent/network/utils/fetch.dart';
 
 class AlertsApi {
   /// Alerts were depaginated in the original parent app, then sorted by date. Depaginating here to follow suite.
-  Future<List<Alert>> getAlertsDepaginated(String studentId) async {
-    var dio = canvasDio();
+  Future<List<Alert>> getAlertsDepaginated(String studentId, bool forceRefresh) async {
+    var dio = canvasDio(forceRefresh: forceRefresh);
     return fetchList(dio.get('users/self/observer_alerts/$studentId'), depaginateWith: dio);
   }
 
   Future<Alert> updateAlertWorkflow(String alertId, String workflowState) async {
     return fetch(canvasDio().put('users/self/observer_alerts/$alertId/$workflowState'));
   }
+
+  // Always force a refresh when retrieving this data
+  Future<UnreadCount> getUnreadCount(String studentId) => fetch(canvasDio(forceRefresh: true)
+      .get('users/self/observer_alerts/unread_count', queryParameters: {'student_id': studentId}));
 }

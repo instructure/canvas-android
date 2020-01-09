@@ -14,16 +14,20 @@
 
 import 'dart:math';
 
+import 'package:built_value/json_object.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/course.dart';
+import 'package:flutter_parent/models/unread_count.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/api/alert_api.dart';
+import 'package:flutter_parent/network/api/inbox_api.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/alerts/alerts_interactor.dart';
 import 'package:flutter_parent/screens/alerts/alerts_screen.dart';
 import 'package:flutter_parent/screens/courses/courses_interactor.dart';
 import 'package:flutter_parent/screens/courses/courses_screen.dart';
+import 'package:flutter_parent/screens/dashboard/alert_notifier.dart';
 import 'package:flutter_parent/screens/dashboard/dashboard_interactor.dart';
 import 'package:flutter_parent/screens/dashboard/dashboard_screen.dart';
 import 'package:flutter_parent/screens/dashboard/inbox_notifier.dart';
@@ -44,7 +48,7 @@ import '../../utils/test_app.dart';
 
 void main() {
   mockNetworkImageResponse();
-  _setupLocator([MockInteractor interactor]) {
+  _setupLocator({MockInteractor interactor, AlertsApi alertsApi, InboxApi inboxApi}) {
     final _locator = GetIt.instance;
     _locator.reset();
     _locator.registerFactory<DashboardInteractor>(() => interactor ?? MockInteractor());
@@ -52,7 +56,10 @@ void main() {
     _locator.registerFactory<AlertsInteractor>(() => MockAlertsInteractor());
     _locator.registerFactory<SettingsInteractor>(() => SettingsInteractor());
     _locator.registerFactory<ManageStudentsInteractor>(() => MockManageStudentsInteractor());
-    _locator.registerLazySingleton<AlertsApi>(() => AlertsApiMock());
+    _locator.registerLazySingleton<AlertsApi>(() => alertsApi ?? AlertsApiMock());
+    _locator.registerLazySingleton<InboxApi>(() => inboxApi);
+    _locator.registerLazySingleton<InboxCountNotifier>(() => InboxCountNotifier());
+    _locator.registerLazySingleton<AlertCountNotifier>(() => AlertCountNotifier());
     _locator.registerLazySingleton<QuickNav>(() => QuickNav());
   }
 
@@ -64,7 +71,7 @@ void main() {
       );
 
   testWidgetsWithAccessibilityChecks('Displays name with pronouns when pronouns are not null', (tester) async {
-    _setupLocator(MockInteractor(includePronouns: true));
+    _setupLocator(interactor: MockInteractor(includePronouns: true));
 
     // Get the first user
     var interactor = GetIt.instance.get<DashboardInteractor>();
@@ -96,7 +103,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Displays No Students when there are no observees', (tester) async {
-    _setupLocator(MockInteractor(generateStudents: false));
+    _setupLocator(interactor: MockInteractor(generateStudents: false));
 
     await tester.pumpWidget(_testableMaterialWidget());
     await tester.pumpAndSettle();
@@ -112,7 +119,7 @@ void main() {
 
   testWidgetsWithAccessibilityChecks('Nav drawer displays observer name (w/pronouns), and email address',
       (tester) async {
-    _setupLocator(MockInteractor(includePronouns: true));
+    _setupLocator(interactor: MockInteractor(includePronouns: true));
 
     // Get the first user
     var interactor = GetIt.instance.get<DashboardInteractor>();
@@ -319,8 +326,9 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Initiates call to update inbox count', (tester) async {
+    final inboxApi = MockInboxApi();
     var interactor = MockInteractor();
-    _setupLocator(interactor);
+    _setupLocator(interactor: interactor, inboxApi: inboxApi);
 
     await tester.pumpWidget(_testableMaterialWidget());
     await tester.pumpAndSettle();
@@ -329,13 +337,14 @@ void main() {
     DashboardScreen.scaffoldKey.currentState.openDrawer();
     await tester.pumpAndSettle();
 
-    expect(interactor.mockInboxNotifier.updateCount, 1);
+    verify(inboxApi.getUnreadCount()).called(1);
   });
 
   testWidgetsWithAccessibilityChecks('Inbox count of zero hides badge', (tester) async {
+    final inboxApi = MockInboxApi();
     var interactor = MockInteractor();
-    interactor.mockInboxNotifier.nextValue = 0;
-    _setupLocator(interactor);
+    when(inboxApi.getUnreadCount()).thenAnswer((_) => Future.value(UnreadCount((b) => b..count = JsonObject('0'))));
+    _setupLocator(interactor: interactor, inboxApi: inboxApi);
 
     await tester.pumpWidget(_testableMaterialWidget());
     await tester.pumpAndSettle();
@@ -344,13 +353,15 @@ void main() {
     DashboardScreen.scaffoldKey.currentState.openDrawer();
     await tester.pumpAndSettle();
 
-    expect(find.byKey(Key('inbox-count')), findsNothing);
+    // Assert there's no text in the inbox-count
+    expect(find.descendant(of: find.byKey(Key('inbox-count')), matching: find.byType(Text)), findsNothing);
   });
 
   testWidgetsWithAccessibilityChecks('Displays Inbox count', (tester) async {
+    final inboxApi = MockInboxApi();
     var interactor = MockInteractor();
-    interactor.mockInboxNotifier.nextValue = 12321;
-    _setupLocator(interactor);
+    when(inboxApi.getUnreadCount()).thenAnswer((_) => Future.value(UnreadCount((b) => b..count = JsonObject('12321'))));
+    _setupLocator(interactor: interactor, inboxApi: inboxApi);
 
     await tester.pumpWidget(_testableMaterialWidget());
     await tester.pumpAndSettle();
@@ -363,9 +374,10 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Updates Inbox count', (tester) async {
+    final inboxApi = MockInboxApi();
     var interactor = MockInteractor();
-    interactor.mockInboxNotifier.nextValue = 12321;
-    _setupLocator(interactor);
+    when(inboxApi.getUnreadCount()).thenAnswer((_) => Future.value(UnreadCount((b) => b..count = JsonObject('12321'))));
+    _setupLocator(interactor: interactor, inboxApi: inboxApi);
 
     await tester.pumpWidget(_testableMaterialWidget());
     await tester.pumpAndSettle();
@@ -374,10 +386,86 @@ void main() {
     DashboardScreen.scaffoldKey.currentState.openDrawer();
     await tester.pumpAndSettle();
 
-    interactor.mockInboxNotifier.value = 78987;
+    when(inboxApi.getUnreadCount()).thenAnswer((_) => Future.value(UnreadCount((b) => b..count = JsonObject('78987'))));
+
+    interactor.getInboxCountNotifier().update();
     await tester.pumpAndSettle();
 
     expect(find.text('78987'), findsOneWidget);
+  });
+
+  group('alert badge', () {
+    testWidgetsWithAccessibilityChecks('Initiates call to update alerts count', (tester) async {
+      final alertsApi = MockAlertsApi();
+      var interactor = MockInteractor();
+      _setupLocator(interactor: interactor, alertsApi: alertsApi);
+
+      await tester.pumpWidget(_testableMaterialWidget());
+      await tester.pumpAndSettle();
+
+      // Open the nav drawer
+      DashboardScreen.scaffoldKey.currentState.openDrawer();
+      await tester.pumpAndSettle();
+
+      verify(alertsApi.getUnreadCount(any)).called(1);
+    });
+
+    testWidgetsWithAccessibilityChecks('Inbox count of zero hides badge', (tester) async {
+      final alertsApi = MockAlertsApi();
+      var interactor = MockInteractor();
+      when(alertsApi.getUnreadCount(any)).thenAnswer((_) => Future.value(UnreadCount((b) => b..count = JsonObject(0))));
+      _setupLocator(interactor: interactor, alertsApi: alertsApi);
+
+      await tester.pumpWidget(_testableMaterialWidget());
+      await tester.pumpAndSettle();
+
+      // Open the nav drawer
+      DashboardScreen.scaffoldKey.currentState.openDrawer();
+      await tester.pumpAndSettle();
+
+      // Assert there's no text in the alerts-count
+      expect(find.descendant(of: find.byKey(Key('alerts-count')), matching: find.byType(Text)), findsNothing);
+    });
+
+    testWidgetsWithAccessibilityChecks('Displays Inbox count', (tester) async {
+      final alertsApi = MockAlertsApi();
+      var interactor = MockInteractor();
+      when(alertsApi.getUnreadCount(any))
+          .thenAnswer((_) => Future.value(UnreadCount((b) => b..count = JsonObject(88))));
+      _setupLocator(interactor: interactor, alertsApi: alertsApi);
+
+      await tester.pumpWidget(_testableMaterialWidget());
+      await tester.pumpAndSettle();
+
+      // Open the nav drawer
+      DashboardScreen.scaffoldKey.currentState.openDrawer();
+      await tester.pumpAndSettle();
+
+      expect(find.text('88'), findsOneWidget);
+    });
+
+    testWidgetsWithAccessibilityChecks('Updates Inbox count', (tester) async {
+      final alertsApi = MockAlertsApi();
+      var interactor = MockInteractor();
+      when(alertsApi.getUnreadCount(any))
+          .thenAnswer((_) => Future.value(UnreadCount((b) => b..count = JsonObject(88))));
+      _setupLocator(interactor: interactor, alertsApi: alertsApi);
+
+      await tester.pumpWidget(_testableMaterialWidget());
+      await tester.pumpAndSettle();
+
+      // Open the nav drawer
+      DashboardScreen.scaffoldKey.currentState.openDrawer();
+      await tester.pumpAndSettle();
+
+      when(alertsApi.getUnreadCount(any))
+          .thenAnswer((_) => Future.value(UnreadCount((b) => b..count = JsonObject(77))));
+
+      interactor.getAlertCountNotifier().update("doesn't matter");
+      await tester.pumpAndSettle();
+
+      expect(find.text('77'), findsOneWidget);
+    });
   });
 }
 
@@ -389,7 +477,6 @@ class MockInteractor extends DashboardInteractor {
   bool includePronouns;
   bool generateStudents;
   bool generateSelf;
-  _MockInboxCountNotifier mockInboxNotifier = _MockInboxCountNotifier();
 
   MockInteractor({this.includePronouns = false, this.generateStudents = true, this.generateSelf = true});
 
@@ -406,21 +493,11 @@ class MockInteractor extends DashboardInteractor {
   Future<User> getSelf({app}) async => generateSelf
       ? _mockUser('Marlene', pronouns: includePronouns ? 'she/her' : null, primaryEmail: 'marlene@instructure.com')
       : null;
-
-  @override
-  InboxCountNotifier getInboxCountNotifier() => mockInboxNotifier;
 }
 
-class _MockInboxCountNotifier extends InboxCountNotifier {
-  int nextValue = 0;
-  int updateCount = 0;
+class MockInboxApi extends Mock implements InboxApi {}
 
-  @override
-  update() {
-    updateCount++;
-    value = nextValue;
-  }
-}
+class MockAlertsApi extends Mock implements AlertsApi {}
 
 class MockCoursesInteractor extends CoursesInteractor {
   @override
