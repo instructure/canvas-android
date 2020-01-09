@@ -393,12 +393,12 @@ public abstract class BaseLoginSignInActivity extends AppCompatActivity implemen
                     errorId = R.string.mobileVerifyUnknownError;
                 }
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(BaseLoginSignInActivity.this);
-                builder.setTitle(R.string.errorOccurred);
-                builder.setMessage(errorId);
-                builder.setCancelable(true);
-                AlertDialog dialog = builder.create();
                 if(!(BaseLoginSignInActivity.this).isFinishing()) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(BaseLoginSignInActivity.this);
+                    builder.setTitle(R.string.errorOccurred);
+                    builder.setMessage(errorId);
+                    builder.setCancelable(true);
+                    AlertDialog dialog = builder.create();
                     dialog.show();
                 }
             }
