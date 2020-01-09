@@ -20,12 +20,7 @@ import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.hasDescendant
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
-import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.matcher.ViewMatchers.withParent
-import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
 import androidx.test.espresso.web.sugar.Web.onWebView
 import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
@@ -45,9 +40,8 @@ import com.instructure.espresso.page.onViewWithText
 import com.instructure.espresso.page.waitForViewWithId
 import com.instructure.student.R
 import com.instructure.student.ui.pages.renderPages.SubmissionCommentsRenderPage
-import org.hamcrest.Matchers.allOf
-import org.hamcrest.Matchers.anyOf
-import org.hamcrest.Matchers.containsString
+import org.hamcrest.Matchers.*
+import java.lang.Thread.sleep
 
 open class SubmissionDetailsPage : BasePage(R.id.submissionDetails) {
     private val commentsButton by OnViewWithStringTextIgnoreCase("comments")
@@ -59,6 +53,7 @@ open class SubmissionDetailsPage : BasePage(R.id.submissionDetails) {
     }
 
     fun clickSubmissionContentAtPosition(percentX: Float, percentY: Float) {
+        sleep(1000) // Sometimes the pdf/annotations aren't fully ready when we click
         onViewWithId(R.id.submissionContent).perform(clickCoordinates(percentX, percentY))
     }
 
