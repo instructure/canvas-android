@@ -38,4 +38,7 @@ class PollsLogoutTask(type: Type) : LogoutTask(type) {
         return InitLoginActivity.createIntent(ContextKeeper.appContext)
     }
 
+    override fun getFcmToken(listener: (registrationId: String?) -> Unit) {
+        listener(null)
+    }
 }

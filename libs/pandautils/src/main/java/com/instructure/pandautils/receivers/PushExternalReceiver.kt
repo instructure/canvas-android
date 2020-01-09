@@ -30,8 +30,6 @@ import com.instructure.canvasapi2.utils.Logger
 import com.instructure.pandautils.R
 import com.instructure.pandautils.models.PushNotification
 import com.instructure.pandautils.services.PushNotificationRegistrationService
-import java.net.MalformedURLException
-import java.net.URL
 
 abstract class PushExternalReceiver : FirebaseMessagingService() {
     abstract fun getAppColor(): Int
@@ -55,11 +53,8 @@ abstract class PushExternalReceiver : FirebaseMessagingService() {
         val collapseKey = getCollapseKey(data)
 
         val push = PushNotification(htmlUrl, from, alert, collapseKey, userId)
-        if (PushNotification.store(push)) {
-            postNotification(this, data, getAppName(this), getStartingActivityClass(), getAppColor())
-        } else {
-            Logger.e("PushExternalReceiver failed to create push notification")
-        }
+        PushNotification.store(push)
+        postNotification(this, data, getAppName(this), getStartingActivityClass(), getAppColor())
     }
 
     companion object {
@@ -68,46 +63,15 @@ abstract class PushExternalReceiver : FirebaseMessagingService() {
         private const val CHANNEL_PUSH_GENERAL = "generalNotifications"
 
         fun postNotification(context: Context, data: Map<String, String>?, appName: String, startingActivity: Class<out Activity>, @ColorRes appColor: Int) {
+            val loginId = ApiPrefs.user?.loginId
 
-            val user = ApiPrefs.user
-            val userDomain = ApiPrefs.domain
-            val url = getHtmlUrl(data)
-            val notificationUserId = PushNotification.getUserIdFromPush(getUserId(data))
-
-            var incomingDomain = ""
-
-            try {
-                incomingDomain = URL(url).host
-            } catch (e: MalformedURLException) {
-                Logger.w("PushExternalReceiver: HTML URL MALFORMED")
-            } catch (e: NullPointerException) {
-                Logger.w("PushExternalReceiver: HTML URL IS NULL")
-            }
-
-            if (user != null && notificationUserId.isNotBlank()) {
-                val currentUserId = user.id.toString()
-                if (!notificationUserId.equals(currentUserId, ignoreCase = true)) {
-                    Logger.e("USER IDS MISMATCHED")
-                    return
-                }
-            } else {
-                Logger.e("PushExternalReceiver: USER WAS NULL OR USER_ID WAS NULL")
-                return
-            }
-
-            val loginId = user.loginId
             if (loginId == null) {
                 Logger.e("PushExternalReceiver: User loginId was null - Can't create notification channel, nor post to a notification channel with a null user loginId")
                 return
             }
 
-            if (incomingDomain.isBlank() || userDomain.isBlank() || !incomingDomain.equals(userDomain, ignoreCase = true)) {
-                Logger.e("PushExternalReceiver: DOMAINS DID NOT MATCH")
-                return
-            }
-
             // Only the first few lines get shown in the notification, and taking all could result in a crash (given an EXTREMELY large amount)
-            val pushes = PushNotification.getStoredPushes().takeLast(10)
+            val pushes = PushNotification.getAllStoredPushes().takeLast(10)
 
             if (pushes.isEmpty() && data == null) {
                 // Nothing to post, situation would occur from the BootReceiver
@@ -145,7 +109,7 @@ abstract class PushExternalReceiver : FirebaseMessagingService() {
 
             createNotificationChannel(context, CHANNEL_PUSH_GENERAL, loginId, nm)
 
-            nm.notify(555443, notification)
+            nm.notify(PushNotification.NOTIFY_ID, notification)
         }
 
         private fun createNotificationChannel(context: Context, channelId: String, userEmail: String, nm: NotificationManager) {

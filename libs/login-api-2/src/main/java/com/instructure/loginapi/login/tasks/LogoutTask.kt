@@ -17,13 +17,16 @@
 package com.instructure.loginapi.login.tasks
 
 import android.app.Activity
+import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.builders.RestBuilder
+import com.instructure.canvasapi2.managers.CommunicationChannelsManager
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
+import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.MasqueradeHelper
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.loginapi.login.util.PreviousUsersUtils
@@ -32,6 +35,7 @@ import com.instructure.pandautils.utils.FilePrefs
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.Utils
 import java.io.File
+import java.lang.Exception
 
 abstract class LogoutTask(val type: Type) {
 
@@ -43,11 +47,33 @@ abstract class LogoutTask(val type: Type) {
 
     protected abstract fun onCleanup()
     protected abstract fun createLoginIntent(context: Context): Intent
+    protected abstract fun getFcmToken(listener: (registrationId: String?) -> Unit)
 
     @Suppress("EXPERIMENTAL_FEATURE_WARNING")
     fun execute() {
+        try {
+            // Get the fcm token to delete the comm channel, then resume logout
+            getFcmToken { registrationId ->
+                handleLogoutTask(registrationId)
+            }
+        } catch (e: Exception) {
+            // Fallback to null in case anything bad happens, that way the logout still goes through
+            handleLogoutTask(null)
+        }
+    }
+
+    private fun handleLogoutTask(registrationId: String?) {
         weave {
             inBackground {
+                // Clear push notifications
+                if (registrationId != null) {
+                    // Synchronously delete channel, has to be done before we clear the user as it makes an API call
+                    CommunicationChannelsManager.deletePushCommunicationChannelSynchronous(registrationId)
+                }
+                (ContextKeeper.appContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
+                    .cancel(PushNotification.NOTIFY_ID)
+                PushNotification.clearPushHistory()
+
                 when (type) {
                     Type.LOGOUT, Type.LOGOUT_NO_LOGIN_FLOW -> removeUser()
                     Type.SWITCH_USERS -> updateUser()
@@ -62,7 +88,6 @@ abstract class LogoutTask(val type: Type) {
                 RestBuilder.clearCacheDirectory()
                 Utils.getAttachmentsDirectory(ContextKeeper.appContext).deleteRecursively()
                 File(ContextKeeper.appContext.filesDir, "cache").deleteRecursively()
-                PushNotification.clearPushHistory()
 
                 // Clear prefs
                 ApiPrefs.clearAllData()
@@ -97,7 +122,7 @@ abstract class LogoutTask(val type: Type) {
         val signedInUser = PreviousUsersUtils.getSignedInUser(
             ContextKeeper.appContext,
             ApiPrefs.domain,
-            ApiPrefs.user?.id ?: 0
+            currentUser?.id ?: 0
         )
         if (currentUser != null && signedInUser != null) {
             signedInUser.user = currentUser

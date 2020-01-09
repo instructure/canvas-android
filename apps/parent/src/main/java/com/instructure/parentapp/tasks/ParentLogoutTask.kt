@@ -32,4 +32,7 @@ class ParentLogoutTask(type: Type) : LogoutTask(type) {
         return LoginActivity.createIntent(context)
     }
 
+    override fun getFcmToken(listener: (registrationId: String?) -> Unit) {
+        listener(null)
+    }
 }
