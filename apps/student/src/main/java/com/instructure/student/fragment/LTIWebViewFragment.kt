@@ -44,7 +44,10 @@ import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.student.R
 import kotlinx.android.synthetic.main.fragment_webview.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import org.json.JSONObject
 
 @PageView
@@ -181,11 +184,13 @@ class LTIWebViewFragment : InternalWebviewFragment() {
                     }
                     launchIntent(result)
                 } catch {
-                    Toast.makeText(
-                        this@LTIWebViewFragment.context,
-                        R.string.utils_unableToViewInBrowser,
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    GlobalScope.launch(Dispatchers.Main) {
+                        Toast.makeText(
+                                this@LTIWebViewFragment.context,
+                                R.string.utils_unableToViewInBrowser,
+                                Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
             } else {
                 // Coming from anywhere else
@@ -213,11 +218,13 @@ class LTIWebViewFragment : InternalWebviewFragment() {
                         launchIntent(url)
                     }
                 } catch {
-                    Toast.makeText(
-                        this@LTIWebViewFragment.context,
-                        R.string.utils_unableToViewInBrowser,
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    GlobalScope.launch(Dispatchers.Main) {
+                        Toast.makeText(
+                                this@LTIWebViewFragment.context,
+                                R.string.utils_unableToViewInBrowser,
+                                Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
             }
 

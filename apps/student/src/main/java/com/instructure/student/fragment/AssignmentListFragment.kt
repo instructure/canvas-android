@@ -69,10 +69,10 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
         }
 
         override fun onRefreshFinished() {
+            if(!isAdded) return // Refresh can finish after user has left screen, causing emptyView to be null
             setRefreshing(false)
             if (recyclerAdapter.size() == 0) {
                 setEmptyView(emptyView, R.drawable.vd_panda_space, R.string.noAssignments, R.string.noAssignmentsSubtext)
-
             }
         }
     }
