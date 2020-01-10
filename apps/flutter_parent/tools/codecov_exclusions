@@ -9,7 +9,7 @@ lib/network/api/*
 lib/screens/inbox/attachment_utils/attachment_picker_interactor.dart
 
 # Theme transition currently does not work in widget tests
-lib/utils/design/theme_transition
+lib/utils/design/theme_transition/*
 
 # Static declarations, since coverage doesn't seem to be recognized at the moment
 lib/utils/snickers.dart

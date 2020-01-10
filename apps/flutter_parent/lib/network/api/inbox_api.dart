@@ -29,14 +29,30 @@ class InboxApi {
     return fetchList(dio.get('conversations', queryParameters: params), depaginateWith: dio);
   }
 
-  Future<Conversation> getConversation(int id) => fetch(canvasDio().get('conversations/$id'));
+  Future<Conversation> getConversation(String id, {bool refresh: false}) {
+    return fetch(canvasDio(forceRefresh: refresh).get('conversations/$id'));
+  }
 
-  Future<UnreadCount> getUnreadCount() => fetch(canvasDio().get('conversations/unread_count'));
+  Future<UnreadCount> getUnreadCount() => fetch(canvasDio(forceRefresh: true).get('conversations/unread_count'));
 
-  Future<Conversation> addMessage(int conversationId, String message) {
-    var dio = canvasDio();
-    dio.options.queryParameters.addAll({'body': message});
-    return fetch(dio.post('conversations/$conversationId/add_message'));
+  Future<Conversation> addMessage(
+    int conversationId,
+    String body,
+    List<String> recipientIds,
+    List<String> attachmentIds,
+    List<String> includeMessageIds,
+  ) async {
+    var config = DioConfig.canvas();
+    var params = {
+      'body': body,
+      'recipients': recipientIds,
+      'attachment_ids': attachmentIds,
+      'included_messages': includeMessageIds,
+    };
+    var conversation = fetch(config.dio.post('conversations/$conversationId/add_message', queryParameters: params));
+    config.clearCache('conversations');
+    config.clearCache('conversations/$conversationId');
+    return conversation;
   }
 
   Future<List<Recipient>> getRecipients(Course course, {bool forceRefresh: false}) {
@@ -66,6 +82,7 @@ class InboxApi {
       'attachment_ids': attachmentIds,
     };
     List<Conversation> result = await fetchList(dio.post('conversations', queryParameters: params));
+    DioConfig.canvas().clearCache('conversations');
     return result[0];
   }
 }

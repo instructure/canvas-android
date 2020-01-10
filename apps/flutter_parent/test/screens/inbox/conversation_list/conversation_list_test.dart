@@ -335,6 +335,43 @@ void main() {
 
     expect(find.text(conversation.lastMessage), findsOneWidget);
   });
+
+  testWidgetsWithAccessibilityChecks('Refreshes on conversation updated', (tester) async {
+    var interactor = _MockInteractor();
+    var nav = _MockNav();
+    setupTestLocator((locator) {
+      locator.registerFactory<QuickNav>(() => nav);
+      locator.registerFactory<ConversationListInteractor>(() => interactor);
+    });
+
+    final conversation = Conversation((b) => b
+      ..contextName = ''
+      ..subject = ''
+      ..lastMessage = 'Message 1'
+      ..workflowState = ConversationWorkflowState.unread
+      ..lastMessageAt = DateTime.now());
+
+    when(interactor.getConversations()).thenAnswer((_) => Future.value([conversation]));
+    when(nav.push(any, any)).thenAnswer((_) async => true); // return 'true', meaning conversation was updated
+
+    await tester.pumpWidget(TestApp(ConversationListScreen()));
+    await tester.pumpAndSettle();
+
+    expect(find.text(conversation.lastMessage), findsOneWidget);
+    expect(find.byKey(Key('unread-indicator')), findsOneWidget);
+
+    final updatedConversation = conversation.rebuild((b) => b
+      ..lastMessage = 'Message 2'
+      ..workflowState = ConversationWorkflowState.read);
+    when(interactor.getConversations(forceRefresh: anyNamed('forceRefresh')))
+        .thenAnswer((_) => Future.value([updatedConversation]));
+
+    await tester.tap(find.text(conversation.lastMessage));
+    await tester.pumpAndSettle();
+
+    expect(find.text(updatedConversation.lastMessage), findsOneWidget);
+    expect(find.byKey(Key('unread-indicator')), findsNothing);
+  });
 }
 
 class _MockInteractor extends Mock implements ConversationListInteractor {}

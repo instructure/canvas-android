@@ -140,6 +140,10 @@ class DioConfig {
         forceRefresh: forceRefresh,
         pageSize: pageSize);
   }
+
+  void clearCache(String path) {
+    DioCacheManager(CacheConfig(baseUrl: baseUrl)).deleteByPrimaryKey(path);
+  }
 }
 
 /// Class for configuring paging parameters
@@ -152,7 +156,7 @@ class PageSize {
 
   static const PageSize canvasDefault = const PageSize(10);
 
-  static const PageSize canvasMax = const PageSize(10);
+  static const PageSize canvasMax = const PageSize(100);
 
   @override
   bool operator ==(Object other) => identical(this, other) || other is PageSize && this.size == other.size;
