@@ -66,7 +66,7 @@ class CoursesApiPactTests : ApiPactTestBase() {
     @Pact(consumer = "mobile")
     fun getFavoriteCoursesPact(builder: PactDslWithProvider) : RequestResponsePact {
         return builder
-                .given("4 courses, 2 favorited")
+                .given(MAIN_PROVIDER_STATE)
 
                 .uponReceiving("A request for favorite courses")
                 .path("/api/v1/users/self/favorites/courses")
@@ -107,7 +107,7 @@ class CoursesApiPactTests : ApiPactTestBase() {
     //region Test grabbing all courses
     //
 
-    val allCoursesQuery =      "include[]=term&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=sections&state[]=completed&state[]=available"
+    val allCoursesQuery = "include[]=term&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=sections&state[]=completed&state[]=available"
     val allCoursesFieldInfo = listOf(
             PactCourseFieldInfo.fromQueryString(courseId = 1, isFavorite = true, query = allCoursesQuery),
             PactCourseFieldInfo.fromQueryString(courseId = 2, isFavorite = true, query = allCoursesQuery),
@@ -126,7 +126,7 @@ class CoursesApiPactTests : ApiPactTestBase() {
     @Pact(consumer = "mobile")
     fun getAllCoursesPact(builder: PactDslWithProvider) : RequestResponsePact {
         return builder
-                .given("4 courses, 2 favorited")
+                .given(MAIN_PROVIDER_STATE)
 
                 .uponReceiving("A request for all courses")
                 .path("/api/v1/courses")
@@ -176,7 +176,7 @@ class CoursesApiPactTests : ApiPactTestBase() {
     @Pact(consumer = "mobile")
     fun getSingleCoursePact(builder: PactDslWithProvider) : RequestResponsePact {
         return builder
-                .given("4 courses, 2 favorited")
+                .given(MAIN_PROVIDER_STATE)
 
                 .uponReceiving("A request for course 1")
                 .path("/api/v1/courses/1")
@@ -220,7 +220,7 @@ class CoursesApiPactTests : ApiPactTestBase() {
     @Pact(consumer = "mobile")
     fun getCourseWithGradePact(builder: PactDslWithProvider) : RequestResponsePact {
         return builder
-                .given("4 courses, 2 favorited")
+                .given(MAIN_PROVIDER_STATE)
 
                 .uponReceiving("A request for course 1 with grade")
                 .path("/api/v1/courses/1")
@@ -257,7 +257,7 @@ class CoursesApiPactTests : ApiPactTestBase() {
     //region grab dashboard cards
     //
 
-    // Should just return the two favorite courses, right?
+    // Should just return ids for the two favorite courses, right?
     val dashboardCardResponseBody = LambdaDsl.newJsonArray { array ->
         array.`object` { obj ->
             obj.id("id", 1L)
@@ -270,7 +270,7 @@ class CoursesApiPactTests : ApiPactTestBase() {
     @Pact(consumer = "mobile")
     fun getDashboardCardsPact(builder: PactDslWithProvider) : RequestResponsePact {
         return builder
-                .given("4 courses, 2 favorited")
+                .given(MAIN_PROVIDER_STATE)
 
                 .uponReceiving("A request for user's dashboard cards")
                 .path("/api/v1/dashboard/dashboard_cards")

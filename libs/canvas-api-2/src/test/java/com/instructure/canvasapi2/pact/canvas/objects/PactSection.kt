@@ -21,10 +21,16 @@ import io.pactfoundation.consumer.dsl.LambdaDslObject
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 
+/**&
+ * Information on how to populate a Section object's fields.
+ */
 data class PactSectionFieldInfo(
         val includeTotalStudents: Boolean = false
 )
 
+/**
+ * Populate a Section object in a Pact specification, based on PactSectionFieldInfo settings.
+ */
 fun LambdaDslObject.populateSectionFields(fieldInfo: PactSectionFieldInfo = PactSectionFieldInfo()) : LambdaDslObject {
 
     this
@@ -40,6 +46,9 @@ fun LambdaDslObject.populateSectionFields(fieldInfo: PactSectionFieldInfo = Pact
     return this
 }
 
+/**
+ * Assert that a Section object in a response has been populated correctly, based on PactSectionFieldInfo settings.
+ */
 fun assertSectionPopulated(description: String, section: Section, fieldInfo: PactSectionFieldInfo = PactSectionFieldInfo()) {
     assertNotNull("$description + id", section.id)
     assertNotNull("$description + name", section.name)

@@ -57,7 +57,7 @@ class EnrollmentsApiPactTests : ApiPactTestBase() {
     @Pact(consumer = "mobile")
     fun getSelfEnrollmentsPact(builder: PactDslWithProvider) : RequestResponsePact {
         return builder
-                .given("4 courses, 2 favorited")
+                .given(MAIN_PROVIDER_STATE)
 
                 .uponReceiving("A request for user 1's enrollments")
                 .path("/api/v1/users/self/enrollments")

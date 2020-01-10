@@ -21,6 +21,13 @@ import io.pactfoundation.consumer.dsl.LambdaDslObject
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 
+/**
+ * Information about how to set up Course object fields.
+ * You must specify a [courseId].
+ * The [numEnrollments] setting will determine the number of embedded Enrollment objects in the Course object.
+ * If [isFavorite] is true, this course is marked as a favorite course.
+ * The includeXxx values correspond directly to include[]=xxx showing up in the request query.
+ */
 data class PactCourseFieldInfo (
     val courseId: Long, // Mandatory
     val numEnrollments: Int = 1,
@@ -35,6 +42,9 @@ data class PactCourseFieldInfo (
     val includeTotalScores: Boolean = false
 ) {
     companion object {
+        /***
+         * Construct a PactCourseFieldInfo object based on the query string being passed with the request.
+         */
         fun fromQueryString(courseId: Long, isFavorite: Boolean, query: String) : PactCourseFieldInfo {
             return PactCourseFieldInfo(
                     courseId = courseId,
@@ -52,6 +62,10 @@ data class PactCourseFieldInfo (
     }
 }
 
+/**
+ * Populate a Term object in a Pact specification.  This seemed simple enough to not need
+ * its own code module, but we may end up moving this to its own module in the future.
+ */
 fun LambdaDslObject.populateTermFields() : LambdaDslObject {
     this
             .id("id")
@@ -62,6 +76,9 @@ fun LambdaDslObject.populateTermFields() : LambdaDslObject {
     return this
 }
 
+/**
+ * Populate a Course object in a Pact specification, based on PactCourseFieldInfo settings.
+ */
 fun LambdaDslObject.populateCourseFields(fieldInfo: PactCourseFieldInfo = PactCourseFieldInfo(courseId = 1)) : LambdaDslObject {
 
     this
@@ -129,6 +146,10 @@ fun LambdaDslObject.populateCourseFields(fieldInfo: PactCourseFieldInfo = PactCo
     return this
 }
 
+/**
+ * Assert that a course object in a response has been properly populated, based on
+ * PactCourseFieldInfo settings.
+ */
 fun assertCoursePopulated(description: String, course: Course, fieldInfo: PactCourseFieldInfo = PactCourseFieldInfo(courseId = 1)) {
 
     assertNotNull("$description + name", course.name)

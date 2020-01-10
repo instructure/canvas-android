@@ -22,8 +22,17 @@ import io.pactfoundation.consumer.dsl.LambdaDslObject
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 
+// A regex enumerating all possible enrollment types
 private val enrollmentTypes = "StudentEnrollment|TeacherEnrollment|TaEnrollment|DesignerEnrollment|ObserverEnrollment"
 
+//
+// region grades logic
+// This seemed simple enough to not put it in its own module.  But that may change.
+//
+
+/**
+ * Populate a Grades object in a Pact specification.
+ */
 private fun LambdaDslObject.populateGradesObject() : LambdaDslObject {
     this
             .stringType("html_url")
@@ -34,25 +43,48 @@ private fun LambdaDslObject.populateGradesObject() : LambdaDslObject {
     return this
 }
 
+/**
+ * Assert that a Grades object in a response has been populated correctly.
+ */
 private fun assertGradesPopulated(description: String, grades: Grades) {
     assertNotNull("$description + html_url", grades.htmlUrl)
-    assertNotNull("$description + html_url", grades.currentScore)
-    assertNotNull("$description + html_url", grades.currentGrade)
-    assertNotNull("$description + html_url", grades.finalScore)
-    assertNotNull("$description + html_url", grades.finalGrade)
+    assertNotNull("$description + currentScore", grades.currentScore)
+    assertNotNull("$description + currentGrade", grades.currentGrade)
+    assertNotNull("$description + finalScore", grades.finalScore)
+    assertNotNull("$description + finalGrade", grades.finalGrade)
 }
+//endregion
 
+/**
+ * Information about how to set up Enrollment user fields.
+ * If [userId] is non-null, we will expect that value for the userId field; otherwise,
+ * we will expect a generic value.
+ * If [courseId] is non-null, we will expect that value for the courseId field; otherwise,
+ * we will expect a generic value.  Note that the courseId field also requires
+ * [populateFully] to be true in order to be populated.
+ * If [includeTotalScoresFields] is true, the computed_current_score, computed_current_grade,
+ * computed_final_score and computed_final_grade fields will be populated.
+ * If [includeCurrentGradingPeriodScoresFields] is true, then a number of fields pertaining to
+ * scores and other info from the current period will be populated.
+ * If [isObserver] is true, then the associated_user_id and observed_user field will be
+ * populated.  Note that the observed_user field also requires [populateFully] to be true
+ * in order to be populated.
+ * If [populateFully] is true, then a number of additional fields are populated.  Typically,
+ * [populateFully] is true when directly retrieving Enrollment objects, and false for Enrollment
+ * objects that are embedded in other retrieved objects.
+ */
 data class PactEnrollmentFieldInfo(
         val userId: Long? = null,
         val courseId: Long? = null,
         val includeTotalScoresFields: Boolean = false,
         val includeCurrentGradingPeriodScoresFields: Boolean = false,
         val isObserver: Boolean = false,
-
-        // These are different between "full" enrollment data and enrollment data embedded in a Course
-        val populateFully: Boolean = false // Add a number of extra fields that only appear when an enrollment is not nested
+        val populateFully: Boolean = false
 )
 
+/**
+ * Populate an Enrollment object in a Pact specification, based on PactEnrollmentFieldInfo settings.
+ */
 fun LambdaDslObject.populateEnrollmentFields(fieldInfo: PactEnrollmentFieldInfo = PactEnrollmentFieldInfo()) : LambdaDslObject {
     this
             .stringMatcher("type", enrollmentTypes, "StudentEnrollment") // May not be the same as "role", despite API docs
@@ -116,6 +148,9 @@ fun LambdaDslObject.populateEnrollmentFields(fieldInfo: PactEnrollmentFieldInfo 
     return this
 }
 
+/**
+ * Assert that an Enrollment object in a response has been populated correctly.
+ */
 fun assertEnrollmentPopulated(
         description: String,
         enrollment: Enrollment,

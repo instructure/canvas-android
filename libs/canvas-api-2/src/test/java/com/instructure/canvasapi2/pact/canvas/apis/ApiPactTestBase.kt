@@ -36,4 +36,6 @@ open class ApiPactTestBase {
 
         return client
     }
+
+    val MAIN_PROVIDER_STATE = "User 1, 4 courses, 2 favorited"
 }
