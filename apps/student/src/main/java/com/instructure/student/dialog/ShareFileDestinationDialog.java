@@ -324,7 +324,7 @@ public class ShareFileDestinationDialog extends DialogFragment implements Upload
     }
 
     private void setupCourseSpinners() {
-
+        if(getActivity() == null || getActivity().isFinishing()) return;
         if(studentEnrollmentsAdapter == null){
             studentEnrollmentsAdapter = new FileUploadCoursesAdapter(getActivity(), getActivity().getLayoutInflater(), FileUploadCoursesAdapter.getFilteredCourseList(courses, FileUploadCoursesAdapter.Type.STUDENT));
             studentCoursesSpinner.setAdapter(studentEnrollmentsAdapter);

@@ -300,10 +300,12 @@ object RouteMatcher : BaseRouteMatcher() {
                 var dialog: AlertDialog? = null
 
                 override fun onCreateLoader(id: Int, args: Bundle?): Loader<OpenMediaAsyncTaskLoader.LoadedMedia> {
-                    dialog = AlertDialog.Builder(activity,  com.instructure.pandautils.R.style.CustomViewAlertDialog)
-                        .setView(com.instructure.pandautils.R.layout.dialog_loading_view)
-                        .create()
-                    dialog!!.show()
+                    if(!activity.isFinishing) {
+                        dialog = AlertDialog.Builder(activity, com.instructure.pandautils.R.style.CustomViewAlertDialog)
+                                .setView(com.instructure.pandautils.R.layout.dialog_loading_view)
+                                .create()
+                        dialog!!.show()
+                    }
                     return OpenMediaAsyncTaskLoader(activity, args)
                 }
 
