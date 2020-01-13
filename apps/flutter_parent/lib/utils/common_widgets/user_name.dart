@@ -44,11 +44,12 @@ class UserName extends StatelessWidget {
 
     Set<Tuple2<int, int>> indexSet = {};
     pronouns.map((it) => '($it)').forEach((it) {
-      for (var i = 0; i < source.length; i) {
-        var index = source.indexOf(it, i);
+      var start = 0;
+      while (start < source.length) {
+        var index = source.indexOf(it, start);
         if (index == -1) break;
         indexSet.add(Tuple2(index, index + it.length));
-        i = index + it.length;
+        start = index + it.length;
       }
     });
 

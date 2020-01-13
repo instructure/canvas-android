@@ -32,11 +32,7 @@ void main() {
     });
 
     await ConversationDetailsInteractor().getConversation(conversationId);
-    VerificationResult result = verify(api.getConversation(captureAny, refresh: captureAnyNamed('refresh')));
-
-    expect(result.callCount, 1); // Called only once
-    expect(result.captured[0], conversationId); // Conversation ID
-    expect(result.captured[1], true); // refresh
+    verify(api.getConversation(conversationId, refresh: true)).called(1);
   });
 
   test('getConversation updates InboxCountNotifier when successful', () async {

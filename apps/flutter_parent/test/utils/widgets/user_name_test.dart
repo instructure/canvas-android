@@ -148,6 +148,24 @@ void main() {
     expect(spans[4].text, ' name');
   });
 
+  test('stylize returns correct span for duplicate pronouns', () {
+    final String source = 'user (pro/noun) middle (pro/noun) name';
+    final List<String> pronouns = ['pro/noun', 'pro/noun'];
+
+    TextSpan actual = UserName.stylize(source, pronouns);
+
+    expect(actual.children.length, 5);
+
+    var spans = actual.children.map((it) => it as TextSpan).toList();
+    expect(spans[0].text, 'user ');
+    expect(spans[1].text, '(pro/noun)');
+    expect(spans[1].style.fontStyle, FontStyle.italic);
+    expect(spans[2].text, ' middle ');
+    expect(spans[3].text, '(pro/noun)');
+    expect(spans[3].style.fontStyle, FontStyle.italic);
+    expect(spans[4].text, ' name');
+  });
+
   test('stylize returns correct span for multiple beginning match', () {
     final String source = '(pro/noun) user middle (pro/noun) name';
     final List<String> pronouns = ['pro/noun'];
