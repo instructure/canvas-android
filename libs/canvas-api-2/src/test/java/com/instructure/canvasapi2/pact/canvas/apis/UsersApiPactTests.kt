@@ -25,7 +25,8 @@ import com.instructure.canvasapi2.pact.canvas.objects.PactUserFieldInfo
 import com.instructure.canvasapi2.pact.canvas.objects.assertUserPopulated
 import com.instructure.canvasapi2.pact.canvas.objects.populateUserFields
 import io.pactfoundation.consumer.dsl.LambdaDsl
-import org.junit.Assert
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
 import org.junit.Test
 
 class UsersApiPactTests : ApiPactTestBase() {
@@ -40,9 +41,20 @@ class UsersApiPactTests : ApiPactTestBase() {
     //
     //region grab user profile info
     //
-    val userFieldInfo = PactUserFieldInfo(id = 1, populateFully = true, isProfile = false)
+    //val userFieldInfo = PactUserFieldInfo(id = 1, populateFully = true, isProfile = false)
     val userResponseBody =  LambdaDsl.newJsonBody() { obj ->
-        obj.populateUserFields(userFieldInfo)
+        obj
+                .id("id", 1L)
+                .stringType("name")
+                .stringType("sortable_name")
+                .stringType("short_name")
+                .stringType("locale")
+                .stringType("effective_locale")
+                .`object`("permissions") { permissions ->
+                    permissions.booleanType("can_update_name")
+                    permissions.booleanType("can_update_avatar")
+                }
+        //obj.populateUserFields(userFieldInfo)
     }.build()
     @Pact(consumer = "mobile")
     fun getUserWithPermissionsPact(builder: PactDslWithProvider) : RequestResponsePact {
@@ -56,7 +68,7 @@ class UsersApiPactTests : ApiPactTestBase() {
 
                 .willRespondWith()
                 .status(200)
-                .body(profileResponseBody)
+                .body(userResponseBody)
                 // TODO: Headers
 
                 .toPact()
@@ -70,9 +82,19 @@ class UsersApiPactTests : ApiPactTestBase() {
         val userCall = service.getSelfWithPermissions()
         val userResult = userCall.execute()
 
-        Assert.assertNotNull("Expected non-null response body", userResult.body())
+        assertNotNull("Expected non-null response body", userResult.body())
         val user = userResult.body()!!
-        assertUserPopulated("user 1's info", user, userFieldInfo)
+
+        assertNotNull("id", user.id)
+        assertEquals("id", 1L, user.id)
+        assertNotNull("name",  user.name)
+        assertNotNull("shortName",  user.shortName)
+        assertNotNull("sortableName",  user.sortableName)
+        assertNotNull("locale",  user.locale)
+        assertNotNull("effective_locale",  user.effective_locale)
+        assertNotNull("permissions",  user.permissions)
+        assertNotNull("permissions.canUpdateAvatar",  user.permissions!!.canUpdateAvatar)
+        assertNotNull("permissions.canUpdateName",  user.permissions!!.canUpdateName)
     }
 
     //endregion
@@ -81,9 +103,17 @@ class UsersApiPactTests : ApiPactTestBase() {
     //
     //region grab user profile info
     //
-    val profileFieldInfo = PactUserFieldInfo(id = 1, populateFully = true, isProfile = true)
     val profileResponseBody =  LambdaDsl.newJsonBody() { obj ->
-        obj.populateUserFields(profileFieldInfo)
+        obj
+                .id("id", 1)
+                .stringType("name")
+                .stringType("sortable_name")
+                .stringType("short_name")
+                .stringType("bio")
+                .stringType("primary_email")
+                .stringType("login_id")
+                .stringType("locale")
+                .stringType("effective_locale")
     }.build()
     @Pact(consumer = "mobile")
     fun getProfilePact(builder: PactDslWithProvider) : RequestResponsePact {
@@ -111,9 +141,19 @@ class UsersApiPactTests : ApiPactTestBase() {
         val profileCall = service.getSelf()
         val profileResult = profileCall.execute()
 
-        Assert.assertNotNull("Expected non-null response body", profileResult.body())
+        assertNotNull("Expected non-null response body", profileResult.body())
         val profile = profileResult.body()!!
-        assertUserPopulated("user 1's profile", profile, profileFieldInfo)
+
+        assertNotNull("id", profile.id)
+        assertEquals("id", 1L, profile.id)
+        assertNotNull("name",  profile.name)
+        assertNotNull("shortName",  profile.shortName)
+        assertNotNull("sortableName",  profile.sortableName)
+        assertNotNull("bio",  profile.bio)
+        assertNotNull("primaryEmail",  profile.primaryEmail)
+        assertNotNull("loginId",  profile.loginId)
+        assertNotNull("locale",  profile.locale)
+        assertNotNull("effective_locale",  profile.effective_locale)
     }
 
     //endregion
