@@ -18,6 +18,8 @@ import 'package:flutter_parent/models/alert.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/screens/alerts/alerts_interactor.dart';
 import 'package:flutter_parent/screens/alerts/alerts_screen.dart';
+import 'package:flutter_parent/screens/dashboard/alert_notifier.dart';
+import 'package:flutter_parent/utils/common_widgets/badges.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/student_color_set.dart';
@@ -35,13 +37,14 @@ void main() {
     _locator.reset();
 
     _locator.registerFactory<AlertsInteractor>(() => interactor ?? _MockAlertsInteractor());
+    _locator.registerLazySingleton<AlertCountNotifier>(() => AlertCountNotifier());
   }
 
   void _pumpAndTapAlert(WidgetTester tester, AlertType type) async {
     final alerts = _mockData(type: type);
 
     final interactor = _MockAlertsInteractor();
-    when(interactor.getAlertsForStudent(any)).thenAnswer((_) => Future.value(alerts));
+    when(interactor.getAlertsForStudent(any, any)).thenAnswer((_) => Future.value(alerts));
     when(interactor.markAlertRead(alerts.first.id))
         .thenAnswer((_) => Future.value(alerts.first.rebuild((b) => b..workflowState = AlertWorkflowState.read)));
     _setupLocator(interactor: interactor);
@@ -56,7 +59,7 @@ void main() {
   group('Loading', () {
     testWidgetsWithAccessibilityChecks('Shows while waiting for future', (tester) async {
       final interactor = _MockAlertsInteractor();
-      when(interactor.getAlertsForStudent(any)).thenAnswer((_) => Future.value());
+      when(interactor.getAlertsForStudent(any, any)).thenAnswer((_) => Future.value());
       _setupLocator(interactor: interactor);
 
       await tester.pumpWidget(_testableWidget());
@@ -67,7 +70,7 @@ void main() {
 
     testWidgetsWithAccessibilityChecks('Does not show once loaded', (tester) async {
       final interactor = _MockAlertsInteractor();
-      when(interactor.getAlertsForStudent(any)).thenAnswer((_) => Future.value());
+      when(interactor.getAlertsForStudent(any, any)).thenAnswer((_) => Future.value());
       _setupLocator(interactor: interactor);
 
       await tester.pumpWidget(_testableWidget());
@@ -81,7 +84,7 @@ void main() {
   group('Empty message', () {
     testWidgetsWithAccessibilityChecks('Shows when response is null', (tester) async {
       final interactor = _MockAlertsInteractor();
-      when(interactor.getAlertsForStudent(any)).thenAnswer((_) => null);
+      when(interactor.getAlertsForStudent(any, any)).thenAnswer((_) => null);
       _setupLocator(interactor: interactor);
 
       await tester.pumpWidget(_testableWidget());
@@ -92,7 +95,7 @@ void main() {
 
     testWidgetsWithAccessibilityChecks('Shows when list is empty', (tester) async {
       final interactor = _MockAlertsInteractor();
-      when(interactor.getAlertsForStudent(any)).thenAnswer((_) => Future.value(List()));
+      when(interactor.getAlertsForStudent(any, any)).thenAnswer((_) => Future.value(List()));
       _setupLocator(interactor: interactor);
 
       await tester.pumpWidget(_testableWidget());
@@ -104,7 +107,7 @@ void main() {
 
   testWidgetsWithAccessibilityChecks('Shows error', (tester) async {
     final interactor = _MockAlertsInteractor();
-    when(interactor.getAlertsForStudent(any)).thenAnswer((_) => Future.error("ErRoR"));
+    when(interactor.getAlertsForStudent(any, any)).thenAnswer((_) => Future.error("ErRoR"));
     _setupLocator(interactor: interactor);
 
     await tester.pumpWidget(_testableWidget());
@@ -116,7 +119,7 @@ void main() {
   group('With data', () {
     testWidgetsWithAccessibilityChecks('Can refresh', (tester) async {
       final interactor = _MockAlertsInteractor();
-      when(interactor.getAlertsForStudent(any)).thenAnswer((_) => Future.value());
+      when(interactor.getAlertsForStudent(any, any)).thenAnswer((_) => Future.value());
       _setupLocator(interactor: interactor);
 
       await tester.pumpWidget(_testableWidget());
@@ -138,7 +141,7 @@ void main() {
       final alerts = _mockData(type: AlertType.institutionAnnouncement);
 
       final interactor = _MockAlertsInteractor();
-      when(interactor.getAlertsForStudent(any)).thenAnswer((_) => Future.value(alerts));
+      when(interactor.getAlertsForStudent(any, any)).thenAnswer((_) => Future.value(alerts));
       _setupLocator(interactor: interactor);
 
       await tester.pumpWidget(_testableWidget());
@@ -155,7 +158,7 @@ void main() {
       final alerts = _mockData(type: AlertType.courseGradeHigh);
 
       final interactor = _MockAlertsInteractor();
-      when(interactor.getAlertsForStudent(any)).thenAnswer((_) => Future.value(alerts));
+      when(interactor.getAlertsForStudent(any, any)).thenAnswer((_) => Future.value(alerts));
       _setupLocator(interactor: interactor);
 
       await tester.pumpWidget(_testableWidget());
@@ -172,7 +175,7 @@ void main() {
       final alerts = _mockData(type: AlertType.courseGradeLow);
 
       final interactor = _MockAlertsInteractor();
-      when(interactor.getAlertsForStudent(any)).thenAnswer((_) => Future.value(alerts));
+      when(interactor.getAlertsForStudent(any, any)).thenAnswer((_) => Future.value(alerts));
       _setupLocator(interactor: interactor);
 
       await tester.pumpWidget(_testableWidget());
@@ -185,11 +188,24 @@ void main() {
       expect((tester.widget(find.byIcon(CanvasIcons.warning)) as Icon).color, ParentColors.failure);
     });
 
-    testWidgetsWithAccessibilityChecks('Can tap alert to mark as read', (tester) async {
-      final alerts = _mockData(type: AlertType.courseGradeLow);
+    testWidgetsWithAccessibilityChecks('Shows alert badge when unread', (tester) async {
+      final alerts = _mockData(type: AlertType.courseGradeLow, state: AlertWorkflowState.unread);
 
       final interactor = _MockAlertsInteractor();
-      when(interactor.getAlertsForStudent(any)).thenAnswer((_) => Future.value(alerts));
+      when(interactor.getAlertsForStudent(any, any)).thenAnswer((_) => Future.value(alerts));
+      _setupLocator(interactor: interactor);
+
+      await tester.pumpWidget(_testableWidget());
+      await tester.pumpAndSettle();
+
+      expect(find.byType(IndicatorBadge), findsOneWidget);
+    });
+
+    testWidgetsWithAccessibilityChecks('Can tap alert to mark as read', (tester) async {
+      final alerts = _mockData(type: AlertType.courseGradeLow, state: AlertWorkflowState.unread);
+
+      final interactor = _MockAlertsInteractor();
+      when(interactor.getAlertsForStudent(any, any)).thenAnswer((_) => Future.value(alerts));
       when(interactor.markAlertRead(alerts.first.id))
           .thenAnswer((_) => Future.value(alerts.first.rebuild((b) => b..workflowState = AlertWorkflowState.read)));
       _setupLocator(interactor: interactor);
@@ -201,6 +217,22 @@ void main() {
       await tester.pumpAndSettle();
 
       verify(interactor.markAlertRead(alerts.first.id)).called(1);
+    });
+
+    testWidgetsWithAccessibilityChecks('Tapping alert that is read does not call to mark as read', (tester) async {
+      final alerts = _mockData(type: AlertType.courseGradeLow, state: AlertWorkflowState.read);
+
+      final interactor = _MockAlertsInteractor();
+      when(interactor.getAlertsForStudent(any, any)).thenAnswer((_) => Future.value(alerts));
+      _setupLocator(interactor: interactor);
+
+      await tester.pumpWidget(_testableWidget());
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text(alerts.first.title));
+      await tester.pumpAndSettle();
+
+      verifyNever(interactor.markAlertRead(any));
     });
 
     testWidgetsWithAccessibilityChecks('Can tap course announcement alert to go to announcement', (tester) async {
@@ -243,12 +275,13 @@ User _mockUser({String id = ''}) {
   return User((b) => b..id = id);
 }
 
-List<Alert> _mockData({int size = 1, AlertType type}) {
+List<Alert> _mockData({int size = 1, AlertType type, AlertWorkflowState state = AlertWorkflowState.read}) {
   return List.generate(
       size,
       (index) => Alert((b) => b
         ..id = index.toString()
         ..title = 'Alert $index'
+        ..workflowState = state
         ..alertType = type ?? AlertType.institutionAnnouncement));
 }
 

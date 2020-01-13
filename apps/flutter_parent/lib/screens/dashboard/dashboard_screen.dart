@@ -23,6 +23,7 @@ import 'package:flutter_parent/screens/login_landing_screen.dart';
 import 'package:flutter_parent/screens/manage_students/manage_students_screen.dart';
 import 'package:flutter_parent/screens/settings/settings_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/avatar.dart';
+import 'package:flutter_parent/utils/common_widgets/badges.dart';
 import 'package:flutter_parent/utils/common_widgets/dropdown_arrow.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/common_widgets/user_name.dart';
@@ -57,6 +58,7 @@ class DashboardState extends State<DashboardScreen> {
   // These two will likely be used when we have specs for error screens
   // ignore: unused_field
   bool _selfError = false;
+
   // ignore: unused_field
   bool _studentsError = false;
 
@@ -69,6 +71,7 @@ class DashboardState extends State<DashboardScreen> {
     if (widget.students?.isNotEmpty == true) {
       _students = widget.students;
       _selectedStudent = _students.first;
+      _interactor.getAlertCountNotifier().update(_selectedStudent.id);
     } else {
       _loadStudents();
     }
@@ -107,8 +110,9 @@ class DashboardState extends State<DashboardScreen> {
       _students = users;
 
       if (_selectedStudent == null && _students.isNotEmpty) {
-        setState(() {
+        setState(() async {
           _selectedStudent = _students.first;
+          await _interactor.getAlertCountNotifier().update(_selectedStudent.id);
         });
       }
 
@@ -191,7 +195,14 @@ class DashboardState extends State<DashboardScreen> {
     return [
       BottomNavigationBarItem(icon: Icon(CanvasIcons.courses), title: Text(L10n(context).coursesLabel)),
       BottomNavigationBarItem(icon: Icon(CanvasIcons.calendar_month), title: Text(L10n(context).calendarLabel)),
-      BottomNavigationBarItem(icon: Icon(CanvasIcons.alerts), title: Text(L10n(context).alertsLabel)),
+      BottomNavigationBarItem(
+        icon: WidgetBadge(
+          Icon(CanvasIcons.alerts),
+          countListenable: _interactor.getAlertCountNotifier(),
+          key: Key('alerts-count'),
+        ),
+        title: Text(L10n(context).alertsLabel),
+      ),
     ];
   }
 
@@ -308,30 +319,11 @@ class DashboardState extends State<DashboardScreen> {
     );
   }
 
+  // Create the inbox tile with an infinite badge count, since there's lots of space we don't need to limit the count to 99+
   _navDrawerInbox() => ListTile(
         title: Text(L10n(context).inbox),
         onTap: () => _navigateToInbox(context),
-        trailing: ValueListenableBuilder(
-          valueListenable: _interactor.getInboxCountNotifier(),
-          builder: (context, count, _) {
-            if (count <= 0) return SizedBox();
-            return Container(
-              key: Key('inbox-count'),
-              decoration: BoxDecoration(color: Theme.of(context).accentColor, shape: BoxShape.circle),
-              child: Padding(
-                padding: const EdgeInsets.all(6.0),
-                child: Text(
-                  '$count',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Theme.of(context).accentIconTheme.color,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            );
-          },
-        ),
+        trailing: NumberBadge(listenable: _interactor.getInboxCountNotifier(), maxCount: null, key: Key('inbox-count')),
       );
 
   _navDrawerManageStudents() =>

@@ -617,4 +617,20 @@ class AppLocalizations {
         'Filter',
         desc: 'Label for buttons to filter what items are visible',
       );
+
+  String get unread => Intl.message('unread', desc: 'Label for things that are marked as unread');
+
+  String unreadCount(int count) => Intl.message(
+        '${count} unread',
+        args: [count],
+        name: 'unreadCount',
+        desc: 'Formatted string for when there are a number of unread items',
+      );
+
+  String badgeNumberPlus(int count) => Intl.message(
+        '${count}+',
+        args: [count],
+        name: 'badgeNumberPlus',
+        desc: "Formatted string for when too many items are being notified in a badge, generally something like '99+'",
+      );
 }

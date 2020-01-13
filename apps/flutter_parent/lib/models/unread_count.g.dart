@@ -20,7 +20,7 @@ class _$UnreadCountSerializer implements StructuredSerializer<UnreadCount> {
     final result = <Object>[
       'unread_count',
       serializers.serialize(object.count,
-          specifiedType: const FullType(String)),
+          specifiedType: const FullType(JsonObject)),
     ];
 
     return result;
@@ -40,7 +40,7 @@ class _$UnreadCountSerializer implements StructuredSerializer<UnreadCount> {
       switch (key) {
         case 'unread_count':
           result.count = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(JsonObject)) as JsonObject;
           break;
       }
     }
@@ -51,7 +51,7 @@ class _$UnreadCountSerializer implements StructuredSerializer<UnreadCount> {
 
 class _$UnreadCount extends UnreadCount {
   @override
-  final String count;
+  final JsonObject count;
 
   factory _$UnreadCount([void Function(UnreadCountBuilder) updates]) =>
       (new UnreadCountBuilder()..update(updates)).build();
@@ -90,9 +90,9 @@ class _$UnreadCount extends UnreadCount {
 class UnreadCountBuilder implements Builder<UnreadCount, UnreadCountBuilder> {
   _$UnreadCount _$v;
 
-  String _count;
-  String get count => _$this._count;
-  set count(String count) => _$this._count = count;
+  JsonObject _count;
+  JsonObject get count => _$this._count;
+  set count(JsonObject count) => _$this._count = count;
 
   UnreadCountBuilder();
 
