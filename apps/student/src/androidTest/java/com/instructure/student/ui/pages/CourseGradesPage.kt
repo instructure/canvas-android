@@ -16,6 +16,7 @@
  */
 package com.instructure.student.ui.pages
 
+import android.os.SystemClock.sleep
 import android.view.View
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
@@ -71,6 +72,7 @@ class CourseGradesPage : BasePage(R.id.courseGradesPage) {
     fun refresh() {
         onView(allOf(withId(R.id.swipeRefreshLayout), isDisplayed()))
                 .perform(withCustomConstraints(swipeDown(), isDisplayingAtLeast(5)))
+        sleep(1000) // Allow some time to react to the update.
     }
 
     // TODO: Explicitly check or un-check, rather than assuming current state

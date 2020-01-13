@@ -97,6 +97,7 @@ class GradesE2ETest: StudentTest() {
         val quizMatcher = withText(quiz.title)
 
         // Make sure our assignments/quizzes are displayed
+        courseGradesPage.refresh()
         courseGradesPage.assertItemDisplayed(assignmentMatcher)
         courseGradesPage.assertGradeNotDisplayed(assignmentMatcher)
         courseGradesPage.assertItemDisplayed(quizMatcher)
@@ -150,4 +151,5 @@ class GradesE2ETest: StudentTest() {
         courseGradesPage.assertGradeDisplayed(quizMatcher, containsTextCaseInsensitive("10/10"))
         courseGradesPage.assertTotalGrade(containsTextCaseInsensitive("76")) // 19 out of 25
     }
+
 }
