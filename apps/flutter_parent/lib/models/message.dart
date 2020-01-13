@@ -55,8 +55,13 @@ abstract class Message implements Built<Message, MessageBuilder> {
 
   @BuiltValueField(wireName: "participating_user_ids")
   @nullable
-  BuiltList<int> get participatingUserIds;
+  BuiltList<String> get participatingUserIds;
 
   Message._();
   factory Message([void Function(MessageBuilder) updates]) = _$Message;
+
+  static void _initializeBuilder(MessageBuilder b) => b
+    ..id = ''
+    ..authorId = ''
+    ..isGenerated = false;
 }

@@ -70,7 +70,7 @@ class _$MessageSerializer implements StructuredSerializer<Message> {
     } else {
       result.add(serializers.serialize(object.participatingUserIds,
           specifiedType:
-              const FullType(BuiltList, const [const FullType(int)])));
+              const FullType(BuiltList, const [const FullType(String)])));
     }
     return result;
   }
@@ -126,7 +126,7 @@ class _$MessageSerializer implements StructuredSerializer<Message> {
         case 'participating_user_ids':
           result.participatingUserIds.replace(serializers.deserialize(value,
                   specifiedType:
-                      const FullType(BuiltList, const [const FullType(int)]))
+                      const FullType(BuiltList, const [const FullType(String)]))
               as BuiltList<dynamic>);
           break;
       }
@@ -154,7 +154,7 @@ class _$Message extends Message {
   @override
   final BuiltList<Message> forwardedMessages;
   @override
-  final BuiltList<int> participatingUserIds;
+  final BuiltList<String> participatingUserIds;
 
   factory _$Message([void Function(MessageBuilder) updates]) =>
       (new MessageBuilder()..update(updates)).build();
@@ -278,13 +278,15 @@ class MessageBuilder implements Builder<Message, MessageBuilder> {
   set forwardedMessages(ListBuilder<Message> forwardedMessages) =>
       _$this._forwardedMessages = forwardedMessages;
 
-  ListBuilder<int> _participatingUserIds;
-  ListBuilder<int> get participatingUserIds =>
-      _$this._participatingUserIds ??= new ListBuilder<int>();
-  set participatingUserIds(ListBuilder<int> participatingUserIds) =>
+  ListBuilder<String> _participatingUserIds;
+  ListBuilder<String> get participatingUserIds =>
+      _$this._participatingUserIds ??= new ListBuilder<String>();
+  set participatingUserIds(ListBuilder<String> participatingUserIds) =>
       _$this._participatingUserIds = participatingUserIds;
 
-  MessageBuilder();
+  MessageBuilder() {
+    Message._initializeBuilder(this);
+  }
 
   MessageBuilder get _$this {
     if (_$v != null) {

@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/conversation.dart';
 import 'package:flutter_parent/models/course.dart';
+import 'package:flutter_parent/screens/inbox/conversation_details/conversation_details_screen.dart';
 import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/avatar.dart';
 import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
@@ -152,8 +153,16 @@ class ConversationListState extends State<ConversationListScreen> {
               ),
             ],
           ),
-          onTap: () {
-            // TODO: Navigate to conversation screen
+          onTap: () async {
+            var refresh = await locator<QuickNav>().push(
+              context,
+              ConversationDetailsScreen(
+                conversationId: item.id,
+                conversationSubject: item.subject,
+                courseName: item.contextName,
+              ),
+            );
+            if (refresh == true || item.isUnread()) _refreshIndicatorKey.currentState.show();
           },
         );
       },

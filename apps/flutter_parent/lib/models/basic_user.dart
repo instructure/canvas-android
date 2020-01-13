@@ -28,10 +28,15 @@ abstract class BasicUser implements Built<BasicUser, BasicUserBuilder> {
   @nullable
   String get name;
 
+  @nullable
+  String get pronouns;
+
   @BuiltValueField(wireName: "avatar_url")
   @nullable
   String get avatarUrl;
 
   BasicUser._();
   factory BasicUser([void Function(BasicUserBuilder) updates]) = _$BasicUser;
+
+  static void _initializeBuilder(BasicUserBuilder b) => b..id = '';
 }

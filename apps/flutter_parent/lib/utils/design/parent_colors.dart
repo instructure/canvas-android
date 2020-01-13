@@ -30,6 +30,9 @@ class ParentColors {
   /// The core 'faded' color, used for subtitles, inactive icons, etc on either light or dark backgrounds
   static const ash = Color(0xFF8B969E);
 
+  /// Another dark color, slightly lighter than licorice
+  static const oxford = Color(0xFF394B58);
+
   /// A general 'success' color
   static const success = Color(0xFF00AC18);
 

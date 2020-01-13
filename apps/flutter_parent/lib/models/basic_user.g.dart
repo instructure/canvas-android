@@ -28,6 +28,13 @@ class _$BasicUserSerializer implements StructuredSerializer<BasicUser> {
       result.add(serializers.serialize(object.name,
           specifiedType: const FullType(String)));
     }
+    result.add('pronouns');
+    if (object.pronouns == null) {
+      result.add(null);
+    } else {
+      result.add(serializers.serialize(object.pronouns,
+          specifiedType: const FullType(String)));
+    }
     result.add('avatar_url');
     if (object.avatarUrl == null) {
       result.add(null);
@@ -58,6 +65,10 @@ class _$BasicUserSerializer implements StructuredSerializer<BasicUser> {
           result.name = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
           break;
+        case 'pronouns':
+          result.pronouns = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
+          break;
         case 'avatar_url':
           result.avatarUrl = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
@@ -75,12 +86,15 @@ class _$BasicUser extends BasicUser {
   @override
   final String name;
   @override
+  final String pronouns;
+  @override
   final String avatarUrl;
 
   factory _$BasicUser([void Function(BasicUserBuilder) updates]) =>
       (new BasicUserBuilder()..update(updates)).build();
 
-  _$BasicUser._({this.id, this.name, this.avatarUrl}) : super._() {
+  _$BasicUser._({this.id, this.name, this.pronouns, this.avatarUrl})
+      : super._() {
     if (id == null) {
       throw new BuiltValueNullFieldError('BasicUser', 'id');
     }
@@ -99,13 +113,15 @@ class _$BasicUser extends BasicUser {
     return other is BasicUser &&
         id == other.id &&
         name == other.name &&
+        pronouns == other.pronouns &&
         avatarUrl == other.avatarUrl;
   }
 
   @override
   int get hashCode {
-    return $jf(
-        $jc($jc($jc(0, id.hashCode), name.hashCode), avatarUrl.hashCode));
+    return $jf($jc(
+        $jc($jc($jc(0, id.hashCode), name.hashCode), pronouns.hashCode),
+        avatarUrl.hashCode));
   }
 
   @override
@@ -113,6 +129,7 @@ class _$BasicUser extends BasicUser {
     return (newBuiltValueToStringHelper('BasicUser')
           ..add('id', id)
           ..add('name', name)
+          ..add('pronouns', pronouns)
           ..add('avatarUrl', avatarUrl))
         .toString();
   }
@@ -129,16 +146,23 @@ class BasicUserBuilder implements Builder<BasicUser, BasicUserBuilder> {
   String get name => _$this._name;
   set name(String name) => _$this._name = name;
 
+  String _pronouns;
+  String get pronouns => _$this._pronouns;
+  set pronouns(String pronouns) => _$this._pronouns = pronouns;
+
   String _avatarUrl;
   String get avatarUrl => _$this._avatarUrl;
   set avatarUrl(String avatarUrl) => _$this._avatarUrl = avatarUrl;
 
-  BasicUserBuilder();
+  BasicUserBuilder() {
+    BasicUser._initializeBuilder(this);
+  }
 
   BasicUserBuilder get _$this {
     if (_$v != null) {
       _id = _$v.id;
       _name = _$v.name;
+      _pronouns = _$v.pronouns;
       _avatarUrl = _$v.avatarUrl;
       _$v = null;
     }
@@ -160,8 +184,9 @@ class BasicUserBuilder implements Builder<BasicUser, BasicUserBuilder> {
 
   @override
   _$BasicUser build() {
-    final _$result =
-        _$v ?? new _$BasicUser._(id: id, name: name, avatarUrl: avatarUrl);
+    final _$result = _$v ??
+        new _$BasicUser._(
+            id: id, name: name, pronouns: pronouns, avatarUrl: avatarUrl);
     replace(_$result);
     return _$result;
   }

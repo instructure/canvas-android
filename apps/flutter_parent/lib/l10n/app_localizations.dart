@@ -307,6 +307,57 @@ class AppLocalizations {
   String get attachmentFailed => Intl.message('Failed. Tap for options.',
       desc: 'Short message shown on a message attachment when uploading has failed');
 
+  /// View conversation
+
+  String get errorLoadingConversation => Intl.message('There was an error loading this conversation',
+      desc: 'Message shown when a conversation fails to load');
+
+  String get reply => Intl.message('Reply', desc: 'Button label for replying to a conversation');
+
+  String get replyAll => Intl.message('Reply All', desc: 'Button label for replying to all conversation participants');
+
+  String get unknownUser => Intl.message('Unknown User', desc: 'Label used where the user name is not known');
+
+  String get authorNameMe => Intl.message(
+        'Me',
+        desc: 'Name displayed for the conversation author if the current user is the author.',
+      );
+
+  String toUser(String userName) {
+    return Intl.message(
+      ' to $userName',
+      args: [userName],
+      desc:
+          'Shown next to a conversation author name and represents who the message was sent to. Should include a leading space if appropriate for the locale.',
+    );
+  }
+
+  String get toMe => Intl.message(' to me',
+      desc:
+          'Shown next to a conversation author name for messages only sent to the curent user. Should include a leading space if appropriate for the locale.');
+
+  String toNOthers(int howMany) {
+    return Intl.plural(
+      howMany,
+      one: ' to 1 other',
+      other: ' to $howMany others',
+      args: [howMany],
+      desc:
+          'Shown next to a conversation author name and represents the number of other users a message was sent to. Should include a leading space if appropriate for the locale.',
+    );
+  }
+
+  String toMeAndNOthers(int howMany) {
+    return Intl.plural(
+      howMany,
+      one: ' to me & 1 other',
+      other: ' to me & $howMany others',
+      args: [howMany],
+      desc:
+          'Shown next to a conversation author name and represents the number of other users a message was sent to in addition to the current user (i.e. "me"). Should include a leading space if appropriate for the locale.',
+    );
+  }
+
   /// Courses Screen
 
   String get noCoursesTitle => Intl.message('No Courses', desc: 'Title for having no courses');

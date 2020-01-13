@@ -23,6 +23,13 @@ class Avatar extends StatelessWidget {
   final Widget overlay;
   final String name; // Generally should be the shortname of the user
 
+  static const List<String> noPictureUrls = const [
+    'images/dotted_pic.png',
+    'images%2Fmessages%2Favatar-50.png',
+    'images/messages/avatar-50.png',
+    'images/messages/avatar-group-50.png',
+  ];
+
   const Avatar(
     this.url, {
     Key key,
@@ -41,6 +48,9 @@ class Avatar extends StatelessWidget {
     // WidgetsFlutterBinding and in tests it's an instance of AutomatedTestWidgetsFlutterBinding.
     var isTest = WidgetsBinding.instance.runtimeType != WidgetsFlutterBinding;
 
+    // Url is valid if it's not null or empty, does not contain any noPictureUrls, and we're not testing
+    bool isUrlValid = !isTest && url != null && url.isNotEmpty && !noPictureUrls.any((it) => url.contains(it));
+
     return Semantics(
       excludeSemantics: true,
       child: ClipRRect(
@@ -51,7 +61,7 @@ class Avatar extends StatelessWidget {
           height: radius * 2,
           child: Stack(
             children: <Widget>[
-              url != null && !isTest // Don't use CachedNetworkImage if we're running in a test
+              isUrlValid // Don't use CachedNetworkImage if we're running in a test
                   ? CachedNetworkImage(
                       fadeInDuration: const Duration(milliseconds: 300),
                       fit: BoxFit.cover,
