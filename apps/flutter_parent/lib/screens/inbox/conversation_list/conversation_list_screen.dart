@@ -18,6 +18,7 @@ import 'package:flutter_parent/models/conversation.dart';
 import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/avatar.dart';
+import 'package:flutter_parent/utils/common_widgets/badges.dart';
 import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
@@ -111,7 +112,7 @@ class ConversationListState extends State<ConversationListScreen> {
       itemCount: data.length,
       itemBuilder: (context, index) {
         var item = data[index];
-        return ListTile(
+        final tile = ListTile(
           contentPadding: EdgeInsets.fromLTRB(8, 8, 16, 8),
           leading: _avatar(context, item),
           title: Row(
@@ -156,6 +157,7 @@ class ConversationListState extends State<ConversationListScreen> {
             // TODO: Navigate to conversation screen
           },
         );
+        return item.isUnread() ? WidgetBadge(tile) : tile;
       },
     );
   }
@@ -226,24 +228,7 @@ class ConversationListState extends State<ConversationListScreen> {
       child: avatar,
     );
 
-    if (conversation.isUnread()) {
-      return Stack(
-        key: Key('unread-indicator'),
-        children: <Widget>[
-          avatar,
-          Positioned(
-            left: 0,
-            top: 0,
-            child: CircleAvatar(
-              backgroundColor: Theme.of(context).accentColor,
-              radius: 4,
-            ),
-          )
-        ],
-      );
-    } else {
-      return avatar;
-    }
+    return avatar;
   }
 
   _createMessage(BuildContext context) {

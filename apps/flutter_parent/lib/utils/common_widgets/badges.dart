@@ -16,6 +16,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 
+/// Typedef for the function callback to get the semantics string.
+/// e.x., semantics: (context, count) => L10n(context).unreadCount(count)
+///
+/// See Also for more details:
+/// * [NumberBadge]
+/// * [IndicatorBadge]
+typedef String GetSemantics(BuildContext context, int count);
+
 /// Adds a badge to a widget. If a count or a listenable is provided, a circle with the count is used as the badge.
 /// Otherwise an simple circle will be added as an indicator.
 ///
@@ -30,9 +38,10 @@ class WidgetBadge extends StatelessWidget {
   final Widget icon;
   final int count;
   final int maxCount;
+  final GetSemantics semantics;
   final ValueListenable countListenable;
 
-  const WidgetBadge(this.icon, {Key key, this.count, this.maxCount = 99, this.countListenable})
+  const WidgetBadge(this.icon, {Key key, this.count, this.maxCount = 99, this.semantics, this.countListenable})
       : assert(icon != null),
         super(key: key);
 
@@ -50,21 +59,25 @@ class WidgetBadge extends StatelessWidget {
   Widget _badge() {
     // If no badge count and no listenable are provided, we just want an indicator on the icon, not a badge with a count
     if (count == null && countListenable == null) {
-      return PositionedDirectional(start: 8, top: 8, child: IndicatorBadge());
+      return PositionedDirectional(start: 8, top: 8, child: IndicatorBadge(semantics: semantics));
     }
-    return PositionedDirectional(end: -10, child: NumberBadge(count: count, listenable: countListenable));
+    return PositionedDirectional(
+        end: -10, child: NumberBadge(count: count, semantics: semantics, listenable: countListenable));
   }
 }
 
 /// A badge with a number in it. If the count is zero or less then no badge is shown. A listenable can be provided so
 /// that the badge count will update automatically. If maxCount is provided (defaults to 99) then the count will be
 /// capped at that number with a "+" appended.
+/// Defaults semantics to [AppLocalizations.unreadCount] if not provided, can be overridden to return null so no
+/// semantics label is added (which then just reads the count provided)
 class NumberBadge extends StatelessWidget {
   final int count;
   final int maxCount;
+  final GetSemantics semantics;
   final ValueListenable listenable;
 
-  const NumberBadge({Key key, this.count, this.maxCount = 99, this.listenable}) : super(key: key);
+  const NumberBadge({Key key, this.count, this.maxCount = 99, this.semantics, this.listenable}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -84,6 +97,7 @@ class NumberBadge extends StatelessWidget {
         padding: const EdgeInsets.all(6.0),
         child: Text(
           maxCount != null && count > maxCount ? L10n(context).badgeNumberPlus(maxCount) : '$count',
+          semanticsLabel: semantics != null ? semantics(context, count) : L10n(context).unreadCount(count),
           style: TextStyle(
             fontSize: 12,
             color: Theme.of(context).accentIconTheme.color,
@@ -97,13 +111,23 @@ class NumberBadge extends StatelessWidget {
 
 /// An empty colored circle, used as an indicator badge. Typically signals that an item is unread, which doesn't need a
 /// count like the NumberBadge.
+/// Defaults semantics to [AppLocalizations.unread] if not provided, can be overridden to return null so no semantics
+/// label is added. Never provides a value for 'count' in the semantics function.
 class IndicatorBadge extends StatelessWidget {
+  final GetSemantics semantics;
+
+  const IndicatorBadge({Key key, this.semantics}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 8,
-      height: 8,
-      decoration: _badgeDecoration(context),
+    return Semantics(
+      label: semantics != null ? semantics(context, null) : L10n(context).unread,
+      child: Container(
+        key: Key('unread-indicator'),
+        width: 8,
+        height: 8,
+        decoration: _badgeDecoration(context),
+      ),
     );
   }
 }
