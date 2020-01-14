@@ -19,7 +19,7 @@ import 'package:flutter_parent/models/assignment_group.dart';
 import 'package:flutter_parent/models/course_grade.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_model.dart';
 import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
-import 'package:flutter_parent/utils/common_widgets/full_screen_scroll_container.dart';
+import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
@@ -35,6 +35,7 @@ class CourseGradesScreen extends StatefulWidget {
 
 class _CourseGradesScreenState extends State<CourseGradesScreen> {
   Set<String> _collapsedGroupIds;
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = new GlobalKey<RefreshIndicatorState>();
 
   @override
   void initState() {
@@ -47,6 +48,7 @@ class _CourseGradesScreenState extends State<CourseGradesScreen> {
     return Consumer<CourseDetailsModel>(
       builder: (context, model, _) {
         return RefreshIndicator(
+          key: _refreshIndicatorKey,
           onRefresh: () => model.loadData(refreshCourse: true, refreshAssignmentGroups: true),
           child: FutureBuilder(
             future: model.assignmentGroupFuture,
@@ -61,10 +63,9 @@ class _CourseGradesScreenState extends State<CourseGradesScreen> {
     if (snapshot.connectionState == ConnectionState.waiting) {
       return LoadingIndicator();
     } else if (snapshot.hasError) {
-      // TODO: Replace with better error widget
-      return FullScreenScrollContainer(
-        children: <Widget>[Text(L10n(context).unexpectedError)],
-      );
+      return ErrorPandaWidget(L10n(context).unexpectedError, () {
+        _refreshIndicatorKey.currentState.show();
+      });
     } else if (!snapshot.hasData || snapshot.data.every((group) => group.assignments.isEmpty) == true) {
       return EmptyPandaWidget(
         svgPath: 'assets/svg/panda-space-no-assignments.svg',
