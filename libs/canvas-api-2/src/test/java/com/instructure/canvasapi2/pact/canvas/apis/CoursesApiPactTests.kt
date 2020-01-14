@@ -17,24 +17,24 @@
 package com.instructure.canvasapi2.pact.canvas.apis.courses
 
 import au.com.dius.pact.consumer.Pact
-import au.com.dius.pact.consumer.PactProviderRuleMk2
 import au.com.dius.pact.consumer.PactVerification
 import au.com.dius.pact.consumer.dsl.PactDslWithProvider
-import au.com.dius.pact.model.PactSpecVersion
 import au.com.dius.pact.model.RequestResponsePact
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.pact.canvas.apis.ApiPactTestBase
-import com.instructure.canvasapi2.pact.canvas.objects.PactCourseFieldInfo
-import com.instructure.canvasapi2.pact.canvas.objects.assertCoursePopulated
-import com.instructure.canvasapi2.pact.canvas.objects.populateCourseFields
+import com.instructure.canvasapi2.pact.canvas.logic.PACT_TIMESTAMP_FORMAT
+import com.instructure.canvasapi2.pact.canvas.logic.PactCourseFieldConfig
+import com.instructure.canvasapi2.pact.canvas.logic.PactEnrollmentFieldConfig
+import com.instructure.canvasapi2.pact.canvas.logic.assertCoursePopulated
+import com.instructure.canvasapi2.pact.canvas.logic.populateCourseFields
+import com.instructure.canvasapi2.pact.canvas.logic.populateEnrollmentFields
+import com.instructure.canvasapi2.pact.canvas.logic.populateSectionFields
+import com.instructure.canvasapi2.pact.canvas.logic.populateTermFields
 import io.pactfoundation.consumer.dsl.LambdaDsl
+import io.pactfoundation.consumer.dsl.LambdaDslObject
 import junit.framework.Assert.assertEquals
 import junit.framework.Assert.assertNotNull
-import org.junit.Rule
 import org.junit.Test
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.GET
 
 class CoursesApiPactTests : ApiPactTestBase() {
 
@@ -45,15 +45,14 @@ class CoursesApiPactTests : ApiPactTestBase() {
         return client.create(CourseAPI.CoursesInterface::class.java)
     }
 
-
     //
     //region Test grabbing favorite courses
     //
 
     val favoriteCoursesQuery = "include[]=term&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=current_grading_period_scores&include[]=course_image&include[]=favorites"
     val favoriteCoursesFieldInfo = listOf(
-            PactCourseFieldInfo.fromQueryString(courseId = 1, isFavorite = true, query = favoriteCoursesQuery),
-            PactCourseFieldInfo.fromQueryString(courseId = 2, isFavorite = true, query = favoriteCoursesQuery)
+            PactCourseFieldConfig.fromQueryString(courseId = 1, isFavorite = true, query = favoriteCoursesQuery),
+            PactCourseFieldConfig.fromQueryString(courseId = 2, isFavorite = true, query = favoriteCoursesQuery)
     )
     val favoriteCoursesResponseBody =  LambdaDsl.newJsonArray { array ->
         for(fieldInfo in favoriteCoursesFieldInfo) {
@@ -98,7 +97,7 @@ class CoursesApiPactTests : ApiPactTestBase() {
             val course = courseList[index]
             val fieldInfo = favoriteCoursesFieldInfo[index]
 
-            assertCoursePopulated(description = "course $index", course = course, fieldInfo = fieldInfo)
+            assertCoursePopulated(description = "course $index", course = course, fieldConfig = fieldInfo)
         }
     }
     //endregion
@@ -109,10 +108,10 @@ class CoursesApiPactTests : ApiPactTestBase() {
 
     val allCoursesQuery = "include[]=term&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=sections&state[]=completed&state[]=available"
     val allCoursesFieldInfo = listOf(
-            PactCourseFieldInfo.fromQueryString(courseId = 1, isFavorite = true, query = allCoursesQuery),
-            PactCourseFieldInfo.fromQueryString(courseId = 2, isFavorite = true, query = allCoursesQuery),
-            PactCourseFieldInfo.fromQueryString(courseId = 3, isFavorite = false, query = allCoursesQuery),
-            PactCourseFieldInfo.fromQueryString(courseId = 4, isFavorite = false, query = allCoursesQuery)
+            PactCourseFieldConfig.fromQueryString(courseId = 1, isFavorite = true, query = allCoursesQuery),
+            PactCourseFieldConfig.fromQueryString(courseId = 2, isFavorite = true, query = allCoursesQuery),
+            PactCourseFieldConfig.fromQueryString(courseId = 3, isFavorite = false, query = allCoursesQuery),
+            PactCourseFieldConfig.fromQueryString(courseId = 4, isFavorite = false, query = allCoursesQuery)
 
     )
     val allCoursesResponseBody =  LambdaDsl.newJsonArray { array ->
@@ -158,7 +157,7 @@ class CoursesApiPactTests : ApiPactTestBase() {
             val course = courseList[index]
             val fieldInfo = allCoursesFieldInfo[index]
 
-            assertCoursePopulated(description = "course $index", course = course, fieldInfo = fieldInfo)
+            assertCoursePopulated(description = "course $index", course = course, fieldConfig = fieldInfo)
         }
     }
     //endregion
@@ -168,7 +167,7 @@ class CoursesApiPactTests : ApiPactTestBase() {
     //
 
     val singleCourseQuery = "include[]=term&include[]=permissions&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=course_image"
-    val singleCourseFieldInfo = PactCourseFieldInfo.fromQueryString(courseId = 1, isFavorite = true, query = singleCourseQuery)
+    val singleCourseFieldInfo = PactCourseFieldConfig.fromQueryString(courseId = 1, isFavorite = true, query = singleCourseQuery)
     val singleCourseResponseBody = LambdaDsl.newJsonBody { obj ->
         obj.populateCourseFields(singleCourseFieldInfo)
     }.build()
@@ -203,7 +202,7 @@ class CoursesApiPactTests : ApiPactTestBase() {
         assertNotNull("Expected non-null response body", getCourseResult.body())
         val course = getCourseResult.body()!!
 
-        assertCoursePopulated(description = "returned course", course = course, fieldInfo = singleCourseFieldInfo)
+        assertCoursePopulated(description = "returned course", course = course, fieldConfig = singleCourseFieldInfo)
     }
     //endregion
 
@@ -212,7 +211,7 @@ class CoursesApiPactTests : ApiPactTestBase() {
     //
 
     val courseWithGradeQuery = "include[]=term&include[]=permissions&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=total_scores&include[]=current_grading_period_scores&include[]=course_image"
-    val courseWithGradeFieldInfo = PactCourseFieldInfo.fromQueryString(courseId = 1, isFavorite = true, query = courseWithGradeQuery)
+    val courseWithGradeFieldInfo = PactCourseFieldConfig.fromQueryString(courseId = 1, isFavorite = true, query = courseWithGradeQuery)
     val courseWithGradeResponseBody = LambdaDsl.newJsonBody { obj ->
         obj.populateCourseFields(courseWithGradeFieldInfo)
     }.build()
@@ -247,7 +246,7 @@ class CoursesApiPactTests : ApiPactTestBase() {
         assertNotNull("Expected non-null response body", getCourseResult.body())
         val course = getCourseResult.body()!!
 
-        assertCoursePopulated(description = "returned course", course = course, fieldInfo = courseWithGradeFieldInfo)
+        assertCoursePopulated(description = "returned course", course = course, fieldConfig = courseWithGradeFieldInfo)
     }
     //endregion
 

@@ -14,7 +14,7 @@
  *     limitations under the License.
  *
  */
-package com.instructure.canvasapi2.pact.canvas.objects
+package com.instructure.canvasapi2.pact.canvas.logic
 
 // Common values/settings for all Pact specifications
 val PACT_TIMESTAMP_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"

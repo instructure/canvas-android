@@ -21,9 +21,9 @@ import au.com.dius.pact.consumer.PactVerification
 import au.com.dius.pact.consumer.dsl.PactDslWithProvider
 import au.com.dius.pact.model.RequestResponsePact
 import com.instructure.canvasapi2.apis.EnrollmentAPI
-import com.instructure.canvasapi2.pact.canvas.objects.PactEnrollmentFieldInfo
-import com.instructure.canvasapi2.pact.canvas.objects.assertEnrollmentPopulated
-import com.instructure.canvasapi2.pact.canvas.objects.populateEnrollmentFields
+import com.instructure.canvasapi2.pact.canvas.logic.PactEnrollmentFieldConfig
+import com.instructure.canvasapi2.pact.canvas.logic.assertEnrollmentPopulated
+import com.instructure.canvasapi2.pact.canvas.logic.populateEnrollmentFields
 import io.pactfoundation.consumer.dsl.LambdaDsl
 import junit.framework.Assert
 import org.junit.Test
@@ -42,10 +42,10 @@ class EnrollmentsApiPactTests : ApiPactTestBase() {
     //
 
     val selfEnrollmentsFieldInfo = listOf(
-            PactEnrollmentFieldInfo(courseId = 1, userId = 1, populateFully = true),
-            PactEnrollmentFieldInfo(courseId = 2, userId = 1, populateFully = true),
-            PactEnrollmentFieldInfo(courseId = 3, userId = 1, populateFully = true),
-            PactEnrollmentFieldInfo(courseId = 4, userId = 1, populateFully = true)
+            PactEnrollmentFieldConfig(courseId = 1, userId = 1, populateFully = true, includeGrades = true),
+            PactEnrollmentFieldConfig(courseId = 2, userId = 1, populateFully = true, includeGrades = true),
+            PactEnrollmentFieldConfig(courseId = 3, userId = 1, populateFully = true, includeGrades = true),
+            PactEnrollmentFieldConfig(courseId = 4, userId = 1, populateFully = true, includeGrades = true)
     )
     val selfEnrollmentsResponseBody =  LambdaDsl.newJsonArray { array ->
         for(fieldInfo in selfEnrollmentsFieldInfo) {
@@ -87,7 +87,7 @@ class EnrollmentsApiPactTests : ApiPactTestBase() {
             val enrollment = enrollments[index]
             val fieldInfo = selfEnrollmentsFieldInfo[index]
 
-            assertEnrollmentPopulated(description = "enrollment $index", enrollment = enrollment, fieldInfo = fieldInfo)
+            assertEnrollmentPopulated(description = "enrollment $index", enrollment = enrollment, fieldConfig = fieldInfo)
         }
     }
     //endregion

@@ -28,12 +28,13 @@ open class ApiPactTestBase {
     @JvmField
     val provider = PactProviderRuleMk2("Canvas LMS API", PactSpecVersion.V2, this)
 
-    fun getClient() : Retrofit {
+    fun getClient(pathPrefix: String = "/api/v1/") : Retrofit {
         val client = Retrofit.Builder()
-                .baseUrl(provider.url + "/api/v1/")
+                .baseUrl(provider.url + pathPrefix)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
 
+        println("PACT: Provider URL: ${provider.url} client base url = ${client.baseUrl()}")
         return client
     }
 

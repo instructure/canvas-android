@@ -14,7 +14,7 @@
  *     limitations under the License.
  *
  */
-package com.instructure.canvasapi2.pact.canvas.objects
+package com.instructure.canvasapi2.pact.canvas.logic
 
 import com.instructure.canvasapi2.models.Course
 import io.pactfoundation.consumer.dsl.LambdaDslObject
@@ -28,7 +28,7 @@ import org.junit.Assert.assertNotNull
  * If [isFavorite] is true, this course is marked as a favorite course.
  * The includeXxx values correspond directly to include[]=xxx showing up in the request query.
  */
-data class PactCourseFieldInfo (
+data class PactCourseFieldConfig (
     val courseId: Long, // Mandatory
     val numEnrollments: Int = 1,
     val isFavorite: Boolean = false,
@@ -39,61 +39,53 @@ data class PactCourseFieldInfo (
     val includeSections: Boolean = false,
     val includeSyllabusBody : Boolean = false,
     val includeTerm: Boolean = false,
-    val includeTotalScores: Boolean = false
+    val includeTotalScores: Boolean = false,
+    val includePermissions: Boolean = false
 ) {
     companion object {
         /***
-         * Construct a PactCourseFieldInfo object based on the query string being passed with the request.
+         * Construct a PactCourseFieldConfig object based on the query string being passed with the request.
          */
-        fun fromQueryString(courseId: Long, isFavorite: Boolean, query: String) : PactCourseFieldInfo {
-            return PactCourseFieldInfo(
+        fun fromQueryString(courseId: Long, isFavorite: Boolean, query: String) : PactCourseFieldConfig {
+            return PactCourseFieldConfig(
                     courseId = courseId,
                     isFavorite = isFavorite,
-                    includeCourseImage = query.contains("=course_image"),
+                    //includeCourseImage = query.contains("=course_image"),
                     includeCurrentGradingPeriodScores = query.contains("=current_grading_period_scores"),
                     includeNeedsGradingCount = query.contains("=needs_grading_count"),
                     includeObservedUsers = query.contains("=observed_users"),
                     includeSections = query.contains("=sections"),
                     includeSyllabusBody = query.contains("=syllabus_body"),
                     includeTerm = query.contains("=term"),
-                    includeTotalScores = query.contains("=total_scores")
+                    includeTotalScores = query.contains("=total_scores"),
+                    includePermissions = query.contains("=permissions")
             )
         }
     }
 }
 
-/**
- * Populate a Term object in a Pact specification.  This seemed simple enough to not need
- * its own code module, but we may end up moving this to its own module in the future.
- */
-fun LambdaDslObject.populateTermFields() : LambdaDslObject {
-    this
-            .id("id")
-            .stringType("name")
-            .timestamp("start_at", PACT_TIMESTAMP_FORMAT)
-            .timestamp("end_at", PACT_TIMESTAMP_FORMAT)
-
-    return this
-}
 
 /**
- * Populate a Course object in a Pact specification, based on PactCourseFieldInfo settings.
+ * Populate a Course object in a Pact specification, based on PactCourseFieldConfig settings.
+ *
+ * Note that access_restricted_by_date, needs_grading_count and image_download_url
+ * are apparently not pass back by the API, documentation to the contrary.
  */
-fun LambdaDslObject.populateCourseFields(fieldInfo: PactCourseFieldInfo = PactCourseFieldInfo(courseId = 1)) : LambdaDslObject {
+fun LambdaDslObject.populateCourseFields(fieldConfig: PactCourseFieldConfig = PactCourseFieldConfig(courseId = 1)) : LambdaDslObject {
 
     this
             .stringType("name")
-            .id("id", fieldInfo.courseId)
+            .id("id", fieldConfig.courseId)
             .stringType("course_code")
-            .booleanValue("is_favorite", fieldInfo.isFavorite)
+            .booleanValue("is_favorite", fieldConfig.isFavorite)
             .timestamp("start_at", PACT_TIMESTAMP_FORMAT)
             .timestamp("end_at", PACT_TIMESTAMP_FORMAT)
             .booleanType("hide_final_grades")
             .booleanType("is_public")
             .stringMatcher("license", "private|cc_by_nc_nd|c_by_nc_sa|c_by_nc|cc_by_nd|cc_by_sa|cc_by|public_domain", "private")
             .booleanType("apply_assignment_group_weights")
-            .booleanType("access_restricted_by_date")
-            .stringType("image_download_url")
+            //.booleanType("access_restricted_by_date")
+            //.stringType("image_download_url")
             .booleanType("has_weighted_grading_periods")
             .booleanType("has_grading_periods") // Optional?
             .stringMatcher("default_view","feed|wiki|modules|assignments|syllabus", "modules")
@@ -104,20 +96,27 @@ fun LambdaDslObject.populateCourseFields(fieldInfo: PactCourseFieldInfo = PactCo
     // Optional/configurable fields
     //
 
-    if(fieldInfo.includeSyllabusBody) {
+    if(fieldConfig.includePermissions) {
+        this.`object`("permissions") { permissions ->
+            permissions.booleanType("create_discussion_topic")
+            permissions.booleanType("create_announcement")
+        }
+
+    }
+    if(fieldConfig.includeSyllabusBody) {
         this.stringType("syllabus_body")
     }
 
-    if(fieldInfo.numEnrollments > 0)
+    if(fieldConfig.numEnrollments > 0)
     {
-        val enrollmentFieldInfo = PactEnrollmentFieldInfo(
-                includeTotalScoresFields = fieldInfo.includeTotalScores,
-                includeCurrentGradingPeriodScoresFields = fieldInfo.includeCurrentGradingPeriodScores,
-                courseId = fieldInfo.courseId
+        val enrollmentFieldInfo = PactEnrollmentFieldConfig(
+                includeTotalScoresFields = fieldConfig.includeTotalScores,
+                includeCurrentGradingPeriodScoresFields = fieldConfig.includeCurrentGradingPeriodScores,
+                courseId = fieldConfig.courseId
                 //TODO: UserId
         )
         this.array("enrollments") { enrollment ->
-            repeat(fieldInfo.numEnrollments) { index ->
+            repeat(fieldConfig.numEnrollments) { index ->
                 enrollment.`object`() {
                     it.populateEnrollmentFields(enrollmentFieldInfo)
                 }
@@ -125,17 +124,17 @@ fun LambdaDslObject.populateCourseFields(fieldInfo: PactCourseFieldInfo = PactCo
         }
     }
 
-    if(fieldInfo.includeTerm) {
+    if(fieldConfig.includeTerm) {
         this.`object`("term") {
             it.populateTermFields()
         }
     }
 
-    if(fieldInfo.includeNeedsGradingCount) {
-        this.numberType("needs_grading_count")
+    if(fieldConfig.includeNeedsGradingCount) {
+        //this.numberType("needs_grading_count")
     }
 
-    if(fieldInfo.includeSections) { // Assume one section
+    if(fieldConfig.includeSections) { // Assume one section
         this.array("sections") { sections ->
             sections.`object`() { section ->
                 section.populateSectionFields()
@@ -148,9 +147,9 @@ fun LambdaDslObject.populateCourseFields(fieldInfo: PactCourseFieldInfo = PactCo
 
 /**
  * Assert that a course object in a response has been properly populated, based on
- * PactCourseFieldInfo settings.
+ * PactCourseFieldConfig settings.
  */
-fun assertCoursePopulated(description: String, course: Course, fieldInfo: PactCourseFieldInfo = PactCourseFieldInfo(courseId = 1)) {
+fun assertCoursePopulated(description: String, course: Course, fieldConfig: PactCourseFieldConfig = PactCourseFieldConfig(courseId = 1)) {
 
     assertNotNull("$description + name", course.name)
     assertNotNull("$description + courseCode", course.courseCode)
@@ -160,8 +159,8 @@ fun assertCoursePopulated(description: String, course: Course, fieldInfo: PactCo
     assertNotNull("$description + isPublic", course.isPublic)
     assertNotNull("$description + license", course.license)
     assertNotNull("$description + isApplyAssignmentGroupWeights", course.isApplyAssignmentGroupWeights)
-    assertNotNull("$description + accessRestrictedByDate", course.accessRestrictedByDate)
-    assertNotNull("$description + imageUrl", course.imageUrl)
+    //assertNotNull("$description + accessRestrictedByDate", course.accessRestrictedByDate)
+    //assertNotNull("$description + imageUrl", course.imageUrl)
     assertNotNull("$description + isWeightedGradingPeriods", course.isWeightedGradingPeriods)
     assertNotNull("$description + homePage", course.homePage)
     assertNotNull("$description + restrictEnrollmentsToCourseDate", course.restrictEnrollmentsToCourseDate)
@@ -169,24 +168,31 @@ fun assertCoursePopulated(description: String, course: Course, fieldInfo: PactCo
     assertNotNull("$description + isFavorite", course.isFavorite)
     assertNotNull("$description + id", course.id)
 
-    if(fieldInfo.includeSyllabusBody) {
+    if(fieldConfig.includePermissions) {
+        assertNotNull("$description + permissions", course.permissions)
+        assertNotNull("$description + permissions.canCreateAnnouncement", course.permissions!!.canCreateAnnouncement)
+        assertNotNull("$description + permissions.canCreateDiscussionTopic", course.permissions!!.canCreateDiscussionTopic)
+    }
+
+    if(fieldConfig.includeSyllabusBody) {
         assertNotNull("$description + syllabusBody", course.syllabusBody)
     }
 
-    if(fieldInfo.includeNeedsGradingCount) {
-        assertNotNull("$description + needsGradingCount", course.needsGradingCount)
+    if(fieldConfig.includeNeedsGradingCount) {
+        //assertNotNull("$description + needsGradingCount", course.needsGradingCount)
     }
 
-    if(fieldInfo.numEnrollments > 0) {
+    if(fieldConfig.numEnrollments > 0) {
         assertNotNull("$description + enrollments", course.enrollments)
-        assertEquals("$description + enrollment count", fieldInfo.numEnrollments, course.enrollments!!.size)
+        assertEquals("$description + enrollment count", fieldConfig.numEnrollments, course.enrollments!!.size)
     }
 
-    if(fieldInfo.includeTerm) {
+    if(fieldConfig.includeTerm) {
         assertNotNull("$description + term", course.term)
+        assertTermPopulated("$description + term", course.term!!)
     }
 
-    if(fieldInfo.includeSections) {
+    if(fieldConfig.includeSections) {
         assertNotNull("$description + sections", course.sections)
         assertEquals("$description + sections count", 1, course.sections.size)
         assertSectionPopulated("$description + section",course.sections[0])

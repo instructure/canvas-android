@@ -14,24 +14,23 @@
  *     limitations under the License.
  *
  */
-package com.instructure.canvasapi2.pact.canvas.objects
+package com.instructure.canvasapi2.pact.canvas.logic
 
 import com.instructure.canvasapi2.models.Section
 import io.pactfoundation.consumer.dsl.LambdaDslObject
-import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 
 /**&
  * Information on how to populate a Section object's fields.
  */
-data class PactSectionFieldInfo(
+data class PactSectionFieldConfig(
         val includeTotalStudents: Boolean = false
 )
 
 /**
- * Populate a Section object in a Pact specification, based on PactSectionFieldInfo settings.
+ * Populate a Section object in a Pact specification, based on PactSectionFieldConfig settings.
  */
-fun LambdaDslObject.populateSectionFields(fieldInfo: PactSectionFieldInfo = PactSectionFieldInfo()) : LambdaDslObject {
+fun LambdaDslObject.populateSectionFields(fieldConfig: PactSectionFieldConfig = PactSectionFieldConfig()) : LambdaDslObject {
 
     this
             .id("id")
@@ -39,7 +38,7 @@ fun LambdaDslObject.populateSectionFields(fieldInfo: PactSectionFieldInfo = Pact
             .timestamp("start_at", PACT_TIMESTAMP_FORMAT)
             .timestamp("end_at", PACT_TIMESTAMP_FORMAT)
 
-    if(fieldInfo.includeTotalStudents) {
+    if(fieldConfig.includeTotalStudents) {
         this.numberType("total_students")
     }
 
@@ -47,15 +46,15 @@ fun LambdaDslObject.populateSectionFields(fieldInfo: PactSectionFieldInfo = Pact
 }
 
 /**
- * Assert that a Section object in a response has been populated correctly, based on PactSectionFieldInfo settings.
+ * Assert that a Section object in a response has been populated correctly, based on PactSectionFieldConfig settings.
  */
-fun assertSectionPopulated(description: String, section: Section, fieldInfo: PactSectionFieldInfo = PactSectionFieldInfo()) {
+fun assertSectionPopulated(description: String, section: Section, fieldConfig: PactSectionFieldConfig = PactSectionFieldConfig()) {
     assertNotNull("$description + id", section.id)
     assertNotNull("$description + name", section.name)
     assertNotNull("$description + startAt", section.startAt)
     assertNotNull("$description + endAt", section.endAt)
 
-    if(fieldInfo.includeTotalStudents) {
+    if(fieldConfig.includeTotalStudents) {
         assertNotNull("$description + totalStudents", section.totalStudents)
     }
 }
