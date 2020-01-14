@@ -19,6 +19,7 @@ import 'package:flutter_parent/network/api/course_api.dart';
 import 'package:flutter_parent/network/api/enrollments_api.dart';
 import 'package:flutter_parent/network/api/file_upload_api.dart';
 import 'package:flutter_parent/network/api/inbox_api.dart';
+import 'package:flutter_parent/screens/alert_thresholds/alert_thresholds_interactor.dart';
 import 'package:flutter_parent/screens/alerts/alerts_interactor.dart';
 import 'package:flutter_parent/screens/courses/courses_interactor.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_interactor.dart';
@@ -50,6 +51,7 @@ void setupLocator() {
 
   // Interactors
   locator.registerFactory<AlertsInteractor>(() => AlertsInteractor());
+  locator.registerFactory<AlertThresholdsInteractor>(() => AlertThresholdsInteractor());
   locator.registerFactory<AttachmentPickerInteractor>(() => AttachmentPickerInteractor());
   locator.registerFactory<ConversationListInteractor>(() => ConversationListInteractor());
   locator.registerFactory<CourseDetailsInteractor>(() => CourseDetailsInteractor());

@@ -529,6 +529,60 @@ class AppLocalizations {
 
   String get appearance => Intl.message('Appearance', desc: 'Label for the appearance section in the settings page');
 
+  /// Alert Thresholds Screen
+  String get alertSettings => Intl.message('Alert Settings');
+
+  String get alertMeWhen => Intl.message('Alert me when...',
+      desc:
+          'Header for the screen where the observer chooses the thresholds that will determine when they receive alerts (e.g. when an assignment is graded below 70%)');
+
+  String percentage(String percentage) => Intl.message(
+        '$percentage%',
+        desc: 'Shows a number with a percentage sign',
+        args: [percentage],
+        examples: const {'percentage': 5},
+      );
+
+  String get courseGradeBelow => Intl.message('Course grade below',
+      desc: 'Label describing the threshold for when the course grade is below a certain percentage');
+
+  String get courseGradeAbove => Intl.message('Course grade above',
+      desc: 'Label describing the threshold for when the course grade is above a certain percentage');
+
+  String get assignmentMissing => Intl.message('Assignment missing');
+
+  String get assignmentGradeBelow => Intl.message('Assignment grade below',
+      desc: 'Label describing the threshold for when an assignment is graded below a certain percentage');
+
+  String get assignmentGradeAbove => Intl.message('Assignment grade above',
+      desc: 'Label describing the threshold for when an assignment is graded above a certain percentage');
+
+  String get courseAnnouncements => Intl.message('Course Announcements');
+
+  String get institutionAnnouncements => Intl.message('Institution Announcements');
+
+  String get never => Intl.message('Never');
+
+  String get gradePercentage => Intl.message('Grade percentage');
+
+  String get alertThresholdsLoadingError => Intl.message('There was an error loading your student\'s alerts.');
+
+  String get mustBeBelow100 => Intl.message('Must be below 100');
+
+  String mustBeBelowN(int percentage) => Intl.message(
+        'Must be below $percentage',
+        desc: 'Validation error to the user that they must choose a percentage below \'n\'',
+        args: [percentage],
+        examples: const {'percentage': 5},
+      );
+
+  String mustBeAboveN(int percentage) => Intl.message(
+        'Must be above $percentage',
+        desc: 'Validation error to the user that they must choose a percentage above \'n\'',
+        args: [percentage],
+        examples: const {'percentage': 5},
+      );
+
   /// Enrollment types
 
   String get enrollmentTypeTeacher => Intl.message('Teacher', desc: 'Label for the Teacher enrollment type');
@@ -633,4 +687,6 @@ class AppLocalizations {
         name: 'badgeNumberPlus',
         desc: "Formatted string for when too many items are being notified in a badge, generally something like '99+'",
       );
+
+  String get genericNetworkError => Intl.message('Network error');
 }

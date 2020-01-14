@@ -29,6 +29,7 @@ import 'package:intl/intl.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../utils/accessibility_utils.dart';
+import '../../utils/canvas_model_utils.dart';
 import '../../utils/test_app.dart';
 
 void main() {
@@ -268,11 +269,7 @@ void main() {
 }
 
 Widget _testableWidget({User student}) {
-  return TestApp(Scaffold(body: AlertsScreen(student ?? _mockUser())));
-}
-
-User _mockUser({String id = ''}) {
-  return User((b) => b..id = id);
+  return TestApp(Scaffold(body: AlertsScreen(student ?? CanvasModelTestUtils.mockUser())));
 }
 
 List<Alert> _mockData({int size = 1, AlertType type, AlertWorkflowState state = AlertWorkflowState.read}) {

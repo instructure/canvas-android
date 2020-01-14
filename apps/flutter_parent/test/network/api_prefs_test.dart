@@ -16,12 +16,12 @@ import 'dart:ui';
 
 import 'package:flutter_parent/models/canvas_token.dart';
 import 'package:flutter_parent/models/mobile_verify_result.dart';
-import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:package_info/package_info.dart';
 
+import '../utils/canvas_model_utils.dart';
 import '../utils/platform_config.dart';
 import '../utils/test_app.dart';
 
@@ -65,7 +65,7 @@ void main() {
 
     final verifyResult = _mockVerifyResult('domain');
     final tokens = CanvasToken((b) => b
-      ..user = _mockUser().toBuilder()
+      ..user = CanvasModelTestUtils.mockUser().toBuilder()
       ..accessToken = 'token'
       ..refreshToken = 'refresh');
 
@@ -102,7 +102,7 @@ void main() {
   test('setting user updates stored user', () async {
     await setupPlatformChannels();
 
-    final user = _mockUser();
+    final user = CanvasModelTestUtils.mockUser();
     await ApiPrefs.setUser(user);
 
     expect(ApiPrefs.getUser(), user);
@@ -113,7 +113,7 @@ void main() {
 
     expect(ApiPrefs.getUser(), null);
 
-    final user = _mockUser();
+    final user = CanvasModelTestUtils.mockUser();
     final app = _MockApp();
     await ApiPrefs.setUser(user, app: app);
 
@@ -132,7 +132,7 @@ void main() {
   test('effectiveLocale returns the users effective locale', () async {
     await setupPlatformChannels();
 
-    final user = _mockUser();
+    final user = CanvasModelTestUtils.mockUser();
     await ApiPrefs.setUser(user);
 
     expect(ApiPrefs.effectiveLocale(), Locale(user.effectiveLocale, user.effectiveLocale));
@@ -141,7 +141,7 @@ void main() {
   test('effectiveLocale returns the users locale if effective locale is null', () async {
     await setupPlatformChannels();
 
-    final user = _mockUser().rebuild((b) => b
+    final user = CanvasModelTestUtils.mockUser().rebuild((b) => b
       ..effectiveLocale = null
       ..locale = 'jp');
 
@@ -153,7 +153,7 @@ void main() {
   test('effectiveLocale returns the users locale if effective locale is null', () async {
     await setupPlatformChannels();
 
-    final user = _mockUser().rebuild((b) => b..effectiveLocale = 'en-AU-x-unimelb');
+    final user = CanvasModelTestUtils.mockUser().rebuild((b) => b..effectiveLocale = 'en-AU-x-unimelb');
 
     await ApiPrefs.setUser(user);
 
@@ -177,7 +177,7 @@ void main() {
   test('getHeaderMap returns a map with the accept-language from prefs', () async {
     await setupPlatformChannels();
 
-    final user = _mockUser().rebuild((b) => b..effectiveLocale = 'en-US');
+    final user = CanvasModelTestUtils.mockUser().rebuild((b) => b..effectiveLocale = 'en-US');
     await ApiPrefs.setUser(user);
 
     expect(ApiPrefs.getHeaderMap()['accept-language'], 'en,US');
@@ -187,7 +187,7 @@ void main() {
     await setupPlatformChannels();
 
     final deviceLocale = window.locale;
-    final user = _mockUser().rebuild((b) => b..effectiveLocale = 'ar');
+    final user = CanvasModelTestUtils.mockUser().rebuild((b) => b..effectiveLocale = 'ar');
     await ApiPrefs.setUser(user);
 
     expect(ApiPrefs.getHeaderMap(forceDeviceLanguage: true)['accept-language'],
@@ -230,18 +230,6 @@ MobileVerifyResult _mockVerifyResult(String domain) => MobileVerifyResult((b) {
         ..clientId = 'clientId'
         ..clientSecret = 'clientSecret'
         ..apiKey = 'key'
-        ..build();
-    });
-
-User _mockUser() => User((b) {
-      return b
-        ..id = ''
-        ..name = 'name'
-        ..sortableName = 'sortable name'
-        ..avatarUrl = 'url'
-        ..primaryEmail = 'email'
-        ..locale = 'en'
-        ..effectiveLocale = 'jp'
         ..build();
     });
 

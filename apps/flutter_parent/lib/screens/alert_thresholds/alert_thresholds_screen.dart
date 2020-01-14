@@ -1,0 +1,208 @@
+// Copyright (C) 2019 - present Instructure, Inc.
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, version 3 of the License.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+import 'package:flutter/material.dart';
+import 'package:flutter_parent/l10n/app_localizations.dart';
+import 'package:flutter_parent/models/alert.dart';
+import 'package:flutter_parent/models/alert_threshold.dart';
+import 'package:flutter_parent/models/user.dart';
+import 'package:flutter_parent/screens/alert_thresholds/alert_thresholds_interactor.dart';
+import 'package:flutter_parent/utils/common_widgets/avatar.dart';
+import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
+import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
+import 'package:flutter_parent/utils/common_widgets/user_name.dart';
+import 'package:flutter_parent/utils/design/parent_colors.dart';
+import 'package:flutter_parent/utils/design/student_color_set.dart';
+import 'package:flutter_parent/utils/service_locator.dart';
+
+import 'alert_thresholds_extensions.dart';
+import 'alert_thresholds_percentage_dialog.dart';
+
+class AlertThresholdsScreen extends StatefulWidget {
+  final User _student;
+
+  AlertThresholdsScreen(this._student);
+
+  @override
+  State<StatefulWidget> createState() => AlertThresholdsState();
+}
+
+class AlertThresholdsState extends State<AlertThresholdsScreen> {
+  Future<List<AlertThreshold>> _thresholdsFuture;
+  Future<List<AlertThreshold>> _loadThresholds() =>
+      locator<AlertThresholdsInteractor>().getAlertThresholdsForStudent(widget._student.id);
+  List<AlertThreshold> _thresholds = [];
+
+  @override
+  void initState() {
+    _thresholdsFuture = _loadThresholds();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: Text(L10n(context).alertSettings),
+        ),
+        body: FutureBuilder(
+          future: _thresholdsFuture,
+          builder: (context, AsyncSnapshot<List<AlertThreshold>> snapshot) {
+            Widget view;
+            if (snapshot.hasError) {
+              view = _error(context);
+            } else if (snapshot.connectionState == ConnectionState.waiting) {
+              view = LoadingIndicator();
+            } else {
+              _thresholds = snapshot.data;
+              view = _body();
+            }
+            return view;
+          },
+        ));
+  }
+
+  Widget _body() {
+    return Column(
+      children: <Widget>[
+        SizedBox(
+          height: 16,
+        ),
+        ListTile(
+          leading: Avatar.fromUser(
+            widget._student,
+            radius: 26,
+          ),
+          title: UserName.fromUser(
+            widget._student,
+            style: Theme.of(context).textTheme.subhead,
+          ),
+        ),
+        SizedBox(
+          height: 12,
+        ),
+        Container(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 6,
+              ),
+              child: Text(
+                L10n(context).alertMeWhen,
+                style: Theme.of(context).textTheme.subhead.copyWith(color: ParentColors.ash),
+              ),
+            )),
+        SingleChildScrollView(child: _thresholdWidgetList())
+      ],
+    );
+  }
+
+  Widget _thresholdWidgetList() {
+    return Column(
+      children: <Widget>[
+        _generateAlertThresholdTile(AlertType.courseGradeLow),
+        _generateAlertThresholdTile(AlertType.courseGradeHigh),
+        _generateAlertThresholdTile(AlertType.assignmentMissing),
+        _generateAlertThresholdTile(AlertType.assignmentGradeLow),
+        _generateAlertThresholdTile(AlertType.assignmentGradeHigh),
+        _generateAlertThresholdTile(AlertType.courseAnnouncement),
+        _generateAlertThresholdTile(AlertType.institutionAnnouncement),
+      ],
+    );
+  }
+
+  Widget _error(BuildContext context) {
+    return ErrorPandaWidget(L10n(context).alertThresholdsLoadingError, () {
+      setState(() {
+        _thresholdsFuture = _loadThresholds();
+      });
+    });
+  }
+
+  Widget _generateAlertThresholdTile(AlertType type) => type.isPercentage() ? _percentageTile(type) : _switchTile(type);
+
+  Widget _percentageTile(AlertType type) {
+    String value = _thresholds.getThreshold(type)?.threshold;
+    return ListTile(
+      title: Text(
+        type.getTitle(context),
+        style: Theme.of(context).textTheme.subhead,
+      ),
+      trailing: Text(
+        value != null ? L10n(context).percentage(value) : L10n(context).never,
+        style: Theme.of(context).textTheme.subhead.copyWith(color: StudentColorSet.electric.light),
+      ),
+      onTap: () async {
+        AlertThreshold update = await showDialog(
+            context: context, child: AlertThresholdsPercentageDialog(_thresholds, type, widget._student.id));
+
+        if (update == null) {
+          // User hit cancel - do nothing
+          return;
+        }
+
+        // Grab the index of the threshold, if it exists
+        var idx = _thresholds.indexWhere((threshold) => threshold?.alertType == type);
+
+        // Update the UI
+        setState(() {
+          if (update.threshold != '-1') {
+            // Threshold was created or updated
+            if (idx == -1) {
+              // Threshold got created
+              _thresholds.add(update);
+            } else {
+              // Existing threshold was updated
+              _thresholds[idx] = update;
+            }
+          } else {
+            // Threshold was either deleted or left at 'never'
+            if (idx != -1) {
+              // Threshold exists but was deleted
+              _thresholds[idx] = null;
+            }
+          }
+        });
+      },
+    );
+  }
+
+  Widget _switchTile(AlertType type) {
+    AlertThreshold threshold = _thresholds.getThreshold(type);
+    bool value = threshold != null;
+    return SwitchListTile(
+      title: Text(type.getTitle(context)),
+      value: value,
+      contentPadding: const EdgeInsets.fromLTRB(16, 0, 7, 0),
+      onChanged: (bool state) async {
+        var update =
+            await locator<AlertThresholdsInteractor>().updateAlertThreshold(type, widget._student.id, threshold);
+
+        // Grab the index of the threshold, if it exists
+        var idx = _thresholds.indexWhere((t) => t?.alertType == type);
+        setState(() {
+          value = value ? false : true;
+          if (idx == -1) {
+            // Threshold got created
+            _thresholds.add(update);
+          } else {
+            // Existing threshold was deleted
+            _thresholds[idx] = null;
+          }
+        });
+      },
+    );
+  }
+}

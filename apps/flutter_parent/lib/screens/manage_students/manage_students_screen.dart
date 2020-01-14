@@ -15,10 +15,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/user.dart';
+import 'package:flutter_parent/screens/alert_thresholds/alert_thresholds_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/avatar.dart';
 import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/user_name.dart';
+import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 import 'add_student_dialog.dart';
@@ -93,8 +95,7 @@ class _ManageStudentsState extends State<ManageStudentsScreen> {
           ),
         ),
         onTap: () {
-          // TODO: Tapping on a user
-//                  locator.get<QuickNav>().push(context, StudentSettingsScreen(students[index]));
+          locator.get<QuickNav>().push(context, AlertThresholdsScreen(students[index]));
         },
       ),
     );
@@ -187,6 +188,7 @@ class _ManageStudentsState extends State<ManageStudentsScreen> {
         ),
         onTap: () async {
           Navigator.of(context).pop();
+          // ignore: unused_local_variable, will use when we get the QR reader in place
           String cameraScanResult = await widget._interactor.getQrReading();
 //          print('Camera results: $cameraScanResult');
 //          if (cameraScanResult != null && cameraScanResult.isNotEmpty && cameraScanResult != '-1') {

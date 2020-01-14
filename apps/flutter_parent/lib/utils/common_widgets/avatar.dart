@@ -14,6 +14,7 @@
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 
 class Avatar extends StatelessWidget {
@@ -38,6 +39,13 @@ class Avatar extends StatelessWidget {
     this.overlay,
     this.name,
   }) : super(key: key);
+
+  Avatar.fromUser(
+    User user, {
+    Color backgroundColor,
+    double radius = 20,
+    Widget overlay,
+  }) : this(user.avatarUrl, name: user.shortName, backgroundColor: backgroundColor, radius: radius, overlay: overlay);
 
   @override
   Widget build(BuildContext context) {
