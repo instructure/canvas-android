@@ -24,6 +24,7 @@ import 'package:flutter_parent/models/submission.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_interactor.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_model.dart';
 import 'package:flutter_parent/screens/courses/details/course_grades_screen.dart';
+import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
@@ -84,11 +85,11 @@ void main() {
     final model = CourseDetailsModel(studentId, courseId);
     expect(() => model.assignmentGroupFuture = Future<List<AssignmentGroup>>.error('ErRoR here'), throwsA(anything));
 
-    await tester.pumpWidget(_testableWidget(model));
+    await tester.pumpWidget(_testableWidget(model, highContrastMode: true));
     await tester.pump(); // Build the widget
     await tester.pump(); // Let the future finish
 
-    expect(find.text(AppLocalizations().unexpectedError), findsOneWidget);
+    expect(find.byType(ErrorPandaWidget), findsOneWidget);
   });
 
   testWidgetsWithAccessibilityChecks('Shows empty', (tester) async {
