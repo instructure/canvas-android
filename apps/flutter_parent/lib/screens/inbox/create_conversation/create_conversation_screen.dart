@@ -118,9 +118,9 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
 
   _send() async {
     setState(() => _sending = true);
-    var recipientIds = _selectedRecipients.map((it) => it.id).toList();
-    var attachmentIds = _attachments.map((it) => it.attachment.id).toList();
     try {
+      var recipientIds = _selectedRecipients.map((it) => it.id).toList();
+      var attachmentIds = _attachments.map((it) => it.attachment.id).toList();
       await _interactor.createConversation(widget._course, recipientIds, _subjectText, _bodyText, attachmentIds);
       Navigator.of(context).pop(true); // 'true' indicates upload was successful
     } catch (e) {

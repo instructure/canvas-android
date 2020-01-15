@@ -36,20 +36,24 @@ class InboxApi {
   Future<UnreadCount> getUnreadCount() => fetch(canvasDio(forceRefresh: true).get('conversations/unread_count'));
 
   Future<Conversation> addMessage(
-    int conversationId,
+    String conversationId,
     String body,
     List<String> recipientIds,
     List<String> attachmentIds,
     List<String> includeMessageIds,
   ) async {
     var config = DioConfig.canvas();
-    var params = {
-      'body': body,
-      'recipients': recipientIds,
-      'attachment_ids': attachmentIds,
-      'included_messages': includeMessageIds,
-    };
-    var conversation = fetch(config.dio.post('conversations/$conversationId/add_message', queryParameters: params));
+    Conversation conversation = await fetch(
+      config.dio.post(
+        'conversations/$conversationId/add_message',
+        queryParameters: {
+          'body': body,
+          'recipients': recipientIds,
+          'attachment_ids': attachmentIds,
+          'included_messages': includeMessageIds,
+        },
+      ),
+    );
     config.clearCache('conversations');
     config.clearCache('conversations/$conversationId');
     return conversation;
