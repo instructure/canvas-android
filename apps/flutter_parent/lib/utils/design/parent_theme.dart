@@ -130,6 +130,39 @@ class _ParentThemeState extends State<ParentTheme> {
   /// Returns a Parent App theme styled with the color of the currently selected student
   ThemeData get studentTheme => _buildTheme(studentColor);
 
+  /// Create a preferred size divider that can be used as the bottom of an app bar
+  PreferredSize _appBarDivider(Color color) => PreferredSize(
+        preferredSize: Size.fromHeight(1),
+        child: Divider(height: 1, color: color),
+      );
+
+  /// Returns a light divider if in dark mode, otherwise a light divider that changes color with HC mode
+  PreferredSize get _appBarDividerThemed =>
+      _appBarDivider(isDarkMode ? ParentColors.oxford : ParentColors.appBarDividerLight);
+
+  /// Returns a light divider if in dark mode, dark divider in light mode unless shadowInLightMode is true, wrapping the optional bottom passed in
+  PreferredSizeWidget appBarDivider({PreferredSizeWidget bottom, bool shadowInLightMode = true}) =>
+      (isDarkMode || !shadowInLightMode)
+          ? PreferredSize(
+              preferredSize: Size.fromHeight(1.0 + (bottom?.preferredSize?.height ?? 0)), // Bottom height plus divider
+              child: Column(
+                children: [
+                  if (bottom != null) bottom,
+                  _appBarDividerThemed,
+                ],
+              ),
+            )
+          : bottom;
+
+  /// Returns a widget wrapping a divider on top of the passed in bottom
+  Widget bottomNavigationDivider(Widget bottom) => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          _appBarDividerThemed,
+          bottom,
+        ],
+      );
+
   @override
   void setState(fn) {
     super.setState(fn);
@@ -260,6 +293,7 @@ class DefaultParentTheme extends StatelessWidget {
       color: theme.scaffoldBackgroundColor,
       textTheme: theme.textTheme,
       iconTheme: theme.iconTheme,
+      elevation: 0,
     );
   }
 }

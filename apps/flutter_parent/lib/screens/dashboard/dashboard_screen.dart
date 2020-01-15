@@ -28,6 +28,7 @@ import 'package:flutter_parent/utils/common_widgets/dropdown_arrow.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/common_widgets/user_name.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
+import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:package_info/package_info.dart';
@@ -137,18 +138,20 @@ class DashboardState extends State<DashboardScreen> {
         child: AppBar(
           flexibleSpace: _appBarStudents(_students),
           centerTitle: true,
+          bottom: ParentTheme.of(context).appBarDivider(),
         ),
       ),
       drawer: Drawer(
         child: SafeArea(child: _navDrawer(_self)),
       ),
       body: _currentPage(),
-      bottomNavigationBar: BottomNavigationBar(
-        items: _bottomNavigationBarItems(),
-        currentIndex: this._currentIndex,
-        onTap: (item) {
-          _handleBottomBarClick(item);
-        },
+      bottomNavigationBar: ParentTheme.of(context).bottomNavigationDivider(
+        BottomNavigationBar(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          items: _bottomNavigationBarItems(),
+          currentIndex: this._currentIndex,
+          onTap: (item) => _handleBottomBarClick(item),
+        ),
       ),
     );
   }

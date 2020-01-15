@@ -58,7 +58,7 @@ class ConversationListState extends State<ConversationListScreen> {
       builder: (context) => Scaffold(
         appBar: AppBar(
           title: Text(L10n(context).inbox),
-          elevation: 1,
+          bottom: ParentTheme.of(context).appBarDivider(shadowInLightMode: false),
         ),
         body: FutureBuilder(
           future: _conversationsFuture,

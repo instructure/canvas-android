@@ -48,6 +48,9 @@ class ParentColors {
   /// Core color for the teacher app
   static const teacherApp = Color(0xFFFFC100);
 
+  /// Color for light mode divider under the app bar
+  static const appBarDividerLight = Color(0x1F000000);
+
   /// Generates a [MaterialColor] swatch for a given color. For best results the source color should have a medium brightness.
   static MaterialColor makeSwatch(Color color) {
     var src = HSLColor.fromColor(color);
