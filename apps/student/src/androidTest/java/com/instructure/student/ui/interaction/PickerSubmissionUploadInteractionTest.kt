@@ -112,8 +112,15 @@ class PickerSubmissionUploadInteractionTest : StudentTest() {
             Intents.release()
         }
 
+        // It's possible for the Submit button to wait a beat before appearing
+        pickerSubmissionUploadPage.waitForSubmitButtonToAppear()
+
         // Now submit the file
         pickerSubmissionUploadPage.submit()
+
+        // The screen may go through several refactorings while the submission is being submitted,
+        // which could potentially throw off our tests.  So wait until we get the "all clear".
+        assignmentDetailsPage.waitForSubmissionComplete()
 
         // Should be back to assignment details page
         assignmentDetailsPage.goToSubmissionDetails()

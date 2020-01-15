@@ -63,6 +63,7 @@ abstract class CanvasTest : InstructureTest(BuildConfig.GLOBAL_DITTO_MODE) {
         // Let's set ourselves up to log information about our retries.
         ScreenshotTestRule.registerRetryHandler( handler = { error, testMethod, testClass ->
 
+            Log.d("TEST RETRY", "testMethod: $testMethod, error=$error, stacktrace=${error.stackTrace.joinToString("\n")} cause=${error.cause}")
             // Grab the Splunk-mobile token from Bitrise
             val splunkToken = InstrumentationRegistry.getArguments().getString("SPLUNK_MOBILE_TOKEN")
 
