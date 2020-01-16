@@ -24,6 +24,7 @@ import 'package:flutter_parent/utils/common_widgets/user_name.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
+import 'package:flutter_parent/utils/style_slicer.dart';
 import 'package:intl/intl.dart';
 import 'package:transparent_image/transparent_image.dart';
 
@@ -80,49 +81,47 @@ class MessageWidget extends StatelessWidget {
   }
 
   Widget _authorText(BuildContext context, Conversation conversation, Message message, BasicUser author) {
-    List<InlineSpan> spans = [];
-    if (message.authorId == currentUserId) {
-      spans.add(
-        TextSpan(
-          text: L10n(context).authorNameMe,
-          style: TextStyle(color: ParentTheme.of(context).onSurfaceColor),
-        ),
-      );
+    String authorInfo;
+    List<StyleSlicer> slicers = [];
+    Color authorColor = ParentTheme.of(context).onSurfaceColor;
 
+    if (message.authorId == currentUserId) {
+      var authorName = toBeginningOfSentenceCase(L10n(context).userNameMe);
+      slicers.add(PatternSlice(authorName, style: TextStyle(color: authorColor), maxMatches: 1));
       if (message.participatingUserIds.length == 2) {
         var otherUser = conversation.participants.firstWhere(
           (it) => it.id != message.authorId,
           orElse: () => BasicUser((b) => b..name = L10n(context).unknownUser),
         );
-        var userName = UserName.fromBasicUser(otherUser).span.toPlainText();
-        spans.add(UserName.stylize(L10n(context).toUser(userName), [otherUser.pronouns]));
+        var recipientName = UserName.fromBasicUser(otherUser).text;
+        slicers.add(PronounSlice(otherUser.pronouns));
+        authorInfo = L10n(context).authorToRecipient(authorName, recipientName);
       } else if (message.participatingUserIds.length > 2) {
-        spans.add(
-          TextSpan(
-            text: L10n(context).toNOthers(message.participatingUserIds.length - 1),
-          ),
-        );
+        authorInfo = L10n(context).authorToNOthers(authorName, message.participatingUserIds.length - 1);
+      } else {
+        authorInfo = authorName;
       }
     } else {
       // This is an 'incoming' message
-      spans.add(
-        UserName.fromBasicUser(
-          author,
-          style: Theme.of(context).textTheme.caption.copyWith(color: ParentTheme.of(context).onSurfaceColor),
-        ).span,
-      );
-
+      String authorName = UserName.fromBasicUser(author).text;
+      slicers.add(PatternSlice(authorName, style: TextStyle(color: authorColor), maxMatches: 1));
+      slicers.add(PronounSlice(author.pronouns));
       if (message.participatingUserIds.length == 2) {
-        spans.add(TextSpan(text: L10n(context).toMe));
+        authorInfo = L10n(context).authorToRecipient(authorName, L10n(context).userNameMe);
       } else if (message.participatingUserIds.length > 2) {
-        spans.add(TextSpan(text: L10n(context).toMeAndNOthers(message.participatingUserIds.length - 2)));
+        authorInfo = L10n(context).authorToRecipientAndNOthers(
+          authorName,
+          L10n(context).userNameMe,
+          message.participatingUserIds.length - 2,
+        );
+      } else {
+        authorInfo == authorName;
       }
     }
 
     return Text.rich(
-      TextSpan(children: spans),
+      StyleSlicer.apply(authorInfo, slicers, baseStyle: Theme.of(context).textTheme.caption),
       key: Key('author-info'),
-      style: Theme.of(context).textTheme.caption,
     );
   }
 
