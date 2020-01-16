@@ -211,7 +211,7 @@ void main() {
       expect(find.text(AppLocalizations().emptyStudentList), findsOneWidget);
     });
 
-    testWidgetsWithAccessibilityChecks('Empty when... empty', (tester) async {
+    testWidgetsWithAccessibilityChecks('Empty when… empty', (tester) async {
       _setupLocator();
 
       List<User> observedStudents = [];

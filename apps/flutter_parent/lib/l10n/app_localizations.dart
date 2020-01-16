@@ -171,7 +171,7 @@ class AppLocalizations {
   /// Domain search screen
 
   String get domainSearchInputHint => Intl.message(
-        'Enter school name or district...',
+        'Enter school name or district…',
         name: 'domainSearchInputHint',
         desc: "Input hint for the text box on the domain search screen",
       );
@@ -532,7 +532,7 @@ class AppLocalizations {
   /// Alert Thresholds Screen
   String get alertSettings => Intl.message('Alert Settings');
 
-  String get alertMeWhen => Intl.message('Alert me when...',
+  String get alertMeWhen => Intl.message('Alert me when…',
       desc:
           'Header for the screen where the observer chooses the thresholds that will determine when they receive alerts (e.g. when an assignment is graded below 70%)');
 
