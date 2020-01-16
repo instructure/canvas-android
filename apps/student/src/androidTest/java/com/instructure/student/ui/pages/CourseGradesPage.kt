@@ -34,6 +34,7 @@ import com.instructure.espresso.WaitForViewWithId
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.click
+import com.instructure.espresso.matchers.WaitForViewMatcher.waitForView
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.withText
 import com.instructure.espresso.swipeDown
@@ -63,6 +64,8 @@ class CourseGradesPage : BasePage(R.id.courseGradesPage) {
     }
 
     fun assertTotalGrade(matcher: Matcher<View>) {
+        // Maybe the total grade will take a beat to update properly?
+        waitForView(allOf(withId(R.id.txtOverallGrade), matcher))
         gradeValue.check(matches(matcher))
     }
 
