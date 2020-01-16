@@ -19,7 +19,9 @@ package com.instructure.canvasapi2.pact.canvas.apis
 import au.com.dius.pact.consumer.PactProviderRuleMk2
 import au.com.dius.pact.model.PactSpecVersion
 import com.instructure.canvasapi2.apis.CourseAPI
+import org.junit.Assert.assertEquals
 import org.junit.Rule
+import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -36,6 +38,12 @@ open class ApiPactTestBase {
 
         //println("PACT: Provider URL: ${provider.url} client base url = ${client.baseUrl()}")
         return client
+    }
+
+    fun <T> assertQueryParamsAndPath(call: Call<T>, expectedQuery: String?, expectedPath: String?)
+    {
+        assertEquals("Call Query Params", call.request().url().query(), expectedQuery)
+        assertEquals("Call Path", call.request().url().url().path, expectedPath)
     }
 
     val MAIN_PROVIDER_STATE = "User 1, 4 courses, 2 favorited"

@@ -48,6 +48,7 @@ class EnrollmentsApiPactTests : ApiPactTestBase() {
             PactEnrollmentFieldConfig(courseId = 3, userId = 1, populateFully = true, includeGrades = true),
             PactEnrollmentFieldConfig(courseId = 4, userId = 1, populateFully = true, includeGrades = true)
     )
+    val selfEnrollmentsPath = "/api/v1/users/self/enrollments"
     val selfEnrollmentsResponseBody =  LambdaDsl.newJsonArray { array ->
         for(fieldInfo in selfEnrollmentsFieldInfo) {
             array.`object` { obj ->
@@ -61,7 +62,7 @@ class EnrollmentsApiPactTests : ApiPactTestBase() {
                 .given(MAIN_PROVIDER_STATE)
 
                 .uponReceiving("A request for user 1's enrollments")
-                .path("/api/v1/users/self/enrollments")
+                .path(selfEnrollmentsPath)
                 .method("GET")
                 // TODO: Headers
 
@@ -80,7 +81,7 @@ class EnrollmentsApiPactTests : ApiPactTestBase() {
         val selfEnrollmentsCall = service.getFirstPageSelfEnrollments(types=null,states=null)
         val selfEnrollmentResult = selfEnrollmentsCall.execute()
 
-        assertEquals("Call Query Params", null, selfEnrollmentsCall.request().url().query())
+        assertQueryParamsAndPath(selfEnrollmentsCall, null, selfEnrollmentsPath)
 
         assertNotNull("Expected non-null response body", selfEnrollmentResult.body())
         val enrollments = selfEnrollmentResult.body()!!

@@ -42,6 +42,7 @@ class UsersApiPactTests : ApiPactTestBase() {
     //region grab user profile info
     //
     val userFieldConfig = PactUserFieldConfig(id = 1, includeLocaleInfo = true, includePermissions = true)
+    val userPath = "/api/v1/users/self"
     val userResponseBody =  LambdaDsl.newJsonBody() { obj ->
         obj.populateUserFields(userFieldConfig)
     }.build()
@@ -52,7 +53,7 @@ class UsersApiPactTests : ApiPactTestBase() {
                 .given(MAIN_PROVIDER_STATE)
 
                 .uponReceiving("A request for user 1's  user object")
-                .path("/api/v1/users/self")
+                .path(userPath)
                 .method("GET")
                 // TODO: Headers
 
@@ -72,7 +73,7 @@ class UsersApiPactTests : ApiPactTestBase() {
         val userCall = service.getSelfWithPermissions()
         val userResult = userCall.execute()
 
-        assertEquals("Call Query Params", null, userCall.request().url().query())
+        assertQueryParamsAndPath(userCall, null, userPath)
 
         assertNotNull("Expected non-null response body", userResult.body())
         val user = userResult.body()!!
@@ -87,6 +88,7 @@ class UsersApiPactTests : ApiPactTestBase() {
     //region grab user profile info
     //
     val profileFieldConfig = PactUserFieldConfig(id = 1, includeLocaleInfo = true, includeProfileInfo = true, includeLoginId = true)
+    val profilePath = "/api/v1/users/self/profile"
     val profileResponseBody =  LambdaDsl.newJsonBody() { obj ->
         obj.populateUserFields(profileFieldConfig)
     }.build()
@@ -96,7 +98,7 @@ class UsersApiPactTests : ApiPactTestBase() {
                 .given(MAIN_PROVIDER_STATE)
 
                 .uponReceiving("A request for user 1's profile")
-                .path("/api/v1/users/self/profile")
+                .path(profilePath)
                 .method("GET")
                 // TODO: Headers
 
@@ -116,7 +118,7 @@ class UsersApiPactTests : ApiPactTestBase() {
         val profileCall = service.getSelf()
         val profileResult = profileCall.execute()
 
-        assertEquals("Call Query Params",null, profileCall.request().url().query())
+        assertQueryParamsAndPath(profileCall, null, profilePath)
 
         assertNotNull("Expected non-null response body", profileResult.body())
         val profile = profileResult.body()!!
@@ -129,6 +131,7 @@ class UsersApiPactTests : ApiPactTestBase() {
     //region grab people from course
     //
     val peopleCallQuery = "include[]=enrollments&include[]=avatar_url&include[]=user_id&include[]=email&include[]=bio&enrollment_type=student"
+    val peopleCallPath = "/api/v1/courses/1/users"
     val peopleFieldConfig = PactUserFieldConfig(id = 1, includeEnrollment = true, includeProfileInfo = true)
     val peopleResponseBody = LambdaDsl.newJsonArray() { array ->
         array.`object`() { person ->
@@ -142,7 +145,7 @@ class UsersApiPactTests : ApiPactTestBase() {
                 .given(MAIN_PROVIDER_STATE)
 
                 .uponReceiving("A request for course 1's student people")
-                .path("/api/v1/courses/1/users")
+                .path(peopleCallPath)
                 .method("GET")
                 .query(peopleCallQuery)
                 // TODO: Headers
@@ -163,8 +166,7 @@ class UsersApiPactTests : ApiPactTestBase() {
         val peopleCall = service.getFirstPagePeopleList(1, enrollmentType="student")
         val peopleResult = peopleCall.execute()
 
-        val actualQueryParams = peopleCall.request().url().query()
-        assertEquals("Call Query Params", peopleCallQuery, actualQueryParams)
+        assertQueryParamsAndPath(peopleCall, peopleCallQuery, peopleCallPath)
 
         assertNotNull("Expected non-null response body", peopleResult.body())
 

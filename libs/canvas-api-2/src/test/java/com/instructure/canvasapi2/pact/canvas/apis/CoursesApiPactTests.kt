@@ -43,6 +43,7 @@ class CoursesApiPactTests : ApiPactTestBase() {
     //
 
     val favoriteCoursesQuery = "include[]=term&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=current_grading_period_scores&include[]=course_image&include[]=favorites"
+    val favoriteCoursesPath = "/api/v1/users/self/favorites/courses"
     val favoriteCoursesFieldInfo = listOf(
             PactCourseFieldConfig.fromQueryString(courseId = 1, isFavorite = true, query = favoriteCoursesQuery),
             PactCourseFieldConfig.fromQueryString(courseId = 2, isFavorite = true, query = favoriteCoursesQuery)
@@ -61,7 +62,7 @@ class CoursesApiPactTests : ApiPactTestBase() {
                 .given(MAIN_PROVIDER_STATE)
 
                 .uponReceiving("A request for favorite courses")
-                .path("/api/v1/users/self/favorites/courses")
+                .path(favoriteCoursesPath)
                 .method("GET")
                 .query(favoriteCoursesQuery)
                 // TODO: Headers
@@ -82,8 +83,7 @@ class CoursesApiPactTests : ApiPactTestBase() {
         val getFavoritesCall = service.favoriteCourses
         val getFavoritesResult = getFavoritesCall.execute()
 
-        val actualQueryParams = getFavoritesCall.request().url().query()
-        assertEquals("Call query params", favoriteCoursesQuery, actualQueryParams)
+        assertQueryParamsAndPath(getFavoritesCall, favoriteCoursesQuery, favoriteCoursesPath)
 
         assertNotNull("Expected non-null response body", getFavoritesResult.body())
         val courseList = getFavoritesResult.body()!!
@@ -103,6 +103,7 @@ class CoursesApiPactTests : ApiPactTestBase() {
     //
 
     val allCoursesQuery = "include[]=term&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=sections&state[]=completed&state[]=available"
+    val allCoursesPath = "/api/v1/courses"
     val allCoursesFieldInfo = listOf(
             PactCourseFieldConfig.fromQueryString(courseId = 1, isFavorite = true, query = allCoursesQuery),
             PactCourseFieldConfig.fromQueryString(courseId = 2, isFavorite = true, query = allCoursesQuery),
@@ -124,7 +125,7 @@ class CoursesApiPactTests : ApiPactTestBase() {
                 .given(MAIN_PROVIDER_STATE)
 
                 .uponReceiving("A request for all courses")
-                .path("/api/v1/courses")
+                .path(allCoursesPath)
                 .method("GET")
                 .query(allCoursesQuery)
                 // TODO: Headers
@@ -145,10 +146,7 @@ class CoursesApiPactTests : ApiPactTestBase() {
         val getCoursesCall = service.firstPageCourses
         val getCoursesResult = getCoursesCall.execute()
 
-        val actualQueryParams = getCoursesCall.request().url().query()
-        assertEquals("Call Query Params", allCoursesQuery, actualQueryParams)
-
-        println("grab all courses query: ${getCoursesCall.request().url().query()}")
+        assertQueryParamsAndPath(getCoursesCall, allCoursesQuery, allCoursesPath)
 
         assertNotNull("Expected non-null response body", getCoursesResult.body())
         val courseList = getCoursesResult.body()!!
@@ -168,6 +166,7 @@ class CoursesApiPactTests : ApiPactTestBase() {
     //
 
     val singleCourseQuery = "include[]=term&include[]=permissions&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=course_image"
+    val singleCoursePath = "/api/v1/courses/1"
     val singleCourseFieldInfo = PactCourseFieldConfig.fromQueryString(courseId = 1, isFavorite = true, query = singleCourseQuery)
     val singleCourseResponseBody = LambdaDsl.newJsonBody { obj ->
         obj.populateCourseFields(singleCourseFieldInfo)
@@ -179,7 +178,7 @@ class CoursesApiPactTests : ApiPactTestBase() {
                 .given(MAIN_PROVIDER_STATE)
 
                 .uponReceiving("A request for course 1")
-                .path("/api/v1/courses/1")
+                .path(singleCoursePath)
                 .method("GET")
                 .query(singleCourseQuery)
                 // TODO: Headers
@@ -200,8 +199,7 @@ class CoursesApiPactTests : ApiPactTestBase() {
         val getCourseCall = service.getCourse(1L)
         val getCourseResult = getCourseCall.execute()
 
-        val actualQueryParams = getCourseCall.request().url().query()
-        assertEquals("Call Query Params", singleCourseQuery, actualQueryParams)
+        assertQueryParamsAndPath(getCourseCall, singleCourseQuery, singleCoursePath)
 
         assertNotNull("Expected non-null response body", getCourseResult.body())
         val course = getCourseResult.body()!!
@@ -215,6 +213,7 @@ class CoursesApiPactTests : ApiPactTestBase() {
     //
 
     val courseWithGradeQuery = "include[]=term&include[]=permissions&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=total_scores&include[]=current_grading_period_scores&include[]=course_image"
+    val courseWithGradePath = "/api/v1/courses/1"
     val courseWithGradeFieldInfo = PactCourseFieldConfig.fromQueryString(courseId = 1, isFavorite = true, query = courseWithGradeQuery)
     val courseWithGradeResponseBody = LambdaDsl.newJsonBody { obj ->
         obj.populateCourseFields(courseWithGradeFieldInfo)
@@ -226,7 +225,7 @@ class CoursesApiPactTests : ApiPactTestBase() {
                 .given(MAIN_PROVIDER_STATE)
 
                 .uponReceiving("A request for course 1 with grade")
-                .path("/api/v1/courses/1")
+                .path(courseWithGradePath)
                 .method("GET")
                 .query(courseWithGradeQuery)
                 // TODO: Headers
@@ -247,8 +246,7 @@ class CoursesApiPactTests : ApiPactTestBase() {
         val getCourseCall = service.getCourseWithGrade(1L)
         val getCourseResult = getCourseCall.execute()
 
-        val actualQueryParams = getCourseCall.request().url().query()
-        assertEquals("Call Query Params", courseWithGradeQuery, actualQueryParams)
+        assertQueryParamsAndPath(getCourseCall, courseWithGradeQuery, courseWithGradePath)
 
         assertNotNull("Expected non-null response body", getCourseResult.body())
         val course = getCourseResult.body()!!
@@ -264,6 +262,7 @@ class CoursesApiPactTests : ApiPactTestBase() {
     //
 
     // Should just return ids for the two favorite courses, right?
+    val dashboardCardPath = "/api/v1/dashboard/dashboard_cards"
     val dashboardCardResponseBody = LambdaDsl.newJsonArray { array ->
         array.`object` { obj ->
             obj.id("id", 1L)
@@ -279,7 +278,7 @@ class CoursesApiPactTests : ApiPactTestBase() {
                 .given(MAIN_PROVIDER_STATE)
 
                 .uponReceiving("A request for user's dashboard cards")
-                .path("/api/v1/dashboard/dashboard_cards")
+                .path(dashboardCardPath)
                 .method("GET")
                 // TODO: Headers
 
@@ -299,7 +298,7 @@ class CoursesApiPactTests : ApiPactTestBase() {
         val getDashboardsCall = service.dashboardCourses
         val getDashboardsResult = getDashboardsCall.execute()
 
-        assertEquals("Call Query Params", null, getDashboardsCall.request().url().query())
+        assertQueryParamsAndPath(getDashboardsCall, null, dashboardCardPath)
 
         assertNotNull("Expected non-null response body", getDashboardsResult.body())
         val dashboardCards = getDashboardsResult.body()!!
