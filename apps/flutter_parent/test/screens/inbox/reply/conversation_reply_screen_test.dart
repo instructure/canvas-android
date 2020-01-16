@@ -410,7 +410,7 @@ void main() {
     await tester.tap(attachmentWidget);
     await tester.pumpAndSettle();
     await tester.tap(find.text(l10n.delete));
-    await tester.pump();
+    await tester.pumpAndSettle();
 
     // Ensure attachment widget has been removed
     attachmentWidget = find.byType(AttachmentWidget);
@@ -520,6 +520,55 @@ void main() {
     await tester.pump(Duration(milliseconds: 100));
 
     expect(find.text('upload.txt'), findsNWidgets(2)); // 2 widgets: one is the tooltip and one is the regular label
+  });
+
+  testWidgetsWithAccessibilityChecks('disables attachment interactions while sending', (tester) async {
+    var handler = AttachmentHandler(File('path/to/file.txt'))
+      ..attachment = Attachment((b) => b..displayName = 'upload.txt')
+      ..stage = AttachmentUploadStage.FINISHED;
+
+    final interactor = _setupInteractor();
+    when(interactor.addAttachment(any)).thenAnswer((_) => Future.value(handler));
+
+    Completer<Conversation> completer = Completer();
+    when(interactor.createReply(any, any, any, any, any)).thenAnswer((_) => completer.future);
+
+    // Create page and add attachment
+    await tester.pumpWidget(TestApp(ConversationReplyScreen(_makeConversation(), null, false), highContrast: true));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(CreateConversationScreen.attachmentKey));
+    await tester.pump();
+
+    // Assert attachment widget is displayed
+    var attachmentWidget = find.byType(AttachmentWidget);
+    expect(attachmentWidget, findsOneWidget);
+
+    // Tap attachment
+    await tester.tap(attachmentWidget);
+    await tester.pumpAndSettle();
+
+    // Should display delete option
+    expect(find.text(l10n.delete), findsOneWidget);
+
+    // Tap outside to dismiss attachment options
+    await tester.tapAt(Offset(0, 0));
+    await tester.pumpAndSettle();
+
+    // Add text to enable sending
+    var matchedWidget = find.byKey(CreateConversationScreen.messageKey);
+    await tester.enterText(matchedWidget, 'Some text here');
+    await tester.pump();
+
+    // Tap send button
+    await tester.tap(find.byKey(CreateConversationScreen.sendKey));
+    await tester.pump();
+
+    // Tap attachment
+    await tester.tap(attachmentWidget);
+    await tester.pump(Duration(milliseconds: 150));
+
+    // Should not display delete option
+    expect(find.text(l10n.delete), findsNothing);
   });
 }
 
