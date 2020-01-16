@@ -77,56 +77,57 @@ class AlertThresholdsState extends State<AlertThresholdsScreen> {
   }
 
   Widget _body() {
-    var list = _thresholdItems();
-    return Column(children: <Widget>[
-      SizedBox(
-        height: 16,
-      ),
-      ListTile(
-        leading: Avatar.fromUser(
-          widget._student,
-          radius: 26,
+    return Column(
+      children: <Widget>[
+        SizedBox(
+          height: 16,
         ),
-        title: UserName.fromUser(
-          widget._student,
-          style: Theme.of(context).textTheme.subhead,
+        ListTile(
+          leading: Avatar.fromUser(
+            widget._student,
+            radius: 26,
+          ),
+          title: UserName.fromUser(
+            widget._student,
+            style: Theme.of(context).textTheme.subhead,
+          ),
         ),
-      ),
-      SizedBox(
-        height: 12,
-      ),
-      Container(
-          alignment: Alignment.centerLeft,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 6,
-            ),
-            child: Text(
-              L10n(context).alertMeWhen,
-              style: Theme.of(context).textTheme.subhead.copyWith(color: ParentColors.ash),
-            ),
-          )),
-      Expanded(
-        child: ListView.builder(
-          shrinkWrap: true,
-          itemCount: list.length,
-          itemBuilder: (context, index) => list[index],
+        SizedBox(
+          height: 12,
         ),
-      ),
-    ]);
+        Container(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 6,
+              ),
+              child: Text(
+                L10n(context).alertMeWhen,
+                style: Theme.of(context).textTheme.subhead.copyWith(color: ParentColors.ash),
+              ),
+            )),
+        Expanded(
+          child: SingleChildScrollView(
+            child: _thresholdWidgetList(),
+          ),
+        )
+      ],
+    );
   }
 
-  List<Widget> _thresholdItems() {
-    return [
-      _generateAlertThresholdTile(AlertType.courseGradeLow),
-      _generateAlertThresholdTile(AlertType.courseGradeHigh),
-      _generateAlertThresholdTile(AlertType.assignmentMissing),
-      _generateAlertThresholdTile(AlertType.assignmentGradeLow),
-      _generateAlertThresholdTile(AlertType.assignmentGradeHigh),
-      _generateAlertThresholdTile(AlertType.courseAnnouncement),
-      _generateAlertThresholdTile(AlertType.institutionAnnouncement),
-    ];
+  Widget _thresholdWidgetList() {
+    return Column(
+      children: <Widget>[
+        _generateAlertThresholdTile(AlertType.courseGradeLow),
+        _generateAlertThresholdTile(AlertType.courseGradeHigh),
+        _generateAlertThresholdTile(AlertType.assignmentMissing),
+        _generateAlertThresholdTile(AlertType.assignmentGradeLow),
+        _generateAlertThresholdTile(AlertType.assignmentGradeHigh),
+        _generateAlertThresholdTile(AlertType.courseAnnouncement),
+        _generateAlertThresholdTile(AlertType.institutionAnnouncement),
+      ],
+    );
   }
 
   Widget _error(BuildContext context) {
