@@ -25,6 +25,7 @@ import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
+import 'package:intl/intl.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../utils/accessibility_utils.dart';
@@ -223,7 +224,7 @@ void main() {
       await tester.pump();
 
       // Check to make sure we have the initial value
-      expect(find.text(AppLocalizations().percentage(initialValue)), findsOneWidget);
+      expect(find.text(NumberFormat.percentPattern().format(int.tryParse(initialValue) / 100)), findsOneWidget);
 
       // Tap on a percent threshold
       await tester.tap(find.text(AppLocalizations().courseGradeBelow));
@@ -240,7 +241,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Check for the update
-      expect(find.text(AppLocalizations().percentage(updatedValue)), findsOneWidget);
+      expect(find.text(NumberFormat.percentPattern().format(int.tryParse(updatedValue) / 100)), findsOneWidget);
     });
   });
 }
@@ -251,7 +252,9 @@ Finder _percentageThresholdFinder(String title, {String value}) => find.byWidget
               (widget.title as Text).data == title &&
               widget.trailing is Text &&
               (widget.trailing as Text).data ==
-                  (value != null ? AppLocalizations().percentage(value) : AppLocalizations().never)
+                  (value != null
+                      ? NumberFormat.percentPattern().format(int.tryParse(value) / 100)
+                      : AppLocalizations().never)
           ? true
           : false;
     });

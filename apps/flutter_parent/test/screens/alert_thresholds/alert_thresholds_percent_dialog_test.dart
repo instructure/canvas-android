@@ -188,7 +188,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Check for error message
-      expect(tester.widget<FlatButton>(find.byKey(okButtonKey)).enabled, isFalse);
+      expect(tester.widget<FlatButton>(find.byKey(AlertThresholdsPercentageDialogState.okButtonKey)).enabled, isFalse);
     });
 
     testWidgets('disable ok button when setting low >= high', (tester) async {
@@ -210,7 +210,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Check for error message
-      expect(tester.widget<FlatButton>(find.byKey(okButtonKey)).enabled, isFalse);
+      expect(tester.widget<FlatButton>(find.byKey(AlertThresholdsPercentageDialogState.okButtonKey)).enabled, isFalse);
     });
 
     testWidgets('disable ok button when setting high <= low', (tester) async {
@@ -232,7 +232,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Check for error message
-      expect(tester.widget<FlatButton>(find.byKey(okButtonKey)).enabled, isFalse);
+      expect(tester.widget<FlatButton>(find.byKey(AlertThresholdsPercentageDialogState.okButtonKey)).enabled, isFalse);
     });
   });
 

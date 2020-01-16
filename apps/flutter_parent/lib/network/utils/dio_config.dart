@@ -81,7 +81,6 @@ class DioConfig {
     }
 
     bool debug = false;
-    assert(debug = true); // Assertions only run in debug mode
 
     // Log interceptor
     dio.interceptors.add(LogInterceptor(

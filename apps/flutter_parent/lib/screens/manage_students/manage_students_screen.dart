@@ -20,6 +20,7 @@ import 'package:flutter_parent/utils/common_widgets/avatar.dart';
 import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/user_name.dart';
+import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
@@ -51,6 +52,7 @@ class _ManageStudentsState extends State<ManageStudentsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(L10n(context).manageStudents),
+        bottom: ParentTheme.of(context).appBarDivider(),
       ),
       body: FutureBuilder(
           initialData: widget._students,

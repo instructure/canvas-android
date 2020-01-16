@@ -23,8 +23,6 @@ import 'package:flutter_parent/screens/alert_thresholds/alert_thresholds_interac
 import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
-final UniqueKey okButtonKey = UniqueKey(); // For testing
-
 class AlertThresholdsPercentageDialog extends StatefulWidget {
   final AlertType _alertType;
   final List<AlertThreshold> thresholds;
@@ -47,6 +45,8 @@ class AlertThresholdsPercentageDialogState extends State<AlertThresholdsPercenta
 
   final int _disabledAlpha = 80;
 
+  static final UniqueKey okButtonKey = UniqueKey(); // For testing
+
   String errorMsg;
 
   final GlobalKey<FormFieldState> _formKey = GlobalKey<FormFieldState>();
@@ -65,7 +65,6 @@ class AlertThresholdsPercentageDialogState extends State<AlertThresholdsPercenta
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      key: UniqueKey(),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
       title: Text(widget._alertType.getTitle(context)),
       content: TextFormField(
@@ -158,11 +157,13 @@ class AlertThresholdsPercentageDialogState extends State<AlertThresholdsPercenta
       actions: <Widget>[
         FlatButton(
             child: Text(L10n(context).cancel.toUpperCase()),
+            disabledTextColor: ParentColors.parentApp.withAlpha(_disabledAlpha),
             onPressed: () {
               Navigator.of(context).pop(null);
             }),
         FlatButton(
             child: Text(L10n(context).never.toUpperCase()),
+            disabledTextColor: ParentColors.parentApp.withAlpha(_disabledAlpha),
             onPressed: () async {
               if (_threshold == null) {
                 // Threshold is already disabled
@@ -177,7 +178,7 @@ class AlertThresholdsPercentageDialogState extends State<AlertThresholdsPercenta
         FlatButton(
           key: okButtonKey,
           child: Text(L10n(context).ok),
-          disabledTextColor: ParentColors.parentApp,
+          disabledTextColor: ParentColors.parentApp.withAlpha(_disabledAlpha),
           onPressed: _disableButtons
               ? null
               : () async {

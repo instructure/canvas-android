@@ -45,7 +45,7 @@ class WebLoginScreen extends StatelessWidget {
       builder: (context) => Scaffold(
         appBar: AppBar(
           title: Text(domain),
-          elevation: 0,
+          bottom: ParentTheme.of(context).appBarDivider(shadowInLightMode: false),
         ),
         body: _webLoginBody(),
       ),

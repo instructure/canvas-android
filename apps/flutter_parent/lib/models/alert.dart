@@ -150,19 +150,19 @@ class AlertType extends EnumClass {
   String toApiString() {
     switch (this) {
       case AlertType.courseAnnouncement:
-        return "course_announcement";
+        return 'course_announcement';
       case AlertType.institutionAnnouncement:
-        return "institution_announcement";
+        return 'institution_announcement';
       case AlertType.assignmentGradeHigh:
-        return "assignment_grade_high";
+        return 'assignment_grade_high';
       case AlertType.assignmentGradeLow:
-        return "assignment_grade_low";
+        return 'assignment_grade_low';
       case AlertType.assignmentMissing:
-        return "assignment_missing";
+        return 'assignment_missing';
       case AlertType.courseGradeHigh:
-        return "course_grade_high";
+        return 'course_grade_high';
       case AlertType.courseGradeLow:
-        return "course_grade_low";
+        return 'course_grade_low';
       default:
         return null;
     }

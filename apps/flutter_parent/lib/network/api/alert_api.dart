@@ -18,7 +18,7 @@ import 'package:flutter_parent/models/unread_count.dart';
 import 'package:flutter_parent/network/utils/dio_config.dart';
 import 'package:flutter_parent/network/utils/fetch.dart';
 
-String _alertThresholdsEndpoint = 'users/self/observer_alert_thresholds';
+const String _alertThresholdsEndpoint = 'users/self/observer_alert_thresholds';
 
 class AlertsApi {
   /// Alerts were depaginated in the original parent app, then sorted by date. Depaginating here to follow suite.
@@ -37,7 +37,7 @@ class AlertsApi {
 
   Future<List<AlertThreshold>> getAlertThresholds(String studentId, bool forceRefresh) async {
     return fetchList(canvasDio(forceRefresh: forceRefresh)
-        .get('users/self/observer_alert_thresholds', queryParameters: {'student_id': studentId}));
+        .get(_alertThresholdsEndpoint, queryParameters: {'student_id': studentId}));
   }
 
   Future<AlertThreshold> deleteAlert(AlertThreshold threshold) async {

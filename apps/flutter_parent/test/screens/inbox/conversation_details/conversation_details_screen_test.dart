@@ -15,6 +15,7 @@
 import 'dart:async';
 
 import 'package:built_collection/built_collection.dart';
+import 'package:built_value/json_object.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -25,6 +26,7 @@ import 'package:flutter_parent/models/conversation.dart';
 import 'package:flutter_parent/models/message.dart';
 import 'package:flutter_parent/screens/inbox/conversation_details/conversation_details_interactor.dart';
 import 'package:flutter_parent/screens/inbox/conversation_details/conversation_details_screen.dart';
+import 'package:flutter_parent/screens/inbox/conversation_details/message_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
@@ -40,8 +42,8 @@ void main() {
 
   final AppLocalizations l10n = AppLocalizations();
 
-  group('Displays correct Author info', () {
-    testWidgetsWithAccessibilityChecks('for monologue message', (tester) async {
+  group('Displays messages', () {
+    testWidgetsWithAccessibilityChecks('displays single message', (tester) async {
       var interactor = _MockInteractor();
       setupTestLocator((locator) => locator.registerFactory<ConversationDetailsInteractor>(() => interactor));
 
@@ -50,7 +52,8 @@ void main() {
           Message((m) => m
             ..authorId = '123'
             ..createdAt = DateTime.now()
-            ..body = ''
+            ..body = 'This is a message'
+            ..attachments = ListBuilder([])
             ..participatingUserIds = ListBuilder(['123']))
         ])
         ..participants = ListBuilder([
@@ -67,13 +70,12 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.byKey(Key('author-info')), findsOneWidget);
-
-      var widget = find.byKey(Key('author-info')).evaluate().first.widget as Text;
-      expect(widget.textSpan.toPlainText(), 'Me');
+      var messageWidget = find.byType(MessageWidget);
+      expect(messageWidget, findsOneWidget);
+      expect(find.descendant(of: messageWidget, matching: find.text(conversation.messages[0].body)), findsOneWidget);
     });
 
-    testWidgetsWithAccessibilityChecks('for message to one other', (tester) async {
+    testWidgetsWithAccessibilityChecks('displays multiple messages in correct order', (tester) async {
       var interactor = _MockInteractor();
       setupTestLocator((locator) => locator.registerFactory<ConversationDetailsInteractor>(() => interactor));
 
@@ -82,303 +84,20 @@ void main() {
           Message((m) => m
             ..authorId = '123'
             ..createdAt = DateTime.now()
-            ..body = ''
-            ..participatingUserIds = ListBuilder(['123', '456'])),
-        ])
-        ..participants = ListBuilder([
-          BasicUser((b) => b
-            ..id = '123'
-            ..name = 'Myself'),
-          BasicUser((b) => b
-            ..id = '456'
-            ..name = 'User 1'),
-        ]));
-
-      when(interactor.getConversation(any)).thenAnswer((_) => Future.value(conversation));
-      when(interactor.getCurrentUserId()).thenReturn('123');
-
-      await tester.pumpWidget(
-        TestApp(ConversationDetailsScreen(conversationId: '', conversationSubject: '', courseName: '')),
-      );
-      await tester.pumpAndSettle();
-
-      expect(find.byKey(Key('author-info')), findsOneWidget);
-
-      var widget = find.byKey(Key('author-info')).evaluate().first.widget as Text;
-      expect(widget.textSpan.toPlainText(), 'Me to User 1');
-    });
-
-    testWidgetsWithAccessibilityChecks('for message to multiple others', (tester) async {
-      var interactor = _MockInteractor();
-      setupTestLocator((locator) => locator.registerFactory<ConversationDetailsInteractor>(() => interactor));
-
-      var conversation = Conversation((c) => c
-        ..messages = ListBuilder([
+            ..body = 'This is message 1'
+            ..attachments = ListBuilder([])
+            ..participatingUserIds = ListBuilder(['123'])),
           Message((m) => m
             ..authorId = '123'
             ..createdAt = DateTime.now()
-            ..body = ''
-            ..participatingUserIds = ListBuilder(['123', '456', '789', '111', '222'])),
-        ])
-        ..participants = ListBuilder([
-          BasicUser((b) => b
-            ..id = '123'
-            ..name = 'Myself'),
-          BasicUser((b) => b
-            ..id = '456'
-            ..name = 'User 1'),
-          BasicUser((b) => b
-            ..id = '789'
-            ..name = 'User 2'),
-          BasicUser((b) => b
-            ..id = '111'
-            ..name = 'User 3'),
-          BasicUser((b) => b
-            ..id = '422256'
-            ..name = 'User 4'),
-        ]));
-
-      when(interactor.getConversation(any)).thenAnswer((_) => Future.value(conversation));
-      when(interactor.getCurrentUserId()).thenReturn('123');
-
-      await tester.pumpWidget(
-        TestApp(ConversationDetailsScreen(conversationId: '', conversationSubject: '', courseName: '')),
-      );
-      await tester.pumpAndSettle();
-
-      expect(find.byKey(Key('author-info')), findsOneWidget);
-
-      var widget = find.byKey(Key('author-info')).evaluate().first.widget as Text;
-      expect(widget.textSpan.toPlainText(), 'Me to 4 others');
-    });
-
-    testWidgetsWithAccessibilityChecks('for message from another', (tester) async {
-      var interactor = _MockInteractor();
-      setupTestLocator((locator) => locator.registerFactory<ConversationDetailsInteractor>(() => interactor));
-
-      var conversation = Conversation((c) => c
-        ..messages = ListBuilder([
-          Message((m) => m
-            ..authorId = '456'
-            ..createdAt = DateTime.now()
-            ..body = ''
-            ..participatingUserIds = ListBuilder(['123', '456'])),
-        ])
-        ..participants = ListBuilder([
-          BasicUser((b) => b
-            ..id = '123'
-            ..name = 'Myself'),
-          BasicUser((b) => b
-            ..id = '456'
-            ..name = 'User 1'),
-        ]));
-
-      when(interactor.getConversation(any)).thenAnswer((_) => Future.value(conversation));
-      when(interactor.getCurrentUserId()).thenReturn('123');
-
-      await tester.pumpWidget(
-        TestApp(ConversationDetailsScreen(conversationId: '', conversationSubject: '', courseName: '')),
-      );
-      await tester.pumpAndSettle();
-
-      expect(find.byKey(Key('author-info')), findsOneWidget);
-
-      var widget = find.byKey(Key('author-info')).evaluate().first.widget as Text;
-      expect(widget.textSpan.toPlainText(), 'User 1 to me');
-    });
-
-    testWidgetsWithAccessibilityChecks('for message from another to multiple others', (tester) async {
-      var interactor = _MockInteractor();
-      setupTestLocator((locator) => locator.registerFactory<ConversationDetailsInteractor>(() => interactor));
-
-      var conversation = Conversation((c) => c
-        ..messages = ListBuilder([
-          Message((m) => m
-            ..authorId = '456'
-            ..createdAt = DateTime.now()
-            ..body = ''
-            ..participatingUserIds = ListBuilder(['123', '456', '789', '111', '222'])),
-        ])
-        ..participants = ListBuilder([
-          BasicUser((b) => b
-            ..id = '123'
-            ..name = 'Myself'),
-          BasicUser((b) => b
-            ..id = '456'
-            ..name = 'User 1'),
-          BasicUser((b) => b
-            ..id = '789'
-            ..name = 'User 2'),
-          BasicUser((b) => b
-            ..id = '111'
-            ..name = 'User 3'),
-          BasicUser((b) => b
-            ..id = '422256'
-            ..name = 'User 4'),
-        ]));
-
-      when(interactor.getConversation(any)).thenAnswer((_) => Future.value(conversation));
-      when(interactor.getCurrentUserId()).thenReturn('123');
-
-      await tester.pumpWidget(
-        TestApp(ConversationDetailsScreen(conversationId: '', conversationSubject: '', courseName: '')),
-      );
-      await tester.pumpAndSettle();
-
-      expect(find.byKey(Key('author-info')), findsOneWidget);
-
-      var widget = find.byKey(Key('author-info')).evaluate().first.widget as Text;
-      expect(widget.textSpan.toPlainText(), 'User 1 to me & 3 others');
-    });
-
-    testWidgetsWithAccessibilityChecks('with pronoun', (tester) async {
-      var interactor = _MockInteractor();
-      setupTestLocator((locator) => locator.registerFactory<ConversationDetailsInteractor>(() => interactor));
-
-      var conversation = Conversation((c) => c
-        ..messages = ListBuilder([
-          Message((m) => m
-            ..authorId = '456'
-            ..createdAt = DateTime.now()
-            ..body = ''
-            ..participatingUserIds = ListBuilder(['123', '456'])),
-        ])
-        ..participants = ListBuilder([
-          BasicUser((b) => b
-            ..id = '123'
-            ..name = 'Myself'),
-          BasicUser((b) => b
-            ..id = '456'
-            ..pronouns = 'pro/noun'
-            ..name = 'User 1'),
-        ]));
-
-      when(interactor.getConversation(any)).thenAnswer((_) => Future.value(conversation));
-      when(interactor.getCurrentUserId()).thenReturn('123');
-
-      await tester.pumpWidget(
-        TestApp(ConversationDetailsScreen(conversationId: '', conversationSubject: '', courseName: '')),
-      );
-      await tester.pumpAndSettle();
-
-      expect(find.byKey(Key('author-info')), findsOneWidget);
-
-      var widget = find.byKey(Key('author-info')).evaluate().first.widget as Text;
-      expect(widget.textSpan.toPlainText(), 'User 1 (pro/noun) to me');
-    });
-
-    testWidgetsWithAccessibilityChecks('for message to one other with pronouns', (tester) async {
-      var interactor = _MockInteractor();
-      setupTestLocator((locator) => locator.registerFactory<ConversationDetailsInteractor>(() => interactor));
-
-      var conversation = Conversation((c) => c
-        ..messages = ListBuilder([
+            ..body = 'This is message 2'
+            ..attachments = ListBuilder([])
+            ..participatingUserIds = ListBuilder(['123'])),
           Message((m) => m
             ..authorId = '123'
             ..createdAt = DateTime.now()
-            ..body = ''
-            ..participatingUserIds = ListBuilder(['123', '456'])),
-        ])
-        ..participants = ListBuilder([
-          BasicUser((b) => b
-            ..id = '123'
-            ..name = 'Myself'),
-          BasicUser((b) => b
-            ..id = '456'
-            ..pronouns = 'pro/noun'
-            ..name = 'User 1'),
-        ]));
-
-      when(interactor.getConversation(any)).thenAnswer((_) => Future.value(conversation));
-      when(interactor.getCurrentUserId()).thenReturn('123');
-
-      await tester.pumpWidget(
-        TestApp(ConversationDetailsScreen(conversationId: '', conversationSubject: '', courseName: '')),
-      );
-      await tester.pumpAndSettle();
-
-      expect(find.byKey(Key('author-info')), findsOneWidget);
-
-      var widget = find.byKey(Key('author-info')).evaluate().first.widget as Text;
-      expect(widget.textSpan.toPlainText(), 'Me to User 1 (pro/noun)');
-    });
-
-    testWidgetsWithAccessibilityChecks('for message to unknown user', (tester) async {
-      var interactor = _MockInteractor();
-      setupTestLocator((locator) => locator.registerFactory<ConversationDetailsInteractor>(() => interactor));
-
-      var conversation = Conversation((c) => c
-        ..messages = ListBuilder([
-          Message((m) => m
-            ..authorId = '123'
-            ..createdAt = DateTime.now()
-            ..body = ''
-            ..participatingUserIds = ListBuilder(['123', '456'])),
-        ])
-        ..participants = ListBuilder([
-          BasicUser((b) => b
-            ..id = '123'
-            ..name = 'Myself'),
-        ]));
-
-      when(interactor.getConversation(any)).thenAnswer((_) => Future.value(conversation));
-      when(interactor.getCurrentUserId()).thenReturn('123');
-
-      await tester.pumpWidget(
-        TestApp(ConversationDetailsScreen(conversationId: '', conversationSubject: '', courseName: '')),
-      );
-      await tester.pumpAndSettle();
-
-      expect(find.byKey(Key('author-info')), findsOneWidget);
-
-      var widget = find.byKey(Key('author-info')).evaluate().first.widget as Text;
-      expect(widget.textSpan.toPlainText(), 'Me to Unknown User');
-    });
-
-    testWidgetsWithAccessibilityChecks('for message from unknown user', (tester) async {
-      var interactor = _MockInteractor();
-      setupTestLocator((locator) => locator.registerFactory<ConversationDetailsInteractor>(() => interactor));
-
-      var conversation = Conversation((c) => c
-        ..messages = ListBuilder([
-          Message((m) => m
-            ..authorId = '456'
-            ..createdAt = DateTime.now()
-            ..body = ''
-            ..participatingUserIds = ListBuilder(['123', '456'])),
-        ])
-        ..participants = ListBuilder([
-          BasicUser((b) => b
-            ..id = '123'
-            ..name = 'Myself'),
-        ]));
-
-      when(interactor.getConversation(any)).thenAnswer((_) => Future.value(conversation));
-      when(interactor.getCurrentUserId()).thenReturn('123');
-
-      await tester.pumpWidget(
-        TestApp(ConversationDetailsScreen(conversationId: '', conversationSubject: '', courseName: '')),
-      );
-      await tester.pumpAndSettle();
-
-      expect(find.byKey(Key('author-info')), findsOneWidget);
-
-      var widget = find.byKey(Key('author-info')).evaluate().first.widget as Text;
-      expect(widget.textSpan.toPlainText(), 'Unknown User to me');
-    });
-  });
-
-  group('Displays message details', () {
-    testWidgetsWithAccessibilityChecks('message date', (tester) async {
-      var interactor = _MockInteractor();
-      setupTestLocator((locator) => locator.registerFactory<ConversationDetailsInteractor>(() => interactor));
-
-      var conversation = Conversation((c) => c
-        ..messages = ListBuilder([
-          Message((m) => m
-            ..authorId = '123'
-            ..createdAt = DateTime(2020, 12, 25, 8, 34, 0, 0, 0)
-            ..body = ''
+            ..body = 'This is message 3'
+            ..attachments = ListBuilder([])
             ..participatingUserIds = ListBuilder(['123']))
         ])
         ..participants = ListBuilder([
@@ -395,88 +114,20 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      var date = find.byKey(Key('message-date'));
-      expect(date, findsOneWidget);
+      // Should have three MessageWidgets
+      expect(find.byType(MessageWidget).evaluate().length, 3);
 
-      var dateText = await tester.widget(date) as Text;
-      expect(dateText.data, 'Dec 25 at 8:34AM');
-    });
+      // Get widget positions in the same order as the messages in the conversation
+      var messageWidgetOffsets = conversation.messages
+          .map((it) => find.ancestor(of: find.text(it.body), matching: find.byType(MessageWidget)))
+          .map((it) => tester.getTopLeft(it))
+          .toList();
 
-    testWidgetsWithAccessibilityChecks('message body', (tester) async {
-      final body = 'This is a message body';
-      var interactor = _MockInteractor();
-      setupTestLocator((locator) => locator.registerFactory<ConversationDetailsInteractor>(() => interactor));
+      // The second message should be displayed below the first message
+      expect(messageWidgetOffsets[1].dy, greaterThan(messageWidgetOffsets[0].dy));
 
-      var conversation = Conversation((c) => c
-        ..messages = ListBuilder([
-          Message((m) => m
-            ..authorId = '123'
-            ..createdAt = DateTime(2020, 12, 25, 8, 34, 0, 0, 0)
-            ..body = body
-            ..participatingUserIds = ListBuilder(['123']))
-        ])
-        ..participants = ListBuilder([
-          BasicUser((b) => b
-            ..id = '123'
-            ..name = 'Myself'),
-        ]));
-
-      when(interactor.getConversation(any)).thenAnswer((_) => Future.value(conversation));
-      when(interactor.getCurrentUserId()).thenReturn('123');
-
-      await tester.pumpWidget(
-        TestApp(ConversationDetailsScreen(conversationId: '', conversationSubject: '', courseName: '')),
-      );
-      await tester.pumpAndSettle();
-
-      expect(find.text(body), findsOneWidget);
-    });
-
-    testWidgetsWithAccessibilityChecks('attachments', (tester) async {
-      final attachments = [
-        Attachment((b) => b
-          ..id = '1'
-          ..displayName = 'Attachment 1'),
-        Attachment((b) => b
-          ..id = '2'
-          ..thumbnailUrl = 'https://fake.url.com'
-          ..displayName = 'Attachment 2'),
-      ];
-      var interactor = _MockInteractor();
-      setupTestLocator((locator) => locator.registerFactory<ConversationDetailsInteractor>(() => interactor));
-
-      var conversation = Conversation((c) => c
-        ..messages = ListBuilder([
-          Message((m) => m
-            ..authorId = '123'
-            ..createdAt = DateTime(2020, 12, 25, 8, 34, 0, 0, 0)
-            ..body = ''
-            ..attachments = ListBuilder(attachments)
-            ..participatingUserIds = ListBuilder(['123']))
-        ])
-        ..participants = ListBuilder([
-          BasicUser((b) => b
-            ..id = '123'
-            ..name = 'Myself'),
-        ]));
-
-      when(interactor.getConversation(any)).thenAnswer((_) => Future.value(conversation));
-      when(interactor.getCurrentUserId()).thenReturn('123');
-
-      await tester.pumpWidget(
-        TestApp(ConversationDetailsScreen(conversationId: '', conversationSubject: '', courseName: '')),
-      );
-      await tester.pumpAndSettle();
-
-      var attachment1 = find.byKey(Key('attachment-1'));
-      expect(attachment1, findsOneWidget);
-      expect(find.descendant(of: attachment1, matching: find.text(attachments[0].displayName)), findsOneWidget);
-      expect(find.descendant(of: attachment1, matching: find.byType(FadeInImage)), findsNothing);
-
-      var attachment2 = find.byKey(Key('attachment-2'));
-      expect(attachment2, findsOneWidget);
-      expect(find.descendant(of: attachment2, matching: find.text(attachments[1].displayName)), findsOneWidget);
-      expect(find.descendant(of: attachment2, matching: find.byType(FadeInImage)), findsOneWidget);
+      // The third message should be displayed below the second message
+      expect(messageWidgetOffsets[2].dy, greaterThan(messageWidgetOffsets[1].dy));
     });
   });
 
@@ -584,7 +235,7 @@ void main() {
     testWidgetsWithAccessibilityChecks('Clicking attachment calls interactor', (tester) async {
       final attachments = [
         Attachment((b) => b
-          ..id = '1'
+          ..jsonId = JsonObject('1')
           ..displayName = 'Attachment 1'),
       ];
       var interactor = _MockInteractor();

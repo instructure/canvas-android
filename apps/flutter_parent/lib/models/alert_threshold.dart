@@ -31,16 +31,16 @@ abstract class AlertThreshold implements Built<AlertThreshold, AlertThresholdBui
 
   String get id;
 
-  @BuiltValueField(wireName: "alert_type")
+  @BuiltValueField(wireName: 'alert_type')
   AlertType get alertType;
 
   @nullable
   String get threshold;
 
-  @BuiltValueField(wireName: "user_id")
+  @BuiltValueField(wireName: 'user_id')
   String get userId;
 
-  @BuiltValueField(wireName: "observer_id")
+  @BuiltValueField(wireName: 'observer_id')
   String get observerId;
 
   static void _initializeBuilder(AlertThresholdBuilder b) => b

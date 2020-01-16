@@ -536,13 +536,6 @@ class AppLocalizations {
       desc:
           'Header for the screen where the observer chooses the thresholds that will determine when they receive alerts (e.g. when an assignment is graded below 70%)');
 
-  String percentage(String percentage) => Intl.message(
-        '$percentage%',
-        desc: 'Shows a number with a percentage sign',
-        args: [percentage],
-        examples: const {'percentage': 5},
-      );
-
   String get courseGradeBelow => Intl.message('Course grade below',
       desc: 'Label describing the threshold for when the course grade is below a certain percentage');
 
@@ -561,7 +554,8 @@ class AppLocalizations {
 
   String get institutionAnnouncements => Intl.message('Institution Announcements');
 
-  String get never => Intl.message('Never');
+  String get never => Intl.message('Never',
+      desc: 'Indication that tells the user they will not receive alert notifications of a specific kind');
 
   String get gradePercentage => Intl.message('Grade percentage');
 
@@ -610,7 +604,7 @@ class AppLocalizations {
       Intl.message('Preparing…', desc: 'Message shown while a file is being prepared to attach to a message');
 
   /// Manage Students
-  String get addStudentWith => Intl.message('Add student with...');
+  String get addStudentWith => Intl.message('Add student with…');
 
   String get addStudent => Intl.message('Add Student');
 

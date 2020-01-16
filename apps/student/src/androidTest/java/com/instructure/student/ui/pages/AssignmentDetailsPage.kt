@@ -21,13 +21,23 @@ import android.widget.ScrollView
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvasapi2.models.Assignment
-import com.instructure.espresso.*
+import com.instructure.espresso.assertContainsText
+import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.assertHasText
+import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.waitForViewWithId
+import com.instructure.espresso.page.waitForViewWithText
+import com.instructure.espresso.scrollTo
+import com.instructure.espresso.swipeDown
+import com.instructure.espresso.waitForCheck
 import com.instructure.student.R
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
@@ -61,6 +71,10 @@ open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
 
         // Now swipe down -- twice, just for good measure (may update twice)
         onView(allOf(withId(R.id.swipeRefreshLayout),  isDisplayed())).swipeDown().swipeDown()
+    }
+
+    fun waitForSubmissionComplete() {
+        waitForViewWithText(R.string.submissionStatusSuccessTitle)
     }
 
     fun goToSubmissionDetails() {

@@ -23,8 +23,10 @@ import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/common_widgets/user_name.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
+import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/design/student_color_set.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
+import 'package:intl/intl.dart';
 
 import 'alert_thresholds_extensions.dart';
 import 'alert_thresholds_percentage_dialog.dart';
@@ -55,6 +57,7 @@ class AlertThresholdsState extends State<AlertThresholdsScreen> {
     return Scaffold(
         appBar: AppBar(
           title: Text(L10n(context).alertSettings),
+          bottom: ParentTheme.of(context).appBarDivider(),
         ),
         body: FutureBuilder(
           future: _thresholdsFuture,
@@ -74,53 +77,56 @@ class AlertThresholdsState extends State<AlertThresholdsScreen> {
   }
 
   Widget _body() {
-    return Column(
-      children: <Widget>[
-        SizedBox(
-          height: 16,
+    var list = _thresholdItems();
+    return Column(children: <Widget>[
+      SizedBox(
+        height: 16,
+      ),
+      ListTile(
+        leading: Avatar.fromUser(
+          widget._student,
+          radius: 26,
         ),
-        ListTile(
-          leading: Avatar.fromUser(
-            widget._student,
-            radius: 26,
-          ),
-          title: UserName.fromUser(
-            widget._student,
-            style: Theme.of(context).textTheme.subhead,
-          ),
+        title: UserName.fromUser(
+          widget._student,
+          style: Theme.of(context).textTheme.subhead,
         ),
-        SizedBox(
-          height: 12,
+      ),
+      SizedBox(
+        height: 12,
+      ),
+      Container(
+          alignment: Alignment.centerLeft,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 6,
+            ),
+            child: Text(
+              L10n(context).alertMeWhen,
+              style: Theme.of(context).textTheme.subhead.copyWith(color: ParentColors.ash),
+            ),
+          )),
+      Expanded(
+        child: ListView.builder(
+          shrinkWrap: true,
+          itemCount: list.length,
+          itemBuilder: (context, index) => list[index],
         ),
-        Container(
-            alignment: Alignment.centerLeft,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 6,
-              ),
-              child: Text(
-                L10n(context).alertMeWhen,
-                style: Theme.of(context).textTheme.subhead.copyWith(color: ParentColors.ash),
-              ),
-            )),
-        SingleChildScrollView(child: _thresholdWidgetList())
-      ],
-    );
+      ),
+    ]);
   }
 
-  Widget _thresholdWidgetList() {
-    return Column(
-      children: <Widget>[
-        _generateAlertThresholdTile(AlertType.courseGradeLow),
-        _generateAlertThresholdTile(AlertType.courseGradeHigh),
-        _generateAlertThresholdTile(AlertType.assignmentMissing),
-        _generateAlertThresholdTile(AlertType.assignmentGradeLow),
-        _generateAlertThresholdTile(AlertType.assignmentGradeHigh),
-        _generateAlertThresholdTile(AlertType.courseAnnouncement),
-        _generateAlertThresholdTile(AlertType.institutionAnnouncement),
-      ],
-    );
+  List<Widget> _thresholdItems() {
+    return [
+      _generateAlertThresholdTile(AlertType.courseGradeLow),
+      _generateAlertThresholdTile(AlertType.courseGradeHigh),
+      _generateAlertThresholdTile(AlertType.assignmentMissing),
+      _generateAlertThresholdTile(AlertType.assignmentGradeLow),
+      _generateAlertThresholdTile(AlertType.assignmentGradeHigh),
+      _generateAlertThresholdTile(AlertType.courseAnnouncement),
+      _generateAlertThresholdTile(AlertType.institutionAnnouncement),
+    ];
   }
 
   Widget _error(BuildContext context) {
@@ -134,14 +140,14 @@ class AlertThresholdsState extends State<AlertThresholdsScreen> {
   Widget _generateAlertThresholdTile(AlertType type) => type.isPercentage() ? _percentageTile(type) : _switchTile(type);
 
   Widget _percentageTile(AlertType type) {
-    String value = _thresholds.getThreshold(type)?.threshold;
+    int value = int.tryParse(_thresholds.getThreshold(type)?.threshold ?? '');
     return ListTile(
       title: Text(
         type.getTitle(context),
         style: Theme.of(context).textTheme.subhead,
       ),
       trailing: Text(
-        value != null ? L10n(context).percentage(value) : L10n(context).never,
+        value != null ? NumberFormat.percentPattern().format(value / 100) : L10n(context).never,
         style: Theme.of(context).textTheme.subhead.copyWith(color: StudentColorSet.electric.light),
       ),
       onTap: () async {
