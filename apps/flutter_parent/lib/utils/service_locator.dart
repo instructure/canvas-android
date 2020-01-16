@@ -30,6 +30,7 @@ import 'package:flutter_parent/screens/inbox/attachment_utils/attachment_picker_
 import 'package:flutter_parent/screens/inbox/conversation_details/conversation_details_interactor.dart';
 import 'package:flutter_parent/screens/inbox/conversation_list/conversation_list_interactor.dart';
 import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_interactor.dart';
+import 'package:flutter_parent/screens/inbox/reply/conversation_reply_interactor.dart';
 import 'package:flutter_parent/screens/manage_students/manage_students_interactor.dart';
 import 'package:flutter_parent/screens/settings/settings_interactor.dart';
 import 'package:flutter_parent/screens/web_login/web_login_interactor.dart';
@@ -51,7 +52,9 @@ void setupLocator() {
   // Interactors
   locator.registerFactory<AlertsInteractor>(() => AlertsInteractor());
   locator.registerFactory<AttachmentPickerInteractor>(() => AttachmentPickerInteractor());
+  locator.registerFactory<ConversationDetailsInteractor>(() => ConversationDetailsInteractor());
   locator.registerFactory<ConversationListInteractor>(() => ConversationListInteractor());
+  locator.registerFactory<ConversationReplyInteractor>(() => ConversationReplyInteractor());
   locator.registerFactory<CourseDetailsInteractor>(() => CourseDetailsInteractor());
   locator.registerFactory<CoursesInteractor>(() => CoursesInteractor());
   locator.registerFactory<CreateConversationInteractor>(() => CreateConversationInteractor());
@@ -59,7 +62,6 @@ void setupLocator() {
   locator.registerFactory<DomainSearchInteractor>(() => DomainSearchInteractor());
   locator.registerFactory<ManageStudentsInteractor>(() => ManageStudentsInteractor());
   locator.registerFactory<SettingsInteractor>(() => SettingsInteractor());
-  locator.registerFactory<ConversationDetailsInteractor>(() => ConversationDetailsInteractor());
   locator.registerFactory<WebLoginInteractor>(() => WebLoginInteractor());
 
   // Other

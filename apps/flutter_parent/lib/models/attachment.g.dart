@@ -19,7 +19,8 @@ class _$AttachmentSerializer implements StructuredSerializer<Attachment> {
       {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
       'id',
-      serializers.serialize(object.id, specifiedType: const FullType(String)),
+      serializers.serialize(object.jsonId,
+          specifiedType: const FullType(JsonObject)),
       'size',
       serializers.serialize(object.size, specifiedType: const FullType(int)),
     ];
@@ -88,8 +89,8 @@ class _$AttachmentSerializer implements StructuredSerializer<Attachment> {
       if (value == null) continue;
       switch (key) {
         case 'id':
-          result.id = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+          result.jsonId = serializers.deserialize(value,
+              specifiedType: const FullType(JsonObject)) as JsonObject;
           break;
         case 'content-type':
           result.contentType = serializers.deserialize(value,
@@ -132,7 +133,7 @@ class _$AttachmentSerializer implements StructuredSerializer<Attachment> {
 
 class _$Attachment extends Attachment {
   @override
-  final String id;
+  final JsonObject jsonId;
   @override
   final String contentType;
   @override
@@ -154,7 +155,7 @@ class _$Attachment extends Attachment {
       (new AttachmentBuilder()..update(updates)).build();
 
   _$Attachment._(
-      {this.id,
+      {this.jsonId,
       this.contentType,
       this.filename,
       this.displayName,
@@ -164,8 +165,8 @@ class _$Attachment extends Attachment {
       this.createdAt,
       this.size})
       : super._() {
-    if (id == null) {
-      throw new BuiltValueNullFieldError('Attachment', 'id');
+    if (jsonId == null) {
+      throw new BuiltValueNullFieldError('Attachment', 'jsonId');
     }
     if (size == null) {
       throw new BuiltValueNullFieldError('Attachment', 'size');
@@ -183,7 +184,7 @@ class _$Attachment extends Attachment {
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
     return other is Attachment &&
-        id == other.id &&
+        jsonId == other.jsonId &&
         contentType == other.contentType &&
         filename == other.filename &&
         displayName == other.displayName &&
@@ -202,7 +203,9 @@ class _$Attachment extends Attachment {
                 $jc(
                     $jc(
                         $jc(
-                            $jc($jc($jc(0, id.hashCode), contentType.hashCode),
+                            $jc(
+                                $jc($jc(0, jsonId.hashCode),
+                                    contentType.hashCode),
                                 filename.hashCode),
                             displayName.hashCode),
                         url.hashCode),
@@ -215,7 +218,7 @@ class _$Attachment extends Attachment {
   @override
   String toString() {
     return (newBuiltValueToStringHelper('Attachment')
-          ..add('id', id)
+          ..add('jsonId', jsonId)
           ..add('contentType', contentType)
           ..add('filename', filename)
           ..add('displayName', displayName)
@@ -231,9 +234,9 @@ class _$Attachment extends Attachment {
 class AttachmentBuilder implements Builder<Attachment, AttachmentBuilder> {
   _$Attachment _$v;
 
-  String _id;
-  String get id => _$this._id;
-  set id(String id) => _$this._id = id;
+  JsonObject _jsonId;
+  JsonObject get jsonId => _$this._jsonId;
+  set jsonId(JsonObject jsonId) => _$this._jsonId = jsonId;
 
   String _contentType;
   String get contentType => _$this._contentType;
@@ -273,7 +276,7 @@ class AttachmentBuilder implements Builder<Attachment, AttachmentBuilder> {
 
   AttachmentBuilder get _$this {
     if (_$v != null) {
-      _id = _$v.id;
+      _jsonId = _$v.jsonId;
       _contentType = _$v.contentType;
       _filename = _$v.filename;
       _displayName = _$v.displayName;
@@ -304,7 +307,7 @@ class AttachmentBuilder implements Builder<Attachment, AttachmentBuilder> {
   _$Attachment build() {
     final _$result = _$v ??
         new _$Attachment._(
-            id: id,
+            jsonId: jsonId,
             contentType: contentType,
             filename: filename,
             displayName: displayName,
