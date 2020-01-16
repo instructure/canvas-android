@@ -25,7 +25,8 @@ import com.instructure.canvasapi2.pact.canvas.logic.PactEnrollmentFieldConfig
 import com.instructure.canvasapi2.pact.canvas.logic.assertEnrollmentPopulated
 import com.instructure.canvasapi2.pact.canvas.logic.populateEnrollmentFields
 import io.pactfoundation.consumer.dsl.LambdaDsl
-import junit.framework.Assert
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
 import org.junit.Test
 
 class EnrollmentsApiPactTests : ApiPactTestBase() {
@@ -79,9 +80,11 @@ class EnrollmentsApiPactTests : ApiPactTestBase() {
         val selfEnrollmentsCall = service.getFirstPageSelfEnrollments(types=null,states=null)
         val selfEnrollmentResult = selfEnrollmentsCall.execute()
 
-        Assert.assertNotNull("Expected non-null response body", selfEnrollmentResult.body())
+        assertEquals("Call Query Params", null, selfEnrollmentsCall.request().url().query())
+
+        assertNotNull("Expected non-null response body", selfEnrollmentResult.body())
         val enrollments = selfEnrollmentResult.body()!!
-        Assert.assertEquals("returned list size", 4, enrollments.count())
+        assertEquals("returned list size", 4, enrollments.count())
 
         for(index in 0..enrollments.size-1) {
             val enrollment = enrollments[index]

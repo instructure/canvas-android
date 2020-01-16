@@ -29,7 +29,7 @@ import java.io.IOException
 
 object CourseAPI {
 
-    interface CoursesInterface {
+    internal interface CoursesInterface {
 
         @get:GET("users/self/favorites/courses?include[]=term&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=current_grading_period_scores&include[]=course_image&include[]=favorites")
         val favoriteCourses: Call<List<Course>>

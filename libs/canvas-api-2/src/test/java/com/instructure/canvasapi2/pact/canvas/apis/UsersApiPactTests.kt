@@ -72,6 +72,8 @@ class UsersApiPactTests : ApiPactTestBase() {
         val userCall = service.getSelfWithPermissions()
         val userResult = userCall.execute()
 
+        assertEquals("Call Query Params", null, userCall.request().url().query())
+
         assertNotNull("Expected non-null response body", userResult.body())
         val user = userResult.body()!!
 
@@ -114,6 +116,8 @@ class UsersApiPactTests : ApiPactTestBase() {
         val profileCall = service.getSelf()
         val profileResult = profileCall.execute()
 
+        assertEquals("Call Query Params",null, profileCall.request().url().query())
+
         assertNotNull("Expected non-null response body", profileResult.body())
         val profile = profileResult.body()!!
 
@@ -124,6 +128,7 @@ class UsersApiPactTests : ApiPactTestBase() {
     //
     //region grab people from course
     //
+    val peopleCallQuery = "include[]=enrollments&include[]=avatar_url&include[]=user_id&include[]=email&include[]=bio&enrollment_type=student"
     val peopleFieldConfig = PactUserFieldConfig(id = 1, includeEnrollment = true, includeProfileInfo = true)
     val peopleResponseBody = LambdaDsl.newJsonArray() { array ->
         array.`object`() { person ->
@@ -136,10 +141,10 @@ class UsersApiPactTests : ApiPactTestBase() {
         return builder
                 .given(MAIN_PROVIDER_STATE)
 
-                .uponReceiving("A request for course 1's people")
+                .uponReceiving("A request for course 1's student people")
                 .path("/api/v1/courses/1/users")
                 .method("GET")
-                .query("include[]=enrollments&include[]=avatar_url&include[]=user_id&include[]=email&include[]=bio&enrollment_type=student")
+                .query(peopleCallQuery)
                 // TODO: Headers
 
                 .willRespondWith()
@@ -152,11 +157,14 @@ class UsersApiPactTests : ApiPactTestBase() {
 
     @Test
     @PactVerification(fragment = "getCoursePeoplePact")
-    fun `grab course 1's people`() {
+    fun `grab course 1's student people`() {
         val service = createService("/api/v1/courses/")
 
         val peopleCall = service.getFirstPagePeopleList(1, enrollmentType="student")
         val peopleResult = peopleCall.execute()
+
+        val actualQueryParams = peopleCall.request().url().query()
+        assertEquals("Call Query Params", peopleCallQuery, actualQueryParams)
 
         assertNotNull("Expected non-null response body", peopleResult.body())
 

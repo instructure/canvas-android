@@ -14,26 +14,19 @@
  *     limitations under the License.
  *
  */
-package com.instructure.canvasapi2.pact.canvas.apis.courses
+package com.instructure.canvasapi2.pact.canvas.apis
 
 import au.com.dius.pact.consumer.Pact
 import au.com.dius.pact.consumer.PactVerification
 import au.com.dius.pact.consumer.dsl.PactDslWithProvider
 import au.com.dius.pact.model.RequestResponsePact
 import com.instructure.canvasapi2.apis.CourseAPI
-import com.instructure.canvasapi2.pact.canvas.apis.ApiPactTestBase
-import com.instructure.canvasapi2.pact.canvas.logic.PACT_TIMESTAMP_FORMAT
 import com.instructure.canvasapi2.pact.canvas.logic.PactCourseFieldConfig
-import com.instructure.canvasapi2.pact.canvas.logic.PactEnrollmentFieldConfig
 import com.instructure.canvasapi2.pact.canvas.logic.assertCoursePopulated
 import com.instructure.canvasapi2.pact.canvas.logic.populateCourseFields
-import com.instructure.canvasapi2.pact.canvas.logic.populateEnrollmentFields
-import com.instructure.canvasapi2.pact.canvas.logic.populateSectionFields
-import com.instructure.canvasapi2.pact.canvas.logic.populateTermFields
 import io.pactfoundation.consumer.dsl.LambdaDsl
-import io.pactfoundation.consumer.dsl.LambdaDslObject
-import junit.framework.Assert.assertEquals
-import junit.framework.Assert.assertNotNull
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
 import org.junit.Test
 
 class CoursesApiPactTests : ApiPactTestBase() {
@@ -88,6 +81,9 @@ class CoursesApiPactTests : ApiPactTestBase() {
 
         val getFavoritesCall = service.favoriteCourses
         val getFavoritesResult = getFavoritesCall.execute()
+
+        val actualQueryParams = getFavoritesCall.request().url().query()
+        assertEquals("Call query params", favoriteCoursesQuery, actualQueryParams)
 
         assertNotNull("Expected non-null response body", getFavoritesResult.body())
         val courseList = getFavoritesResult.body()!!
@@ -149,6 +145,11 @@ class CoursesApiPactTests : ApiPactTestBase() {
         val getCoursesCall = service.firstPageCourses
         val getCoursesResult = getCoursesCall.execute()
 
+        val actualQueryParams = getCoursesCall.request().url().query()
+        assertEquals("Call Query Params", allCoursesQuery, actualQueryParams)
+
+        println("grab all courses query: ${getCoursesCall.request().url().query()}")
+
         assertNotNull("Expected non-null response body", getCoursesResult.body())
         val courseList = getCoursesResult.body()!!
         assertEquals("returned list size",4, courseList.count())
@@ -199,6 +200,9 @@ class CoursesApiPactTests : ApiPactTestBase() {
         val getCourseCall = service.getCourse(1L)
         val getCourseResult = getCourseCall.execute()
 
+        val actualQueryParams = getCourseCall.request().url().query()
+        assertEquals("Call Query Params", singleCourseQuery, actualQueryParams)
+
         assertNotNull("Expected non-null response body", getCourseResult.body())
         val course = getCourseResult.body()!!
 
@@ -242,6 +246,9 @@ class CoursesApiPactTests : ApiPactTestBase() {
 
         val getCourseCall = service.getCourseWithGrade(1L)
         val getCourseResult = getCourseCall.execute()
+
+        val actualQueryParams = getCourseCall.request().url().query()
+        assertEquals("Call Query Params", courseWithGradeQuery, actualQueryParams)
 
         assertNotNull("Expected non-null response body", getCourseResult.body())
         val course = getCourseResult.body()!!
@@ -291,6 +298,8 @@ class CoursesApiPactTests : ApiPactTestBase() {
 
         val getDashboardsCall = service.dashboardCourses
         val getDashboardsResult = getDashboardsCall.execute()
+
+        assertEquals("Call Query Params", null, getDashboardsCall.request().url().query())
 
         assertNotNull("Expected non-null response body", getDashboardsResult.body())
         val dashboardCards = getDashboardsResult.body()!!

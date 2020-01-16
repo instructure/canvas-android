@@ -34,7 +34,7 @@ open class ApiPactTestBase {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
 
-        println("PACT: Provider URL: ${provider.url} client base url = ${client.baseUrl()}")
+        //println("PACT: Provider URL: ${provider.url} client base url = ${client.baseUrl()}")
         return client
     }
 
