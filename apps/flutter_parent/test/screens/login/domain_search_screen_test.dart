@@ -49,7 +49,7 @@ void main() {
       tester.widget<FlatButton>(find.ancestor(of: find.text("NEXT"), matching: find.byType(FlatButton))).enabled,
       false,
     );
-    expect(find.text("Enter school name or district..."), findsOneWidget);
+    expect(find.text("Enter school name or district…"), findsOneWidget);
     expect(find.text("How do I find my school or district?"), findsOneWidget);
   });
 

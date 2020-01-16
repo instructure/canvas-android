@@ -132,6 +132,41 @@ class AlertType extends EnumClass {
 
   @BuiltValueEnumConst(fallback: true)
   static const AlertType unknown = _$alertTypeUnknown;
+
+  bool isPercentage() {
+    return const [
+      AlertType.courseGradeLow,
+      AlertType.courseGradeHigh,
+      AlertType.assignmentGradeLow,
+      AlertType.assignmentGradeHigh
+    ].contains(this);
+  }
+
+  bool isSwitch() {
+    return const [AlertType.assignmentMissing, AlertType.courseAnnouncement, AlertType.institutionAnnouncement]
+        .contains(this);
+  }
+
+  String toApiString() {
+    switch (this) {
+      case AlertType.courseAnnouncement:
+        return 'course_announcement';
+      case AlertType.institutionAnnouncement:
+        return 'institution_announcement';
+      case AlertType.assignmentGradeHigh:
+        return 'assignment_grade_high';
+      case AlertType.assignmentGradeLow:
+        return 'assignment_grade_low';
+      case AlertType.assignmentMissing:
+        return 'assignment_missing';
+      case AlertType.courseGradeHigh:
+        return 'course_grade_high';
+      case AlertType.courseGradeLow:
+        return 'course_grade_low';
+      default:
+        return null;
+    }
+  }
 }
 
 @BuiltValueEnum(wireName: 'workflow_state')

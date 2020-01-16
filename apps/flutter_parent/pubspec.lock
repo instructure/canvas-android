@@ -77,14 +77,14 @@ packages:
       name: build_runner
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.7.2"
+    version: "1.7.3"
   build_runner_core:
     dependency: transitive
     description:
       name: build_runner_core
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.2.1"
+    version: "4.3.0"
   built_collection:
     dependency: "direct main"
     description:
@@ -217,7 +217,7 @@ packages:
       name: firebase
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "7.1.0"
+    version: "7.2.0"
   firebase_analytics:
     dependency: "direct main"
     description:
@@ -231,7 +231,7 @@ packages:
       name: firebase_core
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.3+1"
+    version: "0.4.3+2"
   firebase_core_platform_interface:
     dependency: transitive
     description:
@@ -245,7 +245,7 @@ packages:
       name: firebase_core_web
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.1"
+    version: "0.1.1+2"
   fixnum:
     dependency: transitive
     description:
@@ -324,7 +324,7 @@ packages:
       name: get_it
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.3"
+    version: "3.1.0"
   glob:
     dependency: transitive
     description:
@@ -352,7 +352,7 @@ packages:
       name: http
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.12.0+2"
+    version: "0.12.0+4"
   http_multi_server:
     dependency: transitive
     description:
@@ -394,7 +394,7 @@ packages:
       name: intl_translation
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.17.7"
+    version: "0.17.9"
   io:
     dependency: transitive
     description:
@@ -415,7 +415,7 @@ packages:
       name: json_annotation
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.0"
+    version: "3.0.1"
   json_rpc_2:
     dependency: transitive
     description:
@@ -576,7 +576,7 @@ packages:
       name: plugin_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0"
+    version: "1.0.1"
   pool:
     dependency: transitive
     description:
@@ -693,7 +693,7 @@ packages:
       name: sqflite
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.8"
+    version: "1.2.0"
   stack_trace:
     dependency: transitive
     description:
@@ -798,7 +798,7 @@ packages:
       name: url_launcher_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.4"
+    version: "1.0.5"
   uuid:
     dependency: transitive
     description:
@@ -819,7 +819,7 @@ packages:
       name: vm_service
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.3"
+    version: "2.3.1"
   vm_service_client:
     dependency: transitive
     description:
@@ -863,5 +863,5 @@ packages:
     source: hosted
     version: "2.2.0"
 sdks:
-  dart: ">=2.6.0 <3.0.0"
+  dart: ">=2.7.0 <3.0.0"
   flutter: ">=1.12.13+hotfix.4 <2.0.0"
