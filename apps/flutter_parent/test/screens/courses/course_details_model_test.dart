@@ -94,7 +94,6 @@ void main() {
       await model.assignmentGroupFuture;
 
       verify(interactor.loadAssignmentGroups(courseId, studentId)).called(1);
-      verifyNever(interactor.loadSubmissions(courseId, studentId, any));
     });
 
     test('does not refresh assignments if it has data', () async {
@@ -135,13 +134,16 @@ void main() {
     test('refreshes assignments and loads submissions', () async {
       // Setup the data
       final assignmentId = '101';
-      final initial = _mockAssignmentGroups(assignmentId);
-      final submissions = [Submission((b) => b.assignmentId = assignmentId)];
+      final submissions = [
+        Submission((b) => b
+          ..assignmentId = assignmentId
+          ..userId = studentId)
+      ];
+      final initial = _mockAssignmentGroups(assignmentId, submissions: submissions);
 
       // Mock the data
       final interactor = _MockCourseDetailsInteractor();
       when(interactor.loadAssignmentGroups(courseId, studentId)).thenAnswer((_) async => initial);
-      when(interactor.loadSubmissions(courseId, studentId, [assignmentId])).thenAnswer((_) async => submissions);
       _setupLocator(interactor: interactor);
 
       // Use the model
@@ -149,9 +151,8 @@ void main() {
       await model.loadData();
 
       // Test the model
-      expect((await model.assignmentGroupFuture).first.assignments.first.submission, submissions.first);
+      expect((await model.assignmentGroupFuture).first.assignments.first.submission(studentId), submissions.first);
       verify(interactor.loadAssignmentGroups(courseId, studentId)).called(1);
-      verify(interactor.loadSubmissions(courseId, studentId, [assignmentId])).called(1);
     });
 
     test('refreshes assignments and does not load submissions for unpublished assignments', () async {
@@ -171,12 +172,12 @@ void main() {
       // Test the model
       expect((await model.assignmentGroupFuture).first.assignments, isEmpty);
       verify(interactor.loadAssignmentGroups(courseId, studentId)).called(1);
-      verifyNever(interactor.loadSubmissions(courseId, studentId, any));
     });
   });
 }
 
-List<AssignmentGroup> _mockAssignmentGroups(String assignmentId, {bool published = true}) {
+List<AssignmentGroup> _mockAssignmentGroups(String assignmentId,
+    {bool published = true, List<Submission> submissions}) {
   return [
     AssignmentGroup((group) => group
       ..id = '202'
@@ -189,7 +190,8 @@ List<AssignmentGroup> _mockAssignmentGroups(String assignmentId, {bool published
           ..courseId = courseId
           ..assignmentGroupId = group.id
           ..published = published
-          ..position = 0)
+          ..position = 0
+          ..submissionList = BuiltList.of(submissions ?? <Submission>[]).toBuilder())
       ]).toBuilder())
   ];
 }

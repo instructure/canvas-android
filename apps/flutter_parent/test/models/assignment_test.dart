@@ -18,6 +18,8 @@ import 'package:flutter_parent/models/submission.dart';
 import 'package:test/test.dart';
 
 void main() {
+  const String studentId = '1337';
+
   group('getStatus', () {
     test('returns NONE for none submission type', () {
       final assignment = _mockAssignment(types: [SubmissionTypes.none]);
@@ -30,13 +32,13 @@ void main() {
     });
 
     test('returns LATE for a late submission', () {
-      final assignment = _mockAssignment(submission: _mockSubmission().toBuilder()..isLate = true);
-      expect(assignment.getStatus(), SubmissionStatus.LATE);
+      final assignment = _mockAssignment(submission: _mockSubmission(studentId).toBuilder()..isLate = true);
+      expect(assignment.getStatus(studentId: studentId), SubmissionStatus.LATE);
     });
 
     test('returns MISSING for a missing submission', () {
-      final assignment = _mockAssignment(submission: _mockSubmission().toBuilder()..missing = true);
-      expect(assignment.getStatus(), SubmissionStatus.MISSING);
+      final assignment = _mockAssignment(submission: _mockSubmission(studentId).toBuilder()..missing = true);
+      expect(assignment.getStatus(studentId: studentId), SubmissionStatus.MISSING);
     });
 
     test('returns MISSING for a pass due assignment with a null submission', () {
@@ -48,34 +50,34 @@ void main() {
 
     test('returns MISSING for a pass due assignment with an empty (server generated) submission', () {
       final past = DateTime.now().subtract(Duration(seconds: 1));
-      final submission = _mockSubmission().toBuilder()
+      final submission = _mockSubmission(studentId).toBuilder()
         ..attempt = 0
         ..grade = null;
       final assignment = _mockAssignment(dueAt: past, submission: submission);
 
-      expect(assignment.getStatus(), SubmissionStatus.MISSING);
+      expect(assignment.getStatus(studentId: studentId), SubmissionStatus.MISSING);
     });
 
     test('returns NOT_SUBMITTED for a submission with no submitted at time', () {
-      final assignment = _mockAssignment(submission: _mockSubmission().toBuilder()..submittedAt = null);
-      expect(assignment.getStatus(), SubmissionStatus.NOT_SUBMITTED);
+      final assignment = _mockAssignment(submission: _mockSubmission(studentId).toBuilder()..submittedAt = null);
+      expect(assignment.getStatus(studentId: studentId), SubmissionStatus.NOT_SUBMITTED);
     });
 
     test('returns SUBMITTED for a submission with a submitted at time', () {
       final past = DateTime.now().subtract(Duration(seconds: 1));
-      final assignment = _mockAssignment(submission: _mockSubmission().toBuilder()..submittedAt = past);
+      final assignment = _mockAssignment(submission: _mockSubmission(studentId).toBuilder()..submittedAt = past);
 
-      expect(assignment.getStatus(), SubmissionStatus.SUBMITTED);
+      expect(assignment.getStatus(studentId: studentId), SubmissionStatus.SUBMITTED);
     });
 
     test('returns SUBMITTED for a passed due submission with a valid attempt', () {
       final past = DateTime.now().subtract(Duration(seconds: 1));
-      final submission = _mockSubmission().toBuilder()
+      final submission = _mockSubmission(studentId).toBuilder()
         ..attempt = 1
         ..submittedAt = DateTime.now();
       final assignment = _mockAssignment(dueAt: past, submission: submission);
 
-      expect(assignment.getStatus(), SubmissionStatus.SUBMITTED);
+      expect(assignment.getStatus(studentId: studentId), SubmissionStatus.SUBMITTED);
     });
   });
 }
@@ -91,7 +93,9 @@ Assignment _mockAssignment({
       ..assignmentGroupId = ''
       ..position = 0
       ..dueAt = dueAt
-      ..submission = submission
+      ..submissionList = BuiltList<Submission>(submission != null ? [submission.build()] : []).toBuilder()
       ..submissionTypes = BuiltList<SubmissionTypes>(types).toBuilder());
 
-Submission _mockSubmission() => Submission((b) => b..assignmentId = '');
+Submission _mockSubmission(String studentId) => Submission((b) => b
+  ..assignmentId = ''
+  ..userId = studentId);

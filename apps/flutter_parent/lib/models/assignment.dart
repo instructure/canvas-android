@@ -66,7 +66,11 @@ abstract class Assignment implements Built<Assignment, AssignmentBuilder> {
   bool get useRubricForGrading;
 
   @nullable
-  Submission get submission;
+  @BuiltValueField(wireName: 'submission')
+  BuiltList<Submission> get submissionList;
+
+  Submission submission(String studentId) =>
+      submissionList?.firstWhere((submission) => submission.userId == studentId, orElse: () => null);
 
   @BuiltValueField(wireName: "assignment_group_id")
   String get assignmentGroupId;
@@ -134,12 +138,13 @@ abstract class Assignment implements Built<Assignment, AssignmentBuilder> {
     ..anonymousGrading = false
     ..isStudioEnabled = false;
 
-  SubmissionStatus getStatus() {
+  SubmissionStatus getStatus({String studentId}) {
+    final submission = this.submission(studentId);
     if (submissionTypes?.every((type) => type == SubmissionTypes.onPaper || type == SubmissionTypes.none) == true) {
       return SubmissionStatus.NONE;
     } else if (submission?.isLate == true) {
       return SubmissionStatus.LATE;
-    } else if (_isMissingSubmission()) {
+    } else if (_isMissingSubmission(studentId)) {
       return SubmissionStatus.MISSING;
     } else if (submission?.submittedAt == null) {
       return SubmissionStatus.NOT_SUBMITTED;
@@ -149,7 +154,8 @@ abstract class Assignment implements Built<Assignment, AssignmentBuilder> {
   }
 
   // Returns true if the submission is marked as missing, or if it's pass due and either no submission or 'fake' submission
-  bool _isMissingSubmission() {
+  bool _isMissingSubmission(String studentId) {
+    final submission = this.submission(studentId);
     if (submission?.missing == true) return true;
 
     final isPastDue = dueAt?.isBefore(DateTime.now()) == true;
