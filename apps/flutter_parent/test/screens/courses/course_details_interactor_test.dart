@@ -48,30 +48,6 @@ void main() {
 
     verify(assignmentApi.getAssignmentGroupsWithSubmissionsDepaginated(courseId, studentId)).called(1);
   });
-
-  test('load submissions calls the api', () async {
-    final courseId = '123';
-    final studentId = '321';
-    final assignmentIds = ['1', '2', '3'];
-    final assignmentApi = _MockAssignmentApi();
-    _setupLocator(assignmentApi: assignmentApi);
-
-    CourseDetailsInteractor().loadSubmissions(courseId, studentId, assignmentIds);
-
-    verify(assignmentApi.getSubmissions(courseId, studentId, assignmentIds, forceRefresh: false)).called(1);
-  });
-
-  test('load submissions calls the api with force refresh', () async {
-    final courseId = '123';
-    final studentId = '321';
-    final assignmentIds = ['1', '2', '3'];
-    final assignmentApi = _MockAssignmentApi();
-    _setupLocator(assignmentApi: assignmentApi);
-
-    CourseDetailsInteractor().loadSubmissions(courseId, studentId, assignmentIds, forceRefresh: true);
-
-    verify(assignmentApi.getSubmissions(courseId, studentId, assignmentIds, forceRefresh: true)).called(1);
-  });
 }
 
 class _MockCourseApi extends Mock implements CourseApi {}

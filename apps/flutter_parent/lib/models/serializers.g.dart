@@ -59,6 +59,9 @@ Serializers _$_serializers = (new Serializers().toBuilder()
           const FullType(BuiltList, const [const FullType(Submission)]),
           () => new ListBuilder<Submission>())
       ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(Submission)]),
+          () => new ListBuilder<Submission>())
+      ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(SubmissionTypes)]),
           () => new ListBuilder<SubmissionTypes>())
       ..addBuilderFactory(

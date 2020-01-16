@@ -279,13 +279,14 @@ Assignment _mockAssignment({
     ..assignmentGroupId = groupId
     ..position = int.parse(id)
     ..dueAt = dueAt
-    ..submission = submission?.toBuilder()
+    ..submissionList = BuiltList<Submission>(submission != null ? [submission] : []).toBuilder()
     ..pointsPossible = pointsPossible
     ..published = true);
 }
 
 Submission _mockSubmission({String assignmentId = '', String grade, bool isLate, DateTime submittedAt}) {
   return Submission((b) => b
+    ..userId = studentId
     ..assignmentId = assignmentId
     ..grade = grade
     ..submittedAt = submittedAt
