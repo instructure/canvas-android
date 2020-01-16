@@ -170,7 +170,7 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
 
   Widget _appBar(BuildContext context) {
     return AppBar(
-      elevation: 0,
+      bottom: ParentTheme.of(context).appBarDivider(shadowInLightMode: false),
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,

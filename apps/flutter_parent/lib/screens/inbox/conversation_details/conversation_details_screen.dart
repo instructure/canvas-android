@@ -81,7 +81,6 @@ class _ConversationDetailsScreenState extends State<ConversationDetailsScreen> {
 
   Widget _appBar(BuildContext context) {
     return AppBar(
-      elevation: 0,
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
@@ -93,10 +92,7 @@ class _ConversationDetailsScreenState extends State<ConversationDetailsScreen> {
             Text(widget.courseName, style: Theme.of(context).textTheme.caption),
         ],
       ),
-      bottom: PreferredSize(
-        child: Container(color: Theme.of(context).dividerColor, height: 0.5),
-        preferredSize: Size.fromHeight(0.5),
-      ),
+      bottom: ParentTheme.of(context).appBarDivider(shadowInLightMode: false),
     );
   }
 

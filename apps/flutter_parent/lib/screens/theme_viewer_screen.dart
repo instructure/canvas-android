@@ -99,13 +99,15 @@ class _ThemeViewerScreenState extends State<ThemeViewerScreen> {
             IconButton(icon: Icon(CanvasIcons.email), onPressed: () {}),
             IconButton(icon: Icon(CanvasIcons.search), onPressed: () {}),
           ],
-          bottom: TabBar(
-            indicatorColor: Theme.of(context).primaryIconTheme.color,
-            tabs: [
-              Tab(text: "Widgets"),
-              Tab(text: "Text Styles"),
-              Tab(text: 'Icons'),
-            ],
+          bottom: ParentTheme.of(context).appBarDivider(
+            bottom: TabBar(
+              indicatorColor: Theme.of(context).primaryIconTheme.color,
+              tabs: [
+                Tab(text: "Widgets"),
+                Tab(text: "Text Styles"),
+                Tab(text: 'Icons'),
+              ],
+            ),
           ),
         ),
         body: Container(
@@ -421,14 +423,12 @@ class _ThemeViewerScreenState extends State<ThemeViewerScreen> {
   }
 
   Widget _icons(BuildContext context) {
-    return GridView.count(crossAxisCount: 3,
-      children: List.generate(CanvasIcons.allIcons.length, (idx) {
-        return Column(
-          children: <Widget>[
-            Icon(CanvasIcons.allIcons[idx][1]),
-            Text(CanvasIcons.allIcons[idx][0])
-          ],
-        );
-      }));
+    return GridView.count(
+        crossAxisCount: 3,
+        children: List.generate(CanvasIcons.allIcons.length, (idx) {
+          return Column(
+            children: <Widget>[Icon(CanvasIcons.allIcons[idx][1]), Text(CanvasIcons.allIcons[idx][0])],
+          );
+        }));
   }
 }

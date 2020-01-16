@@ -23,6 +23,7 @@ import 'package:flutter_parent/utils/base_model.dart';
 import 'package:flutter_parent/utils/common_widgets/full_screen_scroll_container.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/design/canvas_icons_solid.dart';
+import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:provider/provider.dart';
 
 class CourseDetailsScreen extends StatefulWidget {
@@ -59,12 +60,14 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
             child: Scaffold(
               appBar: AppBar(
                 title: Text(model.course?.name ?? ''),
-                bottom: TabBar(
-                  tabs: [
-                    Tab(text: L10n(context).courseGradesLabel.toUpperCase()),
-                    Tab(text: L10n(context).courseSyllabusLabel.toUpperCase()),
-                    Tab(text: L10n(context).courseSummaryLabel.toUpperCase()),
-                  ],
+                bottom: ParentTheme.of(context).appBarDivider(
+                  bottom: TabBar(
+                    tabs: [
+                      Tab(text: L10n(context).courseGradesLabel.toUpperCase()),
+                      Tab(text: L10n(context).courseSyllabusLabel.toUpperCase()),
+                      Tab(text: L10n(context).courseSummaryLabel.toUpperCase()),
+                    ],
+                  ),
                 ),
               ),
               body: _body(context, model),

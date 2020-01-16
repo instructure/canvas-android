@@ -35,6 +35,7 @@ class CrashScreen extends StatelessWidget {
               elevation: 0,
               backgroundColor: Colors.transparent,
               iconTheme: Theme.of(context).iconTheme,
+              bottom: ParentTheme.of(context).appBarDivider(shadowInLightMode: false),
             )
           : null,
       body: _body(context),
