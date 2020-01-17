@@ -17,6 +17,7 @@ import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/alert.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/screens/alerts/alerts_interactor.dart';
+import 'package:flutter_parent/screens/announcements/announcement_details_screen.dart';
 import 'package:flutter_parent/screens/dashboard/alert_notifier.dart';
 import 'package:flutter_parent/utils/common_widgets/badges.dart';
 import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
@@ -25,6 +26,7 @@ import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
+import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:intl/intl.dart';
 
@@ -157,7 +159,9 @@ class __AlertsListState extends State<_AlertsList> {
   }
 
   void _routeAlert(Alert alert, int index) async {
-    // TODO: Show detail page for alert
+    if(alert.alertType == AlertType.courseAnnouncement) {
+      locator<QuickNav>().push(context, AnnouncementDetailScreen(alert.contextId, alert.getCourseId()));
+    }
 
     // We're done if the alert was already read, otherwise mark it read
     if (alert.workflowState == AlertWorkflowState.read) return;

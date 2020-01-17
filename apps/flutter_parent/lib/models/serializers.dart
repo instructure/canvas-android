@@ -1,4 +1,4 @@
-// Copyright (C) 2019 - present Instructure, Inc.
+// Copyright (C) 2020 - present Instructure, Inc.
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@ import 'package:built_value/iso_8601_date_time_serializer.dart';
 import 'package:built_value/serializer.dart';
 import 'package:built_value/standard_json_plugin.dart';
 import 'package:flutter_parent/models/alert.dart';
+import 'package:flutter_parent/models/announcement.dart';
 import 'package:flutter_parent/models/assignment.dart';
 import 'package:flutter_parent/models/assignment_group.dart';
 import 'package:flutter_parent/models/attachment.dart';
@@ -32,6 +33,7 @@ import 'package:flutter_parent/models/media_comment.dart';
 import 'package:flutter_parent/models/message.dart';
 import 'package:flutter_parent/models/mobile_verify_result.dart';
 import 'package:flutter_parent/models/recipient.dart';
+import 'package:flutter_parent/models/remote_file.dart';
 import 'package:flutter_parent/models/school_domain.dart';
 import 'package:flutter_parent/models/submission.dart';
 import 'package:flutter_parent/models/unread_count.dart';
@@ -45,6 +47,7 @@ part 'serializers.g.dart';
 /// have it watch for changes and automatically build if you run `flutter pub run build_runner watch`.
 @SerializersFor([
   Alert,
+  Announcement,
   Assignment,
   AssignmentGroup,
   Attachment,
@@ -59,6 +62,7 @@ part 'serializers.g.dart';
   Message,
   MobileVerifyResult,
   Recipient,
+  RemoteFile,
   SchoolDomain,
   Submission,
   UnreadCount,

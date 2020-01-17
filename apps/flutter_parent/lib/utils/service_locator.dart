@@ -13,6 +13,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:flutter_parent/network/api/alert_api.dart';
+import 'package:flutter_parent/network/api/announcement_api.dart';
 import 'package:flutter_parent/network/api/assignment_api.dart';
 import 'package:flutter_parent/network/api/auth_api.dart';
 import 'package:flutter_parent/network/api/course_api.dart';
@@ -20,6 +21,7 @@ import 'package:flutter_parent/network/api/enrollments_api.dart';
 import 'package:flutter_parent/network/api/file_upload_api.dart';
 import 'package:flutter_parent/network/api/inbox_api.dart';
 import 'package:flutter_parent/screens/alerts/alerts_interactor.dart';
+import 'package:flutter_parent/screens/announcements/announcement_details_interactor.dart';
 import 'package:flutter_parent/screens/courses/courses_interactor.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_interactor.dart';
 import 'package:flutter_parent/screens/dashboard/alert_notifier.dart';
@@ -41,6 +43,7 @@ GetIt locator = GetIt.instance;
 void setupLocator() {
   // APIs
   locator.registerLazySingleton<AlertsApi>(() => AlertsApi());
+  locator.registerLazySingleton<AnnouncementApi>(() => AnnouncementApi());
   locator.registerLazySingleton<AssignmentApi>(() => AssignmentApi());
   locator.registerLazySingleton<AuthApi>(() => AuthApi());
   locator.registerLazySingleton<CourseApi>(() => CourseApi());
@@ -50,6 +53,7 @@ void setupLocator() {
 
   // Interactors
   locator.registerFactory<AlertsInteractor>(() => AlertsInteractor());
+  locator.registerFactory<AnnouncementDetailsInteractor>(() => AnnouncementDetailsInteractor());
   locator.registerFactory<AttachmentPickerInteractor>(() => AttachmentPickerInteractor());
   locator.registerFactory<ConversationListInteractor>(() => ConversationListInteractor());
   locator.registerFactory<CourseDetailsInteractor>(() => CourseDetailsInteractor());
