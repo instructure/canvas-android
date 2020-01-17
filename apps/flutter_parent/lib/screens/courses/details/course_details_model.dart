@@ -39,6 +39,8 @@ class CourseDetailsModel extends BaseModel {
 
       // Await the results
       course = await courseFuture;
+
+      return Future<void>.value();
     });
   }
 
@@ -55,4 +57,6 @@ class CourseDetailsModel extends BaseModel {
   }
 
   CourseDetailsInteractor _interactor() => locator<CourseDetailsInteractor>();
+
+  bool hasSyllabus() => course.syllabusBody != null;
 }

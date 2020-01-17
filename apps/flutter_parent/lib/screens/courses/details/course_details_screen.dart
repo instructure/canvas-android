@@ -55,45 +55,47 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
       create: (context) => widget._model,
       child: Consumer<CourseDetailsModel>(
         builder: (context, model, _) {
-          return DefaultTabController(
-            length: 3,
-            child: Scaffold(
-              appBar: AppBar(
-                title: Text(model.course?.name ?? ''),
-                bottom: ParentTheme.of(context).appBarDivider(
-                  bottom: TabBar(
-                    tabs: [
-                      Tab(text: L10n(context).courseGradesLabel.toUpperCase()),
-                      Tab(text: L10n(context).courseSyllabusLabel.toUpperCase()),
-                      Tab(text: L10n(context).courseSummaryLabel.toUpperCase()),
-                    ],
-                  ),
-                ),
-              ),
-              body: _body(context, model),
-              floatingActionButton: FloatingActionButton(
-                onPressed: () => _sendMessage(),
-                child: Semantics(
-                  label: L10n(context).courseMessageHint,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 4, top: 4),
-                    child: Icon(CanvasIconsSolid.comment),
-                  ),
-                ),
-              ),
-            ),
-          );
+          // Show loading if we're waiting for data, not inside the refresh indicator as it's unnecessary
+          if (model.state == ViewState.Busy) {
+            return LoadingIndicator();
+          }
+          return _body(context, model);
         },
       ),
     );
   }
 
   Widget _body(BuildContext context, CourseDetailsModel model) {
-    // Show loading if we're waiting for data, not inside the refresh indicator as it's unnecessary
-    if (model.state == ViewState.Busy) {
-      return LoadingIndicator();
-    }
+    return DefaultTabController(
+      length: model.hasSyllabus() ? 3 : 2,
+      child: Scaffold(
+        appBar: AppBar(
+            title: Text(model.course?.name ?? ''),
+            bottom: ParentTheme.of(context).appBarDivider(
+              bottom: TabBar(
+                tabs: [
+                  Tab(text: L10n(context).courseGradesLabel.toUpperCase()),
+                  if (model.hasSyllabus()) Tab(text: L10n(context).courseSyllabusLabel.toUpperCase()),
+                  Tab(text: L10n(context).courseSummaryLabel.toUpperCase()),
+                ],
+              ),
+            )),
+        body: _tabBody(context, model),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => _sendMessage(),
+          child: Semantics(
+            label: L10n(context).courseMessageHint,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 4, top: 4),
+              child: Icon(CanvasIconsSolid.comment),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 
+  Widget _tabBody(BuildContext context, CourseDetailsModel model) {
     // Get the child widget to show in the refresh indicator
     if (model.state == ViewState.Error) {
       return RefreshIndicator(
@@ -105,7 +107,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
     } else {
       return TabBarView(children: [
         CourseGradesScreen(),
-        CourseSyllabusScreen(),
+        if (model.hasSyllabus()) CourseSyllabusScreen(model.course.syllabusBody),
         CourseSummaryScreen(),
       ]);
     }
