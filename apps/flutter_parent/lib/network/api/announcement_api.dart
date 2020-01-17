@@ -16,6 +16,7 @@
 @GET("{contextType}/{contextId}/discussion_topics/{topicId}?include[]=sections")
         fun getDetailedDiscussion(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("topicId") topicId: Long): Call<DiscussionTopicHeader>
  */
+import 'package:flutter_parent/models/account_notification.dart';
 import 'package:flutter_parent/models/announcement.dart';
 import 'package:flutter_parent/network/utils/dio_config.dart';
 import 'package:flutter_parent/network/utils/fetch.dart';
@@ -23,5 +24,9 @@ import 'package:flutter_parent/network/utils/fetch.dart';
 class AnnouncementApi {
   Future<Announcement> getCourseAnnouncement(String courseId, String announcementId) {
     return fetch(canvasDio().get('courses/$courseId/discussion_topics/$announcementId'));
+  }
+
+  Future<AccountNotification> getAccountNotification(String accountNotificationid) {
+    return fetch(canvasDio().get('accounts/self/users/self/account_notifications/$accountNotificationid'));
   }
 }

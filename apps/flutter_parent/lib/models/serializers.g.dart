@@ -7,6 +7,7 @@ part of serializers;
 // **************************************************************************
 
 Serializers _$_serializers = (new Serializers().toBuilder()
+      ..add(AccountNotification.serializer)
       ..add(Alert.serializer)
       ..add(AlertType.serializer)
       ..add(AlertWorkflowState.serializer)
