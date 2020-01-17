@@ -58,5 +58,5 @@ class CourseDetailsModel extends BaseModel {
 
   CourseDetailsInteractor _interactor() => locator<CourseDetailsInteractor>();
 
-  bool hasSyllabus() => course.syllabusBody != null;
+  bool hasSyllabus() => course?.syllabusBody != null;
 }

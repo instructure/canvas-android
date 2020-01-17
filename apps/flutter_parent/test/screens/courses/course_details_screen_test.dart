@@ -25,6 +25,7 @@ import 'package:get_it/get_it.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../utils/accessibility_utils.dart';
+import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
 
 void main() {
@@ -76,7 +77,7 @@ void main() {
     _setupLocator();
 
     await tester.pumpWidget(TestApp(CourseDetailsScreen.withCourse(studentId, course)));
-    await tester.pump(); // Widget creation
+    await tester.pumpAndSettle(); // Widget creation
 
     expect(find.text(course.name), findsOneWidget);
   });
@@ -96,7 +97,23 @@ void main() {
     expect(find.text(course.name), findsOneWidget);
   });
 
-  testWidgetsWithAccessibilityChecks('Shows course tabs', (tester) async {
+  testWidgetsWithAccessibilityChecks('Shows all course tabs with syllabus body', (tester) async {
+    final course = Course((b) => b
+      ..id = courseId
+      ..syllabusBody = ''
+      ..name = 'Course Name');
+    _setupLocator();
+
+    await tester.pumpWidget(TestApp(CourseDetailsScreen.withCourse(studentId, course)));
+    await tester.pump(); // Widget creation
+    await tester.pump(); // Future resolved
+
+    expect(find.text(AppLocalizations().courseGradesLabel.toUpperCase()), findsOneWidget);
+    expect(find.text(AppLocalizations().courseSyllabusLabel.toUpperCase()), findsOneWidget);
+    expect(find.text(AppLocalizations().courseSummaryLabel.toUpperCase()), findsOneWidget);
+  });
+
+  testWidgetsWithAccessibilityChecks('Shows all but syllabus course tabs when no syllabus', (tester) async {
     _setupLocator();
 
     await tester.pumpWidget(TestApp(CourseDetailsScreen(studentId, courseId)));
@@ -104,7 +121,7 @@ void main() {
     await tester.pump(); // Future resolved
 
     expect(find.text(AppLocalizations().courseGradesLabel.toUpperCase()), findsOneWidget);
-    expect(find.text(AppLocalizations().courseSyllabusLabel.toUpperCase()), findsOneWidget);
+    expect(find.text(AppLocalizations().courseSyllabusLabel.toUpperCase()), findsNothing);
     expect(find.text(AppLocalizations().courseSummaryLabel.toUpperCase()), findsOneWidget);
   });
 
@@ -122,9 +139,16 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Clicking syllabus tab shows the syllabus screen', (tester) async {
+    final course = Course((b) => b
+      ..id = courseId
+      ..syllabusBody = 'hi'
+      ..name = 'Course Name');
     _setupLocator();
 
-    await tester.pumpWidget(TestApp(CourseDetailsScreen(studentId, courseId)));
+    await tester.pumpWidget(TestApp(
+      CourseDetailsScreen.withCourse(studentId, course),
+      platformConfig: PlatformConfig(initWebview: true),
+    ));
     await tester.pump(); // Widget creation
     await tester.pump(); // Future resolved
 
