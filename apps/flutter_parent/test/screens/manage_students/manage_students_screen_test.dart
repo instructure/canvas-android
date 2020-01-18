@@ -13,19 +13,22 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'dart:async';
-import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/user.dart';
+import 'package:flutter_parent/screens/alert_thresholds/alert_thresholds_interactor.dart';
+import 'package:flutter_parent/screens/alert_thresholds/alert_thresholds_screen.dart';
 import 'package:flutter_parent/screens/manage_students/manage_students_interactor.dart';
 import 'package:flutter_parent/screens/manage_students/manage_students_screen.dart';
+import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../utils/accessibility_utils.dart';
+import '../../utils/canvas_model_utils.dart';
 import '../../utils/network_image_response.dart';
 import '../../utils/test_app.dart';
 
@@ -36,7 +39,12 @@ void main() {
     final locator = GetIt.instance;
     locator.reset();
 
+    var thresholdInteractor = _MockAlertThresholdsInteractor();
+    when(thresholdInteractor.getAlertThresholdsForStudent(any)).thenAnswer((_) => Future.value([]));
+
+    locator.registerFactory<AlertThresholdsInteractor>(() => thresholdInteractor);
     locator.registerFactory<ManageStudentsInteractor>(() => interactor ?? _MockManageStudentsInteractor());
+    locator.registerFactory<QuickNav>(() => QuickNav());
   }
 
   void _clickFAB(WidgetTester tester) async {
@@ -51,8 +59,8 @@ void main() {
 
   group('Refresh', () {
     testWidgetsWithAccessibilityChecks('Pulling gets list of students', (tester) async {
-      var preRefreshStudent = [_mockUser('Billy')];
-      var postRefreshStudent = [_mockUser('Sally')];
+      var preRefreshStudent = [CanvasModelTestUtils.mockUser(name: 'Billy')];
+      var postRefreshStudent = [CanvasModelTestUtils.mockUser(name: 'Sally')];
 
       // Mock the behavior of the interactor to return a student
       final interactor = _MockManageStudentsInteractor();
@@ -63,6 +71,9 @@ void main() {
       // Start the page with a single student
       await tester.pumpWidget(TestApp(ManageStudentsScreen(preRefreshStudent)));
       await tester.pumpAndSettle();
+
+      // Check if we're showing the initial student
+      expect(find.text('Billy'), findsOneWidget);
 
       // Pull to refresh\
       final matchedWidget = find.byType(RefreshIndicator);
@@ -99,7 +110,7 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('Retry button on error page loads students', (tester) async {
-      var observedStudents = [_mockUser('Billy')];
+      var observedStudents = [CanvasModelTestUtils.mockUser(name: 'Billy')];
 
       // Mock interactor to return an error when retrieving student list
       var interactor = _MockManageStudentsInteractor();
@@ -143,9 +154,9 @@ void main() {
       _setupLocator();
 
       var observedStudents = [
-        _mockUser('Billy'),
-        _mockUser('Sally'),
-        _mockUser('Trevor'),
+        CanvasModelTestUtils.mockUser(name: 'Billy'),
+        CanvasModelTestUtils.mockUser(name: 'Sally'),
+        CanvasModelTestUtils.mockUser(name: 'Trevor'),
       ];
 
       // Start the page with three students
@@ -160,7 +171,7 @@ void main() {
       _setupLocator();
 
       var observedStudents = [
-        _mockUser('Billy', pronouns: null),
+        CanvasModelTestUtils.mockUser(name: 'Billy', pronouns: null),
       ];
 
       // Start the page with a user that has no pronouns set
@@ -175,7 +186,7 @@ void main() {
       _setupLocator();
 
       var observedStudents = [
-        _mockUser('Billy', pronouns: 'he/him'),
+        CanvasModelTestUtils.mockUser(name: 'Billy', pronouns: 'he/him'),
       ];
 
       // Start the page with a user that has pronouns set
@@ -200,7 +211,7 @@ void main() {
       expect(find.text(AppLocalizations().emptyStudentList), findsOneWidget);
     });
 
-    testWidgetsWithAccessibilityChecks('Empty when... empty', (tester) async {
+    testWidgetsWithAccessibilityChecks('Empty when… empty', (tester) async {
       _setupLocator();
 
       List<User> observedStudents = [];
@@ -215,22 +226,28 @@ void main() {
       // See if we are showing the empty message
       expect(find.text(AppLocalizations().emptyStudentList), findsOneWidget);
     });
-    // TODO: Uncomment when Thresholds is implemented
-//  testWidgetsWithAccessibilityChecks('Tap goes to the Threshold Screen', (tester) async {
-//    _setupLocator();
-//
-//    var observedStudents = [
-//      _mockUser('Billy', pronouns: 'he/him'),
-//    ];
-//
-//    await tester.pumpWidget(TestApp(ManageStudentsScreen(observedStudents)));
-//    await tester.pumpAndSettle();
-//
-//    await tester.tap(find.text('Billy'));
-//
-//    expect(find.byType(ThresholdScreen), findsOneWidget);;
-//
-//  });
+
+    testWidgetsWithAccessibilityChecks('Tap goes to the Threshold Screen', (tester) async {
+      _setupLocator();
+
+      var observedStudent = [CanvasModelTestUtils.mockUser(name: 'Billy')];
+
+      await tester.pumpWidget(TestApp(ManageStudentsScreen(observedStudent)));
+      await tester.pumpAndSettle();
+
+      // Make sure the user was loaded
+      expect(find.text('Billy'), findsOneWidget);
+
+      // Tap on the user
+      await tester.tap(find.text('Billy'));
+
+      // Pump and settle the page transition animation
+      await tester.pump();
+      await tester.pump();
+
+      // Find the thresholds screen
+      expect(find.byType(AlertThresholdsScreen), findsOneWidget);
+    });
   });
 
   group('Add Student', () {
@@ -238,7 +255,7 @@ void main() {
       _setupLocator();
 
       var observedStudents = [
-        _mockUser('Billy', pronouns: 'he/him'),
+        CanvasModelTestUtils.mockUser(name: 'Billy', pronouns: 'he/him'),
       ];
 
       await tester.pumpWidget(TestApp(ManageStudentsScreen(observedStudents), highContrast: true));
@@ -256,7 +273,8 @@ void main() {
 
       _setupLocator(interactor);
 
-      await tester.pumpWidget(TestApp(ManageStudentsScreen([_mockUser('Canvas')]), highContrast: true));
+      await tester.pumpWidget(
+          TestApp(ManageStudentsScreen([CanvasModelTestUtils.mockUser(name: 'Canvas')]), highContrast: true));
       await tester.pumpAndSettle();
 
       await _clickFAB(tester);
@@ -269,7 +287,7 @@ void main() {
     testWidgetsWithAccessibilityChecks('Pairing Code opens dialog', (tester) async {
       _setupLocator();
 
-      var observedStudents = [_mockUser('Billy')];
+      var observedStudents = [CanvasModelTestUtils.mockUser(name: 'Billy')];
 
       // Start the page in high contrast mode with a single user
       // (the bottom sheet header text doesn't pass our a11y contrast ratio test by default)
@@ -290,7 +308,7 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('Refresh list on success', (tester) async {
-      var observedStudent = [_mockUser('Billy')];
+      var observedStudent = [CanvasModelTestUtils.mockUser(name: 'Billy')];
 
       // Mock return value for success when pairing a student
       final interactor = _MockManageStudentsInteractor();
@@ -298,7 +316,7 @@ void main() {
 
       // Mock retrieving students, also add an extra student to the list
       when(interactor.getStudents(forceRefresh: anyNamed('forceRefresh'))).thenAnswer((_) {
-        observedStudent.add(_mockUser('Trevor'));
+        observedStudent.add(CanvasModelTestUtils.mockUser(name: 'Trevor'));
         return Future.value(observedStudent);
       });
 
@@ -340,7 +358,7 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('Show error on fail', (tester) async {
-      var observedStudents = [_mockUser('Billy')];
+      var observedStudents = [CanvasModelTestUtils.mockUser(name: 'Billy')];
 
       // Set the interactor to return false when trying to pair with a student
       final interactor = _MockManageStudentsInteractor();
@@ -373,10 +391,4 @@ void main() {
 
 class _MockManageStudentsInteractor extends Mock implements ManageStudentsInteractor {}
 
-User _mockUser(String name, {String pronouns, String primaryEmail}) => User((b) => b
-  ..id = Random(name.hashCode).nextInt(100000).toString()
-  ..sortableName = name
-  ..name = name
-  ..primaryEmail = primaryEmail ?? null
-  ..pronouns = pronouns ?? null
-  ..build());
+class _MockAlertThresholdsInteractor extends Mock implements AlertThresholdsInteractor {}

@@ -101,7 +101,7 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
             L10n(context).findSchoolOrDistrict,
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
           ),
-          elevation: 0,
+          bottom: ParentTheme.of(context).appBarDivider(shadowInLightMode: false),
           actions: <Widget>[
             FlatButton(
               child: Text(L10n(context).next.toUpperCase()),

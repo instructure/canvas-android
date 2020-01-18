@@ -9,6 +9,7 @@ part of serializers;
 Serializers _$_serializers = (new Serializers().toBuilder()
       ..add(AccountNotification.serializer)
       ..add(Alert.serializer)
+      ..add(AlertThreshold.serializer)
       ..add(AlertType.serializer)
       ..add(AlertWorkflowState.serializer)
       ..add(Announcement.serializer)
@@ -61,6 +62,9 @@ Serializers _$_serializers = (new Serializers().toBuilder()
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(Message)]),
           () => new ListBuilder<Message>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(Submission)]),
+          () => new ListBuilder<Submission>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(Submission)]),
           () => new ListBuilder<Submission>())

@@ -80,13 +80,16 @@ class DioConfig {
       dio.interceptors.add(_cacheInterceptor());
     }
 
+    bool debug = false;
+
     // Log interceptor
     dio.interceptors.add(LogInterceptor(
-      request: false,
-      requestHeader: false,
-      requestBody: false,
-      responseHeader: false,
-      responseBody: false,
+      request: debug,
+      requestHeader: debug,
+      requestBody: debug,
+      responseHeader: debug,
+      responseBody: debug,
+      error: debug,
     ));
 
     return dio;

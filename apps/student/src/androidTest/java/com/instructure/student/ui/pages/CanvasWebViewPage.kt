@@ -23,6 +23,7 @@ import androidx.test.espresso.web.sugar.Web.onWebView
 import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
 import androidx.test.espresso.web.webdriver.DriverAtoms.getText
 import androidx.test.espresso.web.webdriver.Locator
+import com.instructure.canvas.espresso.withElementRepeat
 import com.instructure.espresso.page.BasePage
 import com.instructure.student.R
 import org.hamcrest.Matchers.allOf
@@ -34,9 +35,16 @@ import org.hamcrest.Matchers.containsString
 class CanvasWebViewPage : BasePage(R.id.canvasWebView) {
     fun runTextChecks(vararg checks : WebViewTextCheck) {
         for(check in checks) {
-            onWebView(allOf(withId(R.id.canvasWebView), isDisplayed()))
-                    .withElement(findElement(check.locatorType, check.locatorValue))
-                    .check(webMatches(getText(), containsString(check.textValue)))
+            if(check.repeatSecs != null) {
+                onWebView(allOf(withId(R.id.canvasWebView), isDisplayed()))
+                        .withElementRepeat(findElement(check.locatorType, check.locatorValue), check.repeatSecs)
+                        .check(webMatches(getText(), containsString(check.textValue)))
+            }
+            else {
+                onWebView(allOf(withId(R.id.canvasWebView), isDisplayed()))
+                        .withElement(findElement(check.locatorType, check.locatorValue))
+                        .check(webMatches(getText(), containsString(check.textValue)))
+            }
         }
     }
 }
@@ -46,5 +54,6 @@ class CanvasWebViewPage : BasePage(R.id.canvasWebView) {
 data class WebViewTextCheck(
         val locatorType: Locator,
         val locatorValue: String,
-        val textValue: String
+        val textValue: String,
+        val repeatSecs: Int? = null
 )

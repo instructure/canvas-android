@@ -171,7 +171,7 @@ class AppLocalizations {
   /// Domain search screen
 
   String get domainSearchInputHint => Intl.message(
-        'Enter school name or district...',
+        'Enter school name or district…',
         name: 'domainSearchInputHint',
         desc: "Input hint for the text box on the domain search screen",
       );
@@ -529,6 +529,54 @@ class AppLocalizations {
 
   String get appearance => Intl.message('Appearance', desc: 'Label for the appearance section in the settings page');
 
+  /// Alert Thresholds Screen
+  String get alertSettings => Intl.message('Alert Settings');
+
+  String get alertMeWhen => Intl.message('Alert me when…',
+      desc:
+          'Header for the screen where the observer chooses the thresholds that will determine when they receive alerts (e.g. when an assignment is graded below 70%)');
+
+  String get courseGradeBelow => Intl.message('Course grade below',
+      desc: 'Label describing the threshold for when the course grade is below a certain percentage');
+
+  String get courseGradeAbove => Intl.message('Course grade above',
+      desc: 'Label describing the threshold for when the course grade is above a certain percentage');
+
+  String get assignmentMissing => Intl.message('Assignment missing');
+
+  String get assignmentGradeBelow => Intl.message('Assignment grade below',
+      desc: 'Label describing the threshold for when an assignment is graded below a certain percentage');
+
+  String get assignmentGradeAbove => Intl.message('Assignment grade above',
+      desc: 'Label describing the threshold for when an assignment is graded above a certain percentage');
+
+  String get courseAnnouncements => Intl.message('Course Announcements');
+
+  String get institutionAnnouncements => Intl.message('Institution Announcements');
+
+  String get never => Intl.message('Never',
+      desc: 'Indication that tells the user they will not receive alert notifications of a specific kind');
+
+  String get gradePercentage => Intl.message('Grade percentage');
+
+  String get alertThresholdsLoadingError => Intl.message('There was an error loading your student\'s alerts.');
+
+  String get mustBeBelow100 => Intl.message('Must be below 100');
+
+  String mustBeBelowN(int percentage) => Intl.message(
+        'Must be below $percentage',
+        desc: 'Validation error to the user that they must choose a percentage below \'n\'',
+        args: [percentage],
+        examples: const {'percentage': 5},
+      );
+
+  String mustBeAboveN(int percentage) => Intl.message(
+        'Must be above $percentage',
+        desc: 'Validation error to the user that they must choose a percentage above \'n\'',
+        args: [percentage],
+        examples: const {'percentage': 5},
+      );
+
   /// Enrollment types
 
   String get enrollmentTypeTeacher => Intl.message('Teacher', desc: 'Label for the Teacher enrollment type');
@@ -556,7 +604,7 @@ class AppLocalizations {
       Intl.message('Preparing…', desc: 'Message shown while a file is being prepared to attach to a message');
 
   /// Manage Students
-  String get addStudentWith => Intl.message('Add student with...');
+  String get addStudentWith => Intl.message('Add student with…');
 
   String get addStudent => Intl.message('Add Student');
 
@@ -639,4 +687,6 @@ class AppLocalizations {
 
   String get institutionAnnouncementTitle => Intl.message('Institution Announcement',
       desc: 'Title text show for institution level announcements');
+
+  String get genericNetworkError => Intl.message('Network error');
 }

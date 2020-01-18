@@ -12,8 +12,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import 'dart:math';
-
 import 'package:built_value/json_object.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
@@ -42,6 +40,7 @@ import 'package:get_it/get_it.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../utils/accessibility_utils.dart';
+import '../../utils/canvas_model_utils.dart';
 import '../../utils/network_image_response.dart';
 import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
@@ -483,15 +482,16 @@ class MockInteractor extends DashboardInteractor {
   @override
   Future<List<User>> getStudents({bool forceRefresh = false}) async => generateStudents
       ? [
-          _mockUser('Billy', pronouns: includePronouns ? 'he/him' : null),
-          _mockUser('Sally', pronouns: includePronouns ? 'she/her' : null),
-          _mockUser('Trevor', pronouns: includePronouns ? 'he/him' : null),
+          CanvasModelTestUtils.mockUser(name: 'Billy', pronouns: includePronouns ? 'he/him' : null),
+          CanvasModelTestUtils.mockUser(name: 'Sally', pronouns: includePronouns ? 'she/her' : null),
+          CanvasModelTestUtils.mockUser(name: 'Trevor', pronouns: includePronouns ? 'he/him' : null),
         ]
       : [];
 
   @override
   Future<User> getSelf({app}) async => generateSelf
-      ? _mockUser('Marlene', pronouns: includePronouns ? 'she/her' : null, primaryEmail: 'marlene@instructure.com')
+      ? CanvasModelTestUtils.mockUser(
+          name: 'Marlene', pronouns: includePronouns ? 'she/her' : null, primaryEmail: 'marlene@instructure.com')
       : null;
 }
 
@@ -511,11 +511,3 @@ class MockManageStudentsInteractor extends ManageStudentsInteractor {
   @override
   Future<List<User>> getStudents({bool forceRefresh = false}) => Future.value([]);
 }
-
-User _mockUser(String name, {String pronouns, String primaryEmail}) => User((b) => b
-  ..id = Random(name.hashCode).nextInt(100000).toString()
-  ..sortableName = name
-  ..name = name
-  ..primaryEmail = primaryEmail ?? null
-  ..pronouns = pronouns ?? null
-  ..build());

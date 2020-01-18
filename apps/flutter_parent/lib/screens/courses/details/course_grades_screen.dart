@@ -19,7 +19,7 @@ import 'package:flutter_parent/models/assignment_group.dart';
 import 'package:flutter_parent/models/course_grade.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_model.dart';
 import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
-import 'package:flutter_parent/utils/common_widgets/full_screen_scroll_container.dart';
+import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
@@ -35,6 +35,7 @@ class CourseGradesScreen extends StatefulWidget {
 
 class _CourseGradesScreenState extends State<CourseGradesScreen> {
   Set<String> _collapsedGroupIds;
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = new GlobalKey<RefreshIndicatorState>();
 
   @override
   void initState() {
@@ -47,6 +48,7 @@ class _CourseGradesScreenState extends State<CourseGradesScreen> {
     return Consumer<CourseDetailsModel>(
       builder: (context, model, _) {
         return RefreshIndicator(
+          key: _refreshIndicatorKey,
           onRefresh: () => model.loadData(refreshCourse: true, refreshAssignmentGroups: true),
           child: FutureBuilder(
             future: model.assignmentGroupFuture,
@@ -61,10 +63,9 @@ class _CourseGradesScreenState extends State<CourseGradesScreen> {
     if (snapshot.connectionState == ConnectionState.waiting) {
       return LoadingIndicator();
     } else if (snapshot.hasError) {
-      // TODO: Replace with better error widget
-      return FullScreenScrollContainer(
-        children: <Widget>[Text(L10n(context).unexpectedError)],
-      );
+      return ErrorPandaWidget(L10n(context).unexpectedError, () {
+        _refreshIndicatorKey.currentState.show();
+      });
     } else if (!snapshot.hasData || snapshot.data.every((group) => group.assignments.isEmpty) == true) {
       return EmptyPandaWidget(
         svgPath: 'assets/svg/panda-space-no-assignments.svg',
@@ -214,8 +215,10 @@ class _AssignmentRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final studentId = Provider.of<CourseDetailsModel>(context, listen: false).studentId;
+
     final textTheme = Theme.of(context).textTheme;
-    final assignmentStatus = _assignmentStatus(context, assignment);
+    final assignmentStatus = _assignmentStatus(context, assignment, studentId);
 
     return ListTile(
       onTap: () => null,
@@ -235,14 +238,14 @@ class _AssignmentRow extends StatelessWidget {
           if (assignmentStatus != null) assignmentStatus,
         ],
       ),
-      trailing: _assignmentGrade(context, assignment),
+      trailing: _assignmentGrade(context, assignment, studentId),
     );
   }
 
-  Widget _assignmentStatus(BuildContext context, Assignment assignment) {
+  Widget _assignmentStatus(BuildContext context, Assignment assignment, String studentId) {
     final localizations = L10n(context);
     final textTheme = Theme.of(context).textTheme;
-    final status = assignment.getStatus();
+    final status = assignment.getStatus(studentId: studentId);
 
     switch (status) {
       case SubmissionStatus.NONE:
@@ -269,7 +272,7 @@ class _AssignmentRow extends StatelessWidget {
     }
   }
 
-  Widget _assignmentGrade(BuildContext context, Assignment assignment) {
+  Widget _assignmentGrade(BuildContext context, Assignment assignment, String studentId) {
     dynamic points = assignment.pointsPossible;
 
     // Store the points as an int if possible
@@ -282,9 +285,10 @@ class _AssignmentRow extends StatelessWidget {
     String text, semantics;
     final localizations = L10n(context);
 
-    if (assignment.submission?.grade != null) {
-      text = localizations.gradeFormatScoreOutOfPointsPossible(assignment.submission.grade, points);
-      semantics = localizations.contentDescriptionScoreOutOfPointsPossible(assignment.submission.grade, points);
+    final submission = assignment.submission(studentId);
+    if (submission?.grade != null) {
+      text = localizations.gradeFormatScoreOutOfPointsPossible(submission.grade, points);
+      semantics = localizations.contentDescriptionScoreOutOfPointsPossible(submission.grade, points);
     } else {
       text = localizations.gradeFormatScoreOutOfPointsPossible(localizations.assignmentNoScore, points);
       semantics = localizations.contentDescriptionScoreOutOfPointsPossible('', points); // Read as "out of x points"

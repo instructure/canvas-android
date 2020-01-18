@@ -13,6 +13,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:built_value/built_value.dart';
+import 'package:built_value/json_object.dart';
 import 'package:built_value/serializer.dart';
 
 part 'attachment.g.dart';
@@ -23,7 +24,11 @@ abstract class Attachment implements Built<Attachment, AttachmentBuilder> {
   @BuiltValueSerializer(serializeNulls: true) // Add this line to get nulls to serialize when we convert to JSON
   static Serializer<Attachment> get serializer => _$attachmentSerializer;
 
-  String get id;
+  @BuiltValueField(serialize: false)
+  String get id => jsonId.isString ? jsonId.asString : jsonId.asNum.toString();
+
+  @BuiltValueField(wireName: "id")
+  JsonObject get jsonId;
 
   @BuiltValueField(wireName: "content-type")
   @nullable
@@ -57,6 +62,6 @@ abstract class Attachment implements Built<Attachment, AttachmentBuilder> {
   factory Attachment([void Function(AttachmentBuilder) updates]) = _$Attachment;
 
   static void _initializeBuilder(AttachmentBuilder b) => b
-    ..id = ''
+    ..jsonId = JsonObject('')
     ..size = 0;
 }

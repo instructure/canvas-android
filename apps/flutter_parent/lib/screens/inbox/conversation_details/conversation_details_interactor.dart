@@ -19,6 +19,8 @@ import 'package:flutter_parent/models/message.dart';
 import 'package:flutter_parent/network/api/inbox_api.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/dashboard/inbox_notifier.dart';
+import 'package:flutter_parent/screens/inbox/reply/conversation_reply_screen.dart';
+import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class ConversationDetailsInteractor {
@@ -32,8 +34,7 @@ class ConversationDetailsInteractor {
   }
 
   Future<Conversation> addReply(BuildContext context, Conversation conversation, Message message, bool replyAll) async {
-    // TODO: Will be implemented in MBL-13654
-    return null;
+    return locator<QuickNav>().push(context, ConversationReplyScreen(conversation, message, replyAll));
   }
 
   String getCurrentUserId() => ApiPrefs.getUser().id;

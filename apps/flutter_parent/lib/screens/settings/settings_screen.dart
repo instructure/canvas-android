@@ -37,7 +37,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return ThemeTransitionTarget(
       child: DefaultParentTheme(
         builder: (context) => Scaffold(
-          appBar: AppBar(title: Text(L10n(context).settings)),
+          appBar: AppBar(
+            title: Text(L10n(context).settings),
+            bottom: ParentTheme.of(context).appBarDivider(shadowInLightMode: false),
+          ),
           body: ListView(
             children: [
               Padding(
