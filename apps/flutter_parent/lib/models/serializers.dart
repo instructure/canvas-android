@@ -1,4 +1,4 @@
-// Copyright (C) 2020 - present Instructure, Inc.
+// Copyright (C) 2019 - present Instructure, Inc.
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -20,11 +20,8 @@ import 'package:built_value/serializer.dart';
 import 'package:built_value/standard_json_plugin.dart';
 import 'package:flutter_parent/models/account_notification.dart';
 import 'package:flutter_parent/models/alert.dart';
-<<<<<<< HEAD
 import 'package:flutter_parent/models/announcement.dart';
-=======
 import 'package:flutter_parent/models/alert_threshold.dart';
->>>>>>> master
 import 'package:flutter_parent/models/assignment.dart';
 import 'package:flutter_parent/models/assignment_group.dart';
 import 'package:flutter_parent/models/attachment.dart';
