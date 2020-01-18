@@ -28,9 +28,13 @@ class AnnouncementDetailsInteractor {
   AnnouncementApi _announcementApi() => locator<AnnouncementApi>();
   CourseApi _courseApi() => locator<CourseApi>();
 
-  Future<AnnouncementViewState> getAnnouncement(String announcementId, AnnouncementType type, String courseId, BuildContext context) async {
+  Future<AnnouncementViewState> getAnnouncement(String announcementId,
+      AnnouncementType type, String courseId,
+      String institutionToolbarTitle) async {
     if(type == AnnouncementType.COURSE) {
-      Announcement announcement = await _announcementApi().getCourseAnnouncement(courseId, announcementId);
+      Announcement announcement = await _announcementApi()
+          .getCourseAnnouncement(courseId, announcementId);
+
       Course course = await _courseApi().getCourse(courseId);
 
       return AnnouncementViewState(
@@ -40,10 +44,11 @@ class AnnouncementDetailsInteractor {
           announcement.postedAt
       );
     } else {
-      AccountNotification accountNotification = await _announcementApi().getAccountNotification(announcementId);
+      AccountNotification accountNotification = await _announcementApi()
+          .getAccountNotification(announcementId);
 
       return AnnouncementViewState(
-          L10n(context).institutionAnnouncementTitle,
+          institutionToolbarTitle,
           accountNotification.subject,
           accountNotification.message,
           DateTime.parse(accountNotification.startAt)

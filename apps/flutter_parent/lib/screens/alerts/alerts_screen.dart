@@ -160,11 +160,11 @@ class __AlertsListState extends State<_AlertsList> {
 
   void _routeAlert(Alert alert, int index) async {
     if(alert.alertType == AlertType.courseAnnouncement) {
-      locator<QuickNav>().push(context, AnnouncementDetailScreen(alert.contextId, AnnouncementType.COURSE, alert.getCourseId()));
+      locator<QuickNav>().push(context, AnnouncementDetailScreen(alert.contextId, AnnouncementType.COURSE, alert.getCourseId(), context));
     }
 
     if(alert.alertType == AlertType.institutionAnnouncement) {
-      locator<QuickNav>().push(context, AnnouncementDetailScreen(alert.contextId, AnnouncementType.INSTITUTION, ''));
+      locator<QuickNav>().push(context, AnnouncementDetailScreen(alert.contextId, AnnouncementType.INSTITUTION, '', context));
     }
 
     // We're done if the alert was already read, otherwise mark it read

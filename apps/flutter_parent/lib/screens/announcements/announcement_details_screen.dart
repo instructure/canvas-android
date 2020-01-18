@@ -17,15 +17,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
-import 'package:flutter_parent/models/account_notification.dart';
-import 'package:flutter_parent/models/announcement.dart';
-import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/screens/announcements/announcement_view_state.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:intl/intl.dart';
-import 'package:tuple/tuple.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import 'announcement_details_interactor.dart';
@@ -37,9 +33,10 @@ class AnnouncementDetailScreen extends StatefulWidget {
   final String _announcementId;
   final String _courseId;
   final AnnouncementType _announcementType;
+  final String _toolbarTitle;
 
-  AnnouncementDetailScreen(this._announcementId, this._announcementType, this._courseId, {Key key})
-      : super(key: key);
+  AnnouncementDetailScreen(this._announcementId, this._announcementType, this._courseId, BuildContext context, {Key key})
+      : this._toolbarTitle = L10n(context).institutionAnnouncementTitle, super(key: key);
 
   @override
   State createState() => _AnnouncementDetailScreenState();
@@ -49,7 +46,7 @@ class _AnnouncementDetailScreenState extends State<AnnouncementDetailScreen> {
   Future<AnnouncementViewState> _announcementFuture;
 
   Future<AnnouncementViewState> _loadAnnouncement() =>
-      widget._interactor.getAnnouncement(widget._announcementId, widget._announcementType, widget._courseId, context);
+      widget._interactor.getAnnouncement(widget._announcementId, widget._announcementType, widget._courseId, widget._toolbarTitle);
 
   @override
   void initState() {
@@ -130,7 +127,7 @@ class _AnnouncementDetailScreenState extends State<AnnouncementDetailScreen> {
         setState(() {
           _announcementFuture = widget._interactor.getAnnouncement(
               widget._announcementId, widget._announcementType,
-              widget._courseId, context);
+              widget._courseId, L10n(context).institutionAnnouncementTitle);
         });
       }));
   }
