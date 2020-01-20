@@ -124,6 +124,7 @@ class _ConversationReplyScreenState extends State<ConversationReplyScreen> {
 
   Widget _appBar(BuildContext context) {
     return AppBar(
+      bottom: ParentTheme.of(context).appBarDivider(shadowInLightMode: false),
       elevation: 0,
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
