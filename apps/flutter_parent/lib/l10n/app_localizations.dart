@@ -619,6 +619,50 @@ class AppLocalizations {
   String get addNewStudent =>
       Intl.message('Add new student', desc: 'Semantics label for the FAB on the Manage Students Screen');
 
+  /// Error Report Dialog
+
+  String get device => Intl.message('Device', desc: 'Label used for device manufacturer/model in the error report');
+
+  String get osVersion =>
+      Intl.message('OS Version', desc: 'Label used for device operating system version in the error report');
+
+  String get versionNumber =>
+      Intl.message('Version Number', desc: 'Label used for the app version number in the error report');
+
+  String get reportProblemTitle =>
+      Intl.message('Report A Problem', desc: 'Title used for generic dialog to report problems');
+
+  String get reportProblemSubject => Intl.message('Subject', desc: 'Label used for Subject text field');
+
+  String get reportProblemSubjectEmpty =>
+      Intl.message('A subject is required.', desc: 'Error shown when the subject field is empty');
+
+  String get reportProblemEmail => Intl.message('Email Address', desc: 'Label used for Email Address text field');
+
+  String get reportProblemEmailEmpty =>
+      Intl.message('An email address is required.', desc: 'Error shown when the email field is empty');
+
+  String get reportProblemDescription => Intl.message('Description', desc: 'Label used for Description text field');
+
+  String get reportProblemDescriptionEmpty =>
+      Intl.message('A description is required.', desc: 'Error shown when the description field is empty');
+
+  String get reportProblemSeverity =>
+      Intl.message('How is this affecting you?', desc: 'Label used for the dropdown to select how severe the issue is');
+
+  String get sendReport => Intl.message('send', desc: 'Label used for send button when reporting a problem');
+
+  String get errorSeverityComment => Intl.message('Just a casual question, comment, idea, suggestion…');
+
+  String get errorSeverityNotUrgent => Intl.message("I need some help but it's not urgent.");
+
+  String get errorSeverityWorkaroundPossible =>
+      Intl.message("Something's broken but I can work around it to get what I need done.");
+
+  String get errorSeverityBlocking => Intl.message("I can't get things done until I hear back from you.");
+
+  String get errorSeverityCritical => Intl.message('EXTREME CRITICAL EMERGENCY!!');
+
   /// Miscellaneous
 
   String get cancel => Intl.message('Cancel');
