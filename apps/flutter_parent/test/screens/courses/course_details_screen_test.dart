@@ -187,6 +187,47 @@ void main() {
     // Check that we have the correct subject line
     expect(find.text(AppLocalizations().gradesSubjectMessage(studentName)), findsOneWidget);
   });
+
+  testWidgetsWithAccessibilityChecks('Tapping message button while on syllabus tab shows message screen',
+      (tester) async {
+    final course = Course((b) => b
+      ..id = courseId
+      ..name = 'Course Name'
+      ..courseCode = '1234'
+      ..syllabusBody = 'test');
+
+    final interactor = _MockCourseDetailsInteractor();
+    when(interactor.loadCourse(courseId)).thenAnswer((_) => Future.value(course));
+
+    final convoInteractor = _MockCreateConversationInteractor();
+    when(convoInteractor.getAllRecipients(any)).thenAnswer((_) => Future.value([]));
+    _setupLocator(interactor: interactor, convoInteractor: convoInteractor);
+
+    String studentName = 'Panda';
+
+    await tester.pumpWidget(TestApp(CourseDetailsScreen(studentId, studentName, courseId)));
+    await tester.pump(); // Widget creation
+    await tester.pump(); // Future resolved
+
+    // Should show the fab
+    final matchedWidget = find.byType(FloatingActionButton);
+    expect(matchedWidget, findsOneWidget);
+
+    // Tap the Syllabus tab
+    await tester.tap(
+        find.ancestor(of: find.text(AppLocalizations().courseSyllabusLabel.toUpperCase()), matching: find.byType(Tab)));
+    await tester.pumpAndSettle(); // Let the screen creation settle
+
+    // Tap the FAB
+    await tester.tap(matchedWidget);
+    await tester.pumpAndSettle(); // Let the new screen create itself
+
+    // Check to make sure we're on the conversation screen
+    expect(find.byType(CreateConversationScreen), findsOneWidget);
+
+    // Check that we have the correct subject line
+    expect(find.text(AppLocalizations().syllabusSubjectMessage(studentName)), findsOneWidget);
+  });
 }
 
 class _MockCourseDetailsInteractor extends Mock implements CourseDetailsInteractor {}

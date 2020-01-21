@@ -120,7 +120,8 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
       // Grades
       subject = L10n(context).gradesSubjectMessage(widget._model.studentName);
     } else {
-      // TODO: Syllabus
+      // Syllabus
+      subject = L10n(context).syllabusSubjectMessage(widget._model.studentName);
     }
 
     Widget screen = CreateConversationScreen.withSubject(widget._model.course, subject);
