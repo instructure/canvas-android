@@ -34,6 +34,8 @@ import 'create_conversation_interactor.dart';
 class CreateConversationScreen extends StatefulWidget {
   CreateConversationScreen(this._course) : _subjectTemplate = _course.name;
 
+  CreateConversationScreen.withSubject(this._course, this._subjectTemplate);
+
   final Course _course;
   final String _subjectTemplate;
 

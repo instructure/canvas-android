@@ -20,6 +20,7 @@ import 'package:provider/provider.dart';
 class CourseSyllabusScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    CourseDetailsModel.selectedTab = 1;
     return Consumer<CourseDetailsModel>(
       builder: (context, model, _) => RefreshIndicator(
         onRefresh: () => model.loadData(refreshCourse: true),

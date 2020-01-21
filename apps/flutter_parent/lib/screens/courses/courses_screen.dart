@@ -149,6 +149,6 @@ class _CoursesScreenState extends State<CoursesScreen> {
   }
 
   void _courseTapped(context, Course course) {
-    locator<QuickNav>().push(context, CourseDetailsScreen.withCourse(widget._student.id, course));
+    locator<QuickNav>().push(context, CourseDetailsScreen.withCourse(widget._student.id, widget._student.name, course));
   }
 }

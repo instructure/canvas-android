@@ -19,15 +19,17 @@ import 'package:flutter_parent/utils/base_model.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class CourseDetailsModel extends BaseModel {
+  static int selectedTab = 0;
   String studentId;
+  String studentName;
   String courseId; // Could be routed to without a full course, only the id may be known
   Course course;
   Future<List<AssignmentGroup>> assignmentGroupFuture;
 
-  CourseDetailsModel(this.studentId, this.courseId);
+  CourseDetailsModel(this.studentId, this.studentName, this.courseId);
 
   // A convenience constructor when we already have the course data
-  CourseDetailsModel.withCourse(this.studentId, this.course) : this.courseId = course.id;
+  CourseDetailsModel.withCourse(this.studentId, this.studentName, this.course) : this.courseId = course.id;
 
   Future<void> loadData(
       {bool refreshCourse = false, bool refreshAssignmentGroups = false, bool refreshSummaryList = false}) {

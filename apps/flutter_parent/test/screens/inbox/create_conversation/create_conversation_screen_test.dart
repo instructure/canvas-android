@@ -737,6 +737,18 @@ void main() {
     await tester.tap(find.text(l10n.done));
     await tester.pumpAndSettle();
   });
+
+  testWidgetsWithAccessibilityChecks('passing in subject shows in subject text widget', (tester) async {
+    _setupLocator();
+
+    final course = _mockCourse('0');
+    final subject = 'Instructure Rocks!';
+
+    await tester.pumpWidget(_testableWidget(CreateConversationScreen.withSubject(course, subject)));
+    await tester.pumpAndSettle();
+
+    expect(find.text(subject), findsOneWidget);
+  });
 }
 
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
