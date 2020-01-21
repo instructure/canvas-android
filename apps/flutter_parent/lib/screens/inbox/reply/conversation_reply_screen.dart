@@ -19,8 +19,10 @@ import 'package:flutter_parent/models/message.dart';
 import 'package:flutter_parent/screens/inbox/attachment_utils/attachment_handler.dart';
 import 'package:flutter_parent/screens/inbox/conversation_details/message_widget.dart';
 import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_screen.dart';
+import 'package:flutter_parent/utils/common_widgets/view_attachment/view_attachment_screen.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
+import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:provider/provider.dart';
 
@@ -190,6 +192,9 @@ class _ConversationReplyScreenState extends State<ConversationReplyScreen> {
             conversation: widget.conversation,
             message: widget.message ?? widget.conversation.messages[0],
             currentUserId: _interactor.getCurrentUserId(),
+            onAttachmentClicked: (attachment) {
+              locator<QuickNav>().push(context, ViewAttachmentScreen(attachment));
+            },
           ),
           Divider(thickness: 1, height: 1),
           _editorWidget(context),

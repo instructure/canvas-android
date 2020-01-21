@@ -16,6 +16,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:built_collection/built_collection.dart';
+import 'package:built_value/json_object.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/attachment.dart';
@@ -23,12 +24,18 @@ import 'package:flutter_parent/models/basic_user.dart';
 import 'package:flutter_parent/models/conversation.dart';
 import 'package:flutter_parent/models/message.dart';
 import 'package:flutter_parent/screens/inbox/attachment_utils/attachment_handler.dart';
+import 'package:flutter_parent/screens/inbox/attachment_utils/attachment_picker.dart';
+import 'package:flutter_parent/screens/inbox/attachment_utils/attachment_picker_interactor.dart';
 import 'package:flutter_parent/screens/inbox/conversation_details/message_widget.dart';
 import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_screen.dart';
 import 'package:flutter_parent/screens/inbox/reply/conversation_reply_interactor.dart';
 import 'package:flutter_parent/screens/inbox/reply/conversation_reply_screen.dart';
+import 'package:flutter_parent/utils/common_widgets/view_attachment/view_attachment_interactor.dart';
+import 'package:flutter_parent/utils/common_widgets/view_attachment/view_attachment_screen.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
+import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../../utils/accessibility_utils.dart';
@@ -80,6 +87,39 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.descendant(of: find.byType(MessageWidget), matching: find.text(message.body)), findsOneWidget);
+  });
+
+  testWidgetsWithAccessibilityChecks('tapping attachment on message being replied to shows viewer', (tester) async {
+    _setupInteractor();
+    GetIt.instance.registerLazySingleton<QuickNav>(() => QuickNav());
+    GetIt.instance.registerLazySingleton<ViewAttachmentInteractor>(() => ViewAttachmentInteractor());
+
+    final attachment = Attachment((b) => b
+      ..jsonId = JsonObject('1')
+      ..displayName = 'Attachment 1');
+
+    final message = Message((m) => m
+      ..authorId = '123'
+      ..createdAt = DateTime.now()
+      ..body = ''
+      ..attachments = ListBuilder([attachment])
+      ..participatingUserIds = ListBuilder(['123']));
+
+    final conversation = Conversation((c) => c
+      ..messages = ListBuilder([message])
+      ..participants = ListBuilder([
+        BasicUser((b) => b
+          ..id = '123'
+          ..name = 'Myself'),
+      ]));
+
+    await tester.pumpWidget(TestApp(ConversationReplyScreen(conversation, message, false), highContrast: true));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(Key('attachment-1')));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(ViewAttachmentScreen), findsOneWidget);
   });
 
   testWidgetsWithAccessibilityChecks('displays details of top message if no message is specified', (tester) async {
@@ -569,6 +609,24 @@ void main() {
 
     // Should not display delete option
     expect(find.text(l10n.delete), findsNothing);
+  });
+
+  testWidgetsWithAccessibilityChecks('tapping attachment button shows AttachmentPicker', (tester) async {
+    final interactor = _setupInteractor();
+    GetIt.instance.registerLazySingleton<AttachmentPickerInteractor>(() => AttachmentPickerInteractor());
+    when(interactor.addAttachment(any))
+        .thenAnswer((answer) => ConversationReplyInteractor().addAttachment(answer.positionalArguments[0]));
+
+    // Create page
+    await tester.pumpWidget(TestApp(ConversationReplyScreen(_makeConversation(), null, false), highContrast: true));
+    await tester.pumpAndSettle();
+
+    // Tap attachment button
+    await tester.tap(find.byKey(CreateConversationScreen.attachmentKey));
+    await tester.pumpAndSettle();
+
+    // AttachmentPicker should be displayed
+    expect(find.byType(AttachmentPicker), findsOneWidget);
   });
 }
 
