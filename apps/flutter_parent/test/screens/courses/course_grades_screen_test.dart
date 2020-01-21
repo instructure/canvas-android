@@ -47,7 +47,7 @@ void main() {
   }
 
   testWidgetsWithAccessibilityChecks('Can refresh course and group data', (tester) async {
-    final model = CourseDetailsModel(studentId, courseId);
+    final model = CourseDetailsModel(studentId, '', courseId);
     final interactor = _MockCourseDetailsInteractor();
     _setupLocator(interactor: interactor);
 
@@ -68,7 +68,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Shows loading', (tester) async {
-    final model = CourseDetailsModel(studentId, courseId);
+    final model = CourseDetailsModel(studentId, '', courseId);
     model.assignmentGroupFuture = Future.value([_mockAssignmentGroup()]);
 
     await tester.pumpWidget(_testableWidget(model));
@@ -82,7 +82,7 @@ void main() {
     // failing, the exception doesn't break the runtime code. The reason this happens is there are no listeners for the
     // 'catchError' on the assignment group future, so flutter calls it 'unhandled' and fails the test even though it
     // will still perform the rest of the test.
-    final model = CourseDetailsModel(studentId, courseId);
+    final model = CourseDetailsModel(studentId, '', courseId);
     expect(() => model.assignmentGroupFuture = Future<List<AssignmentGroup>>.error('ErRoR here'), throwsA(anything));
 
     await tester.pumpWidget(_testableWidget(model, highContrastMode: true));
@@ -93,7 +93,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Shows empty', (tester) async {
-    final model = CourseDetailsModel(studentId, courseId);
+    final model = CourseDetailsModel(studentId, '', courseId);
     model.assignmentGroupFuture = Future.value([_mockAssignmentGroup()]); // Create an empty assignment group
 
     await tester.pumpWidget(_testableWidget(model));
@@ -111,7 +111,7 @@ void main() {
       _mockAssignment(dueAt: date),
       _mockAssignment(id: '1', pointsPossible: 2.2, submission: _mockSubmission(grade: grade))
     ]);
-    final model = CourseDetailsModel(studentId, courseId);
+    final model = CourseDetailsModel(studentId, '', courseId);
     model.assignmentGroupFuture = Future.value([group]);
     model.course = _mockCourse();
 
@@ -137,7 +137,7 @@ void main() {
       _mockAssignmentGroup(
           assignmentGroupId: assignmentGroupId + '1', assignments: [_mockAssignment(groupId: assignmentGroupId + '1')]),
     ];
-    final model = CourseDetailsModel(studentId, courseId);
+    final model = CourseDetailsModel(studentId, '', courseId);
     model.course = _mockCourse();
     model.assignmentGroupFuture = Future.value(groups);
 
@@ -155,7 +155,7 @@ void main() {
     final groups = [
       _mockAssignmentGroup(assignments: [_mockAssignment()])
     ];
-    final model = CourseDetailsModel(studentId, courseId);
+    final model = CourseDetailsModel(studentId, '', courseId);
     model.course = _mockCourse();
     model.assignmentGroupFuture = Future.value(groups);
 
@@ -182,7 +182,7 @@ void main() {
       _mockAssignment(
           id: '2', dueAt: DateTime.now().add(Duration(days: 1)), submission: _mockSubmission()), // Not submitted
     ]);
-    final model = CourseDetailsModel(studentId, courseId);
+    final model = CourseDetailsModel(studentId, '', courseId);
     model.assignmentGroupFuture = Future.value([group]);
     model.course = _mockCourse();
 
@@ -201,7 +201,7 @@ void main() {
       final groups = [
         _mockAssignmentGroup(assignments: [_mockAssignment()])
       ];
-      final model = CourseDetailsModel(studentId, courseId);
+      final model = CourseDetailsModel(studentId, '', courseId);
       model.course = _mockCourse(currentScore: 1.2345);
       model.assignmentGroupFuture = Future.value(groups);
 
@@ -217,7 +217,7 @@ void main() {
       final groups = [
         _mockAssignmentGroup(assignments: [_mockAssignment()])
       ];
-      final model = CourseDetailsModel(studentId, courseId);
+      final model = CourseDetailsModel(studentId, '', courseId);
       model.course = _mockCourse(currentGrade: grade);
       model.assignmentGroupFuture = Future.value(groups);
 

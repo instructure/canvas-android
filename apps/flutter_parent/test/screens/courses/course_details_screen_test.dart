@@ -20,6 +20,9 @@ import 'package:flutter_parent/screens/courses/details/course_details_screen.dar
 import 'package:flutter_parent/screens/courses/details/course_grades_screen.dart';
 import 'package:flutter_parent/screens/courses/details/course_summary_screen.dart';
 import 'package:flutter_parent/screens/courses/details/course_syllabus_screen.dart';
+import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_interactor.dart';
+import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_screen.dart';
+import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mockito/mockito.dart';
@@ -31,16 +34,20 @@ void main() {
   final studentId = '123';
   final courseId = '321';
 
-  _setupLocator({CourseDetailsInteractor interactor}) {
+  _setupLocator({CourseDetailsInteractor interactor, CreateConversationInteractor convoInteractor}) {
     final _locator = GetIt.instance;
     _locator.reset();
 
     _locator.registerFactory<CourseDetailsInteractor>(() => interactor ?? _MockCourseDetailsInteractor());
+    _locator
+        .registerFactory<CreateConversationInteractor>(() => convoInteractor ?? _MockCreateConversationInteractor());
+
+    _locator.registerLazySingleton<QuickNav>(() => QuickNav());
   }
 
   testWidgetsWithAccessibilityChecks('Shows loading', (tester) async {
     _setupLocator();
-    await tester.pumpWidget(TestApp(CourseDetailsScreen(studentId, courseId)));
+    await tester.pumpWidget(TestApp(CourseDetailsScreen(studentId, '', courseId)));
     await tester.pump();
 
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
@@ -51,7 +58,7 @@ void main() {
     when(interactor.loadCourse(courseId)).thenAnswer((_) => Future.error("This is an error"));
     _setupLocator(interactor: interactor);
 
-    await tester.pumpWidget(TestApp(CourseDetailsScreen(studentId, courseId)));
+    await tester.pumpWidget(TestApp(CourseDetailsScreen(studentId, '', courseId)));
     await tester.pump(); // Widget creation
     await tester.pump(); // Future resolved
 
@@ -75,7 +82,7 @@ void main() {
       ..name = 'Course Name');
     _setupLocator();
 
-    await tester.pumpWidget(TestApp(CourseDetailsScreen.withCourse(studentId, course)));
+    await tester.pumpWidget(TestApp(CourseDetailsScreen.withCourse(studentId, '', course)));
     await tester.pump(); // Widget creation
 
     expect(find.text(course.name), findsOneWidget);
@@ -89,7 +96,7 @@ void main() {
     when(interactor.loadCourse(courseId)).thenAnswer((_) => Future.value(course));
     _setupLocator(interactor: interactor);
 
-    await tester.pumpWidget(TestApp(CourseDetailsScreen(studentId, courseId)));
+    await tester.pumpWidget(TestApp(CourseDetailsScreen(studentId, '', courseId)));
     await tester.pump(); // Widget creation
     await tester.pump(); // Future resolved
 
@@ -99,7 +106,7 @@ void main() {
   testWidgetsWithAccessibilityChecks('Shows course tabs', (tester) async {
     _setupLocator();
 
-    await tester.pumpWidget(TestApp(CourseDetailsScreen(studentId, courseId)));
+    await tester.pumpWidget(TestApp(CourseDetailsScreen(studentId, '', courseId)));
     await tester.pump(); // Widget creation
     await tester.pump(); // Future resolved
 
@@ -111,7 +118,7 @@ void main() {
   testWidgetsWithAccessibilityChecks('Clicking grades tab shows the grades screen', (tester) async {
     _setupLocator();
 
-    await tester.pumpWidget(TestApp(CourseDetailsScreen(studentId, courseId)));
+    await tester.pumpWidget(TestApp(CourseDetailsScreen(studentId, '', courseId)));
     await tester.pump(); // Widget creation
     await tester.pump(); // Future resolved
 
@@ -124,7 +131,7 @@ void main() {
   testWidgetsWithAccessibilityChecks('Clicking syllabus tab shows the syllabus screen', (tester) async {
     _setupLocator();
 
-    await tester.pumpWidget(TestApp(CourseDetailsScreen(studentId, courseId)));
+    await tester.pumpWidget(TestApp(CourseDetailsScreen(studentId, '', courseId)));
     await tester.pump(); // Widget creation
     await tester.pump(); // Future resolved
 
@@ -137,7 +144,7 @@ void main() {
   testWidgetsWithAccessibilityChecks('Clicking summary tab shows the summary screen', (tester) async {
     _setupLocator();
 
-    await tester.pumpWidget(TestApp(CourseDetailsScreen(studentId, courseId)));
+    await tester.pumpWidget(TestApp(CourseDetailsScreen(studentId, '', courseId)));
     await tester.pump(); // Widget creation
     await tester.pump(); // Future resolved
 
@@ -147,10 +154,22 @@ void main() {
     expect(find.byType(CourseSummaryScreen), findsOneWidget);
   });
 
-  testWidgetsWithAccessibilityChecks('Tapping message button shows message screen', (tester) async {
-    _setupLocator();
+  testWidgetsWithAccessibilityChecks('Tapping message button while on grades tab shows message screen', (tester) async {
+    final course = Course((b) => b
+      ..id = courseId
+      ..name = 'Course Name'
+      ..courseCode = '1234');
 
-    await tester.pumpWidget(TestApp(CourseDetailsScreen(studentId, courseId)));
+    final interactor = _MockCourseDetailsInteractor();
+    when(interactor.loadCourse(courseId)).thenAnswer((_) => Future.value(course));
+
+    final convoInteractor = _MockCreateConversationInteractor();
+    when(convoInteractor.getAllRecipients(any)).thenAnswer((_) => Future.value([]));
+    _setupLocator(interactor: interactor, convoInteractor: convoInteractor);
+
+    String studentName = 'Panda';
+
+    await tester.pumpWidget(TestApp(CourseDetailsScreen(studentId, studentName, courseId)));
     await tester.pump(); // Widget creation
     await tester.pump(); // Future resolved
 
@@ -158,12 +177,18 @@ void main() {
     final matchedWidget = find.byType(FloatingActionButton);
     expect(matchedWidget, findsOneWidget);
 
-    // Should launch the message screen
+    // Tap the FAB
     await tester.tap(matchedWidget);
     await tester.pumpAndSettle(); // Let the new screen create itself
-    // TODO: Test once messages are in
-//    expect(find.byType(MessagesScreen), findsOneWidget);
+
+    // Check to make sure we're on the conversation screen
+    expect(find.byType(CreateConversationScreen), findsOneWidget);
+
+    // Check that we have the correct subject line
+    expect(find.text(AppLocalizations().gradesSubjectMessage(studentName)), findsOneWidget);
   });
 }
 
 class _MockCourseDetailsInteractor extends Mock implements CourseDetailsInteractor {}
+
+class _MockCreateConversationInteractor extends Mock implements CreateConversationInteractor {}

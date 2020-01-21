@@ -45,6 +45,7 @@ class _CourseGradesScreenState extends State<CourseGradesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    CourseDetailsModel.selectedTab = 0;
     return Consumer<CourseDetailsModel>(
       builder: (context, model, _) {
         return RefreshIndicator(

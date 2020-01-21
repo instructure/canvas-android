@@ -446,6 +446,13 @@ class AppLocalizations {
         args: [score, pointsPossible],
       );
 
+  String gradesSubjectMessage(String studentName) => Intl.message(
+        'Regarding: $studentName, Grades',
+        desc: 'The subject line for a message to a teacher regarding a student\'s grades',
+        name: 'gradesSubjectMessage',
+        args: [studentName],
+      );
+
   /// Web Login Screen
 
   String get domainVerificationErrorGeneral => Intl.message(
