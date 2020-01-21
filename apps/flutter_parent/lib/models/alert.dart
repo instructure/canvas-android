@@ -95,6 +95,17 @@ abstract class Alert implements Built<Alert, AlertBuilder> {
       AlertType.courseGradeLow,
     ].contains(alertType);
   }
+
+  String getCourseIdForAnnouncement() {
+    assert(alertType == AlertType.courseAnnouncement);
+
+    int index1 = htmlUrl.lastIndexOf('/courses/');
+    if(index1 != -1) {
+      index1 = index1 + '/courses/'.length;
+    }
+    int index2 = htmlUrl.lastIndexOf('/discussion_topics');
+    return htmlUrl.substring(index1, index2);
+  }
 }
 
 /// If you need to change the values sent over the wire when serializing you

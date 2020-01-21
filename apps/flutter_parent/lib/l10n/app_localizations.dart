@@ -728,5 +728,11 @@ class AppLocalizations {
         desc: 'Formatted string for when too many items are being notified in a badge, generally something like: 99+',
       );
 
+  String get errorLoadingAnnouncement => Intl.message('There was an error loading this announcement',
+      desc: 'Message shown when an announcement detail screen fails to load');
+
+  String get institutionAnnouncementTitle => Intl.message('Institution Announcement',
+      desc: 'Title text shown for institution level announcements');
+
   String get genericNetworkError => Intl.message('Network error');
 }

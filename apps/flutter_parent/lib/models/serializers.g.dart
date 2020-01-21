@@ -7,10 +7,12 @@ part of serializers;
 // **************************************************************************
 
 Serializers _$_serializers = (new Serializers().toBuilder()
+      ..add(AccountNotification.serializer)
       ..add(Alert.serializer)
       ..add(AlertThreshold.serializer)
       ..add(AlertType.serializer)
       ..add(AlertWorkflowState.serializer)
+      ..add(Announcement.serializer)
       ..add(Assignment.serializer)
       ..add(AssignmentGroup.serializer)
       ..add(Attachment.serializer)
@@ -27,6 +29,7 @@ Serializers _$_serializers = (new Serializers().toBuilder()
       ..add(Message.serializer)
       ..add(MobileVerifyResult.serializer)
       ..add(Recipient.serializer)
+      ..add(RemoteFile.serializer)
       ..add(SchoolDomain.serializer)
       ..add(Submission.serializer)
       ..add(SubmissionTypes.serializer)
@@ -47,6 +50,9 @@ Serializers _$_serializers = (new Serializers().toBuilder()
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(Enrollment)]),
           () => new ListBuilder<Enrollment>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(RemoteFile)]),
+          () => new ListBuilder<RemoteFile>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(String)]),
           () => new ListBuilder<String>())

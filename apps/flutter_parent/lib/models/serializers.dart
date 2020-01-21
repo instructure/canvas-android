@@ -18,7 +18,9 @@ import 'package:built_collection/built_collection.dart';
 import 'package:built_value/iso_8601_date_time_serializer.dart';
 import 'package:built_value/serializer.dart';
 import 'package:built_value/standard_json_plugin.dart';
+import 'package:flutter_parent/models/account_notification.dart';
 import 'package:flutter_parent/models/alert.dart';
+import 'package:flutter_parent/models/announcement.dart';
 import 'package:flutter_parent/models/alert_threshold.dart';
 import 'package:flutter_parent/models/assignment.dart';
 import 'package:flutter_parent/models/assignment_group.dart';
@@ -33,6 +35,7 @@ import 'package:flutter_parent/models/media_comment.dart';
 import 'package:flutter_parent/models/message.dart';
 import 'package:flutter_parent/models/mobile_verify_result.dart';
 import 'package:flutter_parent/models/recipient.dart';
+import 'package:flutter_parent/models/remote_file.dart';
 import 'package:flutter_parent/models/school_domain.dart';
 import 'package:flutter_parent/models/submission.dart';
 import 'package:flutter_parent/models/unread_count.dart';
@@ -45,8 +48,10 @@ part 'serializers.g.dart';
 /// If changes are made, run `flutter pub run build_runner build` from the project root. Alternatively, you can
 /// have it watch for changes and automatically build if you run `flutter pub run build_runner watch`.
 @SerializersFor([
+  AccountNotification,
   Alert,
   AlertThreshold,
+  Announcement,
   Assignment,
   AssignmentGroup,
   Attachment,
@@ -61,6 +66,7 @@ part 'serializers.g.dart';
   Message,
   MobileVerifyResult,
   Recipient,
+  RemoteFile,
   SchoolDomain,
   Submission,
   UnreadCount,

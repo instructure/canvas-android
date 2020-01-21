@@ -36,4 +36,28 @@ void main() {
     expect(false, AlertType.assignmentGradeLow.isSwitch());
     expect(false, AlertType.assignmentGradeHigh.isSwitch());
   });
+
+  test('returns valid courseId for course announcement alert', () {
+    final courseId = '1234';
+    final alert = Alert((b) => b
+      ..id = '123'
+      ..title = 'Hodor'
+      ..workflowState = AlertWorkflowState.unread
+      ..htmlUrl = 'https://instructure.com/api/v1/courses/$courseId/discussion_topics/1234'
+      ..alertType = AlertType.courseAnnouncement);
+
+    expect(alert.getCourseIdForAnnouncement(), courseId);
+  });
+
+  test('assertion fails for not a course announcement alert', () {
+    final alert = Alert((b) => b
+      ..id = '123'
+      ..title = 'Hodor'
+      ..workflowState = AlertWorkflowState.unread
+      ..alertType = AlertType.institutionAnnouncement);
+
+    expect(() {
+      alert.getCourseIdForAnnouncement();
+    }, throwsA(isA<AssertionError>()));
+  });
 }
