@@ -96,7 +96,9 @@ abstract class Alert implements Built<Alert, AlertBuilder> {
     ].contains(alertType);
   }
 
-  String getCourseId() {
+  String getCourseIdForAnnouncement() {
+    assert(alertType == AlertType.courseAnnouncement);
+
     int index1 = htmlUrl.lastIndexOf('/courses/');
     if(index1 != -1) {
       index1 = index1 + '/courses/'.length;

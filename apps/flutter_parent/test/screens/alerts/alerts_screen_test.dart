@@ -18,11 +18,15 @@ import 'package:flutter_parent/models/alert.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/screens/alerts/alerts_interactor.dart';
 import 'package:flutter_parent/screens/alerts/alerts_screen.dart';
+import 'package:flutter_parent/screens/announcements/announcement_details_interactor.dart';
+import 'package:flutter_parent/screens/announcements/announcement_details_screen.dart';
+import 'package:flutter_parent/screens/announcements/announcement_view_state.dart';
 import 'package:flutter_parent/screens/dashboard/alert_notifier.dart';
 import 'package:flutter_parent/utils/common_widgets/badges.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/student_color_set.dart';
+import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
@@ -30,32 +34,44 @@ import 'package:mockito/mockito.dart';
 
 import '../../utils/accessibility_utils.dart';
 import '../../utils/canvas_model_utils.dart';
+import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
 
 void main() {
-  _setupLocator({AlertsInteractor interactor}) {
+  _setupLocator({AlertsInteractor interactor, AnnouncementDetailsInteractor announcementDetailsInteractor}) {
     final _locator = GetIt.instance;
     _locator.reset();
 
     _locator.registerFactory<AlertsInteractor>(() => interactor ?? _MockAlertsInteractor());
-    _locator.registerLazySingleton<AlertCountNotifier>(() => AlertCountNotifier());
+    _locator.registerFactory<AnnouncementDetailsInteractor>(() => announcementDetailsInteractor ?? _MockAnnouncementDetailsInteractor());
+    _locator.registerLazySingleton<AlertCountNotifier>(() => _MockAlertCountNotifier());
+    _locator.registerFactory<QuickNav>(() => QuickNav());
   }
 
-  void _pumpAndTapAlert(WidgetTester tester, AlertType type) async {
-    final alerts = _mockData(type: type);
+  AnnouncementDetailsInteractor _setupAnnouncementInteractor() {
+    final announcementInteractor = _MockAnnouncementDetailsInteractor();
+    final response = AnnouncementViewState(
+        'hodorTitle', 'hodor Subject', 'hodor Message', DateTime.now());
+    when(announcementInteractor.getAnnouncement(any, any, any, any)).thenAnswer((_) => Future.value(response));
+    return announcementInteractor;
+  }
+
+  void _pumpAndTapAlert(WidgetTester tester, Alert alert) async {
+    final alerts = List.of([alert]);
 
     final interactor = _MockAlertsInteractor();
     when(interactor.getAlertsForStudent(any, any)).thenAnswer((_) => Future.value(alerts));
     when(interactor.markAlertRead(alerts.first.id))
         .thenAnswer((_) => Future.value(alerts.first.rebuild((b) => b..workflowState = AlertWorkflowState.read)));
-    _setupLocator(interactor: interactor);
+    _setupLocator(interactor: interactor, announcementDetailsInteractor: _setupAnnouncementInteractor());
 
-    await tester.pumpWidget(_testableWidget());
+    await tester.pumpWidget(_testableWidget(highContrastMode: true));
     await tester.pumpAndSettle();
 
     await tester.tap(find.text(alerts.first.title));
     await tester.pumpAndSettle();
   }
+
 
   group('Loading', () {
     testWidgetsWithAccessibilityChecks('Shows while waiting for future', (tester) async {
@@ -237,39 +253,88 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('Can tap course announcement alert to go to announcement', (tester) async {
-      await _pumpAndTapAlert(tester, AlertType.courseAnnouncement);
+      final alert = Alert((b) => b
+        ..id = '123'
+        ..title = 'Hodor'
+        ..workflowState = AlertWorkflowState.unread
+        ..htmlUrl = 'https://instructure.com/api/v1/courses/1234/discussion_topics/1234'
+        ..alertType = AlertType.courseAnnouncement);
 
-      // TODO: Test that course announcement shows
+      await _pumpAndTapAlert(tester, alert);
+
+      expect(find.byType(AnnouncementDetailScreen), findsOneWidget);
     });
 
     testWidgetsWithAccessibilityChecks('Can tap institution announcement alert to go to announcement', (tester) async {
-      await _pumpAndTapAlert(tester, AlertType.institutionAnnouncement);
+      final alert = Alert((b) => b
+        ..id = '123'
+        ..title = 'Hodor'
+        ..workflowState = AlertWorkflowState.unread
+        ..alertType = AlertType.institutionAnnouncement);
+      await _pumpAndTapAlert(tester, alert);
 
-      // TODO: Test that institution announcement shows
+      expect(find.byType(AnnouncementDetailScreen), findsOneWidget);
     });
 
-    testWidgetsWithAccessibilityChecks('Can tap assignment missing alert to go to announcement', (tester) async {
-      await _pumpAndTapAlert(tester, AlertType.assignmentMissing);
+    testWidgetsWithAccessibilityChecks('Can tap assignment missing alert to go to alert', (tester) async {
+      final alert = Alert((b) => b
+        ..id = '123'
+        ..title = 'Hodor'
+        ..workflowState = AlertWorkflowState.unread
+        ..alertType = AlertType.assignmentMissing);
+      await _pumpAndTapAlert(tester, alert);
 
       // TODO: Test that assignment shows
     });
 
-    testWidgetsWithAccessibilityChecks('Can tap assignment grade high alert to go to announcement', (tester) async {
-      await _pumpAndTapAlert(tester, AlertType.assignmentGradeHigh);
+    testWidgetsWithAccessibilityChecks('Can tap assignment grade high alert to go to alert', (tester) async {
+      final alert = Alert((b) => b
+        ..id = '123'
+        ..title = 'Hodor'
+        ..workflowState = AlertWorkflowState.unread
+        ..alertType = AlertType.assignmentGradeHigh);
+      await _pumpAndTapAlert(tester, alert);
 
       // TODO: Test that assignment shows
     });
 
-    testWidgetsWithAccessibilityChecks('Can tap assignment grade low alert to go to announcement', (tester) async {
-      await _pumpAndTapAlert(tester, AlertType.assignmentGradeLow);
+    testWidgetsWithAccessibilityChecks('Can tap assignment grade low alert to go to alert', (tester) async {
+      final alert = Alert((b) => b
+        ..id = '123'
+        ..title = 'Hodor'
+        ..workflowState = AlertWorkflowState.unread
+        ..alertType = AlertType.assignmentGradeLow);
+      await _pumpAndTapAlert(tester, alert);
+
+      // TODO: Test that assignment shows
+    });
+
+    testWidgetsWithAccessibilityChecks('Can tap course grade high alert to go to alert', (tester) async {
+      final alert = Alert((b) => b
+        ..id = '123'
+        ..title = 'Hodor'
+        ..workflowState = AlertWorkflowState.unread
+        ..alertType = AlertType.courseGradeHigh);
+      await _pumpAndTapAlert(tester, alert);
+
+      // TODO: Test that assignment shows
+    });
+
+    testWidgetsWithAccessibilityChecks('Can tap course grade low alert to go to alert', (tester) async {
+      final alert = Alert((b) => b
+        ..id = '123'
+        ..title = 'Hodor'
+        ..workflowState = AlertWorkflowState.unread
+        ..alertType = AlertType.courseGradeLow);
+      await _pumpAndTapAlert(tester, alert);
 
       // TODO: Test that assignment shows
     });
   });
 }
 
-Widget _testableWidget({User student}) {
-  return TestApp(Scaffold(body: AlertsScreen(student ?? CanvasModelTestUtils.mockUser())));
+Widget _testableWidget({User student, bool highContrastMode = false}) {
+  return TestApp(Scaffold(body: AlertsScreen(student ?? CanvasModelTestUtils.mockUser())), platformConfig: PlatformConfig(initWebview: true), highContrast: highContrastMode,);
 }
 
 List<Alert> _mockData({int size = 1, AlertType type, AlertWorkflowState state = AlertWorkflowState.read}) {
@@ -283,3 +348,5 @@ List<Alert> _mockData({int size = 1, AlertType type, AlertWorkflowState state = 
 }
 
 class _MockAlertsInteractor extends Mock implements AlertsInteractor {}
+class _MockAnnouncementDetailsInteractor extends Mock implements AnnouncementDetailsInteractor {}
+class _MockAlertCountNotifier extends Mock implements AlertCountNotifier {}

@@ -160,7 +160,7 @@ class __AlertsListState extends State<_AlertsList> {
 
   void _routeAlert(Alert alert, int index) async {
     if(alert.alertType == AlertType.courseAnnouncement) {
-      locator<QuickNav>().push(context, AnnouncementDetailScreen(alert.contextId, AnnouncementType.COURSE, alert.getCourseId(), context));
+      locator<QuickNav>().push(context, AnnouncementDetailScreen(alert.contextId, AnnouncementType.COURSE, alert.getCourseIdForAnnouncement(), context));
     }
 
     if(alert.alertType == AlertType.institutionAnnouncement) {
