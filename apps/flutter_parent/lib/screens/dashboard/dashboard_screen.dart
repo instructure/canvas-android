@@ -25,6 +25,7 @@ import 'package:flutter_parent/screens/settings/settings_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/avatar.dart';
 import 'package:flutter_parent/utils/common_widgets/badges.dart';
 import 'package:flutter_parent/utils/common_widgets/dropdown_arrow.dart';
+import 'package:flutter_parent/utils/common_widgets/error_report/error_report_dialog.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/common_widgets/user_name.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
@@ -276,6 +277,7 @@ class DashboardState extends State<DashboardScreen> {
     // Close the drawer, then push the Help screen in
     Navigator.of(context).pop();
     // TODO: Navigate to the help screen
+    ErrorReportDialog.asDialog(context);
 //    locator<QuickNav>().push(context, HelpScreen());
   }
 
