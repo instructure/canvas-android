@@ -36,7 +36,7 @@ void main() {
   }
 
   test('constructing with a course updates the course id', () {
-    final model = CourseDetailsModel.withCourse(studentId, course);
+    final model = CourseDetailsModel.withCourse(studentId, '', course);
 
     expect(model.courseId, courseId);
   });
@@ -45,7 +45,7 @@ void main() {
     test('does not refresh course if it has data', () async {
       final interactor = _MockCourseDetailsInteractor();
       _setupLocator(interactor: interactor);
-      final model = CourseDetailsModel.withCourse(studentId, course);
+      final model = CourseDetailsModel.withCourse(studentId, '', course);
 
       await model.loadData();
 
@@ -58,7 +58,7 @@ void main() {
       final interactor = _MockCourseDetailsInteractor();
       when(interactor.loadCourse(courseId)).thenAnswer((_) => Future.value(expected));
       _setupLocator(interactor: interactor);
-      final model = CourseDetailsModel.withCourse(studentId, course);
+      final model = CourseDetailsModel.withCourse(studentId, '', course);
 
       await model.loadData(refreshCourse: true);
 
@@ -71,7 +71,7 @@ void main() {
       final interactor = _MockCourseDetailsInteractor();
       when(interactor.loadCourse(courseId)).thenAnswer((_) => Future.value(expected));
       _setupLocator(interactor: interactor);
-      final model = CourseDetailsModel(studentId, courseId);
+      final model = CourseDetailsModel(studentId, '', courseId);
 
       await model.loadData();
 
@@ -89,7 +89,7 @@ void main() {
       });
       _setupLocator(interactor: interactor);
 
-      final model = CourseDetailsModel.withCourse(studentId, course);
+      final model = CourseDetailsModel.withCourse(studentId, '', course);
       await model.loadData(refreshAssignmentGroups: true);
       await model.assignmentGroupFuture;
 
@@ -100,7 +100,7 @@ void main() {
       final interactor = _MockCourseDetailsInteractor();
       _setupLocator(interactor: interactor);
 
-      final model = CourseDetailsModel.withCourse(studentId, course);
+      final model = CourseDetailsModel.withCourse(studentId, '', course);
       model.assignmentGroupFuture = Future.value();
       await model.loadData();
 
@@ -111,7 +111,7 @@ void main() {
       final interactor = _MockCourseDetailsInteractor();
       _setupLocator(interactor: interactor);
 
-      final model = CourseDetailsModel.withCourse(studentId, course);
+      final model = CourseDetailsModel.withCourse(studentId, '', course);
       await model.loadData(refreshAssignmentGroups: true);
 
       verify(interactor.loadAssignmentGroups(courseId, studentId)).called(1);
@@ -123,7 +123,7 @@ void main() {
       when(interactor.loadAssignmentGroups(courseId, studentId)).thenAnswer((_) async => expected);
       _setupLocator(interactor: interactor);
 
-      final model = CourseDetailsModel.withCourse(studentId, course);
+      final model = CourseDetailsModel.withCourse(studentId, '', course);
       expect(model.assignmentGroupFuture, null);
       await model.loadData();
 
@@ -147,7 +147,7 @@ void main() {
       _setupLocator(interactor: interactor);
 
       // Use the model
-      final model = CourseDetailsModel.withCourse(studentId, course);
+      final model = CourseDetailsModel.withCourse(studentId, '', course);
       await model.loadData();
 
       // Test the model
@@ -166,7 +166,7 @@ void main() {
       _setupLocator(interactor: interactor);
 
       // Use the model
-      final model = CourseDetailsModel.withCourse(studentId, course);
+      final model = CourseDetailsModel.withCourse(studentId, '', course);
       await model.loadData();
 
       // Test the model

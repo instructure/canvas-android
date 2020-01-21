@@ -19,23 +19,26 @@ import 'package:flutter_parent/screens/courses/details/course_details_model.dart
 import 'package:flutter_parent/screens/courses/details/course_grades_screen.dart';
 import 'package:flutter_parent/screens/courses/details/course_summary_screen.dart';
 import 'package:flutter_parent/screens/courses/details/course_syllabus_screen.dart';
+import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_screen.dart';
 import 'package:flutter_parent/utils/base_model.dart';
 import 'package:flutter_parent/utils/common_widgets/full_screen_scroll_container.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/design/canvas_icons_solid.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
+import 'package:flutter_parent/utils/quick_nav.dart';
+import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:provider/provider.dart';
 
 class CourseDetailsScreen extends StatefulWidget {
   final CourseDetailsModel _model;
 
-  CourseDetailsScreen(String studentId, String courseId, {Key key})
-      : this._model = CourseDetailsModel(studentId, courseId),
+  CourseDetailsScreen(String studentId, String studentName, String courseId, {Key key})
+      : this._model = CourseDetailsModel(studentId, studentName, courseId),
         super(key: key);
 
   // A convenience constructor when we already have the course data, so we don't load something we already have
-  CourseDetailsScreen.withCourse(String studentId, Course course, {Key key})
-      : this._model = CourseDetailsModel.withCourse(studentId, course),
+  CourseDetailsScreen.withCourse(String studentId, String studentName, Course course, {Key key})
+      : this._model = CourseDetailsModel.withCourse(studentId, studentName, course),
         super(key: key);
 
   @override
@@ -114,7 +117,15 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
   }
 
   void _sendMessage() {
-    // TODO: Send a message in this course
-//    QuickNav.push(context, MessagesScreen());
+    String subject;
+    if (CourseDetailsModel.selectedTab == 0) {
+      // Grades
+      subject = L10n(context).gradesSubjectMessage(widget._model.studentName);
+    } else {
+      // TODO: Syllabus
+    }
+
+    Widget screen = CreateConversationScreen.withSubject(widget._model.course, subject);
+    locator.get<QuickNav>().push(context, screen);
   }
 }

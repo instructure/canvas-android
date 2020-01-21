@@ -17,6 +17,7 @@ import 'package:flutter_parent/network/api/assignment_api.dart';
 import 'package:flutter_parent/network/api/auth_api.dart';
 import 'package:flutter_parent/network/api/course_api.dart';
 import 'package:flutter_parent/network/api/enrollments_api.dart';
+import 'package:flutter_parent/network/api/error_report_api.dart';
 import 'package:flutter_parent/network/api/file_upload_api.dart';
 import 'package:flutter_parent/network/api/inbox_api.dart';
 import 'package:flutter_parent/screens/alert_thresholds/alert_thresholds_interactor.dart';
@@ -35,6 +36,7 @@ import 'package:flutter_parent/screens/inbox/reply/conversation_reply_interactor
 import 'package:flutter_parent/screens/manage_students/manage_students_interactor.dart';
 import 'package:flutter_parent/screens/settings/settings_interactor.dart';
 import 'package:flutter_parent/screens/web_login/web_login_interactor.dart';
+import 'package:flutter_parent/utils/common_widgets/error_report/error_report_interactor.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:get_it/get_it.dart';
 
@@ -47,6 +49,7 @@ void setupLocator() {
   locator.registerLazySingleton<AuthApi>(() => AuthApi());
   locator.registerLazySingleton<CourseApi>(() => CourseApi());
   locator.registerLazySingleton<EnrollmentsApi>(() => EnrollmentsApi());
+  locator.registerLazySingleton<ErrorReportApi>(() => ErrorReportApi());
   locator.registerLazySingleton<FileUploadApi>(() => FileUploadApi());
   locator.registerLazySingleton<InboxApi>(() => InboxApi());
 
@@ -62,6 +65,7 @@ void setupLocator() {
   locator.registerFactory<CreateConversationInteractor>(() => CreateConversationInteractor());
   locator.registerFactory<DashboardInteractor>(() => DashboardInteractor());
   locator.registerFactory<DomainSearchInteractor>(() => DomainSearchInteractor());
+  locator.registerFactory<ErrorReportInteractor>(() => ErrorReportInteractor());
   locator.registerFactory<ManageStudentsInteractor>(() => ManageStudentsInteractor());
   locator.registerFactory<SettingsInteractor>(() => SettingsInteractor());
   locator.registerFactory<WebLoginInteractor>(() => WebLoginInteractor());

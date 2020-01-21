@@ -16,6 +16,7 @@ import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
+import 'package:flutter_parent/utils/common_widgets/error_report/error_report_dialog.dart';
 import 'package:flutter_parent/utils/common_widgets/respawn.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
@@ -72,9 +73,7 @@ class CrashScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
                   FlatButton(
-                    onPressed: () {
-                      // TODO: Implement this once we know the best way to let users contact support
-                    },
+                    onPressed: () => ErrorReportDialog.asDialog(context, error: error),
                     child: Text(
                       L10n(context).crashScreenContact,
                       style: Theme.of(context).textTheme.caption.copyWith(fontSize: 16),

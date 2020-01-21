@@ -124,6 +124,7 @@ class _ConversationReplyScreenState extends State<ConversationReplyScreen> {
 
   Widget _appBar(BuildContext context) {
     return AppBar(
+      bottom: ParentTheme.of(context).appBarDivider(shadowInLightMode: false),
       elevation: 0,
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -199,28 +200,32 @@ class _ConversationReplyScreenState extends State<ConversationReplyScreen> {
   }
 
   Widget _attachmentsWidget(BuildContext context) {
-    return Container(
-      height: 104,
-      padding: EdgeInsets.symmetric(vertical: 4),
-      child: ListView.separated(
-        shrinkWrap: true,
-        itemCount: _attachments.length,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        scrollDirection: Axis.horizontal,
-        separatorBuilder: (context, index) => SizedBox(width: 12),
-        itemBuilder: (context, index) {
-          var handler = _attachments[index];
-          return ChangeNotifierProvider<AttachmentHandler>.value(
-            value: handler,
-            child: AttachmentWidget(
-              onDelete: (handler) {
-                setState(() {
-                  _attachments.remove(handler);
-                });
-              },
-            ),
-          );
-        },
+    if (_attachments.isEmpty) return Container();
+    return IgnorePointer(
+      ignoring: _sending,
+      child: Container(
+        height: 104,
+        padding: EdgeInsets.symmetric(vertical: 4),
+        child: ListView.separated(
+          shrinkWrap: true,
+          itemCount: _attachments.length,
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          scrollDirection: Axis.horizontal,
+          separatorBuilder: (context, index) => SizedBox(width: 12),
+          itemBuilder: (context, index) {
+            var handler = _attachments[index];
+            return ChangeNotifierProvider<AttachmentHandler>.value(
+              value: handler,
+              child: AttachmentWidget(
+                onDelete: (handler) {
+                  setState(() {
+                    _attachments.remove(handler);
+                  });
+                },
+              ),
+            );
+          },
+        ),
       ),
     );
   }
@@ -235,7 +240,7 @@ class _ConversationReplyScreenState extends State<ConversationReplyScreen> {
         enabled: !_sending,
         textCapitalization: TextCapitalization.sentences,
         minLines: 4,
-        maxLines: 10,
+        maxLines: null,
         style: Theme.of(context).textTheme.body1,
         decoration: InputDecoration(
           hintText: L10n(context).messageBodyInputHint,
