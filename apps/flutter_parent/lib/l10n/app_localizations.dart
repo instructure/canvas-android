@@ -24,41 +24,41 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
 
   List<Locale> get supportedLocales {
     return const <Locale>[
-      Locale("en", ""), // First so it's our fallback
+      Locale('en', ''), // First so it's our fallback
 
       // Supported languages
-      Locale("ar", ""),
-      Locale("cy", ""),
-      Locale("da", ""),
-      Locale("de", ""),
-      Locale("en", "AU"),
-      Locale("en", "CY"),
-      Locale("en", "GB"),
-      Locale("es", ""),
-      Locale("fi", ""),
-      Locale("fr", ""),
-      Locale("fr", "CA"),
-      Locale("ht", ""),
-      Locale("ja", ""),
-      Locale("mi", ""),
-      Locale("nb", ""),
-      Locale("nl", ""),
-      Locale("pl", ""),
-      Locale("pl", ""),
-      Locale("pl", "BR"),
-      Locale("pl", "PT"),
-      Locale("ru", ""),
-      Locale("sl", ""),
-      Locale("sv", ""),
-      Locale("zh", ""),
-      Locale("zh", "HK"),
+      Locale('ar', ''),
+      Locale('cy', ''),
+      Locale('da', ''),
+      Locale('de', ''),
+      Locale('en', 'AU'),
+      Locale('en', 'CY'),
+      Locale('en', 'GB'),
+      Locale('es', ''),
+      Locale('fi', ''),
+      Locale('fr', ''),
+      Locale('fr', 'CA'),
+      Locale('ht', ''),
+      Locale('ja', ''),
+      Locale('mi', ''),
+      Locale('nb', ''),
+      Locale('nl', ''),
+      Locale('pl', ''),
+      Locale('pl', ''),
+      Locale('pl', 'BR'),
+      Locale('pl', 'PT'),
+      Locale('ru', ''),
+      Locale('sl', ''),
+      Locale('sv', ''),
+      Locale('zh', ''),
+      Locale('zh', 'HK'),
 
       // Custom language packs
-      Locale.fromSubtags(languageCode: "da", scriptCode: "instk12"),
-      Locale.fromSubtags(languageCode: "en", scriptCode: "unimelb", countryCode: "AU"),
-      Locale.fromSubtags(languageCode: "en", scriptCode: "instukhe", countryCode: "GB"),
-      Locale.fromSubtags(languageCode: "nb", scriptCode: "instk12"),
-      Locale.fromSubtags(languageCode: "sv", scriptCode: "instk12"),
+      Locale.fromSubtags(languageCode: 'da', scriptCode: 'instk12'),
+      Locale.fromSubtags(languageCode: 'en', scriptCode: 'unimelb', countryCode: 'AU'),
+      Locale.fromSubtags(languageCode: 'en', scriptCode: 'instukhe', countryCode: 'GB'),
+      Locale.fromSubtags(languageCode: 'nb', scriptCode: 'instk12'),
+      Locale.fromSubtags(languageCode: 'sv', scriptCode: 'instk12'),
     ];
   }
 
@@ -103,7 +103,7 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
     if (supported.contains(locale)) {
       return locale;
     } else {
-      return Locale(locale.languageCode, "");
+      return Locale(locale.languageCode, '');
     }
   }
 }
@@ -173,18 +173,18 @@ class AppLocalizations {
   String get domainSearchInputHint => Intl.message(
         'Enter school name or district…',
         name: 'domainSearchInputHint',
-        desc: "Input hint for the text box on the domain search screen",
+        desc: 'Input hint for the text box on the domain search screen',
       );
 
   String noDomainResults(String query) => Intl.message(
-        "Unable to find schools matching '$query'",
+        'Unable to find schools matching \'$query\'',
         name: 'noDomainResults',
         args: [query],
         desc: 'Message shown to users when the domain search query did not return any results',
       );
 
   String get domainSearchHelpLabel => Intl.message(
-        "How do I find my school or district?",
+        'How do I find my school or district?',
         name: 'domainSearchHelpLabel',
         desc: 'Label for the help button on the domain search screen',
       );
@@ -193,14 +193,14 @@ class AppLocalizations {
         'Canvas Guides',
         name: 'canvasGuides',
         desc:
-            "Proper name for the Canvas Guides. This will be used in the domainSearchHelpBody text and will be highlighted and clickable",
+            'Proper name for the Canvas Guides. This will be used in the domainSearchHelpBody text and will be highlighted and clickable',
       );
 
   String get canvasSupport => Intl.message(
         'Canvas Support',
         name: 'canvasSupport',
         desc:
-            "Proper name for Canvas Support. This will be used in the domainSearchHelpBody text and will be highlighted and clickable",
+            'Proper name for Canvas Support. This will be used in the domainSearchHelpBody text and will be highlighted and clickable',
       );
 
   String domainSearchHelpBody(String canvasGuides, String canvasSupport) => Intl.message(
@@ -248,8 +248,8 @@ class AppLocalizations {
   String get noSubject => Intl.message('No Subject', desc: 'Title used for inbox messages that have no subject');
 
   String get errorFetchingCourses =>
-      Intl.message("Unable to fetch courses. Please check your connection and try again.",
-          desc: "Message shown when an error occured while loading courses");
+      Intl.message('Unable to fetch courses. Please check your connection and try again.',
+          desc: 'Message shown when an error occured while loading courses');
 
   String get messageChooseCourse => Intl.message('Choose a course to message',
       desc: 'Header in the course list shown when the user is choosing which course to associate with a new message');
@@ -275,10 +275,10 @@ class AppLocalizations {
       Intl.message('Are you sure you wish to close this page? Your unsent message will be lost.',
           desc: 'Body text of the dialog shown when the user tries leave with unsaved changes');
 
-  String get newMessageTitle => Intl.message('New message', desc: "Title of the new-message screen");
+  String get newMessageTitle => Intl.message('New message', desc: 'Title of the new-message screen');
 
   String get addAttachment =>
-      Intl.message("Add attachment", desc: 'Tooltip for the add-attachment button in the new-message screen');
+      Intl.message('Add attachment', desc: 'Tooltip for the add-attachment button in the new-message screen');
 
   String get sendMessage =>
       Intl.message('Send message', desc: 'Tooltip for the send-message button in the new-message screen');
@@ -299,7 +299,7 @@ class AppLocalizations {
 
   String plusRecipientCount(int count) => Intl.message(
         '+$count',
-        desc: "Shows the number of recipients that are selected but not displayed on screen.",
+        desc: 'Shows the number of recipients that are selected but not displayed on screen.',
         args: [count],
         examples: const {'count': 5},
       );
@@ -358,7 +358,7 @@ class AppLocalizations {
   String get noCoursesTitle => Intl.message('No Courses', desc: 'Title for having no courses');
 
   String get noCoursesMessage =>
-      Intl.message("Your students’s courses might not be published yet.", desc: 'Message for having no courses');
+      Intl.message('Your students\’s courses might not be published yet.', desc: 'Message for having no courses');
 
   String get noGrade => Intl.message(
         'No Grade',
@@ -428,20 +428,20 @@ class AppLocalizations {
       );
 
   String get noAssignmentsMessage => Intl.message(
-        "It looks like assignments haven't been created in this space yet.",
+        'It looks like assignments haven\'t been created in this space yet.',
         desc: 'Message for no assignments',
       );
 
   String gradeFormatScoreOutOfPointsPossible(String score, String pointsPossible) => Intl.message(
         '${score} / ${pointsPossible}',
-        desc: "Formatted string for a student's score out of the points possible",
+        desc: 'Formatted string for a student score out of the points possible',
         name: 'gradeFormatScoreOutOfPointsPossible',
         args: [score, pointsPossible],
       );
 
   String contentDescriptionScoreOutOfPointsPossible(String score, String pointsPossible) => Intl.message(
         '${score} out of ${pointsPossible} points',
-        desc: "Formatted string for a student's score out of the points possible",
+        desc: 'Formatted string for a student score out of the points possible',
         name: 'contentDescriptionScoreOutOfPointsPossible',
         args: [score, pointsPossible],
       );
@@ -473,7 +473,7 @@ class AppLocalizations {
   String get notAParentTitle => Intl.message('Not a parent?',
       desc: 'Title for the screen that shows when the user is not observing any students');
 
-  String get notAParentSubtitle => Intl.message("We couldn't find any students associated with this account",
+  String get notAParentSubtitle => Intl.message('We couldn\'t find any students associated with this account',
       desc: 'Subtitle for the screen that shows when the user is not observing any students');
 
   String get studentOrTeacherTitle => Intl.message('Are you a student or teacher?',
@@ -580,7 +580,7 @@ class AppLocalizations {
 
   String get enrollmentTypeTA => Intl.message('TA',
       desc:
-          "Label for the Teaching Assistant enrollment type (also known as Teacher's Aid or Education Assistant), reduced to a short acronym/initialism if appropriate.");
+          'Label for the Teaching Assistant enrollment type (also known as Teacher Aid or Education Assistant), reduced to a short acronym/initialism if appropriate.');
 
   String get enrollmentTypeObserver => Intl.message('Observer', desc: 'Label for the Observer enrollment type');
 
@@ -654,12 +654,12 @@ class AppLocalizations {
 
   String get errorSeverityComment => Intl.message('Just a casual question, comment, idea, suggestion…');
 
-  String get errorSeverityNotUrgent => Intl.message("I need some help but it's not urgent.");
+  String get errorSeverityNotUrgent => Intl.message('I need some help but it\'s not urgent.');
 
   String get errorSeverityWorkaroundPossible =>
-      Intl.message("Something's broken but I can work around it to get what I need done.");
+      Intl.message('Something\'s broken but I can work around it to get what I need done.');
 
-  String get errorSeverityBlocking => Intl.message("I can't get things done until I hear back from you.");
+  String get errorSeverityBlocking => Intl.message('I can\'t get things done until I hear back from you.');
 
   String get errorSeverityCritical => Intl.message('EXTREME CRITICAL EMERGENCY!!');
 
@@ -675,9 +675,9 @@ class AppLocalizations {
 
   String get no => Intl.message('No');
 
-  String get retry => Intl.message("Retry");
+  String get retry => Intl.message('Retry');
 
-  String get delete => Intl.message("Delete", desc: 'Label used for general delete/remove actions');
+  String get delete => Intl.message('Delete', desc: 'Label used for general delete/remove actions');
 
   String get done => Intl.message('Done', desc: 'Label for general done/finished actions');
 
@@ -718,7 +718,7 @@ class AppLocalizations {
         '${count}+',
         args: [count],
         name: 'badgeNumberPlus',
-        desc: "Formatted string for when too many items are being notified in a badge, generally something like '99+'",
+        desc: 'Formatted string for when too many items are being notified in a badge, generally something like: 99+',
       );
 
   String get genericNetworkError => Intl.message('Network error');
