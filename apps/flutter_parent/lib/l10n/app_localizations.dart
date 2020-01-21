@@ -742,4 +742,6 @@ class AppLocalizations {
       desc: 'Title text shown for institution level announcements');
 
   String get genericNetworkError => Intl.message('Network error');
+
+  String get underConstruction => Intl.message('This feature is currently under construction');
 }

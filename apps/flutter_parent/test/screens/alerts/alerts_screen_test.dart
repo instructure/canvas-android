@@ -22,6 +22,7 @@ import 'package:flutter_parent/screens/announcements/announcement_details_intera
 import 'package:flutter_parent/screens/announcements/announcement_details_screen.dart';
 import 'package:flutter_parent/screens/announcements/announcement_view_state.dart';
 import 'package:flutter_parent/screens/dashboard/alert_notifier.dart';
+import 'package:flutter_parent/screens/under_construction_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/badges.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
@@ -43,15 +44,15 @@ void main() {
     _locator.reset();
 
     _locator.registerFactory<AlertsInteractor>(() => interactor ?? _MockAlertsInteractor());
-    _locator.registerFactory<AnnouncementDetailsInteractor>(() => announcementDetailsInteractor ?? _MockAnnouncementDetailsInteractor());
+    _locator.registerFactory<AnnouncementDetailsInteractor>(
+        () => announcementDetailsInteractor ?? _MockAnnouncementDetailsInteractor());
     _locator.registerLazySingleton<AlertCountNotifier>(() => _MockAlertCountNotifier());
     _locator.registerFactory<QuickNav>(() => QuickNav());
   }
 
   AnnouncementDetailsInteractor _setupAnnouncementInteractor() {
     final announcementInteractor = _MockAnnouncementDetailsInteractor();
-    final response = AnnouncementViewState(
-        'hodorTitle', 'hodor Subject', 'hodor Message', DateTime.now());
+    final response = AnnouncementViewState('hodorTitle', 'hodor Subject', 'hodor Message', DateTime.now());
     when(announcementInteractor.getAnnouncement(any, any, any, any)).thenAnswer((_) => Future.value(response));
     return announcementInteractor;
   }
@@ -71,7 +72,6 @@ void main() {
     await tester.tap(find.text(alerts.first.title));
     await tester.pumpAndSettle();
   }
-
 
   group('Loading', () {
     testWidgetsWithAccessibilityChecks('Shows while waiting for future', (tester) async {
@@ -276,7 +276,7 @@ void main() {
       expect(find.byType(AnnouncementDetailScreen), findsOneWidget);
     });
 
-    testWidgetsWithAccessibilityChecks('Can tap assignment missing alert to go to alert', (tester) async {
+    testWidgetsWithAccessibilityChecks('Can tap assignment missing alert to show under construction', (tester) async {
       final alert = Alert((b) => b
         ..id = '123'
         ..title = 'Hodor'
@@ -285,9 +285,11 @@ void main() {
       await _pumpAndTapAlert(tester, alert);
 
       // TODO: Test that assignment shows
+      expect(find.byType(UnderConstructionScreen), findsOneWidget);
     });
 
-    testWidgetsWithAccessibilityChecks('Can tap assignment grade high alert to go to alert', (tester) async {
+    testWidgetsWithAccessibilityChecks('Can tap assignment grade high alert to show under construction',
+        (tester) async {
       final alert = Alert((b) => b
         ..id = '123'
         ..title = 'Hodor'
@@ -296,9 +298,10 @@ void main() {
       await _pumpAndTapAlert(tester, alert);
 
       // TODO: Test that assignment shows
+      expect(find.byType(UnderConstructionScreen), findsOneWidget);
     });
 
-    testWidgetsWithAccessibilityChecks('Can tap assignment grade low alert to go to alert', (tester) async {
+    testWidgetsWithAccessibilityChecks('Can tap assignment grade low alert to show under construction', (tester) async {
       final alert = Alert((b) => b
         ..id = '123'
         ..title = 'Hodor'
@@ -307,9 +310,10 @@ void main() {
       await _pumpAndTapAlert(tester, alert);
 
       // TODO: Test that assignment shows
+      expect(find.byType(UnderConstructionScreen), findsOneWidget);
     });
 
-    testWidgetsWithAccessibilityChecks('Can tap course grade high alert to go to alert', (tester) async {
+    testWidgetsWithAccessibilityChecks('Can tap course grade high alert to show under construction', (tester) async {
       final alert = Alert((b) => b
         ..id = '123'
         ..title = 'Hodor'
@@ -318,9 +322,10 @@ void main() {
       await _pumpAndTapAlert(tester, alert);
 
       // TODO: Test that assignment shows
+      expect(find.byType(UnderConstructionScreen), findsOneWidget);
     });
 
-    testWidgetsWithAccessibilityChecks('Can tap course grade low alert to go to alert', (tester) async {
+    testWidgetsWithAccessibilityChecks('Can tap course grade low alert to show under construction', (tester) async {
       final alert = Alert((b) => b
         ..id = '123'
         ..title = 'Hodor'
@@ -329,12 +334,17 @@ void main() {
       await _pumpAndTapAlert(tester, alert);
 
       // TODO: Test that assignment shows
+      expect(find.byType(UnderConstructionScreen), findsOneWidget);
     });
   });
 }
 
 Widget _testableWidget({User student, bool highContrastMode = false}) {
-  return TestApp(Scaffold(body: AlertsScreen(student ?? CanvasModelTestUtils.mockUser())), platformConfig: PlatformConfig(initWebview: true), highContrast: highContrastMode,);
+  return TestApp(
+    Scaffold(body: AlertsScreen(student ?? CanvasModelTestUtils.mockUser())),
+    platformConfig: PlatformConfig(initWebview: true),
+    highContrast: highContrastMode,
+  );
 }
 
 List<Alert> _mockData({int size = 1, AlertType type, AlertWorkflowState state = AlertWorkflowState.read}) {
@@ -348,5 +358,7 @@ List<Alert> _mockData({int size = 1, AlertType type, AlertWorkflowState state = 
 }
 
 class _MockAlertsInteractor extends Mock implements AlertsInteractor {}
+
 class _MockAnnouncementDetailsInteractor extends Mock implements AnnouncementDetailsInteractor {}
+
 class _MockAlertCountNotifier extends Mock implements AlertCountNotifier {}

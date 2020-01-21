@@ -18,6 +18,7 @@ import 'package:flutter_parent/models/assignment.dart';
 import 'package:flutter_parent/models/assignment_group.dart';
 import 'package:flutter_parent/models/course_grade.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_model.dart';
+import 'package:flutter_parent/screens/under_construction_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
@@ -25,6 +26,8 @@ import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/design/student_color_set.dart';
+import 'package:flutter_parent/utils/quick_nav.dart';
+import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -170,7 +173,14 @@ class _CourseGradeHeader extends StatelessWidget {
                 style: Theme.of(context).textTheme.caption.copyWith(color: studentColor),
               ),
             ),
-            onTap: () {}, // TODO: Add grading periods filter to model
+            onTap: () {
+              // TODO: Add grading periods filter to model
+              locator<QuickNav>().push(
+                  context,
+                  UnderConstructionScreen(
+                    showAppBar: true,
+                  ));
+            },
           ),
         ],
       ),

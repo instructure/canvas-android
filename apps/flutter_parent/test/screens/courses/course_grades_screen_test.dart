@@ -24,8 +24,10 @@ import 'package:flutter_parent/models/submission.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_interactor.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_model.dart';
 import 'package:flutter_parent/screens/courses/details/course_grades_screen.dart';
+import 'package:flutter_parent/screens/under_construction_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
+import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mockito/mockito.dart';
@@ -44,6 +46,7 @@ void main() {
     _locator.reset();
 
     _locator.registerFactory<CourseDetailsInteractor>(() => interactor ?? _MockCourseDetailsInteractor());
+    _locator.registerFactory<QuickNav>(() => QuickNav());
   }
 
   testWidgetsWithAccessibilityChecks('Can refresh course and group data', (tester) async {
@@ -227,6 +230,30 @@ void main() {
 
       expect(find.text(grade), findsOneWidget);
     });
+  });
+
+  testWidgetsWithAccessibilityChecks('filter tap shows under construction', (tester) async {
+    final grade = '1';
+    final date = DateTime(2000);
+    final group = _mockAssignmentGroup(assignments: [
+      _mockAssignment(dueAt: date),
+      _mockAssignment(id: '1', pointsPossible: 2.2, submission: _mockSubmission(grade: grade))
+    ]);
+    final model = CourseDetailsModel(studentId, '', courseId);
+    model.assignmentGroupFuture = Future.value([group]);
+    model.course = _mockCourse();
+
+    _setupLocator();
+
+    await tester.pumpWidget(_testableWidget(model, highContrastMode: true));
+    await tester.pump(); // Build the widget
+    await tester.pump(); // Let the future finish
+
+    await tester.tap(find.text(AppLocalizations().filter));
+    await tester.pump(); // Build the widget
+    await tester.pump(); // Let the screen get settled
+
+    expect(find.byType(UnderConstructionScreen), findsOneWidget);
   });
 }
 
