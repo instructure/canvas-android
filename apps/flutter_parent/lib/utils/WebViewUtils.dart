@@ -27,10 +27,9 @@ extension WebViewUtils on WebViewController {
    * See html_wrapper.html for more details
    */
   Future<void> loadHtml(String html, {Map<String, String> headers}) async {
-    String fileText = await rootBundle.loadString('assets/html_wrapper.html');
+    String fileText = await rootBundle.loadString('assets/html/html_wrapper.html');
     html = _applyWorkAroundForDoubleSlashesAsUrlSource(html);
     html = _addProtocolToLinks(html);
-    html = html.replaceAll('users/170000004596934/files/170000000042155/preview?verifier=npXK1CmONpIoSjDDyJxQ4gLfcrod5HYeZMW0r7ca', 'https://mobiledev.instructure.com/users/170000004596934/files/170000000042155/preview?verifier=npXK1CmONpIoSjDDyJxQ4gLfcrod5HYeZMW0r7ca');
     html = fileText.replaceAll('{CANVAS_CONTENT}', html);
     String uri = Uri.dataFromString(html,
         mimeType: 'text/html',
