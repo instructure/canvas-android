@@ -121,6 +121,7 @@ void main() {
     await tester.pumpWidget(TestApp(SettingsScreen()));
     await tester.pumpAndSettle();
 
+    await runAccessibilityTests(tester);
     appearanceText(WidgetTester tester) => tester.widget<Text>(find.text(l10n.appearance.toUpperCase()));
 
     var state = tester.state(find.byType(SettingsScreen));

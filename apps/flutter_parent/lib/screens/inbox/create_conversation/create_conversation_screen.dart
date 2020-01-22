@@ -13,6 +13,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/models/recipient.dart';
@@ -30,6 +32,14 @@ import 'package:provider/provider.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 import 'create_conversation_interactor.dart';
+
+class AlwaysDisabledFocusNode extends FocusNode {
+  @override
+  bool get hasFocus => false;
+
+  @override
+  bool get skipTraversal => false;
+}
 
 class CreateConversationScreen extends StatefulWidget {
   CreateConversationScreen(this._course) : _subjectTemplate = _course.name;
@@ -318,6 +328,9 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
     );
   }
 
+
+  FocusNode recipientRowFocusNode = AlwaysDisabledFocusNode();
+
   Widget _recipientsWidget(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -329,12 +342,15 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
               onTap: () => setState(() => _recipientsExpanded = !_recipientsExpanded),
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(16, 4, 4, 4),
-                child: Wrap(
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  key: CreateConversationScreen.recipientsKey,
-                  spacing: 8,
-                  runSpacing: 0,
-                  children: _recipientChips(context),
+                child: Focus(
+                  focusNode: recipientRowFocusNode,
+                  child: Wrap(
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    key: CreateConversationScreen.recipientsKey,
+                    spacing: 8,
+                    runSpacing: 0,
+                    children: _recipientChips(context)
+                  ),
                 ),
               ),
             ),
@@ -409,39 +425,81 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
     }
   }
 
+  FocusNode subjectFocusNode = FocusNode();
+
   Widget _subjectWidget(BuildContext context) {
     return Semantics(
       label: L10n(context).messageSubjectInputHint,
-      child: TextField(
-        key: CreateConversationScreen.subjectKey,
-        controller: _subjectController,
-        enabled: !_sending,
-        style: Theme.of(context).textTheme.body2,
-        textCapitalization: TextCapitalization.sentences,
-        decoration: InputDecoration(
-          hintText: L10n(context).messageSubjectInputHint,
-          contentPadding: EdgeInsets.all(16),
-          border: InputBorder.none,
+      child: RawKeyboardListener(
+        onKey: (event) {
+          if(event.runtimeType == RawKeyDownEvent) {
+            if(event.data.logicalKey == LogicalKeyboardKey.arrowDown) {
+              print("Down arrow pressed!");
+              FocusScope.of(context).requestFocus(messageFocusNode);
+            }
+            else if(event.data.logicalKey == LogicalKeyboardKey.arrowUp) {
+              print("Up arrow pressed!");
+              FocusScope.of(context).requestFocus(recipientRowFocusNode);
+            }
+          }
+        },
+        focusNode: FocusNode(skipTraversal: true), // Needs to be non-null
+        child: TextField(
+          key: CreateConversationScreen.subjectKey,
+          controller: _subjectController,
+          enabled: !_sending,
+          style: Theme.of(context).textTheme.body2,
+          textCapitalization: TextCapitalization.sentences,
+          decoration: InputDecoration(
+            hintText: L10n(context).messageSubjectInputHint,
+            contentPadding: EdgeInsets.all(16),
+            border: InputBorder.none,
+          ),
+          focusNode: subjectFocusNode,
         ),
       ),
     );
   }
 
+  FocusNode messageFocusNode = FocusNode();
+
+  @override
+  void dispose() {
+    messageFocusNode.dispose();
+    recipientRowFocusNode.dispose();
+    subjectFocusNode.dispose();
+    super.dispose();
+  }
+
   Widget _messageWidget(BuildContext context) {
     return Semantics(
       label: L10n(context).messageBodyInputHint,
-      child: TextField(
-        key: CreateConversationScreen.messageKey,
-        controller: _bodyController,
-        enabled: !_sending,
-        textCapitalization: TextCapitalization.sentences,
-        minLines: 4,
-        maxLines: null,
-        style: Theme.of(context).textTheme.body1,
-        decoration: InputDecoration(
-          hintText: L10n(context).messageBodyInputHint,
-          contentPadding: EdgeInsets.all(16),
-          border: InputBorder.none,
+      child: RawKeyboardListener(
+        onKey: (event) {
+          if(event.runtimeType == RawKeyDownEvent) {
+            if(event.data.logicalKey == LogicalKeyboardKey.arrowUp) {
+              print("Up arrow pressed!");
+              FocusScope.of(context).requestFocus(subjectFocusNode);
+              //subjectFocusNode.requestFocus();
+            }
+          }
+        },
+        focusNode: FocusNode(skipTraversal: true), // needs to be non-null
+
+        child: TextField(
+          key: CreateConversationScreen.messageKey,
+          controller: _bodyController,
+          enabled: !_sending,
+          textCapitalization: TextCapitalization.sentences,
+          minLines: 4,
+          maxLines: null,
+          style: Theme.of(context).textTheme.body1,
+          decoration: InputDecoration(
+            hintText: L10n(context).messageBodyInputHint,
+            contentPadding: EdgeInsets.all(16),
+            border: InputBorder.none,
+          ),
+          focusNode: messageFocusNode,
         ),
       ),
     );
