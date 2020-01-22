@@ -74,7 +74,7 @@ class MessageWidget extends StatelessWidget {
           ),
           SizedBox(height: 16),
           Text(message.body),
-          if (message.attachments?.isNotEmpty == true) _attachmentsWidget(context, message.attachments.toList())
+          _attachmentsWidget(context, message)
         ],
       ),
     );
@@ -125,7 +125,10 @@ class MessageWidget extends StatelessWidget {
     );
   }
 
-  Widget _attachmentsWidget(BuildContext context, List<Attachment> attachments) {
+  Widget _attachmentsWidget(BuildContext context, Message message) {
+    List<Attachment> attachments = message.attachments?.toList() ?? [];
+    if (message.mediaComment != null) attachments.add(message.mediaComment.toAttachment());
+    if (attachments.isEmpty) return Container();
     return Container(
       height: 108,
       padding: EdgeInsets.only(top: 12),

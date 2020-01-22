@@ -14,7 +14,10 @@
 
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
+import 'package:built_value/json_object.dart';
 import 'package:built_value/serializer.dart';
+
+import 'attachment.dart';
 
 part 'media_comment.g.dart';
 
@@ -23,8 +26,6 @@ part 'media_comment.g.dart';
 abstract class MediaComment implements Built<MediaComment, MediaCommentBuilder> {
   @BuiltValueSerializer(serializeNulls: true) // Add this line to get nulls to serialize when we convert to JSON
   static Serializer<MediaComment> get serializer => _$mediaCommentSerializer;
-
-  String get id;
 
   @BuiltValueField(wireName: "media_id")
   @nullable
@@ -47,6 +48,15 @@ abstract class MediaComment implements Built<MediaComment, MediaCommentBuilder> 
 
   MediaComment._();
   factory MediaComment([void Function(MediaCommentBuilder) updates]) = _$MediaComment;
+
+  Attachment toAttachment() {
+    return Attachment((a) => a
+      ..jsonId = JsonObject('media-comment-$mediaId')
+      ..contentType = contentType
+      ..filename = mediaId
+      ..displayName = displayName
+      ..url = url);
+  }
 }
 
 @BuiltValueEnum(wireName: 'media_type')

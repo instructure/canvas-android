@@ -44,8 +44,6 @@ class _$MediaCommentSerializer implements StructuredSerializer<MediaComment> {
   Iterable<Object> serialize(Serializers serializers, MediaComment object,
       {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
-      'id',
-      serializers.serialize(object.id, specifiedType: const FullType(String)),
       'media_type',
       serializers.serialize(object.mediaType,
           specifiedType: const FullType(MediaType)),
@@ -93,10 +91,6 @@ class _$MediaCommentSerializer implements StructuredSerializer<MediaComment> {
       final dynamic value = iterator.current;
       if (value == null) continue;
       switch (key) {
-        case 'id':
-          result.id = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
-          break;
         case 'media_id':
           result.mediaId = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
@@ -143,8 +137,6 @@ class _$MediaTypeSerializer implements PrimitiveSerializer<MediaType> {
 
 class _$MediaComment extends MediaComment {
   @override
-  final String id;
-  @override
   final String mediaId;
   @override
   final String displayName;
@@ -159,16 +151,12 @@ class _$MediaComment extends MediaComment {
       (new MediaCommentBuilder()..update(updates)).build();
 
   _$MediaComment._(
-      {this.id,
-      this.mediaId,
+      {this.mediaId,
       this.displayName,
       this.url,
       this.mediaType,
       this.contentType})
       : super._() {
-    if (id == null) {
-      throw new BuiltValueNullFieldError('MediaComment', 'id');
-    }
     if (mediaType == null) {
       throw new BuiltValueNullFieldError('MediaComment', 'mediaType');
     }
@@ -185,7 +173,6 @@ class _$MediaComment extends MediaComment {
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
     return other is MediaComment &&
-        id == other.id &&
         mediaId == other.mediaId &&
         displayName == other.displayName &&
         url == other.url &&
@@ -197,9 +184,7 @@ class _$MediaComment extends MediaComment {
   int get hashCode {
     return $jf($jc(
         $jc(
-            $jc(
-                $jc($jc($jc(0, id.hashCode), mediaId.hashCode),
-                    displayName.hashCode),
+            $jc($jc($jc(0, mediaId.hashCode), displayName.hashCode),
                 url.hashCode),
             mediaType.hashCode),
         contentType.hashCode));
@@ -208,7 +193,6 @@ class _$MediaComment extends MediaComment {
   @override
   String toString() {
     return (newBuiltValueToStringHelper('MediaComment')
-          ..add('id', id)
           ..add('mediaId', mediaId)
           ..add('displayName', displayName)
           ..add('url', url)
@@ -221,10 +205,6 @@ class _$MediaComment extends MediaComment {
 class MediaCommentBuilder
     implements Builder<MediaComment, MediaCommentBuilder> {
   _$MediaComment _$v;
-
-  String _id;
-  String get id => _$this._id;
-  set id(String id) => _$this._id = id;
 
   String _mediaId;
   String get mediaId => _$this._mediaId;
@@ -250,7 +230,6 @@ class MediaCommentBuilder
 
   MediaCommentBuilder get _$this {
     if (_$v != null) {
-      _id = _$v.id;
       _mediaId = _$v.mediaId;
       _displayName = _$v.displayName;
       _url = _$v.url;
@@ -278,7 +257,6 @@ class MediaCommentBuilder
   _$MediaComment build() {
     final _$result = _$v ??
         new _$MediaComment._(
-            id: id,
             mediaId: mediaId,
             displayName: displayName,
             url: url,
