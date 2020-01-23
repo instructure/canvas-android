@@ -130,7 +130,7 @@ class UsersApiPactTests : ApiPactTestBase() {
     //
     //region grab people from course
     //
-    val peopleCallQuery = "include[]=enrollments&include[]=avatar_url&include[]=user_id&include[]=email&include[]=bio&enrollment_type=student&exclude_inactive=true"
+    val peopleCallQuery = "include[]=enrollments&include[]=avatar_url&include[]=user_id&include[]=email&include[]=bio&exclude_inactive=true&enrollment_type=student"
     val peopleCallPath = "/api/v1/courses/1/users"
     val peopleFieldConfig = PactUserFieldConfig(id = 1, includeEnrollment = true, includeProfileInfo = true)
     val peopleResponseBody = LambdaDsl.newJsonArray() { array ->
