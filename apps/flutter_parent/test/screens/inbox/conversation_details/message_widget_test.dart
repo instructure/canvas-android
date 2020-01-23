@@ -14,10 +14,11 @@
 
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/json_object.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_parent/models/attachment.dart';
 import 'package:flutter_parent/models/basic_user.dart';
 import 'package:flutter_parent/models/conversation.dart';
+import 'package:flutter_parent/models/media_comment.dart';
 import 'package:flutter_parent/models/message.dart';
 import 'package:flutter_parent/screens/inbox/conversation_details/message_widget.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -467,6 +468,42 @@ void main() {
       expect(attachment2, findsOneWidget);
       expect(find.descendant(of: attachment2, matching: find.text(attachments[1].displayName)), findsOneWidget);
       expect(find.descendant(of: attachment2, matching: find.byType(FadeInImage)), findsOneWidget);
+    });
+
+    testWidgetsWithAccessibilityChecks('media comment as attachment', (tester) async {
+      final mediaComment = MediaCommentBuilder()
+        ..mediaId = 'fake-id'
+        ..displayName = 'Display Name'
+        ..url = 'fake url'
+        ..mediaType = MediaType.video
+        ..contentType = 'video/mp4';
+
+      final message = Message((m) => m
+        ..authorId = '123'
+        ..createdAt = DateTime(2020, 12, 25, 8, 34, 0, 0, 0)
+        ..body = ''
+        ..mediaComment = mediaComment
+        ..participatingUserIds = ListBuilder(['123']));
+
+      final conversation = Conversation((c) => c
+        ..messages = ListBuilder([message])
+        ..participants = ListBuilder([
+          BasicUser((b) => b
+            ..id = '123'
+            ..name = 'Myself'),
+        ]));
+
+      await tester.pumpWidget(
+        TestApp(
+          MessageWidget(conversation: conversation, message: message, currentUserId: currentUserId),
+          highContrast: true,
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      var attachment1 = find.byKey(Key('attachment-media-comment-fake-id'));
+      expect(attachment1, findsOneWidget);
+      expect(find.descendant(of: attachment1, matching: find.text(mediaComment.displayName)), findsOneWidget);
     });
   });
 

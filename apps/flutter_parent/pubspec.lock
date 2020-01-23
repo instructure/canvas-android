@@ -15,6 +15,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.1"
+  android_intent:
+    dependency: "direct main"
+    description:
+      name: android_intent
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.5"
   archive:
     dependency: transitive
     description:
@@ -127,6 +134,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.2"
+  chewie:
+    dependency: "direct main"
+    description:
+      name: chewie
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.9.8+1"
   code_builder:
     dependency: transitive
     description:
@@ -272,6 +286,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
+  flutter_downloader:
+    dependency: "direct main"
+    description:
+      name: flutter_downloader
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.4.0"
   flutter_driver:
     dependency: "direct dev"
     description: flutter
@@ -459,7 +480,7 @@ packages:
     source: hosted
     version: "1.1.8"
   mime:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: mime
       url: "https://pub.dartlang.org"
@@ -500,6 +521,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.4.8"
+  open_iconic_flutter:
+    dependency: transitive
+    description:
+      name: open_iconic_flutter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.0"
   package_config:
     dependency: transitive
     description:
@@ -543,7 +571,7 @@ packages:
     source: hosted
     version: "0.1.4"
   path_provider:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: path_provider
       url: "https://pub.dartlang.org"
@@ -556,6 +584,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.0+1"
+  permission_handler:
+    dependency: "direct main"
+    description:
+      name: permission_handler
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.1.0"
   petitparser:
     dependency: transitive
     description:
@@ -563,6 +598,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.4.0"
+  photo_view:
+    dependency: "direct main"
+    description:
+      name: photo_view
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.9.1"
   platform:
     dependency: transitive
     description:
@@ -619,6 +661,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.5"
+  screen:
+    dependency: transitive
+    description:
+      name: screen
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.5"
   shared_preferences:
     dependency: "direct main"
     description:
@@ -813,6 +862,27 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.8"
+  video_player:
+    dependency: "direct main"
+    description:
+      name: video_player
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.10.5+1"
+  video_player_platform_interface:
+    dependency: transitive
+    description:
+      name: video_player_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.4"
+  video_player_web:
+    dependency: transitive
+    description:
+      name: video_player_web
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.1+1"
   vm_service:
     dependency: transitive
     description:

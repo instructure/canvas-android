@@ -17,7 +17,6 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/screens/settings/settings_interactor.dart';
 import 'package:flutter_parent/screens/settings/settings_screen.dart';
-import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -121,18 +120,14 @@ void main() {
     await tester.pumpWidget(TestApp(SettingsScreen()));
     await tester.pumpAndSettle();
 
-    appearanceText(WidgetTester tester) => tester.widget<Text>(find.text(l10n.appearance.toUpperCase()));
-
     var state = tester.state(find.byType(SettingsScreen));
     expect(ParentTheme.of(state.context).isHC, isFalse);
-    expect(appearanceText(tester).style.color, ParentColors.ash);
 
     await tester.tap(hcToggle());
     await tester.pumpAndSettle();
 
     state = tester.state(find.byType(SettingsScreen));
     expect(ParentTheme.of(state.context).isHC, isTrue);
-    expect(appearanceText(tester).style.color, ParentColors.licorice);
   });
 }
 

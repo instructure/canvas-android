@@ -38,6 +38,8 @@ class TestApp extends StatefulWidget {
     this.highContrast = false,
   });
 
+  static final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
+
   final Widget home;
   final PlatformConfig platformConfig;
   final List<NavigatorObserver> navigatorObservers;
@@ -70,6 +72,7 @@ class _TestAppState extends State<TestApp> {
         builder: (context, themeData) => MaterialApp(
           title: 'Canvas Parent',
           locale: _locale,
+          navigatorKey: TestApp.navigatorKey,
           navigatorObservers: widget.navigatorObservers,
           localizationsDelegates: const [
             AppLocalizations.delegate,

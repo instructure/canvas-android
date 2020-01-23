@@ -64,7 +64,7 @@ open class SubmissionDetailsPage : BasePage(R.id.submissionDetails) {
     fun addFirstAnnotationComment(text: String) {
         waitForViewWithId(R.id.commentsButton).click()
         waitForViewWithId(R.id.freeTextInput).replaceText(text)
-        onViewWithText("OK").click()
+        onView(containsTextCaseInsensitive("OK")).click()
     }
 
     fun openComments() {

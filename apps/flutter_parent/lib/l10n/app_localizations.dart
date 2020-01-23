@@ -353,6 +353,34 @@ class AppLocalizations {
     );
   }
 
+  /// Viewing attachments
+
+  String get download => Intl.message('Download', desc: 'Label for the button that will begin downloading a file');
+
+  String get openFileExternally => Intl.message('Open with another app',
+      desc: 'Label for the button that will allow users to open a file with another app');
+
+  String get noApplicationsToHandleFile => Intl.message('There are no installed applications that can open this file');
+
+  String get unsupportedFileTitle => Intl.message('Unsupported File');
+
+  String get unsupportedFileMessage => Intl.message('This file is unsupported and can’t be viewed through the app');
+
+  String get errorPlayingMedia => Intl.message(
+        'Unable to play this media file',
+        desc: 'Message shown when audio or video media could not be played',
+      );
+
+  String get errorLoadingImage => Intl.message(
+        'Unable to load this image',
+        desc: 'Message shown when an image file could not be loaded or displayed',
+      );
+
+  String get errorLoadingFile => Intl.message(
+        'There was an error loading this file',
+        desc: 'Message shown when a file could not be loaded or displayed',
+      );
+
   /// Courses Screen
 
   String get noCoursesTitle => Intl.message('No Courses', desc: 'Title for having no courses');

@@ -12,8 +12,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
+import 'package:flutter/widgets.dart';
 import 'package:tuple/tuple.dart';
 
 /// Utility class for applying styles to substrings ('slices') within a body of text.
