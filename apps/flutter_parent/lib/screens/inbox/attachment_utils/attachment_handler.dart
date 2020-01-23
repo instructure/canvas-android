@@ -16,7 +16,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_parent/models/attachment.dart';
-import 'package:flutter_parent/network/api/file_upload_api.dart';
+import 'package:flutter_parent/network/api/file_api.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:path/path.dart';
 
@@ -50,7 +50,7 @@ class AttachmentHandler with ChangeNotifier {
 
     try {
       // Upload the file and monitor progress
-      attachment = await locator<FileUploadApi>().uploadConversationFile(_file, (current, total) {
+      attachment = await locator<FileApi>().uploadConversationFile(_file, (current, total) {
         progress = total == -1 ? null : current.toDouble() / total;
         notifyListeners();
       });

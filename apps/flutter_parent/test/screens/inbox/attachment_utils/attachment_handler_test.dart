@@ -17,7 +17,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_parent/models/attachment.dart';
-import 'package:flutter_parent/network/api/file_upload_api.dart';
+import 'package:flutter_parent/network/api/file_api.dart';
 import 'package:flutter_parent/screens/inbox/attachment_utils/attachment_handler.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -52,7 +52,7 @@ void main() {
 
   test('Notifies listeners during upload', () async {
     final api = _MockFileUploadApi();
-    setupTestLocator((locator) => locator.registerLazySingleton<FileUploadApi>(() => api));
+    setupTestLocator((locator) => locator.registerLazySingleton<FileApi>(() => api));
 
     final completer = Completer<Attachment>();
 
@@ -94,7 +94,7 @@ void main() {
 
   test('Sets failed state when API fails', () async {
     final api = _MockFileUploadApi();
-    setupTestLocator((locator) => locator.registerLazySingleton<FileUploadApi>(() => api));
+    setupTestLocator((locator) => locator.registerLazySingleton<FileApi>(() => api));
 
     when(api.uploadConversationFile(any, any)).thenAnswer((_) => Future.error("Error!"));
 
@@ -105,7 +105,7 @@ void main() {
 
   test('performUpload does nothing if stage is uploading or finished', () {
     final api = _MockFileUploadApi();
-    setupTestLocator((locator) => locator.registerLazySingleton<FileUploadApi>(() => api));
+    setupTestLocator((locator) => locator.registerLazySingleton<FileApi>(() => api));
 
     var handler = AttachmentHandler(File(''))
       ..stage = AttachmentUploadStage.UPLOADING
@@ -156,4 +156,4 @@ void main() {
   });
 }
 
-class _MockFileUploadApi extends Mock implements FileUploadApi {}
+class _MockFileUploadApi extends Mock implements FileApi {}

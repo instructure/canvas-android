@@ -14,7 +14,7 @@
 
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/json_object.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_parent/models/attachment.dart';
 import 'package:flutter_parent/models/basic_user.dart';
 import 'package:flutter_parent/models/conversation.dart';
