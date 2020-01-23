@@ -15,6 +15,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_parent/models/attachment.dart';
+import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/common_widgets/view_attachment/viewers/image_attachment_viewer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -35,7 +36,18 @@ void main() {
     await tester.pumpWidget(TestApp(Material(child: ImageAttachmentViewer(attachment))));
     await tester.pump();
 
-    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    expect(find.byType(LoadingIndicator), findsOneWidget);
+  });
+
+  testWidgetsWithAccessibilityChecks('displays loading indicator for svgs', (tester) async {
+    var attachment = Attachment((a) => a
+      ..contentType = 'image/svg'
+      ..url = 'https://fake.url.com/fake-image.svg');
+
+    await tester.pumpWidget(TestApp(Material(child: ImageAttachmentViewer(attachment))));
+    await tester.pump();
+
+    expect(find.byType(LoadingIndicator), findsOneWidget);
   });
 
   testWidgetsWithAccessibilityChecks('displays image', (tester) async {

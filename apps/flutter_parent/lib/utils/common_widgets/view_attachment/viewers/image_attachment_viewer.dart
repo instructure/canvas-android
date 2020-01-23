@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/attachment.dart';
 import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
+import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:photo_view/photo_view.dart';
 
@@ -34,7 +35,7 @@ class ImageAttachmentViewer extends StatelessWidget {
         backgroundDecoration: backgroundDecoration,
         child: SvgPicture.network(
           attachment.url,
-          placeholderBuilder: (context) => Center(child: CircularProgressIndicator()),
+          placeholderBuilder: (context) => LoadingIndicator(),
         ),
         minScale: minScale,
       );
@@ -44,6 +45,7 @@ class ImageAttachmentViewer extends StatelessWidget {
       backgroundDecoration: backgroundDecoration,
       imageProvider: NetworkImage(attachment.url),
       minScale: minScale,
+      loadingChild: LoadingIndicator(),
       loadFailedChild: EmptyPandaWidget(
         svgPath: 'assets/svg/panda-not-supported.svg',
         title: L10n(context).errorLoadingImage,
