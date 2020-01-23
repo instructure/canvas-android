@@ -18,7 +18,7 @@ import 'package:flutter_parent/utils/design/canvas_icons.dart';
 
 extension AttachmentIcons on Attachment {
   IconData getIcon() {
-    String type = inferContentType();
+    String type = inferContentType() ?? '';
 
     if (type.startsWith('video')) {
       return CanvasIcons.video;
