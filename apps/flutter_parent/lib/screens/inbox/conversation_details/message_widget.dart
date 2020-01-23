@@ -18,9 +18,9 @@ import 'package:flutter_parent/models/attachment.dart';
 import 'package:flutter_parent/models/basic_user.dart';
 import 'package:flutter_parent/models/conversation.dart';
 import 'package:flutter_parent/models/message.dart';
+import 'package:flutter_parent/screens/inbox/attachment_utils/attachment_extensions.dart';
 import 'package:flutter_parent/utils/common_widgets/avatar.dart';
 import 'package:flutter_parent/utils/common_widgets/user_name.dart';
-import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/style_slicer.dart';
@@ -162,7 +162,7 @@ class MessageWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
-                    CanvasIcons.document,
+                    attachment.getIcon(),
                     color: Theme.of(context).accentColor,
                   ),
                   Padding(
