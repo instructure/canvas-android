@@ -18,11 +18,11 @@ package com.instructure.teacher.ui
 import com.instructure.dataseeding.model.AssignmentListApiModel
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.dataseeding.model.CourseApiModel
+import com.instructure.espresso.ditto.Ditto
 import com.instructure.teacher.ui.utils.TeacherTest
 import com.instructure.teacher.ui.utils.seedAssignments
 import com.instructure.teacher.ui.utils.seedData
 import com.instructure.teacher.ui.utils.tokenLogin
-import com.instructure.espresso.ditto.Ditto
 import org.junit.Test
 
 class StudentContextPageTest : TeacherTest() {
