@@ -114,6 +114,14 @@ abstract class Submission implements Built<Submission, SubmissionBuilder> {
   @BuiltValueField(wireName: "entered_grade")
   String get enteredGrade;
 
+  @nullable
+  @BuiltValueField(wireName: "posted_at")
+  DateTime get postedAt;
+
+  bool isGraded() {
+    return grade != null && workflowState != 'pending_review' && postedAt != null;
+  }
+
   static void _initializeBuilder(SubmissionBuilder b) => b
     ..id = ''
     ..score = 0.0

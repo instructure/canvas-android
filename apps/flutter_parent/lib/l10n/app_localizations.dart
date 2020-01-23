@@ -420,6 +420,11 @@ class AppLocalizations {
         desc: 'Label for the total grade in the course',
       );
 
+  String get assignmentGradedLabel => Intl.message(
+        'Graded',
+        desc: 'Label for assignments that have been graded',
+      );
+
   String get assignmentSubmittedLabel => Intl.message(
         'Submitted',
         desc: 'Label for assignments that have been submitted',
@@ -486,6 +491,50 @@ class AppLocalizations {
         desc: 'The subject line for a message to a teacher regarding a student\'s grades',
         name: 'gradesSubjectMessage',
         args: [studentName],
+      );
+
+  /// Assignment Details Screen
+
+  String get assignmentDetailsTitle => Intl.message('Assignment Details');
+
+  String assignmentTotalPoints(String points) => Intl.message('$points pts',
+      name: 'assignmentTotalPoints', desc: 'Label used for the total points the assignment is worth');
+
+  String assignmentTotalPointsAccessible(String points) => Intl.message('$points points',
+      name: 'assignmentTotalPointsAccessible',
+      desc: 'Screenr eader label used for the total points the assignment is worth');
+
+  String get assignmentDueLabel => Intl.message('Due');
+
+  String get assignmentLockLabel => Intl.message('Locked');
+
+  String assignmentLockedUntil(String date) => Intl.message('This assignment is locked until $date');
+
+  String assignmentLockedAt(String date) => Intl.message('This assignment was locked $date',
+      name: 'assignmentLockedAt', args: [date], desc: 'The description for when an assignment was locked.');
+
+  String get assignmentRemindMeLabel => Intl.message('Remind Me', desc: 'Label for the row to set reminders');
+
+  String get assignmentRemindMeSwitch =>
+      Intl.message('Set reminder switch', desc: 'Label for the switch to set a reminder');
+
+  String get assignmentRemindMeDescription =>
+      Intl.message('Set a date and time to be notified of this specific assignment.',
+          desc: 'Description for row to set reminders');
+
+  String get assignmentRemindMeSet =>
+      Intl.message('You will be notified about this assignment on…', desc: 'Description for when a reminder is set');
+
+  String get assignmentDescriptionLabel => Intl.message('Description');
+
+  String get assignmentInstructionsLabel => Intl.message('Instructions');
+
+  String get assignmentNoDescriptionBody =>
+      Intl.message('No description', desc: 'Message used when the assignment has no description');
+
+  String get assignmentMessageHint => Intl.message(
+        'Send a message about this assignment',
+        desc: 'Accessibility hint for the assignment messaage floating action button',
       );
 
   /// Web Login Screen
@@ -766,8 +815,8 @@ class AppLocalizations {
   String get errorLoadingAnnouncement => Intl.message('There was an error loading this announcement',
       desc: 'Message shown when an announcement detail screen fails to load');
 
-  String get institutionAnnouncementTitle => Intl.message('Institution Announcement',
-      desc: 'Title text shown for institution level announcements');
+  String get institutionAnnouncementTitle =>
+      Intl.message('Institution Announcement', desc: 'Title text shown for institution level announcements');
 
   String get genericNetworkError => Intl.message('Network error');
 }

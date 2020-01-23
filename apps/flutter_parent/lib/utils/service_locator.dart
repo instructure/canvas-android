@@ -24,6 +24,7 @@ import 'package:flutter_parent/network/api/inbox_api.dart';
 import 'package:flutter_parent/screens/alert_thresholds/alert_thresholds_interactor.dart';
 import 'package:flutter_parent/screens/alerts/alerts_interactor.dart';
 import 'package:flutter_parent/screens/announcements/announcement_details_interactor.dart';
+import 'package:flutter_parent/screens/assignments/assignment_details_interactor.dart';
 import 'package:flutter_parent/screens/courses/courses_interactor.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_interactor.dart';
 import 'package:flutter_parent/screens/dashboard/alert_notifier.dart';
@@ -69,6 +70,7 @@ void setupLocator() {
   locator.registerFactory<AlertThresholdsInteractor>(() => AlertThresholdsInteractor());
   locator.registerFactory<AnnouncementDetailsInteractor>(() => AnnouncementDetailsInteractor());
   locator.registerFactory<AttachmentFetcherInteractor>(() => AttachmentFetcherInteractor());
+  locator.registerFactory<AssignmentDetailsInteractor>(() => AssignmentDetailsInteractor());
   locator.registerFactory<AttachmentPickerInteractor>(() => AttachmentPickerInteractor());
   locator.registerFactory<AudioVideoAttachmentViewerInteractor>(() => AudioVideoAttachmentViewerInteractor());
   locator.registerFactory<ConversationDetailsInteractor>(() => ConversationDetailsInteractor());

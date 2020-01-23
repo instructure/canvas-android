@@ -57,14 +57,15 @@ class AssignmentApi {
     return fetchFirstPage(canvasDio().get('courses/$courseId/assignments', queryParameters: params));
   }
 
-  Future<Assignment> getAssignment(int courseId, int assignmentId) async {
+  Future<Assignment> getAssignment(String courseId, String assignmentId, {bool forceRefresh = false}) async {
     var params = {
-      'include': ['overrides', 'rubric_assessment', 'submission'],
+      'include': ['overrides', 'rubric_assessment', 'submission', 'observed_users'],
       'all_dates': 'true',
       'override_assignment_dates': 'true',
       'needs_grading_count_by_section': 'true',
     };
-    return fetch(canvasDio().get('courses/$courseId/assignments/$assignmentId', queryParameters: params));
+    return fetch(canvasDio(forceRefresh: forceRefresh)
+        .get('courses/$courseId/assignments/$assignmentId', queryParameters: params));
   }
 
   // TODO: Remove once LA-274 is implemented, and submissions are given with assignment groups (for observers)

@@ -138,9 +138,12 @@ abstract class Assignment implements Built<Assignment, AssignmentBuilder> {
     ..anonymousGrading = false
     ..isStudioEnabled = false;
 
+  bool isSubmittable() =>
+      submissionTypes?.every((type) => type == SubmissionTypes.onPaper || type == SubmissionTypes.none) != true;
+
   SubmissionStatus getStatus({String studentId}) {
     final submission = this.submission(studentId);
-    if (submissionTypes?.every((type) => type == SubmissionTypes.onPaper || type == SubmissionTypes.none) == true) {
+    if (!isSubmittable()) {
       return SubmissionStatus.NONE;
     } else if (submission?.isLate == true) {
       return SubmissionStatus.LATE;
@@ -157,6 +160,9 @@ abstract class Assignment implements Built<Assignment, AssignmentBuilder> {
   bool _isMissingSubmission(String studentId) {
     final submission = this.submission(studentId);
     if (submission?.missing == true) return true;
+
+    // Don't mark LTI assignments as missing when overdue as they usually won't have a real submission for it
+    if (submissionTypes?.contains(SubmissionTypes.externalTool) == true) return false;
 
     final isPastDue = dueAt?.isBefore(DateTime.now()) == true;
     return isPastDue && (submission == null || (submission.attempt == 0 && submission.grade == null));

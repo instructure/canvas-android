@@ -20,6 +20,58 @@ import 'package:test/test.dart';
 void main() {
   const String studentId = '1337';
 
+  group('isSubmittable', () {
+    test('returns true if submission types contain discussion_topic', () {
+      final assignment = _mockAssignment(types: [SubmissionTypes.onPaper, SubmissionTypes.discussionTopic]);
+      expect(assignment.isSubmittable(), true);
+    });
+
+    test('returns true if submission types contain online_quiz', () {
+      final assignment = _mockAssignment(types: [SubmissionTypes.onPaper, SubmissionTypes.onlineQuiz]);
+      expect(assignment.isSubmittable(), true);
+    });
+
+    test('returns true if submission types contain external_tool', () {
+      final assignment = _mockAssignment(types: [SubmissionTypes.onPaper, SubmissionTypes.externalTool]);
+      expect(assignment.isSubmittable(), true);
+    });
+
+    test('returns true if submission types contain online_text_entry', () {
+      final assignment = _mockAssignment(types: [SubmissionTypes.onPaper, SubmissionTypes.onlineTextEntry]);
+      expect(assignment.isSubmittable(), true);
+    });
+
+    test('returns true if submission types contain online_url', () {
+      final assignment = _mockAssignment(types: [SubmissionTypes.onPaper, SubmissionTypes.onlineUrl]);
+      expect(assignment.isSubmittable(), true);
+    });
+
+    test('returns true if submission types contain online_upload', () {
+      final assignment = _mockAssignment(types: [SubmissionTypes.onPaper, SubmissionTypes.onlineUpload]);
+      expect(assignment.isSubmittable(), true);
+    });
+
+    test('returns true if submission types contain media_recording', () {
+      final assignment = _mockAssignment(types: [SubmissionTypes.onPaper, SubmissionTypes.mediaRecording]);
+      expect(assignment.isSubmittable(), true);
+    });
+
+    test('returns false if submission types contain only onPaper', () {
+      final assignment = _mockAssignment(types: [SubmissionTypes.onPaper]);
+      expect(assignment.isSubmittable(), false);
+    });
+
+    test('returns false if submission types contain only none', () {
+      final assignment = _mockAssignment(types: [SubmissionTypes.none]);
+      expect(assignment.isSubmittable(), false);
+    });
+
+    test('returns false if submission types contain only non-submittable types', () {
+      final assignment = _mockAssignment(types: [SubmissionTypes.none, SubmissionTypes.onPaper]);
+      expect(assignment.isSubmittable(), false);
+    });
+  });
+
   group('getStatus', () {
     test('returns NONE for none submission type', () {
       final assignment = _mockAssignment(types: [SubmissionTypes.none]);
@@ -56,6 +108,14 @@ void main() {
       final assignment = _mockAssignment(dueAt: past, submission: submission);
 
       expect(assignment.getStatus(studentId: studentId), SubmissionStatus.MISSING);
+    });
+
+    test('returns NOT_SUBMITTED for a missing submission with type external_tool', () {
+      final past = DateTime.now().subtract(Duration(seconds: 1));
+      final assignment = _mockAssignment(dueAt: past, submission: null)
+          .rebuild((b) => b..submissionTypes = BuiltList.of([SubmissionTypes.externalTool]).toBuilder());
+
+      expect(assignment.getStatus(), SubmissionStatus.NOT_SUBMITTED);
     });
 
     test('returns NOT_SUBMITTED for a submission with no submitted at time', () {
