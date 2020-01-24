@@ -243,7 +243,12 @@ void main() {
 
   testWidgetsWithAccessibilityChecks('shows lock info with module name', (tester) async {
     final moduleName = 'Locked module';
-    final lockInfo = LockInfo((b) => b..contextModule = LockedModule((m) => m..name = moduleName).toBuilder());
+    final lockInfo = LockInfo((b) => b
+      ..contextModule = LockedModule((m) => m
+        ..id = ''
+        ..contextId = ''
+        ..isRequireSequentialProgress = false
+        ..name = moduleName).toBuilder());
     when(interactor.loadAssignmentDetails(any, courseId, assignmentId, studentId)).thenAnswer(
         (_) async => AssignmentDetails(assignment: assignment.rebuild((b) => b..lockInfo = lockInfo.toBuilder())));
 
