@@ -80,6 +80,11 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
 
   CreateConversationInteractor _interactor = locator<CreateConversationInteractor>();
 
+  // Focus nodes to aid us in supporting dpad navigation through TextFields.
+  FocusScopeNode subjectFocusScopeNode = FocusScopeNode();
+  FocusNode messageFocusNode = FocusNode();
+  FocusScopeNode messageFocusScopeNode = FocusScopeNode();
+
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   bool _canSend() =>
@@ -94,6 +99,15 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
     _setupTextControllers();
     _loadRecipients();
     super.initState();
+  }
+
+  // Make sure that we dispose of our focus-related nodes when we dispose this widget.
+  @override
+  void dispose() {
+    messageFocusNode.dispose();
+    messageFocusScopeNode.dispose();
+    subjectFocusScopeNode.dispose();
+    super.dispose();
   }
 
   _setupTextControllers() {
@@ -328,9 +342,6 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
     );
   }
 
-
-  FocusNode recipientRowFocusNode = AlwaysDisabledFocusNode();
-
   Widget _recipientsWidget(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -342,15 +353,12 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
               onTap: () => setState(() => _recipientsExpanded = !_recipientsExpanded),
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(16, 4, 4, 4),
-                child: Focus(
-                  focusNode: recipientRowFocusNode,
-                  child: Wrap(
-                    crossAxisAlignment: WrapCrossAlignment.center,
-                    key: CreateConversationScreen.recipientsKey,
-                    spacing: 8,
-                    runSpacing: 0,
-                    children: _recipientChips(context)
-                  ),
+                child: Wrap(
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  key: CreateConversationScreen.recipientsKey,
+                  spacing: 8,
+                  runSpacing: 0,
+                  children: _recipientChips(context),
                 ),
               ),
             ),
@@ -425,25 +433,28 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
     }
   }
 
-  FocusNode subjectFocusNode = FocusNode();
-
   Widget _subjectWidget(BuildContext context) {
     return Semantics(
       label: L10n(context).messageSubjectInputHint,
-      child: RawKeyboardListener(
-        onKey: (event) {
+      child: FocusScope(
+        node: subjectFocusScopeNode,
+        onKey: (node,event) {
           if(event.runtimeType == RawKeyDownEvent) {
             if(event.data.logicalKey == LogicalKeyboardKey.arrowDown) {
-              print("Down arrow pressed!");
+              //print("Down arrow pressed!");
+              // Simply calling nextFocus() will not work if the message field is unpopulated.
+              // We need to transfer focus to a FocusNode that we added to the message area.
               FocusScope.of(context).requestFocus(messageFocusNode);
+              return true; // Key handled
             }
             else if(event.data.logicalKey == LogicalKeyboardKey.arrowUp) {
-              print("Up arrow pressed!");
-              FocusScope.of(context).requestFocus(recipientRowFocusNode);
+              //print("Up arrow pressed!");
+              FocusScope.of(context).previousFocus();
+              return true; // Key handled
             }
           }
+          return false; // Key not handled
         },
-        focusNode: FocusNode(skipTraversal: true), // Needs to be non-null
         child: TextField(
           key: CreateConversationScreen.subjectKey,
           controller: _subjectController,
@@ -455,36 +466,27 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
             contentPadding: EdgeInsets.all(16),
             border: InputBorder.none,
           ),
-          focusNode: subjectFocusNode,
         ),
       ),
     );
   }
 
-  FocusNode messageFocusNode = FocusNode();
-
-  @override
-  void dispose() {
-    messageFocusNode.dispose();
-    recipientRowFocusNode.dispose();
-    subjectFocusNode.dispose();
-    super.dispose();
-  }
-
   Widget _messageWidget(BuildContext context) {
     return Semantics(
       label: L10n(context).messageBodyInputHint,
-      child: RawKeyboardListener(
-        onKey: (event) {
+      child: FocusScope(
+        onKey: (node,event) {
           if(event.runtimeType == RawKeyDownEvent) {
             if(event.data.logicalKey == LogicalKeyboardKey.arrowUp) {
-              print("Up arrow pressed!");
-              FocusScope.of(context).requestFocus(subjectFocusNode);
-              //subjectFocusNode.requestFocus();
+              //print("Up arrow pressed!");
+              FocusScope.of(context).previousFocus();
+              return true; // Key handled
             }
           }
+
+          return false; // Key not handled
         },
-        focusNode: FocusNode(skipTraversal: true), // needs to be non-null
+        node: messageFocusScopeNode,
 
         child: TextField(
           key: CreateConversationScreen.messageKey,
