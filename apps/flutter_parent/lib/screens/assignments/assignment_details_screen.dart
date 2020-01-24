@@ -97,10 +97,8 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
 
   Widget _fab() => FloatingActionButton(
         onPressed: _sendMessage,
-        child: Semantics(
-          label: L10n(context).assignmentMessageHint,
-          child: Padding(padding: const EdgeInsets.only(left: 4, top: 4), child: Icon(CanvasIconsSolid.comment)),
-        ),
+        tooltip: L10n(context).assignmentMessageHint,
+        child: Padding(padding: const EdgeInsets.only(left: 4, top: 4), child: Icon(CanvasIconsSolid.comment)),
       );
 
   Widget _body(AsyncSnapshot<AssignmentDetails> snapshot) {

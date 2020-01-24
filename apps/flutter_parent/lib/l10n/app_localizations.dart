@@ -495,20 +495,24 @@ class AppLocalizations {
 
   /// Assignment Details Screen
 
-  String get assignmentDetailsTitle => Intl.message('Assignment Details');
+  String get assignmentDetailsTitle =>
+      Intl.message('Assignment Details', desc: 'Title for the page that shows details for an assignment');
 
   String assignmentTotalPoints(String points) => Intl.message('$points pts',
       name: 'assignmentTotalPoints', desc: 'Label used for the total points the assignment is worth');
 
   String assignmentTotalPointsAccessible(String points) => Intl.message('$points points',
       name: 'assignmentTotalPointsAccessible',
-      desc: 'Screenr eader label used for the total points the assignment is worth');
+      desc: 'Screen reader label used for the total points the assignment is worth');
 
-  String get assignmentDueLabel => Intl.message('Due');
+  String get assignmentDueLabel => Intl.message('Due', desc: 'Label for an assignment due date');
 
-  String get assignmentLockLabel => Intl.message('Locked');
+  String get assignmentLockLabel => Intl.message('Locked', desc: 'Label for when an assignment is locked');
 
-  String assignmentLockedUntil(String date) => Intl.message('This assignment is locked until $date');
+  String assignmentLockedUntil(String date) => Intl.message('This assignment is locked until $date',
+      name: 'assignmentLockedUntil',
+      args: [date],
+      desc: 'The description for when an assignment will be unlocked in the future');
 
   String assignmentLockedAt(String date) => Intl.message('This assignment was locked $date',
       name: 'assignmentLockedAt', args: [date], desc: 'The description for when an assignment was locked.');
@@ -525,9 +529,11 @@ class AppLocalizations {
   String get assignmentRemindMeSet =>
       Intl.message('You will be notified about this assignment on…', desc: 'Description for when a reminder is set');
 
-  String get assignmentDescriptionLabel => Intl.message('Description');
+  String get assignmentDescriptionLabel =>
+      Intl.message('Description', desc: 'Label for the description of the assignment');
 
-  String get assignmentInstructionsLabel => Intl.message('Instructions');
+  String get assignmentInstructionsLabel =>
+      Intl.message('Instructions', desc: 'Label for the description of the assignment when it has quiz instructions');
 
   String get assignmentNoDescriptionBody =>
       Intl.message('No description', desc: 'Message used when the assignment has no description');
