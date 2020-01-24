@@ -158,6 +158,13 @@ class _$SubmissionSerializer implements StructuredSerializer<Submission> {
       result.add(serializers.serialize(object.enteredGrade,
           specifiedType: const FullType(String)));
     }
+    result.add('posted_at');
+    if (object.postedAt == null) {
+      result.add(null);
+    } else {
+      result.add(serializers.serialize(object.postedAt,
+          specifiedType: const FullType(DateTime)));
+    }
     return result;
   }
 
@@ -283,6 +290,10 @@ class _$SubmissionSerializer implements StructuredSerializer<Submission> {
           result.enteredGrade = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
           break;
+        case 'posted_at':
+          result.postedAt = serializers.deserialize(value,
+              specifiedType: const FullType(DateTime)) as DateTime;
+          break;
       }
     }
 
@@ -345,6 +356,8 @@ class _$Submission extends Submission {
   final double enteredScore;
   @override
   final String enteredGrade;
+  @override
+  final DateTime postedAt;
 
   factory _$Submission([void Function(SubmissionBuilder) updates]) =>
       (new SubmissionBuilder()..update(updates)).build();
@@ -376,7 +389,8 @@ class _$Submission extends Submission {
       this.user,
       this.pointsDeducted,
       this.enteredScore,
-      this.enteredGrade})
+      this.enteredGrade,
+      this.postedAt})
       : super._() {
     if (id == null) {
       throw new BuiltValueNullFieldError('Submission', 'id');
@@ -455,7 +469,8 @@ class _$Submission extends Submission {
         user == other.user &&
         pointsDeducted == other.pointsDeducted &&
         enteredScore == other.enteredScore &&
-        enteredGrade == other.enteredGrade;
+        enteredGrade == other.enteredGrade &&
+        postedAt == other.postedAt;
   }
 
   @override
@@ -478,26 +493,26 @@ class _$Submission extends Submission {
                                                                 $jc(
                                                                     $jc(
                                                                         $jc(
-                                                                            $jc($jc($jc($jc($jc($jc($jc($jc($jc(0, id.hashCode), grade.hashCode), score.hashCode), attempt.hashCode), submittedAt.hashCode), commentCreated.hashCode), mediaContentType.hashCode), mediaCommentUrl.hashCode),
-                                                                                mediaCommentDisplay.hashCode),
-                                                                            submissionHistory.hashCode),
-                                                                        body.hashCode),
-                                                                    isGradeMatchesCurrentSubmission.hashCode),
-                                                                workflowState.hashCode),
-                                                            submissionType.hashCode),
-                                                        previewUrl.hashCode),
-                                                    url.hashCode),
-                                                isLate.hashCode),
-                                            excused.hashCode),
-                                        missing.hashCode),
-                                    assignmentId.hashCode),
-                                assignment.hashCode),
-                            userId.hashCode),
-                        graderId.hashCode),
-                    user.hashCode),
-                pointsDeducted.hashCode),
-            enteredScore.hashCode),
-        enteredGrade.hashCode));
+                                                                            $jc($jc($jc($jc($jc($jc($jc($jc($jc($jc(0, id.hashCode), grade.hashCode), score.hashCode), attempt.hashCode), submittedAt.hashCode), commentCreated.hashCode), mediaContentType.hashCode), mediaCommentUrl.hashCode), mediaCommentDisplay.hashCode),
+                                                                                submissionHistory.hashCode),
+                                                                            body.hashCode),
+                                                                        isGradeMatchesCurrentSubmission.hashCode),
+                                                                    workflowState.hashCode),
+                                                                submissionType.hashCode),
+                                                            previewUrl.hashCode),
+                                                        url.hashCode),
+                                                    isLate.hashCode),
+                                                excused.hashCode),
+                                            missing.hashCode),
+                                        assignmentId.hashCode),
+                                    assignment.hashCode),
+                                userId.hashCode),
+                            graderId.hashCode),
+                        user.hashCode),
+                    pointsDeducted.hashCode),
+                enteredScore.hashCode),
+            enteredGrade.hashCode),
+        postedAt.hashCode));
   }
 
   @override
@@ -530,7 +545,8 @@ class _$Submission extends Submission {
           ..add('user', user)
           ..add('pointsDeducted', pointsDeducted)
           ..add('enteredScore', enteredScore)
-          ..add('enteredGrade', enteredGrade))
+          ..add('enteredGrade', enteredGrade)
+          ..add('postedAt', postedAt))
         .toString();
   }
 }
@@ -659,6 +675,10 @@ class SubmissionBuilder implements Builder<Submission, SubmissionBuilder> {
   String get enteredGrade => _$this._enteredGrade;
   set enteredGrade(String enteredGrade) => _$this._enteredGrade = enteredGrade;
 
+  DateTime _postedAt;
+  DateTime get postedAt => _$this._postedAt;
+  set postedAt(DateTime postedAt) => _$this._postedAt = postedAt;
+
   SubmissionBuilder() {
     Submission._initializeBuilder(this);
   }
@@ -692,6 +712,7 @@ class SubmissionBuilder implements Builder<Submission, SubmissionBuilder> {
       _pointsDeducted = _$v.pointsDeducted;
       _enteredScore = _$v.enteredScore;
       _enteredGrade = _$v.enteredGrade;
+      _postedAt = _$v.postedAt;
       _$v = null;
     }
     return this;
@@ -742,7 +763,8 @@ class SubmissionBuilder implements Builder<Submission, SubmissionBuilder> {
               user: _user?.build(),
               pointsDeducted: pointsDeducted,
               enteredScore: enteredScore,
-              enteredGrade: enteredGrade);
+              enteredGrade: enteredGrade,
+              postedAt: postedAt);
     } catch (_) {
       String _$failedField;
       try {

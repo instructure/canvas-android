@@ -14,11 +14,65 @@
 
 import 'package:built_collection/built_collection.dart';
 import 'package:flutter_parent/models/assignment.dart';
+import 'package:flutter_parent/models/lock_info.dart';
+import 'package:flutter_parent/models/locked_module.dart';
 import 'package:flutter_parent/models/submission.dart';
 import 'package:test/test.dart';
 
 void main() {
   const String studentId = '1337';
+
+  group('isSubmittable', () {
+    test('returns true if submission types contain discussion_topic', () {
+      final assignment = _mockAssignment(types: [SubmissionTypes.onPaper, SubmissionTypes.discussionTopic]);
+      expect(assignment.isSubmittable(), true);
+    });
+
+    test('returns true if submission types contain online_quiz', () {
+      final assignment = _mockAssignment(types: [SubmissionTypes.onPaper, SubmissionTypes.onlineQuiz]);
+      expect(assignment.isSubmittable(), true);
+    });
+
+    test('returns true if submission types contain external_tool', () {
+      final assignment = _mockAssignment(types: [SubmissionTypes.onPaper, SubmissionTypes.externalTool]);
+      expect(assignment.isSubmittable(), true);
+    });
+
+    test('returns true if submission types contain online_text_entry', () {
+      final assignment = _mockAssignment(types: [SubmissionTypes.onPaper, SubmissionTypes.onlineTextEntry]);
+      expect(assignment.isSubmittable(), true);
+    });
+
+    test('returns true if submission types contain online_url', () {
+      final assignment = _mockAssignment(types: [SubmissionTypes.onPaper, SubmissionTypes.onlineUrl]);
+      expect(assignment.isSubmittable(), true);
+    });
+
+    test('returns true if submission types contain online_upload', () {
+      final assignment = _mockAssignment(types: [SubmissionTypes.onPaper, SubmissionTypes.onlineUpload]);
+      expect(assignment.isSubmittable(), true);
+    });
+
+    test('returns true if submission types contain media_recording', () {
+      final assignment = _mockAssignment(types: [SubmissionTypes.onPaper, SubmissionTypes.mediaRecording]);
+      expect(assignment.isSubmittable(), true);
+    });
+
+    test('returns false if submission types contain only onPaper', () {
+      final assignment = _mockAssignment(types: [SubmissionTypes.onPaper]);
+      expect(assignment.isSubmittable(), false);
+    });
+
+    test('returns false if submission types contain only none', () {
+      final assignment = _mockAssignment(types: [SubmissionTypes.none]);
+      expect(assignment.isSubmittable(), false);
+    });
+
+    test('returns false if submission types contain only non-submittable types', () {
+      final assignment = _mockAssignment(types: [SubmissionTypes.none, SubmissionTypes.onPaper]);
+      expect(assignment.isSubmittable(), false);
+    });
+  });
 
   group('getStatus', () {
     test('returns NONE for none submission type', () {
@@ -58,6 +112,14 @@ void main() {
       expect(assignment.getStatus(studentId: studentId), SubmissionStatus.MISSING);
     });
 
+    test('returns NOT_SUBMITTED for a missing submission with type external_tool', () {
+      final past = DateTime.now().subtract(Duration(seconds: 1));
+      final assignment = _mockAssignment(dueAt: past, submission: null)
+          .rebuild((b) => b..submissionTypes = BuiltList.of([SubmissionTypes.externalTool]).toBuilder());
+
+      expect(assignment.getStatus(), SubmissionStatus.NOT_SUBMITTED);
+    });
+
     test('returns NOT_SUBMITTED for a submission with no submitted at time', () {
       final assignment = _mockAssignment(submission: _mockSubmission(studentId).toBuilder()..submittedAt = null);
       expect(assignment.getStatus(studentId: studentId), SubmissionStatus.NOT_SUBMITTED);
@@ -78,6 +140,42 @@ void main() {
       final assignment = _mockAssignment(dueAt: past, submission: submission);
 
       expect(assignment.getStatus(studentId: studentId), SubmissionStatus.SUBMITTED);
+    });
+  });
+
+  group('isFullyLocked', () {
+    test('returns false when there is no lock info', () {
+      final assignment = _mockAssignment();
+
+      expect(assignment.isFullyLocked, false);
+    });
+
+    test('returns true when there is lock info with module name', () {
+      final lockInfo = LockInfo((b) => b
+        ..contextModule = LockedModule((m) => m
+          ..id = ''
+          ..contextId = ''
+          ..isRequireSequentialProgress = false
+          ..name = 'name').toBuilder());
+      final assignment = _mockAssignment().rebuild((b) => b..lockInfo = lockInfo.toBuilder());
+
+      expect(assignment.isFullyLocked, true);
+    });
+
+    test('returns true when there is lock info with unlock at', () {
+      final unlockDate = DateTime(2100);
+      final lockInfo = LockInfo((b) => b..unlockAt = unlockDate);
+      final assignment = _mockAssignment().rebuild((b) => b..lockInfo = lockInfo.toBuilder());
+
+      expect(assignment.isFullyLocked, true);
+    });
+
+    test('returns false when there is lock info with unlock at in the past', () {
+      final unlockDate = DateTime(2000);
+      final lockInfo = LockInfo((b) => b..unlockAt = unlockDate);
+      final assignment = _mockAssignment().rebuild((b) => b..lockInfo = lockInfo.toBuilder());
+
+      expect(assignment.isFullyLocked, false);
     });
   });
 }
