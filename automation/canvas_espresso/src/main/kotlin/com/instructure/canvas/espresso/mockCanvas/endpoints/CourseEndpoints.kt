@@ -755,7 +755,9 @@ object CourseModuleItemsListEndpoint : Endpoint(
 /**
  * Endpoint that returns list of users in a course
  */
-object CourseUsersEndpoint : Endpoint (response = {
+object CourseUsersEndpoint : Endpoint (
+    UserId() to CourseSingleUserEndpoint,
+    response = {
     GET {
         // We may need to add more "onlyXxx" vars in the future
         val onlyTeachers = request.url().queryParameter("enrollment_type")?.equals("teacher")
@@ -772,3 +774,17 @@ object CourseUsersEndpoint : Endpoint (response = {
         request.successResponse(users)
     }
 })
+
+object CourseSingleUserEndpoint : Endpoint(
+    response = {
+        GET {
+            val requestedUser = data.users[pathVars.userId]
+            if(requestedUser != null) {
+                request.successResponse(requestedUser)
+            } else {
+                request.unauthorizedResponse()
+            }
+        }
+
+    }
+)

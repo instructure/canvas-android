@@ -16,7 +16,9 @@
  */
 package com.instructure.student.ui.pages
 
+import com.instructure.canvasapi2.models.User
 import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.assertContainsText
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.student.R
@@ -30,5 +32,9 @@ class PersonDetailsPage: BasePage(R.id.clickContainer) {
 
     fun clickCompose() {
         compose.click()
+    }
+
+    fun assertIsPerson(user: User) {
+        userName.assertContainsText(user.name)
     }
 }

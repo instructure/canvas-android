@@ -77,6 +77,13 @@ class PeopleListPage: BasePage(R.id.peopleListPage) {
         onView(matcher).click()
     }
 
+    fun selectPerson(user: User)
+    {
+        val matcher = allOf(withText(user.name), withId(R.id.title))
+        scrollToMatch(matcher)
+        onView(matcher).click()
+    }
+
     private fun scrollToMatch(matcher: Matcher<View>) {
         onView(allOf(withId(R.id.listView), isDisplayed(), withAncestor(R.id.peopleListPage)))
                 .perform(RecyclerViewActions.scrollTo<RecyclerView.ViewHolder>(hasDescendant(matcher)))
