@@ -52,7 +52,7 @@ void main() {
   });
 
   setUp(() {
-    clearInteractions(interactor);
+    reset(interactor);
   });
 
   testWidgetsWithAccessibilityChecks('Shows loading', (tester) async {

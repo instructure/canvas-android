@@ -16,162 +16,189 @@ import 'package:built_collection/built_collection.dart';
 import 'package:flutter_parent/models/assignment.dart';
 import 'package:flutter_parent/models/assignment_group.dart';
 import 'package:flutter_parent/models/course.dart';
+import 'package:flutter_parent/models/enrollment.dart';
+import 'package:flutter_parent/models/grading_period.dart';
+import 'package:flutter_parent/models/grading_period_response.dart';
 import 'package:flutter_parent/models/submission.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_interactor.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_model.dart';
-import 'package:get_it/get_it.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
-const studentId = '123';
-const courseId = '321';
-final course = Course((b) => b..id = courseId);
+import '../../utils/test_app.dart';
+
+const _studentId = '123';
+const _courseId = '321';
+final _course = Course((b) => b..id = _courseId);
 
 void main() {
-  _setupLocator({CourseDetailsInteractor interactor}) {
-    final _locator = GetIt.instance;
-    _locator.reset();
+  final _MockCourseDetailsInteractor interactor = _MockCourseDetailsInteractor();
 
-    _locator.registerFactory<CourseDetailsInteractor>(() => interactor ?? _MockCourseDetailsInteractor());
-  }
+  setupTestLocator((locator) {
+    locator.registerFactory<CourseDetailsInteractor>(() => interactor);
+  });
+
+  setUp(() {
+    reset(interactor);
+  });
 
   test('constructing with a course updates the course id', () {
-    final model = CourseDetailsModel.withCourse(studentId, '', course);
+    final model = CourseDetailsModel.withCourse(_studentId, '', _course);
 
-    expect(model.courseId, courseId);
+    expect(model.courseId, _courseId);
   });
 
   group('loadData for course', () {
     test('does not refresh course if it has data', () async {
-      final interactor = _MockCourseDetailsInteractor();
-      _setupLocator(interactor: interactor);
-      final model = CourseDetailsModel.withCourse(studentId, '', course);
+      final model = CourseDetailsModel.withCourse(_studentId, '', _course);
 
       await model.loadData();
 
-      verifyNever(interactor.loadCourse(courseId));
-      expect(model.course, course);
+      verifyNever(interactor.loadCourse(_courseId));
+      expect(model.course, _course);
     });
 
     test('refreshes course if course refresh forced', () async {
       final expected = null;
-      final interactor = _MockCourseDetailsInteractor();
-      when(interactor.loadCourse(courseId)).thenAnswer((_) => Future.value(expected));
-      _setupLocator(interactor: interactor);
-      final model = CourseDetailsModel.withCourse(studentId, '', course);
+      when(interactor.loadCourse(_courseId)).thenAnswer((_) => Future.value(expected));
+      final model = CourseDetailsModel.withCourse(_studentId, '', _course);
 
       await model.loadData(refreshCourse: true);
 
-      verify(interactor.loadCourse(courseId)).called(1);
+      verify(interactor.loadCourse(_courseId)).called(1);
       expect(model.course, expected);
     });
 
     test('refreshes course if course is null', () async {
       final expected = null;
-      final interactor = _MockCourseDetailsInteractor();
-      when(interactor.loadCourse(courseId)).thenAnswer((_) => Future.value(expected));
-      _setupLocator(interactor: interactor);
-      final model = CourseDetailsModel(studentId, '', courseId);
+      when(interactor.loadCourse(_courseId)).thenAnswer((_) => Future.value(expected));
+      final model = CourseDetailsModel(_studentId, '', _courseId);
 
       await model.loadData();
 
-      verify(interactor.loadCourse(courseId)).called(1);
+      verify(interactor.loadCourse(_courseId)).called(1);
       expect(model.course, expected);
     });
   });
 
-  group('loadData for asasignment groups', () {
-    test('refreshAssignmentGroups does not load submissions for a failed assignments call', () async {
-      final interactor = _MockCourseDetailsInteractor();
-      when(interactor.loadAssignmentGroups(courseId, studentId)).thenAnswer((_) {
-        // Catch the error here, as it will fail the test if it's uncaught
-        return Future<List<AssignmentGroup>>.error('Fail to get groups').catchError((_) {});
-      });
-      _setupLocator(interactor: interactor);
-
-      final model = CourseDetailsModel.withCourse(studentId, '', course);
-      await model.loadData(refreshAssignmentGroups: true);
-      await model.assignmentGroupFuture;
-
-      verify(interactor.loadAssignmentGroups(courseId, studentId)).called(1);
-    });
-
-    test('does not refresh assignments if it has data', () async {
-      final interactor = _MockCourseDetailsInteractor();
-      _setupLocator(interactor: interactor);
-
-      final model = CourseDetailsModel.withCourse(studentId, '', course);
-      model.assignmentGroupFuture = Future.value();
-      await model.loadData();
-
-      verifyNever(interactor.loadAssignmentGroups(courseId, studentId));
-    });
-
-    test('refreshAssignmentGroups if assignment refresh forced', () async {
-      final interactor = _MockCourseDetailsInteractor();
-      _setupLocator(interactor: interactor);
-
-      final model = CourseDetailsModel.withCourse(studentId, '', course);
-      await model.loadData(refreshAssignmentGroups: true);
-
-      verify(interactor.loadAssignmentGroups(courseId, studentId)).called(1);
-    });
-
-    test('refreshes assignments if assignments is null', () async {
-      final expected = List<AssignmentGroup>();
-      final interactor = _MockCourseDetailsInteractor();
-      when(interactor.loadAssignmentGroups(courseId, studentId)).thenAnswer((_) async => expected);
-      _setupLocator(interactor: interactor);
-
-      final model = CourseDetailsModel.withCourse(studentId, '', course);
-      expect(model.assignmentGroupFuture, null);
-      await model.loadData();
-
-      verify(interactor.loadAssignmentGroups(courseId, studentId)).called(1);
-      expect(await model.assignmentGroupFuture, expected);
-    });
-
-    test('refreshes assignments and loads submissions', () async {
-      // Setup the data
-      final assignmentId = '101';
-      final submissions = [
-        Submission((b) => b
-          ..assignmentId = assignmentId
-          ..userId = studentId)
+  group('loadAssignments', () {
+    test('returns grade details', () async {
+      // Initial setup
+      final termEnrollment = Enrollment((b) => b
+        ..id = '10'
+        ..enrollmentState = 'active');
+      final gradingPeriods = [
+        GradingPeriod((b) => b
+          ..id = '123'
+          ..title = 'Grade Period 1')
       ];
-      final initial = _mockAssignmentGroups(assignmentId, submissions: submissions);
+      final assignmentGroups = [
+        AssignmentGroup((b) => b
+          ..id = '111'
+          ..name = 'Assignment Group 1')
+      ];
 
       // Mock the data
-      final interactor = _MockCourseDetailsInteractor();
-      when(interactor.loadAssignmentGroups(courseId, studentId)).thenAnswer((_) async => initial);
-      _setupLocator(interactor: interactor);
+      when(interactor.loadEnrollmentsForGradingPeriod(_courseId, _studentId, null, forceRefresh: false))
+          .thenAnswer((_) async => [termEnrollment, termEnrollment.rebuild((b) => b..id = '20')]);
+      when(interactor.loadGradingPeriods(_courseId)).thenAnswer(
+          (_) async => GradingPeriodResponse((b) => b..gradingPeriods = BuiltList.of(gradingPeriods).toBuilder()));
+      when(interactor.loadAssignmentGroups(_courseId, _studentId, null, forceRefresh: false))
+          .thenAnswer((_) async => assignmentGroups);
 
-      // Use the model
-      final model = CourseDetailsModel.withCourse(studentId, '', course);
-      await model.loadData();
+      // Make the call to test
+      final model = CourseDetailsModel.withCourse(_studentId, '', _course);
+      final gradeDetails = await model.loadAssignments();
 
-      // Test the model
-      expect((await model.assignmentGroupFuture).first.assignments.first.submission(studentId), submissions.first);
-      verify(interactor.loadAssignmentGroups(courseId, studentId)).called(1);
+      expect(gradeDetails.termEnrollment, termEnrollment); // Should match only the first enrollment
+      expect(gradeDetails.gradingPeriods, gradingPeriods);
+      expect(gradeDetails.assignmentGroups, assignmentGroups);
     });
 
-    test('refreshes assignments and does not load submissions for unpublished assignments', () async {
-      // Setup the data
-      final assignmentId = '101';
-      final initial = _mockAssignmentGroups(assignmentId, published: false);
+    test('Does not fail with an empty group response', () async {
+      // Mock the data with null response
+      when(interactor.loadAssignmentGroups(_courseId, _studentId, null, forceRefresh: false))
+          .thenAnswer((_) async => null);
 
-      // Mock the data
-      final interactor = _MockCourseDetailsInteractor();
-      when(interactor.loadAssignmentGroups(courseId, studentId)).thenAnswer((_) async => initial);
-      _setupLocator(interactor: interactor);
+      // Make the call to test
+      final model = CourseDetailsModel.withCourse(_studentId, '', _course);
+      var gradeDetails = await model.loadAssignments();
 
-      // Use the model
-      final model = CourseDetailsModel.withCourse(studentId, '', course);
-      await model.loadData();
+      expect(gradeDetails.assignmentGroups, null);
 
-      // Test the model
-      expect((await model.assignmentGroupFuture).first.assignments, isEmpty);
-      verify(interactor.loadAssignmentGroups(courseId, studentId)).called(1);
+      // Test again with empty array
+      when(interactor.loadAssignmentGroups(_courseId, _studentId, null, forceRefresh: false))
+          .thenAnswer((_) async => []);
+      gradeDetails = await model.loadAssignments();
+
+      expect(gradeDetails.assignmentGroups, []);
+    });
+
+    test('Removes unpublished assignments from assignment groups', () async {
+      // Init setup
+      final publishedAssignments = [
+        Assignment((b) => b
+          ..id = '101'
+          ..courseId = _courseId
+          ..assignmentGroupId = '111'
+          ..position = 0
+          ..published = true)
+      ];
+      final unpublishedAssignments = [
+        Assignment((b) => b
+          ..id = '102'
+          ..courseId = _courseId
+          ..assignmentGroupId = '222'
+          ..position = 0)
+      ];
+      final publishedGroup = AssignmentGroup((b) => b
+        ..id = '111'
+        ..name = 'Group 1'
+        ..assignments = BuiltList.of(publishedAssignments).toBuilder());
+      final unpublishedGroup = AssignmentGroup((b) => b
+        ..id = '222'
+        ..name = 'Group 2'
+        ..assignments = BuiltList.of(unpublishedAssignments).toBuilder());
+
+      final assignmentGroups = [
+        publishedGroup,
+        unpublishedGroup,
+      ];
+
+      // Mock the data with null response
+      when(interactor.loadAssignmentGroups(_courseId, _studentId, null, forceRefresh: false))
+          .thenAnswer((_) async => assignmentGroups);
+
+      // Make the call to test
+      final model = CourseDetailsModel.withCourse(_studentId, '', _course);
+      final gradeDetails = await model.loadAssignments();
+
+      expect(gradeDetails.assignmentGroups, [
+        publishedGroup,
+        unpublishedGroup.rebuild((b) => b..assignments = BuiltList.of(List<Assignment>()).toBuilder())
+      ]);
+    });
+
+    test('Updates currentGradingPeriod when load finishes', () async {
+      // Init setup
+      final gradingPeriod = GradingPeriod((b) => b
+        ..id = '1'
+        ..title = 'Period 1');
+
+      // Create the model
+      final model = CourseDetailsModel.withCourse(_studentId, '', _course);
+
+      // Update the grading period, but it shouldn't percolate until a load is called
+      model.updateGradingPeriod(gradingPeriod);
+      expect(model.currentGradingPeriod(), null);
+
+      await model.loadAssignments();
+      expect(model.currentGradingPeriod(), gradingPeriod);
+
+      // Verify the updated grading period was used in api calls
+      verify(interactor.loadAssignmentGroups(_courseId, _studentId, gradingPeriod.id, forceRefresh: false)).called(1);
+      verify(interactor.loadEnrollmentsForGradingPeriod(_courseId, _studentId, gradingPeriod.id, forceRefresh: false))
+          .called(1);
     });
   });
 }
@@ -187,7 +214,7 @@ List<AssignmentGroup> _mockAssignmentGroups(String assignmentId,
       ..assignments = BuiltList.of([
         Assignment((b) => b
           ..id = assignmentId
-          ..courseId = courseId
+          ..courseId = _courseId
           ..assignmentGroupId = group.id
           ..published = published
           ..position = 0

@@ -14,7 +14,6 @@
 
 import 'package:flutter_parent/models/assignment.dart';
 import 'package:flutter_parent/models/assignment_group.dart';
-import 'package:flutter_parent/models/submission.dart';
 import 'package:flutter_parent/network/utils/dio_config.dart';
 import 'package:flutter_parent/network/utils/fetch.dart';
 import 'package:flutter_parent/network/utils/paged_list.dart';
@@ -31,8 +30,10 @@ class AssignmentApi {
     return fetchList(dio.get('courses/$courseId/assignments', queryParameters: params), depaginateWith: dio);
   }
 
-  Future<List<AssignmentGroup>> getAssignmentGroupsWithSubmissionsDepaginated(String courseId, String studentId) async {
-    var dio = canvasDio();
+  Future<List<AssignmentGroup>> getAssignmentGroupsWithSubmissionsDepaginated(
+      String courseId, String studentId, String gradingPeriodId,
+      {bool forceRefresh = false}) async {
+    var dio = canvasDio(forceRefresh: forceRefresh);
     var params = {
       'include': [
         'assignments',
@@ -43,6 +44,7 @@ class AssignmentApi {
         'observed_users',
       ],
       'override_assignment_dates': 'true',
+      if (gradingPeriodId?.isNotEmpty == true) 'grading_period_id': gradingPeriodId,
     };
     return fetchList(dio.get('courses/$courseId/assignment_groups', queryParameters: params), depaginateWith: dio);
   }
@@ -66,20 +68,5 @@ class AssignmentApi {
     };
     return fetch(canvasDio(forceRefresh: forceRefresh)
         .get('courses/$courseId/assignments/$assignmentId', queryParameters: params));
-  }
-
-  // TODO: Remove once LA-274 is implemented, and submissions are given with assignment groups (for observers)
-  Future<List<Submission>> getSubmissions(
-    String courseId,
-    String studentId,
-    List<String> assignmentIds, {
-    bool forceRefresh,
-  }) {
-    final dio = canvasDio(forceRefresh: forceRefresh);
-    final params = {
-      'student_ids': [studentId],
-      'assignment_ids': assignmentIds,
-    };
-    return fetchList(dio.get('courses/$courseId/students/submissions', queryParameters: params), depaginateWith: dio);
   }
 }

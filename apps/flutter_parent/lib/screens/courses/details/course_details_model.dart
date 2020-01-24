@@ -14,6 +14,8 @@
 
 import 'package:flutter_parent/models/assignment_group.dart';
 import 'package:flutter_parent/models/course.dart';
+import 'package:flutter_parent/models/enrollment.dart';
+import 'package:flutter_parent/models/grading_period.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_interactor.dart';
 import 'package:flutter_parent/utils/base_model.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
@@ -24,20 +26,21 @@ class CourseDetailsModel extends BaseModel {
   String studentName;
   String courseId; // Could be routed to without a full course, only the id may be known
   Course course;
-  Future<List<AssignmentGroup>> assignmentGroupFuture;
+  bool forceRefresh = true;
+  GradingPeriod _currentGradingPeriod;
+  GradingPeriod _nextGradingPeriod;
 
   CourseDetailsModel(this.studentId, this.studentName, this.courseId);
 
   // A convenience constructor when we already have the course data
   CourseDetailsModel.withCourse(this.studentId, this.studentName, this.course) : this.courseId = course.id;
 
-  Future<void> loadData(
-      {bool refreshCourse = false, bool refreshAssignmentGroups = false, bool refreshSummaryList = false}) {
+  /// gradingPeriodId is optional, but only used if refreshAssignmentGroups is true
+  Future<void> loadData({bool refreshCourse = false, bool refreshSummaryList = false}) {
     return work(() async {
       // Declare the futures so we can let both run asynchronously
       final courseFuture =
           (refreshCourse || course == null) ? _interactor().loadCourse(courseId) : Future.value(course);
-      if (refreshAssignmentGroups || assignmentGroupFuture == null) assignmentGroupFuture = _loadAssignments();
 
       // Await the results
       course = await courseFuture;
@@ -46,19 +49,58 @@ class CourseDetailsModel extends BaseModel {
     });
   }
 
-  Future<List<AssignmentGroup>> _loadAssignments({bool forceRefresh = false}) {
-    final groupFuture = _interactor().loadAssignmentGroups(courseId, studentId);
-    return groupFuture?.then((groups) async {
-      if (groups == null || groups.isEmpty) return groups;
-
+  Future<GradeDetails> loadAssignments({bool forceRefresh = false}) async {
+    final groupFuture = _interactor()
+        .loadAssignmentGroups(courseId, studentId, _nextGradingPeriod?.id, forceRefresh: forceRefresh)
+        ?.then((groups) async {
       // Remove unpublished assignments to match web
       return groups
-          .map((group) => (group.toBuilder()..assignments.removeWhere((assignment) => !assignment.published)).build())
-          .toList();
+          ?.map((group) => (group.toBuilder()..assignments.removeWhere((assignment) => !assignment.published)).build())
+          ?.toList();
     });
+
+    final gradingPeriodsFuture =
+        _interactor().loadGradingPeriods(courseId, forceRefresh: forceRefresh)?.then((periods) {
+      return periods.gradingPeriods.toList();
+    });
+
+    // Get the grades for the term
+    final enrollmentsFuture = _interactor()
+        .loadEnrollmentsForGradingPeriod(courseId, studentId, _nextGradingPeriod?.id, forceRefresh: forceRefresh)
+        ?.then((enrollments) {
+      return enrollments.length > 0 ? enrollments.first : null;
+    });
+
+    final gradeDetails = GradeDetails(
+      assignmentGroups: await groupFuture,
+      gradingPeriods: await gradingPeriodsFuture,
+      termEnrollment: await enrollmentsFuture,
+    );
+
+    // Set the current grading period to the next one, this way all the selected data shows at the same time
+    if (_nextGradingPeriod != null) _currentGradingPeriod = _nextGradingPeriod;
+
+    return gradeDetails;
   }
 
   CourseDetailsInteractor _interactor() => locator<CourseDetailsInteractor>();
 
   bool hasSyllabus() => course?.syllabusBody != null;
+
+  GradingPeriod currentGradingPeriod() => _currentGradingPeriod;
+
+  /// This sets the next grading period to use when loadAssignments is called. [currentGradingPeriod] won't be updated
+  /// until the load call is finished, this way the grading period isn't updated in the ui until the rest of the data
+  /// updates to reflect the new grading period.
+  updateGradingPeriod(GradingPeriod period) {
+    _nextGradingPeriod = period;
+  }
+}
+
+class GradeDetails {
+  final List<AssignmentGroup> assignmentGroups;
+  final List<GradingPeriod> gradingPeriods;
+  final Enrollment termEnrollment;
+
+  GradeDetails({this.assignmentGroups, this.gradingPeriods, this.termEnrollment});
 }

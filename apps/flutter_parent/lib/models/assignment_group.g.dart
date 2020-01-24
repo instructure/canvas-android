@@ -181,7 +181,9 @@ class AssignmentGroupBuilder
   set assignments(ListBuilder<Assignment> assignments) =>
       _$this._assignments = assignments;
 
-  AssignmentGroupBuilder();
+  AssignmentGroupBuilder() {
+    AssignmentGroup._initializeBuilder(this);
+  }
 
   AssignmentGroupBuilder get _$this {
     if (_$v != null) {

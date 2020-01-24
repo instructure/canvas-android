@@ -36,6 +36,24 @@ class EnrollmentsApi {
     return fetchList(dio.get('users/self/enrollments', queryParameters: params), depaginateWith: dio);
   }
 
+  Future<List<Enrollment>> getEnrollmentsByGradingPeriod(String courseId, String studentId, String gradingPeriodId,
+      {bool forceRefresh = false}) {
+    final dio = canvasDio(forceRefresh: forceRefresh);
+    final params = {
+      'state': ['active', 'completed'], // current_and_concluded state not supported for observers
+      'user_id': studentId,
+      if (gradingPeriodId?.isNotEmpty == true)
+        'grading_period_id': gradingPeriodId,
+    };
+    return fetchList(
+      dio.get(
+        'courses/$courseId/enrollments',
+        queryParameters: params,
+      ),
+      depaginateWith: dio,
+    );
+  }
+
   Future<bool> pairWithStudent(String pairingCode) async {
     try {
       var pairingResponse = await canvasDio().post(ApiPrefs.getApiUrl(path: 'users/${ApiPrefs.getUser().id}/observees'),

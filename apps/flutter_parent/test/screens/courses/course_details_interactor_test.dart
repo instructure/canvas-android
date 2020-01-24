@@ -14,42 +14,58 @@
 
 import 'package:flutter_parent/network/api/assignment_api.dart';
 import 'package:flutter_parent/network/api/course_api.dart';
+import 'package:flutter_parent/network/api/enrollments_api.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_interactor.dart';
-import 'package:get_it/get_it.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
-void main() {
-  _setupLocator({CourseApi courseApi, AssignmentApi assignmentApi}) {
-    final _locator = GetIt.instance;
-    _locator.reset();
+import '../../utils/test_app.dart';
 
-    _locator.registerLazySingleton<CourseApi>(() => courseApi ?? _MockCourseApi());
-    _locator.registerLazySingleton<AssignmentApi>(() => assignmentApi ?? _MockAssignmentApi());
-  }
+void main() {
+  final courseId = '123';
+  final studentId = '1337';
+  final gradingPeriodId = '321';
+
+  final _MockCourseApi courseApi = _MockCourseApi();
+  final _MockAssignmentApi assignmentApi = _MockAssignmentApi();
+  final _MockEnrollmentApi enrollmentApi = _MockEnrollmentApi();
+
+  setupTestLocator((locator) {
+    locator.registerLazySingleton<CourseApi>(() => courseApi);
+    locator.registerLazySingleton<AssignmentApi>(() => assignmentApi);
+    locator.registerLazySingleton<EnrollmentsApi>(() => enrollmentApi);
+  });
 
   test('load course calls the api', () async {
-    final courseId = '123';
-    final courseApi = _MockCourseApi();
-    _setupLocator(courseApi: courseApi);
-
     CourseDetailsInteractor().loadCourse(courseId);
 
     verify(courseApi.getCourse(courseId)).called(1);
   });
 
   test('load assignments calls the api', () async {
-    final courseId = '123';
-    final studentId = '321';
-    final assignmentApi = _MockAssignmentApi();
-    _setupLocator(assignmentApi: assignmentApi);
+    CourseDetailsInteractor().loadAssignmentGroups(courseId, studentId, gradingPeriodId, forceRefresh: true);
 
-    CourseDetailsInteractor().loadAssignmentGroups(courseId, studentId);
+    verify(assignmentApi.getAssignmentGroupsWithSubmissionsDepaginated(courseId, studentId, gradingPeriodId,
+            forceRefresh: true))
+        .called(1);
+  });
 
-    verify(assignmentApi.getAssignmentGroupsWithSubmissionsDepaginated(courseId, studentId)).called(1);
+  test('load grading periods calls the api', () async {
+    CourseDetailsInteractor().loadGradingPeriods(courseId, forceRefresh: true);
+
+    verify(courseApi.getGradingPeriods(courseId, forceRefresh: true)).called(1);
+  });
+
+  test('load enrollments calls the api', () async {
+    CourseDetailsInteractor().loadEnrollmentsForGradingPeriod(courseId, studentId, gradingPeriodId, forceRefresh: true);
+
+    verify(enrollmentApi.getEnrollmentsByGradingPeriod(courseId, studentId, gradingPeriodId, forceRefresh: true))
+        .called(1);
   });
 }
 
 class _MockCourseApi extends Mock implements CourseApi {}
 
 class _MockAssignmentApi extends Mock implements AssignmentApi {}
+
+class _MockEnrollmentApi extends Mock implements EnrollmentsApi {}

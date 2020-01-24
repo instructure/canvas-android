@@ -14,8 +14,11 @@
 
 import 'package:flutter_parent/models/assignment_group.dart';
 import 'package:flutter_parent/models/course.dart';
+import 'package:flutter_parent/models/enrollment.dart';
+import 'package:flutter_parent/models/grading_period_response.dart';
 import 'package:flutter_parent/network/api/assignment_api.dart';
 import 'package:flutter_parent/network/api/course_api.dart';
+import 'package:flutter_parent/network/api/enrollments_api.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class CourseDetailsInteractor {
@@ -23,7 +26,19 @@ class CourseDetailsInteractor {
     return locator<CourseApi>().getCourse(courseId);
   }
 
-  Future<List<AssignmentGroup>> loadAssignmentGroups(String courseId, String studentId) {
-    return locator<AssignmentApi>().getAssignmentGroupsWithSubmissionsDepaginated(courseId, studentId);
+  Future<List<AssignmentGroup>> loadAssignmentGroups(String courseId, String studentId, String gradingPeriodId,
+      {bool forceRefresh = false}) {
+    return locator<AssignmentApi>().getAssignmentGroupsWithSubmissionsDepaginated(courseId, studentId, gradingPeriodId,
+        forceRefresh: forceRefresh);
+  }
+
+  Future<GradingPeriodResponse> loadGradingPeriods(String courseId, {bool forceRefresh = false}) {
+    return locator<CourseApi>().getGradingPeriods(courseId, forceRefresh: forceRefresh);
+  }
+
+  Future<List<Enrollment>> loadEnrollmentsForGradingPeriod(String courseId, String studentId, String gradingPeriodId,
+      {bool forceRefresh = false}) {
+    return locator<EnrollmentsApi>()
+        .getEnrollmentsByGradingPeriod(courseId, studentId, gradingPeriodId, forceRefresh: forceRefresh);
   }
 }

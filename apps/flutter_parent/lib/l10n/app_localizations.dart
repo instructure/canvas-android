@@ -395,6 +395,8 @@ class AppLocalizations {
 
   /// Course Details Screen
 
+  String get filterBy => Intl.message('Filter by', desc: 'Title for list of terms to filter grades by');
+
   String get courseGradesLabel => Intl.message(
         'Grades',
         desc: 'Label for the "Grades" tab in course details',

@@ -1,0 +1,109 @@
+// Copyright (C) 2020 - present Instructure, Inc.
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, version 3 of the License.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+import 'package:built_collection/built_collection.dart';
+import 'package:flutter_parent/models/course.dart';
+import 'package:flutter_parent/models/course_grade.dart';
+import 'package:flutter_parent/models/enrollment.dart';
+import 'package:test/test.dart';
+
+void main() {
+  final _enrollment = Enrollment((b) => b..enrollmentState = 'active');
+
+  group('isCourseGradeLocked', () {
+    test('returns true if hideFinalGrades is true', () {
+      final course = Course((b) => b..hideFinalGrades = true);
+      final grade = CourseGrade(course, null);
+
+      expect(grade.isCourseGradeLocked(), true);
+    });
+
+    test('returns false if hideFinalGrades and hasGradingPeriods are false', () {
+      final course = Course((b) => b
+        ..hideFinalGrades = false
+        ..hasGradingPeriods = false);
+      final grade = CourseGrade(course, null);
+
+      expect(grade.isCourseGradeLocked(), false);
+    });
+
+    test('returns true if hasGradingPeriods is true and there are no course enrollments', () {
+      final course = Course((b) => b
+        ..hasGradingPeriods = true
+        ..enrollments = BuiltList.of(List<Enrollment>()).toBuilder());
+      final grade = CourseGrade(course, null);
+
+      expect(grade.isCourseGradeLocked(), true);
+    });
+
+    test('returns false if hasGradingPeriods is true and an active grading period on the course enrollment is set', () {
+      final enrollment = _enrollment.rebuild((b) => b
+        ..currentGradingPeriodId = '101'
+        ..multipleGradingPeriodsEnabled = true);
+
+      final course = Course((b) => b
+        ..hasGradingPeriods = true
+        ..enrollments = BuiltList.of([enrollment]).toBuilder());
+
+      final grade = CourseGrade(course, null);
+
+      expect(grade.isCourseGradeLocked(), false);
+    });
+
+    test('returns false if hasGradingPeriods is true and NO active grading period on the course enrollment is set', () {
+      final enrollment = _enrollment.rebuild((b) => b..multipleGradingPeriodsEnabled = true);
+
+      final course = Course((b) => b
+        ..hasGradingPeriods = true
+        ..enrollments = BuiltList.of([enrollment]).toBuilder());
+
+      final grade = CourseGrade(course, null);
+
+      expect(grade.isCourseGradeLocked(), true);
+    });
+
+    test(
+        'returns false if hasGradingPeriods is true and totalsForAllGradingPeriodsOption on the course enrollment is true',
+        () {
+      final enrollment = _enrollment.rebuild((b) => b
+        ..role = 'student'
+        ..totalsForAllGradingPeriodsOption = true
+        ..multipleGradingPeriodsEnabled = true);
+
+      final course = Course((b) => b
+        ..hasGradingPeriods = true
+        ..enrollments = BuiltList.of([enrollment]).toBuilder());
+
+      final grade = CourseGrade(course, null);
+
+      expect(grade.isCourseGradeLocked(), false);
+    });
+
+    test(
+        'returns false if hasGradingPeriods is true and totalsForAllGradingPeriodsOption on the course enrollment is false',
+        () {
+      final enrollment = _enrollment.rebuild((b) => b
+        ..role = 'student'
+        ..totalsForAllGradingPeriodsOption = false
+        ..multipleGradingPeriodsEnabled = true);
+
+      final course = Course((b) => b
+        ..hasGradingPeriods = true
+        ..enrollments = BuiltList.of([enrollment]).toBuilder());
+
+      final grade = CourseGrade(course, null);
+
+      expect(grade.isCourseGradeLocked(), true);
+    });
+  });
+}

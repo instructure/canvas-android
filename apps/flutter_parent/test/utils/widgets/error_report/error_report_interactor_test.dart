@@ -33,7 +33,7 @@ void main() {
   final api = _MockErrorReportApi();
   final enrollmentsApi = _MockEnrollmentsApi();
 
-  setUp(() => clearInteractions(api));
+  setUp(() => reset(api));
 
   // Setup test dependencies
   setupPlatformChannels();
