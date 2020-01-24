@@ -16,6 +16,7 @@ library assignment;
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
+import 'package:flutter_parent/models/lock_info.dart';
 
 import 'submission.dart';
 
@@ -77,6 +78,9 @@ abstract class Assignment implements Built<Assignment, AssignmentBuilder> {
 
   int get position;
 
+  @BuiltValueField(wireName: 'lock_info')
+  LockInfo get lockInfo;
+
   @BuiltValueField(wireName: "locked_for_user")
   bool get lockedForUser;
 
@@ -137,6 +141,14 @@ abstract class Assignment implements Built<Assignment, AssignmentBuilder> {
     ..moderatedGrading = false
     ..anonymousGrading = false
     ..isStudioEnabled = false;
+
+  @BuiltValueField(serialize: false)
+  bool get isFullyLocked {
+    if (lockInfo == null || lockInfo.isEmpty) return false;
+    if (lockInfo.hasModuleName) return true;
+    if (lockInfo.unlockAt != null && lockInfo.unlockAt.isAfter(DateTime.now())) return true;
+    return false;
+  }
 
   bool isSubmittable() =>
       submissionTypes?.every((type) => type == SubmissionTypes.onPaper || type == SubmissionTypes.none) != true;

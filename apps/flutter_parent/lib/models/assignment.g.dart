@@ -93,6 +93,9 @@ class _$AssignmentSerializer implements StructuredSerializer<Assignment> {
       'position',
       serializers.serialize(object.position,
           specifiedType: const FullType(int)),
+      'lock_info',
+      serializers.serialize(object.lockInfo,
+          specifiedType: const FullType(LockInfo)),
       'locked_for_user',
       serializers.serialize(object.lockedForUser,
           specifiedType: const FullType(bool)),
@@ -289,6 +292,10 @@ class _$AssignmentSerializer implements StructuredSerializer<Assignment> {
           result.position = serializers.deserialize(value,
               specifiedType: const FullType(int)) as int;
           break;
+        case 'lock_info':
+          result.lockInfo.replace(serializers.deserialize(value,
+              specifiedType: const FullType(LockInfo)) as LockInfo);
+          break;
         case 'locked_for_user':
           result.lockedForUser = serializers.deserialize(value,
               specifiedType: const FullType(bool)) as bool;
@@ -427,6 +434,8 @@ class _$Assignment extends Assignment {
   @override
   final int position;
   @override
+  final LockInfo lockInfo;
+  @override
   final bool lockedForUser;
   @override
   final DateTime lockAt;
@@ -475,6 +484,7 @@ class _$Assignment extends Assignment {
       this.submissionList,
       this.assignmentGroupId,
       this.position,
+      this.lockInfo,
       this.lockedForUser,
       this.lockAt,
       this.unlockAt,
@@ -508,6 +518,9 @@ class _$Assignment extends Assignment {
     }
     if (position == null) {
       throw new BuiltValueNullFieldError('Assignment', 'position');
+    }
+    if (lockInfo == null) {
+      throw new BuiltValueNullFieldError('Assignment', 'lockInfo');
     }
     if (lockedForUser == null) {
       throw new BuiltValueNullFieldError('Assignment', 'lockedForUser');
@@ -568,6 +581,7 @@ class _$Assignment extends Assignment {
         submissionList == other.submissionList &&
         assignmentGroupId == other.assignmentGroupId &&
         position == other.position &&
+        lockInfo == other.lockInfo &&
         lockedForUser == other.lockedForUser &&
         lockAt == other.lockAt &&
         unlockAt == other.unlockAt &&
@@ -605,11 +619,11 @@ class _$Assignment extends Assignment {
                                                                 $jc(
                                                                     $jc(
                                                                         $jc(
-                                                                            $jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc(0, id.hashCode), name.hashCode), description.hashCode), dueAt.hashCode), pointsPossible.hashCode), courseId.hashCode), gradingType.hashCode), htmlUrl.hashCode), url.hashCode), quizId.hashCode),
-                                                                                useRubricForGrading.hashCode),
-                                                                            submissionList.hashCode),
-                                                                        assignmentGroupId.hashCode),
-                                                                    position.hashCode),
+                                                                            $jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc(0, id.hashCode), name.hashCode), description.hashCode), dueAt.hashCode), pointsPossible.hashCode), courseId.hashCode), gradingType.hashCode), htmlUrl.hashCode), url.hashCode), quizId.hashCode), useRubricForGrading.hashCode),
+                                                                                submissionList.hashCode),
+                                                                            assignmentGroupId.hashCode),
+                                                                        position.hashCode),
+                                                                    lockInfo.hashCode),
                                                                 lockedForUser.hashCode),
                                                             lockAt.hashCode),
                                                         unlockAt.hashCode),
@@ -644,6 +658,7 @@ class _$Assignment extends Assignment {
           ..add('submissionList', submissionList)
           ..add('assignmentGroupId', assignmentGroupId)
           ..add('position', position)
+          ..add('lockInfo', lockInfo)
           ..add('lockedForUser', lockedForUser)
           ..add('lockAt', lockAt)
           ..add('unlockAt', unlockAt)
@@ -726,6 +741,10 @@ class AssignmentBuilder implements Builder<Assignment, AssignmentBuilder> {
   int _position;
   int get position => _$this._position;
   set position(int position) => _$this._position = position;
+
+  LockInfoBuilder _lockInfo;
+  LockInfoBuilder get lockInfo => _$this._lockInfo ??= new LockInfoBuilder();
+  set lockInfo(LockInfoBuilder lockInfo) => _$this._lockInfo = lockInfo;
 
   bool _lockedForUser;
   bool get lockedForUser => _$this._lockedForUser;
@@ -819,6 +838,7 @@ class AssignmentBuilder implements Builder<Assignment, AssignmentBuilder> {
       _submissionList = _$v.submissionList?.toBuilder();
       _assignmentGroupId = _$v.assignmentGroupId;
       _position = _$v.position;
+      _lockInfo = _$v.lockInfo?.toBuilder();
       _lockedForUser = _$v.lockedForUser;
       _lockAt = _$v.lockAt;
       _unlockAt = _$v.unlockAt;
@@ -872,6 +892,7 @@ class AssignmentBuilder implements Builder<Assignment, AssignmentBuilder> {
               submissionList: _submissionList?.build(),
               assignmentGroupId: assignmentGroupId,
               position: position,
+              lockInfo: lockInfo.build(),
               lockedForUser: lockedForUser,
               lockAt: lockAt,
               unlockAt: unlockAt,
@@ -892,6 +913,9 @@ class AssignmentBuilder implements Builder<Assignment, AssignmentBuilder> {
       try {
         _$failedField = 'submissionList';
         _submissionList?.build();
+
+        _$failedField = 'lockInfo';
+        lockInfo.build();
 
         _$failedField = 'submissionTypes';
         _submissionTypes?.build();

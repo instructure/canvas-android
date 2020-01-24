@@ -16,6 +16,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/alarm.dart';
 import 'package:flutter_parent/models/assignment.dart';
+import 'package:flutter_parent/models/lock_info.dart';
+import 'package:flutter_parent/models/locked_module.dart';
 import 'package:flutter_parent/models/submission.dart';
 import 'package:flutter_parent/screens/assignments/assignment_details_interactor.dart';
 import 'package:flutter_parent/screens/assignments/assignment_details_screen.dart';
@@ -23,6 +25,7 @@ import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/student_color_set.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -235,13 +238,14 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text(AppLocalizations().assignmentLockLabel), findsOneWidget);
-    expect(find.text(AppLocalizations().assignmentLockedUntil('Jan 1 at 12:00AM')), findsOneWidget);
+    expect(find.text(AppLocalizations().assignmentLockedDate('Jan 1 at 12:00AM')), findsOneWidget);
   });
 
-  testWidgetsWithAccessibilityChecks('shows lock info with lock_at', (tester) async {
-    final lockAt = DateTime(2000);
-    when(interactor.loadAssignmentDetails(any, courseId, assignmentId, studentId))
-        .thenAnswer((_) async => AssignmentDetails(assignment: assignment.rebuild((b) => b..lockAt = lockAt)));
+  testWidgetsWithAccessibilityChecks('shows lock info with module name', (tester) async {
+    final moduleName = 'Locked module';
+    final lockInfo = LockInfo((b) => b..contextModule = LockedModule((m) => m..name = moduleName).toBuilder());
+    when(interactor.loadAssignmentDetails(any, courseId, assignmentId, studentId)).thenAnswer(
+        (_) async => AssignmentDetails(assignment: assignment.rebuild((b) => b..lockInfo = lockInfo.toBuilder())));
 
     await tester.pumpWidget(TestApp(
       AssignmentDetailsScreen(courseId: courseId, assignmentId: assignmentId, studentId: studentId),
@@ -251,7 +255,31 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text(AppLocalizations().assignmentLockLabel), findsOneWidget);
-    expect(find.text(AppLocalizations().assignmentLockedAt('Jan 1 at 12:00AM')), findsOneWidget);
+    expect(find.text(AppLocalizations().assignmentLockedModule(moduleName)), findsOneWidget);
+
+    expect(find.byType(SvgPicture), findsOneWidget); // Show the locked panda
+    expect(find.text(AppLocalizations().assignmentDueLabel), findsNothing); // Fully locked, no due date
+    expect(find.text(AppLocalizations().assignmentDescriptionLabel), findsNothing); // Fully locked, no description
+  });
+
+  testWidgetsWithAccessibilityChecks('shows lock info with lock_explanation', (tester) async {
+    final explanation = 'it is locked';
+    when(interactor.loadAssignmentDetails(any, courseId, assignmentId, studentId)).thenAnswer(
+        (_) async => AssignmentDetails(assignment: assignment.rebuild((b) => b..lockExplanation = explanation)));
+
+    await tester.pumpWidget(TestApp(
+      AssignmentDetailsScreen(courseId: courseId, assignmentId: assignmentId, studentId: studentId),
+      highContrast: true,
+    ));
+
+    await tester.pumpAndSettle();
+
+    expect(find.text(AppLocalizations().assignmentLockLabel), findsOneWidget);
+    expect(find.text(explanation), findsOneWidget);
+    expect(find.text(AppLocalizations().assignmentDueLabel), findsOneWidget); // Not fully locked, show due date
+    expect(find.text(AppLocalizations().assignmentDescriptionLabel), findsOneWidget); // Not fully locked, show desc
+
+    expect(find.byType(SvgPicture), findsNothing); // Should not show the locked panda
   });
 
   testWidgetsWithAccessibilityChecks('shows Assignment with no description', (tester) async {

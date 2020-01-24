@@ -14,6 +14,8 @@
 
 import 'package:built_collection/built_collection.dart';
 import 'package:flutter_parent/models/assignment.dart';
+import 'package:flutter_parent/models/lock_info.dart';
+import 'package:flutter_parent/models/locked_module.dart';
 import 'package:flutter_parent/models/submission.dart';
 import 'package:test/test.dart';
 
@@ -138,6 +140,42 @@ void main() {
       final assignment = _mockAssignment(dueAt: past, submission: submission);
 
       expect(assignment.getStatus(studentId: studentId), SubmissionStatus.SUBMITTED);
+    });
+  });
+
+  group('isFullyLocked', () {
+    test('returns false when there is no lock info', () {
+      final assignment = _mockAssignment();
+
+      expect(assignment.isFullyLocked, false);
+    });
+
+    test('returns true when there is lock info with module name', () {
+      final lockInfo = LockInfo((b) => b
+        ..contextModule = LockedModule((m) => m
+          ..id = ''
+          ..contextId = ''
+          ..isRequireSequentialProgress = false
+          ..name = 'name').toBuilder());
+      final assignment = _mockAssignment().rebuild((b) => b..lockInfo = lockInfo.toBuilder());
+
+      expect(assignment.isFullyLocked, true);
+    });
+
+    test('returns true when there is lock info with unlock at', () {
+      final unlockDate = DateTime(2100);
+      final lockInfo = LockInfo((b) => b..unlockAt = unlockDate);
+      final assignment = _mockAssignment().rebuild((b) => b..lockInfo = lockInfo.toBuilder());
+
+      expect(assignment.isFullyLocked, true);
+    });
+
+    test('returns false when there is lock info with unlock at in the past', () {
+      final unlockDate = DateTime(2000);
+      final lockInfo = LockInfo((b) => b..unlockAt = unlockDate);
+      final assignment = _mockAssignment().rebuild((b) => b..lockInfo = lockInfo.toBuilder());
+
+      expect(assignment.isFullyLocked, false);
     });
   });
 }

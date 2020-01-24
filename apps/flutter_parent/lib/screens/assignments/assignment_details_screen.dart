@@ -22,6 +22,7 @@ import 'package:flutter_parent/utils/design/canvas_icons_solid.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/design/student_color_set.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -116,6 +117,7 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
     final alarm = snapshot.data.alarm;
     final assignment = snapshot.data.assignment;
     final submission = assignment.submission(widget.studentId);
+    final fullyLocked = assignment.isFullyLocked;
     final showStatus = assignment.isSubmittable() || submission.isGraded();
     final submitted = submission?.submittedAt != null;
     final submittedColor = submitted
@@ -156,11 +158,13 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
               ],
             ),
           ),
-          Divider(),
-          ..._rowTile(
-            title: l10n.assignmentDueLabel,
-            child: Text(_dateFormat(assignment.dueAt) ?? l10n.noDueDate, style: textTheme.subhead),
-          ),
+          if (!fullyLocked) ...[
+            Divider(),
+            ..._rowTile(
+              title: l10n.assignmentDueLabel,
+              child: Text(_dateFormat(assignment.dueAt) ?? l10n.noDueDate, style: textTheme.subhead),
+            ),
+          ],
           ..._lockedRow(assignment),
           Divider(),
           ..._rowTile(
@@ -197,12 +201,19 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
             ),
           ),
           Divider(),
-          ..._rowTile(
-            title: assignment.submissionTypes?.contains(SubmissionTypes.onlineQuiz) == true
-                ? l10n.assignmentInstructionsLabel
-                : l10n.assignmentDescriptionLabel,
-            child: _AssignmentDescription(assignment: assignment),
-          ),
+          if (fullyLocked)
+            // no good way to center this image vertically in a scrollable view's remaining space. Settling for padding for now
+            Padding(
+              padding: const EdgeInsets.only(top: 32),
+              child: Center(child: SvgPicture.asset('assets/svg/panda-locked.svg', excludeFromSemantics: true)),
+            ),
+          if (!fullyLocked)
+            ..._rowTile(
+              title: assignment.submissionTypes?.contains(SubmissionTypes.onlineQuiz) == true
+                  ? l10n.assignmentInstructionsLabel
+                  : l10n.assignmentDescriptionLabel,
+              child: _AssignmentDescription(assignment: assignment),
+            ),
           // TODO: Add in 'Learn more' feature
 //        Divider(),
 //        ..._rowTile(
@@ -226,19 +237,23 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
   }
 
   List<Widget> _lockedRow(Assignment assignment) {
-    final l10n = L10n(context);
     String message = null;
-    if (assignment.unlockAt != null) {
-      message = l10n.assignmentLockedUntil(_dateFormat(assignment.unlockAt));
-    } else if (assignment.lockAt != null) {
-      message = l10n.assignmentLockedAt(_dateFormat(assignment.lockAt));
+    if (assignment.lockInfo.hasModuleName) {
+      message = L10n(context).assignmentLockedModule(assignment.lockInfo.contextModule.name);
+    } else if (assignment.unlockAt != null) {
+      message = L10n(context).assignmentLockedDate(_dateFormat(assignment.unlockAt));
+    } else {
+      message = assignment.lockExplanation;
     }
 
-    if (message == null) return [];
+    if (message?.isNotEmpty != true) return [];
 
     return [
       Divider(),
-      ..._rowTile(title: l10n.assignmentLockLabel, child: Text(message, style: Theme.of(context).textTheme.subhead)),
+      ..._rowTile(
+        title: L10n(context).assignmentLockLabel,
+        child: Text(message, style: Theme.of(context).textTheme.subhead),
+      ),
     ];
   }
 
