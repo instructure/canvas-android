@@ -17,6 +17,7 @@ import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/assignment.dart';
 import 'package:flutter_parent/models/assignment_group.dart';
 import 'package:flutter_parent/models/course_grade.dart';
+import 'package:flutter_parent/screens/assignments/assignment_details_screen.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_model.dart';
 import 'package:flutter_parent/screens/under_construction_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
@@ -232,8 +233,10 @@ class _AssignmentRow extends StatelessWidget {
     final assignmentStatus = _assignmentStatus(context, assignment, studentId);
 
     return ListTile(
-      onTap: () => null,
-      // TODO: QuickNav.push(AssignmentDetailsScreen.withAssignment(assignment)),
+      onTap: () => locator<QuickNav>().push(
+        context,
+        AssignmentDetailsScreen(courseId: assignment.courseId, assignmentId: assignment.id, studentId: studentId),
+      ),
       contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       leading: Container(
         alignment: Alignment.topLeft,

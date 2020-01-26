@@ -12,7 +12,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
@@ -155,6 +154,7 @@ class _ConversationDetailsScreenState extends State<ConversationDetailsScreen> {
         return _conversationFuture.catchError((_) {});
       },
       child: ListView.separated(
+        padding: EdgeInsets.only(bottom: 84), // Bottom padding so FAB doesn't obscure messages
         itemCount: conversation.messages?.length ?? 0,
         separatorBuilder: (context, index) => SizedBox(height: 12),
         itemBuilder: (context, index) {

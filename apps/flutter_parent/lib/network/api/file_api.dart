@@ -22,7 +22,7 @@ import 'package:flutter_parent/network/utils/fetch.dart';
 import 'package:mime/mime.dart';
 import 'package:path/path.dart';
 
-class FileUploadApi {
+class FileApi {
   /// Uploads the given [file] to the user's 'conversation attachment's directory. The [progressCallback] will be
   /// called intermittently with two values - a 'count' of the currently uploaded bytes and a 'total' byte count. A
   /// 'total' value of -1 is considered to represent indeterminate progress, and means either the file size is unknown
@@ -69,5 +69,21 @@ class FileUploadApi {
         }
       },
     ));
+  }
+
+  /// Downloads a file located at [url] to the specified [savePath]
+  Future<File> downloadFile(
+    String url,
+    String savePath, {
+    CancelToken cancelToken,
+    ProgressCallback onProgress,
+  }) async {
+    await DioConfig.core(forceRefresh: true).dio.download(
+          url,
+          savePath,
+          cancelToken: cancelToken,
+          onReceiveProgress: onProgress,
+        );
+    return File(savePath);
   }
 }

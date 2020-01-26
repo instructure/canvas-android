@@ -16,6 +16,7 @@ library assignment;
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
+import 'package:flutter_parent/models/lock_info.dart';
 
 import 'submission.dart';
 
@@ -76,6 +77,9 @@ abstract class Assignment implements Built<Assignment, AssignmentBuilder> {
   String get assignmentGroupId;
 
   int get position;
+
+  @BuiltValueField(wireName: 'lock_info')
+  LockInfo get lockInfo;
 
   @BuiltValueField(wireName: "locked_for_user")
   bool get lockedForUser;
@@ -138,9 +142,20 @@ abstract class Assignment implements Built<Assignment, AssignmentBuilder> {
     ..anonymousGrading = false
     ..isStudioEnabled = false;
 
+  @BuiltValueField(serialize: false)
+  bool get isFullyLocked {
+    if (lockInfo == null || lockInfo.isEmpty) return false;
+    if (lockInfo.hasModuleName) return true;
+    if (lockInfo.unlockAt != null && lockInfo.unlockAt.isAfter(DateTime.now())) return true;
+    return false;
+  }
+
+  bool isSubmittable() =>
+      submissionTypes?.every((type) => type == SubmissionTypes.onPaper || type == SubmissionTypes.none) != true;
+
   SubmissionStatus getStatus({String studentId}) {
     final submission = this.submission(studentId);
-    if (submissionTypes?.every((type) => type == SubmissionTypes.onPaper || type == SubmissionTypes.none) == true) {
+    if (!isSubmittable()) {
       return SubmissionStatus.NONE;
     } else if (submission?.isLate == true) {
       return SubmissionStatus.LATE;
@@ -157,6 +172,9 @@ abstract class Assignment implements Built<Assignment, AssignmentBuilder> {
   bool _isMissingSubmission(String studentId) {
     final submission = this.submission(studentId);
     if (submission?.missing == true) return true;
+
+    // Don't mark LTI assignments as missing when overdue as they usually won't have a real submission for it
+    if (submissionTypes?.contains(SubmissionTypes.externalTool) == true) return false;
 
     final isPastDue = dueAt?.isBefore(DateTime.now()) == true;
     return isPastDue && (submission == null || (submission.attempt == 0 && submission.grade == null));

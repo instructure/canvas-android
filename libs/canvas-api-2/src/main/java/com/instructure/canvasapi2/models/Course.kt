@@ -18,6 +18,7 @@
 package com.instructure.canvasapi2.models
 
 import com.google.gson.annotations.SerializedName
+import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.isNullOrEmpty
 import com.instructure.canvasapi2.utils.toDate
 import kotlinx.android.parcel.Parcelize
@@ -122,6 +123,7 @@ data class Course(
     fun getCourseGrade(ignoreMGP: Boolean): CourseGrade? {
         enrollments?.forEach { enrollment ->
             if (enrollment.isStudent || enrollment.isObserver) {
+                Logger.d("Logging for Grades E2E, enrollment for coures grade: $enrollment")
                 return getCourseGradeFromEnrollment(enrollment, ignoreMGP)
             }
         }

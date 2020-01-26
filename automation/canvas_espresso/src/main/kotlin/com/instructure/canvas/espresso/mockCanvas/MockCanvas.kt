@@ -359,6 +359,8 @@ fun MockCanvas.Companion.init(
         }
     }
 
+    data.updateUserEnrollments()
+
     repeat(accountNotificationCount) { data.addAccountNotification() }
 
     // Perform the finishing operational touches for our web server
@@ -366,6 +368,24 @@ fun MockCanvas.Companion.init(
     data.webViewServer.start()
 
     return data
+}
+
+/**
+ * Not ideal, but in order to create realistic users, we have to add enrollments to them...
+ * Unfortunately, in order to create enrollments, we have to have users first, hence the
+ * copy nonesense seen here.
+ */
+fun MockCanvas.updateUserEnrollments() {
+    users.values.forEach { user ->
+        val enrollmentList = mutableListOf<Enrollment>()
+
+        enrollments.values.forEach { enrollment ->
+            if(enrollment.userId == user.id) enrollmentList.add(enrollment)
+        }
+
+        val userCopy = user.copy(enrollments = enrollmentList)
+        users[user.id] = userCopy
+    }
 }
 
 /** Creates a new Course and adds it to MockCanvas */

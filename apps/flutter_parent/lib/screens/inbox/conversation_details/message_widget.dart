@@ -12,16 +12,15 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/attachment.dart';
 import 'package:flutter_parent/models/basic_user.dart';
 import 'package:flutter_parent/models/conversation.dart';
 import 'package:flutter_parent/models/message.dart';
+import 'package:flutter_parent/screens/inbox/attachment_utils/attachment_extensions.dart';
 import 'package:flutter_parent/utils/common_widgets/avatar.dart';
 import 'package:flutter_parent/utils/common_widgets/user_name.dart';
-import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/style_slicer.dart';
@@ -74,7 +73,7 @@ class MessageWidget extends StatelessWidget {
           ),
           SizedBox(height: 16),
           Text(message.body),
-          if (message.attachments?.isNotEmpty == true) _attachmentsWidget(context, message.attachments.toList())
+          _attachmentsWidget(context, message)
         ],
       ),
     );
@@ -125,7 +124,10 @@ class MessageWidget extends StatelessWidget {
     );
   }
 
-  Widget _attachmentsWidget(BuildContext context, List<Attachment> attachments) {
+  Widget _attachmentsWidget(BuildContext context, Message message) {
+    List<Attachment> attachments = message.attachments?.toList() ?? [];
+    if (message.mediaComment != null) attachments.add(message.mediaComment.toAttachment());
+    if (attachments.isEmpty) return Container();
     return Container(
       height: 108,
       padding: EdgeInsets.only(top: 12),
@@ -160,7 +162,7 @@ class MessageWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
-                    CanvasIcons.document,
+                    attachment.getIcon(),
                     color: Theme.of(context).accentColor,
                   ),
                   Padding(

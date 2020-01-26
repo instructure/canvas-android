@@ -21,6 +21,8 @@ import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/models/enrollment.dart';
 import 'package:flutter_parent/models/grade.dart';
 import 'package:flutter_parent/models/submission.dart';
+import 'package:flutter_parent/screens/assignments/assignment_details_interactor.dart';
+import 'package:flutter_parent/screens/assignments/assignment_details_screen.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_interactor.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_model.dart';
 import 'package:flutter_parent/screens/courses/details/course_grades_screen.dart';
@@ -46,7 +48,8 @@ void main() {
     _locator.reset();
 
     _locator.registerFactory<CourseDetailsInteractor>(() => interactor ?? _MockCourseDetailsInteractor());
-    _locator.registerFactory<QuickNav>(() => QuickNav());
+    _locator.registerFactory<AssignmentDetailsInteractor>(() => _MockAssignmentDetailsInteractor());
+    _locator.registerLazySingleton<QuickNav>(() => QuickNav());
   }
 
   testWidgetsWithAccessibilityChecks('Can refresh course and group data', (tester) async {
@@ -255,6 +258,26 @@ void main() {
 
     expect(find.byType(UnderConstructionScreen), findsOneWidget);
   });
+
+  testWidgetsWithAccessibilityChecks('Tapping an assignment shows the details screen', (tester) async {
+    final groups = [
+      _mockAssignmentGroup(assignments: [_mockAssignment()])
+    ];
+    final model = CourseDetailsModel(studentId, '', courseId);
+    model.course = _mockCourse();
+    model.assignmentGroupFuture = Future.value(groups);
+
+    _setupLocator();
+    await tester.pumpWidget(_testableWidget(model));
+    await tester.pump(); // Build the widget
+    await tester.pump(); // Let the future finish
+
+    await tester.tap(find.text(groups.first.assignments.first.name));
+    await tester.pump(); // Process the tap
+    await tester.pump(); // Show the widget
+
+    expect(find.byType(AssignmentDetailsScreen), findsOneWidget);
+  });
 }
 
 Course _mockCourse({double currentScore, String currentGrade}) {
@@ -330,3 +353,5 @@ Widget _testableWidget(CourseDetailsModel model, {bool highContrastMode = false}
 }
 
 class _MockCourseDetailsInteractor extends Mock implements CourseDetailsInteractor {}
+
+class _MockAssignmentDetailsInteractor extends Mock implements AssignmentDetailsInteractor {}

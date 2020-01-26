@@ -11,6 +11,10 @@ lib/screens/inbox/attachment_utils/attachment_picker_interactor.dart
 # Theme transition currently does not work in widget tests
 lib/utils/design/theme_transition/*
 
+# Dependency veneers (i.e. passthrough wrappers).
+# There should be no logic in these files, only direct calls through to unmockable dependencies.
+lib/utils/veneers/*
+
 # Static declarations, since coverage doesn't seem to be recognized at the moment
 lib/utils/snickers.dart
 lib/utils/design/student_color_set.dart

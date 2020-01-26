@@ -19,10 +19,18 @@ package com.instructure.canvasapi2.unit
 
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Enrollment
+import com.instructure.canvasapi2.utils.Logger
 import org.junit.Assert.*
+import org.junit.Before
 import org.junit.Test
 
 class CourseTest {
+
+    @Before
+    fun setup() {
+        // TODO - Remove after E2E grade tests becomes stable, added to enable logging in Enrollment
+        Logger.IS_LOGGING = false
+    }
 
     @Test
     fun isStudent_hasStudentEnrollment() {

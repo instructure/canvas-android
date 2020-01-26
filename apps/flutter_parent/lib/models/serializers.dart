@@ -20,8 +20,8 @@ import 'package:built_value/serializer.dart';
 import 'package:built_value/standard_json_plugin.dart';
 import 'package:flutter_parent/models/account_notification.dart';
 import 'package:flutter_parent/models/alert.dart';
-import 'package:flutter_parent/models/announcement.dart';
 import 'package:flutter_parent/models/alert_threshold.dart';
+import 'package:flutter_parent/models/announcement.dart';
 import 'package:flutter_parent/models/assignment.dart';
 import 'package:flutter_parent/models/assignment_group.dart';
 import 'package:flutter_parent/models/attachment.dart';
@@ -31,6 +31,8 @@ import 'package:flutter_parent/models/conversation.dart';
 import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/models/enrollment.dart';
 import 'package:flutter_parent/models/grade.dart';
+import 'package:flutter_parent/models/lock_info.dart';
+import 'package:flutter_parent/models/locked_module.dart';
 import 'package:flutter_parent/models/media_comment.dart';
 import 'package:flutter_parent/models/message.dart';
 import 'package:flutter_parent/models/mobile_verify_result.dart';
@@ -62,6 +64,8 @@ part 'serializers.g.dart';
   Enrollment,
   FileUploadConfig,
   Grade,
+  LockInfo,
+  LockedModule,
   MediaComment,
   Message,
   MobileVerifyResult,

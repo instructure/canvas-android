@@ -141,7 +141,7 @@ class ConversationListState extends State<ConversationListScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               SizedBox(height: 2),
-              if (item.contextName.isNotEmpty)
+              if (item.contextName?.isNotEmpty == true)
                 Text(
                   item.contextName,
                   style: TextStyle(fontWeight: FontWeight.w500),
