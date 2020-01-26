@@ -49,7 +49,7 @@ class UnderConstructionScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              SvgPicture.asset('assets/svg/panda-not-supported.svg'),
+              SvgPicture.asset('assets/svg/panda-under-construction.svg'),
               SizedBox(height: 64),
               Text(
                 L10n(context).underConstruction,
