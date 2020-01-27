@@ -33,9 +33,6 @@ class ParentColors {
   /// Another dark color, slightly lighter than licorice
   static const oxford = Color(0xFF394B58);
 
-  /// A general 'success' color
-  static const success = Color(0xFF00AC18);
-
   /// A general 'failure' color, crimson
   static const failure = Color(0xFFEE0612);
 

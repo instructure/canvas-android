@@ -204,19 +204,19 @@ class _$ConversationSerializer implements StructuredSerializer<Conversation> {
           result.audience.replace(serializers.deserialize(value,
                   specifiedType:
                       const FullType(BuiltList, const [const FullType(String)]))
-              as BuiltList<dynamic>);
+              as BuiltList<Object>);
           break;
         case 'participants':
           result.participants.replace(serializers.deserialize(value,
                   specifiedType: const FullType(
                       BuiltList, const [const FullType(BasicUser)]))
-              as BuiltList<dynamic>);
+              as BuiltList<Object>);
           break;
         case 'messages':
           result.messages.replace(serializers.deserialize(value,
                   specifiedType: const FullType(
                       BuiltList, const [const FullType(Message)]))
-              as BuiltList<dynamic>);
+              as BuiltList<Object>);
           break;
         case 'context_name':
           result.contextName = serializers.deserialize(value,

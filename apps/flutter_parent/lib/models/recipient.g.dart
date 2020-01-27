@@ -83,7 +83,7 @@ class _$RecipientSerializer implements StructuredSerializer<Recipient> {
               specifiedType: const FullType(BuiltMap, const [
                 const FullType(String),
                 const FullType(BuiltList, const [const FullType(String)])
-              ])) as BuiltMap<dynamic, dynamic>);
+              ])));
           break;
       }
     }

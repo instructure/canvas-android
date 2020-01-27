@@ -97,7 +97,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     String semanticsLabel,
     Widget child,
   }) {
-    double size = 140; // May change once placeholders are replaced with panda images
+    double size = 140;
     return Container(
       key: anchorKey,
       width: size,

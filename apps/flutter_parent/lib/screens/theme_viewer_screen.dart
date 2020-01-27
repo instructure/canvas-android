@@ -267,9 +267,10 @@ class _ThemeViewerScreenState extends State<ThemeViewerScreen> {
                   Text("100 pts", style: Theme.of(context).textTheme.caption),
                   Padding(
                     padding: const EdgeInsets.only(left: 12, right: 4),
-                    child: Icon(Icons.check_circle, size: 20, color: ParentColors.success),
+                    child: Icon(Icons.check_circle, size: 20, color: ParentTheme.of(context).successColor),
                   ),
-                  Text("Submitted", style: Theme.of(context).textTheme.caption.apply(color: ParentColors.success)),
+                  Text("Submitted",
+                      style: Theme.of(context).textTheme.caption.apply(color: ParentTheme.of(context).successColor)),
                 ],
               ),
             ],

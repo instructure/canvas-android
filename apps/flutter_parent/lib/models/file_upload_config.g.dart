@@ -57,10 +57,8 @@ class _$FileUploadConfigSerializer
           break;
         case 'upload_params':
           result.params.replace(serializers.deserialize(value,
-              specifiedType: const FullType(BuiltMap, const [
-                const FullType(String),
-                const FullType(String)
-              ])) as BuiltMap<dynamic, dynamic>);
+              specifiedType: const FullType(BuiltMap,
+                  const [const FullType(String), const FullType(String)])));
           break;
       }
     }

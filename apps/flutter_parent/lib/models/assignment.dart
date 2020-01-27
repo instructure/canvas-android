@@ -50,7 +50,7 @@ abstract class Assignment implements Built<Assignment, AssignmentBuilder> {
 
   @nullable
   @BuiltValueField(wireName: "grading_type")
-  String get gradingType;
+  GradingType get gradingType;
 
   @nullable
   @BuiltValueField(wireName: "html_url")
@@ -179,6 +179,38 @@ abstract class Assignment implements Built<Assignment, AssignmentBuilder> {
     final isPastDue = dueAt?.isBefore(DateTime.now()) == true;
     return isPastDue && (submission == null || (submission.attempt == 0 && submission.grade == null));
   }
+}
+
+@BuiltValueEnum(wireName: 'grading_type')
+class GradingType extends EnumClass {
+  const GradingType._(String name) : super(name);
+
+  static BuiltSet<GradingType> get values => _$gradingTypeValues;
+
+  static GradingType valueOf(String name) => _$gradingTypeValueOf(name);
+
+  static Serializer<GradingType> get serializer => _$gradingTypeSerializer;
+
+  @BuiltValueEnumConst(wireName: 'pass_fail')
+  static const GradingType passFail = _$gradingTypePassFail;
+
+  @BuiltValueEnumConst(wireName: 'percent')
+  static const GradingType percent = _$gradingTypePercent;
+
+  @BuiltValueEnumConst(wireName: 'letter_grade')
+  static const GradingType letterGrade = _$gradingTypeLetterGrade;
+
+  @BuiltValueEnumConst(wireName: 'points')
+  static const GradingType points = _$gradingTypePoints;
+
+  @BuiltValueEnumConst(wireName: 'gpa_scale')
+  static const GradingType gpaScale = _$gradingTypeGpaScale;
+
+  @BuiltValueEnumConst(wireName: 'not_graded')
+  static const GradingType notGraded = _$gradingTypeNotGraded;
+
+  @BuiltValueEnumConst(fallback: true)
+  static const GradingType other = _$gradingTypeOther;
 }
 
 @BuiltValueEnum(wireName: 'submission_types')

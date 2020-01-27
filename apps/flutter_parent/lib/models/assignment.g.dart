@@ -6,6 +6,46 @@ part of assignment;
 // BuiltValueGenerator
 // **************************************************************************
 
+const GradingType _$gradingTypePassFail = const GradingType._('passFail');
+const GradingType _$gradingTypePercent = const GradingType._('percent');
+const GradingType _$gradingTypeLetterGrade = const GradingType._('letterGrade');
+const GradingType _$gradingTypePoints = const GradingType._('points');
+const GradingType _$gradingTypeGpaScale = const GradingType._('gpaScale');
+const GradingType _$gradingTypeNotGraded = const GradingType._('notGraded');
+const GradingType _$gradingTypeOther = const GradingType._('other');
+
+GradingType _$gradingTypeValueOf(String name) {
+  switch (name) {
+    case 'passFail':
+      return _$gradingTypePassFail;
+    case 'percent':
+      return _$gradingTypePercent;
+    case 'letterGrade':
+      return _$gradingTypeLetterGrade;
+    case 'points':
+      return _$gradingTypePoints;
+    case 'gpaScale':
+      return _$gradingTypeGpaScale;
+    case 'notGraded':
+      return _$gradingTypeNotGraded;
+    case 'other':
+      return _$gradingTypeOther;
+    default:
+      return _$gradingTypeOther;
+  }
+}
+
+final BuiltSet<GradingType> _$gradingTypeValues =
+    new BuiltSet<GradingType>(const <GradingType>[
+  _$gradingTypePassFail,
+  _$gradingTypePercent,
+  _$gradingTypeLetterGrade,
+  _$gradingTypePoints,
+  _$gradingTypeGpaScale,
+  _$gradingTypeNotGraded,
+  _$gradingTypeOther,
+]);
+
 const SubmissionTypes _$submissionTypesDiscussionTopic =
     const SubmissionTypes._('discussionTopic');
 const SubmissionTypes _$submissionTypesOnlineQuiz =
@@ -63,6 +103,7 @@ final BuiltSet<SubmissionTypes> _$submissionTypesValues =
 ]);
 
 Serializer<Assignment> _$assignmentSerializer = new _$AssignmentSerializer();
+Serializer<GradingType> _$gradingTypeSerializer = new _$GradingTypeSerializer();
 Serializer<SubmissionTypes> _$submissionTypesSerializer =
     new _$SubmissionTypesSerializer();
 
@@ -152,7 +193,7 @@ class _$AssignmentSerializer implements StructuredSerializer<Assignment> {
       result.add(null);
     } else {
       result.add(serializers.serialize(object.gradingType,
-          specifiedType: const FullType(String)));
+          specifiedType: const FullType(GradingType)));
     }
     result.add('html_url');
     if (object.htmlUrl == null) {
@@ -260,7 +301,7 @@ class _$AssignmentSerializer implements StructuredSerializer<Assignment> {
           break;
         case 'grading_type':
           result.gradingType = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(GradingType)) as GradingType;
           break;
         case 'html_url':
           result.htmlUrl = serializers.deserialize(value,
@@ -282,7 +323,7 @@ class _$AssignmentSerializer implements StructuredSerializer<Assignment> {
           result.submissionList.replace(serializers.deserialize(value,
                   specifiedType: const FullType(
                       BuiltList, const [const FullType(Submission)]))
-              as BuiltList<dynamic>);
+              as BuiltList<Object>);
           break;
         case 'assignment_group_id':
           result.assignmentGroupId = serializers.deserialize(value,
@@ -356,13 +397,47 @@ class _$AssignmentSerializer implements StructuredSerializer<Assignment> {
           result.submissionTypes.replace(serializers.deserialize(value,
                   specifiedType: const FullType(
                       BuiltList, const [const FullType(SubmissionTypes)]))
-              as BuiltList<dynamic>);
+              as BuiltList<Object>);
           break;
       }
     }
 
     return result.build();
   }
+}
+
+class _$GradingTypeSerializer implements PrimitiveSerializer<GradingType> {
+  static const Map<String, String> _toWire = const <String, String>{
+    'passFail': 'pass_fail',
+    'percent': 'percent',
+    'letterGrade': 'letter_grade',
+    'points': 'points',
+    'gpaScale': 'gpa_scale',
+    'notGraded': 'not_graded',
+  };
+  static const Map<String, String> _fromWire = const <String, String>{
+    'pass_fail': 'passFail',
+    'percent': 'percent',
+    'letter_grade': 'letterGrade',
+    'points': 'points',
+    'gpa_scale': 'gpaScale',
+    'not_graded': 'notGraded',
+  };
+
+  @override
+  final Iterable<Type> types = const <Type>[GradingType];
+  @override
+  final String wireName = 'grading_type';
+
+  @override
+  Object serialize(Serializers serializers, GradingType object,
+          {FullType specifiedType = FullType.unspecified}) =>
+      _toWire[object.name] ?? object.name;
+
+  @override
+  GradingType deserialize(Serializers serializers, Object serialized,
+          {FullType specifiedType = FullType.unspecified}) =>
+      GradingType.valueOf(_fromWire[serialized] ?? serialized as String);
 }
 
 class _$SubmissionTypesSerializer
@@ -418,7 +493,7 @@ class _$Assignment extends Assignment {
   @override
   final String courseId;
   @override
-  final String gradingType;
+  final GradingType gradingType;
   @override
   final String htmlUrl;
   @override
@@ -706,9 +781,9 @@ class AssignmentBuilder implements Builder<Assignment, AssignmentBuilder> {
   String get courseId => _$this._courseId;
   set courseId(String courseId) => _$this._courseId = courseId;
 
-  String _gradingType;
-  String get gradingType => _$this._gradingType;
-  set gradingType(String gradingType) => _$this._gradingType = gradingType;
+  GradingType _gradingType;
+  GradingType get gradingType => _$this._gradingType;
+  set gradingType(GradingType gradingType) => _$this._gradingType = gradingType;
 
   String _htmlUrl;
   String get htmlUrl => _$this._htmlUrl;
