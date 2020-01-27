@@ -12,6 +12,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/screens/web_login/web_login_screen.dart';
@@ -29,30 +30,32 @@ class LoginLandingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return DefaultParentTheme(
       builder: (context) => Scaffold(
-        endDrawer: Drawer(
-          child: SafeArea(
-            child: Center(
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: SNICKERS.length,
-                itemBuilder: (context, index) {
-                  var snicker = SNICKERS[index];
-                  return ListTile(
-                    title: Text(snicker.title),
-                    subtitle: Text(snicker.subtitle),
-                    onTap: () {
-                      // TODO: needs test
-                      locator<QuickNav>().push(
-                        context,
-                        WebLoginScreen(snicker.domain, user: snicker.username, pass: snicker.password),
-                      );
-                    },
-                  );
-                },
+        endDrawer: kReleaseMode
+            ? null // Don't show snickers in release mode
+            : Drawer(
+                child: SafeArea(
+                  child: Center(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: SNICKERS.length,
+                      itemBuilder: (context, index) {
+                        var snicker = SNICKERS[index];
+                        return ListTile(
+                          title: Text(snicker.title),
+                          subtitle: Text(snicker.subtitle),
+                          onTap: () {
+                            // TODO: needs test
+                            locator<QuickNav>().push(
+                              context,
+                              WebLoginScreen(snicker.domain, user: snicker.username, pass: snicker.password),
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                ),
               ),
-            ),
-          ),
-        ),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
