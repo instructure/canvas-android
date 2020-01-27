@@ -33,14 +33,6 @@ import 'package:transparent_image/transparent_image.dart';
 
 import 'create_conversation_interactor.dart';
 
-class AlwaysDisabledFocusNode extends FocusNode {
-  @override
-  bool get hasFocus => false;
-
-  @override
-  bool get skipTraversal => false;
-}
-
 class CreateConversationScreen extends StatefulWidget {
   CreateConversationScreen(this._course) : _subjectTemplate = _course.name;
 
@@ -436,6 +428,7 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
   Widget _subjectWidget(BuildContext context) {
     return Semantics(
       label: L10n(context).messageSubjectInputHint,
+      focusable: true,
       child: FocusScope(
         node: subjectFocusScopeNode,
         onKey: (node,event) {
@@ -451,6 +444,12 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
               //print("Up arrow pressed!");
               FocusScope.of(context).previousFocus();
               return true; // Key handled
+            }
+            else if(event.data.logicalKey == LogicalKeyboardKey.tab) {
+              print("TAB key pressed");
+              FocusScope.of(context).requestFocus(messageFocusNode);
+              node.consumeKeyboardToken();
+              return true;
             }
           }
           return false; // Key not handled
@@ -474,6 +473,7 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
   Widget _messageWidget(BuildContext context) {
     return Semantics(
       label: L10n(context).messageBodyInputHint,
+      focusable: true,
       child: FocusScope(
         onKey: (node,event) {
           if(event.runtimeType == RawKeyDownEvent) {
@@ -482,12 +482,18 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
               FocusScope.of(context).previousFocus();
               return true; // Key handled
             }
+            // Tab doesn't seem to work so well on multi-line TextFields
+//            else if(event.data.logicalKey == LogicalKeyboardKey.tab) {
+//              bool result = node.nextFocus();
+//              print("TAB pressed! nextFocus result = $result");
+//              node.consumeKeyboardToken();
+//              return true;
+//            }
           }
 
           return false; // Key not handled
         },
         node: messageFocusScopeNode,
-
         child: TextField(
           key: CreateConversationScreen.messageKey,
           controller: _bodyController,
