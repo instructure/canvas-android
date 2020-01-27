@@ -21,6 +21,7 @@ import 'package:flutter_parent/models/message.dart';
 import 'package:flutter_parent/screens/inbox/attachment_utils/attachment_handler.dart';
 import 'package:flutter_parent/screens/inbox/conversation_details/message_widget.dart';
 import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_screen.dart';
+import 'package:flutter_parent/utils/common_widgets/ArrowAwareFocusScope.dart';
 import 'package:flutter_parent/utils/common_widgets/view_attachment/view_attachment_screen.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
@@ -124,34 +125,8 @@ class _ConversationReplyScreenState extends State<ConversationReplyScreen> {
     return DefaultParentTheme(
       builder: (context) => WillPopScope(
         onWillPop: _onWillPop,
-        child: FocusScope(
-          onKey: (node, event) {
-            if(event is RawKeyDownEvent) {
-              if(event.logicalKey == LogicalKeyboardKey.arrowDown) {
-                print("Key Down!  in _content");
-                node.focusInDirection(TraversalDirection.down);
-                return true; // Event handled
-              }
-              if(event.logicalKey == LogicalKeyboardKey.arrowUp) {
-                print("Key Up!  in _content");
-                node.focusInDirection(TraversalDirection.up);
-                return true; // Event handled
-              }
-              if(event.logicalKey == LogicalKeyboardKey.arrowLeft) {
-                print("Key Up!  in _content");
-                node.focusInDirection(TraversalDirection.left);
-                return true; // Event handled
-              }
-              if(event.logicalKey == LogicalKeyboardKey.arrowRight) {
-                print("Key Up!  in _content");
-                node.focusInDirection(TraversalDirection.right);
-                return true; // Event handled
-              }
-            }
-            return false; // Event unhandled
-          },
+        child: ArrowAwareFocusScope(
           node: _focusScopeNode,
-
           child: Scaffold(
             key: _scaffoldKey,
             appBar: _appBar(context),

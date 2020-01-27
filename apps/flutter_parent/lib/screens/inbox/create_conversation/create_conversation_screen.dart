@@ -20,6 +20,7 @@ import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/models/recipient.dart';
 import 'package:flutter_parent/screens/inbox/attachment_utils/attachment_extensions.dart';
 import 'package:flutter_parent/screens/inbox/attachment_utils/attachment_handler.dart';
+import 'package:flutter_parent/utils/common_widgets/ArrowAwareFocusScope.dart';
 import 'package:flutter_parent/utils/common_widgets/avatar.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/common_widgets/user_name.dart';
@@ -174,29 +175,8 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
     return DefaultParentTheme(
       builder: (context) => WillPopScope(
         onWillPop: _onWillPop,
-        child: FocusScope(
+        child: ArrowAwareFocusScope(
           node: _focusScopeNode,
-          onKey: (node, event) {
-            if(event is RawKeyDownEvent) {
-              if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
-                node.focusInDirection(TraversalDirection.down);
-                return true; // Event handled
-              }
-              if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
-                node.focusInDirection(TraversalDirection.up);
-                return true; // Event handled
-              }
-              if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
-                node.focusInDirection(TraversalDirection.right);
-                return true; // Event handled
-              }
-              if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
-                node.focusInDirection(TraversalDirection.left);
-                return true; // Event handled
-              }
-            }
-            return false; // Event unhandled
-          },
           child: Scaffold(
             key: _scaffoldKey,
             appBar: _appBar(context),

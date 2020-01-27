@@ -20,6 +20,8 @@ import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:package_info/package_info.dart';
 
+import '../ArrowAwareFocusScope.dart';
+
 class ErrorReportDialog extends StatefulWidget {
   static const Key subjectKey = Key('subject');
   static const Key descriptionKey = Key('description');
@@ -117,29 +119,8 @@ class _ErrorReportDialogState extends State<ErrorReportDialog> {
       child: Form(
         key: _formKey,
         autovalidate: _autoValidate,
-        child: FocusScope(
+        child: ArrowAwareFocusScope(
           node: _focusScopeNode,
-          onKey: (node, event) {
-            if(event is RawKeyDownEvent) {
-              if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
-                node.focusInDirection(TraversalDirection.down);
-                return true; // Event handled
-              }
-              if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
-                node.focusInDirection(TraversalDirection.up);
-                return true; // Event handled
-              }
-              if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
-                node.focusInDirection(TraversalDirection.right);
-                return true; // Event handled
-              }
-              if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
-                node.focusInDirection(TraversalDirection.left);
-                return true; // Event handled
-              }
-            }
-            return false; // Event unhandled
-          },
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,

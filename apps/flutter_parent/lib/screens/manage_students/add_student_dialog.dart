@@ -15,6 +15,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
+import 'package:flutter_parent/utils/common_widgets/ArrowAwareFocusScope.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
@@ -46,29 +47,8 @@ class AddStudentDialogState extends State<AddStudentDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return FocusScope(
+    return ArrowAwareFocusScope(
       node: _focusScopeNode,
-      onKey: (node, event) {
-        if(event is RawKeyDownEvent) {
-          if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
-            node.focusInDirection(TraversalDirection.down);
-            return true; // Event handled
-          }
-          if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
-            node.focusInDirection(TraversalDirection.up);
-            return true; // Event handled
-          }
-          if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
-            node.focusInDirection(TraversalDirection.right);
-            return true; // Event handled
-          }
-          if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
-            node.focusInDirection(TraversalDirection.left);
-            return true; // Event handled
-          }
-        }
-        return false; // Event unhandled
-      },
       child: AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
         title: Text(L10n(context).addStudent),
