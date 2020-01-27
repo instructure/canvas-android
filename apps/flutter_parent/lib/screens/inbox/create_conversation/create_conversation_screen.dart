@@ -18,6 +18,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/models/recipient.dart';
+import 'package:flutter_parent/screens/inbox/attachment_utils/attachment_extensions.dart';
 import 'package:flutter_parent/screens/inbox/attachment_utils/attachment_handler.dart';
 import 'package:flutter_parent/utils/common_widgets/avatar.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
@@ -712,7 +713,7 @@ class AttachmentWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
-                CanvasIcons.document,
+                handler.attachment.getIcon(),
                 color: Theme.of(context).accentColor,
               ),
               Padding(

@@ -19,11 +19,12 @@ import 'package:flutter_parent/network/api/auth_api.dart';
 import 'package:flutter_parent/network/api/course_api.dart';
 import 'package:flutter_parent/network/api/enrollments_api.dart';
 import 'package:flutter_parent/network/api/error_report_api.dart';
-import 'package:flutter_parent/network/api/file_upload_api.dart';
+import 'package:flutter_parent/network/api/file_api.dart';
 import 'package:flutter_parent/network/api/inbox_api.dart';
 import 'package:flutter_parent/screens/alert_thresholds/alert_thresholds_interactor.dart';
 import 'package:flutter_parent/screens/alerts/alerts_interactor.dart';
 import 'package:flutter_parent/screens/announcements/announcement_details_interactor.dart';
+import 'package:flutter_parent/screens/assignments/assignment_details_interactor.dart';
 import 'package:flutter_parent/screens/courses/courses_interactor.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_interactor.dart';
 import 'package:flutter_parent/screens/dashboard/alert_notifier.dart';
@@ -39,8 +40,16 @@ import 'package:flutter_parent/screens/manage_students/manage_students_interacto
 import 'package:flutter_parent/screens/settings/settings_interactor.dart';
 import 'package:flutter_parent/screens/web_login/web_login_interactor.dart';
 import 'package:flutter_parent/utils/common_widgets/error_report/error_report_interactor.dart';
+import 'package:flutter_parent/utils/common_widgets/view_attachment/view_attachment_interactor.dart';
+import 'package:flutter_parent/utils/common_widgets/view_attachment/viewers/audio_video_attachment_viewer_interactor.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
+import 'package:flutter_parent/utils/veneers/AndroidIntentVeneer.dart';
+import 'package:flutter_parent/utils/veneers/flutter_downloader_veneer.dart';
+import 'package:flutter_parent/utils/veneers/path_provider_veneer.dart';
 import 'package:get_it/get_it.dart';
+import 'package:permission_handler/permission_handler.dart';
+
+import 'common_widgets/view_attachment/fetcher/attachment_fetcher_interactor.dart';
 
 GetIt locator = GetIt.instance;
 
@@ -53,14 +62,17 @@ void setupLocator() {
   locator.registerLazySingleton<CourseApi>(() => CourseApi());
   locator.registerLazySingleton<EnrollmentsApi>(() => EnrollmentsApi());
   locator.registerLazySingleton<ErrorReportApi>(() => ErrorReportApi());
-  locator.registerLazySingleton<FileUploadApi>(() => FileUploadApi());
+  locator.registerLazySingleton<FileApi>(() => FileApi());
   locator.registerLazySingleton<InboxApi>(() => InboxApi());
 
   // Interactors
   locator.registerFactory<AlertsInteractor>(() => AlertsInteractor());
   locator.registerFactory<AlertThresholdsInteractor>(() => AlertThresholdsInteractor());
   locator.registerFactory<AnnouncementDetailsInteractor>(() => AnnouncementDetailsInteractor());
+  locator.registerFactory<AttachmentFetcherInteractor>(() => AttachmentFetcherInteractor());
+  locator.registerFactory<AssignmentDetailsInteractor>(() => AssignmentDetailsInteractor());
   locator.registerFactory<AttachmentPickerInteractor>(() => AttachmentPickerInteractor());
+  locator.registerFactory<AudioVideoAttachmentViewerInteractor>(() => AudioVideoAttachmentViewerInteractor());
   locator.registerFactory<ConversationDetailsInteractor>(() => ConversationDetailsInteractor());
   locator.registerFactory<ConversationListInteractor>(() => ConversationListInteractor());
   locator.registerFactory<ConversationReplyInteractor>(() => ConversationReplyInteractor());
@@ -72,7 +84,14 @@ void setupLocator() {
   locator.registerFactory<ErrorReportInteractor>(() => ErrorReportInteractor());
   locator.registerFactory<ManageStudentsInteractor>(() => ManageStudentsInteractor());
   locator.registerFactory<SettingsInteractor>(() => SettingsInteractor());
+  locator.registerFactory<ViewAttachmentInteractor>(() => ViewAttachmentInteractor());
   locator.registerFactory<WebLoginInteractor>(() => WebLoginInteractor());
+
+  // Veneers and mockable dependencies
+  locator.registerLazySingleton<AndroidIntentVeneer>(() => AndroidIntentVeneer());
+  locator.registerLazySingleton<FlutterDownloaderVeneer>(() => FlutterDownloaderVeneer());
+  locator.registerLazySingleton<PathProviderVeneer>(() => PathProviderVeneer());
+  locator.registerLazySingleton<PermissionHandler>(() => PermissionHandler());
 
   // Other
   locator.registerLazySingleton<QuickNav>(() => QuickNav());

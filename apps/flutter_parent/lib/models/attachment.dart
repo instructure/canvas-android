@@ -15,6 +15,7 @@
 import 'package:built_value/built_value.dart';
 import 'package:built_value/json_object.dart';
 import 'package:built_value/serializer.dart';
+import 'package:mime/mime.dart';
 
 part 'attachment.g.dart';
 
@@ -57,6 +58,21 @@ abstract class Attachment implements Built<Attachment, AttachmentBuilder> {
   DateTime get createdAt;
 
   int get size;
+
+  String inferContentType() {
+    if (contentType != null && contentType.isNotEmpty) return contentType;
+
+    // First, attempt to infer content type from file name
+    String type = lookupMimeType(filename ?? '');
+
+    // Next, attempt to infer from url
+    if (type == null) type = lookupMimeType(url ?? '');
+
+    // Last, attempt to infer from display name
+    if (type == null) type = lookupMimeType(displayName ?? '');
+
+    return type;
+  }
 
   Attachment._();
   factory Attachment([void Function(AttachmentBuilder) updates]) = _$Attachment;

@@ -15,6 +15,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/parent_app.dart';
 import 'package:flutter_parent/utils/crash_utils.dart';
@@ -29,6 +30,7 @@ void main() {
       ApiPrefs.init(),
       ThemePrefs.init(),
       CrashUtils.init(),
+      FlutterDownloader.initialize(),
     ]);
     setupLocator();
 

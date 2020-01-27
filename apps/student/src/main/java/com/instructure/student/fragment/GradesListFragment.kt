@@ -199,8 +199,10 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
         }
 
         override fun notifyGradeChanged(courseGrade: CourseGrade?) {
+            Logger.d("Logging for Grades E2E, current total grade is: ${txtOverallGrade.text}")
             if (!isAdded) return
             val gradeString = formatGrade(courseGrade, !showTotalCheckBox.isChecked)
+            Logger.d("Logging for Grades E2E, new total grade is: $gradeString")
             txtOverallGrade.text = gradeString
             txtOverallGrade.contentDescription = getContentDescriptionForMinusGradeString(gradeString, requireContext())
             lockGrade(course.hideFinalGrades || courseGrade?.isLocked == true)

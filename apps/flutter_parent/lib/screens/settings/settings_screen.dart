@@ -20,6 +20,7 @@ import 'package:flutter_parent/screens/settings/settings_interactor.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/design/theme_transition/theme_transition_target.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
+import 'package:flutter_svg/svg.dart';
 
 class SettingsScreen extends StatefulWidget {
   @override
@@ -44,10 +45,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           body: ListView(
             children: [
-              Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(16, 16, 16, 0),
-                child: Text(L10n(context).appearance.toUpperCase(), style: Theme.of(context).textTheme.subtitle),
-              ),
               Container(
                 child: ListTile(
                   title: Text(L10n(context).theme),
@@ -69,7 +66,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       padding: EdgeInsets.zero,
       child: Container(
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             _themeOption(
               anchorKey: _lightModeKey,
@@ -77,36 +74,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
               context: context,
               selected: !ParentTheme.of(context).isDarkMode,
               semanticsLabel: L10n(context).lightModeLabel,
-              child: Container(
-                // Placeholder until panda image is ready
-                color: Colors.white,
-                child: Center(
-                  child: Icon(
-                    Icons.brightness_7,
-                    color: Colors.amber,
-                    size: 64,
-                  ),
-                ),
-              ),
+              child: SvgPicture.asset('assets/svg/panda-light-mode.svg'),
             ),
-            SizedBox(width: 8),
             _themeOption(
               anchorKey: _darkModeKey,
               buttonKey: Key('dark-mode-button'),
               context: context,
               selected: ParentTheme.of(context).isDarkMode,
               semanticsLabel: L10n(context).darkModeLabel,
-              child: Container(
-                // Placeholder until panda image is ready
-                color: Colors.black,
-                child: Center(
-                  child: Icon(
-                    Icons.brightness_7,
-                    color: Colors.grey[200],
-                    size: 64,
-                  ),
-                ),
-              ),
+              child: SvgPicture.asset('assets/svg/panda-dark-mode.svg'),
             ),
           ],
         ),
@@ -122,20 +98,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
     String semanticsLabel,
     Widget child,
   }) {
-    double size = 130; // May change once placeholders are replaced with panda images
+    double size = 140; // May change once placeholders are replaced with panda images
     return Container(
       key: anchorKey,
       width: size,
       height: size,
-      padding: EdgeInsets.all(4),
-      decoration: selected
+      padding: EdgeInsets.all(5),
+      foregroundDecoration: selected
           ? BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: Theme.of(context).accentColor, width: 3),
+              borderRadius: BorderRadius.circular(100),
+              border: Border.all(color: Theme.of(context).accentColor, width: 2),
             )
           : null,
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(100),
         child: Stack(
           children: <Widget>[
             child,

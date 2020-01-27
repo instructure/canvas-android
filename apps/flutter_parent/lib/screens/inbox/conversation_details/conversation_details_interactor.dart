@@ -12,7 +12,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_parent/models/attachment.dart';
 import 'package:flutter_parent/models/conversation.dart';
 import 'package:flutter_parent/models/message.dart';
@@ -20,6 +20,7 @@ import 'package:flutter_parent/network/api/inbox_api.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/dashboard/inbox_notifier.dart';
 import 'package:flutter_parent/screens/inbox/reply/conversation_reply_screen.dart';
+import 'package:flutter_parent/utils/common_widgets/view_attachment/view_attachment_screen.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
@@ -40,6 +41,6 @@ class ConversationDetailsInteractor {
   String getCurrentUserId() => ApiPrefs.getUser().id;
 
   void viewAttachment(BuildContext context, Attachment attachment) {
-    // TODO: Will be implemented in MBL-13655
+    locator<QuickNav>().push(context, ViewAttachmentScreen(attachment));
   }
 }

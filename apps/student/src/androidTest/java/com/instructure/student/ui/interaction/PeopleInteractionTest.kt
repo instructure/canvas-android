@@ -16,21 +16,45 @@
 package com.instructure.student.ui.interaction
 
 import com.instructure.canvas.espresso.Stub
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvasapi2.models.User
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
 import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.routeTo
+import com.instructure.student.ui.utils.tokenLogin
 import org.junit.Test
 
 class PeopleInteractionTest : StudentTest() {
     override fun displaysPageObjects() = Unit // Not used for interaction tests
 
-    @Stub
     @Test
-    @TestMetaData(Priority.P1, FeatureCategory.PEOPLE, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P1, FeatureCategory.PEOPLE, TestCategory.INTERACTION, false)
     fun testClick_openContextCard() {
         // Should be able to view all enrolled users and tap on one to open their context card
+        goToPeopleList()
+        peopleListPage.selectPerson(personToSelect)
+        personDetailsPage.assertIsPerson(personToSelect)
+    }
+
+    private lateinit var personToSelect: User
+
+    private fun goToPeopleList() {
+        val data = MockCanvas.init(
+            studentCount = 1,
+            teacherCount = 1,
+            courseCount = 1
+        )
+
+        val course = data.courses.values.first()
+        val student = data.students[0]
+        personToSelect = data.teachers[0]
+
+        tokenLogin(data.domain, data.tokenFor(student)!!, student)
+        routeTo("courses/${course.id}/users", data.domain)
     }
 
 }

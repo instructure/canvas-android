@@ -12,18 +12,15 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/screens/announcements/announcement_view_state.dart';
+import 'package:flutter_parent/utils/WebViewUtils.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:intl/intl.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-
 import 'announcement_details_interactor.dart';
 
 enum AnnouncementType { INSTITUTION, COURSE }
@@ -104,13 +101,8 @@ class _AnnouncementDetailScreenState extends State<AnnouncementDetailScreen> {
           child: WebView(
             initialUrl: 'about:blank',
             onWebViewCreated: (WebViewController webViewController) async {
-              String fileText = await rootBundle.loadString('assets/html_wrapper.html');
-              fileText = fileText.replaceAll('{FLUTTER_CONTENTS}', announcementViewState.announcementMessage);
-              String uri = Uri.dataFromString(fileText,
-                  mimeType: 'text/html',
-                  encoding: Encoding.getByName('utf-8'))
-                  .toString();
-              webViewController.loadUrl(uri);
+              webViewController.loadHtml(
+                  announcementViewState.announcementMessage);
             },
             javascriptMode: JavascriptMode.unrestricted,
           ),
