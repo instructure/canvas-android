@@ -13,6 +13,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/utils/common_widgets/error_report/error_report_interactor.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
@@ -118,6 +119,27 @@ class _ErrorReportDialogState extends State<ErrorReportDialog> {
         autovalidate: _autoValidate,
         child: FocusScope(
           node: _focusScopeNode,
+          onKey: (node, event) {
+            if(event is RawKeyDownEvent) {
+              if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
+                node.focusInDirection(TraversalDirection.down);
+                return true; // Event handled
+              }
+              if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
+                node.focusInDirection(TraversalDirection.up);
+                return true; // Event handled
+              }
+              if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
+                node.focusInDirection(TraversalDirection.right);
+                return true; // Event handled
+              }
+              if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
+                node.focusInDirection(TraversalDirection.left);
+                return true; // Event handled
+              }
+            }
+            return false; // Event unhandled
+          },
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
@@ -163,7 +185,8 @@ class _ErrorReportDialogState extends State<ErrorReportDialog> {
                   onChanged: (option) async {
                     setState(() => _selectedSeverity = option.severity);
                     // Clear focus here, as it can go back to the text forms if they were previously selected
-                    _focusScopeNode.requestFocus(FocusNode());
+                    // NO!  This messes up dpav-nav
+                    //_focusScopeNode.requestFocus(FocusNode());
                   },
                   value: severityOptions.firstWhere((option) => option.severity == _selectedSeverity),
                   items: severityOptions.map((option) {
