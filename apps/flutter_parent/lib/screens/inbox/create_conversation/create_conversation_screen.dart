@@ -74,9 +74,7 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
   CreateConversationInteractor _interactor = locator<CreateConversationInteractor>();
 
   // Focus nodes to aid us in supporting dpad navigation through TextFields.
-  FocusScopeNode subjectFocusScopeNode = FocusScopeNode();
-  FocusNode messageFocusNode = FocusNode();
-  FocusScopeNode messageFocusScopeNode = FocusScopeNode();
+  FocusScopeNode _focusScopeNode = FocusScopeNode();
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -97,9 +95,7 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
   // Make sure that we dispose of our focus-related nodes when we dispose this widget.
   @override
   void dispose() {
-    messageFocusNode.dispose();
-    messageFocusScopeNode.dispose();
-    subjectFocusScopeNode.dispose();
+    _focusScopeNode.dispose();
     super.dispose();
   }
 
@@ -178,10 +174,34 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
     return DefaultParentTheme(
       builder: (context) => WillPopScope(
         onWillPop: _onWillPop,
-        child: Scaffold(
-          key: _scaffoldKey,
-          appBar: _appBar(context),
-          body: _content(context),
+        child: FocusScope(
+          node: _focusScopeNode,
+          onKey: (node, event) {
+            if(event is RawKeyDownEvent) {
+              if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
+                node.focusInDirection(TraversalDirection.down);
+                return true; // Event handled
+              }
+              if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
+                node.focusInDirection(TraversalDirection.up);
+                return true; // Event handled
+              }
+              if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
+                node.focusInDirection(TraversalDirection.right);
+                return true; // Event handled
+              }
+              if (event.logicalKey == LogicalKeyboardKey.arrowLeft) {
+                node.focusInDirection(TraversalDirection.left);
+                return true; // Event handled
+              }
+            }
+            return false; // Event unhandled
+          },
+          child: Scaffold(
+            key: _scaffoldKey,
+            appBar: _appBar(context),
+            body: _content(context),
+          ),
         ),
       ),
     );
@@ -430,42 +450,16 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
     return Semantics(
       label: L10n(context).messageSubjectInputHint,
       focusable: true,
-      child: FocusScope(
-        node: subjectFocusScopeNode,
-        onKey: (node,event) {
-          if(event.runtimeType == RawKeyDownEvent) {
-            if(event.data.logicalKey == LogicalKeyboardKey.arrowDown) {
-              //print("Down arrow pressed!");
-              // Simply calling nextFocus() will not work if the message field is unpopulated.
-              // We need to transfer focus to a FocusNode that we added to the message area.
-              FocusScope.of(context).requestFocus(messageFocusNode);
-              return true; // Key handled
-            }
-            else if(event.data.logicalKey == LogicalKeyboardKey.arrowUp) {
-              //print("Up arrow pressed!");
-              FocusScope.of(context).previousFocus();
-              return true; // Key handled
-            }
-            else if(event.data.logicalKey == LogicalKeyboardKey.tab) {
-              print("TAB key pressed");
-              FocusScope.of(context).requestFocus(messageFocusNode);
-              node.consumeKeyboardToken();
-              return true;
-            }
-          }
-          return false; // Key not handled
-        },
-        child: TextField(
-          key: CreateConversationScreen.subjectKey,
-          controller: _subjectController,
-          enabled: !_sending,
-          style: Theme.of(context).textTheme.body2,
-          textCapitalization: TextCapitalization.sentences,
-          decoration: InputDecoration(
-            hintText: L10n(context).messageSubjectInputHint,
-            contentPadding: EdgeInsets.all(16),
-            border: InputBorder.none,
-          ),
+      child: TextField(
+        key: CreateConversationScreen.subjectKey,
+        controller: _subjectController,
+        enabled: !_sending,
+        style: Theme.of(context).textTheme.body2,
+        textCapitalization: TextCapitalization.sentences,
+        decoration: InputDecoration(
+          hintText: L10n(context).messageSubjectInputHint,
+          contentPadding: EdgeInsets.all(16),
+          border: InputBorder.none,
         ),
       ),
     );
@@ -475,40 +469,18 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
     return Semantics(
       label: L10n(context).messageBodyInputHint,
       focusable: true,
-      child: FocusScope(
-        onKey: (node,event) {
-          if(event.runtimeType == RawKeyDownEvent) {
-            if(event.data.logicalKey == LogicalKeyboardKey.arrowUp) {
-              //print("Up arrow pressed!");
-              FocusScope.of(context).previousFocus();
-              return true; // Key handled
-            }
-            // Tab doesn't seem to work so well on multi-line TextFields
-//            else if(event.data.logicalKey == LogicalKeyboardKey.tab) {
-//              bool result = node.nextFocus();
-//              print("TAB pressed! nextFocus result = $result");
-//              node.consumeKeyboardToken();
-//              return true;
-//            }
-          }
-
-          return false; // Key not handled
-        },
-        node: messageFocusScopeNode,
-        child: TextField(
-          key: CreateConversationScreen.messageKey,
-          controller: _bodyController,
-          enabled: !_sending,
-          textCapitalization: TextCapitalization.sentences,
-          minLines: 4,
-          maxLines: null,
-          style: Theme.of(context).textTheme.body1,
-          decoration: InputDecoration(
-            hintText: L10n(context).messageBodyInputHint,
-            contentPadding: EdgeInsets.all(16),
-            border: InputBorder.none,
-          ),
-          focusNode: messageFocusNode,
+      child: TextField(
+        key: CreateConversationScreen.messageKey,
+        controller: _bodyController,
+        enabled: !_sending,
+        textCapitalization: TextCapitalization.sentences,
+        minLines: 4,
+        maxLines: null,
+        style: Theme.of(context).textTheme.body1,
+        decoration: InputDecoration(
+          hintText: L10n(context).messageBodyInputHint,
+          contentPadding: EdgeInsets.all(16),
+          border: InputBorder.none,
         ),
       ),
     );
