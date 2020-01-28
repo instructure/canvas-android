@@ -82,9 +82,18 @@ data class Course(
     val isObserver: Boolean get() = enrollments?.any { it.isObserver } ?: false
     val isDesigner: Boolean get() = enrollments?.any { it.isDesigner } ?: false
 
-    // If the general hide final setting is off, we still need to check MGP all grades setting
-    // The grade is Locked if they have no active period and the totals for all is hidden
-    // If we've made it this far, the course is definitely not Locked
+    /**
+     * If the general hide final setting is off, we still need to check MGP all grades setting
+     * The grade is Locked if they have no active period and the totals for all is hidden
+     * If we've made it this far, the course is definitely not Locked
+     *
+     * KEY NOTE: This is only accurate for general course grade viewing.
+     * If you are trying to view a grade w/in a filter that allows users to select specific grading periods, use the
+     * function [getCourseGradeForGradingPeriodSpecificEnrollment]
+     *
+     * The key here is that hideFinalGrades is true for all things, but isTotalsForAllGradingPeriodsEnabled is only
+     * true for when the _ALL_ grading period option is selected.
+     */
     private val isCourseGradeLocked: Boolean
         get() {
             if (hideFinalGrades) {
@@ -154,6 +163,17 @@ data class Course(
                         noFinalGrade(enrollment.finalGrade, enrollment.finalScore))
             }
 
+    fun getCourseGradeForGradingPeriodSpecificEnrollment(enrollment: Enrollment) : CourseGrade {
+        return CourseGrade(
+                enrollment.currentPeriodComputedCurrentGrade(),
+                enrollment.currentPeriodComputedCurrentScore(),
+                enrollment.currentPeriodComputedFinalGrade(),
+                enrollment.currentPeriodComputedFinalScore(),
+                hideFinalGrades, // We only care about hiding final grades in this case if the course wants them hidden
+                noCurrentGrade(enrollment.currentPeriodComputedCurrentGrade(), enrollment.currentPeriodComputedCurrentScore()),
+                noFinalGrade(enrollment.currentPeriodComputedFinalGrade(), enrollment.currentPeriodComputedFinalScore()))
+    }
+
     private fun noFinalGrade(finalGrade: String?, finalScore: Double?): Boolean =
             finalScore == null && (finalGrade == null || finalGrade.contains("N/A") || finalGrade.isEmpty())
 
@@ -167,6 +187,9 @@ data class Course(
         enrollments!!.add(enrollment)
     }
 
+    /**
+     * This function helps us to determine if we should be defaulting to the All Grading Period view or not.
+     */
     private fun hasActiveGradingPeriod(): Boolean {
         enrollments?.forEach { enrollment ->
             if (enrollment.isStudent || enrollment.isObserver) {

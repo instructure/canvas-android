@@ -267,6 +267,32 @@ class CourseTest {
     }
 
     @Test
+    fun isCourseGradeLockedForSpecificPeriod_hideAllGradingPeriods() {
+        val enrollment = Enrollment(
+                type = Enrollment.EnrollmentType.Student,
+                currentGradingPeriodId = 123,
+                multipleGradingPeriodsEnabled = true,
+                totalsForAllGradingPeriodsOption = false)
+        val enrollments = arrayListOf(enrollment)
+        val course = Course(hasGradingPeriods = true, enrollments = enrollments)
+
+        assertFalse(course.getCourseGradeForGradingPeriodSpecificEnrollment(enrollment).isLocked)
+    }
+
+    @Test
+    fun isCourseGradeLockedForSpecificPeriod_hideFinal() {
+        val enrollment = Enrollment(
+                type = Enrollment.EnrollmentType.Student,
+                currentGradingPeriodId = 123,
+                multipleGradingPeriodsEnabled = true,
+                totalsForAllGradingPeriodsOption = false)
+        val enrollments = arrayListOf(enrollment)
+        val course = Course(hasGradingPeriods = true, enrollments = enrollments, hideFinalGrades = true)
+
+        assertTrue(course.getCourseGradeForGradingPeriodSpecificEnrollment(enrollment).isLocked)
+    }
+
+    @Test
     fun courseHasNoCurrentGrade() {
         val enrollment = Enrollment(
                 type = Enrollment.EnrollmentType.Student,
