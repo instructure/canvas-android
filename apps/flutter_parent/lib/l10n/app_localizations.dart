@@ -514,6 +514,11 @@ class AppLocalizations {
 
   String get assignmentDueLabel => Intl.message('Due', desc: 'Label for an assignment due date');
 
+  String get assignmentGradeLabel => Intl.message(
+        'Grade',
+        desc: 'Label for the section that displays an assignment\'s grade',
+      );
+
   String get assignmentLockLabel => Intl.message('Locked', desc: 'Label for when an assignment is locked');
 
   String assignmentLockedModule(String moduleName) => Intl.message(
@@ -633,6 +638,54 @@ class AppLocalizations {
       Intl.message('High Contrast Mode', desc: 'Label for the switch that toggles high contrast mode');
 
   String get appearance => Intl.message('Appearance', desc: 'Label for the appearance section in the settings page');
+
+  /// Grade cell
+
+  String get submissionStatusSuccessTitle => Intl.message('Successfully submitted!',
+      desc: 'Title displayed in the grade cell for an assignment that has been submitted');
+
+  String submissionStatusSuccessSubtitle(String date, String time) {
+    return Intl.message(
+      'This assignment was submitted on $date at $time and is waiting to be graded',
+      desc: 'Subtitle displayed in the grade cell for an assignment that has been submitted and is awaiting a grade',
+      args: [date, time],
+    );
+  }
+
+  String outOfPoints(String points, num howMany) => Intl.plural(
+        howMany,
+        one: 'Out of 1 point',
+        other: 'Out of $points points',
+        desc: '',
+        args: [points],
+        precision: 2,
+      );
+
+  String get excused => Intl.message('Excused', desc: 'Grading status for an assignment marked as excused');
+
+  String get gradeComplete => Intl.message('Complete', desc: 'Grading status for an assignment marked as complete');
+
+  String get gradeIncomplete => Intl.message(
+        'Incomplete',
+        desc: 'Grading status for an assignment marked as incomplete',
+      );
+
+  String get accessibilityMinus => Intl.message(
+        "minus",
+        desc: "Screen reader-friendly replacement for the '-' character in letter grades like 'A-'",
+      );
+
+  String latePenalty(String pointsLost) => Intl.message(
+        'Late penalty (-$pointsLost)',
+        desc: 'Text displayed when a late penalty has been applied to the assignment',
+        args: [pointsLost],
+      );
+
+  String finalGrade(String grade) => Intl.message(
+        'Final Grade: $grade',
+        desc: 'Text that displays the final grade of an assignment',
+        args: [grade],
+      );
 
   /// Alert Thresholds Screen
   String get alertSettings => Intl.message('Alert Settings');
@@ -838,4 +891,6 @@ class AppLocalizations {
       Intl.message('Institution Announcement', desc: 'Title text shown for institution level announcements');
 
   String get genericNetworkError => Intl.message('Network error');
+
+  String get underConstruction => Intl.message('This feature is currently under construction');
 }

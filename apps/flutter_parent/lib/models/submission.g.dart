@@ -220,7 +220,7 @@ class _$SubmissionSerializer implements StructuredSerializer<Submission> {
           result.submissionHistory.replace(serializers.deserialize(value,
                   specifiedType: const FullType(
                       BuiltList, const [const FullType(Submission)]))
-              as BuiltList<dynamic>);
+              as BuiltList<Object>);
           break;
         case 'body':
           result.body = serializers.deserialize(value,

@@ -19,6 +19,7 @@ import 'package:flutter_parent/models/assignment_group.dart';
 import 'package:flutter_parent/models/course_grade.dart';
 import 'package:flutter_parent/screens/assignments/assignment_details_screen.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_model.dart';
+import 'package:flutter_parent/screens/under_construction_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
@@ -173,7 +174,14 @@ class _CourseGradeHeader extends StatelessWidget {
                 style: Theme.of(context).textTheme.caption.copyWith(color: studentColor),
               ),
             ),
-            onTap: () {}, // TODO: Add grading periods filter to model
+            onTap: () {
+              // TODO: Add grading periods filter to model
+              locator<QuickNav>().push(
+                  context,
+                  UnderConstructionScreen(
+                    showAppBar: true,
+                  ));
+            },
           ),
         ],
       ),

@@ -78,7 +78,7 @@ class _$AnnouncementSerializer implements StructuredSerializer<Announcement> {
           result.attachments.replace(serializers.deserialize(value,
                   specifiedType: const FullType(
                       BuiltList, const [const FullType(RemoteFile)]))
-              as BuiltList<dynamic>);
+              as BuiltList<Object>);
           break;
       }
     }

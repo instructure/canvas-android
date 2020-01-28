@@ -16,13 +16,13 @@ import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/assignment.dart';
 import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/screens/assignments/assignment_details_interactor.dart';
+import 'package:flutter_parent/screens/assignments/grade_cell.dart';
 import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_screen.dart';
 import 'package:flutter_parent/utils/WebViewUtils.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/design/canvas_icons_solid.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
-import 'package:flutter_parent/utils/design/student_color_set.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:flutter_svg/svg.dart';
@@ -137,9 +137,7 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
     final fullyLocked = assignment.isFullyLocked;
     final showStatus = assignment.isSubmittable() || submission.isGraded();
     final submitted = submission?.submittedAt != null;
-    final submittedColor = submitted
-        ? ParentTheme.of(context).getColorVariantForCurrentState(StudentColorSet.shamrock)
-        : textTheme.caption.color;
+    final submittedColor = submitted ? ParentTheme.of(context).successColor : textTheme.caption.color;
 
     final points = (assignment.pointsPossible.toInt() == assignment.pointsPossible)
         ? assignment.pointsPossible.toInt().toString()
@@ -182,6 +180,7 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
               child: Text(_dateFormat(assignment.dueAt) ?? l10n.noDueDate, style: textTheme.subhead),
             ),
           ],
+          GradeCell.forSubmission(context, assignment, submission),
           ..._lockedRow(assignment),
           Divider(),
           ..._rowTile(
