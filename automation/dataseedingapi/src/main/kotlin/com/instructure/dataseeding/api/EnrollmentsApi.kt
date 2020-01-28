@@ -64,9 +64,15 @@ object EnrollmentsApi {
     fun enrollUserAsDesigner(courseId: Long, userId: Long): EnrollmentApiModel
             = enrollUser(courseId, userId, DESIGNER_ENROLLMENT)
 
-    fun enrollUser(courseId: Long, userId: Long, enrollmentType: String, associatedUserId: Long? = null): EnrollmentApiModel {
+    fun enrollUser(
+            courseId: Long,
+            userId: Long,
+            enrollmentType: String,
+            associatedUserId: Long? = null,
+            enrollmentService: EnrollmentsService = enrollmentsService
+    ): EnrollmentApiModel {
         val enrollment = EnrollmentApiRequestModel(userId, enrollmentType, enrollmentType, associatedUserId = associatedUserId)
-        return enrollmentsService
+        return enrollmentService
                 .enrollUser(courseId, CreateEnrollmentApiRequestModel(enrollment))
                 .execute()
                 .body()!!

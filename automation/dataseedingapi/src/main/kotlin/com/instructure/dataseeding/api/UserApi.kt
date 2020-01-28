@@ -53,7 +53,10 @@ object UserApi {
         CanvasRestAdapter.adminRetrofit.create(UserService::class.java)
     }
 
-    fun createCanvasUser(): CanvasUserApiModel {
+    fun createCanvasUser(
+            userService: UserService = userAdminService,
+            userDomain: String = CanvasRestAdapter.canvasDomain
+    ): CanvasUserApiModel {
         val teacherName = Randomizer.randomName()
         val user = User(teacherName.fullName, teacherName.firstName, teacherName.sortableName)
 
@@ -66,14 +69,14 @@ object UserApi {
 
         val createUser = CreateUser(user, pseudonym, communicationChannel)
 
-        val createdUser = UserApi.userAdminService.createCanvasUser(createUser).execute().body()!!
+        val createdUser = userService.createCanvasUser(createUser).execute().body()!!
 
         // Add extra data to the CanvasUserApiModel
         with(createdUser) {
             loginId = createUser.pseudonym.uniqueId
             password = createUser.pseudonym.password
-            token = getToken(this)
-            domain = CanvasRestAdapter.canvasDomain
+            token = getToken(this, userService, userDomain)
+            domain = userDomain
         }
 
         return createdUser
@@ -84,9 +87,13 @@ object UserApi {
      * @param[userApiModel] A [CanvasUserApiModel]
      * @return An [String] access token for the userApiModel. NOTE: the token has an expiration of 1 hour.
      */
-    private fun getToken(userApiModel: CanvasUserApiModel): String {
-        val authCode = getAuthCode(userApiModel)
-        val response = userAdminService.getToken(
+    private fun getToken(
+            userApiModel: CanvasUserApiModel,
+            userService: UserService = userAdminService,
+            userDomain: String = CanvasRestAdapter.canvasDomain
+    ): String {
+        val authCode = getAuthCode(userApiModel, userDomain)
+        val response = userService.getToken(
                 CanvasRestAdapter.clientId,
                 CanvasRestAdapter.clientSecret,
                 authCode,
@@ -100,8 +107,8 @@ object UserApi {
      * @param[userApiModel] A [CanvasUserApiModel]
      * @return The [String] auth code to be used to acquire the userApiModel's access token
      */
-    private fun getAuthCode(userApiModel: CanvasUserApiModel): String {
-        val loginPageResponse = Jsoup.connect("https://${CanvasRestAdapter.canvasDomain}/login/oauth2/auth")
+    private fun getAuthCode(userApiModel: CanvasUserApiModel, domain: String = CanvasRestAdapter.canvasDomain): String {
+        val loginPageResponse = Jsoup.connect("https://$domain/login/oauth2/auth")
                 .method(Connection.Method.GET)
                 .data("client_id", CanvasRestAdapter.clientId)
                 .data("response_type", "code")
