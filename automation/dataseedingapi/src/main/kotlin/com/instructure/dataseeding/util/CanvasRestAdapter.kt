@@ -86,6 +86,14 @@ object CanvasRestAdapter {
                 .build()
     }
 
+    fun createAdminRetrofitClient(domain: String) : Retrofit {
+        return Retrofit.Builder()
+                .baseUrl("https://$domain/api/v1/")
+                .client(adminOkHttpClient)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+    }
+
     fun retrofitWithToken(token: String): Retrofit =
             Retrofit.Builder()
                     .baseUrl(baseUrl)
