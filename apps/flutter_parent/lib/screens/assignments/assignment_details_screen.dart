@@ -109,9 +109,6 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
       );
 
   Widget _fab(AsyncSnapshot<AssignmentDetails> snapshot) {
-    print('snapshot: $snapshot');
-    print('snapshot data: ${snapshot.data}');
-    print('snapshot assignment: ${snapshot.data.assignment}');
     return FloatingActionButton(
       onPressed: () => _sendMessage(snapshot.data.assignment),
       tooltip: L10n(context).assignmentMessageHint,
