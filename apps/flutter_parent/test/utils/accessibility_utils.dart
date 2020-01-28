@@ -94,22 +94,6 @@ class TextFieldNavigationGuideline extends AccessibilityGuideline {
   @override
   String get description => 'You should be able to direction-arrow out of TextFields';
 
-  // Grab the FocusNodes associated with this screen
-  List<FocusNode> _getFocusNodes(FocusNode root) {
-    List<FocusNode> result = List<FocusNode>();
-    Queue<FocusNode> nodeQueue = Queue<FocusNode>();
-    nodeQueue.addLast(root);
-    while(nodeQueue.isNotEmpty) {
-      FocusNode node = nodeQueue.removeFirst();
-      result.add(node);
-      node.children.forEach( (fn) {
-        nodeQueue.addLast(fn);
-      });
-    }
-
-    return result;
-  }
-
   // Grab the focusable SemanticsNodes associated with this screen.
   List<SemanticsNode> _getFocusableSemanticsNodes(SemanticsNode root) {
     List<SemanticsNode> result = List<SemanticsNode>();
@@ -127,10 +111,8 @@ class TextFieldNavigationGuideline extends AccessibilityGuideline {
 
   // Attempt to find the SemanticsNode that is currently focused.
   SemanticsNode _findFocusedNode(SemanticsNode root) {
-    //print("findFocusedNode: root = $root");
 
     if(root.hasFlag(SemanticsFlag.isFocused) ) {
-      //print("Found focused node! $focusedNode");
       return root;
     }
 
@@ -144,6 +126,10 @@ class TextFieldNavigationGuideline extends AccessibilityGuideline {
 
     return result;
   }
+
+  //
+  //region arrow-key operations
+  //
 
   // Cause an arrow-down to be sent to the screen
   Future<FocusNode> _moveDown(WidgetTester tester) async {
@@ -173,6 +159,8 @@ class TextFieldNavigationGuideline extends AccessibilityGuideline {
     return newFocus;
   }
 
+  //endregion
+
   @override
   FutureOr<Evaluation> evaluate(WidgetTester tester) async {
     final SemanticsNode root = tester.binding.pipelineOwner.semanticsOwner.rootSemanticsNode;
@@ -180,37 +168,39 @@ class TextFieldNavigationGuideline extends AccessibilityGuideline {
     // Default result
     Evaluation result = Evaluation.pass();
 
+
     // Gather all focusable SemanticsNodes for our screen
+    // We can't get this info through the focus node tree.
     List<SemanticsNode> focusableSemanticsNodes = _getFocusableSemanticsNodes(root);
 
-    // Compute all eligible FocusNodes on our screen.
-    List<FocusNode> focusNodes = _getFocusNodes(tester.binding.focusManager.rootScope);
+    Iterable<FocusNode> editableTextFocusNodes =
+        tester.binding.focusManager.rootScope.descendants
+            .where( (fn) => fn.context != null && fn.context.widget is EditableText);
 
 
     if(focusableSemanticsNodes.length > 1) { // Only test navigability if there is something else to which to navigate.
-      for(FocusNode fn in focusNodes) {
-        if(fn.context != null && fn.context.widget is EditableText) {
-          // For each EditableText that we encounter, tap on it to focus it...
-          fn.requestFocus();
-          await tester.pumpAndSettle();
+      for(FocusNode fn in editableTextFocusNodes) {
+        // For each EditableText that we encounter, tap on it to focus it...
+        fn.requestFocus();
+        await tester.pumpAndSettle();
 
-          // and then try to navigate out of it.
-          FocusNode currFocus = tester.binding.focusManager.primaryFocus;
-          FocusNode newFocus = await _moveUp(tester);
-          if(newFocus == currFocus) {
-            newFocus = await _moveDown(tester);
-          }
-          if(newFocus == currFocus) {
-            newFocus = await _moveRight(tester);
-          }
-          if(newFocus == currFocus) {
-            newFocus = await _moveLeft(tester);
-          }
-          if(newFocus == currFocus) {
-            // Attempt to correlate a SemanticsNode with our failed FocusNode
-            SemanticsNode focusedSemanticsNode = _findFocusedNode(root);
-            result += Evaluation.fail("Directional nav stuck in $currFocus, Semantics: $focusedSemanticsNode\n");
-          }
+        // and then try to navigate out of it.
+        FocusNode currFocus = tester.binding.focusManager.primaryFocus;
+        FocusNode newFocus = await _moveUp(tester);
+        if (newFocus == currFocus) {
+          newFocus = await _moveDown(tester);
+        }
+        if (newFocus == currFocus) {
+          newFocus = await _moveRight(tester);
+        }
+        if (newFocus == currFocus) {
+          newFocus = await _moveLeft(tester);
+        }
+        if (newFocus == currFocus) {
+          // Attempt to correlate a SemanticsNode with our failed FocusNode
+          SemanticsNode focusedSemanticsNode = _findFocusedNode(root);
+          result += Evaluation.fail(
+              "Directional nav stuck in $currFocus, Semantics: $focusedSemanticsNode\n");
         }
       }
     }

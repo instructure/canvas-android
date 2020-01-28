@@ -21,7 +21,7 @@ import 'package:flutter_parent/models/message.dart';
 import 'package:flutter_parent/screens/inbox/attachment_utils/attachment_handler.dart';
 import 'package:flutter_parent/screens/inbox/conversation_details/message_widget.dart';
 import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_screen.dart';
-import 'package:flutter_parent/utils/common_widgets/ArrowAwareFocusScope.dart';
+import 'package:flutter_parent/utils/common_widgets/arrow_aware_focus_scope.dart';
 import 'package:flutter_parent/utils/common_widgets/view_attachment/view_attachment_screen.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';

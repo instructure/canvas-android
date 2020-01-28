@@ -20,7 +20,7 @@ import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/models/recipient.dart';
 import 'package:flutter_parent/screens/inbox/attachment_utils/attachment_extensions.dart';
 import 'package:flutter_parent/screens/inbox/attachment_utils/attachment_handler.dart';
-import 'package:flutter_parent/utils/common_widgets/ArrowAwareFocusScope.dart';
+import 'package:flutter_parent/utils/common_widgets/arrow_aware_focus_scope.dart';
 import 'package:flutter_parent/utils/common_widgets/avatar.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/common_widgets/user_name.dart';

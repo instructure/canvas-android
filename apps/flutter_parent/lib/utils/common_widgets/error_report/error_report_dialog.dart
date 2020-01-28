@@ -20,7 +20,7 @@ import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:package_info/package_info.dart';
 
-import '../ArrowAwareFocusScope.dart';
+import '../arrow_aware_focus_scope.dart';
 
 class ErrorReportDialog extends StatefulWidget {
   static const Key subjectKey = Key('subject');
