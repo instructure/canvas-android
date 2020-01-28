@@ -246,7 +246,7 @@ open class GradesListRecyclerAdapter(
                     // Fetch the enrollments associated with the selected gradingPeriodID, these will contain the
                     // correct grade for the period
                     val enrollments = awaitApi<List<Enrollment>>{CourseManager.getUserEnrollmentsForGradingPeriod(canvasContext!!.id, ApiPrefs.user!!.id, gradingPeriodID, it, true)}
-                    updateCourseGradeFromEnrollments(enrollments)
+                    updateCourseGradeFromGradingPeriodSpecificEnrollment(enrollments)
 
                     // Inform the spinner things are done
                     adapterToGradesCallback?.setTermSpinnerState(true)
@@ -257,11 +257,11 @@ open class GradesListRecyclerAdapter(
         }
     }
 
-    private fun updateCourseGradeFromEnrollments(enrollments: List<Enrollment>) {
+    private fun updateCourseGradeFromGradingPeriodSpecificEnrollment(enrollments: List<Enrollment>) {
         for (enrollment in enrollments) {
             if (enrollment.isStudent && enrollment.userId == ApiPrefs.user!!.id) {
                 val course = canvasContext as Course?
-                courseGrade = course!!.getCourseGradeFromEnrollment(enrollment, false)
+                courseGrade = course!!.getCourseGradeForGradingPeriodSpecificEnrollment(enrollment = enrollment)
                 adapterToGradesCallback?.notifyGradeChanged(courseGrade)
                 // We need to update the course that the fragment is using
                 course.addEnrollment(enrollment)
