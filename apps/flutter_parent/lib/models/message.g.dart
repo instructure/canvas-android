@@ -111,7 +111,7 @@ class _$MessageSerializer implements StructuredSerializer<Message> {
           result.attachments.replace(serializers.deserialize(value,
                   specifiedType: const FullType(
                       BuiltList, const [const FullType(Attachment)]))
-              as BuiltList<dynamic>);
+              as BuiltList<Object>);
           break;
         case 'media_comment':
           result.mediaComment.replace(serializers.deserialize(value,
@@ -121,13 +121,13 @@ class _$MessageSerializer implements StructuredSerializer<Message> {
           result.forwardedMessages.replace(serializers.deserialize(value,
                   specifiedType: const FullType(
                       BuiltList, const [const FullType(Message)]))
-              as BuiltList<dynamic>);
+              as BuiltList<Object>);
           break;
         case 'participating_user_ids':
           result.participatingUserIds.replace(serializers.deserialize(value,
                   specifiedType:
                       const FullType(BuiltList, const [const FullType(String)]))
-              as BuiltList<dynamic>);
+              as BuiltList<Object>);
           break;
       }
     }

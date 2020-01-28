@@ -185,6 +185,9 @@ class _ParentThemeState extends State<ParentTheme> {
   /// sharply with the [onSurfaceColor]. Examples are chip backgrounds, progressbar backgrounds, avatar backgrounds, etc.
   Color get nearSurfaceColor => isDarkMode ? Colors.grey[850] : ParentColors.porcelain;
 
+  /// The green 'success' color appropriate for the current light/dark/HC mode
+  Color get successColor => getColorVariantForCurrentState(StudentColorSet.shamrock);
+
   ThemeData _buildTheme(Color themeColor) {
     var textTheme = _buildTextTheme(onSurfaceColor);
 

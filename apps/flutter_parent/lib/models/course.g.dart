@@ -158,7 +158,7 @@ class _$CourseSerializer implements StructuredSerializer<Course> {
           result.enrollments.replace(serializers.deserialize(value,
                   specifiedType: const FullType(
                       BuiltList, const [const FullType(Enrollment)]))
-              as BuiltList<dynamic>);
+              as BuiltList<Object>);
           break;
         case 'needs_grading_count':
           result.needsGradingCount = serializers.deserialize(value,
