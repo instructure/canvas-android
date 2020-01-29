@@ -488,9 +488,16 @@ class AppLocalizations {
 
   String syllabusSubjectMessage(String studentName) => Intl.message(
         'Regarding: $studentName, Syllabus',
-        desc: 'The subject line for a message to a teacher regarding a student\'s grades',
-        name: 'gradesSubjectMessage',
+        desc: 'The subject line for a message to a teacher regarding a course syllabus',
+        name: 'syllabusSubjectMessage',
         args: [studentName],
+      );
+
+  String assignmentSubjectMessage(String studentName, String assignmentName) => Intl.message(
+        'Regarding: $studentName, Assignment - $assignmentName',
+        desc: 'The subject line for a message to a teacher regarding a student\'s assignment',
+        name: 'assignmentSubjectMessage',
+        args: [studentName, assignmentName],
       );
 
   /// Assignment Details Screen

@@ -18,9 +18,15 @@ package com.instructure.student.ui.e2e
 
 import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
+import com.instructure.dataseeding.api.CoursesApi
+import com.instructure.dataseeding.api.EnrollmentsApi
 import com.instructure.dataseeding.api.SeedApi
+import com.instructure.dataseeding.api.UserApi
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.dataseeding.model.CourseApiModel
+import com.instructure.dataseeding.model.EnrollmentTypes.STUDENT_ENROLLMENT
+import com.instructure.dataseeding.model.EnrollmentTypes.TEACHER_ENROLLMENT
+import com.instructure.dataseeding.util.CanvasRestAdapter
 import com.instructure.panda_annotations.*
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.seedData
@@ -119,6 +125,41 @@ class LoginE2ETest : StudentTest() {
 
         // Sign the parent out
         dashboardPage.signOut()
+    }
+
+    // Verify that students can sign into vanity domain
+    @E2E
+    @Test
+    @TestMetaData(Priority.P0, FeatureCategory.LOGIN, TestCategory.E2E)
+    fun testVanityDomainLoginE2E() {
+        // Create a Retrofit client for our vanity domain
+        val domain = "canvas.beta.jitops.computer" // Our test vanity domain
+        val retrofitClient = CanvasRestAdapter.createAdminRetrofitClient(domain)
+
+        // Create services off of that Retrofit client
+        val userService = retrofitClient.create(UserApi.UserService::class.java)
+        val coursesService = retrofitClient.create(CoursesApi.CoursesService::class.java)
+        val enrollmentsService = retrofitClient.create(EnrollmentsApi.EnrollmentsService::class.java)
+
+        // Create student, teacher, course and enrollments in our vanity domain
+        val student = UserApi.createCanvasUser(userService = userService, userDomain = domain)
+        val teacher = UserApi.createCanvasUser(userService = userService, userDomain = domain)
+        val course = CoursesApi.createCourse(coursesService = coursesService)
+        EnrollmentsApi.enrollUser(
+                courseId = course.id,
+                userId = student.id,
+                enrollmentType = STUDENT_ENROLLMENT,
+                enrollmentService = enrollmentsService
+        )
+        EnrollmentsApi.enrollUser(
+                courseId = course.id,
+                userId = teacher.id,
+                enrollmentType = TEACHER_ENROLLMENT,
+                enrollmentService = enrollmentsService
+        )
+
+        // Attempt to sign into our vanity domain, and validate ourself as a student
+        validateUserAndRole(user = student, course = course, role = "Student" )
     }
 
     // Repeated logic from the testUserRolesLoginE2E test.
