@@ -18,7 +18,6 @@ package com.instructure.loginapi.login.api
 
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.utils.APIHelper.paramIsNull
-import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ApiPrefs.userAgent
 import com.instructure.canvasapi2.utils.Logger.d
 import com.instructure.canvasapi2.utils.RemoteConfigParam

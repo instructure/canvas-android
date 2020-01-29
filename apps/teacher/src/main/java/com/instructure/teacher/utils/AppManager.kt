@@ -23,6 +23,7 @@ import com.crashlytics.android.core.CrashlyticsCore
 import com.google.android.play.core.missingsplits.MissingSplitsManagerFactory
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.Logger
+import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
@@ -43,6 +44,7 @@ class AppManager : com.instructure.canvasapi2.AppManager() {
             // Skip app initialization.
             return
         }
+        RemoteConfigUtils.initialize()
         super.onCreate()
 
         if (!ApiPrefs.domain.endsWith(com.instructure.loginapi.login.BuildConfig.ANONYMOUS_SCHOOL_DOMAIN)) {
