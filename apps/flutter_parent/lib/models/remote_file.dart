@@ -34,18 +34,23 @@ abstract class RemoteFile implements Built<RemoteFile, RemoteFileBuilder> {
 
   String get url;
 
+  @nullable
   String get filename;
 
   @BuiltValueField(wireName: 'preview_url')
+  @nullable
   String get previewUrl;
 
   @BuiltValueField(wireName: 'thumbnail_url')
+  @nullable
   String get thumbnailUrl;
 
   @BuiltValueField(wireName: 'content-type')
+  @nullable
   String get contentType;
 
   @BuiltValueField(wireName: 'display_name')
+  @nullable
   String get displayName;
 
   Attachment toAttachment() {
