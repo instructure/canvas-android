@@ -87,7 +87,6 @@ abstract class CanvasTest : InstructureTest(BuildConfig.GLOBAL_DITTO_MODE) {
                 eventObject.put("testClass", testClass)
                 eventObject.put("stackTrace", error.stackTrace.take(15).joinToString(", "))
                 eventObject.put("osVersion", Build.VERSION.SDK_INT.toString())
-                eventObject.put("orientation", if(inLandscape()) "landscape" else "portrait")
                 // Limit our error message to 4096 chars; they can be unreasonably long (e.g., 137K!) when
                 // they contain a view hierarchy, and there is typically not much useful info after the
                 // first few lines.
