@@ -54,7 +54,7 @@ do
       testName=`echo $line | cut -d " " -f 2 | cut -d = -f 2`
       className=`echo $line | cut -d " " -f 3 | cut -d = -f 2`
       runTime=`echo $line | cut -d " " -f 4 | cut -d = -f 2`
-      payload="{\"sourcetype\" : \"mobile-android-qa-testresult\", \"event\" : {\"buildUrl\" : \"$BITRISE_BUILD_URL\", \"status\" : \"passed\", \"testName\": $testName, \"testClass\" : $className, \"deviceConfig\" : $suiteName, \"runTime\" : $runTime, $commonData}"
+      payload="{\"sourcetype\" : \"mobile-android-qa-testresult\", \"event\" : {\"buildUrl\" : \"$BITRISE_BUILD_URL\", \"status\" : \"passed\", \"testName\": $testName, \"testClass\" : $className, \"deviceConfig\" : $suiteName, \"runTime\" : $runTime, $commonData}}"
       failureEncountered=false
     fi
 
@@ -76,7 +76,7 @@ do
 done < "$reportFile"
 
 # After all tests have been processed, Emit the success report
-#echo -e "\nSuccess payload: $successReport\n"
+echo -e "\nSuccess payload: $successReport\n"
 curl -k "https://http-inputs-inst.splunkcloud.com:443/services/collector" -H "Authorization: Splunk $SPLUNK_MOBILE_TOKEN" -d "$successReport"
 
 # Globals for parsing time/cost info

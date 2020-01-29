@@ -15,7 +15,7 @@ gcloud:
   - notAnnotation com.instructure.canvas.espresso.E2E, com.instructure.canvas.espresso.Stub
   device:
   - model: NexusLowRes
-    version: 25
+    version: 28
     locale: en_US
     orientation: portrait
 
