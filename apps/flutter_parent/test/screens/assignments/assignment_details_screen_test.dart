@@ -21,10 +21,13 @@ import 'package:flutter_parent/models/locked_module.dart';
 import 'package:flutter_parent/models/submission.dart';
 import 'package:flutter_parent/screens/assignments/assignment_details_interactor.dart';
 import 'package:flutter_parent/screens/assignments/assignment_details_screen.dart';
+import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_interactor.dart';
+import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/student_color_set.dart';
+import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -38,17 +41,24 @@ void main() {
   final courseId = '123';
   final assignmentId = '321';
   final studentId = '1337';
+  final assignmentName = 'Instructure 101';
+  final assignmentUrl = 'https://www.instructure.com';
 
   final interactor = _MockAssignmentDetailsInteractor();
+  final convoInteractor = _MockCreateConversationInteractor();
 
   final assignment = Assignment((b) => b
     ..id = assignmentId
     ..courseId = courseId
+    ..name = assignmentName
+    ..htmlUrl = assignmentUrl
     ..assignmentGroupId = ''
     ..position = 0);
 
   setupTestLocator((locator) {
     locator.registerFactory<AssignmentDetailsInteractor>(() => interactor);
+    locator.registerFactory<QuickNav>(() => QuickNav());
+    locator.registerFactory<CreateConversationInteractor>(() => convoInteractor);
   });
 
   setUp(() {
@@ -57,7 +67,13 @@ void main() {
 
   testWidgetsWithAccessibilityChecks('Shows loading', (tester) async {
     await tester.pumpWidget(TestApp(
-      AssignmentDetailsScreen(courseId: courseId, assignmentId: assignmentId, studentId: studentId),
+      AssignmentDetailsScreen(
+        courseId: courseId,
+        courseCode: '',
+        assignmentId: assignmentId,
+        studentId: studentId,
+        studentName: '',
+      ),
     ));
 
     await tester.pump();
@@ -75,7 +91,13 @@ void main() {
             ));
 
     await tester.pumpWidget(TestApp(
-      AssignmentDetailsScreen(courseId: courseId, assignmentId: assignmentId, studentId: studentId),
+      AssignmentDetailsScreen(
+        courseId: courseId,
+        courseCode: '',
+        assignmentId: assignmentId,
+        studentId: studentId,
+        studentName: '',
+      ),
       highContrast: true,
     ));
 
@@ -89,7 +111,13 @@ void main() {
         .thenAnswer((_) async => AssignmentDetails(assignment: assignment));
 
     await tester.pumpWidget(TestApp(
-      AssignmentDetailsScreen(courseId: courseId, assignmentId: assignmentId, studentId: studentId),
+      AssignmentDetailsScreen(
+        courseId: courseId,
+        courseCode: '',
+        assignmentId: assignmentId,
+        studentId: studentId,
+        studentName: '',
+      ),
       highContrast: true,
     ));
 
@@ -107,19 +135,33 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Can send a message', (tester) async {
+    String studentName = 'Panda';
+
+    when(convoInteractor.getAllRecipients(any)).thenAnswer((_) => Future.value([]));
     when(interactor.loadAssignmentDetails(any, courseId, assignmentId, studentId))
         .thenAnswer((_) async => AssignmentDetails(assignment: assignment));
 
     await tester.pumpWidget(TestApp(
-      AssignmentDetailsScreen(courseId: courseId, assignmentId: assignmentId, studentId: studentId),
+      AssignmentDetailsScreen(
+        courseId: courseId,
+        courseCode: '',
+        assignmentId: assignmentId,
+        studentId: studentId,
+        studentName: studentName,
+      ),
       highContrast: true,
     ));
 
     await tester.pumpAndSettle();
 
     await tester.tap(find.byType(FloatingActionButton));
+    await tester.pumpAndSettle();
 
-    // TODO: Test message is shown properly
+    // Check to make sure we're on the conversation screen
+    expect(find.byType(CreateConversationScreen), findsOneWidget);
+
+    // Check that we have the correct subject line
+    expect(find.text(AppLocalizations().assignmentSubjectMessage(studentName, assignmentName)), findsOneWidget);
   });
 
   testWidgetsWithAccessibilityChecks('shows error', (tester) async {
@@ -127,7 +169,13 @@ void main() {
         .thenAnswer((_) => Future<AssignmentDetails>.error('Failed to get assignment'));
 
     await tester.pumpWidget(TestApp(
-      AssignmentDetailsScreen(courseId: courseId, assignmentId: assignmentId, studentId: studentId),
+      AssignmentDetailsScreen(
+        courseId: courseId,
+        courseCode: '',
+        assignmentId: assignmentId,
+        studentId: studentId,
+        studentName: '',
+      ),
       highContrast: true,
     ));
 
@@ -157,7 +205,13 @@ void main() {
               ..dueAt = dueDate)));
 
     await tester.pumpWidget(TestApp(
-      AssignmentDetailsScreen(courseId: courseId, assignmentId: assignmentId, studentId: studentId),
+      AssignmentDetailsScreen(
+        courseId: courseId,
+        courseCode: '',
+        assignmentId: assignmentId,
+        studentId: studentId,
+        studentName: '',
+      ),
       highContrast: true,
     ));
 
@@ -196,7 +250,13 @@ void main() {
               ..dueAt = dueDate)));
 
     await tester.pumpWidget(TestApp(
-      AssignmentDetailsScreen(courseId: courseId, assignmentId: assignmentId, studentId: studentId),
+      AssignmentDetailsScreen(
+        courseId: courseId,
+        courseCode: '',
+        assignmentId: assignmentId,
+        studentId: studentId,
+        studentName: '',
+      ),
       highContrast: true,
     ));
 
@@ -216,7 +276,13 @@ void main() {
         .thenAnswer((_) async => AssignmentDetails(assignment: assignment.rebuild((b) => b..dueAt = null)));
 
     await tester.pumpWidget(TestApp(
-      AssignmentDetailsScreen(courseId: courseId, assignmentId: assignmentId, studentId: studentId),
+      AssignmentDetailsScreen(
+        courseId: courseId,
+        courseCode: '',
+        assignmentId: assignmentId,
+        studentId: studentId,
+        studentName: '',
+      ),
       highContrast: true,
     ));
 
@@ -231,7 +297,13 @@ void main() {
         .thenAnswer((_) async => AssignmentDetails(assignment: assignment.rebuild((b) => b..unlockAt = unlockAt)));
 
     await tester.pumpWidget(TestApp(
-      AssignmentDetailsScreen(courseId: courseId, assignmentId: assignmentId, studentId: studentId),
+      AssignmentDetailsScreen(
+        courseId: courseId,
+        courseCode: '',
+        assignmentId: assignmentId,
+        studentId: studentId,
+        studentName: '',
+      ),
       highContrast: true,
     ));
 
@@ -253,7 +325,13 @@ void main() {
         (_) async => AssignmentDetails(assignment: assignment.rebuild((b) => b..lockInfo = lockInfo.toBuilder())));
 
     await tester.pumpWidget(TestApp(
-      AssignmentDetailsScreen(courseId: courseId, assignmentId: assignmentId, studentId: studentId),
+      AssignmentDetailsScreen(
+        courseId: courseId,
+        courseCode: '',
+        assignmentId: assignmentId,
+        studentId: studentId,
+        studentName: '',
+      ),
       highContrast: true,
     ));
 
@@ -273,7 +351,13 @@ void main() {
         (_) async => AssignmentDetails(assignment: assignment.rebuild((b) => b..lockExplanation = explanation)));
 
     await tester.pumpWidget(TestApp(
-      AssignmentDetailsScreen(courseId: courseId, assignmentId: assignmentId, studentId: studentId),
+      AssignmentDetailsScreen(
+        courseId: courseId,
+        courseCode: '',
+        assignmentId: assignmentId,
+        studentId: studentId,
+        studentName: '',
+      ),
       highContrast: true,
     ));
 
@@ -292,7 +376,13 @@ void main() {
         .thenAnswer((_) async => AssignmentDetails(assignment: assignment.rebuild((b) => b..dueAt = null)));
 
     await tester.pumpWidget(TestApp(
-      AssignmentDetailsScreen(courseId: courseId, assignmentId: assignmentId, studentId: studentId),
+      AssignmentDetailsScreen(
+        courseId: courseId,
+        courseCode: '',
+        assignmentId: assignmentId,
+        studentId: studentId,
+        studentName: '',
+      ),
       highContrast: true,
     ));
 
@@ -309,7 +399,13 @@ void main() {
               ..submissionTypes = BuiltList.of([SubmissionTypes.onlineQuiz]).toBuilder())));
 
     await tester.pumpWidget(TestApp(
-      AssignmentDetailsScreen(courseId: courseId, assignmentId: assignmentId, studentId: studentId),
+      AssignmentDetailsScreen(
+        courseId: courseId,
+        courseCode: '',
+        assignmentId: assignmentId,
+        studentId: studentId,
+        studentName: '',
+      ),
       highContrast: true,
     ));
 
@@ -324,7 +420,13 @@ void main() {
         .thenAnswer((_) async => AssignmentDetails(assignment: assignment, alarm: alarm));
 
     await tester.pumpWidget(TestApp(
-      AssignmentDetailsScreen(courseId: courseId, assignmentId: assignmentId, studentId: studentId),
+      AssignmentDetailsScreen(
+        courseId: courseId,
+        courseCode: '',
+        assignmentId: assignmentId,
+        studentId: studentId,
+        studentName: '',
+      ),
       highContrast: true,
     ));
 
@@ -339,3 +441,5 @@ void main() {
 }
 
 class _MockAssignmentDetailsInteractor extends Mock implements AssignmentDetailsInteractor {}
+
+class _MockCreateConversationInteractor extends Mock implements CreateConversationInteractor {}

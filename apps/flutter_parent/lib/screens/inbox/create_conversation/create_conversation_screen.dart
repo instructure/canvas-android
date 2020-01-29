@@ -33,12 +33,17 @@ import 'package:transparent_image/transparent_image.dart';
 import 'create_conversation_interactor.dart';
 
 class CreateConversationScreen extends StatefulWidget {
-  CreateConversationScreen(this._course) : _subjectTemplate = _course.name;
+  CreateConversationScreen(this._course)
+      : _subjectTemplate = _course.name,
+        this._assignmentUrl = null;
 
-  CreateConversationScreen.withSubject(this._course, this._subjectTemplate);
+  CreateConversationScreen.withSubject(this._course, this._subjectTemplate) : this._assignmentUrl = null;
+
+  CreateConversationScreen.fromAssignment(this._course, this._subjectTemplate, this._assignmentUrl);
 
   final Course _course;
   final String _subjectTemplate;
+  final String _assignmentUrl;
 
   static final sendKey = Key("sendButton");
   static final attachmentKey = Key("attachmentButton");
@@ -124,6 +129,9 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
     try {
       var recipientIds = _selectedRecipients.map((it) => it.id).toList();
       var attachmentIds = _attachments.map((it) => it.attachment.id).toList();
+      if (widget._assignmentUrl != null) {
+        _bodyText += '\n\n${widget._assignmentUrl}';
+      }
       await _interactor.createConversation(widget._course, recipientIds, _subjectText, _bodyText, attachmentIds);
       Navigator.of(context).pop(true); // 'true' indicates upload was successful
     } catch (e) {

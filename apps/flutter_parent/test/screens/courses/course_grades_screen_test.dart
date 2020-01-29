@@ -419,6 +419,7 @@ void main() {
 Course _mockCourse() {
   return Course((b) => b
     ..id = _courseId
+    ..courseCode = 'Instructure 101'
     ..enrollments = BuiltList.of([
       Enrollment((enrollment) => enrollment
         ..userId = _studentId

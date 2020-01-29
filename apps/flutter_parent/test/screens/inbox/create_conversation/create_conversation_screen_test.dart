@@ -749,6 +749,52 @@ void main() {
 
     expect(find.text(subject), findsOneWidget);
   });
+
+  testWidgetsWithAccessibilityChecks('appends assignment url when fromAssignment is used', (tester) async {
+    Recipient _makeRecipient(String id, String type) {
+      return Recipient((b) => b
+        ..id = id
+        ..name = 'User $id'
+        ..commonCourses = MapBuilder<String, BuiltList<String>>({
+          '0': BuiltList<String>([type])
+        }));
+    }
+
+    var interactor = _MockedInteractor();
+    when(interactor.getAllRecipients(any))
+        .thenAnswer((_) => Future.value([_makeRecipient('123', 'TeacherEnrollment')]));
+    GetIt.instance.reset();
+    GetIt.instance.registerFactory<CreateConversationInteractor>(() => interactor);
+
+    final course = _mockCourse('0');
+    final subject = 'Regarding Instructure Pandas';
+    final bodyText = 'Instructure Pandas';
+    final assignmentUrl = 'https://www.instructure.com';
+    final sendText = ['$bodyText\n\n$assignmentUrl'];
+
+    await tester.pumpWidget(_testableWidget(CreateConversationScreen.fromAssignment(course, subject, assignmentUrl)));
+    await tester.pumpAndSettle();
+
+    // Check for the subject
+    expect(find.text(subject), findsOneWidget);
+
+    // Type some text into the message body to enable the send button
+    var bodyMatcher = find.byKey(CreateConversationScreen.messageKey);
+    await tester.enterText(bodyMatcher, 'Instructure Pandas');
+    await tester.pump();
+
+    // Verify send button exists and is enabled
+    final sendMatcher = find.byKey(CreateConversationScreen.sendKey);
+    expect(sendMatcher, findsOneWidget);
+    expect(tester.widget<IconButton>(sendMatcher).onPressed == null, isFalse);
+
+    // Click on the send button
+    await tester.tap(sendMatcher);
+    await tester.pump();
+
+    // Check the outgoing message for the url
+    expect(verify(interactor.createConversation(any, any, any, captureAny, any)).captured, sendText);
+  });
 }
 
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
