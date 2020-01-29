@@ -119,7 +119,7 @@ void main() {
   testWidgetsWithAccessibilityChecks('Enables high contrast mode', (tester) async {
     await tester.pumpWidget(TestApp(SettingsScreen()));
     await tester.pumpAndSettle();
-
+    
     var state = tester.state(find.byType(SettingsScreen));
     expect(ParentTheme.of(state.context).isHC, isFalse);
 

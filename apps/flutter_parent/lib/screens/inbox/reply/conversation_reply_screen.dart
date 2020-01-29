@@ -13,12 +13,15 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/conversation.dart';
 import 'package:flutter_parent/models/message.dart';
 import 'package:flutter_parent/screens/inbox/attachment_utils/attachment_handler.dart';
 import 'package:flutter_parent/screens/inbox/conversation_details/message_widget.dart';
 import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_screen.dart';
+import 'package:flutter_parent/utils/common_widgets/arrow_aware_focus_scope.dart';
 import 'package:flutter_parent/utils/common_widgets/view_attachment/view_attachment_screen.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
@@ -51,6 +54,7 @@ class _ConversationReplyScreenState extends State<ConversationReplyScreen> {
   bool _sending = false;
   TextEditingController _bodyController = TextEditingController();
   ConversationReplyInteractor _interactor = locator<ConversationReplyInteractor>();
+  FocusScopeNode _focusScopeNode = FocusScopeNode();
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -63,6 +67,12 @@ class _ConversationReplyScreenState extends State<ConversationReplyScreen> {
       setState(() => _bodyText = _bodyController.text);
     });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _focusScopeNode.dispose();
+    super.dispose();
   }
 
   _send() async {
@@ -115,10 +125,13 @@ class _ConversationReplyScreenState extends State<ConversationReplyScreen> {
     return DefaultParentTheme(
       builder: (context) => WillPopScope(
         onWillPop: _onWillPop,
-        child: Scaffold(
-          key: _scaffoldKey,
-          appBar: _appBar(context),
-          body: _content(context),
+        child: ArrowAwareFocusScope(
+          node: _focusScopeNode,
+          child: Scaffold(
+            key: _scaffoldKey,
+            appBar: _appBar(context),
+            body: _content(context),
+          ),
         ),
       ),
     );
@@ -185,22 +198,22 @@ class _ConversationReplyScreenState extends State<ConversationReplyScreen> {
   Widget _content(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Divider(thickness: 1, height: 1),
-          MessageWidget(
-            conversation: widget.conversation,
-            message: widget.message ?? widget.conversation.messages[0],
-            currentUserId: _interactor.getCurrentUserId(),
-            onAttachmentClicked: (attachment) {
-              locator<QuickNav>().push(context, ViewAttachmentScreen(attachment));
-            },
-          ),
-          Divider(thickness: 1, height: 1),
-          _editorWidget(context),
-          _attachmentsWidget(context),
-        ],
-      ),
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Divider(thickness: 1, height: 1),
+            MessageWidget(
+              conversation: widget.conversation,
+              message: widget.message ?? widget.conversation.messages[0],
+              currentUserId: _interactor.getCurrentUserId(),
+              onAttachmentClicked: (attachment) {
+      locator<QuickNav>().push(context, ViewAttachmentScreen(attachment));
+              },
+            ),
+            Divider(thickness: 1, height: 1),
+            _editorWidget(context),
+            _attachmentsWidget(context),
+          ],
+        ),
     );
   }
 

@@ -13,11 +13,14 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/utils/common_widgets/error_report/error_report_interactor.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:package_info/package_info.dart';
+
+import '../arrow_aware_focus_scope.dart';
 
 class ErrorReportDialog extends StatefulWidget {
   static const Key subjectKey = Key('subject');
@@ -116,7 +119,7 @@ class _ErrorReportDialogState extends State<ErrorReportDialog> {
       child: Form(
         key: _formKey,
         autovalidate: _autoValidate,
-        child: FocusScope(
+        child: ArrowAwareFocusScope(
           node: _focusScopeNode,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -163,7 +166,8 @@ class _ErrorReportDialogState extends State<ErrorReportDialog> {
                   onChanged: (option) async {
                     setState(() => _selectedSeverity = option.severity);
                     // Clear focus here, as it can go back to the text forms if they were previously selected
-                    _focusScopeNode.requestFocus(FocusNode());
+                    // NO!  This messes up dpav-nav
+                    //_focusScopeNode.requestFocus(FocusNode());
                   },
                   value: severityOptions.firstWhere((option) => option.severity == _selectedSeverity),
                   items: severityOptions.map((option) {

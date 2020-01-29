@@ -15,8 +15,12 @@
 // Accessibility-related utilities for our widget tests.
 
 import 'dart:async';
+import 'dart:collection';
+import 'dart:ui';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:meta/meta.dart';
 import 'package:test/test.dart' as test_package;
@@ -44,10 +48,10 @@ void testWidgetsWithAccessibilityChecks(
 
 // Break this out into its own method, so that it can be used mid-test.
 Future<void> runAccessibilityTests(WidgetTester tester) async {
-  //await expectLater(tester, meetsGuideline(NoHintsGuideline()));
   await expectLater(tester, meetsGuideline(textContrastGuideline));
   await expectLater(tester, meetsGuideline(labeledTapTargetGuideline));
   await expectLater(tester, meetsGuideline(androidTapTargetGuideline));
+  await expectLater(tester, meetsGuideline(TextFieldNavigationGuideline())); // Needs to be last, because it fiddles with UI
 }
 
 // Here's an example of a custom guideline.  We can conceivably write
@@ -80,5 +84,127 @@ class NoHintsGuideline extends AccessibilityGuideline {
     }
 
     return traverse(root); // Start traversing at the root.
+  }
+}
+
+/*
+ * An a11y checker that insures that we can navigate out of TextFields using dpad arrows.
+ */
+class TextFieldNavigationGuideline extends AccessibilityGuideline {
+  @override
+  String get description => 'You should be able to direction-arrow out of TextFields';
+
+  // Grab the focusable SemanticsNodes associated with this screen.
+  List<SemanticsNode> _getFocusableSemanticsNodes(SemanticsNode root) {
+    List<SemanticsNode> result = List<SemanticsNode>();
+    if(root.hasFlag(SemanticsFlag.isFocusable) && !root.isMergedIntoParent & !root.isInvisible && !root.hasFlag(SemanticsFlag.isHidden)) {
+      result.add(root);
+    }
+    
+    root.visitChildren((SemanticsNode child) {
+      result.addAll(_getFocusableSemanticsNodes(child));
+      return true;
+    });
+
+    return result;
+  }
+
+  // Attempt to find the SemanticsNode that is currently focused.
+  SemanticsNode _findFocusedNode(SemanticsNode root) {
+
+    if(root.hasFlag(SemanticsFlag.isFocused) ) {
+      return root;
+    }
+
+    SemanticsNode result = null;
+    root.visitChildren((SemanticsNode child) {
+      if(result == null) {
+        result = _findFocusedNode(child);
+      }
+      return true;
+    });
+
+    return result;
+  }
+
+  //
+  //region arrow-key operations
+  //
+
+  // Cause an arrow-down to be sent to the screen
+  Future<FocusNode> _moveDown(WidgetTester tester) async {
+    return _move(tester, LogicalKeyboardKey.arrowDown);
+  }
+
+  // Cause an arrow-up to be sent to the screen
+  Future<FocusNode> _moveUp(WidgetTester tester) async {
+    return _move(tester, LogicalKeyboardKey.arrowUp);
+  }
+
+  // Cause an arrow-left to be sent to the screen
+  Future<FocusNode> _moveLeft(WidgetTester tester) async {
+    return _move(tester, LogicalKeyboardKey.arrowLeft);
+  }
+
+  // Cause an arrow-right to be sent to the screen
+  Future<FocusNode> _moveRight(WidgetTester tester) async {
+    return _move(tester, LogicalKeyboardKey.arrowRight);
+  }
+
+  // Common logic for arrow-moving
+  Future<FocusNode> _move(WidgetTester tester, LogicalKeyboardKey key) async {
+    await tester.sendKeyEvent(key);
+    await tester.pumpAndSettle();
+    FocusNode  newFocus = tester.binding.focusManager.primaryFocus;
+    return newFocus;
+  }
+
+  //endregion
+
+  @override
+  FutureOr<Evaluation> evaluate(WidgetTester tester) async {
+    final SemanticsNode root = tester.binding.pipelineOwner.semanticsOwner.rootSemanticsNode;
+
+    // Default result
+    Evaluation result = Evaluation.pass();
+
+
+    // Gather all focusable SemanticsNodes for our screen
+    // We can't get this info through the focus node tree.
+    List<SemanticsNode> focusableSemanticsNodes = _getFocusableSemanticsNodes(root);
+
+    Iterable<FocusNode> editableTextFocusNodes =
+        tester.binding.focusManager.rootScope.descendants
+            .where( (fn) => fn.context != null && fn.context.widget is EditableText);
+
+
+    if(focusableSemanticsNodes.length > 1) { // Only test navigability if there is something else to which to navigate.
+      for(FocusNode fn in editableTextFocusNodes) {
+        // For each EditableText that we encounter, tap on it to focus it...
+        fn.requestFocus();
+        await tester.pumpAndSettle();
+
+        // and then try to navigate out of it.
+        FocusNode currFocus = tester.binding.focusManager.primaryFocus;
+        FocusNode newFocus = await _moveUp(tester);
+        if (newFocus == currFocus) {
+          newFocus = await _moveDown(tester);
+        }
+        if (newFocus == currFocus) {
+          newFocus = await _moveRight(tester);
+        }
+        if (newFocus == currFocus) {
+          newFocus = await _moveLeft(tester);
+        }
+        if (newFocus == currFocus) {
+          // Attempt to correlate a SemanticsNode with our failed FocusNode
+          SemanticsNode focusedSemanticsNode = _findFocusedNode(root);
+          result += Evaluation.fail(
+              "Directional nav stuck in $currFocus, Semantics: $focusedSemanticsNode\n");
+        }
+      }
+    }
+
+    return result;
   }
 }

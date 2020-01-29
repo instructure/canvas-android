@@ -13,7 +13,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
+import 'package:flutter_parent/utils/common_widgets/arrow_aware_focus_scope.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
@@ -33,95 +35,105 @@ class AddStudentDialog extends StatefulWidget {
 class AddStudentDialogState extends State<AddStudentDialog> {
   var _pairingCodeError = false;
   var _makingApiCall = false;
+  FocusScopeNode _focusScopeNode  =  FocusScopeNode();
 
   final GlobalKey<FormFieldState> _formKey = GlobalKey<FormFieldState>();
 
   @override
+  void dispose() {
+    _focusScopeNode.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-      title: Text(L10n(context).addStudent),
-      content: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(bottom: 20.0),
-            child: Text(
-              L10n(context).pairingCodeEntryExplanation,
-              style: Theme.of(context).textTheme.body1.copyWith(fontSize: 12.0),
+    return ArrowAwareFocusScope(
+      node: _focusScopeNode,
+      child: AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+        title: Text(L10n(context).addStudent),
+        content: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(bottom: 20.0),
+              child: Text(
+                L10n(context).pairingCodeEntryExplanation,
+                style: Theme.of(context).textTheme.body1.copyWith(fontSize: 12.0),
+              ),
             ),
+            TextFormField(
+              key: _formKey,
+              autofocus: true,
+              autocorrect: false,
+              autovalidate: false,
+              initialValue: widget._pairingCode,
+              onChanged: (value) {
+                _showParingCodeError(false);
+              },
+              validator: (text) {
+                if (_pairingCodeError) {
+                  return L10n(context).errorPairingFailed;
+                } else
+                  return null;
+              },
+              onSaved: (code) async {
+                // Disable OK and Cancel buttons
+                setState(() {
+                  _makingApiCall = true;
+                });
+
+                _showParingCodeError(false);
+
+                var successful = await widget._interactor.pairWithStudent(code);
+                if (successful) {
+                  // Close dialog - return 'true' to represent that a student was paired
+                  Navigator.of(context).pop(true);
+                } else {
+                  _showParingCodeError(true);
+                }
+
+                // Enable OK and Cancel buttons
+                setState(() {
+                  _makingApiCall = false;
+                });
+              },
+              onFieldSubmitted: (code) async {
+                _formKey.currentState.save();
+              },
+              decoration: InputDecoration(
+                hintText: L10n(context).pairingCode,
+                hintStyle: TextStyle(color: ParentColors.ash),
+                contentPadding: EdgeInsets.only(bottom: 2),
+                errorText: _pairingCodeError ? L10n(context).errorPairingFailed : null,
+              ),
+            ),
+          ],
+        ),
+        actions: <Widget>[
+          FlatButton(
+            disabledTextColor: ParentColors.parentApp.withAlpha(100),
+            child: Text(L10n(context).cancel.toUpperCase()),
+            onPressed: _makingApiCall
+                ? null
+                : () {
+                    // Pop dialog - false indicates no student was paired
+                    Navigator.of(context).pop(false);
+                  },
           ),
-          TextFormField(
-            key: _formKey,
-            autofocus: true,
-            autocorrect: false,
-            autovalidate: false,
-            initialValue: widget._pairingCode,
-            onChanged: (value) {
-              _showParingCodeError(false);
-            },
-            validator: (text) {
-              if (_pairingCodeError) {
-                return L10n(context).errorPairingFailed;
-              } else
-                return null;
-            },
-            onSaved: (code) async {
-              // Disable OK and Cancel buttons
-              setState(() {
-                _makingApiCall = true;
-              });
-
-              _showParingCodeError(false);
-
-              var successful = await widget._interactor.pairWithStudent(code);
-              if (successful) {
-                // Close dialog - return 'true' to represent that a student was paired
-                Navigator.of(context).pop(true);
-              } else {
-                _showParingCodeError(true);
-              }
-
-              // Enable OK and Cancel buttons
-              setState(() {
-                _makingApiCall = false;
-              });
-            },
-            onFieldSubmitted: (code) async {
-              _formKey.currentState.save();
-            },
-            decoration: InputDecoration(
-              hintText: L10n(context).pairingCode,
-              hintStyle: TextStyle(color: ParentColors.ash),
-              contentPadding: EdgeInsets.only(bottom: 2),
-              errorText: _pairingCodeError ? L10n(context).errorPairingFailed : null,
-            ),
+          FlatButton(
+            disabledTextColor: ParentColors.parentApp.withAlpha(100),
+            child: Text(L10n(context).ok),
+            onPressed: _makingApiCall
+                ? null
+                : () async {
+                    _showParingCodeError(false);
+                    _formKey.currentState.save();
+                  },
           ),
         ],
       ),
-      actions: <Widget>[
-        FlatButton(
-          disabledTextColor: ParentColors.parentApp.withAlpha(100),
-          child: Text(L10n(context).cancel.toUpperCase()),
-          onPressed: _makingApiCall
-              ? null
-              : () {
-                  // Pop dialog - false indicates no student was paired
-                  Navigator.of(context).pop(false);
-                },
-        ),
-        FlatButton(
-          disabledTextColor: ParentColors.parentApp.withAlpha(100),
-          child: Text(L10n(context).ok),
-          onPressed: _makingApiCall
-              ? null
-              : () async {
-                  _showParingCodeError(false);
-                  _formKey.currentState.save();
-                },
-        ),
-      ],
     );
   }
 

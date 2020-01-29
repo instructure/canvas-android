@@ -13,11 +13,14 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/models/recipient.dart';
 import 'package:flutter_parent/screens/inbox/attachment_utils/attachment_extensions.dart';
 import 'package:flutter_parent/screens/inbox/attachment_utils/attachment_handler.dart';
+import 'package:flutter_parent/utils/common_widgets/arrow_aware_focus_scope.dart';
 import 'package:flutter_parent/utils/common_widgets/avatar.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/common_widgets/user_name.dart';
@@ -76,6 +79,9 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
 
   CreateConversationInteractor _interactor = locator<CreateConversationInteractor>();
 
+  // Focus nodes to aid us in supporting dpad navigation through TextFields.
+  FocusScopeNode _focusScopeNode = FocusScopeNode();
+
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   bool _canSend() =>
@@ -90,6 +96,13 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
     _setupTextControllers();
     _loadRecipients();
     super.initState();
+  }
+
+  // Make sure that we dispose of our focus-related nodes when we dispose this widget.
+  @override
+  void dispose() {
+    _focusScopeNode.dispose();
+    super.dispose();
   }
 
   _setupTextControllers() {
@@ -170,10 +183,13 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
     return DefaultParentTheme(
       builder: (context) => WillPopScope(
         onWillPop: _onWillPop,
-        child: Scaffold(
-          key: _scaffoldKey,
-          appBar: _appBar(context),
-          body: _content(context),
+        child: ArrowAwareFocusScope(
+          node: _focusScopeNode,
+          child: Scaffold(
+            key: _scaffoldKey,
+            appBar: _appBar(context),
+            body: _content(context),
+          ),
         ),
       ),
     );
@@ -421,6 +437,7 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
   Widget _subjectWidget(BuildContext context) {
     return Semantics(
       label: L10n(context).messageSubjectInputHint,
+      focusable: true,
       child: TextField(
         key: CreateConversationScreen.subjectKey,
         controller: _subjectController,
@@ -439,6 +456,7 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
   Widget _messageWidget(BuildContext context) {
     return Semantics(
       label: L10n(context).messageBodyInputHint,
+      focusable: true,
       child: TextField(
         key: CreateConversationScreen.messageKey,
         controller: _bodyController,
