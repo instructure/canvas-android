@@ -51,9 +51,12 @@ do
     # Sample line: <testcase name="displaysLoadingState" classname="com.instructure.student.ui.renderTests.SubmissionDetailsRenderTest" time="4.346">
     if [[ $line =~ "testcase name" ]]
     then
+      # Remove the '<' and '>' from around the line
+      line=`echo  $line | tr -d "<>"`
+      # Extract various fields from the line
       testName=`echo $line | cut -d " " -f 2 | cut -d = -f 2`
       className=`echo $line | cut -d " " -f 3 | cut -d = -f 2`
-      runTime=`echo $line | cut -d " " -f 4 | cut -d = -f 2`
+      runTime=`echo $line | cut -d " " -f 4 | cut -d = -f 2 | tr -d '"'`
       payload="{\"sourcetype\" : \"mobile-android-qa-testresult\", \"event\" : {\"buildUrl\" : \"$BITRISE_BUILD_URL\", \"status\" : \"passed\", \"testName\": $testName, \"testClass\" : $className, \"deviceConfig\" : $suiteName, \"runTime\" : $runTime, $commonData}}"
       failureEncountered=false
     fi
