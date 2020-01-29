@@ -18,7 +18,7 @@ package com.instructure.loginapi.login.api
 
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.utils.APIHelper.paramIsNull
-import com.instructure.canvasapi2.utils.ApiPrefs.userAgent
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.Logger.d
 import com.instructure.canvasapi2.utils.RemoteConfigParam
 import com.instructure.canvasapi2.utils.RemoteConfigUtils
@@ -42,7 +42,7 @@ object MobileVerifyAPI {
             val httpClient = OkHttpClient.Builder()
                 .addInterceptor { chain ->
                     val request = chain.request().newBuilder()
-                        .header("User-Agent", userAgent)
+                        .header("User-Agent", ApiPrefs.userAgent)
                         .cacheControl(CacheControl.FORCE_NETWORK)
                         .build()
                     chain.proceed(request)
@@ -71,11 +71,11 @@ object MobileVerifyAPI {
         if (paramIsNull(callback, domain)) {
             return
         }
-        if (userAgent == "") {
+        if (ApiPrefs.userAgent == "") {
             d("User agent must be set for this API to work correctly!")
             return
         }
         val oAuthInterface = getAuthenticationRetrofit(domain).create(OAuthInterface::class.java)
-        oAuthInterface.mobileVerify(domain, userAgent).enqueue(callback)
+        oAuthInterface.mobileVerify(domain, ApiPrefs.userAgent).enqueue(callback)
     }
 }
