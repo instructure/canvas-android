@@ -18,14 +18,12 @@ import 'package:flutter_parent/models/attachment.dart';
 import 'package:flutter_parent/models/basic_user.dart';
 import 'package:flutter_parent/models/conversation.dart';
 import 'package:flutter_parent/models/message.dart';
-import 'package:flutter_parent/screens/inbox/attachment_utils/attachment_extensions.dart';
+import 'package:flutter_parent/utils/common_widgets/attachment_indicator_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/avatar.dart';
 import 'package:flutter_parent/utils/common_widgets/user_name.dart';
-import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/style_slicer.dart';
 import 'package:intl/intl.dart';
-import 'package:transparent_image/transparent_image.dart';
 
 class MessageWidget extends StatelessWidget {
   final Conversation conversation;
@@ -136,68 +134,10 @@ class MessageWidget extends StatelessWidget {
         itemCount: attachments.length,
         scrollDirection: Axis.horizontal,
         separatorBuilder: (context, index) => SizedBox(width: 12),
-        itemBuilder: (context, index) => _attachment(context, attachments[index]),
-      ),
-    );
-  }
-
-  Widget _attachment(BuildContext context, Attachment attachment) {
-    return Container(
-      key: Key('attachment-${attachment.id}'),
-      width: 112,
-      height: 96,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              border: Border.all(color: ParentColors.tiara, width: 0.5),
-              borderRadius: BorderRadius.all(Radius.circular(4)),
-            ),
-          ),
-          Stack(
-            fit: StackFit.expand,
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    attachment.getIcon(),
-                    color: Theme.of(context).accentColor,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(12, 11, 12, 0),
-                    child: Text(
-                      attachment.displayName,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
-                    ),
-                  )
-                ],
-              ),
-              if (attachment.thumbnailUrl != null)
-                ClipRRect(
-                  borderRadius: new BorderRadius.circular(4),
-                  child: FadeInImage.memoryNetwork(
-                    fadeInDuration: const Duration(milliseconds: 300),
-                    fit: BoxFit.cover,
-                    image: attachment.thumbnailUrl,
-                    placeholder: kTransparentImage,
-                  ),
-                ),
-              Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  onTap: () {
-                    if (onAttachmentClicked != null) onAttachmentClicked(attachment);
-                  },
-                ),
-              ),
-            ],
-          ),
-        ],
+        itemBuilder: (context, index) => AttachmentIndicatorWidget(
+            attachment: attachments[index],
+            onAttachmentClicked: onAttachmentClicked
+        ),
       ),
     );
   }

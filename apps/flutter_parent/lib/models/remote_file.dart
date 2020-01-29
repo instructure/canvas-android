@@ -13,7 +13,10 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:built_value/built_value.dart';
+import 'package:built_value/json_object.dart';
 import 'package:built_value/serializer.dart';
+
+import 'attachment.dart';
 
 part 'remote_file.g.dart';
 
@@ -31,11 +34,43 @@ abstract class RemoteFile implements Built<RemoteFile, RemoteFileBuilder> {
 
   String get url;
 
+  @nullable
   String get filename;
+
+  @BuiltValueField(wireName: 'preview_url')
+  @nullable
+  String get previewUrl;
+
+  @BuiltValueField(wireName: 'thumbnail_url')
+  @nullable
+  String get thumbnailUrl;
+
+  @BuiltValueField(wireName: 'content-type')
+  @nullable
+  String get contentType;
+
+  @BuiltValueField(wireName: 'display_name')
+  @nullable
+  String get displayName;
+
+  Attachment toAttachment() {
+    return Attachment((a) => a
+      ..jsonId = JsonObject('remote-file-$id')
+      ..contentType = contentType
+      ..filename = filename
+      ..displayName = displayName
+      ..previewUrl = previewUrl
+      ..thumbnailUrl = thumbnailUrl
+      ..url = url);
+  }
 
   static void _initializeBuilder(RemoteFileBuilder b) => b
       ..id = ''
       ..url = ''
-      ..filename = '';
+      ..filename = ''
+      ..contentType = ''
+      ..previewUrl = ''
+      ..thumbnailUrl = ''
+      ..displayName = '';
 
 }

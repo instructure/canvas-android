@@ -25,6 +25,18 @@ class _$RemoteFileSerializer implements StructuredSerializer<RemoteFile> {
       'filename',
       serializers.serialize(object.filename,
           specifiedType: const FullType(String)),
+      'preview_url',
+      serializers.serialize(object.previewUrl,
+          specifiedType: const FullType(String)),
+      'thumbnail_url',
+      serializers.serialize(object.thumbnailUrl,
+          specifiedType: const FullType(String)),
+      'content-type',
+      serializers.serialize(object.contentType,
+          specifiedType: const FullType(String)),
+      'display_name',
+      serializers.serialize(object.displayName,
+          specifiedType: const FullType(String)),
     ];
 
     return result;
@@ -54,6 +66,22 @@ class _$RemoteFileSerializer implements StructuredSerializer<RemoteFile> {
           result.filename = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
           break;
+        case 'preview_url':
+          result.previewUrl = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
+          break;
+        case 'thumbnail_url':
+          result.thumbnailUrl = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
+          break;
+        case 'content-type':
+          result.contentType = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
+          break;
+        case 'display_name':
+          result.displayName = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
+          break;
       }
     }
 
@@ -68,11 +96,27 @@ class _$RemoteFile extends RemoteFile {
   final String url;
   @override
   final String filename;
+  @override
+  final String previewUrl;
+  @override
+  final String thumbnailUrl;
+  @override
+  final String contentType;
+  @override
+  final String displayName;
 
   factory _$RemoteFile([void Function(RemoteFileBuilder) updates]) =>
       (new RemoteFileBuilder()..update(updates)).build();
 
-  _$RemoteFile._({this.id, this.url, this.filename}) : super._() {
+  _$RemoteFile._(
+      {this.id,
+      this.url,
+      this.filename,
+      this.previewUrl,
+      this.thumbnailUrl,
+      this.contentType,
+      this.displayName})
+      : super._() {
     if (id == null) {
       throw new BuiltValueNullFieldError('RemoteFile', 'id');
     }
@@ -81,6 +125,18 @@ class _$RemoteFile extends RemoteFile {
     }
     if (filename == null) {
       throw new BuiltValueNullFieldError('RemoteFile', 'filename');
+    }
+    if (previewUrl == null) {
+      throw new BuiltValueNullFieldError('RemoteFile', 'previewUrl');
+    }
+    if (thumbnailUrl == null) {
+      throw new BuiltValueNullFieldError('RemoteFile', 'thumbnailUrl');
+    }
+    if (contentType == null) {
+      throw new BuiltValueNullFieldError('RemoteFile', 'contentType');
+    }
+    if (displayName == null) {
+      throw new BuiltValueNullFieldError('RemoteFile', 'displayName');
     }
   }
 
@@ -97,12 +153,25 @@ class _$RemoteFile extends RemoteFile {
     return other is RemoteFile &&
         id == other.id &&
         url == other.url &&
-        filename == other.filename;
+        filename == other.filename &&
+        previewUrl == other.previewUrl &&
+        thumbnailUrl == other.thumbnailUrl &&
+        contentType == other.contentType &&
+        displayName == other.displayName;
   }
 
   @override
   int get hashCode {
-    return $jf($jc($jc($jc(0, id.hashCode), url.hashCode), filename.hashCode));
+    return $jf($jc(
+        $jc(
+            $jc(
+                $jc(
+                    $jc($jc($jc(0, id.hashCode), url.hashCode),
+                        filename.hashCode),
+                    previewUrl.hashCode),
+                thumbnailUrl.hashCode),
+            contentType.hashCode),
+        displayName.hashCode));
   }
 
   @override
@@ -110,7 +179,11 @@ class _$RemoteFile extends RemoteFile {
     return (newBuiltValueToStringHelper('RemoteFile')
           ..add('id', id)
           ..add('url', url)
-          ..add('filename', filename))
+          ..add('filename', filename)
+          ..add('previewUrl', previewUrl)
+          ..add('thumbnailUrl', thumbnailUrl)
+          ..add('contentType', contentType)
+          ..add('displayName', displayName))
         .toString();
   }
 }
@@ -130,6 +203,22 @@ class RemoteFileBuilder implements Builder<RemoteFile, RemoteFileBuilder> {
   String get filename => _$this._filename;
   set filename(String filename) => _$this._filename = filename;
 
+  String _previewUrl;
+  String get previewUrl => _$this._previewUrl;
+  set previewUrl(String previewUrl) => _$this._previewUrl = previewUrl;
+
+  String _thumbnailUrl;
+  String get thumbnailUrl => _$this._thumbnailUrl;
+  set thumbnailUrl(String thumbnailUrl) => _$this._thumbnailUrl = thumbnailUrl;
+
+  String _contentType;
+  String get contentType => _$this._contentType;
+  set contentType(String contentType) => _$this._contentType = contentType;
+
+  String _displayName;
+  String get displayName => _$this._displayName;
+  set displayName(String displayName) => _$this._displayName = displayName;
+
   RemoteFileBuilder() {
     RemoteFile._initializeBuilder(this);
   }
@@ -139,6 +228,10 @@ class RemoteFileBuilder implements Builder<RemoteFile, RemoteFileBuilder> {
       _id = _$v.id;
       _url = _$v.url;
       _filename = _$v.filename;
+      _previewUrl = _$v.previewUrl;
+      _thumbnailUrl = _$v.thumbnailUrl;
+      _contentType = _$v.contentType;
+      _displayName = _$v.displayName;
       _$v = null;
     }
     return this;
@@ -159,8 +252,15 @@ class RemoteFileBuilder implements Builder<RemoteFile, RemoteFileBuilder> {
 
   @override
   _$RemoteFile build() {
-    final _$result =
-        _$v ?? new _$RemoteFile._(id: id, url: url, filename: filename);
+    final _$result = _$v ??
+        new _$RemoteFile._(
+            id: id,
+            url: url,
+            filename: filename,
+            previewUrl: previewUrl,
+            thumbnailUrl: thumbnailUrl,
+            contentType: contentType,
+            displayName: displayName);
     replace(_$result);
     return _$result;
   }

@@ -17,7 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_model.dart';
 import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'package:flutter_parent/utils/WebViewUtils.dart';
+import 'package:flutter_parent/utils/web_view_utils.dart';
 
 class CourseSyllabusScreen extends StatelessWidget {
   final String syllabus;

@@ -14,8 +14,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
+import 'package:flutter_parent/models/attachment.dart';
 import 'package:flutter_parent/screens/announcements/announcement_view_state.dart';
-import 'package:flutter_parent/utils/WebViewUtils.dart';
+import 'package:flutter_parent/utils/web_view_utils.dart';
+import 'package:flutter_parent/utils/common_widgets/attachment_indicator_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
@@ -107,6 +109,7 @@ class _AnnouncementDetailScreenState extends State<AnnouncementDetailScreen> {
             javascriptMode: JavascriptMode.unrestricted,
           ),
         ),
+        _attachmentsWidget(context, announcementViewState.attachment),
       ],
     );
   }
@@ -122,5 +125,19 @@ class _AnnouncementDetailScreenState extends State<AnnouncementDetailScreen> {
               widget._courseId, L10n(context).institutionAnnouncementTitle);
         });
       }));
+  }
+
+  Widget _attachmentsWidget(BuildContext context, Attachment attachment) {
+    if (attachment == null) return Container();
+    return Container(
+      height: 108,
+      padding: EdgeInsets.only(top: 12),
+      child: AttachmentIndicatorWidget(
+        attachment: attachment, 
+        onAttachmentClicked: (attachment) => {
+          widget._interactor.viewAttachment(context, attachment)
+        }
+      )
+    );
   }
 }

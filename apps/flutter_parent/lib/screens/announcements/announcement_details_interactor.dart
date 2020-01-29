@@ -14,14 +14,16 @@
 
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/account_notification.dart';
+import 'package:flutter_parent/models/attachment.dart';
 import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/network/api/course_api.dart';
 import 'package:flutter_parent/screens/announcements/announcement_details_screen.dart';
 import 'package:flutter_parent/screens/announcements/announcement_view_state.dart';
 import 'package:flutter_parent/models/announcement.dart';
 import 'package:flutter_parent/network/api/announcement_api.dart';
+import 'package:flutter_parent/utils/common_widgets/view_attachment/view_attachment_screen.dart';
+import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class AnnouncementDetailsInteractor {
@@ -41,7 +43,8 @@ class AnnouncementDetailsInteractor {
           course.name,
           announcement.title,
           announcement.message,
-          announcement.postedAt
+          announcement.postedAt,
+          announcement.attachments.first.toAttachment()
       );
     } else {
       AccountNotification accountNotification = await _announcementApi()
@@ -51,8 +54,13 @@ class AnnouncementDetailsInteractor {
           institutionToolbarTitle,
           accountNotification.subject,
           accountNotification.message,
-          DateTime.parse(accountNotification.startAt)
+          DateTime.parse(accountNotification.startAt),
+          null // Account notifications can't have attachments
       );
     }
+  }
+
+  void viewAttachment(BuildContext context, Attachment attachment) {
+    locator<QuickNav>().push(context, ViewAttachmentScreen(attachment));
   }
  }
