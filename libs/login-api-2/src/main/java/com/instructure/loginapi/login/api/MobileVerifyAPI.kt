@@ -18,8 +18,11 @@ package com.instructure.loginapi.login.api
 
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.utils.APIHelper.paramIsNull
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ApiPrefs.userAgent
 import com.instructure.canvasapi2.utils.Logger.d
+import com.instructure.canvasapi2.utils.RemoteConfigParam
+import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.loginapi.login.model.DomainVerificationResult
 import okhttp3.CacheControl
 import okhttp3.OkHttpClient
@@ -30,30 +33,47 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 object MobileVerifyAPI {
-    private val authenticationRetrofit: Retrofit
-        private get() {
+
+    internal interface OAuthInterface {
+        @GET("mobile_verify.json")
+        fun mobileVerify(@Query(value = "domain", encoded = false) domain: String?, @Query("user_agent") userAgent: String?): Call<DomainVerificationResult?>
+    }
+
+    private fun getAuthenticationRetrofit(domain: String?) : Retrofit {
             val userAgent = userAgent
             val httpClient = OkHttpClient.Builder()
-                    .addInterceptor { chain ->
-                        if (userAgent != "") {
-                            val request = chain.request().newBuilder()
-                                    .header("User-Agent", userAgent)
-                                    .cacheControl(CacheControl.FORCE_NETWORK)
-                                    .build()
-                            chain.proceed(request)
-                        } else {
-                            chain.proceed(chain.request())
-                        }
+                .addInterceptor { chain ->
+                    if (userAgent != "") {
+                        val request = chain.request().newBuilder()
+                            .header("User-Agent", userAgent)
+                            .cacheControl(CacheControl.FORCE_NETWORK)
+                            .build()
+                        chain.proceed(request)
+                    } else {
+                        chain.proceed(chain.request())
                     }
-                    .build()
+                }.build()
+
+            val mobileVerifyBetaEnabled = RemoteConfigUtils.getString(
+                    RemoteConfigParam.MOBILE_VERIFY_BETA_ENABLED)?.equals("true", ignoreCase = true)
+                    ?: false
+
+            // We only want to switch over to the beta mobile verify domain if the remote firebase config is true
+            val baseUrl = if(mobileVerifyBetaEnabled && domain?.contains(".beta.") == true) {
+                "https://canvas.beta.instructure.com/api/v1/"
+            } else {
+                "https://canvas.instructure.com/api/v1/"
+            }
+
             return Retrofit.Builder()
-                    .baseUrl("https://canvas.instructure.com/api/v1/")
+                    .baseUrl(baseUrl)
                     .client(httpClient)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build()
         }
 
-    fun mobileVerify(domain: String?, callback: StatusCallback<DomainVerificationResult?>?) {
+    @JvmStatic
+    fun mobileVerify(domain: String?, callback: StatusCallback<DomainVerificationResult?>) {
         if (paramIsNull(callback, domain)) {
             return
         }
@@ -62,12 +82,7 @@ object MobileVerifyAPI {
             d("User agent must be set for this API to work correctly!")
             return
         }
-        val oAuthInterface = authenticationRetrofit.create(OAuthInterface::class.java)
+        val oAuthInterface = getAuthenticationRetrofit(domain).create(OAuthInterface::class.java)
         oAuthInterface.mobileVerify(domain, userAgent).enqueue(callback)
-    }
-
-    internal interface OAuthInterface {
-        @GET("mobile_verify.json")
-        fun mobileVerify(@Query(value = "domain", encoded = false) domain: String?, @Query("user_agent") userAgent: String?): Call<DomainVerificationResult?>
     }
 }
