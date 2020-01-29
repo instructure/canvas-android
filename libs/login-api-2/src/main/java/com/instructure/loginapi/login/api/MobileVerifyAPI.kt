@@ -39,18 +39,13 @@ object MobileVerifyAPI {
     }
 
     private fun getAuthenticationRetrofit(domain: String?) : Retrofit {
-            val userAgent = userAgent
             val httpClient = OkHttpClient.Builder()
                 .addInterceptor { chain ->
-                    if (userAgent != "") {
-                        val request = chain.request().newBuilder()
-                            .header("User-Agent", userAgent)
-                            .cacheControl(CacheControl.FORCE_NETWORK)
-                            .build()
-                        chain.proceed(request)
-                    } else {
-                        chain.proceed(chain.request())
-                    }
+                    val request = chain.request().newBuilder()
+                        .header("User-Agent", userAgent)
+                        .cacheControl(CacheControl.FORCE_NETWORK)
+                        .build()
+                    chain.proceed(request)
                 }.build()
 
             val mobileVerifyBetaEnabled = RemoteConfigUtils.getString(
@@ -76,7 +71,6 @@ object MobileVerifyAPI {
         if (paramIsNull(callback, domain)) {
             return
         }
-        val userAgent = userAgent
         if (userAgent == "") {
             d("User agent must be set for this API to work correctly!")
             return
