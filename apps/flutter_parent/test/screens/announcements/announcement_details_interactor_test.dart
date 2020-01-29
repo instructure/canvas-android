@@ -19,6 +19,7 @@ import 'package:flutter_parent/models/account_notification.dart';
 import 'package:flutter_parent/models/announcement.dart';
 import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/models/enrollment.dart';
+import 'package:flutter_parent/models/remote_file.dart';
 import 'package:flutter_parent/network/api/announcement_api.dart';
 import 'package:flutter_parent/network/api/course_api.dart';
 import 'package:flutter_parent/screens/announcements/announcement_details_interactor.dart';
@@ -45,6 +46,15 @@ void main() {
     final announcementType = AnnouncementType.COURSE;
     final postedAt = DateTime.now();
     final courseName = 'flowers for hodornon';
+    final remoteFile = RemoteFile((b) => b
+      ..id = '123'
+      ..url = 'hodor.com'
+      ..filename = 'hodor.jpg'
+      ..contentType = 'jpg'
+      ..previewUrl = 'hodor.com/preview'
+      ..thumbnailUrl = 'hodor.com/thumbnail'
+      ..displayName = 'hodor'
+    );
 
     final announcementData = Announcement((b) => b
       ..id = announcementId
@@ -52,6 +62,7 @@ void main() {
       ..message = announcementMessage
       ..title = announcementSubject
       ..htmlUrl = ''
+      ..attachments = ListBuilder<RemoteFile>([remoteFile])
     );
 
     final courseData = Course((b) => b
@@ -70,7 +81,7 @@ void main() {
     );
 
     final expectedViewState = AnnouncementViewState(
-      courseName, announcementSubject, announcementMessage, postedAt);
+      courseName, announcementSubject, announcementMessage, postedAt, null);
 
     final announcementApi = _MockAnnouncementApi();
     final courseApi = _MockCourseApi();
@@ -110,7 +121,7 @@ void main() {
     );
 
     final expectedViewState = AnnouncementViewState(
-        toolbarTitle, announcementSubject, announcementMessage, postedAt);
+        toolbarTitle, announcementSubject, announcementMessage, postedAt, null);
 
     final announcementApi = _MockAnnouncementApi();
     when(announcementApi.getAccountNotification(announcementId)).thenAnswer((_) =>

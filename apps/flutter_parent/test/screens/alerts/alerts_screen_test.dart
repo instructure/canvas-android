@@ -52,7 +52,7 @@ void main() {
 
   AnnouncementDetailsInteractor _setupAnnouncementInteractor() {
     final announcementInteractor = _MockAnnouncementDetailsInteractor();
-    final response = AnnouncementViewState('hodorTitle', 'hodor Subject', 'hodor Message', DateTime.now());
+    final response = AnnouncementViewState('hodorTitle', 'hodor Subject', 'hodor Message', DateTime.now(), null);
     when(announcementInteractor.getAnnouncement(any, any, any, any)).thenAnswer((_) => Future.value(response));
     return announcementInteractor;
   }

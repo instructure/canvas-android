@@ -14,17 +14,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import 'package:flutter_parent/models/attachment.dart';
+
 class AnnouncementViewState {
   final String _toolbarTitle;
   final String _announcementTitle;
   final String _announcementMessage;
   final DateTime _postedAt;
+  final Attachment _attachment;
 
   AnnouncementViewState(this._toolbarTitle, this._announcementTitle,
-      this._announcementMessage, this._postedAt);
+      this._announcementMessage, this._postedAt, this._attachment);
 
   String get toolbarTitle => _toolbarTitle;
   String get announcementTitle => _announcementTitle;
   String get announcementMessage => _announcementMessage;
   DateTime get postedAt => _postedAt;
+  Attachment get attachment => _attachment;
 }

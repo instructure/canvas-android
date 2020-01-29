@@ -14,11 +14,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import 'package:built_value/json_object.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
+import 'package:flutter_parent/models/attachment.dart';
+import 'package:flutter_parent/models/remote_file.dart';
 import 'package:flutter_parent/screens/announcements/announcement_details_interactor.dart';
 import 'package:flutter_parent/screens/announcements/announcement_details_screen.dart';
 import 'package:flutter_parent/screens/announcements/announcement_view_state.dart';
+import 'package:flutter_parent/utils/common_widgets/attachment_indicator_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
@@ -85,7 +89,7 @@ void main() {
       final courseName = 'flowers for hodornon';
 
       final response = AnnouncementViewState(
-          courseName, announcementSubject, announcementMessage, postedAt);
+          courseName, announcementSubject, announcementMessage, postedAt, null);
       when(interactor.getAnnouncement(announcementId, AnnouncementType.COURSE, courseId, AppLocalizations().institutionAnnouncementTitle)).thenAnswer((_) => Future.value(response));
       _setupLocator(interactor: interactor);
 
@@ -98,6 +102,36 @@ void main() {
       expect(find.byType(WebView), findsOneWidget);
     });
 
+    testWidgetsWithAccessibilityChecks('Shows course announcement with attachment', (tester) async {
+      final interactor = _MockAnnouncementDetailsInteractor();
+      final announcementId = '123';
+      final courseId = '123';
+      final announcementMessage = 'hodor';
+      final announcementSubject = 'hodor subject';
+      final postedAt = DateTime.now();
+      final courseName = 'flowers for hodornon';
+      final attachment = Attachment((b) => b
+        ..jsonId = JsonObject('1')
+        ..displayName = 'Attachment 1');
+
+      final response = AnnouncementViewState(
+          courseName, announcementSubject, announcementMessage, postedAt, attachment);
+      when(interactor.getAnnouncement(announcementId, AnnouncementType.COURSE, courseId, AppLocalizations().institutionAnnouncementTitle)).thenAnswer((_) => Future.value(response));
+      _setupLocator(interactor: interactor);
+
+      await tester.pumpWidget(_testableWidget(announcementId, AnnouncementType.COURSE, courseId));
+      await tester.pumpAndSettle();
+
+      expect(find.text(announcementSubject), findsOneWidget);
+      expect(find.text(courseName), findsOneWidget);
+      expect(find.text(DateFormat(AppLocalizations().dateTimeFormat).format(postedAt)), findsOneWidget);
+      expect(find.byType(WebView), findsOneWidget);
+      var attachmentWidget = find.byType(AttachmentIndicatorWidget);
+      expect(attachmentWidget, findsOneWidget);
+      await tester.tap(attachmentWidget);
+      verify(interactor.viewAttachment(any, attachment)).called(1);
+    });
+
     testWidgetsWithAccessibilityChecks('Shows institution announcement', (tester) async {
       final interactor = _MockAnnouncementDetailsInteractor();
       final announcementId = '123';
@@ -108,7 +142,7 @@ void main() {
       final toolbarTitle = AppLocalizations().institutionAnnouncementTitle;
 
       final response = AnnouncementViewState(
-          toolbarTitle, announcementSubject, announcementMessage, postedAt);
+          toolbarTitle, announcementSubject, announcementMessage, postedAt, null);
       when(interactor.getAnnouncement(announcementId, AnnouncementType.INSTITUTION, courseId, toolbarTitle)).thenAnswer((_) => Future.value(response));
       _setupLocator(interactor: interactor);
 
