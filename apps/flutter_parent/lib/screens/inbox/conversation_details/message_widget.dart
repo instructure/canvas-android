@@ -18,15 +18,12 @@ import 'package:flutter_parent/models/attachment.dart';
 import 'package:flutter_parent/models/basic_user.dart';
 import 'package:flutter_parent/models/conversation.dart';
 import 'package:flutter_parent/models/message.dart';
-import 'package:flutter_parent/screens/inbox/attachment_utils/attachment_extensions.dart';
 import 'package:flutter_parent/utils/common_widgets/attachment_indicator_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/avatar.dart';
 import 'package:flutter_parent/utils/common_widgets/user_name.dart';
-import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/style_slicer.dart';
 import 'package:intl/intl.dart';
-import 'package:transparent_image/transparent_image.dart';
 
 class MessageWidget extends StatelessWidget {
   final Conversation conversation;

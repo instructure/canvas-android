@@ -56,6 +56,8 @@ void main() {
       ..displayName = 'hodor'
     );
 
+    final attachment = remoteFile.toAttachment();
+
     final announcementData = Announcement((b) => b
       ..id = announcementId
       ..postedAt = postedAt
@@ -81,7 +83,7 @@ void main() {
     );
 
     final expectedViewState = AnnouncementViewState(
-      courseName, announcementSubject, announcementMessage, postedAt, null);
+      courseName, announcementSubject, announcementMessage, postedAt, attachment);
 
     final announcementApi = _MockAnnouncementApi();
     final courseApi = _MockCourseApi();
@@ -102,6 +104,7 @@ void main() {
     expect(actualViewState.announcementMessage, expectedViewState.announcementMessage);
     expect(actualViewState.announcementTitle, expectedViewState.announcementTitle);
     expect(actualViewState.postedAt, expectedViewState.postedAt);
+    expect(actualViewState.attachment, attachment);
   });
 
   test('get institution announcement returns a proper view state', () async {

@@ -18,7 +18,6 @@ import 'package:built_value/json_object.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/attachment.dart';
-import 'package:flutter_parent/models/remote_file.dart';
 import 'package:flutter_parent/screens/announcements/announcement_details_interactor.dart';
 import 'package:flutter_parent/screens/announcements/announcement_details_screen.dart';
 import 'package:flutter_parent/screens/announcements/announcement_view_state.dart';

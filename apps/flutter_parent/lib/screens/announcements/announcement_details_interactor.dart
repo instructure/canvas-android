@@ -14,7 +14,6 @@
 
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/account_notification.dart';
 import 'package:flutter_parent/models/attachment.dart';
 import 'package:flutter_parent/models/course.dart';
