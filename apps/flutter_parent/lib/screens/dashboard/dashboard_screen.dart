@@ -26,7 +26,6 @@ import 'package:flutter_parent/screens/settings/settings_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/avatar.dart';
 import 'package:flutter_parent/utils/common_widgets/badges.dart';
 import 'package:flutter_parent/utils/common_widgets/dropdown_arrow.dart';
-import 'package:flutter_parent/utils/common_widgets/error_report/error_report_dialog.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/common_widgets/user_name.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
@@ -34,6 +33,7 @@ import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:package_info/package_info.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'dashboard_interactor.dart';
 
@@ -278,8 +278,8 @@ class DashboardState extends State<DashboardScreen> {
   _navigateToHelp(context) {
     // Close the drawer, then push the Help screen in
     Navigator.of(context).pop();
-    // TODO: Navigate to the help screen
-    ErrorReportDialog.asDialog(context);
+    // TODO: Navigate to the help screen instead, once it's built out
+    launch('https://play.google.com/store/apps/details?id=com.instructure.parentapp');
 //    locator<QuickNav>().push(context, HelpScreen());
   }
 
@@ -341,7 +341,8 @@ class DashboardState extends State<DashboardScreen> {
         onTap: () => locator<QuickNav>().push(context, SettingsScreen()),
       );
 
-  _navDrawerHelp() => ListTile(title: Text(L10n(context).help), onTap: () => _navigateToHelp(context));
+  // TODO: Label help when we get in the help page
+  _navDrawerHelp() => ListTile(title: Text(L10n(context).shareFeedback), onTap: () => _navigateToHelp(context));
 
   _navDrawerSignOut() => ListTile(title: Text(L10n(context).signOut), onTap: () => _performSignOut(context));
 
