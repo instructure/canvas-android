@@ -22,23 +22,42 @@ class _$RemoteFileSerializer implements StructuredSerializer<RemoteFile> {
       serializers.serialize(object.id, specifiedType: const FullType(String)),
       'url',
       serializers.serialize(object.url, specifiedType: const FullType(String)),
-      'filename',
-      serializers.serialize(object.filename,
-          specifiedType: const FullType(String)),
-      'preview_url',
-      serializers.serialize(object.previewUrl,
-          specifiedType: const FullType(String)),
-      'thumbnail_url',
-      serializers.serialize(object.thumbnailUrl,
-          specifiedType: const FullType(String)),
-      'content-type',
-      serializers.serialize(object.contentType,
-          specifiedType: const FullType(String)),
-      'display_name',
-      serializers.serialize(object.displayName,
-          specifiedType: const FullType(String)),
     ];
-
+    result.add('filename');
+    if (object.filename == null) {
+      result.add(null);
+    } else {
+      result.add(serializers.serialize(object.filename,
+          specifiedType: const FullType(String)));
+    }
+    result.add('preview_url');
+    if (object.previewUrl == null) {
+      result.add(null);
+    } else {
+      result.add(serializers.serialize(object.previewUrl,
+          specifiedType: const FullType(String)));
+    }
+    result.add('thumbnail_url');
+    if (object.thumbnailUrl == null) {
+      result.add(null);
+    } else {
+      result.add(serializers.serialize(object.thumbnailUrl,
+          specifiedType: const FullType(String)));
+    }
+    result.add('content-type');
+    if (object.contentType == null) {
+      result.add(null);
+    } else {
+      result.add(serializers.serialize(object.contentType,
+          specifiedType: const FullType(String)));
+    }
+    result.add('display_name');
+    if (object.displayName == null) {
+      result.add(null);
+    } else {
+      result.add(serializers.serialize(object.displayName,
+          specifiedType: const FullType(String)));
+    }
     return result;
   }
 
@@ -122,21 +141,6 @@ class _$RemoteFile extends RemoteFile {
     }
     if (url == null) {
       throw new BuiltValueNullFieldError('RemoteFile', 'url');
-    }
-    if (filename == null) {
-      throw new BuiltValueNullFieldError('RemoteFile', 'filename');
-    }
-    if (previewUrl == null) {
-      throw new BuiltValueNullFieldError('RemoteFile', 'previewUrl');
-    }
-    if (thumbnailUrl == null) {
-      throw new BuiltValueNullFieldError('RemoteFile', 'thumbnailUrl');
-    }
-    if (contentType == null) {
-      throw new BuiltValueNullFieldError('RemoteFile', 'contentType');
-    }
-    if (displayName == null) {
-      throw new BuiltValueNullFieldError('RemoteFile', 'displayName');
     }
   }
 

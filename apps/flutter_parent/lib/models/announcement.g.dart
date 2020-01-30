@@ -204,7 +204,9 @@ class AnnouncementBuilder
   set attachments(ListBuilder<RemoteFile> attachments) =>
       _$this._attachments = attachments;
 
-  AnnouncementBuilder();
+  AnnouncementBuilder() {
+    Announcement._initializeBuilder(this);
+  }
 
   AnnouncementBuilder get _$this {
     if (_$v != null) {
