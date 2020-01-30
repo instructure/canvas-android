@@ -619,9 +619,52 @@ class AppLocalizations {
 
   /// Alerts Screen
 
+  String get noAlertsTitle => Intl.message(
+        'No Alerts',
+        desc: 'The title for the empty message to show to users when there are no alerts for the student.',
+      );
+
   String get noAlertsMessage => Intl.message(
-        'This student has no alerts to view.',
+        'There’s nothing to be notified of yet.',
         desc: 'The empty message to show to users when there are no alerts for the student.',
+      );
+
+  String get courseAnnouncement => Intl.message(
+        'Course Announcement',
+        desc: 'Title for alerts when there is a course announcement',
+      );
+
+  String get institutionAnnouncement => Intl.message(
+        'Institution Announcement',
+        desc: 'Title for alerts when there is an institution announcement',
+      );
+
+  String assignmentGradeAboveThreshold(String threshold) => Intl.message(
+        'Assignment Grade Above $threshold',
+        name: 'assignmentGradeAbove',
+        args: [threshold],
+        desc: 'Title for alerts when an assignment grade is above the threshold value',
+      );
+
+  String assignmentGradeBelowThreshold(String threshold) => Intl.message(
+        'Assignment Grade Below $threshold',
+        name: 'assignmentGradeBelow',
+        args: [threshold],
+        desc: 'Title for alerts when an assignment grade is below the threshold value',
+      );
+
+  String courseGradeAboveThreshold(String threshold) => Intl.message(
+        'Course Grade Above $threshold',
+        name: 'courseGradeAbove',
+        args: [threshold],
+        desc: 'Title for alerts when a course grade is above the threshold value',
+      );
+
+  String courseGradeBelowThreshold(String threshold) => Intl.message(
+        'Course Grade Below $threshold',
+        name: 'courseGradeBelow',
+        args: [threshold],
+        desc: 'Title for alerts when a course grade is below the threshold value',
       );
 
   /// Settings screen

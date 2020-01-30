@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/alert.dart';
 import 'package:flutter_parent/models/user.dart';
+import 'package:flutter_parent/screens/alert_thresholds/alert_thresholds_extensions.dart';
 import 'package:flutter_parent/screens/alerts/alerts_interactor.dart';
 import 'package:flutter_parent/screens/announcements/announcement_details_screen.dart';
 import 'package:flutter_parent/screens/dashboard/alert_notifier.dart';
@@ -42,9 +43,9 @@ class AlertsScreen extends StatefulWidget {
 }
 
 class _AlertsScreenState extends State<AlertsScreen> {
-  Future<List<Alert>> _alertsFuture;
+  Future<AlertsList> _alertsFuture;
 
-  Future<List<Alert>> _loadAlerts({bool forceRefresh = false}) =>
+  Future<AlertsList> _loadAlerts({bool forceRefresh = false}) =>
       widget._interactor.getAlertsForStudent(widget._student.id, forceRefresh);
 
   @override
@@ -57,7 +58,7 @@ class _AlertsScreenState extends State<AlertsScreen> {
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: _alertsFuture,
-      builder: (context, AsyncSnapshot<List<Alert>> snapshot) {
+      builder: (context, AsyncSnapshot<AlertsList> snapshot) {
         // Show loading if we're waiting for data, not inside the refresh indicator as it's unnecessary
         if (snapshot.connectionState == ConnectionState.waiting) {
           return LoadingIndicator();
@@ -67,7 +68,7 @@ class _AlertsScreenState extends State<AlertsScreen> {
         Widget child;
         if (snapshot.hasError) {
           child = _error(context);
-        } else if (snapshot.data == null || snapshot.data.isEmpty) {
+        } else if (snapshot.data == null || snapshot.data.alerts.isEmpty) {
           child = _empty(context);
         } else {
           child = _AlertsList(widget._student, snapshot.data);
@@ -89,47 +90,75 @@ class _AlertsScreenState extends State<AlertsScreen> {
     return FullScreenScrollContainer(children: [Text(L10n(context).unexpectedError)]);
   }
 
-  // TODO: This needs a design (image, title, subtitle)
   Widget _empty(BuildContext context) {
-    return EmptyPandaWidget(subtitle: L10n(context).noAlertsMessage);
+    return EmptyPandaWidget(
+      svgPath: 'assets/svg/panda-no-alerts.svg',
+      title: L10n(context).noAlertsTitle,
+      subtitle: L10n(context).noAlertsMessage,
+    );
   }
 }
 
 /// A helper widget to handle updating read status of alerts, and displaying as a list
 class _AlertsList extends StatefulWidget {
   final _interactor = locator<AlertsInteractor>();
-  final List<Alert> _alerts;
+  final AlertsList _data;
   final User _student;
 
-  _AlertsList(this._student, this._alerts, {Key key}) : super(key: key);
+  _AlertsList(this._student, this._data, {Key key}) : super(key: key);
 
   @override
   __AlertsListState createState() => __AlertsListState();
 }
 
 class __AlertsListState extends State<_AlertsList> {
-  List<Alert> _alerts;
+  AlertsList _data;
 
   @override
   void initState() {
     super.initState();
-    _alerts = widget._alerts;
+    _data = widget._data;
   }
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemCount: _alerts.length,
-      itemBuilder: (context, index) => _alertTile(context, _alerts[index], index),
+      itemCount: _data.alerts.length,
+      itemBuilder: (context, index) => _alertTile(context, _data.alerts[index], index),
     );
   }
 
   Widget _alertTile(BuildContext context, Alert alert, int index) {
-    Widget tile = ListTile(
-      leading: Icon(_alertIcon(alert), color: _alertColor(context, alert), size: 20),
-      title: Text(alert.title),
-      subtitle: Text(_formatDate(context, alert.actionDate)),
+    final textTheme = Theme.of(context).textTheme;
+    final alertColor = _alertColor(context, alert);
+    Widget tile = InkWell(
       onTap: () => _routeAlert(alert, index),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          SizedBox(width: 18),
+          Padding(
+            padding: const EdgeInsets.only(top: 14),
+            child: Icon(_alertIcon(alert), color: alertColor, size: 20),
+          ),
+          SizedBox(width: 34),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                SizedBox(height: 16),
+                Text(_alertTitle(context, alert), style: textTheme.subtitle.copyWith(color: alertColor)),
+                SizedBox(height: 4),
+                Text(alert.title, style: textTheme.subhead),
+                SizedBox(height: 4),
+                Text(_formatDate(context, alert.actionDate), style: textTheme.subtitle),
+                SizedBox(height: 12),
+              ],
+            ),
+          ),
+          SizedBox(height: 16),
+        ],
+      ),
     );
 
     if (alert.workflowState == AlertWorkflowState.unread) {
@@ -153,6 +182,36 @@ class __AlertsListState extends State<_AlertsList> {
     if (alert.isAlertNegative()) return ParentColors.failure;
 
     return ParentColors.failure;
+  }
+
+  String _alertTitle(BuildContext context, Alert alert) {
+    final l10n = L10n(context);
+    final threshold = _data.thresholds?.getThreshold(alert.alertType)?.threshold;
+    String title;
+    switch (alert.alertType) {
+      case AlertType.institutionAnnouncement:
+        title = l10n.institutionAnnouncement;
+        break;
+      case AlertType.courseAnnouncement:
+        title = l10n.courseAnnouncement;
+        break;
+      case AlertType.assignmentMissing:
+        title = l10n.assignmentMissing;
+        break;
+      case AlertType.courseGradeHigh:
+        title = l10n.courseGradeAboveThreshold(threshold);
+        break;
+      case AlertType.courseGradeLow:
+        title = l10n.courseGradeBelowThreshold(threshold);
+        break;
+      case AlertType.assignmentGradeHigh:
+        title = l10n.assignmentGradeAboveThreshold(threshold);
+        break;
+      case AlertType.assignmentGradeLow:
+        title = l10n.assignmentGradeBelowThreshold(threshold);
+        break;
+    }
+    return title;
   }
 
   String _formatDate(BuildContext context, DateTime date) {
@@ -180,7 +239,7 @@ class __AlertsListState extends State<_AlertsList> {
     if (alert.workflowState == AlertWorkflowState.read) return;
 
     final readAlert = await widget._interactor.markAlertRead(alert.id);
-    setState(() => _alerts.setRange(index, index + 1, [readAlert]));
+    setState(() => _data.alerts.setRange(index, index + 1, [readAlert]));
     locator<AlertCountNotifier>().update(widget._student.id);
   }
 }

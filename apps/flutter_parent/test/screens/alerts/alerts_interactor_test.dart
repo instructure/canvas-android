@@ -13,25 +13,29 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:flutter_parent/models/alert.dart';
+import 'package:flutter_parent/models/alert_threshold.dart';
 import 'package:flutter_parent/network/api/alert_api.dart';
 import 'package:flutter_parent/screens/alerts/alerts_interactor.dart';
-import 'package:get_it/get_it.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
-void main() {
-  void _setupLocator({AlertsApi api}) {
-    final _locator = GetIt.instance;
-    _locator.reset();
+import '../../utils/test_app.dart';
 
-    _locator.registerFactory<AlertsApi>(() => api ?? _MockAlertsApi());
-  }
+void main() {
+  final api = _MockAlertsApi();
+
+  setupTestLocator((_locator) {
+    _locator.registerFactory<AlertsApi>(() => api);
+  });
+
+  setUp(() {
+    reset(api);
+  });
 
   test('mark alert read calls the api', () {
     final alertId = '123';
-    final api = _MockAlertsApi();
+
     when(api.updateAlertWorkflow(alertId, 'read')).thenAnswer((_) => Future.value(null));
-    _setupLocator(api: api);
 
     AlertsInteractor().markAlertRead(alertId);
 
@@ -48,14 +52,26 @@ void main() {
         ..actionDate = date.add(Duration(days: index)));
     });
 
-    final api = _MockAlertsApi();
     when(api.getAlertsDepaginated(studentId, false)).thenAnswer((_) => Future.value(data.toList()));
-    _setupLocator(api: api);
 
     final actual = await AlertsInteractor().getAlertsForStudent(studentId, false);
 
     verify(api.getAlertsDepaginated(studentId, false)).called(1);
-    expect(actual, data.reversed.toList()); // Verify that the actual list sorted correctly
+    expect(actual.alerts, data.reversed.toList()); // Verify that the actual list sorted correctly
+  });
+
+  test('get alerts for student returns thresholds', () async {
+    final studentId = '123';
+
+    final data = List.generate(5, (index) {
+      return AlertThreshold((b) => b..id = '$index');
+    });
+    when(api.getAlertThresholds(studentId, false)).thenAnswer((_) async => data);
+
+    final actual = await AlertsInteractor().getAlertsForStudent(studentId, false);
+
+    verify(api.getAlertThresholds(studentId, false)).called(1);
+    expect(actual.thresholds, data); // Verify that the actual list sorted correctly
   });
 }
 
