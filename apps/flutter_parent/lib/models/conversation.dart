@@ -34,47 +34,47 @@ abstract class Conversation implements Built<Conversation, ConversationBuilder> 
   String get subject;
 
   /// The workflowState of the conversation (unread, read, archived)
-  @BuiltValueField(wireName: "workflow_state")
+  @BuiltValueField(wireName: 'workflow_state')
   ConversationWorkflowState get workflowState;
 
   /// 100 character preview of the last message
-  @BuiltValueField(wireName: "last_message")
+  @BuiltValueField(wireName: 'last_message')
   @nullable
   String get lastMessage;
 
   /// 100 character preview of the last authored message
-  @BuiltValueField(wireName: "last_authored_message")
+  @BuiltValueField(wireName: 'last_authored_message')
   @nullable
   String get lastAuthoredMessage;
 
   /// Date of the last message sent
-  @BuiltValueField(wireName: "last_message_at")
+  @BuiltValueField(wireName: 'last_message_at')
   @nullable
   DateTime get lastMessageAt;
 
-  @BuiltValueField(wireName: "last_authored_message_at")
+  @BuiltValueField(wireName: 'last_authored_message_at')
   @nullable
   DateTime get lastAuthoredMessageAt;
 
   // Number of messages in the conversation.
-  @BuiltValueField(wireName: "message_count")
+  @BuiltValueField(wireName: 'message_count')
   int get messageCount;
 
   /// Whether or not the user is subscribed to the current message
-  @BuiltValueField(wireName: "subscribed")
+  @BuiltValueField(wireName: 'subscribed')
   bool get isSubscribed;
 
   /// Whether or not the message is starred
-  @BuiltValueField(wireName: "starred")
+  @BuiltValueField(wireName: 'starred')
   bool get isStarred;
 
   /// The avatar to display. Knows if group, user, etc.
-  @BuiltValueField(wireName: "avatar_url")
+  @BuiltValueField(wireName: 'avatar_url')
   @nullable
   String get avatarUrl;
 
   /// Whether this conversation is visible in the current context. Not 100% what that means
-  @BuiltValueField(wireName: "visible")
+  @BuiltValueField(wireName: 'visible')
   bool get isVisible;
 
   /// The IDs of all people in the conversation. EXCLUDING the current user unless it's a monologue
@@ -89,11 +89,11 @@ abstract class Conversation implements Built<Conversation, ConversationBuilder> 
   @nullable
   BuiltList<Message> get messages;
 
-  @BuiltValueField(wireName: "context_name")
+  @BuiltValueField(wireName: 'context_name')
   @nullable
   String get contextName;
 
-  @BuiltValueField(wireName: "context_code")
+  @BuiltValueField(wireName: 'context_code')
   @nullable
   String get contextCode;
 

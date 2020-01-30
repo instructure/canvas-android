@@ -54,7 +54,7 @@ class FileApi {
 
     // Build the form data for upload
     FormData formData = FormData.fromMap(uploadConfig.params.toMap());
-    formData.files.add(MapEntry("file", await MultipartFile.fromFile(file.path, filename: name)));
+    formData.files.add(MapEntry('file', await MultipartFile.fromFile(file.path, filename: name)));
 
     // Perform upload with progress
     return fetch(Dio().post(

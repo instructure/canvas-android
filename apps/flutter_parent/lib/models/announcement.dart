@@ -15,6 +15,7 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
+
 import 'remote_file.dart';
 
 part 'announcement.g.dart';
@@ -35,19 +36,18 @@ abstract class Announcement implements Built<Announcement, AnnouncementBuilder> 
 
   String get message;
 
-  @BuiltValueField(wireName: "posted_at")
+  @BuiltValueField(wireName: 'posted_at')
   DateTime get postedAt;
 
-  @BuiltValueField(wireName: "html_url")
+  @BuiltValueField(wireName: 'html_url')
   String get htmlUrl;
 
   BuiltList<RemoteFile> get attachments;
 
   static void _intializeBuilder(AnnouncementBuilder b) => b
-      ..id = ''
-      ..title = ''
-      ..message = ''
-      ..postedAt = DateTime.now()
-      ..htmlUrl = '';
-
+    ..id = ''
+    ..title = ''
+    ..message = ''
+    ..postedAt = DateTime.now()
+    ..htmlUrl = '';
 }

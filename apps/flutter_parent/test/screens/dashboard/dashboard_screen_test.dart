@@ -460,7 +460,7 @@ void main() {
       when(alertsApi.getUnreadCount(any))
           .thenAnswer((_) => Future.value(UnreadCount((b) => b..count = JsonObject(77))));
 
-      interactor.getAlertCountNotifier().update("doesn't matter");
+      interactor.getAlertCountNotifier().update('doesn\'t matter');
       await tester.pumpAndSettle();
 
       expect(find.text('77'), findsOneWidget);

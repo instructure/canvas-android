@@ -58,7 +58,7 @@ void main() {
     });
     PagedList list = PagedList(Response(headers: testHeaders));
     expect(list.nextUrl,
-        "https://mobiledev.instructure.com/api/v1/courses/549835/assignments?include%5B%5D=rubric_assessment&needs_grading_count_by_section=true&order_by=position&override_assignment_dates=true&page=2&per_page=10");
+        'https://mobiledev.instructure.com/api/v1/courses/549835/assignments?include%5B%5D=rubric_assessment&needs_grading_count_by_section=true&order_by=position&override_assignment_dates=true&page=2&per_page=10');
   });
 
   test('updates the next link from a response', () {
@@ -75,7 +75,7 @@ void main() {
 
     list.updateWithResponse(Response(headers: testHeaders));
     expect(list.nextUrl,
-        "https://mobiledev.instructure.com/api/v1/courses/549835/assignments?include%5B%5D=rubric_assessment&needs_grading_count_by_section=true&order_by=position&override_assignment_dates=true&page=2&per_page=10");
+        'https://mobiledev.instructure.com/api/v1/courses/549835/assignments?include%5B%5D=rubric_assessment&needs_grading_count_by_section=true&order_by=position&override_assignment_dates=true&page=2&per_page=10');
   });
 
   test('updates the next link from a paged list', () {
@@ -92,7 +92,7 @@ void main() {
 
     list.updateWithPagedList(PagedList(Response(headers: testHeaders)));
     expect(list.nextUrl,
-        "https://mobiledev.instructure.com/api/v1/courses/549835/assignments?include%5B%5D=rubric_assessment&needs_grading_count_by_section=true&order_by=position&override_assignment_dates=true&page=2&per_page=10");
+        'https://mobiledev.instructure.com/api/v1/courses/549835/assignments?include%5B%5D=rubric_assessment&needs_grading_count_by_section=true&order_by=position&override_assignment_dates=true&page=2&per_page=10');
   });
 
   test('parses data', () {

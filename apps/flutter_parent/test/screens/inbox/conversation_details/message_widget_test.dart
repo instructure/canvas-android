@@ -342,7 +342,7 @@ void main() {
         ..participatingUserIds = ListBuilder(['123', '456']));
 
       // Make a really long name
-      final longUserName = List.generate(100, (_) => "Name").join(' ');
+      final longUserName = List.generate(100, (_) => 'Name').join(' ');
 
       final conversation = Conversation((c) => c
         ..messages = ListBuilder([message])

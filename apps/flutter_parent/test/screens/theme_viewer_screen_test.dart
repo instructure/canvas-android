@@ -22,13 +22,13 @@ import 'package:flutter_test/flutter_test.dart';
 import '../utils/test_app.dart';
 
 void main() {
-  Finder darkToggle() => find.text("Dark Mode");
-  Finder hcToggle() => find.text("High Contrast Mode");
-  Finder title() => find.text("Theme configuration");
-  Finder subtitle() => find.text("Play around with some values");
+  Finder darkToggle() => find.text('Dark Mode');
+  Finder hcToggle() => find.text('High Contrast Mode');
+  Finder title() => find.text('Theme configuration');
+  Finder subtitle() => find.text('Play around with some values');
   Finder studentColor() => find.byKey(ThemeViewerScreen.studentColorKey);
 
-  testWidgets("Changes text color for dark and high-contrast modes", (tester) async {
+  testWidgets('Changes text color for dark and high-contrast modes', (tester) async {
     await tester.pumpWidget(TestApp(ThemeViewerScreen()));
     await tester.pumpAndSettle();
 
@@ -65,7 +65,7 @@ void main() {
     expect(tester.widget<Text>(subtitle()).style.color, ParentColors.licorice);
   });
 
-  testWidgets("Set and returns correct values for dark and high-contrast modes", (tester) async {
+  testWidgets('Set and returns correct values for dark and high-contrast modes', (tester) async {
     await tester.pumpWidget(TestApp(ThemeViewerScreen()));
     await tester.pumpAndSettle();
 
@@ -100,7 +100,7 @@ void main() {
     expect(state.isDarkHC, isTrue);
   });
 
-  testWidgets("Uses correct student color variants", (tester) async {
+  testWidgets('Uses correct student color variants', (tester) async {
     await tester.pumpWidget(TestApp(ThemeViewerScreen()));
     await tester.pumpAndSettle();
 
@@ -109,9 +109,9 @@ void main() {
     await tester.pumpAndSettle();
 
     // Switch student color to 'raspberry'
-    await tester.tap(find.text("Student Color 1"));
+    await tester.tap(find.text('Student Color 1'));
     await tester.pump();
-    await tester.tap(find.text("Student Color 4").last);
+    await tester.tap(find.text('Student Color 4').last);
     await tester.pumpAndSettle();
 
     StudentColorSet expected = StudentColorSet.raspberry;

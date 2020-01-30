@@ -25,7 +25,7 @@ import '../../utils/test_app.dart';
 void main() {
   setupLocator();
 
-  testWidgetsWithAccessibilityChecks("Opens domain search screen", (tester) async {
+  testWidgetsWithAccessibilityChecks('Opens domain search screen', (tester) async {
     await tester.pumpWidget(TestApp(LoginLandingScreen()));
     await tester.pumpAndSettle();
 
@@ -39,7 +39,7 @@ void main() {
     await tester.pageBack();
   });
 
-  testWidgetsWithAccessibilityChecks("Displays Snicker Doodles drawer", (tester) async {
+  testWidgetsWithAccessibilityChecks('Displays Snicker Doodles drawer', (tester) async {
     await tester.pumpWidget(TestApp(LoginLandingScreen()));
     await tester.pumpAndSettle();
 

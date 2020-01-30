@@ -56,7 +56,7 @@ void main() {
 
   testWidgetsWithAccessibilityChecks('Shows error and can refresh', (tester) async {
     final interactor = _MockCourseDetailsInteractor();
-    when(interactor.loadCourse(courseId)).thenAnswer((_) => Future.error("This is an error"));
+    when(interactor.loadCourse(courseId)).thenAnswer((_) => Future.error('This is an error'));
     _setupLocator(interactor: interactor);
 
     await tester.pumpWidget(TestApp(CourseDetailsScreen(studentId, '', courseId)));

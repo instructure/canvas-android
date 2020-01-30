@@ -28,32 +28,32 @@ abstract class Attachment implements Built<Attachment, AttachmentBuilder> {
   @BuiltValueField(serialize: false)
   String get id => jsonId.isString ? jsonId.asString : jsonId.asNum.toString();
 
-  @BuiltValueField(wireName: "id")
+  @BuiltValueField(wireName: 'id')
   JsonObject get jsonId;
 
-  @BuiltValueField(wireName: "content-type")
+  @BuiltValueField(wireName: 'content-type')
   @nullable
   String get contentType;
 
   @nullable
   String get filename;
 
-  @BuiltValueField(wireName: "display_name")
+  @BuiltValueField(wireName: 'display_name')
   @nullable
   String get displayName;
 
   @nullable
   String get url;
 
-  @BuiltValueField(wireName: "thumbnail_url")
+  @BuiltValueField(wireName: 'thumbnail_url')
   @nullable
   String get thumbnailUrl;
 
-  @BuiltValueField(wireName: "preview_url")
+  @BuiltValueField(wireName: 'preview_url')
   @nullable
   String get previewUrl;
 
-  @BuiltValueField(wireName: "created_at")
+  @BuiltValueField(wireName: 'created_at')
   @nullable
   DateTime get createdAt;
 

@@ -142,7 +142,7 @@ void main() {
       locator.registerLazySingleton<InboxApi>(() => inboxApi);
     });
 
-    var expectedError = "fail";
+    var expectedError = 'fail';
     when(inboxApi.getConversations(
       scope: anyNamed('scope'),
       forceRefresh: anyNamed('forceRefresh'),

@@ -3,14 +3,12 @@ import 'package:flutter_driver/flutter_driver.dart';
 import 'package:test/test.dart';
 
 void main() {
-
   group('Login Landing Screen', () {
-
     // Set up our finders
-    final findSchoolFinder = find.text("Find School or District");
-    final themeViewerFinder = find.text("Theme Viewer");
-    final domainSearchScreenFinder = find.byType("DomainSearchScreen");
-    final themeViewerScreenFinder = find.byType("ThemeViewerScreen");
+    final findSchoolFinder = find.text('Find School or District');
+    final themeViewerFinder = find.text('Theme Viewer');
+    final domainSearchScreenFinder = find.byType('DomainSearchScreen');
+    final themeViewerScreenFinder = find.byType('ThemeViewerScreen');
 
     FlutterDriver driver;
 

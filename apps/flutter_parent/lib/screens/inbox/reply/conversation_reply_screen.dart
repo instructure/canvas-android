@@ -38,9 +38,9 @@ class ConversationReplyScreen extends StatefulWidget {
   final Message message;
   final bool replyAll;
 
-  static final sendKey = Key("sendButton");
-  static final attachmentKey = Key("attachmentButton");
-  static final messageKey = Key("messageText");
+  static final sendKey = Key('sendButton');
+  static final attachmentKey = Key('attachmentButton');
+  static final messageKey = Key('messageText');
 
   @override
   _ConversationReplyScreenState createState() => _ConversationReplyScreenState();
@@ -49,7 +49,7 @@ class ConversationReplyScreen extends StatefulWidget {
 class _ConversationReplyScreenState extends State<ConversationReplyScreen> {
   _ConversationReplyScreenState();
 
-  String _bodyText = "";
+  String _bodyText = '';
   List<AttachmentHandler> _attachments = [];
   bool _sending = false;
   TextEditingController _bodyController = TextEditingController();
@@ -198,22 +198,22 @@ class _ConversationReplyScreenState extends State<ConversationReplyScreen> {
   Widget _content(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Divider(thickness: 1, height: 1),
-            MessageWidget(
-              conversation: widget.conversation,
-              message: widget.message ?? widget.conversation.messages[0],
-              currentUserId: _interactor.getCurrentUserId(),
-              onAttachmentClicked: (attachment) {
-      locator<QuickNav>().push(context, ViewAttachmentScreen(attachment));
-              },
-            ),
-            Divider(thickness: 1, height: 1),
-            _editorWidget(context),
-            _attachmentsWidget(context),
-          ],
-        ),
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Divider(thickness: 1, height: 1),
+          MessageWidget(
+            conversation: widget.conversation,
+            message: widget.message ?? widget.conversation.messages[0],
+            currentUserId: _interactor.getCurrentUserId(),
+            onAttachmentClicked: (attachment) {
+              locator<QuickNav>().push(context, ViewAttachmentScreen(attachment));
+            },
+          ),
+          Divider(thickness: 1, height: 1),
+          _editorWidget(context),
+          _attachmentsWidget(context),
+        ],
+      ),
     );
   }
 

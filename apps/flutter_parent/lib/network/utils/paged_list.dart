@@ -34,9 +34,9 @@ class PagedList<T> {
   static String _parseNextUrl(Headers headers) {
     if (headers == null) return null;
 
-    final links = headers['link']?.first?.split(",");
-    final next = links?.firstWhere((link) => link.contains("rel=\"next\""), orElse: () => null);
+    final links = headers['link']?.first?.split(',');
+    final next = links?.firstWhere((link) => link.contains('rel="next"'), orElse: () => null);
 
-    return next?.substring(1, next?.lastIndexOf(">"));
+    return next?.substring(1, next?.lastIndexOf('>'));
   }
 }

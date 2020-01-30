@@ -33,8 +33,8 @@ class WebLoginScreen extends StatelessWidget {
   final String domain;
   final String authenticationProvider;
 
-  final String successUrl = "/login/oauth2/auth?code=";
-  final String errorUrl = "/login/oauth2/auth?error=access_denied";
+  final String successUrl = '/login/oauth2/auth?code=';
+  final String errorUrl = '/login/oauth2/auth?error=access_denied';
 
   final _interactor = locator<WebLoginInteractor>();
   final Completer<WebViewController> _controllerCompleter = Completer<WebViewController>();
@@ -128,16 +128,16 @@ class WebLoginScreen extends StatelessWidget {
     if ((baseUrl?.length ?? 0) == 0) {
       baseUrl = domain;
     }
-    if (baseUrl.endsWith("/")) {
+    if (baseUrl.endsWith('/')) {
       baseUrl = baseUrl.substring(0, baseUrl.length - 1);
     }
     if (!baseUrl.startsWith('http://') && !baseUrl.startsWith('https://')) {
       baseUrl = 'https://${baseUrl}';
     }
 
-    var purpose = Uri.encodeQueryComponent("canvasParent"); // PackageInfo.fromPlatform().then((info) => info.appName);
+    var purpose = Uri.encodeQueryComponent('canvasParent'); // PackageInfo.fromPlatform().then((info) => info.appName);
     var clientId = verifyResult != null ? Uri.encodeQueryComponent(verifyResult?.clientId) : '';
-    var redirect = Uri.encodeQueryComponent("https://canvas.instructure.com/login/oauth2/auth");
+    var redirect = Uri.encodeQueryComponent('https://canvas.instructure.com/login/oauth2/auth');
 
     // TODO: Support skipping mobile verify
 //    if (forceAuthRedirect || || mCanvasLogin == MOBILE_VERIFY_FLOW || (domain.contains(".test."))) {
@@ -176,7 +176,7 @@ class WebLoginScreen extends StatelessWidget {
 
     // No data means the request failed for some other reason that we don't know
     if (!snapshot.hasData) {
-      debugPrint("Failed to do mobile verify with error: ${snapshot.error}");
+      debugPrint('Failed to do mobile verify with error: ${snapshot.error}');
       return localizations.domainVerificationErrorUnknown;
     }
 

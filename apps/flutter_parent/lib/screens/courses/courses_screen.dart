@@ -73,7 +73,7 @@ class _CoursesScreenState extends State<CoursesScreen> {
   Widget build(BuildContext context) => _content(context);
 
   Widget _content(BuildContext context) {
-    if (_error) return Text("Error!"); // TODO: Show an error screen
+    if (_error) return Text('Error!'); // TODO: Show an error screen
 
     if (_loading) return LoadingIndicator();
 

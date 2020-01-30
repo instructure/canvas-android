@@ -48,12 +48,12 @@ class CreateConversationScreen extends StatefulWidget {
   final String _subjectTemplate;
   final String _assignmentUrl;
 
-  static final sendKey = Key("sendButton");
-  static final attachmentKey = Key("attachmentButton");
-  static final messageKey = Key("messageText");
-  static final subjectKey = Key("subjectText");
-  static final recipientsKey = Key("participantsContainer");
-  static final recipientsAddKey = Key("participantsAddButton");
+  static final sendKey = Key('sendButton');
+  static final attachmentKey = Key('attachmentButton');
+  static final messageKey = Key('messageText');
+  static final subjectKey = Key('subjectText');
+  static final recipientsKey = Key('participantsContainer');
+  static final recipientsAddKey = Key('participantsAddButton');
 
   @override
   _CreateConversationScreenState createState() => _CreateConversationScreenState(_subjectTemplate);
@@ -62,8 +62,8 @@ class CreateConversationScreen extends StatefulWidget {
 class _CreateConversationScreenState extends State<CreateConversationScreen> {
   _CreateConversationScreenState(this._subjectText);
 
-  String _subjectText = "";
-  String _bodyText = "";
+  String _subjectText = '';
+  String _bodyText = '';
 
   TextEditingController _subjectController;
   TextEditingController _bodyController = TextEditingController();
@@ -124,7 +124,7 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
       _allRecipients = data;
       String courseId = widget._course.id.toString();
       _selectedRecipients =
-          _allRecipients.where((it) => it.commonCourses[courseId]?.contains("TeacherEnrollment")).toList();
+          _allRecipients.where((it) => it.commonCourses[courseId]?.contains('TeacherEnrollment')).toList();
       setState(() {
         _loading = false;
       });
@@ -546,13 +546,13 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
   String _enrollmentType(BuildContext context, Recipient user) {
     var type = user.commonCourses[widget._course.id.toString()].first;
     switch (type) {
-      case "TeacherEnrollment":
+      case 'TeacherEnrollment':
         return L10n(context).enrollmentTypeTeacher;
-      case "TaEnrollment":
+      case 'TaEnrollment':
         return L10n(context).enrollmentTypeTA;
-      case "StudentEnrollment":
+      case 'StudentEnrollment':
         return L10n(context).enrollmentTypeStudent;
-      case "ObserverEnrollment":
+      case 'ObserverEnrollment':
         return L10n(context).enrollmentTypeObserver;
       default:
         return '';
@@ -614,7 +614,7 @@ class AttachmentWidget extends StatelessWidget {
             ),
           ),
           Text(
-            handler.progress == null ? "" : NumberFormat.percentPattern().format(handler.progress),
+            handler.progress == null ? '' : NumberFormat.percentPattern().format(handler.progress),
             style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
           )
         ],
@@ -708,10 +708,10 @@ class AttachmentWidget extends StatelessWidget {
     the widget's ancestor and cause ErrorWidget to briefly flicker on screen */
     await Future.delayed(Duration(milliseconds: 150));
     switch (option) {
-      case "delete":
+      case 'delete':
         if (onDelete != null) onDelete(handler);
         break;
-      case "retry":
+      case 'retry':
         handler.performUpload();
         break;
     }

@@ -27,11 +27,11 @@ abstract class MediaComment implements Built<MediaComment, MediaCommentBuilder> 
   @BuiltValueSerializer(serializeNulls: true) // Add this line to get nulls to serialize when we convert to JSON
   static Serializer<MediaComment> get serializer => _$mediaCommentSerializer;
 
-  @BuiltValueField(wireName: "media_id")
+  @BuiltValueField(wireName: 'media_id')
   @nullable
   String get mediaId;
 
-  @BuiltValueField(wireName: "display_name")
+  @BuiltValueField(wireName: 'display_name')
   @nullable
   String get displayName;
 
@@ -39,10 +39,10 @@ abstract class MediaComment implements Built<MediaComment, MediaCommentBuilder> 
   String get url;
 
   /// Can be either 'audio' or 'video'
-  @BuiltValueField(wireName: "media_type")
+  @BuiltValueField(wireName: 'media_type')
   MediaType get mediaType;
 
-  @BuiltValueField(wireName: "content-type")
+  @BuiltValueField(wireName: 'content-type')
   @nullable
   String get contentType;
 
