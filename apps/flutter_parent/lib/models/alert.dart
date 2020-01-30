@@ -30,33 +30,33 @@ abstract class Alert implements Built<Alert, AlertBuilder> {
 
   String get id;
 
-  @BuiltValueField(wireName: "observer_alert_threshold_id")
+  @BuiltValueField(wireName: 'observer_alert_threshold_id')
   String get observerAlertThresholdId;
 
-  @BuiltValueField(wireName: "context_type")
+  @BuiltValueField(wireName: 'context_type')
   String get contextType;
 
-  @BuiltValueField(wireName: "context_id")
+  @BuiltValueField(wireName: 'context_id')
   String get contextId;
 
-  @BuiltValueField(wireName: "alert_type")
+  @BuiltValueField(wireName: 'alert_type')
   AlertType get alertType;
 
-  @BuiltValueField(wireName: "workflow_state")
+  @BuiltValueField(wireName: 'workflow_state')
   AlertWorkflowState get workflowState;
 
-  @BuiltValueField(wireName: "action_date")
+  @BuiltValueField(wireName: 'action_date')
   DateTime get actionDate;
 
   String get title;
 
-  @BuiltValueField(wireName: "user_id")
+  @BuiltValueField(wireName: 'user_id')
   String get userId;
 
-  @BuiltValueField(wireName: "observer_id")
+  @BuiltValueField(wireName: 'observer_id')
   String get observerId;
 
-  @BuiltValueField(wireName: "html_url")
+  @BuiltValueField(wireName: 'html_url')
   String get htmlUrl;
 
   static void _initializeBuilder(AlertBuilder b) => b
@@ -100,7 +100,7 @@ abstract class Alert implements Built<Alert, AlertBuilder> {
     assert(alertType == AlertType.courseAnnouncement);
 
     int index1 = htmlUrl.lastIndexOf('/courses/');
-    if(index1 != -1) {
+    if (index1 != -1) {
       index1 = index1 + '/courses/'.length;
     }
     int index2 = htmlUrl.lastIndexOf('/discussion_topics');

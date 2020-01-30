@@ -69,7 +69,7 @@ void main() {
     var interactor = _MockInteractor();
     setupTestLocator((locator) => locator.registerFactory<ConversationListInteractor>(() => interactor));
 
-    when(interactor.getConversations()).thenAnswer((_) => Future.error("Error"));
+    when(interactor.getConversations()).thenAnswer((_) => Future.error('Error'));
 
     await tester.pumpWidget(TestApp(ConversationListScreen(), highContrast: true));
     await tester.pumpAndSettle();

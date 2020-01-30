@@ -31,11 +31,11 @@ abstract class Recipient implements Built<Recipient, RecipientBuilder> {
   @nullable
   String get pronouns;
 
-  @BuiltValueField(wireName: "avatar_url")
+  @BuiltValueField(wireName: 'avatar_url')
   @nullable
   String get avatarUrl;
 
-  @BuiltValueField(wireName: "common_courses")
+  @BuiltValueField(wireName: 'common_courses')
   @nullable
   BuiltMap<String, BuiltList<String>> get commonCourses;
 

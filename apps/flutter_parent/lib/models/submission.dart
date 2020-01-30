@@ -88,34 +88,34 @@ abstract class Submission implements Built<Submission, SubmissionBuilder> {
   bool get missing;
 
   // Conversation Stuff
-  @BuiltValueField(wireName: "assignment_id")
+  @BuiltValueField(wireName: 'assignment_id')
   String get assignmentId;
 
   @nullable
   Assignment get assignment;
 
-  @BuiltValueField(wireName: "user_id")
+  @BuiltValueField(wireName: 'user_id')
   String get userId;
 
-  @BuiltValueField(wireName: "grader_id")
+  @BuiltValueField(wireName: 'grader_id')
   String get graderId;
 
   @nullable
   User get user;
 
   @nullable
-  @BuiltValueField(wireName: "points_deducted")
+  @BuiltValueField(wireName: 'points_deducted')
   double get pointsDeducted;
 
-  @BuiltValueField(wireName: "entered_score")
+  @BuiltValueField(wireName: 'entered_score')
   double get enteredScore;
 
   @nullable
-  @BuiltValueField(wireName: "entered_grade")
+  @BuiltValueField(wireName: 'entered_grade')
   String get enteredGrade;
 
   @nullable
-  @BuiltValueField(wireName: "posted_at")
+  @BuiltValueField(wireName: 'posted_at')
   DateTime get postedAt;
 
   bool isGraded() {

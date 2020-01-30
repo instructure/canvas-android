@@ -24,11 +24,11 @@ abstract class FileUploadConfig implements Built<FileUploadConfig, FileUploadCon
   @BuiltValueSerializer(serializeNulls: true) // Add this line to get nulls to serialize when we convert to JSON
   static Serializer<FileUploadConfig> get serializer => _$fileUploadConfigSerializer;
 
-  @BuiltValueField(wireName: "upload_url")
+  @BuiltValueField(wireName: 'upload_url')
   @nullable
   String get url;
 
-  @BuiltValueField(wireName: "upload_params")
+  @BuiltValueField(wireName: 'upload_params')
   @nullable
   BuiltMap<String, String> get params;
 

@@ -109,7 +109,7 @@ void main() {
       (idx) => _mockCourse(
         idx.toString(),
         enrollments: ListBuilder<Enrollment>(
-          [_mockEnrollment(idx.toString(), userId: student.id, computedCurrentGrade: "A")],
+          [_mockEnrollment(idx.toString(), userId: student.id, computedCurrentGrade: 'A')],
         ),
       ),
     );
@@ -213,7 +213,7 @@ Course _mockCourse(String courseId,
         {ListBuilder<Enrollment> enrollments, bool hasActiveGradingPeriod, double currentScore, String currentGrade}) =>
     Course((b) => b
       ..id = courseId
-      ..name = "CourseName"
+      ..name = 'CourseName'
       ..imageDownloadUrl = ''
       ..enrollments = enrollments ?? ListBuilder<Enrollment>([_mockEnrollment('0')])
       ..hasGradingPeriods = hasActiveGradingPeriod ?? false
@@ -223,6 +223,6 @@ Course _mockCourse(String courseId,
 
 User _mockStudent(String userId) => User((b) => b
   ..id = userId
-  ..name = "UserName"
-  ..sortableName = "Sortable Name"
+  ..name = 'UserName'
+  ..sortableName = 'Sortable Name'
   ..build());

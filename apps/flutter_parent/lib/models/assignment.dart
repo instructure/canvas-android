@@ -49,21 +49,21 @@ abstract class Assignment implements Built<Assignment, AssignmentBuilder> {
   String get courseId;
 
   @nullable
-  @BuiltValueField(wireName: "grading_type")
+  @BuiltValueField(wireName: 'grading_type')
   GradingType get gradingType;
 
   @nullable
-  @BuiltValueField(wireName: "html_url")
+  @BuiltValueField(wireName: 'html_url')
   String get htmlUrl;
 
   @nullable
   String get url;
 
   @nullable
-  @BuiltValueField(wireName: "quiz_id")
+  @BuiltValueField(wireName: 'quiz_id')
   String get quizId; // (Optional) id of the associated quiz (applies only when submission_types is ["online_quiz"])
 
-  @BuiltValueField(wireName: "use_rubric_for_grading")
+  @BuiltValueField(wireName: 'use_rubric_for_grading')
   bool get useRubricForGrading;
 
   @nullable
@@ -73,7 +73,7 @@ abstract class Assignment implements Built<Assignment, AssignmentBuilder> {
   Submission submission(String studentId) =>
       submissionList?.firstWhere((submission) => submission.userId == studentId, orElse: () => null);
 
-  @BuiltValueField(wireName: "assignment_group_id")
+  @BuiltValueField(wireName: 'assignment_group_id')
   String get assignmentGroupId;
 
   int get position;
@@ -81,22 +81,22 @@ abstract class Assignment implements Built<Assignment, AssignmentBuilder> {
   @BuiltValueField(wireName: 'lock_info')
   LockInfo get lockInfo;
 
-  @BuiltValueField(wireName: "locked_for_user")
+  @BuiltValueField(wireName: 'locked_for_user')
   bool get lockedForUser;
 
   @nullable
-  @BuiltValueField(wireName: "lock_at")
+  @BuiltValueField(wireName: 'lock_at')
   DateTime get lockAt; // Date the teacher no longer accepts submissions.
 
   @nullable
-  @BuiltValueField(wireName: "unlock_at")
+  @BuiltValueField(wireName: 'unlock_at')
   DateTime get unlockAt;
 
   @nullable
-  @BuiltValueField(wireName: "lock_explanation")
+  @BuiltValueField(wireName: 'lock_explanation')
   String get lockExplanation;
 
-  @BuiltValueField(wireName: "free_form_criterion_comments")
+  @BuiltValueField(wireName: 'free_form_criterion_comments')
   bool get freeFormCriterionComments;
 
   bool get published;
@@ -104,22 +104,22 @@ abstract class Assignment implements Built<Assignment, AssignmentBuilder> {
   bool get muted;
 
   @nullable
-  @BuiltValueField(wireName: "group_category_id")
+  @BuiltValueField(wireName: 'group_category_id')
   String get groupCategoryId;
 
-  @BuiltValueField(wireName: "user_submitted")
+  @BuiltValueField(wireName: 'user_submitted')
   bool get userSubmitted;
 
-  @BuiltValueField(wireName: "only_visible_to_overrides")
+  @BuiltValueField(wireName: 'only_visible_to_overrides')
   bool get onlyVisibleToOverrides;
 
-  @BuiltValueField(wireName: "anonymous_peer_reviews")
+  @BuiltValueField(wireName: 'anonymous_peer_reviews')
   bool get anonymousPeerReviews;
 
-  @BuiltValueField(wireName: "moderated_grading")
+  @BuiltValueField(wireName: 'moderated_grading')
   bool get moderatedGrading;
 
-  @BuiltValueField(wireName: "anonymous_grading")
+  @BuiltValueField(wireName: 'anonymous_grading')
   bool get anonymousGrading;
 
   bool get isStudioEnabled;

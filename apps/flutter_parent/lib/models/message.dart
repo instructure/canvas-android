@@ -29,31 +29,31 @@ abstract class Message implements Built<Message, MessageBuilder> {
 
   String get id;
 
-  @BuiltValueField(wireName: "created_at")
+  @BuiltValueField(wireName: 'created_at')
   @nullable
   DateTime get createdAt;
 
   @nullable
   String get body;
 
-  @BuiltValueField(wireName: "author_id")
+  @BuiltValueField(wireName: 'author_id')
   String get authorId;
 
-  @BuiltValueField(wireName: "generated")
+  @BuiltValueField(wireName: 'generated')
   bool get isGenerated;
 
   @nullable
   BuiltList<Attachment> get attachments;
 
-  @BuiltValueField(wireName: "media_comment")
+  @BuiltValueField(wireName: 'media_comment')
   @nullable
   MediaComment get mediaComment;
 
-  @BuiltValueField(wireName: "forwarded_messages")
+  @BuiltValueField(wireName: 'forwarded_messages')
   @nullable
   BuiltList<Message> get forwardedMessages;
 
-  @BuiltValueField(wireName: "participating_user_ids")
+  @BuiltValueField(wireName: 'participating_user_ids')
   @nullable
   BuiltList<String> get participatingUserIds;
 

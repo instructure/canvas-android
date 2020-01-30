@@ -40,7 +40,7 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
   static const int _MIN_SEARCH_LENGTH = 2;
 
   /// The trimmed user input, used when the user taps the 'Next' button
-  String _query = "";
+  String _query = '';
 
   /// The loading state
   bool _loading = false;
@@ -57,7 +57,7 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
     var thisQuery = query.trim();
     setState(() => _query = thisQuery);
 
-    if (thisQuery.length < _MIN_SEARCH_LENGTH) thisQuery = "";
+    if (thisQuery.length < _MIN_SEARCH_LENGTH) thisQuery = '';
 
     if (thisQuery == _currentQuery) return; // Do nothing if the search query has not effectively changed
 
@@ -104,7 +104,7 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
           bottom: ParentTheme.of(context).appBarDivider(shadowInLightMode: false),
           actions: <Widget>[
             FlatButton(
-              child: Text(L10n(context).next.toUpperCase()),
+              child: Text(L10n(context).next),
               textColor: Theme.of(context).accentColor,
               onPressed: _query.isEmpty ? null : () => _next(context),
             ),
@@ -129,14 +129,14 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
                 suffixIcon: _query.isEmpty
                     ? null
                     : IconButton(
-                        key: Key("clear-query"),
+                        key: Key('clear-query'),
                         icon: Icon(Icons.clear),
                         onPressed: () {
                           // Need to perform this post-frame due to bug while widget testing
                           // See https://github.com/flutter/flutter/issues/17647
                           WidgetsBinding.instance.addPostFrameCallback((_) {
-                            _inputController.text = "";
-                            _searchDomains("");
+                            _inputController.text = '';
+                            _searchDomains('');
                           });
                         },
                       ),
@@ -178,7 +178,7 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
             Divider(height: 1),
             Center(
               child: FlatButton(
-                key: Key("help-button"),
+                key: Key('help-button'),
                 child: Text(L10n(context).domainSearchHelpLabel),
                 textTheme: ButtonTextTheme.accent,
                 onPressed: () {
@@ -249,7 +249,7 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
 
   void _next(BuildContext context) {
     var domain = _query;
-    if (domain.indexOf('.') == -1) domain += ".instructure.com";
+    if (domain.indexOf('.') == -1) domain += '.instructure.com';
 
     locator<QuickNav>().push(context, WebLoginScreen(domain));
   }

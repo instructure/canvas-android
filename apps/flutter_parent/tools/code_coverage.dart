@@ -19,29 +19,29 @@ void main(List<String> args) async {
   try {
     Process.runSync('lcov', []);
   } catch (e) {
-    print("lcov is not installed! Please run 'brew install lcov' first.");
+    print('lcov is not installed! Please run "brew install lcov" first.');
     exit(1);
   }
 
   // Get list of exclusions
   File file = new File('tools/codecov_exclusions');
   if (!file.existsSync()) {
-    print("Could not find exclusions list at ${file.absolute.path}");
+    print('Could not find exclusions list at ${file.absolute.path}');
     exit(1);
   }
   List<String> exclusions = file.readAsLinesSync().map((line) => line.trim()).toList();
   exclusions.retainWhere((line) => line.isNotEmpty && !line.startsWith('#'));
 
   // Run tests with coverage
-  print("Running tests...");
-  await runCommand("flutter", ['test', '--coverage']);
+  print('Running tests...');
+  await runCommand('flutter', ['test', '--coverage']);
 
   // Perform exclusions
-  print("Performing coverage exclusions...");
+  print('Performing coverage exclusions...');
   await runCommand('lcov', ['--remove', 'coverage/lcov.info', ...exclusions, '-o', 'coverage/lcov_filtered.info']);
 
   // Generate HTML coverage report
-  print("Generating HTML report");
+  print('Generating HTML report');
   await runCommand('genhtml', [
     'coverage/lcov_filtered.info',
     '-o',
@@ -50,7 +50,7 @@ void main(List<String> args) async {
 
   // Open the report
   if (!args.contains('--dont-open')) {
-    print("Opening report");
+    print('Opening report');
     await runCommand('open', ['coverage/index.html']);
   }
 }
@@ -61,7 +61,7 @@ Future<int> runCommand(String command, List<String> args) async {
   stderr.addStream(process.stderr);
   var exitCode = await process.exitCode;
   if (exitCode != 0) {
-    print("Command '$command' failed with exit code $exitCode");
+    print('Command "$command" failed with exit code $exitCode');
     exit(1);
   }
   return exitCode;

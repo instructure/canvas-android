@@ -84,7 +84,7 @@ void main() {
   testWidgetsWithAccessibilityChecks('Shows title and message in submitted state', (tester) async {
     GradeCellData data = GradeCellData((b) => b
       ..state = GradeCellState.submitted
-      ..submissionText = "Submission text");
+      ..submissionText = 'Submission text');
     await setupWithData(tester, data);
 
     expect(find.text(l10n.submissionStatusSuccessTitle), findsOneWidget);
@@ -137,7 +137,7 @@ void main() {
     GradeCellData data = GradeCellData((b) => b
       ..state = GradeCellState.graded
       ..grade = 'A-'
-      ..gradeContentDescription = "A. minus");
+      ..gradeContentDescription = 'A. minus');
     await setupWithData(tester, data);
 
     var finder = find.byKey(Key('grade-cell-grade'));

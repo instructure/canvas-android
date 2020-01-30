@@ -36,10 +36,10 @@ abstract class Announcement implements Built<Announcement, AnnouncementBuilder> 
 
   String get message;
 
-  @BuiltValueField(wireName: "posted_at")
+  @BuiltValueField(wireName: 'posted_at')
   DateTime get postedAt;
 
-  @BuiltValueField(wireName: "html_url")
+  @BuiltValueField(wireName: 'html_url')
   String get htmlUrl;
 
   BuiltList<RemoteFile> get attachments;

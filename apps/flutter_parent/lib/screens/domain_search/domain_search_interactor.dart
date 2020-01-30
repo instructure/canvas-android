@@ -22,10 +22,10 @@ class DomainSearchInteractor {
   }
 
   openCanvasGuides() {
-    launch("https://community.canvaslms.com/docs/DOC-9902-canvas-parent-android-guide-table-of-contents");
+    launch('https://community.canvaslms.com/docs/DOC-9902-canvas-parent-android-guide-table-of-contents');
   }
 
   openCanvasSupport() {
-    launch("https://community.canvaslms.com/docs/DOC-17624-how-to-contact-canvas-support");
+    launch('https://community.canvaslms.com/docs/DOC-17624-how-to-contact-canvas-support');
   }
 }

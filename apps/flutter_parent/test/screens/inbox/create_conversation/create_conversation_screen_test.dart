@@ -99,7 +99,7 @@ void main() {
     await tester.pumpWidget(_testableWidget(CreateConversationScreen(_mockCourse('0'))));
     await tester.pumpAndSettle();
 
-    final messageText = "Some text here";
+    final messageText = 'Some text here';
     var matchedWidget = find.byKey(CreateConversationScreen.messageKey);
     await tester.enterText(matchedWidget, messageText);
 
@@ -114,7 +114,7 @@ void main() {
     await tester.pumpAndSettle();
 
     var matchedWidget = find.byKey(CreateConversationScreen.messageKey);
-    await tester.enterText(matchedWidget, "Some text here");
+    await tester.enterText(matchedWidget, 'Some text here');
     await tester.pump();
 
     matchedWidget = find.byKey(CreateConversationScreen.sendKey);
@@ -131,11 +131,11 @@ void main() {
 
     // Set message body
     var matchedWidget = find.byKey(CreateConversationScreen.messageKey);
-    await tester.enterText(matchedWidget, "Some text here");
+    await tester.enterText(matchedWidget, 'Some text here');
 
     // Clear out subject
     matchedWidget = find.byKey(CreateConversationScreen.subjectKey);
-    await tester.enterText(matchedWidget, "");
+    await tester.enterText(matchedWidget, '');
     await tester.pump();
 
     matchedWidget = find.byKey(CreateConversationScreen.sendKey);
@@ -155,7 +155,7 @@ void main() {
 
     // Set message body
     var matchedWidget = find.byKey(CreateConversationScreen.messageKey);
-    await tester.enterText(matchedWidget, "Some text here");
+    await tester.enterText(matchedWidget, 'Some text here');
     await tester.pump();
 
     // Make sure send button is enabled at this point
@@ -198,7 +198,7 @@ void main() {
 
     // Set message body
     var matchedWidget = find.byKey(CreateConversationScreen.messageKey);
-    await tester.enterText(matchedWidget, "Some text here");
+    await tester.enterText(matchedWidget, 'Some text here');
     await tester.pump();
 
     matchedWidget = find.byKey(CreateConversationScreen.sendKey);
@@ -268,7 +268,7 @@ void main() {
     await _pumpTestableWidgetWithBackButton(tester, CreateConversationScreen(course));
 
     var matchedWidget = find.byKey(CreateConversationScreen.messageKey);
-    await tester.enterText(matchedWidget, "Some text here");
+    await tester.enterText(matchedWidget, 'Some text here');
     await tester.pump();
 
     await tester.pageBack();
@@ -286,7 +286,7 @@ void main() {
     await _pumpTestableWidgetWithBackButton(tester, CreateConversationScreen(course), observer: observer);
 
     var matchedWidget = find.byKey(CreateConversationScreen.messageKey);
-    await tester.enterText(matchedWidget, "Some text here");
+    await tester.enterText(matchedWidget, 'Some text here');
     await tester.pump();
 
     await tester.pageBack();
@@ -306,7 +306,7 @@ void main() {
     await _pumpTestableWidgetWithBackButton(tester, CreateConversationScreen(course), observer: observer);
 
     var matchedWidget = find.byKey(CreateConversationScreen.messageKey);
-    await tester.enterText(matchedWidget, "Some text here");
+    await tester.enterText(matchedWidget, 'Some text here');
     await tester.pump();
 
     await tester.pageBack();
@@ -363,7 +363,7 @@ void main() {
     var progressWidget = find.descendant(of: attachmentWidget, matching: find.byType(CircularProgressIndicator));
     expect(tester.widget<CircularProgressIndicator>(progressWidget).value, handler.progress);
     var percentageWidget = find.descendant(of: attachmentWidget, matching: find.byType(Text));
-    expect(tester.widget<Text>(percentageWidget).data, "25%");
+    expect(tester.widget<Text>(percentageWidget).data, '25%');
 
     // Update progress
     handler.progress = 0.75;
@@ -374,7 +374,7 @@ void main() {
     progressWidget = find.descendant(of: attachmentWidget, matching: find.byType(CircularProgressIndicator));
     expect(tester.widget<CircularProgressIndicator>(progressWidget).value, handler.progress);
     percentageWidget = find.descendant(of: attachmentWidget, matching: find.byType(Text));
-    expect(tester.widget<Text>(percentageWidget).data, "75%");
+    expect(tester.widget<Text>(percentageWidget).data, '75%');
   });
 
   testWidgetsWithAccessibilityChecks('displays attachment failed state with retry and delete options', (tester) async {
@@ -414,7 +414,7 @@ void main() {
     var progressWidget = find.descendant(of: attachmentWidget, matching: find.byType(CircularProgressIndicator));
     expect(tester.widget<CircularProgressIndicator>(progressWidget).value, handler.progress);
     var percentageWidget = find.descendant(of: attachmentWidget, matching: find.byType(Text));
-    expect(tester.widget<Text>(percentageWidget).data, "25%");
+    expect(tester.widget<Text>(percentageWidget).data, '25%');
 
     // Move to failed state
     handler.stage = AttachmentUploadStage.FAILED;
@@ -591,7 +591,7 @@ void main() {
 
     // Should show one chip and the text '+1'
     expect(find.byType(Chip), findsOneWidget);
-    expect(find.text("+1"), findsOneWidget);
+    expect(find.text('+1'), findsOneWidget);
 
     // Tap recipient box to expand
     await tester.tap(find.byKey(CreateConversationScreen.recipientsKey));
@@ -599,7 +599,7 @@ void main() {
 
     // Should show two recipient chips
     expect(find.byType(Chip), findsNWidgets(2));
-    expect(find.text("+1"), findsNothing);
+    expect(find.text('+1'), findsNothing);
   });
 
   testWidgetsWithAccessibilityChecks('Selects recipients from list', (tester) async {
@@ -612,22 +612,22 @@ void main() {
     // Should show one teacher recipient (User 1)
     var chip = find.byType(Chip);
     expect(chip, findsOneWidget);
-    expect(find.descendant(of: chip, matching: find.text("User 1")), findsOneWidget);
+    expect(find.descendant(of: chip, matching: find.text('User 1')), findsOneWidget);
 
     var recipientsButton = find.byKey(CreateConversationScreen.recipientsAddKey);
     await tester.tap(recipientsButton);
     await tester.pumpAndSettle();
 
     // Deselect User 1, select User 0
-    await tester.tap(find.text("User 1").last);
-    await tester.tap(find.text("User 0"));
+    await tester.tap(find.text('User 1').last);
+    await tester.tap(find.text('User 0'));
     await tester.tap(find.text(l10n.done));
     await tester.pumpAndSettle();
 
     // Should show one student recipient (User 1)
     chip = find.byType(Chip);
     expect(chip, findsOneWidget);
-    expect(find.descendant(of: chip, matching: find.text("User 0")), findsOneWidget);
+    expect(find.descendant(of: chip, matching: find.text('User 0')), findsOneWidget);
   });
 
   testWidgetsWithAccessibilityChecks('Shows error on send fail', (tester) async {
@@ -639,7 +639,7 @@ void main() {
 
     // Set message body
     var matchedWidget = find.byKey(CreateConversationScreen.messageKey);
-    await tester.enterText(matchedWidget, "Some text here");
+    await tester.enterText(matchedWidget, 'Some text here');
     await tester.pump();
 
     await tester.tap(find.byKey(CreateConversationScreen.sendKey));
@@ -659,7 +659,7 @@ void main() {
 
     // Set message body
     var matchedWidget = find.byKey(CreateConversationScreen.messageKey);
-    await tester.enterText(matchedWidget, "Some text here");
+    await tester.enterText(matchedWidget, 'Some text here');
     await tester.pump();
 
     await tester.tap(find.byKey(CreateConversationScreen.sendKey));
@@ -685,7 +685,7 @@ void main() {
     // Should show one teacher recipient (User 1)
     var chip = find.byType(Chip);
     expect(chip, findsOneWidget);
-    expect(find.descendant(of: chip, matching: find.text("User 1 (They/them)")), findsOneWidget);
+    expect(find.descendant(of: chip, matching: find.text('User 1 (They/them)')), findsOneWidget);
 
     var recipientsButton = find.byKey(CreateConversationScreen.recipientsAddKey);
     await tester.tap(recipientsButton);
@@ -856,22 +856,22 @@ class _MockInteractor extends CreateConversationInteractor {
   Future<List<Recipient>> getAllRecipients(Course course) async {
     if (_fetchFailCount > 0) {
       _fetchFailCount--;
-      return Future.error("Error!");
+      return Future.error('Error!');
     }
     final list = List<Recipient>.generate(
         _recipientCount,
         (index) => Recipient((r) => r
           ..id = index.toString()
-          ..name = "User $index"
-          ..pronouns = _pronouns ? "They/them" : null
-          ..avatarUrl = ""
+          ..name = 'User $index'
+          ..pronouns = _pronouns ? 'They/them' : null
+          ..avatarUrl = ''
           ..commonCourses = _generateCourseMap(course.id, index.toString())));
     return list;
   }
 
   MapBuilder<String, BuiltList<String>> _generateCourseMap(String courseId, String userId) {
     return MapBuilder<String, BuiltList<String>>({
-      courseId.toString(): BuiltList<String>([int.parse(userId) % 2 == 0 ? "StudentEnrollment" : "TeacherEnrollment"])
+      courseId.toString(): BuiltList<String>([int.parse(userId) % 2 == 0 ? 'StudentEnrollment' : 'TeacherEnrollment'])
     });
   }
 
@@ -890,7 +890,7 @@ class _MockInteractor extends CreateConversationInteractor {
   ) {
     if (_sendFailCount > 0) {
       _sendFailCount--;
-      return Future.delayed(Duration(milliseconds: 200), () => Future.error("Error!"));
+      return Future.delayed(Duration(milliseconds: 200), () => Future.error('Error!'));
     }
     return Future.delayed(Duration(milliseconds: 200), () => Conversation((b) => b));
   }
@@ -906,7 +906,7 @@ class _MockAttachmentHandler extends AttachmentHandler {
 Course _mockCourse(String courseId) {
   return Course((c) => c
     ..id = courseId
-    ..name = "Course Name"
-    ..courseCode = "Course Code"
+    ..name = 'Course Name'
+    ..courseCode = 'Course Code'
     ..build());
 }

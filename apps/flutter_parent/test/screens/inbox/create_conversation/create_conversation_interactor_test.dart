@@ -30,8 +30,8 @@ void main() {
     var interactor = CreateConversationInteractor();
     final course = Course();
     final recipients = ['1', '2', '3'];
-    final subject = "Message Subject";
-    final body = "Message Body";
+    final subject = 'Message Subject';
+    final body = 'Message Body';
     final attachments = ['4', '5', '6'];
 
     interactor.createConversation(course, recipients, subject, body, attachments);

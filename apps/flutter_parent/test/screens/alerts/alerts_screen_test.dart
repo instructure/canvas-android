@@ -124,7 +124,7 @@ void main() {
 
   testWidgetsWithAccessibilityChecks('Shows error', (tester) async {
     final interactor = _MockAlertsInteractor();
-    when(interactor.getAlertsForStudent(any, any)).thenAnswer((_) => Future.error("ErRoR"));
+    when(interactor.getAlertsForStudent(any, any)).thenAnswer((_) => Future.error('ErRoR'));
     _setupLocator(interactor: interactor);
 
     await tester.pumpWidget(_testableWidget());

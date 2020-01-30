@@ -48,7 +48,7 @@ class ApiPrefs {
   }
 
   static void _checkInit() {
-    if (_prefs == null || _packageInfo == null) throw StateError("ApiPrefs has not been initialized");
+    if (_prefs == null || _packageInfo == null) throw StateError('ApiPrefs has not been initialized');
   }
 
   // Login
@@ -98,13 +98,13 @@ class ApiPrefs {
   static Locale effectiveLocale() {
     _checkInit();
     User user = _prefs.containsKey(KEY_USER) ? deserialize<User>(json.decode(_prefs.getString(KEY_USER))) : null;
-    List<String> userLocale = (user?.effectiveLocale ?? user?.locale ?? ui.window.locale.toLanguageTag()).split("-x-");
+    List<String> userLocale = (user?.effectiveLocale ?? user?.locale ?? ui.window.locale.toLanguageTag()).split('-x-');
 
     if (userLocale[0].isEmpty) {
       return null;
     }
 
-    List<String> localeParts = userLocale[0].split("-");
+    List<String> localeParts = userLocale[0].split('-');
     if (userLocale.length == 1) {
       return Locale(localeParts.first, localeParts.last);
     } else {
@@ -123,7 +123,7 @@ class ApiPrefs {
 
   static String getUserAgent() => 'androidParent/${_packageInfo.version} (${_packageInfo.buildNumber})';
 
-  static String getApiUrl({String path = ''}) => "${getDomain()}/api/v1/$path";
+  static String getApiUrl({String path = ''}) => '${getDomain()}/api/v1/$path';
 
   static String getDomain() => _getPrefString(KEY_DOMAIN);
 
@@ -152,7 +152,7 @@ class ApiPrefs {
     var headers = {
       'Authorization': 'Bearer $token',
       'accept-language': (forceDeviceLanguage ? ui.window.locale.toLanguageTag() : effectiveLocale()?.toLanguageTag())
-          .replaceAll("-", ","),
+          .replaceAll('-', ','),
       'User-Agent': getUserAgent(),
     };
 

@@ -217,7 +217,7 @@ void main() {
     final interactor = _MockInteractor();
     _setupLocator(interactor);
 
-    final file = File("/fake/path");
+    final file = File('/fake/path');
     when(interactor.getFileFromDevice()).thenAnswer((_) => Future.value(file));
 
     AttachmentHandler result = null;

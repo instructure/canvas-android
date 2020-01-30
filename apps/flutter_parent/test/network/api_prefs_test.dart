@@ -125,7 +125,7 @@ void main() {
 
     final deviceLocale = window.locale.toLanguageTag();
 
-    final localeParts = deviceLocale.split("-");
+    final localeParts = deviceLocale.split('-');
     expect(ApiPrefs.effectiveLocale(), Locale(localeParts.first, localeParts.last));
   });
 
@@ -191,7 +191,7 @@ void main() {
     await ApiPrefs.setUser(user);
 
     expect(ApiPrefs.getHeaderMap(forceDeviceLanguage: true)['accept-language'],
-        deviceLocale.toLanguageTag().replaceAll("-", ","));
+        deviceLocale.toLanguageTag().replaceAll('-', ','));
   });
 
   test('getHeaderMap returns a map with the token from prefs', () async {

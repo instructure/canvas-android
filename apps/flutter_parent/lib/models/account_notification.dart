@@ -35,12 +35,12 @@ abstract class AccountNotification implements Built<AccountNotification, Account
 
   String get subject;
 
-  @BuiltValueField(wireName: "start_at")
+  @BuiltValueField(wireName: 'start_at')
   String get startAt;
 
   static void _initializeBuilder(AccountNotificationBuilder b) => b
-      ..id = ''
-      ..message = ''
-      ..subject = ''
-      ..startAt = '';
+    ..id = ''
+    ..message = ''
+    ..subject = ''
+    ..startAt = '';
 }

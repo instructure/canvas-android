@@ -48,7 +48,7 @@ void main() {
 
   final l10n = AppLocalizations();
 
-  testWidgetsWithAccessibilityChecks("displays 'Reply' as as title for reply", (tester) async {
+  testWidgetsWithAccessibilityChecks('displays "Reply" as as title for reply', (tester) async {
     _setupInteractor();
 
     await tester.pumpWidget(TestApp(ConversationReplyScreen(_makeConversation(), null, false), highContrast: true));
@@ -57,7 +57,7 @@ void main() {
     expect(find.descendant(of: find.byType(AppBar), matching: find.text(l10n.reply)), findsOneWidget);
   });
 
-  testWidgetsWithAccessibilityChecks("displays 'Reply All' as as title for reply all", (tester) async {
+  testWidgetsWithAccessibilityChecks('displays "Reply All" as as title for reply all', (tester) async {
     _setupInteractor();
 
     await tester.pumpWidget(TestApp(ConversationReplyScreen(_makeConversation(), null, true), highContrast: true));

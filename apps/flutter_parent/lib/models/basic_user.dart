@@ -31,7 +31,7 @@ abstract class BasicUser implements Built<BasicUser, BasicUserBuilder> {
   @nullable
   String get pronouns;
 
-  @BuiltValueField(wireName: "avatar_url")
+  @BuiltValueField(wireName: 'avatar_url')
   @nullable
   String get avatarUrl;
 

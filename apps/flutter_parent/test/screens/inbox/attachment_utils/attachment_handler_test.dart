@@ -96,7 +96,7 @@ void main() {
     final api = _MockFileUploadApi();
     setupTestLocator((locator) => locator.registerLazySingleton<FileApi>(() => api));
 
-    when(api.uploadConversationFile(any, any)).thenAnswer((_) => Future.error("Error!"));
+    when(api.uploadConversationFile(any, any)).thenAnswer((_) => Future.error('Error!'));
 
     var handler = AttachmentHandler(File(''));
     await handler.performUpload();

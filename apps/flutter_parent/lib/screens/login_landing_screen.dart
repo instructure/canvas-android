@@ -61,7 +61,7 @@ class LoginLandingScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               SvgPicture.asset(
-                "assets/svg/canvas-parent-login-logo.svg",
+                'assets/svg/canvas-parent-login-logo.svg',
                 semanticsLabel: L10n(context).canvasLogoLabel,
               ),
               SizedBox(height: 64),

@@ -180,7 +180,7 @@ class AppLocalizations {
       );
 
   String noDomainResults(String query) => Intl.message(
-        'Unable to find schools matching \'$query\'',
+        'Unable to find schools matching "$query"',
         name: 'noDomainResults',
         args: [query],
         desc: 'Message shown to users when the domain search query did not return any results',
@@ -623,19 +623,19 @@ class AppLocalizations {
 
   String get studentApp => Intl.message('STUDENT',
       desc:
-          "The 'student' portion of the 'Canvas Student' app name, in all caps. 'Canvas' is excluded in this context as it will be displayed to the user as a wordmark image");
+          'The "student" portion of the "Canvas Student" app name, in all caps. "Canvas" is excluded in this context as it will be displayed to the user as a wordmark image');
 
   String get teacherApp => Intl.message('TEACHER',
       desc:
-          "The 'teacher' portion of the 'Canvas Teacher' app name, in all caps. 'Canvas' is excluded in this context as it will be displayed to the user as a wordmark image");
+          'The "teacher" portion of the "Canvas Teacher" app name, in all caps. "Canvas" is excluded in this context as it will be displayed to the user as a wordmark image');
 
   String get canvasStudentApp => Intl.message('Canvas Student',
       desc:
-          "The name of the Canvas Student app. Only 'Student' should be translated as 'Canvas' is a brand name in this context and should not be translated.");
+          'The name of the Canvas Student app. Only "Student" should be translated as "Canvas" is a brand name in this context and should not be translated.');
 
   String get canvasTeacherApp => Intl.message('Canvas Teacher',
       desc:
-          "The name of the Canvas Teacher app. Only 'Teacher' should be translated as 'Canvas' is a brand name in this context and should not be translated.");
+          'The name of the Canvas Teacher app. Only "Teacher" should be translated as "Canvas" is a brand name in this context and should not be translated.');
 
   /// Alerts Screen
 
@@ -691,8 +691,8 @@ class AppLocalizations {
       );
 
   String get accessibilityMinus => Intl.message(
-        "minus",
-        desc: "Screen reader-friendly replacement for the '-' character in letter grades like 'A-'",
+        'minus',
+        desc: 'Screen reader-friendly replacement for the "-" character in letter grades like "A-"',
       );
 
   String latePenalty(String pointsLost) => Intl.message(

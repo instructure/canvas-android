@@ -31,10 +31,7 @@ extension WebViewUtils on WebViewController {
     html = _applyWorkAroundForDoubleSlashesAsUrlSource(html);
     html = _addProtocolToLinks(html);
     html = fileText.replaceAll('{CANVAS_CONTENT}', html);
-    String uri = Uri.dataFromString(html,
-        mimeType: 'text/html',
-        encoding: Encoding.getByName('utf-8'))
-        .toString();
+    String uri = Uri.dataFromString(html, mimeType: 'text/html', encoding: Encoding.getByName('utf-8')).toString();
     this.loadUrl(uri);
   }
 
@@ -42,32 +39,28 @@ extension WebViewUtils on WebViewController {
    * Loads html content w/o any change to formatting
    */
   Future<void> loadRawHtml(String html, Map<String, String> headers) async {
-    String uri = Uri.dataFromString(html,
-        mimeType: 'text/html',
-        encoding: Encoding.getByName('utf-8'))
-        .toString();
+    String uri = Uri.dataFromString(html, mimeType: 'text/html', encoding: Encoding.getByName('utf-8')).toString();
     this.loadUrl(uri);
   }
-
 }
 
 String _applyWorkAroundForDoubleSlashesAsUrlSource(String html) {
-  if(html.isEmpty) return "";
+  if (html.isEmpty) return '';
   // Fix for embedded videos that have // instead of http://
-  html = html.replaceAll("href=\"//", "href=\"https://");
-  html = html.replaceAll("href='//", "href='https://");
-  html = html.replaceAll("src=\"//", "src=\"https://");
-  html = html.replaceAll("src='//", "src='https://");
+  html = html.replaceAll('href="//', 'href="https://');
+  html = html.replaceAll('href=\'//', 'href=\'https://');
+  html = html.replaceAll('src="//', 'src="https://');
+  html = html.replaceAll('src=\'//', 'src=\'https://');
   return html;
 }
 
 String _addProtocolToLinks(String html) {
-  if(html.isEmpty) return "";
+  if (html.isEmpty) return '';
 
-  html = html.replaceAll("href=\"www.", "href=\"https://www.");
-  html = html.replaceAll("href='www.", "href='https://www.");
-  html = html.replaceAll("src=\"www.", "src=\"https://www.");
-  html = html.replaceAll("src='www.", "src='https://www.");
+  html = html.replaceAll('href="www.', 'href="https://www.');
+  html = html.replaceAll('href=\'www.', 'href=\'https://www.');
+  html = html.replaceAll('src="www.', 'src="https://www.');
+  html = html.replaceAll('src=\'www.', 'src=\'https://www.');
   return html;
 }
 
