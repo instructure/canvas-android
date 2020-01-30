@@ -98,7 +98,8 @@ class TextFieldNavigationGuideline extends AccessibilityGuideline {
   List<SemanticsNode> _getFocusableSemanticsNodes(SemanticsNode root) {
     List<SemanticsNode> result = List<SemanticsNode>();
     if (root.hasFlag(SemanticsFlag.isFocusable) &&
-        !root.isMergedIntoParent & !root.isInvisible &&
+        !root.isMergedIntoParent &&
+        !root.isInvisible &&
         !root.hasFlag(SemanticsFlag.isHidden)) {
       result.add(root);
     }
