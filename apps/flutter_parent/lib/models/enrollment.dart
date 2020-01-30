@@ -97,6 +97,7 @@ abstract class Enrollment implements Built<Enrollment, EnrollmentBuilder> {
   @BuiltValueField(wireName: 'current_period_computed_final_grade')
   String get currentPeriodComputedFinalGrade;
 
+  @nullable
   @BuiltValueField(wireName: 'current_grading_period_id')
   String get currentGradingPeriodId;
 
@@ -133,6 +134,16 @@ abstract class Enrollment implements Built<Enrollment, EnrollmentBuilder> {
   bool isObserver() => ['observer', 'ObserverEnrollment'].any(_matchesEnrollment);
 
   bool isDesigner() => ['designer', 'DesignerEnrollment'].any(_matchesEnrollment);
+
+  bool hasActiveGradingPeriod() =>
+      multipleGradingPeriodsEnabled &&
+      currentGradingPeriodId != null &&
+      currentGradingPeriodId.isNotEmpty &&
+      currentGradingPeriodId != '0';
+
+  // NOTE: Looks like the API will never return multipleGradingPeriodsEnabled for observer enrollments, still checking just in case
+  bool isTotalsForAllGradingPeriodsEnabled() =>
+      (isStudent() || isObserver()) && multipleGradingPeriodsEnabled && totalsForAllGradingPeriodsOption;
 
 // NOTE: There is also a StudentViewEnrollment that allows Teachers to view the course as a student - we don't handle that right now, and we probably don't have to worry about it
 

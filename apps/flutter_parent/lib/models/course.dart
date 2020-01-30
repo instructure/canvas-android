@@ -122,5 +122,5 @@ abstract class Course implements Built<Course, CourseBuilder> {
     ..restrictEnrollmentsToCourseDates = false;
 
   CourseGrade getCourseGrade(String studentId) =>
-      CourseGrade(enrollments.firstWhere((enrollment) => enrollment.userId == studentId));
+      CourseGrade(this, enrollments.firstWhere((enrollment) => enrollment.userId == studentId));
 }

@@ -41,8 +41,8 @@ void main() {
     _locator.registerFactory<QuickNav>(() => QuickNav());
   }
 
-  Widget _testableMaterialWidget([Widget widget]) =>
-      TestApp(Scaffold(body: widget ?? CoursesScreen(_mockStudent('0'))));
+  Widget _testableMaterialWidget([Widget widget, highContrast = false]) =>
+      TestApp(Scaffold(body: widget ?? CoursesScreen(_mockStudent('0'))), highContrast: highContrast);
 
   testWidgetsWithAccessibilityChecks('shows loading indicator when retrieving courses', (tester) async {
     _setupLocator(_MockCoursesInteractor());
@@ -158,7 +158,7 @@ void main() {
 
     _setupLocator(_MockCoursesInteractor(courses: courses));
 
-    await tester.pumpWidget(_testableMaterialWidget(CoursesScreen(student)));
+    await tester.pumpWidget(_testableMaterialWidget(CoursesScreen(student), true));
     await tester.pumpAndSettle();
 
     final matchedWidget = find.text(courses.first.name);

@@ -32,9 +32,6 @@ class _$EnrollmentSerializer implements StructuredSerializer<Enrollment> {
       'totals_for_all_grading_periods_option',
       serializers.serialize(object.totalsForAllGradingPeriodsOption,
           specifiedType: const FullType(bool)),
-      'current_grading_period_id',
-      serializers.serialize(object.currentGradingPeriodId,
-          specifiedType: const FullType(String)),
       'associated_user_id',
       serializers.serialize(object.associatedUserId,
           specifiedType: const FullType(String)),
@@ -131,6 +128,13 @@ class _$EnrollmentSerializer implements StructuredSerializer<Enrollment> {
       result.add(null);
     } else {
       result.add(serializers.serialize(object.currentPeriodComputedFinalGrade,
+          specifiedType: const FullType(String)));
+    }
+    result.add('current_grading_period_id');
+    if (object.currentGradingPeriodId == null) {
+      result.add(null);
+    } else {
+      result.add(serializers.serialize(object.currentGradingPeriodId,
           specifiedType: const FullType(String)));
     }
     result.add('current_grading_period_title');
@@ -385,10 +389,6 @@ class _$Enrollment extends Enrollment {
     if (totalsForAllGradingPeriodsOption == null) {
       throw new BuiltValueNullFieldError(
           'Enrollment', 'totalsForAllGradingPeriodsOption');
-    }
-    if (currentGradingPeriodId == null) {
-      throw new BuiltValueNullFieldError(
-          'Enrollment', 'currentGradingPeriodId');
     }
     if (associatedUserId == null) {
       throw new BuiltValueNullFieldError('Enrollment', 'associatedUserId');

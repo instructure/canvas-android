@@ -17,9 +17,11 @@ import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/assignment.dart';
 import 'package:flutter_parent/models/assignment_group.dart';
 import 'package:flutter_parent/models/course_grade.dart';
+import 'package:flutter_parent/models/enrollment.dart';
+import 'package:flutter_parent/models/grading_period.dart';
 import 'package:flutter_parent/screens/assignments/assignment_details_screen.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_model.dart';
-import 'package:flutter_parent/screens/under_construction_screen.dart';
+import 'package:flutter_parent/screens/courses/details/grading_period_modal.dart';
 import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
@@ -39,7 +41,8 @@ class CourseGradesScreen extends StatefulWidget {
 
 class _CourseGradesScreenState extends State<CourseGradesScreen> {
   Set<String> _collapsedGroupIds;
-  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = new GlobalKey<RefreshIndicatorState>();
+  Future<GradeDetails> _detailsFuture;
+  static final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = new GlobalKey<RefreshIndicatorState>();
 
   @override
   void initState() {
@@ -52,26 +55,38 @@ class _CourseGradesScreenState extends State<CourseGradesScreen> {
     CourseDetailsModel.selectedTab = 0;
     return Consumer<CourseDetailsModel>(
       builder: (context, model, _) {
+        // Initialize the future here if it wasn't set (we need the model, otherwise could've been done in initState)
+        if (_detailsFuture == null) _detailsFuture = model.loadAssignments();
         return RefreshIndicator(
           key: _refreshIndicatorKey,
-          onRefresh: () => model.loadData(refreshCourse: true, refreshAssignmentGroups: true),
+          onRefresh: () => _refresh(model),
           child: FutureBuilder(
-            future: model.assignmentGroupFuture,
-            builder: (context, AsyncSnapshot<List<AssignmentGroup>> snapshot) => _body(snapshot),
+            future: _detailsFuture,
+            builder: (context, AsyncSnapshot<GradeDetails> snapshot) => _body(snapshot, model),
           ),
         );
       },
     );
   }
 
-  Widget _body(AsyncSnapshot<List<AssignmentGroup>> snapshot) {
-    if (snapshot.connectionState == ConnectionState.waiting) {
-      return LoadingIndicator();
-    } else if (snapshot.hasError) {
+  Future<GradeDetails> _refresh(CourseDetailsModel model) {
+    setState(() {
+      _detailsFuture = model.loadAssignments(forceRefresh: model.forceRefresh);
+      model.forceRefresh = true;
+    });
+    return _detailsFuture.catchError((_) {});
+  }
+
+  Widget _body(AsyncSnapshot<GradeDetails> snapshot, CourseDetailsModel model) {
+    if (snapshot.hasError) {
       return ErrorPandaWidget(L10n(context).unexpectedError, () {
         _refreshIndicatorKey.currentState.show();
       });
-    } else if (!snapshot.hasData || snapshot.data.every((group) => group.assignments.isEmpty) == true) {
+    } else if (snapshot.connectionState == ConnectionState.waiting && !snapshot.hasData) {
+      return LoadingIndicator();
+    } else if (!snapshot.hasData ||
+        snapshot.data.assignmentGroups == null ||
+        snapshot.data.assignmentGroups.every((group) => group.assignments.isEmpty) == true) {
       return EmptyPandaWidget(
         svgPath: 'assets/svg/panda-space-no-assignments.svg',
         title: L10n(context).noAssignmentsTitle,
@@ -81,8 +96,8 @@ class _CourseGradesScreenState extends State<CourseGradesScreen> {
 
     return ListView(
       children: [
-        _CourseGradeHeader(),
-        ..._assignmentListChildren(context, snapshot.data),
+        _CourseGradeHeader(context, snapshot.data.gradingPeriods, snapshot.data.termEnrollment),
+        ..._assignmentListChildren(context, snapshot.data.assignmentGroups),
       ],
     );
   }
@@ -133,17 +148,23 @@ class _CourseGradesScreenState extends State<CourseGradesScreen> {
   }
 }
 
-// TODO: Finish logic and functionality when doing MBL-13226
 class _CourseGradeHeader extends StatelessWidget {
+  final List<GradingPeriod> gradingPeriods;
+  final Enrollment termEnrollment;
+
+  _CourseGradeHeader(BuildContext context, List<GradingPeriod> gradingPeriods, this.termEnrollment, {Key key})
+      : this.gradingPeriods = [GradingPeriod((b) => b..title = L10n(context).allGradingPeriods)] + gradingPeriods,
+        super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final model = Provider.of<CourseDetailsModel>(context, listen: false);
-
     final gradingPeriodHeader = _gradingPeriodHeader(context, model);
     final gradeTotalHeader = _gradeTotal(context, model);
+
     return Column(
       children: [
-        SizedBox(height: 16),
+        if (gradingPeriodHeader != null || gradeTotalHeader != null) SizedBox(height: 16),
         if (gradingPeriodHeader != null) gradingPeriodHeader,
         if (gradingPeriodHeader != null && gradeTotalHeader != null) SizedBox(height: 4),
         if (gradeTotalHeader != null) gradeTotalHeader,
@@ -152,9 +173,13 @@ class _CourseGradeHeader extends StatelessWidget {
     );
   }
 
-  // TODO: Don't show this if there's no grading periods
   Widget _gradingPeriodHeader(BuildContext context, CourseDetailsModel model) {
+    // Don't show this if there's no grading periods (we always add 1 for 'All grading periods')
+    if (gradingPeriods.length <= 1) return null;
+
     final studentColor = ParentTheme.of(context).studentColor;
+
+    final gradingPeriod = model.currentGradingPeriod() ?? gradingPeriods.first;
 
     return Padding(
       // Only left padding, lets the filter button go past the margin for the ripple
@@ -164,8 +189,7 @@ class _CourseGradeHeader extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.baseline,
         textBaseline: TextBaseline.ideographic,
         children: <Widget>[
-          // TODO: gradingPeriod.name instead of always all grading periods
-          Text(L10n(context).allGradingPeriods, style: Theme.of(context).textTheme.display1),
+          Text(gradingPeriod.title, style: Theme.of(context).textTheme.display1),
           InkWell(
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
@@ -174,13 +198,13 @@ class _CourseGradeHeader extends StatelessWidget {
                 style: Theme.of(context).textTheme.caption.copyWith(color: studentColor),
               ),
             ),
-            onTap: () {
-              // TODO: Add grading periods filter to model
-              locator<QuickNav>().push(
-                  context,
-                  UnderConstructionScreen(
-                    showAppBar: true,
-                  ));
+            onTap: () async {
+              final gradingPeriod = await GradingPeriodModal.asBottomSheet(context, gradingPeriods);
+              if (gradingPeriod != null) model.updateGradingPeriod(gradingPeriod);
+
+              // Don't force refresh when switching grading periods
+              model.forceRefresh = false;
+              _CourseGradesScreenState._refreshIndicatorKey.currentState.show();
             },
           ),
         ],
@@ -190,9 +214,10 @@ class _CourseGradeHeader extends StatelessWidget {
 
   /// The total grade in the course/grading period
   Widget _gradeTotal(BuildContext context, CourseDetailsModel model) {
-    // TODO: Don't show this in certain cases, refer to Course.kt in canvas-api2
-    //  If 'all grading periods' are selected in a multipleGradingPeriodsEnabled enrollment and totalsForAllGradingPeriodsOption is true
-    //  If hideFinalGrades is enabled on the course
+    // Don't show the total if the grade is locked
+    final grade = CourseGrade(model.course, termEnrollment);
+    if (grade.isCourseGradeLocked(forAllGradingPeriods: model.currentGradingPeriod()?.id == null)) return null;
+
     final textTheme = Theme.of(context).textTheme;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -200,7 +225,7 @@ class _CourseGradeHeader extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           Text(L10n(context).courseTotalGradeLabel, style: textTheme.body1),
-          Text(_courseGrade(context, model.course.getCourseGrade(model.studentId)), style: textTheme.body1),
+          Text(_courseGrade(context, grade), style: textTheme.body1),
         ],
       ),
     );

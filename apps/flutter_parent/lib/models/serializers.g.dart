@@ -24,6 +24,8 @@ Serializers _$_serializers = (new Serializers().toBuilder()
       ..add(Enrollment.serializer)
       ..add(FileUploadConfig.serializer)
       ..add(Grade.serializer)
+      ..add(GradingPeriod.serializer)
+      ..add(GradingPeriodResponse.serializer)
       ..add(GradingType.serializer)
       ..add(LockInfo.serializer)
       ..add(LockedModule.serializer)
@@ -53,6 +55,9 @@ Serializers _$_serializers = (new Serializers().toBuilder()
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(Enrollment)]),
           () => new ListBuilder<Enrollment>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(GradingPeriod)]),
+          () => new ListBuilder<GradingPeriod>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(RemoteFile)]),
           () => new ListBuilder<RemoteFile>())

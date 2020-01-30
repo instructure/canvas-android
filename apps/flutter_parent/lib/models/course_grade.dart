@@ -11,40 +11,78 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+import 'package:flutter_parent/models/course.dart';
+
 import 'enrollment.dart';
 
+/**
+ * CourseGrade object for displaying course grade totals.
+ *
+ * Note: Current vs Final
+ * As a general rule, current represents a grade calculated only from graded assignments, where as
+ * final grades use all assignments, regardless of grading status, in their calculation.
+ *
+ * @finalGrade - Final grade string value, for the current grading period or the current term
+ * (see Course.getCourseGrade, ignoreMGP).
+ *
+ * @finalScore - Final score value, a double representation of a percentage grade, for the current
+ * grading period or the current term (see Course.getCourseGrade, ignoreMGP). Needs formatting
+ * prior to use.
+ *
+ * @noFinalGrade - If the course contains no valid final grade or score, this flag will be true. This is usually
+ * represented in the UI with "N/A". See Course.noFinalGrade for logic.
+ */
 class CourseGrade {
+  Course _course;
   Enrollment _enrollment;
 
-  CourseGrade(this._enrollment);
+  CourseGrade(this._course, this._enrollment);
 
+  /// Represents the lock status of a course, this is different from hideFinalGrades, as it takes both that value, and
+  /// totalsForAllGradingPeriodsOption into account. The latter is only used when relevant.
+  bool isCourseGradeLocked({bool forAllGradingPeriods = true}) {
+    if (_course.hideFinalGrades) {
+      return true;
+    } else if (_course.hasGradingPeriods) {
+      return forAllGradingPeriods && !_hasActiveGradingPeriod() && !_isTotalsForAllGradingPeriodsEnabled();
+    } else {
+      return false;
+    }
+  }
+
+  /// Current score value, a double representation of a percentage grade, for the current grading period or the current
+  /// term (see Course.getCourseGrade, ignoreMGP). Needs formatting prior to use.
   double currentScore() => _hasActiveGradingPeriod() ? _getCurrentPeriodComputedCurrentScore() : _getCurrentScore();
 
+  /// Current grade string value, for the current grading period or the current term. (see Course.getCourseGrade)
   String currentGrade() => _hasActiveGradingPeriod() ? _getCurrentPeriodComputedCurrentGrade() : _getCurrentGrade();
 
+  /// If the course contains no valid current grade or score, this flag will be true. This is usually represented in the
+  /// UI with "N/A".
   bool noCurrentGrade() =>
       currentScore() == null && (currentGrade() == null || currentGrade().contains("N/A") || currentGrade().isEmpty);
 
   bool _hasActiveGradingPeriod() =>
-      _enrollment.multipleGradingPeriodsEnabled &&
-      _enrollment.currentGradingPeriodId != null &&
-      _enrollment.currentGradingPeriodId != 0;
+      _course.enrollments.toList().any((enrollment) => enrollment.hasActiveGradingPeriod());
 
-  double _getCurrentScore() => _enrollment.grades?.currentScore ?? _enrollment.computedCurrentScore;
+  bool _isTotalsForAllGradingPeriodsEnabled() =>
+      _course.enrollments.toList().any((enrollment) => enrollment.isTotalsForAllGradingPeriodsEnabled());
+
+  double _getCurrentScore() => _enrollment?.grades?.currentScore ?? _enrollment?.computedCurrentScore;
 
 //  double _getFinalScore() =>
 //      _enrollment.grade?.finalScore ?? _enrollment.computedFinalScore;
 
-  String _getCurrentGrade() => _enrollment.grades?.currentGrade ?? _enrollment.computedCurrentGrade;
+  String _getCurrentGrade() => _enrollment?.grades?.currentGrade ?? _enrollment?.computedCurrentGrade;
 
 //  String _getFinalGrade() =>
 //      _enrollment.grade?.finalGrade ?? _enrollment.computedFinalGrade;
 
   double _getCurrentPeriodComputedCurrentScore() =>
-      _enrollment.grades?.currentScore ?? _enrollment.currentPeriodComputedCurrentScore;
+      _enrollment?.grades?.currentScore ?? _enrollment?.currentPeriodComputedCurrentScore;
 
   String _getCurrentPeriodComputedCurrentGrade() =>
-      _enrollment.grades?.currentGrade ?? _enrollment.currentPeriodComputedCurrentGrade;
+      _enrollment?.grades?.currentGrade ?? _enrollment?.currentPeriodComputedCurrentGrade;
 
 //  double _getCurrentPeriodComputedFinalScore() =>
 //      _enrollment.grade?.finalScore ??

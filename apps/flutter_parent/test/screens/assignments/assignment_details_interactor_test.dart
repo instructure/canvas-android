@@ -36,8 +36,8 @@ void main() {
 
   // Reset the interactions for the shared mocks
   setUp(() {
-    clearInteractions(assignmentApi);
-    clearInteractions(courseApi);
+    reset(assignmentApi);
+    reset(courseApi);
   });
 
   group('loadAssignmentDetails', () {
@@ -51,6 +51,7 @@ void main() {
     });
 
     test('returns a null alarm if none exist for the assignment', () async {
+      when(courseApi.getCourse(courseId)).thenAnswer((_) async => Course((b) => b..name = ''));
       final details =
           await AssignmentDetailsInteractor().loadAssignmentDetails(false, courseId, assignmentId, studentId);
 
@@ -71,6 +72,7 @@ void main() {
         ..courseId = courseId
         ..assignmentGroupId = ''
         ..position = 0);
+      when(courseApi.getCourse(courseId)).thenAnswer((_) async => Course((b) => b..name = ''));
       when(assignmentApi.getAssignment(courseId, assignmentId, forceRefresh: false))
           .thenAnswer((_) async => assignment);
       final details =

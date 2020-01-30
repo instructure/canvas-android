@@ -31,6 +31,8 @@ import 'package:flutter_parent/models/conversation.dart';
 import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/models/enrollment.dart';
 import 'package:flutter_parent/models/grade.dart';
+import 'package:flutter_parent/models/grading_period.dart';
+import 'package:flutter_parent/models/grading_period_response.dart';
 import 'package:flutter_parent/models/lock_info.dart';
 import 'package:flutter_parent/models/locked_module.dart';
 import 'package:flutter_parent/models/media_comment.dart';
@@ -64,6 +66,8 @@ part 'serializers.g.dart';
   Enrollment,
   FileUploadConfig,
   Grade,
+  GradingPeriod,
+  GradingPeriodResponse,
   LockInfo,
   LockedModule,
   MediaComment,
