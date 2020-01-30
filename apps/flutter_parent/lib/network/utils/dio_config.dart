@@ -144,8 +144,13 @@ class DioConfig {
         pageSize: pageSize);
   }
 
-  void clearCache(String path) {
-    DioCacheManager(CacheConfig(baseUrl: baseUrl)).deleteByPrimaryKey(path);
+  /// Clears the cache, deleting only the entries related to path OR clearing everything if path is null
+  Future<bool> clearCache({String path}) {
+    if (path == null) {
+      return DioCacheManager(CacheConfig(baseUrl: baseUrl)).clearAll();
+    } else {
+      return DioCacheManager(CacheConfig(baseUrl: baseUrl)).deleteByPrimaryKey(path);
+    }
   }
 }
 

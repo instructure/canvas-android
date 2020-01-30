@@ -22,6 +22,7 @@ import 'package:flutter_parent/utils/common_widgets/error_report/error_report_in
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
+import '../../platform_config.dart';
 import '../../test_app.dart';
 
 void main() {
@@ -65,6 +66,8 @@ void main() {
   });
 
   test('Uses user data from api prefs', () async {
+    setupPlatformChannels(config: PlatformConfig(initSqflite: true));
+
     await ApiPrefs.performLogout(); // Clear domain data
     await ApiPrefs.setUser(user);
     await ErrorReportInteractor().submitErrorReport('', '', '', ErrorReportSeverity.COMMENT, '');
@@ -119,6 +122,8 @@ void main() {
   });
 
   test('Uses domain from ErrorReportApi if api prefs has none', () async {
+    setupPlatformChannels(config: PlatformConfig(initSqflite: true));
+
     await ApiPrefs.performLogout(); // Clear domain data in ApiPrefs
     await ErrorReportInteractor().submitErrorReport('', '', '', ErrorReportSeverity.COMMENT, '');
 

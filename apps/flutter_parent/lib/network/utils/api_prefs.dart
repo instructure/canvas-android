@@ -20,6 +20,7 @@ import 'package:flutter_parent/models/canvas_token.dart';
 import 'package:flutter_parent/models/mobile_verify_result.dart';
 import 'package:flutter_parent/models/serializers.dart';
 import 'package:flutter_parent/models/user.dart';
+import 'package:flutter_parent/network/utils/dio_config.dart';
 import 'package:intl/intl.dart';
 import 'package:package_info/package_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -73,6 +74,7 @@ class ApiPrefs {
 
   static Future<void> performLogout() async {
     await init();
+    await DioConfig().clearCache();
     return await new Future<void>.sync(() {
       _prefs.remove(KEY_ACCESS_TOKEN);
       _prefs.remove(KEY_REFRESH_TOKEN);

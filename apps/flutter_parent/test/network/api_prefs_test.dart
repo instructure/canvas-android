@@ -85,7 +85,7 @@ void main() {
         ApiPrefs.KEY_DOMAIN: 'domain',
         ApiPrefs.KEY_ACCESS_TOKEN: 'token',
         ApiPrefs.KEY_REFRESH_TOKEN: 'refresh',
-      }),
+      }, initSqflite: true),
     );
 
     expect(ApiPrefs.getDomain(), 'domain');

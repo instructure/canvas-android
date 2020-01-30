@@ -138,19 +138,7 @@ class MockThemePrefs extends ThemePrefs {
 Future<void> setupPlatformChannels({PlatformConfig config = const PlatformConfig()}) {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  if (config.initPackageInfo) {
-    const MethodChannel('plugins.flutter.io/package_info').setMockMethodCallHandler((MethodCall methodCall) async {
-      if (methodCall.method == 'getAll') {
-        return <String, dynamic>{
-          'appName': 'Canvas',
-          'packageName': 'com.instructure',
-          'version': '1.0.0',
-          'buildNumber': '3',
-        };
-      }
-      return null;
-    });
-  }
+  if (config.initPackageInfo) _initPackageInfo();
 
   if (config.initDeviceInfo) _initPlatformDeviceInfo();
 
@@ -161,6 +149,8 @@ Future<void> setupPlatformChannels({PlatformConfig config = const PlatformConfig
   }
 
   if (config.initWebview) _initPlatformWebView();
+
+  if (config.initSqflite) _initSqflite();
 
   // Return all the futures that were created
   return Future.wait([
@@ -189,6 +179,21 @@ void _initPlatformWebView() {
       default:
         return Future<void>.sync(() {});
     }
+  });
+}
+
+/// Mocks the platform channel used by the package_info plugin
+void _initPackageInfo() {
+  const MethodChannel('plugins.flutter.io/package_info').setMockMethodCallHandler((MethodCall methodCall) async {
+    if (methodCall.method == 'getAll') {
+      return <String, dynamic>{
+        'appName': 'Canvas',
+        'packageName': 'com.instructure',
+        'version': '1.0.0',
+        'buildNumber': '3',
+      };
+    }
+    return null;
   });
 }
 
@@ -226,6 +231,16 @@ void _initPlatformDeviceInfo() {
         'isPhysicalDevice': false,
         'androidId': 'fake-androidId',
       };
+    }
+    return null;
+  });
+}
+
+/// Mocks the platform channels for com.tekartik.sqflite
+void _initSqflite() {
+  const MethodChannel('com.tekartik.sqflite').setMockMethodCallHandler((MethodCall methodCall) async {
+    if (methodCall.method == 'getDatabasesPath') {
+      return 'test';
     }
     return null;
   });

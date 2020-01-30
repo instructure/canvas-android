@@ -54,8 +54,8 @@ class InboxApi {
         },
       ),
     );
-    config.clearCache('conversations');
-    config.clearCache('conversations/$conversationId');
+    config.clearCache(path: 'conversations');
+    config.clearCache(path: 'conversations/$conversationId');
     return conversation;
   }
 
@@ -86,7 +86,7 @@ class InboxApi {
       'attachment_ids': attachmentIds,
     };
     List<Conversation> result = await fetchList(dio.post('conversations', queryParameters: params));
-    DioConfig.canvas().clearCache('conversations');
+    DioConfig.canvas().clearCache(path: 'conversations');
     return result[0];
   }
 }
