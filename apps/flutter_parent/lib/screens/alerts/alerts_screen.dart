@@ -68,7 +68,7 @@ class _AlertsScreenState extends State<AlertsScreen> {
         Widget child;
         if (snapshot.hasError) {
           child = _error(context);
-        } else if (snapshot.data == null || snapshot.data.alerts.isEmpty) {
+        } else if (snapshot.data == null || snapshot.data.alerts == null || snapshot.data.alerts.isEmpty) {
           child = _empty(context);
         } else {
           child = _AlertsList(widget._student, snapshot.data);
