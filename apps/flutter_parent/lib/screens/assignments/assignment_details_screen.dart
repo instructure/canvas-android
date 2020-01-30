@@ -17,7 +17,6 @@ import 'package:flutter_parent/models/assignment.dart';
 import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/screens/assignments/assignment_details_interactor.dart';
 import 'package:flutter_parent/screens/assignments/grade_cell.dart';
-import 'package:flutter_parent/utils/web_view_utils.dart';
 import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
@@ -25,13 +24,13 @@ import 'package:flutter_parent/utils/design/canvas_icons_solid.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
+import 'package:flutter_parent/utils/web_view_utils.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class AssignmentDetailsScreen extends StatefulWidget {
   final String courseId;
-  final String courseCode;
   final String studentId;
   final String studentName;
   final String assignmentId;
@@ -39,12 +38,10 @@ class AssignmentDetailsScreen extends StatefulWidget {
   const AssignmentDetailsScreen(
       {Key key,
       @required this.courseId,
-      @required this.courseCode,
       @required this.assignmentId,
       @required this.studentId,
       @required this.studentName})
       : assert(courseId != null),
-        assert(courseCode != null),
         assert(assignmentId != null),
         assert(studentId != null),
         assert(studentName != null),
@@ -103,14 +100,14 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
           children: [
             Text(L10n(context).assignmentDetailsTitle),
             if (snapshot.hasData)
-              Text(snapshot.data.courseName ?? '', style: Theme.of(context).primaryTextTheme.caption),
+              Text(snapshot.data.course?.name ?? '', style: Theme.of(context).primaryTextTheme.caption),
           ],
         ),
       );
 
   Widget _fab(AsyncSnapshot<AssignmentDetails> snapshot) {
     return FloatingActionButton(
-      onPressed: () => _sendMessage(snapshot.data.assignment),
+      onPressed: () => _sendMessage(snapshot.data),
       tooltip: L10n(context).assignmentMessageHint,
       child: Padding(padding: const EdgeInsets.only(left: 4, top: 4), child: Icon(CanvasIconsSolid.comment)),
     );
@@ -280,12 +277,12 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
     // TODO: Show alarm dialog if checked, then call _loadAssignment() to get the new alarm data
   }
 
-  _sendMessage(Assignment assignment) {
+  _sendMessage(AssignmentDetails details) {
     Course course = Course((b) => b
       ..id = widget.courseId
-      ..courseCode = widget.courseCode);
-    String subject = L10n(context).assignmentSubjectMessage(widget.studentName, assignment.name);
-    Widget screen = CreateConversationScreen.fromAssignment(course, subject, assignment.htmlUrl);
+      ..courseCode = details.course?.courseCode ?? '');
+    String subject = L10n(context).assignmentSubjectMessage(widget.studentName, details.assignment.name);
+    Widget screen = CreateConversationScreen.fromAssignment(course, subject, details.assignment.htmlUrl);
     locator.get<QuickNav>().push(context, screen);
   }
 }
