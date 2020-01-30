@@ -15,6 +15,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
+import 'package:flutter_parent/utils/design/parent_theme.dart';
 
 /// Typedef for the function callback to get the semantics string.
 /// e.x., semantics: (context, count) => L10n(context).unreadCount(count)
@@ -23,6 +24,23 @@ import 'package:flutter_parent/l10n/app_localizations.dart';
 /// * [NumberBadge]
 /// * [IndicatorBadge]
 typedef String GetSemantics(BuildContext context, int count);
+
+/// A simple class to wrap options for [NumberBadge] and [WidgetBadge]
+class BadgeOptions {
+  /// The initial count to show for the badge
+  final int count;
+
+  /// The max count a badge can show, for counts greater than this the string shown will be '$maxCount+'
+  final int maxCount;
+
+  /// True if the badge should include a border
+  final bool includeBorder;
+
+  /// True if the badge colors should be changed to look better against the primary color background
+  final bool onPrimarySurface;
+
+  const BadgeOptions({this.count, this.maxCount = 99, this.includeBorder = false, this.onPrimarySurface = false});
+}
 
 /// Adds a badge to a widget. If a count or a listenable is provided, a circle with the count is used as the badge.
 /// Otherwise an simple circle will be added as an indicator.
@@ -36,12 +54,11 @@ typedef String GetSemantics(BuildContext context, int count);
 /// * [IndicatorBadge] for when a simple circle is all that is needed
 class WidgetBadge extends StatelessWidget {
   final Widget icon;
-  final int count;
-  final int maxCount;
+  final BadgeOptions options;
   final GetSemantics semantics;
   final ValueListenable countListenable;
 
-  const WidgetBadge(this.icon, {Key key, this.count, this.maxCount = 99, this.semantics, this.countListenable})
+  const WidgetBadge(this.icon, {Key key, this.options = const BadgeOptions(), this.semantics, this.countListenable})
       : assert(icon != null),
         super(key: key);
 
@@ -58,11 +75,14 @@ class WidgetBadge extends StatelessWidget {
 
   Widget _badge() {
     // If no badge count and no listenable are provided, we just want an indicator on the icon, not a badge with a count
-    if (count == null && countListenable == null) {
+    if (options?.count == null && countListenable == null) {
       return PositionedDirectional(start: 8, top: 8, child: IndicatorBadge(semantics: semantics));
     }
     return PositionedDirectional(
-        end: -10, child: NumberBadge(count: count, semantics: semantics, listenable: countListenable));
+      end: -10,
+      top: -10,
+      child: NumberBadge(options: options, semantics: semantics, listenable: countListenable),
+    );
   }
 }
 
@@ -72,16 +92,18 @@ class WidgetBadge extends StatelessWidget {
 /// Defaults semantics to [AppLocalizations.unreadCount] if not provided, can be overridden to return null so no
 /// semantics label is added (which then just reads the count provided)
 class NumberBadge extends StatelessWidget {
-  final int count;
-  final int maxCount;
+  static final backgroundKey = const ValueKey('backgroundKey');
+  static final borderKey = const ValueKey('borderKey');
+
+  final BadgeOptions options;
   final GetSemantics semantics;
   final ValueListenable listenable;
 
-  const NumberBadge({Key key, this.count, this.maxCount = 99, this.semantics, this.listenable}) : super(key: key);
+  const NumberBadge({Key key, this.options = const BadgeOptions(), this.semantics, this.listenable}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    if (listenable == null) return _badge(context, count);
+    if (listenable == null) return _badge(context, options.count);
     return ValueListenableBuilder(
       valueListenable: listenable,
       builder: (context, count, _) => _badge(context, count),
@@ -91,17 +113,32 @@ class NumberBadge extends StatelessWidget {
   Widget _badge(BuildContext context, int count) {
     // If there's no count, then don't show anything
     if (count == null || count <= 0) return SizedBox();
+
+    final maxCount = options.maxCount;
+    final accentColor = (ParentTheme.of(context).isDarkMode ? Colors.black : Theme.of(context).accentColor);
+
+    // Wrap in another container to get the border around the badge, since using border for circles in a box decoration
+    // has antialiasing issues.
     return Container(
-      decoration: _badgeDecoration(context),
-      child: Padding(
-        padding: const EdgeInsets.all(6.0),
-        child: Text(
-          maxCount != null && count > maxCount ? L10n(context).badgeNumberPlus(maxCount) : '$count',
-          semanticsLabel: semantics != null ? semantics(context, count) : L10n(context).unreadCount(count),
-          style: TextStyle(
-            fontSize: 12,
-            color: Theme.of(context).accentIconTheme.color,
-            fontWeight: FontWeight.bold,
+      key: borderKey,
+      padding: EdgeInsets.all(options.includeBorder ? 2.0 : 0.0),
+      decoration: BoxDecoration(
+        color: options.onPrimarySurface ? accentColor : Theme.of(context).scaffoldBackgroundColor,
+        shape: BoxShape.circle,
+      ),
+      child: Container(
+        key: backgroundKey,
+        decoration: _badgeDecoration(context, options),
+        child: Padding(
+          padding: const EdgeInsets.all(6.0),
+          child: Text(
+            maxCount != null && count > maxCount ? L10n(context).badgeNumberPlus(maxCount) : '$count',
+            semanticsLabel: semantics != null ? semantics(context, count) : L10n(context).unreadCount(count),
+            style: TextStyle(
+              fontSize: 10,
+              color: options.onPrimarySurface ? accentColor : Theme.of(context).accentIconTheme.color,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
       ),
@@ -126,13 +163,17 @@ class IndicatorBadge extends StatelessWidget {
         key: Key('unread-indicator'),
         width: 8,
         height: 8,
-        decoration: _badgeDecoration(context),
+        decoration: _badgeDecoration(context, BadgeOptions(includeBorder: false)),
       ),
     );
   }
 }
 
-Decoration _badgeDecoration(BuildContext context) => BoxDecoration(
-      color: Theme.of(context).accentColor,
+/// A simple circle decoration to use for the badge background. Keys off of [BadgeOptions.onPrimarySurface] to
+/// determine what color to make the background.
+Decoration _badgeDecoration(BuildContext context, BadgeOptions options) => BoxDecoration(
       shape: BoxShape.circle,
+      color: options.onPrimarySurface ? Theme.of(context).primaryIconTheme.color : Theme.of(context).accentColor,
+      // Can't use border here as there is an antialiasing issue: https://github.com/flutter/flutter/issues/13675
+//      border: !options.includeBorder ? null : Border.all(color: Theme.of(context).scaffoldBackgroundColor, width: 2),
     );

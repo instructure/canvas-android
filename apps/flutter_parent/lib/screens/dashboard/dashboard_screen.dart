@@ -142,6 +142,15 @@ class DashboardState extends State<DashboardScreen> {
           flexibleSpace: _appBarStudents(_students),
           centerTitle: true,
           bottom: ParentTheme.of(context).appBarDivider(),
+          leading: IconButton(
+            icon: WidgetBadge(
+              Icon(Icons.menu),
+              countListenable: _interactor.getInboxCountNotifier(),
+              options: BadgeOptions(includeBorder: true, onPrimarySurface: true),
+            ),
+            onPressed: () => DashboardScreen.scaffoldKey.currentState.openDrawer(),
+            tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+          ),
         ),
       ),
       drawer: Drawer(
@@ -205,6 +214,7 @@ class DashboardState extends State<DashboardScreen> {
         icon: WidgetBadge(
           Icon(CanvasIcons.alerts),
           countListenable: _interactor.getAlertCountNotifier(),
+          options: BadgeOptions(includeBorder: true),
           key: Key('alerts-count'),
         ),
         title: Text(L10n(context).alertsLabel),
@@ -332,7 +342,11 @@ class DashboardState extends State<DashboardScreen> {
   _navDrawerInbox() => ListTile(
         title: Text(L10n(context).inbox),
         onTap: () => _navigateToInbox(context),
-        trailing: NumberBadge(listenable: _interactor.getInboxCountNotifier(), maxCount: null, key: Key('inbox-count')),
+        trailing: NumberBadge(
+          listenable: _interactor.getInboxCountNotifier(),
+          options: BadgeOptions(maxCount: null),
+          key: Key('inbox-count'),
+        ),
       );
 
   _navDrawerManageStudents() =>
