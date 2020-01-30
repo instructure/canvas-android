@@ -151,6 +151,9 @@ class AppLocalizations {
 
   String get help => Intl.message('Help', desc: 'Label text for the help nav drawer button');
 
+  String get shareFeedback =>
+      Intl.message('Send us feedback', desc: 'Label text for the nav drawer button to share feedback');
+
   String get signOut => Intl.message('Sign Out', desc: 'Label text for the Sign Out nav drawer button');
 
   String appVersion(String version) => Intl.message('v. $version',
