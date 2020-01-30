@@ -470,6 +470,21 @@ class AppLocalizations {
         desc: 'Message for no assignments',
       );
 
+  String get errorLoadingCourseSummary => Intl.message(
+        'There was an error loading the summary details for this course.',
+        desc: 'Message shown when the course summary could not be loaded',
+      );
+
+  String get noCourseSummaryTitle => Intl.message(
+        'No Summary',
+        desc: 'Title displayed when there are no items in the course summary',
+      );
+
+  String get noCourseSummaryMessage => Intl.message(
+        'This course does not have any assignments or calendar events yet.',
+        desc: 'Message displayed when there are no items in the course summary',
+      );
+
   String gradeFormatScoreOutOfPointsPossible(String score, String pointsPossible) => Intl.message(
         '${score} / ${pointsPossible}',
         desc: 'Formatted string for a student score out of the points possible',

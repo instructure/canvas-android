@@ -12,13 +12,17 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_parent/models/assignment_group.dart';
 import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/models/enrollment.dart';
 import 'package:flutter_parent/models/grading_period.dart';
+import 'package:flutter_parent/models/schedule_item.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_interactor.dart';
 import 'package:flutter_parent/utils/base_model.dart';
+import 'package:flutter_parent/utils/core_extensions/list_extensions.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
+import 'package:tuple/tuple.dart';
 
 class CourseDetailsModel extends BaseModel {
   static int selectedTab = 0;
@@ -81,6 +85,47 @@ class CourseDetailsModel extends BaseModel {
     if (_nextGradingPeriod != null) _currentGradingPeriod = _nextGradingPeriod;
 
     return gradeDetails;
+  }
+
+  Future<List<ScheduleItem>> loadSummary({bool refresh: false}) async {
+    // Get all assignment and calendar events
+    List<List<ScheduleItem>> results = await Future.wait([
+      _interactor().loadScheduleItems(courseId, ScheduleItem.typeCalendar, refresh),
+      _interactor().loadScheduleItems(courseId, ScheduleItem.typeAssignment, refresh),
+    ]);
+
+    // Potentially heavy list operations going on here, so we'll use a background isolate
+    return compute(processSummaryItems, Tuple2(results, studentId));
+  }
+
+  @visibleForTesting
+  static List<ScheduleItem> processSummaryItems(Tuple2<List<List<ScheduleItem>>, String> input) {
+    var results = input.item1;
+    var studentId = input.item2;
+
+    // Flat map to a single list
+    List<ScheduleItem> items = results.expand((it) => it).toList();
+
+    /* For assignments with one or more overrides, the API will return multiple items with the same ID - one with the
+    base dates and one for each override with the override dates. If one of the overrides applies to the current student,
+    we only want to keep that one. If none of the overrides apply, we only want to keep the item with the base dates. */
+    var overrides = items.where((item) => item.assignmentOverrides != null).toList();
+    overrides.forEach((item) {
+      if (item.assignmentOverrides.any((it) => it.studentIds.contains(studentId))) {
+        // This item applies to the current student. Remove all other items that have the same ID.
+        items.retainWhere((it) => it == item || it.id != item.id);
+      } else {
+        // This item doesn't apply to the current student. Remove it from the list.
+        items.remove(item);
+      }
+    });
+
+    // Sort by ascending date, using a future date as a fallback so that undated items appear at the end
+    // If dates match (which will be the case for undated items), then sort by title
+    return items.sortBy([
+      (it) => it.startAt ?? it.allDayDate,
+      (it) => it.title,
+    ]);
   }
 
   CourseDetailsInteractor _interactor() => locator<CourseDetailsInteractor>();

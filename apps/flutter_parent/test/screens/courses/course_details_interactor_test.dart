@@ -13,6 +13,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:flutter_parent/network/api/assignment_api.dart';
+import 'package:flutter_parent/network/api/calendar_events_api.dart';
 import 'package:flutter_parent/network/api/course_api.dart';
 import 'package:flutter_parent/network/api/enrollments_api.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_interactor.dart';
@@ -29,11 +30,13 @@ void main() {
   final _MockCourseApi courseApi = _MockCourseApi();
   final _MockAssignmentApi assignmentApi = _MockAssignmentApi();
   final _MockEnrollmentApi enrollmentApi = _MockEnrollmentApi();
+  final _MockCalendarApi calendarApi = _MockCalendarApi();
 
   setupTestLocator((locator) {
     locator.registerLazySingleton<CourseApi>(() => courseApi);
     locator.registerLazySingleton<AssignmentApi>(() => assignmentApi);
     locator.registerLazySingleton<EnrollmentsApi>(() => enrollmentApi);
+    locator.registerLazySingleton<CalendarEventsApi>(() => calendarApi);
   });
 
   test('load course calls the api', () async {
@@ -62,7 +65,24 @@ void main() {
     verify(enrollmentApi.getEnrollmentsByGradingPeriod(courseId, studentId, gradingPeriodId, forceRefresh: true))
         .called(1);
   });
+
+  test('load schedule items calls the API', () async {
+    CourseDetailsInteractor().loadScheduleItems('123', 'type', true);
+
+    verify(
+      calendarApi.getAllCalendarEvents(
+        allEvents: true,
+        type: 'type',
+        startDate: null,
+        endDate: null,
+        contexts: ['course_123'],
+        forceRefresh: true,
+      ),
+    );
+  });
 }
+
+class _MockCalendarApi extends Mock implements CalendarEventsApi {}
 
 class _MockCourseApi extends Mock implements CourseApi {}
 
