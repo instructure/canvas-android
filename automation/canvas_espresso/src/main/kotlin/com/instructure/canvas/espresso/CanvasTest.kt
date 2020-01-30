@@ -60,10 +60,13 @@ abstract class CanvasTest : InstructureTest(BuildConfig.GLOBAL_DITTO_MODE) {
         enableAndConfigureAccessibilityChecks()
         super.preLaunchSetup()
 
-        // Let's set ourselves up to log information about our retries.
-        ScreenshotTestRule.registerRetryHandler( handler = { error, testMethod, testClass ->
+        // Let's set ourselves up to log information about our retries and failures.
+        ScreenshotTestRule.registerFailureHandler( handler = { error, testMethod, testClass, disposition ->
 
-            Log.d("TEST RETRY", "testMethod: $testMethod, error=$error, stacktrace=${error.stackTrace.joinToString("\n")} cause=${error.cause}")
+            if(disposition == "retry") {
+                Log.d("TEST RETRY", "testMethod: $testMethod, error=$error, stacktrace=${error.stackTrace.joinToString("\n")} cause=${error.cause}")
+            }
+
             // Grab the Splunk-mobile token from Bitrise
             val splunkToken = InstrumentationRegistry.getArguments().getString("SPLUNK_MOBILE_TOKEN")
 
@@ -79,12 +82,15 @@ abstract class CanvasTest : InstructureTest(BuildConfig.GLOBAL_DITTO_MODE) {
                 eventObject.put("workflow", bitriseWorkflow)
                 eventObject.put("branch", bitriseBranch)
                 eventObject.put("bitriseApp", bitriseApp)
-                eventObject.put("status", "retry")
+                eventObject.put("status", disposition)
                 eventObject.put("testName", testMethod)
                 eventObject.put("testClass", testClass)
                 eventObject.put("stackTrace", error.stackTrace.take(15).joinToString(", "))
-                eventObject.put("message", error.toString())
                 eventObject.put("osVersion", Build.VERSION.SDK_INT.toString())
+                // Limit our error message to 4096 chars; they can be unreasonably long (e.g., 137K!) when
+                // they contain a view hierarchy, and there is typically not much useful info after the
+                // first few lines.
+                eventObject.put("message", error.toString().take(4096))
 
                 val payloadObject = JSONObject()
                 payloadObject.put("sourcetype", "mobile-android-qa-testresult")
