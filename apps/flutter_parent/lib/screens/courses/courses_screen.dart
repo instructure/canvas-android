@@ -136,7 +136,7 @@ class _CoursesScreenState extends State<CoursesScreen> {
     return Text(
       text,
       style: TextStyle(
-        color: Theme.of(context).primaryColor,
+        color: Theme.of(context).accentColor,
         fontSize: 16,
         fontWeight: FontWeight.w500,
       ),

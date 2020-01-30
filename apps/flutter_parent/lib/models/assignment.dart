@@ -179,6 +179,10 @@ abstract class Assignment implements Built<Assignment, AssignmentBuilder> {
     final isPastDue = dueAt?.isBefore(DateTime.now()) == true;
     return isPastDue && (submission == null || (submission.attempt == 0 && submission.grade == null));
   }
+
+  bool get isDiscussion => submissionTypes.contains(SubmissionTypes.discussionTopic);
+
+  bool get isQuiz => submissionTypes.contains(SubmissionTypes.onlineQuiz);
 }
 
 @BuiltValueEnum(wireName: 'grading_type')

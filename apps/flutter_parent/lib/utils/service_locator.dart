@@ -16,6 +16,7 @@ import 'package:flutter_parent/network/api/alert_api.dart';
 import 'package:flutter_parent/network/api/announcement_api.dart';
 import 'package:flutter_parent/network/api/assignment_api.dart';
 import 'package:flutter_parent/network/api/auth_api.dart';
+import 'package:flutter_parent/network/api/calendar_events_api.dart';
 import 'package:flutter_parent/network/api/course_api.dart';
 import 'package:flutter_parent/network/api/enrollments_api.dart';
 import 'package:flutter_parent/network/api/error_report_api.dart';
@@ -59,6 +60,7 @@ void setupLocator() {
   locator.registerLazySingleton<AnnouncementApi>(() => AnnouncementApi());
   locator.registerLazySingleton<AssignmentApi>(() => AssignmentApi());
   locator.registerLazySingleton<AuthApi>(() => AuthApi());
+  locator.registerLazySingleton<CalendarEventsApi>(() => CalendarEventsApi());
   locator.registerLazySingleton<CourseApi>(() => CourseApi());
   locator.registerLazySingleton<EnrollmentsApi>(() => EnrollmentsApi());
   locator.registerLazySingleton<ErrorReportApi>(() => ErrorReportApi());

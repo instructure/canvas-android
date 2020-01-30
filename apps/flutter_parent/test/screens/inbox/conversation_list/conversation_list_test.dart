@@ -84,8 +84,7 @@ void main() {
     reset(interactor);
     when(interactor.getConversations(forceRefresh: anyNamed('forceRefresh'))).thenAnswer((_) => Future.value([]));
     await tester.tap(find.text(l10n.retry));
-    var count = await tester.pumpAndSettle(Duration(seconds: 1));
-    print(count);
+    await tester.pumpAndSettle(Duration(seconds: 1));
 
     // Should no longer show error state
     expect(find.text('There was an error loading your inbox messages.'), findsNothing);

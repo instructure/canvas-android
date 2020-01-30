@@ -34,6 +34,7 @@ import 'package:flutter_parent/screens/manage_students/manage_students_interacto
 import 'package:flutter_parent/screens/manage_students/manage_students_screen.dart';
 import 'package:flutter_parent/screens/settings/settings_interactor.dart';
 import 'package:flutter_parent/screens/settings/settings_screen.dart';
+import 'package:flutter_parent/utils/common_widgets/badges.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
@@ -56,7 +57,7 @@ void main() {
     _locator.registerFactory<SettingsInteractor>(() => SettingsInteractor());
     _locator.registerFactory<ManageStudentsInteractor>(() => MockManageStudentsInteractor());
     _locator.registerLazySingleton<AlertsApi>(() => alertsApi ?? AlertsApiMock());
-    _locator.registerLazySingleton<InboxApi>(() => inboxApi);
+    _locator.registerLazySingleton<InboxApi>(() => inboxApi ?? MockInboxApi());
     _locator.registerLazySingleton<InboxCountNotifier>(() => InboxCountNotifier());
     _locator.registerLazySingleton<AlertCountNotifier>(() => AlertCountNotifier());
     _locator.registerLazySingleton<QuickNav>(() => QuickNav());
@@ -391,6 +392,36 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('78987'), findsOneWidget);
+  });
+
+  testWidgetsWithAccessibilityChecks('Displays Inbox count on app bar', (tester) async {
+    final inboxCount = '12';
+
+    final inboxApi = MockInboxApi();
+    var interactor = MockInteractor();
+    when(inboxApi.getUnreadCount())
+        .thenAnswer((_) => Future.value(UnreadCount((b) => b..count = JsonObject(inboxCount))));
+    _setupLocator(interactor: interactor, inboxApi: inboxApi);
+
+    await tester.pumpWidget(_testableMaterialWidget());
+    await tester.pumpAndSettle();
+
+    expect(find.descendant(of: find.byType(AppBar), matching: find.byKey(NumberBadge.backgroundKey)), findsOneWidget);
+  });
+
+  testWidgetsWithAccessibilityChecks('Does not display Inbox count on app bar when 0', (tester) async {
+    final inboxCount = '0';
+
+    final inboxApi = MockInboxApi();
+    var interactor = MockInteractor();
+    when(inboxApi.getUnreadCount())
+        .thenAnswer((_) => Future.value(UnreadCount((b) => b..count = JsonObject(inboxCount))));
+    _setupLocator(interactor: interactor, inboxApi: inboxApi);
+
+    await tester.pumpWidget(_testableMaterialWidget());
+    await tester.pumpAndSettle();
+
+    expect(find.descendant(of: find.byType(AppBar), matching: find.byKey(NumberBadge.backgroundKey)), findsNothing);
   });
 
   group('alert badge', () {

@@ -44,7 +44,7 @@ abstract class Announcement implements Built<Announcement, AnnouncementBuilder> 
 
   BuiltList<RemoteFile> get attachments;
 
-  static void _intializeBuilder(AnnouncementBuilder b) => b
+  static void _initializeBuilder(AnnouncementBuilder b) => b
     ..id = ''
     ..title = ''
     ..message = ''

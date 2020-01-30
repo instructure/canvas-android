@@ -15,15 +15,18 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:flutter_parent/models/assignment.dart';
 import 'package:flutter_parent/models/assignment_group.dart';
+import 'package:flutter_parent/models/assignment_override.dart';
 import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/models/enrollment.dart';
 import 'package:flutter_parent/models/grading_period.dart';
 import 'package:flutter_parent/models/grading_period_response.dart';
+import 'package:flutter_parent/models/schedule_item.dart';
 import 'package:flutter_parent/models/submission.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_interactor.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_model.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
+import 'package:tuple/tuple.dart';
 
 import '../../utils/test_app.dart';
 
@@ -199,6 +202,149 @@ void main() {
       verify(interactor.loadAssignmentGroups(_courseId, _studentId, gradingPeriod.id, forceRefresh: false)).called(1);
       verify(interactor.loadEnrollmentsForGradingPeriod(_courseId, _studentId, gradingPeriod.id, forceRefresh: false))
           .called(1);
+    });
+  });
+
+  group('Load summary items', () {
+    test('loadSummary calls interactor with correct parameters', () async {
+      // Mock the data
+      final itemA = ScheduleItem((s) => s..title = 'A');
+      final itemB = ScheduleItem((s) => s..title = 'B');
+
+      when(interactor.loadScheduleItems(_courseId, ScheduleItem.typeCalendar, any)).thenAnswer((_) async => [itemA]);
+      when(interactor.loadScheduleItems(_courseId, ScheduleItem.typeAssignment, any)).thenAnswer((_) async => [itemB]);
+
+      // Use the model
+      final model = CourseDetailsModel.withCourse(_studentId, '', _course);
+
+      final expected = [itemA, itemB];
+      final actual = await model.loadSummary(refresh: true);
+
+      expect(actual, expected);
+      verify(interactor.loadScheduleItems(_courseId, ScheduleItem.typeCalendar, true));
+      verify(interactor.loadScheduleItems(_courseId, ScheduleItem.typeAssignment, true));
+    });
+  });
+
+  group('Process summary items', () {
+    test('processSummaryItems sorts by date', () {
+      List<ScheduleItem> sourceItems = [
+        ScheduleItem((s) => s..startAt = DateTime.now()),
+        ScheduleItem((s) => s..startAt = DateTime.now().subtract(Duration(days: 2))),
+        ScheduleItem((s) => s..startAt = DateTime.now().subtract(Duration(days: 1))),
+        ScheduleItem((s) => s..startAt = DateTime.now().subtract(Duration(days: 3))),
+      ];
+
+      var expected = [sourceItems[3], sourceItems[1], sourceItems[2], sourceItems[0]];
+      var actual = CourseDetailsModel.processSummaryItems(Tuple2([sourceItems], ''));
+
+      expect(actual, expected);
+    });
+
+    test('processSummaryItems sorts by title if items are undated', () {
+      List<ScheduleItem> sourceItems = [
+        ScheduleItem((s) => s..title = 'D'),
+        ScheduleItem((s) => s..title = 'B'),
+        ScheduleItem((s) => s..title = 'C'),
+        ScheduleItem((s) => s..title = 'A'),
+      ];
+
+      var expected = [sourceItems[3], sourceItems[1], sourceItems[2], sourceItems[0]];
+      var actual = CourseDetailsModel.processSummaryItems(Tuple2([sourceItems], ''));
+
+      expect(actual, expected);
+    });
+
+    test('processSummaryItems places undated items at end', () {
+      List<ScheduleItem> sourceItems = [
+        ScheduleItem((s) => s..title = 'C'),
+        ScheduleItem((s) => s
+          ..title = 'B'
+          ..startAt = DateTime.now()),
+        ScheduleItem((s) => s..title = 'A'),
+        ScheduleItem((s) => s
+          ..title = 'D'
+          ..startAt = DateTime.now().subtract(Duration(days: 1))),
+      ];
+
+      var expected = [sourceItems[3], sourceItems[1], sourceItems[2], sourceItems[0]];
+      var actual = CourseDetailsModel.processSummaryItems(Tuple2([sourceItems], ''));
+
+      expect(actual, expected);
+    });
+
+    test('processSummaryItems combines multiple sources', () {
+      List<ScheduleItem> sourceItems1 = [
+        ScheduleItem((s) => s..title = 'A'),
+        ScheduleItem((s) => s..title = 'B'),
+      ];
+      List<ScheduleItem> sourceItems2 = [
+        ScheduleItem((s) => s..title = 'C'),
+        ScheduleItem((s) => s..title = 'D'),
+      ];
+
+      var expected = [sourceItems1[0], sourceItems1[1], sourceItems2[0], sourceItems2[1]];
+      var actual = CourseDetailsModel.processSummaryItems(Tuple2([sourceItems1, sourceItems2], ''));
+
+      expect(actual, expected);
+    });
+
+    test('processSummaryItems keeps duplicate item with override that matches student id', () {
+      String studentId = 'student1';
+      List<ScheduleItem> sourceItems = [
+        ScheduleItem((s) => s
+          ..id = 'assignment_a'
+          ..title = 'A'),
+        ScheduleItem((s) => s
+          ..id = 'assignment_a'
+          ..title = 'A'
+          ..assignmentOverrides = ListBuilder([
+            AssignmentOverride((o) => o..studentIds = ListBuilder([studentId]))
+          ])),
+        ScheduleItem((s) => s
+          ..id = 'assignment_a'
+          ..title = 'A'
+          ..assignmentOverrides = ListBuilder([
+            AssignmentOverride((o) => o..studentIds = ListBuilder(['student2']))
+          ])),
+        ScheduleItem((s) => s
+          ..id = 'assignment_b'
+          ..title = 'B'),
+      ];
+
+      var expected = [sourceItems[1], sourceItems[3]];
+      var actual = CourseDetailsModel.processSummaryItems(Tuple2([sourceItems], studentId));
+
+      expect(actual, expected);
+    });
+
+    test('processSummaryItems only keeps base item if no overrides match the student id', () {
+      String studentId = 'student1';
+      List<ScheduleItem> sourceItems = [
+        ScheduleItem((s) => s
+          ..id = 'assignment_a'
+          ..title = 'A'),
+        ScheduleItem((s) => s
+          ..id = 'assignment_a'
+          ..title = 'A'
+          ..assignmentOverrides = ListBuilder([
+            AssignmentOverride((o) => o..studentIds = ListBuilder(['student2']))
+          ])),
+        ScheduleItem((s) => s
+          ..id = 'assignment_a'
+          ..title = 'A'
+          ..assignmentOverrides = ListBuilder([
+            AssignmentOverride((o) => o..studentIds = ListBuilder(['student3']))
+          ])),
+        ScheduleItem((s) => s
+          ..id = 'assignment_b'
+          ..title = 'B'),
+      ];
+
+      var expected = [sourceItems[0], sourceItems[3]];
+      var actual = CourseDetailsModel.processSummaryItems(Tuple2([sourceItems], studentId));
+
+      expect(actual, expected);
     });
   });
 }

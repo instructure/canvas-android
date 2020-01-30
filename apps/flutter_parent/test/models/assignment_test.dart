@@ -178,6 +178,38 @@ void main() {
       expect(assignment.isFullyLocked, false);
     });
   });
+
+  group('isDiscussion', () {
+    test('isDiscussion returns true when submission types contains discussion_topic', () {
+      final assignment = _mockAssignment().rebuild(
+        (b) => b..submissionTypes = ListBuilder([SubmissionTypes.discussionTopic]),
+      );
+
+      expect(assignment.isDiscussion, isTrue);
+    });
+
+    test('isDiscussion returns false when submission types does not contain discussion_topic', () {
+      final assignment = _mockAssignment().rebuild((b) => b..submissionTypes = ListBuilder([]));
+
+      expect(assignment.isDiscussion, isFalse);
+    });
+  });
+
+  group('isQuiz', () {
+    test('isQuiz returns true when submission types contains online_quiz', () {
+      final assignment = _mockAssignment().rebuild(
+        (b) => b..submissionTypes = ListBuilder([SubmissionTypes.onlineQuiz]),
+      );
+
+      expect(assignment.isQuiz, isTrue);
+    });
+
+    test('isQuiz returns false when submission types does not contain online_quiz', () {
+      final assignment = _mockAssignment().rebuild((b) => b..submissionTypes = ListBuilder([]));
+
+      expect(assignment.isQuiz, isFalse);
+    });
+  });
 }
 
 Assignment _mockAssignment({

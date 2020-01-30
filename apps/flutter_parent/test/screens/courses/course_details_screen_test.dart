@@ -169,7 +169,10 @@ void main() {
   testWidgetsWithAccessibilityChecks('Clicking summary tab shows the summary screen', (tester) async {
     _setupLocator();
 
-    await tester.pumpWidget(TestApp(CourseDetailsScreen(studentId, '', courseId)));
+    await tester.pumpWidget(TestApp(
+      CourseDetailsScreen(studentId, '', courseId),
+      highContrast: true,
+    ));
     await tester.pump(); // Widget creation
     await tester.pump(); // Future resolved
 
