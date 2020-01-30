@@ -79,7 +79,7 @@ do
 done < "$reportFile"
 
 # After all tests have been processed, Emit the success report
-echo -e "\nSuccess payload: $successReport\n"
+#echo -e "\nSuccess payload: $successReport\n"
 curl -k "https://http-inputs-inst.splunkcloud.com:443/services/collector" -H "Authorization: Splunk $SPLUNK_MOBILE_TOKEN" -d "$successReport"
 
 # Globals for parsing time/cost info
@@ -88,7 +88,7 @@ hours=0
 minutes=0
 
 # Process the cost report (CostReport.txt)
-# Sample:
+# Sample file:
 #   CostReport
 #     Virtual devices
 #       $1.15 for 1h 9m
