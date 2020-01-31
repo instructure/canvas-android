@@ -19,6 +19,7 @@ package com.instructure.student.ui.pages
 import android.os.SystemClock.sleep
 import android.view.View
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.swipeDown
 import androidx.test.espresso.assertion.ViewAssertions.matches
@@ -36,11 +37,8 @@ import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.matchers.WaitForViewMatcher.waitForView
 import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.page.withText
-import com.instructure.espresso.swipeDown
 import com.instructure.espresso.typeText
 import com.instructure.student.R
-import com.schibsted.spain.barista.internal.assertAny
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
 import java.util.concurrent.TimeUnit
@@ -127,7 +125,7 @@ class CourseGradesPage : BasePage(R.id.courseGradesPage) {
         do {
             try {
                 gradeValue.check(matches(matcher))
-            } catch(e: Exception) {
+            } catch(e: NoMatchingViewException) {
                 if(currentAttempt == maxApiAttempts) {
                     break
                 } else {
