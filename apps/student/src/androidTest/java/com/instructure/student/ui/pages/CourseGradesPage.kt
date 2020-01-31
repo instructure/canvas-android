@@ -117,7 +117,7 @@ class CourseGradesPage : BasePage(R.id.courseGradesPage) {
      *
      * Attempt number 2 at getting the grade e2e test passing consistently.
      *
-     * IF this works, we'll probs want to try ot move it to a bit of a more generic solution that can be re-used.
+     * IF this works, we'll probs want to try to move it to a bit of a more generic solution that can be re-used.
      */
     fun refreshUntilAssertTotalGrade(matcher: Matcher<View>) {
         val waitTime = TimeUnit.SECONDS.toMillis(10)
