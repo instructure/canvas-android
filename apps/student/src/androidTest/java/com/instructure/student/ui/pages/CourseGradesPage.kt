@@ -19,6 +19,7 @@ package com.instructure.student.ui.pages
 import android.os.SystemClock.sleep
 import android.view.View
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.swipeDown
 import androidx.test.espresso.assertion.ViewAssertions.matches
@@ -36,12 +37,11 @@ import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.matchers.WaitForViewMatcher.waitForView
 import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.page.withText
-import com.instructure.espresso.swipeDown
 import com.instructure.espresso.typeText
 import com.instructure.student.R
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
+import java.util.concurrent.TimeUnit
 
 class CourseGradesPage : BasePage(R.id.courseGradesPage) {
     private val gradeLabel by WaitForViewWithId(R.id.txtOverallGradeLabel)
@@ -108,6 +108,33 @@ class CourseGradesPage : BasePage(R.id.courseGradesPage) {
     fun assertGradeDisplayed(itemMatcher: Matcher<View>, gradeMatcher: Matcher<View>) {
         scrollToItem(itemMatcher)
         onView(allOf(withId(R.id.points), hasSibling(itemMatcher), gradeMatcher)).assertDisplayed()
+    }
+
+    /**
+     * Round 2, FIGHT!
+     *
+     * Attempt number 2 at getting the grade e2e test passing consistently.
+     *
+     * IF this works, we'll probs want to try to move it to a bit of a more generic solution that can be re-used.
+     */
+    fun refreshUntilAssertTotalGrade(matcher: Matcher<View>) {
+        val waitTime = TimeUnit.SECONDS.toMillis(10)
+        val endTime = System.currentTimeMillis() + waitTime
+        val maxApiAttempts = 5
+        var currentAttempt = 1
+        do {
+            try {
+                gradeValue.check(matches(matcher))
+            } catch(e: NoMatchingViewException) {
+                if(currentAttempt == maxApiAttempts) {
+                    break
+                } else {
+                    refresh()
+                    currentAttempt++
+                }
+            }
+        } while(System.currentTimeMillis() < endTime)
+        gradeValue.check(matches(matcher))
     }
 
 }
