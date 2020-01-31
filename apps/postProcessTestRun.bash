@@ -76,11 +76,16 @@ do
             successReport="$successReport $payload"
         fi
     fi
-done < "$reportFile"
 
-# After all tests have been processed, Emit the success report
-#echo -e "\nSuccess payload: $successReport\n"
-curl -k "https://http-inputs-inst.splunkcloud.com:443/services/collector" -H "Authorization: Splunk $SPLUNK_MOBILE_TOKEN" -d "$successReport"
+    # Emit success report after each testsuite/device.  For multi-device runs, the report gets
+    # too large to emit if you aggregate the results of all testsuites.
+    if [[ $line =~ "</testsuite>" ]]
+    then
+        #echo -e "\nSuccess payload: $successReport\n"
+        curl -k "https://http-inputs-inst.splunkcloud.com:443/services/collector" -H "Authorization: Splunk $SPLUNK_MOBILE_TOKEN" -d "$successReport"
+        successReport="" # Reset the successReport after emitting it
+    fi
+done < "$reportFile"
 
 # Globals for parsing time/cost info
 cost=0
