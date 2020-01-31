@@ -40,8 +40,10 @@ import com.instructure.espresso.page.withText
 import com.instructure.espresso.swipeDown
 import com.instructure.espresso.typeText
 import com.instructure.student.R
+import com.schibsted.spain.barista.internal.assertAny
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
+import java.util.concurrent.TimeUnit
 
 class CourseGradesPage : BasePage(R.id.courseGradesPage) {
     private val gradeLabel by WaitForViewWithId(R.id.txtOverallGradeLabel)
@@ -108,6 +110,33 @@ class CourseGradesPage : BasePage(R.id.courseGradesPage) {
     fun assertGradeDisplayed(itemMatcher: Matcher<View>, gradeMatcher: Matcher<View>) {
         scrollToItem(itemMatcher)
         onView(allOf(withId(R.id.points), hasSibling(itemMatcher), gradeMatcher)).assertDisplayed()
+    }
+
+    /**
+     * Round 2, FIGHT!
+     *
+     * Attempt number 2 at getting the grade e2e test passing consistently.
+     *
+     * IF this works, we'll probs want to try ot move it to a bit of a more generic solution that can be re-used.
+     */
+    fun refreshUntilAssertTotalGrade(matcher: Matcher<View>) {
+        val waitTime = TimeUnit.SECONDS.toMillis(10)
+        val endTime = System.currentTimeMillis() + waitTime
+        val maxApiAttempts = 5
+        var currentAttempt = 1
+        do {
+            try {
+                gradeValue.check(matches(matcher))
+            } catch(e: Exception) {
+                if(currentAttempt == maxApiAttempts) {
+                    break
+                } else {
+                    refresh()
+                    currentAttempt++
+                }
+            }
+        } while(System.currentTimeMillis() < endTime)
+        gradeValue.check(matches(matcher))
     }
 
 }
