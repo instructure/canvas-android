@@ -23,6 +23,8 @@ import 'package:flutter_parent/screens/courses/courses_interactor.dart';
 import 'package:flutter_parent/screens/courses/courses_screen.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_interactor.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_screen.dart';
+import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
+import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
@@ -32,6 +34,8 @@ import '../../utils/accessibility_utils.dart';
 import '../../utils/test_app.dart';
 
 void main() {
+  AppLocalizations l10n = AppLocalizations();
+
   _setupLocator(_MockCoursesInteractor mockInteractor) {
     final _locator = GetIt.instance;
     _locator.reset();
@@ -85,8 +89,50 @@ void main() {
     await tester.pumpWidget(_testableMaterialWidget(CoursesScreen(student)));
     await tester.pumpAndSettle();
 
-    expect(find.text(AppLocalizations().noCoursesTitle), findsOneWidget);
-    expect(find.text(AppLocalizations().noCoursesMessage), findsOneWidget);
+    expect(find.text(l10n.noCoursesTitle), findsOneWidget);
+    expect(find.text(l10n.noCoursesMessage), findsOneWidget);
+  });
+
+  testWidgetsWithAccessibilityChecks('Shows error state and performs refresh', (tester) async {
+    var student = _mockStudent('1');
+    var interactor = _MockCoursesInteractor(courses: []);
+
+    _setupLocator(interactor);
+
+    interactor.error = true;
+
+    await tester.pumpWidget(_testableMaterialWidget(CoursesScreen(student)));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(ErrorPandaWidget), findsOneWidget);
+    expect(find.text(l10n.errorLoadingCourses), findsOneWidget);
+
+    interactor.error = false;
+    await tester.tap(find.text(l10n.retry));
+    await tester.pumpAndSettle();
+
+    expect(find.text(l10n.noCoursesTitle), findsOneWidget);
+    expect(find.text(l10n.noCoursesMessage), findsOneWidget);
+  });
+
+  testWidgetsWithAccessibilityChecks('Pulls to refresh', (tester) async {
+    var student = _mockStudent('1');
+    var courses = generateCoursesForStudent(student.id);
+    var interactor = _MockCoursesInteractor(courses: []);
+
+    _setupLocator(interactor);
+
+    await tester.pumpWidget(_testableMaterialWidget(CoursesScreen(student)));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(EmptyPandaWidget), findsOneWidget);
+
+    interactor.courses = courses;
+    await tester.drag(find.byType(RefreshIndicator), Offset(0, 300));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(EmptyPandaWidget), findsNothing);
+    expect(find.byType(ListTile), findsNWidgets(courses.length));
   });
 
   testWidgetsWithAccessibilityChecks('shows no grade if there is no current grade', (tester) async {
@@ -98,7 +144,7 @@ void main() {
     await tester.pumpWidget(_testableMaterialWidget(CoursesScreen(student)));
     await tester.pumpAndSettle();
 
-    final gradeWidget = find.text(AppLocalizations().noGrade);
+    final gradeWidget = find.text(l10n.noGrade);
     expect(gradeWidget, findsNWidgets(courses.length));
   });
 
@@ -173,10 +219,15 @@ void main() {
 class _MockCoursesInteractor extends CoursesInteractor {
   List<Course> courses;
 
+  bool error = false;
+
   _MockCoursesInteractor({this.courses});
 
   @override
-  Future<List<Course>> getCourses() async => courses ?? ListBuilder<Course>([_mockCourse('1')]).build().toList();
+  Future<List<Course>> getCourses(String studentId, bool isRefresh) async {
+    if (error) throw '';
+    return courses ?? [_mockCourse('1')];
+  }
 }
 
 class _MockCourseDetailsInteractor extends CourseDetailsInteractor {}
