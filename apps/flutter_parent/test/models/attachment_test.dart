@@ -12,7 +12,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_parent/models/attachment.dart';
 import 'package:flutter_parent/screens/inbox/attachment_utils/attachment_extensions.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
