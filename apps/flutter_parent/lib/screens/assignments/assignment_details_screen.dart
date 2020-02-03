@@ -17,7 +17,6 @@ import 'package:flutter_parent/models/assignment.dart';
 import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/screens/assignments/assignment_details_interactor.dart';
 import 'package:flutter_parent/screens/assignments/grade_cell.dart';
-import 'package:flutter_parent/utils/web_view_utils.dart';
 import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
@@ -25,6 +24,7 @@ import 'package:flutter_parent/utils/design/canvas_icons_solid.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
+import 'package:flutter_parent/utils/web_view_utils.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -253,9 +253,8 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
     String message = null;
     if (assignment.lockInfo.hasModuleName) {
       message = L10n(context).assignmentLockedModule(assignment.lockInfo.contextModule.name);
-    } else if (assignment.unlockAt != null) {
-      message = L10n(context).assignmentLockedDate(_dateFormat(assignment.unlockAt));
-    } else {
+    } else if (assignment.isFullyLocked ||
+        (assignment.lockExplanation?.isNotEmpty == true && assignment.lockAt?.isBefore(DateTime.now()) == true)) {
       message = assignment.lockExplanation;
     }
 

@@ -553,13 +553,6 @@ class AppLocalizations {
         desc: 'The locked description when an assignment is locked by a module',
       );
 
-  String assignmentLockedDate(String date) => Intl.message(
-        'This assignment is locked until $date.',
-        name: 'assignmentLockedDate',
-        args: [date],
-        desc: 'The locked description when an assignment is locked until a future date',
-      );
-
   String get assignmentRemindMeLabel => Intl.message('Remind Me', desc: 'Label for the row to set reminders');
 
   String get assignmentRemindMeSwitch =>

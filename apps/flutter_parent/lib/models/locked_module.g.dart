@@ -47,7 +47,7 @@ class _$LockedModuleSerializer implements StructuredSerializer<LockedModule> {
       result.add(null);
     } else {
       result.add(serializers.serialize(object.unlockAt,
-          specifiedType: const FullType(String)));
+          specifiedType: const FullType(DateTime)));
     }
     return result;
   }
@@ -82,7 +82,7 @@ class _$LockedModuleSerializer implements StructuredSerializer<LockedModule> {
           break;
         case 'unlock_at':
           result.unlockAt = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(DateTime)) as DateTime;
           break;
         case 'require_sequential_progress':
           result.isRequireSequentialProgress = serializers.deserialize(value,
@@ -105,7 +105,7 @@ class _$LockedModule extends LockedModule {
   @override
   final String name;
   @override
-  final String unlockAt;
+  final DateTime unlockAt;
   @override
   final bool isRequireSequentialProgress;
 
@@ -196,9 +196,9 @@ class LockedModuleBuilder
   String get name => _$this._name;
   set name(String name) => _$this._name = name;
 
-  String _unlockAt;
-  String get unlockAt => _$this._unlockAt;
-  set unlockAt(String unlockAt) => _$this._unlockAt = unlockAt;
+  DateTime _unlockAt;
+  DateTime get unlockAt => _$this._unlockAt;
+  set unlockAt(DateTime unlockAt) => _$this._unlockAt = unlockAt;
 
   bool _isRequireSequentialProgress;
   bool get isRequireSequentialProgress => _$this._isRequireSequentialProgress;
