@@ -20,6 +20,7 @@ import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/parent_app.dart';
 import 'package:flutter_parent/utils/crash_utils.dart';
 import 'package:flutter_parent/utils/design/theme_prefs.dart';
+import 'package:flutter_parent/utils/old_app_migration.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 void main() {
@@ -33,6 +34,8 @@ void main() {
       FlutterDownloader.initialize(),
     ]);
     setupLocator();
+
+    await OldAppMigration.performMigrationIfNecessary(); // ApiPrefs must be initialized before calling this
 
     runApp(ParentApp());
   }, onError: (error, stacktrace) => CrashUtils.reportCrash(error, stacktrace));

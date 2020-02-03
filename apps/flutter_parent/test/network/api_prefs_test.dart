@@ -14,7 +14,7 @@
 
 import 'dart:ui';
 
-import 'package:flutter_parent/models/canvas_token.dart';
+import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/models/mobile_verify_result.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -39,68 +39,102 @@ void main() {
     expect(ApiPrefs.isLoggedIn(), false);
   });
 
-  test('is logged in returns false with no domain', () async {
-    await setupPlatformChannels(config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_ACCESS_TOKEN: 'token'}));
+  test('is logged in returns false with no login uuid', () async {
+    var login = Login((b) => b
+      ..domain = 'domain'
+      ..accessToken = 'token'
+      ..user = CanvasModelTestUtils.mockUser().toBuilder());
+    await setupPlatformChannels(config: PlatformConfig());
+    await ApiPrefs.addLogin(login);
+
     expect(ApiPrefs.isLoggedIn(), false);
   });
 
-  test('is logged in returns true with a token and domain', () async {
-    await setupPlatformChannels(
-      config: PlatformConfig(mockPrefs: {
-        ApiPrefs.KEY_ACCESS_TOKEN: 'token',
-        ApiPrefs.KEY_DOMAIN: 'domain',
-      }),
-    );
+  test('is logged in returns false with no valid uuid but no matching login', () async {
+    var login = Login((b) => b
+      ..uuid = 'uuid'
+      ..domain = 'domain'
+      ..accessToken = 'token'
+      ..user = CanvasModelTestUtils.mockUser().toBuilder());
+    await setupPlatformChannels(config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: 'other_uuid'}));
+    await ApiPrefs.addLogin(login);
+
+    expect(ApiPrefs.isLoggedIn(), false);
+  });
+
+  test('is logged in returns true with a valid uuid and matching login', () async {
+    var login = Login((b) => b
+      ..domain = 'domain'
+      ..accessToken = 'token'
+      ..user = CanvasModelTestUtils.mockUser().toBuilder());
+    await setupPlatformChannels(config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
+    await ApiPrefs.addLogin(login);
 
     expect(ApiPrefs.isLoggedIn(), true);
   });
 
   test('getApiUrl returns the domain with the api path added', () async {
-    await setupPlatformChannels(config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_DOMAIN: 'domain'}));
+    var login = Login((b) => b
+      ..domain = 'domain'
+      ..user = CanvasModelTestUtils.mockUser().toBuilder());
+    await setupPlatformChannels(config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
+    await ApiPrefs.addLogin(login);
+
     expect(ApiPrefs.getApiUrl(), 'domain/api/v1/');
   });
 
-  test('perform login updates information', () async {
+  test('switchLogins updates current login data', () async {
     await setupPlatformChannels();
 
-    final verifyResult = _mockVerifyResult('domain');
-    final tokens = CanvasToken((b) => b
-      ..user = CanvasModelTestUtils.mockUser().toBuilder()
+    Login user = Login((b) => b
       ..accessToken = 'token'
-      ..refreshToken = 'refresh');
+      ..refreshToken = 'refresh'
+      ..domain = 'domain'
+      ..clientId = 'clientId'
+      ..clientSecret = 'clientSecret'
+      ..user = CanvasModelTestUtils.mockUser().toBuilder());
 
-    await ApiPrefs.updateLoginInfo(tokens, verifyResult);
+    ApiPrefs.switchLogins(user);
 
-    expect(ApiPrefs.getAuthToken(), tokens.accessToken);
-    expect(ApiPrefs.getRefreshToken(), tokens.refreshToken);
-    expect(ApiPrefs.getDomain(), verifyResult.baseUrl);
-    expect(ApiPrefs.getClientId(), verifyResult.clientId);
-    expect(ApiPrefs.getClientSecret(), verifyResult.clientSecret);
-    expect(ApiPrefs.getUser(), tokens.user);
+    expect(ApiPrefs.getAuthToken(), user.accessToken);
+    expect(ApiPrefs.getRefreshToken(), user.refreshToken);
+    expect(ApiPrefs.getDomain(), user.domain);
+    expect(ApiPrefs.getClientId(), user.clientId);
+    expect(ApiPrefs.getClientSecret(), user.clientSecret);
+    expect(ApiPrefs.getUser(), user.user);
   });
 
-  test('perform logout clears out token and domain', () async {
-    await setupPlatformChannels(
-      config: PlatformConfig(mockPrefs: {
-        ApiPrefs.KEY_DOMAIN: 'domain',
-        ApiPrefs.KEY_ACCESS_TOKEN: 'token',
-        ApiPrefs.KEY_REFRESH_TOKEN: 'refresh',
-      }, initSqflite: true),
-    );
+  test('perform logout clears out data', () async {
+    var login = Login((b) => b
+      ..domain = 'domain'
+      ..accessToken = 'accessToken'
+      ..refreshToken = 'refreshToken'
+      ..user = CanvasModelTestUtils.mockUser().toBuilder());
 
-    expect(ApiPrefs.getDomain(), 'domain');
-    expect(ApiPrefs.getAuthToken(), 'token');
-    expect(ApiPrefs.getRefreshToken(), 'refresh');
+    await setupPlatformChannels(
+        config: PlatformConfig(
+      mockPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid},
+      initSqflite: true,
+    ));
+    await ApiPrefs.addLogin(login);
+
+    expect(ApiPrefs.getDomain(), login.domain);
+    expect(ApiPrefs.getAuthToken(), login.accessToken);
+    expect(ApiPrefs.getRefreshToken(), login.refreshToken);
+    expect(ApiPrefs.getCurrentLoginUuid(), login.uuid);
 
     await ApiPrefs.performLogout();
 
     expect(ApiPrefs.getDomain(), null);
     expect(ApiPrefs.getAuthToken(), null);
     expect(ApiPrefs.getRefreshToken(), null);
+    expect(ApiPrefs.getCurrentLoginUuid(), null);
   });
 
   test('setting user updates stored user', () async {
-    await setupPlatformChannels();
+    final login = Login();
+    await setupPlatformChannels(config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
+    await ApiPrefs.addLogin(login);
 
     final user = CanvasModelTestUtils.mockUser();
     await ApiPrefs.setUser(user);
@@ -109,9 +143,12 @@ void main() {
   });
 
   test('setting user updates with new locale rebuilds the app', () async {
-    await setupPlatformChannels();
+    final login = Login();
+    await setupPlatformChannels(config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
 
     expect(ApiPrefs.getUser(), null);
+
+    await ApiPrefs.addLogin(login);
 
     final user = CanvasModelTestUtils.mockUser();
     final app = _MockApp();
@@ -130,7 +167,9 @@ void main() {
   });
 
   test('effectiveLocale returns the users effective locale', () async {
-    await setupPlatformChannels();
+    final login = Login();
+    await setupPlatformChannels(config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
+    await ApiPrefs.addLogin(login);
 
     final user = CanvasModelTestUtils.mockUser();
     await ApiPrefs.setUser(user);
@@ -139,7 +178,9 @@ void main() {
   });
 
   test('effectiveLocale returns the users locale if effective locale is null', () async {
-    await setupPlatformChannels();
+    final login = Login();
+    await setupPlatformChannels(config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
+    await ApiPrefs.addLogin(login);
 
     final user = CanvasModelTestUtils.mockUser().rebuild((b) => b
       ..effectiveLocale = null
@@ -151,7 +192,9 @@ void main() {
   });
 
   test('effectiveLocale returns the users locale if effective locale is null', () async {
-    await setupPlatformChannels();
+    final login = Login();
+    await setupPlatformChannels(config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
+    await ApiPrefs.addLogin(login);
 
     final user = CanvasModelTestUtils.mockUser().rebuild((b) => b..effectiveLocale = 'en-AU-x-unimelb');
 
@@ -175,7 +218,9 @@ void main() {
   });
 
   test('getHeaderMap returns a map with the accept-language from prefs', () async {
-    await setupPlatformChannels();
+    final login = Login();
+    await setupPlatformChannels(config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
+    await ApiPrefs.addLogin(login);
 
     final user = CanvasModelTestUtils.mockUser().rebuild((b) => b..effectiveLocale = 'en-US');
     await ApiPrefs.setUser(user);
@@ -184,7 +229,9 @@ void main() {
   });
 
   test('getHeaderMap returns a map with the accept-language from device', () async {
-    await setupPlatformChannels();
+    final login = Login();
+    await setupPlatformChannels(config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
+    await ApiPrefs.addLogin(login);
 
     final deviceLocale = window.locale;
     final user = CanvasModelTestUtils.mockUser().rebuild((b) => b..effectiveLocale = 'ar');
@@ -195,12 +242,22 @@ void main() {
   });
 
   test('getHeaderMap returns a map with the token from prefs', () async {
-    await setupPlatformChannels(config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_ACCESS_TOKEN: 'token'}));
+    var login = Login((b) => b
+      ..accessToken = 'token'
+      ..user = CanvasModelTestUtils.mockUser().toBuilder());
+    await setupPlatformChannels(config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
+    await ApiPrefs.addLogin(login);
+
     expect(ApiPrefs.getHeaderMap()['Authorization'], 'Bearer token');
   });
 
   test('getHeaderMap returns a map with the token passed in', () async {
-    await setupPlatformChannels(config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_ACCESS_TOKEN: 'token'}));
+    var login = Login((b) => b
+      ..accessToken = 'token'
+      ..user = CanvasModelTestUtils.mockUser().toBuilder());
+    await setupPlatformChannels(config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
+    await ApiPrefs.addLogin(login);
+
     expect(ApiPrefs.getHeaderMap(token: 'other token')['Authorization'], 'Bearer other token');
   });
 
@@ -219,6 +276,13 @@ void main() {
     final map = {'key': 'value'};
 
     expect(ApiPrefs.getHeaderMap(extraHeaders: map)['key'], 'value');
+  });
+
+  test('gets and sets hasMigrated', () async {
+    await setupPlatformChannels();
+    await ApiPrefs.setHasMigrated(true);
+
+    expect(ApiPrefs.getHasMigrated(), isTrue);
   });
 }
 

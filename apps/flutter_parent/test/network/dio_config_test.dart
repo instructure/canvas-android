@@ -13,11 +13,11 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:dio/dio.dart';
+import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/network/utils/dio_config.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../utils/platform_config.dart';
 import '../utils/test_app.dart';
 
 void main() {
@@ -56,7 +56,7 @@ void main() {
   group('canvas options', () {
     test('initializes with a base url', () async {
       final domain = 'test_domain';
-      await setupPlatformChannels(config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_DOMAIN: domain}));
+      await ApiPrefs.switchLogins(Login((b) => b..domain = domain));
 
       final options = canvasDio().options;
       expect(options.baseUrl, '$domain/api/v1/');

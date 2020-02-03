@@ -12,10 +12,16 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import 'dart:math';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
+import 'package:flutter_parent/network/utils/api_prefs.dart';
+import 'package:flutter_parent/screens/splash/splash_screen.dart';
 import 'package:flutter_parent/screens/web_login/web_login_screen.dart';
+import 'package:flutter_parent/utils/common_widgets/avatar.dart';
+import 'package:flutter_parent/utils/common_widgets/user_name.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
@@ -56,34 +62,95 @@ class LoginLandingScreen extends StatelessWidget {
                   ),
                 ),
               ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              SvgPicture.asset(
-                'assets/svg/canvas-parent-login-logo.svg',
-                semanticsLabel: L10n(context).canvasLogoLabel,
+        body: Column(
+          children: <Widget>[
+            Expanded(child: _body(context)),
+            _previousLogins(context),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _body(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          SvgPicture.asset(
+            'assets/svg/canvas-parent-login-logo.svg',
+            semanticsLabel: L10n(context).canvasLogoLabel,
+          ),
+          SizedBox(height: 64),
+          RaisedButton(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                L10n(context).findSchoolOrDistrict,
+                style: TextStyle(fontSize: 16),
               ),
-              SizedBox(height: 64),
-              RaisedButton(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text(
-                    L10n(context).findSchoolOrDistrict,
-                    style: TextStyle(fontSize: 16),
-                  ),
+            ),
+            color: Theme.of(context).accentColor,
+            textColor: Colors.white,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
+            onPressed: () {
+              onFindSchoolPressed(context);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _previousLogins(BuildContext context) {
+    final itemHeight = 72.0;
+    return StatefulBuilder(
+      builder: (context, setState) {
+        var logins = ApiPrefs.getLogins();
+        if (logins.isEmpty) return Container();
+        return Padding(
+          key: Key('previous-logins'),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(L10n(context).previousLogins, style: Theme.of(context).textTheme.caption),
+              SizedBox(height: 6),
+              Divider(height: 1),
+              AnimatedContainer(
+                curve: Curves.easeInOutBack,
+                duration: Duration(milliseconds: 400),
+                height: min(itemHeight * 2, itemHeight * logins.length),
+                child: ListView.builder(
+                  padding: EdgeInsets.symmetric(vertical: 0),
+                  itemCount: logins.length,
+                  itemBuilder: (context, index) {
+                    var login = logins[index];
+                    return ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      onTap: () {
+                        ApiPrefs.switchLogins(login);
+                        locator<QuickNav>().push(context, SplashScreen());
+                      },
+                      leading: Avatar.fromUser(login.user),
+                      title: UserName.fromUser(login.user),
+                      subtitle: Text(login.domain),
+                      trailing: IconButton(
+                        tooltip: L10n(context).delete,
+                        onPressed: () async {
+                          await ApiPrefs.removeLogin(login);
+                          setState(() {});
+                        },
+                        icon: Icon(Icons.clear),
+                      ),
+                    );
+                  },
                 ),
-                color: Theme.of(context).accentColor,
-                textColor: Colors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
-                onPressed: () {
-                  onFindSchoolPressed(context);
-                },
               ),
             ],
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 

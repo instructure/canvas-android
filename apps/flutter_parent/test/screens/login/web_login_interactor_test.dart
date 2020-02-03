@@ -50,6 +50,7 @@ void main() {
     final user = User((b) => b..name = 'interactor student name');
     final mobileVerify = MobileVerifyResult();
     final tokens = CanvasToken((b) => b
+      ..refreshToken = 'refresh'
       ..accessToken = accessToken
       ..user = user.toBuilder());
 

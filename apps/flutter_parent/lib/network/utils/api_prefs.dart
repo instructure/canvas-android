@@ -16,27 +16,23 @@ import 'dart:convert';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
-import 'package:flutter_parent/models/canvas_token.dart';
-import 'package:flutter_parent/models/mobile_verify_result.dart';
+import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/models/serializers.dart';
 import 'package:flutter_parent/models/user.dart';
-import 'package:flutter_parent/network/utils/dio_config.dart';
 import 'package:intl/intl.dart';
 import 'package:package_info/package_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'dio_config.dart';
+
 class ApiPrefs {
-  static const String KEY_USER = 'user';
-  static const String KEY_DOMAIN = 'domain';
-
-  static const String KEY_ACCESS_TOKEN = 'access_token';
-  static const String KEY_REFRESH_TOKEN = 'refresh_token';
-
-  static const String KEY_CLIENT_ID = 'client_id';
-  static const String KEY_CLIENT_SECRET = 'client_secret';
+  static const String KEY_HAS_MIGRATED = 'has_migrated_from_old_app';
+  static const String KEY_LOGINS = 'logins';
+  static const String KEY_CURRENT_LOGIN_UUID = 'current_login_uuid';
 
   static SharedPreferences _prefs;
   static PackageInfo _packageInfo;
+  static Login _currentLogin;
 
   static Future<void> init() async {
     if (_prefs == null) _prefs = await SharedPreferences.getInstance();
@@ -46,6 +42,7 @@ class ApiPrefs {
   static void clean() {
     _prefs = null;
     _packageInfo = null;
+    _currentLogin = null;
   }
 
   static void _checkInit() {
@@ -59,36 +56,76 @@ class ApiPrefs {
     return getAuthToken() != null && getDomain() != null;
   }
 
-  static Future<void> updateLoginInfo(CanvasToken tokens, MobileVerifyResult verifyResult) async {
-    await init();
-    _prefs.setString(KEY_ACCESS_TOKEN, tokens.accessToken);
-    _prefs.setString(KEY_REFRESH_TOKEN, tokens.refreshToken);
-    _prefs.setString(KEY_DOMAIN, verifyResult.baseUrl);
-    _prefs.setString(KEY_CLIENT_ID, verifyResult.clientId);
-    _prefs.setString(KEY_CLIENT_SECRET, verifyResult.clientSecret);
-
-    if (tokens.user != null) {
-      setUser(tokens.user);
-    }
-  }
-
-  static Future<void> performLogout() async {
-    await init();
-    await DioConfig().clearCache();
-    return await new Future<void>.sync(() {
-      _prefs.remove(KEY_ACCESS_TOKEN);
-      _prefs.remove(KEY_REFRESH_TOKEN);
-      _prefs.remove(KEY_DOMAIN);
-      _prefs.remove(KEY_USER);
-    });
-  }
-
-  /// Set the user. If passing in the root app, it will be rebuilt on locale change.
-  static Future<void> setUser(User user, {app}) async {
+  static Login getCurrentLogin() {
     _checkInit();
+    if (_currentLogin == null) {
+      final currentLoginUuid = getCurrentLoginUuid();
+      _currentLogin = getLogins().firstWhere((it) => it.uuid == currentLoginUuid, orElse: () => null);
+    }
+    return _currentLogin;
+  }
+
+  static Future<void> switchLogins(Login login) async {
+    _checkInit();
+    _currentLogin = login;
+    await _prefs.setString(KEY_CURRENT_LOGIN_UUID, login.uuid);
+  }
+
+  static Future<void> performLogout({bool switchingLogins = false}) async {
+    _checkInit();
+    await DioConfig().clearCache();
+    if (!switchingLogins) await removeLoginByUuid(getCurrentLoginUuid());
+    await _prefs.remove(KEY_CURRENT_LOGIN_UUID);
+    _currentLogin = null;
+  }
+
+  static Future<void> saveLogins(List<Login> logins) async {
+    _checkInit();
+    List<String> jsonList = logins.map((it) => json.encode(serialize(it))).toList();
+    await _prefs.setStringList(KEY_LOGINS, jsonList);
+  }
+
+  static Future<void> addLogin(Login login) async {
+    _checkInit();
+    var logins = getLogins();
+    logins.insert(0, login);
+    await saveLogins(logins);
+  }
+
+  static List<Login> getLogins() {
+    _checkInit();
+    return _prefs.getStringList(KEY_LOGINS)?.map((it) => deserialize<Login>(json.decode(it)))?.toList() ?? [];
+  }
+
+  static Future<void> removeLogin(Login login) => removeLoginByUuid(login.uuid);
+
+  static Future<void> removeLoginByUuid(String uuid) async {
+    _checkInit();
+    var logins = getLogins();
+    logins.retainWhere((it) => it.uuid != uuid);
+    await saveLogins(logins);
+  }
+
+  /// Updates the current login. If passing in the root app, it will be rebuilt on locale change.
+  static Future<void> updateCurrentLogin(dynamic Function(LoginBuilder) updates, {app}) async {
+    _checkInit();
+    final login = getCurrentLogin();
     Locale oldLocale = effectiveLocale();
+    final updatedLogin = login.rebuild(updates);
+
+    // Save in-memory login
+    _currentLogin = updatedLogin;
+
+    // Save persisted login
+    List<Login> allLogins = getLogins();
+    int currentLoginIndex = allLogins.indexWhere((it) => it.uuid == updatedLogin.uuid);
+    if (currentLoginIndex != -1) {
+      allLogins[currentLoginIndex] = updatedLogin;
+      saveLogins(allLogins);
+    }
+
+    // Update locale
     return await new Future<void>.sync(() {
-      _prefs.setString(KEY_USER, json.encode(serialize(user)));
       var newLocale = effectiveLocale();
       if (oldLocale != effectiveLocale()) {
         Intl.defaultLocale = effectiveLocale().toLanguageTag();
@@ -97,9 +134,13 @@ class ApiPrefs {
     });
   }
 
+  static Future<void> setUser(User user, {app}) async {
+    await updateCurrentLogin((b) => b..user = user.toBuilder(), app: app);
+  }
+
   static Locale effectiveLocale() {
     _checkInit();
-    User user = _prefs.containsKey(KEY_USER) ? deserialize<User>(json.decode(_prefs.getString(KEY_USER))) : null;
+    User user = getUser();
     List<String> userLocale = (user?.effectiveLocale ?? user?.locale ?? ui.window.locale.toLanguageTag()).split('-x-');
 
     if (userLocale[0].isEmpty) {
@@ -118,24 +159,37 @@ class ApiPrefs {
     }
   }
 
-  static User getUser() {
-    _checkInit();
-    return _prefs.containsKey(KEY_USER) ? deserialize<User>(jsonDecode(_prefs.getString(KEY_USER))) : null;
-  }
+  static String getCurrentLoginUuid() => _getPrefString(KEY_CURRENT_LOGIN_UUID);
+
+  static User getUser() => getCurrentLogin()?.user;
 
   static String getUserAgent() => 'androidParent/${_packageInfo.version} (${_packageInfo.buildNumber})';
 
   static String getApiUrl({String path = ''}) => '${getDomain()}/api/v1/$path';
 
-  static String getDomain() => _getPrefString(KEY_DOMAIN);
+  static String getDomain() => getCurrentLogin()?.domain;
 
-  static String getAuthToken() => _getPrefString(KEY_ACCESS_TOKEN);
+  static String getAuthToken() => getCurrentLogin()?.accessToken;
 
-  static String getRefreshToken() => _getPrefString(KEY_REFRESH_TOKEN);
+  static String getRefreshToken() => getCurrentLogin()?.refreshToken;
 
-  static String getClientId() => _getPrefString(KEY_CLIENT_ID);
+  static String getClientId() => getCurrentLogin()?.clientId;
 
-  static String getClientSecret() => _getPrefString(KEY_CLIENT_SECRET);
+  static String getClientSecret() => getCurrentLogin()?.clientSecret;
+
+  static bool getHasMigrated() => _getPrefBool(KEY_HAS_MIGRATED);
+
+  static Future<void> setHasMigrated(bool hasMigrated) => _setPrefBool(KEY_HAS_MIGRATED, hasMigrated);
+
+  static Future<void> _setPrefBool(String key, bool value) async {
+    _checkInit();
+    await _prefs.setBool(key, value);
+  }
+
+  static bool _getPrefBool(String key) {
+    _checkInit();
+    return _prefs.getBool(key);
+  }
 
   static String _getPrefString(String key) {
     _checkInit();
