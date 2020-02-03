@@ -53,8 +53,7 @@ void main() {
       ..contentType = 'jpg'
       ..previewUrl = 'hodor.com/preview'
       ..thumbnailUrl = 'hodor.com/thumbnail'
-      ..displayName = 'hodor'
-    );
+      ..displayName = 'hodor');
 
     final attachment = remoteFile.toAttachment();
 
@@ -64,8 +63,7 @@ void main() {
       ..message = announcementMessage
       ..title = announcementSubject
       ..htmlUrl = ''
-      ..attachments = ListBuilder<RemoteFile>([remoteFile])
-    );
+      ..attachments = ListBuilder<RemoteFile>([remoteFile]));
 
     final courseData = Course((b) => b
       ..id = courseId
@@ -79,23 +77,21 @@ void main() {
       ..accessRestrictedByDate = false
       ..hasWeightedGradingPeriods = false
       ..hasGradingPeriods = false
-      ..restrictEnrollmentsToCourseDates = false
-    );
+      ..restrictEnrollmentsToCourseDates = false);
 
-    final expectedViewState = AnnouncementViewState(
-      courseName, announcementSubject, announcementMessage, postedAt, attachment);
+    final expectedViewState =
+        AnnouncementViewState(courseName, announcementSubject, announcementMessage, postedAt, attachment);
 
     final announcementApi = _MockAnnouncementApi();
     final courseApi = _MockCourseApi();
-    when(announcementApi.getCourseAnnouncement(courseId, announcementId)).thenAnswer((_) =>
-      Future.value(announcementData));
-    when(courseApi.getCourse(courseId)).thenAnswer((_) =>
-      Future.value(courseData));
+    when(announcementApi.getCourseAnnouncement(courseId, announcementId))
+        .thenAnswer((_) => Future.value(announcementData));
+    when(courseApi.getCourse(courseId)).thenAnswer((_) => Future.value(courseData));
 
     _setupLocator(announcementApi: announcementApi, courseApi: courseApi);
 
-    final actualViewState = await AnnouncementDetailsInteractor().getAnnouncement(
-      announcementId, announcementType, courseId, '');
+    final actualViewState =
+        await AnnouncementDetailsInteractor().getAnnouncement(announcementId, announcementType, courseId, '');
 
     verify(announcementApi.getCourseAnnouncement(courseId, announcementId)).called(1);
     verify(courseApi.getCourse(courseId)).called(1);
@@ -105,6 +101,61 @@ void main() {
     expect(actualViewState.announcementTitle, expectedViewState.announcementTitle);
     expect(actualViewState.postedAt, expectedViewState.postedAt);
     expect(actualViewState.attachment, attachment);
+  });
+
+  test('get course announcement returns a proper view state with no attachments', () async {
+    final announcementId = '123';
+    final courseId = '123';
+    final announcementMessage = 'hodor';
+    final announcementSubject = 'hodor subject';
+    final announcementType = AnnouncementType.COURSE;
+    final postedAt = DateTime.now();
+    final courseName = 'flowers for hodornon';
+
+    final announcementData = Announcement((b) => b
+      ..id = announcementId
+      ..postedAt = postedAt
+      ..message = announcementMessage
+      ..title = announcementSubject
+      ..htmlUrl = ''
+      ..attachments = ListBuilder<RemoteFile>([]));
+
+    final courseData = Course((b) => b
+      ..id = courseId
+      ..enrollments = ListBuilder<Enrollment>()
+      ..name = courseName
+      ..needsGradingCount = 0
+      ..hideFinalGrades = false
+      ..isPublic = false
+      ..applyAssignmentGroupWeights = false
+      ..isFavorite = false
+      ..accessRestrictedByDate = false
+      ..hasWeightedGradingPeriods = false
+      ..hasGradingPeriods = false
+      ..restrictEnrollmentsToCourseDates = false);
+
+    final expectedViewState =
+        AnnouncementViewState(courseName, announcementSubject, announcementMessage, postedAt, null);
+
+    final announcementApi = _MockAnnouncementApi();
+    final courseApi = _MockCourseApi();
+    when(announcementApi.getCourseAnnouncement(courseId, announcementId))
+        .thenAnswer((_) => Future.value(announcementData));
+    when(courseApi.getCourse(courseId)).thenAnswer((_) => Future.value(courseData));
+
+    _setupLocator(announcementApi: announcementApi, courseApi: courseApi);
+
+    final actualViewState =
+        await AnnouncementDetailsInteractor().getAnnouncement(announcementId, announcementType, courseId, '');
+
+    verify(announcementApi.getCourseAnnouncement(courseId, announcementId)).called(1);
+    verify(courseApi.getCourse(courseId)).called(1);
+
+    expect(actualViewState.toolbarTitle, expectedViewState.toolbarTitle);
+    expect(actualViewState.announcementMessage, expectedViewState.announcementMessage);
+    expect(actualViewState.announcementTitle, expectedViewState.announcementTitle);
+    expect(actualViewState.postedAt, expectedViewState.postedAt);
+    expect(actualViewState.attachment, null);
   });
 
   test('get institution announcement returns a proper view state', () async {
@@ -120,20 +171,19 @@ void main() {
       ..id = announcementId
       ..startAt = postedAt.toIso8601String()
       ..message = announcementMessage
-      ..subject = announcementSubject
-    );
+      ..subject = announcementSubject);
 
-    final expectedViewState = AnnouncementViewState(
-        toolbarTitle, announcementSubject, announcementMessage, postedAt, null);
+    final expectedViewState =
+        AnnouncementViewState(toolbarTitle, announcementSubject, announcementMessage, postedAt, null);
 
     final announcementApi = _MockAnnouncementApi();
-    when(announcementApi.getAccountNotification(announcementId)).thenAnswer((_) =>
-        Future.value(accountNotificationData));
+    when(announcementApi.getAccountNotification(announcementId))
+        .thenAnswer((_) => Future.value(accountNotificationData));
 
     _setupLocator(announcementApi: announcementApi);
 
-    final actualViewState = await AnnouncementDetailsInteractor().getAnnouncement(
-        announcementId, announcementType, courseId, toolbarTitle);
+    final actualViewState =
+        await AnnouncementDetailsInteractor().getAnnouncement(announcementId, announcementType, courseId, toolbarTitle);
 
     verify(announcementApi.getAccountNotification(announcementId)).called(1);
 
@@ -145,4 +195,5 @@ void main() {
 }
 
 class _MockAnnouncementApi extends Mock implements AnnouncementApi {}
+
 class _MockCourseApi extends Mock implements CourseApi {}

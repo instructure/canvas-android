@@ -134,9 +134,9 @@ class GradesE2ETest: StudentTest() {
 
         // Let's toggle "Base on graded assignments" and verify that we see the correct score
         courseGradesPage.toggleBaseOnGradedAssignments()
-        courseGradesPage.assertTotalGrade(containsTextCaseInsensitive("36")) // 9 out of 25
+        courseGradesPage.refreshUntilAssertTotalGrade(containsTextCaseInsensitive("36")) // 9 out of 25
         courseGradesPage.toggleBaseOnGradedAssignments()
-        courseGradesPage.assertTotalGrade(containsTextCaseInsensitive("60")) // 9 out of 15
+        courseGradesPage.refreshUntilAssertTotalGrade(containsTextCaseInsensitive("60")) // 9 out of 15
 
         // Let's submit our quiz
         courseGradesPage.selectItem(quizMatcher)
@@ -149,7 +149,7 @@ class GradesE2ETest: StudentTest() {
         // And make sure our new quiz grade shows up in our grades
         courseGradesPage.refresh()
         courseGradesPage.assertGradeDisplayed(quizMatcher, containsTextCaseInsensitive("10/10"))
-        courseGradesPage.assertTotalGrade(containsTextCaseInsensitive("76")) // 19 out of 25
+        courseGradesPage.refreshUntilAssertTotalGrade(containsTextCaseInsensitive("76"))
     }
 
 }
