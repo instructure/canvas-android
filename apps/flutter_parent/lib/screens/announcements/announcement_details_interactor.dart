@@ -12,16 +12,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_parent/models/account_notification.dart';
+import 'package:flutter_parent/models/announcement.dart';
 import 'package:flutter_parent/models/attachment.dart';
 import 'package:flutter_parent/models/course.dart';
+import 'package:flutter_parent/network/api/announcement_api.dart';
 import 'package:flutter_parent/network/api/course_api.dart';
 import 'package:flutter_parent/screens/announcements/announcement_details_screen.dart';
 import 'package:flutter_parent/screens/announcements/announcement_view_state.dart';
-import 'package:flutter_parent/models/announcement.dart';
-import 'package:flutter_parent/network/api/announcement_api.dart';
 import 'package:flutter_parent/utils/common_widgets/view_attachment/view_attachment_screen.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
@@ -30,37 +28,25 @@ class AnnouncementDetailsInteractor {
   AnnouncementApi _announcementApi() => locator<AnnouncementApi>();
   CourseApi _courseApi() => locator<CourseApi>();
 
-  Future<AnnouncementViewState> getAnnouncement(String announcementId,
-      AnnouncementType type, String courseId,
-      String institutionToolbarTitle) async {
-    if(type == AnnouncementType.COURSE) {
-      Announcement announcement = await _announcementApi()
-          .getCourseAnnouncement(courseId, announcementId);
+  Future<AnnouncementViewState> getAnnouncement(
+      String announcementId, AnnouncementType type, String courseId, String institutionToolbarTitle) async {
+    if (type == AnnouncementType.COURSE) {
+      Announcement announcement = await _announcementApi().getCourseAnnouncement(courseId, announcementId);
 
       Course course = await _courseApi().getCourse(courseId);
 
-      return AnnouncementViewState(
-          course.name,
-          announcement.title,
-          announcement.message,
-          announcement.postedAt,
-          announcement.attachments.first.toAttachment()
-      );
+      return AnnouncementViewState(course.name, announcement.title, announcement.message, announcement.postedAt,
+          announcement.attachments.first.toAttachment());
     } else {
-      AccountNotification accountNotification = await _announcementApi()
-          .getAccountNotification(announcementId);
+      AccountNotification accountNotification = await _announcementApi().getAccountNotification(announcementId);
 
-      return AnnouncementViewState(
-          institutionToolbarTitle,
-          accountNotification.subject,
-          accountNotification.message,
-          DateTime.parse(accountNotification.startAt),
-          null // Account notifications can't have attachments
-      );
+      return AnnouncementViewState(institutionToolbarTitle, accountNotification.subject, accountNotification.message,
+          DateTime.parse(accountNotification.startAt), null // Account notifications can't have attachments
+          );
     }
   }
 
   void viewAttachment(BuildContext context, Attachment attachment) {
     locator<QuickNav>().push(context, ViewAttachmentScreen(attachment));
   }
- }
+}

@@ -14,24 +14,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import 'dart:math';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/models/attachment.dart';
+import 'package:flutter_parent/screens/inbox/attachment_utils/attachment_extensions.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:transparent_image/transparent_image.dart';
-import 'package:flutter_parent/screens/inbox/attachment_utils/attachment_extensions.dart';
 
 class AttachmentIndicatorWidget extends StatelessWidget {
   final Attachment attachment;
   final Function(Attachment) onAttachmentClicked;
-  
-  const AttachmentIndicatorWidget({
-    Key key,
-    @required this.attachment,
-    this.onAttachmentClicked
-  }) : super(key: key);
+
+  const AttachmentIndicatorWidget({Key key, @required this.attachment, this.onAttachmentClicked}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
