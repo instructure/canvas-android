@@ -156,7 +156,7 @@ class __AlertsListState extends State<_AlertsList> {
               ],
             ),
           ),
-          SizedBox(height: 16),
+          SizedBox(width: 16),
         ],
       ),
     );
