@@ -845,6 +845,24 @@ class AppLocalizations {
   String get addNewStudent =>
       Intl.message('Add new student', desc: 'Semantics label for the FAB on the Manage Students Screen');
 
+  /// Event details
+
+  String get eventDetailsDefaultTitle =>
+      Intl.message('Event', desc: 'Title for the event details screen if an event does not have a title');
+
+  String get eventAllDayLabel =>
+      Intl.message('All Day Event', desc: 'Label for the events that are scheduled for the entire day');
+
+  String get eventNoLocation =>
+      Intl.message('No Location Specified', desc: 'Description for events that do not have a location');
+
+  String eventTime(String startAt, String endAt) => Intl.message(
+        '$startAt - $endAt',
+        name: 'eventTime',
+        args: [startAt, endAt],
+        desc: 'The time the event is happening, example: "2:00 pm - 4:00 pm"',
+      );
+
   /// Error Report Dialog
 
   String get device => Intl.message('Device', desc: 'Label used for device manufacturer/model in the error report');

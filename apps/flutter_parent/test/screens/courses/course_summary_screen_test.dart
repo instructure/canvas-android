@@ -23,6 +23,7 @@ import 'package:flutter_parent/models/schedule_item.dart';
 import 'package:flutter_parent/screens/assignments/assignment_details_screen.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_model.dart';
 import 'package:flutter_parent/screens/courses/details/course_summary_screen.dart';
+import 'package:flutter_parent/screens/events/event_details_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
@@ -277,6 +278,26 @@ void main() {
     await tester.tap(find.text(event.title));
 
     verify(nav.push(any, argThat(isA<AssignmentDetailsScreen>())));
+  });
+
+  testWidgetsWithAccessibilityChecks('Tapping calendar event item loads event details', (tester) async {
+    final event = ScheduleItem((s) => s
+      ..type = ScheduleItem.typeCalendar
+      ..title = 'Normal Event'
+      ..startAt = DateTime.now());
+
+    final model = _MockModel();
+    when(model.loadSummary(refresh: false)).thenAnswer((_) async => [event]);
+
+    var nav = _MockNav();
+    setupTestLocator((locator) => locator.registerLazySingleton<QuickNav>(() => nav));
+
+    await tester.pumpWidget(_testableWidget(model));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text(event.title));
+
+    verify(nav.push(any, argThat(isA<EventDetailsScreen>())));
   });
 }
 

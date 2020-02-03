@@ -15,9 +15,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_model.dart';
+import 'package:flutter_parent/utils/web_view_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'package:flutter_parent/utils/web_view_utils.dart';
 
 class CourseSyllabusScreen extends StatelessWidget {
   final String syllabus;
@@ -31,7 +31,7 @@ class CourseSyllabusScreen extends StatelessWidget {
         javascriptMode: JavascriptMode.unrestricted,
         gestureRecognizers: Set()..add(Factory<WebViewGestureRecognizer>(() => WebViewGestureRecognizer())),
         onWebViewCreated: (controller) {
-          controller.loadHtml(syllabus);
+          controller.loadHtml(syllabus, horizontalPadding: 10);
         },
       ),
     );

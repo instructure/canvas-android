@@ -26,11 +26,14 @@ extension WebViewUtils on WebViewController {
    *
    * See html_wrapper.html for more details
    */
-  Future<void> loadHtml(String html, {Map<String, String> headers}) async {
+  Future<void> loadHtml(String html, {Map<String, String> headers, double horizontalPadding = 0}) async {
+    assert(horizontalPadding != null);
+
     String fileText = await rootBundle.loadString('assets/html/html_wrapper.html');
     html = _applyWorkAroundForDoubleSlashesAsUrlSource(html);
     html = _addProtocolToLinks(html);
     html = fileText.replaceAll('{CANVAS_CONTENT}', html);
+    html = html.replaceAll('{PADDING}', horizontalPadding.toString());
     String uri = Uri.dataFromString(html, mimeType: 'text/html', encoding: Encoding.getByName('utf-8')).toString();
     this.loadUrl(uri);
   }
