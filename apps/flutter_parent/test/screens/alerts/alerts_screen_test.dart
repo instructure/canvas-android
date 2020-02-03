@@ -15,6 +15,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/alert.dart';
+import 'package:flutter_parent/models/alert_threshold.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/screens/alerts/alerts_interactor.dart';
 import 'package:flutter_parent/screens/alerts/alerts_screen.dart';
@@ -28,6 +29,7 @@ import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/student_color_set.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
@@ -61,7 +63,7 @@ void main() {
     final alerts = List.of([alert]);
 
     final interactor = _MockAlertsInteractor();
-    when(interactor.getAlertsForStudent(any, any)).thenAnswer((_) => Future.value(alerts));
+    when(interactor.getAlertsForStudent(any, any)).thenAnswer((_) => Future.value(AlertsList(alerts, null)));
     when(interactor.markAlertRead(alerts.first.id))
         .thenAnswer((_) => Future.value(alerts.first.rebuild((b) => b..workflowState = AlertWorkflowState.read)));
     _setupLocator(interactor: interactor, announcementDetailsInteractor: _setupAnnouncementInteractor());
@@ -107,17 +109,21 @@ void main() {
       await tester.pumpWidget(_testableWidget());
       await tester.pumpAndSettle();
 
+      expect(find.byType(SvgPicture), findsOneWidget);
+      expect(find.text(AppLocalizations().noAlertsTitle), findsOneWidget);
       expect(find.text(AppLocalizations().noAlertsMessage), findsOneWidget);
     });
 
     testWidgetsWithAccessibilityChecks('Shows when list is empty', (tester) async {
       final interactor = _MockAlertsInteractor();
-      when(interactor.getAlertsForStudent(any, any)).thenAnswer((_) => Future.value(List()));
+      when(interactor.getAlertsForStudent(any, any)).thenAnswer((_) => Future.value(AlertsList(List(), null)));
       _setupLocator(interactor: interactor);
 
       await tester.pumpWidget(_testableWidget());
       await tester.pumpAndSettle();
 
+      expect(find.byType(SvgPicture), findsOneWidget);
+      expect(find.text(AppLocalizations().noAlertsTitle), findsOneWidget);
       expect(find.text(AppLocalizations().noAlertsMessage), findsOneWidget);
     });
   });
@@ -154,16 +160,19 @@ void main() {
       expect(find.byType(RefreshIndicator), findsOneWidget);
     });
 
-    testWidgetsWithAccessibilityChecks('Shows alert info', (tester) async {
+    testWidgetsWithAccessibilityChecks('Shows alert info for institution annoucnements', (tester) async {
       final alerts = _mockData(type: AlertType.institutionAnnouncement);
 
       final interactor = _MockAlertsInteractor();
-      when(interactor.getAlertsForStudent(any, any)).thenAnswer((_) => Future.value(alerts));
+      when(interactor.getAlertsForStudent(any, any)).thenAnswer((_) => Future.value(AlertsList(alerts, null)));
       _setupLocator(interactor: interactor);
 
       await tester.pumpWidget(_testableWidget());
       await tester.pumpAndSettle();
 
+      final title = find.text(AppLocalizations().institutionAnnouncement);
+      expect(title, findsOneWidget);
+      expect((tester.widget(title) as Text).style.color, ParentColors.ash);
       expect(find.text(alerts.first.title), findsOneWidget);
       expect(find.text(DateFormat(AppLocalizations().dateTimeFormat).format(alerts.first.actionDate.toLocal())),
           findsOneWidget);
@@ -171,16 +180,45 @@ void main() {
       expect((tester.widget(find.byIcon(CanvasIcons.info)) as Icon).color, ParentColors.ash);
     });
 
-    testWidgetsWithAccessibilityChecks('Shows alert positive', (tester) async {
-      final alerts = _mockData(type: AlertType.courseGradeHigh);
+    testWidgetsWithAccessibilityChecks('Shows alert info for course annoucnements', (tester) async {
+      final alerts = _mockData(type: AlertType.courseAnnouncement);
 
       final interactor = _MockAlertsInteractor();
-      when(interactor.getAlertsForStudent(any, any)).thenAnswer((_) => Future.value(alerts));
+      when(interactor.getAlertsForStudent(any, any)).thenAnswer((_) => Future.value(AlertsList(alerts, null)));
       _setupLocator(interactor: interactor);
 
       await tester.pumpWidget(_testableWidget());
       await tester.pumpAndSettle();
 
+      final title = find.text(AppLocalizations().courseAnnouncement);
+      expect(title, findsOneWidget);
+      expect((tester.widget(title) as Text).style.color, ParentColors.ash);
+      expect(find.text(alerts.first.title), findsOneWidget);
+      expect(find.text(DateFormat(AppLocalizations().dateTimeFormat).format(alerts.first.actionDate.toLocal())),
+          findsOneWidget);
+      expect(find.byIcon(CanvasIcons.info), findsOneWidget);
+      expect((tester.widget(find.byIcon(CanvasIcons.info)) as Icon).color, ParentColors.ash);
+    });
+
+    testWidgetsWithAccessibilityChecks('Shows alert positive for course grade high', (tester) async {
+      final thresholdValue = '80';
+      final alerts = _mockData(type: AlertType.courseGradeHigh);
+      final thresholds = [
+        AlertThreshold((b) => b
+          ..alertType = AlertType.courseGradeHigh
+          ..threshold = thresholdValue),
+      ];
+
+      final interactor = _MockAlertsInteractor();
+      when(interactor.getAlertsForStudent(any, any)).thenAnswer((_) => Future.value(AlertsList(alerts, thresholds)));
+      _setupLocator(interactor: interactor);
+
+      await tester.pumpWidget(_testableWidget());
+      await tester.pumpAndSettle();
+
+      final title = find.text(AppLocalizations().courseGradeAboveThreshold(thresholdValue));
+      expect(title, findsOneWidget);
+      expect((tester.widget(title) as Text).style.color, StudentColorSet.electric.light);
       expect(find.text(alerts.first.title), findsOneWidget);
       expect(find.text(DateFormat(AppLocalizations().dateTimeFormat).format(alerts.first.actionDate.toLocal())),
           findsOneWidget);
@@ -188,16 +226,97 @@ void main() {
       expect((tester.widget(find.byIcon(CanvasIcons.info)) as Icon).color, StudentColorSet.electric.light);
     });
 
-    testWidgetsWithAccessibilityChecks('Shows alert negative', (tester) async {
-      final alerts = _mockData(type: AlertType.courseGradeLow);
+    testWidgetsWithAccessibilityChecks('Shows alert positive for assignment grade high', (tester) async {
+      final thresholdValue = '80';
+      final alerts = _mockData(type: AlertType.assignmentGradeHigh);
+      final thresholds = [
+        AlertThreshold((b) => b
+          ..alertType = AlertType.assignmentGradeHigh
+          ..threshold = thresholdValue),
+      ];
 
       final interactor = _MockAlertsInteractor();
-      when(interactor.getAlertsForStudent(any, any)).thenAnswer((_) => Future.value(alerts));
+      when(interactor.getAlertsForStudent(any, any)).thenAnswer((_) => Future.value(AlertsList(alerts, thresholds)));
       _setupLocator(interactor: interactor);
 
       await tester.pumpWidget(_testableWidget());
       await tester.pumpAndSettle();
 
+      final title = find.text(AppLocalizations().assignmentGradeAboveThreshold(thresholdValue));
+      expect(title, findsOneWidget);
+      expect((tester.widget(title) as Text).style.color, StudentColorSet.electric.light);
+      expect(find.text(alerts.first.title), findsOneWidget);
+      expect(find.text(DateFormat(AppLocalizations().dateTimeFormat).format(alerts.first.actionDate.toLocal())),
+          findsOneWidget);
+      expect(find.byIcon(CanvasIcons.info), findsOneWidget);
+      expect((tester.widget(find.byIcon(CanvasIcons.info)) as Icon).color, StudentColorSet.electric.light);
+    });
+
+    testWidgetsWithAccessibilityChecks('Shows alert negative for course grade low', (tester) async {
+      final thresholdValue = '10';
+      final alerts = _mockData(type: AlertType.courseGradeLow);
+      final thresholds = [
+        AlertThreshold((b) => b
+          ..alertType = AlertType.courseGradeLow
+          ..threshold = thresholdValue),
+      ];
+
+      final interactor = _MockAlertsInteractor();
+      when(interactor.getAlertsForStudent(any, any)).thenAnswer((_) => Future.value(AlertsList(alerts, thresholds)));
+      _setupLocator(interactor: interactor);
+
+      await tester.pumpWidget(_testableWidget());
+      await tester.pumpAndSettle();
+
+      final title = find.text(AppLocalizations().courseGradeBelowThreshold(thresholdValue));
+      expect(title, findsOneWidget);
+      expect((tester.widget(title) as Text).style.color, ParentColors.failure);
+      expect(find.text(alerts.first.title), findsOneWidget);
+      expect(find.text(DateFormat(AppLocalizations().dateTimeFormat).format(alerts.first.actionDate.toLocal())),
+          findsOneWidget);
+      expect(find.byIcon(CanvasIcons.warning), findsOneWidget);
+      expect((tester.widget(find.byIcon(CanvasIcons.warning)) as Icon).color, ParentColors.failure);
+    });
+
+    testWidgetsWithAccessibilityChecks('Shows alert negative for assignment grade low', (tester) async {
+      final thresholdValue = '10';
+      final alerts = _mockData(type: AlertType.assignmentGradeLow);
+      final thresholds = [
+        AlertThreshold((b) => b
+          ..alertType = AlertType.assignmentGradeLow
+          ..threshold = thresholdValue),
+      ];
+
+      final interactor = _MockAlertsInteractor();
+      when(interactor.getAlertsForStudent(any, any)).thenAnswer((_) => Future.value(AlertsList(alerts, thresholds)));
+      _setupLocator(interactor: interactor);
+
+      await tester.pumpWidget(_testableWidget());
+      await tester.pumpAndSettle();
+
+      final title = find.text(AppLocalizations().assignmentGradeBelowThreshold(thresholdValue));
+      expect(title, findsOneWidget);
+      expect((tester.widget(title) as Text).style.color, ParentColors.failure);
+      expect(find.text(alerts.first.title), findsOneWidget);
+      expect(find.text(DateFormat(AppLocalizations().dateTimeFormat).format(alerts.first.actionDate.toLocal())),
+          findsOneWidget);
+      expect(find.byIcon(CanvasIcons.warning), findsOneWidget);
+      expect((tester.widget(find.byIcon(CanvasIcons.warning)) as Icon).color, ParentColors.failure);
+    });
+
+    testWidgetsWithAccessibilityChecks('Shows alert negative for missing assignment', (tester) async {
+      final alerts = _mockData(type: AlertType.assignmentMissing);
+
+      final interactor = _MockAlertsInteractor();
+      when(interactor.getAlertsForStudent(any, any)).thenAnswer((_) => Future.value(AlertsList(alerts, null)));
+      _setupLocator(interactor: interactor);
+
+      await tester.pumpWidget(_testableWidget());
+      await tester.pumpAndSettle();
+
+      final title = find.text(AppLocalizations().assignmentMissing);
+      expect(title, findsOneWidget);
+      expect((tester.widget(title) as Text).style.color, ParentColors.failure);
       expect(find.text(alerts.first.title), findsOneWidget);
       expect(find.text(DateFormat(AppLocalizations().dateTimeFormat).format(alerts.first.actionDate.toLocal())),
           findsOneWidget);
@@ -209,7 +328,7 @@ void main() {
       final alerts = _mockData(type: AlertType.courseGradeLow, state: AlertWorkflowState.unread);
 
       final interactor = _MockAlertsInteractor();
-      when(interactor.getAlertsForStudent(any, any)).thenAnswer((_) => Future.value(alerts));
+      when(interactor.getAlertsForStudent(any, any)).thenAnswer((_) => Future.value(AlertsList(alerts, null)));
       _setupLocator(interactor: interactor);
 
       await tester.pumpWidget(_testableWidget());
@@ -222,7 +341,7 @@ void main() {
       final alerts = _mockData(type: AlertType.courseGradeLow, state: AlertWorkflowState.unread);
 
       final interactor = _MockAlertsInteractor();
-      when(interactor.getAlertsForStudent(any, any)).thenAnswer((_) => Future.value(alerts));
+      when(interactor.getAlertsForStudent(any, any)).thenAnswer((_) => Future.value(AlertsList(alerts, null)));
       when(interactor.markAlertRead(alerts.first.id))
           .thenAnswer((_) => Future.value(alerts.first.rebuild((b) => b..workflowState = AlertWorkflowState.read)));
       _setupLocator(interactor: interactor);
@@ -240,7 +359,7 @@ void main() {
       final alerts = _mockData(type: AlertType.courseGradeLow, state: AlertWorkflowState.read);
 
       final interactor = _MockAlertsInteractor();
-      when(interactor.getAlertsForStudent(any, any)).thenAnswer((_) => Future.value(alerts));
+      when(interactor.getAlertsForStudent(any, any)).thenAnswer((_) => Future.value(AlertsList(alerts, null)));
       _setupLocator(interactor: interactor);
 
       await tester.pumpWidget(_testableWidget());
