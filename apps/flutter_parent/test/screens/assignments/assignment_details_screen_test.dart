@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/alarm.dart';
 import 'package:flutter_parent/models/assignment.dart';
+import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/models/lock_info.dart';
 import 'package:flutter_parent/models/locked_module.dart';
 import 'package:flutter_parent/models/submission.dart';
@@ -69,7 +70,6 @@ void main() {
     await tester.pumpWidget(TestApp(
       AssignmentDetailsScreen(
         courseId: courseId,
-        courseCode: '',
         assignmentId: assignmentId,
         studentId: studentId,
         studentName: '',
@@ -86,14 +86,13 @@ void main() {
     final courseName = 'name';
     when(interactor.loadAssignmentDetails(any, courseId, assignmentId, studentId))
         .thenAnswer((_) async => AssignmentDetails(
-              courseName: courseName,
+              course: Course((b) => b..name = courseName),
               assignment: assignment,
             ));
 
     await tester.pumpWidget(TestApp(
       AssignmentDetailsScreen(
         courseId: courseId,
-        courseCode: '',
         assignmentId: assignmentId,
         studentId: studentId,
         studentName: '',
@@ -113,7 +112,6 @@ void main() {
     await tester.pumpWidget(TestApp(
       AssignmentDetailsScreen(
         courseId: courseId,
-        courseCode: '',
         assignmentId: assignmentId,
         studentId: studentId,
         studentName: '',
@@ -144,7 +142,6 @@ void main() {
     await tester.pumpWidget(TestApp(
       AssignmentDetailsScreen(
         courseId: courseId,
-        courseCode: '',
         assignmentId: assignmentId,
         studentId: studentId,
         studentName: studentName,
@@ -171,7 +168,6 @@ void main() {
     await tester.pumpWidget(TestApp(
       AssignmentDetailsScreen(
         courseId: courseId,
-        courseCode: '',
         assignmentId: assignmentId,
         studentId: studentId,
         studentName: '',
@@ -207,7 +203,6 @@ void main() {
     await tester.pumpWidget(TestApp(
       AssignmentDetailsScreen(
         courseId: courseId,
-        courseCode: '',
         assignmentId: assignmentId,
         studentId: studentId,
         studentName: '',
@@ -252,7 +247,6 @@ void main() {
     await tester.pumpWidget(TestApp(
       AssignmentDetailsScreen(
         courseId: courseId,
-        courseCode: '',
         assignmentId: assignmentId,
         studentId: studentId,
         studentName: '',
@@ -278,7 +272,6 @@ void main() {
     await tester.pumpWidget(TestApp(
       AssignmentDetailsScreen(
         courseId: courseId,
-        courseCode: '',
         assignmentId: assignmentId,
         studentId: studentId,
         studentName: '',
@@ -305,7 +298,6 @@ void main() {
     await tester.pumpWidget(TestApp(
       AssignmentDetailsScreen(
         courseId: courseId,
-        courseCode: '',
         assignmentId: assignmentId,
         studentId: studentId,
         studentName: '',
@@ -338,7 +330,6 @@ void main() {
     await tester.pumpWidget(TestApp(
       AssignmentDetailsScreen(
         courseId: courseId,
-        courseCode: '',
         assignmentId: assignmentId,
         studentId: studentId,
         studentName: '',
@@ -368,7 +359,6 @@ void main() {
     await tester.pumpWidget(TestApp(
       AssignmentDetailsScreen(
         courseId: courseId,
-        courseCode: '',
         assignmentId: assignmentId,
         studentId: studentId,
         studentName: '',
@@ -420,7 +410,6 @@ void main() {
     await tester.pumpWidget(TestApp(
       AssignmentDetailsScreen(
         courseId: courseId,
-        courseCode: '',
         assignmentId: assignmentId,
         studentId: studentId,
         studentName: '',
@@ -443,7 +432,6 @@ void main() {
     await tester.pumpWidget(TestApp(
       AssignmentDetailsScreen(
         courseId: courseId,
-        courseCode: '',
         assignmentId: assignmentId,
         studentId: studentId,
         studentName: '',
@@ -464,7 +452,6 @@ void main() {
     await tester.pumpWidget(TestApp(
       AssignmentDetailsScreen(
         courseId: courseId,
-        courseCode: '',
         assignmentId: assignmentId,
         studentId: studentId,
         studentName: '',

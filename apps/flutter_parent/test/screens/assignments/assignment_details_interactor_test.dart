@@ -42,12 +42,12 @@ void main() {
 
   group('loadAssignmentDetails', () {
     test('returns the course name', () async {
-      final courseName = 'course name';
-      when(courseApi.getCourse(courseId)).thenAnswer((_) async => Course((b) => b..name = courseName));
+      final course = Course((b) => b..name = 'course name');
+      when(courseApi.getCourse(courseId)).thenAnswer((_) async => course);
       final details =
           await AssignmentDetailsInteractor().loadAssignmentDetails(false, courseId, assignmentId, studentId);
 
-      expect(details.courseName, courseName);
+      expect(details.course, course);
     });
 
     test('returns a null alarm if none exist for the assignment', () async {

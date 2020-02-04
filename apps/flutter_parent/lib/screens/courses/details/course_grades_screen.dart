@@ -252,9 +252,9 @@ class _AssignmentRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final studentId = Provider.of<CourseDetailsModel>(context, listen: false).studentId;
-    final studentName = Provider.of<CourseDetailsModel>(context, listen: false).studentName;
-    final courseCode = Provider.of<CourseDetailsModel>(context, listen: false).course.courseCode;
+    final model = Provider.of<CourseDetailsModel>(context, listen: false);
+    final studentId = model.studentId;
+    final studentName = model.studentName;
 
     final textTheme = Theme.of(context).textTheme;
     final assignmentStatus = _assignmentStatus(context, assignment, studentId);
@@ -264,7 +264,6 @@ class _AssignmentRow extends StatelessWidget {
         context,
         AssignmentDetailsScreen(
           courseId: assignment.courseId,
-          courseCode: courseCode,
           assignmentId: assignment.id,
           studentId: studentId,
           studentName: studentName,
