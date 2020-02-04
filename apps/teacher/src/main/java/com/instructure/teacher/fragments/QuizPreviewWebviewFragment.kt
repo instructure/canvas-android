@@ -58,7 +58,8 @@ class QuizPreviewWebviewFragment : InternalWebViewFragment() {
         super.onActivityCreated(savedInstanceState)
 
         canvasWebView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
-            override fun openMediaFromWebView(mime: String, url: String, filename: String) = Unit
+            override fun openMediaFromWebView(mime: String, url: String, filename: String) =
+                RouteMatcher.openMedia(requireActivity(), url)
 
             override fun onPageFinishedCallback(webView: WebView, url: String) {
                 // if the teacher submits a quiz preview, it will load the details again and automatically click the preview button again

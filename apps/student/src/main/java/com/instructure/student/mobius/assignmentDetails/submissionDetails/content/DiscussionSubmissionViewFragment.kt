@@ -70,7 +70,8 @@ class DiscussionSubmissionViewFragment : Fragment() {
 
         discussionSubmissionWebView.canvasWebViewClientCallback =
             object : CanvasWebView.CanvasWebViewClientCallback {
-                override fun openMediaFromWebView(mime: String?, url: String?, filename: String?) = Unit
+                override fun openMediaFromWebView(mime: String?, url: String?, filename: String?) =
+                    RouteMatcher.openMedia(requireActivity(), url)
                 override fun onPageStartedCallback(webView: WebView?, url: String?) = Unit
                 override fun onPageFinishedCallback(webView: WebView?, url: String?) = Unit
                 override fun canRouteInternallyDelegate(url: String?) =
