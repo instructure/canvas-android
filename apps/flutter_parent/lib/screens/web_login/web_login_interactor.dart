@@ -12,6 +12,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/models/mobile_verify_result.dart';
 import 'package:flutter_parent/network/api/auth_api.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
@@ -25,6 +26,15 @@ class WebLoginInteractor {
   Future performLogin(MobileVerifyResult result, String oAuthRequest) async {
     final tokens = await locator<AuthApi>().getTokens(result, oAuthRequest);
 
-    await ApiPrefs.updateLoginInfo(tokens, result);
+    Login login = Login((b) => b
+      ..accessToken = tokens.accessToken
+      ..refreshToken = tokens.refreshToken
+      ..domain = result.baseUrl
+      ..clientId = result.clientId
+      ..clientSecret = result.clientSecret
+      ..user = tokens.user.toBuilder());
+
+    ApiPrefs.addLogin(login);
+    ApiPrefs.switchLogins(login);
   }
 }

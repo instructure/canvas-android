@@ -15,6 +15,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
+import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/login_landing_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
@@ -35,7 +36,8 @@ class NotAParentScreen extends StatelessWidget {
               title: L10n(context).notAParentTitle,
               subtitle: L10n(context).notAParentSubtitle,
               buttonText: L10n(context).returnToLogin,
-              onButtonTap: () {
+              onButtonTap: () async {
+                await ApiPrefs.performLogout();
                 locator<QuickNav>().pushAndRemoveAll(context, LoginLandingScreen());
               },
             ),

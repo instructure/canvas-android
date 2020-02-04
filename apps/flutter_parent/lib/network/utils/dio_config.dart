@@ -16,6 +16,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:dio_http_cache/dio_http_cache.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 
 /// Class that helps to create and configure [Dio] instances for common use cases
@@ -146,6 +147,10 @@ class DioConfig {
 
   /// Clears the cache, deleting only the entries related to path OR clearing everything if path is null
   Future<bool> clearCache({String path}) {
+    // The methods below are currently broken in unit tests due to sqflite (even when the sqflite MethodChannel has been
+    // mocked) so we'll just return 'true' for tests. See https://github.com/tekartik/sqflite/issues/83.
+    if (WidgetsBinding.instance.runtimeType != WidgetsFlutterBinding) return Future.value(true);
+
     if (path == null) {
       return DioCacheManager(CacheConfig(baseUrl: baseUrl)).clearAll();
     } else {

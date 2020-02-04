@@ -11,9 +11,8 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-import 'package:flutter_parent/models/canvas_token.dart';
 import 'package:flutter_parent/models/enrollment.dart';
-import 'package:flutter_parent/models/mobile_verify_result.dart';
+import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/api/enrollments_api.dart';
 import 'package:flutter_parent/network/api/error_report_api.dart';
@@ -22,6 +21,7 @@ import 'package:flutter_parent/utils/common_widgets/error_report/error_report_in
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
+import '../../canvas_model_utils.dart';
 import '../../platform_config.dart';
 import '../../test_app.dart';
 
@@ -66,9 +66,14 @@ void main() {
   });
 
   test('Uses user data from api prefs', () async {
-    setupPlatformChannels(config: PlatformConfig(initSqflite: true));
+    setupPlatformChannels();
 
     await ApiPrefs.performLogout(); // Clear domain data
+
+    final login = Login();
+    await setupPlatformChannels(config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
+    await ApiPrefs.addLogin(login);
+
     await ApiPrefs.setUser(user);
     await ErrorReportInteractor().submitErrorReport('', '', '', ErrorReportSeverity.COMMENT, '');
 
@@ -86,6 +91,10 @@ void main() {
   });
 
   test('Uses empty string for no user data in api prefs', () async {
+    final login = Login();
+    await setupPlatformChannels(config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
+    await ApiPrefs.addLogin(login);
+
     await ApiPrefs.setUser(User());
     await ErrorReportInteractor().submitErrorReport('', '', null, ErrorReportSeverity.COMMENT, '');
 
@@ -104,8 +113,13 @@ void main() {
 
   test('Uses domain from api prefs', () async {
     String domain = 'domain';
-    await ApiPrefs.updateLoginInfo(
-        CanvasToken((b) => b..accessToken = ''), MobileVerifyResult((b) => b..baseUrl = domain));
+    Login user = Login((b) => b
+      ..accessToken = ''
+      ..refreshToken = ''
+      ..domain = domain
+      ..user = CanvasModelTestUtils.mockUser().toBuilder());
+    ApiPrefs.switchLogins(user);
+
     await ErrorReportInteractor().submitErrorReport('', '', '', ErrorReportSeverity.COMMENT, '');
 
     verify(api.submitErrorReport(
@@ -122,7 +136,7 @@ void main() {
   });
 
   test('Uses domain from ErrorReportApi if api prefs has none', () async {
-    setupPlatformChannels(config: PlatformConfig(initSqflite: true));
+    setupPlatformChannels();
 
     await ApiPrefs.performLogout(); // Clear domain data in ApiPrefs
     await ErrorReportInteractor().submitErrorReport('', '', '', ErrorReportSeverity.COMMENT, '');

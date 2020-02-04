@@ -14,6 +14,7 @@
 
 import 'package:built_collection/built_collection.dart';
 import 'package:flutter_parent/models/conversation.dart';
+import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/models/message.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/api/inbox_api.dart';
@@ -22,12 +23,14 @@ import 'package:flutter_parent/screens/inbox/reply/conversation_reply_interactor
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
+import '../../../utils/platform_config.dart';
 import '../../../utils/test_app.dart';
 
 void main() {
   setUp(() async {
-    await setupPlatformChannels();
-    ApiPrefs.setUser(User((u) => u.id = 'self'));
+    final login = Login((b) => b..user = User((u) => u.id = 'self').toBuilder());
+    await setupPlatformChannels(config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
+    await ApiPrefs.addLogin(login);
   });
 
   test('getCurrentUserId calls ApiPrefs', () {

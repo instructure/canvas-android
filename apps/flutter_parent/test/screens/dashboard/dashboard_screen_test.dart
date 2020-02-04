@@ -16,6 +16,7 @@ import 'package:built_value/json_object.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/course.dart';
+import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/models/unread_count.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/api/alert_api.dart';
@@ -43,7 +44,6 @@ import 'package:mockito/mockito.dart';
 import '../../utils/accessibility_utils.dart';
 import '../../utils/canvas_model_utils.dart';
 import '../../utils/network_image_response.dart';
-import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
 
 void main() {
@@ -301,18 +301,20 @@ void main() {
       (tester) async {
     _setupLocator();
 
-    await setupPlatformChannels(
-        config: PlatformConfig(mockPrefs: {
-      ApiPrefs.KEY_ACCESS_TOKEN: 'token',
-      ApiPrefs.KEY_DOMAIN: 'domain',
-    }));
+    var login = Login((b) => b
+      ..domain = 'domain'
+      ..accessToken = 'token'
+      ..user = CanvasModelTestUtils.mockUser().toBuilder());
+
+    await ApiPrefs.addLogin(login);
+    await ApiPrefs.switchLogins(login);
 
     expect(ApiPrefs.isLoggedIn(), true);
 
     await tester.pumpWidget(_testableMaterialWidget());
     await tester.pumpAndSettle();
 
-    // Open the nave drawer
+    // Open the nav drawer
     DashboardScreen.scaffoldKey.currentState.openDrawer();
     await tester.pumpAndSettle();
 

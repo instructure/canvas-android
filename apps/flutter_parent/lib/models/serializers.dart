@@ -35,6 +35,7 @@ import 'package:flutter_parent/models/grading_period.dart';
 import 'package:flutter_parent/models/grading_period_response.dart';
 import 'package:flutter_parent/models/lock_info.dart';
 import 'package:flutter_parent/models/locked_module.dart';
+import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/models/media_comment.dart';
 import 'package:flutter_parent/models/message.dart';
 import 'package:flutter_parent/models/mobile_verify_result.dart';
@@ -73,6 +74,7 @@ part 'serializers.g.dart';
   GradingPeriodResponse,
   LockInfo,
   LockedModule,
+  Login,
   MediaComment,
   Message,
   MobileVerifyResult,

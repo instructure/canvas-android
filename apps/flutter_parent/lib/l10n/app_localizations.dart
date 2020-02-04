@@ -156,10 +156,14 @@ class AppLocalizations {
 
   String get signOut => Intl.message('Sign Out', desc: 'Label text for the Sign Out nav drawer button');
 
+  String get switchUsers => Intl.message('Switch Users', desc: 'Label text for the Switch Users nav drawer button');
+
   String appVersion(String version) => Intl.message('v. $version',
       name: 'appVersion', args: [version], desc: 'App version shown in the navigation drawer');
 
   /// Login landing screen
+
+  String get previousLogins => Intl.message('Previous Logins', desc: 'Label for the list of previous user logins');
 
   String get canvasLogoLabel {
     return Intl.message('Canvas logo', name: 'canvaslogoLabel', desc: 'The semantics label for the Canvas logo');

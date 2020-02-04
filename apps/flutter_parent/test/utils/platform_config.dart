@@ -18,7 +18,6 @@ class PlatformConfig {
   final bool initPackageInfo;
   final bool initDeviceInfo;
   final bool initWebview;
-  final bool initSqflite;
 
   final Map<String, dynamic> mockPrefs;
 
@@ -28,7 +27,6 @@ class PlatformConfig {
     this.initPackageInfo = true,
     this.initDeviceInfo = true,
     this.initWebview = false,
-    this.initSqflite = false,
     this.mockPrefs = const {},
   });
 
