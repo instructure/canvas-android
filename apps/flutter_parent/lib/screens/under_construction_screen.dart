@@ -54,7 +54,13 @@ class UnderConstructionScreen extends StatelessWidget {
               Text(
                 L10n(context).underConstruction,
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 8),
+              Text(
+                L10n(context).currentlyBuildingThisFeature,
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.subhead.copyWith(fontWeight: FontWeight.normal),
               ),
             ],
           ),

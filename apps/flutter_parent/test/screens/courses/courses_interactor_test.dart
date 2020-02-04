@@ -12,9 +12,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import 'package:built_collection/built_collection.dart';
-import 'package:flutter_parent/models/course.dart';
-import 'package:flutter_parent/models/enrollment.dart';
 import 'package:flutter_parent/network/api/course_api.dart';
 import 'package:flutter_parent/screens/courses/courses_interactor.dart';
 import 'package:mockito/mockito.dart';
@@ -28,33 +25,9 @@ void main() {
     setupTestLocator((locator) => locator.registerLazySingleton<CourseApi>(() => api));
     when(api.getObserveeCourses(forceRefresh: true)).thenAnswer((_) async => []);
 
-    await CoursesInteractor().getCourses('', true);
+    await CoursesInteractor().getCourses('', isRefresh: true);
 
     verify(api.getObserveeCourses(forceRefresh: true));
-  });
-
-  test('getCourses filters by student enrollment', () async {
-    final studentId = 'student123';
-    final apiCourses = [
-      Course(),
-      Course((c) => c
-        ..enrollments = ListBuilder([
-          Enrollment((e) => e
-            ..userId = studentId
-            ..enrollmentState = '')
-        ])),
-      Course(),
-    ];
-    final expectedCourses = [apiCourses[1]];
-
-    final api = _MockCourseApi();
-    setupTestLocator((locator) => locator.registerLazySingleton<CourseApi>(() => api));
-
-    when(api.getObserveeCourses(forceRefresh: true)).thenAnswer((_) async => apiCourses);
-
-    final actualCourses = await CoursesInteractor().getCourses(studentId, true);
-
-    expect(actualCourses, expectedCourses);
   });
 }
 

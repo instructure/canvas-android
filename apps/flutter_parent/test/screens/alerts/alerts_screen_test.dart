@@ -23,6 +23,7 @@ import 'package:flutter_parent/screens/announcements/announcement_details_intera
 import 'package:flutter_parent/screens/announcements/announcement_details_screen.dart';
 import 'package:flutter_parent/screens/announcements/announcement_view_state.dart';
 import 'package:flutter_parent/screens/dashboard/alert_notifier.dart';
+import 'package:flutter_parent/screens/dashboard/selected_student_notifier.dart';
 import 'package:flutter_parent/screens/under_construction_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/badges.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
@@ -34,6 +35,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:mockito/mockito.dart';
+import 'package:provider/provider.dart';
 
 import '../../utils/accessibility_utils.dart';
 import '../../utils/canvas_model_utils.dart';
@@ -79,6 +81,7 @@ void main() {
     testWidgetsWithAccessibilityChecks('Shows while waiting for future', (tester) async {
       final interactor = _MockAlertsInteractor();
       when(interactor.getAlertsForStudent(any, any)).thenAnswer((_) => Future.value());
+
       _setupLocator(interactor: interactor);
 
       await tester.pumpWidget(_testableWidget());
@@ -460,7 +463,12 @@ void main() {
 
 Widget _testableWidget({User student, bool highContrastMode = false}) {
   return TestApp(
-    Scaffold(body: AlertsScreen(student ?? CanvasModelTestUtils.mockUser())),
+    ChangeNotifierProvider(
+      create: (context) => SelectedStudentNotifier()..update(CanvasModelTestUtils.mockUser(name: 'Trevor')),
+      child: Consumer<SelectedStudentNotifier>(builder: (context, model, _) {
+        return Scaffold(body: AlertsScreen());
+      }),
+    ),
     platformConfig: PlatformConfig(initWebview: true),
     highContrast: highContrastMode,
   );
@@ -481,3 +489,5 @@ class _MockAlertsInteractor extends Mock implements AlertsInteractor {}
 class _MockAnnouncementDetailsInteractor extends Mock implements AnnouncementDetailsInteractor {}
 
 class _MockAlertCountNotifier extends Mock implements AlertCountNotifier {}
+
+class _MockSelectedStudentNotifier extends Mock implements SelectedStudentNotifier {}

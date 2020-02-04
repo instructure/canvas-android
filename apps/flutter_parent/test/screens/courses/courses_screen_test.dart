@@ -23,12 +23,14 @@ import 'package:flutter_parent/screens/courses/courses_interactor.dart';
 import 'package:flutter_parent/screens/courses/courses_screen.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_interactor.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_screen.dart';
+import 'package:flutter_parent/screens/dashboard/selected_student_notifier.dart';
 import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mockito/mockito.dart';
+import 'package:provider/provider.dart';
 
 import '../../utils/accessibility_utils.dart';
 import '../../utils/test_app.dart';
@@ -45,13 +47,20 @@ void main() {
     _locator.registerFactory<QuickNav>(() => QuickNav());
   }
 
-  Widget _testableMaterialWidget([Widget widget, highContrast = false]) =>
-      TestApp(Scaffold(body: widget ?? CoursesScreen(_mockStudent('0'))), highContrast: highContrast);
+  Widget _testableMaterialWidget([Widget widget, highContrast = false]) => TestApp(
+      ChangeNotifierProvider<SelectedStudentNotifier>(
+          create: (context) => SelectedStudentNotifier()..update(_mockStudent('1')),
+          child: Consumer<SelectedStudentNotifier>(
+            builder: (context, model, _) {
+              return Scaffold(body: widget ?? CoursesScreen());
+            },
+          )),
+      highContrast: highContrast);
 
   testWidgetsWithAccessibilityChecks('shows loading indicator when retrieving courses', (tester) async {
     _setupLocator(_MockCoursesInteractor());
 
-    await tester.pumpWidget(TestApp(CoursesScreen(_mockStudent('0'))));
+    await tester.pumpWidget(_testableMaterialWidget());
     await tester.pump();
 
     final loadingWidget = find.byType(CircularProgressIndicator);
@@ -59,10 +68,13 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('does not show loading when courses are loaded', (tester) async {
-    _setupLocator(_MockCoursesInteractor());
+    var student = _mockStudent('1');
+    var courses = generateCoursesForStudent(student.id);
+
+    _setupLocator(_MockCoursesInteractor(courses: courses));
+
     await tester.pumpWidget(_testableMaterialWidget());
-    await tester.pump();
-    await tester.pump();
+    await tester.pumpAndSettle();
 
     final loadingWidget = find.byType(CircularProgressIndicator);
     expect(loadingWidget, findsNothing);
@@ -74,7 +86,7 @@ void main() {
 
     _setupLocator(_MockCoursesInteractor(courses: courses));
 
-    await tester.pumpWidget(_testableMaterialWidget(CoursesScreen(student)));
+    await tester.pumpWidget(_testableMaterialWidget());
     await tester.pumpAndSettle();
 
     final listTileWidget = find.byType(ListTile);
@@ -82,11 +94,9 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('shows empty message after load', (tester) async {
-    var student = _mockStudent('1');
-
     _setupLocator(_MockCoursesInteractor(courses: []));
 
-    await tester.pumpWidget(_testableMaterialWidget(CoursesScreen(student)));
+    await tester.pumpWidget(_testableMaterialWidget());
     await tester.pumpAndSettle();
 
     expect(find.text(l10n.noCoursesTitle), findsOneWidget);
@@ -94,14 +104,13 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Shows error state and performs refresh', (tester) async {
-    var student = _mockStudent('1');
     var interactor = _MockCoursesInteractor(courses: []);
 
     _setupLocator(interactor);
 
     interactor.error = true;
 
-    await tester.pumpWidget(_testableMaterialWidget(CoursesScreen(student)));
+    await tester.pumpWidget(_testableMaterialWidget());
     await tester.pumpAndSettle();
 
     expect(find.byType(ErrorPandaWidget), findsOneWidget);
@@ -122,7 +131,7 @@ void main() {
 
     _setupLocator(interactor);
 
-    await tester.pumpWidget(_testableMaterialWidget(CoursesScreen(student)));
+    await tester.pumpWidget(_testableMaterialWidget());
     await tester.pumpAndSettle();
 
     expect(find.byType(EmptyPandaWidget), findsOneWidget);
@@ -141,7 +150,7 @@ void main() {
 
     _setupLocator(_MockCoursesInteractor(courses: courses));
 
-    await tester.pumpWidget(_testableMaterialWidget(CoursesScreen(student)));
+    await tester.pumpWidget(_testableMaterialWidget());
     await tester.pumpAndSettle();
 
     final gradeWidget = find.text(l10n.noGrade);
@@ -162,7 +171,7 @@ void main() {
 
     _setupLocator(_MockCoursesInteractor(courses: courses));
 
-    await tester.pumpWidget(_testableMaterialWidget(CoursesScreen(student)));
+    await tester.pumpWidget(_testableMaterialWidget());
     await tester.pumpAndSettle();
 
     final gradeWidget = find.text('A');
@@ -183,7 +192,7 @@ void main() {
 
     _setupLocator(_MockCoursesInteractor(courses: courses));
 
-    await tester.pumpWidget(_testableMaterialWidget(CoursesScreen(student)));
+    await tester.pumpWidget(_testableMaterialWidget());
     await tester.pumpAndSettle();
 
     final gradeWidget = find.text('90%');
@@ -204,7 +213,7 @@ void main() {
 
     _setupLocator(_MockCoursesInteractor(courses: courses));
 
-    await tester.pumpWidget(_testableMaterialWidget(CoursesScreen(student), true));
+    await tester.pumpWidget(_testableMaterialWidget(null, true));
     await tester.pumpAndSettle();
 
     final matchedWidget = find.text(courses.first.name);
@@ -224,7 +233,7 @@ class _MockCoursesInteractor extends CoursesInteractor {
   _MockCoursesInteractor({this.courses});
 
   @override
-  Future<List<Course>> getCourses(String studentId, bool isRefresh) async {
+  Future<List<Course>> getCourses(String studentId, {bool isRefresh = false}) async {
     if (error) throw '';
     return courses ?? [_mockCourse('1')];
   }

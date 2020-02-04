@@ -46,7 +46,7 @@ void main() {
       await _setupScreen(tester, CanvasModelTestUtils.mockUser(name: 'Panda'));
       await tester.pumpAndSettle();
 
-      expect(find.text('Panda'), findsOneWidget);
+      expect(find.text('Panda Panda'), findsOneWidget);
       expect(find.byType(Avatar), findsOneWidget);
     });
 

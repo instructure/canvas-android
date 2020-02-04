@@ -17,12 +17,8 @@ import 'package:flutter_parent/network/api/course_api.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class CoursesInteractor {
-  Future<List<Course>> getCourses(String studentId, bool isRefresh) async {
+  Future<List<Course>> getCourses(String studentId, {bool isRefresh = false}) async {
     var courses = await locator<CourseApi>().getObserveeCourses(forceRefresh: isRefresh);
-
-    /// Filter enrollments by those associated with the specified student ID
-    courses.retainWhere((it) => it.enrollments?.any((enrollment) => enrollment.userId == studentId) ?? false);
-
     return courses;
   }
 }

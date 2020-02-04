@@ -73,7 +73,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Check if we're showing the initial student
-      expect(find.text('Billy'), findsOneWidget);
+      expect(find.text('Billy Panda'), findsOneWidget);
 
       // Pull to refresh\
       final matchedWidget = find.byType(RefreshIndicator);
@@ -81,7 +81,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // See if we got our new student
-      expect(find.text('Sally'), findsOneWidget);
+      expect(find.text('Sally Panda'), findsOneWidget);
     });
 
     testWidgetsWithAccessibilityChecks('Error on pull to refresh', (tester) async {
@@ -145,7 +145,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // See if we got the student back from the retry
-      expect(find.text('Billy'), findsOneWidget);
+      expect(find.text('Billy Panda'), findsOneWidget);
     });
   });
 
@@ -179,7 +179,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // See if we displaying the username
-      expect(find.text('Billy'), findsOneWidget);
+      expect(find.text('Billy Panda'), findsOneWidget);
     });
 
     testWidgetsWithAccessibilityChecks('Display username and pronouns ', (tester) async {
@@ -194,7 +194,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // See if we are correctly displaying the username and pronouns of the user
-      expect(find.text('Billy (he/him)'), findsOneWidget);
+      expect(find.text('Billy Panda (he/him)'), findsOneWidget);
     });
 
     testWidgetsWithAccessibilityChecks('Empty when null', (tester) async {
@@ -236,10 +236,10 @@ void main() {
       await tester.pumpAndSettle();
 
       // Make sure the user was loaded
-      expect(find.text('Billy'), findsOneWidget);
+      expect(find.text('Billy Panda'), findsOneWidget);
 
       // Tap on the user
-      await tester.tap(find.text('Billy'));
+      await tester.tap(find.text('Billy Panda'));
 
       // Pump and settle the page transition animation
       await tester.pump();
@@ -328,7 +328,7 @@ void main() {
 
       // Make sure we only have one student
       expect(find.byType(ListTile), findsNWidgets(1));
-      expect(find.text('Billy'), findsOneWidget);
+      expect(find.text('Billy Panda'), findsOneWidget);
 
       // Click FAB
       await _clickFAB(tester);
@@ -353,8 +353,8 @@ void main() {
 
       // Check for two students in the list
       expect(find.byType(ListTile), findsNWidgets(2));
-      expect(find.text('Billy'), findsOneWidget);
-      expect(find.text('Trevor'), findsOneWidget);
+      expect(find.text('Billy Panda'), findsOneWidget);
+      expect(find.text('Trevor Panda'), findsOneWidget);
     });
 
     testWidgetsWithAccessibilityChecks('Show error on fail', (tester) async {

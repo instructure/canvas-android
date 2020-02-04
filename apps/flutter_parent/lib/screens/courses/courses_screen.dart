@@ -18,95 +18,112 @@ import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/models/course_grade.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_screen.dart';
+import 'package:flutter_parent/screens/dashboard/selected_student_notifier.dart';
 import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 import 'courses_interactor.dart';
 
 class CoursesScreen extends StatefulWidget {
-  final User _student;
-
-  const CoursesScreen(this._student, {Key key}) : super(key: key);
-
   @override
   _CoursesScreenState createState() => _CoursesScreenState();
 }
 
 class _CoursesScreenState extends State<CoursesScreen> {
-  CoursesInteractor _interactor = locator<CoursesInteractor>();
+  User _student;
+  List<Course> _courses = [];
 
   Future<List<Course>> _coursesFuture;
 
-  @override
-  void initState() {
-    _loadCourses();
-    super.initState();
-  }
+  CoursesInteractor _interactor = locator<CoursesInteractor>();
 
-  Future<List<Course>> _loadCourses({bool isRefresh: false}) {
-    _coursesFuture = _interactor.getCourses(widget._student?.id, isRefresh);
-    if (isRefresh) setState(() {});
-    return _coursesFuture.catchError((_) {});
-  }
+  final GlobalKey<RefreshIndicatorState> _refreshKey = new GlobalKey<RefreshIndicatorState>();
 
   @override
-  Widget build(BuildContext context) {
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    var _selectedStudent = Provider.of<SelectedStudentNotifier>(context, listen: true).value;
+    if (_student != _selectedStudent) {
+      // The student was changed by the user, update the courses
+      _student = _selectedStudent;
+      if (_courses.isEmpty) {
+        // We haven't loaded the courses yet, let's do it now
+        _coursesFuture = _loadCourses();
+      }
+    }
+  }
+
+  Future<List<Course>> _loadCourses({bool forceRefresh = false}) =>
+      _interactor.getCourses(_student.id, isRefresh: forceRefresh);
+
+  @override
+  Widget build(BuildContext context) => _content(context);
+
+  Widget _content(BuildContext context) {
     return FutureBuilder(
       future: _coursesFuture,
-      builder: (BuildContext context, AsyncSnapshot<List<Course>> snapshot) {
-        if (snapshot.hasData) {
-          return RefreshIndicator(
-            onRefresh: () => _loadCourses(isRefresh: true),
-            child: _success(context, snapshot.data),
-          );
-        } else if (snapshot.hasError && snapshot.connectionState == ConnectionState.done) {
-          return ErrorPandaWidget(L10n(context).errorLoadingCourses, () => _loadCourses(isRefresh: true));
+      builder: (context, snapshot) {
+        Widget _body;
+        if (snapshot.hasError) {
+          _body = ErrorPandaWidget(L10n(context).errorLoadingCourses, () => _refreshKey.currentState.show());
+        } else if (snapshot.hasData) {
+          _courses = snapshot.data;
+          final studentCourses = _courses.where(_enrollmentFilter);
+          _body = (studentCourses == null || studentCourses.isEmpty)
+              ? EmptyPandaWidget(
+                  svgPath: 'assets/svg/panda-book.svg',
+                  title: L10n(context).noCoursesTitle,
+                  subtitle: L10n(context).noCoursesMessage,
+                )
+              : _success(studentCourses);
         } else {
           return LoadingIndicator();
         }
-      },
-    );
-  }
 
-  Widget _success(BuildContext context, List<Course> courses) {
-    if (courses.isEmpty) {
-      return EmptyPandaWidget(
-        svgPath: 'assets/svg/panda-book.svg',
-        title: L10n(context).noCoursesTitle,
-        subtitle: L10n(context).noCoursesMessage,
-      );
-    }
-
-    return ListView.builder(
-      padding: EdgeInsets.symmetric(vertical: 8),
-      itemCount: courses.length,
-      itemBuilder: (context, index) {
-        var course = courses[index];
-        return ListTile(
-          onTap: () => _courseTapped(context, course),
-          title: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              SizedBox(height: 8),
-              Text(course.name ?? '', style: Theme.of(context).textTheme.subhead),
-              SizedBox(height: 2),
-              Text(course.courseCode ?? '', style: Theme.of(context).textTheme.caption),
-              SizedBox(height: 4),
-              _courseGrade(context, course),
-              SizedBox(height: 8),
-            ],
-          ),
+        return RefreshIndicator(
+          key: _refreshKey,
+          onRefresh: () => _refresh(),
+          child: _body,
         );
       },
     );
   }
 
+  Widget _success(Iterable<Course> courses) {
+    return ListView.builder(
+        scrollDirection: Axis.vertical,
+        physics: const AlwaysScrollableScrollPhysics(),
+        itemCount: courses.length,
+        itemBuilder: (context, idx) {
+          var course = courses.toList()[idx];
+          return Padding(
+            padding: EdgeInsets.symmetric(vertical: 8),
+            child: ListTile(
+              onTap: () => _courseTapped(context, course),
+              title: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  SizedBox(height: 8),
+                  Text(course.name ?? '', style: Theme.of(context).textTheme.subhead),
+                  SizedBox(height: 2),
+                  Text(course.courseCode ?? '', style: Theme.of(context).textTheme.caption),
+                  SizedBox(height: 4),
+                  _courseGrade(context, course),
+                  SizedBox(height: 8),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
   Widget _courseGrade(context, Course course) {
-    CourseGrade grade = course.getCourseGrade(widget._student?.id);
+    CourseGrade grade = course.getCourseGrade(_student?.id);
     var format = NumberFormat.percentPattern();
     format.maximumFractionDigits = 2;
 
@@ -117,10 +134,29 @@ class _CoursesScreenState extends State<CoursesScreen> {
         ? L10n(context).noGrade
         : grade.currentGrade()?.isNotEmpty == true ? grade.currentGrade() : format.format(grade.currentScore() / 100);
 
-    return Text(text, style: Theme.of(context).textTheme.caption.copyWith(color: Theme.of(context).accentColor));
+    return Text(
+      text,
+      style: TextStyle(
+        color: Theme.of(context).accentColor,
+        fontSize: 16,
+        fontWeight: FontWeight.w500,
+      ),
+    );
+  }
+
+  /// Filters enrollments by those associated with the currently selected user
+  bool _enrollmentFilter(Course course) {
+    return course.enrollments?.any((enrollment) => enrollment.userId == _student?.id) ?? false;
   }
 
   void _courseTapped(context, Course course) {
-    locator<QuickNav>().push(context, CourseDetailsScreen.withCourse(widget._student.id, widget._student.name, course));
+    locator<QuickNav>().push(context, CourseDetailsScreen.withCourse(_student.id, _student.name, course));
+  }
+
+  Future<void> _refresh() {
+    setState(() {
+      _coursesFuture = _loadCourses(forceRefresh: true);
+    });
+    return _coursesFuture;
   }
 }
