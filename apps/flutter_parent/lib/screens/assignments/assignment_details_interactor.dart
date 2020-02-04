@@ -13,6 +13,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import 'package:flutter_parent/models/alarm.dart';
 import 'package:flutter_parent/models/assignment.dart';
+import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/network/api/assignment_api.dart';
 import 'package:flutter_parent/network/api/course_api.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
@@ -30,7 +31,7 @@ class AssignmentDetailsInteractor {
 
     return AssignmentDetails(
       assignment: (await assignment),
-      courseName: (await course).name,
+      course: (await course),
       alarm: alarm,
     );
   }
@@ -38,8 +39,8 @@ class AssignmentDetailsInteractor {
 
 class AssignmentDetails {
   final Alarm alarm;
-  final String courseName;
+  final Course course;
   final Assignment assignment;
 
-  AssignmentDetails({this.alarm, this.courseName, this.assignment});
+  AssignmentDetails({this.alarm, this.course, this.assignment});
 }

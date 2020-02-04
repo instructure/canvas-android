@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/alarm.dart';
 import 'package:flutter_parent/models/assignment.dart';
+import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/models/lock_info.dart';
 import 'package:flutter_parent/models/locked_module.dart';
 import 'package:flutter_parent/models/submission.dart';
@@ -69,7 +70,6 @@ void main() {
     await tester.pumpWidget(TestApp(
       AssignmentDetailsScreen(
         courseId: courseId,
-        courseCode: '',
         assignmentId: assignmentId,
         studentId: studentId,
         studentName: '',
@@ -86,14 +86,13 @@ void main() {
     final courseName = 'name';
     when(interactor.loadAssignmentDetails(any, courseId, assignmentId, studentId))
         .thenAnswer((_) async => AssignmentDetails(
-              courseName: courseName,
+              course: Course((b) => b..name = courseName),
               assignment: assignment,
             ));
 
     await tester.pumpWidget(TestApp(
       AssignmentDetailsScreen(
         courseId: courseId,
-        courseCode: '',
         assignmentId: assignmentId,
         studentId: studentId,
         studentName: '',
@@ -113,7 +112,6 @@ void main() {
     await tester.pumpWidget(TestApp(
       AssignmentDetailsScreen(
         courseId: courseId,
-        courseCode: '',
         assignmentId: assignmentId,
         studentId: studentId,
         studentName: '',
@@ -144,7 +142,6 @@ void main() {
     await tester.pumpWidget(TestApp(
       AssignmentDetailsScreen(
         courseId: courseId,
-        courseCode: '',
         assignmentId: assignmentId,
         studentId: studentId,
         studentName: studentName,
@@ -171,7 +168,6 @@ void main() {
     await tester.pumpWidget(TestApp(
       AssignmentDetailsScreen(
         courseId: courseId,
-        courseCode: '',
         assignmentId: assignmentId,
         studentId: studentId,
         studentName: '',
@@ -207,7 +203,6 @@ void main() {
     await tester.pumpWidget(TestApp(
       AssignmentDetailsScreen(
         courseId: courseId,
-        courseCode: '',
         assignmentId: assignmentId,
         studentId: studentId,
         studentName: '',
@@ -252,7 +247,6 @@ void main() {
     await tester.pumpWidget(TestApp(
       AssignmentDetailsScreen(
         courseId: courseId,
-        courseCode: '',
         assignmentId: assignmentId,
         studentId: studentId,
         studentName: '',
@@ -278,7 +272,6 @@ void main() {
     await tester.pumpWidget(TestApp(
       AssignmentDetailsScreen(
         courseId: courseId,
-        courseCode: '',
         assignmentId: assignmentId,
         studentId: studentId,
         studentName: '',
@@ -289,28 +282,6 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text(AppLocalizations().noDueDate), findsOneWidget);
-  });
-
-  testWidgetsWithAccessibilityChecks('shows lock info with unlock_at', (tester) async {
-    final unlockAt = DateTime(2000);
-    when(interactor.loadAssignmentDetails(any, courseId, assignmentId, studentId))
-        .thenAnswer((_) async => AssignmentDetails(assignment: assignment.rebuild((b) => b..unlockAt = unlockAt)));
-
-    await tester.pumpWidget(TestApp(
-      AssignmentDetailsScreen(
-        courseId: courseId,
-        courseCode: '',
-        assignmentId: assignmentId,
-        studentId: studentId,
-        studentName: '',
-      ),
-      highContrast: true,
-    ));
-
-    await tester.pumpAndSettle();
-
-    expect(find.text(AppLocalizations().assignmentLockLabel), findsOneWidget);
-    expect(find.text(AppLocalizations().assignmentLockedDate('Jan 1 at 12:00AM')), findsOneWidget);
   });
 
   testWidgetsWithAccessibilityChecks('shows lock info with module name', (tester) async {
@@ -327,7 +298,6 @@ void main() {
     await tester.pumpWidget(TestApp(
       AssignmentDetailsScreen(
         courseId: courseId,
-        courseCode: '',
         assignmentId: assignmentId,
         studentId: studentId,
         studentName: '',
@@ -345,15 +315,50 @@ void main() {
     expect(find.text(AppLocalizations().assignmentDescriptionLabel), findsNothing); // Fully locked, no description
   });
 
-  testWidgetsWithAccessibilityChecks('shows lock info with lock_explanation', (tester) async {
-    final explanation = 'it is locked';
-    when(interactor.loadAssignmentDetails(any, courseId, assignmentId, studentId)).thenAnswer(
-        (_) async => AssignmentDetails(assignment: assignment.rebuild((b) => b..lockExplanation = explanation)));
+  testWidgetsWithAccessibilityChecks('shows lock info with unlock date', (tester) async {
+    final lockExplanation = 'Locked date';
+    final unlockAt = DateTime.now().add(Duration(days: 1));
+    final lockInfo = LockInfo((b) => b..unlockAt = unlockAt);
+    when(interactor.loadAssignmentDetails(any, courseId, assignmentId, studentId))
+        .thenAnswer((_) async => AssignmentDetails(
+              assignment: assignment.rebuild((b) => b
+                ..lockExplanation = lockExplanation
+                ..lockInfo = lockInfo.toBuilder()
+                ..unlockAt = unlockAt),
+            ));
 
     await tester.pumpWidget(TestApp(
       AssignmentDetailsScreen(
         courseId: courseId,
-        courseCode: '',
+        assignmentId: assignmentId,
+        studentId: studentId,
+        studentName: '',
+      ),
+      highContrast: true,
+    ));
+
+    await tester.pumpAndSettle();
+
+    expect(find.text(AppLocalizations().assignmentLockLabel), findsOneWidget);
+    expect(find.text(lockExplanation), findsOneWidget);
+
+    expect(find.byType(SvgPicture), findsOneWidget); // Show the locked panda
+    expect(find.text(AppLocalizations().assignmentDueLabel), findsNothing); // Fully locked, no due date
+    expect(find.text(AppLocalizations().assignmentDescriptionLabel), findsNothing); // Fully locked, no description
+  });
+
+  testWidgetsWithAccessibilityChecks('shows lock info with lock_explanation', (tester) async {
+    final explanation = 'it is locked';
+    when(interactor.loadAssignmentDetails(any, courseId, assignmentId, studentId))
+        .thenAnswer((_) async => AssignmentDetails(
+              assignment: assignment.rebuild((b) => b
+                ..lockExplanation = explanation
+                ..lockAt = DateTime.now().add(Duration(days: -1))),
+            ));
+
+    await tester.pumpWidget(TestApp(
+      AssignmentDetailsScreen(
+        courseId: courseId,
         assignmentId: assignmentId,
         studentId: studentId,
         studentName: '',
@@ -371,6 +376,33 @@ void main() {
     expect(find.byType(SvgPicture), findsNothing); // Should not show the locked panda
   });
 
+  testWidgetsWithAccessibilityChecks('does not show lock info with lock_explanation if not yet locked', (tester) async {
+    final explanation = 'it is locked';
+    when(interactor.loadAssignmentDetails(any, courseId, assignmentId, studentId))
+        .thenAnswer((_) async => AssignmentDetails(
+              assignment: assignment.rebuild((b) => b
+                ..lockExplanation = explanation
+                ..lockAt = DateTime.now().add(Duration(days: 1))),
+            ));
+
+    await tester.pumpWidget(TestApp(
+      AssignmentDetailsScreen(
+        courseId: courseId,
+        courseCode: '',
+        assignmentId: assignmentId,
+        studentId: studentId,
+        studentName: '',
+      ),
+      highContrast: true,
+    ));
+
+    await tester.pumpAndSettle();
+
+    // Should not show locked info since it is not yet locked
+    expect(find.text(AppLocalizations().assignmentLockLabel), findsNothing);
+    expect(find.text(explanation), findsNothing);
+  });
+
   testWidgetsWithAccessibilityChecks('shows Assignment with no description', (tester) async {
     when(interactor.loadAssignmentDetails(any, courseId, assignmentId, studentId))
         .thenAnswer((_) async => AssignmentDetails(assignment: assignment.rebuild((b) => b..dueAt = null)));
@@ -378,7 +410,6 @@ void main() {
     await tester.pumpWidget(TestApp(
       AssignmentDetailsScreen(
         courseId: courseId,
-        courseCode: '',
         assignmentId: assignmentId,
         studentId: studentId,
         studentName: '',
@@ -401,7 +432,6 @@ void main() {
     await tester.pumpWidget(TestApp(
       AssignmentDetailsScreen(
         courseId: courseId,
-        courseCode: '',
         assignmentId: assignmentId,
         studentId: studentId,
         studentName: '',
@@ -422,7 +452,6 @@ void main() {
     await tester.pumpWidget(TestApp(
       AssignmentDetailsScreen(
         courseId: courseId,
-        courseCode: '',
         assignmentId: assignmentId,
         studentId: studentId,
         studentName: '',
