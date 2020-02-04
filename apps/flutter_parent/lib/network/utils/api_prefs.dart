@@ -88,6 +88,7 @@ class ApiPrefs {
   static Future<void> addLogin(Login login) async {
     _checkInit();
     var logins = getLogins();
+    logins.removeWhere((it) => it.domain == login.domain && it.user.id == login.user.id); // Remove duplicates
     logins.insert(0, login);
     await saveLogins(logins);
   }

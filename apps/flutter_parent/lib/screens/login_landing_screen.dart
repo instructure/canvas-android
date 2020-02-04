@@ -108,47 +108,49 @@ class LoginLandingScreen extends StatelessWidget {
       builder: (context, setState) {
         var logins = ApiPrefs.getLogins();
         if (logins.isEmpty) return Container();
-        return Padding(
+        return Column(
           key: Key('previous-logins'),
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(L10n(context).previousLogins, style: Theme.of(context).textTheme.caption),
-              SizedBox(height: 6),
-              Divider(height: 1),
-              AnimatedContainer(
-                curve: Curves.easeInOutBack,
-                duration: Duration(milliseconds: 400),
-                height: min(itemHeight * 2, itemHeight * logins.length),
-                child: ListView.builder(
-                  padding: EdgeInsets.symmetric(vertical: 0),
-                  itemCount: logins.length,
-                  itemBuilder: (context, index) {
-                    var login = logins[index];
-                    return ListTile(
-                      contentPadding: EdgeInsets.zero,
-                      onTap: () {
-                        ApiPrefs.switchLogins(login);
-                        locator<QuickNav>().push(context, SplashScreen());
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Text(L10n(context).previousLogins, style: Theme.of(context).textTheme.caption),
+            ),
+            SizedBox(height: 6),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Divider(height: 1),
+            ),
+            AnimatedContainer(
+              curve: Curves.easeInOutBack,
+              duration: Duration(milliseconds: 400),
+              height: min(itemHeight * 2, itemHeight * logins.length),
+              child: ListView.builder(
+                padding: EdgeInsets.symmetric(vertical: 0),
+                itemCount: logins.length,
+                itemBuilder: (context, index) {
+                  var login = logins[index];
+                  return ListTile(
+                    onTap: () {
+                      ApiPrefs.switchLogins(login);
+                      locator<QuickNav>().push(context, SplashScreen());
+                    },
+                    leading: Avatar.fromUser(login.user),
+                    title: UserName.fromUser(login.user),
+                    subtitle: Text(login.domain),
+                    trailing: IconButton(
+                      tooltip: L10n(context).delete,
+                      onPressed: () async {
+                        await ApiPrefs.removeLogin(login);
+                        setState(() {});
                       },
-                      leading: Avatar.fromUser(login.user),
-                      title: UserName.fromUser(login.user),
-                      subtitle: Text(login.domain),
-                      trailing: IconButton(
-                        tooltip: L10n(context).delete,
-                        onPressed: () async {
-                          await ApiPrefs.removeLogin(login);
-                          setState(() {});
-                        },
-                        icon: Icon(Icons.clear),
-                      ),
-                    );
-                  },
-                ),
+                      icon: Icon(Icons.clear),
+                    ),
+                  );
+                },
               ),
-            ],
-          ),
+            ),
+          ],
         );
       },
     );

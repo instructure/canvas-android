@@ -150,8 +150,6 @@ Future<void> setupPlatformChannels({PlatformConfig config = const PlatformConfig
 
   if (config.initWebview) _initPlatformWebView();
 
-  if (config.initSqflite) _initSqflite();
-
   // Return all the futures that were created
   return Future.wait([
     if (apiPrefsInitFuture != null) apiPrefsInitFuture,
@@ -231,16 +229,6 @@ void _initPlatformDeviceInfo() {
         'isPhysicalDevice': false,
         'androidId': 'fake-androidId',
       };
-    }
-    return null;
-  });
-}
-
-/// Mocks the platform channels for com.tekartik.sqflite
-void _initSqflite() {
-  const MethodChannel('com.tekartik.sqflite').setMockMethodCallHandler((MethodCall methodCall) async {
-    if (methodCall.method == 'getDatabasesPath') {
-      return 'test';
     }
     return null;
   });

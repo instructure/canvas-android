@@ -114,7 +114,6 @@ void main() {
     await setupPlatformChannels(
         config: PlatformConfig(
       mockPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid},
-      initSqflite: true,
     ));
     await ApiPrefs.addLogin(login);
 
