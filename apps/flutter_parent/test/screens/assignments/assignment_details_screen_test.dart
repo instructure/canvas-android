@@ -388,7 +388,6 @@ void main() {
     await tester.pumpWidget(TestApp(
       AssignmentDetailsScreen(
         courseId: courseId,
-        courseCode: '',
         assignmentId: assignmentId,
         studentId: studentId,
         studentName: '',
