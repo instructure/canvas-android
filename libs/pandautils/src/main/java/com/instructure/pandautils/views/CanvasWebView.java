@@ -798,40 +798,57 @@ public class CanvasWebView extends WebView implements NestedScrollingChild {
                 mFilePathCallback.onReceiveValue(null);
             }
             mFilePathCallback = filePath;
-            startVideoChooser(VIDEO_PICKER_RESULT_CODE);
+            startFileChooser(VIDEO_PICKER_RESULT_CODE, fileChooserParams);
             return true;
         }
 
         return false;
     }
 
-    private void startVideoChooser(final int requestCode) {
-        Intent videoIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
-        videoIntent.setType("video/*");
+    // Allow users to pick files for webview upload. Most common usage is for Studio uploads. Modified to allow file
+    // chooser params so other LTI's can also be used (like turnitin).
+    private void startFileChooser(final int requestCode, WebChromeClient.FileChooserParams fileChooserParams) {
+        Intent fileIntent = new Intent(Intent.ACTION_GET_CONTENT);
+        fileIntent.setType("*/*");
+        fileIntent.putExtra(Intent.EXTRA_MIME_TYPES, fileChooserParams.getAcceptTypes());
 
-        String fileName = "vid_" + System.currentTimeMillis() + ".mp4";
-        File file = new File(FileUploadUtils.getExternalCacheDir(mContext), fileName);
+        // Determine if we can upload video files so we can add the camera to the list of choices
+        boolean allowRecording = false;
+        for (String type : fileChooserParams.getAcceptTypes()) {
+            if (type.equalsIgnoreCase("video/*") || type.equalsIgnoreCase("video/mp4")) {
+                allowRecording = true;
+                break;
+            }
+        }
 
-        Uri cameraImageUri = FileProvider.getUriForFile(mContext, mContext.getPackageName() + Const.FILE_PROVIDER_AUTHORITY, file);
-        // Camera.
         final List<Intent> cameraIntents = new ArrayList<>();
-        final Intent captureIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-        final PackageManager packageManager = mContext.getPackageManager();
-        final List<ResolveInfo> listCam = packageManager.queryIntentActivities(captureIntent, 0);
-        for(ResolveInfo res : listCam) {
-            final String packageName = res.activityInfo.packageName;
-            final Intent intent = new Intent(captureIntent);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageUri);
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            intent.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
-            intent.setPackage(packageName);
-            cameraIntents.add(intent);
+        if (allowRecording) {
+            String fileName = "vid_" + System.currentTimeMillis() + ".mp4";
+            File file = new File(FileUploadUtils.getExternalCacheDir(mContext), fileName);
+
+            Uri cameraImageUri = FileProvider.getUriForFile(mContext, mContext.getPackageName() + Const.FILE_PROVIDER_AUTHORITY, file);
+            // Camera.
+            final Intent captureIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+            final PackageManager packageManager = mContext.getPackageManager();
+            final List<ResolveInfo> listCam = packageManager.queryIntentActivities(captureIntent, 0);
+            for (ResolveInfo res : listCam) {
+                final String packageName = res.activityInfo.packageName;
+                final Intent intent = new Intent(captureIntent);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageUri);
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                intent.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
+                intent.setPackage(packageName);
+                cameraIntents.add(intent);
+            }
         }
         // Chooser of filesystem options.
-        final Intent chooserIntent = Intent.createChooser(videoIntent, getContext().getString(R.string.pickVideo));
+        final String title = TextUtils.isEmpty(fileChooserParams.getTitle())
+                ? getContext().getString(R.string.pickFile)
+                : fileChooserParams.getTitle().toString();
+        final Intent chooserIntent = Intent.createChooser(fileIntent, title);
 
         // Add the camera options.
-        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, cameraIntents.toArray(new Parcelable[cameraIntents.size()]));
+        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, cameraIntents.toArray(new Parcelable[0]));
 
         mVideoPickerCallback.requestStartActivityForResult(chooserIntent, requestCode);
     }
