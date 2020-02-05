@@ -12,9 +12,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
-class DropdownArrow extends StatefulWidget {
+class DropdownArrow extends StatelessWidget {
   const DropdownArrow({
     Key key,
     this.size = 4,
@@ -27,61 +29,23 @@ class DropdownArrow extends StatefulWidget {
   final double size;
   final double strokeWidth;
   final Color color;
-
   final bool rotate;
 
   @override
-  State<StatefulWidget> createState() => _DropDownArrowState();
-}
-
-class _DropDownArrowState extends State<DropdownArrow> with SingleTickerProviderStateMixin {
-  AnimationController rotationController;
-  Animation<double> animation;
-
-  @override
-  void initState() {
-    super.initState();
-    _prepareAnimations();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return RotationTransition(
-      turns: animation,
-      child: CustomPaint(
-        child: SizedBox(width: widget.size * 2, height: widget.size),
-        painter: _DropdownArrowPainter(widget.color, widget.strokeWidth),
-      ),
+    return TweenAnimationBuilder(
+      tween: Tween<double>(begin: 0, end: rotate ? -pi : 0),
+      duration: Duration(milliseconds: 300),
+      builder: (context, value, _) {
+        return Transform.rotate(
+          angle: value,
+          child: CustomPaint(
+            child: SizedBox(width: size * 2, height: size),
+            painter: _DropdownArrowPainter(color, strokeWidth),
+          ),
+        );
+      },
     );
-  }
-
-  void _prepareAnimations() {
-    rotationController = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: 200),
-      upperBound: .35,
-    );
-    animation = CurvedAnimation(parent: rotationController, curve: Curves.fastOutSlowIn);
-  }
-
-  void _runRotationCheck() {
-    if (widget.rotate) {
-      rotationController.forward();
-    } else {
-      rotationController.reverse();
-    }
-  }
-
-  @override
-  void dispose() {
-    rotationController.dispose();
-    super.dispose();
-  }
-
-  @override
-  void didUpdateWidget(DropdownArrow oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    _runRotationCheck();
   }
 }
 
