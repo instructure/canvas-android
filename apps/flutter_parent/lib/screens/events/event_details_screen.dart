@@ -60,30 +60,37 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
-      key: _refreshKey,
-      onRefresh: () {
-        setState(() {
-          _eventFuture = _loadEvent(forceRefresh: true);
-        });
-        return _eventFuture.catchError((_) {});
+    return FutureBuilder(
+      future: _eventFuture,
+      builder: (context, AsyncSnapshot<ScheduleItem> snapshot) {
+        return Scaffold(
+          appBar: AppBar(title: Text(L10n(context).eventDetailsTitle)),
+          body: RefreshIndicator(
+            key: _refreshKey,
+            onRefresh: () {
+              setState(() {
+                _eventFuture = _loadEvent(forceRefresh: true);
+              });
+              return _eventFuture.catchError((_) {});
+            },
+            child: _body(context, snapshot),
+          ),
+        );
       },
-      child: FutureBuilder(
-        future: _eventFuture,
-        builder: (context, AsyncSnapshot<ScheduleItem> snapshot) {
-          if (snapshot.hasError) {
-            return ErrorPandaWidget(
-              L10n(context).unexpectedError,
-              () => _refreshKey.currentState.show(),
-            );
-          } else if (!snapshot.hasData) {
-            return LoadingIndicator();
-          } else {
-            return _EventDetails(snapshot.data);
-          }
-        },
-      ),
     );
+  }
+
+  Widget _body(BuildContext context, AsyncSnapshot<ScheduleItem> snapshot) {
+    if (snapshot.hasError) {
+      return ErrorPandaWidget(
+        L10n(context).unexpectedError,
+        () => _refreshKey.currentState.show(),
+      );
+    } else if (!snapshot.hasData) {
+      return LoadingIndicator();
+    } else {
+      return _EventDetails(snapshot.data);
+    }
   }
 }
 
@@ -102,8 +109,7 @@ class _EventDetails extends StatelessWidget {
     String dateLine1, dateLine2;
     final date = event.startAt ?? event.endAt;
     if (event.isAllDay) {
-      dateLine1 = l10n.eventAllDayLabel;
-      dateLine2 = _dateFormat(date);
+      dateLine1 = _dateFormat(date);
     } else if (event.startAt != null && event.endAt != null && event.startAt != event.endAt) {
       dateLine1 = _dateFormat(date);
       dateLine2 = l10n.eventTime(_timeFormat(event.startAt), _timeFormat(event.endAt));
@@ -124,26 +130,33 @@ class _EventDetails extends StatelessWidget {
       locationLine2 = event.locationAddress;
     }
 
-    return Scaffold(
-      appBar: AppBar(title: Text(event.title ?? l10n.eventDetailsDefaultTitle)),
-      body: ListView(
-        children: [
-          SizedBox(height: 20),
-          _SimpleTile(
-            leading: Icon(Icons.timer),
-            line1: dateLine1,
-            line2: dateLine2,
+    final textTheme = Theme.of(context).textTheme;
+
+    return ListView(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 16),
+              Text(event.title ?? '', style: textTheme.display1),
+              SizedBox(height: 16),
+              Divider(),
+              _SimpleTile(label: l10n.eventDateLabel, line1: dateLine1, line2: dateLine2),
+              Divider(),
+              _SimpleTile(label: l10n.eventLocationLabel, line1: locationLine1, line2: locationLine2),
+              Divider(),
+              _SimpleHeader(label: l10n.assignmentDescriptionLabel),
+            ],
           ),
-          SizedBox(height: 20),
-          _SimpleTile(
-            leading: Icon(Icons.location_on),
-            line1: locationLine1,
-            line2: locationLine2,
-          ),
-          SizedBox(height: 16),
-          ConstrainedWebView(content: event.description, horizontalPadding: 10),
-        ],
-      ),
+        ),
+        // No external padding for the webview, defined via the html in the web view
+        ConstrainedWebView(
+          content: event.description,
+          horizontalPadding: 16,
+        ),
+      ],
     );
   }
 
@@ -157,36 +170,40 @@ class _EventDetails extends StatelessWidget {
 }
 
 class _SimpleTile extends StatelessWidget {
-  final Widget leading;
-  final String line1;
-  final String line2;
+  final String label, line1, line2;
 
-  const _SimpleTile({Key key, this.leading, this.line1, this.line2}) : super(key: key);
+  const _SimpleTile({Key key, this.label, this.line1, this.line2}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final style = Theme.of(context).textTheme.subhead;
+    final textTheme = Theme.of(context).textTheme;
 
-    return Row(
-      // If wwe only have one line, center the content. Otherwise align start
-      crossAxisAlignment: (line1?.isNotEmpty == true && line2?.isNotEmpty == true)
-          ? CrossAxisAlignment.start
-          : CrossAxisAlignment.center,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(width: 16),
-        leading,
-        SizedBox(width: 16),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (line1?.isNotEmpty == true) Text(line1, style: style),
-              if (line1?.isNotEmpty == true && line2?.isNotEmpty == true) SizedBox(height: 8),
-              if (line2?.isNotEmpty == true) Text(line2, style: style),
-            ],
-          ),
-        ),
-        SizedBox(width: 16),
+        _SimpleHeader(label: label),
+        Text(line1 ?? '', style: textTheme.subhead),
+        if (line2 != null) SizedBox(height: 8),
+        if (line2 != null) Text(line2, style: textTheme.subhead),
+        SizedBox(height: 16),
+      ],
+    );
+  }
+}
+
+class _SimpleHeader extends StatelessWidget {
+  final String label;
+
+  const _SimpleHeader({Key key, this.label}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        SizedBox(height: 16),
+        Text(label, style: Theme.of(context).textTheme.overline),
+        SizedBox(height: 8),
       ],
     );
   }

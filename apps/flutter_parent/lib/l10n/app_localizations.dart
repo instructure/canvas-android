@@ -847,11 +847,11 @@ class AppLocalizations {
 
   /// Event details
 
-  String get eventDetailsDefaultTitle =>
-      Intl.message('Event', desc: 'Title for the event details screen if an event does not have a title');
+  String get eventDetailsTitle => Intl.message('Event', desc: 'Title for the event details screen');
 
-  String get eventAllDayLabel =>
-      Intl.message('All Day Event', desc: 'Label for the events that are scheduled for the entire day');
+  String get eventDateLabel => Intl.message('Date', desc: 'Label for the event date');
+
+  String get eventLocationLabel => Intl.message('Location', desc: 'Label for the location information');
 
   String get eventNoLocation =>
       Intl.message('No Location Specified', desc: 'Description for events that do not have a location');

@@ -22,7 +22,7 @@ class ConstrainedWebView extends StatefulWidget {
   final double horizontalPadding;
 
   const ConstrainedWebView(
-      {Key key, @required this.content, this.emptyDescription, this.initialHeight = 10, this.horizontalPadding = 0})
+      {Key key, @required this.content, this.emptyDescription, this.initialHeight = 1, this.horizontalPadding = 0})
       : assert(initialHeight != null),
         assert(horizontalPadding != null),
         super(key: key);
@@ -63,6 +63,8 @@ class _ConstrainedWebViewState extends State<ConstrainedWebView> {
       }
     }
 
+    // Unfortunately, there is an issue where the web view will load a black screen first before it's initialized. This
+    // is a known problem and can be followed here: https://github.com/flutter/flutter/issues/27198
     return ConstrainedBox(
       constraints: BoxConstraints(maxHeight: _height),
       child: WebView(

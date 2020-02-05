@@ -127,8 +127,7 @@ void main() {
       await tester.pump(); // Let the widget build
       await tester.pump(); // Let the future finish
 
-      expect(find.byIcon(Icons.timer), findsOneWidget);
-      expect(find.text(l10n.eventAllDayLabel), findsOneWidget);
+      expect(find.text(l10n.eventDateLabel), findsOneWidget);
       expect(find.text('Saturday Jan 1, 2000'), findsOneWidget);
     });
 
@@ -142,8 +141,7 @@ void main() {
       await tester.pump(); // Let the widget build
       await tester.pump(); // Let the future finish
 
-      expect(find.byIcon(Icons.timer), findsOneWidget);
-      expect(find.text(l10n.eventAllDayLabel), findsOneWidget);
+      expect(find.text(l10n.eventDateLabel), findsOneWidget);
       expect(find.text('Saturday Jan 1, 2000'), findsOneWidget);
     });
 
@@ -158,7 +156,7 @@ void main() {
       await tester.pump(); // Let the widget build
       await tester.pump(); // Let the future finish
 
-      expect(find.byIcon(Icons.timer), findsOneWidget);
+      expect(find.text(l10n.eventDateLabel), findsOneWidget);
       expect(find.text('Saturday Jan 1, 2000'), findsOneWidget);
       expect(find.text(l10n.eventTime('12:00 AM', '2:00 AM')), findsOneWidget);
     });
@@ -171,7 +169,7 @@ void main() {
       await tester.pump(); // Let the widget build
       await tester.pump(); // Let the future finish
 
-      expect(find.byIcon(Icons.timer), findsOneWidget);
+      expect(find.text(l10n.eventDateLabel), findsOneWidget);
       expect(find.text('Saturday Jan 1, 2000'), findsOneWidget);
       expect(find.text('12:00 AM'), findsOneWidget);
     });
@@ -184,7 +182,7 @@ void main() {
       await tester.pump(); // Let the widget build
       await tester.pump(); // Let the future finish
 
-      expect(find.byIcon(Icons.timer), findsOneWidget);
+      expect(find.text(l10n.eventDateLabel), findsOneWidget);
       expect(find.text('Saturday Jan 1, 2000'), findsOneWidget);
       expect(find.text('12:00 AM'), findsOneWidget);
     });
@@ -202,7 +200,7 @@ void main() {
       await tester.pump(); // Let the widget build
       await tester.pump(); // Let the future finish
 
-      expect(find.byIcon(Icons.location_on), findsOneWidget);
+      expect(find.text(l10n.eventLocationLabel), findsOneWidget);
       expect(find.text(name), findsOneWidget);
       expect(find.text(address), findsOneWidget);
     });
@@ -215,7 +213,7 @@ void main() {
       await tester.pump(); // Let the widget build
       await tester.pump(); // Let the future finish
 
-      expect(find.byIcon(Icons.location_on), findsOneWidget);
+      expect(find.text(l10n.eventLocationLabel), findsOneWidget);
       expect(find.text(name), findsOneWidget);
     });
 
@@ -227,7 +225,7 @@ void main() {
       await tester.pump(); // Let the widget build
       await tester.pump(); // Let the future finish
 
-      expect(find.byIcon(Icons.location_on), findsOneWidget);
+      expect(find.text(l10n.eventLocationLabel), findsOneWidget);
       expect(find.text(address), findsOneWidget);
     });
 
@@ -238,12 +236,12 @@ void main() {
       await tester.pump(); // Let the widget build
       await tester.pump(); // Let the future finish
 
-      expect(find.byIcon(Icons.location_on), findsOneWidget);
+      expect(find.text(l10n.eventLocationLabel), findsOneWidget);
       expect(find.text(l10n.eventNoLocation), findsOneWidget);
     });
   });
 
-  testWidgetsWithAccessibilityChecks('shows event title as app bar title', (tester) async {
+  testWidgetsWithAccessibilityChecks('shows event title', (tester) async {
     final title = 'Event Test Title';
     final event = baseEvent.rebuild((b) => b..title = title);
 
@@ -251,18 +249,8 @@ void main() {
     await tester.pump(); // Let the widget build
     await tester.pump(); // Let the future finish
 
-    expect(find.descendant(of: find.byType(AppBar), matching: find.text(title)), findsOneWidget);
-  });
-
-  testWidgetsWithAccessibilityChecks('shows default title as app bar title when event has no title', (tester) async {
-    final event = baseEvent;
-
-    await tester.pumpWidget(TestApp(EventDetailsScreen.withEvent(event: event)));
-    await tester.pump(); // Let the widget build
-    await tester.pump(); // Let the future finish
-
-    expect(
-        find.descendant(of: find.byType(AppBar), matching: find.text(l10n.eventDetailsDefaultTitle)), findsOneWidget);
+    expect(find.text(l10n.eventDetailsTitle), findsOneWidget);
+    expect(find.text(title), findsOneWidget);
   });
 
   testWidgetsWithAccessibilityChecks('shows webview', (tester) async {
@@ -276,6 +264,7 @@ void main() {
     await tester.pump(); // Let the widget build
     await tester.pump(); // Let the future finish
 
+    expect(find.text(l10n.assignmentDescriptionLabel), findsOneWidget);
     expect(find.byType(WebView), findsOneWidget);
   });
 }
