@@ -58,7 +58,7 @@ abstract class ScheduleItem implements Built<ScheduleItem, ScheduleItemBuilder> 
   @nullable
   String get locationAddress;
 
-  String get type; // Either 'event' or 'calendar'
+  String get type; // Either 'event' or 'assignment'
 
   @BuiltValueField(wireName: 'location_name')
   @nullable

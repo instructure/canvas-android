@@ -18,6 +18,7 @@ import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/screens/assignments/assignment_details_interactor.dart';
 import 'package:flutter_parent/screens/assignments/grade_cell.dart';
 import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_screen.dart';
+import 'package:flutter_parent/utils/common_widgets/constrained_web_view.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/design/canvas_icons_solid.dart';
@@ -27,7 +28,6 @@ import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:flutter_parent/utils/web_view_utils.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 
 class AssignmentDetailsScreen extends StatefulWidget {
   final String courseId;
@@ -222,7 +222,10 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
               title: assignment.submissionTypes?.contains(SubmissionTypes.onlineQuiz) == true
                   ? l10n.assignmentInstructionsLabel
                   : l10n.assignmentDescriptionLabel,
-              child: _AssignmentDescription(assignment: assignment),
+              child: ConstrainedWebView(
+                content: assignment.description,
+                emptyDescription: l10n.assignmentNoDescriptionBody,
+              ),
             ),
           // TODO: Add in 'Learn more' feature
 //        Divider(),
@@ -283,53 +286,5 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
     String subject = L10n(context).assignmentSubjectMessage(widget.studentName, details.assignment.name);
     Widget screen = CreateConversationScreen.fromAssignment(course, subject, details.assignment.htmlUrl);
     locator.get<QuickNav>().push(context, screen);
-  }
-}
-
-class _AssignmentDescription extends StatefulWidget {
-  final Assignment assignment;
-
-  const _AssignmentDescription({Key key, this.assignment}) : super(key: key);
-
-  @override
-  __AssignmentDescriptionState createState() => __AssignmentDescriptionState();
-}
-
-class __AssignmentDescriptionState extends State<_AssignmentDescription> {
-  double _height = 10;
-  WebViewController _controller;
-
-  @override
-  void dispose() {
-    _controller = null;
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = L10n(context);
-    final textTheme = Theme.of(context).textTheme;
-    final assignment = widget.assignment;
-
-    if (assignment.description == null || assignment.description.isEmpty)
-      return Text(l10n.assignmentNoDescriptionBody, style: textTheme.body1);
-
-    return ConstrainedBox(
-      constraints: BoxConstraints(maxHeight: _height),
-      child: WebView(
-        javascriptMode: JavascriptMode.unrestricted,
-        onPageFinished: (url) async {
-          if (!url.startsWith('data:text/html')) return; // An attempt to make links not resize the webview and crash
-          final height =
-              double.parse(await _controller?.evaluateJavascript('document.documentElement.scrollHeight;') ?? '0');
-
-          setState(() => _height = height);
-        },
-        onWebViewCreated: (WebViewController webViewController) async {
-          webViewController.loadHtml(assignment.description);
-          _controller = webViewController;
-        },
-      ),
-    );
   }
 }
