@@ -17,6 +17,7 @@ import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_model.dart';
 import 'package:flutter_parent/screens/courses/details/course_grades_screen.dart';
+import 'package:flutter_parent/screens/courses/details/course_home_page_screen.dart';
 import 'package:flutter_parent/screens/courses/details/course_summary_screen.dart';
 import 'package:flutter_parent/screens/courses/details/course_syllabus_screen.dart';
 import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_screen.dart';
@@ -69,23 +70,27 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
   }
 
   Widget _body(BuildContext context, CourseDetailsModel model) {
+    final tabCount = model.tabCount();
     return DefaultTabController(
-      length: model.hasSyllabus() ? 3 : 2,
+      length: tabCount,
       child: Scaffold(
         appBar: AppBar(
             title: Text(model.course?.name ?? ''),
             bottom: ParentTheme.of(context).appBarDivider(
-              bottom: TabBar(
-                tabs: [
-                  Tab(text: L10n(context).courseGradesLabel.toUpperCase()),
-                  if (model.hasSyllabus()) Tab(text: L10n(context).courseSyllabusLabel.toUpperCase()),
-                  Tab(text: L10n(context).courseSummaryLabel.toUpperCase()),
-                ],
-              ),
+              bottom: (tabCount <= 1)
+                  ? null // Don't show the tab bar if we only have one tab
+                  : TabBar(
+                      tabs: [
+                        Tab(text: L10n(context).courseGradesLabel.toUpperCase()),
+                        if (model.hasHomePageAsFrontPage) Tab(text: L10n(context).courseFrontPageLabel.toUpperCase()),
+                        if (model.hasHomePageAsSyllabus) Tab(text: L10n(context).courseSyllabusLabel.toUpperCase()),
+                        if (model.showSummary) Tab(text: L10n(context).courseSummaryLabel.toUpperCase()),
+                      ],
+                    ),
             )),
         body: _tabBody(context, model),
         floatingActionButton: FloatingActionButton(
-          onPressed: () => _sendMessage(),
+          onPressed: () => _sendMessage(model.hasHomePageAsSyllabus),
           child: Semantics(
             label: L10n(context).courseMessageHint,
             child: Padding(
@@ -108,22 +113,28 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
         },
       );
     } else {
-      return TabBarView(children: [
-        CourseGradesScreen(),
-        if (model.hasSyllabus()) CourseSyllabusScreen(model.course.syllabusBody),
-        CourseSummaryScreen(),
-      ]);
+      return TabBarView(
+        children: [
+          CourseGradesScreen(),
+          if (model.hasHomePageAsFrontPage) CourseHomePageScreen(courseId: model.courseId),
+          if (model.hasHomePageAsSyllabus) CourseSyllabusScreen(model.course.syllabusBody),
+          if (model.showSummary) CourseSummaryScreen(),
+        ],
+      );
     }
   }
 
-  void _sendMessage() {
+  void _sendMessage(bool hasSyllabus) {
     String subject;
     if (CourseDetailsModel.selectedTab == 0) {
       // Grades
       subject = L10n(context).gradesSubjectMessage(widget._model.studentName);
-    } else {
+    } else if (hasSyllabus) {
       // Syllabus
       subject = L10n(context).syllabusSubjectMessage(widget._model.studentName);
+    } else {
+      // Front Page
+      subject = L10n(context).frontPageSubjectMessage(widget._model.studentName);
     }
 
     Widget screen = CreateConversationScreen.withSubject(widget._model.course, subject);

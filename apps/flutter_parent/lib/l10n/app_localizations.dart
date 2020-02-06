@@ -428,6 +428,11 @@ class AppLocalizations {
         desc: 'Label for the "Syllabus" tab in course details',
       );
 
+  String get courseFrontPageLabel => Intl.message(
+        'Front Page',
+        desc: 'Label for the "Front Page" tab in course details',
+      );
+
   String get courseSummaryLabel => Intl.message(
         'Summary',
         desc: 'Label for the "Summary" tab in course details',
@@ -531,11 +536,23 @@ class AppLocalizations {
         args: [studentName],
       );
 
+  String frontPageSubjectMessage(String studentName) => Intl.message(
+        'Regarding: $studentName, Front Page',
+        desc: 'The subject line for a message to a teacher regarding a course front page',
+        name: 'frontPageSubjectMessage',
+        args: [studentName],
+      );
+
   String assignmentSubjectMessage(String studentName, String assignmentName) => Intl.message(
         'Regarding: $studentName, Assignment - $assignmentName',
         desc: 'The subject line for a message to a teacher regarding a student\'s assignment',
         name: 'assignmentSubjectMessage',
         args: [studentName, assignmentName],
+      );
+
+  String get noPageFound => Intl.message(
+        'There is no page information available.',
+        desc: 'Description for when no page information is available',
       );
 
   /// Assignment Details Screen
@@ -985,6 +1002,7 @@ class AppLocalizations {
   String get genericNetworkError => Intl.message('Network error');
 
   String get underConstruction => Intl.message('Under Construction');
+
   String get currentlyBuildingThisFeature =>
       Intl.message('We are currently building this feature for your viewing pleasure.');
 }

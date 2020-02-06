@@ -29,6 +29,7 @@ import 'package:flutter_parent/models/basic_user.dart';
 import 'package:flutter_parent/models/canvas_token.dart';
 import 'package:flutter_parent/models/conversation.dart';
 import 'package:flutter_parent/models/course.dart';
+import 'package:flutter_parent/models/course_tab.dart';
 import 'package:flutter_parent/models/enrollment.dart';
 import 'package:flutter_parent/models/grade.dart';
 import 'package:flutter_parent/models/grading_period.dart';
@@ -39,6 +40,7 @@ import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/models/media_comment.dart';
 import 'package:flutter_parent/models/message.dart';
 import 'package:flutter_parent/models/mobile_verify_result.dart';
+import 'package:flutter_parent/models/page.dart';
 import 'package:flutter_parent/models/recipient.dart';
 import 'package:flutter_parent/models/remote_file.dart';
 import 'package:flutter_parent/models/schedule_item.dart';
@@ -67,6 +69,7 @@ part 'serializers.g.dart';
   CanvasToken,
   Conversation,
   Course,
+  CourseTab,
   Enrollment,
   FileUploadConfig,
   Grade,
@@ -78,6 +81,7 @@ part 'serializers.g.dart';
   MediaComment,
   Message,
   MobileVerifyResult,
+  Page,
   Recipient,
   RemoteFile,
   SchoolDomain,
