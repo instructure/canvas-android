@@ -46,6 +46,7 @@ import com.instructure.pandautils.utils.AppType
 import com.instructure.pandautils.utils.Utils
 import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.student.R
 import com.instructure.student.activity.InternalWebViewActivity
 import com.instructure.student.util.LoggingUtility

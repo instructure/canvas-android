@@ -433,8 +433,10 @@ void main() {
       // Get the first user
       var interactor = GetIt.instance.get<DashboardInteractor>();
       User first;
+      User second;
       interactor.getStudents().then((students) {
         first = students.first;
+        second = students[1];
       });
 
       // Load the screen
@@ -456,7 +458,7 @@ void main() {
       expect(slideAnimation.value, expanded);
 
       // Tap on a user
-      await tester.tap(find.text(first.shortName));
+      await tester.tap(find.text(second.shortName));
       await tester.pumpAndSettle(); // Wait for user switcher to slide back
 
       expect(slideAnimation.value, retracted);

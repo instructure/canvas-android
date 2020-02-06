@@ -80,7 +80,7 @@ class DashboardState extends State<DashboardScreen> {
 
   @override
   void initState() {
-    _selectedStudentNotifier = SelectedStudentNotifier();
+    _selectedStudentNotifier = _interactor.getSelectedStudentNotifier();
     _loadSelf();
     if (widget.students?.isNotEmpty == true) {
       _students = widget.students;

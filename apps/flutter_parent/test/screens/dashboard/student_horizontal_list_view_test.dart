@@ -30,9 +30,9 @@ import '../../utils/test_app.dart';
 void main() {
   group('Render', () {
     testWidgetsWithAccessibilityChecks('shows all students as well as add student button', (tester) async {
-      var student1 = CanvasModelTestUtils.mockUser(name: 'Billy');
-      var student2 = CanvasModelTestUtils.mockUser(name: 'Sally');
-      var student3 = CanvasModelTestUtils.mockUser(name: 'Trevor');
+      var student1 = CanvasModelTestUtils.mockUser(shortName: 'Billy');
+      var student2 = CanvasModelTestUtils.mockUser(shortName: 'Sally');
+      var student3 = CanvasModelTestUtils.mockUser(shortName: 'Trevor');
       var students = [student1, student2, student3];
 
       // Setup the widget
@@ -49,8 +49,8 @@ void main() {
 
   group('Interaction', () {
     testWidgetsWithAccessibilityChecks('student tap updates selected student, theme, and calls onTap', (tester) async {
-      var student1 = CanvasModelTestUtils.mockUser(name: 'Billy');
-      var student2 = CanvasModelTestUtils.mockUser(name: 'Sally');
+      var student1 = CanvasModelTestUtils.mockUser(shortName: 'Billy');
+      var student2 = CanvasModelTestUtils.mockUser(shortName: 'Sally');
 
       var students = [student1, student2];
 

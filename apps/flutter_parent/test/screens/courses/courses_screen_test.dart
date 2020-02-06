@@ -38,190 +38,225 @@ import '../../utils/test_app.dart';
 void main() {
   AppLocalizations l10n = AppLocalizations();
 
-  _setupLocator(_MockCoursesInteractor mockInteractor) {
+  _setupLocator(_MockCoursesInteractor mockInteractor, {SelectedStudentNotifier notifier}) {
     final _locator = GetIt.instance;
     _locator.reset();
     _locator.registerFactory<CoursesInteractor>(() => mockInteractor);
     _locator.registerFactory<CourseDetailsInteractor>(() => _MockCourseDetailsInteractor());
     _locator.registerFactory<AssignmentApi>(() => _MockAssignmentApi());
     _locator.registerFactory<QuickNav>(() => QuickNav());
+
+    _locator.registerLazySingleton<SelectedStudentNotifier>(() => notifier ?? SelectedStudentNotifier());
   }
 
-  Widget _testableMaterialWidget([Widget widget, highContrast = false]) => TestApp(
-      ChangeNotifierProvider<SelectedStudentNotifier>(
-          create: (context) => SelectedStudentNotifier()..update(_mockStudent('1')),
-          child: Consumer<SelectedStudentNotifier>(
-            builder: (context, model, _) {
-              return Scaffold(body: widget ?? CoursesScreen());
-            },
-          )),
-      highContrast: highContrast);
+  Widget _testableMaterialWidget({Widget widget, highContrast = false, SelectedStudentNotifier notifier = null}) =>
+      TestApp(
+          ChangeNotifierProvider<SelectedStudentNotifier>(
+              create: (context) => notifier ?? SelectedStudentNotifier()
+                ..update(_mockStudent('1')),
+              child: Consumer<SelectedStudentNotifier>(
+                builder: (context, model, _) {
+                  return Scaffold(body: widget ?? CoursesScreen());
+                },
+              )),
+          highContrast: highContrast);
 
-  testWidgetsWithAccessibilityChecks('shows loading indicator when retrieving courses', (tester) async {
-    _setupLocator(_MockCoursesInteractor());
+  group('Render', () {
+    testWidgetsWithAccessibilityChecks('shows loading indicator when retrieving courses', (tester) async {
+      _setupLocator(_MockCoursesInteractor());
 
-    await tester.pumpWidget(_testableMaterialWidget());
-    await tester.pump();
+      await tester.pumpWidget(_testableMaterialWidget());
+      await tester.pump();
 
-    final loadingWidget = find.byType(CircularProgressIndicator);
-    expect(loadingWidget, findsOneWidget);
-  });
+      final loadingWidget = find.byType(CircularProgressIndicator);
+      expect(loadingWidget, findsOneWidget);
+    });
 
-  testWidgetsWithAccessibilityChecks('does not show loading when courses are loaded', (tester) async {
-    var student = _mockStudent('1');
-    var courses = generateCoursesForStudent(student.id);
+    testWidgetsWithAccessibilityChecks('does not show loading when courses are loaded', (tester) async {
+      var student = _mockStudent('1');
+      var courses = generateCoursesForStudent(student.id);
 
-    _setupLocator(_MockCoursesInteractor(courses: courses));
+      _setupLocator(_MockCoursesInteractor(courses: courses));
 
-    await tester.pumpWidget(_testableMaterialWidget());
-    await tester.pumpAndSettle();
+      await tester.pumpWidget(_testableMaterialWidget());
+      await tester.pumpAndSettle();
 
-    final loadingWidget = find.byType(CircularProgressIndicator);
-    expect(loadingWidget, findsNothing);
-  });
+      final loadingWidget = find.byType(CircularProgressIndicator);
+      expect(loadingWidget, findsNothing);
+    });
 
-  testWidgetsWithAccessibilityChecks('shows courses after load', (tester) async {
-    var student = _mockStudent('1');
-    var courses = generateCoursesForStudent(student.id);
+    testWidgetsWithAccessibilityChecks('shows courses after load', (tester) async {
+      var student = _mockStudent('1');
+      var courses = generateCoursesForStudent(student.id);
 
-    _setupLocator(_MockCoursesInteractor(courses: courses));
+      _setupLocator(_MockCoursesInteractor(courses: courses));
 
-    await tester.pumpWidget(_testableMaterialWidget());
-    await tester.pumpAndSettle();
+      await tester.pumpWidget(_testableMaterialWidget());
+      await tester.pumpAndSettle();
 
-    final listTileWidget = find.byType(ListTile);
-    expect(listTileWidget, findsNWidgets(courses.length));
-  });
+      final listTileWidget = find.byType(ListTile);
+      expect(listTileWidget, findsNWidgets(courses.length));
+    });
 
-  testWidgetsWithAccessibilityChecks('shows empty message after load', (tester) async {
-    _setupLocator(_MockCoursesInteractor(courses: []));
+    testWidgetsWithAccessibilityChecks('shows empty message after load', (tester) async {
+      _setupLocator(_MockCoursesInteractor(courses: []));
 
-    await tester.pumpWidget(_testableMaterialWidget());
-    await tester.pumpAndSettle();
+      await tester.pumpWidget(_testableMaterialWidget());
+      await tester.pumpAndSettle();
 
-    expect(find.text(l10n.noCoursesTitle), findsOneWidget);
-    expect(find.text(l10n.noCoursesMessage), findsOneWidget);
-  });
+      expect(find.text(l10n.noCoursesTitle), findsOneWidget);
+      expect(find.text(l10n.noCoursesMessage), findsOneWidget);
+    });
 
-  testWidgetsWithAccessibilityChecks('Shows error state and performs refresh', (tester) async {
-    var interactor = _MockCoursesInteractor(courses: []);
+    testWidgetsWithAccessibilityChecks('Shows error state and performs refresh', (tester) async {
+      var interactor = _MockCoursesInteractor(courses: []);
 
-    _setupLocator(interactor);
+      _setupLocator(interactor);
 
-    interactor.error = true;
+      interactor.error = true;
 
-    await tester.pumpWidget(_testableMaterialWidget());
-    await tester.pumpAndSettle();
+      await tester.pumpWidget(_testableMaterialWidget());
+      await tester.pumpAndSettle();
 
-    expect(find.byType(ErrorPandaWidget), findsOneWidget);
-    expect(find.text(l10n.errorLoadingCourses), findsOneWidget);
+      expect(find.byType(ErrorPandaWidget), findsOneWidget);
+      expect(find.text(l10n.errorLoadingCourses), findsOneWidget);
 
-    interactor.error = false;
-    await tester.tap(find.text(l10n.retry));
-    await tester.pumpAndSettle();
+      interactor.error = false;
+      await tester.tap(find.text(l10n.retry));
+      await tester.pumpAndSettle();
 
-    expect(find.text(l10n.noCoursesTitle), findsOneWidget);
-    expect(find.text(l10n.noCoursesMessage), findsOneWidget);
-  });
+      expect(find.text(l10n.noCoursesTitle), findsOneWidget);
+      expect(find.text(l10n.noCoursesMessage), findsOneWidget);
+    });
 
-  testWidgetsWithAccessibilityChecks('Pulls to refresh', (tester) async {
-    var student = _mockStudent('1');
-    var courses = generateCoursesForStudent(student.id);
-    var interactor = _MockCoursesInteractor(courses: []);
+    testWidgetsWithAccessibilityChecks('shows no grade if there is no current grade', (tester) async {
+      var student = _mockStudent('1');
+      var courses = generateCoursesForStudent(student.id);
 
-    _setupLocator(interactor);
+      _setupLocator(_MockCoursesInteractor(courses: courses));
 
-    await tester.pumpWidget(_testableMaterialWidget());
-    await tester.pumpAndSettle();
+      await tester.pumpWidget(_testableMaterialWidget());
+      await tester.pumpAndSettle();
 
-    expect(find.byType(EmptyPandaWidget), findsOneWidget);
+      final gradeWidget = find.text(l10n.noGrade);
+      expect(gradeWidget, findsNWidgets(courses.length));
+    });
 
-    interactor.courses = courses;
-    await tester.drag(find.byType(RefreshIndicator), Offset(0, 300));
-    await tester.pumpAndSettle();
-
-    expect(find.byType(EmptyPandaWidget), findsNothing);
-    expect(find.byType(ListTile), findsNWidgets(courses.length));
-  });
-
-  testWidgetsWithAccessibilityChecks('shows no grade if there is no current grade', (tester) async {
-    var student = _mockStudent('1');
-    var courses = generateCoursesForStudent(student.id);
-
-    _setupLocator(_MockCoursesInteractor(courses: courses));
-
-    await tester.pumpWidget(_testableMaterialWidget());
-    await tester.pumpAndSettle();
-
-    final gradeWidget = find.text(l10n.noGrade);
-    expect(gradeWidget, findsNWidgets(courses.length));
-  });
-
-  testWidgetsWithAccessibilityChecks('shows grade if there is a current grade', (tester) async {
-    var student = _mockStudent('1');
-    var courses = List.generate(
-      1,
-      (idx) => _mockCourse(
-        idx.toString(),
-        enrollments: ListBuilder<Enrollment>(
-          [_mockEnrollment(idx.toString(), userId: student.id, computedCurrentGrade: 'A')],
+    testWidgetsWithAccessibilityChecks('shows grade if there is a current grade', (tester) async {
+      var student = _mockStudent('1');
+      var courses = List.generate(
+        1,
+        (idx) => _mockCourse(
+          idx.toString(),
+          enrollments: ListBuilder<Enrollment>(
+            [_mockEnrollment(idx.toString(), userId: student.id, computedCurrentGrade: 'A')],
+          ),
         ),
-      ),
-    );
+      );
 
-    _setupLocator(_MockCoursesInteractor(courses: courses));
+      _setupLocator(_MockCoursesInteractor(courses: courses));
 
-    await tester.pumpWidget(_testableMaterialWidget());
-    await tester.pumpAndSettle();
+      await tester.pumpWidget(_testableMaterialWidget());
+      await tester.pumpAndSettle();
 
-    final gradeWidget = find.text('A');
-    expect(gradeWidget, findsNWidgets(courses.length));
+      final gradeWidget = find.text('A');
+      expect(gradeWidget, findsNWidgets(courses.length));
+    });
+
+    testWidgetsWithAccessibilityChecks('shows score if there is a grade but no grade string', (tester) async {
+      var student = _mockStudent('1');
+      var courses = List.generate(
+        1,
+        (idx) => _mockCourse(
+          idx.toString(),
+          enrollments: ListBuilder<Enrollment>(
+            [_mockEnrollment(idx.toString(), userId: student.id, computedCurrentScore: 90)],
+          ),
+        ),
+      );
+
+      _setupLocator(_MockCoursesInteractor(courses: courses));
+
+      await tester.pumpWidget(_testableMaterialWidget());
+      await tester.pumpAndSettle();
+
+      final gradeWidget = find.text('90%');
+      expect(gradeWidget, findsNWidgets(courses.length));
+    });
+
+    testWidgetsWithAccessibilityChecks('only shows courses for selected user', (tester) async {
+      var numCourses1 = 3;
+      var numCourses2 = 1;
+      var student1 = _mockStudent('1');
+      var student2 = _mockStudent('2');
+      var courses1 = generateCoursesForStudent(student1.id, numberOfCourses: numCourses1);
+      var courses2 = generateCoursesForStudent(student2.id, numberOfCourses: numCourses2);
+
+      SelectedStudentNotifier notifier = SelectedStudentNotifier();
+      _setupLocator(_MockCoursesInteractor(courses: courses1..addAll(courses2)), notifier: notifier);
+
+      await tester.pumpWidget(_testableMaterialWidget(notifier: notifier));
+      await tester.pumpAndSettle();
+
+      // First student will be selected, verify that we show their courses
+      final listTileWidget = find.byType(ListTile);
+      expect(listTileWidget, findsNWidgets(numCourses1));
+
+      // Select second student
+      notifier.update(student2);
+      await tester.pump();
+      await tester.pumpAndSettle();
+
+      // Check for the courses of the second student
+      expect(listTileWidget, findsNWidgets(numCourses2));
+    });
   });
 
-  testWidgetsWithAccessibilityChecks('shows score if there is a grade but no grade string', (tester) async {
-    var student = _mockStudent('1');
-    var courses = List.generate(
-      1,
-      (idx) => _mockCourse(
-        idx.toString(),
-        enrollments: ListBuilder<Enrollment>(
-          [_mockEnrollment(idx.toString(), userId: student.id, computedCurrentScore: 90)],
+  group('Interaction', () {
+    testWidgetsWithAccessibilityChecks('Pulls to refresh', (tester) async {
+      var student = _mockStudent('1');
+      var courses = generateCoursesForStudent(student.id);
+      var interactor = _MockCoursesInteractor(courses: []);
+
+      _setupLocator(interactor);
+
+      await tester.pumpWidget(_testableMaterialWidget());
+      await tester.pumpAndSettle();
+
+      expect(find.byType(EmptyPandaWidget), findsOneWidget);
+
+      interactor.courses = courses;
+      await tester.drag(find.byType(RefreshIndicator), Offset(0, 300));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(EmptyPandaWidget), findsNothing);
+      expect(find.byType(ListTile), findsNWidgets(courses.length));
+    });
+
+    testWidgetsWithAccessibilityChecks('launches course detail screen when tapping on a course', (tester) async {
+      var student = _mockStudent('1');
+      var courses = List.generate(
+        1,
+        (idx) => _mockCourse(
+          idx.toString(),
+          enrollments: ListBuilder<Enrollment>(
+            [_mockEnrollment(idx.toString(), userId: student.id, computedCurrentScore: 90)],
+          ),
         ),
-      ),
-    );
+      );
 
-    _setupLocator(_MockCoursesInteractor(courses: courses));
+      _setupLocator(_MockCoursesInteractor(courses: courses));
 
-    await tester.pumpWidget(_testableMaterialWidget());
-    await tester.pumpAndSettle();
+      await tester.pumpWidget(_testableMaterialWidget(highContrast: true));
+      await tester.pumpAndSettle();
 
-    final gradeWidget = find.text('90%');
-    expect(gradeWidget, findsNWidgets(courses.length));
-  });
+      final matchedWidget = find.text(courses.first.name);
+      expect(matchedWidget, findsOneWidget);
+      await tester.tap(matchedWidget);
+      await tester.pumpAndSettle();
 
-  testWidgetsWithAccessibilityChecks('launches course detail screen when tapping on a course', (tester) async {
-    var student = _mockStudent('1');
-    var courses = List.generate(
-      1,
-      (idx) => _mockCourse(
-        idx.toString(),
-        enrollments: ListBuilder<Enrollment>(
-          [_mockEnrollment(idx.toString(), userId: student.id, computedCurrentScore: 90)],
-        ),
-      ),
-    );
-
-    _setupLocator(_MockCoursesInteractor(courses: courses));
-
-    await tester.pumpWidget(_testableMaterialWidget(null, true));
-    await tester.pumpAndSettle();
-
-    final matchedWidget = find.text(courses.first.name);
-    expect(matchedWidget, findsOneWidget);
-    await tester.tap(matchedWidget);
-    await tester.pumpAndSettle();
-
-    expect(find.byType(CourseDetailsScreen), findsOneWidget);
+      expect(find.byType(CourseDetailsScreen), findsOneWidget);
+    });
   });
 }
 
@@ -243,10 +278,10 @@ class _MockCourseDetailsInteractor extends CourseDetailsInteractor {}
 
 class _MockAssignmentApi extends Mock implements AssignmentApi {}
 
-List<Course> generateCoursesForStudent([String userId]) {
-  var student = _mockStudent(userId ?? '1');
+List<Course> generateCoursesForStudent(String userId, {int numberOfCourses = 1}) {
+  var student = _mockStudent(userId);
   return List.generate(
-    3,
+    numberOfCourses,
     (idx) => _mockCourse(
       idx.toString(),
       enrollments: ListBuilder<Enrollment>([_mockEnrollment(idx.toString(), userId: student.id)]),
