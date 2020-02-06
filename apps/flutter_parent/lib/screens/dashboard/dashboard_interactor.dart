@@ -19,6 +19,7 @@ import 'package:flutter_parent/network/api/user_api.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/dashboard/alert_notifier.dart';
 import 'package:flutter_parent/screens/dashboard/inbox_notifier.dart';
+import 'package:flutter_parent/screens/dashboard/selected_student_notifier.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class DashboardInteractor {
@@ -42,4 +43,6 @@ class DashboardInteractor {
   InboxCountNotifier getInboxCountNotifier() => locator<InboxCountNotifier>();
 
   AlertCountNotifier getAlertCountNotifier() => locator<AlertCountNotifier>();
+
+  SelectedStudentNotifier getSelectedStudentNotifier() => locator<SelectedStudentNotifier>();
 }

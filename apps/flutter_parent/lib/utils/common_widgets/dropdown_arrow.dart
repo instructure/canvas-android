@@ -12,6 +12,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 class DropdownArrow extends StatelessWidget {
@@ -20,18 +22,29 @@ class DropdownArrow extends StatelessWidget {
     this.size = 4,
     double strokeWidth,
     this.color = Colors.white,
+    this.rotate = false,
   })  : this.strokeWidth = strokeWidth ?? size / 2,
         super(key: key);
 
   final double size;
   final double strokeWidth;
   final Color color;
+  final bool rotate;
 
   @override
   Widget build(BuildContext context) {
-    return CustomPaint(
-      child: SizedBox(width: size * 2, height: size),
-      painter: _DropdownArrowPainter(color, strokeWidth),
+    return TweenAnimationBuilder(
+      tween: Tween<double>(begin: 0, end: rotate ? -pi : 0),
+      duration: Duration(milliseconds: 300),
+      builder: (context, value, _) {
+        return Transform.rotate(
+          angle: value,
+          child: CustomPaint(
+            child: SizedBox(width: size * 2, height: size),
+            painter: _DropdownArrowPainter(color, strokeWidth),
+          ),
+        );
+      },
     );
   }
 }

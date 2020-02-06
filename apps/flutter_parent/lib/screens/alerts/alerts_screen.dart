@@ -20,6 +20,7 @@ import 'package:flutter_parent/screens/alert_thresholds/alert_thresholds_extensi
 import 'package:flutter_parent/screens/alerts/alerts_interactor.dart';
 import 'package:flutter_parent/screens/announcements/announcement_details_screen.dart';
 import 'package:flutter_parent/screens/dashboard/alert_notifier.dart';
+import 'package:flutter_parent/screens/dashboard/selected_student_notifier.dart';
 import 'package:flutter_parent/screens/under_construction_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/badges.dart';
 import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
@@ -31,12 +32,10 @@ import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class AlertsScreen extends StatefulWidget {
   final _interactor = locator<AlertsInteractor>();
-  final User _student;
-
-  AlertsScreen(this._student, {Key key}) : super(key: key);
 
   @override
   _AlertsScreenState createState() => _AlertsScreenState();
@@ -44,19 +43,34 @@ class AlertsScreen extends StatefulWidget {
 
 class _AlertsScreenState extends State<AlertsScreen> {
   Future<AlertsList> _alertsFuture;
+  User _student;
 
   Future<AlertsList> _loadAlerts({bool forceRefresh = false}) =>
-      widget._interactor.getAlertsForStudent(widget._student.id, forceRefresh);
+      widget._interactor.getAlertsForStudent(_student.id, forceRefresh);
+
+  GlobalKey<RefreshIndicatorState> _refreshKey = GlobalKey<RefreshIndicatorState>();
 
   @override
-  void initState() {
-    super.initState();
-    _alertsFuture = _loadAlerts();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    var _selectedStudent = Provider.of<SelectedStudentNotifier>(context, listen: true).value;
+    if (_alertsFuture == null) {
+      // First time
+      _student = _selectedStudent;
+      _alertsFuture = _loadAlerts();
+    }
+
+    if (_student != _selectedStudent) {
+      // The student was changed by the user, get the new alerts
+      _student = _selectedStudent;
+      _alertsFuture = _loadAlerts(forceRefresh: true);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
+      key: _refreshKey,
       future: _alertsFuture,
       builder: (context, AsyncSnapshot<AlertsList> snapshot) {
         // Show loading if we're waiting for data, not inside the refresh indicator as it's unnecessary
@@ -71,7 +85,7 @@ class _AlertsScreenState extends State<AlertsScreen> {
         } else if (snapshot.data == null || snapshot.data.alerts == null || snapshot.data.alerts.isEmpty) {
           child = _empty(context);
         } else {
-          child = _AlertsList(widget._student, snapshot.data);
+          child = _AlertsList(_student, snapshot.data);
         }
 
         return RefreshIndicator(

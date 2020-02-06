@@ -19,6 +19,9 @@ import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/alerts/alerts_screen.dart';
 import 'package:flutter_parent/screens/calendar/CalendarScreen.dart';
 import 'package:flutter_parent/screens/courses/courses_screen.dart';
+import 'package:flutter_parent/screens/dashboard/selected_student_notifier.dart';
+import 'package:flutter_parent/screens/dashboard/student_expansion_widget.dart';
+import 'package:flutter_parent/screens/dashboard/student_horizontal_list_view.dart';
 import 'package:flutter_parent/screens/inbox/conversation_list/conversation_list_screen.dart';
 import 'package:flutter_parent/screens/login_landing_screen.dart';
 import 'package:flutter_parent/screens/manage_students/manage_students_screen.dart';
@@ -29,11 +32,13 @@ import 'package:flutter_parent/utils/common_widgets/dropdown_arrow.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/common_widgets/user_name.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
+import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:package_info/package_info.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'dashboard_interactor.dart';
@@ -69,12 +74,18 @@ class DashboardState extends State<DashboardScreen> {
   User _selectedStudent;
   int _currentIndex = 0;
 
+  bool expand = false;
+
+  SelectedStudentNotifier _selectedStudentNotifier;
+
   @override
   void initState() {
+    _selectedStudentNotifier = _interactor.getSelectedStudentNotifier();
     _loadSelf();
     if (widget.students?.isNotEmpty == true) {
       _students = widget.students;
       _selectedStudent = _students.first;
+      _selectedStudentNotifier.value = _selectedStudent;
       _interactor.getAlertCountNotifier().update(_selectedStudent.id);
     } else {
       _loadStudents();
@@ -115,6 +126,7 @@ class DashboardState extends State<DashboardScreen> {
 
       if (_selectedStudent == null && _students.isNotEmpty) {
         setState(() async {
+          _selectedStudentNotifier.value = _students.first;
           _selectedStudent = _students.first;
           await _interactor.getAlertCountNotifier().update(_selectedStudent.id);
         });
@@ -134,41 +146,78 @@ class DashboardState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: DashboardScreen.scaffoldKey,
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(107.0),
-        child: AppBar(
-          flexibleSpace: _appBarStudents(_students),
-          centerTitle: true,
-          bottom: ParentTheme.of(context).appBarDivider(),
-          leading: IconButton(
-            icon: WidgetBadge(
-              Icon(Icons.menu),
-              countListenable: _interactor.getInboxCountNotifier(),
-              options: BadgeOptions(includeBorder: true, onPrimarySurface: true),
+    return ChangeNotifierProvider<SelectedStudentNotifier>(
+      create: (context) => _selectedStudentNotifier,
+      child: Consumer<SelectedStudentNotifier>(
+        builder: (context, model, _) {
+          return Scaffold(
+            key: DashboardScreen.scaffoldKey,
+            appBar: PreferredSize(
+              preferredSize: Size.fromHeight(107.0),
+              child: AppBar(
+                flexibleSpace: Semantics(
+                  label: 'Tap to open the student selector',
+                  child: _appBarStudents(_students, model.value),
+                ),
+                centerTitle: true,
+                bottom: ParentTheme.of(context).appBarDivider(),
+                leading: IconButton(
+                  icon: WidgetBadge(
+                    Icon(
+                      Icons.menu,
+                      color: Theme.of(context).primaryIconTheme.color,
+                    ),
+                    countListenable: _interactor.getInboxCountNotifier(),
+                    options: BadgeOptions(includeBorder: true, onPrimarySurface: true),
+                  ),
+                  onPressed: () => DashboardScreen.scaffoldKey.currentState.openDrawer(),
+                  tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+                ),
+              ),
             ),
-            onPressed: () => DashboardScreen.scaffoldKey.currentState.openDrawer(),
-            tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
-          ),
-        ),
-      ),
-      drawer: Drawer(
-        child: SafeArea(child: _navDrawer(_self)),
-      ),
-      body: _currentPage(),
-      bottomNavigationBar: ParentTheme.of(context).bottomNavigationDivider(
-        BottomNavigationBar(
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          items: _bottomNavigationBarItems(),
-          currentIndex: this._currentIndex,
-          onTap: (item) => _handleBottomBarClick(item),
-        ),
+            drawer: Drawer(
+              child: SafeArea(child: _navDrawer(_self)),
+            ),
+            body: Column(children: [
+              StudentExpansionWidget(
+                expand: expand,
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      height: 108,
+                      child: StudentHorizontalListView(
+                        _students,
+                        onTap: () => setState(() => expand = !expand),
+                      ),
+                    ),
+                    PreferredSize(
+                      preferredSize: Size.fromHeight(1),
+                      child: Divider(
+                          height: 1,
+                          color: ParentTheme.of(context).isDarkMode
+                              ? ParentColors.oxford
+                              : ParentColors.appBarDividerLight),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(child: _currentPage())
+            ]),
+            bottomNavigationBar: ParentTheme.of(context).bottomNavigationDivider(
+              BottomNavigationBar(
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                items: _bottomNavigationBarItems(),
+                currentIndex: this._currentIndex,
+                onTap: (item) => _handleBottomBarClick(item),
+              ),
+            ),
+          );
+        },
       ),
     );
   }
 
-  Widget _appBarStudents(List<User> students) {
+  Widget _appBarStudents(List<User> students, User selectedStudent) {
     if (students.isEmpty) {
       // No students yet, we are either still loading, or there was an error
       if (_studentsLoading) {
@@ -183,25 +232,32 @@ class DashboardState extends State<DashboardScreen> {
     }
 
     return SafeArea(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Avatar(
-            _selectedStudent.avatarUrl,
-            name: _selectedStudent.shortName,
-            radius: 24,
-          ),
-          SizedBox(height: 8),
-          Row(
+      child: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: () => setState(() => expand = !expand),
+        child: Semantics(
+          label: L10n(context).tapToShowStudentSelector,
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              UserName.fromUser(_selectedStudent, style: Theme.of(context).primaryTextTheme.subhead),
-              SizedBox(width: 6),
-              DropdownArrow(),
+              Avatar(
+                selectedStudent.avatarUrl,
+                name: selectedStudent.shortName,
+                radius: 24,
+              ),
+              SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  UserName.fromUser(selectedStudent, style: Theme.of(context).primaryTextTheme.subhead),
+                  SizedBox(width: 6),
+                  DropdownArrow(rotate: expand),
+                ],
+              )
             ],
-          )
-        ],
+          ),
+        ),
       ),
     );
   }
@@ -262,14 +318,14 @@ class DashboardState extends State<DashboardScreen> {
 
     switch (_currentIndex) {
       case 1:
-        return CalendarScreen(_selectedStudent);
+        return CalendarScreen(_selectedStudentNotifier.value);
         break;
       case 2:
-        return AlertsScreen(_selectedStudent);
+        return AlertsScreen();
         break;
       case 0:
       default:
-        return CoursesScreen(_selectedStudent);
+        return CoursesScreen();
         break;
     }
   }

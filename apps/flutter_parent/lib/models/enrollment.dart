@@ -21,6 +21,8 @@ import 'user.dart';
 
 part 'enrollment.g.dart';
 
+/// To have this built_value be generated, run this command from the project root:
+/// flutter packages pub run build_runner build --delete-conflicting-outputs
 abstract class Enrollment implements Built<Enrollment, EnrollmentBuilder> {
   @BuiltValueSerializer(serializeNulls: true)
   static Serializer<Enrollment> get serializer => _$enrollmentSerializer;

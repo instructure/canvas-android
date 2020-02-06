@@ -17,14 +17,16 @@ import 'dart:math';
 import 'package:flutter_parent/models/user.dart';
 
 class CanvasModelTestUtils {
-  static User mockUser({String name, String pronouns, String primaryEmail, String id}) => User((b) => b
-    ..id = id ?? Random(name.hashCode).nextInt(100000).toString()
-    ..sortableName = name ?? 'sortableName'
-    ..name = name ?? 'name'
-    ..primaryEmail = primaryEmail ?? 'email'
-    ..pronouns = pronouns ?? null
-    ..locale = 'en'
-    ..effectiveLocale = 'jp'
-    ..avatarUrl = ''
-    ..build());
+  static User mockUser({String name, String pronouns, String primaryEmail, String id, String shortName}) =>
+      User((b) => b
+        ..id = id ?? Random(name.hashCode).nextInt(100000).toString()
+        ..sortableName = name ?? 'sortableName'
+        ..name = '$name Panda' ?? 'name'
+        ..shortName = shortName ?? 'shortName_${Random(name.hashCode).nextInt(100000).toString()}'
+        ..primaryEmail = primaryEmail ?? 'email'
+        ..pronouns = pronouns ?? null
+        ..locale = 'en'
+        ..effectiveLocale = 'jp'
+        ..avatarUrl = ''
+        ..build());
 }

@@ -145,6 +145,15 @@ class AppLocalizations {
   String get noStudents =>
       Intl.message('No Students', desc: 'Text for when an observer has no students they are observing');
 
+  String get tapToShowStudentSelector => Intl.message('Tap to show student selector',
+      desc: 'Semantics label for the area that will show the student selector when tapped');
+
+  String get tapToPairNewStudent => Intl.message('Tap to pair with a new student',
+      desc: 'Semantics label for the add student button in the student selector');
+
+  String get tapToSelectStudent => Intl.message('Tap to select this student',
+      desc: 'Semantics label on individual students in the student switcher');
+
   /// Navigation Drawer
   String get manageStudents => Intl.message('Manage Students',
       desc: 'Label text for the Manage Students nav drawer button as well as the title for the Manage Students screen');
@@ -975,5 +984,7 @@ class AppLocalizations {
 
   String get genericNetworkError => Intl.message('Network error');
 
-  String get underConstruction => Intl.message('This feature is currently under construction');
+  String get underConstruction => Intl.message('Under Construction');
+  String get currentlyBuildingThisFeature =>
+      Intl.message('We are currently building this feature for your viewing pleasure.');
 }

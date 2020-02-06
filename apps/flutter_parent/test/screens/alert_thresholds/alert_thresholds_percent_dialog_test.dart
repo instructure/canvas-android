@@ -26,7 +26,7 @@ import '../../utils/accessibility_utils.dart';
 import '../../utils/test_app.dart';
 
 void main() {
-  group('Render Test', () {
+  group('Render', () {
     testWidgetsWithAccessibilityChecks('header', (tester) async {
       var widget = TestApp(
         AlertThresholdsPercentageDialog([], AlertType.courseGradeLow, ''),
