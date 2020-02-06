@@ -339,7 +339,9 @@ class QuizDetailsFragment : BasePresenterFragment<
         }
 
         instructionsWebView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
-            override fun openMediaFromWebView(mime: String?, url: String?, filename: String?) {}
+            override fun openMediaFromWebView(mime: String?, url: String?, filename: String?) {
+                RouteMatcher.openMedia(requireActivity(), url)
+            }
             override fun onPageStartedCallback(webView: WebView?, url: String?) {}
             override fun onPageFinishedCallback(webView: WebView?, url: String?) {}
             override fun routeInternallyCallback(url: String?) {
