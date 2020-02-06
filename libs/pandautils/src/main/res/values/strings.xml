@@ -96,7 +96,7 @@
     <string name="filePermissionGranted">File is now ready to download, please try again.</string>
     <string name="filePermissionDenied">The file cannot be downloaded without granting permission.</string>
     <string name="pleaseTryAgain">Permission Granted, please try again.</string>
-    <string name="pickVideo">Select a Video</string>
+    <string name="pickFile">Select a File</string>
     <string name="assignmentSubmissionUpload">Uploading submission for %s</string>
     <string name="assignmentSubmissionError">Submission failed for %s</string>
     <string name="assignmentSubmissionComplete">Successfully submitted %s</string>
