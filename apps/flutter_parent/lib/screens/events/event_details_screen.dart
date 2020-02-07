@@ -13,11 +13,13 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
+import 'package:flutter_parent/models/reminder.dart';
 import 'package:flutter_parent/models/schedule_item.dart';
 import 'package:flutter_parent/screens/events/event_details_interactor.dart';
 import 'package:flutter_parent/utils/common_widgets/constrained_web_view.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
+import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:intl/intl.dart';
 
@@ -147,6 +149,9 @@ class _EventDetails extends StatelessWidget {
               Divider(),
               _SimpleTile(label: l10n.eventLocationLabel, line1: locationLine1, line2: locationLine2),
               Divider(),
+              _SimpleHeader(label: l10n.assignmentRemindMeLabel),
+              _RemindMe(event, [dateLine1, dateLine2].where((it) => it != null).join('\n')),
+              Divider(),
               _SimpleHeader(label: l10n.assignmentDescriptionLabel),
             ],
           ),
@@ -166,6 +171,97 @@ class _EventDetails extends StatelessWidget {
 
   String _timeFormat(DateTime time) {
     return time == null ? null : DateFormat.jm().format(time.toLocal());
+  }
+}
+
+class _RemindMe extends StatefulWidget {
+  final ScheduleItem event;
+  final String formattedDate;
+
+  const _RemindMe(this.event, this.formattedDate, {Key key}) : super(key: key);
+
+  @override
+  _RemindMeState createState() => _RemindMeState();
+}
+
+class _RemindMeState extends State<_RemindMe> {
+  Future<Reminder> _reminderFuture;
+
+  EventDetailsInteractor _interactor = locator<EventDetailsInteractor>();
+
+  Future<Reminder> _loadReminder() => _interactor.loadReminder(widget.event.id);
+
+  @override
+  void initState() {
+    _reminderFuture = _loadReminder();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    TextTheme textTheme = Theme.of(context).textTheme;
+    return FutureBuilder(
+      future: _reminderFuture,
+      builder: (BuildContext context, AsyncSnapshot<Reminder> snapshot) {
+        Reminder reminder = snapshot.data;
+        return SwitchListTile(
+          contentPadding: EdgeInsets.zero,
+          value: reminder != null,
+          title: Text(
+            reminder?.date == null ? L10n(context).eventRemindMeDescription : L10n(context).eventRemindMeSet,
+            style: textTheme.subhead,
+          ),
+          subtitle: reminder == null
+              ? null
+              : Padding(
+                  padding: const EdgeInsets.only(top: 8),
+                  child: Text(
+                    DateFormat(L10n(context).dateTimeFormat).format(reminder.date.toLocal()),
+                    style: textTheme.subhead.copyWith(color: ParentTheme.of(context).studentColor),
+                  ),
+                ),
+          onChanged: (checked) => _handleAlarmSwitch(context, widget.event, checked, reminder, widget.formattedDate),
+        );
+      },
+    );
+  }
+
+  _handleAlarmSwitch(
+    BuildContext context,
+    ScheduleItem event,
+    bool checked,
+    Reminder reminder,
+    String formattedDate,
+  ) async {
+    if (reminder != null) _interactor.deleteReminder(reminder);
+    if (checked) {
+      var now = DateTime.now();
+      var eventDate = event.isAllDay ? event.allDayDate.toLocal() : event.startAt.toLocal();
+      var initialDate = eventDate?.isAfter(now) == true ? eventDate : now;
+
+      DateTime date;
+      TimeOfDay time;
+
+      date = await showDatePicker(
+        context: context,
+        initialDate: initialDate,
+        firstDate: now,
+        lastDate: initialDate.add(Duration(days: 365)),
+      );
+      if (date != null) {
+        time = await showTimePicker(context: context, initialTime: TimeOfDay.fromDateTime(initialDate));
+      }
+
+      if (date != null && time != null) {
+        DateTime reminderDate = DateTime(date.year, date.month, date.day, time.hour, time.minute);
+        await _interactor.createReminder(L10n(context), reminderDate, event.id, event.title, formattedDate);
+      }
+    }
+
+    // Perform refresh
+    setState(() {
+      _reminderFuture = _loadReminder();
+    });
   }
 }
 

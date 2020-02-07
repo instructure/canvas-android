@@ -68,7 +68,7 @@ void main() {
   test('Uses user data from api prefs', () async {
     setupPlatformChannels();
 
-    await ApiPrefs.performLogout(); // Clear domain data
+    await ApiPrefs.performLogout(switchingLogins: true); // Clear domain data
 
     final login = Login();
     await setupPlatformChannels(config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
@@ -138,7 +138,7 @@ void main() {
   test('Uses domain from ErrorReportApi if api prefs has none', () async {
     setupPlatformChannels();
 
-    await ApiPrefs.performLogout(); // Clear domain data in ApiPrefs
+    await ApiPrefs.performLogout(switchingLogins: true); // Clear domain data in ApiPrefs
     await ErrorReportInteractor().submitErrorReport('', '', '', ErrorReportSeverity.COMMENT, '');
 
     verify(api.submitErrorReport(
