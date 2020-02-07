@@ -104,20 +104,19 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
           ),
           bottom: ParentTheme.of(context).appBarDivider(shadowInLightMode: false),
           actions: <Widget>[
-            SizedBox(
-              width: 70,
-              child: FlatButton(
-                padding: EdgeInsets.all(0),
-                child: Text(
-                  L10n(context).next,
-                  textAlign: TextAlign.end,
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500,
-                  ),
+            MaterialButton(
+              minWidth: 20,
+              highlightColor: Colors.transparent,
+              splashColor: Theme.of(context).accentColor.withAlpha(100),
+              textColor: Theme.of(context).accentColor,
+              onPressed: _query.isEmpty ? null : () => _next(context),
+              child: Text(
+                L10n(context).next,
+                textAlign: TextAlign.end,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
                 ),
-                textColor: Theme.of(context).accentColor,
-                onPressed: _query.isEmpty ? null : () => _next(context),
               ),
             ),
           ],
