@@ -36,8 +36,8 @@ void main() {
     await tester.pumpWidget(TestApp(LoginLandingScreen()));
     await tester.pumpAndSettle();
 
-    expect(find.text(AppLocalizations().findSchoolOrDistrict), findsOneWidget);
-    await tester.tap(find.text(AppLocalizations().findSchoolOrDistrict));
+    expect(find.text(AppLocalizations().findSchool), findsOneWidget);
+    await tester.tap(find.text(AppLocalizations().findSchool));
     await tester.pumpAndSettle();
 
     expect(find.byType(DomainSearchScreen), findsOneWidget);

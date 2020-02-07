@@ -178,9 +178,9 @@ class AppLocalizations {
     return Intl.message('Canvas logo', name: 'canvaslogoLabel', desc: 'The semantics label for the Canvas logo');
   }
 
-  String get findSchoolOrDistrict => Intl.message(
-        'Find School or District',
-        name: 'findSchoolOrDistrict',
+  String get findSchool => Intl.message(
+        'Find School',
+        name: 'findSchool',
         desc: 'Text for the find-my-school button',
       );
 

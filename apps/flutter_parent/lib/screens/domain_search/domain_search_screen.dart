@@ -98,7 +98,7 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
       builder: (context) => Scaffold(
         appBar: AppBar(
           title: Text(
-            L10n(context).findSchoolOrDistrict,
+            L10n(context).findSchool,
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
           ),
           bottom: ParentTheme.of(context).appBarDivider(shadowInLightMode: false),
@@ -201,7 +201,7 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text(L10n(context).findSchoolOrDistrict),
+            title: Text(L10n(context).findSchool),
             content: Text.rich(
               _helpBodySpan(
                 text: body,
