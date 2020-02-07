@@ -46,7 +46,7 @@ void main() {
     await tester.pumpWidget(TestApp(DomainSearchScreen()));
     await tester.pumpAndSettle();
 
-    expect(find.text(l10n.findSchoolOrDistrict), findsOneWidget);
+    expect(find.text(l10n.findSchool), findsOneWidget);
     expect(find.text(l10n.next), findsOneWidget);
     expect(
       tester.widget<FlatButton>(find.ancestor(of: find.text(l10n.next), matching: find.byType(FlatButton))).enabled,

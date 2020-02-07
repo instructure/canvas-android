@@ -86,7 +86,7 @@ class LoginLandingScreen extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Text(
-                L10n(context).findSchoolOrDistrict,
+                L10n(context).findSchool,
                 style: TextStyle(fontSize: 16),
               ),
             ),
