@@ -16,9 +16,11 @@
  */
 package com.instructure.canvasapi2.pact.canvas.apis
 
-import au.com.dius.pact.consumer.PactProviderRuleMk2
-import au.com.dius.pact.model.PactSpecVersion
+import au.com.dius.pact.consumer.junit.PactProviderRule
+import au.com.dius.pact.core.model.PactSpecVersion
+import com.instructure.canvasapi2.PactRequestInterceptor
 import com.instructure.canvasapi2.apis.CourseAPI
+import okhttp3.OkHttpClient
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import retrofit2.Call
@@ -28,11 +30,22 @@ import retrofit2.converter.gson.GsonConverterFactory
 open class ApiPactTestBase {
     @Rule
     @JvmField
-    val provider = PactProviderRuleMk2("Canvas LMS API", PactSpecVersion.V2, this)
+    val provider = PactProviderRule("Canvas LMS API", PactSpecVersion.V2, this)
 
     fun getClient(pathPrefix: String = "/api/v1/") : Retrofit {
+
+        val okHttpClient = OkHttpClient.Builder()
+                .addInterceptor(PactRequestInterceptor("Student1"))
+                .addInterceptor { chain ->
+                    val request = chain.request()
+                    val builder = request.newBuilder()
+                    builder.addHeader("Content-Type", "application/json")
+                    chain.proceed(builder.build())
+                }
+                .build()
         val client = Retrofit.Builder()
                 .baseUrl(provider.url + pathPrefix)
+                .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
 
@@ -45,6 +58,16 @@ open class ApiPactTestBase {
         assertEquals("Call Query Params", call.request().url().query(), expectedQuery)
         assertEquals("Call Path", call.request().url().url().path, expectedPath)
     }
+
+    val DEFAULT_REQUEST_HEADERS = mapOf(
+            "Authorization" to "Bearer some_token",
+            "Auth-User" to "Student1",
+            "Content-Type" to "application/json"
+    )
+
+    val DEFAULT_RESPONSE_HEADERS = mapOf(
+            "Content-Type" to "application/json; charset=utf-8"
+    )
 
     val MAIN_PROVIDER_STATE = "User 1, 4 courses, 2 favorited"
 }

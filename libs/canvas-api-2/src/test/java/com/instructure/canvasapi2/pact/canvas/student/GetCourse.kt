@@ -1,9 +1,10 @@
 package com.instructure.canvasapi2.pact.canvas.student
 
 import au.com.dius.pact.consumer.MockServer
+import au.com.dius.pact.consumer.PactTestExecutionContext
 import au.com.dius.pact.consumer.dsl.PactDslJsonBody
 import au.com.dius.pact.consumer.dsl.PactDslWithProvider
-import au.com.dius.pact.model.RequestResponsePact
+import au.com.dius.pact.core.model.RequestResponsePact
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.models.Course
@@ -41,7 +42,7 @@ class GetCourse : CanvasPact() {
                 .toPact()
     }
 
-    override fun runTest(mockServer: MockServer) {
+    override fun runTest(mockServer: MockServer, context: PactTestExecutionContext) {
         runBlocking {
             val response = awaitApi<Course> {
                 val adapter = RestBuilder(it, authUser)

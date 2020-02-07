@@ -16,10 +16,10 @@
  */
 package com.instructure.canvasapi2.pact.canvas.apis
 
-import au.com.dius.pact.consumer.Pact
-import au.com.dius.pact.consumer.PactVerification
 import au.com.dius.pact.consumer.dsl.PactDslWithProvider
-import au.com.dius.pact.model.RequestResponsePact
+import au.com.dius.pact.consumer.junit.PactVerification
+import au.com.dius.pact.core.model.RequestResponsePact
+import au.com.dius.pact.core.model.annotations.Pact
 import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.pact.canvas.logic.PactEnrollmentFieldConfig
 import com.instructure.canvasapi2.pact.canvas.logic.assertEnrollmentPopulated
@@ -43,10 +43,10 @@ class EnrollmentsApiPactTests : ApiPactTestBase() {
     //
 
     val selfEnrollmentsFieldInfo = listOf(
-            PactEnrollmentFieldConfig(courseId = 1, userId = 1, populateFully = true, includeGrades = true),
-            PactEnrollmentFieldConfig(courseId = 2, userId = 1, populateFully = true, includeGrades = true),
-            PactEnrollmentFieldConfig(courseId = 3, userId = 1, populateFully = true, includeGrades = true),
-            PactEnrollmentFieldConfig(courseId = 4, userId = 1, populateFully = true, includeGrades = true)
+            PactEnrollmentFieldConfig(courseId = 1, userId = 1, populateFully = true, includeGrades = true)
+//            PactEnrollmentFieldConfig(courseId = 2, userId = 1, populateFully = true, includeGrades = true),
+//            PactEnrollmentFieldConfig(courseId = 3, userId = 1, populateFully = true, includeGrades = true),
+//            PactEnrollmentFieldConfig(courseId = 4, userId = 1, populateFully = true, includeGrades = true)
     )
     val selfEnrollmentsPath = "/api/v1/users/self/enrollments"
     val selfEnrollmentsResponseBody =  LambdaDsl.newJsonArray { array ->
@@ -59,23 +59,23 @@ class EnrollmentsApiPactTests : ApiPactTestBase() {
     @Pact(consumer = "mobile")
     fun getSelfEnrollmentsPact(builder: PactDslWithProvider) : RequestResponsePact {
         return builder
-                .given(MAIN_PROVIDER_STATE)
+                .given("a student in a course with enrollment grades")
 
-                .uponReceiving("A request for user 1's enrollments")
+                .uponReceiving("A request for user's enrollments")
                 .path(selfEnrollmentsPath)
                 .method("GET")
-                // TODO: Headers
+                .headers(DEFAULT_REQUEST_HEADERS)
 
                 .willRespondWith()
                 .status(200)
                 .body(selfEnrollmentsResponseBody)
-                // TODO: Headers
+                .headers(DEFAULT_RESPONSE_HEADERS)
 
                 .toPact()
     }
     @Test
     @PactVerification(fragment = "getSelfEnrollmentsPact")
-    fun `grab user 1's enrollments`() {
+    fun `grab user's enrollments`() {
         val service = createService()
 
         val selfEnrollmentsCall = service.getFirstPageSelfEnrollments(types=null,states=null)
@@ -85,7 +85,7 @@ class EnrollmentsApiPactTests : ApiPactTestBase() {
 
         assertNotNull("Expected non-null response body", selfEnrollmentResult.body())
         val enrollments = selfEnrollmentResult.body()!!
-        assertEquals("returned list size", 4, enrollments.count())
+        assertEquals("returned list size", 1, enrollments.count())
 
         for(index in 0..enrollments.size-1) {
             val enrollment = enrollments[index]

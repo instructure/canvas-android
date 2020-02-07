@@ -13,8 +13,8 @@ fun LambdaDslObject.populateTermFields() : LambdaDslObject {
     this
             .id("id")
             .stringType("name")
-            .timestamp("start_at", PACT_TIMESTAMP_FORMAT)
-            .timestamp("end_at", PACT_TIMESTAMP_FORMAT)
+            .stringMatcher("start_at", PACT_TIMESTAMP_REGEX, "2020-01-23T00:00:00Z")
+            .stringMatcher("end_at", PACT_TIMESTAMP_REGEX, "2020-01-23T00:00:00Z")
 
     return this
 }

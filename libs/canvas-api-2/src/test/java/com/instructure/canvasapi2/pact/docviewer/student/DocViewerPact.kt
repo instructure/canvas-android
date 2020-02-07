@@ -16,9 +16,9 @@
 package com.instructure.canvasapi2.pact.docviewer.student
 
 import android.content.Context
-import au.com.dius.pact.consumer.ConsumerPactTestMk2
+import au.com.dius.pact.consumer.junit.ConsumerPactTest
 import au.com.dius.pact.consumer.MockServer
-import au.com.dius.pact.model.PactSpecVersion
+import au.com.dius.pact.core.model.PactSpecVersion
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.utils.ContextKeeper
@@ -26,7 +26,7 @@ import com.instructure.canvasapi2.utils.Logger
 import org.junit.Before
 import org.mockito.Mockito
 
-abstract class DocViewerPact : ConsumerPactTestMk2() {
+abstract class DocViewerPact : ConsumerPactTest() {
 
     companion object {
         const val providerName = "DocViewer"

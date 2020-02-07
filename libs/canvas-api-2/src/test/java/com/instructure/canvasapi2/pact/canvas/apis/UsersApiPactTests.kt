@@ -16,10 +16,10 @@
  */
 package com.instructure.canvasapi2.pact.canvas.apis
 
-import au.com.dius.pact.consumer.Pact
-import au.com.dius.pact.consumer.PactVerification
 import au.com.dius.pact.consumer.dsl.PactDslWithProvider
-import au.com.dius.pact.model.RequestResponsePact
+import au.com.dius.pact.consumer.junit.PactVerification
+import au.com.dius.pact.core.model.RequestResponsePact
+import au.com.dius.pact.core.model.annotations.Pact
 import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.pact.canvas.logic.PactUserFieldConfig
 import com.instructure.canvasapi2.pact.canvas.logic.assertUserPopulated
@@ -41,7 +41,7 @@ class UsersApiPactTests : ApiPactTestBase() {
     //
     //region grab user profile info
     //
-    val userFieldConfig = PactUserFieldConfig(id = 1, includeLocaleInfo = true, includePermissions = true)
+    val userFieldConfig = PactUserFieldConfig(includeLocaleInfo = true, includePermissions = true)
     val userPath = "/api/v1/users/self"
     val userResponseBody =  LambdaDsl.newJsonBody() { obj ->
         obj.populateUserFields(userFieldConfig)
@@ -50,24 +50,25 @@ class UsersApiPactTests : ApiPactTestBase() {
     @Pact(consumer = "mobile")
     fun getUserWithPermissionsPact(builder: PactDslWithProvider) : RequestResponsePact {
         return builder
-                .given(MAIN_PROVIDER_STATE)
+                //.given("a student with a to do item")
+                .given("a student in a course with enrollment grades")
 
-                .uponReceiving("A request for user 1's  user object")
+                .uponReceiving("A request for user's user info")
                 .path(userPath)
                 .method("GET")
-                // TODO: Headers
+                .headers(DEFAULT_REQUEST_HEADERS)
 
                 .willRespondWith()
                 .status(200)
                 .body(userResponseBody)
-                // TODO: Headers
+                .headers(DEFAULT_RESPONSE_HEADERS)
 
                 .toPact()
     }
 
     @Test
     @PactVerification(fragment = "getUserWithPermissionsPact")
-    fun `grab user 1's user info`() {
+    fun `grab user's user info`() {
         val service = createService()
 
         val userCall = service.getSelfWithPermissions()
@@ -87,7 +88,7 @@ class UsersApiPactTests : ApiPactTestBase() {
     //
     //region grab user profile info
     //
-    val profileFieldConfig = PactUserFieldConfig(id = 1, includeLocaleInfo = true, includeProfileInfo = true, includeLoginId = true)
+    val profileFieldConfig = PactUserFieldConfig(includeLocaleInfo = true, includeProfileInfo = true, includeLoginId = true)
     val profilePath = "/api/v1/users/self/profile"
     val profileResponseBody =  LambdaDsl.newJsonBody() { obj ->
         obj.populateUserFields(profileFieldConfig)
@@ -95,24 +96,24 @@ class UsersApiPactTests : ApiPactTestBase() {
     @Pact(consumer = "mobile")
     fun getProfilePact(builder: PactDslWithProvider) : RequestResponsePact {
         return builder
-                .given(MAIN_PROVIDER_STATE)
+                .given("a student in a course with enrollment grades")
 
-                .uponReceiving("A request for user 1's profile")
+                .uponReceiving("A request for user's profile")
                 .path(profilePath)
                 .method("GET")
-                // TODO: Headers
+                .headers(DEFAULT_REQUEST_HEADERS)
 
                 .willRespondWith()
                 .status(200)
                 .body(profileResponseBody)
-                // TODO: Headers
+                .headers(DEFAULT_RESPONSE_HEADERS)
 
                 .toPact()
     }
 
     @Test
     @PactVerification(fragment = "getProfilePact")
-    fun `grab user 1's profile`() {
+    fun `grab user's profile`() {
         val service = createService()
 
         val profileCall = service.getSelf()
@@ -132,7 +133,7 @@ class UsersApiPactTests : ApiPactTestBase() {
     //
     val peopleCallQuery = "include[]=enrollments&include[]=avatar_url&include[]=user_id&include[]=email&include[]=bio&exclude_inactive=true&enrollment_type=student"
     val peopleCallPath = "/api/v1/courses/1/users"
-    val peopleFieldConfig = PactUserFieldConfig(id = 1, includeEnrollment = true, includeProfileInfo = true)
+    val peopleFieldConfig = PactUserFieldConfig(includeEnrollment = true, includeProfileInfo = true)
     val peopleResponseBody = LambdaDsl.newJsonArray() { array ->
         array.`object`() { person ->
             person.populateUserFields(peopleFieldConfig)
@@ -142,18 +143,19 @@ class UsersApiPactTests : ApiPactTestBase() {
     @Pact(consumer = "mobile")
     fun getCoursePeoplePact(builder: PactDslWithProvider) : RequestResponsePact {
         return builder
-                .given(MAIN_PROVIDER_STATE)
+                //.given("course with student")
+                .given("a student in a course with enrollment grades")
 
                 .uponReceiving("A request for course 1's student people")
                 .path(peopleCallPath)
                 .method("GET")
                 .query(peopleCallQuery)
-                // TODO: Headers
+                .headers(DEFAULT_REQUEST_HEADERS)
 
                 .willRespondWith()
                 .status(200)
                 .body(peopleResponseBody)
-                // TODO: Headers
+                .headers(DEFAULT_RESPONSE_HEADERS)
 
                 .toPact()
     }

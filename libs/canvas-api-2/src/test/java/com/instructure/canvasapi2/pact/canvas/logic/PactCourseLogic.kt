@@ -20,6 +20,7 @@ import com.instructure.canvasapi2.models.Course
 import io.pactfoundation.consumer.dsl.LambdaDslObject
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertTrue
 
 /**
  * Information about how to set up Course object fields.
@@ -31,7 +32,6 @@ import org.junit.Assert.assertNotNull
 data class PactCourseFieldConfig (
     val courseId: Long, // Mandatory
     val numEnrollments: Int = 1,
-    val isFavorite: Boolean = false,
     val includeCourseImage: Boolean = false,
     val includeCurrentGradingPeriodScores: Boolean = false,
     val includeNeedsGradingCount: Boolean = false,
@@ -40,16 +40,16 @@ data class PactCourseFieldConfig (
     val includeSyllabusBody : Boolean = false,
     val includeTerm: Boolean = false,
     val includeTotalScores: Boolean = false,
-    val includePermissions: Boolean = false
+    val includePermissions: Boolean = false,
+    val includeFavorites: Boolean = false
 ) {
     companion object {
         /***
          * Construct a PactCourseFieldConfig object based on the query string being passed with the request.
          */
-        fun fromQueryString(courseId: Long, isFavorite: Boolean, query: String) : PactCourseFieldConfig {
-            return PactCourseFieldConfig(
+        fun fromQueryString(courseId: Long, query: String) : PactCourseFieldConfig {
+            val result = PactCourseFieldConfig(
                     courseId = courseId,
-                    isFavorite = isFavorite,
                     //includeCourseImage = query.contains("=course_image"),
                     includeCurrentGradingPeriodScores = query.contains("=current_grading_period_scores"),
                     includeNeedsGradingCount = query.contains("=needs_grading_count"),
@@ -58,8 +58,11 @@ data class PactCourseFieldConfig (
                     includeSyllabusBody = query.contains("=syllabus_body"),
                     includeTerm = query.contains("=term"),
                     includeTotalScores = query.contains("=total_scores"),
-                    includePermissions = query.contains("=permissions")
+                    includePermissions = query.contains("=permissions"),
+                    includeFavorites = query.contains("=favorites")
             )
+
+            return result
         }
     }
 }
@@ -77,17 +80,14 @@ fun LambdaDslObject.populateCourseFields(fieldConfig: PactCourseFieldConfig = Pa
             .stringType("name")
             .id("id", fieldConfig.courseId)
             .stringType("course_code")
-            .booleanValue("is_favorite", fieldConfig.isFavorite)
-            .timestamp("start_at", PACT_TIMESTAMP_FORMAT)
-            .timestamp("end_at", PACT_TIMESTAMP_FORMAT)
+            .stringMatcher("start_at", PACT_TIMESTAMP_REGEX, "2020-01-23T00:00:00Z")
+            .stringMatcher("end_at", PACT_TIMESTAMP_REGEX, "2020-01-23T00:00:00Z")
             .booleanType("hide_final_grades")
             .booleanType("is_public")
             .stringMatcher("license", "private|cc_by_nc_nd|c_by_nc_sa|c_by_nc|cc_by_nd|cc_by_sa|cc_by|public_domain", "private")
             .booleanType("apply_assignment_group_weights")
             //.booleanType("access_restricted_by_date")
             //.stringType("image_download_url")
-            .booleanType("has_weighted_grading_periods")
-            .booleanType("has_grading_periods") // Optional?
             .stringMatcher("default_view","feed|wiki|modules|assignments|syllabus", "modules")
             .booleanType("restrict_enrollments_to_course_dates")
             .stringMatcher("workflow_state", "unpublished|available|completed|deleted", "available")
@@ -95,6 +95,10 @@ fun LambdaDslObject.populateCourseFields(fieldConfig: PactCourseFieldConfig = Pa
     //
     // Optional/configurable fields
     //
+
+    if(fieldConfig.includeFavorites) {
+        this.booleanType("is_favorite")
+    }
 
     if(fieldConfig.includePermissions) {
         this.`object`("permissions") { permissions ->
@@ -105,6 +109,12 @@ fun LambdaDslObject.populateCourseFields(fieldConfig: PactCourseFieldConfig = Pa
     }
     if(fieldConfig.includeSyllabusBody) {
         this.stringType("syllabus_body")
+    }
+
+    if(fieldConfig.includeCurrentGradingPeriodScores) {
+        this
+                .booleanType("has_weighted_grading_periods")
+                .booleanType("has_grading_periods")
     }
 
     if(fieldConfig.numEnrollments > 0)
@@ -161,12 +171,19 @@ fun assertCoursePopulated(description: String, course: Course, fieldConfig: Pact
     assertNotNull("$description + isApplyAssignmentGroupWeights", course.isApplyAssignmentGroupWeights)
     //assertNotNull("$description + accessRestrictedByDate", course.accessRestrictedByDate)
     //assertNotNull("$description + imageUrl", course.imageUrl)
-    assertNotNull("$description + isWeightedGradingPeriods", course.isWeightedGradingPeriods)
     assertNotNull("$description + homePage", course.homePage)
     assertNotNull("$description + restrictEnrollmentsToCourseDate", course.restrictEnrollmentsToCourseDate)
     assertNotNull("$description + workflowState", course.workflowState)
-    assertNotNull("$description + isFavorite", course.isFavorite)
     assertNotNull("$description + id", course.id)
+
+    if(fieldConfig.includeFavorites) {
+        assertNotNull("$description + isFavorite", course.isFavorite)
+    }
+
+    if(fieldConfig.includeCurrentGradingPeriodScores) {
+        assertNotNull("$description + hasGradingPeriods", course.hasGradingPeriods)
+        assertNotNull("$description + isWeightedGradingPeriods", course.isWeightedGradingPeriods)
+    }
 
     if(fieldConfig.includePermissions) {
         assertNotNull("$description + permissions", course.permissions)
