@@ -41,9 +41,9 @@ class CourseGrade {
   /// Represents the lock status of a course, this is different from hideFinalGrades, as it takes both that value, and
   /// totalsForAllGradingPeriodsOption into account. The latter is only used when relevant.
   bool isCourseGradeLocked({bool forAllGradingPeriods = true}) {
-    if (_course.hideFinalGrades) {
+    if (_course?.hideFinalGrades == true) {
       return true;
-    } else if (_course.hasGradingPeriods) {
+    } else if (_course?.hasGradingPeriods == true) {
       return forAllGradingPeriods && !_hasActiveGradingPeriod() && !_isTotalsForAllGradingPeriodsEnabled();
     } else {
       return false;
@@ -63,10 +63,10 @@ class CourseGrade {
       currentScore() == null && (currentGrade() == null || currentGrade().contains('N/A') || currentGrade().isEmpty);
 
   bool _hasActiveGradingPeriod() =>
-      _course.enrollments.toList().any((enrollment) => enrollment.hasActiveGradingPeriod());
+      _course?.enrollments?.toList()?.any((enrollment) => enrollment.hasActiveGradingPeriod()) ?? false;
 
   bool _isTotalsForAllGradingPeriodsEnabled() =>
-      _course.enrollments.toList().any((enrollment) => enrollment.isTotalsForAllGradingPeriodsEnabled());
+      _course?.enrollments?.toList()?.any((enrollment) => enrollment.isTotalsForAllGradingPeriodsEnabled()) ?? false;
 
   double _getCurrentScore() => _enrollment?.grades?.currentScore ?? _enrollment?.computedCurrentScore;
 

@@ -78,12 +78,18 @@ class _CourseGradesScreenState extends State<CourseGradesScreen> {
   }
 
   Widget _body(AsyncSnapshot<GradeDetails> snapshot, CourseDetailsModel model) {
-    if (snapshot.hasError) {
-      return ErrorPandaWidget(L10n(context).unexpectedError, () {
-        _refreshIndicatorKey.currentState.show();
-      });
-    } else if (snapshot.connectionState == ConnectionState.waiting && !snapshot.hasData) {
+    final header = _CourseGradeHeader(context, snapshot.data?.gradingPeriods ?? [], snapshot.data?.termEnrollment);
+    if (snapshot.connectionState == ConnectionState.waiting && !snapshot.hasData) {
       return LoadingIndicator();
+    }
+
+    if (snapshot.hasError) {
+      return ErrorPandaWidget(
+        L10n(context).unexpectedError,
+        () {
+          _refreshIndicatorKey.currentState.show();
+        },
+      );
     } else if (!snapshot.hasData ||
         snapshot.data.assignmentGroups == null ||
         snapshot.data.assignmentGroups.every((group) => group.assignments.isEmpty) == true) {
@@ -91,12 +97,14 @@ class _CourseGradesScreenState extends State<CourseGradesScreen> {
         svgPath: 'assets/svg/panda-space-no-assignments.svg',
         title: L10n(context).noAssignmentsTitle,
         subtitle: L10n(context).noAssignmentsMessage,
+        // Don't show the header if we have no assignments at all (null grading period id corresponds to all grading periods)
+        header: (model.currentGradingPeriod()?.id == null) ? null : header,
       );
     }
 
     return ListView(
       children: [
-        _CourseGradeHeader(context, snapshot.data.gradingPeriods, snapshot.data.termEnrollment),
+        header,
         ..._assignmentListChildren(context, snapshot.data.assignmentGroups),
       ],
     );

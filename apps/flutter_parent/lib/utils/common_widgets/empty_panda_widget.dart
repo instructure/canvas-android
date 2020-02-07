@@ -25,6 +25,7 @@ class EmptyPandaWidget extends StatelessWidget {
   final String subtitle;
   final String buttonText;
   final GestureTapCallback onButtonTap;
+  final Widget header;
 
   const EmptyPandaWidget({
     Key key,
@@ -33,11 +34,13 @@ class EmptyPandaWidget extends StatelessWidget {
     this.subtitle,
     this.buttonText,
     this.onButtonTap,
+    this.header,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return FullScreenScrollContainer(
+      header: header,
       children: <Widget>[
         if (svgPath != null) SvgPicture.asset(svgPath, excludeFromSemantics: true),
         if (svgPath != null && (title != null || subtitle != null)) SizedBox(height: 64),
