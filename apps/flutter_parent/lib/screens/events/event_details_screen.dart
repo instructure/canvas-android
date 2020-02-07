@@ -236,7 +236,7 @@ class _RemindMeState extends State<_RemindMe> {
     if (reminder != null) _interactor.deleteReminder(reminder);
     if (checked) {
       var now = DateTime.now();
-      var eventDate = event.isAllDay ? event.allDayDate : event.startAt;
+      var eventDate = event.isAllDay ? event.allDayDate.toLocal() : event.startAt.toLocal();
       var initialDate = eventDate?.isAfter(now) == true ? eventDate : now;
 
       DateTime date;

@@ -27,18 +27,6 @@ abstract class NotificationPayload implements Built<NotificationPayload, Notific
   NotificationPayloadType get type;
 
   @nullable
-  String get domain;
-
-  @nullable
-  String get userId;
-
-  @nullable
-  String get studentId;
-
-  @nullable
-  String get routeUrl;
-
-  @nullable
   String get data;
 
   NotificationPayload._();

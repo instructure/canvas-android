@@ -89,6 +89,7 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
           onRefresh: () {
             setState(() {
               _assignmentFuture = _loadAssignment(forceRefresh: true);
+              _reminderFuture = _loadReminder();
             });
             return _assignmentFuture.catchError((_) {}); // Catch errors so they don't crash the app
           },
@@ -276,7 +277,7 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
     if (reminder != null) await _interactor.deleteReminder(reminder);
     if (checked) {
       var now = DateTime.now();
-      var initialDate = assignment.dueAt?.isAfter(now) == true ? assignment.dueAt : now;
+      var initialDate = assignment.dueAt?.isAfter(now) == true ? assignment.dueAt.toLocal() : now;
 
       DateTime date;
       TimeOfDay time;

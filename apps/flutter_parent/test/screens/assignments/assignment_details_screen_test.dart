@@ -590,8 +590,6 @@ void main() {
     expect(find.text(AppLocalizations().assignmentRemindMeDescription), findsOneWidget);
     expect((tester.widget(find.byType(Switch)) as Switch).value, false);
   });
-
-  // TODO: test setting reminder and removing reminder
 }
 
 class _MockAssignmentDetailsInteractor extends Mock implements AssignmentDetailsInteractor {}

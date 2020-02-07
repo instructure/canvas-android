@@ -52,34 +52,6 @@ class _$NotificationPayloadSerializer
       serializers.serialize(object.type,
           specifiedType: const FullType(NotificationPayloadType)),
     ];
-    result.add('domain');
-    if (object.domain == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.domain,
-          specifiedType: const FullType(String)));
-    }
-    result.add('userId');
-    if (object.userId == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.userId,
-          specifiedType: const FullType(String)));
-    }
-    result.add('studentId');
-    if (object.studentId == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.studentId,
-          specifiedType: const FullType(String)));
-    }
-    result.add('routeUrl');
-    if (object.routeUrl == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.routeUrl,
-          specifiedType: const FullType(String)));
-    }
     result.add('data');
     if (object.data == null) {
       result.add(null);
@@ -107,22 +79,6 @@ class _$NotificationPayloadSerializer
           result.type = serializers.deserialize(value,
                   specifiedType: const FullType(NotificationPayloadType))
               as NotificationPayloadType;
-          break;
-        case 'domain':
-          result.domain = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
-          break;
-        case 'userId':
-          result.userId = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
-          break;
-        case 'studentId':
-          result.studentId = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
-          break;
-        case 'routeUrl':
-          result.routeUrl = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
           break;
         case 'data':
           result.data = serializers.deserialize(value,
@@ -166,28 +122,13 @@ class _$NotificationPayload extends NotificationPayload {
   @override
   final NotificationPayloadType type;
   @override
-  final String domain;
-  @override
-  final String userId;
-  @override
-  final String studentId;
-  @override
-  final String routeUrl;
-  @override
   final String data;
 
   factory _$NotificationPayload(
           [void Function(NotificationPayloadBuilder) updates]) =>
       (new NotificationPayloadBuilder()..update(updates)).build();
 
-  _$NotificationPayload._(
-      {this.type,
-      this.domain,
-      this.userId,
-      this.studentId,
-      this.routeUrl,
-      this.data})
-      : super._() {
+  _$NotificationPayload._({this.type, this.data}) : super._() {
     if (type == null) {
       throw new BuiltValueNullFieldError('NotificationPayload', 'type');
     }
@@ -207,33 +148,18 @@ class _$NotificationPayload extends NotificationPayload {
     if (identical(other, this)) return true;
     return other is NotificationPayload &&
         type == other.type &&
-        domain == other.domain &&
-        userId == other.userId &&
-        studentId == other.studentId &&
-        routeUrl == other.routeUrl &&
         data == other.data;
   }
 
   @override
   int get hashCode {
-    return $jf($jc(
-        $jc(
-            $jc(
-                $jc($jc($jc(0, type.hashCode), domain.hashCode),
-                    userId.hashCode),
-                studentId.hashCode),
-            routeUrl.hashCode),
-        data.hashCode));
+    return $jf($jc($jc(0, type.hashCode), data.hashCode));
   }
 
   @override
   String toString() {
     return (newBuiltValueToStringHelper('NotificationPayload')
           ..add('type', type)
-          ..add('domain', domain)
-          ..add('userId', userId)
-          ..add('studentId', studentId)
-          ..add('routeUrl', routeUrl)
           ..add('data', data))
         .toString();
   }
@@ -247,22 +173,6 @@ class NotificationPayloadBuilder
   NotificationPayloadType get type => _$this._type;
   set type(NotificationPayloadType type) => _$this._type = type;
 
-  String _domain;
-  String get domain => _$this._domain;
-  set domain(String domain) => _$this._domain = domain;
-
-  String _userId;
-  String get userId => _$this._userId;
-  set userId(String userId) => _$this._userId = userId;
-
-  String _studentId;
-  String get studentId => _$this._studentId;
-  set studentId(String studentId) => _$this._studentId = studentId;
-
-  String _routeUrl;
-  String get routeUrl => _$this._routeUrl;
-  set routeUrl(String routeUrl) => _$this._routeUrl = routeUrl;
-
   String _data;
   String get data => _$this._data;
   set data(String data) => _$this._data = data;
@@ -272,10 +182,6 @@ class NotificationPayloadBuilder
   NotificationPayloadBuilder get _$this {
     if (_$v != null) {
       _type = _$v.type;
-      _domain = _$v.domain;
-      _userId = _$v.userId;
-      _studentId = _$v.studentId;
-      _routeUrl = _$v.routeUrl;
       _data = _$v.data;
       _$v = null;
     }
@@ -297,14 +203,7 @@ class NotificationPayloadBuilder
 
   @override
   _$NotificationPayload build() {
-    final _$result = _$v ??
-        new _$NotificationPayload._(
-            type: type,
-            domain: domain,
-            userId: userId,
-            studentId: studentId,
-            routeUrl: routeUrl,
-            data: data);
+    final _$result = _$v ?? new _$NotificationPayload._(type: type, data: data);
     replace(_$result);
     return _$result;
   }

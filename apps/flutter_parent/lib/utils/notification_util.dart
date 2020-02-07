@@ -20,7 +20,6 @@ import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/notification_payload.dart';
 import 'package:flutter_parent/models/reminder.dart';
 import 'package:flutter_parent/models/serializers.dart';
-import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/utils/db/reminder_db.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
@@ -95,8 +94,6 @@ class NotificationUtil {
   Future<void> scheduleReminder(AppLocalizations l10n, String title, String body, Reminder reminder) {
     final payload = NotificationPayload((b) => b
       ..type = NotificationPayloadType.reminder
-      ..domain = ApiPrefs.getDomain()
-      ..userId = ApiPrefs.getUser().id
       ..data = json.encode(serialize(reminder)));
 
     final notificationDetails = NotificationDetails(

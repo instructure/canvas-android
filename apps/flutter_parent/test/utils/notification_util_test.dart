@@ -16,11 +16,9 @@ import 'dart:convert';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
-import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/models/notification_payload.dart';
 import 'package:flutter_parent/models/reminder.dart';
 import 'package:flutter_parent/models/serializers.dart';
-import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/utils/db/reminder_db.dart';
 import 'package:flutter_parent/utils/notification_util.dart';
 import 'package:mockito/mockito.dart';
@@ -119,8 +117,6 @@ void main() {
 
   test('scheduleReminder calls plugin with expected parameters', () async {
     await setupPlatformChannels();
-    var login = Login();
-    await ApiPrefs.switchLogins(login);
 
     final reminder = Reminder((b) => b
       ..id = 123
@@ -128,8 +124,6 @@ void main() {
 
     final expectedPayload = NotificationPayload((b) => b
       ..type = NotificationPayloadType.reminder
-      ..domain = ApiPrefs.getDomain()
-      ..userId = ApiPrefs.getUser().id
       ..data = json.encode(serialize(reminder)));
 
     await NotificationUtil().scheduleReminder(AppLocalizations(), 'title', 'body', reminder);

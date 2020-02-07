@@ -11,7 +11,6 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-import 'package:flutter/widgets.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/models/reminder.dart';
@@ -32,7 +31,6 @@ void main() {
   final eventsApi = _MockEventsApi();
   final reminderDb = _MockReminderDb();
   final notificationUtil = _MockNotificationUtil();
-  final context = _MockContext();
   final login = Login((b) => b
     ..domain = 'test-domain'
     ..user = User((u) => u..id = '123').toBuilder());
@@ -47,7 +45,6 @@ void main() {
     reset(eventsApi);
     reset(reminderDb);
     reset(notificationUtil);
-    reset(context);
     await setupPlatformChannels();
     await ApiPrefs.switchLogins(login);
   });
@@ -138,5 +135,3 @@ class _MockEventsApi extends Mock implements CalendarEventsApi {}
 class _MockReminderDb extends Mock implements ReminderDb {}
 
 class _MockNotificationUtil extends Mock implements NotificationUtil {}
-
-class _MockContext extends Mock implements BuildContext {}
