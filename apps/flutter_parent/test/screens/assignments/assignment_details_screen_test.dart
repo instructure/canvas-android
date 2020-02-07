@@ -222,7 +222,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text(assignmentName), findsOneWidget);
-    expect(find.text('Jan 1 at 12:00AM'), findsOneWidget);
+    expect(find.text(DateFormat(AppLocalizations().dateTimeFormat).format(dueDate.toLocal())), findsOneWidget);
     expect(find.text('1.5 pts'), findsOneWidget);
     expect(find.byIcon(Icons.do_not_disturb), findsOneWidget);
     expect((tester.widget(find.byIcon(Icons.do_not_disturb)) as Icon).color, ParentColors.licorice);

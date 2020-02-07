@@ -175,7 +175,7 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
             Divider(),
             ..._rowTile(
               title: l10n.assignmentDueLabel,
-              child: Text(_dateFormat(assignment.dueAt) ?? l10n.noDueDate, style: textTheme.subhead),
+              child: Text(_dateFormat(assignment?.dueAt?.toLocal()) ?? l10n.noDueDate, style: textTheme.subhead),
             ),
           ],
           GradeCell.forSubmission(context, assignment, submission),
