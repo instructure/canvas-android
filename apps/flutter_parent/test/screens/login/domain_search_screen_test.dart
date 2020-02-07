@@ -49,7 +49,9 @@ void main() {
     expect(find.text(l10n.findSchool), findsOneWidget);
     expect(find.text(l10n.next), findsOneWidget);
     expect(
-      tester.widget<FlatButton>(find.ancestor(of: find.text(l10n.next), matching: find.byType(FlatButton))).enabled,
+      tester
+          .widget<MaterialButton>(find.ancestor(of: find.text(l10n.next), matching: find.byType(MaterialButton)))
+          .enabled,
       false,
     );
     expect(find.text(l10n.domainSearchInputHint), findsOneWidget);
@@ -81,13 +83,14 @@ void main() {
     await tester.pumpAndSettle();
 
     var nextButton =
-        tester.widget<FlatButton>(find.ancestor(of: find.text(l10n.next), matching: find.byType(FlatButton)));
+        tester.widget<MaterialButton>(find.ancestor(of: find.text(l10n.next), matching: find.byType(MaterialButton)));
     expect(nextButton.enabled, false);
 
     await tester.enterText(find.byType(TextField), 'aa');
     await tester.pumpAndSettle();
 
-    nextButton = tester.widget<FlatButton>(find.ancestor(of: find.text(l10n.next), matching: find.byType(FlatButton)));
+    nextButton =
+        tester.widget<MaterialButton>(find.ancestor(of: find.text(l10n.next), matching: find.byType(MaterialButton)));
     expect(nextButton.enabled, true);
   });
 
