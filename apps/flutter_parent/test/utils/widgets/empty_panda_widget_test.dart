@@ -128,6 +128,14 @@ void main() {
     expect(find.text(subtitle), findsOneWidget);
     expect(find.widgetWithText(FlatButton, buttonText), findsOneWidget);
   });
+
+  testWidgetsWithAccessibilityChecks('shows a header', (tester) async {
+    await tester.pumpWidget(_testableWidget(EmptyPandaWidget(header: Text('h'))));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(Text), findsOneWidget);
+    expect(find.text('h'), findsOneWidget);
+  });
 }
 
 Widget _testableWidget(EmptyPandaWidget child) {

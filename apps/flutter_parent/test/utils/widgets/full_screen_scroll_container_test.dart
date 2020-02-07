@@ -57,6 +57,34 @@ void main() {
       // Verify we had our refresh called
       verify(refresher.refresh()).called(1);
     });
+
+    testWidgetsWithAccessibilityChecks('can add header', (tester) async {
+      final children = [Text('a')];
+      final header = Text('h');
+
+      // Pump the widget
+      await tester.pumpWidget(_refreshingWidget(children, header: header));
+      await tester.pumpAndSettle();
+
+      // Should show the text
+      expect(find.text('a'), findsOneWidget);
+
+      // Should be at the center of the screen (in relation to the header)
+      final positionA = tester.getCenter(find.text('a'));
+      final positionHeaderCenter = tester.getCenter(find.text('h'));
+      final positionCenter = tester.getCenter(find.byType(MaterialApp));
+      expect(positionA.dx, positionCenter.dx);
+      expect(positionA.dy - positionHeaderCenter.dy, positionCenter.dy);
+
+      // Should show the text
+      expect(find.text('h'), findsOneWidget);
+
+      // Should be at the center of the screen
+      final positionHeader = tester.getTopLeft(find.text('h'));
+      final positionTop = tester.getTopLeft(find.byType(MaterialApp));
+      expect(positionHeaderCenter.dx, positionCenter.dx);
+      expect(positionHeader.dy, positionTop.dy);
+    });
   });
 
   group('Multiple children', () {
@@ -98,6 +126,37 @@ void main() {
       // Verify we had our refresh called
       verify(refresher.refresh()).called(1);
     });
+
+    testWidgetsWithAccessibilityChecks('can add header', (tester) async {
+      final children = [Text('a'), Text('b'), Text('c')];
+      final header = Text('h');
+
+      // Pump the widget
+      await tester.pumpWidget(_refreshingWidget(children, header: header));
+      await tester.pumpAndSettle();
+
+      // Should show the text
+      // The widgets should all be visible
+      expect(find.text('a'), findsOneWidget);
+      expect(find.text('b'), findsOneWidget);
+      expect(find.text('c'), findsOneWidget);
+
+      // The middle widget should be at the center of the screen (in relation to the header)
+      final positionA = tester.getCenter(find.text('b'));
+      final positionHeaderCenter = tester.getCenter(find.text('h'));
+      final positionCenter = tester.getCenter(find.byType(MaterialApp));
+      expect(positionA.dx, positionCenter.dx);
+      expect(positionA.dy - positionHeaderCenter.dy, positionCenter.dy);
+
+      // Should show the text
+      expect(find.text('h'), findsOneWidget);
+
+      // Should be at the center of the screen
+      final positionHeader = tester.getTopLeft(find.text('h'));
+      final positionTop = tester.getTopLeft(find.byType(MaterialApp));
+      expect(positionHeaderCenter.dx, positionCenter.dx);
+      expect(positionHeader.dy, positionTop.dy);
+    });
   });
 }
 
@@ -105,11 +164,11 @@ class _Refresher extends Mock {
   void refresh();
 }
 
-Widget _refreshingWidget(List<Widget> children, {_Refresher refresher}) {
+Widget _refreshingWidget(List<Widget> children, {_Refresher refresher, Widget header}) {
   return MaterialApp(
     home: Scaffold(
       body: RefreshIndicator(
-        child: FullScreenScrollContainer(children: children),
+        child: FullScreenScrollContainer(children: children, header: header),
         onRefresh: () {
           refresher?.refresh();
           return Future.value();

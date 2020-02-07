@@ -17,6 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/school_domain.dart';
 import 'package:flutter_parent/screens/web_login/web_login_screen.dart';
+import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
@@ -98,15 +99,25 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
       builder: (context) => Scaffold(
         appBar: AppBar(
           title: Text(
-            L10n(context).findSchoolOrDistrict,
+            L10n(context).findSchool,
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
           ),
           bottom: ParentTheme.of(context).appBarDivider(shadowInLightMode: false),
           actions: <Widget>[
-            FlatButton(
-              child: Text(L10n(context).next),
+            MaterialButton(
+              minWidth: 20,
+              highlightColor: Colors.transparent,
+              splashColor: Theme.of(context).accentColor.withAlpha(100),
               textColor: Theme.of(context).accentColor,
               onPressed: _query.isEmpty ? null : () => _next(context),
+              child: Text(
+                L10n(context).next,
+                textAlign: TextAlign.end,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
             ),
           ],
         ),
@@ -130,7 +141,10 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
                     ? null
                     : IconButton(
                         key: Key('clear-query'),
-                        icon: Icon(Icons.clear),
+                        icon: Icon(
+                          Icons.clear,
+                          color: ParentColors.ash,
+                        ),
                         onPressed: () {
                           // Need to perform this post-frame due to bug while widget testing
                           // See https://github.com/flutter/flutter/issues/17647
@@ -201,7 +215,7 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text(L10n(context).findSchoolOrDistrict),
+            title: Text(L10n(context).findSchool),
             content: Text.rich(
               _helpBodySpan(
                 text: body,

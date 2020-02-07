@@ -178,9 +178,9 @@ class AppLocalizations {
     return Intl.message('Canvas logo', name: 'canvaslogoLabel', desc: 'The semantics label for the Canvas logo');
   }
 
-  String get findSchoolOrDistrict => Intl.message(
-        'Find School or District',
-        name: 'findSchoolOrDistrict',
+  String get findSchool => Intl.message(
+        'Find School',
+        name: 'findSchool',
         desc: 'Text for the find-my-school button',
       );
 
@@ -631,6 +631,18 @@ class AppLocalizations {
         desc: 'The generic error shown when we are unable to verify with Canvas',
       );
 
+  /// Reminders
+
+  String get remindersNotificationChannelName => Intl.message(
+        'Reminders',
+        desc: 'Name of the system notification channel for assignment and event reminders',
+      );
+
+  String get remindersNotificationChannelDescription => Intl.message(
+        'Notifications for reminders about assignments and calendar events',
+        desc: 'Description of the system notification channel for assignment and event reminders',
+      );
+
   /// Not-A-Parent screen
 
   String get notAParentTitle => Intl.message('Not a parent?',
@@ -890,6 +902,12 @@ class AppLocalizations {
         args: [startAt, endAt],
         desc: 'The time the event is happening, example: "2:00 pm - 4:00 pm"',
       );
+
+  String get eventRemindMeDescription => Intl.message('Set a date and time to be notified of this event.',
+      desc: 'Description for row to set event reminders');
+
+  String get eventRemindMeSet =>
+      Intl.message('You will be notified about this event on…', desc: 'Description for when an event reminder is set');
 
   /// Error Report Dialog
 

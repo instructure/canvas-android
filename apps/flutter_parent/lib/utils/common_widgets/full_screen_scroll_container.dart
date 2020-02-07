@@ -20,9 +20,10 @@ import 'package:flutter/material.dart';
 /// Mostly pulling from the example by Flutter for SingleChildScrollView:
 /// https://api.flutter.dev/flutter/widgets/SingleChildScrollView-class.html
 class FullScreenScrollContainer extends StatelessWidget {
+  final Widget header;
   final List<Widget> children;
 
-  const FullScreenScrollContainer({@required this.children, Key key}) : super(key: key);
+  const FullScreenScrollContainer({@required this.children, this.header, Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -34,11 +35,22 @@ class FullScreenScrollContainer extends StatelessWidget {
             minHeight: viewportConstraints.maxHeight,
             minWidth: viewportConstraints.maxWidth,
           ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 32),
+          child: IntrinsicHeight(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: children,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                if (header != null) header,
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 32),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.max,
+                      children: children,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),

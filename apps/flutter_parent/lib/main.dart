@@ -19,7 +19,9 @@ import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/parent_app.dart';
 import 'package:flutter_parent/utils/crash_utils.dart';
+import 'package:flutter_parent/utils/db/db_util.dart';
 import 'package:flutter_parent/utils/design/theme_prefs.dart';
+import 'package:flutter_parent/utils/notification_util.dart';
 import 'package:flutter_parent/utils/old_app_migration.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
@@ -32,8 +34,12 @@ void main() {
       ThemePrefs.init(),
       CrashUtils.init(),
       FlutterDownloader.initialize(),
+      DbUtil.init(),
     ]);
     setupLocator();
+
+    // Currently must be initialized after locator has been set up. This may change once routing is implemented.
+    await NotificationUtil.init();
 
     await OldAppMigration.performMigrationIfNecessary(); // ApiPrefs must be initialized before calling this
 

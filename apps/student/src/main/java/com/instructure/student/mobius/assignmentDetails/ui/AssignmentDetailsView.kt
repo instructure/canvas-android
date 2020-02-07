@@ -28,6 +28,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import android.widget.Toast
+import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -99,7 +100,9 @@ class AssignmentDetailsView(
 
     private fun setupDescriptionView() {
         descriptionWebView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
-            override fun openMediaFromWebView(mime: String, url: String, filename: String) {}
+            override fun openMediaFromWebView(mime: String, url: String, filename: String) {
+                RouteMatcher.openMedia(context as FragmentActivity, url)
+            }
             override fun onPageFinishedCallback(webView: WebView, url: String) {}
             override fun onPageStartedCallback(webView: WebView, url: String) {}
             override fun canRouteInternallyDelegate(url: String): Boolean {

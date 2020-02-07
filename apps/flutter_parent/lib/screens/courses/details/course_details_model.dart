@@ -41,8 +41,8 @@ class CourseDetailsModel extends BaseModel {
   // A convenience constructor when we already have the course data
   CourseDetailsModel.withCourse(this.studentId, this.studentName, this.course) : this.courseId = course.id;
 
-  /// gradingPeriodId is optional, but only used if refreshAssignmentGroups is true
-  Future<void> loadData({bool refreshCourse = false, bool refreshSummaryList = false}) {
+  /// Used only be the skeleton to load the course data for creating tabs and the app bar
+  Future<void> loadData({bool refreshCourse = false}) {
     return work(() async {
       // Declare the futures so we can let both run asynchronously
       final courseFuture =
@@ -60,6 +60,10 @@ class CourseDetailsModel extends BaseModel {
   }
 
   Future<GradeDetails> loadAssignments({bool forceRefresh = false}) async {
+    if (forceRefresh) {
+      course = await _interactor().loadCourse(courseId);
+    }
+
     final groupFuture = _interactor()
         .loadAssignmentGroups(courseId, studentId, _nextGradingPeriod?.id, forceRefresh: forceRefresh)
         ?.then((groups) async {
@@ -71,7 +75,7 @@ class CourseDetailsModel extends BaseModel {
 
     final gradingPeriodsFuture =
         _interactor().loadGradingPeriods(courseId, forceRefresh: forceRefresh)?.then((periods) {
-      return periods.gradingPeriods.toList();
+      return periods?.gradingPeriods?.toList() ?? [];
     });
 
     // Get the grades for the term
@@ -79,7 +83,7 @@ class CourseDetailsModel extends BaseModel {
         .loadEnrollmentsForGradingPeriod(courseId, studentId, _nextGradingPeriod?.id, forceRefresh: forceRefresh)
         ?.then((enrollments) {
       return enrollments.length > 0 ? enrollments.first : null;
-    });
+    })?.catchError((_) => null); // Some 'legacy' parents can't read grades for students, so catch and return null
 
     final gradeDetails = GradeDetails(
       assignmentGroups: await groupFuture,

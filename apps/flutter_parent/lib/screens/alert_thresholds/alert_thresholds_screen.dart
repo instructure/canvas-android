@@ -42,6 +42,7 @@ class AlertThresholdsScreen extends StatefulWidget {
 
 class AlertThresholdsState extends State<AlertThresholdsScreen> {
   Future<List<AlertThreshold>> _thresholdsFuture;
+
   Future<List<AlertThreshold>> _loadThresholds() =>
       locator<AlertThresholdsInteractor>().getAlertThresholdsForStudent(widget._student.id);
   List<AlertThreshold> _thresholds = [];
@@ -189,26 +190,65 @@ class AlertThresholdsState extends State<AlertThresholdsScreen> {
   Widget _switchTile(AlertType type) {
     AlertThreshold threshold = _thresholds.getThreshold(type);
     bool value = threshold != null;
-    return SwitchListTile(
-      title: Text(type.getTitle(context)),
-      value: value,
-      contentPadding: const EdgeInsets.fromLTRB(16, 0, 7, 0),
-      onChanged: (bool state) async {
-        var update =
-            await locator<AlertThresholdsInteractor>().updateAlertThreshold(type, widget._student.id, threshold);
+    return _TalkbackSwitchTile(
+      title: type.getTitle(context),
+      initValue: value,
+      onChange: (changed) {
+        _updateThreshold(type, threshold);
+      },
+    );
+  }
 
-        // Grab the index of the threshold, if it exists
-        var idx = _thresholds.indexWhere((t) => t?.alertType == type);
+  Future<void> _updateThreshold(AlertType type, AlertThreshold threshold) async {
+    var update = await locator<AlertThresholdsInteractor>().updateAlertThreshold(type, widget._student.id, threshold);
+
+    // Grab the index of the threshold, if it exists
+    var idx = _thresholds.indexWhere((t) => t?.alertType == type);
+    setState(() {
+      if (idx == -1) {
+        // Threshold got created
+        _thresholds.add(update);
+      } else {
+        // Existing threshold was deleted
+        _thresholds[idx] = null;
+      }
+    });
+  }
+}
+
+/// Create a switch tile that can set it's state to have talkback read correctly. Having onChanged be a future seems to
+/// update the value too late for talkback, so it reads the previous value.
+class _TalkbackSwitchTile extends StatefulWidget {
+  final String title;
+  final bool initValue;
+  final ValueChanged<bool> onChange;
+
+  const _TalkbackSwitchTile({Key key, this.title, this.initValue, this.onChange}) : super(key: key);
+
+  @override
+  _TalkbackSwitchTileState createState() => _TalkbackSwitchTileState();
+}
+
+class _TalkbackSwitchTileState extends State<_TalkbackSwitchTile> {
+  bool _value;
+
+  @override
+  void initState() {
+    _value = widget.initValue ?? false;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SwitchListTile(
+      title: Text(widget.title),
+      value: _value,
+      contentPadding: const EdgeInsets.fromLTRB(16, 0, 7, 0),
+      onChanged: (bool state) {
         setState(() {
-          value = value ? false : true;
-          if (idx == -1) {
-            // Threshold got created
-            _thresholds.add(update);
-          } else {
-            // Existing threshold was deleted
-            _thresholds[idx] = null;
-          }
+          _value = state;
         });
+        widget.onChange(state);
       },
     );
   }

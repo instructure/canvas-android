@@ -32,7 +32,6 @@ import 'package:flutter_parent/screens/courses/details/course_details_interactor
 import 'package:flutter_parent/screens/dashboard/alert_notifier.dart';
 import 'package:flutter_parent/screens/dashboard/dashboard_interactor.dart';
 import 'package:flutter_parent/screens/dashboard/inbox_notifier.dart';
-import 'package:flutter_parent/screens/dashboard/selected_student_notifier.dart';
 import 'package:flutter_parent/screens/domain_search/domain_search_interactor.dart';
 import 'package:flutter_parent/screens/events/event_details_interactor.dart';
 import 'package:flutter_parent/screens/inbox/attachment_utils/attachment_picker_interactor.dart';
@@ -46,14 +45,18 @@ import 'package:flutter_parent/screens/web_login/web_login_interactor.dart';
 import 'package:flutter_parent/utils/common_widgets/error_report/error_report_interactor.dart';
 import 'package:flutter_parent/utils/common_widgets/view_attachment/view_attachment_interactor.dart';
 import 'package:flutter_parent/utils/common_widgets/view_attachment/viewers/audio_video_attachment_viewer_interactor.dart';
+import 'package:flutter_parent/utils/db/reminder_db.dart';
+import 'package:flutter_parent/utils/notification_util.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/veneers/AndroidIntentVeneer.dart';
 import 'package:flutter_parent/utils/veneers/flutter_downloader_veneer.dart';
 import 'package:flutter_parent/utils/veneers/path_provider_veneer.dart';
 import 'package:get_it/get_it.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:sqflite/sqflite.dart';
 
 import 'common_widgets/view_attachment/fetcher/attachment_fetcher_interactor.dart';
+import 'db/db_util.dart';
 
 GetIt locator = GetIt.instance;
 
@@ -70,6 +73,10 @@ void setupLocator() {
   locator.registerLazySingleton<FileApi>(() => FileApi());
   locator.registerLazySingleton<InboxApi>(() => InboxApi());
   locator.registerLazySingleton<PageApi>(() => PageApi());
+
+  // DB helpers
+  locator.registerLazySingleton<Database>(() => DbUtil.instance);
+  locator.registerLazySingleton<ReminderDb>(() => ReminderDb());
 
   // Interactors
   locator.registerFactory<AlertsInteractor>(() => AlertsInteractor());
@@ -102,7 +109,7 @@ void setupLocator() {
 
   // Other
   locator.registerLazySingleton<AlertCountNotifier>(() => AlertCountNotifier());
+  locator.registerLazySingleton<NotificationUtil>(() => NotificationUtil());
   locator.registerLazySingleton<InboxCountNotifier>(() => InboxCountNotifier());
   locator.registerLazySingleton<QuickNav>(() => QuickNav());
-  locator.registerLazySingleton<SelectedStudentNotifier>(() => SelectedStudentNotifier());
 }

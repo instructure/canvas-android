@@ -15,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/assignment.dart';
 import 'package:flutter_parent/models/course.dart';
+import 'package:flutter_parent/models/reminder.dart';
 import 'package:flutter_parent/screens/assignments/assignment_details_interactor.dart';
 import 'package:flutter_parent/screens/assignments/grade_cell.dart';
 import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_screen.dart';
@@ -25,7 +26,6 @@ import 'package:flutter_parent/utils/design/canvas_icons_solid.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
-import 'package:flutter_parent/utils/web_view_utils.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 
@@ -56,9 +56,11 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
 
   // State variables
   Future<AssignmentDetails> _assignmentFuture;
+  Future<Reminder> _reminderFuture;
 
   @override
   void initState() {
+    _reminderFuture = _loadReminder();
     _assignmentFuture = _loadAssignment();
     super.initState();
   }
@@ -71,6 +73,8 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
         widget.assignmentId,
         widget.studentId,
       );
+
+  Future<Reminder> _loadReminder() => _interactor.loadReminder(widget.assignmentId);
 
   @override
   Widget build(BuildContext context) {
@@ -85,6 +89,7 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
           onRefresh: () {
             setState(() {
               _assignmentFuture = _loadAssignment(forceRefresh: true);
+              _reminderFuture = _loadReminder();
             });
             return _assignmentFuture.catchError((_) {}); // Catch errors so they don't crash the app
           },
@@ -125,7 +130,6 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
     final textTheme = Theme.of(context).textTheme;
 
     final l10n = L10n(context);
-    final alarm = snapshot.data.alarm;
     final assignment = snapshot.data.assignment;
     final submission = assignment.submission(widget.studentId);
     final fullyLocked = assignment.isFullyLocked;
@@ -171,7 +175,7 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
             Divider(),
             ..._rowTile(
               title: l10n.assignmentDueLabel,
-              child: Text(_dateFormat(assignment.dueAt) ?? l10n.noDueDate, style: textTheme.subhead),
+              child: Text(_dateFormat(assignment?.dueAt?.toLocal()) ?? l10n.noDueDate, style: textTheme.subhead),
             ),
           ],
           GradeCell.forSubmission(context, assignment, submission),
@@ -179,35 +183,31 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
           Divider(),
           ..._rowTile(
             title: l10n.assignmentRemindMeLabel,
-            child: Column(
-              children: <Widget>[
-                Row(
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: Text(
-                        alarm?.time == null
-                            ? L10n(context).assignmentRemindMeDescription
-                            : L10n(context).assignmentRemindMeSet,
-                        style: textTheme.subhead,
-                      ),
-                    ),
-                    SizedBox(width: 16),
-                    Semantics(
-                      label: l10n.assignmentRemindMeSwitch,
-                      child: Switch(
-                        value: alarm != null,
-                        onChanged: (checked) => _handleAlarmSwitch(context, assignment, checked),
-                      ),
-                    ),
-                  ],
-                ),
-                if (alarm != null)
-                  Text(
-                    _dateFormat(alarm?.time),
-                    style: textTheme.subhead.copyWith(color: ParentTheme.of(context).studentColor),
+            child: FutureBuilder(
+              future: _reminderFuture,
+              builder: (BuildContext context, AsyncSnapshot<Reminder> snapshot) {
+                Reminder reminder = snapshot.data;
+                return SwitchListTile(
+                  contentPadding: EdgeInsets.zero,
+                  value: reminder != null,
+                  title: Text(
+                    reminder?.date == null
+                        ? L10n(context).assignmentRemindMeDescription
+                        : L10n(context).assignmentRemindMeSet,
+                    style: textTheme.subhead,
                   ),
-              ],
+                  subtitle: reminder == null
+                      ? null
+                      : Padding(
+                          padding: const EdgeInsets.only(top: 8),
+                          child: Text(
+                            _dateFormat(reminder?.date?.toLocal()),
+                            style: textTheme.subhead.copyWith(color: ParentTheme.of(context).studentColor),
+                          ),
+                        ),
+                  onChanged: (checked) => _handleAlarmSwitch(context, assignment, checked, reminder),
+                );
+              },
             ),
           ),
           Divider(),
@@ -273,10 +273,39 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
     return time == null ? null : DateFormat(L10n(context).dateTimeFormat).format(time);
   }
 
-  _handleAlarmSwitch(BuildContext context, Assignment assignment, bool checked) {
-    // TODO: Clear alarm is it's not checked
+  _handleAlarmSwitch(BuildContext context, Assignment assignment, bool checked, Reminder reminder) async {
+    if (reminder != null) await _interactor.deleteReminder(reminder);
+    if (checked) {
+      var now = DateTime.now();
+      var initialDate = assignment.dueAt?.isAfter(now) == true ? assignment.dueAt.toLocal() : now;
 
-    // TODO: Show alarm dialog if checked, then call _loadAssignment() to get the new alarm data
+      DateTime date;
+      TimeOfDay time;
+
+      date = await showDatePicker(
+        context: context,
+        initialDate: initialDate,
+        firstDate: now,
+        lastDate: initialDate.add(Duration(days: 365)),
+      );
+
+      if (date != null) {
+        time = await showTimePicker(context: context, initialTime: TimeOfDay.fromDateTime(initialDate));
+      }
+
+      if (date != null && time != null) {
+        DateTime reminderDate = DateTime(date.year, date.month, date.day, time.hour, time.minute);
+        var body = assignment.dueAt == null
+            ? L10n(context).noDueDate
+            : DateFormat(L10n(context).dueDateTimeFormat).format(assignment.dueAt.toLocal());
+        await _interactor.createReminder(L10n(context), reminderDate, assignment.id, assignment.name, body);
+      }
+    }
+
+    // Perform refresh
+    setState(() {
+      _reminderFuture = _loadReminder();
+    });
   }
 
   _sendMessage(AssignmentDetails details) {

@@ -103,6 +103,20 @@ void main() {
     verify(interactor.loadAssignmentGroups(_courseId, _studentId, null, forceRefresh: true)).called(1);
   });
 
+  // We still want to show the grades page even if we can't get the term enrollment
+  testWidgetsWithAccessibilityChecks('Does not show error for term enrollment failure', (tester) async {
+    final model = CourseDetailsModel(_studentId, '', _courseId);
+    when(interactor.loadEnrollmentsForGradingPeriod(_courseId, _studentId, any, forceRefresh: anyNamed('forceRefresh')))
+        .thenAnswer((_) async => Future<List<Enrollment>>.error('Error getting term enrollment'));
+
+    await tester.pumpWidget(_testableWidget(model, highContrastMode: true));
+    await tester.pump(); // Build the widget
+    await tester.pump(); // Let the future finish
+
+    expect(find.text(AppLocalizations().noAssignmentsTitle), findsOneWidget);
+    expect(find.text(AppLocalizations().noAssignmentsMessage), findsOneWidget);
+  });
+
   testWidgetsWithAccessibilityChecks('Shows empty', (tester) async {
     final model = CourseDetailsModel(_studentId, '', _courseId);
     when(interactor.loadAssignmentGroups(_courseId, _studentId, null)).thenAnswer((_) async => List<AssignmentGroup>());
@@ -111,6 +125,68 @@ void main() {
     await tester.pump(); // Build the widget
     await tester.pump(); // Let the future finish
 
+    expect(find.text(AppLocalizations().noAssignmentsTitle), findsOneWidget);
+    expect(find.text(AppLocalizations().noAssignmentsMessage), findsOneWidget);
+  });
+
+  testWidgetsWithAccessibilityChecks('Shows empty with period header', (tester) async {
+    final model = CourseDetailsModel(_studentId, '', _courseId);
+
+    final gradingPeriod = GradingPeriod((b) => b
+      ..id = '123'
+      ..title = 'test period');
+    final enrollment = Enrollment((b) => b
+      ..enrollmentState = 'active'
+      ..grades = _mockGrade(currentScore: 12)
+      ..multipleGradingPeriodsEnabled = true);
+    model.updateGradingPeriod(gradingPeriod);
+    model.course = _mockCourse().rebuild((b) => b..hasGradingPeriods = true);
+
+    // Mock stuff
+    when(interactor.loadAssignmentGroups(_courseId, _studentId, null)).thenAnswer((_) async => List<AssignmentGroup>());
+    when(interactor.loadGradingPeriods(_courseId)).thenAnswer(
+        (_) async => GradingPeriodResponse((b) => b..gradingPeriods = BuiltList.of([gradingPeriod]).toBuilder()));
+    when(interactor.loadEnrollmentsForGradingPeriod(_courseId, _studentId, null)).thenAnswer((_) async => [enrollment]);
+
+    await tester.pumpWidget(_testableWidget(model, highContrastMode: true));
+    await tester.pump(); // Build the widget
+    await tester.pump(); // Let the future finish
+
+    // Verify that we are showing the course grade when not locked
+    expect(find.text(AppLocalizations().courseTotalGradeLabel), findsOneWidget);
+    expect(find.text('test period'), findsOneWidget);
+
+    // Verify that we are showing the empty message
+    expect(find.text(AppLocalizations().noAssignmentsTitle), findsOneWidget);
+    expect(find.text(AppLocalizations().noAssignmentsMessage), findsOneWidget);
+  });
+
+  testWidgetsWithAccessibilityChecks('Shows empty without period header', (tester) async {
+    final model = CourseDetailsModel(_studentId, '', _courseId);
+
+    final gradingPeriod = null;
+    final enrollment = Enrollment((b) => b
+      ..enrollmentState = 'active'
+      ..grades = _mockGrade(currentScore: 12)
+      ..multipleGradingPeriodsEnabled = true);
+    model.updateGradingPeriod(gradingPeriod);
+    model.course = _mockCourse().rebuild((b) => b..hasGradingPeriods = true);
+
+    // Mock stuff
+    when(interactor.loadAssignmentGroups(_courseId, _studentId, null)).thenAnswer((_) async => List<AssignmentGroup>());
+    when(interactor.loadGradingPeriods(_courseId)).thenAnswer(
+        (_) async => GradingPeriodResponse((b) => b..gradingPeriods = BuiltList<GradingPeriod>.of([]).toBuilder()));
+    when(interactor.loadEnrollmentsForGradingPeriod(_courseId, _studentId, null)).thenAnswer((_) async => [enrollment]);
+
+    await tester.pumpWidget(_testableWidget(model, highContrastMode: true));
+    await tester.pump(); // Build the widget
+    await tester.pump(); // Let the future finish
+
+    // Verify that we are showing the course grade when not locked
+    expect(find.text(AppLocalizations().courseTotalGradeLabel), findsNothing);
+    expect(find.text('test period'), findsNothing);
+
+    // Verify that we are showing the empty message
     expect(find.text(AppLocalizations().noAssignmentsTitle), findsOneWidget);
     expect(find.text(AppLocalizations().noAssignmentsMessage), findsOneWidget);
   });

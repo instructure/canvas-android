@@ -14,11 +14,11 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
-import 'package:flutter_parent/models/alarm.dart';
 import 'package:flutter_parent/models/assignment.dart';
 import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/models/lock_info.dart';
 import 'package:flutter_parent/models/locked_module.dart';
+import 'package:flutter_parent/models/reminder.dart';
 import 'package:flutter_parent/models/submission.dart';
 import 'package:flutter_parent/screens/assignments/assignment_details_interactor.dart';
 import 'package:flutter_parent/screens/assignments/assignment_details_screen.dart';
@@ -31,6 +31,7 @@ import 'package:flutter_parent/utils/design/student_color_set.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:intl/intl.dart';
 import 'package:mockito/mockito.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -55,6 +56,14 @@ void main() {
     ..htmlUrl = assignmentUrl
     ..assignmentGroupId = ''
     ..position = 0);
+
+  final reminder = Reminder((b) => b
+    ..id = 123
+    ..userId = 'user-123'
+    ..type = 'type'
+    ..itemId = 'item-123'
+    ..date = DateTime.now()
+    ..userDomain = 'domain');
 
   setupTestLocator((locator) {
     locator.registerFactory<AssignmentDetailsInteractor>(() => interactor);
@@ -213,7 +222,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text(assignmentName), findsOneWidget);
-    expect(find.text('Jan 1 at 12:00AM'), findsOneWidget);
+    expect(find.text(DateFormat(AppLocalizations().dateTimeFormat).format(dueDate.toLocal())), findsOneWidget);
     expect(find.text('1.5 pts'), findsOneWidget);
     expect(find.byIcon(Icons.do_not_disturb), findsOneWidget);
     expect((tester.widget(find.byIcon(Icons.do_not_disturb)) as Icon).color, ParentColors.licorice);
@@ -443,10 +452,11 @@ void main() {
     expect(find.text(AppLocalizations().assignmentInstructionsLabel), findsOneWidget);
   });
 
-  testWidgetsWithAccessibilityChecks('shows alarm if set', (tester) async {
-    final alarm = Alarm('0', DateTime(2000));
+  testWidgetsWithAccessibilityChecks('shows reminder if set', (tester) async {
     when(interactor.loadAssignmentDetails(any, courseId, assignmentId, studentId))
-        .thenAnswer((_) async => AssignmentDetails(assignment: assignment, alarm: alarm));
+        .thenAnswer((_) async => AssignmentDetails(assignment: assignment));
+
+    when(interactor.loadReminder(any)).thenAnswer((_) async => reminder);
 
     await tester.pumpWidget(TestApp(
       AssignmentDetailsScreen(
@@ -462,10 +472,124 @@ void main() {
 
     expect(find.text(AppLocalizations().assignmentRemindMeSet), findsOneWidget);
     expect((tester.widget(find.byType(Switch)) as Switch).value, true);
-    expect(find.text('Jan 1 at 12:00AM'), findsOneWidget);
+    expect(find.text(DateFormat(AppLocalizations().dateTimeFormat).format(reminder.date)), findsOneWidget);
   });
 
-  // TODO: test setting reminder and removing reminder
+  testWidgetsWithAccessibilityChecks('creates reminder without due date', (tester) async {
+    when(interactor.loadAssignmentDetails(any, courseId, assignmentId, studentId))
+        .thenAnswer((_) async => AssignmentDetails(assignment: assignment));
+
+    when(interactor.loadReminder(any)).thenAnswer((_) async => null);
+
+    await tester.pumpWidget(TestApp(
+      AssignmentDetailsScreen(
+        courseId: courseId,
+        assignmentId: assignmentId,
+        studentId: studentId,
+        studentName: '',
+      ),
+      highContrast: true,
+    ));
+
+    await tester.pumpAndSettle();
+
+    expect(find.text(AppLocalizations().assignmentRemindMeDescription), findsOneWidget);
+    expect((tester.widget(find.byType(Switch)) as Switch).value, false);
+
+    when(interactor.loadReminder(any)).thenAnswer((_) async => reminder);
+
+    // Tap on switch to open date picker
+    await tester.tap(find.byType(Switch));
+    await tester.pumpAndSettle();
+
+    // Tap on 'OK' button in date picker to open time picker
+    await tester.tap(find.text(DefaultMaterialLocalizations().okButtonLabel));
+    await tester.pumpAndSettle();
+
+    // Tap on 'OK' button in time picker
+    await tester.tap(find.text(DefaultMaterialLocalizations().okButtonLabel));
+    await tester.pumpAndSettle();
+
+    verify(interactor.createReminder(any, any, assignmentId, assignment.name, AppLocalizations().noDueDate));
+
+    expect(find.text(AppLocalizations().assignmentRemindMeSet), findsOneWidget);
+    expect((tester.widget(find.byType(Switch)) as Switch).value, true);
+    expect(find.text(DateFormat(AppLocalizations().dateTimeFormat).format(reminder.date)), findsOneWidget);
+  });
+
+  testWidgetsWithAccessibilityChecks('creates reminder with due date', (tester) async {
+    final date = DateTime.now().add(Duration(hours: 1));
+    when(interactor.loadAssignmentDetails(any, any, any, any))
+        .thenAnswer((_) async => AssignmentDetails(assignment: assignment.rebuild((b) => b..dueAt = date)));
+
+    when(interactor.loadReminder(any)).thenAnswer((_) async => null);
+
+    await tester.pumpWidget(TestApp(
+      AssignmentDetailsScreen(
+        courseId: courseId,
+        assignmentId: assignmentId,
+        studentId: studentId,
+        studentName: '',
+      ),
+      highContrast: true,
+    ));
+
+    await tester.pumpAndSettle();
+
+    expect(find.text(AppLocalizations().assignmentRemindMeDescription), findsOneWidget);
+    expect((tester.widget(find.byType(Switch)) as Switch).value, false);
+
+    when(interactor.loadReminder(any)).thenAnswer((_) async => reminder);
+
+    // Tap on switch to open date picker
+    await tester.tap(find.byType(Switch));
+    await tester.pumpAndSettle();
+
+    // Tap on 'OK' button in date picker to open time picker
+    await tester.tap(find.text(DefaultMaterialLocalizations().okButtonLabel));
+    await tester.pumpAndSettle();
+
+    // Tap on 'OK' button in time picker
+    await tester.tap(find.text(DefaultMaterialLocalizations().okButtonLabel));
+    await tester.pumpAndSettle();
+
+    var expectedBody = DateFormat(AppLocalizations().dueDateTimeFormat).format(date);
+    verify(interactor.createReminder(any, any, assignmentId, assignment.name, expectedBody));
+
+    expect(find.text(AppLocalizations().assignmentRemindMeSet), findsOneWidget);
+    expect((tester.widget(find.byType(Switch)) as Switch).value, true);
+    expect(find.text(DateFormat(AppLocalizations().dateTimeFormat).format(reminder.date)), findsOneWidget);
+  });
+
+  testWidgetsWithAccessibilityChecks('deletes reminder', (tester) async {
+    when(interactor.loadAssignmentDetails(any, courseId, assignmentId, studentId))
+        .thenAnswer((_) async => AssignmentDetails(assignment: assignment));
+
+    when(interactor.loadReminder(any)).thenAnswer((_) async => reminder);
+
+    await tester.pumpWidget(TestApp(
+      AssignmentDetailsScreen(
+        courseId: courseId,
+        assignmentId: assignmentId,
+        studentId: studentId,
+        studentName: '',
+      ),
+      highContrast: true,
+    ));
+
+    await tester.pumpAndSettle();
+
+    expect(find.text(AppLocalizations().assignmentRemindMeSet), findsOneWidget);
+    expect((tester.widget(find.byType(Switch)) as Switch).value, true);
+
+    when(interactor.loadReminder(any)).thenAnswer((_) async => null);
+
+    await tester.tap(find.byType(Switch));
+    await tester.pumpAndSettle();
+
+    expect(find.text(AppLocalizations().assignmentRemindMeDescription), findsOneWidget);
+    expect((tester.widget(find.byType(Switch)) as Switch).value, false);
+  });
 }
 
 class _MockAssignmentDetailsInteractor extends Mock implements AssignmentDetailsInteractor {}

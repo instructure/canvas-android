@@ -73,4 +73,16 @@ void main() {
     // Verify the callback was called
     expect(called, true);
   });
+
+  testWidgetsWithAccessibilityChecks('Shows a header', (tester) async {
+    await tester.pumpWidget(TestApp(
+      ErrorPandaWidget(errorString, callback, header: Text('header here')),
+      highContrast: true,
+    ));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(FlatButton), findsOneWidget);
+    expect(find.text(AppLocalizations().retry), findsOneWidget);
+    expect(find.text('header here'), findsOneWidget);
+  });
 }

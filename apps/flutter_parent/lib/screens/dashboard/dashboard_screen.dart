@@ -80,7 +80,7 @@ class DashboardState extends State<DashboardScreen> {
 
   @override
   void initState() {
-    _selectedStudentNotifier = _interactor.getSelectedStudentNotifier();
+    _selectedStudentNotifier = SelectedStudentNotifier();
     _loadSelf();
     if (widget.students?.isNotEmpty == true) {
       _students = widget.students;
@@ -352,6 +352,7 @@ class DashboardState extends State<DashboardScreen> {
   }
 
   _performSignOut(BuildContext context, {bool switchingUsers = false}) async {
+    ParentTheme.of(context).studentIndex = 0;
     await ApiPrefs.performLogout(switchingLogins: switchingUsers);
     Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) {
       return LoginLandingScreen();

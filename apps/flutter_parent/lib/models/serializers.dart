@@ -40,8 +40,10 @@ import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/models/media_comment.dart';
 import 'package:flutter_parent/models/message.dart';
 import 'package:flutter_parent/models/mobile_verify_result.dart';
+import 'package:flutter_parent/models/notification_payload.dart';
 import 'package:flutter_parent/models/page.dart';
 import 'package:flutter_parent/models/recipient.dart';
+import 'package:flutter_parent/models/reminder.dart';
 import 'package:flutter_parent/models/remote_file.dart';
 import 'package:flutter_parent/models/schedule_item.dart';
 import 'package:flutter_parent/models/school_domain.dart';
@@ -81,8 +83,10 @@ part 'serializers.g.dart';
   MediaComment,
   Message,
   MobileVerifyResult,
+  NotificationPayload,
   Page,
   Recipient,
+  Reminder,
   RemoteFile,
   SchoolDomain,
   ScheduleItem,

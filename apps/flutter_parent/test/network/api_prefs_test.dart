@@ -16,7 +16,10 @@ import 'dart:ui';
 
 import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/models/mobile_verify_result.dart';
+import 'package:flutter_parent/models/reminder.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
+import 'package:flutter_parent/utils/db/reminder_db.dart';
+import 'package:flutter_parent/utils/notification_util.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:package_info/package_info.dart';
@@ -122,12 +125,41 @@ void main() {
     expect(ApiPrefs.getRefreshToken(), login.refreshToken);
     expect(ApiPrefs.getCurrentLoginUuid(), login.uuid);
 
-    await ApiPrefs.performLogout();
+    await ApiPrefs.performLogout(switchingLogins: true);
 
     expect(ApiPrefs.getDomain(), null);
     expect(ApiPrefs.getAuthToken(), null);
     expect(ApiPrefs.getRefreshToken(), null);
     expect(ApiPrefs.getCurrentLoginUuid(), null);
+  });
+
+  test('perform logout clears out reminder', () async {
+    final reminderDb = _MockReminderDb();
+    final notificationUtil = _MockNotificationUtil();
+    setupTestLocator((locator) {
+      locator.registerLazySingleton<ReminderDb>(() => reminderDb);
+      locator.registerLazySingleton<NotificationUtil>(() => notificationUtil);
+    });
+
+    final reminder = Reminder((b) => b..id = 1234);
+    when(reminderDb.getAllForUser(any, any)).thenAnswer((_) async => [reminder]);
+
+    var login = Login((b) => b
+      ..domain = 'domain'
+      ..accessToken = 'accessToken'
+      ..refreshToken = 'refreshToken'
+      ..user = CanvasModelTestUtils.mockUser().toBuilder());
+
+    await setupPlatformChannels(
+        config: PlatformConfig(
+      mockPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid},
+    ));
+    await ApiPrefs.addLogin(login);
+    await ApiPrefs.performLogout(switchingLogins: false);
+
+    verify(reminderDb.getAllForUser(login.domain, login.user.id));
+    verify(notificationUtil.deleteNotifications([reminder.id]));
+    verify(reminderDb.deleteAllForUser(login.domain, login.user.id));
   });
 
   test('setting user updates stored user', () async {
@@ -301,3 +333,7 @@ abstract class _Rebuildable {
 }
 
 class _MockApp extends Mock implements _Rebuildable {}
+
+class _MockReminderDb extends Mock implements ReminderDb {}
+
+class _MockNotificationUtil extends Mock implements NotificationUtil {}

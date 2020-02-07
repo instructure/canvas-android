@@ -86,7 +86,7 @@ class LoginLandingScreen extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Text(
-                L10n(context).findSchoolOrDistrict,
+                L10n(context).findSchool,
                 style: TextStyle(fontSize: 16),
               ),
             ),
@@ -133,7 +133,7 @@ class LoginLandingScreen extends StatelessWidget {
                   return ListTile(
                     onTap: () {
                       ApiPrefs.switchLogins(login);
-                      locator<QuickNav>().push(context, SplashScreen());
+                      locator<QuickNav>().pushAndRemoveAll(context, SplashScreen());
                     },
                     leading: Avatar.fromUser(login.user),
                     title: UserName.fromUser(login.user),
