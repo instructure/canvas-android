@@ -17,6 +17,7 @@ import 'package:flutter_parent/models/assignment.dart';
 import 'package:flutter_parent/models/assignment_group.dart';
 import 'package:flutter_parent/models/assignment_override.dart';
 import 'package:flutter_parent/models/course.dart';
+import 'package:flutter_parent/models/course_tab.dart';
 import 'package:flutter_parent/models/enrollment.dart';
 import 'package:flutter_parent/models/grading_period.dart';
 import 'package:flutter_parent/models/grading_period_response.dart';
@@ -345,6 +346,144 @@ void main() {
       var actual = CourseDetailsModel.processSummaryItems(Tuple2([sourceItems], studentId));
 
       expect(actual, expected);
+    });
+  });
+
+  group('tab count', () {
+    test('returns 1 when no home page or syllabus', () {
+      final course = _course.rebuild((b) => b
+        ..syllabusBody = null
+        ..homePage = null);
+      final model = CourseDetailsModel.withCourse(_studentId, '', course);
+
+      expect(model.tabCount(), 1);
+    });
+
+    test('returns 2 when home page is front page', () {
+      final course = _course.rebuild((b) => b
+        ..syllabusBody = 'body'
+        ..homePage = HomePage.wiki);
+      final model = CourseDetailsModel.withCourse(_studentId, '', course);
+
+      expect(model.tabCount(), 2);
+    });
+
+    test('returns 3 when home page is syllabus', () {
+      final course = _course.rebuild((b) => b
+        ..syllabusBody = 'body'
+        ..homePage = HomePage.syllabus);
+      final model = CourseDetailsModel.withCourse(_studentId, '', course);
+
+      expect(model.tabCount(), 3);
+    });
+
+    test('returns 3 when home page is not front page with a valid syllabus', () async {
+      final course = _course.rebuild((b) => b
+        ..syllabusBody = 'body'
+        ..homePage = null);
+      final model = CourseDetailsModel.withCourse(_studentId, '', course);
+
+      when(interactor.loadCourseTabs(_courseId, forceRefresh: true)).thenAnswer((_) async => [
+            CourseTab((b) => b..id = HomePage.syllabus.name),
+          ]);
+      await model.loadData();
+
+      expect(model.tabCount(), 3);
+    });
+
+    test('returns 1 when no home page and syllabus tab is not visible', () async {
+      final course = _course.rebuild((b) => b
+        ..syllabusBody = 'body'
+        ..homePage = null);
+      final model = CourseDetailsModel.withCourse(_studentId, '', course);
+
+      when(interactor.loadCourseTabs(_courseId, forceRefresh: true)).thenAnswer((_) async => [
+            CourseTab((b) => b..id = HomePage.assignments.name),
+          ]);
+      await model.loadData();
+
+      expect(model.tabCount(), 1);
+    });
+  });
+  group('tab visibility', () {
+    test('returns syllabus and summary if the course has a syllabus home page', () {
+      final course = _course.rebuild((b) => b
+        ..syllabusBody = 'body'
+        ..homePage = HomePage.syllabus);
+      final model = CourseDetailsModel.withCourse(_studentId, '', course);
+
+      expect(model.hasHomePageAsSyllabus, true);
+      expect(model.showSummary, true); // TODO: test once we can access the course flag
+      expect(model.hasHomePageAsFrontPage, false);
+    });
+
+    test('returns syllabus and summary if the course has a syllabus without a home page', () async {
+      final course = _course.rebuild((b) => b
+        ..syllabusBody = 'body'
+        ..homePage = null);
+      final model = CourseDetailsModel.withCourse(_studentId, '', course);
+
+      when(interactor.loadCourseTabs(_courseId, forceRefresh: true)).thenAnswer((_) async => [
+            CourseTab((b) => b..id = HomePage.syllabus.name),
+          ]);
+      await model.loadData();
+
+      expect(model.hasHomePageAsSyllabus, true);
+      expect(model.showSummary, true);
+      expect(model.hasHomePageAsFrontPage, false);
+    });
+
+    test('returns false for all if the course has a syllabus without a syllabus tab', () async {
+      final course = _course.rebuild((b) => b
+        ..syllabusBody = 'body'
+        ..homePage = null);
+      final model = CourseDetailsModel.withCourse(_studentId, '', course);
+
+      when(interactor.loadCourseTabs(_courseId, forceRefresh: true)).thenAnswer((_) async => []);
+      await model.loadData();
+
+      expect(model.hasHomePageAsSyllabus, false);
+      expect(model.showSummary, false);
+      expect(model.hasHomePageAsFrontPage, false);
+    });
+
+    test('returns front page if the course has a home page page', () {
+      final course = _course.rebuild((b) => b..homePage = HomePage.wiki);
+      final model = CourseDetailsModel.withCourse(_studentId, '', course);
+
+      expect(model.hasHomePageAsFrontPage, true);
+      expect(model.hasHomePageAsSyllabus, false);
+      expect(model.showSummary, false);
+    });
+
+    test('returns front page if the course has a home page page and a syllabus', () {
+      final course = _course.rebuild((b) => b
+        ..homePage = HomePage.wiki
+        ..syllabusBody = 'body');
+      final model = CourseDetailsModel.withCourse(_studentId, '', course);
+
+      expect(model.hasHomePageAsFrontPage, true);
+      expect(model.hasHomePageAsSyllabus, false);
+      expect(model.showSummary, false);
+    });
+
+    test('returns false for all if the course does not have a home page page nor a syllabus body', () {
+      final course = _course.rebuild((b) => b
+        ..homePage = null
+        ..syllabusBody = null);
+      final model = CourseDetailsModel.withCourse(_studentId, '', course);
+
+      expect(model.hasHomePageAsFrontPage, false);
+      expect(model.hasHomePageAsSyllabus, false);
+      expect(model.showSummary, false);
+    });
+
+    test('returns false for all if the course is null', () {
+      final model = CourseDetailsModel(_studentId, '', _courseId);
+
+      expect(model.hasHomePageAsFrontPage, false);
+      expect(model.hasHomePageAsSyllabus, false);
+      expect(model.showSummary, false);
     });
   });
 }

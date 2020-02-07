@@ -22,6 +22,7 @@ import 'package:flutter_parent/network/api/enrollments_api.dart';
 import 'package:flutter_parent/network/api/error_report_api.dart';
 import 'package:flutter_parent/network/api/file_api.dart';
 import 'package:flutter_parent/network/api/inbox_api.dart';
+import 'package:flutter_parent/network/api/page_api.dart';
 import 'package:flutter_parent/screens/alert_thresholds/alert_thresholds_interactor.dart';
 import 'package:flutter_parent/screens/alerts/alerts_interactor.dart';
 import 'package:flutter_parent/screens/announcements/announcement_details_interactor.dart';
@@ -71,6 +72,7 @@ void setupLocator() {
   locator.registerLazySingleton<ErrorReportApi>(() => ErrorReportApi());
   locator.registerLazySingleton<FileApi>(() => FileApi());
   locator.registerLazySingleton<InboxApi>(() => InboxApi());
+  locator.registerLazySingleton<PageApi>(() => PageApi());
 
   // DB helpers
   locator.registerLazySingleton<Database>(() => DbUtil.instance);

@@ -14,19 +14,25 @@
 
 import 'package:flutter_parent/models/assignment_group.dart';
 import 'package:flutter_parent/models/course.dart';
+import 'package:flutter_parent/models/course_tab.dart';
 import 'package:flutter_parent/models/enrollment.dart';
 import 'package:flutter_parent/models/grading_period_response.dart';
+import 'package:flutter_parent/models/page.dart';
 import 'package:flutter_parent/models/schedule_item.dart';
 import 'package:flutter_parent/network/api/assignment_api.dart';
 import 'package:flutter_parent/network/api/calendar_events_api.dart';
 import 'package:flutter_parent/network/api/course_api.dart';
 import 'package:flutter_parent/network/api/enrollments_api.dart';
+import 'package:flutter_parent/network/api/page_api.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class CourseDetailsInteractor {
   Future<Course> loadCourse(String courseId) {
     return locator<CourseApi>().getCourse(courseId);
   }
+
+  Future<List<CourseTab>> loadCourseTabs(String courseId, {bool forceRefresh = false}) =>
+      locator<CourseApi>().getCourseTabs(courseId, forceRefresh: forceRefresh);
 
   Future<List<AssignmentGroup>> loadAssignmentGroups(String courseId, String studentId, String gradingPeriodId,
       {bool forceRefresh = false}) {
@@ -52,4 +58,7 @@ class CourseDetailsInteractor {
       forceRefresh: refresh,
     );
   }
+
+  Future<Page> loadHomePage(String courseId, {bool forceRefresh = false}) =>
+      locator<PageApi>().getCourseFrontPage(courseId, forceRefresh: forceRefresh);
 }

@@ -13,6 +13,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:flutter_parent/models/course.dart';
+import 'package:flutter_parent/models/course_tab.dart';
 import 'package:flutter_parent/models/grading_period_response.dart';
 import 'package:flutter_parent/network/utils/dio_config.dart';
 import 'package:flutter_parent/network/utils/fetch.dart';
@@ -61,5 +62,9 @@ class CourseApi {
   // TODO: Set up pagination when API is fixed (no header link) and remove per_page query parameter
   Future<GradingPeriodResponse> getGradingPeriods(String courseId, {bool forceRefresh = false}) {
     return fetch(canvasDio(forceRefresh: forceRefresh).get('courses/$courseId/grading_periods?per_page=100'));
+  }
+
+  Future<List<CourseTab>> getCourseTabs(String courseId, {bool forceRefresh}) {
+    return fetchList(canvasDio(forceRefresh: forceRefresh).get('courses/$courseId/tabs'));
   }
 }

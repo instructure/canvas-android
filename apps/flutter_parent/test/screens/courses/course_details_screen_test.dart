@@ -15,9 +15,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/course.dart';
+import 'package:flutter_parent/models/page.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_interactor.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_screen.dart';
 import 'package:flutter_parent/screens/courses/details/course_grades_screen.dart';
+import 'package:flutter_parent/screens/courses/details/course_home_page_screen.dart';
 import 'package:flutter_parent/screens/courses/details/course_summary_screen.dart';
 import 'package:flutter_parent/screens/courses/details/course_syllabus_screen.dart';
 import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_interactor.dart';
@@ -107,7 +109,8 @@ void main() {
   testWidgetsWithAccessibilityChecks('Shows all course tabs with syllabus body', (tester) async {
     final course = Course((b) => b
       ..id = courseId
-      ..syllabusBody = ''
+      ..syllabusBody = 'body'
+      ..homePage = HomePage.syllabus
       ..name = 'Course Name');
     _setupLocator();
 
@@ -118,24 +121,52 @@ void main() {
     expect(find.text(AppLocalizations().courseGradesLabel.toUpperCase()), findsOneWidget);
     expect(find.text(AppLocalizations().courseSyllabusLabel.toUpperCase()), findsOneWidget);
     expect(find.text(AppLocalizations().courseSummaryLabel.toUpperCase()), findsOneWidget);
+
+    expect(find.text(AppLocalizations().courseFrontPageLabel.toUpperCase()), findsNothing);
   });
 
-  testWidgetsWithAccessibilityChecks('Shows all but syllabus course tabs when no syllabus', (tester) async {
+  testWidgetsWithAccessibilityChecks('Shows course tabs with home page', (tester) async {
+    final course = Course((b) => b
+      ..id = courseId
+      ..homePage = HomePage.wiki
+      ..name = 'Course Name');
+    _setupLocator();
+
+    await tester.pumpWidget(TestApp(CourseDetailsScreen.withCourse(studentId, '', course)));
+    await tester.pump(); // Widget creation
+    await tester.pump(); // Future resolved
+
+    expect(find.text(AppLocalizations().courseGradesLabel.toUpperCase()), findsOneWidget);
+    expect(find.text(AppLocalizations().courseFrontPageLabel.toUpperCase()), findsOneWidget);
+
+    expect(find.text(AppLocalizations().courseSummaryLabel.toUpperCase()), findsNothing);
+  });
+
+  testWidgetsWithAccessibilityChecks('Shows no tabs when no syllabus and no front page', (tester) async {
     _setupLocator();
 
     await tester.pumpWidget(TestApp(CourseDetailsScreen(studentId, '', courseId)));
     await tester.pump(); // Widget creation
     await tester.pump(); // Future resolved
 
-    expect(find.text(AppLocalizations().courseGradesLabel.toUpperCase()), findsOneWidget);
+    // Should show the view
+    expect(find.byType(CourseGradesScreen), findsOneWidget);
+
+    // Should not show any tabs
+    expect(find.text(AppLocalizations().courseGradesLabel.toUpperCase()), findsNothing);
     expect(find.text(AppLocalizations().courseSyllabusLabel.toUpperCase()), findsNothing);
-    expect(find.text(AppLocalizations().courseSummaryLabel.toUpperCase()), findsOneWidget);
+    expect(find.text(AppLocalizations().courseSummaryLabel.toUpperCase()), findsNothing);
   });
 
   testWidgetsWithAccessibilityChecks('Clicking grades tab shows the grades screen', (tester) async {
+    final course = Course((b) => b
+      ..id = courseId
+      ..syllabusBody = 'hi'
+      ..homePage = HomePage.syllabus
+      ..name = 'Course Name');
     _setupLocator();
 
-    await tester.pumpWidget(TestApp(CourseDetailsScreen(studentId, '', courseId)));
+    await tester.pumpWidget(TestApp(CourseDetailsScreen.withCourse(studentId, '', course)));
     await tester.pump(); // Widget creation
     await tester.pump(); // Future resolved
 
@@ -149,6 +180,7 @@ void main() {
     final course = Course((b) => b
       ..id = courseId
       ..syllabusBody = 'hi'
+      ..homePage = HomePage.syllabus
       ..name = 'Course Name');
     _setupLocator();
 
@@ -166,11 +198,40 @@ void main() {
     expect(find.byType(CourseSyllabusScreen), findsOneWidget);
   });
 
+  testWidgetsWithAccessibilityChecks('Clicking front page tab shows the front page screen', (tester) async {
+    final interactor = _MockCourseDetailsInteractor();
+    final course = Course((b) => b
+      ..id = courseId
+      ..homePage = HomePage.wiki
+      ..name = 'Course Name');
+    _setupLocator(interactor: interactor);
+
+    when(interactor.loadHomePage(courseId)).thenAnswer((_) async => Page((b) => b..id = '1'));
+
+    await tester.pumpWidget(TestApp(
+      CourseDetailsScreen.withCourse(studentId, '', course),
+      platformConfig: PlatformConfig(initWebview: true),
+    ));
+
+    await tester.pump(); // Widget creation
+    await tester.pump(); // Future resolved
+
+    await tester.tap(find.text(AppLocalizations().courseFrontPageLabel.toUpperCase()));
+    await tester.pumpAndSettle(); // Let the screen animate to the tab
+
+    expect(find.byType(CourseHomePageScreen), findsOneWidget);
+  });
+
   testWidgetsWithAccessibilityChecks('Clicking summary tab shows the summary screen', (tester) async {
+    final course = Course((b) => b
+      ..id = courseId
+      ..syllabusBody = 'hi'
+      ..homePage = HomePage.syllabus
+      ..name = 'Course Name');
     _setupLocator();
 
     await tester.pumpWidget(TestApp(
-      CourseDetailsScreen(studentId, '', courseId),
+      CourseDetailsScreen.withCourse(studentId, '', course),
       highContrast: true,
     ));
     await tester.pump(); // Widget creation
@@ -222,6 +283,7 @@ void main() {
       ..id = courseId
       ..name = 'Course Name'
       ..courseCode = '1234'
+      ..homePage = HomePage.syllabus
       ..syllabusBody = 'test');
 
     final interactor = _MockCourseDetailsInteractor();
@@ -255,6 +317,49 @@ void main() {
 
     // Check that we have the correct subject line
     expect(find.text(AppLocalizations().syllabusSubjectMessage(studentName)), findsOneWidget);
+  });
+
+  testWidgetsWithAccessibilityChecks('Tapping message button while on front page tab shows message screen',
+      (tester) async {
+    final course = Course((b) => b
+      ..id = courseId
+      ..name = 'Course Name'
+      ..courseCode = '1234'
+      ..homePage = HomePage.wiki);
+
+    final interactor = _MockCourseDetailsInteractor();
+    when(interactor.loadCourse(courseId)).thenAnswer((_) => Future.value(course));
+    when(interactor.loadHomePage(courseId)).thenAnswer((_) async => Page((b) => b..id = '1'));
+
+    final convoInteractor = _MockCreateConversationInteractor();
+    when(convoInteractor.getAllRecipients(any)).thenAnswer((_) => Future.value([]));
+
+    _setupLocator(interactor: interactor, convoInteractor: convoInteractor);
+
+    String studentName = 'Panda';
+
+    await tester.pumpWidget(TestApp(CourseDetailsScreen(studentId, studentName, courseId)));
+    await tester.pump(); // Widget creation
+    await tester.pump(); // Future resolved
+
+    // Should show the fab
+    final matchedWidget = find.byType(FloatingActionButton);
+    expect(matchedWidget, findsOneWidget);
+
+    // Tap the Front Page tab
+    await tester.tap(find.ancestor(
+        of: find.text(AppLocalizations().courseFrontPageLabel.toUpperCase()), matching: find.byType(Tab)));
+    await tester.pumpAndSettle(); // Let the screen creation settle
+
+    // Tap the FAB
+    await tester.tap(matchedWidget);
+    await tester.pumpAndSettle(); // Let the new screen create itself
+
+    // Check to make sure we're on the conversation screen
+    expect(find.byType(CreateConversationScreen), findsOneWidget);
+
+    // Check that we have the correct subject line
+    expect(find.text(AppLocalizations().frontPageSubjectMessage(studentName)), findsOneWidget);
   });
 }
 

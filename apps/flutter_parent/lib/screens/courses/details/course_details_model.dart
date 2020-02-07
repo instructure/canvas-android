@@ -15,6 +15,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_parent/models/assignment_group.dart';
 import 'package:flutter_parent/models/course.dart';
+import 'package:flutter_parent/models/course_tab.dart';
 import 'package:flutter_parent/models/enrollment.dart';
 import 'package:flutter_parent/models/grading_period.dart';
 import 'package:flutter_parent/models/schedule_item.dart';
@@ -30,6 +31,7 @@ class CourseDetailsModel extends BaseModel {
   String studentName;
   String courseId; // Could be routed to without a full course, only the id may be known
   Course course;
+  List<CourseTab> tabs = List();
   bool forceRefresh = true;
   GradingPeriod _currentGradingPeriod;
   GradingPeriod _nextGradingPeriod;
@@ -46,8 +48,12 @@ class CourseDetailsModel extends BaseModel {
       final courseFuture =
           (refreshCourse || course == null) ? _interactor().loadCourse(courseId) : Future.value(course);
 
+      // Always force a refresh of tabs, it's small enough that we can do this every time
+      final tabsFuture = _interactor().loadCourseTabs(courseId, forceRefresh: true);
+
       // Await the results
       course = await courseFuture;
+      tabs = await tabsFuture;
 
       return Future<void>.value();
     });
@@ -134,7 +140,21 @@ class CourseDetailsModel extends BaseModel {
 
   CourseDetailsInteractor _interactor() => locator<CourseDetailsInteractor>();
 
-  bool hasSyllabus() => course?.syllabusBody != null;
+  int tabCount() {
+    if (hasHomePageAsFrontPage) return 2;
+    if (hasHomePageAsSyllabus) return showSummary ? 3 : 2; // Summary is only shown with syllabus
+    return 1; // Just show the grades tab
+  }
+
+  bool get hasHomePageAsFrontPage => course?.homePage == HomePage.wiki;
+
+  bool get hasHomePageAsSyllabus =>
+      course?.syllabusBody?.isNotEmpty == true &&
+      (course?.homePage == HomePage.syllabus ||
+          (course?.homePage != HomePage.wiki && tabs.any((tab) => tab.id == HomePage.syllabus.name)));
+
+  // TODO: Use the course flag to determine if we're allowed to show the summary, as well as if we are showing syllabus
+  bool get showSummary => hasHomePageAsSyllabus; // && course.summaryVisible;
 
   GradingPeriod currentGradingPeriod() => _currentGradingPeriod;
 

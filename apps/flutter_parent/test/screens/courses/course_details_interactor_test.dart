@@ -16,6 +16,7 @@ import 'package:flutter_parent/network/api/assignment_api.dart';
 import 'package:flutter_parent/network/api/calendar_events_api.dart';
 import 'package:flutter_parent/network/api/course_api.dart';
 import 'package:flutter_parent/network/api/enrollments_api.dart';
+import 'package:flutter_parent/network/api/page_api.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_interactor.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
@@ -31,12 +32,14 @@ void main() {
   final _MockAssignmentApi assignmentApi = _MockAssignmentApi();
   final _MockEnrollmentApi enrollmentApi = _MockEnrollmentApi();
   final _MockCalendarApi calendarApi = _MockCalendarApi();
+  final _MockPageApi pageApi = _MockPageApi();
 
   setupTestLocator((locator) {
     locator.registerLazySingleton<CourseApi>(() => courseApi);
     locator.registerLazySingleton<AssignmentApi>(() => assignmentApi);
     locator.registerLazySingleton<EnrollmentsApi>(() => enrollmentApi);
     locator.registerLazySingleton<CalendarEventsApi>(() => calendarApi);
+    locator.registerLazySingleton<PageApi>(() => pageApi);
   });
 
   test('load course calls the api', () async {
@@ -80,6 +83,18 @@ void main() {
       ),
     );
   });
+
+  test('load home page calls the api', () {
+    final courseId = '123';
+    CourseDetailsInteractor().loadHomePage(courseId, forceRefresh: true);
+    verify(pageApi.getCourseFrontPage(courseId, forceRefresh: true)).called(1);
+  });
+
+  test('load course tabs calls the api', () {
+    final courseId = '123';
+    CourseDetailsInteractor().loadCourseTabs(courseId, forceRefresh: true);
+    verify(courseApi.getCourseTabs(courseId, forceRefresh: true)).called(1);
+  });
 }
 
 class _MockCalendarApi extends Mock implements CalendarEventsApi {}
@@ -89,3 +104,5 @@ class _MockCourseApi extends Mock implements CourseApi {}
 class _MockAssignmentApi extends Mock implements AssignmentApi {}
 
 class _MockEnrollmentApi extends Mock implements EnrollmentsApi {}
+
+class _MockPageApi extends Mock implements PageApi {}
