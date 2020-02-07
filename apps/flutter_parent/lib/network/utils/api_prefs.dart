@@ -19,6 +19,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/models/serializers.dart';
 import 'package:flutter_parent/models/user.dart';
+import 'package:flutter_parent/utils/db/reminder_db.dart';
+import 'package:flutter_parent/utils/notification_util.dart';
+import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:intl/intl.dart';
 import 'package:package_info/package_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -73,8 +76,24 @@ class ApiPrefs {
 
   static Future<void> performLogout({bool switchingLogins = false}) async {
     _checkInit();
+
+    // Clear network cache
     await DioConfig().clearCache();
-    if (!switchingLogins) await removeLoginByUuid(getCurrentLoginUuid());
+
+    // Perform full-logout tasks if we're not just switching users
+    if (!switchingLogins) {
+      // Remove reminders
+      ReminderDb reminderDb = locator<ReminderDb>();
+      final reminders = await reminderDb.getAllForUser(getDomain(), getUser().id);
+      final reminderIds = reminders.map((it) => it.id).toList();
+      await locator<NotificationUtil>().deleteNotifications(reminderIds);
+      await reminderDb.deleteAllForUser(getDomain(), getUser().id);
+
+      // Remove saved Login data
+      await removeLoginByUuid(getCurrentLoginUuid());
+    }
+
+    // Clear current Login
     await _prefs.remove(KEY_CURRENT_LOGIN_UUID);
     _currentLogin = null;
   }

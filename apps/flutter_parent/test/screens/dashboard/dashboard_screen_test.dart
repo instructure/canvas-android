@@ -38,6 +38,8 @@ import 'package:flutter_parent/screens/manage_students/manage_students_screen.da
 import 'package:flutter_parent/screens/settings/settings_interactor.dart';
 import 'package:flutter_parent/screens/settings/settings_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/badges.dart';
+import 'package:flutter_parent/utils/db/reminder_db.dart';
+import 'package:flutter_parent/utils/notification_util.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
@@ -357,7 +359,15 @@ void main() {
     // (the tests for that screen all pass accessibility checks, however)
     testWidgets('tapping Sign Out from nav drawer signs user out and returns to the Login Landing screen',
         (tester) async {
+      final reminderDb = _MockReminderDb();
+      final notificationUtil = _MockNotificationUtil();
+
       _setupLocator();
+      final _locator = GetIt.instance;
+      _locator.registerLazySingleton<ReminderDb>(() => reminderDb);
+      _locator.registerLazySingleton<NotificationUtil>(() => notificationUtil);
+
+      when(reminderDb.getAllForUser(any, any)).thenAnswer((_) async => []);
 
       var login = Login((b) => b
         ..domain = 'domain'
@@ -623,3 +633,7 @@ class MockManageStudentsInteractor extends ManageStudentsInteractor {
   @override
   Future<List<User>> getStudents({bool forceRefresh = false}) => Future.value([]);
 }
+
+class _MockReminderDb extends Mock implements ReminderDb {}
+
+class _MockNotificationUtil extends Mock implements NotificationUtil {}

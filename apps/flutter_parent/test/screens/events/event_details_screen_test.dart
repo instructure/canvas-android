@@ -13,12 +13,14 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
+import 'package:flutter_parent/models/reminder.dart';
 import 'package:flutter_parent/models/schedule_item.dart';
 import 'package:flutter_parent/screens/events/event_details_interactor.dart';
 import 'package:flutter_parent/screens/events/event_details_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:intl/intl.dart';
 import 'package:mockito/mockito.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -32,6 +34,13 @@ void main() {
   final baseEvent = ScheduleItem((b) => b
     ..id = eventId
     ..type = ScheduleItem.typeCalendar);
+  final reminder = Reminder((b) => b
+    ..id = 123
+    ..userId = 'user-123'
+    ..type = 'type'
+    ..itemId = eventId
+    ..date = DateTime(2100)
+    ..userDomain = 'domain');
   final interactor = _MockEventDetailsInteractor();
 
   final l10n = AppLocalizations();
@@ -238,6 +247,134 @@ void main() {
 
       expect(find.text(l10n.eventLocationLabel), findsOneWidget);
       expect(find.text(l10n.eventNoLocation), findsOneWidget);
+    });
+  });
+
+  group('reminder', () {
+    testWidgetsWithAccessibilityChecks('shows correct state when reminder is set', (tester) async {
+      final title = 'Event Test Title';
+      final event = baseEvent.rebuild((b) => b..title = title);
+
+      when(interactor.loadReminder(any)).thenAnswer((_) async => reminder);
+
+      await tester.pumpWidget(TestApp(EventDetailsScreen.withEvent(event: event)));
+      await tester.pump(); // Let the widget build
+      await tester.pump(); // Let the event future finish
+      await tester.pump(); // Let the reminder future finish
+
+      expect(find.text(l10n.eventRemindMeDescription), findsNothing);
+      expect(find.text(l10n.eventRemindMeSet), findsOneWidget);
+      expect((tester.widget(find.byType(Switch)) as Switch).value, true);
+      expect(find.text(DateFormat(AppLocalizations().dateTimeFormat).format(reminder.date)), findsOneWidget);
+    });
+
+    testWidgetsWithAccessibilityChecks('shows correct state when no reminder is set', (tester) async {
+      final title = 'Event Test Title';
+      final event = baseEvent.rebuild((b) => b..title = title);
+
+      await tester.pumpWidget(TestApp(EventDetailsScreen.withEvent(event: event)));
+      await tester.pump(); // Let the widget build
+      await tester.pump(); // Let the event future finish
+      await tester.pump(); // Let the reminder future finish
+
+      expect(find.text(l10n.eventRemindMeDescription), findsOneWidget);
+      expect((tester.widget(find.byType(Switch)) as Switch).value, false);
+    });
+
+    testWidgetsWithAccessibilityChecks('creates reminder with all day date', (tester) async {
+      final title = 'Event Test Title';
+      final event = baseEvent.rebuild((b) => b
+        ..title = title
+        ..isAllDay = true
+        ..startAt = DateTime(2000)
+        ..allDayDate = DateTime(2000));
+
+      when(interactor.loadReminder(any)).thenAnswer((_) async => null);
+
+      await tester.pumpWidget(TestApp(EventDetailsScreen.withEvent(event: event)));
+      await tester.pump(); // Let the widget build
+      await tester.pump(); // Let the event future finish
+      await tester.pump(); // Let the reminder future finish
+
+      when(interactor.loadReminder(any)).thenAnswer((_) async => reminder);
+
+      // Tap on switch to open date picker
+      await tester.tap(find.byType(Switch));
+      await tester.pumpAndSettle();
+
+      // Tap on 'OK' button in date picker to open time picker
+      await tester.tap(find.text(DefaultMaterialLocalizations().okButtonLabel));
+      await tester.pumpAndSettle();
+
+      // Tap on 'OK' button in time picker
+      await tester.tap(find.text(DefaultMaterialLocalizations().okButtonLabel));
+      await tester.pumpAndSettle();
+
+      verify(interactor.createReminder(any, any, eventId, event.title, 'Saturday Jan 1, 2000'));
+
+      expect(find.text(AppLocalizations().eventRemindMeSet), findsOneWidget);
+      expect((tester.widget(find.byType(Switch)) as Switch).value, true);
+    });
+
+    testWidgetsWithAccessibilityChecks('creates reminder with date range', (tester) async {
+      final title = 'Event Test Title';
+      final startDate = DateTime(2000);
+      final endDate = startDate.add(Duration(hours: 2));
+      final event = baseEvent.rebuild((b) => b
+        ..title = title
+        ..startAt = startDate
+        ..endAt = endDate);
+
+      when(interactor.loadReminder(any)).thenAnswer((_) async => null);
+
+      await tester.pumpWidget(TestApp(EventDetailsScreen.withEvent(event: event)));
+      await tester.pump(); // Let the widget build
+      await tester.pump(); // Let the event future finish
+      await tester.pump(); // Let the reminder future finish
+
+      when(interactor.loadReminder(any)).thenAnswer((_) async => reminder);
+
+      // Tap on switch to open date picker
+      await tester.tap(find.byType(Switch));
+      await tester.pumpAndSettle();
+
+      // Tap on 'OK' button in date picker to open time picker
+      await tester.tap(find.text(DefaultMaterialLocalizations().okButtonLabel));
+      await tester.pumpAndSettle();
+
+      // Tap on 'OK' button in time picker
+      await tester.tap(find.text(DefaultMaterialLocalizations().okButtonLabel));
+      await tester.pumpAndSettle();
+
+      verify(interactor.createReminder(any, any, eventId, event.title, 'Saturday Jan 1, 2000\n12:00 AM - 2:00 AM'));
+
+      expect(find.text(AppLocalizations().eventRemindMeSet), findsOneWidget);
+      expect((tester.widget(find.byType(Switch)) as Switch).value, true);
+    });
+
+    testWidgetsWithAccessibilityChecks('deletes reminder', (tester) async {
+      final title = 'Event Test Title';
+      final event = baseEvent.rebuild((b) => b..title = title);
+
+      when(interactor.loadReminder(any)).thenAnswer((_) async => reminder);
+
+      await tester.pumpWidget(TestApp(EventDetailsScreen.withEvent(event: event)));
+      await tester.pump(); // Let the widget build
+      await tester.pump(); // Let the event future finish
+      await tester.pump(); // Let the reminder future finish
+
+      expect(find.text(l10n.eventRemindMeDescription), findsNothing);
+      expect(find.text(l10n.eventRemindMeSet), findsOneWidget);
+      expect((tester.widget(find.byType(Switch)) as Switch).value, true);
+
+      when(interactor.loadReminder(any)).thenAnswer((_) async => null);
+
+      await tester.tap(find.byType(Switch));
+      await tester.pumpAndSettle();
+
+      expect(find.text(l10n.eventRemindMeSet), findsNothing);
+      expect(find.text(l10n.eventRemindMeDescription), findsOneWidget);
+      expect((tester.widget(find.byType(Switch)) as Switch).value, false);
     });
   });
 
