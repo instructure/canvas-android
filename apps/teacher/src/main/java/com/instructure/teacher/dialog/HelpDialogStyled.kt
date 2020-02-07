@@ -156,6 +156,12 @@ class HelpDialogStyled : DialogFragment() {
                     val intent = Intent(Intent.ACTION_SENDTO).apply { data = Uri.parse(link.url) }
                     startActivity(intent)
                 }
+                link.url.contains("cases.canvaslms.com/liveagentchat") -> {
+                    // Chat with Canvas Support - Doesn't seem work properly with WebViews, so we kick it out
+                    // to the external browser
+                    val intent = Intent(Intent.ACTION_VIEW).apply { data = Uri.parse(link.url) }
+                    startActivity(intent)
+                }
                 // External URL
                 else ->
                     startActivity(InternalWebViewActivity.createIntent(requireActivity(), link.url, link.text, false))
