@@ -145,7 +145,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(ApiPrefs.getCurrentLogin(), logins[0]);
-    verify(nav.push(any, argThat(isA<SplashScreen>())));
+    verify(nav.pushAndRemoveAll(any, argThat(isA<SplashScreen>())));
   });
 }
 
