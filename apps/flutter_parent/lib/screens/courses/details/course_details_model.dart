@@ -39,7 +39,7 @@ class CourseDetailsModel extends BaseModel {
   // A convenience constructor when we already have the course data
   CourseDetailsModel.withCourse(this.studentId, this.studentName, this.course) : this.courseId = course.id;
 
-  /// Used only be the skeleton to load the course data for
+  /// Used only be the skeleton to load the course data for creating tabs and the app bar
   Future<void> loadData({bool refreshCourse = false}) {
     return work(() async {
       // Declare the futures so we can let both run asynchronously

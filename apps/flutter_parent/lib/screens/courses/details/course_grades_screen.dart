@@ -89,7 +89,6 @@ class _CourseGradesScreenState extends State<CourseGradesScreen> {
         () {
           _refreshIndicatorKey.currentState.show();
         },
-        header: header,
       );
     } else if (!snapshot.hasData ||
         snapshot.data.assignmentGroups == null ||
@@ -98,7 +97,8 @@ class _CourseGradesScreenState extends State<CourseGradesScreen> {
         svgPath: 'assets/svg/panda-space-no-assignments.svg',
         title: L10n(context).noAssignmentsTitle,
         subtitle: L10n(context).noAssignmentsMessage,
-        header: header,
+        // Don't show the header if we have no assignments at all (null grading period id corresponds to all grading periods)
+        header: (model.currentGradingPeriod()?.id == null) ? null : header,
       );
     }
 
