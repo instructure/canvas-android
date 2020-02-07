@@ -60,7 +60,10 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
         builder: (context, model, _) {
           // Show loading if we're waiting for data, not inside the refresh indicator as it's unnecessary
           if (model.state == ViewState.Busy) {
-            return LoadingIndicator();
+            return Material(
+              color: Theme.of(context).scaffoldBackgroundColor,
+              child: LoadingIndicator(),
+            );
           }
           return _body(context, model);
         },
