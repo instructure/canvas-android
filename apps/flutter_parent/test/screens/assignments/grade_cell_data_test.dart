@@ -17,6 +17,7 @@ import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/assignment.dart';
 import 'package:flutter_parent/models/grade_cell_data.dart';
 import 'package:flutter_parent/models/submission.dart';
+import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
 
@@ -91,9 +92,9 @@ void main() {
       ..workflowState = 'submitted');
     var expected = GradeCellData((b) => b
       ..state = GradeCellState.submitted
-      ..submissionText = l10n.submissionStatusSuccessSubtitle(
-        DateFormat.MMMMd().format(submission.submittedAt),
-        DateFormat.jm().format(submission.submittedAt),
+      ..submissionText = submission.submittedAt.l10nFormat(
+        l10n.submissionStatusSuccessSubtitle,
+        dateFormat: DateFormat.MMMMd(),
       ));
     var actual = GradeCellData.forSubmission(baseAssignment, submission, theme, l10n);
     expect(actual, expected);
@@ -161,9 +162,9 @@ void main() {
       ..score = 0.0);
     var expected = GradeCellData((b) => b
       ..state = GradeCellState.submitted
-      ..submissionText = l10n.submissionStatusSuccessSubtitle(
-        DateFormat.MMMMd().format(submission.submittedAt),
-        DateFormat.jm().format(submission.submittedAt),
+      ..submissionText = submission.submittedAt.l10nFormat(
+        l10n.submissionStatusSuccessSubtitle,
+        dateFormat: DateFormat.MMMMd(),
       ));
     var actual = GradeCellData.forSubmission(assignment, submission, theme, l10n);
     expect(actual, expected);

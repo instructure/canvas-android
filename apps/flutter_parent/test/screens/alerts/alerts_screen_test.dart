@@ -26,6 +26,7 @@ import 'package:flutter_parent/screens/dashboard/alert_notifier.dart';
 import 'package:flutter_parent/screens/dashboard/selected_student_notifier.dart';
 import 'package:flutter_parent/screens/under_construction_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/badges.dart';
+import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/student_color_set.dart';
@@ -33,7 +34,6 @@ import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
-import 'package:intl/intl.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
 
@@ -177,8 +177,7 @@ void main() {
       expect(title, findsOneWidget);
       expect((tester.widget(title) as Text).style.color, ParentColors.ash);
       expect(find.text(alerts.first.title), findsOneWidget);
-      expect(find.text(DateFormat(AppLocalizations().dateTimeFormat).format(alerts.first.actionDate.toLocal())),
-          findsOneWidget);
+      expect(find.text(alerts.first.actionDate.l10nFormat(AppLocalizations().dateAtTime)), findsOneWidget);
       expect(find.byIcon(CanvasIcons.info), findsOneWidget);
       expect((tester.widget(find.byIcon(CanvasIcons.info)) as Icon).color, ParentColors.ash);
     });
@@ -197,8 +196,7 @@ void main() {
       expect(title, findsOneWidget);
       expect((tester.widget(title) as Text).style.color, ParentColors.ash);
       expect(find.text(alerts.first.title), findsOneWidget);
-      expect(find.text(DateFormat(AppLocalizations().dateTimeFormat).format(alerts.first.actionDate.toLocal())),
-          findsOneWidget);
+      expect(find.text(alerts.first.actionDate.l10nFormat(AppLocalizations().dateAtTime)), findsOneWidget);
       expect(find.byIcon(CanvasIcons.info), findsOneWidget);
       expect((tester.widget(find.byIcon(CanvasIcons.info)) as Icon).color, ParentColors.ash);
     });
@@ -223,8 +221,7 @@ void main() {
       expect(title, findsOneWidget);
       expect((tester.widget(title) as Text).style.color, StudentColorSet.electric.light);
       expect(find.text(alerts.first.title), findsOneWidget);
-      expect(find.text(DateFormat(AppLocalizations().dateTimeFormat).format(alerts.first.actionDate.toLocal())),
-          findsOneWidget);
+      expect(find.text(alerts.first.actionDate.l10nFormat(AppLocalizations().dateAtTime)), findsOneWidget);
       expect(find.byIcon(CanvasIcons.info), findsOneWidget);
       expect((tester.widget(find.byIcon(CanvasIcons.info)) as Icon).color, StudentColorSet.electric.light);
     });
@@ -249,8 +246,7 @@ void main() {
       expect(title, findsOneWidget);
       expect((tester.widget(title) as Text).style.color, StudentColorSet.electric.light);
       expect(find.text(alerts.first.title), findsOneWidget);
-      expect(find.text(DateFormat(AppLocalizations().dateTimeFormat).format(alerts.first.actionDate.toLocal())),
-          findsOneWidget);
+      expect(find.text(alerts.first.actionDate.l10nFormat(AppLocalizations().dateAtTime)), findsOneWidget);
       expect(find.byIcon(CanvasIcons.info), findsOneWidget);
       expect((tester.widget(find.byIcon(CanvasIcons.info)) as Icon).color, StudentColorSet.electric.light);
     });
@@ -275,8 +271,7 @@ void main() {
       expect(title, findsOneWidget);
       expect((tester.widget(title) as Text).style.color, ParentColors.failure);
       expect(find.text(alerts.first.title), findsOneWidget);
-      expect(find.text(DateFormat(AppLocalizations().dateTimeFormat).format(alerts.first.actionDate.toLocal())),
-          findsOneWidget);
+      expect(find.text(alerts.first.actionDate.l10nFormat(AppLocalizations().dateAtTime)), findsOneWidget);
       expect(find.byIcon(CanvasIcons.warning), findsOneWidget);
       expect((tester.widget(find.byIcon(CanvasIcons.warning)) as Icon).color, ParentColors.failure);
     });
@@ -301,8 +296,7 @@ void main() {
       expect(title, findsOneWidget);
       expect((tester.widget(title) as Text).style.color, ParentColors.failure);
       expect(find.text(alerts.first.title), findsOneWidget);
-      expect(find.text(DateFormat(AppLocalizations().dateTimeFormat).format(alerts.first.actionDate.toLocal())),
-          findsOneWidget);
+      expect(find.text(alerts.first.actionDate.l10nFormat(AppLocalizations().dateAtTime)), findsOneWidget);
       expect(find.byIcon(CanvasIcons.warning), findsOneWidget);
       expect((tester.widget(find.byIcon(CanvasIcons.warning)) as Icon).color, ParentColors.failure);
     });
@@ -321,8 +315,7 @@ void main() {
       expect(title, findsOneWidget);
       expect((tester.widget(title) as Text).style.color, ParentColors.failure);
       expect(find.text(alerts.first.title), findsOneWidget);
-      expect(find.text(DateFormat(AppLocalizations().dateTimeFormat).format(alerts.first.actionDate.toLocal())),
-          findsOneWidget);
+      expect(find.text(alerts.first.actionDate.l10nFormat(AppLocalizations().dateAtTime)), findsOneWidget);
       expect(find.byIcon(CanvasIcons.warning), findsOneWidget);
       expect((tester.widget(find.byIcon(CanvasIcons.warning)) as Icon).color, ParentColors.failure);
     });

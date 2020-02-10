@@ -973,16 +973,16 @@ class AppLocalizations {
 
   String get unexpectedError => Intl.message('An unexpected error occurred');
 
-  String get dateTimeFormat => Intl.message(
-        "MMM d 'at' h:mma",
-        desc:
-            "The string to format dates, only the 'at' needs to be translated, as well as arranging the date/time components. MMM will show the month abbreviated as 'Oct', d shows the day, h:mma will show the time as '10:33PM'. Use a captial H for 24 hour times, in which case the 'a' can be omitted to remove the am/pm from the string.",
+  String dateAtTime(String date, String time) => Intl.message(
+        '$date at $time',
+        args: [date, time],
+        desc: 'The string to format dates',
       );
 
-  String get dueDateTimeFormat => Intl.message(
-        "'Due' MMM d 'at' h:mma",
-        desc:
-            "The string to format dates, only the 'Due' and 'at' needs to be translated (not including apostrophes), as well as arranging the date/time components. MMM will show the month abbreviated as 'Oct', d shows the day, h:mma will show the time as '10:33PM'. Use a captial H for 24 hour times, in which case the 'a' can be omitted to remove the am/pm from the string.",
+  String dueDateAtTime(String date, String time) => Intl.message(
+        'Due $date at $time',
+        args: [date, time],
+        desc: 'The string to format due dates',
       );
 
   String get noDueDate => Intl.message(

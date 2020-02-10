@@ -19,6 +19,7 @@ import 'package:flutter_parent/screens/events/event_details_interactor.dart';
 import 'package:flutter_parent/utils/common_widgets/constrained_web_view.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
+import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:intl/intl.dart';
@@ -216,7 +217,7 @@ class _RemindMeState extends State<_RemindMe> {
               : Padding(
                   padding: const EdgeInsets.only(top: 8),
                   child: Text(
-                    DateFormat(L10n(context).dateTimeFormat).format(reminder.date.toLocal()),
+                    reminder.date.l10nFormat(L10n(context).dateAtTime),
                     style: textTheme.subhead.copyWith(color: ParentTheme.of(context).studentColor),
                   ),
                 ),

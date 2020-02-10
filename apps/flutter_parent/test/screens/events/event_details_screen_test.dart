@@ -19,8 +19,8 @@ import 'package:flutter_parent/screens/events/event_details_interactor.dart';
 import 'package:flutter_parent/screens/events/event_details_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
+import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:intl/intl.dart';
 import 'package:mockito/mockito.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -265,7 +265,7 @@ void main() {
       expect(find.text(l10n.eventRemindMeDescription), findsNothing);
       expect(find.text(l10n.eventRemindMeSet), findsOneWidget);
       expect((tester.widget(find.byType(Switch)) as Switch).value, true);
-      expect(find.text(DateFormat(AppLocalizations().dateTimeFormat).format(reminder.date)), findsOneWidget);
+      expect(find.text(reminder.date.l10nFormat(AppLocalizations().dateAtTime)), findsOneWidget);
     });
 
     testWidgetsWithAccessibilityChecks('shows correct state when no reminder is set', (tester) async {

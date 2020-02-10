@@ -16,13 +16,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/attachment.dart';
 import 'package:flutter_parent/screens/announcements/announcement_view_state.dart';
-import 'package:flutter_parent/utils/web_view_utils.dart';
 import 'package:flutter_parent/utils/common_widgets/attachment_indicator_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
+import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter_parent/utils/web_view_utils.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+
 import 'announcement_details_interactor.dart';
 
 enum AnnouncementType { INSTITUTION, COURSE }
@@ -34,8 +35,10 @@ class AnnouncementDetailScreen extends StatefulWidget {
   final AnnouncementType _announcementType;
   final String _toolbarTitle;
 
-  AnnouncementDetailScreen(this._announcementId, this._announcementType, this._courseId, BuildContext context, {Key key})
-      : this._toolbarTitle = L10n(context).institutionAnnouncementTitle, super(key: key);
+  AnnouncementDetailScreen(this._announcementId, this._announcementType, this._courseId, BuildContext context,
+      {Key key})
+      : this._toolbarTitle = L10n(context).institutionAnnouncementTitle,
+        super(key: key);
 
   @override
   State createState() => _AnnouncementDetailScreenState();
@@ -44,8 +47,8 @@ class AnnouncementDetailScreen extends StatefulWidget {
 class _AnnouncementDetailScreenState extends State<AnnouncementDetailScreen> {
   Future<AnnouncementViewState> _announcementFuture;
 
-  Future<AnnouncementViewState> _loadAnnouncement() =>
-      widget._interactor.getAnnouncement(widget._announcementId, widget._announcementType, widget._courseId, widget._toolbarTitle);
+  Future<AnnouncementViewState> _loadAnnouncement() => widget._interactor
+      .getAnnouncement(widget._announcementId, widget._announcementType, widget._courseId, widget._toolbarTitle);
 
   @override
   void initState() {
@@ -55,20 +58,20 @@ class _AnnouncementDetailScreenState extends State<AnnouncementDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-      return FutureBuilder(
-        future: _announcementFuture,
-        builder: (context, AsyncSnapshot<AnnouncementViewState> snapshot) {
-          if(snapshot.connectionState == ConnectionState.waiting) {
-            return Container(color: Theme.of(context).scaffoldBackgroundColor, child: LoadingIndicator());
-          }
+    return FutureBuilder(
+      future: _announcementFuture,
+      builder: (context, AsyncSnapshot<AnnouncementViewState> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Container(color: Theme.of(context).scaffoldBackgroundColor, child: LoadingIndicator());
+        }
 
-          if(snapshot.hasError || snapshot.data == null) {
-            return _error();
-          } else {
-            return _announcementScaffold(snapshot.data);
-          }
-        },
-      );
+        if (snapshot.hasError || snapshot.data == null) {
+          return _error();
+        } else {
+          return _announcementScaffold(snapshot.data);
+        }
+      },
+    );
   }
 
   Widget _announcementScaffold(AnnouncementViewState announcementViewState) {
@@ -94,7 +97,7 @@ class _AnnouncementDetailScreenState extends State<AnnouncementDetailScreen> {
         ),
         SizedBox(height: 4),
         Text(
-          DateFormat(L10n(context).dateTimeFormat).format(announcementViewState.postedAt.toLocal()),
+          announcementViewState.postedAt.l10nFormat(L10n(context).dateAtTime),
           style: Theme.of(context).textTheme.caption,
         ),
         SizedBox(height: 20),
@@ -103,8 +106,7 @@ class _AnnouncementDetailScreenState extends State<AnnouncementDetailScreen> {
           child: WebView(
             initialUrl: 'about:blank',
             onWebViewCreated: (WebViewController webViewController) async {
-              webViewController.loadHtml(
-                  announcementViewState.announcementMessage);
+              webViewController.loadHtml(announcementViewState.announcementMessage);
             },
             javascriptMode: JavascriptMode.unrestricted,
           ),
@@ -115,29 +117,23 @@ class _AnnouncementDetailScreenState extends State<AnnouncementDetailScreen> {
   }
 
   Widget _error() {
-    return Container(color: Theme
-      .of(context)
-      .scaffoldBackgroundColor,
-      child: ErrorPandaWidget(L10n(context).errorLoadingAnnouncement, () {
-        setState(() {
-          _announcementFuture = widget._interactor.getAnnouncement(
-              widget._announcementId, widget._announcementType,
-              widget._courseId, L10n(context).institutionAnnouncementTitle);
-        });
-      }));
+    return Container(
+        color: Theme.of(context).scaffoldBackgroundColor,
+        child: ErrorPandaWidget(L10n(context).errorLoadingAnnouncement, () {
+          setState(() {
+            _announcementFuture = widget._interactor.getAnnouncement(widget._announcementId, widget._announcementType,
+                widget._courseId, L10n(context).institutionAnnouncementTitle);
+          });
+        }));
   }
 
   Widget _attachmentsWidget(BuildContext context, Attachment attachment) {
     if (attachment == null) return Container();
     return Container(
-      height: 108,
-      padding: EdgeInsets.only(top: 12),
-      child: AttachmentIndicatorWidget(
-        attachment: attachment, 
-        onAttachmentClicked: (attachment) => {
-          widget._interactor.viewAttachment(context, attachment)
-        }
-      )
-    );
+        height: 108,
+        padding: EdgeInsets.only(top: 12),
+        child: AttachmentIndicatorWidget(
+            attachment: attachment,
+            onAttachmentClicked: (attachment) => {widget._interactor.viewAttachment(context, attachment)}));
   }
 }

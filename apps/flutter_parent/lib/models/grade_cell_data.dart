@@ -17,6 +17,7 @@ import 'package:flutter/material.dart' hide Builder;
 import 'package:flutter/rendering.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/submission.dart';
+import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:intl/intl.dart';
 
@@ -77,9 +78,9 @@ abstract class GradeCellData implements Built<GradeCellData, GradeCellDataBuilde
     if (submission.submittedAt != null && submission.grade == null) {
       return GradeCellData((b) => b
         ..state = GradeCellState.submitted
-        ..submissionText = l10n.submissionStatusSuccessSubtitle(
-          DateFormat.MMMMd().format(submission.submittedAt),
-          DateFormat.jm().format(submission.submittedAt),
+        ..submissionText = submission.submittedAt.l10nFormat(
+          l10n.submissionStatusSuccessSubtitle,
+          dateFormat: DateFormat.MMMMd(),
         ));
     }
 

@@ -21,10 +21,10 @@ import 'package:flutter_parent/screens/events/event_details_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
+import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class CourseSummaryScreen extends StatelessWidget {
@@ -106,7 +106,7 @@ class __CourseSummaryState extends State<_CourseSummary> with AutomaticKeepAlive
     if (date == null) {
       dateText = L10n(context).noDueDate;
     } else {
-      dateText = DateFormat(L10n(context).dateTimeFormat).format(date.toLocal());
+      dateText = date.l10nFormat(L10n(context).dateAtTime);
     }
 
     return ListTile(

@@ -21,6 +21,7 @@ import 'package:flutter_parent/models/message.dart';
 import 'package:flutter_parent/utils/common_widgets/attachment_indicator_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/avatar.dart';
 import 'package:flutter_parent/utils/common_widgets/user_name.dart';
+import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/style_slicer.dart';
 import 'package:intl/intl.dart';
@@ -45,7 +46,7 @@ class MessageWidget extends StatelessWidget {
       (it) => it.id == message.authorId,
       orElse: () => BasicUser((b) => b..name = L10n(context).unknownUser),
     );
-    var date = DateFormat(L10n(context).dateTimeFormat).format(message.createdAt.toLocal());
+    var date = message.createdAt.l10nFormat(L10n(context).dateAtTime);
     return Container(
       padding: EdgeInsets.all(16),
       color: Theme.of(context).scaffoldBackgroundColor,
@@ -134,10 +135,8 @@ class MessageWidget extends StatelessWidget {
         itemCount: attachments.length,
         scrollDirection: Axis.horizontal,
         separatorBuilder: (context, index) => SizedBox(width: 12),
-        itemBuilder: (context, index) => AttachmentIndicatorWidget(
-            attachment: attachments[index],
-            onAttachmentClicked: onAttachmentClicked
-        ),
+        itemBuilder: (context, index) =>
+            AttachmentIndicatorWidget(attachment: attachments[index], onAttachmentClicked: onAttachmentClicked),
       ),
     );
   }

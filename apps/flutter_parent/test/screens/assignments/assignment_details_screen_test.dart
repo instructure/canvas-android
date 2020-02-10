@@ -26,12 +26,12 @@ import 'package:flutter_parent/screens/inbox/create_conversation/create_conversa
 import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
+import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/student_color_set.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:intl/intl.dart';
 import 'package:mockito/mockito.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -222,7 +222,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text(assignmentName), findsOneWidget);
-    expect(find.text(DateFormat(AppLocalizations().dateTimeFormat).format(dueDate.toLocal())), findsOneWidget);
+    expect(find.text(dueDate.l10nFormat(AppLocalizations().dateAtTime)), findsOneWidget);
     expect(find.text('1.5 pts'), findsOneWidget);
     expect(find.byIcon(Icons.do_not_disturb), findsOneWidget);
     expect((tester.widget(find.byIcon(Icons.do_not_disturb)) as Icon).color, ParentColors.licorice);
@@ -472,7 +472,7 @@ void main() {
 
     expect(find.text(AppLocalizations().assignmentRemindMeSet), findsOneWidget);
     expect((tester.widget(find.byType(Switch)) as Switch).value, true);
-    expect(find.text(DateFormat(AppLocalizations().dateTimeFormat).format(reminder.date)), findsOneWidget);
+    expect(find.text(reminder.date.l10nFormat(AppLocalizations().dateAtTime)), findsOneWidget);
   });
 
   testWidgetsWithAccessibilityChecks('creates reminder without due date', (tester) async {
@@ -514,7 +514,7 @@ void main() {
 
     expect(find.text(AppLocalizations().assignmentRemindMeSet), findsOneWidget);
     expect((tester.widget(find.byType(Switch)) as Switch).value, true);
-    expect(find.text(DateFormat(AppLocalizations().dateTimeFormat).format(reminder.date)), findsOneWidget);
+    expect(find.text(reminder.date.l10nFormat(AppLocalizations().dateAtTime)), findsOneWidget);
   });
 
   testWidgetsWithAccessibilityChecks('creates reminder with due date', (tester) async {
@@ -553,12 +553,12 @@ void main() {
     await tester.tap(find.text(DefaultMaterialLocalizations().okButtonLabel));
     await tester.pumpAndSettle();
 
-    var expectedBody = DateFormat(AppLocalizations().dueDateTimeFormat).format(date);
+    var expectedBody = date.l10nFormat(AppLocalizations().dueDateAtTime);
     verify(interactor.createReminder(any, any, assignmentId, assignment.name, expectedBody));
 
     expect(find.text(AppLocalizations().assignmentRemindMeSet), findsOneWidget);
     expect((tester.widget(find.byType(Switch)) as Switch).value, true);
-    expect(find.text(DateFormat(AppLocalizations().dateTimeFormat).format(reminder.date)), findsOneWidget);
+    expect(find.text(reminder.date.l10nFormat(AppLocalizations().dateAtTime)), findsOneWidget);
   });
 
   testWidgetsWithAccessibilityChecks('deletes reminder', (tester) async {
