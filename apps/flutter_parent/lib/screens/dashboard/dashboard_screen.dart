@@ -290,18 +290,21 @@ class DashboardState extends State<DashboardScreen> {
       }
     }
 
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      // Header
-      _navDrawerHeader(user),
+    return ListTileTheme(
+      style: ListTileStyle.list,
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        // Header
+        _navDrawerHeader(user),
 
-      // Tiles (Inbox, Manage Students, Sign Out, etc)
-      Expanded(
-        child: _navDrawerItemsList(),
-      ),
+        // Tiles (Inbox, Manage Students, Sign Out, etc)
+        Expanded(
+          child: _navDrawerItemsList(),
+        ),
 
-      // App version
-      _navDrawerAppVersion(),
-    ]);
+        // App version
+        _navDrawerAppVersion(),
+      ]),
+    );
   }
 
   _handleBottomBarClick(item) {
