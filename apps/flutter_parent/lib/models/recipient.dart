@@ -26,6 +26,7 @@ abstract class Recipient implements Built<Recipient, RecipientBuilder> {
 
   String get id;
 
+  // The name of the context or short name of the user
   String get name;
 
   @nullable
