@@ -140,7 +140,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
       subject = L10n(context).frontPageSubjectMessage(widget._model.studentName);
     }
 
-    Widget screen = CreateConversationScreen.withSubject(widget._model.course, subject);
+    Widget screen = CreateConversationScreen.withSubject(widget._model.course, widget._model.studentId, subject);
     locator.get<QuickNav>().push(context, screen);
   }
 }
