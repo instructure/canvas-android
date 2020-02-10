@@ -387,7 +387,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Click on Sign Out
-      await tester.tap(find.text(AppLocalizations().signOut));
+      await tester.tap(find.text(AppLocalizations().logOut));
       await tester.pumpAndSettle();
 
       // Test if we ended up on the Login Landing page and if we are logged out
