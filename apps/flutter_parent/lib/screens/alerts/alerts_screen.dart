@@ -26,12 +26,12 @@ import 'package:flutter_parent/utils/common_widgets/badges.dart';
 import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/full_screen_scroll_container.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
+import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class AlertsScreen extends StatefulWidget {
@@ -229,7 +229,7 @@ class __AlertsListState extends State<_AlertsList> {
   }
 
   String _formatDate(BuildContext context, DateTime date) {
-    return DateFormat(L10n(context).dateTimeFormat).format(date.toLocal());
+    return date.l10nFormat(L10n(context).dateAtTime);
   }
 
   void _routeAlert(Alert alert, int index) async {

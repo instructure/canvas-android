@@ -23,9 +23,9 @@ import 'package:flutter_parent/screens/announcements/announcement_details_screen
 import 'package:flutter_parent/screens/announcements/announcement_view_state.dart';
 import 'package:flutter_parent/utils/common_widgets/attachment_indicator_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
+import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
-import 'package:intl/intl.dart';
 import 'package:mockito/mockito.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -87,9 +87,10 @@ void main() {
       final postedAt = DateTime.now();
       final courseName = 'flowers for hodornon';
 
-      final response = AnnouncementViewState(
-          courseName, announcementSubject, announcementMessage, postedAt, null);
-      when(interactor.getAnnouncement(announcementId, AnnouncementType.COURSE, courseId, AppLocalizations().institutionAnnouncementTitle)).thenAnswer((_) => Future.value(response));
+      final response = AnnouncementViewState(courseName, announcementSubject, announcementMessage, postedAt, null);
+      when(interactor.getAnnouncement(
+              announcementId, AnnouncementType.COURSE, courseId, AppLocalizations().institutionAnnouncementTitle))
+          .thenAnswer((_) => Future.value(response));
       _setupLocator(interactor: interactor);
 
       await tester.pumpWidget(_testableWidget(announcementId, AnnouncementType.COURSE, courseId));
@@ -97,7 +98,7 @@ void main() {
 
       expect(find.text(announcementSubject), findsOneWidget);
       expect(find.text(courseName), findsOneWidget);
-      expect(find.text(DateFormat(AppLocalizations().dateTimeFormat).format(postedAt)), findsOneWidget);
+      expect(find.text(postedAt.l10nFormat(AppLocalizations().dateAtTime)), findsOneWidget);
       expect(find.byType(WebView), findsOneWidget);
     });
 
@@ -113,9 +114,11 @@ void main() {
         ..jsonId = JsonObject('1')
         ..displayName = 'Attachment 1');
 
-      final response = AnnouncementViewState(
-          courseName, announcementSubject, announcementMessage, postedAt, attachment);
-      when(interactor.getAnnouncement(announcementId, AnnouncementType.COURSE, courseId, AppLocalizations().institutionAnnouncementTitle)).thenAnswer((_) => Future.value(response));
+      final response =
+          AnnouncementViewState(courseName, announcementSubject, announcementMessage, postedAt, attachment);
+      when(interactor.getAnnouncement(
+              announcementId, AnnouncementType.COURSE, courseId, AppLocalizations().institutionAnnouncementTitle))
+          .thenAnswer((_) => Future.value(response));
       _setupLocator(interactor: interactor);
 
       await tester.pumpWidget(_testableWidget(announcementId, AnnouncementType.COURSE, courseId));
@@ -123,7 +126,7 @@ void main() {
 
       expect(find.text(announcementSubject), findsOneWidget);
       expect(find.text(courseName), findsOneWidget);
-      expect(find.text(DateFormat(AppLocalizations().dateTimeFormat).format(postedAt)), findsOneWidget);
+      expect(find.text(postedAt.l10nFormat(AppLocalizations().dateAtTime)), findsOneWidget);
       expect(find.byType(WebView), findsOneWidget);
       var attachmentWidget = find.byType(AttachmentIndicatorWidget);
       expect(attachmentWidget, findsOneWidget);
@@ -140,9 +143,9 @@ void main() {
       final postedAt = DateTime.now();
       final toolbarTitle = AppLocalizations().institutionAnnouncementTitle;
 
-      final response = AnnouncementViewState(
-          toolbarTitle, announcementSubject, announcementMessage, postedAt, null);
-      when(interactor.getAnnouncement(announcementId, AnnouncementType.INSTITUTION, courseId, toolbarTitle)).thenAnswer((_) => Future.value(response));
+      final response = AnnouncementViewState(toolbarTitle, announcementSubject, announcementMessage, postedAt, null);
+      when(interactor.getAnnouncement(announcementId, AnnouncementType.INSTITUTION, courseId, toolbarTitle))
+          .thenAnswer((_) => Future.value(response));
       _setupLocator(interactor: interactor);
 
       await tester.pumpWidget(_testableWidget(announcementId, AnnouncementType.INSTITUTION, courseId));
@@ -150,18 +153,22 @@ void main() {
 
       expect(find.text(announcementSubject), findsOneWidget);
       expect(find.text(toolbarTitle), findsOneWidget);
-      expect(find.text(DateFormat(AppLocalizations().dateTimeFormat).format(postedAt)), findsOneWidget);
+      expect(find.text(postedAt.l10nFormat(AppLocalizations().dateAtTime)), findsOneWidget);
       expect(find.byType(WebView), findsOneWidget);
     });
   });
 }
 
 Widget _testableWidget(String announcementId, AnnouncementType type, String courseId) {
-  return TestApp(Builder(
-    builder: (BuildContext context) {
-      return AnnouncementDetailScreen(announcementId, type, courseId, context);
-    },
-  ), highContrast: true, platformConfig: PlatformConfig(initWebview: true),);
+  return TestApp(
+    Builder(
+      builder: (BuildContext context) {
+        return AnnouncementDetailScreen(announcementId, type, courseId, context);
+      },
+    ),
+    highContrast: true,
+    platformConfig: PlatformConfig(initWebview: true),
+  );
 }
 
 class _MockAnnouncementDetailsInteractor extends Mock implements AnnouncementDetailsInteractor {}

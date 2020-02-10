@@ -395,7 +395,7 @@ void main() {
       expect(date, findsOneWidget);
 
       var dateText = await tester.widget(date) as Text;
-      expect(dateText.data, 'Dec 25 at 8:34AM');
+      expect(dateText.data, 'Dec 25 at 8:34 AM');
     });
 
     testWidgetsWithAccessibilityChecks('message body', (tester) async {

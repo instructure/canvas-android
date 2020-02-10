@@ -215,7 +215,7 @@ void main() {
 
     expect(find.text(group.name), findsOneWidget);
     expect(find.text(group.assignments.first.name), findsOneWidget);
-    expect(find.text('Due Jan 1 at 12:00AM'), findsOneWidget);
+    expect(find.text('Due Jan 1 at 12:00 AM'), findsOneWidget);
     expect(find.text('- / 0'), findsOneWidget);
 
     expect(find.text(group.assignments.last.name), findsOneWidget);

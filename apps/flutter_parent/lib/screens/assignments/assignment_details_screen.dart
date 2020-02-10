@@ -22,12 +22,12 @@ import 'package:flutter_parent/screens/inbox/create_conversation/create_conversa
 import 'package:flutter_parent/utils/common_widgets/constrained_web_view.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
+import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
 import 'package:flutter_parent/utils/design/canvas_icons_solid.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:intl/intl.dart';
 
 class AssignmentDetailsScreen extends StatefulWidget {
   final String courseId;
@@ -269,9 +269,7 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
     ];
   }
 
-  String _dateFormat(DateTime time) {
-    return time == null ? null : DateFormat(L10n(context).dateTimeFormat).format(time);
-  }
+  String _dateFormat(DateTime time) => time.l10nFormat(L10n(context).dateAtTime);
 
   _handleAlarmSwitch(BuildContext context, Assignment assignment, bool checked, Reminder reminder) async {
     if (reminder != null) await _interactor.deleteReminder(reminder);
@@ -295,9 +293,7 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
 
       if (date != null && time != null) {
         DateTime reminderDate = DateTime(date.year, date.month, date.day, time.hour, time.minute);
-        var body = assignment.dueAt == null
-            ? L10n(context).noDueDate
-            : DateFormat(L10n(context).dueDateTimeFormat).format(assignment.dueAt.toLocal());
+        var body = assignment.dueAt.l10nFormat(L10n(context).dueDateAtTime) ?? L10n(context).noDueDate;
         await _interactor.createReminder(L10n(context), reminderDate, assignment.id, assignment.name, body);
       }
     }

@@ -27,10 +27,10 @@ import 'package:flutter_parent/screens/events/event_details_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
+import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:intl/intl.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
 
@@ -136,7 +136,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text(event.title), findsOneWidget);
-    expect(find.text(DateFormat(l10n.dateTimeFormat).format(event.startAt.toLocal())), findsOneWidget);
+    expect(find.text(event.startAt.l10nFormat(l10n.dateAtTime)), findsOneWidget);
     expect(find.byIcon(CanvasIcons.calendar_month), findsOneWidget);
   });
 
@@ -159,7 +159,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text(event.title), findsOneWidget);
-    expect(find.text(DateFormat(l10n.dateTimeFormat).format(event.startAt.toLocal())), findsOneWidget);
+    expect(find.text(event.startAt.l10nFormat(l10n.dateAtTime)), findsOneWidget);
     expect(find.byIcon(CanvasIcons.assignment), findsOneWidget);
   });
 
@@ -182,7 +182,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text(event.title), findsOneWidget);
-    expect(find.text(DateFormat(l10n.dateTimeFormat).format(event.startAt.toLocal())), findsOneWidget);
+    expect(find.text(event.startAt.l10nFormat(l10n.dateAtTime)), findsOneWidget);
     expect(find.byIcon(CanvasIcons.discussion), findsOneWidget);
   });
 
@@ -205,7 +205,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text(event.title), findsOneWidget);
-    expect(find.text(DateFormat(l10n.dateTimeFormat).format(event.startAt.toLocal())), findsOneWidget);
+    expect(find.text(event.startAt.l10nFormat(l10n.dateAtTime)), findsOneWidget);
     expect(find.byIcon(CanvasIcons.quiz), findsOneWidget);
   });
 
@@ -229,7 +229,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text(event.title), findsOneWidget);
-    expect(find.text(DateFormat(l10n.dateTimeFormat).format(event.startAt.toLocal())), findsOneWidget);
+    expect(find.text(event.startAt.l10nFormat(l10n.dateAtTime)), findsOneWidget);
     expect(find.byIcon(CanvasIcons.lock), findsOneWidget);
   });
 
