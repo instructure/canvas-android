@@ -64,6 +64,9 @@ open class InternalWebviewFragment : ParentFragment() {
     var title: String? by NullableStringArg(key = Const.ACTION_BAR_TITLE)
     var url: String? by NullableStringArg(key = Const.INTERNAL_URL)
 
+    // Used for external urls that reject the candroid user agent string
+    var originalUserAgentString: String = ""
+
     /*
      * Our router has some catch-all routes which open the UnsupportedFeatureFragment for urls that match the user's
      * domain but don't match any other internal routes. In some cases, such as viewing an HTML file preview, we need to
@@ -93,6 +96,7 @@ open class InternalWebviewFragment : ParentFragment() {
 
         with(rootView) {
             canvasWebView.settings.loadWithOverviewMode = true
+            originalUserAgentString = canvasWebView.settings.userAgentString
             canvasWebView.settings.userAgentString = ApiPrefs.userAgent
             canvasWebView.setInitialScale(100)
 
@@ -308,6 +312,9 @@ open class InternalWebviewFragment : ParentFragment() {
                         url = awaitApi<AuthenticatedSession> { OAuthManager.getAuthenticatedSession(url!!, it) }.sessionUrl
                     } catch (e: StatusCallbackError) {
                     }
+                } else {
+                    // External URL, use the non-Canvas specific user agent string
+                    canvasWebView.settings.userAgentString = originalUserAgentString
                 }
 
                 if (getIsUnsupportedFeature()) {
