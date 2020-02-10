@@ -354,7 +354,7 @@ class DashboardState extends State<DashboardScreen> {
 //    locator<QuickNav>().push(context, HelpScreen());
   }
 
-  _performSignOut(BuildContext context, {bool switchingUsers = false}) async {
+  _performLogOut(BuildContext context, {bool switchingUsers = false}) async {
     ParentTheme.of(context).studentIndex = 0;
     await ApiPrefs.performLogout(switchingLogins: switchingUsers);
     Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) {
@@ -389,7 +389,7 @@ class DashboardState extends State<DashboardScreen> {
       _navDrawerSettings(),
       _navDrawerHelp(),
       _navDrawerSwitchUsers(),
-      _navDrawerSignOut(),
+      _navDrawerLogOut(),
       null // to get trailing divider
     ];
     return ListView.separated(
@@ -426,11 +426,11 @@ class DashboardState extends State<DashboardScreen> {
         onTap: () => _navigateToHelp(context),
       );
 
-  _navDrawerSignOut() => ListTile(title: Text(L10n(context).signOut), onTap: () => _performSignOut(context));
+  _navDrawerLogOut() => ListTile(title: Text(L10n(context).logOut), onTap: () => _performLogOut(context));
 
   _navDrawerSwitchUsers() => ListTile(
         title: Text(L10n(context).switchUsers),
-        onTap: () => _performSignOut(context, switchingUsers: true),
+        onTap: () => _performLogOut(context, switchingUsers: true),
       );
 
   _navDrawerAppVersion() => Column(

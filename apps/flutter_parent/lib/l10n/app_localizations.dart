@@ -163,7 +163,7 @@ class AppLocalizations {
   String get shareFeedback =>
       Intl.message('Send us feedback', desc: 'Label text for the nav drawer button to share feedback');
 
-  String get signOut => Intl.message('Sign Out', desc: 'Label text for the Sign Out nav drawer button');
+  String get logOut => Intl.message('Log Out', desc: 'Label text for the Log Out nav drawer button');
 
   String get switchUsers => Intl.message('Switch Users', desc: 'Label text for the Switch Users nav drawer button');
 
