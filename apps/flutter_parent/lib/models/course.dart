@@ -29,6 +29,7 @@ abstract class Course implements Built<Course, CourseBuilder> {
   static Serializer<Course> get serializer => _$courseSerializer;
 
   Course._();
+
   factory Course([void Function(CourseBuilder) updates]) = _$Course;
 
   // Helper variables
@@ -49,6 +50,7 @@ abstract class Course implements Built<Course, CourseBuilder> {
   String get finalGrade;
 
   String get id;
+
   String get name;
 
   @nullable
@@ -127,8 +129,33 @@ abstract class Course implements Built<Course, CourseBuilder> {
     ..hasGradingPeriods = false
     ..restrictEnrollmentsToCourseDates = false;
 
-  CourseGrade getCourseGrade(String studentId) =>
-      CourseGrade(this, enrollments.firstWhere((enrollment) => enrollment.userId == studentId));
+  /// Get the course grade.
+  /// Optional:
+  /// [forceAllPeriods] -> Used to determine if there's an active grading period on the enrollment, true for this will
+  ///   always force no active grading period
+  /// [enrollment] -> If specified, will use for the grading period grades, unless a non-null value is provided this
+  ///   will default to the student's enrollment in the course
+  /// [gradingPeriodId] -> Only used when [enrollment] is not provided or is null, when pulling the student's enrollment
+  ///   from the course will also match based on [Enrollment.currentGradingPeriodId]
+  CourseGrade getCourseGrade(
+    String studentId, {
+    Enrollment enrollment,
+    String gradingPeriodId,
+    bool forceAllPeriods = false,
+  }) =>
+      CourseGrade(
+        this,
+        enrollment ??
+            enrollments.firstWhere(
+              (enrollment) =>
+                  enrollment.userId == studentId &&
+                  (gradingPeriodId == null ||
+                      gradingPeriodId.isEmpty ||
+                      gradingPeriodId == enrollment.currentGradingPeriodId),
+              orElse: () => null,
+            ),
+        forceAllPeriods: forceAllPeriods,
+      );
 }
 
 @BuiltValueEnum(wireName: 'default_view')

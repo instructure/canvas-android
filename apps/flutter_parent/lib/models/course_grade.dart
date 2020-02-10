@@ -35,8 +35,17 @@ import 'enrollment.dart';
 class CourseGrade {
   Course _course;
   Enrollment _enrollment;
+  bool _forceAllPeriods;
 
-  CourseGrade(this._course, this._enrollment);
+  CourseGrade(this._course, this._enrollment, {bool forceAllPeriods = false}) : _forceAllPeriods = forceAllPeriods;
+
+  operator ==(Object other) {
+    if (!(other is CourseGrade)) {
+      return false;
+    }
+    final grade = other as CourseGrade;
+    return _course == grade._course && _enrollment == grade._enrollment && _forceAllPeriods == grade._forceAllPeriods;
+  }
 
   /// Represents the lock status of a course, this is different from hideFinalGrades, as it takes both that value, and
   /// totalsForAllGradingPeriodsOption into account. The latter is only used when relevant.
@@ -63,7 +72,8 @@ class CourseGrade {
       currentScore() == null && (currentGrade() == null || currentGrade().contains('N/A') || currentGrade().isEmpty);
 
   bool _hasActiveGradingPeriod() =>
-      _course?.enrollments?.toList()?.any((enrollment) => enrollment.hasActiveGradingPeriod()) ?? false;
+      !_forceAllPeriods &&
+      (_course?.enrollments?.toList()?.any((enrollment) => enrollment.hasActiveGradingPeriod()) ?? false);
 
   bool _isTotalsForAllGradingPeriodsEnabled() =>
       _course?.enrollments?.toList()?.any((enrollment) => enrollment.isTotalsForAllGradingPeriodsEnabled()) ?? false;

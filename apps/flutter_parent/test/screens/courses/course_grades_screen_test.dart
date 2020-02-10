@@ -404,6 +404,123 @@ void main() {
       expect(find.text(AppLocalizations().courseTotalGradeLabel), findsOneWidget);
       expect(find.text('test period'), findsOneWidget);
     });
+
+    testWidgetsWithAccessibilityChecks('is shown when looking at all grading periods with an active period set',
+        (tester) async {
+      final groups = [
+        _mockAssignmentGroup(assignments: [_mockAssignment()])
+      ];
+      final gradingPeriod = GradingPeriod((b) => b
+        ..id = null
+        ..title = 'All Grading Periods');
+      final enrollment = Enrollment((b) => b
+        ..enrollmentState = 'active'
+        ..role = 'observer'
+        ..userId = _studentId
+        ..currentGradingPeriodId = '1212'
+        ..totalsForAllGradingPeriodsOption = true
+        ..multipleGradingPeriodsEnabled = true
+        ..currentPeriodComputedCurrentScore = 12
+        ..computedCurrentScore = 1);
+      final model = CourseDetailsModel(_studentId, '', _courseId);
+      model.updateGradingPeriod(gradingPeriod);
+      model.course = _mockCourse().rebuild((b) => b
+        ..hasGradingPeriods = true
+        ..enrollments = ListBuilder([enrollment]));
+
+      // Mock stuff
+      when(interactor.loadAssignmentGroups(_courseId, _studentId, gradingPeriod.id)).thenAnswer((_) async => groups);
+      when(interactor.loadGradingPeriods(_courseId)).thenAnswer(
+          (_) async => GradingPeriodResponse((b) => b..gradingPeriods = BuiltList.of([gradingPeriod]).toBuilder()));
+      when(interactor.loadEnrollmentsForGradingPeriod(_courseId, _studentId, null)).thenAnswer((_) async => null);
+
+      await tester.pumpWidget(_testableWidget(model, highContrastMode: true));
+      await tester.pump(); // Build the widget
+      await tester.pump(); // Let the future finish
+
+      // Verify that we are showing the course grade when not locked
+      expect(find.text(AppLocalizations().courseTotalGradeLabel), findsOneWidget);
+      expect(find.text('1%'), findsOneWidget);
+      expect(find.text(AppLocalizations().noGrade), findsNothing);
+    });
+
+    testWidgetsWithAccessibilityChecks(
+        'is shown when looking at a period with an active period set (given no enrollment response)', (tester) async {
+      final groups = [
+        _mockAssignmentGroup(assignments: [_mockAssignment()])
+      ];
+      final gradingPeriod = GradingPeriod((b) => b
+        ..id = '1212'
+        ..title = 'All Grading Periods');
+      final enrollment = Enrollment((b) => b
+        ..enrollmentState = 'active'
+        ..role = 'observer'
+        ..userId = _studentId
+        ..currentGradingPeriodId = gradingPeriod.id
+        ..totalsForAllGradingPeriodsOption = true
+        ..multipleGradingPeriodsEnabled = true
+        ..currentPeriodComputedCurrentScore = 12
+        ..computedCurrentScore = 1);
+      final model = CourseDetailsModel(_studentId, '', _courseId);
+      model.updateGradingPeriod(gradingPeriod);
+      model.course = _mockCourse().rebuild((b) => b
+        ..hasGradingPeriods = true
+        ..enrollments = ListBuilder([enrollment]));
+
+      // Mock stuff
+      when(interactor.loadAssignmentGroups(_courseId, _studentId, gradingPeriod.id)).thenAnswer((_) async => groups);
+      when(interactor.loadGradingPeriods(_courseId)).thenAnswer(
+          (_) async => GradingPeriodResponse((b) => b..gradingPeriods = BuiltList.of([gradingPeriod]).toBuilder()));
+      when(interactor.loadEnrollmentsForGradingPeriod(_courseId, _studentId, null)).thenAnswer((_) async => null);
+
+      await tester.pumpWidget(_testableWidget(model, highContrastMode: true));
+      await tester.pump(); // Build the widget
+      await tester.pump(); // Let the future finish
+
+      // Verify that we are showing the course grade when not locked
+      expect(find.text(AppLocalizations().courseTotalGradeLabel), findsOneWidget);
+      expect(find.text('12%'), findsOneWidget);
+      expect(find.text(AppLocalizations().noGrade), findsNothing);
+    });
+
+    testWidgetsWithAccessibilityChecks(
+        'is not shown when looking at all grading periods with an active period set and final grades hidden',
+        (tester) async {
+      final groups = [
+        _mockAssignmentGroup(assignments: [_mockAssignment()])
+      ];
+      final gradingPeriod = GradingPeriod((b) => b
+        ..id = null
+        ..title = 'All Grading Periods');
+      final enrollment = Enrollment((b) => b
+        ..enrollmentState = 'active'
+        ..role = 'observer'
+        ..userId = _studentId
+        ..currentGradingPeriodId = '1212'
+        ..totalsForAllGradingPeriodsOption = true
+        ..multipleGradingPeriodsEnabled = true
+        ..currentPeriodComputedCurrentScore = 12
+        ..computedCurrentScore = 1);
+      final model = CourseDetailsModel(_studentId, '', _courseId);
+      model.updateGradingPeriod(gradingPeriod);
+      model.course = _mockCourse().rebuild((b) => b
+        ..hasGradingPeriods = true
+        ..hideFinalGrades = true
+        ..enrollments = ListBuilder([enrollment]));
+
+      // Mock stuff
+      when(interactor.loadAssignmentGroups(_courseId, _studentId, gradingPeriod.id)).thenAnswer((_) async => groups);
+      when(interactor.loadGradingPeriods(_courseId)).thenAnswer(
+          (_) async => GradingPeriodResponse((b) => b..gradingPeriods = BuiltList.of([gradingPeriod]).toBuilder()));
+      when(interactor.loadEnrollmentsForGradingPeriod(_courseId, _studentId, null)).thenAnswer((_) async => null);
+
+      await tester.pumpWidget(_testableWidget(model, highContrastMode: true));
+      await tester.pump(); // Build the widget
+      await tester.pump(); // Let the future finish
+
+      // Verify that we are showing the course grade when not locked
+      expect(find.text(AppLocalizations().courseTotalGradeLabel), findsNothing);
+    });
   });
 
   testWidgetsWithAccessibilityChecks('grading period not shown when noot multiple grading periods', (tester) async {
