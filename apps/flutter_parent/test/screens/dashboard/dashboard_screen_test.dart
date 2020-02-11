@@ -89,7 +89,7 @@ void main() {
       await tester.pumpWidget(_testableMaterialWidget());
       await tester.pumpAndSettle();
 
-      expect(find.text('${first.name} (${first.pronouns})'), findsOneWidget);
+      expect(find.text('${first.shortName} (${first.pronouns})'), findsOneWidget);
     });
 
     testWidgetsWithAccessibilityChecks('Displays name without pronouns when pronouns are null', (tester) async {
@@ -105,7 +105,8 @@ void main() {
       await tester.pumpWidget(_testableMaterialWidget());
       await tester.pumpAndSettle();
 
-      expect(find.text('${first.name}'), findsOneWidget);
+      // Will find two, one in the navbar header and one in the student switcher
+      expect(find.text('${first.shortName}'), findsNWidgets(2));
     });
 
     // TODO: Finish when we have specs
@@ -423,12 +424,16 @@ void main() {
       expect(slideAnimation.value, retracted);
 
       // Tap the user header, expanding it
-      await tester.tap(find.text(first.name));
+      // There will be two instances, one in the header and one in the student switcher
+      // we want to tap the first one (the one in the header)
+      await tester.tap(find.text(first.shortName).at(0));
       await tester.pumpAndSettle(); // Wait for user switcher to slide out
       expect(slideAnimation.value, expanded);
 
       // Tap the user header, retracting it
-      await tester.tap(find.text(first.name));
+      // There will be two instances, one in the header and one in the student switcher
+      // we want to tap the first one (the one in the header)
+      await tester.tap(find.text(first.shortName).at(0));
       await tester.pumpAndSettle(); // Wait for user switcher to slide back
       expect(slideAnimation.value, retracted);
     });
@@ -463,7 +468,9 @@ void main() {
       expect(slideAnimation.value, retracted);
 
       // Tap the user header, expanding it
-      await tester.tap(find.text(first.name));
+      // There will be two instances, one in the header and one in the student switcher
+      // we want to tap the first one (the one in the header)
+      await tester.tap(find.text(first.shortName).at(0));
       await tester.pumpAndSettle(); // Wait for user switcher to slide out
       expect(slideAnimation.value, expanded);
 
@@ -604,16 +611,22 @@ class MockInteractor extends DashboardInteractor {
   @override
   Future<List<User>> getStudents({bool forceRefresh = false}) async => generateStudents
       ? [
-          CanvasModelTestUtils.mockUser(name: 'Billy', pronouns: includePronouns ? 'he/him' : null),
-          CanvasModelTestUtils.mockUser(name: 'Sally', pronouns: includePronouns ? 'she/her' : null),
-          CanvasModelTestUtils.mockUser(name: 'Trevor', pronouns: includePronouns ? 'he/him' : null),
+          CanvasModelTestUtils.mockUser(
+              name: 'Billy Name', shortName: 'Billy', pronouns: includePronouns ? 'he/him' : null),
+          CanvasModelTestUtils.mockUser(
+              name: 'Sally Name', shortName: 'Sally', pronouns: includePronouns ? 'she/her' : null),
+          CanvasModelTestUtils.mockUser(
+              name: 'Trevor Name', shortName: 'Trevor', pronouns: includePronouns ? 'he/him' : null),
         ]
       : [];
 
   @override
   Future<User> getSelf({app}) async => generateSelf
       ? CanvasModelTestUtils.mockUser(
-          name: 'Marlene', pronouns: includePronouns ? 'she/her' : null, primaryEmail: 'marlene@instructure.com')
+          name: 'Marlene Name',
+          shortName: 'Marlene',
+          pronouns: includePronouns ? 'she/her' : null,
+          primaryEmail: 'marlene@instructure.com')
       : null;
 }
 

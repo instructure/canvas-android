@@ -59,8 +59,8 @@ void main() {
 
   group('Refresh', () {
     testWidgetsWithAccessibilityChecks('Pulling gets list of students', (tester) async {
-      var preRefreshStudent = [CanvasModelTestUtils.mockUser(name: 'Billy')];
-      var postRefreshStudent = [CanvasModelTestUtils.mockUser(name: 'Sally')];
+      var preRefreshStudent = [CanvasModelTestUtils.mockUser(shortName: 'Billy')];
+      var postRefreshStudent = [CanvasModelTestUtils.mockUser(shortName: 'Sally')];
 
       // Mock the behavior of the interactor to return a student
       final interactor = _MockManageStudentsInteractor();
@@ -73,7 +73,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Check if we're showing the initial student
-      expect(find.text('Billy Panda'), findsOneWidget);
+      expect(find.text('Billy'), findsOneWidget);
 
       // Pull to refresh\
       final matchedWidget = find.byType(RefreshIndicator);
@@ -81,7 +81,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // See if we got our new student
-      expect(find.text('Sally Panda'), findsOneWidget);
+      expect(find.text('Sally'), findsOneWidget);
     });
 
     testWidgetsWithAccessibilityChecks('Error on pull to refresh', (tester) async {
@@ -110,7 +110,7 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('Retry button on error page loads students', (tester) async {
-      var observedStudents = [CanvasModelTestUtils.mockUser(name: 'Billy')];
+      var observedStudents = [CanvasModelTestUtils.mockUser(shortName: 'Billy')];
 
       // Mock interactor to return an error when retrieving student list
       var interactor = _MockManageStudentsInteractor();
@@ -145,7 +145,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // See if we got the student back from the retry
-      expect(find.text('Billy Panda'), findsOneWidget);
+      expect(find.text('Billy'), findsOneWidget);
     });
   });
 
@@ -171,7 +171,7 @@ void main() {
       _setupLocator();
 
       var observedStudents = [
-        CanvasModelTestUtils.mockUser(name: 'Billy', pronouns: null),
+        CanvasModelTestUtils.mockUser(shortName: 'Billy', pronouns: null),
       ];
 
       // Start the page with a user that has no pronouns set
@@ -179,14 +179,14 @@ void main() {
       await tester.pumpAndSettle();
 
       // See if we displaying the username
-      expect(find.text('Billy Panda'), findsOneWidget);
+      expect(find.text('Billy'), findsOneWidget);
     });
 
     testWidgetsWithAccessibilityChecks('Display username and pronouns ', (tester) async {
       _setupLocator();
 
       var observedStudents = [
-        CanvasModelTestUtils.mockUser(name: 'Billy', pronouns: 'he/him'),
+        CanvasModelTestUtils.mockUser(shortName: 'Billy', pronouns: 'he/him'),
       ];
 
       // Start the page with a user that has pronouns set
@@ -194,7 +194,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // See if we are correctly displaying the username and pronouns of the user
-      expect(find.text('Billy Panda (he/him)'), findsOneWidget);
+      expect(find.text('Billy (he/him)'), findsOneWidget);
     });
 
     testWidgetsWithAccessibilityChecks('Empty when null', (tester) async {
@@ -230,16 +230,16 @@ void main() {
     testWidgetsWithAccessibilityChecks('Tap goes to the Threshold Screen', (tester) async {
       _setupLocator();
 
-      var observedStudent = [CanvasModelTestUtils.mockUser(name: 'Billy')];
+      var observedStudent = [CanvasModelTestUtils.mockUser(shortName: 'Billy')];
 
       await tester.pumpWidget(TestApp(ManageStudentsScreen(observedStudent)));
       await tester.pumpAndSettle();
 
       // Make sure the user was loaded
-      expect(find.text('Billy Panda'), findsOneWidget);
+      expect(find.text('Billy'), findsOneWidget);
 
       // Tap on the user
-      await tester.tap(find.text('Billy Panda'));
+      await tester.tap(find.text('Billy'));
 
       // Pump and settle the page transition animation
       await tester.pump();
@@ -308,7 +308,7 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('Refresh list on success', (tester) async {
-      var observedStudent = [CanvasModelTestUtils.mockUser(name: 'Billy')];
+      var observedStudent = [CanvasModelTestUtils.mockUser(shortName: 'Billy')];
 
       // Mock return value for success when pairing a student
       final interactor = _MockManageStudentsInteractor();
@@ -316,7 +316,7 @@ void main() {
 
       // Mock retrieving students, also add an extra student to the list
       when(interactor.getStudents(forceRefresh: anyNamed('forceRefresh'))).thenAnswer((_) {
-        observedStudent.add(CanvasModelTestUtils.mockUser(name: 'Trevor'));
+        observedStudent.add(CanvasModelTestUtils.mockUser(shortName: 'Trevor'));
         return Future.value(observedStudent);
       });
 
@@ -328,7 +328,7 @@ void main() {
 
       // Make sure we only have one student
       expect(find.byType(ListTile), findsNWidgets(1));
-      expect(find.text('Billy Panda'), findsOneWidget);
+      expect(find.text('Billy'), findsOneWidget);
 
       // Click FAB
       await _clickFAB(tester);
@@ -353,8 +353,8 @@ void main() {
 
       // Check for two students in the list
       expect(find.byType(ListTile), findsNWidgets(2));
-      expect(find.text('Billy Panda'), findsOneWidget);
-      expect(find.text('Trevor Panda'), findsOneWidget);
+      expect(find.text('Billy'), findsOneWidget);
+      expect(find.text('Trevor'), findsOneWidget);
     });
 
     testWidgetsWithAccessibilityChecks('Show error on fail', (tester) async {

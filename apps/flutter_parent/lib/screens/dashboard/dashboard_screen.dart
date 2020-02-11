@@ -250,7 +250,7 @@ class DashboardState extends State<DashboardScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  UserName.fromUser(selectedStudent, style: Theme.of(context).primaryTextTheme.subhead),
+                  UserName.fromUserShortName(selectedStudent, style: Theme.of(context).primaryTextTheme.subhead),
                   SizedBox(width: 6),
                   DropdownArrow(rotate: expand),
                 ],
