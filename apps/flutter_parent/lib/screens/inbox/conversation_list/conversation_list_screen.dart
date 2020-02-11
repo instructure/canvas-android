@@ -280,7 +280,7 @@ class ConversationListState extends State<ConversationListScreen> {
                         title: Text(it.name),
                         onTap: () async {
                           Navigator.pop(context); // Dismisses the bottom sheet
-                          var refresh = await locator<QuickNav>().push(context, CreateConversationScreen(it));
+                          var refresh = await locator<QuickNav>().push(context, CreateConversationScreen(it, ''));
                           if (refresh == true) _refreshIndicatorKey.currentState.show();
                         },
                       )),

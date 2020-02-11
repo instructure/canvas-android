@@ -25,7 +25,6 @@ import 'package:flutter_parent/utils/common_widgets/avatar.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/common_widgets/user_name.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
-import 'package:flutter_parent/utils/design/canvas_icons_solid.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
@@ -36,15 +35,25 @@ import 'package:transparent_image/transparent_image.dart';
 import 'create_conversation_interactor.dart';
 
 class CreateConversationScreen extends StatefulWidget {
-  CreateConversationScreen(this._course)
+  CreateConversationScreen(this._course, this._studentId)
       : _subjectTemplate = _course.name,
         this._assignmentUrl = null;
 
-  CreateConversationScreen.withSubject(this._course, this._subjectTemplate) : this._assignmentUrl = null;
+  CreateConversationScreen.withSubject(
+    this._course,
+    this._studentId,
+    this._subjectTemplate,
+  ) : this._assignmentUrl = null;
 
-  CreateConversationScreen.fromAssignment(this._course, this._subjectTemplate, this._assignmentUrl);
+  CreateConversationScreen.fromAssignment(
+    this._course,
+    this._studentId,
+    this._subjectTemplate,
+    this._assignmentUrl,
+  );
 
   final Course _course;
+  final String _studentId;
   final String _subjectTemplate;
   final String _assignmentUrl;
 
@@ -120,9 +129,9 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
       _loading = true;
       _error = false;
     });
-    _interactor.getAllRecipients(widget._course).then((data) {
+    _interactor.getAllRecipients(widget._course, widget._studentId).then((data) {
       _allRecipients = data;
-      String courseId = widget._course.id.toString();
+      String courseId = widget._course.id;
       _selectedRecipients =
           _allRecipients.where((it) => it.commonCourses[courseId]?.contains('TeacherEnrollment')).toList();
       setState(() {
@@ -259,11 +268,10 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Divider(thickness: 1, height: 1),
           _recipientsWidget(context),
-          Divider(thickness: 1, height: 1),
+          Divider(height: 1),
           _subjectWidget(context),
-          Divider(thickness: 1, height: 1),
+          Divider(height: 1),
           _messageWidget(context),
           _attachmentsWidget(context),
         ],
@@ -366,11 +374,12 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
           ),
         ),
         IconButton(
+          padding: EdgeInsets.all(16),
           tooltip: L10n(context).selectRecipients,
           key: CreateConversationScreen.recipientsAddKey,
           icon: Icon(
-            CanvasIconsSolid.plus,
-            size: 18,
+            CanvasIcons.address_book,
+            size: 20,
             color: Theme.of(context).hintColor,
           ),
           onPressed: _sending ? null : () => _showRecipientPicker(context),
@@ -521,19 +530,6 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
                     },
                   ),
                 ),
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  FlatButton(
-                    textColor: Theme.of(context).accentColor,
-                    child: Text(L10n(context).done),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
               ),
             ],
           );

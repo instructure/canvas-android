@@ -144,7 +144,7 @@ void main() {
   testWidgetsWithAccessibilityChecks('Can send a message', (tester) async {
     String studentName = 'Panda';
 
-    when(convoInteractor.getAllRecipients(any)).thenAnswer((_) => Future.value([]));
+    when(convoInteractor.getAllRecipients(any, any)).thenAnswer((_) => Future.value([]));
     when(interactor.loadAssignmentDetails(any, courseId, assignmentId, studentId))
         .thenAnswer((_) async => AssignmentDetails(assignment: assignment));
 

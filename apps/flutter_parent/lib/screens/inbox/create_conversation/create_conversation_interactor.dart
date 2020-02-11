@@ -23,8 +23,15 @@ import 'package:flutter_parent/utils/service_locator.dart';
 import '../attachment_utils/attachment_picker.dart';
 
 class CreateConversationInteractor {
-  Future<List<Recipient>> getAllRecipients(Course course) async {
-    return locator<InboxApi>().getRecipients(course);
+  Future<List<Recipient>> getAllRecipients(Course course, String studentId) async {
+    var result = await locator<InboxApi>().getRecipients(course);
+
+    // The only allowed recipients are teachers and the specific student
+    result.retainWhere((it) {
+      return it.id == studentId || it.commonCourses[course.id]?.contains('TeacherEnrollment') == true;
+    });
+
+    return result;
   }
 
   Future<Conversation> createConversation(

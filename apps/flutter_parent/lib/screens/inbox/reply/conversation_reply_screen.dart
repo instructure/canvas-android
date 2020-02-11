@@ -140,7 +140,6 @@ class _ConversationReplyScreenState extends State<ConversationReplyScreen> {
   Widget _appBar(BuildContext context) {
     return AppBar(
       bottom: ParentTheme.of(context).appBarDivider(shadowInLightMode: false),
-      elevation: 0,
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
@@ -200,7 +199,6 @@ class _ConversationReplyScreenState extends State<ConversationReplyScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Divider(thickness: 1, height: 1),
           MessageWidget(
             conversation: widget.conversation,
             message: widget.message ?? widget.conversation.messages[0],
@@ -209,7 +207,7 @@ class _ConversationReplyScreenState extends State<ConversationReplyScreen> {
               locator<QuickNav>().push(context, ViewAttachmentScreen(attachment));
             },
           ),
-          Divider(thickness: 1, height: 1),
+          Divider(height: 1),
           _editorWidget(context),
           _attachmentsWidget(context),
         ],

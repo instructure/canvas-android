@@ -309,7 +309,12 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
       ..id = widget.courseId
       ..courseCode = details.course?.courseCode ?? '');
     String subject = L10n(context).assignmentSubjectMessage(widget.studentName, details.assignment.name);
-    Widget screen = CreateConversationScreen.fromAssignment(course, subject, details.assignment.htmlUrl);
+    Widget screen = CreateConversationScreen.fromAssignment(
+      course,
+      widget.studentId,
+      subject,
+      details.assignment.htmlUrl,
+    );
     locator.get<QuickNav>().push(context, screen);
   }
 }
