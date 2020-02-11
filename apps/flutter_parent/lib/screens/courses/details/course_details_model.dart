@@ -55,6 +55,14 @@ class CourseDetailsModel extends BaseModel {
       course = await courseFuture;
       tabs = await tabsFuture;
 
+      // Set the _nextGradingPeriod to the current enrollment period (if active and if not already set)
+      final enrollment =
+          course?.enrollments?.firstWhere((enrollment) => enrollment.userId == studentId, orElse: () => null);
+      if (_nextGradingPeriod == null && enrollment?.hasActiveGradingPeriod() == true) {
+        _nextGradingPeriod = GradingPeriod((b) => b
+          ..id = enrollment.currentGradingPeriodId
+          ..title = enrollment.currentGradingPeriodTitle);
+      }
       return Future<void>.value();
     });
   }

@@ -83,6 +83,58 @@ void main() {
       verify(interactor.loadCourse(_courseId)).called(1);
       expect(model.course, expected);
     });
+
+    test('sets grading period to enrollments active period', () async {
+      final gradingPeriodId = '101';
+      final enrollment = Enrollment((b) => b
+        ..enrollmentState = 'active'
+        ..currentGradingPeriodId = '101'
+        ..multipleGradingPeriodsEnabled = true
+        ..userId = _studentId);
+      final course = _course.rebuild((b) => b..enrollments = ListBuilder([enrollment]));
+      final model = CourseDetailsModel.withCourse(_studentId, '', course);
+
+      await model.loadData();
+      await model.loadAssignments();
+
+      verify(interactor.loadAssignmentGroups(_courseId, _studentId, gradingPeriodId)).called(1);
+    });
+
+    test('does not set grading period when enrollment has no active period', () async {
+      final enrollment = Enrollment((b) => b
+        ..enrollmentState = 'active'
+        ..currentGradingPeriodId = null
+        ..multipleGradingPeriodsEnabled = true
+        ..userId = _studentId);
+      final course = _course.rebuild((b) => b..enrollments = ListBuilder([enrollment]));
+      final model = CourseDetailsModel.withCourse(_studentId, '', course);
+
+      await model.loadData();
+      await model.loadAssignments();
+
+      verify(interactor.loadAssignmentGroups(_courseId, _studentId, null)).called(1);
+    });
+
+    test('does not set grading period to enrollments active period if already set', () async {
+      final gradingPeriodId = '101';
+      final badGradingPeriodId = '202';
+      final enrollment = Enrollment((b) => b
+        ..enrollmentState = 'active'
+        ..currentGradingPeriodId = '101'
+        ..multipleGradingPeriodsEnabled = true
+        ..userId = _studentId);
+      final course = _course.rebuild((b) => b..enrollments = ListBuilder([enrollment]));
+      final model = CourseDetailsModel.withCourse(_studentId, '', course);
+
+      when(interactor.loadCourse(_courseId)).thenAnswer((_) async => course.rebuild((b) =>
+          b..enrollments = ListBuilder([enrollment.rebuild((e) => e..currentGradingPeriodId = badGradingPeriodId)])));
+      await model.loadData();
+      await model.loadData(refreshCourse: true);
+      await model.loadAssignments();
+
+      verify(interactor.loadAssignmentGroups(_courseId, _studentId, gradingPeriodId)).called(1);
+      verifyNever(interactor.loadAssignmentGroups(_courseId, _studentId, badGradingPeriodId));
+    });
   });
 
   group('loadAssignments', () {

@@ -223,8 +223,14 @@ class _CourseGradeHeader extends StatelessWidget {
 
   /// The total grade in the course/grading period
   Widget _gradeTotal(BuildContext context, CourseDetailsModel model) {
+    final grade = model.course.getCourseGrade(
+      model.studentId,
+      enrollment: termEnrollment,
+      gradingPeriodId: model.currentGradingPeriod()?.id,
+      forceAllPeriods: termEnrollment == null && model.currentGradingPeriod()?.id == null,
+    );
+
     // Don't show the total if the grade is locked
-    final grade = CourseGrade(model.course, termEnrollment);
     if (grade.isCourseGradeLocked(forAllGradingPeriods: model.currentGradingPeriod()?.id == null)) return null;
 
     final textTheme = Theme.of(context).textTheme;
