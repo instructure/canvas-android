@@ -426,7 +426,29 @@ class DashboardState extends State<DashboardScreen> {
         onTap: () => _navigateToHelp(context),
       );
 
-  _navDrawerLogOut() => ListTile(title: Text(L10n(context).logOut), onTap: () => _performLogOut(context));
+  _navDrawerLogOut() => ListTile(
+        title: Text(L10n(context).logOut),
+        onTap: () {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                content: Text(L10n(context).logoutConfirmation),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                  FlatButton(
+                    child: Text(MaterialLocalizations.of(context).okButtonLabel),
+                    onPressed: () => _performLogOut(context),
+                  )
+                ],
+              );
+            },
+          );
+        },
+      );
 
   _navDrawerSwitchUsers() => ListTile(
         title: Text(L10n(context).switchUsers),

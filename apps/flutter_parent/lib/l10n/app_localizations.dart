@@ -170,6 +170,11 @@ class AppLocalizations {
   String appVersion(String version) => Intl.message('v. $version',
       name: 'appVersion', args: [version], desc: 'App version shown in the navigation drawer');
 
+  String get logoutConfirmation => Intl.message(
+        'Are you sure you want to log out?',
+        desc: 'Confirmation message displayed when the user tries to log out',
+      );
+
   /// Login landing screen
 
   String get previousLogins => Intl.message('Previous Logins', desc: 'Label for the list of previous user logins');
