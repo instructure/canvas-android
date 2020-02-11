@@ -355,6 +355,54 @@ void main() {
 //    // TODO: Test that Help screen was loaded
 //  });
 
+    testWidgets(
+      'tapping Sign Out from nav drawer displays confirmation dialog',
+      (tester) async {
+        final reminderDb = _MockReminderDb();
+        final notificationUtil = _MockNotificationUtil();
+
+        _setupLocator();
+        final _locator = GetIt.instance;
+        _locator.registerLazySingleton<ReminderDb>(() => reminderDb);
+        _locator.registerLazySingleton<NotificationUtil>(() => notificationUtil);
+
+        when(reminderDb.getAllForUser(any, any)).thenAnswer((_) async => []);
+
+        var login = Login((b) => b
+          ..domain = 'domain'
+          ..accessToken = 'token'
+          ..user = CanvasModelTestUtils.mockUser().toBuilder());
+
+        await ApiPrefs.addLogin(login);
+        await ApiPrefs.switchLogins(login);
+
+        expect(ApiPrefs.isLoggedIn(), true);
+
+        await tester.pumpWidget(_testableMaterialWidget());
+        await tester.pumpAndSettle();
+
+        // Open the nav drawer
+        DashboardScreen.scaffoldKey.currentState.openDrawer();
+        await tester.pumpAndSettle();
+
+        // Click on Sign Out
+        await tester.tap(find.text(AppLocalizations().logOut));
+        await tester.pumpAndSettle();
+
+        // Should show logout confirmation text
+        expect(find.text(AppLocalizations().logoutConfirmation), findsOneWidget);
+
+        // Tap the cancel button
+        await tester.tap(find.text(DefaultMaterialLocalizations().cancelButtonLabel));
+        await tester.pumpAndSettle();
+
+        // Dialog should be gone and we should still be logged in on the dashboard screen
+        expect(find.text(AppLocalizations().logoutConfirmation), findsNothing);
+        expect(find.byType(DashboardScreen), findsOneWidget);
+        expect(ApiPrefs.isLoggedIn(), true);
+      },
+    );
+
     // Not using the accessibility tester due to an issue where the
     // Login Landing screen fails a contrast ratio test after logging out
     // (the tests for that screen all pass accessibility checks, however)
@@ -389,6 +437,10 @@ void main() {
 
       // Click on Sign Out
       await tester.tap(find.text(AppLocalizations().logOut));
+      await tester.pumpAndSettle();
+
+      // Tap the OK button in the confirmation dialog
+      await tester.tap(find.text(DefaultMaterialLocalizations().okButtonLabel));
       await tester.pumpAndSettle();
 
       // Test if we ended up on the Login Landing page and if we are logged out
