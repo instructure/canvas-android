@@ -125,7 +125,7 @@ class CourseGradesPage : BasePage(R.id.courseGradesPage) {
         do {
             try {
                 gradeValue.check(matches(matcher))
-            } catch(e: NoMatchingViewException) {
+            } catch(e: Exception) {
                 if(currentAttempt == maxApiAttempts) {
                     break
                 } else {
