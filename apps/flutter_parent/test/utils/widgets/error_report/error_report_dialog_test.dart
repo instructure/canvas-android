@@ -23,26 +23,8 @@ import '../../accessibility_utils.dart';
 import '../../test_app.dart';
 
 void main() {
-  TestApp _createTestApp(Future callback(BuildContext)) => TestApp(
-        Builder(
-            builder: (context) => RaisedButton(
-                  child: Text('tap me', style: TextStyle(color: Colors.white)), // So it's 'accessible'
-                  onPressed: () => callback(context),
-                )),
-        highContrast: true,
-      );
-
-  _showDialog(WidgetTester tester, Future callback(BuildContext)) async {
-    await tester.pumpWidget(_createTestApp(callback));
-    await tester.pumpAndSettle();
-
-    // Tap the button to show the dialog
-    await tester.tap(find.byType(RaisedButton));
-    await tester.pumpAndSettle();
-  }
-
   testWidgetsWithAccessibilityChecks('Shows a dialog', (tester) async {
-    await _showDialog(tester, (context) => ErrorReportDialog.asDialog(context));
+    await TestApp.showWidgetFromTap(tester, (context) => ErrorReportDialog.asDialog(context), highContrast: true);
 
     expect(find.byType(ErrorReportDialog), findsOneWidget);
     expect(find.text(AppLocalizations().reportProblemTitle), findsOneWidget);
@@ -59,16 +41,16 @@ void main() {
     final subject = 'subject';
     final severity = ErrorReportSeverity.CRITICAL;
 
-    await _showDialog(
-      tester,
-      (context) => ErrorReportDialog.asDialog(
-        context,
-        title: title,
-        subject: subject,
-        severity: severity,
-        includeEmail: true,
-      ),
-    );
+    await TestApp.showWidgetFromTap(
+        tester,
+        (context) => ErrorReportDialog.asDialog(
+              context,
+              title: title,
+              subject: subject,
+              severity: severity,
+              includeEmail: true,
+            ),
+        highContrast: true);
 
     expect(find.byType(ErrorReportDialog), findsOneWidget);
     expect(find.text(title), findsOneWidget);
@@ -78,7 +60,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Selecting a severity updates dialog', (tester) async {
-    await _showDialog(tester, (context) => ErrorReportDialog.asDialog(context));
+    await TestApp.showWidgetFromTap(tester, (context) => ErrorReportDialog.asDialog(context), highContrast: true);
 
     // Tap on dropdown to show list
     await tester.tap(find.text(AppLocalizations().errorSeverityComment));
@@ -93,7 +75,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Cancel closes the dialog', (tester) async {
-    await _showDialog(tester, (context) => ErrorReportDialog.asDialog(context));
+    await TestApp.showWidgetFromTap(tester, (context) => ErrorReportDialog.asDialog(context), highContrast: true);
 
     await tester.tap(find.text(AppLocalizations().cancel.toUpperCase()));
     await tester.pumpAndSettle();
@@ -102,7 +84,8 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Submit validates the dialog and shows errors', (tester) async {
-    await _showDialog(tester, (context) => ErrorReportDialog.asDialog(context, includeEmail: true));
+    await TestApp.showWidgetFromTap(tester, (context) => ErrorReportDialog.asDialog(context, includeEmail: true),
+        highContrast: true);
 
     expect(find.text(AppLocalizations().reportProblemSubjectEmpty), findsNothing);
     expect(find.text(AppLocalizations().reportProblemDescriptionEmpty), findsNothing);
@@ -126,7 +109,11 @@ void main() {
     final interactor = _MockErrorReportInteractor();
     setupTestLocator((locator) => locator.registerFactory<ErrorReportInteractor>(() => interactor));
 
-    await _showDialog(tester, (context) => ErrorReportDialog.asDialog(context, includeEmail: true, error: error));
+    await TestApp.showWidgetFromTap(
+      tester,
+      (context) => ErrorReportDialog.asDialog(context, includeEmail: true, error: error),
+      highContrast: true,
+    );
 
     // Enter in the details
     await tester.enterText(find.byKey(ErrorReportDialog.subjectKey), subject);

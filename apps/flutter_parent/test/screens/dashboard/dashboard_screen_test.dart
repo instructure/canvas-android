@@ -32,6 +32,7 @@ import 'package:flutter_parent/screens/dashboard/dashboard_screen.dart';
 import 'package:flutter_parent/screens/dashboard/inbox_notifier.dart';
 import 'package:flutter_parent/screens/dashboard/selected_student_notifier.dart';
 import 'package:flutter_parent/screens/dashboard/student_expansion_widget.dart';
+import 'package:flutter_parent/screens/help/help_dialog.dart';
 import 'package:flutter_parent/screens/login_landing_screen.dart';
 import 'package:flutter_parent/screens/manage_students/manage_students_interactor.dart';
 import 'package:flutter_parent/screens/manage_students/manage_students_screen.dart';
@@ -339,21 +340,22 @@ void main() {
       expect(find.byType(SettingsScreen), findsOneWidget);
     });
 
-//  testWidgetsWithAccessibilityChecks('tapping Help from nav drawer shows help', (tester) async {
-//    _setupLocator(MockInteractor());
-//
-//    await tester.pumpWidget(_testableMaterialWidget());
-//    await tester.pumpAndSettle();
-//
-//    // Open the nav drawer
-//    DashboardScreen.scaffoldKey.currentState.openDrawer();
-//    await tester.pumpAndSettle();
-//
-//    // Click on Help
-//    await tester.tap(find.text(AppLocalizations().help));
-//
-//    // TODO: Test that Help screen was loaded
-//  });
+    testWidgetsWithAccessibilityChecks('tapping Help from nav drawer shows help', (tester) async {
+      _setupLocator(interactor: MockInteractor());
+
+      await tester.pumpWidget(_testableMaterialWidget());
+      await tester.pumpAndSettle();
+
+      // Open the nav drawer
+      DashboardScreen.scaffoldKey.currentState.openDrawer();
+      await tester.pumpAndSettle();
+
+      // Click on Help
+      await tester.tap(find.text(AppLocalizations().help));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(HelpDialog), findsOneWidget);
+    });
 
     // Not using the accessibility tester due to an issue where the
     // Login Landing screen fails a contrast ratio test after logging out
