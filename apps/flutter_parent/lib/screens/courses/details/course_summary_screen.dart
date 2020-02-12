@@ -115,7 +115,14 @@ class __CourseSummaryState extends State<_CourseSummary> with AutomaticKeepAlive
       leading: Icon(_getIcon(item), color: Theme.of(context).accentColor),
       onTap: () {
         if (item.type == ScheduleItem.typeCalendar) {
-          locator<QuickNav>().push(context, EventDetailsScreen.withEvent(event: item));
+          locator<QuickNav>().push(
+              context,
+              EventDetailsScreen.withEvent(
+                event: item,
+                courseId: widget.model.courseId,
+                studentName: widget.model.studentName,
+                studentId: widget.model.studentId,
+              ));
         } else {
           locator<QuickNav>().push(
             context,

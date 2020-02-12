@@ -253,7 +253,7 @@ void main() {
     when(interactor.loadCourse(courseId)).thenAnswer((_) => Future.value(course));
 
     final convoInteractor = _MockCreateConversationInteractor();
-    when(convoInteractor.getAllRecipients(any, any)).thenAnswer((_) => Future.value([]));
+    when(convoInteractor.loadData(any, any)).thenAnswer((_) async => CreateConversationData(course, []));
     _setupLocator(interactor: interactor, convoInteractor: convoInteractor);
 
     String studentName = 'Panda';
@@ -290,7 +290,7 @@ void main() {
     when(interactor.loadCourse(courseId)).thenAnswer((_) => Future.value(course));
 
     final convoInteractor = _MockCreateConversationInteractor();
-    when(convoInteractor.getAllRecipients(any, any)).thenAnswer((_) => Future.value([]));
+    when(convoInteractor.loadData(any, any)).thenAnswer((_) async => CreateConversationData(course, []));
     _setupLocator(interactor: interactor, convoInteractor: convoInteractor);
 
     String studentName = 'Panda';
@@ -332,7 +332,7 @@ void main() {
     when(interactor.loadHomePage(courseId)).thenAnswer((_) async => Page((b) => b..id = '1'));
 
     final convoInteractor = _MockCreateConversationInteractor();
-    when(convoInteractor.getAllRecipients(any, any)).thenAnswer((_) => Future.value([]));
+    when(convoInteractor.loadData(any, any)).thenAnswer((_) async => CreateConversationData(course, []));
 
     _setupLocator(interactor: interactor, convoInteractor: convoInteractor);
 

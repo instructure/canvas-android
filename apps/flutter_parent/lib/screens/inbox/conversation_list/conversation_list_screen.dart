@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/conversation.dart';
 import 'package:flutter_parent/models/course.dart';
+import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/inbox/conversation_details/conversation_details_screen.dart';
 import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/avatar.dart';
@@ -279,8 +280,19 @@ class ConversationListState extends State<ConversationListScreen> {
                   ...snapshot.data.map((it) => ListTile(
                         title: Text(it.name),
                         onTap: () async {
+                          String postscript = L10n(context).messageLinkPostscript(
+                            '', // TODO: Pass in student short name
+                            '${ApiPrefs.getDomain()}/courses/${it.id}',
+                          );
                           Navigator.pop(context); // Dismisses the bottom sheet
-                          var refresh = await locator<QuickNav>().push(context, CreateConversationScreen(it, ''));
+                          var refresh = await locator<QuickNav>().push(
+                              context,
+                              CreateConversationScreen(
+                                it.id,
+                                '', // TODO: Pass in student ID
+                                it.name,
+                                postscript,
+                              ));
                           if (refresh == true) _refreshIndicatorKey.currentState.show();
                         },
                       )),

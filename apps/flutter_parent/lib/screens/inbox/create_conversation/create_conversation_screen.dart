@@ -35,27 +35,19 @@ import 'package:transparent_image/transparent_image.dart';
 import 'create_conversation_interactor.dart';
 
 class CreateConversationScreen extends StatefulWidget {
-  CreateConversationScreen(this._course, this._studentId)
-      : _subjectTemplate = _course.name,
-        this._assignmentUrl = null;
-
-  CreateConversationScreen.withSubject(
-    this._course,
+  CreateConversationScreen(
+    this._courseId,
     this._studentId,
     this._subjectTemplate,
-  ) : this._assignmentUrl = null;
+    this._postscript,
+  )   : assert(_courseId != null),
+        assert(_studentId != null),
+        assert(_subjectTemplate != null);
 
-  CreateConversationScreen.fromAssignment(
-    this._course,
-    this._studentId,
-    this._subjectTemplate,
-    this._assignmentUrl,
-  );
-
-  final Course _course;
+  final String _courseId;
   final String _studentId;
   final String _subjectTemplate;
-  final String _assignmentUrl;
+  final String _postscript;
 
   static final sendKey = Key('sendButton');
   static final attachmentKey = Key('attachmentButton');
@@ -80,6 +72,7 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
   List<Recipient> _allRecipients = [];
   List<Recipient> _selectedRecipients = [];
   List<AttachmentHandler> _attachments = [];
+  Course course;
 
   bool _loading = false;
   bool _error = false;
@@ -129,9 +122,10 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
       _loading = true;
       _error = false;
     });
-    _interactor.getAllRecipients(widget._course, widget._studentId).then((data) {
-      _allRecipients = data;
-      String courseId = widget._course.id;
+    _interactor.loadData(widget._courseId, widget._studentId).then((data) {
+      course = data.course;
+      _allRecipients = data.recipients;
+      String courseId = widget._courseId;
       _selectedRecipients =
           _allRecipients.where((it) => it.commonCourses[courseId]?.contains('TeacherEnrollment')).toList();
       setState(() {
@@ -151,10 +145,10 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
     try {
       var recipientIds = _selectedRecipients.map((it) => it.id).toList();
       var attachmentIds = _attachments.map((it) => it.attachment.id).toList();
-      if (widget._assignmentUrl != null) {
-        _bodyText += '\n\n${widget._assignmentUrl}';
+      if (widget._postscript != null) {
+        _bodyText += '\n\n${widget._postscript}';
       }
-      await _interactor.createConversation(widget._course, recipientIds, _subjectText, _bodyText, attachmentIds);
+      await _interactor.createConversation(widget._courseId, recipientIds, _subjectText, _bodyText, attachmentIds);
       Navigator.of(context).pop(true); // 'true' indicates upload was successful
     } catch (e) {
       setState(() => _sending = false);
@@ -212,7 +206,7 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           Text(L10n(context).newMessageTitle),
-          Text(widget._course.courseCode, style: Theme.of(context).textTheme.caption),
+          Text(course?.courseCode ?? '', style: Theme.of(context).textTheme.caption),
         ],
       ),
       actions: [
@@ -540,7 +534,7 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
   }
 
   String _enrollmentType(BuildContext context, Recipient user) {
-    var type = user.commonCourses[widget._course.id.toString()].first;
+    var type = user.commonCourses[widget._courseId].first;
     switch (type) {
       case 'TeacherEnrollment':
         return L10n(context).enrollmentTypeTeacher;

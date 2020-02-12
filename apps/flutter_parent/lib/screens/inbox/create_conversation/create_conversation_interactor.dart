@@ -16,6 +16,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_parent/models/conversation.dart';
 import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/models/recipient.dart';
+import 'package:flutter_parent/network/api/course_api.dart';
 import 'package:flutter_parent/network/api/inbox_api.dart';
 import 'package:flutter_parent/screens/inbox/attachment_utils/attachment_handler.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
@@ -23,28 +24,37 @@ import 'package:flutter_parent/utils/service_locator.dart';
 import '../attachment_utils/attachment_picker.dart';
 
 class CreateConversationInteractor {
-  Future<List<Recipient>> getAllRecipients(Course course, String studentId) async {
-    var result = await locator<InboxApi>().getRecipients(course);
+  Future<CreateConversationData> loadData(String courseId, String studentId) async {
+    final recipients = await locator<InboxApi>().getRecipients(courseId);
 
     // The only allowed recipients are teachers and the specific student
-    result.retainWhere((it) {
-      return it.id == studentId || it.commonCourses[course.id]?.contains('TeacherEnrollment') == true;
+    recipients.retainWhere((it) {
+      return it.id == studentId || it.commonCourses[courseId]?.contains('TeacherEnrollment') == true;
     });
 
-    return result;
+    Course course = await locator<CourseApi>().getCourse(courseId);
+
+    return CreateConversationData(course, recipients);
   }
 
   Future<Conversation> createConversation(
-    Course course,
+    String courseId,
     List<String> recipientIds,
     String subject,
     String body,
     List<String> attachmentIds,
   ) {
-    return locator<InboxApi>().createConversation(course, recipientIds, subject, body, attachmentIds);
+    return locator<InboxApi>().createConversation(courseId, recipientIds, subject, body, attachmentIds);
   }
 
   Future<AttachmentHandler> addAttachment(BuildContext context) async {
     return AttachmentPicker.asBottomSheet(context);
   }
+}
+
+class CreateConversationData {
+  final Course course;
+  final List<Recipient> recipients;
+
+  CreateConversationData(this.course, this.recipients);
 }

@@ -328,6 +328,13 @@ class AppLocalizations {
   String get attachmentFailed => Intl.message('Failed. Tap for options.',
       desc: 'Short message shown on a message attachment when uploading has failed');
 
+  String messageLinkPostscript(String studentName, String linkUrl) => Intl.message(
+        'Regarding: $studentName, $linkUrl',
+        desc:
+            'A postscript appended to new messages that clarifies which student is the subject of the message and also includes a URL for the related Canvas component (course, assignment, event, etc).',
+        args: [studentName, linkUrl],
+      );
+
   /// View conversation
 
   String get errorLoadingConversation => Intl.message('There was an error loading this conversation',
@@ -553,6 +560,12 @@ class AppLocalizations {
         desc: 'The subject line for a message to a teacher regarding a student\'s assignment',
         name: 'assignmentSubjectMessage',
         args: [studentName, assignmentName],
+      );
+
+  String eventSubjectMessage(String studentName, String eventTitle) => Intl.message(
+        'Regarding: $studentName, Event - $eventTitle',
+        desc: 'The subject line for a message to a teacher regarding a calendar event',
+        args: [studentName, eventTitle],
       );
 
   String get noPageFound => Intl.message(

@@ -35,15 +35,25 @@ import '../../../utils/network_image_response.dart';
 import '../../../utils/test_app.dart';
 
 void main() {
+  //String studentName = 'Student Name';
   String studentId = 'student_123';
 
   mockNetworkImageResponse();
 
   final l10n = AppLocalizations();
 
+  Widget _testableWidget({Course course, String subject, String postscript, MockNavigatorObserver observer}) {
+    if (course == null) course = _mockCourse('0');
+    return TestApp(
+      CreateConversationScreen(course.id, studentId, subject ?? course.name, postscript),
+      navigatorObservers: [if (observer != null) observer],
+      highContrast: true,
+    );
+  }
+
   testWidgetsWithAccessibilityChecks('shows loading when retrieving participants', (tester) async {
     _setupLocator();
-    await tester.pumpWidget(_testableWidget(CreateConversationScreen(_mockCourse('0'), studentId)));
+    await tester.pumpWidget(_testableWidget());
     await tester.pump();
     final matchedWidget = find.byType(CircularProgressIndicator);
     expect(matchedWidget, findsOneWidget);
@@ -52,7 +62,7 @@ void main() {
   testWidgetsWithAccessibilityChecks('does not show loading when participants are loaded', (tester) async {
     _setupLocator();
 
-    await tester.pumpWidget(_testableWidget(CreateConversationScreen(_mockCourse('0'), studentId)));
+    await tester.pumpWidget(_testableWidget());
     await tester.pumpAndSettle();
 
     final matchedWidget = find.byType(CircularProgressIndicator);
@@ -62,7 +72,7 @@ void main() {
   testWidgetsWithAccessibilityChecks('sending disabled when no message is present', (tester) async {
     _setupLocator();
 
-    await tester.pumpWidget(_testableWidget(CreateConversationScreen(_mockCourse('0'), studentId)));
+    await tester.pumpWidget(_testableWidget());
     await tester.pumpAndSettle();
 
     final matchedWidget = find.byKey(CreateConversationScreen.sendKey);
@@ -73,7 +83,7 @@ void main() {
   testWidgetsWithAccessibilityChecks('Shows error state on fetch fail, allows retry', (tester) async {
     _setupLocator(fetchFailCount: 1);
 
-    await tester.pumpWidget(_testableWidget(CreateConversationScreen(_mockCourse('0'), studentId)));
+    await tester.pumpWidget(_testableWidget());
     await tester.pumpAndSettle();
 
     // Should show error message and retry button
@@ -98,7 +108,7 @@ void main() {
   testWidgetsWithAccessibilityChecks('can enter message text', (tester) async {
     _setupLocator();
 
-    await tester.pumpWidget(_testableWidget(CreateConversationScreen(_mockCourse('0'), studentId)));
+    await tester.pumpWidget(_testableWidget());
     await tester.pumpAndSettle();
 
     final messageText = 'Some text here';
@@ -112,7 +122,7 @@ void main() {
   testWidgetsWithAccessibilityChecks('sending is enabled once message is present', (tester) async {
     _setupLocator();
 
-    await tester.pumpWidget(_testableWidget(CreateConversationScreen(_mockCourse('0'), studentId)));
+    await tester.pumpWidget(_testableWidget());
     await tester.pumpAndSettle();
 
     var matchedWidget = find.byKey(CreateConversationScreen.messageKey);
@@ -128,7 +138,7 @@ void main() {
       (tester) async {
     _setupLocator();
 
-    await tester.pumpWidget(_testableWidget(CreateConversationScreen(_mockCourse('0'), studentId)));
+    await tester.pumpWidget(_testableWidget());
     await tester.pumpAndSettle();
 
     // Set message body
@@ -152,7 +162,7 @@ void main() {
 
     _setupLocator(attachmentHandler: handler);
 
-    await tester.pumpWidget(_testableWidget(CreateConversationScreen(_mockCourse('0'), studentId)));
+    await tester.pumpWidget(_testableWidget());
     await tester.pumpAndSettle();
 
     // Set message body
@@ -195,7 +205,7 @@ void main() {
       'sending is disabled when no participants are selected, but subject and message are present', (tester) async {
     _setupLocator(recipientCount: 0);
 
-    await tester.pumpWidget(_testableWidget(CreateConversationScreen(_mockCourse('0'), studentId)));
+    await tester.pumpWidget(_testableWidget());
     await tester.pumpAndSettle();
 
     // Set message body
@@ -212,7 +222,7 @@ void main() {
     _setupLocator();
 
     final course = _mockCourse('0');
-    await tester.pumpWidget(_testableWidget(CreateConversationScreen(course, studentId)));
+    await tester.pumpWidget(_testableWidget(course: course));
     await tester.pumpAndSettle();
 
     var matchedWidget = find.byKey(CreateConversationScreen.subjectKey);
@@ -223,7 +233,7 @@ void main() {
     _setupLocator();
 
     final course = _mockCourse('0');
-    await tester.pumpWidget(_testableWidget(CreateConversationScreen(course, studentId)));
+    await tester.pumpWidget(_testableWidget(course: course));
     await tester.pumpAndSettle();
 
     var matchedWidget = find.byKey(CreateConversationScreen.subjectKey);
@@ -238,7 +248,7 @@ void main() {
     _setupLocator(recipientCount: recipientCount);
 
     final course = _mockCourse('0');
-    await tester.pumpWidget(_testableWidget(CreateConversationScreen(course, studentId)));
+    await tester.pumpWidget(_testableWidget(course: course));
     await tester.pumpAndSettle();
 
     var matchedWidget = find.byKey(CreateConversationScreen.recipientsKey);
@@ -252,7 +262,10 @@ void main() {
     final course = _mockCourse('0');
 
     // Load up a temp page with a button to navigate to our screen, that way the back button exists in the app bar
-    await _pumpTestableWidgetWithBackButton(tester, CreateConversationScreen(course, studentId));
+    await _pumpTestableWidgetWithBackButton(
+      tester,
+      CreateConversationScreen(course.id, studentId, '', null),
+    );
 
     var matchedWidget = find.byKey(CreateConversationScreen.messageKey);
 
@@ -267,7 +280,10 @@ void main() {
     _setupLocator();
     final course = _mockCourse('0');
 
-    await _pumpTestableWidgetWithBackButton(tester, CreateConversationScreen(course, studentId));
+    await _pumpTestableWidgetWithBackButton(
+      tester,
+      CreateConversationScreen(course.id, studentId, '', null),
+    );
 
     var matchedWidget = find.byKey(CreateConversationScreen.messageKey);
     await tester.enterText(matchedWidget, 'Some text here');
@@ -285,7 +301,11 @@ void main() {
     final course = _mockCourse('0');
     final observer = MockNavigatorObserver();
 
-    await _pumpTestableWidgetWithBackButton(tester, CreateConversationScreen(course, studentId), observer: observer);
+    await _pumpTestableWidgetWithBackButton(
+      tester,
+      CreateConversationScreen(course.id, studentId, '', null),
+      observer: observer,
+    );
 
     var matchedWidget = find.byKey(CreateConversationScreen.messageKey);
     await tester.enterText(matchedWidget, 'Some text here');
@@ -305,7 +325,11 @@ void main() {
     final course = _mockCourse('0');
     final observer = MockNavigatorObserver();
 
-    await _pumpTestableWidgetWithBackButton(tester, CreateConversationScreen(course, studentId), observer: observer);
+    await _pumpTestableWidgetWithBackButton(
+      tester,
+      CreateConversationScreen(course.id, studentId, '', null),
+      observer: observer,
+    );
 
     var matchedWidget = find.byKey(CreateConversationScreen.messageKey);
     await tester.enterText(matchedWidget, 'Some text here');
@@ -325,7 +349,7 @@ void main() {
     final course = _mockCourse('0');
     final observer = MockNavigatorObserver();
 
-    await tester.pumpWidget(_testableWidget(CreateConversationScreen(course, studentId), observer: observer));
+    await tester.pumpWidget(_testableWidget(course: course, observer: observer));
     await tester.pumpAndSettle();
 
     var matchedWidget = find.byKey(CreateConversationScreen.recipientsAddKey);
@@ -351,7 +375,7 @@ void main() {
     _setupLocator(attachmentHandler: handler);
 
     // Create page and add attachment
-    await tester.pumpWidget(_testableWidget(CreateConversationScreen(_mockCourse('0'), studentId)));
+    await tester.pumpWidget(_testableWidget());
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(CreateConversationScreen.attachmentKey));
     await tester.pump();
@@ -385,7 +409,7 @@ void main() {
     _setupLocator(attachmentHandler: handler);
 
     // Create page and add attachment
-    await tester.pumpWidget(_testableWidget(CreateConversationScreen(_mockCourse('0'), studentId)));
+    await tester.pumpWidget(_testableWidget());
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(CreateConversationScreen.attachmentKey));
     await tester.pump();
@@ -445,7 +469,7 @@ void main() {
     _setupLocator(attachmentHandler: handler);
 
     // Create page and add attachment
-    await tester.pumpWidget(_testableWidget(CreateConversationScreen(_mockCourse('0'), studentId)));
+    await tester.pumpWidget(_testableWidget());
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(CreateConversationScreen.attachmentKey));
     await tester.pump();
@@ -474,7 +498,7 @@ void main() {
     _setupLocator(attachmentHandler: handler);
 
     // Create page and add attachment
-    await tester.pumpWidget(_testableWidget(CreateConversationScreen(_mockCourse('0'), studentId)));
+    await tester.pumpWidget(_testableWidget());
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(CreateConversationScreen.attachmentKey));
     await tester.pump();
@@ -496,7 +520,7 @@ void main() {
     _setupLocator(attachmentHandler: handler);
 
     // Create page and add attachment
-    await tester.pumpWidget(_testableWidget(CreateConversationScreen(_mockCourse('0'), studentId)));
+    await tester.pumpWidget(_testableWidget());
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(CreateConversationScreen.attachmentKey));
     await tester.pump();
@@ -520,7 +544,7 @@ void main() {
     _setupLocator(attachmentHandler: handler);
 
     // Create page and add attachment
-    await tester.pumpWidget(_testableWidget(CreateConversationScreen(_mockCourse('0'), studentId)));
+    await tester.pumpWidget(_testableWidget());
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(CreateConversationScreen.attachmentKey));
     await tester.pump();
@@ -546,7 +570,7 @@ void main() {
     _setupLocator(attachmentHandler: handler);
 
     // Create page and add attachment
-    await tester.pumpWidget(_testableWidget(CreateConversationScreen(_mockCourse('0'), studentId)));
+    await tester.pumpWidget(_testableWidget());
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(CreateConversationScreen.attachmentKey));
     await tester.pump();
@@ -587,7 +611,7 @@ void main() {
   testWidgetsWithAccessibilityChecks('Expands and collapses recipient box', (tester) async {
     _setupLocator();
 
-    await tester.pumpWidget(_testableWidget(CreateConversationScreen(_mockCourse('0'), studentId)));
+    await tester.pumpWidget(_testableWidget());
     await tester.pumpAndSettle();
 
     // Should show one chip and the text '+1'
@@ -607,7 +631,7 @@ void main() {
     _setupLocator(recipientCount: 2); // One teacher, one student
     final course = _mockCourse('0');
 
-    await tester.pumpWidget(_testableWidget(CreateConversationScreen(course, studentId)));
+    await tester.pumpWidget(_testableWidget(course: course));
     await tester.pumpAndSettle();
 
     // Should show one teacher recipient (User 1)
@@ -635,7 +659,7 @@ void main() {
     _setupLocator(sendFailCount: 1);
     final course = _mockCourse('0');
 
-    await tester.pumpWidget(_testableWidget(CreateConversationScreen(course, studentId)));
+    await tester.pumpWidget(_testableWidget(course: course));
     await tester.pumpAndSettle();
 
     // Set message body
@@ -654,8 +678,11 @@ void main() {
     final course = _mockCourse('0');
     final observer = MockNavigatorObserver();
 
-    await _pumpTestableWidgetWithBackButton(tester, CreateConversationScreen(course, studentId));
-    await tester.pumpWidget(_testableWidget(CreateConversationScreen(course, studentId), observer: observer));
+    await _pumpTestableWidgetWithBackButton(
+      tester,
+      CreateConversationScreen(course.id, studentId, course.name, null),
+    );
+    await tester.pumpWidget(_testableWidget(course: course, observer: observer));
     await tester.pumpAndSettle();
 
     // Set message body
@@ -664,6 +691,7 @@ void main() {
     await tester.pump();
 
     await tester.tap(find.byKey(CreateConversationScreen.sendKey));
+    await tester.pump();
     await tester.pump();
 
     // Should show progressbar in app bar
@@ -680,7 +708,7 @@ void main() {
     _setupLocator(recipientCount: 2, pronouns: true); // One teacher, one student
     final course = _mockCourse('0');
 
-    await tester.pumpWidget(_testableWidget(CreateConversationScreen(course, studentId)));
+    await tester.pumpWidget(_testableWidget(course: course));
     await tester.pumpAndSettle();
 
     // Should show one teacher recipient (User 1)
@@ -714,9 +742,9 @@ void main() {
       _makeRecipient('3', 'ObserverEnrollment'),
     ];
 
-    when(interactor.getAllRecipients(any, any)).thenAnswer((_) => Future.value(recipients));
+    when(interactor.loadData(any, any)).thenAnswer((_) async => CreateConversationData(_mockCourse('0'), recipients));
 
-    await tester.pumpWidget(_testableWidget(CreateConversationScreen(_mockCourse('0'), studentId)));
+    await tester.pumpWidget(_testableWidget());
     await tester.pumpAndSettle();
 
     var recipientsButton = find.byKey(CreateConversationScreen.recipientsAddKey);
@@ -745,13 +773,14 @@ void main() {
     final course = _mockCourse('0');
     final subject = 'Instructure Rocks!';
 
-    await tester.pumpWidget(_testableWidget(CreateConversationScreen.withSubject(course, studentId, subject)));
+    await tester.pumpWidget(_testableWidget(course: course, subject: subject));
     await tester.pumpAndSettle();
 
     expect(find.text(subject), findsOneWidget);
   });
 
-  testWidgetsWithAccessibilityChecks('appends assignment url when fromAssignment is used', (tester) async {
+  testWidgetsWithAccessibilityChecks('appends postscript if present', (tester) async {
+    final course = _mockCourse('0');
     Recipient _makeRecipient(String id, String type) {
       return Recipient((b) => b
         ..id = id
@@ -762,20 +791,17 @@ void main() {
     }
 
     var interactor = _MockedInteractor();
-    when(interactor.getAllRecipients(any, any))
-        .thenAnswer((_) => Future.value([_makeRecipient('123', 'TeacherEnrollment')]));
+    final data = CreateConversationData(course, [_makeRecipient('123', 'TeacherEnrollment')]);
+    when(interactor.loadData(any, any)).thenAnswer((_) async => data);
     GetIt.instance.reset();
     GetIt.instance.registerFactory<CreateConversationInteractor>(() => interactor);
 
-    final course = _mockCourse('0');
     final subject = 'Regarding Instructure Pandas';
     final bodyText = 'Instructure Pandas';
-    final assignmentUrl = 'https://www.instructure.com';
-    final sendText = ['$bodyText\n\n$assignmentUrl'];
+    final postscript = 'P. S. More Pandas';
+    final sendText = ['$bodyText\n\n$postscript'];
 
-    await tester.pumpWidget(
-      _testableWidget(CreateConversationScreen.fromAssignment(course, studentId, subject, assignmentUrl)),
-    );
+    await tester.pumpWidget(_testableWidget(course: course, subject: subject, postscript: postscript));
     await tester.pumpAndSettle();
 
     // Check for the subject
@@ -802,20 +828,17 @@ void main() {
 
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 
-Widget _testableWidget(Widget widget, {MockNavigatorObserver observer}) {
-  return TestApp(widget, navigatorObservers: [if (observer != null) observer], highContrast: true);
-}
-
 /// Load up a temp page with a button to navigate to our screen, that way the back button exists in the app bar
 Future<void> _pumpTestableWidgetWithBackButton(tester, Widget widget, {MockNavigatorObserver observer}) async {
-  final app = _testableWidget(
+  final app = TestApp(
     Builder(
       builder: (context) => FlatButton(
         child: Semantics(label: 'test', child: const SizedBox()),
         onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => widget)),
       ),
     ),
-    observer: observer,
+    navigatorObservers: [if (observer != null) observer],
+    highContrast: true,
   );
 
   await tester.pumpWidget(app);
@@ -856,7 +879,7 @@ class _MockInteractor extends CreateConversationInteractor {
       [this._pronouns = false]);
 
   @override
-  Future<List<Recipient>> getAllRecipients(Course course, String studentId) async {
+  Future<CreateConversationData> loadData(String courseId, String studentId) async {
     if (_fetchFailCount > 0) {
       _fetchFailCount--;
       return Future.error('Error!');
@@ -868,8 +891,9 @@ class _MockInteractor extends CreateConversationInteractor {
           ..name = 'User $index'
           ..pronouns = _pronouns ? 'They/them' : null
           ..avatarUrl = ''
-          ..commonCourses = _generateCourseMap(course.id, index.toString())));
-    return list;
+          ..commonCourses = _generateCourseMap(courseId, index.toString())));
+
+    return CreateConversationData(_mockCourse(courseId), list);
   }
 
   MapBuilder<String, BuiltList<String>> _generateCourseMap(String courseId, String userId) {
@@ -885,7 +909,7 @@ class _MockInteractor extends CreateConversationInteractor {
 
   @override
   Future<Conversation> createConversation(
-    Course course,
+    String courseId,
     List<String> recipientIds,
     String subject,
     String body,
