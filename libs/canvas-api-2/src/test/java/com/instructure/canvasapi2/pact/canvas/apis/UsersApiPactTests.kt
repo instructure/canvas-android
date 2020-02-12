@@ -50,8 +50,7 @@ class UsersApiPactTests : ApiPactTestBase() {
     @Pact(consumer = "mobile")
     fun getUserWithPermissionsPact(builder: PactDslWithProvider) : RequestResponsePact {
         return builder
-                //.given("a student with a to do item")
-                .given("a student in a course with enrollment grades")
+                .given(MAIN_PROVIDER_STATE)
 
                 .uponReceiving("A request for user's user info")
                 .path(userPath)
@@ -96,7 +95,7 @@ class UsersApiPactTests : ApiPactTestBase() {
     @Pact(consumer = "mobile")
     fun getProfilePact(builder: PactDslWithProvider) : RequestResponsePact {
         return builder
-                .given("a student in a course with enrollment grades")
+                .given(MAIN_PROVIDER_STATE)
 
                 .uponReceiving("A request for user's profile")
                 .path(profilePath)
@@ -132,8 +131,8 @@ class UsersApiPactTests : ApiPactTestBase() {
     //region grab people from course
     //
     val peopleCallQuery = "include[]=enrollments&include[]=avatar_url&include[]=user_id&include[]=email&include[]=bio&exclude_inactive=true&enrollment_type=student"
-    val peopleCallPath = "/api/v1/courses/1/users"
-    val peopleFieldConfig = PactUserFieldConfig(includeEnrollment = true, includeProfileInfo = true)
+    val peopleCallPath = "/api/v1/courses/2/users"
+    val peopleFieldConfig = PactUserFieldConfig(includeEnrollment = true, includeProfileInfo = false)
     val peopleResponseBody = LambdaDsl.newJsonArray() { array ->
         array.`object`() { person ->
             person.populateUserFields(peopleFieldConfig)
@@ -143,10 +142,9 @@ class UsersApiPactTests : ApiPactTestBase() {
     @Pact(consumer = "mobile")
     fun getCoursePeoplePact(builder: PactDslWithProvider) : RequestResponsePact {
         return builder
-                //.given("course with student")
-                .given("a student in a course with enrollment grades")
+                .given(MAIN_PROVIDER_STATE)
 
-                .uponReceiving("A request for course 1's student people")
+                .uponReceiving("A request for course 2's student people")
                 .path(peopleCallPath)
                 .method("GET")
                 .query(peopleCallQuery)
@@ -162,10 +160,10 @@ class UsersApiPactTests : ApiPactTestBase() {
 
     @Test
     @PactVerification(fragment = "getCoursePeoplePact")
-    fun `grab course 1's student people`() {
+    fun `grab course 2's student people`() {
         val service = createService("/api/v1/courses/")
 
-        val peopleCall = service.getFirstPagePeopleList(1, enrollmentType="student")
+        val peopleCall = service.getFirstPagePeopleList(2, enrollmentType="student")
         val peopleResult = peopleCall.execute()
 
         assertQueryParamsAndPath(peopleCall, peopleCallQuery, peopleCallPath)

@@ -31,6 +31,7 @@ import org.junit.Assert.assertTrue
  */
 data class PactCourseFieldConfig (
     val courseId: Long, // Mandatory
+    val isFavorite: Boolean? = null,
     val numEnrollments: Int = 1,
     val includeCourseImage: Boolean = false,
     val includeCurrentGradingPeriodScores: Boolean = false,
@@ -47,9 +48,10 @@ data class PactCourseFieldConfig (
         /***
          * Construct a PactCourseFieldConfig object based on the query string being passed with the request.
          */
-        fun fromQueryString(courseId: Long, query: String) : PactCourseFieldConfig {
+        fun fromQueryString(courseId: Long, isFavorite: Boolean? = null, query: String) : PactCourseFieldConfig {
             val result = PactCourseFieldConfig(
                     courseId = courseId,
+                    isFavorite = isFavorite,
                     //includeCourseImage = query.contains("=course_image"),
                     includeCurrentGradingPeriodScores = query.contains("=current_grading_period_scores"),
                     includeNeedsGradingCount = query.contains("=needs_grading_count"),
@@ -97,7 +99,12 @@ fun LambdaDslObject.populateCourseFields(fieldConfig: PactCourseFieldConfig = Pa
     //
 
     if(fieldConfig.includeFavorites) {
-        this.booleanType("is_favorite")
+        if(fieldConfig.isFavorite != null) {
+            this.booleanValue("is_favorite", fieldConfig.isFavorite)
+        }
+        else {
+            this.booleanType("is_favorite")
+        }
     }
 
     if(fieldConfig.includePermissions) {
@@ -178,6 +185,9 @@ fun assertCoursePopulated(description: String, course: Course, fieldConfig: Pact
 
     if(fieldConfig.includeFavorites) {
         assertNotNull("$description + isFavorite", course.isFavorite)
+        if(fieldConfig.isFavorite != null) {
+            assertEquals("$description + isFavorite", fieldConfig.isFavorite, course.isFavorite)
+        }
     }
 
     if(fieldConfig.includeCurrentGradingPeriodScores) {

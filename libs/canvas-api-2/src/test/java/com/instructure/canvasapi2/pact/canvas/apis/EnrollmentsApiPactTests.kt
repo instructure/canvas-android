@@ -43,10 +43,8 @@ class EnrollmentsApiPactTests : ApiPactTestBase() {
     //
 
     val selfEnrollmentsFieldInfo = listOf(
-            PactEnrollmentFieldConfig(courseId = 1, userId = 1, populateFully = true, includeGrades = true)
-//            PactEnrollmentFieldConfig(courseId = 2, userId = 1, populateFully = true, includeGrades = true),
-//            PactEnrollmentFieldConfig(courseId = 3, userId = 1, populateFully = true, includeGrades = true),
-//            PactEnrollmentFieldConfig(courseId = 4, userId = 1, populateFully = true, includeGrades = true)
+            PactEnrollmentFieldConfig(courseId = 2, userId = 8, populateFully = true, includeGrades = true),
+            PactEnrollmentFieldConfig(courseId = 3, userId = 8, populateFully = true, includeGrades = true)
     )
     val selfEnrollmentsPath = "/api/v1/users/self/enrollments"
     val selfEnrollmentsResponseBody =  LambdaDsl.newJsonArray { array ->
@@ -59,7 +57,7 @@ class EnrollmentsApiPactTests : ApiPactTestBase() {
     @Pact(consumer = "mobile")
     fun getSelfEnrollmentsPact(builder: PactDslWithProvider) : RequestResponsePact {
         return builder
-                .given("a student in a course with enrollment grades")
+                .given(MAIN_PROVIDER_STATE)
 
                 .uponReceiving("A request for user's enrollments")
                 .path(selfEnrollmentsPath)
@@ -85,7 +83,7 @@ class EnrollmentsApiPactTests : ApiPactTestBase() {
 
         assertNotNull("Expected non-null response body", selfEnrollmentResult.body())
         val enrollments = selfEnrollmentResult.body()!!
-        assertEquals("returned list size", 1, enrollments.count())
+        assertEquals("returned list size", 2, enrollments.count())
 
         for(index in 0..enrollments.size-1) {
             val enrollment = enrollments[index]

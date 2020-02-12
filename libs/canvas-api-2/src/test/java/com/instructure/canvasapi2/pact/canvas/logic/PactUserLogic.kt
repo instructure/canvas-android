@@ -95,7 +95,7 @@ fun LambdaDslObject.populateUserFields(fieldConfig: PactUserFieldConfig = PactUs
 
     if(fieldConfig.includeProfileInfo) {
         this
-                .stringType("avatar_url")
+                //.stringType("avatar_url") // Evidently, we just never get avatar_urls
                 .stringType("primary_email")
                 .stringType("bio")
     }
@@ -142,7 +142,7 @@ fun assertUserPopulated(description: String, user: User, fieldConfig: PactUserFi
     }
 
     if(fieldConfig.includeProfileInfo) {
-        assertNotNull("$description + avatarUrl", user.avatarUrl)
+        //assertNotNull("$description + avatarUrl", user.avatarUrl)
         assertNotNull("$description + primaryEmail", user.primaryEmail)
         assertNotNull("$description + bio", user.bio)
     }

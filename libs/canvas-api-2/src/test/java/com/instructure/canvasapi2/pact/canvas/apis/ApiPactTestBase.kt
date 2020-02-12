@@ -20,7 +20,9 @@ import au.com.dius.pact.consumer.junit.PactProviderRule
 import au.com.dius.pact.core.model.PactSpecVersion
 import com.instructure.canvasapi2.PactRequestInterceptor
 import com.instructure.canvasapi2.apis.CourseAPI
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.Response
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import retrofit2.Call
@@ -32,10 +34,11 @@ open class ApiPactTestBase {
     @JvmField
     val provider = PactProviderRule("Canvas LMS API", PactSpecVersion.V2, this)
 
+    val DEFAULT_MOBILE_STUDENT = "Mobile Student"
     fun getClient(pathPrefix: String = "/api/v1/") : Retrofit {
 
         val okHttpClient = OkHttpClient.Builder()
-                .addInterceptor(PactRequestInterceptor("Student1"))
+                .addInterceptor(PactRequestInterceptor(DEFAULT_MOBILE_STUDENT))
                 .addInterceptor { chain ->
                     val request = chain.request()
                     val builder = request.newBuilder()
@@ -61,7 +64,7 @@ open class ApiPactTestBase {
 
     val DEFAULT_REQUEST_HEADERS = mapOf(
             "Authorization" to "Bearer some_token",
-            "Auth-User" to "Student1",
+            "Auth-User" to DEFAULT_MOBILE_STUDENT,
             "Content-Type" to "application/json"
     )
 
@@ -69,5 +72,5 @@ open class ApiPactTestBase {
             "Content-Type" to "application/json; charset=utf-8"
     )
 
-    val MAIN_PROVIDER_STATE = "User 1, 4 courses, 2 favorited"
+    val MAIN_PROVIDER_STATE = "a student with 2 courses"
 }

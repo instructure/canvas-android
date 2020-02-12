@@ -46,8 +46,7 @@ class CoursesApiPactTests : ApiPactTestBase() {
     val favoriteCoursesQuery = "include[]=term&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=current_grading_period_scores&include[]=course_image&include[]=favorites"
     val favoriteCoursesPath = "/api/v1/users/self/favorites/courses"
     val favoriteCoursesFieldInfo = listOf(
-            PactCourseFieldConfig.fromQueryString(courseId = 1, query = favoriteCoursesQuery),
-            PactCourseFieldConfig.fromQueryString(courseId = 2, query = favoriteCoursesQuery)
+            PactCourseFieldConfig.fromQueryString(courseId = 3, isFavorite = true, query = favoriteCoursesQuery)
     )
     val favoriteCoursesResponseBody =  LambdaDsl.newJsonArray { array ->
         for(fieldInfo in favoriteCoursesFieldInfo) {
@@ -60,7 +59,7 @@ class CoursesApiPactTests : ApiPactTestBase() {
     @Pact(consumer = "mobile")
     fun getFavoriteCoursesPact(builder: PactDslWithProvider) : RequestResponsePact {
         return builder
-                .given("a student in a course with enrollment grades")
+                .given(MAIN_PROVIDER_STATE)
 
                 .uponReceiving("A request for favorite courses")
                 .path(favoriteCoursesPath)
@@ -88,7 +87,7 @@ class CoursesApiPactTests : ApiPactTestBase() {
 
         assertNotNull("Expected non-null response body", getFavoritesResult.body())
         val courseList = getFavoritesResult.body()!!
-        assertEquals("returned list size",2, courseList.count())
+        assertEquals("returned list size",1, courseList.count())
 
         for(index in 0..courseList.size-1) {
             val course = courseList[index]
@@ -106,11 +105,9 @@ class CoursesApiPactTests : ApiPactTestBase() {
     val allCoursesQuery = "include[]=term&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=sections&state[]=completed&state[]=available"
     val allCoursesPath = "/api/v1/courses"
     val allCoursesFieldInfo = listOf(
-            PactCourseFieldConfig.fromQueryString(courseId = 1, query = allCoursesQuery),
-            PactCourseFieldConfig.fromQueryString(courseId = 2, query = allCoursesQuery),
-            PactCourseFieldConfig.fromQueryString(courseId = 3, query = allCoursesQuery),
-            PactCourseFieldConfig.fromQueryString(courseId = 4, query = allCoursesQuery)
-
+            // Evidently, permissions info is *not* returned from this call, even though include[]=permissions is specified
+            PactCourseFieldConfig.fromQueryString(courseId = 2, isFavorite = false, query = allCoursesQuery).copy(includePermissions = false),
+            PactCourseFieldConfig.fromQueryString(courseId = 3, isFavorite = true, query = allCoursesQuery).copy(includePermissions = false)
     )
     val allCoursesResponseBody =  LambdaDsl.newJsonArray { array ->
         for(fieldInfo in allCoursesFieldInfo) {
@@ -123,7 +120,7 @@ class CoursesApiPactTests : ApiPactTestBase() {
     @Pact(consumer = "mobile")
     fun getAllCoursesPact(builder: PactDslWithProvider) : RequestResponsePact {
         return builder
-                .given("a student in a course with enrollment grades")
+                .given(MAIN_PROVIDER_STATE)
 
                 .uponReceiving("A request for all courses")
                 .path(allCoursesPath)
@@ -151,7 +148,7 @@ class CoursesApiPactTests : ApiPactTestBase() {
 
         assertNotNull("Expected non-null response body", getCoursesResult.body())
         val courseList = getCoursesResult.body()!!
-        assertEquals("returned list size",4, courseList.count())
+        assertEquals("returned list size",2, courseList.count())
 
         for(index in 0..courseList.size-1) {
             val course = courseList[index]
@@ -167,19 +164,18 @@ class CoursesApiPactTests : ApiPactTestBase() {
     //
 
     val singleCourseQuery = "include[]=term&include[]=permissions&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=course_image"
-    val singleCoursePath = "/api/v1/courses/1"
-    val singleCourseFieldInfo = PactCourseFieldConfig.fromQueryString(courseId = 1, query = singleCourseQuery)
+    val singleCoursePath = "/api/v1/courses/3"
+    val singleCourseFieldInfo = PactCourseFieldConfig.fromQueryString(courseId = 3, isFavorite = true, query = singleCourseQuery)
     val singleCourseResponseBody = LambdaDsl.newJsonBody { obj ->
         obj.populateCourseFields(singleCourseFieldInfo)
     }.build()
 
     @Pact(consumer = "mobile")
     fun getSingleCoursePact(builder: PactDslWithProvider) : RequestResponsePact {
-        print("query: $singleCourseQuery, encoded: ${URLEncoder.encode(singleCourseQuery, "utf-8")} ")
         return builder
-                .given("a student in a course with enrollment grades")
+                .given(MAIN_PROVIDER_STATE)
 
-                .uponReceiving("A request for course 1")
+                .uponReceiving("A request for course 3")
                 .path(singleCoursePath)
                 .method("GET")
                 .query(singleCourseQuery)
@@ -195,10 +191,10 @@ class CoursesApiPactTests : ApiPactTestBase() {
 
     @Test
     @PactVerification(fragment = "getSingleCoursePact")
-    fun `grab course 1`() {
+    fun `grab course 3`() {
         val service = createService()
 
-        val getCourseCall = service.getCourse(1L)
+        val getCourseCall = service.getCourse(3L)
         val getCourseResult = getCourseCall.execute()
 
         //assertQueryParamsAndPath(getCourseCall, singleCourseQuery, singleCoursePath)
@@ -215,8 +211,8 @@ class CoursesApiPactTests : ApiPactTestBase() {
     //
 
     val courseWithGradeQuery = "include[]=term&include[]=permissions&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=total_scores&include[]=current_grading_period_scores&include[]=course_image"
-    val courseWithGradePath = "/api/v1/courses/1"
-    val courseWithGradeFieldInfo = PactCourseFieldConfig.fromQueryString(courseId = 1, query = courseWithGradeQuery)
+    val courseWithGradePath = "/api/v1/courses/3"
+    val courseWithGradeFieldInfo = PactCourseFieldConfig.fromQueryString(courseId = 3, isFavorite = true, query = courseWithGradeQuery)
     val courseWithGradeResponseBody = LambdaDsl.newJsonBody { obj ->
         obj.populateCourseFields(courseWithGradeFieldInfo)
     }.build()
@@ -224,12 +220,12 @@ class CoursesApiPactTests : ApiPactTestBase() {
     @Pact(consumer = "mobile")
     fun getCourseWithGradePact(builder: PactDslWithProvider) : RequestResponsePact {
         return builder
-                .given("a student in a course with enrollment grades")
+                .given(MAIN_PROVIDER_STATE)
 
-                .uponReceiving("A request for course 1 with grade")
+                .uponReceiving("A request for course 3 with grade")
                 .path(courseWithGradePath)
                 .method("GET")
-                .encodedQuery(courseWithGradeQuery)
+                .query(courseWithGradeQuery)
                 .headers(DEFAULT_REQUEST_HEADERS)
 
                 .willRespondWith()
@@ -242,10 +238,10 @@ class CoursesApiPactTests : ApiPactTestBase() {
 
     @Test
     @PactVerification(fragment = "getCourseWithGradePact")
-    fun `grab course 1 with grade`() {
+    fun `grab course 3 with grade`() {
         val service = createService()
 
-        val getCourseCall = service.getCourseWithGrade(1L)
+        val getCourseCall = service.getCourseWithGrade(3L)
         val getCourseResult = getCourseCall.execute()
 
         assertQueryParamsAndPath(getCourseCall, courseWithGradeQuery, courseWithGradePath)
@@ -263,21 +259,18 @@ class CoursesApiPactTests : ApiPactTestBase() {
     //region grab dashboard cards
     //
 
-    // Should just return ids for the two favorite courses, right?
+    // Should just return id for the favorite course, right?
     val dashboardCardPath = "/api/v1/dashboard/dashboard_cards"
     val dashboardCardResponseBody = LambdaDsl.newJsonArray { array ->
         array.`object` { obj ->
-            obj.id("id", 1L)
-        }
-        array.`object` { obj ->
-            obj.id("id", 2L)
+            obj.id("id", 3L)
         }
     }.build()
 
     @Pact(consumer = "mobile")
     fun getDashboardCardsPact(builder: PactDslWithProvider) : RequestResponsePact {
         return builder
-                .given("a student in a course with enrollment grades")
+                .given(MAIN_PROVIDER_STATE)
 
                 .uponReceiving("A request for user's dashboard cards")
                 .path(dashboardCardPath)
@@ -304,9 +297,8 @@ class CoursesApiPactTests : ApiPactTestBase() {
 
         assertNotNull("Expected non-null response body", getDashboardsResult.body())
         val dashboardCards = getDashboardsResult.body()!!
-        assertEquals("Dashboard card count", 2, dashboardCards.size)
-        assertEquals("Dashboard card 0 id", 1, dashboardCards[0].id)
-        assertEquals("Dashboard card 1 id", 2, dashboardCards[1].id)
+        assertEquals("Dashboard card count", 1, dashboardCards.size)
+        assertEquals("Dashboard card 0 id", 3, dashboardCards[0].id)
     }
 
     //endregion
